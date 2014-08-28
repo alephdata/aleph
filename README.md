@@ -9,6 +9,15 @@ as [DocumentCloud](http://documentcloud.org) and
 [analice.me](http://analice.me).
 
 
+Use cases
+---------
+
+* As a journalist, I want to store a list of documents that mention a person/org/topic so that I can sift through the documents.
+* As a journalist, I want to intersect sets of documents that mention people/orgs/topics so that I can drill down on the relationships between them. 
+* As a journalist, I want to combine different types of facets which represent document and entity metadata.
+* As a data importer, I want to routinely crawl and import documents from a data source. 
+* As a data importer, I want to associate metadata with documents and entities to allow advanced facets. 
+
 Basic ideas
 -----------
 
@@ -25,8 +34,12 @@ Basic ideas
 Existing tools
 --------------
 
-* DocumentCloud, analice.me, resourcecontracts.org
+* [DocumentCloud](http://github.com/documentcloud)
+* [analice.me](https://github.com/hhba/mapa76)
+* [resourcecontracts.org](https://github.com/developmentseed/rw-contracts)
+* [mma-dexter](https://github.com/Code4SA/mma-dexter)
+* [datawi.re](https://github.com/pudo/datawi.re)
 * nltk, patterns
-* OpenCalais, LingPipe
+* OpenCalais, LingPipe, AlchemyAPI
 
 
