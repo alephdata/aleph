@@ -18,6 +18,7 @@ Use cases
 * As a data importer, I want to routinely crawl and import documents from a data source. 
 * As a data importer, I want to associate metadata with documents and entities to allow advanced facets. 
 
+
 Basic ideas
 -----------
 
