@@ -44,3 +44,10 @@ Existing tools
 * OpenCalais, LingPipe, AlchemyAPI
 
 
+Installation
+------------
+
+dit uses textract, which has external (i.e. non-Python) dependencies. See the [install guide](http://textract.readthedocs.org/en/latest/installation.html).
+
+
+
