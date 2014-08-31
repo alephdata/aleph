@@ -4,12 +4,9 @@ from setuptools import setup, find_packages
 REQUIREMENTS = os.path.join(os.path.dirname(__file__), 'requirements.txt')
 REQUIREMENTS = open(REQUIREMENTS, 'r').read().splitlines()
 
-VERSION = os.path.join(os.path.dirname(__file__), 'VERSION')
-VERSION = open(VERSION, 'r').read().strip()
-
 setup(
     name='dit',
-    version=VERSION,
+    version='0.1',
     description="Bits of code for document mining.",
     long_description="",
     classifiers=[
@@ -28,6 +25,10 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
-    entry_points={},
+    entry_points={
+        'dit.stages': [
+            'file_size = dit.stages.file_size:get_file_size'
+        ]
+    },
     tests_require=[]
 )

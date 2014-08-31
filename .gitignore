@@ -3,3 +3,6 @@
 *.egg-info
 
 .env
+
+test-data/*
+test-repo/*

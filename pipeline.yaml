@@ -1,0 +1,22 @@
+config:
+    stash: /Users/fl/.docstash
+    collection: 'asx-announcements'
+
+ingest:
+    docs:
+        source: /Users/fl/Code/icij-asx/data/ann
+
+stages:
+    mime_detect:
+        stage: mime_detect
+
+    textract:
+        stage: textract
+
+    normalize:
+        stage: normalize
+        transforms: ['lower', 'collapse']
+
+    index:
+        stage: elasticsearch
+        host: http://bonsai.io/dfsf
