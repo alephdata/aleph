@@ -8,15 +8,15 @@ ingest:
 
 stages:
     mime_detect:
-        stage: mime_detect
+        op: mime_detect
 
     textract:
-        stage: textract
+        op: textract
 
     normalize:
-        stage: normalize
+        op: normalize
         transforms: ['lower', 'collapse']
 
     index:
-        stage: elasticsearch
+        op: elasticsearch
         host: http://bonsai.io/dfsf

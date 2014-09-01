@@ -7,7 +7,7 @@ NAMESPACE = 'dit.stages'
 log = logging.getLogger(__name__)
 
 
-def init_stages(app):
+def load_stages():
     manager = ExtensionManager(namespace=NAMESPACE,
                                propagate_map_exceptions=True,
                                invoke_on_load=False)
