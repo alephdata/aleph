@@ -5,7 +5,7 @@ from docpipe import Task
 MAPPED_DOC_TYPES = {}
 
 es = Elasticsearch()
-es_index = 'dit'
+es_index = 'docsift'
 
 
 def make_query():
@@ -31,7 +31,7 @@ def index_document(document):
     #     MAPPED_DOC_TYPES[doc_type] = es_mapping
 
     es.index(index=es_index, doc_type=doc_type,
-             body=document._store, id=document.content_id)
+             body=document.meta, id=document.content_id)
 
 
 class IndexerTask(Task):

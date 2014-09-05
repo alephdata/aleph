@@ -1,8 +1,8 @@
 from flask import render_template, request
 from flask_pager import Pager
 
-from dit.filters import app
-from dit.search import make_query, es, es_index
+from docsift.filters import app
+from docsift.search import make_query, es, es_index
 
 
 @app.route("/")

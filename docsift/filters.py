@@ -1,7 +1,7 @@
 import urllib
 from jinja2 import Markup
 
-from dit.app import app
+from docsift.app import app
 
 
 @app.template_filter('field')

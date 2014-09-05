@@ -5,9 +5,9 @@ REQUIREMENTS = os.path.join(os.path.dirname(__file__), 'requirements.txt')
 REQUIREMENTS = open(REQUIREMENTS, 'r').read().splitlines()
 
 setup(
-    name='dit',
+    name='docsift',
     version='0.1',
-    description="Bits of code for document mining.",
+    description="Document sifting web frontend",
     long_description="",
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -27,7 +27,7 @@ setup(
     install_requires=REQUIREMENTS,
     entry_points={
         'docpipe.tasks': [
-            'index = dit.indexing:IndexerTask'
+            'index = docsift.indexing:IndexerTask'
         ]
     },
     tests_require=[]
