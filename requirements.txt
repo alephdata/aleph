@@ -1,1 +1,8 @@
 textract>=1.0.0
+docstash
+docpipe
+elasticsearch
+flask
+flask-script
+flask-assets
+elasticutils

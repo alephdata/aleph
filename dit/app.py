@@ -1,19 +1,35 @@
 import logging
 from flask import Flask
+from flask.ext.assets import Environment
 
 from docstash import Stash
 
 from dit import default_settings
-from dit.manager import load_stages
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
+
+# specific loggers
+requests_log = logging.getLogger("requests")
+requests_log.setLevel(logging.WARNING)
+
+urllib3_log = logging.getLogger("urllib3")
+urllib3_log.setLevel(logging.WARNING)
+
+#elasticsearch_log = logging.getLogger("elasticsearch")
+#elasticsearch_log.setLevel(logging.WARNING)
+
+elasticsearch_log = logging.getLogger("elasticsearch.trace")
+elasticsearch_log.setLevel(logging.DEBUG)
+
+
+stevedore_log = logging.getLogger("stevedore")
+stevedore_log.setLevel(logging.WARNING)
 
 app = Flask('dit')
 
 app.config.from_object(default_settings)
 app.config.from_envvar('DIT_SETTINGS', silent=True)
 
-stages = load_stages()
-stash = Stash(path=app.config.get('STASH_PATH'))
+assets = Environment(app)
 
-print stages, stash
+stash = Stash(path=app.config.get('DOCSTASH_PATH'))

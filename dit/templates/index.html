@@ -1,0 +1,64 @@
+{%extends "layout.html" %}
+
+{% block title %}
+  {{query or "Search"}}
+{% endblock %}
+
+{% block content %}
+  <div class="row search-area">
+    <div class="col-md-8">
+      <form class="form-horizontal" role="form">
+        <div class="input-group">
+          <input name="query" type="text" class="form-control" id="query"
+            value="{{query}}" autofocus placeholder="Search the document stash">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-default">Search</button>
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <ul class="results">
+        {% for result in pager %}
+          <li class="result">
+            <span class="title">
+              <i class="fa fa-quote-left"></i>
+              <a href="#">
+              {{result | field('file') | decode | truncate(70, True) }}
+            </a></span>
+            {% if result.source_url %}
+              <span class="source"><a href="{{result.source_url}}">{{result.source_url | truncate(80, True) }}</a></span>
+            {% endif %}
+            <p class="teaser">
+              {{result | field('text') | truncate(200) | or('No body text is available.') }}
+            </p>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <ul class="pagination">
+        {% if pager.has_prev %}
+          <li><a href="{{pager.prev_url}}">&laquo;</a></li>
+        {% else %}
+          <li class="disabled"><a>&laquo;</a></li>
+        {% endif %}
+        {% for page in pager.range %}
+          {% if page == pager.page %}
+            <li class="active"><a>{{page}}</a></li>
+          {% else %}
+            <li><a href="{{pager.page_url(page)}}">{{page}}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if pager.has_next %}
+          <li><a href="{{pager.next_url}}">&raquo;</a></li>
+        {% else %}
+          <li class="disabled"><a>&raquo;</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}
+

@@ -26,8 +26,8 @@ setup(
     zip_safe=False,
     install_requires=REQUIREMENTS,
     entry_points={
-        'dit.stages': [
-            'file_size = dit.stages.file_size:get_file_size'
+        'docpipe.tasks': [
+            'index = dit.indexing:IndexerTask'
         ]
     },
     tests_require=[]

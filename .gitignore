@@ -6,3 +6,5 @@
 
 test-data/*
 test-repo/*
+
+dit/static/.webassets-cache/*
