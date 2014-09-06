@@ -1,8 +1,22 @@
 from flask import render_template, request
+from flask import send_file
 from flask_pager import Pager
 
+from docsift.app import stash
 from docsift.filters import app
 from docsift.search import make_query, es, es_index
+
+
+@app.route("/collections/<collection>/document/<hash>/<path:file>")
+def download(collection, hash, file):
+    document = stash.get(collection).get(hash)
+    return send_file(document.file)
+
+
+@app.route("/collections/<collection>/document/<hash>")
+def details(collection, hash):
+    document = stash.get(collection).get(hash)
+    return render_template('document.html', document=document)
 
 
 @app.route("/")

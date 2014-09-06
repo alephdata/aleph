@@ -7,7 +7,7 @@
 {% block content %}
   <div class="row search-area">
     <div class="col-md-8">
-      <form class="form-horizontal" role="form">
+      <form class="form-horizontal" role="form" action="{{url_for('index')}}">
         <div class="input-group">
           <input name="query" type="text" class="form-control" id="query"
             value="{{query}}" autofocus placeholder="Search the document stash">
@@ -25,12 +25,15 @@
         {% for result in pager %}
           <li class="result">
             <span class="title">
-              <i class="fa fa-quote-left"></i>
-              <a href="#">
+              <a href="{{ result | details_url }}">
               {{result | field('file') | decode | truncate(70, True) }}
-            </a></span>
+              </a>
+            </span>
             {% if result.source_url %}
-              <span class="source"><a href="{{result.source_url}}">{{result.source_url | truncate(80, True) }}</a></span>
+              <span class="source">
+                <a href="{{result.source_url}}">{{result.source_url | truncate(80, True) }}</a>
+                (<a href="{{result | download_url }}">local copy</a>)
+              </span>
             {% endif %}
             <p class="teaser">
               {{result | field('text') | truncate(200) | or('No body text is available.') }}
