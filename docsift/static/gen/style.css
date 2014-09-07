@@ -29,3 +29,17 @@ ul.results li.result .source a {
 ul.results li.result .placeholder {
   color: #999;
 }
+ul.results li.result.active {
+  background-color: #eee;
+}
+.table.table-details {
+  table-layout: fixed;
+}
+.table.table-details th {
+  width: 25%;
+}
+.table.table-details td {
+  overflow: hidden;
+  w-hite-space: nowrap;
+  word-wrap: break-word;
+}

@@ -1,0 +1,21 @@
+{% macro pagination(pager) -%}
+    <ul class="pagination">
+        {% if pager.has_prev %}
+          <li><a href="{{pager.prev_url}}">&laquo;</a></li>
+        {% else %}
+          <li class="disabled"><a>&laquo;</a></li>
+        {% endif %}
+        {% for page in pager.range %}
+          {% if page == pager.page %}
+            <li class="active"><a>{{page}}</a></li>
+          {% else %}
+            <li><a href="{{pager.page_url(page)}}">{{page}}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if pager.has_next %}
+          <li><a href="{{pager.next_url}}">&raquo;</a></li>
+        {% else %}
+          <li class="disabled"><a>&raquo;</a></li>
+        {% endif %}
+    </ul>
+{%- endmacro %}

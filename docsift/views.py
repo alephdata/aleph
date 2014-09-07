@@ -16,7 +16,21 @@ def download(collection, hash, file):
 @app.route("/collections/<collection>/document/<hash>")
 def details(collection, hash):
     document = stash.get(collection).get(hash)
-    return render_template('document.html', document=document)
+
+    meta = {}
+    for key, value in document.items():
+        if key in app.config.get('HIDE_FIELDS', []):
+            continue
+        if isinstance(value, (dict, list, tuple)) and not len(value):
+            continue
+        elif not len(unicode(value).strip()):
+            continue
+        meta[key] = value
+    meta = sorted(meta.items())
+
+    if 'snippet' in request.args:
+        return render_template('_details.html', document=document, meta=meta)
+    return render_template('document.html', document=document, meta=meta)
 
 
 @app.route("/")

@@ -7,8 +7,24 @@ from flask import url_for
 from docsift.app import app, stash
 
 
+def get_mapping(name):
+    return app.config.get('FIELD_MAPPING', {}).get(name, name)
+
+
+def get_mapped(result, name):
+    return result[get_mapping(name)]
+
+
+@app.context_processor
+def inject():
+    return {
+        'mapped': get_mapped
+    }
+
+
 @app.template_filter('field')
 def reverse_filter(result, field):
+    field = get_mapping(field)
     if field in result.es_meta.highlight:
         matches = result.es_meta.highlight[field]
         if len(matches):
@@ -31,11 +47,14 @@ def decode_filter(result):
 
 @app.template_filter('stringify')
 def stringify_filter(result):
+    normstr = unicode(result).lower()
     if isinstance(result, datetime):
         return result.strftime('%B %d, %Y %H:%M')
     elif isinstance(result, dict):
         fmt = pformat(result).strip()
         return Markup('<pre>%s</pre>' % fmt)
+    elif normstr.startswith('http://') or normstr.startswith('https://'):
+        return Markup('<a href="%s">%s</a>' % (result, result))
     else:
         return unicode(result)[:300]
 
