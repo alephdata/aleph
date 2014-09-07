@@ -6,3 +6,4 @@ flask
 flask-script
 flask-assets
 elasticutils
+xlsxwriter

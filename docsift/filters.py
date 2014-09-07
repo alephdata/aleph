@@ -2,7 +2,7 @@ import urllib
 from datetime import datetime
 from pprint import pformat
 from jinja2 import Markup
-from flask import url_for
+from flask import url_for, request
 
 from docsift.app import app, stash
 
@@ -15,10 +15,21 @@ def get_mapped(result, name):
     return result[get_mapping(name)]
 
 
+def query_state():
+    tuples = []
+    for k, v in request.args.items():
+        if k in ['limit', 'offset']:
+            continue
+        v = v.encode('utf-8')
+        tuples.append((k, v))
+    return '?' + urllib.urlencode(tuples)
+
+
 @app.context_processor
 def inject():
     return {
-        'mapped': get_mapped
+        'mapped': get_mapped,
+        'query_state': query_state
     }
 
 
