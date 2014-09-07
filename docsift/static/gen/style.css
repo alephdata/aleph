@@ -1,9 +1,16 @@
 pre {
   border: 0;
 }
+.close-area {
+  margin-bottom: 1em;
+}
 .search-area {
   margin-top: 2em;
   margin-bottom: 2em;
+}
+.facet-active {
+  color: red;
+  font-weight: bold;
 }
 ul.results {
   list-style-type: none;

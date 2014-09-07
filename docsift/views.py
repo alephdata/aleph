@@ -12,6 +12,8 @@ from docsift.search import make_query, es, es_index
 
 
 HIDDEN = app.config.get('HIDE_FIELDS', [])
+FACETS = app.config.get('FACETS', {})
+FILTER = 'filter-'
 
 
 @app.route("/collections/<collection>/document/<hash>/<path:file>")
@@ -40,6 +42,12 @@ def details(collection, hash):
     return render_template('document.html', document=document, meta=meta)
 
 
+def get_filter_query():
+    if 'filter_query' in request.args:
+        return request.args.get('filter_query')
+    return app.config.get('DEFAULT_FILTER', '')
+
+
 def query():
     s = make_query()
     if 'collection' in request.args:
@@ -47,16 +55,29 @@ def query():
     if 'query' in request.args and len(request.args.get('query')):
         s = s.query(_all__query_string=request.args.get('query'))
         s = s.highlight('title', 'text', 'file')
+
+    for k, v in request.args.items():
+        if k.startswith(FILTER):
+            k = k.split(FILTER).pop()
+            s = s.filter(**{k: v})
+    #if len(get_filter_query()):
+    #    s = s.filter(_all=get_filter_query())
     return s
 
 
 @app.route("/")
 def index():
     s = query()
-    #print s, list(s) #, s.build_search()
+    s = s.facet(*FACETS.keys(), size=10)
+
+    facets = [(f, FILTER + f, t) for (f, t) in FACETS.items()]
+
     return render_template('index.html',
                            pager=Pager(s, limit=15),
-                           query=request.args.get('query', ''))
+                           query=request.args.get('query', ''),
+                           filter_query=get_filter_query(),
+                           facets=facets,
+                           facet_counts=s.facet_counts())
 
 
 @app.route("/export")

@@ -16,11 +16,10 @@
             <button type="submit" class="btn btn-default">Search</button>
           </span>
         </div>
-      
-        <p>
-          <a href="/export{{query_state()}}">Export results to Excel</a>
-        </p>
       </form>
+    </div>
+    <div class="col-md-4">
+      <a class="btn btn-default" href="/export{{query_state()}}">Export results to Excel</a>
     </div>
   </div>
 
@@ -50,8 +49,40 @@
       {{ pagination(pager) }}
     </div>
     <div class="col-md-6" id="sidebar">
-      huhu
+      <div class="row">
+        {% for facet, filter, title in facets %}
+          <div class="col-md-6">
+            <h4>{{title}}</h4>
+            <ul class="list-group">
+              {% for res in facet_counts[facet] %}
+              <li class="list-group-item">
+                <span class="badge">{{res.count}}</span>
+                {% if pager.has_url_state(filter, res.term) %}
+                  <a class="facet-active" href="{{pager.remove_url_state(filter, res.term)}}">{{res.term}}</a>
+                {% else %}
+                  <a href="{{pager.add_url_state(filter, res.term)}}">{{res.term}}</a>
+                {% endif %}
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
     </div>
+
+    <script id="details-sidebar" type="text/plain">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            Details
+            <a class="close close-details">&times;</a>
+          </h3>
+        </div>
+        <div class="panel-body">
+          TABLE
+        </div>
+      </div>
+    </script>
   </div>
 {% endblock %}
 

@@ -1,5 +1,6 @@
 $(function() {
     var $sidebar = $('#sidebar'),
+        detailsTpl = $('#details-sidebar').html(),
         sidebarContent = $sidebar.html();
 
     var $results = $('.result');
@@ -7,8 +8,13 @@ $(function() {
     var loadDetails = function(collection, document) {
         var req = $.get('/collections/' + collection + '/document/' + document + '?snippet=true');
         req.done(function(html) {
-            console.log('snippet!');
-            $sidebar.html(html);
+            var sb = detailsTpl.replace('TABLE', html);
+            $sidebar.html(sb);
+
+            $('.close-details').click(function(e) {
+                console.log('huhu');
+                $sidebar.html(sidebarContent);
+            });
         });
     };
 
@@ -23,5 +29,7 @@ $(function() {
         var $el = $(e.currentTarget);
         //$el.removeClass('active');
     });
+
+
 
 });
