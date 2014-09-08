@@ -20,7 +20,7 @@ def query_state():
     for k, v in request.args.items():
         if k in ['limit', 'offset']:
             continue
-        v = v.encode('utf-8')
+        v = unicode(v).encode('utf-8')
         tuples.append((k, v))
     return '?' + urllib.urlencode(tuples)
 

@@ -9,7 +9,7 @@ from docsift import logs
 app = Flask('docsift')
 
 app.config.from_object(default_settings)
-app.config.from_envvar('DIT_SETTINGS', silent=True)
+app.config.from_envvar('DOCSIFT_SETTINGS', silent=True)
 
 assets = Environment(app)
 

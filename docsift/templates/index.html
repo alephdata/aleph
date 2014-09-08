@@ -12,6 +12,11 @@
         <div class="input-group">
           <input name="query" type="text" class="form-control" id="query"
             value="{{query}}" autofocus placeholder="Search the document stash">
+          {% for k, v in pager.query_args %}
+            {% if k not in ['query'] %}
+              <input name="{{k}}" type="hidden" value="{{v}}">
+            {% endif %}
+          {% endfor %}
           <span class="input-group-btn">
             <button type="submit" class="btn btn-default">Search</button>
           </span>
