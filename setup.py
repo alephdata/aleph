@@ -6,7 +6,7 @@ REQUIREMENTS = open(REQUIREMENTS, 'r').read().splitlines()
 
 setup(
     name='docsift',
-    version='0.1',
+    version='0.2',
     description="Document sifting web frontend",
     long_description="",
     classifiers=[
@@ -26,8 +26,8 @@ setup(
     zip_safe=False,
     install_requires=REQUIREMENTS,
     entry_points={
-        'docpipe.tasks': [
-            'index = docsift.indexing:IndexerTask'
+        'docpipe.operators': [
+            # 'index = docsift.indexing:IndexerTask'
         ]
     },
     tests_require=[]

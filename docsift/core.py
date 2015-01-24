@@ -1,10 +1,9 @@
 from flask import Flask
 from flask.ext.assets import Environment
 
-from docstash import Stash
+from barn import open_archive
 
 from docsift import default_settings
-from docsift import logs
 
 app = Flask('docsift')
 
@@ -13,4 +12,5 @@ app.config.from_envvar('DOCSIFT_SETTINGS', silent=True)
 
 assets = Environment(app)
 
-stash = Stash(path=app.config.get('DOCSTASH_PATH'))
+archive = open_archive(app.config.get('ARCHIVE_TYPE'),
+                       **app.config.get('ARCHIVE_CONFIG'))

@@ -1,5 +1,4 @@
-textract>=1.0.0
-docstash
+textract>=1.1.0
 docpipe
 elasticsearch
 flask

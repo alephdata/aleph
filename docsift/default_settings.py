@@ -1,17 +1,5 @@
-
 DEBUG = True
+ASSETS_DEBUG = True
 
-
-
-
-HIDE_FIELDS = ['headers', 'source_status']
-
-FIELD_MAPPING = {
-    'source_url': 'url'
-}
-
-FACETS = {
-    'region': 'Region',
-    'status': 'Status',
-    'country': 'Country'
-}
+ARCHIVE_TYPE = 'file'
+ARCHIVE_CONFIG = {'path': '/Users/fl/Data/docsift-archive'}

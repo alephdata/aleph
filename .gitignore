@@ -4,7 +4,4 @@
 
 .env
 
-test-data/*
-test-repo/*
-
 docsift/static/.webassets-cache/*
