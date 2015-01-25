@@ -14,6 +14,6 @@ def angular_templates():
                 yield (file_name, fh.read().decode('utf-8'))
 
 
-@app.route('/app/')
+@app.route('/')
 def ui():
     return render_template("layout.html", templates=angular_templates())

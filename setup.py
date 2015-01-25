@@ -1,9 +1,6 @@
 import os
 from setuptools import setup, find_packages
 
-REQUIREMENTS = os.path.join(os.path.dirname(__file__), 'requirements.txt')
-REQUIREMENTS = open(REQUIREMENTS, 'r').read().splitlines()
-
 setup(
     name='aleph',
     version='0.2',
@@ -24,7 +21,7 @@ setup(
     namespace_packages=[],
     include_package_data=True,
     zip_safe=False,
-    install_requires=REQUIREMENTS,
+    install_requires=[],
     entry_points={
         'docpipe.operators': [
             # 'index = docsift.indexing:IndexerTask'

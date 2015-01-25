@@ -1,6 +1,6 @@
 var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'truncate']);
 
-storyweb.config(['$routeProvider', '$locationProvider',
+aleph.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
 
   //$routeProvider.when('/', {
