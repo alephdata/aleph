@@ -24,7 +24,7 @@ setup(
     install_requires=[],
     entry_points={
         'docpipe.operators': [
-            # 'index = docsift.indexing:IndexerTask'
+            'aleph_indexer = aleph.processing.indexer:IndexerOperator'
         ]
     },
     tests_require=[]

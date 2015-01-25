@@ -15,3 +15,4 @@ requests>=2.5.1
 restpager>=0.1
 simplejson>=3.6.5
 six
+textract>=1.1.0
