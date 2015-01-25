@@ -1,5 +1,7 @@
 
-CARD_MAPPING = {
+DOC_TYPE = 'document'
+
+DOC_MAPPING = {
     "_id": {
         "path": "id"
     },

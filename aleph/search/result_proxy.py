@@ -1,4 +1,4 @@
-from storyweb.core import es, es_index
+from aleph.core import es, es_index
 
 
 class ESResultProxy(object):

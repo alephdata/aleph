@@ -1,6 +1,6 @@
 
 
-def cards_query(req):
+def document_query(req):
     qstr = req.get('q', '').strip()
     if len(qstr):
         q = {'query_string': {'query': qstr}}
