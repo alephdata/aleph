@@ -21,3 +21,21 @@ D.I.T.
     > load raw data from some place
 
 
+
+crawl.grano.cc/
+    
+
+    badguys
+        /statements/
+        /entities/
+        /sets/
+
+    archive
+        /collections/ [list, edit, index]
+        /query/
+        /tag
+
+
+"Osama bin Laden" ["Osama Bin Ladin", "Usama bin Laden"]
+
+
