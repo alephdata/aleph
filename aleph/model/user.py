@@ -73,6 +73,11 @@ class User(db.Model):
         return user
 
     @classmethod
+    def by_id(cls, id):
+        q = db.session.query(cls).filter_by(id=int(id))
+        return q.first()
+
+    @classmethod
     def by_twitter_id(cls, twitter_id):
         q = db.session.query(cls).filter_by(twitter_id=str(twitter_id))
         return q.first()

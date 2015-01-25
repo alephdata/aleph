@@ -22,7 +22,7 @@ def status():
     return jsonify({
         'logged_in': authz.logged_in(),
         'api_key': current_user.api_key if authz.logged_in() else None,
-        'account': current_user if authz.logged_in() else None,
+        'user': current_user if authz.logged_in() else None,
         'permissions': {},
         'logins': oauth_providers,
         'logout': url_for('.logout')

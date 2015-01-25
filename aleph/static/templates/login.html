@@ -1,0 +1,10 @@
+
+<h1>You need to login.</h1>
+
+Here's some options: 
+
+<ul>
+  <li ng-repeat="(provider, url) in session.logins">
+    <a href="{{url}}" target="_self">{{provider}}</a>
+  </li>
+</ul>
