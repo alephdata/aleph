@@ -4,4 +4,5 @@
 
 .env
 
-docsift/static/.webassets-cache/*
+aleph/static/.webassets-cache/*
+aleph/static/vendor/*

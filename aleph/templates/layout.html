@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{config.APP_NAME}}</title>
+    
+    {% assets "css" %}
+      <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet">
+    {% endassets %}
+
+    <link rel="shortcut icon" href="http://www.codeforafrica.org/favicon.png" type="image/x-icon" />
+  </head>
+  <body>
+    <div id="airlock" class="container-fluid">
+      This page intentionally left blank
+    </div>
+
+    {% for path, tmpl in templates %}
+      <script id="{{path}}" type="text/ng-template">{{ tmpl | safe }}</script>
+    {% endfor %}
+
+    {% assets "js" %}
+      <script src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+  </body>
+</html>

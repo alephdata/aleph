@@ -5,7 +5,7 @@ REQUIREMENTS = os.path.join(os.path.dirname(__file__), 'requirements.txt')
 REQUIREMENTS = open(REQUIREMENTS, 'r').read().splitlines()
 
 setup(
-    name='docsift',
+    name='aleph',
     version='0.2',
     description="Document sifting web frontend",
     long_description="",

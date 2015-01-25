@@ -1,8 +1,12 @@
 from flask.ext.script import Manager
+from flask.ext.assets import ManageAssets
 
-from docsift.app import archive, app
+from aleph.core import archive
+from aleph.views import app, assets
+
 
 manager = Manager(app)
+manager.add_command("assets", ManageAssets(assets))
 
 
 @manager.command
