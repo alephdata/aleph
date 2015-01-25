@@ -12,6 +12,7 @@ DOC_MAPPING = {
     "properties": {
         "id": {"type": "string", "index": "not_analyzed"},
         "title": {"type": "string", "index": "analyzed"},
+        "slug": {"type": "string", "index": "not_analyzed"},
         "collection": {"type": "string", "index": "not_analyzed"},
         "archive_url": {"type": "string", "index": "not_analyzed"},
         "source_url": {"type": "string", "index": "not_analyzed"},
