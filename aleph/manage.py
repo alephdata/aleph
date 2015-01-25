@@ -2,6 +2,7 @@ from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 
 from aleph.core import archive
+from aleph.model import db
 from aleph.views import app, assets
 from aleph.search import init_search
 from aleph.processing import make_pipeline
@@ -22,6 +23,8 @@ def process(collection_name):
 @manager.command
 def init():
     """ Create the elastic search index and database. """
+    db.drop_all()
+    db.create_all()
     init_search()
 
 

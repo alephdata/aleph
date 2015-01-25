@@ -29,14 +29,14 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
   $scope.result = {};
 
   $scope.load = function() {
-    $scope.query = angular.fromJson($location.search().q);
+    $scope.query = $location.search();
     $http.get('/api/1/query', {params: $scope.query}).then(function(res) {
       $scope.result = res.data;
     });
   };
 
   $scope.update = function() {
-    $location.search('q', angular.toJson($scope.query));
+    $location.search($scope.query);
   }
 
   $scope.load();
