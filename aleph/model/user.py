@@ -78,6 +78,11 @@ class User(db.Model):
         return q.first()
 
     @classmethod
+    def by_api_key(cls, api_key):
+        q = db.session.query(cls).filter_by(api_key=api_key)
+        return q.first()
+
+    @classmethod
     def by_twitter_id(cls, twitter_id):
         q = db.session.query(cls).filter_by(twitter_id=str(twitter_id))
         return q.first()

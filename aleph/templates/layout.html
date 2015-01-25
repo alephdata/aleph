@@ -13,11 +13,9 @@
 
     <link rel="shortcut icon" href="http://www.codeforafrica.org/favicon.png" type="image/x-icon" />
   </head>
-  <body ng-controller="AppCtrl">
+  <body ng-controller="AppCtrl" ng-cloak>
     <a ng-click="editProfile()">edit profile</a>
-    <div id="airlock" class="container-fluid" ng-view>
-      This page intentionally left blank
-    </div>
+    <div id="airlock" class="container-fluid" ng-view></div>
 
     {% for path, tmpl in templates %}
       <script id="{{path}}" type="text/ng-template">{{ tmpl | safe }}</script>
