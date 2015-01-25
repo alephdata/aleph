@@ -6,7 +6,8 @@ from aleph.search.mapping import DOC_TYPE
 def index_package(package, plain_text, normalized_text):
     es.json_encoder = AppEncoder
     body = {
-        'id': package.id
+        'id': package.id,
+        'collection': package.collection
     }
     source = package.source
     if source is None:
