@@ -1,10 +1,15 @@
 import simplejson
+from urllib import urlencode
 from datetime import datetime, date
 from inspect import isgenerator
+
+from restpager import Pager as RESTPager
 from sqlalchemy.orm import Query
 from sqlalchemy.ext.associationproxy import _AssociationList
 from werkzeug.exceptions import NotFound
 from flask import Response, request
+
+from aleph.core import url_for
 
 
 def obj_or_404(obj):
@@ -23,6 +28,15 @@ def request_data(overlay={}):
             data = dict(request.form.items())
     data.update(overlay)
     return data
+
+
+class Pager(RESTPager):
+
+    def url(self, query):
+        url = url_for(request.endpoint, **dict(self.kwargs))
+        if len(query):
+            url = url + '?' + urlencode(query)
+        return url
 
 
 class AppEncoder(simplejson.JSONEncoder):

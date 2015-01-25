@@ -16,32 +16,6 @@ FACETS = app.config.get('FACETS', {})
 FILTER = 'filter-'
 
 
-@app.route("/collections/<collection>/document/<hash>/<path:file>")
-def download(collection, hash, file):
-    document = stash.get(collection).get(hash)
-    return send_file(document.file)
-
-
-@app.route("/collections/<collection>/document/<hash>")
-def details(collection, hash):
-    document = stash.get(collection).get(hash)
-
-    meta = {}
-    for key, value in document.items():
-        if key in HIDDEN:
-            continue
-        if isinstance(value, (dict, list, tuple)) and not len(value):
-            continue
-        elif not len(unicode(value).strip()):
-            continue
-        meta[key] = value
-    meta = sorted(meta.items())
-
-    if 'snippet' in request.args:
-        return render_template('_details.html', document=document, meta=meta)
-    return render_template('document.html', document=document, meta=meta)
-
-
 def get_filter_query():
     if 'filter_query' in request.args:
         return request.args.get('filter_query')

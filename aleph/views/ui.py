@@ -15,5 +15,6 @@ def angular_templates():
 
 
 @app.route('/')
+@app.route('/search')
 def ui():
     return render_template("layout.html", templates=angular_templates())

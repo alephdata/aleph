@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="aleph">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -13,8 +13,8 @@
 
     <link rel="shortcut icon" href="http://www.codeforafrica.org/favicon.png" type="image/x-icon" />
   </head>
-  <body>
-    <div id="airlock" class="container-fluid">
+  <body ng-controller="AppCtrl">
+    <div id="airlock" class="container-fluid" ng-view>
       This page intentionally left blank
     </div>
 

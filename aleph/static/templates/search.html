@@ -1,2 +1,19 @@
 
-I am a banana!
+<form class="form-inline" ng-submit="update()">
+  <div class="form-group">
+    <div class="input-group">
+      <input type="text" class="form-control col-md-10"
+        ng-model="query.q" placeholder="Search for...">
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+
+<div class="table-responsive">
+  <table class="table table-condensed table-bordered">
+    <tr ng-repeat="doc in result.results">
+      <td><a ng-href="{{doc.archive_url}}">{{doc.title}}</a></td>
+    </tr>
+  </table>
+</div>

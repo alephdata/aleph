@@ -2,6 +2,13 @@ from aleph.core import es, es_index
 from aleph.views.util import AppEncoder
 from aleph.search.mapping import DOC_TYPE
 
+from jinja2.filters import do_truncate as truncate
+from jinja2.filters import do_striptags as striptags
+
+
+def html_summary(html):
+    return truncate(striptags(html), length=160)
+
 
 def index_package(package, plain_text, normalized_text):
     es.json_encoder = AppEncoder
@@ -24,6 +31,7 @@ def index_package(package, plain_text, normalized_text):
     
     if plain_text.exists():
         body['text'] = plain_text.fh().read()
+        body['summary'] = html_summary(body['text'])
     if normalized_text.exists():
         body['normalized'] = normalized_text.fh().read()
 

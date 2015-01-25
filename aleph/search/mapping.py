@@ -20,6 +20,7 @@ DOC_MAPPING = {
         "extension": {"type": "string", "index": "analyzed"},
         "mime_type": {"type": "string", "index": "analyzed"},
         "text": {"type": "string", "index": "analyzed"},
+        "summary": {"type": "string", "index": "analyzed"},
         "normalized": {"type": "string", "index": "analyzed"},
         "created_at": {"type": "date", "index": "not_analyzed"},
         "updated_at": {"type": "date", "index": "not_analyzed"},
