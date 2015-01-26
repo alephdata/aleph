@@ -25,6 +25,9 @@ setup(
     entry_points={
         'docpipe.operators': [
             'aleph_indexer = aleph.processing.indexer:IndexerOperator'
+        ],
+        'aleph.crawlers': [
+            'rigzone = aleph.crawlers.rigzone:RigZoneCrawler'
         ]
     },
     tests_require=[]

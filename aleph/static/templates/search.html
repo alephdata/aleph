@@ -13,7 +13,9 @@
 <div class="table-responsive">
   <table class="table table-condensed table-bordered">
     <tr ng-repeat="doc in result.results">
-      <td><a ng-href="{{doc.archive_url}}">{{doc.title}}</a></td>
+      <td>
+        <a ng-href="{{doc.archive_url}}" target="_self">{{doc.title}}</a>
+      </td>
     </tr>
   </table>
 </div>

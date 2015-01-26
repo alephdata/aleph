@@ -1,3 +1,5 @@
+import logging
+
 from aleph.core import es, es_index
 from aleph.views.util import AppEncoder
 from aleph.search.mapping import DOC_TYPE
@@ -5,8 +7,12 @@ from aleph.search.mapping import DOC_TYPE
 from jinja2.filters import do_truncate as truncate
 from jinja2.filters import do_striptags as striptags
 
+log = logging.getLogger(__name__)
+
 
 def html_summary(html):
+    if not isinstance(html, unicode):
+        html = html.decode('utf-8')
     return truncate(striptags(html), length=160)
 
 
@@ -35,5 +41,7 @@ def index_package(package, plain_text, normalized_text):
     if normalized_text.exists():
         body['normalized'] = normalized_text.fh().read()
 
+    print source.meta
+    log.info("Indexing: %r", body['title'])
     es.index(es_index, DOC_TYPE, body, package.id)
 
