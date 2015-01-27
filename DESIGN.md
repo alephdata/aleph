@@ -39,3 +39,13 @@ crawl.grano.cc/
 "Osama bin Laden" ["Osama Bin Ladin", "Usama bin Laden"]
 
 
+
+
+
+* Collections write API distinction
+* Collections editor
+
+* Lists + Entities model 
+* Calais' "special" list and calais tagger
+* Generic tagger 
+* List editor and importer

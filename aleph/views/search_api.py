@@ -21,9 +21,8 @@ def add_urls(doc):
 
 @blueprint.route('/api/1/query')
 def query():
-    from flask.ext.login import current_user
-    print authz.request_collections(), current_user
-    query = document_query(request.args, authorized=authz.request_collections())
+    authorized = authz.request_collections('read')
+    query = document_query(request.args, authorized=authorized)
     pager = Pager(search_documents(query),
                   results_converter=lambda ds: [add_urls(d) for d in ds])
     return jsonify(pager)

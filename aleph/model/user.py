@@ -3,6 +3,7 @@ from datetime import datetime
 
 from aleph.core import db, login_manager, url_for
 from aleph.model.util import make_token
+from aleph.model.forms import UserForm
 
 log = logging.getLogger(__name__)
 
@@ -53,6 +54,11 @@ class User(db.Model):
             'email': self.email,
             'display_name': self.display_name
         }
+
+    def update(self, data):
+        data = UserForm().deserialize(data)
+        self.display_name = data.get('display_name')
+        self.email = data.get('email')
 
     @classmethod
     def load(cls, data):

@@ -20,9 +20,7 @@ def view(id):
 def update(id):
     user = obj_or_404(User.by_id(id))
     authz.require(user.id == current_user.id)
-    data = request_data()
-    user.display_name = data.get('display_name')
-    user.email = data.get('email')
+    user.update(request_data())
     db.session.add(user)
     db.session.commit()
     return jsonify(user)

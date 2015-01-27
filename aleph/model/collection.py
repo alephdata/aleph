@@ -6,6 +6,7 @@ from sqlalchemy import or_
 from aleph.core import db, archive, url_for
 from aleph.model.util import make_token
 from aleph.model.user import User
+from aleph.model.forms import CollectionForm
 
 log = logging.getLogger(__name__)
 
@@ -35,13 +36,18 @@ class Collection(db.Model):
     def __unicode__(self):
         return self.label
 
+    def update(self, data, user):
+        data = CollectionForm().deserialize(data)
+        self.label = data.get('label')
+        self.public = data.get('public')
+        self.users = list(set(data.get('users', []) + [user]))
+
     def to_dict(self):
         return {
             'api_url': url_for('collections.view', slug=self.slug),
             'slug': self.slug,
             'label': self.label,
-            'public': self.public,
-            'users': [u.id for u in self.users]
+            'public': self.public
         }
 
     @property
@@ -64,12 +70,17 @@ class Collection(db.Model):
         return [c.slug for c in q.all()]
 
     @classmethod
-    def list_user_slugs(cls, user=None):
+    def list_user_slugs(cls, user=None, include_public=True):
+        logged_in = user is not None and user.is_authenticated()
         q = db.session.query(cls.slug)
-        conds = [cls.public == True] # noqa
-        if user is not None and user.is_authenticated():
+        conds = []
+        if include_public:
+            conds.append(cls.public == True) # noqa
+        if logged_in:
             conds.append(cls.users.any(User.id == user.id))
-        if not (user.is_authenticated() and user.is_admin):
+        if not len(conds):
+            return
+        if not (logged_in and user.is_admin):
             q = q.filter(or_(*conds))
         return [c.slug for c in q.all()]
 

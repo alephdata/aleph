@@ -12,24 +12,31 @@ blueprint = Blueprint('collections', __name__)
 
 @blueprint.route('/api/1/collections', methods=['GET'])
 def index():
-    collections = Collection.all_by_user(current_user)
-    return jsonify({'results': collections, 'total': collections.count()})
+    collections = []
+    for coll in Collection.all_by_user(current_user):
+        data = coll.to_dict()
+        if authz.collection_write(coll.slug):
+            data['token'] = coll.token
+        collections.append(data)
+    return jsonify({'results': collections, 'total': len(collections)})
 
 
 @blueprint.route('/api/1/collections/<slug>', methods=['GET'])
 def view(slug):
     authz.require(authz.collection_read(slug))
     collection = obj_or_404(Collection.by_slug(slug))
-    return jsonify(collection)
+    data = collection.to_dict()
+    if authz.collection_write(slug):
+        data['token'] = collection.token
+        data['users'] = [u.id for u in collection.users]
+    return jsonify(data)
 
 
-# @blueprint.route('/api/1/users/<id>', methods=['POST', 'PUT'])
-# def update(id):
-#     user = obj_or_404(User.by_id(id))
-#     authz.require(user.id == current_user.id)
-#     data = request_data()
-#     user.display_name = data.get('display_name')
-#     user.email = data.get('email')
-#     db.session.add(user)
-#     db.session.commit()
-#     return jsonify(user)
+@blueprint.route('/api/1/collections/<slug>', methods=['POST', 'PUT'])
+def update(slug):
+    authz.require(authz.collection_write(slug))
+    collection = obj_or_404(Collection.by_slug(slug))
+    collection.update(request_data(), current_user)
+    db.session.add(collection)
+    db.session.commit()
+    return view(slug)
