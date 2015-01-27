@@ -2,12 +2,14 @@ from werkzeug.exceptions import NotFound
 from flask import Blueprint, redirect, send_file
 
 from aleph.core import archive, url_for
+from aleph import authz
 from aleph.views.util import jsonify
 
 blueprint = Blueprint('data', __name__)
 
 
 def get_package(collection, package_id):
+    authz.require(authz.collection_read(collection))
     collection = archive.get(collection)
     package = collection.get(package_id)
     if not package.exists():

@@ -1,6 +1,6 @@
-from werkzeug.exceptions import NotFound
 from flask import Blueprint, request
 
+from aleph import authz
 from aleph.core import url_for
 from aleph.views.util import jsonify, Pager
 from aleph.search.queries import document_query
@@ -21,7 +21,9 @@ def add_urls(doc):
 
 @blueprint.route('/api/1/query')
 def query():
-    query = document_query(request.args)
+    from flask.ext.login import current_user
+    print authz.request_collections(), current_user
+    query = document_query(request.args, authorized=authz.request_collections())
     pager = Pager(search_documents(query),
                   results_converter=lambda ds: [add_urls(d) for d in ds])
     return jsonify(pager)

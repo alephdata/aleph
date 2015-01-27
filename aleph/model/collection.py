@@ -1,10 +1,19 @@
 import logging
 from datetime import datetime
 
-from aleph.core import db, archive
+from sqlalchemy import or_
+
+from aleph.core import db, archive, url_for
 from aleph.model.util import make_token
+from aleph.model.user import User
 
 log = logging.getLogger(__name__)
+
+
+collection_user_table = db.Table('collection_user', db.metadata,
+    db.Column('collection_slug', db.Unicode, db.ForeignKey('collection.slug')), # noqa
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')) # noqa
+)
 
 
 class Collection(db.Model):
@@ -17,6 +26,9 @@ class Collection(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
                            onupdate=datetime.utcnow)
 
+    users = db.relationship(User, secondary=collection_user_table,
+                            backref='collections')
+
     def __repr__(self):
         return '<Collection(%r)>' % self.slug
 
@@ -25,8 +37,11 @@ class Collection(db.Model):
 
     def to_dict(self):
         return {
+            'api_url': url_for('collections.view', slug=self.slug),
             'slug': self.slug,
-            'label': self.label
+            'label': self.label,
+            'public': self.public,
+            'users': [u.id for u in self.users]
         }
 
     @property
@@ -44,9 +59,25 @@ class Collection(db.Model):
         return coll
 
     @classmethod
-    def list_slugs(cls):
+    def list_all_slugs(cls):
         q = db.session.query(cls.slug)
         return [c.slug for c in q.all()]
+
+    @classmethod
+    def list_user_slugs(cls, user=None):
+        q = db.session.query(cls.slug)
+        conds = [cls.public == True] # noqa
+        if user is not None and user.is_authenticated():
+            conds.append(cls.users.any(User.id == user.id))
+        if not (user.is_authenticated() and user.is_admin):
+            q = q.filter(or_(*conds))
+        return [c.slug for c in q.all()]
+
+    @classmethod
+    def all_by_user(cls, user):
+        q = db.session.query(cls)
+        q = q.filter(cls.slug.in_(cls.list_user_slugs(user)))
+        return q
 
     @classmethod
     def create_from_store(cls, collection):
@@ -58,7 +89,7 @@ class Collection(db.Model):
 
     @classmethod
     def sync(cls):
-        existing = cls.list_slugs()
+        existing = cls.list_all_slugs()
         for collection in archive:
             if collection.name not in existing:
                 cls.create_from_store(collection)

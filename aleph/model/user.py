@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 
-from aleph.core import db, login_manager
+from aleph.core import db, login_manager, url_for
 from aleph.model.util import make_token
 
 log = logging.getLogger(__name__)
@@ -49,6 +49,7 @@ class User(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
+            'api_url': url_for('users.view', id=self.id),
             'email': self.email,
             'display_name': self.display_name
         }
