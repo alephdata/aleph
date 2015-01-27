@@ -1,60 +1,66 @@
 import logging
 from datetime import datetime
-from werkzeug.security import generate_password_hash
-from werkzeug.security import check_password_hash
 
-from storyweb.core import db, login_manager
+from aleph.core import db, archive
+from aleph.model.util import make_token
 
 log = logging.getLogger(__name__)
 
 
-@login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.Unicode, nullable=False)
-    display_name = db.Column(db.Unicode)
-    is_admin = db.Column(db.Boolean, nullable=False, default=False)
-    active = db.Column(db.Boolean, nullable=False, default=True)
-
+class Collection(db.Model):
+    slug = db.Column(db.Unicode, nullable=False, primary_key=True)
+    label = db.Column(db.Unicode, nullable=True)
+    public = db.Column(db.Boolean, default=False)
+    token = db.Column(db.Unicode, default=make_token)
+    
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
                            onupdate=datetime.utcnow)
 
-    @property
-    def password(self):
-        return self.password_hash
-
-    @password.setter
-    def password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
-
-    def is_active(self):
-        return self.active
-
-    def is_authenticated(self):
-        return True
- 
-    def is_anonymous(self):
-        return False
- 
-    def get_id(self):
-        return unicode(self.id)
-
     def __repr__(self):
-        return '<User(%r,%r)>' % (self.id, self.email)
+        return '<Collection(%r)>' % self.slug
 
     def __unicode__(self):
-        return self.display_name
+        return self.label
 
     def to_dict(self):
         return {
-            'id': self.id,
-            'display_name': self.display_name
+            'slug': self.slug,
+            'label': self.label
         }
+
+    @property
+    def store(self):
+        return archive.get(self.slug)
+
+    @classmethod
+    def by_slug(cls, slug, commit_on_create=True):
+        q = db.session.query(cls).filter_by(slug=slug)
+        coll = q.first()
+        if coll is None and coll in archive:
+            coll = cls.create_from_store(archive.get(slug))
+            if commit_on_create:
+                db.session.commit()
+        return coll
+
+    @classmethod
+    def list_slugs(cls):
+        q = db.session.query(cls.slug)
+        return [c.slug for c in q.all()]
+
+    @classmethod
+    def create_from_store(cls, collection):
+        coll = cls()
+        coll.slug = collection.name
+        coll.label = collection.name
+        db.session.add(coll)
+        return coll
+
+    @classmethod
+    def sync(cls):
+        existing = cls.list_slugs()
+        for collection in archive:
+            if collection.name not in existing:
+                cls.create_from_store(collection)
+        db.session.commit()
+

@@ -2,7 +2,7 @@ from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 
 from aleph.core import archive
-from aleph.model import db
+from aleph.model import db, Collection
 from aleph.views import app, assets
 from aleph.search import init_search
 from aleph.processing import make_pipeline
@@ -11,6 +11,9 @@ from aleph.crawlers import crawl_source
 
 manager = Manager(app)
 manager.add_command("assets", ManageAssets(assets))
+
+# Hacky much?
+Collection.sync()
 
 
 @manager.command
