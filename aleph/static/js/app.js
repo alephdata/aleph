@@ -111,7 +111,6 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
   $scope.loadMore = function() {
     isLoading = true;
     $http.get($scope.result.next_url).then(function(res) {
-      //console.log("beeen called.");
       $scope.result.results = $scope.result.results.concat(res.data.results);
       $scope.result.next_url = res.data.next_url;
       isLoading = false;

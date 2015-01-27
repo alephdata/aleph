@@ -32,7 +32,6 @@ def status():
 @blueprint.route('/api/1/sessions/logout')
 def logout():
     logout_user()
-    session.clear()
     return redirect(request.args.get('next_url', url_for('ui')))
 
 

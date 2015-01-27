@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="http://www.codeforafrica.org/favicon.png" type="image/x-icon" />
   </head>
   <body ng-controller="AppCtrl">
-    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" ng-show="session.logged_in">
       <div class="container-fluid">
         <form class="navbar-form navbar-left"
           role="search" ng-submit="submitSearch()">
@@ -28,7 +28,7 @@
         </form>
 
         <div id="navbar" class="collapse navbar-collapse navbar-right" ng-cloak>
-          <ul class="nav navbar-nav" ng-show="session.logged_in">
+          <ul class="nav navbar-nav">
             <li>
               <a ng-click="editProfile()" href='#' ng-bind="session.user.display_name"></a>
             </li>
