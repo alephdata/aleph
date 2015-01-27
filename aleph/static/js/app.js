@@ -90,26 +90,31 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
 aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
   function($scope, $location, $http) {
 
+  var isLoading = false;
   $scope.result = {};
-
+  
   $scope.load = function() {
     $scope.loadQuery();
     var query = angular.copy($scope.query);
     query['limit'] = 35;
+    isLoading = true;
     $http.get('/api/1/query', {params: query}).then(function(res) {
       $scope.result = res.data;
+      isLoading = false;
     });
   };
 
   $scope.hasMore = function() {
-    return $scope.result.next_url !== null;
+    return !isLoading && $scope.result.next_url !== null;
   }
 
   $scope.loadMore = function() {
+    isLoading = true;
     $http.get($scope.result.next_url).then(function(res) {
       //console.log("beeen called.");
       $scope.result.results = $scope.result.results.concat(res.data.results);
-      $scope.result.next_url = $scope.result.next_url;
+      $scope.result.next_url = res.data.next_url;
+      isLoading = false;
     });
   }
 
