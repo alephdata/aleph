@@ -6,7 +6,7 @@ aleph.config(['$routeProvider', '$locationProvider',
   $routeProvider.when('/search', {
     templateUrl: 'search.html',
     controller: 'SearchCtrl',
-    loginRequired: true
+    loginRequired: false
   });
 
   $routeProvider.when('/login', {
