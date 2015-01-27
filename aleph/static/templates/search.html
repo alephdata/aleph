@@ -14,7 +14,13 @@
   <table class="table table-condensed table-bordered">
     <tr ng-repeat="doc in result.results">
       <td>
-        <a ng-href="{{doc.archive_url}}" target="_self">{{doc.title}}</a>
+        <a ng-href="{{doc.source_site}}" target="_self">{{doc.source_label}}</a>
+      </td>
+      <td>
+        <a ng-href="{{doc.source_url}}" target="_self">{{doc.title}}</a>
+        (<a ng-href="{{doc.archive_url}}" target="_self">cached</a>)
+
+        <span class="summary">{{doc.summary}}</span>
       </td>
     </tr>
   </table>

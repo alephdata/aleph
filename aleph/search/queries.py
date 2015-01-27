@@ -22,5 +22,6 @@ def document_query(args):
     return {
         'query': q,
         '_source': ['title', 'name', 'extension', 'collection', 'mime_type',
-                    'id', 'updated_at', 'slug']
+                    'id', 'updated_at', 'slug', 'source_url', 'source_site',
+                    'source_label', 'summary']
     }

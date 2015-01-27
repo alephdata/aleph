@@ -28,7 +28,9 @@ def index_package(package, plain_text, normalized_text):
 
     body['name'] = source.meta.get('name')
     body['slug'] = source.meta.get('slug')
-    body['title'] = source.meta.get('title', body['name'])
+    body['title'] = source.meta.get('title') or body['name']
+    body['source_label'] = source.meta.get('source_label')
+    body['source_site'] = source.meta.get('source_site')
     body['source_url'] = source.meta.get('source_url')
     body['created_at'] = source.meta.get('created_at')
     body['updated_at'] = source.meta.get('updated_at')
@@ -41,7 +43,6 @@ def index_package(package, plain_text, normalized_text):
     if normalized_text.exists():
         body['normalized'] = normalized_text.fh().read()
 
-    print source.meta
     log.info("Indexing: %r", body['title'])
     es.index(es_index, DOC_TYPE, body, package.id)
 
