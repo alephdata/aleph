@@ -6,7 +6,7 @@ from aleph.model import db
 from aleph.views import app, assets
 from aleph.search import init_search
 from aleph.processing import make_pipeline
-from aleph.crawlers import run_crawler
+from aleph.crawlers import crawl_source
 
 
 manager = Manager(app)
@@ -14,9 +14,9 @@ manager.add_command("assets", ManageAssets(assets))
 
 
 @manager.command
-def crawl(crawler_name):
-    """ Execute a given crawler. """
-    run_crawler(crawler_name)
+def crawl(source):
+    """ Execute the crawler for a given source specification. """
+    crawl_source(source)
 
 
 @manager.command
