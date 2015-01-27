@@ -3,11 +3,13 @@ from flask.ext.assets import Bundle
 from aleph.core import assets
 
 js_assets = Bundle(
+    'vendor/jquery/dist/jquery.js',
     'vendor/angular/angular.js',
     'vendor/angular-route/angular-route.js',
     'vendor/angular-animate/angular-animate.js',
     'vendor/angular-truncate/src/truncate.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
+    'vendor/nginfinitescroll/build/ng-infinite-scroll.js',
     'js/app.js',
     filters='uglifyjs',
     output='assets/app.js'

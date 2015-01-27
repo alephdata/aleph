@@ -69,3 +69,63 @@
     -o-border-radius: @radius;
     border-radius: @radius;
 }
+
+// Angular ugliness fix 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+.navbar {
+    .navbar-brand {
+        font-size: 2em;
+    }
+
+  @media (min-width: @screen-sm-min) {
+    .navbar-searchbox input {
+        min-width: 300px;
+    }
+  }
+
+  @media (min-width: @screen-md-min) {
+    .navbar-searchbox input {
+        min-width: 600px;
+    }
+  }
+
+  @media (min-width: @screen-lg-min) {
+    .navbar-searchbox input {
+        min-width: 800px;
+    }
+  }
+}
+
+
+// Search results 
+.result {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.4em 0 0.4em 0;
+    border-bottom: 1px solid @border-color;
+    //max-width: 90px;
+
+    .source {
+        color: #aaa;
+        font-weight: bold;
+    }
+
+    .archive, .archive a {
+        color: #aaa;
+    }
+
+    .summary {
+        color: @border-color;
+        font-size: 0.8em;
+    }
+
+    .title {
+        font-weight: bold;
+    }
+}
+
+

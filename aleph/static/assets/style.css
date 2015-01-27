@@ -6503,3 +6503,51 @@ button.close {
     display: none !important;
   }
 }
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+  display: none !important;
+}
+.navbar .navbar-brand {
+  font-size: 2em;
+}
+@media (min-width: 768px) {
+  .navbar .navbar-searchbox input {
+    min-width: 300px;
+  }
+}
+@media (min-width: 992px) {
+  .navbar .navbar-searchbox input {
+    min-width: 600px;
+  }
+}
+@media (min-width: 1200px) {
+  .navbar .navbar-searchbox input {
+    min-width: 800px;
+  }
+}
+.result {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0.4em 0 0.4em 0;
+  border-bottom: 1px solid #d7d7d7;
+}
+.result .source {
+  color: #aaa;
+  font-weight: bold;
+}
+.result .archive,
+.result .archive a {
+  color: #aaa;
+}
+.result .summary {
+  color: #d7d7d7;
+  font-size: 0.8em;
+}
+.result .title {
+  font-weight: bold;
+}

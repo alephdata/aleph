@@ -22,6 +22,7 @@
     "angular-route": "~1.2.27",
     "angular-animate": "~1.2.27",
     "angular-bootstrap": "~0.12.0",
-    "angular-truncate": "*"
+    "angular-truncate": "*",
+    "nginfinitescroll": "~1.2.0"
   }
 }

@@ -12,7 +12,7 @@ from aleph.model import User
 blueprint = Blueprint('sessions', __name__)
 
 
-@blueprint.route('/api/1/sessions', methods=['GET'])
+@blueprint.route('/api/1/sessions')
 def status():
     oauth_providers = {}
     for name, provider in PROVIDERS.items():
@@ -29,14 +29,14 @@ def status():
     })
 
 
-@blueprint.route('/api/1/sessions/logout', methods=['GET'])
+@blueprint.route('/api/1/sessions/logout')
 def logout():
     logout_user()
     session.clear()
     return redirect(request.args.get('next_url', url_for('ui')))
 
 
-@blueprint.route('/api/1/sessions/login/<provider>', methods=['GET'])
+@blueprint.route('/api/1/sessions/login/<provider>')
 def login(provider):
     if provider not in PROVIDERS:
         raise BadRequest('Unknown provider: %s' % provider)
@@ -50,7 +50,7 @@ def login(provider):
 handler = PROVIDERS.get('twitter')
 
 
-@blueprint.route('/api/1/sessions/callback/twitter', methods=['GET'])
+@blueprint.route('/api/1/sessions/callback/twitter')
 @handler.authorized_handler
 def twitter_authorized(resp):
     next_url = session.get('next_url', url_for('ui'))
@@ -73,7 +73,7 @@ def twitter_authorized(resp):
 handler = PROVIDERS.get('facebook')
 
 
-@blueprint.route('/api/1/sessions/callback/facebook', methods=['GET'])
+@blueprint.route('/api/1/sessions/callback/facebook')
 @handler.authorized_handler
 def facebook_authorized(resp):
     next_url = session.get('next_url', url_for('ui'))

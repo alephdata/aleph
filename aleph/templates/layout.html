@@ -13,8 +13,33 @@
 
     <link rel="shortcut icon" href="http://www.codeforafrica.org/favicon.png" type="image/x-icon" />
   </head>
-  <body ng-controller="AppCtrl" ng-cloak>
-    <a ng-click="editProfile()">edit profile</a>
+  <body ng-controller="AppCtrl">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="container-fluid">
+        <form class="navbar-form navbar-left"
+          role="search" ng-submit="submitSearch()">
+          <div class="form-group">
+            <div class="input-group navbar-searchbox">
+              <span class="input-group-addon">&alefsym;</span>
+              <input type="text" class="search-query form-control" autofocus
+                ng-model="query.q" placeholder="Search people, companies and other entities">
+            </div>
+          </div>
+        </form>
+
+        <div id="navbar" class="collapse navbar-collapse navbar-right" ng-cloak>
+          <ul class="nav navbar-nav" ng-show="session.logged_in">
+            <li>
+              <a ng-click="editProfile()" href='#' ng-bind="session.user.display_name"></a>
+            </li>
+            <li>
+              <a href="{{url_for('sessions.logout')}}" target="_self">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
     <div id="airlock" class="container-fluid" ng-view></div>
 
     {% for path, tmpl in templates %}

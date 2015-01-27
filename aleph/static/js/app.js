@@ -1,4 +1,4 @@
-var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'truncate']);
+var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'truncate', 'infinite-scroll']);
 
 aleph.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
@@ -50,6 +50,7 @@ aleph.factory('Session', ['$http', '$q', function($http, $q) {
 aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$modal', 'Session',
   function($scope, $rootScope, $location, $http, $modal, Session) {
   $scope.session = {logged_in: false};
+  $scope.query = {};
 
   Session.get(function(session) {
     $scope.session = session;
@@ -67,9 +68,21 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
   $scope.editProfile = function() {
     var d = $modal.open({
         templateUrl: 'profile.html',
-        controller: 'ProfileCtrl'
+        controller: 'ProfileCtrl',
+        backdrop: true
     });
   };
+
+  $scope.submitSearch = function() {
+    $location.path('/search');
+    $location.search($scope.query);
+  }
+
+  $scope.loadQuery = function() {
+    $scope.query = $location.search();
+  };
+
+  $scope.loadQuery();
 
 }]);
 
@@ -77,18 +90,27 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
 aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
   function($scope, $location, $http) {
 
-  $scope.query = {};
   $scope.result = {};
 
   $scope.load = function() {
-    $scope.query = $location.search();
-    $http.get('/api/1/query', {params: $scope.query}).then(function(res) {
+    $scope.loadQuery();
+    var query = angular.copy($scope.query);
+    query['limit'] = 35;
+    $http.get('/api/1/query', {params: query}).then(function(res) {
       $scope.result = res.data;
     });
   };
 
-  $scope.update = function() {
-    $location.search($scope.query);
+  $scope.hasMore = function() {
+    return $scope.result.next_url !== null;
+  }
+
+  $scope.loadMore = function() {
+    $http.get($scope.result.next_url).then(function(res) {
+      //console.log("beeen called.");
+      $scope.result.results = $scope.result.results.concat(res.data.results);
+      $scope.result.next_url = $scope.result.next_url;
+    });
   }
 
   $scope.load();
