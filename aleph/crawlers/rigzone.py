@@ -11,10 +11,6 @@ log = logging.getLogger(__name__)
 
 class RigZoneCrawler(Crawler):
 
-    LABEL = "RigZone"
-    COLLECTION = "rigzone"
-    URL = "http://www.rigzone.com/"
-
     def crawl(self):
         feed = etree.parse(RSS_FEED)
         url = feed.findtext('.//item/link')

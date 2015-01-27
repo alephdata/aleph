@@ -24,9 +24,19 @@ TWITTER_API_KEY = 'UZYoBAfBzNluBlmBwPOGYw'
 TWITTER_API_SECRET = 'ngHaeaRPKA5BDQNXhPFmLWA1PvTA1kBGDaAJmc517E'
 
 
-CELERY_ALWAYS_EAGER = False
+CELERY_ALWAYS_EAGER = True
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = 'UTC'
 CELERY_BROKER_URL = env.get('RABBITMQ_BIGWIG_URL',
                             'amqp://guest:guest@localhost:5672//')
+
+
+SOURCES = {
+    'rigzone': {
+        'crawler': 'rigzone',
+        'label': 'RigZone',
+        'site': 'http://rigzone.com',
+        'collection': 'rigzone'
+    }
+}
