@@ -25,7 +25,8 @@ def index():
 def view(id):
     user = obj_or_404(User.by_id(id))
     data = user.to_dict()
-    del data['email']
+    if user.id != current_user.id:
+        del data['email']
     return jsonify(data)
 
 
