@@ -60,10 +60,10 @@ class Crawler(object):
         if tag is None:
             tag = self.make_tag(title=title, url=url, **kwargs)
         if CrawlState.check(tag):
-            log.debug("Skipping %r, tagged as done.", tag)
+            log.debug("Skipping %r in %r, tagged as done.", tag, self)
             raise TagExists()
         CrawlState.create(self.source, tag)
         db.session.commit()
 
     def __repr__(self):
-        return '<%s(%s, %s)>' % (self.__class__.__name__, self.source)
+        return '<%s(%r)>' % (self.__class__.__name__, self.source)
