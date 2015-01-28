@@ -4,6 +4,7 @@
 *.sqlite3
 
 .env
+settings.py
 
 aleph/static/.webassets-cache/*
 aleph/static/vendor/*
