@@ -21,6 +21,7 @@ logging.getLogger('pyelasticsearch').setLevel(logging.WARNING)
 logging.getLogger('elasticsearch').setLevel(logging.WARNING)
 logging.getLogger('docpipe').setLevel(logging.INFO)
 logging.getLogger('boto').setLevel(logging.INFO)
+logging.getLogger('amqp').setLevel(logging.INFO)
 
 app = Flask(__name__)
 app.config.from_object(default_settings)
