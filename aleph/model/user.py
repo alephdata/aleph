@@ -80,6 +80,11 @@ class User(db.Model):
         return user
 
     @classmethod
+    def all(cls):
+        q = db.session.query(cls).filter_by(active=True)
+        return q
+
+    @classmethod
     def by_id(cls, id):
         q = db.session.query(cls).filter_by(id=int(id))
         return q.first()
