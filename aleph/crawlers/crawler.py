@@ -1,7 +1,9 @@
 import logging
+from hashlib import sha1
 from pkg_resources import iter_entry_points
 
-from aleph.core import archive
+from aleph.core import db
+from aleph.model import CrawlState
 from aleph.processing import ingest_url
 
 log = logging.getLogger(__name__)
@@ -15,43 +17,15 @@ def get_crawlers():
     return CRAWLERS
 
 
-class Source(object):
-
-    def __init__(self, name, config):
-        self.name = name
-        self.config = config
-
-    @property
-    def collection(self):
-        if not hasattr(self, '_collection'):
-            collection_name = self.config.get('collection', self.name)
-            self._collection = archive.get(collection_name)
-        return self._collection
-
-    @property
-    def label(self):
-        return self.config.get('label', self.name)
-
-    @property
-    def site(self):
-        return self.config.get('site')
-
-    @property
-    def crawler(self):
-        if not hasattr(self, '_crawler'):
-            crawler_name = self.config.get('crawler', self.name)
-            cls = get_crawlers().get(crawler_name)
-            if cls is None:
-                log.error("Invalid source; no such crawler: %r", crawler_name)
-            self._crawler = cls(self)
-        return self._crawler
-
-    def __repr__(self):
-        return '<Source(%r)>' % self.name
+class TagExists(Exception):
+    pass
 
 
 class Crawler(object):
-    
+
+    DEFAULT_LABEL = None
+    DEFAULT_SITE = None
+
     def __init__(self, source):
         self.source = source
 
@@ -75,6 +49,21 @@ class Crawler(object):
         meta['source_label'] = self.source.label
         meta['source_site'] = self.source.site
         ingest_url.delay(self.source.collection.name, url, meta=meta)
+
+    def make_tag(self, title=None, url=None, **kwargs):
+        kwargs['title'] = title
+        kwargs['url'] = url
+        kwargs = [repr((k, unicode(v))) for k, v in kwargs.items()]
+        return sha1('$'.join(kwargs)).hexdigest()
+
+    def check_tag(self, tag=None, title=None, url=None, **kwargs):
+        if tag is None:
+            tag = self.make_tag(title=title, url=url, **kwargs)
+        if CrawlState.check(tag):
+            log.debug("Skipping %r, tagged as done.", tag)
+            raise TagExists()
+        CrawlState.create(self.source, tag)
+        db.session.commit()
 
     def __repr__(self):
         return '<%s(%s, %s)>' % (self.__class__.__name__, self.source)

@@ -2,7 +2,7 @@ from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 
 from aleph.core import archive
-from aleph.model import db, Collection
+from aleph.model import db, Collection, CrawlState
 from aleph.views import app, assets
 from aleph.search import init_search
 from aleph.processing import make_pipeline
@@ -23,6 +23,13 @@ def crawl(source):
 
 
 @manager.command
+def resetcrawl(source):
+    """ Reset the crawler state for a given source specification. """
+    CrawlState.flush(source)
+    db.session.commit()
+
+
+@manager.command
 def process(collection_name):
     """ Index all documents in the given collection. """
     collection = archive.get(collection_name)
@@ -33,9 +40,9 @@ def process(collection_name):
 @manager.command
 def init():
     """ Create the elastic search index and database. """
-    db.drop_all()
+    #db.drop_all()
     db.create_all()
-    init_search()
+    #init_search()
 
 
 if __name__ == "__main__":

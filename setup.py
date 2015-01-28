@@ -1,4 +1,3 @@
-import os
 from setuptools import setup, find_packages
 
 setup(
@@ -15,7 +14,7 @@ setup(
     keywords='',
     author='Friedrich Lindenberg',
     author_email='friedrich@pudo.org',
-    url='http://pudo.org',
+    url='http://grano.cc',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     namespace_packages=[],
@@ -25,9 +24,6 @@ setup(
     entry_points={
         'docpipe.operators': [
             'aleph_indexer = aleph.processing.indexer:IndexerOperator'
-        ],
-        'aleph.crawlers': [
-            'rigzone = aleph.crawlers.rigzone:RigZoneCrawler'
         ]
     },
     tests_require=[]

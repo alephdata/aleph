@@ -1,7 +1,9 @@
 from aleph.core import app
-from aleph.crawlers.common import Source
+from aleph.crawlers.source import Source
+from aleph.crawlers.crawler import Crawler, TagExists # noqa
 
 SOURCES = {}
+
 
 def get_sources():
     if not len(SOURCES):
