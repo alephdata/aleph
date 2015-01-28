@@ -33,19 +33,24 @@ class Crawler(object):
         raise NotImplemented()
 
     def meta_data(self, title=None, mime_type=None, extension=None,
-                  source_url=None, source_file=None, article=False):
-        data = {
+                  source_url=None, source_file=None, article=False,
+                  summary=None, meta=None):
+        if meta is None:
+            meta = {}
+        meta.update({
             'title': title,
+            'summary': summary,
             'mime_type': mime_type,
             'extension': extension,
             'source_url': source_url,
             'source_file': source_file,
             'extract_article': article
-        }
-        return dict([(k, v) for k, v in data.items() if v is not None])
+        })
+        return dict([(k, v) for k, v in meta.items() if v is not None])
 
     def emit_url(self, url, **kwargs):
         meta = self.meta_data(**kwargs)
+        meta['source_url'] = url
         meta['source_label'] = self.source.label
         meta['source_site'] = self.source.site
         ingest_url.delay(self.source.collection.name, url, meta=meta)
@@ -60,7 +65,7 @@ class Crawler(object):
         if tag is None:
             tag = self.make_tag(title=title, url=url, **kwargs)
         if CrawlState.check(tag):
-            log.debug("Skipping %r in %r, tagged as done.", tag, self)
+            log.debug("Skipping %r in %r, tagged as done.", tag, self.source)
             raise TagExists()
         CrawlState.create(self.source, tag)
         db.session.commit()
