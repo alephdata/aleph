@@ -51,6 +51,7 @@ such as [DocumentCloud](http://documentcloud.org) and [analice.me](http://analic
 
 dit uses textract, which has external (i.e. non-Python) dependencies. See the [install guide](http://textract.readthedocs.org/en/latest/installation.html).
 
+apt-get install python-dev libxml2-dev libxslt1-dev antiword poppler-utils pstotext tesseract-ocr flac ffmpeg lame libmad0 libsox-fmt-mp3 sox
 
 ## License
 
