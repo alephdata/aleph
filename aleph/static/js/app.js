@@ -9,6 +9,12 @@ aleph.config(['$routeProvider', '$locationProvider',
     loginRequired: false
   });
 
+  $routeProvider.when('/collections', {
+    templateUrl: 'collections_index.html',
+    controller: 'CollectionsCtrl',
+    loginRequired: false
+  });
+
   $routeProvider.when('/login', {
     templateUrl: 'login.html',
     controller: 'LoginCtrl',
@@ -92,6 +98,7 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
 
   var isLoading = false;
   $scope.result = {};
+  $scope.collections = [];
   
   $scope.load = function() {
     $scope.loadQuery();
@@ -102,11 +109,15 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
       $scope.result = res.data;
       isLoading = false;
     });
+
+    $http.get('/api/1/collections').then(function(res) {
+      $scope.collections = res.data.results;
+    });
   };
 
   $scope.hasMore = function() {
     return !isLoading && $scope.result.next_url !== null;
-  }
+  };
 
   $scope.loadMore = function() {
     isLoading = true;
@@ -115,9 +126,14 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
       $scope.result.next_url = res.data.next_url;
       isLoading = false;
     });
-  }
+  };
+
+  $scope.collectionCount = function() {
+    return $scope.query.collection ? $scope.query.collection.length : $scope.collections.length;
+  };
 
   $scope.load();
+
 }]);
 
 

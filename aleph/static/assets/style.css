@@ -6514,6 +6514,9 @@ button.close {
 .navbar .navbar-brand {
   font-size: 2em;
 }
+.navbar .navbar-form {
+  padding-left: 0;
+}
 @media (min-width: 768px) {
   .navbar .navbar-searchbox input {
     min-width: 300px;

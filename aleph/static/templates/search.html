@@ -1,22 +1,30 @@
+<div class="row">
+  <div class="col-md-9">
+    <ol class="breadcrumb">
+      <li class="active">
+        Found {{result.total}} documents across {{collectionCount()}} collections.
+      </li>
+    </ol>
 
-<ol class="breadcrumb">
-  <li class="active">Found {{result.total}} matches.</li>
-</ol>
+    <div class="alert alert-warning" ng-show="!result.total">
+      No results were found.
+      <span ng-show="!session.logged_in">
+        You may need to log in before you can see more results.
+      </span>
+    </div>
 
-<div class="alert alert-warning" ng-show="!result.total">
-  No results were found.
-  <span ng-show="!session.logged_in">
-    You may need to log in before you can see more results.
-  </span>
-</div>
+    <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()" infinite-scroll-distance="3">
+      <div class="result" ng-repeat="doc in result.results">
+        <a ng-href="{{doc.source_site}}" target="_self" class="source">{{doc.source_label}}</a>
+        <a ng-href="{{doc.source_url}}" target="_self" class="title">{{doc.title}}</a>
+        <span class="archive">
+          [<a ng-href="{{doc.archive_url}}" target="_self">cached</a>]
+        </span>
+        <span class="summary">{{doc.summary}}</span>
+      </div>
+    </div>
+  </div>
 
-<div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()" infinite-scroll-distance="3">
-  <div class="result" ng-repeat="doc in result.results">
-    <a ng-href="{{doc.source_site}}" target="_self" class="source">{{doc.source_label}}</a>
-    <a ng-href="{{doc.source_url}}" target="_self" class="title">{{doc.title}}</a>
-    <span class="archive">
-      [<a ng-href="{{doc.archive_url}}" target="_self">cached</a>]
-    </span>
-    <span class="summary">{{doc.summary}}</span>
+  <div class="col-md-3">
   </div>
 </div>

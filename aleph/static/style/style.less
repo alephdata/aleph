@@ -80,23 +80,27 @@
         font-size: 2em;
     }
 
-  @media (min-width: @screen-sm-min) {
-    .navbar-searchbox input {
-        min-width: 300px;
+    .navbar-form {
+        padding-left: 0;
     }
-  }
 
-  @media (min-width: @screen-md-min) {
-    .navbar-searchbox input {
-        min-width: 600px;
+    @media (min-width: @screen-sm-min) {
+        .navbar-searchbox input {
+            min-width: 300px;
+        }
     }
-  }
 
-  @media (min-width: @screen-lg-min) {
-    .navbar-searchbox input {
-        min-width: 800px;
+    @media (min-width: @screen-md-min) {
+        .navbar-searchbox input {
+            min-width: 600px;
+        }
     }
-  }
+
+    @media (min-width: @screen-lg-min) {
+        .navbar-searchbox input {
+            min-width: 800px;
+        }
+    }
 }
 
 
