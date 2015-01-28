@@ -5,7 +5,7 @@ from werkzeug.exceptions import Forbidden
 
 def request_collections(action):
     try:
-        return request.collection_slugs.get(action)
+        return request.collection_slugs.get(action) or []
     except:
         return []
 
