@@ -7,3 +7,7 @@ worker:
 
 clear:
 	celery purge -f -A aleph.queue
+
+assets:
+	bower install
+	python aleph/manage.py assets --parse-templates build
