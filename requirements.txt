@@ -19,3 +19,4 @@ simplejson>=3.6.5
 six
 textract>=1.1.0
 colander>=1.0
+newspaper

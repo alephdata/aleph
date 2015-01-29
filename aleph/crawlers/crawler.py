@@ -26,8 +26,9 @@ class Crawler(object):
     DEFAULT_LABEL = None
     DEFAULT_SITE = None
 
-    def __init__(self, source):
+    def __init__(self, source, ignore_tags=False):
         self.source = source
+        self.ignore_tags = ignore_tags
 
     def crawl(self):
         raise NotImplemented()
@@ -48,12 +49,13 @@ class Crawler(object):
         })
         return dict([(k, v) for k, v in meta.items() if v is not None])
 
-    def emit_url(self, url, **kwargs):
+    def emit_url(self, url, package_id=None, **kwargs):
         meta = self.meta_data(**kwargs)
         meta['source_url'] = url
         meta['source_label'] = self.source.label
         meta['source_site'] = self.source.site
-        ingest_url.delay(self.source.collection.name, url, meta=meta)
+        ingest_url.delay(self.source.collection.name, url,
+                         package_id=package_id, meta=meta)
 
     def make_tag(self, title=None, url=None, **kwargs):
         kwargs['title'] = title
@@ -64,11 +66,13 @@ class Crawler(object):
     def check_tag(self, tag=None, title=None, url=None, **kwargs):
         if tag is None:
             tag = self.make_tag(title=title, url=url, **kwargs)
-        if CrawlState.check(tag):
-            log.debug("Skipping %r in %r, tagged as done.", tag, self.source)
-            raise TagExists()
-        CrawlState.create(self.source, tag)
-        db.session.commit()
+        if not self.ignore_tags:
+            if CrawlState.check(tag):
+                log.debug("Skipping %r in %r, tagged as done.", tag, self.source)
+                raise TagExists()
+            CrawlState.create(self.source, tag)
+            db.session.commit()
+        return tag
 
     def __repr__(self):
         return '<%s(%r)>' % (self.__class__.__name__, self.source)
