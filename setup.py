@@ -24,6 +24,9 @@ setup(
     entry_points={
         'docpipe.operators': [
             'aleph_indexer = aleph.processing.indexer:IndexerOperator'
+        ],
+        'console_scripts': [
+            'aleph = aleph.manage:main',
         ]
     },
     tests_require=[]

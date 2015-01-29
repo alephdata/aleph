@@ -12,8 +12,9 @@ def get_sources():
     return SOURCES
 
 
-def crawl_source(name):
+def crawl_source(name, ignore_tags=False):
     source = get_sources().get(name)
     if source is None:
         raise ValueError("Source does not exist: %r" % name)
+    source.crawler.ignore_tags = ignore_tags
     source.crawler.crawl()

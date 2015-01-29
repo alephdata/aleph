@@ -12,18 +12,15 @@ from aleph.crawlers import crawl_source
 manager = Manager(app)
 manager.add_command("assets", ManageAssets(assets))
 
-# Hacky much?
-Collection.sync()
-
 
 @manager.command
-def crawl(source):
+def crawl(source, force=False):
     """ Execute the crawler for a given source specification. """
-    crawl_source(source)
+    crawl_source(source, ignore_tags=force)
 
 
 @manager.command
-def resetcrawl(source):
+def reset(source):
     """ Reset the crawler state for a given source specification. """
     CrawlState.flush(source)
     db.session.commit()
@@ -43,7 +40,12 @@ def init():
     #db.drop_all()
     db.create_all()
     #init_search()
+    # Hacky much?
+    Collection.sync()
 
+
+def main():
+    manager.run()
 
 if __name__ == "__main__":
-    manager.run()
+    main()
