@@ -1,3 +1,4 @@
+import json
 import logging
 
 from docpipe.pipeline import Pipeline
@@ -23,10 +24,15 @@ CONFIG = {
 }
 
 
-def make_pipeline(collection):
+def make_pipeline(collection, overwrite=False):
     log.info('Constructing pipeline for collection %r', collection)
+    config = CONFIG
+    if overwrite:
+        config = json.loads(json.dumps(config))
+        for k, v in config['process'].items():
+            config['process'][k]['overwrite'] = True
     try:
-        pipeline = Pipeline(collection, 'aleph_process', config=CONFIG)
+        pipeline = Pipeline(collection, 'aleph_process', config=config)
         return pipeline
     except DocpipeException, de:
         log.exception(de)

@@ -43,6 +43,9 @@ def index_package(package, plain_text, normalized_text):
     if normalized_text.exists():
         body['normalized'] = normalized_text.fh().read()
 
+    if not body['title']:
+        return
+
     log.info("Indexing: %r", body['title'])
     es.index(es_index, DOC_TYPE, body, package.id)
 

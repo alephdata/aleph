@@ -27,10 +27,10 @@ def reset(source):
 
 
 @manager.command
-def process(collection_name):
+def process(collection_name, force=False):
     """ Index all documents in the given collection. """
     collection = archive.get(collection_name)
-    pipeline = make_pipeline(collection)
+    pipeline = make_pipeline(collection, overwrite=force)
     pipeline.process_sync()
 
 
