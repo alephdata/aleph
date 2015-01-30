@@ -14,8 +14,10 @@ def angular_templates():
                 yield (file_name, fh.read().decode('utf-8'))
 
 
+@app.route('/collections/<path:slug>')
+@app.route('/collections')
 @app.route('/search')
 @app.route('/login')
 @app.route('/')
-def ui():
+def ui(**kwargs):
     return render_template("layout.html", templates=angular_templates())

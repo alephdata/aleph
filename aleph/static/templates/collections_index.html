@@ -1,0 +1,13 @@
+<ol class="breadcrumb">
+  <li class="active">
+    Collections of Documents
+  </li>
+</ol>
+
+<ul>
+  <li ng-repeat="collection in collections.results">
+    <a ng-click="editCollection(collection.slug)">
+      {{collection.label}}
+    </a>
+  </li>
+</ul>

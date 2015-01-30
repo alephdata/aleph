@@ -11,6 +11,10 @@ js_assets = Bundle(
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
     'vendor/nginfinitescroll/build/ng-infinite-scroll.js',
     'js/app.js',
+    'js/services.js',
+    'js/search.js',
+    'js/collections.js',
+    'js/ctrl.js',
     filters='uglifyjs',
     output='assets/app.js'
 )
