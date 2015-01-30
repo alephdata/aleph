@@ -44,6 +44,7 @@ def index_package(package, plain_text, normalized_text):
         body['normalized'] = normalized_text.fh().read()
 
     if not body['title']:
+        log.error("No title on package %r, skipping", package)
         return
 
     log.info("Indexing: %r", body['title'])
