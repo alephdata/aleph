@@ -38,6 +38,13 @@ class Source(object):
             self._crawler = cls(self)
         return self._crawler
 
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'label': self.label,
+            'site': self.site
+        }
+
     def __repr__(self):
         return '<Source(%r)>' % self.name
 

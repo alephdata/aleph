@@ -24,13 +24,13 @@ def index_package(package, plain_text, normalized_text):
     }
     source = package.source
     if source is None:
+        log.error("No source for package %r, skipping", package)
         return
 
     body['name'] = source.meta.get('name')
     body['slug'] = source.meta.get('slug')
     body['title'] = source.meta.get('title') or body['name']
-    body['source_label'] = source.meta.get('source_label')
-    body['source_site'] = source.meta.get('source_site')
+    body['source'] = source.meta.get('source')
     body['source_url'] = source.meta.get('source_url')
     body['created_at'] = source.meta.get('created_at')
     body['updated_at'] = source.meta.get('updated_at')
@@ -44,7 +44,7 @@ def index_package(package, plain_text, normalized_text):
         body['normalized'] = normalized_text.fh().read()
 
     if not body['title']:
-        log.error("No title on package %r, skipping", package)
+        log.error("No title for package %r, skipping", package)
         return
 
     log.info("Indexing: %r", body['title'])

@@ -36,6 +36,6 @@ def document_query(args, authorized=None):
     return {
         'query': q,
         '_source': ['title', 'name', 'extension', 'collection', 'mime_type',
-                    'id', 'updated_at', 'slug', 'source_url', 'source_site',
-                    'source_label', 'summary']
+                    'id', 'updated_at', 'slug', 'source_url', 'source',
+                    'summary']
     }

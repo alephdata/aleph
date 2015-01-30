@@ -52,8 +52,7 @@ class Crawler(object):
     def emit_url(self, url, package_id=None, **kwargs):
         meta = self.meta_data(**kwargs)
         meta['source_url'] = url
-        meta['source_label'] = self.source.label
-        meta['source_site'] = self.source.site
+        meta['source'] = self.source.name
         ingest_url.delay(self.source.collection.name, url,
                          package_id=package_id, meta=meta)
 
