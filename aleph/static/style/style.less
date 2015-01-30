@@ -60,6 +60,11 @@
 @import "../vendor/bootstrap/less/utilities.less";
 @import "../vendor/bootstrap/less/responsive-utilities.less";
 
+// Modal backdrop workaround:
+html { height: 100%; }
+body { min-height: 100%; }
+.modal-backdrop { bottom: 0; }
+
 
 // Globals & Mixins
 .rounded-corners (@radius: @default-radius) {
