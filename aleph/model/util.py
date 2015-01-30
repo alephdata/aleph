@@ -13,3 +13,7 @@ def make_token():
         if num == 0:
             break
     return ''.join(reversed(s))
+
+
+def make_textid():
+    return uuid.uuid4().hex
