@@ -44,7 +44,14 @@ def init():
     Collection.sync()
 
 
+@manager.command
+def index_init():
+    """ Create the elastic search index and database. """
+    init_search()
+
+
 def main():
+    Collection.sync()
     manager.run()
 
 if __name__ == "__main__":

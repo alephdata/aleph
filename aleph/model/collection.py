@@ -99,10 +99,20 @@ class Collection(db.Model):
         return coll
 
     @classmethod
+    def delete_by_slug(cls, slug):
+        q = db.session.query(cls).filter_by(slug=slug)
+        q.delete()
+
+    @classmethod
     def sync(cls):
         existing = cls.list_all_slugs()
+        seen = set()
         for collection in archive:
             if collection.name not in existing:
                 cls.create_from_store(collection)
+            seen.add(collection.name)
+        for slug in existing:
+            if slug not in seen:
+                cls.delete_by_slug(slug)
         db.session.commit()
 
