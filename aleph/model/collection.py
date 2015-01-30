@@ -20,7 +20,7 @@ collection_user_table = db.Table('collection_user', db.metadata,
 class Collection(db.Model):
     slug = db.Column(db.Unicode, nullable=False, primary_key=True)
     label = db.Column(db.Unicode, nullable=True)
-    public = db.Column(db.Boolean, default=False)
+    public = db.Column(db.Boolean, default=True)
     token = db.Column(db.Unicode, default=make_token)
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

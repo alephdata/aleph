@@ -5,7 +5,7 @@ from flask.ext.login import current_user
 from aleph.core import app, login_manager
 from aleph.views.ui import ui # noqa
 from aleph.assets import assets # noqa
-from aleph.model import User, Collection
+from aleph.model import User
 from aleph.views.util import jsonify
 from aleph.views.data_api import blueprint as data_api
 from aleph.views.search_api import blueprint as search_api
@@ -31,13 +31,8 @@ def load_user_from_request(request):
 
 @app.before_request
 def before():
-    request.collection_slugs = {}
-    if request.endpoint != 'static':
-        request.collection_slugs = {
-            'read': Collection.list_user_slugs(current_user),
-            'write': Collection.list_user_slugs(current_user,
-                                                include_public=False)
-        }
+    request.authz_colls = {}
+    request.authz_lists = {}
 
 
 @app.errorhandler(Invalid)

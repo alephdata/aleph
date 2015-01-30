@@ -21,7 +21,7 @@ def add_urls(doc):
 
 @blueprint.route('/api/1/query')
 def query():
-    authorized = authz.request_collections('read')
+    authorized = authz.authz_collections('read')
     query = document_query(request.args, authorized=authorized)
     pager = Pager(search_documents(query),
                   results_converter=lambda ds: [add_urls(d) for d in ds])
