@@ -2,7 +2,7 @@
   <div class="col-md-9">
     <ol class="breadcrumb">
       <li class="active">
-        Found {{result.total}} documents across {{collectionCount()}} collections.
+        Found {{result.total}} documents across {{numQueriedCollections()}} collections.
       </li>
     </ol>
 
@@ -29,11 +29,12 @@
     <div class="panel panel-default">
       <div class="panel-heading">Document collections</div>    
       <ul class="list-group">
-        <li class="list-group-item"
+        <li class="list-group-item facet"
           ng-repeat="facet in result.facets.collections"
-          ng-class="{'active': hasCollectionFilter(facet.key)}">
+          ng-class="{'active': hasCollectionFilter(facet.key)}"
+          ng-click="toggleCollectionFilter(facet.key)">
           <span class="badge">{{facet.doc_count}}</span>
-          <a ng-click="toggleCollectionFilter(facet.key)">{{collections[facet.key].label}}</a>
+          {{collections[facet.key].label}}
         </li>
       </ul>
     </div>

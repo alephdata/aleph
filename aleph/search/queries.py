@@ -12,14 +12,15 @@ def document_query(args, collections=None):
             {"term": {"name": {"value": qstr, "boost": 7.0}}},
             {"term": {"text": {"value": qstr, "boost": 3.0}}}
         ]
-        q = {
+        filtered_q = {
             "bool": {
                 "must": q,
                 "should": bq
             }
         }
     else:
-        q = {'match_all': {}}
+        filtered_q = {'match_all': {}}
+    q = filtered_q
 
     if collections is not None:
         colls = args.getlist('collection') or collections
@@ -36,11 +37,23 @@ def document_query(args, collections=None):
 
     # query facets
     aggs = {
-        'collections': {
-            'terms': {'field': 'collection'}
+        'all': {
+            'global': {},
+            'aggs': {
+                'ftr': {
+                    'filter': {'query': filtered_q},
+                    'aggs': {
+                        'collections': {
+                            'terms': {'field': 'collection'}
+                        }
+                    }
+                }
+            }
         }
     }
-    #q['aggregations'] = aggs
+
+    # from pprint import pprint
+    # pprint(aggs)
 
     return {
         'query': q,

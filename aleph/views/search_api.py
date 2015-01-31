@@ -22,7 +22,8 @@ def add_urls(doc):
 
 
 def transform_facets(aggregations):
-    coll = aggregations.get('collections', {}).get('buckets', [])
+    coll = aggregations.get('all', {}).get('ftr', {}).get('collections', {})
+    coll = coll.get('buckets', [])
     facets = {
         'collections': coll
     }

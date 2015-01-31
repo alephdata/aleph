@@ -2,7 +2,8 @@
 aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
   function($scope, $location, $http) {
 
-  var isLoading = false;
+  var isLoading = false,
+      collectionCount = 0;
   $scope.result = {};
   $scope.collections = {};
 
@@ -12,6 +13,7 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
       collections[c.slug] = c;
     });
     $scope.collections = collections;
+    collectionCount = res.data.total;
   });
   
   $scope.load = function() {
@@ -50,6 +52,10 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
 
   $scope.hasCollectionFilter = function(slug) {
     return $scope.query.collection.indexOf(slug) != -1;
+  };
+
+  $scope.numQueriedCollections = function() {
+    return $scope.query.collection.length || collectionCount;
   };
 
   $scope.load();
