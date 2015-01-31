@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 
 from sqlalchemy.ext.hybrid import hybrid_property
-from normality import slugify
+from normality import normalize
 
 from aleph.core import db
 
@@ -29,7 +29,11 @@ class Selector(db.Model):
     @text.setter
     def text(self, text):
         self._text = text
-        self.normalized = slugify(text)
+        self.normalized = self.normalize(text)
+
+    @classmethod
+    def normalize(cls, text):
+        return normalize(text)
 
     def __repr__(self):
         return '<Selector(%r, %r)>' % (self.entity_id, self.text)

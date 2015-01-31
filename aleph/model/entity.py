@@ -3,7 +3,8 @@ from datetime import datetime
 
 from aleph.core import db
 from aleph.model.user import User
-from aleph.model.util import make_textid
+from aleph.model.selector import Selector
+from aleph.model.util import make_textid, db_compare
 
 log = logging.getLogger(__name__)
 
@@ -43,6 +44,25 @@ class Entity(db.Model):
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
+
+    def has_selector(self, text):
+        normalized = Selector.normalize(text)
+        for selector in self.selectors:
+            if selector.normalized == normalized:
+                return True
+        return False
+
+    @classmethod
+    def by_normalized_label(cls, label, lst):
+        q = db.session.query(cls)
+        q = q.filter_by(list=lst)
+        q = q.filter(db_compare(cls.label, label))
+        return q.first()
+
+    @classmethod
+    def by_id(cls, id):
+        q = db.session.query(cls).filter_by(id=id)
+        return q.first()
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.label)

@@ -17,11 +17,12 @@ list_user_table = db.Table('list_user', db.metadata,
 
 
 class List(db.Model):
-    id = db.Column(db.Integer(), primary_key=True, default=make_textid)
+    id = db.Column(db.Integer(), primary_key=True)
     label = db.Column(db.Unicode)
     public = db.Column(db.Boolean, default=False)
 
-    creator_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    creator_id = db.Column(db.Integer(), db.ForeignKey('user.id'),
+                           nullable=True)
     creator = db.relationship(User)
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -40,6 +41,21 @@ class List(db.Model):
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
+
+    @classmethod
+    def by_label(cls, label):
+        q = db.session.query(cls).filter_by(label=label)
+        return q.first()
+
+    @classmethod
+    def create(cls, data):
+        lst = cls()
+        lst.label = data.get('label')
+        if data.get('public') is not None:
+            lst.public = data.get('public')
+        lst.creator = data.get('creator')
+        db.session.add(lst)
+        return lst
 
     @classmethod
     def user_list_ids(cls, user=None, include_public=True):

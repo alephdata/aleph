@@ -35,6 +35,13 @@ def process(collection_name, force=False):
 
 
 @manager.command
+def fixture(name):
+    """ Load a list fixture. """
+    from aleph.processing.fixtures import load_fixture
+    load_fixture(name)
+
+
+@manager.command
 def init():
     """ Create the elastic search index and database. """
     #db.drop_all()
