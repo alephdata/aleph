@@ -41,9 +41,8 @@ def document_query(args, collections=None, lists=None):
         filtered_q = {'match_all': {}}
     
     # entities filter
-    entities = args.getlist('entity')
-    if len(entities):
-        cf = {'terms': {'entities.id': entities}}
+    for entity in args.getlist('entity'):
+        cf = {'term': {'entities.id': entity}}
         filtered_q = add_filter(filtered_q, cf)
 
     q = deepcopy(filtered_q)

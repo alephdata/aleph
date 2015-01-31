@@ -33,19 +33,25 @@
           <ul class="nav navbar-nav">
             <li ng-show="!session.logged_in && session.logins.twitter">
               {% raw %}
-                <a href='{{session.logins.twitter}}' target='_self'>Login using twitter</a>
+                <a href='{{session.logins.twitter}}' target='_self'>
+                  <i class="fa fa-twitter"></i> Sign in
+                </a>
               {% endraw %}
             </li>
             <li ng-show="!session.logged_in && session.logins.facebook">
               {% raw %}
-                <a href='{{session.logins.facebook}}' target='_self'>Login using facebook</a>
+                <a href='{{session.logins.facebook}}' target='_self'>
+                  <i class="fa fa-facebook-official"></i> Sign in
+                </a>
               {% endraw %}
             </li>
             <li ng-show="session.logged_in">
               <a ng-click="editProfile()" href='#' ng-bind="session.user.display_name"></a>
             </li>
             <li ng-show="session.logged_in">
-              <a href="{{url_for('sessions.logout')}}" target="_self">Logout</a>
+              <a href="{{url_for('sessions.logout')}}" target="_self">
+                <i class="fa fa-sign-out"></i> Logout
+              </a>
             </li>
           </ul>
         </div>

@@ -33,9 +33,9 @@ class EntityTag(db.Model):
         etag = aliased(cls)
         ent = aliased(Entity)
         q = db.session.query(etag.entity_id, ent.label, ent.list_id)
+        q = q.join(ent, ent.id == etag.entity_id)
         q = q.filter(etag.collection == collection)
         q = q.filter(etag.package_id == package_id)
-        q = q.join(ent, ent.id == etag.entity_id)
         entities = []
         for entity_id, label, lst in q.all():
             entities.append({'id': entity_id, 'label': label, 'list': lst})
