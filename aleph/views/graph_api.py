@@ -2,7 +2,7 @@ from itertools import combinations
 
 from flask import Blueprint, request
 import networkx as nx
-from networkx import degree_centrality
+from networkx import degree
 from networkx.readwrite import json_graph
 
 from aleph import authz
@@ -23,9 +23,8 @@ def multigraph_to_weighted(multigraph):
             graph[u][v]['weight'] += w
         else:
             graph.add_edge(u, v, weight=w)
-    degree = degree_centrality(graph)
     for id in multigraph.nodes_iter():
-        graph.node[id]['degree'] = degree.get(id)
+        graph.node[id]['degree'] = degree(graph, id, weight='weight')
     return graph
 
 
