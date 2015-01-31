@@ -14,7 +14,7 @@
     </div>
 
     <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()" infinite-scroll-distance="3">
-      <div class="result" ng-repeat="doc in result.results">
+      <div class="result animate toggle" ng-repeat="doc in result.results">
         <a ng-href="{{doc.source.site}}" target="_self" class="source">{{doc.source.label}}</a>
         <a ng-href="{{doc.source_url}}" target="_self" class="title">{{doc.title}}</a>
         <span class="archive">

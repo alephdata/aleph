@@ -21,6 +21,7 @@ js_assets = Bundle(
 
 css_assets = Bundle(
     'style/style.less',
+    'style/animations.css',
     filters='less',
     output='assets/style.css'
 )
