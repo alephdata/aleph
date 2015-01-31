@@ -36,7 +36,9 @@ def generate_graph(args):
         entities = set()
         for entity in doc.get('_source').get('entities', []):
             if not graph.has_node(entity.get('id')):
-                graph.add_node(entity.get('id'), label=entity.get('label'))
+                graph.add_node(entity.get('id'),
+                               label=entity.get('label'),
+                               category=entity.get('category'))
             entities.add(entity.get('id'))
         for (src, dst) in combinations(entities, 2):
             graph.add_edge(src, dst, weight=1)
