@@ -23,7 +23,8 @@ setup(
     install_requires=[],
     entry_points={
         'docpipe.operators': [
-            'aleph_indexer = aleph.processing.indexer:IndexerOperator'
+            'aleph_indexer = aleph.processing.indexer:IndexerOperator',
+            'aleph_tagger = aleph.processing.tagger:TaggerOperator'
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',

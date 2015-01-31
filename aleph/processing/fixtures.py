@@ -41,6 +41,9 @@ def load_fixture(name):
                 entity = Entity()
                 entity.list = lst
                 entity.label = label
+            entity.category = category
+            db.session.add(entity)
+
             selector = row.get(mapping.get('selector', 'selector'))
             for text in [label, selector]:
                 if text is None:
@@ -52,8 +55,6 @@ def load_fixture(name):
                 selector.entity = entity
                 entity.selectors.append(selector)
                 db.session.add(selector)
-            entity.category = category
-            db.session.add(entity)
-
+            
     db.session.commit()
     print lst

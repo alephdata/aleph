@@ -5,7 +5,6 @@ from sqlalchemy import or_
 
 from aleph.core import db
 from aleph.model.user import User
-from aleph.model.util import make_textid
 
 log = logging.getLogger(__name__)
 
