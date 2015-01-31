@@ -32,13 +32,19 @@ class EntityTag(db.Model):
     def by_package(cls, collection, package_id):
         etag = aliased(cls)
         ent = aliased(Entity)
-        q = db.session.query(etag.entity_id, ent.label, ent.list_id)
+        q = db.session.query(etag.entity_id, ent.label,
+                             ent.category, ent.list_id)
         q = q.join(ent, ent.id == etag.entity_id)
         q = q.filter(etag.collection == collection)
         q = q.filter(etag.package_id == package_id)
         entities = []
-        for entity_id, label, lst in q.all():
-            entities.append({'id': entity_id, 'label': label, 'list': lst})
+        for entity_id, label, category, lst in q.all():
+            entities.append({
+                'id': entity_id,
+                'label': label,
+                'category': category,
+                'list': lst
+            })
         return entities
 
     def __repr__(self):
