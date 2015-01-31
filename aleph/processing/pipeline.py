@@ -16,13 +16,13 @@ CONFIG = {
             'operator': 'normalize',
             'requires': ['plain_text']
         },
-        'tag_entities': {
+        'entities': {
             'operator': 'aleph_tagger',
             'requires': ['normalized_text']
         },
         'index': {
             'operator': 'aleph_indexer',
-            'requires': ['plain_text', 'normalized_text']
+            'requires': ['entities', 'plain_text', 'normalized_text']
         }
     }
 }
