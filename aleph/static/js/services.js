@@ -1,5 +1,4 @@
 
-
 aleph.factory('Session', ['$http', '$q', function($http, $q) {
     var dfd = null;
 

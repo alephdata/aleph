@@ -29,26 +29,26 @@
           </div>
         </form>
 
-        <div id="navbar" class="collapse navbar-collapse navbar-right" ng-cloak>
+        <div id="navbar" class="collapse navbar-collapse navbar-right">
           <ul class="nav navbar-nav">
-            <li ng-show="!session.logged_in && session.logins.twitter">
+            <li ng-show="!session.logged_in && session.logins.twitter" ng-cloak>
               {% raw %}
                 <a href='{{session.logins.twitter}}' target='_self'>
                   <i class="fa fa-twitter"></i> Sign in
                 </a>
               {% endraw %}
             </li>
-            <li ng-show="!session.logged_in && session.logins.facebook">
+            <li ng-show="!session.logged_in && session.logins.facebook" ng-cloak>
               {% raw %}
                 <a href='{{session.logins.facebook}}' target='_self'>
                   <i class="fa fa-facebook-official"></i> Sign in
                 </a>
               {% endraw %}
             </li>
-            <li ng-show="session.logged_in">
+            <li ng-show="session.logged_in" ng-cloak>
               <a ng-click="editProfile()" href='#' ng-bind="session.user.display_name"></a>
             </li>
-            <li ng-show="session.logged_in">
+            <li ng-show="session.logged_in" ng-cloak>
               <a href="{{url_for('sessions.logout')}}" target="_self">
                 <i class="fa fa-sign-out"></i> Logout
               </a>
