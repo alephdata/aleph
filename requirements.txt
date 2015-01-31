@@ -17,6 +17,6 @@ requests>=2.5.1
 restpager>=0.1
 simplejson>=3.6.5
 six
-textract>=1.1.0
+textract>=1.2.0
 colander>=1.0
 newspaper
