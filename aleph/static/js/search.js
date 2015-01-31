@@ -4,7 +4,15 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
 
   var isLoading = false;
   $scope.result = {};
-  $scope.collections = [];
+  $scope.collections = {};
+
+  $http.get('/api/1/collections').then(function(res) {
+    var collections = {}
+    angular.forEach(res.data.results, function(c) {
+      collections[c.slug] = c;
+    });
+    $scope.collections = collections;
+  });
   
   $scope.load = function() {
     $scope.loadQuery();
@@ -14,10 +22,6 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
     $http.get('/api/1/query', {params: query}).then(function(res) {
       $scope.result = res.data;
       isLoading = false;
-    });
-
-    $http.get('/api/1/collections').then(function(res) {
-      $scope.collections = res.data.results;
     });
   };
 
@@ -34,8 +38,18 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
     });
   };
 
-  $scope.collectionCount = function() {
-    return $scope.query.collection ? $scope.query.collection.length : $scope.collections.length;
+  $scope.toggleCollectionFilter = function(slug) {
+    var idx = $scope.query.collection.indexOf(slug);
+    if (idx == -1) {
+      $scope.query.collection.push(slug);
+    } else {
+      $scope.query.collection.splice(idx, 1);
+    }
+    $scope.submitSearch();
+  };
+
+  $scope.hasCollectionFilter = function(slug) {
+    return $scope.query.collection.indexOf(slug) != -1;
   };
 
   $scope.load();

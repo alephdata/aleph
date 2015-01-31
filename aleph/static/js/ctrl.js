@@ -46,6 +46,15 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
 
   $scope.loadQuery = function() {
     $scope.query = $location.search();
+    if (!angular.isArray($scope.query.collection)) {
+      if (angular.isDefined($scope.query.collection) &&
+          $scope.query.collection.length) {
+        $scope.query.collection = [$scope.query.collection];
+      } else {
+        $scope.query.collection = [];
+      }
+    }
+    console.log("loaded query: ", $scope.query);
   };
 
   $scope.loadQuery();

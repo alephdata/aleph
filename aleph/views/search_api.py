@@ -21,10 +21,21 @@ def add_urls(doc):
     return doc
 
 
+def transform_facets(aggregations):
+    coll = aggregations.get('collections', {}).get('buckets', [])
+    facets = {
+        'collections': coll
+    }
+    return facets
+
+
 @blueprint.route('/api/1/query')
 def query():
-    authorized = authz.authz_collections('read')
-    query = document_query(request.args, authorized=authorized)
+    collections = authz.authz_collections('read')
+    query = document_query(request.args, collections=collections)
     pager = Pager(search_documents(query),
                   results_converter=lambda ds: [add_urls(d) for d in ds])
-    return jsonify(pager)
+    data = pager.to_dict()
+    raw = pager._results.result
+    data['facets'] = transform_facets(raw.get('aggregations', {}))
+    return jsonify(data)

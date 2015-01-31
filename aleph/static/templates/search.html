@@ -26,5 +26,17 @@
   </div>
 
   <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">Document collections</div>    
+      <ul class="list-group">
+        <li class="list-group-item"
+          ng-repeat="facet in result.facets.collections"
+          ng-class="{'active': hasCollectionFilter(facet.key)}">
+          <span class="badge">{{facet.doc_count}}</span>
+          <a ng-click="toggleCollectionFilter(facet.key)">{{collections[facet.key].label}}</a>
+        </li>
+      </ul>
+    </div>
+
   </div>
 </div>
