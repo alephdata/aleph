@@ -2,6 +2,10 @@ from copy import deepcopy
 
 from werkzeug.datastructures import MultiDict
 
+DEFAULT_FIELDS = ['title', 'name', 'extension', 'collection',
+                  'id', 'updated_at', 'slug', 'source_url', 'source',
+                  'summary']
+
 
 def add_filter(q, flt):
     if 'filtered' not in q:
@@ -20,7 +24,8 @@ def add_filter(q, flt):
     return q
     
 
-def document_query(args, collections=None, lists=None):
+def document_query(args, fields=DEFAULT_FIELDS, collections=None, lists=None,
+                   facets=True):
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
     qstr = args.get('q', '').strip()
@@ -56,38 +61,39 @@ def document_query(args, collections=None, lists=None):
         cf = {'terms': {'collection': colls}}
         q = add_filter(q, cf)
 
+    aggs = {}
+
     # query facets
-    aggs = {
-        'all': {
-            'global': {},
-            'aggs': {
-                'ftr': {
-                    'filter': {'query': filtered_q},
-                    'aggs': {
-                        'collections': {
-                            'terms': {'field': 'collection'}
+    if facets:
+        aggs = {
+            'all': {
+                'global': {},
+                'aggs': {
+                    'ftr': {
+                        'filter': {'query': filtered_q},
+                        'aggs': {
+                            'collections': {
+                                'terms': {'field': 'collection'}
+                            }
                         }
                     }
                 }
-            }
-        },
-        'lists': {
-            'filter': {'terms': {'entities.list': lists or []}},
-            'aggs': {
-                'entities': {
-                    'terms': {'field': 'entities.id',
-                              'size': 100}
+            },
+            'lists': {
+                'filter': {'terms': {'entities.list': lists or []}},
+                'aggs': {
+                    'entities': {
+                        'terms': {'field': 'entities.id',
+                                  'size': 100}
+                    }
                 }
             }
         }
-    }
 
     q = {
         'query': q,
         'aggregations': aggs,
-        '_source': ['title', 'name', 'extension', 'collection',
-                    'id', 'updated_at', 'slug', 'source_url', 'source',
-                    'summary']
+        '_source': fields
     }
     # import json
     # print json.dumps(q, indent=2)
