@@ -58,6 +58,10 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
     return $scope.query.collection.length || collectionCount;
   };
 
+  $scope.$on('$routeUpdate', function(){
+    $scope.load();
+  });
+
   $scope.load();
 
 }]);

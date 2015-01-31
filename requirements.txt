@@ -20,3 +20,5 @@ six
 textract>=1.2.0
 colander>=1.0
 newspaper
+unicodecsv
+networkx
