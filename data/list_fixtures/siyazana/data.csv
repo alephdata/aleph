@@ -909,7 +909,6 @@ Person,cxcuudaabwqpl5g,Siyabonga Nqakula,Siyabonga Nqakula
 Person,m5nht1yxcczzbxj,Cyril Ramaphosa,Cyril Ramaphosa
 Person,k74u3zyj0eko3k7,Prince Nelisuzulu Benedict Buthelezi,Prince Nelisuzulu Benedict Buthelezi
 Person,dbahy04tuiledkt,Prince Phumaphesheya Buthelezi,Prince Phumaphesheya Buthelezi
-Person,ng368k7ub0t8g2h,Sheryl,Sheryl
 Person,cur7gx8jmdhin1u,Dr. Tshepo Motsepe,Dr. Tshepo Motsepe
 Person,deqv2f7l418r34x,Richard Molewa,Richard Molewa
 Person,dui8sudth4ym4sl,Chloe Selfe,Chloe Selfe
@@ -1011,7 +1010,6 @@ Person,i0xrqddrz9xx3iq,Naledi Pandor,Naledi Pandor
 Person,inxe6y21ne5wgz1,Patrice Motsepe,Patrice Motsepe
 Person,o3xdjkoxkcui93x,EDWARD SENZO MCHUNU,EDWARD SENZO MCHUNU
 Person,mkt2qokt2nhpavx,Tokyo Sexwale,Tokyo Sexwale
-Person,h9roa0xl9tfmmqt,Naledi,Naledi
 Person,ld9hm8lhtculjx9,Nokulinda,Nokulinda
 Person,kryxhml4wpcqr3l,Peter Charles James,Peter Charles James
 Person,j75th0n5ks9ypq7,Shelma Rumine Hartel,Shelma Rumine Hartel
@@ -1281,7 +1279,7 @@ Person,oymp6skke5jqdqd,Arron Cecil Steyn,Arron Cecil Steyn
 Company,8zbm1mbalcubji6,CITY OF CAPE TOWN METR MUNICIPALITY,CITY OF CAPE TOWN METR MUNICIPALITY
 Company,g4zvyymlauw2pu3,DEMINDEX RES CORP (SA) (PTY) LTD,DEMINDEX RES CORP (SA) (PTY) LTD
 Company,f3zcvfeto2zosvg,CPV POWER PLANT NO.1 BOND SPV (RF) LTD,CPV POWER PLANT NO.1 BOND SPV (RF) LTD
-Company,nil7qwaz44g405b,DISCOVERY,DISCOVERY LIMITED
+Company,nil7qwaz44g405b,DISCOVERY LIMITED,DISCOVERY LIMITED
 Company,h5end3vr4pb6j9e,CITY OF JHB METRO MUNICIPALITY,CITY OF JHB METRO MUNICIPALITY
 Company,n4om6t4mnt0zaxc,City of Johannesburg Metropolitan Municipality,City of Johannesburg Metropolitan Municipality
 Company,eghfxk5pluo3k74,CLINDEB INVESTMENTS,CLINDEB INVESTMENTS LIMITED
@@ -1373,7 +1371,7 @@ Person,n60hf7d11s9nc5l,Baliswa Betty Ncanywa,Baliswa Betty Ncanywa
 Company,ec0ta7buxo2gwsz,ESOR LIMITED,ESOR LIMITED
 Person,kz14b207fhv9qq8,Azwianewi Reginah Negondeni,Azwianewi Reginah Negondeni
 Company,hrq18s93yv97xr9,DEUTSCHE BANK AG,DEUTSCHE BANK AG
-Company,odw60jd2xh5hnuy,FIRSTRAND LIMITED,FIRSTRAND LIMITED
+Company,odw60jd2xh5hnuy,Firstrand Ltd.,FIRSTRAND LIMITED
 Person,h56yrbdk4mw3a1b,Bafu Joel Matlaila,Bafu Joel Matlaila
 Company,o19w7ygi9m1u6gt,FARITEC HOLDINGS LIMITED,FARITEC HOLDINGS LIMITED
 Company,jkqqc0np53vhild,GOLD FIELDS LIMITED,GOLD FIELDS LIMITED
@@ -2034,7 +2032,7 @@ Person,lkndjscuhscusqp,Christo Gerhardus Els,Christo Gerhardus Els
 Person,hupq3carr4im3uv,Chritian Nkakareng Rakgoale,Chritian Nkakareng Rakgoale
 Person,cwmx8ut2ovdvero,Cingiwe Kula,Cingiwe Kula
 Person,07dnempo1emi2w6,Clara Mvungama,Clara Mvungama
-Organization,bdi4sja8dx5me12,FIRSTRAND BANK,FIRSTRAND BANK LIMITED
+Organization,bdi4sja8dx5me12,Firstrand Ltd.,FIRSTRAND BANK LIMITED
 Company,iwzsf4h203qy0ki,SIZWENTSALUBAGOBODO,SIZWENTSALUBAGOBODO INCORPORATED
 Person,mlye30lh8mc6nhw,Mamonare Patricia Chueu,Mamonare Patricia Chueu
 Person,gnsjfxp8dfrvk4j,Conthessa Verenca Lombard,Conthessa Verenca Lombard
@@ -8619,7 +8617,6 @@ Organization,h348z34wti6eq0m,FPS Property Solutions (Edms) Bpk,FPS Property Solu
 Organization,khf2uakxh9r08am,Specons Investment,Specons Investment
 Organization,o3srilwom22bk5s,Baxozest (Pty) Ltd,Baxozest (Pty) Ltd
 Organization,k9qggx3e0mitehh,Oppokholo Trading,Oppokholo Trading
-Organization,k4mlmngn1b5rr13,Fast Track,Fast Track
 Organization,lg4a6vj1995vu9e,Nelson Mandela Museum,Nelson Mandela Museum [Counsillor]
 Organization,ortspna277b942e,Mvungezwe CC,Mvungezwe CC
 Organization,hgltpr33tgqz265,Sibonelo Poultry,Sibonelo Poultry
@@ -9068,7 +9065,6 @@ Organization,mgj69tt6xff3i7k,Inzala (Pty) Ltd,Inzala (Pty) Ltd
 Organization,coazr3khhjimg4s,Government Employees Pension Fund,Government Employees Pension Fund
 Organization,m1yt9gmczxmlraq,Johannesburg Water Management,Johannesburg Water Management
 Organization,hrcro32gy1jgjc4,Board of My Life,Board of My Life
-Organization,gdm1nlfoxy73jgq,Non Profit,Non Profit
 Organization,mmxurzsiw2nw5c0,Dyambu Holdings (Pty) Ltd,Dyambu Holdings (Pty) LTd
 Organization,hpxqnsrmm0xsozg,Marula Electronics CC,Marula electronics CC
 Organization,iy98crlc8u32cjt,Viking Fishing,Viking Fishing
@@ -9286,7 +9282,6 @@ Organization,oc97mct0kq6gloq,Thethanke Investments (Pty) Ltd,Thethanke Investmen
 Organization,m820c62wh07vlie,Ogiyonke Amakiosikra,Ogiyonke Amakiosikra
 Organization,ndqj7heztgta293,Moral Regeneration Movement,Moral Regeneration Movement [Board Member]
 Organization,fvpxsxhq4fqhslb,Gauteng Provincial Executive Committee - ANC,Gauteng Provincial Executive Committee - ANC [Member]
-Organization,eybpg44guyuyfw7,Member of the Board,Member of the Board
 Organization,w31rc5g1vnpqiib,Member of the Provincial Executive Committee,Member of the Provincial Executive Committee
 Organization,i5fn9rf7yvakmcj,ETH Homes,ETH Homes
 Organization,e9z1xaj3h8w0itj,Varlour Trading Enterprise,Varlour Trading Enterprise
@@ -10467,7 +10462,6 @@ Organization,guns3hhh5r6ibsm,Matomo Investments (Pty) Ltd,Matomo Investments
 Organization,mojjerxbiz0pfbq,Carbanet Africa Log,Carbanet Africa Log
 Organization,nqvc5bmy7x8pfmp,Camacho and Mendes,Camacho and Mendes
 Organization,gxazmfyvzr9l29w,Ella and elizabeth cc,Ella and elizabeth cc
-Organization,mwgocwwe83hqovp,(Pty) Ltd,(Pty) Ltd
 Organization,h0jk7bsllqztjqo,Southern Storm Properties 72,Southern Storm Properties 72
 Organization,hgcz8ikmnd4pqhw,MICT Master Distribution (Pty) Ltd,Mict Master Distribution
 Organization,mhzw9seql15pa23,Renaissance Construction Projects,"Renaissance Construction Projects  """
@@ -10482,7 +10476,6 @@ Organization,g3el24oyt1d37pe,Mvelaphanda Property Holdings (Pty) Ltd,Mvelaphanda
 Organization,1b49ginp6tm5oke,WIM Works,WIM Works
 Organization,cuovf8r7zzxcsqd,Fillnput 127,Fillnput 127
 Organization,iiiuss0q5td1vdx,Eagle Quest Trading,Eagle Quest Trading
-Organization,950k47yfc3c6q4k,Mode,Mode [Director]
 Organization,l2dunpsqxctm4cr,Non-Executive Director - Catholic Institute for Non Education,Non-Executive Director - Catholic Institute for Non Education
 Organization,gw2ov25lp0k2nkp,Sanpark Alcohol,Sanpark Alcohol
 Organization,e1kx2h4jnq7xcce,Lekgako Mining,Lekgako Mining
@@ -10757,7 +10750,6 @@ Organization,l6z7jxx1ypir38q,SAB,SAB
 Organization,ep6fubvn4l1xtln,HIBBARD PUBLISHERS,Hibbard Publishers
 Organization,iffpafj22je3fo3,D.R.D Gold,D.R.D Gold
 Organization,gfvljp2lm11qn92,Isibonelo Poultry,Isibonelo Poultry [Dormant]
-Organization,op6zlyvcscgigbc,Multi-Choice,MultiChoice
 Organization,hop3b4bh7ssyj35,Lemias Spares,Lemias Spares [Deregistered]
 Organization,dcibx1tmoakxq1y,World On Line,World On Line
 Organization,elhso0insajhk9z,Multi Choice - Thuthuka,Multi Choice - Thuthuka
@@ -10859,7 +10851,7 @@ Organization,m4m6woretxkn12g,Phuthuma Nathi,Phuthu8ma Nathi
 Organization,iffpafj22je3fo3,D.R.D Gold,DRD Gold
 Organization,oz998zcrta7jui8,Momentum Life,Momentum Life
 Organization,gp9v5fhk3ofhvuu,BOE Stockbrokers (Pty) Ltd,BOE Stockbrokers (Pty) Ltd
-Organization,jnr136a3f5bef1s,FNB,FNB
+Organization,jnr136a3f5bef1s,First National Bank,FNB
 Organization,e00uzhktyk1v2bz,StratEquity Empowerment Investment (Pty) Ltd,Stratequity Empowerment Investment (Pty) Ltd
 Organization,ecfdzmunvktwota,Bay Point Trading,Bay Point Trading
 Organization,ldn320g6jmy75ly,Trust to purchase a property,Trust to purchase a property
@@ -11107,7 +11099,6 @@ Organization,hlf1izqk2ljfako,Westmark Trading (Pty) Ltd,Westmark Trading (Pty)Lt
 Organization,nc6upz1m00wggye,Sizisa Ukhanyo Trading 206,Sizisa Ukhanyo Trading 206
 Organization,ik99agtkdf8cghl,Fusion Coronation Top 20-B,Fusion Coronation Top 20 - B
 Organization,tk1yly324ak4khv,Naledi Costs Consultants Bk,Naledi Costs Consultant BK
-Organization,brqgcczv9ruv6ko,Harmony,Harmony
 Organization,gfcszf12gtss11y,Himera Properties (Pty) Ltd,Himera Properties (Pty) Ltd
 Organization,j60a8cv09k46a4d,ICI,ICI
 Organization,r5rsqu0wbp7zg0k,Plan B Trading Enterprise,Plan B Trading Enterprise
@@ -11300,7 +11291,7 @@ Organization,bycxfd07a1dkxsk,Speevee Trading (Pty) Ltd,Speevee Trading (Pty) Ltd
 Organization,lztzu5sf5rga570,Scarlet Ibis Investments 282,Scarlet Ibis Investments 282
 Organization,bmj40vbkoqnmax6,American Rainbow Minerals,American Rainbow Minerals
 Organization,eiyk6yg0473me0y,MMI HOLDINGS,MMI Holdings
-Organization,ggw1h4v3k0p9lpu,FIRSTRAND,Firstrand
+Organization,ggw1h4v3k0p9lpu,Firstrand Ltd.,Firstrand
 Organization,gcuuersbhtoljl1,Island House (Pty) Ltd,Island House (Pty) Ltd
 Organization,kl85y1hvkfbgm2q,LONDANI COAL,Londani Coal
 Organization,m3bnzuiymhvkftk,Sawini,Sawini
@@ -11330,7 +11321,7 @@ Organization,kht69ot630il012,Copper Sunset Trading,Copper Sunset Trading
 Organization,bcnwum6ppxehunw,Silver Seed,Silver Seed
 Organization,oun7cadu6i7f3nj,Allan Gray Balanced,Allan Gray Balanced
 Organization,ldvt7qiqp4qjg71,MTN Ashonge,MTN Ashonge
-Organization,ggw1h4v3k0p9lpu,FIRSTRAND,Firstrand Limited
+Organization,ggw1h4v3k0p9lpu,Firstrand Ltd.,Firstrand Limited
 Organization,dhb1iwqrxa274wt,KARA BOOKS AND STATIONERY,Kara Books
 Organization,hiiu1bz8e26cuxg,MONDI LIMITED,Mondi Limited
 Organization,lbm85c0ulvi4d94,Allan Gray Stable Fund,Allan Gray Stable
@@ -11423,7 +11414,7 @@ Organization,dos5rvnp7orm7wj,VITOMI CONSTRUCTION AND PROJECTS,Vitomi
 Organization,cl8i3le4lkvs84f,Leswekeng/Patsima Aviation,Leswekeng/Patsima Aviation
 Organization,owjwgrmca74qs9d,Yarningdale Share Block,Yarningdale Share Block
 Organization,mqrlwtnvcqsaxpy,Nokone Mokgoloko Consulting,Nokone Mokgoloko Consulting
-Organization,ggw1h4v3k0p9lpu,FIRSTRAND,Firstrand Ltd
+Organization,ggw1h4v3k0p9lpu,Firstrand Ltd.,Firstrand Ltd
 Organization,m1fhmggxyl0nk8e,Letsatsi Oil and Shipping,Letsatsi Oil and Shipping
 Organization,cq7avd39nyvi165,Standard Bank Money Market Fund R,Standard Bank Money Market Fund R
 Organization,cd6a2jpn2g03br2,INVESTEC,Investec
@@ -11590,7 +11581,6 @@ Organization,gbbc6c1f1nurhde,Uncedo Lwamakhosikazi Trading,uncedo Lwamakhusikazi
 Organization,bzdwjchcxzve2gf,Lithemba Investments (Pty),Lithemba Investments Pty
 Organization,npq41lp2yv1ccps,NTK Bpk.,NTK Bpk
 Organization,b6kd60xm6ex7nvj,Phutuma Nathi Investment,Phutuma Nathi Investment
-Organization,d24163zgk4076q5,NUTRITION,NUTRITION
 Organization,frgcwc8mngyvfw7,Sasol ICM Group [African Projects],Sasol ICM Group [African Projects]
 Organization,ksgk9xzennksfmj,Buyisikamva Hardware Solutions,Buyisikamva Hardware Solutions
 Organization,vk9a7ku7a10al6y,Retail Bonds,Retail Bonds
@@ -11599,7 +11589,7 @@ Organization,iml2mvj55fazy3k,Capshop [Cso],Capshop [Cso]
 Organization,ofikpv2dvgvjbs0,Clicks [CLS],Clicks [CLS]
 Organization,gc52lq8iegh38nf,CAPEVIN HOLDINGS,Capevin Holdings Limited
 Organization,m65xsq3bpc4sjfc,Sasol Inzalo Ordinary Shares,Sasal Inzalo Ordinary
-Organization,fpyf1ta1ft6pzep,Telkom [Post Office],Telkom [Post Office]
+Organization,fpyf1ta1ft6pzep,Telkom,Telkom [Post Office]
 Organization,di9wlfl8ut3nz7g,Verutus,Verutus
 Organization,e15zbjqcx88cerp,LONMIN PUBLIC LIMITED COMPANY,Lonmin
 Organization,l81s11ah1a0snvj,Merafe Res.,Merafe Res.
@@ -11697,7 +11687,7 @@ Organization,jsjfvm1n4c7sl2u,Naspers Ltd N,Naspers Ltd N
 Organization,k2x46x0jwypss8t,City Lodge [Clh],City Lodge [Clh]
 Organization,nvch58gvc1n69fy,Reinet [REI],Reinet [REI]
 Organization,nbsw6ck7tmqtc7x,Growthpoint,Growthpoint
-Organization,bdi4sja8dx5me12,FIRSTRAND BANK,Firstrand B-Prefs
+Organization,bdi4sja8dx5me12,Firstrand Ltd.,Firstrand B-Prefs
 Organization,e9i83hvv12z8lef,Goldfields Ltd.,Goldfields Ltd
 Organization,lzy84b2cte7wf9o,SANLAM,SANLAM
 Organization,ciiixzw8t7zddhw,Senzo Information,Senzo Information
@@ -14407,7 +14397,6 @@ Organization,oh7pb7nh1gz06th,Moramadi B,Moramadi B
 Organization,hxyewzstz71gbgs,Ditabo Med. Suppliers,Ditabo Med. Suppliers
 Organization,j3kl86jnxmokith,PAPI AND BRIDGET TRADING,PAPI AND BRIDGET TRADING
 Organization,oajh4ixnktdfkjd,Cavisham Artists Trust,Cavisham Artists Trust
-Organization,bv0suc2ignvtebf,Sciences,Sciences
 Organization,czt4xse90yajkoi,CENTRAL ROUTE TRADING,CENTRAL ROUTE TRADING
 Organization,m7gc6grazyf704r,METOREX,METOREX
 Organization,hlpiie4svca8u1p,TRUE CLASS CONSORTIUM,TRUE CLASS CONSORTIUM
@@ -14436,7 +14425,7 @@ Company,djoedn88utuapkr,RAUBEX GROUP,RAUBEX GROUP
 Company,bxztbhc12g9po6s,ONELOGIX GROUP,ONELOGIX GROUP
 Company,chvnww2df810y64,STEINHOFF SERVICES,STEINHOFF SERVICES
 Organization,d34ugs0h2qqabrj,REMGRO,REMGRO
-Organization,g70aqcn5hsz9eb1,LABAT,LABAT
+Organization,g70aqcn5hsz9eb1,LABAT AFRICA,LABAT
 Organization,m8tqkqapbpeiuo4,ANTALIS SOUTH AFRICA,ANTALIS SOUTH AFRICA
 Organization,jkfeootglmivppy,FIXTRADE,FIXTRADE
 Organization,iyc42yyq8g7o49j,Workers' Education Project,Workers' Education Project
@@ -15178,7 +15167,7 @@ Company,n55y18wpw6j0mte,BSI STEEL,BSI STEEL
 Company,mu2ow8a0ae881jv,CULLINAN HOLDINGS,CULLINAN HOLDINGS
 Company,oh93u72k8lf7scc,CROOKES BROTHERS,CROOKES BROTHERS
 Company,bu8yy1nowbpp5x9,ELB GROUP,ELB GROUP
-Organization,bdi4sja8dx5me12,FIRSTRAND BANK,FIRSTRAND BANK
+Organization,bdi4sja8dx5me12,Firstrand Ltd.,FIRSTRAND BANK
 Organization,dwzzmzvv9v4up9i,JOZI HOUSING,JOZI HOUSING
 Organization,es4rc9lia76b2q1,CDMS Regulaltion Institution,CDMS Regulaltion Institution
 Company,iohofk7uy13mjdy,ERBACON INVESTMENT HOLDINGS,ERBACON INVESTMENT HOLDINGS
@@ -15355,7 +15344,6 @@ Organization,kxqggoftekvax86,Vintria International Enterprises CC,Vintria Intern
 Organization,d3vaqcs09m5wm2f,AJAS PROPERTIES,AJAS PROPERTIES
 Organization,grg7en7820irn5p,RAGENT TRADING,RAGENT TRADING
 Organization,gyy3d35mpm3yobs,Camacho & Mendes,Camacho & Mendes
-Organization,950k47yfc3c6q4k,Mode,Mode
 Organization,erkizjg5zhr6kck,Mamalets Trading Enterprises,Mamalets Trading
 Organization,m80pl1mcs9mamnf,Team South Africa,TEAM SOUTH AFRICA
 Organization,if14uitnknw83d9,New Order Investment 144,New order Investments 144
