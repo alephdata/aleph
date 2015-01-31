@@ -74,7 +74,10 @@ def document_query(args, collections=None, lists=None):
         'lists': {
             'filter': {'terms': {'entities.list': lists or []}},
             'aggs': {
-                'entities': {'terms': {'field': 'entities.id'}}
+                'entities': {
+                    'terms': {'field': 'entities.id',
+                              'size': 100}
+                }
             }
         }
     }
@@ -88,5 +91,18 @@ def document_query(args, collections=None, lists=None):
     }
     # import json
     # print json.dumps(q, indent=2)
+    return q
+
+
+def entity_query(selectors):
+    texts = []
+    for selector in selectors:
+        if hasattr(selector, 'normalized'):
+            selector = selector.normalized
+        texts.append(selector)
+    q = {
+        'query': {'terms': {'normalized': texts}},
+        '_source': ['collection', 'id']
+    }
     return q
 

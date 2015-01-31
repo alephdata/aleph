@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 class TaggerOperator(SourceOperator):
 
-    BATCH_SIZE = 10000
+    BATCH_SIZE = 5000
     DEFAULT_SOURCE = os.path.join(Stage.GROUP, 'normalized.txt')
 
     def compile(self, matches):
@@ -28,7 +28,7 @@ class TaggerOperator(SourceOperator):
             matches[text].add(entity_id)
             if i > 0 and i % self.BATCH_SIZE == 0:
                 yield self.compile(matches), matches
-                matches = {}
+                matches = defaultdict(set)
         if len(matches):
             yield self.compile(matches), matches
 

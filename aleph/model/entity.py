@@ -23,7 +23,7 @@ class Entity(db.Model):
 
     creator_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     creator = db.relationship(User, backref=db.backref('entities',
-                              lazy='dynamic'))
+                              lazy='dynamic', cascade='all, delete-orphan'))
     
     list_id = db.Column(db.Integer(), db.ForeignKey('list.id'))
     list = db.relationship('List', backref=db.backref('entities',
@@ -51,6 +51,10 @@ class Entity(db.Model):
             if selector.normalized == normalized:
                 return True
         return False
+
+    def delete(self):
+        self.selectors.delete()
+        db.session.delete(self)
 
     @classmethod
     def by_normalized_label(cls, label, lst):

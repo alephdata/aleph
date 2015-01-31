@@ -6563,7 +6563,11 @@ body {
 .result .title {
   font-weight: bold;
 }
-.facet {
+.facet-list {
+  max-height: 30em;
+  overflow-y: scroll;
+}
+.facet-list .facet {
   cursor: pointer;
 }
 .entity-icon {

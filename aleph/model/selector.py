@@ -20,7 +20,7 @@ class Selector(db.Model):
 
     entity_id = db.Column(db.Unicode(50), db.ForeignKey('entity.id'))
     entity = db.relationship('Entity', backref=db.backref('selectors',
-                                                          lazy='dynamic'))
+        lazy='dynamic', cascade='all, delete-orphan')) # noqa
 
     @hybrid_property
     def text(self):

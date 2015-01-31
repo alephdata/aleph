@@ -51,7 +51,7 @@ def init():
     db.create_all()
     #init_search()
     # Hacky much?
-    Collection.sync()
+    # Collection.sync()
 
 
 @manager.command
@@ -61,7 +61,6 @@ def index_init():
 
 
 def main():
-    Collection.sync()
     manager.run()
 
 if __name__ == "__main__":

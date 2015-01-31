@@ -15,7 +15,7 @@ class EntityTag(db.Model):
     collection = db.Column(db.Unicode(100))
     package_id = db.Column(db.Unicode(100))
 
-    entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'))
+    entity_id = db.Column(db.Unicode(50), db.ForeignKey('entity.id'))
     entity = db.relationship(Entity, backref=db.backref('tags',
                                                         lazy='dynamic'))
     

@@ -41,6 +41,11 @@ class List(db.Model):
             'updated_at': self.updated_at
         }
 
+    def delete(self):
+        for entity in self.entities:
+            entity.delete()
+        db.session.delete(self)
+
     @classmethod
     def by_label(cls, label):
         q = db.session.query(cls).filter_by(label=label)

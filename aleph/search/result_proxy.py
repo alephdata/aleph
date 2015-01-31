@@ -28,6 +28,9 @@ class ESResultProxy(object):
             q = self.query.copy()
             q['from'] = self._offset
             q['size'] = self._limit
+            # HACKY
+            if q['from'] > 0:
+                del q['aggregations']
             self._result = es.search(index=es_index,
                                      doc_type=self.doc_type,
                                      query=q)

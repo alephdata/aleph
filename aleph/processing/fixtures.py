@@ -1,10 +1,13 @@
 import os
+import logging
 import yaml
 import unicodecsv
 
 from aleph.core import db
 from aleph.model import List, Entity, Selector
+from aleph.processing.entities import refresh
 
+log = logging.getLogger(__name__)
 fixtures_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data',
                              'list_fixtures')
 
@@ -18,16 +21,21 @@ def load_fixture(name):
         data = yaml.load(fh)
 
     lst = List.by_label(data.get('list'))
-    if lst is None:
-        lst = List.create({
-            'label': data.get('list'),
-            'public': data.get('public')
-        })
+    if lst is not None:
+        lst.delete()
+        db.session.commit()
+    
+    lst = List.create({
+        'label': data.get('list'),
+        'public': data.get('public')
+    })
+    log.info("Loading %r", lst)
 
     mapping = data.get('mapping')
     default_category = data.get('default_category')
     assert default_category in Entity.CATEGORIES, default_category
 
+    all_selectors = set()
     with open(os.path.join(dir_name, 'data.csv'), 'rb') as fh:
         for row in unicodecsv.DictReader(fh):
             label = row.get(mapping.get('label', 'label'))
@@ -48,6 +56,7 @@ def load_fixture(name):
             for text in [label, selector]:
                 if text is None:
                     continue
+                all_selectors.add(Selector.normalize(text))
                 if entity.has_selector(text):
                     continue
                 selector = Selector()
@@ -57,4 +66,5 @@ def load_fixture(name):
                 db.session.add(selector)
             
     db.session.commit()
+    refresh(all_selectors)
     print lst

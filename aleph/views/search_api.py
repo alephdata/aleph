@@ -26,12 +26,15 @@ def transform_facets(aggregations):
     coll = aggregations.get('all', {}).get('ftr', {}).get('collections', {})
     coll = coll.get('buckets', [])
     ents = aggregations.get('lists', {}).get('entities', {}).get('buckets', [])
-    entities = Entity.by_id_set([e.get('key') for e in ents])
+    objs = Entity.by_id_set([e.get('key') for e in ents])
+    entities = []
     for entity in ents:
-        entity['entity'] = entities.get(entity.get('key'))
+        entity['entity'] = objs.get(entity.get('key'))
+        if entity['entity'] is not None:
+            entities.append(entity)
     return {
         'collections': coll,
-        'entities': ents
+        'entities': entities
     }
 
 
