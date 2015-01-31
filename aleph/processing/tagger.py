@@ -36,21 +36,23 @@ class TaggerOperator(SourceOperator):
         text = normalized.data()
         EntityTag.delete_set(normalized.package.collection,
                              normalized.package.id)
+        db.session.flush()
+
         entities = set()
         for rex, matches in self.expressions():
             for match in rex.finditer(text):
                 _, match, _ = match.groups()
-                entities = entities.union(matches[match])
+                entities.update(matches[match])
 
         for entity in entities:
             tag = EntityTag()
             tag.collection = normalized.package.collection
-            tag.package = normalized.package.id
+            tag.package_id = normalized.package.id
             tag.entity_id = entity
             db.session.add(tag)
 
-        if len(entities):
-            log.info("Tagged %r with %d entities", normalized.package,
-                     len(entities))
         db.session.commit()
-        
+
+        if len(entities):
+            log.info("Tagged %r with %d entities", normalized.package.id,
+                     len(entities))

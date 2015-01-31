@@ -2,6 +2,7 @@ import logging
 
 from aleph.core import es, es_index
 from aleph.views.util import AppEncoder
+from aleph.model import EntityTag
 from aleph.search.mapping import DOC_TYPE
 
 from jinja2.filters import do_truncate as truncate
@@ -40,12 +41,15 @@ def index_package(package, plain_text, normalized_text):
     if plain_text.exists():
         body['text'] = plain_text.fh().read()
         body['summary'] = html_summary(body['text'])
+
     if normalized_text.exists():
         body['normalized'] = normalized_text.fh().read()
 
     if not body['title']:
         log.error("No title for package %r, skipping", package)
         return
+
+    body['entities'] = EntityTag.by_package(package.collection, package.id)
 
     log.info("Indexing: %r", body['title'])
     es.index(es_index, DOC_TYPE, body, package.id)
