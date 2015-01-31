@@ -40,18 +40,18 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
     });
   };
 
-  $scope.toggleCollectionFilter = function(slug) {
-    var idx = $scope.query.collection.indexOf(slug);
+  $scope.toggleFilter = function(name, val) {
+    var idx = $scope.query[name].indexOf(val);
     if (idx == -1) {
-      $scope.query.collection.push(slug);
+      $scope.query[name].push(val);
     } else {
-      $scope.query.collection.splice(idx, 1);
+      $scope.query[name].splice(idx, 1);
     }
     $scope.submitSearch();
   };
 
-  $scope.hasCollectionFilter = function(slug) {
-    return $scope.query.collection.indexOf(slug) != -1;
+  $scope.hasFilter = function(name, val) {
+    return $scope.query[name].indexOf(val) != -1;
   };
 
   $scope.numQueriedCollections = function() {

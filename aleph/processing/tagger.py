@@ -39,6 +39,7 @@ class TaggerOperator(SourceOperator):
         db.session.flush()
 
         entities = set()
+        source = normalized.package.source
         for rex, matches in self.expressions():
             for match in rex.finditer(text):
                 _, match, _ = match.groups()

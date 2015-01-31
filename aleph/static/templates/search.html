@@ -26,13 +26,28 @@
   </div>
 
   <div class="col-md-3">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">People, Companies, etc.</div>    
+      <ul class="list-group">
+        <li class="list-group-item facet animate toggle"
+          ng-repeat="entity in result.facets.entities"
+          ng-class="{'active': hasFilter('entity', entity.key)}"
+          ng-click="toggleFilter('entity', entity.key)">
+          <span class="badge">{{entity.doc_count}}</span>
+          <entity-icon category="entity.entity.category"></entity-icon>
+          {{entity.entity.label}}
+        </li>
+      </ul>
+    </div>
+  
     <div class="panel panel-default">
       <div class="panel-heading">Document collections</div>    
       <ul class="list-group">
-        <li class="list-group-item facet"
+        <li class="list-group-item facet animate toggle"
           ng-repeat="facet in result.facets.collections"
-          ng-class="{'active': hasCollectionFilter(facet.key)}"
-          ng-click="toggleCollectionFilter(facet.key)">
+          ng-class="{'active': hasFilter('collection', facet.key)}"
+          ng-click="toggleFilter('collection', facet.key)">
           <span class="badge">{{facet.doc_count}}</span>
           {{collections[facet.key].label}}
         </li>

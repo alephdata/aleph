@@ -44,17 +44,22 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
     $location.search($scope.query);
   }
 
-  $scope.loadQuery = function() {
-    $scope.query = $location.search();
-    if (!angular.isArray($scope.query.collection)) {
-      if (angular.isDefined($scope.query.collection) &&
-          $scope.query.collection.length) {
-        $scope.query.collection = [$scope.query.collection];
+  var ensureArray = function(data) {
+    if (!angular.isArray(data)) {
+      if (angular.isDefined(data) && data.length) {
+        data = [data];
       } else {
-        $scope.query.collection = [];
+        data = [];
       }
     }
-    console.log("loaded query: ", $scope.query);
+    return data;
+  };
+
+  $scope.loadQuery = function() {
+    $scope.query = $location.search();
+    $scope.query.collection = ensureArray($scope.query.collection);
+    $scope.query.entity = ensureArray($scope.query.entity);
+    //console.log("loaded query: ", $scope.query);
   };
 
   $scope.loadQuery();

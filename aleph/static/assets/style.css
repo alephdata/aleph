@@ -6566,6 +6566,9 @@ body {
 .facet {
   cursor: pointer;
 }
+.entity-icon {
+  margin-right: 0.5em;
+}
 
 /* ------------------------------------------- */
 /* Mixins

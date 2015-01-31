@@ -32,7 +32,7 @@ DOC_MAPPING = {
             "include_in_parent": True,
             "properties": {
                 "id": {"type": "string", "index": "not_analyzed"},
-                "label": {"type": "string", "index": "analyzed"},
+                "label": {"type": "string", "index": "not_analyzed"},
                 "list": {"type": "integer", "index": "not_analyzed"}
             }
         }

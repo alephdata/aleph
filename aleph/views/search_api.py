@@ -2,6 +2,7 @@ from flask import Blueprint, request
 
 from aleph import authz
 from aleph.core import url_for
+from aleph.model import Entity
 from aleph.views.util import jsonify, Pager
 from aleph.crawlers import get_sources
 from aleph.search.queries import document_query
@@ -24,16 +25,21 @@ def add_urls(doc):
 def transform_facets(aggregations):
     coll = aggregations.get('all', {}).get('ftr', {}).get('collections', {})
     coll = coll.get('buckets', [])
-    facets = {
-        'collections': coll
+    ents = aggregations.get('lists', {}).get('entities', {}).get('buckets', [])
+    entities = Entity.by_id_set([e.get('key') for e in ents])
+    for entity in ents:
+        entity['entity'] = entities.get(entity.get('key'))
+    return {
+        'collections': coll,
+        'entities': ents
     }
-    return facets
 
 
 @blueprint.route('/api/1/query')
 def query():
     collections = authz.authz_collections('read')
-    query = document_query(request.args, collections=collections)
+    lists = authz.authz_lists('read')
+    query = document_query(request.args, collections=collections, lists=lists)
     pager = Pager(search_documents(query),
                   results_converter=lambda ds: [add_urls(d) for d in ds])
     data = pager.to_dict()

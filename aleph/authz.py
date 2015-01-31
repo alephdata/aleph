@@ -20,7 +20,7 @@ def authz_lists(action):
     if action == 'write' and request.authz_lists.get('write') is None:
         request.authz_lists['write'] = List.user_list_ids(current_user,
             include_public=False) # noqa
-    return request.authz_colls[action] or []
+    return request.authz_lists[action] or []
 
 
 def collection_read(name):

@@ -16,6 +16,7 @@ manager.add_command("assets", ManageAssets(assets))
 @manager.command
 def crawl(source, force=False):
     """ Execute the crawler for a given source specification. """
+    Collection.sync()
     crawl_source(source, ignore_tags=force)
 
 
@@ -23,12 +24,14 @@ def crawl(source, force=False):
 def reset(source):
     """ Reset the crawler state for a given source specification. """
     CrawlState.flush(source)
+    Collection.sync()
     db.session.commit()
 
 
 @manager.command
 def process(collection_name, force=False):
     """ Index all documents in the given collection. """
+    Collection.sync()
     collection = archive.get(collection_name)
     pipeline = make_pipeline(collection, overwrite=force)
     pipeline.process_sync()

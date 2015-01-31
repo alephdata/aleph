@@ -39,7 +39,7 @@ class Entity(db.Model):
             'label': self.label,
             'category': self.category,
             'creator_id': self.creator_id,
-            'selectors': [s.text for s in self.selectors],
+            # 'selectors': [s.text for s in self.selectors],
             'list_id': self.list_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
@@ -63,6 +63,17 @@ class Entity(db.Model):
     def by_id(cls, id):
         q = db.session.query(cls).filter_by(id=id)
         return q.first()
+
+    @classmethod
+    def by_id_set(cls, ids):
+        if not len(ids):
+            return {}
+        q = db.session.query(cls)
+        q = q.filter(cls.id.in_(ids))
+        entities = {}
+        for ent in q:
+            entities[ent.id] = ent
+        return entities
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.label)
