@@ -51,7 +51,6 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
     } else {
       $scope.collection.users.push(id);
     }
-    console.log($scope.collection);
   };
 
   $scope.save = function(form) {
