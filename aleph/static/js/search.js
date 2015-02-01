@@ -129,7 +129,10 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
       nodeContainer = svg.append("g"),
       linkElements = null,
       nodeElements = null,
-      force = d3.layout.force().linkStrength(0.2).gravity(0.1),
+      force = d3.layout
+                .force()
+                .linkStrength(0.2)
+                .gravity(0.1),
       graphData = {};
 
   var updateSize = function() {
@@ -150,6 +153,7 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
 
     force = force
       .linkDistance(width/3)
+      .on('tick', tick)
       .size([width, height])
       .nodes(graphData.nodes)
       .links(graphData.links)
@@ -175,7 +179,6 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
 
     nodeElements.enter().append("circle")
         .attr("class", function(d) { return 'node ' + d.category; })
-        .classed('active', function(d) { return Query.hasFilter('entity', d.id); })
         .attr("r", 2)
         .attr("tooltip-append-to-body", true)
         .attr("tooltip", function(d){ return d.label; })
@@ -190,23 +193,24 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
 
     nodeElements.exit().remove();
 
-    //nodeElements.append("title")
-    //    .text(function(d) { return d.label; });
-    $compile($('#graph'))($scope);
-
-    force.on("tick", function() {
-      linkElements
-          .attr("x1", function(d) { return d.source.x; })
-          .attr("y1", function(d) { return d.source.y; })
-          .attr("x2", function(d) { return d.target.x; })
-          .attr("y2", function(d) { return d.target.y; });
-
-      nodeElements
-          .attr("cx", function(d) { return d.x; })
-          .attr("cy", function(d) { return d.y; });
+    nodeElements.classed('active', function(d) {
+      return Query.hasFilter('entity', d.id);
     });
 
+    $compile($('#graph'))($scope);
   };
+
+  var tick = function() {
+    linkElements
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    nodeElements
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+  }
 
   var init = function() {
     $scope.load();
@@ -216,6 +220,7 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
   $scope.load = function() {
     if (Query.state.mode != 'graph') return;
     var query = angular.copy(Query.load());
+    query['limit'] = 150; // hello dunbar?
     $http.get('/api/1/graph', {params: query}).then(function(res) {
       graphData = res.data;
       updateSize();
