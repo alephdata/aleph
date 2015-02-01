@@ -9,7 +9,7 @@ aleph.controller('GraphCtrl', ['$scope', '$location', '$http', 'debounce',
 
   var updateSize = function() {
     var width = $(window).width() * 0.9,
-        height = width * 0.7;
+        height = $(window).height() * 0.9;
     svg.attr("width", width)
        .attr("height", height);
     redraw(width, height);
@@ -20,13 +20,13 @@ aleph.controller('GraphCtrl', ['$scope', '$location', '$http', 'debounce',
     if (graphData === null) return;
 
     var degreeExtent = d3.extent(graphData.nodes, function(n) { return n.degree});
-    var nodeScale = d3.scale.linear().domain(degreeExtent).range([5, 50]);
+    var nodeScale = d3.scale.linear().domain(degreeExtent).range([5, width/30]);
     var linkExtent = d3.extent(graphData.links, function(n) { return n.weight});
-    var linkScale = d3.scale.linear().domain(linkExtent).range([1, 10]);
+    var linkScale = d3.scale.linear().domain(linkExtent).range([1, width/100]);
 
     force = d3.layout.force()
       //.charge(-120)
-      .linkDistance(50 * 4)
+      .linkDistance(width/5)
       .linkStrength(2)
       .size([width, height]);
 
