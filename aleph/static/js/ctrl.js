@@ -1,8 +1,8 @@
 
-aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$modal', 'Session',
-  function($scope, $rootScope, $location, $http, $modal, Session) {
+aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$modal', 'Session', 'Query',
+  function($scope, $rootScope, $location, $http, $modal, Session, Query) {
   $scope.session = {logged_in: false};
-  $scope.query = {};
+  $scope.query = Query.state;
 
   Session.get(function(session) {
     $scope.session = session;
@@ -41,28 +41,8 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
 
   $scope.submitSearch = function() {
     $location.path('/search');
-    $location.search($scope.query);
-  }
-
-  var ensureArray = function(data) {
-    if (!angular.isArray(data)) {
-      if (angular.isDefined(data) && data.length) {
-        data = [data];
-      } else {
-        data = [];
-      }
-    }
-    return data;
+    Query.submit();
   };
-
-  $scope.loadQuery = function() {
-    $scope.query = $location.search();
-    $scope.query.mode = $scope.query.mode || 'table';
-    $scope.query.collection = ensureArray($scope.query.collection);
-    $scope.query.entity = ensureArray($scope.query.entity);
-  };
-
-  $scope.loadQuery();
 
 }]);
 
