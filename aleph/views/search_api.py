@@ -43,9 +43,9 @@ def query():
     collections = authz.authz_collections('read')
     lists = authz.authz_lists('read')
     query = document_query(request.args, collections=collections, lists=lists)
-    pager = Pager(search_documents(query),
+    results = search_documents(query)
+    pager = Pager(results,
                   results_converter=lambda ds: [add_urls(d) for d in ds])
     data = pager.to_dict()
-    raw = pager._results.result
-    data['facets'] = transform_facets(raw.get('aggregations', {}))
+    data['facets'] = transform_facets(results.result.get('aggregations', {}))
     return jsonify(data)
