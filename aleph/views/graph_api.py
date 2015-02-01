@@ -1,6 +1,7 @@
 from itertools import combinations
 
 from flask import Blueprint, request
+from restpager.args import arg_int
 import networkx as nx
 from networkx import degree
 from networkx.readwrite import json_graph
@@ -25,10 +26,25 @@ def multigraph_to_weighted(multigraph):
             graph.add_edge(u, v, weight=w)
     for id in multigraph.nodes_iter():
         deg = degree(graph, id, weight='weight')
-        if deg == 0:
-            graph.remove_node(id)
-        else:
-            graph.node[id]['degree'] = deg
+        graph.node[id]['degree'] = deg
+    return graph
+
+
+def paginate_graph(graph):
+    graph.partial = None
+    limit = arg_int('limit')
+    if limit is None or graph.number_of_nodes() <= limit:
+        return graph
+
+    graph.partial = {
+        'total': graph.number_of_nodes(),
+        'shown': limit
+    }
+    nodes = sorted(graph.nodes_iter(data=True),
+                   key=lambda (id, d): d['degree'],
+                   reverse=True)
+    for id, data in nodes[limit:]:
+        graph.remove_node(id)
     return graph
 
 
@@ -50,10 +66,13 @@ def generate_graph(args):
             entities.add(entity.get('id'))
         for (src, dst) in combinations(entities, 2):
             graph.add_edge(src, dst, weight=1)
-    return multigraph_to_weighted(graph)
+    graph = multigraph_to_weighted(graph)
+    return paginate_graph(graph)
 
 
 @blueprint.route('/api/1/graph')
 def query():
     graph = generate_graph(request.args)
-    return jsonify(json_graph.node_link_data(graph))
+    data = json_graph.node_link_data(graph)
+    data['partial'] = graph.partial
+    return jsonify(data)

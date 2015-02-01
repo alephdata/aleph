@@ -39,6 +39,10 @@
         <div id="graph">
           <svg></svg>
         </div>
+        <div class="alert alert-warning" ng-show="partial">
+          For clarity, only the {{partial.shown}} most well-connected entities 
+          are shown out of a network of {{partial.total}}.
+        </div>
       </div>
     </div>
 

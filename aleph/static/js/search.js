@@ -123,6 +123,7 @@ aleph.controller('SearchListCtrl', ['$scope', '$location', '$http',
 
 aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile', 'debounce', 'Query',
   function($scope, $location, $http, $compile, debounce, Query) {
+  $scope.partial = null;
 
   var svg = d3.select("#graph svg"),
       linkContainer = svg.append("g"),
@@ -131,6 +132,7 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
       nodeElements = null,
       force = d3.layout
                 .force()
+                .charge(-100)
                 .linkStrength(0.2)
                 .gravity(0.1),
       graphData = {};
@@ -220,9 +222,10 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
   $scope.load = function() {
     if (Query.state.mode != 'graph') return;
     var query = angular.copy(Query.load());
-    query['limit'] = 150; // hello dunbar?
+    query['limit'] = 75; // hello dunbar?
     $http.get('/api/1/graph', {params: query}).then(function(res) {
       graphData = res.data;
+      $scope.partial = res.data.partial;
       updateSize();
     });
   };
