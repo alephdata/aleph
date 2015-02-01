@@ -67,7 +67,11 @@
       <script id="{{path}}" type="text/ng-template">{{ tmpl | safe }}</script>
     {% endfor %}
 
-    {% assets "js" %}
+    {% assets "deps" %}
+      <script src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+    {% assets "app" %}
       <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
   </body>

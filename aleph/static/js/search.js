@@ -146,7 +146,7 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
   };
 
   var redraw = function(width, height) {
-    if (graphData === null) return;
+    if (graphData === null || !graphData.nodes) return;
 
     var degreeExtent = d3.extent(graphData.nodes, function(n) { return n.degree});
     var nodeScale = d3.scale.sqrt().domain(degreeExtent).range([5, width/30]);

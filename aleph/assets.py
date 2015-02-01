@@ -2,7 +2,7 @@ from flask.ext.assets import Bundle
 
 from aleph.core import assets
 
-js_assets = Bundle(
+deps_assets = Bundle(
     'vendor/jquery/dist/jquery.js',
     'vendor/d3/d3.js',
     'vendor/angular/angular.js',
@@ -12,6 +12,11 @@ js_assets = Bundle(
     'vendor/angular-truncate/src/truncate.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
     'vendor/nginfinitescroll/build/ng-infinite-scroll.js',
+    filters='uglifyjs',
+    output='assets/deps.js'
+)
+
+app_assets = Bundle(
     'js/app.js',
     'js/services.js',
     'js/search.js',
@@ -28,5 +33,6 @@ css_assets = Bundle(
     output='assets/style.css'
 )
 
-assets.register('js', js_assets)
+assets.register('deps', deps_assets)
+assets.register('app', app_assets)
 assets.register('css', css_assets)

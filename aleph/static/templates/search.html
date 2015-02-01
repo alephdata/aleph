@@ -57,7 +57,7 @@
           ng-click="toggleFilter('entity', entity.key)">
           <span class="badge">{{entity.doc_count}}</span>
           <entity-icon category="entity.entity.category"></entity-icon>
-          {{entity.entity.label}}
+          <span class="lbl">{{entity.entity.label}}</span>
         </li>
       </ul>
     </div>
@@ -77,7 +77,7 @@
           ng-class="{'active': hasFilter('collection', facet.key)}"
           ng-click="toggleFilter('collection', facet.key)">
           <span class="badge">{{facet.doc_count}}</span>
-          {{collections[facet.key].label}}
+          <span class="lbl">{{collections[facet.key].label}}</span>
         </li>
       </ul>
     </div>
