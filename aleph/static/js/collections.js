@@ -57,7 +57,7 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
   $scope.save = function(form) {
       var res = $http.post(apiUrl, $scope.collection);
       res.success(function(data) {
-          $modalInstance.dismiss('ok');
+          $location.path('/collections');
       });
       //res.error(grano.handleFormError(form));
   };
