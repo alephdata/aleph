@@ -6520,6 +6520,9 @@ body {
 .x-ng-cloak {
   display: none !important;
 }
+a {
+  cursor: pointer;
+}
 .navbar .navbar-brand {
   font-size: 2em;
 }

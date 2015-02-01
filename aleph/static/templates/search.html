@@ -1,10 +1,15 @@
 <div class="row">
   <div class="col-md-9">
-    <ol class="breadcrumb">
-      <li class="active">
-        Found {{result.total}} documents across {{numQueriedCollections()}} collections.
+    <ul class="nav nav-tabs">
+      <li role="presentation" ng-class="{'active': query.mode == 'table'}">
+        <a ng-click="setMode('table')">
+          Documents <span class="badge">{{result.total || '0'}}</span>
+        </a>
       </li>
-    </ol>
+      <li role="presentation" ng-class="{'active': query.mode == 'graph'}">
+        <a ng-click="setMode('graph')">Actor network</a>
+      </li>
+    </ul>
 
     <div class="alert alert-warning" ng-show="!result.total">
       No results were found.

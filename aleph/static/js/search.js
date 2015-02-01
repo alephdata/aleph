@@ -27,6 +27,11 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http',
     });
   };
 
+  $scope.setMode = function(mode) {
+    $scope.query.mode = mode;
+    $scope.submitSearch();
+  }
+
   $scope.hasMore = function() {
     return !isLoading && $scope.result.next_url !== null;
   };
