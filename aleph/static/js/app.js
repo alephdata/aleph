@@ -9,14 +9,7 @@ aleph.config(['$routeProvider', '$locationProvider',
     reloadOnSearch: false,
     loginRequired: false
   });
-
-  $routeProvider.when('/graph', {
-    templateUrl: 'graph.html',
-    controller: 'GraphCtrl',
-    reloadOnSearch: false,
-    loginRequired: false
-  });
-
+  
   $routeProvider.when('/collections', {
     templateUrl: 'collections_index.html',
     controller: 'CollectionsIndexCtrl',
