@@ -6576,12 +6576,25 @@ a {
 .entity-icon {
   margin-right: 0.5em;
 }
+.entity-icon.Person {
+  color: #f15623;
+}
+.entity-icon.Company {
+  color: #95c93d;
+}
+.entity-icon.Organization {
+  color: #00b48d;
+}
+.entity-icon.Other {
+  color: #eb0080;
+}
 #graph .node {
   stroke: #fff;
   stroke-width: 1.5px;
 }
 #graph .node.active {
   stroke: #337ab7;
+  stroke-width: 3px;
 }
 #graph .node.Person {
   fill: #f15623;

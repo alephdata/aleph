@@ -124,7 +124,7 @@ aleph.controller('SearchListCtrl', ['$scope', '$location', '$http',
 aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile', 'debounce', 'Query',
   function($scope, $location, $http, $compile, debounce, Query) {
 
-  var svg = d3.select("#graph").append("svg"),
+  var svg = d3.select("#graph svg"),
       linkContainer = svg.append("g"),
       nodeContainer = svg.append("g"),
       linkElements = null,
