@@ -1,17 +1,33 @@
+
+
+aleph.directive('collectionsFrame', ['$http', function($http) {
+  return {
+    restrict: 'E',
+    transclude: true,
+    scope: {
+      'collection': '='
+    },
+    templateUrl: 'collections_frame.html',
+    link: function (scope, element, attrs, model) {
+      $http.get('/api/1/collections').then(function(res) {
+        scope.collections = res.data;
+      })
+    }
+  };
+}]);
+
+
 aleph.controller('CollectionsIndexCtrl', ['$scope', '$location', '$http',
   function($scope, $location, $http) {
   $scope.collections = {};
 
-  $http.get('/api/1/collections').then(function(res) {
-    $scope.collections = res.data;
-  })
-
 }]);
 
-aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$modalInstance', 'slug',
-  function($scope, $location, $http, $modalInstance, slug) {
+
+aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$routeParams',
+  function($scope, $location, $http, $routeParams) {
   
-  var apiUrl = '/api/1/collections/' + slug;
+  var apiUrl = '/api/1/collections/' + $routeParams.slug;
   $scope.collection = {};
   $scope.users = {};
 
@@ -24,7 +40,8 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$modal
   })
 
   $scope.hasUser = function(id) {
-    return $scope.collection.users.indexOf(id) != -1;
+    var users = $scope.collection.users || [];
+    return users.indexOf(id) != -1;
   };
 
   $scope.toggleUser = function(id) {
@@ -37,11 +54,7 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$modal
     console.log($scope.collection);
   };
 
-  $scope.cancel = function() {
-      $modalInstance.dismiss('cancel');
-  };
-
-  $scope.update = function(form) {
+  $scope.save = function(form) {
       var res = $http.post(apiUrl, $scope.collection);
       res.success(function(data) {
           $modalInstance.dismiss('ok');

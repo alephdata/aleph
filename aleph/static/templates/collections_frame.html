@@ -1,0 +1,30 @@
+<ol class="breadcrumb">
+  <li>
+    <a href="/">Home</a>
+  </li>
+  <li ng-class="{'active': !collection}">
+    <a href="/collections">Document collections</a>
+  </li>
+  <li ng-show="collection" class="active">
+    {{collection.label}}
+  </li>
+</ol>
+
+<div class="row">
+  <div class="col-md-3">
+    <ul class="nav nav-pills nav-stacked">
+      <li ng-repeat="coll in collections.results"
+          ng-class="{'active': coll.slug == collection.slug,
+                     'disabled': !coll.token}">
+        <a href="/collections/{{coll.slug}}" ng-show="coll.token">
+          {{coll.label}}
+        </a>
+        <a ng-hide="coll.token">
+          {{coll.label}}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-9" ng-transclude>
+  </div>
+</div>

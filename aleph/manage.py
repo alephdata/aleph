@@ -23,8 +23,8 @@ def crawl(source, force=False):
 @manager.command
 def reset(source):
     """ Reset the crawler state for a given source specification. """
-    CrawlState.flush(source)
     Collection.sync()
+    CrawlState.flush(source)
     db.session.commit()
 
 
@@ -51,7 +51,7 @@ def init():
     db.create_all()
     #init_search()
     # Hacky much?
-    # Collection.sync()
+    Collection.sync()
 
 
 @manager.command

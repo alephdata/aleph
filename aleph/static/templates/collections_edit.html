@@ -1,11 +1,8 @@
 
-<div class="modal-header">
-  <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
-  <h4 class="modal-title">Manage document collection: {{collection.label}}</h4>
-</div>
+<collections-frame collection="collection">
 
-<form class="form-horizontal" role="form" name="editCollection" ng-submit="update(editCollection)">
-  <div class="modal-body">
+  <form class="form-horizontal" role="form" name="editCollection" ng-submit="save(editCollection)">
+
     <div class="row">
       <div class="col-md-6">   
         <div class="form-group" ng-class="{'has-error': editCollection.label.$invalid}">
@@ -43,11 +40,19 @@
             <span class="help-block">Use the token to query and submit documents via the API.</span>
           </div>
         </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </div>
       </div>
+
+
       <div class="col-md-6">
         <table class="table table-condensed">
-          <tr ng-repeat="user in users.results">
-            <th colspan="2">Users who have access</td>
+          <tr>
+            <th colspan="2">Users who have access</th>
           </tr>
           <tr ng-repeat="user in users.results">
             <td width='1%'>
@@ -59,10 +64,6 @@
         </table>
       </div>
     </div>
-  </div>
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
-    <button type="submit" class="btn btn-primary">Save</button>
-  </div>
-</form>
+  
+  </form>
+</collection-frame>

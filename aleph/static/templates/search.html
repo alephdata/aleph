@@ -67,7 +67,14 @@
     </div>
   
     <div class="panel panel-default">
-      <div class="panel-heading">Document collections</div>    
+      <div class="panel-heading">
+        <span class="pull-right">
+          <a href="/collections" ng-show="session.logged_in">
+            <i class="fa fa-cog"></i>
+          </a>
+        </span>
+        Document collections
+      </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
           ng-repeat="facet in result.facets.collections"
