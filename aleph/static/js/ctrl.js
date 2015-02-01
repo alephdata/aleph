@@ -57,9 +57,9 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
 
   $scope.loadQuery = function() {
     $scope.query = $location.search();
+    $scope.query.mode = $scope.query.mode || 'table';
     $scope.query.collection = ensureArray($scope.query.collection);
     $scope.query.entity = ensureArray($scope.query.entity);
-    //console.log("loaded query: ", $scope.query);
   };
 
   $scope.loadQuery();

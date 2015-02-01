@@ -13,16 +13,30 @@
       </span>
     </div>
 
-    <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()" infinite-scroll-distance="3">
-      <div class="result animate toggle" ng-repeat="doc in result.results">
-        <a ng-href="{{doc.source.site}}" target="_self" class="source">{{doc.source.label}}</a>
-        <a ng-href="{{doc.source_url}}" target="_self" class="title">{{doc.title}}</a>
-        <span class="archive">
-          [<a ng-href="{{doc.archive_url}}" target="_self">cached</a>]
-        </span>
-        <span class="summary">{{doc.summary}}</span>
+    <div ng-show="query.mode == 'table'">
+      <div ng-controller="SearchListCtrl">
+        <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()"
+          infinite-scroll-distance="3">
+          <div class="result animate toggle" ng-repeat="doc in result.results">
+            <a ng-href="{{doc.source.site}}" target="_self" class="source">{{doc.source.label}}</a>
+            <a ng-href="{{doc.source_url}}" target="_self" class="title">{{doc.title}}</a>
+            <span class="archive">
+              [<a ng-href="{{doc.archive_url}}" target="_self">cached</a>]
+            </span>
+            <span class="summary">{{doc.summary}}</span>
+          </div>
+        </div>
       </div>
     </div>
+
+    <div ng-show="query.mode == 'graph'">
+      <div ng-controller="SearchGraphCtrl">
+        <div id="graph"></div>
+      </div>
+    </div>
+
+
+
   </div>
 
   <div class="col-md-3">
