@@ -80,14 +80,18 @@ aleph.controller('SearchListCtrl', ['$scope', '$location', '$http',
 aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', 'debounce',
   function($scope, $location, $http, debounce) {
 
-  var svg = null,
+  var svg = d3.select("#graph").append("svg"),
+      linkContainer = svg.append("g"),
+      nodeContainer = svg.append("g"),
+      linkElements = null,
+      nodeElements = null,
       force = d3.layout.force().linkStrength(2),
       graphData = {};
 
 
   var updateSize = function() {
     var width = $('#graph').width(),
-        height = $(window).height() * 0.7;
+        height = $(window).height() * 0.8;
     svg.attr("width", width)
        .attr("height", height);
     redraw(width, height);
@@ -97,40 +101,53 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', 'debounce',
     if (graphData === null) return;
 
     var degreeExtent = d3.extent(graphData.nodes, function(n) { return n.degree});
-    var nodeScale = d3.scale.linear().domain(degreeExtent).range([5, width/30]);
+    var nodeScale = d3.scale.sqrt().domain(degreeExtent).range([5, width/30]);
     var linkExtent = d3.extent(graphData.links, function(n) { return n.weight});
-    var linkScale = d3.scale.linear().domain(linkExtent).range([1, width/100]);
+    var linkScale = d3.scale.sqrt().domain(linkExtent).range([1, width/100]);
 
     force = force
-      .linkDistance(width/4)
+      .linkDistance(width/3)
       .size([width, height])
       .nodes(graphData.nodes)
       .links(graphData.links)
       .start();
 
-    var link = svg.selectAll(".link")
-        .data(graphData.links)
-      .enter().append("line")
+    linkElements = linkContainer.selectAll(".link")
+        .data(graphData.links, function(l) {
+          return l.source.id + '.' + l.target.id;
+        });
+
+    linkElements.enter().append("line")
         .attr("class", "link")
         .style('stroke-width', function(d) { return linkScale(d.weight); });
 
-    var node = svg.selectAll(".node")
-        .data(graphData.nodes)
-      .enter().append("circle")
-        .attr("class", function(d) { return 'node ' + d.category; })
-        .attr("r", function(d) { return nodeScale(d.degree); })
-        .call(force.drag);
+    linkElements.exit().remove();
 
-    node.append("title")
+    nodeElements = nodeContainer.selectAll(".node")
+        .data(graphData.nodes, function(n) { return n.id; });
+
+    nodeElements.enter().append("circle")
+        .attr("class", function(d) { return 'node ' + d.category; })
+        .attr("r", 2)
+        .call(force.drag)
+        .transition()
+          .duration(1000)
+          .attr("r", function(d) { return nodeScale(d.degree); });
+
+    nodeElements.exit().remove();
+
+    nodeElements.append("title")
         .text(function(d) { return d.label; });
 
     force.on("tick", function() {
-      link.attr("x1", function(d) { return d.source.x; })
+      linkElements
+          .attr("x1", function(d) { return d.source.x; })
           .attr("y1", function(d) { return d.source.y; })
           .attr("x2", function(d) { return d.target.x; })
           .attr("y2", function(d) { return d.target.y; });
 
-      node.attr("cx", function(d) { return d.x; })
+      nodeElements
+          .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; });
     });
 
@@ -138,7 +155,6 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', 'debounce',
 
   var init = function() {
     $scope.load();
-    svg = d3.select("#graph").append("svg");
     $(window).resize(debounce(updateSize, 400));
   }
 
