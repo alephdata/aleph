@@ -6573,6 +6573,26 @@ body {
 .entity-icon {
   margin-right: 0.5em;
 }
+#graph .node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+#graph .node.Person {
+  fill: #f15623;
+}
+#graph .node.Company {
+  fill: #95c93d;
+}
+#graph .node.Organization {
+  fill: #00b48d;
+}
+#graph .node.Other {
+  fill: #eb0080;
+}
+#graph .link {
+  stroke: #999;
+  stroke-opacity: .4;
+}
 
 /* ------------------------------------------- */
 /* Mixins

@@ -17,6 +17,7 @@ def angular_templates():
 @app.route('/collections/<path:slug>')
 @app.route('/collections')
 @app.route('/search')
+@app.route('/graph')
 @app.route('/login')
 @app.route('/')
 def ui(**kwargs):

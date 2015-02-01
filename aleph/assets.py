@@ -4,7 +4,9 @@ from aleph.core import assets
 
 js_assets = Bundle(
     'vendor/jquery/dist/jquery.js',
+    'vendor/d3/d3.js',
     'vendor/angular/angular.js',
+    'vendor/ng-debounce/angular-debounce.js',
     'vendor/angular-route/angular-route.js',
     'vendor/angular-animate/angular-animate.js',
     'vendor/angular-truncate/src/truncate.js',
@@ -13,6 +15,7 @@ js_assets = Bundle(
     'js/app.js',
     'js/services.js',
     'js/search.js',
+    'js/graph.js',
     'js/collections.js',
     'js/ctrl.js',
     filters='uglifyjs',

@@ -1,4 +1,4 @@
-var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'truncate', 'infinite-scroll']);
+var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'debounce', 'truncate', 'infinite-scroll']);
 
 aleph.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
@@ -6,6 +6,13 @@ aleph.config(['$routeProvider', '$locationProvider',
   $routeProvider.when('/search', {
     templateUrl: 'search.html',
     controller: 'SearchCtrl',
+    reloadOnSearch: false,
+    loginRequired: false
+  });
+
+  $routeProvider.when('/graph', {
+    templateUrl: 'graph.html',
+    controller: 'GraphCtrl',
     reloadOnSearch: false,
     loginRequired: false
   });

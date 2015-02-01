@@ -24,7 +24,11 @@ def multigraph_to_weighted(multigraph):
         else:
             graph.add_edge(u, v, weight=w)
     for id in multigraph.nodes_iter():
-        graph.node[id]['degree'] = degree(graph, id, weight='weight')
+        deg = degree(graph, id, weight='weight')
+        if deg == 0:
+            graph.remove_node(id)
+        else:
+            graph.node[id]['degree'] = deg
     return graph
 
 
