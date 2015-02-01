@@ -1,6 +1,8 @@
 import logging
 from datetime import datetime
 
+from sqlalchemy.orm import aliased
+
 from aleph.core import db
 from aleph.model.user import User
 from aleph.model.selector import Selector
@@ -78,6 +80,32 @@ class Entity(db.Model):
         for ent in q:
             entities[ent.id] = ent
         return entities
+
+    @classmethod
+    def suggest_prefix(cls, prefix, lists, limit=10):
+        from aleph.model import EntityTag
+        ent = aliased(Entity)
+        sel = aliased(Selector)
+        tag = aliased(EntityTag)
+        prefix = Selector.normalize(prefix)
+        if not len(prefix):
+            return []
+        prefix = '%s%%' % prefix
+        q = db.session.query(ent.id, ent.label, ent.category)
+        q = q.join(sel, ent.id == sel.entity_id)
+        q = q.join(tag, ent.id == tag.entity_id)
+        q = q.filter(ent.list_id.in_(lists))
+        q = q.filter(sel.normalized.like(prefix))
+        q = q.limit(limit)
+        q = q.distinct()
+        suggestions = []
+        for entity_id, label, category in q.all():
+            suggestions.append({
+                'id': entity_id,
+                'label': label,
+                'category': category
+            })
+        return suggestions
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.label)

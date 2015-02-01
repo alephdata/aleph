@@ -1,6 +1,6 @@
 
-aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$modal', 'Session', 'Query',
-  function($scope, $rootScope, $location, $http, $modal, Session, Query) {
+aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$modal', '$q', 'Session', 'Query',
+  function($scope, $rootScope, $location, $http, $modal, $q, Session, Query) {
   $scope.session = {logged_in: false};
   $scope.query = Query.state;
 
@@ -16,6 +16,19 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
       }
     });
   });
+
+  $scope.suggestEntities = function(prefix) {
+    var dfd = $q.defer();
+    $http.get('/api/1/entities/_suggest', {params: {'prefix': prefix}}).then(function(res) {
+      dfd.resolve(res.data.results);
+    });
+    return dfd.promise;
+  }
+
+  $scope.acceptSuggestion = function($item) {
+    Query.toggleFilter('entity', $item.id);
+    $scope.query.q = '';
+  }
 
   $scope.editProfile = function() {
     var d = $modal.open({
