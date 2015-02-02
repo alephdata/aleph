@@ -22,7 +22,7 @@ def add_filter(q, flt):
         q['filtered']['filter'] = \
             {'and': [flt, q['filtered']['filter']]}
     return q
-    
+
 
 def document_query(args, fields=DEFAULT_FIELDS, collections=None, lists=None,
                    facets=True):
@@ -44,7 +44,7 @@ def document_query(args, fields=DEFAULT_FIELDS, collections=None, lists=None,
         }
     else:
         filtered_q = {'match_all': {}}
-    
+
     # entities filter
     for entity in args.getlist('entity'):
         cf = {'term': {'entities.id': entity}}
@@ -60,6 +60,9 @@ def document_query(args, fields=DEFAULT_FIELDS, collections=None, lists=None,
             colls = ['none']
         cf = {'terms': {'collection': colls}}
         q = add_filter(q, cf)
+
+        all_coll_f = {'terms': {'collection': collections}}
+        filtered_q = add_filter(q, all_coll_f)
 
     aggs = {}
 
@@ -111,4 +114,3 @@ def entity_query(selectors):
         '_source': ['collection', 'id']
     }
     return q
-

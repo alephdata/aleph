@@ -6569,15 +6569,13 @@ a {
 .facet-list {
   max-height: 30em;
   overflow-y: scroll;
+  overflow: -moz-scrollbars-vertical;
 }
 .facet-list .facet {
   cursor: pointer;
   white-space: nowrap;
   text-overflow: hidden;
   overflow-x: hidden;
-}
-.facet-list .facet .lbl {
-  display: inline-block;
 }
 .entity-icon {
   margin-right: 0.5em;
