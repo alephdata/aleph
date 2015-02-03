@@ -62,7 +62,7 @@ def document_query(args, fields=DEFAULT_FIELDS, collections=None, lists=None,
         q = add_filter(q, cf)
 
         all_coll_f = {'terms': {'collection': collections}}
-        filtered_q = add_filter(q, all_coll_f)
+        filtered_q = add_filter(filtered_q, all_coll_f)
 
     aggs = {}
 
