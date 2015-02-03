@@ -4,7 +4,7 @@ from flask.ext.assets import ManageAssets
 from aleph.core import archive
 from aleph.model import db, Collection, CrawlState
 from aleph.views import app, assets
-from aleph.search import init_search
+from aleph.search import init_search, delete_index
 from aleph.processing import make_pipeline
 from aleph.crawlers import crawl_source
 
@@ -21,7 +21,7 @@ def crawl(source, force=False):
 
 
 @manager.command
-def reset(source):
+def flush(source):
     """ Reset the crawler state for a given source specification. """
     Collection.sync()
     CrawlState.flush(source)
@@ -45,19 +45,19 @@ def fixture(name):
 
 
 @manager.command
-def init():
-    """ Create the elastic search index and database. """
-    #db.drop_all()
-    db.create_all()
-    #init_search()
-    # Hacky much?
+def reset():
+    """ Delete and re-create the search index and database. """
+    db.drop_all()
+    delete_index()
+    init_search()
     Collection.sync()
 
 
 @manager.command
-def index_init():
-    """ Create the elastic search index and database. """
+def upgrade():
+    """ Create or upgrade the search index and database. """
     init_search()
+    Collection.sync()
 
 
 def main():

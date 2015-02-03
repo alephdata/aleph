@@ -36,6 +36,18 @@ DOC_MAPPING = {
                 "category": {"type": "string", "index": "not_analyzed"},
                 "list": {"type": "integer", "index": "not_analyzed"}
             }
+        },
+        "attributes": {
+            "_id": {
+                "path": "id"
+            },
+            "type": "nested",
+            "include_in_parent": True,
+            "properties": {
+                "id": {"type": "string", "index": "not_analyzed"},
+                "name": {"type": "string", "index": "not_analyzed"},
+                "value": {"type": "string", "index": "not_analyzed"}
+            }
         }
     }
 }
