@@ -81,7 +81,8 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http', 'Query',
 
   $scope.setMode = function(mode) {
     Query.state.mode = mode;
-    Query.submit();
+    $location.search(Query.state);
+    $location.path('/search');
   };
 
   $scope.numQueriedCollections = function() {
