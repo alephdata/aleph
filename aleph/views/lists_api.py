@@ -2,6 +2,7 @@ from flask import Blueprint  # , request
 from flask.ext.login import current_user
 
 from aleph.views.util import obj_or_404, jsonify, Pager, request_data
+from aleph.processing import refresh_selectors
 from aleph.model import List, db
 from aleph import authz
 
@@ -52,3 +53,15 @@ def update(id):
     db.session.add(lst)
     db.session.commit()
     return view(id)
+
+
+@blueprint.route('/api/1/lists/<int:id>', methods=['DELETE'])
+def delete(id):
+    authz.require(authz.list_write(id))
+    lst = obj_or_404(List.by_id(id))
+    selectors = lst.terms
+    lst.delete()
+    db.session.commit()
+    if len(selectors):
+        refresh_selectors.delay(selectors)
+    return jsonify({'status': 'ok'})

@@ -36,3 +36,9 @@ def process_package(collection_name, package_id):
     log.info("Processing package: %r", package)
     pipeline = make_pipeline(collection)
     pipeline.process_package(package)
+
+
+@celery.task()
+def refresh_selectors(selectors):
+    from aleph.processing.entities import refresh
+    refresh(selectors)

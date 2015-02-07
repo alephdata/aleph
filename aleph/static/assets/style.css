@@ -6523,8 +6523,8 @@ body {
 a {
   cursor: pointer;
 }
-.navbar .navbar-brand {
-  font-size: 2em;
+.navbar .brand-field {
+  font-weight: 900;
 }
 .navbar .navbar-form {
   padding-left: 0;

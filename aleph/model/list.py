@@ -60,8 +60,8 @@ class List(db.Model):
         self.users = list(set(data.get('users', []) + [user]))
 
     def delete(self):
-        for entity in self.entities:
-            entity.delete()
+        # for entity in self.entities:
+        #     entity.delete()
         db.session.delete(self)
 
     @classmethod
@@ -95,6 +95,16 @@ class List(db.Model):
         q = q.filter(cls.id.in_(cls.user_list_ids(user)))
         q = q.order_by(cls.id.desc())
         return q
+
+    @property
+    def terms(self):
+        from aleph.model.entity import Entity
+        from aleph.model.selector import Selector
+        q = db.session.query(Selector.normalized)
+        q = q.join(Entity, Entity.id == Selector.entity_id)
+        q = q.filter(Entity.list_id == self.id)
+        q = q.distinct()
+        return set([r[0] for r in q])
 
     def __repr__(self):
         return '<List(%r, %r)>' % (self.id, self.label)

@@ -3,7 +3,7 @@ from os import environ as env, path
 DEBUG = True
 ASSETS_DEBUG = True
 
-APP_TITLE = 'The Aleph'
+APP_TITLE = 'aleph.grano.local'
 APP_NAME = 'aleph'
 
 ARCHIVE_TYPE = 'file'

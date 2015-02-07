@@ -56,7 +56,14 @@
 
   <div class="col-md-3">
     <div class="panel panel-default">
-      <div class="panel-heading">People, Companies, etc.</div>    
+      <div class="panel-heading">
+        <span class="pull-right">
+          <a href="/lists" ng-show="session.logged_in">
+            <i class="fa fa-cog"></i>
+          </a>
+        </span>
+        People, Companies, etc.
+      </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
           ng-repeat="entity in result.facets.entities"

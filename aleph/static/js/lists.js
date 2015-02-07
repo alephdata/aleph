@@ -23,8 +23,8 @@ aleph.controller('ListsIndexCtrl', ['$scope', '$location', '$http',
 }]);
 
 
-aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash', 'Validation',
-  function($scope, $location, $http, $routeParams, Flash, Validation) {
+aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$modal', 'Flash', 'Validation',
+  function($scope, $location, $http, $routeParams, $modal, Flash, Validation) {
   
   var apiUrl = '/api/1/lists/' + $routeParams.id;
   $scope.list = {};
@@ -56,6 +56,16 @@ aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams
     }
   };
 
+  $scope.delete = function() {
+    var d = $modal.open({
+        templateUrl: 'lists_delete.html',
+        controller: 'ListsDeleteCtrl',
+        resolve: {
+            list: function () { return $scope.list; }
+        }
+    });
+  }
+
   $scope.save = function(form) {
     var res = $http.post(apiUrl, $scope.list);
     res.success(function(data) {
@@ -81,6 +91,25 @@ aleph.controller('ListsNewCtrl', ['$scope', '$location', '$http', '$routeParams'
           $location.path('/lists/' + data.id);
       });
       res.error(Validation.handle(form));
+  };
+
+}]);
+
+
+aleph.controller('ListsDeleteCtrl', ['$scope', '$location', '$http', '$modalInstance', 'list',
+  function($scope, $location, $http, $modalInstance, list) {
+  $scope.list = list;
+  
+  $scope.cancel = function() {
+    $modalInstance.dismiss('cancel');
+  };
+
+  $scope.delete = function() {
+    var res = $http.delete($scope.list.api_url);
+    res.then(function(data) {
+        $location.path('/lists');
+        $modalInstance.dismiss('ok');
+    });
   };
 
 }]);

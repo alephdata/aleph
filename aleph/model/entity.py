@@ -29,7 +29,7 @@ class Entity(db.Model):
 
     list_id = db.Column(db.Integer(), db.ForeignKey('list.id'))
     list = db.relationship('List', backref=db.backref('entities',
-                                                      lazy='dynamic'))
+                           lazy='dynamic', cascade='all, delete-orphan'))
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
@@ -55,7 +55,6 @@ class Entity(db.Model):
         return False
 
     def delete(self):
-        self.selectors.delete()
         db.session.delete(self)
 
     @classmethod
@@ -112,6 +111,10 @@ class Entity(db.Model):
                 'category': category
             })
         return suggestions
+
+    @property
+    def terms(self):
+        return set([s.normalized for s in self.selectors])
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.label)
