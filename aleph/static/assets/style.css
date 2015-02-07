@@ -6544,6 +6544,13 @@ a {
     min-width: 800px;
   }
 }
+.flashes {
+  position: relative;
+}
+.flashes .alert {
+  position: absolute;
+  width: 100%;
+}
 .result {
   white-space: nowrap;
   overflow: hidden;

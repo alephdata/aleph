@@ -28,6 +28,12 @@ aleph.config(['$routeProvider', '$locationProvider',
     loginRequired: true
   });
 
+  $routeProvider.when('/lists/new', {
+    templateUrl: 'lists_new.html',
+    controller: 'ListsNewCtrl',
+    loginRequired: true
+  });
+
   $routeProvider.when('/lists/:id', {
     templateUrl: 'lists_edit.html',
     controller: 'ListsEditCtrl',
@@ -55,3 +61,54 @@ aleph.directive('entityIcon', ['$http', function($http) {
     }
   };
 }]);
+
+aleph.factory('Flash', ['$rootScope', '$timeout', function($rootScope, $timeout) {
+  // Message flashing.
+  var currentMessage = null;
+
+  $rootScope.$on("$routeChangeSuccess", function() {
+    currentMessage = null;
+  });
+
+  return {
+    message: function(message, type) {
+      currentMessage = [message, type];
+      $timeout(function() {
+        currentMessage = null;
+      }, 1500);
+    },
+    getMessage: function() {
+      return currentMessage;
+    }
+  };
+}]);
+
+aleph.factory('Validation', ['Flash', function(Flash) {
+  // handle server-side form validation errors.
+  return {
+    handle: function(form) {
+      return function(res) {
+        if (res.status == 400 || !form) {
+            var errors = [];
+            
+            for (var field in res.errors) {
+                form[field].$setValidity('value', false);
+                form[field].$message = res.errors[field];
+                errors.push(field);
+            }
+            if (angular.isDefined(form._errors)) {
+                angular.forEach(form._errors, function(field) {
+                    if (errors.indexOf(field) == -1) {
+                        form[field].$setValidity('value', true);
+                    }
+                });
+            }
+            form._errors = errors;
+        } else {
+          Flash.message(res.message || res.title || 'Server error', 'danger');
+        }
+      }
+    }
+  };
+}]);
+

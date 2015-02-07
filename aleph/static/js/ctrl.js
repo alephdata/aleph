@@ -1,8 +1,9 @@
 
-aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$modal', '$q', 'Session', 'Query',
-  function($scope, $rootScope, $location, $http, $modal, $q, Session, Query) {
+aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$modal', '$q', 'Flash', 'Session', 'Query',
+  function($scope, $rootScope, $location, $http, $modal, $q, Flash, Session, Query) {
   $scope.session = {logged_in: false};
   $scope.query = Query.state;
+  $scope.flash = Flash;
 
   Session.get(function(session) {
     $scope.session = session;
@@ -81,6 +82,5 @@ aleph.controller('ProfileCtrl', ['$scope', '$location', '$modalInstance', '$http
             $scope.session.user = data;
             $modalInstance.dismiss('ok');
         });
-        //res.error(grano.handleFormError(form));
     };  
 }]);

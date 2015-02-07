@@ -23,8 +23,8 @@ aleph.controller('ListsIndexCtrl', ['$scope', '$location', '$http',
 }]);
 
 
-aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams',
-  function($scope, $location, $http, $routeParams) {
+aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash', 'Validation',
+  function($scope, $location, $http, $routeParams, Flash, Validation) {
   
   var apiUrl = '/api/1/lists/' + $routeParams.id;
   $scope.list = {};
@@ -59,8 +59,29 @@ aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams
   $scope.save = function(form) {
       var res = $http.post(apiUrl, $scope.list);
       res.success(function(data) {
-          $location.path('/lists');
+        Flash.message('Your changes have been saved.', 'success');
+        //$location.path('/lists');
       });
+      res.error(Validation.handle(form));
+  };
+
+}]);
+
+
+aleph.controller('ListsNewCtrl', ['$scope', '$location', '$http', '$routeParams', 'Validation',
+  function($scope, $location, $http, $routeParams, Validation) {
+  $scope.list = {'public': false};
+  
+  $scope.canCreate = function() {
+    return $scope.session.logged_in;
+  };
+
+  $scope.create = function(form) {
+      var res = $http.post('/api/1/lists', $scope.list);
+      res.success(function(data) {
+          $location.path('/lists/' + data.id);
+      });
+      res.error(Validation.handle(form));
   };
 
 }]);

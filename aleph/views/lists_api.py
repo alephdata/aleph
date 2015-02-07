@@ -22,9 +22,13 @@ def index():
 
 
 @blueprint.route('/api/1/lists', methods=['POST', 'PUT'])
-def create(id):
+def create():
     authz.require(authz.logged_in())
-    lst = List.create(request_data(), current_user)
+    data = request_data()
+    data['creator'] = current_user
+    if 'users' not in data:
+        data['users'] = []
+    lst = List.create(data, current_user)
     db.session.commit()
     return view(lst.id)
 

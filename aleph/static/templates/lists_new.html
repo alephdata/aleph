@@ -1,0 +1,34 @@
+
+<lists-frame list="list">
+  <form class="form-horizontal" role="form" name="newList" ng-submit="create(newList)">
+    <div class="row">
+      <div class="col-md-6">   
+        <div class="form-group" ng-class="{'has-error': newList.label.$invalid}">
+          <label class="col-sm-3 control-label" for="label">Label</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="label" name="label" ng-model="list.label"
+              placeholder="The list's label">
+            <p class="help-block" ng-show="newList.label.$invalid" ng-bind="newList.label.$message"></p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="list.public"> Publicly visible
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <button type="submit" class="btn btn-primary"
+              ng-disabled="!canCreate()">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</lists-frame>

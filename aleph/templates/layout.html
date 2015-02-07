@@ -63,6 +63,14 @@
       </div>
     </nav>
 
+    {% raw %}
+    <div ng-show="flash.getMessage()" class="container-fluid flashes" ng-cloak>
+      <div class="alert alert-{{flash.getMessage()[1]}} animate slide-top">
+        <p>{{flash.getMessage()[0]}}</p>
+      </div>
+    </div>
+    {% endraw %}
+
     <div id="airlock" class="container-fluid" ng-view></div>
 
     {% for path, tmpl in templates %}
