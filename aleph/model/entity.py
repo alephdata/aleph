@@ -26,11 +26,11 @@ class Entity(db.Model):
     creator_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     creator = db.relationship(User, backref=db.backref('entities',
                               lazy='dynamic', cascade='all, delete-orphan'))
-    
+
     list_id = db.Column(db.Integer(), db.ForeignKey('list.id'))
     list = db.relationship('List', backref=db.backref('entities',
                                                       lazy='dynamic'))
-    
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
                            onupdate=datetime.utcnow)
@@ -69,6 +69,12 @@ class Entity(db.Model):
     def by_id(cls, id):
         q = db.session.query(cls).filter_by(id=id)
         return q.first()
+
+    @classmethod
+    def by_lists(cls, lists):
+        q = db.session.query(cls)
+        q = q.filter(cls.list_id.in_(lists))
+        return q
 
     @classmethod
     def by_id_set(cls, ids):

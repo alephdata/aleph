@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import or_
 
-from aleph.core import db
+from aleph.core import db, url_for
 from aleph.model.user import User
 
 log = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class List(db.Model):
     creator_id = db.Column(db.Integer(), db.ForeignKey('user.id'),
                            nullable=True)
     creator = db.relationship(User)
-    
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
                            onupdate=datetime.utcnow)
@@ -34,6 +34,8 @@ class List(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
+            'api_url': url_for('lists.view', id=self.id),
+            'entities_api_url': url_for('entities.index', list=self.id),
             'label': self.label,
             'public': self.public,
             'creator_id': self.creator_id,
@@ -49,6 +51,11 @@ class List(db.Model):
     @classmethod
     def by_label(cls, label):
         q = db.session.query(cls).filter_by(label=label)
+        return q.first()
+
+    @classmethod
+    def by_id(cls, id):
+        q = db.session.query(cls).filter_by(id=id)
         return q.first()
 
     @classmethod
@@ -75,6 +82,13 @@ class List(db.Model):
         if not (logged_in and user.is_admin):
             q = q.filter(or_(*conds))
         return [c.id for c in q.all()]
+
+    @classmethod
+    def all_by_user(cls, user):
+        q = db.session.query(cls)
+        q = q.filter(cls.id.in_(cls.user_list_ids(user)))
+        q = q.order_by(cls.id.desc())
+        return q
 
     def __repr__(self):
         return '<List(%r, %r)>' % (self.id, self.label)

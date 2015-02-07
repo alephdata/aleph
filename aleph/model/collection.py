@@ -22,7 +22,7 @@ class Collection(db.Model):
     label = db.Column(db.Unicode, nullable=True)
     public = db.Column(db.Boolean, default=True)
     token = db.Column(db.Unicode, default=make_token)
-    
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
                            onupdate=datetime.utcnow)

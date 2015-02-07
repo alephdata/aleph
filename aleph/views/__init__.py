@@ -11,6 +11,7 @@ from aleph.views.search_api import blueprint as search_api
 from aleph.views.graph_api import blueprint as graph_api
 from aleph.views.sessions_api import blueprint as sessions_api
 from aleph.views.users_api import blueprint as users_api
+from aleph.views.lists_api import blueprint as lists_api
 from aleph.views.entities_api import blueprint as entities_api
 from aleph.views.collections_api import blueprint as collections_api
 
@@ -20,6 +21,7 @@ app.register_blueprint(search_api)
 app.register_blueprint(graph_api)
 app.register_blueprint(sessions_api)
 app.register_blueprint(users_api)
+app.register_blueprint(lists_api)
 app.register_blueprint(entities_api)
 app.register_blueprint(collections_api)
 
