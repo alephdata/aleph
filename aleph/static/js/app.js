@@ -13,13 +13,13 @@ aleph.config(['$routeProvider', '$locationProvider',
   $routeProvider.when('/collections', {
     templateUrl: 'collections_index.html',
     controller: 'CollectionsIndexCtrl',
-    loginRequired: false
+    loginRequired: true
   });
 
   $routeProvider.when('/collections/:slug', {
     templateUrl: 'collections_edit.html',
     controller: 'CollectionsEditCtrl',
-    loginRequired: false
+    loginRequired: true
   });
 
   $routeProvider.otherwise({

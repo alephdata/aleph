@@ -64,7 +64,10 @@
           ng-click="toggleFilter('entity', entity.key)">
           <span class="badge">{{entity.doc_count}}</span>
           <entity-icon category="entity.entity.category"></entity-icon>
-          <span class="lbl">{{entity.entity.label}}</span>
+          <span class="lbl" tooltip="{{entity.entity.label.length > 18 ? entity.entity.label : ''}}"
+            tooltip-append-to-body="true" tooltip-placement="left">
+            {{entity.entity.label | characters: 18 }}
+          </span>
         </li>
       </ul>
     </div>
@@ -84,7 +87,9 @@
           ng-class="{'active': hasFilter('collection', facet.key)}"
           ng-click="toggleFilter('collection', facet.key)">
           <span class="badge">{{facet.doc_count}}</span>
-          <span class="lbl">{{collections[facet.key].label}}</span>
+          <span class="lbl">
+            {{collections[facet.key].label | characters: 20 }}
+          </span>
         </li>
       </ul>
     </div>

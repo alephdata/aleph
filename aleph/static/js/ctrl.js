@@ -52,9 +52,9 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
     });
   };
 
-  $scope.submitSearch = function() {
+  $scope.submitSearch = function(form) {
+    $location.search(Query.state);
     $location.path('/search');
-    Query.submit();
   };
 
 }]);
