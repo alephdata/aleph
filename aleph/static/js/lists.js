@@ -19,7 +19,6 @@ aleph.directive('listsFrame', ['$http', function($http) {
 aleph.controller('ListsIndexCtrl', ['$scope', '$location', '$http',
   function($scope, $location, $http) {
   $scope.collections = {};
-
 }]);
 
 
@@ -79,7 +78,7 @@ aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams
 
 aleph.controller('ListsNewCtrl', ['$scope', '$location', '$http', '$routeParams', 'Validation',
   function($scope, $location, $http, $routeParams, Validation) {
-  $scope.list = {'public': false};
+  $scope.list = {'public': false, 'new': true};
   
   $scope.canCreate = function() {
     return $scope.session.logged_in;
@@ -96,8 +95,8 @@ aleph.controller('ListsNewCtrl', ['$scope', '$location', '$http', '$routeParams'
 }]);
 
 
-aleph.controller('ListsDeleteCtrl', ['$scope', '$location', '$http', '$modalInstance', 'list',
-  function($scope, $location, $http, $modalInstance, list) {
+aleph.controller('ListsDeleteCtrl', ['$scope', '$location', '$http', '$modalInstance', 'list', 'Flash',
+  function($scope, $location, $http, $modalInstance, list, Flash) {
   $scope.list = list;
   
   $scope.cancel = function() {
