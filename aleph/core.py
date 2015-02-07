@@ -4,6 +4,7 @@ from flask import url_for as _url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.assets import Environment
+from flask.ext.migrate import Migrate
 from flask.ext.oauth import OAuth
 from barn import open_archive
 from kombu import Exchange, Queue
@@ -29,6 +30,7 @@ app.config.from_envvar('ALEPH_SETTINGS', silent=True)
 app_name = app.config.get('APP_NAME')
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db, directory=app.config.get('ALEMBIC_DIR'))
 
 oauth = OAuth()
 login_manager = LoginManager()
