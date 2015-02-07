@@ -45,3 +45,12 @@ class CollectionForm(colander.MappingSchema):
     public = colander.SchemaNode(colander.Boolean())
     users = CollectionUsers()
 
+
+class ListUsers(colander.SequenceSchema):
+    user = colander.SchemaNode(UserRef())
+
+
+class ListForm(colander.MappingSchema):
+    label = colander.SchemaNode(colander.String())
+    public = colander.SchemaNode(colander.Boolean())
+    users = ListUsers()

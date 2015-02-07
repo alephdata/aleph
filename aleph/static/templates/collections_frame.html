@@ -16,10 +16,10 @@
       <li ng-repeat="coll in collections.results"
           ng-class="{'active': coll.slug == collection.slug,
                      'disabled': !coll.token}">
-        <a href="/collections/{{coll.slug}}" ng-show="coll.token">
+        <a href="/collections/{{coll.slug}}" ng-show="coll.can_write">
           {{coll.label}}
         </a>
-        <a ng-hide="coll.token">
+        <a ng-hide="coll.can_write">
           {{coll.label}}
         </a>
       </li>

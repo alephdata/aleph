@@ -37,6 +37,10 @@ aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams
   $http.get('/api/1/users').then(function(res) {
     $scope.users = res.data;
   })
+  
+  $scope.canSave = function() {
+    return $scope.list.can_write;
+  };
 
   $scope.hasUser = function(id) {
     var users = $scope.list.users || [];

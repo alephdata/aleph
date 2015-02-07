@@ -16,7 +16,7 @@
       <li ng-repeat="lst in lists.results"
           ng-class="{'active': list.id == lst.id}">
         <a href="/lists/{{lst.id}}">
-          {{lst.label}}
+          <i class="fa fa-list"></i> {{lst.label}}
         </a>
       </li>
     </ul>

@@ -15,7 +15,8 @@ def index():
     collections = []
     for coll in Collection.all_by_user(current_user):
         data = coll.to_dict()
-        if authz.collection_write(coll.slug):
+        data['can_write'] = authz.collection_write(coll.slug)
+        if data['can_write']:
             data['token'] = coll.token
         collections.append(data)
     return jsonify({'results': collections, 'total': len(collections)})
@@ -26,7 +27,8 @@ def view(slug):
     authz.require(authz.collection_read(slug))
     collection = obj_or_404(Collection.by_slug(slug))
     data = collection.to_dict()
-    if authz.collection_write(slug):
+    data['can_write'] = authz.collection_write(slug)
+    if data['can_write']:
         data['token'] = collection.token
         data['users'] = [u.id for u in collection.users]
     return jsonify(data)

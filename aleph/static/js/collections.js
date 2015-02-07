@@ -39,6 +39,10 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
     $scope.users = res.data;
   })
 
+  $scope.canSave = function() {
+    return $scope.collection.can_write;
+  };
+
   $scope.hasUser = function(id) {
     var users = $scope.collection.users || [];
     return users.indexOf(id) != -1;

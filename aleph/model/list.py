@@ -5,6 +5,7 @@ from sqlalchemy import or_
 
 from aleph.core import db, url_for
 from aleph.model.user import User
+from aleph.model.forms import ListForm
 
 log = logging.getLogger(__name__)
 
@@ -43,6 +44,21 @@ class List(db.Model):
             'updated_at': self.updated_at
         }
 
+    @classmethod
+    def create(cls, data, user):
+        lst = cls()
+        lst.update(data, user)
+        lst.creator = data.get('creator')
+        db.session.add(lst)
+        return lst
+
+    def update(self, data, user):
+        data = ListForm().deserialize(data)
+        self.label = data.get('label')
+        if data.get('public') is not None:
+            self.public = data.get('public')
+        self.users = list(set(data.get('users', []) + [user]))
+
     def delete(self):
         for entity in self.entities:
             entity.delete()
@@ -57,16 +73,6 @@ class List(db.Model):
     def by_id(cls, id):
         q = db.session.query(cls).filter_by(id=id)
         return q.first()
-
-    @classmethod
-    def create(cls, data):
-        lst = cls()
-        lst.label = data.get('label')
-        if data.get('public') is not None:
-            lst.public = data.get('public')
-        lst.creator = data.get('creator')
-        db.session.add(lst)
-        return lst
 
     @classmethod
     def user_list_ids(cls, user=None, include_public=True):
