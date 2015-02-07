@@ -75,7 +75,7 @@ aleph.factory('Flash', ['$rootScope', '$timeout', function($rootScope, $timeout)
       currentMessage = [message, type];
       $timeout(function() {
         currentMessage = null;
-      }, 1500);
+      }, 2000);
     },
     getMessage: function() {
       return currentMessage;

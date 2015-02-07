@@ -6549,7 +6549,7 @@ a {
 }
 .flashes .alert {
   position: absolute;
-  width: 100%;
+  right: 1em;
 }
 .result {
   white-space: nowrap;

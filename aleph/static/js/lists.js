@@ -57,12 +57,11 @@ aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams
   };
 
   $scope.save = function(form) {
-      var res = $http.post(apiUrl, $scope.list);
-      res.success(function(data) {
-        Flash.message('Your changes have been saved.', 'success');
-        //$location.path('/lists');
-      });
-      res.error(Validation.handle(form));
+    var res = $http.post(apiUrl, $scope.list);
+    res.success(function(data) {
+      Flash.message('Your changes have been saved.', 'success');
+    });
+    res.error(Validation.handle(form));
   };
 
 }]);
