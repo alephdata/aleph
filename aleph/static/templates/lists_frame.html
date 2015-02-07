@@ -1,0 +1,26 @@
+<ol class="breadcrumb">
+  <li>
+    <a href="/">Home</a>
+  </li>
+  <li ng-class="{'active': !list}">
+    <a href="/lists">Lists of people and companies</a>
+  </li>
+  <li ng-show="list" class="active">
+    {{list.label}}
+  </li>
+</ol>
+
+<div class="row">
+  <div class="col-md-3">
+    <ul class="nav nav-pills nav-stacked">
+      <li ng-repeat="lst in lists.results"
+          ng-class="{'active': list.id == lst.id}">
+        <a href="/lists/{{lst.id}}">
+          {{lst.label}}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-9" ng-transclude>
+  </div>
+</div>

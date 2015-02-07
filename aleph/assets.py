@@ -21,6 +21,7 @@ app_assets = Bundle(
     'js/services.js',
     'js/search.js',
     'js/collections.js',
+    'js/entities.js',
     'js/ctrl.js',
     filters='uglifyjs',
     output='assets/app.js'

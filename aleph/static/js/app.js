@@ -22,6 +22,18 @@ aleph.config(['$routeProvider', '$locationProvider',
     loginRequired: true
   });
 
+  $routeProvider.when('/lists', {
+    templateUrl: 'lists_index.html',
+    controller: 'ListsIndexCtrl',
+    loginRequired: true
+  });
+
+  $routeProvider.when('/lists/:id', {
+    templateUrl: 'lists_edit.html',
+    controller: 'ListsEditCtrl',
+    loginRequired: true
+  });
+
   $routeProvider.otherwise({
     redirectTo: '/search',
     loginRequired: false
