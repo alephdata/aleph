@@ -27,11 +27,11 @@ aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams
   function($scope, $location, $http, $routeParams) {
   
   var apiUrl = '/api/1/lists/' + $routeParams.id;
-  $scope.collection = {};
+  $scope.list = {};
   $scope.users = {};
 
   $http.get(apiUrl).then(function(res) {
-    $scope.collection = res.data;
+    $scope.list = res.data;
   })
 
   $http.get('/api/1/users').then(function(res) {
@@ -39,23 +39,23 @@ aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams
   })
 
   $scope.hasUser = function(id) {
-    var users = $scope.collection.users || [];
+    var users = $scope.list.users || [];
     return users.indexOf(id) != -1;
   };
 
   $scope.toggleUser = function(id) {
-    var idx = $scope.collection.users.indexOf(id);
+    var idx = $scope.list.users.indexOf(id);
     if (idx != -1) {
-      $scope.collection.users.splice(idx, 1);
+      $scope.list.users.splice(idx, 1);
     } else {
-      $scope.collection.users.push(id);
+      $scope.list.users.push(id);
     }
   };
 
   $scope.save = function(form) {
-      var res = $http.post(apiUrl, $scope.collection);
+      var res = $http.post(apiUrl, $scope.list);
       res.success(function(data) {
-          $location.path('/collections');
+          $location.path('/lists');
       });
   };
 
