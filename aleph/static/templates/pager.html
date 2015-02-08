@@ -1,0 +1,8 @@
+
+<ul ng-show="showPager" class="pagination pagination-sm pagination-cursors">
+  <li ng-class="{'disabled': response.prev_url==null}"><a ng-click="load({url: response.prev_url})">&laquo;</a></li>
+  <li ng-repeat="page in pages" ng-class="{'active': page.current}">
+    <a ng-click="load({url: page.url})">{{page.page}}</a>
+  </li>
+  <li ng-class="{'disabled': response.next_url==null}"><a ng-click="load({url: response.next_url})">&raquo;</a></li>
+</ul>

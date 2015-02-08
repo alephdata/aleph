@@ -18,6 +18,12 @@ aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routePa
     });
   };
 
+  $scope.loadUrl = function(url) {
+    $http.get(url).then(function(res) {
+      $scope.entities = res.data;
+    });
+  }
+
   $scope.filter = function() {
     delete $scope.query['list'];
     $location.search($scope.query);
