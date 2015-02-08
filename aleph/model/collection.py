@@ -40,7 +40,10 @@ class Collection(db.Model):
         data = CollectionForm().deserialize(data)
         self.label = data.get('label')
         self.public = data.get('public')
-        self.users = list(set(data.get('users', []) + [user]))
+        users = set(data.get('users', []))
+        if user is not None:
+            users.add(user)
+        self.users = list(users)
 
     def to_dict(self):
         return {

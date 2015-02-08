@@ -2,9 +2,13 @@ import os
 import logging
 import yaml
 import unicodecsv
+from collections import defaultdict
+
+from colander import Invalid
 
 from aleph.core import db
-from aleph.model import List, Entity, Selector
+from aleph.model.forms import CATEGORIES
+from aleph.model import List, Entity
 from aleph.processing.entities import refresh
 
 log = logging.getLogger(__name__)
@@ -21,50 +25,46 @@ def load_fixture(name):
         data = yaml.load(fh)
 
     lst = List.by_label(data.get('list'))
+    selectors = set()
     if lst is not None:
+        selectors = lst.terms
         lst.delete()
         db.session.commit()
-    
+
     lst = List.create({
         'label': data.get('list'),
-        'public': data.get('public')
-    })
+        'public': data.get('public'),
+        'users': []
+    }, None)
     log.info("Loading %r", lst)
 
     mapping = data.get('mapping')
     default_category = data.get('default_category')
-    assert default_category in Entity.CATEGORIES, default_category
+    assert default_category in CATEGORIES, default_category
 
-    all_selectors = set()
+    entities = defaultdict(set)
     with open(os.path.join(dir_name, 'data.csv'), 'rb') as fh:
         for row in unicodecsv.DictReader(fh):
             label = row.get(mapping.get('label', 'label'))
-            category = row.get(mapping.get('category', 'category'))
             if label is None:
                 continue
-            if category not in Entity.CATEGORIES:
-                category = default_category
-            entity = Entity.by_normalized_label(label, lst)
-            if entity is None:
-                entity = Entity()
-                entity.list = lst
-                entity.label = label
-            entity.category = category
-            db.session.add(entity)
 
-            selector = row.get(mapping.get('selector', 'selector'))
-            for text in [label, selector]:
-                if text is None:
-                    continue
-                all_selectors.add(Selector.normalize(text))
-                if entity.has_selector(text):
-                    continue
-                selector = Selector()
-                selector.text = text
-                selector.entity = entity
-                entity.selectors.append(selector)
-                db.session.add(selector)
-            
+            category = row.get(mapping.get('category', 'category'))
+            category = category or default_category
+
+            selectors = [row.get(mapping.get('selector', 'selector'))]
+            selectors = [s for s in selectors if s]
+            entities[(label, category)].update(selectors)
+
+    for (label, category), selectors in entities.items():
+        data = {'label': label, 'category': category,
+                'selectors': selectors, 'list': lst}
+        try:
+            Entity.create(data, None)
+        except Invalid, inv:
+            log.warn("Failed: %s", inv)
+
     db.session.commit()
-    refresh(all_selectors)
-    print lst
+    selectors.update(lst.terms)
+    log.info('Created %s entities', len(entities))
+    refresh(selectors)

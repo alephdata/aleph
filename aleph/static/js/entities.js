@@ -1,6 +1,6 @@
 
-aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routeParams', 'Validation',
-  function($scope, $location, $http, $routeParams, Validation) {
+aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routeParams', 'Validation', 'Flash',
+  function($scope, $location, $http, $routeParams, Validation, Flash) {
   
   var apiUrl = '/api/1/lists/' + $routeParams.id;
   $scope.query = $location.search();
@@ -46,7 +46,7 @@ aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routePa
 
   var adaptEntity = function(entity) {
     entity.selectors = [];
-    entity.list_id = $routeParams.id;
+    entity.list = $routeParams.id;
     entity.aliases = entity.aliases || '';
     angular.forEach(entity.aliases.split(','), function(s) {
       s = s.trim();
@@ -69,7 +69,7 @@ aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routePa
 
   $scope.update = function(form, entity) {
     entity = adaptEntity(entity);
-    var res = $http.post('/api/1/entities', entity);
+    var res = $http.post(entity.api_url, entity);
     res.success(function(data) {
       Flash.message("Your changes have been saved.", 'success');
       $scope.setEdit(null);

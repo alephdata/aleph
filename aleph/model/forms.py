@@ -1,6 +1,12 @@
 import colander
 from colander import Invalid # noqa
 
+PERSON = 'Person'
+COMPANY = 'Company'
+ORGANIZATION = 'Organization'
+OTHER = 'Other'
+CATEGORIES = [PERSON, COMPANY, ORGANIZATION, OTHER]
+
 
 class Ref(object):
 
@@ -30,6 +36,20 @@ class UserRef(Ref):
         return None
 
 
+class ListRef(Ref):
+
+    def decode(self, cstruct):
+        from aleph.model.list import List
+
+        if isinstance(cstruct, List):
+            return cstruct
+        if isinstance(cstruct, (basestring, int)):
+            return List.by_id(cstruct)
+        if isinstance(cstruct, dict):
+            return self.decode(cstruct.get('id'))
+        return None
+
+
 class UserForm(colander.MappingSchema):
     email = colander.SchemaNode(colander.String(),
                                 validator=colander.Email())
@@ -54,3 +74,15 @@ class ListForm(colander.MappingSchema):
     label = colander.SchemaNode(colander.String())
     public = colander.SchemaNode(colander.Boolean())
     users = ListUsers()
+
+
+class EntitySelectors(colander.SequenceSchema):
+    selector = colander.SchemaNode(colander.String())
+
+
+class EntityForm(colander.MappingSchema):
+    label = colander.SchemaNode(colander.String())
+    category = colander.SchemaNode(colander.String(),
+                                   validator=colander.OneOf(CATEGORIES))
+    selectors = EntitySelectors()
+    list = colander.SchemaNode(ListRef())

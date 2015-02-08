@@ -48,7 +48,7 @@ class List(db.Model):
     def create(cls, data, user):
         lst = cls()
         lst.update(data, user)
-        lst.creator = data.get('creator')
+        lst.creator = user
         db.session.add(lst)
         return lst
 
@@ -57,7 +57,10 @@ class List(db.Model):
         self.label = data.get('label')
         if data.get('public') is not None:
             self.public = data.get('public')
-        self.users = list(set(data.get('users', []) + [user]))
+        users = set(data.get('users', []))
+        if user is not None:
+            users.add(user)
+        self.users = list(users)
 
     def delete(self):
         # for entity in self.entities:

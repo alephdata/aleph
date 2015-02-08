@@ -7,18 +7,13 @@ from sqlalchemy.orm import aliased
 from aleph.core import db, url_for
 from aleph.model.user import User
 from aleph.model.selector import Selector
+from aleph.model.forms import EntityForm, CATEGORIES
 from aleph.model.util import make_textid, db_compare
 
 log = logging.getLogger(__name__)
 
 
 class Entity(db.Model):
-    PERSON = 'Person'
-    COMPANY = 'Company'
-    ORGANIZATION = 'Organization'
-    OTHER = 'Other'
-    CATEGORIES = [PERSON, COMPANY, ORGANIZATION, OTHER]
-
     id = db.Column(db.Unicode(50), primary_key=True, default=make_textid)
     label = db.Column(db.Unicode)
     category = db.Column(db.Enum(*CATEGORIES, name='entity_categories'),
@@ -44,7 +39,7 @@ class Entity(db.Model):
             'category': self.category,
             'creator_id': self.creator_id,
             'selectors': [s.text for s in self.selectors],
-            'list_id': self.list_id,
+            'list': self.list_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
@@ -58,6 +53,35 @@ class Entity(db.Model):
 
     def delete(self):
         db.session.delete(self)
+
+    @classmethod
+    def create(cls, data, user):
+        ent = cls()
+        ent.update(data)
+        ent.creator = user
+        db.session.add(ent)
+        return ent
+
+    def update(self, data):
+        data = EntityForm().deserialize(data)
+        self.label = data.get('label')
+        self.list = data.get('list')
+        self.category = data.get('category')
+
+        selectors = set(data.get('selectors'))
+        selectors.add(self.label)
+        existing = list(self.selectors)
+        for sel in list(existing):
+            if sel.text in selectors:
+                selectors.remove(sel.text)
+                existing.remove(sel)
+        for sel in existing:
+            db.session.delete(sel)
+        for text in selectors:
+            sel = Selector()
+            sel.entity = self
+            sel.text = text
+            db.session.add(sel)
 
     @classmethod
     def by_normalized_label(cls, label, lst):
