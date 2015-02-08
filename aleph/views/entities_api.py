@@ -34,7 +34,7 @@ def create():
     authz.require(authz.list_write(data['list'].id))
     entity = Entity.create(data, current_user)
     db.session.commit()
-    refresh_selectors.delay(entity.terms)
+    refresh_selectors.delay(list(entity.terms))
     return view(entity.id)
 
 
@@ -64,7 +64,7 @@ def update(id):
     entity.update(data)
     db.session.commit()
     selectors = old_selectors.symmetric_difference(entity.terms)
-    refresh_selectors.delay(selectors)
+    refresh_selectors.delay(list(selectors))
     return view(entity.id)
 
 
@@ -75,5 +75,5 @@ def delete(id):
     selectors = entity.terms
     entity.delete()
     db.session.commit()
-    refresh_selectors.delay(selectors)
+    refresh_selectors.delay(list(selectors))
     return jsonify({'status': 'ok'})

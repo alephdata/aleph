@@ -88,7 +88,7 @@ aleph.controller('ListsNewCtrl', ['$scope', '$location', '$http', '$routeParams'
   $scope.create = function(form) {
       var res = $http.post('/api/1/lists', $scope.list);
       res.success(function(data) {
-          $location.path('/lists/' + data.id);
+          $location.path('/lists/' + data.id + '/entities');
       });
       res.error(Validation.handle(form));
   };

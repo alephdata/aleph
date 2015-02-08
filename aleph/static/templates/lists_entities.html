@@ -29,7 +29,7 @@
     </tr-->
     <tr>
       <td colspan="4" ng-show="edit == 'new'">
-        <div class="alert alert-info">
+        <div class="alert alert-info" ng-show="entities.total == 0 && query.prefix.length">
           <strong>No matches were found.</strong> Why don't you create a new entity to track 
           this company or person?
         </div>

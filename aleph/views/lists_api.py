@@ -62,6 +62,5 @@ def delete(id):
     selectors = lst.terms
     lst.delete()
     db.session.commit()
-    if len(selectors):
-        refresh_selectors.delay(selectors)
+    refresh_selectors.delay(list(selectors))
     return jsonify({'status': 'ok'})
