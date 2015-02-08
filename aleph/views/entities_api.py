@@ -3,7 +3,8 @@ from flask.ext.login import current_user
 from werkzeug.exceptions import BadRequest
 
 from aleph.views.util import obj_or_404, jsonify, Pager
-from aleph.model import Entity, List
+from aleph.processing import refresh_selectors
+from aleph.model import Entity, List, db
 from aleph import authz
 
 blueprint = Blueprint('entities', __name__)
@@ -38,3 +39,15 @@ def view(id):
     entity = obj_or_404(Entity.by_id(id))
     authz.require(authz.list_read(entity.list_id))
     return jsonify(entity)
+
+
+@blueprint.route('/api/1/entities/<id>', methods=['DELETE'])
+def delete(id):
+    entity = obj_or_404(Entity.by_id(id))
+    authz.require(authz.list_write(entity.list_id))
+    selectors = entity.terms
+    entity.delete()
+    db.session.commit()
+    if len(selectors):
+        refresh_selectors.delay(selectors)
+    return jsonify({'status': 'ok'})

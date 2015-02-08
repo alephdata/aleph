@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy.orm import aliased
 
-from aleph.core import db
+from aleph.core import db, url_for
 from aleph.model.user import User
 from aleph.model.selector import Selector
 from aleph.model.util import make_textid, db_compare
@@ -39,6 +39,7 @@ class Entity(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
+            'api_url': url_for('entities.view', id=self.id),
             'label': self.label,
             'category': self.category,
             'creator_id': self.creator_id,
@@ -77,6 +78,7 @@ class Entity(db.Model):
         if prefix is not None and len(prefix):
             q = q.join(Selector, cls.id == Selector.entity_id)
             q = cls.apply_filter(q, Selector.normalized, prefix)
+        q = q.order_by(cls.label.asc())
         return q
 
     @classmethod
@@ -109,6 +111,7 @@ class Entity(db.Model):
         if prefix is None or not len(prefix):
             return []
         q = cls.apply_filter(q, sel.normalized, prefix)
+        q = q.order_by(ent.label.asc())
         q = q.limit(limit)
         q = q.distinct()
         suggestions = []

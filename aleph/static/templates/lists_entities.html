@@ -11,7 +11,9 @@
             ng-model="query.prefix"
             placeholder="Filter by name">
           <span class="input-group-btn">
-            <button class="btn btn-default" type="button">Create new...</button>
+            <button class="btn btn-success" type="button">
+              <i class="fa fa-plus-square"></i> New
+            </button>
           </span>
         </div>
       </div>
@@ -19,21 +21,31 @@
   </form>
 
 
-  <table class="table">
+  <table class="table table-striped">
     <tr>
-      <th>Name</th>
+      <th colspan="2">Name</th>
       <th>Aliases</th>
-      <th>Actions</th>
+      <th width="10%"></th>
     </tr>
     <tr ng-repeat="entity in entities.results">
-      <td>
+      <td width="1%">
         <entity-icon category="entity.category"></entity-icon>
-        {{entity.label}}
+      </td>
+      <td width="30%">
+        {{ entity.label }}
       </td>
       <td>
         {{ entity.selectors.join(', ') }}
       </td>
-      <td>
+      <td width="10%" class="actions">
+        <div class="btn-group btn-group-sm" role="group">
+          <button type="button" class="btn btn-default">
+            <i class="fa fa-pencil-square-o"></i>
+          </button>
+          <button type="button" class="btn btn-danger" ng-click="delete(entity)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
       </td>
     </tr>
   </table>

@@ -6577,6 +6577,9 @@ a {
 .search-bar {
   margin-bottom: 1em;
 }
+.actions {
+  text-align: right;
+}
 .facet-list {
   max-height: 30em;
   overflow-y: scroll;

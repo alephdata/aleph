@@ -17,6 +17,13 @@ aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routePa
     });
   };
 
+  $scope.delete = function(entity) {
+    $http.delete(entity.api_url).then(function(res) {
+      var idx = $scope.entities.results.indexOf(entity);
+      $scope.entities.results.splice(idx, 1);
+    });
+  };
+
   $scope.filter();
 
 }]);
