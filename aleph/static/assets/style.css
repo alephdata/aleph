@@ -6580,6 +6580,9 @@ a {
 .actions {
   text-align: right;
 }
+.right-text {
+  text-align: right;
+}
 .facet-list {
   max-height: 30em;
   overflow-y: scroll;

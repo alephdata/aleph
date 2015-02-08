@@ -7,11 +7,11 @@
           <div class="input-group-addon">
             <i class="fa fa-search"></i>
           </div>
-          <input type="text" class="form-control"
+          <input type="text" class="form-control" id="prefix-search"
             ng-model="query.prefix"
             placeholder="Filter by name">
           <span class="input-group-btn">
-            <button class="btn btn-success" type="button">
+            <button class="btn btn-success" type="button" ng-click="setEdit('new')">
               <i class="fa fa-plus-square"></i> New
             </button>
           </span>
@@ -22,12 +22,78 @@
 
 
   <table class="table table-striped">
-    <tr>
+    <!--tr>
       <th colspan="2">Name</th>
       <th>Aliases</th>
       <th width="10%"></th>
+    </tr-->
+    <tr>
+      <td colspan="4" ng-show="edit == 'new'">
+        <div class="alert alert-info">
+          <strong>No matches were found.</strong> Why don't you create a new entity to track 
+          this company or person?
+        </div>
+        <form class="form-horizontal" name="newEntityForm" ng-submit="create(newEntityForm)">
+          <div class="form-group">
+            <label for="label" class="col-sm-2 control-label">Label</label>
+            <div class="col-sm-10">
+              <input type="label" class="form-control" id="edit-label-new"
+                 ng-model="newEntity.label"
+                placeholder="Name">
+              <p class="help-block" ng-show="newEntityForm.label.$invalid" ng-bind="newEntityForm.label.$message"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="aliases" class="col-sm-2 control-label">a.k.a.</label>
+            <div class="col-sm-10">
+              <input type="label" class="form-control" id="aliases" ng-model="newEntity.aliases"
+                placeholder="Known aliases and alternate spellings of the name, separated by commas.">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-2">
+              <div class="radio">
+                <label>
+                  <input type="radio" ng-model="newEntity.category" value="Person"> Person
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="radio">
+                <label>
+                  <input type="radio" ng-model="newEntity.category" value="Company"> Company
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="radio">
+                <label>
+                  <input type="radio" ng-model="newEntity.category" value="Organization"> Organization
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="radio">
+                <label>
+                  <input type="radio" ng-model="newEntity.category" value="Other"> Other
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-success">
+                Create
+              </button>
+              <button type="button" class="btn btn-default" ng-click="setEdit(null)">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      </td>
     </tr>
-    <tr ng-repeat="entity in entities.results">
+    <tr ng-repeat-start="entity in entities.results" ng-hide="edit == entity.id">
       <td width="1%">
         <entity-icon category="entity.category"></entity-icon>
       </td>
@@ -35,17 +101,79 @@
         {{ entity.label }}
       </td>
       <td>
-        {{ entity.selectors.join(', ') }}
+        {{ entity.aliases }}
       </td>
       <td width="10%" class="actions">
         <div class="btn-group btn-group-sm" role="group">
-          <button type="button" class="btn btn-default">
+          <button type="button" class="btn btn-default" ng-click="setEdit(entity.id)">
             <i class="fa fa-pencil-square-o"></i>
           </button>
           <button type="button" class="btn btn-danger" ng-click="delete(entity)">
             <i class="fa fa-trash"></i>
           </button>
         </div>
+      </td>
+    </tr>
+    <tr ng-repeat-end>
+      <td colspan="4" ng-show="edit == entity.id">
+        <form class="form-horizontal" name="editEntity" ng-submit="update(editEntity, entity)">
+          <div class="form-group">
+            <label for="label" class="col-sm-2 control-label">Label</label>
+            <div class="col-sm-10">
+              <input type="label" class="form-control" id="edit-label-{{entity.id}}"
+                 ng-model="entity.label"
+                placeholder="Name">
+              <p class="help-block" ng-show="editEntity.label.$invalid" ng-bind="editEntity.label.$message"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="aliases" class="col-sm-2 control-label">a.k.a.</label>
+            <div class="col-sm-10">
+              <input type="label" class="form-control" id="aliases" ng-model="entity.aliases"
+                placeholder="Known aliases and alternate spellings of the name, separated by commas.">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-2">
+              <div class="radio">
+                <label>
+                  <input type="radio" ng-model="entity.category" value="Person"> Person
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="radio">
+                <label>
+                  <input type="radio" ng-model="entity.category" value="Company"> Company
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="radio">
+                <label>
+                  <input type="radio" ng-model="entity.category" value="Organization"> Organization
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="radio">
+                <label>
+                  <input type="radio" ng-model="entity.category" value="Other"> Other
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-success">
+                Save
+              </button>
+              <button type="button" class="btn btn-default" ng-click="setEdit(null)">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
       </td>
     </tr>
   </table>
