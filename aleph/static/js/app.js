@@ -43,6 +43,7 @@ aleph.config(['$routeProvider', '$locationProvider',
   $routeProvider.when('/lists/:id/entities', {
     templateUrl: 'lists_entities.html',
     controller: 'ListsEntitiesCtrl',
+    reloadOnSearch: false,
     loginRequired: true
   });
 

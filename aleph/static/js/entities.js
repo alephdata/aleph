@@ -3,7 +3,7 @@ aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routePa
   function($scope, $location, $http, $routeParams) {
   
   var apiUrl = '/api/1/lists/' + $routeParams.id;
-  $scope.query = {'list': $routeParams.id, 'prefix': ''};
+  $scope.query = $location.search();
   $scope.list = {};
   $scope.entities = {};
 
@@ -11,10 +11,16 @@ aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routePa
     $scope.list = res.data;
   });
 
-  $scope.filter = function() {
+  $scope.loadQuery = function() {
+    $scope.query['list'] = $routeParams.id;
     $http.get('/api/1/entities', {params: $scope.query}).then(function(res) {
       $scope.entities = res.data;
     });
+  };
+
+  $scope.filter = function() {
+    delete $scope.query['list'];
+    $location.search($scope.query);
   };
 
   $scope.delete = function(entity) {
@@ -24,6 +30,10 @@ aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routePa
     });
   };
 
-  $scope.filter();
+  $scope.$on('$routeUpdate', function(){
+    $scope.loadQuery();
+  });
+
+  $scope.loadQuery();
 
 }]);
