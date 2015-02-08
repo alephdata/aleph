@@ -15,7 +15,7 @@
     <ul class="nav nav-pills nav-stacked">
       <li ng-repeat="lst in lists.results"
           ng-class="{'active': list.id == lst.id}">
-        <a href="/lists/{{lst.id}}">
+        <a href="/lists/{{lst.id}}/entities">
           <i class="fa fa-list"></i> {{lst.label}}
         </a>
       </li>
@@ -26,6 +26,15 @@
       </li>
     </ul>
   </div>
-  <div class="col-md-9" ng-transclude>
+  <div class="col-md-9">
+    <ul class="nav nav-tabs" ng-show="selected">
+      <li role="presentation" ng-class="{'active': selected == 'entities'}">
+        <a href="/lists/{{list.id}}/entities">Manage people and companies</a>
+      </li>
+      <li role="presentation" ng-class="{'active': selected == 'edit'}">
+        <a href="/lists/{{list.id}}">List settings</a>
+      </li>
+    </ul>
+    <div ng-transclude></div>
   </div>
 </div>

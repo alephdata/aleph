@@ -40,6 +40,12 @@ aleph.config(['$routeProvider', '$locationProvider',
     loginRequired: true
   });
 
+  $routeProvider.when('/lists/:id/entities', {
+    templateUrl: 'lists_entities.html',
+    controller: 'ListsEntitiesCtrl',
+    loginRequired: true
+  });
+
   $routeProvider.otherwise({
     redirectTo: '/search',
     loginRequired: false

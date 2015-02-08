@@ -1,0 +1,40 @@
+
+<lists-frame list="list" selected="entities">
+  <form class="search-bar" ng-submit="filter()">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="input-group">
+          <div class="input-group-addon">
+            <i class="fa fa-search"></i>
+          </div>
+          <input type="text" class="form-control"
+            ng-model="query.prefix"
+            placeholder="Filter by name">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">Create new...</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+  <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Aliases</th>
+      <th>Actions</th>
+    </tr>
+    <tr ng-repeat="entity in entities.results">
+      <td>
+        <entity-icon category="entity.category"></entity-icon>
+        {{entity.label}}
+      </td>
+      <td>
+        {{ entity.selectors.join(', ') }}
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+</lists-frame>

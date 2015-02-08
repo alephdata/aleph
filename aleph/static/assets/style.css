@@ -6573,6 +6573,10 @@ a {
 .result .title {
   font-weight: bold;
 }
+.nav.nav-tabs,
+.search-bar {
+  margin-bottom: 1em;
+}
 .facet-list {
   max-height: 30em;
   overflow-y: scroll;

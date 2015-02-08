@@ -42,7 +42,7 @@ class Entity(db.Model):
             'label': self.label,
             'category': self.category,
             'creator_id': self.creator_id,
-            # 'selectors': [s.text for s in self.selectors],
+            'selectors': [s.text for s in self.selectors],
             'list_id': self.list_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at

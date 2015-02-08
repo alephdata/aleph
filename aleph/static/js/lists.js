@@ -4,7 +4,8 @@ aleph.directive('listsFrame', ['$http', function($http) {
     restrict: 'E',
     transclude: true,
     scope: {
-      'list': '='
+      'list': '=',
+      'selected': '@'
     },
     templateUrl: 'lists_frame.html',
     link: function (scope, element, attrs, model) {
