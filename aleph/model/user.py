@@ -22,7 +22,7 @@ class User(db.Model):
 
     twitter_id = db.Column(db.Unicode)
     facebook_id = db.Column(db.Unicode)
-    
+
     api_key = db.Column(db.Unicode, default=make_token)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -34,10 +34,10 @@ class User(db.Model):
 
     def is_authenticated(self):
         return True
- 
+
     def is_anonymous(self):
         return False
- 
+
     def get_id(self):
         return unicode(self.id)
 

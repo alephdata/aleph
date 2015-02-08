@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 
+from sqlalchemy import or_
 from sqlalchemy.orm import aliased
 
 from aleph.core import db
@@ -70,9 +71,12 @@ class Entity(db.Model):
         return q.first()
 
     @classmethod
-    def by_lists(cls, lists):
+    def by_lists(cls, lists, prefix=None):
         q = db.session.query(cls)
         q = q.filter(cls.list_id.in_(lists))
+        if prefix is not None and len(prefix):
+            q = q.join(Selector, cls.id == Selector.entity_id)
+            q = cls.apply_filter(q, Selector.normalized, prefix)
         return q
 
     @classmethod
@@ -87,20 +91,24 @@ class Entity(db.Model):
         return entities
 
     @classmethod
+    def apply_filter(cls, q, col, prefix):
+        prefix = Selector.normalize(prefix)
+        return q.filter(or_(col.like('%s%%' % prefix),
+                            col.like('%% %s%%' % prefix)))
+
+    @classmethod
     def suggest_prefix(cls, prefix, lists, limit=10):
         from aleph.model import EntityTag
         ent = aliased(Entity)
         sel = aliased(Selector)
         tag = aliased(EntityTag)
-        prefix = Selector.normalize(prefix)
-        if not len(prefix):
-            return []
-        prefix = '%s%%' % prefix
         q = db.session.query(ent.id, ent.label, ent.category)
         q = q.join(sel, ent.id == sel.entity_id)
         q = q.join(tag, ent.id == tag.entity_id)
         q = q.filter(ent.list_id.in_(lists))
-        q = q.filter(sel.normalized.like(prefix))
+        if prefix is None or not len(prefix):
+            return []
+        q = cls.apply_filter(q, sel.normalized, prefix)
         q = q.limit(limit)
         q = q.distinct()
         suggestions = []

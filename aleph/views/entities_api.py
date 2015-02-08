@@ -19,7 +19,9 @@ def index():
             list_ids = [l for l in list_ids if l in filter_lists]
         except ValueError:
             raise BadRequest()
-    q = Entity.by_lists(list_ids)
+
+    prefix = request.args.get('prefix')
+    q = Entity.by_lists(list_ids, prefix=prefix)
     return jsonify(Pager(q))
 
 
