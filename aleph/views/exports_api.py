@@ -1,36 +1,43 @@
 import json
 import StringIO
 
-from flask import Blueprint, request
+from flask import Blueprint, request, send_file
 import xlsxwriter
+
+from aleph import authz
+from aleph.crawlers import get_sources
+from aleph.search import raw_iter
+from aleph.search.queries import document_query
+from aleph.search.attributes import CORE_ATTRIBUTES
 
 blueprint = Blueprint('exports', __name__)
 
 XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
 
-@blueprint.route('/api/1/export')
-def export():
+def make_excel(iter, attributes):
     output = StringIO.StringIO()
     workbook = xlsxwriter.Workbook(output)
-    worksheet = workbook.add_worksheet('Search results')
+    worksheet = workbook.add_worksheet('Documents')
 
-    keys = None
     row = 0
-    header = workbook.add_format({'bold': True, 'border': 1, 'fg_color': '#D7E4BC'})
-    for res in s[0:100000]:
-        data = res._results_dict
-        if keys is None:
+    header = workbook.add_format({
+        'bold': True,
+        'border': 1,
+        'fg_color': '#D7E4BC'
+    })
+    for data in iter:
+        # data = res._results_dict
+        if row == 0:
             col = 0
-            keys = [k for k in data.keys() if k not in HIDDEN]
-            for key in keys:
-                worksheet.write(row, col, key, header)
+            for attr in attributes:
+                worksheet.write(row, col, attr, header)
                 col += 1
             row += 1
 
         col = 0
-        for key in keys:
-            val = data.get(key, None)
+        for attr in attributes:
+            val = data.get(attr, None)
             if isinstance(val, (list, tuple, set, dict)):
                 val = json.dumps(val)
             worksheet.write(row, col, val)
@@ -40,7 +47,36 @@ def export():
     worksheet.freeze_panes(1, 0)
     workbook.close()
     output.seek(0)
-    res = make_response(output.read())
-    res.headers["Content-Type"] = XLSX_MIME
-    res.headers["Content-Disposition"] = "attachment; filename=export.xlsx"
-    return res
+    return output
+
+
+def process_row(row, attributes):
+    src = row.get('_source')
+    data = {}
+    for name in attributes:
+        value = src.get(name)
+        for attr in src.get('attributes', []):
+            if attr.get('name') == name:
+                value = attr.get('value')
+        if name == 'source':
+            value = unicode(get_sources().get(value, value))
+        data[name] = value
+    return data
+
+
+@blueprint.route('/api/1/query/export')
+def export():
+    attributes = request.args.getlist('attribute')
+    query = document_query(request.args, lists=authz.authz_lists('read'),
+                           collections=authz.authz_collections('read'))
+    query['_source'] = set(query['_source'])
+    for attribute in attributes:
+        if attribute in CORE_ATTRIBUTES:
+            query['_source'].add(attribute)
+        else:
+            query['_source'].add('attributes')
+    query['_source'] = list(query['_source'])
+    output = (process_row(r, attributes) for r in raw_iter(query))
+    output = make_excel(output, attributes)
+    return send_file(output, mimetype=XLSX_MIME, as_attachment=True,
+                     attachment_filename='export.xlsx')

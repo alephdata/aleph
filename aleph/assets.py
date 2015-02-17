@@ -17,6 +17,7 @@ deps_assets = Bundle(
 )
 
 app_assets = Bundle(
+    'js/util.js',
     'js/app.js',
     'js/services.js',
     'js/search.js',

@@ -21,6 +21,7 @@ aleph.factory('Query', ['$http', '$location', function($http, $location) {
     query = $location.search();
     query.mode = query.mode || 'table';
     query.collection = ensureArray(query.collection);
+    query.attribute = ensureArray(query.attribute);
     query.entity = ensureArray(query.entity);
     return query;
   };
@@ -45,6 +46,9 @@ aleph.factory('Query', ['$http', '$location', function($http, $location) {
       state: query,
       submit: submit,
       load: load,
+      queryString: function() {
+        return queryString(query);
+      },
       hasFilter: hasFilter,
       toggleFilter: toggleFilter
   };
@@ -237,6 +241,37 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
 
   init();
 }]);
+
+
+
+aleph.controller('SearchExportCtrl', ['$scope', '$location', '$http', '$compile', 'Query',
+  function($scope, $location, $http, $compile, Query) {
+  $scope.attributes = {};
+  $scope.query = Query;
+  $scope.graph = {'limit': 75, 'options': [10, 75, 150, 300, 600, 1200]};
+
+  $scope.load = function() {
+    if (Query.state.mode != 'export') return;
+    $http.get('/api/1/query/attributes', {params: Query.load()}).then(function(res) {
+      $scope.attributes = res.data;
+
+      if (Query.state.attribute.length == 0) {
+        angular.forEach(res.data.core, function(enable, a) {
+          if (enable) { Query.state.attribute.push(a); }
+        });
+        Query.submit();
+      }
+    });
+  };
+
+  $scope.$on('$routeUpdate', function(){
+    $scope.load();
+  });
+
+  $scope.load();
+}]);
+
+
 
 
 

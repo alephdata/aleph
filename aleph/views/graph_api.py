@@ -1,6 +1,7 @@
 from itertools import combinations
+from StringIO import StringIO
 
-from flask import Blueprint, request
+from flask import Blueprint, request, send_file
 from restpager.args import arg_int
 import networkx as nx
 from networkx import degree
@@ -73,6 +74,13 @@ def generate_graph(args):
 @blueprint.route('/api/1/graph')
 def query():
     graph = generate_graph(request.args)
-    data = json_graph.node_link_data(graph)
-    data['partial'] = graph.partial
-    return jsonify(data)
+    format = request.args.get('format', '').lower().strip()
+    if format == 'gexf':
+        sio = StringIO()
+        nx.write_gexf(graph, sio)
+        sio.seek(0)
+        return send_file(sio, mimetype='application/xml')
+    else:
+        data = json_graph.node_link_data(graph)
+        data['partial'] = graph.partial
+        return jsonify(data)

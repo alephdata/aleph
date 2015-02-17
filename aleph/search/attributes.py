@@ -6,11 +6,11 @@ from aleph.search.mapping import DOC_TYPE
 from aleph.search.queries import attributes_query
 
 CORE_ATTRIBUTES = {
-    'name': True,
+    'name': False,
     'title': True,
     'source': True,
     'source_url': True,
-    'summary': False,
+    'summary': True,
     'extension': False,
     'mime_type': False
 }
