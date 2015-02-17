@@ -39,20 +39,6 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
     });
   };
 
-  $scope.editCollection = function(slug) {
-    var d = $modal.open({
-        templateUrl: 'collections_edit.html',
-        controller: 'CollectionsEditCtrl',
-        backdrop: true,
-        size: 'lg',
-        resolve: {
-          slug: function () {
-            return slug;
-          }
-        }
-    });
-  };
-
   $scope.submitSearch = function(form) {
     $location.search(Query.state);
     $location.path('/search');
