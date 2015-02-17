@@ -6,6 +6,7 @@ from aleph.model import Entity
 from aleph.views.util import jsonify, Pager
 from aleph.crawlers import get_sources
 from aleph.search.queries import document_query
+from aleph.search.attributes import available_attributes
 from aleph.search import search_documents
 
 blueprint = Blueprint('search', __name__)
@@ -40,12 +41,19 @@ def transform_facets(aggregations):
 
 @blueprint.route('/api/1/query')
 def query():
-    collections = authz.authz_collections('read')
-    lists = authz.authz_lists('read')
-    query = document_query(request.args, collections=collections, lists=lists)
+    query = document_query(request.args, lists=authz.authz_lists('read'),
+                           collections=authz.authz_collections('read'))
     results = search_documents(query)
     pager = Pager(results,
                   results_converter=lambda ds: [add_urls(d) for d in ds])
     data = pager.to_dict()
     data['facets'] = transform_facets(results.result.get('aggregations', {}))
     return jsonify(data)
+
+
+@blueprint.route('/api/1/query/attributes')
+def attributes():
+    attributes = available_attributes(request.args,
+        collections=authz.authz_collections('read'), # noqa
+        lists=authz.authz_lists('read')) # noqa
+    return jsonify(attributes)

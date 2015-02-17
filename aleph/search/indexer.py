@@ -1,38 +1,21 @@
 import logging
-from hashlib import sha1
+
+from jinja2.filters import do_truncate as truncate
+from jinja2.filters import do_striptags as striptags
 
 from aleph.core import es, es_index
 from aleph.views.util import AppEncoder
 from aleph.model import EntityTag
 from aleph.search.mapping import DOC_TYPE
-
-from jinja2.filters import do_truncate as truncate
-from jinja2.filters import do_striptags as striptags
+from aleph.search.attributes import generate_attributes
 
 log = logging.getLogger(__name__)
-IGNORE = ['name', 'slug', 'title', 'source', 'source_url',
-          'summary', 'created_at', 'updated_at', 'extension',
-          'mime_type', 'text', 'normalized', 'entities',
-          'http_status', 'http_headers', 'extract_article']
 
 
 def html_summary(html):
     if not isinstance(html, unicode):
         html = html.decode('utf-8')
     return truncate(striptags(html), length=250)
-
-
-def generate_attributes(meta):
-    attributes = []
-    for key, value in meta.items():
-        if key in IGNORE or isinstance(value, (dict, list)):
-            continue
-        attributes.append({
-            'id': sha1('%s:%r' % (key, value)).hexdigest(),
-            'name': key,
-            'value': unicode(value)
-        })
-    return attributes
 
 
 def index_package(package, plain_text, normalized_text):

@@ -114,3 +114,15 @@ def entity_query(selectors):
         '_source': ['collection', 'id']
     }
     return q
+
+
+def attributes_query(args, collections=None, lists=None):
+    q = document_query(args, collections=collections, lists=lists,
+                       facets=False)
+    q['aggregations'] = {
+        'attributes': {
+            'terms': {'field': 'attributes.name'}
+        }
+    }
+    q['size'] = 0
+    return q
