@@ -12,11 +12,12 @@ CORE_ATTRIBUTES = {
     'source_url': True,
     'summary': True,
     'extension': False,
-    'mime_type': False
+    'mime_type': False,
+    'entities': False
 }
 
 ALSO_IGNORE = ['slug', 'created_at', 'updated_at', 'text',
-               'normalized', 'entities', 'http_status',
+               'normalized', 'http_status',
                'http_headers', 'extract_article']
 
 IGNORE = CORE_ATTRIBUTES.keys() + ALSO_IGNORE

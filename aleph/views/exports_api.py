@@ -5,6 +5,7 @@ from flask import Blueprint, request, send_file
 import xlsxwriter
 
 from aleph import authz
+from aleph.model import Entity
 from aleph.crawlers import get_sources
 from aleph.search import raw_iter
 from aleph.search.queries import document_query
@@ -58,6 +59,9 @@ def process_row(row, attributes):
         for attr in src.get('attributes', []):
             if attr.get('name') == name:
                 value = attr.get('value')
+        if name == 'entities':
+            objs = Entity.by_id_set([e.get('id') for e in value])
+            value = ', '.join([o.label for o in objs.values()])
         if name == 'source':
             value = unicode(get_sources().get(value, value))
         data[name] = value
