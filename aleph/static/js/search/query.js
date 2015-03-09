@@ -6,6 +6,15 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     $location.search(query);
   }
 
+  var mode = function() {
+    if ($route.current) {
+      var ctrl = $route.current.$$route.controller;
+      if (ctrl == 'SearchExportCtrl') return 'export';
+      if (ctrl == 'SearchTableCtrl') return 'table';
+      if (ctrl == 'SearchGraphCtrl') return 'graph';
+    }
+  }
+
   var ensureArray = function(data) {
     if (!angular.isArray(data)) {
       if (angular.isDefined(data) && data.length) {
@@ -19,7 +28,6 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
 
   var load = function() {
     query = $location.search();
-    query.mode = query.mode || 'table';
     query.collection = ensureArray(query.collection);
     query.attribute = ensureArray(query.attribute);
     query.entity = ensureArray(query.entity);
@@ -46,6 +54,7 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
       state: query,
       submit: submit,
       load: load,
+      mode: mode,
       queryString: function() {
         return queryString(query);
       },

@@ -25,6 +25,7 @@
     "angular-truncate": "*",
     "nginfinitescroll": "~1.2.0",
     "d3": "~3.5.3",
-    "ng-debounce": "~0.1.5"
+    "ng-debounce": "~0.1.5",
+    "ngprogress-lite": "~1.0.7"
   }
 }

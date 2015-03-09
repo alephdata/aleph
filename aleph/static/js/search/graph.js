@@ -114,31 +114,3 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
 }]);
 
 
-
-aleph.controller('SearchExportCtrl', ['$scope', '$location', '$http', '$compile', 'Query',
-  function($scope, $location, $http, $compile, Query) {
-  $scope.attributes = {};
-  $scope.graph = {'limit': 75, 'options': [10, 75, 150, 300, 600, 1200]};
-
-  $scope.load = function() {
-    if (Query.state.mode != 'export') return;
-    $http.get('/api/1/query/attributes', {params: Query.load()}).then(function(res) {
-      $scope.attributes = res.data;
-
-      if (Query.state.attribute.length == 0) {
-        angular.forEach(res.data.core, function(enable, a) {
-          if (enable) { Query.state.attribute.push(a); }
-        });
-        Query.submit();
-      }
-    });
-  };
-
-  $scope.load();
-}]);
-
-
-
-
-
-

@@ -1,20 +1,20 @@
 <div class="row">
   <div class="col-md-9">
     <ul class="nav nav-tabs">
-      <li role="presentation" ng-class="{'active': query.state.mode == 'table'}">
-        <a ng-click="setMode('table')">
-          Documents <span class="badge">{{result.total || '0'}}</span>
+      <li role="presentation" ng-class="{'active': query.mode() == 'table'}">
+        <a ng-href="/search?{{ query.queryString() }}">
+          Documents <span class="badge">{{result.total || ''}}</span>
         </a>
       </li>
-      <li role="presentation" ng-class="{'active': query.state.mode == 'graph'}">
-        <a ng-click="setMode('graph')">Actor network</a>
+      <li role="presentation" ng-class="{'active': query.mode() == 'graph'}">
+        <a ng-href="/search/graph?{{ query.queryString() }}">Actor network</a>
       </li>
-      <li role="presentation" ng-class="{'active': query.state.mode == 'export'}">
-        <a ng-click="setMode('export')">Export</a>
+      <li role="presentation" ng-class="{'active': query.mode() == 'export'}">
+        <a ng-href="/search/export?{{ query.queryString() }}">Export</a>
       </li>
     </ul>
 
-    <div class="alert alert-warning" ng-show="!result.total">
+    <div class="alert alert-warning" ng-show="result.limit > 0 && !result.total">
       No results were found.
       <span ng-show="!session.logged_in">
         You may need to log in before you can see more results.

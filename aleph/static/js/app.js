@@ -1,4 +1,5 @@
-var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'debounce', 'truncate', 'infinite-scroll']);
+var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngProgressLite', 'ui.bootstrap',
+                                     'debounce', 'truncate', 'infinite-scroll']);
 
 aleph.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
@@ -7,10 +8,24 @@ aleph.config(['$routeProvider', '$locationProvider',
     templateUrl: 'search_table.html',
     controller: 'SearchTableCtrl',
     reloadOnSearch: true,
+    progressBar: true,
     loginRequired: false,
     resolve: {
       'collections': loadSearchCollections,
       'result': loadSearchResult
+    }
+  });
+
+   $routeProvider.when('/search/export', {
+    templateUrl: 'search_export.html',
+    controller: 'SearchExportCtrl',
+    reloadOnSearch: true,
+    progressBar: true,
+    loginRequired: false,
+    resolve: {
+      'collections': loadSearchCollections,
+      'result': loadSearchResult,
+      'attributes': loadSearchAttributes
     }
   });
   
