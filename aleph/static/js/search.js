@@ -1,17 +1,13 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$location', '$http', 'Query', 'collections',
-  function($scope, $location, $http, Query, collections) {
+aleph.controller('SearchCtrl', ['$scope', '$location', '$http', 'Query', 'collections', 'result',
+  function($scope, $location, $http, Query, collections, result) {
 
-  $scope.result = {};
+  $scope.result = result;
   $scope.collections = collections;
   $scope.query = Query;
 
   $scope.load = function() {
-    var query = angular.copy(Query.load());
-    query['limit'] = Query.state.mode == 'table' ? 35 : 0;
-    $http.get('/api/1/query', {params: query}).then(function(res) {
-      $scope.result = res.data;
-    });
+    
   };
 
   $scope.setMode = function(mode) {

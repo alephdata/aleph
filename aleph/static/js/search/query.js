@@ -1,5 +1,5 @@
 
-aleph.factory('Query', ['$http', '$location', function($http, $location) {
+aleph.factory('Query', ['$route', '$location', function($route, $location) {
   var query = {};
 
   var submit = function() {

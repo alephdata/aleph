@@ -2,7 +2,8 @@ aleph.directive('searchSidebar', ['Query', 'Session', function (Query, Session) 
     return {
         restrict: 'EA',
         scope: {
-            'response': '='
+            'result': '=',
+            'collections': '='
         },
         templateUrl: 'search_sidebar.html',
         link: function (scope, element, attrs, model) {

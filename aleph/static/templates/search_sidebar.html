@@ -9,7 +9,7 @@
   </div>
   <ul class="list-group facet-list">
     <li class="list-group-item facet animate toggle"
-      ng-repeat="entity in response.facets.entities"
+      ng-repeat="entity in result.facets.entities"
       ng-class="{'active': query.hasFilter('entity', entity.key)}"
       ng-click="query.toggleFilter('entity', entity.key)">
       <span class="badge">{{entity.doc_count}}</span>
@@ -33,7 +33,7 @@
   </div>
   <ul class="list-group facet-list">
     <li class="list-group-item facet animate toggle"
-      ng-repeat="facet in response.facets.collections"
+      ng-repeat="facet in result.facets.collections"
       ng-class="{'active': query.hasFilter('collection', facet.key)}"
       ng-click="query.toggleFilter('collection', facet.key)">
       <span class="badge">{{facet.doc_count}}</span>
