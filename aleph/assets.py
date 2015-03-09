@@ -25,6 +25,7 @@ app_assets = Bundle(
     'js/search/loaders.js',
     'js/search/frame.js',
     'js/search/table.js',
+    'js/search/graph.js',
     'js/search/export.js',
     'js/collections.js',
     'js/lists.js',

@@ -16,7 +16,7 @@ aleph.config(['$routeProvider', '$locationProvider',
     }
   });
 
-   $routeProvider.when('/search/export', {
+  $routeProvider.when('/search/export', {
     templateUrl: 'search_export.html',
     controller: 'SearchExportCtrl',
     reloadOnSearch: true,
@@ -26,6 +26,19 @@ aleph.config(['$routeProvider', '$locationProvider',
       'collections': loadSearchCollections,
       'result': loadSearchResult,
       'attributes': loadSearchAttributes
+    }
+  });
+
+  $routeProvider.when('/search/graph', {
+    templateUrl: 'search_graph.html',
+    controller: 'SearchGraphCtrl',
+    reloadOnSearch: true,
+    progressBar: true,
+    loginRequired: false,
+    resolve: {
+      'collections': loadSearchCollections,
+      'result': loadSearchResult,
+      'graph': loadSearchGraph
     }
   });
   

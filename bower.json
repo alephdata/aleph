@@ -26,6 +26,7 @@
     "nginfinitescroll": "~1.2.0",
     "d3": "~3.5.3",
     "ng-debounce": "~0.1.5",
-    "ngprogress-lite": "~1.0.7"
+    "ngprogress-lite": "~1.0.7",
+    "angular-loading-bar": "~0.7.1"
   }
 }

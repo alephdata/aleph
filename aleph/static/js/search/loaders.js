@@ -42,5 +42,12 @@ var loadSearchAttributes = ['$http', '$q', '$route', 'Query', function($http, $q
 }];
 
 
-
-
+var loadSearchGraph = ['$http', '$q', '$route', 'Query', function($http, $q, $route, Query) {
+  var dfd = $q.defer();
+  var query = angular.copy(Query.load());
+  query['limit'] = 75; // hello dunbar?
+  $http.get('/api/1/graph', {params: query}).then(function(res) {
+    dfd.resolve(res.data);
+  });
+  return dfd.promise;
+}];

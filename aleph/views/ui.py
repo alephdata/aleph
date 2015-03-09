@@ -20,6 +20,7 @@ def angular_templates():
 @app.route('/collections')
 @app.route('/search')
 @app.route('/search/export')
+@app.route('/search/graph')
 @app.route('/graph')
 @app.route('/login')
 @app.route('/')
