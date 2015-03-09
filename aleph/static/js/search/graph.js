@@ -1,7 +1,7 @@
 
-aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile', 'debounce',
+aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$timeout', '$compile', 'debounce',
                                      'Query', 'result', 'collections', 'graph',
-  function($scope, $location, $http, $compile, debounce, Query, result, collections, graph) {
+  function($scope, $location, $timeout, $compile, debounce, Query, result, collections, graph) {
   
   $scope.partial = graph.partial;
   $scope.result = result;
@@ -101,7 +101,7 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
   }
 
   var init = function() {
-    $scope.$watch('partial', function() {
+    $timeout(function() {
       updateSize();  
     });
     $(window).resize(debounce(updateSize, 400));
