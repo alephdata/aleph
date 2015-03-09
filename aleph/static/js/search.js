@@ -1,42 +1,4 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$location', '$http', 'Query', 'collections', 'result',
-  function($scope, $location, $http, Query, collections, result) {
-
-  $scope.result = result;
-  $scope.collections = collections;
-  $scope.query = Query;
-
-  $scope.setMode = function(mode) {
-    Query.state.mode = mode;
-    $location.search(Query.state);
-    $location.path('/search');
-  };
-
-}]);
-
-
-
-aleph.controller('SearchListCtrl', ['$scope', '$location', '$http',
-  function($scope, $location, $http) {
-  var isLoading = false;
-
-  $scope.hasMore = function() {
-    return !isLoading && $scope.result.next_url !== null;
-  };
-
-  $scope.loadMore = function() {
-    if (!$scope.$parent.result.next_url) {
-      return;
-    }
-    isLoading = true;
-    $http.get($scope.$parent.result.next_url).then(function(res) {
-      $scope.$parent.result.results = $scope.$parent.result.results.concat(res.data.results);
-      $scope.$parent.result.next_url = res.data.next_url;
-      isLoading = false;
-    });
-  };
-
-}]);
 
 
 aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile', 'debounce', 'Query',
