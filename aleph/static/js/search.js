@@ -6,17 +6,11 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http', 'Query', 'collec
   $scope.collections = collections;
   $scope.query = Query;
 
-  $scope.load = function() {
-    
-  };
-
   $scope.setMode = function(mode) {
     Query.state.mode = mode;
     $location.search(Query.state);
     $location.path('/search');
   };
-
-  $scope.load();
 
 }]);
 
@@ -162,7 +156,6 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
 aleph.controller('SearchExportCtrl', ['$scope', '$location', '$http', '$compile', 'Query',
   function($scope, $location, $http, $compile, Query) {
   $scope.attributes = {};
-  $scope.query = Query;
   $scope.graph = {'limit': 75, 'options': [10, 75, 150, 300, 600, 1200]};
 
   $scope.load = function() {

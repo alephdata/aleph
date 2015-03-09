@@ -1,166 +1,142 @@
-<div class="row">
-  <div class="col-md-9">
-    <ul class="nav nav-tabs">
-      <li role="presentation" ng-class="{'active': query.state.mode == 'table'}">
-        <a ng-click="setMode('table')">
-          Documents <span class="badge">{{result.total || '0'}}</span>
-        </a>
-      </li>
-      <li role="presentation" ng-class="{'active': query.state.mode == 'graph'}">
-        <a ng-click="setMode('graph')">Actor network</a>
-      </li>
-      <li role="presentation" ng-class="{'active': query.state.mode == 'export'}">
-        <a ng-click="setMode('export')">Export</a>
-      </li>
-    </ul>
-
-    <div class="alert alert-warning" ng-show="!result.total">
-      No results were found.
-      <span ng-show="!session.logged_in">
-        You may need to log in before you can see more results.
-      </span>
-    </div>
-
-    <div ng-show="query.state.mode == 'table'">
-      <div ng-controller="SearchListCtrl">
-        <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()"
-          infinite-scroll-distance="3">
-          <div class="result animate toggle" ng-repeat="doc in result.results">
-            <a ng-href="{{doc.source.site}}" target="_self"
-               tooltip="Loaded from {{doc.source.label}} on {{doc.updated_at.split('T')[0]}}"
-               tooltip-append-to-body="true"
-               tooltip-placement="right" class="source">
-              {{doc.source.label}}
-            </a>
-            <a ng-href="{{doc.source_url}}" target="_self" class="title">
-              {{doc.title | characters: 90 }}
-            </a>
-            <span class="archive">
-              [<a ng-href="{{doc.archive_url}}" target="_self">cached</a>]
-            </span>
-            <span class="summary">{{doc.summary}}</span>
-          </div>
+<div search-frame result="result" collections="collections">
+  
+  <div ng-show="query.state.mode == 'table'">
+    <div ng-controller="SearchListCtrl">
+      <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()"
+        infinite-scroll-distance="3">
+        <div class="result animate toggle" ng-repeat="doc in result.results">
+          <a ng-href="{{doc.source.site}}" target="_self"
+             tooltip="Loaded from {{doc.source.label}} on {{doc.updated_at.split('T')[0]}}"
+             tooltip-append-to-body="true"
+             tooltip-placement="right" class="source">
+            {{doc.source.label}}
+          </a>
+          <a ng-href="{{doc.source_url}}" target="_self" class="title">
+            {{doc.title | characters: 90 }}
+          </a>
+          <span class="archive">
+            [<a ng-href="{{doc.archive_url}}" target="_self">cached</a>]
+          </span>
+          <span class="summary">{{doc.summary}}</span>
         </div>
       </div>
     </div>
+  </div>
 
-    <div ng-show="query.state.mode == 'graph'">
-      <div ng-controller="SearchGraphCtrl">
-        <div id="graph">
-          <svg></svg>
-        </div>
-        <div class="alert alert-warning" ng-show="partial">
-          For clarity, only the {{partial.shown}} most well-connected entities 
-          are shown out of a network of {{partial.total}}.
-        </div>
+  <div ng-show="query.state.mode == 'graph'">
+    <div ng-controller="SearchGraphCtrl">
+      <div id="graph">
+        <svg></svg>
+      </div>
+      <div class="alert alert-warning" ng-show="partial">
+        For clarity, only the {{partial.shown}} most well-connected entities 
+        are shown out of a network of {{partial.total}}.
       </div>
     </div>
+  </div>
 
-    <div ng-show="query.state.mode == 'export'">
-      <div ng-controller="SearchExportCtrl">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                Document metadata
-              </div>
-              <div class="panel-body">
-                <p>
-                  You can download links and other meta data for all documents
-                  matching your search criteria.
-                </p>
-                <p>
-                  Below, select the fields you want to include. Exports will never
-                  include the full document.
-                </p>
-              </div>
+  <div ng-show="query.state.mode == 'export'">
+    <div ng-controller="SearchExportCtrl">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              Document metadata
+            </div>
+            <div class="panel-body">
+              <p>
+                You can download links and other meta data for all documents
+                matching your search criteria.
+              </p>
+              <p>
+                Below, select the fields you want to include. Exports will never
+                include the full document.
+              </p>
+            </div>
 
-              <table class="table">
-                <tr>
-                  <th colspan="2">Core fields</th>
-                </tr>
-                <tr ng-repeat="(a, k) in attributes.core">
-                  <td width="1%">
-                    <input type="checkbox" ng-checked="query.hasFilter('attribute', a)"
-                      ng-click="query.toggleFilter('attribute', a)">
-                  </td>
-                  <td>
-                    {{a}}
-                  </td>
-                </tr>
-                <tr ng-show="attributes.extra">
-                  <th colspan="2">Extra fields</th>
-                </tr>
-                <tr ng-repeat="(a, k) in attributes.extra">
-                  <td width="1%">
-                    <input type="checkbox" ng-checked="query.hasFilter('attribute', a)"
-                      ng-click="query.toggleFilter('attribute', a)">
-                  </td>
-                  <td>
-                    {{a}}
-                  </td>
-                </tr>
-              </table>
+            <table class="table">
+              <tr>
+                <th colspan="2">Core fields</th>
+              </tr>
+              <tr ng-repeat="(a, k) in attributes.core">
+                <td width="1%">
+                  <input type="checkbox" ng-checked="query.hasFilter('attribute', a)"
+                    ng-click="query.toggleFilter('attribute', a)">
+                </td>
+                <td>
+                  {{a}}
+                </td>
+              </tr>
+              <tr ng-show="attributes.extra">
+                <th colspan="2">Extra fields</th>
+              </tr>
+              <tr ng-repeat="(a, k) in attributes.extra">
+                <td width="1%">
+                  <input type="checkbox" ng-checked="query.hasFilter('attribute', a)"
+                    ng-click="query.toggleFilter('attribute', a)">
+                </td>
+                <td>
+                  {{a}}
+                </td>
+              </tr>
+            </table>
 
-              <div class="panel-body">
-                <a class="btn btn-primary"
-                  ng-href="/api/1/query/export?{{query.queryString()}}"
-                  download target="_self">
-                  <i class="fa fa-cloud-download"></i>
-                  Download {{result.total}} records (xlsx)
-                </a>
-              </div>
+            <div class="panel-body">
+              <a class="btn btn-primary"
+                ng-href="/api/1/query/export?{{query.queryString()}}"
+                download target="_self">
+                <i class="fa fa-cloud-download"></i>
+                Download {{result.total}} records (xlsx)
+              </a>
             </div>
           </div>
+        </div>
 
-          <div class="col-md-6">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                Actor network data
+        <div class="col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              Actor network data
+            </div>
+            <div class="panel-body">
+              <p>
+                Network data can be used to further explore the connections
+                between entities. Each link indicates two entities occuring 
+                in the same document. If multiple documents indicate a
+                connection, a weight is included in the data.
+              </p>
+
+              <div class="form-group">
+                <label for="limit">Number of nodes to include</label>
+                <select class="form-control" id="limit" ng-model="graph.limit"
+                  ng-options="a for a in graph.options">
+                </select>
               </div>
-              <div class="panel-body">
-                <p>
-                  Network data can be used to further explore the connections
-                  between entities. Each link indicates two entities occuring 
-                  in the same document. If multiple documents indicate a
-                  connection, a weight is included in the data.
-                </p>
 
-                <div class="form-group">
-                  <label for="limit">Number of nodes to include</label>
-                  <select class="form-control" id="limit" ng-model="graph.limit"
-                    ng-options="a for a in graph.options">
-                  </select>
-                </div>
+              <hr/>
 
-                <hr/>
+              <a ng-href="/api/1/graph?format=gexf&limit={{graph.limit}}&{{query.queryString()}}" class="btn btn-primary" target="_self"
+              download="actors.gexf">
+                <i class="fa fa-cloud-download"></i>
+                Download Graph Exchange XML (gexf)
+              </a>
+              <p class="help-block">
+                This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool (intermediate). 
+              </p>
 
-                <a ng-href="/api/1/graph?format=gexf&limit={{graph.limit}}&{{query.queryString()}}" class="btn btn-primary" target="_self"
-                download="actors.gexf">
-                  <i class="fa fa-cloud-download"></i>
-                  Download Graph Exchange XML (gexf)
-                </a>
-                <p class="help-block">
-                  This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool (intermediate). 
-                </p>
+              <hr/>
 
-                <hr/>
-
-                <a ng-href="/api/1/graph?format=json&limit={{graph.limit}}&{{query.queryString()}}" class="btn btn-primary" target="_self"
-                download="actors.json">
-                  <i class="fa fa-cloud-download"></i>
-                  Download D3 network (json)
-                </a>
-                <p class="help-block">
-                  This data format is suited for data visualizations using <a href="http://d3js.org">data-driven documents (d3)</a>, a powerful JavaScript library (expert). 
-                </p>
-              </div>
+              <a ng-href="/api/1/graph?format=json&limit={{graph.limit}}&{{query.queryString()}}" class="btn btn-primary" target="_self"
+              download="actors.json">
+                <i class="fa fa-cloud-download"></i>
+                Download D3 network (json)
+              </a>
+              <p class="help-block">
+                This data format is suited for data visualizations using <a href="http://d3js.org">data-driven documents (d3)</a>, a powerful JavaScript library (expert). 
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="col-md-3" search-sidebar collections="collections" result="result"></div>
 </div>

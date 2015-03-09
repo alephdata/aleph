@@ -1,11 +1,12 @@
-aleph.directive('searchSidebar', ['Query', 'Session', function (Query, Session) {
+aleph.directive('searchFrame', ['Query', 'Session', function (Query, Session) {
     return {
         restrict: 'EA',
         scope: {
             'result': '=',
             'collections': '='
         },
-        templateUrl: 'search_sidebar.html',
+        transclude: true,
+        templateUrl: 'search_frame.html',
         link: function (scope, element, attrs, model) {
             scope.query = Query;
             scope.session = {}

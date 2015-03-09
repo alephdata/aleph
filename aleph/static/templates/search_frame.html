@@ -1,0 +1,75 @@
+<div class="row">
+  <div class="col-md-9">
+    <ul class="nav nav-tabs">
+      <li role="presentation" ng-class="{'active': query.state.mode == 'table'}">
+        <a ng-click="setMode('table')">
+          Documents <span class="badge">{{result.total || '0'}}</span>
+        </a>
+      </li>
+      <li role="presentation" ng-class="{'active': query.state.mode == 'graph'}">
+        <a ng-click="setMode('graph')">Actor network</a>
+      </li>
+      <li role="presentation" ng-class="{'active': query.state.mode == 'export'}">
+        <a ng-click="setMode('export')">Export</a>
+      </li>
+    </ul>
+
+    <div class="alert alert-warning" ng-show="!result.total">
+      No results were found.
+      <span ng-show="!session.logged_in">
+        You may need to log in before you can see more results.
+      </span>
+    </div>
+
+    <div ng-transclude></div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="pull-right">
+          <a href="/lists" ng-show="session.logged_in">
+            <i class="fa fa-cog"></i>
+          </a>
+        </span>
+        People, Companies, etc.
+      </div>
+      <ul class="list-group facet-list">
+        <li class="list-group-item facet animate toggle"
+          ng-repeat="entity in result.facets.entities"
+          ng-class="{'active': query.hasFilter('entity', entity.key)}"
+          ng-click="query.toggleFilter('entity', entity.key)">
+          <span class="badge">{{entity.doc_count}}</span>
+          <entity-icon category="entity.entity.category"></entity-icon>
+          <span class="lbl" tooltip="{{entity.entity.label.length > 18 ? entity.entity.label : ''}}"
+            tooltip-append-to-body="true" tooltip-placement="left">
+            {{entity.entity.label | characters: 18 }}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="pull-right">
+          <a href="/collections" ng-show="session.logged_in">
+            <i class="fa fa-cog"></i>
+          </a>
+        </span>
+        Document collections
+      </div>
+      <ul class="list-group facet-list">
+        <li class="list-group-item facet animate toggle"
+          ng-repeat="facet in result.facets.collections"
+          ng-class="{'active': query.hasFilter('collection', facet.key)}"
+          ng-click="query.toggleFilter('collection', facet.key)">
+          <span class="badge">{{facet.doc_count}}</span>
+          <span class="lbl">
+            {{collections[facet.key].label | characters: 20 }}
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
