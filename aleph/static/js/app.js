@@ -9,9 +9,7 @@ aleph.config(['$routeProvider', '$locationProvider',
     reloadOnSearch: true,
     loginRequired: false,
     resolve: {
-      'foo': ['$http', function($http) {
-        //console.log('resolve!');
-      }]
+      'collections': loadSearchCollections
     }
   });
   

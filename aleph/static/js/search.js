@@ -1,22 +1,12 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$location', '$http', 'Query',
-  function($scope, $location, $http, Query) {
+aleph.controller('SearchCtrl', ['$scope', '$location', '$http', 'Query', 'collections',
+  function($scope, $location, $http, Query, collections) {
 
-  var collectionCount = 0;
   $scope.result = {};
-  $scope.collections = {};
+  $scope.collections = collections;
 
   $scope.toggleFilter = Query.toggleFilter;
   $scope.hasFilter = Query.hasFilter;
-
-  $http.get('/api/1/collections').then(function(res) {
-    var collections = {}
-    angular.forEach(res.data.results, function(c) {
-      collections[c.slug] = c;
-    });
-    $scope.collections = collections;
-    collectionCount = res.data.total;
-  });
   
   $scope.load = function() {
     var query = angular.copy(Query.load());
@@ -30,10 +20,6 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http', 'Query',
     Query.state.mode = mode;
     $location.search(Query.state);
     $location.path('/search');
-  };
-
-  $scope.numQueriedCollections = function() {
-    return $scope.query.collection.length || collectionCount;
   };
 
   $scope.load();
