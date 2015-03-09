@@ -9,7 +9,7 @@ deps_assets = Bundle(
     'vendor/ng-debounce/angular-debounce.js',
     'vendor/angular-route/angular-route.js',
     'vendor/angular-animate/angular-animate.js',
-    'vendor/ngprogress-lite/ngprogress-lite.js',
+    'vendor/angular-loading-bar/build/loading-bar.js',
     'vendor/angular-truncate/src/truncate.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
     'vendor/nginfinitescroll/build/ng-infinite-scroll.js',
@@ -38,7 +38,7 @@ app_assets = Bundle(
 
 css_assets = Bundle(
     'style/style.less',
-    'vendor/ngprogress-lite/ngprogress-lite.css',
+    'vendor/angular-loading-bar/build/loading-bar.css',
     'style/animations.css',
     filters='less',
     output='assets/style.css'

@@ -1,7 +1,7 @@
 
 aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$modal', '$q',
-                             'ngProgressLite', 'Flash', 'Session', 'Query',
-  function($scope, $rootScope, $location, $http, $modal, $q, ngProgressLite, Flash, Session, Query) {
+                             'Flash', 'Session', 'Query',
+  function($scope, $rootScope, $location, $http, $modal, $q, Flash, Session, Query) {
   $scope.session = {logged_in: false};
   $scope.query = Query.state;
   $scope.flash = Flash;
@@ -11,24 +11,12 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
   });
 
   $rootScope.$on("$routeChangeStart", function (event, next, current) {
-    if (next.$$route && next.$$route.progressBar) {
-      ngProgressLite.start();
-    }
-
     Session.get(function(session) {
       if (next.$$route && next.$$route.loginRequired && !session.logged_in) {
         $location.search({});
         $location.path('/');
       }
     });
-  });
-
-  $rootScope.$on("$routeChangeSuccess", function (event, next, current) {
-    ngProgressLite.done();
-  });
-
-  $rootScope.$on("routeChangeError", function (event, next, current) {
-    ngProgressLite.done();
   });
 
   $scope.suggestEntities = function(prefix) {
@@ -62,11 +50,11 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
 
 aleph.controller('ProfileCtrl', ['$scope', '$location', '$modalInstance', '$http', 'Session',
   function($scope, $location, $modalInstance, $http, Session) {
-    $scope.session = {logged_in: false};
+    //$scope.session = {logged_in: false};
     $scope.user = {};
 
     Session.get(function(session) {
-        $scope.session = session;
+        //$scope.session = session;
         $scope.user = session.user;
     });
 

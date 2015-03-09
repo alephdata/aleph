@@ -1,4 +1,4 @@
-var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngProgressLite', 'ui.bootstrap',
+var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'angular-loading-bar', 'ui.bootstrap',
                                      'debounce', 'truncate', 'infinite-scroll']);
 
 aleph.config(['$routeProvider', '$locationProvider',
@@ -8,7 +8,6 @@ aleph.config(['$routeProvider', '$locationProvider',
     templateUrl: 'search_table.html',
     controller: 'SearchTableCtrl',
     reloadOnSearch: true,
-    progressBar: true,
     loginRequired: false,
     resolve: {
       'collections': loadSearchCollections,
@@ -20,7 +19,6 @@ aleph.config(['$routeProvider', '$locationProvider',
     templateUrl: 'search_export.html',
     controller: 'SearchExportCtrl',
     reloadOnSearch: true,
-    progressBar: true,
     loginRequired: false,
     resolve: {
       'collections': loadSearchCollections,
@@ -33,7 +31,6 @@ aleph.config(['$routeProvider', '$locationProvider',
     templateUrl: 'search_graph.html',
     controller: 'SearchGraphCtrl',
     reloadOnSearch: true,
-    progressBar: true,
     loginRequired: false,
     resolve: {
       'collections': loadSearchCollections,
@@ -100,54 +97,3 @@ aleph.directive('entityIcon', ['$http', function($http) {
     }
   };
 }]);
-
-aleph.factory('Flash', ['$rootScope', '$timeout', function($rootScope, $timeout) {
-  // Message flashing.
-  var currentMessage = null;
-
-  $rootScope.$on("$routeChangeSuccess", function() {
-    currentMessage = null;
-  });
-
-  return {
-    message: function(message, type) {
-      currentMessage = [message, type];
-      $timeout(function() {
-        currentMessage = null;
-      }, 2000);
-    },
-    getMessage: function() {
-      return currentMessage;
-    }
-  };
-}]);
-
-aleph.factory('Validation', ['Flash', function(Flash) {
-  // handle server-side form validation errors.
-  return {
-    handle: function(form) {
-      return function(res) {
-        if (res.status == 400 || !form) {
-            var errors = [];
-            
-            for (var field in res.errors) {
-                form[field].$setValidity('value', false);
-                form[field].$message = res.errors[field];
-                errors.push(field);
-            }
-            if (angular.isDefined(form._errors)) {
-                angular.forEach(form._errors, function(field) {
-                    if (errors.indexOf(field) == -1) {
-                        form[field].$setValidity('value', true);
-                    }
-                });
-            }
-            form._errors = errors;
-        } else {
-          Flash.message(res.message || res.title || 'Server error', 'danger');
-        }
-      }
-    }
-  };
-}]);
-

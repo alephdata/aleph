@@ -1,14 +1,6 @@
 
-var loadSearchCollections = ['$http', '$q', function($http, $q) {
-  var dfd = $q.defer();
-  $http.get('/api/1/collections').then(function(res) {
-    var collections = {}
-    angular.forEach(res.data.results, function(c) {
-      collections[c.slug] = c;
-    });
-    dfd.resolve(collections);
-  });
-  return dfd.promise;
+var loadSearchCollections = ['Collections', function(Collections) {
+  return Collections.load();
 }];
 
 

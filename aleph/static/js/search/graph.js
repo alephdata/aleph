@@ -70,10 +70,10 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$http', '$compile',
         .attr("r", 2)
         .attr("tooltip-append-to-body", true)
         .attr("tooltip", function(d){ return d.label; })
-        .on("click", function(d) {
-          Query.toggleFilter('entity', d.id);
-          $scope.$apply();
-        })
+        // .on("click", function(d) {
+        //   Query.toggleFilter('entity', d.id);
+        //   $scope.$apply();
+        // })
         .call(force.drag)
         .transition()
           .duration(1000)

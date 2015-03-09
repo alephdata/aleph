@@ -24,8 +24,9 @@ aleph.controller('CollectionsIndexCtrl', ['$scope', '$location', '$http',
 }]);
 
 
-aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash', 'Validation',
-  function($scope, $location, $http, $routeParams, Flash, Validation) {
+aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash',
+                                         'Validation', 'Collections',
+  function($scope, $location, $http, $routeParams, Flash, Validation, Collections) {
   
   var apiUrl = '/api/1/collections/' + $routeParams.slug;
   $scope.collection = {};
@@ -60,7 +61,8 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
   $scope.save = function(form) {
       var res = $http.post(apiUrl, $scope.collection);
       res.success(function(data) {
-          Flash.message('Your changes have been saved.', 'success');
+        Collections.reset();
+        Flash.message('Your changes have been saved.', 'success');
       });
       res.error(Validation.handle(form));
   };
