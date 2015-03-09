@@ -4,10 +4,8 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http', 'Query', 'collec
 
   $scope.result = {};
   $scope.collections = collections;
+  $scope.query = Query;
 
-  $scope.toggleFilter = Query.toggleFilter;
-  $scope.hasFilter = Query.hasFilter;
-  
   $scope.load = function() {
     var query = angular.copy(Query.load());
     query['limit'] = Query.state.mode == 'table' ? 35 : 0;

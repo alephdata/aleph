@@ -1,15 +1,15 @@
 <div class="row">
   <div class="col-md-9">
     <ul class="nav nav-tabs">
-      <li role="presentation" ng-class="{'active': query.mode == 'table'}">
+      <li role="presentation" ng-class="{'active': query.state.mode == 'table'}">
         <a ng-click="setMode('table')">
           Documents <span class="badge">{{result.total || '0'}}</span>
         </a>
       </li>
-      <li role="presentation" ng-class="{'active': query.mode == 'graph'}">
+      <li role="presentation" ng-class="{'active': query.state.mode == 'graph'}">
         <a ng-click="setMode('graph')">Actor network</a>
       </li>
-      <li role="presentation" ng-class="{'active': query.mode == 'export'}">
+      <li role="presentation" ng-class="{'active': query.state.mode == 'export'}">
         <a ng-click="setMode('export')">Export</a>
       </li>
     </ul>
@@ -21,7 +21,7 @@
       </span>
     </div>
 
-    <div ng-show="query.mode == 'table'">
+    <div ng-show="query.state.mode == 'table'">
       <div ng-controller="SearchListCtrl">
         <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()"
           infinite-scroll-distance="3">
@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <div ng-show="query.mode == 'graph'">
+    <div ng-show="query.state.mode == 'graph'">
       <div ng-controller="SearchGraphCtrl">
         <div id="graph">
           <svg></svg>
@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <div ng-show="query.mode == 'export'">
+    <div ng-show="query.state.mode == 'export'">
       <div ng-controller="SearchExportCtrl">
         <div class="row">
           <div class="col-md-6">
@@ -162,51 +162,5 @@
     </div>
   </div>
 
-  <div class="col-md-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <span class="pull-right">
-          <a href="/lists" ng-show="session.logged_in">
-            <i class="fa fa-cog"></i>
-          </a>
-        </span>
-        People, Companies, etc.
-      </div>
-      <ul class="list-group facet-list">
-        <li class="list-group-item facet animate toggle"
-          ng-repeat="entity in result.facets.entities"
-          ng-class="{'active': hasFilter('entity', entity.key)}"
-          ng-click="toggleFilter('entity', entity.key)">
-          <span class="badge">{{entity.doc_count}}</span>
-          <entity-icon category="entity.entity.category"></entity-icon>
-          <span class="lbl" tooltip="{{entity.entity.label.length > 18 ? entity.entity.label : ''}}"
-            tooltip-append-to-body="true" tooltip-placement="left">
-            {{entity.entity.label | characters: 18 }}
-          </span>
-        </li>
-      </ul>
-    </div>
-  
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <span class="pull-right">
-          <a href="/collections" ng-show="session.logged_in">
-            <i class="fa fa-cog"></i>
-          </a>
-        </span>
-        Document collections
-      </div>
-      <ul class="list-group facet-list">
-        <li class="list-group-item facet animate toggle"
-          ng-repeat="facet in result.facets.collections"
-          ng-class="{'active': hasFilter('collection', facet.key)}"
-          ng-click="toggleFilter('collection', facet.key)">
-          <span class="badge">{{facet.doc_count}}</span>
-          <span class="lbl">
-            {{collections[facet.key].label | characters: 20 }}
-          </span>
-        </li>
-      </ul>
-    </div>
-  </div>
+  <div class="col-md-3" search-sidebar response="result"></div>
 </div>
