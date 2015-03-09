@@ -6,8 +6,13 @@ aleph.config(['$routeProvider', '$locationProvider',
   $routeProvider.when('/search', {
     templateUrl: 'search.html',
     controller: 'SearchCtrl',
-    reloadOnSearch: false,
-    loginRequired: false
+    reloadOnSearch: true,
+    loginRequired: false,
+    resolve: {
+      'foo': ['$http', function($http) {
+        //console.log('resolve!');
+      }]
+    }
   });
   
   $routeProvider.when('/collections', {
