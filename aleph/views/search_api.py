@@ -4,6 +4,7 @@ from aleph import authz
 from aleph.core import url_for
 from aleph.model import Entity
 from aleph.views.util import jsonify, Pager
+from aleph.views.cache import etag_cache_keygen
 from aleph.crawlers import get_sources
 from aleph.search.queries import document_query
 from aleph.search.attributes import available_attributes
@@ -41,6 +42,7 @@ def transform_facets(aggregations):
 
 @blueprint.route('/api/1/query')
 def query():
+    etag_cache_keygen()
     query = document_query(request.args, lists=authz.authz_lists('read'),
                            collections=authz.authz_collections('read'))
     results = search_documents(query)
@@ -53,6 +55,7 @@ def query():
 
 @blueprint.route('/api/1/query/attributes')
 def attributes():
+    etag_cache_keygen()
     attributes = available_attributes(request.args,
         collections=authz.authz_collections('read'), # noqa
         lists=authz.authz_lists('read')) # noqa

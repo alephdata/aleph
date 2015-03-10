@@ -2,6 +2,7 @@ from flask import Blueprint  # , request
 from flask.ext.login import current_user
 
 from aleph.views.util import obj_or_404, jsonify, Pager, request_data
+from aleph.views.cache import etag_cache_keygen
 from aleph.processing import refresh_selectors
 from aleph.model import List, db
 from aleph import authz
@@ -38,6 +39,7 @@ def create():
 def view(id):
     authz.require(authz.list_read(id))
     lst = obj_or_404(List.by_id(id))
+    etag_cache_keygen(lst)
     data = lst.to_dict()
     data['can_write'] = authz.list_write(id)
     if data['can_write']:

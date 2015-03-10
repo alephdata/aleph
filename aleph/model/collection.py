@@ -50,7 +50,9 @@ class Collection(db.Model):
             'api_url': url_for('collections.view', slug=self.slug),
             'slug': self.slug,
             'label': self.label,
-            'public': self.public
+            'public': self.public,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
         }
 
     @property

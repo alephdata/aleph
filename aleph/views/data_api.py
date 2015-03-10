@@ -4,6 +4,7 @@ from flask import Blueprint, redirect, send_file
 from aleph.core import archive, url_for
 from aleph import authz
 from aleph.views.util import jsonify
+from aleph.views.cache import etag_cache_keygen
 
 blueprint = Blueprint('data', __name__)
 
@@ -29,6 +30,7 @@ def package(collection, package_id):
 
 @blueprint.route('/api/1/manifest/<collection>/<package_id>')
 def manifest(collection, package_id):
+    etag_cache_keygen(collection, package_id)
     package = get_package(collection, package_id)
     return jsonify(package.manifest)
 
