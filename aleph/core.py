@@ -6,7 +6,7 @@ from flask.ext.login import LoginManager
 from flask.ext.assets import Environment
 from flask.ext.migrate import Migrate
 from flask.ext.oauth import OAuth
-from barn import open_archive
+from archivekit import open_archive
 from kombu import Exchange, Queue
 from celery import Celery
 from pyelasticsearch import ElasticSearch
@@ -61,4 +61,3 @@ def url_for(*a, **kw):
         return _url_for(*a, **kw)
     except RuntimeError:
         return None
-

@@ -1,6 +1,6 @@
 import logging
 
-from barn.ingest import Ingestor
+from archivekit.ingest import Ingestor
 
 from aleph.core import archive, celery
 from aleph.processing.pipeline import make_pipeline # noqa

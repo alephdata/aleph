@@ -1,8 +1,8 @@
 import json
 import logging
 
-from docpipe.pipeline import Pipeline
-from docpipe.exc import DocpipeException
+from loadkit.pipeline import Pipeline
+from loadkit.util import LoadKitException
 
 log = logging.getLogger(__name__)
 
@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 CONFIG = {
     'process': {
         'plain_text': {
-            'operator': 'extract'
+            'operator': 'text_extract'
         },
         'normalized_text': {
             'operator': 'normalize',
@@ -38,5 +38,5 @@ def make_pipeline(collection, overwrite=False):
     try:
         pipeline = Pipeline(collection, 'aleph_process', config=config)
         return pipeline
-    except DocpipeException, de:
+    except LoadKitException, de:
         log.exception(de)

@@ -3,8 +3,8 @@ import re
 import logging
 from collections import defaultdict
 
-from docpipe.stage import Stage
-from docpipe.operators.common import SourceOperator
+from loadkit.types.stage import Stage
+from loadkit.operators.common import SourceOperator
 
 from aleph.core import db
 from aleph.model import EntityTag, Selector

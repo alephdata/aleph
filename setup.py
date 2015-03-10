@@ -22,7 +22,7 @@ setup(
     zip_safe=False,
     install_requires=[],
     entry_points={
-        'docpipe.operators': [
+        'loadkit.operators': [
             'aleph_indexer = aleph.processing.indexer:IndexerOperator',
             'aleph_tagger = aleph.processing.tagger:TaggerOperator'
         ],
