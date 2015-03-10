@@ -2,10 +2,6 @@
 aleph.factory('Query', ['$route', '$location', function($route, $location) {
   var query = {};
 
-  var submit = function() {
-    $location.search(query);
-  }
-
   var mode = function() {
     if ($route.current) {
       var ctrl = $route.current.$$route.controller;
@@ -34,25 +30,28 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     return query;
   };
 
-  var toggleFilter = function(name, val) {
+  var toggleFilter = function(name, val, skipReload) {
     var idx = query[name].indexOf(val);
     if (idx == -1) {
       query[name].push(val);
     } else {
       query[name].splice(idx, 1);
     }
-    submit();
+    $location.search(query);
+    if (!skipReload) {
+      $route.reload();  
+    }
   };
 
   var hasFilter = function(name, val) {
-    return query[name].indexOf(val) != -1;
+    var q = load();
+    return q[name].indexOf(val) != -1;
   };
 
   load();
 
   return {
       state: query,
-      submit: submit,
       load: load,
       mode: mode,
       queryString: function() {

@@ -24,7 +24,7 @@
           <tr ng-repeat="(a, k) in attributes.core">
             <td width="1%">
               <input type="checkbox" ng-checked="query.hasFilter('attribute', a)"
-                ng-click="query.toggleFilter('attribute', a)">
+                ng-click="query.toggleFilter('attribute', a, true)">
             </td>
             <td>
               {{a}}
@@ -36,7 +36,7 @@
           <tr ng-repeat="(a, k) in attributes.extra">
             <td width="1%">
               <input type="checkbox" ng-checked="query.hasFilter('attribute', a)"
-                ng-click="query.toggleFilter('attribute', a)">
+                ng-click="query.toggleFilter('attribute', a, true)">
             </td>
             <td>
               {{a}}

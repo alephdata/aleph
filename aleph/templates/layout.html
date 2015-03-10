@@ -24,7 +24,7 @@
             <div class="input-group navbar-searchbox">
               <span class="input-group-addon brand-field">{{config.APP_TITLE}}</span>
               <input type="text" class="search-query form-control" autofocus
-                ng-model="query.q" placeholder="Search people, companies and other entities"
+                ng-model="query.state.q" placeholder="Search people, companies and other entities"
                 typeahead="entity for entity in suggestEntities($viewValue)"
                 typeahead-min-length="2"
                 typeahead-focus-first="false"

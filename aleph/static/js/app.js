@@ -1,13 +1,15 @@
 var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'angular-loading-bar', 'ui.bootstrap',
                                      'debounce', 'truncate', 'infinite-scroll']);
 
-aleph.config(['$routeProvider', '$locationProvider',
-    function($routeProvider, $locationProvider) {
+aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
+    function($routeProvider, $locationProvider, cfpLoadingBarProvider) {
+
+  cfpLoadingBarProvider.includeSpinner = false;
 
   $routeProvider.when('/search', {
     templateUrl: 'search_table.html',
     controller: 'SearchTableCtrl',
-    reloadOnSearch: true,
+    reloadOnSearch: false,
     loginRequired: false,
     resolve: {
       'collections': loadSearchCollections,
@@ -18,7 +20,7 @@ aleph.config(['$routeProvider', '$locationProvider',
   $routeProvider.when('/search/export', {
     templateUrl: 'search_export.html',
     controller: 'SearchExportCtrl',
-    reloadOnSearch: true,
+    reloadOnSearch: false,
     loginRequired: false,
     resolve: {
       'collections': loadSearchCollections,

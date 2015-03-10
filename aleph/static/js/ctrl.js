@@ -1,9 +1,9 @@
 
-aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$modal', '$q',
+aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$http', '$modal', '$q',
                              'Flash', 'Session', 'Query',
-  function($scope, $rootScope, $location, $http, $modal, $q, Flash, Session, Query) {
+  function($scope, $rootScope, $location, $route, $http, $modal, $q, Flash, Session, Query) {
   $scope.session = {logged_in: false};
-  $scope.query = Query.state;
+  $scope.query = Query;
   $scope.flash = Flash;
 
   Session.get(function(session) {
@@ -42,7 +42,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$http', '$mod
 
   $scope.submitSearch = function(form) {
     $location.search(Query.state);
-    $location.path('/search');
+    $route.reload();
   };
 
 }]);
