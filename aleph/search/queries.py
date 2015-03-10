@@ -24,7 +24,7 @@ def add_filter(q, flt):
     return q
 
 
-def document_query(args, fields=DEFAULT_FIELDS, collections=None, lists=None,
+def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
                    facets=True):
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
@@ -53,15 +53,15 @@ def document_query(args, fields=DEFAULT_FIELDS, collections=None, lists=None,
     q = deepcopy(filtered_q)
 
     # collections filter
-    if collections is not None:
-        colls = args.getlist('collection') or collections
-        colls = [c for c in colls if c in collections]
-        if not len(colls):
-            colls = ['none']
-        cf = {'terms': {'collection': colls}}
+    if sources is not None:
+        srcs = args.getlist('source') or sources
+        srcs = [c for c in srcs if c in sources]
+        if not len(srcs):
+            srcs = ['none']
+        cf = {'terms': {'collection': srcs}}
         q = add_filter(q, cf)
 
-        all_coll_f = {'terms': {'collection': collections}}
+        all_coll_f = {'terms': {'collection': sources}}
         filtered_q = add_filter(filtered_q, all_coll_f)
 
     aggs = {}
@@ -116,8 +116,8 @@ def entity_query(selectors):
     return q
 
 
-def attributes_query(args, collections=None, lists=None):
-    q = document_query(args, collections=collections, lists=lists,
+def attributes_query(args, sources=None, lists=None):
+    q = document_query(args, sources=sources, lists=lists,
                        facets=False)
     q['aggregations'] = {
         'attributes': {

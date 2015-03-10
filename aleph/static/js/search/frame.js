@@ -3,7 +3,7 @@ aleph.directive('searchFrame', ['Query', 'Session', function (Query, Session) {
         restrict: 'EA',
         scope: {
             'result': '=',
-            'collections': '='
+            'sources': '='
         },
         transclude: true,
         templateUrl: 'search_frame.html',

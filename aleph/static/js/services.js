@@ -22,7 +22,7 @@ aleph.factory('Session', ['$http', '$q', function($http, $q) {
 }]);
 
 
-aleph.factory('Collections', ['$http', '$q', function($http, $q) {
+aleph.factory('Sources', ['$http', '$q', function($http, $q) {
     var dfd = null;
 
     var reset = function() { dfd = null; };
@@ -30,12 +30,12 @@ aleph.factory('Collections', ['$http', '$q', function($http, $q) {
     var load = function(cb) {
         if (dfd === null) {
             dfd = $q.defer();
-            $http.get('/api/1/collections').then(function(res) {
-                var collections = {}
+            $http.get('/api/1/sources').then(function(res) {
+                var sources = {}
                 angular.forEach(res.data.results, function(c) {
-                  collections[c.slug] = c;
+                  sources[c.slug] = c;
                 });
-                dfd.resolve(collections);
+                dfd.resolve(sources);
             });
         }
         return dfd.promise;

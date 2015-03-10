@@ -1,9 +1,9 @@
-<div search-frame result="result" collections="collections">
+<div search-frame result="result" sources="sources">
 
   <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()"
     infinite-scroll-distance="3">
     <div class="result animate toggle" ng-repeat="doc in result.results">
-      <a ng-href="{{doc.source.site}}" target="_self"
+      <a ng-href="{{doc.source.url}}" target="_self"
          tooltip="Loaded from {{doc.source.label}} on {{doc.updated_at.split('T')[0]}}"
          tooltip-append-to-body="true"
          tooltip-placement="right" class="source">

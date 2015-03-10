@@ -24,7 +24,7 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
 
   var load = function() {
     query = $location.search();
-    query.collection = ensureArray(query.collection);
+    query.source = ensureArray(query.source);
     query.attribute = ensureArray(query.attribute);
     query.entity = ensureArray(query.entity);
     return query;

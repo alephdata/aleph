@@ -3,21 +3,21 @@ from datetime import datetime
 
 from sqlalchemy import or_
 
-from aleph.core import db, archive, url_for
+from aleph.core import app, db, archive, url_for
 from aleph.model.util import make_token
 from aleph.model.user import User
-from aleph.model.forms import CollectionForm
+from aleph.model.forms import SourceForm
 
 log = logging.getLogger(__name__)
 
 
-collection_user_table = db.Table('collection_user', db.metadata,
-    db.Column('collection_slug', db.Unicode, db.ForeignKey('collection.slug')), # noqa
+source_user_table = db.Table('source_user', db.metadata,
+    db.Column('source_slug', db.Unicode, db.ForeignKey('source.slug')), # noqa
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')) # noqa
 )
 
 
-class Collection(db.Model):
+class Source(db.Model):
     slug = db.Column(db.Unicode, nullable=False, primary_key=True)
     label = db.Column(db.Unicode, nullable=True)
     public = db.Column(db.Boolean, default=True)
@@ -27,17 +27,17 @@ class Collection(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
                            onupdate=datetime.utcnow)
 
-    users = db.relationship(User, secondary=collection_user_table,
-                            backref='collections')
+    users = db.relationship(User, secondary=source_user_table,
+                            backref='sources')
 
     def __repr__(self):
-        return '<Collection(%r)>' % self.slug
+        return '<Source(%r)>' % self.slug
 
     def __unicode__(self):
         return self.label
 
     def update(self, data, user):
-        data = CollectionForm().deserialize(data)
+        data = SourceForm().deserialize(data)
         self.label = data.get('label')
         self.public = data.get('public')
         users = set(data.get('users', []))
@@ -47,7 +47,7 @@ class Collection(db.Model):
 
     def to_dict(self):
         return {
-            'api_url': url_for('collections.view', slug=self.slug),
+            'api_url': url_for('sources.view', slug=self.slug),
             'slug': self.slug,
             'label': self.label,
             'public': self.public,
@@ -56,18 +56,33 @@ class Collection(db.Model):
         }
 
     @property
+    def config(self):
+        return app.config.get('SOURCES', {}).get(self.slug)
+
+    @property
+    def crawler(self):
+        if not hasattr(self, '_crawler'):
+            from aleph.crawlers.crawler import get_crawlers
+            crawler_name = self.config.get('crawler', self.slug)
+            cls = get_crawlers().get(crawler_name)
+            if cls is None:
+                raise TypeError("Invalid crawler: %r" % crawler_name)
+            self._crawler = cls(self)
+        return self._crawler
+
+    @property
     def store(self):
         return archive.get(self.slug)
 
     @classmethod
     def by_slug(cls, slug, commit_on_create=True):
         q = db.session.query(cls).filter_by(slug=slug)
-        coll = q.first()
-        if coll is None and coll in archive:
-            coll = cls.create_from_store(archive.get(slug))
+        source = q.first()
+        if source is None and slug in archive:
+            source = cls.create(slug)
             if commit_on_create:
                 db.session.commit()
-        return coll
+        return source
 
     @classmethod
     def list_all_slugs(cls):
@@ -96,12 +111,12 @@ class Collection(db.Model):
         return q
 
     @classmethod
-    def create_from_store(cls, collection):
-        coll = cls()
-        coll.slug = collection.name
-        coll.label = collection.name
-        db.session.add(coll)
-        return coll
+    def create(cls, slug):
+        src = cls()
+        src.slug = slug
+        src.label = slug
+        db.session.add(src)
+        return src
 
     @classmethod
     def delete_by_slug(cls, slug):
@@ -114,10 +129,9 @@ class Collection(db.Model):
         seen = set()
         for collection in archive:
             if collection.name not in existing:
-                cls.create_from_store(collection)
+                cls.create(collection.name)
             seen.add(collection.name)
         for slug in existing:
             if slug not in seen:
                 cls.delete_by_slug(slug)
         db.session.commit()
-

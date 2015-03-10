@@ -14,7 +14,7 @@ from aleph.views.users_api import blueprint as users_api
 from aleph.views.lists_api import blueprint as lists_api
 from aleph.views.entities_api import blueprint as entities_api
 from aleph.views.exports_api import blueprint as exports_api
-from aleph.views.collections_api import blueprint as collections_api
+from aleph.views.sources_api import blueprint as sources_api
 
 
 app.register_blueprint(data_api)
@@ -25,7 +25,7 @@ app.register_blueprint(users_api)
 app.register_blueprint(lists_api)
 app.register_blueprint(entities_api)
 app.register_blueprint(exports_api)
-app.register_blueprint(collections_api)
+app.register_blueprint(sources_api)
 
 
 @login_manager.request_loader
@@ -38,7 +38,7 @@ def load_user_from_request(request):
 
 @app.before_request
 def before():
-    request.authz_colls = {}
+    request.authz_sources = {}
     request.authz_lists = {}
 
 

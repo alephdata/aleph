@@ -14,7 +14,6 @@ DOC_MAPPING = {
         "title": {"type": "string", "index": "analyzed"},
         "slug": {"type": "string", "index": "not_analyzed"},
         "collection": {"type": "string", "index": "not_analyzed"},
-        "source": {"type": "string", "index": "not_analyzed"},
         "source_url": {"type": "string", "index": "not_analyzed"},
         "name": {"type": "string", "index": "analyzed"},
         "extension": {"type": "string", "index": "analyzed"},

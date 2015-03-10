@@ -58,7 +58,7 @@ def etag_cache_keygen(*keys):
     args = filter(lambda (k, v): k != '_', args)
 
     request._http_etag = cache_hash(args, current_user, keys,
-                                    request.authz_colls,
+                                    request.authz_sources,
                                     request.authz_lists)
     if request.if_none_match == request._http_etag:
         raise NotModified()

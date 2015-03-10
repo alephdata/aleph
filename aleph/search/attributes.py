@@ -8,7 +8,7 @@ from aleph.search.queries import attributes_query
 CORE_ATTRIBUTES = {
     'name': False,
     'title': True,
-    'source': True,
+    'collection': True,
     'source_url': True,
     'summary': True,
     'extension': False,
@@ -38,8 +38,8 @@ def generate_attributes(meta):
     return attributes
 
 
-def available_attributes(args, collections=None, lists=None):
-    q = attributes_query(args, collections=collections, lists=lists)
+def available_attributes(args, sources=None, lists=None):
+    q = attributes_query(args, sources=sources, lists=lists)
     result = es.search(index=es_index, doc_type=DOC_TYPE, query=q)
     result = result.get('aggregations', {}).get('attributes', {})
     result = {r.get('key'): False for r in result.get('buckets', [])}

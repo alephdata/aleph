@@ -16,8 +16,8 @@ def angular_templates():
 
 @app.route('/lists/<path:id>')
 @app.route('/lists')
-@app.route('/collections/<path:slug>')
-@app.route('/collections')
+@app.route('/sources/<path:slug>')
+@app.route('/sources')
 @app.route('/search')
 @app.route('/search/export')
 @app.route('/search/graph')

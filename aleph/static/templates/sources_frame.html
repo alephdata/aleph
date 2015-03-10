@@ -1,0 +1,30 @@
+<ol class="breadcrumb">
+  <li>
+    <a href="/">Home</a>
+  </li>
+  <li ng-class="{'active': !source}">
+    <a href="/sources">Document sources</a>
+  </li>
+  <li ng-show="source" class="active">
+    {{source.label}}
+  </li>
+</ol>
+
+<div class="row">
+  <div class="col-md-3">
+    <ul class="nav nav-pills nav-stacked">
+      <li ng-repeat="src in sources.results"
+          ng-class="{'active': src.slug == source.slug,
+                     'disabled': !src.token}">
+        <a href="/sources/{{src.slug}}" ng-show="src.can_write">
+          {{src.label}}
+        </a>
+        <a ng-hide="src.can_write">
+          {{src.label}}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-9" ng-transclude>
+  </div>
+</div>

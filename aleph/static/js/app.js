@@ -12,7 +12,7 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     reloadOnSearch: false,
     loginRequired: false,
     resolve: {
-      'collections': loadSearchCollections,
+      'sources': loadSearchSources,
       'result': loadSearchResult
     }
   });
@@ -23,7 +23,7 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     reloadOnSearch: false,
     loginRequired: false,
     resolve: {
-      'collections': loadSearchCollections,
+      'sources': loadSearchSources,
       'result': loadSearchResult,
       'attributes': loadSearchAttributes
     }
@@ -35,21 +35,21 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     reloadOnSearch: true,
     loginRequired: false,
     resolve: {
-      'collections': loadSearchCollections,
+      'sources': loadSearchSources,
       'result': loadSearchResult,
       'graph': loadSearchGraph
     }
   });
   
-  $routeProvider.when('/collections', {
-    templateUrl: 'collections_index.html',
-    controller: 'CollectionsIndexCtrl',
+  $routeProvider.when('/sources', {
+    templateUrl: 'sources_index.html',
+    controller: 'SourcesIndexCtrl',
     loginRequired: true
   });
 
-  $routeProvider.when('/collections/:slug', {
-    templateUrl: 'collections_edit.html',
-    controller: 'CollectionsEditCtrl',
+  $routeProvider.when('/sources/:slug', {
+    templateUrl: 'sources_edit.html',
+    controller: 'SourcesEditCtrl',
     loginRequired: true
   });
 

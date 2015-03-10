@@ -1,6 +1,6 @@
 from aleph.core import db # noqa
 from aleph.model.user import User # noqa
-from aleph.model.collection import Collection # noqa
+from aleph.model.source import Source # noqa
 from aleph.model.crawl_state import CrawlState # noqa
 from aleph.model.selector import Selector # noqa
 from aleph.model.entity import Entity # noqa

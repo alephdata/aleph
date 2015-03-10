@@ -27,7 +27,7 @@ app_assets = Bundle(
     'js/search/table.js',
     'js/search/graph.js',
     'js/search/export.js',
-    'js/collections.js',
+    'js/sources.js',
     'js/lists.js',
     'js/entities.js',
     'js/directives.js',

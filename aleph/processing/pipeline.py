@@ -29,7 +29,7 @@ CONFIG = {
 
 
 def make_pipeline(collection, overwrite=False):
-    log.info('Constructing pipeline for collection %r', collection)
+    # log.info('Constructing pipeline for collection %r', collection)
     config = CONFIG
     if overwrite:
         config = json.loads(json.dumps(config))

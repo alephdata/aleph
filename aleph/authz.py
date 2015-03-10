@@ -2,16 +2,16 @@ from flask import request
 from flask.ext.login import current_user
 from werkzeug.exceptions import Forbidden
 
-from aleph.model import Collection, List
+from aleph.model import Source, List
 
 
-def authz_collections(action):
-    if action == 'read' and request.authz_colls.get('read') is None:
-        request.authz_colls['read'] = Collection.list_user_slugs(current_user)
-    if action == 'write' and request.authz_colls.get('write') is None:
-        request.authz_colls['write'] = Collection.list_user_slugs(current_user,
+def authz_sources(action):
+    if action == 'read' and request.authz_sources.get('read') is None:
+        request.authz_sources['read'] = Source.list_user_slugs(current_user)
+    if action == 'write' and request.authz_sources.get('write') is None:
+        request.authz_sources['write'] = Source.list_user_slugs(current_user,
             include_public=False) # noqa
-    return request.authz_colls[action] or []
+    return request.authz_sources[action] or []
 
 
 def authz_lists(action):
@@ -23,12 +23,12 @@ def authz_lists(action):
     return request.authz_lists[action] or []
 
 
-def collection_read(name):
-    return name in authz_collections('read')
+def source_read(name):
+    return name in authz_sources('read')
 
 
-def collection_write(name):
-    return name in authz_collections('write')
+def source_write(name):
+    return name in authz_sources('write')
 
 
 def list_read(id):

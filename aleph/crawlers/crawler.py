@@ -23,9 +23,6 @@ class TagExists(Exception):
 
 class Crawler(object):
 
-    DEFAULT_LABEL = None
-    DEFAULT_SITE = None
-
     def __init__(self, source, ignore_tags=False):
         self.source = source
         self.ignore_tags = ignore_tags
@@ -52,8 +49,7 @@ class Crawler(object):
     def emit_url(self, url, package_id=None, **kwargs):
         meta = self.meta_data(**kwargs)
         meta['source_url'] = url
-        meta['source'] = self.source.name
-        ingest_url.delay(self.source.collection.name, url,
+        ingest_url.delay(self.source.slug, url,
                          package_id=package_id, meta=meta)
 
     def make_tag(self, title=None, url=None, **kwargs):

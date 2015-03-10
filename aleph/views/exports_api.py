@@ -5,8 +5,7 @@ from flask import Blueprint, request, send_file
 import xlsxwriter
 
 from aleph import authz
-from aleph.model import Entity
-from aleph.crawlers import get_sources
+from aleph.model import Entity, Source
 from aleph.search import raw_iter
 from aleph.search.queries import document_query
 from aleph.search.attributes import CORE_ATTRIBUTES
@@ -62,8 +61,9 @@ def process_row(row, attributes):
         if name == 'entities':
             objs = Entity.by_id_set([e.get('id') for e in value])
             value = ', '.join([o.label for o in objs.values()])
-        if name == 'source':
-            value = unicode(get_sources().get(value, value))
+        if name == 'collection':
+            # WARNING: don't to one query per row
+            value = unicode(Source.by_slug(value) or value)
         data[name] = value
     return data
 
@@ -72,7 +72,7 @@ def process_row(row, attributes):
 def export():
     attributes = request.args.getlist('attribute')
     query = document_query(request.args, lists=authz.authz_lists('read'),
-                           collections=authz.authz_collections('read'))
+                           sources=authz.authz_sources('read'))
     query['_source'] = set(query['_source'])
     for attribute in attributes:
         if attribute in CORE_ATTRIBUTES:

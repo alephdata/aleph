@@ -2,7 +2,7 @@ import logging
 from flask.ext import migrate
 
 from aleph.search import init_search, delete_index
-from aleph.model import db, Collection
+from aleph.model import db, Source
 
 
 log = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ def upgrade():
     migrate.upgrade()
     log.info("Reconfiguring the search index...")
     init_search()
-    Collection.sync()
+    Source.sync()
 
 
 def reset():

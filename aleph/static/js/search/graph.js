@@ -1,11 +1,11 @@
 
 aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$timeout', '$compile', 'debounce',
-                                     'Query', 'result', 'collections', 'graph',
-  function($scope, $location, $timeout, $compile, debounce, Query, result, collections, graph) {
+                                     'Query', 'result', 'sources', 'graph',
+  function($scope, $location, $timeout, $compile, debounce, Query, result, sources, graph) {
   
   $scope.partial = graph.partial;
   $scope.result = result;
-  $scope.collections = collections;
+  $scope.sources = sources;
 
   var svg = null,
       linkElements = null,

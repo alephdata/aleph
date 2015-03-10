@@ -10,7 +10,7 @@ class CrawlState(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tag = db.Column(db.Unicode, nullable=False, index=True)
     source = db.Column(db.Unicode, nullable=True)
-    
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
                            onupdate=datetime.utcnow)
@@ -28,7 +28,7 @@ class CrawlState(db.Model):
     @classmethod
     def create(cls, source, tag):
         crawl_state = cls()
-        crawl_state.source = unicode(source)
+        crawl_state.source = source.slug
         crawl_state.tag = tag
         db.session.add(crawl_state)
 
@@ -36,5 +36,3 @@ class CrawlState(db.Model):
     def flush(cls, source):
         q = db.session.query(cls).filter_by(source=unicode(source))
         q.delete()
-
-

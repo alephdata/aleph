@@ -1,6 +1,6 @@
 
-var loadSearchCollections = ['Collections', function(Collections) {
-  return Collections.load();
+var loadSearchSources = ['Sources', function(Sources) {
+  return Sources.load();
 }];
 
 

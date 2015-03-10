@@ -2,10 +2,9 @@ from flask import Blueprint, request
 
 from aleph import authz
 from aleph.core import url_for
-from aleph.model import Entity
+from aleph.model import Entity, Source
 from aleph.views.util import jsonify, Pager
 from aleph.views.cache import etag_cache_keygen
-from aleph.crawlers import get_sources
 from aleph.search.queries import document_query
 from aleph.search.attributes import available_attributes
 from aleph.search import search_documents
@@ -14,7 +13,7 @@ blueprint = Blueprint('search', __name__)
 
 
 def add_urls(doc):
-    doc['source'] = get_sources().get(doc.get('source'))
+    doc['source'] = Source.by_slug(doc.get('collection'))
     doc['archive_url'] = url_for('data.package',
                                  collection=doc.get('collection'),
                                  package_id=doc.get('id'))
@@ -35,7 +34,7 @@ def transform_facets(aggregations):
         if entity['entity'] is not None:
             entities.append(entity)
     return {
-        'collections': coll,
+        'sources': coll,
         'entities': entities
     }
 
@@ -44,7 +43,7 @@ def transform_facets(aggregations):
 def query():
     etag_cache_keygen()
     query = document_query(request.args, lists=authz.authz_lists('read'),
-                           collections=authz.authz_collections('read'))
+                           sources=authz.authz_sources('read'))
     results = search_documents(query)
     pager = Pager(results,
                   results_converter=lambda ds: [add_urls(d) for d in ds])
@@ -57,6 +56,6 @@ def query():
 def attributes():
     etag_cache_keygen()
     attributes = available_attributes(request.args,
-        collections=authz.authz_collections('read'), # noqa
+        sources=authz.authz_sources('read'), # noqa
         lists=authz.authz_lists('read')) # noqa
     return jsonify(attributes)

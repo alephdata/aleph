@@ -1,23 +1,23 @@
 
-<collections-frame collection="collection">
+<sources-frame source="source">
 
-  <form class="form-horizontal" role="form" name="editCollection" ng-submit="save(editCollection)">
+  <form class="form-horizontal" role="form" name="editSource" ng-submit="save(editSource)">
 
     <div class="row">
       <div class="col-md-6">   
-        <div class="form-group" ng-class="{'has-error': editCollection.label.$invalid}">
+        <div class="form-group" ng-class="{'has-error': editSource.label.$invalid}">
           <label class="col-sm-3 control-label" for="label">Label</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="label" name="label" ng-model="collection.label"
-              placeholder="The collection's label">
-            <p class="help-block" ng-show="editCollection.label.$invalid" ng-bind="editCollection.label.$message"></p>
+            <input type="text" class="form-control" id="label" name="label" ng-model="source.label"
+              placeholder="The source's label">
+            <p class="help-block" ng-show="editSource.label.$invalid" ng-bind="editSource.label.$message"></p>
           </div>
         </div>
 
         <div class="form-group">
           <label class="col-sm-3 control-label" for="slug">Path</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="token" name="slug" ng-model="collection.slug"
+            <input type="text" class="form-control" id="token" name="slug" ng-model="source.slug"
               disabled>
           </div>
         </div>
@@ -26,7 +26,7 @@
           <div class="col-sm-offset-3 col-sm-9">
             <div class="checkbox">
               <label>
-                <input type="checkbox" ng-model="collection.public"> Publicly visible
+                <input type="checkbox" ng-model="source.public"> Publicly visible
               </label>
             </div>
           </div>
@@ -35,7 +35,7 @@
         <div class="form-group">
           <label class="col-sm-3 control-label" for="token">Token</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="token" name="token" ng-model="collection.token"
+            <input type="text" class="form-control" id="token" name="token" ng-model="source.token"
               disabled>
             <span class="help-block">Use the token to query and submit documents via the API.</span>
           </div>
@@ -67,4 +67,4 @@
     </div>
   
   </form>
-</collection-frame>
+</source-frame>

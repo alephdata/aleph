@@ -18,7 +18,7 @@ class EntityTag(db.Model):
     entity_id = db.Column(db.Unicode(50), db.ForeignKey('entity.id'))
     entity = db.relationship(Entity, backref=db.backref('tags',
                                                         lazy='dynamic'))
-    
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     @classmethod
