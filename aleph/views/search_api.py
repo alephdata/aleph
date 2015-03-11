@@ -25,6 +25,7 @@ def add_urls(doc):
 def transform_facets(aggregations):
     coll = aggregations.get('all', {}).get('ftr', {}).get('collections', {})
     coll = coll.get('buckets', [])
+
     lists = {}
     for list_id in get_list_facets(request.args):
         key = 'list_%s' % list_id
@@ -36,9 +37,18 @@ def transform_facets(aggregations):
             if entity['entity'] is not None:
                 entities.append(entity)
         lists[list_id] = entities
+
+    attributes = {}
+    for attr in request.args.getlist('attributefacet'):
+        key = 'attr_%s' % attr
+        print aggregations.get(key)
+        vals = aggregations.get(key, {}).get('inner', {}).get('values', {}).get('buckets', [])
+        attributes[attr] = vals
+
     return {
         'sources': coll,
-        'lists': lists
+        'lists': lists,
+        'attributes': attributes
     }
 
 

@@ -109,11 +109,18 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
 
         for attr in args.getlist('attributefacet'):
             attr_facet = {
-                'filter': {'term': {'attributes.name': attr}},
+                'nested': {
+                    'path': 'attributes'
+                },
                 'aggs': {
-                    'values': {
-                        'terms': {'field': 'attributes.value',
-                                  'size': 100}
+                    'inner': {
+                        'filter': {'term': {'attributes.name': attr}},
+                        'aggs': {
+                            'values': {
+                                'terms': {'field': 'value',
+                                          'size': 100}
+                            }
+                        }
                     }
                 }
             }
