@@ -1,6 +1,6 @@
 
-var loadSearchSources = ['Sources', function(Sources) {
-  return Sources.get();
+var loadSearchContext = ['QueryContext', function(QueryContext) {
+  return QueryContext.get();
 }];
 
 

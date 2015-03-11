@@ -12,7 +12,7 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     reloadOnSearch: false,
     loginRequired: false,
     resolve: {
-      'sources': loadSearchSources,
+      'context': loadSearchContext,
       'result': loadSearchResult
     }
   });
@@ -23,7 +23,7 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     reloadOnSearch: false,
     loginRequired: false,
     resolve: {
-      'sources': loadSearchSources,
+      'context': loadSearchContext,
       'result': loadSearchResult,
       'attributes': loadSearchAttributes
     }
@@ -35,7 +35,7 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     reloadOnSearch: true,
     loginRequired: false,
     resolve: {
-      'sources': loadSearchSources,
+      'context': loadSearchContext,
       'result': loadSearchResult,
       'graph': loadSearchGraph
     }

@@ -22,7 +22,7 @@ aleph.factory('Session', ['$http', '$q', function($http, $q) {
 }]);
 
 
-aleph.factory('Sources', ['$http', '$q', function($http, $q) {
+aleph.factory('QueryContext', ['$http', '$q', function($http, $q) {
     var dfd = null;
 
     var reset = function() { dfd = null; };
@@ -34,7 +34,9 @@ aleph.factory('Sources', ['$http', '$q', function($http, $q) {
           angular.forEach(res.data.results, function(c) {
             sources[c.slug] = c;
           });
-          dfd.resolve(sources);
+          dfd.resolve({
+            'sources': sources
+          });
       });
     };
 

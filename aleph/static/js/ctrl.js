@@ -64,11 +64,9 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
 
 aleph.controller('ProfileCtrl', ['$scope', '$location', '$modalInstance', '$http', 'Session',
   function($scope, $location, $modalInstance, $http, Session) {
-    //$scope.session = {logged_in: false};
     $scope.user = {};
 
     Session.get(function(session) {
-        //$scope.session = session;
         $scope.user = session.user;
     });
 
