@@ -37,7 +37,7 @@ def cache_response(resp):
         resp.cache_control.no_cache = True
         return resp
 
-    resp.cache_control.max_age = 3600 * 6
+    resp.cache_control.max_age = 3600 * 3
 
     if current_user.is_authenticated():
         resp.cache_control.private = True
@@ -57,8 +57,11 @@ def etag_cache_keygen(*keys):
     # jquery where is your god now?!?
     args = filter(lambda (k, v): k != '_', args)
 
-    request._http_etag = cache_hash(args, current_user, keys,
-                                    request.authz_sources,
-                                    request.authz_lists)
+    cache_parts = [args, keys]
+    if current_user.is_authenticated():
+        cache_parts.extend((current_user,
+                            request.authz_sources,
+                            request.authz_lists))
+    request._http_etag = cache_hash(*cache_parts)
     if request.if_none_match == request._http_etag:
         raise NotModified()
