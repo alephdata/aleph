@@ -1,12 +1,11 @@
 
-aleph.controller('SearchTableCtrl', ['$scope', '$location', '$http', 'result', 'context',
-  function($scope, $location, $http, result, context) {
+aleph.controller('SearchTableCtrl', ['$scope', '$location', '$http', 'result',
+  function($scope, $location, $http, result) {
 
   var isLoading = false;
 
   $scope.result = result;
-  $scope.sources = context.sources;
-  
+
   $scope.hasMore = function() {
     return !isLoading && $scope.result.next_url !== null;
   };

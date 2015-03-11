@@ -8,10 +8,15 @@ aleph.directive('searchFrame', ['Query', 'QueryContext', 'Session', function (Qu
         templateUrl: 'search_frame.html',
         link: function (scope, element, attrs, model) {
             scope.query = Query;
-            scope.session = {}
+            scope.sources = {};
+            scope.session = {};
+            scope.lists = {};
+            scope.attributes = {};
 
             QueryContext.get().then(function(ctx) {
                 scope.sources = ctx.sources;
+                scope.lists = ctx.lists;
+                scope.attributes = ctx.attributes;
             });
             
             Session.get(function(session) {

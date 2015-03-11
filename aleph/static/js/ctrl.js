@@ -1,10 +1,14 @@
 
 aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$http', '$modal', '$q',
-                             'Flash', 'Session', 'Query',
-  function($scope, $rootScope, $location, $route, $http, $modal, $q, Flash, Session, Query) {
+                             'Flash', 'Session', 'Query', 'QueryContext',
+  function($scope, $rootScope, $location, $route, $http, $modal, $q, Flash, Session, Query, QueryContext) {
   $scope.session = {logged_in: false};
   $scope.query = Query;
   $scope.flash = Flash;
+
+  QueryContext.get().then(function(context) {
+    $scope.queryContext = context;
+  });
 
   Session.get(function(session) {
     $scope.session = session;

@@ -13,7 +13,6 @@ blueprint = Blueprint('search', __name__)
 
 
 def add_urls(doc):
-    doc['source'] = Source.by_slug(doc.get('collection'))
     doc['archive_url'] = url_for('data.package',
                                  collection=doc.get('collection'),
                                  package_id=doc.get('id'))
