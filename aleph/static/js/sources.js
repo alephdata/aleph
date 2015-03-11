@@ -25,8 +25,8 @@ aleph.controller('SourcesIndexCtrl', ['$scope', '$location', '$http',
 
 
 aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash',
-                                     'Validation', 'Sources',
-  function($scope, $location, $http, $routeParams, Flash, Validation, Sources) {
+                                     'Validation', 'QueryContext',
+  function($scope, $location, $http, $routeParams, Flash, Validation, QueryContext) {
   
   var apiUrl = '/api/1/sources/' + $routeParams.slug;
   $scope.source = {};
@@ -61,7 +61,7 @@ aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routePara
   $scope.save = function(form) {
       var res = $http.post(apiUrl, $scope.source);
       res.success(function(data) {
-        Sources.reset();
+        QueryContext.reset();
         Flash.message('Your changes have been saved.', 'success');
       });
       res.error(Validation.handle(form));

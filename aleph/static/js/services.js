@@ -22,37 +22,6 @@ aleph.factory('Session', ['$http', '$q', function($http, $q) {
 }]);
 
 
-aleph.factory('QueryContext', ['$http', '$q', function($http, $q) {
-    var dfd = null;
-
-    var reset = function() { dfd = null; };
-
-    var load = function() {
-      dfd = $q.defer();
-      $http.get('/api/1/sources').then(function(res) {
-          var sources = {}
-          angular.forEach(res.data.results, function(c) {
-            sources[c.slug] = c;
-          });
-          dfd.resolve({
-            'sources': sources
-          });
-      });
-    };
-
-    var get = function() {
-      if (dfd === null) { load(); }
-      return dfd.promise;
-    }
-
-    return {
-      get: get,
-      reset: reset
-    };
-
-}]);
-
-
 aleph.factory('Flash', ['$rootScope', '$timeout', function($rootScope, $timeout) {
   // Message flashing.
   var currentMessage = null;
@@ -73,6 +42,7 @@ aleph.factory('Flash', ['$rootScope', '$timeout', function($rootScope, $timeout)
     }
   };
 }]);
+
 
 aleph.factory('Validation', ['Flash', function(Flash) {
   // handle server-side form validation errors.
