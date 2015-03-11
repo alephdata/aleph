@@ -8,6 +8,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
 
   QueryContext.get().then(function(context) {
     $scope.queryContext = context;
+    
     var facetListOptions = [];
     angular.forEach(context.lists, function(lst, id) {
       if (Query.state.listfacet.indexOf(id) == -1) {
@@ -16,7 +17,6 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
     });
     $scope.facetListOptions = facetListOptions;
 
-    console.log(context.attributes);
     var attrListOptions = [];
     angular.forEach(context.attributes.attributes, function(d, attr) {
       if (Query.state.attributefacet.indexOf(attr) == -1) {

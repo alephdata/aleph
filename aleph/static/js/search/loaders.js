@@ -21,7 +21,7 @@ var loadSearchAttributes = ['$http', '$q', '$route', 'Query', function($http, $q
     var attributes = res.data;
 
     if (Query.state.attribute.length == 0) {
-      angular.forEach(res.data.core, function(enable, a) {
+      angular.forEach(res.data.fields, function(enable, a) {
         if (enable) {
           Query.state.attribute.push(a);
         }
