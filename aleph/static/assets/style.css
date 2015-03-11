@@ -6531,17 +6531,17 @@ a {
 }
 @media (min-width: 768px) {
   .navbar .navbar-searchbox input {
-    min-width: 300px;
+    min-width: 200px;
   }
 }
 @media (min-width: 992px) {
   .navbar .navbar-searchbox input {
-    min-width: 600px;
+    min-width: 500px;
   }
 }
 @media (min-width: 1200px) {
   .navbar .navbar-searchbox input {
-    min-width: 800px;
+    min-width: 700px;
   }
 }
 .flashes {

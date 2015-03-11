@@ -30,6 +30,16 @@
                 typeahead-focus-first="false"
                 typeahead-template-url="entity_link.html"
                 typeahead-on-select="acceptSuggestion($item)">
+              
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default">
+                  <i class="fa fa-list-alt"></i>
+                  Facets
+                  <span class="caret"></span>
+                </button>
+                <button type="button" class="btn btn-default" ng-click="clearSearch()">
+                  <i class="fa fa-refresh"></i> Reset</button>
+              </span>
             </div>
           </div>
         </form>

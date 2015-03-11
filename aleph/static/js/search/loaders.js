@@ -1,6 +1,6 @@
 
 var loadSearchSources = ['Sources', function(Sources) {
-  return Sources.load();
+  return Sources.get();
 }];
 
 

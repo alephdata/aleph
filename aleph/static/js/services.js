@@ -27,23 +27,25 @@ aleph.factory('Sources', ['$http', '$q', function($http, $q) {
 
     var reset = function() { dfd = null; };
 
-    var load = function(cb) {
-        if (dfd === null) {
-            dfd = $q.defer();
-            $http.get('/api/1/sources').then(function(res) {
-                var sources = {}
-                angular.forEach(res.data.results, function(c) {
-                  sources[c.slug] = c;
-                });
-                dfd.resolve(sources);
-            });
-        }
-        return dfd.promise;
+    var load = function() {
+      dfd = $q.defer();
+      $http.get('/api/1/sources').then(function(res) {
+          var sources = {}
+          angular.forEach(res.data.results, function(c) {
+            sources[c.slug] = c;
+          });
+          dfd.resolve(sources);
+      });
     };
 
+    var get = function() {
+      if (dfd === null) { load(); }
+      return dfd.promise;
+    }
+
     return {
-        load: load,
-        reset: reset
+      get: get,
+      reset: reset
     };
 
 }]);
