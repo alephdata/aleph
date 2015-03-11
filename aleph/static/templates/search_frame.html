@@ -37,6 +37,7 @@
           </a>
         </span>
         List: {{lists[id].label}}
+        <span class="label label-warning" ng-hide="result.facets && result.facets.lists && result.facets.lists[id] && result.facets.lists[id].length">no options</span>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
@@ -61,6 +62,7 @@
           </a>
         </span>
         Attribute: {{attr}}
+        <span class="label label-warning" ng-hide="result.facets && result.facets.attributes && result.facets.attributes[attr] && result.facets.attributes[attr].length">no options</span>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"

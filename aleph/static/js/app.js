@@ -50,12 +50,6 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     loginRequired: true
   });
 
-  $routeProvider.when('/lists', {
-    templateUrl: 'lists_index.html',
-    controller: 'ListsIndexCtrl',
-    loginRequired: true
-  });
-
   $routeProvider.when('/lists/new', {
     templateUrl: 'lists_new.html',
     controller: 'ListsNewCtrl',

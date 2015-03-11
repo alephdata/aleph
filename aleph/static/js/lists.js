@@ -17,12 +17,6 @@ aleph.directive('listsFrame', ['$http', function($http) {
 }]);
 
 
-aleph.controller('ListsIndexCtrl', ['$scope', '$location', '$http',
-  function($scope, $location, $http) {
-  $scope.collections = {};
-}]);
-
-
 aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$modal',
                                    'Flash', 'Validation', 'QueryContext',
   function($scope, $location, $http, $routeParams, $modal, Flash, Validation, QueryContext) {
