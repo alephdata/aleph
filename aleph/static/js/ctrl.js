@@ -34,7 +34,8 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
 
   $scope.suggestEntities = function(prefix) {
     var dfd = $q.defer();
-    $http.get('/api/1/entities/_suggest', {params: {'prefix': prefix}}).then(function(res) {
+    var opts = {params: {'prefix': prefix}, ignoreLoadingBar: true};
+    $http.get('/api/1/entities/_suggest', opts).then(function(res) {
       dfd.resolve(res.data.results);
     });
     return dfd.promise;
