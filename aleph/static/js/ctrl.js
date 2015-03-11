@@ -50,9 +50,9 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   };
 
   $scope.clearSearch = function(form) {
-    Query.state = {};
-    $location.search({});
-    if (Query.mode() == 'table') {
+    var mode = Query.mode();
+    Query.clear();
+    if (mode == 'table') {
       $route.reload();
     } else {
       $location.path('/search');

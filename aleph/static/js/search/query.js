@@ -30,6 +30,11 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     return query;
   };
 
+  var clear = function() {
+    $location.search({});
+    load();
+  };
+
   var toggleFilter = function(name, val, skipReload) {
     var idx = query[name].indexOf(val);
     if (idx == -1) {
@@ -54,6 +59,7 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
       state: query,
       load: load,
       mode: mode,
+      clear: clear,
       queryString: function() {
         return queryString(query);
       },
