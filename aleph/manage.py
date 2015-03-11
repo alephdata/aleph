@@ -11,7 +11,7 @@ from aleph.upgrade import upgrade as upgrade_, reset as reset_
 
 
 manager = Manager(app)
-manager.add_command("assets", ManageAssets(assets))
+manager.add_command('assets', ManageAssets(assets))
 manager.add_command('db', MigrateCommand)
 
 
