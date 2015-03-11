@@ -41,6 +41,7 @@ class EntityTag(db.Model):
         for entity_id, label, category, lst in q.all():
             entities.append({
                 'id': entity_id,
+                'entity': entity_id,
                 'label': label,
                 'category': category,
                 'list': lst

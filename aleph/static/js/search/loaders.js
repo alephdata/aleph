@@ -19,6 +19,10 @@ var loadSearchAttributes = ['$http', '$q', '$route', 'Query', function($http, $q
   var dfd = $q.defer();
   $http.get('/api/1/query/attributes', {params: Query.load()}).then(function(res) {
     var attributes = res.data;
+    attributes.has_attributes = false;
+    angular.forEach(res.data.attributes, function(enable, a) {
+      attributes.has_attributes = true;
+    });
 
     if (Query.state.attribute.length == 0) {
       angular.forEach(res.data.fields, function(enable, a) {

@@ -6,6 +6,9 @@ DEFAULT_FIELDS = ['title', 'name', 'extension', 'collection',
                   'id', 'updated_at', 'slug', 'source_url', 'source',
                   'summary']
 
+QUERY_FIELDS = ['title', 'source_url', 'summary', 'extension', 'mime_type',
+                'text', 'entities.label', 'attributes.value']
+
 
 def add_filter(q, flt):
     if 'filtered' not in q:
@@ -38,16 +41,24 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
         args = MultiDict(args)
     qstr = args.get('q', '').strip()
     if len(qstr):
-        q = {'query_string': {'query': qstr}}
-        bq = [
-            {"term": {"title": {"value": qstr, "boost": 10.0}}},
-            {"term": {"name": {"value": qstr, "boost": 7.0}}},
-            {"term": {"text": {"value": qstr, "boost": 3.0}}}
-        ]
         filtered_q = {
             "bool": {
-                "must": q,
-                "should": bq
+                "must": {
+                    "multi_match": {
+                        "query": qstr,
+                        "fields": QUERY_FIELDS,
+                        "type": "best_fields",
+                        "cutoff_frequency": 0.0007,
+                        "operator": "and",
+                    },
+                },
+                "should": {
+                    "multi_match": {
+                        "query": qstr,
+                        "fields": QUERY_FIELDS,
+                        "type": "phrase"
+                    },
+                }
             }
         }
     else:
@@ -116,11 +127,18 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
                 continue
 
             list_facet = {
-                'filter': {'term': {'entities.list': list_id}},
+                'nested': {
+                    'path': 'entities'
+                },
                 'aggs': {
-                    'entities': {
-                        'terms': {'field': 'entities.id',
-                                  'size': 50}
+                    'inner': {
+                        'filter': {'term': {'entities.list': list_id}},
+                        'aggs': {
+                            'entities': {
+                                'terms': {'field': 'entity',
+                                          'size': 50}
+                            }
+                        }
                     }
                 }
             }

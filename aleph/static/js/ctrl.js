@@ -29,6 +29,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
         $location.path('/');
       }
     });
+    $scope.query.state = Query.load();
   });
 
   $scope.suggestEntities = function(prefix) {

@@ -29,7 +29,8 @@ def transform_facets(aggregations):
     lists = {}
     for list_id in get_list_facets(request.args):
         key = 'list_%s' % list_id
-        ents = aggregations.get(key, {}).get('entities', {}).get('buckets', [])
+        ents = aggregations.get(key, {}).get('inner', {})
+        ents = ents.get('entities', {}).get('buckets', [])
         objs = Entity.by_id_set([e.get('key') for e in ents])
         entities = []
         for entity in ents:
