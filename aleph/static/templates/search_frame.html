@@ -42,7 +42,7 @@
         <li class="list-group-item facet animate toggle"
           ng-repeat="entity in result.facets.lists[id]"
           ng-class="{'active': query.hasFilter('entity', entity.key)}"
-          ng-click="query.toggleFilter('entity', entity.key)">
+          ng-click="query.toggleEntityFilter(entity.key, id)">
           <span class="badge">{{entity.doc_count}}</span>
           <entity-icon category="entity.entity.category"></entity-icon>
           <span class="lbl" tooltip="{{entity.entity.label.length > 35 ? entity.entity.label : ''}}"

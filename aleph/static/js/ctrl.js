@@ -40,7 +40,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   }
 
   $scope.acceptSuggestion = function($item) {
-    $scope.query.q = '';
+    $scope.query.state.q = '';
     Query.toggleFilter('entity', $item.id);
   }
 
@@ -53,7 +53,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   };
 
   $scope.submitSearch = function(form) {
-    $location.search(Query.state);
+    $location.search($scope.query.state);
     if (Query.mode()) {
       $route.reload();
     } else {

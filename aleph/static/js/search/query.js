@@ -39,6 +39,30 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     load();
   };
 
+  var clearDependentFilters = function(name, val) {
+    if (name == 'attributefacet') {
+      var key = 'attribute-' + val;
+      query[key] = [];
+    }
+    if (name == 'listfacet') {
+      var key = 'list-' + val;
+      if (query.entity) {
+        angular.forEach(query[key], function(id) {
+          var idx = query.entity.indexOf(id);
+          if (idx != -1) {
+            query.entity.splice(idx, 1);
+          }
+        });
+      }
+      query[key] = [];
+    }
+  }
+
+  var toggleEntityFilter = function(id, list) {
+    toggleFilter('entity', id, true);
+    toggleFilter('list-' + list, id);
+  }
+
   var toggleFilter = function(name, val, skipReload) {
     if (!angular.isArray(query[name])) {
       query[name] = [];
@@ -48,6 +72,7 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
       query[name].push(val);
     } else {
       query[name].splice(idx, 1);
+      clearDependentFilters(name, val);
     }
     $location.search(query);
     if (!skipReload) {
@@ -70,7 +95,8 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
         return queryString(query);
       },
       hasFilter: hasFilter,
-      toggleFilter: toggleFilter
+      toggleFilter: toggleFilter,
+      toggleEntityFilter: toggleEntityFilter
   };
 
 }]);
