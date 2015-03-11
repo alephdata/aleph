@@ -5,7 +5,7 @@ from aleph.core import es, es_index
 from aleph.search.mapping import DOC_TYPE
 from aleph.search.queries import attributes_query
 
-CORE_ATTRIBUTES = {
+CORE_FIELDS = {
     'name': False,
     'title': True,
     'collection': True,
@@ -20,7 +20,7 @@ ALSO_IGNORE = ['slug', 'created_at', 'updated_at', 'text',
                'normalized', 'http_status',
                'http_headers', 'extract_article']
 
-IGNORE = CORE_ATTRIBUTES.keys() + ALSO_IGNORE
+IGNORE = CORE_FIELDS.keys() + ALSO_IGNORE
 
 log = logging.getLogger(__name__)
 
@@ -43,4 +43,4 @@ def available_attributes(args, sources=None, lists=None):
     result = es.search(index=es_index, doc_type=DOC_TYPE, query=q)
     result = result.get('aggregations', {}).get('attributes', {})
     result = {r.get('key'): False for r in result.get('buckets', [])}
-    return {'core': CORE_ATTRIBUTES, 'extra': result}
+    return {'fields': CORE_FIELDS, 'attributes': result}

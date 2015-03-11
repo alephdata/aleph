@@ -8,7 +8,7 @@ from aleph import authz
 from aleph.model import Entity, Source
 from aleph.search import raw_iter
 from aleph.search.queries import document_query
-from aleph.search.attributes import CORE_ATTRIBUTES
+from aleph.search.attributes import CORE_FIELDS
 
 blueprint = Blueprint('exports', __name__)
 
@@ -75,7 +75,7 @@ def export():
                            sources=authz.authz_sources('read'))
     query['_source'] = set(query['_source'])
     for attribute in attributes:
-        if attribute in CORE_ATTRIBUTES:
+        if attribute in CORE_FIELDS:
             query['_source'].add(attribute)
         else:
             query['_source'].add('attributes')

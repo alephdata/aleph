@@ -27,6 +27,10 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     query.source = ensureArray(query.source);
     query.attribute = ensureArray(query.attribute);
     query.entity = ensureArray(query.entity);
+
+    query.listfacet = ensureArray(query.listfacet);
+    query.attributefacet = ensureArray(query.attributefacet);
+
     return query;
   };
 

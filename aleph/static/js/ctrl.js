@@ -8,6 +8,22 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
 
   QueryContext.get().then(function(context) {
     $scope.queryContext = context;
+    var facetListOptions = [];
+    angular.forEach(context.lists, function(lst, id) {
+      if (Query.state.listfacet.indexOf(id) == -1) {
+        facetListOptions.push(lst);
+      }
+    });
+    $scope.facetListOptions = facetListOptions;
+
+    console.log(context.attributes);
+    var attrListOptions = [];
+    angular.forEach(context.attributes.attributes, function(d, attr) {
+      if (Query.state.attributefacet.indexOf(attr) == -1) {
+        attrListOptions.push(attr);
+      }
+    });
+    $scope.attrListOptions = attrListOptions;
   });
 
   Session.get(function(session) {
