@@ -38,11 +38,13 @@
                   <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                  <li ng-repeat="list in facetListOptions">
-                    <a ng-click="query.toggleFilter('listfacet', list.id)" ng-bind="list.label"></a>
+                  <li ng-repeat="(id, list) in queryContext.lists"
+                    ng-show="showListFacet(id)">
+                    <a ng-click="query.toggleFilter('listfacet', id)" ng-bind="list.label"></a>
                   </li>
                   <li class="divider"></li>
-                  <li ng-repeat="attr in attrListOptions">
+                  <li ng-repeat="(attr, d) in queryContext.attributes"
+                    ng-show="showAttributeFacet(attr)">
                     <a ng-click="query.toggleFilter('attributefacet', attr)" ng-bind="attr"></a>
                   </li>
                 </ul>

@@ -24,6 +24,14 @@ def add_filter(q, flt):
     return q
 
 
+def get_list_facets(args):
+    for list_id in args.getlist('listfacet'):
+        try:
+            yield int(list_id)
+        except:
+            pass
+
+
 def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
                    facets=True):
     if not isinstance(args, MultiDict):
@@ -81,9 +89,15 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
                         }
                     }
                 }
-            },
-            'lists': {
-                'filter': {'terms': {'entities.list': lists or []}},
+            }
+        }
+
+        for list_id in get_list_facets(args):
+            if list_id not in lists:
+                continue
+
+            list_facet = {
+                'filter': {'term': {'entities.list': list_id}},
                 'aggs': {
                     'entities': {
                         'terms': {'field': 'entities.id',
@@ -91,7 +105,19 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
                     }
                 }
             }
-        }
+            aggs['list_%s' % list_id] = list_facet
+
+        for attr in args.getlist('attributefacet'):
+            attr_facet = {
+                'filter': {'term': {'attributes.name': attr}},
+                'aggs': {
+                    'values': {
+                        'terms': {'field': 'attributes.value',
+                                  'size': 100}
+                    }
+                }
+            }
+            aggs['attr_%s' % attr] = attr_facet
 
     q = {
         'query': q,

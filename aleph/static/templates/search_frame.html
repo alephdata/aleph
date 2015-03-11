@@ -26,18 +26,21 @@
 
   <div class="col-md-3">
 
-    <div class="panel panel-default">
+    <div class="panel panel-default" ng-repeat="id in query.state.listfacet">
       <div class="panel-heading">
         <span class="pull-right">
-          <a href="/lists" ng-show="session.logged_in">
+          <a ng-href="/lists/{{id}}/entities" ng-show="session.logged_in">
             <i class="fa fa-cog"></i>
           </a>
+          <a ng-click="query.toggleFilter('listfacet', id)">
+            <i class="fa fa-close"></i>
+          </a>
         </span>
-        People, Companies, etc.
+        List: {{lists[id].label}}
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
-          ng-repeat="entity in result.facets.entities"
+          ng-repeat="entity in result.facets.lists[id]"
           ng-class="{'active': query.hasFilter('entity', entity.key)}"
           ng-click="query.toggleFilter('entity', entity.key)">
           <span class="badge">{{entity.doc_count}}</span>

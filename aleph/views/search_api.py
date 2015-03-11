@@ -2,10 +2,10 @@ from flask import Blueprint, request
 
 from aleph import authz
 from aleph.core import url_for
-from aleph.model import Entity, Source
+from aleph.model import Entity
 from aleph.views.util import jsonify, Pager
 from aleph.views.cache import etag_cache_keygen
-from aleph.search.queries import document_query
+from aleph.search.queries import document_query, get_list_facets
 from aleph.search.attributes import available_attributes
 from aleph.search import search_documents
 
@@ -25,16 +25,20 @@ def add_urls(doc):
 def transform_facets(aggregations):
     coll = aggregations.get('all', {}).get('ftr', {}).get('collections', {})
     coll = coll.get('buckets', [])
-    ents = aggregations.get('lists', {}).get('entities', {}).get('buckets', [])
-    objs = Entity.by_id_set([e.get('key') for e in ents])
-    entities = []
-    for entity in ents:
-        entity['entity'] = objs.get(entity.get('key'))
-        if entity['entity'] is not None:
-            entities.append(entity)
+    lists = {}
+    for list_id in get_list_facets(request.args):
+        key = 'list_%s' % list_id
+        ents = aggregations.get(key, {}).get('entities', {}).get('buckets', [])
+        objs = Entity.by_id_set([e.get('key') for e in ents])
+        entities = []
+        for entity in ents:
+            entity['entity'] = objs.get(entity.get('key'))
+            if entity['entity'] is not None:
+                entities.append(entity)
+        lists[list_id] = entities
     return {
         'sources': coll,
-        'entities': entities
+        'lists': lists
     }
 
 
