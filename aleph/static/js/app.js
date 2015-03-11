@@ -30,7 +30,7 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
   $routeProvider.when('/search/graph', {
     templateUrl: 'search_graph.html',
     controller: 'SearchGraphCtrl',
-    reloadOnSearch: true,
+    reloadOnSearch: false,
     loginRequired: false,
     resolve: {
       'result': loadSearchResult,

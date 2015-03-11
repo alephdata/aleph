@@ -58,6 +58,25 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
         cf = {'term': {'entities.id': entity}}
         filtered_q = add_filter(filtered_q, cf)
 
+    for key, value in args.items():
+        if not key.startswith('attribute-'):
+            continue
+        _, attr = key.split('attribute-', 1)
+        af = {
+            "nested": {
+                "path": "attributes",
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"term": {"attributes.name": attr}},
+                            {"term": {"attributes.value": value}}
+                        ]
+                    }
+                }
+            }
+        }
+        filtered_q = add_filter(filtered_q, af)
+
     q = deepcopy(filtered_q)
 
     # collections filter
@@ -101,7 +120,7 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
                 'aggs': {
                     'entities': {
                         'terms': {'field': 'entities.id',
-                                  'size': 100}
+                                  'size': 50}
                     }
                 }
             }
@@ -118,7 +137,7 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
                         'aggs': {
                             'values': {
                                 'terms': {'field': 'value',
-                                          'size': 100}
+                                          'size': 50}
                             }
                         }
                     }

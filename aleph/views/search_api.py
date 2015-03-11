@@ -41,8 +41,8 @@ def transform_facets(aggregations):
     attributes = {}
     for attr in request.args.getlist('attributefacet'):
         key = 'attr_%s' % attr
-        print aggregations.get(key)
-        vals = aggregations.get(key, {}).get('inner', {}).get('values', {}).get('buckets', [])
+        vals = aggregations.get(key, {}).get('inner', {})
+        vals = vals.get('values', {}).get('buckets', [])
         attributes[attr] = vals
 
     return {

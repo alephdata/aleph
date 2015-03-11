@@ -12,25 +12,25 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
   }
 
   var ensureArray = function(data) {
-    if (!angular.isArray(data)) {
-      if (angular.isDefined(data) && data.length) {
-        data = [data];
-      } else {
-        data = [];
-      }
+    if (!angular.isDefined(data)) {
+      return [];
     }
     return data;
   };
 
   var load = function() {
-    query = $location.search();
+    query = {};
+    angular.forEach($location.search(), function(v, k) {
+      if (!angular.isArray(v)) {
+        v = [v];
+      }
+      query[k] = v;
+    });
     query.source = ensureArray(query.source);
     query.attribute = ensureArray(query.attribute);
     query.entity = ensureArray(query.entity);
-
     query.listfacet = ensureArray(query.listfacet);
     query.attributefacet = ensureArray(query.attributefacet);
-
     return query;
   };
 
@@ -40,6 +40,9 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
   };
 
   var toggleFilter = function(name, val, skipReload) {
+    if (!angular.isArray(query[name])) {
+      query[name] = [];
+    }
     var idx = query[name].indexOf(val);
     if (idx == -1) {
       query[name].push(val);
@@ -53,8 +56,7 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
   };
 
   var hasFilter = function(name, val) {
-    var q = load();
-    return q[name].indexOf(val) != -1;
+    return angular.isArray(query[name]) && query[name].indexOf(val) != -1;
   };
 
   load();
