@@ -41,6 +41,7 @@ def login(provider):
         raise BadRequest('Unknown provider: %s' % provider)
     if current_user.is_authenticated():
         return redirect(url_for('ui'))
+    session.clear()
     callback = url_for('.%s_authorized' % provider)
     session['next_url'] = request.args.get('next_url', url_for('ui'))
     return PROVIDERS[provider].authorize(callback=callback)
