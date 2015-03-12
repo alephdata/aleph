@@ -12,7 +12,10 @@ aleph.factory('Session', ['$http', '$q', function($http, $q) {
             var config = {cache: false, params: {'_': dt.getTime()}};
             dfd = $http.get('/api/1/sessions', config);
         }
-        dfd.success(cb);
+        dfd.success(function(data) {
+          data.cbq = data.logged_in ? data.user.id : 'anon';
+          cb(data);
+        });
     };
 
     return {
