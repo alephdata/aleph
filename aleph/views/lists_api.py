@@ -1,7 +1,7 @@
 from flask import Blueprint  # , request
 from flask.ext.login import current_user
+from apikit import obj_or_404, jsonify, Pager, request_data
 
-from aleph.views.util import obj_or_404, jsonify, Pager, request_data
 from aleph.views.cache import etag_cache_keygen
 from aleph.processing import refresh_selectors
 from aleph.model import List, db

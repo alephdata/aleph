@@ -2,13 +2,12 @@ from itertools import combinations
 from StringIO import StringIO
 
 from flask import Blueprint, request, send_file
-from restpager.args import arg_int
 import networkx as nx
 from networkx import degree
 from networkx.readwrite import json_graph
+from apikit import jsonify, arg_int
 
 from aleph import authz
-from aleph.views.util import jsonify
 from aleph.views.cache import etag_cache_keygen
 from aleph.search import raw_iter
 from aleph.search.queries import document_query

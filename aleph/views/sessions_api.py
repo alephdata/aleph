@@ -1,11 +1,11 @@
 from flask import session, Blueprint, redirect, request
 from flask.ext.login import login_user, logout_user, current_user
 from werkzeug.exceptions import BadRequest
+from apikit import jsonify
 
 from aleph import authz
 from aleph.providers import PROVIDERS, Stub
 from aleph.core import db, url_for
-from aleph.views.util import jsonify
 from aleph.model import User
 
 

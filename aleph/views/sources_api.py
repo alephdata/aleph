@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask.ext.login import current_user
+from apikit import obj_or_404, request_data, jsonify
 
-from aleph.views.util import obj_or_404, request_data, jsonify
 from aleph.views.cache import etag_cache_keygen
 from aleph.model import Source
 from aleph.core import db

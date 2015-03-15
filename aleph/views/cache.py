@@ -1,8 +1,8 @@
 from flask import request, Response, get_flashed_messages
 from flask.ext.login import current_user
+from apikit import cache_hash
 
 from aleph.core import app
-from aleph.views.util import cache_hash
 
 
 class NotModified(Exception):

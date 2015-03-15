@@ -15,7 +15,7 @@ nose
 psycopg2
 pyelasticsearch==1.0
 requests>=2.5.1
-restpager>=0.1
+apikit
 simplejson>=3.6.5
 six
 textract>=1.2.0

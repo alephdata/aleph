@@ -1,8 +1,8 @@
 from flask import Blueprint, request
 from flask.ext.login import current_user
 from werkzeug.exceptions import BadRequest
+from apikit import obj_or_404, jsonify, Pager, request_data
 
-from aleph.views.util import obj_or_404, jsonify, Pager, request_data
 from aleph.processing import refresh_selectors
 from aleph.model import Entity, List, db
 from aleph.model.forms import EntityForm

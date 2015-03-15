@@ -1,9 +1,9 @@
 from flask import Blueprint, request
+from apikit import jsonify, Pager
 
 from aleph import authz
 from aleph.core import url_for
 from aleph.model import Entity
-from aleph.views.util import jsonify, Pager
 from aleph.views.cache import etag_cache_keygen
 from aleph.search.queries import document_query, get_list_facets
 from aleph.search.attributes import available_attributes

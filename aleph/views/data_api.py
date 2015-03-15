@@ -1,9 +1,10 @@
 from werkzeug.exceptions import NotFound
 from flask import Blueprint, redirect, send_file
+from apikit import jsonify
+
 
 from aleph.core import archive, url_for
 from aleph import authz
-from aleph.views.util import jsonify
 from aleph.views.cache import etag_cache_keygen
 
 blueprint = Blueprint('data', __name__)
