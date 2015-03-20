@@ -17,8 +17,15 @@
         <div class="form-group">
           <label class="col-sm-3 control-label" for="slug">Path</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="token" name="slug" ng-model="source.slug"
+            <input type="text" class="form-control" id="slug" name="slug" ng-model="source.slug"
               disabled>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label" for="crawler">Crawler</label>
+          <div class="col-sm-9">
+            <select class="form-control" id="crawler" name="crawler" ng-model="source.crawler" ng-options="c.name as c.label for c in crawlers.results"></select>
           </div>
         </div>
 

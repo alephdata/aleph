@@ -60,9 +60,23 @@ class SourceUsers(colander.SequenceSchema):
     user = colander.SchemaNode(UserRef())
 
 
+class SourceCrawlers(colander.OneOf):
+
+    @property
+    def choices(self):
+        from aleph.crawlers import get_crawlers
+        return get_crawlers().keys()
+
+    @choices.setter
+    def choices(self, value):
+        pass
+
+
 class SourceForm(colander.MappingSchema):
     label = colander.SchemaNode(colander.String())
     public = colander.SchemaNode(colander.Boolean())
+    crawler = colander.SchemaNode(colander.String(),
+                                  validator=SourceCrawlers([]))
     users = SourceUsers()
 
 

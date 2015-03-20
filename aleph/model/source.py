@@ -2,9 +2,9 @@ import logging
 from datetime import datetime
 
 from sqlalchemy import or_
+from sqlalchemy_utils.types.json import JSONType
 
 from aleph.core import app, db, archive, url_for
-from aleph.model.util import make_token
 from aleph.model.user import User
 from aleph.model.forms import SourceForm
 
@@ -21,6 +21,8 @@ class Source(db.Model):
     slug = db.Column(db.Unicode, nullable=False, primary_key=True)
     label = db.Column(db.Unicode, nullable=True)
     public = db.Column(db.Boolean, default=True)
+    crawler = db.Column(db.Unicode)
+    config = db.Column(JSONType, nullable=True, default={})
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
@@ -39,6 +41,7 @@ class Source(db.Model):
         data = SourceForm().deserialize(data)
         self.label = data.get('label')
         self.public = data.get('public')
+        self.crawler = data.get('crawler')
         users = set(data.get('users', []))
         if user is not None:
             users.add(user)
@@ -50,24 +53,21 @@ class Source(db.Model):
             'slug': self.slug,
             'label': self.label,
             'public': self.public,
+            'crawler': self.crawler,
+            'config': self.config,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
 
     @property
-    def config(self):
-        return app.config.get('SOURCES', {}).get(self.slug)
-
-    @property
-    def crawler(self):
-        if not hasattr(self, '_crawler'):
+    def crawler_instance(self):
+        if not hasattr(self, '_crawler_instance'):
             from aleph.crawlers.crawler import get_crawlers
-            crawler_name = self.config.get('crawler', self.slug)
-            cls = get_crawlers().get(crawler_name)
+            cls = get_crawlers().get(self.crawler)
             if cls is None:
-                raise TypeError("Invalid crawler: %r" % crawler_name)
-            self._crawler = cls(self)
-        return self._crawler
+                raise TypeError("Invalid crawler: %r" % self.crawler)
+            self._crawler_instance = cls(self)
+        return self._crawler_instance
 
     @property
     def store(self):
@@ -125,12 +125,7 @@ class Source(db.Model):
     @classmethod
     def sync(cls):
         existing = cls.list_all_slugs()
-        seen = set()
         for collection in archive:
             if collection.name not in existing:
                 cls.create(collection.name)
-            seen.add(collection.name)
-        for slug in existing:
-            if slug not in seen:
-                cls.delete_by_slug(slug)
         db.session.commit()
