@@ -1,6 +1,37 @@
 
+var loadCrawlers = ['$http', '$q', '$route', function($http, $q, $route) {
+  var dfd = $q.defer();
+  $http.get('/api/1/crawlers').then(function(res) {
+    dfd.resolve(res.data);
+  });
+  return dfd.promise;
+}];
 
-aleph.directive('sourcesFrame', ['$http', function($http) {
+
+var loadUsers = ['$http', '$q', '$route', 'Session', function($http, $q, $route, Session) {
+  var dfd = $q.defer();
+  Session.get(function(session) {
+    $http.get('/api/1/users', {params: {'_uid': session.cbq}}).then(function(res) {
+      dfd.resolve(res.data);
+    });
+  });
+  return dfd.promise;
+}];
+
+
+var loadSource = ['$http', '$q', '$route', 'Session', function($http, $q, $route, Session) {
+  var dfd = $q.defer(),
+      url = '/api/1/sources/' + $route.current.params.slug;
+  Session.get(function(session) {
+    $http.get(url, {params: {'_uid': session.cbq}}).then(function(res) {
+      dfd.resolve(res.data);
+    });
+  });
+  return dfd.promise;
+}];
+
+
+aleph.directive('sourcesFrame', ['$http', 'QueryContext', function($http, QueryContext) {
   return {
     restrict: 'E',
     transclude: true,
@@ -9,9 +40,10 @@ aleph.directive('sourcesFrame', ['$http', function($http) {
     },
     templateUrl: 'sources_frame.html',
     link: function (scope, element, attrs, model) {
-      $http.get('/api/1/sources').then(function(res) {
-        scope.sources = res.data;
-      })
+      scope.sources = {};
+      QueryContext.get().then(function(data) {
+        scope.sources = data.sources;
+      });
     }
   };
 }]);
@@ -19,26 +51,18 @@ aleph.directive('sourcesFrame', ['$http', function($http) {
 
 aleph.controller('SourcesIndexCtrl', ['$scope', '$location', '$http',
   function($scope, $location, $http) {
-  $scope.sources = {};
 
 }]);
 
 
 aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash',
-                                     'Validation', 'QueryContext',
-  function($scope, $location, $http, $routeParams, Flash, Validation, QueryContext) {
+                                     'Validation', 'QueryContext', 'users', 'crawlers', 'source',
+  function($scope, $location, $http, $routeParams, Flash, Validation, QueryContext, users, crawlers, source) {
   
   var apiUrl = '/api/1/sources/' + $routeParams.slug;
-  $scope.source = {};
-  $scope.users = {};
-
-  $http.get(apiUrl).then(function(res) {
-    $scope.source = res.data;
-  })
-
-  $http.get('/api/1/users').then(function(res) {
-    $scope.users = res.data;
-  })
+  $scope.source = source;
+  $scope.users = users;
+  $scope.crawlers = crawlers;
 
   $scope.canSave = function() {
     return $scope.source.can_write;
