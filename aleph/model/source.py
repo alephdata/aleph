@@ -44,7 +44,6 @@ class Source(db.Model):
     def update_data(self, data, user):
         self.label = data.get('label')
         self.public = data.get('public')
-        self.crawler = data.get('crawler')
         self.config = data.get('config')
         users = set(data.get('users', []))
         if user is not None:
@@ -118,6 +117,7 @@ class Source(db.Model):
         src = cls()
         data = SourceCreateForm().deserialize(data)
         src.slug = data.get('slug')
+        src.crawler = data.get('crawler')
         src.update_data(data, user)
         db.session.add(src)
         return src

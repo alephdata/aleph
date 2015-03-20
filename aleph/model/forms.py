@@ -76,8 +76,8 @@ class SourceCrawlers(colander.OneOf):
 class SourceEditForm(colander.MappingSchema):
     label = colander.SchemaNode(colander.String())
     public = colander.SchemaNode(colander.Boolean())
-    crawler = colander.SchemaNode(colander.String(),
-                                  validator=SourceCrawlers([]))
+    # crawler = colander.SchemaNode(colander.String(),
+    #                               validator=SourceCrawlers([]))
     users = SourceUsers()
     config = colander.SchemaNode(colander.Mapping(unknown='preserve'))
 
