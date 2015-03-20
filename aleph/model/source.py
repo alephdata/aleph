@@ -58,7 +58,7 @@ class Source(db.Model):
             'label': self.label,
             'public': self.public,
             'crawler': self.crawler,
-            'config': self.config,
+            # 'config': self.config,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }

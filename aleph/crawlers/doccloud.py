@@ -33,16 +33,11 @@ class DocumentCloudCrawler(Crawler):
                 try:
                     id = self.check_tag(url=doc.get('canonical_url'))
                     pdf_url = doc.get('resources', {}).get('pdf')
-                    meta = {
-                        'title': doc.get('title'),
-                        'url': doc.get('canonical_url'),
-                        'summary': doc.get('description'),
-                        'extension': 'pdf',
-                        'source_url': pdf_url,
-                        'mime_type': 'application/pdf'
-                    }
                     res = requests.get(pdf_url, auth=auth, verify=False)
-                    self.emit_ingest(res, package_id=id, meta=meta)
+                    self.emit_ingest(res, package_id=id,
+                                     title=doc.get('title'),
+                                     source_url=doc.get('canonical_url'),
+                                     summary=doc.get('description'))
                 except TagExists:
                     pass
             pages = math.ceil(data.get('total') / PAGE_SIZE)

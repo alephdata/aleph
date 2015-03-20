@@ -11,7 +11,7 @@ blueprint = Blueprint('data', __name__)
 
 
 def get_package(collection, package_id):
-    authz.require(authz.collection_read(collection))
+    authz.require(authz.source_read(collection))
     collection = archive.get(collection)
     package = collection.get(package_id)
     if not package.exists():

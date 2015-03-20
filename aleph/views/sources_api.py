@@ -43,6 +43,7 @@ def view(slug):
     data['can_write'] = authz.source_write(slug)
     if data['can_write']:
         data['users'] = [u.id for u in source.users]
+        data['config'] = source.config
     return jsonify(data)
 
 

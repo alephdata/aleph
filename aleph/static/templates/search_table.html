@@ -9,7 +9,7 @@
          tooltip-placement="right" class="source">
         {{queryContext.sources[doc.collection].label || doc.collection}}
       </a>
-      <a ng-href="{{doc.source_url}}" target="_self" class="title">
+      <a ng-href="{{doc.url || doc.source_url}}" target="_self" class="title">
         {{doc.title | characters: 90 }}
       </a>
       <span class="archive">
