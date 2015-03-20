@@ -4,7 +4,7 @@ from pkg_resources import iter_entry_points
 
 from aleph.core import db
 from aleph.model import CrawlState
-from aleph.processing import ingest_url
+from aleph.processing import ingest_url, ingest
 
 log = logging.getLogger(__name__)
 CRAWLERS = {}
@@ -51,6 +51,11 @@ class Crawler(object):
         meta['source_url'] = url
         ingest_url.delay(self.source.slug, url,
                          package_id=package_id, meta=meta)
+
+    def emit_ingest(self, something, package_id=None, **kwargs):
+        meta = self.meta_data(**kwargs)
+        ingest(self.source.store, something,
+               package_id=package_id, meta=meta)
 
     def make_tag(self, title=None, url=None, **kwargs):
         kwargs['title'] = title

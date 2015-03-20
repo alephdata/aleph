@@ -5,7 +5,7 @@ from flask.ext.migrate import MigrateCommand
 from aleph.core import archive
 from aleph.model import db, CrawlState
 from aleph.views import app, assets
-from aleph.processing import make_pipeline
+from aleph.processing import make_pipeline, process_collection
 from aleph.crawlers import crawl_source
 from aleph.upgrade import upgrade as upgrade_, reset as reset_
 
@@ -31,9 +31,7 @@ def flush(source):
 @manager.command
 def process(collection_name, force=False):
     """ Index all documents in the given collection. """
-    collection = archive.get(collection_name)
-    pipeline = make_pipeline(collection, overwrite=force)
-    pipeline.process_sync()
+    process_collection.delay(collection_name, overwrite=force)
 
 
 @manager.command

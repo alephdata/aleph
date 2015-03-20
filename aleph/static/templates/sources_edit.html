@@ -39,10 +39,18 @@
           </div>
         </div>
 
+        <div ng-show="source.crawler == 'doccloud' || source.crawler == 'sourceafrica'">
+          <doccloud-config source="source" crawlers="crawlers"></doccloud-config>
+        </div>
+
         <div class="form-group">
           <div class="col-sm-offset-3 col-sm-9">
             <button type="submit" class="btn btn-primary"
               ng-disabled="!canSave()">Save</button>
+            <button class="btn btn-default" ng-click="crawl()"
+              ng-disabled="crawlTriggered">Begin crawling</button>
+            <button class="btn btn-default" ng-click="process()"
+              ng-disabled="processTriggered">Re-index</button>
           </div>
         </div>
       </div>

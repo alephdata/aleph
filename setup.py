@@ -26,6 +26,10 @@ setup(
             'aleph_indexer = aleph.processing.indexer:IndexerOperator',
             'aleph_tagger = aleph.processing.tagger:TaggerOperator'
         ],
+        'aleph.crawlers': [
+            'doccloud = aleph.crawlers.doccloud:DocumentCloudCrawler',
+            'sourceafrica = aleph.crawlers.doccloud:SourceAfricaCrawler',
+        ],
         'console_scripts': [
             'aleph = aleph.manage:main',
         ]

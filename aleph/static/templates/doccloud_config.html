@@ -1,0 +1,51 @@
+<div class="form-group">
+  <label class="col-sm-3 control-label" for="username">
+    {{crawler.label}}
+  </label>
+  <div class="col-sm-9">
+  </div>
+</div>
+
+
+<div class="form-group">
+  <label class="col-sm-3 control-label" for="username">Username</label>
+  <div class="col-sm-9">
+    <input type="text" class="form-control"
+      id="username" name="username"
+      ng-blur="reloadProjects()"
+      ng-model="source.config.username">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-3 control-label" for="password">Password</label>
+  <div class="col-sm-9">
+    <input type="password" class="form-control"
+      id="password" name="password"
+      ng-blur="reloadProjects()"
+      ng-model="source.config.password">
+  </div>
+</div>
+
+<div class="form-group" ng-show="checking">
+  <label class="col-sm-3 control-label"></label>
+  <div class="col-sm-9">
+    <div class="alert alert-warning" role="alert">Loading projects from {{crawler.label}}...</div>
+  </div>
+</div>
+
+<div class="form-group" ng-show="failed">
+  <label class="col-sm-3 control-label"></label>
+  <div class="col-sm-9">
+    <div class="alert alert-danger" role="alert">
+      The provided credentials aren't valid.
+    </div>
+  </div>
+</div>
+
+<div class="form-group" ng-show="projects">
+  <label class="col-sm-3 control-label" for="project">Project</label>
+  <div class="col-sm-9">
+    <select class="form-control" id="project" name="project" ng-model="source.config.project_id" ng-options="p.id as p.title for p in projects"></select>
+  </div>
+</div>

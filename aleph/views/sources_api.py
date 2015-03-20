@@ -3,6 +3,8 @@ from flask.ext.login import current_user
 from apikit import obj_or_404, request_data, jsonify
 
 from aleph.views.cache import etag_cache_keygen
+from aleph.processing import process_collection
+from aleph.crawlers import crawl_source
 from aleph.model import Source
 from aleph.core import db
 from aleph import authz
@@ -42,6 +44,22 @@ def view(slug):
     if data['can_write']:
         data['users'] = [u.id for u in source.users]
     return jsonify(data)
+
+
+@blueprint.route('/api/1/sources/<slug>/crawl', methods=['POST', 'PUT'])
+def crawl(slug):
+    authz.require(authz.source_write(slug))
+    source = obj_or_404(Source.by_slug(slug))
+    crawl_source.delay(source.slug)
+    return jsonify({'status': 'ok'})
+
+
+@blueprint.route('/api/1/sources/<slug>/process', methods=['POST', 'PUT'])
+def process(slug):
+    authz.require(authz.source_write(slug))
+    source = obj_or_404(Source.by_slug(slug))
+    process_collection.delay(source.slug)
+    return jsonify({'status': 'ok'})
 
 
 @blueprint.route('/api/1/sources/<slug>', methods=['POST', 'PUT'])
