@@ -18,8 +18,6 @@ def index():
     for source in Source.all_by_user(current_user):
         data = source.to_dict()
         data['can_write'] = authz.source_write(source.slug)
-        if data['can_write']:
-            data['token'] = source.token
         latest.add(data['updated_at'])
         sources.append(data)
     etag_cache_keygen(max(latest))
@@ -34,7 +32,6 @@ def view(slug):
     data = source.to_dict()
     data['can_write'] = authz.source_write(slug)
     if data['can_write']:
-        data['token'] = source.token
         data['users'] = [u.id for u in source.users]
     return jsonify(data)
 
