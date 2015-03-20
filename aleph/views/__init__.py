@@ -15,6 +15,7 @@ from aleph.views.lists_api import blueprint as lists_api
 from aleph.views.entities_api import blueprint as entities_api
 from aleph.views.exports_api import blueprint as exports_api
 from aleph.views.sources_api import blueprint as sources_api
+from aleph.views.crawlers_api import blueprint as crawlers_api
 
 
 app.register_blueprint(data_api)
@@ -26,6 +27,7 @@ app.register_blueprint(lists_api)
 app.register_blueprint(entities_api)
 app.register_blueprint(exports_api)
 app.register_blueprint(sources_api)
+app.register_blueprint(crawlers_api)
 
 
 @login_manager.request_loader

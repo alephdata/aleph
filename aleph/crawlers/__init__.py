@@ -1,5 +1,5 @@
 from aleph.model import db, Source
-from aleph.crawlers.crawler import Crawler, TagExists # noqa
+from aleph.crawlers.crawler import get_crawlers, Crawler, TagExists # noqa
 
 
 def crawl_source(slug, ignore_tags=False):
