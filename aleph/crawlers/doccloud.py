@@ -33,7 +33,8 @@ class DocumentCloudCrawler(Crawler):
                 try:
                     id = self.check_tag(url=doc.get('canonical_url'))
                     pdf_url = doc.get('resources', {}).get('pdf')
-                    res = requests.get(pdf_url, auth=auth, verify=False)
+                    pdf_auth = None if 'amazonaws.com' in pdf_url else auth
+                    res = requests.get(pdf_url, auth=pdf_auth, verify=False)
                     self.emit_ingest(res, package_id=id,
                                      title=doc.get('title'),
                                      source_url=doc.get('canonical_url'),
