@@ -72,12 +72,29 @@ class SourceCrawlers(colander.OneOf):
         pass
 
 
-class SourceForm(colander.MappingSchema):
+class SourceEditForm(colander.MappingSchema):
     label = colander.SchemaNode(colander.String())
     public = colander.SchemaNode(colander.Boolean())
     crawler = colander.SchemaNode(colander.String(),
                                   validator=SourceCrawlers([]))
     users = SourceUsers()
+    config = colander.SchemaNode(colander.Mapping(unknown='preserve'))
+
+
+def source_slug_available(value):
+    from aleph.model.source import Source
+    existing = Source.by_slug(value)
+    return existing is None
+
+
+class SourceCreateForm(colander.MappingSchema):
+    slug = colander.SchemaNode(colander.String(),
+        validator=colander.Function(source_slug_available, 'Invalid slug')) # noqa
+    label = colander.SchemaNode(colander.String())
+    crawler = colander.SchemaNode(colander.String(),
+                                  validator=SourceCrawlers([]))
+    users = SourceUsers()
+    config = colander.SchemaNode(colander.Mapping(unknown='preserve'))
 
 
 class ListUsers(colander.SequenceSchema):

@@ -22,6 +22,7 @@ def upgrade():
     else:
         op.add_column('source', sa.Column('config', sa.Unicode(), nullable=True))
     op.drop_column('source', 'token')
+    op.execute("UPDATE source SET config = '{}';")
 
 
 def downgrade():

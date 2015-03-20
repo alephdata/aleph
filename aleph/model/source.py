@@ -4,9 +4,9 @@ from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy_utils.types.json import JSONType
 
-from aleph.core import app, db, archive, url_for
+from aleph.core import db, archive, url_for
 from aleph.model.user import User
-from aleph.model.forms import SourceForm
+from aleph.model.forms import SourceEditForm, SourceCreateForm
 
 log = logging.getLogger(__name__)
 
@@ -38,10 +38,14 @@ class Source(db.Model):
         return self.label
 
     def update(self, data, user):
-        data = SourceForm().deserialize(data)
+        data = SourceEditForm().deserialize(data)
+        self.update_data(data, user)
+
+    def update_data(self, data, user):
         self.label = data.get('label')
         self.public = data.get('public')
         self.crawler = data.get('crawler')
+        self.config = data.get('config')
         users = set(data.get('users', []))
         if user is not None:
             users.add(user)
@@ -110,10 +114,10 @@ class Source(db.Model):
         return q
 
     @classmethod
-    def create(cls, slug):
+    def create(cls, data, user=None):
         src = cls()
-        src.slug = slug
-        src.label = slug
+        data = SourceCreateForm().deserialize(data)
+        src.update_data(data, user)
         db.session.add(src)
         return src
 
@@ -127,5 +131,8 @@ class Source(db.Model):
         existing = cls.list_all_slugs()
         for collection in archive:
             if collection.name not in existing:
-                cls.create(collection.name)
+                cls.create({
+                    'slug': collection.name,
+                    'label': collection.name
+                })
         db.session.commit()
