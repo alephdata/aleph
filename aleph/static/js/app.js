@@ -44,6 +44,15 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     loginRequired: true
   });
 
+  $routeProvider.when('/sources/new', {
+    templateUrl: 'sources_new.html',
+    controller: 'SourcesNewCtrl',
+    loginRequired: true,
+    resolve: {
+      'crawlers': loadCrawlers
+    }
+  });
+
   $routeProvider.when('/sources/:slug', {
     templateUrl: 'sources_edit.html',
     controller: 'SourcesEditCtrl',

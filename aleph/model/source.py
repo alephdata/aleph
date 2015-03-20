@@ -117,6 +117,7 @@ class Source(db.Model):
     def create(cls, data, user=None):
         src = cls()
         data = SourceCreateForm().deserialize(data)
+        src.slug = data.get('slug')
         src.update_data(data, user)
         db.session.add(src)
         return src

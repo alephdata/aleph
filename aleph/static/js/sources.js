@@ -59,7 +59,6 @@ aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routePara
                                      'Validation', 'QueryContext', 'users', 'crawlers', 'source',
   function($scope, $location, $http, $routeParams, Flash, Validation, QueryContext, users, crawlers, source) {
   
-  var apiUrl = '/api/1/sources/' + $routeParams.slug;
   $scope.source = source;
   $scope.users = users;
   $scope.crawlers = crawlers;
@@ -83,10 +82,39 @@ aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routePara
   };
 
   $scope.save = function(form) {
-      var res = $http.post(apiUrl, $scope.source);
+      var res = $http.post(source.api_url, $scope.source);
       res.success(function(data) {
         QueryContext.reset();
         Flash.message('Your changes have been saved.', 'success');
+      });
+      res.error(Validation.handle(form));
+  };
+
+}]);
+
+
+aleph.controller('SourcesNewCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash',
+                                     'Validation', 'QueryContext', 'crawlers',
+  function($scope, $location, $http, $routeParams, Flash, Validation, QueryContext, crawlers) {
+  
+  $scope.source = {
+    config: {},
+    fresh: true,
+    'public': false,
+    crawler: crawlers.results[0].name
+  };
+  $scope.crawlers = crawlers;
+
+  $scope.canSave = function() {
+    return $scope.source.label && $scope.source.slug;
+  };
+
+  $scope.save = function(form) {
+      var res = $http.post('/api/1/sources', $scope.source);
+      res.success(function(data) {
+        QueryContext.reset();
+        Flash.message('The source has been created.', 'success');
+        $location.path('/sources/' + data.slug);
       });
       res.error(Validation.handle(form));
   };

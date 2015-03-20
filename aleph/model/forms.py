@@ -1,4 +1,5 @@
 import colander
+from normality import slugify
 from colander import Invalid # noqa
 
 PERSON = 'Person'
@@ -89,11 +90,14 @@ def source_slug_available(value):
 
 class SourceCreateForm(colander.MappingSchema):
     slug = colander.SchemaNode(colander.String(),
-        validator=colander.Function(source_slug_available, 'Invalid slug')) # noqa
+        preparer=slugify,
+        validator=colander.All(
+            colander.Function(source_slug_available, 'Invalid slug'),
+            colander.Length(min=3, max=100))) # noqa
     label = colander.SchemaNode(colander.String())
     crawler = colander.SchemaNode(colander.String(),
                                   validator=SourceCrawlers([]))
-    users = SourceUsers()
+    users = SourceUsers(missing=[])
     config = colander.SchemaNode(colander.Mapping(unknown='preserve'))
 
 

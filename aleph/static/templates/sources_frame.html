@@ -5,8 +5,11 @@
   <li ng-class="{'active': !source}">
     <a href="/sources">Document sources</a>
   </li>
-  <li ng-show="source" class="active">
+  <li ng-show="source.label && !source.fresh" class="active">
     {{source.label}}
+  </li>
+  <li ng-show="source.fresh" class="active">
+    Create a new source
   </li>
 </ol>
 
@@ -21,6 +24,11 @@
         </a>
         <a ng-hide="src.can_write">
           {{src.label}}
+        </a>
+      </li>
+      <li ng-class="{'active': source.fresh}">
+        <a href="/sources/new">
+          <i class="fa fa-plus-square"></i> New source
         </a>
       </li>
     </ul>
