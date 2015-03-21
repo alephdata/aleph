@@ -31,23 +31,7 @@
                 typeahead-template-url="entity_link.html"
                 typeahead-on-select="acceptSuggestion($item)">
               
-              <span class="input-group-btn" dropdown>
-                <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-                  <i class="fa fa-list-alt"></i>
-                  Sidebar filters
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li ng-repeat="(id, list) in queryContext.lists"
-                    ng-show="showListFacet(id)">
-                    <a ng-click="query.toggleFilter('listfacet', id)" ng-bind="list.label"></a>
-                  </li>
-                  <li class="divider"></li>
-                  <li ng-repeat="(attr, d) in queryContext.attributes.attributes"
-                    ng-show="showAttributeFacet(attr)">
-                    <a ng-click="query.toggleFilter('attributefacet', attr)" ng-bind="attr"></a>
-                  </li>
-                </ul>
+              <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="clearSearch()">
                   <i class="fa fa-refresh"></i> Reset</button>
               </span>

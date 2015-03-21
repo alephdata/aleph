@@ -78,6 +78,30 @@
       </ul>
     </div>
 
+    <div class="btn-group btn-group-justified" role="group">
+      <div class="btn-group" role="group" dropdown>
+        <button type="button" class="btn btn-default dropdown-toggle"
+          dropdown-toggle>
+          <i class="fa fa-list-alt"></i>
+          Add filters
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li ng-repeat="(id, list) in queryContext.lists"
+            ng-show="showListFacet(id)">
+            <a ng-click="query.toggleFilter('listfacet', id)"
+              ng-bind="list.label"></a>
+          </li>
+          <li class="divider"></li>
+          <li ng-repeat="(attr, d) in queryContext.attributes.attributes"
+            ng-show="showAttributeFacet(attr)">
+            <a ng-click="query.toggleFilter('attributefacet', attr)"
+              ng-bind="attr"></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <br/>
 
     <div class="panel panel-default">
       <div class="panel-heading">
