@@ -2,7 +2,7 @@ import logging
 
 from jinja2.filters import do_truncate as truncate
 from jinja2.filters import do_striptags as striptags
-from apikit.jsonify import AppEncoder
+from apikit.jsonify import JSONEncoder
 
 from aleph.core import es, es_index
 from aleph.model import EntityTag
@@ -19,7 +19,7 @@ def html_summary(html):
 
 
 def index_package(package, plain_text, normalized_text):
-    es.json_encoder = AppEncoder
+    es.json_encoder = JSONEncoder
     body = {
         'id': package.id,
         'collection': package.collection
