@@ -10,14 +10,6 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
     $scope.queryContext = context;
   });
 
-  // $scope.showListFacet = function(id) {
-  //   return Query.load().listfacet.indexOf(id) == -1;
-  // };
-
-  // $scope.showAttributeFacet = function(attr) {
-  //   return Query.load().attributefacet.indexOf(attr) == -1;
-  // };
-
   Session.get(function(session) {
     $scope.session = session;
   });
