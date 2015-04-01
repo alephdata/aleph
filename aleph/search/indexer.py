@@ -2,9 +2,9 @@ import logging
 
 from jinja2.filters import do_truncate as truncate
 from jinja2.filters import do_striptags as striptags
+from apikit.jsonify import AppEncoder
 
 from aleph.core import es, es_index
-from aleph.views.util import AppEncoder
 from aleph.model import EntityTag
 from aleph.search.mapping import DOC_TYPE
 from aleph.search.attributes import generate_attributes

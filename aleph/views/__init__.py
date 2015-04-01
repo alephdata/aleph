@@ -1,11 +1,11 @@
 from colander import Invalid
 from flask import request
+from apikit import jsonify
 
 from aleph.core import app, login_manager
 from aleph.views.ui import ui # noqa
 from aleph.assets import assets # noqa
 from aleph.model import User
-from aleph.views.util import jsonify
 from aleph.views.data_api import blueprint as data_api
 from aleph.views.search_api import blueprint as search_api
 from aleph.views.graph_api import blueprint as graph_api

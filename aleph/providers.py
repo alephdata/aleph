@@ -1,9 +1,9 @@
 from functools import wraps
 
 from flask import session
+from apikit import jsonify
 
 from aleph.core import oauth, app
-from aleph.views.util import jsonify
 
 
 class Stub():
