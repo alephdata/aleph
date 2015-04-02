@@ -15,7 +15,8 @@ log = logging.getLogger(__name__)
 def html_summary(html):
     if not isinstance(html, unicode):
         html = html.decode('utf-8')
-    return truncate(striptags(html), length=250)
+    # return truncate(striptags(html), length=250)
+    return striptags(html)
 
 
 def index_package(package, plain_text, normalized_text):
