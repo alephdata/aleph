@@ -1,6 +1,6 @@
 import logging
 
-from jinja2.filters import do_truncate as truncate
+# from jinja2.filters import do_truncate as truncate
 from jinja2.filters import do_striptags as striptags
 from apikit.jsonify import JSONEncoder
 
@@ -41,7 +41,8 @@ def index_package(package, plain_text, normalized_text):
 
     if plain_text.exists():
         body['text'] = plain_text.fh().read()
-        body['summary'] = html_summary(body['text'])
+        summary = source.meta.get('summary') or body.get('text')
+        body['summary'] = html_summary(summary)
 
     if normalized_text.exists():
         body['normalized'] = normalized_text.fh().read()

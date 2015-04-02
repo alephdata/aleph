@@ -8,7 +8,7 @@ from aleph.search.mapping import DOC_MAPPING, DOC_TYPE
 from aleph.search.result_proxy import ESResultProxy
 from aleph.search.queries import document_query # noqa
 
-PAGE = 10000
+PAGE = 500
 
 log = logging.getLogger(__name__)
 
