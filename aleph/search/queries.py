@@ -191,7 +191,8 @@ def attributes_query(args, sources=None, lists=None):
                        facets=False)
     q['aggregations'] = {
         'attributes': {
-            'terms': {'field': 'attributes.name'}
+            'terms': {'field': 'attributes.name',
+                      'size': 200}
         }
     }
     q['size'] = 0
