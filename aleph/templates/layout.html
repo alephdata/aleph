@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{config.APP_TITLE}}</title>
-    
+
     {% assets "css" %}
       <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet">
     {% endassets %}
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
-    <link rel="shortcut icon" href="http://www.codeforafrica.org/favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="http://openoil.net/wp/wp-content/themes/organic_nonprofit/images/favicon.ico"
+      type="image/x-icon" />
     <base href="{{url_for('ui')}}">
   </head>
   <body ng-controller="AppCtrl">
@@ -30,7 +31,7 @@
                 typeahead-focus-first="false"
                 typeahead-template-url="entity_link.html"
                 typeahead-on-select="acceptSuggestion($item)">
-              
+
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="clearSearch()">
                   <i class="fa fa-refresh"></i> Reset</button>

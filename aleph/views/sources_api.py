@@ -22,7 +22,8 @@ def index():
         data['can_write'] = authz.source_write(source.slug)
         latest.add(data['updated_at'])
         sources.append(data)
-    etag_cache_keygen(max(latest))
+    if len(latest):
+        etag_cache_keygen(max(latest))
     return jsonify({'results': sources, 'total': len(sources)})
 
 
