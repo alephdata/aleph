@@ -58,7 +58,7 @@ aleph.controller('SourcesIndexCtrl', ['$scope', '$location', '$http',
 aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash',
                                      'Validation', 'QueryContext', 'users', 'crawlers', 'source',
   function($scope, $location, $http, $routeParams, Flash, Validation, QueryContext, users, crawlers, source) {
-  
+
   $scope.source = source;
   $scope.users = users;
   $scope.crawlers = crawlers;
@@ -115,7 +115,7 @@ aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routePara
 aleph.controller('SourcesNewCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash',
                                      'Validation', 'QueryContext', 'crawlers',
   function($scope, $location, $http, $routeParams, Flash, Validation, QueryContext, crawlers) {
-  
+
   $scope.source = {
     config: {},
     fresh: true,
@@ -134,7 +134,7 @@ aleph.controller('SourcesNewCtrl', ['$scope', '$location', '$http', '$routeParam
   };
 
   $scope.$watch('source.label', function(l) {
-    if($scope.slugGen) {
+    if($scope.slugGen && l) {
       var slug = l.toLowerCase()
         .replace(/ /g,'-')
         .replace(/[^\w-]+/g,'')
