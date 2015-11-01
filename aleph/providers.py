@@ -29,7 +29,8 @@ class Stub():
 
 PROVIDERS = {
     'twitter': Stub('twitter'),
-    'facebook': Stub('facebook')
+    'facebook': Stub('facebook'),
+    'github': Stub('github'),
 }
 
 
@@ -63,3 +64,18 @@ if app.config.get('FACEBOOK_APP_ID') is not None:
         return session.get('facebook_token')
 
     PROVIDERS['facebook'] = facebook
+
+if app.config.get('GITHUB_CLIENT_ID') is not None:
+    github = oauth.remote_app('github',
+        base_url='https://github.com/login/',
+        request_token_url=None,
+        access_token_url='https://github.com/login/oauth/access_token',
+        authorize_url='https://github.com/login/oauth/authorize',
+        consumer_key=app.config.get('GITHUB_CLIENT_ID'),
+        consumer_secret=app.config.get('GITHUB_CLIENT_SECRET'))
+
+    @github.tokengetter
+    def get_github_token(token=None):
+        return session.get('github_token')
+
+    PROVIDERS['github'] = github

@@ -90,3 +90,25 @@ def facebook_authorized(resp):
     db.session.commit()
     login_user(user, remember=True)
     return redirect(next_url)
+
+
+handler = PROVIDERS.get('github')
+
+
+@blueprint.route('/api/1/sessions/callback/github')
+@handler.authorized_handler
+def github_authorized(resp):
+    next_url = session.get('next_url', url_for('ui'))
+    if resp is None or 'access_token' not in resp:
+        return redirect(next_url)
+    session['github_token'] = (resp.get('access_token'), '')
+    profile = PROVIDERS.get('github').get('https://api.github.com/user').data
+    data = {
+        'display_name': profile.get('name'),
+        'email': profile.get('email'),
+        'github_id': profile.get('id')
+    }
+    user = User.load(data)
+    db.session.commit()
+    login_user(user, remember=True)
+    return redirect(next_url)

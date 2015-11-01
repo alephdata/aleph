@@ -56,6 +56,13 @@
                 </a>
               {% endraw %}
             </li>
+            <li ng-show="!session.logged_in && session.logins.github" ng-cloak>
+              {% raw %}
+                <a href='{{session.logins.github}}' target='_self'>
+                  <i class="fa fa-github"></i> Sign in
+                </a>
+              {% endraw %}
+            </li>
             <li ng-show="session.logged_in" ng-cloak>
               <a ng-click="editProfile()" ng-bind="session.user.display_name"></a>
             </li>
