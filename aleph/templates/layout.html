@@ -63,6 +63,13 @@
                 </a>
               {% endraw %}
             </li>
+            <li ng-show="!session.logged_in && session.logins.google" ng-cloak>
+              {% raw %}
+                <a href='{{session.logins.google}}' target='_self'>
+                  <i class="fa fa-google"></i> Sign in
+                </a>
+              {% endraw %}
+            </li>
             <li ng-show="session.logged_in" ng-cloak>
               <a ng-click="editProfile()" ng-bind="session.user.display_name"></a>
             </li>
