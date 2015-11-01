@@ -22,6 +22,8 @@ class User(db.Model):
 
     twitter_id = db.Column(db.Unicode)
     facebook_id = db.Column(db.Unicode)
+    github_id = db.Column(db.Unicode)
+    google_id = db.Column(db.Unicode)
 
     api_key = db.Column(db.Unicode, default=make_token)
 
@@ -67,11 +69,17 @@ class User(db.Model):
             user = cls.by_twitter_id(data.get('twitter_id'))
         elif 'facebook_id' in data:
             user = cls.by_facebook_id(data.get('facebook_id'))
+        elif 'github_id' in data:
+            user = cls.by_github_id(data.get('github_id'))
+        elif 'google_id' in data:
+            user = cls.by_google_id(data.get('google_id'))
         if user is None:
             user = cls()
 
         user.twitter_id = data.get('twitter_id')
         user.facebook_id = data.get('facebook_id')
+        user.github_id = data.get('github_id')
+        user.google_id = data.get('google_id')
         if not user.display_name:
             user.display_name = data.get('display_name')
         if not user.email:
@@ -102,4 +110,14 @@ class User(db.Model):
     @classmethod
     def by_facebook_id(cls, facebook_id):
         q = db.session.query(cls).filter_by(facebook_id=str(facebook_id))
+        return q.first()
+
+    @classmethod
+    def by_github_id(cls, github_id):
+        q = db.session.query(cls).filter_by(github_id=str(github_id))
+        return q.first()
+
+    @classmethod
+    def by_google_id(cls, google_id):
+        q = db.session.query(cls).filter_by(google_id=str(google_id))
         return q.first()
