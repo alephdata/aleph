@@ -41,7 +41,7 @@ def raw_iter(query, total=10000):
         query['size'] = PAGE
         result = es.search(index=es_index,
                            doc_type=DOC_TYPE,
-                           query=query)
+                           body=query)
         hits = result.get('hits', {})
         for doc in hits.get('hits', []):
             yield doc

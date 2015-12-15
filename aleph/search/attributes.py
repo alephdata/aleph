@@ -40,7 +40,7 @@ def generate_attributes(meta):
 
 def available_attributes(args, sources=None, lists=None):
     q = attributes_query(args, sources=sources, lists=lists)
-    result = es.search(index=es_index, doc_type=DOC_TYPE, query=q)
+    result = es.search(index=es_index, doc_type=DOC_TYPE, body=q)
     result = result.get('aggregations', {}).get('attributes', {})
     result = {r.get('key'): False for r in result.get('buckets', [])}
     return {'fields': CORE_FIELDS, 'attributes': result}

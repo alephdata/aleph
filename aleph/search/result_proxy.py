@@ -33,7 +33,7 @@ class ESResultProxy(object):
                 del q['aggregations']
             self._result = es.search(index=es_index,
                                      doc_type=self.doc_type,
-                                     query=q)
+                                     body=q)
         return self._result
 
     def __len__(self):

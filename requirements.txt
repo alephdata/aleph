@@ -13,7 +13,6 @@ lxml
 normality>=0.1
 nose
 psycopg2
-pyelasticsearch==1.0
 requests>=2.5.1
 apikit
 simplejson>=3.6.5
@@ -25,4 +24,3 @@ unicodecsv
 networkx
 XlsxWriter>=0.6.6
 SQLAlchemy-Utils>=0.29.8
-dropbox>=2.2.0
