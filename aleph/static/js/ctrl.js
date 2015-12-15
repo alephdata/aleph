@@ -89,5 +89,5 @@ aleph.controller('ProfileCtrl', ['$scope', '$location', '$modalInstance', '$http
       $scope.session.user = data;
       $modalInstance.dismiss('ok');
     });
-  };  
+  };
 }]);

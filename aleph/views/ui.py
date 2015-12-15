@@ -14,15 +14,6 @@ def angular_templates():
                 yield (file_name, fh.read().decode('utf-8'))
 
 
-@app.route('/lists/<path:id>')
-@app.route('/lists')
-@app.route('/sources/<path:slug>')
-@app.route('/sources')
-@app.route('/search')
-@app.route('/search/export')
-@app.route('/search/graph')
-@app.route('/graph')
-@app.route('/login')
 @app.route('/')
 def ui(**kwargs):
     return render_template("layout.html", templates=angular_templates())

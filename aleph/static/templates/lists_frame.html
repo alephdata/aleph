@@ -1,6 +1,6 @@
 <ol class="breadcrumb">
   <li>
-    <a href="/">Home</a>
+    <a href="/#/">Home</a>
   </li>
   <li>
     Lists of people and companies
@@ -15,12 +15,12 @@
     <ul class="nav nav-pills nav-stacked">
       <li ng-repeat="lst in lists.results"
           ng-class="{'active': list.id == lst.id}">
-        <a href="/lists/{{lst.id}}/entities">
+        <a href="/#/lists/{{lst.id}}/entities">
           <i class="fa fa-list"></i> {{lst.label}}
         </a>
       </li>
       <li ng-class="{'active': list.new}">
-        <a href="/lists/new">
+        <a href="/#/lists/new">
           <i class="fa fa-plus-square"></i> Create a new list
         </a>
       </li>
@@ -29,10 +29,10 @@
   <div class="col-md-9">
     <ul class="nav nav-tabs" ng-show="selected">
       <li role="presentation" ng-class="{'active': selected == 'entities'}">
-        <a href="/lists/{{list.id}}/entities">Manage people and companies</a>
+        <a href="/#/lists/{{list.id}}/entities">Manage people and companies</a>
       </li>
       <li role="presentation" ng-class="{'active': selected == 'edit'}">
-        <a href="/lists/{{list.id}}">List settings</a>
+        <a href="/#/lists/{{list.id}}">List settings</a>
       </li>
     </ul>
     <div ng-transclude></div>

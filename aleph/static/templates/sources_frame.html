@@ -19,7 +19,7 @@
       <li ng-repeat="(slug, src) in sources"
           ng-class="{'active': src.slug == source.slug,
                      'disabled': !src.can_write}">
-        <a ng-href="/sources/{{src.slug}}" ng-show="src.can_write">
+        <a ng-href="/#/sources/{{src.slug}}" ng-show="src.can_write">
           {{src.label}}
         </a>
         <a ng-hide="src.can_write">
@@ -27,7 +27,7 @@
         </a>
       </li>
       <li ng-class="{'active': source.fresh}">
-        <a href="/sources/new">
+        <a href="/#/sources/new">
           <i class="fa fa-plus-square"></i> New source
         </a>
       </li>
