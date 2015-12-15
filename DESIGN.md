@@ -1,3 +1,16 @@
+Iteration II
+============
+
+* Document / Record - distinction, raw data support
+* Use database to store documents and records
+* Inline S3/FS support
+* Ingest mechanism for URLs
+* Ingest mechanism for bundled files
+* Alerts / Subscriptions
+* Testing
+* tidbits
+
+
 D.I.T.
 ======
 
