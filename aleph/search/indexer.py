@@ -10,6 +10,7 @@ from aleph.search.mapping import DOC_TYPE
 from aleph.search.attributes import generate_attributes
 
 log = logging.getLogger(__name__)
+es.json_encoder = JSONEncoder
 
 
 def html_summary(html):
@@ -20,7 +21,6 @@ def html_summary(html):
 
 
 def index_package(package, plain_text, normalized_text):
-    es.json_encoder = JSONEncoder
     body = {
         'id': package.id,
         'collection': package.collection

@@ -1,7 +1,11 @@
 import uuid
 import string
+from datetime import datetime
 
 from sqlalchemy import func
+
+from aleph.core import db
+
 
 ALPHABET = string.ascii_lowercase + string.digits
 
@@ -30,3 +34,8 @@ def make_token():
 
 def make_textid():
     return uuid.uuid4().hex
+
+
+class TimeStampedModel(object):
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)

@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 
 from sqlalchemy import or_
 from sqlalchemy.orm import aliased
@@ -8,12 +7,13 @@ from aleph.core import db, url_for
 from aleph.model.user import User
 from aleph.model.selector import Selector
 from aleph.model.forms import EntityForm, CATEGORIES
-from aleph.model.util import make_textid, db_compare
+from aleph.model.common import make_textid, db_compare
+from aleph.model.common import TimeStampedModel
 
 log = logging.getLogger(__name__)
 
 
-class Entity(db.Model):
+class Entity(db.Model, TimeStampedModel):
     id = db.Column(db.Unicode(50), primary_key=True, default=make_textid)
     label = db.Column(db.Unicode)
     category = db.Column(db.Enum(*CATEGORIES, name='entity_categories'),
@@ -26,10 +26,6 @@ class Entity(db.Model):
     list_id = db.Column(db.Integer(), db.ForeignKey('list.id'))
     list = db.relationship('List', backref=db.backref('entities',
                            lazy='dynamic', cascade='all, delete-orphan'))
-
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow,
-                           onupdate=datetime.utcnow)
 
     def to_dict(self):
         return {

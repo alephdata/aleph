@@ -6,6 +6,7 @@ from sqlalchemy import or_
 from aleph.core import db, url_for
 from aleph.model.user import User
 from aleph.model.forms import ListForm
+from aleph.model.common import TimeStampedModel
 
 log = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ list_user_table = db.Table('list_user', db.metadata,
 )
 
 
-class List(db.Model):
+class List(db.Model, TimeStampedModel):
     id = db.Column(db.Integer(), primary_key=True)
     label = db.Column(db.Unicode)
     public = db.Column(db.Boolean, default=False)
@@ -24,10 +25,6 @@ class List(db.Model):
     creator_id = db.Column(db.Integer(), db.ForeignKey('user.id'),
                            nullable=True)
     creator = db.relationship(User)
-
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow,
-                           onupdate=datetime.utcnow)
 
     users = db.relationship(User, secondary=list_user_table,
                             backref='lists')

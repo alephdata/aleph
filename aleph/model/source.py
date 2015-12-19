@@ -1,10 +1,10 @@
 import logging
-from datetime import datetime
 
 from sqlalchemy import or_
 from sqlalchemy_utils.types.json import JSONType
 
 from aleph.core import db, archive, url_for
+from aleph.model.common import TimeStampedModel
 from aleph.model.user import User
 from aleph.model.forms import SourceEditForm, SourceCreateForm
 
@@ -17,16 +17,12 @@ source_user_table = db.Table('source_user', db.metadata,
 )
 
 
-class Source(db.Model):
+class Source(db.Model, TimeStampedModel):
     slug = db.Column(db.Unicode, nullable=False, primary_key=True)
     label = db.Column(db.Unicode, nullable=True)
     public = db.Column(db.Boolean, default=True)
     crawler = db.Column(db.Unicode)
     config = db.Column(JSONType, nullable=True, default={})
-
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow,
-                           onupdate=datetime.utcnow)
 
     users = db.relationship(User, secondary=source_user_table,
                             backref='sources')

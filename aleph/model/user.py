@@ -1,8 +1,8 @@
 import logging
-from datetime import datetime
 
 from aleph.core import db, login_manager, url_for
-from aleph.model.util import make_token
+from aleph.model.common import make_token
+from aleph.model.common import TimeStampedModel
 from aleph.model.forms import UserForm
 
 log = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-class User(db.Model):
+class User(db.Model, TimeStampedModel):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.Unicode, nullable=True)
     display_name = db.Column(db.Unicode, nullable=True)
@@ -24,10 +24,6 @@ class User(db.Model):
     facebook_id = db.Column(db.Unicode)
 
     api_key = db.Column(db.Unicode, default=make_token)
-
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow,
-                           onupdate=datetime.utcnow)
 
     def is_active(self):
         return self.active

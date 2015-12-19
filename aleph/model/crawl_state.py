@@ -2,18 +2,15 @@ import logging
 from datetime import datetime
 
 from aleph.core import db
+from aleph.model.common import TimeStampedModel
 
 log = logging.getLogger(__name__)
 
 
-class CrawlState(db.Model):
+class CrawlState(db.Model, TimeStampedModel):
     id = db.Column(db.Integer, primary_key=True)
     tag = db.Column(db.Unicode, nullable=False, index=True)
     source = db.Column(db.Unicode, nullable=True)
-
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow,
-                           onupdate=datetime.utcnow)
 
     def __repr__(self):
         return '<CrawlState(%r, %r)>' % (self.source, self.tag)

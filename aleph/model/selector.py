@@ -5,18 +5,15 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from normality import normalize
 
 from aleph.core import db
+from aleph.model.common import TimeStampedModel
 
 log = logging.getLogger(__name__)
 
 
-class Selector(db.Model):
+class Selector(db.Model, TimeStampedModel):
     id = db.Column(db.Integer, primary_key=True)
     _text = db.Column('text', db.Unicode, index=True)
     normalized = db.Column(db.Unicode, index=True)
-
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow,
-                           onupdate=datetime.utcnow)
 
     entity_id = db.Column(db.Unicode(50), db.ForeignKey('entity.id'))
     entity = db.relationship('Entity', backref=db.backref('selectors',
