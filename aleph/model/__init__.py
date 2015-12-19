@@ -6,3 +6,4 @@ from aleph.model.selector import Selector # noqa
 from aleph.model.entity import Entity # noqa
 from aleph.model.entity_tag import EntityTag # noqa
 from aleph.model.list import List # noqa
+from aleph.model.document import Document # noqa
