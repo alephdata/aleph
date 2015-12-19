@@ -1,11 +1,11 @@
 import logging
 from itertools import count
+
 from pyelasticsearch.exceptions import ElasticHttpNotFoundError
 from pyelasticsearch.exceptions import IndexAlreadyExistsError
 
 from aleph.core import es, es_index
 from aleph.search.mapping import DOC_MAPPING, DOC_TYPE
-from aleph.search.result_proxy import ESResultProxy
 from aleph.search.queries import document_query # noqa
 
 PAGE = 500
@@ -27,10 +27,6 @@ def delete_index():
         es.delete_index(es_index)
     except ElasticHttpNotFoundError:
         pass
-
-
-def search_documents(query):
-    return ESResultProxy(DOC_TYPE, query)
 
 
 def raw_iter(query, total=10000):

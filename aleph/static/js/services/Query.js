@@ -75,6 +75,11 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     }
   };
 
+  var toggleEntityFilter = function(id, list) {
+    toggleFilter('entity', id, true);
+    toggleFilter('list-' + list, id);
+  };
+
   var hasFilter = function(name, val) {
     return angular.isArray(query[name]) && query[name].indexOf(val) != -1;
   };
@@ -90,7 +95,8 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
         return queryString(query);
       },
       hasFilter: hasFilter,
-      toggleFilter: toggleFilter
+      toggleFilter: toggleFilter,
+      toggleEntityFilter: toggleEntityFilter
   };
 
 }]);

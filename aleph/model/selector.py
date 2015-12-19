@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 
 from sqlalchemy.ext.hybrid import hybrid_property
 from normality import normalize

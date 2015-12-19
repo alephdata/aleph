@@ -35,7 +35,7 @@ class Entity(db.Model, TimeStampedModel):
             'category': self.category,
             'creator_id': self.creator_id,
             'selectors': [s.text for s in self.selectors],
-            'list': self.list_id,
+            'list_id': self.list_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }

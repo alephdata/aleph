@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 
 from aleph.core import db
 from aleph.model.common import TimeStampedModel

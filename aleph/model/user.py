@@ -18,7 +18,6 @@ class User(db.Model, TimeStampedModel):
     email = db.Column(db.Unicode, nullable=True)
     display_name = db.Column(db.Unicode, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
-    active = db.Column(db.Boolean, nullable=False, default=True)
 
     twitter_id = db.Column(db.Unicode)
     facebook_id = db.Column(db.Unicode)
@@ -26,7 +25,7 @@ class User(db.Model, TimeStampedModel):
     api_key = db.Column(db.Unicode, default=make_token)
 
     def is_active(self):
-        return self.active
+        return True
 
     def is_authenticated(self):
         return True
@@ -77,8 +76,7 @@ class User(db.Model, TimeStampedModel):
 
     @classmethod
     def all(cls):
-        q = db.session.query(cls).filter_by(active=True)
-        return q
+        return db.session.query(cls)
 
     @classmethod
     def by_id(cls, id):
