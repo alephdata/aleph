@@ -55,7 +55,7 @@
               {% endraw %}
             </li>
             <li ng-show="session.logged_in" ng-cloak>
-              <a ng-click="editProfile()" ng-bind="session.user.display_name"></a>
+              <a ng-click="editProfile()" ng-bind="session.user.name"></a>
             </li>
             <li ng-show="session.logged_in" ng-cloak>
               <a href="{{url_for('sessions.logout')}}" target="_self">

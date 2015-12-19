@@ -61,8 +61,8 @@ def twitter_authorized(resp):
     provider = PROVIDERS.get('twitter')
     res = provider.get('users/show.json?user_id=%s' % resp.get('user_id'))
     data = {
-        'display_name': res.data.get('name'),
-        'twitter_id': res.data.get('id')
+        'name': res.data.get('name'),
+        'id': 'tw:%s' % res.data.get('id')
     }
     user = User.load(data)
     db.session.commit()
@@ -82,9 +82,9 @@ def facebook_authorized(resp):
     session['facebook_token'] = (resp.get('access_token'), '')
     profile = PROVIDERS.get('facebook').get('/me').data
     data = {
-        'display_name': profile.get('name'),
+        'name': profile.get('name'),
         'email': profile.get('email'),
-        'facebook_id': profile.get('id')
+        'id': 'fb:%s' % profile.get('id')
     }
     user = User.load(data)
     db.session.commit()

@@ -18,11 +18,11 @@ aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routePa
     if (suggestCreate) {
       $scope.newEntity = {
         'category': 'Person',
-        'label': $scope.query.prefix
+        'name': $scope.query.prefix
       };
     } else if (val) {
       setTimeout(function() {
-        $('#edit-label-' + val).focus();  
+        $('#edit-name-' + val).focus();  
       }, 20);
     }
   };
@@ -32,7 +32,7 @@ aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routePa
     angular.forEach(res.data.results, function(e) {
       var aliases = [];
       angular.forEach(e.selectors, function(s) {
-        if (s !== e.label) {
+        if (s !== e.name) {
           aliases.push(s);
         }
       });

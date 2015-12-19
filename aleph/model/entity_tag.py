@@ -30,17 +30,17 @@ class EntityTag(db.Model, TimeStampedModel):
     def by_package(cls, collection, package_id):
         etag = aliased(cls)
         ent = aliased(Entity)
-        q = db.session.query(etag.entity_id, ent.label,
+        q = db.session.query(etag.entity_id, ent.name,
                              ent.category, ent.list_id)
         q = q.join(ent, ent.id == etag.entity_id)
         q = q.filter(etag.collection == collection)
         q = q.filter(etag.package_id == package_id)
         entities = []
-        for entity_id, label, category, lst in q.all():
+        for entity_id, name, category, lst in q.all():
             entities.append({
                 'id': entity_id,
                 'entity': entity_id,
-                'label': label,
+                'name': name,
                 'category': category,
                 'list': lst
             })

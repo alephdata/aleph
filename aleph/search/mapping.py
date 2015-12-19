@@ -32,7 +32,7 @@ DOC_MAPPING = {
             "properties": {
                 "id": {"type": "string", "index": "not_analyzed"},
                 "entity": {"type": "string", "index": "not_analyzed"},
-                "label": {"type": "string", "index": "not_analyzed"},
+                "name": {"type": "string", "index": "not_analyzed"},
                 "category": {"type": "string", "index": "not_analyzed"},
                 "list": {"type": "integer", "index": "not_analyzed"}
             }

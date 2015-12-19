@@ -7,7 +7,7 @@ DEFAULT_FIELDS = ['title', 'name', 'extension', 'collection',
                   'summary']
 
 QUERY_FIELDS = ['title', 'source_url', 'summary', 'extension', 'mime_type',
-                'text', 'entities.label', 'attributes.value']
+                'text', 'entities.name', 'attributes.value']
 
 
 def add_filter(q, flt):

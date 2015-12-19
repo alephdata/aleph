@@ -35,12 +35,13 @@
         </div>
         <form class="form-horizontal" name="newEntityForm" ng-submit="create(newEntityForm)">
           <div class="form-group">
-            <label for="label" class="col-sm-2 control-label">Label</label>
+            <label for="name" class="col-sm-2 control-label">Name</label>
             <div class="col-sm-10">
-              <input type="label" class="form-control" id="edit-label-new"
-                 ng-model="newEntity.label"
+              <input type="name" class="form-control" id="edit-name-new"
+                 ng-model="newEntity.name"
                 placeholder="Name">
-              <p class="help-block" ng-show="newEntityForm.label.$invalid" ng-bind="newEntityForm.label.$message"></p>
+              <p class="help-block" ng-show="newEntityForm.name.$invalid"
+                ng-bind="newEntityForm.name.$message"></p>
             </div>
           </div>
           <div class="form-group">
@@ -98,7 +99,7 @@
         <entity-icon category="entity.category"></entity-icon>
       </td>
       <td width="30%">
-        {{ entity.label }}
+        {{ entity.name }}
       </td>
       <td>
         {{ entity.aliases }}
@@ -118,12 +119,12 @@
       <td colspan="4" ng-show="edit == entity.id">
         <form class="form-horizontal" name="editEntity" ng-submit="update(editEntity, entity)">
           <div class="form-group">
-            <label for="label" class="col-sm-2 control-label">Label</label>
+            <label for="name" class="col-sm-2 control-label">Name</label>
             <div class="col-sm-10">
-              <input type="label" class="form-control" id="edit-label-{{entity.id}}"
-                 ng-model="entity.label"
+              <input type="name" class="form-control" id="edit-name-{{entity.id}}"
+                 ng-model="entity.name"
                 placeholder="Name">
-              <p class="help-block" ng-show="editEntity.label.$invalid" ng-bind="editEntity.label.$message"></p>
+              <p class="help-block" ng-show="editEntity.name.$invalid" ng-bind="editEntity.name.$message"></p>
             </div>
           </div>
           <div class="form-group">

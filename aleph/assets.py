@@ -32,7 +32,6 @@ app_assets = Bundle(
     'js/controllers/SourcesIndexCtrl.js',
     'js/controllers/SourcesNewCtrl.js',
     'js/directives/alephPager.js',
-    'js/directives/doccloudConfig.js',
     'js/directives/entityIcon.js',
     'js/directives/listsFrame.js',
     'js/directives/searchFrame.js',

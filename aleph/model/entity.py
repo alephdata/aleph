@@ -2,6 +2,8 @@ import logging
 
 from sqlalchemy import or_
 from sqlalchemy.orm import aliased
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.dialects.postgresql import JSON
 
 from aleph.core import db, url_for
 from aleph.model.user import User
@@ -14,12 +16,13 @@ log = logging.getLogger(__name__)
 
 
 class Entity(db.Model, TimeStampedModel):
-    id = db.Column(db.Unicode(50), primary_key=True, default=make_textid)
-    label = db.Column(db.Unicode)
+    id = db.Column(db.Unicode(254), primary_key=True, default=make_textid)
+    name = db.Column(db.Unicode)
+
     category = db.Column(db.Enum(*CATEGORIES, name='entity_categories'),
                          nullable=False)
 
-    creator_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    creator_id = db.Column(db.Unicode(254), db.ForeignKey('user.id'))
     creator = db.relationship(User, backref=db.backref('entities',
                               lazy='dynamic', cascade='all, delete-orphan'))
 
@@ -27,11 +30,21 @@ class Entity(db.Model, TimeStampedModel):
     list = db.relationship('List', backref=db.backref('entities',
                            lazy='dynamic', cascade='all, delete-orphan'))
 
+    _data = db.Column('data', JSON)
+
+    @hybrid_property
+    def data(self):
+        return self._data
+
+    @data.setter
+    def data(self, data):
+        self._data = data
+
     def to_dict(self):
         return {
             'id': self.id,
+            'name': self.name,
             'api_url': url_for('entities.view', id=self.id),
-            'label': self.label,
             'category': self.category,
             'creator_id': self.creator_id,
             'selectors': [s.text for s in self.selectors],
@@ -60,12 +73,12 @@ class Entity(db.Model, TimeStampedModel):
 
     def update(self, data):
         data = EntityForm().deserialize(data)
-        self.label = data.get('label')
+        self.name = data.get('name')
         self.list = data.get('list')
         self.category = data.get('category')
 
         selectors = set(data.get('selectors'))
-        selectors.add(self.label)
+        selectors.add(self.name)
         existing = list(self.selectors)
         for sel in list(existing):
             if sel.text in selectors:
@@ -80,10 +93,10 @@ class Entity(db.Model, TimeStampedModel):
             db.session.add(sel)
 
     @classmethod
-    def by_normalized_label(cls, label, lst):
+    def by_normalized_name(cls, name, lst):
         q = db.session.query(cls)
         q = q.filter_by(list=lst)
-        q = q.filter(db_compare(cls.label, label))
+        q = q.filter(db_compare(cls.name, name))
         return q.first()
 
     @classmethod
@@ -98,7 +111,7 @@ class Entity(db.Model, TimeStampedModel):
         if prefix is not None and len(prefix):
             q = q.join(Selector, cls.id == Selector.entity_id)
             q = cls.apply_filter(q, Selector.normalized, prefix)
-        q = q.order_by(cls.label.asc())
+        q = q.order_by(cls.name.asc())
         return q
 
     @classmethod
@@ -124,21 +137,21 @@ class Entity(db.Model, TimeStampedModel):
         ent = aliased(Entity)
         sel = aliased(Selector)
         tag = aliased(EntityTag)
-        q = db.session.query(ent.id, ent.label, ent.category)
+        q = db.session.query(ent.id, ent.name, ent.category)
         q = q.join(sel, ent.id == sel.entity_id)
         q = q.join(tag, ent.id == tag.entity_id)
         q = q.filter(ent.list_id.in_(lists))
         if prefix is None or not len(prefix):
             return []
         q = cls.apply_filter(q, sel.normalized, prefix)
-        q = q.order_by(ent.label.asc())
+        q = q.order_by(ent.name.asc())
         q = q.limit(limit)
         q = q.distinct()
         suggestions = []
-        for entity_id, label, category in q.all():
+        for entity_id, name, category in q.all():
             suggestions.append({
                 'id': entity_id,
-                'label': label,
+                'name': name,
                 'category': category
             })
         return suggestions
@@ -148,7 +161,7 @@ class Entity(db.Model, TimeStampedModel):
         return set([s.normalized for s in self.selectors])
 
     def __repr__(self):
-        return '<Entity(%r, %r)>' % (self.id, self.label)
+        return '<Entity(%r, %r)>' % (self.id, self.name)
 
     def __unicode__(self):
-        return self.label
+        return self.name

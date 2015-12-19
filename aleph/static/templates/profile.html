@@ -1,14 +1,14 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
-  <h4 class="modal-title">Profile: {{session.user.display_name}}</h4>
+  <h4 class="modal-title">Profile</h4>
 </div>
 
 <form class="form-horizontal" role="form" name="editUser" ng-submit="update(editUser)">
   <div class="modal-body">
-    <div class="form-group" ng-class="{'has-error': editUser.display_name.$invalid}">
-      <label class="col-sm-2 control-label" for="display_name">Name</label>
+    <div class="form-group" ng-class="{'has-error': editUser.name.$invalid}">
+      <label class="col-sm-2 control-label" for="name">Name</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" id="display_name" name="display_name" ng-model="user.display_name"
+        <input type="text" class="form-control" id="name" name="name" ng-model="user.name"
           placeholder="Your full name">
         <p class="help-block" ng-show="editUser.full_name.$invalid" ng-bind="editUser.full_name.$message"></p>
       </div>

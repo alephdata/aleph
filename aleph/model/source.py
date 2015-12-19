@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 source_user_table = db.Table('source_user', db.metadata,
     db.Column('source_slug', db.Unicode, db.ForeignKey('source.slug')), # noqa
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id')) # noqa
+    db.Column('user_id', db.Unicode(254), db.ForeignKey('user.id')) # noqa
 )
 
 
@@ -53,7 +53,6 @@ class Source(db.Model, TimeStampedModel):
             'label': self.label,
             'public': self.public,
             'crawler': self.crawler,
-            # 'config': self.config,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
