@@ -154,6 +154,9 @@ class Metadata(MutableMapping):
     def __iter__(self):
         return self.data.keys()
 
+    def __repr__(self):
+        return '<Metadata(%r,%r)>' % (self.file_name, self.content_hash)
+
     def __len__(self):
         return len(self.data)
 

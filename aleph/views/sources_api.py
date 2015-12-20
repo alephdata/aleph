@@ -18,7 +18,7 @@ def index():
     latest = set()
     for source in Source.all(ids=authz.sources(authz.READ)):
         data = source.to_dict()
-        data['can_write'] = authz.source_write(source.slug)
+        data['can_write'] = authz.source_write(source.id)
         latest.add(data['updated_at'])
         sources.append(data)
     if len(latest):
@@ -49,7 +49,7 @@ def view(id):
 @blueprint.route('/api/1/sources/<id>/process', methods=['POST', 'PUT'])
 def process(id):
     authz.require(authz.source_write(id))
-    source = obj_or_404(Source.by_slug(id))
+    source = obj_or_404(Source.by_id(id))
     process_collection.delay(source.id)
     return jsonify({'status': 'ok'})
 
@@ -57,7 +57,7 @@ def process(id):
 @blueprint.route('/api/1/sources/<id>', methods=['POST', 'PUT'])
 def update(id):
     authz.require(authz.source_write(id))
-    source = obj_or_404(Source.by_slug(id))
+    source = obj_or_404(Source.by_id(id))
     source.update(request_data(), current_user)
     db.session.add(source)
     db.session.commit()

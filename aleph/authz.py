@@ -39,20 +39,20 @@ def lists(action):
     return list(request._authz_lists.get(action, []))
 
 
-def source_read(name):
-    return name in sources(READ)
+def source_read(id):
+    return int(id) in sources(READ)
 
 
-def source_write(name):
-    return name in sources(WRITE)
+def source_write(id):
+    return int(id) in sources(WRITE)
 
 
 def list_read(id):
-    return id in lists(READ)
+    return int(id) in lists(READ)
 
 
 def list_write(id):
-    return id in lists(WRITE)
+    return int(id) in lists(WRITE)
 
 
 def logged_in():

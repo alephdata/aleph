@@ -1,5 +1,4 @@
 import colander
-from normality import slugify
 from colander import Invalid # noqa
 
 PERSON = 'Person'
@@ -67,18 +66,8 @@ class SourceEditForm(colander.MappingSchema):
     users = SourceUsers()
 
 
-def source_key_available(value):
-    from aleph.model.source import Source
-    existing = Source.by_key(value)
-    return existing is None
-
-
 class SourceCreateForm(colander.MappingSchema):
-    key = colander.SchemaNode(colander.String(),
-        preparer=slugify,
-        validator=colander.All(
-            colander.Function(source_key_available, 'Invalid slug'),
-            colander.Length(min=3, max=100))) # noqa
+    key = colander.SchemaNode(colander.String(), missing=None)
     label = colander.SchemaNode(colander.String())
     users = SourceUsers(missing=[])
 

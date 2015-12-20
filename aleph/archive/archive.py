@@ -19,6 +19,7 @@ class Archive(object):
 
     def _update_metadata(self, filename, meta):
         meta.content_hash = checksum(filename)
+        return meta
 
     def archive_file(self, filename, meta, move=False):
         """ Import the given file into the archive, and return an

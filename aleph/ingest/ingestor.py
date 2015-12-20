@@ -13,4 +13,4 @@ class Ingestor(object):
 
     @classmethod
     def dispatch(cls, meta):
-        pass
+        print "FUUUUUU", meta.to_dict()

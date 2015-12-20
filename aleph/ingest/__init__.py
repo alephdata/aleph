@@ -53,9 +53,11 @@ def ingest_file(meta, file_name, move=False):
     meta = meta_object(meta)
     if not os.path.isfile(file_name):
         raise ValueError("No such file: %r", file_name)
+    if not meta.title:
+        meta.title = os.path.basename(file_name)
+    if not meta.source_path:
+        meta.source_path = file_name
     meta = archive.archive_file(file_name, meta, move=move)
-    if not meta.source_url:
-        meta.file_name = os.path.basename(file_name)
     ingest(meta)
 
 

@@ -1,23 +1,45 @@
+import os
+import logging
+
+from normality import slugify
 from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 from flask.ext.migrate import MigrateCommand
 
-from aleph.model import db
+from aleph.model import db, Source
 from aleph.views import app, assets
 from aleph.processing import process_collection
-from aleph.crawlers import crawl_source
+from aleph.crawlers.directory import DirectoryCrawler
 from aleph.upgrade import upgrade as upgrade_, reset as reset_
 
 
+log = logging.getLogger('aleph')
 manager = Manager(app)
 manager.add_command('assets', ManageAssets(assets))
 manager.add_command('db', MigrateCommand)
 
 
 @manager.command
-def crawl(source, force=False):
-    """ Execute the crawler for a given source specification. """
-    crawl_source(source, ignore_tags=force)
+def sources():
+    """ List all sources. """
+    for source in db.session.query(Source):
+        print source.id, source.key, source.label
+
+
+@manager.command
+def crawldir(directory, source=None, force=False):
+    """ Crawl the given directory. """
+    directory = os.path.abspath(directory)
+    directory = os.path.normpath(directory)
+    source = source or directory
+    source = Source.create({
+        'key': 'directory:%s' % slugify(source),
+        'label': source
+    })
+    log.info('Crawling %r, to %r', directory, source)
+    crawler = DirectoryCrawler(source)
+    crawler.crawl(directory=directory)
+    db.session.commit()
 
 
 @manager.command

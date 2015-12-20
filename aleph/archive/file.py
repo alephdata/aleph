@@ -20,6 +20,10 @@ class FileArchive(Archive):
         file will not exist afterwards. """
         meta = self._update_metadata(filename, meta)
         path = self._get_local_path(meta)
+        if os.path.isfile(path):
+            if move:  # really?
+                os.unlink(filename)
+            return meta
         try:
             os.makedirs(os.path.dirname(path))
         except:

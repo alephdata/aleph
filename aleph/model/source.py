@@ -1,7 +1,5 @@
 import logging
 
-from sqlalchemy import or_
-
 from aleph.core import db, url_for
 from aleph.model.common import TimeStampedModel, make_token
 from aleph.model.user import User
@@ -18,8 +16,7 @@ source_user_table = db.Table('source_user', db.metadata,
 
 class Source(db.Model, TimeStampedModel):
     id = db.Column(db.Integer, primary_key=True)
-    key = db.Column(db.Unicode, unique=True, default=make_token,
-                    nullable=False)
+    key = db.Column(db.Unicode, unique=True, nullable=False)
     label = db.Column(db.Unicode, nullable=True)
     public = db.Column(db.Boolean, default=True)
 
@@ -60,7 +57,7 @@ class Source(db.Model, TimeStampedModel):
         return db.session.query(cls).filter_by(id=id).first()
 
     @classmethod
-    def by_key(cls, key, commit_on_create=True):
+    def by_key(cls, key):
         return db.session.query(cls).filter_by(key=key).first()
 
     @classmethod
@@ -72,14 +69,18 @@ class Source(db.Model, TimeStampedModel):
 
     @classmethod
     def create(cls, data, user=None):
+        if data.get('key') is not None:
+            src = Source.by_key(data.get('key'))
+            if src is not None:
+                return src
         src = cls()
         data = SourceCreateForm().deserialize(data)
-        src.key = data.get('key')
+        src.key = data.get('key', make_token())
         src.update_data(data, user)
         db.session.add(src)
         return src
 
     @classmethod
-    def delete_by_slug(cls, slug):
-        q = db.session.query(cls).filter_by(slug=slug)
+    def delete(cls, id):
+        q = db.session.query(cls).filter_by(id=id)
         q.delete()
