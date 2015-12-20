@@ -3,7 +3,7 @@ from flask.ext.login import current_user
 from apikit import obj_or_404, jsonify, Pager, request_data
 
 from aleph.views.cache import etag_cache_keygen
-from aleph.processing import refresh_selectors
+# from aleph.analyze import analyze_matches
 from aleph.model import List, db
 from aleph import authz
 
@@ -61,8 +61,8 @@ def update(id):
 def delete(id):
     authz.require(authz.list_write(id))
     lst = obj_or_404(List.by_id(id))
-    selectors = lst.terms
+    # selectors = lst.terms
     lst.delete()
     db.session.commit()
-    refresh_selectors.delay(list(selectors))
+    # refresh_selectors.delay(list(selectors))
     return jsonify({'status': 'ok'})

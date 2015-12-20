@@ -8,7 +8,7 @@ from flask.ext.migrate import MigrateCommand
 
 from aleph.model import db, Source
 from aleph.views import app, assets
-from aleph.processing import process_collection
+from aleph.analyze import analyze_source
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.upgrade import upgrade as upgrade_, reset as reset_
 
@@ -49,9 +49,12 @@ def flush(source):
 
 
 @manager.command
-def process(source_key, force=False):
+def analyze(source_key, force=False):
     """ Index all documents in the given source. """
-    process_collection.delay(source_key, overwrite=force)
+    source = Source.by_key(source_key)
+    if source is None:
+        raise ValueError("No such source: %r" % source_key)
+    analyze_source.delay(source.id)
 
 
 @manager.command

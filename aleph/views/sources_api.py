@@ -3,7 +3,7 @@ from flask.ext.login import current_user
 from apikit import obj_or_404, request_data, jsonify
 
 from aleph.views.cache import etag_cache_keygen
-from aleph.processing import process_collection
+from aleph.analyze import analyze_source
 from aleph.model import Source
 from aleph.core import db
 from aleph import authz
@@ -50,7 +50,7 @@ def view(id):
 def process(id):
     authz.require(authz.source_write(id))
     source = obj_or_404(Source.by_id(id))
-    process_collection.delay(source.id)
+    analyze_source.delay(source.id)
     return jsonify({'status': 'ok'})
 
 
