@@ -49,7 +49,6 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     controller: 'SourcesNewCtrl',
     loginRequired: true,
     resolve: {
-      'crawlers': loadCrawlers
     }
   });
 
@@ -58,7 +57,6 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     controller: 'SourcesEditCtrl',
     loginRequired: true,
     resolve: {
-      'crawlers': loadCrawlers,
       'users': loadUsers,
       'source': loadSource
     }

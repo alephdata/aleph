@@ -40,8 +40,8 @@ def load_user_from_request(request):
 
 @app.before_request
 def before():
-    request.authz_sources = {}
-    request.authz_lists = {}
+    request._authz_sources = {}
+    request._authz_lists = {}
 
 
 @app.errorhandler(Invalid)

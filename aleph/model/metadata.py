@@ -8,7 +8,7 @@ from urlparse import urlparse
 from normality import slugify
 from collections import MutableMapping, Mapping
 
-from aleph.model.common import make_filename
+from aleph.util import make_filename
 
 
 class Metadata(MutableMapping):

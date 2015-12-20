@@ -53,8 +53,8 @@ def generate_graph(args):
     fields = ['id', 'collection', 'entities.id', 'entities.label',
               'entities.category']
     query = document_query(args, fields=fields,
-                           sources=authz.authz_sources('read'),
-                           lists=authz.authz_lists('read'),
+                           sources=authz.sources(authz.READ),
+                           lists=authz.lists(authz.READ),
                            facets=False)
     graph = nx.MultiGraph()
     for doc in raw_iter(query):

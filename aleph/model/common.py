@@ -1,9 +1,7 @@
-import os
 import uuid
 import string
 from datetime import datetime
 
-from normality import slugify
 from sqlalchemy import func
 
 from aleph.core import db
@@ -36,26 +34,6 @@ def make_token():
 
 def make_textid():
     return uuid.uuid4().hex
-
-
-def make_filename(source, sep='-'):
-    if source is not None:
-        source = os.path.basename(source)
-        slugs = [slugify(s, sep=sep) for s in source.split('.')]
-        source = '.'.join(slugs)
-        source = source.strip('.').strip(sep)
-    return source
-
-
-# def fullpath(filename):
-#     """ Perform normalization of the source file name. """
-#     if filename is None:
-#         return
-#     # a happy tour through stdlib
-#     filename = os.path.expanduser(filename)
-#     filename = os.path.expandvars(filename)
-#     filename = os.path.normpath(filename)
-#     return os.path.abspath(filename)
 
 
 class TimeStampedModel(object):

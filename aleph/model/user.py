@@ -14,7 +14,8 @@ def load_user(id):
 
 
 class User(db.Model, TimeStampedModel):
-    id = db.Column(db.Unicode(254), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    oauth = db.Column(db.Unicode(254))
     email = db.Column(db.Unicode, nullable=True)
     name = db.Column(db.Unicode, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
@@ -53,10 +54,10 @@ class User(db.Model, TimeStampedModel):
 
     @classmethod
     def load(cls, data):
-        user = cls.by_id(data.get('id'))
+        user = cls.by_oauth(data.get('oauth'))
         if user is None:
             user = cls()
-            user.id = data.get('id')
+            user.oauth = data.get('oauth')
 
         if not user.name:
             user.name = data.get('name')
@@ -72,6 +73,11 @@ class User(db.Model, TimeStampedModel):
     @classmethod
     def by_id(cls, id):
         q = db.session.query(cls).filter_by(id=int(id))
+        return q.first()
+
+    @classmethod
+    def by_oauth(cls, oauth):
+        q = db.session.query(cls).filter_by(oauth=oauth)
         return q.first()
 
     @classmethod

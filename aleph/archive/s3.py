@@ -11,4 +11,3 @@ class S3Archive(Archive):
         self.aws_key_id = config.get('ARCHIVE_AWS_KEY_ID', aws_key_id)
         self.aws_key_id = config.get('ARCHIVE_AWS_SECRET', aws_secret)
         self.bucket_name = config.get('ARCHIVE_BUCKET')
-

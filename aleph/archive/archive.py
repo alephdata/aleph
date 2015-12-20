@@ -1,5 +1,5 @@
 import os
-from aleph.archive.util import checksum
+from aleph.util import checksum
 
 
 class Archive(object):

@@ -71,8 +71,8 @@ def process_row(row, attributes):
 @blueprint.route('/api/1/query/export')
 def export():
     attributes = request.args.getlist('attribute')
-    query = document_query(request.args, lists=authz.authz_lists('read'),
-                           sources=authz.authz_sources('read'))
+    query = document_query(request.args, lists=authz.lists(authz.READ),
+                           sources=authz.sources(authz.READ))
     query['_source'] = set(query['_source'])
     for attribute in attributes:
         if attribute in CORE_FIELDS:

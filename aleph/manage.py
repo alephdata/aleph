@@ -2,10 +2,9 @@ from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 from flask.ext.migrate import MigrateCommand
 
-from aleph.core import archive
-from aleph.model import db, CrawlState
+from aleph.model import db
 from aleph.views import app, assets
-from aleph.processing import make_pipeline, process_collection
+from aleph.processing import process_collection
 from aleph.crawlers import crawl_source
 from aleph.upgrade import upgrade as upgrade_, reset as reset_
 
@@ -24,22 +23,13 @@ def crawl(source, force=False):
 @manager.command
 def flush(source):
     """ Reset the crawler state for a given source specification. """
-    CrawlState.flush(source)
     db.session.commit()
 
 
 @manager.command
-def process(collection_name, force=False):
-    """ Index all documents in the given collection. """
-    process_collection.delay(collection_name, overwrite=force)
-
-
-@manager.command
-def fixture(name):
-    """ Load a list fixture. """
-    # TODO: replace this whole thing with something more frameworky
-    from aleph.processing.fixtures import load_fixture
-    load_fixture(name)
+def process(source_key, force=False):
+    """ Index all documents in the given source. """
+    process_collection.delay(source_key, overwrite=force)
 
 
 @manager.command
@@ -52,6 +42,12 @@ def reset():
 def upgrade():
     """ Create or upgrade the search index and database. """
     upgrade_()
+
+
+@manager.command
+def createdb():
+    db.drop_all()
+    db.create_all()
 
 
 def main():

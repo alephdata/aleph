@@ -1,4 +1,7 @@
+import os
 from hashlib import sha256
+
+from normality import slugify
 
 
 def checksum(filename):
@@ -11,3 +14,12 @@ def checksum(filename):
                 break
             hash.update(block)
     return hash.hexdigest()
+
+
+def make_filename(source, sep='-'):
+    if source is not None:
+        source = os.path.basename(source)
+        slugs = [slugify(s, sep=sep) for s in source.split('.')]
+        source = '.'.join(slugs)
+        source = source.strip('.').strip(sep)
+    return source

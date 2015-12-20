@@ -21,7 +21,7 @@ class Entity(db.Model, TimeStampedModel):
     category = db.Column(db.Enum(*CATEGORIES, name='entity_categories'),
                          nullable=False)
 
-    creator_id = db.Column(db.Unicode(254), db.ForeignKey('user.id'))
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     creator = db.relationship(User, backref=db.backref('entities',
                               lazy='dynamic', cascade='all, delete-orphan'))
 

@@ -2,45 +2,65 @@ from flask import request
 from flask.ext.login import current_user
 from werkzeug.exceptions import Forbidden
 
-from aleph.model import Source, List
+from aleph.core import db
+from aleph.model import Source, List, User
+
+READ = 'read'
+WRITE = 'write'
 
 
-def authz_sources(action):
-    if action == 'read' and request.authz_sources.get('read') is None:
-        request.authz_sources['read'] = Source.list_user_slugs(current_user)
-    if action == 'write' and request.authz_sources.get('write') is None:
-        request.authz_sources['write'] = Source.list_user_slugs(current_user,
-            include_public=False) # noqa
-    return request.authz_sources[action] or []
+def sources(action):
+    request._authz_sources = {READ: set(), WRITE: set()}
+    q = db.session.query(Source.id).filter_by(public=True)
+    for source_id, in q.all():
+        request._authz_sources[READ].add(source_id)
+    if logged_in():
+        q = db.session.query(Source.id)
+        if not is_admin():
+            q = q.filter(Source.users.any(User.id == current_user.id))
+        for source_id, in q.all():
+            request._authz_sources[READ].add(source_id)
+            request._authz_sources[WRITE].add(source_id)
+    return list(request._authz_sources.get(action, []))
 
 
-def authz_lists(action):
-    if action == 'read' and request.authz_lists.get('read') is None:
-        request.authz_lists['read'] = List.user_list_ids(current_user)
-    if action == 'write' and request.authz_lists.get('write') is None:
-        request.authz_lists['write'] = List.user_list_ids(current_user,
-            include_public=False) # noqa
-    return request.authz_lists[action] or []
+def lists(action):
+    request._authz_lists = {READ: set(), WRITE: set()}
+    q = db.session.query(List.id).filter_by(public=True)
+    for list_id, in q.all():
+        request._authz_lists[READ].add(list_id)
+    if logged_in():
+        q = db.session.query(List.id)
+        if not is_admin():
+            q = q.filter(List.users.any(User.id == current_user.id))
+        for list_id, in q.all():
+            request._authz_lists[READ].add(list_id)
+            request._authz_lists[WRITE].add(list_id)
+    return list(request._authz_lists.get(action, []))
 
 
 def source_read(name):
-    return name in authz_sources('read')
+    return name in sources(READ)
 
 
 def source_write(name):
-    return name in authz_sources('write')
+    return name in sources(WRITE)
 
 
 def list_read(id):
-    return id in authz_lists('read')
+    return id in lists(READ)
 
 
 def list_write(id):
-    return id in authz_lists('write')
+    return id in lists(WRITE)
 
 
 def logged_in():
     return current_user.is_authenticated()
+
+
+def is_admin():
+    return logged_in() and current_user.is_admin
 
 
 def require(pred):

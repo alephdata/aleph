@@ -8,9 +8,8 @@ APP_TITLE = 'aleph.grano.local'
 APP_NAME = 'aleph'
 
 ARCHIVE_TYPE = 'file'
-ARCHIVE_CONFIG = {'path': '/Users/fl/Data/docsift-archive'}
 
-SECRET_KEY = env.get('SECRET_KEY', 'banana umbrella')
+SECRET_KEY = env.get('SECRET_KEY')
 
 SQLALCHEMY_DATABASE_URI = env.get('DATABASE_URL', 'sqlite:///aleph.sqlite3')
 ELASTICSEARCH_URL = env.get('BONSAI_URL', 'http://localhost:9200')
@@ -31,6 +30,3 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_BROKER_URL = env.get('RABBITMQ_BIGWIG_URL',
                             'amqp://guest:guest@localhost:5672//')
 CELERY_IMPORTS = ('aleph.processing')
-
-SOURCES = {
-}

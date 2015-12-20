@@ -57,8 +57,9 @@ def transform_facets(aggregations):
 @blueprint.route('/api/1/query')
 def query():
     etag_cache_keygen()
-    query = document_query(request.args, lists=authz.authz_lists('read'),
-                           sources=authz.authz_sources('read'))
+    query = document_query(request.args,
+                           lists=authz.lists(authz.READ),
+                           sources=authz.sources(authz.READ))
     query['size'] = get_limit()
     query['from'] = get_offset()
     if query['from'] > 0 and 'aggregations' in query:
@@ -96,6 +97,6 @@ def query():
 def attributes():
     etag_cache_keygen()
     attributes = available_attributes(request.args,
-        sources=authz.authz_sources('read'), # noqa
-        lists=authz.authz_lists('read')) # noqa
+        sources=authz.sources(authz.READ), # noqa
+        lists=authz.lists(authz.READ)) # noqa
     return jsonify(attributes)

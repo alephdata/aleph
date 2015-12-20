@@ -21,7 +21,7 @@ class List(db.Model, TimeStampedModel):
     label = db.Column(db.Unicode)
     public = db.Column(db.Boolean, default=False)
 
-    creator_id = db.Column(db.Unicode(254), db.ForeignKey('user.id'),
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'),
                            nullable=True)
     creator = db.relationship(User)
 

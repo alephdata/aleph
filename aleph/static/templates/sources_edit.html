@@ -15,14 +15,6 @@
         </div>
 
         <div class="form-group">
-          <label class="col-sm-3 control-label" for="crawler">Crawler</label>
-          <div class="col-sm-9">
-            <select class="form-control" id="crawler" name="crawler" ng-model="source.crawler" ng-options="c.name as c.label for c in crawlers.results" 
-            readonly></select>
-          </div>
-        </div>
-
-        <div class="form-group">
           <div class="col-sm-offset-3 col-sm-9">
             <div class="checkbox">
               <label>
@@ -36,10 +28,8 @@
           <div class="col-sm-offset-3 col-sm-9">
             <button type="submit" class="btn btn-primary"
               ng-disabled="!canSave()">Save</button>
-            <button class="btn btn-default" ng-click="crawl()"
-              ng-disabled="crawlTriggered">Begin crawling</button>
             <button class="btn btn-default" ng-click="process()"
-              ng-disabled="processTriggered">Re-index</button>
+              ng-disabled="processTriggered">Re-process</button>
           </div>
         </div>
       </div>

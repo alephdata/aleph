@@ -16,10 +16,10 @@
 <div class="row">
   <div class="col-md-3">
     <ul class="nav nav-pills nav-stacked">
-      <li ng-repeat="(slug, src) in sources"
-          ng-class="{'active': src.slug == source.slug,
+      <li ng-repeat="(id, src) in sources"
+          ng-class="{'active': src.id == source.id,
                      'disabled': !src.can_write}">
-        <a ng-href="/#/sources/{{src.slug}}" ng-show="src.can_write">
+        <a ng-href="/#/sources/{{src.id}}" ng-show="src.can_write">
           {{src.label}}
         </a>
         <a ng-hide="src.can_write">

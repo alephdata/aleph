@@ -61,44 +61,26 @@ class SourceUsers(colander.SequenceSchema):
     user = colander.SchemaNode(UserRef())
 
 
-class SourceCrawlers(colander.OneOf):
-
-    @property
-    def choices(self):
-        from aleph.crawlers import get_crawlers
-        return get_crawlers().keys()
-
-    @choices.setter
-    def choices(self, value):
-        pass
-
-
 class SourceEditForm(colander.MappingSchema):
     label = colander.SchemaNode(colander.String())
     public = colander.SchemaNode(colander.Boolean())
-    # crawler = colander.SchemaNode(colander.String(),
-    #                               validator=SourceCrawlers([]))
     users = SourceUsers()
-    config = colander.SchemaNode(colander.Mapping(unknown='preserve'))
 
 
-def source_slug_available(value):
+def source_key_available(value):
     from aleph.model.source import Source
-    existing = Source.by_slug(value)
+    existing = Source.by_key(value)
     return existing is None
 
 
 class SourceCreateForm(colander.MappingSchema):
-    slug = colander.SchemaNode(colander.String(),
+    key = colander.SchemaNode(colander.String(),
         preparer=slugify,
         validator=colander.All(
-            colander.Function(source_slug_available, 'Invalid slug'),
+            colander.Function(source_key_available, 'Invalid slug'),
             colander.Length(min=3, max=100))) # noqa
     label = colander.SchemaNode(colander.String())
-    crawler = colander.SchemaNode(colander.String(),
-                                  validator=SourceCrawlers([]))
     users = SourceUsers(missing=[])
-    config = colander.SchemaNode(colander.Mapping(unknown='preserve'))
 
 
 class ListUsers(colander.SequenceSchema):
@@ -111,13 +93,8 @@ class ListForm(colander.MappingSchema):
     users = ListUsers()
 
 
-class EntitySelectors(colander.SequenceSchema):
-    selector = colander.SchemaNode(colander.String())
-
-
 class EntityForm(colander.MappingSchema):
     name = colander.SchemaNode(colander.String())
     category = colander.SchemaNode(colander.String(),
                                    validator=colander.OneOf(CATEGORIES))
-    selectors = EntitySelectors()
     list = colander.SchemaNode(ListRef())
