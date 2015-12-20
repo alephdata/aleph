@@ -22,11 +22,11 @@ setup(
     zip_safe=False,
     install_requires=[],
     entry_points={
-        'loadkit.operators': [
-            'aleph_indexer = aleph.processing.indexer:IndexerOperator',
-            'aleph_tagger = aleph.processing.tagger:TaggerOperator'
+        'aleph.ingestors': [
+            'plain = aleph.ingest.text:PlainTextIngestor'
         ],
-        'aleph.crawlers': [],
+        'aleph.crawlers': [
+        ],
         'console_scripts': [
             'aleph = aleph.manage:main',
         ]

@@ -30,5 +30,5 @@ class Archive(object):
     def load_file(self, meta):
         pass
 
-    def cleanup_file(self, meta, filename):
+    def cleanup_file(self, meta):
         pass

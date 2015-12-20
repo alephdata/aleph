@@ -20,11 +20,11 @@ class Crawler(object):
         })
 
     def emit_url(self, meta, url):
-        ingest_url.delay(meta, url)
+        ingest_url.delay(self.source.id, meta, url)
 
     def emit_file(self, meta, file_path):
         # TODO: handle source
-        ingest_file(meta, file_path)
+        ingest_file(self.source.id, meta, file_path)
 
     def __repr__(self):
         return '<%s()>' % self.__class__.__name__

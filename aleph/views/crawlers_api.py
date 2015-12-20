@@ -2,7 +2,7 @@ from flask import Blueprint
 from apikit import jsonify
 
 from aleph.views.cache import etag_cache_keygen
-from aleph.crawlers import get_crawlers
+from aleph.ext import get_crawlers
 
 
 blueprint = Blueprint('crawlers', __name__)

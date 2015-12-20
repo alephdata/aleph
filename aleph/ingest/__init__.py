@@ -28,7 +28,7 @@ def meta_object(meta):
 
 
 @celery.task()
-def ingest_url(meta, url):
+def ingest_url(source_id, meta, url):
     meta = meta_object(meta)
     fh, temp = mkstemp(suffix=slugify(url))
     os.close(fh)
@@ -41,7 +41,7 @@ def ingest_url(meta, url):
                     fh.write(chunk)
         meta.source_url = res.url
         meta.headers = res.headers
-        ingest_file(meta, temp, move=True)
+        ingest_file(source_id, meta, temp, move=True)
     except Exception as ex:
         log.exception(ex)
     finally:
@@ -49,7 +49,7 @@ def ingest_url(meta, url):
             os.unlink(temp)
 
 
-def ingest_file(meta, file_name, move=False):
+def ingest_file(source_id, meta, file_name, move=False):
     meta = meta_object(meta)
     if not os.path.isfile(file_name):
         raise ValueError("No such file: %r", file_name)
@@ -58,13 +58,13 @@ def ingest_file(meta, file_name, move=False):
     if not meta.source_path:
         meta.source_path = file_name
     meta = archive.archive_file(file_name, meta, move=move)
-    ingest.delay(meta)
+    ingest.delay(source_id, meta)
 
 
 @celery.task()
-def ingest(meta):
+def ingest(source_id, meta):
     meta = meta_object(meta)
     try:
-        Ingestor.dispatch(meta)
+        Ingestor.dispatch(source_id, meta)
     except Exception as ex:
         log.exception(ex)

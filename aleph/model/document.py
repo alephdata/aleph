@@ -11,9 +11,17 @@ log = logging.getLogger(__name__)
 
 
 class Document(db.Model, TimeStampedModel):
+    TYPE_TEXT = 'text'
+    TYPE_TABULAR = 'tabular'
+    TYPE_OTHER = 'other'
+
     id = db.Column(db.BigInteger, primary_key=True)
-    crawler_tag = db.Column(db.Unicode(65), nullable=False, index=True)
+    # crawler_tag = db.Column(db.Unicode(65), nullable=False, index=True)
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
+    type = db.Column(db.Unicode(10), nullable=False, index=True)
+    source_id = db.Column(db.Integer(), db.ForeignKey('source.id'))
+    source = db.relationship('Source', backref=db.backref('documents',
+                                                          lazy='dynamic'))
     _meta = db.Column('meta', JSON)
 
     @hybrid_property
@@ -32,10 +40,10 @@ class Document(db.Model, TimeStampedModel):
             meta = meta.data
         self._meta = meta
 
-    @classmethod
-    def check_crawler_tag(cls, crawler_tag):
-        q = db.session.query(cls).filter_by(crawler_tag=crawler_tag)
-        return q.count() > 0
+    # @classmethod
+    # def check_crawler_tag(cls, crawler_tag):
+    #     q = db.session.query(cls).filter_by(crawler_tag=crawler_tag)
+    #     return q.count() > 0
 
     def __repr__(self):
         return '<Document(%r)>' % (self.id)
@@ -47,6 +55,8 @@ class Document(db.Model, TimeStampedModel):
         data = self.meta.to_dict()
         data.update({
             'id': self.id,
+            'type': self.type,
+            'source_id': self.source_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         })
