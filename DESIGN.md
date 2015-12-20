@@ -1,6 +1,11 @@
 Iteration II
 ============
 
+aleph/crawler
+aleph/ingest
+aleph/extract
+aleph/fs
+
 * Document / Record - distinction, raw data support
 * Use database to store documents and records
 * Inline S3/FS support

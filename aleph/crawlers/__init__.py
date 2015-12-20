@@ -1,6 +1,17 @@
+from pkg_resources import iter_entry_points
+
 from aleph.model import Source
 from aleph.core import celery
-from aleph.crawlers.crawler import get_crawlers, Crawler, TagExists # noqa
+from aleph.crawlers.crawler import Crawler # noqa
+
+CRAWLERS = {}
+
+
+def get_crawlers():
+    if not CRAWLERS:
+        for ep in iter_entry_points('aleph.crawlers'):
+            CRAWLERS[ep.name] = ep.load()
+    return CRAWLERS
 
 
 @celery.task()

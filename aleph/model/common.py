@@ -38,14 +38,12 @@ def make_textid():
     return uuid.uuid4().hex
 
 
-def make_filename(source):
-    if source is not None and len(source):
+def make_filename(source, sep='-'):
+    if source is not None:
         source = os.path.basename(source)
-        source, ext = os.path.splitext(source)
-        source = slugify(source)
-        ext = ext.lower().strip().replace('.', '')
-        if len(ext):
-            source = '%s.%s' % (source, ext)
+        slugs = [slugify(s, sep=sep) for s in source.split('.')]
+        source = '.'.join(slugs)
+        source = source.strip('.').strip(sep)
     return source
 
 

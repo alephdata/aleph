@@ -5,14 +5,13 @@ from sqlalchemy.dialects.postgresql import JSON
 
 from aleph.core import db
 from aleph.model.metadata import Metadata
-from aleph.model.common import make_textid
 from aleph.model.common import TimeStampedModel
 
 log = logging.getLogger(__name__)
 
 
 class Document(db.Model, TimeStampedModel):
-    id = db.Column(db.String(100), primary_key=True, default=make_textid)
+    id = db.Column(db.BigInteger, primary_key=True)
     crawler_tag = db.Column(db.Unicode(65), nullable=False, index=True)
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
     _meta = db.Column('meta', JSON)
@@ -32,6 +31,11 @@ class Document(db.Model, TimeStampedModel):
             self.content_hash = meta.content_hash
             meta = meta.data
         self._meta = meta
+
+    @classmethod
+    def check_crawler_tag(cls, crawler_tag):
+        q = db.session.query(cls).filter_by(crawler_tag=crawler_tag)
+        return q.count() > 0
 
     def __repr__(self):
         return '<Document(%r)>' % (self.id)
