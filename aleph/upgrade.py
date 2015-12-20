@@ -1,7 +1,7 @@
 import logging
 from flask.ext import migrate
 
-from aleph.search import init_search, delete_index
+from aleph.index import init_search, delete_index
 from aleph.model import db, Source
 
 

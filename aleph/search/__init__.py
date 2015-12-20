@@ -1,32 +1,13 @@
 import logging
 from itertools import count
 
-from pyelasticsearch.exceptions import ElasticHttpNotFoundError
-from pyelasticsearch.exceptions import IndexAlreadyExistsError
-
 from aleph.core import es, es_index
-from aleph.search.mapping import DOC_MAPPING, DOC_TYPE
+from aleph.search.mapping import DOC_TYPE
 from aleph.search.queries import document_query # noqa
 
-PAGE = 500
+PAGE = 1000
 
 log = logging.getLogger(__name__)
-
-
-def init_search():
-    log.info("Creating ElasticSearch index and uploading mapping...")
-    try:
-        es.create_index(es_index)
-    except IndexAlreadyExistsError:
-        pass
-    es.put_mapping(es_index, DOC_TYPE, {DOC_TYPE: DOC_MAPPING})
-
-
-def delete_index():
-    try:
-        es.delete_index(es_index)
-    except ElasticHttpNotFoundError:
-        pass
 
 
 def raw_iter(query, total=10000):

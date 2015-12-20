@@ -58,9 +58,10 @@ def ingest_file(meta, file_name, move=False):
     if not meta.source_path:
         meta.source_path = file_name
     meta = archive.archive_file(file_name, meta, move=move)
-    ingest(meta)
+    ingest.delay(meta)
 
 
+@celery.task()
 def ingest(meta):
     meta = meta_object(meta)
     try:
