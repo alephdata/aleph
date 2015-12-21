@@ -19,6 +19,14 @@ log = logging.getLogger(__name__)
 #   WordIngestor
 #   HTMLIngestor
 #   TableIngestor
+#
+# https://bugzilla.redhat.com/show_bug.cgi?id=191060#c1
+# https://github.com/deanmalmgren/textract/blob/master/textract/parsers/pptx_parser.py
+# https://github.com/chardet/chardet
+# http://poppler.freedesktop.org/
+# http://www.unixuser.org/~euske/python/pdfminer/index.html
+# https://mstamy2.github.io/PyPDF2/#documentation
+# http://pybrary.net/pyPdf/pythondoc-pyPdf.pdf.html
 
 
 def meta_object(meta):
@@ -53,9 +61,9 @@ def ingest_file(source_id, meta, file_name, move=False):
     meta = meta_object(meta)
     if not os.path.isfile(file_name):
         raise ValueError("No such file: %r", file_name)
-    if not meta.title:
+    if not meta.has('title'):
         meta.title = os.path.basename(file_name)
-    if not meta.source_path:
+    if not meta.has('source_path'):
         meta.source_path = file_name
     meta = archive.archive_file(file_name, meta, move=move)
     ingest.delay(source_id, meta)

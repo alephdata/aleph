@@ -23,7 +23,9 @@ setup(
     install_requires=[],
     entry_points={
         'aleph.ingestors': [
-            'plain = aleph.ingest.text:PlainTextIngestor'
+            'plain = aleph.ingest.text:PlainTextIngestor',
+            'html = aleph.ingest.text:HtmlIngestor',
+            'rar = aleph.ingest.packages:RARIngestor'
         ],
         'aleph.crawlers': [
         ],

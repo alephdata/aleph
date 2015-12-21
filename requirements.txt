@@ -22,3 +22,4 @@ unicodecsv
 networkx
 XlsxWriter>=0.6.6
 SQLAlchemy-Utils>=0.29.8
+rarfile

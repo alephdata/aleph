@@ -2,7 +2,7 @@ import logging
 
 from aleph.core import db, archive
 from aleph.ext import get_ingestors
-from aleph.model import Document, Page
+from aleph.model import Document
 from aleph.analyze import analyze_document
 
 log = logging.getLogger(__name__)
@@ -10,6 +10,9 @@ log = logging.getLogger(__name__)
 
 class Ingestor(object):
     DOCUMENT_TYPE = Document.TYPE_OTHER
+    MIME_TYPES = []
+    EXTENSIONS = []
+    BASE_SCORE = 5
 
     def __init__(self, source_id):
         self.source_id = source_id
@@ -40,7 +43,12 @@ class Ingestor(object):
 
     @classmethod
     def match(cls, meta, local_path):
-        return -1
+        score = -1
+        if meta.mime_type in cls.MIME_TYPES:
+            score += cls.BASE_SCORE
+        if meta.extension in cls.EXTENSIONS:
+            score += cls.BASE_SCORE
+        return score
 
     @classmethod
     def dispatch(cls, source_id, meta):
@@ -53,7 +61,9 @@ class Ingestor(object):
                     best_score = score
                     best_cls = cls
             if best_cls is None:
+                log.debug("No ingestor found for: %r", meta.file_name)
                 return
+            log.debug("Dispatching %r to %r", meta.file_name, best_cls)
             best_cls(source_id).ingest(meta, local_path)
         except Exception as ex:
             log.exception(ex)
