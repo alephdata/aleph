@@ -1,8 +1,12 @@
 import os
+import logging
 from lxml import html
 
 from aleph.model import db, Page, Document
 from aleph.ingest.ingestor import Ingestor
+from aleph.ingest.ocr import extract_pdf, document_to_pdf, extract_image
+
+log = logging.getLogger(__name__)
 
 
 class TextIngestor(Ingestor):
@@ -48,7 +52,6 @@ class PlainTextIngestor(TextIngestor):
 
 
 class HtmlIngestor(TextIngestor):
-    MAX_SIZE = 5 * 1024 * 1024
     REMOVE_TAGS = ['script', 'style', 'link', 'input', 'textarea']
     MIME_TYPES = ['text/html']
     EXTENSIONS = ['html', 'htm', 'asp', 'aspx', 'jsp']
@@ -74,4 +77,59 @@ class HtmlIngestor(TextIngestor):
 
         document = self.create_document(meta)
         self.create_page(document, doc.text_content())
+        self.emit(document)
+
+
+class PDFIngestor(TextIngestor):
+    MIME_TYPES = ['application/pdf']
+    EXTENSIONS = ['pdf']
+
+    def ingest(self, meta, local_path):
+        data = extract_pdf(local_path)
+
+        if not meta.has('author') and data.get('author'):
+            meta['author'] = data.get('author')
+
+        if not meta.has('title') and data.get('title'):
+            meta.title = data.get('title')
+
+        document = self.create_document(meta)
+        for page in data['pages']:
+            self.create_page(document, page)
+        self.emit(document)
+
+
+class DocumentIngestor(PDFIngestor):
+    MIME_TYPES = ['application/msword', 'application/rtf', 'application/x-rtf',
+                  'text/richtext', '']
+    EXTENSIONS = ['doc', 'docx', 'rtf', 'odt', 'sxw', 'dot', 'docm',
+                  'hqx', 'pdb']
+    BASE_SCORE = 3
+
+    def ingest(self, meta, local_path):
+        pdf_path = document_to_pdf(local_path)
+        if pdf_path is None:
+            log.warning("Could not convert document: %r", meta)
+            return
+        try:
+            super(DocumentIngestor, self).ingest(meta, pdf_path)
+        finally:
+            if os.path.isfile(pdf_path):
+                os.unlink(pdf_path)
+
+
+class ImageIngestor(TextIngestor):
+    MIME_TYPES = ['image/png', 'image/tiff', 'image/x-tiff',
+                  'image/jpeg', 'image/bmp', '  image/x-windows-bmp',
+                  'image/x-portable-bitmap']
+    EXTENSIONS = ['gif', 'png', 'jpg', 'jpeg', 'tif', 'tiff', 'bmp',
+                  'jpe', 'pbm']
+    BASE_SCORE = 3
+
+    def ingest(self, meta, local_path):
+        text = extract_image(local_path)
+        if len(text) < 5:
+            return
+        document = self.create_document(meta)
+        self.create_page(document, text)
         self.emit(document)

@@ -88,31 +88,36 @@ class TarIngestor(PackageIngestor):
 
 
 class SingleFilePackageIngestor(PackageIngestor):
-    pass
+    BASE_SCORE = 15
+
+    def unpack(self, meta, local_path, temp_dir):
+        file_name = meta.file_name
+        for ext in self.EXTENSIONS:
+            ext = '.' + ext
+            if file_name.endswith(ext):
+                file_name = file_name[:len(file_name) - len(ext)]
+        temp_file = os.path.join(temp_dir, file_name)
+        self.unpack_file(meta, local_path, temp_file)
 
 
 class GzipIngestor(SingleFilePackageIngestor):
     MIME_TYPES = ['application/x-gzip', 'multipart/x-gzip']
     EXTENSIONS = ['gz', 'tgz']
 
-    def unpack(self, meta, local_path, temp_dir):
-        with tarfile.TarFile(local_path) as tf:
-            tf.extractall(path=temp_dir)
-            for (dirname, _, files) in os.walk(temp_dir):
-                for filename in files:
-                    path = os.path.join(dirname, filename)
-                    self.emit_file(meta, path)
+    def unpack_file(self, meta, local_path, temp_file):
+        with gzip.GzipFile(local_path) as src:
+            with open(temp_file, 'wb') as dst:
+                shutil.copyfileobj(src, dst)
+        self.emit_file(meta, temp_file)
 
 
-class Bz2Ingestor(SingleFilePackageIngestor):
+class BZ2Ingestor(SingleFilePackageIngestor):
     MIME_TYPES = ['application/x-bzip', 'application/x-bzip2',
                   'multipart/x-bzip', 'multipart/x-bzip2']
     EXTENSIONS = ['bz', 'tbz', 'b2', 'tbz2']
 
-    def unpack(self, meta, local_path, temp_dir):
-        with tarfile.TarFile(local_path) as tf:
-            tf.extractall(path=temp_dir)
-            for (dirname, _, files) in os.walk(temp_dir):
-                for filename in files:
-                    path = os.path.join(dirname, filename)
-                    self.emit_file(meta, path)
+    def unpack_file(self, meta, local_path, temp_file):
+        with bz2.BZ2File(local_path) as src:
+            with open(temp_file, 'wb') as dst:
+                shutil.copyfileobj(src, dst)
+        self.emit_file(meta, temp_file)

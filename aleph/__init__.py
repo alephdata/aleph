@@ -1,3 +1,4 @@
+import os
 import logging
 
 # shut up useless SA warning:
@@ -18,3 +19,9 @@ logging.getLogger('elasticsearch').setLevel(logging.WARNING)
 logging.getLogger('boto3').setLevel(logging.WARNING)
 logging.getLogger('botocore').setLevel(logging.WARNING)
 logging.getLogger('amqp').setLevel(logging.INFO)
+
+# default locale settings
+os.environ['LC_ALL'] = 'en_US'
+os.environ['LC_LANG'] = 'en_US'
+os.environ['LC_CTYPE'] = 'en_US'
+os.environ['LANG'] = 'en_US'

@@ -25,7 +25,14 @@ setup(
         'aleph.ingestors': [
             'plain = aleph.ingest.text:PlainTextIngestor',
             'html = aleph.ingest.text:HtmlIngestor',
-            'rar = aleph.ingest.packages:RARIngestor'
+            'pdf = aleph.ingest.text:PDFIngestor',
+            'doc = aleph.ingest.text:DocumentIngestor',
+            'img = aleph.ingest.text:ImageIngestor',
+            'rar = aleph.ingest.packages:RARIngestor',
+            'zip = aleph.ingest.packages:ZipIngestor',
+            'tar = aleph.ingest.packages:TarIngestor',
+            'gz = aleph.ingest.packages:GzipIngestor',
+            'bz2 = aleph.ingest.packages:BZ2Ingestor'
         ],
         'aleph.crawlers': [
         ],
