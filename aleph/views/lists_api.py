@@ -12,7 +12,7 @@ blueprint = Blueprint('lists', __name__)
 
 @blueprint.route('/api/1/lists', methods=['GET'])
 def index():
-    q = List.all_by_user(current_user)
+    q = List.all(list_ids=authz.lists(authz.READ))
     data = Pager(q).to_dict()
     results = []
     for lst in data.pop('results'):

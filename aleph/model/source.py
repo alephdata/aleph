@@ -29,6 +29,19 @@ class Source(db.Model, TimeStampedModel):
     def __unicode__(self):
         return self.label
 
+    @classmethod
+    def create(cls, data, user=None):
+        if data.get('key') is not None:
+            src = Source.by_key(data.get('key'))
+            if src is not None:
+                return src
+        src = cls()
+        data = SourceCreateForm().deserialize(data)
+        src.key = data.get('key', make_token())
+        src.update_data(data, user)
+        db.session.add(src)
+        return src
+
     def update(self, data, user):
         data = SourceEditForm().deserialize(data)
         self.update_data(data, user)
@@ -40,6 +53,11 @@ class Source(db.Model, TimeStampedModel):
         if user is not None:
             users.add(user)
         self.users = list(users)
+
+    @classmethod
+    def delete(cls, id):
+        q = db.session.query(cls).filter_by(id=id)
+        q.delete()
 
     def to_dict(self):
         return {
@@ -66,21 +84,3 @@ class Source(db.Model, TimeStampedModel):
         if ids is not None:
             q = q.filter(cls.id.in_(ids))
         return q
-
-    @classmethod
-    def create(cls, data, user=None):
-        if data.get('key') is not None:
-            src = Source.by_key(data.get('key'))
-            if src is not None:
-                return src
-        src = cls()
-        data = SourceCreateForm().deserialize(data)
-        src.key = data.get('key', make_token())
-        src.update_data(data, user)
-        db.session.add(src)
-        return src
-
-    @classmethod
-    def delete(cls, id):
-        q = db.session.query(cls).filter_by(id=id)
-        q.delete()

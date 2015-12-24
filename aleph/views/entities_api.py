@@ -4,7 +4,7 @@ from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify, Pager, request_data
 
 # from aleph.processing import refresh_selectors
-from aleph.model import Entity, List, db
+from aleph.model import Entity, db
 from aleph.model.forms import EntityForm
 from aleph import authz
 
@@ -13,7 +13,7 @@ blueprint = Blueprint('entities', __name__)
 
 @blueprint.route('/api/1/entities', methods=['GET'])
 def index():
-    list_ids = List.user_list_ids(current_user)
+    list_ids = authz.lists(authz.READ)
     filter_lists = request.args.getlist('list')
     if len(filter_lists):
         try:

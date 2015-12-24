@@ -23,7 +23,6 @@ class Crawler(object):
         ingest_url.delay(self.source.id, meta, url)
 
     def emit_file(self, meta, file_path):
-        # TODO: handle source
         ingest_file(self.source.id, meta, file_path)
 
     def __repr__(self):

@@ -1,7 +1,5 @@
 import logging
 
-from sqlalchemy import or_
-
 from aleph.core import db, url_for
 from aleph.model.user import User
 from aleph.model.forms import ListForm
@@ -64,34 +62,15 @@ class List(db.Model, TimeStampedModel):
         db.session.delete(self)
 
     @classmethod
-    def by_label(cls, label):
-        q = db.session.query(cls).filter_by(label=label)
-        return q.first()
-
-    @classmethod
     def by_id(cls, id):
         q = db.session.query(cls).filter_by(id=id)
         return q.first()
 
     @classmethod
-    def user_list_ids(cls, user=None, include_public=True):
-        logged_in = user is not None and user.is_authenticated()
-        q = db.session.query(cls.id)
-        conds = []
-        if include_public:
-            conds.append(cls.public == True) # noqa
-        if logged_in:
-            conds.append(cls.users.any(User.id == user.id))
-        if not len(conds):
-            return []
-        if not (logged_in and user.is_admin):
-            q = q.filter(or_(*conds))
-        return [c.id for c in q.all()]
-
-    @classmethod
-    def all_by_user(cls, user):
+    def all(cls, list_ids=None):
         q = db.session.query(cls)
-        q = q.filter(cls.id.in_(cls.user_list_ids(user)))
+        if list_ids is not None:
+            q = q.filter(cls.id.in_(list_ids))
         q = q.order_by(cls.id.desc())
         return q
 
