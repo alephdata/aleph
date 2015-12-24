@@ -1,8 +1,11 @@
 import logging
+import chardet
+import six
 from datetime import datetime, date
 
 from messytables import any_tableset, offset_processor
 from messytables import headers_guess, headers_processor
+from dbf.base import DBF
 
 from aleph.model import Document
 from aleph.ingest.ingestor import Ingestor
@@ -41,7 +44,7 @@ class MessyTablesIngestor(TabularIngestor):
         tabular.create()
 
         def generate_rows():
-            for row in row_set:
+            for i, row in enumerate(row_set):
                 record = {}
                 for cell, column in zip(row, columns):
                     value = cell.value
@@ -56,6 +59,7 @@ class MessyTablesIngestor(TabularIngestor):
                     for column in columns:
                         record[column.name] = record.get(column.name, None)
                     yield record
+            log.info("Loaded %s rows.", i)
 
         tabular.load_iter(generate_rows())
         return schema
@@ -71,5 +75,58 @@ class MessyTablesIngestor(TabularIngestor):
                 tables.append(self.generate_table(meta, sheet, row_set))
 
             meta.tables = tables
+            document = self.create_document(meta)
+            self.emit(document)
+
+
+class DBFIngestor(TabularIngestor):
+    MIME_TYPES = []
+    EXTENSIONS = ['dbf']
+
+    def ingest(self, meta, local_path):
+        with open(local_path, 'rb') as fh:
+            db = DBF(fh)
+            schema = TabularSchema({
+                'content_hash': meta.content_hash,
+                'sheet': 0
+            })
+            columns = [schema.add_column(h) for h in db.fields.keys()]
+            columns = {c.label: c.name for c in columns}
+            tabular = Tabular(schema)
+            tabular.drop()
+            tabular.create()
+
+            def generate_rows():
+                if db.numrec == 0:
+                    return
+                text = []
+                for i in xrange(0, db.numrec):
+                    for v in db.select(i).values():
+                        if isinstance(v, six.string_types):
+                            text.append(v)
+                det = chardet.detect(' '.join(text))
+                for i in xrange(0, db.numrec):
+                    row = db.select(i)
+                    record = {}
+                    for k, value in row.items():
+                        name = columns.get(k)
+                        if value is None:
+                            continue
+                        if isinstance(value, (date, datetime)):
+                            value = value.isoformat()
+                        if not isinstance(value, six.string_types):
+                            value = str(value)
+                        else:
+                            value = value.decode(det.get('encoding'))
+                        if len(value.strip()):
+                            record[name] = value
+                    if len(record):
+                        for name in columns.values():
+                            record[name] = record.get(name, None)
+                        yield record
+                log.info("Loaded %s rows.", i)
+
+            tabular.load_iter(generate_rows())
+            meta.tables = [schema]
             document = self.create_document(meta)
             self.emit(document)

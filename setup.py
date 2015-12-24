@@ -29,6 +29,7 @@ setup(
             'doc = aleph.ingest.text:DocumentIngestor',
             'img = aleph.ingest.text:ImageIngestor',
             'messy = aleph.ingest.tabular:MessyTablesIngestor',
+            'dbf = aleph.ingest.tabular:DBFIngestor',
             'rar = aleph.ingest.packages:RARIngestor',
             'zip = aleph.ingest.packages:ZipIngestor',
             'tar = aleph.ingest.packages:TarIngestor',

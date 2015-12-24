@@ -25,3 +25,4 @@ SQLAlchemy-Utils>=0.29.8
 rarfile
 slate
 https://github.com/pudo/messytables/tarball/allow-parser-args
+pyDBF
