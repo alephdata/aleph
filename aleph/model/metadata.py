@@ -8,6 +8,7 @@ from normality import slugify
 from collections import MutableMapping, Mapping
 
 from aleph.util import make_filename
+from aleph.model.tabular import TabularSchema
 
 
 class Metadata(MutableMapping):
@@ -135,6 +136,20 @@ class Metadata(MutableMapping):
                 data[slugify(k, sep='_')] = v
 
         self.data['headers'] = data
+
+    @property
+    def tables(self):
+        return [TabularSchema(s) for s in self.data.get('tables', [])]
+
+    @tables.setter
+    def tables(self, tables):
+        data = []
+        if isinstance(tables, (list, tuple, set)):
+            for schema in tables:
+                if isinstance(schema, TabularSchema):
+                    schema = schema.to_dict()
+                data.append(schema)
+        self.data['tables'] = data
 
     def __getitem__(self, name):
         return self.data.get(name)

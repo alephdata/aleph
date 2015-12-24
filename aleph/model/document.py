@@ -16,7 +16,6 @@ class Document(db.Model, TimeStampedModel):
     TYPE_OTHER = 'other'
 
     id = db.Column(db.BigInteger, primary_key=True)
-    # crawler_tag = db.Column(db.Unicode(65), nullable=False, index=True)
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)
     source_id = db.Column(db.Integer(), db.ForeignKey('source.id'))
@@ -27,23 +26,15 @@ class Document(db.Model, TimeStampedModel):
     @hybrid_property
     def meta(self):
         self._meta = self._meta or {}
-        # self._meta.crawler_tag = self.crawler_tag
         self._meta['content_hash'] = self.content_hash
         return Metadata(data=self._meta or {})
 
     @meta.setter
     def meta(self, meta):
         if isinstance(meta, Metadata):
-            # make indexable properties
-            # self.crawler_tag = meta.crawler_tag
             self.content_hash = meta.content_hash
             meta = meta.data
         self._meta = meta
-
-    # @classmethod
-    # def check_crawler_tag(cls, crawler_tag):
-    #     q = db.session.query(cls).filter_by(crawler_tag=crawler_tag)
-    #     return q.count() > 0
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.meta.title)

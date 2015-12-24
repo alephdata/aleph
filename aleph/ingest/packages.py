@@ -49,7 +49,7 @@ class RARIngestor(PackageIngestor):
     @classmethod
     def match(cls, meta, local_path):
         if rarfile.is_rarfile(local_path):
-            return 10
+            return 3
         return -1
 
 
@@ -66,7 +66,7 @@ class ZipIngestor(PackageIngestor):
     @classmethod
     def match(cls, meta, local_path):
         if zipfile.is_zipfile(local_path):
-            return 10
+            return 3
         return -1
 
 
@@ -83,12 +83,12 @@ class TarIngestor(PackageIngestor):
     @classmethod
     def match(cls, meta, local_path):
         if tarfile.is_tarfile(local_path):
-            return 10
+            return 3
         return -1
 
 
 class SingleFilePackageIngestor(PackageIngestor):
-    BASE_SCORE = 15
+    BASE_SCORE = 2
 
     def unpack(self, meta, local_path, temp_dir):
         file_name = meta.file_name

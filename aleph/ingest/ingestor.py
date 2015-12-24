@@ -63,7 +63,8 @@ class Ingestor(object):
             if best_cls is None:
                 log.debug("No ingestor found for: %r", meta.file_name)
                 return
-            log.debug("Dispatching %r to %r", meta.file_name, best_cls)
+            log.debug("Dispatching %r to %r", meta.file_name,
+                      best_cls.__name__)
             best_cls(source_id).ingest(meta, local_path)
         except Exception as ex:
             log.exception(ex)

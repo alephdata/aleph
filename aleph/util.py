@@ -1,12 +1,12 @@
 import os
-from hashlib import sha256
+from hashlib import sha1
 
 from normality import slugify
 
 
 def checksum(filename):
     """ Generate a hash for a given file name. """
-    hash = sha256()
+    hash = sha1()
     with open(filename, 'rb') as fh:
         while True:
             block = fh.read(2 ** 10)
