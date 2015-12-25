@@ -10,6 +10,14 @@ from collections import MutableMapping, Mapping
 from aleph.util import make_filename
 from aleph.model.tabular import TabularSchema
 
+CORE_FACETS = {
+    'extension': 'File extension',
+    'mime_type': 'MIME type',
+    'languages': 'Languages',
+    'countries': 'Countries'
+}
+# CORE_ATTRIBUTES = CORE['']
+
 
 class Metadata(MutableMapping):
     """ Handle all sorts of metadata normalization for documents. """

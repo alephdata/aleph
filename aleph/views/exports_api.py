@@ -7,8 +7,8 @@ import xlsxwriter
 from aleph import authz
 from aleph.model import Entity, Source
 from aleph.search import raw_iter
-from aleph.search.queries import document_query
-from aleph.search.attributes import CORE_FIELDS
+# from aleph.search.queries import document_query
+from aleph.model.metadata import CORE_FACETS
 
 blueprint = Blueprint('exports', __name__)
 
@@ -75,7 +75,7 @@ def export():
                            sources=authz.sources(authz.READ))
     query['_source'] = set(query['_source'])
     for attribute in attributes:
-        if attribute in CORE_FIELDS:
+        if attribute in CORE_FACETS:
             query['_source'].add(attribute)
         else:
             query['_source'].add('attributes')

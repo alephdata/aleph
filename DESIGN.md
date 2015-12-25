@@ -15,6 +15,16 @@ aleph/fs
 * Testing
 * tidbits
 
+-----
+* Fix attributes facets
+* Entity data model / schema-based validation
+* Spindle importer 
+* OpenNames importer
+* Fix entities facets
+-----
+
+
+
 
 D.I.T.
 ======

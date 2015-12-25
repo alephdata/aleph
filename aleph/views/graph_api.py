@@ -10,7 +10,7 @@ from apikit import jsonify, arg_int
 from aleph import authz
 from aleph.views.cache import etag_cache_keygen
 from aleph.search import raw_iter
-from aleph.search.queries import document_query
+# from aleph.search.queries import document_query
 
 blueprint = Blueprint('graph', __name__)
 
@@ -56,6 +56,7 @@ def generate_graph(args):
                            sources=authz.sources(authz.READ),
                            lists=authz.lists(authz.READ),
                            facets=False)
+
     graph = nx.MultiGraph()
     for doc in raw_iter(query):
         entities = set()
@@ -68,6 +69,7 @@ def generate_graph(args):
         for (src, dst) in combinations(entities, 2):
             graph.add_edge(src, dst, weight=1)
     graph = multigraph_to_weighted(graph)
+
     return paginate_graph(graph)
 
 
