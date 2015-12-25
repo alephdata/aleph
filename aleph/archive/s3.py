@@ -68,3 +68,12 @@ class S3Archive(Archive):
         path = self._get_local_mirror(meta)
         if os.path.isfile(path):
             os.unlink(path)
+
+    def generate_url(self, meta):
+        params = {
+            'Bucket': self.bucket_name,
+            'Key': self._get_file_path(meta)
+        }
+        return self.s3.generate_presigned_url('get_object',
+                                              Params=params,
+                                              ExpiresIn=86400)

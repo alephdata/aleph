@@ -32,3 +32,6 @@ class Archive(object):
 
     def cleanup_file(self, meta):
         pass
+
+    def generate_url(self, meta):
+        return
