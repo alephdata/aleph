@@ -23,7 +23,7 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     loginRequired: false,
     resolve: {
       'result': loadSearchResult,
-      'attributes': loadSearchAttributes
+      'fields': loadSearchFields
     }
   });
 

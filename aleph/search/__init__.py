@@ -3,7 +3,8 @@ from itertools import count
 
 from aleph.core import es, es_index
 from aleph.index.mapping import TYPE_DOCUMENT
-from aleph.search.queries import document_query # noqa
+from aleph.search.query import construct_query  # noqa
+from aleph.search.query import execute_query  # noqa
 
 PAGE = 1000
 

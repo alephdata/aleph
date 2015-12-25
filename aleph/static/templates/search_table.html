@@ -7,13 +7,13 @@
          tooltip="Loaded on {{doc.updated_at.split('T')[0]}}"
          tooltip-append-to-body="true"
          tooltip-placement="right" class="source">
-        {{queryContext.sources[doc.collection].label || doc.collection}}
+        {{queryContext.sources[doc.source_id].label || doc.source_id}}
       </a>
       <a ng-href="{{doc.url || doc.source_url}}" target="_self" class="title">
         {{doc.title | characters: 90 }}
       </a>
       <span class="archive">
-        [<a ng-href="{{doc.archive_url}}" target="_self">cached</a>]
+        [<a ng-href="{{doc.data_url}}" target="_self">cached</a>]
       </span>
       <span class="summary">{{doc.summary}}</span>
     </div>

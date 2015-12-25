@@ -30,7 +30,7 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     query.attribute = ensureArray(query.attribute);
     query.entity = ensureArray(query.entity);
     query.listfacet = ensureArray(query.listfacet);
-    query.attributefacet = ensureArray(query.attributefacet);
+    query.facet = ensureArray(query.facet);
     return query;
   };
 
@@ -40,8 +40,8 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
   };
 
   var clearDependentFilters = function(name, val) {
-    if (name == 'attributefacet') {
-      var key = 'attribute-' + val;
+    if (name == 'facet') {
+      var key = 'filter:' + val;
       query[key] = [];
     }
     if (name == 'listfacet') {

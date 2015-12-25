@@ -18,28 +18,13 @@
         </div>
 
         <table class="table">
-          <tr>
-            <th colspan="2">Core fields</th>
-          </tr>
-          <tr ng-repeat="(a, k) in attributes.fields">
+          <tr ng-repeat="(name, label) in fields">
             <td width="1%">
-              <input type="checkbox" ng-checked="query.hasFilter('attribute', a)"
-                ng-click="query.toggleFilter('attribute', a, true)">
+              <input type="checkbox" ng-checked="query.hasFilter('field', name)"
+                ng-click="query.toggleFilter('fields', name, true)">
             </td>
             <td>
-              {{a}}
-            </td>
-          </tr>
-          <tr ng-show="attributes.has_attributes">
-            <th colspan="2">Extra attributes</th>
-          </tr>
-          <tr ng-repeat="(a, k) in attributes.attributes">
-            <td width="1%">
-              <input type="checkbox" ng-checked="query.hasFilter('attribute', a)"
-                ng-click="query.toggleFilter('attribute', a, true)">
-            </td>
-            <td>
-              {{a}}
+              {{label}}
             </td>
           </tr>
         </table>

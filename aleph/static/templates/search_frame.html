@@ -93,10 +93,9 @@
               ng-bind="list.label"></a>
           </li>
           <li class="divider"></li>
-          <li ng-repeat="(attr, d) in queryContext.attributes.attributes"
-            ng-show="showAttributeFacet(attr)">
-            <a ng-click="query.toggleFilter('attributefacet', attr)"
-              ng-bind="attr"></a>
+          <li ng-repeat="(field, label) in queryContext.fields"
+            ng-show="showFieldFacet(field)">
+            <a ng-click="query.toggleFilter('facet', field)" ng-bind="label"></a>
           </li>
         </ul>
       </div>

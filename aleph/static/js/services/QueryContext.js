@@ -10,12 +10,12 @@ aleph.factory('QueryContext', ['$http', '$q', 'Session', function($http, $q, Ses
         $q.all([
           $http.get('/api/1/sources?_uid=' + session.cbq),
           $http.get('/api/1/lists?_uid=' + session.cbq),
-          $http.get('/api/1/query/attributes?_uid=' + session.cbq)
+          $http.get('/api/1/fields?_uid=' + session.cbq)
         ]).then(function(results) {
 
             var sources = {}
             angular.forEach(results[0].data.results, function(c) {
-              sources[c.slug] = c;
+              sources[c.id] = c;
             });
 
             var lists = {}
@@ -26,7 +26,7 @@ aleph.factory('QueryContext', ['$http', '$q', 'Session', function($http, $q, Ses
             dfd.resolve({
               'sources': sources,
               'lists': lists,
-              'attributes': results[2].data,
+              'fields': results[2].data,
             });
         });
       })

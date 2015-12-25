@@ -25,8 +25,8 @@ aleph.directive('searchFrame', ['Query', 'QueryContext', 'Session', function (Qu
         return Query.load().listfacet.indexOf(id) == -1;
       };
 
-      scope.showAttributeFacet = function(attr) {
-        return Query.load().attributefacet.indexOf(attr) == -1;
+      scope.showFieldFacet = function(field) {
+        return Query.load().facet.indexOf(field) == -1;
       };
       
       Session.get(function(session) {
