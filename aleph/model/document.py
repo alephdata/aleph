@@ -4,6 +4,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSON
 
 from aleph.core import db
+from aleph.model.tabular import Tabular
 from aleph.model.source import Source
 from aleph.model.metadata import Metadata
 from aleph.model.common import TimeStampedModel
@@ -19,7 +20,7 @@ class Document(db.Model, TimeStampedModel):
     id = db.Column(db.BigInteger, primary_key=True)
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)
-    source_id = db.Column(db.Integer(), db.ForeignKey('source.id'))
+    source_id = db.Column(db.Integer(), db.ForeignKey('source.id'), index=True)
     source = db.relationship(Source, backref=db.backref('documents',
                                                         lazy='dynamic'))
     _meta = db.Column('meta', JSON)
@@ -36,6 +37,10 @@ class Document(db.Model, TimeStampedModel):
             self.content_hash = meta.content_hash
             meta = meta.data
         self._meta = meta
+
+    @property
+    def tables(self):
+        return [Tabular(s) for s in self.meta.tables]
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.meta.title)
@@ -58,3 +63,18 @@ class Document(db.Model, TimeStampedModel):
     def by_id(cls, id):
         q = db.session.query(cls).filter_by(id=id)
         return q.first()
+
+
+class Page(db.Model):
+
+    id = db.Column(db.BigInteger, primary_key=True)
+    number = db.Column(db.Integer(), nullable=True)
+    text = db.Column(db.Unicode(), nullable=False)
+    document_id = db.Column(db.Integer(), db.ForeignKey('document.id'))
+    document = db.relationship(Document, backref=db.backref('pages'))
+
+    def __repr__(self):
+        return '<Page(%r,%r)>' % (self.document_id, self.number)
+
+    def __unicode__(self):
+        return self.number

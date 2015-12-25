@@ -41,6 +41,10 @@ class TabularSchema(object):
         return TabularColumn(self, column)
 
     @property
+    def sheet(self):
+        return self.schema.get('sheet')
+
+    @property
     def table_name(self):
         return 'tabular_%s_%s' % (self.schema.get('content_hash'),
                                   self.schema.get('sheet'))
@@ -122,13 +126,13 @@ class Tabular(object):
         if not hasattr(self, '_count'):
             q = select(columns=func.count(self.table.c._id),
                        from_obj=self.table)
-            rp = self.db.engine.execute(q)
+            rp = db.engine.execute(q)
             self._count = rp.scalar()
         return self._count
 
     def __iter__(self):
-        q = select(columns=self.table, from_obj=self.table)
-        rp = self.db.engine.execute(q)
+        q = select(columns=self.table.c, from_obj=self.table)
+        rp = db.engine.execute(q)
         while True:
             rows = rp.fetchmany(2000)
             if not rows:

@@ -18,3 +18,7 @@ def get_crawlers():
 
 def get_ingestors():
     return get_extensions('aleph.ingestors')
+
+
+def get_analyzer():
+    return get_extensions('aleph.analyzer')

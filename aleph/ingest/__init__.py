@@ -27,6 +27,8 @@ log = logging.getLogger(__name__)
 # http://www.unixuser.org/~euske/python/pdfminer/index.html
 # https://mstamy2.github.io/PyPDF2/#documentation
 # http://pybrary.net/pyPdf/pythondoc-pyPdf.pdf.html
+#
+# https://svn.apache.org/viewvc/httpd/httpd/branches/2.2.x/docs/conf/mime.types?view=annotate
 
 
 def meta_object(meta):

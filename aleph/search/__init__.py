@@ -2,7 +2,7 @@ import logging
 from itertools import count
 
 from aleph.core import es, es_index
-from aleph.search.mapping import DOC_TYPE
+from aleph.index.mapping import TYPE_DOCUMENT
 from aleph.search.queries import document_query # noqa
 
 PAGE = 1000
@@ -17,7 +17,7 @@ def raw_iter(query, total=10000):
             return
         query['size'] = PAGE
         result = es.search(index=es_index,
-                           doc_type=DOC_TYPE,
+                           doc_type=TYPE_DOCUMENT,
                            body=query)
         hits = result.get('hits', {})
         for doc in hits.get('hits', []):

@@ -2,7 +2,7 @@ import logging
 from hashlib import sha1
 
 from aleph.core import es, es_index
-from aleph.search.mapping import DOC_TYPE
+from aleph.index.mapping import TYPE_DOCUMENT
 from aleph.search.queries import attributes_query
 
 CORE_FIELDS = {
@@ -40,7 +40,7 @@ def generate_attributes(meta):
 
 def available_attributes(args, sources=None, lists=None):
     q = attributes_query(args, sources=sources, lists=lists)
-    result = es.search(index=es_index, doc_type=DOC_TYPE, body=q)
+    result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
     result = result.get('aggregations', {}).get('attributes', {})
     result = {r.get('key'): False for r in result.get('buckets', [])}
     return {'fields': CORE_FIELDS, 'attributes': result}

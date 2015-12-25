@@ -71,8 +71,11 @@ def upgrade():
 
 @manager.command
 def createdb():
+    from aleph.index import init_search, delete_index
     db.drop_all()
     db.create_all()
+    delete_index()
+    init_search()
 
 
 def main():

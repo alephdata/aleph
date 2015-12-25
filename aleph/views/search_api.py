@@ -8,7 +8,7 @@ from aleph.model import Entity
 from aleph.views.cache import etag_cache_keygen
 from aleph.search.queries import document_query, get_list_facets
 from aleph.search.attributes import available_attributes
-from aleph.search.mapping import DOC_TYPE
+from aleph.index.mapping import TYPE_DOCUMENT
 
 blueprint = Blueprint('search', __name__)
 
@@ -64,7 +64,7 @@ def query():
     query['from'] = get_offset()
     if query['from'] > 0 and 'aggregations' in query:
         del query['aggregations']
-    result = es.search(index=es_index, doc_type=DOC_TYPE, body=query)
+    result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=query)
     hits = result.get('hits', {})
     output = {
         'status': 'ok',
