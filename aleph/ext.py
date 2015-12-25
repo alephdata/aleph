@@ -20,5 +20,5 @@ def get_ingestors():
     return get_extensions('aleph.ingestors')
 
 
-def get_analyzer():
-    return get_extensions('aleph.analyzer')
+def get_analyzers():
+    return get_extensions('aleph.analyzers').values()

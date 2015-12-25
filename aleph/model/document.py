@@ -2,6 +2,7 @@ import logging
 
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db
 from aleph.model.tabular import Tabular
@@ -37,6 +38,7 @@ class Document(db.Model, TimeStampedModel):
             self.content_hash = meta.content_hash
             meta = meta.data
         self._meta = meta
+        flag_modified(self, '_meta')
 
     @property
     def tables(self):

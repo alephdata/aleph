@@ -26,3 +26,4 @@ rarfile
 slate
 https://github.com/pudo/messytables/tarball/allow-parser-args
 pyDBF
+langid

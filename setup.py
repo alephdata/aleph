@@ -36,6 +36,9 @@ setup(
             'gz = aleph.ingest.packages:GzipIngestor',
             'bz2 = aleph.ingest.packages:BZ2Ingestor'
         ],
+        'aleph.analyzers': [
+            'lang = aleph.analyze.language:LanguageAnalyzer'
+        ],
         'aleph.crawlers': [
         ],
         'console_scripts': [
