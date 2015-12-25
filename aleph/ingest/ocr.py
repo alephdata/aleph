@@ -2,7 +2,6 @@ import os
 import shutil
 import logging
 import subprocess
-import unicodedata
 from tempfile import mkstemp, mkdtemp
 
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
@@ -14,6 +13,7 @@ from pdfminer.pdfdocument import PDFDocument
 from cStringIO import StringIO
 
 from aleph.core import app
+from aleph.util import safe_text
 
 
 log = logging.getLogger(__name__)
@@ -86,19 +86,6 @@ def raw_pdf_convert(path):
         return doc.info.pop(), pages
 
 
-def normalize_text(s):
-    # TODO: this whole thing is a nightmare.
-    for enc in ['utf-8', 'utf-16', 'latin-1', 'cp1251']:
-        try:
-            if not isinstance(s, unicode):
-                s = s.decode(enc)
-        except:
-            pass
-    text = "".join(ch for ch in s if unicodedata.category(ch)[0] != "C")
-    text = text.replace(u'\xfe\xff', '')  # remove BOM
-    return text
-
-
 def extract_pdf(path, languages=DEFAULT_LANGUAGES):
     """ Extract content from a PDF file. This will attempt to use PyPDF2
     to extract textual content first. If none is found, it'll send the file
@@ -106,7 +93,7 @@ def extract_pdf(path, languages=DEFAULT_LANGUAGES):
     info, pages = raw_pdf_convert(path)
     data = {'pages': pages, 'ocr': False}
     for k, v in info.items():
-        data[k.lower()] = normalize_text(v)
+        data[k.lower()] = safe_text(v)
 
     text = ''.join(data['pages']).strip()
     # FIXME: this should be smarter
@@ -131,9 +118,3 @@ def document_to_pdf(path):
             return os.path.join(work_dir, out_file)
     except Exception as ex:
         log.exception(ex)
-
-
-if __name__ == '__main__':
-    import sys
-    # for page in extract_image_pdf(sys.argv[1]):
-    # print extract_document(sys.argv[1])

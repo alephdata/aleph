@@ -5,6 +5,7 @@ from lxml import html
 from aleph.model import db, Page, Document
 from aleph.ingest.ingestor import Ingestor
 from aleph.ingest.ocr import extract_pdf, document_to_pdf, extract_image
+from aleph.util import guess_encoding
 
 log = logging.getLogger(__name__)
 
@@ -35,14 +36,19 @@ class PlainTextIngestor(TextIngestor):
         # TODO: chardet
         document = self.create_document(meta)
         with open(local_path, 'rb') as fh:
-            text = fh.read().decode('utf-8', 'ignore')
-            self.create_page(document, text)
-        self.emit(document)
+            text = fh.read()
+            encoding = guess_encoding(text)
+            if encoding is not None:
+                text = text.decode(encoding)
+                self.create_page(document, text)
+                self.emit(document)
 
     @classmethod
     def match(cls, meta, local_path):
         if os.stat(local_path).st_size > cls.MAX_SIZE:
             return -1
+        if meta.extension in ['txt', 'md', 'mdown']:
+            return 5
         with open(local_path, 'rb') as fh:
             text = fh.read(4096)
             if '\0' in text:

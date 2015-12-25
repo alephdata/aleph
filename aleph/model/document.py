@@ -4,6 +4,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSON
 
 from aleph.core import db
+from aleph.model.source import Source
 from aleph.model.metadata import Metadata
 from aleph.model.common import TimeStampedModel
 
@@ -19,8 +20,8 @@ class Document(db.Model, TimeStampedModel):
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)
     source_id = db.Column(db.Integer(), db.ForeignKey('source.id'))
-    source = db.relationship('Source', backref=db.backref('documents',
-                                                          lazy='dynamic'))
+    source = db.relationship(Source, backref=db.backref('documents',
+                                                        lazy='dynamic'))
     _meta = db.Column('meta', JSON)
 
     @hybrid_property
@@ -52,3 +53,8 @@ class Document(db.Model, TimeStampedModel):
             'updated_at': self.updated_at
         })
         return data
+
+    @classmethod
+    def by_id(cls, id):
+        q = db.session.query(cls).filter_by(id=id)
+        return q.first()

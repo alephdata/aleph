@@ -8,6 +8,7 @@ from messytables import headers_guess, headers_processor
 from dbf.base import DBF
 
 from aleph.model import Document
+from aleph.util import guess_encoding, string_value
 from aleph.ingest.ingestor import Ingestor
 from aleph.model.tabular import TabularSchema, Tabular
 
@@ -47,14 +48,7 @@ class MessyTablesIngestor(TabularIngestor):
             for i, row in enumerate(row_set):
                 record = {}
                 for cell, column in zip(row, columns):
-                    value = cell.value
-                    if value is None:
-                        continue
-                    if isinstance(value, (date, datetime)):
-                        value = value.isoformat()
-                    value = unicode(value)
-                    if len(value.strip()):
-                        record[column.name] = value
+                    record[column.name] = string_value(cell.value)
                 if len(record):
                     for column in columns:
                         record[column.name] = record.get(column.name, None)
@@ -102,28 +96,21 @@ class DBFIngestor(TabularIngestor):
                 text = []
                 for i in xrange(0, db.numrec):
                     for v in db.select(i).values():
-                        if isinstance(v, six.string_types):
+                        if isinstance(v, str):
                             text.append(v)
-                det = chardet.detect(' '.join(text))
+                encoding = guess_encoding(' '.join(text))
+
                 for i in xrange(0, db.numrec):
                     row = db.select(i)
                     record = {}
                     for k, value in row.items():
                         name = columns.get(k)
-                        if value is None:
-                            continue
-                        if isinstance(value, (date, datetime)):
-                            value = value.isoformat()
-                        if not isinstance(value, six.string_types):
-                            value = str(value)
-                        else:
-                            value = value.decode(det.get('encoding'))
-                        if len(value.strip()):
-                            record[name] = value
+                        record[name] = string_value(value, encoding=encoding)
                     if len(record):
                         for name in columns.values():
                             record[name] = record.get(name, None)
                         yield record
+
                 log.info("Loaded %s rows.", i)
 
             tabular.load_iter(generate_rows())
