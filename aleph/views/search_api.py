@@ -14,12 +14,6 @@ blueprint = Blueprint('search', __name__)
 
 
 def add_urls(doc):
-    doc['archive_url'] = url_for('data.package',
-                                 collection=doc.get('collection'),
-                                 package_id=doc.get('id'))
-    doc['manifest_url'] = url_for('data.manifest',
-                                  collection=doc.get('collection'),
-                                  package_id=doc.get('id'))
     return doc
 
 
@@ -40,17 +34,9 @@ def transform_facets(aggregations):
                 entities.append(entity)
         lists[list_id] = entities
 
-    attributes = {}
-    for attr in request.args.getlist('attributefacet'):
-        key = 'attr_%s' % attr
-        vals = aggregations.get(key, {}).get('inner', {})
-        vals = vals.get('values', {}).get('buckets', [])
-        attributes[attr] = vals
-
     return {
         'sources': coll,
-        'lists': lists,
-        'attributes': attributes
+        'lists': lists
     }
 
 
@@ -64,6 +50,7 @@ def query():
     query['from'] = get_offset()
     if query['from'] > 0 and 'aggregations' in query:
         del query['aggregations']
+
     result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=query)
     hits = result.get('hits', {})
     output = {

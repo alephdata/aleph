@@ -69,25 +69,6 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
         cf = {'term': {'entities.id': entity}}
         filtered_q = add_filter(filtered_q, cf)
 
-    for key, value in args.items():
-        if not key.startswith('attribute-'):
-            continue
-        _, attr = key.split('attribute-', 1)
-        af = {
-            "nested": {
-                "path": "attributes",
-                "query": {
-                    "bool": {
-                        "must": [
-                            {"term": {"attributes.name": attr}},
-                            {"term": {"attributes.value": value}}
-                        ]
-                    }
-                }
-            }
-        }
-        filtered_q = add_filter(filtered_q, af)
-
     q = deepcopy(filtered_q)
 
     # collections filter
@@ -96,10 +77,10 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
         srcs = [c for c in srcs if c in sources]
         if not len(srcs):
             srcs = ['none']
-        cf = {'terms': {'collection': srcs}}
+        cf = {'terms': {'source_id': srcs}}
         q = add_filter(q, cf)
 
-        all_coll_f = {'terms': {'collection': sources}}
+        all_coll_f = {'terms': {'source_id': sources}}
         filtered_q = add_filter(filtered_q, all_coll_f)
 
     aggs = {}
@@ -113,8 +94,8 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
                     'ftr': {
                         'filter': {'query': filtered_q},
                         'aggs': {
-                            'collections': {
-                                'terms': {'field': 'collection'}
+                            'sources': {
+                                'terms': {'field': 'source_id'}
                             }
                         }
                     }
@@ -144,24 +125,24 @@ def document_query(args, fields=DEFAULT_FIELDS, sources=None, lists=None,
             }
             aggs['list_%s' % list_id] = list_facet
 
-        for attr in args.getlist('attributefacet'):
-            attr_facet = {
-                'nested': {
-                    'path': 'attributes'
-                },
-                'aggs': {
-                    'inner': {
-                        'filter': {'term': {'attributes.name': attr}},
-                        'aggs': {
-                            'values': {
-                                'terms': {'field': 'value',
-                                          'size': 50}
-                            }
-                        }
-                    }
-                }
-            }
-            aggs['attr_%s' % attr] = attr_facet
+        # for attr in args.getlist('attributefacet'):
+        #     attr_facet = {
+        #         'nested': {
+        #             'path': 'attributes'
+        #         },
+        #         'aggs': {
+        #             'inner': {
+        #                 'filter': {'term': {'attributes.name': attr}},
+        #                 'aggs': {
+        #                     'values': {
+        #                         'terms': {'field': 'value',
+        #                                   'size': 50}
+        #                     }
+        #                 }
+        #             }
+        #         }
+        #     }
+        #     aggs['attr_%s' % attr] = attr_facet
 
     q = {
         'query': q,
@@ -186,14 +167,14 @@ def entity_query(selectors):
     return q
 
 
-def attributes_query(args, sources=None, lists=None):
-    q = document_query(args, sources=sources, lists=lists,
-                       facets=False)
-    q['aggregations'] = {
-        'attributes': {
-            'terms': {'field': 'attributes.name',
-                      'size': 200}
-        }
-    }
-    q['size'] = 0
-    return q
+# def attributes_query(args, sources=None, lists=None):
+#     q = document_query(args, sources=sources, lists=lists,
+#                        facets=False)
+#     q['aggregations'] = {
+#         'attributes': {
+#             'terms': {'field': 'attributes.name',
+#                       'size': 200}
+#         }
+#     }
+#     q['size'] = 0
+#     return q
