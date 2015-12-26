@@ -1,4 +1,4 @@
-from flask import Blueprint  # , request
+from flask import Blueprint
 from flask.ext.login import current_user
 from apikit import obj_or_404, jsonify, Pager, request_data
 
@@ -61,7 +61,6 @@ def update(id):
 def delete(id):
     authz.require(authz.list_write(id))
     lst = obj_or_404(List.by_id(id))
-    # selectors = lst.terms
     lst.delete()
     db.session.commit()
     # refresh_selectors.delay(list(selectors))

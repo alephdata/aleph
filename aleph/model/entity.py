@@ -1,38 +1,26 @@
 import logging
 
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from sqlalchemy.orm import aliased
-from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSON
 
 from aleph.core import db, url_for
 from aleph.model.forms import EntityForm, CATEGORIES
-from aleph.model.common import make_textid, db_compare
+from aleph.model.common import db_compare
 from aleph.model.common import TimeStampedModel
 
 log = logging.getLogger(__name__)
 
 
 class Entity(db.Model, TimeStampedModel):
-    id = db.Column(db.Unicode(254), primary_key=True, default=make_textid)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode)
-
+    data = db.Column('data', JSON)
     category = db.Column(db.Enum(*CATEGORIES, name='entity_categories'),
                          nullable=False)
-
     list_id = db.Column(db.Integer(), db.ForeignKey('list.id'))
     list = db.relationship('List', backref=db.backref('entities',
                            lazy='dynamic', cascade='all, delete-orphan'))
-
-    _data = db.Column('data', JSON)
-
-    @hybrid_property
-    def data(self):
-        return self._data
-
-    @data.setter
-    def data(self, data):
-        self._data = data
 
     def to_dict(self):
         return {
@@ -58,12 +46,27 @@ class Entity(db.Model, TimeStampedModel):
 
     def update(self, data):
         data = EntityForm().deserialize(data)
-        self.name = data.get('name')
+        self.label = data.get('label')
         self.list = data.get('list')
         self.category = data.get('category')
 
+        selectors = set(data.get('selectors'))
+        selectors.add(self.label)
+        existing = list(self.selectors)
+        for sel in list(existing):
+            if sel.text in selectors:
+                selectors.remove(sel.text)
+                existing.remove(sel)
+        for sel in existing:
+            db.session.delete(sel)
+        for text in selectors:
+            sel = Selector()
+            sel.entity = self
+            sel.text = text
+            db.session.add(sel)
+
     @classmethod
-    def by_normalized_name(cls, name, lst):
+    def by_name(cls, name, lst):
         q = db.session.query(cls)
         q = q.filter_by(list=lst)
         q = q.filter(db_compare(cls.name, name))
@@ -96,17 +99,21 @@ class Entity(db.Model, TimeStampedModel):
     def suggest_prefix(cls, prefix, lists, limit=10):
         if prefix is None or not len(prefix):
             return []
-
+        prefix = prefix.strip()
         ent = aliased(Entity)
-        q = db.session.query(ent.id, ent.name, ent.category)
-        q.filter(or_(ent.name.like('%s%%' % prefix),
-                     ent.name.like('%% %s%%' % prefix)))
+        sel = aliased(Selector)
+        count = func.count(sel.id)
+        q = db.session.query(ent.id, ent.name, ent.category, count)
+        q = q.join(sel, ent.id == sel.entity_id)
         q = q.filter(ent.list_id.in_(lists))
-        q = q.order_by(ent.name.asc())
+        q = q.filter(or_(sel.text.ilike('%s%%' % prefix),
+                         sel.text.ilike('%% %s%%' % prefix)))
+        q = cls.apply_filter(q, sel.normalized, prefix)
+        q = q.group_by(ent.id, ent.name, ent.category)
+        q = q.order_by(count.desc())
         q = q.limit(limit)
-        q = q.distinct()
         suggestions = []
-        for entity_id, name, category in q.all():
+        for entity_id, name, category, count in q.all():
             suggestions.append({
                 'id': entity_id,
                 'name': name,
@@ -119,3 +126,19 @@ class Entity(db.Model, TimeStampedModel):
 
     def __unicode__(self):
         return self.name
+
+
+class Selector(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.Unicode, index=True)
+
+    entity_id = db.Column(db.Integer, db.ForeignKey('entity.id'))
+    entity = db.relationship(Entity, backref=db.backref('selectors',
+                             lazy='dynamic',
+                             cascade='all, delete-orphan')) # noqa
+
+    def __repr__(self):
+        return '<Selector(%r, %r)>' % (self.entity_id, self.text)
+
+    def __unicode__(self):
+        return self.text
