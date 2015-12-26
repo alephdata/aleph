@@ -32,20 +32,22 @@ class SpindleCrawler(Crawler):
             'public': False,
             'users': []
         })
-        log.info(" > Spindle collection: %r", lst.label)
+        log.info(" > Spindle collection: %s", lst.label)
         db.session.flush()
         res = requests.get('%s/entities' % url, headers=self.HEADERS)
         lst.delete_entities()
         for entity in res.json().get('results', []):
             if entity.get('name') is None:
                 continue
+            aliases = [on.get('alias') for on in entity.get('other_names', [])]
             ent = Entity.create({
                 'name': entity.get('name'),
                 'list': lst,
                 'category': SCHEMATA.get(entity.get('$schema'), OTHER),
-                'data': entity
+                'data': entity,
+                'selectors': aliases
             })
-            log.info("  >> %r (%r)", ent.name, ent.category)
+            log.info("  # %s (%s)", ent.name, ent.category)
 
     def crawl(self):
         url = urljoin(self.URL, '/api/collections')

@@ -34,7 +34,13 @@ class Entity(db.Model, TimeStampedModel):
         }
 
     def delete(self):
+        self.delete_selectors()
         db.session.delete(self)
+
+    def delete_selectors(self):
+        q = db.session.query(Selector)
+        q = q.filter(Selector.entity_id == self.id)
+        q.delete()
 
     @classmethod
     def create(cls, data):

@@ -74,10 +74,8 @@ class List(db.Model, TimeStampedModel):
         db.session.delete(self)
 
     def delete_entities(self):
-        from aleph.model.entity import Entity
-        q = db.session.query(Entity)
-        q = q.filter(Entity.list_id == self.id)
-        q.delete()
+        for entity in self.entities:
+            entity.delete()
 
     @classmethod
     def by_id(cls, id):
