@@ -40,6 +40,8 @@ setup(
             'lang = aleph.analyze.language:LanguageAnalyzer'
         ],
         'aleph.crawlers': [
+            'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
+            'spindle = aleph.crawlers.spindle:SpindleCrawler'
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',

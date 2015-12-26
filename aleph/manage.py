@@ -9,6 +9,7 @@ from flask.ext.migrate import MigrateCommand
 from aleph.model import db, Source
 from aleph.views import app, assets
 from aleph.analyze import analyze_source
+from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.upgrade import upgrade as upgrade_, reset as reset_
 
@@ -27,18 +28,25 @@ def sources():
 
 
 @manager.command
+def crawl(name):
+    """ Execute the given crawler. """
+    log.info('Crawling %r...', name)
+    crawlers = get_crawlers()
+    if name not in crawlers:
+        log.info('No such crawler: %r', name)
+    else:
+        crawler = crawlers.get(name)()
+        crawler.crawl()
+    db.session.commit()
+
+
+@manager.command
 def crawldir(directory, source=None, force=False):
     """ Crawl the given directory. """
     directory = os.path.abspath(directory)
     directory = os.path.normpath(directory)
-    source = source or directory
-    source = Source.create({
-        'key': 'directory:%s' % slugify(source),
-        'label': source
-    })
-    log.info('Crawling %r, to %r', directory, source)
-    crawler = DirectoryCrawler(source)
-    crawler.crawl(directory=directory)
+    log.info('Crawling %r (src tag: %r)', directory, source)
+    DirectoryCrawler().crawl(directory=directory, source=source)
     db.session.commit()
 
 

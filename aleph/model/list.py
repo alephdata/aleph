@@ -17,6 +17,7 @@ list_user_table = db.Table('list_user', db.metadata,
 class List(db.Model, TimeStampedModel):
     id = db.Column(db.Integer(), primary_key=True)
     label = db.Column(db.Unicode)
+    foreign_id = db.Column(db.Unicode)
     public = db.Column(db.Boolean, default=False)
 
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'),
@@ -32,11 +33,22 @@ class List(db.Model, TimeStampedModel):
             'api_url': url_for('lists.view', id=self.id),
             'entities_api_url': url_for('entities.index', list=self.id),
             'label': self.label,
+            'foreign_id': self.foreign_id,
             'public': self.public,
             'creator_id': self.creator_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
+
+    @classmethod
+    def by_foreign_id(cls, foreign_id, data):
+        q = db.session.query(cls)
+        q = q.filter(cls.foreign_id == foreign_id)
+        lst = q.first()
+        if lst is None:
+            lst = cls.create(data, None)
+            lst.foreign_id = foreign_id
+        return lst
 
     @classmethod
     def create(cls, data, user):
@@ -60,6 +72,12 @@ class List(db.Model, TimeStampedModel):
         # for entity in self.entities:
         #     entity.delete()
         db.session.delete(self)
+
+    def delete_entities(self):
+        from aleph.model.entity import Entity
+        q = db.session.query(Entity)
+        q = q.filter(Entity.list_id == self.id)
+        q.delete()
 
     @classmethod
     def by_id(cls, id):

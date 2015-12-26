@@ -37,21 +37,21 @@ class Entity(db.Model, TimeStampedModel):
         db.session.delete(self)
 
     @classmethod
-    def create(cls, data, user):
+    def create(cls, data):
         ent = cls()
         ent.update(data)
-        ent.creator = user
         db.session.add(ent)
         return ent
 
     def update(self, data):
         data = EntityForm().deserialize(data)
-        self.label = data.get('label')
+        self.name = data.get('name')
         self.list = data.get('list')
         self.category = data.get('category')
+        selectors = set(data.get('selectors', []))
+        self.data = data.get('data')
 
-        selectors = set(data.get('selectors'))
-        selectors.add(self.label)
+        selectors.add(self.name)
         existing = list(self.selectors)
         for sel in list(existing):
             if sel.text in selectors:

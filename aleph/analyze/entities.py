@@ -10,6 +10,10 @@ log = logging.getLogger(__name__)
 BATCH_SIZE = 5000
 
 
+def normalize(text):
+    return text
+
+
 class EntityAnalyzer(Analyzer):
 
     def compile(self, matcher):
@@ -20,6 +24,7 @@ class EntityAnalyzer(Analyzer):
         matches = defaultdict(set)
         q = db.session.query(Selector.entity_id, Selector.text)
         for i, (entity_id, text) in enumerate(q.yield_per(self.BATCH_SIZE)):
+            text = normalize(text)
             matches[text].add(entity_id)
             if i > 0 and i % self.BATCH_SIZE == 0:
                 yield self.compile(matches), matches
@@ -34,6 +39,7 @@ class EntityAnalyzer(Analyzer):
         return self._matchers
 
     def tag_text(self, text, entities):
+        text = normalize(text)
         for rex, matches in self.matchers:
             for match in rex.finditer(text):
                 _, match, _ = match.groups()
