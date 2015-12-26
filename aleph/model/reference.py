@@ -18,10 +18,9 @@ class Reference(db.Model, TimeStampedModel):
                                                         lazy='dynamic'))
 
     @classmethod
-    def delete_set(cls, collection, package_id):
+    def delete_document(cls, document_id):
         q = db.session.query(cls)
-        q = q.filter_by(collection=collection)
-        q = q.filter_by(package_id=package_id)
+        q = q.filter_by(document_id=document_id)
         q.delete()
 
     def __repr__(self):
