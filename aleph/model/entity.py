@@ -6,7 +6,6 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSON
 
 from aleph.core import db, url_for
-from aleph.model.user import User
 from aleph.model.forms import EntityForm, CATEGORIES
 from aleph.model.common import make_textid, db_compare
 from aleph.model.common import TimeStampedModel
@@ -20,10 +19,6 @@ class Entity(db.Model, TimeStampedModel):
 
     category = db.Column(db.Enum(*CATEGORIES, name='entity_categories'),
                          nullable=False)
-
-    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    creator = db.relationship(User, backref=db.backref('entities',
-                              lazy='dynamic', cascade='all, delete-orphan'))
 
     list_id = db.Column(db.Integer(), db.ForeignKey('list.id'))
     list = db.relationship('List', backref=db.backref('entities',
@@ -45,7 +40,6 @@ class Entity(db.Model, TimeStampedModel):
             'name': self.name,
             'api_url': url_for('entities.view', id=self.id),
             'category': self.category,
-            'creator_id': self.creator_id,
             'list_id': self.list_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at

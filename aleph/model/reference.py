@@ -10,10 +10,12 @@ from aleph.model.common import TimeStampedModel
 log = logging.getLogger(__name__)
 
 
-class EntityTag(db.Model, TimeStampedModel):
+class Reference(db.Model, TimeStampedModel):
     id = db.Column(db.Integer(), primary_key=True)
-    collection = db.Column(db.Unicode(100))
-    package_id = db.Column(db.Unicode(100))
+    document_id = db.Column(db.BigInteger, db.ForeignKey('document.id'))
+    entity_id = db.Column(db.Integer, db.ForeignKey('document.id'))
+    selector_id = db.Column(db.Integer, db.ForeignKey('document.id'))
+    weight = db.Column(db.Integer)
 
     entity_id = db.Column(db.Unicode(50), db.ForeignKey('entity.id'))
     entity = db.relationship(Entity, backref=db.backref('tags',
