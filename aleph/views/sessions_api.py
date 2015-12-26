@@ -23,7 +23,16 @@ def status():
         'logged_in': authz.logged_in(),
         'api_key': current_user.api_key if authz.logged_in() else None,
         'user': current_user if authz.logged_in() else None,
-        'permissions': {},
+        'permissions': {
+            'lists': {
+                'read': authz.lists(authz.READ),
+                'write': authz.lists(authz.WRITE)
+            },
+            'sources': {
+                'read': authz.sources(authz.READ),
+                'write': authz.sources(authz.WRITE)
+            }
+        },
         'logins': oauth_providers,
         'logout': url_for('.logout')
     })

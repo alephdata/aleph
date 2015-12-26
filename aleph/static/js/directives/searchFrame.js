@@ -12,12 +12,12 @@ aleph.directive('searchFrame', ['Query', 'QueryContext', 'Session', function (Qu
       scope.sources = {};
       scope.session = {};
       scope.lists = {};
-      scope.attributes = {};
+      scope.fields = {};
 
       QueryContext.get().then(function(ctx) {
         scope.sources = ctx.sources;
         scope.lists = ctx.lists;
-        scope.attributes = ctx.attributes;
+        scope.fields = ctx.fields;
         scope.queryContext = ctx;
       });
 

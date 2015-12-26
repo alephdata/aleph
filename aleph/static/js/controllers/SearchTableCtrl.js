@@ -7,17 +7,17 @@ aleph.controller('SearchTableCtrl', ['$scope', '$location', '$http', 'result',
   $scope.result = result;
 
   $scope.hasMore = function() {
-    return !isLoading && $scope.result.next_url !== null;
+    return !isLoading && $scope.result.next !== null;
   };
 
   $scope.loadMore = function() {
-    if (!$scope.result.next_url) {
+    if (!$scope.result.next) {
       return;
     }
     isLoading = true;
-    $http.get($scope.result.next_url).then(function(res) {
+    $http.get($scope.result.next).then(function(res) {
       $scope.result.results = $scope.result.results.concat(res.data.results);
-      $scope.result.next_url = res.data.next_url;
+      $scope.result.next = res.data.next;
       isLoading = false;
     });
   };

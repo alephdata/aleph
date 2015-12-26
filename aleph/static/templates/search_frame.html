@@ -54,25 +54,24 @@
       </ul>
     </div>
 
-    <div class="panel panel-default" ng-repeat="attr in query.load().attributefacet">
+    <div class="panel panel-default" ng-repeat="field in query.load().facet">
       <div class="panel-heading">
         <span class="pull-right">
-          <a ng-click="query.toggleFilter('attributefacet', attr)">
+          <a ng-click="query.toggleFilter('facet', field)">
             <i class="fa fa-close"></i>
           </a>
         </span>
-        Attribute: {{attr}}
-        <span class="label label-warning" ng-hide="result.facets && result.facets.attributes && result.facets.attributes[attr] && result.facets.attributes[attr].length">no options</span>
+        Attribute: {{fields[field]}}
+        <span class="label label-warning" ng-hide="result.facets && result.facets[field]">no options</span>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
-          ng-repeat="af in result.facets.attributes[attr]"
-          ng-class="{'active': query.hasFilter('attribute-' + attr, af.key)}"
-          ng-click="query.toggleFilter('attribute-' + attr, af.key)">
-          <span class="badge">{{af.doc_count}}</span>
-          <span class="lbl" tooltip="{{af.key.length > 35 ? af.key : ''}}"
-            tooltip-append-to-body="true" tooltip-placement="left">
-            {{af.key | characters: 35 }}
+          ng-repeat="val in result.facets[field].values"
+          ng-class="{'active': query.hasFilter(field, val.key)}"
+          ng-click="query.toggleFilter(field, val.key)">
+          <span class="badge">{{val.doc_count}}</span>
+          <span class="lbl" tooltip="{{val.key}}" tooltip-append-to-body="true" tooltip-placement="left">
+            {{val.key | characters: 35 }}
           </span>
         </li>
       </ul>

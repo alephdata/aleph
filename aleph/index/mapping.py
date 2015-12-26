@@ -18,6 +18,8 @@ DOCUMENT_MAPPING = {
         "source_id": {"type": "string", "index": "not_analyzed"},
         "source_url": {"type": "string", "index": "not_analyzed"},
         "extension": {"type": "string", "index": "not_analyzed"},
+        "languages": {"type": "string", "index": "not_analyzed"},
+        "countries": {"type": "string", "index": "not_analyzed"},
         "mime_type": {"type": "string", "index": "not_analyzed"},
         "summary": {"type": "string", "index": "analyzed"},
         "created_at": {"type": "date", "index": "not_analyzed"},

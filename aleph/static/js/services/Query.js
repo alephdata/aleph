@@ -59,14 +59,15 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
   }
 
   var toggleFilter = function(name, val, skipReload) {
-    if (!angular.isArray(query[name])) {
-      query[name] = [];
+    var filter = 'filter:' + name;
+    if (!angular.isArray(query[filter])) {
+      query[filter] = [];
     }
-    var idx = query[name].indexOf(val);
+    var idx = query[filter].indexOf(val);
     if (idx == -1) {
-      query[name].push(val);
+      query[filter].push(val);
     } else {
-      query[name].splice(idx, 1);
+      query[filter].splice(idx, 1);
       clearDependentFilters(name, val);
     }
     $location.search(query);
