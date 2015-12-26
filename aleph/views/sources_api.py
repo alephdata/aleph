@@ -15,14 +15,10 @@ blueprint = Blueprint('sources', __name__)
 @blueprint.route('/api/1/sources', methods=['GET'])
 def index():
     sources = []
-    latest = set()
     for source in Source.all(ids=authz.sources(authz.READ)):
         data = source.to_dict()
         data['can_write'] = authz.source_write(source.id)
-        latest.add(data['updated_at'])
         sources.append(data)
-    if len(latest):
-        etag_cache_keygen(max(latest))
     return jsonify({'results': sources, 'total': len(sources)})
 
 
