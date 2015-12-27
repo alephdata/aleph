@@ -7,7 +7,7 @@ from aleph.core import es, es_index, url_for
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.common import add_filter, authz_filter
 
-QUERY_FIELDS = ['title^100', 'file_name^10', 'summary^2', 'text']
+QUERY_FIELDS = ['title^100', 'file_name^10', 'summary^2']
 DEFAULT_FIELDS = ['source_id', 'title', 'content_hash', 'file_name',
                   'extension', 'mime_type', 'countries', 'languages',
                   'source_url', 'created_at', 'updated_at']
