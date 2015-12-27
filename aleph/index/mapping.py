@@ -22,31 +22,11 @@ DOCUMENT_MAPPING = {
         "countries": {"type": "string", "index": "not_analyzed"},
         "mime_type": {"type": "string", "index": "not_analyzed"},
         "summary": {"type": "string", "index": "analyzed"},
+        "text": {"type": "string", "index": "analyzed"},
         "created_at": {"type": "date", "index": "not_analyzed"},
         "updated_at": {"type": "date", "index": "not_analyzed"}
     }
 }
-
-PAGE_MAPPING = {
-    "_id": {
-        "path": "id"
-    },
-    "_all": {
-        "enabled": True
-    },
-    "_parent": {
-        "type": TYPE_DOCUMENT
-    },
-    "properties": {
-        # "_parent": {"type": TYPE_DOCUMENT},
-        "id": {"type": "integer", "index": "not_analyzed"},
-        "content_hash": {"type": "string", "index": "not_analyzed"},
-        "document_id": {"type": "integer", "index": "not_analyzed"},
-        "number": {"type": "string", "index": "not_analyzed"},
-        "text": {"type": "string", "index": "analyzed"}
-    }
-}
-
 
 RECORD_MAPPING = {
     "_id": {
@@ -56,15 +36,17 @@ RECORD_MAPPING = {
         "enabled": True
     },
     "_parent": {
-        "type": TYPE_DOCUMENT
+        "type": TYPE_DOCUMENT,
+        "property": "id"
     },
     "properties": {
-        # "_parent": {"type": TYPE_DOCUMENT},
         "id": {"type": "string", "index": "not_analyzed"},
+        "type": {"type": "string", "index": "not_analyzed"},
         "content_hash": {"type": "string", "index": "not_analyzed"},
         "document_id": {"type": "integer", "index": "not_analyzed"},
         "sheet": {"type": "integer", "index": "not_analyzed"},
         "row_id": {"type": "integer", "index": "not_analyzed"},
+        "page_number": {"type": "string", "index": "not_analyzed"},
         "text": {"type": "string", "index": "analyzed"},
         "raw": {"type": "object"}
     }

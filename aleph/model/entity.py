@@ -114,7 +114,6 @@ class Entity(db.Model, TimeStampedModel):
         q = q.filter(ent.list_id.in_(lists))
         q = q.filter(or_(sel.text.ilike('%s%%' % prefix),
                          sel.text.ilike('%% %s%%' % prefix)))
-        q = cls.apply_filter(q, sel.normalized, prefix)
         q = q.group_by(ent.id, ent.name, ent.category)
         q = q.order_by(count.desc())
         q = q.limit(limit)

@@ -6,9 +6,8 @@ from elasticsearch.helpers import bulk, scan
 
 from aleph.core import celery, es, es_index
 from aleph.model import Document
-from aleph.index.mapping import TYPE_DOCUMENT, TYPE_PAGE, TYPE_RECORD
-from aleph.index.mapping import DOCUMENT_MAPPING, PAGE_MAPPING
-from aleph.index.mapping import RECORD_MAPPING
+from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD
+from aleph.index.mapping import DOCUMENT_MAPPING, RECORD_MAPPING
 
 log = logging.getLogger(__name__)
 es.json_encoder = JSONEncoder
@@ -17,14 +16,13 @@ es.json_encoder = JSONEncoder
 def init_search():
     log.info("Creating ElasticSearch index and uploading mapping...")
     es.indices.create(es_index, ignore=[400, 404])
-    es.indices.put_mapping(es_index, TYPE_DOCUMENT,
-                           {TYPE_DOCUMENT: DOCUMENT_MAPPING},
+    es.indices.put_mapping(index=es_index,
+                           doc_type=TYPE_DOCUMENT,
+                           body={TYPE_DOCUMENT: DOCUMENT_MAPPING},
                            ignore=[400, 404])
-    es.indices.put_mapping(es_index, TYPE_PAGE,
-                           {TYPE_PAGE: PAGE_MAPPING},
-                           ignore=[400, 404])
-    es.indices.put_mapping(es_index, TYPE_RECORD,
-                           {TYPE_RECORD: RECORD_MAPPING},
+    es.indices.put_mapping(index=es_index,
+                           doc_type=TYPE_RECORD,
+                           body={TYPE_RECORD: RECORD_MAPPING},
                            ignore=[400, 404])
 
 
@@ -37,7 +35,7 @@ def clear_children(document):
 
     def gen_deletes():
             for res in scan(es, query=q, index=es_index,
-                            doc_type=[TYPE_PAGE, TYPE_RECORD]):
+                            doc_type=[TYPE_RECORD]):
                 yield {
                     '_op_type': 'delete',
                     '_index': es_index,
@@ -51,16 +49,20 @@ def clear_children(document):
 
 def generate_pages(document):
     for page in document.pages:
+        tid = sha1(str(document.id))
+        tid.update(str(page.id))
+        tid = tid.hexdigest()
         yield {
-            '_id': page.id,
-            '_type': TYPE_PAGE,
+            '_id': tid,
+            '_type': TYPE_RECORD,
             '_index': es_index,
-            'parent': document.id,
+            '_parent': document.id,
             '_source': {
-                'id': page.id,
+                'id': tid,
+                'type': 'page',
                 'content_hash': document.content_hash,
                 'document_id': document.id,
-                'number': page.number,
+                'page_number': page.number,
                 'text': page.text
             }
         }
@@ -80,9 +82,10 @@ def generate_records(document):
                 '_id': tid,
                 '_type': TYPE_RECORD,
                 '_index': es_index,
-                'parent': document.id,
+                '_parent': document.id,
                 '_source': {
                     'id': tid,
+                    'type': 'row',
                     'content_hash': document.content_hash,
                     'document_id': document.id,
                     'row_id': row_id,

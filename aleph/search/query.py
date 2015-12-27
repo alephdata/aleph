@@ -4,9 +4,10 @@ from collections import defaultdict
 from werkzeug.datastructures import MultiDict
 
 from aleph.core import es, es_index, url_for
+from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.common import add_filter, authz_filter
 
-QUERY_FIELDS = ['title^100', 'file_name^10', 'summary^2']
+QUERY_FIELDS = ['title^100', 'file_name^10', 'summary^2', 'text']
 DEFAULT_FIELDS = ['source_id', 'title', 'content_hash', 'file_name',
                   'extension', 'mime_type', 'countries', 'languages',
                   'source_url', 'created_at', 'updated_at']
@@ -109,7 +110,8 @@ def text_query(text):
     if len(text):
         q = {
             "bool": {
-                "must": {
+                "minimum_should_match": 1,
+                "should": {
                     "multi_match": {
                         "query": text,
                         "fields": QUERY_FIELDS,
@@ -124,6 +126,21 @@ def text_query(text):
                         "fields": QUERY_FIELDS,
                         "type": "phrase"
                     },
+                },
+                "should": {
+                    "has_child": {
+                        "type": TYPE_RECORD,
+                        "score_mode": "sum",
+                        "query": {
+                            "match": {
+                                "text": {
+                                    "query": text,
+                                    "cutoff_frequency": 0.0007,
+                                    "operator": "and"
+                                }
+                            },
+                        }
+                    }
                 }
             }
         }
@@ -134,7 +151,7 @@ def text_query(text):
 
 def execute_query(args, q):
     """ Execute the query and return a set of results. """
-    result = es.search(index=es_index, body=q)
+    result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
     hits = result.get('hits', {})
     output = {
         'status': 'ok',
