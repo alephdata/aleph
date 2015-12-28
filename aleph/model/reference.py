@@ -2,6 +2,7 @@ import logging
 
 from aleph.core import db
 from aleph.model.entity import Entity
+from aleph.model.document import Document
 from aleph.model.common import TimeStampedModel
 
 
@@ -14,8 +15,10 @@ class Reference(db.Model, TimeStampedModel):
     entity_id = db.Column(db.Integer, db.ForeignKey('entity.id'))
     weight = db.Column(db.Integer)
 
-    entity = db.relationship(Entity, backref=db.backref('tags',
+    entity = db.relationship(Entity, backref=db.backref('references',
                                                         lazy='dynamic'))
+    document = db.relationship(Document, backref=db.backref('references',
+                                                            lazy='dynamic'))
 
     @classmethod
     def delete_document(cls, document_id):

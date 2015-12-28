@@ -37,7 +37,8 @@ setup(
             'bz2 = aleph.ingest.packages:BZ2Ingestor'
         ],
         'aleph.analyzers': [
-            'lang = aleph.analyze.language:LanguageAnalyzer'
+            'lang = aleph.analyze.language:LanguageAnalyzer',
+            'entities = aleph.analyze.entities:EntityAnalyzer'
         ],
         'aleph.crawlers': [
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',

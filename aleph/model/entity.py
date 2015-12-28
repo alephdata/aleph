@@ -42,6 +42,10 @@ class Entity(db.Model, TimeStampedModel):
         q = q.filter(Selector.entity_id == self.id)
         q.delete()
 
+    @property
+    def terms(self):
+        return set([s.text for s in self.selectors])
+
     @classmethod
     def create(cls, data):
         ent = cls()

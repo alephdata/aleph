@@ -51,6 +51,13 @@ def crawldir(directory, source=None, force=False):
 
 
 @manager.command
+def reanalyze():
+    from aleph.analyze import analyze_source
+    for source in Source.all():
+        analyze_source.delay(source.id)
+
+
+@manager.command
 def flush(source):
     """ Reset the crawler state for a given source specification. """
     db.session.commit()

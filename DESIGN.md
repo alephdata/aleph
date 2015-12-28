@@ -21,6 +21,10 @@ aleph/fs
 * Spindle importer 
 * OpenNames importer
 * Fix entities facets
+
+* Azerbaijan importer 
+* Moldova importer 
+* YL importer
 -----
 
 

@@ -96,6 +96,19 @@ def generate_records(document):
             }
 
 
+def generate_entities(document):
+    entities = []
+    for reference in document.references:
+        entities.append({
+            'weight': reference.weight,
+            'id': reference.entity.id,
+            'list_id': reference.entity.list_id,
+            'name': reference.entity.name,
+            'category': reference.entity.category
+        })
+    return entities
+
+
 @celery.task()
 def index_document(document_id):
     document = Document.by_id(document_id)
@@ -104,6 +117,7 @@ def index_document(document_id):
         return
     log.info("Index document: %r", document)
     data = document.to_dict()
+    data['entities'] = generate_entities(document)
     es.index(index=es_index, doc_type=TYPE_DOCUMENT, body=data,
              id=document.id)
     clear_children(document)

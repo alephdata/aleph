@@ -24,7 +24,21 @@ DOCUMENT_MAPPING = {
         "summary": {"type": "string", "index": "analyzed"},
         "text": {"type": "string", "index": "analyzed"},
         "created_at": {"type": "date", "index": "not_analyzed"},
-        "updated_at": {"type": "date", "index": "not_analyzed"}
+        "updated_at": {"type": "date", "index": "not_analyzed"},
+        "entities": {
+            "_id": {
+                "path": "id"
+            },
+            "type": "nested",
+            # "include_in_parent": True,
+            "properties": {
+                "id": {"type": "string", "index": "not_analyzed"},
+                "list_id": {"type": "string", "index": "not_analyzed"},
+                "name": {"type": "string", "index": "not_analyzed"},
+                "category": {"type": "string", "index": "not_analyzed"},
+                "weight": {"type": "string", "index": "not_analyzed"}
+            }
+        },
     }
 }
 

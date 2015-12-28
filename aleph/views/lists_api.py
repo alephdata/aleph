@@ -2,10 +2,10 @@ from flask import Blueprint
 from flask.ext.login import current_user
 from apikit import obj_or_404, jsonify, Pager, request_data
 
-from aleph.views.cache import etag_cache_keygen
-# from aleph.analyze import analyze_matches
-from aleph.model import List, db
 from aleph import authz
+from aleph.model import List, db
+from aleph.analyze import analyze_terms
+from aleph.views.cache import etag_cache_keygen
 
 blueprint = Blueprint('lists', __name__)
 
@@ -13,14 +13,7 @@ blueprint = Blueprint('lists', __name__)
 @blueprint.route('/api/1/lists', methods=['GET'])
 def index():
     q = List.all(list_ids=authz.lists(authz.READ))
-    data = Pager(q).to_dict()
-    results = []
-    for lst in data.pop('results'):
-        ldata = lst.to_dict()
-        ldata['can_write'] = authz.list_write(lst.id)
-        results.append(ldata)
-    data['results'] = results
-    return jsonify(data)
+    return jsonify(Pager(q).to_dict())
 
 
 @blueprint.route('/api/1/lists', methods=['POST', 'PUT'])
@@ -41,8 +34,7 @@ def view(id):
     lst = obj_or_404(List.by_id(id))
     etag_cache_keygen(lst)
     data = lst.to_dict()
-    data['can_write'] = authz.list_write(id)
-    if data['can_write']:
+    if authz.list_write(id):
         data['users'] = [u.id for u in lst.users]
     return jsonify(data)
 
@@ -61,7 +53,8 @@ def update(id):
 def delete(id):
     authz.require(authz.list_write(id))
     lst = obj_or_404(List.by_id(id))
+    terms = lst.terms
     lst.delete()
     db.session.commit()
-    # refresh_selectors.delay(list(selectors))
+    analyze_terms.delay(list(terms))
     return jsonify({'status': 'ok'})

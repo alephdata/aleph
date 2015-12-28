@@ -92,9 +92,8 @@ class List(db.Model, TimeStampedModel):
 
     @property
     def terms(self):
-        from aleph.model.entity import Entity
-        from aleph.model.selector import Selector
-        q = db.session.query(Selector.normalized)
+        from aleph.model.entity import Entity, Selector
+        q = db.session.query(Selector.text)
         q = q.join(Entity, Entity.id == Selector.entity_id)
         q = q.filter(Entity.list_id == self.id)
         q = q.distinct()

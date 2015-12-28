@@ -4,6 +4,7 @@ import logging
 
 from aleph.core import db
 from aleph.model import List, Entity
+from aleph.analyze import analyze_terms
 from aleph.model.forms import PERSON, ORGANIZATION, OTHER
 from aleph.crawlers.crawler import Crawler
 
@@ -33,7 +34,7 @@ class OpenNamesCrawler(Crawler):
         })
         log.info(" > Spindle collection: %s", lst.label)
         db.session.flush()
-
+        terms = lst.terms
         entities = requests.get(url).json().get('entities', [])
         for entity in entities:
             if entity.get('name') is None:
@@ -52,6 +53,8 @@ class OpenNamesCrawler(Crawler):
                 'selectors': selectors
             })
             log.info("  # %s (%s)", ent.name, ent.category)
+        terms.update(lst.terms)
+        analyze_terms.delay(list(terms))
 
     def crawl(self):
         data = requests.get(JSON_PATH).json()

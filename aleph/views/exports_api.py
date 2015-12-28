@@ -7,7 +7,7 @@ import xlsxwriter
 from aleph import authz
 from aleph.model import Entity, Source
 from aleph.search import raw_iter
-# from aleph.search.queries import document_query
+from aleph.search import construct_query
 from aleph.model.metadata import CORE_FACETS
 
 blueprint = Blueprint('exports', __name__)
@@ -71,15 +71,10 @@ def process_row(row, attributes):
 @blueprint.route('/api/1/query/export')
 def export():
     attributes = request.args.getlist('attribute')
-    query = document_query(request.args, lists=authz.lists(authz.READ),
-                           sources=authz.sources(authz.READ))
-    query['_source'] = set(query['_source'])
+    query = construct_query(request.args)
     for attribute in attributes:
-        if attribute in CORE_FACETS:
-            query['_source'].add(attribute)
-        else:
-            query['_source'].add('attributes')
-    query['_source'] = list(query['_source'])
+        query['_source'].add(attribute)
+    query['_source'] = list(set(query['_source']))
     output = (process_row(r, attributes) for r in raw_iter(query))
     output = make_excel(output, attributes)
     return send_file(output, mimetype=XLSX_MIME, as_attachment=True,

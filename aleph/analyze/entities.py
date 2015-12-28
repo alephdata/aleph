@@ -23,10 +23,10 @@ class EntityAnalyzer(Analyzer):
     def generate_matchers(self):
         matches = defaultdict(set)
         q = db.session.query(Selector.entity_id, Selector.text)
-        for i, (entity_id, text) in enumerate(q.yield_per(self.BATCH_SIZE)):
+        for i, (entity_id, text) in enumerate(q.yield_per(BATCH_SIZE)):
             text = normalize(text)
             matches[text].add(entity_id)
-            if i > 0 and i % self.BATCH_SIZE == 0:
+            if i > 0 and i % BATCH_SIZE == 0:
                 yield self.compile(matches), matches
                 matches = defaultdict(set)
         if len(matches):
@@ -39,10 +39,12 @@ class EntityAnalyzer(Analyzer):
         return self._matchers
 
     def tag_text(self, text, entities):
+        if text is None:
+            return
         text = normalize(text)
         for rex, matches in self.matchers:
             for match in rex.finditer(text):
-                _, match, _ = match.groups()
+                match = match.group(2)
                 for entity_id in matches.get(match, []):
                     entities[entity_id] += 1
 
@@ -61,10 +63,13 @@ class EntityAnalyzer(Analyzer):
         self.save(document, meta, entities)
 
     def save(self, document, meta, entities):
+        if len(entities):
+            log.info("Tagged %r with %d entities", document, len(entities))
+
         Reference.delete_document(document.id)
         for entity_id, weight in entities.items():
             ref = Reference()
-            ref.document = document.id
+            ref.document_id = document.id
             ref.entity_id = entity_id
             ref.weight = weight
             db.session.add(ref)

@@ -5,6 +5,7 @@ import logging
 
 from aleph.core import app, db
 from aleph.model import List, Entity
+from aleph.analyze import analyze_terms
 from aleph.model.forms import PERSON, ORGANIZATION, COMPANY, OTHER
 from aleph.crawlers.crawler import Crawler
 
@@ -35,6 +36,7 @@ class SpindleCrawler(Crawler):
         log.info(" > Spindle collection: %s", lst.label)
         db.session.flush()
         res = requests.get('%s/entities' % url, headers=self.HEADERS)
+        terms = lst.terms
         lst.delete_entities()
         for entity in res.json().get('results', []):
             if entity.get('name') is None:
@@ -48,6 +50,8 @@ class SpindleCrawler(Crawler):
                 'selectors': aliases
             })
             log.info("  # %s (%s)", ent.name, ent.category)
+        terms.update(lst.terms)
+        analyze_terms.delay(list(terms))
 
     def crawl(self):
         url = urljoin(self.URL, '/api/collections')
