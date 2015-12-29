@@ -69,9 +69,9 @@
           ng-repeat="val in result.facets[field].values"
           ng-class="{'active': query.hasFilter(field, val.key)}"
           ng-click="query.toggleFilter(field, val.key)">
-          <span class="badge">{{val.doc_count}}</span>
-          <span class="lbl" tooltip="{{val.key}}" tooltip-append-to-body="true" tooltip-placement="left">
-            {{val.key | characters: 35 }}
+          <span class="badge">{{val.count}}</span>
+          <span class="lbl" tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
+            {{val.label | characters: 35 }}
           </span>
         </li>
       </ul>

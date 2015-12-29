@@ -6,6 +6,7 @@ from werkzeug.datastructures import MultiDict
 from aleph.core import es, es_index, url_for
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.common import add_filter, authz_filter
+from aleph.search.facets import convert_aggregations
 
 QUERY_FIELDS = ['title^100', 'file_name^10', 'summary^2']
 DEFAULT_FIELDS = ['source_id', 'title', 'content_hash', 'file_name',
@@ -161,7 +162,7 @@ def execute_query(args, q):
         'took': result.get('took'),
         'total': hits.get('total'),
         'next': None,
-        'facets': {}
+        'facets': convert_aggregations(result, args.getlist('facet'))
     }
     next_offset = output['offset'] + output['limit']
     if output['total'] > next_offset:
@@ -180,16 +181,4 @@ def execute_query(args, q):
         document['data_url'] = url_for('data.file',
                                        document_id=doc.get('_id'))
         output['results'].append(document)
-
-    # traverse and get all facets.
-    aggs = result.get('aggregations', {})
-    for facet in args.getlist('facet'):
-        scoped = aggs.get('scoped', {}).get(facet, {})
-        value = aggs.get(facet, scoped.get(facet, {}))
-        data = {
-            'total': scoped.get('doc_count', hits.get('total')),
-            'values': value.get('buckets', [])
-        }
-        output['facets'][facet] = data
-
     return output
