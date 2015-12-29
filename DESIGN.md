@@ -6,11 +6,11 @@ aleph/ingest
 aleph/extract
 aleph/fs
 
-* Document / Record - distinction, raw data support
-* Use database to store documents and records
-* Inline S3/FS support
-* Ingest mechanism for URLs
-* Ingest mechanism for bundled files
+* [DONE] Document / Record - distinction, raw data support
+* [DONE] Use database to store documents and records
+* [DONE] Inline S3/FS support
+* [DONE] Ingest mechanism for URLs
+* [DONE] Ingest mechanism for bundled files
 * Alerts / Subscriptions
 * Testing
 * tidbits
@@ -18,8 +18,8 @@ aleph/fs
 -----
 * Fix attributes facets
 * Entity data model / schema-based validation
-* Spindle importer 
-* OpenNames importer
+* [DONE] Spindle importer 
+* [DONE] OpenNames importer
 * Fix entities facets
 
 * Azerbaijan importer 
