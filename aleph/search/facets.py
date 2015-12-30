@@ -15,7 +15,7 @@ def convert_bucket(facet, bucket):
     if facet == 'languages':
         try:
             locale = Locale(key.strip().lower())
-            data['label'] = locale.display_name
+            data['label'] = locale.get_display_name('en_US')
         except:
             pass
     elif facet == 'countries' and key is not None:

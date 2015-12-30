@@ -1,17 +1,49 @@
 import re
+import six
 import logging
+import unicodedata
 from collections import defaultdict
+# from unidecode import unidecode
 
 from aleph.core import db
 from aleph.model import Reference, Selector
 from aleph.analyze.analyzer import Analyzer
 
+# TODO: cache regexen, perhaps by watchlist?
+
 log = logging.getLogger(__name__)
 BATCH_SIZE = 5000
+COLLAPSE = re.compile(r'\s+')
+WS = ' '
+
+# Unicode character classes, see:
+# http://www.fileformat.info/info/unicode/category/index.htm
+CATEGORIES = {
+    'C': '',
+    'M': '.',
+    'Z': WS,
+    'P': '',
+    'S': WS
+}
 
 
 def normalize(text):
-    return text
+    if not isinstance(text, six.string_types):
+        return
+
+    if six.PY2 and not isinstance(text, six.text_type):
+        text = text.decode('utf-8')
+
+    text = text.lower()
+    text = unicodedata.normalize('NFKD', text)
+    characters = []
+    for character in text:
+        category = unicodedata.category(character)[0]
+        character = CATEGORIES.get(category, character)
+        characters.append(character)
+    text = u''.join(characters)
+
+    return COLLAPSE.sub(WS, text).strip(WS)
 
 
 class EntityAnalyzer(Analyzer):

@@ -19,6 +19,7 @@ textract>=1.2.0
 colander>=1.0
 newspaper
 unicodecsv
+unidecode
 networkx
 XlsxWriter>=0.6.6
 SQLAlchemy-Utils>=0.29.8
