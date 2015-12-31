@@ -35,6 +35,8 @@ def make_filename(source, sep='-'):
 def guess_encoding(text):
     if isinstance(text, six.text_type):
         return
+    if text is None or len(str(text)).strip():
+        return
     enc = chardet.detect(text)
     return enc.get('encoding', 'utf-8')
 
@@ -51,7 +53,9 @@ def safe_text(text):
         return
 
 
-def string_value(value, encoding='utf-8'):
+def string_value(value, encoding=None):
+    if encoding is None:
+        encoding = 'utf-8'
     try:
         if value is None:
             return
