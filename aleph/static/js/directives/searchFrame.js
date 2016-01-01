@@ -22,7 +22,7 @@ aleph.directive('searchFrame', ['Query', 'QueryContext', 'Session', function (Qu
       });
 
       scope.showListFacet = function(id) {
-        return Query.load().listfacet.indexOf(id) == -1;
+        return Query.load().watchlist.indexOf(id) == -1;
       };
 
       scope.showFieldFacet = function(field) {

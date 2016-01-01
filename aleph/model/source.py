@@ -34,6 +34,7 @@ class Source(db.Model, TimeStampedModel):
         src.foreign_id = data.get('foreign_id', make_token())
         src.update_data(data, user)
         db.session.add(src)
+        db.session.flush()
         return src
 
     def update(self, data, user):

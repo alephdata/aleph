@@ -4,6 +4,7 @@ from collections import defaultdict
 from werkzeug.datastructures import MultiDict
 
 from aleph.core import es, es_index, url_for
+from aleph import authz
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.common import add_filter, authz_filter
 from aleph.search.facets import convert_aggregations
@@ -37,6 +38,7 @@ def construct_query(args, fields=None):
 
     facets = args.getlist('facet')
     aggs = aggregate(q, facets, filters)
+    q = entity_watchlists(q, aggs, args)
 
     sort = ['_score']
     return {
@@ -45,6 +47,37 @@ def construct_query(args, fields=None):
         'aggregations': aggs,
         '_source': fields or DEFAULT_FIELDS
     }
+
+
+def entity_watchlists(q, aggs, args):
+    """ Filter entities, facet for watchlists. """
+    for list_id in args.getlist('watchlist'):
+        if not authz.list_read(list_id):
+            continue
+
+        list_facet = {
+            'nested': {
+                'path': 'entities'
+            },
+            'aggs': {
+                'inner': {
+                    'filter': {'term': {'entities.list_id': list_id}},
+                    'aggs': {
+                        'entities': {
+                            'terms': {'field': 'entity_id',
+                                      'size': 50}
+                        }
+                    }
+                }
+            }
+        }
+        aggs['list__%s' % list_id] = list_facet
+
+    for entity in args.getlist('entity'):
+        cf = {'term': {'entities.entity_id': entity}}
+        q = add_filter(q, cf)
+
+    return q
 
 
 def filter_query(q, filters, skip=None):
@@ -162,8 +195,10 @@ def execute_query(args, q):
         'took': result.get('took'),
         'total': hits.get('total'),
         'next': None,
-        'facets': convert_aggregations(result, args.getlist('facet'))
+        'facets': {},
+        'watchlists': {}
     }
+    convert_aggregations(result, output, args)
     next_offset = output['offset'] + output['limit']
     if output['total'] > next_offset:
         params = {'offset': next_offset}

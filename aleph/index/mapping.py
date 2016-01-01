@@ -30,9 +30,10 @@ DOCUMENT_MAPPING = {
                 "path": "id"
             },
             "type": "nested",
-            # "include_in_parent": True,
+            "include_in_parent": True,
             "properties": {
-                "id": {"type": "string", "index": "not_analyzed"},
+                "id": {"type": "integer", "index": "not_analyzed"},
+                "entity_id": {"type": "integer", "index": "not_analyzed"},
                 "list_id": {"type": "string", "index": "not_analyzed"},
                 "name": {"type": "string", "index": "not_analyzed"},
                 "category": {"type": "string", "index": "not_analyzed"},

@@ -95,11 +95,13 @@ class Entity(db.Model, TimeStampedModel):
         return q
 
     @classmethod
-    def by_id_set(cls, ids):
+    def by_id_set(cls, ids, list_id=None):
         if not len(ids):
             return {}
         q = db.session.query(cls)
         q = q.filter(cls.id.in_(ids))
+        if list_id is not None:
+            q = q.filter(cls.list_id == list_id)
         entities = {}
         for ent in q:
             entities[ent.id] = ent

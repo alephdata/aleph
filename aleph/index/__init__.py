@@ -100,8 +100,9 @@ def generate_entities(document):
     entities = []
     for reference in document.references:
         entities.append({
+            'id': reference.id,
             'weight': reference.weight,
-            'id': reference.entity.id,
+            'entity_id': reference.entity.id,
             'list_id': reference.entity.list_id,
             'name': reference.entity.name,
             'category': reference.entity.category
