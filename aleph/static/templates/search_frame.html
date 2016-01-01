@@ -61,14 +61,14 @@
             <i class="fa fa-close"></i>
           </a>
         </span>
-        Attribute: {{fields[field]}}
+        {{fields[field]}}
         <span class="label label-warning" ng-hide="result.facets && result.facets[field]">no options</span>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
           ng-repeat="val in result.facets[field].values"
-          ng-class="{'active': query.hasFilter(field, val.key)}"
-          ng-click="query.toggleFilter(field, val.key)">
+          ng-class="{'active': query.hasFilter('filter:' + field, val.key)}"
+          ng-click="query.toggleFilter('filter:' + field, val.key)">
           <span class="badge">{{val.count}}</span>
           <span class="lbl" tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
             {{val.label | characters: 35 }}

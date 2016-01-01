@@ -58,8 +58,9 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     }
   }
 
-  var toggleFilter = function(name, val, skipReload) {
-    var filter = 'filter:' + name;
+  var toggleFilter = function(filter, val, skipReload) {
+    // var filter = 'filter:' + name;
+    // var filter = 'filter:' + name;
     if (!angular.isArray(query[filter])) {
       query[filter] = [];
     }
@@ -68,7 +69,7 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
       query[filter].push(val);
     } else {
       query[filter].splice(idx, 1);
-      clearDependentFilters(name, val);
+      clearDependentFilters(filter, val);
     }
     $location.search(query);
     if (!skipReload) {
