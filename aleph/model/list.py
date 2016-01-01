@@ -17,7 +17,7 @@ list_user_table = db.Table('list_user', db.metadata,
 class List(db.Model, TimeStampedModel):
     id = db.Column(db.Integer(), primary_key=True)
     label = db.Column(db.Unicode)
-    foreign_id = db.Column(db.Unicode)
+    foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
     public = db.Column(db.Boolean, default=False)
 
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'),
@@ -40,24 +40,6 @@ class List(db.Model, TimeStampedModel):
             'updated_at': self.updated_at
         }
 
-    @classmethod
-    def by_foreign_id(cls, foreign_id, data):
-        q = db.session.query(cls)
-        q = q.filter(cls.foreign_id == foreign_id)
-        lst = q.first()
-        if lst is None:
-            lst = cls.create(data, None)
-            lst.foreign_id = foreign_id
-        return lst
-
-    @classmethod
-    def create(cls, data, user):
-        lst = cls()
-        lst.update(data, user)
-        lst.creator = user
-        db.session.add(lst)
-        return lst
-
     def update(self, data, user):
         data = ListForm().deserialize(data)
         self.label = data.get('label')
@@ -76,6 +58,24 @@ class List(db.Model, TimeStampedModel):
     def delete_entities(self):
         for entity in self.entities:
             entity.delete()
+
+    @classmethod
+    def by_foreign_id(cls, foreign_id, data):
+        q = db.session.query(cls)
+        q = q.filter(cls.foreign_id == foreign_id)
+        lst = q.first()
+        if lst is None:
+            lst = cls.create(data, None)
+            lst.foreign_id = foreign_id
+        return lst
+
+    @classmethod
+    def create(cls, data, user):
+        lst = cls()
+        lst.update(data, user)
+        lst.creator = user
+        db.session.add(lst)
+        return lst
 
     @classmethod
     def by_id(cls, id):

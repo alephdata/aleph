@@ -5,7 +5,8 @@ from aleph.core import celery
 from aleph.ext import get_analyzers
 from aleph.model import Document
 from aleph.index import index_document
-from aleph.search import raw_iter, construct_query
+from aleph.search import raw_iter
+from aleph.search.query import text_query
 
 
 log = logging.getLogger(__name__)
@@ -19,9 +20,9 @@ def analyze_source(source_id):
 
 @celery.task()
 def analyze_terms(terms):
-    q = ' OR '.join(map(json.dumps, terms))
-    q = construct_query({'q': q})
-    analyze_matches(q)
+    for term in terms:
+        q = text_query(term)
+        analyze_matches.delay(q)
 
 
 @celery.task()

@@ -29,7 +29,7 @@ class OpenNamesCrawler(Crawler):
 
         lst = List.by_foreign_id(url, {
             'label': source.get('source_id'),
-            'public': False,
+            'public': True,
             'users': []
         })
         log.info(" > Spindle collection: %s", lst.label)

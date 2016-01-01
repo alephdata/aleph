@@ -12,7 +12,7 @@ class DirectoryCrawler(Crawler):
     def crawl(self, directory=None, source=None):
         source = source or directory
         source = Source.create({
-            'key': 'directory:%s' % slugify(source),
+            'foreign_id': 'directory:%s' % slugify(source),
             'label': source
         })
         directory = directory or os.getcwd()

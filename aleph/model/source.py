@@ -16,28 +16,22 @@ source_user_table = db.Table('source_user', db.metadata,
 
 class Source(db.Model, TimeStampedModel):
     id = db.Column(db.Integer, primary_key=True)
-    key = db.Column(db.Unicode, unique=True, nullable=False)
     label = db.Column(db.Unicode, nullable=True)
+    foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
     public = db.Column(db.Boolean, default=True)
 
     users = db.relationship(User, secondary=source_user_table,
                             backref='sources')
 
-    def __repr__(self):
-        return '<Source(%r)>' % self.key
-
-    def __unicode__(self):
-        return self.label
-
     @classmethod
     def create(cls, data, user=None):
-        if data.get('key') is not None:
-            src = Source.by_key(data.get('key'))
+        if data.get('foreign_id') is not None:
+            src = Source.by_foreign_id(data.get('foreign_id'))
             if src is not None:
                 return src
         src = cls()
         data = SourceCreateForm().deserialize(data)
-        src.key = data.get('key', make_token())
+        src.foreign_id = data.get('foreign_id', make_token())
         src.update_data(data, user)
         db.session.add(src)
         return src
@@ -54,16 +48,11 @@ class Source(db.Model, TimeStampedModel):
             users.add(user)
         self.users = list(users)
 
-    @classmethod
-    def delete(cls, id):
-        q = db.session.query(cls).filter_by(id=id)
-        q.delete()
-
     def to_dict(self):
         return {
             'api_url': url_for('sources.view', id=self.id),
             'id': self.id,
-            'key': self.key,
+            'foreign_id': self.foreign_id,
             'label': self.label,
             'public': self.public,
             'created_at': self.created_at,
@@ -71,12 +60,17 @@ class Source(db.Model, TimeStampedModel):
         }
 
     @classmethod
+    def delete(cls, id):
+        q = db.session.query(cls).filter_by(id=id)
+        q.delete()
+
+    @classmethod
     def by_id(cls, id):
         return db.session.query(cls).filter_by(id=id).first()
 
     @classmethod
-    def by_key(cls, key):
-        return db.session.query(cls).filter_by(key=key).first()
+    def by_foreign_id(cls, foreign_id):
+        return db.session.query(cls).filter_by(foreign_id=foreign_id).first()
 
     @classmethod
     def all(cls, ids=None):
@@ -84,3 +78,9 @@ class Source(db.Model, TimeStampedModel):
         if ids is not None:
             q = q.filter(cls.id.in_(ids))
         return q
+
+    def __repr__(self):
+        return '<Source(%r)>' % self.id
+
+    def __unicode__(self):
+        return self.label

@@ -45,7 +45,7 @@ def crawldir(directory, source=None, force=False):
     """ Crawl the given directory. """
     directory = os.path.abspath(directory)
     directory = os.path.normpath(directory)
-    log.info('Crawling %r (src tag: %r)', directory, source)
+    log.info('Crawling %r...', directory)
     DirectoryCrawler().crawl(directory=directory, source=source)
     db.session.commit()
 
