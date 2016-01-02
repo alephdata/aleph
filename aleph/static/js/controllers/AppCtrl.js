@@ -1,6 +1,6 @@
-aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$http', '$modal', '$q',
+aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$http', '$uibModal', '$q',
                              'Flash', 'Session', 'Query', 'QueryContext',
-  function($scope, $rootScope, $location, $route, $http, $modal, $q, Flash, Session, Query, QueryContext) {
+  function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Flash, Session, Query, QueryContext) {
   $scope.session = {logged_in: false};
   $scope.query = Query;
   $scope.flash = Flash;
@@ -38,7 +38,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   }
 
   $scope.editProfile = function() {
-    var d = $modal.open({
+    var d = $uibModal.open({
         templateUrl: 'profile.html',
         controller: 'ProfileCtrl',
         backdrop: true

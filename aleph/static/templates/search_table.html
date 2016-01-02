@@ -4,7 +4,7 @@
     infinite-scroll-distance="3">
     <div class="result animate toggle" ng-repeat="doc in result.results">
       <a ng-href="" target="_self"
-         tooltip="Loaded on {{doc.updated_at.split('T')[0]}}"
+         uib-tooltip="Loaded on {{doc.updated_at.split('T')[0]}}"
          tooltip-append-to-body="true"
          tooltip-placement="right" class="source">
         {{queryContext.sources[doc.source_id].label || doc.source_id}}

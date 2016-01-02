@@ -20,7 +20,7 @@ WS = ' '
 # http://www.fileformat.info/info/unicode/category/index.htm
 CATEGORIES = {
     'C': '',
-    'M': '.',
+    'M': ' . ',
     'Z': WS,
     'P': '',
     'S': WS

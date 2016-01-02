@@ -27,14 +27,14 @@
   <div class="col-md-3">
 
     <div class="btn-group btn-group-justified" role="group">
-      <div class="btn-group" role="group" dropdown>
+      <div class="btn-group" role="group" uib-dropdown>
         <button type="button" class="btn btn-default dropdown-toggle"
-          dropdown-toggle>
+          uib-dropdown-toggle>
           <i class="fa fa-list-alt"></i>
           Add filters
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" role="menu">
+        <ul class="uib-dropdown-menu" role="menu">
           <li ng-repeat="(id, list) in queryContext.lists"
             ng-show="showListFacet(id)">
             <a ng-click="query.toggleFilter('watchlist', id)"
@@ -70,7 +70,7 @@
           ng-click="query.toggleEntityFilter(entity.id, id)">
           <span class="badge">{{entity.count}}</span>
           <entity-icon category="entity.category"></entity-icon>
-          <span class="lbl" tooltip="{{entity.name.length > 35 ? entity.name : ''}}"
+          <span class="lbl" uib-tooltip="{{entity.name.length > 35 ? entity.name : ''}}"
             tooltip-append-to-body="true" tooltip-placement="left">
             {{entity.name | characters: 35 }}
           </span>
@@ -94,7 +94,7 @@
           ng-class="{'active': query.hasFilter('filter:' + field, val.key)}"
           ng-click="query.toggleFilter('filter:' + field, val.key)">
           <span class="badge">{{val.count}}</span>
-          <span class="lbl" tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
+          <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
             {{val.label | characters: 35 }}
           </span>
         </li>

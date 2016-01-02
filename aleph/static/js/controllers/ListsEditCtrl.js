@@ -1,6 +1,6 @@
-aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$modal',
+aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$uibModal',
                                    'Flash', 'Validation', 'QueryContext',
-  function($scope, $location, $http, $routeParams, $modal, Flash, Validation, QueryContext) {
+  function($scope, $location, $http, $routeParams, $uibModal, Flash, Validation, QueryContext) {
   
   var apiUrl = '/api/1/lists/' + $routeParams.id;
   $scope.list = {};
@@ -33,7 +33,7 @@ aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams
   };
 
   $scope.delete = function() {
-    var d = $modal.open({
+    var d = $uibModal.open({
         templateUrl: 'lists_delete.html',
         controller: 'ListsDeleteCtrl',
         resolve: {

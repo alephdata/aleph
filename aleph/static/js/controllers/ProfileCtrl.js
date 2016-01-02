@@ -1,5 +1,5 @@
-aleph.controller('ProfileCtrl', ['$scope', '$location', '$modalInstance', '$http', 'Session',
-  function($scope, $location, $modalInstance, $http, Session) {
+aleph.controller('ProfileCtrl', ['$scope', '$location', '$uibModalInstance', '$http', 'Session',
+  function($scope, $location, $uibModalInstance, $http, Session) {
   $scope.user = {};
   $scope.session = {};
 
@@ -9,7 +9,7 @@ aleph.controller('ProfileCtrl', ['$scope', '$location', '$modalInstance', '$http
   });
 
   $scope.cancel = function() {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 
   $scope.update = function(form) {
@@ -17,7 +17,7 @@ aleph.controller('ProfileCtrl', ['$scope', '$location', '$modalInstance', '$http
     res.success(function(data) {
       $scope.user = data;
       $scope.session.user = data;
-      $modalInstance.dismiss('ok');
+      $uibModalInstance.dismiss('ok');
     });
   };
 }]);

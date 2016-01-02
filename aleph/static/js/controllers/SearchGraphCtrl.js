@@ -68,7 +68,7 @@ aleph.controller('SearchGraphCtrl', ['$scope', '$location', '$timeout', '$compil
         .attr("class", function(d) { return 'node ' + d.category; })
         .attr("r", 2)
         .attr("tooltip-append-to-body", true)
-        .attr("tooltip", function(d){ return d.label; })
+        .attr("uib-tooltip", function(d){ return d.label; })
         // .on("click", function(d) {
         //   Query.toggleFilter('entity', d.id);
         //   $scope.$apply();

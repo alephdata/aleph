@@ -6635,7 +6635,7 @@ a {
 }
 
 /*! 
- * angular-loading-bar v0.7.1
+ * angular-loading-bar v0.8.0
  * https://chieffancypants.github.io/angular-loading-bar
  * Copyright (c) 2015 Wes Cruver
  * License: MIT
@@ -6706,7 +6706,7 @@ a {
   border: solid 2px transparent;
   border-top-color: #29d;
   border-left-color: #29d;
-  border-radius: 10px;
+  border-radius: 50%;
   -webkit-animation: loading-bar-spinner 400ms linear infinite;
   -moz-animation: loading-bar-spinner 400ms linear infinite;
   -ms-animation: loading-bar-spinner 400ms linear infinite;
