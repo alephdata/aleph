@@ -20,7 +20,7 @@ DEFAULT_FIELDS = ['source_id', 'title', 'content_hash', 'file_name',
 OR_FIELDS = ['source_id']
 
 
-def construct_query(args, fields=None):
+def construct_query(args, fields=None, facets=True):
     """ Parse a user query string, compose and execute a query. """
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
@@ -36,9 +36,10 @@ def construct_query(args, fields=None):
             _, field = key.split(':', 1)
             filters.append((field, value))
 
-    facets = args.getlist('facet')
-    aggs = aggregate(q, facets, filters)
-    q = entity_watchlists(q, aggs, args)
+    aggs = {}
+    if facets:
+        aggs = aggregate(q, args, filters)
+        q = entity_watchlists(q, aggs, args)
 
     sort = ['_score']
     return {
@@ -95,7 +96,7 @@ def filter_query(q, filters, skip=None):
     return q
 
 
-def aggregate(q, facets, filters):
+def aggregate(q, args, filters):
     # Generate aggregations. They are a generalized mechanism to do facetting
     # in ElasticSearch. Anything placed inside the "scoped" sub-aggregation
     # is made to be ``global``, ie. it'll have to bring it's own filters.
@@ -105,7 +106,7 @@ def aggregate(q, facets, filters):
             'aggs': {}
         }
     }
-    for facet in facets:
+    for facet in args.getlist('facet'):
         agg = {facet: {'terms': {'field': facet, 'size': 200}}}
         if facet in OR_FIELDS:
             aggs['scoped']['aggs'][facet] = {

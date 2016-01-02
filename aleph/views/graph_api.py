@@ -7,10 +7,8 @@ from networkx import degree
 from networkx.readwrite import json_graph
 from apikit import jsonify, arg_int
 
-from aleph import authz
 from aleph.views.cache import etag_cache_keygen
-from aleph.search import raw_iter
-# from aleph.search.queries import document_query
+from aleph.search import raw_iter, construct_query
 
 blueprint = Blueprint('graph', __name__)
 
@@ -50,22 +48,19 @@ def paginate_graph(graph):
 
 
 def generate_graph(args):
-    fields = ['id', 'collection', 'entities.id', 'entities.label',
+    fields = ['id', 'collection', 'entities.entity_id', 'entities.name',
               'entities.category']
-    query = document_query(args, fields=fields,
-                           sources=authz.sources(authz.READ),
-                           lists=authz.lists(authz.READ),
-                           facets=False)
+    query = construct_query(args, fields=fields, facets=False)
 
     graph = nx.MultiGraph()
     for doc in raw_iter(query):
         entities = set()
         for entity in doc.get('_source').get('entities', []):
-            if not graph.has_node(entity.get('id')):
-                graph.add_node(entity.get('id'),
-                               label=entity.get('label'),
+            if not graph.has_node(entity.get('entity_id')):
+                graph.add_node(entity.get('entity_id'),
+                               label=entity.get('name'),
                                category=entity.get('category'))
-            entities.add(entity.get('id'))
+            entities.add(entity.get('entity_id'))
         for (src, dst) in combinations(entities, 2):
             graph.add_edge(src, dst, weight=1)
     graph = multigraph_to_weighted(graph)
