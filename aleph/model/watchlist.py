@@ -2,19 +2,19 @@ import logging
 
 from aleph.core import db, url_for
 from aleph.model.user import User
-from aleph.model.forms import ListForm
+from aleph.model.forms import WatchlistForm
 from aleph.model.common import TimeStampedModel
 
 log = logging.getLogger(__name__)
 
 
-list_user_table = db.Table('list_user', db.metadata,
-    db.Column('list_id', db.Integer, db.ForeignKey('list.id')), # noqa
+watchlist_user_table = db.Table('watchlist_user', db.metadata,
+    db.Column('watchlist_id', db.Integer, db.ForeignKey('watchlist.id')), # noqa
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')) # noqa
 )
 
 
-class List(db.Model, TimeStampedModel):
+class Watchlist(db.Model, TimeStampedModel):
     id = db.Column(db.Integer(), primary_key=True)
     label = db.Column(db.Unicode)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
@@ -24,8 +24,8 @@ class List(db.Model, TimeStampedModel):
                            nullable=True)
     creator = db.relationship(User)
 
-    users = db.relationship(User, secondary=list_user_table,
-                            backref='lists')
+    users = db.relationship(User, secondary=watchlist_user_table,
+                            backref='watchlists')
 
     def to_dict(self):
         return {
@@ -41,7 +41,7 @@ class List(db.Model, TimeStampedModel):
         }
 
     def update(self, data, user):
-        data = ListForm().deserialize(data)
+        data = WatchlistForm().deserialize(data)
         self.label = data.get('label')
         if data.get('public') is not None:
             self.public = data.get('public')
@@ -63,30 +63,29 @@ class List(db.Model, TimeStampedModel):
     def by_foreign_id(cls, foreign_id, data):
         q = db.session.query(cls)
         q = q.filter(cls.foreign_id == foreign_id)
-        lst = q.first()
-        if lst is None:
-            lst = cls.create(data, None)
-            lst.foreign_id = foreign_id
-        return lst
+        watchlist = q.first()
+        if watchlist is None:
+            watchlist = cls.create(data, None)
+            watchlist.foreign_id = foreign_id
+        return watchlist
 
     @classmethod
     def create(cls, data, user):
-        lst = cls()
-        lst.update(data, user)
-        lst.creator = user
-        db.session.add(lst)
-        return lst
+        watchlist = cls()
+        watchlist.update(data, user)
+        watchlist.creator = user
+        db.session.add(watchlist)
+        return watchlist
 
     @classmethod
     def by_id(cls, id):
-        q = db.session.query(cls).filter_by(id=id)
-        return q.first()
+        return db.session.query(cls).filter_by(id=id).first()
 
     @classmethod
-    def all(cls, list_ids=None):
+    def all(cls, watchlist_ids=None):
         q = db.session.query(cls)
-        if list_ids is not None:
-            q = q.filter(cls.id.in_(list_ids))
+        if watchlist_ids is not None:
+            q = q.filter(cls.id.in_(watchlist_ids))
         q = q.order_by(cls.id.desc())
         return q
 
@@ -95,12 +94,12 @@ class List(db.Model, TimeStampedModel):
         from aleph.model.entity import Entity, Selector
         q = db.session.query(Selector.text)
         q = q.join(Entity, Entity.id == Selector.entity_id)
-        q = q.filter(Entity.list_id == self.id)
+        q = q.filter(Entity.watchlist_id == self.id)
         q = q.distinct()
         return set([r[0] for r in q])
 
     def __repr__(self):
-        return '<List(%r, %r)>' % (self.id, self.label)
+        return '<Watchlist(%r, %r)>' % (self.id, self.label)
 
     def __unicode__(self):
         return self.label

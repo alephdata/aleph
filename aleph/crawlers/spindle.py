@@ -4,7 +4,7 @@ import requests
 import logging
 
 from aleph.core import app, db
-from aleph.model import List, Entity
+from aleph.model import Watchlist, Entity
 from aleph.analyze import analyze_terms
 from aleph.model.forms import PERSON, ORGANIZATION, COMPANY, OTHER
 from aleph.crawlers.crawler import Crawler
@@ -28,29 +28,29 @@ class SpindleCrawler(Crawler):
         if not len(collection.get('subjects', [])):
             return
         url = urljoin(self.URL, '/api/collections/%s' % collection.get('id'))
-        lst = List.by_foreign_id(url, {
+        watchlist = Watchlist.by_foreign_id(url, {
             'label': collection.get('title'),
             'public': False,
             'users': []
         })
-        log.info(" > Spindle collection: %s", lst.label)
+        log.info(" > Spindle collection: %s", watchlist.label)
         db.session.flush()
         res = requests.get('%s/entities' % url, headers=self.HEADERS)
-        terms = lst.terms
-        lst.delete_entities()
+        terms = watchlist.terms
+        watchlist.delete_entities()
         for entity in res.json().get('results', []):
             if entity.get('name') is None:
                 continue
             aliases = [on.get('alias') for on in entity.get('other_names', [])]
             ent = Entity.create({
                 'name': entity.get('name'),
-                'list': lst,
+                'watchlist': watchlist,
                 'category': SCHEMATA.get(entity.get('$schema'), OTHER),
                 'data': entity,
                 'selectors': aliases
             })
             log.info("  # %s (%s)", ent.name, ent.category)
-        terms.update(lst.terms)
+        terms.update(watchlist.terms)
         analyze_terms.delay(list(terms))
 
     def crawl(self):

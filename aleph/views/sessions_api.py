@@ -24,9 +24,9 @@ def status():
         'api_key': current_user.api_key if authz.logged_in() else None,
         'user': current_user if authz.logged_in() else None,
         'permissions': {
-            'lists': {
-                'read': authz.lists(authz.READ),
-                'write': authz.lists(authz.WRITE)
+            'watchlists': {
+                'read': authz.watchlists(authz.READ),
+                'write': authz.watchlists(authz.WRITE)
             },
             'sources': {
                 'read': authz.sources(authz.READ),

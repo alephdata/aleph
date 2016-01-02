@@ -3,7 +3,7 @@ import requests
 import logging
 
 from aleph.core import db
-from aleph.model import List, Entity
+from aleph.model import Watchlist, Entity
 from aleph.analyze import analyze_terms
 from aleph.model.forms import PERSON, ORGANIZATION, OTHER
 from aleph.crawlers.crawler import Crawler
@@ -27,14 +27,14 @@ class OpenNamesCrawler(Crawler):
         json_file = source.get('data', {}).get('json')
         url = urljoin(JSON_PATH, json_file)
 
-        lst = List.by_foreign_id(url, {
+        watchlist = Watchlist.by_foreign_id(url, {
             'label': source.get('source_id'),
             'public': True,
             'users': []
         })
-        log.info(" > Spindle collection: %s", lst.label)
+        log.info(" > Spindle collection: %s", watchlist.label)
         db.session.flush()
-        terms = lst.terms
+        terms = watchlist.terms
         entities = requests.get(url).json().get('entities', [])
         for entity in entities:
             if entity.get('name') is None:
@@ -47,13 +47,13 @@ class OpenNamesCrawler(Crawler):
                     selectors.append(iden.get('number'))
             ent = Entity.create({
                 'name': entity.get('name'),
-                'list': lst,
+                'watchlist': watchlist,
                 'category': CATEGORIES.get(entity.get('type'), OTHER),
                 'data': entity,
                 'selectors': selectors
             })
             log.info("  # %s (%s)", ent.name, ent.category)
-        terms.update(lst.terms)
+        terms.update(watchlist.terms)
         analyze_terms.delay(list(terms))
 
     def crawl(self):

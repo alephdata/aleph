@@ -36,15 +36,15 @@ class UserRef(Ref):
         return None
 
 
-class ListRef(Ref):
+class WatchlistRef(Ref):
 
     def decode(self, cstruct):
-        from aleph.model.list import List
+        from aleph.model.watchlist import Watchlist
 
-        if isinstance(cstruct, List):
+        if isinstance(cstruct, Watchlist):
             return cstruct
         if isinstance(cstruct, (basestring, int)):
-            return List.by_id(cstruct)
+            return Watchlist.by_id(cstruct)
         if isinstance(cstruct, dict):
             return self.decode(cstruct.get('id'))
         return None
@@ -72,18 +72,18 @@ class SourceCreateForm(colander.MappingSchema):
     users = SourceUsers(missing=[])
 
 
-class ListUsers(colander.SequenceSchema):
+class WatchlistUsers(colander.SequenceSchema):
     user = colander.SchemaNode(UserRef())
 
 
-class ListForm(colander.MappingSchema):
+class WatchlistForm(colander.MappingSchema):
     label = colander.SchemaNode(colander.String())
     public = colander.SchemaNode(colander.Boolean())
-    users = ListUsers()
+    users = WatchlistUsers()
 
 
 class EntityForm(colander.MappingSchema):
     name = colander.SchemaNode(colander.String())
     category = colander.SchemaNode(colander.String(),
                                    validator=colander.OneOf(CATEGORIES))
-    list = colander.SchemaNode(ListRef())
+    watchlist = colander.SchemaNode(WatchlistRef())

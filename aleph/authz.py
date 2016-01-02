@@ -3,7 +3,7 @@ from flask.ext.login import current_user
 from werkzeug.exceptions import Forbidden
 
 from aleph.core import db
-from aleph.model import Source, List, User
+from aleph.model import Source, Watchlist, User
 
 READ = 'read'
 WRITE = 'write'
@@ -24,19 +24,19 @@ def sources(action):
     return list(request._authz_sources.get(action, []))
 
 
-def lists(action):
-    request._authz_lists = {READ: set(), WRITE: set()}
-    q = db.session.query(List.id).filter_by(public=True)
-    for list_id, in q.all():
-        request._authz_lists[READ].add(list_id)
+def watchlists(action):
+    request._authz_watchlists = {READ: set(), WRITE: set()}
+    q = db.session.query(Watchlist.id).filter_by(public=True)
+    for watchlist_id, in q.all():
+        request._authz_watchlists[READ].add(watchlist_id)
     if logged_in():
-        q = db.session.query(List.id)
+        q = db.session.query(Watchlist.id)
         if not is_admin():
-            q = q.filter(List.users.any(User.id == current_user.id))
-        for list_id, in q.all():
-            request._authz_lists[READ].add(list_id)
-            request._authz_lists[WRITE].add(list_id)
-    return list(request._authz_lists.get(action, []))
+            q = q.filter(Watchlist.users.any(User.id == current_user.id))
+        for watchlist_id, in q.all():
+            request._authz_watchlists[READ].add(watchlist_id)
+            request._authz_watchlists[WRITE].add(watchlist_id)
+    return list(request._authz_watchlists.get(action, []))
 
 
 def source_read(id):
@@ -47,12 +47,12 @@ def source_write(id):
     return int(id) in sources(WRITE)
 
 
-def list_read(id):
-    return int(id) in lists(READ)
+def watchlist_read(id):
+    return int(id) in watchlists(READ)
 
 
-def list_write(id):
-    return int(id) in lists(WRITE)
+def watchlist_write(id):
+    return int(id) in watchlists(WRITE)
 
 
 def logged_in():

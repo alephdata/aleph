@@ -34,7 +34,7 @@ DOCUMENT_MAPPING = {
             "properties": {
                 "id": {"type": "integer", "index": "not_analyzed"},
                 "entity_id": {"type": "integer", "index": "not_analyzed"},
-                "list_id": {"type": "string", "index": "not_analyzed"},
+                "watchlist_id": {"type": "string", "index": "not_analyzed"},
                 "name": {"type": "string", "index": "not_analyzed"},
                 "category": {"type": "string", "index": "not_analyzed"},
                 "weight": {"type": "string", "index": "not_analyzed"}

@@ -103,7 +103,7 @@ def generate_entities(document):
             'id': reference.id,
             'weight': reference.weight,
             'entity_id': reference.entity.id,
-            'list_id': reference.entity.list_id,
+            'watchlist_id': reference.entity.watchlist_id,
             'name': reference.entity.name,
             'category': reference.entity.category
         })

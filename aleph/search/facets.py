@@ -30,11 +30,11 @@ def convert_bucket(facet, bucket):
     return data
 
 
-def convert_list(entities, list_id):
+def convert_watchlist(entities, watchlist_id):
     output = {'entities': []}
     buckets = entities.get('buckets', [])
     entities = Entity.by_id_set([e.get('key') for e in buckets],
-                                list_id=list_id)
+                                watchlist_id=watchlist_id)
     for bucket in buckets:
         entity = entities.get(bucket.get('key'))
         if entity is None:
@@ -49,10 +49,11 @@ def convert_aggregations(result, output, args):
     """ traverse and get all facets. """
     aggs = result.get('aggregations', {})
 
-    for list_id in args.getlist('watchlist'):
-        value = aggs.get('list__%s' % list_id, {})
+    for watchlist_id in args.getlist('watchlist'):
+        value = aggs.get('watchlist__%s' % watchlist_id, {})
         value = value.get('inner', {}).get('entities', {})
-        output['watchlists'][list_id] = convert_list(value, list_id)
+        output['watchlists'][watchlist_id] = \
+            convert_watchlist(value, watchlist_id)
 
     for facet in args.getlist('facet'):
         scoped = aggs.get('scoped', {}).get(facet, {})
