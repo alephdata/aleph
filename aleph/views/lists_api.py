@@ -34,8 +34,7 @@ def view(id):
     lst = obj_or_404(List.by_id(id))
     etag_cache_keygen(lst)
     data = lst.to_dict()
-    if authz.list_write(id):
-        data['users'] = [u.id for u in lst.users]
+    data['users'] = [u.id for u in lst.users]
     return jsonify(data)
 
 

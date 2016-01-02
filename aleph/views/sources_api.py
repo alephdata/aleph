@@ -36,9 +36,7 @@ def view(id):
     source = obj_or_404(Source.by_id(id))
     etag_cache_keygen(source)
     data = source.to_dict()
-    data['can_write'] = authz.source_write(id)
-    if data['can_write']:
-        data['users'] = [u.id for u in source.users]
+    data['users'] = [u.id for u in source.users]
     return jsonify(data)
 
 
