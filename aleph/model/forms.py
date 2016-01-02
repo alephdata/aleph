@@ -53,7 +53,7 @@ class ListRef(Ref):
 class UserForm(colander.MappingSchema):
     email = colander.SchemaNode(colander.String(),
                                 validator=colander.Email())
-    display_name = colander.SchemaNode(colander.String())
+    name = colander.SchemaNode(colander.String())
 
 
 class SourceUsers(colander.SequenceSchema):
