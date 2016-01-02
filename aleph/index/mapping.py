@@ -15,7 +15,7 @@ DOCUMENT_MAPPING = {
         "title": {"type": "string", "index": "analyzed"},
         "content_hash": {"type": "string", "index": "not_analyzed"},
         "file_name": {"type": "string", "index": "not_analyzed"},
-        "source_id": {"type": "string", "index": "not_analyzed"},
+        "source_id": {"type": "integer", "index": "not_analyzed"},
         "source_url": {"type": "string", "index": "not_analyzed"},
         "extension": {"type": "string", "index": "not_analyzed"},
         "languages": {"type": "string", "index": "not_analyzed"},

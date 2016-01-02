@@ -16,11 +16,16 @@ aleph/fs
 * tidbits
 
 -----
-* Fix attributes facets
+* [DONE] Fix attributes facets
 * Entity data model / schema-based validation
 * [DONE] Spindle importer 
 * [DONE] OpenNames importer
-* Fix entities facets
+* [DONE] Fix entities facets
+* Upgrade bootstrap-ui
+* Refactor QueryContext 
+* Rename List -> Watchlist
+* Source facets
+* Source modals
 
 * Azerbaijan importer 
 * Moldova importer 
