@@ -12,7 +12,7 @@ from aleph.search.facets import convert_aggregations
 QUERY_FIELDS = ['title^100', 'file_name^10', 'summary^2']
 DEFAULT_FIELDS = ['source_id', 'title', 'content_hash', 'file_name',
                   'extension', 'mime_type', 'countries', 'languages',
-                  'source_url', 'created_at', 'updated_at']
+                  'source_url', 'created_at', 'updated_at', 'type']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
