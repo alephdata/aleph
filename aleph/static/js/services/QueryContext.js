@@ -9,7 +9,7 @@ aleph.factory('QueryContext', ['$http', '$q', 'Session', function($http, $q, Ses
       Session.get(function(session) {
         $q.all([
           $http.get('/api/1/sources?_uid=' + session.cbq),
-          $http.get('/api/1/lists?_uid=' + session.cbq),
+          $http.get('/api/1/watchlists?_uid=' + session.cbq),
           $http.get('/api/1/fields?_uid=' + session.cbq)
         ]).then(function(results) {
 
@@ -18,14 +18,14 @@ aleph.factory('QueryContext', ['$http', '$q', 'Session', function($http, $q, Ses
               sources[c.id] = c;
             });
 
-            var lists = {}
+            var watchlists = {}
             angular.forEach(results[1].data.results, function(c) {
-              lists[c.id] = c;
+              watchlists[c.id] = c;
             });
 
             dfd.resolve({
               'sources': sources,
-              'lists': lists,
+              'watchlists': watchlists,
               'fields': results[2].data,
             });
         });

@@ -41,4 +41,4 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = 'UTC'
 CELERY_BROKER_URL = env.get('RABBITMQ_BIGWIG_URL',
                             'amqp://guest:guest@localhost:5672//')
-CELERY_IMPORTS = ('aleph.processing')
+CELERY_IMPORTS = ('aleph.queue')

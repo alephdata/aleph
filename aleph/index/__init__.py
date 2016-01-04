@@ -36,6 +36,7 @@ def clear_children(document):
     def gen_deletes():
             for res in scan(es, query=q, index=es_index,
                             doc_type=[TYPE_RECORD]):
+                print res
                 yield {
                     '_op_type': 'delete',
                     '_index': es_index,
@@ -43,8 +44,11 @@ def clear_children(document):
                     '_id': res.get('_id')
                 }
 
-    bulk(es, gen_deletes(), stats_only=True, chunk_size=2000,
-         request_timeout=60.0)
+    try:
+        bulk(es, gen_deletes(), stats_only=True, chunk_size=2000,
+             request_timeout=60.0)
+    except Exception as ex:
+        log.exception(ex)
 
 
 def generate_pages(document):

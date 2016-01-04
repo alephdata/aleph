@@ -52,6 +52,7 @@ class WatchlistRef(Ref):
 
 class UserForm(colander.MappingSchema):
     email = colander.SchemaNode(colander.String(),
+                                default=None, missing=None,
                                 validator=colander.Email())
     name = colander.SchemaNode(colander.String())
 

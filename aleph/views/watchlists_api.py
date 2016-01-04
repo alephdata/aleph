@@ -50,7 +50,7 @@ def update(id):
 
 @blueprint.route('/api/1/watchlists/<int:id>', methods=['DELETE'])
 def delete(id):
-    authz.require(authz.list_write(id))
+    authz.require(authz.watchlist_write(id))
     watchlist = obj_or_404(Watchlist.by_id(id))
     terms = watchlist.terms
     watchlist.delete()

@@ -1,13 +1,13 @@
-aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$uibModal',
-                                   'Flash', 'Validation', 'QueryContext',
+aleph.controller('WatchlistsEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$uibModal',
+                                        'Flash', 'Validation', 'QueryContext',
   function($scope, $location, $http, $routeParams, $uibModal, Flash, Validation, QueryContext) {
   
-  var apiUrl = '/api/1/lists/' + $routeParams.id;
-  $scope.list = {};
+  var apiUrl = '/api/1/watchlists/' + $routeParams.id;
+  $scope.watchlist = {};
   $scope.users = {};
 
   $http.get(apiUrl).then(function(res) {
-    $scope.list = res.data;
+    $scope.watchlist = res.data;
   })
 
   $http.get('/api/1/users').then(function(res) {
@@ -15,35 +15,35 @@ aleph.controller('ListsEditCtrl', ['$scope', '$location', '$http', '$routeParams
   })
   
   $scope.canSave = function() {
-    return $scope.list.can_write;
+    return $scope.watchlist.can_write;
   };
 
   $scope.hasUser = function(id) {
-    var users = $scope.list.users || [];
+    var users = $scope.watchlist.users || [];
     return users.indexOf(id) != -1;
   };
 
   $scope.toggleUser = function(id) {
-    var idx = $scope.list.users.indexOf(id);
+    var idx = $scope.watchlist.users.indexOf(id);
     if (idx != -1) {
-      $scope.list.users.splice(idx, 1);
+      $scope.watchlist.users.splice(idx, 1);
     } else {
-      $scope.list.users.push(id);
+      $scope.watchlist.users.push(id);
     }
   };
 
   $scope.delete = function() {
     var d = $uibModal.open({
-        templateUrl: 'lists_delete.html',
-        controller: 'ListsDeleteCtrl',
+        templateUrl: 'watchlists_delete.html',
+        controller: 'WatchlistsDeleteCtrl',
         resolve: {
-            list: function () { return $scope.list; }
+            watchlist: function () { return $scope.watchlist; }
         }
     });
   }
 
   $scope.save = function(form) {
-    var res = $http.post(apiUrl, $scope.list);
+    var res = $http.post(apiUrl, $scope.watchlist);
     res.success(function(data) {
       QueryContext.reset();
       Flash.message('Your changes have been saved.', 'success');

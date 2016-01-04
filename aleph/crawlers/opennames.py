@@ -33,6 +33,7 @@ class OpenNamesCrawler(Crawler):
             'users': []
         })
         log.info(" > Spindle collection: %s", watchlist.label)
+        watchlist.delete_entities()
         db.session.flush()
         terms = watchlist.terms
         entities = requests.get(url).json().get('entities', [])
@@ -54,6 +55,7 @@ class OpenNamesCrawler(Crawler):
             })
             log.info("  # %s (%s)", ent.name, ent.category)
         terms.update(watchlist.terms)
+        db.session.commit()
         analyze_terms.delay(list(terms))
 
     def crawl(self):

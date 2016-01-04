@@ -1,13 +1,13 @@
 
-<lists-frame list="list" selected="edit">
+<lists-frame watchlist="watchlist" selected="edit">
   <form class="form-horizontal" role="form" name="editList" ng-submit="save(editList)">
     <div class="row">
       <div class="col-md-6">   
         <div class="form-group" ng-class="{'has-error': editList.label.$invalid}">
           <label class="col-sm-3 control-label" for="label">Label</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="label" name="label" ng-model="list.label"
-              placeholder="The list's label">
+            <input type="text" class="form-control" id="label" name="label" ng-model="watchlist.label"
+              placeholder="The watchlist's label">
             <p class="help-block" ng-show="editList.label.$invalid" ng-bind="editList.label.$message"></p>
           </div>
         </div>
@@ -16,7 +16,7 @@
           <div class="col-sm-offset-3 col-sm-9">
             <div class="checkbox">
               <label>
-                <input type="checkbox" ng-model="list.public"> Publicly visible
+                <input type="checkbox" ng-model="watchlist.public"> Publicly visible
               </label>
             </div>
           </div>

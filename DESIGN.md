@@ -21,9 +21,9 @@ aleph/fs
 * [DONE] Spindle importer 
 * [DONE] OpenNames importer
 * [DONE] Fix entities facets
-* Upgrade bootstrap-ui
+* [DONE] Upgrade bootstrap-ui
 * Refactor QueryContext 
-* Rename List -> Watchlist
+* [DONE] Rename List -> Watchlist
 * Source facets
 * Source modals
 

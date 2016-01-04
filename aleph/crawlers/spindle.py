@@ -51,6 +51,7 @@ class SpindleCrawler(Crawler):
             })
             log.info("  # %s (%s)", ent.name, ent.category)
         terms.update(watchlist.terms)
+        db.session.commit()
         analyze_terms.delay(list(terms))
 
     def crawl(self):

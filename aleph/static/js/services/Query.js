@@ -44,8 +44,8 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
       var key = 'filter:' + val;
       query[key] = [];
     }
-    if (name == 'listfacet') {
-      var key = 'list-' + val;
+    if (name == 'watchlist') {
+      var key = 'watchlist-' + val;
       if (query.entity) {
         angular.forEach(query[key], function(id) {
           var idx = query.entity.indexOf(id);
@@ -77,9 +77,9 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     }
   };
 
-  var toggleEntityFilter = function(id, list) {
+  var toggleEntityFilter = function(id, watchlist) {
     toggleFilter('entity', id, true);
-    toggleFilter('list-' + list, id);
+    toggleFilter('watchlist-' + watchlist, id);
   };
 
   var hasFilter = function(name, val) {

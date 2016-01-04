@@ -62,21 +62,21 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     }
   });
 
-  $routeProvider.when('/lists/new', {
-    templateUrl: 'lists_new.html',
-    controller: 'ListsNewCtrl',
+  $routeProvider.when('/watchlists/new', {
+    templateUrl: 'watchlists_new.html',
+    controller: 'WatchlistsNewCtrl',
     loginRequired: true
   });
 
-  $routeProvider.when('/lists/:id', {
-    templateUrl: 'lists_edit.html',
-    controller: 'ListsEditCtrl',
+  $routeProvider.when('/watchlists/:id', {
+    templateUrl: 'watchlists_edit.html',
+    controller: 'WatchlistsEditCtrl',
     loginRequired: true
   });
 
-  $routeProvider.when('/lists/:id/entities', {
-    templateUrl: 'lists_entities.html',
-    controller: 'ListsEntitiesCtrl',
+  $routeProvider.when('/watchlists/:id/entities', {
+    templateUrl: 'watchlists_entities.html',
+    controller: 'WatchlistsEntitiesCtrl',
     reloadOnSearch: false,
     loginRequired: true
   });

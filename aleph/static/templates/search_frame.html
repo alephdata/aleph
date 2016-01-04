@@ -35,10 +35,10 @@
           <span class="caret"></span>
         </button>
         <ul class="uib-dropdown-menu" role="menu">
-          <li ng-repeat="(id, list) in queryContext.lists"
+          <li ng-repeat="(id, watchlist) in queryContext.watchlists"
             ng-show="showListFacet(id)">
             <a ng-click="query.toggleFilter('watchlist', id)"
-              ng-bind="list.label"></a>
+              ng-bind="watchlist.label"></a>
           </li>
           <li class="divider"></li>
           <li ng-repeat="(field, label) in queryContext.fields"
@@ -60,7 +60,7 @@
             <i class="fa fa-close"></i>
           </a>
         </span>
-        List: {{lists[id].label}}
+        List: {{watchlists[id].label}}
         <span class="label label-warning" ng-hide="result.watchlists && result.watchlists[id] && result.watchlists[id].entities.length">no options</span>
       </div>
       <ul class="list-group facet-list">

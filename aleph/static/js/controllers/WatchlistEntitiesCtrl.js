@@ -1,8 +1,8 @@
 
-aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routeParams', 'Validation', 'Flash',
+aleph.controller('WatchlistsEntitiesCtrl', ['$scope', '$location', '$http', '$routeParams', 'Validation', 'Flash',
   function($scope, $location, $http, $routeParams, Validation, Flash) {
   
-  var apiUrl = '/api/1/lists/' + $routeParams.id;
+  var apiUrl = '/api/1/watchlists/' + $routeParams.id;
   $scope.query = $location.search();
   $scope.list = {};
   $scope.entities = {};
@@ -79,7 +79,7 @@ aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routePa
 
   $scope.loadQuery = function() {
     $scope.setEdit(null);
-    $scope.query['list'] = $routeParams.id;
+    $scope.query['watchlist'] = $routeParams.id;
     $http.get('/api/1/entities', {params: $scope.query}).then(handleResult);
   };
 
@@ -88,7 +88,7 @@ aleph.controller('ListsEntitiesCtrl', ['$scope', '$location', '$http', '$routePa
   }
 
   $scope.filter = function() {
-    delete $scope.query['list'];
+    delete $scope.query['watchlist'];
     $location.search($scope.query);
   };
 
