@@ -1,7 +1,7 @@
 var loadSearchFields = ['$http', '$q', '$route', 'Query', 'Session',
   function($http, $q, $route, Query, Session) {
   var dfd = $q.defer();
-  Session.get(function(session) {
+  Session.get().then(function(session) {
     var q = angular.copy(Query.load());
     q['_uid'] = session.cbq;
     $http.get('/api/1/fields', {params: q}).then(function(res) {

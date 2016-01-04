@@ -1,7 +1,7 @@
 
 aleph.controller('SourcesNewCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash',
-                                     'Validation', 'QueryContext',
-  function($scope, $location, $http, $routeParams, Flash, Validation, QueryContext) {
+                                     'Validation', 'Metadata',
+  function($scope, $location, $http, $routeParams, Flash, Validation, Metadata) {
   
   $scope.source = {
     fresh: true,
@@ -15,7 +15,7 @@ aleph.controller('SourcesNewCtrl', ['$scope', '$location', '$http', '$routeParam
   $scope.save = function(form) {
       var res = $http.post('/api/1/sources', $scope.source);
       res.success(function(data) {
-        QueryContext.reset();
+        Metadata.flush();
         Flash.message('The source has been created.', 'success');
         $location.path('/sources/' + data.id);
       });

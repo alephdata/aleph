@@ -1,4 +1,4 @@
-aleph.directive('searchFrame', ['Query', 'QueryContext', 'Session', function (Query, QueryContext, Session) {
+aleph.directive('searchFrame', ['Query', 'Metadata', 'Session', function (Query, Metadata, Session) {
   return {
     restrict: 'EA',
     scope: {
@@ -8,17 +8,17 @@ aleph.directive('searchFrame', ['Query', 'QueryContext', 'Session', function (Qu
     templateUrl: 'search_frame.html',
     link: function (scope, element, attrs, model) {
       scope.query = Query;
-      scope.queryContext = {};
+      scope.metadata = {};
       scope.sources = {};
       scope.session = {};
       scope.watchlists = {};
       scope.fields = {};
 
-      QueryContext.get().then(function(ctx) {
+      Metadata.get().then(function(ctx) {
         scope.sources = ctx.sources;
         scope.watchlists = ctx.watchlists;
         scope.fields = ctx.fields;
-        scope.queryContext = ctx;
+        scope.metadata = ctx;
       });
 
       scope.showListFacet = function(id) {
@@ -29,7 +29,7 @@ aleph.directive('searchFrame', ['Query', 'QueryContext', 'Session', function (Qu
         return Query.load().facet.indexOf(field) == -1;
       };
       
-      Session.get(function(session) {
+      Session.get().then(function(session) {
         scope.session = session;
       });
     }

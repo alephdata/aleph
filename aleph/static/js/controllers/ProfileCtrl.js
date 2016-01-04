@@ -1,9 +1,9 @@
-aleph.controller('ProfileCtrl', ['$scope', '$location', '$uibModalInstance', '$http', 'Session',
-  function($scope, $location, $uibModalInstance, $http, Session) {
+aleph.controller('ProfileCtrl', ['$scope', '$location', '$uibModalInstance', '$http', 'Session', 'Metadata',
+  function($scope, $location, $uibModalInstance, $http, Session, Metadata) {
   $scope.user = {};
   $scope.session = {};
 
-  Session.get(function(session) {
+  Session.get().then(function(session) {
     $scope.user = session.user;
     $scope.session = session;
   });
@@ -17,7 +17,9 @@ aleph.controller('ProfileCtrl', ['$scope', '$location', '$uibModalInstance', '$h
     res.success(function(data) {
       $scope.user = data;
       $scope.session.user = data;
-      $uibModalInstance.dismiss('ok');
+      Metadata.flush().then(function() {
+        $uibModalInstance.dismiss('ok');
+      });
     });
   };
 }]);

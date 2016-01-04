@@ -2,7 +2,7 @@
 var loadSearchResult = ['$http', '$q', '$route', 'Query', 'Session',
   function($http, $q, $route, Query, Session) {
   var dfd = $q.defer();
-  Session.get(function(session) {
+  Session.get().then(function(session) {
     var query = angular.copy(Query.load());
     query['_uid'] = session.cbq;
     query['facet'].push('source_id');

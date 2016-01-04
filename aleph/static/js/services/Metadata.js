@@ -1,12 +1,16 @@
 
-aleph.factory('QueryContext', ['$http', '$q', 'Session', function($http, $q, Session) {
+aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session) {
     var dfd = null;
 
-    var reset = function() { dfd = null; };
+    var flush = function() {
+      Session.flush();
+      dfd = null;
+      return get();
+    };
 
     var load = function() {
       dfd = $q.defer();
-      Session.get(function(session) {
+      Session.get().then(function(session) {
         $q.all([
           $http.get('/api/1/sources?_uid=' + session.cbq),
           $http.get('/api/1/watchlists?_uid=' + session.cbq),
@@ -24,12 +28,13 @@ aleph.factory('QueryContext', ['$http', '$q', 'Session', function($http, $q, Ses
             });
 
             dfd.resolve({
+              'session': session,
               'sources': sources,
               'watchlists': watchlists,
               'fields': results[2].data,
             });
         });
-      })
+      });
     };
 
     var get = function() {
@@ -39,7 +44,7 @@ aleph.factory('QueryContext', ['$http', '$q', 'Session', function($http, $q, Ses
 
     return {
       get: get,
-      reset: reset
+      flush: flush
     };
 
 }]);

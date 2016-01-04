@@ -1,4 +1,4 @@
-aleph.directive('sourcesFrame', ['$http', 'QueryContext', function($http, QueryContext) {
+aleph.directive('sourcesFrame', ['$http', 'Metadata', function($http, Metadata) {
   return {
     restrict: 'E',
     transclude: true,
@@ -8,7 +8,7 @@ aleph.directive('sourcesFrame', ['$http', 'QueryContext', function($http, QueryC
     templateUrl: 'sources_frame.html',
     link: function (scope, element, attrs, model) {
       scope.sources = {};
-      QueryContext.get().then(function(data) {
+      Metadata.get().then(function(data) {
         scope.sources = data.sources;
       });
     }

@@ -35,13 +35,13 @@
           <span class="caret"></span>
         </button>
         <ul class="uib-dropdown-menu" role="menu">
-          <li ng-repeat="(id, watchlist) in queryContext.watchlists"
+          <li ng-repeat="(id, watchlist) in metadata.watchlists"
             ng-show="showListFacet(id)">
             <a ng-click="query.toggleFilter('watchlist', id)"
               ng-bind="watchlist.label"></a>
           </li>
           <li class="divider"></li>
-          <li ng-repeat="(field, label) in queryContext.fields"
+          <li ng-repeat="(field, label) in metadata.fields"
             ng-show="showFieldFacet(field)">
             <a ng-click="query.toggleFilter('facet', field)" ng-bind="label"></a>
           </li>

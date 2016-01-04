@@ -10,7 +10,7 @@ aleph.directive('watchlistsFrame', ['$http', function($http) {
     link: function (scope, element, attrs, model) {
       $http.get('/api/1/watchlists').then(function(res) {
         scope.watchlists = res.data;
-      })
+      });
     }
   };
 }]);

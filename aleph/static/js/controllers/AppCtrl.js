@@ -1,20 +1,17 @@
 aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$http', '$uibModal', '$q',
-                             'Flash', 'Session', 'Query', 'QueryContext',
-  function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Flash, Session, Query, QueryContext) {
+                             'Flash', 'Session', 'Query', 'Metadata',
+  function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Flash, Session, Query, Metadata) {
   $scope.session = {logged_in: false};
   $scope.query = Query;
   $scope.flash = Flash;
 
-  QueryContext.get().then(function(context) {
-    $scope.queryContext = context;
-  });
-
-  Session.get(function(session) {
-    $scope.session = session;
+  Metadata.get().then(function(context) {
+    $scope.metadata = context;
+    $scope.session = context.session;
   });
 
   $rootScope.$on("$routeChangeStart", function (event, next, current) {
-    Session.get(function(session) {
+    Session.get().then(function(session) {
       if (next.$$route && next.$$route.loginRequired && !session.logged_in) {
         $location.search({});
         $location.path('/');

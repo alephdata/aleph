@@ -1,6 +1,6 @@
 aleph.controller('WatchlistsDeleteCtrl', ['$scope', '$location', '$http', '$uibModalInstance', 'watchlist',
-                                          'Flash', 'QueryContext',
-  function($scope, $location, $http, $uibModalInstance, watchlist, Flash, QueryContext) {
+                                          'Flash', 'Metadata',
+  function($scope, $location, $http, $uibModalInstance, watchlist, Flash, Metadata) {
   $scope.watchlist = watchlist;
   
   $scope.cancel = function() {
@@ -10,7 +10,7 @@ aleph.controller('WatchlistsDeleteCtrl', ['$scope', '$location', '$http', '$uibM
   $scope.delete = function() {
     var res = $http.delete($scope.watchlist.api_url);
     res.then(function(data) {
-        QueryContext.reset();
+        Metadata.flush();
         $location.path('/watchlists');
         $uibModalInstance.dismiss('ok');
     });

@@ -7,7 +7,7 @@
          uib-tooltip="Loaded on {{doc.updated_at.split('T')[0]}}"
          tooltip-append-to-body="true"
          tooltip-placement="right" class="source">
-        {{queryContext.sources[doc.source_id].label || doc.source_id}}
+        {{metadata.sources[doc.source_id].label || doc.source_id}}
       </a>
       <a ng-href="{{doc.source_url || doc.data_url}}" target="_self" class="title">
         {{doc.title | characters: 90 }}

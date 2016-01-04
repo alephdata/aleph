@@ -1,25 +1,27 @@
 
 aleph.factory('Session', ['$http', '$q', function($http, $q) {
-    var dfd = null;
+  var dfd = null;
 
-    var reset = function() {
-        dfd = null;
-    };
+  var getSession = function() {
+    if (!dfd) {
+      var dt = new Date(),
+          config = {cache: false, params: {'_': dt.getTime()}};
+      dfd = $q.defer();
+      $http.get('/api/1/sessions', config).then(function(res) {
+        res.data.cbq = res.data.logged_in ? res.data.user.id : 'anon';
+        dfd.resolve(res.data);
+      }, function(err) {
+        dfd.reject(err);
+      });
+    }
+    return dfd.promise;
+  };
 
-    var get = function(cb) {
-        if (dfd === null) {
-            var dt = new Date();
-            var config = {cache: false, params: {'_': dt.getTime()}};
-            dfd = $http.get('/api/1/sessions', config);
-        }
-        dfd.success(function(data) {
-          data.cbq = data.logged_in ? data.user.id : 'anon';
-          cb(data);
-        });
-    };
-
-    return {
-        get: get,
-        reset: reset
-    };
+  return {
+    get: getSession,
+    flush: function() {
+      dfd = null;
+      return getSession();
+    }
+  }
 }]);

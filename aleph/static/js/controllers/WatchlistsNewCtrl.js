@@ -1,6 +1,6 @@
 aleph.controller('WatchlistsNewCtrl', ['$scope', '$location', '$http', '$routeParams',
-                                       'Validation', 'QueryContext',
-  function($scope, $location, $http, $routeParams, Validation, QueryContext) {
+                                       'Validation', 'Metadata',
+  function($scope, $location, $http, $routeParams, Validation, Metadata) {
   $scope.watchlist = {'public': false, 'new': true};
   
   $scope.canCreate = function() {
@@ -10,7 +10,7 @@ aleph.controller('WatchlistsNewCtrl', ['$scope', '$location', '$http', '$routePa
   $scope.create = function(form) {
       var res = $http.post('/api/1/watchlists', $scope.watchlist);
       res.success(function(data) {
-        QueryContext.reset();
+        Metadata.flush();
         $location.path('/watchlists/' + data.id + '/entities');
       });
       res.error(Validation.handle(form));

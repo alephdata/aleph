@@ -1,6 +1,6 @@
 aleph.controller('WatchlistsEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$uibModal',
-                                        'Flash', 'Validation', 'QueryContext',
-  function($scope, $location, $http, $routeParams, $uibModal, Flash, Validation, QueryContext) {
+                                        'Flash', 'Validation', 'Metadata',
+  function($scope, $location, $http, $routeParams, $uibModal, Flash, Validation, Metadata) {
   
   var apiUrl = '/api/1/watchlists/' + $routeParams.id;
   $scope.watchlist = {};
@@ -45,7 +45,7 @@ aleph.controller('WatchlistsEditCtrl', ['$scope', '$location', '$http', '$routeP
   $scope.save = function(form) {
     var res = $http.post(apiUrl, $scope.watchlist);
     res.success(function(data) {
-      QueryContext.reset();
+      Metadata.flush();
       Flash.message('Your changes have been saved.', 'success');
     });
     res.error(Validation.handle(form));
