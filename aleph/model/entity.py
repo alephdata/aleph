@@ -4,7 +4,7 @@ from sqlalchemy import or_, func
 from sqlalchemy.orm import aliased
 from sqlalchemy.dialects.postgresql import JSON
 
-from aleph.core import db, url_for
+from aleph.core import db  # , url_for
 from aleph.model.forms import EntityForm, CATEGORIES
 from aleph.model.watchlist import Watchlist
 from aleph.model.common import db_compare
@@ -27,11 +27,11 @@ class Entity(db.Model, TimeStampedModel):
         return {
             'id': self.id,
             'name': self.name,
-            'api_url': url_for('entities.view', id=self.id),
+            # 'api_url': url_for('entities.view', id=self.id),
             'category': self.category,
             'watchlist_id': self.watchlist_id,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
+            # 'created_at': self.created_at,
+            # 'updated_at': self.updated_at
         }
 
     def delete(self):

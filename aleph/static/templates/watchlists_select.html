@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">Select active watchlists</h4>
+</div>
+
+<form class="form-horizontal" role="form" name="selectWatchlists" ng-submit="update(selectWatchlists)">
+  <div class="modal-scroll">
+    <table class="table table-condensed">
+      <tr ng-repeat="watchlist in watchlists" ng-class="{'first-row': $first}">
+        <td class="active-switch">
+          <input type="checkbox" ng-model="watchlist.active">
+        </td>
+        <td> 
+          {{watchlist.label}}
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default" ng-click="setAll(true)">Select all</button>
+      <button type="button" class="btn btn-default" ng-click="setAll(false)">Clear all</button>
+    </div>
+    <button type="submit" class="btn btn-primary">OK</button>
+  </div>
+</form>

@@ -30,24 +30,10 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     load();
   };
 
-  var clearDependentFilters = function(name, val) {
-    if (name == 'facet') {
-      var key = 'filter:' + val;
-      query[key] = [];
-    }
-    if (name == 'watchlist') {
-      var key = 'watchlist-' + val;
-      if (query.entity) {
-        angular.forEach(query[key], function(id) {
-          var idx = query.entity.indexOf(id);
-          if (idx != -1) {
-            query.entity.splice(idx, 1);
-          }
-        });
-      }
-      query[key] = [];
-    }
-  }
+  var set = function(name, val) {
+    query[name] = val;
+    $location.search(query);
+  };
 
   var toggleFilter = function(filter, val, skipReload) {
     // var filter = 'filter:' + name;
@@ -60,14 +46,12 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
       query[filter].push(val);
     } else {
       query[filter].splice(idx, 1);
-      clearDependentFilters(filter, val);
     }
     $location.search(query);
   };
 
   var toggleEntityFilter = function(id, watchlist) {
     toggleFilter('entity', id, true);
-    toggleFilter('watchlist-' + watchlist, id);
   };
 
   var hasFilter = function(name, val) {
@@ -80,6 +64,7 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
       state: query,
       load: load,
       clear: clear,
+      set: set,
       queryString: function() {
         return queryString(query);
       },

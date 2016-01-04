@@ -240,36 +240,17 @@ a {
     }
 }
 
+.modal-scroll {
+    max-height: 30em;
+    overflow-y: scroll;
 
-#graph {
-    .node {
-        stroke: #fff;
-        stroke-width: 1.5px;
-
-        &.active {
-            stroke: @brand-primary;
-            stroke-width: 3px;
-        }
-
-        &.Person {
-            fill: @color-person;
-        }
-
-        &.Company {
-            fill: @color-company;
-        }
-
-        &.Organization {
-            fill: @color-organization;
-        }
-
-        &.Other {
-            fill: @color-other;
-        }
+    .active-switch {
+        padding-left: 1.5em;
     }
 
-    .link {
-        stroke: #999;
-        stroke-opacity: .4;
+    .table {
+        .first-row td {
+            border-top: none;   
+        }
     }
 }

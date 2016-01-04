@@ -33,68 +33,45 @@
 
   <div class="col-md-4">
     <div class="btn-group btn-group-justified" role="group">
-      <div class="btn-group" role="group">
-        <div class="btn-group" uib-dropdown dropdown-append-to-body>
-          <button type="button" class="btn btn-default dropdown-toggle"
-            uib-dropdown-toggle>
-            <i class="fa fa-list"></i>
-            Watchlists
-            <span class="caret"></span>
-          </button>
-          <ul class="uib-dropdown-menu" role="menu">
-            <li ng-repeat="watchlist in getWatchlists()"
-              ng-show="showListFacet(id)">
-              <a ng-click="query.toggleFilter('watchlist', watchlist.id)">
-                <span ng-if="!watchlist.count">{{watchlist.label}}</span>
-                <strong ng-if="watchlist.count">{{watchlist.label}}</strong>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="btn-group" uib-dropdown dropdown-append-to-body>
-          <button type="button" class="btn btn-default dropdown-toggle"
-            uib-dropdown-toggle>
-            <i class="fa fa-filter"></i>
-            Other filters
-            <span class="caret"></span>
-          </button>
-          <ul class="uib-dropdown-menu" role="menu">
-            <li ng-repeat="(field, label) in metadata.fields"
-              ng-show="showFieldFacet(field)">
-              <a ng-click="query.toggleFilter('facet', field)" ng-bind="label"></a>
-            </li>
-          </ul>
-        </div>
+      <div class="btn-group" uib-dropdown dropdown-append-to-body>
+        <button type="button" class="btn btn-default dropdown-toggle"
+          uib-dropdown-toggle>
+          <i class="fa fa-filter"></i>
+          Other filters
+          <span class="caret"></span>
+        </button>
+        <ul class="uib-dropdown-menu" role="menu">
+          <li ng-repeat="(field, label) in metadata.fields"
+            ng-show="showFieldFacet(field)">
+            <a ng-click="query.toggleFilter('facet', field)" ng-bind="label"></a>
+          </li>
+        </ul>
       </div>
     </div>
     <br/>
 
-    <div class="panel panel-default" ng-repeat="id in query.load().watchlist"
-      ng-if="result.watchlists[id]">
+    <div class="panel panel-default">
       <div class="panel-heading">
         <span class="pull-right">
-          <a ng-click="query.toggleFilter('watchlist', id)">
-            <i class="fa fa-close"></i>
+          <a ng-click="selectWatchlists($event)">
+            <i class="fa fa-cog"></i>
           </a>
         </span>
-        Watchlist: <strong>{{metadata.watchlists[id].label}}</strong>
-        <a ng-href="/#/watchlists/{{id}}/entities" ng-show="canEditWatchlist(warchlists[id])">
-          <i class="fa fa-cog"></i>
-        </a> 
+        <strong>Persons and Companies</strong>
       </div>
       <ul class="list-group facet-list">
-        <li class="list-group-item facet empty" ng-if="!result.watchlists[id].entities.length">
-          no matching documents
+        <li class="list-group-item facet empty" ng-if="!result.entities.length">
+          <a ng-click="selectWatchlists($event)"><i class="fa fa-cog"></i> Select watchlists</a> to see tagged entities.
         </li>
         <li class="list-group-item facet animate toggle"
-          ng-repeat="entity in result.watchlists[id].entities"
+          ng-repeat="entity in result.entities"
           ng-class="{'active': query.hasFilter('entity', entity.id)}"
           ng-click="query.toggleEntityFilter(entity.id, id)">
           <span class="badge">{{entity.count}}</span>
           <entity-icon category="entity.category"></entity-icon>
-          <span class="lbl" uib-tooltip="{{entity.name.length > 35 ? entity.name : ''}}"
-            tooltip-append-to-body="true" tooltip-placement="left">
-            {{entity.name }}
+          <span class="lbl" uib-tooltip="{{metadata.watchlists[entity.watchlist_id].label}}"
+            tooltip-append-to-body="true" tooltip-placement="right">
+            {{entity.name}}
           </span>
         </li>
       </ul>

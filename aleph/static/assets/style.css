@@ -6804,29 +6804,15 @@ a {
 .entity-icon.Other {
   color: #eb0080;
 }
-#graph .node {
-  stroke: #fff;
-  stroke-width: 1.5px;
+.modal-scroll {
+  max-height: 30em;
+  overflow-y: scroll;
 }
-#graph .node.active {
-  stroke: #337ab7;
-  stroke-width: 3px;
+.modal-scroll .active-switch {
+  padding-left: 1.5em;
 }
-#graph .node.Person {
-  fill: #f15623;
-}
-#graph .node.Company {
-  fill: #95c93d;
-}
-#graph .node.Organization {
-  fill: #00b48d;
-}
-#graph .node.Other {
-  fill: #eb0080;
-}
-#graph .link {
-  stroke: #999;
-  stroke-opacity: .4;
+.modal-scroll .table .first-row td {
+  border-top: none;
 }
 
 /*! 

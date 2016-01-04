@@ -31,19 +31,18 @@ def convert_bucket(facet, bucket):
     return data
 
 
-def convert_watchlist(entities, watchlist_id):
-    output = {'entities': []}
+def convert_entities(entities):
+    results = []
     buckets = entities.get('buckets', [])
-    entities = Entity.by_id_set([e.get('key') for e in buckets],
-                                watchlist_id=watchlist_id)
+    entities = Entity.by_id_set([e.get('key') for e in buckets])
     for bucket in buckets:
         entity = entities.get(bucket.get('key'))
         if entity is None:
             continue
         data = entity.to_dict()
         data['count'] = bucket.get('doc_count')
-        output['entities'].append(data)
-    return output
+        results.append(data)
+    return results
 
 
 def convert_sources(facet):
@@ -67,13 +66,9 @@ def convert_aggregations(result, output, args):
     sources = scoped.get('source', {}).get('source', {})
     output['sources'] = convert_sources(sources)
 
-    for watchlist_id in args.getlist('watchlist'):
-        name = 'watchlist__%s' % watchlist_id
-        # value = scoped.get(name, {}).get(name, {})
-        value = aggs.get(name, {})
-        value = value.get('inner', {}).get('entities', {})
-        output['watchlists'][watchlist_id] = \
-            convert_watchlist(value, watchlist_id)
+    entities = aggs.get('entities', {}).get('inner', {})
+    entities = entities.get('entities', {})
+    output['entities'] = convert_entities(entities)
 
     for facet in args.getlist('facet'):
         value = aggs.get(facet)
