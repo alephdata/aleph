@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-9">
+  <div class="col-md-8">
     <ul class="nav nav-tabs">
       <li role="presentation" ng-class="{'active': query.mode() == 'table'}">
         <a ng-href="/#/search?{{ query.queryString() }}">
@@ -24,28 +24,38 @@
     <div ng-transclude></div>
   </div>
 
-  <div class="col-md-3">
-
+  <div class="col-md-4">
     <div class="btn-group btn-group-justified" role="group">
-      <div class="btn-group" role="group" uib-dropdown>
-        <button type="button" class="btn btn-default dropdown-toggle"
-          uib-dropdown-toggle>
-          <i class="fa fa-list-alt"></i>
-          Add filters
-          <span class="caret"></span>
-        </button>
-        <ul class="uib-dropdown-menu" role="menu">
-          <li ng-repeat="(id, watchlist) in metadata.watchlists"
-            ng-show="showListFacet(id)">
-            <a ng-click="query.toggleFilter('watchlist', id)"
-              ng-bind="watchlist.label"></a>
-          </li>
-          <li class="divider"></li>
-          <li ng-repeat="(field, label) in metadata.fields"
-            ng-show="showFieldFacet(field)">
-            <a ng-click="query.toggleFilter('facet', field)" ng-bind="label"></a>
-          </li>
-        </ul>
+      <div class="btn-group" role="group">
+        <div class="btn-group" uib-dropdown dropdown-append-to-body>
+          <button type="button" class="btn btn-default dropdown-toggle"
+            uib-dropdown-toggle>
+            <i class="fa fa-list"></i>
+            Watchlists
+            <span class="caret"></span>
+          </button>
+          <ul class="uib-dropdown-menu" role="menu">
+            <li ng-repeat="(id, watchlist) in metadata.watchlists"
+              ng-show="showListFacet(id)">
+              <a ng-click="query.toggleFilter('watchlist', id)"
+                ng-bind="watchlist.label"></a>
+            </li>
+          </ul>
+        </div>
+        <div class="btn-group" uib-dropdown dropdown-append-to-body>
+          <button type="button" class="btn btn-default dropdown-toggle"
+            uib-dropdown-toggle>
+            <i class="fa fa-filter"></i>
+            Other filters
+            <span class="caret"></span>
+          </button>
+          <ul class="uib-dropdown-menu" role="menu">
+            <li ng-repeat="(field, label) in metadata.fields"
+              ng-show="showFieldFacet(field)">
+              <a ng-click="query.toggleFilter('facet', field)" ng-bind="label"></a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <br/>
@@ -72,7 +82,7 @@
           <entity-icon category="entity.category"></entity-icon>
           <span class="lbl" uib-tooltip="{{entity.name.length > 35 ? entity.name : ''}}"
             tooltip-append-to-body="true" tooltip-placement="left">
-            {{entity.name | characters: 35 }}
+            {{entity.name }}
           </span>
         </li>
       </ul>
@@ -117,7 +127,7 @@
           ng-click="query.toggleFilter('filter:source_id', facet.id)">
           <span class="badge">{{facet.count}}</span>
           <span class="lbl">
-            {{facet.label | characters: 20 }}
+            {{facet.label }}
           </span>
         </li>
       </ul>
