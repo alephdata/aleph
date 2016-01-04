@@ -162,20 +162,19 @@
       </div>
       <div class="panel-body">
         <p>
-          Network data can be used to further explore the connections
-          between watchlist entities. Link indicate entities occuring
-          in the same document. If multiple documents indicate a
-          connection, a weight is included in the data.
+          Get data to further analyze the connections between
+          watchlist entities. Links connect entities occuring
+          in the same document.
         </p>
-
+        <p class="help-block">
+          This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool. 
+        </p>
         <a ng-href="/api/1/graph?format=gexf&limit=2000&{{query.queryString()}}" class="btn btn-primary" target="_self"
         download="actors.gexf">
           <i class="fa fa-cloud-download"></i>
           Download Graph Exchange XML (GEXF)
         </a>
-        <p class="help-block">
-          This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool. 
-        </p>
+        
       </div>
     </div>
 
