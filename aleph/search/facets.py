@@ -5,13 +5,14 @@ from pycountry import countries
 
 from aleph.model.metadata import CORE_FACETS
 from aleph.model.entity import Entity
+from aleph.model.source import Source
 
 
 def convert_bucket(facet, bucket):
     key = bucket.get('key')
     data = {
         'count': bucket.get('doc_count'),
-        'key': key,
+        'id': key,
         'label': key,
     }
 
@@ -45,6 +46,20 @@ def convert_watchlist(entities, watchlist_id):
     return output
 
 
+def convert_sources(facet):
+    output = {'values': []}
+    ids = [b.get('key') for b in facet.get('buckets', [])]
+    labels = Source.all_labels(ids=ids)
+    for bucket in facet.get('buckets', []):
+        key = bucket.get('key')
+        output['values'].append({
+            'id': key,
+            'label': labels.get(key, key),
+            'count': bucket.get('doc_count')
+        })
+    return output
+
+
 def convert_aggregations(result, output, args):
     """ traverse and get all facets. """
     aggs = result.get('aggregations', {})
@@ -55,9 +70,11 @@ def convert_aggregations(result, output, args):
         output['watchlists'][watchlist_id] = \
             convert_watchlist(value, watchlist_id)
 
+    sources = aggs.get('scoped', {}).get('source', {}).get('source', {})
+    output['sources'] = convert_sources(sources)
+
     for facet in args.getlist('facet'):
-        scoped = aggs.get('scoped', {}).get(facet, {})
-        value = aggs.get(facet, scoped.get(facet, {}))
+        value = aggs.get(facet)
         data = {
             'label': CORE_FACETS.get(facet),
             'values': [convert_bucket(facet, b) for b in value.get('buckets')]

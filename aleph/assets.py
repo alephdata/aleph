@@ -36,7 +36,6 @@ app_assets = Bundle(
     'js/directives/watchlistsFrame.js',
     'js/directives/searchFrame.js',
     'js/directives/sourcesFrame.js',
-    'js/loaders/loadSearchFields.js',
     'js/loaders/loadMetadata.js',
     'js/loaders/loadSearchGraph.js',
     'js/loaders/loadSearchResult.js',

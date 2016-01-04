@@ -91,8 +91,8 @@
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
           ng-repeat="val in result.facets[field].values"
-          ng-class="{'active': query.hasFilter('filter:' + field, val.key)}"
-          ng-click="query.toggleFilter('filter:' + field, val.key)">
+          ng-class="{'active': query.hasFilter('filter:' + field, val.id)}"
+          ng-click="query.toggleFilter('filter:' + field, val.id)">
           <span class="badge">{{val.count}}</span>
           <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
             {{val.label | characters: 35 }}
@@ -112,12 +112,12 @@
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
-          ng-repeat="facet in result.facets.source_id.values"
-          ng-class="{'active': query.hasFilter('filter:source_id', facet.key)}"
-          ng-click="query.toggleFilter('filter:source_id', facet.key)">
+          ng-repeat="facet in result.sources.values"
+          ng-class="{'active': query.hasFilter('filter:source_id', facet.id)}"
+          ng-click="query.toggleFilter('filter:source_id', facet.id)">
           <span class="badge">{{facet.count}}</span>
           <span class="lbl">
-            {{sources[facet.key].label | characters: 20 }}
+            {{facet.label | characters: 20 }}
           </span>
         </li>
       </ul>

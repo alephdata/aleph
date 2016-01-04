@@ -4,7 +4,6 @@ var loadSearchGraph = ['$http', '$q', '$route', 'Query', 'Session',
   Session.get().then(function(session) {
     var query = angular.copy(Query.load());
     query['_uid'] = session.cbq;
-    query['facet'].push('source_id');
     query['limit'] = 75; // hello dunbar?
     $http.get('/api/1/graph', {params: query}).then(function(res) {
       dfd.resolve(res.data);

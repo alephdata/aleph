@@ -39,6 +39,7 @@ def construct_query(args, fields=None, facets=True):
     aggs = {}
     if facets:
         aggs = aggregate(q, args, filters)
+        aggs = facet_source(q, aggs, filters)
         q = entity_watchlists(q, aggs, args)
 
     sort = ['_score']
@@ -83,6 +84,31 @@ def entity_watchlists(q, aggs, args):
     return q
 
 
+def facet_source(q, aggs, filters):
+    aggs['scoped']['aggs']['source'] = {
+        'filter': {
+            'query': filter_query(q, filters, skip='source_id')
+        },
+        'aggs': {
+            'source': {
+                'terms': {'field': 'source_id', 'size': 1000}
+            }
+        }
+    }
+    return aggs
+
+
+def aggregate(q, args, filters):
+    # Generate aggregations. They are a generalized mechanism to do facetting
+    # in ElasticSearch. Anything placed inside the "scoped" sub-aggregation
+    # is made to be ``global``, ie. it'll have to bring it's own filters.
+    aggs = {'scoped': {'global': {}, 'aggs': {}}}
+    for facet in args.getlist('facet'):
+        agg = {facet: {'terms': {'field': facet, 'size': 200}}}
+        aggs.update(agg)
+    return aggs
+
+
 def filter_query(q, filters, skip=None):
     """ Apply a list of filters to the given query. """
     or_filters = defaultdict(list)
@@ -95,48 +121,6 @@ def filter_query(q, filters, skip=None):
             q = add_filter(q, {'term': {field: value}})
     for field, value in or_filters.items():
         q = add_filter(q, {'terms': {field: value}})
-    return q
-
-
-def aggregate(q, args, filters):
-    # Generate aggregations. They are a generalized mechanism to do facetting
-    # in ElasticSearch. Anything placed inside the "scoped" sub-aggregation
-    # is made to be ``global``, ie. it'll have to bring it's own filters.
-    aggs = {
-        'scoped': {
-            'global': {},
-            'aggs': {}
-        }
-    }
-    for facet in args.getlist('facet'):
-        agg = {facet: {'terms': {'field': facet, 'size': 200}}}
-        if facet in OR_FIELDS:
-            aggs['scoped']['aggs'][facet] = {
-                'filter': {
-                    'query': filter_query(q, filters, skip=facet)
-                },
-                'aggs': agg
-            }
-        else:
-            aggs.update(agg)
-    return aggs
-
-
-def paginate(q, limit, offset):
-    """ Apply pagination to the query, based on limit and offset. """
-    try:
-        q['from'] = max(0, int(offset))
-    except (TypeError, ValueError):
-        q['from'] = 0
-    try:
-        q['size'] = min(10000, int(limit))
-    except (TypeError, ValueError):
-        q['size'] = 30
-
-    if q['from'] > 0:
-        # When requesting a second page of the results, the client will not
-        # need to be returned facet results a second time.
-        del q['aggregations']
     return q
 
 

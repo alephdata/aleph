@@ -12,26 +12,18 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
       dfd = $q.defer();
       Session.get().then(function(session) {
         $q.all([
-          $http.get('/api/1/sources?_uid=' + session.cbq),
           $http.get('/api/1/watchlists?_uid=' + session.cbq),
           $http.get('/api/1/fields?_uid=' + session.cbq)
         ]).then(function(results) {
-
-            var sources = {}
-            angular.forEach(results[0].data.results, function(c) {
-              sources[c.id] = c;
-            });
-
             var watchlists = {}
-            angular.forEach(results[1].data.results, function(c) {
+            angular.forEach(results[0].data.results, function(c) {
               watchlists[c.id] = c;
             });
 
             dfd.resolve({
               'session': session,
-              'sources': sources,
               'watchlists': watchlists,
-              'fields': results[2].data,
+              'fields': results[1].data,
             });
         });
       });
