@@ -9,7 +9,7 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
   $routeProvider.when('/search', {
     templateUrl: 'search.html',
     controller: 'SearchCtrl',
-    reloadOnSearch: false,
+    reloadOnSearch: true,
     loginRequired: false,
     resolve: {
       'result': loadSearch

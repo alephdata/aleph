@@ -26,10 +26,10 @@ aleph/fs
 * [DONE] Rename List -> Watchlist
 * [DONE] Source facets
 * [DONE] Source modals
-* Implicit facet on list_id
-* Bug fix watchlists
-* Simplify search UI
+* [DONE] Implicit facet on list_id
+* [DONE] Simplify search UI
 * Result drilldown
+* Bug fix watchlists
 * Table viewer
 * Document pages viewer
 

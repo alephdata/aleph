@@ -6,10 +6,10 @@
 <form class="form-horizontal" role="form" name="editSource" ng-submit="save(editSource)">
   <div class="modal-body">
     <div class="row">
-      <div class="col-md-6">   
+      <div class="col-lg-12">   
         <div class="form-group" ng-class="{'has-error': editSource.label.$invalid}">
-          <label class="col-sm-2 control-label" for="label">Label</label>
-          <div class="col-sm-10">
+          <label class="col-sm-3 control-label" for="label">Label</label>
+          <div class="col-sm-9">
             <input type="text" class="form-control" id="label" name="label" ng-model="source.label"
               placeholder="The source's label">
             <p class="help-block" ng-show="editSource.label.$invalid" ng-bind="editSource.label.$message"></p>
@@ -17,15 +17,15 @@
         </div>
 
         <div class="form-group">
-          <label class="col-sm-2 control-label" for="foreign_id">Import&nbsp;ID</label>
-          <div class="col-sm-10">
+          <label class="col-sm-3 control-label" for="foreign_id">Import&nbsp;ID</label>
+          <div class="col-sm-9">
             <input type="text" class="form-control" id="foreign_id" name="foreign_id" ng-model="source.foreign_id"
               readonly>
           </div>
         </div>
 
         <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
+          <div class="col-sm-offset-3 col-sm-9">
             <div class="checkbox">
               <label>
                 <input type="checkbox" ng-model="source.public"> Publicly visible
@@ -35,7 +35,7 @@
         </div>
       </div>
 
-      <div class="col-md-6">
+      <div class="col-lg-12">
         <table class="table table-condensed">
           <tr>
             <th colspan="2">Users who have access</th>

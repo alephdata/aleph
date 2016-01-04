@@ -63,15 +63,17 @@ def convert_sources(facet):
 def convert_aggregations(result, output, args):
     """ traverse and get all facets. """
     aggs = result.get('aggregations', {})
+    scoped = aggs.get('scoped', {})
+    sources = scoped.get('source', {}).get('source', {})
+    output['sources'] = convert_sources(sources)
 
     for watchlist_id in args.getlist('watchlist'):
-        value = aggs.get('watchlist__%s' % watchlist_id, {})
+        name = 'watchlist__%s' % watchlist_id
+        # value = scoped.get(name, {}).get(name, {})
+        value = aggs.get(name, {})
         value = value.get('inner', {}).get('entities', {})
         output['watchlists'][watchlist_id] = \
             convert_watchlist(value, watchlist_id)
-
-    sources = aggs.get('scoped', {}).get('source', {}).get('source', {})
-    output['sources'] = convert_sources(sources)
 
     for facet in args.getlist('facet'):
         value = aggs.get(facet)

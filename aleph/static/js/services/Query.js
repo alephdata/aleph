@@ -63,9 +63,6 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
       clearDependentFilters(filter, val);
     }
     $location.search(query);
-    if (!skipReload) {
-      $route.reload();
-    }
   };
 
   var toggleEntityFilter = function(id, watchlist) {

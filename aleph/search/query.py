@@ -40,7 +40,7 @@ def construct_query(args, fields=None, facets=True):
     if facets:
         aggs = aggregate(q, args, filters)
         aggs = facet_source(q, aggs, filters)
-        q = entity_watchlists(q, aggs, args)
+        q = entity_watchlists(q, aggs, args, filters)
 
     sort = ['_score']
     return {
@@ -51,7 +51,7 @@ def construct_query(args, fields=None, facets=True):
     }
 
 
-def entity_watchlists(q, aggs, args):
+def entity_watchlists(q, aggs, args, filters):
     """ Filter entities, facet for watchlists. """
     for watchlist_id in args.getlist('watchlist'):
         if not authz.watchlist_read(watchlist_id):
@@ -75,7 +75,16 @@ def entity_watchlists(q, aggs, args):
                 }
             }
         }
-        aggs['watchlist__%s' % watchlist_id] = list_facet
+        name = 'watchlist__%s' % watchlist_id
+        aggs[name] = list_facet
+        # aggs['scoped']['aggs'][name] = {
+        #     'filter': {
+        #         'query': filter_query(q, filters)
+        #     },
+        #     'aggs': {
+        #         name: list_facet
+        #     }
+        # }
 
     for entity in args.getlist('entity'):
         cf = {'term': {'entities.entity_id': entity}}

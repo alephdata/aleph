@@ -44,21 +44,12 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
 
   $scope.submitSearch = function(form) {
     $location.search($scope.query.state);
-    if (Query.mode()) {
-      $route.reload();
-    } else {
-      $location.path('/search');
-    }
+    $location.path('/search');
   };
 
   $scope.clearSearch = function(form) {
-    var mode = Query.mode();
     Query.clear();
-    if (mode == 'table') {
-      $route.reload();
-    } else {
-      $location.path('/search');
-    }
+    $location.path('/search');
   };
 
 }]);

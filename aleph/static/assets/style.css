@@ -6774,7 +6774,7 @@ a {
   text-align: right;
 }
 .facet-list {
-  max-height: 30em;
+  max-height: 20em;
   overflow-y: scroll;
   overflow: -moz-scrollbars-vertical;
 }

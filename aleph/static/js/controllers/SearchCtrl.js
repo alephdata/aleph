@@ -1,18 +1,16 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$location', '$http', '$uibModal', 'result', 'Query', 'Metadata', 'Authz',
-  function($scope, $location, $http, $uibModal, result, Query, Metadata, Authz) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'result', 'Query', 'Metadata', 'Authz',
+  function($scope, $route, $location, $http, $uibModal, result, Query, Metadata, Authz) {
 
   var isLoading = false;
   $scope.result = result;
   $scope.query = Query;
   $scope.metadata = {};
   $scope.session = {};
-  $scope.watchlists = {};
   $scope.fields = {};
   $scope.graph = {'limit': 75, 'options': [10, 75, 150, 300, 600, 1200]};
 
   Metadata.get().then(function(metadata) {
-    $scope.watchlists = metadata.watchlists;
     $scope.fields = metadata.fields;
     $scope.session = metadata.session;
     $scope.metadata = metadata;
@@ -27,11 +25,35 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http', '$uibModal', 're
   };
 
   $scope.canEditSource = function(source) {
+    if (!source || !source.id) {
+      return false;
+    }
     return Authz.source(Authz.WRITE, source.id);
   };
 
   $scope.canEditWatchlist = function(watchlist) {
+    if (!watchlist || !watchlist.id) {
+      return false;
+    }
     return Authz.source(Authz.WRITE, watchlist.id);
+  };
+
+  $scope.getWatchlists = function() {
+    var watchlists = [],
+        values = result.facets['entities.watchlist_id'].values;
+    for (var i in $scope.metadata.watchlists) {
+      var watchlist = $scope.metadata.watchlists[i];
+      watchlist.count = 0;
+      for (var i in values) {
+        if (values[i].id == watchlist.id) {
+          watchlist.count = values[i].count;
+        }
+      }
+      watchlists.push(watchlist);
+    }
+    return watchlists.sort(function(a, b) {
+      return a.label.localeCompare(b.label);
+    });
   };
 
   $scope.editSource = function(source, $event) {
@@ -40,7 +62,7 @@ aleph.controller('SearchCtrl', ['$scope', '$location', '$http', '$uibModal', 're
       templateUrl: 'sources_edit.html',
       controller: 'SourcesEditCtrl',
       backdrop: true,
-      size: 'lg',
+      size: 'md',
       resolve: {
         source: ['$q', '$http', function($q, $http) {
           var dfd = $q.defer();

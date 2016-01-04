@@ -35,10 +35,12 @@
             <span class="caret"></span>
           </button>
           <ul class="uib-dropdown-menu" role="menu">
-            <li ng-repeat="(id, watchlist) in metadata.watchlists"
+            <li ng-repeat="watchlist in getWatchlists()"
               ng-show="showListFacet(id)">
-              <a ng-click="query.toggleFilter('watchlist', id)"
-                ng-bind="watchlist.label"></a>
+              <a ng-click="query.toggleFilter('watchlist', watchlist.id)">
+                <span ng-if="!watchlist.count">{{watchlist.label}}</span>
+                <strong ng-if="watchlist.count">{{watchlist.label}}</strong>
+              </a>
             </li>
           </ul>
         </div>
@@ -68,7 +70,7 @@
             <i class="fa fa-close"></i>
           </a>
         </span>
-        List: {{watchlists[id].label}}
+        Watchlist: <strong>{{metadata.watchlists[id].label}}</strong>
         <a ng-href="/#/watchlists/{{id}}/entities" ng-show="canEditWatchlist(warchlists[id])">
           <i class="fa fa-cog"></i>
         </a> 
@@ -119,7 +121,7 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        Document sources
+        <strong>Document sources</strong>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
@@ -139,7 +141,7 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        Document metadata
+        <strong>Download result list</strong>
       </div>
       <div class="panel-body">
         <p>
@@ -156,7 +158,7 @@
     </div>
     <div class="panel panel-default">
       <div class="panel-heading">
-        Actor network data
+        <strong>Download watchlist network</strong>
       </div>
       <div class="panel-body">
         <p>
@@ -172,7 +174,7 @@
           Download Graph Exchange XML (GEXF)
         </a>
         <p class="help-block">
-          This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool (intermediate). 
+          This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool. 
         </p>
       </div>
     </div>
