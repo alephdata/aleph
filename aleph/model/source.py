@@ -37,17 +37,14 @@ class Source(db.Model, TimeStampedModel):
         db.session.flush()
         return src
 
-    def update(self, data, user):
+    def update(self, data):
         data = SourceEditForm().deserialize(data)
-        self.update_data(data, user)
+        self.update_data(data)
 
-    def update_data(self, data, user):
+    def update_data(self, data):
         self.label = data.get('label')
         self.public = data.get('public')
-        users = set(data.get('users', []))
-        if user is not None:
-            users.add(user)
-        self.users = list(users)
+        self.users = list(set(data.get('users', [])))
 
     def to_dict(self):
         return {

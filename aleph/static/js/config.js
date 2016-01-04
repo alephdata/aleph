@@ -38,30 +38,6 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     }
   });
 
-  $routeProvider.when('/sources', {
-    templateUrl: 'sources_index.html',
-    controller: 'SourcesIndexCtrl',
-    loginRequired: true
-  });
-
-  $routeProvider.when('/sources/new', {
-    templateUrl: 'sources_new.html',
-    controller: 'SourcesNewCtrl',
-    loginRequired: true,
-    resolve: {
-    }
-  });
-
-  $routeProvider.when('/sources/:slug', {
-    templateUrl: 'sources_edit.html',
-    controller: 'SourcesEditCtrl',
-    loginRequired: true,
-    resolve: {
-      'users': loadUsers,
-      'source': loadSource
-    }
-  });
-
   $routeProvider.when('/watchlists/new', {
     templateUrl: 'watchlists_new.html',
     controller: 'WatchlistsNewCtrl',

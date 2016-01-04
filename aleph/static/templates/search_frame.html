@@ -63,7 +63,7 @@
     <div class="panel panel-default" ng-repeat="id in query.load().watchlist">
       <div class="panel-heading">
         <span class="pull-right">
-          <a ng-href="/#/lists/{{id}}/entities" ng-show="session.logged_in">
+          <a ng-href="/#/watchlists/{{id}}/entities" ng-show="session.logged_in">
             <i class="fa fa-cog"></i>
           </a>
           <a ng-click="query.toggleFilter('watchlist', id)">
@@ -122,7 +122,10 @@
           ng-click="query.toggleFilter('filter:source_id', source.id)">
           <span class="badge">{{source.count}}</span>
           <span class="lbl">
-            {{source.label }}
+            {{source.label}}
+            <a ng-click="editSource(source, $event)" ng-show="canEditSource(source)">
+              <i class="fa fa-wrench"></i>
+            </a>
           </span>
         </li>
       </ul>

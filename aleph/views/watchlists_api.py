@@ -30,7 +30,7 @@ def create():
 
 @blueprint.route('/api/1/watchlists/<int:id>', methods=['GET'])
 def view(id):
-    authz.require(authz.list_read(id))
+    authz.require(authz.watchlist_read(id))
     watchlist = obj_or_404(Watchlist.by_id(id))
     etag_cache_keygen(watchlist)
     data = watchlist.to_dict()

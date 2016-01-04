@@ -1,5 +1,5 @@
 
-aleph.factory('Session', ['$http', '$q', function($http, $q) {
+aleph.factory('Session', ['$http', '$q', '$rootScope', function($http, $q, $rootScope) {
   var dfd = null;
 
   var getSession = function() {
@@ -9,6 +9,7 @@ aleph.factory('Session', ['$http', '$q', function($http, $q) {
       dfd = $q.defer();
       $http.get('/api/1/sessions', config).then(function(res) {
         res.data.cbq = res.data.logged_in ? res.data.user.id : 'anon';
+        $rootScope.session = res.data;
         dfd.resolve(res.data);
       }, function(err) {
         dfd.reject(err);

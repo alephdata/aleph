@@ -1,6 +1,6 @@
-aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash',
-                                     'Validation', 'Metadata', 'users', 'source',
-  function($scope, $location, $http, $routeParams, Flash, Validation, Metadata, users, source) {
+aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$uibModalInstance',
+                                     'Flash', 'Validation', 'Metadata', 'users', 'source',
+    function($scope, $location, $http, $routeParams, $uibModalInstance, Flash, Validation, Metadata, users, source) {
   
   $scope.source = source;
   $scope.users = users;
@@ -24,11 +24,15 @@ aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routePara
     }
   };
 
+  $scope.cancel = function() {
+    $uibModalInstance.dismiss('cancel');
+  };
+
   $scope.process = function() {
     if (!$scope.processTriggered) {
       $scope.processTriggered = true;
       $http.post($scope.source.api_url + '/process').then(function() {
-        Flash.message('Re-indexing and analyzing documents.', 'success');
+        $uibModalInstance.dismiss('ok');
       });
     }
   };
@@ -36,8 +40,9 @@ aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routePara
   $scope.save = function(form) {
       var res = $http.post(source.api_url, $scope.source);
       res.success(function(data) {
-        Metadata.flush();
-        Flash.message('Your changes have been saved.', 'success');
+        Metadata.flush().then(function() {
+          $uibModalInstance.close(data.data);
+        });
       });
       res.error(Validation.handle(form));
   };

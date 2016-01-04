@@ -18,7 +18,7 @@ aleph.controller('ProfileCtrl', ['$scope', '$location', '$uibModalInstance', '$h
       $scope.user = data;
       $scope.session.user = data;
       Metadata.flush().then(function() {
-        $uibModalInstance.dismiss('ok');
+        $uibModalInstance.close($scope.user);
       });
     });
   };

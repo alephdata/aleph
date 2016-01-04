@@ -22,14 +22,6 @@ def index():
     return jsonify({'results': sources, 'total': len(sources)})
 
 
-@blueprint.route('/api/1/sources', methods=['POST', 'PUT'])
-def create():
-    authz.require(authz.logged_in())
-    src = Source.create(request_data(), current_user)
-    db.session.commit()
-    return view(src.id)
-
-
 @blueprint.route('/api/1/sources/<id>', methods=['GET'])
 def view(id):
     authz.require(authz.source_read(id))
@@ -52,7 +44,7 @@ def process(id):
 def update(id):
     authz.require(authz.source_write(id))
     source = obj_or_404(Source.by_id(id))
-    source.update(request_data(), current_user)
+    source.update(request_data())
     db.session.add(source)
     db.session.commit()
     return view(id)

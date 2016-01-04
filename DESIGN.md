@@ -22,10 +22,10 @@ aleph/fs
 * [DONE] OpenNames importer
 * [DONE] Fix entities facets
 * [DONE] Upgrade bootstrap-ui
-* Refactor QueryContext 
+* [DONE] Refactor QueryContext 
 * [DONE] Rename List -> Watchlist
-* Source facets
-* Source modals
+* [DONE] Source facets
+* [DONE] Source modals
 
 * Azerbaijan importer 
 * Moldova importer 
