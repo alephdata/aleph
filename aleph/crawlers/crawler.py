@@ -1,5 +1,6 @@
 import logging
 
+from aleph.core import db
 from aleph.model.metadata import Metadata
 from aleph.ingest import ingest_url, ingest_file
 
@@ -17,9 +18,11 @@ class Crawler(object):
         })
 
     def emit_url(self, source, meta, url):
-        ingest_url.delay(source.id, meta, url)
+        db.session.commit()
+        ingest_url.delay(source.id, meta.data, url)
 
     def emit_file(self, source, meta, file_path):
+        db.session.commit()
         ingest_file(source.id, meta, file_path)
 
     def __repr__(self):

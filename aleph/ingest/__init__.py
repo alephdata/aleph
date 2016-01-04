@@ -31,15 +31,9 @@ log = logging.getLogger(__name__)
 # https://svn.apache.org/viewvc/httpd/httpd/branches/2.2.x/docs/conf/mime.types?view=annotate
 
 
-def meta_object(meta):
-    if not isinstance(meta, Metadata):
-        meta = Metadata(data=meta)
-    return meta
-
-
 @celery.task()
-def ingest_url(source_id, meta, url):
-    meta = meta_object(meta)
+def ingest_url(source_id, metadata, url):
+    meta = Metadata(data=metadata)
     fh, temp = mkstemp(suffix=slugify(url))
     os.close(fh)
     try:
@@ -60,7 +54,6 @@ def ingest_url(source_id, meta, url):
 
 
 def ingest_file(source_id, meta, file_name, move=False):
-    meta = meta_object(meta)
     if not os.path.isfile(file_name):
         raise ValueError("No such file: %r", file_name)
     if not meta.has('title'):
@@ -68,12 +61,12 @@ def ingest_file(source_id, meta, file_name, move=False):
     if not meta.has('source_path'):
         meta.source_path = file_name
     meta = archive.archive_file(file_name, meta, move=move)
-    ingest.delay(source_id, meta)
+    ingest.delay(source_id, meta.data)
 
 
 @celery.task()
-def ingest(source_id, meta):
-    meta = meta_object(meta)
+def ingest(source_id, metadata):
+    meta = Metadata(data=metadata)
     try:
         Ingestor.dispatch(source_id, meta)
     except Exception as ex:

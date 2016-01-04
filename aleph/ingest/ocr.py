@@ -83,7 +83,10 @@ def raw_pdf_convert(path):
                 interpreter.process_page(page)
                 pages.append(device.outfp.getvalue())
         device.close()
-        return doc.info.pop(), pages
+        info = {}
+        if len(doc.info):
+            info = doc.info.pop()
+        return info, pages
 
 
 def extract_pdf(path, languages=DEFAULT_LANGUAGES):
