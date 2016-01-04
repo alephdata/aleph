@@ -113,21 +113,16 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span class="pull-right">
-          <a href="/#/sources" ng-show="session.logged_in">
-            <i class="fa fa-cog"></i>
-          </a>
-        </span>
         Document sources
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
-          ng-repeat="facet in result.sources.values"
-          ng-class="{'active': query.hasFilter('filter:source_id', facet.id)}"
-          ng-click="query.toggleFilter('filter:source_id', facet.id)">
-          <span class="badge">{{facet.count}}</span>
+          ng-repeat="source in result.sources.values"
+          ng-class="{'active': query.hasFilter('filter:source_id', source.id)}"
+          ng-click="query.toggleFilter('filter:source_id', source.id)">
+          <span class="badge">{{source.count}}</span>
           <span class="lbl">
-            {{facet.label }}
+            {{source.label }}
           </span>
         </li>
       </ul>

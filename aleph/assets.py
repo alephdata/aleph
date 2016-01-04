@@ -1,6 +1,7 @@
+import os
 from flask.ext.assets import Bundle
 
-from aleph.core import assets
+from aleph.core import assets, app
 
 deps_assets = Bundle(
     'vendor/jquery/dist/jquery.js',
@@ -17,39 +18,16 @@ deps_assets = Bundle(
     output='assets/deps.js'
 )
 
-app_assets = Bundle(
-    'js/config.js',
-    'js/controllers/AppCtrl.js',
-    'js/controllers/WatchlistEntitiesCtrl.js',
-    'js/controllers/WatchlistsDeleteCtrl.js',
-    'js/controllers/WatchlistsEditCtrl.js',
-    'js/controllers/WatchlistsNewCtrl.js',
-    'js/controllers/ProfileCtrl.js',
-    'js/controllers/SearchExportCtrl.js',
-    'js/controllers/SearchGraphCtrl.js',
-    'js/controllers/SearchTableCtrl.js',
-    'js/controllers/SourcesEditCtrl.js',
-    'js/controllers/SourcesIndexCtrl.js',
-    'js/controllers/SourcesNewCtrl.js',
-    'js/directives/alephPager.js',
-    'js/directives/entityIcon.js',
-    'js/directives/watchlistsFrame.js',
-    'js/directives/searchFrame.js',
-    'js/directives/sourcesFrame.js',
-    'js/loaders/loadMetadata.js',
-    'js/loaders/loadSearchGraph.js',
-    'js/loaders/loadSearchResult.js',
-    'js/loaders/loadSource.js',
-    'js/loaders/loadUsers.js',
-    'js/services/Flash.js',
-    'js/services/Query.js',
-    'js/services/Metadata.js',
-    'js/services/Session.js',
-    'js/services/Validation.js',
-    'js/util.js',
-    filters='uglifyjs',
-    output='assets/app.js'
-)
+js_files = []
+for (root, dirs, files) in os.walk(os.path.join(app.static_folder, 'js')):
+    for file_name in files:
+        file_path = os.path.relpath(os.path.join(root, file_name),
+                                    app.static_folder)
+        js_files.append(file_path)
+
+app_assets = Bundle(*js_files,
+                    filters='uglifyjs',
+                    output='assets/app.js')
 
 css_assets = Bundle(
     'style/style.less',
