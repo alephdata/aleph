@@ -2,15 +2,6 @@
 aleph.factory('Query', ['$route', '$location', function($route, $location) {
   var query = {};
 
-  var mode = function() {
-    if ($route.current) {
-      var ctrl = $route.current.$$route.controller;
-      if (ctrl == 'SearchExportCtrl') return 'export';
-      if (ctrl == 'SearchTableCtrl') return 'table';
-      if (ctrl == 'SearchGraphCtrl') return 'graph';
-    }
-  }
-
   var ensureArray = function(data) {
     if (!angular.isDefined(data)) {
       return [];
@@ -91,7 +82,6 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
   return {
       state: query,
       load: load,
-      mode: mode,
       clear: clear,
       queryString: function() {
         return queryString(query);

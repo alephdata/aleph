@@ -1,19 +1,5 @@
 <div class="row">
   <div class="col-md-8">
-    <ul class="nav nav-tabs">
-      <li role="presentation" ng-class="{'active': query.mode() == 'table'}">
-        <a ng-href="/#/search?{{ query.queryString() }}">
-          Documents <span class="badge">{{result.total || ''}}</span>
-        </a>
-      </li>
-      <li role="presentation" ng-class="{'active': query.mode() == 'graph'}">
-        <a ng-href="/#/search/graph?{{ query.queryString() }}">Actor network</a>
-      </li>
-      <li role="presentation" ng-class="{'active': query.mode() == 'export'}">
-        <a ng-href="/#/search/export?{{ query.queryString() }}">Export</a>
-      </li>
-    </ul>
-
     <div class="alert alert-warning" ng-show="result.limit > 0 && !result.total">
       No results were found.
       <span ng-show="!session.logged_in">
@@ -21,7 +7,21 @@
       </span>
     </div>
 
-    <div ng-transclude></div>
+    <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()"
+      infinite-scroll-distance="3">
+      <div class="result animate toggle" ng-repeat="doc in result.results">
+        <a ng-href="" target="_self"
+           uib-tooltip="Loaded on {{doc.updated_at.split('T')[0]}}"
+           tooltip-append-to-body="true"
+           tooltip-placement="right" class="source">
+          {{result.sources.labels[doc.source_id]}}
+        </a>
+        <a ng-href="{{doc.source_url || doc.data_url}}" target="_self" class="title">
+          {{doc.title | characters: 90 }}
+        </a>
+        <span class="summary">{{doc.summary}}</span>
+      </div>
+    </div>
   </div>
 
   <div class="col-md-4">
@@ -136,6 +136,47 @@
         </li>
       </ul>
     </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Document metadata
+      </div>
+      <div class="panel-body">
+        <p>
+          You can download links and other meta data for all documents
+          matching your search criteria.
+        </p>
+        <a class="btn btn-primary"
+          ng-href="/api/1/query/export?{{query.queryString()}}"
+          download target="_self">
+          <i class="fa fa-cloud-download"></i>
+          Download {{result.total}} search results (Excel 2007)
+        </a>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Actor network data
+      </div>
+      <div class="panel-body">
+        <p>
+          Network data can be used to further explore the connections
+          between watchlist entities. Link indicate entities occuring
+          in the same document. If multiple documents indicate a
+          connection, a weight is included in the data.
+        </p>
+
+        <a ng-href="/api/1/graph?format=gexf&limit=2000&{{query.queryString()}}" class="btn btn-primary" target="_self"
+        download="actors.gexf">
+          <i class="fa fa-cloud-download"></i>
+          Download Graph Exchange XML (GEXF)
+        </a>
+        <p class="help-block">
+          This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool (intermediate). 
+        </p>
+      </div>
+    </div>
+
   </div>
 </div>
 

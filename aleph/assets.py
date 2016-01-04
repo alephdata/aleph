@@ -5,7 +5,6 @@ from aleph.core import assets, app
 
 deps_assets = Bundle(
     'vendor/jquery/dist/jquery.js',
-    'vendor/d3/d3.js',
     'vendor/angular/angular.js',
     'vendor/ng-debounce/angular-debounce.js',
     'vendor/angular-route/angular-route.js',

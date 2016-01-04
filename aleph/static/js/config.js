@@ -7,34 +7,12 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
   cfpLoadingBarProvider.includeSpinner = false;
 
   $routeProvider.when('/search', {
-    templateUrl: 'search_table.html',
-    controller: 'SearchTableCtrl',
+    templateUrl: 'search.html',
+    controller: 'SearchCtrl',
     reloadOnSearch: false,
     loginRequired: false,
     resolve: {
-      'result': loadSearchResult
-    }
-  });
-
-  $routeProvider.when('/search/export', {
-    templateUrl: 'search_export.html',
-    controller: 'SearchExportCtrl',
-    reloadOnSearch: false,
-    loginRequired: false,
-    resolve: {
-      'result': loadSearchResult,
-      'metadata': loadMetadata
-    }
-  });
-
-  $routeProvider.when('/search/graph', {
-    templateUrl: 'search_graph.html',
-    controller: 'SearchGraphCtrl',
-    reloadOnSearch: false,
-    loginRequired: false,
-    resolve: {
-      'result': loadSearchResult,
-      'graph': loadSearchGraph
+      'result': loadSearch
     }
   });
 
