@@ -42,12 +42,14 @@ def guess_encoding(text):
 
 
 def safe_text(text):
+    if text is None:
+        return
     try:
         encoding = guess_encoding(text)
         if encoding:
             text = text.decode(encoding)
-        else:
-            text = unicode(text)
+        if not isinstance(text, six.text_type):
+            return
         text = ''.join(ch for ch in text if category(ch)[0] != 'C')
         return text.replace(u'\xfe\xff', '')  # remove BOM
     except Exception as ex:
