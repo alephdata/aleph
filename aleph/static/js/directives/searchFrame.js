@@ -33,6 +33,10 @@ aleph.directive('searchFrame', ['$uibModal', '$route', 'Query', 'Metadata', 'Aut
         return Authz.source(Authz.WRITE, source.id);
       };
 
+      scope.canEditWatchlist = function(watchlist) {
+        return Authz.source(Authz.WRITE, watchlist.id);
+      };
+
       scope.editSource = function(source, $event) {
         $event.stopPropagation();
         var instance = $uibModal.open({

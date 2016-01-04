@@ -64,14 +64,14 @@
       ng-if="result.watchlists[id]">
       <div class="panel-heading">
         <span class="pull-right">
-          <a ng-href="/#/watchlists/{{id}}/entities" ng-show="session.logged_in">
-            <i class="fa fa-cog"></i>
-          </a>
           <a ng-click="query.toggleFilter('watchlist', id)">
             <i class="fa fa-close"></i>
           </a>
         </span>
         List: {{watchlists[id].label}}
+        <a ng-href="/#/watchlists/{{id}}/entities" ng-show="canEditWatchlist(warchlists[id])">
+          <i class="fa fa-cog"></i>
+        </a> 
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet empty" ng-if="!result.watchlists[id].entities.length">
@@ -130,7 +130,7 @@
           <span class="lbl">
             {{source.label}}
             <a ng-click="editSource(source, $event)" ng-show="canEditSource(source)">
-              <i class="fa fa-wrench"></i>
+              <i class="fa fa-cog"></i>
             </a>
           </span>
         </li>
