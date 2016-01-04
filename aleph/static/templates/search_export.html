@@ -18,7 +18,7 @@
         </div>
 
         <table class="table">
-          <tr ng-repeat="(name, label) in fields">
+          <tr ng-repeat="(name, label) in metadata.fields">
             <td width="1%">
               <input type="checkbox" ng-checked="query.hasFilter('field', name)"
                 ng-click="query.toggleFilter('fields', name, true)">
