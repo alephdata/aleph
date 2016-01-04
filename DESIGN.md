@@ -26,9 +26,15 @@ aleph/fs
 * [DONE] Rename List -> Watchlist
 * [DONE] Source facets
 * [DONE] Source modals
+* Implicit facet on list_id
+* Bug fix watchlists
+* Simplify search UI
+* Result drilldown
+* Table viewer
+* Document pages viewer
 
 * Azerbaijan importer 
-* Moldova importer 
+* Moldova importer
 * YL importer
 -----
 

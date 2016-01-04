@@ -13,6 +13,7 @@ blueprint = Blueprint('watchlists', __name__)
 @blueprint.route('/api/1/watchlists', methods=['GET'])
 def index():
     q = Watchlist.all(watchlist_ids=authz.watchlists(authz.READ))
+    q = q.order_by(Watchlist.label.asc())
     return jsonify(Pager(q).to_dict())
 
 

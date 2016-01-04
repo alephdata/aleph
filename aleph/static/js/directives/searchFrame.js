@@ -10,13 +10,11 @@ aleph.directive('searchFrame', ['$uibModal', '$route', 'Query', 'Metadata', 'Aut
     link: function (scope, element, attrs, model) {
       scope.query = Query;
       scope.metadata = {};
-      scope.sources = {};
       scope.session = {};
       scope.watchlists = {};
       scope.fields = {};
 
       Metadata.get().then(function(metadata) {
-        scope.sources = metadata.sources;
         scope.watchlists = metadata.watchlists;
         scope.fields = metadata.fields;
         scope.session = metadata.session;

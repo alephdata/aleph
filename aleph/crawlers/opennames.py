@@ -28,7 +28,7 @@ class OpenNamesCrawler(Crawler):
         url = urljoin(JSON_PATH, json_file)
 
         watchlist = Watchlist.by_foreign_id(url, {
-            'label': source.get('source_id'),
+            'label': 'OpenNames / %s' % source.get('source_id'),
             'public': True,
             'users': []
         })

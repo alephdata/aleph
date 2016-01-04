@@ -51,13 +51,18 @@ class Watchlist(db.Model, TimeStampedModel):
         self.users = list(users)
 
     def delete(self):
-        # for entity in self.entities:
-        #     entity.delete()
+        self.delete_entities()
         db.session.delete(self)
 
     def delete_entities(self):
-        for entity in self.entities:
-            entity.delete()
+        from aleph.model import Entity, Selector
+        q = db.session.query(Selector)
+        q = q.join(Entity, Entity.id == Selector.entity_id)
+        q = q.filter(Entity.watchlist_id == self.id)
+        q.delete()
+        q = db.session.query(Entity)
+        q = q.filter(Entity.watchlist_id == self.id)
+        q.delete()
 
     @classmethod
     def by_foreign_id(cls, foreign_id, data):
