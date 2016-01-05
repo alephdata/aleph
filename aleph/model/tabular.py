@@ -122,6 +122,9 @@ class Tabular(object):
             self.table.drop()
         self._table = None
 
+    def to_dict(self):
+        return self.schema.to_dict()
+
     def __len__(self):
         if not hasattr(self, '_count'):
             q = select(columns=func.count(self.table.c._id),

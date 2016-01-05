@@ -17,6 +17,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   });
 
   $scope.viewDetails = function(doc) {
+    $location.search({});
     if (doc.type === 'tabular') {
       $location.path('/tabular/' + doc.id + '/' + 0);
     } else {

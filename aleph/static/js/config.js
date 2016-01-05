@@ -16,13 +16,13 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     }
   });
 
-  $routeProvider.when('/tabular/:document_id/:sheet_id', {
+  $routeProvider.when('/tabular/:document_id/:table_id', {
     templateUrl: 'tabular.html',
     controller: 'TabularCtrl',
     reloadOnSearch: true,
     loginRequired: false,
     resolve: {
-      'doc': loadDocument
+      'data': loadTabular
     }
   });
 
@@ -32,7 +32,7 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     reloadOnSearch: true,
     loginRequired: false,
     resolve: {
-      'doc': loadDocument
+      'data': loadText
     }
   });
 

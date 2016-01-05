@@ -12,11 +12,10 @@ from aleph.model.tabular import TabularSchema
 
 CORE_FACETS = {
     'extension': 'File extension',
-    'mime_type': 'MIME type',
+    'mime_type': 'Content type',
     'languages': 'Languages',
     'countries': 'Countries'
 }
-# CORE_ATTRIBUTES = CORE['']
 
 
 class Metadata(MutableMapping):

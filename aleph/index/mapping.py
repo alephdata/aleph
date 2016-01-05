@@ -22,7 +22,6 @@ DOCUMENT_MAPPING = {
         "countries": {"type": "string", "index": "not_analyzed"},
         "mime_type": {"type": "string", "index": "not_analyzed"},
         "summary": {"type": "string", "index": "analyzed"},
-        "text": {"type": "string", "index": "analyzed"},
         "created_at": {"type": "date", "index": "not_analyzed"},
         "updated_at": {"type": "date", "index": "not_analyzed"},
         "entities": {

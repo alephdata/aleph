@@ -1,2 +1,21 @@
 
 {{doc.title}} (table)
+
+<div class="data-table" infinite-scroll="loadMore()" infinite-scroll-distance="3">
+    <table class="table table-bordered table-striped table-hover table-rounded">
+    <thead>
+        <tr>
+            <th ng-repeat="col in table.columns" data-type="{{col.type}}">
+                {{col.label}}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in rows.results">
+            <td ng-repeat="col in table.columns">
+                {{row[col.name]}}
+            </td>
+        </tr>
+    </tbody>
+    </table>
+</div>
