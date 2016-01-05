@@ -16,6 +16,26 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     }
   });
 
+  $routeProvider.when('/tabular/:document_id/:sheet_id', {
+    templateUrl: 'tabular.html',
+    controller: 'TabularCtrl',
+    reloadOnSearch: true,
+    loginRequired: false,
+    resolve: {
+      'doc': loadDocument
+    }
+  });
+
+  $routeProvider.when('/text/:document_id', {
+    templateUrl: 'text.html',
+    controller: 'TextCtrl',
+    reloadOnSearch: true,
+    loginRequired: false,
+    resolve: {
+      'doc': loadDocument
+    }
+  });
+
   $routeProvider.when('/watchlists/new', {
     templateUrl: 'watchlists_new.html',
     controller: 'WatchlistsNewCtrl',

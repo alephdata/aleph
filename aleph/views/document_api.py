@@ -7,7 +7,7 @@ from aleph.core import archive
 from aleph import authz
 from aleph.model import Document
 
-blueprint = Blueprint('data', __name__)
+blueprint = Blueprint('document', __name__)
 
 
 def get_document(document_id):
@@ -18,12 +18,12 @@ def get_document(document_id):
     return document
 
 
-@blueprint.route('/api/1/document/<document_id>')
-def document(document_id):
+@blueprint.route('/api/1/documents/<document_id>')
+def view(document_id):
     return jsonify(get_document(document_id).to_dict())
 
 
-@blueprint.route('/api/1/document/<document_id>/file')
+@blueprint.route('/api/1/documents/<document_id>/file')
 def file(document_id):
     document = get_document(document_id)
     url = archive.generate_url(document.meta)

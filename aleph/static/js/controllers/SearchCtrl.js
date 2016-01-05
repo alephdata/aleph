@@ -16,6 +16,14 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     $scope.metadata = metadata;
   });
 
+  $scope.viewDetails = function(doc) {
+    if (doc.type === 'tabular') {
+      $location.path('/tabular/' + doc.id + '/' + 0);
+    } else {
+      $location.path('/text/' + doc.id);  
+    }
+  };
+
   $scope.showListFacet = function(id) {
     return Query.load().watchlist.indexOf(id) == -1;
   };

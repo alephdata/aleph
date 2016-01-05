@@ -10,7 +10,7 @@
     <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()"
       infinite-scroll-distance="3">
       <div class="result animate toggle" ng-repeat="doc in result.results">
-        <a ng-href="{{doc.source_url || doc.data_url}}" target="_self" class="title">
+        <a ng-click="viewDetails(doc)" target="_self" class="title">
           <span ng-if="doc.type == 'tabular'">
             <i class="fa fa-table"></i>
           </span>

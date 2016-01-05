@@ -198,9 +198,9 @@ def execute_query(args, q):
     for doc in hits.get('hits', []):
         document = doc.get('_source')
         document['id'] = doc.get('_id')
-        document['api_url'] = url_for('data.document',
+        document['api_url'] = url_for('document.view',
                                       document_id=doc.get('_id'))
-        document['data_url'] = url_for('data.file',
+        document['data_url'] = url_for('document.file',
                                        document_id=doc.get('_id'))
         output['results'].append(document)
     return output
