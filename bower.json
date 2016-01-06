@@ -26,7 +26,8 @@
     "ngInfiniteScroll": "nginfinitescroll#~1.2.1",
     "d3": "~3.5.12",
     "ng-debounce": "~0.1.7",
-    "angular-loading-bar": "~0.8.0"
+    "angular-loading-bar": "~0.8.0",
+    "bootstrap-sass": "~3.3.6"
   },
   "resolutions": {
     "angular": "~1.4.8"

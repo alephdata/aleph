@@ -1,0 +1,40 @@
+
+.navbar {
+    .brand-field {
+        //color: $grano-color;
+        font-weight: 900;
+    }
+
+    .navbar-form {
+        padding-left: 0;
+    }
+
+    @media (min-width: $screen-sm-min) {
+        .navbar-searchbox input {
+            min-width: 200px;
+        }
+    }
+
+    @media (min-width: $screen-md-min) {
+        .navbar-searchbox input {
+            min-width: 500px;
+        }
+    }
+
+    @media (min-width: $screen-lg-min) {
+        .navbar-searchbox input {
+            min-width: 700px;
+        }
+    }
+}
+
+
+// Flash messages
+.flashes {
+    position: relative;
+
+    .alert {
+        position: absolute;
+        right: 1em;
+    }
+}

@@ -1,0 +1,30 @@
+
+td.numeric {
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.data-table {
+    overflow-x: scroll;
+
+    th {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    td {
+        min-width: 150px;
+        max-width: 350px;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &.numeric { 
+            min-width: 70px;
+        }
+    }
+}

@@ -1,0 +1,101 @@
+
+// Search results 
+.result {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: hidden;
+    padding: 0.4em 0 0.4em 0;
+    border-bottom: 1px solid $border-color;
+    //max-width: 90px;
+
+    .source {
+        color: #aaa;
+        font-weight: bold;
+    }
+
+    .archive, .archive a {
+        color: #aaa;
+    }
+
+    .summary {
+        color: $border-color;
+        font-size: 0.8em;
+    }
+
+    .title {
+        font-weight: bold;
+    }
+}
+
+
+// List entities page 
+.nav.nav-tabs, .search-bar {
+    margin-bottom: 1em;
+}
+
+.actions {
+    text-align: right;
+}
+
+.right-text {
+    text-align: right;   
+}
+
+
+.facet-list {
+    max-height: 20em;
+    overflow-y: scroll;
+    overflow: -moz-scrollbars-vertical; 
+    //margin: -3px -1px 0 -1px;
+
+    .facet {
+        cursor: pointer;
+        white-space: nowrap;
+        text-overflow: hidden;
+        overflow-x: hidden;    
+        .lbl {
+        }
+
+        &.empty {
+            color: $text-muted;
+            font-style: italic;
+            cursor: default;
+        }
+    }    
+}
+
+
+.entity-icon {
+    margin-right: 0.5em;
+
+    &.Person {
+        color: $color-person;
+    }
+
+    &.Company {
+        color: $color-company;
+    }
+
+    &.Organization {
+        color: $color-organization;
+    }
+
+    &.Other {
+        color: $color-other;
+    }
+}
+
+.modal-scroll {
+    max-height: 30em;
+    overflow-y: scroll;
+
+    .active-switch {
+        padding-left: 1.5em;
+    }
+
+    .table {
+        .first-row td {
+            border-top: none;   
+        }
+    }
+}

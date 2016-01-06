@@ -1,0 +1,75 @@
+$occrp-red: #982022;
+// $occrp-red: #f31d35;
+// $occrp-navy: #241F38;
+$occrp-green: #27918C;
+$occrp-dark: #3a4953;
+
+$default-radius: 3px;
+
+$col-1: #CF3D1E;
+$col-2: #F15623;
+$col-3: #F68B1F;
+$col-4: #FFC60B;
+$col-5: #DFCE21;
+$col-6: #BCD631;
+$col-7: #95C93D;
+$col-8: #48B85C;
+$col-9: #00833D;
+$col-10: #00B48D;
+$col-11: #60C4B1;
+$col-12: #27C4F4;
+$col-13: #478DCB;
+$col-14: #3E67B1;
+$col-15: #4251A3;
+$col-16: #59449B;
+$col-17: #6E3F7C;
+$col-18: #6A246D;
+$col-19: #8A4873;
+$col-20: #EB0080;
+$col-21: #EF58A0;
+$col-22: #C05A89;
+
+// Style tiles, Colours
+$border-color: #d7d7d7;
+$boxed-color: #fafafa;
+$grano-color: #ed1c24;
+
+$color-person: $col-2;
+$color-company: $col-7;
+$color-organization: $col-10;
+$color-other: $col-20;
+
+// override bootstrap defaults
+$brand-primary: $occrp-red;
+// $brand-success: $occrp-green;
+$text-color: #333;
+$text-muted: #999;
+$gray-subtle: #f0f0f0;
+$page-bg: #fff;
+$spacing: 0.5em;
+
+// Style tiles, Fonts
+$font-default: 'Open Sans', sans-serif;
+$font-family-sans-serif: 'Open Sans', sans-serif;
+$input-border-focus: $brand-primary;
+
+@import "../vendor/bootstrap-sass/assets/stylesheets/_bootstrap";
+@import "mixins";
+
+// Modal backdrop workaround:
+html { height: 100%; }
+body { min-height: 100%; }
+.modal-backdrop { bottom: 0; }
+
+// Angular ugliness fix 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+a {
+    cursor: pointer;
+}
+
+@import "nav";
+@import "search";
+@import "table";

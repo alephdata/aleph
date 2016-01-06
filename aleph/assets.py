@@ -29,10 +29,10 @@ app_assets = Bundle(*js_files,
                     output='assets/app.js')
 
 css_assets = Bundle(
-    'style/style.less',
+    'style/aleph.scss',
     'vendor/angular-loading-bar/build/loading-bar.css',
     'style/animations.css',
-    filters='less',
+    filters='scss',
     output='assets/style.css'
 )
 
