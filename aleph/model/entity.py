@@ -20,8 +20,7 @@ class Entity(db.Model, TimeStampedModel):
     category = db.Column(db.Enum(*CATEGORIES, name='entity_categories'),
                          nullable=False)
     watchlist_id = db.Column(db.Integer(), db.ForeignKey('watchlist.id'))
-    watchlist = db.relationship(Watchlist, backref=db.backref('entities',
-                                lazy='dynamic', cascade='all, delete-orphan'))
+    watchlist = db.relationship(Watchlist, backref=db.backref('entities', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
 
     def to_dict(self):
         return {
@@ -145,9 +144,7 @@ class Selector(db.Model):
     text = db.Column(db.Unicode, index=True)
 
     entity_id = db.Column(db.Integer, db.ForeignKey('entity.id'))
-    entity = db.relationship(Entity, backref=db.backref('selectors',
-                             lazy='dynamic',
-                             cascade='all, delete-orphan')) # noqa
+    entity = db.relationship(Entity, backref=db.backref('selectors', lazy='dynamic', cascade='all, delete-orphan')) # noqa
 
     def __repr__(self):
         return '<Selector(%r, %r)>' % (self.entity_id, self.text)

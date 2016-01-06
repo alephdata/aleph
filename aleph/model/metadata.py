@@ -27,7 +27,7 @@ class Metadata(MutableMapping):
         self.data = data
 
     def has(self, name):
-        return self.data.get('name') is not None
+        return self.data.get(name) is not None
 
     @property
     def title(self):

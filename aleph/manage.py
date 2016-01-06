@@ -24,7 +24,7 @@ manager.add_command('db', MigrateCommand)
 def sources():
     """ List all sources. """
     for source in db.session.query(Source):
-        print source.id, source.key, source.label
+        print source.id, source.foreign_id, source.label
 
 
 @manager.command
@@ -58,17 +58,23 @@ def reanalyze():
 
 
 @manager.command
-def flush(source):
+def flush(foreign_id):
     """ Reset the crawler state for a given source specification. """
+    from aleph.index import delete_source
+    source = Source.by_foreign_id(foreign_id)
+    if source is None:
+        raise ValueError("No such source: %r" % foreign_id)
+    delete_source(source.id)
+    source.delete()
     db.session.commit()
 
 
 @manager.command
-def analyze(source_key, force=False):
+def analyze(foreign_id, force=False):
     """ Index all documents in the given source. """
-    source = Source.by_key(source_key)
+    source = Source.by_foreign_id(foreign_id)
     if source is None:
-        raise ValueError("No such source: %r" % source_key)
+        raise ValueError("No such source: %r" % foreign_id)
     analyze_source.delay(source.id)
 
 

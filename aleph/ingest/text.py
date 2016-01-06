@@ -73,16 +73,20 @@ class HtmlIngestor(TextIngestor):
     def ingest(self, meta, local_path):
         doc = self.parse_html(local_path)
 
-        title = doc.findtext('//title')
-        if title is not None:
-            meta.title = title.strip()
+        if not meta.has('title'):
+            title = doc.findtext('//title')
+            if title is not None:
+                meta.title = title.strip()
 
-        summary = doc.find('//meta[@name="description"]')
-        if summary is not None and summary.get('content'):
-            meta.summary = summary.get('content')
+        if not meta.has('summary'):
+            summary = doc.find('//meta[@name="description"]')
+            if summary is not None and summary.get('content'):
+                meta.summary = summary.get('content')
 
         document = self.create_document(meta)
-        self.create_page(document, doc.text_content())
+        body = doc.find('/body')
+        if body is not None:
+            self.create_page(document, body.text_content())
         self.emit(document)
 
 

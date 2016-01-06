@@ -1,4 +1,5 @@
 import logging
+from tempfile import NamedTemporaryFile
 
 from aleph.core import db
 from aleph.model.metadata import Metadata
@@ -20,6 +21,12 @@ class Crawler(object):
     def emit_url(self, source, meta, url):
         db.session.commit()
         ingest_url.delay(source.id, meta.data, url)
+
+    def emit_content(self, source, meta, content):
+        db.session.commit()
+        with NamedTemporaryFile() as fh:
+            fh.write(content)
+            ingest_file(source.id, meta, fh.name)
 
     def emit_file(self, source, meta, file_path):
         db.session.commit()

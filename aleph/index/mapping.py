@@ -57,11 +57,13 @@ RECORD_MAPPING = {
         "id": {"type": "string", "index": "not_analyzed"},
         "type": {"type": "string", "index": "not_analyzed"},
         "content_hash": {"type": "string", "index": "not_analyzed"},
+        "source_id": {"type": "integer", "index": "not_analyzed"},
         "document_id": {"type": "integer", "index": "not_analyzed"},
         "sheet": {"type": "integer", "index": "not_analyzed"},
         "row_id": {"type": "integer", "index": "not_analyzed"},
         "page_number": {"type": "string", "index": "not_analyzed"},
         "text": {"type": "string", "index": "analyzed"},
+        "latin": {"type": "string", "index": "analyzed"},
         "raw": {"type": "object"}
     }
 }

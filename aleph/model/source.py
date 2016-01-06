@@ -20,19 +20,18 @@ class Source(db.Model, TimeStampedModel):
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
     public = db.Column(db.Boolean, default=True)
 
-    users = db.relationship(User, secondary=source_user_table,
-                            backref='sources')
+    users = db.relationship(User, secondary=source_user_table, backref='sources')  # noqa
 
     @classmethod
-    def create(cls, data, user=None):
-        if data.get('foreign_id') is not None:
-            src = Source.by_foreign_id(data.get('foreign_id'))
-            if src is not None:
-                return src
+    def create(cls, data):
+        foreign_id = data.get('foreign_id')
+        src = Source.by_foreign_id(foreign_id)
+        if src is not None:
+            return src
         src = cls()
         data = SourceCreateForm().deserialize(data)
-        src.foreign_id = data.get('foreign_id', make_token())
-        src.update_data(data, user)
+        src.foreign_id = foreign_id or make_token()
+        src.update_data(data)
         db.session.add(src)
         db.session.flush()
         return src
@@ -46,6 +45,26 @@ class Source(db.Model, TimeStampedModel):
         self.public = data.get('public')
         self.users = list(set(data.get('users', [])))
 
+    def delete(self):
+        from aleph.model import Document, Page, Reference
+        sq = db.session.query(Document.id)
+        sq = sq.filter(Document.source_id == self.id)
+        sq = sq.subquery()
+
+        q = db.session.query(Page)
+        q = q.filter(Page.entity_id.in_(sq))
+        q.delete(synchronize_session='fetch')
+
+        q = db.session.query(Reference)
+        q = q.filter(Reference.entity_id.in_(sq))
+        q.delete(synchronize_session='fetch')
+
+        q = db.session.query(Document)
+        q = q.filter(Document.source_id == self.id)
+        q.delete(synchronize_session='fetch')
+
+        db.session.delete(self)
+
     def to_dict(self):
         return {
             'api_url': url_for('sources.view', id=self.id),
@@ -58,16 +77,13 @@ class Source(db.Model, TimeStampedModel):
         }
 
     @classmethod
-    def delete(cls, id):
-        q = db.session.query(cls).filter_by(id=id)
-        q.delete()
-
-    @classmethod
     def by_id(cls, id):
         return db.session.query(cls).filter_by(id=id).first()
 
     @classmethod
     def by_foreign_id(cls, foreign_id):
+        if foreign_id is None:
+            return
         return db.session.query(cls).filter_by(foreign_id=foreign_id).first()
 
     @classmethod

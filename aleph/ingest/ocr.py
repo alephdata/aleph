@@ -107,6 +107,7 @@ def extract_pdf(path, languages=DEFAULT_LANGUAGES):
     return data
 
 
+# other formats: http://opengrok.libreoffice.org/s?n=25&start=0&q=PreferredFilter&sort=relevancy&project=core,
 def document_to_pdf(path):
     """ OK, this is weird. Converting LibreOffice-supported documents to
     PDF to then use that extractor. """

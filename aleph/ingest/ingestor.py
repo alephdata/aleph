@@ -21,17 +21,20 @@ class Ingestor(object):
         raise NotImplemented()
 
     def create_document(self, meta, type=None):
+        type = type or self.DOCUMENT_TYPE
         if meta.content_hash:
             q = db.session.query(Document)
             q = q.filter(Document.content_hash == meta.content_hash)
             q = q.filter(Document.source_id == self.source_id)
             document = q.first()
             if document is not None:
+                document.meta = meta
+                document.type = type
                 return document
         document = Document()
         document.source_id = self.source_id
         document.meta = meta
-        document.type = type or self.DOCUMENT_TYPE
+        document.type = type
         db.session.add(document)
         db.session.flush()
         return document
@@ -52,13 +55,13 @@ class Ingestor(object):
 
     @classmethod
     def dispatch(cls, source_id, meta):
-        if meta.content_hash:
-            q = db.session.query(Document)
-            q = q.filter(Document.content_hash == meta.content_hash)
-            q = q.filter(Document.source_id == source_id)
-            doc = q.first()
-            if doc is not None:
-                return
+        # if meta.content_hash:
+        #     q = db.session.query(Document)
+        #     q = q.filter(Document.content_hash == meta.content_hash)
+        #     q = q.filter(Document.source_id == source_id)
+        #     doc = q.first()
+        #     if doc is not None:
+        #         return
 
         best_score, best_cls = 0, None
         local_path = archive.load_file(meta)

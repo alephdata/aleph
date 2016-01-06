@@ -42,7 +42,8 @@ setup(
         ],
         'aleph.crawlers': [
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
-            'spindle = aleph.crawlers.spindle:SpindleCrawler'
+            'spindle = aleph.crawlers.spindle:SpindleCrawler',
+            'aznews = aleph.crawlers.azerbaijan_news:AzerbaijanNewsCrawler'
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',

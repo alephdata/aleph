@@ -1,8 +1,9 @@
 
-aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'Metadata', 'Authz', 'doc',
-    function($scope, $location, $http, Metadata, Authz, doc) {
+aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'Metadata', 'Authz', 'data',
+    function($scope, $location, $http, Metadata, Authz, data) {
 
-  console.log(doc);
+  $scope.doc = data.doc;
+  console.log(data);
 
 
 }]);

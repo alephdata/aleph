@@ -31,12 +31,45 @@ def delete_index():
 
 
 def clear_children(document):
-    q = {'query': {'term': {'document_id': document.id}}}
+    q = {'query': {'term': {'document_id': document.id}},
+         '_source': ['id', 'document_id']}
 
     def gen_deletes():
             for res in scan(es, query=q, index=es_index,
                             doc_type=[TYPE_RECORD]):
-                print res
+                yield {
+                    '_op_type': 'delete',
+                    '_index': es_index,
+                    '_parent': res.get('_source', {}).get('document_id'),
+                    '_type': res.get('_type'),
+                    '_id': res.get('_id')
+                }
+
+    try:
+        bulk(es, gen_deletes(), stats_only=True, chunk_size=2000,
+             request_timeout=60.0)
+    except Exception as ex:
+        log.exception(ex)
+
+
+def delete_source(source_id):
+    q = {'query': {'term': {'source_id': source_id}}}
+
+    def deletes():
+            q['_source'] = ['id', 'document_id']
+            for res in scan(es, query=q, index=es_index,
+                            doc_type=[TYPE_RECORD]):
+                yield {
+                    '_op_type': 'delete',
+                    '_index': es_index,
+                    '_parent': res.get('_source', {}).get('document_id'),
+                    '_type': res.get('_type'),
+                    '_id': res.get('_id')
+                }
+
+            q['_source'] = ['id']
+            for res in scan(es, query=q, index=es_index,
+                            doc_type=[TYPE_DOCUMENT]):
                 yield {
                     '_op_type': 'delete',
                     '_index': es_index,
@@ -45,7 +78,7 @@ def clear_children(document):
                 }
 
     try:
-        bulk(es, gen_deletes(), stats_only=True, chunk_size=2000,
+        bulk(es, deletes(), stats_only=True, chunk_size=2000,
              request_timeout=60.0)
     except Exception as ex:
         log.exception(ex)
@@ -66,6 +99,7 @@ def generate_pages(document):
                 'type': 'page',
                 'content_hash': document.content_hash,
                 'document_id': document.id,
+                'source_id': document.source_id,
                 'page_number': page.number,
                 'text': page.text
             }
@@ -92,6 +126,7 @@ def generate_records(document):
                     'type': 'row',
                     'content_hash': document.content_hash,
                     'document_id': document.id,
+                    'source_id': document.source_id,
                     'row_id': row_id,
                     'sheet': table.schema.sheet,
                     'text': text,

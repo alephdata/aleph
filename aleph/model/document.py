@@ -22,8 +22,7 @@ class Document(db.Model, TimeStampedModel):
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)
     source_id = db.Column(db.Integer(), db.ForeignKey('source.id'), index=True)
-    source = db.relationship(Source, backref=db.backref('documents',
-                                                        lazy='dynamic'))
+    source = db.relationship(Source, backref=db.backref('documents', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
     _meta = db.Column('meta', JSON)
 
     @hybrid_property
@@ -73,7 +72,7 @@ class Page(db.Model):
     number = db.Column(db.Integer(), nullable=True)
     text = db.Column(db.Unicode(), nullable=False)
     document_id = db.Column(db.Integer(), db.ForeignKey('document.id'))
-    document = db.relationship(Document, backref=db.backref('pages'))
+    document = db.relationship(Document, backref=db.backref('pages', cascade='all, delete-orphan'))  # noqa
 
     def __repr__(self):
         return '<Page(%r,%r)>' % (self.document_id, self.number)

@@ -20,12 +20,10 @@ class Watchlist(db.Model, TimeStampedModel):
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
     public = db.Column(db.Boolean, default=False)
 
-    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'),
-                           nullable=True)
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     creator = db.relationship(User)
 
-    users = db.relationship(User, secondary=watchlist_user_table,
-                            backref='watchlists')
+    users = db.relationship(User, secondary=watchlist_user_table, backref='watchlists')  # noqa
 
     def to_dict(self):
         return {
@@ -55,14 +53,22 @@ class Watchlist(db.Model, TimeStampedModel):
         db.session.delete(self)
 
     def delete_entities(self):
-        from aleph.model import Entity, Selector
+        from aleph.model import Entity, Selector, Reference
+        sq = db.session.query(Entity.id)
+        sq = sq.filter(Entity.watchlist_id == self.id)
+        sq = sq.subquery()
+
         q = db.session.query(Selector)
-        q = q.join(Entity, Entity.id == Selector.entity_id)
-        q = q.filter(Entity.watchlist_id == self.id)
-        q.delete()
+        q = q.filter(Selector.entity_id.in_(sq))
+        q.delete(synchronize_session='fetch')
+
+        q = db.session.query(Reference)
+        q = q.filter(Reference.entity_id.in_(sq))
+        q.delete(synchronize_session='fetch')
+
         q = db.session.query(Entity)
         q = q.filter(Entity.watchlist_id == self.id)
-        q.delete()
+        q.delete(synchronize_session='fetch')
 
     @classmethod
     def by_foreign_id(cls, foreign_id, data):
