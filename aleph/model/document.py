@@ -20,6 +20,7 @@ class Document(db.Model, TimeStampedModel):
 
     id = db.Column(db.BigInteger, primary_key=True)
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
+    foreign_id = db.Column(db.Unicode, unique=True, nullable=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)
     source_id = db.Column(db.Integer(), db.ForeignKey('source.id'), index=True)
     source = db.relationship(Source, backref=db.backref('documents', lazy='dynamic', cascade='all, delete-orphan'))  # noqa

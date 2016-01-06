@@ -5,12 +5,11 @@ from urlparse import urljoin
 from itertools import count
 from lxml import html
 
-from aleph.model import Source
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
 BASE_URL = 'http://www.azerbaijan-news.az/'
-FAILED_LIMIT = 1000
+FAILED_LIMIT = 10000
 
 
 class AzerbaijanNewsCrawler(Crawler):
@@ -19,13 +18,13 @@ class AzerbaijanNewsCrawler(Crawler):
         meta = self.metadata()
         meta['languages'] = ['az']
         meta['countries'] = ['az']
-        meta.file_name = 'article_%s.htm' % id
+        meta.file_name = 'article-%s.htm' % id
         meta.extension = 'htm'
         meta.source_url = urljoin(BASE_URL, '/index.php?mod=3&id=%s' % id)
         res = requests.get(meta.source_url)
         if res.status_code >= 500:
             log.warning('Failed to load: %r', meta.source_url)
-            # time.sleep(10)
+            time.sleep(10)
             return True
 
         # print res.content
@@ -51,11 +50,7 @@ class AzerbaijanNewsCrawler(Crawler):
         return True
 
     def crawl(self):
-        source = Source.create({
-            'foreign_id': BASE_URL,
-            'label': 'Azerbaijan State News'
-        })
-
+        source = self.create_source(label='Azerbaijan State News')
         failed_articles = 0
         for idx in count(80000):
             if self.crawl_article(source, idx):

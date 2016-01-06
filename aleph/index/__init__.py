@@ -6,6 +6,7 @@ from elasticsearch.helpers import bulk, scan
 
 from aleph.core import celery, es, es_index
 from aleph.model import Document
+from aleph.util import latinize_text
 from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD
 from aleph.index.mapping import DOCUMENT_MAPPING, RECORD_MAPPING
 
@@ -101,7 +102,8 @@ def generate_pages(document):
                 'document_id': document.id,
                 'source_id': document.source_id,
                 'page_number': page.number,
-                'text': page.text
+                'text': page.text,
+                'text_latin': latinize_text(page.text)
             }
         }
 
@@ -130,6 +132,7 @@ def generate_records(document):
                     'row_id': row_id,
                     'sheet': table.schema.sheet,
                     'text': text,
+                    'text_latin': latinize_text(text),
                     'raw': row
                 }
             }
@@ -158,6 +161,8 @@ def index_document(document_id):
     log.info("Index document: %r", document)
     data = document.to_dict()
     data['entities'] = generate_entities(document)
+    data['title_latin'] = latinize_text(data.get('title'))
+    data['summary_latin'] = latinize_text(data.get('summary'))
     es.index(index=es_index, doc_type=TYPE_DOCUMENT, body=data,
              id=document.id)
     clear_children(document)

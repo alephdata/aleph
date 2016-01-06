@@ -3,6 +3,7 @@ import logging
 from hashlib import sha1
 from unicodedata import category
 from datetime import datetime, date
+from unidecode import unidecode
 
 import six
 import chardet
@@ -39,6 +40,14 @@ def guess_encoding(text):
         return
     enc = chardet.detect(text)
     return enc.get('encoding', 'utf-8')
+
+
+def latinize_text(text):
+    if not isinstance(text, six.text_type):
+        return text
+    text = unicode(unidecode(text))
+    text = text.replace('@', 'a')
+    return text.lower()
 
 
 def safe_text(text):

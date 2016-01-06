@@ -6,6 +6,7 @@ from collections import defaultdict
 # from unidecode import unidecode
 
 from aleph.core import db
+from aleph.util import latinize_text
 from aleph.model import Reference, Selector
 from aleph.analyze.analyzer import Analyzer
 
@@ -34,7 +35,7 @@ def normalize(text):
     if six.PY2 and not isinstance(text, six.text_type):
         text = text.decode('utf-8')
 
-    text = text.lower()
+    text = latinize_text(text.lower())
     text = unicodedata.normalize('NFKD', text)
     characters = []
     for character in text:

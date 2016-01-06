@@ -1,4 +1,3 @@
-import json
 import logging
 
 from aleph.core import celery

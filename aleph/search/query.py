@@ -5,11 +5,11 @@ from werkzeug.datastructures import MultiDict
 
 from aleph.core import es, es_index, url_for
 from aleph import authz
+from aleph.util import latinize_text
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.common import add_filter, authz_filter
 from aleph.search.facets import convert_aggregations
 
-QUERY_FIELDS = ['title^100', 'file_name^10', 'summary^2']
 DEFAULT_FIELDS = ['source_id', 'title', 'content_hash', 'file_name',
                   'extension', 'mime_type', 'countries', 'languages',
                   'source_url', 'created_at', 'updated_at', 'type']
@@ -128,6 +128,7 @@ def text_query(text):
     """ Construct the part of a query which is responsible for finding a
     piece of thext in the selected documents. """
     text = text.strip()
+    text_latin = latinize_text(text)
     if len(text):
         q = {
             "bool": {
@@ -135,7 +136,16 @@ def text_query(text):
                 "should": {
                     "multi_match": {
                         "query": text,
-                        "fields": QUERY_FIELDS,
+                        "fields": ['title^100', 'file_name^10', 'summary^2'],
+                        "type": "most_fields",
+                        "cutoff_frequency": 0.0007,
+                        "operator": "and",
+                    },
+                },
+                "should": {
+                    "multi_match": {
+                        "query": text_latin,
+                        "fields": ['title_latin^100', 'summary_latin^2'],
                         "type": "most_fields",
                         "cutoff_frequency": 0.0007,
                         "operator": "and",
@@ -144,7 +154,7 @@ def text_query(text):
                 "should": {
                     "multi_match": {
                         "query": text,
-                        "fields": QUERY_FIELDS,
+                        "fields": ['title^100', 'file_name^10', 'summary^2'],
                         "type": "phrase"
                     },
                 },
@@ -153,13 +163,26 @@ def text_query(text):
                         "type": TYPE_RECORD,
                         "score_mode": "sum",
                         "query": {
-                            "match": {
-                                "text": {
-                                    "query": text,
-                                    "cutoff_frequency": 0.0007,
-                                    "operator": "and"
+                            "bool": {
+                                "should": {
+                                    "match": {
+                                        "text": {
+                                            "query": text,
+                                            "cutoff_frequency": 0.0007,
+                                            "operator": "and"
+                                        }
+                                    }
+                                },
+                                "should": {
+                                    "match": {
+                                        "text_latin": {
+                                            "query": text_latin,
+                                            "cutoff_frequency": 0.0007,
+                                            "operator": "and"
+                                        }
+                                    }
                                 }
-                            },
+                            }
                         }
                     }
                 }

@@ -13,6 +13,7 @@ DOCUMENT_MAPPING = {
     "properties": {
         "id": {"type": "integer", "index": "not_analyzed"},
         "title": {"type": "string", "index": "analyzed"},
+        "title_latin": {"type": "string", "index": "analyzed"},
         "content_hash": {"type": "string", "index": "not_analyzed"},
         "file_name": {"type": "string", "index": "not_analyzed"},
         "source_id": {"type": "integer", "index": "not_analyzed"},
@@ -22,6 +23,7 @@ DOCUMENT_MAPPING = {
         "countries": {"type": "string", "index": "not_analyzed"},
         "mime_type": {"type": "string", "index": "not_analyzed"},
         "summary": {"type": "string", "index": "analyzed"},
+        "summary_latin": {"type": "string", "index": "analyzed"},
         "created_at": {"type": "date", "index": "not_analyzed"},
         "updated_at": {"type": "date", "index": "not_analyzed"},
         "entities": {
@@ -63,7 +65,7 @@ RECORD_MAPPING = {
         "row_id": {"type": "integer", "index": "not_analyzed"},
         "page_number": {"type": "string", "index": "not_analyzed"},
         "text": {"type": "string", "index": "analyzed"},
-        "latin": {"type": "string", "index": "analyzed"},
+        "text_latin": {"type": "string", "index": "analyzed"},
         "raw": {"type": "object"}
     }
 }
