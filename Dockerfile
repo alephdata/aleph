@@ -1,10 +1,12 @@
+FROM pudo/aleph-base:latest
+MAINTAINER Friedrich Lindenberg <friedrich@pudo.org>
+ENV DEBIAN_FRONTEND noninteractive
 
-# Tesseract language packages
-# Antiword
-# unrar
-# poppler-utils
-# libreoffice
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --upgrade pip && pip install functools32 \
+  && pip install -r /tmp/requirements.txt
 
-# tesseract-ocr-aze tesseract-ocr-ara tesseract-ocr-bul tesseract-ocr-ces tesseract-ocr-deu
-# tesseract-ocr-eng tesseract-ocr-hrv tesseract-ocr-hun tesseract-ocr-slv tesseract-ocr-ukr
-# tesseract-ocr-tur tesseract-ocr-srp tesseract-ocr-ron tesseract-ocr-rus
+COPY . /aleph
+WORKDIR /aleph
+ENV ALEPH_SETTINGS /aleph/contrib/docker_settings.py
+RUN pip install -e /aleph
