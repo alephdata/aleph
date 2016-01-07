@@ -1,8 +1,0 @@
-
-list: "Siyazana"
-public: true
-default_category: "Person"
-mapping:
-    label: "label"
-    selector: "selector"
-

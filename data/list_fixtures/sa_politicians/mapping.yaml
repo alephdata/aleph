@@ -1,8 +1,0 @@
-
-list: "Parliamentarians in South Africa"
-public: true
-default_category: "Person"
-mapping:
-    label: "canonical"
-    selector: "alias"
-
