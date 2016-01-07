@@ -15,4 +15,3 @@ assets:
 base-image:
 	docker build -t pudo/aleph-base:latest contrib/base-image
 	docker push pudo/aleph-base:latest
-
