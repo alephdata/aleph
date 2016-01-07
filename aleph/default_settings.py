@@ -21,6 +21,7 @@ ARCHIVE_AWS_SECRET = env.get('AWS_SECRET_ACCESS_KEY')
 SECRET_KEY = env.get('SECRET_KEY')
 
 SQLALCHEMY_DATABASE_URI = env.get('DATABASE_URL', 'sqlite:///aleph.sqlite3')
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 ELASTICSEARCH_URL = env.get('BONSAI_URL', 'http://localhost:9200')
 
 ALEMBIC_DIR = path.join(path.dirname(__file__), 'migrate')
