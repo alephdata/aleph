@@ -21,20 +21,16 @@ class Ingestor(object):
         raise NotImplemented()
 
     def create_document(self, meta, type=None):
-        type = type or self.DOCUMENT_TYPE
         if meta.content_hash:
             q = db.session.query(Document)
             q = q.filter(Document.content_hash == meta.content_hash)
             q = q.filter(Document.source_id == self.source_id)
             document = q.first()
-            if document is not None:
-                document.meta = meta
-                document.type = type
-                return document
-        document = Document()
-        document.source_id = self.source_id
+        if document is None:
+            document = Document()
+            document.source_id = self.source_id
         document.meta = meta
-        document.type = type
+        document.type = type or self.DOCUMENT_TYPE
         db.session.add(document)
         db.session.flush()
         return document

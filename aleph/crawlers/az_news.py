@@ -52,7 +52,7 @@ class AzerbaijanNewsCrawler(Crawler):
     def crawl(self):
         source = self.create_source(label='Azerbaijan State News')
         failed_articles = 0
-        for idx in count(80000):
+        for idx in count(1):
             if self.crawl_article(source, idx):
                 failed_articles = 0
             else:

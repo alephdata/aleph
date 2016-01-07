@@ -62,32 +62,29 @@ class HtmlIngestor(TextIngestor):
     MIME_TYPES = ['text/html']
     EXTENSIONS = ['html', 'htm', 'asp', 'aspx', 'jsp']
 
-    def parse_html(self, local_path):
-        with open(local_path, 'rb') as fh:
-            doc = html.parse(fh)
-            for name in self.REMOVE_TAGS:
-                for tag in doc.findall('//' + name):
-                    tag.getparent().remove(tag)
-            return doc
-
     def ingest(self, meta, local_path):
-        doc = self.parse_html(local_path)
+        with open(local_path, 'rb') as fh:
+            doc = html.fromstring(fh.read())
 
-        if not meta.has('title'):
-            title = doc.findtext('//title')
-            if title is not None:
-                meta.title = title.strip()
+            for name in self.REMOVE_TAGS:
+                for tag in doc.findall('.//' + name):
+                    tag.drop_tree()
 
-        if not meta.has('summary'):
-            summary = doc.find('//meta[@name="description"]')
-            if summary is not None and summary.get('content'):
-                meta.summary = summary.get('content')
+            if not meta.has('title'):
+                title = doc.findtext('.//title')
+                if title is not None:
+                    meta.title = title.strip()
 
-        document = self.create_document(meta)
-        body = doc.find('/body')
-        if body is not None:
-            self.create_page(document, body.text_content())
-        self.emit(document)
+            if not meta.has('summary'):
+                summary = doc.find('.//meta[@name="description"]')
+                if summary is not None and summary.get('content'):
+                    meta.summary = summary.get('content')
+
+            document = self.create_document(meta)
+            body = doc.find('./body')
+            if body is not None:
+                self.create_page(document, body.text_content())
+            self.emit(document)
 
 
 class PDFIngestor(TextIngestor):

@@ -27,7 +27,12 @@ class Metadata(MutableMapping):
         self.data = data
 
     def has(self, name):
-        return self.data.get(name) is not None
+        value = self.data.get(name)
+        if value is None:
+            return False
+        if isinstance(value, (six.text_type, list, set, tuple)):
+            return len(value) > 0
+        return True
 
     @property
     def title(self):
@@ -42,7 +47,8 @@ class Metadata(MutableMapping):
 
     @property
     def file_name(self):
-        file_name = self.data.get('file_name')
+        file_name = self.data.get('file_name') \
+            if self.has('file_name') else None
 
         # derive file name from headers
         if file_name is None and 'content_disposition' in self.headers:
@@ -76,7 +82,8 @@ class Metadata(MutableMapping):
 
     @property
     def source_path(self):
-        source_path = self.data.get('source_path')
+        source_path = self.data.get('source_path') \
+            if self.has('source_path') else None
         if source_path is None and self.source_url:
             source_path = urlparse(self.source_url).path
         return source_path
@@ -95,7 +102,8 @@ class Metadata(MutableMapping):
 
     @property
     def extension(self):
-        extension = self.data.get('extension')
+        extension = self.data.get('extension') \
+            if self.has('extension') else None
 
         if extension is None and self.file_name:
             _, extension = os.path.splitext(self.file_name)
@@ -110,7 +118,8 @@ class Metadata(MutableMapping):
 
     @property
     def mime_type(self):
-        mime_type = self.data.get('mime_type')
+        mime_type = self.data.get('mime_type') \
+            if self.has('mime_type') else None
 
         if mime_type is None and self.file_name:
             mime_type, _ = mimetypes.guess_type(self.file_name)

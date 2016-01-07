@@ -52,11 +52,11 @@ class Source(db.Model, TimeStampedModel):
         sq = sq.subquery()
 
         q = db.session.query(Page)
-        q = q.filter(Page.entity_id.in_(sq))
+        q = q.filter(Page.document_id.in_(sq))
         q.delete(synchronize_session='fetch')
 
         q = db.session.query(Reference)
-        q = q.filter(Reference.entity_id.in_(sq))
+        q = q.filter(Reference.document_id.in_(sq))
         q.delete(synchronize_session='fetch')
 
         q = db.session.query(Document)
