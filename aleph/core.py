@@ -1,3 +1,5 @@
+import logging
+from logging.handlers import SMTPHandler
 from flask import Flask
 from flask import url_for as flask_url_for
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -39,6 +41,17 @@ celery = Celery(app_name, broker=app.config['CELERY_BROKER_URL'])
 celery.config_from_object(app.config)
 assets = Environment(app)
 archive = archive.from_config(app.config)
+
+if not app.debug and app.config.get('MAIL_ADMINS'):
+    credentials = app.config.get('MAIL_CREDENTIALS', ())
+    mail_handler = SMTPHandler(app.config.get('MAIL_HOST'),
+                               app.config.get('MAIL_FROM'),
+                               app.config.get('MAIL_ADMINS'),
+                               '%s crash report' % app_name,
+                               credentials=credentials,
+                               secure=())
+    mail_handler.setLevel(logging.ERROR)
+    app.logger.addHandler(mail_handler)
 
 
 def url_for(*a, **kw):
