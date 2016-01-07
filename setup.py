@@ -44,7 +44,8 @@ setup(
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
             'spindle = aleph.crawlers.spindle:SpindleCrawler',
             'aznews = aleph.crawlers.az_news:AzerbaijanNewsCrawler',
-            'azapa = aleph.crawlers.az_apa:AzerbaijanPressAgency'
+            'azapa = aleph.crawlers.az_apa:AzerbaijanPressAgency',
+            'mdcourts = aleph.crawlers.md_courts:MoldovaCourts'
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',
