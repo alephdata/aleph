@@ -57,7 +57,6 @@ def ingest_file(source_id, meta, file_name, move=False):
     if not meta.has('source_path'):
         meta.source_path = file_name
     meta = archive.archive_file(file_name, meta, move=move)
-    print meta, meta.content_hash
     ingest.delay(source_id, meta.data)
 
 

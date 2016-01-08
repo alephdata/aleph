@@ -11,13 +11,7 @@ aleph/fs
 * [DONE] Inline S3/FS support
 * [DONE] Ingest mechanism for URLs
 * [DONE] Ingest mechanism for bundled files
-* Alerts / Subscriptions
-* Testing
-* tidbits
-
------
 * [DONE] Fix attributes facets
-* Entity data model / schema-based validation
 * [DONE] Spindle importer 
 * [DONE] OpenNames importer
 * [DONE] Fix entities facets
@@ -28,13 +22,20 @@ aleph/fs
 * [DONE] Source modals
 * [DONE] Implicit facet on list_id
 * [DONE] Simplify search UI
-* Result drilldown
-* Bug fix watchlists
-* Table viewer
+* [DONE] Bug fix watchlists
+* [BASIC] Table viewer
 * Document pages viewer
+* Entity data model / schema-based validation
+* Result drilldown
 
-* Azerbaijan importer 
-* Moldova importer
+* Role/Permission
+* OCCRP OAuth
+* Alerts / Subscriptions
+* Testing
+* tidbits
+
+* [DONE] Azerbaijan importer 
+* [DONE] Moldova importer
 * YL importer
 -----
 
