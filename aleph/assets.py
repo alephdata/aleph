@@ -12,7 +12,7 @@ deps_assets = Bundle(
     'vendor/angular-loading-bar/build/loading-bar.js',
     'vendor/angular-truncate/src/truncate.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
-    'vendor/nginfinitescroll/build/ng-infinite-scroll.js',
+    'vendor/ngInfiniteScroll/build/ng-infinite-scroll.js',
     filters='uglifyjs',
     output='assets/deps.js'
 )
