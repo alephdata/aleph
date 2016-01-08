@@ -2,25 +2,16 @@ import logging
 
 from aleph.core import db, url_for
 from aleph.model.common import TimeStampedModel, make_token
-from aleph.model.user import User
-from aleph.model.forms import SourceEditForm, SourceCreateForm
+# from aleph.model.role import Role
+from aleph.model.forms import SourceForm
 
 log = logging.getLogger(__name__)
-
-
-source_user_table = db.Table('source_user', db.metadata,
-    db.Column('source_id', db.Integer, db.ForeignKey('source.id')), # noqa
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id')) # noqa
-)
 
 
 class Source(db.Model, TimeStampedModel):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.Unicode, nullable=True)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
-    public = db.Column(db.Boolean, default=True)
-
-    users = db.relationship(User, secondary=source_user_table, backref='sources')  # noqa
 
     @classmethod
     def create(cls, data):
@@ -29,21 +20,15 @@ class Source(db.Model, TimeStampedModel):
         if src is not None:
             return src
         src = cls()
-        data = SourceCreateForm().deserialize(data)
         src.foreign_id = foreign_id or make_token()
-        src.update_data(data)
+        src.update(data)
         db.session.add(src)
         db.session.flush()
         return src
 
     def update(self, data):
-        data = SourceEditForm().deserialize(data)
-        self.update_data(data)
-
-    def update_data(self, data):
+        data = SourceForm().deserialize(data)
         self.label = data.get('label')
-        self.public = data.get('public')
-        self.users = list(set(data.get('users', [])))
 
     def delete(self):
         from aleph.model import Document, Page, Reference
@@ -71,7 +56,6 @@ class Source(db.Model, TimeStampedModel):
             'id': self.id,
             'foreign_id': self.foreign_id,
             'label': self.label,
-            'public': self.public,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }

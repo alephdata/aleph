@@ -29,8 +29,8 @@ class Entity(db.Model, TimeStampedModel):
             # 'api_url': url_for('entities.view', id=self.id),
             'category': self.category,
             'watchlist_id': self.watchlist_id,
-            # 'created_at': self.created_at,
-            # 'updated_at': self.updated_at
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
         }
 
     def delete(self):

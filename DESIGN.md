@@ -1,10 +1,7 @@
 Iteration II
 ============
 
-aleph/crawler
-aleph/ingest
-aleph/extract
-aleph/fs
+* https://github.com/sayanee/angularjs-pdf/issues/96
 
 * [DONE] Document / Record - distinction, raw data support
 * [DONE] Use database to store documents and records
@@ -28,6 +25,7 @@ aleph/fs
 * Entity data model / schema-based validation
 * Result drilldown
 
+* Database Crawler
 * Role/Permission
 * OCCRP OAuth
 * Alerts / Subscriptions

@@ -1,28 +1,50 @@
 from flask import session, Blueprint, redirect, request
-from flask.ext.login import login_user, logout_user, current_user
-from werkzeug.exceptions import BadRequest
+from flask_oauthlib.client import OAuthException
 from apikit import jsonify
 
 from aleph import authz
-from aleph.providers import PROVIDERS, Stub
-from aleph.core import db, url_for
-from aleph.model import User
+from aleph.core import db, url_for, oauth_provider, system_role
+from aleph.model import Role
 
 
 blueprint = Blueprint('sessions', __name__)
 
 
+@oauth_provider.tokengetter
+def get_oauth_token():
+    if 'oauth' in session:
+        sig = session.get('oauth')
+        return (sig.get('access_token'), '')
+
+
+@blueprint.before_app_request
+def load_role():
+    request.auth_roles = set([system_role(Role.SYSTEM_GUEST)])
+    request.auth_role = None
+
+    auth_header = request.headers.get('Authorization')
+    if auth_header is not None:
+        if not auth_header.lower().startswith('apikey'):
+            return
+        api_key = auth_header.split(' ', 1).pop()
+        request.auth_role = Role.by_api_key(api_key)
+        if request.auth_role is None:
+            return
+        request.auth_roles.update([system_role(Role.SYSTEM_USER),
+                                   request.auth_role.id])
+    elif session.get('user'):
+        request.auth_roles.update(session.get('roles', []))
+        request.auth_role = Role.by_id(session.get('user'))
+    request.logged_in = request.auth_role is not None
+
+
 @blueprint.route('/api/1/sessions')
 def status():
-    oauth_providers = {}
-    for name, provider in PROVIDERS.items():
-        if not isinstance(provider, Stub):
-            oauth_providers[name] = url_for('.login', provider=name)
-
     return jsonify({
         'logged_in': authz.logged_in(),
-        'api_key': current_user.api_key if authz.logged_in() else None,
-        'user': current_user if authz.logged_in() else None,
+        'api_key': request.auth_role.api_key if authz.logged_in() else None,
+        'role': request.auth_role,
+        'roles': list(request.auth_roles),
         'permissions': {
             'watchlists': {
                 'read': authz.watchlists(authz.READ),
@@ -33,69 +55,52 @@ def status():
                 'write': authz.sources(authz.WRITE)
             }
         },
-        'logins': oauth_providers,
         'logout': url_for('.logout')
     })
 
 
+@blueprint.route('/api/1/sessions/login')
+def login():
+    return oauth_provider.authorize(callback=url_for('sessions.callback'))
+
+
 @blueprint.route('/api/1/sessions/logout')
 def logout():
-    logout_user()
-    return redirect(request.args.get('next_url', url_for('ui')))
-
-
-@blueprint.route('/api/1/sessions/login/<provider>')
-def login(provider):
-    if provider not in PROVIDERS:
-        raise BadRequest('Unknown provider: %s' % provider)
-    if current_user.is_authenticated:
-        return redirect(url_for('ui'))
+    authz.require(authz.logged_in())
     session.clear()
-    callback = url_for('.%s_authorized' % provider)
-    session['next_url'] = request.args.get('next_url', url_for('ui'))
-    return PROVIDERS[provider].authorize(callback=callback)
+    return redirect(url_for('ui'))
 
 
-handler = PROVIDERS.get('twitter')
+@blueprint.route('/api/1/sessions/callback')
+def callback():
+    resp = oauth_provider.authorized_response()
+    if resp is None or isinstance(resp, OAuthException):
+        # FIXME: notify the user, somehow.
+        return redirect(url_for('ui'))
 
-
-@blueprint.route('/api/1/sessions/callback/twitter')
-@handler.authorized_handler
-def twitter_authorized(resp):
-    next_url = session.get('next_url', url_for('ui'))
-    if resp is None or 'oauth_token' not in resp:
-        return redirect(next_url)
-    session['twitter_token'] = (resp['oauth_token'],
-                                resp['oauth_token_secret'])
-    provider = PROVIDERS.get('twitter')
-    res = provider.get('users/show.json?user_id=%s' % resp.get('user_id'))
-    data = {
-        'name': res.data.get('name'),
-        'oauth': 'tw:%s' % res.data.get('id')
-    }
-    user = User.load(data)
+    session['oauth'] = resp
+    session['roles'] = [system_role(Role.SYSTEM_USER)]
+    if 'googleapis.com' in oauth_provider.base_url:
+        me = oauth_provider.get('userinfo')
+        user_id = 'google:%s' % me.data.get('id')
+        role = Role.load_or_create(user_id, Role.USER, me.data.get('name'),
+                                   email=me.data.get('email'))
+    elif 'occrp.org' in oauth_provider.base_url or \
+            'investigativedashboard.org' in oauth_provider.base_url:
+        me = oauth_provider.get('api/2/accounts/profile/')
+        user_id = 'idashboard:user:%s' % me.data.get('id')
+        role = Role.load_or_create(user_id, Role.USER,
+                                   me.data.get('display_name'),
+                                   email=me.data.get('email'),
+                                   is_admin=me.data.get('is_admin'))
+        for group in me.data.get('groups', []):
+            group_id = 'idashboard:%s' % group.get('id')
+            group_role = Role.load_or_create(group_id, Role.GROUP,
+                                             group.get('name'))
+            session['roles'].append(group_role.id)
+    else:
+        raise RuntimeError("Unknown OAuth URL: %r" % oauth_provider.base_url)
+    session['roles'].append(role.id)
+    session['user'] = role.id
     db.session.commit()
-    login_user(user, remember=True)
-    return redirect(next_url)
-
-
-handler = PROVIDERS.get('facebook')
-
-
-@blueprint.route('/api/1/sessions/callback/facebook')
-@handler.authorized_handler
-def facebook_authorized(resp):
-    next_url = session.get('next_url', url_for('ui'))
-    if resp is None or 'access_token' not in resp:
-        return redirect(next_url)
-    session['facebook_token'] = (resp.get('access_token'), '')
-    profile = PROVIDERS.get('facebook').get('/me').data
-    data = {
-        'name': profile.get('name'),
-        'email': profile.get('email'),
-        'oauth': 'fb:%s' % profile.get('id')
-    }
-    user = User.load(data)
-    db.session.commit()
-    login_user(user, remember=True)
-    return redirect(next_url)
+    return redirect(url_for('ui'))

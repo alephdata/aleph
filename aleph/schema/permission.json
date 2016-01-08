@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "https://aleph.grano.cc/operational/permission.json#",
+    "type": "object",
+    "properties": {
+        "role": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+        },
+        "read": {
+            "type": "boolean"
+        },
+        "write": {
+            "type": "boolean"
+        }
+    },
+    "required": ["role", "read", "write"]
+}

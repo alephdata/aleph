@@ -1,5 +1,4 @@
 from flask import Blueprint, request
-from flask.ext.login import current_user
 from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify, Pager, request_data
 
@@ -32,7 +31,7 @@ def create():
     data = EntityForm().deserialize(request_data())
     authz.require(data['watchlist'])
     authz.require(authz.watchlist_write(data['watchlist'].id))
-    entity = Entity.create(data, current_user)
+    entity = Entity.create(data)
     db.session.commit()
     analyze_terms.delay(list(entity.terms))
     return view(entity.id)

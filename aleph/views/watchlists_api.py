@@ -1,5 +1,4 @@
-from flask import Blueprint
-from flask.ext.login import current_user
+from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, Pager, request_data
 
 from aleph import authz
@@ -20,11 +19,7 @@ def index():
 @blueprint.route('/api/1/watchlists', methods=['POST', 'PUT'])
 def create():
     authz.require(authz.logged_in())
-    data = request_data()
-    data['creator'] = current_user
-    if 'users' not in data:
-        data['users'] = []
-    watchlist = Watchlist.create(data, current_user)
+    watchlist = Watchlist.create(request_data(), request.auth_role)
     db.session.commit()
     return view(watchlist.id)
 
@@ -34,16 +29,14 @@ def view(id):
     authz.require(authz.watchlist_read(id))
     watchlist = obj_or_404(Watchlist.by_id(id))
     etag_cache_keygen(watchlist)
-    data = watchlist.to_dict()
-    data['users'] = [u.id for u in watchlist.users]
-    return jsonify(data)
+    return jsonify(watchlist)
 
 
 @blueprint.route('/api/1/watchlists/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     authz.require(authz.watchlist_write(id))
     watchlist = obj_or_404(Watchlist.by_id(id))
-    watchlist.update(request_data(), current_user)
+    watchlist.update(request_data())
     db.session.add(watchlist)
     db.session.commit()
     return view(id)

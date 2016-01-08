@@ -3,10 +3,9 @@ from logging.handlers import SMTPHandler
 from flask import Flask
 from flask import url_for as flask_url_for
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import LoginManager
 from flask.ext.assets import Environment
 from flask.ext.migrate import Migrate
-from flask.ext.oauth import OAuth
+from flask_oauthlib.client import OAuth
 from kombu import Exchange, Queue
 from celery import Celery
 from elasticsearch import Elasticsearch
@@ -19,14 +18,11 @@ app.config.from_object(default_settings)
 app.config.from_envvar('ALEPH_SETTINGS', silent=True)
 
 app_name = app.config.get('APP_NAME')
+oauth = OAuth(app)
+oauth_provider = oauth.remote_app('provider', app_key='OAUTH')
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db, directory=app.config.get('ALEMBIC_DIR'))
-
-oauth = OAuth()
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'ui'
 
 es = Elasticsearch(app.config.get('ELASTICSEARCH_URL'))
 es_index = app.config.get('ELASTICSEARCH_INDEX', app_name)
@@ -52,6 +48,20 @@ if not app.debug and app.config.get('MAIL_ADMINS'):
                                secure=())
     mail_handler.setLevel(logging.ERROR)
     app.logger.addHandler(mail_handler)
+
+
+def system_role(role_name):
+    from aleph.model import Role
+    if not hasattr(app, '_authz_roles'):
+        app._authz_roles = {}
+        role = Role.load_or_create(Role.SYSTEM_GUEST, Role.SYSTEM,
+                                   'All visitors')
+        app._authz_roles[Role.SYSTEM_GUEST] = role.id
+        role = Role.load_or_create(Role.SYSTEM_USER, Role.SYSTEM,
+                                   'Logged-in users')
+        app._authz_roles[Role.SYSTEM_USER] = role.id
+        db.session.commit()
+    return app._authz_roles.get(role_name)
 
 
 def url_for(*a, **kw):

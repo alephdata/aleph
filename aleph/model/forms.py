@@ -50,37 +50,19 @@ class WatchlistRef(Ref):
         return None
 
 
-class UserForm(colander.MappingSchema):
+class RoleForm(colander.MappingSchema):
     email = colander.SchemaNode(colander.String(),
                                 default=None, missing=None,
                                 validator=colander.Email())
     name = colander.SchemaNode(colander.String())
 
 
-class SourceUsers(colander.SequenceSchema):
-    user = colander.SchemaNode(UserRef())
-
-
-class SourceEditForm(colander.MappingSchema):
+class SourceForm(colander.MappingSchema):
     label = colander.SchemaNode(colander.String())
-    public = colander.SchemaNode(colander.Boolean())
-    users = SourceUsers()
-
-
-class SourceCreateForm(colander.MappingSchema):
-    key = colander.SchemaNode(colander.String(), missing=None)
-    label = colander.SchemaNode(colander.String())
-    users = SourceUsers(missing=[])
-
-
-class WatchlistUsers(colander.SequenceSchema):
-    user = colander.SchemaNode(UserRef())
 
 
 class WatchlistForm(colander.MappingSchema):
     label = colander.SchemaNode(colander.String())
-    public = colander.SchemaNode(colander.Boolean())
-    users = WatchlistUsers()
 
 
 class EntityForm(colander.MappingSchema):

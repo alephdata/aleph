@@ -1,29 +1,20 @@
 import logging
 
 from aleph.core import db, url_for
-from aleph.model.user import User
+from aleph.model.role import Role
 from aleph.model.forms import WatchlistForm
 from aleph.model.common import TimeStampedModel
 
 log = logging.getLogger(__name__)
 
 
-watchlist_user_table = db.Table('watchlist_user', db.metadata,
-    db.Column('watchlist_id', db.Integer, db.ForeignKey('watchlist.id')), # noqa
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id')) # noqa
-)
-
-
 class Watchlist(db.Model, TimeStampedModel):
     id = db.Column(db.Integer(), primary_key=True)
     label = db.Column(db.Unicode)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
-    public = db.Column(db.Boolean, default=False)
 
-    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    creator = db.relationship(User)
-
-    users = db.relationship(User, secondary=watchlist_user_table, backref='watchlists')  # noqa
+    creator_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
+    creator = db.relationship(Role)
 
     def to_dict(self):
         return {
@@ -32,21 +23,14 @@ class Watchlist(db.Model, TimeStampedModel):
             'entities_api_url': url_for('entities.index', list=self.id),
             'label': self.label,
             'foreign_id': self.foreign_id,
-            'public': self.public,
             'creator_id': self.creator_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
 
-    def update(self, data, user):
+    def update(self, data):
         data = WatchlistForm().deserialize(data)
         self.label = data.get('label')
-        if data.get('public') is not None:
-            self.public = data.get('public')
-        users = set(data.get('users', []))
-        if user is not None:
-            users.add(user)
-        self.users = list(users)
 
     def delete(self):
         self.delete_entities()
@@ -81,10 +65,10 @@ class Watchlist(db.Model, TimeStampedModel):
         return watchlist
 
     @classmethod
-    def create(cls, data, user):
+    def create(cls, data, role):
         watchlist = cls()
-        watchlist.update(data, user)
-        watchlist.creator = user
+        watchlist.update(data)
+        watchlist.creator = role
         db.session.add(watchlist)
         return watchlist
 

@@ -1,10 +1,10 @@
 aleph.controller('ProfileCtrl', ['$scope', '$location', '$uibModalInstance', '$http', 'Session', 'Metadata',
   function($scope, $location, $uibModalInstance, $http, Session, Metadata) {
-  $scope.user = {};
+  $scope.role = {};
   $scope.session = {};
 
   Session.get().then(function(session) {
-    $scope.user = session.user;
+    $scope.role = session.role;
     $scope.session = session;
   });
 
@@ -13,12 +13,12 @@ aleph.controller('ProfileCtrl', ['$scope', '$location', '$uibModalInstance', '$h
   };
 
   $scope.update = function(form) {
-    var res = $http.post('/api/1/users/' + $scope.user.id, $scope.user);
+    var res = $http.post('/api/1/roles/' + $scope.role.id, $scope.role);
     res.success(function(data) {
-      $scope.user = data;
-      $scope.session.user = data;
+      $scope.role = data;
+      $scope.session.role = data;
       Metadata.flush().then(function() {
-        $uibModalInstance.close($scope.user);
+        $uibModalInstance.close($scope.role);
       });
     });
   };

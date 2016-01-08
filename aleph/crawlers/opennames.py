@@ -32,7 +32,7 @@ class OpenNamesCrawler(Crawler):
             'public': True,
             'users': []
         })
-        log.info(" > Spindle collection: %s", watchlist.label)
+        log.info(" > OpenNames collection: %s", watchlist.label)
         watchlist.delete_entities()
         db.session.flush()
         terms = watchlist.terms

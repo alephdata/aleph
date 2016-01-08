@@ -1,42 +1,49 @@
 from flask import request
-from flask.ext.login import current_user
 from werkzeug.exceptions import Forbidden
 
 from aleph.core import db
-from aleph.model import Source, Watchlist, User
+from aleph.model import Source, Watchlist, Permission
 
 READ = 'read'
 WRITE = 'write'
 
 
 def sources(action):
-    request._authz_sources = {READ: set(), WRITE: set()}
-    q = db.session.query(Source.id).filter_by(public=True)
-    for source_id, in q.all():
-        request._authz_sources[READ].add(source_id)
-    if logged_in():
-        q = db.session.query(Source.id)
-        if not is_admin():
-            q = q.filter(Source.users.any(User.id == current_user.id))
-        for source_id, in q.all():
-            request._authz_sources[READ].add(source_id)
-            request._authz_sources[WRITE].add(source_id)
-    return list(request._authz_sources.get(action, []))
+    if not hasattr(request, 'auth_sources'):
+        request.auth_sources = {READ: set(), WRITE: set()}
+        if is_admin():
+            for source_id, in db.session.query(Source.id):
+                request.auth_sources[READ].add(source_id)
+                request.auth_sources[WRITE].add(source_id)
+        else:
+            q = db.session.query(Permission)
+            q = q.filter(Permission.role_id.in_(request.auth_roles))
+            q = q.filter(Permission.resource_type == Permission.SOURCE)
+            for perm in q:
+                if perm.read:
+                    request.auth_sources[READ].add(perm.resource_id)
+                if perm.write and request.logged_in:
+                    request.auth_sources[WRITE].add(perm.resource_id)
+    return list(request.auth_sources.get(action, []))
 
 
 def watchlists(action):
-    request._authz_watchlists = {READ: set(), WRITE: set()}
-    q = db.session.query(Watchlist.id).filter_by(public=True)
-    for watchlist_id, in q.all():
-        request._authz_watchlists[READ].add(watchlist_id)
-    if logged_in():
-        q = db.session.query(Watchlist.id)
-        if not is_admin():
-            q = q.filter(Watchlist.users.any(User.id == current_user.id))
-        for watchlist_id, in q.all():
-            request._authz_watchlists[READ].add(watchlist_id)
-            request._authz_watchlists[WRITE].add(watchlist_id)
-    return list(request._authz_watchlists.get(action, []))
+    if not hasattr(request, 'auth_watchlists'):
+        request.auth_watchlists = {READ: set(), WRITE: set()}
+        if is_admin():
+            for wl_id, in db.session.query(Watchlist.id):
+                request.auth_watchlists[READ].add(wl_id)
+                request.auth_watchlists[WRITE].add(wl_id)
+        else:
+            q = db.session.query(Permission)
+            q = q.filter(Permission.role_id.in_(request.auth_roles))
+            q = q.filter(Permission.resource_type == Permission.WATCHLIST)
+            for perm in q:
+                if perm.read:
+                    request.auth_watchlists[READ].add(perm.resource_id)
+                if perm.write and request.logged_in:
+                    request.auth_watchlists[WRITE].add(perm.resource_id)
+    return list(request.auth_watchlists.get(action, []))
 
 
 def source_read(id):
@@ -56,11 +63,11 @@ def watchlist_write(id):
 
 
 def logged_in():
-    return current_user.is_authenticated
+    return request.auth_role is not None
 
 
 def is_admin():
-    return logged_in() and current_user.is_admin
+    return logged_in() and request.auth_role.is_admin
 
 
 def require(pred):

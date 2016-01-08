@@ -40,22 +40,13 @@
 
         <div id="navbar" class="collapse navbar-collapse navbar-right">
           <ul class="nav navbar-nav">
-            <li ng-show="!session.logged_in && session.logins.twitter" ng-cloak>
-              {% raw %}
-                <a href='{{session.logins.twitter}}' target='_self'>
-                  <i class="fa fa-twitter"></i> Sign in
-                </a>
-              {% endraw %}
-            </li>
-            <li ng-show="!session.logged_in && session.logins.facebook" ng-cloak>
-              {% raw %}
-                <a href='{{session.logins.facebook}}' target='_self'>
-                  <i class="fa fa-facebook-official"></i> Sign in
-                </a>
-              {% endraw %}
+            <li ng-show="!session.logged_in" ng-cloak>
+              <a href="{{url_for('sessions.login')}}" target="_self">
+                <i class="fa fa-sign-in"></i> Sign in
+              </a>
             </li>
             <li ng-show="session.logged_in" ng-cloak>
-              <a ng-click="editProfile()" ng-bind="session.user.name"></a>
+              <a ng-click="editProfile()" ng-bind="session.role.name"></a>
             </li>
             <li ng-show="session.logged_in" ng-cloak>
               <a href="{{url_for('sessions.logout')}}" target="_self">
