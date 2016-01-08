@@ -48,7 +48,7 @@ def logout():
 def login(provider):
     if provider not in PROVIDERS:
         raise BadRequest('Unknown provider: %s' % provider)
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         return redirect(url_for('ui'))
     session.clear()
     callback = url_for('.%s_authorized' % provider)

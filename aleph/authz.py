@@ -56,7 +56,7 @@ def watchlist_write(id):
 
 
 def logged_in():
-    return current_user.is_authenticated()
+    return current_user.is_authenticated
 
 
 def is_admin():

@@ -39,7 +39,7 @@ def cache_response(resp):
 
     resp.cache_control.max_age = 3600 * 3
 
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         resp.cache_control.private = True
     else:
         resp.cache_control.public = True
@@ -58,7 +58,7 @@ def etag_cache_keygen(*keys):
     args = filter(lambda (k, v): k != '_', args)
 
     cache_parts = [args, keys]
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         cache_parts.extend((current_user,
                             request.authz_sources,
                             request.authz_lists))

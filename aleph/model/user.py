@@ -21,14 +21,9 @@ class User(db.Model, TimeStampedModel):
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     api_key = db.Column(db.Unicode, default=make_token)
 
-    def is_active(self):
-        return True
-
-    def is_authenticated(self):
-        return True
-
-    def is_anonymous(self):
-        return False
+    is_active = True
+    is_authenticated = True
+    is_anonymous = False
 
     def get_id(self):
         return unicode(self.id)
