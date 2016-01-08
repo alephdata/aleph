@@ -4,9 +4,7 @@
     "type": "object",
     "properties": {
         "role": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2048
+            "type": "integer"
         },
         "read": {
             "type": "boolean"

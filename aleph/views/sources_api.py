@@ -1,5 +1,5 @@
 from flask import Blueprint
-from apikit import obj_or_404, request_data, jsonify
+from apikit import obj_or_404, request_data, Pager, jsonify
 
 from aleph.views.cache import etag_cache_keygen
 from aleph.analyze import analyze_source
@@ -13,12 +13,8 @@ blueprint = Blueprint('sources', __name__)
 
 @blueprint.route('/api/1/sources', methods=['GET'])
 def index():
-    sources = []
-    for source in Source.all(ids=authz.sources(authz.READ)):
-        data = source.to_dict()
-        data['can_write'] = authz.source_write(source.id)
-        sources.append(data)
-    return jsonify({'results': sources, 'total': len(sources)})
+    pager = Pager(Source.all(ids=authz.sources(authz.READ)))
+    return jsonify(pager)
 
 
 @blueprint.route('/api/1/sources/<id>', methods=['GET'])
@@ -26,9 +22,7 @@ def view(id):
     authz.require(authz.source_read(id))
     source = obj_or_404(Source.by_id(id))
     etag_cache_keygen(source)
-    data = source.to_dict()
-    data['users'] = [u.id for u in source.users]
-    return jsonify(data)
+    return jsonify(source)
 
 
 @blueprint.route('/api/1/sources/<id>/process', methods=['POST', 'PUT'])

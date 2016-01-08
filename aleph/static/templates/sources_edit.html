@@ -23,31 +23,10 @@
               readonly>
           </div>
         </div>
-
-        <div class="form-group">
-          <div class="col-sm-offset-3 col-sm-9">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" ng-model="source.public"> Publicly visible
-              </label>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div class="col-lg-12">
-        <table class="table table-condensed">
-          <tr>
-            <th colspan="2">Users who have access</th>
-          </tr>
-          <tr ng-repeat="user in users.results">
-            <td width='1%'>
-              <input type="checkbox" ng-checked="hasUser(user.id)"
-                ng-click="toggleUser(user.id)">
-            </td>
-            <td>{{user.name}}</td>
-          </tr>
-        </table>
+        <permissions-edit api-base="{{source.api_url}}"></permissions-edit>
       </div>
     </div>
   </div>

@@ -36,6 +36,9 @@ def construct_query(args, fields=None, facets=True):
             _, field = key.split(':', 1)
             filters.append((field, value))
 
+    for entity in args.getlist('entity'):
+        filters.append(('entities.entity_id', entity))
+
     aggs = {}
     if facets:
         aggs = aggregate(q, args, filters)
@@ -76,11 +79,6 @@ def entity_watchlists(q, aggs, args, filters):
             }
         }
     }
-
-    for entity in args.getlist('entity'):
-        cf = {'term': {'entities.entity_id': entity}}
-        q = add_filter(q, cf)
-
     return q
 
 

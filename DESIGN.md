@@ -21,13 +21,16 @@ Iteration II
 * [DONE] Simplify search UI
 * [DONE] Bug fix watchlists
 * [BASIC] Table viewer
+* [DONE] OCCRP OAuth
+* [DONE] Role/Permission
+* [DONE] Source facet filters
+* [DONE] Entity selection bug
+* Watchlist edit controller
 * Document pages viewer
+* Filter display
 * Entity data model / schema-based validation
 * Result drilldown
-
 * Database Crawler
-* Role/Permission
-* OCCRP OAuth
 * Alerts / Subscriptions
 * Testing
 * tidbits

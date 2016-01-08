@@ -22,12 +22,12 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     query.entity = ensureArray(query.entity);
     query.watchlist = ensureArray(query.watchlist);
     query.facet = ensureArray(query.facet);
+    console.log(query);
     return query;
   };
 
   var clear = function() {
     $location.search({});
-    load();
   };
 
   var set = function(name, val) {
@@ -35,12 +35,11 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     $location.search(query);
   };
 
-  var toggleFilter = function(filter, val, skipReload) {
-    // var filter = 'filter:' + name;
-    // var filter = 'filter:' + name;
+  var toggleFilter = function(filter, val) {
     if (!angular.isArray(query[filter])) {
       query[filter] = [];
     }
+    val = val + '';
     var idx = query[filter].indexOf(val);
     if (idx == -1) {
       query[filter].push(val);
@@ -50,11 +49,8 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     $location.search(query);
   };
 
-  var toggleEntityFilter = function(id, watchlist) {
-    toggleFilter('entity', id, true);
-  };
-
   var hasFilter = function(name, val) {
+    val = val + '';
     return angular.isArray(query[name]) && query[name].indexOf(val) != -1;
   };
 
@@ -69,8 +65,7 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
         return queryString(query);
       },
       hasFilter: hasFilter,
-      toggleFilter: toggleFilter,
-      toggleEntityFilter: toggleEntityFilter
+      toggleFilter: toggleFilter
   };
 
 }]);

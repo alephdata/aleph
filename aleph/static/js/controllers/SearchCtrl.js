@@ -57,14 +57,17 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
       resolve: {
         source: ['$q', '$http', function($q, $http) {
           var dfd = $q.defer();
-          $http.get('/api/1/sources/' + source.id).then(function(res) {
-            dfd.resolve(res.data);
+          Metadata.getRoles().then(function() {
+            $http.get('/api/1/sources/' + source.id).then(function(res) {
+              dfd.resolve(res.data);
+            }, function(err) {
+              dfd.reject(err);
+            });
           }, function(err) {
             dfd.reject(err);
           });
           return dfd.promise;
-        }],
-        users: loadUsers
+        }]
       }
     });
 

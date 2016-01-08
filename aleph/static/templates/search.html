@@ -48,7 +48,7 @@
         <li class="list-group-item facet animate toggle"
           ng-repeat="entity in result.entities"
           ng-class="{'active': query.hasFilter('entity', entity.id)}"
-          ng-click="query.toggleEntityFilter(entity.id, id)">
+          ng-click="query.toggleFilter('entity', entity.id)">
           <span class="badge">{{entity.count}}</span>
           <entity-icon category="entity.category"></entity-icon>
           <span class="lbl" uib-tooltip="{{metadata.watchlists[entity.watchlist_id].label}}"

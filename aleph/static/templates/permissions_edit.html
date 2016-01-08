@@ -1,0 +1,26 @@
+<table class="table roles">
+  <tbody ng-repeat="type in types">
+    <tr>
+      <th>{{type.label}}</th>
+      <th width="10%">
+        <span ng-show="$first">View</span>
+      </th>
+      <th width="10%">
+          <span ng-show="$first">Edit</span>
+      </th>
+    </tr>
+    <tr ng-repeat="role in roles | filter:{type: type.type}">
+      <td>
+        {{role.name}}
+      </td>
+      <td class="numeric">
+        <input type="checkbox" ng-model="role.read" ng-change="markDirty(role)">
+      </td>
+      <td class="numeric">
+        <input type="checkbox" ng-model="role.write"
+          ng-disabled="role.foreign_id == 'guest'"
+          ng-change="markDirty(role)">
+      </td>
+    </tr>
+  </tbody>
+</table>
