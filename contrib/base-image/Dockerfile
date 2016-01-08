@@ -26,3 +26,7 @@ RUN echo "en_GB ISO-8859-1" >> /etc/locale.gen && \
     locale-gen
 
 RUN pip install psycopg2 lxml numpy
+
+RUN curl --silent --location https://deb.nodesource.com/setup_0.12 | sh
+RUN apt-get install --yes nodejs && curl -L https://www.npmjs.org/install.sh | sh
+RUN npm install -g bower uglifyjs

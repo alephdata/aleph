@@ -10,3 +10,4 @@ COPY . /aleph
 WORKDIR /aleph
 ENV ALEPH_SETTINGS /aleph/contrib/docker_settings.py
 RUN pip install -e /aleph
+RUN rm -rf .git && bower --allow-root install
