@@ -45,14 +45,14 @@ def suggest():
     return jsonify({'results': results})
 
 
-@blueprint.route('/api/1/entities/<id>', methods=['GET'])
+@blueprint.route('/api/1/entities/<int:id>', methods=['GET'])
 def view(id):
     entity = obj_or_404(Entity.by_id(id))
     authz.require(authz.watchlist_read(entity.watchlist_id))
     return jsonify(entity)
 
 
-@blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])
+@blueprint.route('/api/1/entities/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     entity = obj_or_404(Entity.by_id(id))
     authz.require(authz.watchlist_write(entity.watchlist_id))
@@ -67,7 +67,7 @@ def update(id):
     return view(entity.id)
 
 
-@blueprint.route('/api/1/entities/<id>', methods=['DELETE'])
+@blueprint.route('/api/1/entities/<int:id>', methods=['DELETE'])
 def delete(id):
     entity = obj_or_404(Entity.by_id(id))
     authz.require(authz.watchlist_write(entity.watchlist_id))

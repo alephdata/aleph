@@ -1,5 +1,5 @@
 from werkzeug.exceptions import NotFound
-from flask import Blueprint, request
+from flask import Blueprint
 from apikit import jsonify, Pager
 
 from aleph.model.tabular_query import TabularQuery
@@ -18,13 +18,13 @@ def get_tabular(document_id, table_id):
     return document, table
 
 
-@blueprint.route('/api/1/documents/<document_id>/tables/<int:table_id>')
+@blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>')
 def view(document_id, table_id):
     document, tabular = get_tabular(document_id, table_id)
     return jsonify(tabular)
 
 
-@blueprint.route('/api/1/documents/<document_id>/tables/<int:table_id>/rows')
+@blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>/rows')
 def rows(document_id, table_id):
     document, tabular = get_tabular(document_id, table_id)
     query = TabularQuery(tabular, {})

@@ -43,17 +43,23 @@ def update(id):
 
 
 @blueprint.route('/api/1/watchlists/<int:watchlist>/permissions')
-@blueprint.route('/api/1/sources/<int:source>/permissions')
-def permissions_index(watchlist=None, source=None):
+def watchlist_permissions_index(watchlist=None):
+    authz.require(authz.watchlist_write(watchlist))
     q = db.session.query(Permission)
-    if watchlist is not None:
-        authz.require(authz.watchlist_write(watchlist))
-        q = q.filter(Permission.resource_type == Permission.COLLECTION)
-        q = q.filter(Permission.resource_id == watchlist)
-    elif source is not None:
-        authz.require(authz.source_write(source))
-        q = q.filter(Permission.resource_type == Permission.SOURCE)
-        q = q.filter(Permission.resource_id == source)
+    q = q.filter(Permission.resource_type == Permission.COLLECTION)
+    q = q.filter(Permission.resource_id == watchlist)
+    return jsonify({
+        'total': q.count(),
+        'results': q
+    })
+
+
+@blueprint.route('/api/1/sources/<int:source>/permissions')
+def source_permissions_index(source=None):
+    q = db.session.query(Permission)
+    authz.require(authz.source_write(source))
+    q = q.filter(Permission.resource_type == Permission.SOURCE)
+    q = q.filter(Permission.resource_id == source)
     return jsonify({
         'total': q.count(),
         'results': q
@@ -75,24 +81,12 @@ def permissions_save(watchlist=None, source=None):
     data = request_data()
     validate(data, permissions_schema)
 
-    # check that the role exists.
-    rq = db.session.query(Role).filter(Role.id == data['role'])
-    if rq.first() is None:
+    role = db.session.query(Role).filter(Role.id == data['role']).first()
+    if role is None:
         raise BadRequest()
 
-    q = db.session.query(Permission)
-    q = q.filter(Permission.role_id == data['role'])
-    q = q.filter(Permission.resource_type == resource_type)
-    q = q.filter(Permission.resource_id == resource_id)
-    permission = q.first()
-    if permission is None:
-        permission = Permission()
-        permission.role_id = data['role']
-        permission.resource_type = resource_type
-        permission.resource_id = resource_id
-    permission.read = data['read']
-    permission.write = data['write']
-    db.session.add(permission)
+    permission = Permission.grant_resource(resource_type, resource_id, role,
+                                           data['read'], data['write'])
     db.session.commit()
     return jsonify({
         'status': 'ok',

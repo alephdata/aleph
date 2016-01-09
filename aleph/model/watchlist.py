@@ -62,6 +62,7 @@ class Watchlist(db.Model, TimeStampedModel):
         if watchlist is None:
             watchlist = cls.create(data, None)
             watchlist.foreign_id = foreign_id
+            db.session.flush()
         return watchlist
 
     @classmethod

@@ -17,7 +17,7 @@ def index():
     return jsonify(pager)
 
 
-@blueprint.route('/api/1/sources/<id>', methods=['GET'])
+@blueprint.route('/api/1/sources/<int:id>', methods=['GET'])
 def view(id):
     authz.require(authz.source_read(id))
     source = obj_or_404(Source.by_id(id))
@@ -25,7 +25,7 @@ def view(id):
     return jsonify(source)
 
 
-@blueprint.route('/api/1/sources/<id>/process', methods=['POST', 'PUT'])
+@blueprint.route('/api/1/sources/<int:id>/process', methods=['POST', 'PUT'])
 def process(id):
     authz.require(authz.source_write(id))
     source = obj_or_404(Source.by_id(id))
@@ -33,7 +33,7 @@ def process(id):
     return jsonify({'status': 'ok'})
 
 
-@blueprint.route('/api/1/sources/<id>', methods=['POST', 'PUT'])
+@blueprint.route('/api/1/sources/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     authz.require(authz.source_write(id))
     source = obj_or_404(Source.by_id(id))

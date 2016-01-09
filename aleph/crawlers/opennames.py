@@ -3,7 +3,7 @@ import requests
 import logging
 
 from aleph.core import db
-from aleph.model import Watchlist, Entity
+from aleph.model import Watchlist, Entity, Role, Permission
 from aleph.analyze import analyze_terms
 from aleph.model.forms import PERSON, ORGANIZATION, OTHER
 from aleph.crawlers.crawler import Crawler
@@ -32,6 +32,7 @@ class OpenNamesCrawler(Crawler):
             'public': True,
             'users': []
         })
+        Permission.grant_foreign(watchlist, Role.SYSTEM_GUEST, True, False)
         log.info(" > OpenNames collection: %s", watchlist.label)
         watchlist.delete_entities()
         db.session.flush()

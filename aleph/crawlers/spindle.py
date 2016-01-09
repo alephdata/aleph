@@ -4,7 +4,7 @@ import requests
 import logging
 
 from aleph.core import app, db
-from aleph.model import Watchlist, Entity
+from aleph.model import Watchlist, Entity, Permission
 from aleph.analyze import analyze_terms
 from aleph.model.forms import PERSON, ORGANIZATION, COMPANY, OTHER
 from aleph.crawlers.crawler import Crawler
@@ -33,8 +33,12 @@ class SpindleCrawler(Crawler):
             'public': False,
             'users': []
         })
+        res = requests.get('%s/permissions' % url, headers=self.HEADERS)
+        for perm in res.json().get('results', []):
+            Permission.grant_foreign(watchlist, perm.get('role'),
+                                     perm.get('read'), perm.get('write'))
+
         log.info(" > Spindle collection: %s", watchlist.label)
-        db.session.flush()
         res = requests.get('%s/entities' % url, headers=self.HEADERS)
         terms = watchlist.terms
         watchlist.delete_entities()

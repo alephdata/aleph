@@ -25,6 +25,7 @@ Iteration II
 * [DONE] Role/Permission
 * [DONE] Source facet filters
 * [DONE] Entity selection bug
+* [DONE] Crawler permissions management
 * Watchlist edit controller
 * Document pages viewer
 * Filter display

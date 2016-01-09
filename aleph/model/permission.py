@@ -27,3 +27,31 @@ class Permission(db.Model, TimeStampedModel):
             'resource_id': self.resource_id,
             'resource_type': self.resource_type
         }
+
+    @classmethod
+    def grant_foreign(cls, resource, foreign_id, read, write):
+        from aleph.model import Source, Watchlist, Role
+        role = Role.by_foreign_id(foreign_id)
+        if role is None:
+            return
+        if isinstance(resource, Source):
+            cls.grant_resource(cls.SOURCE, resource.id, role, read, write)
+        if isinstance(resource, Watchlist):
+            cls.grant_resource(cls.WATCHLIST, resource.id, role, read, write)
+
+    @classmethod
+    def grant_resource(cls, resource_type, resource_id, role, read, write):
+        q = db.session.query(Permission)
+        q = q.filter(Permission.role_id == role.id)
+        q = q.filter(Permission.resource_type == resource_type)
+        q = q.filter(Permission.resource_id == resource_id)
+        permission = q.first()
+        if permission is None:
+            permission = Permission()
+            permission.role_id = role.id
+            permission.resource_type = resource_type
+            permission.resource_id = resource_id
+        permission.read = read
+        permission.write = write
+        db.session.add(permission)
+        return permission
