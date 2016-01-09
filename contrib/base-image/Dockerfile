@@ -10,6 +10,7 @@ RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
         libreoffice-l10n-hu libreoffice-l10n-hr libreoffice-l10n-uk \
         libreoffice-pdfimport hyphen-hr hyphen-ro hyphen-de mythes-cs \
         mythes-hu tesseract-ocr tesseract-ocr-bel tesseract-ocr-aze \
+        tesseract-ocr-osd imagemagick-common imagemagick \
         tesseract-ocr-ces tesseract-ocr-eng tesseract-ocr-deu \
         tesseract-ocr-hrv tesseract-ocr-hun tesseract-ocr-rus \
         tesseract-ocr-pol tesseract-ocr-slk tesseract-ocr-slv \
