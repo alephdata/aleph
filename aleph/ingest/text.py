@@ -3,6 +3,7 @@ import logging
 from tempfile import mkstemp
 
 from lxml import html
+from lxml.html.clean import Cleaner
 from extractors import extract_pdf, extract_image
 from extractors import document_to_pdf, image_to_pdf
 
@@ -67,12 +68,12 @@ class DocumentIngestor(PDFIngestor):
 
     def extract_document(self, meta, local_path):
         pdf_path = document_to_pdf(local_path)
-        if pdf_path is None:
+        if pdf_path is None or not os.path.isfile(pdf_path):
             log.warning("Could not convert document: %r", meta)
             return
         try:
+            self.store_pdf(meta, pdf_path, move=False)
             self.extract_pdf(meta, pdf_path)
-            self.store_pdf(meta, pdf_path)
         finally:
             if os.path.isfile(pdf_path):
                 os.unlink(pdf_path)
@@ -82,21 +83,18 @@ class DocumentIngestor(PDFIngestor):
 
 
 class HtmlIngestor(DocumentIngestor):
-    REMOVE_TAGS = ['script', 'style', 'link', 'input', 'textarea']
     MIME_TYPES = ['text/html']
     EXTENSIONS = ['html', 'htm', 'asp', 'aspx', 'jsp']
+
+    cleaner = Cleaner(scripts=True, javascript=True, style=True, links=True,
+                      embedded=True, forms=True, annoying_tags=True,
+                      meta=False)
 
     def ingest(self, meta, local_path):
         fh, out_path = mkstemp(suffix='htm')
         os.close(fh)
         with open(local_path, 'rb') as fh:
             doc = html.fromstring(fh.read())
-
-            # TODO: use ``newspaper`` instead?
-            for name in self.REMOVE_TAGS:
-                for tag in doc.findall('.//' + name):
-                    tag.drop_tree()
-
             if not meta.has('title'):
                 title = doc.findtext('.//title')
                 if title is not None:
@@ -107,6 +105,7 @@ class HtmlIngestor(DocumentIngestor):
                 if summary is not None and summary.get('content'):
                     meta.summary = summary.get('content')
 
+            self.cleaner(doc)
         try:
             with open(out_path, 'w') as fh:
                 fh.write(html.tostring(doc))
@@ -128,10 +127,14 @@ class ImageIngestor(TextIngestor):
     def ingest(self, meta, local_path):
         text = extract_image(local_path)
         pdf_path = image_to_pdf(local_path)
-        if pdf_path is None:
-            log.warning("Could not convert image: %r", meta)
-            return
-        self.store_pdf(meta, pdf_path)
-        document = self.create_document(meta)
-        self.create_page(document, text)
-        self.emit(document)
+        try:
+            if pdf_path is None or not os.path.isfile(pdf_path):
+                log.warning("Could not convert image: %r", meta)
+                return
+            self.store_pdf(meta, pdf_path)
+            document = self.create_document(meta)
+            self.create_page(document, text)
+            self.emit(document)
+        finally:
+            if os.path.isfile(pdf_path):
+                os.unlink(pdf_path)

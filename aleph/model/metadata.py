@@ -29,7 +29,7 @@ class PDFAlternative(object):
 
     @property
     def content_hash(self):
-        return self.meta.get('pdf_version')
+        return self.meta.data.get('pdf_version')
 
     @content_hash.setter
     def content_hash(self, content_hash):
@@ -175,7 +175,7 @@ class Metadata(MutableMapping):
     def is_pdf(self):
         if self.extension == 'pdf':
             return True
-        if self.mime_type in ['text/html']:
+        if self.mime_type in ['application/pdf']:
             return True
         return False
 
@@ -227,4 +227,5 @@ class Metadata(MutableMapping):
         data['mime_type'] = self.mime_type
         data['source_path'] = self.source_path
         data['title'] = self.title
+        data['is_pdf'] = self.is_pdf
         return data

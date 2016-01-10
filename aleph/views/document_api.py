@@ -1,4 +1,4 @@
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import NotFound, BadRequest
 from flask import Blueprint, redirect, send_file
 from apikit import jsonify
 
@@ -35,3 +35,18 @@ def file(document_id):
     return send_file(fh, as_attachment=True,
                      attachment_filename=document.meta.file_name,
                      mimetype=document.meta.mime_type)
+
+
+@blueprint.route('/api/1/documents/<int:document_id>/pdf')
+def pdf(document_id):
+    document = get_document(document_id)
+    if document.type != Document.TYPE_TEXT:
+        raise BadRequest("PDF is only available for text documents")
+    pdf = document.meta.pdf
+    url = archive.generate_url(pdf)
+    if url is not None:
+        return redirect(url)
+
+    local_path = archive.load_file(pdf)
+    fh = open(local_path, 'rb')
+    return send_file(fh, mimetype=pdf.mime_type)
