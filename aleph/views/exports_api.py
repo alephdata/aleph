@@ -13,12 +13,17 @@ from aleph.model.metadata import CORE_FACETS
 blueprint = Blueprint('exports', __name__)
 
 XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+SKIP_FIELDS = ['summary_latin', 'title_latin', 'content_hash']
 
 
-def make_excel(iter, attributes):
+def make_excel(results):
     output = StringIO.StringIO()
     workbook = xlsxwriter.Workbook(output)
     worksheet = workbook.add_worksheet('Documents')
+
+    attributes = set()
+    for result in results:
+        attributes.update(result.keys())
 
     row = 0
     header = workbook.add_format({
@@ -26,7 +31,7 @@ def make_excel(iter, attributes):
         'border': 1,
         'fg_color': '#D7E4BC'
     })
-    for data in iter:
+    for data in results:
         # data = res._results_dict
         if row == 0:
             col = 0
@@ -50,32 +55,46 @@ def make_excel(iter, attributes):
     return output
 
 
-def process_row(row, attributes):
-    src = row.get('_source')
-    data = {}
-    for name in attributes:
-        value = src.get(name)
-        for attr in src.get('attributes', []):
-            if attr.get('name') == name:
-                value = attr.get('value')
-        if name == 'entities':
-            objs = Entity.by_id_set([e.get('id') for e in value])
-            value = ', '.join([o.label for o in objs.values()])
-        if name == 'collection':
-            # WARNING: don't to one query per row
-            value = unicode(Source.by_slug(value) or value)
-        data[name] = value
-    return data
+def format_results(query):
+    sources = {}
+    entities = {}
+    results = []
+    for row in raw_iter(query):
+        src = row.get('_source')
+        data = {}
+        for name, value in src.items():
+            if isinstance(value, dict) or name in SKIP_FIELDS:
+                continue
+            if name == 'entities':
+                load_ids = []
+                for entity_id in value:
+                    if entity_id not in entities:
+                        load_ids.append(entity_id)
+                if len(load_ids):
+                    for id, ent in Entity.by_id_set(load_ids).items():
+                        entities[id] = ent.name
+
+                value = ', '.join([entities.get(e) for e in value
+                                   if entities.get(e) is not None])
+            if isinstance(value, (list, tuple, set)):
+                value = ', '.join(value)
+            if name == 'source_id':
+                # WARNING: don't to one query per row
+                if value not in sources:
+                    source = Source.by_id(value)
+                    if source is None:
+                        sources[value] = '[Deleted source %s]' % value
+                    else:
+                        sources[value] = source.label
+                value = sources[value]
+            data[name] = value
+            results.append(data)
+    return results
 
 
 @blueprint.route('/api/1/query/export')
 def export():
-    attributes = request.args.getlist('attribute')
-    query = construct_query(request.args)
-    for attribute in attributes:
-        query['_source'].add(attribute)
-    query['_source'] = list(set(query['_source']))
-    output = (process_row(r, attributes) for r in raw_iter(query))
-    output = make_excel(output, attributes)
+    output = format_results(construct_query(request.args))
+    output = make_excel(output)
     return send_file(output, mimetype=XLSX_MIME, as_attachment=True,
                      attachment_filename='export.xlsx')
