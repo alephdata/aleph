@@ -1,14 +1,12 @@
 import logging
-import chardet
-import six
-from datetime import datetime, date
 
 from messytables import any_tableset, offset_processor
 from messytables import headers_guess, headers_processor
 from dbf.base import DBF
+from extractors import guess_encoding
 
 from aleph.model import Document
-from aleph.util import guess_encoding, string_value
+from aleph.util import string_value
 from aleph.ingest.ingestor import Ingestor
 from aleph.model.tabular import TabularSchema, Tabular
 

@@ -21,6 +21,7 @@ networkx
 XlsxWriter==0.6.6
 SQLAlchemy-Utils>=0.29.8
 https://github.com/pudo/messytables/tarball/allow-parser-args
+https://github.com/pudo/extractors/tarball/master
 langid==1.1.5
 babel
 pdfminer==20140328
