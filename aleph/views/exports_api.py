@@ -4,11 +4,9 @@ import StringIO
 from flask import Blueprint, request, send_file
 import xlsxwriter
 
-from aleph import authz
 from aleph.model import Entity, Source
 from aleph.search import raw_iter
 from aleph.search import construct_query
-from aleph.model.metadata import CORE_FACETS
 
 blueprint = Blueprint('exports', __name__)
 
