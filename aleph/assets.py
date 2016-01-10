@@ -6,6 +6,9 @@ from aleph.core import assets, app
 deps_assets = Bundle(
     'vendor/jquery/dist/jquery.js',
     'vendor/angular/angular.js',
+    'vendor/pdfjs-dist/build/pdf.js',
+    'vendor/pdfjs-dist/build/pdf.worker.js',
+    'vendor/angular-pdf/dist/angular-pdf.js',
     'vendor/ng-debounce/angular-debounce.js',
     'vendor/angular-route/angular-route.js',
     'vendor/angular-animate/angular-animate.js',

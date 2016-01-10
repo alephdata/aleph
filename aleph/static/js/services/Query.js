@@ -22,7 +22,6 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     query.entity = ensureArray(query.entity);
     query.watchlist = ensureArray(query.watchlist);
     query.facet = ensureArray(query.facet);
-    console.log(query);
     return query;
   };
 
