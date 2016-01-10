@@ -23,7 +23,6 @@ setup(
     install_requires=[],
     entry_points={
         'aleph.ingestors': [
-            'plain = aleph.ingest.text:PlainTextIngestor',
             'html = aleph.ingest.text:HtmlIngestor',
             'pdf = aleph.ingest.text:PDFIngestor',
             'doc = aleph.ingest.text:DocumentIngestor',

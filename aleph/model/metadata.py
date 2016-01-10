@@ -18,6 +18,24 @@ CORE_FACETS = {
 }
 
 
+class PDFAlternative(object):
+    """ Alternate PDF version. """
+
+    def __init__(self, meta):
+        self.meta = meta
+        self.extension = 'pdf'
+        self.mime_type = 'application/pdf'
+        self.file_name = self.meta.file_name + '.pdf'
+
+    @property
+    def content_hash(self):
+        return self.meta.get('pdf_version')
+
+    @content_hash.setter
+    def content_hash(self, content_hash):
+        self.meta.data['pdf_version'] = content_hash
+
+
 class Metadata(MutableMapping):
     """ Handle all sorts of metadata normalization for documents. """
 
@@ -152,6 +170,20 @@ class Metadata(MutableMapping):
                 data[slugify(k, sep='_')] = v
 
         self.data['headers'] = data
+
+    @property
+    def is_pdf(self):
+        if self.extension == 'pdf':
+            return True
+        if self.mime_type in ['text/html']:
+            return True
+        return False
+
+    @property
+    def pdf(self):
+        if self.is_pdf:
+            return self
+        return PDFAlternative(self)
 
     @property
     def tables(self):
