@@ -27,29 +27,40 @@ class PackageIngestor(Ingestor):
     def unpack(self, meta, local_path, temp_dir):
         pass
 
-    def emit_file(self, meta, temp_path):
-        meta = meta.clone()
-        meta.data.pop('title', None)
-        meta.data.pop('file_name', None)
-        meta.data.pop('extension', None)
-        meta.data.pop('mime_type', None)
-        ingest_file(self.source_id, meta, temp_path)
+    def emit_member(self, meta, name, fh, temp_dir):
+        try:
+            file_name = os.path.basename(os.path.normpath(name))
+            file_path = os.path.join(temp_dir, file_name)
+            child = meta.clone()
+            child.clear('title')
+            child.clear('extension')
+            child.clear('file_name')
+            child.clear('mime_type')
+            child.parent = meta.clone()
+            child.file_name = file_name
+            child.source_path = name
+
+            with open(file_path, 'wb') as dst:
+                shutil.copyfileobj(fh, dst)
+            ingest_file(self.source_id, child, file_path)
+        except IOError as re:
+            log.exception(re)
 
 
 class RARIngestor(PackageIngestor):
 
     def unpack(self, meta, local_path, temp_dir):
         with rarfile.RarFile(local_path) as rf:
-            rf.extractall(path=temp_dir)
-            for (dirname, _, files) in os.walk(temp_dir):
-                for filename in files:
-                    path = os.path.join(dirname, filename)
-                    self.emit_file(meta, path)
+            for info in rf.infolist():
+                if info.file_size == 0:
+                    continue
+                fh = rf.open(info)
+                self.emit_member(meta, info.filename, fh, temp_dir)
 
     @classmethod
     def match(cls, meta, local_path):
         if rarfile.is_rarfile(local_path):
-            return 3
+            return 4
         return -1
 
 
@@ -57,38 +68,41 @@ class ZipIngestor(PackageIngestor):
 
     def unpack(self, meta, local_path, temp_dir):
         with zipfile.ZipFile(local_path) as zf:
-            zf.extractall(path=temp_dir)
-            for (dirname, _, files) in os.walk(temp_dir):
-                for filename in files:
-                    path = os.path.join(dirname, filename)
-                    self.emit_file(meta, path)
+            for info in zf.infolist():
+                if info.file_size == 0:
+                    continue
+                fh = zf.open(info)
+                self.emit_member(meta, info.filename, fh, temp_dir)
 
     @classmethod
     def match(cls, meta, local_path):
         if zipfile.is_zipfile(local_path):
-            return 3
+            return 4
         return -1
 
 
 class TarIngestor(PackageIngestor):
 
     def unpack(self, meta, local_path, temp_dir):
-        with tarfile.TarFile(local_path) as tf:
-            tf.extractall(path=temp_dir)
-            for (dirname, _, files) in os.walk(temp_dir):
-                for filename in files:
-                    path = os.path.join(dirname, filename)
-                    self.emit_file(meta, path)
+        with tarfile.open(name=local_path, mode='r:*') as tf:
+            for member in tf:
+                if not member.isfile():
+                    continue
+                fh = tf.extractfile(member)
+                self.emit_member(meta, member.name, fh, temp_dir)
 
     @classmethod
     def match(cls, meta, local_path):
         if tarfile.is_tarfile(local_path):
-            return 3
+            return 4
         return -1
 
 
 class SingleFilePackageIngestor(PackageIngestor):
     BASE_SCORE = 2
+
+    def emit_file(self, meta, file_path):
+        ingest_file(self.source_id, meta, file_path)
 
     def unpack(self, meta, local_path, temp_dir):
         file_name = meta.file_name
@@ -98,6 +112,12 @@ class SingleFilePackageIngestor(PackageIngestor):
                 file_name = file_name[:len(file_name) - len(ext)]
         temp_file = os.path.join(temp_dir, file_name)
         self.unpack_file(meta, local_path, temp_file)
+
+    @classmethod
+    def match(cls, meta, local_path):
+        if tarfile.is_tarfile(local_path):
+            return -1
+        return super(SingleFilePackageIngestor, cls).match(meta, local_path)
 
 
 class GzipIngestor(SingleFilePackageIngestor):
@@ -114,7 +134,7 @@ class GzipIngestor(SingleFilePackageIngestor):
 class BZ2Ingestor(SingleFilePackageIngestor):
     MIME_TYPES = ['application/x-bzip', 'application/x-bzip2',
                   'multipart/x-bzip', 'multipart/x-bzip2']
-    EXTENSIONS = ['bz', 'tbz', 'b2', 'tbz2']
+    EXTENSIONS = ['bz', 'tbz', 'bz2', 'tbz2']
 
     def unpack_file(self, meta, local_path, temp_file):
         with bz2.BZ2File(local_path) as src:

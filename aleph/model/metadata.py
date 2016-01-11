@@ -52,6 +52,22 @@ class Metadata(MutableMapping):
             return len(value) > 0
         return True
 
+    def clear(self, name):
+        self.data.pop(name, None)
+
+    @property
+    def parent(self):
+        if 'parent' not in self.data or \
+                not isinstance(self.data.get('parent'), dict):
+            return None
+        return Metadata(data=self.data.get('parent'))
+
+    @parent.setter
+    def parent(self, parent):
+        if isinstance(parent, Metadata):
+            parent = parent.data
+        self.data['parent'] = parent
+
     @property
     def title(self):
         title = self.data.get('title')
@@ -222,6 +238,8 @@ class Metadata(MutableMapping):
 
     def to_dict(self):
         data = deepcopy(self.data)
+        if self.has('parent'):
+            data['parent'] = self.parent.to_dict()
         data['file_name'] = self.file_name
         data['extension'] = self.extension
         data['mime_type'] = self.mime_type
