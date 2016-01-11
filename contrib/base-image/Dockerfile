@@ -17,7 +17,7 @@ RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
         tesseract-ocr-pol tesseract-ocr-slk tesseract-ocr-slv \
         tesseract-ocr-sqi tesseract-ocr-srp tesseract-ocr-tur \
         tesseract-ocr-ukr poppler-utils poppler-data antiword \
-        unrtf pstotext zlib1g-dev python-numpy \
+        unrtf pstotext zlib1g-dev python-numpy default-jdk \
   && apt-get clean && apt-get autoremove -y -q
 
 # GB Land registry parser
