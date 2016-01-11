@@ -32,3 +32,4 @@ rarfile==2.7
 xlrd==0.9.3
 jsonschema
 functools32
+flower
