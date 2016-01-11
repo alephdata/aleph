@@ -18,7 +18,7 @@ RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
         tesseract-ocr-sqi tesseract-ocr-srp tesseract-ocr-tur \
         tesseract-ocr-ukr poppler-utils poppler-data antiword \
         unrtf pstotext zlib1g-dev python-numpy default-jdk \
-  && apt-get clean && apt-get autoremove -y -q
+  && apt-get clean
 
 # GB Land registry parser
 RUN echo "en_GB ISO-8859-1" >> /etc/locale.gen && \

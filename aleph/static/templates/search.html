@@ -40,10 +40,18 @@
           </a>
         </span>
         <strong>Persons and Companies</strong>
+        <small ng-show="query.state.watchlist.length">
+          (from {{query.state.watchlist.length}} watchlists)
+        </small>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet empty" ng-if="!result.entities.length">
-          <a ng-click="selectWatchlists($event)"><i class="fa fa-cog"></i> Select watchlists</a> to see tagged entities.
+          <span ng-hide="query.state.watchlist.length">
+            <a ng-click="selectWatchlists($event)"><i class="fa fa-cog"></i> Select watchlists</a> to see tagged entities.
+          </span>
+          <span ng-show="query.state.watchlist.length">
+            The selected watchlists don't match any documents.
+          </span>
         </li>
         <li class="list-group-item facet animate toggle"
           ng-repeat="entity in result.entities"
