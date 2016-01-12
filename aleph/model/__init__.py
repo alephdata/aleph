@@ -7,3 +7,9 @@ from aleph.model.reference import Reference # noqa
 from aleph.model.watchlist import Watchlist # noqa
 from aleph.model.metadata import Metadata # noqa
 from aleph.model.document import Document, Page # noqa
+
+
+def clear_session():
+    db.session.rollback()
+    # db.session.expunge_all()
+    # db.session.prune()

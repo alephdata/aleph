@@ -42,6 +42,7 @@ setup(
         'aleph.crawlers': [
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
             'spindle = aleph.crawlers.spindle:SpindleCrawler',
+            'idashboard = aleph.crawlers.idashboard:InvestigativeDashboard',
             'aznews = aleph.crawlers.az_news:AzerbaijanNewsCrawler',
             'azapa = aleph.crawlers.az_apa:AzerbaijanPressAgency',
             'mdcourts = aleph.crawlers.md_courts:MoldovaCourts',

@@ -31,6 +31,7 @@ class AzerbaijanNewsCrawler(Crawler):
         doc = html.document_fromstring(res.content.decode('utf-8'))
         article = doc.find('.//article')
         if article is None:
+            log.warning('No article: %r', meta.source_url)
             return False
 
         for m in doc.findall('.//meta'):
@@ -46,6 +47,7 @@ class AzerbaijanNewsCrawler(Crawler):
         doc.find('.//body').drop_tree()
         doc.append(body)
         content = html.tostring(doc)
+        log.info('Scraped AZ news (%s): %r', id, meta)
         self.emit_content(source, meta, content)
         return True
 

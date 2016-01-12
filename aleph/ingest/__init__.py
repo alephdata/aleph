@@ -4,6 +4,7 @@ import requests
 from tempfile import NamedTemporaryFile
 
 from aleph.core import archive, celery
+from aleph.model import clear_session
 from aleph.model.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor
 
@@ -32,6 +33,7 @@ log = logging.getLogger(__name__)
 
 @celery.task()
 def ingest_url(source_id, metadata, url):
+    clear_session()
     meta = Metadata(data=metadata)
     try:
         with NamedTemporaryFile() as fh:
@@ -62,6 +64,7 @@ def ingest_file(source_id, meta, file_name, move=False):
 
 @celery.task()
 def ingest(source_id, metadata):
+    clear_session()
     meta = Metadata(data=metadata)
     try:
         Ingestor.dispatch(source_id, meta)

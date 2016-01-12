@@ -3,6 +3,7 @@ import logging
 from aleph.core import celery
 from aleph.ext import get_analyzers
 from aleph.model import Document, Watchlist, Entity
+from aleph.model import clear_session
 from aleph.index import index_document
 from aleph.search import raw_iter
 from aleph.search.query import text_query
@@ -53,6 +54,7 @@ def analyze_matches(query):
 
 @celery.task()
 def analyze_document(document_id):
+    clear_session()
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)

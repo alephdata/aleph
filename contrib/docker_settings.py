@@ -38,6 +38,11 @@ FACEBOOK_APP_SECRET = os.environ.get('ALEPH_FACEBOOK_APP_SECRET')
 SPINDLE_URL = os.environ.get('ALEPH_SPINDLE_HOST', 'https://search.occrp.org/')
 SPINDLE_API_KEY = os.environ.get('ALEPH_SPINDLE_API_KEY')
 
+ID_HOST = 'https://www.investigativedashboard.org/'
+ID_USERNAME = os.environ.get('ALEPH_ID_USERNAME')
+ID_PASSWORD = os.environ.get('ALEPH_ID_PASSWORD')
+
+
 OAUTH = {
     'consumer_key': os.environ.get('ALEPH_OAUTH_KEY'),
     'consumer_secret': os.environ.get('ALEPH_OAUTH_SECRET'),

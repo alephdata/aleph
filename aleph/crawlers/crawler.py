@@ -37,9 +37,9 @@ class Crawler(object):
             fh.write(content)
             ingest_file(source.id, meta.clone(), fh.name)
 
-    def emit_file(self, source, meta, file_path):
+    def emit_file(self, source, meta, file_path, move=False):
         db.session.commit()
-        ingest_file(source.id, meta.clone(), file_path)
+        ingest_file(source.id, meta.clone(), file_path, move=move)
 
     def emit_watchlist(self, watchlist):
         db.session.commit()

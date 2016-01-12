@@ -5,7 +5,7 @@ from apikit.jsonify import JSONEncoder
 from elasticsearch.helpers import bulk, scan
 
 from aleph.core import celery, es, es_index
-from aleph.model import Document
+from aleph.model import Document, clear_session
 from aleph.util import latinize_text
 from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD
 from aleph.index.mapping import DOCUMENT_MAPPING, RECORD_MAPPING
@@ -154,6 +154,7 @@ def generate_entities(document):
 
 @celery.task()
 def index_document(document_id):
+    clear_session()
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
