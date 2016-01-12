@@ -28,15 +28,13 @@ class OpenNamesCrawler(Crawler):
         url = urljoin(JSON_PATH, json_file)
 
         watchlist = Watchlist.by_foreign_id(url, {
-            'label': 'OpenNames / %s' % source.get('source_id'),
-            'public': True,
+            'label': source.get('source_id'),
             'users': []
         })
         Permission.grant_foreign(watchlist, Role.SYSTEM_GUEST, True, False)
         log.info(" > OpenNames collection: %s", watchlist.label)
         watchlist.delete_entities()
         db.session.flush()
-        terms = watchlist.terms
         entities = requests.get(url).json().get('entities', [])
         for entity in entities:
             if entity.get('name') is None:
@@ -55,9 +53,7 @@ class OpenNamesCrawler(Crawler):
                 'selectors': selectors
             })
             log.info("  # %s (%s)", ent.name, ent.category)
-        terms.update(watchlist.terms)
-        db.session.commit()
-        analyze_terms.delay(list(terms))
+        self.emit_watchlist(watchlist)
 
     def crawl(self):
         data = requests.get(JSON_PATH).json()

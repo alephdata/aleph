@@ -55,14 +55,16 @@ class Watchlist(db.Model, TimeStampedModel):
         q.delete(synchronize_session='fetch')
 
     @classmethod
-    def by_foreign_id(cls, foreign_id, data):
+    def by_foreign_id(cls, foreign_id, data, role=None):
         q = db.session.query(cls)
         q = q.filter(cls.foreign_id == foreign_id)
         watchlist = q.first()
         if watchlist is None:
-            watchlist = cls.create(data, None)
+            watchlist = cls.create(data, role)
             watchlist.foreign_id = foreign_id
-            db.session.flush()
+        watchlist.update(data)
+        db.session.add(watchlist)
+        db.session.flush()
         return watchlist
 
     @classmethod

@@ -5,6 +5,7 @@ from aleph.core import db
 from aleph.model import Metadata, Source
 from aleph.ext import get_crawlers
 from aleph.ingest import ingest_url, ingest_file
+from aleph.analyze import analyze_watchlist
 
 log = logging.getLogger(__name__)
 
@@ -39,6 +40,10 @@ class Crawler(object):
     def emit_file(self, source, meta, file_path):
         db.session.commit()
         ingest_file(source.id, meta.clone(), file_path)
+
+    def emit_watchlist(self, watchlist):
+        db.session.commit()
+        analyze_watchlist.delay(watchlist.id)
 
     def __repr__(self):
         return '<%s()>' % self.__class__.__name__

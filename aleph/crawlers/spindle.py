@@ -29,9 +29,7 @@ class SpindleCrawler(Crawler):
             return
         url = urljoin(self.URL, '/api/collections/%s' % collection.get('id'))
         watchlist = Watchlist.by_foreign_id(url, {
-            'label': collection.get('title'),
-            'public': False,
-            'users': []
+            'label': collection.get('title')
         })
         res = requests.get('%s/permissions' % url, headers=self.HEADERS)
         for perm in res.json().get('results', []):
@@ -40,7 +38,6 @@ class SpindleCrawler(Crawler):
 
         log.info(" > Spindle collection: %s", watchlist.label)
         res = requests.get('%s/entities' % url, headers=self.HEADERS)
-        terms = watchlist.terms
         watchlist.delete_entities()
         for entity in res.json().get('results', []):
             if entity.get('name') is None:
@@ -54,9 +51,7 @@ class SpindleCrawler(Crawler):
                 'selectors': aliases
             })
             log.info("  # %s (%s)", ent.name, ent.category)
-        db.session.commit()
-        terms.update(watchlist.terms)
-        analyze_terms.delay(list(terms))
+        self.emit_watchlist(watchlist)
 
     def crawl(self):
         url = urljoin(self.URL, '/api/collections')

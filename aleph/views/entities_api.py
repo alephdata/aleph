@@ -4,7 +4,7 @@ from apikit import obj_or_404, jsonify, Pager, request_data
 
 from aleph.model import Entity, db
 from aleph.model.forms import EntityForm
-from aleph.analyze import analyze_terms
+from aleph.analyze import analyze_entity
 from aleph import authz
 
 blueprint = Blueprint('entities', __name__)
@@ -33,7 +33,7 @@ def create():
     authz.require(authz.watchlist_write(data['watchlist'].id))
     entity = Entity.create(data)
     db.session.commit()
-    analyze_terms.delay(list(entity.terms))
+    analyze_entity.delay(entity.id)
     return view(entity.id)
 
 
@@ -59,11 +59,9 @@ def update(id):
     data = EntityForm().deserialize(request_data())
     authz.require(data['watchlist'])
     authz.require(authz.watchlist_write(data['watchlist'].id))
-    terms = entity.terms
     entity.update(data)
     db.session.commit()
-    terms.update(entity.terms)
-    analyze_terms.delay(terms)
+    analyze_entity.delay(entity.id)
     return view(entity.id)
 
 
@@ -71,8 +69,7 @@ def update(id):
 def delete(id):
     entity = obj_or_404(Entity.by_id(id))
     authz.require(authz.watchlist_write(entity.watchlist_id))
-    terms = list(entity.terms)
     entity.delete()
     db.session.commit()
-    analyze_terms.delay(terms)
+    analyze_entity.delay(id)
     return jsonify({'status': 'ok'})

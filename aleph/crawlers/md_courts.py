@@ -8,7 +8,7 @@ from urlparse import urljoin
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
-PAGE_SIZE = 1000
+PAGE_SIZE = 50
 BASE = 'http://instante.justice.md/apps/hotariri_judecata/inst/'
 COURTS = ["cac/cac.php", "cab/cab.php", "cabe/cabe.php", "cach/cach.php",
           "caco/caco.php", "jan/jan.php", "jba/jba.php", "jbs/jbs.php",
@@ -33,7 +33,7 @@ class MoldovaCourts(Crawler):
         for i in count(1):
             q = {
                 '_search': 'false',
-                'nd': 1448893196876,
+                'nd': 1452590243771,
                 'rows': PAGE_SIZE,
                 'page': i,
                 'sidx': 'id',
