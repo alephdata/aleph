@@ -1,6 +1,7 @@
 import requests
 import logging
 import math
+import json
 from itertools import count
 from urlparse import urljoin
 
@@ -39,28 +40,18 @@ class MoldovaCourts(Crawler):
                 'sord': 'asc'
             }
             res = requests.post(url, data=q)
-            data = res.json()
+            data = json.loads(res.content)
             pages = int(math.ceil(float(data['records']) / PAGE_SIZE))
             log.info('Court %s: page %s (of %s)', court, i, pages)
             if i > pages:
                 return
             for row in data['rows']:
-                # id = row.get('id')
                 file_href, date, case, parties, typ, topic, _ = row['cell']
                 _, href = file_href.split('"', 1)
                 href, _ = href.split('"', 1)
                 source_url = urljoin(url, href)
                 m = meta.clone()
                 m.title = '%s (%s), %s, %s' % (parties, case, topic, typ)
-                # m.data.update({
-                #     'record_id': id,
-                #     'date': date,
-                #     'case_id': case,
-                #     'summary': parties,
-                #     'type': typ,
-                #     'court': court,
-                #     'title': topic
-                # })
                 self.emit_url(source, m, source_url)
 
     def crawl(self):
