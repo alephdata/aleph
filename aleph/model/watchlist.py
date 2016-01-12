@@ -1,5 +1,7 @@
 import logging
 
+from sqlalchemy import not_
+
 from aleph.core import db, url_for
 from aleph.model.role import Role
 from aleph.model.forms import WatchlistForm
@@ -36,9 +38,11 @@ class Watchlist(db.Model, TimeStampedModel):
         self.delete_entities()
         db.session.delete(self)
 
-    def delete_entities(self):
+    def delete_entities(self, spare=None):
         from aleph.model import Entity, Selector, Reference
         sq = db.session.query(Entity.id)
+        if spare is not None:
+            sq = sq.filter(not_(Entity.id.in_(spare)))
         sq = sq.filter(Entity.watchlist_id == self.id)
         sq = sq.subquery()
 
@@ -52,6 +56,8 @@ class Watchlist(db.Model, TimeStampedModel):
 
         q = db.session.query(Entity)
         q = q.filter(Entity.watchlist_id == self.id)
+        if spare is not None:
+            q = q.filter(not_(Entity.id.in_(spare)))
         q.delete(synchronize_session='fetch')
 
     @classmethod

@@ -38,19 +38,20 @@ class SpindleCrawler(Crawler):
 
         log.info(" > Spindle collection: %s", watchlist.label)
         res = requests.get('%s/entities' % url, headers=self.HEADERS)
-        watchlist.delete_entities()
+        existing_entities = []
         for entity in res.json().get('results', []):
             if entity.get('name') is None:
                 continue
             aliases = [on.get('alias') for on in entity.get('other_names', [])]
-            ent = Entity.create({
+            ent = Entity.by_foreign_id(entity.get('id'), watchlist, {
                 'name': entity.get('name'),
-                'watchlist': watchlist,
                 'category': SCHEMATA.get(entity.get('$schema'), OTHER),
                 'data': entity,
                 'selectors': aliases
             })
+            existing_entities.append(ent.id)
             log.info("  # %s (%s)", ent.name, ent.category)
+        watchlist.delete_entities(spare=existing_entities)
         self.emit_watchlist(watchlist)
 
     def crawl(self):

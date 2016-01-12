@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 
 class Entity(db.Model, TimeStampedModel):
     id = db.Column(db.Integer, primary_key=True)
+    foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     name = db.Column(db.Unicode)
     data = db.Column('data', JSON)
     category = db.Column(db.Enum(*CATEGORIES, name='entity_categories'),
@@ -26,6 +27,7 @@ class Entity(db.Model, TimeStampedModel):
         return {
             'id': self.id,
             'name': self.name,
+            'foreign_id': self.foreign_id,
             # 'api_url': url_for('entities.view', id=self.id),
             'category': self.category,
             'watchlist_id': self.watchlist_id,
@@ -46,17 +48,11 @@ class Entity(db.Model, TimeStampedModel):
     def terms(self):
         return set([s.text for s in self.selectors])
 
-    @classmethod
-    def create(cls, data):
-        ent = cls()
-        ent.update(data)
-        db.session.add(ent)
-        return ent
-
     def update(self, data):
         data = EntityForm().deserialize(data)
         self.name = data.get('name')
         self.watchlist = data.get('watchlist')
+        self.foreign_id = data.get('foreign_id')
         self.category = data.get('category')
         selectors = set(data.get('selectors', []))
         self.data = data.get('data')
@@ -74,6 +70,26 @@ class Entity(db.Model, TimeStampedModel):
             sel.entity = self
             sel.text = text
             db.session.add(sel)
+
+    @classmethod
+    def create(cls, data):
+        ent = cls()
+        ent.update(data)
+        db.session.add(ent)
+        return ent
+
+    @classmethod
+    def by_foreign_id(cls, foreign_id, watchlist, data):
+        data['watchlist'] = watchlist
+        data['foreign_id'] = foreign_id
+        q = db.session.query(cls)
+        q = q.filter_by(watchlist=watchlist)
+        q = q.filter_by(foreign_id=foreign_id)
+        ent = q.first()
+        if ent is None:
+            ent = cls.create(data)
+        ent.update(data)
+        return ent
 
     @classmethod
     def by_name(cls, name, watchlist):
