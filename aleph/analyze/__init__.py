@@ -30,7 +30,7 @@ def analyze_matches(query):
         query = {'query': query}
     query['_source'] = []
     for row in raw_iter(query):
-        analyze_document.delay(row.get('_id'))
+        analyze_document(row.get('_id'))
 
 
 @celery.task()
@@ -43,6 +43,6 @@ def analyze_document(document_id):
     for cls in get_analyzers():
         try:
             cls().analyze(document, document.meta)
+            index_document(document_id)
         except Exception as ex:
             log.exception(ex)
-    index_document.delay(document_id)

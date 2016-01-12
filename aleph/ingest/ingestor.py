@@ -38,7 +38,7 @@ class Ingestor(object):
     def emit(self, document):
         db.session.commit()
         log.debug("Ingested document: %r", document)
-        analyze_document.delay(document.id)
+        analyze_document(document.id)
 
     @classmethod
     def match(cls, meta, local_path):
