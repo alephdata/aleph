@@ -24,8 +24,14 @@ def construct_query(args, fields=None, facets=True):
     """ Parse a user query string, compose and execute a query. """
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
-    q = text_query(args.get('q', ''))
+    text = args.get('q', '').strip()
+    q = text_query(text)
     q = authz_filter(q)
+
+    if text:
+        sort = ['_score']
+    else:
+        sort = [{'updated_at': 'desc'}, {'created_at': 'desc'}, '_score']
 
     # Extract filters, given in the form: &filter:foo_field=bla_value
     filters = []
@@ -45,7 +51,6 @@ def construct_query(args, fields=None, facets=True):
         aggs = facet_source(q, aggs, filters)
         q = entity_watchlists(q, aggs, args, filters)
 
-    sort = ['_score']
     return {
         'sort': sort,
         'query': filter_query(q, filters),
