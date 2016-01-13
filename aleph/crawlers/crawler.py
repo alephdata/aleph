@@ -15,11 +15,15 @@ class Crawler(object):
     def crawl(self, **kwargs):
         raise NotImplemented()
 
+    @property
+    def name(self):
+        for name, cls in get_crawlers().items():
+            if isinstance(self, cls):
+                return name
+
     def create_source(self, **data):
         if 'foreign_id' not in data:
-            for name, cls in get_crawlers().items():
-                if isinstance(self, cls):
-                    data['foreign_id'] = name
+            data['foreign_id'] = self.name
         return Source.create(data)
 
     def metadata(self):
