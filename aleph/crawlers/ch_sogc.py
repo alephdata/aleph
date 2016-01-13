@@ -41,6 +41,7 @@ class SwissCommercialGazette(Crawler):
         meta['countries'] = ['ch']
         meta.extension = 'pdf'
         meta.mime_type = 'application/pdf'
+        meta.foreign_id = source_url
         # TODO: handle date
         title = '%s (%s, %s)' % (name, category, date)
         meta.title = title.replace('\n', ' - ')
