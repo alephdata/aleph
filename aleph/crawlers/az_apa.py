@@ -21,8 +21,8 @@ class AzerbaijanPressAgency(Crawler):
             max_num = max(int(num), max_num)
 
         meta = self.metadata()
-        meta['languages'] = ['en']
-        meta['countries'] = ['az']
+        meta.add_language('en')
+        meta.add_country('az')
         meta.extension = 'htm'
         meta.mime_type = 'text/html'
 

@@ -37,8 +37,8 @@ class SwissCommercialGazette(Crawler):
             return
         source_url = urljoin(BASE_URL, link.get('href'))
         meta = self.metadata()
-        meta['languages'] = ['en']
-        meta['countries'] = ['ch']
+        meta.languages = ['en', 'fr', 'de']
+        meta.add_country('ch')
         meta.extension = 'pdf'
         meta.mime_type = 'application/pdf'
         meta.foreign_id = source_url

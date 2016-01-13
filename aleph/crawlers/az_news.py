@@ -16,8 +16,8 @@ class AzerbaijanNewsCrawler(Crawler):
 
     def crawl_article(self, source, id):
         meta = self.metadata()
-        meta['languages'] = ['az']
-        meta['countries'] = ['az']
+        meta.add_language('az')
+        meta.add_country('az')
         meta.file_name = 'article-%s.htm' % id
         meta.extension = 'htm'
         meta.source_url = urljoin(BASE_URL, '/index.php?mod=3&id=%s' % id)

@@ -107,6 +107,36 @@ class Metadata(MutableMapping):
         self.data['summary'] = summary
 
     @property
+    def languages(self):
+        return set(self.data.get('languages', []))
+
+    @languages.setter
+    def languages(self, languages):
+        for lang in languages:
+            self.add_language(lang)
+
+    def add_language(self, language):
+        language = language.lower().strip()
+        languages = self.languages
+        languages.add(language)
+        self.data['languages'] = list(languages)
+
+    @property
+    def countries(self):
+        return set(self.data.get('countries', []))
+
+    @countries.setter
+    def countries(self, countries):
+        for country in countries:
+            self.add_country(country)
+
+    def add_country(self, country):
+        country = country.lower().strip()
+        countries = self.countries
+        countries.add(country)
+        self.data['countries'] = list(countries)
+
+    @property
     def source_url(self):
         return self.data.get('source_url')
 

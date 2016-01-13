@@ -58,8 +58,8 @@ class MoldovaCourts(Crawler):
     def crawl(self):
         source = self.create_source(label='Moldova Courts')
         meta = self.metadata()
-        meta['languages'] = ['ro']
-        meta['countries'] = ['md']
+        meta.add_language('ro')
+        meta.add_country('md')
         meta.extension = 'pdf'
         meta.mime_type = 'application/pdf'
 

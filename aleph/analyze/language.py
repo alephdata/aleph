@@ -13,6 +13,8 @@ CUTOFF = 30
 class LanguageAnalyzer(Analyzer):
 
     def analyze_text(self, document, meta):
+        if len(meta.languages):
+            return
         languages = set()
         for page in document.pages:
             if not page.text or len(page.text) < CUTOFF:
@@ -23,6 +25,8 @@ class LanguageAnalyzer(Analyzer):
         self.save(document, meta, languages)
 
     def analyze_tabular(self, document, meta):
+        if len(meta.languages):
+            return
         languages = set()
         for table in document.tables:
             for row in table:
