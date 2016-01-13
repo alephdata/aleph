@@ -46,6 +46,7 @@ class InvestigativeDashboard(Crawler):
         fh, file_path = mkstemp(suffix=data['filename'])
         try:
             meta = self.metadata()
+            meta.foreign_id = data['id']
             meta.file_name = data['filename']
             meta.title = data['title']
             meta.mime_type = data['mimetype']

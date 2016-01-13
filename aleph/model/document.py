@@ -20,7 +20,7 @@ class Document(db.Model, TimeStampedModel):
 
     id = db.Column(db.BigInteger, primary_key=True)
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
-    foreign_id = db.Column(db.Unicode, unique=True, nullable=True)
+    foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)
     source_id = db.Column(db.Integer(), db.ForeignKey('source.id'), index=True)
     source = db.relationship(Source, backref=db.backref('documents', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
@@ -30,12 +30,14 @@ class Document(db.Model, TimeStampedModel):
     def meta(self):
         self._meta = self._meta or {}
         self._meta['content_hash'] = self.content_hash
+        self._meta['foreign_id'] = self.foreign_id
         return Metadata(data=self._meta or {})
 
     @meta.setter
     def meta(self, meta):
         if isinstance(meta, Metadata):
             self.content_hash = meta.content_hash
+            self.foreign_id = meta.foreign_id
             meta = meta.data
         self._meta = meta
         flag_modified(self, '_meta')

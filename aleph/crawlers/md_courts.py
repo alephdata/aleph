@@ -51,6 +51,7 @@ class MoldovaCourts(Crawler):
                 href, _ = href.split('"', 1)
                 source_url = urljoin(url, href)
                 m = meta.clone()
+                m.foreign_id = source_url
                 m.title = '%s (%s), %s, %s' % (parties, case, topic, typ)
                 self.emit_url(source, m, source_url)
 

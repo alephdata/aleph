@@ -135,6 +135,14 @@ class Metadata(MutableMapping):
         self.data['content_hash'] = content_hash
 
     @property
+    def foreign_id(self):
+        return self.data.get('foreign_id')
+
+    @foreign_id.setter
+    def foreign_id(self, foreign_id):
+        self.data['foreign_id'] = foreign_id
+
+    @property
     def extension(self):
         extension = self.data.get('extension') \
             if self.has('extension') else None
