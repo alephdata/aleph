@@ -26,12 +26,13 @@ Iteration II
 * [DONE] Source facet filters
 * [DONE] Entity selection bug
 * [DONE] Crawler permissions management
+* [DONE] Database Crawler
 * Watchlist edit controller
 * Document pages viewer
 * Filter display
 * Entity data model / schema-based validation
+* Image ingest / PDF generation
 * Result drilldown
-* Database Crawler
 * Alerts / Subscriptions
 * Testing
 * tidbits

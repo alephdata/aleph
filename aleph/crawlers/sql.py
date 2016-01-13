@@ -1,6 +1,5 @@
 import os
 import yaml
-import shutil
 import logging
 import unicodecsv
 from tempfile import mkstemp
@@ -94,12 +93,14 @@ class SQLCrawler(Crawler):
 
     name = 'sql'
 
-    def crawl_query(self, engine, source, meta_base, query):
+    def crawl_query(self, engine, source, meta_base, name, query):
         meta_ = meta_base.copy()
         meta_.update(query.get('meta', {}))
         meta = self.metadata()
         meta.extension = 'csv'
         meta.data.update(meta_)
+        meta.foreign_id = '%s:%s' % (source.foreign_id, name)
+
         query = SQLQuery(engine, query)
 
         fh, file_path = mkstemp(suffix='.csv')
@@ -122,15 +123,14 @@ class SQLCrawler(Crawler):
             log.exception(ex)
         finally:
             if os.path.isfile(file_path):
-                pass
-                # os.unlink(file_path)
+                os.unlink(file_path)
 
     def crawl_source(self, engine, foreign_id, data):
         source = self.create_source(foreign_id=foreign_id,
                                     label=data.get('label'))
         meta_base = data.get('meta', {})
-        for query in data.get('queries', []):
-            self.crawl_query(engine, source, meta_base, query)
+        for name, query in data.get('queries', {}).items():
+            self.crawl_query(engine, source, meta_base, name, query)
 
     def crawl(self, config=None, source=None):
         with open(config, 'rb') as fh:
@@ -139,4 +139,5 @@ class SQLCrawler(Crawler):
             engine = create_engine(engine_url)
             for name, data in config.get('sources', {}).items():
                 if source is None or source == name:
-                    self.crawl_source(engine, '%s:%s' % (self.name, name), data)
+                    foreign_id = '%s:%s' % (self.name, name)
+                    self.crawl_source(engine, foreign_id, data)
