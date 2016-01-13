@@ -33,3 +33,4 @@ xlrd==0.9.3
 jsonschema
 functools32
 flower
+pyyaml

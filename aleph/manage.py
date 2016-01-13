@@ -1,7 +1,6 @@
 import os
 import logging
 
-from normality import slugify
 from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 from flask.ext.migrate import MigrateCommand
@@ -11,6 +10,7 @@ from aleph.views import app, assets
 from aleph.analyze import analyze_source
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
+from aleph.crawlers.sql import SQLCrawler
 from aleph.upgrade import upgrade as upgrade_, reset as reset_
 
 
@@ -41,12 +41,21 @@ def crawl(name):
 
 
 @manager.command
-def crawldir(directory, source=None, force=False):
+def crawldir(directory, source=None):
     """ Crawl the given directory. """
     directory = os.path.abspath(directory)
     directory = os.path.normpath(directory)
     log.info('Crawling %r...', directory)
     DirectoryCrawler().crawl(directory=directory, source=source)
+
+
+@manager.command
+def crawlsql(yaml_config, source=None):
+    """ Crawl the given database query file. """
+    yaml_config = os.path.abspath(yaml_config)
+    yaml_config = os.path.normpath(yaml_config)
+    log.info('Crawling %r...', yaml_config)
+    SQLCrawler().crawl(config=yaml_config, source=source)
     db.session.commit()
 
 
