@@ -63,6 +63,6 @@ def analyze_document(document_id):
     for cls in get_analyzers():
         try:
             cls().analyze(document, document.meta)
-            index_document(document_id)
         except Exception as ex:
             log.exception(ex)
+    index_document(document_id)
