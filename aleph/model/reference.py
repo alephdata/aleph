@@ -22,7 +22,7 @@ class Reference(db.Model, TimeStampedModel):
     def delete_document(cls, document_id):
         q = db.session.query(cls)
         q = q.filter_by(document_id=document_id)
-        q.delete()
+        q.delete(synchronize_session='fetch')
 
     def __repr__(self):
         return '<Reference(%r, %r)>' % (self.document_id, self.entity_id)

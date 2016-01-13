@@ -59,6 +59,7 @@ class Watchlist(db.Model, TimeStampedModel):
         if spare is not None:
             q = q.filter(not_(Entity.id.in_(spare)))
         q.delete(synchronize_session='fetch')
+        db.session.refresh(self)
 
     @classmethod
     def by_foreign_id(cls, foreign_id, data, role=None):

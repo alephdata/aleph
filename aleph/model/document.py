@@ -63,6 +63,12 @@ class Document(db.Model, TimeStampedModel):
         })
         return data
 
+    def delete_pages(self):
+        pq = db.session.query(Page)
+        pq = pq.filter(Page.document_id == self.id)
+        pq.delete(synchronize_session='fetch')
+        db.session.refresh(self)
+
     @classmethod
     def by_id(cls, id):
         q = db.session.query(cls).filter_by(id=id)

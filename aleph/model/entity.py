@@ -42,7 +42,8 @@ class Entity(db.Model, TimeStampedModel):
     def delete_selectors(self):
         q = db.session.query(Selector)
         q = q.filter(Selector.entity_id == self.id)
-        q.delete()
+        q.delete(synchronize_session='fetch')
+        db.session.refresh(self)
 
     @property
     def terms(self):

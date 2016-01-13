@@ -19,9 +19,7 @@ class TextIngestor(Ingestor):
 
     def create_document(self, meta, type=None):
         document = super(TextIngestor, self).create_document(meta, type=type)
-        pq = db.session.query(Page)
-        pq = pq.filter(Page.document_id == document.id)
-        pq.delete()
+        document.delete_pages()
         return document
 
     def create_page(self, document, text, number=1):
