@@ -27,11 +27,12 @@ Iteration II
 * [DONE] Entity selection bug
 * [DONE] Crawler permissions management
 * [DONE] Database Crawler
-* Watchlist edit controller
+* [WONTFIX] Watchlist edit controller
+* [DONE] Image ingest / PDF generation
+* Fix image pdf generation
 * Document pages viewer
 * Filter display
 * Entity data model / schema-based validation
-* Image ingest / PDF generation
 * Result drilldown
 * Alerts / Subscriptions
 * Testing

@@ -166,7 +166,9 @@ class Metadata(MutableMapping):
 
     @property
     def foreign_id(self):
-        return self.data.get('foreign_id')
+        foreign_id = self.data.get('foreign_id')
+        if foreign_id is not None:
+            return unicode(foreign_id)
 
     @foreign_id.setter
     def foreign_id(self, foreign_id):
