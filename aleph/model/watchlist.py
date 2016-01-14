@@ -101,6 +101,11 @@ class Watchlist(db.Model, TimeStampedModel):
         q = q.order_by(cls.id.desc())
         return q
 
+    @classmethod
+    def timestamps(cls):
+        q = db.session.query(cls.id, cls.updated_at)
+        return q.all()
+
     @property
     def terms(self):
         from aleph.model.entity import Entity, Selector

@@ -7,7 +7,7 @@ from collections import defaultdict
 
 from aleph.core import db
 from aleph.util import latinize_text
-from aleph.model import Reference, Selector
+from aleph.model import Reference, Selector, Entity, Watchlist
 from aleph.analyze.analyzer import Analyzer
 
 # TODO: cache regexen, perhaps by watchlist?
@@ -47,28 +47,45 @@ def normalize(text):
     return COLLAPSE.sub(WS, text).strip(WS)
 
 
+class EntityCache(object):
+
+    def __init__(self):
+        self.watchlists = {}
+
+    def compile_watchlist(self, watchlist_id):
+        matchers = defaultdict(set)
+        q = db.session.query(Selector.entity_id, Selector.text)
+        q = q.join(Entity, Entity.id == Selector.entity_id)
+        q = q.filter(Entity.watchlist_id == watchlist_id)
+        for entity_id, text in q.all():
+            text = normalize(text)
+            matchers[text].add(entity_id)
+        body = '|'.join(matchers.keys())
+        rex = re.compile('( |^)(%s)( |$)' % body)
+        return rex, matchers
+
+    def matchers(self):
+        timestamps = Watchlist.timestamps()
+        for ts in self.watchlists.keys():
+            if ts not in timestamps:
+                self.watchlists.remove(ts)
+
+        for ts in timestamps:
+            if ts not in self.watchlists:
+                log.info('Entity tagger updating watchlist: %r', ts)
+                self.watchlists[ts] = self.compile_watchlist(ts[0])
+
+        return self.watchlists.values()
+
+
 class EntityAnalyzer(Analyzer):
 
-    def compile(self, matcher):
-        body = '|'.join(matcher.keys())
-        return re.compile('( |^)(%s)( |$)' % body)
-
-    def generate_matchers(self):
-        matches = defaultdict(set)
-        q = db.session.query(Selector.entity_id, Selector.text)
-        for i, (entity_id, text) in enumerate(q.yield_per(BATCH_SIZE)):
-            text = normalize(text)
-            matches[text].add(entity_id)
-            if i > 0 and i % BATCH_SIZE == 0:
-                yield self.compile(matches), matches
-                matches = defaultdict(set)
-        if len(matches):
-            yield self.compile(matches), matches
+    cache = EntityCache()
 
     @property
     def matchers(self):
         if not hasattr(self, '_matchers'):
-            self._matchers = list(self.generate_matchers())
+            self._matchers = self.cache.matchers()
         return self._matchers
 
     def tag_text(self, text, entities):
