@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from sqlalchemy import not_
 
@@ -33,10 +34,15 @@ class Watchlist(db.Model, TimeStampedModel):
     def update(self, data):
         data = WatchlistForm().deserialize(data)
         self.label = data.get('label')
+        self.touch()
 
     def delete(self):
         self.delete_entities()
         db.session.delete(self)
+
+    def touch(self):
+        self.updated_at = datetime.utcnow()
+        db.session.add(self)
 
     def delete_entities(self, spare=None):
         from aleph.model import Entity, Selector, Reference
@@ -59,6 +65,7 @@ class Watchlist(db.Model, TimeStampedModel):
         if spare is not None:
             q = q.filter(not_(Entity.id.in_(spare)))
         q.delete(synchronize_session='fetch')
+        self.touch()
         db.session.refresh(self)
 
     @classmethod
