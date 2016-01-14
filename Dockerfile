@@ -9,5 +9,6 @@ RUN pip install --upgrade pip && pip install functools32 \
 COPY . /aleph
 WORKDIR /aleph
 ENV ALEPH_SETTINGS /aleph/contrib/docker_settings.py
+ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
 RUN pip install -e /aleph
 RUN rm -rf .git && bower --allow-root install
