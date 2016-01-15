@@ -33,8 +33,6 @@ app_assets = Bundle(*js_files,
 
 css_assets = Bundle(
     'style/aleph.scss',
-    'vendor/angular-loading-bar/build/loading-bar.css',
-    'style/animations.css',
     filters='scss',
     output='assets/style.css'
 )

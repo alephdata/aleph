@@ -79,12 +79,22 @@ def flush(foreign_id):
 
 
 @manager.command
-def analyze(foreign_id, force=False):
+def analyze(foreign_id):
     """ Index all documents in the given source. """
     source = Source.by_foreign_id(foreign_id)
     if source is None:
         raise ValueError("No such source: %r" % foreign_id)
     analyze_source.delay(source.id)
+
+
+@manager.command
+def index(foreign_id=None):
+    """ Index all documents in the given source. """
+    source = None
+    if foreign_id:
+        source = Source.by_foreign_id(foreign_id)
+        if source is None:
+            raise ValueError("No such source: %r" % foreign_id)
 
 
 @manager.command
