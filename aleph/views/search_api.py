@@ -13,7 +13,7 @@ blueprint = Blueprint('search', __name__)
 def query():
     etag_cache_keygen()
     query = construct_query(request.args)
-    query['size'] = get_limit()
+    query['size'] = get_limit(default=100)
     query['from'] = get_offset()
     return jsonify(execute_query(request.args, query))
 
