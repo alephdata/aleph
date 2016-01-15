@@ -12,7 +12,7 @@ from aleph.index import init_search, delete_index, index_document
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
-from aleph.upgrade import upgrade as upgrade_, reset as reset_
+from aleph.upgrade import upgrade as upgrade_
 
 
 log = logging.getLogger('aleph')
@@ -61,13 +61,6 @@ def crawlsql(yaml_config, source=None):
 
 
 @manager.command
-def reanalyze():
-    from aleph.analyze import analyze_source
-    for source in Source.all():
-        analyze_source.delay(source.id)
-
-
-@manager.command
 def flush(foreign_id):
     """ Reset the crawler state for a given source specification. """
     from aleph.index import delete_source
@@ -80,17 +73,21 @@ def flush(foreign_id):
 
 
 @manager.command
-def analyze(foreign_id):
-    """ Re-analyze all documents in the given source. """
-    source = Source.by_foreign_id(foreign_id)
-    if source is None:
-        raise ValueError("No such source: %r" % foreign_id)
-    analyze_source.delay(source.id)
+def analyze(foreign_id=None):
+    """ Re-analyze documents in the given source (or throughout). """
+    if foreign_id:
+        source = Source.by_foreign_id(foreign_id)
+        if source is None:
+            raise ValueError("No such source: %r" % foreign_id)
+        analyze_source.delay(source.id)
+    else:
+        for source in Source.all():
+            analyze_source.delay(source.id)
 
 
 @manager.command
 def index(foreign_id=None):
-    """ Index all documents in the given source. """
+    """ Index documents in the given source (or throughout). """
     q = db.session.query(Document.id)
     if foreign_id:
         source = Source.by_foreign_id(foreign_id)
@@ -105,19 +102,14 @@ def index(foreign_id=None):
 
 
 @manager.command
-def reset():
-    """ Delete and re-create the search index and database. """
-    reset_()
-
-
-@manager.command
 def upgrade():
     """ Create or upgrade the search index and database. """
     upgrade_()
 
 
 @manager.command
-def createdb():
+def evilshit():
+    """ Delete all data and recreate the database. """
     db.drop_all()
     db.create_all()
     delete_index()
