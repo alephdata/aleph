@@ -5,9 +5,10 @@ from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 from flask.ext.migrate import MigrateCommand
 
-from aleph.model import db, Source
+from aleph.model import db, Source, Document
 from aleph.views import app, assets
 from aleph.analyze import analyze_source
+from aleph.index import init_search, delete_index, index_document
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
@@ -80,7 +81,7 @@ def flush(foreign_id):
 
 @manager.command
 def analyze(foreign_id):
-    """ Index all documents in the given source. """
+    """ Re-analyze all documents in the given source. """
     source = Source.by_foreign_id(foreign_id)
     if source is None:
         raise ValueError("No such source: %r" % foreign_id)
@@ -90,11 +91,17 @@ def analyze(foreign_id):
 @manager.command
 def index(foreign_id=None):
     """ Index all documents in the given source. """
-    source = None
+    q = db.session.query(Document.id)
     if foreign_id:
         source = Source.by_foreign_id(foreign_id)
         if source is None:
             raise ValueError("No such source: %r" % foreign_id)
+        q = q.filter(Document.source_id == source.id)
+    else:
+        delete_index()
+        init_search()
+    for doc_id, in q:
+        index_document.delay(doc_id)
 
 
 @manager.command
@@ -111,7 +118,6 @@ def upgrade():
 
 @manager.command
 def createdb():
-    from aleph.index import init_search, delete_index
     db.drop_all()
     db.create_all()
     delete_index()
