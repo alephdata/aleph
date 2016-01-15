@@ -110,4 +110,4 @@ class InvestigativeDashboard(Crawler):
 
     def crawl(self):
         self.crawl_requests()
-        # self.crawl_files()
+        self.crawl_files()

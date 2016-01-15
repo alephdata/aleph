@@ -30,9 +30,9 @@ Iteration II
 * [WONTFIX] Watchlist edit controller
 * [DONE] Image ingest / PDF generation
 * [DONE] Fix image pdf generation
-* [DONE] Document pages viewer
+* [BASIC] Document pages viewer
+* [DONE] Import ID ticket entities
 * Load performance / pagination
-* Import ID ticket entities
 * Filter display
 * Entity data model / schema-based validation
 * Result drilldown
@@ -43,6 +43,7 @@ Iteration II
 * [DONE] Azerbaijan importer 
 * [DONE] Moldova importer
 * YL importer
+
 -----
 
 
