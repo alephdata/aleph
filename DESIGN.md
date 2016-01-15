@@ -29,8 +29,10 @@ Iteration II
 * [DONE] Database Crawler
 * [WONTFIX] Watchlist edit controller
 * [DONE] Image ingest / PDF generation
-* Fix image pdf generation
-* Document pages viewer
+* [DONE] Fix image pdf generation
+* [DONE] Document pages viewer
+* Load performance / pagination
+* Import ID ticket entities
 * Filter display
 * Entity data model / schema-based validation
 * Result drilldown
