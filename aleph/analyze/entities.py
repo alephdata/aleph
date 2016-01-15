@@ -68,7 +68,7 @@ class EntityCache(object):
         timestamps = Watchlist.timestamps()
         for ts in self.watchlists.keys():
             if ts not in timestamps:
-                self.watchlists.remove(ts)
+                self.watchlists.pop(ts, None)
 
         for ts in timestamps:
             if ts not in self.watchlists:
