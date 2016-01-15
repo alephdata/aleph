@@ -107,6 +107,7 @@ class InvestigativeDashboard(Crawler):
             existing_entities.append(ent.id)
             log.info("  # %s (%s)", ent.name, ent.category)
         watchlist.delete_entities(spare=existing_entities)
+        self.emit_watchlist(watchlist)
 
     def crawl(self):
         self.crawl_requests()
