@@ -2,7 +2,7 @@ import os
 import logging
 from tempfile import mkstemp
 
-from lxml import html
+from lxml import html, etree
 from lxml.html.clean import Cleaner
 from extractors import extract_pdf, extract_image
 from extractors import document_to_pdf, image_to_pdf
@@ -106,7 +106,7 @@ class HtmlIngestor(DocumentIngestor):
             self.cleaner(doc)
         try:
             with open(out_path, 'w') as fh:
-                fh.write(html.tostring(doc))
+                fh.write(etree.tostring(doc))
 
             self.extract_document(meta, out_path)
         finally:

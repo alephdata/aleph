@@ -36,20 +36,24 @@ def analyze_entity(entity_id):
         analyze_terms(entity.terms)
 
 
-@celery.task()
 def analyze_terms(terms):
+    ignore = set()
     for term in terms:
         q = text_query(term)
-        analyze_matches.delay(q)
+        ignore = analyze_matches(q, ignore=ignore)
 
 
-@celery.task()
-def analyze_matches(query):
+def analyze_matches(query, ignore=None):
     if 'query' not in query:
         query = {'query': query}
     query['_source'] = []
+    if ignore is None:
+        ignore = set([])
     for row in raw_iter(query):
-        analyze_document(row.get('_id'))
+        doc_id = row.get('_id')
+        if doc_id in ignore:
+            continue
+        analyze_document.delay(doc_id)
 
 
 @celery.task()

@@ -4,7 +4,6 @@ import logging
 
 from aleph.core import db
 from aleph.model import Watchlist, Entity, Role, Permission
-from aleph.analyze import analyze_terms
 from aleph.model.forms import PERSON, ORGANIZATION, OTHER
 from aleph.crawlers.crawler import Crawler
 

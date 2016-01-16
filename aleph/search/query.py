@@ -107,7 +107,7 @@ def aggregate(q, args, filters):
     # is made to be ``global``, ie. it'll have to bring it's own filters.
     aggs = {'scoped': {'global': {}, 'aggs': {}}}
     for facet in args.getlist('facet'):
-        agg = {facet: {'terms': {'field': facet, 'size': 200}}}
+        agg = {facet: {'terms': {'field': facet, 'size': 100}}}
         aggs.update(agg)
     return aggs
 

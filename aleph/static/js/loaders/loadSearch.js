@@ -6,7 +6,7 @@ var loadSearch = ['$http', '$q', '$route', 'Query', 'Session',
     var query = angular.copy(Query.load());
     // query.facet.push('entities.watchlist_id');
     query['_uid'] = session.cbq;
-    query['limit'] = 30;
+    query['limit'] = 100;
     $http.get('/api/1/query', {params: query}).then(function(res) {
       var result = res.data;
       result.sources.labels = {};
