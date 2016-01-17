@@ -79,7 +79,10 @@ class SwissCommercialGazette(Crawler):
         min_date = date - timedelta(days=5 * 365)
         while True:
             for type_ in TYPES:
-                self.crawl_set(source, date.strftime('%d.%m.%Y'), type_)
+                try:
+                    self.crawl_set(source, date.strftime('%d.%m.%Y'), type_)
+                except Exception as ex:
+                    log.exception(ex)
 
             date = date - timedelta(days=1)
             if date < min_date:
