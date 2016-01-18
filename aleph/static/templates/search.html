@@ -10,7 +10,7 @@
     <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()"
       infinite-scroll-distance="3">
       <div class="result animate toggle" ng-repeat="doc in result.results">
-        <a ng-click="viewDetails(doc)" target="_self" class="title">
+        <a ng-click="viewDetails(doc)" class="title">
           <span ng-if="doc.type == 'tabular'">
             <i class="fa fa-table"></i>
           </span>
@@ -27,6 +27,32 @@
         </a>
         
         <span class="summary">{{doc.summary}}</span>
+        <div class="records" ng-if="doc.records.total">
+          <ul ng-repeat="rec in doc.records.results">
+            <li>
+              <a ng-click="viewDetails(doc, rec)">
+                <span ng-if="doc.type == 'tabular'">
+                  row #{{rec.row_id}}:
+                </span>
+                <span ng-if="doc.type == 'text'">
+                  page #{{rec.page}}:
+                </span>
+              </a>
+              <span ng-repeat="snippet in rec.snippets">
+                <span ng-bind-html="snippet">
+              </span>
+            </li>
+          </ul>
+          <span class="total">
+            ({{doc.records.total}} matching
+            <span ng-if="doc.type == 'tabular'">
+              rows in total)
+            </span>
+            <span ng-if="doc.type == 'text'">
+              pages in total)
+            </span>
+          </span>
+        </div>
       </div>
     </div>
   </div>

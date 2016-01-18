@@ -63,7 +63,7 @@ RECORD_MAPPING = {
         "document_id": {"type": "integer", "index": "not_analyzed"},
         "sheet": {"type": "integer", "index": "not_analyzed"},
         "row_id": {"type": "integer", "index": "not_analyzed"},
-        "page_number": {"type": "string", "index": "not_analyzed"},
+        "page": {"type": "integer", "index": "not_analyzed"},
         "text": {"type": "string", "index": "analyzed"},
         "text_latin": {"type": "string", "index": "analyzed"},
         "raw": {"type": "object"}

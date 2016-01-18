@@ -1,3 +1,4 @@
+import json
 from pprint import pprint  # noqa
 from collections import defaultdict
 
@@ -9,6 +10,7 @@ from aleph.util import latinize_text
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.common import add_filter, authz_filter
 from aleph.search.facets import convert_aggregations
+from aleph.search.records import records_sub_query
 
 DEFAULT_FIELDS = ['source_id', 'title', 'content_hash', 'file_name',
                   'extension', 'mime_type', 'countries', 'languages',
@@ -165,7 +167,7 @@ def text_query(text):
                     {
                         "has_child": {
                             "type": TYPE_RECORD,
-                            "score_mode": "sum",
+                            "score_mode": "avg",
                             "query": {
                                 "bool": {
                                     "should": {
@@ -223,12 +225,37 @@ def execute_query(args, q):
             params[k] = v
         output['next'] = url_for('search.query', **params)
 
+    sub_queries = []
     for doc in hits.get('hits', []):
         document = doc.get('_source')
-        document['id'] = doc.get('_id')
+        document['id'] = int(doc.get('_id'))
+        document['score'] = doc.get('_score')
+        document['records'] = {'results': [], 'total': 0}
+
+        sq = records_sub_query(document['id'], args)
+        if sq is not None:
+            sub_queries.append(json.dumps({}))
+            sub_queries.append(json.dumps(sq))
+
         document['api_url'] = url_for('document.view',
                                       document_id=doc.get('_id'))
         document['data_url'] = url_for('document.file',
                                        document_id=doc.get('_id'))
         output['results'].append(document)
+
+    if len(sub_queries):
+        res = es.msearch(index=es_index, doc_type=TYPE_RECORD,
+                         body='\n'.join(sub_queries))
+        for doc in output['results']:
+            for sq in res.get('responses', []):
+                sqhits = sq.get('hits', {})
+                for hit in sqhits.get('hits', {}):
+                    record = hit.get('_source')
+                    if doc['id'] != record.get('document_id'):
+                        continue
+                    record['score'] = hit.get('_score')
+                    record['text'] = hit.get('highlight', {}).get('text')
+                    doc['records']['results'].append(record)
+                    doc['records']['total'] = sqhits.get('total', 0)
+
     return output

@@ -5,11 +5,11 @@
     overflow: hidden;
     text-overflow: hidden;
     padding: 0.4em 0 0.4em 0;
-    border-bottom: 1px solid $border-color;
+    border-bottom: 1px solid $gray-subtle;
     //max-width: 90px;
 
     .source {
-        color: #aaa;
+        color: $text-muted;
         font-weight: bold;
     }
 
@@ -24,6 +24,27 @@
 
     .title {
         font-weight: bold;
+    }
+
+    .records {
+        margin-left: 1.3em;
+
+        ul {
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+            padding-top: 0.2em;
+            padding-bottom: 0.2em;
+        }
+
+        em {
+            background-color: yellow;
+            font-style: normal;
+        }
+
+        .total {
+            color: $text-muted;
+        }
     }
 }
 

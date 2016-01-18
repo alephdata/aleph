@@ -49,8 +49,8 @@ class PDFIngestor(TextIngestor):
             meta.title = data.get('title')
 
         document = self.create_document(meta)
-        for page in data['pages']:
-            self.create_page(document, page)
+        for i, page in enumerate(data['pages']):
+            self.create_page(document, page, number=i + 1)
         self.emit(document)
 
     def ingest(self, meta, local_path):

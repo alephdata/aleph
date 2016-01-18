@@ -1,6 +1,6 @@
 
-var loadSearch = ['$http', '$q', '$route', 'Query', 'Session',
-  function($http, $q, $route, Query, Session) {
+var loadSearch = ['$http', '$q', '$route', '$sce', 'Query', 'Session',
+  function($http, $q, $route, $sce, Query, Session) {
   var dfd = $q.defer();
   Session.get().then(function(session) {
     var query = angular.copy(Query.load());
@@ -13,6 +13,20 @@ var loadSearch = ['$http', '$q', '$route', 'Query', 'Session',
         var src = res.data.sources.values[i];
         result.sources.labels[src.id] = src.label;
       }
+
+      // allow HTML highlight results:
+      for (var i in res.data.results) {
+        var doc = res.data.results[i];
+        for (var j in doc.records.results) {
+          var rec = doc.records.results[j];
+          rec.snippets = [];
+          for (var n in rec.text) {
+            var text = rec.text[n];
+            rec.snippets.push($sce.trustAsHtml(text));
+          }
+        }
+      }
+
       dfd.resolve(result);
     });
   });

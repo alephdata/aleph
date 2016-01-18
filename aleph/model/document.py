@@ -78,7 +78,7 @@ class Document(db.Model, TimeStampedModel):
 class Page(db.Model):
 
     id = db.Column(db.BigInteger, primary_key=True)
-    number = db.Column(db.Integer(), nullable=True)
+    number = db.Column(db.Integer(), nullable=False)
     text = db.Column(db.Unicode(), nullable=False)
     document_id = db.Column(db.Integer(), db.ForeignKey('document.id'))
     document = db.relationship(Document, backref=db.backref('pages', cascade='all, delete-orphan'))  # noqa

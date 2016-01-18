@@ -16,12 +16,25 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     $scope.metadata = metadata;
   });
 
-  $scope.viewDetails = function(doc) {
+  $scope.viewDetails = function(doc, rec) {
     $location.search({});
     if (doc.type === 'tabular') {
-      $location.path('/tabular/' + doc.id + '/' + 0);
+      var sheet = rec ? rec.sheet : 0,
+          row = rec ? rec.row_id : 0;
+      $location.path('/tabular/' + doc.id + '/' + sheet);
+      $location.search({
+        'row': row,
+        'q': Query.state.q,
+        'entity': Query.state.entity
+      });
     } else {
-      $location.path('/text/' + doc.id);  
+      var page = rec ? rec.page : 1;
+      $location.path('/text/' + doc.id);
+      $location.search({
+        'page': page,
+        'q': Query.state.q,
+        'entity': Query.state.entity
+      });
     }
   };
 

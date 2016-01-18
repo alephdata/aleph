@@ -101,7 +101,7 @@ def generate_pages(document):
                 'content_hash': document.content_hash,
                 'document_id': document.id,
                 'source_id': document.source_id,
-                'page_number': page.number,
+                'page': page.number,
                 'text': page.text,
                 'text_latin': latinize_text(page.text)
             }
