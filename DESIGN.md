@@ -33,19 +33,29 @@ Iteration II
 * [BASIC] Document pages viewer
 * [DONE] Import ID ticket entities
 * Load performance / pagination
+* Invert source selection options
 * Filter display
 * Entity data model / schema-based validation
 * Result drilldown
+* Dates (on metadata and UI)
 * Alerts / Subscriptions
 * Testing
 * tidbits
+* Switch to JSONB
 
 * [DONE] Azerbaijan importer 
 * [DONE] Moldova importer
 * YL importer
 
------
+---
 
+http://www.legilux.public.lu/entr/archives/index.php?year=2016
+https://apps.llv.li/amtsblatt/kundmachung/display/43020
+https://apps.llv.li/amtsblatt/kundmachung/displayAct/0
+http://www.oera.li/hrweb/ger/PublSuche_afj.htm
+
+
+---
 
 
 

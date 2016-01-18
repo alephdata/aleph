@@ -136,59 +136,61 @@ def text_query(text):
         q = {
             "bool": {
                 "minimum_should_match": 1,
-                "should": {
-                    "multi_match": {
-                        "query": text,
-                        "fields": ['title^100', 'file_name^10', 'summary^2'],
-                        "type": "most_fields",
-                        "cutoff_frequency": 0.0007,
-                        "operator": "and",
+                "should": [
+                    {
+                        "multi_match": {
+                            "query": text,
+                            "fields": ['title^100', 'file_name^10', 'summary^2'],
+                            "type": "most_fields",
+                            "cutoff_frequency": 0.0007,
+                            "operator": "and",
+                        }
                     },
-                },
-                "should": {
-                    "multi_match": {
-                        "query": text_latin,
-                        "fields": ['title_latin^100', 'summary_latin^2'],
-                        "type": "most_fields",
-                        "cutoff_frequency": 0.0007,
-                        "operator": "and",
+                    {
+                        "multi_match": {
+                            "query": text_latin,
+                            "fields": ['title_latin^100', 'summary_latin^2'],
+                            "type": "most_fields",
+                            "cutoff_frequency": 0.0007,
+                            "operator": "and",
+                        }
                     },
-                },
-                "should": {
-                    "multi_match": {
-                        "query": text,
-                        "fields": ['title^100', 'file_name^10', 'summary^2'],
-                        "type": "phrase"
+                    {
+                        "multi_match": {
+                            "query": text,
+                            "fields": ['title^100', 'file_name^10', 'summary^2'],
+                            "type": "phrase"
+                        }
                     },
-                },
-                "should": {
-                    "has_child": {
-                        "type": TYPE_RECORD,
-                        "score_mode": "sum",
-                        "query": {
-                            "bool": {
-                                "should": {
-                                    "match": {
-                                        "text": {
-                                            "query": text,
-                                            "cutoff_frequency": 0.0007,
-                                            "operator": "and"
+                    {
+                        "has_child": {
+                            "type": TYPE_RECORD,
+                            "score_mode": "sum",
+                            "query": {
+                                "bool": {
+                                    "should": {
+                                        "match": {
+                                            "text": {
+                                                "query": text,
+                                                "cutoff_frequency": 0.0007,
+                                                "operator": "and"
+                                            }
                                         }
-                                    }
-                                },
-                                "should": {
-                                    "match": {
-                                        "text_latin": {
-                                            "query": text_latin,
-                                            "cutoff_frequency": 0.0007,
-                                            "operator": "and"
+                                    },
+                                    "should": {
+                                        "match": {
+                                            "text_latin": {
+                                                "query": text_latin,
+                                                "cutoff_frequency": 0.0007,
+                                                "operator": "and"
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                }
+                ]
             }
         }
     else:
