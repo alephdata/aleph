@@ -15,6 +15,12 @@ class DirectoryCrawler(Crawler):
             'foreign_id': 'directory:%s' % slugify(source),
             'label': source
         })
+
+        if not os.path.isfile(directory):
+            meta = self.metadata()
+            meta.file_name = directory
+            self.emit_file(source, meta, directory)
+
         directory = directory or os.getcwd()
         directory = directory.encode('utf-8')
         for (dirname, dirs, files) in os.walk(directory):
@@ -25,6 +31,5 @@ class DirectoryCrawler(Crawler):
                 if not os.path.isfile(file_path):
                     continue
                 meta = self.metadata()
-                meta.title = file_name
                 meta.file_name = file_name
                 self.emit_file(source, meta, file_path)
