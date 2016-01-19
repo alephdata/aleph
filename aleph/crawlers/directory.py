@@ -16,11 +16,15 @@ class DirectoryCrawler(Crawler):
             'label': source
         })
         directory = directory or os.getcwd()
+        directory = directory.encode('utf-8')
         for (dirname, dirs, files) in os.walk(directory):
             for file_name in files:
                 if file_name in SKIP_FILES:
                     continue
+                file_path = os.path.join(dirname, file_name)
+                if not os.path.isfile(file_path):
+                    continue
                 meta = self.metadata()
                 meta.title = file_name
                 meta.file_name = file_name
-                self.emit_file(source, meta, os.path.join(dirname, file_name))
+                self.emit_file(source, meta, file_path)
