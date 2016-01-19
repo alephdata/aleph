@@ -46,7 +46,8 @@ setup(
             'aznews = aleph.crawlers.az_news:AzerbaijanNewsCrawler',
             'azapa = aleph.crawlers.az_apa:AzerbaijanPressAgency',
             'mdcourts = aleph.crawlers.md_courts:MoldovaCourts',
-            'chsogc = aleph.crawlers.ch_sogc:SwissCommercialGazette'
+            'chsogc = aleph.crawlers.ch_sogc:SwissCommercialGazette',
+            'lulegi = aleph.crawlers.lu_legi:LuxembourgGazette'
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',

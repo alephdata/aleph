@@ -36,11 +36,12 @@ class DirectoryCrawler(Crawler):
                 if not os.path.isfile(file_path):
                     continue
                 try:
-                    if not isinstance(file_path, six.text_type):
-                        enc = chardet.detect(file_path)
-                        file_path = file_path.decode(enc.get('encoding'))
                     meta = self.metadata()
-                    meta.file_name = os.path.basename(file_path)
+                    if isinstance(file_name, six.text_type):
+                        meta.file_name = file_name
+                    else:
+                        enc = chardet.detect(file_name)
+                        meta.file_name = file_name.decode(enc.get('encoding'))
                     meta.source_path = file_path
                     self.emit_file(source, meta, file_path)
                 except Exception as ex:
