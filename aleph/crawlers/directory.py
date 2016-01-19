@@ -16,7 +16,7 @@ class DirectoryCrawler(Crawler):
             'label': source
         })
 
-        if not os.path.isfile(directory):
+        if os.path.isfile(directory):
             meta = self.metadata()
             meta.file_name = directory
             self.emit_file(source, meta, directory)
