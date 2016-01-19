@@ -1,10 +1,13 @@
 import os
+import six
+import chardet
+import logging
 from normality import slugify
-from extractors import guess_encoding
 
 from aleph.model import Source
 from aleph.crawlers.crawler import Crawler
 
+log = logging.getLogger(__name__)
 SKIP_FILES = ['.DS_Store', '.gitignore', 'Thumbs.db']
 
 
@@ -25,19 +28,20 @@ class DirectoryCrawler(Crawler):
         directory = directory or os.getcwd()
         directory = directory.encode('utf-8')
         for (dirname, dirs, files) in os.walk(directory):
+            log.info("Descending: %r", dirname)
             for file_name in files:
                 if file_name in SKIP_FILES:
                     continue
                 file_path = os.path.join(dirname, file_name)
                 if not os.path.isfile(file_path):
                     continue
-                enc = guess_encoding(file_path)
-                if enc is not None:
-                    try:
-                        file_path = file_path.decode(enc)
-                    except:
-                        pass
-                meta = self.metadata()
-                meta.file_name = os.path.basename(file_path)
-                meta.source_path = file_path
-                self.emit_file(source, meta, file_path)
+                try:
+                    if not isinstance(file_path, six.text_type):
+                        enc = chardet.detect(file_path)
+                        file_path = file_path.decode(enc.get('encoding'))
+                    meta = self.metadata()
+                    meta.file_name = os.path.basename(file_path)
+                    meta.source_path = file_path
+                    self.emit_file(source, meta, file_path)
+                except Exception as ex:
+                    log.exception(ex)
