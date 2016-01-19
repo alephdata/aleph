@@ -1,5 +1,6 @@
 import os
 from normality import slugify
+from extractors import guess_encoding
 
 from aleph.model import Source
 from aleph.crawlers.crawler import Crawler
@@ -30,6 +31,13 @@ class DirectoryCrawler(Crawler):
                 file_path = os.path.join(dirname, file_name)
                 if not os.path.isfile(file_path):
                     continue
+                enc = guess_encoding(file_path)
+                if enc is not None:
+                    try:
+                        file_path = file_path.decode(enc)
+                    except:
+                        pass
                 meta = self.metadata()
-                meta.file_name = file_name
+                meta.file_name = os.path.basename(file_path)
+                meta.source_path = file_path
                 self.emit_file(source, meta, file_path)
