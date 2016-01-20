@@ -1,4 +1,4 @@
-aleph.factory('Validation', ['Flash', function(Flash) {
+aleph.factory('Validation', [function() {
   // handle server-side form validation errors.
   return {
     handle: function(form) {
@@ -20,7 +20,7 @@ aleph.factory('Validation', ['Flash', function(Flash) {
           }
           form._errors = errors;
         } else {
-          Flash.message(res.message || res.title || 'Server error', 'danger');
+          console.log(res)
         }
       }
     }

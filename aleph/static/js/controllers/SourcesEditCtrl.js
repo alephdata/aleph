@@ -1,6 +1,6 @@
 aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$uibModalInstance',
-                                     'Flash', 'Validation', 'Metadata', 'source',
-    function($scope, $location, $http, $routeParams, $uibModalInstance, Flash, Validation, Metadata, source) {
+                                     'Validation', 'Metadata', 'source',
+    function($scope, $location, $http, $routeParams, $uibModalInstance, Validation, Metadata, source) {
   
   $scope.source = source;
   $scope.processTriggered = false;

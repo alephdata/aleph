@@ -1,9 +1,8 @@
 aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$http', '$uibModal', '$q',
-                             'Flash', 'Session', 'Query', 'Metadata',
-  function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Flash, Session, Query, Metadata) {
+                             'Session', 'Query', 'Metadata',
+  function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Session, Query, Metadata) {
   $scope.session = {logged_in: false};
   $scope.query = Query;
-  $scope.flash = Flash;
 
   Metadata.get().then(function(context) {
     $scope.metadata = context;
