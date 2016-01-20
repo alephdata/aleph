@@ -12,7 +12,7 @@ postgres:
     - "127.0.0.1:5433:5432"
 
 elasticsearch:
-  build: elasticsearch:1.7.2
+  image: elasticsearch:1.7.2
   volumes:
     - "/srv/data/elasticsearch:/usr/share/elasticsearch/data"
     - "/srv/logs/elasticsearch:/var/log"
