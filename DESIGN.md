@@ -34,6 +34,7 @@ Iteration II
 * [DONE] Import ID ticket entities
 * Load performance / pagination
 * Invert source selection options
+* crawldir CLI arguments
 * Filter display
 * Entity data model / schema-based validation
 * Result drilldown
@@ -48,6 +49,8 @@ Iteration II
 * YL importer
 
 ---
+
+http://www.rba.co.uk/sources/registers.htm#cayman -- 
 
 http://www.legilux.public.lu/entr/archives/index.php?year=2016
 https://apps.llv.li/amtsblatt/kundmachung/display/43020

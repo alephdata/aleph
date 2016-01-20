@@ -9,7 +9,7 @@ from aleph.model.source import Source
 
 
 def convert_bucket(facet, bucket):
-    key = bucket.get('key')
+    key = bucket.get('key_as_string', bucket.get('key'))
     data = {
         'count': bucket.get('doc_count'),
         'id': key,

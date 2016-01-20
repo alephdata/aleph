@@ -12,8 +12,7 @@ from aleph.search.common import add_filter, authz_filter
 from aleph.search.facets import convert_aggregations
 from aleph.search.records import records_sub_query
 
-DEFAULT_FIELDS = ['source_id', 'title', 'content_hash', 'file_name',
-                  'extension', 'mime_type', 'countries', 'languages',
+DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'mime_type',
                   'source_url', 'created_at', 'updated_at', 'type']
 
 # Scoped facets are facets where the returned facet values are returned such

@@ -1,6 +1,7 @@
 import requests
 import logging
 from datetime import datetime, timedelta
+import dateparser
 from urlparse import urljoin
 from lxml import html
 
@@ -42,7 +43,7 @@ class SwissCommercialGazette(Crawler):
         meta.extension = 'pdf'
         meta.mime_type = 'application/pdf'
         meta.foreign_id = source_url
-        # TODO: handle date
+        meta.add_date(dateparser.parse(date))
         title = '%s (%s, %s)' % (name, category, date)
         meta.title = title.replace('\n', ' - ')
         self.emit_url(source, meta, source_url)

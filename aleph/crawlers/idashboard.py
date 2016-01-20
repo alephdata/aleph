@@ -56,6 +56,7 @@ class InvestigativeDashboard(Crawler):
             meta.file_name = data['filename']
             meta.title = data['title']
             meta.mime_type = data['mimetype']
+            meta.add_date(data['date_added'])
             if len(data.get('description', '')):
                 meta.summary = data['description']
             url = urljoin(self.host, '/podaci/file/%s/download' % data['id'])

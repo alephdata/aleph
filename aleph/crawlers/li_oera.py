@@ -18,14 +18,14 @@ class LiechtensteinOld(Crawler):
         if res.status_code != 200:
             return
         meta = self.metadata()
-        date = date.strftime('%d.%m.%Y')
-        meta.title = 'Liechtenstein Kundmachungen %s' % date
+        date_str = date.strftime('%d.%m.%Y')
+        meta.title = 'Liechtenstein Kundmachungen %s' % date_str
         meta.languages = ['de']
         meta.add_country('li')
         meta.extension = 'pdf'
+        meta.add_date(date)
         meta.mime_type = 'application/pdf'
         meta.foreign_id = source_url
-        # TODO: handle date
         self.emit_url(source, meta, source_url)
 
     def crawl(self):

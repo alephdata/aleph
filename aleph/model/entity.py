@@ -2,7 +2,7 @@ import logging
 
 from sqlalchemy import or_, func
 from sqlalchemy.orm import aliased
-from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db  # , url_for
 from aleph.model.forms import EntityForm, CATEGORIES
@@ -17,7 +17,7 @@ class Entity(db.Model, TimeStampedModel):
     id = db.Column(db.Integer, primary_key=True)
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     name = db.Column(db.Unicode)
-    data = db.Column('data', JSON)
+    data = db.Column('data', JSONB)
     category = db.Column(db.Enum(*CATEGORIES, name='entity_categories'),
                          nullable=False)
     watchlist_id = db.Column(db.Integer(), db.ForeignKey('watchlist.id'))

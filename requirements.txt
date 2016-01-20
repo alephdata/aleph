@@ -34,3 +34,4 @@ jsonschema
 functools32
 flower
 pyyaml
+dateparser

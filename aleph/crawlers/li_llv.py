@@ -3,6 +3,7 @@ import requests
 import logging
 from lxml import etree, html
 from tempfile import mkstemp
+import dateparser
 # from datetime import datetime, timedelta
 
 from aleph.crawlers.crawler import Crawler
@@ -40,7 +41,9 @@ class LiechtensteinAmtsblatt(Crawler):
         meta.mime_type = 'application/pdf'
         meta.foreign_id = notice_id
         meta.title = doc.findtext('.//div[@class="body"]//h3')
-        # TODO: handle date
+
+        date = doc.findtext('.//div[@class="details"]/span[@class="datum"]')
+        meta.add_date(dateparser.parse(date))
 
         fh, file_path = mkstemp(suffix='.pdf')
         try:

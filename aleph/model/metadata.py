@@ -2,6 +2,7 @@ import os
 import six
 import cgi
 import mimetypes
+from datetime import date, datetime
 from copy import deepcopy
 from urlparse import urlparse
 from normality import slugify
@@ -14,7 +15,8 @@ CORE_FACETS = {
     'extension': 'File extension',
     'mime_type': 'Content type',
     'languages': 'Languages',
-    'countries': 'Countries'
+    'countries': 'Countries',
+    'dates': 'Dates'
 }
 
 
@@ -112,6 +114,7 @@ class Metadata(MutableMapping):
 
     @languages.setter
     def languages(self, languages):
+        self.data['languages'] = []
         for lang in languages:
             self.add_language(lang)
 
@@ -127,6 +130,7 @@ class Metadata(MutableMapping):
 
     @countries.setter
     def countries(self, countries):
+        self.data['countries'] = []
         for country in countries:
             self.add_country(country)
 
@@ -135,6 +139,32 @@ class Metadata(MutableMapping):
         countries = self.countries
         countries.add(country)
         self.data['countries'] = list(countries)
+
+    @property
+    def dates(self):
+        return set(self.data.get('dates', []))
+
+    @dates.setter
+    def dates(self, dates):
+        self.data['dates'] = []
+        for obj in dates:
+            self.add_date(obj)
+
+    def add_date(self, obj):
+        if isinstance(obj, datetime):
+            obj = obj.date()
+        if isinstance(obj, date):
+            obj = obj.isoformat()
+        else:
+            if isinstance(obj, six.string_types):
+                obj = obj[:10]
+            else:
+                return
+            # this may raise ValueError etc.
+            datetime.strptime(obj, '%Y-%m-%d')
+        dates = self.dates
+        dates.add(obj)
+        self.data['dates'] = list(dates)
 
     @property
     def source_url(self):

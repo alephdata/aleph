@@ -21,6 +21,7 @@ DOCUMENT_MAPPING = {
         "extension": {"type": "string", "index": "not_analyzed"},
         "languages": {"type": "string", "index": "not_analyzed"},
         "countries": {"type": "string", "index": "not_analyzed"},
+        "dates": {"type": "date", "format": "yyyy-MM-dd"},
         "mime_type": {"type": "string", "index": "not_analyzed"},
         "summary": {"type": "string", "index": "analyzed"},
         "summary_latin": {"type": "string", "index": "analyzed"},

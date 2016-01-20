@@ -4,6 +4,7 @@ import math
 import json
 from itertools import count
 from urlparse import urljoin
+from datetime import datetime
 
 from aleph.crawlers.crawler import Crawler
 
@@ -51,6 +52,11 @@ class MoldovaCourts(Crawler):
                 href, _ = href.split('"', 1)
                 source_url = urljoin(url, href)
                 m = meta.clone()
+                try:
+                    dt = datetime.strptime(date, '%d-%m-%Y')
+                    m.add_date(dt)
+                except:
+                    pass
                 m.foreign_id = source_url
                 m.title = '%s (%s), %s, %s' % (parties, case, topic, typ)
                 self.emit_url(source, m, source_url)

@@ -1,7 +1,7 @@
 import logging
 
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db
@@ -24,7 +24,7 @@ class Document(db.Model, TimeStampedModel):
     type = db.Column(db.Unicode(10), nullable=False, index=True)
     source_id = db.Column(db.Integer(), db.ForeignKey('source.id'), index=True)
     source = db.relationship(Source, backref=db.backref('documents', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
-    _meta = db.Column('meta', JSON)
+    _meta = db.Column('meta', JSONB)
 
     @hybrid_property
     def meta(self):
