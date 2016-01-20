@@ -1,0 +1,43 @@
+<a ng-click="viewDetails()" class="title">
+  <span ng-if="doc.type == 'tabular'">
+    <i class="fa fa-table"></i>
+  </span>
+  <span ng-if="doc.type == 'text'">
+    <i class="fa fa-file-text-o"></i>
+  </span>
+  {{doc.title | characters: 90 }}
+</a>
+<a ng-href="" target="_self"
+   uib-tooltip="Loaded on {{doc.updated_at.split('T')[0]}}"
+   tooltip-append-to-body="true"
+   tooltip-placement="right" class="source">
+  {{result.sources.labels[doc.source_id]}}
+</a>
+
+<span class="summary">{{doc.summary}}</span>
+<div class="records" ng-if="doc.records.total">
+  <ul ng-repeat="rec in doc.records.results">
+    <li>
+      <a ng-click="viewDetails(rec)">
+        <span ng-if="doc.type == 'tabular'">
+          row #{{rec.row_id}}:
+        </span>
+        <span ng-if="doc.type == 'text'">
+          page #{{rec.page}}:
+        </span>
+      </a>
+      <span ng-repeat="snippet in rec.snippets">
+        <span ng-bind-html="snippet">
+      </span>
+    </li>
+  </ul>
+  <span class="total">
+    ({{doc.records.total}} matching
+    <span ng-if="doc.type == 'tabular'">
+      rows in total)
+    </span>
+    <span ng-if="doc.type == 'text'">
+      pages in total)
+    </span>
+  </span>
+</div>
