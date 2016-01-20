@@ -62,20 +62,35 @@ def construct_query(args, fields=None, facets=True):
 
 def entity_watchlists(q, aggs, args, filters):
     """ Filter entities, facet for watchlists. """
+    entities = args.getlist('entity')
     watchlists = []
+    readable = authz.watchlists(authz.READ)
     for watchlist_id in args.getlist('watchlist'):
         if authz.watchlist_read(watchlist_id):
             watchlists.append(watchlist_id)
 
+    flt = {
+        'or': [
+            {
+                'terms': {'entities.watchlist_id': watchlists}
+            },
+            {
+                'and': [
+                    {
+                        'terms': {'entities.watchlist_id': readable},
+                        'terms': {'entities.entity_id': entities},
+                    }
+                ]
+            }
+        ]
+    }
     aggs['entities'] = {
         'nested': {
             'path': 'entities'
         },
         'aggs': {
             'inner': {
-                'filter': {
-                    'terms': {'entities.watchlist_id': watchlists}
-                },
+                'filter': flt,
                 'aggs': {
                     'entities': {
                         'terms': {'field': 'entity_id',

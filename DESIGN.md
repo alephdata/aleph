@@ -32,13 +32,13 @@ Iteration II
 * [DONE] Fix image pdf generation
 * [BASIC] Document pages viewer
 * [DONE] Import ID ticket entities
+* [DONE] Dates (on metadata and UI)
 * Load performance / pagination
 * Invert source selection options
 * crawldir CLI arguments
 * Filter display
 * Entity data model / schema-based validation
 * Result drilldown
-* Dates (on metadata and UI)
 * Alerts / Subscriptions
 * Testing
 * tidbits
