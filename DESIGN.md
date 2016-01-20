@@ -33,16 +33,16 @@ Iteration II
 * [BASIC] Document pages viewer
 * [DONE] Import ID ticket entities
 * [DONE] Dates (on metadata and UI)
+* [DONE] Switch to JSONB
+* Loading screen (spinner, failure)
 * Load performance / pagination
 * Invert source selection options
 * crawldir CLI arguments
 * Filter display
-* Entity data model / schema-based validation
 * Result drilldown
 * Alerts / Subscriptions
 * Testing
 * tidbits
-* Switch to JSONB
 
 * [DONE] Azerbaijan importer 
 * [DONE] Moldova importer
