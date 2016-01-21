@@ -22,7 +22,8 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     reloadOnSearch: true,
     loginRequired: false,
     resolve: {
-      'data': loadTabular
+      'data': loadTabular,
+      'metadata': loadMetadata
     }
   });
 
@@ -32,7 +33,8 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     reloadOnSearch: true,
     loginRequired: false,
     resolve: {
-      'data': loadText
+      'data': loadText,
+      'metadata': loadMetadata
     }
   });
 

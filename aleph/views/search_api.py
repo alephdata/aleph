@@ -1,6 +1,8 @@
+from babel import Locale
 from flask import Blueprint, request
 from apikit import jsonify
 from apikit import get_limit, get_offset
+from pycountry import countries
 
 from aleph.model.metadata import CORE_FACETS
 from aleph.views.cache import etag_cache_keygen
@@ -19,9 +21,23 @@ def query():
 
 
 @blueprint.route('/api/1/metadata')
-def attributes():
+def metadata():
     etag_cache_keygen()
+
+    country_names = {
+        'zz': 'Global',
+        'xk': 'Kosovo'
+    }
+
+    for country in countries:
+        country_names[country.alpha2.lower()] = country.name
+
+    language_names = dict(Locale('en').languages.items())
+    language_names = {k: v for k, v in language_names.items() if len(k) == 2}
+
     return jsonify({
         'status': 'ok',
-        'fields': CORE_FACETS
+        'fields': CORE_FACETS,
+        'countries': country_names,
+        'languages': language_names
     })

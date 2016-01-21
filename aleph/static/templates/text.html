@@ -33,11 +33,19 @@
         </tr>
         <tr ng-if="doc.languages && doc.languages.length">
           <th>Languages</th>
-          <td>{{doc.languages}}</td>
+          <td>
+            <span ng-repeat="lang in doc.languages">
+              {{getLanguageLabel(lang)}}<span ng-if="!$last">;</span>
+            </span>
+          </td>
         </tr>
         <tr ng-if="doc.countries && doc.countries.length">
           <th>Countries</th>
-          <td>{{doc.countries}}</td>
+          <td>
+            <span ng-repeat="cc in doc.countries">
+              {{getCountryLabel(cc)}}<span ng-if="!$last">;</span>
+            </span>
+          </td>
         </tr>
         <tr>
           <th>Updated</th>

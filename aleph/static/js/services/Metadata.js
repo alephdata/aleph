@@ -17,7 +17,8 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
           $http.get('/api/1/watchlists?limit=1000&_uid=' + session.cbq),
           $http.get('/api/1/metadata?_uid=' + session.cbq)
         ]).then(function(results) {
-            var watchlists = {}
+            var watchlists = {}, 
+                metadata = results[1].data;
             angular.forEach(results[0].data.results, function(c) {
               watchlists[c.id] = c;
             });
@@ -25,7 +26,9 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
             dfd.resolve({
               'session': session,
               'watchlists': watchlists,
-              'fields': results[1].data.fields,
+              'fields': metadata.fields,
+              'countries': metadata.countries, 
+              'languages': metadata.languages
             });
         });
       });
