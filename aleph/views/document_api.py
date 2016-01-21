@@ -20,7 +20,10 @@ def get_document(document_id):
 
 @blueprint.route('/api/1/documents/<int:document_id>')
 def view(document_id):
-    return jsonify(get_document(document_id).to_dict())
+    doc = get_document(document_id)
+    data = doc.to_dict()
+    data['source'] = doc.source
+    return jsonify(data)
 
 
 @blueprint.route('/api/1/documents/<int:document_id>/file')

@@ -5,6 +5,7 @@ from aleph.core import assets, app
 
 deps_assets = Bundle(
     'vendor/jquery/dist/jquery.js',
+    'vendor/moment/moment.js',
     'vendor/angular/angular.js',
     'vendor/pdfjs-dist/build/pdf.js',
     'vendor/pdfjs-dist/build/pdf.worker.js',
@@ -17,7 +18,7 @@ deps_assets = Bundle(
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
     'vendor/ngInfiniteScroll/build/ng-infinite-scroll.js',
     filters='uglifyjs',
-    output='assets/deps.js'
+    output='assets/vendor.js'
 )
 
 js_files = []

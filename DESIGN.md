@@ -59,6 +59,10 @@ https://apps.llv.li/amtsblatt/kundmachung/displayAct/0
 http://www.oera.li/hrweb/ger/PublSuche_afj.htm
 
 
+http://www.start.umd.edu/gtd/
+https://wikileaks.org/plusd/?qproject[]=cg&q=#result
+https://archive.org/details/wikileaks-cables-csv
+
 ---
 
 

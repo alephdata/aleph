@@ -18,7 +18,10 @@ def query():
     return jsonify(execute_query(request.args, query))
 
 
-@blueprint.route('/api/1/fields')
+@blueprint.route('/api/1/metadata')
 def attributes():
     etag_cache_keygen()
-    return jsonify(CORE_FACETS)
+    return jsonify({
+        'status': 'ok',
+        'fields': CORE_FACETS
+    })
