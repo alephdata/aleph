@@ -58,7 +58,8 @@ class MoldovaCourts(Crawler):
                 except:
                     pass
                 m.foreign_id = source_url
-                m.title = '%s (%s), %s, %s' % (parties, case, topic, typ)
+                title = '%s (%s), %s, %s' % (parties, case, topic, typ)
+                m.title = title.replace('\n', ' ')
                 self.emit_url(source, m, source_url)
 
     def crawl(self):

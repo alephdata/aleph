@@ -57,7 +57,22 @@
       </div>
     </nav>
 
-    <div id="airlock" class="container-fluid" ng-view></div>
+    <div id="page">
+      <div id="spinner-overlay" ng-hide="routeLoaded">
+        <div class="spinner" ng-hide="routeFailed">
+          <i class="fa fa-spinner fa-pulse"></i>
+        </div>
+        <div class="spinner failed" ng-cloak ng-show="routeFailed">
+          <i class="fa fa-exclamation-triangle"></i>
+          <div class="failure-note">
+            He's dead, Jim.
+          </div>
+        </div>
+      </div>
+      <div id="view" class="container-fluid">
+        <div ng-cloak ng-view autoscroll="true"></div>
+      </div>
+    </div>
 
     {% for path, tmpl in templates %}
       <script id="{{path}}" type="text/ng-template">{{ tmpl | safe }}</script>

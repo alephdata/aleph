@@ -2,6 +2,7 @@ Iteration II
 ============
 
 * https://github.com/sayanee/angularjs-pdf/issues/96
+* https://github.com/scrapinghub/extruct
 
 * [DONE] Document / Record - distinction, raw data support
 * [DONE] Use database to store documents and records
@@ -34,7 +35,7 @@ Iteration II
 * [DONE] Import ID ticket entities
 * [DONE] Dates (on metadata and UI)
 * [DONE] Switch to JSONB
-* Loading screen (spinner, failure)
+* [DONE] Loading screen (spinner, failure)
 * Load performance / pagination
 * Invert source selection options
 * crawldir CLI arguments

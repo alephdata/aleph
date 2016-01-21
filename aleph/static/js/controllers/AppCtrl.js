@@ -3,6 +3,8 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Session, Query, Metadata) {
   $scope.session = {logged_in: false};
   $scope.query = Query;
+  $scope.routeLoaded = false;
+  $scope.routeFailed = false;
 
   Metadata.get().then(function(context) {
     $scope.metadata = context;
@@ -17,6 +19,16 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
       }
     });
     $scope.query.state = Query.load();
+    $scope.routeLoaded = false;
+    $scope.routeFailed = false;
+  });
+
+  $rootScope.$on("$routeChangeSuccess", function (event, next, current) {
+    $scope.routeLoaded = true;
+  });
+
+  $rootScope.$on("$routeChangeError", function (event, next, current) {
+    $scope.routeFailed = true;
   });
 
   $scope.suggestEntities = function(prefix) {

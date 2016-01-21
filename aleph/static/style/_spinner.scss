@@ -1,0 +1,27 @@
+#spinner-overlay {
+    position: absolute;
+    z-index: 1100;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 30em;
+    height: 100%;
+    opacity: 0.6;
+    background-color: $page-bg;
+
+    .spinner {
+        margin-top: 3em;
+        text-align: center;
+        //color: $text-muted;
+        color: $brand-primary;
+
+        &.failed {
+            color: $brand-primary;
+        }
+
+        i {
+            font-size: 4em;
+            margin: 0.5em;
+        }
+    }
+}
