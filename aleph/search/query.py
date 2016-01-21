@@ -223,7 +223,6 @@ def execute_query(args, q):
         'results': [],
         'offset': q['from'],
         'limit': q['size'],
-        'took': result.get('took'),
         'total': hits.get('total'),
         'next': None,
         'facets': {},
