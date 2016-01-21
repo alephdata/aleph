@@ -21,21 +21,24 @@ def get_oauth_token():
 def load_role():
     request.auth_roles = set([system_role(Role.SYSTEM_GUEST)])
     request.auth_role = None
+    request.logged_in = False
 
     auth_header = request.headers.get('Authorization')
-    if auth_header is not None:
+
+    if session.get('user'):
+        request.auth_roles.update(session.get('roles', []))
+        request.auth_role = Role.by_id(session.get('user'))
+        request.logged_in = True
+    elif auth_header is not None:
         if not auth_header.lower().startswith('apikey'):
             return
         api_key = auth_header.split(' ', 1).pop()
-        request.auth_role = Role.by_api_key(api_key)
-        if request.auth_role is None:
+        role = Role.by_api_key(api_key)
+        if role is None:
             return
-        request.auth_roles.update([system_role(Role.SYSTEM_USER),
-                                   request.auth_role.id])
-    elif session.get('user'):
-        request.auth_roles.update(session.get('roles', []))
-        request.auth_role = Role.by_id(session.get('user'))
-    request.logged_in = request.auth_role is not None
+        request.auth_role = role
+        request.auth_roles.update([system_role(Role.SYSTEM_USER), role.id])
+        request.logged_in = True
 
 
 @blueprint.route('/api/1/sessions')
