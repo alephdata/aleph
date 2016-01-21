@@ -6,7 +6,7 @@ import xlsxwriter
 
 from aleph.model import Entity, Source
 from aleph.search import raw_iter
-from aleph.search import construct_query
+from aleph.search import documents_query
 
 blueprint = Blueprint('exports', __name__)
 
@@ -92,7 +92,7 @@ def format_results(query):
 
 @blueprint.route('/api/1/query/export')
 def export():
-    output = format_results(construct_query(request.args))
+    output = format_results(documents_query(request.args))
     output = make_excel(output)
     return send_file(output, mimetype=XLSX_MIME, as_attachment=True,
                      attachment_filename='export.xlsx')

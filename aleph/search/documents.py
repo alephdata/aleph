@@ -21,7 +21,7 @@ DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'mime_type',
 OR_FIELDS = ['source_id']
 
 
-def construct_query(args, fields=None, facets=True):
+def documents_query(args, fields=None, facets=True):
     """ Parse a user query string, compose and execute a query. """
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
@@ -214,7 +214,7 @@ def text_query(text):
     return q
 
 
-def execute_query(args, q):
+def execute_documents_query(args, q):
     """ Execute the query and return a set of results. """
     result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
     hits = result.get('hits', {})

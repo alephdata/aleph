@@ -6,8 +6,8 @@ from pycountry import countries
 
 from aleph.model.metadata import CORE_FACETS
 from aleph.views.cache import etag_cache_keygen
-from aleph.search import construct_query, execute_query
-from aleph.search.records import records_query, execute_records_query
+from aleph.search import documents_query, execute_documents_query
+from aleph.search import records_query, execute_records_query
 from aleph.views.document_api import get_document
 
 blueprint = Blueprint('search', __name__)
@@ -16,10 +16,10 @@ blueprint = Blueprint('search', __name__)
 @blueprint.route('/api/1/query')
 def query():
     etag_cache_keygen()
-    query = construct_query(request.args)
+    query = documents_query(request.args)
     query['size'] = get_limit(default=100)
     query['from'] = get_offset()
-    return jsonify(execute_query(request.args, query))
+    return jsonify(execute_documents_query(request.args, query))
 
 
 @blueprint.route('/api/1/query/records/<int:document_id>')
