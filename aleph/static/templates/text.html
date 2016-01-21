@@ -3,8 +3,10 @@
 
 <div class="row">
   <div class="col-md-8">  
-    <ng-pdf template-url="text_viewer.html" canvasid="pdf" scale="page-fit"></ng-pdf>
+    <ng-pdf template-url="text_viewer.html" canvasid="pdf" scale="page-fit"
+      page="{{initialPage}}"  ng-hide="loading"></ng-pdf>
   </div>
+
   <div class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -18,14 +20,6 @@
         <tr>
           <th>Source</th>
           <td>{{doc.source.label}}</td>
-        </tr>
-        <tr ng-if="doc.file_name">
-          <th>File</th>
-          <td><code>{{doc.file_name}}</code></td>
-        </tr>
-        <tr ng-if="doc.mime_type">
-          <th>Type</th>
-          <td><code>{{doc.mime_type}}</code></td>
         </tr>
         <tr ng-if="doc.author">
           <th>Author</th>
@@ -58,6 +52,14 @@
         <tr ng-if="doc.source_url">
           <th>Source&nbsp;URL</th>
           <td><a ng-href="{{doc.source_url}}" target="_new">{{doc.source_url | host}}</a></td>
+        </tr>
+        <tr ng-if="doc.file_name">
+          <th>File</th>
+          <td><code>{{doc.file_name}}</code></td>
+        </tr>
+        <tr ng-if="doc.mime_type">
+          <th>Type</th>
+          <td><code>{{doc.mime_type}}</code></td>
         </tr>
         <tr>
           <td colspan="2">

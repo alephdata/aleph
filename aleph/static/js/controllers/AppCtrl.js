@@ -19,17 +19,27 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
       }
     });
     $scope.query.state = Query.load();
-    $scope.routeLoaded = false;
-    $scope.routeFailed = false;
+    $scope.reportLoading(true);
   });
 
   $rootScope.$on("$routeChangeSuccess", function (event, next, current) {
-    $scope.routeLoaded = true;
+    $scope.reportLoading(false);
   });
 
   $rootScope.$on("$routeChangeError", function (event, next, current) {
     $scope.routeFailed = true;
   });
+
+  $scope.reportError = function(message) {
+    $scope.routeFailed = true;
+  };
+
+  $scope.reportLoading = function(flag) {
+    $scope.routeLoaded = !flag;
+    if (flag) {
+      $scope.routeFailed = false;
+    }
+  };
 
   $scope.suggestEntities = function(prefix) {
     var dfd = $q.defer();
