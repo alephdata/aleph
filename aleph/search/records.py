@@ -1,7 +1,8 @@
 from aleph.model import Entity
+from aleph.util import latinize_text
 
 
-def records_sub_query(document_id, args, size=5):
+def records_query(document_id, args, size=5):
     terms = []
     text = args.get('q', '').strip()
     if len(text):
@@ -17,11 +18,20 @@ def records_sub_query(document_id, args, size=5):
     shoulds = []
     for term in terms:
         shoulds.append({
-            'multi_match': {
-                'query': term,
-                'fields': ['text^10', 'text_latin'],
-                'type': 'cross_fields',
-                'operator': 'and',
+            'match': {
+                'text': {
+                    'query': term,
+                    'boost': 10,
+                    'operator': 'and'
+                }
+            }
+        })
+        shoulds.append({
+            'match': {
+                'text_latin': {
+                    'query': latinize_text(term),
+                    'operator': 'and'
+                }
             }
         })
 

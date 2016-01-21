@@ -10,7 +10,7 @@ from aleph.util import latinize_text
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.common import add_filter, authz_filter
 from aleph.search.facets import convert_aggregations
-from aleph.search.records import records_sub_query
+from aleph.search.records import records_query
 
 DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'mime_type',
                   'source_url', 'created_at', 'updated_at', 'type']
@@ -246,7 +246,7 @@ def execute_query(args, q):
         document['score'] = doc.get('_score')
         document['records'] = {'results': [], 'total': 0}
 
-        sq = records_sub_query(document['id'], args)
+        sq = records_query(document['id'], args)
         if sq is not None:
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))
