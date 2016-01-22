@@ -43,7 +43,7 @@ class OpenNamesCrawler(Crawler):
             for iden in entity.get('identities', []):
                 if iden.get('number'):
                     selectors.append(iden.get('number'))
-            ent = Entity.by_foreign_id(entity.get('id'), watchlist, {
+            ent = Entity.by_foreign_id(entity.get('uid'), watchlist, {
                 'name': entity.get('name'),
                 'category': CATEGORIES.get(entity.get('type'), OTHER),
                 'data': entity,

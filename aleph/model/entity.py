@@ -55,9 +55,11 @@ class Entity(db.Model, TimeStampedModel):
         self.watchlist = data.get('watchlist')
         self.foreign_id = data.get('foreign_id')
         self.category = data.get('category')
-        selectors = set(data.get('selectors', []))
         self.data = data.get('data')
+        db.session.add(self)
+        db.session.flush()
 
+        selectors = set(data.get('selectors', []))
         selectors.add(self.name)
         existing = list(self.selectors)
         for sel in list(existing):
