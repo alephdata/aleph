@@ -35,10 +35,16 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
     q.pq = $scope.textQuery;
     q.q = null; // wat.
     $location.search(q);  
-    Document.queryPages(data.doc.id, q).then(function(pages) {
+  };
+
+  $scope.$on('$locationChangeStart', function() {
+    var query = $location.search();
+    $scope.pageNum = query.page || 1;
+    $scope.textQuery = query.pq || query.q;
+    Document.queryPages(data.doc.id, query).then(function(pages) {
       $scope.pages = pages;  
     });
-  };
+  });
 
   $scope.getLanguageLabel = function(code) {
     var label = metadata.languages[code];
