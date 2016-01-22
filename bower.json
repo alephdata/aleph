@@ -29,8 +29,7 @@
     "angular-loading-bar": "~0.8.0",
     "bootstrap-sass": "~3.3.6",
     "angular-pdf": "~1.3.0",
-    "moment": "~2.11.1",
-    "angular-pdf-viewer": "~0.2.9"
+    "moment": "~2.11.1"
   },
   "resolutions": {
     "angular": "~1.4.8"
