@@ -107,6 +107,10 @@ canvas#pdf {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    .selected {
+        background-color: $gray-subtle;
+    }
 }
 
 .entity-icon {

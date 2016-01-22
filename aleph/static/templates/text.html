@@ -17,7 +17,7 @@
       </div>
       <div class="pages-list" ng-show="pages.total">
         <table class="table">
-          <tr ng-repeat="page in pages.results">
+          <tr ng-repeat="page in pages.results" ng-class="{'selected': pageNum == page.page}">
             <th width="1%">
               <a ng-click="setPage(page.page)">pg.&nbsp;{{page.page}}</a>
             </th>
