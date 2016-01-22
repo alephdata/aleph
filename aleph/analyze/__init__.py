@@ -6,7 +6,7 @@ from aleph.model import Document, Watchlist, Entity
 from aleph.model import clear_session
 from aleph.index import index_document
 from aleph.search import raw_iter
-from aleph.search.query import text_query
+from aleph.search.documents import text_query
 
 
 log = logging.getLogger(__name__)
