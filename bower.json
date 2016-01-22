@@ -22,7 +22,7 @@
     "angular-route": "1.4.8",
     "angular-animate": "1.4.8",
     "angular-bootstrap": "0.14.3",
-    "ngInfiniteScroll": "nginfinitescroll#~1.2.1",
+    "nginfinitescroll": "1.2.0",
     "d3": "~3.5.12",
     "ng-debounce": "~0.1.7",
     "angular-loading-bar": "~0.8.0",

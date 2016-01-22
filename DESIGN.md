@@ -36,11 +36,11 @@ Iteration II
 * [DONE] Dates (on metadata and UI)
 * [DONE] Switch to JSONB
 * [DONE] Loading screen (spinner, failure)
+* [DONE] Result drilldown
 * Load performance / pagination
 * Invert source selection options
 * crawldir CLI arguments
 * Filter display
-* Result drilldown
 * Alerts / Subscriptions
 * Testing
 * tidbits

@@ -86,6 +86,49 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     });
   };
 
+  var compareFacetOptions = function(a, b) {
+    var counts = b.count - a.count;
+    if (counts !== 0) {
+      return counts;
+    }
+    var al = a.label || a.name || a.id;
+    var bl = b.label || b.name || b.id;
+    return al.localeCompare(bl);
+  };
+
+  $scope.getSources = function() {
+    return result.sources.values.sort(function(a, b) {
+      var af = Query.hasFilter('filter:source_id', a.id),
+          bf = Query.hasFilter('filter:source_id', b.id);
+      if (af && !bf) { return -1; }
+      if (!af && bf) { return 1; }
+      return compareFacetOptions(a, b);
+    });
+  };
+
+  $scope.getEntities = function() {
+    return result.entities.sort(function(a, b) {
+      var af = Query.hasFilter('entity', a.id),
+          bf = Query.hasFilter('entity', b.id);
+      if (af && !bf) { return -1; }
+      if (!af && bf) { return 1; }
+      return compareFacetOptions(a, b);
+    });
+  };
+
+  $scope.getFacet = function(name) {
+    if (!result.facets[name]) {
+      return [];
+    }
+    return result.facets[name].values.sort(function(a, b) {
+      var af = Query.hasFilter('filter:' + name, a.id),
+          bf = Query.hasFilter('filter:' + name, b.id);
+      if (af && !bf) { return -1; }
+      if (!af && bf) { return 1; }
+      return compareFacetOptions(a, b);
+    });
+  };
+
   $scope.hasMore = function() {
     return !isLoading && $scope.result.next !== null;
   };
@@ -101,5 +144,4 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
       isLoading = false;
     });
   };
-
 }]);

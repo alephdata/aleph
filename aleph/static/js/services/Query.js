@@ -17,8 +17,6 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
       }
       query[k] = v;
     });
-    query.source = ensureArray(query.source);
-    query.attribute = ensureArray(query.attribute);
     query.entity = ensureArray(query.entity);
     query.watchlist = ensureArray(query.watchlist);
     query.facet = ensureArray(query.facet);

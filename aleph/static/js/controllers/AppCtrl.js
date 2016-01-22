@@ -1,6 +1,7 @@
 aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$http', '$uibModal', '$q',
                              'Session', 'Query', 'Metadata',
-  function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Session, Query, Metadata) {
+    function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Session, Query, Metadata) {
+
   $scope.session = {logged_in: false};
   $scope.query = Query;
   $scope.routeLoaded = false;

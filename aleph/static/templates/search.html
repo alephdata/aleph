@@ -7,8 +7,8 @@
       </span>
     </div>
 
-    <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()"
-      infinite-scroll-distance="3">
+    <div infinite-scroll="loadMore()" infinite-scroll-disabled="hasMore()"
+      infinite-scroll-distance="1" infinite-scroll-immediate-check="false">
       <div class="result animate toggle" ng-repeat="doc in result.results">
         <search-result doc="doc" result="result"></search-result>
       </div>
@@ -38,7 +38,7 @@
           </span>
         </li>
         <li class="list-group-item facet animate toggle"
-          ng-repeat="entity in result.entities"
+          ng-repeat="entity in getEntities()"
           ng-class="{'active': query.hasFilter('entity', entity.id)}"
           ng-click="query.toggleFilter('entity', entity.id)">
           <span class="badge">{{entity.count}}</span>
@@ -70,7 +70,7 @@
     <br/>
 
     <div class="panel panel-default" ng-repeat="field in query.load().facet"
-      ng-if="result.facets && result.facets[field]">
+      ng-if="result.facets && getFacet(field)">
       <div class="panel-heading">
         <span class="pull-right">
           <a ng-click="query.toggleFilter('facet', field)">
@@ -101,7 +101,7 @@
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
-          ng-repeat="source in result.sources.values"
+          ng-repeat="source in getSources()"
           ng-class="{'active': query.hasFilter('filter:source_id', source.id)}"
           ng-click="query.toggleFilter('filter:source_id', source.id)">
           <span class="badge">{{source.count}}</span>
