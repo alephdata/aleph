@@ -89,12 +89,18 @@ canvas#pdf {
     box-shadow: 3px 3px 10px darken($gray-subtle, 20%);
 }
 
+.pages-query {
+    .input-group {
+        margin-bottom: 0.5em;
+    }
+}
+
 .pages-list {
     max-height: 25em;
     overflow-y: scroll;
     overflow: -moz-scrollbars-vertical; 
-    margin-top: 0.5em;
-    margin-bottom: 1em;
+    // padding-top: 0.5em;
+    padding-bottom: 1em;
 
     td {
         white-space: nowrap;

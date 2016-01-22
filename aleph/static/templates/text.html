@@ -6,7 +6,7 @@
   </div>
 
   <div class="col-md-4">
-    <form class="form-horizontal" ng-submit="updateTextQuery()">
+    <form class="form-horizontal pages-query" ng-submit="updateTextQuery()">
       <div class="input-group">
         <span class="input-group-addon">
           <i class="fa fa-search"></i>
@@ -15,7 +15,7 @@
           ng-model="textQuery"
           placeholder="Search within this document">
       </div>
-      <div class="pages-list">
+      <div class="pages-list" ng-show="pages.total">
         <table class="table">
           <tr ng-repeat="page in pages.results">
             <th width="1%">
