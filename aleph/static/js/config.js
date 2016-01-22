@@ -30,12 +30,12 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
   $routeProvider.when('/text/:document_id', {
     templateUrl: 'text.html',
     controller: 'TextCtrl',
-    reloadOnSearch: true,
+    reloadOnSearch: false,
     loginRequired: false,
     resolve: {
       'data': loadText,
       'metadata': loadMetadata,
-      'pages': loadQueryPages
+      'pages': loadPagesQuery
     }
   });
 

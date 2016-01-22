@@ -2,10 +2,33 @@
 <div class="row">
   <div class="col-md-8">  
     <ng-pdf template-url="text_viewer.html" canvasid="pdf" scale="page-fit"
-      page="{{initialPage}}"  ng-hide="loading"></ng-pdf>
+      page="{{pageNum}}"  ng-hide="loading"></ng-pdf>
   </div>
 
   <div class="col-md-4">
+    <form class="form-horizontal" ng-submit="updateTextQuery()">
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-search"></i>
+        </span>
+        <input type="text" class="form-control"
+          ng-model="textQuery"
+          placeholder="Search within this document">
+      </div>
+      <div class="pages-list">
+        <table class="table">
+          <tr ng-repeat="page in pages.results">
+            <th width="1%">
+              <a ng-click="setPage(page.page)">pg.&nbsp;{{page.page}}</a>
+            </th>
+            <td>
+              <span ng-bind-html="page.snippet"></span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+
     <div class="panel panel-default">
       <div class="panel-heading">
         <strong>Metadata</strong>
@@ -75,24 +98,6 @@
             </div>
           </td>
       </table>
-    </div>
-  
-    <div class="panel panel-default" ng-if="pages.total">
-      <div class="panel-heading">
-        <strong>Other results in this document</strong>
-      </div>
-      <div class="pages-list">
-        <table class="table">
-          <tr ng-repeat="page in pages.results">
-            <td width="1%">
-              <a ng-click="">pg.&nbsp;{{page.page}}</a>
-            </td>
-            <td>
-              <span ng-bind-html="page.snippet"></span>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
+    </div> 
   </div>
 </div>

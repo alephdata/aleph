@@ -48,13 +48,18 @@ def records_query(document_id, args, size=5):
             'term': {'document_id': document_id}
         }
 
+    try:
+        snippet = int(args.get('snippet', 150))
+    except:
+        snippet = 150
+
     return {
         'size': size,
         'query': q,
         'highlight': {
             'fields': {
-                'text': {},
-                'text_latin': {}
+                'text': {'fragment_size': snippet},
+                'text_latin': {'fragment_size': snippet}
             }
         },
         '_source': ['document_id', 'sheet', 'row_id', 'page']

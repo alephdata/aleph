@@ -93,6 +93,14 @@ canvas#pdf {
     max-height: 25em;
     overflow-y: scroll;
     overflow: -moz-scrollbars-vertical; 
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+
+    td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 .entity-icon {
