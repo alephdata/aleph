@@ -14,7 +14,6 @@ deps_assets = Bundle(
     'vendor/angular-route/angular-route.js',
     'vendor/angular-animate/angular-animate.js',
     'vendor/angular-loading-bar/build/loading-bar.js',
-    'vendor/angular-truncate/src/truncate.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
     'vendor/ngInfiniteScroll/build/ng-infinite-scroll.js',
     filters='uglifyjs',

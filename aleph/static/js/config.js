@@ -1,5 +1,5 @@
 var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'angular-loading-bar', 'ui.bootstrap',
-                                     'debounce', 'truncate', 'infinite-scroll', 'pdf']);
+                                     'debounce', 'infinite-scroll', 'pdf']);
 
 aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     function($routeProvider, $locationProvider, cfpLoadingBarProvider) {
