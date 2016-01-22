@@ -1,8 +1,10 @@
 
-aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'data',
-    function($scope, $location, $http, metadata, Authz, data) {
+aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'data', 'pages',
+    function($scope, $location, $http, metadata, Authz, data, pages) {
 
   $scope.doc = data.doc;
+  $scope.pages = pages;
+
   $scope.loading = true;
   $scope.initialPage = $location.search().page || 1;
   $scope.reportLoading(true);

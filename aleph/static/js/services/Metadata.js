@@ -15,7 +15,7 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
       Session.get().then(function(session) {
         $q.all([
           $http.get('/api/1/watchlists?limit=1000&_uid=' + session.cbq),
-          $http.get('/api/1/metadata?_uid=' + session.cbq)
+          $http.get('/api/1/metadata')
         ]).then(function(results) {
             var watchlists = {}, 
                 metadata = results[1].data;

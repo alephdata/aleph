@@ -34,7 +34,8 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     loginRequired: false,
     resolve: {
       'data': loadText,
-      'metadata': loadMetadata
+      'metadata': loadMetadata,
+      'pages': loadQueryPages
     }
   });
 

@@ -27,6 +27,11 @@ def records(document_id):
     etag_cache_keygen()
     document = get_document(document_id)
     query = records_query(document.id, request.args)
+    if query is None:
+        return jsonify({
+            'status': 'ok',
+            'message': 'no query'
+        })
     query['size'] = get_limit(default=100)
     query['from'] = get_offset()
     res = execute_records_query(document.id, request.args, query)
