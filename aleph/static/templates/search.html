@@ -89,7 +89,7 @@
           ng-click="query.toggleFilter('filter:' + field, val.id)">
           <span class="badge">{{val.count}}</span>
           <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
-            {{val.label | characters: 35 }}
+            {{val.label | limitTo:35 }}
           </span>
         </li>
       </ul>

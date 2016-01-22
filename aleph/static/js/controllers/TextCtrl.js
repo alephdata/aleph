@@ -33,6 +33,7 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
   $scope.updateTextQuery = function() {
     var q = $location.search();
     q.pq = $scope.textQuery;
+    q.q = null; // wat.
     $location.search(q);  
     Document.queryPages(data.doc.id, q).then(function(pages) {
       $scope.pages = pages;  

@@ -5,7 +5,7 @@
   <span ng-if="doc.type == 'text'">
     <i class="fa fa-file-text-o"></i>
   </span>
-  {{doc.title | characters: 90 }}
+  {{doc.title | limitTo:90 }}
 </a>
 <a ng-href="" target="_self"
    uib-tooltip="Loaded on {{doc.updated_at.split('T')[0]}}"
