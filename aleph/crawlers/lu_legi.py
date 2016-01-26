@@ -13,6 +13,9 @@ YEARS = range(1996, datetime.utcnow().year + 1)
 class LuxembourgGazette(Crawler):
 
     def crawl_record(self, source, source_url, title):
+        if self.foreign_id_exists(source, source_url):
+            # assuming they're immutable
+            return
         meta = self.metadata()
         meta.title = title
         meta.languages = ['fr']

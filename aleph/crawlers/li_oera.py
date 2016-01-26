@@ -14,6 +14,9 @@ class LiechtensteinOld(Crawler):
 
     def crawl_record(self, source, date):
         source_url = BASE_URL % date.strftime('%Y%m%d')
+        if self.foreign_id_exists(source, source_url):
+            # assuming they're immutable
+            return
         res = requests.head(source_url)
         if res.status_code != 200:
             return

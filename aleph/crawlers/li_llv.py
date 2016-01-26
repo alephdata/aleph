@@ -19,6 +19,9 @@ CATEGORIES = ['HREIN', 'STEUER', 'EDKURLG', 'GLB', 'HRKU', 'KONZ',
 class LiechtensteinAmtsblatt(Crawler):
 
     def crawl_record(self, source, notice_id):
+        if self.foreign_id_exists(source, notice_id):
+            # assuming they're immutable
+            return
         url = BASE_URL % notice_id
         sess = requests.Session()
         res = sess.get(url, allow_redirects=False)

@@ -2,7 +2,7 @@ import logging
 from tempfile import NamedTemporaryFile
 
 from aleph.core import db
-from aleph.model import Metadata, Source
+from aleph.model import Metadata, Source, Document
 from aleph.ext import get_crawlers
 from aleph.ingest import ingest_url, ingest_file
 from aleph.analyze import analyze_watchlist
@@ -30,6 +30,15 @@ class Crawler(object):
         return Metadata(data={
             'crawler': self.__class__.__name__
         })
+
+    def foreign_id_exists(self, source, foreign_id):
+        q = db.session.query(Document.id)
+        q = q.filter(Document.source_id == source.id)
+        q = q.filter(Document.foreign_id == foreign_id)
+        exists = q.first() is not None
+        if exists:
+            log.info("Foreign ID exists (%s): %s", source, foreign_id)
+        return exists
 
     def emit_url(self, source, meta, url):
         db.session.commit()

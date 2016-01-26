@@ -37,6 +37,9 @@ class SwissCommercialGazette(Crawler):
         if link is None:
             return
         source_url = urljoin(BASE_URL, link.get('href'))
+        if self.foreign_id_exists(source, source_url):
+            # assuming they're immutable
+            return
         meta = self.metadata()
         meta.languages = ['en', 'fr', 'de']
         meta.add_country('ch')
@@ -79,6 +82,7 @@ class SwissCommercialGazette(Crawler):
         date = datetime.utcnow()
         min_date = date - timedelta(days=5 * 365)
         while True:
+            log.info(" -> Date: %s", date)
             for type_ in TYPES:
                 try:
                     self.crawl_set(source, date.strftime('%d.%m.%Y'), type_)
