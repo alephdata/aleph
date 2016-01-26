@@ -1,7 +1,6 @@
 import os
-import requests
 import logging
-from lxml import etree, html
+from lxml import html
 from tempfile import mkstemp
 import dateparser
 # from datetime import datetime, timedelta
@@ -11,7 +10,12 @@ from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
 BASE_URL = 'https://wikileaks.org/plusd/cables/%s.html'
-BASE_DIRECTORY = os.environ.get("WL_CABLES_PATH", app.config.get("WL_CABLES_PATH"))
+
+# This needs to contain:
+# the cablegate bundle here, folder 'cables':
+#   http://download.cabledrum.net/cablegate/
+BASE_DIRECTORY = os.environ.get("WL_CABLES_PATH",
+                                app.config.get("WL_CABLES_PATH"))
 
 
 class WikileaksCables(Crawler):
