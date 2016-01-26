@@ -65,8 +65,5 @@ def analyze_document(document_id):
         return
     log.info("Analyze document: %r", document)
     for cls in get_analyzers():
-        try:
-            cls().analyze(document, document.meta)
-        except Exception as ex:
-            log.exception(ex)
+        cls().analyze(document, document.meta)
     index_document(document_id)

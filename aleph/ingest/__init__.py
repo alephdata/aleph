@@ -27,6 +27,8 @@ def ingest_url(source_id, metadata, url):
     with NamedTemporaryFile() as fh:
         log.info("Ingesting URL: %r", url)
         res = requests.get(url, stream=True)
+        if res.status_code >= 400:
+            log.error("Error ingesting %r: %r", url, res.status_code)
         meta.source_url = res.url
         for chunk in res.iter_content(chunk_size=1024):
             if chunk:
