@@ -43,7 +43,7 @@ if not app.debug and app.config.get('MAIL_ADMINS'):
     mail_handler = SMTPHandler(app.config.get('MAIL_HOST'),
                                app.config.get('MAIL_FROM'),
                                app.config.get('MAIL_ADMINS'),
-                               '%s crash report' % app_name,
+                               '[%s] Crash report' % app_name,
                                credentials=credentials,
                                secure=())
     mail_handler.setLevel(logging.ERROR)
