@@ -49,7 +49,8 @@ setup(
             'chsogc = aleph.crawlers.ch_sogc:SwissCommercialGazette',
             'lulegi = aleph.crawlers.lu_legi:LuxembourgGazette',
             'lioera = aleph.crawlers.li_oera:LiechtensteinOld',
-            'lillv = aleph.crawlers.li_llv:LiechtensteinAmtsblatt'
+            'lillv = aleph.crawlers.li_llv:LiechtensteinAmtsblatt',
+            'wlcables = aleph.crawlers.wl_cables:WikileaksCables'
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',
