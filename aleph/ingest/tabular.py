@@ -32,6 +32,7 @@ class MessyTablesIngestor(TabularIngestor):
         row_set.register_processor(headers_processor(headers))
         row_set.register_processor(offset_processor(offset + 1))
         schema = TabularSchema({
+            'sheet_name': row_set.name,
             'content_hash': meta.content_hash,
             'sheet': sheet
         })

@@ -1,8 +1,13 @@
 
 <div class="row">
-  <div class="col-md-8">  
+  <div class="col-md-8">
+    <ul class="nav nav-tabs" ng-if="doc.tables.length > 1">
+      <li ng-repeat="tbl in doc.tables" ng-class="{'active': tbl.sheet == table.sheet}">
+        <a href="#/tabular/{{doc.id}}/{{tbl.sheet}}" ng-bind="tbl.sheet_name"></a>
+      </li>
+    </ul>
     <div class="data-table" infinite-scroll="loadMore()" infinite-scroll-distance="1">
-      <table class="table table-bordered table-striped table-hover table-rounded">
+      <table class="table table-bordered table-striped table-condensed">
         <thead>
           <tr>
             <th ng-repeat="col in table.columns" data-type="{{col.type}}">
@@ -12,7 +17,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="row in rows.results">
-            <td ng-repeat="col in table.columns">
+            <td ng-repeat="col in table.columns" ng-class="getClass(row, col)">
               {{row[col.name]}}
             </td>
           </tr>

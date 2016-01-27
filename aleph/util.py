@@ -47,8 +47,8 @@ def string_value(value, encoding=None):
             return
         if isinstance(value, (date, datetime)):
             return value.isoformat()
-        elif isinstance(value, float):
-            return "{:.4f}".format(value)
+        elif isinstance(value, float) and not value.is_integer():
+            return unicode(value)
         elif isinstance(value, six.string_types):
             if not isinstance(value, six.text_type):
                 value = value.decode(encoding)

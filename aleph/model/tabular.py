@@ -45,6 +45,13 @@ class TabularSchema(object):
         return self.schema.get('sheet')
 
     @property
+    def sheet_name(self):
+        name = self.schema.get('sheet_name')
+        if name is not None:
+            return name
+        return 'Sheet %s' % self.sheet
+
+    @property
     def table_name(self):
         return 'tabular_%s_%s' % (self.schema.get('content_hash'),
                                   self.schema.get('sheet'))
@@ -55,7 +62,11 @@ class TabularSchema(object):
             yield TabularColumn(self, col)
 
     def to_dict(self):
-        return self.schema
+        data = self.schema
+        data['sheet'] = self.sheet
+        data['sheet_name'] = self.sheet_name
+        data['table_name'] = self.table_name
+        return data
 
     def __repr__(self):
         return '<TabularSchema(%r)>' % list(self.columns)
