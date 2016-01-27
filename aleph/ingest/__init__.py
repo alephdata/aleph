@@ -29,16 +29,15 @@ def ingest_url(source_id, metadata, url):
         res = requests.get(url, stream=True)
         if res.status_code >= 400:
             log.error("Error ingesting %r: %r", url, res.status_code)
-        meta.source_url = res.url
         for chunk in res.iter_content(chunk_size=1024):
             if chunk:
                 fh.write(chunk)
         fh.flush()
-
-        if not meta.has('file_name'):
-            meta.file_name = meta.file_name
+        if not meta.has('source_url'):
+            meta.source_url = res.url
         meta.headers = res.headers
-        ingest_file(source_id, meta, fh.name)
+        meta = archive.archive_file(fh.name, meta, move=True)
+        ingest.delay(source_id, meta.data)
 
 
 def ingest_file(source_id, meta, file_name, move=False):
