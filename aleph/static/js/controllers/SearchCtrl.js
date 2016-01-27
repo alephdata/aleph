@@ -86,47 +86,38 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     });
   };
 
-  var compareFacetOptions = function(a, b) {
-    var counts = b.count - a.count;
-    if (counts !== 0) {
-      return counts;
+  var sortedFilters = function(data, name) {
+    if (!data || !data.length) {
+      return;
     }
-    var al = a.label || a.name || a.id;
-    var bl = b.label || b.name || b.id;
-    return al.localeCompare(bl);
+    return data.sort(function(a, b) {
+      var af = Query.hasFilter(name, a.id),
+          bf = Query.hasFilter(name, b.id);
+      if (af && !bf) { return -1; }
+      if (!af && bf) { return 1; }
+      var counts = b.count - a.count;
+      if (counts !== 0) {
+        return counts;
+      }
+      var al = a.label || a.name || a.id;
+      var bl = b.label || b.name || b.id;
+      return al.localeCompare(bl);
+    });
   };
 
   $scope.getSources = function() {
-    return result.sources.values.sort(function(a, b) {
-      var af = Query.hasFilter('filter:source_id', a.id),
-          bf = Query.hasFilter('filter:source_id', b.id);
-      if (af && !bf) { return -1; }
-      if (!af && bf) { return 1; }
-      return compareFacetOptions(a, b);
-    });
+    return sortedFilters(result.sources.values, 'filter:source_id');
   };
 
   $scope.getEntities = function() {
-    return result.entities.sort(function(a, b) {
-      var af = Query.hasFilter('entity', a.id),
-          bf = Query.hasFilter('entity', b.id);
-      if (af && !bf) { return -1; }
-      if (!af && bf) { return 1; }
-      return compareFacetOptions(a, b);
-    });
+    return sortedFilters(result.entities, 'entity');
   };
 
   $scope.getFacet = function(name) {
     if (!result.facets[name]) {
-      return [];
+      return;
     }
-    return result.facets[name].values.sort(function(a, b) {
-      var af = Query.hasFilter('filter:' + name, a.id),
-          bf = Query.hasFilter('filter:' + name, b.id);
-      if (af && !bf) { return -1; }
-      if (!af && bf) { return 1; }
-      return compareFacetOptions(a, b);
-    });
+    return sortedFilters(result.facets[name].values, 'filter:' + name);
   };
 
   $scope.hasMore = function() {
