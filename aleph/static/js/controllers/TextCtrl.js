@@ -46,15 +46,4 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
     });
   });
 
-  $scope.getLanguageLabel = function(code) {
-    var label = metadata.languages[code];
-    return label || code;
-  };
-
-  $scope.getCountryLabel = function(code) {
-    var label = metadata.countries[code];
-    return label || code;
-  };
-  
-
 }]);

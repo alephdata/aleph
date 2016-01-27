@@ -61,6 +61,10 @@ html { height: 100%; }
 body { min-height: 100%; }
 .modal-backdrop { bottom: 0; }
 
+#page {
+    position: relative;
+}
+
 // Angular ugliness fix 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
@@ -80,7 +84,6 @@ em {
     background-color: yellow;
     font-style: normal;
 }
-
 
 canvas#pdf {
     margin-top: 0.5em;
