@@ -91,6 +91,16 @@ canvas#pdf {
     box-shadow: 3px 3px 10px darken($gray-subtle, 20%);
 }
 
+.badge {
+    background-color: $page-bg;
+    color: $text-muted;
+}
+
+.list-group-item.active .badge {
+    background-color: $brand-primary;
+    color: $page-bg;
+}
+
 .pages-query {
     .input-group {
         margin-bottom: 0.5em;

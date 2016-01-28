@@ -1,6 +1,6 @@
 
-aleph.controller('TabularCtrl', ['$scope', '$location', '$http', 'Metadata', 'Authz', 'data',
-    function($scope, $location, $http, Metadata, Authz, data) {
+aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$filter', 'Metadata', 'Authz', 'data',
+    function($scope, $location, $http, $sce, $filter, Metadata, Authz, data) {
 
   $scope.doc = data.doc;
   $scope.table = data.table;
@@ -16,6 +16,17 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', 'Metadata', 'Au
     if (!isNaN(filterFloat(value))) {
       return 'numeric';
     }
+  };
+
+  $scope.formatCell = function(row, col) {
+    var value = row[col.name];
+    if (value === null || value === undefined) {
+      return;
+    }
+    // if (!isNaN(filterFloat(value))) {
+    //   return $filter('number')(value);
+    // }
+    return value;
   };
 
   $scope.updateQuery = function() {
