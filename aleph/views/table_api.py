@@ -1,8 +1,8 @@
 from werkzeug.exceptions import NotFound
-from flask import Blueprint
-from apikit import jsonify, Pager
+from flask import Blueprint, request
+from apikit import jsonify, get_limit, get_offset
 
-from aleph.model.tabular_query import TabularQuery
+from aleph.search.tabular import tabular_query, execute_tabular_query
 from aleph.views.document_api import get_document
 
 
@@ -27,6 +27,8 @@ def view(document_id, table_id):
 @blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>/rows')
 def rows(document_id, table_id):
     document, tabular = get_tabular(document_id, table_id)
-    query = TabularQuery(tabular, {})
-    return jsonify(Pager(query, document_id=document_id,
-                         table_id=table_id))
+    query = tabular_query(document_id, table_id, request.args)
+    query['size'] = get_limit(default=100)
+    query['from'] = get_offset()
+    return jsonify(execute_tabular_query(document_id, table_id,
+                                         request.args, query))

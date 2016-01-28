@@ -31,8 +31,7 @@ class TextIngestor(Ingestor):
         return page
 
     def store_pdf(self, meta, pdf_path, move=True):
-        if not meta.is_pdf:
-            archive.archive_file(pdf_path, meta.pdf, move=move)
+        archive.archive_file(pdf_path, meta.pdf, move=move)
 
 
 class PDFIngestor(TextIngestor):
