@@ -1,5 +1,6 @@
 from aleph.index import TYPE_RECORD
 from aleph.core import es, es_index, url_for
+from aleph.util import latinize_text
 from aleph.search.common import add_filter
 
 
@@ -8,6 +9,32 @@ def tabular_query(document_id, sheet, args):
     q = {
         'match_all': {}
     }
+
+    text = args.get('q', '').strip()
+    if len(text):
+        text_latin = latinize_text(text)
+        q = {
+            "bool": {
+                "should": {
+                    "match": {
+                        "text": {
+                            "query": text,
+                            "cutoff_frequency": 0.0007,
+                            "operator": "and"
+                        }
+                    }
+                },
+                "should": {
+                    "match": {
+                        "text_latin": {
+                            "query": text_latin,
+                            "cutoff_frequency": 0.0007,
+                            "operator": "and"
+                        }
+                    }
+                }
+            }
+        }
 
     try:
         rows = [int(r) for r in args.getlist('row')]

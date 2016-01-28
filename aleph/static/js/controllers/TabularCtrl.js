@@ -1,14 +1,3 @@
-/* 
-
-* Fixed headers
-* [DONE] Multiple sheets
-* Cell value formatting
-* Highlight selected row
-* Filter globally
-* Filter by field
-* Facet by field
-
-*/ 
 
 aleph.controller('TabularCtrl', ['$scope', '$location', '$http', 'Metadata', 'Authz', 'data',
     function($scope, $location, $http, Metadata, Authz, data) {
@@ -17,6 +6,7 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', 'Metadata', 'Au
   $scope.table = data.table;
   $scope.rows = data.rows;
   $scope.moreLoading = false;
+  $scope.textQuery = $location.search().rq || $location.search().q;
 
   $scope.getClass = function(row, col) {
     var value = row[col.name];
@@ -26,6 +16,14 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', 'Metadata', 'Au
     if (!isNaN(filterFloat(value))) {
       return 'numeric';
     }
+  };
+
+  $scope.updateQuery = function() {
+    var q = $location.search();
+    q.rq = $scope.textQuery;
+    q.q = null; // wat.
+    q.row = null;
+    $location.search(q);  
   };
 
   $scope.isHighlighted = function(row) {

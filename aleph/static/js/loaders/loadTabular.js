@@ -13,8 +13,10 @@ var loadTabular = ['$http', '$q', '$route', '$location', 'Document',
       }
     }
 
-    var rowsUrl = '/api/1/documents/' + documentId + '/tables/' + tableId + '/rows';
-    $http.get(rowsUrl, {params: $location.search()}).then(function(res) {
+    var rowsUrl = '/api/1/documents/' + documentId + '/tables/' + tableId + '/rows',
+        q = $location.search();
+    q.q = q.rq || q.q;
+    $http.get(rowsUrl, {params: q}).then(function(res) {
       dfd.resolve({
         doc: doc,
         table: table,

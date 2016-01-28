@@ -6,7 +6,7 @@ import langid
 from aleph.analyze.analyzer import Analyzer
 
 log = logging.getLogger(__name__)
-THRESHOLD = 0.8
+THRESHOLD = 0.9
 CUTOFF = 30
 
 

@@ -27,6 +27,24 @@
   </div>
 
   <div class="col-md-4">
+    <form class="form-horizontal pages-query" ng-submit="updateQuery()">
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-search"></i>
+        </span>
+        <input type="text" class="form-control"
+          ng-model="textQuery"
+          placeholder="Search within this dataset">
+      </div>
+    </form>
+
+    <ol class="breadcrumb">
+      <li class="active">
+        Matching {{rows.total | number}} rows.
+      </li>
+    </ol>
+
+
     <metadata-sidebar doc="doc"></metadata-sidebar>
   </div>
 </div>

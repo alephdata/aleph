@@ -37,6 +37,13 @@ Iteration II
 * [DONE] Switch to JSONB
 * [DONE] Loading screen (spinner, failure)
 * [DONE] Result drilldown
+* Tabular: Fixed headers
+* [DONE] Tabular: Multiple sheets
+* Tabular: Cell value formatting
+* [DONE] Tabular: Highlight selected row
+* [DONE] Tabular: Filter globally
+* Tabular: Filter by field
+* Tabular: Facet by field
 * Load performance / pagination
 * Invert source selection options
 * crawldir CLI arguments

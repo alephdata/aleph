@@ -25,7 +25,7 @@
         </span>
         <strong>Persons and Companies</strong>
         <small ng-show="query.state.watchlist.length">
-          (from {{query.state.watchlist.length}} watchlists)
+          (from {{query.state.watchlist.length | number}} watchlists)
         </small>
       </div>
       <ul class="list-group facet-list">
@@ -41,7 +41,7 @@
           ng-repeat="entity in getEntities() track by entity.id"
           ng-class="{'active': query.hasFilter('entity', entity.id)}"
           ng-click="query.toggleFilter('entity', entity.id)">
-          <span class="badge">{{entity.count}}</span>
+          <span class="badge">{{entity.count | number}}</span>
           <entity-icon category="entity.category"></entity-icon>
           <span class="lbl" uib-tooltip="{{metadata.watchlists[entity.watchlist_id].label}}"
             tooltip-append-to-body="true" tooltip-placement="right">
@@ -86,7 +86,7 @@
           ng-repeat="val in getFacet(field)"
           ng-class="{'active': query.hasFilter('filter:' + field, val.id)}"
           ng-click="query.toggleFilter('filter:' + field, val.id)">
-          <span class="badge">{{val.count}}</span>
+          <span class="badge">{{val.count | number}}</span>
           <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
             {{val.label | limitTo:35 }}
           </span>
@@ -103,7 +103,7 @@
           ng-repeat="source in getSources()"
           ng-class="{'active': query.hasFilter('filter:source_id', source.id)}"
           ng-click="query.toggleFilter('filter:source_id', source.id)">
-          <span class="badge">{{source.count}}</span>
+          <span class="badge">{{source.count | number}}</span>
           <span class="lbl">
             {{source.label}}
             <a ng-click="editSource(source, $event)" ng-show="canEditSource(source)">
@@ -113,7 +113,6 @@
         </li>
       </ul>
     </div>
-
 
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -128,7 +127,7 @@
           ng-href="/api/1/query/export?{{query.queryString()}}"
           download target="_self">
           <i class="fa fa-cloud-download"></i>
-          Download {{result.total}} search results (Excel 2007)
+          Download {{result.total | number}} search results (Excel 2007)
         </a>
       </div>
     </div>
