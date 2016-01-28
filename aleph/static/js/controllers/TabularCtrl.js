@@ -28,6 +28,12 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', 'Metadata', 'Au
     }
   };
 
+  $scope.isHighlighted = function(row) {
+    var rows = ensureArray($location.search().row), 
+        id = row._id + '';
+    return rows.indexOf(id) !== -1;
+  };
+
   $scope.loadMore = function() {
     if (!$scope.rows.next_url || $scope.moreLoading) {
       return;

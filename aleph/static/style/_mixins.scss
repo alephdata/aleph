@@ -6,3 +6,8 @@
     -o-border-radius: $radius;
     border-radius: $radius;
 }
+
+@mixin highlighted {
+    background-color: yellow;
+    font-style: normal;
+}

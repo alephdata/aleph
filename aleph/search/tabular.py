@@ -4,13 +4,38 @@ from aleph.search.common import add_filter
 
 
 def tabular_query(document_id, sheet, args):
+    scored = False
     q = {
         'match_all': {}
     }
-    sort = [{'row_id': 'asc'}]
+
+    try:
+        rows = [int(r) for r in args.getlist('row')]
+        if len(rows):
+            scored = True
+            q = {
+                "bool": {
+                    "must": q,
+                    "should": {
+                        "constant_score": {
+                            "filter": {'terms': {'row_id': rows}},
+                            "boost": 1000
+                        }
+                    }
+                }
+            }
+    except Exception:
+        pass
 
     q = add_filter(q, {'term': {'document_id': document_id}})
     q = add_filter(q, {'term': {'sheet': sheet}})
+
+    # from pprint import pprint
+    # pprint(q)
+
+    sort = [{'row_id': 'asc'}]
+    if scored:
+        sort.insert(0, '_score')
     return {
         'from': 0,
         'size': 100,
@@ -46,5 +71,6 @@ def execute_tabular_query(document_id, table_id, args, query):
 
     for rec in hits.get('hits', []):
         record = rec.get('_source').get('raw')
+        record['_id'] = rec.get('_source', {}).get('row_id')
         output['results'].append(record)
     return output

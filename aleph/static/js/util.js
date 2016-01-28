@@ -43,3 +43,13 @@ function filterFloat(value) {
       return Number(value);
   return NaN;
 }
+
+function ensureArray(data) {
+  if (!angular.isDefined(data)) {
+    return [];
+  }
+  if (!angular.isArray(data)) {
+    return [data];
+  }
+  return data;
+};

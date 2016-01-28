@@ -81,8 +81,7 @@ a {
 @import "spinner";
 
 em {
-    background-color: yellow;
-    font-style: normal;
+    @include highlighted;
 }
 
 canvas#pdf {

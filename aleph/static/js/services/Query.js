@@ -2,13 +2,6 @@
 aleph.factory('Query', ['$route', '$location', function($route, $location) {
   var query = {};
 
-  var ensureArray = function(data) {
-    if (!angular.isDefined(data)) {
-      return [];
-    }
-    return data;
-  };
-
   var load = function() {
     query = {};
     angular.forEach($location.search(), function(v, k) {

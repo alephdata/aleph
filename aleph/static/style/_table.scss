@@ -28,4 +28,10 @@ td.numeric {
             text-align: right;
         }
     }
+
+    tr.highlight {
+        td {
+            @include highlighted;
+        }
+    }
 }

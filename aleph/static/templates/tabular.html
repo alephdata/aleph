@@ -16,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="row in rows.results">
+          <tr ng-repeat="row in rows.results" ng-class="{'highlight': isHighlighted(row)}">
             <td ng-repeat="col in table.columns" ng-class="getClass(row, col)">
               {{row[col.name]}}
             </td>
