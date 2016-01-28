@@ -12,6 +12,9 @@ log = logging.getLogger(__name__)
 
 class Crawler(object):
 
+    def __init__(self, base_meta=None):
+        self.base_meta = base_meta or {}
+
     def crawl(self, **kwargs):
         raise NotImplemented()
 
@@ -27,9 +30,12 @@ class Crawler(object):
         return Source.create(data)
 
     def metadata(self):
-        return Metadata(data={
-            'crawler': self.__class__.__name__
-        })
+        meta = {
+            'crawler': self.__class__.__name__,
+            'crawler_name': self.name
+        }
+        meta.update(self.base_meta)
+        return Metadata(data=meta)
 
     def foreign_id_exists(self, source, foreign_id):
         q = db.session.query(Document.id)

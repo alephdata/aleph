@@ -42,12 +42,21 @@ def crawl(name):
 
 
 @manager.command
-def crawldir(directory, source=None):
+@manager.option('-s', '--source', dest='source')
+@manager.option('-l', '--language', dest='language', nargs='*')
+@manager.option('-c', '--country', dest='country', nargs='*')
+def crawldir(directory, source=None, language=None, country=None):
     """ Crawl the given directory. """
     directory = os.path.abspath(directory)
     directory = os.path.normpath(directory)
     log.info('Crawling %r...', directory)
-    DirectoryCrawler().crawl(directory=directory, source=source)
+    meta = {}
+    if language is not None:
+        meta['languages'] = [language]
+    if country is not None:
+        meta['countries'] = [country]
+    crawler = DirectoryCrawler(base_meta=meta)
+    crawler.crawl(directory=directory, source=source)
 
 
 @manager.command
