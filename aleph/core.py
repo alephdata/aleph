@@ -24,7 +24,7 @@ oauth_provider = oauth.remote_app('provider', app_key='OAUTH')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db, directory=app.config.get('ALEMBIC_DIR'))
 
-es = Elasticsearch(app.config.get('ELASTICSEARCH_URL'))
+es = Elasticsearch(app.config.get('ELASTICSEARCH_URL'), timeout=120)
 es_index = app.config.get('ELASTICSEARCH_INDEX', app_name)
 
 queue_name = app_name + '_q'

@@ -2,7 +2,7 @@
 aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'result', 'Query', 'Metadata', 'Authz',
     function($scope, $route, $location, $http, $uibModal, result, Query, Metadata, Authz) {
 
-  var isLoading = false;
+  var isLoading = false, nothing = [];
   $scope.result = result;
   $scope.query = Query;
   $scope.metadata = {};
@@ -88,8 +88,9 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
 
   var sortedFilters = function(data, name) {
     if (!data || !data.length) {
-      return;
+      return nothing;
     }
+    // data = angular.copy(data);
     return data.sort(function(a, b) {
       var af = Query.hasFilter(name, a.id),
           bf = Query.hasFilter(name, b.id);
@@ -118,6 +119,21 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
       return;
     }
     return sortedFilters(result.facets[name].values, 'filter:' + name);
+  };
+
+  $scope.getActiveFacets = function() {
+    if (!result.facets) {
+      return nothing;
+    }
+    var queryFacets = Query.load().facet,
+        facets = [];
+    for (var i in queryFacets) {
+      var facet = queryFacets[i];
+      if (result.facets[facet]) {
+        facets.push(facet);
+      }
+    }
+    return facets;
   };
 
   $scope.hasMore = function() {
