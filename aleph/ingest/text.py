@@ -5,7 +5,7 @@ from tempfile import mkstemp
 from lxml import html, etree
 from lxml.html.clean import Cleaner
 from extractors import extract_pdf, extract_image
-from extractors import document_to_pdf, image_to_pdf
+from extractors import document_to_pdf, image_to_pdf, html_to_pdf
 
 from aleph.core import archive
 from aleph.model import db, Page, Document
@@ -63,11 +63,7 @@ class DocumentIngestor(PDFIngestor):
                   'hqx', 'pdb', 'txt']
     BASE_SCORE = 5
 
-    def extract_document(self, meta, local_path):
-        pdf_path = document_to_pdf(local_path)
-        if pdf_path is None or not os.path.isfile(pdf_path):
-            log.warning("Could not convert document: %r", meta)
-            return
+    def extract_pdf_alternative(self, meta, pdf_path):
         try:
             self.store_pdf(meta, pdf_path, move=False)
             self.extract_pdf(meta, pdf_path)
@@ -76,7 +72,11 @@ class DocumentIngestor(PDFIngestor):
                 os.unlink(pdf_path)
 
     def ingest(self, meta, local_path):
-        self.extract_document(meta, local_path)
+        pdf_path = document_to_pdf(local_path)
+        if pdf_path is None or not os.path.isfile(pdf_path):
+            log.warning("Could not convert document: %r", meta)
+            return
+        self.extract_pdf_alternative(meta, pdf_path)
 
 
 class HtmlIngestor(DocumentIngestor):
@@ -88,7 +88,7 @@ class HtmlIngestor(DocumentIngestor):
                       meta=False)
 
     def ingest(self, meta, local_path):
-        fh, out_path = mkstemp(suffix='htm')
+        fh, out_path = mkstemp(suffix='.htm')
         os.close(fh)
         with open(local_path, 'rb') as fh:
             doc = html.fromstring(fh.read())
@@ -107,7 +107,11 @@ class HtmlIngestor(DocumentIngestor):
             with open(out_path, 'w') as fh:
                 fh.write(etree.tostring(doc))
 
-            self.extract_document(meta, out_path)
+            pdf_path = html_to_pdf(out_path)
+            if pdf_path is None or not os.path.isfile(pdf_path):
+                log.warning("Could not convert document: %r", meta)
+                return
+            self.extract_pdf_alternative(meta, pdf_path)
         finally:
             if os.path.isfile(out_path):
                 os.unlink(out_path)
