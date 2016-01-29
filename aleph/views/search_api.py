@@ -32,7 +32,7 @@ def records(document_id):
             'status': 'ok',
             'message': 'no query'
         })
-    query['size'] = get_limit(default=100)
+    query['size'] = get_limit(default=30)
     query['from'] = get_offset()
     res = execute_records_query(document.id, request.args, query)
     return jsonify(res)

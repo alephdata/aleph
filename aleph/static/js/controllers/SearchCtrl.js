@@ -137,11 +137,11 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   };
 
   $scope.hasMore = function() {
-    return !isLoading && $scope.result.next !== null;
+    return $scope.result.next !== null;
   };
 
   $scope.loadMore = function() {
-    if (!$scope.result.next) {
+    if (!$scope.result.next || isLoading) {
       return;
     }
     isLoading = true;
