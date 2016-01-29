@@ -78,7 +78,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
 
   var sortedFilters = function(data, name) {
     if (!data || !data.length) {
-      return nothing;
+      return [];
     }
     // data = angular.copy(data);
     return data.sort(function(a, b) {
