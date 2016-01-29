@@ -33,3 +33,6 @@ RUN pip install psycopg2 lxml numpy
 RUN curl --silent --location https://deb.nodesource.com/setup_0.12 | sh
 RUN apt-get install --yes nodejs && curl -L https://www.npmjs.org/install.sh | sh
 RUN npm install -g bower uglifyjs
+
+RUN wget -O /tmp/wkhtmltox.tar.xv http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz \
+    && tar -xf /tmp/wkhtmltox.tar.xv -C /opt && rm -f /tmp/wkhtmltox.tar.xv

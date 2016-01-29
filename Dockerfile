@@ -10,5 +10,6 @@ COPY . /aleph
 WORKDIR /aleph
 ENV ALEPH_SETTINGS /aleph/contrib/docker_settings.py
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
+ENV WKHTMLTOPDF_BIN /opt/wkhtmltox/bin/wkhtmltopdf
 RUN pip install -e /aleph && pip install https://github.com/pudo/extractors/tarball/master
 RUN rm -rf .git && bower --allow-root install
