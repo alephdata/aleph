@@ -1,24 +1,14 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'result', 'Query', 'Metadata', 'Authz',
-    function($scope, $route, $location, $http, $uibModal, result, Query, Metadata, Authz) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'data', 'Query', 'Authz',
+    function($scope, $route, $location, $http, $uibModal, data, Query, Authz) {
 
-  var isLoading = false, nothing = [];
-  $scope.result = result;
+  var isLoading = false;
+  $scope.result = data.result;
+  $scope.fields = data.metadata.fields;
+  $scope.session = data.metadata.session;
+  $scope.metadata = data.metadata;
   $scope.query = Query;
-  $scope.metadata = {};
-  $scope.session = {};
-  $scope.fields = {};
   $scope.graph = {'limit': 75, 'options': [10, 75, 150, 300, 600, 1200]};
-
-  Metadata.get().then(function(metadata) {
-    $scope.fields = metadata.fields;
-    $scope.session = metadata.session;
-    $scope.metadata = metadata;
-  });
-
-  $scope.showListFacet = function(id) {
-    return Query.load().watchlist.indexOf(id) == -1;
-  };
 
   $scope.showFieldFacet = function(field) {
     return Query.load().facet.indexOf(field) == -1;
@@ -106,35 +96,26 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     });
   };
 
-  $scope.getSources = function() {
-    return sortedFilters(result.sources.values, 'filter:source_id');
-  };
+  var initFacets = function() {
+    $scope.sourceFacets = sortedFilters(data.result.sources.values, 'filter:source_id');
+    $scope.entityFacets = sortedFilters(data.result.entities, 'entity');
 
-  $scope.getEntities = function() {
-    return sortedFilters(result.entities, 'entity');
-  };
-
-  $scope.getFacet = function(name) {
-    if (!result.facets[name]) {
-      return;
-    }
-    return sortedFilters(result.facets[name].values, 'filter:' + name);
-  };
-
-  $scope.getActiveFacets = function() {
-    if (!result.facets) {
-      return nothing;
-    }
     var queryFacets = Query.load().facet,
-        facets = [];
+        facets = {};
     for (var i in queryFacets) {
       var facet = queryFacets[i];
-      if (result.facets[facet]) {
-        facets.push(facet);
+      if (data.result.facets[facet]) {
+        if (data.result.facets[facet]) {
+          var values = data.result.facets[facet].values;
+          facets[facet] = sortedFilters(values, 'filter:' + name);  
+        }
       }
     }
-    return facets;
+
+    $scope.facets = facets;
   };
+
+  initFacets();
 
   $scope.hasMore = function() {
     return $scope.result.next !== null;

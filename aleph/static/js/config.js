@@ -12,7 +12,7 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     reloadOnSearch: true,
     loginRequired: false,
     resolve: {
-      'result': loadSearch
+      'data': loadSearch
     }
   });
 
