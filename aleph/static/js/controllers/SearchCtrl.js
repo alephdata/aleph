@@ -1,6 +1,6 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'data', 'Query', 'Authz',
-    function($scope, $route, $location, $http, $uibModal, data, Query, Authz) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'data', 'Query', 'Authz', 'Metadata',
+    function($scope, $route, $location, $http, $uibModal, data, Query, Authz, Metadata) {
 
   var isLoading = false;
   $scope.result = data.result;
