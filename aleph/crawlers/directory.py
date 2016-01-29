@@ -38,11 +38,15 @@ class DirectoryCrawler(Crawler):
                 try:
                     meta = self.metadata()
                     if isinstance(file_name, six.text_type):
-                        meta.file_name = file_name
+                        meta.source_path = file_path
                     else:
                         enc = chardet.detect(file_name)
-                        meta.file_name = file_name.decode(enc.get('encoding'))
-                    meta.source_path = file_path
+                        enc = enc.get('encoding')
+                        try:
+                            meta.source_path = file_path.decode(enc)
+                        except:
+                            meta.source_path = file_path.decode('ascii', 'ignore')
+
                     self.emit_file(source, meta, file_path)
                 except Exception as ex:
                     log.exception(ex)

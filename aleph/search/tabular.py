@@ -12,6 +12,7 @@ def tabular_query(document_id, sheet, args):
 
     text = args.get('q', '').strip()
     if len(text):
+        scored = True
         text_latin = latinize_text(text)
         q = {
             "bool": {
@@ -38,21 +39,22 @@ def tabular_query(document_id, sheet, args):
 
     try:
         rows = [int(r) for r in args.getlist('row')]
-        if len(rows):
-            scored = True
-            q = {
-                "bool": {
-                    "must": q,
-                    "should": {
-                        "constant_score": {
-                            "filter": {'terms': {'row_id': rows}},
-                            "boost": 1000
-                        }
+    except Exception:
+        rows = []
+
+    if len(rows):
+        scored = True
+        q = {
+            "bool": {
+                "must": q,
+                "should": {
+                    "constant_score": {
+                        "filter": {'terms': {'row_id': rows}},
+                        "boost": 1000
                     }
                 }
             }
-    except Exception:
-        pass
+        }
 
     q = add_filter(q, {'term': {'document_id': document_id}})
     q = add_filter(q, {'term': {'sheet': sheet}})
