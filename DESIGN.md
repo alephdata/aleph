@@ -37,24 +37,26 @@ Iteration II
 * [DONE] Switch to JSONB
 * [DONE] Loading screen (spinner, failure)
 * [DONE] Result drilldown
-* Tabular: Fixed headers
 * [DONE] Tabular: Multiple sheets
-* Tabular: Cell value formatting
 * [DONE] Tabular: Highlight selected row
 * [DONE] Tabular: Filter globally
+* [DONE] crawldir CLI arguments
+* [WONTFIX] Invert source selection options
+* Tabular: Cell value formatting
+* Tabular: Fixed headers
 * Tabular: Filter by field
 * Tabular: Facet by field
-* Load performance / pagination
-* Invert source selection options
-* crawldir CLI arguments
-* Filter display
+* Web crawler
+* GDrive importer
+* [MAYBE] Filter display
 * Alerts / Subscriptions
+* JS set titles
 * Testing
 * tidbits
 
 * [DONE] Azerbaijan importer 
 * [DONE] Moldova importer
-* YL importer
+* [DONE] YL importer
 
 ---
 
@@ -69,6 +71,8 @@ http://www.oera.li/hrweb/ger/PublSuche_afj.htm
 http://www.start.umd.edu/gtd/
 https://wikileaks.org/plusd/?qproject[]=cg&q=#result
 https://archive.org/details/wikileaks-cables-csv
+
+https://services.gov.im/ded/services/companiesregistry/viewcompany.iom?Id=121122
 
 ---
 
