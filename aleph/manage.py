@@ -12,6 +12,7 @@ from aleph.index import init_search, delete_index, index_document
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
+from aleph.crawlers.web import WebCrawler
 from aleph.upgrade import upgrade as upgrade_
 
 
@@ -66,6 +67,16 @@ def crawlsql(yaml_config, source=None):
     yaml_config = os.path.normpath(yaml_config)
     log.info('Crawling %r...', yaml_config)
     SQLCrawler().crawl(config=yaml_config, source=source)
+    db.session.commit()
+
+
+@manager.command
+def crawlweb(yaml_config, source=None):
+    """ Crawl the given web crawler config file. """
+    yaml_config = os.path.abspath(yaml_config)
+    yaml_config = os.path.normpath(yaml_config)
+    log.info('Crawling %r...', yaml_config)
+    WebCrawler().crawl(config=yaml_config, source=source)
     db.session.commit()
 
 
