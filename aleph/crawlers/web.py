@@ -67,7 +67,16 @@ class WebCrawlerState(object):
         return True
 
     def should_process(self, url):
-        return True
+        parsed = urlparse(url)
+
+        for seed in self.seeds:
+            sparsed = urlparse(seed)
+            if parsed.hostname == sparsed.hostname:
+                return True
+            dom = '.%s' % sparsed.hostname
+            if parsed.hostname.endswith(dom):
+                return True
+        return False
 
     def emit(self, page):
         meta = self.crawler.metadata()
@@ -162,8 +171,7 @@ class WebCrawlerPage(object):
             self.parse()
 
     def retain(self):
-        # self.state.emit(self)
-        print self.url
+        self.state.emit(self)
 
 
 class WebCrawler(Crawler):
