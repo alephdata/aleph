@@ -15,6 +15,7 @@ apikit
 six
 colander>=1.0
 unicodecsv
+urlnorm
 gunicorn
 Unidecode==0.04.17
 networkx

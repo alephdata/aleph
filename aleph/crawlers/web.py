@@ -1,10 +1,12 @@
 import os
+import cgi
 import yaml
 import logging
 import requests
+import urlnorm
+from urlparse import urljoin, urlparse, urldefrag
 from lxml import html
 from tempfile import mkstemp
-from sqlalchemy import create_engine
 
 from aleph.crawlers.crawler import Crawler
 
@@ -19,12 +21,20 @@ def as_list(attr):
     return [attr]
 
 
+def normalize_url(url):
+    url = urlnorm.norm(url)
+    url, _ = urldefrag(url)
+    url = url.rstrip('/')
+    return url
+
+
 class WebCrawlerState(object):
 
     def __init__(self, crawler, source, config):
+        self.crawler = crawler
         self.source = source
         self.config = config
-        self.seen_urls = set([])
+        self.seen = set([])
 
     @property
     def session(self):
@@ -32,11 +42,42 @@ class WebCrawlerState(object):
             self._session = requests.Session()
         return self._session
 
+    @property
+    def seeds(self):
+        if not hasattr(self, '_seeds'):
+            seeds = as_list(self.config.get('seed'))
+            self._seeds = [normalize_url(s) for s in seeds]
+        return self._seeds
+
+    def queue(self, url):
+        page = WebCrawlerPage(self, url)
+        # TODO: add celery?
+        page.process()
+
+    def should_retain(self, page):
+        if not self.should_process(page.normalized_url):
+            return False
+        return True
+
+    def should_crawl(self, url):
+        if normalize_url(url) in self.seen:
+            return False
+        if not self.should_process(url):
+            return False
+        return True
+
+    def should_process(self, url):
+        return True
+
     def emit(self, page):
-        meta = self.metadata()
+        meta = self.crawler.metadata()
         meta.data.update(self.config.get('meta', {}))
-        meta.source_url = page.url
+        meta.source_url = page.normalized_url
+        meta.foreign_id = page.id
         meta.headers = page.response.headers
+
+        from pprint import pprint
+        pprint(meta.to_dict())
 
         fh, file_path = mkstemp(suffix='.%s' % meta.extension)
         try:
@@ -70,9 +111,59 @@ class WebCrawlerPage(object):
             self._doc = html.fromstring(self.response.content)
         return self._doc
 
+    @property
+    def normalized_url(self):
+        url = self.url
+        if hasattr(self, '_response'):
+            url = self._response.url
+        return normalize_url(url)
+
+    @property
+    def id(self):
+        return self.normalized_url
+
+    @property
+    def is_html(self):
+        content_type = self.response.headers.get('content-type')
+        if content_type is None:
+            return True
+        mime_type, _ = cgi.parse_header(content_type)
+        if 'html' in mime_type:
+            return True
+        return False
+
+    def parse(self):
+        tags = [('a', 'href'), ('img', 'src'), ('link', 'href'),
+                ('iframe', 'src')]
+
+        urls = set([])
+        for tag_name, attr_name in tags:
+            for tag in self.doc.findall('.//%s' % tag_name):
+                attr = tag.get(attr_name)
+                if attr is None:
+                    continue
+                urls.add(urljoin(self.normalized_url, attr))
+
+        for url in urls:
+            self.state.queue(url)
+
     def process(self):
-        # res = requests.get(self.url)
-        print self.doc
+        if not self.state.should_crawl(self.normalized_url):
+            return
+
+        self.state.seen.add(self.normalized_url)
+        if self.response.status_code > 300:
+            return
+        self.state.seen.add(self.normalized_url)
+
+        if self.state.should_retain(self):
+            self.retain()
+        if self.is_html:
+            self.parse()
+
+    def retain(self):
+        # self.state.emit(self)
+        print self.url
 
 
 class WebCrawler(Crawler):
@@ -84,7 +175,7 @@ class WebCrawler(Crawler):
                                     label=data.get('label'))
 
         state = WebCrawlerState(self, source, data)
-        for url in as_list(data.get('seed')):
+        for url in state.seeds:
             page = WebCrawlerPage(state, url)
             page.process()
 
