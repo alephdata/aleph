@@ -54,9 +54,13 @@ Iteration II
 * Testing
 * tidbits
 
+
+* BUG: content loaded in pagination does not have highlights
+
 * [DONE] Azerbaijan importer 
 * [DONE] Moldova importer
 * [DONE] YL importer
+* Romanian Gazette http://www.monitoruloficial.ro/RO/article--e-Monitor--339.html 
 
 ---
 

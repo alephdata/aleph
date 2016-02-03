@@ -1,9 +1,9 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'data', 'Query', 'Authz', 'Metadata',
-    function($scope, $route, $location, $http, $uibModal, data, Query, Authz, Metadata) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', '$sce', 'data', 'Query', 'Authz', 'Metadata',
+    function($scope, $route, $location, $http, $uibModal, $sce, data, Query, Authz, Metadata) {
 
   var isLoading = false;
-  $scope.result = data.result;
+  $scope.result = {};
   $scope.fields = data.metadata.fields;
   $scope.session = data.metadata.session;
   $scope.metadata = data.metadata;
@@ -115,7 +115,25 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     $scope.facets = facets;
   };
 
+  var initResults = function() {
+    // allow HTML highlight results:
+    for (var i in data.result.results) {
+      var doc = data.result.results[i];
+      for (var j in doc.records.results) {
+        var rec = doc.records.results[j];
+        rec.snippets = [];
+        for (var n in rec.text) {
+          var text = rec.text[n];
+          rec.snippets.push($sce.trustAsHtml(text));
+        }
+      }
+    }
+    $scope.result = data.result;
+    isLoading = false;
+  };
+
   initFacets();
+  initResults();
 
   $scope.hasMore = function() {
     return $scope.result.next !== null;
@@ -127,9 +145,10 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     }
     isLoading = true;
     $http.get($scope.result.next).then(function(res) {
-      $scope.result.results = $scope.result.results.concat(res.data.results);
-      $scope.result.next = res.data.next;
-      isLoading = false;
+      data.result.results = data.result.results.concat(res.data.results);
+      data.result.next = res.data.next;
+      
+      initResults();
     });
   };
 }]);
