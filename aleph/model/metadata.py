@@ -245,17 +245,16 @@ class Metadata(MutableMapping):
 
     @property
     def headers(self):
-        return self.data.get('headers', {})
+        # normalize header names
+        headers = {}
+        for k, v in self.data.get('headers', {}).items():
+            headers[slugify(k, sep='_')] = v
+        return headers
 
     @headers.setter
     def headers(self, headers):
-        # normalize header names
         if isinstance(headers, Mapping):
-            data = {}
-            for k, v in headers.items():
-                data[slugify(k, sep='_')] = v
-
-        self.data['headers'] = data
+            self.data['headers'] = dict(headers)
 
     @property
     def is_pdf(self):
@@ -313,6 +312,7 @@ class Metadata(MutableMapping):
         data['file_name'] = self.file_name
         data['extension'] = self.extension
         data['mime_type'] = self.mime_type
+        data['headers'] = self.headers
         data['source_path'] = self.source_path
         data['title'] = self.title
         data['is_pdf'] = self.is_pdf
