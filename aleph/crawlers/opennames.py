@@ -31,6 +31,8 @@ class OpenNamesCrawler(Crawler):
         })
         Permission.grant_foreign(watchlist, Role.SYSTEM_GUEST, True, False)
         log.info(" > OpenNames collection: %s", watchlist.label)
+        previous_terms = watchlist.terms
+        updated_terms = set()
         existing_entities = []
         db.session.flush()
         entities = requests.get(url).json().get('entities', [])
@@ -49,10 +51,12 @@ class OpenNamesCrawler(Crawler):
                 'data': entity,
                 'selectors': selectors
             })
+            updated_terms.update(ent.terms)
             existing_entities.append(ent.id)
             log.info("  # %s (%s)", ent.name, ent.category)
         watchlist.delete_entities(spare=existing_entities)
-        self.emit_watchlist(watchlist)
+        terms = previous_terms.symmetric_difference(updated_terms)
+        self.emit_watchlist(watchlist, terms)
 
     def crawl(self):
         data = requests.get(JSON_PATH).json()
