@@ -19,15 +19,6 @@ def analyze_source(source_id):
 
 
 @celery.task()
-def analyze_watchlist(watchlist_id):
-    query = {'term': {'entities.watchlist_id': watchlist_id}}
-    analyze_matches(query)
-    watchlist = Watchlist.by_id(watchlist_id)
-    if watchlist is not None:
-        analyze_terms(watchlist.terms)
-
-
-@celery.task()
 def analyze_entity(entity_id):
     query = {'term': {'entities.entity_id': entity_id}}
     analyze_matches(query)
@@ -36,6 +27,7 @@ def analyze_entity(entity_id):
         analyze_terms(entity.terms)
 
 
+@celery.task()
 def analyze_terms(terms):
     ignore = set()
     for term in terms:
