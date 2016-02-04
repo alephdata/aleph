@@ -92,6 +92,7 @@ class Entity(db.Model, TimeStampedModel):
         if ent is None:
             ent = cls.create(data)
         ent.update(data)
+        db.session.flush()
         return ent
 
     @classmethod
