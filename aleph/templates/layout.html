@@ -19,7 +19,9 @@
           role="search" ng-submit="submitSearch(form)">
           <div class="form-group">
             <div class="input-group navbar-searchbox">
-              <span class="input-group-addon brand-field">{{config.APP_TITLE}}</span>
+              <span class="input-group-addon brand-field">
+                <a ng-click="clearSearch()">{{config.APP_TITLE}}</a>
+              </span>
               <input type="text" class="search-query form-control" autofocus
                 ng-model="query.state.q" placeholder="Search across documents and data sources"
                 uib-typeahead="entity for entity in suggestEntities($viewValue)"
@@ -27,11 +29,6 @@
                 typeahead-focus-first="false"
                 typeahead-template-url="entity_link.html"
                 typeahead-on-select="acceptSuggestion($item)">
-              
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="clearSearch()">
-                  <i class="fa fa-refresh"></i> Reset</button>
-              </span>
             </div>
           </div>
         </form>
