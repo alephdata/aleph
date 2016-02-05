@@ -54,14 +54,6 @@ class Ingestor(object):
 
     @classmethod
     def dispatch(cls, source_id, meta):
-        # if meta.content_hash:
-        #     q = db.session.query(Document)
-        #     q = q.filter(Document.content_hash == meta.content_hash)
-        #     q = q.filter(Document.source_id == source_id)
-        #     doc = q.first()
-        #     if doc is not None:
-        #         return
-
         best_score, best_cls = 0, None
         local_path = archive.load_file(meta)
         try:
