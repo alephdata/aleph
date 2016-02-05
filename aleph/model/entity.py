@@ -4,7 +4,7 @@ from sqlalchemy import or_, func
 from sqlalchemy.orm import aliased
 from sqlalchemy.dialects.postgresql import JSONB
 
-from aleph.core import db  # , url_for
+from aleph.core import db
 from aleph.model.forms import EntityForm, CATEGORIES
 from aleph.model.watchlist import Watchlist
 from aleph.model.common import db_compare

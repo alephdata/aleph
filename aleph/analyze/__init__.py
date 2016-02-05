@@ -2,7 +2,7 @@ import logging
 
 from aleph.core import celery
 from aleph.ext import get_analyzers
-from aleph.model import Document, Watchlist, Entity
+from aleph.model import Document, Entity
 from aleph.model import clear_session
 from aleph.index import index_document
 from aleph.search import raw_iter
@@ -12,13 +12,13 @@ from aleph.search.documents import text_query
 log = logging.getLogger(__name__)
 
 
-@celery.task()
+@celery.task(ignore_result=True)
 def analyze_source(source_id):
     query = {'term': {'source_id': source_id}}
     analyze_matches(query)
 
 
-@celery.task()
+@celery.task(ignore_result=True)
 def analyze_entity(entity_id):
     query = {'term': {'entities.entity_id': entity_id}}
     analyze_matches(query)
@@ -27,7 +27,7 @@ def analyze_entity(entity_id):
         analyze_terms(entity.terms)
 
 
-@celery.task()
+@celery.task(ignore_result=True)
 def analyze_terms(terms):
     ignore = set()
     for term in terms:
@@ -48,7 +48,7 @@ def analyze_matches(query, ignore=None):
         analyze_document.delay(doc_id)
 
 
-@celery.task()
+@celery.task(ignore_result=True)
 def analyze_document(document_id):
     clear_session()
     document = Document.by_id(document_id)
