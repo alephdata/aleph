@@ -12,40 +12,43 @@ from aleph.search.documents import text_query
 log = logging.getLogger(__name__)
 
 
+def query_doc_ids(query):
+    query = {
+        'query': query,
+        '_source': []
+    }
+    for row in raw_iter(query):
+        yield row.get('_id')
+
+
 @celery.task(ignore_result=True)
 def analyze_source(source_id):
     query = {'term': {'source_id': source_id}}
-    analyze_matches(query)
+    for doc_id in query_doc_ids(query):
+        analyze_document.delay(doc_id)
 
 
 @celery.task(ignore_result=True)
 def analyze_entity(entity_id):
+    seen = set()
     query = {'term': {'entities.entity_id': entity_id}}
-    analyze_matches(query)
+    for doc_id in query_doc_ids(query):
+        analyze_document.delay(doc_id)
+        seen.add(doc_id)
     entity = Entity.by_id(entity_id)
     if entity is not None:
-        analyze_terms(entity.terms)
+        analyze_terms(entity.terms, seen=seen)
 
 
 @celery.task(ignore_result=True)
-def analyze_terms(terms):
-    ignore = set()
+def analyze_terms(terms, seen=None):
+    if seen is None:
+        seen = set()
     for term in terms:
-        q = text_query(term)
-        ignore = analyze_matches(q, ignore=ignore)
-
-
-def analyze_matches(query, ignore=None):
-    if 'query' not in query:
-        query = {'query': query}
-    query['_source'] = []
-    if ignore is None:
-        ignore = set([])
-    for row in raw_iter(query):
-        doc_id = row.get('_id')
-        if doc_id in ignore:
-            continue
-        analyze_document.delay(doc_id)
+        for doc_id in query_doc_ids(text_query(term)):
+            if doc_id not in seen:
+                analyze_document.delay(doc_id)
+            seen.add(doc_id)
 
 
 @celery.task(ignore_result=True)
