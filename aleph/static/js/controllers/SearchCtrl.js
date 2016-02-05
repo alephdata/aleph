@@ -1,6 +1,6 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', '$sce', 'data', 'Query', 'Authz', 'Metadata',
-    function($scope, $route, $location, $http, $uibModal, $sce, data, Query, Authz, Metadata) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', '$sce', 'data', 'Query', 'Authz', 'Metadata', 'Title',
+    function($scope, $route, $location, $http, $uibModal, $sce, data, Query, Authz, Metadata, Title) {
 
   var isLoading = false;
   $scope.result = {};
@@ -9,6 +9,13 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   $scope.metadata = data.metadata;
   $scope.query = Query;
   $scope.graph = {'limit': 75, 'options': [10, 75, 150, 300, 600, 1200]};
+  
+  if (Query.state.q) {
+    Title.set("Search for '" + Query.state.q + "'");  
+  } else {
+    Title.set("Search documents");  
+  }
+  
 
   $scope.showFieldFacet = function(field) {
     return Query.load().facet.indexOf(field) == -1;

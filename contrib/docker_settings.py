@@ -7,6 +7,7 @@ SECRET_KEY = os.environ.get('ALEPH_SECRET_KEY')
 
 APP_TITLE = os.environ.get('ALEPH_APP_TITLE', 'Aleph')
 APP_NAME = os.environ.get('ALEPH_APP_NAME', 'aleph')
+FAVICON = 'https://investigativedashboard.org/static/favicon.ico'
 
 ELASTICSEARCH_URL = os.environ.get('ALEPH_ELASTICSEARCH_URI')
 

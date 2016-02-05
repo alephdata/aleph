@@ -6,6 +6,7 @@ CACHE = True
 
 APP_TITLE = 'aleph.grano.local'
 APP_NAME = 'aleph'
+FAVICON = 'https://investigativedashboard.org/static/favicon.ico'
 
 ARCHIVE_TYPE = 'file'
 ARCHIVE_AWS_KEY_ID = env.get('AWS_ACCESS_KEY_ID')
