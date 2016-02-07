@@ -1,12 +1,14 @@
 
-aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$filter', 'Metadata', 'Authz', 'data',
-    function($scope, $location, $http, $sce, $filter, Metadata, Authz, data) {
+aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$filter', 'Metadata', 'Authz', 'Title', 'data',
+    function($scope, $location, $http, $sce, $filter, Metadata, Authz, Title, data) {
 
   $scope.doc = data.doc;
   $scope.table = data.table;
   $scope.rows = data.rows;
   $scope.moreLoading = false;
   $scope.textQuery = $location.search().rq || $location.search().q;
+
+  Title.set(data.doc.title || data.doc.file_name);
 
   $scope.getClass = function(row, col) {
     var value = row[col.name];

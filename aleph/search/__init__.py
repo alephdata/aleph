@@ -11,11 +11,9 @@ PAGE = 1000
 log = logging.getLogger(__name__)
 
 
-def raw_iter(query, total=10000):
+def raw_iter(query):
     for page in count(0):
         query['from'] = PAGE * page
-        if query['from'] >= total:
-            return
         query['size'] = PAGE
         result = es.search(index=es_index,
                            doc_type=TYPE_DOCUMENT,

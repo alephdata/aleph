@@ -3,7 +3,7 @@ from apikit import obj_or_404, jsonify, Pager, request_data
 
 from aleph import authz
 from aleph.model import Watchlist, db
-from aleph.analyze import analyze_watchlist
+from aleph.analyze import analyze_terms
 from aleph.views.cache import etag_cache_keygen
 
 blueprint = Blueprint('watchlists', __name__)
@@ -39,7 +39,6 @@ def update(id):
     watchlist.update(request_data())
     db.session.add(watchlist)
     db.session.commit()
-    analyze_watchlist.delay(watchlist.id)
     return view(id)
 
 
@@ -47,7 +46,7 @@ def update(id):
 def delete(id):
     authz.require(authz.watchlist_write(id))
     watchlist = obj_or_404(Watchlist.by_id(id))
+    analyze_terms.delay(watchlist.terms)
     watchlist.delete()
     db.session.commit()
-    analyze_watchlist.delay(id)
     return jsonify({'status': 'ok'})

@@ -17,7 +17,7 @@ REQUEST_TYPES = {
 }
 
 
-class InvestigativeDashboard(Crawler):
+class IDBase(Crawler):
 
     @property
     def host(self):
@@ -38,6 +38,9 @@ class InvestigativeDashboard(Crawler):
             })
             self._session = sess
         return self._session
+
+
+class IDFiles(IDBase):
 
     def crawl_file(self, data):
         if data['public_read']:
@@ -74,7 +77,7 @@ class InvestigativeDashboard(Crawler):
             if os.path.isfile(file_path):
                 os.unlink(file_path)
 
-    def crawl_files(self):
+    def crawl(self):
         url = urljoin(self.host, '/podaci/search/?q=+&format=json')
         while True:
             res = self.session.get(url)
@@ -85,31 +88,36 @@ class InvestigativeDashboard(Crawler):
                 break
             url = data['next']
 
-    def crawl_requests(self):
+
+class IDRequests(IDBase):
+
+    def crawl(self):
         url = urljoin(self.host, '/ticket/all_closed/?format=json')
-        data = self.session.get(url).json()
         watchlist = Watchlist.by_foreign_id(url, {
-            'label': 'Investigative Dashboard (Closed Requests)'
+            'label': 'Investigative Dashboard Requests'
         })
         Permission.grant_foreign(watchlist, 'idashboard:occrp_staff',
                                  True, False)
         existing_entities = []
+        previous_terms = watchlist.terms
+        updated_terms = set()
         db.session.flush()
-        for req in data.get('paginator', {}).get('object_list'):
-            category = REQUEST_TYPES.get(req.get('ticket_type'))
-            if category is None:
-                continue
-            ent = Entity.by_foreign_id(str(req.get('id')), watchlist, {
-                'name': req.get('name'),
-                'category': category,
-                'data': req,
-                'selectors': [req.get('name')]
-            })
-            existing_entities.append(ent.id)
-            log.info("  # %s (%s)", ent.name, ent.category)
+        for endpoint in ['all_closed', 'all_open']:
+            url = urljoin(self.host, '/ticket/%s/?format=json' % endpoint)
+            data = self.session.get(url).json()
+            for req in data.get('paginator', {}).get('object_list'):
+                category = REQUEST_TYPES.get(req.get('ticket_type'))
+                if category is None:
+                    continue
+                ent = Entity.by_foreign_id(str(req.get('id')), watchlist, {
+                    'name': req.get('name'),
+                    'category': category,
+                    'data': req,
+                    'selectors': [req.get('name')]
+                })
+                updated_terms.update(ent.terms)
+                existing_entities.append(ent.id)
+                log.info("  # %s (%s)", ent.name, ent.category)
         watchlist.delete_entities(spare=existing_entities)
-        self.emit_watchlist(watchlist)
-
-    def crawl(self):
-        self.crawl_requests()
-        self.crawl_files()
+        terms = previous_terms.symmetric_difference(updated_terms)
+        self.emit_watchlist(watchlist, terms)

@@ -42,10 +42,10 @@ setup(
         'aleph.crawlers': [
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
             'spindle = aleph.crawlers.spindle:SpindleCrawler',
-            'idashboard = aleph.crawlers.idashboard:InvestigativeDashboard',
+            'idrequests = aleph.crawlers.idashboard:IDRequests',
+            'idfiles = aleph.crawlers.idashboard:IDFiles',
             'aznews = aleph.crawlers.az_news:AzerbaijanNewsCrawler',
             'azapa = aleph.crawlers.az_apa:AzerbaijanPressAgency',
-            'mdcourts = aleph.crawlers.md_courts:MoldovaCourts',
             'chsogc = aleph.crawlers.ch_sogc:SwissCommercialGazette',
             'lulegi = aleph.crawlers.lu_legi:LuxembourgGazette',
             'lioera = aleph.crawlers.li_oera:LiechtensteinOld',

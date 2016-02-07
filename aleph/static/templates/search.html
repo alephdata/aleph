@@ -95,7 +95,7 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        <strong>Document sources</strong>
+        <strong>Document sources</strong> <small>{{sourceFacets.length}}</small>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
@@ -113,7 +113,7 @@
       </ul>
     </div>
 
-    <div class="panel panel-default">
+    <div class="panel panel-default" ng-if="result.total < 10000">
       <div class="panel-heading">
         <strong>Download result list</strong>
       </div>

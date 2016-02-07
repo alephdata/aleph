@@ -233,7 +233,7 @@ def execute_documents_query(args, q):
     if output['total'] > next_offset:
         params = {'offset': next_offset}
         for k, v in args.iterlists():
-            if k in ['facet', 'offset']:
+            if k in ['offset']:
                 continue
             params[k] = v
         output['next'] = url_for('search.query', **params)

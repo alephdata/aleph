@@ -152,7 +152,7 @@ def generate_entities(document):
     return entities
 
 
-@celery.task()
+@celery.task(ignore_result=True)
 def index_document(document_id):
     clear_session()
     document = Document.by_id(document_id)
