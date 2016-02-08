@@ -12,6 +12,8 @@ log = logging.getLogger(__name__)
 
 class AlephKrauler(Krauler):
 
+    USER_AGENT = 'aleph/web'
+
     def __init__(self, crawler, source, config):
         self.crawler = crawler
         self.source = source
