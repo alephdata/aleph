@@ -52,6 +52,7 @@ Iteration II
 * Alerts / Subscriptions
 * JS set titles
 * Testing
+* Check DOCX/XLSX ingest
 * tidbits
 
 
