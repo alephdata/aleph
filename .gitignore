@@ -9,3 +9,5 @@ settings.py
 aleph/static/.webassets-cache/*
 aleph/static/assets/*
 aleph/static/vendor/*
+
+aleph.env
