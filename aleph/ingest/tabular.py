@@ -24,7 +24,7 @@ class MessyTablesIngestor(TabularIngestor):
                   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',  # noqa
                   'application/vnd.oasis.opendocument.spreadsheet',
                   'text/tab-separated-values']
-    EXTENSIONS = ['csv', 'tsv', 'xls', 'xlsx', 'ods']
+    EXTENSIONS = ['csv', 'tsv', 'xls', 'xlsx', 'ods', 'rtf']
     BASE_SCORE = 6
 
     def generate_table(self, meta, sheet, row_set):
@@ -44,7 +44,7 @@ class MessyTablesIngestor(TabularIngestor):
         tabular.create()
 
         def generate_rows():
-            for i, row in enumerate(row_set):
+            for row in row_set:
                 record = {}
                 for cell, column in zip(row, columns):
                     record[column.name] = string_value(cell.value)
@@ -52,7 +52,6 @@ class MessyTablesIngestor(TabularIngestor):
                     for column in columns:
                         record[column.name] = record.get(column.name, None)
                     yield record
-            log.info("Loaded %s rows.", i)
 
         tabular.load_iter(generate_rows())
         return schema
@@ -109,8 +108,6 @@ class DBFIngestor(TabularIngestor):
                         for name in columns.values():
                             record[name] = record.get(name, None)
                         yield record
-
-                log.info("Loaded %s rows.", i)
 
             tabular.load_iter(generate_rows())
             meta.tables = [schema]

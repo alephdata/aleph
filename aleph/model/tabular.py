@@ -29,8 +29,9 @@ class TabularSchema(object):
             self.schema['columns'] = []
 
     def add_column(self, label):
-        column = slugify(label or '', sep='_')[:55]
+        column = slugify(label or '', sep='_')
         column = column or 'column'
+        column = column[:55]
         name, i = column, 2
         # de-dupe: column, column_2, column_3, ...
         while name in [c.name for c in self.columns]:
@@ -83,8 +84,8 @@ class Tabular(object):
 
     @property
     def table(self):
-        """ Generate an appropriate table representation to mirror the
-        fields known for this table. """
+        """Generate an appropriate table representation to mirror the
+        fields known for this table."""
         if self._table is None:
             self._table = Table(self.schema.table_name, self.meta)
             id_col = Column('_id', Unicode(42), primary_key=True)
@@ -99,8 +100,8 @@ class Tabular(object):
         return db.engine.has_table(self.table.name)
 
     def load_iter(self, iterable, chunk_size=5000):
-        """ Bulk load all the data in an artifact to a matching database
-        table. """
+        """Bulk load all the data in an artifact to a matching database
+        table."""
         chunk = []
 
         conn = self.bind.connect()

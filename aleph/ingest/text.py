@@ -58,6 +58,8 @@ class PDFIngestor(TextIngestor):
 
 class DocumentIngestor(PDFIngestor):
     MIME_TYPES = ['application/msword', 'application/rtf', 'application/x-rtf',
+                  'application/vnd.oasis.opendocument.text',
+                  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # noqa
                   'text/richtext', 'text/plain']
     EXTENSIONS = ['doc', 'docx', 'rtf', 'odt', 'sxw', 'dot', 'docm',
                   'hqx', 'pdb', 'txt']
@@ -119,8 +121,9 @@ class HtmlIngestor(DocumentIngestor):
 
 class ImageIngestor(TextIngestor):
     MIME_TYPES = ['image/png', 'image/tiff', 'image/x-tiff',
-                  'image/jpeg', 'image/bmp', '  image/x-windows-bmp',
-                  'image/x-portable-bitmap']
+                  'image/jpeg', 'image/bmp', 'image/x-windows-bmp',
+                  'image/x-portable-bitmap', 'application/postscript',
+                  'image/vnd.dxf', 'image/svg+xml']
     EXTENSIONS = ['gif', 'png', 'jpg', 'jpeg', 'tif', 'tiff', 'bmp',
                   'jpe', 'pbm']
     BASE_SCORE = 5

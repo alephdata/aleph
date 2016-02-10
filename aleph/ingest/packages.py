@@ -77,7 +77,7 @@ class ZipIngestor(PackageIngestor):
     @classmethod
     def match(cls, meta, local_path):
         if zipfile.is_zipfile(local_path):
-            return 4
+            return 3
         return -1
 
 

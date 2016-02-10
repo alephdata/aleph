@@ -56,7 +56,7 @@ Iteration II
 * tidbits
 
 
-* BUG: content loaded in pagination does not have highlights
+* [DONE] BUG: content loaded in pagination does not have highlights
 
 * [DONE] Azerbaijan importer 
 * [DONE] Moldova importer
