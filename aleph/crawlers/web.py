@@ -1,5 +1,4 @@
 import os
-import cgi
 import yaml
 import logging
 from lxml import html
@@ -12,6 +11,8 @@ log = logging.getLogger(__name__)
 
 
 class AlephKrauler(Krauler):
+
+    USER_AGENT = 'aleph/web'
 
     def __init__(self, crawler, source, config):
         self.crawler = crawler
@@ -67,6 +68,6 @@ class WebCrawler(Crawler):
         with open(config, 'rb') as fh:
             config = yaml.load(fh)
             for name, data in config.get('sources', {}).items():
-                if source is None or source == name:
+                if source is None or name == source:
                     foreign_id = '%s:%s' % (self.name, name)
                     self.crawl_source(foreign_id, data)

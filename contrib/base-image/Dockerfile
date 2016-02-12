@@ -2,10 +2,11 @@ FROM python:2.7.10
 MAINTAINER Friedrich Lindenberg <friedrich@pudo.org>
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN echo "deb http://http.us.debian.org/debian stable non-free" >/etc/apt/sources.list.d/nonfree.list
 RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
         curl git python-pip python-virtualenv build-essential python-dev \
         libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates less \
-        postgresql-client-9.4 unrar-free unzip locales libreoffice \
+        postgresql-client-9.4 unrar unzip locales libreoffice \
         libreoffice-writer libreoffice-draw libreoffice-impress \
         libreoffice-l10n-en-gb libreoffice-help-tr libreoffice-help-ru \
         libreoffice-l10n-hu libreoffice-l10n-hr libreoffice-l10n-uk \

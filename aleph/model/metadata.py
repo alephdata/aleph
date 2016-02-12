@@ -142,7 +142,11 @@ class Metadata(MutableMapping):
 
     @property
     def dates(self):
-        return set(self.data.get('dates', []))
+        _dates = set()
+        for date_ in self.data.get('dates', []):
+            if date is not None:
+                _dates.add(date_.strip('.').strip())
+        return _dates
 
     @dates.setter
     def dates(self, dates):
@@ -310,6 +314,9 @@ class Metadata(MutableMapping):
         if self.has('parent'):
             data['parent'] = self.parent.to_dict()
         data['file_name'] = self.file_name
+        data['dates'] = self.dates
+        data['countries'] = self.countries
+        data['languages'] = self.languages
         data['extension'] = self.extension
         data['mime_type'] = self.mime_type
         data['headers'] = self.headers

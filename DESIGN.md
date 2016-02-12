@@ -52,10 +52,11 @@ Iteration II
 * Alerts / Subscriptions
 * JS set titles
 * Testing
+* Check DOCX/XLSX ingest
 * tidbits
 
 
-* BUG: content loaded in pagination does not have highlights
+* [DONE] BUG: content loaded in pagination does not have highlights
 
 * [DONE] Azerbaijan importer 
 * [DONE] Moldova importer
