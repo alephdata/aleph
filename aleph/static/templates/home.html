@@ -1,0 +1,41 @@
+
+<div class="row">
+  <div class="col-md-6 intro-text">
+    <div class="intro-text">
+      <p>
+        <strong>Welcome to {{title}}</strong>
+      </p>
+      <p>
+        {{title}} makes a large number of research material searchable. This
+        includes documents from previous investigations and official sources, and
+        scraped databases from many countries.
+      </p>
+      <p>
+        The site also cross-references watchlists of people and companies with source
+        documents to find mentions of persons and organisations of interest. You can use
+        watchlists to quickly find relevant material.
+      </p>
+      <div class="alert alert-info" role="alert">
+        <strong>Help us improve.</strong> Please send feedback on the quality of search results, 
+        using the tool, or ideas for additional sources to be included to
+        <strong>tech@occrp.org</strong>.
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <table class="table table-striped">
+      <tr>
+        <th>
+          Document and data sources ({{result.sources.values.length | number}})
+        </th>
+        <th class="numeric">
+          {{result.total | number}}
+        </th>
+      </tr>
+      <tr ng-repeat="source in result.sources.values">
+        <td><a ng-href="#/search?filter:source_id={{source.id}}">{{source.label}}</a></td>
+        <td class="numeric">{{source.count}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

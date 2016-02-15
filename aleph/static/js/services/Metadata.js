@@ -17,15 +17,18 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
           $http.get('/api/1/watchlists?limit=1000&_uid=' + session.cbq),
           $http.get('/api/1/metadata')
         ]).then(function(results) {
-            var watchlists = {}, 
+            var watchlists = {},
+                watchlistsCount = 0, 
                 metadata = results[1].data;
             angular.forEach(results[0].data.results, function(c) {
               watchlists[c.id] = c;
+              watchlistsCount++;
             });
 
             dfd.resolve({
               'session': session,
               'watchlists': watchlists,
+              'watchlistsCount': watchlistsCount,
               'fields': metadata.fields,
               'countries': metadata.countries, 
               'languages': metadata.languages

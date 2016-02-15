@@ -6,6 +6,9 @@ aleph.factory('Title', [function() {
   return {
       set: function(text) {
         element.innerHTML = text + ' - ' + originalTitle;
+      },
+      getSiteTitle: function() {
+        return originalTitle;
       }
   };
 }]);

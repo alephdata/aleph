@@ -63,6 +63,12 @@ canvas#pdf {
     box-shadow: 3px 3px 10px darken($gray-subtle, 20%);
 }
 
+.intro-text {
+    font-size: 1.2em;
+    line-height: 1.6em;
+    color: text-muted;
+}
+
 .badge {
     background-color: $page-bg;
     color: $text-muted;

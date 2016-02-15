@@ -39,10 +39,22 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     }
   });
 
+  $routeProvider.when('/', {
+    templateUrl: 'home.html',
+    controller: 'HomeCtrl',
+    reloadOnSearch: false,
+    loginRequired: false,
+    resolve: {
+      'data': loadHome
+    }
+  });
+
   $routeProvider.otherwise({
-    redirectTo: '/search',
+    redirectTo: '/',
     loginRequired: false
   });
+
+
 
   $locationProvider.html5Mode(false);
 }]);
