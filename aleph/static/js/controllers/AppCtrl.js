@@ -70,6 +70,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   };
 
   $scope.clearSearch = function(form) {
+    $rootScope.reportLoading(true);
     $location.search({});
     $location.path('/');
   };

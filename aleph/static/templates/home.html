@@ -7,14 +7,14 @@
       </p>
       <p>
         {{title}} makes a large number of research material searchable. This
-        includes documents from previous investigations and official sources, and
-        scraped databases from many countries.
+        includes documents from <em>previous investigations</em> and <em>official sources</em>, and
+        <em>scraped databases</em> from many countries.
       </p>
       <p>
-        The site also cross-references watchlists of people and companies with source
-        documents to find mentions of persons and organisations of interest. You can use
-        watchlists to quickly find relevant material.
+        The site also cross-references documents with <em>entity watchlists</em> to find mentions
+        of persons and organisations of interest.
       </p>
+      <br/>
       <div class="alert alert-info" role="alert">
         <strong>Help us improve.</strong> Please send feedback on the quality of search results, 
         using the tool, or ideas for additional sources to be included to
@@ -34,7 +34,7 @@
       </tr>
       <tr ng-repeat="source in result.sources.values">
         <td><a ng-href="#/search?filter:source_id={{source.id}}">{{source.label}}</a></td>
-        <td class="numeric">{{source.count}}</td>
+        <td class="numeric">{{source.count | number}}</td>
       </tr>
     </table>
   </div>

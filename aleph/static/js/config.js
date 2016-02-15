@@ -1,8 +1,8 @@
 var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'angular-loading-bar', 'ui.bootstrap',
-                                     'debounce', 'infinite-scroll', 'pdf']);
+                                     'debounce', 'infinite-scroll', 'pdf', 'angulartics', 'angulartics.piwik']);
 
-aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
-    function($routeProvider, $locationProvider, cfpLoadingBarProvider) {
+aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider', 'cfpLoadingBarProvider',
+    function($routeProvider, $locationProvider, $analyticsProvider, cfpLoadingBarProvider) {
 
   cfpLoadingBarProvider.includeSpinner = false;
 
