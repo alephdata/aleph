@@ -19,7 +19,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Session',
       var dfd = $q.defer();
       Session.get().then(function(session) {
         var sq = {
-              'q': query.pq || query.q
+              'q': query.pq
             },
             url = '/api/1/query/records/' + documentId;
 
