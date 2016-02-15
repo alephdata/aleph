@@ -20,7 +20,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
       }
     });
     $scope.query.state = Query.load();
-    $scope.reportLoading(true);
+    // $scope.reportLoading(true);
   });
 
   $rootScope.$on("$routeChangeSuccess", function (event, next, current) {
@@ -31,11 +31,11 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
     $scope.routeFailed = true;
   });
 
-  $scope.reportError = function(message) {
+  $rootScope.reportError = function(message) {
     $scope.routeFailed = true;
   };
 
-  $scope.reportLoading = function(flag) {
+  $rootScope.reportLoading = function(flag) {
     $scope.routeLoaded = !flag;
     if (flag) {
       $scope.routeFailed = false;
