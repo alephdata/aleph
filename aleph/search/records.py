@@ -49,9 +49,9 @@ def records_query(document_id, args, size=5):
         }
 
     try:
-        snippet = int(args.get('snippet', 150))
+        snippet = int(args.get('snippet', 100))
     except:
-        snippet = 150
+        snippet = 100
 
     return {
         'size': size,

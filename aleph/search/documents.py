@@ -267,7 +267,11 @@ def execute_documents_query(args, q):
                     if doc['id'] != record.get('document_id'):
                         continue
                     record['score'] = hit.get('_score')
-                    record['text'] = hit.get('highlight', {}).get('text')
+                    highlights = hit.get('highlight', {})
+                    if len(highlights.get('text', [])):
+                        record['text'] = highlights.get('text')
+                    elif len(highlights.get('text_latin', [])):
+                        record['text'] = highlights.get('text_latin', [])
                     doc['records']['results'].append(record)
                     doc['records']['total'] = sqhits.get('total', 0)
 
