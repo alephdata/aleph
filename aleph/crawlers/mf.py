@@ -11,9 +11,13 @@ class MetaFolderCrawler(Crawler):
     name = 'metafolder'
 
     def normalize_metadata(self, item):
-        meta = item.meta
-        if 'foreign_id' not in meta:
+        meta = self.metadata()
+        meta.data.update(item.meta)
+        if 'foreign_id' not in item.meta:
             meta['foreign_id'] = item.identifier
+        meta.dates = item.meta.get('dates', [])
+        meta.countries = item.meta.get('countries', [])
+        meta.languages = item.meta.get('languages', [])
         return meta
 
     def crawl_item(self, item, sources, source):
@@ -26,9 +30,9 @@ class MetaFolderCrawler(Crawler):
             label = source_data.get('label', source_id)
             sources[source_id] = self.create_source(foreign_id=source_id,
                                                     label=label)
-        meta = self.metadata()
+
         log.info('Import: %r', item.identifier)
-        meta.data.update(self.normalize_metadata(item))
+        meta = self.normalize_metadata(item)
         self.emit_file(sources[source_id], meta, item.data_path)
 
     def crawl(self, folder, source=None):
