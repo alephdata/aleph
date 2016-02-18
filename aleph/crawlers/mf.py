@@ -13,7 +13,7 @@ class MetaFolderCrawler(Crawler):
     def normalize_metadata(self, item):
         meta = self.metadata()
         meta.data.update(item.meta)
-        if 'foreign_id' not in item.meta:
+        if not item.meta.get('foreign_id'):
             meta['foreign_id'] = item.identifier
         meta.dates = item.meta.get('dates', [])
         meta.countries = item.meta.get('countries', [])
