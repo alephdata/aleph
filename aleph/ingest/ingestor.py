@@ -68,9 +68,6 @@ class Ingestor(object):
             log.debug("Dispatching %r to %r", meta.file_name,
                       best_cls.__name__)
             best_cls(source_id).ingest(meta, local_path)
-        except Exception as ex:
-            log.exception(ex)
-            db.session.rollback()
         finally:
             archive.cleanup_file(meta)
             # db.session.dispose()
