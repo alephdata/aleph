@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 # https://svn.apache.org/viewvc/httpd/httpd/branches/2.2.x/docs/conf/mime.types?view=annotate
 
 
-@celery.task(ignore_result=True)
+@celery.task()
 def ingest_url(source_id, metadata, url):
     clear_session()
     meta = Metadata(data=metadata)
@@ -49,7 +49,7 @@ def ingest_file(source_id, meta, file_name, move=False):
     ingest.delay(source_id, meta.data)
 
 
-@celery.task(ignore_result=True)
+@celery.task()
 def ingest(source_id, metadata):
     clear_session()
     meta = Metadata(data=metadata)

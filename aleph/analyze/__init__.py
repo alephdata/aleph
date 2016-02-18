@@ -21,14 +21,14 @@ def query_doc_ids(query):
         yield row.get('_id')
 
 
-@celery.task(ignore_result=True)
+@celery.task()
 def analyze_source(source_id):
     query = {'term': {'source_id': source_id}}
     for doc_id in query_doc_ids(query):
         analyze_document.delay(doc_id)
 
 
-@celery.task(ignore_result=True)
+@celery.task()
 def analyze_entity(entity_id):
     seen = set()
     query = {'term': {'entities.entity_id': entity_id}}
@@ -40,7 +40,7 @@ def analyze_entity(entity_id):
         analyze_terms(entity.terms, seen=seen)
 
 
-@celery.task(ignore_result=True)
+@celery.task()
 def analyze_terms(terms, seen=None):
     if seen is None:
         seen = set()
@@ -51,7 +51,7 @@ def analyze_terms(terms, seen=None):
             seen.add(doc_id)
 
 
-@celery.task(ignore_result=True)
+@celery.task()
 def analyze_document(document_id):
     clear_session()
     document = Document.by_id(document_id)

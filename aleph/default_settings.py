@@ -28,12 +28,6 @@ ELASTICSEARCH_URL = env.get('BONSAI_URL', 'http://localhost:9200')
 ALEMBIC_DIR = path.join(path.dirname(__file__), 'migrate')
 ALEMBIC_DIR = path.abspath(ALEMBIC_DIR)
 
-TWITTER_API_KEY = None
-TWITTER_API_SECRET = None
-
-FACEBOOK_APP_ID = None
-FACEBOOK_APP_SECRET = None
-
 SPINDLE_URL = 'https://search.occrp.org/'
 SPINDLE_API_KEY = None
 
