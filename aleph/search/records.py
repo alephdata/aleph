@@ -1,5 +1,4 @@
 from aleph.model import Entity
-from aleph.util import latinize_text
 from aleph.index import TYPE_RECORD
 from aleph.core import es, es_index, url_for
 
@@ -20,20 +19,11 @@ def records_query(document_id, args, size=5):
     shoulds = []
     for term in terms:
         shoulds.append({
-            'match': {
-                'text': {
-                    'query': term,
-                    'boost': 10,
-                    'operator': 'and'
-                }
-            }
-        })
-        shoulds.append({
-            'match': {
-                'text_latin': {
-                    'query': latinize_text(term),
-                    'operator': 'and'
-                }
+            'query_string': {
+                'query': text,
+                'fields': ['text^10', 'text_latin'],
+                'default_operator': 'AND',
+                'use_dis_max': True
             }
         })
 
@@ -49,9 +39,9 @@ def records_query(document_id, args, size=5):
         }
 
     try:
-        snippet = int(args.get('snippet', 100))
+        snippet = int(args.get('snippet', 50))
     except:
-        snippet = 100
+        snippet = 50
 
     return {
         'size': size,

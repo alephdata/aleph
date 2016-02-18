@@ -147,35 +147,19 @@ def text_query(text):
     """ Construct the part of a query which is responsible for finding a
     piece of thext in the selected documents. """
     text = text.strip()
-    text_latin = latinize_text(text)
     if len(text):
         q = {
             "bool": {
                 "minimum_should_match": 1,
                 "should": [
                     {
-                        "multi_match": {
+                        "query_string": {
                             "query": text,
-                            "fields": ['title^100', 'file_name^10', 'summary^2'],
-                            "type": "most_fields",
-                            "cutoff_frequency": 0.0007,
-                            "operator": "and",
-                        }
-                    },
-                    {
-                        "multi_match": {
-                            "query": text_latin,
-                            "fields": ['title_latin^100', 'summary_latin^2'],
-                            "type": "most_fields",
-                            "cutoff_frequency": 0.0007,
-                            "operator": "and",
-                        }
-                    },
-                    {
-                        "multi_match": {
-                            "query": text,
-                            "fields": ['title^100', 'file_name^10', 'summary^2'],
-                            "type": "phrase"
+                            "fields": ['title^100', 'file_name^10',
+                                       'summary^10', 'title_latin',
+                                       'summary_latin'],
+                            "default_operator": "AND",
+                            "use_dis_max": True
                         }
                     },
                     {
@@ -184,24 +168,17 @@ def text_query(text):
                             "score_mode": "avg",
                             "query": {
                                 "bool": {
-                                    "should": {
-                                        "match": {
-                                            "text": {
+                                    "should": [
+                                        {
+                                            "query_string": {
+                                                "fields": ["text^5",
+                                                           "text_latin"],
                                                 "query": text,
-                                                "cutoff_frequency": 0.0007,
-                                                "operator": "and"
+                                                "default_operator": "AND",
+                                                "use_dis_max": True
                                             }
                                         }
-                                    },
-                                    "should": {
-                                        "match": {
-                                            "text_latin": {
-                                                "query": text_latin,
-                                                "cutoff_frequency": 0.0007,
-                                                "operator": "and"
-                                            }
-                                        }
-                                    }
+                                    ]
                                 }
                             }
                         }
@@ -215,7 +192,7 @@ def text_query(text):
 
 
 def execute_documents_query(args, q):
-    """ Execute the query and return a set of results. """
+    """Execute the query and return a set of results."""
     result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
     hits = result.get('hits', {})
     output = {
