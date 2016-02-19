@@ -13,7 +13,7 @@ blueprint = Blueprint('alerts', __name__)
 @blueprint.route('/api/1/alerts', methods=['GET'])
 def index():
     authz.require(authz.logged_in())
-    alerts = Alert.all(role_id=request.auth_role.get('id'))
+    alerts = Alert.all(role=request.auth_role)
     return jsonify({'results': alerts, 'total': len(alerts)})
 
 
@@ -22,7 +22,7 @@ def create():
     authz.require(authz.logged_in())
     data = request_data()
     validate(data, alerts_schema)
-    alert = Alert.create(data, request.auth_role.get('id'))
+    alert = Alert.create(data.get('query', {}), request.auth_role)
     db.session.commit()
     return view(alert.id)
 
@@ -30,14 +30,14 @@ def create():
 @blueprint.route('/api/1/alerts/<int:id>', methods=['GET'])
 def view(id):
     authz.require(authz.logged_in())
-    alert = obj_or_404(Alert.by_id(id, role_id=request.auth_role.get('id')))
+    alert = obj_or_404(Alert.by_id(id, role=request.auth_role))
     return jsonify(alert)
 
 
 @blueprint.route('/api/1/alerts/<int:id>', methods=['DELETE'])
 def delete(id):
     authz.require(authz.logged_in())
-    alert = obj_or_404(Alert.by_id(id, role_id=request.auth_role.get('id')))
+    alert = obj_or_404(Alert.by_id(id, role=request.auth_role))
     alert.delete()
     db.session.commit()
     return jsonify({'status': 'ok'})

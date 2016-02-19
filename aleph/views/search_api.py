@@ -4,10 +4,12 @@ from apikit import jsonify
 from apikit import get_limit, get_offset
 from pycountry import countries
 
+from aleph import authz
 from aleph.model.metadata import CORE_FACETS
 from aleph.views.cache import etag_cache_keygen
 from aleph.search import documents_query, execute_documents_query
 from aleph.search import records_query, execute_records_query
+from aleph.model import Alert
 from aleph.views.document_api import get_document
 
 blueprint = Blueprint('search', __name__)
@@ -19,7 +21,11 @@ def query():
     query = documents_query(request.args)
     query['size'] = get_limit(default=100)
     query['from'] = get_offset()
-    return jsonify(execute_documents_query(request.args, query))
+    result = execute_documents_query(request.args, query)
+    result['alert'] = None
+    if authz.logged_in():
+        result['alert'] = Alert.exists(request.args, request.auth_role)
+    return jsonify(result)
 
 
 @blueprint.route('/api/1/query/records/<int:document_id>')
