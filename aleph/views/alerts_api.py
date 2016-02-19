@@ -1,0 +1,43 @@
+from flask import Blueprint, request
+from apikit import obj_or_404, request_data, jsonify
+
+from aleph.model import Alert
+from aleph.core import db
+from aleph.validation import validate
+from aleph import authz
+
+alerts_schema = 'https://aleph.grano.cc/operational/alert.json#'
+blueprint = Blueprint('alerts', __name__)
+
+
+@blueprint.route('/api/1/alerts', methods=['GET'])
+def index():
+    authz.require(authz.logged_in())
+    alerts = Alert.all(role_id=request.auth_role.get('id'))
+    return jsonify({'results': alerts, 'total': len(alerts)})
+
+
+@blueprint.route('/api/1/alerts', methods=['POST', 'PUT'])
+def create():
+    authz.require(authz.logged_in())
+    data = request_data()
+    validate(data, alerts_schema)
+    alert = Alert.create(data, request.auth_role.get('id'))
+    db.session.commit()
+    return view(alert.id)
+
+
+@blueprint.route('/api/1/alerts/<int:id>', methods=['GET'])
+def view(id):
+    authz.require(authz.logged_in())
+    alert = obj_or_404(Alert.by_id(id, role_id=request.auth_role.get('id')))
+    return jsonify(alert)
+
+
+@blueprint.route('/api/1/alerts/<int:id>', methods=['DELETE'])
+def delete(id):
+    authz.require(authz.logged_in())
+    alert = obj_or_404(Alert.by_id(id, role_id=request.auth_role.get('id')))
+    alert.delete()
+    db.session.commit()
+    return jsonify({'status': 'ok'})
