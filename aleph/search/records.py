@@ -4,20 +4,9 @@ from aleph.core import es, es_index, url_for
 
 
 def records_query(document_id, args, size=5, snippet_size=50):
-    terms = []
+    shoulds = []
     text = args.get('q', '').strip()
     if len(text):
-        terms.append(text)
-
-    entities = Entity.by_id_set(args.getlist('entity'))
-    for entity in entities.values():
-        terms.extend(entity.terms)
-
-    if not len(terms):
-        return None
-
-    shoulds = []
-    for term in terms:
         shoulds.append({
             'query_string': {
                 'query': text,
@@ -26,6 +15,21 @@ def records_query(document_id, args, size=5, snippet_size=50):
                 'use_dis_max': True
             }
         })
+
+    entities = Entity.by_id_set(args.getlist('entity'))
+    for entity in entities.values():
+        for term in entity.terms:
+            shoulds.append({
+                'multi_match': {
+                    'query': term,
+                    'type': "best_fields",
+                    'fields': ['text^5', 'text_latin'],
+                    'operator': 'AND'
+                }
+            })
+
+    if not len(shoulds):
+        return None
 
     q = {
         'bool': {
