@@ -40,3 +40,4 @@ class MetaFolderCrawler(Crawler):
         sources = {}
         for item in mf:
             self.crawl_item(item, sources, source)
+        self.finalize()

@@ -7,6 +7,7 @@ SECRET_KEY = os.environ.get('ALEPH_SECRET_KEY')
 
 APP_TITLE = os.environ.get('ALEPH_APP_TITLE', 'Aleph')
 APP_NAME = os.environ.get('ALEPH_APP_NAME', 'aleph')
+APP_URL = os.environ.get('ALEPH_APP_URL')
 FAVICON = 'https://investigativedashboard.org/static/favicon.ico'
 
 ELASTICSEARCH_URL = os.environ.get('ALEPH_ELASTICSEARCH_URI')
@@ -16,9 +17,17 @@ PREFERRED_URL_SCHEME = 'https'
 
 MAIL_FROM = os.environ.get('MAIL_FROM')
 MAIL_HOST = os.environ.get('MAIL_HOST')
+MAIL_SERVER = os.environ.get('MAIL_HOST')
 MAIL_ADMINS = [os.environ.get('MAIL_ADMIN')]
 MAIL_CREDENTIALS = (os.environ.get('MAIL_USERNAME'),
                     os.environ.get('MAIL_PASSWORD'))
+MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+
+# this is GMail-specific, factor it out?
+MAIL_USE_TLS = True
+MAIL_PORT = 587
+
 
 CELERY_BROKER_URL = os.environ.get('ALEPH_BROKER_URI')
 

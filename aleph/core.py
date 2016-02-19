@@ -6,6 +6,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.assets import Environment
 from flask.ext.migrate import Migrate
 from flask_oauthlib.client import OAuth
+from flask_mail import Mail
 from kombu import Exchange, Queue
 from celery import Celery
 from elasticsearch import Elasticsearch
@@ -18,8 +19,12 @@ app.config.from_object(default_settings)
 app.config.from_envvar('ALEPH_SETTINGS', silent=True)
 
 app_name = app.config.get('APP_NAME')
+app_url = app.config.get('APP_URL')
+
 oauth = OAuth(app)
 oauth_provider = oauth.remote_app('provider', app_key='OAUTH')
+
+mail = Mail(app)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db, directory=app.config.get('ALEMBIC_DIR'))

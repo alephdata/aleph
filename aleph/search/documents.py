@@ -20,13 +20,21 @@ DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'mime_type',
 OR_FIELDS = ['source_id']
 
 
-def documents_query(args, fields=None, facets=True):
-    """ Parse a user query string, compose and execute a query. """
+def documents_query(args, fields=None, facets=True, min_id=None):
+    """Parse a user query string, compose and execute a query."""
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
     text = args.get('q', '').strip()
     q = text_query(text)
     q = authz_filter(q)
+    if min_id is not None:
+        q = add_filter(q, {
+            "range": {
+                "id": {
+                    "gt": min_id
+                }
+            }
+        })
 
     if text:
         sort = ['_score']
@@ -128,7 +136,7 @@ def aggregate(q, args, filters):
 
 
 def filter_query(q, filters, skip=None):
-    """ Apply a list of filters to the given query. """
+    """Apply a list of filters to the given query."""
     or_filters = defaultdict(list)
     for field, value in filters:
         if field == skip:
@@ -190,6 +198,27 @@ def text_query(text):
     return q
 
 
+def run_sub_queries(output, sub_queries):
+    if len(sub_queries):
+        res = es.msearch(index=es_index, doc_type=TYPE_RECORD,
+                         body='\n'.join(sub_queries))
+        for doc in output['results']:
+            for sq in res.get('responses', []):
+                sqhits = sq.get('hits', {})
+                for hit in sqhits.get('hits', {}):
+                    record = hit.get('_source')
+                    if doc['id'] != record.get('document_id'):
+                        continue
+                    record['score'] = hit.get('_score')
+                    highlights = hit.get('highlight', {})
+                    if len(highlights.get('text', [])):
+                        record['text'] = highlights.get('text')
+                    elif len(highlights.get('text_latin', [])):
+                        record['text'] = highlights.get('text_latin', [])
+                    doc['records']['results'].append(record)
+                    doc['records']['total'] = sqhits.get('total', 0)
+
+
 def execute_documents_query(args, q):
     """Execute the query and return a set of results."""
     result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
@@ -232,23 +261,36 @@ def execute_documents_query(args, q):
                                        document_id=doc.get('_id'))
         output['results'].append(document)
 
-    if len(sub_queries):
-        res = es.msearch(index=es_index, doc_type=TYPE_RECORD,
-                         body='\n'.join(sub_queries))
-        for doc in output['results']:
-            for sq in res.get('responses', []):
-                sqhits = sq.get('hits', {})
-                for hit in sqhits.get('hits', {}):
-                    record = hit.get('_source')
-                    if doc['id'] != record.get('document_id'):
-                        continue
-                    record['score'] = hit.get('_score')
-                    highlights = hit.get('highlight', {})
-                    if len(highlights.get('text', [])):
-                        record['text'] = highlights.get('text')
-                    elif len(highlights.get('text_latin', [])):
-                        record['text'] = highlights.get('text_latin', [])
-                    doc['records']['results'].append(record)
-                    doc['records']['total'] = sqhits.get('total', 0)
+    run_sub_queries(output, sub_queries)
+    return output
 
+
+def execute_documents_alert_query(args, q):
+    """Execute the query and return a set of results."""
+    if not isinstance(args, MultiDict):
+        args = MultiDict(args)
+    q['size'] = 50
+    result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
+    hits = result.get('hits', {})
+    output = {
+        'total': hits.get('total'),
+        'results': [],
+    }
+    convert_aggregations(result, output, args)
+    sub_queries = []
+    for doc in hits.get('hits', []):
+        document = doc.get('_source')
+        document['id'] = int(doc.get('_id'))
+        for source in output['sources']['values']:
+            if source['id'] == document['source_id']:
+                document['source'] = source
+        document['records'] = {'results': [], 'total': 0}
+
+        sq = records_query(document['id'], args, size=1, snippet_size=140)
+        if sq is not None:
+            sub_queries.append(json.dumps({}))
+            sub_queries.append(json.dumps(sq))
+        output['results'].append(document)
+
+    run_sub_queries(output, sub_queries)
     return output

@@ -100,6 +100,12 @@ class Alert(db.Model, TimeStampedModel):
         return q.first()
 
     @classmethod
+    def by_role(cls, role):
+        q = db.session.query(cls)
+        q = q.filter(cls.role_id == role.id)
+        return q
+
+    @classmethod
     def all(cls, role=None):
         q = db.session.query(cls)
         q = q.filter(cls.deleted_at == None)  # noqa
@@ -114,9 +120,7 @@ class Alert(db.Model, TimeStampedModel):
         q = extract_query(query)
         alert.query = {k: q.getlist(k) for k in q.keys()}
         alert.signature = query_signature(q)
-        alert.max_id = Document.get_max_id()
-        db.session.add(alert)
-        db.session.flush()
+        alert.update()
         return alert
 
     @classmethod
@@ -129,6 +133,11 @@ class Alert(db.Model, TimeStampedModel):
 
     def delete(self):
         self.deleted_at = datetime.utcnow()
+        db.session.add(self)
+        db.session.flush()
+
+    def update(self):
+        self.max_id = Document.get_max_id()
         db.session.add(self)
         db.session.flush()
 

@@ -8,6 +8,7 @@ from flask.ext.migrate import MigrateCommand
 from aleph.model import db, Source, Document
 from aleph.views import app, assets
 from aleph.analyze import analyze_source
+from aleph.alerts import check_alerts
 from aleph.index import init_search, delete_index, index_document
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
@@ -28,6 +29,12 @@ def sources():
     """List all sources."""
     for source in db.session.query(Source):
         print source.id, source.foreign_id, source.label
+
+
+@manager.command
+def alerts():
+    """Generate alert notifications."""
+    check_alerts()
 
 
 @manager.command

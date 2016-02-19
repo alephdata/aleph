@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <style>
+      body {
+        font-family: sans-serif;
+        font-size: 1em;
+        color: #333;
+      }
+
+      a {
+        color: #982022;
+        font-weight: bold;
+      }
+
+      table {
+        border: 0;
+        width: 100%;
+      }
+
+      hr {
+        margin-top: 1em;
+        border: 0;
+        height: 1px;
+        background: #999;
+      }
+
+      p.footer {
+        font-size: 0.9em;
+        color: #ccc;
+      }
+
+      .source-attr a {
+        color: #999;
+        text-decoration: none;
+      }
+
+      tr.teaser td {
+        padding-bottom: 0.5em;
+        padding-left: 1em;
+      }
+
+      tr.tally-row td {
+        padding-top: 1em;
+      }
+
+      em {
+        background-color: yellow;
+        font-style: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Dear {{role.name}},</p>
+    <p>
+      new documents have been found for your alert: <strong>{{alert.label}}</strong>.
+    </p>
+
+    <table>
+      {% for result in results.results %}
+        <tr class="result">
+          <td>
+            {% if result.type == 'text' %}
+              <a href="{{app_url}}#/text/{{result.id}}?{{qs}}">{{result.title}}</a>
+            {% else %}
+              <a href="{{app_url}}#/tabular/{{result.id}}/0?{{qs}}">{{result.title}}</a>
+            {% endif %}
+            <span class="source-attr">
+              <a href="{{app_url}}#/search?filter:source_id={{result.source.id}}">
+                {{result.source.label}}
+              </a>
+            </span>
+          </td>
+        </tr>
+        <tr class="teaser">
+          <td colspan="2">
+            {% for rec in result.records.results %}
+              {% for text in rec.text %}
+                {{text | safe}}
+              {% endfor %}
+            {% endfor %}
+          </td>
+        </tr>
+      {% endfor %}
+      {% if results.total > 1 %}
+        <tr class="tally-row">
+          <td colspan="2">
+            There were a total of {{results.total}} matches.
+          </td>
+        </tr>
+      {% endif %}
+    </table>
+
+    <hr>
+    <p class="footer">
+      You will receive notifications like this whenever {{app_title}} adds documents that
+      match your search criteria. If you would like to stop receiving them, visit
+      <a href="{{app_url}}">{{app_url}}</a> to manage your active alerts.
+  </body>
+</html>

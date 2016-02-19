@@ -50,3 +50,5 @@ class DirectoryCrawler(Crawler):
                     self.emit_file(source, meta, file_path)
                 except Exception as ex:
                     log.exception(ex)
+
+        self.finalize()

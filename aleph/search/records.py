@@ -3,7 +3,7 @@ from aleph.index import TYPE_RECORD
 from aleph.core import es, es_index, url_for
 
 
-def records_query(document_id, args, size=5):
+def records_query(document_id, args, size=5, snippet_size=50):
     terms = []
     text = args.get('q', '').strip()
     if len(text):
@@ -39,9 +39,9 @@ def records_query(document_id, args, size=5):
         }
 
     try:
-        snippet = int(args.get('snippet', 50))
+        snippet = int(args.get('snippet', snippet_size))
     except:
-        snippet = 50
+        snippet = snippet_size
 
     return {
         'size': size,
