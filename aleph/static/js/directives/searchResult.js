@@ -18,7 +18,7 @@ aleph.directive('searchResult', ['$location', '$rootScope', 'Query', function($l
           $location.search({
             'row': row,
             'q': Query.state.q,
-            'rq': Query.state.q,
+            'dq': Query.state.q,
             'entity': Query.state.entity
           });
         } else {
@@ -27,7 +27,7 @@ aleph.directive('searchResult', ['$location', '$rootScope', 'Query', function($l
           $location.search({
             'page': page,
             'q': Query.state.q,
-            'pq': Query.state.q,
+            'dq': Query.state.q,
             'entity': Query.state.entity
           });
         }
