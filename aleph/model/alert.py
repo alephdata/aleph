@@ -1,9 +1,12 @@
+from hashlib import sha1
+from datetime import datetime
+
 from sqlalchemy.dialects.postgresql import JSONB
 from werkzeug.datastructures import MultiDict
-from hashlib import sha1
 
 from aleph.core import db
 from aleph.model.document import Document
+from aleph.model.entity import Entity
 from aleph.model.common import TimeStampedModel
 
 
@@ -49,10 +52,32 @@ class Alert(db.Model, TimeStampedModel):
     signature = db.Column(db.Unicode)
     query = db.Column(JSONB)
     max_id = db.Column(db.BigInteger)
+    deleted_at = db.Column(db.DateTime, nullable=True, default=None)
 
     @property
     def label(self):
-        return 'foo'
+        # This is weird. Should live somewhere else.
+        fragments = []
+        q = self.query.get('q')
+        if q and len(q):
+            fragments.append('matching "%s"' % ''.join(q))
+        entities = self.query.get('entity')
+        if entities and len(entities):
+            entities = Entity.by_id_set(entities)
+            sub_fragments = []
+            for entity in entities.values():
+                sub_fragments.append('"%s"' % entity.name)
+            fragment = ' and '.join(sub_fragments)
+            fragments.append('mentioning %s' % fragment)
+        for key in self.query.keys():
+            if not key.startswith('filter:'):
+                continue
+            _, field = key.split(':', 1)
+            # TODO: source_id special handling?
+            field = field.replace('_', ' ')
+            value = '; '.join(self.query.get(key))
+            fragments.append('filtered by %s: %s' % (field, value))
+        return 'Results %s' % ', '.join(fragments)
 
     def to_dict(self):
         return {
@@ -69,6 +94,7 @@ class Alert(db.Model, TimeStampedModel):
     @classmethod
     def by_id(cls, id, role=None):
         q = db.session.query(cls).filter_by(id=id)
+        q = q.filter(cls.deleted_at == None)  # noqa
         if role is not None:
             q = q.filter(cls.role_id == role.id)
         return q.first()
@@ -76,6 +102,7 @@ class Alert(db.Model, TimeStampedModel):
     @classmethod
     def all(cls, role=None):
         q = db.session.query(cls)
+        q = q.filter(cls.deleted_at == None)  # noqa
         if role is not None:
             q = q.filter(cls.role_id == role.id)
         return q
@@ -94,16 +121,19 @@ class Alert(db.Model, TimeStampedModel):
 
     @classmethod
     def exists(cls, query, role):
-        q = db.session.query(cls)
+        q = db.session.query(cls.id)
+        q = q.filter(cls.deleted_at == None)  # noqa
         q = q.filter(cls.role_id == role.id)
         q = q.filter(cls.signature == query_signature(query))
-        return q.first()
+        return q.scalar()
 
     def delete(self):
-        db.session.delete(self)
+        self.deleted_at = datetime.utcnow()
+        db.session.add(self)
+        db.session.flush()
 
-    # def __repr__(self):
-    #     return '<Alert(%r, %r)>' % (self.id, self.label)
+    def __repr__(self):
+        return '<Alert(%r, %r)>' % (self.id, self.query)
 
-    # def __unicode__(self):
-    #     return self.label
+    def __unicode__(self):
+        return self.label

@@ -42,7 +42,14 @@
               </a>
             </li>
             <li ng-show="session.logged_in" ng-cloak>
-              <a ng-click="editProfile()" ng-bind="session.role.name"></a>
+              <a ng-click="editProfile($event)">
+                <i class="fa fa-cog"></i> Settings
+              </a>
+            </li>
+            <li ng-show="session.logged_in" ng-cloak>
+              <a ng-click="manageAlerts($event)">
+                <i class="fa fa-bell"></i> Alerts
+              </a>
             </li>
             <li ng-show="session.logged_in" ng-cloak>
               <a href="{{url_for('sessions.logout')}}" target="_self">

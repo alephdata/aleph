@@ -13,7 +13,7 @@ blueprint = Blueprint('alerts', __name__)
 @blueprint.route('/api/1/alerts', methods=['GET'])
 def index():
     authz.require(authz.logged_in())
-    alerts = Alert.all(role=request.auth_role)
+    alerts = Alert.all(role=request.auth_role).all()
     return jsonify({'results': alerts, 'total': len(alerts)})
 
 

@@ -1,6 +1,6 @@
 aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$http', '$uibModal', '$q',
-                             'Session', 'Query', 'Metadata',
-    function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Session, Query, Metadata) {
+                             'Session', 'Query', 'Alert', 'Metadata',
+    function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Session, Query, Alert, Metadata) {
 
   $scope.session = {logged_in: false};
   $scope.query = Query;
@@ -56,11 +56,25 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
     Query.toggleFilter('entity', $item.id);
   }
 
-  $scope.editProfile = function() {
+  $scope.editProfile = function($event) {
+    $event.stopPropagation();
     var d = $uibModal.open({
         templateUrl: 'profile.html',
         controller: 'ProfileCtrl',
         backdrop: true
+    });
+  };
+
+  $scope.manageAlerts = function($event) {
+    $event.stopPropagation();
+    var instance = $uibModal.open({
+      templateUrl: 'alerts_manage.html',
+      controller: 'AlertsManageCtrl',
+      backdrop: true,
+      size: 'md',
+      resolve: {
+        alerts: Alert.index()
+      }
     });
   };
 

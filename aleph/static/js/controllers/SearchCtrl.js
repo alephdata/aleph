@@ -1,6 +1,6 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', '$sce', 'data', 'Query', 'Authz', 'Metadata', 'Title',
-    function($scope, $route, $location, $http, $uibModal, $sce, data, Query, Authz, Metadata, Title) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', '$sce', 'data', 'Query', 'Authz', 'Alert', 'Metadata', 'Title',
+    function($scope, $route, $location, $http, $uibModal, $sce, data, Query, Authz, Alert, Metadata, Title) {
 
   var isLoading = false;
   $scope.result = {};
@@ -93,12 +93,11 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
 
   $scope.toggleAlert = function() {
     if ($scope.hasAlert()) {
-      $http.delete('/api/1/alerts/' + $scope.result.alert.id);
+      Alert.delete($scope.result.alert);
       $scope.result.alert = null;
     } else {
-      var data = {'query': $location.search()};
-      $http.post('/api/1/alerts', data).then(function(res) {
-        $scope.result.alert = res.data;
+      Alert.create($location.search()).then(function(alert) {
+        $scope.result.alert = alert.id;
       });
     }
   };
