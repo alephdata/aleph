@@ -10,7 +10,7 @@ def authz_filter(q):
 
 
 def add_filter(q, filter_):
-    """ Add the filter ``filter_`` to the given query. """
+    """Add the given filter ``filter_`` to the given query."""
     q = deepcopy(q)
     if 'filtered' not in q:
         return {

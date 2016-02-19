@@ -6,9 +6,8 @@ from werkzeug.datastructures import MultiDict
 
 from aleph.core import es, es_index, url_for
 from aleph import authz
-from aleph.util import latinize_text
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
-from aleph.search.common import add_filter, authz_filter
+from aleph.search.util import add_filter, authz_filter
 from aleph.search.facets import convert_aggregations
 from aleph.search.records import records_query
 
@@ -155,7 +154,7 @@ def text_query(text):
                     {
                         "query_string": {
                             "query": text,
-                            "fields": ['title^100', 'file_name^10',
+                            "fields": ['title^15', 'file_name^10',
                                        'summary^10', 'title_latin',
                                        'summary_latin'],
                             "default_operator": "AND",

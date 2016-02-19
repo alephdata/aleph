@@ -1,7 +1,7 @@
 from aleph.index import TYPE_RECORD
 from aleph.core import es, es_index, url_for
 from aleph.util import latinize_text
-from aleph.search.common import add_filter
+from aleph.search.util import add_filter
 
 
 def tabular_query(document_id, sheet, args):
