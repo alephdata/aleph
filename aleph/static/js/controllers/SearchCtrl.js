@@ -83,6 +83,26 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     });
   };
 
+  $scope.hasAlert = function() {
+    return data.result.alert !== null;
+  };
+
+  $scope.canCreateAlert = function() {
+    return data.metadata.session.logged_in;
+  };
+
+  $scope.toggleAlert = function() {
+    if ($scope.hasAlert()) {
+      $http.delete('/api/1/alerts/' + $scope.result.alert.id);
+      $scope.result.alert = null;
+    } else {
+      var data = {'query': $location.search()};
+      $http.post('/api/1/alerts', data).then(function(res) {
+        $scope.result.alert = res.data;
+      });
+    }
+  };
+
   var sortedFilters = function(data, name) {
     if (!data || !data.length) {
       return [];

@@ -1,5 +1,6 @@
 import logging
 
+from sqlalchemy import func
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
@@ -73,6 +74,11 @@ class Document(db.Model, TimeStampedModel):
     def by_id(cls, id):
         q = db.session.query(cls).filter_by(id=id)
         return q.first()
+
+    @classmethod
+    def get_max_id(cls):
+        q = db.session.query(func.max(cls.id))
+        return q.scalar()
 
 
 class Page(db.Model):

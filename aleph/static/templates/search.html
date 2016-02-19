@@ -59,10 +59,10 @@
 
     <div class="btn-group btn-group-justified" role="group">
       <div class="btn-group" uib-dropdown dropdown-append-to-body>
-        <button type="button" class="btn btn-primary dropdown-toggle"
+        <button type="button" class="btn btn-default dropdown-toggle"
           uib-dropdown-toggle>
           <i class="fa fa-filter"></i>
-          Filter by type, language, country
+          Add filter
           <span class="caret"></span>
         </button>
         <ul class="uib-dropdown-menu" role="menu">
@@ -70,6 +70,18 @@
             <a ng-click="query.toggleFilter('facet', field)" ng-bind="label"></a>
           </li>
         </ul>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-default" ng-click="toggleAlert()"
+          ng-disabled="!canCreateAlert()" ng-class="{'active': hasAlert()}">
+          <i class="fa fa-bell"></i>
+          <span ng-show="hasAlert()">
+            Disable alert
+          </span>
+          <span ng-hide="hasAlert()">
+            Create alert
+          </span>
+        </button>
       </div>
     </div>
     <br/>

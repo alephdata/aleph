@@ -3,6 +3,7 @@ from werkzeug.datastructures import MultiDict
 from hashlib import sha1
 
 from aleph.core import db
+from aleph.model.document import Document
 from aleph.model.common import TimeStampedModel
 
 
@@ -33,7 +34,7 @@ def query_signature(q):
     out = sha1()
     for field in q.keys():
         out.update('::' + field.encode('utf-8'))
-        for value in set(sorted(q.getlist())):
+        for value in set(sorted(q.getlist(field))):
             out.update('==' + value.encode('utf-8'))
     return out.hexdigest()
 
@@ -59,6 +60,7 @@ class Alert(db.Model, TimeStampedModel):
             'label': self.label,
             'signature': self.signature,
             'role_id': self.role_id,
+            'max_id': self.max_id,
             'query': self.query,
             'created_at': self.created_at,
             'updated_at': self.updated_at
@@ -79,12 +81,13 @@ class Alert(db.Model, TimeStampedModel):
         return q
 
     @classmethod
-    def create(cls, query, role_id):
+    def create(cls, query, role):
         alert = cls()
-        alert.role_id = role_id
+        alert.role_id = role.id
         q = extract_query(query)
-        alert.query = q
+        alert.query = {k: q.getlist(k) for k in q.keys()}
         alert.signature = query_signature(q)
+        alert.max_id = Document.get_max_id()
         db.session.add(alert)
         db.session.flush()
         return alert
@@ -99,8 +102,8 @@ class Alert(db.Model, TimeStampedModel):
     def delete(self):
         db.session.delete(self)
 
-    def __repr__(self):
-        return '<Alert(%r, %r)>' % (self.id, self.label)
+    # def __repr__(self):
+    #     return '<Alert(%r, %r)>' % (self.id, self.label)
 
-    def __unicode__(self):
-        return self.label
+    # def __unicode__(self):
+    #     return self.label

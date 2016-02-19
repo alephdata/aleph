@@ -5,10 +5,7 @@
     "properties": {
         "query": {
             "type": "object"
-        },
-        "is_active": {
-            "type": "boolean"
         }
     },
-    "required": ["role_id", "query"]
+    "required": ["query"]
 }
