@@ -250,7 +250,7 @@ def execute_documents_query(args, q):
         document['score'] = doc.get('_score')
         document['records'] = {'results': [], 'total': 0}
 
-        sq = records_query(document['id'], args)
+        sq = records_query(document['id'], args, snippet_size=140)
         if sq is not None:
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))

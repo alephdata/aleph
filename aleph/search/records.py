@@ -52,8 +52,14 @@ def records_query(document_id, args, size=5, snippet_size=50):
         'query': q,
         'highlight': {
             'fields': {
-                'text': {'fragment_size': snippet},
-                'text_latin': {'fragment_size': snippet}
+                'text': {
+                    'fragment_size': snippet,
+                    'number_of_fragments': 1
+                },
+                'text_latin': {
+                    'fragment_size': snippet,
+                    'number_of_fragments': 1
+                }
             }
         },
         '_source': ['document_id', 'sheet', 'row_id', 'page']

@@ -19,7 +19,6 @@ app.config.from_object(default_settings)
 app.config.from_envvar('ALEPH_SETTINGS', silent=True)
 
 app_name = app.config.get('APP_NAME')
-app_url = app.config.get('APP_URL')
 
 oauth = OAuth(app)
 oauth_provider = oauth.remote_app('provider', app_key='OAUTH')

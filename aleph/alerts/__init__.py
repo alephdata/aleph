@@ -2,7 +2,7 @@ import logging
 from urllib import urlencode
 from flask import request, render_template
 
-from aleph.core import app, db, celery, app_url, system_role
+from aleph.core import app, db, celery, system_role
 from aleph.model import Role, Alert
 from aleph.notify import notify_role
 from aleph.search.documents import documents_query
@@ -49,7 +49,7 @@ def check_role_alerts(role):
         html = render_template('alert.html', alert=alert, results=results,
                                role=role, qs=qs,
                                app_title=app.config.get('APP_TITLE'),
-                               app_url=app_url)
+                               app_url=app.config.get('APP_BASEURL'))
         notify_role(role, subject, html)
         alert.update()
     db.session.commit()
