@@ -22,12 +22,12 @@ def extract_query(q):
             for val in values:
                 if not isinstance(val, (list, tuple, set)):
                     val = [val]
-            for v in val:
-                if v is None:
-                    continue
-                v = unicode(v).lower()
-                if len(v):
-                    cleaned.add(key, v)
+                for v in val:
+                    if v is None:
+                        continue
+                    v = unicode(v).lower()
+                    if len(v):
+                        cleaned.add(key, v)
     return cleaned
 
 
@@ -63,20 +63,26 @@ class Alert(db.Model, TimeStampedModel):
             fragments.append('matching "%s"' % ''.join(q))
         entities = self.query.get('entity')
         if entities and len(entities):
-            entities = Entity.by_id_set(entities)
-            sub_fragments = []
-            for entity in entities.values():
-                sub_fragments.append('"%s"' % entity.name)
-            fragment = ' and '.join(sub_fragments)
-            fragments.append('mentioning %s' % fragment)
+            try:
+                entities = Entity.by_id_set(entities)
+                sub_fragments = []
+                for entity in entities.values():
+                    sub_fragments.append('"%s"' % entity.name)
+                fragment = ' and '.join(sub_fragments)
+                fragments.append('mentioning %s' % fragment)
+            except:
+                pass
         for key in self.query.keys():
-            if not key.startswith('filter:'):
-                continue
-            _, field = key.split(':', 1)
-            # TODO: source_id special handling?
-            field = field.replace('_', ' ')
-            value = '; '.join(self.query.get(key))
-            fragments.append('filtered by %s: %s' % (field, value))
+            try:
+                if not key.startswith('filter:'):
+                    continue
+                _, field = key.split(':', 1)
+                # TODO: source_id special handling?
+                field = field.replace('_', ' ')
+                value = '; '.join(self.query.get(key))
+                fragments.append('filtered by %s: %s' % (field, value))
+            except:
+                pass
         return 'Results %s' % ', '.join(fragments)
 
     def to_dict(self):
