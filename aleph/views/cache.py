@@ -40,12 +40,6 @@ def enable_cache(vary_user=False, vary=None, server_side=True):
 
 @app.after_request
 def cache_response(resp):
-    if resp.is_streamed and request.endpoint != 'static':
-        # http://wiki.nginx.org/X-accel#X-Accel-Buffering
-        resp.headers['X-Accel-Buffering'] = 'no'
-        # resp.cache_control.no_cache = True
-        return resp
-
     if request.endpoint == 'static':
         enable_cache()
         request._http_cache = True
@@ -53,11 +47,13 @@ def cache_response(resp):
         resp.cache_control.public = True
         resp.cache_control.max_age = 3600 * 24 * 14
         return resp
+    elif resp.is_streamed:
+        # http://wiki.nginx.org/X-accel#X-Accel-Buffering
+        resp.headers['X-Accel-Buffering'] = 'no'
 
     if not request._http_cache \
             or request.method not in ['GET', 'HEAD', 'OPTIONS'] \
-            or resp.status_code > 399:
-        resp.cache_control.no_cache = True
+            or resp.status_code != 200:
         return resp
 
     if request._http_server:

@@ -17,6 +17,7 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 logging.getLogger('pyelasticsearch').setLevel(logging.WARNING)
 logging.getLogger('elasticsearch').setLevel(logging.WARNING)
 logging.getLogger('boto3').setLevel(logging.WARNING)
+logging.getLogger('boto').setLevel(logging.WARNING)
 logging.getLogger('botocore').setLevel(logging.WARNING)
 logging.getLogger('amqp').setLevel(logging.INFO)
 

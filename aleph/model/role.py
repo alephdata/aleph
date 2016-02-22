@@ -48,8 +48,10 @@ class Role(db.Model, TimeStampedModel):
         return self.name
 
     @classmethod
-    def all(cls):
-        return db.session.query(cls)
+    def notifiable(cls):
+        q = db.session.query(cls.id)
+        q = q.filter(cls.email != None)  # noqa
+        return q
 
     @classmethod
     def by_id(cls, id):

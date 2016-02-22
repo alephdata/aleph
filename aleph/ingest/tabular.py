@@ -37,6 +37,8 @@ class MessyTablesIngestor(TabularIngestor):
             'sheet': sheet
         })
         columns = [schema.add_column(h) for h in headers]
+        if not len(columns):
+            return
         log.info("Creating internal table: %s columns, table: %r", len(columns),
                  schema.table_name)
         tabular = Tabular(schema)
@@ -83,6 +85,8 @@ class DBFIngestor(TabularIngestor):
                 'sheet': 0
             })
             columns = [schema.add_column(h) for h in db.fields.keys()]
+            if not len(columns):
+                return
             columns = {c.label: c.name for c in columns}
             tabular = Tabular(schema)
             tabular.drop()

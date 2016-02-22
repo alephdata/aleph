@@ -62,6 +62,9 @@ class TabularSchema(object):
         for col in self.schema['columns']:
             yield TabularColumn(self, col)
 
+    def __len__(self):
+        return len(list(self.columns))
+
     def to_dict(self):
         data = self.schema
         data['sheet'] = self.sheet

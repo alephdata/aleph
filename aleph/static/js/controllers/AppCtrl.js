@@ -84,9 +84,13 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   };
 
   $scope.clearSearch = function(form) {
-    $rootScope.reportLoading(true);
-    $location.search({});
-    $location.path('/');
+    if ($location.path() == '/') {
+      $route.reload();
+    } else {
+      $rootScope.reportLoading(true);
+      $location.search({});
+      $location.path('/');
+    }
   };
 
 }]);
