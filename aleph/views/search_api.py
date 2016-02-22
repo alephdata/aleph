@@ -6,7 +6,7 @@ from pycountry import countries
 
 from aleph import authz
 from aleph.model.metadata import CORE_FACETS
-from aleph.views.cache import etag_cache_keygen
+from aleph.views.cache import enable_cache
 from aleph.search import documents_query, execute_documents_query
 from aleph.search import records_query, execute_records_query
 from aleph.model import Alert
@@ -17,7 +17,8 @@ blueprint = Blueprint('search', __name__)
 
 @blueprint.route('/api/1/query')
 def query():
-    etag_cache_keygen()
+    creds = authz.watchlists(authz.READ), authz.sources(authz.READ)
+    enable_cache(vary_user=True, vary=creds)
     query = documents_query(request.args)
     query['size'] = get_limit(default=100)
     query['from'] = get_offset()
@@ -30,8 +31,8 @@ def query():
 
 @blueprint.route('/api/1/query/records/<int:document_id>')
 def records(document_id):
-    etag_cache_keygen()
     document = get_document(document_id)
+    enable_cache(vary_user=True)
     query = records_query(document.id, request.args)
     if query is None:
         return jsonify({
@@ -46,7 +47,7 @@ def records(document_id):
 
 @blueprint.route('/api/1/metadata')
 def metadata():
-    etag_cache_keygen()
+    enable_cache(server_side=False)
     country_names = {
         'zz': 'Global',
         'xk': 'Kosovo'

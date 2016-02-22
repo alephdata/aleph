@@ -6,7 +6,6 @@ var loadSearch = ['$http', '$q', '$route', 'Query', 'Session', 'Metadata',
   Metadata.get().then(function(metadata) {
     Session.get().then(function(session) {
       var query = angular.copy(Query.load());
-      query['_uid'] = session.cbq;
       query['limit'] = 50;
       $http.get('/api/1/query', {params: query}).then(function(res) {
         var result = res.data;

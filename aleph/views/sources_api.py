@@ -1,7 +1,6 @@
 from flask import Blueprint
 from apikit import obj_or_404, request_data, Pager, jsonify
 
-from aleph.views.cache import etag_cache_keygen
 from aleph.analyze import analyze_source
 from aleph.model import Source
 from aleph.core import db
@@ -21,7 +20,6 @@ def index():
 def view(id):
     authz.require(authz.source_read(id))
     source = obj_or_404(Source.by_id(id))
-    etag_cache_keygen(source)
     return jsonify(source)
 
 

@@ -7,7 +7,6 @@ from networkx import degree
 from networkx.readwrite import json_graph
 from apikit import jsonify, arg_int
 
-from aleph.views.cache import etag_cache_keygen
 from aleph.search import raw_iter, documents_query
 
 blueprint = Blueprint('graph', __name__)
@@ -70,7 +69,6 @@ def generate_graph(args):
 
 @blueprint.route('/api/1/graph')
 def query():
-    etag_cache_keygen()
     graph = generate_graph(request.args)
     format = request.args.get('format', '').lower().strip()
     if format == 'gexf':

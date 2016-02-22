@@ -2,7 +2,7 @@ import os
 
 DEBUG = False
 ASSETS_DEBUG = False
-CACHE = False
+CACHE = True
 SECRET_KEY = os.environ.get('ALEPH_SECRET_KEY')
 
 APP_TITLE = os.environ.get('ALEPH_APP_TITLE', 'Aleph')

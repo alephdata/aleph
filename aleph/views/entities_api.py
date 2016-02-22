@@ -2,10 +2,11 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify, Pager, request_data
 
+from aleph import authz
 from aleph.model import Entity, db
 from aleph.model.forms import EntityForm
 from aleph.analyze import analyze_entity
-from aleph import authz
+from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('entities', __name__)
 
@@ -42,6 +43,7 @@ def create():
 @blueprint.route('/api/1/entities/_suggest', methods=['GET'])
 def suggest():
     watchlists = authz.watchlists(authz.READ)
+    enable_cache(vary=watchlists, server_side=False)
     prefix = request.args.get('prefix')
     results = Entity.suggest_prefix(prefix, watchlists)
     return jsonify({'results': results})
