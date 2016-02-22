@@ -110,7 +110,7 @@ class Metadata(MutableMapping):
 
     @property
     def languages(self):
-        return set(self.data.get('languages', []))
+        return list(set(self.data.get('languages', [])))
 
     @languages.setter
     def languages(self, languages):
@@ -121,12 +121,12 @@ class Metadata(MutableMapping):
     def add_language(self, language):
         language = language.lower().strip()
         languages = self.languages
-        languages.add(language)
+        languages.append(language)
         self.data['languages'] = list(languages)
 
     @property
     def countries(self):
-        return set(self.data.get('countries', []))
+        return list(set(self.data.get('countries', [])))
 
     @countries.setter
     def countries(self, countries):
@@ -137,7 +137,7 @@ class Metadata(MutableMapping):
     def add_country(self, country):
         country = country.lower().strip()
         countries = self.countries
-        countries.add(country)
+        countries.append(country)
         self.data['countries'] = list(countries)
 
     @property
@@ -146,7 +146,7 @@ class Metadata(MutableMapping):
         for date_ in self.data.get('dates', []):
             if date is not None:
                 _dates.add(date_.strip('.').strip())
-        return _dates
+        return list(_dates)
 
     @dates.setter
     def dates(self, dates):
@@ -167,7 +167,7 @@ class Metadata(MutableMapping):
             # this may raise ValueError etc.
             datetime.strptime(obj, '%Y-%m-%d')
         dates = self.dates
-        dates.add(obj)
+        dates.append(obj)
         self.data['dates'] = list(dates)
 
     @property

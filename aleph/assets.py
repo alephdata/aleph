@@ -15,6 +15,8 @@ deps_assets = Bundle(
     'vendor/angular-animate/angular-animate.js',
     'vendor/angular-loading-bar/build/loading-bar.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
+    'vendor/angulartics/src/angulartics.js',
+    'vendor/angulartics/src/angulartics-piwik.js',
     'vendor/ngInfiniteScroll/build/ng-infinite-scroll.js',
     filters='uglifyjs',
     output='assets/vendor.js'

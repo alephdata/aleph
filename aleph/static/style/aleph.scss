@@ -30,6 +30,7 @@ $input-border-focus: $brand-primary;
 // Modal backdrop workaround:
 html { height: 100%; }
 body { min-height: 100%; }
+
 .modal-backdrop { bottom: 0; }
 
 #page {
@@ -60,6 +61,12 @@ canvas#pdf {
     margin-bottom: 2em;
     border: 1px solid darken($gray-subtle, 20%);
     box-shadow: 3px 3px 10px darken($gray-subtle, 20%);
+}
+
+.intro-text {
+    font-size: 1.2em;
+    line-height: 1.7em;
+    color: text-muted;
 }
 
 .badge {

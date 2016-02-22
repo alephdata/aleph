@@ -152,7 +152,7 @@ def generate_entities(document):
     return entities
 
 
-@celery.task(ignore_result=True)
+@celery.task()
 def index_document(document_id):
     clear_session()
     document = Document.by_id(document_id)
@@ -168,13 +168,10 @@ def index_document(document_id):
              id=document.id)
     clear_children(document)
 
-    try:
-        if document.type == Document.TYPE_TEXT:
-            bulk(es, generate_pages(document), stats_only=True,
-                 chunk_size=2000, request_timeout=60.0)
+    if document.type == Document.TYPE_TEXT:
+        bulk(es, generate_pages(document), stats_only=True,
+             chunk_size=2000, request_timeout=60.0)
 
-        if document.type == Document.TYPE_TABULAR:
-            bulk(es, generate_records(document), stats_only=True,
-                 chunk_size=2000, request_timeout=60.0)
-    except Exception as ex:
-        log.exception(ex)
+    if document.type == Document.TYPE_TABULAR:
+        bulk(es, generate_records(document), stats_only=True,
+             chunk_size=2000, request_timeout=60.0)

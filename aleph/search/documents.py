@@ -6,9 +6,8 @@ from werkzeug.datastructures import MultiDict
 
 from aleph.core import es, es_index, url_for
 from aleph import authz
-from aleph.util import latinize_text
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
-from aleph.search.common import add_filter, authz_filter
+from aleph.search.util import add_filter, authz_filter
 from aleph.search.facets import convert_aggregations
 from aleph.search.records import records_query
 
@@ -21,13 +20,21 @@ DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'mime_type',
 OR_FIELDS = ['source_id']
 
 
-def documents_query(args, fields=None, facets=True):
-    """ Parse a user query string, compose and execute a query. """
+def documents_query(args, fields=None, facets=True, min_id=None):
+    """Parse a user query string, compose and execute a query."""
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
     text = args.get('q', '').strip()
     q = text_query(text)
     q = authz_filter(q)
+    if min_id is not None:
+        q = add_filter(q, {
+            "range": {
+                "id": {
+                    "gt": min_id
+                }
+            }
+        })
 
     if text:
         sort = ['_score']
@@ -129,7 +136,7 @@ def aggregate(q, args, filters):
 
 
 def filter_query(q, filters, skip=None):
-    """ Apply a list of filters to the given query. """
+    """Apply a list of filters to the given query."""
     or_filters = defaultdict(list)
     for field, value in filters:
         if field == skip:
@@ -147,35 +154,19 @@ def text_query(text):
     """ Construct the part of a query which is responsible for finding a
     piece of thext in the selected documents. """
     text = text.strip()
-    text_latin = latinize_text(text)
     if len(text):
         q = {
             "bool": {
                 "minimum_should_match": 1,
                 "should": [
                     {
-                        "multi_match": {
+                        "query_string": {
                             "query": text,
-                            "fields": ['title^100', 'file_name^10', 'summary^2'],
-                            "type": "most_fields",
-                            "cutoff_frequency": 0.0007,
-                            "operator": "and",
-                        }
-                    },
-                    {
-                        "multi_match": {
-                            "query": text_latin,
-                            "fields": ['title_latin^100', 'summary_latin^2'],
-                            "type": "most_fields",
-                            "cutoff_frequency": 0.0007,
-                            "operator": "and",
-                        }
-                    },
-                    {
-                        "multi_match": {
-                            "query": text,
-                            "fields": ['title^100', 'file_name^10', 'summary^2'],
-                            "type": "phrase"
+                            "fields": ['title^15', 'file_name^10',
+                                       'summary^10', 'title_latin',
+                                       'summary_latin'],
+                            "default_operator": "AND",
+                            "use_dis_max": True
                         }
                     },
                     {
@@ -184,24 +175,17 @@ def text_query(text):
                             "score_mode": "avg",
                             "query": {
                                 "bool": {
-                                    "should": {
-                                        "match": {
-                                            "text": {
+                                    "should": [
+                                        {
+                                            "query_string": {
+                                                "fields": ["text^5",
+                                                           "text_latin"],
                                                 "query": text,
-                                                "cutoff_frequency": 0.0007,
-                                                "operator": "and"
+                                                "default_operator": "AND",
+                                                "use_dis_max": True
                                             }
                                         }
-                                    },
-                                    "should": {
-                                        "match": {
-                                            "text_latin": {
-                                                "query": text_latin,
-                                                "cutoff_frequency": 0.0007,
-                                                "operator": "and"
-                                            }
-                                        }
-                                    }
+                                    ]
                                 }
                             }
                         }
@@ -214,8 +198,29 @@ def text_query(text):
     return q
 
 
+def run_sub_queries(output, sub_queries):
+    if len(sub_queries):
+        res = es.msearch(index=es_index, doc_type=TYPE_RECORD,
+                         body='\n'.join(sub_queries))
+        for doc in output['results']:
+            for sq in res.get('responses', []):
+                sqhits = sq.get('hits', {})
+                for hit in sqhits.get('hits', {}):
+                    record = hit.get('_source')
+                    if doc['id'] != record.get('document_id'):
+                        continue
+                    record['score'] = hit.get('_score')
+                    highlights = hit.get('highlight', {})
+                    if len(highlights.get('text', [])):
+                        record['text'] = highlights.get('text')
+                    elif len(highlights.get('text_latin', [])):
+                        record['text'] = highlights.get('text_latin', [])
+                    doc['records']['results'].append(record)
+                    doc['records']['total'] = sqhits.get('total', 0)
+
+
 def execute_documents_query(args, q):
-    """ Execute the query and return a set of results. """
+    """Execute the query and return a set of results."""
     result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
     hits = result.get('hits', {})
     output = {
@@ -245,7 +250,7 @@ def execute_documents_query(args, q):
         document['score'] = doc.get('_score')
         document['records'] = {'results': [], 'total': 0}
 
-        sq = records_query(document['id'], args)
+        sq = records_query(document['id'], args, snippet_size=140)
         if sq is not None:
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))
@@ -256,19 +261,36 @@ def execute_documents_query(args, q):
                                        document_id=doc.get('_id'))
         output['results'].append(document)
 
-    if len(sub_queries):
-        res = es.msearch(index=es_index, doc_type=TYPE_RECORD,
-                         body='\n'.join(sub_queries))
-        for doc in output['results']:
-            for sq in res.get('responses', []):
-                sqhits = sq.get('hits', {})
-                for hit in sqhits.get('hits', {}):
-                    record = hit.get('_source')
-                    if doc['id'] != record.get('document_id'):
-                        continue
-                    record['score'] = hit.get('_score')
-                    record['text'] = hit.get('highlight', {}).get('text')
-                    doc['records']['results'].append(record)
-                    doc['records']['total'] = sqhits.get('total', 0)
+    run_sub_queries(output, sub_queries)
+    return output
 
+
+def execute_documents_alert_query(args, q):
+    """Execute the query and return a set of results."""
+    if not isinstance(args, MultiDict):
+        args = MultiDict(args)
+    q['size'] = 50
+    result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
+    hits = result.get('hits', {})
+    output = {
+        'total': hits.get('total'),
+        'results': [],
+    }
+    convert_aggregations(result, output, args)
+    sub_queries = []
+    for doc in hits.get('hits', []):
+        document = doc.get('_source')
+        document['id'] = int(doc.get('_id'))
+        for source in output['sources']['values']:
+            if source['id'] == document['source_id']:
+                document['source'] = source
+        document['records'] = {'results': [], 'total': 0}
+
+        sq = records_query(document['id'], args, size=1, snippet_size=140)
+        if sq is not None:
+            sub_queries.append(json.dumps({}))
+            sub_queries.append(json.dumps(sq))
+        output['results'].append(document)
+
+    run_sub_queries(output, sub_queries)
     return output

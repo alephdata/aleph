@@ -6,7 +6,7 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$filte
   $scope.table = data.table;
   $scope.rows = data.rows;
   $scope.moreLoading = false;
-  $scope.textQuery = $location.search().rq || $location.search().q;
+  $scope.textQuery = $location.search().dq;
 
   Title.set(data.doc.title || data.doc.file_name);
 
@@ -33,8 +33,8 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$filte
 
   $scope.updateQuery = function() {
     var q = $location.search();
-    q.rq = $scope.textQuery;
-    q.q = null; // wat.
+    q.dq = $scope.textQuery;
+    // q.q = null; // wat.
     q.row = null;
     $location.search(q);  
   };

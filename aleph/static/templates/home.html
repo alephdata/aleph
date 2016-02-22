@@ -1,0 +1,43 @@
+
+<div class="row">
+  <div class="col-md-6 intro-text">
+    <div class="intro-text">
+      <p>
+        <strong>Welcome to {{title}}</strong>
+      </p>
+      <p>
+        {{title}} makes research material accessible.
+      </p>
+      <p>This
+        includes documents from <em>previous investigations</em>, <em>official sources</em>, and
+        <em>scraped databases</em> from many countries.
+      </p>
+      <p>
+        The site also cross-references documents with <em>entity watchlists</em> to find mentions
+        of persons and organisations of interest.
+      </p>
+      <br/>
+      <div class="alert alert-info" role="alert">
+        <strong>Help us improve.</strong> Please send feedback on the quality of search results, 
+        using the tool, or ideas for additional sources to 
+        <strong>tech@occrp.org</strong>.
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <table class="table table-striped">
+      <tr>
+        <th>
+          Document and data sources ({{result.sources.values.length | number}})
+        </th>
+        <th class="numeric">
+          {{result.total | number}}
+        </th>
+      </tr>
+      <tr ng-repeat="source in result.sources.values">
+        <td><a ng-href="#/search?filter:source_id={{source.id}}">{{source.label}}</a></td>
+        <td class="numeric">{{source.count | number}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

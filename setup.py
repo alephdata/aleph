@@ -45,8 +45,6 @@ setup(
             'idrequests = aleph.crawlers.idashboard:IDRequests',
             'idfiles = aleph.crawlers.idashboard:IDFiles',
             'aznews = aleph.crawlers.az_news:AzerbaijanNewsCrawler',
-            'azapa = aleph.crawlers.az_apa:AzerbaijanPressAgency',
-            'chsogc = aleph.crawlers.ch_sogc:SwissCommercialGazette',
             'lulegi = aleph.crawlers.lu_legi:LuxembourgGazette',
             'lioera = aleph.crawlers.li_oera:LiechtensteinOld',
             'lillv = aleph.crawlers.li_llv:LiechtensteinAmtsblatt',

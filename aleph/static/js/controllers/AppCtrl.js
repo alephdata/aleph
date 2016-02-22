@@ -1,6 +1,6 @@
 aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$http', '$uibModal', '$q',
-                             'Session', 'Query', 'Metadata',
-    function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Session, Query, Metadata) {
+                             'Session', 'Query', 'Alert', 'Metadata',
+    function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Session, Query, Alert, Metadata) {
 
   $scope.session = {logged_in: false};
   $scope.query = Query;
@@ -20,7 +20,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
       }
     });
     $scope.query.state = Query.load();
-    $scope.reportLoading(true);
+    // $scope.reportLoading(true);
   });
 
   $rootScope.$on("$routeChangeSuccess", function (event, next, current) {
@@ -31,11 +31,11 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
     $scope.routeFailed = true;
   });
 
-  $scope.reportError = function(message) {
+  $rootScope.reportError = function(message) {
     $scope.routeFailed = true;
   };
 
-  $scope.reportLoading = function(flag) {
+  $rootScope.reportLoading = function(flag) {
     $scope.routeLoaded = !flag;
     if (flag) {
       $scope.routeFailed = false;
@@ -56,11 +56,25 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
     Query.toggleFilter('entity', $item.id);
   }
 
-  $scope.editProfile = function() {
+  $scope.editProfile = function($event) {
+    $event.stopPropagation();
     var d = $uibModal.open({
         templateUrl: 'profile.html',
         controller: 'ProfileCtrl',
         backdrop: true
+    });
+  };
+
+  $scope.manageAlerts = function($event) {
+    $event.stopPropagation();
+    var instance = $uibModal.open({
+      templateUrl: 'alerts_manage.html',
+      controller: 'AlertsManageCtrl',
+      backdrop: true,
+      size: 'md',
+      resolve: {
+        alerts: Alert.index()
+      }
     });
   };
 
@@ -70,8 +84,9 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   };
 
   $scope.clearSearch = function(form) {
+    $rootScope.reportLoading(true);
     $location.search({});
-    $location.path('/search');
+    $location.path('/');
   };
 
 }]);

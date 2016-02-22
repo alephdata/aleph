@@ -48,6 +48,10 @@ class Role(db.Model, TimeStampedModel):
         return self.name
 
     @classmethod
+    def all(cls):
+        return db.session.query(cls)
+
+    @classmethod
     def by_id(cls, id):
         if id is not None:
             return db.session.query(cls).filter_by(id=id).first()

@@ -1,41 +1,35 @@
 from aleph.model import Entity
-from aleph.util import latinize_text
 from aleph.index import TYPE_RECORD
 from aleph.core import es, es_index, url_for
 
 
-def records_query(document_id, args, size=5):
-    terms = []
+def records_query(document_id, args, size=5, snippet_size=50):
+    shoulds = []
     text = args.get('q', '').strip()
     if len(text):
-        terms.append(text)
+        shoulds.append({
+            'query_string': {
+                'query': text,
+                'fields': ['text^10', 'text_latin'],
+                'default_operator': 'AND',
+                'use_dis_max': True
+            }
+        })
 
     entities = Entity.by_id_set(args.getlist('entity'))
     for entity in entities.values():
-        terms.extend(entity.terms)
-
-    if not len(terms):
-        return None
-
-    shoulds = []
-    for term in terms:
-        shoulds.append({
-            'match': {
-                'text': {
+        for term in entity.terms:
+            shoulds.append({
+                'multi_match': {
                     'query': term,
-                    'boost': 10,
-                    'operator': 'and'
+                    'type': "best_fields",
+                    'fields': ['text^5', 'text_latin'],
+                    'operator': 'AND'
                 }
-            }
-        })
-        shoulds.append({
-            'match': {
-                'text_latin': {
-                    'query': latinize_text(term),
-                    'operator': 'and'
-                }
-            }
-        })
+            })
+
+    if not len(shoulds):
+        return None
 
     q = {
         'bool': {
@@ -49,17 +43,23 @@ def records_query(document_id, args, size=5):
         }
 
     try:
-        snippet = int(args.get('snippet', 150))
+        snippet = int(args.get('snippet', snippet_size))
     except:
-        snippet = 150
+        snippet = snippet_size
 
     return {
         'size': size,
         'query': q,
         'highlight': {
             'fields': {
-                'text': {'fragment_size': snippet},
-                'text_latin': {'fragment_size': snippet}
+                'text': {
+                    'fragment_size': snippet,
+                    'number_of_fragments': 1
+                },
+                'text_latin': {
+                    'fragment_size': snippet,
+                    'number_of_fragments': 1
+                }
             }
         },
         '_source': ['document_id', 'sheet', 'row_id', 'page']

@@ -19,12 +19,11 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Session',
       var dfd = $q.defer();
       Session.get().then(function(session) {
         var sq = {
-              'q': query.pq || query.q
+              'q': query.pq
             },
             url = '/api/1/query/records/' + documentId;
 
         if (sq.q) {
-          sq['_uid'] = session.cbq;
           sq['snippet'] = 80;
           sq['limit'] = 1000;
           $http.get(url, {params: sq}).then(function(res) {

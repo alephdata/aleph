@@ -42,7 +42,14 @@
               </a>
             </li>
             <li ng-show="session.logged_in" ng-cloak>
-              <a ng-click="editProfile()" ng-bind="session.role.name"></a>
+              <a ng-click="editProfile($event)">
+                <i class="fa fa-cog"></i> Settings
+              </a>
+            </li>
+            <li ng-show="session.logged_in" ng-cloak>
+              <a ng-click="manageAlerts($event)">
+                <i class="fa fa-bell"></i> Alerts
+              </a>
             </li>
             <li ng-show="session.logged_in" ng-cloak>
               <a href="{{url_for('sessions.logout')}}" target="_self">
@@ -57,7 +64,7 @@
     <div id="page">
       <div id="spinner-overlay" ng-hide="routeLoaded">
         <div class="spinner" ng-hide="routeFailed">
-          <i class="fa fa-spinner fa-pulse"></i>
+          <i class="fa fa-circle-o-notch fa-spin"></i>
         </div>
         <div class="spinner failed" ng-cloak ng-show="routeFailed">
           <i class="fa fa-exclamation-triangle"></i>
@@ -70,6 +77,8 @@
         <div ng-cloak ng-view autoscroll="true"></div>
       </div>
     </div>
+
+    {% include "analytics.html" %}
 
     {% for path, tmpl in templates %}
       <script id="{{path}}" type="text/ng-template">{{ tmpl | safe }}</script>

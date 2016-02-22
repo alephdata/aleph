@@ -8,8 +8,6 @@ RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
         libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates less \
         postgresql-client-9.4 unrar unzip locales libreoffice \
         libreoffice-writer libreoffice-draw libreoffice-impress \
-        libreoffice-l10n-en-gb libreoffice-help-tr libreoffice-help-ru \
-        libreoffice-l10n-hu libreoffice-l10n-hr libreoffice-l10n-uk \
         libreoffice-pdfimport hyphen-hr hyphen-ro hyphen-de mythes-cs \
         mythes-hu tesseract-ocr tesseract-ocr-bel tesseract-ocr-aze \
         tesseract-ocr-osd imagemagick-common imagemagick unoconv \

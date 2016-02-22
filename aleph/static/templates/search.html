@@ -16,6 +16,12 @@
   </div>
 
   <div class="col-md-4">
+    <!-- div class="panel panel-default">
+      <div class="panel-heading">
+        {{result.total | number}} documents and databases
+      </div>
+    </div -->
+
     <div class="panel panel-default">
       <div class="panel-heading">
         <span class="pull-right">
@@ -53,10 +59,10 @@
 
     <div class="btn-group btn-group-justified" role="group">
       <div class="btn-group" uib-dropdown dropdown-append-to-body>
-        <button type="button" class="btn btn-primary dropdown-toggle"
+        <button type="button" class="btn btn-default dropdown-toggle"
           uib-dropdown-toggle>
           <i class="fa fa-filter"></i>
-          Filter by type, language, country
+          Add filter
           <span class="caret"></span>
         </button>
         <ul class="uib-dropdown-menu" role="menu">
@@ -64,6 +70,18 @@
             <a ng-click="query.toggleFilter('facet', field)" ng-bind="label"></a>
           </li>
         </ul>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-default" ng-click="toggleAlert()"
+          ng-disabled="!canCreateAlert()" ng-class="{'active': hasAlert()}">
+          <i class="fa fa-bell"></i>
+          <span ng-show="hasAlert()">
+            Disable alert
+          </span>
+          <span ng-hide="hasAlert()">
+            Create alert
+          </span>
+        </button>
       </div>
     </div>
     <br/>
@@ -113,7 +131,7 @@
       </ul>
     </div>
 
-    <div class="panel panel-default" ng-if="result.total < 10000">
+    <div class="panel panel-default" ng-if="result.total < 20000">
       <div class="panel-heading">
         <strong>Download result list</strong>
       </div>
@@ -130,7 +148,8 @@
         </a>
       </div>
     </div>
-    <div class="panel panel-default">
+
+    <div class="panel panel-default" ng-if="result.total < 20000">
       <div class="panel-heading">
         <strong>Download watchlist network</strong>
       </div>

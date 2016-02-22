@@ -98,6 +98,7 @@ class SQLCrawler(Crawler):
         meta_.update(query.get('meta', {}))
         meta = self.metadata()
         meta.extension = 'csv'
+        meta.mime_type = 'text/csv'
         meta.data.update(meta_)
         meta.foreign_id = '%s:%s' % (source.foreign_id, name)
 
@@ -119,8 +120,6 @@ class SQLCrawler(Crawler):
                     writer.writerow(row[h] for h in headers)
             fh.close()
             self.emit_file(source, meta, file_path, move=True)
-        except Exception as ex:
-            log.exception(ex)
         finally:
             if os.path.isfile(file_path):
                 os.unlink(file_path)
@@ -141,3 +140,4 @@ class SQLCrawler(Crawler):
                 if source is None or source == name:
                     foreign_id = '%s:%s' % (self.name, name)
                     self.crawl_source(engine, foreign_id, data)
+        self.finalize()

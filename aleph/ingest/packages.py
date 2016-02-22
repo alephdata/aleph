@@ -43,8 +43,8 @@ class PackageIngestor(Ingestor):
             with open(file_path, 'wb') as dst:
                 shutil.copyfileobj(fh, dst)
             ingest_file(self.source_id, child, file_path)
-        except IOError as re:
-            log.exception(re)
+        except Exception as ex:
+            log.exception(ex)
 
 
 class RARIngestor(PackageIngestor):

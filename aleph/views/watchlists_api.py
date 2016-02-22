@@ -4,14 +4,16 @@ from apikit import obj_or_404, jsonify, Pager, request_data
 from aleph import authz
 from aleph.model import Watchlist, db
 from aleph.analyze import analyze_terms
-from aleph.views.cache import etag_cache_keygen
+from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('watchlists', __name__)
 
 
 @blueprint.route('/api/1/watchlists', methods=['GET'])
 def index():
-    q = Watchlist.all(watchlist_ids=authz.watchlists(authz.READ))
+    watchlists = authz.watchlists(authz.READ)
+    enable_cache(vary_user=True, vary=watchlists)
+    q = Watchlist.all(watchlist_ids=watchlists)
     q = q.order_by(Watchlist.label.asc())
     return jsonify(Pager(q).to_dict())
 
@@ -28,7 +30,6 @@ def create():
 def view(id):
     authz.require(authz.watchlist_read(id))
     watchlist = obj_or_404(Watchlist.by_id(id))
-    etag_cache_keygen(watchlist)
     return jsonify(watchlist)
 
 

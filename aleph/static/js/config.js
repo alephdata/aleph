@@ -1,8 +1,8 @@
 var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'angular-loading-bar', 'ui.bootstrap',
-                                     'debounce', 'infinite-scroll', 'pdf']);
+                                     'debounce', 'infinite-scroll', 'pdf', 'angulartics', 'angulartics.piwik']);
 
-aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
-    function($routeProvider, $locationProvider, cfpLoadingBarProvider) {
+aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider', 'cfpLoadingBarProvider',
+    function($routeProvider, $locationProvider, $analyticsProvider, cfpLoadingBarProvider) {
 
   cfpLoadingBarProvider.includeSpinner = false;
 
@@ -39,10 +39,22 @@ aleph.config(['$routeProvider', '$locationProvider', 'cfpLoadingBarProvider',
     }
   });
 
+  $routeProvider.when('/', {
+    templateUrl: 'home.html',
+    controller: 'HomeCtrl',
+    reloadOnSearch: false,
+    loginRequired: false,
+    resolve: {
+      'data': loadHome
+    }
+  });
+
   $routeProvider.otherwise({
-    redirectTo: '/search',
+    redirectTo: '/',
     loginRequired: false
   });
+
+
 
   $locationProvider.html5Mode(false);
 }]);

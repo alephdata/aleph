@@ -28,12 +28,6 @@ ELASTICSEARCH_URL = env.get('BONSAI_URL', 'http://localhost:9200')
 ALEMBIC_DIR = path.join(path.dirname(__file__), 'migrate')
 ALEMBIC_DIR = path.abspath(ALEMBIC_DIR)
 
-TWITTER_API_KEY = None
-TWITTER_API_SECRET = None
-
-FACEBOOK_APP_ID = None
-FACEBOOK_APP_SECRET = None
-
 SPINDLE_URL = 'https://search.occrp.org/'
 SPINDLE_API_KEY = None
 
@@ -41,6 +35,11 @@ CELERY_ALWAYS_EAGER = False
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = 'UTC'
+# CELERY_ACKS_LATE = True
+# CELERY_RESULT_PERSISTENT = False
+# CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
+# CELERY_IGNORE_RESULT = True
+# CELERYD_MAX_TASKS_PER_CHILD = 100
 CELERY_BROKER_URL = env.get('RABBITMQ_BIGWIG_URL',
                             'amqp://guest:guest@localhost:5672//')
 CELERY_IMPORTS = ('aleph.queue')

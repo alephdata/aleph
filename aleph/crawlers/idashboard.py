@@ -87,6 +87,7 @@ class IDFiles(IDBase):
             if not data.get('next'):
                 break
             url = data['next']
+        self.finalize()
 
 
 class IDRequests(IDBase):

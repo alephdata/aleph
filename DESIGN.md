@@ -42,15 +42,15 @@ Iteration II
 * [DONE] Tabular: Filter globally
 * [DONE] crawldir CLI arguments
 * [WONTFIX] Invert source selection options
+* [DONE] Web crawler
+* [DONE] JS set titles
 * Tabular: Cell value formatting
 * Tabular: Fixed headers
 * Tabular: Filter by field
 * Tabular: Facet by field
-* Web crawler
 * GDrive importer
 * [MAYBE] Filter display
 * Alerts / Subscriptions
-* JS set titles
 * Testing
 * Check DOCX/XLSX ingest
 * tidbits
@@ -79,9 +79,23 @@ https://archive.org/details/wikileaks-cables-csv
 
 https://services.gov.im/ded/services/companiesregistry/viewcompany.iom?Id=121122
 
----
 
 
+-------------
+
+Alert
+    - id
+    - role_id
+    - query
+    - created_at
+    - is_active
+
+GET /api/1/alerts
+POST /api/1/alerts 
+DELETE /api/1/alerts/<id>
+
+
+-------------
 
 D.I.T.
 ======
