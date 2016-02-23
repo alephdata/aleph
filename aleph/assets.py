@@ -24,7 +24,7 @@ deps_assets = Bundle(
 
 js_files = []
 for (root, dirs, files) in os.walk(os.path.join(app.static_folder, 'js')):
-    for file_name in files:
+    for file_name in sorted(files):
         file_path = os.path.relpath(os.path.join(root, file_name),
                                     app.static_folder)
         js_files.append(file_path)

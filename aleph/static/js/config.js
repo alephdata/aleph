@@ -54,7 +54,5 @@ aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider', 'cfpL
     loginRequired: false
   });
 
-
-
   $locationProvider.html5Mode(false);
 }]);
