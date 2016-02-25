@@ -44,13 +44,16 @@ Iteration II
 * [WONTFIX] Invert source selection options
 * [DONE] Web crawler
 * [DONE] JS set titles
+* [DONE] Alerts / Subscriptions
+* Watchlist subscriptins 
+* Fix OpenName import
+* Fix SQL loader.
 * Tabular: Cell value formatting
 * Tabular: Fixed headers
 * Tabular: Filter by field
 * Tabular: Facet by field
 * GDrive importer
 * [MAYBE] Filter display
-* Alerts / Subscriptions
 * Testing
 * Check DOCX/XLSX ingest
 * tidbits

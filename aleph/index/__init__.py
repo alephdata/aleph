@@ -132,7 +132,7 @@ def generate_records(document):
                     'row_id': row_id,
                     'sheet': table.schema.sheet,
                     'text': text,
-                    'text_latin': latinize_text(text),
+                    'text_latin': [latinize_text(t) for t in text],
                     'raw': row
                 }
             }
