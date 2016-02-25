@@ -160,7 +160,7 @@ def index_document(document_id):
         log.info("Could not find document: %r", document_id)
         return
     log.info("Index document: %r", document)
-    data = document.to_dict()
+    data = document.to_index_dict()
     data['entities'] = generate_entities(document)
     data['title_latin'] = latinize_text(data.get('title'))
     data['summary_latin'] = latinize_text(data.get('summary'))

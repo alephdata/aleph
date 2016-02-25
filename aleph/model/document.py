@@ -53,8 +53,7 @@ class Document(db.Model, TimeStampedModel):
     def __unicode__(self):
         return self.id
 
-    def to_dict(self):
-        data = self.meta.to_dict()
+    def _add_to_dict(self, data):
         data.update({
             'id': self.id,
             'type': self.type,
@@ -63,6 +62,14 @@ class Document(db.Model, TimeStampedModel):
             'updated_at': self.updated_at
         })
         return data
+
+    def to_dict(self):
+        data = self.meta.to_dict()
+        return self._add_to_dict(data)
+
+    def to_index_dict(self):
+        data = self.meta.to_index_dict()
+        return self._add_to_dict(data)
 
     def delete_pages(self):
         pq = db.session.query(Page)

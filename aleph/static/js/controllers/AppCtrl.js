@@ -54,6 +54,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   $scope.acceptSuggestion = function($item) {
     $scope.query.state.q = '';
     Query.toggleFilter('entity', $item.id);
+    $location.path('/search');
   }
 
   $scope.editProfile = function($event) {

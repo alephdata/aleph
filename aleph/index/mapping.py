@@ -10,6 +10,17 @@ DOCUMENT_MAPPING = {
     "_all": {
         "enabled": True
     },
+    "dynamic_templates": [
+        {
+            "text": {
+                "match": "parent.*",
+                "mapping": {
+                    "type": "string"
+                }
+            }
+        }
+    ],
+    "date_detection": False,
     "properties": {
         "id": {"type": "integer", "index": "not_analyzed"},
         "title": {"type": "string", "index": "analyzed"},
@@ -56,6 +67,18 @@ RECORD_MAPPING = {
         "type": TYPE_DOCUMENT,
         "property": "id"
     },
+    "dynamic_templates": [
+        {
+            "fields": {
+                "match": "raw.*",
+                "mapping": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                }
+            }
+        }
+    ],
+    "date_detection": False,
     "properties": {
         "id": {"type": "string", "index": "not_analyzed"},
         "type": {"type": "string", "index": "not_analyzed"},
@@ -67,6 +90,8 @@ RECORD_MAPPING = {
         "page": {"type": "integer", "index": "not_analyzed"},
         "text": {"type": "string", "index": "analyzed"},
         "text_latin": {"type": "string", "index": "analyzed"},
-        "raw": {"type": "object"}
+        "raw": {
+            "type": "object"
+        }
     }
 }

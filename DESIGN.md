@@ -58,6 +58,9 @@ Iteration II
 * Check DOCX/XLSX ingest
 * tidbits
 
+* BUG: document search doesn't work
+* BUG: Selecting entity on home 
+
 
 * [DONE] BUG: content loaded in pagination does not have highlights
 
@@ -65,6 +68,14 @@ Iteration II
 * [DONE] Moldova importer
 * [DONE] YL importer
 * Romanian Gazette http://www.monitoruloficial.ro/RO/article--e-Monitor--339.html 
+
+
+UI Feedback 
+
+* 3 Use cases on home page
+* Result list: too tiny, too crowded
+
+
 
 ---
 
