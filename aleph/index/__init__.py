@@ -118,6 +118,8 @@ def generate_records(document):
             tid = tid.hexdigest()
             text = [t for t in row.values() if t is not None]
             text = list(set(text))
+            latin = [latinize_text(t) for t in text]
+            latin = [t for t in latin if t not in text]
             yield {
                 '_id': tid,
                 '_type': TYPE_RECORD,
@@ -132,7 +134,7 @@ def generate_records(document):
                     'row_id': row_id,
                     'sheet': table.schema.sheet,
                     'text': text,
-                    'text_latin': [latinize_text(t) for t in text],
+                    'text_latin': latin,
                     'raw': row
                 }
             }

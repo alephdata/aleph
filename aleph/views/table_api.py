@@ -29,7 +29,6 @@ def view(document_id, table_id):
 @blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>/rows')
 def rows(document_id, table_id):
     document, tabular = get_tabular(document_id, table_id)
-    enable_cache(vary_user=True)
     query = tabular_query(document_id, table_id, request.args)
     query['size'] = get_limit(default=100)
     query['from'] = get_offset()
