@@ -15,7 +15,7 @@ var loadTabular = ['$http', '$q', '$route', '$location', 'Document',
 
     var rowsUrl = '/api/1/documents/' + documentId + '/tables/' + tableId + '/rows',
         q = $location.search();
-    q.q = q.rq || q.q;
+    q.q = q.dq;
     $http.get(rowsUrl, {params: q}).then(function(res) {
       dfd.resolve({
         doc: doc,
