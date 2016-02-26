@@ -1,4 +1,4 @@
-var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'angular-loading-bar', 'ui.bootstrap',
+var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'ui.bootstrap',
                                      'debounce', 'infinite-scroll', 'pdf', 'angulartics', 'angulartics.piwik']);
 
 aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider', 'cfpLoadingBarProvider',

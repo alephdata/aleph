@@ -12,6 +12,7 @@ deps_assets = Bundle(
     'vendor/angular-pdf/dist/angular-pdf.js',
     'vendor/ng-debounce/angular-debounce.js',
     'vendor/angular-route/angular-route.js',
+    'vendor/angular-sanitize/angular-sanitize.js',
     'vendor/angular-animate/angular-animate.js',
     'vendor/angular-loading-bar/build/loading-bar.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',

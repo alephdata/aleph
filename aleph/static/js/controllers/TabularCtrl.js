@@ -1,6 +1,6 @@
 
-aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$filter', 'Metadata', 'Authz', 'Title', 'data',
-    function($scope, $location, $http, $sce, $filter, Metadata, Authz, Title, data) {
+aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Metadata', 'Authz', 'Title', 'data',
+    function($scope, $location, $http, $sce, $sanitize, $filter, Metadata, Authz, Title, data) {
 
   $scope.doc = data.doc;
   $scope.table = data.table;
@@ -25,10 +25,14 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$filte
     if (value === null || value === undefined) {
       return;
     }
+    if (value.toLowerCase().startsWith('http://') || value.toLowerCase().startsWith('https://')) {
+      value = '<a target="_new" href=' + value + '>' + $sanitize(value) + '</a>'
+      return $sce.trustAsHtml(value);
+    }
     // if (!isNaN(filterFloat(value))) {
     //   return $filter('number')(value);
     // }
-    return value;
+    return $sce.trustAsHtml($sanitize(value));
   };
 
   $scope.updateQuery = function() {
