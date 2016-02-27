@@ -25,9 +25,10 @@ class OpenNamesCrawler(Crawler):
 
         json_file = source.get('data', {}).get('json')
         url = urljoin(JSON_PATH, json_file)
-
+        source_name = source.get('source') or source.get('source_id')
+        label = '%s - %s' % (source.get('publisher'), source_name)
         watchlist = Watchlist.by_foreign_id(url, {
-            'label': source.get('source_id')
+            'label': label
         })
         Permission.grant_foreign(watchlist, Role.SYSTEM_GUEST, True, False)
         log.info(" > OpenNames collection: %s", watchlist.label)

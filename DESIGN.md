@@ -45,6 +45,9 @@ Iteration II
 * [DONE] Web crawler
 * [DONE] JS set titles
 * [DONE] Alerts / Subscriptions
+* [DONE] BUG: content loaded in pagination does not have highlights
+* [DONE] BUG: document search doesn't work
+* [DONE] BUG: Selecting entity on home 
 * Watchlist subscriptins 
 * Fix OpenName import
 * Fix SQL loader.
@@ -57,41 +60,8 @@ Iteration II
 * Testing
 * Check DOCX/XLSX ingest
 * tidbits
-
-* BUG: document search doesn't work
-* BUG: Selecting entity on home 
-
-
-* [DONE] BUG: content loaded in pagination does not have highlights
-
-* [DONE] Azerbaijan importer 
-* [DONE] Moldova importer
-* [DONE] YL importer
-* Romanian Gazette http://www.monitoruloficial.ro/RO/article--e-Monitor--339.html 
-
-
-UI Feedback 
-
 * 3 Use cases on home page
 * Result list: too tiny, too crowded
-
-
-
----
-
-http://www.rba.co.uk/sources/registers.htm#cayman -- 
-
-http://www.legilux.public.lu/entr/archives/index.php?year=2016
-https://apps.llv.li/amtsblatt/kundmachung/display/43020
-https://apps.llv.li/amtsblatt/kundmachung/displayAct/0
-http://www.oera.li/hrweb/ger/PublSuche_afj.htm
-
-
-http://www.start.umd.edu/gtd/
-https://wikileaks.org/plusd/?qproject[]=cg&q=#result
-https://archive.org/details/wikileaks-cables-csv
-
-https://services.gov.im/ded/services/companiesregistry/viewcompany.iom?Id=121122
 
 
 
