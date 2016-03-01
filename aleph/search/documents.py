@@ -221,8 +221,6 @@ def run_sub_queries(output, sub_queries):
 def execute_documents_query(args, q):
     """Execute the query and return a set of results."""
     result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
-    pprint(q)
-    pprint(result)
     hits = result.get('hits', {})
     output = {
         'status': 'ok',

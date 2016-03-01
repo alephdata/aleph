@@ -1,20 +1,25 @@
-aleph.directive('alephPager', ['$timeout', function ($timeout) {
+aleph.directive('responsePager', ['$timeout', function ($timeout) {
     return {
         restrict: 'E',
         scope: {
             'response': '=',
             'load': '&load'
         },
-        templateUrl: 'pager.html',
+        templateUrl: 'response_pager.html',
         link: function (scope, element, attrs, model) {
+            var pageOffset = function(page) {
+                return (page-1) * scope.response.limit;   
+            }
+
             scope.$watch('response', function(e) {
                 scope.showPager = false;
                 scope.pages = [];
-                if (scope.response.pages <= 1) {
+                var pagesCount = Math.ceil(scope.response.total / scope.response.limit);
+                if (pagesCount <= 1) {
                     return;
                 }
                 var pages = [],
-                    current = (scope.response.offset / scope.response.limit) + 1,
+                    current = (scope.response.offset / scope.response.limit) + 1;
                     num = Math.ceil(scope.response.total / scope.response.limit),
                     range = 2,
                     low = current - range,
@@ -28,16 +33,15 @@ aleph.directive('alephPager', ['$timeout', function ($timeout) {
                     high = num;
                     low = Math.max(1, num - (2*range)+1);
                 }
-
                 for (var page = low; page <= high; page++) {
-                    var offset = (page-1) * scope.response.limit,
-                        url = scope.response.format.replace('LIMIT', scope.response.limit).replace('OFFSET', offset);
                     pages.push({
                         page: page,
-                        current: page==current,
-                        url: url
+                        offset: pageOffset(page),
+                        current: page == current
                     });
                 }
+                scope.prev = current == low ? -1 : pageOffset(current - 1);
+                scope.next = current == high ? -1 : pageOffset(current + 1);
                 scope.showPager = true;
                 scope.pages = pages;
             });

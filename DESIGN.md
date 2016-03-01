@@ -65,6 +65,15 @@ Iteration II
 
 
 
+-- DESIGN
+
+* How to display results?
+* How to explain watchlists?
+* Paginated view
+* Home page
+
+
+
 -------------
 
 Alert

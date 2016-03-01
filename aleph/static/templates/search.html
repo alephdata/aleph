@@ -7,21 +7,22 @@
       </span>
     </div>
 
-    <div infinite-scroll="loadMore()" infinite-scroll-disabled="!hasMore()"
-      infinite-scroll-distance="1" infinite-scroll-immediate-check="false">
+    <div>
       <div class="result animate toggle" ng-repeat="doc in result.results">
         <search-result doc="doc" result="result"></search-result>
+      </div>
+      <div>
+        <div class="pull-right">
+          <response-pager response="result" load="loadOffset(offset)"></response-pager>
+        </div>
+        <div class="pagination">
+          Found {{result.total | number}} documents.
+        </div>
       </div>
     </div>
   </div>
 
   <div class="col-md-4">
-    <!-- div class="panel panel-default">
-      <div class="panel-heading">
-        {{result.total | number}} documents and databases
-      </div>
-    </div -->
-
     <div class="panel panel-default">
       <div class="panel-heading">
         <span class="pull-right">

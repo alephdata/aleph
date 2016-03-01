@@ -83,6 +83,8 @@ class Alert(db.Model, TimeStampedModel):
                 fragments.append('filtered by %s: %s' % (field, value))
             except:
                 pass
+        if not len(fragments):
+            return 'Everything'
         return 'Results %s' % ', '.join(fragments)
 
     def to_dict(self):

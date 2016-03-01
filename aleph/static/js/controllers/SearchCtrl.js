@@ -15,10 +15,15 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   } else {
     Title.set("Search documents");  
   }
-  
 
   $scope.showFieldFacet = function(field) {
     return Query.load().facet.indexOf(field) == -1;
+  };
+
+  $scope.loadOffset = function(offset) {
+    var query = Query.load();
+    query.offset = offset;
+    $location.search(query);
   };
 
   $scope.canEditSource = function(source) {
@@ -161,20 +166,4 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   initFacets();
   initResults();
 
-  $scope.hasMore = function() {
-    return $scope.result.next !== null;
-  };
-
-  $scope.loadMore = function() {
-    if (!$scope.result.next || isLoading) {
-      return;
-    }
-    isLoading = true;
-    $http.get($scope.result.next).then(function(res) {
-      data.result.results = data.result.results.concat(res.data.results);
-      data.result.next = res.data.next;
-      
-      initResults();
-    });
-  };
 }]);
