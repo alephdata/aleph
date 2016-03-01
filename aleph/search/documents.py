@@ -30,7 +30,7 @@ def documents_query(args, fields=None, facets=True, min_id=None):
     if min_id is not None:
         q = add_filter(q, {
             "range": {
-                "id": {
+                "_id": {
                     "gt": min_id
                 }
             }
@@ -74,7 +74,7 @@ def entity_watchlists(q, aggs, args, filters):
     readable = authz.watchlists(authz.READ)
     for watchlist_id in args.getlist('watchlist'):
         if authz.watchlist_read(watchlist_id):
-            watchlists.append(watchlist_id)
+            watchlists.append(int(watchlist_id))
 
     flt = {
         'or': [
@@ -100,8 +100,7 @@ def entity_watchlists(q, aggs, args, filters):
                 'filter': flt,
                 'aggs': {
                     'entities': {
-                        'terms': {'field': 'entity_id',
-                                  'size': 100}
+                        'terms': {'field': 'entities.entity_id', 'size': 100}
                     }
                 }
             }
@@ -222,6 +221,8 @@ def run_sub_queries(output, sub_queries):
 def execute_documents_query(args, q):
     """Execute the query and return a set of results."""
     result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
+    pprint(q)
+    pprint(result)
     hits = result.get('hits', {})
     output = {
         'status': 'ok',

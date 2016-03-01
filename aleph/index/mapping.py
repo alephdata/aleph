@@ -1,12 +1,8 @@
 
 TYPE_DOCUMENT = 'document'
-TYPE_PAGE = 'page'
 TYPE_RECORD = 'record'
 
 DOCUMENT_MAPPING = {
-    "_id": {
-        "path": "id"
-    },
     "_all": {
         "enabled": True
     },
@@ -22,7 +18,6 @@ DOCUMENT_MAPPING = {
     ],
     "date_detection": False,
     "properties": {
-        "id": {"type": "integer", "index": "not_analyzed"},
         "title": {"type": "string", "index": "analyzed"},
         "title_latin": {"type": "string", "index": "analyzed"},
         "content_hash": {"type": "string", "index": "not_analyzed"},
@@ -39,9 +34,6 @@ DOCUMENT_MAPPING = {
         "created_at": {"type": "date", "index": "not_analyzed"},
         "updated_at": {"type": "date", "index": "not_analyzed"},
         "entities": {
-            "_id": {
-                "path": "id"
-            },
             "type": "nested",
             "include_in_parent": True,
             "properties": {
@@ -57,15 +49,11 @@ DOCUMENT_MAPPING = {
 }
 
 RECORD_MAPPING = {
-    "_id": {
-        "path": "id"
-    },
     "_all": {
         "enabled": True
     },
     "_parent": {
-        "type": TYPE_DOCUMENT,
-        "property": "id"
+        "type": TYPE_DOCUMENT
     },
     "dynamic_templates": [
         {
@@ -80,7 +68,6 @@ RECORD_MAPPING = {
     ],
     "date_detection": False,
     "properties": {
-        "id": {"type": "string", "index": "not_analyzed"},
         "type": {"type": "string", "index": "not_analyzed"},
         "content_hash": {"type": "string", "index": "not_analyzed"},
         "source_id": {"type": "integer", "index": "not_analyzed"},
