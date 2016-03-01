@@ -10,7 +10,6 @@ deps_assets = Bundle(
     'vendor/pdfjs-dist/build/pdf.js',
     'vendor/pdfjs-dist/build/pdf.worker.js',
     'vendor/angular-pdf/dist/angular-pdf.js',
-    'vendor/ng-debounce/angular-debounce.js',
     'vendor/angular-route/angular-route.js',
     'vendor/angular-sanitize/angular-sanitize.js',
     'vendor/angular-animate/angular-animate.js',
@@ -18,7 +17,6 @@ deps_assets = Bundle(
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
     'vendor/angulartics/src/angulartics.js',
     'vendor/angulartics/src/angulartics-piwik.js',
-    'vendor/ngInfiniteScroll/build/ng-infinite-scroll.js',
     filters='uglifyjs',
     output='assets/vendor.js'
 )
