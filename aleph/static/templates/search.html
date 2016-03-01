@@ -135,25 +135,26 @@
 
     <div class="panel panel-default" ng-if="result.total < 20000">
       <div class="panel-heading">
-        <strong>Download result list</strong>
+        <strong>Work with the result list</strong>
       </div>
       <div class="panel-body">
         <p>
-          You can download links and other meta data for all documents
-          matching your search criteria.
+          Download links and metadata for all documents
+          matching your search criteria to go through them
+          in detail.
         </p>
         <a class="btn btn-primary"
           ng-href="/api/1/query/export?{{query.queryString()}}"
           download target="_self">
-          <i class="fa fa-cloud-download"></i>
-          Download {{result.total | number}} search results (Excel 2007)
+          <i class="fa fa-file-excel-o"></i>
+          Excel file ({{result.total | number}} results)
         </a>
       </div>
     </div>
 
     <div class="panel panel-default" ng-if="result.total < 20000">
       <div class="panel-heading">
-        <strong>Download watchlist network</strong>
+        <strong>Analyze watchlist matches</strong>
       </div>
       <div class="panel-body">
         <p>

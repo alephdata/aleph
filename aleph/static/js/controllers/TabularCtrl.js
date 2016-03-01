@@ -49,19 +49,10 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
     return rows.indexOf(id) !== -1;
   };
 
-  $scope.loadMore = function() {
-    if (!$scope.rows.next_url || $scope.moreLoading) {
-      return;
-    }
-    $scope.moreLoading = true;
-    $scope.reportLoading(true);
-    $http.get($scope.rows.next_url).then(function(res) {
-      $scope.rows.results = $scope.rows.results.concat(res.data.results);
-      $scope.rows.next_url = res.data.next_url;
-      $scope.moreLoading = false;
-      $scope.reportLoading(false);
-    });
+  $scope.loadOffset = function(offset) {
+    var query = $location.search();
+    query.offset = offset;
+    $location.search(query);
   };
-
 
 }]);

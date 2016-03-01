@@ -7,10 +7,7 @@
   </span>
   {{doc.title | limitTo:90 }}
 </a>
-<a ng-href="" target="_self"
-   uib-tooltip="Loaded on {{doc.updated_at.split('T')[0]}}"
-   tooltip-append-to-body="true"
-   tooltip-placement="right" class="source">
+<a ng-click="filterSource(doc.source_id)" class="source">
   {{result.sources.labels[doc.source_id]}}
 </a>
 
