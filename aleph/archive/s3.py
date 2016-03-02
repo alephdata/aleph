@@ -23,6 +23,7 @@ class S3Archive(Archive):
                                aws_secret_access_key=self.secret,
                                region_name=self.region)
         self.s3 = self.session.resource('s3')
+        self.client = self.session.client('s3')
         log.info("Using archive: s3://%s", self.bucket_name)
         self.bucket = self.s3.Bucket(self.bucket_name)
 
@@ -74,6 +75,6 @@ class S3Archive(Archive):
             'Bucket': self.bucket_name,
             'Key': self._get_file_path(meta)
         }
-        return self.s3.generate_presigned_url('get_object',
-                                              Params=params,
-                                              ExpiresIn=86400)
+        return self.client.generate_presigned_url('get_object',
+                                                  Params=params,
+                                                  ExpiresIn=86400)
