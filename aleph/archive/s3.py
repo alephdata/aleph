@@ -37,6 +37,17 @@ class S3Archive(Archive):
                 })
             else:
                 raise
+        cors = self.bucket.Cors()
+        config = {
+            'CORSRules': [
+                {
+                    'AllowedMethods': ['GET'],
+                    'AllowedOrigins': ['*'],
+                    'MaxAgeSeconds': 84600 * 14
+                }
+            ]
+        }
+        cors.put(CORSConfiguration=config)
 
     def archive_file(self, filename, meta, move=False):
         meta = self._update_metadata(filename, meta)
