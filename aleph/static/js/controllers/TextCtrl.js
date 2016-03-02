@@ -50,7 +50,6 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
     $scope.textQuery = query.dq;
     Title.set(data.doc.title + ", Page " + $scope.pageNum);
     Document.queryPages(data.doc.id, query).then(function(pages) {
-      console.log('fooooo!');
       $scope.pages = pages;  
     });
   });

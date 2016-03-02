@@ -1,3 +1,4 @@
+import logging
 from flask import session, Blueprint, redirect, request
 from flask_oauthlib.client import OAuthException
 from apikit import jsonify
@@ -8,6 +9,7 @@ from aleph.model import Role
 from aleph.views.cache import enable_cache
 
 
+log = logging.getLogger(__name__)
 blueprint = Blueprint('sessions', __name__)
 
 
@@ -80,6 +82,7 @@ def logout():
 def callback():
     resp = oauth_provider.authorized_response()
     if resp is None or isinstance(resp, OAuthException):
+        log.warning("Failed OAuth: %r", resp)
         # FIXME: notify the user, somehow.
         return redirect(url_for('ui'))
 
@@ -108,4 +111,5 @@ def callback():
     session['roles'].append(role.id)
     session['user'] = role.id
     db.session.commit()
+    log.info("Logged in: %r", role)
     return redirect(url_for('ui'))
