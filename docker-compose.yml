@@ -8,16 +8,16 @@ postgres:
     POSTGRES_USER:     aleph
     POSTGRES_PASSWORD: aleph
     POSTGRES_DATABASE: aleph
-  ports:
-    - "127.0.0.1:5433:5432"
+  # ports:
+  #  - "127.0.0.1:5433:5432"
 
 elasticsearch:
   image: elasticsearch:2.2.0
   volumes:
     - "/srv/data/elasticsearch:/usr/share/elasticsearch/data"
     - "/srv/logs/elasticsearch:/var/log"
-  ports:
-    - "127.0.0.1:9201:9200"
+  # ports:
+  # - "127.0.0.1:9201:9200"
   environment:
     ES_HEAP_SIZE: 4g
 
@@ -34,6 +34,8 @@ worker:
       C_FORCE_ROOT: true
       ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
       ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
+      EXTRACTORS_CACHE_DIR: /srv/data/extractors
+      TESSDATA_PREFIX: /usr/share/tesseract-ocr
     env_file:
       - aleph.env
 
