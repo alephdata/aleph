@@ -42,8 +42,18 @@ Here's some key features:
 
 ## Installation
 
-As aleph has multiple external dependencies, it is strongly recommended to deploy the package
-in a containerized setup via ``docker`` and ``docker-compose``. After [installing both of these](https://docs.docker.com/compose/install/), you can deploy a simple version of aleph like this:
+As aleph has multiple external dependencies (for data processing and conversion), it is
+strongly recommended to deploy the package in a containerized setup via ``docker`` and
+``docker-compose``. Please follow the relevant documentation on [installing docker-compose](https://docs.docker.com/compose/install/).
+
+You will also need to set up a Google OAuth web application at their [developers console](https://console.developers.google.com/),
+and make sure to configure the OAuth callback URL to be ``http(s)://your-install/api/1/sessions/callback``. 
+
+Finally, ``aleph`` is optimized to utilise certain aspects of Amazons AWS offerings. By
+default, it will try to create a bucket for the application's data, and make use of
+Amazon SQS for task queueing. If you wish to use AWS, you will need to set the AWS key ID
+and access key in the configuration file. Alternatively, plain file system storage and 
+RabbitMQ can be used to avoid AWS.
 
 ```bash
 $ git clone git@github.com:pudo/aleph.git
@@ -53,8 +63,9 @@ $ cp aleph.env.tmpl aleph.env
 $ docker-compose up
 ```
 
-This will launch containers for PostgreSQL, ElasticSearch, RabbitMQ as well as for the applications
-front- and backend.
+This will launch containers for PostgreSQL and ElasticSearch as well as for the applications
+front- and backend. The application should become available at ``http://localhost:13376``.
+You can proxy this port to the public web, or install an HTTP cache to retain static assets.
 
 ## Existing tools
 
