@@ -8,12 +8,13 @@ SECRET_KEY = os.environ.get('ALEPH_SECRET_KEY')
 APP_TITLE = os.environ.get('ALEPH_APP_TITLE', 'Aleph')
 APP_NAME = os.environ.get('ALEPH_APP_NAME', 'aleph')
 APP_BASEURL = os.environ.get('ALEPH_APP_URL')
-FAVICON = 'https://investigativedashboard.org/static/favicon.ico'
+FAVICON = os.environ.get('ALEPH_FAVICON')
 
 ELASTICSEARCH_URL = os.environ.get('ALEPH_ELASTICSEARCH_URI')
 
 SQLALCHEMY_DATABASE_URI = os.environ.get('ALEPH_DATABASE_URI')
-PREFERRED_URL_SCHEME = 'https'
+
+PREFERRED_URL_SCHEME = os.environ.get('ALEPH_URL_SCHEME')
 
 MAIL_FROM = os.environ.get('MAIL_FROM')
 MAIL_HOST = os.environ.get('MAIL_HOST')
@@ -28,44 +29,26 @@ MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 MAIL_USE_TLS = True
 MAIL_PORT = 587
 
-
 CELERY_BROKER_URL = os.environ.get('ALEPH_BROKER_URI')
 BROKER_TRANSPORT_OPTIONS = {
-    'region': 'eu-west-1',
-    'queue_name_prefix': 'prod-'
+    'region': 'eu-west-1'
 }
 
-# ADMINS = ((APP_TITLE, MAIL_ADMINS[0]),)
-# SERVER_EMAIL = MAIL_FROM
-# EMAIL_HOST = MAIL_HOST
-# EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = MAIL_CREDENTIALS
-# EMAIL_USE_TLS = True
-
-ARCHIVE_TYPE = os.environ.get('ALEPH_ARCHIVE_TYPE')
-ARCHIVE_AWS_KEY_ID = os.environ.get('ALEPH_AWS_ACCESS_KEY_ID')
-ARCHIVE_AWS_SECRET = os.environ.get('ALEPH_AWS_SECRET_ACCESS_KEY')
+ARCHIVE_TYPE = os.environ.get('ALEPH_ARCHIVE_TYPE', 's3')
+ARCHIVE_AWS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+ARCHIVE_AWS_SECRET = os.environ.get('AWS_SECRET_ACCESS_KEY')
 ARCHIVE_BUCKET = os.environ.get('ALEPH_ARCHIVE_BUCKET')
 ARCHIVE_PATH = os.environ.get('ALEPH_ARCHIVE_PATH')
-
-TWITTER_API_KEY = os.environ.get('ALEPH_TWITTER_API_KEY')
-TWITTER_API_SECRET = os.environ.get('ALEPH_TWITTER_API_SECRET')
-
-FACEBOOK_APP_ID = os.environ.get('ALEPH_FACEBOOK_APP_ID')
-FACEBOOK_APP_SECRET = os.environ.get('ALEPH_FACEBOOK_APP_SECRET')
-
-SPINDLE_URL = os.environ.get('ALEPH_SPINDLE_HOST', 'https://search.occrp.org/')
-SPINDLE_API_KEY = os.environ.get('ALEPH_SPINDLE_API_KEY')
-
-ID_HOST = 'https://www.investigativedashboard.org/'
-ID_USERNAME = os.environ.get('ALEPH_ID_USERNAME')
-ID_PASSWORD = os.environ.get('ALEPH_ID_PASSWORD')
 
 OAUTH = {
     'consumer_key': os.environ.get('ALEPH_OAUTH_KEY'),
     'consumer_secret': os.environ.get('ALEPH_OAUTH_SECRET'),
-    'base_url': 'https://investigativedashboard.org/',
+    'request_token_params': {
+        'scope': 'https://www.googleapis.com/auth/userinfo.email'
+    },
+    'base_url': 'https://www.googleapis.com/oauth2/v1/',
     'request_token_url': None,
     'access_token_method': 'POST',
-    'access_token_url': 'https://investigativedashboard.org/o/token/',
-    'authorize_url': 'https://investigativedashboard.org/o/authorize',
+    'access_token_url': 'https://accounts.google.com/o/oauth2/token',
+    'authorize_url': 'https://accounts.google.com/o/oauth2/auth',
 }
