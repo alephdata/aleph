@@ -1,11 +1,21 @@
 
 <div class="row">
   <div class="col-md-8">
-    <ul class="nav nav-tabs" ng-if="doc.tables.length > 1">
+    <ul class="nav nav-pills pull-right" ng-if="doc.tables.length > 1">
       <li ng-repeat="tbl in doc.tables" ng-class="{'active': tbl.sheet == table.sheet}">
-        <a href="#/tabular/{{doc.id}}/{{tbl.sheet}}" ng-bind="tbl.sheet_name"></a>
+        <a href="#/tabular/{{doc.id}}/{{tbl.sheet}}?ctx={{searchCtx}}" ng-bind="tbl.sheet_name"></a>
       </li>
     </ul>
+
+    <div class="btn-toolbar" role="toolbar">
+      <button class="btn btn-default" ng-click="backToSearch()">
+        <i class="fa fa-chevron-left"></i>
+        Back to results
+      </button>
+    </div>
+
+    <div class="clearfix"></div>
+
     <div class="data-table">
       <table class="table table-bordered table-striped table-condensed">
         <thead>

@@ -32,6 +32,12 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
     $scope.pageNum = page;
   };
 
+  $scope.backToSearch = function() {
+    var query = alephUrlUnBlob($location.search().ctx);
+    $location.path('/search');
+    $location.search(query);
+  };
+
   $scope.updateTextQuery = function() {
     var q = $location.search();
     q.dq = $scope.textQuery;

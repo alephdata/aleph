@@ -13,27 +13,25 @@ aleph.directive('searchResult', ['$location', '$route', '$rootScope', 'Query', f
       };
 
       scope.viewDetails = function(rec) {
+        var query = $location.search(),
+            search = {
+              ctx: alephUrlBlob(query),
+              q: query.q,
+              dq: query.q
+            };
         $rootScope.reportLoading(true);
         if (scope.doc.type === 'tabular') {
           var sheet = rec ? rec.sheet : 0,
               row = rec ? rec.row_id : 0;
           $location.path('/tabular/' + scope.doc.id + '/' + sheet);
-          $location.search({
-            'row': row,
-            'q': Query.state.q,
-            'dq': Query.state.q,
-            'entity': Query.state.entity
-          });
+          search.row = row;
+          $location.search(search);
         } else {
           var page = rec ? rec.page : 1;
           $location.path('/text/' + scope.doc.id);
-          $location.search({
-            'page': page,
-            'q': Query.state.q,
-            'dq': Query.state.q,
-            'entity': Query.state.entity
-          });
+          search.page = page;
         }
+        $location.search(search);
       };
 
     }

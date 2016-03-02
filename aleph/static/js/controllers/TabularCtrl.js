@@ -6,6 +6,7 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
   $scope.table = data.table;
   $scope.rows = data.rows;
   $scope.moreLoading = false;
+  $scope.searchCtx = $location.search().ctx;
   $scope.textQuery = $location.search().dq;
 
   Title.set(data.doc.title || data.doc.file_name);
@@ -33,6 +34,12 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
     //   return $filter('number')(value);
     // }
     return $sce.trustAsHtml($sanitize(value));
+  };
+
+  $scope.backToSearch = function() {
+    var query = alephUrlUnBlob($location.search().ctx);
+    $location.path('/search');
+    $location.search(query);
   };
 
   $scope.updateQuery = function() {
