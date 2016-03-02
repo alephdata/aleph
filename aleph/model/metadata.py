@@ -309,18 +309,28 @@ class Metadata(MutableMapping):
     def clone(self):
         return Metadata(data=deepcopy(self.data))
 
+    def to_index_dict(self):
+        return {
+            'content_hash': self.content_hash,
+            'foreign_id': self.foreign_id,
+            'file_name': self.file_name,
+            'dates': self.dates,
+            'countries': self.countries,
+            'languages': self.languages,
+            'extension': self.extension,
+            'mime_type': self.mime_type,
+            'headers': self.headers,
+            'source_path': self.source_path,
+            'source_url': self.source_url,
+            'title': self.title,
+            'summary': self.summary
+        }
+
     def to_dict(self):
         data = deepcopy(self.data)
         if self.has('parent'):
             data['parent'] = self.parent.to_dict()
-        data['file_name'] = self.file_name
-        data['dates'] = self.dates
-        data['countries'] = self.countries
-        data['languages'] = self.languages
-        data['extension'] = self.extension
-        data['mime_type'] = self.mime_type
-        data['headers'] = self.headers
-        data['source_path'] = self.source_path
-        data['title'] = self.title
+        data.update(self.to_index_dict())
         data['is_pdf'] = self.is_pdf
+        data['headers'] = self.headers
         return data

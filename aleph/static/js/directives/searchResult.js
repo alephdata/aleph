@@ -1,4 +1,4 @@
-aleph.directive('searchResult', ['$location', '$rootScope', 'Query', function($location, $rootScope, Query) {
+aleph.directive('searchResult', ['$location', '$route', '$rootScope', 'Query', function($location, $route, $rootScope, Query) {
   return {
     restrict: 'E',
     scope: {
@@ -8,8 +8,11 @@ aleph.directive('searchResult', ['$location', '$rootScope', 'Query', function($l
     templateUrl: 'search_result.html',
     link: function (scope, element, attrs) {
 
+      scope.filterSource = function(source_id) {
+        Query.set('filter:source_id', source_id + '');
+      };
+
       scope.viewDetails = function(rec) {
-        $location.search({});
         $rootScope.reportLoading(true);
         if (scope.doc.type === 'tabular') {
           var sheet = rec ? rec.sheet : 0,

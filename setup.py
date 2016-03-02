@@ -43,12 +43,7 @@ setup(
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
             'spindle = aleph.crawlers.spindle:SpindleCrawler',
             'idrequests = aleph.crawlers.idashboard:IDRequests',
-            'idfiles = aleph.crawlers.idashboard:IDFiles',
-            'aznews = aleph.crawlers.az_news:AzerbaijanNewsCrawler',
-            'lulegi = aleph.crawlers.lu_legi:LuxembourgGazette',
-            'lioera = aleph.crawlers.li_oera:LiechtensteinOld',
-            'lillv = aleph.crawlers.li_llv:LiechtensteinAmtsblatt',
-            'wlcables = aleph.crawlers.wl_cables:WikileaksCables'
+            'idfiles = aleph.crawlers.idashboard:IDFiles'
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',

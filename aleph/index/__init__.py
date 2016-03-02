@@ -16,24 +16,21 @@ es.json_encoder = JSONEncoder
 
 def init_search():
     log.info("Creating ElasticSearch index and uploading mapping...")
-    es.indices.create(es_index, ignore=[400, 404])
-    es.indices.put_mapping(index=es_index,
-                           doc_type=TYPE_DOCUMENT,
-                           body={TYPE_DOCUMENT: DOCUMENT_MAPPING},
-                           ignore=[400, 404])
-    es.indices.put_mapping(index=es_index,
-                           doc_type=TYPE_RECORD,
-                           body={TYPE_RECORD: RECORD_MAPPING},
-                           ignore=[400, 404])
+    es.indices.create(es_index, body={
+        'mappings': {
+            TYPE_DOCUMENT: DOCUMENT_MAPPING,
+            TYPE_RECORD: RECORD_MAPPING
+        }
+    })
 
 
 def delete_index():
-    es.indices.delete(es_index, ignore=[400, 404])
+    es.indices.delete(es_index, ignore=[404])
 
 
 def clear_children(document):
     q = {'query': {'term': {'document_id': document.id}},
-         '_source': ['id', 'document_id']}
+         '_source': ['_id', 'document_id']}
 
     def gen_deletes():
             for res in scan(es, query=q, index=es_index,
@@ -57,7 +54,7 @@ def delete_source(source_id):
     q = {'query': {'term': {'source_id': source_id}}}
 
     def deletes():
-            q['_source'] = ['id', 'document_id']
+            q['_source'] = ['document_id']
             for res in scan(es, query=q, index=es_index,
                             doc_type=[TYPE_RECORD]):
                 yield {
@@ -68,7 +65,7 @@ def delete_source(source_id):
                     '_id': res.get('_id')
                 }
 
-            q['_source'] = ['id']
+            q['_source'] = []
             for res in scan(es, query=q, index=es_index,
                             doc_type=[TYPE_DOCUMENT]):
                 yield {
@@ -96,7 +93,6 @@ def generate_pages(document):
             '_index': es_index,
             '_parent': document.id,
             '_source': {
-                'id': tid,
                 'type': 'page',
                 'content_hash': document.content_hash,
                 'document_id': document.id,
@@ -118,13 +114,14 @@ def generate_records(document):
             tid = tid.hexdigest()
             text = [t for t in row.values() if t is not None]
             text = list(set(text))
+            latin = [latinize_text(t) for t in text]
+            latin = [t for t in latin if t not in text]
             yield {
                 '_id': tid,
                 '_type': TYPE_RECORD,
                 '_index': es_index,
-                '_parent': document.id,
+                '_parent': unicode(document.id),
                 '_source': {
-                    'id': tid,
                     'type': 'row',
                     'content_hash': document.content_hash,
                     'document_id': document.id,
@@ -132,7 +129,7 @@ def generate_records(document):
                     'row_id': row_id,
                     'sheet': table.schema.sheet,
                     'text': text,
-                    'text_latin': latinize_text(text),
+                    'text_latin': latin,
                     'raw': row
                 }
             }
@@ -160,7 +157,7 @@ def index_document(document_id):
         log.info("Could not find document: %r", document_id)
         return
     log.info("Index document: %r", document)
-    data = document.to_dict()
+    data = document.to_index_dict()
     data['entities'] = generate_entities(document)
     data['title_latin'] = latinize_text(data.get('title'))
     data['summary_latin'] = latinize_text(data.get('summary'))

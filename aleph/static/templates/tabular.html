@@ -6,7 +6,7 @@
         <a href="#/tabular/{{doc.id}}/{{tbl.sheet}}" ng-bind="tbl.sheet_name"></a>
       </li>
     </ul>
-    <div class="data-table" infinite-scroll="loadMore()" infinite-scroll-distance="1">
+    <div class="data-table">
       <table class="table table-bordered table-striped table-condensed">
         <thead>
           <tr>
@@ -17,11 +17,19 @@
         </thead>
         <tbody>
           <tr ng-repeat="row in rows.results" ng-class="{'highlight': isHighlighted(row)}">
-            <td ng-repeat="col in table.columns" ng-class="getClass(row, col)" ng-bind="formatCell(row, col)"></td>
+            <td ng-repeat="col in table.columns" ng-class="getClass(row, col)" ng-bind-html="formatCell(row, col)"></td>
           </tr>
         </tbody>
       </table>
     </div>
+    <div>
+        <div class="pull-right">
+          <response-pager response="rows" load="loadOffset(offset)"></response-pager>
+        </div>
+        <div class="pagination">
+          {{rows.total | number}} rows found.
+        </div>
+      </div>
   </div>
 
   <div class="col-md-4">
@@ -35,13 +43,6 @@
           placeholder="Search within this dataset">
       </div>
     </form>
-
-    <ol class="breadcrumb">
-      <li class="active">
-        Matching {{rows.total | number}} rows.
-      </li>
-    </ol>
-
 
     <metadata-sidebar doc="doc"></metadata-sidebar>
   </div>

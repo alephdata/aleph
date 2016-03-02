@@ -20,6 +20,7 @@
     "angular": "1.4.8",
     "bootstrap": "~3.3.6",
     "angular-route": "1.4.8",
+    "angular-sanitize": "1.5.0",
     "angular-animate": "1.4.8",
     "angular-bootstrap": "0.14.3",
     "ngInfiniteScroll": "nginfinitescroll#1.2.0",

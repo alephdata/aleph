@@ -12,7 +12,7 @@ postgres:
     - "127.0.0.1:5433:5432"
 
 elasticsearch:
-  image: elasticsearch:1.7.2
+  image: elasticsearch:2.2.0
   volumes:
     - "/srv/data/elasticsearch:/usr/share/elasticsearch/data"
     - "/srv/logs/elasticsearch:/var/log"
@@ -21,19 +21,10 @@ elasticsearch:
   environment:
     ES_HEAP_SIZE: 4g
 
-rabbitmq:
-    image: rabbitmq:3-management
-    volumes:
-      - "/srv/data/rabbitmq/:/var/lib/rabbitmq"
-    expose:
-      - "5673"
-      - "15672"
-
 worker:
     build: .
     command: celery -A aleph.queue worker -c 10 -l INFO --logfile=/var/log/celery.log
     links:
-      - rabbitmq
       - postgres
       - elasticsearch
     volumes:
@@ -41,11 +32,8 @@ worker:
       - "/srv/logs/worker:/var/log"
     environment:
       C_FORCE_ROOT: true
-      ALEPH_ELASTICSEARCH_URI: http://aleph_elasticsearch:9200/
-      ALEPH_DATABASE_URI: postgresql://aleph:aleph@aleph_postgres/aleph
-      ALEPH_BROKER_URI: amqp://guest:guest@aleph_rabbitmq:5672//
-      ALEPH_ARCHIVE_TYPE: file
-      ALEPH_ARCHIVE_PATH: /srv/data/aleph
+      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
+      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
     env_file:
       - aleph.env
 
@@ -55,17 +43,13 @@ web:
     ports:
       - "13376:8000"
     links:
-      - rabbitmq
       - postgres
       - elasticsearch
     volumes:
       - "/srv/data/:/srv/data/"
       - "/srv/data/live/aleph-logs/worker:/var/log"
     environment:
-      ALEPH_ELASTICSEARCH_URI: http://aleph_elasticsearch:9200/
-      ALEPH_DATABASE_URI: postgresql://aleph:aleph@aleph_postgres/aleph
-      ALEPH_BROKER_URI: amqp://guest:guest@aleph_rabbitmq:5672//
-      ALEPH_ARCHIVE_TYPE: file
-      ALEPH_ARCHIVE_PATH: /srv/data/aleph
+      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
+      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
     env_file:
       - aleph.env

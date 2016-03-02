@@ -13,17 +13,15 @@ log = logging.getLogger(__name__)
 
 @celery.task()
 def check_alerts():
-    for role in Role.all():
+    for role_id, in Role.notifiable():
         with app.test_request_context('/'):
+            role = Role.by_id(role_id)
             request.auth_role = role
             request.logged_in = True
             # FIXME: can't re-gain access to implicit oauth rules.
             request.auth_roles = [system_role(Role.SYSTEM_USER),
                                   system_role(Role.SYSTEM_GUEST),
                                   role.id]
-            if not role.email:
-                log.info("No email: %r", role)
-                continue
             check_role_alerts(role)
 
 

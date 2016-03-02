@@ -27,40 +27,56 @@ $input-border-focus: $brand-primary;
 @import "../vendor/bootstrap-sass/assets/stylesheets/_bootstrap";
 @import "mixins";
 
-// Modal backdrop workaround:
-html { height: 100%; }
-body { min-height: 100%; }
+html {
+    height: 100%;
+}
 
-.modal-backdrop { bottom: 0; }
+body {
+    min-height: 100%;
+    // -webkit-font-smoothing: antialiased;
+    // -moz-osx-font-smoothing: grayscale;
+}
 
 #page {
     position: relative;
 }
 
-// Angular ugliness fix 
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
-}
-
-a {
-    cursor: pointer;
-}
-
+@import "common";
 @import "loadingbar";
 @import "nav";
 @import "search";
-@import "table";
+@import "tabular";
+@import "text";
 @import "spinner";
+@import "entities";
+
+.navbar.navbar-default {
+    background-color: $page-bg;
+    border-bottom: 0;
+    @include drop-shadow;
+
+    // .input-group-addon.brand-field {
+    //     background-color: $page-bg;
+    //     a {
+    //         color: $occrp-red;    
+    //     }
+    // }
+}
+
+a {
+    // color: $occrp-red;
+    &:hover, &:visited {
+        color: darken($occrp-red, 10%);
+    }
+}
 
 em {
     @include highlighted;
 }
 
-canvas#pdf {
-    margin-top: 0.5em;
-    margin-bottom: 2em;
-    border: 1px solid darken($gray-subtle, 20%);
-    box-shadow: 3px 3px 10px darken($gray-subtle, 20%);
+code {
+    background-color: lighten($occrp-dark, 70%);
+    color: $occrp-dark;
 }
 
 .intro-text {
@@ -69,58 +85,9 @@ canvas#pdf {
     color: text-muted;
 }
 
-.badge {
-    background-color: $page-bg;
-    color: $text-muted;
-}
-
 .list-group-item.active .badge {
     background-color: $brand-primary;
     color: $page-bg;
-}
-
-.pages-query {
-    .input-group {
-        margin-bottom: 0.5em;
-    }
-}
-
-.pages-list {
-    max-height: 25em;
-    overflow-y: scroll;
-    overflow: -moz-scrollbars-vertical; 
-    // padding-top: 0.5em;
-    margin-bottom: 1em;
-
-    td {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .selected {
-        background-color: $gray-subtle;
-    }
-}
-
-.entity-icon {
-    margin-right: 0.5em;
-
-    &.Person {
-        color: $color-person;
-    }
-
-    &.Company {
-        color: $color-company;
-    }
-
-    &.Organization {
-        color: $color-organization;
-    }
-
-    &.Other {
-        color: $color-other;
-    }
 }
 
 .modal-scroll {

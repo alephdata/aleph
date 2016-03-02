@@ -34,7 +34,7 @@ def sources():
 @manager.command
 def alerts():
     """Generate alert notifications."""
-    check_alerts()
+    check_alerts.delay()
 
 
 @manager.command

@@ -30,7 +30,7 @@ def documents_query(args, fields=None, facets=True, min_id=None):
     if min_id is not None:
         q = add_filter(q, {
             "range": {
-                "id": {
+                "_id": {
                     "gt": min_id
                 }
             }
@@ -74,7 +74,7 @@ def entity_watchlists(q, aggs, args, filters):
     readable = authz.watchlists(authz.READ)
     for watchlist_id in args.getlist('watchlist'):
         if authz.watchlist_read(watchlist_id):
-            watchlists.append(watchlist_id)
+            watchlists.append(int(watchlist_id))
 
     flt = {
         'or': [
@@ -100,8 +100,7 @@ def entity_watchlists(q, aggs, args, filters):
                 'filter': flt,
                 'aggs': {
                     'entities': {
-                        'terms': {'field': 'entity_id',
-                                  'size': 100}
+                        'terms': {'field': 'entities.entity_id', 'size': 100}
                     }
                 }
             }

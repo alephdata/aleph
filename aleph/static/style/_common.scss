@@ -1,0 +1,13 @@
+
+// Angular ugliness fix 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+a {
+    cursor: pointer;
+}
+
+.modal-backdrop {
+    bottom: 0;
+}

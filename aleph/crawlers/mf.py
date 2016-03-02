@@ -1,6 +1,7 @@
 import logging
 import metafolder
 
+from aleph.model import Permission, Role
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
@@ -30,6 +31,14 @@ class MetaFolderCrawler(Crawler):
             label = source_data.get('label', source_id)
             sources[source_id] = self.create_source(foreign_id=source_id,
                                                     label=label)
+            if source_data.get('public'):
+                Permission.grant_foreign(sources[source_id],
+                                         Role.SYSTEM_GUEST,
+                                         True, False)
+            if source_data.get('users'):
+                Permission.grant_foreign(sources[source_id],
+                                         Role.SYSTEM_USER,
+                                         True, False)
 
         log.info('Import: %r', item.identifier)
         meta = self.normalize_metadata(item)

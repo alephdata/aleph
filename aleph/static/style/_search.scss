@@ -69,13 +69,22 @@
         white-space: nowrap;
         text-overflow: hidden;
         overflow-x: hidden;    
-        .lbl {
+        
+        .badge {
+            background-color: $page-bg;
+            color: $text-muted;
         }
 
         &.empty {
             color: $text-muted;
             font-style: italic;
             cursor: default;
+        }
+
+        &.active {
+            a {
+                color: white;
+            }
         }
     }    
 }

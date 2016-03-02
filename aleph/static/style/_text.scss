@@ -1,0 +1,31 @@
+
+canvas#pdf {
+    margin-top: 0.5em;
+    margin-bottom: 2em;
+    border: 1px solid darken($gray-subtle, 20%);
+    box-shadow: 3px 3px 10px darken($gray-subtle, 20%);
+}
+
+.pages-query {
+    .input-group {
+        margin-bottom: 0.5em;
+    }
+}
+
+.pages-list {
+    max-height: 25em;
+    overflow-y: scroll;
+    overflow: -moz-scrollbars-vertical; 
+    // padding-top: 0.5em;
+    margin-bottom: 1em;
+
+    td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .selected {
+        background-color: $gray-subtle;
+    }
+}

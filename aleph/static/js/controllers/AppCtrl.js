@@ -54,6 +54,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   $scope.acceptSuggestion = function($item) {
     $scope.query.state.q = '';
     Query.toggleFilter('entity', $item.id);
+    $location.path('/search');
   }
 
   $scope.editProfile = function($event) {
@@ -84,9 +85,13 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   };
 
   $scope.clearSearch = function(form) {
-    $rootScope.reportLoading(true);
-    $location.search({});
-    $location.path('/');
+    if ($location.path() == '/') {
+      $route.reload();
+    } else {
+      $rootScope.reportLoading(true);
+      $location.search({});
+      $location.path('/');
+    }
   };
 
 }]);

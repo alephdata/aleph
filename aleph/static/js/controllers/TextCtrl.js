@@ -35,8 +35,7 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
   $scope.updateTextQuery = function() {
     var q = $location.search();
     q.dq = $scope.textQuery;
-    // q.q = null; // wat.
-    $location.search(q);  
+    $location.search(q); 
   };
 
   $scope.$on('$locationChangeStart', function() {
@@ -45,6 +44,7 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
     $scope.textQuery = query.dq;
     Title.set(data.doc.title + ", Page " + $scope.pageNum);
     Document.queryPages(data.doc.id, query).then(function(pages) {
+      console.log('fooooo!');
       $scope.pages = pages;  
     });
   });

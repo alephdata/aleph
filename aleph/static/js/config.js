@@ -1,5 +1,5 @@
-var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'angular-loading-bar', 'ui.bootstrap',
-                                     'debounce', 'infinite-scroll', 'pdf', 'angulartics', 'angulartics.piwik']);
+var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'ui.bootstrap',
+                                     'pdf', 'angulartics', 'angulartics.piwik']);
 
 aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider', 'cfpLoadingBarProvider',
     function($routeProvider, $locationProvider, $analyticsProvider, cfpLoadingBarProvider) {
@@ -53,8 +53,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider', 'cfpL
     redirectTo: '/',
     loginRequired: false
   });
-
-
 
   $locationProvider.html5Mode(false);
 }]);

@@ -1,7 +1,7 @@
 from aleph.index import TYPE_RECORD
 from aleph.core import es, es_index, url_for
-from aleph.util import latinize_text
 from aleph.search.util import add_filter
+from pprint import pprint  # noqa
 
 
 def tabular_query(document_id, sheet, args):
@@ -13,27 +13,12 @@ def tabular_query(document_id, sheet, args):
     text = args.get('q', '').strip()
     if len(text):
         scored = True
-        text_latin = latinize_text(text)
         q = {
-            "bool": {
-                "should": {
-                    "match": {
-                        "text": {
-                            "query": text,
-                            "cutoff_frequency": 0.0007,
-                            "operator": "and"
-                        }
-                    }
-                },
-                "should": {
-                    "match": {
-                        "text_latin": {
-                            "query": text_latin,
-                            "cutoff_frequency": 0.0007,
-                            "operator": "and"
-                        }
-                    }
-                }
+            'query_string': {
+                'query': text,
+                'fields': ['text^10', 'text_latin'],
+                'default_operator': 'AND',
+                'use_dis_max': True
             }
         }
 
@@ -59,7 +44,6 @@ def tabular_query(document_id, sheet, args):
     q = add_filter(q, {'term': {'document_id': document_id}})
     q = add_filter(q, {'term': {'sheet': sheet}})
 
-    # from pprint import pprint
     # pprint(q)
 
     sort = [{'row_id': 'asc'}]
