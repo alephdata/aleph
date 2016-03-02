@@ -49,7 +49,7 @@ strongly recommended to deploy the package in a containerized setup via ``docker
 You will also need to set up a Google OAuth web application at their [developers console](https://console.developers.google.com/),
 and make sure to configure the OAuth callback URL to be ``http(s)://your-install/api/1/sessions/callback``. 
 
-Finally, ``aleph`` is optimized to utilise certain aspects of Amazons AWS offerings. By
+Finally, ``aleph`` is optimized to utilise certain aspects of [Amazons AWS](https://aws.amazon.com) offerings. By
 default, it will try to create a bucket for the application's data, and make use of
 Amazon SQS for task queueing. If you wish to use AWS, you will need to set the AWS key ID
 and access key in the configuration file. Alternatively, plain file system storage and 
@@ -61,11 +61,29 @@ $ cd aleph
 $ cp aleph.env.tmpl aleph.env
 # edit the environment settings
 $ docker-compose up
+$ docker-compose run worker /bin/bash
+# init the database (this will also delete it, hence the name):
+root@worker# aleph evilshit
 ```
 
 This will launch containers for PostgreSQL and ElasticSearch as well as for the applications
 front- and backend. The application should become available at ``http://localhost:13376``.
 You can proxy this port to the public web, or install an HTTP cache to retain static assets.
+
+## Usage
+
+``aleph`` has a number of ways for ingesting data. These are controlled via the command line
+utility by the same name, usually from inside the ``worker`` container.
+
+```bash
+$ docker-compose run worker /bin/bash
+# Load entity watchlists from OpenNames (http://pudo.org/material/opennames):
+root@worker# aleph crawl opennames
+# Load all files from the given directory:
+root@worker# aleph crawldir /srv/data/my_little_documents_folder
+# Load data from a metafolder:
+root@worker# aleph metafolder /srv/data/scraped.mf
+```
 
 ## Existing tools
 
