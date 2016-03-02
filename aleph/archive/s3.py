@@ -37,17 +37,7 @@ class S3Archive(Archive):
                 })
             else:
                 raise
-        cors = self.bucket.Cors()
-        config = {
-            'CORSRules': [
-                {
-                    'AllowedMethods': ['GET'],
-                    'AllowedOrigins': ['*'],
-                    'MaxAgeSeconds': 84600 * 14
-                }
-            ]
-        }
-        cors.put(CORSConfiguration=config)
+        self.cors_configured = False
 
     def archive_file(self, filename, meta, move=False):
         meta = self._update_metadata(filename, meta)
@@ -82,6 +72,19 @@ class S3Archive(Archive):
             os.unlink(path)
 
     def generate_url(self, meta):
+        if not self.cors_configured:
+            self.cors_configured = True
+            cors = self.bucket.Cors()
+            config = {
+                'CORSRules': [
+                    {
+                        'AllowedMethods': ['GET'],
+                        'AllowedOrigins': ['*'],
+                        'MaxAgeSeconds': 84600 * 14
+                    }
+                ]
+            }
+            cors.put(CORSConfiguration=config)
         params = {
             'Bucket': self.bucket_name,
             'Key': self._get_file_path(meta)
