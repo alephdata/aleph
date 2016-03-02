@@ -33,4 +33,4 @@ def add_filter(q, filter_):
 
 def clean_highlight(hlt):
     hlt = MARKS.sub('.', hlt)
-    return hlt
+    return hlt.strip()

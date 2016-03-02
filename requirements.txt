@@ -7,6 +7,7 @@ Flask-Script==2.0.5
 Flask-Mail
 celery>=3.1.17
 elasticsearch
+cssutils
 lxml
 normality>=0.1
 nose

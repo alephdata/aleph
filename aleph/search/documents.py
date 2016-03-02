@@ -11,8 +11,9 @@ from aleph.search.util import add_filter, authz_filter, clean_highlight
 from aleph.search.facets import convert_aggregations
 from aleph.search.records import records_query
 
-DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'mime_type',
-                  'source_url', 'created_at', 'updated_at', 'type']
+DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'languages',
+                  'countries', 'source_url', 'created_at', 'updated_at',
+                  'type', 'summary']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
@@ -68,7 +69,7 @@ def documents_query(args, fields=None, facets=True, min_id=None):
 
 
 def entity_watchlists(q, aggs, args, filters):
-    """ Filter entities, facet for watchlists. """
+    """Filter entities, facet for watchlists."""
     entities = args.getlist('entity')
     watchlists = []
     readable = authz.watchlists(authz.READ)
@@ -252,7 +253,7 @@ def execute_documents_query(args, q):
         document['score'] = doc.get('_score')
         document['records'] = {'results': [], 'total': 0}
 
-        sq = records_query(document['id'], args, snippet_size=140)
+        sq = records_query(document['id'], args)
         if sq is not None:
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))
@@ -288,7 +289,7 @@ def execute_documents_alert_query(args, q):
                 document['source'] = source
         document['records'] = {'results': [], 'total': 0}
 
-        sq = records_query(document['id'], args, size=1, snippet_size=140)
+        sq = records_query(document['id'], args, size=1)
         if sq is not None:
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))

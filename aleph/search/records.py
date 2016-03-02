@@ -3,7 +3,7 @@ from aleph.index import TYPE_RECORD
 from aleph.core import es, es_index, url_for
 
 
-def records_query(document_id, args, size=5, snippet_size=50):
+def records_query(document_id, args, size=5, snippet_size=100):
     shoulds = []
     text = args.get('q', '').strip()
     if len(text):
@@ -43,9 +43,9 @@ def records_query(document_id, args, size=5, snippet_size=50):
         }
 
     try:
-        snippet = int(args.get('snippet', snippet_size))
+        snippet_size = int(args.get('snippet', snippet_size))
     except:
-        snippet = snippet_size
+        pass
 
     return {
         'size': size,
@@ -53,11 +53,11 @@ def records_query(document_id, args, size=5, snippet_size=50):
         'highlight': {
             'fields': {
                 'text': {
-                    'fragment_size': snippet,
+                    'fragment_size': snippet_size,
                     'number_of_fragments': 1
                 },
                 'text_latin': {
-                    'fragment_size': snippet,
+                    'fragment_size': snippet_size,
                     'number_of_fragments': 1
                 }
             }

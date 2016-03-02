@@ -6,7 +6,7 @@
         <i class="fa fa-chevron-left"></i>
         Back to results
       </button>
-      <div class="btn-group" role="group">
+      <div class="btn-group" role="group" ng-if="doc.tables.length > 1">
         <a ng-repeat="tbl in doc.tables" class="btn btn-default" ng-class="{'active': tbl.sheet == table.sheet}"
             ng-href="#/tabular/{{doc.id}}/{{tbl.sheet}}?ctx={{searchCtx}}" ng-bind="tbl.sheet_name">
         </a>
@@ -30,11 +30,11 @@
         </tbody>
       </table>
     </div>
-    <div>
+    <div class="bottom-pager">
         <div class="pull-right">
           <response-pager response="rows" load="loadOffset(offset)"></response-pager>
         </div>
-        <div class="pagination">
+        <div class="total">
           {{rows.total | number}} rows found.
         </div>
       </div>

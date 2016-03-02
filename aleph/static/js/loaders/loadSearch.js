@@ -7,6 +7,7 @@ var loadSearch = ['$http', '$q', '$route', '$location', 'Query', 'Session', 'Met
     Session.get().then(function(session) {
       var query = angular.copy(Query.load());
       query['limit'] = 30;
+      query['snippet'] = 140;
       query['offset'] = $location.search().offset || 0;
       $http.get('/api/1/query', {params: query}).then(function(res) {
         var result = res.data;

@@ -23,6 +23,13 @@
     padding-right: $base-font-size * 2;
 }
 
+@mixin display-flex {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
 @mixin flex-item($args) {
     -ms-flex: $args;
     -webkit-flex: $args;

@@ -33,8 +33,10 @@ html {
 
 body {
     min-height: 100%;
-    // -webkit-font-smoothing: antialiased;
-    // -moz-osx-font-smoothing: grayscale;
+    /*
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    */
 }
 
 #page {
@@ -63,21 +65,6 @@ body {
     // }
 }
 
-a {
-    // color: $occrp-red;
-    &:hover, &:visited {
-        color: darken($occrp-red, 10%);
-    }
-}
-
-em {
-    @include highlighted;
-}
-
-code {
-    background-color: lighten($occrp-dark, 70%);
-    color: $occrp-dark;
-}
 
 .intro-text {
     font-size: 1.2em;
@@ -90,10 +77,7 @@ code {
     color: $page-bg;
 }
 
-.modal-scroll {
-    max-height: 30em;
-    overflow-y: scroll;
-
+.modal-table {
     .active-switch {
         padding-left: 1.5em;
     }
@@ -103,4 +87,10 @@ code {
             border-top: none;   
         }
     }
+}
+
+.modal-scroll {
+    max-height: 30em;
+    overflow-y: scroll;
+    @extend .modal-table;
 }

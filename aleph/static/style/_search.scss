@@ -1,49 +1,4 @@
 
-// Search results 
-.result {
-    // white-space: nowrap;
-    // overflow: hidden;
-    // text-overflow: hidden;
-    padding: 0.4em 0 0.4em 0;
-    border-bottom: 1px solid $gray-subtle;
-    //max-width: 90px;
-
-    .source {
-        color: $text-muted;
-        font-weight: bold;
-    }
-
-    .archive, .archive a {
-        color: #aaa;
-    }
-
-    .summary {
-        color: $border-color;
-        font-size: 0.8em;
-    }
-
-    .title {
-        font-weight: bold;
-    }
-
-    .records {
-        margin-left: 1.3em;
-
-        ul {
-            padding: 0;
-            margin: 0;
-            list-style-type: none;
-            padding-top: 0.2em;
-            padding-bottom: 0.2em;
-        }
-
-        .total {
-            color: $text-muted;
-        }
-    }
-}
-
-
 // List entities page 
 .nav.nav-tabs, .search-bar {
     margin-bottom: 1em;
@@ -89,3 +44,79 @@
     }    
 }
 
+// Search results 
+.search-result {
+    padding: 1em 0 1.5em 0;
+    border-bottom: 1px solid $gray-subtle;
+    @include display-flex;
+    //max-width: 90px;
+
+    .document-type {
+        @include flex-item(1 0 1.5em);
+        width: 1.5em;
+        font-size: 1.1em;
+    }
+
+    .descriptor {
+        @include flex-item(99 0 6em);
+    }
+
+    .source {
+        padding-top: 0.2em;
+        // font-size: 0.9em;
+        color: $text-muted;
+
+        i {
+            font-size: 0.8em;
+        }
+
+        a {
+            color: $text-muted;
+            text-decoration: underline;
+        }
+    }
+
+    .summary, .records {
+        padding-top: 0.2em;
+        font-size: 0.95;
+    }
+
+    em {
+        background-color: transparent;
+        font-weight: bolder;
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 1.1em;
+        // letter-spacing: 0.1em;
+
+        .addon {
+            margin-left: 0.2em;
+            font-size: 0.8em;
+            color: $text-muted;
+        }
+    }
+
+    .records {
+        a {
+            text-decoration: underline;
+        }
+
+        .ref {
+            color: $text-muted;
+        }
+
+        ul {
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+            padding-top: 0.2em;
+            padding-bottom: 0.2em;
+        }
+
+        .total {
+            color: $text-muted;
+        }
+    }
+}

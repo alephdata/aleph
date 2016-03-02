@@ -20,7 +20,7 @@
       <th>Languages</th>
       <td>
         <span ng-repeat="lang in doc.languages">
-          {{getLanguageLabel(lang)}}<span ng-if="!$last">;</span>
+          {{lang | language}}<span ng-if="!$last">;</span>
         </span>
       </td>
     </tr>
@@ -28,7 +28,7 @@
       <th>Countries</th>
       <td>
         <span ng-repeat="cc in doc.countries">
-          {{getCountryLabel(cc)}}<span ng-if="!$last">;</span>
+          {{cc | country}}<span ng-if="!$last">;</span>
         </span>
       </td>
     </tr>

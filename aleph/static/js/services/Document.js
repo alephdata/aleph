@@ -24,7 +24,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Session',
             url = '/api/1/query/records/' + documentId;
 
         if (sq.q) {
-          sq['snippet'] = 80;
+          sq['snippet'] = 50;
           sq['limit'] = 1000;
           $http.get(url, {params: sq}).then(function(res) {
             for (var i in res.data.results) {

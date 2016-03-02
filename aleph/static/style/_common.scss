@@ -4,10 +4,41 @@
   display: none !important;
 }
 
-a {
+a, .click {
     cursor: pointer;
 }
 
 .modal-backdrop {
     bottom: 0;
+}
+
+.bottom-pager {
+    margin-top: 1em;
+
+    .total {
+        padding-top: 8px;
+        font-weight: bold;
+        color: $text-muted;
+    }
+
+    .pagination {
+        margin-top: 0;
+    }
+}
+
+a {
+    // color: $occrp-red;
+    &:hover {
+        color: darken($occrp-red, 10%);
+    }
+
+    &.btn:hover, &.btn.btn-primary:hover, 
+    &.btn:visited, &.btn.btn-primary:visited {
+        color: white;
+    }
+}
+
+code {
+    background-color: lighten($occrp-dark, 70%);
+    color: $occrp-dark;
 }

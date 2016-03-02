@@ -21,6 +21,7 @@ logging.getLogger('boto3').setLevel(logging.WARNING)
 logging.getLogger('boto').setLevel(logging.WARNING)
 logging.getLogger('botocore').setLevel(logging.WARNING)
 logging.getLogger('amqp').setLevel(logging.INFO)
+logging.getLogger('assets.cssutils').setLevel(logging.INFO)
 
 # default locale settings
 os.environ['LC_ALL'] = 'en_US'
