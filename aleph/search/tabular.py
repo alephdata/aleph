@@ -59,7 +59,7 @@ def tabular_query(document_id, sheet, args):
 
 
 def execute_tabular_query(document_id, table_id, args, query):
-    """ Execute a query against records and return a set of results. """
+    """Execute a query against records and return a set of results."""
     result = es.search(index=es_index, doc_type=TYPE_RECORD, body=query)
     hits = result.get('hits', {})
     output = {

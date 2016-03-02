@@ -7,7 +7,7 @@ from werkzeug.datastructures import MultiDict
 from aleph.core import es, es_index, url_for
 from aleph import authz
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
-from aleph.search.util import add_filter, authz_filter
+from aleph.search.util import add_filter, authz_filter, clean_highlight
 from aleph.search.facets import convert_aggregations
 from aleph.search.records import records_query
 
@@ -214,6 +214,9 @@ def run_sub_queries(output, sub_queries):
                         record['text'] = highlights.get('text')
                     elif len(highlights.get('text_latin', [])):
                         record['text'] = highlights.get('text_latin', [])
+                    else:
+                        continue
+                    record['text'] = [clean_highlight(t) for t in record['text']]
                     doc['records']['results'].append(record)
                     doc['records']['total'] = sqhits.get('total', 0)
 

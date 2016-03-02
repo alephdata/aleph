@@ -1,6 +1,9 @@
+import re
 from copy import deepcopy
 
 from aleph import authz
+
+MARKS = re.compile(r'[_\.;,/]{2,}')
 
 
 def authz_filter(q):
@@ -26,3 +29,8 @@ def add_filter(q, filter_):
         q['filtered']['filter'] = \
             {'and': [filter_, q['filtered']['filter']]}
     return q
+
+
+def clean_highlight(hlt):
+    hlt = MARKS.sub('.', hlt)
+    return hlt
