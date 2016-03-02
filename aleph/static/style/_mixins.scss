@@ -11,3 +11,20 @@
     background-color: yellow;
     font-style: normal;
 }
+
+@mixin drop-shadow {
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+@mixin padded-box {
+    padding-top: $base-font-size * 3;
+    padding-bottom: $base-font-size * 3;
+    padding-left: $base-font-size * 2;
+    padding-right: $base-font-size * 2;
+}
+
+@mixin flex-item($args) {
+    -ms-flex: $args;
+    -webkit-flex: $args;
+    flex: $args;
+}
