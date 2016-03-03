@@ -42,21 +42,6 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
     }
   };
 
-  $scope.suggestEntities = function(prefix) {
-    var dfd = $q.defer();
-    var opts = {params: {'prefix': prefix}, ignoreLoadingBar: true};
-    $http.get('/api/1/entities/_suggest', opts).then(function(res) {
-      dfd.resolve(res.data.results);
-    });
-    return dfd.promise;
-  }
-
-  $scope.acceptSuggestion = function($item) {
-    $scope.query.state.q = '';
-    Query.toggleFilter('entity', $item.id);
-    $location.path('/search');
-  }
-
   $scope.editProfile = function($event) {
     $event.stopPropagation();
     var d = $uibModal.open({
@@ -77,21 +62,6 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
         alerts: Alert.index()
       }
     });
-  };
-
-  $scope.submitSearch = function(form) {
-    $location.search($scope.query.state);
-    $location.path('/search');
-  };
-
-  $scope.clearSearch = function(form) {
-    if ($location.path() == '/') {
-      $route.reload();
-    } else {
-      $rootScope.reportLoading(true);
-      $location.search({});
-      $location.path('/');
-    }
   };
 
 }]);

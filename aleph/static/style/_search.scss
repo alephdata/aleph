@@ -1,6 +1,6 @@
 
 // List entities page 
-.nav.nav-tabs, .search-bar {
+.nav.nav-tabs, {
     margin-bottom: 1em;
 }
 
@@ -42,6 +42,10 @@
             }
         }
     }    
+}
+
+.search-bar {
+    margin-bottom: 1em;
 }
 
 // Search results 

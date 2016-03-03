@@ -1,27 +1,7 @@
-<div class="row">
+<div class="row search-bar">
   <div class="col-md-8">
-    <div class="alert alert-warning" ng-show="result.limit > 0 && !result.total">
-      No results were found.
-      <span ng-show="!session.logged_in">
-        You may need to log in before you can see more results.
-      </span>
-    </div>
-
-    <div>
-      <div ng-repeat="doc in result.results">
-        <search-result doc="doc" result="result"></search-result>
-      </div>
-      <div class="bottom-pager">
-        <div class="pull-right">
-          <response-pager response="result" load="loadOffset(offset)"></response-pager>
-        </div>
-        <div class="total">
-          Found {{result.total | number}} documents.
-        </div>
-      </div>
-    </div>
+    <search-box></search-box>
   </div>
-
   <div class="col-md-4">
     <div class="btn-group btn-group-justified" role="group">
       <div class="btn-group" uib-dropdown dropdown-append-to-body>
@@ -50,9 +30,29 @@
         </button>
       </div>
     </div>
-    <br/>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <div>
+      <div ng-repeat="doc in result.results">
+        <search-result doc="doc" result="result"></search-result>
+      </div>
+      <div class="bottom-pager">
+        <div class="pull-right">
+          <response-pager response="result" load="loadOffset(offset)"></response-pager>
+        </div>
+        <div class="total" ng-if="result.limit > 0 && !result.total">
+          No results were found.
+        </div>
+        <div class="total" ng-if="result.limit > 0 && result.total">
+          Found {{result.total | number}} documents.
+        </div>
+      </div>
+    </div>
+  </div>
 
-
+  <div class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span class="pull-right">

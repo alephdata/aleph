@@ -8,7 +8,8 @@ SECRET_KEY = os.environ.get('ALEPH_SECRET_KEY')
 APP_TITLE = os.environ.get('ALEPH_APP_TITLE', 'Aleph')
 APP_NAME = os.environ.get('ALEPH_APP_NAME', 'aleph')
 APP_BASEURL = os.environ.get('ALEPH_APP_URL')
-FAVICON = os.environ.get('ALEPH_FAVICON')
+APP_LOGO = os.environ.get('ALEPH_LOGO')
+APP_FAVICON = os.environ.get('ALEPH_FAVICON')
 
 ELASTICSEARCH_URL = os.environ.get('ALEPH_ELASTICSEARCH_URI')
 
