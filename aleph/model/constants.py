@@ -8,12 +8,12 @@ CORE_FACETS = {
 }
 
 SOURCE_CATEGORIES = {
-    'news': 'News Reporting',
-    'leak': 'Leaked Information',
-    'gazette': 'Government Gazettes',
-    'court': 'Court Documents',
-    'company': 'Company Databases',
-    'scrape': 'Scraped Databases',
-    'procurement': 'Procurement and Licenses',
+    'news': 'News reports',
+    'leak': 'Leaks',
+    'gazette': 'Gazettes',
+    'court': 'Court cases',
+    'company': 'Company records',
+    'scrape': 'Scrapes',
+    'procurement': 'Procurement',
     'grey': 'Grey Literature'
 }
