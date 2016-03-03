@@ -17,15 +17,22 @@
           </li>
         </ul>
       </div>
+      <div class="btn-group" uib-dropdown dropdown-append-to-body>
+        <a href="/#/search" class="btn btn-primary">
+          <i class="fa fa-times"></i>
+          Clear search
+        </a>
+      </div>
       <div class="btn-group">
-        <button type="button" class="btn btn-primary" ng-click="toggleAlert()"
-          ng-disabled="!canCreateAlert()" ng-class="{'active': hasAlert()}">
+        <button type="button" class="btn" ng-click="toggleAlert()"
+          ng-disabled="!canCreateAlert()"
+          ng-class="{'btn-success': hasAlert(), 'btn-primary': !hasAlert()}">
           <i class="fa fa-bell"></i>
           <span ng-show="hasAlert()">
             Disable alert
           </span>
           <span ng-hide="hasAlert()">
-            Create alert
+            Set alert
           </span>
         </button>
       </div>

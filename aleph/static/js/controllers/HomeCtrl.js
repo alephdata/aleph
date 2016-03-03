@@ -1,12 +1,17 @@
 
-aleph.controller('HomeCtrl', ['$scope', '$location', 'Query', 'Authz', 'Metadata', 'Title', 'data',
-    function($scope, $location, Query, Authz, Metadata, Title, data) {
+aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Query', 'Authz', 'Metadata', 'Title', 'data',
+    function($scope, $location, $route, $uibModal, Query, Authz, Metadata, Title, data) {
 
   $scope.result = data.result;
+  $scope.sources = data.sources;
   $scope.session = data.metadata.session;
   $scope.metadata = data.metadata;
+  $scope.watchlists = data.metadata.watchlistsList.sort(function(a, b) {
+    return a.label.localeCompare(b.label);
+  });
   $scope.query = Query.load();
   $scope.title = Title.getSiteTitle();
+
   Title.set("Welcome");
 
   $scope.showFieldFacet = function(field) {
@@ -18,13 +23,6 @@ aleph.controller('HomeCtrl', ['$scope', '$location', 'Query', 'Authz', 'Metadata
       return false;
     }
     return Authz.source(Authz.WRITE, source.id);
-  };
-
-  $scope.canEditWatchlist = function(watchlist) {
-    if (!watchlist || !watchlist.id) {
-      return false;
-    }
-    return Authz.source(Authz.WRITE, watchlist.id);
   };
 
   $scope.submitSearch = function(form) {
@@ -59,7 +57,7 @@ aleph.controller('HomeCtrl', ['$scope', '$location', 'Query', 'Authz', 'Metadata
     });
 
     instance.result.then(function() {
-      $route.reload();
+      // $route.reload();
     });
   };
 

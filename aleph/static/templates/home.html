@@ -1,8 +1,7 @@
 <div class="home">
   <div class="jumbotron">
-    <h1>{{result.total | number}},000 leads</h1>
-    <!-- p class="teaser">for your investigations</p -->
-
+    <h1>{{result.total | number}} leads</h1>
+    <p class="teaser">for your investigations</p>
     <div class="search-area">
       <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
         <div class="input-group input-group-lg">
@@ -27,6 +26,16 @@
     </div>
     <div class="col-md-4 feature">
       <h2>
+        <i class="fa fa-bell"></i>
+        E-Mail Alerts
+      </h2>
+      <p>
+        As new material gets added, you can stay informed about any additional matches for
+        your previous searches by setting up e-mail alerts
+      </p>
+    </div>
+    <div class="col-md-4 feature">
+      <h2>
         <i class="fa fa-male"></i>
         Persons of Interest
       </h2>
@@ -35,15 +44,42 @@
         research, and international sanctions lists.
       </p>
     </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8 feature">
+      <h3>
+        Document sources
+      </h3>
+      <p>{{result.sources.values.length | number}} document sources are included in
+      searches at the moment. Please feel free to contact us with any other suggested document 
+      and data sets.</p>
+      <div ng-repeat="(category, lst) in sources | orderBy:category">
+        <div class="heading">
+          <strong>{{category | sourceCategory}}</strong>
+        </div>
+        <div class="row">
+          <div class="col-md-6 source" ng-repeat="source in lst">
+            <a href="#/search?filter:source_id={{source.id}}" class="mainlink">{{source.label}}</a>
+            <span class="count">{{source.count | number}}</span>
+            <a ng-click="editSource(source, $event)" ng-show="canEditSource(source)">
+              <i class="fa fa-cog"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="col-md-4 feature">
-      <h2>
-        <i class="fa fa-bell"></i>
-        E-Mail Alerts
-      </h2>
-      <p>
-        As new material gets added, you can stay informed about any additional matches for
-        your previous searches by setting up e-mail alerts
-      </p>
+      <h3>
+        Watchlists
+      </h3>
+      <p>Select a watchlist to cross-reference it with documents:</p>
+      <ul>
+        <li ng-repeat="watchlist in watchlists">
+          <a ng-href="#/search?watchlist={{watchlist.id}}" class="mainlink">{{watchlist.label}}</a>
+        </li>
+      </ul>
     </div>
   </div>
 
