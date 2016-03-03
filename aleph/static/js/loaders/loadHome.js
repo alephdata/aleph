@@ -7,6 +7,7 @@ var loadHome = ['$http', '$q', '$route', 'Query', 'Session', 'Metadata',
     Session.get().then(function(session) {
       var query = {limit: 0};
       $http.get('/api/1/query', {params: query}).then(function(res) {
+        
         dfd.resolve({
           'result': res.data,
           'metadata': metadata

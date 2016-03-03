@@ -1,0 +1,40 @@
+.home {
+    .jumbotron {
+        background-color: white;
+        text-align: center;
+
+        h1 {
+            // text-transform: uppercase;
+            font-size: 4em;
+            font-weight: bold;
+        }
+
+        p.teaser {
+            // text-transform: uppercase;
+            font-size: 2.5em;   
+        }
+
+        .search-area {
+            max-width: 500px;
+            margin: 3em auto 0 auto;
+        }
+    }
+
+    .feature {
+        h2 {
+            // text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 1.5em;
+
+            i {
+                color: $brand-primary;
+            }
+        }
+
+        p {
+            font-size: 1.2em;   
+            color: $text-muted;
+        }
+    }
+}

@@ -1,11 +1,11 @@
 
-aleph.controller('HomeCtrl', ['$scope', 'Query', 'Authz', 'Metadata', 'Title', 'data',
-    function($scope, Query, Authz, Metadata, Title, data) {
+aleph.controller('HomeCtrl', ['$scope', '$location', 'Query', 'Authz', 'Metadata', 'Title', 'data',
+    function($scope, $location, Query, Authz, Metadata, Title, data) {
 
   $scope.result = data.result;
   $scope.session = data.metadata.session;
   $scope.metadata = data.metadata;
-  $scope.query = Query;
+  $scope.query = Query.load();
   $scope.title = Title.getSiteTitle();
   Title.set("Welcome");
 
@@ -25,6 +25,13 @@ aleph.controller('HomeCtrl', ['$scope', 'Query', 'Authz', 'Metadata', 'Title', '
       return false;
     }
     return Authz.source(Authz.WRITE, watchlist.id);
+  };
+
+  $scope.submitSearch = function(form) {
+    var search = Query.load();
+    search.q = $scope.query.q;
+    $location.search(search);
+    $location.path('/search');
   };
 
   $scope.editSource = function(source, $event) {

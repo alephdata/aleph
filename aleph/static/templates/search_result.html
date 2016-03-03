@@ -17,8 +17,9 @@
     </div>
 
     <div class="source">
+      <span ng-if="source.category" class="label label-primary">{{ source.category | sourceCategory }}</span>
       <a ng-click="filterSource(doc.source_id)" class="source"
-        ng-bind="result.sources.labels[doc.source_id]"></a>
+        ng-bind="source.label"></a>
       <span ng-if="doc.source_url">
         |
         <i class="fa fa-external-link"></i>

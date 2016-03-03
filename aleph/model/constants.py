@@ -10,7 +10,7 @@ CORE_FACETS = {
 SOURCE_CATEGORIES = {
     'news': 'News reports',
     'leak': 'Leaks',
-    'gazette': 'Gazettes',
+    'gazette': 'Gazette notices',
     'court': 'Court cases',
     'company': 'Company records',
     'scrape': 'Scrapes',

@@ -48,12 +48,16 @@ def convert_entities(entities):
 def convert_sources(facet):
     output = {'values': []}
     ids = [b.get('key') for b in facet.get('buckets', [])]
-    labels = Source.all_labels(ids=ids)
+    sources = Source.all_by_id(ids=ids)
     for bucket in facet.get('buckets', []):
         key = bucket.get('key')
+        source = sources.get(key)
+        if source is None:
+            continue
         output['values'].append({
             'id': key,
-            'label': labels.get(key, key),
+            'label': source.label,
+            'category': source.category,
             'count': bucket.get('doc_count')
         })
     return output

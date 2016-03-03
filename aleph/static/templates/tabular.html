@@ -4,7 +4,7 @@
     <div class="btn-toolbar" role="toolbar">
       <button class="btn btn-default" ng-click="backToSearch()">
         <i class="fa fa-chevron-left"></i>
-        Back to results
+        Back to search
       </button>
       <div class="btn-group" role="group" ng-if="doc.tables.length > 1">
         <a ng-repeat="tbl in doc.tables" class="btn btn-default" ng-class="{'active': tbl.sheet == table.sheet}"

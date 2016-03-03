@@ -80,13 +80,13 @@ class Source(db.Model, TimeStampedModel):
         return q
 
     @classmethod
-    def all_labels(cls, ids=None):
-        q = db.session.query(cls.id, cls.label)
+    def all_by_id(cls, ids=None):
+        q = db.session.query(cls)
         if ids is not None:
             q = q.filter(cls.id.in_(ids))
         data = {}
-        for (id, label) in q:
-            data[id] = label
+        for source in q:
+            data[source.id] = source
         return data
 
     def __repr__(self):
