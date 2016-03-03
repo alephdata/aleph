@@ -69,7 +69,7 @@ def system_role(role_name):
 
 
 def url_for(*a, **kw):
-    """ Always generate external URLs. """
+    """Generate external URLs with HTTPS (if configured)."""
     try:
         kw['_external'] = True
         if app.config.get('PREFERRED_URL_SCHEME'):

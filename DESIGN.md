@@ -74,6 +74,16 @@ Iteration II
 
 
 
+CREATE TABLE alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+COPY alembic_version (version_num) FROM stdin;
+57e9e4ff269b
+\.
+
+
+
 -------------
 
 Alert
