@@ -30,6 +30,7 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
               'watchlists': watchlists,
               'watchlistsCount': watchlistsCount,
               'fields': metadata.fields,
+              'source_categories': metadata.source_categories,
               'countries': metadata.countries, 
               'languages': metadata.languages
             });

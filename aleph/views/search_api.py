@@ -5,7 +5,7 @@ from apikit import get_limit, get_offset
 from pycountry import countries
 
 from aleph import authz
-from aleph.model.metadata import CORE_FACETS
+from aleph.model.constants import CORE_FACETS, SOURCE_CATEGORIES
 from aleph.views.cache import enable_cache
 from aleph.search import documents_query, execute_documents_query
 from aleph.search import records_query, execute_records_query
@@ -60,6 +60,7 @@ def metadata():
     return jsonify({
         'status': 'ok',
         'fields': CORE_FACETS,
+        'source_categories': SOURCE_CATEGORIES,
         'countries': country_names,
         'languages': language_names
     })

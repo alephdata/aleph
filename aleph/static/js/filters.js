@@ -38,3 +38,20 @@ aleph.filter('language', ['Metadata', function(Metadata) {
     return label || code;
   };
 }]);
+
+
+aleph.filter('sourceCategory', ['Metadata', function(Metadata) {
+  var categories = {};
+
+  Metadata.get().then(function(md) {
+    categories = md.source_categories;
+  });
+
+  return function(code) {
+    if (!code) {
+      return 'Unclassified';
+    }
+    var label = categories[code];
+    return label || code;
+  };
+}]);

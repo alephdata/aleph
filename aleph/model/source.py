@@ -3,7 +3,6 @@ import logging
 from aleph.core import db, url_for
 from aleph.model.common import TimeStampedModel, make_token
 # from aleph.model.role import Role
-from aleph.model.forms import SourceForm
 
 log = logging.getLogger(__name__)
 
@@ -11,6 +10,7 @@ log = logging.getLogger(__name__)
 class Source(db.Model, TimeStampedModel):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.Unicode, nullable=True)
+    category = db.Column(db.Unicode, nullable=True)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
 
     @classmethod
@@ -27,8 +27,9 @@ class Source(db.Model, TimeStampedModel):
         return src
 
     def update(self, data):
-        data = SourceForm().deserialize(data)
         self.label = data.get('label')
+        if 'category' in data:
+            self.category = data.get('category')
 
     def delete(self):
         from aleph.model import Document, Page, Reference
@@ -56,6 +57,7 @@ class Source(db.Model, TimeStampedModel):
             'id': self.id,
             'foreign_id': self.foreign_id,
             'label': self.label,
+            'category': self.category,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }

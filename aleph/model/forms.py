@@ -57,10 +57,6 @@ class RoleForm(colander.MappingSchema):
     name = colander.SchemaNode(colander.String())
 
 
-class SourceForm(colander.MappingSchema):
-    label = colander.SchemaNode(colander.String())
-
-
 class WatchlistForm(colander.MappingSchema):
     label = colander.SchemaNode(colander.String())
 

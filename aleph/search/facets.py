@@ -3,7 +3,7 @@ from pprint import pprint  # noqa
 from babel import Locale
 from pycountry import countries
 
-from aleph.model.metadata import CORE_FACETS
+from aleph.model.constants import CORE_FACETS
 from aleph.model.entity import Entity
 from aleph.model.source import Source
 

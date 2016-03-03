@@ -11,14 +11,6 @@ from collections import MutableMapping, Mapping
 from aleph.util import make_filename
 from aleph.model.tabular import TabularSchema
 
-CORE_FACETS = {
-    'extension': 'File extension',
-    'mime_type': 'Content type',
-    'languages': 'Languages',
-    'countries': 'Countries',
-    'dates': 'Dates'
-}
-
 
 class PDFAlternative(object):
     """ Alternate PDF version. """
