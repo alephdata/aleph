@@ -26,6 +26,12 @@ a, .click {
     }
 }
 
+em {
+    background-color: transparent;
+    font-weight: bolder;
+    font-style: normal;
+}
+
 a {
     // color: $occrp-red;
     &:hover {
