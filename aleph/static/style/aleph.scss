@@ -33,6 +33,7 @@ html {
 
 body {
     min-height: 100%;
+    background-color: $text-muted;
     /*
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -41,6 +42,19 @@ body {
 
 #page {
     position: relative;
+    background-color: white;
+    padding-bottom: 2em;
+}
+
+footer {
+    padding-top: 2em;
+    padding-bottom: 6em;
+    color: white;
+
+    a {
+        color: white;
+        text-decoration: underline;
+    }    
 }
 
 @import "common";
@@ -64,7 +78,6 @@ body {
     //     }
     // }
 }
-
 
 .intro-text {
     font-size: 1.2em;

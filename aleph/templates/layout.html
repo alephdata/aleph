@@ -14,54 +14,54 @@
     <base href="{{url_for('ui')}}">
   </head>
   <body ng-controller="AppCtrl">
-    <nav class="navbar navbar-default navbar-static-top" role="navigation">
-      <div class="container-fluid">
-        <form class="navbar-form navbar-left"
-          role="search" ng-submit="submitSearch(form)">
-          <div class="form-group">
-            <div class="input-group navbar-searchbox">
-              <span class="input-group-addon brand-field">
-                <a ng-click="clearSearch()">{{config.APP_TITLE}}</a>
-              </span>
-              <input type="text" class="search-query form-control" autofocus
-                ng-model="query.state.q" placeholder="Search across documents and data sources"
-                uib-typeahead="entity for entity in suggestEntities($viewValue)"
-                typeahead-min-length="2"
-                typeahead-focus-first="false"
-                typeahead-template-url="entity_link.html"
-                typeahead-on-select="acceptSuggestion($item)">
-            </div>
-          </div>
-        </form>
-
-        <div id="navbar" class="collapse navbar-collapse navbar-right">
-          <ul class="nav navbar-nav">
-            <li ng-show="!session.logged_in" ng-cloak>
-              <a href="{{url_for('sessions.login')}}" target="_self">
-                <i class="fa fa-sign-in"></i> Sign in
-              </a>
-            </li>
-            <li ng-show="session.logged_in" ng-cloak>
-              <a ng-click="editProfile($event)">
-                <i class="fa fa-cog"></i> Settings
-              </a>
-            </li>
-            <li ng-show="session.logged_in" ng-cloak>
-              <a ng-click="manageAlerts($event)">
-                <i class="fa fa-bell"></i> Alerts
-              </a>
-            </li>
-            <li ng-show="session.logged_in" ng-cloak>
-              <a href="{{url_for('sessions.logout')}}" target="_self">
-                <i class="fa fa-sign-out"></i> Logout
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
     <div id="page">
+      <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container-fluid">
+          <form class="navbar-form navbar-left"
+            role="search" ng-submit="submitSearch(form)">
+            <div class="form-group">
+              <div class="input-group navbar-searchbox">
+                <span class="input-group-addon brand-field">
+                  <a ng-click="clearSearch()">{{config.APP_TITLE}}</a>
+                </span>
+                <input type="text" class="search-query form-control" autofocus
+                  ng-model="query.state.q" placeholder="Search across documents and data sources"
+                  uib-typeahead="entity for entity in suggestEntities($viewValue)"
+                  typeahead-min-length="2"
+                  typeahead-focus-first="false"
+                  typeahead-template-url="entity_link.html"
+                  typeahead-on-select="acceptSuggestion($item)">
+              </div>
+            </div>
+          </form>
+
+          <div id="navbar" class="collapse navbar-collapse navbar-right">
+            <ul class="nav navbar-nav">
+              <li ng-show="!session.logged_in" ng-cloak>
+                <a href="{{url_for('sessions.login')}}" target="_self">
+                  <i class="fa fa-sign-in"></i> Sign in
+                </a>
+              </li>
+              <li ng-show="session.logged_in" ng-cloak>
+                <a ng-click="editProfile($event)">
+                  <i class="fa fa-cog"></i> Settings
+                </a>
+              </li>
+              <li ng-show="session.logged_in" ng-cloak>
+                <a ng-click="manageAlerts($event)">
+                  <i class="fa fa-bell"></i> Alerts
+                </a>
+              </li>
+              <li ng-show="session.logged_in" ng-cloak>
+                <a href="{{url_for('sessions.logout')}}" target="_self">
+                  <i class="fa fa-sign-out"></i> Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
       <div id="spinner-overlay" ng-hide="routeLoaded">
         <div class="spinner" ng-hide="routeFailed">
           <i class="fa fa-circle-o-notch fa-spin"></i>
@@ -77,6 +77,19 @@
         <div ng-cloak ng-view autoscroll="true"></div>
       </div>
     </div>
+
+    <footer>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <p class="pull-right">
+              <i class="fa fa-github-square"></i>
+              <a href="https://github.com/pudo/aleph">source code</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
 
     {% include "analytics.html" %}
 
