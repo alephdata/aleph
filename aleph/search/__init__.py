@@ -1,4 +1,5 @@
 import logging
+from itertools import count
 from elasticsearch.helpers import scan
 
 from aleph.core import es, es_index
