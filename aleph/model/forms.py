@@ -65,4 +65,3 @@ class EntityForm(colander.MappingSchema):
     name = colander.SchemaNode(colander.String())
     category = colander.SchemaNode(colander.String(),
                                    validator=colander.OneOf(CATEGORIES))
-    watchlist = colander.SchemaNode(WatchlistRef())

@@ -52,13 +52,10 @@ class Entity(db.Model, TimeStampedModel):
     def update(self, data):
         data = EntityForm().deserialize(data)
         self.name = data.get('name')
-        self.watchlist = data.get('watchlist')
-        self.foreign_id = data.get('foreign_id')
         self.category = data.get('category')
         self.data = data.get('data')
         db.session.add(self)
         db.session.flush()
-
         selectors = set(data.get('selectors', []))
         selectors.add(self.name)
         existing = list(self.selectors)
@@ -83,15 +80,16 @@ class Entity(db.Model, TimeStampedModel):
 
     @classmethod
     def by_foreign_id(cls, foreign_id, watchlist, data):
-        data['watchlist'] = watchlist
-        data['foreign_id'] = foreign_id
         q = db.session.query(cls)
         q = q.filter_by(watchlist=watchlist)
         q = q.filter_by(foreign_id=foreign_id)
         ent = q.first()
         if ent is None:
             ent = cls.create(data)
-        ent.update(data)
+            ent.foreign_id = foreign_id
+            ent.watchlist = watchlist
+        else:
+            ent.update(data)
         db.session.flush()
         return ent
 

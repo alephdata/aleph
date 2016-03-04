@@ -100,8 +100,7 @@ class IDRequests(IDBase):
         Permission.grant_foreign(watchlist, 'idashboard:occrp_staff',
                                  True, False)
         existing_entities = []
-        previous_terms = watchlist.terms
-        updated_terms = set()
+        terms = set()
         db.session.flush()
         for endpoint in ['all_closed', 'all_open']:
             url = urljoin(self.host, '/ticket/%s/?format=json' % endpoint)
@@ -116,9 +115,11 @@ class IDRequests(IDBase):
                     'data': req,
                     'selectors': [req.get('name')]
                 })
-                updated_terms.update(ent.terms)
+                terms.update(ent.terms)
                 existing_entities.append(ent.id)
                 log.info("  # %s (%s)", ent.name, ent.category)
-        watchlist.delete_entities(spare=existing_entities)
-        terms = previous_terms.symmetric_difference(updated_terms)
+
+        for entity in watchlist.entities:
+            if entity.id not in existing_entities:
+                entity.delete()
         self.emit_watchlist(watchlist, terms)

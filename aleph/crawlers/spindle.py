@@ -37,8 +37,7 @@ class SpindleCrawler(Crawler):
 
         log.info(" > Spindle collection: %s", watchlist.label)
         res = requests.get('%s/entities' % url, headers=self.HEADERS)
-        previous_terms = watchlist.terms
-        updated_terms = set()
+        terms = set()
         existing_entities = []
         for entity in res.json().get('results', []):
             if entity.get('name') is None:
@@ -50,11 +49,13 @@ class SpindleCrawler(Crawler):
                 'data': entity,
                 'selectors': aliases
             })
-            updated_terms.update(ent.terms)
+            terms.update(ent.terms)
             existing_entities.append(ent.id)
             log.info("  # %s (%s)", ent.name, ent.category)
-        watchlist.delete_entities(spare=existing_entities)
-        terms = previous_terms.symmetric_difference(updated_terms)
+
+        for entity in watchlist.entities:
+            if entity.id not in existing_entities:
+                entity.delete()
         self.emit_watchlist(watchlist, terms)
 
     def crawl(self):

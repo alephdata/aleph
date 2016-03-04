@@ -63,7 +63,7 @@ class Crawler(object):
 
     def emit_watchlist(self, watchlist, terms):
         db.session.commit()
-        log.debug("Changed terms: %r", terms)
+        # log.debug("Changed terms: %r", terms)
         analyze_terms(terms)
 
     def finalize(self):
