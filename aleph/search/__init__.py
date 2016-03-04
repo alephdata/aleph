@@ -11,6 +11,21 @@ PAGE = 1000
 log = logging.getLogger(__name__)
 
 
-def raw_iter(query):
+def scan_iter(query):
     for res in scan(es, query=query, index=es_index, doc_type=[TYPE_DOCUMENT]):
         yield res
+
+
+def raw_iter(query):
+    for page in count(0):
+        query['from'] = PAGE * page
+        query['size'] = PAGE
+        result = es.search(index=es_index,
+                           doc_type=TYPE_DOCUMENT,
+                           body=query)
+        hits = result.get('hits', {})
+        for doc in hits.get('hits', []):
+            yield doc
+
+        if not hits.get('total') > PAGE * (page + 1):
+            return

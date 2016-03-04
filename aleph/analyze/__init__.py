@@ -5,7 +5,7 @@ from aleph.ext import get_analyzers
 from aleph.model import Document, Entity
 from aleph.model import clear_session
 from aleph.index import index_document
-from aleph.search import raw_iter, TYPE_RECORD
+from aleph.search import scan_iter, TYPE_RECORD
 from aleph.util import latinize_text
 
 
@@ -17,7 +17,7 @@ def query_doc_ids(query):
         'query': query,
         '_source': False
     }
-    for row in raw_iter(query):
+    for row in scan_iter(query):
         yield row.get('_id')
 
 
