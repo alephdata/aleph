@@ -96,7 +96,7 @@ class Alert(db.Model, TimeStampedModel):
             'custom_label': self.custom_label,
             'signature': self.signature,
             'role_id': self.role_id,
-            'max_id': self.max_id,
+            'notified_at': self.notified_at,
             'query': self.query,
             'created_at': self.created_at,
             'updated_at': self.updated_at
