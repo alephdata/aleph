@@ -100,6 +100,12 @@ def flush(foreign_id):
 
 
 @manager.command
+def develop():
+    from aleph.analyze import analyze_terms
+    analyze_terms(['azerbaijan'])
+
+
+@manager.command
 def analyze(foreign_id=None):
     """Re-analyze documents in the given source (or throughout)."""
     if foreign_id:

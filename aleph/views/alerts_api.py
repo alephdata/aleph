@@ -23,7 +23,9 @@ def create():
     authz.require(authz.logged_in())
     data = request_data()
     validate(data, alerts_schema)
-    alert = Alert.create(data.get('query', {}), request.auth_role)
+    alert = Alert.create(data.get('query', {}),
+                         data.get('custom_label'),
+                         request.auth_role)
     db.session.commit()
     return view(alert.id)
 

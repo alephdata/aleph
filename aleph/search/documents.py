@@ -21,18 +21,18 @@ DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'languages',
 OR_FIELDS = ['source_id']
 
 
-def documents_query(args, fields=None, facets=True, min_id=None):
+def documents_query(args, fields=None, facets=True, newer_than=None):
     """Parse a user query string, compose and execute a query."""
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
     text = args.get('q', '').strip()
     q = text_query(text)
     q = authz_filter(q)
-    if min_id is not None:
+    if newer_than is not None:
         q = add_filter(q, {
             "range": {
-                "_id": {
-                    "gt": min_id
+                "created_at": {
+                    "gt": newer_than
                 }
             }
         })

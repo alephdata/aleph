@@ -25,29 +25,39 @@ def check_alerts():
             check_role_alerts(role)
 
 
+def make_document_query(alert):
+    qs = {'dq': alert.query.get('q')}
+    qs.update(alert.query)
+    args = []
+    for k, vs in qs.items():
+        if isinstance(vs, (list, tuple, set)):
+            for v in vs:
+                args.append((k, v))
+        else:
+            args.append((k, vs))
+    return urlencode(args)
+
+
 def check_role_alerts(role):
     alerts = Alert.by_role(role).all()
+    if not len(alerts):
+        return
     log.info('Alerting %r, %d alerts...', role, len(alerts))
     for alert in alerts:
-        q = documents_query(alert.query, min_id=alert.max_id)
+        q = documents_query(alert.query, newer_than=alert.notified_at)
         results = execute_documents_alert_query(alert.query, q)
         if results['total'] == 0:
             continue
-        subject = '%s (%s new results)' % (alert.label, results['total'])
-        qs = {'dq': alert.query.get('q')}
-        qs.update(alert.query)
-        args = []
-        for k, vs in qs.items():
-            if isinstance(vs, (list, tuple, set)):
-                for v in vs:
-                    args.append((k, v))
-            else:
-                args.append((k, vs))
-        qs = urlencode(args)
-        html = render_template('alert.html', alert=alert, results=results,
-                               role=role, qs=qs,
-                               app_title=app.config.get('APP_TITLE'),
-                               app_url=app.config.get('APP_BASEURL'))
-        notify_role(role, subject, html)
+        log.info('Found: %d new results for: %r', results['total'],
+                 alert.query)
         alert.update()
+        try:
+            subject = '%s (%s new results)' % (alert.label, results['total'])
+            html = render_template('alert.html', alert=alert, results=results,
+                                   role=role, qs=make_document_query(alert),
+                                   app_title=app.config.get('APP_TITLE'),
+                                   app_url=app.config.get('APP_BASEURL'))
+            notify_role(role, subject, html)
+        except Exception as ex:
+            log.exception(ex)
     db.session.commit()
