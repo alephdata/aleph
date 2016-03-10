@@ -2,7 +2,6 @@ import logging
 
 from aleph.core import db, url_for
 from aleph.model.common import TimeStampedModel, make_token
-# from aleph.model.role import Role
 
 log = logging.getLogger(__name__)
 
@@ -32,13 +31,13 @@ class Source(db.Model, TimeStampedModel):
             self.category = data.get('category')
 
     def delete(self):
-        from aleph.model import Document, Page, Reference
+        from aleph.model import Document, DocumentPage, Reference
         sq = db.session.query(Document.id)
         sq = sq.filter(Document.source_id == self.id)
         sq = sq.subquery()
 
-        q = db.session.query(Page)
-        q = q.filter(Page.document_id.in_(sq))
+        q = db.session.query(DocumentPage)
+        q = q.filter(DocumentPage.document_id.in_(sq))
         q.delete(synchronize_session='fetch')
 
         q = db.session.query(Reference)

@@ -1,3 +1,4 @@
+# coding: utf-8
 import os
 import logging
 
@@ -101,8 +102,8 @@ def flush(foreign_id):
 
 @manager.command
 def develop():
-    from aleph.analyze import analyze_terms
-    analyze_terms(['azerbaijan'])
+    from aleph.util import latinize_text
+    print latinize_text(u'ΠΕΤΡΟΣ ΦΟΙΒΟΥ ΠΙΕΡΙΔΗΣ')
 
 
 @manager.command
