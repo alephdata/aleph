@@ -59,7 +59,11 @@ function alephUrlBlob(obj) {
 }
 
 function alephUrlUnBlob(val) {
-  return JSON.parse(atob(val));
+  try {
+    return JSON.parse(atob(val));
+  } catch(e) {
+    return {};
+  }
 }
 
 

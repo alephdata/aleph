@@ -9,15 +9,7 @@ from normality import slugify
 from collections import MutableMapping, Mapping
 
 from aleph.util import make_filename
-from aleph.model.tabular import TabularSchema
-
-CORE_FACETS = {
-    'extension': 'File extension',
-    'mime_type': 'Content type',
-    'languages': 'Languages',
-    'countries': 'Countries',
-    'dates': 'Dates'
-}
+from aleph.model.tabular import Tabular
 
 
 class PDFAlternative(object):
@@ -276,14 +268,14 @@ class Metadata(MutableMapping):
 
     @property
     def tables(self):
-        return [TabularSchema(s) for s in self.data.get('tables', [])]
+        return [Tabular(s) for s in self.data.get('tables', [])]
 
     @tables.setter
     def tables(self, tables):
         data = []
         if isinstance(tables, (list, tuple, set)):
             for schema in tables:
-                if isinstance(schema, TabularSchema):
+                if isinstance(schema, Tabular):
                     schema = schema.to_dict()
                 data.append(schema)
         self.data['tables'] = data

@@ -48,8 +48,10 @@ Iteration II
 * [DONE] BUG: content loaded in pagination does not have highlights
 * [DONE] BUG: document search doesn't work
 * [DONE] BUG: Selecting entity on home 
+* [DONE] 3 Use cases on home page
+* [DONE] Result list: too tiny, too crowded
 * Watchlist subscriptins 
-* Fix OpenName import
+* [DONE] Fix OpenName import
 * Fix SQL loader.
 * Tabular: Cell value formatting
 * Tabular: Fixed headers
@@ -60,18 +62,8 @@ Iteration II
 * Testing
 * Check DOCX/XLSX ingest
 * tidbits
-* 3 Use cases on home page
-* Result list: too tiny, too crowded
-
-
-
--- DESIGN
-
-* How to display results?
-* How to explain watchlists?
-* Paginated view
-* Home page
-
+* Refactor DocumentPage
+* Refactor DocumentRecord (Tabular)
 
 
 -------------

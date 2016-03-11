@@ -5,6 +5,9 @@
     "properties": {
         "query": {
             "type": "object"
+        },
+        "custom_label": {
+            "type": "string"
         }
     },
     "required": ["query"]

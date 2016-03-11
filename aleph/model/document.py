@@ -1,4 +1,5 @@
 import logging
+from hashlib import sha1
 
 from sqlalchemy import func
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -72,10 +73,32 @@ class Document(db.Model, TimeStampedModel):
         return self._add_to_dict(data)
 
     def delete_pages(self):
-        pq = db.session.query(Page)
-        pq = pq.filter(Page.document_id == self.id)
+        pq = db.session.query(DocumentPage)
+        pq = pq.filter(DocumentPage.document_id == self.id)
         pq.delete(synchronize_session='fetch')
         db.session.refresh(self)
+
+    def delete_records(self):
+        pq = db.session.query(DocumentRecord)
+        pq = pq.filter(DocumentRecord.document_id == self.id)
+        pq.delete(synchronize_session='fetch')
+        db.session.refresh(self)
+
+    def insert_records(self, sheet, iterable, chunk_size=1000):
+        chunk = []
+        for i, data in enumerate(iterable):
+            chunk.append({
+                'document_id': self.id,
+                'row_id': i,
+                'sheet': sheet,
+                'data': data
+            })
+            if len(chunk) >= chunk_size:
+                db.session.bulk_insert_mappings(DocumentRecord, chunk)
+                chunk = []
+
+        if len(chunk):
+            db.session.bulk_insert_mappings(DocumentRecord, chunk)
 
     @classmethod
     def by_id(cls, id):
@@ -88,7 +111,7 @@ class Document(db.Model, TimeStampedModel):
         return q.scalar()
 
 
-class Page(db.Model):
+class DocumentPage(db.Model):
 
     id = db.Column(db.BigInteger, primary_key=True)
     number = db.Column(db.Integer(), nullable=False)
@@ -97,7 +120,31 @@ class Page(db.Model):
     document = db.relationship(Document, backref=db.backref('pages', cascade='all, delete-orphan'))  # noqa
 
     def __repr__(self):
-        return '<Page(%r,%r)>' % (self.document_id, self.number)
+        return '<DocumentPage(%r,%r)>' % (self.document_id, self.number)
 
-    def __unicode__(self):
-        return self.number
+
+class DocumentRecord(db.Model):
+
+    id = db.Column(db.BigInteger, primary_key=True)
+    sheet = db.Column(db.Integer, nullable=False)
+    row_id = db.Column(db.Integer, nullable=False)
+    data = db.Column(JSONB)
+    document_id = db.Column(db.Integer(), db.ForeignKey('document.id'))
+    document = db.relationship(Document, backref=db.backref('records', cascade='all, delete-orphan'))  # noqa
+
+    @property
+    def tid(self):
+        tid = sha1(str(self.document_id))
+        tid.update(str(self.sheet))
+        tid.update(str(self.row_id))
+        return tid.hexdigest()
+
+    @property
+    def text(self):
+        if self.data is None:
+            return []
+        text = [t for t in self.data.values() if t is not None]
+        return list(set(text))
+
+    def __repr__(self):
+        return '<DocumentRecord(%r,%r)>' % (self.document_id, self.row_id)

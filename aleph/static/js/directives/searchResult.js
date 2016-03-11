@@ -7,10 +7,20 @@ aleph.directive('searchResult', ['$location', '$route', '$rootScope', 'Query', f
     },
     templateUrl: 'search_result.html',
     link: function (scope, element, attrs) {
+      scope.source = {};
 
       scope.filterSource = function(source_id) {
         Query.set('filter:source_id', source_id + '');
       };
+
+      scope.$watch('doc', function(doc) {
+        for (var i in scope.result.sources.values) {
+          var source = scope.result.sources.values[i];
+          if (source.id === doc.source_id) {
+            scope.source = source;
+          }
+        }
+      });
 
       scope.viewDetails = function(rec) {
         var query = $location.search(),

@@ -5,7 +5,6 @@ from sqlalchemy.dialects.postgresql import JSONB
 from werkzeug.datastructures import MultiDict
 
 from aleph.core import db
-from aleph.model.document import Document
 from aleph.model.entity import Entity
 from aleph.model.common import TimeStampedModel
 
@@ -49,13 +48,16 @@ class Alert(db.Model, TimeStampedModel):
 
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
+    custom_label = db.Column(db.Unicode, nullable=True)
     signature = db.Column(db.Unicode)
     query = db.Column(JSONB)
-    max_id = db.Column(db.BigInteger)
+    notified_at = db.Column(db.DateTime, nullable=True)
     deleted_at = db.Column(db.DateTime, nullable=True, default=None)
 
     @property
     def label(self):
+        if self.custom_label is not None:
+            return self.custom_label
         # This is weird. Should live somewhere else.
         fragments = []
         q = self.query.get('q')
@@ -91,9 +93,10 @@ class Alert(db.Model, TimeStampedModel):
         return {
             'id': self.id,
             'label': self.label,
+            'custom_label': self.custom_label,
             'signature': self.signature,
             'role_id': self.role_id,
-            'max_id': self.max_id,
+            'notified_at': self.notified_at,
             'query': self.query,
             'created_at': self.created_at,
             'updated_at': self.updated_at
@@ -122,12 +125,13 @@ class Alert(db.Model, TimeStampedModel):
         return q
 
     @classmethod
-    def create(cls, query, role):
+    def create(cls, query, custom_label, role):
         alert = cls()
         alert.role_id = role.id
         q = extract_query(query)
         alert.query = {k: q.getlist(k) for k in q.keys()}
         alert.signature = query_signature(q)
+        alert.custom_label = custom_label
         alert.update()
         return alert
 
@@ -145,7 +149,7 @@ class Alert(db.Model, TimeStampedModel):
         db.session.flush()
 
     def update(self):
-        self.max_id = Document.get_max_id()
+        self.notified_at = datetime.utcnow()
         db.session.add(self)
         db.session.flush()
 

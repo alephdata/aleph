@@ -4,9 +4,10 @@ DEBUG = True
 ASSETS_DEBUG = True
 CACHE = True
 
-APP_TITLE = 'aleph.grano.local'
+APP_TITLE = 'Aleph'
 APP_NAME = 'aleph'
-FAVICON = 'https://investigativedashboard.org/static/favicon.ico'
+APP_LOGO = 'http://assets.pudo.org/img/logo_bigger.png'
+APP_FAVICON = 'http://assets.pudo.org/img/logo_bigger.png'
 
 ARCHIVE_TYPE = 'file'
 ARCHIVE_AWS_KEY_ID = env.get('AWS_ACCESS_KEY_ID')

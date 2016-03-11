@@ -5,8 +5,8 @@ from aleph.ext import get_analyzers
 from aleph.model import Document, Entity
 from aleph.model import clear_session
 from aleph.index import index_document
-from aleph.search import raw_iter
-from aleph.search.documents import text_query
+from aleph.search import scan_iter, TYPE_RECORD
+from aleph.util import latinize_text
 
 
 log = logging.getLogger(__name__)
@@ -15,9 +15,9 @@ log = logging.getLogger(__name__)
 def query_doc_ids(query):
     query = {
         'query': query,
-        '_source': []
+        '_source': False
     }
-    for row in raw_iter(query):
+    for row in scan_iter(query):
         yield row.get('_id')
 
 
@@ -45,7 +45,40 @@ def analyze_terms(terms, seen=None):
     if seen is None:
         seen = set()
     for term in terms:
-        for doc_id in query_doc_ids(text_query(term)):
+        term = latinize_text(term)
+        query = {
+            "bool": {
+                "minimum_should_match": 1,
+                "should": [
+                    {
+                        "multi_match": {
+                            "query": term,
+                            "fields": ["title", "summary", "file_name",
+                                       "title_latin", "summary_latin"]
+                        }
+                    },
+                    {
+                        "has_child": {
+                            "type": TYPE_RECORD,
+                            "query": {
+                                "bool": {
+                                    "should": [
+                                        {
+                                            "multi_match": {
+                                                "query": term,
+                                                "fields": ["text",
+                                                           "text_latin"]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+        for doc_id in query_doc_ids(query):
             if doc_id not in seen:
                 analyze_document.delay(doc_id)
             seen.add(doc_id)

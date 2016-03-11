@@ -2,8 +2,6 @@ import logging
 
 from aleph.core import db, url_for
 from aleph.model.common import TimeStampedModel, make_token
-# from aleph.model.role import Role
-from aleph.model.forms import SourceForm
 
 log = logging.getLogger(__name__)
 
@@ -11,6 +9,7 @@ log = logging.getLogger(__name__)
 class Source(db.Model, TimeStampedModel):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.Unicode, nullable=True)
+    category = db.Column(db.Unicode, nullable=True)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
 
     @classmethod
@@ -27,17 +26,18 @@ class Source(db.Model, TimeStampedModel):
         return src
 
     def update(self, data):
-        data = SourceForm().deserialize(data)
         self.label = data.get('label')
+        if 'category' in data:
+            self.category = data.get('category')
 
     def delete(self):
-        from aleph.model import Document, Page, Reference
+        from aleph.model import Document, DocumentPage, Reference
         sq = db.session.query(Document.id)
         sq = sq.filter(Document.source_id == self.id)
         sq = sq.subquery()
 
-        q = db.session.query(Page)
-        q = q.filter(Page.document_id.in_(sq))
+        q = db.session.query(DocumentPage)
+        q = q.filter(DocumentPage.document_id.in_(sq))
         q.delete(synchronize_session='fetch')
 
         q = db.session.query(Reference)
@@ -56,6 +56,7 @@ class Source(db.Model, TimeStampedModel):
             'id': self.id,
             'foreign_id': self.foreign_id,
             'label': self.label,
+            'category': self.category,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
@@ -78,13 +79,13 @@ class Source(db.Model, TimeStampedModel):
         return q
 
     @classmethod
-    def all_labels(cls, ids=None):
-        q = db.session.query(cls.id, cls.label)
+    def all_by_id(cls, ids=None):
+        q = db.session.query(cls)
         if ids is not None:
             q = q.filter(cls.id.in_(ids))
         data = {}
-        for (id, label) in q:
-            data[id] = label
+        for source in q:
+            data[source.id] = source
         return data
 
     def __repr__(self):

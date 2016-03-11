@@ -33,17 +33,34 @@ html {
 
 body {
     min-height: 100%;
-    // -webkit-font-smoothing: antialiased;
-    // -moz-osx-font-smoothing: grayscale;
+    background-color: $text-muted;
+    /*
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    */
 }
 
 #page {
     position: relative;
+    background-color: white;
+    padding-bottom: 2em;
+}
+
+footer {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    color: white;
+
+    a {
+        color: white;
+        text-decoration: underline;
+    }    
 }
 
 @import "common";
 @import "loadingbar";
 @import "nav";
+@import "home";
 @import "search";
 @import "tabular";
 @import "text";
@@ -63,22 +80,6 @@ body {
     // }
 }
 
-a {
-    // color: $occrp-red;
-    &:hover, &:visited {
-        color: darken($occrp-red, 10%);
-    }
-}
-
-em {
-    @include highlighted;
-}
-
-code {
-    background-color: lighten($occrp-dark, 70%);
-    color: $occrp-dark;
-}
-
 .intro-text {
     font-size: 1.2em;
     line-height: 1.7em;
@@ -90,10 +91,7 @@ code {
     color: $page-bg;
 }
 
-.modal-scroll {
-    max-height: 30em;
-    overflow-y: scroll;
-
+.modal-table {
     .active-switch {
         padding-left: 1.5em;
     }
@@ -103,4 +101,10 @@ code {
             border-top: none;   
         }
     }
+}
+
+.modal-scroll {
+    max-height: 30em;
+    overflow-y: scroll;
+    @extend .modal-table;
 }

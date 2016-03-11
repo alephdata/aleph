@@ -1,43 +1,85 @@
-
-<div class="row">
-  <div class="col-md-6 intro-text">
-    <div class="intro-text">
-      <p>
-        <strong>Welcome to {{title}}</strong>
-      </p>
-      <p>
-        {{title}} makes research material accessible.
-      </p>
-      <p>This
-        includes documents from <em>previous investigations</em>, <em>official sources</em>, and
-        <em>scraped databases</em> from many countries.
-      </p>
-      <p>
-        The site also cross-references documents with <em>entity watchlists</em> to find mentions
-        of persons and organisations of interest.
-      </p>
-      <br/>
-      <div class="alert alert-info" role="alert">
-        <strong>Help us improve.</strong> Please send feedback on the quality of search results, 
-        using the tool, or ideas for additional sources to 
-        <strong>tech@occrp.org</strong>.
-      </div>
+<div class="home">
+  <div class="jumbotron">
+    <h1>{{result.total | number}} leads</h1>
+    <p class="teaser">for your investigations</p>
+    <div class="search-area">
+      <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
+        <div class="input-group input-group-lg">
+          <input type="text" class="form-control" autofocus ng-model="query.q" placeholder="Search across documents and data sources">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="submit">Search</button>
+          </span>
+        </div>
+      </form>
     </div>
   </div>
-  <div class="col-md-6">
-    <table class="table table-striped">
-      <tr>
-        <th>
-          Document and data sources ({{result.sources.values.length | number}})
-        </th>
-        <th class="numeric">
-          {{result.total | number}}
-        </th>
-      </tr>
-      <tr ng-repeat="source in result.sources.values">
-        <td><a ng-href="#/search?filter:source_id={{source.id}}">{{source.label}}</a></td>
-        <td class="numeric">{{source.count | number}}</td>
-      </tr>
-    </table>
+  <div class="row">
+    <div class="col-md-4 feature">
+      <h2>
+        <i class="fa fa-file-text"></i>
+        Search it all
+      </h2>
+      <p>
+        {{title}} lets you search across data and documents from previous investigations,
+        official sources, and scraped databases.
+      </p>
+    </div>
+    <div class="col-md-4 feature">
+      <h2>
+        <i class="fa fa-bell"></i>
+        E-Mail Alerts
+      </h2>
+      <p>
+        As new material gets added, you can stay informed about any additional matches for
+        your previous searches by setting up e-mail alerts
+      </p>
+    </div>
+    <div class="col-md-4 feature">
+      <h2>
+        <i class="fa fa-male"></i>
+        Persons of Interest
+      </h2>
+      <p>
+        Documents and databases are cross-referenced with watchlists based on OCCRP
+        research, and international sanctions lists.
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8 feature">
+      <h3>
+        Document sources
+      </h3>
+      <p>{{result.sources.values.length | number}} document sources are included in
+      searches at the moment. Please feel free to contact us with any other suggested document 
+      and data sets.</p>
+      <div ng-repeat="(category, lst) in sources | orderBy:category">
+        <div class="heading">
+          <strong>{{category | sourceCategory}}</strong>
+        </div>
+        <div class="row">
+          <div class="col-md-6 source" ng-repeat="source in lst">
+            <a href="#/search?filter:source_id={{source.id}}" class="mainlink">{{source.label}}</a>
+            <span class="count">{{source.count | number}}</span>
+            <a ng-click="editSource(source, $event)" ng-show="canEditSource(source)">
+              <i class="fa fa-cog"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 feature">
+      <h3>
+        Watchlists
+      </h3>
+      <p>Select a watchlist to cross-reference it with documents:</p>
+      <ul>
+        <li ng-repeat="watchlist in watchlists">
+          <a ng-href="#/search?watchlist={{watchlist.id}}" class="mainlink">{{watchlist.label}}</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

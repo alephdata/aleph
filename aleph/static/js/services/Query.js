@@ -27,17 +27,19 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
   };
 
   var toggleFilter = function(filter, val) {
-    if (!angular.isArray(query[filter])) {
-      query[filter] = [];
+    var q = load();
+    if (!angular.isArray(q[filter])) {
+      q[filter] = [];
     }
     val = val + '';
-    var idx = query[filter].indexOf(val);
+    var idx = q[filter].indexOf(val);
     if (idx == -1) {
-      query[filter].push(val);
+      q[filter].push(val);
     } else {
-      query[filter].splice(idx, 1);
+      q[filter].splice(idx, 1);
     }
-    $location.search(query);
+    $location.search(q);
+    query = q;
   };
 
   var hasFilter = function(name, val) {

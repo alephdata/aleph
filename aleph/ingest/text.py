@@ -8,7 +8,7 @@ from extractors import extract_pdf, extract_image
 from extractors import document_to_pdf, image_to_pdf, html_to_pdf
 
 from aleph.core import archive
-from aleph.model import db, Page, Document
+from aleph.model import db, Document, DocumentPage
 from aleph.ingest.ingestor import Ingestor
 
 log = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class TextIngestor(Ingestor):
         return document
 
     def create_page(self, document, text, number=1):
-        page = Page()
+        page = DocumentPage()
         page.document_id = document.id
         page.text = text
         page.number = number

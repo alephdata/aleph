@@ -1,20 +1,18 @@
 
 <div class="row">
   <div class="col-md-8">
-    <ul class="nav nav-pills pull-right" ng-if="doc.tables.length > 1">
-      <li ng-repeat="tbl in doc.tables" ng-class="{'active': tbl.sheet == table.sheet}">
-        <a href="#/tabular/{{doc.id}}/{{tbl.sheet}}?ctx={{searchCtx}}" ng-bind="tbl.sheet_name"></a>
-      </li>
-    </ul>
-
     <div class="btn-toolbar" role="toolbar">
       <button class="btn btn-default" ng-click="backToSearch()">
         <i class="fa fa-chevron-left"></i>
-        Back to results
+        Back to search
       </button>
+      <div class="btn-group" role="group" ng-if="doc.tables.length > 1">
+        <a ng-repeat="tbl in doc.tables" class="btn btn-default" ng-class="{'active': tbl.sheet == table.sheet}"
+            ng-href="#/tabular/{{doc.id}}/{{tbl.sheet}}?ctx={{searchCtx}}" ng-bind="tbl.sheet_name">
+        </a>
+      </div>
     </div>
-
-    <div class="clearfix"></div>
+    <br/>
 
     <div class="data-table">
       <table class="table table-bordered table-striped table-condensed">
@@ -32,11 +30,11 @@
         </tbody>
       </table>
     </div>
-    <div>
+    <div class="bottom-pager">
         <div class="pull-right">
           <response-pager response="rows" load="loadOffset(offset)"></response-pager>
         </div>
-        <div class="pagination">
+        <div class="total">
           {{rows.total | number}} rows found.
         </div>
       </div>

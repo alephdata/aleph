@@ -7,12 +7,13 @@ from werkzeug.datastructures import MultiDict
 from aleph.core import es, es_index, url_for
 from aleph import authz
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
-from aleph.search.util import add_filter, authz_filter
+from aleph.search.util import add_filter, authz_filter, clean_highlight
 from aleph.search.facets import convert_aggregations
 from aleph.search.records import records_query
 
-DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'mime_type',
-                  'source_url', 'created_at', 'updated_at', 'type']
+DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'languages',
+                  'countries', 'source_url', 'created_at', 'updated_at',
+                  'type', 'summary']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
@@ -20,18 +21,18 @@ DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'mime_type',
 OR_FIELDS = ['source_id']
 
 
-def documents_query(args, fields=None, facets=True, min_id=None):
+def documents_query(args, fields=None, facets=True, newer_than=None):
     """Parse a user query string, compose and execute a query."""
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
     text = args.get('q', '').strip()
     q = text_query(text)
     q = authz_filter(q)
-    if min_id is not None:
+    if newer_than is not None:
         q = add_filter(q, {
             "range": {
-                "_id": {
-                    "gt": min_id
+                "created_at": {
+                    "gt": newer_than
                 }
             }
         })
@@ -68,7 +69,7 @@ def documents_query(args, fields=None, facets=True, min_id=None):
 
 
 def entity_watchlists(q, aggs, args, filters):
-    """ Filter entities, facet for watchlists. """
+    """Filter entities, facet for watchlists."""
     entities = args.getlist('entity')
     watchlists = []
     readable = authz.watchlists(authz.READ)
@@ -214,6 +215,9 @@ def run_sub_queries(output, sub_queries):
                         record['text'] = highlights.get('text')
                     elif len(highlights.get('text_latin', [])):
                         record['text'] = highlights.get('text_latin', [])
+                    else:
+                        continue
+                    record['text'] = [clean_highlight(t) for t in record['text']]
                     doc['records']['results'].append(record)
                     doc['records']['total'] = sqhits.get('total', 0)
 
@@ -249,7 +253,7 @@ def execute_documents_query(args, q):
         document['score'] = doc.get('_score')
         document['records'] = {'results': [], 'total': 0}
 
-        sq = records_query(document['id'], args, snippet_size=140)
+        sq = records_query(document['id'], args)
         if sq is not None:
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))
@@ -285,7 +289,7 @@ def execute_documents_alert_query(args, q):
                 document['source'] = source
         document['records'] = {'results': [], 'total': 0}
 
-        sq = records_query(document['id'], args, size=1, snippet_size=140)
+        sq = records_query(document['id'], args, size=1)
         if sq is not None:
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))

@@ -1,3 +1,4 @@
+# coding: utf-8
 import os
 import logging
 
@@ -5,7 +6,7 @@ from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 from flask.ext.migrate import MigrateCommand
 
-from aleph.model import db, Source, Document
+from aleph.model import db, upgrade_db, Source, Document
 from aleph.views import app, assets
 from aleph.analyze import analyze_source
 from aleph.alerts import check_alerts
@@ -14,7 +15,6 @@ from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
 from aleph.crawlers.mf import MetaFolderCrawler
-from aleph.upgrade import upgrade as upgrade_
 
 
 log = logging.getLogger('aleph')
@@ -101,6 +101,12 @@ def flush(foreign_id):
 
 
 @manager.command
+def develop():
+    from aleph.util import latinize_text
+    print latinize_text(u'ΠΕΤΡΟΣ ΦΟΙΒΟΥ ΠΙΕΡΙΔΗΣ')
+
+
+@manager.command
 def analyze(foreign_id=None):
     """Re-analyze documents in the given source (or throughout)."""
     if foreign_id:
@@ -132,20 +138,21 @@ def index(foreign_id=None):
 @manager.command
 def upgrade():
     """Create or upgrade the search index and database."""
-    upgrade_()
+    upgrade_db()
 
 
 @manager.command
 def evilshit():
     """Delete all data and recreate the database."""
     db.drop_all()
-    db.create_all()
+    upgrade_db()
     delete_index()
     init_search()
 
 
 def main():
     manager.run()
+
 
 if __name__ == "__main__":
     main()

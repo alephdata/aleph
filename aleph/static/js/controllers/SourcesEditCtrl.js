@@ -4,6 +4,11 @@ aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routePara
   
   $scope.source = source;
   $scope.processTriggered = false;
+  $scope.categories = {};
+
+  Metadata.get().then(function(metadata) {
+    $scope.categories = metadata.source_categories;
+  });
 
   $scope.canSave = function() {
     return $scope.source.can_write;

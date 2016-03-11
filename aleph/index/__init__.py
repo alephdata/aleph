@@ -105,34 +105,27 @@ def generate_pages(document):
 
 
 def generate_records(document):
-    for table in document.tables:
-        for row in table:
-            row_id = row.pop('_id')
-            tid = sha1(str(document.id))
-            tid.update(str(table.schema.sheet))
-            tid.update(str(row_id))
-            tid = tid.hexdigest()
-            text = [t for t in row.values() if t is not None]
-            text = list(set(text))
-            latin = [latinize_text(t) for t in text]
-            latin = [t for t in latin if t not in text]
-            yield {
-                '_id': tid,
-                '_type': TYPE_RECORD,
-                '_index': es_index,
-                '_parent': unicode(document.id),
-                '_source': {
-                    'type': 'row',
-                    'content_hash': document.content_hash,
-                    'document_id': document.id,
-                    'source_id': document.source_id,
-                    'row_id': row_id,
-                    'sheet': table.schema.sheet,
-                    'text': text,
-                    'text_latin': latin,
-                    'raw': row
-                }
+    for record in document.records:
+        text = record.text
+        latin = [latinize_text(t) for t in text]
+        latin = [t for t in latin if t not in text]
+        yield {
+            '_id': record.tid,
+            '_type': TYPE_RECORD,
+            '_index': es_index,
+            '_parent': unicode(document.id),
+            '_source': {
+                'type': 'row',
+                'content_hash': document.content_hash,
+                'document_id': document.id,
+                'source_id': document.source_id,
+                'row_id': record.row_id,
+                'sheet': record.sheet,
+                'text': text,
+                'text_latin': latin,
+                'raw': record.data
             }
+        }
 
 
 def generate_entities(document):

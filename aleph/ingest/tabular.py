@@ -8,7 +8,7 @@ from extractors import guess_encoding
 from aleph.model import Document
 from aleph.util import string_value
 from aleph.ingest.ingestor import Ingestor
-from aleph.model.tabular import TabularSchema, Tabular
+from aleph.model.tabular import Tabular
 
 # TODO, dbf: https://pypi.python.org/pypi/pyDBF/
 log = logging.getLogger(__name__)
@@ -16,6 +16,18 @@ log = logging.getLogger(__name__)
 
 class TabularIngestor(Ingestor):
     DOCUMENT_TYPE = Document.TYPE_TABULAR
+
+    def create_document(self, meta, type=None):
+        document = super(TabularIngestor, self).create_document(meta,
+                                                                type=type)
+        document.delete_records()
+        return document
+
+    def create_tabular(self, sheet, sheet_name=None):
+        return Tabular({
+            'sheet_name': sheet_name,
+            'sheet': sheet
+        })
 
 
 class MessyTablesIngestor(TabularIngestor):
@@ -27,23 +39,14 @@ class MessyTablesIngestor(TabularIngestor):
     EXTENSIONS = ['csv', 'tsv', 'xls', 'xlsx', 'ods', 'rtf']
     BASE_SCORE = 6
 
-    def generate_table(self, meta, sheet, row_set):
+    def generate_table(self, document, sheet, row_set):
         offset, headers = headers_guess(row_set.sample)
         row_set.register_processor(headers_processor(headers))
         row_set.register_processor(offset_processor(offset + 1))
-        schema = TabularSchema({
-            'sheet_name': row_set.name,
-            'content_hash': meta.content_hash,
-            'sheet': sheet
-        })
-        columns = [schema.add_column(h) for h in headers]
+        tabular = self.create_tabular(sheet, row_set.name)
+        columns = [tabular.add_column(h) for h in headers]
         if not len(columns):
             return
-        log.info("Creating internal table: %s columns, table: %r", len(columns),
-                 schema.table_name)
-        tabular = Tabular(schema)
-        tabular.drop()
-        tabular.create()
 
         def generate_rows():
             for row in row_set:
@@ -55,8 +58,8 @@ class MessyTablesIngestor(TabularIngestor):
                         record[column.name] = record.get(column.name, None)
                     yield record
 
-        tabular.load_iter(generate_rows())
-        return schema
+        document.insert_records(sheet, generate_rows())
+        return tabular
 
     def ingest(self, meta, local_path):
         with open(local_path, 'rb') as fh:
@@ -65,11 +68,12 @@ class MessyTablesIngestor(TabularIngestor):
                                      mimetype=meta.mime_type,
                                      window=20000)
             tables = []
+            document = self.create_document(meta)
             for sheet, row_set in enumerate(table_set.tables):
-                tables.append(self.generate_table(meta, sheet, row_set))
+                tables.append(self.generate_table(document, sheet, row_set))
 
             meta.tables = tables
-            document = self.create_document(meta)
+            document.meta = meta
             self.emit(document)
 
 
@@ -80,17 +84,12 @@ class DBFIngestor(TabularIngestor):
     def ingest(self, meta, local_path):
         with open(local_path, 'rb') as fh:
             db = DBF(fh)
-            schema = TabularSchema({
-                'content_hash': meta.content_hash,
-                'sheet': 0
-            })
-            columns = [schema.add_column(h) for h in db.fields.keys()]
+            document = self.create_document(meta)
+            tabular = self.create_tabular(0)
+            columns = [tabular.add_column(h) for h in db.fields.keys()]
             if not len(columns):
                 return
             columns = {c.label: c.name for c in columns}
-            tabular = Tabular(schema)
-            tabular.drop()
-            tabular.create()
 
             def generate_rows():
                 if db.numrec == 0:
@@ -113,7 +112,7 @@ class DBFIngestor(TabularIngestor):
                             record[name] = record.get(name, None)
                         yield record
 
-            tabular.load_iter(generate_rows())
-            meta.tables = [schema]
-            document = self.create_document(meta)
+            document.insert_records(0, generate_rows())
+            meta.tables = [tabular]
+            document.meta = meta
             self.emit(document)

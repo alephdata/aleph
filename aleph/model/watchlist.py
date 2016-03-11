@@ -44,30 +44,6 @@ class Watchlist(db.Model, TimeStampedModel):
         self.updated_at = datetime.utcnow()
         db.session.add(self)
 
-    def delete_entities(self, spare=None):
-        from aleph.model import Entity, Selector, Reference
-        sq = db.session.query(Entity.id)
-        if spare is not None:
-            sq = sq.filter(not_(Entity.id.in_(spare)))
-        sq = sq.filter(Entity.watchlist_id == self.id)
-        sq = sq.subquery()
-
-        q = db.session.query(Selector)
-        q = q.filter(Selector.entity_id.in_(sq))
-        q.delete(synchronize_session='fetch')
-
-        q = db.session.query(Reference)
-        q = q.filter(Reference.entity_id.in_(sq))
-        q.delete(synchronize_session='fetch')
-
-        q = db.session.query(Entity)
-        q = q.filter(Entity.watchlist_id == self.id)
-        if spare is not None:
-            q = q.filter(not_(Entity.id.in_(spare)))
-        q.delete(synchronize_session='fetch')
-        self.touch()
-        db.session.refresh(self)
-
     @classmethod
     def by_foreign_id(cls, foreign_id, data, role=None):
         q = db.session.query(cls)

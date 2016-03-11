@@ -57,10 +57,6 @@ class RoleForm(colander.MappingSchema):
     name = colander.SchemaNode(colander.String())
 
 
-class SourceForm(colander.MappingSchema):
-    label = colander.SchemaNode(colander.String())
-
-
 class WatchlistForm(colander.MappingSchema):
     label = colander.SchemaNode(colander.String())
 
@@ -69,4 +65,3 @@ class EntityForm(colander.MappingSchema):
     name = colander.SchemaNode(colander.String())
     category = colander.SchemaNode(colander.String(),
                                    validator=colander.OneOf(CATEGORIES))
-    watchlist = colander.SchemaNode(WatchlistRef())

@@ -7,7 +7,19 @@ var loadHome = ['$http', '$q', '$route', 'Query', 'Session', 'Metadata',
     Session.get().then(function(session) {
       var query = {limit: 0};
       $http.get('/api/1/query', {params: query}).then(function(res) {
+        var sources = {};
+        for (var i in res.data.sources.values) {
+          var source = res.data.sources.values[i],
+              category = source.category || 'other';
+          if (!sources[category]) {
+            sources[category] = [source];
+          } else {
+            sources[category].push(source);
+          }
+        }
+
         dfd.resolve({
+          'sources': sources,
           'result': res.data,
           'metadata': metadata
         });

@@ -28,8 +28,10 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
             dfd.resolve({
               'session': session,
               'watchlists': watchlists,
+              'watchlistsList': results[0].data.results,
               'watchlistsCount': watchlistsCount,
               'fields': metadata.fields,
+              'source_categories': metadata.source_categories,
               'countries': metadata.countries, 
               'languages': metadata.languages
             });

@@ -9,10 +9,15 @@ td.numeric, th.numeric {
 .data-table {
     overflow-x: scroll;
 
+    table.table {
+        margin-bottom: 0;    
+    }
+
     th {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        background-color: $boxed-color;
     }
 
     td {
