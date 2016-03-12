@@ -44,10 +44,6 @@ class Document(db.Model, TimeStampedModel):
         self._meta = meta
         flag_modified(self, '_meta')
 
-    @property
-    def tables(self):
-        return [Tabular(s) for s in self.meta.tables]
-
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.meta.title)
 
