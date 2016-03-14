@@ -37,7 +37,6 @@ class Entity(db.Model, TimeStampedModel):
 
     def delete(self):
         from aleph.model import Reference
-        self.delete_selectors()
         q = db.session.query(Reference)
         q = q.filter(Reference.entity_id == self.id)
         q.delete(synchronize_session='fetch')
