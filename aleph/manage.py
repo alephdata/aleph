@@ -101,12 +101,6 @@ def flush(foreign_id):
 
 
 @manager.command
-def develop():
-    from aleph.util import latinize_text
-    print latinize_text(u'ΠΕΤΡΟΣ ΦΟΙΒΟΥ ΠΙΕΡΙΔΗΣ')
-
-
-@manager.command
 def analyze(foreign_id=None):
     """Re-analyze documents in the given source (or throughout)."""
     if foreign_id:

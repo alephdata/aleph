@@ -36,14 +36,15 @@ class Entity(db.Model, TimeStampedModel):
         }
 
     def delete(self):
+        from aleph.model import Reference
         self.delete_selectors()
-        db.session.delete(self)
-
-    def delete_selectors(self):
+        q = db.session.query(Reference)
+        q = q.filter(Reference.entity_id == self.id)
+        q.delete(synchronize_session='fetch')
         q = db.session.query(Selector)
         q = q.filter(Selector.entity_id == self.id)
         q.delete(synchronize_session='fetch')
-        db.session.refresh(self)
+        db.session.delete(self)
 
     @property
     def terms(self):
