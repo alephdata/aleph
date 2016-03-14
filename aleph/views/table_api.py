@@ -13,7 +13,7 @@ blueprint = Blueprint('table', __name__)
 def get_tabular(document_id, table_id):
     document = get_document(document_id)
     try:
-        table = document.tables[table_id]
+        table = document.meta.tables[table_id]
     except IndexError:
         raise NotFound("No such table: %s" % table_id)
     return document, table
