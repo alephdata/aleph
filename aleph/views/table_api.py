@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from apikit import jsonify, get_limit, get_offset
 
 from aleph.search.tabular import tabular_query, execute_tabular_query
-from aleph.views.document_api import get_document
+from aleph.views.util import get_document
 from aleph.views.cache import enable_cache
 
 

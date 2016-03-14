@@ -7,10 +7,10 @@ from pycountry import countries
 from aleph import authz
 from aleph.model.constants import CORE_FACETS, SOURCE_CATEGORIES
 from aleph.views.cache import enable_cache
+from aleph.views.util import get_document
 from aleph.search import documents_query, execute_documents_query
 from aleph.search import records_query, execute_records_query
 from aleph.model import Alert
-from aleph.views.document_api import get_document
 
 blueprint = Blueprint('search', __name__)
 
