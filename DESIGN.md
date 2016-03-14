@@ -1,3 +1,29 @@
+
+## Use cases
+
+* As a journalist, I want to combine different types of facets which
+  represent document and entity metadata.
+* As a journalist, I want to see a list of documents that mention
+  a person/org/topic so that I can sift through the documents.
+* As a journalist, I want to intersect sets of documents that mention multiple
+  people/orgs/topics so that I can drill down on the relationships between them. 
+* As a data importer, I want to routinely crawl and import documents
+  from many data sources, including web scrapers, structured sources and filesystems. 
+* As a data importer, I want to associate metadata with documents
+  and entities so that users can browse by various facets. 
+
+
+## Basic ideas
+
+* Each imported document is either tabular or textual. It has many records, i.e. data rows
+  or document pages.
+* An entity (such as a person, organisation, or topic) is like a permanent search query;
+  each entity can have multiple actual search terms associated with it (``selectors``).
+* Documents matching an entity after that entity has been created yield notifications if
+  a user is subscribed.
+
+
+
 Iteration II
 ============
 
