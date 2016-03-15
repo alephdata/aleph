@@ -6,7 +6,7 @@ var loadHome = ['$http', '$q', '$route', 'Query', 'Session', 'Metadata',
   Metadata.get().then(function(metadata) {
     Session.get().then(function(session) {
       var query = {limit: 0};
-      $http.get('/api/1/query', {params: query}).then(function(res) {
+      $http.get('/api/1/query', {cache: true, params: query}).then(function(res) {
         var sources = {};
         for (var i in res.data.sources.values) {
           var source = res.data.sources.values[i],

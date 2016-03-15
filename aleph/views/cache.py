@@ -47,27 +47,30 @@ def cache_response(resp):
         resp.cache_control.public = True
         resp.cache_control.max_age = 3600 * 24 * 14
         return resp
-    elif resp.is_streamed:
+
+    if resp.is_streamed:
         # http://wiki.nginx.org/X-accel#X-Accel-Buffering
         resp.headers['X-Accel-Buffering'] = 'no'
 
-    if not request._http_cache \
-            or request.method not in ['GET', 'HEAD', 'OPTIONS'] \
-            or resp.status_code != 200:
+    if not request._http_cache:
         return resp
 
-    if request._http_server:
-        resp.cache_control.must_revalidate = True
-        resp.cache_control.private = True
-        resp.expires = -1
-    else:
-        resp.cache_control.private = True
-        resp.cache_control.max_age = 3600 * 2
+    if request.method not in ['GET', 'HEAD', 'OPTIONS']:
+        return resp
 
-    if not authz.logged_in():
-        resp.cache_control.public = True
+    if resp.status_code != 200:
+        return resp
 
     if request._http_etag:
         resp.set_etag(request._http_etag)
 
+    if authz.logged_in():
+        resp.cache_control.private = True
+    else:
+        resp.cache_control.public = True
+
+    if request._http_server:
+        resp.expires = -1
+    else:
+        resp.cache_control.max_age = 3600 * 2
     return resp

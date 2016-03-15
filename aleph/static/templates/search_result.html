@@ -11,7 +11,7 @@
   </div>
   <div class="descriptor">
     <div class="title">
-      <a ng-click="viewDetails()" ng-bind="doc.title"></a>
+      <a ng-href="{{getUrl()}}" ng-bind="doc.title"></a>
       <!-- span ng-if="doc.title == doc.file_name && doc.extension" class="addon" ng-bind="doc.extension"></span -->
       <span ng-if="doc.title != doc.file_name" class="addon" ng-bind="doc.file_name"></span>
     </div>
@@ -49,8 +49,8 @@
       <ul ng-repeat="rec in doc.records.results">
         <li>
           &bdquo;<span ng-click="viewDetails(rec)" class="click" ng-repeat="snippet in rec.snippets" ng-bind-html="snippet"></span>&ldquo;
-          <span ng-if="doc.type == 'tabular'" class="ref">in <a ng-click="viewDetails(rec)">row {{rec.row_id | number}}</a></span>
-          <span ng-if="doc.type == 'text'" class="ref">on <a ng-click="viewDetails(rec)">page {{rec.page | number}}</a></span>
+          <span ng-if="doc.type == 'tabular'" class="ref">in <a ng-href="{{getUrl(rec)}}">row {{rec.row_id | number}}</a></span>
+          <span ng-if="doc.type == 'text'" class="ref">on <a ng-href="{{getUrl(rec)}}">page {{rec.page | number}}</a></span>
         </li>
       </ul>
       <span class="total" ng-if="doc.records.totals > doc.records.results.length">

@@ -22,27 +22,29 @@ aleph.directive('searchResult', ['$location', '$route', '$rootScope', 'Query', f
         }
       });
 
-      scope.viewDetails = function(rec) {
-        var query = $location.search(),
-            search = {
-              ctx: alephUrlBlob(query),
-              q: query.q,
-              dq: query.q
-            };
-        $rootScope.reportLoading(true);
+      scope.getUrl = function(rec) {
+        var search = $location.search(),
+            query = {
+              ctx: alephUrlBlob(search),
+              q: search.q,
+              dq: search.q
+            },
+            path = null;
         if (scope.doc.type === 'tabular') {
           var sheet = rec ? rec.sheet : 0,
-              row = rec ? rec.row_id : 0;
-          $location.path('/tabular/' + scope.doc.id + '/' + sheet);
-          search.row = row;
-          $location.search(search);
+              row = rec ? rec.row_id : null;
+          query.row = row;
+          path = '/#/tabular/' + scope.doc.id + '/' + sheet;
         } else {
-          var page = rec ? rec.page : 1;
-          $location.path('/text/' + scope.doc.id);
-          search.page = page;
+          path = '/#/text/' + scope.doc.id;
+          query.page = rec ? rec.page : 1;
         }
-        $location.search(search);
+        return path + '?' + queryString(query);
       };
+
+      scope.viewDetails = function(rec) {
+        window.location.href = scope.getUrl(rec);
+      }
 
     }
   };

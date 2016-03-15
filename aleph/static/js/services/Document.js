@@ -7,7 +7,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Session',
       var dfd = $q.defer(),
           url = url = '/api/1/documents/' + id;
       Session.get().then(function(session) {
-        $http.get(url).then(function(res) {
+        $http.get(url, {cache: true}).then(function(res) {
           dfd.resolve(res.data);
         }, function(err) {
           dfd.reject(err);
@@ -26,7 +26,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Session',
         if (sq.q) {
           sq['snippet'] = 50;
           sq['limit'] = 1000;
-          $http.get(url, {params: sq}).then(function(res) {
+          $http.get(url, {cache: true, params: sq}).then(function(res) {
             for (var i in res.data.results) {
               var record = res.data.results[i];
               record.snippet = $sce.trustAsHtml(record.text[0]);

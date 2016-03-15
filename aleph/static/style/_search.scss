@@ -55,6 +55,10 @@
     @include display-flex;
     //max-width: 90px;
 
+    a:visited {
+        color: $text-muted;
+    }
+
     .document-type {
         @include flex-item(1 0 1.5em);
         width: 1.5em;
