@@ -52,6 +52,10 @@
       <th>Type</th>
       <td><code>{{doc.mime_type}}</code></td>
     </tr>
+    <tr ng-if="doc.source_url">
+      <th>Checksum</th>
+      <td><code>{{doc.content_hash}}</code></td>
+    </tr>
     <tr>
       <td colspan="2">
         <div class="btn-group" role="group">

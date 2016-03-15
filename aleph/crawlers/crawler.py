@@ -6,7 +6,6 @@ from aleph.model import Metadata, Source, Document
 from aleph.ext import get_crawlers
 from aleph.ingest import ingest_url, ingest_file
 from aleph.analyze import analyze_terms
-from aleph.alerts import check_alerts
 
 log = logging.getLogger(__name__)
 
@@ -67,7 +66,7 @@ class Crawler(object):
         analyze_terms(terms)
 
     def finalize(self):
-        check_alerts.delay()
+        pass
 
     def __repr__(self):
         return '<%s()>' % self.__class__.__name__

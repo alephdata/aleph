@@ -1,22 +1,26 @@
-from werkzeug.exceptions import NotFound, BadRequest
-from flask import Blueprint, redirect, send_file
-from apikit import jsonify
+from werkzeug.exceptions import BadRequest
+from flask import Blueprint, redirect, send_file, request
+from apikit import jsonify, Pager
 
 
-from aleph.core import archive
+from aleph.core import archive, db
 from aleph import authz
 from aleph.model import Document
 from aleph.views.cache import enable_cache
+from aleph.views.util import get_document, match_ids
 
 blueprint = Blueprint('document', __name__)
 
 
-def get_document(document_id):
-    document = Document.by_id(document_id)
-    if document is None:
-        raise NotFound()
-    authz.require(authz.source_read(document.source_id))
-    return document
+@blueprint.route('/api/1/documents', methods=['GET'])
+def index():
+    q = db.session.query(Document)
+    sources_ids = match_ids('sources', authz.sources(authz.READ))
+    q = q.filter(Document.source_id.in_(sources_ids))
+    hashes = request.args.getlist('content_hash')
+    if len(hashes):
+        q = q.filter(Document.content_hash.in_(hashes))
+    return jsonify(Pager(q))
 
 
 @blueprint.route('/api/1/documents/<int:document_id>')

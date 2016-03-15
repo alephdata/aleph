@@ -1,5 +1,4 @@
 from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify, Pager, request_data
 
 from aleph import authz
@@ -7,23 +6,15 @@ from aleph.model import Entity, db
 from aleph.model.forms import EntityForm
 from aleph.analyze import analyze_entity
 from aleph.views.cache import enable_cache
+from aleph.views.util import match_ids
 
 blueprint = Blueprint('entities', __name__)
 
 
 @blueprint.route('/api/1/entities', methods=['GET'])
 def index():
-    watchlist_ids = authz.watchlists(authz.READ)
-    filter_lists = request.args.getlist('watchlist')
-    if len(filter_lists):
-        try:
-            filter_lists = [int(f) for f in filter_lists]
-            watchlist_ids = [l for l in watchlist_ids if l in filter_lists]
-        except ValueError:
-            raise BadRequest()
-
-    prefix = request.args.get('prefix')
-    q = Entity.by_lists(watchlist_ids, prefix=prefix)
+    watchlist_ids = match_ids('watchlist', authz.watchlists(authz.READ))
+    q = Entity.by_lists(watchlist_ids, prefix=request.args.get('prefix'))
     return jsonify(Pager(q))
 
 
