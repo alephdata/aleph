@@ -4,6 +4,7 @@ CORE_FACETS = {
     'mime_type': 'Content type',
     'languages': 'Languages',
     'countries': 'Countries',
+    'keywords': 'Keywords',
     'dates': 'Dates'
 }
 
