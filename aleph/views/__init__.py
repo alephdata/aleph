@@ -2,8 +2,9 @@ from colander import Invalid
 from apikit import jsonify
 
 from aleph.core import app
-from aleph.views.ui import ui # noqa
-from aleph.assets import assets # noqa
+from aleph.views.ui import ui  # noqa
+from aleph.assets import assets  # noqa
+from aleph.admin import admin  # noqa
 from aleph.views.document_api import blueprint as document_api
 from aleph.views.search_api import blueprint as search_api
 from aleph.views.graph_api import blueprint as graph_api

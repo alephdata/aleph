@@ -2,6 +2,7 @@ import logging
 from logging.handlers import SMTPHandler
 from flask import Flask
 from flask import url_for as flask_url_for
+from flask_admin import Admin
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.assets import Environment
 from flask.ext.migrate import Migrate
@@ -30,6 +31,8 @@ migrate = Migrate(app, db, directory=app.config.get('ALEMBIC_DIR'))
 
 es = Elasticsearch(app.config.get('ELASTICSEARCH_URL'), timeout=120)
 es_index = app.config.get('ELASTICSEARCH_INDEX', app_name)
+
+admin = Admin(app, name=app_name, template_mode='bootstrap3')
 
 queue_name = app_name + '_q'
 app.config['CELERY_DEFAULT_QUEUE'] = queue_name

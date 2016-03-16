@@ -28,6 +28,10 @@ class Document(db.Model, TimeStampedModel):
     source = db.relationship(Source, backref=db.backref('documents', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
     _meta = db.Column('meta', JSONB)
 
+    @property
+    def title(self):
+        return self.meta.title
+
     @hybrid_property
     def meta(self):
         self._meta = self._meta or {}
