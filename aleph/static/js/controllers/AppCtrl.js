@@ -20,7 +20,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
       }
     });
     $scope.query.state = Query.load();
-    // $scope.reportLoading(true);
+    $scope.reportLoading(true);
   });
 
   $rootScope.$on("$routeChangeSuccess", function (event, next, current) {

@@ -47,7 +47,7 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
     var getRoles = function() {
       if (rolesDfd === null) {
         rolesDfd = $q.defer();
-        $http.get('/api/1/roles').then(function(res) {
+        $http.get('/api/1/roles', {cache: true}).then(function(res) {
           rolesDfd.resolve(res.data);
         }, function(err) {
           rolesDfd.reject(err);

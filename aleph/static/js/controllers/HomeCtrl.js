@@ -14,10 +14,6 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Que
 
   Title.set("Welcome");
 
-  $scope.showFieldFacet = function(field) {
-    return Query.load().facet.indexOf(field) == -1;
-  };
-
   $scope.canEditSource = function(source) {
     if (!source || !source.id) {
       return false;
@@ -57,49 +53,7 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Que
     });
 
     instance.result.then(function() {
-      // $route.reload();
+      $route.reload();
     });
   };
-
-  var sortedFilters = function(data, name) {
-    if (!data || !data.length) {
-      return [];
-    }
-    // data = angular.copy(data);
-    return data.sort(function(a, b) {
-      var af = Query.hasFilter(name, a.id),
-          bf = Query.hasFilter(name, b.id);
-      if (af && !bf) { return -1; }
-      if (!af && bf) { return 1; }
-      var counts = b.count - a.count;
-      if (counts !== 0) {
-        return counts;
-      }
-      var al = a.label || a.name || a.id;
-      var bl = b.label || b.name || b.id;
-      return al.localeCompare(bl);
-    });
-  };
-
-  var initFacets = function() {
-    $scope.sourceFacets = sortedFilters(data.result.sources.values, 'filter:source_id');
-    $scope.entityFacets = sortedFilters(data.result.entities, 'entity');
-
-    var queryFacets = Query.load().facet,
-        facets = {};
-    for (var i in queryFacets) {
-      var facet = queryFacets[i];
-      if (data.result.facets[facet]) {
-        if (data.result.facets[facet]) {
-          var values = data.result.facets[facet].values;
-          facets[facet] = sortedFilters(values, 'filter:' + name);  
-        }
-      }
-    }
-
-    $scope.facets = facets;
-  };
-
-  initFacets();
-
 }]);

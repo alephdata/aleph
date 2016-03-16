@@ -15,7 +15,7 @@
     <base href="{{url_for('ui')}}">
   </head>
   <body ng-controller="AppCtrl">
-    <div id="page">
+    <div id="page" ng-show="session.roles" ng-cloak>
       <nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container-fluid">
           <div class="navbar-header">
@@ -25,22 +25,22 @@
 
           <div id="navbar" class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
-              <li ng-show="!session.logged_in" ng-cloak>
+              <li ng-show="!session.logged_in">
                 <a href="{{url_for('sessions.login')}}" target="_self">
                   <i class="fa fa-sign-in"></i> Sign in
                 </a>
               </li>
-              <li ng-show="session.logged_in" ng-cloak>
+              <li ng-show="session.logged_in">
                 <a ng-click="editProfile($event)">
                   <i class="fa fa-cog"></i> Settings
                 </a>
               </li>
-              <li ng-show="session.logged_in" ng-cloak>
+              <li ng-show="session.logged_in">
                 <a ng-click="manageAlerts($event)">
                   <i class="fa fa-bell"></i> Alerts
                 </a>
               </li>
-              <li ng-show="session.logged_in" ng-cloak>
+              <li ng-show="session.logged_in">
                 <a href="{{url_for('sessions.logout')}}" target="_self">
                   <i class="fa fa-sign-out"></i> Logout
                 </a>
@@ -54,7 +54,7 @@
         <div class="spinner" ng-hide="routeFailed">
           <i class="fa fa-circle-o-notch fa-spin"></i>
         </div>
-        <div class="spinner failed" ng-cloak ng-show="routeFailed">
+        <div class="spinner failed" ng-show="routeFailed">
           <i class="fa fa-exclamation-triangle"></i>
           <div class="failure-note">
             He's dead, Jim.
@@ -62,7 +62,7 @@
         </div>
       </div>
       <div id="view" class="container-fluid">
-        <div ng-cloak ng-view autoscroll="true"></div>
+        <div ng-view autoscroll="true"></div>
       </div>
     </div>
 
