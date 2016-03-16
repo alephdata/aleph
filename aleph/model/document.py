@@ -118,6 +118,14 @@ class DocumentPage(db.Model):
     def __repr__(self):
         return '<DocumentPage(%r,%r)>' % (self.document_id, self.number)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'number': self.number,
+            'text': self.text,
+            'document_id': self.document_id
+        }
+
 
 class DocumentRecord(db.Model):
 

@@ -1,13 +1,15 @@
 from werkzeug.exceptions import BadRequest
 from flask import Blueprint, redirect, send_file, request
-from apikit import jsonify, Pager
-
+from apikit import jsonify, Pager, get_limit, get_offset
 
 from aleph.core import archive, db
 from aleph import authz
 from aleph.model import Document
 from aleph.views.cache import enable_cache
+from aleph.search.tabular import tabular_query, execute_tabular_query
 from aleph.views.util import get_document, match_ids
+from aleph.views.util import get_tabular, get_page
+
 
 blueprint = Blueprint('document', __name__)
 
@@ -61,3 +63,27 @@ def pdf(document_id):
     local_path = archive.load_file(pdf)
     fh = open(local_path, 'rb')
     return send_file(fh, mimetype=pdf.mime_type)
+
+
+@blueprint.route('/api/1/documents/<int:document_id>/pages/<int:number>')
+def page(document_id, number):
+    document, page = get_page(document_id, number)
+    enable_cache(server_side=True)
+    return jsonify(page)
+
+
+@blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>')
+def table(document_id, table_id):
+    document, tabular = get_tabular(document_id, table_id)
+    enable_cache(vary_user=True)
+    return jsonify(tabular)
+
+
+@blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>/rows')
+def rows(document_id, table_id):
+    document, tabular = get_tabular(document_id, table_id)
+    query = tabular_query(document_id, table_id, request.args)
+    query['size'] = get_limit(default=100)
+    query['from'] = get_offset()
+    return jsonify(execute_tabular_query(document_id, table_id,
+                                         request.args, query))
