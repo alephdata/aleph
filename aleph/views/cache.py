@@ -62,6 +62,9 @@ def cache_response(resp):
         return resp
 
     if request._http_etag:
+        if request.if_none_match == request._http_etag:
+            raise NotModified()
+
         resp.set_etag(request._http_etag)
 
     if authz.logged_in():

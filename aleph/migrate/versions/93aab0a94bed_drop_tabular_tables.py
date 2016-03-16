@@ -16,6 +16,7 @@ import sqlalchemy as sa
 
 log = logging.getLogger(__name__)
 
+
 def upgrade():
     bind = op.get_bind()
     meta = sa.MetaData()

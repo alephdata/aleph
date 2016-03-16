@@ -88,8 +88,8 @@ Iteration II
 * Testing
 * Check DOCX/XLSX ingest
 * tidbits
-* Refactor DocumentPage
-* Refactor DocumentRecord (Tabular)
+* [DONE] Refactor DocumentPage
+* [DONE] Refactor DocumentRecord (Tabular)
 
 
 -------------
