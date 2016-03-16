@@ -15,7 +15,7 @@ def index():
     enable_cache(vary_user=True, vary=watchlists)
     q = Watchlist.all(watchlist_ids=watchlists)
     q = q.order_by(Watchlist.label.asc())
-    return jsonify(Pager(q).to_dict())
+    return jsonify(Pager(q))
 
 
 @blueprint.route('/api/1/watchlists', methods=['POST', 'PUT'])
