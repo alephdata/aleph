@@ -36,7 +36,7 @@ class WatchlistView(BaseModelView):
 
 class EntityView(BaseModelView):
     column_list = ['name', 'foreign_id', 'watchlist']
-    column_filters = ['name', 'watchlist']
+    column_filters = ['name', 'watchlist.label']
 
 
 admin.add_view(RoleView(Role, db.session, endpoint='role_admin'))
