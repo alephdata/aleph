@@ -24,6 +24,13 @@ def init_search():
     })
 
 
+def upgrade_search():
+    es.indices.put_mapping(index=es_index, body=DOCUMENT_MAPPING,
+                           doc_type=TYPE_DOCUMENT)
+    es.indices.put_mapping(index=es_index, body=RECORD_MAPPING,
+                           doc_type=TYPE_RECORD)
+
+
 def delete_index():
     es.indices.delete(es_index, ignore=[404])
 

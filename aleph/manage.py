@@ -10,7 +10,8 @@ from aleph.model import db, upgrade_db, Source, Document
 from aleph.views import app, assets
 from aleph.analyze import analyze_source
 from aleph.alerts import check_alerts
-from aleph.index import init_search, delete_index, index_document
+from aleph.index import init_search, delete_index, upgrade_search
+from aleph.index import index_document
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
@@ -133,6 +134,7 @@ def index(foreign_id=None):
 def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_db()
+    upgrade_search()
 
 
 @manager.command
