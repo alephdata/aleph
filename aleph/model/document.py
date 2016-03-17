@@ -7,7 +7,6 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db
-from aleph.model.tabular import Tabular
 from aleph.model.source import Source
 from aleph.model.metadata import Metadata
 from aleph.model.common import TimeStampedModel

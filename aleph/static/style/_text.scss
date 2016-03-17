@@ -29,3 +29,18 @@ canvas#pdf {
         background-color: $gray-subtle;
     }
 }
+
+.panel-metadata {
+    td {
+        position: relative;
+
+        code {
+            position: absolute;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+            max-width: 95%;
+        }    
+    }
+}

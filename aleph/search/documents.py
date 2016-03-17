@@ -13,7 +13,7 @@ from aleph.search.records import records_query
 
 DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'languages',
                   'countries', 'source_url', 'created_at', 'updated_at',
-                  'type', 'summary']
+                  'type', 'summary', 'keywords']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query

@@ -325,6 +325,7 @@ class Metadata(MutableMapping):
             'dates': self.dates,
             'countries': self.countries,
             'languages': self.languages,
+            'keywords': self.keywords,
             'extension': self.extension,
             'mime_type': self.mime_type,
             'headers': self.headers,
