@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from sqlalchemy import or_, func
 from sqlalchemy.orm import aliased
@@ -9,12 +10,12 @@ from aleph.model.constants import ENTITY_CATEGORIES
 from aleph.model.watchlist import Watchlist
 from aleph.model.validation import validate
 from aleph.model.common import db_compare
-from aleph.model.common import TimeStampedModel
+from aleph.model.common import SoftDeleteModel
 
 log = logging.getLogger(__name__)
 
 
-class Entity(db.Model, TimeStampedModel):
+class Entity(db.Model, SoftDeleteModel):
     id = db.Column(db.Integer, primary_key=True)
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     name = db.Column(db.Unicode)
@@ -24,27 +25,16 @@ class Entity(db.Model, TimeStampedModel):
     watchlist_id = db.Column(db.Integer(), db.ForeignKey('watchlist.id'))
     watchlist = db.relationship(Watchlist, backref=db.backref('entities', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'foreign_id': self.foreign_id,
-            # 'api_url': url_for('entities.view', id=self.id),
-            'category': self.category,
-            'watchlist_id': self.watchlist_id,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
-        }
-
     def delete(self):
         from aleph.model import Reference
+        # TODO: make this more consistent in terms of soft vs hard deletes
         q = db.session.query(Reference)
         q = q.filter(Reference.entity_id == self.id)
         q.delete(synchronize_session='fetch')
         q = db.session.query(Selector)
         q = q.filter(Selector.entity_id == self.id)
         q.delete(synchronize_session='fetch')
-        db.session.delete(self)
+        self.deleted_at = datetime.utcnow()
 
     @property
     def terms(self):
@@ -81,7 +71,7 @@ class Entity(db.Model, TimeStampedModel):
 
     @classmethod
     def by_foreign_id(cls, foreign_id, watchlist, data):
-        q = db.session.query(cls)
+        q = cls.all()
         q = q.filter_by(watchlist=watchlist)
         q = q.filter_by(foreign_id=foreign_id)
         ent = q.first()
@@ -96,19 +86,19 @@ class Entity(db.Model, TimeStampedModel):
 
     @classmethod
     def by_name(cls, name, watchlist):
-        q = db.session.query(cls)
+        q = cls.all()
         q = q.filter_by(watchlist=watchlist)
         q = q.filter(db_compare(cls.name, name))
         return q.first()
 
     @classmethod
     def by_id(cls, id):
-        q = db.session.query(cls).filter_by(id=id)
+        q = cls.all().filter_by(id=id)
         return q.first()
 
     @classmethod
     def by_lists(cls, watchlists, prefix=None):
-        q = db.session.query(cls)
+        q = cls.all()
         q = q.filter(cls.watchlist_id.in_(watchlists))
         q = q.order_by(cls.name.asc())
         return q
@@ -117,7 +107,7 @@ class Entity(db.Model, TimeStampedModel):
     def by_id_set(cls, ids, watchlist_id=None):
         if not len(ids):
             return {}
-        q = db.session.query(cls)
+        q = cls.all()
         q = q.filter(cls.id.in_(ids))
         if watchlist_id is not None:
             q = q.filter(cls.watchlist_id == watchlist_id)
@@ -136,6 +126,7 @@ class Entity(db.Model, TimeStampedModel):
         count = func.count(sel.id)
         q = db.session.query(ent.id, ent.name, ent.category, count)
         q = q.join(sel, ent.id == sel.entity_id)
+        q = q.filter(ent.deleted_at == None)  # noqa
         q = q.filter(ent.watchlist_id.in_(watchlists))
         q = q.filter(or_(sel.text.ilike('%s%%' % prefix),
                          sel.text.ilike('%% %s%%' % prefix)))
@@ -156,6 +147,18 @@ class Entity(db.Model, TimeStampedModel):
 
     def __unicode__(self):
         return self.name
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'foreign_id': self.foreign_id,
+            # 'api_url': url_for('entities.view', id=self.id),
+            'category': self.category,
+            'watchlist_id': self.watchlist_id,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
+        }
 
 
 class Selector(db.Model):

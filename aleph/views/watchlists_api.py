@@ -13,7 +13,7 @@ blueprint = Blueprint('watchlists', __name__)
 def index():
     watchlists = authz.watchlists(authz.READ)
     enable_cache(vary_user=True, vary=watchlists)
-    q = Watchlist.all(watchlist_ids=watchlists)
+    q = Watchlist.all_by_ids(watchlists)
     q = q.order_by(Watchlist.label.asc())
     return jsonify(Pager(q))
 

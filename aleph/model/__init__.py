@@ -24,5 +24,4 @@ def clear_session():
 
 def upgrade_db():
     log.info("Beginning database migration...")
-    # print [migrate.current()]
     migrate.upgrade()

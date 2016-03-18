@@ -15,8 +15,10 @@ class Reference(db.Model, TimeStampedModel):
     entity_id = db.Column(db.Integer, db.ForeignKey('entity.id'))
     weight = db.Column(db.Integer)
 
-    entity = db.relationship(Entity, backref=db.backref('references', lazy='dynamic', cascade='all, delete-orphan'))
-    document = db.relationship(Document, backref=db.backref('references', lazy='dynamic', cascade='all, delete-orphan'))
+    entity = db.relationship(Entity, backref=db.backref('references',
+                             lazy='dynamic', cascade='all, delete-orphan'))
+    document = db.relationship(Document, backref=db.backref('references',
+                               lazy='dynamic', cascade='all, delete-orphan'))
 
     @classmethod
     def delete_document(cls, document_id):

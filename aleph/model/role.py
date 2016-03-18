@@ -2,11 +2,12 @@ from uuid import uuid4
 
 from aleph.core import db
 from aleph.model.validation import validate
-from aleph.model.common import TimeStampedModel
+from aleph.model.common import SoftDeleteModel
 
 
-class Role(db.Model, TimeStampedModel):
-    """ A user, group or other access control subject. """
+class Role(db.Model, SoftDeleteModel):
+    """A user, group or other access control subject."""
+
     __tablename__ = 'role'
 
     USER = 'user'
@@ -26,48 +27,31 @@ class Role(db.Model, TimeStampedModel):
     type = db.Column(db.Enum(*TYPES, name='role_type'), nullable=False)
     permissions = db.relationship("Permission", backref="role")
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'foreign_id': self.foreign_id,
-            'name': self.name,
-            'is_admin': self.is_admin,
-            'email': self.email,
-            'type': self.type
-        }
-
     def update(self, data):
         validate(data, 'role.json#')
         self.name = data.get('name')
         self.email = data.get('email')
 
-    def __repr__(self):
-        return '<Role(%r,%r)>' % (self.id, self.foreign_id)
-
-    def __unicode__(self):
-        return self.name
-
     @classmethod
     def notifiable(cls):
         q = db.session.query(cls.id)
+        q = q.filter_by(cls.deleted_at == None)  # noqa
         q = q.filter(cls.email != None)  # noqa
         return q
 
     @classmethod
     def by_id(cls, id):
-        if id is not None:
-            return db.session.query(cls).filter_by(id=id).first()
+        return cls.all().filter_by(id=id).first()
 
     @classmethod
     def by_foreign_id(cls, foreign_id):
         if foreign_id is not None:
-            q = db.session.query(cls)
-            return q.filter_by(foreign_id=foreign_id).first()
+            return cls.all().filter_by(foreign_id=foreign_id).first()
 
     @classmethod
     def by_api_key(cls, api_key):
         if api_key is not None:
-            return db.session.query(cls).filter_by(api_key=api_key).first()
+            return cls.all().filter_by(api_key=api_key).first()
 
     @classmethod
     def load_or_create(cls, foreign_id, type, name, email=None,
@@ -85,3 +69,19 @@ class Role(db.Model, TimeStampedModel):
         db.session.add(role)
         db.session.flush()
         return role
+
+    def __repr__(self):
+        return '<Role(%r,%r)>' % (self.id, self.foreign_id)
+
+    def __unicode__(self):
+        return self.name
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'foreign_id': self.foreign_id,
+            'name': self.name,
+            'is_admin': self.is_admin,
+            'email': self.email,
+            'type': self.type
+        }

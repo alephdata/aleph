@@ -3,7 +3,7 @@ from apikit import obj_or_404, request_data, Pager, jsonify
 
 from aleph import authz
 from aleph.core import db
-from aleph.model import Source, validate
+from aleph.model import Source
 from aleph.analyze import analyze_source
 
 
@@ -12,8 +12,8 @@ blueprint = Blueprint('sources', __name__)
 
 @blueprint.route('/api/1/sources', methods=['GET'])
 def index():
-    pager = Pager(Source.all(ids=authz.sources(authz.READ)))
-    return jsonify(pager)
+    q = Source.all_by_ids(ids=authz.sources(authz.READ))
+    return jsonify(Pager(q))
 
 
 @blueprint.route('/api/1/sources/<int:id>', methods=['GET'])

@@ -28,7 +28,7 @@ manager.add_command('db', MigrateCommand)
 @manager.command
 def sources():
     """List all sources."""
-    for source in db.session.query(Source):
+    for source in Source.all():
         print source.id, source.foreign_id, source.label
 
 

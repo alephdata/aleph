@@ -14,7 +14,7 @@ blueprint = Blueprint('roles', __name__)
 def index():
     authz.require(authz.logged_in())
     users = []
-    for role in db.session.query(Role):
+    for role in Role.all():
         data = role.to_dict()
         del data['email']
         users.append(data)
@@ -44,7 +44,7 @@ def update(id):
 @blueprint.route('/api/1/watchlists/<int:watchlist>/permissions')
 def watchlist_permissions_index(watchlist=None):
     authz.require(authz.watchlist_write(watchlist))
-    q = db.session.query(Permission)
+    q = Permission.all()
     q = q.filter(Permission.resource_type == Permission.COLLECTION)
     q = q.filter(Permission.resource_id == watchlist)
     return jsonify({
@@ -55,8 +55,8 @@ def watchlist_permissions_index(watchlist=None):
 
 @blueprint.route('/api/1/sources/<int:source>/permissions')
 def source_permissions_index(source=None):
-    q = db.session.query(Permission)
     authz.require(authz.source_write(source))
+    q = Permission.all()
     q = q.filter(Permission.resource_type == Permission.SOURCE)
     q = q.filter(Permission.resource_id == source)
     return jsonify({
@@ -80,7 +80,7 @@ def permissions_save(watchlist=None, source=None):
     data = request_data()
     validate(data, 'permission.json#')
 
-    role = db.session.query(Role).filter(Role.id == data['role']).first()
+    role = Role.all().filter(Role.id == data['role']).first()
     if role is None:
         raise BadRequest()
 

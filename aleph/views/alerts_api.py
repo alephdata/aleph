@@ -3,7 +3,7 @@ from apikit import obj_or_404, request_data, jsonify
 
 from aleph import authz
 from aleph.core import db
-from aleph.model import Alert, validate
+from aleph.model import Alert
 from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('alerts', __name__)
@@ -12,7 +12,7 @@ blueprint = Blueprint('alerts', __name__)
 @blueprint.route('/api/1/alerts', methods=['GET'])
 def index():
     authz.require(authz.logged_in())
-    alerts = Alert.all(role=request.auth_role).all()
+    alerts = Alert.by_role(request.auth_role).all()
     return jsonify({'results': alerts, 'total': len(alerts)})
 
 

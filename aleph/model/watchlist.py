@@ -4,30 +4,18 @@ from datetime import datetime
 from aleph.core import db, url_for
 from aleph.model.role import Role
 from aleph.model.validation import validate
-from aleph.model.common import TimeStampedModel
+from aleph.model.common import SoftDeleteModel
 
 log = logging.getLogger(__name__)
 
 
-class Watchlist(db.Model, TimeStampedModel):
+class Watchlist(db.Model, SoftDeleteModel):
     id = db.Column(db.Integer(), primary_key=True)
     label = db.Column(db.Unicode)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
 
     creator_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
     creator = db.relationship(Role)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'api_url': url_for('watchlists.view', id=self.id),
-            'entities_api_url': url_for('entities.index', list=self.id),
-            'label': self.label,
-            'foreign_id': self.foreign_id,
-            'creator_id': self.creator_id,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
-        }
 
     def update(self, data):
         validate(data, 'watchlist.json#')
@@ -42,10 +30,18 @@ class Watchlist(db.Model, TimeStampedModel):
         self.updated_at = datetime.utcnow()
         db.session.add(self)
 
+    @property
+    def terms(self):
+        from aleph.model.entity import Entity, Selector
+        q = db.session.query(Selector.text)
+        q = q.join(Entity, Entity.id == Selector.entity_id)
+        q = q.filter(Entity.watchlist_id == self.id)
+        q = q.distinct()
+        return set([r[0] for r in q])
+
     @classmethod
     def by_foreign_id(cls, foreign_id, data, role=None):
-        q = db.session.query(cls)
-        q = q.filter(cls.foreign_id == foreign_id)
+        q = cls.all().filter(cls.foreign_id == foreign_id)
         watchlist = q.first()
         if watchlist is None:
             watchlist = cls.create(data, role)
@@ -65,32 +61,32 @@ class Watchlist(db.Model, TimeStampedModel):
 
     @classmethod
     def by_id(cls, id):
-        return db.session.query(cls).filter_by(id=id).first()
+        return cls.all().filter_by(id=id).first()
 
     @classmethod
-    def all(cls, watchlist_ids=None):
-        q = db.session.query(cls)
-        if watchlist_ids is not None:
-            q = q.filter(cls.id.in_(watchlist_ids))
-        q = q.order_by(cls.id.desc())
-        return q
+    def all_by_ids(cls, ids):
+        return cls.all().filter(cls.id.in_(ids))
 
     @classmethod
     def timestamps(cls):
         q = db.session.query(cls.id, cls.updated_at)
+        q = q.filter(cls.deleted_at == None)  # noqa
         return q.all()
-
-    @property
-    def terms(self):
-        from aleph.model.entity import Entity, Selector
-        q = db.session.query(Selector.text)
-        q = q.join(Entity, Entity.id == Selector.entity_id)
-        q = q.filter(Entity.watchlist_id == self.id)
-        q = q.distinct()
-        return set([r[0] for r in q])
 
     def __repr__(self):
         return '<Watchlist(%r, %r)>' % (self.id, self.label)
 
     def __unicode__(self):
         return self.label
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'api_url': url_for('watchlists.view', id=self.id),
+            'entities_api_url': url_for('entities.index', list=self.id),
+            'label': self.label,
+            'foreign_id': self.foreign_id,
+            'creator_id': self.creator_id,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
+        }

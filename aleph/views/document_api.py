@@ -16,9 +16,8 @@ blueprint = Blueprint('document', __name__)
 
 @blueprint.route('/api/1/documents', methods=['GET'])
 def index():
-    q = db.session.query(Document)
     sources_ids = match_ids('sources', authz.sources(authz.READ))
-    q = q.filter(Document.source_id.in_(sources_ids))
+    q = Document.all().filter(Document.source_id.in_(sources_ids))
     hashes = request.args.getlist('content_hash')
     if len(hashes):
         q = q.filter(Document.content_hash.in_(hashes))
