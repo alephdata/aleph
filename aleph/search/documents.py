@@ -153,48 +153,47 @@ def filter_query(q, filters, skip=None):
 def text_query(text):
     """ Construct the part of a query which is responsible for finding a
     piece of thext in the selected documents. """
-    text = text.strip()
-    if len(text):
-        q = {
-            "bool": {
-                "minimum_should_match": 1,
-                "should": [
-                    {
-                        "query_string": {
-                            "query": text,
-                            "fields": ['title^15', 'file_name^10',
-                                       'summary^10', 'title_latin',
-                                       'summary_latin'],
-                            "default_operator": "AND",
-                            "use_dis_max": True
-                        }
-                    },
-                    {
-                        "has_child": {
-                            "type": TYPE_RECORD,
-                            "score_mode": "avg",
-                            "query": {
-                                "bool": {
-                                    "should": [
-                                        {
-                                            "query_string": {
-                                                "fields": ["text^5",
-                                                           "text_latin"],
-                                                "query": text,
-                                                "default_operator": "AND",
-                                                "use_dis_max": True
-                                            }
+    if not len(text.strip()):
+        return {'match_all': {}}
+
+    q = {
+        "bool": {
+            "minimum_should_match": 1,
+            "should": [
+                {
+                    "query_string": {
+                        "query": text,
+                        "fields": ['title^15', 'file_name',
+                                   'summary^10', 'title_latin^12',
+                                   'summary_latin^8'],
+                        "default_operator": "AND",
+                        "use_dis_max": True
+                    }
+                },
+                {
+                    "has_child": {
+                        "type": TYPE_RECORD,
+                        "score_mode": "sum",
+                        "query": {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "query_string": {
+                                            "fields": ["text^6",
+                                                       "text_latin^4"],
+                                            "query": text,
+                                            "default_operator": "AND",
+                                            "use_dis_max": True
                                         }
-                                    ]
-                                }
+                                    }
+                                ]
                             }
                         }
                     }
-                ]
-            }
+                }
+            ]
         }
-    else:
-        q = {'match_all': {}}
+    }
     return q
 
 
