@@ -1,6 +1,7 @@
 import logging
 
 from aleph.core import db, url_for
+from aleph.model.validation import validate
 from aleph.model.common import TimeStampedModel, make_token
 
 log = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ class Source(db.Model, TimeStampedModel):
         return src
 
     def update(self, data):
+        validate(data, 'source.json#')
         self.label = data.get('label')
         if 'category' in data:
             self.category = data.get('category')

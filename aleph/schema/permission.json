@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://aleph.grano.cc/operational/permission.json#",
+    "id": "permission.json#",
     "type": "object",
     "properties": {
         "role": {

@@ -1,3 +1,5 @@
+from babel import Locale
+from pycountry import countries
 
 CORE_FACETS = {
     'extension': 'File extension',
@@ -18,3 +20,22 @@ SOURCE_CATEGORIES = {
     'procurement': 'Procurement',
     'grey': 'Grey Literature'
 }
+
+COUNTRY_NAMES = {
+    'zz': 'Global',
+    'xk': 'Kosovo'
+}
+
+for country in countries:
+    COUNTRY_NAMES[country.alpha2.lower()] = country.name
+
+
+LANGUAGE_NAMES = dict(Locale('en').languages.items())
+LANGUAGE_NAMES = {k: v for k, v in LANGUAGE_NAMES.items() if len(k) == 2}
+
+
+PERSON = 'Person'
+COMPANY = 'Company'
+ORGANIZATION = 'Organization'
+OTHER = 'Other'
+ENTITY_CATEGORIES = [PERSON, COMPANY, ORGANIZATION, OTHER]

@@ -6,6 +6,7 @@ from werkzeug.datastructures import MultiDict
 
 from aleph.core import db
 from aleph.model.entity import Entity
+from aleph.model.validation import validate
 from aleph.model.common import TimeStampedModel
 
 
@@ -125,13 +126,14 @@ class Alert(db.Model, TimeStampedModel):
         return q
 
     @classmethod
-    def create(cls, query, custom_label, role):
+    def create(cls, data, role):
+        validate(data, 'alert.json#')
         alert = cls()
         alert.role_id = role.id
-        q = extract_query(query)
+        q = extract_query(data.get('query'))
         alert.query = {k: q.getlist(k) for k in q.keys()}
         alert.signature = query_signature(q)
-        alert.custom_label = custom_label
+        alert.custom_label = data.get('custom_label')
         alert.update()
         return alert
 

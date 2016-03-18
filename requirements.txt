@@ -17,7 +17,6 @@ boto
 requests>=2.5.1
 apikit
 six
-colander>=1.0
 unicodecsv
 urlnorm
 gunicorn

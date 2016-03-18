@@ -1,5 +1,6 @@
-from colander import Invalid
+from flask import request
 from apikit import jsonify
+from jsonschema import ValidationError
 
 from aleph.core import app
 from aleph.views.ui import ui  # noqa
@@ -29,11 +30,19 @@ app.register_blueprint(sources_api)
 app.register_blueprint(alerts_api)
 
 
-@app.errorhandler(Invalid)
-def handle_invalid(exc):
-    exc.node.name = ''
-    data = {
-        'status': 400,
-        'errors': exc.asdict()
-    }
-    return jsonify(data, status=400)
+@app.errorhandler(403)
+def handle_authz_error(err):
+    return jsonify({
+        'status': 'error',
+        'message': 'You are not authorized to do this.',
+        'roles': request.auth_roles,
+        'user': request.auth_user
+    }, status=403)
+
+
+@app.errorhandler(ValidationError)
+def handle_validation_error(err):
+    return jsonify({
+        'status': 'error',
+        'message': err.message
+    }, status=400)

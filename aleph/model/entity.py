@@ -5,8 +5,9 @@ from sqlalchemy.orm import aliased
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
-from aleph.model.forms import EntityForm, CATEGORIES
+from aleph.model.constants import ENTITY_CATEGORIES
 from aleph.model.watchlist import Watchlist
+from aleph.model.validation import validate
 from aleph.model.common import db_compare
 from aleph.model.common import TimeStampedModel
 
@@ -18,7 +19,7 @@ class Entity(db.Model, TimeStampedModel):
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     name = db.Column(db.Unicode)
     data = db.Column('data', JSONB)
-    category = db.Column(db.Enum(*CATEGORIES, name='entity_categories'),
+    category = db.Column(db.Enum(*ENTITY_CATEGORIES, name='entity_categories'),
                          nullable=False)
     watchlist_id = db.Column(db.Integer(), db.ForeignKey('watchlist.id'))
     watchlist = db.relationship(Watchlist, backref=db.backref('entities', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
@@ -50,7 +51,7 @@ class Entity(db.Model, TimeStampedModel):
         return set([s.text for s in self.selectors])
 
     def update(self, data):
-        data = EntityForm().deserialize(data)
+        validate(data, 'entity.json#')
         self.name = data.get('name')
         self.category = data.get('category')
         self.data = data.get('data')

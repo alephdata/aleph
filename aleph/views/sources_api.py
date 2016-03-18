@@ -1,14 +1,12 @@
 from flask import Blueprint
 from apikit import obj_or_404, request_data, Pager, jsonify
 
-from aleph.analyze import analyze_source
-from aleph.validation import validate
-from aleph.model import Source
-from aleph.core import db
 from aleph import authz
+from aleph.core import db
+from aleph.model import Source, validate
+from aleph.analyze import analyze_source
 
 
-sources_schema = 'https://aleph.grano.cc/operational/source.json#'
 blueprint = Blueprint('sources', __name__)
 
 
@@ -37,9 +35,7 @@ def process(id):
 def update(id):
     authz.require(authz.source_write(id))
     source = obj_or_404(Source.by_id(id))
-    data = request_data()
-    validate(data, sources_schema)
-    source.update(data)
+    source.update(request_data())
     db.session.add(source)
     db.session.commit()
     return view(id)

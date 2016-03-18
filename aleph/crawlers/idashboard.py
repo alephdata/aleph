@@ -6,7 +6,7 @@ import requests
 
 from aleph.core import app, db
 from aleph.model import Watchlist, Permission, Entity
-from aleph.model.forms import PERSON, COMPANY
+from aleph.model.constants import PERSON, COMPANY
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)

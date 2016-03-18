@@ -2,12 +2,11 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, request_data, jsonify
 
-from aleph.model import Role, Permission
-from aleph.core import db
-from aleph.validation import validate
 from aleph import authz
+from aleph.core import db
+from aleph.model import Role, Permission, validate
 
-permissions_schema = 'https://aleph.grano.cc/operational/permission.json#'
+
 blueprint = Blueprint('roles', __name__)
 
 
@@ -79,7 +78,7 @@ def permissions_save(watchlist=None, source=None):
     resource_type = Permission.WATCHLIST if watchlist else Permission.SOURCE
     resource_id = watchlist or source
     data = request_data()
-    validate(data, permissions_schema)
+    validate(data, 'permission.json#')
 
     role = db.session.query(Role).filter(Role.id == data['role']).first()
     if role is None:

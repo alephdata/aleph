@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from aleph.core import db
-from aleph.model.forms import RoleForm
+from aleph.model.validation import validate
 from aleph.model.common import TimeStampedModel
 
 
@@ -37,7 +37,7 @@ class Role(db.Model, TimeStampedModel):
         }
 
     def update(self, data):
-        data = RoleForm().deserialize(data)
+        validate(data, 'role.json#')
         self.name = data.get('name')
         self.email = data.get('email')
 

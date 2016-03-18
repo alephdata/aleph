@@ -4,7 +4,7 @@ import logging
 
 from aleph.core import db
 from aleph.model import Watchlist, Entity, Role, Permission
-from aleph.model.forms import PERSON, ORGANIZATION, OTHER
+from aleph.model.constants import PERSON, ORGANIZATION, OTHER
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)

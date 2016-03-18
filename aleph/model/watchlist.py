@@ -1,11 +1,9 @@
 import logging
 from datetime import datetime
 
-from sqlalchemy import not_
-
 from aleph.core import db, url_for
 from aleph.model.role import Role
-from aleph.model.forms import WatchlistForm
+from aleph.model.validation import validate
 from aleph.model.common import TimeStampedModel
 
 log = logging.getLogger(__name__)
@@ -32,7 +30,7 @@ class Watchlist(db.Model, TimeStampedModel):
         }
 
     def update(self, data):
-        data = WatchlistForm().deserialize(data)
+        validate(data, 'watchlist.json#')
         self.label = data.get('label')
         self.touch()
 

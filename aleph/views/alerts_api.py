@@ -2,12 +2,10 @@ from flask import Blueprint, request
 from apikit import obj_or_404, request_data, jsonify
 
 from aleph import authz
-from aleph.model import Alert
 from aleph.core import db
-from aleph.validation import validate
+from aleph.model import Alert, validate
 from aleph.views.cache import enable_cache
 
-alerts_schema = 'https://aleph.grano.cc/operational/alert.json#'
 blueprint = Blueprint('alerts', __name__)
 
 
@@ -21,10 +19,7 @@ def index():
 @blueprint.route('/api/1/alerts', methods=['POST', 'PUT'])
 def create():
     authz.require(authz.logged_in())
-    data = request_data()
-    validate(data, alerts_schema)
-    alert = Alert.create(data.get('query', {}),
-                         data.get('custom_label'),
+    alert = Alert.create(request_data(),
                          request.auth_role)
     db.session.commit()
     return view(alert.id)

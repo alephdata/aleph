@@ -3,9 +3,9 @@ from pprint import pprint  # noqa
 import requests
 import logging
 
-from aleph.core import app, db
+from aleph.core import app
 from aleph.model import Watchlist, Entity, Permission
-from aleph.model.forms import PERSON, ORGANIZATION, COMPANY, OTHER
+from aleph.model.constants import PERSON, ORGANIZATION, COMPANY, OTHER
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
