@@ -12,7 +12,7 @@ def sources(action):
     if not hasattr(request, 'auth_sources'):
         request.auth_sources = {READ: set(), WRITE: set()}
         if is_admin():
-            for source_id, in db.session.query(Source.id):
+            for source_id, in Source.all_ids():
                 request.auth_sources[READ].add(source_id)
                 request.auth_sources[WRITE].add(source_id)
         else:
@@ -31,8 +31,7 @@ def watchlists(action):
     if not hasattr(request, 'auth_watchlists'):
         request.auth_watchlists = {READ: set(), WRITE: set()}
         if is_admin():
-            q = db.session.query(Watchlist.id)
-            q = q.filter(Watchlist.deleted_at == None)  # noqa
+            q = Watchlist.all_ids().filter(Watchlist.deleted_at == None)  # noqa
             for wl_id, in q:
                 request.auth_watchlists[READ].add(wl_id)
                 request.auth_watchlists[WRITE].add(wl_id)

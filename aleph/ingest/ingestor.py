@@ -22,7 +22,7 @@ class Ingestor(object):
 
     def create_document(self, meta, type=None):
         if meta.content_hash:
-            q = db.session.query(Document)
+            q = Document.all()
             if meta.foreign_id:
                 q = q.filter(Document.foreign_id == meta.foreign_id)
             else:

@@ -117,7 +117,7 @@ def analyze(foreign_id=None):
 @manager.command
 def index(foreign_id=None):
     """Index documents in the given source (or throughout)."""
-    q = db.session.query(Document.id)
+    q = Document.all_ids()
     if foreign_id:
         source = Source.by_foreign_id(foreign_id)
         if source is None:

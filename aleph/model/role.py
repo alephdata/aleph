@@ -34,10 +34,7 @@ class Role(db.Model, SoftDeleteModel):
 
     @classmethod
     def notifiable(cls):
-        q = db.session.query(cls.id)
-        q = q.filter_by(cls.deleted_at == None)  # noqa
-        q = q.filter(cls.email != None)  # noqa
-        return q
+        return cls.all_ids().filter(cls.email != None)  # noqa
 
     @classmethod
     def by_id(cls, id):

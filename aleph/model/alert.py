@@ -108,9 +108,7 @@ class Alert(db.Model, SoftDeleteModel):
 
     @classmethod
     def by_role(cls, role):
-        q = cls.all()
-        q = q.filter(cls.role_id == role.id)
-        return q
+        return cls.all().filter(cls.role_id == role.id)
 
     @classmethod
     def create(cls, data, role):
@@ -126,9 +124,7 @@ class Alert(db.Model, SoftDeleteModel):
 
     @classmethod
     def exists(cls, query, role):
-        q = db.session.query(cls.id)
-        q = q.filter(cls.deleted_at == None)  # noqa
-        q = q.filter(cls.role_id == role.id)
+        q = cls.all_ids().filter(cls.role_id == role.id)
         q = q.filter(cls.signature == query_signature(query))
         return q.scalar()
 
