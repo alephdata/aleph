@@ -22,6 +22,8 @@ install:
   - pip install -r requirements.txt
   - pip install -e .
   - pip install psycopg2 coveralls
+  - npm install -g bower
+  - bower install
 before_script:
   - psql -c 'create database aleph_test;' -U postgres
   - cp $TRAVIS_BUILD_DIR/test_settings.py.tmpl $TRAVIS_BUILD_DIR/test_settings.py
