@@ -5,7 +5,7 @@ cache:
 python:
   - "2.7"
 services:
-  - postgresql
+#  - postgresql
   - elasticsearch
 addons:
   postgresql: "9.4.1"
