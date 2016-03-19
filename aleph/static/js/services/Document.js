@@ -5,7 +5,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Session',
   return {
     get: function(id) {
       var dfd = $q.defer(),
-          url = url = '/api/1/documents/' + id;
+          url = '/api/1/documents/' + id;
       Session.get().then(function(session) {
         $http.get(url, {cache: true}).then(function(res) {
           dfd.resolve(res.data);
@@ -36,6 +36,17 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Session',
         } else {
           dfd.resolve({});
         }
+      });
+      return dfd.promise;
+    },
+    getPage: function(documentId, pageNumber) {
+      var dfd = $q.defer(),
+          page = parseInt(pageNumber, 10) || 1,
+          url = '/api/1/documents/' + documentId + '/pages/' + page;
+      $http.get(url, {cache: true}).then(function(res) {
+        dfd.resolve(res.data);
+      }, function(err) {
+        dfd.reject(err);
       });
       return dfd.promise;
     }

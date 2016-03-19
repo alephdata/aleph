@@ -30,7 +30,7 @@ def get_page(document_id, number):
     q = q.filter(DocumentPage.number == number)
     page = q.first()
     if page is None:
-        raise NotFound("No such page: %s" % page)
+        raise NotFound("No such page: %s" % number)
     return document, page
 
 

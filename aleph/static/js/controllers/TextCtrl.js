@@ -3,9 +3,11 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
     function($scope, $location, $http, metadata, Authz, Document, Title, data, pages) {
 
   $scope.doc = data.doc;
+  $scope.pageText = data.page.text;
   $scope.pages = pages;
 
   $scope.loading = true;
+  $scope.viewText = $location.search().view == 'text';
   $scope.pageNum = $location.search().page || 1;
   $scope.textQuery = $location.search().dq;
   $scope.reportLoading(true);
@@ -22,14 +24,24 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
     $scope.reportLoading(false);
   }
 
+  $scope.toggleViewText = function() {
+    $scope.viewText = !$scope.viewText;
+    var q = $location.search();
+    q.view = $scope.viewText ? 'text' : null;
+    $location.search(q);
+  }
+
   $scope.$watch('pageNum', function(pg) {
     var q = $location.search();
     q.page = pg;
     $location.search(q);
+    Document.getPage(data.doc.id, pg).then(function(page) {
+      $scope.pageText = page.text;
+    });
   });
 
-  $scope.setPage = function(page) {
-    $scope.pageNum = page;
+  $scope.setPage = function(pageNum) {
+    $scope.pageNum = pageNum;
   };
 
   $scope.backToSearch = function() {
