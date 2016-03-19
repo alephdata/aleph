@@ -1,9 +1,14 @@
 language: python
+cache:
+  - apt
+  - pip
 python:
   - "2.7"
 services:
   - postgresql
   - elasticsearch
+addons:
+  postgresql: "9.4.1"
 env:
   - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
 before_install:
@@ -17,6 +22,7 @@ before_script:
   - psql -c 'create database aleph_test;' -U postgres
   - cp $TRAVIS_BUILD_DIR/test_settings.py.tmpl $TRAVIS_BUILD_DIR/test_settings.py
   - nosetests --version
+  - psql --version
 script:
   - nosetests --with-coverage --cover-package=aleph
 after_success:
