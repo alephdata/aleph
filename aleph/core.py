@@ -15,43 +15,51 @@ from apikit.jsonify import JSONEncoder
 
 from aleph import default_settings, archive
 
-
-app = Flask('aleph')
-app.config.from_object(default_settings)
-app.config.from_envvar('ALEPH_SETTINGS', silent=True)
-
-app_name = app.config.get('APP_NAME')
-
-oauth = OAuth(app)
+db = SQLAlchemy()
+migrate = Migrate()
+mail = Mail()
+celery = Celery('aleph')
+assets = Environment()
+oauth = OAuth()
 oauth_provider = oauth.remote_app('provider', app_key='OAUTH')
+admin = Admin(template_mode='bootstrap3')
 
-mail = Mail(app)
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db, directory=app.config.get('ALEMBIC_DIR'))
-admin = Admin(app, name=app_name, template_mode='bootstrap3')
+def create_app(config={}):
+    app = Flask('aleph')
+    app.config.from_object(default_settings)
+    app.config.from_envvar('ALEPH_SETTINGS', silent=True)
+    app_name = app.config.get('APP_NAME')
 
-queue_name = app_name + '_q'
-app.config['CELERY_DEFAULT_QUEUE'] = queue_name
-app.config['CELERY_QUEUES'] = (
-    Queue(queue_name, Exchange(queue_name), routing_key=queue_name),
-)
+    if not app.debug and app.config.get('MAIL_ADMINS'):
+        credentials = (app.config.get('MAIL_USERNAME'),
+                       app.config.get('MAIL_PASSWORD'))
+        mail_handler = SMTPHandler(app.config.get('MAIL_SERVER'),
+                                   app.config.get('MAIL_FROM'),
+                                   app.config.get('MAIL_ADMINS'),
+                                   '[%s] Crash report' % app_name,
+                                   credentials=credentials,
+                                   secure=())
+        mail_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(mail_handler)
 
-celery = Celery(app_name, broker=app.config['CELERY_BROKER_URL'])
-celery.config_from_object(app.config)
-assets = Environment(app)
+    queue_name = app_name + '_q'
+    app.config['CELERY_DEFAULT_QUEUE'] = queue_name
+    app.config['CELERY_QUEUES'] = (
+        Queue(queue_name, Exchange(queue_name), routing_key=queue_name),
+    )
+    celery.conf.update(app.config)
+    celery.conf.update({
+        'BROKER_URL': app.config['CELERY_BROKER_URL']
+    })
 
-if not app.debug and app.config.get('MAIL_ADMINS'):
-    credentials = (app.config.get('MAIL_USERNAME'),
-                   app.config.get('MAIL_PASSWORD'))
-    mail_handler = SMTPHandler(app.config.get('MAIL_SERVER'),
-                               app.config.get('MAIL_FROM'),
-                               app.config.get('MAIL_ADMINS'),
-                               '[%s] Crash report' % app_name,
-                               credentials=credentials,
-                               secure=())
-    mail_handler.setLevel(logging.ERROR)
-    app.logger.addHandler(mail_handler)
+    migrate.init_app(app, db, directory=app.config.get('ALEMBIC_DIR'))
+    oauth.init_app(app)
+    mail.init_app(app)
+    db.init_app(app)
+    assets.init_app(app)
+    admin.init_app(app)
+    return app
 
 
 def get_config(name, default=None):
@@ -68,7 +76,8 @@ def get_es():
 
 
 def get_es_index():
-    return app.config.get('ELASTICSEARCH_INDEX', app_name)
+    app = current_app._get_current_object()
+    return app.config.get('ELASTICSEARCH_INDEX', app.config.get('APP_NAME'))
 
 
 def get_archive():

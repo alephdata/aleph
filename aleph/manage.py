@@ -6,7 +6,7 @@ from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 from flask.ext.migrate import MigrateCommand
 
-from aleph.core import app
+from aleph.core import create_app
 from aleph.model import db, upgrade_db, Source, Document
 from aleph.views import mount_app_blueprints, assets
 from aleph.analyze import analyze_source
@@ -21,10 +21,11 @@ from aleph.crawlers.mf import MetaFolderCrawler
 
 log = logging.getLogger('aleph')
 
+app = create_app()
+mount_app_blueprints(app)
 manager = Manager(app)
 manager.add_command('assets', ManageAssets(assets))
 manager.add_command('db', MigrateCommand)
-mount_app_blueprints(app)
 
 
 @manager.command
