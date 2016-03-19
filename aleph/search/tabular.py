@@ -1,5 +1,5 @@
 from aleph.index import TYPE_RECORD
-from aleph.core import get_es, get_es_index, url_for
+from aleph.core import get_es, get_es_index
 from aleph.search.util import add_filter
 from pprint import pprint  # noqa
 
@@ -58,7 +58,7 @@ def tabular_query(document_id, sheet, args):
     }
 
 
-def execute_tabular_query(document_id, table_id, args, query):
+def execute_tabular_query(query):
     """Execute a query against records and return a set of results."""
     result = get_es().search(index=get_es_index(), doc_type=TYPE_RECORD,
                              body=query)
@@ -71,18 +71,6 @@ def execute_tabular_query(document_id, table_id, args, query):
         'total': hits.get('total'),
         'next': None
     }
-    next_offset = output['offset'] + output['limit']
-    if output['total'] > next_offset:
-        params = {'offset': next_offset}
-        for k, v in args.iterlists():
-            if k in ['offset']:
-                continue
-            params[k] = v
-        output['next'] = url_for('documents_api.rows',
-                                 document_id=document_id,
-                                 table_id=table_id,
-                                 **params)
-
     for rec in hits.get('hits', []):
         record = rec.get('_source').get('raw')
         record['_id'] = rec.get('_source', {}).get('row_id')

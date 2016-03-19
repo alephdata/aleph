@@ -66,7 +66,7 @@ def records_query(document_id, args, size=5, snippet_size=100):
     }
 
 
-def execute_records_query(document_id, args, query):
+def execute_records_query(query):
     """Execute a query against records and return a set of results."""
     result = get_es().search(index=get_es_index(), doc_type=TYPE_RECORD,
                              body=query)
@@ -79,17 +79,6 @@ def execute_records_query(document_id, args, query):
         'total': hits.get('total'),
         'next': None
     }
-    next_offset = output['offset'] + output['limit']
-    if output['total'] > next_offset:
-        params = {'offset': next_offset}
-        for k, v in args.iterlists():
-            if k in ['offset']:
-                continue
-            params[k] = v
-        output['next'] = url_for('search_api.record',
-                                 document_id=document_id,
-                                 **params)
-
     for rec in hits.get('hits', []):
         record = rec.get('_source')
         record['score'] = rec.get('_score')

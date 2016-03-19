@@ -34,3 +34,15 @@ def add_filter(q, filter_):
 def clean_highlight(hlt):
     hlt = MARKS.sub('.', hlt)
     return hlt.strip()
+
+
+def next_params(args, result):
+    """Get the parameters for making a next link."""
+    next_offset = result['offset'] + result['limit']
+    if result['total'] > next_offset:
+        params = {'offset': next_offset}
+        for k, v in args.iterlists():
+            if k in ['offset']:
+                continue
+            params[k] = v
+        return params

@@ -2,11 +2,12 @@ from werkzeug.exceptions import BadRequest
 from flask import Blueprint, redirect, send_file, request
 from apikit import jsonify, Pager, get_limit, get_offset
 
-from aleph.core import get_archive
+from aleph.core import get_archive, url_for
 from aleph import authz
 from aleph.model import Document
 from aleph.views.cache import enable_cache
 from aleph.search.tabular import tabular_query, execute_tabular_query
+from aleph.search.util import next_params
 from aleph.views.util import get_document, match_ids
 from aleph.views.util import get_tabular, get_page
 
@@ -84,5 +85,10 @@ def rows(document_id, table_id):
     query = tabular_query(document_id, table_id, request.args)
     query['size'] = get_limit(default=100)
     query['from'] = get_offset()
-    return jsonify(execute_tabular_query(document_id, table_id,
-                                         request.args, query))
+
+    result = execute_tabular_query(query)
+    params = next_params(request.args, result)
+    if params is not None:
+        result['next'] = url_for('documents_api.rows', document_id=document_id,
+                                 table_id=table_id, **params)
+    return jsonify(result)

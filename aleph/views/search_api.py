@@ -3,12 +3,14 @@ from apikit import jsonify
 from apikit import get_limit, get_offset
 
 from aleph import authz
-
+from aleph.core import url_for
+from aleph.model import Alert
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document
 from aleph.search import documents_query, execute_documents_query
 from aleph.search import records_query, execute_records_query
-from aleph.model import Alert
+from aleph.search.util import next_params
+
 
 blueprint = Blueprint('search_api', __name__)
 
@@ -24,6 +26,9 @@ def query():
     result['alert'] = None
     if authz.logged_in():
         result['alert'] = Alert.exists(request.args, request.auth_role)
+    params = next_params(request.args, result)
+    if params is not None:
+        result['next'] = url_for('search_api.query', **params)
     return jsonify(result)
 
 
@@ -39,5 +44,9 @@ def records(document_id):
         })
     query['size'] = get_limit(default=30)
     query['from'] = get_offset()
-    res = execute_records_query(document.id, request.args, query)
-    return jsonify(res)
+    result = execute_records_query(query)
+    params = next_params(request.args, result)
+    if params is not None:
+        result['next'] = url_for('search_api.record', document_id=document_id,
+                                 **params)
+    return jsonify(result)

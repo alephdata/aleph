@@ -237,15 +237,6 @@ def execute_documents_query(args, q):
         'watchlists': {}
     }
     convert_aggregations(result, output, args)
-    next_offset = output['offset'] + output['limit']
-    if output['total'] > next_offset:
-        params = {'offset': next_offset}
-        for k, v in args.iterlists():
-            if k in ['offset']:
-                continue
-            params[k] = v
-        output['next'] = url_for('search_api.query', **params)
-
     sub_queries = []
     for doc in hits.get('hits', []):
         document = doc.get('_source')
