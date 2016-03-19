@@ -1,0 +1,82 @@
+
+- model: aleph.model.source.Source
+  records:
+    - id: 1000
+      label: Public Test Source
+      category: news
+      foreign_id: test_public
+    - id: 2000
+      label: Private Test Source
+      category: grey
+      foreign_id: test_private
+
+- model: aleph.model.permission.Permission
+  records:
+    - id: 100000
+      role_id: 1
+      read: true
+      write: false
+      resource_id: 1000
+      resource_type: 'source'
+    - id: 100001
+      role_id: 2
+      read: true
+      write: false
+      resource_id: 1000
+      resource_type: 'source'
+
+- model: aleph.model.document.Document
+  records:
+    - id: 1000
+      content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8291
+      foreign_id: test1
+      type: text
+      source_id: 1000
+      _meta:
+        title: Foo Document
+        file_name: foo.txt
+        extension: txt
+        languages: ['en']
+    - id: 1001
+      content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8292
+      foreign_id: test2
+      type: text
+      source_id: 2000
+      _meta:
+        title: Secret Document
+        file_name: bar.txt
+        extension: txt
+        languages: ['en']
+    - id: 1002
+      content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8294
+      foreign_id: test3
+      type: text
+      source_id: 1000
+      _meta:
+        title: Does not mention fruit
+        file_name: qux.txt
+        extension: txt
+        languages: ['ru']
+
+- model: aleph.model.document.DocumentPage
+  records:
+    - id: 1000
+      document_id: 1000
+      number: 1
+      text: >
+        This is a document about a banana!
+    - id: 1001
+      document_id: 1000
+      number: 2
+      text: >
+        It has two pages in total.
+    - id: 1002
+      document_id: 1001
+      number: 1
+      text: >
+        TOP SECRET BANANA SECRETS
+    - id: 1003
+      document_id: 1002
+      number: 1
+      text: >
+        This document makes no mention of specific fruit whatsoever.

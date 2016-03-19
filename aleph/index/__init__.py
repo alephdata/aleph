@@ -29,6 +29,10 @@ def upgrade_search():
                                  doc_type=TYPE_RECORD)
 
 
+def optimize_search():
+    get_es().indices.optimize(index=get_es_index())
+
+
 def delete_index():
     get_es().indices.delete(get_es_index(), ignore=[404])
 

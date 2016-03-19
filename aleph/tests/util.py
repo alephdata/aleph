@@ -2,10 +2,12 @@ import os
 import shutil
 from tempfile import mkdtemp
 from flask.ext.testing import TestCase as FlaskTestCase
+from flask.ext.fixtures import loaders, load_fixtures
 
-from aleph.model import Role, create_system_roles
-from aleph.index import delete_index, init_search
-from aleph.core import db, get_es, get_es_index, create_app
+from aleph.model import Role, Document, create_system_roles
+from aleph.index import delete_index, init_search, optimize_search
+from aleph.analyze import analyze_document
+from aleph.core import db, create_app
 from aleph.views import mount_app_blueprints
 
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
@@ -45,6 +47,15 @@ class TestCase(FlaskTestCase):
                              Role.system(Role.SYSTEM_USER), role.id]
             sess['user'] = role.id
 
+    def load_fixtures(self, file_name, process_documents=True):
+        filepath = os.path.abspath(os.path.join(FIXTURES, file_name))
+        load_fixtures(db, loaders.load(filepath))
+        db.session.commit()
+        if process_documents:
+            for doc_id, in Document.all_ids():
+                analyze_document(doc_id)
+            optimize_search()
+
     def setUp(self):
         try:
             os.makedirs(self.temp_dir)
@@ -55,7 +66,6 @@ class TestCase(FlaskTestCase):
         db.drop_all()
         db.create_all()
         create_system_roles()
-        self.es = get_es()
 
     def tearDown(self):
         db.session.close()
