@@ -5,18 +5,22 @@ cache:
 python:
   - "2.7"
 services:
-#  - postgresql
+  - postgresql
   - elasticsearch
 addons:
-  postgresql: "9.4.1"
+  postgresql: "9.4"
+  apt:
+    packages:
+      - python-software-properties
+      - libtesseract-dev
 env:
   - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
-before_install:
-  - virtualenv ./pyenv --distribute
-  - source ./pyenv/bin/activate
+# before_install:
+#   - virtualenv ./pyenv --distribute
+#   - source ./pyenv/bin/activate
 install:
-  - sudo apt-get install python-software-properties libtesseract-dev
-  - pip install -r requirements.txt -e .
+  - pip install -r requirements.txt
+  - pip install -e .
   - pip install psycopg2 coveralls
 before_script:
   - psql -c 'create database aleph_test;' -U postgres
