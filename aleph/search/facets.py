@@ -74,6 +74,7 @@ def convert_aggregations(result, output, args):
     entities = entities.get('entities', {})
     output['entities'] = convert_entities(entities)
 
+    output['facets'] = {}
     for facet in args.getlist('facet'):
         value = aggs.get(facet)
         data = {

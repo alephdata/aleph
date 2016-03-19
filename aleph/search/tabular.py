@@ -1,25 +1,17 @@
+from pprint import pprint  # noqa
+
 from aleph.index import TYPE_RECORD
 from aleph.search.util import add_filter, execute_basic
-from pprint import pprint  # noqa
+from aleph.search.fragments import text_query_string, match_all
 
 
 def tabular_query(document_id, sheet, args):
     scored = False
-    q = {
-        'match_all': {}
-    }
-
+    q = match_all()
     text = args.get('q', '').strip()
     if len(text):
         scored = True
-        q = {
-            'query_string': {
-                'query': text,
-                'fields': ['text^10', 'text_latin'],
-                'default_operator': 'AND',
-                'use_dis_max': True
-            }
-        }
+        q = text_query_string(text)
 
     try:
         rows = [int(r) for r in args.getlist('row')]

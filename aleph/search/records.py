@@ -1,5 +1,6 @@
 from aleph.model import Entity
 from aleph.index import TYPE_RECORD
+from aleph.search.fragments import text_query_string
 from aleph.search.util import execute_basic
 
 
@@ -7,14 +8,7 @@ def records_query(document_id, args, size=5, snippet_size=100):
     shoulds = []
     text = args.get('q', '').strip()
     if len(text):
-        shoulds.append({
-            'query_string': {
-                'query': text,
-                'fields': ['text^10', 'text_latin'],
-                'default_operator': 'AND',
-                'use_dis_max': True
-            }
-        })
+        shoulds.append(text_query_string(text))
 
     entities = Entity.by_id_set(args.getlist('entity'))
     for entity in entities.values():

@@ -9,6 +9,8 @@ from aleph import authz
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import add_filter, authz_filter, clean_highlight
 from aleph.search.util import execute_basic
+from aleph.search.fragments import text_query_string, meta_query_string
+from aleph.search.fragments import match_all, child_record
 from aleph.search.facets import convert_aggregations
 from aleph.search.records import records_query
 
@@ -155,48 +157,21 @@ def filter_query(q, filters, skip=None):
 def text_query(text):
     """ Construct the part of a query which is responsible for finding a
     piece of thext in the selected documents. """
-    if not len(text.strip()):
-        return {'match_all': {}}
-
-    q = {
+    if text is None or not len(text.strip()):
+        return match_all()
+    return {
         "bool": {
             "minimum_should_match": 1,
             "should": [
-                {
-                    "query_string": {
-                        "query": text,
-                        "fields": ['title^15', 'file_name',
-                                   'summary^10', 'title_latin^12',
-                                   'summary_latin^8'],
-                        "default_operator": "AND",
-                        "use_dis_max": True
+                meta_query_string(text),
+                child_record({
+                    "bool": {
+                        "should": [text_query_string(text)]
                     }
-                },
-                {
-                    "has_child": {
-                        "type": TYPE_RECORD,
-                        "score_mode": "sum",
-                        "query": {
-                            "bool": {
-                                "should": [
-                                    {
-                                        "query_string": {
-                                            "fields": ["text^6",
-                                                       "text_latin^4"],
-                                            "query": text,
-                                            "default_operator": "AND",
-                                            "use_dis_max": True
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                }
+                })
             ]
         }
     }
-    return q
 
 
 def run_sub_queries(output, sub_queries):
