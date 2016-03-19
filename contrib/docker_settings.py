@@ -18,11 +18,8 @@ SQLALCHEMY_DATABASE_URI = os.environ.get('ALEPH_DATABASE_URI')
 PREFERRED_URL_SCHEME = os.environ.get('ALEPH_URL_SCHEME')
 
 MAIL_FROM = os.environ.get('MAIL_FROM')
-MAIL_HOST = os.environ.get('MAIL_HOST')
 MAIL_SERVER = os.environ.get('MAIL_HOST')
 MAIL_ADMINS = [os.environ.get('MAIL_ADMIN')]
-MAIL_CREDENTIALS = (os.environ.get('MAIL_USERNAME'),
-                    os.environ.get('MAIL_PASSWORD'))
 MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
 MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 

@@ -46,8 +46,9 @@ assets = Environment(app)
 archive = archive.from_config(app.config)
 
 if not app.debug and app.config.get('MAIL_ADMINS'):
-    credentials = app.config.get('MAIL_CREDENTIALS', ())
-    mail_handler = SMTPHandler(app.config.get('MAIL_HOST'),
+    credentials = (app.config.get('MAIL_USERNAME'),
+                   app.config.get('MAIL_PASSWORD'))
+    mail_handler = SMTPHandler(app.config.get('MAIL_SERVER'),
                                app.config.get('MAIL_FROM'),
                                app.config.get('MAIL_ADMINS'),
                                '[%s] Crash report' % app_name,
