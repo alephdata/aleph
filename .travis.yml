@@ -10,7 +10,7 @@ before_install:
   - virtualenv ./pyenv --distribute
   - source ./pyenv/bin/activate
 install:
-  - sudo apt-get install python-software-properties
+  - sudo apt-get install python-software-properties libtesseract-dev
   - pip install -r requirements.txt -e .
   - pip install psycopg2 coveralls
 before_script:
