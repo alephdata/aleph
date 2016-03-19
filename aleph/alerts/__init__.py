@@ -2,7 +2,7 @@ import logging
 from urllib import urlencode
 from flask import request, render_template, current_app
 
-from aleph.core import get_config, db, celery, system_role
+from aleph.core import get_config, db, celery
 from aleph.model import Role, Alert
 from aleph.notify import notify_role
 from aleph.search.documents import documents_query
@@ -19,8 +19,9 @@ def check_alerts():
             request.auth_role = role
             request.logged_in = True
             # FIXME: can't re-gain access to implicit oauth rules.
-            request.auth_roles = [system_role(Role.SYSTEM_USER),
-                                  system_role(Role.SYSTEM_GUEST),
+            # -> https://github.com/pudo/aleph/issues/14
+            request.auth_roles = [Role.system(Role.SYSTEM_USER),
+                                  Role.system(Role.SYSTEM_GUEST),
                                   role.id]
             check_role_alerts(role)
 

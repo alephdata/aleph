@@ -61,26 +61,12 @@ def get_config(name, default=None):
     return current_app.config.get(name, default)
 
 
-def system_role(role_name):
-    from aleph.model import Role
-    if not hasattr(app, '_authz_roles'):
-        app._authz_roles = {}
-        role = Role.load_or_create(Role.SYSTEM_GUEST, Role.SYSTEM,
-                                   'All visitors')
-        app._authz_roles[Role.SYSTEM_GUEST] = role.id
-        role = Role.load_or_create(Role.SYSTEM_USER, Role.SYSTEM,
-                                   'Logged-in users')
-        app._authz_roles[Role.SYSTEM_USER] = role.id
-        db.session.commit()
-    return app._authz_roles.get(role_name)
-
-
 def url_for(*a, **kw):
     """Generate external URLs with HTTPS (if configured)."""
     try:
         kw['_external'] = True
-        if app.config.get('PREFERRED_URL_SCHEME'):
-            kw['_scheme'] = app.config.get('PREFERRED_URL_SCHEME')
+        if get_config('PREFERRED_URL_SCHEME'):
+            kw['_scheme'] = get_config('PREFERRED_URL_SCHEME')
         return flask_url_for(*a, **kw)
     except RuntimeError:
         return None

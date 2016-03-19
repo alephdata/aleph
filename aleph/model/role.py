@@ -1,4 +1,5 @@
 from uuid import uuid4
+from flask import current_app
 
 from aleph.core import db
 from aleph.model.validation import validate
@@ -66,6 +67,15 @@ class Role(db.Model, SoftDeleteModel):
         db.session.add(role)
         db.session.flush()
         return role
+
+    @classmethod
+    def system(cls, foreign_id):
+        if not hasattr(current_app, '_authz_roles'):
+            current_app._authz_roles = {}
+        if foreign_id not in current_app._authz_roles:
+            role = cls.by_foreign_id(foreign_id)
+            current_app._authz_roles[foreign_id] = role.id
+        return current_app._authz_roles[foreign_id]
 
     def __repr__(self):
         return '<Role(%r,%r)>' % (self.id, self.foreign_id)
