@@ -8,6 +8,7 @@ from aleph.core import get_es, get_es_index, url_for
 from aleph import authz
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import add_filter, authz_filter, clean_highlight
+from aleph.search.util import execute_basic
 from aleph.search.facets import convert_aggregations
 from aleph.search.records import records_query
 
@@ -28,6 +29,7 @@ def documents_query(args, fields=None, facets=True, newer_than=None):
     text = args.get('q', '').strip()
     q = text_query(text)
     q = authz_filter(q)
+
     if newer_than is not None:
         q = add_filter(q, {
             "range": {
@@ -221,21 +223,9 @@ def run_sub_queries(output, sub_queries):
                     doc['records']['total'] = sqhits.get('total', 0)
 
 
-def execute_documents_query(args, q):
+def execute_documents_query(args, query):
     """Execute the query and return a set of results."""
-    result = get_es().search(index=get_es_index(), doc_type=TYPE_DOCUMENT,
-                             body=q)
-    hits = result.get('hits', {})
-    output = {
-        'status': 'ok',
-        'results': [],
-        'offset': q['from'],
-        'limit': q['size'],
-        'total': hits.get('total'),
-        'next': None,
-        'facets': {},
-        'watchlists': {}
-    }
+    result, hits, output = execute_basic(TYPE_DOCUMENT, query)
     convert_aggregations(result, output, args)
     sub_queries = []
     for doc in hits.get('hits', []):
@@ -259,18 +249,12 @@ def execute_documents_query(args, q):
     return output
 
 
-def execute_documents_alert_query(args, q):
+def execute_documents_alert_query(args, query):
     """Execute the query and return a set of results."""
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
-    q['size'] = 50
-    result = get_es().search(index=get_es_index(), doc_type=TYPE_DOCUMENT,
-                             body=q)
-    hits = result.get('hits', {})
-    output = {
-        'total': hits.get('total'),
-        'results': [],
-    }
+    query['size'] = 50
+    result, hits, output = execute_basic(TYPE_DOCUMENT, query)
     convert_aggregations(result, output, args)
     sub_queries = []
     for doc in hits.get('hits', []):

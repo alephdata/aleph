@@ -1,6 +1,6 @@
 from aleph.model import Entity
 from aleph.index import TYPE_RECORD
-from aleph.core import get_es, get_es_index, url_for
+from aleph.search.util import execute_basic
 
 
 def records_query(document_id, args, size=5, snippet_size=100):
@@ -68,17 +68,7 @@ def records_query(document_id, args, size=5, snippet_size=100):
 
 def execute_records_query(query):
     """Execute a query against records and return a set of results."""
-    result = get_es().search(index=get_es_index(), doc_type=TYPE_RECORD,
-                             body=query)
-    hits = result.get('hits', {})
-    output = {
-        'status': 'ok',
-        'results': [],
-        'offset': query['from'],
-        'limit': query['size'],
-        'total': hits.get('total'),
-        'next': None
-    }
+    result, hits, output = execute_basic(TYPE_RECORD, query)
     for rec in hits.get('hits', []):
         record = rec.get('_source')
         record['score'] = rec.get('_score')
