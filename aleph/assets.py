@@ -47,6 +47,7 @@ def compile_assets(app):
                         filters='uglifyjs',
                         output='assets/app.js')
 
+    assets._named_bundles = {}
     assets.register('base', base_assets)
     assets.register('angular', angular_assets)
     assets.register('app', app_assets)

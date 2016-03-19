@@ -25,6 +25,10 @@ def clear_session():
 def upgrade_db():
     log.info("Beginning database migration...")
     migrate.upgrade()
+    create_system_roles
+
+
+def create_system_roles():
     log.info("Creating system roles...")
     Role.load_or_create(Role.SYSTEM_GUEST, Role.SYSTEM, 'All visitors')
     Role.load_or_create(Role.SYSTEM_USER, Role.SYSTEM, 'Logged-in users')

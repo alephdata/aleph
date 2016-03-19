@@ -5,6 +5,7 @@ Flask-Migrate==1.8.0
 flask-oauthlib
 Flask-SQLAlchemy==2.1
 Flask-Script==2.0.5
+Flask-Testing==0.4.2
 Flask-Mail
 celery>=3.1.17
 elasticsearch
@@ -38,7 +39,7 @@ rarfile==2.7
 xlrd==0.9.3
 jsonschema
 functools32
-flower
 pyyaml
 dateparser
 jdatetime==1.7.2
+coverage

@@ -45,7 +45,7 @@ def handle_authz_error(err):
         'status': 'error',
         'message': 'You are not authorized to do this.',
         'roles': request.auth_roles,
-        'user': request.auth_user
+        'user': request.auth_role
     }, status=403)
 
 

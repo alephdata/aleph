@@ -28,7 +28,11 @@ admin = Admin(template_mode='bootstrap3')
 def create_app(config={}):
     app = Flask('aleph')
     app.config.from_object(default_settings)
-    app.config.from_envvar('ALEPH_SETTINGS', silent=True)
+    if config.get('TESTING'):
+        app.config.from_envvar('ALEPH_TEST_SETTINGS', silent=True)
+    else:
+        app.config.from_envvar('ALEPH_SETTINGS', silent=True)
+    app.config.update(config)
     app_name = app.config.get('APP_NAME')
 
     if not app.debug and app.config.get('MAIL_ADMINS'):
@@ -60,6 +64,14 @@ def create_app(config={}):
     assets.init_app(app)
     admin.init_app(app)
     return app
+
+
+@migrate.configure
+def configure_alembic(config):
+    app = current_app._get_current_object()
+    config.set_main_option('sqlalchemy.url',
+                           app.config['SQLALCHEMY_DATABASE_URI'])
+    return config
 
 
 def get_config(name, default=None):
