@@ -1,6 +1,6 @@
 import logging
 from logging.handlers import SMTPHandler
-from flask import Flask
+from flask import Flask, current_app
 from flask import url_for as flask_url_for
 from flask_admin import Admin
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -55,6 +55,10 @@ if not app.debug and app.config.get('MAIL_ADMINS'):
                                secure=())
     mail_handler.setLevel(logging.ERROR)
     app.logger.addHandler(mail_handler)
+
+
+def get_config(name, default=None):
+    return current_app.config.get(name, default)
 
 
 def system_role(role_name):

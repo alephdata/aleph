@@ -1,8 +1,11 @@
-from flask import request, Response
+from flask import request, Response, Blueprint
 from apikit import cache_hash
 
-from aleph.core import app
 from aleph import authz
+from aleph.core import get_config
+
+
+blueprint = Blueprint('cache_api', __name__)
 
 
 class NotModified(Exception):
@@ -13,7 +16,7 @@ def handle_not_modified(exc):
     return Response(status=304)
 
 
-@app.before_request
+@blueprint.before_app_request
 def setup_caching():
     request._http_cache = False
     request._http_etag = None
@@ -30,7 +33,7 @@ def enable_cache(vary_user=False, vary=None, server_side=True):
     if vary_user:
         cache_parts.extend((request.auth_roles))
 
-    request._http_cache = app.config.get('CACHE')
+    request._http_cache = get_config('CACHE')
     request._http_etag = cache_hash(*cache_parts)
     request._http_server = server_side
 
@@ -38,7 +41,7 @@ def enable_cache(vary_user=False, vary=None, server_side=True):
         raise NotModified()
 
 
-@app.after_request
+@blueprint.after_app_request
 def cache_response(resp):
     if request.endpoint == 'static':
         enable_cache()

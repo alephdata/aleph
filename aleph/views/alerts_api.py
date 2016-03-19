@@ -6,7 +6,7 @@ from aleph.core import db
 from aleph.model import Alert
 from aleph.views.cache import enable_cache
 
-blueprint = Blueprint('alerts', __name__)
+blueprint = Blueprint('alerts_api', __name__)
 
 
 @blueprint.route('/api/1/alerts', methods=['GET'])

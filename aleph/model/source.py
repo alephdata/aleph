@@ -74,7 +74,7 @@ class Source(db.Model, DatedModel):
 
     def to_dict(self):
         return {
-            'api_url': url_for('sources.view', id=self.id),
+            'api_url': url_for('sources_api.view', id=self.id),
             'id': self.id,
             'foreign_id': self.foreign_id,
             'label': self.label,

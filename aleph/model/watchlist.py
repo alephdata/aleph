@@ -82,8 +82,7 @@ class Watchlist(db.Model, SoftDeleteModel):
     def to_dict(self):
         return {
             'id': self.id,
-            'api_url': url_for('watchlists.view', id=self.id),
-            'entities_api_url': url_for('entities.index', list=self.id),
+            'api_url': url_for('watchlists_api.view', id=self.id),
             'label': self.label,
             'foreign_id': self.foreign_id,
             'creator_id': self.creator_id,

@@ -3,15 +3,14 @@ from apikit import jsonify
 from apikit import get_limit, get_offset
 
 from aleph import authz
-from aleph.model.constants import CORE_FACETS, SOURCE_CATEGORIES
-from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
+
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document
 from aleph.search import documents_query, execute_documents_query
 from aleph.search import records_query, execute_records_query
 from aleph.model import Alert
 
-blueprint = Blueprint('search', __name__)
+blueprint = Blueprint('search_api', __name__)
 
 
 @blueprint.route('/api/1/query')
@@ -42,15 +41,3 @@ def records(document_id):
     query['from'] = get_offset()
     res = execute_records_query(document.id, request.args, query)
     return jsonify(res)
-
-
-@blueprint.route('/api/1/metadata')
-def metadata():
-    enable_cache(server_side=False)
-    return jsonify({
-        'status': 'ok',
-        'fields': CORE_FACETS,
-        'source_categories': SOURCE_CATEGORIES,
-        'countries': COUNTRY_NAMES,
-        'languages': LANGUAGE_NAMES
-    })

@@ -153,7 +153,7 @@ class Entity(db.Model, SoftDeleteModel):
             'id': self.id,
             'name': self.name,
             'foreign_id': self.foreign_id,
-            # 'api_url': url_for('entities.view', id=self.id),
+            # 'api_url': url_for('entities_api.view', id=self.id),
             'category': self.category,
             'watchlist_id': self.watchlist_id,
             'created_at': self.created_at,

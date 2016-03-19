@@ -7,7 +7,7 @@ from aleph.model import Source
 from aleph.analyze import analyze_source
 
 
-blueprint = Blueprint('sources', __name__)
+blueprint = Blueprint('sources_api', __name__)
 
 
 @blueprint.route('/api/1/sources', methods=['GET'])

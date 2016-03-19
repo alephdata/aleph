@@ -6,8 +6,9 @@ from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 from flask.ext.migrate import MigrateCommand
 
+from aleph.core import app
 from aleph.model import db, upgrade_db, Source, Document
-from aleph.views import app, assets
+from aleph.views import mount_app_blueprints, assets
 from aleph.analyze import analyze_source
 from aleph.alerts import check_alerts
 from aleph.index import init_search, delete_index, upgrade_search
@@ -23,6 +24,7 @@ log = logging.getLogger('aleph')
 manager = Manager(app)
 manager.add_command('assets', ManageAssets(assets))
 manager.add_command('db', MigrateCommand)
+mount_app_blueprints(app)
 
 
 @manager.command

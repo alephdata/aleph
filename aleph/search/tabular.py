@@ -77,7 +77,7 @@ def execute_tabular_query(document_id, table_id, args, query):
             if k in ['offset']:
                 continue
             params[k] = v
-        output['next'] = url_for('document.rows',
+        output['next'] = url_for('documents_api.rows',
                                  document_id=document_id,
                                  table_id=table_id,
                                  **params)

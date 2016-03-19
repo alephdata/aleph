@@ -7,7 +7,7 @@ from aleph.analyze import analyze_entity
 from aleph.views.cache import enable_cache
 from aleph.views.util import match_ids
 
-blueprint = Blueprint('entities', __name__)
+blueprint = Blueprint('entities_api', __name__)
 
 
 @blueprint.route('/api/1/entities', methods=['GET'])

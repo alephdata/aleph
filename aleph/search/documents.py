@@ -243,7 +243,7 @@ def execute_documents_query(args, q):
             if k in ['offset']:
                 continue
             params[k] = v
-        output['next'] = url_for('search.query', **params)
+        output['next'] = url_for('search_api.query', **params)
 
     sub_queries = []
     for doc in hits.get('hits', []):
@@ -257,9 +257,9 @@ def execute_documents_query(args, q):
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))
 
-        document['api_url'] = url_for('document.view',
+        document['api_url'] = url_for('documents_api.view',
                                       document_id=doc.get('_id'))
-        document['data_url'] = url_for('document.file',
+        document['data_url'] = url_for('documents_api.file',
                                        document_id=doc.get('_id'))
         output['results'].append(document)
 

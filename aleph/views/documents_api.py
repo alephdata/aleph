@@ -2,7 +2,7 @@ from werkzeug.exceptions import BadRequest
 from flask import Blueprint, redirect, send_file, request
 from apikit import jsonify, Pager, get_limit, get_offset
 
-from aleph.core import archive, db
+from aleph.core import archive
 from aleph import authz
 from aleph.model import Document
 from aleph.views.cache import enable_cache
@@ -11,7 +11,7 @@ from aleph.views.util import get_document, match_ids
 from aleph.views.util import get_tabular, get_page
 
 
-blueprint = Blueprint('document', __name__)
+blueprint = Blueprint('documents_api', __name__)
 
 
 @blueprint.route('/api/1/documents', methods=['GET'])

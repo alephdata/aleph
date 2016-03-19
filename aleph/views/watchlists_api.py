@@ -6,7 +6,7 @@ from aleph.model import Watchlist, db
 from aleph.analyze import analyze_terms
 from aleph.views.cache import enable_cache
 
-blueprint = Blueprint('watchlists', __name__)
+blueprint = Blueprint('watchlists_api', __name__)
 
 
 @blueprint.route('/api/1/watchlists', methods=['GET'])

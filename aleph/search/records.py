@@ -85,7 +85,7 @@ def execute_records_query(document_id, args, query):
             if k in ['offset']:
                 continue
             params[k] = v
-        output['next'] = url_for('search.record',
+        output['next'] = url_for('search_api.record',
                                  document_id=document_id,
                                  **params)
 

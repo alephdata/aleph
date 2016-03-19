@@ -7,7 +7,7 @@ from aleph.core import db
 from aleph.model import Role, Permission, validate
 
 
-blueprint = Blueprint('roles', __name__)
+blueprint = Blueprint('roles_api', __name__)
 
 
 @blueprint.route('/api/1/roles', methods=['GET'])

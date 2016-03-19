@@ -10,7 +10,7 @@ from aleph.views.cache import enable_cache
 
 
 log = logging.getLogger(__name__)
-blueprint = Blueprint('sessions', __name__)
+blueprint = Blueprint('sessions_api', __name__)
 
 
 @oauth_provider.tokengetter
@@ -68,14 +68,14 @@ def status():
 
 @blueprint.route('/api/1/sessions/login')
 def login():
-    return oauth_provider.authorize(callback=url_for('sessions.callback'))
+    return oauth_provider.authorize(callback=url_for('.callback'))
 
 
 @blueprint.route('/api/1/sessions/logout')
 def logout():
     authz.require(authz.logged_in())
     session.clear()
-    return redirect(url_for('ui'))
+    return redirect(url_for('base_api.ui'))
 
 
 @blueprint.route('/api/1/sessions/callback')
@@ -84,7 +84,7 @@ def callback():
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)
         # FIXME: notify the user, somehow.
-        return redirect(url_for('ui'))
+        return redirect(url_for('base_api.ui'))
 
     session['oauth'] = resp
     session['roles'] = [system_role(Role.SYSTEM_USER)]
@@ -112,4 +112,4 @@ def callback():
     session['user'] = role.id
     db.session.commit()
     log.info("Logged in: %r", role)
-    return redirect(url_for('ui'))
+    return redirect(url_for('base_api.ui'))

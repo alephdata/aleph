@@ -13,7 +13,7 @@ class BaseModelView(sqla.ModelView):
 
     def inaccessible_callback(self, name, **kwargs):
         # redirect to login page if user doesn't have access
-        return redirect(url_for('ui'))
+        return redirect(url_for('base_api.ui'))
 
 
 class RoleView(BaseModelView):
