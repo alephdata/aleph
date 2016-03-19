@@ -89,9 +89,9 @@ class EntityAnalyzer(Analyzer):
         return self._matchers
 
     def tag_text(self, text, entities):
+        text = normalize(text)
         if text is None:
             return
-        text = normalize(text)
         for rex, matches in self.matchers:
             for match in rex.finditer(text):
                 match = match.group(2)
@@ -106,10 +106,9 @@ class EntityAnalyzer(Analyzer):
 
     def analyze_tabular(self, document, meta):
         entities = defaultdict(int)
-        for table in document.tables:
-            for row in table:
-                for text in row.values():
-                    self.tag_text(text, entities)
+        for record in document.records:
+            for text in record.data.values():
+                self.tag_text(text, entities)
         self.save(document, meta, entities)
 
     def save(self, document, meta, entities):

@@ -13,10 +13,7 @@ log = logging.getLogger(__name__)
 
 
 def query_doc_ids(query):
-    query = {
-        'query': query,
-        '_source': False
-    }
+    query = {'query': query, '_source': False}
     for row in scan_iter(query):
         yield row.get('_id')
 

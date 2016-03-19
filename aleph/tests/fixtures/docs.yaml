@@ -10,6 +10,15 @@
       category: grey
       foreign_id: test_private
 
+- model: aleph.model.watchlist.Watchlist
+  records:
+    - id: 1000
+      label: Public Watchlist
+      foreign_id: test_public
+    - id: 2000
+      label: Private Watchlist
+      foreign_id: test_private
+
 - model: aleph.model.permission.Permission
   records:
     - id: 100000
@@ -24,6 +33,40 @@
       write: false
       resource_id: 1000
       resource_type: 'source'
+    - id: 100002
+      role_id: 1
+      read: true
+      write: false
+      resource_id: 1000
+      resource_type: 'watchlist'
+    - id: 100003
+      role_id: 2
+      read: true
+      write: false
+      resource_id: 1000
+      resource_type: 'watchlist'
+
+- model: aleph.model.entity.Entity
+  records:
+    - id: 1000
+      name: KwaZulu
+      category: Company
+      foreign_id: kwa11
+      watchlist_id: 1000
+    - id: 2000
+      name: BaNana
+      category: Person
+      foreign_id: banana
+      watchlist_id: 2000
+
+- model: aleph.model.entity.Selector
+  records:
+    - id: 1000
+      text: KwaZulu
+      entity_id: 1000
+    - id: 2000
+      text: BaNana
+      entity_id: 1000
 
 - model: aleph.model.document.Document
   records:
@@ -57,6 +100,33 @@
         file_name: qux.txt
         extension: txt
         languages: ['ru']
+    - id: 1003
+      content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8294
+      foreign_id: test4
+      type: tabular
+      source_id: 1000
+      _meta:
+        title: Tabular thingie
+        file_name: test.csv
+        extension: csv
+        languages: ['en']
+        tables:
+          - sheet: 0
+            sheet_name: "South Africa Places"
+            columns:
+              - label: ISSID
+                name: ISSID
+              - label: Municipality_metro
+                name: Municipality_metro
+              - label: TownCity_Name
+                name: TownCity_Name
+              - label: Coordinates
+                name: Coordinates
+              - label: Start_Date
+                name: Start_Date
+              - label: End_Date
+                name: End_Date
+
 
 - model: aleph.model.document.DocumentPage
   records:
@@ -80,3 +150,116 @@
       number: 1
       text: >
         This document makes no mention of specific fruit whatsoever.
+
+- model: aleph.model.document.DocumentRecord
+  records:
+    - id: 10000
+      document_id: 1003
+      sheet: 0
+      row_id: 1
+      data:
+        ISSID: 261
+        Municipality_metro: Western Cape - City of Cape Town
+        TownCity_Name: Cape Town
+        Coordinates: -34.039985,18.67393
+        Start_Date: 07/01/2013 00:00
+        End_Date: 07/01/2013 00:00
+    - id: 10001
+      document_id: 1003
+      sheet: 0
+      row_id: 2
+      data:
+        ISSID: 269
+        Municipality_metro: Gauteng - City of Tshwane
+        TownCity_Name: Hammanskraal
+        Coordinates: -25.399557,28.259501
+        Start_Date: 07/01/2013 00:00
+        End_Date: 07/03/2013 00:00
+    - id: 10002
+      document_id: 1003
+      sheet: 0
+      row_id: 3
+      data:
+        ISSID: 262
+        Municipality_metro: Gauteng - City of Tshwane
+        TownCity_Name: Pretoria
+        Coordinates: -25.743229,28.246858
+        Start_Date: 07/02/2013 00:00
+        End_Date: 07/02/2013 00:00
+    - id: 10003
+      document_id: 1003
+      sheet: 0
+      row_id: 4
+      data:
+        ISSID: 263
+        Municipality_metro: Western Cape - City of Cape Town
+        TownCity_Name: Cape Town
+        Coordinates: -33.903026,18.638944
+        Start_Date: 07/02/2013 00:00
+        End_Date: 07/02/2013 00:00
+    - id: 10004
+      document_id: 1003
+      sheet: 0
+      row_id: 5
+      data:
+        ISSID: 272
+        Municipality_metro: KwaZulu Natal - eThekwini
+        TownCity_Name: Durban
+        Coordinates: -29.802604,30.981924
+        Start_Date: 07/02/2013 00:00
+        End_Date: 07/05/2013 00:00
+    - id: 10005
+      document_id: 1003
+      sheet: 0
+      row_id: 6
+      data:
+        ISSID: 294
+        Municipality_metro: Limpopo - Thulamela
+        TownCity_Name: Thohoyandou
+        Coordinates: -22.974917,30.462563
+        Start_Date: 07/03/2013 00:00
+        End_Date: 07/03/2013 00:00
+    - id: 10006
+      document_id: 1003
+      sheet: 0
+      row_id: 7
+      data:
+        ISSID: 342
+        Municipality_metro: Gauteng - City of Johannesburg
+        TownCity_Name: Johannesburg
+        Coordinates: -26.204463,28.039799
+        Start_Date: 07/03/2013 00:00
+        End_Date: 07/03/2013 00:00
+    - id: 10007
+      document_id: 1003
+      sheet: 0
+      row_id: 8
+      data:
+        ISSID: 268
+        Municipality_metro: North West - Tlokwe City Council
+        TownCity_Name: Potchefstroom
+        Coordinates: -26.71663,27.098297
+        Start_Date: 07/04/2013 00:00
+        End_Date: 07/04/2013 00:00
+    - id: 10008
+      document_id: 1003
+      sheet: 0
+      row_id: 9
+      data:
+        ISSID: 341
+        Municipality_metro: Western Cape - City of Cape Town
+        TownCity_Name: Cape Town
+        Coordinates: -33.675483,18.99115
+        Start_Date: 07/04/2013 00:00
+        End_Date: 07/04/2013 00:00
+    - id: 10009
+      document_id: 1003
+      sheet: 0
+      row_id: 10
+      data:
+        ISSID: 288
+        Municipality_metro: Free State - Fezile Dabi
+        TownCity_Name: Kroonstad
+        Coordinates: -27.42612,27.198029
+        Start_Date: 07/05/2013 00:00
+        End_Date: 07/06/2013 00:00
