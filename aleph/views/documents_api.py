@@ -2,7 +2,7 @@ from werkzeug.exceptions import BadRequest
 from flask import Blueprint, redirect, send_file, request
 from apikit import jsonify, Pager, get_limit, get_offset
 
-from aleph.core import archive
+from aleph.core import get_archive
 from aleph import authz
 from aleph.model import Document
 from aleph.views.cache import enable_cache
@@ -37,11 +37,11 @@ def view(document_id):
 def file(document_id):
     document = get_document(document_id)
     enable_cache(server_side=True)
-    url = archive.generate_url(document.meta)
+    url = get_archive().generate_url(document.meta)
     if url is not None:
         return redirect(url)
 
-    local_path = archive.load_file(document.meta)
+    local_path = get_archive().load_file(document.meta)
     fh = open(local_path, 'rb')
     return send_file(fh, as_attachment=True,
                      attachment_filename=document.meta.file_name,
@@ -55,11 +55,11 @@ def pdf(document_id):
     if document.type != Document.TYPE_TEXT:
         raise BadRequest("PDF is only available for text documents")
     pdf = document.meta.pdf
-    url = archive.generate_url(pdf)
+    url = get_archive().generate_url(pdf)
     if url is not None:
         return redirect(url)
 
-    local_path = archive.load_file(pdf)
+    local_path = get_archive().load_file(pdf)
     fh = open(local_path, 'rb')
     return send_file(fh, mimetype=pdf.mime_type)
 

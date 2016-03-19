@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from werkzeug.datastructures import MultiDict
 
-from aleph.core import es, es_index, url_for
+from aleph.core import get_es, get_es_index, url_for
 from aleph import authz
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import add_filter, authz_filter, clean_highlight
@@ -199,8 +199,8 @@ def text_query(text):
 
 def run_sub_queries(output, sub_queries):
     if len(sub_queries):
-        res = es.msearch(index=es_index, doc_type=TYPE_RECORD,
-                         body='\n'.join(sub_queries))
+        res = get_es().msearch(index=get_es_index(), doc_type=TYPE_RECORD,
+                               body='\n'.join(sub_queries))
         for doc in output['results']:
             for sq in res.get('responses', []):
                 sqhits = sq.get('hits', {})
@@ -223,7 +223,8 @@ def run_sub_queries(output, sub_queries):
 
 def execute_documents_query(args, q):
     """Execute the query and return a set of results."""
-    result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
+    result = get_es().search(index=get_es_index(), doc_type=TYPE_DOCUMENT,
+                             body=q)
     hits = result.get('hits', {})
     output = {
         'status': 'ok',
@@ -272,7 +273,8 @@ def execute_documents_alert_query(args, q):
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
     q['size'] = 50
-    result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
+    result = get_es().search(index=get_es_index(), doc_type=TYPE_DOCUMENT,
+                             body=q)
     hits = result.get('hits', {})
     output = {
         'total': hits.get('total'),

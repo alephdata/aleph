@@ -7,7 +7,7 @@ from lxml.html.clean import Cleaner
 from extractors import extract_pdf, extract_image
 from extractors import document_to_pdf, image_to_pdf, html_to_pdf
 
-from aleph.core import archive
+from aleph.core import get_archive
 from aleph.model import db, Document, DocumentPage
 from aleph.ingest.ingestor import Ingestor
 
@@ -31,7 +31,7 @@ class TextIngestor(Ingestor):
         return page
 
     def store_pdf(self, meta, pdf_path, move=True):
-        archive.archive_file(pdf_path, meta.pdf, move=move)
+        get_archive().archive_file(pdf_path, meta.pdf, move=move)
 
 
 class PDFIngestor(TextIngestor):

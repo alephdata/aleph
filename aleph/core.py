@@ -11,11 +11,12 @@ from flask_mail import Mail
 from kombu import Exchange, Queue
 from celery import Celery
 from elasticsearch import Elasticsearch
+from apikit.jsonify import JSONEncoder
 
 from aleph import default_settings, archive
 
 
-app = Flask(__name__)
+app = Flask('aleph')
 app.config.from_object(default_settings)
 app.config.from_envvar('ALEPH_SETTINGS', silent=True)
 
@@ -28,10 +29,6 @@ mail = Mail(app)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db, directory=app.config.get('ALEMBIC_DIR'))
-
-es = Elasticsearch(app.config.get('ELASTICSEARCH_URL'), timeout=120)
-es_index = app.config.get('ELASTICSEARCH_INDEX', app_name)
-
 admin = Admin(app, name=app_name, template_mode='bootstrap3')
 
 queue_name = app_name + '_q'
@@ -43,7 +40,6 @@ app.config['CELERY_QUEUES'] = (
 celery = Celery(app_name, broker=app.config['CELERY_BROKER_URL'])
 celery.config_from_object(app.config)
 assets = Environment(app)
-archive = archive.from_config(app.config)
 
 if not app.debug and app.config.get('MAIL_ADMINS'):
     credentials = (app.config.get('MAIL_USERNAME'),
@@ -60,6 +56,26 @@ if not app.debug and app.config.get('MAIL_ADMINS'):
 
 def get_config(name, default=None):
     return current_app.config.get(name, default)
+
+
+def get_es():
+    app = current_app._get_current_object()
+    if not hasattr(app, '_es_instance'):
+        app._es_instance = Elasticsearch(app.config.get('ELASTICSEARCH_URL'),
+                                         timeout=120)
+        app._es_instance.json_encoder = JSONEncoder
+    return app._es_instance
+
+
+def get_es_index():
+    return app.config.get('ELASTICSEARCH_INDEX', app_name)
+
+
+def get_archive():
+    app = current_app._get_current_object()
+    if not hasattr(app, '_aleph_archive'):
+        app._aleph_archive = archive.from_config(app.config)
+    return app._aleph_archive
 
 
 def url_for(*a, **kw):
