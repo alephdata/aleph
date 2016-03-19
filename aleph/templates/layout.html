@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="{{ config.APP_FAVICON }}">
-    <base href="{{url_for('ui')}}">
+    <base href="{{url_for('.ui')}}">
   </head>
   <body ng-controller="AppCtrl">
     <div id="page" ng-show="session.roles" ng-cloak>
@@ -26,7 +26,7 @@
           <div id="navbar" class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
               <li ng-show="!session.logged_in">
-                <a href="{{url_for('sessions.login')}}" target="_self">
+                <a href="{{url_for('sessions_api.login')}}" target="_self">
                   <i class="fa fa-sign-in"></i> Sign in
                 </a>
               </li>
@@ -41,7 +41,7 @@
                 </a>
               </li>
               <li ng-show="session.logged_in">
-                <a href="{{url_for('sessions.logout')}}" target="_self">
+                <a href="{{url_for('sessions_api.logout')}}" target="_self">
                   <i class="fa fa-sign-out"></i> Logout
                 </a>
               </li>
