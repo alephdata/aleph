@@ -13,13 +13,10 @@ addons:
     packages:
       - python-software-properties
       - libtesseract-dev
-      - ruby-sass
 env:
   - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
-# before_install:
-#   - virtualenv ./pyenv --distribute
-#   - source ./pyenv/bin/activate
 install:
+  - gem install sass
   - pip install -r requirements.txt
   - pip install -e .
   - pip install psycopg2 coveralls
