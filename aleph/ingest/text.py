@@ -82,6 +82,17 @@ class DocumentIngestor(PDFIngestor):
         self.extract_pdf_alternative(meta, pdf_path)
 
 
+class PresentationIngestor(DocumentIngestor):
+    MIME_TYPES = ['application/vnd.ms-powerpoint.presentation',
+                  'application/vnd.ms-powerpoint',
+                  'application/vnd.openxmlformats-officedocument.presentationml.presentation',  # noqa
+                  'application/vnd.openxmlformats-officedocument.presentationml.slideshow',  # noqa
+                  'application/vnd.oasis.opendocument.presentation',
+                  'application/vnd.sun.xml.impress']
+    EXTENSIONS = ['ppt', 'pptx', 'odp', 'pot', 'pps', 'ppa']
+    BASE_SCORE = 5
+
+
 class HtmlIngestor(DocumentIngestor):
     MIME_TYPES = ['text/html']
     EXTENSIONS = ['html', 'htm', 'asp', 'aspx', 'jsp']
