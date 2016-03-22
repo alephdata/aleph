@@ -6,11 +6,13 @@ from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 from flask.ext.migrate import MigrateCommand
 
+from aleph.core import create_app
 from aleph.model import db, upgrade_db, Source, Document
-from aleph.views import app, assets
+from aleph.views import mount_app_blueprints, assets
 from aleph.analyze import analyze_source
 from aleph.alerts import check_alerts
-from aleph.index import init_search, delete_index, index_document
+from aleph.index import init_search, delete_index, upgrade_search
+from aleph.index import index_document
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
@@ -19,6 +21,8 @@ from aleph.crawlers.mf import MetaFolderCrawler
 
 log = logging.getLogger('aleph')
 
+app = create_app()
+mount_app_blueprints(app)
 manager = Manager(app)
 manager.add_command('assets', ManageAssets(assets))
 manager.add_command('db', MigrateCommand)
@@ -27,7 +31,7 @@ manager.add_command('db', MigrateCommand)
 @manager.command
 def sources():
     """List all sources."""
-    for source in db.session.query(Source):
+    for source in Source.all():
         print source.id, source.foreign_id, source.label
 
 
@@ -116,7 +120,7 @@ def analyze(foreign_id=None):
 @manager.command
 def index(foreign_id=None):
     """Index documents in the given source (or throughout)."""
-    q = db.session.query(Document.id)
+    q = Document.all_ids()
     if foreign_id:
         source = Source.by_foreign_id(foreign_id)
         if source is None:
@@ -133,6 +137,7 @@ def index(foreign_id=None):
 def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_db()
+    upgrade_search()
 
 
 @manager.command

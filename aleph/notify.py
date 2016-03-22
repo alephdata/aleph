@@ -1,7 +1,7 @@
 import logging
 from flask_mail import Message
 
-from aleph.core import app, mail
+from aleph.core import get_config, mail
 
 log = logging.getLogger(__name__)
 
@@ -11,9 +11,9 @@ def notify_role(role, subject, html):
         log.error("Role does not have E-Mail: %r", role)
         return
 
-    sender = '%s <%s>' % (app.config.get('APP_TITLE'),
-                          app.config.get('MAIL_FROM'))
-    subject = '[%s] %s' % (app.config.get('APP_TITLE'), subject)
+    sender = '%s <%s>' % (get_config('APP_TITLE'),
+                          get_config('MAIL_FROM'))
+    subject = '[%s] %s' % (get_config('APP_TITLE'), subject)
     msg = Message(subject=subject,
                   sender=sender,
                   recipients=[role.email])

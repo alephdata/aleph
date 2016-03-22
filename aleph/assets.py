@@ -1,7 +1,7 @@
 import os
 from flask.ext.assets import Bundle
 
-from aleph.core import assets, app
+from aleph.core import assets
 
 base_assets = Bundle(
     'vendor/jquery/dist/jquery.js',
@@ -26,17 +26,6 @@ angular_assets = Bundle(
     output='assets/angular.js'
 )
 
-js_files = []
-for (root, dirs, files) in os.walk(os.path.join(app.static_folder, 'js')):
-    for file_name in sorted(files):
-        file_path = os.path.relpath(os.path.join(root, file_name),
-                                    app.static_folder)
-        js_files.append(file_path)
-
-app_assets = Bundle(*js_files,
-                    filters='uglifyjs',
-                    output='assets/app.js')
-
 css_assets = Bundle(
     'style/aleph.scss',
     depends=['**/*.scss'],
@@ -44,7 +33,22 @@ css_assets = Bundle(
     output='assets/style.css'
 )
 
-assets.register('base', base_assets)
-assets.register('angular', angular_assets)
-assets.register('app', app_assets)
-assets.register('css', css_assets)
+
+def compile_assets(app):
+    js_files = []
+    js_path = os.path.join(app.static_folder, 'js')
+    for (root, dirs, files) in os.walk(js_path):
+        for file_name in sorted(files):
+            file_path = os.path.relpath(os.path.join(root, file_name),
+                                        app.static_folder)
+            js_files.append(file_path)
+
+    app_assets = Bundle(*js_files,
+                        filters='uglifyjs',
+                        output='assets/app.js')
+
+    assets._named_bundles = {}
+    assets.register('base', base_assets)
+    assets.register('angular', angular_assets)
+    assets.register('app', app_assets)
+    assets.register('css', css_assets)

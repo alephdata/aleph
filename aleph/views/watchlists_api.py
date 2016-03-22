@@ -6,16 +6,16 @@ from aleph.model import Watchlist, db
 from aleph.analyze import analyze_terms
 from aleph.views.cache import enable_cache
 
-blueprint = Blueprint('watchlists', __name__)
+blueprint = Blueprint('watchlists_api', __name__)
 
 
 @blueprint.route('/api/1/watchlists', methods=['GET'])
 def index():
     watchlists = authz.watchlists(authz.READ)
     enable_cache(vary_user=True, vary=watchlists)
-    q = Watchlist.all(watchlist_ids=watchlists)
+    q = Watchlist.all_by_ids(watchlists)
     q = q.order_by(Watchlist.label.asc())
-    return jsonify(Pager(q).to_dict())
+    return jsonify(Pager(q))
 
 
 @blueprint.route('/api/1/watchlists', methods=['POST', 'PUT'])

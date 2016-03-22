@@ -8,7 +8,7 @@ from aleph.model import Entity, Source
 from aleph.search import raw_iter
 from aleph.search import documents_query
 
-blueprint = Blueprint('exports', __name__)
+blueprint = Blueprint('exports_api', __name__)
 
 XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 SKIP_FIELDS = ['summary_latin', 'title_latin', 'content_hash']

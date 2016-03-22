@@ -18,7 +18,7 @@ var loadTabular = ['$http', '$q', '$route', '$location', 'Document',
     q.q = q.dq;
     q.limit = 30;
     q.offset = $location.search().offset || 0;
-    $http.get(rowsUrl, {params: q}).then(function(res) {
+    $http.get(rowsUrl, {cache: true, params: q}).then(function(res) {
       dfd.resolve({
         doc: doc,
         table: table,

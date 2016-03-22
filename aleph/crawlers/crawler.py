@@ -38,8 +38,7 @@ class Crawler(object):
         return Metadata(data=meta)
 
     def foreign_id_exists(self, source, foreign_id):
-        q = db.session.query(Document.id)
-        q = q.filter(Document.source_id == source.id)
+        q = Document.all_ids().filter(Document.source_id == source.id)
         q = q.filter(Document.foreign_id == foreign_id)
         exists = q.first() is not None
         if exists:

@@ -3,20 +3,17 @@ import logging
 from aleph.core import celery
 from aleph.ext import get_analyzers
 from aleph.model import Document, Entity
-from aleph.model import clear_session
+from aleph.search.fragments import text_query_string, meta_query_string
+from aleph.search.fragments import child_record
 from aleph.index import index_document
-from aleph.search import scan_iter, TYPE_RECORD
-from aleph.util import latinize_text
+from aleph.search import scan_iter
 
 
 log = logging.getLogger(__name__)
 
 
 def query_doc_ids(query):
-    query = {
-        'query': query,
-        '_source': False
-    }
+    query = {'query': query, '_source': False}
     for row in scan_iter(query):
         yield row.get('_id')
 
@@ -45,36 +42,16 @@ def analyze_terms(terms, seen=None):
     if seen is None:
         seen = set()
     for term in terms:
-        term = latinize_text(term)
         query = {
             "bool": {
                 "minimum_should_match": 1,
                 "should": [
-                    {
-                        "multi_match": {
-                            "query": term,
-                            "fields": ["title", "summary", "file_name",
-                                       "title_latin", "summary_latin"]
+                    meta_query_string(term, literal=True),
+                    child_record({
+                        "bool": {
+                            "should": [text_query_string(term, literal=True)]
                         }
-                    },
-                    {
-                        "has_child": {
-                            "type": TYPE_RECORD,
-                            "query": {
-                                "bool": {
-                                    "should": [
-                                        {
-                                            "multi_match": {
-                                                "query": term,
-                                                "fields": ["text",
-                                                           "text_latin"]
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
+                    })
                 ]
             }
         }
@@ -86,7 +63,6 @@ def analyze_terms(terms, seen=None):
 
 @celery.task()
 def analyze_document(document_id):
-    clear_session()
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)

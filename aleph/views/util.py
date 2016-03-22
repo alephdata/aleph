@@ -2,7 +2,8 @@ from flask import request
 from werkzeug.exceptions import NotFound, BadRequest
 
 from aleph import authz
-from aleph.model import Document
+from aleph.core import db
+from aleph.model import Document, DocumentPage
 
 
 def get_document(document_id):
@@ -11,6 +12,26 @@ def get_document(document_id):
         raise NotFound()
     authz.require(authz.source_read(document.source_id))
     return document
+
+
+def get_tabular(document_id, table_id):
+    document = get_document(document_id)
+    try:
+        table = document.meta.tables[table_id]
+    except IndexError:
+        raise NotFound("No such table: %s" % table_id)
+    return document, table
+
+
+def get_page(document_id, number):
+    document = get_document(document_id)
+    q = db.session.query(DocumentPage)
+    q = q.filter(DocumentPage.document_id == document_id)
+    q = q.filter(DocumentPage.number == number)
+    page = q.first()
+    if page is None:
+        raise NotFound("No such page: %s" % number)
+    return document, page
 
 
 def match_ids(arg_name, valid_ids):

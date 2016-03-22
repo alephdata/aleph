@@ -1,5 +1,5 @@
 
-<div class="panel panel-default">
+<div class="panel panel-default panel-metadata">
   <div class="panel-heading">
     <strong>Metadata</strong>
   </div>
@@ -29,6 +29,14 @@
       <td>
         <span ng-repeat="cc in doc.countries">
           {{cc | country}}<span ng-if="!$last">;</span>
+        </span>
+      </td>
+    </tr>
+    <tr ng-if="doc.keywords && doc.keywords.length">
+      <th>Keywords</th>
+      <td>
+        <span ng-repeat="kw in doc.keywords">
+          {{kw}}<span ng-if="!$last">;</span>
         </span>
       </td>
     </tr>

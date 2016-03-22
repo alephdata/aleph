@@ -11,6 +11,7 @@ from aleph.model.reference import Reference # noqa
 from aleph.model.watchlist import Watchlist # noqa
 from aleph.model.metadata import Metadata # noqa
 from aleph.model.document import Document, DocumentPage # noqa
+from aleph.model.validation import validate # noqa
 
 log = logging.getLogger(__name__)
 
@@ -23,5 +24,12 @@ def clear_session():
 
 def upgrade_db():
     log.info("Beginning database migration...")
-    # print [migrate.current()]
     migrate.upgrade()
+    create_system_roles
+
+
+def create_system_roles():
+    log.info("Creating system roles...")
+    Role.load_or_create(Role.SYSTEM_GUEST, Role.SYSTEM, 'All visitors')
+    Role.load_or_create(Role.SYSTEM_USER, Role.SYSTEM, 'Logged-in users')
+    db.session.commit()

@@ -4,9 +4,9 @@ from tempfile import mkstemp
 from urlparse import urljoin
 import requests
 
-from aleph.core import app, db
+from aleph.core import get_config, db
 from aleph.model import Watchlist, Permission, Entity
-from aleph.model.forms import PERSON, COMPANY
+from aleph.model.constants import PERSON, COMPANY
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
@@ -21,13 +21,13 @@ class IDBase(Crawler):
 
     @property
     def host(self):
-        return app.config.get('ID_HOST', 'https://investigativedashboard.org/')
+        return get_config('ID_HOST', 'https://investigativedashboard.org/')
 
     @property
     def session(self):
         if not hasattr(self, '_session'):
-            username = app.config.get('ID_USERNAME')
-            password = app.config.get('ID_PASSWORD')
+            username = get_config('ID_USERNAME')
+            password = get_config('ID_PASSWORD')
             sess = requests.Session()
             res = sess.get(urljoin(self.host, '/accounts/login/'))
             data = {'csrfmiddlewaretoken': sess.cookies['csrftoken'],

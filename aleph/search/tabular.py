@@ -1,26 +1,17 @@
-from aleph.index import TYPE_RECORD
-from aleph.core import es, es_index, url_for
-from aleph.search.util import add_filter
 from pprint import pprint  # noqa
+
+from aleph.index import TYPE_RECORD
+from aleph.search.util import add_filter, execute_basic
+from aleph.search.fragments import text_query_string, match_all
 
 
 def tabular_query(document_id, sheet, args):
     scored = False
-    q = {
-        'match_all': {}
-    }
-
+    q = match_all()
     text = args.get('q', '').strip()
     if len(text):
         scored = True
-        q = {
-            'query_string': {
-                'query': text,
-                'fields': ['text^10', 'text_latin'],
-                'default_operator': 'AND',
-                'use_dis_max': True
-            }
-        }
+        q = text_query_string(text)
 
     try:
         rows = [int(r) for r in args.getlist('row')]
@@ -58,30 +49,9 @@ def tabular_query(document_id, sheet, args):
     }
 
 
-def execute_tabular_query(document_id, table_id, args, query):
+def execute_tabular_query(query):
     """Execute a query against records and return a set of results."""
-    result = es.search(index=es_index, doc_type=TYPE_RECORD, body=query)
-    hits = result.get('hits', {})
-    output = {
-        'status': 'ok',
-        'results': [],
-        'offset': query['from'],
-        'limit': query['size'],
-        'total': hits.get('total'),
-        'next': None
-    }
-    next_offset = output['offset'] + output['limit']
-    if output['total'] > next_offset:
-        params = {'offset': next_offset}
-        for k, v in args.iterlists():
-            if k in ['offset']:
-                continue
-            params[k] = v
-        output['next'] = url_for('table.rows',
-                                 document_id=document_id,
-                                 table_id=table_id,
-                                 **params)
-
+    result, hits, output = execute_basic(TYPE_RECORD, query)
     for rec in hits.get('hits', []):
         record = rec.get('_source').get('raw')
         record['_id'] = rec.get('_source', {}).get('row_id')

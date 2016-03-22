@@ -19,6 +19,7 @@ class MetaFolderCrawler(Crawler):
         meta.dates = item.meta.get('dates', [])
         meta.countries = item.meta.get('countries', [])
         meta.languages = item.meta.get('languages', [])
+        meta.keywords = item.meta.get('keywords', [])
         return meta
 
     def crawl_item(self, item, sources, source):

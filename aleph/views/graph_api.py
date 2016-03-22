@@ -9,7 +9,7 @@ from apikit import jsonify, arg_int
 
 from aleph.search import raw_iter, documents_query
 
-blueprint = Blueprint('graph', __name__)
+blueprint = Blueprint('graph_api', __name__)
 
 
 def multigraph_to_weighted(multigraph):

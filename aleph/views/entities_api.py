@@ -3,12 +3,11 @@ from apikit import obj_or_404, jsonify, Pager, request_data
 
 from aleph import authz
 from aleph.model import Entity, db
-from aleph.model.forms import EntityForm
 from aleph.analyze import analyze_entity
 from aleph.views.cache import enable_cache
 from aleph.views.util import match_ids
 
-blueprint = Blueprint('entities', __name__)
+blueprint = Blueprint('entities_api', __name__)
 
 
 @blueprint.route('/api/1/entities', methods=['GET'])
@@ -20,7 +19,7 @@ def index():
 
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
 def create():
-    data = EntityForm().deserialize(request_data())
+    data = request_data()
     watchlist = data.get('watchlist')
     authz.require(watchlist)
     authz.require(authz.watchlist_write(watchlist.id))
@@ -51,7 +50,7 @@ def view(id):
 def update(id):
     entity = obj_or_404(Entity.by_id(id))
     authz.require(authz.watchlist_write(entity.watchlist_id))
-    data = EntityForm().deserialize(request_data())
+    data = request_data()
     watchlist = data.get('watchlist')
     authz.require(watchlist)
     authz.require(authz.watchlist_write(watchlist.id))

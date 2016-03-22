@@ -6,7 +6,8 @@ from werkzeug.datastructures import MultiDict
 
 from aleph.core import db
 from aleph.model.entity import Entity
-from aleph.model.common import TimeStampedModel
+from aleph.model.validation import validate
+from aleph.model.common import SoftDeleteModel
 
 
 def extract_query(q):
@@ -41,7 +42,7 @@ def query_signature(q):
     return out.hexdigest()
 
 
-class Alert(db.Model, TimeStampedModel):
+class Alert(db.Model, SoftDeleteModel):
     """A subscription to notifications on a given query."""
 
     __tablename__ = 'alert'
@@ -52,7 +53,6 @@ class Alert(db.Model, TimeStampedModel):
     signature = db.Column(db.Unicode)
     query = db.Column(JSONB)
     notified_at = db.Column(db.DateTime, nullable=True)
-    deleted_at = db.Column(db.DateTime, nullable=True, default=None)
 
     @property
     def label(self):
@@ -89,6 +89,48 @@ class Alert(db.Model, TimeStampedModel):
             return 'Everything'
         return 'Results %s' % ', '.join(fragments)
 
+    def delete(self):
+        self.deleted_at = datetime.utcnow()
+        db.session.add(self)
+        db.session.flush()
+
+    def update(self):
+        self.notified_at = datetime.utcnow()
+        db.session.add(self)
+        db.session.flush()
+
+    @classmethod
+    def by_id(cls, id, role=None):
+        q = cls.all().filter_by(id=id)
+        if role is not None:
+            q = q.filter(cls.role_id == role.id)
+        return q.first()
+
+    @classmethod
+    def by_role(cls, role):
+        return cls.all().filter(cls.role_id == role.id)
+
+    @classmethod
+    def create(cls, data, role):
+        validate(data, 'alert.json#')
+        alert = cls()
+        alert.role_id = role.id
+        q = extract_query(data.get('query'))
+        alert.query = {k: q.getlist(k) for k in q.keys()}
+        alert.signature = query_signature(q)
+        alert.custom_label = data.get('custom_label')
+        alert.update()
+        return alert
+
+    @classmethod
+    def exists(cls, query, role):
+        q = cls.all_ids().filter(cls.role_id == role.id)
+        q = q.filter(cls.signature == query_signature(query))
+        return q.scalar()
+
+    def __repr__(self):
+        return '<Alert(%r, %r)>' % (self.id, self.query)
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -101,60 +143,3 @@ class Alert(db.Model, TimeStampedModel):
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
-
-    @classmethod
-    def by_id(cls, id, role=None):
-        q = db.session.query(cls).filter_by(id=id)
-        q = q.filter(cls.deleted_at == None)  # noqa
-        if role is not None:
-            q = q.filter(cls.role_id == role.id)
-        return q.first()
-
-    @classmethod
-    def by_role(cls, role):
-        q = db.session.query(cls)
-        q = q.filter(cls.role_id == role.id)
-        return q
-
-    @classmethod
-    def all(cls, role=None):
-        q = db.session.query(cls)
-        q = q.filter(cls.deleted_at == None)  # noqa
-        if role is not None:
-            q = q.filter(cls.role_id == role.id)
-        return q
-
-    @classmethod
-    def create(cls, query, custom_label, role):
-        alert = cls()
-        alert.role_id = role.id
-        q = extract_query(query)
-        alert.query = {k: q.getlist(k) for k in q.keys()}
-        alert.signature = query_signature(q)
-        alert.custom_label = custom_label
-        alert.update()
-        return alert
-
-    @classmethod
-    def exists(cls, query, role):
-        q = db.session.query(cls.id)
-        q = q.filter(cls.deleted_at == None)  # noqa
-        q = q.filter(cls.role_id == role.id)
-        q = q.filter(cls.signature == query_signature(query))
-        return q.scalar()
-
-    def delete(self):
-        self.deleted_at = datetime.utcnow()
-        db.session.add(self)
-        db.session.flush()
-
-    def update(self):
-        self.notified_at = datetime.utcnow()
-        db.session.add(self)
-        db.session.flush()
-
-    def __repr__(self):
-        return '<Alert(%r, %r)>' % (self.id, self.query)
-
-    def __unicode__(self):
-        return self.label

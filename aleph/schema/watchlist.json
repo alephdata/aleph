@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "watchlist.json#",
+    "type": "object",
+    "properties": {
+        "label": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 255
+        }
+    },
+    "required": ["label"]
+}

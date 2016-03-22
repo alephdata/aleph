@@ -2,6 +2,7 @@ import re
 from copy import deepcopy
 
 from aleph import authz
+from aleph.core import get_es, get_es_index
 
 MARKS = re.compile(r'[_\.;,/]{2,}')
 
@@ -34,3 +35,31 @@ def add_filter(q, filter_):
 def clean_highlight(hlt):
     hlt = MARKS.sub('.', hlt)
     return hlt.strip()
+
+
+def execute_basic(doc_type, query):
+    """Common part of running a particular query."""
+    result = get_es().search(index=get_es_index(), doc_type=doc_type,
+                             body=query)
+    hits = result.get('hits', {})
+    output = {
+        'status': 'ok',
+        'results': [],
+        'offset': query.get('from', 0),
+        'limit': query.get('size'),
+        'total': hits.get('total'),
+        'next': None
+    }
+    return result, hits, output
+
+
+def next_params(args, result):
+    """Get the parameters for making a next link."""
+    next_offset = result['offset'] + result['limit']
+    if result['total'] > next_offset:
+        params = {'offset': next_offset}
+        for k, v in args.iterlists():
+            if k in ['offset']:
+                continue
+            params[k] = v
+        return params

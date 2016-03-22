@@ -11,3 +11,5 @@ aleph/static/assets/*
 aleph/static/vendor/*
 
 aleph.env
+test_settings.py
+.coverage

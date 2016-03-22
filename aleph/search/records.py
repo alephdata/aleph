@@ -1,20 +1,14 @@
 from aleph.model import Entity
 from aleph.index import TYPE_RECORD
-from aleph.core import es, es_index, url_for
+from aleph.search.fragments import text_query_string
+from aleph.search.util import execute_basic
 
 
 def records_query(document_id, args, size=5, snippet_size=100):
     shoulds = []
     text = args.get('q', '').strip()
     if len(text):
-        shoulds.append({
-            'query_string': {
-                'query': text,
-                'fields': ['text^10', 'text_latin'],
-                'default_operator': 'AND',
-                'use_dis_max': True
-            }
-        })
+        shoulds.append(text_query_string(text))
 
     entities = Entity.by_id_set(args.getlist('entity'))
     for entity in entities.values():
@@ -66,29 +60,9 @@ def records_query(document_id, args, size=5, snippet_size=100):
     }
 
 
-def execute_records_query(document_id, args, query):
-    """ Execute a query against records and return a set of results. """
-    result = es.search(index=es_index, doc_type=TYPE_RECORD, body=query)
-    hits = result.get('hits', {})
-    output = {
-        'status': 'ok',
-        'results': [],
-        'offset': query['from'],
-        'limit': query['size'],
-        'total': hits.get('total'),
-        'next': None
-    }
-    next_offset = output['offset'] + output['limit']
-    if output['total'] > next_offset:
-        params = {'offset': next_offset}
-        for k, v in args.iterlists():
-            if k in ['offset']:
-                continue
-            params[k] = v
-        output['next'] = url_for('search.record',
-                                 document_id=document_id,
-                                 **params)
-
+def execute_records_query(query):
+    """Execute a query against records and return a set of results."""
+    result, hits, output = execute_basic(TYPE_RECORD, query)
     for rec in hits.get('hits', []):
         record = rec.get('_source')
         record['score'] = rec.get('_score')

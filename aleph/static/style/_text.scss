@@ -6,6 +6,10 @@ canvas#pdf {
     box-shadow: 3px 3px 10px darken($gray-subtle, 20%);
 }
 
+pre {
+    margin-top: 0.5em;
+}
+
 .pages-query {
     .input-group {
         margin-bottom: 0.5em;
@@ -27,5 +31,20 @@ canvas#pdf {
 
     .selected {
         background-color: $gray-subtle;
+    }
+}
+
+.panel-metadata {
+    td {
+        position: relative;
+
+        code {
+            position: absolute;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+            max-width: 95%;
+        }    
     }
 }

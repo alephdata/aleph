@@ -15,7 +15,7 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
       Session.get().then(function(session) {
         $q.all([
           $http.get('/api/1/watchlists?limit=1000&_uid=' + session.cbq),
-          $http.get('/api/1/metadata')
+          $http.get('/api/1/metadata', {cache: true})
         ]).then(function(results) {
             var watchlists = {},
                 watchlistsCount = 0, 
@@ -47,7 +47,7 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
     var getRoles = function() {
       if (rolesDfd === null) {
         rolesDfd = $q.defer();
-        $http.get('/api/1/roles').then(function(res) {
+        $http.get('/api/1/roles', {cache: true}).then(function(res) {
           rolesDfd.resolve(res.data);
         }, function(err) {
           rolesDfd.reject(err);

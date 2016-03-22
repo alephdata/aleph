@@ -3,9 +3,9 @@ from pprint import pprint  # noqa
 import requests
 import logging
 
-from aleph.core import app, db
+from aleph.core import get_config
 from aleph.model import Watchlist, Entity, Permission
-from aleph.model.forms import PERSON, ORGANIZATION, COMPANY, OTHER
+from aleph.model.constants import PERSON, ORGANIZATION, COMPANY, OTHER
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
@@ -19,8 +19,8 @@ SCHEMATA = {
 
 class SpindleCrawler(Crawler):
 
-    URL = app.config.get('SPINDLE_URL')
-    API_KEY = app.config.get('SPINDLE_API_KEY')
+    URL = get_config('SPINDLE_URL')
+    API_KEY = get_config('SPINDLE_API_KEY')
     HEADERS = {'Authorization': 'ApiKey %s' % API_KEY}
 
     def crawl_collection(self, collection):

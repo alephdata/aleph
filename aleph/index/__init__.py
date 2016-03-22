@@ -1,22 +1,19 @@
 import logging
 from hashlib import sha1
-
-from apikit.jsonify import JSONEncoder
 from elasticsearch.helpers import bulk, scan
 
-from aleph.core import celery, es, es_index
-from aleph.model import Document, clear_session
+from aleph.core import celery, get_es, get_es_index
+from aleph.model import Document
 from aleph.util import latinize_text
 from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD
 from aleph.index.mapping import DOCUMENT_MAPPING, RECORD_MAPPING
 
 log = logging.getLogger(__name__)
-es.json_encoder = JSONEncoder
 
 
 def init_search():
     log.info("Creating ElasticSearch index and uploading mapping...")
-    es.indices.create(es_index, body={
+    get_es().indices.create(get_es_index(), body={
         'mappings': {
             TYPE_DOCUMENT: DOCUMENT_MAPPING,
             TYPE_RECORD: RECORD_MAPPING
@@ -24,59 +21,73 @@ def init_search():
     })
 
 
+def upgrade_search():
+    """Add any missing properties to the index mappings."""
+    get_es().indices.put_mapping(index=get_es_index(), body=DOCUMENT_MAPPING,
+                                 doc_type=TYPE_DOCUMENT)
+    get_es().indices.put_mapping(index=get_es_index(), body=RECORD_MAPPING,
+                                 doc_type=TYPE_RECORD)
+
+
+def optimize_search():
+    get_es().indices.optimize(index=get_es_index())
+
+
 def delete_index():
-    es.indices.delete(es_index, ignore=[404])
+    get_es().indices.delete(get_es_index(), ignore=[404])
 
 
 def clear_children(document):
+    """Delete all records associated with the given document."""
     q = {'query': {'term': {'document_id': document.id}},
          '_source': ['_id', 'document_id']}
 
     def gen_deletes():
-            for res in scan(es, query=q, index=es_index,
+            for res in scan(get_es(), query=q, index=get_es_index(),
                             doc_type=[TYPE_RECORD]):
                 yield {
                     '_op_type': 'delete',
-                    '_index': es_index,
+                    '_index': get_es_index(),
                     '_parent': res.get('_source', {}).get('document_id'),
                     '_type': res.get('_type'),
                     '_id': res.get('_id')
                 }
 
     try:
-        bulk(es, gen_deletes(), stats_only=True, chunk_size=2000,
+        bulk(get_es(), gen_deletes(), stats_only=True, chunk_size=2000,
              request_timeout=60.0)
     except Exception as ex:
         log.exception(ex)
 
 
 def delete_source(source_id):
+    """Delete all documents from a particular source."""
     q = {'query': {'term': {'source_id': source_id}}}
 
     def deletes():
             q['_source'] = ['document_id']
-            for res in scan(es, query=q, index=es_index,
+            for res in scan(get_es(), query=q, index=get_es_index(),
                             doc_type=[TYPE_RECORD]):
                 yield {
                     '_op_type': 'delete',
-                    '_index': es_index,
+                    '_index': get_es_index(),
                     '_parent': res.get('_source', {}).get('document_id'),
                     '_type': res.get('_type'),
                     '_id': res.get('_id')
                 }
 
             q['_source'] = []
-            for res in scan(es, query=q, index=es_index,
+            for res in scan(get_es(), query=q, index=get_es_index(),
                             doc_type=[TYPE_DOCUMENT]):
                 yield {
                     '_op_type': 'delete',
-                    '_index': es_index,
+                    '_index': get_es_index(),
                     '_type': res.get('_type'),
                     '_id': res.get('_id')
                 }
 
     try:
-        bulk(es, deletes(), stats_only=True, chunk_size=2000,
+        bulk(get_es(), deletes(), stats_only=True, chunk_size=2000,
              request_timeout=60.0)
     except Exception as ex:
         log.exception(ex)
@@ -90,7 +101,7 @@ def generate_pages(document):
         yield {
             '_id': tid,
             '_type': TYPE_RECORD,
-            '_index': es_index,
+            '_index': get_es_index(),
             '_parent': document.id,
             '_source': {
                 'type': 'page',
@@ -112,7 +123,7 @@ def generate_records(document):
         yield {
             '_id': record.tid,
             '_type': TYPE_RECORD,
-            '_index': es_index,
+            '_index': get_es_index(),
             '_parent': unicode(document.id),
             '_source': {
                 'type': 'row',
@@ -144,7 +155,7 @@ def generate_entities(document):
 
 @celery.task()
 def index_document(document_id):
-    clear_session()
+    # clear_session()
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
@@ -154,14 +165,14 @@ def index_document(document_id):
     data['entities'] = generate_entities(document)
     data['title_latin'] = latinize_text(data.get('title'))
     data['summary_latin'] = latinize_text(data.get('summary'))
-    es.index(index=es_index, doc_type=TYPE_DOCUMENT, body=data,
-             id=document.id)
-    clear_children(document)
+    get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
+                   id=document.id)
 
+    clear_children(document)
     if document.type == Document.TYPE_TEXT:
-        bulk(es, generate_pages(document), stats_only=True,
+        bulk(get_es(), generate_pages(document), stats_only=True,
              chunk_size=2000, request_timeout=60.0)
 
     if document.type == Document.TYPE_TABULAR:
-        bulk(es, generate_records(document), stats_only=True,
+        bulk(get_es(), generate_records(document), stats_only=True,
              chunk_size=2000, request_timeout=60.0)

@@ -1,12 +1,13 @@
 import logging
 
 from aleph.core import db, url_for
-from aleph.model.common import TimeStampedModel, make_token
+from aleph.model.validation import validate
+from aleph.model.common import DatedModel, make_token
 
 log = logging.getLogger(__name__)
 
 
-class Source(db.Model, TimeStampedModel):
+class Source(db.Model, DatedModel):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.Unicode, nullable=True)
     category = db.Column(db.Unicode, nullable=True)
@@ -26,6 +27,7 @@ class Source(db.Model, TimeStampedModel):
         return src
 
     def update(self, data):
+        validate(data, 'source.json#')
         self.label = data.get('label')
         if 'category' in data:
             self.category = data.get('category')
@@ -50,9 +52,29 @@ class Source(db.Model, TimeStampedModel):
 
         db.session.delete(self)
 
+    @classmethod
+    def by_id(cls, id):
+        return cls.all().filter_by(id=id).first()
+
+    @classmethod
+    def by_foreign_id(cls, foreign_id):
+        if foreign_id is None:
+            return
+        return cls.all().filter_by(foreign_id=foreign_id).first()
+
+    @classmethod
+    def all_by_ids(cls, ids):
+        return cls.all().filter(cls.id.in_(ids))
+
+    def __repr__(self):
+        return '<Source(%r)>' % self.id
+
+    def __unicode__(self):
+        return self.label
+
     def to_dict(self):
         return {
-            'api_url': url_for('sources.view', id=self.id),
+            'api_url': url_for('sources_api.view', id=self.id),
             'id': self.id,
             'foreign_id': self.foreign_id,
             'label': self.label,
@@ -60,36 +82,3 @@ class Source(db.Model, TimeStampedModel):
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
-
-    @classmethod
-    def by_id(cls, id):
-        return db.session.query(cls).filter_by(id=id).first()
-
-    @classmethod
-    def by_foreign_id(cls, foreign_id):
-        if foreign_id is None:
-            return
-        return db.session.query(cls).filter_by(foreign_id=foreign_id).first()
-
-    @classmethod
-    def all(cls, ids=None):
-        q = db.session.query(cls)
-        if ids is not None:
-            q = q.filter(cls.id.in_(ids))
-        return q
-
-    @classmethod
-    def all_by_id(cls, ids=None):
-        q = db.session.query(cls)
-        if ids is not None:
-            q = q.filter(cls.id.in_(ids))
-        data = {}
-        for source in q:
-            data[source.id] = source
-        return data
-
-    def __repr__(self):
-        return '<Source(%r)>' % self.id
-
-    def __unicode__(self):
-        return self.label

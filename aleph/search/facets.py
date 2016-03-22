@@ -48,23 +48,23 @@ def convert_entities(entities):
 def convert_sources(facet):
     output = {'values': []}
     ids = [b.get('key') for b in facet.get('buckets', [])]
-    sources = Source.all_by_id(ids=ids)
+    sources = Source.all_by_ids(ids).all()
     for bucket in facet.get('buckets', []):
         key = bucket.get('key')
-        source = sources.get(key)
-        if source is None:
-            continue
-        output['values'].append({
-            'id': key,
-            'label': source.label,
-            'category': source.category,
-            'count': bucket.get('doc_count')
-        })
+        for source in sources:
+            if source.id != key:
+                continue
+            output['values'].append({
+                'id': key,
+                'label': source.label,
+                'category': source.category,
+                'count': bucket.get('doc_count')
+            })
     return output
 
 
 def convert_aggregations(result, output, args):
-    """ traverse and get all facets. """
+    """Traverse and get all facets."""
     aggs = result.get('aggregations', {})
     scoped = aggs.get('scoped', {})
     sources = scoped.get('source', {}).get('source', {})
@@ -74,6 +74,7 @@ def convert_aggregations(result, output, args):
     entities = entities.get('entities', {})
     output['entities'] = convert_entities(entities)
 
+    output['facets'] = {}
     for facet in args.getlist('facet'):
         value = aggs.get(facet)
         data = {

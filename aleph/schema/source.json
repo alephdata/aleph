@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://aleph.grano.cc/operational/source.json#",
+    "id": "source.json#",
     "type": "object",
     "properties": {
         "label": {
@@ -10,7 +10,7 @@
         },
         "category": {
             "type": "string",
-            "enum": ["news", "leak", "gazette", "court", "company", "scrape", "procurement", "grey"]
+            "format": "source-category"
         }
     },
     "required": ["label"]

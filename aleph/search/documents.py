@@ -4,16 +4,19 @@ from collections import defaultdict
 
 from werkzeug.datastructures import MultiDict
 
-from aleph.core import es, es_index, url_for
+from aleph.core import get_es, get_es_index, url_for
 from aleph import authz
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import add_filter, authz_filter, clean_highlight
+from aleph.search.util import execute_basic
+from aleph.search.fragments import text_query_string, meta_query_string
+from aleph.search.fragments import match_all, child_record
 from aleph.search.facets import convert_aggregations
 from aleph.search.records import records_query
 
 DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'languages',
                   'countries', 'source_url', 'created_at', 'updated_at',
-                  'type', 'summary']
+                  'type', 'summary', 'keywords']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
@@ -28,6 +31,7 @@ def documents_query(args, fields=None, facets=True, newer_than=None):
     text = args.get('q', '').strip()
     q = text_query(text)
     q = authz_filter(q)
+
     if newer_than is not None:
         q = add_filter(q, {
             "range": {
@@ -153,55 +157,27 @@ def filter_query(q, filters, skip=None):
 def text_query(text):
     """ Construct the part of a query which is responsible for finding a
     piece of thext in the selected documents. """
-    text = text.strip()
-    if len(text):
-        q = {
-            "bool": {
-                "minimum_should_match": 1,
-                "should": [
-                    {
-                        "query_string": {
-                            "query": text,
-                            "fields": ['title^15', 'file_name^10',
-                                       'summary^10', 'title_latin',
-                                       'summary_latin'],
-                            "default_operator": "AND",
-                            "use_dis_max": True
-                        }
-                    },
-                    {
-                        "has_child": {
-                            "type": TYPE_RECORD,
-                            "score_mode": "avg",
-                            "query": {
-                                "bool": {
-                                    "should": [
-                                        {
-                                            "query_string": {
-                                                "fields": ["text^5",
-                                                           "text_latin"],
-                                                "query": text,
-                                                "default_operator": "AND",
-                                                "use_dis_max": True
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
+    if text is None or not len(text.strip()):
+        return match_all()
+    return {
+        "bool": {
+            "minimum_should_match": 1,
+            "should": [
+                meta_query_string(text),
+                child_record({
+                    "bool": {
+                        "should": [text_query_string(text)]
                     }
-                ]
-            }
+                })
+            ]
         }
-    else:
-        q = {'match_all': {}}
-    return q
+    }
 
 
 def run_sub_queries(output, sub_queries):
     if len(sub_queries):
-        res = es.msearch(index=es_index, doc_type=TYPE_RECORD,
-                         body='\n'.join(sub_queries))
+        res = get_es().msearch(index=get_es_index(), doc_type=TYPE_RECORD,
+                               body='\n'.join(sub_queries))
         for doc in output['results']:
             for sq in res.get('responses', []):
                 sqhits = sq.get('hits', {})
@@ -222,30 +198,10 @@ def run_sub_queries(output, sub_queries):
                     doc['records']['total'] = sqhits.get('total', 0)
 
 
-def execute_documents_query(args, q):
+def execute_documents_query(args, query):
     """Execute the query and return a set of results."""
-    result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
-    hits = result.get('hits', {})
-    output = {
-        'status': 'ok',
-        'results': [],
-        'offset': q['from'],
-        'limit': q['size'],
-        'total': hits.get('total'),
-        'next': None,
-        'facets': {},
-        'watchlists': {}
-    }
+    result, hits, output = execute_basic(TYPE_DOCUMENT, query)
     convert_aggregations(result, output, args)
-    next_offset = output['offset'] + output['limit']
-    if output['total'] > next_offset:
-        params = {'offset': next_offset}
-        for k, v in args.iterlists():
-            if k in ['offset']:
-                continue
-            params[k] = v
-        output['next'] = url_for('search.query', **params)
-
     sub_queries = []
     for doc in hits.get('hits', []):
         document = doc.get('_source')
@@ -258,9 +214,9 @@ def execute_documents_query(args, q):
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))
 
-        document['api_url'] = url_for('document.view',
+        document['api_url'] = url_for('documents_api.view',
                                       document_id=doc.get('_id'))
-        document['data_url'] = url_for('document.file',
+        document['data_url'] = url_for('documents_api.file',
                                        document_id=doc.get('_id'))
         output['results'].append(document)
 
@@ -268,17 +224,12 @@ def execute_documents_query(args, q):
     return output
 
 
-def execute_documents_alert_query(args, q):
+def execute_documents_alert_query(args, query):
     """Execute the query and return a set of results."""
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
-    q['size'] = 50
-    result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
-    hits = result.get('hits', {})
-    output = {
-        'total': hits.get('total'),
-        'results': [],
-    }
+    query['size'] = 50
+    result, hits, output = execute_basic(TYPE_DOCUMENT, query)
     convert_aggregations(result, output, args)
     sub_queries = []
     for doc in hits.get('hits', []):

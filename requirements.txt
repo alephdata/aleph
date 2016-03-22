@@ -1,12 +1,15 @@
 Flask==0.10.1
 Flask-Assets==0.10
+Flask-Admin==1.4.0
 Flask-Migrate==1.8.0
 flask-oauthlib
 Flask-SQLAlchemy==2.1
 Flask-Script==2.0.5
-Flask-Mail
+Flask-Testing==0.4.2
+Flask-Fixtures==0.3.3
+Flask-Mail==0.9.1
 celery>=3.1.17
-elasticsearch
+elasticsearch==2.1.0
 cssutils
 lxml
 normality>=0.1
@@ -16,7 +19,6 @@ boto
 requests>=2.5.1
 apikit
 six
-colander>=1.0
 unicodecsv
 urlnorm
 gunicorn
@@ -38,7 +40,7 @@ rarfile==2.7
 xlrd==0.9.3
 jsonschema
 functools32
-flower
 pyyaml
 dateparser
 jdatetime==1.7.2
+coverage

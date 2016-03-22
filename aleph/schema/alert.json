@@ -1,13 +1,13 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://aleph.grano.cc/operational/alert.json#",
+    "id": "alert.json#",
     "type": "object",
     "properties": {
         "query": {
             "type": "object"
         },
         "custom_label": {
-            "type": "string"
+            "type": ["string", "null"]
         }
     },
     "required": ["query"]

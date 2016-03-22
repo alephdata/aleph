@@ -1,6 +1,6 @@
 import logging
 
-from aleph.core import db, archive
+from aleph.core import db, get_archive
 from aleph.ext import get_ingestors
 from aleph.model import Document
 from aleph.analyze import analyze_document
@@ -22,7 +22,7 @@ class Ingestor(object):
 
     def create_document(self, meta, type=None):
         if meta.content_hash:
-            q = db.session.query(Document)
+            q = Document.all()
             if meta.foreign_id:
                 q = q.filter(Document.foreign_id == meta.foreign_id)
             else:
@@ -55,7 +55,7 @@ class Ingestor(object):
     @classmethod
     def dispatch(cls, source_id, meta):
         best_score, best_cls = 0, None
-        local_path = archive.load_file(meta)
+        local_path = get_archive().load_file(meta)
         try:
             for cls in get_ingestors().values():
                 score = cls.match(meta, local_path)
@@ -69,5 +69,5 @@ class Ingestor(object):
                       best_cls.__name__)
             best_cls(source_id).ingest(meta, local_path)
         finally:
-            archive.cleanup_file(meta)
+            get_archive().cleanup_file(meta)
             # db.session.dispose()

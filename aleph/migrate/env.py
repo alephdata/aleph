@@ -2,11 +2,9 @@ from __future__ import with_statement
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from aleph.core import app
 from aleph.model import db
 
 config = context.config
-config.set_main_option('sqlalchemy.url', app.config['SQLALCHEMY_DATABASE_URI'])
 config.set_main_option('script_location', '.')
 target_metadata = db.metadata
 

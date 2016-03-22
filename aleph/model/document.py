@@ -7,15 +7,14 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db
-from aleph.model.tabular import Tabular
 from aleph.model.source import Source
 from aleph.model.metadata import Metadata
-from aleph.model.common import TimeStampedModel
+from aleph.model.common import DatedModel
 
 log = logging.getLogger(__name__)
 
 
-class Document(db.Model, TimeStampedModel):
+class Document(db.Model, DatedModel):
     TYPE_TEXT = 'text'
     TYPE_TABULAR = 'tabular'
     TYPE_OTHER = 'other'
@@ -27,6 +26,10 @@ class Document(db.Model, TimeStampedModel):
     source_id = db.Column(db.Integer(), db.ForeignKey('source.id'), index=True)
     source = db.relationship(Source, backref=db.backref('documents', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
     _meta = db.Column('meta', JSONB)
+
+    @property
+    def title(self):
+        return self.meta.title
 
     @hybrid_property
     def meta(self):
@@ -43,30 +46,6 @@ class Document(db.Model, TimeStampedModel):
             meta = meta.data
         self._meta = meta
         flag_modified(self, '_meta')
-
-    def __repr__(self):
-        return '<Document(%r,%r,%r)>' % (self.id, self.type, self.meta.title)
-
-    def __unicode__(self):
-        return self.id
-
-    def _add_to_dict(self, data):
-        data.update({
-            'id': self.id,
-            'type': self.type,
-            'source_id': self.source_id,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
-        })
-        return data
-
-    def to_dict(self):
-        data = self.meta.to_dict()
-        return self._add_to_dict(data)
-
-    def to_index_dict(self):
-        data = self.meta.to_index_dict()
-        return self._add_to_dict(data)
 
     def delete_pages(self):
         pq = db.session.query(DocumentPage)
@@ -98,13 +77,37 @@ class Document(db.Model, TimeStampedModel):
 
     @classmethod
     def by_id(cls, id):
-        q = db.session.query(cls).filter_by(id=id)
+        q = cls.all().filter_by(id=id)
         return q.first()
 
     @classmethod
     def get_max_id(cls):
         q = db.session.query(func.max(cls.id))
         return q.scalar()
+
+    def __repr__(self):
+        return '<Document(%r,%r,%r)>' % (self.id, self.type, self.meta.title)
+
+    def __unicode__(self):
+        return self.id
+
+    def _add_to_dict(self, data):
+        data.update({
+            'id': self.id,
+            'type': self.type,
+            'source_id': self.source_id,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
+        })
+        return data
+
+    def to_dict(self):
+        data = self.meta.to_dict()
+        return self._add_to_dict(data)
+
+    def to_index_dict(self):
+        data = self.meta.to_index_dict()
+        return self._add_to_dict(data)
 
 
 class DocumentPage(db.Model):
@@ -117,6 +120,14 @@ class DocumentPage(db.Model):
 
     def __repr__(self):
         return '<DocumentPage(%r,%r)>' % (self.document_id, self.number)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'number': self.number,
+            'text': self.text,
+            'document_id': self.document_id
+        }
 
 
 class DocumentRecord(db.Model):

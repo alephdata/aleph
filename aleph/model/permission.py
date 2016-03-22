@@ -1,9 +1,10 @@
 from aleph.core import db
-from aleph.model.common import TimeStampedModel
+from aleph.model.common import SoftDeleteModel
 
 
-class Permission(db.Model, TimeStampedModel):
-    """ A set of rights granted to a role on a resource. """
+class Permission(db.Model, SoftDeleteModel):
+    """A set of rights granted to a role on a resource."""
+
     __tablename__ = 'permission'
 
     WATCHLIST = 'watchlist'
@@ -18,16 +19,6 @@ class Permission(db.Model, TimeStampedModel):
     resource_type = db.Column(db.Enum(*RESOURCE_TYPES, name='permission_type'),
                               nullable=False)
 
-    def to_dict(self):
-        return {
-            # 'id': self.id,
-            'role': self.role_id,
-            'read': self.read,
-            'write': self.write,
-            'resource_id': self.resource_id,
-            'resource_type': self.resource_type
-        }
-
     @classmethod
     def grant_foreign(cls, resource, foreign_id, read, write):
         from aleph.model import Source, Watchlist, Role
@@ -41,7 +32,7 @@ class Permission(db.Model, TimeStampedModel):
 
     @classmethod
     def grant_resource(cls, resource_type, resource_id, role, read, write):
-        q = db.session.query(Permission)
+        q = cls.all()
         q = q.filter(Permission.role_id == role.id)
         q = q.filter(Permission.resource_type == resource_type)
         q = q.filter(Permission.resource_id == resource_id)
@@ -55,3 +46,13 @@ class Permission(db.Model, TimeStampedModel):
         permission.write = write
         db.session.add(permission)
         return permission
+
+    def to_dict(self):
+        return {
+            # 'id': self.id,
+            'role': self.role_id,
+            'read': self.read,
+            'write': self.write,
+            'resource_id': self.resource_id,
+            'resource_type': self.resource_type
+        }

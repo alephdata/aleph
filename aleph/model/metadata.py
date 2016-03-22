@@ -133,6 +133,22 @@ class Metadata(MutableMapping):
         self.data['countries'] = list(countries)
 
     @property
+    def keywords(self):
+        return list(set(self.data.get('keywords', [])))
+
+    @keywords.setter
+    def keywords(self, keywords):
+        self.data['keywords'] = []
+        for kw in keywords:
+            self.add_keyword(kw)
+
+    def add_keyword(self, keyword):
+        keyword = keyword.strip()
+        keywords = self.keywords
+        keywords.append(keyword)
+        self.data['keywords'] = list(keywords)
+
+    @property
     def dates(self):
         _dates = set()
         for date_ in self.data.get('dates', []):
@@ -309,6 +325,7 @@ class Metadata(MutableMapping):
             'dates': self.dates,
             'countries': self.countries,
             'languages': self.languages,
+            'keywords': self.keywords,
             'extension': self.extension,
             'mime_type': self.mime_type,
             'headers': self.headers,

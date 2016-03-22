@@ -36,7 +36,29 @@ def make_textid():
     return uuid.uuid4().hex
 
 
-class TimeStampedModel(object):
+class DatedModel(object):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
                            onupdate=datetime.utcnow)
+
+    @classmethod
+    def all(cls):
+        return db.session.query(cls)
+
+    @classmethod
+    def all_ids(cls):
+        return db.session.query(cls.id)
+
+
+class SoftDeleteModel(DatedModel):
+    deleted_at = db.Column(db.DateTime, default=None, nullable=True)
+
+    @classmethod
+    def all(cls):
+        q = super(SoftDeleteModel, cls).all()
+        return q.filter(cls.deleted_at == None)  # noqa
+
+    @classmethod
+    def all_ids(cls):
+        q = super(SoftDeleteModel, cls).all_ids()
+        return q.filter(cls.deleted_at == None)  # noqa

@@ -1,8 +1,11 @@
-from flask import request, Response
+from flask import request, Response, Blueprint
 from apikit import cache_hash
 
-from aleph.core import app
 from aleph import authz
+from aleph.core import get_config
+
+
+blueprint = Blueprint('cache_api', __name__)
 
 
 class NotModified(Exception):
@@ -13,7 +16,7 @@ def handle_not_modified(exc):
     return Response(status=304)
 
 
-@app.before_request
+@blueprint.before_app_request
 def setup_caching():
     request._http_cache = False
     request._http_etag = None
@@ -30,7 +33,7 @@ def enable_cache(vary_user=False, vary=None, server_side=True):
     if vary_user:
         cache_parts.extend((request.auth_roles))
 
-    request._http_cache = app.config.get('CACHE')
+    request._http_cache = get_config('CACHE')
     request._http_etag = cache_hash(*cache_parts)
     request._http_server = server_side
 
@@ -38,7 +41,7 @@ def enable_cache(vary_user=False, vary=None, server_side=True):
         raise NotModified()
 
 
-@app.after_request
+@blueprint.after_app_request
 def cache_response(resp):
     if request.endpoint == 'static':
         enable_cache()
@@ -47,27 +50,33 @@ def cache_response(resp):
         resp.cache_control.public = True
         resp.cache_control.max_age = 3600 * 24 * 14
         return resp
-    elif resp.is_streamed:
+
+    if resp.is_streamed:
         # http://wiki.nginx.org/X-accel#X-Accel-Buffering
         resp.headers['X-Accel-Buffering'] = 'no'
 
-    if not request._http_cache \
-            or request.method not in ['GET', 'HEAD', 'OPTIONS'] \
-            or resp.status_code != 200:
+    if not request._http_cache:
         return resp
 
-    if request._http_server:
-        resp.cache_control.must_revalidate = True
-        resp.cache_control.private = True
-        resp.expires = -1
-    else:
-        resp.cache_control.private = True
-        resp.cache_control.max_age = 3600 * 2
+    if request.method not in ['GET', 'HEAD', 'OPTIONS']:
+        return resp
 
-    if not authz.logged_in():
-        resp.cache_control.public = True
+    if resp.status_code != 200:
+        return resp
 
     if request._http_etag:
+        if request.if_none_match == request._http_etag:
+            raise NotModified()
+
         resp.set_etag(request._http_etag)
 
+    if authz.logged_in():
+        resp.cache_control.private = True
+    else:
+        resp.cache_control.public = True
+
+    if request._http_server:
+        resp.expires = -1
+    else:
+        resp.cache_control.max_age = 3600 * 2
     return resp

@@ -7,7 +7,7 @@ from lxml.html.clean import Cleaner
 from extractors import extract_pdf, extract_image
 from extractors import document_to_pdf, image_to_pdf, html_to_pdf
 
-from aleph.core import archive
+from aleph.core import get_archive
 from aleph.model import db, Document, DocumentPage
 from aleph.ingest.ingestor import Ingestor
 
@@ -31,7 +31,7 @@ class TextIngestor(Ingestor):
         return page
 
     def store_pdf(self, meta, pdf_path, move=True):
-        archive.archive_file(pdf_path, meta.pdf, move=move)
+        get_archive().archive_file(pdf_path, meta.pdf, move=move)
 
 
 class PDFIngestor(TextIngestor):
@@ -60,9 +60,10 @@ class DocumentIngestor(PDFIngestor):
     MIME_TYPES = ['application/msword', 'application/rtf', 'application/x-rtf',
                   'application/vnd.oasis.opendocument.text',
                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # noqa
-                  'text/richtext', 'text/plain']
+                  'text/richtext', 'text/plain', 'application/wordperfect',
+                  'application/vnd.wordperfect']
     EXTENSIONS = ['doc', 'docx', 'rtf', 'odt', 'sxw', 'dot', 'docm',
-                  'hqx', 'pdb', 'txt']
+                  'hqx', 'pdb', 'txt', 'wpd']
     BASE_SCORE = 5
 
     def extract_pdf_alternative(self, meta, pdf_path):
@@ -79,6 +80,17 @@ class DocumentIngestor(PDFIngestor):
             log.warning("Could not convert document: %r", meta)
             return
         self.extract_pdf_alternative(meta, pdf_path)
+
+
+class PresentationIngestor(DocumentIngestor):
+    MIME_TYPES = ['application/vnd.ms-powerpoint.presentation',
+                  'application/vnd.ms-powerpoint',
+                  'application/vnd.openxmlformats-officedocument.presentationml.presentation',  # noqa
+                  'application/vnd.openxmlformats-officedocument.presentationml.slideshow',  # noqa
+                  'application/vnd.oasis.opendocument.presentation',
+                  'application/vnd.sun.xml.impress']
+    EXTENSIONS = ['ppt', 'pptx', 'odp', 'pot', 'pps', 'ppa']
+    BASE_SCORE = 5
 
 
 class HtmlIngestor(DocumentIngestor):

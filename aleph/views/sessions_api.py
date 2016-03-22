@@ -4,13 +4,13 @@ from flask_oauthlib.client import OAuthException
 from apikit import jsonify
 
 from aleph import authz
-from aleph.core import db, url_for, oauth_provider, system_role
+from aleph.core import db, url_for, oauth_provider
 from aleph.model import Role
 from aleph.views.cache import enable_cache
 
 
 log = logging.getLogger(__name__)
-blueprint = Blueprint('sessions', __name__)
+blueprint = Blueprint('sessions_api', __name__)
 
 
 @oauth_provider.tokengetter
@@ -22,7 +22,7 @@ def get_oauth_token():
 
 @blueprint.before_app_request
 def load_role():
-    request.auth_roles = set([system_role(Role.SYSTEM_GUEST)])
+    request.auth_roles = set([Role.system(Role.SYSTEM_GUEST)])
     request.auth_role = None
     request.logged_in = False
 
@@ -40,7 +40,7 @@ def load_role():
         if role is None:
             return
         request.auth_role = role
-        request.auth_roles.update([system_role(Role.SYSTEM_USER), role.id])
+        request.auth_roles.update([Role.system(Role.SYSTEM_USER), role.id])
         request.logged_in = True
 
 
@@ -68,14 +68,14 @@ def status():
 
 @blueprint.route('/api/1/sessions/login')
 def login():
-    return oauth_provider.authorize(callback=url_for('sessions.callback'))
+    return oauth_provider.authorize(callback=url_for('.callback'))
 
 
 @blueprint.route('/api/1/sessions/logout')
 def logout():
     authz.require(authz.logged_in())
     session.clear()
-    return redirect(url_for('ui'))
+    return redirect(url_for('base_api.ui'))
 
 
 @blueprint.route('/api/1/sessions/callback')
@@ -84,10 +84,10 @@ def callback():
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)
         # FIXME: notify the user, somehow.
-        return redirect(url_for('ui'))
+        return redirect(url_for('base_api.ui'))
 
     session['oauth'] = resp
-    session['roles'] = [system_role(Role.SYSTEM_USER)]
+    session['roles'] = [Role.system(Role.SYSTEM_USER)]
     if 'googleapis.com' in oauth_provider.base_url:
         me = oauth_provider.get('userinfo')
         user_id = 'google:%s' % me.data.get('id')
@@ -112,4 +112,4 @@ def callback():
     session['user'] = role.id
     db.session.commit()
     log.info("Logged in: %r", role)
-    return redirect(url_for('ui'))
+    return redirect(url_for('base_api.ui'))

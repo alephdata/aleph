@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "entity.json#",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 10000
+        },
+        "category": {
+            "type": "string",
+            "format": "entity-category"
+        }
+    },
+    "required": ["name", "category"]
+}

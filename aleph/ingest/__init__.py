@@ -3,7 +3,7 @@ import logging
 import requests
 from tempfile import NamedTemporaryFile
 
-from aleph.core import archive, celery
+from aleph.core import get_archive, celery
 from aleph.model import clear_session
 from aleph.model.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor
@@ -36,7 +36,7 @@ def ingest_url(source_id, metadata, url):
         if not meta.has('source_url'):
             meta.source_url = res.url
         meta.headers = res.headers
-        meta = archive.archive_file(fh.name, meta, move=True)
+        meta = get_archive().archive_file(fh.name, meta, move=True)
         ingest.delay(source_id, meta.data)
 
 
@@ -45,7 +45,7 @@ def ingest_file(source_id, meta, file_name, move=False):
         raise ValueError("No such file: %r", file_name)
     if not meta.has('source_path'):
         meta.source_path = file_name
-    meta = archive.archive_file(file_name, meta, move=move)
+    meta = get_archive().archive_file(file_name, meta, move=move)
     ingest.delay(source_id, meta.data)
 
 

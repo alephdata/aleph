@@ -16,11 +16,12 @@ setup(
     author_email='friedrich@pudo.org',
     url='http://grano.cc',
     license='MIT',
-    packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+    packages=find_packages(exclude=['ez_setup', 'examples', 'test']),
     namespace_packages=[],
     include_package_data=True,
     zip_safe=False,
     install_requires=[],
+    test_suite='nose.collector',
     entry_points={
         'aleph.ingestors': [
             'html = aleph.ingest.text:HtmlIngestor',
@@ -49,5 +50,7 @@ setup(
             'aleph = aleph.manage:main',
         ]
     },
-    tests_require=[]
+    tests_require=[
+        'coverage', 'nose'
+    ]
 )
