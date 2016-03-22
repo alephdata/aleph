@@ -1,6 +1,3 @@
-# with mail.record_messages() as outbox:
-# assert len(outbox) == 1
-import json
 from datetime import datetime, timedelta
 
 from aleph.core import db, mail

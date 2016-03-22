@@ -62,7 +62,7 @@
 - model: aleph.model.entity.Selector
   records:
     - id: 1000
-      text: KwaZulu
+      text: kwazulu
       entity_id: 1000
     - id: 2000
       text: banana
@@ -101,7 +101,7 @@
         extension: txt
         languages: ['ru']
     - id: 1003
-      content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8294
+      content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8295
       foreign_id: test4
       type: tabular
       source_id: 1000
@@ -144,7 +144,7 @@
       document_id: 1001
       number: 1
       text: >
-        TOP SECRET BANANA SECRETS
+        TOP SECRET BANANA SECRETS FROM KWAZULU NATAL!
     - id: 1003
       document_id: 1002
       number: 1
