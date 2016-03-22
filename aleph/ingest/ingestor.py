@@ -4,6 +4,7 @@ from aleph.core import db, get_archive
 from aleph.ext import get_ingestors
 from aleph.model import Document
 from aleph.analyze import analyze_document
+from aleph.instrument import processing_exception, processing_log, INGEST
 
 log = logging.getLogger(__name__)
 
@@ -53,21 +54,33 @@ class Ingestor(object):
         return score
 
     @classmethod
-    def dispatch(cls, source_id, meta):
+    def auction_file(cls, meta, local_path):
         best_score, best_cls = 0, None
+        for cls in get_ingestors().values():
+            score = cls.match(meta, local_path)
+            if score > best_score:
+                best_score = score
+                best_cls = cls
+        return best_cls
+
+    @classmethod
+    def dispatch(cls, source_id, meta):
         local_path = get_archive().load_file(meta)
+        best_cls = cls.auction_file(meta, local_path)
+        if best_cls is None:
+            message = "No ingestor found: %r" % meta.file_name
+            processing_log(INGEST, component=cls.__name__, meta=meta,
+                           source_id=source_id, error_type='NoIngestorFound',
+                           error_message=message)
+            return
+
+        log.debug("Dispatching %r to %r", meta.file_name, best_cls.__name__)
         try:
-            for cls in get_ingestors().values():
-                score = cls.match(meta, local_path)
-                if score > best_score:
-                    best_score = score
-                    best_cls = cls
-            if best_cls is None:
-                log.debug("No ingestor found for: %r", meta.file_name)
-                return
-            log.debug("Dispatching %r to %r", meta.file_name,
-                      best_cls.__name__)
             best_cls(source_id).ingest(meta, local_path)
+        except Exception as ex:
+            log.exception(ex)
+            processing_exception(INGEST, component=best_cls.__name__,
+                                 exception=ex, meta=meta,
+                                 source_id=source_id)
         finally:
             get_archive().cleanup_file(meta)
-            # db.session.dispose()

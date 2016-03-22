@@ -5,6 +5,7 @@ from aleph.ext import get_analyzers
 from aleph.model import Document, Entity
 from aleph.search.fragments import text_query_string, meta_query_string
 from aleph.search.fragments import child_record
+from aleph.instrument import processing_exception, ANALYZE
 from aleph.index import index_document
 from aleph.search import scan_iter
 
@@ -69,5 +70,13 @@ def analyze_document(document_id):
         return
     log.info("Analyze document: %r", document)
     for cls in get_analyzers():
-        cls().analyze(document, document.meta)
+        try:
+            cls().analyze(document, document.meta)
+        except Exception as ex:
+            log.exception(ex)
+            processing_exception(ANALYZE, component=cls.__name__,
+                                 document_id=document.id,
+                                 meta=document.meta,
+                                 source_id=document.source_id,
+                                 exception=ex)
     index_document(document_id)
