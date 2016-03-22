@@ -28,14 +28,13 @@ class LanguageAnalyzer(Analyzer):
         if len(meta.languages):
             return
         languages = set()
-        for table in document.tables:
-            for row in table:
-                for text in row.values():
-                    if not text or len(text) < CUTOFF:
-                        continue
-                    lang, score = langid.classify(text)
-                    if score > THRESHOLD:
-                        languages.add(lang)
+        for record in document.records:
+            for text in record.data.values():
+                if not text or len(text) < CUTOFF:
+                    continue
+                lang, score = langid.classify(text)
+                if score > THRESHOLD:
+                    languages.add(lang)
         self.save(document, meta, languages)
 
     def save(self, document, meta, languages):
