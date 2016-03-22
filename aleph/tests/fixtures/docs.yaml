@@ -65,8 +65,8 @@
       text: KwaZulu
       entity_id: 1000
     - id: 2000
-      text: BaNana
-      entity_id: 1000
+      text: banana
+      entity_id: 2000
 
 - model: aleph.model.document.Document
   records:
