@@ -76,11 +76,6 @@ class Document(db.Model, DatedModel):
             db.session.bulk_insert_mappings(DocumentRecord, chunk)
 
     @classmethod
-    def by_id(cls, id):
-        q = cls.all().filter_by(id=id)
-        return q.first()
-
-    @classmethod
     def get_max_id(cls):
         q = db.session.query(func.max(cls.id))
         return q.scalar()

@@ -53,10 +53,6 @@ class Source(db.Model, DatedModel):
         db.session.delete(self)
 
     @classmethod
-    def by_id(cls, id):
-        return cls.all().filter_by(id=id).first()
-
-    @classmethod
     def by_foreign_id(cls, foreign_id):
         if foreign_id is None:
             return

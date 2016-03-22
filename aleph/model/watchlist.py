@@ -60,10 +60,6 @@ class Watchlist(db.Model, SoftDeleteModel):
         return watchlist
 
     @classmethod
-    def by_id(cls, id):
-        return cls.all().filter_by(id=id).first()
-
-    @classmethod
     def all_by_ids(cls, ids):
         return cls.all().filter(cls.id.in_(ids))
 

@@ -92,11 +92,6 @@ class Entity(db.Model, SoftDeleteModel):
         return q.first()
 
     @classmethod
-    def by_id(cls, id):
-        q = cls.all().filter_by(id=id)
-        return q.first()
-
-    @classmethod
     def by_lists(cls, watchlists, prefix=None):
         q = cls.all()
         q = q.filter(cls.watchlist_id.in_(watchlists))
