@@ -46,6 +46,7 @@ class TestCase(FlaskTestCase):
             sess['roles'] = [Role.system(Role.SYSTEM_GUEST),
                              Role.system(Role.SYSTEM_USER), role.id]
             sess['user'] = role.id
+        return role
 
     def load_fixtures(self, file_name, process_documents=True):
         filepath = os.path.abspath(os.path.join(FIXTURES, file_name))
