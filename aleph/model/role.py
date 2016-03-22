@@ -74,6 +74,8 @@ class Role(db.Model, SoftDeleteModel):
             current_app._authz_roles = {}
         if foreign_id not in current_app._authz_roles:
             role = cls.by_foreign_id(foreign_id)
+            if role is None:
+                return
             current_app._authz_roles[foreign_id] = role.id
         return current_app._authz_roles[foreign_id]
 

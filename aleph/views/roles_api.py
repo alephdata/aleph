@@ -23,6 +23,7 @@ def index():
 
 @blueprint.route('/api/1/roles/<int:id>', methods=['GET'])
 def view(id):
+    authz.require(authz.logged_in())
     role = obj_or_404(Role.by_id(id))
     data = role.to_dict()
     if role.id != request.auth_role.id:
