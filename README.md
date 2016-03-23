@@ -198,7 +198,7 @@ Metafolders (see glossary above) can be used to bulk-import many documents while
 }
 ```
 
-Of course, other metadata (such as title, summary, languages, file types, etc.) can be included as well. Once these basic criteria are mapped, the import can be started via:
+Of course, other metadata (such as title, summary, languages, file types, etc.) can be included as well. Once these basic criteria are met, the import can be started via:
 
 ```bash
 $ docker-compose run worker /bin/bash
@@ -213,7 +213,7 @@ The Python [metafolder API](https://github.com/pudo/metafolder) is also very eas
 
 ### Loading data from SQL databases
 
-``aleph`` comes with a built-in method to import data from a SQL database, either by reading whole tables or the output of specific, pre-defined queries. In order to serve aleph's document pipeline, this process actually generates CSV files, which are then loaded into the system.
+``aleph`` comes with a built-in method to import data from a SQL database, either by reading whole tables or the output of specific, pre-defined queries. In order to work with ``aleph's`` document pipeline, this process actually generates CSV files, which are then loaded into the system.
 
 To configure the ``crawlsql`` command, you must create a query specification as a YAML file. This will contain information regarding the database connection, source tables and queries and additional metadata.
 
@@ -257,7 +257,7 @@ sources:
           	       my_person_table.home_address_id
 ```
 
-Of course, you need to make sure that the docker container running the aleph import comamnds will be able to connect to the given database URI. Given that, you can run the following command to begin the import:
+Of course, you need to make sure that the docker container running the aleph import commands will be able to connect to the given database URI. You can run the following command to begin the import:
 
 ```bash
 $ docker-compose run worker /bin/bash
@@ -266,7 +266,7 @@ root@worker# aleph crawlsql /path/to/spec.yml
 
 ### Loading well-known persons of interest
 
-One of the key features of ``aleph`` is its ability to cross-reference imported documents and databases with the names of entities of interest, such as names of politicians or companies. While you can use the application itself to manage such watchlists, it may be useful to bootstrap 
+One of the key features of ``aleph`` is its ability to cross-reference imported documents and databases with the names of entities of interest, such as politicians or companies. While you can use the application itself to manage such watchlists, it may be useful to bootstrap 
 the database using data from international sanctions and police search lists. Such data is provided by [OpenNames](http://pudo.org/material/opennames/) and can be imported in bulk:
 
 ```bash
@@ -278,7 +278,7 @@ Please note that importing entity watchlists requires re-indexing documents that
 
 ### Developing a custom crawler
 
-Custom crawlers are useful to directly import large amounts of data programmatically into the system. This can make sense for custom scrapers or crawlers where the indirection of using a metafolder is not desirable.
+Custom crawlers are useful to directly import large amounts of data into the system. This can make sense for custom scrapers or crawlers where the indirection of using a metafolder is not desirable.
 
 Crawlers are Python classes and exposed via the ``entry_point`` of a Python package. To develop a custom crawler, start by setting up a separate Python package from ``aleph`` with it's own ``setup.py`` ([learn more](https://python-packaging.readthedocs.org/en/latest/)).
 
@@ -316,7 +316,7 @@ setup(
 )
 ```
 
-Finally, you must ensure that the plugin python package is installed in your ``aleph`` docker container, for example by extending the ``Dockerfile`` used to build that container. Once this is ready, run the crawler from inside that container:
+Finally, you must ensure that the plugin package is installed in your ``aleph`` docker container, for example by extending the ``Dockerfile`` to include the plugin package. Once this is ready, run the crawler from inside the container:
 
 ```bash
 $ docker-compose run worker /bin/bash
@@ -344,7 +344,7 @@ If you want to re-analyze or re-index all documents that are part of a given sou
 ```bash
 $ docker-compose run worker /bin/bash
 
-# Perform analysis (i.e. entity extraction, language detection), then index:
+# Perform analysis (i.e. entity extraction, language detection) and index:
 root@worker# aleph analyze -f source_foreign_id
 
 # Re-index only:
