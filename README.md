@@ -1,6 +1,8 @@
 # aleph [![Build Status](https://api.travis-ci.org/pudo/aleph.png)](https://travis-ci.org/pudo/aleph)
 
-Sections: [Installation](#installation) | [Using aleph](#usage) | [Mailing list](#license) | [License](#license)
+Sections: [Installation](#installation) | [Usage](#usage) | [Mailing list](#mailing-list) | [License](#license)
+
+* * *
 
 ``aleph`` is a tool for indexing large amounts of both unstructured (PDF, Word, HTML) and structured (CSV, XLS, SQL) data for easy browsing and search. It is built with investigative reporting as a primary use case. ``aleph`` allows cross-referencing mentions of well-known entities (such as people and companies) against watchlists, e.g. from prior research or public datasets.
 
@@ -30,11 +32,12 @@ You will also need to set up a Google OAuth web application at their [developers
 Finally, ``aleph`` is optimized to utilise certain aspects of [Amazons AWS](https://aws.amazon.com). By default, it will try to create a bucket for the application's data, and make use of Amazon SQS for task queueing. If you wish to use AWS, you will need to set the AWS key ID and access key in the configuration file. Alternatively, plain file system storage and RabbitMQ can be used to avoid AWS.
 
 ```bash
+$ mkdir -p /srv && cd /srv
 $ git clone git@github.com:pudo/aleph.git
 $ cd aleph
 $ cp aleph.env.tmpl aleph.env
 # edit the environment settings
-$ docker-compose up
+$ docker-compose up -d
 $ docker-compose run worker /bin/bash
 # init the database (this will also delete it, hence the name):
 root@worker# aleph upgrade
@@ -113,23 +116,246 @@ $ make test
 
 ## Usage
 
-``aleph`` has a number of ways for ingesting data. These are controlled via the command line utility by the same name, usually from inside the ``worker`` container.
+End-users will use ``aleph`` via the web-based user interface, which is not covered here as it should be self-explanatory. In order to load data, delete loaded documents or perform other maintenance, though, command line tools are provided. These include several different methods of loading data from source directories, the web, or a SQL database.
+
+When using ``docker``, the commands below should be run from within an instance of the ``worker`` container. An instance can be launched using the following command, which will result in a root shell inside the container:
 
 ```bash
 $ docker-compose run worker /bin/bash
-# Load entity watchlists from OpenNames (http://pudo.org/material/opennames):
-root@worker# aleph crawl opennames
+```
+
+### A little aleph glossary
+
+Before digging into the individual import methods for ``aleph``, here is some of the vocabulary used by the application.
+
+* ***Documents*** are the basic search results in ``aleph``. They can either be *text documents* (in which case they are expected to have a number of pages and are shown as a PDF in the user interface), or *tabular documents* (in which case they can have multiple sheets, each with a number of records. They will be shown as tables in the user interface).
+* ***Sources*** are units of content used to identify the origin of documents in aleph. This can be the name of an imported directory, or somethign more abstract, such as the name of an organisation or web site that has been ingested.
+* ***Foreign IDs*** exist both for documents and sources. They are a little piece of text used to identify the origin of information, e.g. the URL of a crawled document, or the path of an imported folder. Used to avoid duplicate imports when importing the same content twice.
+* ***Metadata*** is used to describe the content of individual documents in ``aleph``. Common metadata fields in ``aleph`` include:
+	* ``title``: a short document title (will be extrapolated from the file name, if none is given).
+	* ``summary``: an optional short description, usually less than 200 characters.
+	* ``file_name``: the basename of the imported file, e.g. ``Source_Data.xlsx``. If not provided, this will be guessed from the ``source_url`` or ``source_path``)
+	* ``foreign_id``: see above, e.g. a source URL, or foreign systems ID
+	* ``extension``: e.g. ``pdf``, ``csv``, without the dot
+	* ``mime_type``: e.g. ``text/csv``, ``application/pdf``
+	* ``source_url``: e.g. ``http://source.com/documents/Source_Data.xlsx``
+	* ``source_path``: local import path, e.g. ``/tmp/Source_Data.xlsx``
+	* ``languages``: a list of lowercase two-letter ISO 3166-1 language codes, e.g ``['ja', 'en']``
+	* ``countries``: a list of lowercase two-letter ISO country codes, e.g ``['jp', 'en']``
+	* ``dates``: a list of ISO 8601 dates relevant to the document, eg. ``['2001-01-28']``
+	* ``keywords``: a list of key phrases.
+	* ``headers``: a hash of the headers received upon download of the document via HTTP.
+	* ``content_hash``: a SHA-1 checksum of the data (automatically generated).
+
+	Other fields can be added, but they will not usually be shown in the user interface.
+
+* ***Metafolders*** are a mechanism to store a set of documents before importing them into ``aleph``. It's benefit is storing metadata (see above) alongside the actual files that are to be imported, while separating ``aleph`` from previous workflow stages (e.g. the scraping of a web site). Metafolders can be generated using the Python [metafolder](https://github.com/pudo/metafolder) library, and the [krauler](https://github.com/pudo/krauler) web crawling/scraping tool.
+* ***Crawlers*** are little plug-ins to the ``aleph`` engine which import data into the system. The included crawlers are very flexible, such as ``SQLCrawler``, ``DirectoryCrawler`` or ``MetaFolderCrawler``, but specific crawlers can be programmed that will import data from a specific source.
+* ***Ingestors*** are plug-ins to the ``aleph`` engine which accept crawled files and attempt to extract text pages or tabular rows from them so that they can be imported into the system. Ingestors for common file formats like Word documents, PDF files or CSV spreadsheets are included, but more exotic types can be supported by programming additional ingestors.
+* ***Analyzers*** are run after the documents have been ingested. They are used to extract additional information from a document. Examples include the extraction of entities and language detection. Again, new analyzers can be added through the plug-in system.
+* **Plugins** to ``aleph`` are Python classes in a Python distutils package which are exposed via the ``entry_points`` mechanism. They include crawlers, ingestors and analyzers. See ``setup.py`` in the repository root for examples.
+
+### Loading data from a file or directory
+
+It is easy for ``aleph`` to recursively traverse all files and directories in a given input directory. Some files, such as ZIP packages or Tarfiles will be treated as 'virtual' directories and their contents will be imported as well.
+
+The downside of using directory crawling as an import method, however, is that it provides very limited ways of including metadata, such as document titles, source URLs or document languages. If such information is important to you, please consider using metafolders (see below).
+
+```bash
+$ docker-compose run worker /bin/bash
+
 # Load all files from the given directory:
 root@worker# aleph crawldir /srv/data/my_little_documents_folder
-# Load data from a metafolder:
-root@worker# aleph metafolder /srv/data/scraped.mf
+
+# Load an individual file:
+root@worker# aleph crawldir /srv/data/my_file.doc
+
+# Specify a language for all documents:
+root@worker# aleph crawldir -l fr /srv/data/my_little_documents_folder/french
+
+# Specify a country for all documents:
+root@worker# aleph crawldir -c ca /srv/data/my_little_documents_folder/canadian
+```
+
+Importing the same directory multiple times will not duplicate the source files, as long as the base path of the crawl is identitcal (it is being used to identify the document source).
+
+### Loading data from a metafolder
+
+Metafolders (see glossary above) can be used to bulk-import many documents while retaining relevant metadata. It is important for [metafolder](https://github.com/pudo/metafolder) items  imported into ``aleph`` to include information on the document source which they are to be associated with. Thus, the minimal metadata for a metafolder item would look something like this:
+
+```json
+{
+	"title": "Document title (not required)",
+	"source": {
+		"label": "The Banana Republic Leaks",
+		"foreign_id": "banana:republic"
+	}
+}
+```
+
+Of course, other metadata (such as title, summary, languages, file types, etc.) can be included as well. Once these basic criteria are mapped, the import can be started via:
+
+```bash
+$ docker-compose run worker /bin/bash
+root@worker# aleph metafolder /srv/data/my_meta_folder
+```
+
+#### Generating metafolders
+
+Metafolder is a format developed for aleph, and thus there's a lack of applications creating them. One notable exception is [krauler](https://github.com/pudo/krauler) a simplistic web crawler which comes pre-installed with the default ``aleph`` docker container. It is usually configured using a YAML file and can be used to easily grab all of a web site, or (for example) all PDF files from a specific domain.
+
+The Python [metafolder API](https://github.com/pudo/metafolder) is also very easy to use in more specific scripts. It can be used in scrapers and data cleaning scripts.
+
+### Loading data from SQL databases
+
+``aleph`` comes with a built-in method to import data from a SQL database, either by reading whole tables or the output of specific, pre-defined queries. In order to serve aleph's document pipeline, this process actually generates CSV files, which are then loaded into the system.
+
+To configure the ``crawlsql`` command, you must create a query specification as a YAML file. This will contain information regarding the database connection, source tables and queries and additional metadata.
+
+```yaml
+# This can also be an environment variable, e.g. $DATABASE_URI
+url: "postgresql://user:pass@hostnmae/database_name"
+sources:
+    my_source_foreign_id:
+        label: "Source Label"
+        # Specify metadata common to all documents from this source:
+        meta:
+            countries: ['de']
+            languages: ['de']
+        queries:
+            my_document_foreign_id:
+                table: my_source_table
+                # Metadata specific to this document/query:
+                meta:
+                    title: "Whatever this table is about"
+                    keywords:
+                    	- stuff
+                    	- misc
+                # Do not include some of the columns:
+                skip:
+                  - id
+                  - code
+                  - sequence
+            
+            another_document_foreign_id:
+          	   tables:
+          	     - my_person_table
+          	     - my_address_table
+          	   joins:
+          	   	  # It does not matter which is left or right
+          	     - left: my_person_table.home_address_id
+          	       right: my_address_table.id
+          	   meta:
+          	       title: "Query joined from two tables"
+          	   skip:
+          	       # requires qualified names now:
+          	       my_person_table.home_address_id
+```
+
+Of course, you need to make sure that the docker container running the aleph import comamnds will be able to connect to the given database URI. Given that, you can run the following command to begin the import:
+
+```bash
+$ docker-compose run worker /bin/bash
+root@worker# aleph crawlsql /path/to/spec.yml
+```
+
+### Loading well-known persons of interest
+
+One of the key features of ``aleph`` is its ability to cross-reference imported documents and databases with the names of entities of interest, such as names of politicians or companies. While you can use the application itself to manage such watchlists, it may be useful to bootstrap 
+the database using data from international sanctions and police search lists. Such data is provided by [OpenNames](http://pudo.org/material/opennames/) and can be imported in bulk:
+
+```bash
+$ docker-compose run worker /bin/bash
+root@worker# aleph crawl opennames
+```
+
+Please note that importing entity watchlists requires re-indexing documents that match the given entity search terms. If you already have documents indexed, expect a significant amount of background activity following the import of the OpenNames watchlists.
+
+### Developing a custom crawler
+
+Custom crawlers are useful to directly import large amounts of data programmatically into the system. This can make sense for custom scrapers or crawlers where the indirection of using a metafolder is not desirable.
+
+Crawlers are Python classes and exposed via the ``entry_point`` of a Python package. To develop a custom crawler, start by setting up a separate Python package from ``aleph`` with it's own ``setup.py`` ([learn more](https://python-packaging.readthedocs.org/en/latest/)).
+
+A basic crawler will extend the relevant ``Crawler`` class from ``aleph`` and implement it's ``crawl()`` method:
+
+```python
+from aleph.crawlers.crawler import Crawler
+
+class ExampleCrawler(Crawler):
+
+    def crawl(self):
+	    source = self.create_source(foreign_id='example', label='Example.com Documents')
+	    for i in range(0, 1000:
+		     meta = self.metadata()
+	         meta.foreign_id = 'example-doc:%s' % i
+             meta.title = 'Document Number %s' % i
+             meta.mime_type = 'application/pdf'
+             url = 'https://example.com/documents/%s.pdf' % i
+             self.emit_url(source, meta, url)
+```
+
+Besides ``emit_url``, results can also be forwarded using the ``emit_file(source, meta, file_path)`` and ``emit_content(source, meta, content)`` methods. If a crawler creates watchlists, it can use ``emit_watchlist(watchlist, entity_search_terms)`` which will start a partial re-index of documents.
+
+In order to make sure that ``aleph`` can find the new crawler, it must be added to the ``setup.py`` of your package:
+
+```python
+setup(
+    name='mypackage.example:ExampleCrawler',
+    ...
+    entry_points={
+        'aleph.crawlers': [
+            'example = mypackage.example:ExampleCrawler'
+        ]
+    }
+)
+```
+
+Finally, you must ensure that the plugin python package is installed in your ``aleph`` docker container, for example by extending the ``Dockerfile`` used to build that container. Once this is ready, run the crawler from inside that container:
+
+```bash
+$ docker-compose run worker /bin/bash
+root@worker# aleph crawl example
+```
+
+### Other maintenance commands
+
+``aleph`` also includes a set of command to perform a set of other maintenance operations. For starters, an admin can list all sources currently registered in the system:
+
+```bash
+$ docker-compose run worker /bin/bash
+root@worker# aleph sources
+```
+
+To delete all documents in a given source, as well as the source itself, run:
+
+```bash
+$ docker-compose run worker /bin/bash
+root@worker# aleph flush source_foreign_id
+```
+
+If you want to re-analyze or re-index all documents that are part of a given source, run:
+
+```bash
+$ docker-compose run worker /bin/bash
+
+# Perform analysis (i.e. entity extraction, language detection), then index:
+root@worker# aleph analyze -f source_foreign_id
+
+# Re-index only:
+root@worker# aleph analyze -f source_foreign_id
+```
+
+Finally, a pleasantly-named command is provided to delete and re-construct both the entire database and the search index.
+
+```bash
+$ docker-compose run worker /bin/bash
+root@worker# aleph evilshit
 ```
 
 ## Mailing list
 
-``aleph`` is used by multiple organisations, including Code for Africa, OCCRP and OpenOil. For coordination, the following Google Group exists: 
-
-https://groups.google.com/forum/#!forum/aleph-search
+``aleph`` is used by multiple organisations, including Code for Africa, OCCRP and OpenOil. For coordination, the following Google Group exists: [aleph-search](https://groups.google.com/forum/#!forum/aleph-search)
 
 ## Existing alternatives
 
