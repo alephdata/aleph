@@ -1,5 +1,7 @@
 # aleph [![Build Status](https://api.travis-ci.org/pudo/aleph.png)](https://travis-ci.org/pudo/aleph)
 
+Sections: [Installation](#installation) | [Using aleph](#usage) | [Mailing list](#license) | [License](#license)
+
 ``aleph`` is a tool for indexing large amounts of both unstructured (PDF, Word, HTML) and structured (CSV, XLS, SQL) data for easy browsing and search. It is built with investigative reporting as a primary use case. ``aleph`` allows cross-referencing mentions of well-known entities (such as people and companies) against watchlists, e.g. from prior research or public datasets.
 
 Here's some key features:
@@ -35,7 +37,7 @@ $ cp aleph.env.tmpl aleph.env
 $ docker-compose up
 $ docker-compose run worker /bin/bash
 # init the database (this will also delete it, hence the name):
-root@worker# aleph evilshit
+root@worker# aleph upgrade
 ```
 
 This will launch containers for PostgreSQL and ElasticSearch as well as for the applications front- and backend. The application should become available at ``http://localhost:13376``. You can proxy this port to the public web, or install an HTTP cache to retain static assets (make sure to set ``CACHE = True`` in the settings file.
@@ -123,7 +125,7 @@ root@worker# aleph crawldir /srv/data/my_little_documents_folder
 root@worker# aleph metafolder /srv/data/scraped.mf
 ```
 
-## Project coordination
+## Mailing list
 
 ``aleph`` is used by multiple organisations, including Code for Africa, OCCRP and OpenOil. For coordination, the following Google Group exists: 
 
