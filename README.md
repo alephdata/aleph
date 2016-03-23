@@ -286,7 +286,7 @@ class ExampleCrawler(Crawler):
 
     def crawl(self):
 	    source = self.create_source(foreign_id='example', label='Example.com Documents')
-	    for i in range(0, 1000:
+	    for i in range(0, 1000):
 		     meta = self.metadata()
 	         meta.foreign_id = 'example-doc:%s' % i
              meta.title = 'Document Number %s' % i
@@ -301,7 +301,7 @@ In order to make sure that ``aleph`` can find the new crawler, it must be added 
 
 ```python
 setup(
-    name='mypackage.example:ExampleCrawler',
+    name='mypackage',
     ...
     entry_points={
         'aleph.crawlers': [
