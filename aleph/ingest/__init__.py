@@ -3,11 +3,11 @@ import logging
 import requests
 from tempfile import NamedTemporaryFile
 
+from aleph import process
 from aleph.core import get_archive, celery
 from aleph.model import clear_session
 from aleph.model.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor
-from aleph.instrument import processing_exception, processing_log, INGEST
 
 log = logging.getLogger(__name__)
 
@@ -41,9 +41,8 @@ def ingest_url(source_id, metadata, url):
             meta = get_archive().archive_file(fh.name, meta, move=True)
     except Exception as ex:
         log.exception(ex)
-        processing_exception(INGEST, component='ingest_url',
-                             source_id=source_id, meta=meta,
-                             exception=ex)
+        process.exception(process.INGEST, component='ingest_url',
+                          source_id=source_id, meta=meta, exception=ex)
         return
     ingest.delay(source_id, meta.data)
 
@@ -57,9 +56,8 @@ def ingest_file(source_id, meta, file_name, move=False):
         meta = get_archive().archive_file(file_name, meta, move=move)
     except Exception as ex:
         log.exception(ex)
-        processing_exception(INGEST, component='ingest_url',
-                             source_id=source_id, meta=meta,
-                             exception=ex)
+        process.exception(process.INGEST, component='ingest_url',
+                          source_id=source_id, meta=meta, exception=ex)
         return
     ingest.delay(source_id, meta.data)
 
@@ -68,7 +66,8 @@ def ingest_file(source_id, meta, file_name, move=False):
 def ingest(source_id, metadata):
     meta = Metadata(data=metadata)
     try:
-        processing_log(INGEST, component='ingest', meta=meta, source_id=source_id)
+        process.log(process.INGEST, component='ingest', meta=meta,
+                    source_id=source_id)
     except Exception as ex:
         log.exception(ex)
     Ingestor.dispatch(source_id, meta)

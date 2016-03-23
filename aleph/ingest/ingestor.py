@@ -1,10 +1,10 @@
 import logging
 
+from aleph import process
 from aleph.core import db, get_archive
 from aleph.ext import get_ingestors
 from aleph.model import Document
 from aleph.analyze import analyze_document
-from aleph.instrument import processing_exception, processing_log, INGEST
 
 log = logging.getLogger(__name__)
 
@@ -69,9 +69,9 @@ class Ingestor(object):
         best_cls = cls.auction_file(meta, local_path)
         if best_cls is None:
             message = "No ingestor found: %r" % meta.file_name
-            processing_log(INGEST, component=cls.__name__, meta=meta,
-                           source_id=source_id, error_type='NoIngestorFound',
-                           error_message=message)
+            process.log(process.INGEST, component=cls.__name__, meta=meta,
+                        source_id=source_id, error_type='NoIngestorFound',
+                        error_message=message)
             return
 
         log.debug("Dispatching %r to %r", meta.file_name, best_cls.__name__)
@@ -79,8 +79,7 @@ class Ingestor(object):
             best_cls(source_id).ingest(meta, local_path)
         except Exception as ex:
             log.exception(ex)
-            processing_exception(INGEST, component=best_cls.__name__,
-                                 exception=ex, meta=meta,
-                                 source_id=source_id)
+            process.exception(process.INGEST, component=best_cls.__name__,
+                              exception=ex, meta=meta, source_id=source_id)
         finally:
             get_archive().cleanup_file(meta)

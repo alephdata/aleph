@@ -140,4 +140,3 @@ class SQLCrawler(Crawler):
                 if source is None or source == name:
                     foreign_id = '%s:%s' % (self.name, name)
                     self.crawl_source(engine, foreign_id, data)
-        self.finalize()
