@@ -50,7 +50,6 @@ class ProcessingLog(db.Model, DatedModel):
         obj.error_details = error_details
 
         session = db.create_scoped_session()
-        # session = db.session
         session.add(obj)
         session.commit()
         session.remove()

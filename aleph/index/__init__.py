@@ -156,7 +156,6 @@ def generate_entities(document):
 
 @celery.task()
 def index_document(document_id):
-    # clear_session()
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
@@ -179,6 +178,7 @@ def index_document(document_id):
             bulk(get_es(), generate_records(document), stats_only=True,
                  chunk_size=2000, request_timeout=60.0)
     except Exception as ex:
+        log.exception(ex)
         process.exception(process.INDEX, component=__name__,
                           document_id=document.id, meta=document.meta,
                           source_id=document.source_id, exception=ex)
