@@ -154,12 +154,11 @@ Before digging into the individual import methods for ``aleph``, here is some of
 	* ``content_hash``: a SHA-1 checksum of the data (automatically generated).
 
 	Other fields can be added, but they will not usually be shown in the user interface.
-
 * ***Metafolders*** are a mechanism to store a set of documents before importing them into ``aleph``. It's benefit is storing metadata (see above) alongside the actual files that are to be imported, while separating ``aleph`` from previous workflow stages (e.g. the scraping of a web site). Metafolders can be generated using the Python [metafolder](https://github.com/pudo/metafolder) library, and the [krauler](https://github.com/pudo/krauler) web crawling/scraping tool.
 * ***Crawlers*** are little plug-ins to the ``aleph`` engine which import data into the system. The included crawlers are very flexible, such as ``SQLCrawler``, ``DirectoryCrawler`` or ``MetaFolderCrawler``, but specific crawlers can be programmed that will import data from a specific source.
 * ***Ingestors*** are plug-ins to the ``aleph`` engine which accept crawled files and attempt to extract text pages or tabular rows from them so that they can be imported into the system. Ingestors for common file formats like Word documents, PDF files or CSV spreadsheets are included, but more exotic types can be supported by programming additional ingestors.
 * ***Analyzers*** are run after the documents have been ingested. They are used to extract additional information from a document. Examples include the extraction of entities and language detection. Again, new analyzers can be added through the plug-in system.
-* **Plugins** to ``aleph`` are Python classes in a Python distutils package which are exposed via the ``entry_points`` mechanism. They include crawlers, ingestors and analyzers. See ``setup.py`` in the repository root for examples.
+* ***Plugins*** to ``aleph`` are Python classes in a Python distutils package which are exposed via the ``entry_points`` mechanism. They include crawlers, ingestors and analyzers. See ``setup.py`` in the repository root for examples.
 
 ### Loading data from a file or directory
 
