@@ -76,7 +76,7 @@ def permissions_save(collection=None, source=None):
     if source is not None:
         authz.require(authz.source_write(source))
 
-    resource_type = Permission.WATCHLIST if collection else Permission.SOURCE
+    resource_type = Permission.COLLECTION if collection else Permission.SOURCE
     resource_id = collection or source
     data = request_data()
     validate(data, 'permission.json#')

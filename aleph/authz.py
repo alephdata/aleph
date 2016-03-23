@@ -1,7 +1,6 @@
 from flask import request
 from werkzeug.exceptions import Forbidden
 
-from aleph.core import db
 from aleph.model import Source, Collection, Permission
 
 READ = 'read'
@@ -32,13 +31,13 @@ def collections(action):
         request.auth_collections = {READ: set(), WRITE: set()}
         if is_admin():
             q = Collection.all_ids().filter(Collection.deleted_at == None)  # noqa
-            for wl_id, in q:
-                request.auth_collections[READ].add(wl_id)
-                request.auth_collections[WRITE].add(wl_id)
+            for col_id, in q:
+                request.auth_collections[READ].add(col_id)
+                request.auth_collections[WRITE].add(col_id)
         else:
             q = Permission.all()
             q = q.filter(Permission.role_id.in_(request.auth_roles))
-            q = q.filter(Permission.resource_type == Permission.WATCHLIST)
+            q = q.filter(Permission.resource_type == Permission.COLLECTION)
             for perm in q:
                 if perm.read:
                     request.auth_collections[READ].add(perm.resource_id)
