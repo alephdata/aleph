@@ -68,7 +68,7 @@ class Crawler(object):
         db.session.commit()
         ingest_file(source.id, meta.clone(), file_path, move=move)
 
-    def emit_watchlist(self, watchlist, terms):
+    def emit_collection(self, collection, terms):
         db.session.commit()
         # log.debug("Changed terms: %r", terms)
         analyze_terms(terms)

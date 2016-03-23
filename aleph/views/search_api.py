@@ -17,7 +17,7 @@ blueprint = Blueprint('search_api', __name__)
 
 @blueprint.route('/api/1/query')
 def query():
-    creds = authz.watchlists(authz.READ), authz.sources(authz.READ)
+    creds = authz.collections(authz.READ), authz.sources(authz.READ)
     enable_cache(vary_user=True, vary=creds)
     query = documents_query(request.args)
     query['size'] = get_limit(default=100)

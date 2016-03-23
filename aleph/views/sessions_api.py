@@ -54,8 +54,8 @@ def status():
         'roles': list(request.auth_roles),
         'permissions': {
             'collections': {
-                'read': authz.watchlists(authz.READ),
-                'write': authz.watchlists(authz.WRITE)
+                'read': authz.collections(authz.READ),
+                'write': authz.collections(authz.WRITE)
             },
             'sources': {
                 'read': authz.sources(authz.READ),

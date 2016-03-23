@@ -266,7 +266,7 @@ root@worker# aleph crawlsql /path/to/spec.yml
 
 ### Loading well-known persons of interest
 
-One of the key features of ``aleph`` is its ability to cross-reference imported documents and databases with the names of entities of interest, such as politicians or companies. While you can use the application itself to manage such watchlists, it may be useful to bootstrap 
+One of the key features of ``aleph`` is its ability to cross-reference imported documents and databases with the names of entities of interest, such as politicians or companies. While you can use the application itself to manage such collections, it may be useful to bootstrap 
 the database using data from international sanctions and police search lists. Such data is provided by [OpenNames](http://pudo.org/material/opennames/) and can be imported in bulk:
 
 ```bash
@@ -274,7 +274,7 @@ $ docker-compose run worker /bin/bash
 root@worker# aleph crawl opennames
 ```
 
-Please note that importing entity watchlists requires re-indexing documents that match the given entity search terms. If you already have documents indexed, expect a significant amount of background activity following the import of the OpenNames watchlists.
+Please note that importing entity collections requires re-indexing documents that match the given entity search terms. If you already have documents indexed, expect a significant amount of background activity following the import of the OpenNames collections.
 
 ### Developing a custom crawler
 
@@ -300,7 +300,7 @@ class ExampleCrawler(Crawler):
              self.emit_url(source, meta, url)
 ```
 
-Besides ``emit_url``, results can also be forwarded using the ``emit_file(source, meta, file_path)`` and ``emit_content(source, meta, content)`` methods. If a crawler creates watchlists, it can use ``emit_watchlist(watchlist, entity_search_terms)`` which will start a partial re-index of documents.
+Besides ``emit_url``, results can also be forwarded using the ``emit_file(source, meta, file_path)`` and ``emit_content(source, meta, content)`` methods. If a crawler creates collections, it can use ``emit_collection(collection, entity_search_terms)`` which will start a partial re-index of documents.
 
 In order to make sure that ``aleph`` can find the new crawler, it must be added to the ``setup.py`` of your package:
 

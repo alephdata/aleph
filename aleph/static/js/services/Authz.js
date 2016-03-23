@@ -1,9 +1,9 @@
 
 aleph.factory('Authz', ['$rootScope', function($rootScope) {
   return {
-    watchlist: function(right, watchlist_id) {
-      if ($rootScope.session.permissions.watchlists && $rootScope.session.permissions.watchlists[right]) {
-        return $rootScope.session.permissions.watchlists[right].indexOf(watchlist_id) != -1;
+    collection: function(right, collection_id) {
+      if ($rootScope.session.permissions.collections && $rootScope.session.permissions.collections[right]) {
+        return $rootScope.session.permissions.collections[right].indexOf(collection_id) != -1;
       }
       return false;
     },

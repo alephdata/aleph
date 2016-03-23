@@ -10,13 +10,13 @@
       category: grey
       foreign_id: test_private
 
-- model: aleph.model.watchlist.Watchlist
+- model: aleph.model.collection.Collection
   records:
     - id: 1000
-      label: Public Watchlist
+      label: Public Collection
       foreign_id: test_public
     - id: 2000
-      label: Private Watchlist
+      label: Private Collection
       foreign_id: test_private
 
 - model: aleph.model.permission.Permission
@@ -38,13 +38,13 @@
       read: true
       write: false
       resource_id: 1000
-      resource_type: 'watchlist'
+      resource_type: 'collection'
     - id: 100003
       role_id: 2
       read: true
       write: false
       resource_id: 1000
-      resource_type: 'watchlist'
+      resource_type: 'collection'
 
 - model: aleph.model.entity.Entity
   records:
@@ -52,12 +52,12 @@
       name: KwaZulu
       category: Company
       foreign_id: kwa11
-      watchlist_id: 1000
+      collection_id: 1000
     - id: 2000
       name: BaNana
       category: Person
       foreign_id: banana
-      watchlist_id: 2000
+      collection_id: 2000
 
 - model: aleph.model.entity.Selector
   records:

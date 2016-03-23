@@ -7,7 +7,7 @@ from aleph.views.search_api import blueprint as search_api
 from aleph.views.graph_api import blueprint as graph_api
 from aleph.views.sessions_api import blueprint as sessions_api
 from aleph.views.roles_api import blueprint as roles_api
-from aleph.views.watchlists_api import blueprint as watchlists_api
+from aleph.views.collections_api import blueprint as collections_api
 from aleph.views.entities_api import blueprint as entities_api
 from aleph.views.exports_api import blueprint as exports_api
 from aleph.views.sources_api import blueprint as sources_api
@@ -22,7 +22,7 @@ def mount_app_blueprints(app):
     app.register_blueprint(graph_api)
     app.register_blueprint(sessions_api)
     app.register_blueprint(roles_api)
-    app.register_blueprint(watchlists_api)
+    app.register_blueprint(collections_api)
     app.register_blueprint(entities_api)
     app.register_blueprint(exports_api)
     app.register_blueprint(sources_api)

@@ -4,7 +4,7 @@ import requests
 import logging
 
 from aleph.core import get_config
-from aleph.model import Watchlist, Entity, Permission
+from aleph.model import Collection, Entity, Permission
 from aleph.model.constants import PERSON, ORGANIZATION, COMPANY, OTHER
 from aleph.crawlers.crawler import Crawler
 
@@ -27,15 +27,15 @@ class SpindleCrawler(Crawler):
         if not len(collection.get('subjects', [])):
             return
         url = urljoin(self.URL, '/api/collections/%s' % collection.get('id'))
-        watchlist = Watchlist.by_foreign_id(url, {
+        collection = Collection.by_foreign_id(url, {
             'label': collection.get('title')
         })
         res = requests.get('%s/permissions' % url, headers=self.HEADERS)
         for perm in res.json().get('results', []):
-            Permission.grant_foreign(watchlist, perm.get('role'),
+            Permission.grant_foreign(collection, perm.get('role'),
                                      perm.get('read'), perm.get('write'))
 
-        log.info(" > Spindle collection: %s", watchlist.label)
+        log.info(" > Spindle collection: %s", collection.label)
         res = requests.get('%s/entities' % url, headers=self.HEADERS)
         terms = set()
         existing_entities = []
@@ -43,7 +43,7 @@ class SpindleCrawler(Crawler):
             if entity.get('name') is None:
                 continue
             aliases = [on.get('alias') for on in entity.get('other_names', [])]
-            ent = Entity.by_foreign_id(entity.get('id'), watchlist, {
+            ent = Entity.by_foreign_id(entity.get('id'), collection, {
                 'name': entity.get('name'),
                 'category': SCHEMATA.get(entity.get('$schema'), OTHER),
                 'data': entity,
@@ -53,10 +53,10 @@ class SpindleCrawler(Crawler):
             existing_entities.append(ent.id)
             log.info("  # %s (%s)", ent.name, ent.category)
 
-        for entity in watchlist.entities:
+        for entity in collection.entities:
             if entity.id not in existing_entities:
                 entity.delete()
-        self.emit_watchlist(watchlist, terms)
+        self.emit_collection(collection, terms)
 
     def crawl(self):
         url = urljoin(self.URL, '/api/collections')

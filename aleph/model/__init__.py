@@ -8,7 +8,7 @@ from aleph.model.permission import Permission # noqa
 from aleph.model.source import Source # noqa
 from aleph.model.entity import Entity, Selector # noqa
 from aleph.model.reference import Reference # noqa
-from aleph.model.watchlist import Watchlist # noqa
+from aleph.model.collection import Collection # noqa
 from aleph.model.log import ProcessingLog # noqa
 from aleph.model.metadata import Metadata # noqa
 from aleph.model.document import Document, DocumentPage # noqa

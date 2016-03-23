@@ -1,5 +1,5 @@
 from aleph.core import db
-from aleph.model import Watchlist
+from aleph.model import Collection
 from aleph.tests.util import TestCase
 
 
@@ -33,7 +33,7 @@ class AuthApiTestCase(TestCase):
         assert res.json['role']['id'] == role.id, res.json
 
     def test_admin_all_access(self):
-        self.wl = Watchlist()
+        self.wl = Collection()
         self.wl.label = "Test Collection"
         self.wl.foreign_id = 'test'
         self.wl.creator = self.create_user('watcher')
@@ -42,9 +42,9 @@ class AuthApiTestCase(TestCase):
         res = self.client.get('/api/1/sessions')
         perm = res.json['permissions']
         assert not len(perm['sources']['write']), res.json
-        assert not len(perm['watchlists']['write']), res.json
+        assert not len(perm['collections']['write']), res.json
         self.login(foreign_id='admin', is_admin=True)
         res = self.client.get('/api/1/sessions')
         perm = res.json['permissions']
         # assert not len(perm['sources']['write']), res.json
-        assert len(perm['watchlists']['write']), res.json
+        assert len(perm['collections']['write']), res.json
