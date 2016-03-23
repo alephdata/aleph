@@ -77,7 +77,7 @@ def entity_watchlists(q, aggs, args, filters):
     entities = args.getlist('entity')
     watchlists = []
     readable = authz.watchlists(authz.READ)
-    for watchlist_id in args.getlist('watchlist'):
+    for watchlist_id in args.getlist('collection'):
         if authz.watchlist_read(watchlist_id):
             watchlists.append(int(watchlist_id))
 

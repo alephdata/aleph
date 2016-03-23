@@ -9,7 +9,7 @@ from aleph.views.cache import enable_cache
 blueprint = Blueprint('watchlists_api', __name__)
 
 
-@blueprint.route('/api/1/watchlists', methods=['GET'])
+@blueprint.route('/api/1/collections', methods=['GET'])
 def index():
     watchlists = authz.watchlists(authz.READ)
     enable_cache(vary_user=True, vary=watchlists)
@@ -18,7 +18,7 @@ def index():
     return jsonify(Pager(q))
 
 
-@blueprint.route('/api/1/watchlists', methods=['POST', 'PUT'])
+@blueprint.route('/api/1/collections', methods=['POST', 'PUT'])
 def create():
     authz.require(authz.logged_in())
     watchlist = Watchlist.create(request_data(), request.auth_role)
@@ -26,14 +26,14 @@ def create():
     return view(watchlist.id)
 
 
-@blueprint.route('/api/1/watchlists/<int:id>', methods=['GET'])
+@blueprint.route('/api/1/collections/<int:id>', methods=['GET'])
 def view(id):
     authz.require(authz.watchlist_read(id))
     watchlist = obj_or_404(Watchlist.by_id(id))
     return jsonify(watchlist)
 
 
-@blueprint.route('/api/1/watchlists/<int:id>', methods=['POST', 'PUT'])
+@blueprint.route('/api/1/collections/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     authz.require(authz.watchlist_write(id))
     watchlist = obj_or_404(Watchlist.by_id(id))
@@ -43,7 +43,7 @@ def update(id):
     return view(id)
 
 
-@blueprint.route('/api/1/watchlists/<int:id>', methods=['DELETE'])
+@blueprint.route('/api/1/collections/<int:id>', methods=['DELETE'])
 def delete(id):
     authz.require(authz.watchlist_write(id))
     watchlist = obj_or_404(Watchlist.by_id(id))

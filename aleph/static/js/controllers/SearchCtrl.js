@@ -33,13 +33,6 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     return Authz.source(Authz.WRITE, source.id);
   };
 
-  $scope.canEditWatchlist = function(watchlist) {
-    if (!watchlist || !watchlist.id) {
-      return false;
-    }
-    return Authz.source(Authz.WRITE, watchlist.id);
-  };
-
   $scope.editSource = function(source, $event) {
     $event.stopPropagation();
     var instance = $uibModal.open({
@@ -69,22 +62,22 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     });
   };
 
-  $scope.selectWatchlists = function($event) {
+  $scope.selectCollections = function($event) {
     $event.stopPropagation();
     var instance = $uibModal.open({
-      templateUrl: 'watchlists_select.html',
-      controller: 'WatchlistsSelectCtrl',
+      templateUrl: 'collections_select.html',
+      controller: 'CollectionsSelectCtrl',
       backdrop: true,
       size: 'md',
       resolve: {
-        watchlists: function() {
-          return Query.load().watchlist;
+        collections: function() {
+          return Query.load().collection;
         }
       }
     });
 
-    instance.result.then(function(watchlists) {
-      Query.set('watchlist', watchlists);
+    instance.result.then(function(collections) {
+      Query.set('collection', collections);
     });
   };
 
