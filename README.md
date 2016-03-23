@@ -86,7 +86,9 @@ Before continuing, please make sure that you have created a PostgreSQL database 
 $ createdb -E utf-8 aleph
 ```
 
-To configure ``aleph``, copy the configuration file template from ``contrib/docker_settings.py`` to a local path (such as ``settings.py``) and adapt them to suit your local environment. This includes setting up database and search index settings, outbound SMTP email settings, as well as OAuth and AWS credentials (see the ``docker`` section above). You must also make sure that the environment variable ``ALEPH_SETTINGS`` is set to the absolute path of the configuration file.
+To configure ``aleph``, copy the configuration file template from ``contrib/docker_settings.py`` to a local path (e.g. ``settings.py``) and adapt it to suit your local environment. This includes setting up database and search index settings, outbound SMTP email settings, as well as OAuth and AWS credentials (see the ``docker`` section above).
+
+You must also make sure that the environment variable ``ALEPH_SETTINGS`` is set to the absolute path of the configuration file.
 
 After setting up the configuration, you can create the database schema and search index like this:
 
@@ -94,19 +96,23 @@ After setting up the configuration, you can create the database schema and searc
 $ aleph upgrade
 ```
 
-Most errors in this command will be due to an invalid configuration, please be sure you have the configuration fully set up, database server and index running and all environment variables set.
+Most errors in this command will be due to an invalid configuration, please be sure you have the settings file prepared, database server and index running and all environment variables set.
 
-When the database has been created, you can run a development HTTP server on localhost like this:
+Once the database has been created, you can run a development HTTP server on localhost like this:
 
 ```bash
 $ aleph runserver
 ```
 
+Visit [http://localhost:5000](http://localhost:5000) to try out the web application. Make sure to use ``gunicorn`` instead of the built-in web server to run the web interface in production.
+
 Other commands (used to crawl and ingest data, or manage the system) will be explained in the Usage section below.
 
 ### Running the tests
 
-To run the test harness for ``aleph``, the application must use actual versions of a PostgreSQL database and an ElasticSearch index. These can be configured by making a copy of the ``test_settings.py.tmpl`` file to ``test_settings.py`` and editing it to match your local configuration. You must then set the environment variable ``ALEPH_TEST_SETTINGS`` to point to the absolute path of that settings file.
+To run the test harness for ``aleph``, the application must use a PostgreSQL database and an ElasticSearch index which will be deleted and re-initialized during each test run. Make sure to set these up separately from the ones you plan to use during normal operation.
+
+The test settings can be configured by making a copy of the ``test_settings.py.tmpl`` file to ``test_settings.py`` and editing it to match your local configuration. You must then set the environment variable ``ALEPH_TEST_SETTINGS`` to point to the absolute path of that settings file.
 
 When the settings are available, run:
 
