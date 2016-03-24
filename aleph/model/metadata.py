@@ -13,7 +13,7 @@ from aleph.model.tabular import Tabular
 
 
 class PDFAlternative(object):
-    """ Alternate PDF version. """
+    """Alternate PDF version."""
 
     def __init__(self, meta):
         self.meta = meta
@@ -31,7 +31,7 @@ class PDFAlternative(object):
 
 
 class Metadata(MutableMapping):
-    """ Handle all sorts of metadata normalization for documents. """
+    """Handle all sorts of metadata normalization for documents."""
 
     def __init__(self, data=None):
         if data is None:
