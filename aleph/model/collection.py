@@ -3,13 +3,15 @@ from datetime import datetime
 
 from aleph.core import db, url_for
 from aleph.model.role import Role
-from aleph.model.validation import validate
+from aleph.model.validation import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
 
 log = logging.getLogger(__name__)
 
 
-class Collection(db.Model, IdModel, SoftDeleteModel):
+class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
+    _schema = 'collection.json#'
+
     label = db.Column(db.Unicode)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
 
@@ -17,8 +19,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     creator = db.relationship(Role)
 
     def update(self, data):
-        validate(data, 'collection.json#')
-        self.label = data.get('label')
+        self.schema_update(data)
         self.touch()
 
     def delete(self):

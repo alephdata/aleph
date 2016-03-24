@@ -2,13 +2,14 @@ from uuid import uuid4
 from flask import current_app
 
 from aleph.core import db
-from aleph.model.validation import validate
+from aleph.model.validation import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
 
 
-class Role(db.Model, IdModel, SoftDeleteModel):
+class Role(db.Model, IdModel, SoftDeleteModel, SchemaModel):
     """A user, group or other access control subject."""
 
+    _schema = 'role.json#'
     __tablename__ = 'role'
 
     USER = 'user'
@@ -28,9 +29,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     permissions = db.relationship("Permission", backref="role")
 
     def update(self, data):
-        validate(data, 'role.json#')
-        self.name = data.get('name')
-        self.email = data.get('email')
+        self.schema_update(data)
 
     @classmethod
     def notifiable(cls):

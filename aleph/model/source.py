@@ -1,13 +1,15 @@
 import logging
 
 from aleph.core import db, url_for
-from aleph.model.validation import validate
+from aleph.model.validation import SchemaModel
 from aleph.model.common import DatedModel, IdModel, make_token
 
 log = logging.getLogger(__name__)
 
 
-class Source(db.Model, IdModel, DatedModel):
+class Source(db.Model, IdModel, DatedModel, SchemaModel):
+    _schema = 'source.json#'
+
     label = db.Column(db.Unicode, nullable=True)
     category = db.Column(db.Unicode, nullable=True)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
@@ -26,10 +28,7 @@ class Source(db.Model, IdModel, DatedModel):
         return src
 
     def update(self, data):
-        validate(data, 'source.json#')
-        self.label = data.get('label')
-        if 'category' in data:
-            self.category = data.get('category')
+        self.schema_update(data)
 
     def delete(self):
         from aleph.model import Document, DocumentPage, Reference

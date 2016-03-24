@@ -15,8 +15,10 @@ log = logging.getLogger(__name__)
 
 
 class Entity(db.Model, IdModel, SoftDeleteModel):
-    
+    _schema = 'entity/entity.json#'
+
     name = db.Column(db.Unicode)
+    foreign_id = db.Column(db.Unicode)
     data = db.Column('data', JSONB)
     category = db.Column(db.Enum(*ENTITY_CATEGORIES, name='entity_categories'),
                          nullable=False)
