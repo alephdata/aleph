@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 
 class Entity(db.Model, IdModel, SoftDeleteModel):
-    foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
+    
     name = db.Column(db.Unicode)
     data = db.Column('data', JSONB)
     category = db.Column(db.Enum(*ENTITY_CATEGORIES, name='entity_categories'),
@@ -152,35 +152,3 @@ class Selector(db.Model):
 
     def __unicode__(self):
         return self.text
-
-
-# class EntityIdentifier(IdModel, SoftDeleteModel):
-#     identifier = db.Column(db.Unicode)
-#     scheme = db.Column(db.Unicode)
-
-
-# class EntityOtherName(IdModel, SoftDeleteModel):
-#     name = db.Column(db.Unicode)
-#     note = db.Column(db.Unicode)
-#     family_name = db.Column(db.Unicode)
-#     given_name = db.Column(db.Unicode)
-#     additional_name = db.Column(db.Unicode)
-#     start_date = db.Column(db.DateTime)
-#     end_date = db.Column(db.DateTime)
-
-
-# class EntityAddress(IdModel, SoftDeleteModel):
-#     text = db.Column(db.Unicode)
-#     street_address = db.Column(db.Unicode)
-#     locality = db.Column(db.Unicode)
-#     region = db.Column(db.Unicode)
-#     postal_code = db.Column(db.Unicode)
-#     country = db.Column(db.Unicode)
-
-
-# class EntityContactDetail(IdModel, SoftDeleteModel):
-#     label = db.Column(db.Unicode)
-#     type = db.Column(db.Unicode)
-#     note = db.Column(db.Unicode)
-#     valid_from = db.Column(db.DateTime)
-#     valid_until = db.Column(db.DateTime)
