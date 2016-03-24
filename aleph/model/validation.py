@@ -41,7 +41,7 @@ def is_source_category(cat):
 
 @format_checker.checks('entity-category')
 def is_entity_category(cat):
-    return cat in ENTITY_CATEGORIES.keys()
+    return cat in ENTITY_CATEGORIES
 
 
 def validate(data, schema):
@@ -55,6 +55,7 @@ class SchemaModel(object):
     """Reflect operations for entity updates from a JSON schema."""
 
     _schema = None
+    _schema_recurse = False
 
     @property
     def schema_data(self):
@@ -74,11 +75,12 @@ class SchemaModel(object):
                 continue
             if prop.name not in data:
                 continue
-            if not prop.is_value:
-                continue
-            # TODO: type-casting
-            value = convert_value(prop, data[prop.name])
-            setattr(self, prop.name, value)
+            if prop.is_value:
+                # TODO: type-casting
+                value = convert_value(prop, data[prop.name])
+                setattr(self, prop.name, value)
+            # if prop.is_object:
+            #    print getattr('object', name)
         if isinstance(self, DatedModel):
             self.updated_at = datetime.utcnow()
         db.session.add(self)

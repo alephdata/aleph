@@ -10,6 +10,15 @@ from aleph.views.util import match_ids
 blueprint = Blueprint('entities_api', __name__)
 
 
+def get_data(entity=None):
+    data = request_data()
+    collection_id = data.get('collection_id')
+    collection_id = entity.collection_id if entity else collection_id
+    authz.require(authz.collection_write(collection_id))
+    data['id'] = entity.id if entity else None
+    return data
+
+
 @blueprint.route('/api/1/entities', methods=['GET'])
 def index():
     collection_ids = match_ids('collection', authz.collections(authz.READ))
@@ -20,12 +29,7 @@ def index():
 
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
 def create():
-    data = request_data()
-    collection = data.get('collection')
-    authz.require(collection)
-    authz.require(authz.collection_write(collection.id))
-    entity = Entity.create(data)
-    collection.touch()
+    entity = Entity.save(get_data())
     db.session.commit()
     analyze_entity.delay(entity.id)
     return view(entity.id)
@@ -50,13 +54,7 @@ def view(id):
 @blueprint.route('/api/1/entities/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     entity = obj_or_404(Entity.by_id(id))
-    authz.require(authz.collection_write(entity.collection_id))
-    data = request_data()
-    collection = data.get('collection')
-    authz.require(collection)
-    authz.require(authz.collection_write(collection.id))
-    entity.update(data)
-    collection.touch()
+    entity = Entity.save(get_data(entity=entity))
     db.session.commit()
     analyze_entity.delay(entity.id)
     return view(entity.id)

@@ -15,11 +15,6 @@
         "sortIndex": 92,
         "type": ["string", "null"]
     },
-    "description": {
-        "sortIndex": 95,
-        "title": "Description",
-        "type": ["string", "null"]
-    },
     "valuation": {
       "sortIndex": 90,
       "title": "Valuation",

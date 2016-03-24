@@ -1,12 +1,12 @@
-from aleph.model.validation import resolver
+from aleph.util import find_subclasses
 
 
-class EntitySchema(object):
-    """Update entities from JSON schema specified data."""
+class SchemaDispatcher(object):
 
-    _schema = None
-
-    @property
-    def schema(self):
-        _, schema = resolver.resolve(self._schema)
-        return schema
+    @classmethod
+    def get_schema_class(cls, schema):
+        if cls._schema == schema:
+            return cls
+        for subcls in find_subclasses(cls):
+            if subcls._schema == schema:
+                return subcls
