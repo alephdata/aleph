@@ -4,6 +4,8 @@ Sections: [Installation](#installation) | [Usage](#usage) | [Mailing list](#mail
 
 * * *
 
+*Truth cannot penetrate a closed mind. If all places in the universe are in the Aleph, then all stars, all lamps, all sources of light are in it, too.* - [The Aleph](http://www.phinnweb.org/links/literature/borges/aleph.html), Jorge Luis Borges
+
 ``aleph`` is a tool for indexing large amounts of both unstructured (PDF, Word, HTML) and structured (CSV, XLS, SQL) data for easy browsing and search. It is built with investigative reporting as a primary use case. ``aleph`` allows cross-referencing mentions of well-known entities (such as people and companies) against watchlists, e.g. from prior research or public datasets.
 
 Here's some key features:
