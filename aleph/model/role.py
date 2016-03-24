@@ -1,7 +1,7 @@
 from uuid import uuid4
 from flask import current_app
 
-from aleph.core import db
+from aleph.core import db, url_for
 from aleph.model.validation import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
 
@@ -80,11 +80,9 @@ class Role(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         return self.name
 
     def to_dict(self):
-        return {
-            'id': self.id,
-            'foreign_id': self.foreign_id,
-            'name': self.name,
-            'is_admin': self.is_admin,
-            'email': self.email,
-            'type': self.type
-        }
+        data = super(Role, self).to_dict()
+        data['api_url'] = url_for('roles_api.view', id=self.id)
+        data['foreign_id'] = self.foreign_id
+        data['is_admin'] = self.is_admin
+        data['type'] = self.type
+        return data

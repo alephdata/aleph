@@ -66,7 +66,6 @@ class Entity(db.Model, IdModel, SoftDeleteModel):
     def create(cls, data):
         ent = cls()
         ent.update(data)
-        db.session.add(ent)
         return ent
 
     @classmethod

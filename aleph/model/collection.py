@@ -20,7 +20,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
 
     def update(self, data):
         self.schema_update(data)
-        self.touch()
 
     def delete(self):
         self.delete_entities()
@@ -29,15 +28,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
     def touch(self):
         self.updated_at = datetime.utcnow()
         db.session.add(self)
-
-    @property
-    def terms(self):
-        from aleph.model.entity import Entity, Selector
-        q = db.session.query(Selector.text)
-        q = q.join(Entity, Entity.id == Selector.entity_id)
-        q = q.filter(Entity.collection_id == self.id)
-        q = q.distinct()
-        return set([r[0] for r in q])
 
     @classmethod
     def by_foreign_id(cls, foreign_id, data, role=None):
@@ -76,12 +66,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         return self.label
 
     def to_dict(self):
-        return {
-            'id': self.id,
-            'api_url': url_for('collections_api.view', id=self.id),
-            'label': self.label,
-            'foreign_id': self.foreign_id,
-            'creator_id': self.creator_id,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
-        }
+        data = super(Collection, self).to_dict()
+        data['api_url'] = url_for('collections_api.view', id=self.id)
+        data['foreign_id'] = self.foreign_id
+        data['creator_id'] = self.creator_id
+        return data

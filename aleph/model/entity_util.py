@@ -1,7 +1,7 @@
 from aleph.model.validation import resolver
 
 
-class SchemaBased(object):
+class EntitySchema(object):
     """Update entities from JSON schema specified data."""
 
     _schema = None

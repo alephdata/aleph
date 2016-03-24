@@ -20,7 +20,6 @@ for (root, dirs, files) in os.walk(schema_dir):
         with open(os.path.join(root, schema_file), 'r') as fh:
             schema = json.load(fh)
             resolver.store[schema['id']] = schema
-            print schema_file, schema['id']
 
 format_checker = FormatChecker()
 
@@ -53,6 +52,8 @@ def validate(data, schema):
 
 
 class SchemaModel(object):
+    """Reflect operations for entity updates from a JSON schema."""
+
     _schema = None
 
     @property
@@ -81,3 +82,13 @@ class SchemaModel(object):
         if isinstance(self, DatedModel):
             self.updated_at = datetime.utcnow()
         db.session.add(self)
+
+    def to_dict(self):
+        parent = super(SchemaModel, self)
+        data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
+        data['$schema'] = self._schema
+        for prop in self.schema_visitor.properties:
+            if not prop.is_value:
+                continue
+            data[prop.name] = getattr(self, prop.name)
+        return data

@@ -3,7 +3,7 @@ import logging
 from aleph import process
 from aleph.core import celery
 from aleph.ext import get_analyzers
-from aleph.model import Document, Entity
+from aleph.model import Document, Entity, Collection
 from aleph.search.fragments import text_query_string, meta_query_string
 from aleph.search.fragments import child_record
 from aleph.index import index_document
@@ -24,6 +24,16 @@ def analyze_source(source_id):
     query = {'term': {'source_id': source_id}}
     for doc_id in query_doc_ids(query):
         analyze_document.delay(doc_id)
+
+
+@celery.task()
+def analyze_collection(collection_id):
+    collection = Collection.by_id(collection_id)
+    if collection is None:
+        log.error("Collection does not exist: %r", collection_id)
+        return
+    for entity in collection.entities:
+        analyze_entity(entity.id)
 
 
 @celery.task()
