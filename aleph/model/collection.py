@@ -4,13 +4,12 @@ from datetime import datetime
 from aleph.core import db, url_for
 from aleph.model.role import Role
 from aleph.model.validation import validate
-from aleph.model.common import SoftDeleteModel
+from aleph.model.common import SoftDeleteModel, IdModel
 
 log = logging.getLogger(__name__)
 
 
-class Collection(db.Model, SoftDeleteModel):
-    id = db.Column(db.Integer(), primary_key=True)
+class Collection(db.Model, IdModel, SoftDeleteModel):
     label = db.Column(db.Unicode)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
 

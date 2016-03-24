@@ -13,7 +13,8 @@ blueprint = Blueprint('entities_api', __name__)
 @blueprint.route('/api/1/entities', methods=['GET'])
 def index():
     collection_ids = match_ids('collection', authz.collections(authz.READ))
-    q = Entity.by_lists(collection_ids, prefix=request.args.get('prefix'))
+    q = Entity.all()
+    q = q.filter(Entity.collection_id.in_(collection_ids))
     return jsonify(Pager(q))
 
 

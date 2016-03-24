@@ -2,23 +2,10 @@ import uuid
 import string
 from datetime import datetime
 
-from sqlalchemy import func
-
 from aleph.core import db
 
 
 ALPHABET = string.ascii_lowercase + string.digits
-
-
-def db_norm(col):
-    return func.trim(func.lower(col))
-
-
-def db_compare(col, text):
-    if text is None:
-        return col == text
-    text_ = text.lower().strip()
-    return db_norm(col) == text_
 
 
 def make_token():
@@ -34,6 +21,10 @@ def make_token():
 
 def make_textid():
     return uuid.uuid4().hex
+
+
+class IdModel(object):
+    id = db.Column(db.Integer(), primary_key=True)
 
 
 class DatedModel(object):
@@ -53,6 +44,10 @@ class DatedModel(object):
     def by_id(cls, id):
         return cls.all().filter_by(id=id).first()
 
+    def delete(self):
+        # hard delete
+        db.session.delete(self)
+
 
 class SoftDeleteModel(DatedModel):
     deleted_at = db.Column(db.DateTime, default=None, nullable=True)
@@ -66,3 +61,7 @@ class SoftDeleteModel(DatedModel):
     def all_ids(cls):
         q = super(SoftDeleteModel, cls).all_ids()
         return q.filter(cls.deleted_at == None)  # noqa
+
+    def delete(self):
+        self.deleted_at = datetime.utcnow()
+        db.session.add(self)

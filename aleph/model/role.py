@@ -3,10 +3,10 @@ from flask import current_app
 
 from aleph.core import db
 from aleph.model.validation import validate
-from aleph.model.common import SoftDeleteModel
+from aleph.model.common import SoftDeleteModel, IdModel
 
 
-class Role(db.Model, SoftDeleteModel):
+class Role(db.Model, IdModel, SoftDeleteModel):
     """A user, group or other access control subject."""
 
     __tablename__ = 'role'
@@ -19,7 +19,6 @@ class Role(db.Model, SoftDeleteModel):
     SYSTEM_GUEST = 'guest'
     SYSTEM_USER = 'user'
 
-    id = db.Column(db.Integer, primary_key=True)
     foreign_id = db.Column(db.Unicode(2048), nullable=False, unique=True)
     name = db.Column(db.Unicode, nullable=False)
     email = db.Column(db.Unicode, nullable=True)

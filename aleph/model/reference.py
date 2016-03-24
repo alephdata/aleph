@@ -3,13 +3,13 @@ import logging
 from aleph.core import db
 from aleph.model.entity import Entity
 from aleph.model.document import Document
-from aleph.model.common import DatedModel
+from aleph.model.common import DatedModel, IdModel
 
 
 log = logging.getLogger(__name__)
 
 
-class Reference(db.Model, DatedModel):
+class Reference(db.Model, IdModel, DatedModel):
     id = db.Column(db.Integer(), primary_key=True)
     document_id = db.Column(db.BigInteger, db.ForeignKey('document.id'))
     entity_id = db.Column(db.Integer, db.ForeignKey('entity.id'))

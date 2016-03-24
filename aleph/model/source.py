@@ -2,13 +2,12 @@ import logging
 
 from aleph.core import db, url_for
 from aleph.model.validation import validate
-from aleph.model.common import DatedModel, make_token
+from aleph.model.common import DatedModel, IdModel, make_token
 
 log = logging.getLogger(__name__)
 
 
-class Source(db.Model, DatedModel):
-    id = db.Column(db.Integer, primary_key=True)
+class Source(db.Model, IdModel, DatedModel):
     label = db.Column(db.Unicode, nullable=True)
     category = db.Column(db.Unicode, nullable=True)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)

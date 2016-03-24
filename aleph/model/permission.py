@@ -1,8 +1,8 @@
 from aleph.core import db
-from aleph.model.common import SoftDeleteModel
+from aleph.model.common import SoftDeleteModel, IdModel
 
 
-class Permission(db.Model, SoftDeleteModel):
+class Permission(db.Model, IdModel, SoftDeleteModel):
     """A set of rights granted to a role on a resource."""
 
     __tablename__ = 'permission'

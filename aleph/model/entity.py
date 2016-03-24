@@ -9,14 +9,12 @@ from aleph.core import db
 from aleph.model.constants import ENTITY_CATEGORIES
 from aleph.model.collection import Collection
 from aleph.model.validation import validate
-from aleph.model.common import db_compare
-from aleph.model.common import SoftDeleteModel
+from aleph.model.common import SoftDeleteModel, IdModel
 
 log = logging.getLogger(__name__)
 
 
-class Entity(db.Model, SoftDeleteModel):
-    id = db.Column(db.Integer, primary_key=True)
+class Entity(db.Model, IdModel, SoftDeleteModel):
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     name = db.Column(db.Unicode)
     data = db.Column('data', JSONB)
@@ -83,20 +81,6 @@ class Entity(db.Model, SoftDeleteModel):
             ent.update(data)
         db.session.flush()
         return ent
-
-    @classmethod
-    def by_name(cls, name, collection):
-        q = cls.all()
-        q = q.filter_by(collection=collection)
-        q = q.filter(db_compare(cls.name, name))
-        return q.first()
-
-    @classmethod
-    def by_lists(cls, collections, prefix=None):
-        q = cls.all()
-        q = q.filter(cls.collection_id.in_(collections))
-        q = q.order_by(cls.name.asc())
-        return q
 
     @classmethod
     def by_id_set(cls, ids, collection_id=None):
@@ -168,3 +152,35 @@ class Selector(db.Model):
 
     def __unicode__(self):
         return self.text
+
+
+# class EntityIdentifier(IdModel, SoftDeleteModel):
+#     identifier = db.Column(db.Unicode)
+#     scheme = db.Column(db.Unicode)
+
+
+# class EntityOtherName(IdModel, SoftDeleteModel):
+#     name = db.Column(db.Unicode)
+#     note = db.Column(db.Unicode)
+#     family_name = db.Column(db.Unicode)
+#     given_name = db.Column(db.Unicode)
+#     additional_name = db.Column(db.Unicode)
+#     start_date = db.Column(db.DateTime)
+#     end_date = db.Column(db.DateTime)
+
+
+# class EntityAddress(IdModel, SoftDeleteModel):
+#     text = db.Column(db.Unicode)
+#     street_address = db.Column(db.Unicode)
+#     locality = db.Column(db.Unicode)
+#     region = db.Column(db.Unicode)
+#     postal_code = db.Column(db.Unicode)
+#     country = db.Column(db.Unicode)
+
+
+# class EntityContactDetail(IdModel, SoftDeleteModel):
+#     label = db.Column(db.Unicode)
+#     type = db.Column(db.Unicode)
+#     note = db.Column(db.Unicode)
+#     valid_from = db.Column(db.DateTime)
+#     valid_until = db.Column(db.DateTime)
