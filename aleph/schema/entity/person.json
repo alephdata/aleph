@@ -41,12 +41,6 @@
       "title": "Residential address",
       "$ref": "entity/address.json#"
     },
-    "other_names": {
-      "description": "Alternate or former names",
-      "rdfReverse": "person",
-      "type": "array",
-      "items": {"$ref": "entity/other_name.json#"}
-    },
     "family_first": {
       "title": "Family members (1)",
       "rdfReverse": "first_person",
@@ -70,18 +64,6 @@
       "rdfReverse": "second_person",
       "type": "array",
       "items": {"$ref": "entity/social.json#"}
-    },
-    "postal_address": {
-      "title": "Postal address",
-      "$ref": "entity/address.json#"
-    },
-    "contact_details": {
-      "title": "Contact details",
-      "description": "Means of contacting the person",
-      "type": "array",
-      "items": {
-        "$ref": "entity/contact_detail.json#"
-      }
     }
   }
 }

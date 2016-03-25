@@ -15,16 +15,6 @@
       "description": "An organization category, e.g. committee",
       "type": ["string", "null"]
     },
-    "abstract": {
-      "title": "Abstract",
-      "description": "A one-line description of an organization",
-      "type": ["string", "null"]
-    },
-    "description": {
-      "title": "Description",
-      "description": "An extended description of an organization",
-      "type": ["string", "null"]
-    },
     "founding_date": {
       "title": "Founding date",
       "sortIndex": 71,
@@ -39,19 +29,9 @@
       "type": ["string", "null"],
       "format": "date"
     },
-    "image": {
-      "hidden": true,
-      "description": "A URL of an image",
-      "type": ["string", "null"],
-      "format": "uri"
-    },
-    "contact_details": {
-      "title": "Contact details",
-      "description": "Means of contacting the organization",
-      "type": "array",
-      "items": {
-        "$ref": "entity/contact_detail.json#"
-      }
+    "current_status": {
+      "title": "Current status",
+      "type": ["string", "null"]
     },
     "members": {
       "title": "Members",
@@ -61,6 +41,14 @@
       "items": {
         "$ref": "entity/membership.json#"
       }
+    },
+    "registered_address": {
+      "title": "Registered address",
+      "$ref": "entity/address.json"
+    },
+    "headquarters_address": {
+      "title": "HQ address",
+      "$ref": "entity/address.json"
     }
   }
 }

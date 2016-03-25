@@ -59,3 +59,18 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 400, res.json
+
+    def test_create(self):
+        self.login(is_admin=True)
+        url = '/api/1/entities'
+        data = {
+            '$schema': 'entity/building.json',
+            'name': "Our house",
+            'collection_id': self.col.id,
+            'summary': "In the middle of our street"
+        }
+        print data
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, res.json
+        assert 'middle' in res.json['summary'], res.json

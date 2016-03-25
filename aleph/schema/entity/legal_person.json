@@ -28,6 +28,18 @@
         "$ref": "link/membership.json#"
       }
     },
+    "contact_details": {
+      "title": "Contact details",
+      "description": "Means of contacting the organization",
+      "type": "array",
+      "items": {
+        "$ref": "entity/contact_detail.json#"
+      }
+    },
+    "postal_address": {
+      "title": "Postal address",
+      "$ref": "entity/address.json"
+    },
     "image": {
       "title": "Image URL",
       "description": "A URL of a head shot",

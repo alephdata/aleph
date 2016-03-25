@@ -21,10 +21,6 @@
       "description": "unique identifier given by the corporate register with which it is incorporated",
       "minLength": 1
     },
-    "current_status": {
-      "title": "Current status",
-      "type": ["string", "null"]
-    },
     "sector": {
       "title": "Sector",
       "sortIndex": 83,
@@ -35,38 +31,10 @@
       "sortIndex": 82,
       "type": ["string", "null"]
     },
-    "registry_url": {
+    "register_url": {
       "title": "Company register link",
       "type": "string",
       "format": "uri"
-    },
-    "website": {
-      "title": "Website",
-      "type": "string",
-      "minLength": 5,
-      "format": "uri"
-    },
-    "telephone_number": {
-      "title": "Phone number",
-      "type": "string",
-      "minLength": 4
-    },
-    "fax_number": {
-      "title": "Fax number",
-      "type": "string",
-      "minLength": 4
-    },
-    "registered_address": {
-      "title": "Registered address",
-      "$ref": "entity/address.json"
-    },
-    "headquarters_address": {
-      "title": "HQ address",
-      "$ref": "entity/address.json"
-    },
-    "postal_address": {
-      "title": "Postal address",
-      "$ref": "entity/address.json"
     }
   }
 }

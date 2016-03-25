@@ -1,6 +1,5 @@
 import logging
-from datetime import datetime
-
+# from datetime import datetime
 # from sqlalchemy import or_, func
 # from sqlalchemy.orm import aliased
 # from sqlalchemy.dialects.postgresql import JSONB
@@ -11,6 +10,8 @@ from aleph.model.collection import Collection
 from aleph.model.validation import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
 from aleph.model.entity_util import SchemaDispatcher
+from aleph.model.entity_details import EntityOtherName, EntityIdentifier
+from aleph.model.entity_details import EntityAddress, EntityContactDetail
 
 log = logging.getLogger(__name__)
 
@@ -48,7 +49,7 @@ class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel,
         if 'id' in data and data.get('id'):
             # TODO: use identifiers as well
             ent = cls.by_id(data['id'])
-            print 'ENTITY', type(ent)
+            # print 'ENTITY', type(ent)
             ent.update(data)
             return ent
         else:
@@ -58,12 +59,16 @@ class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel,
                     if subcls._schema == schema:
                         cls = subcls
             ent = cls()
+            ent.collection_id = data.get('collection_id')
             ent.update(data)
             return ent
 
     @property
     def terms(self):
-        return []  # FIXME
+        terms = set([self.name])
+        for other_name in self.other_names:
+            terms.update(other_name.terms)
+        return [t for t in terms if t is not None and len(t)]
 
     @classmethod
     def by_id_set(cls, ids, collection_id=None):
@@ -135,6 +140,7 @@ class EntityLegalPerson(Entity):
     }
 
     image = db.Column(db.Unicode, nullable=True)
+    # TODO: postal address
 
 
 class EntityLand(EntityAsset):
@@ -169,3 +175,30 @@ class EntityPerson(EntityLegalPerson):
     gender = db.Column(db.Unicode, nullable=True)
     birth_date = db.Column(db.Date, nullable=True)
     death_date = db.Column(db.Date, nullable=True)
+    biography = db.Column(db.Date, nullable=True)
+    # TODO residential address
+
+
+class EntityOrganization(EntityLegalPerson):
+    _schema = 'entity/organization.json#'
+    __mapper_args__ = {
+        'polymorphic_identity': _schema
+    }
+
+    classification = db.Column(db.Unicode, nullable=True)
+    founding_date = db.Column(db.Date, nullable=True)
+    dissolution_date = db.Column(db.Date, nullable=True)
+    current_status = db.Column(db.Date, nullable=True)
+    # TODO registered address, HQ address
+
+
+class EntityCompany(EntityOrganization, EntityAsset):
+    _schema = 'entity/company.json#'
+    __mapper_args__ = {
+        'polymorphic_identity': _schema
+    }
+
+    company_number = db.Column(db.Unicode, nullable=True)
+    sector = db.Column(db.Date, nullable=True)
+    company_type = db.Column(db.Date, nullable=True)
+    register_url = db.Column(db.Date, nullable=True)

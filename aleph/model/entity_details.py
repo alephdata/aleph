@@ -1,17 +1,28 @@
 from aleph.core import db
+from aleph.model.validation import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
 
 
-class EntityIdentifier(db.Model, IdModel, SoftDeleteModel):
+class EntityDetails(IdModel, SoftDeleteModel, SchemaModel):
+
+    def update(self, data):
+        self.schema_update(data)
+
+
+class EntityIdentifier(db.Model, EntityDetails):
     _schema = 'entity/identifier.json#'
 
+    entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
+    entity = db.relationship('Entity', backref=db.backref('identities', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
     identifier = db.Column(db.Unicode)
     scheme = db.Column(db.Unicode)
 
 
-class EntityOtherName(db.Model, IdModel, SoftDeleteModel):
+class EntityOtherName(db.Model, EntityDetails):
     _schema = 'entity/other_name.json#'
 
+    entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
+    entity = db.relationship('Entity', backref=db.backref('other_names', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
     name = db.Column(db.Unicode)
     note = db.Column(db.Unicode)
     family_name = db.Column(db.Unicode)
@@ -20,9 +31,27 @@ class EntityOtherName(db.Model, IdModel, SoftDeleteModel):
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
 
+    @property
+    def display_name(self):
+        if self.name is not None:
+            return self.name
+        return ''
 
-class EntityAddress(db.Model, IdModel, SoftDeleteModel):
+    @property
+    def terms(self):
+        return [self.display_name]
+
+    def to_dict(self):
+        data = super(EntityOtherName, self).to_dict()
+        data['display_name'] = self.display_name
+        return data
+
+
+class EntityAddress(db.Model, EntityDetails):
     _schema = 'entity/address.json#'
+
+    # entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
+    # entity = db.relationship('Entity', backref=db.backref('other_names', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
 
     text = db.Column(db.Unicode)
     street_address = db.Column(db.Unicode)
@@ -32,8 +61,11 @@ class EntityAddress(db.Model, IdModel, SoftDeleteModel):
     country = db.Column(db.Unicode)
 
 
-class EntityContactDetail(db.Model, IdModel, SoftDeleteModel):
+class EntityContactDetail(db.Model, EntityDetails):
     _schema = 'entity/contact_detail.json#'
+
+    entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
+    entity = db.relationship('EntityLegalPerson', backref=db.backref('contact_details', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
 
     label = db.Column(db.Unicode)
     type = db.Column(db.Unicode)
