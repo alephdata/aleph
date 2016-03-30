@@ -7,7 +7,7 @@ from networkx import degree
 from networkx.readwrite import json_graph
 from apikit import jsonify, arg_int
 
-from aleph.search import raw_iter, documents_query
+from aleph.search import scan_iter, documents_query
 
 blueprint = Blueprint('graph_api', __name__)
 
@@ -50,9 +50,10 @@ def generate_graph(args):
     fields = ['id', 'collection', 'entities.entity_id', 'entities.name',
               'entities.category']
     query = documents_query(args, fields=fields, facets=False)
+    query = {'query': query['query']}
 
     graph = nx.MultiGraph()
-    for doc in raw_iter(query):
+    for doc in scan_iter(query):
         entities = set()
         for entity in doc.get('_source').get('entities', []):
             if not graph.has_node(entity.get('entity_id')):

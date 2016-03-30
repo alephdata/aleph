@@ -2,6 +2,7 @@ import logging
 from hashlib import sha1
 from elasticsearch.helpers import bulk, scan
 
+from aleph import process
 from aleph.core import celery, get_es, get_es_index
 from aleph.model import Document
 from aleph.util import latinize_text
@@ -146,7 +147,8 @@ def generate_entities(document):
             'id': reference.id,
             'weight': reference.weight,
             'entity_id': reference.entity.id,
-            'watchlist_id': reference.entity.watchlist_id,
+            'collection_id': reference.entity.collection_id,
+            'watchlist_id': reference.entity.collection_id,
             'name': reference.entity.name,
             'category': reference.entity.category
         })
@@ -155,24 +157,29 @@ def generate_entities(document):
 
 @celery.task()
 def index_document(document_id):
-    # clear_session()
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
         return
-    log.info("Index document: %r", document)
-    data = document.to_index_dict()
-    data['entities'] = generate_entities(document)
-    data['title_latin'] = latinize_text(data.get('title'))
-    data['summary_latin'] = latinize_text(data.get('summary'))
-    get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
-                   id=document.id)
+    try:
+        log.info("Index document: %r", document)
+        data = document.to_index_dict()
+        data['entities'] = generate_entities(document)
+        data['title_latin'] = latinize_text(data.get('title'))
+        data['summary_latin'] = latinize_text(data.get('summary'))
+        get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
+                       id=document.id)
 
-    clear_children(document)
-    if document.type == Document.TYPE_TEXT:
-        bulk(get_es(), generate_pages(document), stats_only=True,
-             chunk_size=2000, request_timeout=60.0)
+        clear_children(document)
+        if document.type == Document.TYPE_TEXT:
+            bulk(get_es(), generate_pages(document), stats_only=True,
+                 chunk_size=2000, request_timeout=60.0)
 
-    if document.type == Document.TYPE_TABULAR:
-        bulk(get_es(), generate_records(document), stats_only=True,
-             chunk_size=2000, request_timeout=60.0)
+        if document.type == Document.TYPE_TABULAR:
+            bulk(get_es(), generate_records(document), stats_only=True,
+                 chunk_size=2000, request_timeout=60.0)
+    except Exception as ex:
+        log.exception(ex)
+        process.exception(process.INDEX, component=__name__,
+                          document_id=document.id, meta=document.meta,
+                          source_id=document.source_id, exception=ex)

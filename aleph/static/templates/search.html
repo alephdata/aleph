@@ -63,21 +63,21 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <span class="pull-right">
-          <a ng-click="selectWatchlists($event)">
+          <a ng-click="selectCollections($event)">
             <i class="fa fa-cog"></i>
           </a>
         </span>
         <strong><i class="fa fa-male"></i> Persons and Companies</strong>
-        <small ng-show="query.state.watchlist.length">
-          (from {{query.state.watchlist.length | number}} watchlists)
+        <small ng-show="query.state.collection.length">
+          (from {{query.state.collection.length | number}} watchlists)
         </small>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet empty" ng-if="!result.entities.length">
-          <span ng-hide="query.state.watchlist.length">
-            <a ng-click="selectWatchlists($event)"><i class="fa fa-cog"></i> Select watchlists</a> to see tagged entities.
+          <span ng-hide="query.state.collection.length">
+            <a ng-click="selectCollections($event)"><i class="fa fa-cog"></i> Select watchlists</a> to see tagged entities.
           </span>
-          <span ng-show="query.state.watchlist.length">
+          <span ng-show="query.state.collection.length">
             The selected watchlists don't match any documents.
           </span>
         </li>
@@ -87,7 +87,7 @@
           ng-click="query.toggleFilter('entity', entity.id)">
           <span class="badge">{{entity.count | number}}</span>
           <entity-icon category="entity.category"></entity-icon>
-          <span class="lbl" uib-tooltip="{{metadata.watchlists[entity.watchlist_id].label}}"
+          <span class="lbl" uib-tooltip="{{metadata.collections[entity.collection_id].label}}"
             tooltip-append-to-body="true" tooltip-placement="right">
             {{entity.name}}
           </span>

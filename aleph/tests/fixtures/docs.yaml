@@ -10,13 +10,13 @@
       category: grey
       foreign_id: test_private
 
-- model: aleph.model.watchlist.Watchlist
+- model: aleph.model.collection.Collection
   records:
     - id: 1000
-      label: Public Watchlist
+      label: Public Collection
       foreign_id: test_public
     - id: 2000
-      label: Private Watchlist
+      label: Private Collection
       foreign_id: test_private
 
 - model: aleph.model.permission.Permission
@@ -38,13 +38,13 @@
       read: true
       write: false
       resource_id: 1000
-      resource_type: 'watchlist'
+      resource_type: 'collection'
     - id: 100003
       role_id: 2
       read: true
       write: false
       resource_id: 1000
-      resource_type: 'watchlist'
+      resource_type: 'collection'
 
 - model: aleph.model.entity.Entity
   records:
@@ -52,21 +52,21 @@
       name: KwaZulu
       category: Company
       foreign_id: kwa11
-      watchlist_id: 1000
+      collection_id: 1000
     - id: 2000
       name: BaNana
       category: Person
       foreign_id: banana
-      watchlist_id: 2000
+      collection_id: 2000
 
 - model: aleph.model.entity.Selector
   records:
     - id: 1000
-      text: KwaZulu
+      text: kwazulu
       entity_id: 1000
     - id: 2000
-      text: BaNana
-      entity_id: 1000
+      text: banana
+      entity_id: 2000
 
 - model: aleph.model.document.Document
   records:
@@ -101,7 +101,7 @@
         extension: txt
         languages: ['ru']
     - id: 1003
-      content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8294
+      content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8295
       foreign_id: test4
       type: tabular
       source_id: 1000
@@ -144,7 +144,7 @@
       document_id: 1001
       number: 1
       text: >
-        TOP SECRET BANANA SECRETS
+        TOP SECRET BANANA SECRETS FROM KWAZULU NATAL!
     - id: 1003
       document_id: 1002
       number: 1

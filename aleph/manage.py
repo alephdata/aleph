@@ -50,7 +50,7 @@ def crawl(name):
         log.info('No such crawler: %r', name)
     else:
         crawler = crawlers.get(name)()
-        crawler.crawl()
+        crawler.execute()
     db.session.commit()
 
 
@@ -69,7 +69,7 @@ def crawldir(directory, source=None, language=None, country=None):
     if country is not None:
         meta['countries'] = [country]
     crawler = DirectoryCrawler(base_meta=meta)
-    crawler.crawl(directory=directory, source=source)
+    crawler.execute(directory=directory, source=source)
 
 
 @manager.command
@@ -79,7 +79,7 @@ def crawlsql(yaml_config, source=None):
     yaml_config = os.path.abspath(yaml_config)
     yaml_config = os.path.normpath(yaml_config)
     log.info('Crawling %r...', yaml_config)
-    SQLCrawler().crawl(config=yaml_config, source=source)
+    SQLCrawler().execute(config=yaml_config, source=source)
     db.session.commit()
 
 
@@ -88,7 +88,7 @@ def crawlsql(yaml_config, source=None):
 def metafolder(folder, source=None):
     """Crawl the given metafolder path."""
     log.info('Importing %r...', folder)
-    MetaFolderCrawler().crawl(folder=folder, source=source)
+    MetaFolderCrawler().execute(folder=folder, source=source)
     db.session.commit()
 
 

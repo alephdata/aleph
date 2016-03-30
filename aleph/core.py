@@ -47,6 +47,9 @@ def create_app(config={}):
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
 
+    if 'postgres' not in app.config.get('SQLALCHEMY_DATABASE_URI', ''):
+        raise RuntimeError("aleph database must be PostgreSQL!")
+
     queue_name = app_name + '_q'
     app.config['CELERY_DEFAULT_QUEUE'] = queue_name
     app.config['CELERY_QUEUES'] = (

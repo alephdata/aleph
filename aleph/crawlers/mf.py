@@ -1,6 +1,7 @@
 import logging
 import metafolder
 
+from aleph import process
 from aleph.model import Permission, Role
 from aleph.crawlers.crawler import Crawler
 
@@ -26,8 +27,7 @@ class MetaFolderCrawler(Crawler):
         source_data = item.meta.get('source', {})
         source_id = source_data.pop('foreign_id', source)
         if source_id is None:
-            log.error("No foreign_id for source given: %r", item)
-            return
+            raise ValueError("No foreign_id for source given: %r" % item)
         if source_id not in sources:
             label = source_data.get('label', source_id)
             sources[source_id] = self.create_source(foreign_id=source_id,
@@ -49,5 +49,10 @@ class MetaFolderCrawler(Crawler):
         mf = metafolder.open(folder)
         sources = {}
         for item in mf:
-            self.crawl_item(item, sources, source)
-        self.finalize()
+            try:
+                self.crawl_item(item, sources, source)
+            except Exception as ex:
+                process.exception(process.INDEX, component=self.name,
+                                  foreign_id=item.identifier,
+                                  source_location=folder, meta=item.meta,
+                                  exception=ex)

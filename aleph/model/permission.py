@@ -7,9 +7,9 @@ class Permission(db.Model, SoftDeleteModel):
 
     __tablename__ = 'permission'
 
-    WATCHLIST = 'watchlist'
+    COLLECTION = 'collection'
     SOURCE = 'source'
-    RESOURCE_TYPES = [WATCHLIST, SOURCE]
+    RESOURCE_TYPES = [COLLECTION, SOURCE]
 
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
@@ -21,14 +21,14 @@ class Permission(db.Model, SoftDeleteModel):
 
     @classmethod
     def grant_foreign(cls, resource, foreign_id, read, write):
-        from aleph.model import Source, Watchlist, Role
+        from aleph.model import Source, Collection, Role
         role = Role.by_foreign_id(foreign_id)
         if role is None:
             return
         if isinstance(resource, Source):
             cls.grant_resource(cls.SOURCE, resource.id, role, read, write)
-        if isinstance(resource, Watchlist):
-            cls.grant_resource(cls.WATCHLIST, resource.id, role, read, write)
+        if isinstance(resource, Collection):
+            cls.grant_resource(cls.COLLECTION, resource.id, role, read, write)
 
     @classmethod
     def grant_resource(cls, resource_type, resource_id, role, read, write):

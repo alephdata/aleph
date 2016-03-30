@@ -49,6 +49,10 @@ class DatedModel(object):
     def all_ids(cls):
         return db.session.query(cls.id)
 
+    @classmethod
+    def by_id(cls, id):
+        return cls.all().filter_by(id=id).first()
+
 
 class SoftDeleteModel(DatedModel):
     deleted_at = db.Column(db.DateTime, default=None, nullable=True)

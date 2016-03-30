@@ -12,7 +12,7 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
     });
     query.offset = null;
     query.entity = ensureArray(query.entity);
-    query.watchlist = ensureArray(query.watchlist);
+    query.collection = ensureArray(query.collection);
     query.facet = ensureArray(query.facet);
     return query;
   };

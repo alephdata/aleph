@@ -3,16 +3,14 @@
   <h4 class="modal-title">Select active watchlists</h4>
 </div>
 
-<form class="form-horizontal" role="form" name="selectWatchlists" ng-submit="update(selectWatchlists)">
+<form class="form-horizontal" role="form" name="selectCollections" ng-submit="update(selectCollections)">
   <div class="modal-table">
     <table class="table table-condensed">
-      <tr ng-repeat="watchlist in watchlists" ng-class="{'first-row': $first}">
+      <tr ng-repeat="collection in collections" ng-class="{'first-row': $first}">
         <td class="active-switch">
-          <input type="checkbox" ng-model="watchlist.active">
+          <input type="checkbox" ng-model="collection.active">
         </td>
-        <td> 
-          {{watchlist.label}}
-        </td>
+        <td ng-bind="collection.label"></td>
       </tr>
     </table>
   </div>

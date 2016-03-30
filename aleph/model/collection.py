@@ -9,7 +9,7 @@ from aleph.model.common import SoftDeleteModel
 log = logging.getLogger(__name__)
 
 
-class Watchlist(db.Model, SoftDeleteModel):
+class Collection(db.Model, SoftDeleteModel):
     id = db.Column(db.Integer(), primary_key=True)
     label = db.Column(db.Unicode)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
@@ -18,7 +18,7 @@ class Watchlist(db.Model, SoftDeleteModel):
     creator = db.relationship(Role)
 
     def update(self, data):
-        validate(data, 'watchlist.json#')
+        validate(data, 'collection.json#')
         self.label = data.get('label')
         self.touch()
 
@@ -35,33 +35,29 @@ class Watchlist(db.Model, SoftDeleteModel):
         from aleph.model.entity import Entity, Selector
         q = db.session.query(Selector.text)
         q = q.join(Entity, Entity.id == Selector.entity_id)
-        q = q.filter(Entity.watchlist_id == self.id)
+        q = q.filter(Entity.collection_id == self.id)
         q = q.distinct()
         return set([r[0] for r in q])
 
     @classmethod
     def by_foreign_id(cls, foreign_id, data, role=None):
         q = cls.all().filter(cls.foreign_id == foreign_id)
-        watchlist = q.first()
-        if watchlist is None:
-            watchlist = cls.create(data, role)
-            watchlist.foreign_id = foreign_id
-        watchlist.update(data)
-        db.session.add(watchlist)
+        collection = q.first()
+        if collection is None:
+            collection = cls.create(data, role)
+            collection.foreign_id = foreign_id
+        collection.update(data)
+        db.session.add(collection)
         db.session.flush()
-        return watchlist
+        return collection
 
     @classmethod
     def create(cls, data, role):
-        watchlist = cls()
-        watchlist.update(data)
-        watchlist.creator = role
-        db.session.add(watchlist)
-        return watchlist
-
-    @classmethod
-    def by_id(cls, id):
-        return cls.all().filter_by(id=id).first()
+        collection = cls()
+        collection.update(data)
+        collection.creator = role
+        db.session.add(collection)
+        return collection
 
     @classmethod
     def all_by_ids(cls, ids):
@@ -74,7 +70,7 @@ class Watchlist(db.Model, SoftDeleteModel):
         return q.all()
 
     def __repr__(self):
-        return '<Watchlist(%r, %r)>' % (self.id, self.label)
+        return '<Collection(%r, %r)>' % (self.id, self.label)
 
     def __unicode__(self):
         return self.label
@@ -82,7 +78,7 @@ class Watchlist(db.Model, SoftDeleteModel):
     def to_dict(self):
         return {
             'id': self.id,
-            'api_url': url_for('watchlists_api.view', id=self.id),
+            'api_url': url_for('collections_api.view', id=self.id),
             'label': self.label,
             'foreign_id': self.foreign_id,
             'creator_id': self.creator_id,

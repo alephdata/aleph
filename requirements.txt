@@ -8,8 +8,10 @@ Flask-Script==2.0.5
 Flask-Testing==0.4.2
 Flask-Fixtures==0.3.3
 Flask-Mail==0.9.1
+SQLAlchemy==1.0.11
 celery>=3.1.17
 elasticsearch==2.1.0
+psycopg2
 cssutils
 lxml
 normality>=0.1
@@ -25,7 +27,6 @@ gunicorn
 Unidecode==0.04.17
 networkx
 XlsxWriter==0.6.6
-SQLAlchemy-Utils>=0.29.8
 https://github.com/pudo/messytables/tarball/allow-parser-args
 https://github.com/pudo/extractors/tarball/master
 https://github.com/pudo/krauler/tarball/master

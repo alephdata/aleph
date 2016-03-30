@@ -76,8 +76,8 @@
       </h3>
       <p>Select a watchlist to cross-reference it with documents:</p>
       <ul>
-        <li ng-repeat="watchlist in watchlists">
-          <a ng-href="#/search?watchlist={{watchlist.id}}" class="mainlink">{{watchlist.label}}</a>
+        <li ng-repeat="collection in collections">
+          <a ng-href="#/search?collection={{collection.id}}" class="mainlink" ng-bind="collection.label"></a>
         </li>
       </ul>
     </div>

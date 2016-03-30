@@ -5,7 +5,7 @@ from urlparse import urljoin
 import requests
 
 from aleph.core import get_config, db
-from aleph.model import Watchlist, Permission, Entity
+from aleph.model import Collection, Permission, Entity
 from aleph.model.constants import PERSON, COMPANY
 from aleph.crawlers.crawler import Crawler
 
@@ -87,17 +87,16 @@ class IDFiles(IDBase):
             if not data.get('next'):
                 break
             url = data['next']
-        self.finalize()
 
 
 class IDRequests(IDBase):
 
     def crawl(self):
         url = urljoin(self.host, '/ticket/all_closed/?format=json')
-        watchlist = Watchlist.by_foreign_id(url, {
+        collection = Collection.by_foreign_id(url, {
             'label': 'Investigative Dashboard Requests'
         })
-        Permission.grant_foreign(watchlist, 'idashboard:occrp_staff',
+        Permission.grant_foreign(collection, 'idashboard:occrp_staff',
                                  True, False)
         existing_entities = []
         terms = set()
@@ -109,7 +108,7 @@ class IDRequests(IDBase):
                 category = REQUEST_TYPES.get(req.get('ticket_type'))
                 if category is None:
                     continue
-                ent = Entity.by_foreign_id(str(req.get('id')), watchlist, {
+                ent = Entity.by_foreign_id(str(req.get('id')), collection, {
                     'name': req.get('name'),
                     'category': category,
                     'data': req,
@@ -119,7 +118,7 @@ class IDRequests(IDBase):
                 existing_entities.append(ent.id)
                 log.info("  # %s (%s)", ent.name, ent.category)
 
-        for entity in watchlist.entities:
+        for entity in collection.entities:
             if entity.id not in existing_entities:
                 entity.delete()
-        self.emit_watchlist(watchlist, terms)
+        self.emit_collection(collection, terms)

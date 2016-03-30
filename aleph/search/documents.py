@@ -62,7 +62,7 @@ def documents_query(args, fields=None, facets=True, newer_than=None):
     if facets:
         aggs = aggregate(q, args, filters)
         aggs = facet_source(q, aggs, filters)
-        q = entity_watchlists(q, aggs, args, filters)
+        q = entity_collections(q, aggs, args, filters)
 
     return {
         'sort': sort,
@@ -72,19 +72,19 @@ def documents_query(args, fields=None, facets=True, newer_than=None):
     }
 
 
-def entity_watchlists(q, aggs, args, filters):
-    """Filter entities, facet for watchlists."""
+def entity_collections(q, aggs, args, filters):
+    """Filter entities, facet for collections."""
     entities = args.getlist('entity')
-    watchlists = []
-    readable = authz.watchlists(authz.READ)
-    for watchlist_id in args.getlist('watchlist'):
-        if authz.watchlist_read(watchlist_id):
-            watchlists.append(int(watchlist_id))
+    collections = []
+    readable = authz.collections(authz.READ)
+    for collection_id in args.getlist('collection'):
+        if authz.collection_read(collection_id):
+            collections.append(int(collection_id))
 
     flt = {
         'or': [
             {
-                'terms': {'entities.watchlist_id': watchlists}
+                'terms': {'entities.watchlist_id': collections}
             },
             {
                 'and': [

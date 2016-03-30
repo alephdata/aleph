@@ -42,12 +42,12 @@ def update(id):
     return jsonify(role)
 
 
-@blueprint.route('/api/1/watchlists/<int:watchlist>/permissions')
-def watchlist_permissions_index(watchlist=None):
-    authz.require(authz.watchlist_write(watchlist))
+@blueprint.route('/api/1/collections/<int:collection>/permissions')
+def collection_permissions_index(collection=None):
+    authz.require(authz.collection_write(collection))
     q = Permission.all()
     q = q.filter(Permission.resource_type == Permission.COLLECTION)
-    q = q.filter(Permission.resource_id == watchlist)
+    q = q.filter(Permission.resource_id == collection)
     return jsonify({
         'total': q.count(),
         'results': q
@@ -66,18 +66,18 @@ def source_permissions_index(source=None):
     })
 
 
-@blueprint.route('/api/1/watchlists/<int:watchlist>/permissions',
+@blueprint.route('/api/1/collections/<int:collection>/permissions',
                  methods=['POST', 'PUT'])
 @blueprint.route('/api/1/sources/<int:source>/permissions',
                  methods=['POST', 'PUT'])
-def permissions_save(watchlist=None, source=None):
-    if watchlist is not None:
-        authz.require(authz.watchlist_write(watchlist))
+def permissions_save(collection=None, source=None):
+    if collection is not None:
+        authz.require(authz.collection_write(collection))
     if source is not None:
         authz.require(authz.source_write(source))
 
-    resource_type = Permission.WATCHLIST if watchlist else Permission.SOURCE
-    resource_id = watchlist or source
+    resource_type = Permission.COLLECTION if collection else Permission.SOURCE
+    resource_id = collection or source
     data = request_data()
     validate(data, 'permission.json#')
 

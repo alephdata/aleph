@@ -1,5 +1,4 @@
 import logging
-from itertools import count
 from elasticsearch.helpers import scan
 
 from aleph.core import get_es, get_es_index
@@ -13,21 +12,5 @@ log = logging.getLogger(__name__)
 
 
 def scan_iter(query):
-    for res in scan(get_es(), query=query, index=get_es_index(),
-                    doc_type=[TYPE_DOCUMENT]):
-        yield res
-
-
-def raw_iter(query):
-    for page in count(0):
-        query['from'] = PAGE * page
-        query['size'] = PAGE
-        result = get_es().search(index=get_es_index(),
-                                 doc_type=TYPE_DOCUMENT,
-                                 body=query)
-        hits = result.get('hits', {})
-        for doc in hits.get('hits', []):
-            yield doc
-
-        if not hits.get('total') > PAGE * (page + 1):
-            return
+    return scan(get_es(), query=query, index=get_es_index(),
+                doc_type=[TYPE_DOCUMENT])

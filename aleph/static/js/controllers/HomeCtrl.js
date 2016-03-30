@@ -6,7 +6,7 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Que
   $scope.sources = data.sources;
   $scope.session = data.metadata.session;
   $scope.metadata = data.metadata;
-  $scope.watchlists = data.metadata.watchlistsList.sort(function(a, b) {
+  $scope.collections = data.metadata.collectionsList.sort(function(a, b) {
     return a.label.localeCompare(b.label);
   });
   $scope.query = Query.load();

@@ -7,7 +7,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
 from aleph.model.constants import ENTITY_CATEGORIES
-from aleph.model.watchlist import Watchlist
+from aleph.model.collection import Collection
 from aleph.model.validation import validate
 from aleph.model.common import db_compare
 from aleph.model.common import SoftDeleteModel
@@ -22,8 +22,8 @@ class Entity(db.Model, SoftDeleteModel):
     data = db.Column('data', JSONB)
     category = db.Column(db.Enum(*ENTITY_CATEGORIES, name='entity_categories'),
                          nullable=False)
-    watchlist_id = db.Column(db.Integer(), db.ForeignKey('watchlist.id'))
-    watchlist = db.relationship(Watchlist, backref=db.backref('entities', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
+    collection_id = db.Column(db.Integer(), db.ForeignKey('collection.id'))
+    collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
 
     def delete(self):
         from aleph.model import Reference
@@ -70,54 +70,49 @@ class Entity(db.Model, SoftDeleteModel):
         return ent
 
     @classmethod
-    def by_foreign_id(cls, foreign_id, watchlist, data):
+    def by_foreign_id(cls, foreign_id, collection, data):
         q = cls.all()
-        q = q.filter_by(watchlist=watchlist)
+        q = q.filter_by(collection=collection)
         q = q.filter_by(foreign_id=foreign_id)
         ent = q.first()
         if ent is None:
             ent = cls.create(data)
             ent.foreign_id = foreign_id
-            ent.watchlist = watchlist
+            ent.collection = collection
         else:
             ent.update(data)
         db.session.flush()
         return ent
 
     @classmethod
-    def by_name(cls, name, watchlist):
+    def by_name(cls, name, collection):
         q = cls.all()
-        q = q.filter_by(watchlist=watchlist)
+        q = q.filter_by(collection=collection)
         q = q.filter(db_compare(cls.name, name))
         return q.first()
 
     @classmethod
-    def by_id(cls, id):
-        q = cls.all().filter_by(id=id)
-        return q.first()
-
-    @classmethod
-    def by_lists(cls, watchlists, prefix=None):
+    def by_lists(cls, collections, prefix=None):
         q = cls.all()
-        q = q.filter(cls.watchlist_id.in_(watchlists))
+        q = q.filter(cls.collection_id.in_(collections))
         q = q.order_by(cls.name.asc())
         return q
 
     @classmethod
-    def by_id_set(cls, ids, watchlist_id=None):
+    def by_id_set(cls, ids, collection_id=None):
         if not len(ids):
             return {}
         q = cls.all()
         q = q.filter(cls.id.in_(ids))
-        if watchlist_id is not None:
-            q = q.filter(cls.watchlist_id == watchlist_id)
+        if collection_id is not None:
+            q = q.filter(cls.collection_id == collection_id)
         entities = {}
         for ent in q:
             entities[ent.id] = ent
         return entities
 
     @classmethod
-    def suggest_prefix(cls, prefix, watchlists, limit=10):
+    def suggest_prefix(cls, prefix, collections, limit=10):
         if prefix is None or not len(prefix):
             return []
         prefix = prefix.strip()
@@ -127,7 +122,7 @@ class Entity(db.Model, SoftDeleteModel):
         q = db.session.query(ent.id, ent.name, ent.category, count)
         q = q.join(sel, ent.id == sel.entity_id)
         q = q.filter(ent.deleted_at == None)  # noqa
-        q = q.filter(ent.watchlist_id.in_(watchlists))
+        q = q.filter(ent.collection_id.in_(collections))
         q = q.filter(or_(sel.text.ilike('%s%%' % prefix),
                          sel.text.ilike('%% %s%%' % prefix)))
         q = q.group_by(ent.id, ent.name, ent.category)
@@ -155,7 +150,7 @@ class Entity(db.Model, SoftDeleteModel):
             'foreign_id': self.foreign_id,
             # 'api_url': url_for('entities_api.view', id=self.id),
             'category': self.category,
-            'watchlist_id': self.watchlist_id,
+            'collection_id': self.collection_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }

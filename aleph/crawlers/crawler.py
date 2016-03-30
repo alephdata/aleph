@@ -1,6 +1,7 @@
 import logging
 from tempfile import NamedTemporaryFile
 
+from aleph import process
 from aleph.core import db
 from aleph.model import Metadata, Source, Document
 from aleph.ext import get_crawlers
@@ -17,6 +18,14 @@ class Crawler(object):
 
     def crawl(self, **kwargs):
         raise NotImplemented()
+
+    def execute(self, **kwargs):
+        try:
+            self.crawl(**kwargs)
+            self.finalize()
+        except Exception as ex:
+            log.exception(ex)
+            process.exception(process.CRAWL, component=self.name, exception=ex)
 
     @property
     def name(self):
@@ -59,7 +68,7 @@ class Crawler(object):
         db.session.commit()
         ingest_file(source.id, meta.clone(), file_path, move=move)
 
-    def emit_watchlist(self, watchlist, terms):
+    def emit_collection(self, collection, terms):
         db.session.commit()
         # log.debug("Changed terms: %r", terms)
         analyze_terms(terms)

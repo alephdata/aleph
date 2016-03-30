@@ -1,5 +1,6 @@
 import logging
 
+from aleph import process
 from aleph.core import celery
 from aleph.ext import get_analyzers
 from aleph.model import Document, Entity
@@ -69,5 +70,11 @@ def analyze_document(document_id):
         return
     log.info("Analyze document: %r", document)
     for cls in get_analyzers():
-        cls().analyze(document, document.meta)
+        try:
+            cls().analyze(document, document.meta)
+        except Exception as ex:
+            log.exception(ex)
+            process.exception(process.ANALYZE, component=cls.__name__,
+                              document_id=document.id, meta=document.meta,
+                              source_id=document.source_id, exception=ex)
     index_document(document_id)

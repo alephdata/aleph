@@ -14,22 +14,22 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
       dfd = $q.defer();
       Session.get().then(function(session) {
         $q.all([
-          $http.get('/api/1/watchlists?limit=1000&_uid=' + session.cbq),
+          $http.get('/api/1/collections?limit=1000&_uid=' + session.cbq),
           $http.get('/api/1/metadata', {cache: true})
         ]).then(function(results) {
-            var watchlists = {},
-                watchlistsCount = 0, 
+            var collections = {},
+                collectionsCount = 0, 
                 metadata = results[1].data;
             angular.forEach(results[0].data.results, function(c) {
-              watchlists[c.id] = c;
-              watchlistsCount++;
+              collections[c.id] = c;
+              collectionsCount++;
             });
 
             dfd.resolve({
               'session': session,
-              'watchlists': watchlists,
-              'watchlistsList': results[0].data.results,
-              'watchlistsCount': watchlistsCount,
+              'collections': collections,
+              'collectionsList': results[0].data.results,
+              'collectionsCount': collectionsCount,
               'fields': metadata.fields,
               'source_categories': metadata.source_categories,
               'countries': metadata.countries, 

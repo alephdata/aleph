@@ -7,10 +7,10 @@ from collections import defaultdict
 
 from aleph.core import db
 from aleph.util import latinize_text
-from aleph.model import Reference, Selector, Entity, Watchlist
+from aleph.model import Reference, Selector, Entity, Collection
 from aleph.analyze.analyzer import Analyzer
 
-# TODO: cache regexen, perhaps by watchlist?
+# TODO: cache regexen, perhaps by collection?
 
 log = logging.getLogger(__name__)
 BATCH_SIZE = 5000
@@ -50,13 +50,13 @@ def normalize(text):
 class EntityCache(object):
 
     def __init__(self):
-        self.watchlists = {}
+        self.collections = {}
 
-    def compile_watchlist(self, watchlist_id):
+    def compile_collection(self, collection_id):
         matchers = defaultdict(set)
         q = db.session.query(Selector.entity_id, Selector.text)
         q = q.join(Entity, Entity.id == Selector.entity_id)
-        q = q.filter(Entity.watchlist_id == watchlist_id)
+        q = q.filter(Entity.collection_id == collection_id)
         for entity_id, text in q.all():
             text = normalize(text)
             matchers[text].add(entity_id)
@@ -65,17 +65,17 @@ class EntityCache(object):
         return rex, matchers
 
     def matchers(self):
-        timestamps = Watchlist.timestamps()
-        for ts in self.watchlists.keys():
+        timestamps = Collection.timestamps()
+        for ts in self.collections.keys():
             if ts not in timestamps:
-                self.watchlists.pop(ts, None)
+                self.collections.pop(ts, None)
 
         for ts in timestamps:
-            if ts not in self.watchlists:
-                log.info('Entity tagger updating watchlist: %r', ts)
-                self.watchlists[ts] = self.compile_watchlist(ts[0])
+            if ts not in self.collections:
+                log.info('Entity tagger updating collection: %r', ts)
+                self.collections[ts] = self.compile_collection(ts[0])
 
-        return self.watchlists.values()
+        return self.collections.values()
 
 
 class EntityAnalyzer(Analyzer):
