@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "link/social.json#",
+  "id": "/link/social.json#",
   "title": "Social tie",
   "plural": "Social ties",
   "sortIndex": 35,
@@ -8,7 +8,7 @@
   "faIcon": "fa-link",
   "inline": false,
   "graph": "edge",
-  "oneOf": [{"$ref": "link/link.json#"}],
+  "oneOf": [{"$ref": "/link/link.json#"}],
   "required": ["role", "first_person", "second_person"],
   "properties": {
     "role": {
@@ -19,13 +19,13 @@
     "first_person": {
       "title": "First person",
       "sortIndex": 90,
-      "$ref": "entity/person.json#",
+      "$ref": "/entity/person.json#",
       "rdfReverse": "social_first"
     },
     "second_person": {
       "title": "Second person",
       "sortIndex": 85,
-      "$ref": "entity/person.json#",
+      "$ref": "/entity/person.json#",
       "rdfReverse": "social_second"
     },
     "note": {

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/building.json#",
+  "id": "/entity/building.json#",
   "title": "Building",
   "plural": "Buildings",
   "description": "A building",
@@ -8,10 +8,10 @@
   "type": "object",
   "faIcon": "fa-building",
   "graph": "node",
-  "oneOf": [{"$ref": "entity/asset.json#"}],
+  "oneOf": [{"$ref": "/entity/asset.json#"}],
   "properties": {
-    "address": {
-      "$ref": "entity/address.json#"
+    "building_address": {
+      "$ref": "/entity/address.json#"
     }
   }
 }

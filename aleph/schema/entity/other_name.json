@@ -1,24 +1,18 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/other_name.json#",
+  "id": "/entity/other_name.json#",
   "title": "Other name",
   "plural": "Aliases",
   "description": "An alternate or former name",
   "type": "object",
   "faIcon": "fa-language",
   "inline": true,
-  "required": ["person", "name"], 
+  "required": ["name"], 
   "properties": {
     "id": {
       "title": "ID",
       "hidden": true,
       "type": "integer"
-    },
-    "person": {
-      "sortIndex": 99,
-      "title": "Person",
-      "rdfReverse": "other_names",
-      "$ref": "entity/person.json#"
     },
     "name": {
       "title": "Other name",

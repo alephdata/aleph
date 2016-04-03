@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/contact_detail.json#",
+  "id": "/entity/contact_detail.json#",
   "title": "Contact detail",
   "plural": "Contact details",
   "description": "A means of contacting an entity",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/land.json#",
+  "id": "/entity/land.json#",
   "title": "Land",
   "plural": "Land",
   "description": "A parcel of land",
@@ -9,7 +9,7 @@
   "faIcon": "fa-map",
   "graph": "node",
   "oneOf": [
-      {"$ref": "entity/asset.json#"}
+      {"$ref": "asset.json#"}
   ],
   "properties": {
     "parcel_number": {

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/identifier.json#",
+  "id": "/entity/identifier.json#",
   "title": "Identifier",
   "plural": "Identifiers",
   "description": "An issued identifier",

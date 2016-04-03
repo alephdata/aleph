@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/legal_person.json#",
+  "id": "/entity/legal_person.json#",
   "title": "Legal Entity",
   "plural": "Legal Entities",
   "description": "An individual or company",
@@ -8,7 +8,7 @@
   "type": "object",
   "faIcon": "fa-user-secret",
   "graph": "node",
-  "oneOf": [{"$ref": "entity/entity.json#"}],
+  "oneOf": [{"$ref": "/entity/entity.json#"}],
   "required": ["name"],
   "properties": {
     "assets": {
@@ -16,7 +16,7 @@
       "type": "array",
       "rdfReverse": "owner",
       "items": {
-        "$ref": "entity/ownership.json#"
+        "$ref": "/link/ownership.json#"
       }
     },
     "memberships": {
@@ -25,7 +25,7 @@
       "description": "The person's memberships",
       "rdfReverse": "person",
       "items": {
-        "$ref": "link/membership.json#"
+        "$ref": "/link/membership.json#"
       }
     },
     "contact_details": {
@@ -33,12 +33,12 @@
       "description": "Means of contacting the organization",
       "type": "array",
       "items": {
-        "$ref": "entity/contact_detail.json#"
+        "$ref": "/entity/contact_detail.json#"
       }
     },
     "postal_address": {
       "title": "Postal address",
-      "$ref": "entity/address.json"
+      "$ref": "/entity/address.json"
     },
     "image": {
       "title": "Image URL",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/entity.json#",
+  "id": "/entity/entity.json#",
   "title": "Any entity",
   "type": "object",
   "properties": {
@@ -49,13 +49,13 @@
     "identifiers": {
       "title": "Identifiers",
       "type": "array",
-      "items": {"$ref": "entity/identifier.json#"}
+      "items": {"$ref": "/entity/identifier.json#"}
     },
     "other_names": {
       "description": "Alternate or former names",
       "rdfReverse": "person",
       "type": "array",
-      "items": {"$ref": "entity/other_name.json#"}
+      "items": {"$ref": "/entity/other_name.json#"}
     }
   },
   "required": ["name"]

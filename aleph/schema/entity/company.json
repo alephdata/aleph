@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/company.json#",
+  "id": "/entity/company.json#",
   "title": "Company",
   "plural": "Companies",
   "description": "A company",
@@ -9,8 +9,8 @@
   "faIcon": "fa-suitcase",
   "graph": "node",
   "allOf": [
-      {"$ref": "entity/organization.json#"},
-      {"$ref": "entity/asset.json#"}
+      {"$ref": "/entity/organization.json#"},
+      {"$ref": "/entity/asset.json#"}
   ],
   "required": ["name"],
   "properties": {

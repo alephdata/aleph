@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://schema.occrp.org/generic/link.json#",
+  "id": "/link/link.json#",
   "title": "A link between entities",
   "description": "A generic link between two (or more) entitites",
   "type": "object",

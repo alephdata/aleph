@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/person.json#",
+  "id": "/entity/person.json#",
   "title": "Person",
   "plural": "People",
   "description": "A real person, alive or dead",
@@ -8,7 +8,7 @@
   "type": "object",
   "faIcon": "fa-user",
   "graph": "node",
-  "oneOf": [{"$ref": "entity/legal_person.json#"}],
+  "oneOf": [{"$ref": "/entity/legal_person.json#"}],
   "required": ["name"],
   "properties": {
     "gender": {
@@ -39,31 +39,31 @@
     },
     "residential_address": {
       "title": "Residential address",
-      "$ref": "entity/address.json#"
+      "$ref": "/entity/address.json#"
     },
     "family_first": {
       "title": "Family members (1)",
       "rdfReverse": "first_person",
       "type": "array",
-      "items": {"$ref": "entity/family.json#"}
+      "items": {"$ref": "/link/family.json#"}
     },
     "family_second": {
       "title": "Family members (2)",
       "rdfReverse": "second_person",
       "type": "array",
-      "items": {"$ref": "entity/family.json#"}
+      "items": {"$ref": "/link/family.json#"}
     },
     "social_first": {
       "title": "Social relationships (1)",
       "rdfReverse": "first_person",
       "type": "array",
-      "items": {"$ref": "entity/social.json#"}
+      "items": {"$ref": "/link/social.json#"}
     },
     "social_second": {
       "title": "Social relationships (2)",
       "rdfReverse": "second_person",
       "type": "array",
-      "items": {"$ref": "entity/social.json#"}
+      "items": {"$ref": "/link/social.json#"}
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/address.json#",
+  "id": "/entity/address.json#",
   "title": "Address",
   "plural": "Addresses",
   "description": "An address object",
@@ -14,7 +14,7 @@
     },
     "text": {
       "title": "Text",
-      "type": "text"
+      "type": "string"
     },
     "street_address": {
       "title": "Street address",

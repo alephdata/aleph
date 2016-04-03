@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/organization.json#",
+  "id": "/entity/organization.json#",
   "title": "Organization",
   "plural": "Organizations",
   "description": "A group with a common purpose or reason for existence that goes beyond the set of people belonging to it",
@@ -8,7 +8,7 @@
   "type": "object",
   "faIcon": "fa-university",
   "graph": "node",
-  "oneOf": [{"$ref": "entity/legal_person.json#"}],
+  "oneOf": [{"$ref": "/entity/legal_person.json#"}],
   "properties": {
     "classification": {
       "title": "Classification",
@@ -39,16 +39,16 @@
       "type": "array",
       "rdfReverse": "organization",
       "items": {
-        "$ref": "entity/membership.json#"
+        "$ref": "/link/membership.json#"
       }
     },
     "registered_address": {
       "title": "Registered address",
-      "$ref": "entity/address.json"
+      "$ref": "/entity/address.json"
     },
     "headquarters_address": {
       "title": "HQ address",
-      "$ref": "entity/address.json"
+      "$ref": "/entity/address.json"
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "entity/asset.json#",
+  "id": "/entity/asset.json#",
   "title": "Asset",
   "plural": "Assets",
   "description": "An asset owned by one or several owners",
@@ -8,7 +8,7 @@
   "sortIndex": 63,
   "faIcon": "fa-map",
   "graph": "node",
-  "oneOf": [{"$ref": "entity/entity.json#"}],
+  "oneOf": [{"$ref": "/entity/entity.json#"}],
   "properties": {
     "register_name": {
         "title": "Register name",
@@ -37,7 +37,7 @@
         "type": "array",
         "rdfReverse": "asset",
         "items": {
-            "$ref": "link/ownership.json#"
+            "$ref": "/link/ownership.json#"
         }
     }
   }
