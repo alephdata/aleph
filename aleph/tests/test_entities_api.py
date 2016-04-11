@@ -64,7 +64,7 @@ class EntitiesApiTestCase(TestCase):
         self.login(is_admin=True)
         url = '/api/1/entities'
         data = {
-            '$schema': 'entity/building.json',
+            '$schema': '/entity/building.json',
             'name': "Our house",
             'collection_id': self.col.id,
             'summary': "In the middle of our street"
@@ -74,3 +74,25 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 'middle' in res.json['summary'], res.json
+
+    def test_create_nested(self):
+        self.login(is_admin=True)
+        url = '/api/1/entities'
+        data = {
+            '$schema': '/entity/person.json#',
+            'name': "Osama bin Laden",
+            'collection_id': self.col.id,
+            'other_names': [
+                {'name': "Usama bin Laden"},
+                {'name': "Osama bin Ladin"},
+            ],
+            'residential_address': {
+                'text': 'Home',
+                'region': 'Netherlands',
+                'country': 'nl'
+            }
+        }
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, res.json
+        assert 2 == len(res.json.get('other_names', [])), res.json

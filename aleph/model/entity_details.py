@@ -10,16 +10,16 @@ class EntityDetails(IdModel, SoftDeleteModel, SchemaModel):
 
 
 class EntityIdentifier(db.Model, EntityDetails):
-    _schema = 'entity/identifier.json#'
+    _schema = '/entity/identifier.json#'
 
     entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
-    entity = db.relationship('Entity', backref=db.backref('identities', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
+    entity = db.relationship('Entity', backref=db.backref('identifiers', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
     identifier = db.Column(db.Unicode)
     scheme = db.Column(db.Unicode)
 
 
 class EntityOtherName(db.Model, EntityDetails):
-    _schema = 'entity/other_name.json#'
+    _schema = '/entity/other_name.json#'
 
     entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
     entity = db.relationship('Entity', backref=db.backref('other_names', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
@@ -28,6 +28,9 @@ class EntityOtherName(db.Model, EntityDetails):
     family_name = db.Column(db.Unicode)
     given_name = db.Column(db.Unicode)
     additional_name = db.Column(db.Unicode)
+    honorific_prefix = db.Column(db.Unicode)
+    honorific_suffix = db.Column(db.Unicode)
+    patronymic_name = db.Column(db.Unicode)
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
 
@@ -47,11 +50,22 @@ class EntityOtherName(db.Model, EntityDetails):
         return data
 
 
-class EntityAddress(db.Model, EntityDetails):
-    _schema = 'entity/address.json#'
+class EntityContactDetail(db.Model, EntityDetails):
+    _schema = '/entity/contact_detail.json#'
 
-    # entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
-    # entity = db.relationship('Entity', backref=db.backref('other_names', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
+    entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
+    entity = db.relationship('EntityLegalPerson', backref=db.backref('contact_details',
+        lazy='dynamic', cascade='all, delete-orphan'))  # noqa
+
+    label = db.Column(db.Unicode)
+    type = db.Column(db.Unicode)
+    note = db.Column(db.Unicode)
+    valid_from = db.Column(db.DateTime)
+    valid_until = db.Column(db.DateTime)
+
+
+class EntityAddress(db.Model, EntityDetails):
+    _schema = '/entity/address.json#'
 
     text = db.Column(db.Unicode)
     street_address = db.Column(db.Unicode)
@@ -59,16 +73,3 @@ class EntityAddress(db.Model, EntityDetails):
     region = db.Column(db.Unicode)
     postal_code = db.Column(db.Unicode)
     country = db.Column(db.Unicode)
-
-
-class EntityContactDetail(db.Model, EntityDetails):
-    _schema = 'entity/contact_detail.json#'
-
-    entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
-    entity = db.relationship('EntityLegalPerson', backref=db.backref('contact_details', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
-
-    label = db.Column(db.Unicode)
-    type = db.Column(db.Unicode)
-    note = db.Column(db.Unicode)
-    valid_from = db.Column(db.DateTime)
-    valid_until = db.Column(db.DateTime)

@@ -84,5 +84,6 @@ class Role(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         data['api_url'] = url_for('roles_api.view', id=self.id)
         data['foreign_id'] = self.foreign_id
         data['is_admin'] = self.is_admin
+        data['email'] = self.email
         data['type'] = self.type
         return data

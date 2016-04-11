@@ -70,27 +70,101 @@ class SchemaModel(object):
 
     def schema_update(self, data):
         validate(data, self._schema)
+        db.session.add(self)
         for prop in self.schema_visitor.properties:
             if prop.name == 'id':
                 continue
             if prop.name not in data:
                 continue
+            prop_data = data[prop.name]
             if prop.is_value:
-                # TODO: type-casting
-                value = convert_value(prop, data[prop.name])
-                setattr(self, prop.name, value)
-            # if prop.is_object:
-            #    print getattr('object', name)
+                self._schema_update_value(prop, prop_data)
+            elif prop.is_object:
+                self._schema_update_object(prop, prop_data)
+            elif prop.is_array:
+                self._schema_update_array(prop, prop_data)
         if isinstance(self, DatedModel):
             self.updated_at = datetime.utcnow()
         db.session.add(self)
+
+    def _schema_update_value(self, prop, data):
+        value = convert_value(prop, data)
+        setattr(self, prop.name, value)
+
+    def _get_property_by_column(self, column):
+        for prop in self.__mapper__.iterate_properties:
+            if hasattr(prop, 'columns'):
+                if column in prop.columns:
+                    return prop
+
+    def _get_relationship(self, name, direction):
+        rel = getattr(type(self), name)
+        if rel.prop.direction.name != direction:
+            raise TypeError("Not a %s relationship!" % direction)
+        if not issubclass(rel.mapper.class_, SchemaModel):
+            raise TypeError("Associated class is not a SchemaModel!")
+        return rel
+
+    def _schema_update_object(self, prop, data):
+        rel = self._get_relationship(prop.name, 'MANYTOONE')
+
+        obj = getattr(self, prop.name)
+        if obj is None:
+            # Create if does not exist.
+            if data is None:
+                return
+            obj = rel.mapper.class_()
+
+        # Update or delete.
+        if data is not None:
+            obj.update(data)
+            db.session.flush()
+        else:
+            obj.delete()
+
+        # Link up primary and foreign key.
+        for local_col, remote_col in rel.prop.local_remote_pairs:
+            local_prop = self._get_property_by_column(local_col)
+            remote_prop = obj._get_property_by_column(remote_col)
+            value = getattr(obj, remote_prop.key)
+            if data is None:
+                value = None
+            setattr(self, local_prop.key, value)
+        return obj
+
+    def _schema_update_array(self, prop, data):
+        rel = self._get_relationship(prop.name, 'ONETOMANY')
+        existing = list(getattr(self, prop.name))
+        fresh = data or []
+
+        for item in fresh:
+            obj = rel.mapper.class_()
+            obj.update(item)
+            existing.append(obj)
+
+        db.session.flush()
+
+        for obj in existing:
+            # Link up primary and foreign key.
+            for local_col, remote_col in rel.prop.local_remote_pairs:
+                local_prop = self._get_property_by_column(local_col)
+                remote_prop = obj._get_property_by_column(remote_col)
+                value = getattr(self, local_prop.key)
+                setattr(obj, remote_prop.key, value)
+
+            # print obj.entity_id, obj.to_dict()
+
+        setattr(self, prop.name, existing)
+        return existing
 
     def to_dict(self):
         parent = super(SchemaModel, self)
         data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
         data['$schema'] = self._schema
         for prop in self.schema_visitor.properties:
-            if not prop.is_value:
-                continue
-            data[prop.name] = getattr(self, prop.name)
+            if prop.is_value or prop.inline or \
+                    (prop.is_array and prop.items.inline):
+                value = getattr(self, prop.name)
+                if value is not None:
+                    data[prop.name] = value
         return data

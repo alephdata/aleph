@@ -1,7 +1,7 @@
 import logging
 # from datetime import datetime
-# from sqlalchemy import or_, func
-# from sqlalchemy.orm import aliased
+from sqlalchemy import or_
+from sqlalchemy.orm import aliased
 # from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
@@ -10,24 +10,24 @@ from aleph.model.collection import Collection
 from aleph.model.validation import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
 from aleph.model.entity_util import SchemaDispatcher
-from aleph.model.entity_details import EntityOtherName, EntityIdentifier
-from aleph.model.entity_details import EntityAddress, EntityContactDetail
+from aleph.model.entity_details import EntityOtherName, EntityIdentifier  # noqa
+from aleph.model.entity_details import EntityAddress, EntityContactDetail  # noqa
 
 log = logging.getLogger(__name__)
 
 
 class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel,
              SchemaDispatcher):
-    _schema = 'entity/entity.json#'
+    _schema = '/entity/entity.json#'
 
     name = db.Column(db.Unicode)
-    discriminator = db.Column('type', db.String(255), index=True)
+    type = db.Column('type', db.String(255), index=True)
     summary = db.Column(db.Unicode, nullable=True)
     description = db.Column(db.Unicode, nullable=True)
     jurisdiction_code = db.Column(db.Unicode, nullable=True)
 
     __mapper_args__ = {
-        'polymorphic_on': discriminator,
+        'polymorphic_on': type,
         'polymorphic_identity': _schema
     }
 
@@ -83,31 +83,26 @@ class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel,
             entities[ent.id] = ent
         return entities
 
-    # @classmethod
-    # def suggest_prefix(cls, prefix, collections, limit=10):
-    #     if prefix is None or not len(prefix):
-    #         return []
-    #     prefix = prefix.strip()
-    #     ent = aliased(Entity)
-    #     sel = aliased(Selector)
-    #     count = func.count(sel.id)
-    #     q = db.session.query(ent.id, ent.name, ent.category, count)
-    #     q = q.join(sel, ent.id == sel.entity_id)
-    #     q = q.filter(ent.deleted_at == None)  # noqa
-    #     q = q.filter(ent.collection_id.in_(collections))
-    #     q = q.filter(or_(sel.text.ilike('%s%%' % prefix),
-    #                      sel.text.ilike('%% %s%%' % prefix)))
-    #     q = q.group_by(ent.id, ent.name, ent.category)
-    #     q = q.order_by(count.desc())
-    #     q = q.limit(limit)
-    #     suggestions = []
-    #     for entity_id, name, category, count in q.all():
-    #         suggestions.append({
-    #             'id': entity_id,
-    #             'name': name,
-    #             'category': category
-    #         })
-    #     return suggestions
+    @classmethod
+    def suggest_prefix(cls, prefix, collections, limit=10):
+        if prefix is None or not len(prefix):
+            return []
+        prefix = prefix.strip()
+        ent = aliased(Entity)
+        q = db.session.query(ent.id, ent.name, ent.type)
+        q = q.filter(ent.deleted_at == None)  # noqa
+        q = q.filter(ent.collection_id.in_(collections))
+        q = q.filter(or_(ent.name.ilike('%s%%' % prefix),
+                         ent.name.ilike('%% %s%%' % prefix)))
+        q = q.limit(limit)
+        suggestions = []
+        for entity_id, name, schema in q.all():
+            suggestions.append({
+                'id': entity_id,
+                'name': name,
+                '$schema': schema
+            })
+        return suggestions
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)
@@ -140,11 +135,12 @@ class EntityLegalPerson(Entity):
     }
 
     image = db.Column(db.Unicode, nullable=True)
-    # TODO: postal address
+    postal_address_id = db.Column(db.Integer(), db.ForeignKey('entity_address.id'))  # noqa
+    postal_address = db.relationship('EntityAddress', foreign_keys=[postal_address_id])  # noqa
 
 
 class EntityLand(EntityAsset):
-    _schema = 'entity/land.json#'
+    _schema = '/entity/land.json#'
     __mapper_args__ = {
         'polymorphic_identity': _schema
     }
@@ -158,16 +154,17 @@ class EntityLand(EntityAsset):
 
 
 class EntityBuilding(EntityAsset):
-    _schema = 'entity/building.json#'
+    _schema = '/entity/building.json#'
     __mapper_args__ = {
         'polymorphic_identity': _schema
     }
 
-    # TODO: address
+    building_address_id = db.Column(db.Integer(), db.ForeignKey('entity_address.id'))  # noqa
+    building_address = db.relationship('EntityAddress', foreign_keys=[building_address_id])  # noqa
 
 
 class EntityPerson(EntityLegalPerson):
-    _schema = 'entity/person.json#'
+    _schema = '/entity/person.json#'
     __mapper_args__ = {
         'polymorphic_identity': _schema
     }
@@ -176,11 +173,13 @@ class EntityPerson(EntityLegalPerson):
     birth_date = db.Column(db.Date, nullable=True)
     death_date = db.Column(db.Date, nullable=True)
     biography = db.Column(db.Date, nullable=True)
-    # TODO residential address
+
+    residential_address_id = db.Column(db.Integer(), db.ForeignKey('entity_address.id'))  # noqa
+    residential_address = db.relationship('EntityAddress', foreign_keys=[residential_address_id])  # noqa
 
 
 class EntityOrganization(EntityLegalPerson):
-    _schema = 'entity/organization.json#'
+    _schema = '/entity/organization.json#'
     __mapper_args__ = {
         'polymorphic_identity': _schema
     }
@@ -189,11 +188,16 @@ class EntityOrganization(EntityLegalPerson):
     founding_date = db.Column(db.Date, nullable=True)
     dissolution_date = db.Column(db.Date, nullable=True)
     current_status = db.Column(db.Date, nullable=True)
-    # TODO registered address, HQ address
+
+    registered_address_id = db.Column(db.Integer(), db.ForeignKey('entity_address.id'))  # noqa
+    registered_address = db.relationship('EntityAddress', foreign_keys=[registered_address_id])  # noqa
+
+    headquarters_address_id = db.Column(db.Integer(), db.ForeignKey('entity_address.id'))  # noqa
+    headquarters_address = db.relationship('EntityAddress', foreign_keys=[headquarters_address_id])  # noqa
 
 
 class EntityCompany(EntityOrganization, EntityAsset):
-    _schema = 'entity/company.json#'
+    _schema = '/entity/company.json#'
     __mapper_args__ = {
         'polymorphic_identity': _schema
     }

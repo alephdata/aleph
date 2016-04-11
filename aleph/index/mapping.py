@@ -43,7 +43,7 @@ DOCUMENT_MAPPING = {
                 "watchlist_id": {"type": "integer", "index": "not_analyzed"},
                 "collection_id": {"type": "integer", "index": "not_analyzed"},
                 "name": {"type": "string", "index": "not_analyzed"},
-                "category": {"type": "string", "index": "not_analyzed"},
+                "type": {"type": "string", "index": "not_analyzed"},
                 "weight": {"type": "string", "index": "not_analyzed"}
             }
         },

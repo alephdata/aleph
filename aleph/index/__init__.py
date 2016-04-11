@@ -20,6 +20,7 @@ def init_search():
             TYPE_RECORD: RECORD_MAPPING
         }
     })
+    get_es().indices.open(index=get_es_index())
 
 
 def upgrade_search():
@@ -150,7 +151,7 @@ def generate_entities(document):
             'collection_id': reference.entity.collection_id,
             'watchlist_id': reference.entity.collection_id,
             'name': reference.entity.name,
-            'category': reference.entity.category
+            'type': reference.entity.type
         })
     return entities
 
@@ -161,25 +162,19 @@ def index_document(document_id):
     if document is None:
         log.info("Could not find document: %r", document_id)
         return
-    try:
-        log.info("Index document: %r", document)
-        data = document.to_index_dict()
-        data['entities'] = generate_entities(document)
-        data['title_latin'] = latinize_text(data.get('title'))
-        data['summary_latin'] = latinize_text(data.get('summary'))
-        get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
-                       id=document.id)
+    log.info("Index document: %r", document)
+    data = document.to_index_dict()
+    data['entities'] = generate_entities(document)
+    data['title_latin'] = latinize_text(data.get('title'))
+    data['summary_latin'] = latinize_text(data.get('summary'))
+    get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
+                   id=document.id)
 
-        clear_children(document)
-        if document.type == Document.TYPE_TEXT:
-            bulk(get_es(), generate_pages(document), stats_only=True,
-                 chunk_size=2000, request_timeout=60.0)
+    clear_children(document)
+    if document.type == Document.TYPE_TEXT:
+        bulk(get_es(), generate_pages(document), stats_only=True,
+             chunk_size=2000, request_timeout=60.0)
 
-        if document.type == Document.TYPE_TABULAR:
-            bulk(get_es(), generate_records(document), stats_only=True,
-                 chunk_size=2000, request_timeout=60.0)
-    except Exception as ex:
-        log.exception(ex)
-        process.exception(process.INDEX, component=__name__,
-                          document_id=document.id, meta=document.meta,
-                          source_id=document.source_id, exception=ex)
+    if document.type == Document.TYPE_TABULAR:
+        bulk(get_es(), generate_records(document), stats_only=True,
+             chunk_size=2000, request_timeout=60.0)

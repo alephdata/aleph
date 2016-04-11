@@ -46,26 +46,27 @@
       resource_id: 1000
       resource_type: 'collection'
 
-- model: aleph.model.entity.Entity
+- model: aleph.model.entity.EntityCompany
   records:
     - id: 1000
       name: KwaZulu
-      category: Company
-      foreign_id: kwa11
+      # foreign_id: kwa11
       collection_id: 1000
+
+- model: aleph.model.entity.EntityPerson
+  records:
     - id: 2000
       name: BaNana
-      category: Person
-      foreign_id: banana
+      # foreign_id: banana
       collection_id: 2000
 
-- model: aleph.model.entity.Selector
+- model: aleph.model.entity_details.EntityOtherName
   records:
     - id: 1000
-      text: kwazulu
+      name: kwazulu
       entity_id: 1000
     - id: 2000
-      text: banana
+      name: banana
       entity_id: 2000
 
 - model: aleph.model.document.Document
