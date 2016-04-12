@@ -2,6 +2,7 @@ import os
 from apikit import jsonify
 from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
+from elasticsearch import TransportError
 
 from aleph.model.constants import CORE_FACETS, SOURCE_CATEGORIES
 from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
@@ -54,4 +55,13 @@ def handle_validation_error(err):
     return jsonify({
         'status': 'error',
         'message': err.message
+    }, status=400)
+
+
+@blueprint.app_errorhandler(TransportError)
+def handle_es_error(err):
+    return jsonify({
+        'status': 'error',
+        'message': err.error,
+        'info': err.info.get('error', {}).get('root_cause', [])[-1]
     }, status=400)

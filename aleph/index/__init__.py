@@ -2,7 +2,6 @@ import logging
 from hashlib import sha1
 from elasticsearch.helpers import bulk, scan
 
-from aleph import process
 from aleph.core import celery, get_es, get_es_index
 from aleph.model import Document
 from aleph.util import latinize_text

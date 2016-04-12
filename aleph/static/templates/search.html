@@ -41,6 +41,10 @@
 </div>
 <div class="row">
   <div class="col-md-8">
+    <div class="alert alert-danger" role="alert" ng-if="error">
+      <strong>An error occurred while running your search.</strong>
+      {{error.info.reason || error.message}}
+    </div>
     <div>
       <div ng-repeat="doc in result.results">
         <search-result doc="doc" result="result"></search-result>
