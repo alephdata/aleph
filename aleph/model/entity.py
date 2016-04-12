@@ -46,10 +46,8 @@ class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel,
 
     @classmethod
     def save(cls, data):
-        if 'id' in data and data.get('id'):
-            # TODO: use identifiers as well
-            ent = cls.by_id(data['id'])
-            # print 'ENTITY', type(ent)
+        ent = cls.by_id(data.get('id'))
+        if ent is not None:
             ent.update(data)
             return ent
         else:
