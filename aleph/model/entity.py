@@ -9,16 +9,15 @@ from aleph.util import find_subclasses
 from aleph.model.collection import Collection
 from aleph.model.validation import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
-from aleph.model.entity_util import SchemaDispatcher
 from aleph.model.entity_details import EntityOtherName, EntityIdentifier  # noqa
 from aleph.model.entity_details import EntityAddress, EntityContactDetail  # noqa
 
 log = logging.getLogger(__name__)
 
 
-class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel,
-             SchemaDispatcher):
+class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel):
     _schema = '/entity/entity.json#'
+    _schema_recurse = True
 
     name = db.Column(db.Unicode)
     type = db.Column('type', db.String(255), index=True)
@@ -98,7 +97,7 @@ class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel,
             suggestions.append({
                 'id': entity_id,
                 'name': name,
-                'type': schema
+                '$schema': schema
             })
         return suggestions
 

@@ -3,7 +3,7 @@ aleph.directive('entityIcon', ['$http', function($http) {
     restrict: 'E',
     transclude: true,
     scope: {
-      'type': '='
+      'schema': '='
     },
     templateUrl: 'entity_icon.html',
     link: function (scope, element, attrs, model) {

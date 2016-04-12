@@ -7,6 +7,7 @@ from jsonmapping import SchemaVisitor
 from jsonmapping.value import convert_value
 
 from aleph.core import db
+from aleph.util import find_subclasses
 from aleph.model.common import DatedModel
 from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.model.constants import SOURCE_CATEGORIES, ENTITY_CATEGORIES
@@ -64,6 +65,14 @@ class SchemaModel(object):
         _, schema = resolver.resolve(self._schema)
         return schema
 
+    @classmethod
+    def get_schema_class(cls, schema):
+        if cls._schema == schema:
+            return cls
+        for subcls in find_subclasses(cls):
+            if subcls._schema == schema:
+                return subcls
+
     @property
     def schema_visitor(self):
         return SchemaVisitor(self.schema_data, resolver)
@@ -80,9 +89,9 @@ class SchemaModel(object):
             prop_data = data[prop.name]
             if prop.is_value:
                 self._schema_update_value(prop, prop_data)
-            elif prop.is_object:
+            elif prop.is_object and self._schema_recurse:
                 self._schema_update_object(prop, prop_data)
-            elif prop.is_array:
+            elif prop.is_array and self._schema_recurse:
                 self._schema_update_array(prop, prop_data)
         if isinstance(self, DatedModel):
             self.updated_at = datetime.utcnow()
@@ -116,6 +125,7 @@ class SchemaModel(object):
         return rel
 
     def _schema_update_object(self, prop, data):
+        """Create or update an associated object."""
         rel = self._get_relationship(prop.name, 'MANYTOONE')
 
         obj = getattr(self, prop.name)
@@ -141,6 +151,7 @@ class SchemaModel(object):
         return obj
 
     def _schema_update_array(self, prop, data):
+        """Create or update an associated set of objects."""
         rel = self._get_relationship(prop.name, 'ONETOMANY')
         cls = rel.mapper.class_
         existing = list(getattr(self, prop.name))
