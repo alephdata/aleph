@@ -148,7 +148,6 @@ def generate_entities(document):
             'weight': reference.weight,
             'entity_id': reference.entity.id,
             'collection_id': reference.entity.collection_id,
-            'watchlist_id': reference.entity.collection_id,
             'name': reference.entity.name,
             'type': reference.entity.type
         })

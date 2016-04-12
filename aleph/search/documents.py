@@ -84,12 +84,12 @@ def entity_collections(q, aggs, args, filters):
     flt = {
         'or': [
             {
-                'terms': {'entities.watchlist_id': collections}
+                'terms': {'entities.collection_id': collections}
             },
             {
                 'and': [
                     {
-                        'terms': {'entities.watchlist_id': readable},
+                        'terms': {'entities.collection_id': readable},
                         'terms': {'entities.entity_id': entities},
                     }
                 ]

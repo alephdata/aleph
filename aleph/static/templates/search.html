@@ -90,7 +90,7 @@
           ng-class="{'active': query.hasFilter('entity', entity.id)}"
           ng-click="query.toggleFilter('entity', entity.id)">
           <span class="badge">{{entity.count | number}}</span>
-          <entity-icon category="entity.category"></entity-icon>
+          <entity-icon type="entity.type"></entity-icon>
           <span class="lbl" uib-tooltip="{{metadata.collections[entity.collection_id].label}}"
             tooltip-append-to-body="true" tooltip-placement="right">
             {{entity.name}}
