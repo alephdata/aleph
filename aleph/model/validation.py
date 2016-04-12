@@ -92,12 +92,21 @@ class SchemaModel(object):
         setattr(self, prop.name, value)
 
     def _get_property_by_column(self, column):
+        """Given a model column, find its mapped property name."""
         for prop in self.__mapper__.iterate_properties:
             if hasattr(prop, 'columns'):
                 if column in prop.columns:
-                    return prop
+                    return prop.key
+
+    def _get_associations(self, obj, rel):
+        """Return both column names for the association."""
+        for local_col, remote_col in rel.prop.local_remote_pairs:
+            local = self._get_property_by_column(local_col)
+            remote = obj._get_property_by_column(remote_col)
+            yield local, remote
 
     def _get_relationship(self, name, direction):
+        """Get relationship metadata related to a given property."""
         rel = getattr(type(self), name)
         if rel.prop.direction.name != direction:
             raise TypeError("Not a %s relationship!" % direction)
@@ -123,36 +132,33 @@ class SchemaModel(object):
             obj.delete()
 
         # Link up primary and foreign key.
-        for local_col, remote_col in rel.prop.local_remote_pairs:
-            local_prop = self._get_property_by_column(local_col)
-            remote_prop = obj._get_property_by_column(remote_col)
-            value = getattr(obj, remote_prop.key)
+        for local, remote in self._get_associations(obj, rel):
+            value = getattr(obj, remote)
             if data is None:
                 value = None
-            setattr(self, local_prop.key, value)
+            setattr(self, local, value)
         return obj
 
     def _schema_update_array(self, prop, data):
         rel = self._get_relationship(prop.name, 'ONETOMANY')
+        cls = rel.mapper.class_
         existing = list(getattr(self, prop.name))
-        fresh = data or []
+        ids = set()
 
-        for item in fresh:
-            obj = rel.mapper.class_()
+        for item in data or []:
+            obj = cls.by_id(item.get('id')) or cls()
             obj.update(item)
+            db.session.flush()
+            ids.add(obj.id)
             existing.append(obj)
 
-        db.session.flush()
-
         for obj in existing:
-            # Link up primary and foreign key.
-            for local_col, remote_col in rel.prop.local_remote_pairs:
-                local_prop = self._get_property_by_column(local_col)
-                remote_prop = obj._get_property_by_column(remote_col)
-                value = getattr(self, local_prop.key)
-                setattr(obj, remote_prop.key, value)
+            if obj.id not in ids:
+                obj.delete()
+                continue
 
-            # print obj.entity_id, obj.to_dict()
+            for local, remote in self._get_associations(obj, rel):
+                setattr(obj, remote, getattr(self, local))
 
         setattr(self, prop.name, existing)
         return existing

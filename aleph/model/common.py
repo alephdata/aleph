@@ -48,6 +48,8 @@ class DatedModel(object):
 
     @classmethod
     def by_id(cls, id):
+        if id is None:
+            return
         return cls.all().filter_by(id=id).first()
 
     def delete(self):
