@@ -13,7 +13,9 @@ class EntityIdentifier(db.Model, EntityDetails):
     _schema = '/entity/identifier.json#'
 
     entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
-    entity = db.relationship('Entity', backref=db.backref('identifiers', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
+    entity = db.relationship('Entity', primaryjoin="and_(Entity.id == foreign(EntityIdentifier.entity_id), "  # noqa
+                                                        "EntityIdentifier.deleted_at == None)",  # noqa
+                             backref=db.backref('identifiers', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
     identifier = db.Column(db.Unicode)
     scheme = db.Column(db.Unicode)
 
@@ -22,7 +24,9 @@ class EntityOtherName(db.Model, EntityDetails):
     _schema = '/entity/other_name.json#'
 
     entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
-    entity = db.relationship('Entity', backref=db.backref('other_names', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
+    entity = db.relationship('Entity', primaryjoin="and_(Entity.id == foreign(EntityOtherName.entity_id), "  # noqa
+                                                        "EntityOtherName.deleted_at == None)",  # noqa
+                             backref=db.backref('other_names', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
     name = db.Column(db.Unicode)
     note = db.Column(db.Unicode)
     family_name = db.Column(db.Unicode)
@@ -54,8 +58,9 @@ class EntityContactDetail(db.Model, EntityDetails):
     _schema = '/entity/contact_detail.json#'
 
     entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
-    entity = db.relationship('EntityLegalPerson', backref=db.backref('contact_details',
-        lazy='dynamic', cascade='all, delete-orphan'))  # noqa
+    entity = db.relationship('EntityLegalPerson', primaryjoin="and_(Entity.id == foreign(EntityContactDetail.entity_id), "  # noqa
+                                                              "EntityContactDetail.deleted_at == None)",  # noqa
+                             backref=db.backref('contact_details', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
 
     label = db.Column(db.Unicode)
     type = db.Column(db.Unicode)

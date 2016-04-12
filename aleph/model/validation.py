@@ -69,6 +69,7 @@ class SchemaModel(object):
         return SchemaVisitor(self.schema_data, resolver)
 
     def schema_update(self, data):
+        """Update the object based on JSON schema properties."""
         validate(data, self._schema)
         db.session.add(self)
         for prop in self.schema_visitor.properties:
@@ -146,6 +147,8 @@ class SchemaModel(object):
         ids = set()
 
         for item in data or []:
+            if item is None:
+                continue
             obj = cls.by_id(item.get('id')) or cls()
             obj.update(item)
             db.session.flush()

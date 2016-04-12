@@ -96,3 +96,67 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 2 == len(res.json.get('other_names', [])), res.json
+
+    def test_remove_nested(self):
+        self.login(is_admin=True)
+        url = '/api/1/entities'
+        data = {
+            '$schema': '/entity/person.json#',
+            'name': "Osama bin Laden",
+            'collection_id': self.col.id,
+            'other_names': [
+                {'name': "Usama bin Laden"},
+                {'name': "Osama bin Ladin"},
+            ],
+            'residential_address': {
+                'text': 'Home',
+                'region': 'Netherlands',
+                'country': 'nl'
+            }
+        }
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, (res.status_code, res.json)
+        data = res.json
+        data['other_names'].pop()
+        assert 1 == len(data['other_names']), data
+        del data['residential_address']
+        url = '/api/1/entities/%s' % data['id']
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, (res.status_code, res.json)
+        assert 1 == len(res.json.get('other_names', [])), res.json
+
+    def test_delete_entity(self):
+        self.login(is_admin=True)
+        url = '/api/1/entities'
+        data = {
+            '$schema': '/entity/person.json#',
+            'name': "Osama bin Laden",
+            'collection_id': self.col.id
+        }
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, (res.status_code, res.json)
+        data = res.json
+        url = '/api/1/entities/%s' % data['id']
+        res = self.client.delete(url)
+        assert res.status_code == 200, (res.status_code, res.json)
+        res = self.client.get(url)
+        assert res.status_code == 404, (res.status_code, res.json)
+
+    def test_suggest_entity(self):
+        self.login(is_admin=True)
+        url = '/api/1/entities'
+        data = {
+            '$schema': '/entity/person.json#',
+            'name': "Osama bin Laden",
+            'collection_id': self.col.id
+        }
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        res = self.client.get('/api/1/entities/_suggest?prefix=osa')
+        assert res.status_code == 200, (res.status_code, res.json)
+        data = res.json
+        assert len(data['results']) == 1, data
+        assert 'Laden' in data['results'][0]['name'], data

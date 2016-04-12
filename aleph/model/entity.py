@@ -98,7 +98,7 @@ class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel,
             suggestions.append({
                 'id': entity_id,
                 'name': name,
-                '$schema': schema
+                'type': schema
             })
         return suggestions
 
@@ -134,7 +134,9 @@ class EntityLegalPerson(Entity):
 
     image = db.Column(db.Unicode, nullable=True)
     postal_address_id = db.Column(db.Integer(), db.ForeignKey('entity_address.id'))  # noqa
-    postal_address = db.relationship('EntityAddress', foreign_keys=[postal_address_id])  # noqa
+    postal_address = db.relationship('EntityAddress',
+                                     primaryjoin="and_(EntityAddress.id == foreign(EntityLegalPerson.postal_address_id), "  # noqa
+                                                 "EntityAddress.deleted_at == None)")  # noqa
 
 
 class EntityLand(EntityAsset):
@@ -158,7 +160,9 @@ class EntityBuilding(EntityAsset):
     }
 
     building_address_id = db.Column(db.Integer(), db.ForeignKey('entity_address.id'))  # noqa
-    building_address = db.relationship('EntityAddress', foreign_keys=[building_address_id])  # noqa
+    building_address = db.relationship('EntityAddress',
+                                       primaryjoin="and_(EntityAddress.id == foreign(EntityBuilding.building_address_id), "  # noqa
+                                                   "EntityAddress.deleted_at == None)")  # noqa
 
 
 class EntityPerson(EntityLegalPerson):
@@ -173,7 +177,9 @@ class EntityPerson(EntityLegalPerson):
     biography = db.Column(db.Date, nullable=True)
 
     residential_address_id = db.Column(db.Integer(), db.ForeignKey('entity_address.id'))  # noqa
-    residential_address = db.relationship('EntityAddress', foreign_keys=[residential_address_id])  # noqa
+    residential_address = db.relationship('EntityAddress',
+                                          primaryjoin="and_(EntityAddress.id == foreign(EntityPerson.residential_address_id), "  # noqa
+                                                      "EntityAddress.deleted_at == None)")  # noqa
 
 
 class EntityOrganization(EntityLegalPerson):
@@ -188,10 +194,14 @@ class EntityOrganization(EntityLegalPerson):
     current_status = db.Column(db.Date, nullable=True)
 
     registered_address_id = db.Column(db.Integer(), db.ForeignKey('entity_address.id'))  # noqa
-    registered_address = db.relationship('EntityAddress', foreign_keys=[registered_address_id])  # noqa
+    registered_address = db.relationship('EntityAddress',
+                                         primaryjoin="and_(EntityAddress.id == foreign(EntityOrganization.registered_address_id), "  # noqa
+                                                     "EntityAddress.deleted_at == None)")  # noqa
 
     headquarters_address_id = db.Column(db.Integer(), db.ForeignKey('entity_address.id'))  # noqa
-    headquarters_address = db.relationship('EntityAddress', foreign_keys=[headquarters_address_id])  # noqa
+    headquarters_address = db.relationship('EntityAddress',
+                                           primaryjoin="and_(EntityAddress.id == foreign(EntityOrganization.headquarters_address_id), "  # noqa
+                                                       "EntityAddress.deleted_at == None)")  # noqa
 
 
 class EntityCompany(EntityOrganization, EntityAsset):
