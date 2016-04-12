@@ -58,8 +58,7 @@ class EntityCache(object):
         q = q.filter(Entity.collection_id == collection_id)
         for entity in q.all():
             for term in entity.terms:
-                text = normalize(term)
-                matchers[text].add(entity.id)
+                matchers[normalize(term)].add(entity.id)
         body = '|'.join(matchers.keys())
         rex = re.compile('( |^)(%s)( |$)' % body)
         return rex, matchers
