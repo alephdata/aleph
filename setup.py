@@ -44,7 +44,8 @@ setup(
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
             'spindle = aleph.crawlers.spindle:SpindleCrawler',
             'idrequests = aleph.crawlers.idashboard:IDRequests',
-            'idfiles = aleph.crawlers.idashboard:IDFiles'
+            'idfiles = aleph.crawlers.idashboard:IDFiles',
+            'blacklight = aleph.crawlers.blacklight:BlacklightCrawler'
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',
