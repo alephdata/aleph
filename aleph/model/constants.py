@@ -32,10 +32,3 @@ for country in countries:
 
 LANGUAGE_NAMES = dict(Locale('en').languages.items())
 LANGUAGE_NAMES = {k: v for k, v in LANGUAGE_NAMES.items() if len(k) == 2}
-
-
-PERSON = 'Person'
-COMPANY = 'Company'
-ORGANIZATION = 'Organization'
-OTHER = 'Other'
-ENTITY_CATEGORIES = [PERSON, COMPANY, ORGANIZATION, OTHER]
