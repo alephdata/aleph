@@ -10,7 +10,7 @@
     "id": {
       "title": "ID",
       "hidden": true,
-      "type": "integer"
+      "type": "string"
     },
     "label": {
       "title": "Label",

@@ -68,7 +68,6 @@ class EntitiesApiTestCase(TestCase):
             'collection_id': self.col.id,
             'summary': "In the middle of our street"
         }
-        print data
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 200, res.json

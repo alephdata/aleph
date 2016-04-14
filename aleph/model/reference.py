@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 class Reference(db.Model, IdModel, DatedModel):
     id = db.Column(db.Integer(), primary_key=True)
     document_id = db.Column(db.BigInteger, db.ForeignKey('document.id'))
-    entity_id = db.Column(db.Integer, db.ForeignKey('entity.id'))
+    entity_id = db.Column(db.String(32), db.ForeignKey('entity.id'))
     weight = db.Column(db.Integer)
 
     entity = db.relationship(Entity, backref=db.backref('references',

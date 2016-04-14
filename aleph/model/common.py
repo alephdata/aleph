@@ -33,6 +33,17 @@ class IdModel(object):
         return data
 
 
+class UuidModel(object):
+    id = db.Column(db.String(32), primary_key=True, default=make_textid(),
+                   nullable=False, unique=False)
+
+    def to_dict(self):
+        parent = super(UuidModel, self)
+        data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
+        data['id'] = self.id
+        return data
+
+
 class DatedModel(object):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,

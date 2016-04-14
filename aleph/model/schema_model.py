@@ -52,7 +52,6 @@ class SchemaModel(object):
                 self._schema_update_array(prop, prop_data, merge=merge)
         if isinstance(self, DatedModel):
             self.updated_at = datetime.utcnow()
-        db.session.add(self)
 
     def _schema_update_value(self, prop, data, merge=False):
         value = convert_value(prop, data)
@@ -133,6 +132,32 @@ class SchemaModel(object):
 
         setattr(self, prop.name, existing)
         return existing
+
+    @property
+    def _merge_key(self):
+        parts = []
+        for prop in self.schema_visitor.properties:
+            if not prop.is_value or prop.name == 'id':
+                continue
+            value = getattr(self, prop.name)
+            if value is None:
+                continue
+            value = u'%s>>>%s' % (prop.name, value)
+            parts.append(value.encode('utf-8'))
+        return '>|>'.join(sorted(parts))
+
+    def delete(self):
+        for prop in self.schema_visitor.properties:
+            if prop.is_value:
+                continue
+            if prop.is_array and prop.items.inline:
+                for item in getattr(self, prop.name):
+                    item.delete()
+            if prop.is_object and prop.inline:
+                value = getattr(self, prop.name)
+                if value is not None:
+                    value.delete()
+        super(SchemaModel, self).delete()
 
     def to_dict(self):
         parent = super(SchemaModel, self)

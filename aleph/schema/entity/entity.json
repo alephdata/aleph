@@ -9,7 +9,7 @@
       "sortIndex": 1001,
       "hidden": true,
       "description": "The person's unique identifier",
-      "type": ["integer", "null"]
+      "type": ["string", "null"]
     },
     "name": {
       "title": "Name",

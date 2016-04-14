@@ -12,7 +12,7 @@
     "id": {
       "title": "ID",
       "hidden": true,
-      "type": "integer"
+      "type": "string"
     },
     "name": {
       "title": "Other name",

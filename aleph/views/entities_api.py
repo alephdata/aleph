@@ -15,7 +15,10 @@ def get_data(entity=None):
     collection_id = data.get('collection_id')
     collection_id = entity.collection_id if entity else collection_id
     authz.require(authz.collection_write(collection_id))
-    data['id'] = entity.id if entity else None
+    if entity is not None:
+        data['id'] = entity.id
+    else:
+        data.pop('id', None)
     return data
 
 
@@ -44,14 +47,14 @@ def suggest():
     return jsonify({'results': results})
 
 
-@blueprint.route('/api/1/entities/<int:id>', methods=['GET'])
+@blueprint.route('/api/1/entities/<id>', methods=['GET'])
 def view(id):
     entity = obj_or_404(Entity.by_id(id))
     authz.require(authz.collection_read(entity.collection_id))
     return jsonify(entity)
 
 
-@blueprint.route('/api/1/entities/<int:id>', methods=['POST', 'PUT'])
+@blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])
 def update(id):
     entity = obj_or_404(Entity.by_id(id))
     entity = Entity.save(get_data(entity=entity))
@@ -60,7 +63,7 @@ def update(id):
     return view(entity.id)
 
 
-@blueprint.route('/api/1/entities/<int:id>', methods=['DELETE'])
+@blueprint.route('/api/1/entities/<id>', methods=['DELETE'])
 def delete(id):
     entity = obj_or_404(Entity.by_id(id))
     authz.require(authz.collection_write(entity.collection_id))

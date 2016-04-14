@@ -48,14 +48,14 @@
 
 - model: aleph.model.entity.EntityCompany
   records:
-    - id: 1000
+    - id: 9b052e79d3cbff66b4e9c1e943948bae
       name: KwaZulu
       # foreign_id: kwa11
       collection_id: 1000
 
 - model: aleph.model.entity.EntityPerson
   records:
-    - id: 2000
+    - id: 250e77f12a5ab6972a0895d290c4792f
       name: BaNana
       # foreign_id: banana
       collection_id: 2000
@@ -64,10 +64,10 @@
   records:
     - id: 1000
       name: kwazulu
-      entity_id: 1000
+      entity_id: 9b052e79d3cbff66b4e9c1e943948bae
     - id: 2000
       name: banana
-      entity_id: 2000
+      entity_id: 250e77f12a5ab6972a0895d290c4792f
 
 - model: aleph.model.document.Document
   records:

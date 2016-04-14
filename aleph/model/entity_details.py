@@ -1,18 +1,21 @@
 from aleph.core import db
 from aleph.model.schema_model import SchemaModel
-from aleph.model.common import SoftDeleteModel, IdModel
+from aleph.model.common import SoftDeleteModel, UuidModel, make_textid
 
 
-class EntityDetails(IdModel, SoftDeleteModel, SchemaModel):
+class EntityDetails(UuidModel, SoftDeleteModel, SchemaModel):
 
     def update(self, data):
+        if self.id is None:
+            self.id = make_textid()
         self.schema_update(data)
 
 
 class EntityIdentifier(db.Model, EntityDetails):
     _schema = '/entity/identifier.json#'
+    __tablename__ = 'entity_identifier'
 
-    entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
+    entity_id = db.Column(db.String(32), db.ForeignKey('entity.id'), index=True)
     entity = db.relationship('Entity', primaryjoin="and_(Entity.id == foreign(EntityIdentifier.entity_id), "  # noqa
                                                         "EntityIdentifier.deleted_at == None)",  # noqa
                              backref=db.backref('identifiers', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
@@ -23,7 +26,7 @@ class EntityIdentifier(db.Model, EntityDetails):
 class EntityOtherName(db.Model, EntityDetails):
     _schema = '/entity/other_name.json#'
 
-    entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
+    entity_id = db.Column(db.String(32), db.ForeignKey('entity.id'), index=True)
     entity = db.relationship('Entity', primaryjoin="and_(Entity.id == foreign(EntityOtherName.entity_id), "  # noqa
                                                         "EntityOtherName.deleted_at == None)",  # noqa
                              backref=db.backref('other_names', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
@@ -57,7 +60,7 @@ class EntityOtherName(db.Model, EntityDetails):
 class EntityContactDetail(db.Model, EntityDetails):
     _schema = '/entity/contact_detail.json#'
 
-    entity_id = db.Column(db.Integer(), db.ForeignKey('entity.id'), index=True)
+    entity_id = db.Column(db.String(32), db.ForeignKey('entity.id'), index=True)
     entity = db.relationship('EntityLegalPerson', primaryjoin="and_(Entity.id == foreign(EntityContactDetail.entity_id), "  # noqa
                                                               "EntityContactDetail.deleted_at == None)",  # noqa
                              backref=db.backref('contact_details', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
