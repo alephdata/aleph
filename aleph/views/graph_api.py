@@ -48,7 +48,7 @@ def paginate_graph(graph):
 
 def generate_graph(args):
     fields = ['id', 'collection', 'entities.entity_id', 'entities.name',
-              'entities.type']
+              'entities.$schema']
     query = documents_query(args, fields=fields, facets=False)
     query = {'query': query['query']}
 
@@ -59,7 +59,7 @@ def generate_graph(args):
             if not graph.has_node(entity.get('entity_id')):
                 graph.add_node(entity.get('entity_id'),
                                label=entity.get('name'),
-                               type=entity.get('type'))
+                               schema=entity.get('$schema'))
             entities.add(entity.get('entity_id'))
         for (src, dst) in combinations(entities, 2):
             graph.add_edge(src, dst, weight=1)
