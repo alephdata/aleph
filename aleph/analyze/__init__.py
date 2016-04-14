@@ -27,16 +27,6 @@ def analyze_source(source_id):
 
 
 @celery.task()
-def analyze_collection(collection_id):
-    collection = Collection.by_id(collection_id)
-    if collection is None:
-        log.error("Collection does not exist: %r", collection_id)
-        return
-    for entity in collection.entities:
-        analyze_entity(entity.id)
-
-
-@celery.task()
 def analyze_entity(entity_id):
     seen = set()
     query = {'term': {'entities.entity_id': entity_id}}

@@ -18,8 +18,7 @@ class EntitiesApiTestCase(TestCase):
         self.ent = Entity()
         self.ent.collection = self.col
         self.ent.update({
-            'name': 'Winnie the Pooh',
-            'category': 'Person'
+            'name': 'Winnie the Pooh'
         })
         db.session.add(self.ent)
         db.session.commit()
