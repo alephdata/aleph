@@ -10,7 +10,7 @@ from aleph.core import db
 from aleph.util import find_subclasses
 from aleph.model.common import DatedModel
 from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
-from aleph.model.constants import SOURCE_CATEGORIES, ENTITY_CATEGORIES
+from aleph.model.constants import SOURCE_CATEGORIES
 
 
 resolver = RefResolver('core.json#', {})
@@ -77,7 +77,7 @@ class SchemaModel(object):
     def schema_visitor(self):
         return SchemaVisitor(self.schema_data, resolver)
 
-    def schema_update(self, data):
+    def schema_update(self, data, merge=False):
         """Update the object based on JSON schema properties."""
         validate(data, self._schema)
         db.session.add(self)
@@ -88,16 +88,16 @@ class SchemaModel(object):
                 continue
             prop_data = data[prop.name]
             if prop.is_value:
-                self._schema_update_value(prop, prop_data)
+                self._schema_update_value(prop, prop_data, merge=merge)
             elif prop.is_object and self._schema_recurse:
-                self._schema_update_object(prop, prop_data)
+                self._schema_update_object(prop, prop_data, merge=merge)
             elif prop.is_array and self._schema_recurse:
-                self._schema_update_array(prop, prop_data)
+                self._schema_update_array(prop, prop_data, merge=merge)
         if isinstance(self, DatedModel):
             self.updated_at = datetime.utcnow()
         db.session.add(self)
 
-    def _schema_update_value(self, prop, data):
+    def _schema_update_value(self, prop, data, merge=False):
         value = convert_value(prop, data)
         setattr(self, prop.name, value)
 
@@ -124,7 +124,7 @@ class SchemaModel(object):
             raise TypeError("Associated class is not a SchemaModel!")
         return rel
 
-    def _schema_update_object(self, prop, data):
+    def _schema_update_object(self, prop, data, merge=False):
         """Create or update an associated object."""
         rel = self._get_relationship(prop.name, 'MANYTOONE')
 
@@ -150,7 +150,7 @@ class SchemaModel(object):
             setattr(self, local, value)
         return obj
 
-    def _schema_update_array(self, prop, data):
+    def _schema_update_array(self, prop, data, merge=False):
         """Create or update an associated set of objects."""
         rel = self._get_relationship(prop.name, 'ONETOMANY')
         cls = rel.mapper.class_
@@ -167,7 +167,7 @@ class SchemaModel(object):
             existing.append(obj)
 
         for obj in existing:
-            if obj.id not in ids:
+            if obj.id not in ids and not merge:
                 obj.delete()
                 continue
 

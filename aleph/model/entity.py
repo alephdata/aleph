@@ -40,11 +40,11 @@ class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         q.delete(synchronize_session='fetch')
         super(Entity, self).delete()
 
-    def update(self, data):
-        self.schema_update(data)
+    def update(self, data, merge=False):
+        self.schema_update(data, merge=merge)
 
     @classmethod
-    def save(cls, data):
+    def save(cls, data, merge=False):
         ent = cls.by_id(data.get('id'))
         if ent is not None:
             ent.update(data)
@@ -57,7 +57,7 @@ class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel):
                         cls = subcls
             ent = cls()
             ent.collection_id = data.get('collection_id')
-            ent.update(data)
+            ent.update(data, merge=merge)
             return ent
 
     @property
@@ -66,6 +66,21 @@ class Entity(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         for other_name in self.other_names:
             terms.update(other_name.terms)
         return [t for t in terms if t is not None and len(t)]
+
+    @classmethod
+    def by_identifier(cls, scheme, identifier, collection_id=None):
+        ent = aliased(Entity)
+        q = db.session.query(ent)
+        q = q.filter(ent.deleted_at == None)  # noqa
+        if collection_id is not None:
+            q = q.filter(ent.collection_id == collection_id)
+
+        ident = aliased(EntityIdentifier)
+        q = q.join(ident, ent.identifiers)
+        q = q.filter(ident.deleted_at == None) # noqa
+        q = q.filter(ident.scheme == scheme)
+        q = q.filter(ident.identifier == identifier)
+        return q.first()
 
     @classmethod
     def by_id_set(cls, ids, collection_id=None):
