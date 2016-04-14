@@ -1,7 +1,7 @@
 import logging
 
 from aleph.core import db, url_for
-from aleph.model.validation import SchemaModel
+from aleph.model.schema_model import SchemaModel
 from aleph.model.common import DatedModel, IdModel, make_token
 
 log = logging.getLogger(__name__)

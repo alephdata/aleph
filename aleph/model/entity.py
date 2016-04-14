@@ -7,7 +7,7 @@ from sqlalchemy.orm import aliased
 from aleph.core import db
 from aleph.util import find_subclasses
 from aleph.model.collection import Collection
-from aleph.model.validation import SchemaModel
+from aleph.model.schema_model import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
 from aleph.model.entity_details import EntityOtherName, EntityIdentifier  # noqa
 from aleph.model.entity_details import EntityAddress, EntityContactDetail  # noqa

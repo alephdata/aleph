@@ -2,7 +2,7 @@ from uuid import uuid4
 from flask import current_app
 
 from aleph.core import db, url_for
-from aleph.model.validation import SchemaModel
+from aleph.model.schema_model import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
 
 

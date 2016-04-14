@@ -3,7 +3,7 @@ from datetime import datetime
 
 from aleph.core import db, url_for
 from aleph.model.role import Role
-from aleph.model.validation import SchemaModel
+from aleph.model.schema_model import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
 
 log = logging.getLogger(__name__)
