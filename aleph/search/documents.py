@@ -201,7 +201,6 @@ def run_sub_queries(output, sub_queries):
 def execute_documents_query(args, query):
     """Execute the query and return a set of results."""
     result, hits, output = execute_basic(TYPE_DOCUMENT, query)
-    print 'RES', result
     convert_aggregations(result, output, args)
     sub_queries = []
     for doc in hits.get('hits', []):

@@ -83,9 +83,6 @@ class Document(db.Model, DatedModel):
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.meta.title)
 
-    def __unicode__(self):
-        return self.id
-
     def _add_to_dict(self, data):
         data.update({
             'id': self.id,

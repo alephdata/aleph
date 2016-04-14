@@ -16,7 +16,7 @@ SCHEMA = {
 }
 
 
-class OpenNamesCrawler(Crawler):
+class OpenNamesCrawler(Crawler):  # pragma: no cover
 
     def crawl_source(self, source):
         if source.get('source_id') in IGNORE_SOURCES:

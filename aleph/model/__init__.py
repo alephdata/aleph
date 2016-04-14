@@ -11,7 +11,7 @@ from aleph.model.reference import Reference # noqa
 from aleph.model.collection import Collection # noqa
 from aleph.model.log import ProcessingLog # noqa
 from aleph.model.metadata import Metadata # noqa
-from aleph.model.document import Document, DocumentPage # noqa
+from aleph.model.document import Document, DocumentPage, DocumentRecord # noqa
 from aleph.model.validation import validate # noqa
 
 log = logging.getLogger(__name__)

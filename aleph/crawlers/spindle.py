@@ -16,7 +16,7 @@ SCHEMATA = {
 }
 
 
-class SpindleCrawler(Crawler):
+class SpindleCrawler(Crawler):  # pragma: no cover
 
     URL = get_config('SPINDLE_URL')
     API_KEY = get_config('SPINDLE_API_KEY')

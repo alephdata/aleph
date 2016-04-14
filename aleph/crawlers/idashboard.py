@@ -16,7 +16,7 @@ REQUEST_TYPES = {
 }
 
 
-class IDBase(Crawler):
+class IDBase(Crawler):  # pragma: no cover
 
     @property
     def host(self):
@@ -39,7 +39,7 @@ class IDBase(Crawler):
         return self._session
 
 
-class IDFiles(IDBase):
+class IDFiles(IDBase):  # pragma: no cover
 
     def crawl_file(self, data):
         if data['public_read']:
@@ -88,7 +88,7 @@ class IDFiles(IDBase):
             url = data['next']
 
 
-class IDRequests(IDBase):
+class IDRequests(IDBase):  # pragma: no cover
 
     def update_entity(self, entity, collection):
         category = REQUEST_TYPES.get(entity.get('ticket_type'))

@@ -15,29 +15,26 @@ log = logging.getLogger(__name__)
 
 def delete_source(source_id):
     """Delete all documents from a particular source."""
-    q = {'query': {'term': {'source_id': source_id}}}
+    q = {'query': {'term': {'source_id': source_id}}, '_source': False}
 
     def deletes():
-            q['_source'] = ['document_id']
-            for res in scan(get_es(), query=q, index=get_es_index(),
-                            doc_type=[TYPE_RECORD]):
-                yield {
-                    '_op_type': 'delete',
-                    '_index': get_es_index(),
-                    '_parent': res.get('_source', {}).get('document_id'),
-                    '_type': res.get('_type'),
-                    '_id': res.get('_id')
-                }
-
-            q['_source'] = []
-            for res in scan(get_es(), query=q, index=get_es_index(),
-                            doc_type=[TYPE_DOCUMENT]):
-                yield {
-                    '_op_type': 'delete',
-                    '_index': get_es_index(),
-                    '_type': res.get('_type'),
-                    '_id': res.get('_id')
-                }
+        for res in scan(get_es(), query=q, index=get_es_index(),
+                        doc_type=[TYPE_RECORD]):
+            yield {
+                '_op_type': 'delete',
+                '_index': get_es_index(),
+                '_parent': res.get('_parent'),
+                '_type': res.get('_type'),
+                '_id': res.get('_id')
+            }
+        for res in scan(get_es(), query=q, index=get_es_index(),
+                        doc_type=[TYPE_DOCUMENT]):
+            yield {
+                '_op_type': 'delete',
+                '_index': get_es_index(),
+                '_type': res.get('_type'),
+                '_id': res.get('_id')
+            }
 
     try:
         bulk(get_es(), deletes(), stats_only=True, chunk_size=2000,
