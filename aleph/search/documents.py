@@ -56,7 +56,7 @@ def documents_query(args, fields=None, facets=True, newer_than=None):
             filters.append((field, value))
 
     for entity in args.getlist('entity'):
-        filters.append(('entities.entity_uuid', entity))
+        filters.append(('entities.uuid', entity))
 
     aggs = {}
     if facets:
@@ -90,7 +90,7 @@ def entity_collections(q, aggs, args, filters):
                 'and': [
                     {
                         'terms': {'entities.collection_id': readable},
-                        'terms': {'entities.entity_uuid': entities},
+                        'terms': {'entities.uuid': entities},
                     }
                 ]
             }
@@ -105,7 +105,7 @@ def entity_collections(q, aggs, args, filters):
                 'filter': flt,
                 'aggs': {
                     'entities': {
-                        'terms': {'field': 'entities.entity_uuid', 'size': 100}
+                        'terms': {'field': 'entities.uuid', 'size': 100}
                     }
                 }
             }
@@ -201,6 +201,7 @@ def run_sub_queries(output, sub_queries):
 def execute_documents_query(args, query):
     """Execute the query and return a set of results."""
     result, hits, output = execute_basic(TYPE_DOCUMENT, query)
+    print 'RES', result
     convert_aggregations(result, output, args)
     sub_queries = []
     for doc in hits.get('hits', []):

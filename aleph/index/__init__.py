@@ -52,7 +52,7 @@ def generate_entities(document):
         entities.append({
             'id': reference.id,
             'weight': reference.weight,
-            'entity_id': reference.entity.id,
+            'uuid': reference.entity.id,
             'collection_id': reference.entity.collection_id,
             'name': reference.entity.name,
             '$schema': reference.entity.type

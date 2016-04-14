@@ -116,9 +116,13 @@ class SchemaModel(object):
         for item in data or []:
             if item is None:
                 continue
-            obj = cls.by_id(item.get('id')) or cls()
+            obj = cls()
+            for cand in existing:
+                if item.get('id') and cand.id == item.get('id'):
+                    obj = cand
+                elif merge and obj._merge_compare(item):
+                    obj = cand
             obj.update(item)
-            db.session.flush()
             ids.add(obj.id)
             existing.append(obj)
 
@@ -133,18 +137,14 @@ class SchemaModel(object):
         setattr(self, prop.name, existing)
         return existing
 
-    @property
-    def _merge_key(self):
-        parts = []
+    def _merge_compare(self, data):
         for prop in self.schema_visitor.properties:
             if not prop.is_value or prop.name == 'id':
                 continue
             value = getattr(self, prop.name)
-            if value is None:
-                continue
-            value = u'%s>>>%s' % (prop.name, value)
-            parts.append(value.encode('utf-8'))
-        return '>|>'.join(sorted(parts))
+            if value != data.get(prop.name):
+                return False
+        return True
 
     def delete(self):
         for prop in self.schema_visitor.properties:
