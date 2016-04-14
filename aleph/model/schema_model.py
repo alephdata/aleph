@@ -120,7 +120,7 @@ class SchemaModel(object):
             for cand in existing:
                 if item.get('id') and cand.id == item.get('id'):
                     obj = cand
-                elif merge and obj._merge_compare(item):
+                elif merge and cand._merge_compare(item):
                     obj = cand
             obj.update(item)
             ids.add(obj.id)
@@ -139,7 +139,7 @@ class SchemaModel(object):
 
     def _merge_compare(self, data):
         for prop in self.schema_visitor.properties:
-            if not prop.is_value or prop.name == 'id':
+            if (not prop.is_value) or (prop.name == 'id'):
                 continue
             value = getattr(self, prop.name)
             if value != data.get(prop.name):

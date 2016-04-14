@@ -2,6 +2,7 @@ import json
 
 from aleph.core import db
 from aleph.model import Collection, Entity
+from aleph.model.entity_details import EntityAddress
 from aleph.tests.util import TestCase
 
 
@@ -18,7 +19,11 @@ class EntitiesApiTestCase(TestCase):
         self.ent = Entity()
         self.ent.collection = self.col
         self.ent.update({
-            'name': 'Winnie the Pooh'
+            'name': 'Winnie the Pooh',
+            'identifiers': [{
+                'scheme': 'wikipedia',
+                'identifier': 'en:Winnie-the-Pooh'
+            }]
         })
         db.session.add(self.ent)
         db.session.commit()
@@ -40,6 +45,19 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'entity/entity' in res.json['$schema'], res.json
         assert 'Winnie' in res.json['name'], res.json
+
+    def test_lookup(self):
+        args = '?scheme=wikipedia&identifier=en:Winnie-the-Pooh'
+        res = self.client.get('/api/1/entities/_lookup%s' % args)
+        assert res.status_code == 403, res
+        self.login(is_admin=True)
+        res = self.client.get('/api/1/entities/_lookup%s' % args)
+        assert res.status_code == 200, res
+        assert 'entity/entity' in res.json['$schema'], res.json
+        assert 'Winnie' in res.json['name'], res.json
+        args = args + 'xxx'
+        res = self.client.get('/api/1/entities/_lookup%s' % args)
+        assert res.status_code == 404, res
 
     def test_update(self):
         self.login(is_admin=True)
@@ -95,6 +113,37 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res.json
         assert 2 == len(res.json.get('other_names', [])), res.json
 
+    def test_merge_nested(self):
+        self.login(is_admin=True)
+        url = '/api/1/entities'
+        data = {
+            '$schema': '/entity/person.json#',
+            'name': "Osama bin Laden",
+            'collection_id': self.col.id,
+            'other_names': [
+                {'name': "Usama bin Laden"},
+                {'name': "Osama bin Ladin"},
+            ],
+            'residential_address': {
+                'text': 'Home',
+                'region': 'Netherlands',
+                'country': 'nl'
+            }
+        }
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, (res.status_code, res.json)
+        data = res.json
+        data['other_names'] = [
+            {'name': "Usama bin Laden"},
+            {'name': "Usama bin Ladin"},
+        ]
+        url = '/api/1/entities/%s?merge=true' % data['id']
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, (res.status_code, res.json)
+        assert 3 == len(res.json.get('other_names', [])), res.json
+
     def test_remove_nested(self):
         self.login(is_admin=True)
         url = '/api/1/entities'
@@ -124,6 +173,34 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
         assert 1 == len(res.json.get('other_names', [])), res.json
+
+    def test_edit_nested_object(self):
+        self.login(is_admin=True)
+        url = '/api/1/entities'
+        data = {
+            '$schema': '/entity/person.json#',
+            'name': "Osama bin Laden",
+            'collection_id': self.col.id,
+            'residential_address': {
+                'text': 'Home',
+                'region': 'Netherlands',
+                'country': 'nl'
+            }
+        }
+        assert not EntityAddress.all().count(), EntityAddress.all().all()
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, (res.status_code, res.json)
+        addr_count = EntityAddress.all().count()
+        assert addr_count, EntityAddress.all().all()
+        data = res.json
+        url = '/api/1/entities/%s' % data['id']
+        data['residential_address']['region'] = 'Amsterdam'
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, (res.status_code, res.json)
+        assert res.json['residential_address']['region'] == 'Amsterdam', res.json
+        assert EntityAddress.all().count() == addr_count, EntityAddress.all().all()
 
     def test_delete_entity(self):
         self.login(is_admin=True)

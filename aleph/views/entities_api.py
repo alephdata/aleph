@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from apikit import obj_or_404, jsonify, Pager, request_data
+from apikit import obj_or_404, jsonify, Pager, request_data, arg_bool
 
 from aleph import authz
 from aleph.model import Entity, db
@@ -54,10 +54,18 @@ def view(id):
     return jsonify(entity)
 
 
+@blueprint.route('/api/1/entities/_lookup', methods=['GET'])
+def lookup():
+    entity = obj_or_404(Entity.by_identifier(request.args.get('scheme'),
+                                             request.args.get('identifier')))
+    authz.require(authz.collection_read(entity.collection_id))
+    return jsonify(entity)
+
+
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])
 def update(id):
     entity = obj_or_404(Entity.by_id(id))
-    entity = Entity.save(get_data(entity=entity))
+    entity = Entity.save(get_data(entity=entity), merge=arg_bool('merge'))
     db.session.commit()
     analyze_entity.delay(entity.id)
     return view(entity.id)
