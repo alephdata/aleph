@@ -5,15 +5,14 @@ import logging
 
 from aleph.core import get_config
 from aleph.model import Collection, Entity, Permission
-from aleph.model.constants import PERSON, ORGANIZATION, COMPANY, OTHER
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
 
 SCHEMATA = {
-    'https://schema.occrp.org/generic/person.json#': PERSON,
-    'https://schema.occrp.org/generic/company.json#': COMPANY,
-    'https://schema.occrp.org/generic/organization.json#': ORGANIZATION
+    'https://schema.occrp.org/generic/person.json#': '/entity/person.json#',
+    'https://schema.occrp.org/generic/company.json#': '/entity/company.json#',
+    'https://schema.occrp.org/generic/organization.json#': '/entity/organization.json#'  # noqa
 }
 
 
