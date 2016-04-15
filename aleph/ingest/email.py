@@ -34,9 +34,10 @@ class EmailFileIngestor(TextIngestor):
         name, ext = os.path.splitext(part.detected_file_name)
         if len(ext):
             ext = ext.strip().lower()
-        if part.body is None:
+        body = part.body
+        if body is None:
             return
-        out_path = self.write_temp(part.body, ext)
+        out_path = self.write_temp(body, ext)
         child = meta.clone()
         child.clear('title')
         child.clear('extension')
