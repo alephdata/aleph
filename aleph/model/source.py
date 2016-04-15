@@ -29,13 +29,18 @@ class Source(db.Model, IdModel, DatedModel, SchemaModel):
         self.schema_update(data)
 
     def delete(self):
-        from aleph.model import Document, DocumentPage, Reference
+        from aleph.model import Document, Reference
+        from aleph.model import DocumentRecord, DocumentPage
         sq = db.session.query(Document.id)
         sq = sq.filter(Document.source_id == self.id)
         sq = sq.subquery()
 
         q = db.session.query(DocumentPage)
         q = q.filter(DocumentPage.document_id.in_(sq))
+        q.delete(synchronize_session='fetch')
+
+        q = db.session.query(DocumentRecord)
+        q = q.filter(DocumentRecord.document_id.in_(sq))
         q.delete(synchronize_session='fetch')
 
         q = db.session.query(Reference)

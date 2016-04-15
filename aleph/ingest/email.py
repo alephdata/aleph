@@ -42,6 +42,11 @@ class EmailFileIngestor(TextIngestor):
         child.clear('extension')
         child.parent = meta.clone()
         child.file_name = unicode(part.detected_file_name)
+
+        # Weird outlook RTF representations -- do we want them?
+        if child.file_name == 'rtf-body.rtf':
+            return
+
         child.mime_type = unicode(part.detected_content_type)
         ingest_file(self.source_id, child, out_path, move=True)
 
@@ -84,7 +89,7 @@ class EmailFileIngestor(TextIngestor):
             if not part.is_body():
                 self.ingest_attachment(part, meta)
             elif 'html' not in body_type:
-                body_type = unicode(part.detected_file_name)
+                body_type = unicode(part.detected_content_type)
                 body_part = part.body
 
         out_path = ''
