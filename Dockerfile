@@ -15,7 +15,7 @@ RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
         tesseract-ocr-pol tesseract-ocr-slk tesseract-ocr-slv \
         tesseract-ocr-sqi tesseract-ocr-srp tesseract-ocr-tur \
         tesseract-ocr-ukr poppler-utils poppler-data unrtf pstotext zlib1g-dev \
-        python-numpy default-jdk \
+        python-numpy default-jdk readpst \
   && apt-get clean
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
 
