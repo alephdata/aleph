@@ -84,7 +84,7 @@ class EmailFileIngestor(TextIngestor):
         meta = self.parse_headers(msg, meta)
 
         body_type = 'text/plain'
-        body_part = msg
+        body_part = msg.body
 
         for part in msg.walk():
             if not part.is_body():
