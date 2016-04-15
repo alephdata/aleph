@@ -5,6 +5,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   var isLoading = false;
   $scope.result = {};
   $scope.fields = data.metadata.fields;
+  $scope.error = data.result.error;
   $scope.session = data.metadata.session;
   $scope.metadata = data.metadata;
   $scope.query = Query;
@@ -86,7 +87,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   };
 
   $scope.canCreateAlert = function() {
-    return data.metadata.session.logged_in;
+    return data.metadata.session.logged_in && !data.result.error;
   };
 
   $scope.toggleAlert = function() {
@@ -121,6 +122,12 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   };
 
   var initFacets = function() {
+    if (data.result.error) {
+      $scope.facets = {};
+      $scope.sourceFacets = [];
+      $scope.entityFacets = [];
+      return;
+    }
     $scope.sourceFacets = sortedFilters(data.result.sources.values, 'filter:source_id');
     $scope.entityFacets = sortedFilters(data.result.entities, 'entity');
 
@@ -140,6 +147,10 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   };
 
   var initResults = function() {
+    if (data.result.error) {
+      $scope.result = {'results': []};
+      return;
+    }
     // allow HTML highlight results:
     for (var i in data.result.results) {
       var doc = data.result.results[i];

@@ -10,7 +10,7 @@ from aleph.archive.archive import Archive
 log = logging.getLogger(__name__)
 
 
-class S3Archive(Archive):
+class S3Archive(Archive):  # pragma: no cover
 
     def __init__(self, config):
         self.local_base = tempfile.gettempdir()

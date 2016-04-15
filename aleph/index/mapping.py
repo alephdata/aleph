@@ -39,11 +39,11 @@ DOCUMENT_MAPPING = {
             "include_in_parent": True,
             "properties": {
                 "id": {"type": "integer", "index": "not_analyzed"},
-                "entity_id": {"type": "integer", "index": "not_analyzed"},
+                "uuid": {"type": "string", "index": "not_analyzed"},
                 "watchlist_id": {"type": "integer", "index": "not_analyzed"},
                 "collection_id": {"type": "integer", "index": "not_analyzed"},
                 "name": {"type": "string", "index": "not_analyzed"},
-                "category": {"type": "string", "index": "not_analyzed"},
+                "$schema": {"type": "string", "index": "not_analyzed"},
                 "weight": {"type": "string", "index": "not_analyzed"}
             }
         },

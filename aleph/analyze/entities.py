@@ -7,7 +7,7 @@ from collections import defaultdict
 
 from aleph.core import db
 from aleph.util import latinize_text
-from aleph.model import Reference, Selector, Entity, Collection
+from aleph.model import Reference, Entity, Collection
 from aleph.analyze.analyzer import Analyzer
 
 # TODO: cache regexen, perhaps by collection?
@@ -54,12 +54,11 @@ class EntityCache(object):
 
     def compile_collection(self, collection_id):
         matchers = defaultdict(set)
-        q = db.session.query(Selector.entity_id, Selector.text)
-        q = q.join(Entity, Entity.id == Selector.entity_id)
+        q = db.session.query(Entity)
         q = q.filter(Entity.collection_id == collection_id)
-        for entity_id, text in q.all():
-            text = normalize(text)
-            matchers[text].add(entity_id)
+        for entity in q.all():
+            for term in entity.terms:
+                matchers[normalize(term)].add(entity.id)
         body = '|'.join(matchers.keys())
         rex = re.compile('( |^)(%s)( |$)' % body)
         return rex, matchers

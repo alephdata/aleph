@@ -1,14 +1,15 @@
 from uuid import uuid4
 from flask import current_app
 
-from aleph.core import db
-from aleph.model.validation import validate
-from aleph.model.common import SoftDeleteModel
+from aleph.core import db, url_for
+from aleph.model.schema_model import SchemaModel
+from aleph.model.common import SoftDeleteModel, IdModel
 
 
-class Role(db.Model, SoftDeleteModel):
+class Role(db.Model, IdModel, SoftDeleteModel, SchemaModel):
     """A user, group or other access control subject."""
 
+    _schema = 'role.json#'
     __tablename__ = 'role'
 
     USER = 'user'
@@ -19,7 +20,6 @@ class Role(db.Model, SoftDeleteModel):
     SYSTEM_GUEST = 'guest'
     SYSTEM_USER = 'user'
 
-    id = db.Column(db.Integer, primary_key=True)
     foreign_id = db.Column(db.Unicode(2048), nullable=False, unique=True)
     name = db.Column(db.Unicode, nullable=False)
     email = db.Column(db.Unicode, nullable=True)
@@ -29,9 +29,7 @@ class Role(db.Model, SoftDeleteModel):
     permissions = db.relationship("Permission", backref="role")
 
     def update(self, data):
-        validate(data, 'role.json#')
-        self.name = data.get('name')
-        self.email = data.get('email')
+        self.schema_update(data)
 
     @classmethod
     def notifiable(cls):
@@ -82,11 +80,10 @@ class Role(db.Model, SoftDeleteModel):
         return self.name
 
     def to_dict(self):
-        return {
-            'id': self.id,
-            'foreign_id': self.foreign_id,
-            'name': self.name,
-            'is_admin': self.is_admin,
-            'email': self.email,
-            'type': self.type
-        }
+        data = super(Role, self).to_dict()
+        data['api_url'] = url_for('roles_api.view', id=self.id)
+        data['foreign_id'] = self.foreign_id
+        data['is_admin'] = self.is_admin
+        data['email'] = self.email
+        data['type'] = self.type
+        return data

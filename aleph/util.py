@@ -1,4 +1,5 @@
 import os
+import gc
 import logging
 from hashlib import sha1
 from datetime import datetime, date
@@ -60,3 +61,13 @@ def string_value(value, encoding=None):
     except Exception as ex:
         log.exception(ex)
         return
+
+
+def find_subclasses(cls):
+    # https://stackoverflow.com/questions/8956928
+    all_refs = gc.get_referrers(cls)
+    results = []
+    for o in all_refs:
+        if (isinstance(o, tuple) and getattr(o[0], "__mro__", None) is o):
+            results.append(o[0])
+    return results

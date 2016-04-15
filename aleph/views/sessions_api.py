@@ -73,7 +73,6 @@ def login():
 
 @blueprint.route('/api/1/sessions/logout')
 def logout():
-    authz.require(authz.logged_in())
     session.clear()
     return redirect(url_for('base_api.ui'))
 

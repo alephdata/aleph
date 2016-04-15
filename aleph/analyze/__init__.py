@@ -3,7 +3,7 @@ import logging
 from aleph import process
 from aleph.core import celery
 from aleph.ext import get_analyzers
-from aleph.model import Document, Entity
+from aleph.model import Document, Entity, Collection
 from aleph.search.fragments import text_query_string, meta_query_string
 from aleph.search.fragments import child_record
 from aleph.index import index_document

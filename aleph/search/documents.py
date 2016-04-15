@@ -56,7 +56,7 @@ def documents_query(args, fields=None, facets=True, newer_than=None):
             filters.append((field, value))
 
     for entity in args.getlist('entity'):
-        filters.append(('entities.entity_id', entity))
+        filters.append(('entities.uuid', entity))
 
     aggs = {}
     if facets:
@@ -84,13 +84,13 @@ def entity_collections(q, aggs, args, filters):
     flt = {
         'or': [
             {
-                'terms': {'entities.watchlist_id': collections}
+                'terms': {'entities.collection_id': collections}
             },
             {
                 'and': [
                     {
-                        'terms': {'entities.watchlist_id': readable},
-                        'terms': {'entities.entity_id': entities},
+                        'terms': {'entities.collection_id': readable},
+                        'terms': {'entities.uuid': entities},
                     }
                 ]
             }
@@ -105,7 +105,7 @@ def entity_collections(q, aggs, args, filters):
                 'filter': flt,
                 'aggs': {
                     'entities': {
-                        'terms': {'field': 'entities.entity_id', 'size': 100}
+                        'terms': {'field': 'entities.uuid', 'size': 100}
                     }
                 }
             }

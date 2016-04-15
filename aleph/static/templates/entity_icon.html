@@ -1,7 +1,17 @@
-<span class="entity-icon {{category}}" uib-tooltip="{{category}}"
+<span class="entity-icon {{type}}" uib-tooltip="{{type}}"
   tooltip-append-to-body="true" tooltip-placement="left">
-  <i class="fa fa-question-circle" ng-if="category=='Other'"></i>
-  <i class="fa fa-suitcase" ng-if="category=='Company'"></i>
-  <i class="fa fa-university" ng-if="category=='Organization'"></i>
-  <i class="fa fa-user" ng-if="category=='Person'"></i>
+  <i class="fa fa-question-circle"
+    ng-if="type=='/entity/asset.json#'"></i>
+  <i class="fa fa-question-circle"
+    ng-if="type=='/entity/building.json#'"></i>
+  <i class="fa fa-question-circle"
+    ng-if="type=='/entity/asset.json#'"></i>
+  <i class="fa fa-suitcase"
+    ng-if="type=='/entity/company.json#'"></i>
+  <i class="fa fa-university"
+    ng-if="type=='/entity/organization.json#'"></i>
+  <i class="fa fa-user"
+    ng-if="type=='/entity/person.json#'"></i>
+  <i class="fa fa-user"
+    ng-if="type=='/entity/entity.json#'"></i>
 </span>

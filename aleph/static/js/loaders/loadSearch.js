@@ -16,6 +16,14 @@ var loadSearch = ['$http', '$q', '$route', '$location', 'Query', 'Session', 'Met
           'metadata': metadata
         });
       }, function(err) {
+        if (err.status == 400) {
+          dfd.resolve({
+            'result': {
+              'error': err.data
+            },
+            'metadata': metadata
+          });
+        }
         dfd.reject(err);  
       });
     }, function(err) {
