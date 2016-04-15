@@ -7,6 +7,8 @@ CORE_FACETS = {
     'languages': 'Languages',
     'countries': 'Countries',
     'keywords': 'Keywords',
+    'author': 'Document author',
+    'recipients': 'Message recipients',
     'dates': 'Dates'
 }
 

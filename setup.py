@@ -28,6 +28,7 @@ setup(
             'pdf = aleph.ingest.text:PDFIngestor',
             'doc = aleph.ingest.text:DocumentIngestor',
             'img = aleph.ingest.text:ImageIngestor',
+            'email = aleph.ingest.email:EmailFileIngestor',
             'messy = aleph.ingest.tabular:MessyTablesIngestor',
             'dbf = aleph.ingest.tabular:DBFIngestor',
             'rar = aleph.ingest.packages:RARIngestor',
