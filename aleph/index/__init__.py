@@ -39,8 +39,8 @@ def delete_source(source_id):
     try:
         bulk(get_es(), deletes(), stats_only=True, chunk_size=2000,
              request_timeout=60.0)
-    except Exception as ex:
-        log.exception(ex)
+    except Exception:
+        log.debug("Failed to clear documents: %r", source_id)
 
 
 def generate_entities(document):

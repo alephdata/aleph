@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 def clear_records(document):
     """Delete all records associated with the given document."""
     q = {'query': {'term': {'document_id': document.id}},
-         '_source': ['_id', 'document_id']}
+         '_source': False}
 
     def gen_deletes():
             for res in scan(get_es(), query=q, index=get_es_index(),
@@ -24,7 +24,7 @@ def clear_records(document):
                 yield {
                     '_op_type': 'delete',
                     '_index': get_es_index(),
-                    '_parent': res.get('_source', {}).get('document_id'),
+                    '_parent': res.get('_parent'),
                     '_type': res.get('_type'),
                     '_id': res.get('_id')
                 }
@@ -32,8 +32,8 @@ def clear_records(document):
     try:
         bulk(get_es(), gen_deletes(), stats_only=True, chunk_size=2000,
              request_timeout=60.0)
-    except Exception as ex:
-        log.exception(ex)
+    except Exception:
+        log.debug("Failed to clear previous index: %r", document)
 
 
 def generate_records(document):
