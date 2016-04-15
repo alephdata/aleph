@@ -1,8 +1,9 @@
 import os
 import logging
+import shutil
 import rfc822
-from normality import slugify
-from tempfile import mkstemp
+import subprocess
+from tempfile import mkstemp, mkdtemp
 from time import mktime
 from datetime import datetime
 
@@ -20,12 +21,11 @@ class EmailFileIngestor(TextIngestor):
     EXTENSIONS = ['eml', 'rfc822', 'email', 'msg']
     BASE_SCORE = 5
 
-    def write_temp(self, part, suffix=''):
+    def write_temp(self, body, suffix=''):
         fh, out_path = mkstemp(suffix=suffix)
         os.close(fh)
         with open(out_path, 'w') as fh:
-            body = part.body
-            if isinstance(part.body, unicode):
+            if isinstance(body, unicode):
                 body = body.encode('utf-8')
             fh.write(body)
         return out_path
@@ -34,7 +34,9 @@ class EmailFileIngestor(TextIngestor):
         name, ext = os.path.splitext(part.detected_file_name)
         if len(ext):
             ext = ext.strip().lower()
-        out_path = self.write_temp(part, ext)
+        if part.body is None:
+            return
+        out_path = self.write_temp(part.body, ext)
         child = meta.clone()
         child.clear('title')
         child.clear('extension')
@@ -72,28 +74,65 @@ class EmailFileIngestor(TextIngestor):
     def ingest(self, meta, local_path):
         with open(local_path, 'rb') as emlfh:
             data = emlfh.read()
-            msg = mime.from_string(data)
-            meta = self.parse_headers(msg, meta)
+        msg = mime.from_string(data)
+        meta = self.parse_headers(msg, meta)
 
-            body_type = 'text/plain'
-            body_part = msg
+        body_type = 'text/plain'
+        body_part = msg
 
-            for part in msg.walk():
-                if not part.is_body():
-                    self.ingest_attachment(part, meta)
-                elif 'html' not in body_type:
-                    body_type = unicode(part.detected_file_name)
-                    body_part = part
+        for part in msg.walk():
+            if not part.is_body():
+                self.ingest_attachment(part, meta)
+            elif 'html' not in body_type:
+                body_type = unicode(part.detected_file_name)
+                body_part = part.body
 
-            out_path = ''
-            try:
-                if 'html' in body_type:
-                    out_path = self.write_temp(body_part, '.htm')
-                    ing = HtmlIngestor(self.source_id)
-                else:
-                    out_path = self.write_temp(body_part, '.txt')
-                    ing = DocumentIngestor(self.source_id)
-                ing.ingest(meta, out_path)
-            finally:
-                if os.path.isfile(out_path):
-                    os.unlink(out_path)
+        out_path = ''
+        if body_part is None:
+            log.info("No body in E-Mail: %r", meta)
+            return
+        try:
+            if 'html' in body_type:
+                out_path = self.write_temp(body_part, '.htm')
+                ing = HtmlIngestor(self.source_id)
+            else:
+                out_path = self.write_temp(body_part, '.txt')
+                ing = DocumentIngestor(self.source_id)
+            ing.ingest(meta, out_path)
+        finally:
+            if len(out_path) and os.path.isfile(out_path):
+                os.unlink(out_path)
+
+
+class OutlookIngestor(TextIngestor):
+    MIME_TYPES = ['application/vnd.ms-outlook']
+    EXTENSIONS = ['pst']
+    BASE_SCORE = 5
+
+    def ingest_message(self, filepath, meta):
+        child = meta.clone()
+        child.clear('title')
+        child.clear('extension')
+        child.clear('file_name')
+        child.clear('mime_type')
+        child.parent = meta.clone()
+        child.source_path = filepath
+        ingest_file(self.source_id, child, filepath, move=True)
+
+    def ingest(self, meta, local_path):
+        work_dir = mkdtemp()
+        try:
+            bin_path = os.environ.get('READPST_BIN', 'readpst')
+            args = [bin_path, '-D', '-e', '-o', work_dir, local_path]
+            log.debug('Converting Outlook PST file: %r', ' '.join(args))
+            subprocess.call(args)
+            for (dirpath, dirnames, filenames) in os.walk(work_dir):
+                child = meta.clone()
+                relpath = os.path.relpath(dirpath, work_dir)
+                for kw in relpath.split(os.path.sep):
+                    child.add_keyword(kw)
+                for filename in filenames:
+                    filepath = os.path.join(dirpath, filename)
+                    self.ingest_message(filepath, child)
+        finally:
+            shutil.rmtree(work_dir)
