@@ -24,11 +24,10 @@ class SchemaModel(object):
 
     @classmethod
     def get_schema_class(cls, schema):
-        if cls._schema == schema:
-            return cls
         for subcls in find_subclasses(cls):
             if subcls._schema == schema:
                 return subcls
+        return cls
 
     @property
     def schema_visitor(self):
@@ -45,15 +44,15 @@ class SchemaModel(object):
                 continue
             prop_data = data[prop.name]
             if prop.is_value:
-                self._schema_update_value(prop, prop_data, merge=merge)
+                self._schema_update_value(prop, prop_data)
             elif prop.is_object and self._schema_recurse:
-                self._schema_update_object(prop, prop_data, merge=merge)
+                self._schema_update_object(prop, prop_data)
             elif prop.is_array and self._schema_recurse:
                 self._schema_update_array(prop, prop_data, merge=merge)
         if isinstance(self, DatedModel):
             self.updated_at = datetime.utcnow()
 
-    def _schema_update_value(self, prop, data, merge=False):
+    def _schema_update_value(self, prop, data):
         value = convert_value(prop, data)
         setattr(self, prop.name, value)
 
@@ -80,7 +79,7 @@ class SchemaModel(object):
             raise TypeError("Associated class is not a SchemaModel!")
         return rel
 
-    def _schema_update_object(self, prop, data, merge=False):
+    def _schema_update_object(self, prop, data):
         """Create or update an associated object."""
         rel = self._get_relationship(prop.name, 'MANYTOONE')
 
@@ -139,9 +138,13 @@ class SchemaModel(object):
 
     def _merge_compare(self, data):
         for prop in self.schema_visitor.properties:
-            if (not prop.is_value) or (prop.name == 'id'):
+            if not prop.is_value:
+                continue
+            if prop.name == 'id':
                 continue
             value = getattr(self, prop.name)
+            if value is None:
+                continue
             if value != data.get(prop.name):
                 return False
         return True

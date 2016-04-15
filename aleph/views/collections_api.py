@@ -28,8 +28,8 @@ def create():
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['GET'])
 def view(id):
-    authz.require(authz.collection_read(id))
     collection = obj_or_404(Collection.by_id(id))
+    authz.require(authz.collection_read(id))
     return jsonify(collection)
 
 
@@ -45,8 +45,9 @@ def update(id):
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['DELETE'])
 def delete(id):
-    authz.require(authz.collection_write(id))
     collection = obj_or_404(Collection.by_id(id))
+    authz.require(authz.collection_write(id))
+    # TODO: race condition-ish...
     for entity in collection.entities:
         analyze_entity.delay(entity.id)
     collection.delete()

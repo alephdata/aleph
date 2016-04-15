@@ -58,3 +58,13 @@ class CollectionsApiTestCase(TestCase):
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 400, res.json
+
+    def test_delete(self):
+        self.login(is_admin=True)
+        url = '/api/1/collections/%s' % self.col.id
+        res = self.client.get(url)
+        assert res.status_code == 200, res
+        res = self.client.delete(url)
+        assert res.status_code == 200, res
+        res = self.client.get(url)
+        assert res.status_code == 404, res

@@ -5,7 +5,6 @@ from sqlalchemy.orm import aliased
 # from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
-from aleph.util import find_subclasses
 from aleph.model.collection import Collection
 from aleph.model.schema_model import SchemaModel
 from aleph.model.common import SoftDeleteModel, UuidModel, make_textid
@@ -46,12 +45,14 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     @classmethod
     def save(cls, data, merge=False):
         ent = cls.by_id(data.get('id'))
+        for identifier in data.get('identifiers', []):
+            if ent is None:
+                ent = cls.by_identifier(identifier.get('scheme'),
+                                        identifier.get('identifier'),
+                                        data.get('collection_id'))
         if ent is None:
             schema = data.get('$schema', cls._schema)
-            if schema != cls._schema:
-                for subcls in find_subclasses(cls):
-                    if subcls._schema == schema:
-                        cls = subcls
+            cls = cls.get_schema_class(schema)
             ent = cls()
             ent.id = make_textid()
             ent.collection_id = data.get('collection_id')
@@ -186,7 +187,7 @@ class EntityPerson(EntityLegalPerson):
     gender = db.Column(db.Unicode, nullable=True)
     birth_date = db.Column(db.Date, nullable=True)
     death_date = db.Column(db.Date, nullable=True)
-    biography = db.Column(db.Date, nullable=True)
+    biography = db.Column(db.Unicode, nullable=True)
 
     residential_address_id = db.Column(db.String(32), db.ForeignKey('entity_address.id'))  # noqa
     residential_address = db.relationship('EntityAddress',
@@ -203,7 +204,7 @@ class EntityOrganization(EntityLegalPerson):
     classification = db.Column(db.Unicode, nullable=True)
     founding_date = db.Column(db.Date, nullable=True)
     dissolution_date = db.Column(db.Date, nullable=True)
-    current_status = db.Column(db.Date, nullable=True)
+    current_status = db.Column(db.Unicode, nullable=True)
 
     registered_address_id = db.Column(db.String(32), db.ForeignKey('entity_address.id'))  # noqa
     registered_address = db.relationship('EntityAddress',
@@ -223,6 +224,6 @@ class EntityCompany(EntityOrganization, EntityAsset):
     }
 
     company_number = db.Column(db.Unicode, nullable=True)
-    sector = db.Column(db.Date, nullable=True)
-    company_type = db.Column(db.Date, nullable=True)
-    register_url = db.Column(db.Date, nullable=True)
+    sector = db.Column(db.Unicode, nullable=True)
+    company_type = db.Column(db.Unicode, nullable=True)
+    register_url = db.Column(db.Unicode, nullable=True)

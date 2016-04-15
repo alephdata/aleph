@@ -9,7 +9,7 @@
   "inline": false,
   "graph": "edge",
   "oneOf": [{"$ref": "/link/link.json#"}],
-  "required": ["role", "first_person", "second_person"],
+  "required": ["role"],
   "properties": {
     "role": {
       "title": "Relationship",

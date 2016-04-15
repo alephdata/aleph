@@ -34,33 +34,23 @@ class OpenNamesCrawler(Crawler):  # pragma: no cover
         terms = set()
         existing_entities = []
         db.session.flush()
-        scheme = 'opennames:%s' % source.get('source_id')
         entities = requests.get(url).json().get('entities', [])
         for entity in entities:
-            if entity.get('name') is None:
-                continue
             data = {
-                'identifiers': [
-                    {
-                        'schema': scheme,
-                        'identifier': entity.get('uid')
-                    }
-                ],
+                'identifiers': [{
+                    'scheme': 'opennames:%s' % source.get('source_id'),
+                    'identifier': entity.get('uid')
+                }],
                 'other_names': [],
                 'name': entity.get('name'),
                 '$schema': SCHEMA.get(entity.get('type'),
                                       '/entity/entity.json#')
             }
             for on in entity.get('other_names', []):
-                on['name'] = on.get('other_name')
+                on['name'] = on.pop('other_name', None)
                 data['other_names'].append(on)
 
-            ent = Entity.by_identifier(scheme, entity.get('uid'),
-                                       collection.id)
-            if ent is None:
-                ent = Entity.save(data, merge=True)
-            else:
-                ent.update(data, merge=True)
+            ent = Entity.save(data, merge=True)
             db.session.flush()
             terms.update(ent.terms)
             existing_entities.append(ent.id)

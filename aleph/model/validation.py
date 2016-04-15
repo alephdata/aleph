@@ -21,12 +21,12 @@ format_checker = FormatChecker()
 
 @format_checker.checks('country-code')
 def is_country_code(code):
-    return code in COUNTRY_NAMES.keys()
+    return code.lower() in COUNTRY_NAMES.keys()
 
 
 @format_checker.checks('language-code')
 def is_language_code(code):
-    return code in LANGUAGE_NAMES.keys()
+    return code.lower() in LANGUAGE_NAMES.keys()
 
 
 @format_checker.checks('source-category')

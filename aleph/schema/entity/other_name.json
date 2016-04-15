@@ -7,7 +7,7 @@
   "type": "object",
   "faIcon": "fa-language",
   "inline": true,
-  "required": ["name"], 
+  "required": [], 
   "properties": {
     "id": {
       "title": "ID",
@@ -18,7 +18,7 @@
       "title": "Other name",
       "sortIndex": 98,
       "description": "An alternate or former name",
-      "type": "string"
+      "type": ["string", "null"]
     },
     "note": {
       "title": "Description",

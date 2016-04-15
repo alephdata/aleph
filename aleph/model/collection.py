@@ -22,8 +22,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         self.schema_update(data)
 
     def delete(self):
-        self.delete_entities()
-        db.session.delete(self)
+        for entity in self.entities:
+            entity.delete()
+        super(Collection, self).delete()
 
     def touch(self):
         self.updated_at = datetime.utcnow()

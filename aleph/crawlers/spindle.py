@@ -3,12 +3,13 @@ from pprint import pprint  # noqa
 import requests
 import logging
 
-from aleph.core import get_config
+from aleph.core import get_config, db
 from aleph.model import Collection, Entity, Permission
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
 
+OTHER = '/entity/entity.json#'
 SCHEMATA = {
     'https://schema.occrp.org/generic/person.json#': '/entity/person.json#',
     'https://schema.occrp.org/generic/company.json#': '/entity/company.json#',
@@ -41,16 +42,37 @@ class SpindleCrawler(Crawler):  # pragma: no cover
         for entity in res.json().get('results', []):
             if entity.get('name') is None:
                 continue
-            aliases = [on.get('alias') for on in entity.get('other_names', [])]
-            ent = Entity.by_foreign_id(entity.get('id'), collection, {
-                'name': entity.get('name'),
-                'category': SCHEMATA.get(entity.get('$schema'), OTHER),
-                'data': entity,
-                'selectors': aliases
-            })
+            entity['$schema'] = SCHEMATA.get(entity.get('$schema'), OTHER)
+            if 'jurisdiction_code' in entity:
+                entity['jurisdiction_code'] = \
+                    entity['jurisdiction_code'].lower()
+            entity.pop('members', None)
+            entity.pop('memberships', None)
+            entity.pop('assets', None)
+            entity.pop('owners', None)
+            entity.pop('family_first', None)
+            entity.pop('family_second', None)
+            entity.pop('social_first', None)
+            entity.pop('social_second', None)
+
+            for date_field in ['birth_date']:
+                if date_field in entity and 'T' in entity[date_field]:
+                    entity[date_field], _ = entity[date_field].split('T', 1)
+
+            for on in entity.get('other_names', []):
+                name = on.pop('alias', None)
+                if name is not None:
+                    on['name'] = name
+
+            entity['identifiers'] = [{
+                'scheme': 'spindle',
+                'identifier': entity.pop('id', None)
+            }]
+            ent = Entity.save(entity, merge=True)
+            db.session.flush()
             terms.update(ent.terms)
             existing_entities.append(ent.id)
-            log.info("  # %s (%s)", ent.name, ent.category)
+            log.info("  # %s", ent.name)
 
         for entity in collection.entities:
             if entity.id not in existing_entities:

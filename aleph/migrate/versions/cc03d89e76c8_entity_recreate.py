@@ -54,18 +54,18 @@ def upgrade():
         sa.Column('gender', sa.Unicode(), nullable=True),
         sa.Column('birth_date', sa.Date(), nullable=True),
         sa.Column('death_date', sa.Date(), nullable=True),
-        sa.Column('biography', sa.Date(), nullable=True),
+        sa.Column('biography', sa.Unicode(), nullable=True),
         sa.Column('residential_address_id', sa.String(length=32), nullable=True),
         sa.Column('classification', sa.Unicode(), nullable=True),
         sa.Column('founding_date', sa.Date(), nullable=True),
         sa.Column('dissolution_date', sa.Date(), nullable=True),
-        sa.Column('current_status', sa.Date(), nullable=True),
+        sa.Column('current_status', sa.Unicode(), nullable=True),
         sa.Column('registered_address_id', sa.String(length=32), nullable=True),
         sa.Column('headquarters_address_id', sa.String(length=32), nullable=True),
         sa.Column('company_number', sa.Unicode(), nullable=True),
-        sa.Column('sector', sa.Date(), nullable=True),
-        sa.Column('company_type', sa.Date(), nullable=True),
-        sa.Column('register_url', sa.Date(), nullable=True),
+        sa.Column('sector', sa.Unicode(), nullable=True),
+        sa.Column('company_type', sa.Unicode(), nullable=True),
+        sa.Column('register_url', sa.Unicode(), nullable=True),
         sa.ForeignKeyConstraint(['building_address_id'], ['entity_address.id']),
         sa.ForeignKeyConstraint(['collection_id'], ['collection.id'], ),
         sa.ForeignKeyConstraint(['headquarters_address_id'], ['entity_address.id'], ),
@@ -126,11 +126,11 @@ def upgrade():
     op.create_index(op.f('ix_processing_log_source_location'), 'processing_log', ['source_location'], unique=False)
     op.drop_index('ix_processing_log_source_loc', table_name='processing_log')
     op.add_column(u'reference', sa.Column('entity_id', sa.String(length=32), nullable=True))
-    op.create_foreign_key(None, 'reference', 'entity', ['entity_id'], ['id'])
+    op.create_foreign_key('ix_reference_fk', 'reference', 'entity', ['entity_id'], ['id'])
 
 
 def downgrade():
-    op.drop_constraint(None, 'reference', type_='foreignkey')
+    op.drop_constraint('ix_reference_fk', 'reference', type_='foreignkey')
     op.drop_column(u'reference', 'entity_id')
     op.create_index('ix_processing_log_source_loc', 'processing_log', ['source_location'], unique=False)
     op.drop_index(op.f('ix_processing_log_source_location'), table_name='processing_log')
