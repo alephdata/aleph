@@ -100,7 +100,8 @@ class EmailFileIngestor(TextIngestor):
 
         out_path = ''
         if body_part is None:
-            self.log_error(meta, error_type='EmptyEmailError', error_message="No body in E-Mail: %r" % meta)  # noqa
+            self.log_error(meta, error_type='EmptyEmailError',
+                           error_message="No body in E-Mail: %r" % meta)
             return
         try:
             if 'html' in body_type:
@@ -111,7 +112,8 @@ class EmailFileIngestor(TextIngestor):
                 ing = DocumentIngestor(self.source_id)
             ing.ingest(meta, out_path)
         finally:
-            if len(out_path) and os.path.isfile(out_path):
+            if out_path is not None and len(out_path) and \
+                    os.path.isfile(out_path):
                 os.unlink(out_path)
 
 

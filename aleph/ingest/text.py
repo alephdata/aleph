@@ -83,13 +83,15 @@ class DocumentIngestor(PDFIngestor):
             self.store_pdf(meta, pdf_path, move=False)
             self.extract_pdf(meta, pdf_path)
         finally:
-            if os.path.isfile(pdf_path):
+            if pdf_path is not None and os.path.isfile(pdf_path):
                 os.unlink(pdf_path)
 
     def ingest(self, meta, local_path):
         pdf_path = document_to_pdf(local_path)
         if pdf_path is None or not os.path.isfile(pdf_path):
-            self.log_error(meta, error_type='DocumentConvertError', error_message="Could not convert doc: %r" % meta)  # noqa
+            self.log_error(meta, error_type='DocumentConvertError',
+                           error_message="Could not convert doc: %r" % meta)
+            return
         self.extract_pdf_alternative(meta, pdf_path)
 
 
@@ -134,7 +136,8 @@ class HtmlIngestor(DocumentIngestor):
 
             pdf_path = html_to_pdf(out_path)
             if pdf_path is None or not os.path.isfile(pdf_path):
-                self.log_error(meta, error_type='HTMLConvertError', error_message="Could not convert HTML: %r" % meta)  # noqa
+                self.log_error(meta, error_type='HTMLConvertError',
+                               error_message="Could not convert HTML: %r" % meta)  # noqa
                 return
             self.extract_pdf_alternative(meta, pdf_path)
         finally:
