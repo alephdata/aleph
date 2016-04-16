@@ -77,6 +77,8 @@ class ZipIngestor(PackageIngestor):
                     self.emit_member(meta, info.filename, fh, temp_dir)
         except zipfile.BadZipfile as bad:
             self.log_exception(meta, bad)
+        except IOError as ioe:
+            self.log_exception(meta, ioe)
 
     @classmethod
     def match(cls, meta, local_path):
