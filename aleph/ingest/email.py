@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 class EmailFileIngestor(TextIngestor):
     MIME_TYPES = ['multipart/mixed']
     EXTENSIONS = ['eml', 'rfc822', 'email']
-    BASE_SCORE = 5
+    BASE_SCORE = 6
 
     def write_temp(self, body, suffix=''):
         fh, out_path = mkstemp(suffix=suffix)
