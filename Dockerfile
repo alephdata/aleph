@@ -3,8 +3,7 @@ MAINTAINER Friedrich Lindenberg <friedrich@pudo.org>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN echo "deb http://http.us.debian.org/debian stable non-free" >/etc/apt/sources.list.d/nonfree.list
-RUN apt-get update -qq && apt-get dist-upgrade \
-        && apt-get install -y -q --no-install-recommends \
+RUN apt-get update -qq && apt-get -y dist-upgrade && apt-get install -y -q  \
         curl git python-pip python-virtualenv build-essential python-dev \
         libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates less \
         postgresql-client-9.4 unrar unzip locales libreoffice libopenjpeg5 \
@@ -19,7 +18,7 @@ RUN apt-get update -qq && apt-get dist-upgrade \
         tesseract-ocr-sqi tesseract-ocr-srp tesseract-ocr-tur \
         tesseract-ocr-ukr poppler-utils poppler-data unrtf pstotext \
         python-numpy default-jdk readpst \
-  && apt-get autoremove && apt-get clean
+  && apt-get -y autoremove && apt-get clean
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
 
 RUN echo "en_GB ISO-8859-1" >> /etc/locale.gen && \

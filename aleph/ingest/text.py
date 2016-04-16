@@ -55,6 +55,14 @@ class PDFIngestor(TextIngestor):
     def ingest(self, meta, local_path):
         self.extract_pdf(meta, local_path)
 
+    @classmethod
+    def match(cls, meta, local_path):
+        with open(local_path, 'r') as fh:
+            begin = fh.read(10)
+            if begin.startswith('%%PDF-1.'):
+                return 10
+        return -1
+
 
 class DocumentIngestor(PDFIngestor):
     MIME_TYPES = ['application/msword', 'application/rtf', 'application/x-rtf',
