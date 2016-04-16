@@ -90,10 +90,13 @@ class EmailFileIngestor(TextIngestor):
         for part in msg.walk():
             if not part.is_body():
                 self.ingest_attachment(part, meta)
-            elif 'html' not in body_type and part.body is not None \
-                    and len(part.body.strip()):
+                continue
+
+            body = part.body
+            if 'html' not in body_type and \
+                    body is not None and len(body.strip()):
                 body_type = unicode(part.detected_content_type)
-                body_part = part.body
+                body_part = body
 
         out_path = ''
         if body_part is None:
