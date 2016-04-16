@@ -30,14 +30,6 @@ class TextIngestor(Ingestor):
         db.session.add(page)
         return page
 
-    def store_pdf(self, meta, pdf_path, move=True):
-        get_archive().archive_file(pdf_path, meta.pdf, move=move)
-
-
-class PDFIngestor(TextIngestor):
-    MIME_TYPES = ['application/pdf']
-    EXTENSIONS = ['pdf']
-
     def extract_pdf(self, meta, pdf_path):
         data = extract_pdf(pdf_path)
         if data is None:
@@ -56,19 +48,26 @@ class PDFIngestor(TextIngestor):
             self.create_page(document, page, number=i + 1)
         self.emit(document)
 
+    def store_pdf(self, meta, pdf_path, move=True):
+        get_archive().archive_file(pdf_path, meta.pdf, move=move)
+
+
+class PDFIngestor(TextIngestor):
+    MIME_TYPES = ['application/pdf']
+    EXTENSIONS = ['pdf']
+
     def ingest(self, meta, local_path):
         self.extract_pdf(meta, local_path)
 
     @classmethod
     def match(cls, meta, local_path):
         with open(local_path, 'r') as fh:
-            begin = fh.read(10)
-            if begin.startswith('%PDF-1.'):
-                return 10
+            if fh.read(10).startswith('%PDF-1.'):
+                return 15
         return -1
 
 
-class DocumentIngestor(PDFIngestor):
+class DocumentIngestor(TextIngestor):
     MIME_TYPES = ['application/msword', 'application/rtf', 'application/x-rtf',
                   'application/vnd.oasis.opendocument.text',
                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # noqa

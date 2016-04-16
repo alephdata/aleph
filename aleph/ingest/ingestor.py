@@ -60,9 +60,9 @@ class Ingestor(object):
     def match(cls, meta, local_path):
         score = -1
         if meta.mime_type in cls.MIME_TYPES:
-            score = max(score * 1.1, cls.BASE_SCORE)
+            score += cls.BASE_SCORE
         if meta.extension in cls.EXTENSIONS:
-            score = max(score * 1.1, cls.BASE_SCORE)
+            score += cls.BASE_SCORE
         return score
 
     @classmethod
@@ -70,6 +70,7 @@ class Ingestor(object):
         best_score, best_cls = 0, None
         for cls in get_ingestors().values():
             score = cls.match(meta, local_path)
+            print local_path, cls, score
             if score > best_score:
                 best_score = score
                 best_cls = cls

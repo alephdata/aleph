@@ -37,7 +37,7 @@ class MessyTablesIngestor(TabularIngestor):
                   'application/vnd.oasis.opendocument.spreadsheet',
                   'text/tab-separated-values']
     EXTENSIONS = ['csv', 'tsv', 'xls', 'xlsx', 'ods', 'rtf']
-    BASE_SCORE = 6
+    BASE_SCORE = 4
 
     def generate_table(self, document, sheet, row_set):
         offset, headers = headers_guess(row_set.sample)
@@ -80,6 +80,7 @@ class MessyTablesIngestor(TabularIngestor):
 class DBFIngestor(TabularIngestor):
     MIME_TYPES = []
     EXTENSIONS = ['dbf']
+    BASE_SCORE = 7
 
     def ingest(self, meta, local_path):
         with open(local_path, 'rb') as fh:

@@ -45,6 +45,8 @@ class EmailFileIngestor(TextIngestor):
         child.clear('file_name')
         child.parent = meta.clone()
         child.file_name = unicode(part.detected_file_name)
+        child.mime_type = unicode(part.detected_content_type)
+        # print unicode(part.detected_content_type)
 
         # Weird outlook RTF representations -- do we want them?
         if child.file_name == 'rtf-body.rtf':

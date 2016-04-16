@@ -8,7 +8,6 @@ import zipfile
 import tarfile
 from tempfile import mkdtemp
 
-from aleph import process
 from aleph.ingest import ingest_file
 from aleph.ingest.ingestor import Ingestor
 
