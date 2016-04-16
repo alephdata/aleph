@@ -3,20 +3,23 @@ MAINTAINER Friedrich Lindenberg <friedrich@pudo.org>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN echo "deb http://http.us.debian.org/debian stable non-free" >/etc/apt/sources.list.d/nonfree.list
-RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
+RUN apt-get update -qq && apt-get dist-upgrade \
+        && apt-get install -y -q --no-install-recommends \
         curl git python-pip python-virtualenv build-essential python-dev \
         libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates less \
         postgresql-client-9.4 unrar unzip locales libreoffice libopenjpeg5 \
         tesseract-ocr tesseract-ocr-bel tesseract-ocr-aze libopenjpeg-dev \
+        libtiff5-dev libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev \
+        libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
         tesseract-ocr-osd imagemagick-common imagemagick unoconv \
         libtesseract-dev ruby-sass wkhtmltopdf vim libjpeg-dev \
         tesseract-ocr-ces tesseract-ocr-eng tesseract-ocr-deu \
         tesseract-ocr-hrv tesseract-ocr-hun tesseract-ocr-rus \
         tesseract-ocr-pol tesseract-ocr-slk tesseract-ocr-slv \
         tesseract-ocr-sqi tesseract-ocr-srp tesseract-ocr-tur \
-        tesseract-ocr-ukr poppler-utils poppler-data unrtf pstotext zlib1g-dev \
+        tesseract-ocr-ukr poppler-utils poppler-data unrtf pstotext \
         python-numpy default-jdk readpst \
-  && apt-get clean
+  && apt-get autoremove && apt-get clean
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
 
 RUN echo "en_GB ISO-8859-1" >> /etc/locale.gen && \

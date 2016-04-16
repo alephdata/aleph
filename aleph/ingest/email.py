@@ -41,6 +41,8 @@ class EmailFileIngestor(TextIngestor):
         child = meta.clone()
         child.clear('title')
         child.clear('extension')
+        child.clear('mime_type')
+        child.clear('file_name')
         child.parent = meta.clone()
         child.file_name = unicode(part.detected_file_name)
 
@@ -48,7 +50,6 @@ class EmailFileIngestor(TextIngestor):
         if child.file_name == 'rtf-body.rtf':
             return
 
-        child.mime_type = unicode(part.detected_content_type)
         ingest_file(self.source_id, child, out_path, move=True)
 
     def parse_headers(self, msg, meta):
