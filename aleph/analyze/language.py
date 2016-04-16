@@ -26,7 +26,7 @@ class LanguageAnalyzer(Analyzer):
             return
         languages = defaultdict(float)
         for text, rec in document.text_parts():
-            if len(text) < CUTOFF:
+            if len(text.strip()) < CUTOFF:
                 continue
             lang, score = self.identifier.classify(text)
             if score > THRESHOLD:
