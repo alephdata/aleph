@@ -90,13 +90,13 @@ class EmailFileIngestor(TextIngestor):
         for part in msg.walk():
             if not part.is_body():
                 self.ingest_attachment(part, meta)
-            elif 'html' not in body_type:
+            elif 'html' not in body_type and len(part.body.strip()):
                 body_type = unicode(part.detected_content_type)
                 body_part = part.body
 
         out_path = ''
         if body_part is None:
-            log.info("No body in E-Mail: %r", meta)
+            self.log_error(meta, error_type='EmptyEmailError', error_message="No body in E-Mail: %r" % meta)  # noqa
             return
         try:
             if 'html' in body_type:
@@ -141,5 +141,7 @@ class OutlookIngestor(TextIngestor):
                 for filename in filenames:
                     filepath = os.path.join(dirpath, filename)
                     self.ingest_message(filepath, child)
+        except Exception as ex:
+            self.log_exception(meta, ex)
         finally:
             shutil.rmtree(work_dir)

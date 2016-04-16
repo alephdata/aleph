@@ -44,6 +44,18 @@ class Ingestor(object):
         log.debug("Ingested document: %r", document)
         analyze_document(document.id)
 
+    def log_error(self, meta, error_type=None, error_message=None,
+                  error_details=None):
+        process.log(process.INGEST, component=type(self).__name__,
+                    source_id=self.source_id, meta=meta,
+                    error_type=error_type, error_message=error_message,
+                    error_details=error_details)
+
+    def log_exception(self, meta, exception):
+        process.exception(process.INGEST, component=type(self).__name__,
+                          source_id=self.source_id, meta=meta,
+                          exception=exception)
+
     @classmethod
     def match(cls, meta, local_path):
         score = -1

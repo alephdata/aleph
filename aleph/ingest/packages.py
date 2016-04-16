@@ -8,6 +8,7 @@ import zipfile
 import tarfile
 from tempfile import mkdtemp
 
+from aleph import process
 from aleph.ingest import ingest_file
 from aleph.ingest.ingestor import Ingestor
 
@@ -67,12 +68,15 @@ class RARIngestor(PackageIngestor):
 class ZipIngestor(PackageIngestor):
 
     def unpack(self, meta, local_path, temp_dir):
-        with zipfile.ZipFile(local_path) as zf:
-            for info in zf.infolist():
-                if info.file_size == 0:
-                    continue
-                fh = zf.open(info)
-                self.emit_member(meta, info.filename, fh, temp_dir)
+        try:
+            with zipfile.ZipFile(local_path) as zf:
+                for info in zf.infolist():
+                    if info.file_size == 0:
+                        continue
+                    fh = zf.open(info)
+                    self.emit_member(meta, info.filename, fh, temp_dir)
+        except zipfile.BadZipfile as bad:
+            self.log_exception(meta, bad)
 
     @classmethod
     def match(cls, meta, local_path):
