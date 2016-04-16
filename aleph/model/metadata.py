@@ -65,7 +65,7 @@ class Metadata(MutableMapping):
     @property
     def title(self):
         title = self.data.get('title')
-        if title is None or len(title.strip())
+        if title is None or len(title.strip()):
             if self.file_name:
                 title = self.file_name
         return title
