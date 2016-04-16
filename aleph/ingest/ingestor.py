@@ -70,7 +70,6 @@ class Ingestor(object):
         best_score, best_cls = 0, None
         for cls in get_ingestors().values():
             score = cls.match(meta, local_path)
-            print local_path, cls, score
             if score > best_score:
                 best_score = score
                 best_cls = cls
