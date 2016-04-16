@@ -87,30 +87,18 @@ class EntityAnalyzer(Analyzer):
             self._matchers = self.cache.matchers()
         return self._matchers
 
-    def tag_text(self, text, entities):
-        text = normalize(text)
-        if text is None:
-            return
-        for rex, matches in self.matchers:
-            for match in rex.finditer(text):
-                match = match.group(2)
-                for entity_id in matches.get(match, []):
-                    entities[entity_id] += 1
-
-    def analyze_text(self, document, meta):
+    def analyze(self, document, meta):
         entities = defaultdict(int)
-        for page in document.pages:
-            self.tag_text(page.text, entities)
-        self.save(document, meta, entities)
+        for text, rec in document.text_parts():
+            text = normalize(text)
+            if text is None or not len(text):
+                continue
+            for rex, matches in self.matchers:
+                for match in rex.finditer(text):
+                    match = match.group(2)
+                    for entity_id in matches.get(match, []):
+                        entities[entity_id] += 1
 
-    def analyze_tabular(self, document, meta):
-        entities = defaultdict(int)
-        for record in document.records:
-            for text in record.data.values():
-                self.tag_text(text, entities)
-        self.save(document, meta, entities)
-
-    def save(self, document, meta, entities):
         if len(entities):
             log.info("Tagged %r with %d entities", document, len(entities))
 
@@ -121,4 +109,4 @@ class EntityAnalyzer(Analyzer):
             ref.entity_id = entity_id
             ref.weight = weight
             db.session.add(ref)
-        super(EntityAnalyzer, self).save(document, meta)
+        self.save(document, meta)

@@ -59,7 +59,7 @@ class PDFIngestor(TextIngestor):
     def match(cls, meta, local_path):
         with open(local_path, 'r') as fh:
             begin = fh.read(10)
-            if begin.startswith('%%PDF-1.'):
+            if begin.startswith('%PDF-1.'):
                 return 10
         return -1
 
