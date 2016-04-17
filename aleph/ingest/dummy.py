@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 class SkipIngestor(Ingestor):
     MIME_TYPES = []
     EXTENSIONS = ['emf', 'rels']
-    BASE_SCORE = 5
+    BASE_SCORE = 10
 
     def ingest(self, meta, local_path):
-        log.info("Dummy has taken: %r", meta)
+        log.info("Skip: %r", meta)
