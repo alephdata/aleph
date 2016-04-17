@@ -32,7 +32,8 @@ def index():
 
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
 def create():
-    entity = Entity.save(get_data())
+    data = get_data()
+    entity = Entity.save(data, collection_id=data.get('collection_id'))
     db.session.commit()
     analyze_entity.delay(entity.id)
     return view(entity.id)
@@ -65,7 +66,9 @@ def lookup():
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])
 def update(id):
     entity = obj_or_404(Entity.by_id(id))
-    entity = Entity.save(get_data(entity=entity), merge=arg_bool('merge'))
+    entity = Entity.save(get_data(entity=entity),
+                         collection_id=entity.collection_id,
+                         merge=arg_bool('merge'))
     db.session.commit()
     analyze_entity.delay(entity.id)
     return view(entity.id)
