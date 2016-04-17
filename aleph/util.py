@@ -19,7 +19,7 @@ CATEGORIES = {
     'C': '',
     'M': ' . ',
     'Z': WS,
-    'P': WS,
+    'P': '',
     'S': WS
 }
 
