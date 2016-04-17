@@ -63,8 +63,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     @property
     def terms(self):
         terms = set([self.name])
-        for other_name in self.other_names:
-            terms.update(other_name.terms)
+        # for other_name in self.other_names:
+        #    terms.update(other_name.terms)
         return [t for t in terms if t is not None and len(t)]
 
     @classmethod
