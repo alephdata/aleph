@@ -68,7 +68,7 @@ class SpindleCrawler(Crawler):  # pragma: no cover
                 'scheme': 'spindle',
                 'identifier': entity.pop('id', None)
             }]
-            ent = Entity.save(entity, merge=True)
+            ent = Entity.save(entity, collection_id=collection.id, merge=True)
             db.session.flush()
             terms.update(ent.terms)
             existing_entities.append(ent.id)

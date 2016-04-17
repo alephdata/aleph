@@ -50,7 +50,7 @@ class OpenNamesCrawler(Crawler):  # pragma: no cover
                 on['name'] = on.pop('other_name', None)
                 data['other_names'].append(on)
 
-            ent = Entity.save(data, merge=True)
+            ent = Entity.save(data, collection_id=collection.id, merge=True)
             db.session.flush()
             terms.update(ent.terms)
             existing_entities.append(ent.id)

@@ -43,19 +43,20 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         self.schema_update(data, merge=merge)
 
     @classmethod
-    def save(cls, data, merge=False):
+    def save(cls, data, collection_id=None, merge=False):
         ent = cls.by_id(data.get('id'))
         for identifier in data.get('identifiers', []):
             if ent is None:
                 ent = cls.by_identifier(identifier.get('scheme'),
                                         identifier.get('identifier'),
-                                        data.get('collection_id'))
+                                        collection_id=collection_id)
         if ent is None:
             schema = data.get('$schema', cls._schema)
             cls = cls.get_schema_class(schema)
             ent = cls()
             ent.id = make_textid()
-            ent.collection_id = data.get('collection_id')
+            if collection_id is not None:
+                ent.collection_id = collection_id
         ent.update(data, merge=merge)
         return ent
 
