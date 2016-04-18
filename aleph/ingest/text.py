@@ -81,6 +81,8 @@ class DocumentIngestor(TextIngestor):
         try:
             self.store_pdf(meta, pdf_path, move=False)
             self.extract_pdf(meta, pdf_path)
+        except Exception as exception:
+            self.log_exception(meta, exception)
         finally:
             if pdf_path is not None and os.path.isfile(pdf_path):
                 os.unlink(pdf_path)
