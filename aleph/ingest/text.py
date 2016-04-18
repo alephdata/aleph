@@ -74,10 +74,9 @@ class DocumentIngestor(TextIngestor):
     MIME_TYPES = ['application/msword', 'application/rtf', 'application/x-rtf',
                   'application/vnd.oasis.opendocument.text',
                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # noqa
-                  'text/richtext', 'text/plain', 'application/wordperfect',
-                  'application/vnd.wordperfect']
-    EXTENSIONS = ['doc', 'docx', 'rtf', 'odt', 'sxw', 'dot', 'docm',
-                  'hqx', 'pdb', 'txt', 'wpd']
+                  'text/richtext', 'application/wordperfect', 'application/vnd.wordperfect']  # noqa
+    EXTENSIONS = ['doc', 'docx', 'rtf', 'odt', 'sxw', 'dot', 'docm', 'hqx',
+                  'pdb', 'txt', 'wpd']
     BASE_SCORE = 5
 
     def extract_pdf_alternative(self, meta, pdf_path):
