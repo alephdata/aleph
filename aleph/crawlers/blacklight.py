@@ -80,9 +80,6 @@ class BlacklightCrawler(Crawler):
             return True
 
 
-
-
-
     def crawl_page(self, base_url, page_number, page_count):
         page_url = base_url + 'catalog.json?page='+ str(page_number)
         log.info('crawling page {} url: {}'.format(page_number, page_url))
