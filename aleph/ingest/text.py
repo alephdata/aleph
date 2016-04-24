@@ -7,7 +7,7 @@ from lxml.html.clean import Cleaner
 from extractors import extract_pdf, extract_image
 from extractors import document_to_pdf, image_to_pdf, html_to_pdf
 
-from aleph.core import get_archive
+from aleph.core import get_archive, get_config
 from aleph.model import db, Document, DocumentPage
 from aleph.ingest.ingestor import Ingestor
 
@@ -30,8 +30,13 @@ class TextIngestor(Ingestor):
         db.session.add(page)
         return page
 
+    def get_languages(self, meta):
+        default_languages = get_config('OCR_DEFAULTS', ['en'])
+        languages = meta.languages + default_languages
+        return list(set(languages))
+
     def extract_pdf(self, meta, pdf_path):
-        data = extract_pdf(pdf_path)
+        data = extract_pdf(pdf_path, languages=self.get_languages(meta))
         if data is None:
             self.log_error(meta, error_type='PDFSyntaxError',
                            error_message="Could not parse PDF: %r" % meta)
@@ -158,7 +163,7 @@ class ImageIngestor(TextIngestor):
     BASE_SCORE = 5
 
     def ingest(self, meta, local_path):
-        text = extract_image(local_path)
+        text = extract_image(local_path, languages=self.get_languages(meta))
         pdf_path = image_to_pdf(local_path)
         try:
             if pdf_path is None or not os.path.isfile(pdf_path):

@@ -15,6 +15,8 @@ ARCHIVE_AWS_SECRET = env.get('AWS_SECRET_ACCESS_KEY')
 # ARCHIVE_BUCKET = 'aleph2-dev.pudo.org'
 # ARCHIVE_PATH = '/srv/data/aleph'
 
+OCR_DEFAULTS = ['en']
+
 SECRET_KEY = env.get('SECRET_KEY')
 
 SQLALCHEMY_DATABASE_URI = env.get('DATABASE_URL', 'sqlite:///aleph.sqlite3')
