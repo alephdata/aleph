@@ -80,6 +80,7 @@ class S3Archive(Archive):  # pragma: no cover
                     {
                         'AllowedMethods': ['GET'],
                         'AllowedOrigins': ['*'],
+                        'AllowedHeaders': ['*'],
                         'MaxAgeSeconds': 84600 * 14
                     }
                 ]
