@@ -30,6 +30,17 @@ def view(document_id):
     doc = get_document(document_id)
     enable_cache()
     data = doc.to_dict()
+    data['data_url'] = get_archive().generate_url(doc.meta)
+    if data['data_url'] is None:
+        data['data_url'] = url_for('documents_api.file',
+                                   document_id=document_id)
+    if doc.meta.is_pdf:
+        data['pdf_url'] = data['data_url']
+    elif doc.meta.pdf.content_hash is not None:
+        data['pdf_url'] = get_archive().generate_url(doc.meta.pdf)
+        if data['pdf_url'] is None:
+            data['data_url'] = url_for('documents_api.pdf',
+                                       document_id=document_id)
     data['source'] = doc.source
     return jsonify(data)
 

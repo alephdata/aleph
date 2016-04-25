@@ -11,7 +11,7 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
   $scope.pageNum = $location.search().page || 1;
   $scope.textQuery = $location.search().dq;
   $scope.reportLoading(true);
-  $scope.pdfUrl = '/api/1/documents/' + data.doc.id + '/pdf';
+  $scope.pdfUrl = data.doc.pdf_url;
 
   Title.set(data.doc.title + " (Page " + $scope.pageNum + ")");
 
