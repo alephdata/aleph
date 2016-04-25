@@ -4,7 +4,7 @@ from tempfile import mkstemp
 
 from lxml import html, etree
 from lxml.html.clean import Cleaner
-from extractors import extract_pdf, extract_image
+from extractors import extract_pdf
 from extractors import document_to_pdf, image_to_pdf, html_to_pdf
 
 from aleph.core import get_archive, get_config
@@ -53,8 +53,8 @@ class TextIngestor(Ingestor):
             self.create_page(document, page, number=i + 1)
         self.emit(document)
 
-    def store_pdf(self, meta, pdf_path, move=True):
-        get_archive().archive_file(pdf_path, meta.pdf, move=move)
+    def store_pdf(self, meta, pdf_path):
+        get_archive().archive_file(pdf_path, meta.pdf, move=False)
 
 
 class PDFIngestor(TextIngestor):
@@ -86,7 +86,7 @@ class DocumentIngestor(TextIngestor):
 
     def extract_pdf_alternative(self, meta, pdf_path):
         try:
-            self.store_pdf(meta, pdf_path, move=False)
+            self.store_pdf(meta, pdf_path)
             self.extract_pdf(meta, pdf_path)
         except Exception as exception:
             self.log_exception(meta, exception)
@@ -163,16 +163,13 @@ class ImageIngestor(TextIngestor):
     BASE_SCORE = 5
 
     def ingest(self, meta, local_path):
-        text = extract_image(local_path, languages=self.get_languages(meta))
-        pdf_path = image_to_pdf(local_path)
         try:
+            pdf_path = image_to_pdf(local_path)
             if pdf_path is None or not os.path.isfile(pdf_path):
                 self.log_error(meta, error_type='ImageConvertError', error_message="Could not convert image: %r" % meta)  # noqa
                 return
             self.store_pdf(meta, pdf_path)
-            document = self.create_document(meta)
-            self.create_page(document, text)
-            self.emit(document)
+            self.extract_pdf(meta, pdf_path)
         finally:
             if os.path.isfile(pdf_path):
                 os.unlink(pdf_path)
