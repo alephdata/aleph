@@ -111,7 +111,7 @@ def callback():
         role = Role.load_or_create(user_id, Role.USER,
                u'%s %s' % (me.data.get('first_name'), me.data.get('last_name')),
                email=me.data.get('email'),
-               is_admin=me.data.get('is_superuser'))
+               is_admin=me.data.get('is_superuser', False))
     else:
         raise RuntimeError("Unknown OAuth URL: %r" % oauth_provider.base_url)
     session['roles'].append(role.id)
