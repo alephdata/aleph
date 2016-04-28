@@ -1,3 +1,5 @@
+import logging
+
 from werkzeug.exceptions import BadRequest
 from flask import Blueprint, redirect, send_file, request
 from apikit import jsonify, Pager, get_limit, get_offset
@@ -12,6 +14,7 @@ from aleph.views.util import get_document, match_ids
 from aleph.views.util import get_tabular, get_page
 
 
+log = logging.getLogger(__name__)
 blueprint = Blueprint('documents_api', __name__)
 
 
@@ -37,7 +40,10 @@ def view(document_id):
     if doc.meta.is_pdf:
         data['pdf_url'] = data['data_url']
     else:
-        data['pdf_url'] = get_archive().generate_url(doc.meta.pdf)
+        try:
+            data['pdf_url'] = get_archive().generate_url(doc.meta.pdf)
+        except Exception as ex:
+            log.info('Could not generate PDF url: %r', ex)
         if data['pdf_url'] is None:
             data['pdf_url'] = url_for('documents_api.pdf',
                                       document_id=document_id)
