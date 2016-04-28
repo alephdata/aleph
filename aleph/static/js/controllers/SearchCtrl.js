@@ -6,6 +6,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   $scope.result = {};
   $scope.fields = data.metadata.fields;
   $scope.error = data.result.error;
+  $scope.facets = [];
   $scope.session = data.metadata.session;
   $scope.metadata = data.metadata;
   $scope.query = Query;
@@ -16,10 +17,6 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   } else {
     Title.set("Search documents");  
   }
-
-  $scope.showFieldFacet = function(field) {
-    return Query.load().facet.indexOf(field) == -1;
-  };
 
   $scope.loadOffset = function(offset) {
     var query = Query.load();
@@ -123,7 +120,6 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
 
   var initFacets = function() {
     if (data.result.error) {
-      $scope.facets = {};
       $scope.sourceFacets = [];
       $scope.entityFacets = [];
       return;
@@ -132,15 +128,19 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     $scope.entityFacets = sortedFilters(data.result.entities, 'entity');
 
     var queryFacets = Query.load().facet,
-        facets = {};
-    for (var i in queryFacets) {
-      var facet = queryFacets[i];
-      if (data.result.facets[facet]) {
-        if (data.result.facets[facet]) {
-          var values = data.result.facets[facet].values;
-          facets[facet] = sortedFilters(values, 'filter:' + name);  
-        }
+        facets = [];
+
+    for (var name in data.metadata.fields) {
+      var facet = {
+        field: name,
+        label: data.metadata.fields[name],
+        active: queryFacets.indexOf(name) != -1
+      };
+      if (data.result.facets[name]) {
+        var values = data.result.facets[name].values;
+        facet.values = sortedFilters(values, 'filter:' + name);  
       }
+      facets.push(facet);
     }
 
     $scope.facets = facets;

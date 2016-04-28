@@ -2,7 +2,7 @@ from babel import Locale
 from pycountry import countries
 
 CORE_FACETS = {
-    'extension': 'File extension',
+    # 'extension': 'File extension',
     'mime_type': 'Content type',
     'languages': 'Languages',
     'countries': 'Countries',
