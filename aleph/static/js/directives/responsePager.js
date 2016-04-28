@@ -5,7 +5,7 @@ aleph.directive('responsePager', ['$timeout', function ($timeout) {
             'response': '=',
             'load': '&load'
         },
-        templateUrl: 'response_pager.html',
+        templateUrl: 'templates/response_pager.html',
         link: function (scope, element, attrs, model) {
             var pageOffset = function(page) {
                 return (page-1) * scope.response.limit;   

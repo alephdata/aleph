@@ -9,7 +9,7 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
   $scope.searchCtx = $location.search().ctx;
   $scope.textQuery = $location.search().dq;
 
-  Title.set(data.doc.title || data.doc.file_name);
+  Title.set(data.doc.title || data.doc.file_name, "documents");
 
   $scope.getClass = function(row, col) {
     var value = row[col.name];

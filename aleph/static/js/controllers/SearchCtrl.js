@@ -18,9 +18,9 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   };
   
   if (Query.state.q) {
-    Title.set("Search for '" + Query.state.q + "'");  
+    Title.set("Search for '" + Query.state.q + "'", "documents");
   } else {
-    Title.set("Search documents");  
+    Title.set("Search documents", "documents");  
   }
 
   $scope.loadOffset = function(offset) {
@@ -39,7 +39,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   $scope.editSource = function(source, $event) {
     $event.stopPropagation();
     var instance = $uibModal.open({
-      templateUrl: 'sources_edit.html',
+      templateUrl: 'templates/sources_edit.html',
       controller: 'SourcesEditCtrl',
       backdrop: true,
       size: 'md',
@@ -68,7 +68,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   $scope.selectCollections = function($event) {
     $event.stopPropagation();
     var instance = $uibModal.open({
-      templateUrl: 'collections_select.html',
+      templateUrl: 'templates/collections_select.html',
       controller: 'CollectionsSelectCtrl',
       backdrop: true,
       size: 'md',

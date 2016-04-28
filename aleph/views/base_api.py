@@ -11,13 +11,14 @@ blueprint = Blueprint('base_api', __name__)
 
 
 def angular_templates():
-    partials_dir = os.path.join(current_app.static_folder, 'templates')
-    for (root, dirs, files) in os.walk(partials_dir):
-        for file_name in files:
-            file_path = os.path.join(root, file_name)
-            with open(file_path, 'rb') as fh:
-                file_name = file_path[len(partials_dir) + 1:]
-                yield (file_name, fh.read().decode('utf-8'))
+    for tmpl_set in ['templates', 'help']:
+        partials_dir = os.path.join(current_app.static_folder, tmpl_set)
+        for (root, dirs, files) in os.walk(partials_dir):
+            for file_name in files:
+                file_path = os.path.join(root, file_name)
+                with open(file_path, 'rb') as fh:
+                    file_name = file_path[len(current_app.static_folder) + 1:]
+                    yield (file_name, fh.read().decode('utf-8'))
 
 
 @blueprint.route('/')

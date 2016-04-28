@@ -61,7 +61,6 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
       toggleFilter: toggleFilter,
       setLastSearch: function(last) {
         lastSearch = last;
-        console.log("Query", last)
       },
       getLastSearch: function() {
         return lastSearch;

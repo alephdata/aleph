@@ -13,7 +13,7 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
   $scope.reportLoading(true);
   $scope.pdfUrl = data.doc.pdf_url;
 
-  Title.set(data.doc.title + " (Page " + $scope.pageNum + ")");
+  Title.set(data.doc.title + " (Page " + $scope.pageNum + ")", "documents");
 
   $scope.onError = function(error) {
     $scope.reportError("Could not load document.");

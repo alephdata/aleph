@@ -5,7 +5,7 @@ aleph.directive('entityIcon', ['$http', function($http) {
     scope: {
       'schema': '='
     },
-    templateUrl: 'entity_icon.html',
+    templateUrl: 'templates/entity_icon.html',
     link: function (scope, element, attrs, model) {
     }
   };

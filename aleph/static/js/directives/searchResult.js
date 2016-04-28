@@ -5,7 +5,7 @@ aleph.directive('searchResult', ['$location', '$route', '$rootScope', 'Query', f
       'doc': '=',
       'result': '='
     },
-    templateUrl: 'search_result.html',
+    templateUrl: 'templates/search_result.html',
     link: function (scope, element, attrs) {
       scope.source = {};
 

@@ -4,7 +4,7 @@ aleph.directive('searchBox', ['$location', '$q', '$route', '$http', '$rootScope'
     restrict: 'E',
     scope: {
     },
-    templateUrl: 'search_box.html',
+    templateUrl: 'templates/search_box.html',
     link: function (scope, element, attrs) {
       scope.query = $location.search();
 
