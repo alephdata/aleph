@@ -4,18 +4,20 @@
   </div>
   <div class="col-md-4">
     <div class="btn-group btn-group-justified" role="group">
-      <!--div class="btn-group" uib-dropdown dropdown-append-to-body>
+      <div class="btn-group" uib-dropdown dropdown-append-to-body>
         <button type="button" class="btn btn-primary dropdown-toggle"
           uib-dropdown-toggle>
-          <i class="fa fa-list-alt"></i>
-          Explore by...
+          <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+          Sort by...
         </button>
         <ul class="uib-dropdown-menu" role="menu">
-          <li ng-repeat="(field, label) in fields" ng-show="showFieldFacet(field)">
-            <a ng-click="query.toggleFilter('facet', field)" ng-bind="label"></a>
+          <li ng-repeat="(field, label) in sortOptions"
+              ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'score')}">
+            <a ng-click="query.set('sort', field)"
+               ng-bind="label"></a>
           </li>
         </ul>
-      </div-->
+      </div>
       <div class="btn-group" uib-dropdown dropdown-append-to-body>
         <a href="/#/search" class="btn btn-primary">
           <i class="fa fa-times"></i>
@@ -102,8 +104,8 @@
       <div class="panel-heading">
         <span class="pull-right">
           <a ng-click="query.toggleFilter('facet', facet.field)">
-            <i ng-if="!facet.active" class="fa fa-angle-double-down" aria-hidden="true"></i>
-            <i ng-if="facet.active" class="fa fa-angle-double-up" aria-hidden="true"></i>
+            <i ng-if="!facet.active" class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+            <i ng-if="facet.active" class="fa fa-caret-square-o-up" aria-hidden="true"></i>
           </a>
         </span>
         <strong>{{facet.label}}</strong>

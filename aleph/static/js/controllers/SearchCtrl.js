@@ -11,6 +11,11 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   $scope.metadata = data.metadata;
   $scope.query = Query;
   $scope.graph = {'limit': 75, 'options': [10, 75, 150, 300, 600, 1200]};
+  $scope.sortOptions = {
+    score: 'Relevancy',
+    newest: 'Newest',
+    oldest: 'Oldest'
+  };
   
   if (Query.state.q) {
     Title.set("Search for '" + Query.state.q + "'");  

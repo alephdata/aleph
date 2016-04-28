@@ -35,7 +35,7 @@ em {
 a {
     // color: $occrp-red;
     &:hover {
-        color: darken($occrp-red, 10%);
+        color: darken($brand-primary, 10%);
     }
 
     &.btn:hover, &.btn.btn-primary:hover, 

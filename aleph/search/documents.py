@@ -41,8 +41,15 @@ def documents_query(args, fields=None, facets=True, newer_than=None):
             }
         })
 
-    if text:
+    # Sorting -- should this be passed into search directly, instead of
+    # these aliases?
+    sort_mode = args.get('sort', '').strip().lower()
+    if text or sort_mode == 'score':
         sort = ['_score']
+    elif sort_mode == 'newest':
+        sort = [{'dates': 'desc'}, {'created_at': 'desc'}, '_score']
+    elif sort_mode == 'oldest':
+        sort = [{'dates': 'asc'}, {'created_at': 'asc'}, '_score']
     else:
         sort = [{'updated_at': 'desc'}, {'created_at': 'desc'}, '_score']
 
