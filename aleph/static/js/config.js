@@ -1,10 +1,8 @@
-var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'ui.bootstrap',
+var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'ui.bootstrap',
                                      'pdf', 'angulartics', 'angulartics.piwik']);
 
-aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider', 'cfpLoadingBarProvider',
-    function($routeProvider, $locationProvider, $analyticsProvider, cfpLoadingBarProvider) {
-
-  cfpLoadingBarProvider.includeSpinner = false;
+aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider',
+    function($routeProvider, $locationProvider, $analyticsProvider) {
 
   $routeProvider.when('/search', {
     templateUrl: 'search.html',

@@ -1,6 +1,6 @@
 
 aleph.factory('Query', ['$route', '$location', function($route, $location) {
-  var query = {};
+  var query = {}, lastSearch = {};
 
   var load = function() {
     query = {};
@@ -58,7 +58,14 @@ aleph.factory('Query', ['$route', '$location', function($route, $location) {
         return queryString(query);
       },
       hasFilter: hasFilter,
-      toggleFilter: toggleFilter
+      toggleFilter: toggleFilter,
+      setLastSearch: function(last) {
+        lastSearch = last;
+        console.log("Query", last)
+      },
+      getLastSearch: function() {
+        return lastSearch;
+      }
   };
 
 }]);

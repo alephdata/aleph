@@ -1,6 +1,6 @@
 
-aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'data', 'pages',
-    function($scope, $location, $http, metadata, Authz, Document, Title, data, pages) {
+aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'Query', 'data', 'pages',
+    function($scope, $location, $http, metadata, Authz, Document, Title, Query, data, pages) {
 
   $scope.doc = data.doc;
   $scope.pageText = data.page.text;
@@ -45,9 +45,8 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
   };
 
   $scope.backToSearch = function() {
-    var query = alephUrlUnBlob($location.search().ctx);
     $location.path('/search');
-    $location.search(query);
+    $location.search(Query.getLastSearch());
   };
 
   $scope.updateTextQuery = function() {

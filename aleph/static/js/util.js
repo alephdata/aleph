@@ -54,18 +54,6 @@ function ensureArray(data) {
   return data;
 };
 
-function alephUrlBlob(obj) {
-  return btoa(JSON.stringify(obj));
-}
-
-function alephUrlUnBlob(val) {
-  try {
-    return JSON.parse(atob(val));
-  } catch(e) {
-    return {};
-  }
-}
-
 
 // polyfill startsWith
 if (!String.prototype.startsWith) {

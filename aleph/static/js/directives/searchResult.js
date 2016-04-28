@@ -24,11 +24,7 @@ aleph.directive('searchResult', ['$location', '$route', '$rootScope', 'Query', f
 
       scope.getUrl = function(rec) {
         var search = $location.search(),
-            query = {
-              ctx: alephUrlBlob(search),
-              q: search.q,
-              dq: search.q
-            },
+            query = {},
             path = null;
         if (scope.doc.type === 'tabular') {
           var sheet = rec ? rec.sheet : 0,
@@ -38,6 +34,7 @@ aleph.directive('searchResult', ['$location', '$route', '$rootScope', 'Query', f
         } else {
           path = '/#/text/' + scope.doc.id;
           query.page = rec ? rec.page : 1;
+          query.dq = search.q;
         }
         return path + '?' + queryString(query);
       };
