@@ -1,16 +1,14 @@
 
-var loadSearch = ['$http', '$q', '$route', '$location', 'Query', 'History', 'Session', 'Metadata',
-    function($http, $q, $route, $location, Query, History, Session, Metadata) {
+var loadEntitiesIndex = ['$http', '$q', '$route', '$location', 'Session', 'Metadata',
+    function($http, $q, $route, $location, Session, Metadata) {
   var dfd = $q.defer();
-
   Metadata.get().then(function(metadata) {
     Session.get().then(function(session) {
-      var query = angular.copy(Query.load());
+      var query = angular.copy($location.search());
       query['limit'] = 30;
-      query['snippet'] = 140;
-      query['offset'] = $location.search().offset || 0;
-      History.setLastSearch($location.search());
-      $http.get('/api/1/query', {cache: true, params: query}).then(function(res) {
+      query['facet'] = 'jurisdiction_code';
+      query['offset'] = query.offset || 0;
+      $http.get('/api/1/entities', {params: query}).then(function(res) {
         var result = res.data;
         dfd.resolve({
           'result': result,
@@ -33,6 +31,5 @@ var loadSearch = ['$http', '$q', '$route', '$location', 'Query', 'History', 'Ses
   }, function(err) {
     dfd.reject(err);
   });
-
   return dfd.promise;
 }];

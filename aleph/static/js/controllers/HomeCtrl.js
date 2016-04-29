@@ -1,6 +1,6 @@
 
-aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Query', 'Authz', 'Metadata', 'Title', 'data',
-    function($scope, $location, $route, $uibModal, Query, Authz, Metadata, Title, data) {
+aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Authz', 'Metadata', 'Title', 'data',
+    function($scope, $location, $route, $uibModal, Authz, Metadata, Title, data) {
 
   $scope.result = data.result;
   $scope.sources = data.sources;
@@ -9,8 +9,8 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Que
   $scope.collections = data.metadata.collectionsList.sort(function(a, b) {
     return a.label.localeCompare(b.label);
   });
-  $scope.query = Query.load();
   $scope.title = Title.getSiteTitle();
+  $scope.query = {q: ''};
 
   Title.set("Welcome");
 
@@ -22,9 +22,7 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Que
   };
 
   $scope.submitSearch = function(form) {
-    var search = Query.load();
-    search.q = $scope.query.q;
-    $location.search(search);
+    $location.search({q: $scope.query.q});
     $location.path('/search');
   };
 
