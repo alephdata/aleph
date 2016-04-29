@@ -47,17 +47,22 @@ class Role(db.Model, IdModel, SoftDeleteModel, SchemaModel):
 
     @classmethod
     def load_or_create(cls, foreign_id, type, name, email=None,
-                       is_admin=False):
+                       is_admin=None):
         role = cls.by_foreign_id(foreign_id)
         if role is None:
             role = cls()
             role.foreign_id = foreign_id
             role.type = type
+            role.is_admin = False
+
         if role.api_key is None:
             role.api_key = uuid4().hex
         role.name = name
         role.email = email
-        role.is_admin = is_admin
+
+        if is_admin is not None:
+            role.is_admin = is_admin
+
         db.session.add(role)
         db.session.flush()
         return role

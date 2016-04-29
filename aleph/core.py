@@ -11,7 +11,6 @@ from flask_mail import Mail
 from kombu import Exchange, Queue
 from celery import Celery
 from elasticsearch import Elasticsearch
-from apikit.jsonify import JSONEncoder
 
 from aleph import default_settings, archive
 
@@ -86,7 +85,6 @@ def get_es():
     if not hasattr(app, '_es_instance'):
         app._es_instance = Elasticsearch(app.config.get('ELASTICSEARCH_URL'),
                                          timeout=120)
-        app._es_instance.json_encoder = JSONEncoder
     return app._es_instance
 
 

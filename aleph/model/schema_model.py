@@ -167,9 +167,11 @@ class SchemaModel(object):
         data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
         data['$schema'] = self._schema
         for prop in self.schema_visitor.properties:
-            if prop.is_value or prop.inline or \
-                    (prop.is_array and prop.items.inline):
+            if prop.is_value or prop.inline:
                 value = getattr(self, prop.name)
                 if value is not None:
                     data[prop.name] = value
+            if prop.is_array and prop.items.inline:
+                value = getattr(self, prop.name)
+                data[prop.name] = list(value)
         return data
