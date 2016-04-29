@@ -1,3 +1,126 @@
+<div class="row search-bar">
+  <div class="col-md-8">
+    <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
+      <div class="input-group">
+        <input type="text" class="form-control" autofocus
+               ng-model="query.state.q" placeholder="Search people and companies">
+        <span class="input-group-btn">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </span>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-md-4">
+  </div>
+</div>
 
 
-INDÄX!
+<div class="row">
+  <div class="col-md-8">
+    <div class="alert alert-danger" role="alert" ng-if="error">
+      <strong>An error occurred while running your search.</strong>
+      {{error.info.reason || error.message}}
+    </div>
+
+    <div>
+      <table ng=if="result.results.length" class="table table-striped">
+        <tr ng-repeat-start="entity in result.results">
+          <td>
+            <entity-icon schema="entity.$schema"></entity-icon>
+          </td>
+          <td>
+            <strong>{{entity.name}}</strong>
+          </td>
+          <td>{{entity.jurisdiction_code.toUpperCase()}}</td>
+          <td class="numeric">
+            <a ng-href="/#/search?entity={{entity.id}}">
+              <i class="fa fa-search" aria-hidden="true"></i> Search
+            </a>
+          </td>
+        </tr>
+        <tr ng-repeat-end ng-show="entity.summary">
+          <td>
+          </td>
+          <td colspan="3">
+            {{entity.summary | limitTo:500}}
+          </td>
+        </tr>
+      </table>
+      <div class="bottom-pager">
+        <div class="pull-right">
+          <response-pager response="result" load="loadOffset(offset)"></response-pager>
+        </div>
+        <div class="total" ng-if="result.limit > 0 && !result.total">
+          No entities were found.
+        </div>
+        <div class="total" ng-if="result.limit > 0 && result.total">
+          Found {{result.total | number}} entities.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Countries</strong>
+        <small>{{jurisdictionFacet.length}}</small>
+      </div>
+      <ul class="list-group facet-list">
+        <li class="list-group-item facet empty" ng-if="!jurisdictionFacet.length">
+          No entities with country associations.
+        </li>
+        <li class="list-group-item facet animate toggle"
+          ng-repeat="val in jurisdictionFacet"
+          ng-class="{'active': query.hasFilter('jurisdiction_code', val.id)}"
+          ng-click="query.toggleFilter('jurisdiction_code', val.id)">
+          <span class="badge">{{val.count | number}}</span>
+          <span class="lbl">
+            {{val.label | country}}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Watchlists</strong>
+        <small>{{collectionFacet.length}}</small>
+      </div>
+      <ul class="list-group facet-list">
+        <li class="list-group-item facet animate toggle"
+          ng-repeat="collection in collectionFacet"
+          ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
+          ng-click="query.toggleFilter('collection_id', collection.id)">
+          <span class="badge">{{collection.count | number}}</span>
+          <span class="lbl">
+            {{collection.label | limitTo:50 }}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Types</strong>
+        <small>{{schemaFacet.length}}</small>
+      </div>
+      <ul class="list-group facet-list">
+        <li class="list-group-item facet empty" ng-if="!schemaFacet.length">
+          No entities found.
+        </li>
+        <li class="list-group-item facet animate toggle"
+          ng-repeat="val in schemaFacet"
+          ng-class="{'active': query.hasFilter('$schema', val.id)}"
+          ng-click="query.toggleFilter('$schema', val.id)">
+          <span class="badge">{{val.count | number}}</span>
+          <span class="lbl">
+            {{val.label | schemaPlural}}
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+

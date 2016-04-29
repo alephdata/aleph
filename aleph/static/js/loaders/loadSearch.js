@@ -7,7 +7,6 @@ var loadSearch = ['$http', '$q', '$route', '$location', 'Query', 'History', 'Ses
     Session.get().then(function(session) {
       var query = Query.parse(),
           state = angular.copy(query.state);
-
       state['limit'] = 30;
       state['snippet'] = 140;
       state['offset'] = state.offset || 0;

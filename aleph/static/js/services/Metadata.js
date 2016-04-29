@@ -31,6 +31,7 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
               'collectionsList': results[0].data.results,
               'collectionsCount': collectionsCount,
               'fields': metadata.fields,
+              'schemata': metadata.schemata,
               'source_categories': metadata.source_categories,
               'countries': metadata.countries, 
               'languages': metadata.languages

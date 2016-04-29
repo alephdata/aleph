@@ -6,6 +6,8 @@ from elasticsearch import TransportError
 
 from aleph.model.constants import CORE_FACETS, SOURCE_CATEGORIES
 from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
+from aleph.model.validation import resolver
+from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('base_api', __name__)
 
@@ -23,21 +25,31 @@ def angular_templates():
 
 @blueprint.route('/')
 def ui(**kwargs):
-    from aleph.views.cache import enable_cache
     enable_cache(server_side=True)
     return render_template("layout.html", templates=angular_templates())
 
 
 @blueprint.route('/api/1/metadata')
 def metadata():
-    from aleph.views.cache import enable_cache
     enable_cache(server_side=False)
+    schemata = {}
+    for schema_id, schema in resolver.store.items():
+        if not schema_id.endswith('#'):
+            schema_id = schema_id + '#'
+        schemata[schema_id] = {
+            'id': schema_id,
+            'title': schema.get('title'),
+            'plural': schema.get('plural', schema.get('title')),
+            'description': schema.get('description'),
+            'inline': schema.get('inline', False)
+        }
     return jsonify({
         'status': 'ok',
         'fields': CORE_FACETS,
         'source_categories': SOURCE_CATEGORIES,
         'countries': COUNTRY_NAMES,
-        'languages': LANGUAGE_NAMES
+        'languages': LANGUAGE_NAMES,
+        'schemata': schemata
     })
 
 

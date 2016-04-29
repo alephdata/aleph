@@ -1,16 +1,18 @@
 
-var loadEntitiesIndex = ['$http', '$q', '$route', '$location', 'Session', 'Metadata',
-    function($http, $q, $route, $location, Session, Metadata) {
+var loadEntitiesIndex = ['$http', '$q', '$route', '$location', 'Session', 'Metadata', 'Query',
+    function($http, $q, $route, $location, Session, Metadata, Query) {
   var dfd = $q.defer();
   Metadata.get().then(function(metadata) {
     Session.get().then(function(session) {
-      var query = angular.copy($location.search());
-      query['limit'] = 30;
-      query['facet'] = 'jurisdiction_code';
-      query['offset'] = query.offset || 0;
-      $http.get('/api/1/entities', {params: query}).then(function(res) {
+      var query = Query.parse(),
+          state = angular.copy(query.state);
+      state['limit'] = 30;
+      state['facet'] = ['jurisdiction_code', '$schema'];
+      state['offset'] = state.offset || 0;
+      $http.get('/api/1/entities', {params: state}).then(function(res) {
         var result = res.data;
         dfd.resolve({
+          'query': query,
           'result': result,
           'metadata': metadata
         });
@@ -20,6 +22,7 @@ var loadEntitiesIndex = ['$http', '$q', '$route', '$location', 'Session', 'Metad
             'result': {
               'error': err.data
             },
+            'query': query,
             'metadata': metadata
           });
         }
