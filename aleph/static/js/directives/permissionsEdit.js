@@ -6,7 +6,7 @@ aleph.directive('permissionsEdit', ['$http', '$q', 'Metadata',
     scope: {
       'apiBase': '@'
     },
-    templateUrl: 'permissions_edit.html',
+    templateUrl: 'templates/permissions_edit.html',
     link: function (scope, element, attrs, model) {
       var url = scope.apiBase + '/permissions';
 

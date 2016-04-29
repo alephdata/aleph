@@ -23,6 +23,21 @@
             <a class="navbar-brand" href="/#/">{{config.APP_TITLE}}</a>
           </div>
 
+          <div id="navbar" class="collapse navbar-collapse navbar-left">
+            <ul class="nav navbar-nav">
+              <li ng-class="{'active': navSection =='documents'}">
+                <a href="/#/search">
+                  Document Search
+                </a>
+              </li>
+              <li ng-class="{'active': navSection =='help'}">
+                <a href="/#/help">
+                  Help
+                </a>
+              </li>
+            </ul>
+          </div>
+
           <div id="navbar" class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
               <li ng-show="!session.logged_in">
@@ -75,6 +90,8 @@
               aleph search engine &middot;
               <i class="fa fa-github-square"></i>
               <a href="https://github.com/pudo/aleph">source code</a>
+              &middot;
+              <a href="/#/help/api">api documentation</a>
             </p>
           </div>
         </div>

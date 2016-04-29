@@ -47,8 +47,8 @@ def paginate_graph(graph):
 
 
 def generate_graph(args):
-    fields = ['id', 'collection', 'entities.entity_id', 'entities.name',
-              'entities.category']
+    fields = ['id', 'collection', 'entities.uuid', 'entities.name',
+              'entities.$schema']
     query = documents_query(args, fields=fields, facets=False)
     query = {'query': query['query']}
 
@@ -56,15 +56,14 @@ def generate_graph(args):
     for doc in scan_iter(query):
         entities = set()
         for entity in doc.get('_source').get('entities', []):
-            if not graph.has_node(entity.get('entity_id')):
-                graph.add_node(entity.get('entity_id'),
+            if not graph.has_node(entity.get('uuid')):
+                graph.add_node(entity.get('uuid'),
                                label=entity.get('name'),
-                               category=entity.get('category'))
-            entities.add(entity.get('entity_id'))
+                               schema=entity.get('$schema'))
+            entities.add(entity.get('uuid'))
         for (src, dst) in combinations(entities, 2):
             graph.add_edge(src, dst, weight=1)
     graph = multigraph_to_weighted(graph)
-
     return paginate_graph(graph)
 
 

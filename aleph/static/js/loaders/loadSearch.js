@@ -9,6 +9,7 @@ var loadSearch = ['$http', '$q', '$route', '$location', 'Query', 'Session', 'Met
       query['limit'] = 30;
       query['snippet'] = 140;
       query['offset'] = $location.search().offset || 0;
+      Query.setLastSearch($location.search());
       $http.get('/api/1/query', {cache: true, params: query}).then(function(res) {
         var result = res.data;
         dfd.resolve({
@@ -16,6 +17,14 @@ var loadSearch = ['$http', '$q', '$route', '$location', 'Query', 'Session', 'Met
           'metadata': metadata
         });
       }, function(err) {
+        if (err.status == 400) {
+          dfd.resolve({
+            'result': {
+              'error': err.data
+            },
+            'metadata': metadata
+          });
+        }
         dfd.reject(err);  
       });
     }, function(err) {

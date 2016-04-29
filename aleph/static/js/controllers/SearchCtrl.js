@@ -5,20 +5,23 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   var isLoading = false;
   $scope.result = {};
   $scope.fields = data.metadata.fields;
+  $scope.error = data.result.error;
+  $scope.facets = [];
   $scope.session = data.metadata.session;
   $scope.metadata = data.metadata;
   $scope.query = Query;
   $scope.graph = {'limit': 75, 'options': [10, 75, 150, 300, 600, 1200]};
+  $scope.sortOptions = {
+    score: 'Relevancy',
+    newest: 'Newest',
+    oldest: 'Oldest'
+  };
   
   if (Query.state.q) {
-    Title.set("Search for '" + Query.state.q + "'");  
+    Title.set("Search for '" + Query.state.q + "'", "documents");
   } else {
-    Title.set("Search documents");  
+    Title.set("Search documents", "documents");  
   }
-
-  $scope.showFieldFacet = function(field) {
-    return Query.load().facet.indexOf(field) == -1;
-  };
 
   $scope.loadOffset = function(offset) {
     var query = Query.load();
@@ -36,7 +39,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   $scope.editSource = function(source, $event) {
     $event.stopPropagation();
     var instance = $uibModal.open({
-      templateUrl: 'sources_edit.html',
+      templateUrl: 'templates/sources_edit.html',
       controller: 'SourcesEditCtrl',
       backdrop: true,
       size: 'md',
@@ -65,7 +68,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   $scope.selectCollections = function($event) {
     $event.stopPropagation();
     var instance = $uibModal.open({
-      templateUrl: 'collections_select.html',
+      templateUrl: 'templates/collections_select.html',
       controller: 'CollectionsSelectCtrl',
       backdrop: true,
       size: 'md',
@@ -86,7 +89,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   };
 
   $scope.canCreateAlert = function() {
-    return data.metadata.session.logged_in;
+    return data.metadata.session.logged_in && !data.result.error;
   };
 
   $scope.toggleAlert = function() {
@@ -121,25 +124,38 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   };
 
   var initFacets = function() {
+    if (data.result.error) {
+      $scope.sourceFacets = [];
+      $scope.entityFacets = [];
+      return;
+    }
     $scope.sourceFacets = sortedFilters(data.result.sources.values, 'filter:source_id');
     $scope.entityFacets = sortedFilters(data.result.entities, 'entity');
 
     var queryFacets = Query.load().facet,
-        facets = {};
-    for (var i in queryFacets) {
-      var facet = queryFacets[i];
-      if (data.result.facets[facet]) {
-        if (data.result.facets[facet]) {
-          var values = data.result.facets[facet].values;
-          facets[facet] = sortedFilters(values, 'filter:' + name);  
-        }
+        facets = [];
+
+    for (var name in data.metadata.fields) {
+      var facet = {
+        field: name,
+        label: data.metadata.fields[name],
+        active: queryFacets.indexOf(name) != -1
+      };
+      if (data.result.facets[name]) {
+        var values = data.result.facets[name].values;
+        facet.values = sortedFilters(values, 'filter:' + name);  
       }
+      facets.push(facet);
     }
 
     $scope.facets = facets;
   };
 
   var initResults = function() {
+    if (data.result.error) {
+      $scope.result = {'results': []};
+      return;
+    }
     // allow HTML highlight results:
     for (var i in data.result.results) {
       var doc = data.result.results[i];

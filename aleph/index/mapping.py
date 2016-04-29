@@ -27,9 +27,11 @@ DOCUMENT_MAPPING = {
         "extension": {"type": "string", "index": "not_analyzed"},
         "languages": {"type": "string", "index": "not_analyzed"},
         "countries": {"type": "string", "index": "not_analyzed"},
+        "recipients": {"type": "string", "index": "not_analyzed"},
         "keywords": {"type": "string", "index": "not_analyzed"},
         "dates": {"type": "date", "format": "yyyy-MM-dd"},
         "mime_type": {"type": "string", "index": "not_analyzed"},
+        "author": {"type": "string", "index": "not_analyzed"},
         "summary": {"type": "string", "index": "analyzed"},
         "summary_latin": {"type": "string", "index": "analyzed"},
         "created_at": {"type": "date", "index": "not_analyzed"},
@@ -39,11 +41,11 @@ DOCUMENT_MAPPING = {
             "include_in_parent": True,
             "properties": {
                 "id": {"type": "integer", "index": "not_analyzed"},
-                "entity_id": {"type": "integer", "index": "not_analyzed"},
+                "uuid": {"type": "string", "index": "not_analyzed"},
                 "watchlist_id": {"type": "integer", "index": "not_analyzed"},
                 "collection_id": {"type": "integer", "index": "not_analyzed"},
                 "name": {"type": "string", "index": "not_analyzed"},
-                "category": {"type": "string", "index": "not_analyzed"},
+                "$schema": {"type": "string", "index": "not_analyzed"},
                 "weight": {"type": "string", "index": "not_analyzed"}
             }
         },

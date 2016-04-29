@@ -1,13 +1,11 @@
-var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'angular-loading-bar', 'ui.bootstrap',
+var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'ui.bootstrap',
                                      'pdf', 'angulartics', 'angulartics.piwik']);
 
-aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider', 'cfpLoadingBarProvider',
-    function($routeProvider, $locationProvider, $analyticsProvider, cfpLoadingBarProvider) {
-
-  cfpLoadingBarProvider.includeSpinner = false;
+aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider',
+    function($routeProvider, $locationProvider, $analyticsProvider) {
 
   $routeProvider.when('/search', {
-    templateUrl: 'search.html',
+    templateUrl: 'templates/search.html',
     controller: 'SearchCtrl',
     reloadOnSearch: true,
     loginRequired: false,
@@ -17,7 +15,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider', 'cfpL
   });
 
   $routeProvider.when('/tabular/:document_id/:table_id', {
-    templateUrl: 'tabular.html',
+    templateUrl: 'templates/tabular.html',
     controller: 'TabularCtrl',
     reloadOnSearch: true,
     loginRequired: false,
@@ -28,7 +26,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider', 'cfpL
   });
 
   $routeProvider.when('/text/:document_id', {
-    templateUrl: 'text.html',
+    templateUrl: 'templates/text.html',
     controller: 'TextCtrl',
     reloadOnSearch: false,
     loginRequired: false,
@@ -39,8 +37,24 @@ aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider', 'cfpL
     }
   });
 
+  $routeProvider.when('/help/:page', {
+    templateUrl: 'templates/help.html',
+    controller: 'HelpCtrl',
+    reloadOnSearch: false,
+    loginRequired: false,
+    resolve: {}
+  });
+
+  $routeProvider.when('/help', {
+    templateUrl: 'templates/help.html',
+    controller: 'HelpCtrl',
+    reloadOnSearch: false,
+    loginRequired: false,
+    resolve: {}
+  });
+
   $routeProvider.when('/', {
-    templateUrl: 'home.html',
+    templateUrl: 'templates/home.html',
     controller: 'HomeCtrl',
     reloadOnSearch: false,
     loginRequired: false,

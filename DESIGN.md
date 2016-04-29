@@ -92,6 +92,22 @@ Iteration II
 * [DONE] Refactor DocumentRecord (Tabular)
 
 
+* [DONE] entityIcon directive
+* [DONE] double check index
+* [DONE] double check tagger
+* [DONE] update entities
+* do content-based object merge
+* do schema model deletion
+* switch entity PK to UUIDs
+
+* index entities
+* adapt spindle importer
+* adapt opennames importer
+* adapt id importer
+* ui directives for collection management 
+* ui directives for entity management
+* ui collection index
+
 -------------
 
 Alert

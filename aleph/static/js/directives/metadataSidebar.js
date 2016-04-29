@@ -5,7 +5,7 @@ aleph.directive('metadataSidebar', [function() {
     scope: {
       'doc': '='
     },
-    templateUrl: 'metadata_sidebar.html',
+    templateUrl: 'templates/metadata_sidebar.html',
     link: function (scope, element, attrs, model) {
     }
   };

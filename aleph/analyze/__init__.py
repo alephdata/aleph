@@ -3,6 +3,7 @@ import logging
 from aleph import process
 from aleph.core import celery
 from aleph.ext import get_analyzers
+from aleph.util import normalize_strong
 from aleph.model import Document, Entity
 from aleph.search.fragments import text_query_string, meta_query_string
 from aleph.search.fragments import child_record
@@ -43,14 +44,15 @@ def analyze_terms(terms, seen=None):
     if seen is None:
         seen = set()
     for term in terms:
+        term = normalize_strong(term)
         query = {
             "bool": {
                 "minimum_should_match": 1,
                 "should": [
-                    meta_query_string(term, literal=True),
+                    meta_query_string(term),
                     child_record({
                         "bool": {
-                            "should": [text_query_string(term, literal=True)]
+                            "should": [text_query_string(term)]
                         }
                     })
                 ]

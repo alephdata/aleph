@@ -7,13 +7,14 @@
       <div class="btn-group" uib-dropdown dropdown-append-to-body>
         <button type="button" class="btn btn-primary dropdown-toggle"
           uib-dropdown-toggle>
-          <i class="fa fa-list-alt"></i>
-          Explore by...
-          <!-- span class="caret"></span -->
+          <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+          Sort by...
         </button>
         <ul class="uib-dropdown-menu" role="menu">
-          <li ng-repeat="(field, label) in metadata.fields" ng-show="showFieldFacet(field)">
-            <a ng-click="query.toggleFilter('facet', field)" ng-bind="label"></a>
+          <li ng-repeat="(field, label) in sortOptions"
+              ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'score')}">
+            <a ng-click="query.set('sort', field)"
+               ng-bind="label"></a>
           </li>
         </ul>
       </div>
@@ -41,6 +42,10 @@
 </div>
 <div class="row">
   <div class="col-md-8">
+    <div class="alert alert-danger" role="alert" ng-if="error">
+      <strong>An error occurred while running your search.</strong>
+      {{error.info.reason || error.message}}
+    </div>
     <div>
       <div ng-repeat="doc in result.results">
         <search-result doc="doc" result="result"></search-result>
@@ -86,7 +91,7 @@
           ng-class="{'active': query.hasFilter('entity', entity.id)}"
           ng-click="query.toggleFilter('entity', entity.id)">
           <span class="badge">{{entity.count | number}}</span>
-          <entity-icon category="entity.category"></entity-icon>
+          <entity-icon schema="entity.$schema"></entity-icon>
           <span class="lbl" uib-tooltip="{{metadata.collections[entity.collection_id].label}}"
             tooltip-append-to-body="true" tooltip-placement="right">
             {{entity.name}}
@@ -95,23 +100,24 @@
       </ul>
     </div>
 
-    <div class="panel panel-default" ng-repeat="(field, values) in facets">
+    <div class="panel panel-default" ng-repeat="facet in facets">
       <div class="panel-heading">
         <span class="pull-right">
-          <a ng-click="query.toggleFilter('facet', field)">
-            <i class="fa fa-close"></i>
+          <a ng-click="query.toggleFilter('facet', facet.field)">
+            <i ng-if="!facet.active" class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+            <i ng-if="facet.active" class="fa fa-caret-square-o-up" aria-hidden="true"></i>
           </a>
         </span>
-        <strong>{{fields[field]}}</strong>
+        <strong>{{facet.label}}</strong>
       </div>
-      <ul class="list-group facet-list">
-        <li class="list-group-item facet empty" ng-if="!values.length">
-          no matching documents
+      <ul class="list-group facet-list" ng-if="facet.active">
+        <li class="list-group-item facet empty" ng-if="!facet.values.length">
+          No documents with {{facet.label}} metadata.
         </li>
         <li class="list-group-item facet animate toggle"
-          ng-repeat="val in values"
-          ng-class="{'active': query.hasFilter('filter:' + field, val.id)}"
-          ng-click="query.toggleFilter('filter:' + field, val.id)">
+          ng-repeat="val in facet.values"
+          ng-class="{'active': query.hasFilter('filter:' + facet.field, val.id)}"
+          ng-click="query.toggleFilter('filter:' + facet.field, val.id)">
           <span class="badge">{{val.count | number}}</span>
           <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
             {{val.label | limitTo:35 }}

@@ -37,9 +37,9 @@ class MessyTablesIngestor(TabularIngestor):
                   'application/vnd.oasis.opendocument.spreadsheet',
                   'text/tab-separated-values']
     EXTENSIONS = ['csv', 'tsv', 'xls', 'xlsx', 'ods', 'rtf']
-    BASE_SCORE = 6
+    BASE_SCORE = 4
 
-    def generate_table(self, document, sheet, row_set):
+    def generate_table(self, document, meta, sheet, row_set):
         offset, headers = headers_guess(row_set.sample)
         row_set.register_processor(headers_processor(headers))
         row_set.register_processor(offset_processor(offset + 1))
@@ -51,12 +51,15 @@ class MessyTablesIngestor(TabularIngestor):
         def generate_rows():
             for row in row_set:
                 record = {}
-                for cell, column in zip(row, columns):
-                    record[column.name] = string_value(cell.value)
-                if len(record):
-                    for column in columns:
-                        record[column.name] = record.get(column.name, None)
-                    yield record
+                try:
+                    for cell, column in zip(row, columns):
+                        record[column.name] = string_value(cell.value)
+                    if len(record):
+                        for column in columns:
+                            record[column.name] = record.get(column.name, None)
+                        yield record
+                except Exception as exception:
+                    self.log_exception(meta, exception)
 
         document.insert_records(sheet, generate_rows())
         return tabular
@@ -70,7 +73,8 @@ class MessyTablesIngestor(TabularIngestor):
             tables = []
             document = self.create_document(meta)
             for sheet, row_set in enumerate(table_set.tables):
-                tables.append(self.generate_table(document, sheet, row_set))
+                tables.append(self.generate_table(document, meta, sheet,
+                                                  row_set))
 
             meta.tables = tables
             document.meta = meta
@@ -80,6 +84,7 @@ class MessyTablesIngestor(TabularIngestor):
 class DBFIngestor(TabularIngestor):
     MIME_TYPES = []
     EXTENSIONS = ['dbf']
+    BASE_SCORE = 7
 
     def ingest(self, meta, local_path):
         with open(local_path, 'rb') as fh:

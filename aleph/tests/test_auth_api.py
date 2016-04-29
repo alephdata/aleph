@@ -19,6 +19,14 @@ class AuthApiTestCase(TestCase):
         assert res.json.get('logged_in'), res.json
         assert res.json.get('role'), res.json
 
+    def test_session_logout(self):
+        self.login()
+        res = self.client.get('/api/1/sessions')
+        assert res.json.get('logged_in'), res.json
+        res = self.client.get('/api/1/sessions/logout')
+        res = self.client.get('/api/1/sessions')
+        assert not res.json.get('logged_in'), res.json
+
     def test_header_login(self):
         role = self.create_user()
         db.session.refresh(role)

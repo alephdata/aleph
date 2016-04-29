@@ -2,6 +2,7 @@ import os
 from apikit import jsonify
 from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
+from elasticsearch import TransportError
 
 from aleph.model.constants import CORE_FACETS, SOURCE_CATEGORIES
 from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
@@ -10,13 +11,14 @@ blueprint = Blueprint('base_api', __name__)
 
 
 def angular_templates():
-    partials_dir = os.path.join(current_app.static_folder, 'templates')
-    for (root, dirs, files) in os.walk(partials_dir):
-        for file_name in files:
-            file_path = os.path.join(root, file_name)
-            with open(file_path, 'rb') as fh:
-                file_name = file_path[len(partials_dir) + 1:]
-                yield (file_name, fh.read().decode('utf-8'))
+    for tmpl_set in ['templates', 'help']:
+        partials_dir = os.path.join(current_app.static_folder, tmpl_set)
+        for (root, dirs, files) in os.walk(partials_dir):
+            for file_name in files:
+                file_path = os.path.join(root, file_name)
+                with open(file_path, 'rb') as fh:
+                    file_name = file_path[len(current_app.static_folder) + 1:]
+                    yield (file_name, fh.read().decode('utf-8'))
 
 
 @blueprint.route('/')
@@ -54,4 +56,13 @@ def handle_validation_error(err):
     return jsonify({
         'status': 'error',
         'message': err.message
+    }, status=400)
+
+
+@blueprint.app_errorhandler(TransportError)
+def handle_es_error(err):
+    return jsonify({
+        'status': 'error',
+        'message': err.error,
+        'info': err.info.get('error', {}).get('root_cause', [])[-1]
     }, status=400)
