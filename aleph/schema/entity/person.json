@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "/entity/person.json#",
+  "title": "Person",
+  "plural": "People",
+  "description": "A real person, alive or dead",
+  "sortIndex": 100,
+  "type": "object",
+  "faIcon": "fa-user",
+  "graph": "node",
+  "oneOf": [{"$ref": "/entity/legal_person.json#"}],
+  "required": ["name"],
+  "properties": {
+    "gender": {
+      "title": "Gender",
+      "sortIndex": 78,
+      "description": "A gender",
+      "type": ["string", "null"]
+    },
+    "birth_date": {
+      "title": "Birth date",
+      "sortIndex": 86,
+      "description": "A date of birth",
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "death_date": {
+      "title": "Death date",
+      "sortIndex": 84,
+      "description": "A date of death",
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "biography": {
+      "title": "Biography",
+      "sortIndex": 76,
+      "description": "An extended account of a person's life",
+      "type": ["string", "null"]
+    },
+    "residential_address": {
+      "title": "Residential address",
+      "$ref": "/entity/address.json#"
+    },
+    "family_first": {
+      "title": "Family members (1)",
+      "rdfReverse": "first_person",
+      "type": "array",
+      "items": {"$ref": "/link/family.json#"}
+    },
+    "family_second": {
+      "title": "Family members (2)",
+      "rdfReverse": "second_person",
+      "type": "array",
+      "items": {"$ref": "/link/family.json#"}
+    },
+    "social_first": {
+      "title": "Social relationships (1)",
+      "rdfReverse": "first_person",
+      "type": "array",
+      "items": {"$ref": "/link/social.json#"}
+    },
+    "social_second": {
+      "title": "Social relationships (2)",
+      "rdfReverse": "second_person",
+      "type": "array",
+      "items": {"$ref": "/link/social.json#"}
+    }
+  }
+}

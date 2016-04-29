@@ -4,20 +4,19 @@ import logging
 
 from aleph.core import db
 from aleph.model import Collection, Entity, Role, Permission
-from aleph.model.constants import PERSON, ORGANIZATION, OTHER
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
 
 JSON_PATH = 'http://archive.pudo.org/opennames/latest/metadata.json'
 IGNORE_SOURCES = ['EVERY-POLITICIAN']
-CATEGORIES = {
-    'individual': PERSON,
-    'entity': ORGANIZATION
+SCHEMA = {
+    'individual': '/entity/person.json#',
+    'entity': '/entity/entity.json#'
 }
 
 
-class OpenNamesCrawler(Crawler):
+class OpenNamesCrawler(Crawler):  # pragma: no cover
 
     def crawl_source(self, source):
         if source.get('source_id') in IGNORE_SOURCES:
@@ -37,29 +36,30 @@ class OpenNamesCrawler(Crawler):
         db.session.flush()
         entities = requests.get(url).json().get('entities', [])
         for entity in entities:
-            if entity.get('name') is None:
-                continue
-            selectors = []
-            for on in entity.get('other_names', []):
-                selectors.append(on.get('other_name'))
-
-            for iden in entity.get('identities', []):
-                if iden.get('number'):
-                    selectors.append(iden.get('number'))
-
-            ent = Entity.by_foreign_id(entity.get('uid'), collection, {
+            data = {
+                'identifiers': [{
+                    'scheme': 'opennames:%s' % source.get('source_id'),
+                    'identifier': entity.get('uid')
+                }],
+                'other_names': [],
                 'name': entity.get('name'),
-                'category': CATEGORIES.get(entity.get('type'), OTHER),
-                'data': entity,
-                'selectors': selectors
-            })
+                '$schema': SCHEMA.get(entity.get('type'),
+                                      '/entity/entity.json#')
+            }
+            for on in entity.get('other_names', []):
+                on['name'] = on.pop('other_name', None)
+                data['other_names'].append(on)
+
+            ent = Entity.save(data, collection_id=collection.id, merge=True)
+            db.session.flush()
             terms.update(ent.terms)
             existing_entities.append(ent.id)
-            log.info("  # %s (%s)", ent.name, ent.category)
+            log.info("  # %s", ent.name)
 
         for entity in collection.entities:
             if entity.id not in existing_entities:
                 entity.delete()
+
         self.emit_collection(collection, terms)
 
     def crawl(self):

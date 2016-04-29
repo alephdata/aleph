@@ -45,7 +45,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   $scope.editProfile = function($event) {
     $event.stopPropagation();
     var d = $uibModal.open({
-        templateUrl: 'profile.html',
+        templateUrl: 'templates/profile.html',
         controller: 'ProfileCtrl',
         backdrop: true
     });
@@ -54,7 +54,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   $scope.manageAlerts = function($event) {
     $event.stopPropagation();
     var instance = $uibModal.open({
-      templateUrl: 'alerts_manage.html',
+      templateUrl: 'templates/alerts_manage.html',
       controller: 'AlertsManageCtrl',
       backdrop: true,
       size: 'md',

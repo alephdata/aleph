@@ -2,11 +2,13 @@ from babel import Locale
 from pycountry import countries
 
 CORE_FACETS = {
-    'extension': 'File extension',
+    # 'extension': 'File extension',
     'mime_type': 'Content type',
     'languages': 'Languages',
     'countries': 'Countries',
     'keywords': 'Keywords',
+    'author': 'Document author',
+    'recipients': 'Message recipients',
     'dates': 'Dates'
 }
 
@@ -32,10 +34,3 @@ for country in countries:
 
 LANGUAGE_NAMES = dict(Locale('en').languages.items())
 LANGUAGE_NAMES = {k: v for k, v in LANGUAGE_NAMES.items() if len(k) == 2}
-
-
-PERSON = 'Person'
-COMPANY = 'Company'
-ORGANIZATION = 'Organization'
-OTHER = 'Other'
-ENTITY_CATEGORIES = [PERSON, COMPANY, ORGANIZATION, OTHER]

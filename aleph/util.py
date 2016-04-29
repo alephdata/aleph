@@ -1,17 +1,31 @@
 import os
+import re
+import gc
+import six
 import logging
+import unicodedata
 from hashlib import sha1
 from datetime import datetime, date
 from unidecode import unidecode
-
-import six
 from normality import slugify
 
 log = logging.getLogger(__name__)
+COLLAPSE = re.compile(r'\s+')
+WS = ' '
+
+# Unicode character classes, see:
+# http://www.fileformat.info/info/unicode/category/index.htm
+CATEGORIES = {
+    'C': '',
+    'M': ' . ',
+    'Z': WS,
+    'P': '',
+    'S': WS
+}
 
 
 def checksum(filename):
-    """ Generate a hash for a given file name. """
+    """Generate a hash for a given file name."""
     hash = sha1()
     with open(filename, 'rb') as fh:
         while True:
@@ -39,6 +53,24 @@ def latinize_text(text):
     return text.lower()
 
 
+def normalize_strong(text):
+    if not isinstance(text, six.string_types):
+        return
+
+    if six.PY2 and not isinstance(text, six.text_type):
+        text = text.decode('utf-8')
+
+    text = latinize_text(text.lower())
+    text = unicodedata.normalize('NFKD', text)
+    characters = []
+    for character in text:
+        category = unicodedata.category(character)[0]
+        character = CATEGORIES.get(category, character)
+        characters.append(character)
+    text = u''.join(characters)
+    return COLLAPSE.sub(WS, text).strip(WS)
+
+
 def string_value(value, encoding=None):
     if encoding is None:
         encoding = 'utf-8'
@@ -60,3 +92,13 @@ def string_value(value, encoding=None):
     except Exception as ex:
         log.exception(ex)
         return
+
+
+def find_subclasses(cls):
+    # https://stackoverflow.com/questions/8956928
+    all_refs = gc.get_referrers(cls)
+    results = []
+    for o in all_refs:
+        if (isinstance(o, tuple) and getattr(o[0], "__mro__", None) is o):
+            results.append(o[0])
+    return results

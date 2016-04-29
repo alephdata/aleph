@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "/entity/company.json#",
+  "title": "Company",
+  "plural": "Companies",
+  "description": "A company",
+  "sortIndex": 90,
+  "type": "object",
+  "faIcon": "fa-suitcase",
+  "graph": "node",
+  "allOf": [
+      {"$ref": "/entity/organization.json#"},
+      {"$ref": "/entity/asset.json#"}
+  ],
+  "required": ["name"],
+  "properties": {
+    "company_number": {
+      "sortIndex": 85,
+      "type": "string",
+      "title": "Company number",
+      "description": "unique identifier given by the corporate register with which it is incorporated",
+      "minLength": 1
+    },
+    "sector": {
+      "title": "Sector",
+      "sortIndex": 83,
+      "type": ["string", "null"]
+    },
+    "company_type": {
+      "title": "Company type",
+      "sortIndex": 82,
+      "type": ["string", "null"]
+    },
+    "register_url": {
+      "title": "Company register link",
+      "type": "string",
+      "format": "uri"
+    }
+  }
+}

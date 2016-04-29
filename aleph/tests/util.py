@@ -48,8 +48,11 @@ class TestCase(FlaskTestCase):
             sess['user'] = role.id
         return role
 
+    def get_fixture_path(self, file_name):
+        return os.path.abspath(os.path.join(FIXTURES, file_name))
+
     def load_fixtures(self, file_name, process_documents=True):
-        filepath = os.path.abspath(os.path.join(FIXTURES, file_name))
+        filepath = self.get_fixture_path(file_name)
         load_fixtures(db, loaders.load(filepath))
         db.session.commit()
         if process_documents:

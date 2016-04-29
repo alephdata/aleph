@@ -31,7 +31,7 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Que
   $scope.editSource = function(source, $event) {
     $event.stopPropagation();
     var instance = $uibModal.open({
-      templateUrl: 'sources_edit.html',
+      templateUrl: 'templates/sources_edit.html',
       controller: 'SourcesEditCtrl',
       backdrop: true,
       size: 'md',

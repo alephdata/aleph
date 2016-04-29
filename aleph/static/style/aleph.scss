@@ -18,10 +18,12 @@ $text-muted: #999;
 $gray-subtle: #f0f0f0;
 $page-bg: #fff;
 $spacing: 0.5em;
+$base-unit: 12px;
 
 // Style tiles, Fonts
 $font-default: 'Open Sans', sans-serif;
 $font-family-sans-serif: 'Open Sans', sans-serif;
+$font-family-serif: 'Georgia', serif;
 $input-border-focus: $brand-primary;
 
 @import "../vendor/bootstrap-sass/assets/stylesheets/_bootstrap";
@@ -58,7 +60,7 @@ footer {
 }
 
 @import "common";
-@import "loadingbar";
+@import "help";
 @import "nav";
 @import "home";
 @import "search";

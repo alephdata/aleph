@@ -1,6 +1,6 @@
 
-aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Metadata', 'Authz', 'Title', 'data',
-    function($scope, $location, $http, $sce, $sanitize, $filter, Metadata, Authz, Title, data) {
+aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Metadata', 'Authz', 'Title', 'Query', 'data',
+    function($scope, $location, $http, $sce, $sanitize, $filter, Metadata, Authz, Title, Query, data) {
 
   $scope.doc = data.doc;
   $scope.table = data.table;
@@ -9,7 +9,7 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
   $scope.searchCtx = $location.search().ctx;
   $scope.textQuery = $location.search().dq;
 
-  Title.set(data.doc.title || data.doc.file_name);
+  Title.set(data.doc.title || data.doc.file_name, "documents");
 
   $scope.getClass = function(row, col) {
     var value = row[col.name];
@@ -37,9 +37,8 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
   };
 
   $scope.backToSearch = function() {
-    var query = alephUrlUnBlob($location.search().ctx);
     $location.path('/search');
-    $location.search(query);
+    $location.search(Query.getLastSearch());
   };
 
   $scope.updateQuery = function() {

@@ -1,47 +1,42 @@
 import logging
-from collections import Counter
+from collections import defaultdict
 
-import langid
+from langid.langid import LanguageIdentifier, model
 # https://github.com/saffsd/langid.py
 
 from aleph.analyze.analyzer import Analyzer
 
 log = logging.getLogger(__name__)
 
-THRESHOLD = 0.8
+THRESHOLD = 0.9
 CUTOFF = 30
 
 
 class LanguageAnalyzer(Analyzer):
 
-    def analyze_text(self, document, meta):
+    @property
+    def identifier(self):
+        if not hasattr(LanguageAnalyzer, '_identifier'):
+            LanguageAnalyzer._identifier = \
+                LanguageIdentifier.from_modelstring(model, norm_probs=True)
+        return LanguageAnalyzer._identifier
+
+    def analyze(self, document, meta):
         if len(meta.languages):
             return
-        languages = Counter()
-        for page in document.pages:
-            if not page.text or len(page.text) < CUTOFF:
+        languages = defaultdict(float)
+        for text, rec in document.text_parts():
+            if len(text.strip()) < CUTOFF:
                 continue
-            lang, score = langid.classify(page.text)
+            lang, score = self.identifier.classify(text)
             if score > THRESHOLD:
-                languages[lang] += 1
-        self.save(document, meta, languages)
+                languages[lang] += score * len(text)
 
-    def analyze_tabular(self, document, meta):
-        if len(meta.languages):
+        if not len(languages):
             return
-        languages = Counter()
-        for record in document.records:
-            for text in record.data.values():
-                if not text or len(text) < CUTOFF:
-                    continue
-                lang, score = langid.classify(text)
-                if score > THRESHOLD:
-                    languages[lang] += 1
-        self.save(document, meta, languages)
 
-    def save(self, document, meta, languages):
-        existing = meta.get('languages')
-        if existing is not None and not len(existing) and len(languages):
-            return
-        meta['languages'] = [l for (l, c) in languages.most_common(1)]
-        super(LanguageAnalyzer, self).save(document, meta)
+        languages = sorted(languages.items(), key=lambda (l, c): c,
+                           reverse=True)
+        meta.add_language(languages[0][0])
+        log.info("Classified languages in %r: %r", document, languages[:10])
+        self.save(document, meta)

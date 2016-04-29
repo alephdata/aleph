@@ -13,7 +13,7 @@ from aleph.model.tabular import Tabular
 
 
 class PDFAlternative(object):
-    """ Alternate PDF version. """
+    """Alternate PDF version."""
 
     def __init__(self, meta):
         self.meta = meta
@@ -31,7 +31,7 @@ class PDFAlternative(object):
 
 
 class Metadata(MutableMapping):
-    """ Handle all sorts of metadata normalization for documents. """
+    """Handle all sorts of metadata normalization for documents."""
 
     def __init__(self, data=None):
         if data is None:
@@ -65,8 +65,9 @@ class Metadata(MutableMapping):
     @property
     def title(self):
         title = self.data.get('title')
-        if title is None and self.file_name:
-            title = self.file_name
+        if title is None or not len(title.strip()):
+            if self.file_name:
+                title = self.file_name
         return title
 
     @title.setter
@@ -99,6 +100,14 @@ class Metadata(MutableMapping):
     @summary.setter
     def summary(self, summary):
         self.data['summary'] = summary
+
+    @property
+    def author(self):
+        return self.data.get('author')
+
+    @author.setter
+    def author(self, author):
+        self.data['author'] = author
 
     @property
     def languages(self):
@@ -147,6 +156,21 @@ class Metadata(MutableMapping):
         keywords = self.keywords
         keywords.append(keyword)
         self.data['keywords'] = list(keywords)
+
+    @property
+    def recipients(self):
+        return list(set(self.data.get('recipients', [])))
+
+    @recipients.setter
+    def recipients(self, recipients):
+        self.data['recipients'] = []
+        for recipient in recipients:
+            self.add_recipient(recipient)
+
+    def add_recipient(self, recipient):
+        recipients = self.recipients
+        recipients.append(recipient)
+        self.data['recipients'] = list(recipients)
 
     @property
     def dates(self):
@@ -322,10 +346,12 @@ class Metadata(MutableMapping):
             'content_hash': self.content_hash,
             'foreign_id': self.foreign_id,
             'file_name': self.file_name,
+            'author': self.author,
             'dates': self.dates,
             'countries': self.countries,
             'languages': self.languages,
             'keywords': self.keywords,
+            'recipients': self.recipients,
             'extension': self.extension,
             'mime_type': self.mime_type,
             'headers': self.headers,

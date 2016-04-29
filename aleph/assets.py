@@ -18,7 +18,6 @@ angular_assets = Bundle(
     'vendor/angular-route/angular-route.js',
     'vendor/angular-sanitize/angular-sanitize.js',
     'vendor/angular-animate/angular-animate.js',
-    'vendor/angular-loading-bar/build/loading-bar.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
     'vendor/angulartics/src/angulartics.js',
     'vendor/angulartics/src/angulartics-piwik.js',

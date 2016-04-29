@@ -1,6 +1,6 @@
 
-aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'data', 'pages',
-    function($scope, $location, $http, metadata, Authz, Document, Title, data, pages) {
+aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'Query', 'data', 'pages',
+    function($scope, $location, $http, metadata, Authz, Document, Title, Query, data, pages) {
 
   $scope.doc = data.doc;
   $scope.pageText = data.page.text;
@@ -11,9 +11,9 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
   $scope.pageNum = $location.search().page || 1;
   $scope.textQuery = $location.search().dq;
   $scope.reportLoading(true);
-  $scope.pdfUrl = '/api/1/documents/' + data.doc.id + '/pdf';
+  $scope.pdfUrl = data.doc.pdf_url;
 
-  Title.set(data.doc.title + " (Page " + $scope.pageNum + ")");
+  Title.set(data.doc.title + " (Page " + $scope.pageNum + ")", "documents");
 
   $scope.onError = function(error) {
     $scope.reportError("Could not load document.");
@@ -45,9 +45,8 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
   };
 
   $scope.backToSearch = function() {
-    var query = alephUrlUnBlob($location.search().ctx);
     $location.path('/search');
-    $location.search(query);
+    $location.search(Query.getLastSearch());
   };
 
   $scope.updateTextQuery = function() {

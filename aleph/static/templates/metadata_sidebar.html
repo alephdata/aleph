@@ -16,6 +16,20 @@
       <th>Author</th>
       <td>{{doc.author}}</td>
     </tr>
+    <tr ng-if="doc.recipients && doc.recipients.length">
+      <th>Recipients</th>
+      <td>
+        <span ng-repeat="recipient in doc.recipients">
+          {{recipient}}<span ng-if="!$last">,</span>
+        </span>
+      </td>
+    </tr>
+    <tr ng-if="doc.dates && doc.dates.length == 1">
+      <th>Date</th>
+      <td>
+       {{doc.dates[0] | date}}
+      </td>
+    </tr>
     <tr ng-if="doc.languages && doc.languages.length">
       <th>Languages</th>
       <td>

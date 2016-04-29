@@ -4,10 +4,10 @@ from tempfile import mkstemp
 
 from lxml import html, etree
 from lxml.html.clean import Cleaner
-from extractors import extract_pdf, extract_image
+from extractors import extract_pdf
 from extractors import document_to_pdf, image_to_pdf, html_to_pdf
 
-from aleph.core import get_archive
+from aleph.core import get_archive, get_config
 from aleph.model import db, Document, DocumentPage
 from aleph.ingest.ingestor import Ingestor
 
@@ -30,16 +30,17 @@ class TextIngestor(Ingestor):
         db.session.add(page)
         return page
 
-    def store_pdf(self, meta, pdf_path, move=True):
-        get_archive().archive_file(pdf_path, meta.pdf, move=move)
-
-
-class PDFIngestor(TextIngestor):
-    MIME_TYPES = ['application/pdf']
-    EXTENSIONS = ['pdf']
+    def get_languages(self, meta):
+        default_languages = get_config('OCR_DEFAULTS', ['en'])
+        languages = meta.languages + default_languages
+        return list(set(languages))
 
     def extract_pdf(self, meta, pdf_path):
-        data = extract_pdf(pdf_path)
+        data = extract_pdf(pdf_path, languages=self.get_languages(meta))
+        if data is None:
+            self.log_error(meta, error_type='PDFSyntaxError',
+                           error_message="Could not parse PDF: %r" % meta)
+            return
 
         if not meta.has('author') and data.get('author'):
             meta['author'] = data.get('author')
@@ -52,32 +53,53 @@ class PDFIngestor(TextIngestor):
             self.create_page(document, page, number=i + 1)
         self.emit(document)
 
+    def store_pdf(self, meta, pdf_path):
+        get_archive().archive_file(pdf_path, meta.pdf, move=False)
+
+
+class PDFIngestor(TextIngestor):
+    MIME_TYPES = ['application/pdf']
+    EXTENSIONS = ['pdf']
+
     def ingest(self, meta, local_path):
-        self.extract_pdf(meta, local_path)
+        try:
+            self.extract_pdf(meta, local_path)
+        except Exception as exception:
+            self.log_exception(meta, exception)
+
+    @classmethod
+    def match(cls, meta, local_path):
+        with open(local_path, 'r') as fh:
+            if fh.read(10).startswith('%PDF-1.'):
+                return 15
+        return -1
 
 
-class DocumentIngestor(PDFIngestor):
+class DocumentIngestor(TextIngestor):
     MIME_TYPES = ['application/msword', 'application/rtf', 'application/x-rtf',
                   'application/vnd.oasis.opendocument.text',
                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # noqa
-                  'text/richtext', 'text/plain', 'application/wordperfect',
-                  'application/vnd.wordperfect']
-    EXTENSIONS = ['doc', 'docx', 'rtf', 'odt', 'sxw', 'dot', 'docm',
-                  'hqx', 'pdb', 'txt', 'wpd']
+                  'text/richtext', 'application/wordperfect', 'application/vnd.wordperfect']  # noqa
+    EXTENSIONS = ['doc', 'docx', 'rtf', 'odt', 'sxw', 'dot', 'docm', 'hqx',
+                  'pdb', 'txt', 'wpd']
     BASE_SCORE = 5
 
     def extract_pdf_alternative(self, meta, pdf_path):
         try:
-            self.store_pdf(meta, pdf_path, move=False)
+            self.store_pdf(meta, pdf_path)
             self.extract_pdf(meta, pdf_path)
+        except Exception as exception:
+            self.log_exception(meta, exception)
         finally:
-            if os.path.isfile(pdf_path):
+            if pdf_path is not None and os.path.isfile(pdf_path):
                 os.unlink(pdf_path)
 
     def ingest(self, meta, local_path):
         pdf_path = document_to_pdf(local_path)
         if pdf_path is None or not os.path.isfile(pdf_path):
-            raise ValueError("Could not convert document: %r" % meta)
+            self.log_error(meta, error_type='DocumentConvertError',
+                           error_message="Could not convert doc: %r" % meta)
+            return
         self.extract_pdf_alternative(meta, pdf_path)
 
 
@@ -122,7 +144,9 @@ class HtmlIngestor(DocumentIngestor):
 
             pdf_path = html_to_pdf(out_path)
             if pdf_path is None or not os.path.isfile(pdf_path):
-                raise ValueError("Could not convert document: %r" % meta)
+                self.log_error(meta, error_type='HTMLConvertError',
+                               error_message="Could not convert HTML: %r" % meta)  # noqa
+                return
             self.extract_pdf_alternative(meta, pdf_path)
         finally:
             if os.path.isfile(out_path):
@@ -139,15 +163,13 @@ class ImageIngestor(TextIngestor):
     BASE_SCORE = 5
 
     def ingest(self, meta, local_path):
-        text = extract_image(local_path)
-        pdf_path = image_to_pdf(local_path)
         try:
+            pdf_path = image_to_pdf(local_path)
             if pdf_path is None or not os.path.isfile(pdf_path):
-                raise ValueError("Could not convert image: %r" % meta)
+                self.log_error(meta, error_type='ImageConvertError', error_message="Could not convert image: %r" % meta)  # noqa
+                return
             self.store_pdf(meta, pdf_path)
-            document = self.create_document(meta)
-            self.create_page(document, text)
-            self.emit(document)
+            self.extract_pdf(meta, pdf_path)
         finally:
             if os.path.isfile(pdf_path):
                 os.unlink(pdf_path)

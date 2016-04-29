@@ -73,7 +73,6 @@ def login():
 
 @blueprint.route('/api/1/sessions/logout')
 def logout():
-    authz.require(authz.logged_in())
     session.clear()
     return redirect(url_for('base_api.ui'))
 
@@ -106,6 +105,13 @@ def callback():
             group_role = Role.load_or_create(group_id, Role.GROUP,
                                              group.get('name'))
             session['roles'].append(group_role.id)
+    elif 'correctiv.org' in oauth_provider.base_url:
+        me = oauth_provider.get('api/user/')
+        user_id = 'correctiv:user:%s' % me.data.get('id')
+        role = Role.load_or_create(user_id, Role.USER,
+               u'%s %s' % (me.data.get('first_name'), me.data.get('last_name')),
+               email=me.data.get('email'),
+               is_admin=me.data.get('is_superuser', False))
     else:
         raise RuntimeError("Unknown OAuth URL: %r" % oauth_provider.base_url)
     session['roles'].append(role.id)

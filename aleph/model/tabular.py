@@ -21,6 +21,7 @@ class Tabular(object):
             self.schema['columns'] = []
 
     def add_column(self, label):
+        label = unicode(label)
         column = slugify(label or '', sep='_')
         column = column or 'column'
         column = column[:55]

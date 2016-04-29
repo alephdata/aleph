@@ -24,6 +24,11 @@ logging.getLogger('amqp').setLevel(logging.INFO)
 logging.getLogger('assets.cssutils').setLevel(logging.ERROR)
 logging.getLogger('cssutils').setLevel(logging.ERROR)
 
+logging.getLogger('extractors').setLevel(logging.DEBUG)
+
+# Log all SQL statements:
+# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
 # default locale settings
 os.environ['LC_ALL'] = 'en_US'
 os.environ['LC_LANG'] = 'en_US'
