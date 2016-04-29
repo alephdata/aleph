@@ -7,6 +7,7 @@ var loadEntitiesIndex = ['$http', '$q', '$route', '$location', 'Session', 'Metad
       var query = Query.parse(),
           state = angular.copy(query.state);
       state['limit'] = 30;
+      state['doc_counts'] = 'true';
       state['facet'] = ['jurisdiction_code', '$schema'];
       state['offset'] = state.offset || 0;
       $http.get('/api/1/entities', {params: state}).then(function(res) {

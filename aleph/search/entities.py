@@ -1,10 +1,11 @@
+import json
 from pprint import pprint  # noqa
 
 from werkzeug.datastructures import MultiDict
 
-from aleph.core import url_for
-from aleph.index import TYPE_ENTITY
-from aleph.search.util import authz_collections_filter
+from aleph.core import url_for, get_es, get_es_index
+from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
+from aleph.search.util import authz_collections_filter, authz_sources_filter
 from aleph.search.util import execute_basic, parse_filters
 from aleph.search.fragments import match_all, filter_query, aggregate
 from aleph.search.facets import convert_entity_aggregations
@@ -66,14 +67,28 @@ def facet_collection(q, aggs, filters):
     return aggs
 
 
-def execute_entities_query(args, query):
+def execute_entities_query(args, query, doc_counts=False):
     """Execute the query and return a set of results."""
     result, hits, output = execute_basic(TYPE_ENTITY, query)
     convert_entity_aggregations(result, output, args)
+    sub_queries = []
     for doc in hits.get('hits', []):
-        document = doc.get('_source')
-        document['id'] = doc.get('_id')
-        document['score'] = doc.get('_score')
-        document['api_url'] = url_for('entities_api.view', id=doc.get('_id'))
-        output['results'].append(document)
+        entity = doc.get('_source')
+        entity['id'] = doc.get('_id')
+        entity['score'] = doc.get('_score')
+        entity['api_url'] = url_for('entities_api.view', id=doc.get('_id'))
+        output['results'].append(entity)
+
+        sq = {'term': {'entities.uuid': entity['id']}}
+        sq = authz_sources_filter(sq)
+        sq = {'size': 0, 'query': sq}
+        sub_queries.append(json.dumps({}))
+        sub_queries.append(json.dumps(sq))
+
+    if doc_counts and len(sub_queries):
+        res = get_es().msearch(index=get_es_index(),
+                               doc_type=TYPE_DOCUMENT,
+                               body='\n'.join(sub_queries))
+        for (entity, res) in zip(output['results'], res.get('responses')):
+            entity['doc_count'] = res.get('hits', {}).get('total')
     return output

@@ -28,7 +28,9 @@ def index():
     q = entities_query(request.args)
     q['size'] = get_limit(default=50)
     q['from'] = get_offset()
-    return jsonify(execute_entities_query(request.args, q))
+    res = execute_entities_query(request.args, q,
+                                 doc_counts=arg_bool('doc_counts'))
+    return jsonify(res)
 
 
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
