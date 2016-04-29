@@ -5,10 +5,7 @@ from elasticsearch.helpers import bulk, scan
 from aleph.core import get_es, get_es_index
 from aleph.model import Document
 from aleph.util import latinize_text
-from aleph.index.admin import init_search, upgrade_search  # noqa
-from aleph.index.admin import delete_index, optimize_search  # noqa
 from aleph.index.mapping import TYPE_RECORD
-from aleph.index.mapping import DOCUMENT_MAPPING, RECORD_MAPPING  # noqa
 
 log = logging.getLogger(__name__)
 

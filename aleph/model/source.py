@@ -59,10 +59,6 @@ class Source(db.Model, IdModel, DatedModel, SchemaModel):
             return
         return cls.all().filter_by(foreign_id=foreign_id).first()
 
-    @classmethod
-    def all_by_ids(cls, ids):
-        return cls.all().filter(cls.id.in_(ids))
-
     def __repr__(self):
         return '<Source(%r)>' % self.id
 

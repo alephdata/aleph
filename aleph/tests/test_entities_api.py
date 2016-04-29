@@ -3,6 +3,7 @@ import json
 from aleph.core import db
 from aleph.model import Collection, Entity
 from aleph.model.entity_details import EntityAddress
+from aleph.index import index_entity, optimize_search
 from aleph.tests.util import TestCase
 
 
@@ -17,9 +18,10 @@ class EntitiesApiTestCase(TestCase):
         db.session.add(self.col)
         db.session.flush()
         self.ent = Entity()
-        self.ent.collection = self.col
+        self.ent.collection_id = self.col.id
         self.ent.update({
             'name': 'Winnie the Pooh',
+            'jurisdiction_code': 'pa',
             'identifiers': [{
                 'scheme': 'wikipedia',
                 'identifier': 'en:Winnie-the-Pooh'
@@ -29,13 +31,24 @@ class EntitiesApiTestCase(TestCase):
         db.session.commit()
 
     def test_index(self):
+        index_entity(self.ent)
+        optimize_search()
         res = self.client.get('/api/1/entities')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
+        assert len(res.json['collections']['values']) == 0, res.json
         self.login(is_admin=True)
         res = self.client.get('/api/1/entities')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
+        assert len(res.json['collections']['values']) == 1, res.json
+        col0 = res.json['collections']['values'][0]
+        assert col0['id'] == self.col.id, res.json
+        assert col0['label'] == self.col.label, res.json
+        assert len(res.json['facets']) == 0, res.json
+        res = self.client.get('/api/1/entities?facet=jurisdiction_code')
+        assert len(res.json['facets']) == 1, res.json
+        assert 'values' in res.json['facets']['jurisdiction_code'], res.json
 
     def test_view(self):
         res = self.client.get('/api/1/entities/%s' % self.ent.id)

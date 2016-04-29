@@ -5,6 +5,7 @@ import logging
 from aleph.core import db
 from aleph.model import Collection, Entity, Role, Permission
 from aleph.crawlers.crawler import Crawler
+from aleph.index import index_entity, delete_entity
 
 log = logging.getLogger(__name__)
 
@@ -52,6 +53,7 @@ class OpenNamesCrawler(Crawler):  # pragma: no cover
 
             ent = Entity.save(data, collection_id=collection.id, merge=True)
             db.session.flush()
+            index_entity(ent)
             terms.update(ent.terms)
             existing_entities.append(ent.id)
             log.info("  # %s", ent.name)
@@ -59,6 +61,7 @@ class OpenNamesCrawler(Crawler):  # pragma: no cover
         for entity in collection.entities:
             if entity.id not in existing_entities:
                 entity.delete()
+                delete_entity(entity.id)
 
         self.emit_collection(collection, terms)
 

@@ -1,11 +1,12 @@
 from flask import Blueprint, request
-from apikit import obj_or_404, jsonify, Pager, request_data, arg_bool
+from apikit import obj_or_404, jsonify, request_data, arg_bool
+from apikit import get_limit, get_offset
 
 from aleph import authz
 from aleph.model import Entity, db
-from aleph.analyze import analyze_entity
+from aleph.graph import update_entity
 from aleph.views.cache import enable_cache
-from aleph.views.util import match_ids
+from aleph.search import entities_query, execute_entities_query
 
 blueprint = Blueprint('entities_api', __name__)
 
@@ -24,10 +25,10 @@ def get_data(entity=None):
 
 @blueprint.route('/api/1/entities', methods=['GET'])
 def index():
-    collection_ids = match_ids('collection', authz.collections(authz.READ))
-    q = Entity.all()
-    q = q.filter(Entity.collection_id.in_(collection_ids))
-    return jsonify(Pager(q))
+    q = entities_query(request.args)
+    q['size'] = get_limit(default=50)
+    q['from'] = get_offset()
+    return jsonify(execute_entities_query(request.args, q))
 
 
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
@@ -35,7 +36,7 @@ def create():
     data = get_data()
     entity = Entity.save(data, collection_id=data.get('collection_id'))
     db.session.commit()
-    analyze_entity.delay(entity.id)
+    update_entity(entity)
     return view(entity.id)
 
 
@@ -70,7 +71,7 @@ def update(id):
                          collection_id=entity.collection_id,
                          merge=arg_bool('merge'))
     db.session.commit()
-    analyze_entity.delay(entity.id)
+    update_entity(entity)
     return view(entity.id)
 
 
@@ -80,5 +81,5 @@ def delete(id):
     authz.require(authz.collection_write(entity.collection_id))
     entity.delete()
     db.session.commit()
-    analyze_entity.delay(id)
+    update_entity(entity)
     return jsonify({'status': 'ok'})

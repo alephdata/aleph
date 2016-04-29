@@ -51,10 +51,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         return collection
 
     @classmethod
-    def all_by_ids(cls, ids):
-        return cls.all().filter(cls.id.in_(ids))
-
-    @classmethod
     def timestamps(cls):
         q = db.session.query(cls.id, cls.updated_at)
         q = q.filter(cls.deleted_at == None)  # noqa

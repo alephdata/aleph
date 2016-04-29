@@ -70,7 +70,6 @@ class Crawler(object):
 
     def emit_collection(self, collection, terms):
         db.session.commit()
-        # log.debug("Changed terms: %r", terms)
         analyze_terms(terms)
 
     def finalize(self):
