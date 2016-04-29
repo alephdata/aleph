@@ -51,7 +51,7 @@ function ensureArray(data) {
   if (!angular.isArray(data)) {
     return [data];
   }
-  return data;
+  return data
 };
 
 

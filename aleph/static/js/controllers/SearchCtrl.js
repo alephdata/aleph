@@ -1,6 +1,6 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', '$sce', 'data', 'Query', 'Authz', 'Alert', 'Metadata', 'Title',
-    function($scope, $route, $location, $http, $uibModal, $sce, data, Query, Authz, Alert, Metadata, Title) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', '$sce', 'data', 'Authz', 'Alert', 'Metadata', 'Title',
+    function($scope, $route, $location, $http, $uibModal, $sce, data, Authz, Alert, Metadata, Title) {
 
   var isLoading = false;
   $scope.result = {};
@@ -9,7 +9,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   $scope.facets = [];
   $scope.session = data.metadata.session;
   $scope.metadata = data.metadata;
-  $scope.query = Query;
+  $scope.query = data.query;
   $scope.graph = {'limit': 75, 'options': [10, 75, 150, 300, 600, 1200]};
   $scope.sortOptions = {
     score: 'Relevancy',
@@ -17,16 +17,14 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     oldest: 'Oldest'
   };
   
-  if (Query.state.q) {
-    Title.set("Search for '" + Query.state.q + "'", "documents");
+  if (data.query.state.q) {
+    Title.set("Search for '" + data.query.state.q + "'", "documents");
   } else {
     Title.set("Search documents", "documents");  
   }
 
   $scope.loadOffset = function(offset) {
-    var query = Query.load();
-    query.offset = offset;
-    $location.search(query);
+    data.query.set('offset', offset);
   };
 
   $scope.canEditSource = function(source) {
@@ -74,13 +72,13 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
       size: 'md',
       resolve: {
         collections: function() {
-          return Query.load().collection;
+          return data.query.getArray('collection');
         }
       }
     });
 
     instance.result.then(function(collections) {
-      Query.set('collection', collections);
+      data.query.set('collection', collections);
     });
   };
 
@@ -109,8 +107,8 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     }
     // data = angular.copy(data);
     return data.sort(function(a, b) {
-      var af = Query.hasFilter(name, a.id),
-          bf = Query.hasFilter(name, b.id);
+      var af = $scope.query.hasField(name, a.id),
+          bf = $scope.query.hasField(name, b.id);
       if (af && !bf) { return -1; }
       if (!af && bf) { return 1; }
       var counts = b.count - a.count;
@@ -132,7 +130,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     $scope.sourceFacets = sortedFilters(data.result.sources.values, 'filter:source_id');
     $scope.entityFacets = sortedFilters(data.result.entities, 'entity');
 
-    var queryFacets = Query.load().facet,
+    var queryFacets = data.query.getArray('facet'),
         facets = [];
 
     for (var name in data.metadata.fields) {

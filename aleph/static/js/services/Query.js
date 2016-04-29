@@ -1,64 +1,58 @@
 
 aleph.factory('Query', ['$route', '$location', function($route, $location) {
-  var query = {};
 
-  var load = function() {
-    query = {};
-    angular.forEach($location.search(), function(v, k) {
-      if (!angular.isArray(v)) {
-        v = [v];
-      }
-      query[k] = v;
-    });
-    query.offset = null;
-    query.entity = ensureArray(query.entity);
-    query.collection = ensureArray(query.collection);
-    query.facet = ensureArray(query.facet);
-    return query;
+  var ParsedQuery = function() {
+    this.state = $location.search();
   };
 
-  var clear = function() {
+  ParsedQuery.prototype.toString = function() {
+    return queryString(this.state);
+  };
+
+  ParsedQuery.prototype.getArray = function(key) {
+    return ensureArray(this.state[key]).map(function(v) {
+      return v + '';
+    });
+  };
+
+  ParsedQuery.prototype.hasField = function(name, val) {
+    var cur = this.getArray(name + ''),
+        valStr = val ? val + '' : null;
+    return cur.indexOf(valStr) != -1;
+  };
+
+  ParsedQuery.prototype.hasFilter = function(name, val) {
+    return this.hasField('filter:' + name, val);
+  };
+
+  ParsedQuery.prototype.clear = function() {
     $location.search({});
   };
 
-  var set = function(name, val) {
-    query[name] = val;
-    $location.search(query);
+  ParsedQuery.prototype.set = function(name, val) {
+    this.state[name] = val;
+    $location.search(this.state);
   };
 
-  var toggleFilter = function(filter, val) {
-    var q = load();
-    if (!angular.isArray(q[filter])) {
-      q[filter] = [];
-    }
-    val = val + '';
-    var idx = q[filter].indexOf(val);
+  ParsedQuery.prototype.toggle = function(name, val) {
+    var values = this.getArray(name),
+        valStr = val ? val + '' : null;
+    var idx = values.indexOf(valStr);
     if (idx == -1) {
-      q[filter].push(val);
+      values.push(valStr);
     } else {
-      q[filter].splice(idx, 1);
+      values.splice(idx, 1);
     }
-    $location.search(q);
-    query = q;
+    this.set(name, values);
   };
 
-  var hasFilter = function(name, val) {
-    val = val + '';
-    return angular.isArray(query[name]) && query[name].indexOf(val) != -1;
+  ParsedQuery.prototype.toggleFilter = function(name, val) {
+    return this.toggle('filter:' + name, val);
   };
-
-  load();
 
   return {
-      state: query,
-      load: load,
-      clear: clear,
-      set: set,
-      queryString: function() {
-        return queryString(query);
-      },
-      hasFilter: hasFilter,
-      toggleFilter: toggleFilter
+    parse: function() {
+      return new ParsedQuery();
+    }
   };
-
 }]);

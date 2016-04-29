@@ -22,8 +22,8 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Aut
   };
 
   $scope.submitSearch = function(form) {
-    $location.search({q: $scope.query.q});
     $location.path('/search');
+    $location.search({q: $scope.query.q});
   };
 
   $scope.editSource = function(source, $event) {

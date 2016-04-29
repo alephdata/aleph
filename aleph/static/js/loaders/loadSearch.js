@@ -5,15 +5,17 @@ var loadSearch = ['$http', '$q', '$route', '$location', 'Query', 'History', 'Ses
 
   Metadata.get().then(function(metadata) {
     Session.get().then(function(session) {
-      var query = angular.copy(Query.load());
-      query['limit'] = 30;
-      query['snippet'] = 140;
-      query['offset'] = $location.search().offset || 0;
-      History.setLastSearch($location.search());
-      $http.get('/api/1/query', {cache: true, params: query}).then(function(res) {
-        var result = res.data;
+      var query = Query.parse(),
+          state = angular.copy(query.state);
+
+      state['limit'] = 30;
+      state['snippet'] = 140;
+      state['offset'] = state.offset || 0;
+      History.setLastSearch(query.state);
+      $http.get('/api/1/query', {cache: true, params: state}).then(function(res) {
         dfd.resolve({
-          'result': result,
+          'query': query,
+          'result': res.data,
           'metadata': metadata
         });
       }, function(err) {
@@ -22,6 +24,7 @@ var loadSearch = ['$http', '$q', '$route', '$location', 'Query', 'History', 'Ses
             'result': {
               'error': err.data
             },
+            'query': query,
             'metadata': metadata
           });
         }

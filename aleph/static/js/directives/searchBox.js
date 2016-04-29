@@ -1,16 +1,15 @@
-aleph.directive('searchBox', ['$location', '$q', '$route', '$http', '$rootScope', 'Query',
-    function($location, $q, $route, $http, $rootScope, Query) {
+aleph.directive('searchBox', ['$location', '$q', '$route', '$http', '$rootScope',
+    function($location, $q, $route, $http, $rootScope) {
   return {
     restrict: 'E',
     scope: {
+      query: '='
     },
     templateUrl: 'templates/search_box.html',
     link: function (scope, element, attrs) {
-      scope.query = $location.search();
-
       scope.suggestEntities = function(prefix) {
         var dfd = $q.defer();
-        var opts = {params: {'prefix': prefix}, ignoreLoadingBar: true};
+        var opts = {params: {'prefix': prefix}};
         $http.get('/api/1/entities/_suggest', opts).then(function(res) {
           dfd.resolve(res.data.results);
         });
@@ -18,16 +17,14 @@ aleph.directive('searchBox', ['$location', '$q', '$route', '$http', '$rootScope'
       }
 
       scope.acceptSuggestion = function($item) {
-        scope.query.q = '';
-        Query.toggleFilter('entity', $item.id);
+        scope.query.state.q = '';
+        scope.query.toggle('entity', $item.id);
         $location.path('/search');
       }
 
       scope.submitSearch = function(form) {
-        var search = Query.load();
-        search.q = scope.query.q;
-        $location.search(search);
         $location.path('/search');
+        scope.query.set('q', scope.query.state.q);
       };
     }
   };

@@ -1,6 +1,6 @@
 <div class="row search-bar">
   <div class="col-md-8">
-    <search-box></search-box>
+    <search-box query="query"></search-box>
   </div>
   <div class="col-md-4">
     <div class="btn-group btn-group-justified" role="group">
@@ -88,8 +88,8 @@
         </li>
         <li class="list-group-item facet animate toggle"
           ng-repeat="entity in entityFacets track by entity.id"
-          ng-class="{'active': query.hasFilter('entity', entity.id)}"
-          ng-click="query.toggleFilter('entity', entity.id)">
+          ng-class="{'active': query.hasField('entity', entity.id)}"
+          ng-click="query.toggle('entity', entity.id)">
           <span class="badge">{{entity.count | number}}</span>
           <entity-icon schema="entity.$schema"></entity-icon>
           <span class="lbl" uib-tooltip="{{metadata.collections[entity.collection_id].label}}"
@@ -103,7 +103,7 @@
     <div class="panel panel-default" ng-repeat="facet in facets">
       <div class="panel-heading">
         <span class="pull-right">
-          <a ng-click="query.toggleFilter('facet', facet.field)">
+          <a ng-click="query.toggle('facet', facet.field)">
             <i ng-if="!facet.active" class="fa fa-caret-square-o-down" aria-hidden="true"></i>
             <i ng-if="facet.active" class="fa fa-caret-square-o-up" aria-hidden="true"></i>
           </a>
@@ -116,8 +116,8 @@
         </li>
         <li class="list-group-item facet animate toggle"
           ng-repeat="val in facet.values"
-          ng-class="{'active': query.hasFilter('filter:' + facet.field, val.id)}"
-          ng-click="query.toggleFilter('filter:' + facet.field, val.id)">
+          ng-class="{'active': query.hasFilter(facet.field, val.id)}"
+          ng-click="query.toggleFilter(facet.field, val.id)">
           <span class="badge">{{val.count | number}}</span>
           <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
             {{val.label | limitTo:35 }}
@@ -133,8 +133,8 @@
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
           ng-repeat="source in sourceFacets"
-          ng-class="{'active': query.hasFilter('filter:source_id', source.id)}"
-          ng-click="query.toggleFilter('filter:source_id', source.id)">
+          ng-class="{'active': query.hasFilter('source_id', source.id)}"
+          ng-click="query.toggleFilter('source_id', source.id)">
           <span class="badge">{{source.count | number}}</span>
           <span class="lbl">
             {{source.label}}
