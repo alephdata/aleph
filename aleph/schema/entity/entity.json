@@ -1,8 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "id": "/entity/entity.json#",
-  "title": "Any entity",
+  "title": "Other entities",
   "type": "object",
+  "faIcon": "fa-user",
   "properties": {
     "id": {
       "title": "ID",

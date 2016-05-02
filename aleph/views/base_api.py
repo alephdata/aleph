@@ -39,6 +39,7 @@ def metadata():
         schemata[schema_id] = {
             'id': schema_id,
             'title': schema.get('title'),
+            'faIcon': schema.get('faIcon'),
             'plural': schema.get('plural', schema.get('title')),
             'description': schema.get('description'),
             'inline': schema.get('inline', False)

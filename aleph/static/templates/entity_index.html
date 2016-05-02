@@ -35,7 +35,7 @@
           <td>{{entity.jurisdiction_code.toUpperCase()}}</td>
           <td class="numeric">
             <a ng-href="/#/search?entity={{entity.id}}" ng-if="entity.doc_count">
-              <i class="fa fa-search" aria-hidden="true"></i> {{entity.doc_count}}
+              <i class="fa fa-search" aria-hidden="true"></i> {{entity.doc_count | number}}
             </a>
             <span ng-if="!entity.doc_count">
               <i class="fa fa-search" aria-hidden="true"></i> 0
