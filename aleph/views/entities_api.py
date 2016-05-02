@@ -3,24 +3,30 @@ from apikit import obj_or_404, jsonify, request_data, arg_bool
 from apikit import get_limit, get_offset
 
 from aleph import authz
-from aleph.model import Entity, db
+from aleph.model import Entity, Collection, db
 from aleph.graph import update_entity
 from aleph.views.cache import enable_cache
 from aleph.search import entities_query, execute_entities_query
+from aleph.search import suggest_entities
 
 blueprint = Blueprint('entities_api', __name__)
 
 
-def get_data(entity=None):
-    data = request_data()
-    collection_id = data.get('collection_id')
-    collection_id = entity.collection_id if entity else collection_id
-    authz.require(authz.collection_write(collection_id))
-    if entity is not None:
-        data['id'] = entity.id
-    else:
-        data.pop('id', None)
-    return data
+def check_authz(entity, permission):
+    permissions = authz.collections(permission)
+    for collection in entity.collections:
+        if collection.id in permissions:
+            return
+    authz.require(False)
+
+
+def get_collections(data):
+    collections = []
+    for coll_id in data.get('collections'):
+        if isinstance(coll_id, dict):
+            coll_id = coll_id.get('id')
+        collections.append(coll_id)
+    return Collection.all_by_ids(collections).all()
 
 
 @blueprint.route('/api/1/entities', methods=['GET'])
@@ -35,8 +41,12 @@ def index():
 
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
 def create():
-    data = get_data()
-    entity = Entity.save(data, collection_id=data.get('collection_id'))
+    data = request_data()
+    data.pop('id', None)
+    data['collections'] = get_collections(data)
+    for collection in data['collections']:
+        authz.require(authz.collection_write(collection.id))
+    entity = Entity.save(data)
     db.session.commit()
     update_entity(entity)
     return view(entity.id)
@@ -46,15 +56,13 @@ def create():
 def suggest():
     collections = authz.collections(authz.READ)
     enable_cache(vary=collections, server_side=False)
-    prefix = request.args.get('prefix')
-    results = Entity.suggest_prefix(prefix, collections)
-    return jsonify({'results': results})
+    return jsonify(suggest_entities(request.args))
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['GET'])
 def view(id):
     entity = obj_or_404(Entity.by_id(id))
-    authz.require(authz.collection_read(entity.collection_id))
+    check_authz(entity, authz.READ)
     return jsonify(entity)
 
 
@@ -62,16 +70,21 @@ def view(id):
 def lookup():
     entity = obj_or_404(Entity.by_identifier(request.args.get('scheme'),
                                              request.args.get('identifier')))
-    authz.require(authz.collection_read(entity.collection_id))
+    check_authz(entity, authz.READ)
     return jsonify(entity)
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])
 def update(id):
     entity = obj_or_404(Entity.by_id(id))
-    entity = Entity.save(get_data(entity=entity),
-                         collection_id=entity.collection_id,
-                         merge=arg_bool('merge'))
+    check_authz(entity, authz.WRITE)
+    data = request_data()
+    data['id'] = entity.id
+    possible_collections = authz.collections(authz.WRITE)
+    possible_collections.extend([c.id for c in entity.collections])
+    data['collections'] = [c for c in get_collections(data)
+                           if c.id in possible_collections]
+    entity = Entity.save(data, merge=arg_bool('merge'))
     db.session.commit()
     update_entity(entity)
     return view(entity.id)
@@ -80,7 +93,7 @@ def update(id):
 @blueprint.route('/api/1/entities/<id>', methods=['DELETE'])
 def delete(id):
     entity = obj_or_404(Entity.by_id(id))
-    authz.require(authz.collection_write(entity.collection_id))
+    check_authz(entity, authz.WRITE)
     entity.delete()
     db.session.commit()
     update_entity(entity)

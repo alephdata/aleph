@@ -1,6 +1,6 @@
 import logging
 # from datetime import datetime
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from sqlalchemy.orm import aliased
 # from sqlalchemy.dialects.postgresql import JSONB
 
@@ -12,6 +12,11 @@ from aleph.model.entity_details import EntityOtherName, EntityIdentifier  # noqa
 from aleph.model.entity_details import EntityAddress, EntityContactDetail  # noqa
 
 log = logging.getLogger(__name__)
+
+collection_entity_table = db.Table('collection_entity',
+    db.Column('entity_id', db.String(32), db.ForeignKey('entity.id')),  # noqa
+    db.Column('collection_id', db.Integer, db.ForeignKey('collection.id'))  # noqa
+)
 
 
 class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
@@ -29,8 +34,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         'polymorphic_identity': _schema
     }
 
-    collection_id = db.Column(db.Integer(), db.ForeignKey('collection.id'))
-    collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
+    collections = db.relationship(Collection, secondary=collection_entity_table,  # noqa
+                                  backref=db.backref('entities', lazy='dynamic'))  # noqa
 
     def delete(self):
         from aleph.model import Reference
@@ -43,20 +48,26 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         self.schema_update(data, merge=merge)
 
     @classmethod
-    def save(cls, data, collection_id=None, merge=False):
+    def save(cls, data, merge=False):
         ent = cls.by_id(data.get('id'))
+        collections = data.get('collections')
         for identifier in data.get('identifiers', []):
             if ent is None:
                 ent = cls.by_identifier(identifier.get('scheme'),
                                         identifier.get('identifier'),
-                                        collection_id=collection_id)
+                                        collections=collections)
         if ent is None:
             schema = data.get('$schema', cls._schema)
             cls = cls.get_schema_class(schema)
             ent = cls()
             ent.id = make_textid()
-            if collection_id is not None:
-                ent.collection_id = collection_id
+
+        if merge:
+            for collection in ent.collections:
+                if collection.id not in [c.id for c in collections]:
+                    collections.append(collection)
+
+        ent.collections = collections
         ent.update(data, merge=merge)
         return ent
 
@@ -68,53 +79,48 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         return [t for t in terms if t is not None and len(t)]
 
     @classmethod
-    def by_identifier(cls, scheme, identifier, collection_id=None):
-        ent = aliased(Entity)
-        q = db.session.query(ent)
-        q = q.filter(ent.deleted_at == None)  # noqa
-        if collection_id is not None:
-            q = q.filter(ent.collection_id == collection_id)
+    def filter_collections(cls, q, collections=None):
+        if collections is None:
+            return q
+        collection_ids = []
+        for collection in collections:
+            if isinstance(collection, Collection):
+                collection = collection.id
+            collection_ids.append(collection)
+        coll = aliased(Collection)
+        q = q.join(coll, Entity.collections)
+        q = q.filter(coll.id.in_(collection_ids))
+        q = q.filter(coll.deleted_at == None)  # noqa
+        return q
 
+    @classmethod
+    def by_identifier(cls, scheme, identifier, collections=None):
+        q = db.session.query(Entity)
+        q = q.filter(Entity.deleted_at == None)  # noqa
+        q = cls.filter_collections(q, collections=collections)
         ident = aliased(EntityIdentifier)
-        q = q.join(ident, ent.identifiers)
+        q = q.join(ident, Entity.identifiers)
         q = q.filter(ident.deleted_at == None) # noqa
         q = q.filter(ident.scheme == scheme)
         q = q.filter(ident.identifier == identifier)
         return q.first()
 
     @classmethod
-    def by_id_set(cls, ids, collection_id=None):
+    def by_id_set(cls, ids, collections=None):
         if not len(ids):
             return {}
         q = cls.all()
+        q = cls.filter_collections(q, collections=collections)
         q = q.filter(cls.id.in_(ids))
-        if collection_id is not None:
-            q = q.filter(cls.collection_id == collection_id)
         entities = {}
         for ent in q:
             entities[ent.id] = ent
         return entities
 
     @classmethod
-    def suggest_prefix(cls, prefix, collections, limit=10):
-        if prefix is None or not len(prefix):
-            return []
-        prefix = prefix.strip()
-        ent = aliased(Entity)
-        q = db.session.query(ent.id, ent.name, ent.type)
-        q = q.filter(ent.deleted_at == None)  # noqa
-        q = q.filter(ent.collection_id.in_(collections))
-        q = q.filter(or_(ent.name.ilike('%s%%' % prefix),
-                         ent.name.ilike('%% %s%%' % prefix)))
-        q = q.limit(limit)
-        suggestions = []
-        for entity_id, name, schema in q.all():
-            suggestions.append({
-                'id': entity_id,
-                'name': name,
-                '$schema': schema
-            })
-        return suggestions
+    def latest(cls):
+        q = db.session.query(func.max(cls.updated_at))
+        return q.scalar()
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)
@@ -124,7 +130,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
 
     def to_dict(self):
         data = super(Entity, self).to_dict()
-        data['collection_id'] = self.collection_id
+        data['collections'] = [c.id for c in self.collections]
         return data
 
 

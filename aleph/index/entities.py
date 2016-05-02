@@ -28,7 +28,7 @@ def index_entity(entity):
     data = entity.to_dict()
     data.pop('id', None)
     data['doc_count'] = get_count(entity)
-    data['collection_id'] = entity.collection_id
+    data['collection_id'] = data.get('collections')
     data['terms'] = entity.terms
     data['terms_latin'] = [latinize_text(t) for t in entity.terms]
     data['name_latin'] = latinize_text(data.get('name'))

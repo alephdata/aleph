@@ -5,7 +5,7 @@ import logging
 
 from aleph.core import get_config, db
 from aleph.model import Collection, Entity, Permission
-from aleph.crawlers.crawler import Crawler
+from aleph.crawlers.crawler import EntityCrawler
 from aleph.index import index_entity, delete_entity
 
 log = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ SCHEMATA = {
 }
 
 
-class SpindleCrawler(Crawler):  # pragma: no cover
+class SpindleCrawler(EntityCrawler):  # pragma: no cover
 
     URL = get_config('SPINDLE_URL')
     API_KEY = get_config('SPINDLE_API_KEY')
@@ -69,6 +69,7 @@ class SpindleCrawler(Crawler):  # pragma: no cover
                 'scheme': 'spindle',
                 'identifier': entity.pop('id', None)
             }]
+
             ent = Entity.save(entity, collection_id=collection.id, merge=True)
             db.session.flush()
             index_entity(ent)

@@ -45,6 +45,7 @@ DOCUMENT_MAPPING = {
                 "uuid": {"type": "string", "index": "not_analyzed"},
                 "watchlist_id": {"type": "integer", "index": "not_analyzed"},
                 "collection_id": {"type": "integer", "index": "not_analyzed"},
+                "collections": {"type": "integer", "index": "not_analyzed"},
                 "name": {"type": "string", "index": "not_analyzed"},
                 "$schema": {"type": "string", "index": "not_analyzed"},
                 "weight": {"type": "string", "index": "not_analyzed"}
@@ -99,6 +100,7 @@ ENTITY_MAPPING = {
         "terms": {"type": "string", "index": "analyzed"},
         "terms_latin": {"type": "string", "index": "analyzed"},
         "collection_id": {"type": "integer", "index": "analyzed"},
+        "collections": {"type": "integer", "index": "analyzed"},
         "$schema": {"type": "string", "index": "not_analyzed"},
         "summary": {"type": "string", "index": "analyzed"},
         "summary_latin": {"type": "string", "index": "analyzed"},
@@ -116,7 +118,7 @@ ENTITY_MAPPING = {
                 "scheme": {"type": "string", "index": "not_analyzed"}
             }
         },
-        "identifiers": {
+        "contact_details": {
             "type": "nested",
             "include_in_parent": True,
             "properties": {

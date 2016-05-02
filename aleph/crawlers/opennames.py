@@ -4,7 +4,7 @@ import logging
 
 from aleph.core import db
 from aleph.model import Collection, Entity, Role, Permission
-from aleph.crawlers.crawler import Crawler
+from aleph.crawlers.crawler import EntityCrawler
 from aleph.index import index_entity, delete_entity
 
 log = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ SCHEMA = {
 }
 
 
-class OpenNamesCrawler(Crawler):  # pragma: no cover
+class OpenNamesCrawler(EntityCrawler):  # pragma: no cover
 
     def crawl_source(self, source):
         if source.get('source_id') in IGNORE_SOURCES:

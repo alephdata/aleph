@@ -77,3 +77,9 @@ class Crawler(object):
 
     def __repr__(self):
         return '<%s()>' % self.__class__.__name__
+
+
+class EntityCrawler(Crawler):
+
+    def create_collection(self, foreign_id, data):
+        pass

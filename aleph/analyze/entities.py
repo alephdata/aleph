@@ -1,70 +1,71 @@
 import re
 import logging
+from threading import RLock
+from itertools import count
 from collections import defaultdict
 # from unidecode import unidecode
 
 from aleph.core import db
 from aleph.util import normalize_strong
-from aleph.model import Reference, Entity, Collection
+from aleph.model import Reference, Entity
 from aleph.analyze.analyzer import Analyzer
 
-# TODO: cache regexen, perhaps by collection?
 
 log = logging.getLogger(__name__)
+lock = RLock()
 BATCH_SIZE = 5000
 
 
 class EntityCache(object):
 
     def __init__(self):
-        self.collections = {}
+        self.latest = None
+        self.matches = {}
+        self.regexes = []
 
-    def compile_collection(self, collection_id):
-        matchers = defaultdict(set)
-        q = db.session.query(Entity)
-        q = q.filter(Entity.collection_id == collection_id)
-        q = q.filter(Entity.deleted_at == None)  # noqa
-        for entity in q:
+    def generate(self):
+        with lock:
+            self._generate()
+
+    def _generate(self):
+        latest = Entity.latest()
+        if self.latest is not None and self.latest >= latest:
+            return
+
+        log.info('Generating entity tagger: %r', latest)
+        self.latest = latest
+        self.matches = defaultdict(set)
+
+        for entity in Entity.all():
             for term in entity.terms:
-                matchers[normalize_strong(term)].add(entity.id)
-        body = '|'.join(matchers.keys())
-        rex = re.compile('( |^)(%s)( |$)' % body)
-        return rex, matchers
+                self.matches[normalize_strong(term)].add(entity.id)
 
-    def matchers(self):
-        timestamps = Collection.timestamps()
-        for ts in self.collections.keys():
-            if ts not in timestamps:
-                self.collections.pop(ts, None)
-
-        for ts in timestamps:
-            if ts not in self.collections:
-                log.info('Entity tagger updating collection: %r', ts)
-                self.collections[ts] = self.compile_collection(ts[0])
-
-        return self.collections.values()
+        self.regexes = []
+        terms = self.matches.keys()
+        for i in count(0):
+            terms_slice = terms[i * BATCH_SIZE:(i + 1) * BATCH_SIZE]
+            if not len(terms_slice):
+                break
+            body = '|'.join(terms_slice)
+            rex = re.compile('( |^)(%s)( |$)' % body)
+            self.regexes.append(rex)
 
 
 class EntityAnalyzer(Analyzer):
 
     cache = EntityCache()
 
-    @property
-    def matchers(self):
-        if not hasattr(self, '_matchers'):
-            self._matchers = self.cache.matchers()
-        return self._matchers
-
     def analyze(self, document, meta):
+        self.cache.generate()
         entities = defaultdict(int)
         for text, rec in document.text_parts():
             text = normalize_strong(text)
             if text is None or not len(text):
                 continue
-            for rex, matches in self.matchers:
+            for rex in self.cache.regexes:
                 for match in rex.finditer(text):
                     match = match.group(2)
-                    for entity_id in matches.get(match, []):
+                    for entity_id in self.cache.matches.get(match, []):
                         entities[entity_id] += 1
 
         if len(entities):

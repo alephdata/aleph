@@ -20,7 +20,7 @@ def update_entity(entity):
 def reindex_entities():
     query = db.session.query(Entity)
     for entity in query.yield_per(1000):
-        log.info('Index [%s]: %r ', entity.id, entity.name)
+        log.info('Index [%s]: %s', entity.id, entity.name)
         if entity.deleted_at:
             delete_entity(entity.id)
         else:

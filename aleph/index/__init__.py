@@ -47,11 +47,13 @@ def delete_source(source_id):
 def generate_entities(document):
     entities = []
     for reference in document.references:
+        colls = [c.id for c in reference.entity.collections]
         entities.append({
             'id': reference.id,
             'weight': reference.weight,
             'uuid': reference.entity.id,
-            'collection_id': reference.entity.collection_id,
+            'collection_id': colls,
+            'collections': colls,
             'name': reference.entity.name,
             '$schema': reference.entity.type
         })

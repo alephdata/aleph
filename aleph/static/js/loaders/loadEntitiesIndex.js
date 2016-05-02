@@ -6,7 +6,7 @@ var loadEntitiesIndex = ['$http', '$q', '$route', '$location', 'Session', 'Metad
     Session.get().then(function(session) {
       var query = Query.parse(),
           state = angular.copy(query.state);
-      state['limit'] = 30;
+      state['limit'] = 20;
       state['doc_counts'] = 'true';
       state['facet'] = ['jurisdiction_code', '$schema'];
       state['offset'] = state.offset || 0;

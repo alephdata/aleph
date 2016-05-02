@@ -6,7 +6,7 @@ import requests
 
 from aleph.core import get_config, db
 from aleph.model import Collection, Permission, Entity
-from aleph.crawlers.crawler import Crawler
+from aleph.crawlers.crawler import Crawler, EntityCrawler
 
 log = logging.getLogger(__name__)
 
@@ -88,7 +88,7 @@ class IDFiles(IDBase):  # pragma: no cover
             url = data['next']
 
 
-class IDRequests(IDBase):  # pragma: no cover
+class IDRequests(IDBase, EntityCrawler):  # pragma: no cover
 
     def update_entity(self, entity, collection):
         category = REQUEST_TYPES.get(entity.get('ticket_type'))

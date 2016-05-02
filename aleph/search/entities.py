@@ -6,17 +6,17 @@ from werkzeug.datastructures import MultiDict
 from aleph.core import url_for, get_es, get_es_index
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.search.util import authz_collections_filter, authz_sources_filter
-from aleph.search.util import execute_basic, parse_filters
+from aleph.search.util import execute_basic, parse_filters, add_filter
 from aleph.search.fragments import match_all, filter_query, aggregate
 from aleph.search.facets import convert_entity_aggregations
 
-DEFAULT_FIELDS = ['collection_id', 'name', 'summary', 'jurisdiction_code',
+DEFAULT_FIELDS = ['collections', 'name', 'summary', 'jurisdiction_code',
                   'description', '$schema']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
 # used to generate the facet values.
-OR_FIELDS = ['collection_id']
+OR_FIELDS = ['collections']
 
 
 def entities_query(args, fields=None, facets=True):
@@ -65,15 +65,38 @@ def entities_query(args, fields=None, facets=True):
 def facet_collection(q, aggs, filters):
     aggs['scoped']['aggs']['collection'] = {
         'filter': {
-            'query': filter_query(q, filters, OR_FIELDS, skip='collection_id')
+            'query': filter_query(q, filters, OR_FIELDS, skip='collections')
         },
         'aggs': {
             'collection': {
-                'terms': {'field': 'collection_id', 'size': 1000}
+                'terms': {'field': 'collections', 'size': 1000}
             }
         }
     }
     return aggs
+
+
+def suggest_entities(args):
+    """Auto-complete API."""
+    text = args.get('prefix')
+    options = []
+    if text is not None and len(text.strip()):
+        q = {'prefix': {'terms': text.strip()}}
+        q = {
+            'size': 5,
+            'query': authz_collections_filter(q),
+            '_source': ['name', '$schema']
+        }
+        result = get_es().search(index=get_es_index(), doc_type=TYPE_ENTITY,
+                                 body=q)
+        for res in result.get('hits', {}).get('hits', []):
+            ent = res.get('_source')
+            ent['id'] = res.get('_id')
+            options.append(ent)
+    return {
+        'text': text,
+        'results': options
+    }
 
 
 def execute_entities_query(args, query, doc_counts=False):
