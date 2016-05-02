@@ -31,6 +31,7 @@ def entities_query(args, fields=None, facets=True):
             "query_string": {
                 "query": text,
                 "fields": ['name^15', 'name_latin^5',
+                           'terms^12', 'terms_latin^3',
                            'summary^10', 'summary_latin^7',
                            'description^5', 'description_latin^3'],
                 "default_operator": "AND",
@@ -46,7 +47,7 @@ def entities_query(args, fields=None, facets=True):
         aggs = facet_collection(q, aggs, filters)
 
     return {
-        'sort': ['_score'],
+        'sort': [{'doc_count': 'desc'}, '_score'],
         'query': filter_query(q, filters, OR_FIELDS),
         'aggregations': aggs,
         '_source': fields or DEFAULT_FIELDS

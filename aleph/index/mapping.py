@@ -96,6 +96,8 @@ ENTITY_MAPPING = {
     "properties": {
         "name": {"type": "string", "index": "analyzed"},
         "name_latin": {"type": "string", "index": "analyzed"},
+        "terms": {"type": "string", "index": "analyzed"},
+        "terms_latin": {"type": "string", "index": "analyzed"},
         "collection_id": {"type": "integer", "index": "analyzed"},
         "$schema": {"type": "string", "index": "not_analyzed"},
         "summary": {"type": "string", "index": "analyzed"},
