@@ -4,8 +4,8 @@ from tempfile import mkstemp
 from urlparse import urljoin
 import requests
 
-from aleph.core import get_config, db
-from aleph.model import Collection, Permission, Entity
+from aleph.core import get_config
+from aleph.model import Permission
 from aleph.crawlers.crawler import Crawler, EntityCrawler
 
 log = logging.getLogger(__name__)
@@ -106,39 +106,21 @@ class IDRequests(IDBase, EntityCrawler):  # pragma: no cover
             'name': entity.get('name'),
             '$schema': category
         }
-        ent = Entity.by_identifier('idashboard', entity.get('id'),
-                                   collection.id)
-        if ent is not None:
-            data['id'] = ent.id
-
-        ent = Entity.save(data, merge=True)
-        db.session.flush()
-        return ent
+        self.emit_entity(collection, data)
 
     def crawl(self):
         url = urljoin(self.host, '/ticket/all_closed/?format=json')
-        collection = Collection.by_foreign_id(url, {
+        coll = self.find_collection(url, {
             'label': 'Investigative Dashboard Requests'
         })
-        Permission.grant_foreign(collection, 'idashboard:occrp_staff',
+        Permission.grant_foreign(coll, 'idashboard:occrp_staff',
                                  True, False)
-        existing_entities = []
-        terms = set()
-        db.session.flush()
         for endpoint in ['all_closed', 'all_open']:
             url = urljoin(self.host, '/ticket/%s/?format=json' % endpoint)
             data = self.session.get(url).json()
-            print url
-            continue
 
             for req in data.get('paginator', {}).get('object_list'):
-                ent = self.update_entity(req, collection)
-                if ent is not None:
-                    terms.update(ent.terms)
-                    existing_entities.append(ent.id)
-                    log.info("  # %s", ent.name)
+                # TODO: get the ID API fixed.
+                self.update_entity(req, coll)
 
-        for entity in collection.entities:
-            if entity.id not in existing_entities:
-                entity.delete()
-        self.emit_collection(collection, terms)
+        self.emit_collection(coll)

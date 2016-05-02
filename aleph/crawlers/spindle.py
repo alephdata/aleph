@@ -3,10 +3,9 @@ from pprint import pprint  # noqa
 import requests
 import logging
 
-from aleph.core import get_config, db
-from aleph.model import Collection, Entity, Permission
+from aleph.core import get_config
+from aleph.model import Permission
 from aleph.crawlers.crawler import EntityCrawler
-from aleph.index import index_entity, delete_entity
 
 log = logging.getLogger(__name__)
 
@@ -28,7 +27,7 @@ class SpindleCrawler(EntityCrawler):  # pragma: no cover
         if not len(collection.get('subjects', [])):
             return
         url = urljoin(self.URL, '/api/collections/%s' % collection.get('id'))
-        collection = Collection.by_foreign_id(url, {
+        collection = self.find_collection(url, {
             'label': collection.get('title')
         })
         res = requests.get('%s/permissions' % url, headers=self.HEADERS)
@@ -38,8 +37,6 @@ class SpindleCrawler(EntityCrawler):  # pragma: no cover
 
         log.info(" > Spindle collection: %s", collection.label)
         res = requests.get('%s/entities' % url, headers=self.HEADERS)
-        terms = set()
-        existing_entities = []
         for entity in res.json().get('results', []):
             if entity.get('name') is None:
                 continue
@@ -69,20 +66,8 @@ class SpindleCrawler(EntityCrawler):  # pragma: no cover
                 'scheme': 'spindle',
                 'identifier': entity.pop('id', None)
             }]
-
-            ent = Entity.save(entity, collection_id=collection.id, merge=True)
-            db.session.flush()
-            index_entity(ent)
-            terms.update(ent.terms)
-            existing_entities.append(ent.id)
-            log.info("  # %s", ent.name)
-
-        for entity in collection.entities:
-            if entity.id not in existing_entities:
-                entity.delete()
-                delete_entity(entity.id)
-
-        self.emit_collection(collection, terms)
+            self.emit_entity(collection, entity)
+        self.emit_collection(collection)
 
     def crawl(self):
         url = urljoin(self.URL, '/api/collections')
