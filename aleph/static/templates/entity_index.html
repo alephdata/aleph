@@ -12,6 +12,28 @@
   </div>
 
   <div class="col-md-4">
+    <div class="btn-group btn-group-justified" role="group">
+      <div class="btn-group" uib-dropdown dropdown-append-to-body>
+        <button type="button" class="btn btn-primary dropdown-toggle"
+          uib-dropdown-toggle>
+          <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+          Sort by...
+        </button>
+        <ul class="uib-dropdown-menu" role="menu">
+          <li ng-repeat="(field, label) in sortOptions"
+              ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'score')}">
+            <a ng-click="query.set('sort', field)"
+               ng-bind="label"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="btn-group">
+        <a href="" class="btn btn-primary btn-disabled">
+          <i class="fa fa-user"></i>
+          Create
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 

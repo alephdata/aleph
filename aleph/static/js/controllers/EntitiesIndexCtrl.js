@@ -13,6 +13,11 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
                                                   'filter:jurisdiction_code');
   $scope.schemaFacet = data.query.sortFacet(data.result.facets.$schema.values,
                                             'filter:$schema');
+  $scope.sortOptions = {
+    score: 'Relevancy',
+    alphabet: 'Alphabet',
+    doc_count: 'Documents matched'
+  };
   
   if (data.query.getQ()) {
     Title.set("Browse for '" + data.query.getQ() + "'", "entities");

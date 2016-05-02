@@ -46,8 +46,16 @@ def entities_query(args, fields=None, facets=True):
         aggs = aggregate(q, args)
         aggs = facet_collection(q, aggs, filters)
 
+    sort_mode = args.get('sort', '').strip().lower()
+    if sort_mode == 'doc_count':
+        sort = [{'doc_count': 'desc'}, '_score']
+    elif sort_mode == 'alphabet':
+        sort = [{'name': 'asc'}, '_score']
+    else:
+        sort = ['_score']
+
     return {
-        'sort': [{'doc_count': 'desc'}, '_score'],
+        'sort': sort,
         'query': filter_query(q, filters, OR_FIELDS),
         'aggregations': aggs,
         '_source': fields or DEFAULT_FIELDS
