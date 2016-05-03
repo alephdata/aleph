@@ -1,12 +1,10 @@
 
 aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session) {
-    var dfd = null,
-        rolesDfd = null;
+    var dfd = null;
 
     var flush = function() {
       Session.flush();
       dfd = null;
-      rolesDfd = null;
       return get();
     };
 
@@ -45,21 +43,8 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
       return dfd.promise;
     };
 
-    var getRoles = function() {
-      if (rolesDfd === null) {
-        rolesDfd = $q.defer();
-        $http.get('/api/1/roles', {cache: true}).then(function(res) {
-          rolesDfd.resolve(res.data);
-        }, function(err) {
-          rolesDfd.reject(err);
-        });
-      }
-      return rolesDfd.promise;
-    };
-
     return {
       get: get,
-      getRoles: getRoles,
       flush: flush
     };
 

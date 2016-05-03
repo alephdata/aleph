@@ -1,6 +1,6 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', '$sce', 'data', 'Authz', 'Alert', 'Metadata', 'Title',
-    function($scope, $route, $location, $http, $uibModal, $sce, data, Authz, Alert, Metadata, Title) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', '$sce', 'data', 'Authz', 'Alert', 'Role', 'Title',
+    function($scope, $route, $location, $http, $uibModal, $sce, data, Authz, Alert, Role, Title) {
 
   var isLoading = false;
   $scope.result = {};
@@ -46,7 +46,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
       resolve: {
         source: ['$q', '$http', function($q, $http) {
           var dfd = $q.defer();
-          Metadata.getRoles().then(function() {
+          Role.getCommon().then(function() {
             $http.get('/api/1/sources/' + source.id).then(function(res) {
               dfd.resolve(res.data);
             }, function(err) {

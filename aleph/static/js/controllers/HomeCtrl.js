@@ -1,6 +1,6 @@
 
-aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Authz', 'Metadata', 'Title', 'data',
-    function($scope, $location, $route, $uibModal, Authz, Metadata, Title, data) {
+aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Authz', 'Role', 'Title', 'data',
+    function($scope, $location, $route, $uibModal, Authz, Role, Title, data) {
 
   $scope.result = data.result;
   $scope.sources = data.sources;
@@ -36,7 +36,7 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Aut
       resolve: {
         source: ['$q', '$http', function($q, $http) {
           var dfd = $q.defer();
-          Metadata.getRoles().then(function() {
+          Role.getCommon().then(function() {
             $http.get('/api/1/sources/' + source.id).then(function(res) {
               dfd.resolve(res.data);
             }, function(err) {

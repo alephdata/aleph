@@ -1,6 +1,6 @@
 
-aleph.directive('permissionsEdit', ['$http', '$q', 'Metadata',
-    function($http, $q, Metadata) {
+aleph.directive('permissionsEdit', ['$http', '$q', 'Role',
+    function($http, $q, Role) {
   return {
     restrict: 'E',
     scope: {
@@ -16,7 +16,7 @@ aleph.directive('permissionsEdit', ['$http', '$q', 'Metadata',
         {type: 'user', label: 'Users'},
       ];
       scope.roles = [];
-      Metadata.getRoles().then(function(roles) {
+      Role.getCommon().then(function(roles) {
         for (var j in roles.results) {
           var role = roles.results[j];
           role.read = false;
