@@ -2,7 +2,7 @@
 aleph.factory('Role', ['$http', '$q', function($http, $q) {
     var dfd = null;
 
-    var getCommon = function() {
+    var getAll = function() {
       if (dfd === null) {
         // var params = {'type': ['system', 'group']}
         dfd = $q.defer();
@@ -16,7 +16,7 @@ aleph.factory('Role', ['$http', '$q', function($http, $q) {
     };
 
     return {
-      getCommon: getCommon
+      getAll: getAll
     };
 
 }]);

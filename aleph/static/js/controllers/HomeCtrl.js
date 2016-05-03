@@ -36,7 +36,7 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', '$uibModal', 'Aut
       resolve: {
         source: ['$q', '$http', function($q, $http) {
           var dfd = $q.defer();
-          Role.getCommon().then(function() {
+          Role.getAll().then(function() {
             $http.get('/api/1/sources/' + source.id).then(function(res) {
               dfd.resolve(res.data);
             }, function(err) {
