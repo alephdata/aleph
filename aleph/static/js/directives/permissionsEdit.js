@@ -52,10 +52,11 @@ aleph.directive('permissionsEdit', ['$http', '$q', 'Role',
       };
 
       scope.findRoles = function($value) {
-        var matching = [];
+        var matching = [],
+            value = $value.toLowerCase();
         for (var i in roles) {
           var role = roles[i];
-          if (role.name.toLowerCase().startsWith($value)) {
+          if (role.name.toLowerCase().startsWith(value)) {
             matching.push(role);
           }
         }

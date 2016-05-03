@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">Watchlist settings</h4>
+</div>
+
+<form class="form-horizontal" role="form" name="editCollection" ng-submit="save(editCollection)">
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-12">   
+        <div class="form-group" ng-class="{'has-error': editCollection.label.$invalid}">
+          <label class="col-sm-3 control-label" for="label">Label</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="label" name="label" ng-model="collection.label"
+              placeholder="The collections's label">
+            <p class="help-block" ng-show="editCollection.label.$invalid" ng-bind="editCollection.label.$message"></p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label" for="foreign_id">Import&nbsp;ID</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="foreign_id" name="foreign_id" ng-model="collection.foreign_id" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-12">
+        <permissions-edit api-base="{{collection.api_url}}"></permissions-edit>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </div>
+</form>
+

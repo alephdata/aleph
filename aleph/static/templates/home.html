@@ -61,10 +61,10 @@
         <div class="row">
           <div class="col-md-6 source" ng-repeat="source in lst">
             <a href="#/search?filter:source_id={{source.id}}" class="mainlink">{{source.label}}</a>
-            <span class="count">{{source.count | number}}</span>
-            <a ng-click="editSource(source, $event)" ng-show="canEditSource(source)">
+            <a ng-click="editSource(source, $event)" ng-show="authz.source(authz.WRITE, source.id)">
               <i class="fa fa-cog"></i>
             </a>
+            <span class="count">{{source.count | number}}</span>
           </div>
         </div>
       </div>
@@ -78,6 +78,9 @@
       <ul>
         <li ng-repeat="collection in collections">
           <a ng-href="#/search?collection={{collection.id}}" class="mainlink" ng-bind="collection.label"></a>
+          <a ng-click="editCollection(collection, $event)" ng-show="authz.collection(authz.WRITE, collection.id)">
+            <i class="fa fa-cog"></i>
+          </a>
         </li>
       </ul>
     </div>

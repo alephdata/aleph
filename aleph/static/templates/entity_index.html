@@ -121,6 +121,9 @@
           <span class="badge">{{collection.count | number}}</span>
           <span class="lbl">
             {{collection.label | limitTo:50 }}
+            <a ng-click="editCollection(collection, $event)" ng-show="authz.collection(authz.WRITE, collection.id)">
+              <i class="fa fa-cog"></i>
+            </a>
           </span>
         </li>
       </ul>

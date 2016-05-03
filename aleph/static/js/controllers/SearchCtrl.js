@@ -1,6 +1,6 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', '$sce', 'data', 'Authz', 'Alert', 'Role', 'Title',
-    function($scope, $route, $location, $http, $uibModal, $sce, data, Authz, Alert, Role, Title) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', 'Source', '$sce', 'data', 'Authz', 'Alert', 'Role', 'Title',
+    function($scope, $route, $location, $http, Source, $sce, data, Authz, Alert, Role, Title) {
 
   var isLoading = false;
   $scope.result = {};
@@ -12,6 +12,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   $scope.session = data.metadata.session;
   $scope.metadata = data.metadata;
   $scope.query = data.query;
+  $scope.authz = Authz;
   $scope.graph = {'limit': 75, 'options': [10, 75, 150, 300, 600, 1200]};
   $scope.sortOptions = {
     score: 'Relevancy',
@@ -29,38 +30,9 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     data.query.set('offset', offset);
   };
 
-  $scope.canEditSource = function(source) {
-    if (!source || !source.id) {
-      return false;
-    }
-    return Authz.source(Authz.WRITE, source.id);
-  };
-
   $scope.editSource = function(source, $event) {
     $event.stopPropagation();
-    var instance = $uibModal.open({
-      templateUrl: 'templates/sources_edit.html',
-      controller: 'SourcesEditCtrl',
-      backdrop: true,
-      size: 'md',
-      resolve: {
-        source: ['$q', '$http', function($q, $http) {
-          var dfd = $q.defer();
-          Role.getAll().then(function() {
-            $http.get('/api/1/sources/' + source.id).then(function(res) {
-              dfd.resolve(res.data);
-            }, function(err) {
-              dfd.reject(err);
-            });
-          }, function(err) {
-            dfd.reject(err);
-          });
-          return dfd.promise;
-        }]
-      }
-    });
-
-    instance.result.then(function() {
+    Source.edit(source).then(function() {
       $route.reload();
     });
   };

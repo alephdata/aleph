@@ -138,7 +138,7 @@
           <span class="badge">{{source.count | number}}</span>
           <span class="lbl">
             {{source.label}}
-            <a ng-click="editSource(source, $event)" ng-show="canEditSource(source)">
+            <a ng-click="editSource(source, $event)" ng-show="authz.source(authz.WRITE, source.id)">
               <i class="fa fa-cog"></i>
             </a>
           </span>
