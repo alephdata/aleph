@@ -24,7 +24,11 @@ class Mock(MagicMock):
     def __getattr__(cls, name):
             return Mock()
 
+<<<<<<< HEAD
 MOCK_MODULES = ['https://github.com/pudo/extractors/tarball/master', 'extractors', 'flanker', 'tesserwrap']
+=======
+MOCK_MODULES = ['https://github.com/pudo/extractors/tarball/master', 'extractors', 'flanker']
+>>>>>>> c938cd075c11fc5c5ea5d140a1140a1eaaebedd6
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 
