@@ -48,9 +48,9 @@ CELERYBEAT_SCHEDULE = {
         'task': 'aleph.alerts.check_alerts',
         'schedule': crontab(hour=1, minute=30)
     },
-    'reindex-entities-every-night': {
+    'reindex-entities': {
         'task': 'aleph.entities.reindex_entities',
-        'schedule': crontab(hour='*/6', minute=0)
+        'schedule': crontab(hour='*/4', minute=0)
     },
 }
 
