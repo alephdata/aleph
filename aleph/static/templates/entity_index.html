@@ -28,9 +28,8 @@
         </ul>
       </div>
       <div class="btn-group">
-        <a href="" class="btn btn-primary btn-disabled">
-          <i class="fa fa-user"></i>
-          Create
+        <a ng-click="createEntity($event)" class="btn btn-primary" ng-disabled="!authz.logged_in()">
+          <i class="fa fa-plus-square" aria-hidden="true"></i> Create
         </a>
       </div>
     </div>
@@ -45,8 +44,14 @@
       {{error.info.reason || error.message}}
     </div>
 
+    <div class="alert alert-info" class="total" ng-if="result.limit > 0 && !result.total">
+      No entities were found.
+      <a ng-show="authz.logged_in()" ng-click="createEntity($event, query.state.q)">Create one now.</a>
+    </div>
+        
+
     <div>
-      <table ng=if="result.results.length" class="table table-striped">
+      <table ng-if="result.results.length" class="table table-striped">
         <tr ng-repeat-start="entity in result.results">
           <td>
             <entity-icon schema="entity.$schema"></entity-icon>
@@ -75,9 +80,6 @@
       <div class="bottom-pager">
         <div class="pull-right">
           <response-pager response="result" load="loadOffset(offset)"></response-pager>
-        </div>
-        <div class="total" ng-if="result.limit > 0 && !result.total">
-          No entities were found.
         </div>
         <div class="total" ng-if="result.limit > 0 && result.total">
           Found {{result.total | number}} entities.
@@ -144,6 +146,7 @@
           ng-click="query.toggleFilter('$schema', val.id)">
           <span class="badge">{{val.count | number}}</span>
           <span class="lbl">
+            <entity-icon schema="val.id"></entity-icon>
             {{val.label | schemaPlural}}
           </span>
         </li>

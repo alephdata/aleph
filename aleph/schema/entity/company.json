@@ -3,7 +3,7 @@
   "id": "/entity/company.json#",
   "title": "Company",
   "plural": "Companies",
-  "description": "A company",
+  "description": "A for-profit company, with or without liability.",
   "sortIndex": 90,
   "type": "object",
   "faIcon": "fa-suitcase",

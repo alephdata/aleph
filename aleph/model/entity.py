@@ -50,7 +50,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     @classmethod
     def save(cls, data, merge=False):
         ent = cls.by_id(data.get('id'))
-        collections = data.get('collections')
+        collections = data.pop('collections', [])
         for identifier in data.get('identifiers', []):
             if ent is None:
                 ent = cls.by_identifier(identifier.get('scheme'),

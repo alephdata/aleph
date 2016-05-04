@@ -4,7 +4,8 @@ from datetime import datetime
 from aleph.core import db, url_for
 from aleph.model.role import Role
 from aleph.model.schema_model import SchemaModel
-from aleph.model.common import SoftDeleteModel, IdModel
+from aleph.model.permission import Permission
+from aleph.model.common import SoftDeleteModel, IdModel, make_token
 
 log = logging.getLogger(__name__)
 
@@ -46,8 +47,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
     def create(cls, data, role):
         collection = cls()
         collection.update(data)
+        collection.foreign_id = data.get('foreign_id') or make_token()
         collection.creator = role
         db.session.add(collection)
+        db.session.flush()
+        Permission.grant_resource(Permission.COLLECTION, collection.id,
+                                  role, True, True)
         return collection
 
     @classmethod

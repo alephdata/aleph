@@ -13,6 +13,9 @@ aleph.factory('Authz', ['$rootScope', function($rootScope) {
       }
       return false;
     },
+    logged_in: function() {
+      return $rootScope.session.logged_in;
+    },
     READ: 'read',
     WRITE: 'write'
   }

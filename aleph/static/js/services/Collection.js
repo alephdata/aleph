@@ -1,4 +1,3 @@
-
 aleph.factory('Collection', ['$uibModal', function($uibModal) {
 
   return {

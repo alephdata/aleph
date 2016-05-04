@@ -1,6 +1,6 @@
 
-aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http', 'Collection', 'data', 'Authz', 'Alert', 'Metadata', 'Title',
-    function($scope, $route, $location, $http, Collection, data, Authz, Alert, Metadata, Title) {
+aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http', '$timeout', 'Collection', 'Entity', 'data', 'Authz', 'Alert', 'Metadata', 'Title',
+    function($scope, $route, $location, $http, $timeout, Collection, Entity, data, Authz, Alert, Metadata, Title) {
 
   $scope.result = data.result;
   $scope.error = data.result.error;
@@ -38,6 +38,18 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
     $event.stopPropagation();
     Collection.edit(collection).then(function() {
       $route.reload();
+    });
+  };
+
+  $scope.createEntity = function($event, name) {
+    if (name) {
+      name = titleCaps(name);
+    }
+    $event.stopPropagation();
+    Entity.create({name: name}).then(function() {
+      $timeout(function() {
+        $route.reload();
+      }, 500);
     });
   };
 
