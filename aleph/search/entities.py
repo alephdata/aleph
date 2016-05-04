@@ -6,9 +6,10 @@ from werkzeug.datastructures import MultiDict
 from aleph.core import url_for, get_es, get_es_index
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.search.util import authz_collections_filter, authz_sources_filter
-from aleph.search.util import execute_basic, parse_filters, add_filter
+from aleph.search.util import execute_basic, parse_filters
 from aleph.search.fragments import match_all, filter_query, aggregate
 from aleph.search.facets import convert_entity_aggregations
+from aleph.util import latinize_text
 
 DEFAULT_FIELDS = ['collections', 'name', 'summary', 'jurisdiction_code',
                   'description', '$schema']
@@ -81,16 +82,19 @@ def suggest_entities(args):
     text = args.get('prefix')
     options = []
     if text is not None and len(text.strip()):
-        q = {'prefix': {'terms': text.strip()}}
+        q = {'match_phrase_prefix': {'terms': text.strip()}}
         q = {
             'size': 5,
             'query': authz_collections_filter(q),
-            '_source': ['name', '$schema']
+            '_source': ['name', '$schema', 'terms']
         }
+        ref = latinize_text(text)
         result = get_es().search(index=get_es_index(), doc_type=TYPE_ENTITY,
                                  body=q)
         for res in result.get('hits', {}).get('hits', []):
             ent = res.get('_source')
+            terms = [latinize_text(t) for t in ent.pop('terms', [])]
+            ent['match'] = ref in terms
             ent['id'] = res.get('_id')
             options.append(ent)
     return {

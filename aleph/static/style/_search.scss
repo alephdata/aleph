@@ -47,6 +47,19 @@
     margin-bottom: 1em;
 }
 
+.alert.alert-suggest {
+    background-color: $gray-subtle;
+    // border: 1px solid $border-color;
+
+    .entity-icon {
+        margin-right: 0;
+    }
+
+    a {
+        font-weight: bold;
+    }
+}
+
 // Search results 
 .search-result {
     padding: 1em 0 1.5em 0;

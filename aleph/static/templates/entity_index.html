@@ -44,11 +44,10 @@
       {{error.info.reason || error.message}}
     </div>
 
-    <div class="alert alert-info" class="total" ng-if="result.limit > 0 && !result.total">
-      No entities were found.
-      <a ng-show="authz.logged_in()" ng-click="createEntity($event, query.state.q)">Create one now.</a>
+    <div class="alert alert-suggest" ng-if="result.limit > 0 && !result.total && authz.logged_in()">
+      No entities were found,
+      <a ng-click="createEntity($event, query.state.q)">create one now</a>?
     </div>
-        
 
     <div>
       <table ng-if="result.results.length" class="table table-striped">
