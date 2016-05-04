@@ -51,8 +51,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         collection.creator = role
         db.session.add(collection)
         db.session.flush()
-        Permission.grant_resource(Permission.COLLECTION, collection.id,
-                                  role, True, True)
+        if role is not None:
+            Permission.grant_resource(Permission.COLLECTION, collection.id,
+                                      role, True, True)
         return collection
 
     @classmethod
