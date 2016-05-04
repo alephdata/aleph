@@ -1,6 +1,6 @@
 import logging
 
-from aleph.core import db
+from aleph.core import db, celery
 from aleph.model import Entity
 from aleph.index import index_entity, delete_entity
 from aleph.analyze import analyze_entity
@@ -17,6 +17,7 @@ def update_entity(entity):
     analyze_entity.delay(entity.id)
 
 
+@celery.task()
 def reindex_entities():
     query = db.session.query(Entity)
     for entity in query.yield_per(1000):

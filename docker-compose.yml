@@ -39,6 +39,23 @@ worker:
     env_file:
       - aleph.env
 
+beat:
+    build: .
+    command: celery -A aleph.queue worker beat -s /var/run/celerybeat-schedule
+    links:
+      - postgres
+      - elasticsearch
+    volumes:
+      - "/:/host"
+      - "/srv/logs/scheduler:/var/log"
+      - "/srv/run/scheduler:/var/run"
+    environment:
+      C_FORCE_ROOT: true
+      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
+      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
+    env_file:
+      - aleph.env
+
 web:
     build: .
     command: gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app

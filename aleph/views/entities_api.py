@@ -4,7 +4,7 @@ from apikit import get_limit, get_offset
 
 from aleph import authz
 from aleph.model import Entity, Collection, db
-from aleph.graph import update_entity
+from aleph.entities import update_entity
 from aleph.views.cache import enable_cache
 from aleph.search import entities_query, execute_entities_query
 from aleph.search import suggest_entities

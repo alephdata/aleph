@@ -13,7 +13,7 @@ from aleph.analyze import analyze_source
 from aleph.alerts import check_alerts
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document
-from aleph.graph import reindex_entities
+from aleph.entities import reindex_entities
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
