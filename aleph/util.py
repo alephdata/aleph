@@ -16,8 +16,8 @@ WS = ' '
 # Unicode character classes, see:
 # http://www.fileformat.info/info/unicode/category/index.htm
 CATEGORIES = {
-    'C': '',
-    'M': ' . ',
+    'C': None,
+    'M': None,
     'Z': WS,
     'P': '',
     'S': WS
@@ -66,6 +66,8 @@ def normalize_strong(text):
     for character in text:
         category = unicodedata.category(character)[0]
         character = CATEGORIES.get(category, character)
+        if character is None:
+            continue
         characters.append(character)
     text = u''.join(characters)
     return COLLAPSE.sub(WS, text).strip(WS)

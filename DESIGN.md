@@ -85,11 +85,12 @@ Iteration II
 * Tabular: Facet by field
 * GDrive importer
 * [MAYBE] Filter display
-* Testing
-* Check DOCX/XLSX ingest
+* [DONE] Testing
+* [DONE] Check DOCX/XLSX ingest
 * tidbits
 * [DONE] Refactor DocumentPage
 * [DONE] Refactor DocumentRecord (Tabular)
+
 
 
 * [DONE] entityIcon directive
@@ -97,16 +98,22 @@ Iteration II
 * [DONE] double check tagger
 * [DONE] update entities
 * do content-based object merge
-* do schema model deletion
-* switch entity PK to UUIDs
+* [DONE] do schema model deletion
+* [DONE] switch entity PK to UUIDs
 
-* index entities
-* adapt spindle importer
-* adapt opennames importer
-* adapt id importer
-* ui directives for collection management 
+* [DONE] index entities
+* [DONE] adapt spindle importer
+* [DONE] adapt opennames importer
+* [DONE] adapt id importer
+* [DONE] ui directives for collection management 
 * ui directives for entity management
-* ui collection index
+* [DONE] ui collection index
+
+* Alerts refactor model
+* Delete metadata cache after collection creation
+* Check entity tagger
+* Simplify entity creation 
+* Entity edit screen
 
 -------------
 
