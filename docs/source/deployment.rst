@@ -95,3 +95,29 @@ This is a `from scratch` guide for deploying aleph components outside of a conta
     $ nosetests --with-coverage --cover-package=aleph --cover-erase
 
 
+
+Common Deployment Issues
+------------------------
+
+* Aleph upgrade fails due to multiple heads::
+
+  $ alembic.util.exc.CommandError: Multiple head revisions are present for given argument 'head'; please specify a specific target revision, '<branchname>@head' to narrow to a specific head, or 'heads' for all heads
+
+  Solution:
+  List out the heads using::
+      
+      $ aleph db heads
+
+  Merge the heads::
+      
+      $ aleph db merge 1234 5678
+
+  Run your upgrade::
+
+      $ aleph upgrade
+
+  
+
+
+
+
