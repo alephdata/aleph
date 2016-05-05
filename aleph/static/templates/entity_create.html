@@ -6,7 +6,9 @@
 <form role="form" name="createEntity" ng-submit="save(createEntity)">
   <div class="modal-body">
     <div class="form-group" ng-class="{'has-error': createEntity.name.$invalid}">
-      <label class="control-label" for="name">Name</label>
+      <label class="control-label" for="name">
+        Name <span ng-if="!selectSchema">of {{schemata[entity.$schema].title}}</span>
+      </label>
       <input type="text" class="form-control input-lg" id="name" name="name" ng-model="entity.name"
         placeholder="New Entity Name" required ng-minlength="3">
       <p class="help-block">
@@ -14,7 +16,7 @@
       </p>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" ng-if="selectSchema">
       <label class="control-label" for="type">Type of entity</label>
       <div>
         <div class="btn-group btn-group-justified" role="group">
@@ -56,17 +58,6 @@
     </div>
 
     <div class="form-group">
-      <label class="control-label" for="summary">
-        Summary
-      </label>
-      <div class="">
-        <textarea class="form-control" id="summary" name="summary"
-          ng-model="entity.summary" rows="2" maxlength="200"></textarea>
-        <p class="help-block">Describe the relevance of this entity in a sentence.</p>
-      </div>
-    </div>
-
-    <div class="form-group">
       <label class="control-label" for="jurisdiction_code">
         <span ng-hide="isPerson()">Jurisdiction</span>
         <span ng-show="isPerson()">Nationality</span>
@@ -79,6 +70,16 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <label class="control-label" for="summary">
+        Summary
+      </label>
+      <div class="">
+        <textarea class="form-control" id="summary" name="summary"
+          ng-model="entity.summary" rows="2" maxlength="200"></textarea>
+        <p class="help-block">Describe the relevance of this entity in a sentence.</p>
+      </div>
+    </div>
   </div>
 
   <div class="modal-footer">

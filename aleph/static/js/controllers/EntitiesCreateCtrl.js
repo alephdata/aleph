@@ -3,6 +3,7 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
 
   $scope.availableSchemata = ['/entity/person.json#', '/entity/company.json#',
                               '/entity/organization.json#']
+  $scope.selectSchema = !entity.$schema;
   $scope.entity = entity;
   $scope.collection = {};
   $scope.createCollection = false;
@@ -101,7 +102,9 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
       var res = $http.post('/api/1/collections', $scope.collection);
       res.then(function(res) {
         $scope.collection = res.data;
-        $scope.saveEntity();
+        Metadata.flush().then(function() {
+          $scope.saveEntity();
+        });
       });
       res.error(Validation.handle($scope.createEntity));
     }
