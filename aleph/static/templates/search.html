@@ -52,15 +52,14 @@
         <entity-icon schema="suggestEntity.$schema"></entity-icon> {{suggestEntity.name}}</a>?
     </div>
     <div class="alert alert-suggest" ng-if="showCreate() && authz.logged_in()">
-      Is <strong>{{originalText}}</strong> a 
+      Do you want to track <strong>{{originalText}}</strong>? Set up a 
       <a ng-click="createQueryEntity('/entity/person.json#')">
         <entity-icon schema="'/entity/person.json#'"></entity-icon> Person</a>,
       <a ng-click="createQueryEntity('/entity/company.json#')">
         <entity-icon schema="'/entity/company.json#'"></entity-icon> Company</a>,
       or
       <a ng-click="createQueryEntity('/entity/organization.json#')">
-        <entity-icon schema="'/entity/organization.json#'"></entity-icon> Organization</a>
-      that you want to track?
+        <entity-icon schema="'/entity/organization.json#'"></entity-icon> Organization</a>.
     </div>
     <div>
       <div ng-repeat="doc in result.results">
