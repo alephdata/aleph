@@ -47,8 +47,8 @@ class EntityCache(object):
             if not len(terms_slice):
                 break
             body = '|'.join(terms_slice)
-            # rex = re.compile('( |^)(%s)( |$)' % body)
-            rex = re.compile('(%s)' % body)
+            rex = re.compile('( |^)(%s)( |$)' % body)
+            # rex = re.compile('(%s)' % body)
             self.regexes.append(rex)
 
         log.info('Generating entity tagger: %r (%s terms)',
@@ -68,8 +68,8 @@ class EntityAnalyzer(Analyzer):
                 continue
             for rex in self.cache.regexes:
                 for match in rex.finditer(text):
-                    # match = match.group(2)
-                    match = match.group(1)
+                    match = match.group(2)
+                    # match = match.group(1)
                     for entity_id in self.cache.matches.get(match, []):
                         entities[entity_id] += 1
 
