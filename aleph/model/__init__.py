@@ -27,7 +27,7 @@ def clear_session():
 def upgrade_db():
     log.info("Beginning database migration...")
     migrate.upgrade()
-    create_system_roles
+    create_system_roles()
 
 
 def create_system_roles():
