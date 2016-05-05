@@ -13,7 +13,7 @@ ARCHIVE_TYPE = 'file'
 ARCHIVE_AWS_KEY_ID = env.get('AWS_ACCESS_KEY_ID')
 ARCHIVE_AWS_SECRET = env.get('AWS_SECRET_ACCESS_KEY')
 # ARCHIVE_BUCKET = 'aleph2-dev.pudo.org'
-# ARCHIVE_PATH = '/srv/data/aleph'
+ARCHIVE_PATH = env.get('ARCHIVE_PATH', '/srv/data/aleph')
 
 OCR_DEFAULTS = ['en']
 
