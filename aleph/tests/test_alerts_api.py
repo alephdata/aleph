@@ -47,7 +47,7 @@ class AlertsApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 'putin' in res.json['label'], res.json
-        assert res.json['query_text'] == ['putin'], res.json
+        assert res.json['query_text'] == 'putin', res.json
 
     def test_view(self):
         data = {'query_text': 'putin'}

@@ -39,7 +39,7 @@ def check_role_alerts(role):
         if results['total'] == 0:
             continue
         log.info('Found: %d new results for: %r', results['total'],
-                 alert.query)
+                 alert.label)
         alert.update()
         try:
             subject = '%s (%s new results)' % (alert.label, results['total'])

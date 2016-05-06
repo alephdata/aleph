@@ -82,7 +82,7 @@ class Alert(db.Model, SoftDeleteModel):
 
     def to_query(self):
         return MultiDict({
-            'q': self.query_text,
+            'q': self.query_text or '',
             'entity': self.entity_id
         })
 
