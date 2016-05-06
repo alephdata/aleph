@@ -1,3 +1,4 @@
+# coding: utf-8
 import os
 import re
 import gc
@@ -48,9 +49,9 @@ def make_filename(source, sep='-'):
 def latinize_text(text):
     if not isinstance(text, six.text_type):
         return text
-    text = unicode(unidecode(text))
-    text = text.replace('@', 'a')
-    return text.lower()
+    text = text.lower()
+    text = text.replace(u'ə', 'a')
+    return unicode(unidecode(text))
 
 
 def normalize_strong(text):

@@ -41,6 +41,18 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
     });
   };
 
+  $scope.toggleAlert = function(entity) {
+    if (entity.alert_id) {
+      Alert.delete(entity.alert_id);
+      entity.alert_id = null;
+    } else {
+      var alert = {entity_id: entity.id};
+      Alert.create(alert).then(function(alert) {
+        entity.alert_id = alert.id;
+      });
+    }
+  };
+
   $scope.createEntity = function($event, name) {
     if (name) {
       name = titleCaps(name);

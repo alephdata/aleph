@@ -52,14 +52,22 @@
     <div>
       <table ng-if="result.results.length" class="table table-striped">
         <tr ng-repeat-start="entity in result.results">
-          <td>
+          <td width="1%">
             <entity-icon schema="entity.$schema"></entity-icon>
           </td>
           <td>
             <strong>{{entity.name}}</strong>
           </td>
           <td>{{entity.jurisdiction_code.toUpperCase()}}</td>
-          <td class="numeric">
+          <td class="numeric" width="5%">
+            <button type="button" class="btn btn-default btn-xs" ng-click="toggleAlert(entity)"
+                ng-class="{'btn-primary': entity.alert_id}">
+              <i class="fa fa-bell"></i>
+              <span ng-show="entity.alert_id">Stop</span>
+              <span ng-hide="entity.alert_id">Track</span>
+            </button>
+          </td>
+          <td class="numeric" width="5%">
             <a ng-href="/#/search?entity={{entity.id}}" ng-if="entity.doc_count">
               <i class="fa fa-search" aria-hidden="true"></i> {{entity.doc_count | number}}
             </a>
@@ -71,7 +79,7 @@
         <tr ng-repeat-end ng-show="entity.summary">
           <td>
           </td>
-          <td colspan="3">
+          <td colspan="4">
             {{entity.summary | limitTo:500}}
           </td>
         </tr>
