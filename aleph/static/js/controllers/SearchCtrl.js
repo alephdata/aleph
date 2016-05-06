@@ -80,14 +80,9 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
       Alert.delete($scope.result.alert);
       $scope.result.alert = null;
     } else {
-      var alert = {query_text: $scope.originalText, label: $scope.originalText};
+      var alert = {query_text: $scope.originalText};
       if (data.query.getArray('entity').length == 1) {
         alert.entity_id = data.query.getArray('entity')[0];
-        $scope.entityFacets.forEach(function(e) {
-          if (e.id == alert.entity_id) {
-            alert.label = e.name;
-          }
-        });
       }
       Alert.create(alert).then(function(alert) {
         $scope.result.alert = alert.id;
