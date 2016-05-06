@@ -23,7 +23,6 @@ var loadEntitiesIndex = ['$http', '$q', '$route', '$location', 'Session', 'Metad
               }
             }
           }
-          console.log(result);
           dfd.resolve({
             'query': query,
             'result': result,

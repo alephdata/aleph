@@ -65,4 +65,36 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
     });
   };
 
+  $scope.getSelection = function() {
+    var selection = [];
+    for (var i in data.result.results) {
+      var entity = data.result.results[i];
+      if (entity.selected) {
+        selection.push(entity);
+      }
+    }
+    return selection;
+  };
+
+  $scope.canDelete = function() {
+    return $scope.getSelection().length > 0;
+  };
+
+  $scope.canMerge = function() {
+    // return $scope.getSelection().length > 1;
+    return false;
+  };
+
+  $scope.deleteSelection = function($event) {
+    Entity.deleteMany($scope.getSelection()).then(function() {
+      $timeout(function() {
+        $route.reload();
+      }, 500);
+    });
+  };
+
+  $scope.mergeSelection = function($event) {
+
+  };
+
 }]);

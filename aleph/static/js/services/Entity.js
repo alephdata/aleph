@@ -14,6 +14,20 @@ aleph.factory('Entity', ['$uibModal', function($uibModal) {
         }
       });
       return instance.result;
+    },
+    deleteMany: function(entities) {
+      var instance = $uibModal.open({
+        templateUrl: 'templates/entity_delete.html',
+        controller: 'EntitiesDeleteCtrl',
+        backdrop: true,
+        size: 'md',
+        resolve: {
+          entities: function() {
+            return entities;
+          }
+        }
+      });
+      return instance.result;
     }
   };
 }]);

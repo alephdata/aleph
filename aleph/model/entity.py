@@ -42,6 +42,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         q = db.session.query(Reference)
         q = q.filter(Reference.entity_id == self.id)
         q.delete(synchronize_session='fetch')
+        for alert in self.alerts:
+            alert.delete()
         super(Entity, self).delete()
 
     def update(self, data, merge=False):

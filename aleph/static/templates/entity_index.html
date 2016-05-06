@@ -29,13 +29,25 @@
       </div>
       <div class="btn-group">
         <a ng-click="createEntity($event)" class="btn btn-primary" ng-disabled="!authz.logged_in()">
-          <i class="fa fa-plus-square" aria-hidden="true"></i> Create
+          <i class="fa fa-plus-square" aria-hidden="true"></i>
+          Create
+        </a>
+      </div>
+      <div class="btn-group">
+        <a ng-click="mergeSelection($event)" class="btn btn-primary" ng-disabled="!canMerge()">
+          <i class="fa fa-link" aria-hidden="true"></i>
+          Merge
+        </a>
+      </div>
+      <div class="btn-group">
+        <a ng-click="deleteSelection($event)" class="btn btn-primary" ng-disabled="!canDelete()">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+          Delete
         </a>
       </div>
     </div>
   </div>
 </div>
-
 
 <div class="row">
   <div class="col-md-8">
@@ -52,14 +64,17 @@
     <div>
       <table ng-if="result.results.length" class="table table-striped">
         <tr ng-repeat-start="entity in result.results">
+          <td width="1%" ng-if="authz.logged_in()">
+            <input type="checkbox" ng-disabled="!authz.entityWrite(entity)" ng-model="entity.selected">
+          </td>
           <td width="1%">
             <entity-icon schema="entity.$schema"></entity-icon>
           </td>
           <td>
             <strong>{{entity.name}}</strong>
           </td>
-          <td>{{entity.jurisdiction_code.toUpperCase()}}</td>
-          <td class="numeric" width="5%">
+          <td width="1%">{{entity.jurisdiction_code.toUpperCase()}}</td>
+          <td class="numeric" width="1%">
             <button type="button" class="btn btn-default btn-xs" ng-click="toggleAlert(entity)"
                 ng-class="{'btn-primary': entity.alert_id}">
               <i class="fa fa-bell"></i>
@@ -77,6 +92,8 @@
           </td>
         </tr>
         <tr ng-repeat-end ng-show="entity.summary">
+          <td ng-if="authz.logged_in()">
+          </td>
           <td>
           </td>
           <td colspan="4">
