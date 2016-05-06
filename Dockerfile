@@ -7,17 +7,18 @@ RUN apt-get update -qq && apt-get -y dist-upgrade && apt-get install -y -q  \
         curl git python-pip python-virtualenv build-essential python-dev \
         libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates less \
         postgresql-client-9.4 unrar unzip locales libreoffice libopenjpeg5 \
-        tesseract-ocr tesseract-ocr-bel tesseract-ocr-aze libopenjpeg-dev \
         libtiff5-dev libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev \
-        libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
-        tesseract-ocr-osd imagemagick-common imagemagick unoconv \
+        poppler-utils poppler-data unrtf pstotext python-numpy default-jdk \
+        readpst libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
+        libopenjpeg-dev imagemagick-common imagemagick unoconv \
         libtesseract-dev ruby-sass wkhtmltopdf vim libjpeg-dev \
+        tesseract-ocr tesseract-ocr-bel tesseract-ocr-aze \
         tesseract-ocr-ces tesseract-ocr-eng tesseract-ocr-deu \
+        tesseract-ocr-spa tesseract-ocr-fra tesseract-ocr-osd \
         tesseract-ocr-hrv tesseract-ocr-hun tesseract-ocr-rus \
         tesseract-ocr-pol tesseract-ocr-slk tesseract-ocr-slv \
         tesseract-ocr-sqi tesseract-ocr-srp tesseract-ocr-tur \
-        tesseract-ocr-ukr poppler-utils poppler-data unrtf pstotext \
-        python-numpy default-jdk readpst \
+        tesseract-ocr-ukr \ 
   && apt-get -y autoremove && apt-get clean
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
 
