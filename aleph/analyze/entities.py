@@ -1,5 +1,6 @@
 import re
 import logging
+from time import time
 from threading import RLock
 from itertools import count
 from collections import defaultdict
@@ -13,7 +14,7 @@ from aleph.analyze.analyzer import Analyzer
 
 log = logging.getLogger(__name__)
 lock = RLock()
-BATCH_SIZE = 5000
+BATCH_SIZE = 10000
 
 
 class EntityCache(object):
@@ -60,6 +61,7 @@ class EntityAnalyzer(Analyzer):
     cache = EntityCache()
 
     def analyze(self, document, meta):
+        begin_time = time()
         self.cache.generate()
         entities = defaultdict(int)
         for text, rec in document.text_parts():
@@ -73,9 +75,6 @@ class EntityAnalyzer(Analyzer):
                     for entity_id in self.cache.matches.get(match, []):
                         entities[entity_id] += 1
 
-        if len(entities):
-            log.info("Tagged %r with %d entities", document, len(entities))
-
         Reference.delete_document(document.id)
         for entity_id, weight in entities.items():
             ref = Reference()
@@ -84,3 +83,11 @@ class EntityAnalyzer(Analyzer):
             ref.weight = weight
             db.session.add(ref)
         self.save(document, meta)
+
+        duration_time = int((time() - begin_time) * 1000)
+        if len(entities):
+            log.info("Tagged %r with %d entities (%sms)",
+                     document, len(entities), duration_time)
+        else:
+            log.info("No entities on %r (%sms)",
+                     document, len(entities), duration_time)
