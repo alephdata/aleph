@@ -1,0 +1,36 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">Merge duplicates</h4>
+</div>
+
+<form role="form" name="createEntity" ng-submit="confirm()">
+  <div class="modal-body">
+    <div class="alert alert-warning" role="alert">
+      <p><strong>Merging is not reversible.</strong> If you're not sure
+      the given entities are identical, do not merge them.</p>
+      <p><strong>Changes data visibility.</strong> The combined data
+      will be visible to anyone who can see the original entities.</p>
+    </div>
+    <table class="table table-striped">
+      <tr>
+        <th colspan="3">
+          Select which name should be used for the resulting entity:
+        </th>
+      </tr>
+      <tr ng-repeat="entity in entities">
+        <td width="1%">
+          <input type="radio" id="primary" name="primary" ng-model="primary" value="{{entity.id}}">
+        </td>
+        <td ng-bind="::entity.name"></td>
+        <td class="numeric">
+          <i class="fa fa-search" aria-hidden="true"></i>
+          {{entity.doc_count | number}}
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button type="submit" class="btn btn-primary">OK</button>
+  </div>
+</form>

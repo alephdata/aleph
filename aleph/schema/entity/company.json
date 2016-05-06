@@ -9,8 +9,7 @@
   "faIcon": "fa-suitcase",
   "graph": "node",
   "allOf": [
-      {"$ref": "/entity/organization.json#"},
-      {"$ref": "/entity/asset.json#"}
+      {"$ref": "/entity/organization.json#"}
   ],
   "required": ["name"],
   "properties": {
@@ -30,11 +29,6 @@
       "title": "Company type",
       "sortIndex": 82,
       "type": ["string", "null"]
-    },
-    "register_url": {
-      "title": "Company register link",
-      "type": "string",
-      "format": "uri"
     }
   }
 }

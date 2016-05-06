@@ -47,6 +47,16 @@
       ],
       "sortIndex": 900
     },
+    "register_name": {
+        "title": "Register name",
+        "sortIndex": 92,
+        "type": ["string", "null"]
+    },
+    "register_url": {
+      "title": "Register link",
+      "type": "string",
+      "format": "uri"
+    },
     "identifiers": {
       "title": "Identifiers",
       "type": "array",

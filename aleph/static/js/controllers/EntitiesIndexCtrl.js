@@ -81,8 +81,7 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
   };
 
   $scope.canMerge = function() {
-    // return $scope.getSelection().length > 1;
-    return false;
+    return $scope.getSelection().length > 1;
   };
 
   $scope.deleteSelection = function($event) {
@@ -94,7 +93,11 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
   };
 
   $scope.mergeSelection = function($event) {
-
+    Entity.merge($scope.getSelection()).then(function() {
+      $timeout(function() {
+        $route.reload();
+      }, 500);
+    });
   };
 
 }]);

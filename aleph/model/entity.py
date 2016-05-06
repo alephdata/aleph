@@ -28,6 +28,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     summary = db.Column(db.Unicode, nullable=True)
     description = db.Column(db.Unicode, nullable=True)
     jurisdiction_code = db.Column(db.Unicode, nullable=True)
+    register_name = db.Column(db.Unicode, nullable=True)
+    register_url = db.Column(db.Unicode, nullable=True)
 
     __mapper_args__ = {
         'polymorphic_on': type,
@@ -90,12 +92,18 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         for prop in self.schema_visitor.properties:
             if prop.name == 'id':
                 continue
-            self_value = getattr(self, prop.name)
-            other_value = getattr(other, prop.name)
-            if prop.is_value:
+
+            self_value = getattr(self, prop.name) if \
+                hasattr(self, prop.name) else None
+            other_value = getattr(other, prop.name) if \
+                hasattr(other, prop.name) else None
+
+            if self_value is None and other_value is None:
+                continue
+
+            if prop.is_value and self_value is None:
                 # update local properties
-                if self_value is None:
-                    setattr(self, prop.name, other_value)
+                setattr(self, prop.name, other_value)
 
             elif prop.is_object and self._schema_recurse:
                 # update associated objects which are not set on the
@@ -226,7 +234,6 @@ class EntityAsset(Entity):
         'polymorphic_identity': _schema
     }
 
-    register_name = db.Column(db.Unicode, nullable=True)
     valuation = db.Column(db.Integer, nullable=True)
     valuation_currency = db.Column(db.Unicode(100), nullable=True)
     valuation_date = db.Column(db.Date, nullable=True)
@@ -310,7 +317,7 @@ class EntityOrganization(EntityLegalPerson):
                                                        "EntityAddress.deleted_at == None)")  # noqa
 
 
-class EntityCompany(EntityOrganization, EntityAsset):
+class EntityCompany(EntityOrganization):
     _schema = '/entity/company.json#'
     __mapper_args__ = {
         'polymorphic_identity': _schema
@@ -319,4 +326,3 @@ class EntityCompany(EntityOrganization, EntityAsset):
     company_number = db.Column(db.Unicode, nullable=True)
     sector = db.Column(db.Unicode, nullable=True)
     company_type = db.Column(db.Unicode, nullable=True)
-    register_url = db.Column(db.Unicode, nullable=True)

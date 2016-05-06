@@ -28,6 +28,20 @@ aleph.factory('Entity', ['$uibModal', function($uibModal) {
         }
       });
       return instance.result;
+    },
+    merge: function(entities) {
+      var instance = $uibModal.open({
+        templateUrl: 'templates/entity_merge.html',
+        controller: 'EntitiesMergeCtrl',
+        backdrop: true,
+        size: 'md',
+        resolve: {
+          entities: function() {
+            return entities;
+          }
+        }
+      });
+      return instance.result;
     }
   };
 }]);
