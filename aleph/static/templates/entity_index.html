@@ -53,7 +53,7 @@
   <div class="col-md-8">
     <div class="alert alert-danger" role="alert" ng-if="error">
       <strong>An error occurred while running your search.</strong>
-      {{error.info.reason || error.message}}
+      {{::error.info.reason || error.message}}
     </div>
 
     <div class="alert alert-suggest" ng-if="result.limit > 0 && !result.total && authz.logged_in()">
@@ -71,9 +71,9 @@
             <entity-icon schema="entity.$schema"></entity-icon>
           </td>
           <td>
-            <strong>{{entity.name}}</strong>
+            <strong>{{::entity.name}}</strong>
           </td>
-          <td width="1%">{{entity.jurisdiction_code.toUpperCase()}}</td>
+          <td width="1%">{{::entity.jurisdiction_code.toUpperCase()}}</td>
           <td class="numeric" width="1%">
             <button type="button" class="btn btn-default btn-xs" ng-click="toggleAlert(entity)"
                 ng-class="{'btn-primary': entity.alert_id}">
@@ -97,7 +97,7 @@
           <td>
           </td>
           <td colspan="4">
-            {{entity.summary | limitTo:500}}
+            {{::entity.summary | limitTo:500}}
           </td>
         </tr>
       </table>
@@ -106,7 +106,7 @@
           <response-pager response="result" load="loadOffset(offset)"></response-pager>
         </div>
         <div class="total" ng-if="result.limit > 0 && result.total">
-          Found {{result.total | number}} entities.
+          Found {{::result.total | number}} entities.
         </div>
       </div>
     </div>
@@ -116,7 +116,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <strong>Countries</strong>
-        <small>{{jurisdictionFacet.length}}</small>
+        <small>{{::jurisdictionFacet.length}}</small>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet empty" ng-if="!jurisdictionFacet.length">
@@ -126,9 +126,9 @@
           ng-repeat="val in jurisdictionFacet"
           ng-class="{'active': query.hasFilter('jurisdiction_code', val.id)}"
           ng-click="query.toggleFilter('jurisdiction_code', val.id)">
-          <span class="badge">{{val.count | number}}</span>
+          <span class="badge">{{::val.count | number}}</span>
           <span class="lbl">
-            {{val.label | country}}
+            {{::val.label | country}}
           </span>
         </li>
       </ul>
@@ -137,16 +137,16 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <strong>Watchlists</strong>
-        <small>{{collectionFacet.length}}</small>
+        <small>{{::collectionFacet.length}}</small>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
           ng-repeat="collection in collectionFacet"
           ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
           ng-click="query.toggleFilter('collection_id', collection.id)">
-          <span class="badge">{{collection.count | number}}</span>
+          <span class="badge">{{::collection.count | number}}</span>
           <span class="lbl">
-            {{collection.label | limitTo:50 }}
+            {{::collection.label | limitTo:50 }}
             <a ng-click="editCollection(collection, $event)" ng-show="authz.collection(authz.WRITE, collection.id)">
               <i class="fa fa-cog"></i>
             </a>
@@ -158,7 +158,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <strong>Types</strong>
-        <small>{{schemaFacet.length}}</small>
+        <small>{{::schemaFacet.length}}</small>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet empty" ng-if="!schemaFacet.length">
@@ -168,10 +168,10 @@
           ng-repeat="val in schemaFacet"
           ng-class="{'active': query.hasFilter('$schema', val.id)}"
           ng-click="query.toggleFilter('$schema', val.id)">
-          <span class="badge">{{val.count | number}}</span>
+          <span class="badge">{{::val.count | number}}</span>
           <span class="lbl">
             <entity-icon schema="val.id"></entity-icon>
-            {{val.label | schemaPlural}}
+            {{::val.label | schemaPlural}}
           </span>
         </li>
       </ul>

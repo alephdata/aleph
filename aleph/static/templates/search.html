@@ -14,7 +14,7 @@
           <li ng-repeat="(field, label) in sortOptions"
               ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'score')}">
             <a ng-click="query.set('sort', field)"
-               ng-bind="label"></a>
+               ng-bind="::label"></a>
           </li>
         </ul>
       </div>
@@ -44,7 +44,7 @@
   <div class="col-md-8">
     <div class="alert alert-danger" role="alert" ng-if="error">
       <strong>An error occurred while running your search.</strong>
-      {{error.info.reason || error.message}}
+      {{::error.info.reason || error.message}}
     </div>
     <div class="alert alert-suggest" ng-if="showSuggest()">
       Looking for 
@@ -73,7 +73,7 @@
           No results were found.
         </div>
         <div class="total" ng-if="result.limit > 0 && result.total">
-          Found {{result.total | number}} documents.
+          Found {{::result.total | number}} documents.
         </div>
       </div>
     </div>
@@ -105,11 +105,11 @@
           ng-repeat="entity in entityFacets track by entity.id"
           ng-class="{'active': query.hasField('entity', entity.id)}"
           ng-click="query.toggle('entity', entity.id)">
-          <span class="badge">{{entity.count | number}}</span>
+          <span class="badge">{{::entity.count | number}}</span>
           <entity-icon schema="entity.$schema"></entity-icon>
           <span class="lbl" uib-tooltip="{{metadata.collections[entity.collection_id].label}}"
             tooltip-append-to-body="true" tooltip-placement="right">
-            {{entity.name}}
+            {{::entity.name}}
           </span>
         </li>
       </ul>
@@ -123,7 +123,7 @@
             <i ng-if="facet.active" class="fa fa-caret-square-o-up" aria-hidden="true"></i>
           </a>
         </span>
-        <strong>{{facet.label}}</strong>
+        <strong>{{::facet.label}}</strong>
       </div>
       <ul class="list-group facet-list" ng-if="facet.active">
         <li class="list-group-item facet empty" ng-if="!facet.values.length">
@@ -133,9 +133,9 @@
           ng-repeat="val in facet.values"
           ng-class="{'active': query.hasFilter(facet.field, val.id)}"
           ng-click="query.toggleFilter(facet.field, val.id)">
-          <span class="badge">{{val.count | number}}</span>
+          <span class="badge">{{::val.count | number}}</span>
           <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
-            {{val.label | limitTo:35 }}
+            {{::val.label | limitTo:35 }}
           </span>
         </li>
       </ul>
@@ -143,14 +143,14 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        <strong>Document sources</strong> <small>{{sourceFacets.length}}</small>
+        <strong>Document sources</strong> <small>{{::sourceFacets.length}}</small>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
           ng-repeat="source in sourceFacets"
           ng-class="{'active': query.hasFilter('source_id', source.id)}"
           ng-click="query.toggleFilter('source_id', source.id)">
-          <span class="badge">{{source.count | number}}</span>
+          <span class="badge">{{::source.count | number}}</span>
           <span class="lbl">
             {{source.label}}
             <a ng-click="editSource(source, $event)" ng-show="authz.source(authz.WRITE, source.id)">
@@ -175,7 +175,7 @@
           ng-href="/api/1/query/export?{{query.queryString()}}"
           download target="_self">
           <i class="fa fa-file-excel-o"></i>
-          Excel file ({{result.total | number}} results)
+          Excel file ({{::result.total | number}} results)
         </a>
       </div>
     </div>
@@ -193,7 +193,7 @@
         <p class="help-block">
           This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool. 
         </p>
-        <a ng-href="/api/1/graph?format=gexf&limit=2000&{{query.queryString()}}" class="btn btn-primary" target="_self"
+        <a ng-href="/api/1/graph?format=gexf&limit=2000&{{::query.queryString()}}" class="btn btn-primary" target="_self"
         download="actors.gexf">
           <i class="fa fa-cloud-download"></i>
           Download Graph Exchange XML (GEXF)

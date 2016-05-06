@@ -15,6 +15,9 @@ aleph.controller('EntitiesDeleteCtrl', ['$scope', '$location', '$q', '$http', '$
     }
     $q.all(deletes).then(function() {
       $uibModalInstance.close(entities);
+    }, function(err) {
+      console.log('Delete error', err);
+      $uibModalInstance.close(entities);
     });
   };
 
