@@ -30,7 +30,7 @@ def analyze_source(source_id):
 @celery.task()
 def analyze_entity(entity_id):
     seen = set()
-    query = {'term': {'entities.entity_id': entity_id}}
+    query = {'term': {'entities.uuid': entity_id}}
     for doc_id in query_doc_ids(query):
         analyze_document.delay(doc_id)
         seen.add(doc_id)

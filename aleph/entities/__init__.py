@@ -10,10 +10,13 @@ log = logging.getLogger(__name__)
 
 def update_entity(entity):
     """Perform some update operations on entities."""
-    if entity.deleted_at:
-        delete_entity(entity.id)
-    else:
-        index_entity(entity)
+    try:
+        if entity.deleted_at:
+            delete_entity(entity.id)
+        else:
+            index_entity(entity)
+    except Exception as ex:
+        log.exception(ex)
     analyze_entity.delay(entity.id)
 
 
