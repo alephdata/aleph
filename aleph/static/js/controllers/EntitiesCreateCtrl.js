@@ -5,6 +5,7 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
                               '/entity/organization.json#']
   $scope.selectSchema = !entity.$schema;
   $scope.entity = entity;
+  $scope.createAlert = true;
   $scope.collection = {};
   $scope.createCollection = false;
   $scope.collections = [];
@@ -85,8 +86,15 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
   $scope.saveEntity = function() {
     $scope.entity.collections = [$scope.collection.id];
     var res = $http.post('/api/1/entities', $scope.entity);
-    res.then(function(entity) {
-      $uibModalInstance.close();
+    res.then(function(res) {
+      if ($scope.createAlert) {
+        var alert = {entity_id: res.data.id};
+        $http.post('/api/1/alerts', alert).then(function(ares) {
+          $uibModalInstance.close(res.data);  
+        });
+      } else {
+        $uibModalInstance.close(res.data);  
+      }
     });
     res.error(Validation.handle($scope.createEntity));
   }
