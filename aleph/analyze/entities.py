@@ -90,4 +90,4 @@ class EntityAnalyzer(Analyzer):
                      document, len(entities), duration_time)
         else:
             log.info("No entities on %r (%sms)",
-                     document, len(entities), duration_time)
+                     document, duration_time)
