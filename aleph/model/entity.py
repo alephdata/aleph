@@ -1,6 +1,6 @@
 import logging
-# from datetime import datetime
-from sqlalchemy import or_, func
+from datetime import datetime
+from sqlalchemy import func
 from sqlalchemy.orm import aliased
 # from sqlalchemy.dialects.postgresql import JSONB
 
@@ -48,6 +48,88 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
 
     def update(self, data, merge=False):
         self.schema_update(data, merge=merge)
+
+    def merge(self, other):
+        if self.id == other.id:
+            return
+        # De-dupe todo:
+        # 1. merge identifiers
+        # 2. merge properties
+        # 3. merge names, make merged names into a.k.a's
+        # 4. merge collections
+        # 5. update references
+        # 6. update alerts
+        # 7. delete source entities
+        # 8. update source entities
+        # 9. update target entity
+        collections = list(self.collections)
+        for collection in other.collections:
+            if collection not in collections:
+                self.collections.append(collection)
+
+        if self.name.lower() != other.name.lower():
+            aka = EntityOtherName()
+            aka.entity = self
+            aka.name = other.name
+            db.session.add(aka)
+
+        from aleph.model.alert import Alert
+        q = db.session.query(Alert).filter(Alert.entity_id == other.id)
+        q.update({'entity_id': self.id})
+
+        from aleph.model.reference import Reference
+        q = db.session.query(Reference).filter(Reference.entity_id == other.id)
+        q.update({'entity_id': self.id})
+        db.session.commit()
+
+        self.schema_merge(other)
+
+    def schema_merge(self, other):
+        """Attempt to merge other onto self via JSON schema."""
+        # TODO: figure out if we want to change schema
+        for prop in self.schema_visitor.properties:
+            if prop.name == 'id':
+                continue
+            self_value = getattr(self, prop.name)
+            other_value = getattr(other, prop.name)
+            if prop.is_value:
+                # update local properties
+                if self_value is None:
+                    setattr(self, prop.name, other_value)
+
+            elif prop.is_object and self._schema_recurse:
+                # update associated objects which are not set on the
+                # existing object.
+                rel = self._get_relationship(prop.name, 'MANYTOONE')
+                if self_value is not None or other_value is None:
+                    continue
+                for local, remote in self._get_associations(other_value, rel):
+                    other_id = getattr(other_value, remote)
+                    setattr(self, local, other_id)
+                    setattr(other, local, None)
+
+            elif prop.is_array and self._schema_recurse:
+                # merge array associations
+                rel = self._get_relationship(prop.name, 'ONETOMANY')
+                full_list = list(self_value)
+
+                for new_item in other_value:
+                    data = new_item.to_dict()
+                    for obj in full_list:
+                        if obj._merge_compare(data):
+                            new_item.delete()
+                            continue
+                    full_list.append(new_item)
+
+                for obj in full_list:
+                    for local, remote in self._get_associations(obj, rel):
+                        setattr(obj, remote, getattr(self, local))
+
+        self.created_at = min((self.created_at, other.created_at))
+        self.updated_at = datetime.utcnow()
+        db.session.flush()
+        db.session.refresh(other)
+        other.delete()
 
     @classmethod
     def save(cls, data, merge=False):

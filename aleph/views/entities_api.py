@@ -90,6 +90,19 @@ def update(id):
     return view(entity.id)
 
 
+@blueprint.route('/api/1/entities/<id>/merge/<other_id>', methods=['DELETE'])
+def merge(id, other_id):
+    entity = obj_or_404(Entity.by_id(id))
+    check_authz(entity, authz.WRITE)
+    other = obj_or_404(Entity.by_id(other_id))
+    check_authz(other, authz.WRITE)
+    entity.merge(other)
+    db.session.commit()
+    update_entity(entity)
+    update_entity(other)
+    return view(entity.id)
+
+
 @blueprint.route('/api/1/entities/<id>', methods=['DELETE'])
 def delete(id):
     entity = obj_or_404(Entity.by_id(id))
