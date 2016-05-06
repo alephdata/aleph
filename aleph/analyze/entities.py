@@ -14,7 +14,7 @@ from aleph.analyze.analyzer import Analyzer
 
 log = logging.getLogger(__name__)
 lock = RLock()
-BATCH_SIZE = 10000
+BATCH_SIZE = 1000
 
 
 class EntityCache(object):
