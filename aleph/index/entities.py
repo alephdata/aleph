@@ -10,7 +10,8 @@ log = logging.getLogger(__name__)
 
 def delete_entity(entity_id):
     """Delete an entity from the index."""
-    get_es().delete(index=get_es_index(), doc_type=TYPE_ENTITY, id=entity_id)
+    get_es().delete(index=get_es_index(), doc_type=TYPE_ENTITY, id=entity_id,
+                    ignore=[404])
 
 
 def get_count(entity):

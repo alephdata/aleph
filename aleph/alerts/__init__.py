@@ -5,8 +5,7 @@ from flask import request, render_template, current_app
 from aleph.core import get_config, db, celery
 from aleph.model import Role, Alert
 from aleph.notify import notify_role
-from aleph.search.documents import documents_query
-from aleph.search.documents import execute_documents_alert_query
+from aleph.search.documents import alert_query
 
 log = logging.getLogger(__name__)
 
@@ -27,16 +26,7 @@ def check_alerts():
 
 
 def make_document_query(alert):
-    qs = {'dq': alert.query.get('q')}
-    qs.update(alert.query)
-    args = []
-    for k, vs in qs.items():
-        if isinstance(vs, (list, tuple, set)):
-            for v in vs:
-                args.append((k, v))
-        else:
-            args.append((k, vs))
-    return urlencode(args)
+    return urlencode((('dq', alert.query_text),))
 
 
 def check_role_alerts(role):
@@ -45,8 +35,7 @@ def check_role_alerts(role):
         return
     log.info('Alerting %r, %d alerts...', role, len(alerts))
     for alert in alerts:
-        q = documents_query(alert.query, newer_than=alert.notified_at)
-        results = execute_documents_alert_query(alert.query, q)
+        results = alert_query(alert)
         if results['total'] == 0:
             continue
         log.info('Found: %d new results for: %r', results['total'],

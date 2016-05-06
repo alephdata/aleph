@@ -19,7 +19,7 @@ class AlertsApiTestCase(TestCase):
         assert res.json['total'] == 0, res.json
 
     def test_create(self):
-        data = {'query': {}}
+        data = {'query_text': 'banana pumpkin'}
         jdata = json.dumps(data)
         res = self.client.post('/api/1/alerts', data=jdata,
                                content_type='application/json')
@@ -28,10 +28,10 @@ class AlertsApiTestCase(TestCase):
         res = self.client.post('/api/1/alerts', data=jdata,
                                content_type='application/json')
         assert res.status_code == 200, res.json
-        assert 'Everything' in res.json['label'], res.json
+        assert 'banana pumpkin' in res.json['label'], res.json
 
     def test_create_with_label(self):
-        data = {'query': {}, 'custom_label': 'banana'}
+        data = {'query_text': 'foo', 'label': 'banana'}
         jdata = json.dumps(data)
         self.login()
         res = self.client.post('/api/1/alerts', data=jdata,
@@ -40,17 +40,17 @@ class AlertsApiTestCase(TestCase):
         assert 'banana' in res.json['label'], res.json
 
     def test_create_with_query(self):
-        data = {'query': {'q': 'putin'}}
+        data = {'query_text': 'putin'}
         jdata = json.dumps(data)
         self.login()
         res = self.client.post('/api/1/alerts', data=jdata,
                                content_type='application/json')
         assert res.status_code == 200, res.json
-        assert 'Results matching' in res.json['label'], res.json
-        assert res.json['query']['q'] == ['putin'], res.json
+        assert 'putin' in res.json['label'], res.json
+        assert res.json['query_text'] == ['putin'], res.json
 
     def test_view(self):
-        data = {'query': {'q': 'putin'}}
+        data = {'query_text': 'putin'}
         jdata = json.dumps(data)
         self.login()
         res = self.client.post('/api/1/alerts', data=jdata,
@@ -63,7 +63,7 @@ class AlertsApiTestCase(TestCase):
         assert res3.status_code == 404, res3
 
     def test_delete(self):
-        data = {'query': {'q': 'putin'}}
+        data = {'query_text': 'putin'}
         jdata = json.dumps(data)
         self.login()
         res = self.client.post('/api/1/alerts', data=jdata,

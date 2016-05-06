@@ -1,45 +1,10 @@
-from hashlib import sha1
 from datetime import datetime
-
-from sqlalchemy.dialects.postgresql import JSONB
 from werkzeug.datastructures import MultiDict
 
 from aleph.core import db
 from aleph.model.entity import Entity
 from aleph.model.validation import validate
 from aleph.model.common import SoftDeleteModel
-
-
-def extract_query(q):
-    """Remove parts of the query which do not affect the result set."""
-    q = MultiDict(q)
-    cleaned = MultiDict()
-    for key in q.keys():
-        values = q.getlist(key)
-        if key == 'q':
-            values = [v.strip() for v in values]
-        if key.startswith('filter:') or key in ['entity', 'q']:
-            for val in values:
-                if not isinstance(val, (list, tuple, set)):
-                    val = [val]
-                for v in val:
-                    if v is None:
-                        continue
-                    v = unicode(v).lower()
-                    if len(v):
-                        cleaned.add(key, v)
-    return cleaned
-
-
-def query_signature(q):
-    """Generate a SHA1 signature for the given query."""
-    q = extract_query(q)
-    out = sha1()
-    for field in q.keys():
-        out.update('::' + field.encode('utf-8'))
-        for value in set(sorted(q.getlist(field))):
-            out.update('==' + value.encode('utf-8'))
-    return out.hexdigest()
 
 
 class Alert(db.Model, SoftDeleteModel):
@@ -50,44 +15,18 @@ class Alert(db.Model, SoftDeleteModel):
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
     custom_label = db.Column(db.Unicode, nullable=True)
-    signature = db.Column(db.Unicode)
-    query = db.Column(JSONB)
+    query_text = db.Column(db.Unicode, nullable=True)
+    entity_id = db.Column(db.String(32), db.ForeignKey('entity.id'), nullable=True)  # noqa
+    entity = db.relationship(Entity, backref=db.backref('alerts', lazy='dynamic'))  # noqa
     notified_at = db.Column(db.DateTime, nullable=True)
 
     @property
     def label(self):
         if self.custom_label is not None:
             return self.custom_label
-        # This is weird. Should live somewhere else.
-        fragments = []
-        q = self.query.get('q')
-        if q and len(q):
-            fragments.append('matching "%s"' % ''.join(q))
-        entities = self.query.get('entity')
-        if entities and len(entities):
-            try:
-                entities = Entity.by_id_set(entities)
-                sub_fragments = []
-                for entity in entities.values():
-                    sub_fragments.append('"%s"' % entity.name)
-                fragment = ' and '.join(sub_fragments)
-                fragments.append('mentioning %s' % fragment)
-            except:
-                pass
-        for key in self.query.keys():
-            try:
-                if not key.startswith('filter:'):
-                    continue
-                _, field = key.split(':', 1)
-                # TODO: source_id special handling?
-                field = field.replace('_', ' ')
-                value = '; '.join(self.query.get(key))
-                fragments.append('filtered by %s: %s' % (field, value))
-            except:
-                pass
-        if not len(fragments):
-            return 'Everything'
-        return 'Results %s' % ', '.join(fragments)
+        if self.entity:
+            return self.entity.name
+        return self.query_text
 
     def delete(self):
         self.deleted_at = datetime.utcnow()
@@ -115,31 +54,46 @@ class Alert(db.Model, SoftDeleteModel):
         validate(data, 'alert.json#')
         alert = cls()
         alert.role_id = role.id
-        q = extract_query(data.get('query'))
-        alert.query = {k: q.getlist(k) for k in q.keys()}
-        alert.signature = query_signature(q)
-        alert.custom_label = data.get('custom_label')
+        alert.query_text = data.get('query_text')
+        if alert.query_text is not None:
+            alert.query_text = alert.query_text.strip()
+            alert.query_text = alert.query_text or None
+        alert.entity_id = data.get('entity_id') or None
+        alert.custom_label = data.get('label')
         alert.update()
         return alert
 
     @classmethod
     def exists(cls, query, role):
         q = cls.all_ids().filter(cls.role_id == role.id)
-        q = q.filter(cls.signature == query_signature(query))
+        query_text = query.get('q')
+        if query_text is not None and not len(query_text.strip()):
+            query_text = None
+        q = q.filter(cls.query_text == query_text)
+        entities = query.getlist('entity')
+        if len(entities) == 1:
+            q = q.filter(cls.entity_id == entities[0])
+        else:
+            q = q.filter(cls.entity_id == None)  # noqa
         return q.scalar()
 
     def __repr__(self):
-        return '<Alert(%r, %r)>' % (self.id, self.query)
+        return '<Alert(%r, %r)>' % (self.id, self.label)
+
+    def to_query(self):
+        return MultiDict({
+            'q': self.query_text,
+            'entity': self.entity_id
+        })
 
     def to_dict(self):
         return {
             'id': self.id,
             'label': self.label,
-            'custom_label': self.custom_label,
-            'signature': self.signature,
             'role_id': self.role_id,
-            'notified_at': self.notified_at,
-            'query': self.query,
+            'query_text': self.query_text,
+            'entity_id': self.entity_id,
             'created_at': self.created_at,
+            'notified_at': self.notified_at,
             'updated_at': self.updated_at
         }
