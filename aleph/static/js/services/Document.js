@@ -29,7 +29,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Session',
           $http.get(url, {cache: true, params: sq}).then(function(res) {
             for (var i in res.data.results) {
               var record = res.data.results[i];
-              if (record.text.length) {
+              if (record && record.text && record.text.length) {
                 record.snippet = $sce.trustAsHtml(record.text[0]);  
               }
             }
