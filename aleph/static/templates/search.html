@@ -82,12 +82,32 @@
   <div class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">
+        <strong>Document sources</strong> <small>{{::sourceFacets.length}}</small>
+      </div>
+      <ul class="list-group facet-list">
+        <li class="list-group-item facet animate toggle"
+          ng-repeat="source in sourceFacets"
+          ng-class="{'active': query.hasFilter('source_id', source.id)}"
+          ng-click="query.toggleFilter('source_id', source.id)">
+          <span class="badge">{{::source.count | number}}</span>
+          <span class="lbl">
+            {{source.label}}
+            <a ng-click="editSource(source, $event)" ng-show="authz.source(authz.WRITE, source.id)">
+              <i class="fa fa-cog"></i>
+            </a>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
         <span class="pull-right">
           <a ng-click="selectCollections($event)">
             <i class="fa fa-cog"></i>
           </a>
         </span>
-        <strong><i class="fa fa-male"></i> Persons and Companies</strong>
+        <strong>Persons and Companies</strong>
         <small ng-show="query.state.collection.length">
           (from {{query.state.collection.length | number}} watchlists)
         </small>
@@ -136,26 +156,6 @@
           <span class="badge">{{::val.count | number}}</span>
           <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
             {{::val.label | limitTo:35 }}
-          </span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <strong>Document sources</strong> <small>{{::sourceFacets.length}}</small>
-      </div>
-      <ul class="list-group facet-list">
-        <li class="list-group-item facet animate toggle"
-          ng-repeat="source in sourceFacets"
-          ng-class="{'active': query.hasFilter('source_id', source.id)}"
-          ng-click="query.toggleFilter('source_id', source.id)">
-          <span class="badge">{{::source.count | number}}</span>
-          <span class="lbl">
-            {{source.label}}
-            <a ng-click="editSource(source, $event)" ng-show="authz.source(authz.WRITE, source.id)">
-              <i class="fa fa-cog"></i>
-            </a>
           </span>
         </li>
       </ul>
