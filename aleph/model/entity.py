@@ -116,7 +116,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
                     setattr(self, local, other_id)
                     setattr(other, local, None)
 
-            elif prop.is_array and self._schema_recurse:
+            elif prop.is_array and self._schema_recurse \
+                    and other_value is not None:
                 # merge array associations
                 rel = self._get_relationship(prop.name, 'ONETOMANY')
                 full_list = list(self_value)
