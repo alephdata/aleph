@@ -12,7 +12,8 @@ class AlertsApiTestCase(TestCase):
 
     def test_index(self):
         res = self.client.get('/api/1/alerts')
-        assert res.status_code == 403, res
+        assert res.status_code == 200, res
+        assert res.json['total'] == 0, res.json
         self.login()
         res = self.client.get('/api/1/alerts')
         assert res.status_code == 200, res
