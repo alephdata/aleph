@@ -11,7 +11,7 @@ aleph.factory('Alert', ['$http', '$q', '$location', '$sce', '$uibModal', 'Sessio
           $http.get('/api/1/alerts').then(function(res) {
             indexDfd.resolve(res.data);
           }, function(err) {
-            indexDfd.reject(err);
+            indexDfd.resolve({total: 0, results: []});
           });
         });
       }
