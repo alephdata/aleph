@@ -24,6 +24,13 @@ def angular_templates():
 
 
 @blueprint.route('/')
+@blueprint.route('/search')
+@blueprint.route('/help')
+@blueprint.route('/help/<path:path>')
+@blueprint.route('/entities')
+@blueprint.route('/entities/<path:path>')
+@blueprint.route('/tabular/<path:path>')
+@blueprint.route('/text/<path:path>')
 def ui(**kwargs):
     enable_cache(server_side=True)
     return render_template("layout.html", templates=angular_templates())

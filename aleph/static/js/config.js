@@ -73,10 +73,10 @@ aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider',
     }
   });
 
-  $routeProvider.otherwise({
-    redirectTo: '/',
-    loginRequired: false
-  });
+  // $routeProvider.otherwise({
+  //   redirectTo: '/',
+  //   loginRequired: false
+  // });
 
-  $locationProvider.html5Mode(false);
+  $locationProvider.html5Mode(true);
 }]);

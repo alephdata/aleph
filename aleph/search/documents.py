@@ -68,9 +68,11 @@ def entity_collections(q, aggs, args, filters):
     entities = args.getlist('entity')
     collections = []
     readable = authz.collections(authz.READ)
-    for collection_id in args.getlist('collection'):
+    requested = args.getlist('collection') or readable
+    for collection_id in requested:
+        collection_id = int(collection_id)
         if authz.collection_read(collection_id):
-            collections.append(int(collection_id))
+            collections.append(collection_id)
 
     flt = {
         'or': [

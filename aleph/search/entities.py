@@ -48,11 +48,13 @@ def entities_query(args, fields=None, facets=True):
         aggs = facet_collection(q, aggs, filters)
 
     sort_mode = args.get('sort', '').strip().lower()
+    default_sort = 'score' if len(text) else 'doc_count'
+    sort_mode = sort_mode or default_sort
     if sort_mode == 'doc_count':
         sort = [{'doc_count': 'desc'}, '_score']
     elif sort_mode == 'alphabet':
         sort = [{'name': 'asc'}, '_score']
-    else:
+    elif sort_mode == 'score':
         sort = ['_score']
 
     return {
