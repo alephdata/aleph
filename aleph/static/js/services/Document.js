@@ -29,7 +29,9 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Session',
           $http.get(url, {cache: true, params: sq}).then(function(res) {
             for (var i in res.data.results) {
               var record = res.data.results[i];
-              record.snippet = $sce.trustAsHtml(record.text[0]);
+              if (record.text.length) {
+                record.snippet = $sce.trustAsHtml(record.text[0]);  
+              }
             }
             dfd.resolve(res.data);
           });
