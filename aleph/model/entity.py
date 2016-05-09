@@ -73,8 +73,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
 
         if self.name.lower() != other.name.lower():
             aka = EntityOtherName()
+            aka.update({'name': other.name})
             aka.entity = self
-            aka.name = other.name
             db.session.add(aka)
 
         from aleph.model.alert import Alert
