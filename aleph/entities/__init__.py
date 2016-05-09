@@ -1,7 +1,7 @@
 import logging
 
 from aleph.core import db, celery
-from aleph.model import Entity
+from aleph.model import Entity, Alert
 from aleph.index import index_entity, delete_entity
 from aleph.analyze import analyze_entity
 
@@ -15,6 +15,7 @@ def update_entity(entity):
             delete_entity(entity.id)
         else:
             index_entity(entity)
+        Alert.dedupe(entity.id)
     except Exception as ex:
         log.exception(ex)
     analyze_entity.delay(entity.id)

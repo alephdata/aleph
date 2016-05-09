@@ -54,6 +54,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     def merge(self, other):
         if self.id == other.id:
             return
+
         # De-dupe todo:
         # 1. merge identifiers
         # 2. merge properties
@@ -64,6 +65,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         # 7. delete source entities
         # 8. update source entities
         # 9. update target entity
+
         collections = list(self.collections)
         for collection in other.collections:
             if collection not in collections:
@@ -84,6 +86,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         q.update({'entity_id': self.id})
         db.session.commit()
 
+        db.session.refresh(other)
         self.schema_merge(other)
 
     def schema_merge(self, other):
@@ -111,10 +114,12 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
                 rel = self._get_relationship(prop.name, 'MANYTOONE')
                 if self_value is not None or other_value is None:
                     continue
-                for local, remote in self._get_associations(other_value, rel):
-                    other_id = getattr(other_value, remote)
+                data = other_value.to_dict()
+                obj = type(other_value)()
+                obj.update(data)
+                for local, remote in self._get_associations(obj, rel):
+                    other_id = getattr(obj, remote)
                     setattr(self, local, other_id)
-                    setattr(other, local, None)
 
             elif prop.is_array and self._schema_recurse \
                     and other_value is not None:
@@ -124,21 +129,21 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
 
                 for new_item in other_value:
                     data = new_item.to_dict()
-                    for obj in full_list:
-                        if obj._merge_compare(data):
-                            new_item.delete()
-                            continue
-                    full_list.append(new_item)
+                    existing = [o for o in full_list if o.merge_compare(data)]
+                    if len(existing):
+                        continue
 
-                for obj in full_list:
+                    obj = type(new_item)()
+                    obj.update(data)
                     for local, remote in self._get_associations(obj, rel):
                         setattr(obj, remote, getattr(self, local))
+                    db.session.add(obj)
+                    full_list.append(obj)
 
         self.created_at = min((self.created_at, other.created_at))
         self.updated_at = datetime.utcnow()
-        db.session.flush()
-        db.session.refresh(other)
         other.delete()
+        db.session.flush()
 
     @classmethod
     def save(cls, data, merge=False):

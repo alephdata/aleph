@@ -39,12 +39,11 @@ def ingest_url(source_id, metadata, url):
                 meta.source_url = res.url
             meta.headers = res.headers
             meta = get_archive().archive_file(fh.name, meta, move=True)
+            ingest.delay(source_id, meta.data)
     except Exception as ex:
         log.exception(ex)
         process.exception(process.INGEST, component='ingest_url',
                           source_id=source_id, meta=meta, exception=ex)
-        return
-    ingest.delay(source_id, meta.data)
 
 
 def ingest_file(source_id, meta, file_name, move=False):
@@ -54,12 +53,11 @@ def ingest_file(source_id, meta, file_name, move=False):
         if not meta.has('source_path'):
             meta.source_path = file_name
         meta = get_archive().archive_file(file_name, meta, move=move)
+        ingest.delay(source_id, meta.data)
     except Exception as ex:
         log.exception(ex)
         process.exception(process.INGEST, component='ingest_url',
                           source_id=source_id, meta=meta, exception=ex)
-        return
-    ingest.delay(source_id, meta.data)
 
 
 @celery.task()

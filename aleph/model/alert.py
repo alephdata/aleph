@@ -1,5 +1,6 @@
 from datetime import datetime
 from werkzeug.datastructures import MultiDict
+from sqlalchemy import func
 
 from aleph.core import db
 from aleph.model.entity import Entity
@@ -38,6 +39,13 @@ class Alert(db.Model, SoftDeleteModel):
         db.session.add(self)
         db.session.flush()
 
+    def is_same(self, other):
+        if other.role_id == self.role_id:
+            if other.entity_id == self.entity_id:
+                if other.query_text == self.query_text:
+                    return True
+        return False
+
     @classmethod
     def by_id(cls, id, role=None):
         q = cls.all().filter_by(id=id)
@@ -67,15 +75,28 @@ class Alert(db.Model, SoftDeleteModel):
     def exists(cls, query, role):
         q = cls.all_ids().filter(cls.role_id == role.id)
         query_text = query.get('q')
-        if query_text is not None and not len(query_text.strip()):
-            query_text = None
+        if query_text is not None:
+            query_text = query_text.strip()
+            if not len(query_text):
+                query_text = None
         q = q.filter(cls.query_text == query_text)
         entities = query.getlist('entity')
         if len(entities) == 1:
             q = q.filter(cls.entity_id == entities[0])
         else:
             q = q.filter(cls.entity_id == None)  # noqa
+        q = q.limit(1)
         return q.scalar()
+
+    @classmethod
+    def dedupe(cls, entity_id):
+        alerts = cls.all().filter_by(entity_id=entity_id).all()
+        for left in alerts:
+            for right in alerts:
+                if left.id >= right.id:
+                    continue
+                if left.is_same(right):
+                    left.delete()
 
     def __repr__(self):
         return '<Alert(%r, %r)>' % (self.id, self.label)

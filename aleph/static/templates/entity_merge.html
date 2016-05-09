@@ -19,7 +19,7 @@
       </tr>
       <tr ng-repeat="entity in entities">
         <td width="1%">
-          <input type="radio" id="primary" name="primary" ng-model="primary" value="{{entity.id}}">
+          <input type="radio" id="primary" name="primary" ng-model="select.primary" value="{{entity.id}}">
         </td>
         <td ng-bind="::entity.name"></td>
         <td class="numeric">

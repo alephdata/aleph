@@ -69,14 +69,9 @@ class EntitiesTestCase(TestCase):
         # pprint(data)
         assert 'bear' in data['description']
         assert 'pa' in data['jurisdiction_code']
-
         db.session.refresh(self.alert)
         assert self.alert.label == data['name']
-        other = json.loads(jsonify(self.other).data)
-        assert other['deleted_at'], other
-        assert not len(other['identifiers']), other
-        # pprint(other)
-        # assert False
+        assert self.other.deleted_at is not None, self.other
 
     def test_api_merge(self):
         url = '/api/1/entities/%s/merge/%s' % (self.ent.id, self.other.id)
