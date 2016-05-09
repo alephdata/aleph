@@ -1,6 +1,5 @@
 import logging
 
-from aleph import process
 from aleph.core import celery
 from aleph.ext import get_analyzers
 from aleph.util import normalize_strong
@@ -71,12 +70,9 @@ def analyze_document(document_id):
         log.info("Could not find document: %r", document_id)
         return
     log.info("Analyze document: %r", document)
-    for cls in get_analyzers():
-        try:
+    try:
+        for cls in get_analyzers():
             cls().analyze(document, document.meta)
-        except Exception as ex:
-            log.exception(ex)
-            process.exception(process.ANALYZE, component=cls.__name__,
-                              document_id=document.id, meta=document.meta,
-                              source_id=document.source_id, exception=ex)
-    index_document(document_id)
+        index_document(document_id)
+    except Exception as ex:
+        log.exception(ex)

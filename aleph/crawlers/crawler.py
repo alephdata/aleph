@@ -1,7 +1,6 @@
 import logging
 from tempfile import NamedTemporaryFile
 
-from aleph import process
 from aleph.core import db
 from aleph.model import Metadata, Source, Document, Entity, Collection
 from aleph.ext import get_crawlers
@@ -26,7 +25,6 @@ class Crawler(object):
             self.finalize()
         except Exception as ex:
             log.exception(ex)
-            process.exception(process.CRAWL, component=self.name, exception=ex)
 
     @property
     def name(self):

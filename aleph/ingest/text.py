@@ -38,8 +38,7 @@ class TextIngestor(Ingestor):
     def extract_pdf(self, meta, pdf_path):
         data = extract_pdf(pdf_path, languages=self.get_languages(meta))
         if data is None:
-            self.log_error(meta, error_type='PDFSyntaxError',
-                           error_message="Could not parse PDF: %r" % meta)
+            log.error("Could not parse PDF: %r", meta)
             return
 
         if not meta.has('author') and data.get('author'):
@@ -97,8 +96,7 @@ class DocumentIngestor(TextIngestor):
     def ingest(self, meta, local_path):
         pdf_path = document_to_pdf(local_path)
         if pdf_path is None or not os.path.isfile(pdf_path):
-            self.log_error(meta, error_type='DocumentConvertError',
-                           error_message="Could not convert doc: %r" % meta)
+            log.error("Could not convert document: %r", meta)
             return
         self.extract_pdf_alternative(meta, pdf_path)
 
@@ -144,8 +142,7 @@ class HtmlIngestor(DocumentIngestor):
 
             pdf_path = html_to_pdf(out_path)
             if pdf_path is None or not os.path.isfile(pdf_path):
-                self.log_error(meta, error_type='HTMLConvertError',
-                               error_message="Could not convert HTML: %r" % meta)  # noqa
+                log.error("Could not convert document: %r", meta)
                 return
             self.extract_pdf_alternative(meta, pdf_path)
         finally:
@@ -166,7 +163,7 @@ class ImageIngestor(TextIngestor):
         try:
             pdf_path = image_to_pdf(local_path)
             if pdf_path is None or not os.path.isfile(pdf_path):
-                self.log_error(meta, error_type='ImageConvertError', error_message="Could not convert image: %r" % meta)  # noqa
+                log.error("Could not convert image: %r", meta)
                 return
             self.store_pdf(meta, pdf_path)
             self.extract_pdf(meta, pdf_path)
