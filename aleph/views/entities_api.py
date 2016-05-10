@@ -39,6 +39,15 @@ def index():
     return jsonify(res)
 
 
+@blueprint.route('/api/1/entities/_all', methods=['GET'])
+def all():
+    q = Entity.all_ids()
+    clause = Collection.id.in_(authz.collections(authz.READ))
+    q = q.filter(Entity.collections.any(clause))
+    results = [r[0] for r in q.all()]
+    return jsonify({'results': results, 'total': len(results)})
+
+
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
 def create():
     data = request_data()

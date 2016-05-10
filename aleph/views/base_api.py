@@ -29,7 +29,6 @@ def end_event_track(resp):
     origin = 'aleph.views.%s' % request.endpoint
     log.debug("Request %s (%s): %sms", request.endpoint, resp.status_code,
               int(duration * 1000))
-    print dir(request)
     event.report(origin, {
         'endpoint': request.endpoint,
         'duration': duration,
