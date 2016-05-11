@@ -35,8 +35,8 @@ class CollectionView(BaseModelView):
 
 
 class EntityView(BaseModelView):
-    column_list = ['name', 'foreign_id', 'collection']
-    column_filters = ['name', 'collection.label']
+    column_list = ['name', 'jurisdiction_code']
+    column_filters = ['name', 'jurisdiction_code']
 
 
 admin.add_view(RoleView(Role, db.session, endpoint='role_admin'))

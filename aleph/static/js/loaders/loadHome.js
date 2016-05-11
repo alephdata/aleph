@@ -1,6 +1,6 @@
 
-var loadHome = ['$http', '$q', '$route', 'Query', 'Session', 'Metadata',
-    function($http, $q, $route, Query, Session, Metadata) {
+var loadHome = ['$http', '$q', '$route', 'Session', 'Metadata',
+    function($http, $q, $route, Session, Metadata) {
   var dfd = $q.defer();
 
   Metadata.get().then(function(metadata) {

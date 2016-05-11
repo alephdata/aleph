@@ -1,8 +1,9 @@
 import logging
 
 from aleph.core import get_es, get_es_index
-from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD
+from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD, TYPE_ENTITY
 from aleph.index.mapping import DOCUMENT_MAPPING, RECORD_MAPPING
+from aleph.index.mapping import ENTITY_MAPPING
 
 log = logging.getLogger(__name__)
 
@@ -12,7 +13,8 @@ def init_search():
     get_es().indices.create(get_es_index(), body={
         'mappings': {
             TYPE_DOCUMENT: DOCUMENT_MAPPING,
-            TYPE_RECORD: RECORD_MAPPING
+            TYPE_RECORD: RECORD_MAPPING,
+            TYPE_ENTITY: ENTITY_MAPPING
         }
     })
     get_es().indices.open(index=get_es_index())
@@ -24,6 +26,8 @@ def upgrade_search():
                                  doc_type=TYPE_DOCUMENT)
     get_es().indices.put_mapping(index=get_es_index(), body=RECORD_MAPPING,
                                  doc_type=TYPE_RECORD)
+    get_es().indices.put_mapping(index=get_es_index(), body=ENTITY_MAPPING,
+                                 doc_type=TYPE_ENTITY)
 
 
 def optimize_search():

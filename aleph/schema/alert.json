@@ -3,12 +3,15 @@
     "id": "alert.json#",
     "type": "object",
     "properties": {
-        "query": {
-            "type": "object"
+        "query_text": {
+            "type": ["string", "null"]
         },
-        "custom_label": {
+        "entity_id": {
+            "type": ["string", "null"]
+        },
+        "label": {
             "type": ["string", "null"]
         }
     },
-    "required": ["query"]
+    "required": []
 }

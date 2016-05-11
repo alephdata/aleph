@@ -30,9 +30,9 @@ aleph.directive('searchResult', ['$location', '$route', '$rootScope', 'Query', f
           var sheet = rec ? rec.sheet : 0,
               row = rec ? rec.row_id : null;
           query.row = row;
-          path = '/#/tabular/' + scope.doc.id + '/' + sheet;
+          path = '/tabular/' + scope.doc.id + '/' + sheet;
         } else {
-          path = '/#/text/' + scope.doc.id;
+          path = '/text/' + scope.doc.id;
           query.page = rec ? rec.page : 1;
           query.dq = search.q;
         }

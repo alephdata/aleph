@@ -1,11 +1,11 @@
 <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
   <div class="input-group">
     <input type="text" class="form-control" autofocus
-        ng-model="query.q" placeholder="Search across documents and data sources"
+        ng-model="query.state.q" placeholder="Search across documents and data sources"
         uib-typeahead="entity for entity in suggestEntities($viewValue)"
         typeahead-min-length="2"
         typeahead-focus-first="false"
-        typeahead-template-url="entity_link.html"
+        typeahead-template-url="templates/entity_link.html"
         typeahead-on-select="acceptSuggestion($item)">
     <span class="input-group-btn">
       <button class="btn btn-primary" type="submit">Search</button>

@@ -44,7 +44,7 @@ def view(document_id):
             data['pdf_url'] = get_archive().generate_url(doc.meta.pdf)
         except Exception as ex:
             log.info('Could not generate PDF url: %r', ex)
-        if data['pdf_url'] is None:
+        if data.get('pdf_url') is None:
             data['pdf_url'] = url_for('documents_api.pdf',
                                       document_id=document_id)
     data['source'] = doc.source

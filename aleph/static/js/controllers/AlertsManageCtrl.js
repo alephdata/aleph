@@ -5,7 +5,7 @@ aleph.controller('AlertsManageCtrl', ['$scope', '$uibModalInstance', '$location'
 
   $scope.openQuery = function(alert) {
     $location.path('/search');
-    $location.search(alert.query);
+    $location.search({'q': alert.query_text, 'entity': alert.entity_id});
     $uibModalInstance.close();
   };
 

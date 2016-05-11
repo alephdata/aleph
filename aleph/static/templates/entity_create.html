@@ -1,0 +1,96 @@
+<!-- div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">Create an entity</h4>
+</div-->
+
+<form role="form" name="createEntity" ng-submit="save(createEntity)">
+  <div class="modal-body">
+    <div class="form-group" ng-class="{'has-error': createEntity.name.$invalid}">
+      <label class="control-label" for="name">
+        Name <span ng-if="!selectSchema">of {{schemata[entity.$schema].title}}</span>
+      </label>
+      <input type="text" class="form-control input-lg" id="name" name="name" ng-model="entity.name"
+        placeholder="New Entity Name" required ng-minlength="3">
+      <p class="help-block">
+        At least three letters, don't include any comments or alternate names.
+      </p>
+    </div>
+
+    <div class="form-group" ng-if="selectSchema">
+      <label class="control-label" for="type">Type of entity</label>
+      <div>
+        <div class="btn-group btn-group-justified" role="group">
+          <div class="btn-group" role="group" ng-repeat="schema in availableSchemata">
+            <button type="button" class="btn btn-default"
+              ng-class="{'active': entity.$schema == schema}" ng-click="setSchema(schema)">
+              <entity-icon schema="schema"></entity-icon>
+              {{schemata[schema].title}}
+            </button>
+          </div>
+        </div>
+        <p class="help-block" ng-bind="schemata[entity.$schema].description"></p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="collection">
+        Watchlist
+      </label>
+      <div ng-hide="createCollection">
+        <select class="form-control" id="collection" name="collection"
+          ng-model="collection" ng-init="collection = collections[0]"
+          ng-options="c as c.label for c in collections"></select>
+        <p class="help-block">
+          Group this entity into an appropriate watchlist, or
+          <a ng-click="setCreateCollection(true)">create a new one</a>.
+        </p>
+      </div>
+      <div ng-show="createCollection">
+        <input type="text" class="form-control" ng-model="collection.label">
+        <p class="help-block" ng-show="hasCollections()">
+          Name your new watchlist, or
+          <a ng-click="setCreateCollection(false)">use an existing one</a>.
+        </p>
+        <p class="help-block" ng-hide="hasCollections()">
+          Since you don't have any watchlists yet, we'll create one for you.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="jurisdiction_code">
+        <span ng-hide="isPerson()">Jurisdiction</span>
+        <span ng-show="isPerson()">Nationality</span>
+      </label>
+      <div class="">
+        <select class="form-control" id="jurisdiction_code" name="jurisdiction_code"
+          ng-model="entity.jurisdiction_code" ng-init="entity.jurisdiction_code = null"
+          ng-options="c.value as c.label for c in jurisdictions"></select>
+        <p class="help-block">Leave this empty if multiple countries apply.</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="summary">
+        Summary
+      </label>
+      <div class="">
+        <textarea class="form-control" id="summary" name="summary"
+          ng-model="entity.summary" rows="2" maxlength="200"></textarea>
+        <p class="help-block">Describe the relevance of this entity in a sentence.</p>
+      </div>
+    </div>
+
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="createAlert"> Receive e-mail alerts about new, matching documents.
+      </label>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="!canSave()">Save</button>
+  </div>
+</form>
+

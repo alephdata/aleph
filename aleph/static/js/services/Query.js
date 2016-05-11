@@ -1,70 +1,89 @@
 
 aleph.factory('Query', ['$route', '$location', function($route, $location) {
-  var query = {}, lastSearch = {};
 
-  var load = function() {
-    query = {};
-    angular.forEach($location.search(), function(v, k) {
-      if (!angular.isArray(v)) {
-        v = [v];
-      }
-      query[k] = v;
-    });
-    query.offset = null;
-    query.entity = ensureArray(query.entity);
-    query.collection = ensureArray(query.collection);
-    query.facet = ensureArray(query.facet);
-    return query;
+  var ParsedQuery = function() {
+    this.state = $location.search();
   };
 
-  var clear = function() {
+  ParsedQuery.prototype.toString = function() {
+    return queryString(this.state);
+  };
+
+  ParsedQuery.prototype.getArray = function(key) {
+    return ensureArray(this.state[key]).map(function(v) {
+      return v + '';
+    });
+  };
+
+  ParsedQuery.prototype.hasField = function(name, val) {
+    var cur = this.getArray(name + ''),
+        valStr = val ? val + '' : null;
+    return cur.indexOf(valStr) != -1;
+  };
+
+  ParsedQuery.prototype.getQ = function() {
+    var q = this.state.q || '';
+    q = q.trim();
+    if (!q.length) { 
+      return null;
+    }
+    return q;
+  };
+
+  ParsedQuery.prototype.hasFilter = function(name, val) {
+    return this.hasField('filter:' + name, val);
+  };
+
+  ParsedQuery.prototype.clear = function() {
     $location.search({});
   };
 
-  var set = function(name, val) {
-    query[name] = val;
-    $location.search(query);
+  ParsedQuery.prototype.set = function(name, val) {
+    this.state.offset = 0;
+    this.state[name] = val;
+    $location.search(this.state);
   };
 
-  var toggleFilter = function(filter, val) {
-    var q = load();
-    if (!angular.isArray(q[filter])) {
-      q[filter] = [];
-    }
-    val = val + '';
-    var idx = q[filter].indexOf(val);
+  ParsedQuery.prototype.toggle = function(name, val) {
+    var values = this.getArray(name),
+        valStr = val ? val + '' : null;
+    var idx = values.indexOf(valStr);
     if (idx == -1) {
-      q[filter].push(val);
+      values.push(valStr);
     } else {
-      q[filter].splice(idx, 1);
+      values.splice(idx, 1);
     }
-    $location.search(q);
-    query = q;
+    this.set(name, values);
   };
 
-  var hasFilter = function(name, val) {
-    val = val + '';
-    return angular.isArray(query[name]) && query[name].indexOf(val) != -1;
+  ParsedQuery.prototype.toggleFilter = function(name, val) {
+    return this.toggle('filter:' + name, val);
   };
 
-  load();
+  ParsedQuery.prototype.sortFacet = function(data, name) {
+    var self = this;
+    if (!data || !data.length) {
+      return [];
+    }
+
+    return data.sort(function(a, b) {
+      var af = self.hasField(name, a.id),
+          bf = self.hasField(name, b.id);
+      if (af && !bf) { return -1; }
+      if (!af && bf) { return 1; }
+      var counts = b.count - a.count;
+      if (counts !== 0) {
+        return counts;
+      }
+      var al = a.label || a.name || a.id;
+      var bl = b.label || b.name || b.id;
+      return al.localeCompare(bl);
+    });
+  };
 
   return {
-      state: query,
-      load: load,
-      clear: clear,
-      set: set,
-      queryString: function() {
-        return queryString(query);
-      },
-      hasFilter: hasFilter,
-      toggleFilter: toggleFilter,
-      setLastSearch: function(last) {
-        lastSearch = last;
-      },
-      getLastSearch: function() {
-        return lastSearch;
-      }
+    parse: function() {
+      return new ParsedQuery();
+    }
   };
-
 }]);

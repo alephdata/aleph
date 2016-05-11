@@ -1,8 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "id": "/entity/entity.json#",
-  "title": "Any entity",
+  "title": "Other entities",
   "type": "object",
+  "faIcon": "fa-user",
   "properties": {
     "id": {
       "title": "ID",
@@ -45,6 +46,16 @@
         }
       ],
       "sortIndex": 900
+    },
+    "register_name": {
+        "title": "Register name",
+        "sortIndex": 92,
+        "type": ["string", "null"]
+    },
+    "register_url": {
+      "title": "Register link",
+      "type": "string",
+      "format": "uri"
     },
     "identifiers": {
       "title": "Identifiers",

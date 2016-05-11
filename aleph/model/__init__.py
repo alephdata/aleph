@@ -9,7 +9,7 @@ from aleph.model.source import Source # noqa
 from aleph.model.entity import Entity # noqa
 from aleph.model.reference import Reference # noqa
 from aleph.model.collection import Collection # noqa
-from aleph.model.log import ProcessingLog # noqa
+from aleph.model.event import Event # noqa
 from aleph.model.metadata import Metadata # noqa
 from aleph.model.document import Document, DocumentPage, DocumentRecord # noqa
 from aleph.model.validation import validate # noqa
@@ -19,15 +19,12 @@ log = logging.getLogger(__name__)
 
 def clear_session():
     db.session.rollback()
-    # db.session.remove()
-    # db.session.expunge_all()
-    # db.session.prune()
 
 
 def upgrade_db():
     log.info("Beginning database migration...")
     migrate.upgrade()
-    create_system_roles
+    create_system_roles()
 
 
 def create_system_roles():

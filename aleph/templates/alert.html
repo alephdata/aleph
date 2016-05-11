@@ -26,7 +26,7 @@
 
       p.footer {
         font-size: 0.9em;
-        color: #ccc;
+        color: #999;
       }
 
       .source-attr a {
@@ -60,12 +60,12 @@
         <tr class="result">
           <td>
             {% if result.type == 'text' %}
-              <a href="{{app_url}}#/text/{{result.id}}?{{qs}}">{{result.title}}</a>
+              <a href="{{app_url}}text/{{result.id}}?{{qs}}">{{result.title}}</a>
             {% else %}
-              <a href="{{app_url}}#/tabular/{{result.id}}/0?{{qs}}">{{result.title}}</a>
+              <a href="{{app_url}}tabular/{{result.id}}/0?{{qs}}">{{result.title}}</a>
             {% endif %}
             <span class="source-attr">
-              <a href="{{app_url}}#/search?filter:source_id={{result.source.id}}">
+              <a href="{{app_url}}search?filter:source_id={{result.source.id}}">
                 {{result.source.label}}
               </a>
             </span>

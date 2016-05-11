@@ -1,6 +1,6 @@
 
-aleph.directive('permissionsEdit', ['$http', '$q', 'Metadata',
-    function($http, $q, Metadata) {
+aleph.directive('permissionsEdit', ['$http', '$q', 'Role',
+    function($http, $q, Role) {
   return {
     restrict: 'E',
     scope: {
@@ -8,17 +8,19 @@ aleph.directive('permissionsEdit', ['$http', '$q', 'Metadata',
     },
     templateUrl: 'templates/permissions_edit.html',
     link: function (scope, element, attrs, model) {
-      var url = scope.apiBase + '/permissions';
+      var url = scope.apiBase + '/permissions',
+          roles = [];
 
+      scope.newRole = null;
       scope.types = [
         {type: 'system', label: 'State'},
         {type: 'group', label: 'Groups'},
         {type: 'user', label: 'Users'},
       ];
-      scope.roles = [];
-      Metadata.getRoles().then(function(roles) {
-        for (var j in roles.results) {
-          var role = roles.results[j];
+      
+      Role.getAll().then(function(all) {
+        for (var j in all.results) {
+          var role = all.results[j];
           role.read = false;
           role.write = false;
           role.dirty = false;
@@ -26,17 +28,46 @@ aleph.directive('permissionsEdit', ['$http', '$q', 'Metadata',
         $http.get(url).then(function(res) {
           for (var i in res.data.results) {
             var perm = res.data.results[i];
-            for (var j in roles.results) {
-              var role = roles.results[j];
+            for (var j in all.results) {
+              var role = all.results[j];
               if (role.id == perm.role) {
                 role.read = perm.read;
                 role.write = perm.write;
               }
             }
           }
-          scope.roles = roles.results;
+          roles = all.results;
         });
       });
+
+      scope.getActiveRoles = function() {
+        var activeRoles = [];
+        for (var i in roles) {
+          var role = roles[i];
+          if (role.type != 'user' || role.read || role.write) {
+            activeRoles.push(role);  
+          }
+        }
+        return activeRoles;
+      };
+
+      scope.findRoles = function($value) {
+        var matching = [],
+            value = $value.toLowerCase();
+        for (var i in roles) {
+          var role = roles[i];
+          if (role.name.toLowerCase().startsWith(value)) {
+            matching.push(role);
+          }
+        }
+        return matching;
+      };
+
+      scope.addRole = function($item, $model) {
+        $item.read = true;
+        $item.dirty = true;
+        scope.newRole = {name: ''};
+      };
 
       scope.markDirty = function(role) {
         role.dirty = true;
@@ -44,8 +75,8 @@ aleph.directive('permissionsEdit', ['$http', '$q', 'Metadata',
 
       scope.$on('savePermissions', function() {
         var qs = [];
-        for (var j in scope.roles) {
-          var role = scope.roles[j];
+        for (var j in roles) {
+          var role = roles[j];
           if (role.dirty) {
             qs.push($http.post(url, {
               role: role.id,

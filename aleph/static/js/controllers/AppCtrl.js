@@ -1,9 +1,8 @@
 aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$http', '$uibModal', '$q',
-                             'Session', 'Query', 'Alert', 'Metadata',
-    function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Session, Query, Alert, Metadata) {
+                             'Session', 'Alert', 'Metadata',
+    function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Session, Alert, Metadata) {
 
   $scope.session = {logged_in: false};
-  $scope.query = Query;
   $scope.routeLoaded = false;
   $scope.routeFailed = false;
 
@@ -19,7 +18,6 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
         $location.path('/');
       }
     });
-    $scope.query.state = Query.load();
     $scope.reportLoading(true);
   });
 

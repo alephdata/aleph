@@ -13,6 +13,7 @@ from aleph.analyze import analyze_source
 from aleph.alerts import check_alerts
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document
+from aleph.entities import reindex_entities
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
@@ -129,8 +130,15 @@ def index(foreign_id=None):
     else:
         delete_index()
         init_search()
+        indexentities()
     for doc_id, in q:
         index_document.delay(doc_id)
+
+
+@manager.command
+def indexentities(foreign_id=None):
+    """Re-index all the entities."""
+    reindex_entities()
 
 
 @manager.command

@@ -58,6 +58,10 @@ class DatedModel(object):
         return db.session.query(cls.id)
 
     @classmethod
+    def all_by_ids(cls, ids):
+        return cls.all().filter(cls.id.in_(ids))
+
+    @classmethod
     def by_id(cls, id):
         if id is None:
             return

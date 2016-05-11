@@ -1,17 +1,18 @@
 import json
 from pprint import pprint  # noqa
-from collections import defaultdict
 
 from werkzeug.datastructures import MultiDict
 
 from aleph.core import get_es, get_es_index, url_for
 from aleph import authz
+from aleph.model import Source
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
-from aleph.search.util import add_filter, authz_filter, clean_highlight
-from aleph.search.util import execute_basic
+from aleph.search.util import add_filter, authz_sources_filter, clean_highlight
+from aleph.search.util import execute_basic, parse_filters
 from aleph.search.fragments import text_query_string, meta_query_string
-from aleph.search.fragments import match_all, child_record
-from aleph.search.facets import convert_aggregations
+from aleph.search.fragments import match_all, child_record, aggregate
+from aleph.search.fragments import filter_query
+from aleph.search.facets import convert_document_aggregations
 from aleph.search.records import records_query
 
 DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'languages',
@@ -24,22 +25,13 @@ DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'languages',
 OR_FIELDS = ['source_id']
 
 
-def documents_query(args, fields=None, facets=True, newer_than=None):
+def documents_query(args, fields=None, facets=True):
     """Parse a user query string, compose and execute a query."""
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
     text = args.get('q', '').strip()
     q = text_query(text)
-    q = authz_filter(q)
-
-    if newer_than is not None:
-        q = add_filter(q, {
-            "range": {
-                "created_at": {
-                    "gt": newer_than
-                }
-            }
-        })
+    q = authz_sources_filter(q)
 
     # Sorting -- should this be passed into search directly, instead of
     # these aliases?
@@ -53,27 +45,19 @@ def documents_query(args, fields=None, facets=True, newer_than=None):
     else:
         sort = [{'updated_at': 'desc'}, {'created_at': 'desc'}, '_score']
 
-    # Extract filters, given in the form: &filter:foo_field=bla_value
-    filters = []
-    for key in args.keys():
-        for value in args.getlist(key):
-            if not key.startswith('filter:'):
-                continue
-            _, field = key.split(':', 1)
-            filters.append((field, value))
-
+    filters = parse_filters(args)
     for entity in args.getlist('entity'):
         filters.append(('entities.uuid', entity))
 
     aggs = {}
     if facets:
-        aggs = aggregate(q, args, filters)
+        aggs = aggregate(q, args)
         aggs = facet_source(q, aggs, filters)
         q = entity_collections(q, aggs, args, filters)
 
     return {
         'sort': sort,
-        'query': filter_query(q, filters),
+        'query': filter_query(q, filters, OR_FIELDS),
         'aggregations': aggs,
         '_source': fields or DEFAULT_FIELDS
     }
@@ -84,9 +68,11 @@ def entity_collections(q, aggs, args, filters):
     entities = args.getlist('entity')
     collections = []
     readable = authz.collections(authz.READ)
-    for collection_id in args.getlist('collection'):
+    requested = args.getlist('collection') or readable
+    for collection_id in requested:
+        collection_id = int(collection_id)
         if authz.collection_read(collection_id):
-            collections.append(int(collection_id))
+            collections.append(collection_id)
 
     flt = {
         'or': [
@@ -124,7 +110,7 @@ def entity_collections(q, aggs, args, filters):
 def facet_source(q, aggs, filters):
     aggs['scoped']['aggs']['source'] = {
         'filter': {
-            'query': filter_query(q, filters, skip='source_id')
+            'query': filter_query(q, filters, OR_FIELDS, skip='source_id')
         },
         'aggs': {
             'source': {
@@ -135,35 +121,8 @@ def facet_source(q, aggs, filters):
     return aggs
 
 
-def aggregate(q, args, filters):
-    # Generate aggregations. They are a generalized mechanism to do facetting
-    # in ElasticSearch. Anything placed inside the "scoped" sub-aggregation
-    # is made to be ``global``, ie. it'll have to bring it's own filters.
-    aggs = {'scoped': {'global': {}, 'aggs': {}}}
-    for facet in args.getlist('facet'):
-        agg = {facet: {'terms': {'field': facet, 'size': 100}}}
-        aggs.update(agg)
-    return aggs
-
-
-def filter_query(q, filters, skip=None):
-    """Apply a list of filters to the given query."""
-    or_filters = defaultdict(list)
-    for field, value in filters:
-        if field == skip:
-            continue
-        if field in OR_FIELDS:
-            or_filters[field].append(value)
-        else:
-            q = add_filter(q, {'term': {field: value}})
-    for field, value in or_filters.items():
-        q = add_filter(q, {'terms': {field: value}})
-    return q
-
-
 def text_query(text):
-    """ Construct the part of a query which is responsible for finding a
-    piece of thext in the selected documents. """
+    """Part of a query which finds a piece of text."""
     if text is None or not len(text.strip()):
         return match_all()
     return {
@@ -208,7 +167,7 @@ def run_sub_queries(output, sub_queries):
 def execute_documents_query(args, query):
     """Execute the query and return a set of results."""
     result, hits, output = execute_basic(TYPE_DOCUMENT, query)
-    convert_aggregations(result, output, args)
+    convert_document_aggregations(result, output, args)
     sub_queries = []
     for doc in hits.get('hits', []):
         document = doc.get('_source')
@@ -231,23 +190,40 @@ def execute_documents_query(args, query):
     return output
 
 
-def execute_documents_alert_query(args, query):
+def alert_query(alert):
     """Execute the query and return a set of results."""
-    if not isinstance(args, MultiDict):
-        args = MultiDict(args)
-    query['size'] = 50
-    result, hits, output = execute_basic(TYPE_DOCUMENT, query)
-    convert_aggregations(result, output, args)
+    q = text_query(alert.query_text)
+    q = authz_sources_filter(q)
+    if alert.entity_id:
+        q = filter_query(q, [('entities.uuid', alert.entity_id)], OR_FIELDS)
+    if alert.notified_at:
+        q = add_filter(q, {
+            "range": {
+                "created_at": {
+                    "gt": alert.notified_at
+                }
+            }
+        })
+    q = {
+        'query': q,
+        'size': 150
+    }
+
+    result, hits, output = execute_basic(TYPE_DOCUMENT, q)
     sub_queries = []
+    sources = {}
     for doc in hits.get('hits', []):
         document = doc.get('_source')
         document['id'] = int(doc.get('_id'))
-        for source in output['sources']['values']:
-            if source['id'] == document['source_id']:
-                document['source'] = source
+        source_id = document['source_id']
+        if source_id not in sources:
+            sources[source_id] = Source.by_id(source_id)
+        if sources[source_id] is None:
+            continue
+        document['source'] = sources[source_id]
         document['records'] = {'results': [], 'total': 0}
 
-        sq = records_query(document['id'], args, size=1)
+        sq = records_query(document['id'], alert.to_query(), size=1)
         if sq is not None:
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))

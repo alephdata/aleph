@@ -30,7 +30,6 @@ class SearchApiTestCase(TestCase):
         res = self.client.get('/api/1/query?facet=languages')
         assert res.status_code == 200, res
         lang_facet = res.json['facets']['languages']
-        assert lang_facet['label'] == 'Languages', lang_facet
         assert len(lang_facet['values']) == 2
         text = json.dumps(lang_facet)
         assert '"ru"' in text, lang_facet

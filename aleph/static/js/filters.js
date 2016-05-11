@@ -40,6 +40,22 @@ aleph.filter('language', ['Metadata', function(Metadata) {
 }]);
 
 
+aleph.filter('schemaPlural', ['Metadata', function(Metadata) {
+  var schemata = {};
+
+  Metadata.get().then(function(md) {
+    schemata = md.schemata;
+  });
+
+  return function(schema_id) {
+    if (schemata[schema_id]) {
+      return schemata[schema_id].plural;
+    }
+    return schema_id;
+  };
+}]);
+
+
 aleph.filter('sourceCategory', ['Metadata', function(Metadata) {
   var categories = {};
 

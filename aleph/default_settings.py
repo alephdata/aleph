@@ -1,3 +1,4 @@
+from celery.schedules import crontab
 from os import environ as env, path
 
 DEBUG = True
@@ -41,6 +42,17 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_BROKER_URL = env.get('RABBITMQ_BIGWIG_URL',
                             'amqp://guest:guest@localhost:5672//')
 CELERY_IMPORTS = ('aleph.queue')
+
+CELERYBEAT_SCHEDULE = {
+    'alert-every-night': {
+        'task': 'aleph.alerts.check_alerts',
+        'schedule': crontab(hour=1, minute=30)
+    },
+    'reindex-entities': {
+        'task': 'aleph.entities.reindex_entities',
+        'schedule': crontab(hour='*/4', minute=0)
+    },
+}
 
 OAUTH = {
     'consumer_key': '',

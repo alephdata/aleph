@@ -1,4 +1,5 @@
 from flask import Blueprint, request, send_file
+from apikit import get_limit
 
 from aleph.core import url_for
 from aleph.model import Source
@@ -14,9 +15,11 @@ FIELDS = ['source', 'title', 'file_name', 'summary', 'extension',
           'file_url', 'source_url']
 
 
-def get_results(query):
+def get_results(query, limit):
     sources = {}
-    for row in scan_iter(query):
+    for i, row in enumerate(scan_iter(query)):
+        if i >= limit:
+            return
         data = {
             'file_url': url_for('documents_api.file',
                                 document_id=row.get('_id'))
@@ -43,6 +46,7 @@ def get_results(query):
 def export():
     query = documents_query(request.args)
     query = {'query': query['query']}
-    output = make_excel(get_results(query), FIELDS)
+    limit = min(10000, get_limit(default=50))
+    output = make_excel(get_results(query, limit), FIELDS)
     return send_file(output, mimetype=XLSX_MIME, as_attachment=True,
                      attachment_filename='export.xlsx')

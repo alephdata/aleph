@@ -1,7 +1,6 @@
 import logging
 import metafolder
 
-from aleph import process
 from aleph.model import Permission, Role
 from aleph.crawlers.crawler import Crawler
 
@@ -49,10 +48,4 @@ class MetaFolderCrawler(Crawler):
         mf = metafolder.open(folder)
         sources = {}
         for item in mf:
-            try:
-                self.crawl_item(item, sources, source)
-            except Exception as ex:
-                process.exception(process.INDEX, component=self.name,
-                                  foreign_id=item.identifier,
-                                  source_location=folder, meta=item.meta,
-                                  exception=ex)
+            self.crawl_item(item, sources, source)
