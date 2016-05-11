@@ -1,74 +1,79 @@
 import re
 import logging
+from time import time
+from threading import RLock
+from itertools import count
 from collections import defaultdict
 # from unidecode import unidecode
 
 from aleph.core import db
 from aleph.util import normalize_strong
-from aleph.model import Reference, Entity, Collection
+from aleph.model import Reference, Entity
 from aleph.analyze.analyzer import Analyzer
 
-# TODO: cache regexen, perhaps by collection?
 
 log = logging.getLogger(__name__)
-BATCH_SIZE = 5000
+lock = RLock()
+BATCH_SIZE = 1000
 
 
 class EntityCache(object):
 
     def __init__(self):
-        self.collections = {}
+        self.latest = None
+        self.matches = {}
+        self.regexes = []
 
-    def compile_collection(self, collection_id):
-        matchers = defaultdict(set)
-        q = db.session.query(Entity)
-        q = q.filter(Entity.collection_id == collection_id)
-        q = q.filter(Entity.deleted_at == None)  # noqa
-        for entity in q:
+    def generate(self):
+        with lock:
+            self._generate()
+
+    def _generate(self):
+        latest = Entity.latest()
+        if self.latest is not None and self.latest >= latest:
+            return
+
+        self.latest = latest
+        self.matches = defaultdict(set)
+
+        for entity in Entity.all():
             for term in entity.terms:
-                matchers[normalize_strong(term)].add(entity.id)
-        body = '|'.join(matchers.keys())
-        rex = re.compile('( |^)(%s)( |$)' % body)
-        return rex, matchers
+                self.matches[normalize_strong(term)].add(entity.id)
 
-    def matchers(self):
-        timestamps = Collection.timestamps()
-        for ts in self.collections.keys():
-            if ts not in timestamps:
-                self.collections.pop(ts, None)
+        self.regexes = []
+        terms = self.matches.keys()
+        terms = [t for t in terms if len(t) > 2]
+        for i in count(0):
+            terms_slice = terms[i * BATCH_SIZE:(i + 1) * BATCH_SIZE]
+            if not len(terms_slice):
+                break
+            body = '|'.join(terms_slice)
+            rex = re.compile('( |^)(%s)( |$)' % body)
+            # rex = re.compile('(%s)' % body)
+            self.regexes.append(rex)
 
-        for ts in timestamps:
-            if ts not in self.collections:
-                log.info('Entity tagger updating collection: %r', ts)
-                self.collections[ts] = self.compile_collection(ts[0])
-
-        return self.collections.values()
+        log.info('Generating entity tagger: %r (%s terms)',
+                 latest, len(terms))
 
 
 class EntityAnalyzer(Analyzer):
 
     cache = EntityCache()
 
-    @property
-    def matchers(self):
-        if not hasattr(self, '_matchers'):
-            self._matchers = self.cache.matchers()
-        return self._matchers
-
     def analyze(self, document, meta):
+        begin_time = time()
+        self.cache.generate()
         entities = defaultdict(int)
         for text, rec in document.text_parts():
             text = normalize_strong(text)
-            if text is None or not len(text):
+            if text is None or len(text) <= 2:
                 continue
-            for rex, matches in self.matchers:
+            for rex in self.cache.regexes:
                 for match in rex.finditer(text):
                     match = match.group(2)
-                    for entity_id in matches.get(match, []):
+                    # match = match.group(1)
+                    for entity_id in self.cache.matches.get(match, []):
                         entities[entity_id] += 1
-
-        if len(entities):
-            log.info("Tagged %r with %d entities", document, len(entities))
 
         Reference.delete_document(document.id)
         for entity_id, weight in entities.items():
@@ -78,3 +83,11 @@ class EntityAnalyzer(Analyzer):
             ref.weight = weight
             db.session.add(ref)
         self.save(document, meta)
+
+        duration_time = int((time() - begin_time) * 1000)
+        if len(entities):
+            log.info("Tagged %r with %d entities (%sms)",
+                     document, len(entities), duration_time)
+        else:
+            log.info("No entities on %r (%sms)",
+                     document, duration_time)

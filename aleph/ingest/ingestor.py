@@ -1,6 +1,6 @@
 import logging
 
-from aleph import process
+from aleph import event
 from aleph.core import db, get_archive
 from aleph.ext import get_ingestors
 from aleph.model import Document
@@ -44,17 +44,11 @@ class Ingestor(object):
         log.debug("Ingested document: %r", document)
         analyze_document(document.id)
 
-    def log_error(self, meta, error_type=None, error_message=None,
-                  error_details=None):
-        process.log(process.INGEST, component=type(self).__name__,
-                    source_id=self.source_id, meta=meta,
-                    error_type=error_type, error_message=error_message,
-                    error_details=error_details)
-
     def log_exception(self, meta, exception):
-        process.exception(process.INGEST, component=type(self).__name__,
-                          source_id=self.source_id, meta=meta,
-                          exception=exception)
+        origin = '%s.%s' % (self.__module__, self.__class__.__name__)
+        data = meta.data if hasattr(meta, 'data') else {}
+        data['source_id'] = self.source_id
+        event.exception(origin, data, exception)
 
     @classmethod
     def match(cls, meta, local_path):
@@ -80,10 +74,8 @@ class Ingestor(object):
         local_path = get_archive().load_file(meta)
         best_cls = cls.auction_file(meta, local_path)
         if best_cls is None:
-            message = "No ingestor found: %r" % meta.file_name
-            process.log(process.INGEST, component=cls.__name__, meta=meta,
-                        source_id=source_id, error_type='NoIngestorFound',
-                        error_message=message)
+            log.error("No ingestor found: %r (%r, %r)", meta.file_name,
+                      meta.extension, meta.mime_type)
             return
 
         log.debug("Dispatching %r to %r", meta.file_name, best_cls.__name__)
@@ -91,7 +83,5 @@ class Ingestor(object):
             best_cls(source_id).ingest(meta, local_path)
         except Exception as ex:
             log.exception(ex)
-            process.exception(process.INGEST, component=best_cls.__name__,
-                              exception=ex, meta=meta, source_id=source_id)
         finally:
             get_archive().cleanup_file(meta)

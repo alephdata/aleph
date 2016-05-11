@@ -16,7 +16,7 @@ class AlertsTestCase(TestCase):
         self.role_no_email = self.create_user('without_email', email=None)
 
     def test_notify(self):
-        data = {'query': {}, 'custom_label': 'Test Alert'}
+        data = {'query_text': '', 'label': 'Test Alert'}
         alert = Alert.create(data, self.role_email)
         alert.notified_at = datetime.utcnow() + timedelta(hours=72)
         db.session.commit()

@@ -2,9 +2,8 @@ from urlparse import urljoin
 import requests
 import logging
 
-from aleph.core import db
-from aleph.model import Collection, Entity, Role, Permission
-from aleph.crawlers.crawler import Crawler
+from aleph.model import Role, Permission
+from aleph.crawlers.crawler import EntityCrawler
 
 log = logging.getLogger(__name__)
 
@@ -16,7 +15,7 @@ SCHEMA = {
 }
 
 
-class OpenNamesCrawler(Crawler):  # pragma: no cover
+class OpenNamesCrawler(EntityCrawler):  # pragma: no cover
 
     def crawl_source(self, source):
         if source.get('source_id') in IGNORE_SOURCES:
@@ -26,14 +25,11 @@ class OpenNamesCrawler(Crawler):  # pragma: no cover
         url = urljoin(JSON_PATH, json_file)
         source_name = source.get('source') or source.get('source_id')
         label = '%s - %s' % (source.get('publisher'), source_name)
-        collection = Collection.by_foreign_id(url, {
+        collection = self.find_collection(url, {
             'label': label
         })
         Permission.grant_foreign(collection, Role.SYSTEM_GUEST, True, False)
         log.info(" > OpenNames collection: %s", collection.label)
-        terms = set()
-        existing_entities = []
-        db.session.flush()
         entities = requests.get(url).json().get('entities', [])
         for entity in entities:
             data = {
@@ -49,18 +45,8 @@ class OpenNamesCrawler(Crawler):  # pragma: no cover
             for on in entity.get('other_names', []):
                 on['name'] = on.pop('other_name', None)
                 data['other_names'].append(on)
-
-            ent = Entity.save(data, collection_id=collection.id, merge=True)
-            db.session.flush()
-            terms.update(ent.terms)
-            existing_entities.append(ent.id)
-            log.info("  # %s", ent.name)
-
-        for entity in collection.entities:
-            if entity.id not in existing_entities:
-                entity.delete()
-
-        self.emit_collection(collection, terms)
+            self.emit_entity(collection, data)
+        self.emit_collection(collection)
 
     def crawl(self):
         data = requests.get(JSON_PATH).json()

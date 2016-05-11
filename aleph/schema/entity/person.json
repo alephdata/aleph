@@ -3,7 +3,7 @@
   "id": "/entity/person.json#",
   "title": "Person",
   "plural": "People",
-  "description": "A real person, alive or dead",
+  "description": "A natural person, whether alive or dead",
   "sortIndex": 100,
   "type": "object",
   "faIcon": "fa-user",

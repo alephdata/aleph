@@ -1,12 +1,10 @@
 
 aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session) {
-    var dfd = null,
-        rolesDfd = null;
+    var dfd = null;
 
     var flush = function() {
       Session.flush();
       dfd = null;
-      rolesDfd = null;
       return get();
     };
 
@@ -31,6 +29,7 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
               'collectionsList': results[0].data.results,
               'collectionsCount': collectionsCount,
               'fields': metadata.fields,
+              'schemata': metadata.schemata,
               'source_categories': metadata.source_categories,
               'countries': metadata.countries, 
               'languages': metadata.languages
@@ -44,21 +43,8 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
       return dfd.promise;
     };
 
-    var getRoles = function() {
-      if (rolesDfd === null) {
-        rolesDfd = $q.defer();
-        $http.get('/api/1/roles', {cache: true}).then(function(res) {
-          rolesDfd.resolve(res.data);
-        }, function(err) {
-          rolesDfd.reject(err);
-        });
-      }
-      return rolesDfd.promise;
-    };
-
     return {
       get: get,
-      getRoles: getRoles,
       flush: flush
     };
 

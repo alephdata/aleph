@@ -7,6 +7,7 @@ from flask.ext.fixtures import loaders, load_fixtures
 from aleph.model import Role, Document, create_system_roles
 from aleph.index import delete_index, init_search, optimize_search
 from aleph.analyze import analyze_document
+from aleph.entities import reindex_entities
 from aleph.core import db, create_app
 from aleph.views import mount_app_blueprints
 
@@ -55,6 +56,7 @@ class TestCase(FlaskTestCase):
         filepath = self.get_fixture_path(file_name)
         load_fixtures(db, loaders.load(filepath))
         db.session.commit()
+        reindex_entities()
         if process_documents:
             for doc_id, in Document.all_ids():
                 analyze_document(doc_id)

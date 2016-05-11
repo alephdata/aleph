@@ -1,17 +1,4 @@
-<span class="entity-icon {{type}}" uib-tooltip="{{type}}"
-  tooltip-append-to-body="true" tooltip-placement="left">
-  <i class="fa fa-question-circle"
-    ng-if="type=='/entity/asset.json#'"></i>
-  <i class="fa fa-question-circle"
-    ng-if="type=='/entity/building.json#'"></i>
-  <i class="fa fa-question-circle"
-    ng-if="type=='/entity/asset.json#'"></i>
-  <i class="fa fa-suitcase"
-    ng-if="type=='/entity/company.json#'"></i>
-  <i class="fa fa-university"
-    ng-if="type=='/entity/organization.json#'"></i>
-  <i class="fa fa-user"
-    ng-if="type=='/entity/person.json#'"></i>
-  <i class="fa fa-user"
-    ng-if="type=='/entity/entity.json#'"></i>
+<span class="entity-icon" uib-tooltip="{{data.title}}"
+  tooltip-append-to-body="true">
+  <i class="fa {{data.faIcon}}"></i>
 </span>

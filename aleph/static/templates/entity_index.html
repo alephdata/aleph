@@ -1,0 +1,181 @@
+<div class="row search-bar">
+  <div class="col-md-8">
+    <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
+      <div class="input-group">
+        <input type="text" class="form-control" autofocus
+               ng-model="query.state.q" placeholder="Search people and companies">
+        <span class="input-group-btn">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </span>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-md-4">
+    <div class="btn-group btn-group-justified" role="group">
+      <div class="btn-group" uib-dropdown dropdown-append-to-body>
+        <button type="button" class="btn btn-primary dropdown-toggle"
+          uib-dropdown-toggle>
+          <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+          Sort by...
+        </button>
+        <ul class="uib-dropdown-menu" role="menu">
+          <li ng-repeat="(field, label) in sortOptions"
+              ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'score')}">
+            <a ng-click="query.set('sort', field)"
+               ng-bind="label"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="btn-group">
+        <a ng-click="createEntity($event)" class="btn btn-primary" ng-disabled="!authz.logged_in()">
+          <i class="fa fa-plus-square" aria-hidden="true"></i>
+          Create
+        </a>
+      </div>
+      <div class="btn-group">
+        <a ng-click="mergeSelection($event)" class="btn btn-primary" ng-disabled="!canMerge()">
+          <i class="fa fa-link" aria-hidden="true"></i>
+          Merge
+        </a>
+      </div>
+      <div class="btn-group">
+        <a ng-click="deleteSelection($event)" class="btn btn-primary" ng-disabled="!canDelete()">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+          Delete
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="alert alert-danger" role="alert" ng-if="error">
+      <strong>An error occurred while running your search.</strong>
+      {{::error.info.reason || error.message}}
+    </div>
+
+    <div class="alert alert-suggest" ng-if="result.limit > 0 && !result.total && authz.logged_in()">
+      No entities were found,
+      <a ng-click="createEntity($event, query.state.q)">create one now</a>?
+    </div>
+
+    <div>
+      <table ng-if="result.results.length" class="table table-striped">
+        <tr ng-repeat-start="entity in result.results">
+          <td width="1%" ng-if="authz.logged_in()">
+            <input type="checkbox" ng-disabled="!authz.entityWrite(entity)" ng-model="entity.selected">
+          </td>
+          <td width="1%">
+            <entity-icon schema="entity.$schema"></entity-icon>
+          </td>
+          <td>
+            <strong>{{::entity.name}}</strong>
+          </td>
+          <td width="1%">{{::entity.jurisdiction_code.toUpperCase()}}</td>
+          <td class="numeric" width="1%">
+            <button type="button" class="btn btn-default btn-xs" ng-click="toggleAlert(entity)"
+                ng-class="{'btn-primary': entity.alert_id}">
+              <i class="fa fa-bell"></i>
+              <span ng-show="entity.alert_id">Stop</span>
+              <span ng-hide="entity.alert_id">Track</span>
+            </button>
+          </td>
+          <td class="numeric" width="5%">
+            <a ng-href="/search?entity={{entity.id}}" ng-if="entity.doc_count">
+              <i class="fa fa-search" aria-hidden="true"></i> {{entity.doc_count | number}}
+            </a>
+            <span ng-if="!entity.doc_count">
+              <i class="fa fa-search" aria-hidden="true"></i> 0
+            </span>
+          </td>
+        </tr>
+        <tr ng-repeat-end ng-show="entity.summary">
+          <td ng-if="authz.logged_in()">
+          </td>
+          <td>
+          </td>
+          <td colspan="4">
+            {{::entity.summary | limitTo:500}}
+          </td>
+        </tr>
+      </table>
+      <div class="bottom-pager">
+        <div class="pull-right">
+          <response-pager response="result" load="loadOffset(offset)"></response-pager>
+        </div>
+        <div class="total" ng-if="result.limit > 0 && result.total">
+          Found {{::result.total | number}} entities.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Countries</strong>
+        <small>{{::jurisdictionFacet.length}}</small>
+      </div>
+      <ul class="list-group facet-list">
+        <li class="list-group-item facet empty" ng-if="!jurisdictionFacet.length">
+          No entities with country associations.
+        </li>
+        <li class="list-group-item facet animate toggle"
+          ng-repeat="val in jurisdictionFacet"
+          ng-class="{'active': query.hasFilter('jurisdiction_code', val.id)}"
+          ng-click="query.toggleFilter('jurisdiction_code', val.id)">
+          <span class="badge">{{::val.count | number}}</span>
+          <span class="lbl">
+            {{::val.label | country}}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Watchlists</strong>
+        <small>{{::collectionFacet.length}}</small>
+      </div>
+      <ul class="list-group facet-list">
+        <li class="list-group-item facet animate toggle"
+          ng-repeat="collection in collectionFacet"
+          ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
+          ng-click="query.toggleFilter('collection_id', collection.id)">
+          <span class="badge">{{::collection.count | number}}</span>
+          <span class="lbl">
+            {{::collection.label | limitTo:50 }}
+            <a ng-click="editCollection(collection, $event)" ng-show="authz.collection(authz.WRITE, collection.id)">
+              <i class="fa fa-cog"></i>
+            </a>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Types</strong>
+        <small>{{::schemaFacet.length}}</small>
+      </div>
+      <ul class="list-group facet-list">
+        <li class="list-group-item facet empty" ng-if="!schemaFacet.length">
+          No entities found.
+        </li>
+        <li class="list-group-item facet animate toggle"
+          ng-repeat="val in schemaFacet"
+          ng-class="{'active': query.hasFilter('$schema', val.id)}"
+          ng-click="query.toggleFilter('$schema', val.id)">
+          <span class="badge">{{::val.count | number}}</span>
+          <span class="lbl">
+            <entity-icon schema="val.id"></entity-icon>
+            {{::val.label | schemaPlural}}
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+

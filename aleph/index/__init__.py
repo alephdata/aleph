@@ -7,8 +7,9 @@ from aleph.util import latinize_text
 from aleph.index.admin import init_search, upgrade_search  # noqa
 from aleph.index.admin import delete_index, optimize_search  # noqa
 from aleph.index.records import generate_records, clear_records
-from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD
-from aleph.index.mapping import DOCUMENT_MAPPING, RECORD_MAPPING  # noqa
+from aleph.index.entities import index_entity, delete_entity  # noqa
+from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD, TYPE_ENTITY  # noqa
+from aleph.index.mapping import DOCUMENT_MAPPING, RECORD_MAPPING, ENTITY_MAPPING  # noqa
 
 log = logging.getLogger(__name__)
 
@@ -46,11 +47,13 @@ def delete_source(source_id):
 def generate_entities(document):
     entities = []
     for reference in document.references:
+        colls = [c.id for c in reference.entity.collections]
         entities.append({
             'id': reference.id,
             'weight': reference.weight,
             'uuid': reference.entity.id,
-            'collection_id': reference.entity.collection_id,
+            'collection_id': colls,
+            'collections': colls,
             'name': reference.entity.name,
             '$schema': reference.entity.type
         })

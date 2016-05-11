@@ -1,5 +1,6 @@
 import logging
 from logging.handlers import SMTPHandler
+from urlparse import urljoin
 from flask import Flask, current_app
 from flask import url_for as flask_url_for
 from flask_admin import Admin
@@ -78,6 +79,10 @@ def configure_alembic(config):
 
 def get_config(name, default=None):
     return current_app.config.get(name, default)
+
+
+def get_app_url():
+    return urljoin(current_app.config.get('APP_BASEURL'), '/')
 
 
 def get_es():

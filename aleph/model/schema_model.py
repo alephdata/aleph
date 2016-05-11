@@ -119,7 +119,7 @@ class SchemaModel(object):
             for cand in existing:
                 if item.get('id') and cand.id == item.get('id'):
                     obj = cand
-                elif merge and cand._merge_compare(item):
+                elif merge and cand.merge_compare(item):
                     obj = cand
             obj.update(item)
             ids.add(obj.id)
@@ -136,7 +136,7 @@ class SchemaModel(object):
         setattr(self, prop.name, existing)
         return existing
 
-    def _merge_compare(self, data):
+    def merge_compare(self, data):
         for prop in self.schema_visitor.properties:
             if not prop.is_value:
                 continue

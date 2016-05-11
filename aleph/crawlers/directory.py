@@ -4,7 +4,6 @@ import chardet
 import logging
 from normality import slugify
 
-from aleph import process
 from aleph.model import Source
 from aleph.crawlers.crawler import Crawler
 
@@ -51,6 +50,3 @@ class DirectoryCrawler(Crawler):
                     self.emit_file(source, meta, file_path)
                 except Exception as ex:
                     log.exception(ex)
-                    process.exception(process.INDEX, component=self.name,
-                                      source_location=directory,
-                                      source_id=source.id, exception=ex)

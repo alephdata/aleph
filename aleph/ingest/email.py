@@ -102,8 +102,7 @@ class EmailFileIngestor(TextIngestor):
 
         out_path = ''
         if body_part is None:
-            self.log_error(meta, error_type='EmptyEmailError',
-                           error_message="No body in E-Mail: %r" % meta)
+            log.warning("No body in E-Mail: %r" % meta)
             return
         try:
             if 'html' in body_type:

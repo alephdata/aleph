@@ -9,7 +9,7 @@
           <span ng-show="$first">Edit</span>
       </th>
     </tr>
-    <tr ng-repeat="role in roles | filter:{type: type.type}">
+    <tr ng-repeat="role in getActiveRoles() | filter:{type: type.type}">
       <td>
         {{role.name}}
       </td>
@@ -23,4 +23,18 @@
       </td>
     </tr>
   </tbody>
+  <tfoot>
+    <tr>
+      <td>
+        <input type="input" class="form-control"
+          placeholder="Grant access to more users..."
+          ng-model="newRole"
+          uib-typeahead="role as role.name for role in findRoles($viewValue)"
+          typeahead-on-select="addRole($item, $model)"
+          typeahead-editable="false">
+      </td>
+      <td colspan="2">
+      </td>
+    </tr>
+  </tfoot>
 </table>

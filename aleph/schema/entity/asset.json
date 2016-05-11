@@ -10,11 +10,6 @@
   "graph": "node",
   "oneOf": [{"$ref": "/entity/entity.json#"}],
   "properties": {
-    "register_name": {
-        "title": "Register name",
-        "sortIndex": 92,
-        "type": ["string", "null"]
-    },
     "valuation": {
       "sortIndex": 90,
       "title": "Valuation",
@@ -22,23 +17,23 @@
     },
     "valuation_currency": {
       "sortIndex": 86,
-        "title": "Currency of valuation",
-        "type": ["string", "null"]
+      "title": "Currency of valuation",
+      "type": ["string", "null"]
     },
     "valuation_date": {
       "sortIndex": 88,
-        "title": "Date of valuation",
-        "type": ["string", "null"],
-        "format": "date"
+      "title": "Date of valuation",
+      "type": ["string", "null"],
+      "format": "date"
     },
     "owners": {
-        "title": "Owners",
-        "sortIndex": 99,
-        "type": "array",
-        "rdfReverse": "asset",
-        "items": {
-            "$ref": "/link/ownership.json#"
-        }
+      "title": "Owners",
+      "sortIndex": 99,
+      "type": "array",
+      "rdfReverse": "asset",
+      "items": {
+          "$ref": "/link/ownership.json#"
+      }
     }
   }
 }

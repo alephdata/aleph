@@ -13,7 +13,7 @@
 }
 
 .facet-list {
-    max-height: 20em;
+    max-height: 15em;
     overflow-y: scroll;
     overflow: -moz-scrollbars-vertical; 
     //margin: -3px -1px 0 -1px;
@@ -45,6 +45,19 @@
 
 .search-bar {
     margin-bottom: 1em;
+}
+
+.alert.alert-suggest {
+    background-color: $gray-subtle;
+    // border: 1px solid $border-color;
+
+    .entity-icon {
+        margin-right: 0;
+    }
+
+    a {
+        font-weight: bold;
+    }
 }
 
 // Search results 
