@@ -37,9 +37,13 @@ def convert_entities(entities):
         entity = entities.get(bucket.get('key'))
         if entity is None:
             continue
-        data = entity.to_dict()
-        data['count'] = bucket.get('doc_count')
-        results.append(data)
+        results.append({
+            'name': entity.name,
+            'summary': entity.summary,
+            '$schema': entity.type,
+            'jurisdiction_code': entity.jurisdiction_code,
+            'count': bucket.get('doc_count')
+        })
     return results
 
 
