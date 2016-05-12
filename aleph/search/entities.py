@@ -9,7 +9,7 @@ from aleph.search.util import authz_collections_filter, authz_sources_filter
 from aleph.search.util import execute_basic, parse_filters
 from aleph.search.fragments import match_all, filter_query, aggregate
 from aleph.search.facets import convert_entity_aggregations
-from aleph.util import latinize_text
+from aleph.text import latinize_text
 
 DEFAULT_FIELDS = ['collections', 'name', 'summary', 'jurisdiction_code',
                   'description', '$schema']

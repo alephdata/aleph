@@ -4,7 +4,7 @@ from messytables import any_tableset, offset_processor
 from messytables import headers_guess, headers_processor
 
 from aleph.model import Document
-from aleph.util import string_value
+from aleph.text import string_value
 from aleph.ingest.ingestor import Ingestor
 from aleph.model.tabular import Tabular
 

@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from aleph.index import TYPE_RECORD
-from aleph.util import latinize_text
+from aleph.text import latinize_text
 from aleph.search.util import add_filter
 
 

@@ -4,10 +4,9 @@ from time import time
 from threading import RLock
 from itertools import count
 from collections import defaultdict
-# from unidecode import unidecode
 
 from aleph.core import db
-from aleph.util import normalize_strong
+from aleph.text import normalize_strong
 from aleph.model import Reference, Entity
 from aleph.analyze.analyzer import Analyzer
 

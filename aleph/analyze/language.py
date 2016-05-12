@@ -1,6 +1,5 @@
 import logging
 from collections import defaultdict
-
 from langid.langid import LanguageIdentifier, model
 # https://github.com/saffsd/langid.py
 

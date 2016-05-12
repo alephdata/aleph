@@ -2,7 +2,7 @@ import logging
 
 from aleph.core import celery
 from aleph.ext import get_analyzers
-from aleph.util import normalize_strong
+from aleph.text import normalize_strong
 from aleph.model import Document, Entity
 from aleph.search.fragments import text_query_string, meta_query_string
 from aleph.search.fragments import child_record

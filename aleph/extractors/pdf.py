@@ -9,7 +9,7 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser, PDFSyntaxError
 from pdfminer.pdfdocument import PDFDocument
 
-from aleph.extractors.util import safe_text, text_fragments
+from aleph.text import string_value
 from aleph.extractors.tesseract import _extract_image_page
 
 log = logging.getLogger(__name__)
@@ -27,14 +27,19 @@ def _find_objects(objects, cls):
 def _convert_page(layout, path):
     text_content = []
     for text_obj in _find_objects(layout._objs, (LTTextBox, LTTextLine)):
-        text_content.append(text_obj.get_text())
+        text = text_obj.get_text()
+        if text is None:
+            continue
+        text = text.strip()
+        if len(text):
+            text_content.append(text)
 
-    text = text_fragments(text_content)
+    text = '\n'.join(text_content)
     # if len(text) < 2:
     #     if len(list(_find_objects(layout._objs, LTImage))):
     #         log.debug("Defaulting to OCR: %r, pg. %s", path, page_no)
     #         text = _extract_image_page(path, page_no, languages)
-    return text
+    return text.strip()
 
 
 def extract_pdf(path, languages=None):
@@ -63,7 +68,7 @@ def extract_pdf(path, languages=None):
             for k, v in doc.info[-1].items():
                 k = k.lower().strip()
                 if k != 'pages':
-                    result[k] = safe_text(v)
+                    result[k] = string_value(v)
 
         if not doc.is_extractable:
             raise TypeError("PDF not extractable: %s", path)

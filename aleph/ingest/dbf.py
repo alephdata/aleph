@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 from dbf.base import DBF
-from aleph.util import string_value
-from aleph.extractors import guess_encoding
+from aleph.text import string_value
 from aleph.ingest.tabular import TabularIngestor
 
 
@@ -28,14 +27,13 @@ class DBFIngestor(TabularIngestor):
                     for v in db.select(i).values():
                         if isinstance(v, str):
                             text.append(v)
-                encoding = guess_encoding(' '.join(text))
 
                 for i in xrange(0, db.numrec):
                     row = db.select(i)
                     record = {}
                     for k, value in row.items():
                         name = columns.get(k)
-                        record[name] = string_value(value, encoding=encoding)
+                        record[name] = string_value(value)
                     if len(record):
                         for name in columns.values():
                             record[name] = record.get(name, None)
