@@ -9,8 +9,8 @@ from PIL import Image
 from tesserwrap import Tesseract, PageSegMode
 
 from aleph.core import get_config
+from aleph.model import Cache
 from aleph.extractors.constants import get_languages
-from aleph.extractors.cache import set_cache, get_cache
 
 # https://tesserwrap.readthedocs.org/en/latest/#
 # https://pillow.readthedocs.org/en/3.0.x/reference/Image.html
@@ -31,7 +31,8 @@ def extract_image_data(data, languages=None):
     tessdata_prefix = get_config('TESSDATA_PREFIX')
     if tessdata_prefix is None:
         raise ValueError('TESSDATA_PREFIX is not set, OCR will not work.')
-    key, text = get_cache(data)
+    languages = get_languages(languages)
+    text = Cache.get_ocr(data, languages)
     if text is not None:
         return text
     try:
@@ -41,13 +42,12 @@ def extract_image_data(data, languages=None):
         return ''
 
     # TODO: play with contrast and sharpening the images.
-    languages = get_languages(languages)
     extractor = Tesseract(tessdata_prefix, lang=languages)
     extractor.set_page_seg_mode(PageSegMode.PSM_AUTO_OSD)
     text = extractor.ocr_image(img)
     log.debug('OCR done: %s, %s characters extracted',
               languages, len(text))
-    set_cache(key, text)
+    Cache.set_ocr(data, languages, text)
     return text
 
 
