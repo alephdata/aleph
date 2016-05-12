@@ -24,6 +24,7 @@ class LanguageAnalyzer(Analyzer):
     def analyze(self, document, meta):
         if len(meta.languages):
             return
+
         languages = defaultdict(float)
         for text, rec in document.text_parts():
             if len(text.strip()) < CUTOFF:
