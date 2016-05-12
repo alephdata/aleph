@@ -28,7 +28,6 @@ Unidecode==0.04.17
 networkx
 XlsxWriter==0.6.6
 https://github.com/pudo/messytables/tarball/allow-parser-args
-https://github.com/pudo/extractors/tarball/master
 https://github.com/pudo/krauler/tarball/master
 https://github.com/pudo/metafolder/tarball/master
 https://github.com/pudo/jsonmapping/tarball/master

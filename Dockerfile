@@ -46,6 +46,5 @@ RUN pip install --upgrade pip && pip install functools32 \
 COPY . /aleph
 WORKDIR /aleph
 ENV ALEPH_SETTINGS /aleph/contrib/docker_settings.py
-RUN pip install -e /aleph \
-    && pip install --upgrade https://github.com/pudo/extractors/tarball/master
+RUN pip install -e /aleph
 RUN bower --allow-root install

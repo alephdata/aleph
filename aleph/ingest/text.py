@@ -1,14 +1,13 @@
 import os
 import logging
 from tempfile import mkstemp
-
 from lxml import html, etree
 from lxml.html.clean import Cleaner
-from extractors import extract_pdf
-from extractors import document_to_pdf, image_to_pdf, html_to_pdf
 
 from aleph.core import get_archive, get_config
 from aleph.model import db, Document, DocumentPage
+from aleph.extractors import extract_pdf
+from aleph.extractors import document_to_pdf, image_to_pdf, html_to_pdf
 from aleph.ingest.ingestor import Ingestor
 
 log = logging.getLogger(__name__)

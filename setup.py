@@ -24,15 +24,15 @@ setup(
     test_suite='nose.collector',
     entry_points={
         'aleph.ingestors': [
+            'skip = aleph.ingest.dummy:SkipIngestor',
             'html = aleph.ingest.text:HtmlIngestor',
             'pdf = aleph.ingest.text:PDFIngestor',
             'doc = aleph.ingest.text:DocumentIngestor',
             'img = aleph.ingest.text:ImageIngestor',
             'email = aleph.ingest.email:EmailFileIngestor',
-            'skip = aleph.ingest.dummy:SkipIngestor',
             'pst = aleph.ingest.email:OutlookIngestor',
             'messy = aleph.ingest.tabular:MessyTablesIngestor',
-            'dbf = aleph.ingest.tabular:DBFIngestor',
+            'dbf = aleph.ingest.dbf:DBFIngestor',
             'rar = aleph.ingest.packages:RARIngestor',
             'zip = aleph.ingest.packages:ZipIngestor',
             'tar = aleph.ingest.packages:TarIngestor',
