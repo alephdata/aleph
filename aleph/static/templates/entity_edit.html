@@ -30,7 +30,7 @@
             <p class="help-block">Describe the relevance of this entity in a sentence.</p>
           </div>
         </div>
-
+ 
         <div class="checkbox">
           <label>
             <input type="checkbox" ng-model="entity.haveAlert"> Receive e-mail alerts about new, matching documents.
@@ -39,6 +39,32 @@
       </div>
       <div class="col-md-8" ng-show="section == 'other_names'">
       </div>
+      <div class="col-md-8" ng-show="section == 'details'">
+        
+        <div class="form-group" ng-if="isPerson">
+          <label class="control-label" for="description">Gender</label>
+          <div>
+            <input type="text" class="form-control" id="gender"
+              ng-model="entity.gender"
+              placeholder="e.g. male, female">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="description">
+            <span ng-show="isEntity">Description</span>
+            <span ng-show="isCompany">Corporate</span>
+            <span ng-show="isOrganization">History</span>
+            <span ng-show="isPerson">Personal Biography</span>
+          </label>
+          <div class="">
+            <textarea class="form-control" id="description" name="description"
+              ng-model="entity.description" rows="4"></textarea>
+            <p class="help-block">Provide biographical background about this entity.</p>
+          </div>
+        </div>
+
+      </div>
       <div class="col-md-4">
         <ul class="nav nav-pills nav-stacked">
           <li ng-class="{'active': section == 'base'}">
@@ -46,6 +72,9 @@
           </li>
           <li ng-class="{'active': section == 'other_names'}">
             <a ng-click="setSection('other_names')">Alternate Names</a>
+          </li>
+          <li ng-class="{'active': section == 'details'}">
+            <a ng-click="setSection('details')">Additional Detail</a>
           </li>
         </ul>
       </div>

@@ -174,8 +174,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     @property
     def terms(self):
         terms = set([self.name])
-        # for other_name in self.other_names:
-        #    terms.update(other_name.terms)
+        for other_name in self.other_names:
+            terms.update(other_name.terms)
         return [t for t in terms if t is not None and len(t)]
 
     @classmethod
@@ -293,7 +293,6 @@ class EntityPerson(EntityLegalPerson):
     gender = db.Column(db.Unicode, nullable=True)
     birth_date = db.Column(db.Date, nullable=True)
     death_date = db.Column(db.Date, nullable=True)
-    biography = db.Column(db.Unicode, nullable=True)
 
     residential_address_id = db.Column(db.String(32), db.ForeignKey('entity_address.id'))  # noqa
     residential_address = db.relationship('EntityAddress',

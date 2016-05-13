@@ -5,6 +5,12 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
   $scope.entity.jurisdiction_code = entity.jurisdiction_code || null;
   $scope.originalName = entity.name + '';
   $scope.section = 'base';
+  $scope.isEntity = entity.$schema == '/entity/entity.json#';
+  $scope.isPerson = entity.$schema == '/entity/person.json#';
+  $scope.isCompany = entity.$schema == '/entity/company.json#';
+  $scope.isOrganization = (entity.$schema == '/entity/organization.json#') || $scope.isCompany;
+  console.log(entity, $scope.isPerson);
+  
 
   var initAlerts = function() {
     $scope.alertId = null;
