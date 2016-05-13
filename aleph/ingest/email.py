@@ -11,7 +11,8 @@ from flanker import mime
 from flanker.addresslib import address
 
 from aleph.ingest import ingest_file
-from aleph.ingest.text import TextIngestor, DocumentIngestor, HtmlIngestor
+from aleph.ingest.text import TextIngestor, DocumentIngestor
+from aleph.ingest.html import HtmlIngestor
 
 log = logging.getLogger(__name__)
 
