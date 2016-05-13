@@ -31,3 +31,8 @@ class ETLTestCase(TestCase):
         doc.delete_records()
         records = db.session.query(DocumentRecord).all()
         assert len(records) == 0, len(records)
+
+    def test_load_sample_directory(self):
+        csv_path = self.get_fixture_path('samples')
+        crawler = DirectoryCrawler()
+        crawler.execute(directory=csv_path)

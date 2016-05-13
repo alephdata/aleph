@@ -3,6 +3,8 @@ from dbf.base import DBF
 from aleph.text import string_value
 from aleph.ingest.tabular import TabularIngestor
 
+# TODO, dbf: https://pypi.python.org/pypi/pyDBF/
+
 
 class DBFIngestor(TabularIngestor):
     MIME_TYPES = []

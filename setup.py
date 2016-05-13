@@ -26,7 +26,8 @@ setup(
         'aleph.ingestors': [
             'skip = aleph.ingest.dummy:SkipIngestor',
             'pdf = aleph.ingest.text:PDFIngestor',
-            'doc = aleph.ingest.text:DocumentIngestor',
+            'doc = aleph.ingest.document:DocumentIngestor',
+            'ppt = aleph.ingest.document:PresentationIngestor',
             'html = aleph.ingest.html:HtmlIngestor',
             'img = aleph.ingest.image:ImageIngestor',
             'email = aleph.ingest.email:EmailFileIngestor',

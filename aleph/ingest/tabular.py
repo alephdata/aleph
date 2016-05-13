@@ -3,12 +3,11 @@ import logging
 from messytables import any_tableset, offset_processor
 from messytables import headers_guess, headers_processor
 
+from aleph.metadata import Tabular
 from aleph.model import Document
 from aleph.text import string_value
 from aleph.ingest.ingestor import Ingestor
-from aleph.metadata import Tabular
 
-# TODO, dbf: https://pypi.python.org/pypi/pyDBF/
 log = logging.getLogger(__name__)
 
 

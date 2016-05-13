@@ -10,7 +10,7 @@ from pdfminer.pdfparser import PDFParser, PDFSyntaxError
 from pdfminer.pdfdocument import PDFDocument
 
 from aleph.text import string_value
-from aleph.extractors.tesseract import _extract_image_page
+from aleph.ingest.tesseract import _extract_image_page
 
 log = logging.getLogger(__name__)
 
