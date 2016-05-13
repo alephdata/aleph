@@ -107,8 +107,12 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <span class="pull-right">
-          <a ng-click="selectCollections($event)">
-            <i class="fa fa-cog"></i>
+          <a class="btn btn-xs btn-default" ng-click="createQueryEntity()"
+              ng-if="authz.logged_in()">
+            <i class="fa fa-plus"></i>
+          </a>
+          <a class="btn btn-xs btn-default" ng-click="selectCollections($event)">
+            <i class="fa fa-filter"></i>
           </a>
         </span>
         <strong>Persons and Companies</strong>

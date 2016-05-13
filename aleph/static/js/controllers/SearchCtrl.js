@@ -94,7 +94,15 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     var name = $scope.originalText;
     name = name.replace(/[\"\'\(\)\[\]\+]*/, ' ');
     name = titleCaps(name);
-    Entity.create({$schema: schema, name: name});
+    Entity.create({$schema: schema, name: name}).then(function() {
+      $route.reload();
+    });
+  };
+
+  $scope.editEntity = function(entity) {
+    Entity.edit(entity.id).then(function() {
+      $route.reload();
+    });
   };
 
   $scope.setEntity = function(entity) {
