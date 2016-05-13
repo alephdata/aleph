@@ -25,10 +25,10 @@ setup(
     entry_points={
         'aleph.ingestors': [
             'skip = aleph.ingest.dummy:SkipIngestor',
-            'html = aleph.ingest.text:HtmlIngestor',
             'pdf = aleph.ingest.text:PDFIngestor',
             'doc = aleph.ingest.text:DocumentIngestor',
-            'img = aleph.ingest.text:ImageIngestor',
+            'html = aleph.ingest.html:HtmlIngestor',
+            'img = aleph.ingest.image:ImageIngestor',
             'email = aleph.ingest.email:EmailFileIngestor',
             'pst = aleph.ingest.email:OutlookIngestor',
             'messy = aleph.ingest.tabular:MessyTablesIngestor',

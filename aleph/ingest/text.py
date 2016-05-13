@@ -1,13 +1,10 @@
 import os
 import logging
-from tempfile import mkstemp
-from lxml import html, etree
-from lxml.html.clean import Cleaner
 
 from aleph.core import get_archive, get_config
 from aleph.model import db, Document, DocumentPage
 from aleph.extractors import extract_pdf
-from aleph.extractors import document_to_pdf, image_to_pdf, html_to_pdf
+from aleph.extractors import document_to_pdf
 from aleph.ingest.ingestor import Ingestor
 
 log = logging.getLogger(__name__)
@@ -109,63 +106,3 @@ class PresentationIngestor(DocumentIngestor):
                   'application/vnd.sun.xml.impress']
     EXTENSIONS = ['ppt', 'pptx', 'odp', 'pot', 'pps', 'ppa']
     BASE_SCORE = 5
-
-
-class HtmlIngestor(DocumentIngestor):
-    MIME_TYPES = ['text/html']
-    EXTENSIONS = ['html', 'htm', 'asp', 'aspx', 'jsp']
-
-    cleaner = Cleaner(scripts=True, javascript=True, style=True, links=True,
-                      embedded=True, forms=True, annoying_tags=True,
-                      meta=False)
-
-    def ingest(self, meta, local_path):
-        fh, out_path = mkstemp(suffix='.htm')
-        os.close(fh)
-        with open(local_path, 'rb') as fh:
-            doc = html.fromstring(fh.read())
-            if not meta.has('title'):
-                title = doc.findtext('.//title')
-                if title is not None:
-                    meta.title = title.strip()
-
-            if not meta.has('summary'):
-                summary = doc.find('.//meta[@name="description"]')
-                if summary is not None and summary.get('content'):
-                    meta.summary = summary.get('content')
-
-            self.cleaner(doc)
-        try:
-            with open(out_path, 'w') as fh:
-                fh.write(etree.tostring(doc))
-
-            pdf_path = html_to_pdf(out_path)
-            if pdf_path is None or not os.path.isfile(pdf_path):
-                log.error("Could not convert document: %r", meta)
-                return
-            self.extract_pdf_alternative(meta, pdf_path)
-        finally:
-            if os.path.isfile(out_path):
-                os.unlink(out_path)
-
-
-class ImageIngestor(TextIngestor):
-    MIME_TYPES = ['image/png', 'image/tiff', 'image/x-tiff',
-                  'image/jpeg', 'image/bmp', 'image/x-windows-bmp',
-                  'image/x-portable-bitmap', 'application/postscript',
-                  'image/vnd.dxf', 'image/svg+xml']
-    EXTENSIONS = ['gif', 'png', 'jpg', 'jpeg', 'tif', 'tiff', 'bmp',
-                  'jpe', 'pbm']
-    BASE_SCORE = 5
-
-    def ingest(self, meta, local_path):
-        try:
-            pdf_path = image_to_pdf(local_path)
-            if pdf_path is None or not os.path.isfile(pdf_path):
-                log.error("Could not convert image: %r", meta)
-                return
-            self.store_pdf(meta, pdf_path)
-            self.extract_pdf(meta, pdf_path)
-        finally:
-            if os.path.isfile(pdf_path):
-                os.unlink(pdf_path)

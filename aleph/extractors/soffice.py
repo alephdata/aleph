@@ -2,7 +2,7 @@ import os
 import logging
 import shutil
 import subprocess
-from tempfile import mkdtemp, mkstemp
+from tempfile import mkdtemp
 
 from aleph.core import get_config
 
@@ -31,17 +31,3 @@ def document_to_pdf(path):
         log.exception(ex)
     finally:
         shutil.rmtree(instance_dir)
-
-
-def html_to_pdf(path):
-    """OK, this is weirder. Converting HTML to PDF via WebKit."""
-    fh, out_path = mkstemp(suffix='.pdf')
-    os.close(fh)
-    try:
-        wkhtmltopdf = get_config('WKHTMLTOPDF_BIN')
-        args = [wkhtmltopdf, '--disable-javascript', '--no-outline',
-                '--no-images', '--quiet', path, out_path]
-        subprocess.call(args)
-        return out_path
-    except Exception as ex:
-        log.exception(ex)

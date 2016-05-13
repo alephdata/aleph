@@ -2,8 +2,8 @@ import pycountry
 
 
 def get_languages(languages):
-    if languages is None or not len(languages):
-        languages = ['en']
+    if languages is None:
+        languages = []
 
     supported = []
     for lang in languages:

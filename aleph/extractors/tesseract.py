@@ -17,15 +17,6 @@ from aleph.extractors.constants import get_languages
 log = logging.getLogger(__name__)
 
 
-def extract_image(path, languages=None):
-    """Extract text from an image."""
-    # Use tesseract to extract text in the given ``languages`` from an
-    # image file. Tesseract should support a wide range of formats, including
-    # PNG, TIFF and JPG.
-    with open(path, 'rb') as fh:
-        return extract_image_data(fh.read(), languages=languages)
-
-
 def extract_image_data(data, languages=None):
     """Extract text from a binary string of data."""
     tessdata_prefix = get_config('TESSDATA_PREFIX')
