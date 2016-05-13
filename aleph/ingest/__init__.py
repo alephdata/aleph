@@ -6,7 +6,7 @@ from tempfile import NamedTemporaryFile
 from aleph import event
 from aleph.core import get_archive, celery
 from aleph.model import clear_session
-from aleph.model.metadata import Metadata
+from aleph.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor
 
 log = logging.getLogger(__name__)

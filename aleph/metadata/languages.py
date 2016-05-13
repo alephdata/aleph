@@ -1,7 +1,7 @@
 import pycountry
 
 
-def get_languages(languages):
+def get_iso3(languages):
     if languages is None:
         languages = []
 

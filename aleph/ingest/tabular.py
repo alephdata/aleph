@@ -6,7 +6,7 @@ from messytables import headers_guess, headers_processor
 from aleph.model import Document
 from aleph.text import string_value
 from aleph.ingest.ingestor import Ingestor
-from aleph.model.tabular import Tabular
+from aleph.metadata import Tabular
 
 # TODO, dbf: https://pypi.python.org/pypi/pyDBF/
 log = logging.getLogger(__name__)

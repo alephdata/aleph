@@ -2,7 +2,8 @@ import logging
 from tempfile import NamedTemporaryFile
 
 from aleph.core import db
-from aleph.model import Metadata, Source, Document, Entity, Collection
+from aleph.metadata import Metadata
+from aleph.model import Source, Document, Entity, Collection
 from aleph.ext import get_crawlers
 from aleph.ingest import ingest_url, ingest_file
 from aleph.index import index_entity, delete_entity
