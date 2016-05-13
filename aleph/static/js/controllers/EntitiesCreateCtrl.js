@@ -1,15 +1,16 @@
-aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Validation', 'entity',
-    function($scope, $http, $uibModalInstance, Metadata, Session, Authz, Validation, entity) {
+aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Alert', 'Validation', 'entity',
+    function($scope, $http, $uibModalInstance, Metadata, Session, Authz, Alert, Validation, entity) {
 
   $scope.availableSchemata = ['/entity/person.json#', '/entity/company.json#',
-                              '/entity/organization.json#']
+                              '/entity/organization.json#'];
   $scope.selectSchema = !entity.$schema;
   $scope.entity = entity;
+  $scope.entity.jurisdiction_code = $scope.entity.jurisdiction_code || null;
+  $scope.entity.$schema = $scope.entity.$schema || $scope.availableSchemata[0];
   $scope.createAlert = true;
   $scope.collection = {};
   $scope.createCollection = false;
   $scope.collections = [];
-  $scope.entity.$schema = $scope.entity.$schema || $scope.availableSchemata[0];
   $scope.schemata = {};
 
   Metadata.get().then(function(metadata) {
@@ -68,7 +69,7 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
     res.then(function(res) {
       if ($scope.createAlert) {
         var alert = {entity_id: res.data.id};
-        $http.post('/api/1/alerts', alert).then(function(ares) {
+        Alert.create({entity_id: res.data.id}).then(function() {
           $uibModalInstance.close(res.data);  
         });
       } else {

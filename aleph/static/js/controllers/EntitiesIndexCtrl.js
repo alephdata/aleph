@@ -65,6 +65,14 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
     });
   };
 
+  $scope.editEntity = function(entity) {
+    Entity.edit(entity.id).then(function() {
+      $timeout(function() {
+        $route.reload();
+      }, 500);
+    });
+  };
+
   $scope.getSelection = function() {
     var selection = [];
     for (var i in data.result.results) {

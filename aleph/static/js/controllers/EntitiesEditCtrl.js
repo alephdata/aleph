@@ -1,68 +1,30 @@
-aleph.controller('EntitiesEditCtrl', ['$scope', '$http', 'Metadata', 'Session', 'Authz', 'Validation', 'data',
-    function($scope, $http, Metadata, Session, Authz, Validation, data) {
+aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Alert', 'Validation', 'entity', 'metadata', 'alerts',
+    function($scope, $http, $uibModalInstance, Metadata, Session, Authz, Alert, Validation, entity, metadata, alerts) {
 
-  $scope.availableSchemata = ['/entity/person.json#', '/entity/company.json#',
-                              '/entity/organization.json#']
-  $scope.entity = data.entity;
+  $scope.entity = entity;
+  $scope.entity.jurisdiction_code = entity.jurisdiction_code || null;
+  $scope.originalName = entity.name + '';
 
-  // $scope.selectSchema = !entity.$schema;
-  // $scope.entity = entity;
-  // $scope.createAlert = true;
-  // $scope.collection = {};
-  // $scope.createCollection = false;
-  // $scope.collections = [];
-  // $scope.entity.$schema = $scope.entity.$schema || $scope.availableSchemata[0];
-  // $scope.schemata = {};
+  var initAlerts = function() {
+    $scope.alertId = null;
+    for (var i in alerts.results) {
+      var alert = alerts.results[i];
+      if (!alert.query_text && alert.entity_id == $scope.entity.id) {
+        $scope.alertId = alert.id;
+      }
+    }
+    $scope.entity.haveAlert = $scope.alertId != null;
+  }
 
-  // Metadata.get().then(function(metadata) {
-  //   $scope.schemata = metadata.schemata;
-
-  //   var collections = [];
-  //   for (var cid in metadata.collections) {
-  //     var col = metadata.collections[cid];
-  //     if (Authz.collection(Authz.WRITE, col.id)) {
-  //       collections.push(col);
-  //     }
-  //   };
-  //   $scope.collections = collections;
-  //   if (!$scope.hasCollections()) {
-  //     $scope.setCreateCollection(true);
-  //   }
-  // });
-
-  // $scope.setSchema = function(schema) {
-  //   $scope.entity.$schema = schema;
-  // };
-
-  // $scope.isPerson = function() {
-  //   return $scope.entity.$schema == '/entity/person.json#';
-  // };
-
-  // $scope.hasCollections = function() {
-  //   return $scope.collections.length > 0;
-  // };
-
-  // $scope.setCreateCollection = function(flag) {
-  //   Session.get().then(function(session) {
-  //     $scope.createCollection = flag;
-  //     if (flag) {
-  //       $scope.collection = {
-  //         label: session.role.name + '\'s Watchlist'
-  //       };
-  //     } else {
-  //       $scope.collection = $scope.collections[0];
-  //     }
-  //   });
-  // };
+  initAlerts();
 
   $scope.canSave = function() {
-    // if ($scope.createCollection) {
-    //   if (!$scope.collection.label || !$scope.collection.label.length > 2) {
-    //     return false;
-    //   }
-    // }
     return $scope.editEntity.$valid;
   }
+
+  $scope.cancel = function() {
+    $uibModalInstance.dismiss('cancel');
+  };
 
   $scope.save = function(form) {
     if (!$scope.canSave()) {
@@ -71,15 +33,17 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', 'Metadata', 'Session', 
     var url = '/api/1/entities/' + $scope.entity.id;
     var res = $http.post(url, $scope.entity);
     res.then(function(res) {
-      // if ($scope.createAlert) {
-      //   var alert = {entity_id: res.data.id};
-      //   $http.post('/api/1/alerts', alert).then(function(ares) {
-      //     $uibModalInstance.close(res.data);  
-      //   });
-      // } else {
-      //   $uibModalInstance.close(res.data);  
-      // }
-      console.log('Saved.');
+      if ($scope.entity.haveAlert && !$scope.alertId) {
+        Alert.create({entity_id: entity.id}).then(function() {
+          $uibModalInstance.close(res.data);  
+        });
+      } else if (!$scope.entity.haveAlert && $scope.alertId) {
+        Alert.delete($scope.alertId).then(function() {
+          $uibModalInstance.close(res.data);  
+        });
+      } else {
+        $uibModalInstance.close(res.data);
+      }
     });
   };
 

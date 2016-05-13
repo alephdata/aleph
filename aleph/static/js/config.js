@@ -47,16 +47,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider',
     }
   });
 
-  $routeProvider.when('/entities/:entity_id', {
-    templateUrl: 'templates/entity_edit.html',
-    controller: 'EntitiesEditCtrl',
-    reloadOnSearch: true,
-    loginRequired: false,
-    resolve: {
-      'data': loadEntity
-    }
-  });
-
   $routeProvider.when('/help/:page', {
     templateUrl: 'templates/help.html',
     controller: 'HelpCtrl',

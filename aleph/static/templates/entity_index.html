@@ -75,8 +75,9 @@
           </td>
           <td width="1%">{{::entity.jurisdiction_code.toUpperCase()}}</td>
           <td class="numeric" width="1%">
-            <a ng-if="authz.entityWrite(entity)"
-              ng-href="/entities/{{::entity.id}}">
+            <button type="button" class="btn btn-default btn-xs"
+              ng-click="editEntity(entity)"
+              ng-if="authz.entityWrite(entity)">
               <i class="fa fa-cog"></i>
               Edit
             </button>
