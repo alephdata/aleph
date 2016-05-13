@@ -38,10 +38,9 @@ def convert_entities(entities):
         if entity is None:
             continue
         results.append({
+            'id': entity.id,
             'name': entity.name,
-            'summary': entity.summary,
             '$schema': entity.type,
-            'jurisdiction_code': entity.jurisdiction_code,
             'count': bucket.get('doc_count')
         })
     return results
