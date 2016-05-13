@@ -99,12 +99,6 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     });
   };
 
-  $scope.editEntity = function(entity) {
-    Entity.edit(entity.id).then(function() {
-      $route.reload();
-    });
-  };
-
   $scope.setEntity = function(entity) {
     data.query.set('q', '');
     data.query.toggle('entity', entity.id);
