@@ -61,7 +61,7 @@
       <a ng-click="createQueryEntity('/entity/organization.json#')">
         <entity-icon schema="'/entity/organization.json#'"></entity-icon> Organization</a>.
     </div>
-    <div class="alert alert-suggest" ng-if="!authz.logged_in()">
+    <div class="alert alert-suggest" ng-if="showCreate() && !authz.logged_in()">
       Want to keep track of <strong>{{originalText}}</strong>?
       <a ng-href="/api/1/sessions/login" target="_self">Sign in</a> to create search alerts.
     </div>

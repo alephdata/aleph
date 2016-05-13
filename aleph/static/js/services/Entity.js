@@ -1,4 +1,5 @@
-aleph.factory('Entity', ['$uibModal', function($uibModal) {
+aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Session',
+    function($uibModal, $q, $http, Session) {
 
   return {
     create: function(entity) {
@@ -14,6 +15,18 @@ aleph.factory('Entity', ['$uibModal', function($uibModal) {
         }
       });
       return instance.result;
+    },
+    get: function(id) {
+      var dfd = $q.defer(),
+          url = '/api/1/entities/' + id;
+      Session.get().then(function(session) {
+        $http.get(url).then(function(res) {
+          dfd.resolve(res.data);
+        }, function(err) {
+          dfd.reject(err);
+        });
+      });
+      return dfd.promise;
     },
     deleteMany: function(entities) {
       var instance = $uibModal.open({

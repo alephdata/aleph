@@ -1,7 +1,7 @@
 var loadText = ['$http', '$q', '$location', '$route', 'Document',
     function($http, $q, $location, $route, Document) {
   
-  var dfd = $q.defer();
+  var dfd = $q.defer(),
       pageNumber = $location.search().page,
       documentId = $route.current.params.document_id;
 

@@ -3,7 +3,7 @@
   "id": "/entity/entity.json#",
   "title": "Other entities",
   "type": "object",
-  "faIcon": "fa-user",
+  "faIcon": "fa-square",
   "properties": {
     "id": {
       "title": "ID",
