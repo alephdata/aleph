@@ -31,7 +31,7 @@ RUN echo "en_GB ISO-8859-1" >> /etc/locale.gen && \
 # A Node, for good measure.
 RUN curl -sL https://deb.nodesource.com/setup | bash -
 RUN apt-get install -y nodejs && curl -L https://www.npmjs.org/install.sh | sh
-RUN npm install -g bower uglifyjs
+RUN npm --silent --quiet install -g bower uglifyjs
 
 # WebKit HTML to X install since the one that comes with distros is hellishly outdated.
 RUN wget -O /tmp/wkhtmltox.tar.xv http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz \
@@ -40,11 +40,11 @@ ENV WKHTMLTOPDF_BIN /opt/wkhtmltox/bin/wkhtmltopdf
 
 # Begin python festivities
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install --upgrade pip && pip install functools32 \
-  && pip install -r /tmp/requirements.txt
+RUN pip install -q --upgrade pip && pip install -q functools32 \
+  && pip install -q -r /tmp/requirements.txt
 
 COPY . /aleph
 WORKDIR /aleph
 ENV ALEPH_SETTINGS /aleph/contrib/docker_settings.py
-RUN pip install -e /aleph
-RUN bower --allow-root install
+RUN pip install -q -e /aleph
+RUN bower --allow-root --quiet install
