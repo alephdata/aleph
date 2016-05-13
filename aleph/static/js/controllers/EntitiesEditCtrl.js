@@ -4,6 +4,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
   $scope.entity = entity;
   $scope.entity.jurisdiction_code = entity.jurisdiction_code || null;
   $scope.originalName = entity.name + '';
+  $scope.section = 'base';
 
   var initAlerts = function() {
     $scope.alertId = null;
@@ -20,6 +21,10 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
 
   $scope.canSave = function() {
     return $scope.editEntity.$valid;
+  }
+
+  $scope.setSection = function(section) {
+    $scope.section = section;
   }
 
   $scope.cancel = function() {
