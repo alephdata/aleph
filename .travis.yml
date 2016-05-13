@@ -13,6 +13,11 @@ addons:
     packages:
       - python-software-properties
       - libtesseract-dev
+      - wkhtmltopdf
+      - tesseract-ocr-eng
+      - poppler-utils
+      - readpst
+      - libreoffice
 env:
   - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
 install:
