@@ -9,8 +9,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
   $scope.isPerson = entity.$schema == '/entity/person.json#';
   $scope.isCompany = entity.$schema == '/entity/company.json#';
   $scope.isOrganization = (entity.$schema == '/entity/organization.json#') || $scope.isCompany;
-  console.log(entity, $scope.isPerson);
-  
+  // console.log(entity, $scope.isPerson);
 
   var initAlerts = function() {
     $scope.alertId = null;
