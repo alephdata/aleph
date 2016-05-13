@@ -12,27 +12,10 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', 'Metadata', 'Session', 
   // $scope.createCollection = false;
   // $scope.collections = [];
   // $scope.entity.$schema = $scope.entity.$schema || $scope.availableSchemata[0];
-  // $scope.jurisdictions = [];
   // $scope.schemata = {};
 
   // Metadata.get().then(function(metadata) {
   //   $scope.schemata = metadata.schemata;
-
-  //   var jurisdictions = [{
-  //     label: 'No country selected',
-  //     value: null
-  //   }];
-  //   for (var value in metadata.countries) {
-  //     jurisdictions.push({
-  //       value: value,
-  //       label: metadata.countries[value]
-  //     });
-  //   }
-  //   $scope.jurisdictions = jurisdictions.sort(function(a, b) {
-  //     if (a.value == null) return -1;
-  //     if (b.value == null) return 1;
-  //     return a.label.localeCompare(b.label);
-  //   });
 
   //   var collections = [];
   //   for (var cid in metadata.collections) {

@@ -57,18 +57,7 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label class="control-label" for="jurisdiction_code">
-        <span ng-hide="isPerson()">Jurisdiction</span>
-        <span ng-show="isPerson()">Nationality</span>
-      </label>
-      <div class="">
-        <select class="form-control" id="jurisdiction_code" name="jurisdiction_code"
-          ng-model="entity.jurisdiction_code" ng-init="entity.jurisdiction_code = null"
-          ng-options="c.value as c.label for c in jurisdictions"></select>
-        <p class="help-block">Leave this empty if multiple countries apply.</p>
-      </div>
-    </div>
+    <entity-jurisdiction entity="entity"></entity-jurisdiction>
 
     <div class="form-group">
       <label class="control-label" for="summary">
