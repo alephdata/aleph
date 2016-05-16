@@ -38,7 +38,7 @@ class BlacklightCrawler(Crawler):
 
     def crawl_document(self, base_url, id):
         source_url = base_url + 'catalog/'+ id + '.json'
-        response = requests.get(source_url)
+        response = requests.get(source_url, timeout=4)
         try:
             response.raise_for_status()
         except:
@@ -83,7 +83,7 @@ class BlacklightCrawler(Crawler):
     def crawl_page(self, base_url, page_number, page_count):
         page_url = base_url + 'catalog.json?page='+ str(page_number)
         log.info('crawling page {} url: {}'.format(page_number, page_url))
-        response = requests.get(page_url)
+        response = requests.get(page_url, timeout=4)
         try:
             response.raise_for_status()
         except:
@@ -104,7 +104,7 @@ class BlacklightCrawler(Crawler):
 
     def get_page_count(self, base_url):
         page_url = base_url + 'catalog.json'
-        response = requests.get(page_url)
+        response = requests.get(page_url, timeout=4)
         try:
             response.raise_for_status()
         except:
