@@ -60,7 +60,7 @@ class Crawler(object):
     def emit_content(self, source, meta, content):
         db.session.commit()
         with NamedTemporaryFile() as fh:
-            fh.write(content)
+            fh.write(content.encode('utf-8'))
             ingest_file(source.id, meta.clone(), fh.name)
 
     def emit_file(self, source, meta, file_path, move=False):
