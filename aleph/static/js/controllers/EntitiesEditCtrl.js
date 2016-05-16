@@ -9,6 +9,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
   $scope.isPerson = entity.$schema == '/entity/person.json#';
   $scope.isCompany = entity.$schema == '/entity/company.json#';
   $scope.isOrganization = (entity.$schema == '/entity/organization.json#') || $scope.isCompany;
+  $scope.newOtherName = {editing: false};
   // console.log(entity, $scope.isPerson);
 
   var initAlerts = function() {
@@ -24,13 +25,48 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
 
   initAlerts();
 
+  $scope.editOtherName = function(flag) {
+    $scope.newOtherName.editing = flag;
+  };
+
+  $scope.addOtherName = function() {
+    var newOtherName = angular.copy($scope.newOtherName);
+    newOtherName.display_name = newOtherName.name;
+    $scope.newOtherName = {editing: true};
+    $scope.entity.other_names.push(newOtherName);
+  };
+
+  $scope.canAddOtherName = function() {
+    return $scope.newOtherName.name && $scope.newOtherName.name.length > 2;
+  };
+
+  $scope.removeOtherName = function(other_name) {
+    var idx = $scope.entity.other_names.indexOf(other_name);
+    if (idx != -1) {
+      $scope.entity.other_names.splice(idx, 1);
+    };
+  };
+
+  $scope.updateOtherName = function(other_name) {
+    if (other_name.display_name.trim().length > 2) {
+      other_name.name = other_name.display_name;  
+    };
+  };
+
+  $scope.removeIdentifier = function(identifier) {
+    var idx = $scope.entity.identifiers.indexOf(identifier);
+    if (idx != -1) {
+      $scope.entity.identifiers.splice(idx, 1);
+    };
+  };
+
   $scope.canSave = function() {
     return $scope.editEntity.$valid;
-  }
+  };
 
   $scope.setSection = function(section) {
     $scope.section = section;
-  }
+  };
 
   $scope.cancel = function() {
     $uibModalInstance.dismiss('cancel');
@@ -40,6 +76,14 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
     if (!$scope.canSave()) {
       return false;
     }
+
+    if ($scope.newOtherName.editing) {
+      if ($scope.canAddOtherName()) {
+        $scope.addOtherName();
+      }
+      return false;
+    }
+
     var url = '/api/1/entities/' + $scope.entity.id;
     var res = $http.post(url, $scope.entity);
     res.then(function(res) {

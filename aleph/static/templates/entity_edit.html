@@ -37,8 +37,43 @@
           </label>
         </div>
       </div>
+
       <div class="col-md-8" ng-show="section == 'other_names'">
+        <p class="help-block">Alternate names (<i>also known as</i>) can
+          be former names, spelling variations, names in other scripts or
+          well-known aliases.
+        </p>
+        <table class="table">
+          <tr ng-repeat="other_name in entity.other_names">
+            <td>
+              <input type="text" class="form-control input" id="new_name" name="new_name"
+                ng-model="other_name.display_name" ng-minlength="3"
+                ng-change="updateOtherName(other_name)">
+            </td>
+            <td width="1%">
+              <button type="button" class="btn btn-default btn"
+                ng-click="removeOtherName(other_name)">
+                <i class="fa fa-trash-o"></i>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="text" class="form-control input" id="new_name" name="new_name"
+                ng-model="newOtherName.name" placeholder="Add an alternate name..."
+                ng-focus="editOtherName(true)" ng-blur="editOtherName(false)">
+            </td>
+            <td width="1%">
+              <button type="button" class="btn btn-success btn"
+                ng-click="addOtherName()" ng-disabled="!canAddOtherName()">
+                <i class="fa fa-plus"></i>
+              </button>
+            </td>
+          </tr>
+        </table>
+        
       </div>
+      
       <div class="col-md-8" ng-show="section == 'details'">
 
         <div class="form-group" ng-if="isCompany">
@@ -123,7 +158,32 @@
           </div>
         </div>
 
+        <div class="form-group" ng-if="entity.identifiers.length">
+          <hr>
+          <label class="control-label" for="description">Data Identifiers</label>
+          <p class="help-block">Used when updating entity data from external sources.</p>
+          <div>
+            <table class="table table-condensed">
+              <tr>
+                <th>Scheme</th>
+                <th>Identifier</th>
+                <th></th>
+              </tr>
+              <tr ng-repeat="identifier in entity.identifiers">
+                <td>{{identifier.scheme}}</td>
+                <td>{{identifier.identifier}}</td>
+                <td width='0%'>
+                  <button type="button" class="btn btn-default btn-xs"
+                    ng-click="removeIdentifier(identifier)">
+                    <i class="fa fa-trash-o"></i>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
       </div>
+
       <div class="col-md-4">
         <ul class="nav nav-pills nav-stacked">
           <li ng-class="{'active': section == 'base'}">

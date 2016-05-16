@@ -65,7 +65,8 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
     });
   };
 
-  $scope.editEntity = function(entity) {
+  $scope.editEntity = function($event, entity) {
+    $event.stopPropagation();
     Entity.edit(entity.id).then(function() {
       $timeout(function() {
         $route.reload();
