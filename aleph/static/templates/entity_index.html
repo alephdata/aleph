@@ -83,7 +83,8 @@
             </button>
           </td>
           <td class="numeric" width="1%">
-            <button type="button" class="btn btn-default btn-xs" ng-click="toggleAlert(entity)"
+            <button type="button" class="btn btn-default btn-xs" ng-if="authz.logged_in()"
+                ng-click="toggleAlert(entity)"
                 ng-class="{'btn-primary': entity.alert_id}">
               <i class="fa fa-bell"></i>
               <span ng-show="entity.alert_id">Stop</span>
