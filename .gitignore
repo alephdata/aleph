@@ -9,6 +9,7 @@ settings.py
 aleph/static/.webassets-cache/*
 aleph/static/assets/*
 aleph/static/vendor/*
+docs/build/*
 
 aleph.env
 test_settings.py

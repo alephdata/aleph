@@ -48,7 +48,8 @@ setup(
             'spindle = aleph.crawlers.spindle:SpindleCrawler',
             'idrequests = aleph.crawlers.idashboard:IDRequests',
             'idfiles = aleph.crawlers.idashboard:IDFiles',
-            'blacklight = aleph.crawlers.blacklight:BlacklightCrawler'
+            'blacklight = aleph.crawlers.blacklight:BlacklightCrawler',
+            'sourceafrica = aleph.crawlers.sourceafrica:SourceAfricaCrawler'
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',
