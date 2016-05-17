@@ -81,14 +81,14 @@
     <tr>
       <td colspan="2">
         <div class="btn-group" role="group">
-          <a ng-href="/api/1/documents/{{doc.id}}/file" download="{{doc.file_name}}" class="btn btn-default">
+          <a ng-href="/api/1/documents/{{doc.id}}/file" target="_self" download="{{doc.file_name}}" class="btn btn-default">
             <i class="fa fa-cloud-download"></i> Download
             <span ng-if="doc.extension">
               ({{doc.extension}})
             </span>
           </a>
           <a ng-if="doc.type =='text' && !doc.is_pdf"
-            ng-href="/api/1/documents/{{doc.id}}/pdf" download="{{doc.file_name}}.pdf" class="btn btn-default">
+            ng-href="/api/1/documents/{{doc.id}}/pdf" target="_self" download="{{doc.file_name}}.pdf" class="btn btn-default">
             <i class="fa fa-cloud-download"></i> Download PDF
           </a>
         </div>
