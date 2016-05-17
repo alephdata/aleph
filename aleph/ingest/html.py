@@ -6,7 +6,7 @@ from lxml import html, etree
 from lxml.html.clean import Cleaner
 
 from aleph.core import get_config
-from aleph.ingest.text import DocumentIngestor
+from aleph.ingest.document import DocumentIngestor
 
 log = logging.getLogger(__name__)
 
