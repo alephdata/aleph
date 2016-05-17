@@ -184,6 +184,28 @@
         </div>
       </div>
 
+      <div class="col-md-8" ng-show="section == 'dedupe'">
+        <table class="table table-striped">
+          <tr>
+            <th>Possible Duplicate</th>
+            <th width="1%">Country</th>
+            <th width="5%">Score</th>
+            <th width="1%"></th>
+          </tr>
+          <tr ng-repeat="opt in duplicateOptions">
+            <td><a ng-click="editDuplicate(opt)">{{opt.name}}</a></td>
+            <td class="numeric">{{opt.jurisdiction_code.toUpperCase()}}</td>
+            <td class="numeric">{{opt.score | number: 1}}</td>
+            <td>
+              <a ng-click="mergeDuplicate(opt)" class="btn btn-primary btn-xs">
+                <i class="fa fa-link" aria-hidden="true"></i>
+                Merge
+              </a>
+            </td>
+          </tr>
+        </table>
+      </div>
+
       <div class="col-md-4">
         <ul class="nav nav-pills nav-stacked">
           <li ng-class="{'active': section == 'base'}">
@@ -194,6 +216,9 @@
           </li>
           <li ng-class="{'active': section == 'details'}">
             <a ng-click="setSection('details')">Additional Detail</a>
+          </li>
+          <li ng-class="{'active': section == 'dedupe'}">
+            <a ng-click="setSection('dedupe')">Possible Duplicates</a>
           </li>
         </ul>
       </div>

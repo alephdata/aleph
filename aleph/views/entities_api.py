@@ -7,7 +7,7 @@ from aleph.model import Entity, Collection, db
 from aleph.entities import update_entity
 from aleph.views.cache import enable_cache
 from aleph.search import entities_query, execute_entities_query
-from aleph.search import suggest_entities
+from aleph.search import suggest_entities, similar_entities
 
 blueprint = Blueprint('entities_api', __name__)
 
@@ -73,6 +73,13 @@ def view(id):
     entity = obj_or_404(Entity.by_id(id))
     check_authz(entity, authz.READ)
     return jsonify(entity)
+
+
+@blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])
+def similar(id):
+    entity = obj_or_404(Entity.by_id(id))
+    check_authz(entity, authz.READ)
+    return jsonify(similar_entities(entity, request.args))
 
 
 @blueprint.route('/api/1/entities/_lookup', methods=['GET'])

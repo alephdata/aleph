@@ -67,6 +67,8 @@ def convert_sources(facet):
 def convert_collections(facet):
     output = {'values': []}
     ids = [b.get('key') for b in facet.get('buckets', [])]
+    if not len(ids):
+        return output
     collections = Collection.all_by_ids(ids).all()
     for bucket in facet.get('buckets', []):
         key = bucket.get('key')

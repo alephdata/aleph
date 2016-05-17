@@ -1,5 +1,5 @@
-aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Alert', 'Validation', 'entity', 'metadata', 'alerts',
-    function($scope, $http, $uibModalInstance, Metadata, Session, Authz, Alert, Validation, entity, metadata, alerts) {
+aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Alert', 'Entity', 'Validation', 'entity', 'metadata', 'alerts',
+    function($scope, $http, $uibModalInstance, Metadata, Session, Authz, Alert, Entity, Validation, entity, metadata, alerts) {
 
   $scope.entity = entity;
   $scope.entity.jurisdiction_code = entity.jurisdiction_code || null;
@@ -10,7 +10,14 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
   $scope.isCompany = entity.$schema == '/entity/company.json#';
   $scope.isOrganization = (entity.$schema == '/entity/organization.json#') || $scope.isCompany;
   $scope.newOtherName = {editing: false};
+  $scope.duplicateOptions = [];
   // console.log(entity, $scope.isPerson);
+
+  var initDedupe = function() {
+    $http.get('/api/1/entities/' + entity.id + '/similar').then(function(res) {
+      $scope.duplicateOptions = res.data.results;
+    });
+  };
 
   var initAlerts = function() {
     $scope.alertId = null;
@@ -21,8 +28,9 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
       }
     }
     $scope.entity.haveAlert = $scope.alertId != null;
-  }
+  };
 
+  initDedupe();
   initAlerts();
 
   $scope.editOtherName = function(flag) {
@@ -58,6 +66,21 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
     if (idx != -1) {
       $scope.entity.identifiers.splice(idx, 1);
     };
+  };
+
+  $scope.mergeDuplicate = function(dup) {
+    var idx = $scope.duplicateOptions.indexOf(dup);
+    if (idx != -1) {
+      $scope.duplicateOptions.splice(idx, 1);
+    };
+    var url = '/api/1/entities/' +  entity.id + '/merge/' + dup.id;
+    $http.delete(url);
+  };
+
+  $scope.editDuplicate = function(dup) {
+    Entity.edit(dup.id).then(function() {
+      initDedupe();
+    });
   };
 
   $scope.canSave = function() {
