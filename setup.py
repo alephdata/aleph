@@ -46,7 +46,6 @@ setup(
         ],
         'aleph.crawlers': [
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
-            'spindle = aleph.crawlers.spindle:SpindleCrawler',
             'idrequests = aleph.crawlers.idashboard:IDRequests',
             'idfiles = aleph.crawlers.idashboard:IDFiles'
         ],

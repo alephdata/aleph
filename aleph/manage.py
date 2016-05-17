@@ -17,7 +17,7 @@ from aleph.entities import reindex_entities
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
-from aleph.crawlers.mf import MetaFolderCrawler
+from aleph.crawlers.metafolder import MetaFolderCrawler
 
 
 log = logging.getLogger('aleph')
