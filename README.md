@@ -67,7 +67,6 @@ The following packages are strictly optional but enable additional document impo
 Once these dependencies are installed, the following environment variables (might) need to be adjusted:
 
 * ``TESSDATA_PREFIX`` must be set for OCR to work at all. This is the path of the ``tesseract`` training files, usually ``/usr/share/tesseract-ocr``.
-* ``EXTRACTORS_CACHE_DIR`` will be used to cache OCR results. Set this to a writeable directory to enable caching.
 * ``WKHTMLTOPDF_BIN`` to point to the ``wkhtmltopdf`` binary (if not in ``PATH``)
 * ``SOFFICE_BIN`` to point to the LibreOffice binary (if not in ``PATH``)
 * ``CONVERT_BIN`` to point to the ImageMagick binary (if not in ``PATH``)

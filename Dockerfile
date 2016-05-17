@@ -11,7 +11,7 @@ RUN apt-get update -qq && apt-get -y dist-upgrade && apt-get install -y -q  \
         poppler-utils poppler-data unrtf pstotext python-numpy default-jdk \
         readpst libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
         libopenjpeg-dev imagemagick-common imagemagick unoconv \
-        libtesseract-dev ruby-sass wkhtmltopdf vim libjpeg-dev \
+        libtesseract-dev ruby-sass wkhtmltopdf vim libjpeg-dev libicu-dev \
         tesseract-ocr tesseract-ocr-bel tesseract-ocr-aze \
         tesseract-ocr-ces tesseract-ocr-eng tesseract-ocr-deu \
         tesseract-ocr-spa tesseract-ocr-fra tesseract-ocr-osd \
