@@ -62,7 +62,11 @@ def string_value(value):
         return unicode(value)
     elif isinstance(value, six.string_types):
         if not isinstance(value, six.text_type):
-            enc = chardet.detect(value) or 'utf-8'
+            enc = chardet.detect(value)
+            if enc is not None:
+                enc = enc.get('encoding')
+            if enc is None:
+                enc = 'utf-8'
             value = value.decode(enc)
             value = ''.join(ch for ch in value if category(ch)[0] != 'C')
             value = value.replace(u'\xfe\xff', '')  # remove BOM
