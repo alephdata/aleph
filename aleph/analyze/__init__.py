@@ -16,9 +16,9 @@ log = logging.getLogger(__name__)
 
 
 def install_analyzers():
-    for task in ['pos2', 'ner2', 'morph2', 'tsne2', 'counts2',
-                 'embeddings2', 'sentiment2', 'sgns2',
-                 'transliteration2']:
+    # ['pos2', 'ner2', 'morph2', 'tsne2', 'counts2', 'embeddings2',
+    #  'sentiment2', 'sgns2', 'transliteration2']
+    for task in ['embeddings2', 'ner2']:
         log.info("Downloading linguistic resources: %r...", task)
         downloader.download('TASK:%s' % task, quiet=True)
 
