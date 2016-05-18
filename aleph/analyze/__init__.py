@@ -16,15 +16,11 @@ log = logging.getLogger(__name__)
 
 
 def install_analyzers():
-    downloader.download('TASK:pos2')
-    downloader.download('TASK:ner2')
-    downloader.download('TASK:morph2')
-    downloader.download('TASK:tsne2')
-    downloader.download('TASK:counts2')
-    downloader.download('TASK:embeddings2')
-    downloader.download('TASK:sentiment2')
-    downloader.download('TASK:sgns2')
-    downloader.download('TASK:transliteration2')
+    for task in ['pos2', 'ner2', 'morph2', 'tsne2', 'counts2',
+                 'embeddings2', 'sentiment2', 'sgns2',
+                 'transliteration2']:
+        log.info("Downloading linguistic resources: %r...", task)
+        downloader.download('TASK:%s' % task, quiet=True)
 
 
 def query_doc_ids(query):
