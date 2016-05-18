@@ -15,7 +15,7 @@ from aleph.search import scan_iter
 log = logging.getLogger(__name__)
 
 
-def upgrade_analyzers():
+def install_analyzers():
     downloader.download('TASK:pos2')
     downloader.download('TASK:ner2')
     downloader.download('TASK:morph2')
