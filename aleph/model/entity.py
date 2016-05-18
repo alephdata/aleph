@@ -230,6 +230,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     @classmethod
     def latest(cls):
         q = db.session.query(func.max(cls.updated_at))
+        q = q.filter(cls.state == cls.STATE_ACTIVE)
         return q.scalar()
 
     def __repr__(self):
