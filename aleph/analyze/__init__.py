@@ -1,4 +1,6 @@
+from __future__ import absolute_import
 import logging
+from polyglot.downloader import downloader
 
 from aleph.core import celery
 from aleph.ext import get_analyzers
@@ -11,6 +13,18 @@ from aleph.search import scan_iter
 
 
 log = logging.getLogger(__name__)
+
+
+def upgrade_analyzers():
+    downloader.download('TASK:pos2')
+    downloader.download('TASK:ner2')
+    downloader.download('TASK:morph2')
+    downloader.download('TASK:tsne2')
+    downloader.download('TASK:counts2')
+    downloader.download('TASK:embeddings2')
+    downloader.download('TASK:sentiment2')
+    downloader.download('TASK:sgns2')
+    downloader.download('TASK:transliteration2')
 
 
 def query_doc_ids(query):
