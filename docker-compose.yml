@@ -29,12 +29,13 @@ worker:
       - elasticsearch
     volumes:
       - "/:/host"
+      - "/opt/aleph/data:/opt/aleph/data"
       - "/opt/aleph/logs/worker:/var/log"
     environment:
       C_FORCE_ROOT: 'true'
       ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
       ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-      EXTRACTORS_CACHE_DIR: /srv/data/extractors
+      POLYGLOT_DATA_PATH: /opt/aleph/data
       TESSDATA_PREFIX: /usr/share/tesseract-ocr
     env_file:
       - aleph.env
