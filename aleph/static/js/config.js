@@ -47,6 +47,14 @@ aleph.config(['$routeProvider', '$locationProvider', '$analyticsProvider',
     }
   });
 
+  $routeProvider.when('/entities/review', {
+    templateUrl: 'templates/entity_review.html',
+    controller: 'EntitiesReviewCtrl',
+    reloadOnSearch: true,
+    loginRequired: false,
+    resolve: {}
+  });
+
   $routeProvider.when('/help/:page', {
     templateUrl: 'templates/help.html',
     controller: 'HelpCtrl',

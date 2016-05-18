@@ -29,6 +29,9 @@ aleph.factory('Authz', ['$rootScope', function($rootScope) {
     logged_in: function() {
       return $rootScope.session.logged_in;
     },
+    is_admin: function() {
+      return $rootScope.session.logged_in && $rootScope.session.role.is_admin;
+    },
     READ: 'read',
     WRITE: 'write'
   }

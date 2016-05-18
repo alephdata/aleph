@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="panel panel-success" ng-if="entity.empty">
+      <div class="panel-heading">
+        <h3 class="panel-title">Nothing to do</h3>
+      </div>
+      <div class="panel-body">
+        All pending entities have been processed. Thanks for your help!
+      </div>
+    </div>
+    <div class="panel panel-default" ng-if="!entity.empty">
+      <!-- div class="panel-heading">Review: {{entity.name}}</div-->
+      <div class="panel-body">
+        <div class="form-group" ng-class="{'has-error': reviewEntity.name.$invalid}">
+          <label class="control-label" for="name">
+            Name <span ng-if="!selectSchema">of {{schemata[entity.$schema].title}}</span>
+          </label>
+          <input type="text" class="form-control input-lg" id="name" name="name" ng-model="entity.name"
+            placeholder="Entity Name" required ng-minlength="3">
+          <p class="help-block" ng-if="entity.name != entity.name_latin">
+            Latinized: <strong ng-bind="entity.name_latin"></strong>
+          </p>
+        </div>
+        <entity-jurisdiction entity="entity"></entity-jurisdiction>
+        <div class="form-group" style="text-align: center;">
+          <button type="button" class="btn btn-success btn-lg" ng-click="activate()">
+            Activate
+          </button>
+          <button type="button" class="btn btn-danger btn-lg" ng-click="delete()">
+            Discard
+          </button>
+        </div>
+        <table class="table table-striped">
+          <tr>
+            <th>Possible Duplicate</th>
+            <th width="1%">Country</th>
+            <th width="5%">Score</th>
+            <th width="1%"></th>
+          </tr>
+          <tr ng-repeat="opt in duplicateOptions">
+            <td><a ng-click="editDuplicate(opt)">{{opt.name}}</a></td>
+            <td class="numeric">{{opt.jurisdiction_code.toUpperCase()}}</td>
+            <td class="numeric">{{opt.score | number: 1}}</td>
+            <td>
+              <a ng-click="mergeDuplicate(opt)" class="btn btn-primary btn-xs">
+                <i class="fa fa-link" aria-hidden="true"></i>
+                Merge
+              </a>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

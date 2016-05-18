@@ -23,10 +23,11 @@ CATEGORIES = {
 }
 
 
-def latinize_text(text):
+def latinize_text(text, lowercase=True):
     if not isinstance(text, six.text_type):
         return text
-    text = text.lower()
+    if lowercase:
+        text = text.lower()
     text = text.replace(u'ə', 'a')
     return unicode(unidecode(text))
 
