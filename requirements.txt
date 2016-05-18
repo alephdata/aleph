@@ -31,10 +31,11 @@ networkx
 XlsxWriter==0.6.6
 https://github.com/pudo/messytables/tarball/allow-parser-args
 https://github.com/pudo/krauler/tarball/master
-https://github.com/pudo/metafolder/tarball/master
-https://github.com/pudo/jsonmapping/tarball/master
+metafolder
+jsonmapping
 # pdfminer==20140328
 https://github.com/euske/pdfminer/tarball/master
+https://github.com/aboSamoor/polyglot/tarball/master
 langid==1.1.5
 babel
 pyDBF==0.1

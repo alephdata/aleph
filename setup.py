@@ -42,7 +42,8 @@ setup(
         ],
         'aleph.analyzers': [
             'lang = aleph.analyze.language:LanguageAnalyzer',
-            'entities = aleph.analyze.entities:EntityAnalyzer'
+            'regex = aleph.analyze.regex:RegexEntityAnalyzer',
+            'polyglot = aleph.analyze.polyglot:PolyglotEntityAnalyzer'
         ],
         'aleph.crawlers': [
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',

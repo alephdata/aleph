@@ -35,7 +35,9 @@ class EntityCache(object):
         self.latest = latest
         self.matches = defaultdict(set)
 
-        for entity in Entity.all():
+        q = Entity.all()
+        q = q.filter(Entity.state == Entity.STATE_ACTIVE)
+        for entity in q:
             for term in entity.terms:
                 self.matches[normalize_strong(term)].add(entity.id)
 
@@ -55,9 +57,10 @@ class EntityCache(object):
                  latest, len(terms))
 
 
-class EntityAnalyzer(Analyzer):
+class RegexEntityAnalyzer(Analyzer):
 
     cache = EntityCache()
+    origin = 'regex'
 
     def analyze(self, document, meta):
         begin_time = time()
@@ -74,11 +77,12 @@ class EntityAnalyzer(Analyzer):
                     for entity_id in self.cache.matches.get(match, []):
                         entities[entity_id] += 1
 
-        Reference.delete_document(document.id)
+        Reference.delete_document(document.id, origin=self.origin)
         for entity_id, weight in entities.items():
             ref = Reference()
             ref.document_id = document.id
             ref.entity_id = entity_id
+            ref.origin = self.origin
             ref.weight = weight
             db.session.add(ref)
         self.save(document, meta)

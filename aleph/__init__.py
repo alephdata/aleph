@@ -23,6 +23,7 @@ logging.getLogger('botocore').setLevel(logging.WARNING)
 logging.getLogger('amqp').setLevel(logging.INFO)
 logging.getLogger('assets.cssutils').setLevel(logging.ERROR)
 logging.getLogger('cssutils').setLevel(logging.ERROR)
+logging.getLogger('polyglot').setLevel(logging.WARNING)
 
 logging.getLogger('extractors').setLevel(logging.DEBUG)
 

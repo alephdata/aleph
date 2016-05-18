@@ -8,6 +8,9 @@
             "minLength": 2,
             "maxLength": 255
         },
+        "generate_entities": {
+            "type": "boolean"
+        },
         "category": {
             "type": "string",
             "format": "source-category"

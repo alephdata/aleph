@@ -52,6 +52,11 @@
         "sortIndex": 92,
         "type": ["string", "null"]
     },
+    "state": {
+      "title": "State",
+      "type": "string",
+      "enum": ["pending", "active", "deleted"]
+    },
     "register_url": {
       "title": "Register link",
       "type": "string",

@@ -10,10 +10,7 @@ def get_extensions(section):
         EXTENSIONS[section] = {}
     if not EXTENSIONS[section]:
         for ep in iter_entry_points(section):
-            try:
-                EXTENSIONS[section][ep.name] = ep.load()
-            except Exception as ex:
-                log.exception(ex)
+            EXTENSIONS[section][ep.name] = ep.load()
     return EXTENSIONS[section]
 
 
