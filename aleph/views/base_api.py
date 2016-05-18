@@ -2,7 +2,7 @@ import os
 import logging
 from time import time
 from apikit import jsonify
-from flask import render_template, current_app, Blueprint, request
+from flask import render_template, current_app, Blueprint, request, session
 from jsonschema import ValidationError
 from elasticsearch import TransportError
 
@@ -41,6 +41,10 @@ def end_event_track(resp):
         'status_code': resp.status_code,
         'response_length': resp.content_length
     })
+    log.info('DEBUG OAUTH REQ %r, %r (%r)', request.remote_addr,
+             session.get('oauth', {}).get('access_token'),
+             request.auth_role)
+    # print session.get('oauth', {}).get('access_token')
     return resp
 
 
