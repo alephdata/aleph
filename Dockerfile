@@ -47,4 +47,4 @@ COPY . /aleph
 WORKDIR /aleph
 ENV ALEPH_SETTINGS /aleph/contrib/docker_settings.py
 RUN pip install -q -e /aleph
-RUN bower --allow-root --quiet install
+RUN rm -rf /aleph/.git && bower --allow-root --quiet install
