@@ -38,9 +38,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         if collection is None:
             collection = cls.create(data, role)
             collection.foreign_id = foreign_id
-        collection.update(data)
-        db.session.add(collection)
-        db.session.flush()
+            collection.update(data)
+            db.session.add(collection)
+            db.session.flush()
         return collection
 
     @classmethod
