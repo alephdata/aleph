@@ -42,7 +42,7 @@ worker:
 
 beat:
     build: .
-    command: celery -A aleph.queue worker beat -s /var/run/celerybeat-schedule
+    command: celery -A aleph.queue beat -s /var/run/celerybeat-schedule
     links:
       - postgres
       - elasticsearch
