@@ -18,6 +18,7 @@ ARCHIVE_PATH = env.get('ARCHIVE_PATH', '/srv/data/aleph')
 
 # Set up a custom SCSS file with additional style rules here.
 CUSTOM_SCSS_PATH = None
+CUSTOM_TEMPLATES_DIR = []
 
 OCR_DEFAULTS = ['en']
 TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')

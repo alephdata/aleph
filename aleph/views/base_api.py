@@ -7,6 +7,7 @@ from jsonschema import ValidationError
 from elasticsearch import TransportError
 
 from aleph import event
+from aleph.core import get_config
 from aleph.model.constants import CORE_FACETS, SOURCE_CATEGORIES
 from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.model.validation import resolver
@@ -45,14 +46,19 @@ def end_event_track(resp):
 
 
 def angular_templates():
-    for tmpl_set in ['templates', 'help']:
-        partials_dir = os.path.join(current_app.static_folder, tmpl_set)
-        for (root, dirs, files) in os.walk(partials_dir):
-            for file_name in files:
-                file_path = os.path.join(root, file_name)
-                with open(file_path, 'rb') as fh:
-                    file_name = file_path[len(current_app.static_folder) + 1:]
-                    yield (file_name, fh.read().decode('utf-8'))
+    templates = {}
+    template_dirs = [current_app.static_folder]
+    template_dirs.extend(get_config('CUSTOM_TEMPLATES_DIR'))
+    for template_dir in template_dirs:
+        for tmpl_set in ['templates', 'help']:
+            tmpl_dir = os.path.join(template_dir, tmpl_set)
+            for (root, dirs, files) in os.walk(tmpl_dir):
+                for file_name in files:
+                    file_path = os.path.join(root, file_name)
+                    with open(file_path, 'rb') as fh:
+                        file_name = file_path[len(template_dir) + 1:]
+                        templates[file_name] = fh.read().decode('utf-8')
+    return templates.items()
 
 
 @blueprint.route('/')
