@@ -13,3 +13,12 @@ Be sure to export the following env variables:
 - ARCHIVE_PATH:  Absolute path to the archive directory.
 - RABBITMQ_BIGWIG_URL:  Rabbitmq broker URI
 - BONSAI_URL=http://localhost:9200
+
+
+
+Configuring extra SCSS style information
+--------------------------------------
+
+An additional configuration option, ``CUSTOM_SCSS_PATH``, can be used to specify the path to
+a SCSS file which will be imported into the application upon start. The given path must be 
+absolute, or relative to the run-time location of aleph.

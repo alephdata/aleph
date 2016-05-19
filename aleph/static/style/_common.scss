@@ -33,7 +33,7 @@ em {
 }
 
 a {
-    // color: $occrp-red;
+    // color: $aleph-theme;
     &:hover {
         color: darken($brand-primary, 10%);
     }
@@ -45,6 +45,6 @@ a {
 }
 
 code {
-    background-color: lighten($occrp-dark, 70%);
-    color: $occrp-dark;
+    background-color: lighten($aleph-dark, 70%);
+    color: $aleph-dark;
 }

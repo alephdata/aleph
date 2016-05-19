@@ -33,6 +33,18 @@ css_assets = Bundle(
 )
 
 
+def generate_custom_scss(app):
+    # This is a hack to allow an extra SCSS file to be specified in the
+    # settings.
+    custom_scss = os.path.join(app.static_folder, 'style', '_custom.scss')
+    with open(custom_scss, 'w') as fout:
+        scss_text = ''
+        if app.config.get('CUSTOM_SCSS_PATH'):
+            with open(app.config['CUSTOM_SCSS_PATH'], 'r') as fin:
+                scss_text = fin.read()
+        fout.write(scss_text)
+
+
 def compile_assets(app):
     js_files = []
     js_path = os.path.join(app.static_folder, 'js')
@@ -45,6 +57,7 @@ def compile_assets(app):
     app_assets = Bundle(*js_files,
                         filters='uglifyjs',
                         output='assets/app.js')
+    generate_custom_scss(app)
 
     assets._named_bundles = {}
     assets.register('base', base_assets)

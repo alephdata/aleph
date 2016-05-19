@@ -1,18 +1,15 @@
-@import "colors";
+$aleph-theme: #982022 !default;
+$aleph-dark: #3a4953 !default;
+
+@import "custom";
 
 // Style tiles, Colours
 $border-color: #d7d7d7;
 $boxed-color: #fafafa;
 $default-radius: 3px;
 
-$color-person: $col-2;
-$color-company: $col-7;
-$color-organization: $col-10;
-$color-other: $col-20;
-
 // override bootstrap defaults
-$brand-primary: $occrp-red;
-// $brand-success: $occrp-green;
+$brand-primary: $aleph-theme;
 $text-color: #333;
 $text-muted: #999;
 $gray-subtle: #f0f0f0;
@@ -21,9 +18,8 @@ $spacing: 0.5em;
 $base-unit: 12px;
 
 // Style tiles, Fonts
-$font-default: 'Open Sans', sans-serif;
-$font-family-sans-serif: 'Open Sans', sans-serif;
-$font-family-serif: 'Georgia', serif;
+$font-family-sans-serif: 'Open Sans', sans-serif !default;
+$font-family-serif: 'Georgia', serif !default;
 $input-border-focus: $brand-primary;
 
 @import "../vendor/bootstrap-sass/assets/stylesheets/_bootstrap";
@@ -77,7 +73,7 @@ footer {
     // .input-group-addon.brand-field {
     //     background-color: $page-bg;
     //     a {
-    //         color: $occrp-red;    
+    //         color: $aleph-theme;    
     //     }
     // }
 }

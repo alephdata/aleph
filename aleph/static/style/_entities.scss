@@ -1,20 +1,4 @@
 
 .entity-icon {
     margin-right: 0.5em;
-
-    &.Person {
-        color: $color-person;
-    }
-
-    &.Company {
-        color: $color-company;
-    }
-
-    &.Organization {
-        color: $color-organization;
-    }
-
-    &.Other {
-        color: $color-other;
-    }
 }

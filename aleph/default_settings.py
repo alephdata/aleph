@@ -16,6 +16,9 @@ ARCHIVE_AWS_SECRET = env.get('AWS_SECRET_ACCESS_KEY')
 # ARCHIVE_BUCKET = 'aleph2-dev.pudo.org'
 ARCHIVE_PATH = env.get('ARCHIVE_PATH', '/srv/data/aleph')
 
+# Set up a custom SCSS file with additional style rules here.
+CUSTOM_SCSS_PATH = None
+
 OCR_DEFAULTS = ['en']
 TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')
 PDFTOPPM_BIN = env.get('PDFTOPPM_BIN', 'pdftoppm')
