@@ -20,6 +20,7 @@ class DirectoryCrawler(Crawler):
     def crawl_file(self, source, file_path, base_meta):
         try:
             meta = self.make_meta(base_meta)
+            meta.foreign_id = file_path
             if isinstance(file_path, six.text_type):
                 meta.source_path = file_path
             else:

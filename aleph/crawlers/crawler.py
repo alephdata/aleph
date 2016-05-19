@@ -24,10 +24,11 @@ class Crawler(object):
     def execute(self, **kwargs):
         try:
             self.crawl(**kwargs)
+            db.session.commit()
         except Exception as ex:
             log.exception(ex)
 
-    def make_meta(self, data):
+    def make_meta(self, data={}):
         data = json.loads(json.dumps(data))
         data['crawler'] = self.__class__.__name__
         return Metadata(data=data)
@@ -73,4 +74,18 @@ class EntityCrawler(Crawler):
 class DocumentCrawler(Crawler):
     SOURCE_ID = None
     SOURCE_LABEL = None
-    SOURCE_PUBLIC = False
+
+    @property
+    def source(self):
+        if not hasattr(self, '_source'):
+            self._source = Source.create({
+                'foreign_id': self.SOURCE_ID,
+                'label': self.SOURCE_LABEL or self.SOURCE_ID
+            })
+        return self._source
+
+    def emit_file(self, meta, file_path, move=False):
+        ingest_file(self.source.id, meta.clone(), file_path, move=move)
+
+    def emit_url(self, meta, source_url, move=False):
+        ingest_url.delay(self.source.id, meta.clone().data, source_url)

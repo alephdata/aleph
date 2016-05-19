@@ -6,7 +6,7 @@ import requests
 
 from aleph.core import get_config
 from aleph.model import Permission
-from aleph.crawlers.crawler import Crawler, EntityCrawler
+from aleph.crawlers.crawler import DocumentCrawler, EntityCrawler
 
 log = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ REQUEST_TYPES = {
 }
 
 
-class IDBase(Crawler):  # pragma: no cover
+class IDBase(object):  # pragma: no cover
 
     @property
     def host(self):
@@ -39,21 +39,14 @@ class IDBase(Crawler):  # pragma: no cover
         return self._session
 
 
-class IDFiles(IDBase):  # pragma: no cover
+class IDFiles(IDBase, DocumentCrawler):  # pragma: no cover
+    SOURCE_ID = 'idashboard:staff'
+    SOURCE_LABEL = 'Investigative Dashboard Requests'
 
     def crawl_file(self, data):
-        if data['public_read']:
-            source = self.create_source(foreign_id='idashboard:public',
-                                        label='Investigative Dashboard (Public)')
-        elif data['staff_read']:
-            source = self.create_source(foreign_id='idashboard:staff',
-                                        label='Investigative Dashboard (Staff)')
-        else:
-            return
-
         fh, file_path = mkstemp(suffix=data['filename'])
         try:
-            meta = self.metadata()
+            meta = self.make_meta({})
             meta.foreign_id = data['id']
             meta.file_name = data['filename']
             meta.title = data['title']
@@ -68,8 +61,8 @@ class IDFiles(IDBase):  # pragma: no cover
                 if chunk:
                     fh.write(chunk)
             fh.close()
-            log.info("Importing %r to %r", meta.title, source)
-            self.emit_file(source, meta, file_path, move=True)
+            log.info("Importing %r", meta.title)
+            self.emit_file(meta, file_path, move=True)
         except Exception as ex:
             log.exception(ex)
         finally:
