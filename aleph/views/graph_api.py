@@ -8,6 +8,7 @@ from networkx.readwrite import json_graph
 from apikit import jsonify, arg_int
 
 from aleph.search import scan_iter, documents_query
+from aleph.model import Entity
 
 blueprint = Blueprint('graph_api', __name__)
 
@@ -57,9 +58,10 @@ def generate_graph(args):
         entities = set()
         for entity in doc.get('_source').get('entities', []):
             if not graph.has_node(entity.get('uuid')):
+                obj = Entity.by_id(entity.get('uuid'))
                 graph.add_node(entity.get('uuid'),
-                               label=entity.get('name'),
-                               schema=entity.get('$schema'))
+                               label=obj.name,
+                               schema=obj.type)
             entities.add(entity.get('uuid'))
         for (src, dst) in combinations(entities, 2):
             graph.add_edge(src, dst, weight=1)

@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from aleph.core import db, celery
 from aleph.text import normalize_strong
-from aleph.model import Entity, Reference, Alert
+from aleph.model import Entity, Reference, Document, Alert
 from aleph.index import index_entity, delete_entity, index_document
 from aleph.index.entities import delete_entity_references
 from aleph.search.records import scan_entity_mentions
@@ -39,6 +39,9 @@ def generate_entity_references(entity):
              len(documents))
 
     for document_id, weight in documents.items():
+        doc = Document.by_id(document_id)
+        if doc is None:
+            continue
         ref = Reference()
         ref.document_id = document_id
         ref.entity_id = entity.id
