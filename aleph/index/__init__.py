@@ -58,9 +58,7 @@ def index_document(document_id, records=True):
     get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
                    id=document.id)
 
-    if not records:
-        return
-
-    clear_records(document)
-    bulk(get_es(), generate_records(document), stats_only=True,
-         chunk_size=1000, request_timeout=500.0)
+    if records:
+        clear_records(document)
+        bulk(get_es(), generate_records(document), stats_only=True,
+             chunk_size=1000, request_timeout=500.0)

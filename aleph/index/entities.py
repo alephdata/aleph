@@ -3,6 +3,7 @@ from elasticsearch.helpers import bulk, scan
 
 from aleph.core import get_es, get_es_index
 from aleph.text import latinize_text
+from aleph.model import Entity
 from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.index.util import expand_json
 
@@ -58,6 +59,8 @@ def generate_entities(document):
             continue
         seen.add(reference.entity_id)
         colls = [c.id for c in reference.entity.collections]
+        if reference.entity.state != Entity.STATE_ACTIVE:
+            continue
         entities.append({
             'uuid': reference.entity.id,
             'collection_id': colls
