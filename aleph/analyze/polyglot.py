@@ -63,7 +63,10 @@ class PolyglotEntityAnalyzer(Analyzer):
         q = q.filter(EntityIdentifier.identifier == name)
         ident = q.first()
         if ident is not None:
-            return ident.entity_id
+            if ident.deleted_at is None:
+                return ident.entity_id
+            if ident.entity.deleted_at is None:
+                return None
 
         data = {
             'name': name,
@@ -91,9 +94,12 @@ class PolyglotEntityAnalyzer(Analyzer):
 
         Reference.delete_document(document.id, origin=self.origin)
         for name, weight, schema in entities:
+            entity_id = self.load_entity(name, schema)
+            if entity_id is None:
+                continue
             ref = Reference()
             ref.document_id = document.id
-            ref.entity_id = self.load_entity(name, schema)
+            ref.entity_id = entity_id
             ref.weight = weight
             db.session.add(ref)
         self.save(document, meta)

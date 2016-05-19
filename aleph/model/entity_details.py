@@ -29,7 +29,7 @@ class EntityOtherName(db.Model, EntityDetails):
     entity_id = db.Column(db.String(32), db.ForeignKey('entity.id'), index=True)
     entity = db.relationship('Entity', primaryjoin="and_(Entity.id == foreign(EntityOtherName.entity_id), "  # noqa
                                                         "EntityOtherName.deleted_at == None)",  # noqa
-                             backref=db.backref('other_names', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
+                             backref=db.backref('other_names', cascade='all, delete-orphan'))  # noqa
     name = db.Column(db.Unicode)
     note = db.Column(db.Unicode)
     family_name = db.Column(db.Unicode)

@@ -18,7 +18,9 @@ def update_entity(entity):
         Alert.dedupe(entity.id)
     except Exception as ex:
         log.exception(ex)
-    analyze_entity.delay(entity.id)
+
+    if entity.state == Entity.STATE_ACTIVE:
+        analyze_entity.delay(entity.id)
 
 
 @celery.task()
@@ -26,7 +28,7 @@ def reindex_entities():
     query = db.session.query(Entity)
     for entity in query.yield_per(1000):
         log.info('Index [%s]: %s', entity.id, entity.name)
-        if entity.deleted_at:
+        if entity.state != Entity.STATE_ACTIVE:
             delete_entity(entity.id)
         else:
             index_entity(entity)

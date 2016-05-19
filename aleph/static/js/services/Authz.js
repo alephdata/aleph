@@ -27,10 +27,10 @@ aleph.factory('Authz', ['$rootScope', function($rootScope) {
       return false;
     },
     logged_in: function() {
-      return $rootScope.session.logged_in;
+      return $rootScope.session && $rootScope.session.logged_in;
     },
     is_admin: function() {
-      return $rootScope.session.logged_in && $rootScope.session.role.is_admin;
+      return $rootScope.session && $rootScope.session.role && $rootScope.session.role.is_admin;
     },
     READ: 'read',
     WRITE: 'write'

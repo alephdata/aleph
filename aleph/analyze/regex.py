@@ -4,6 +4,7 @@ from time import time
 from threading import RLock
 from itertools import count
 from collections import defaultdict
+from sqlalchemy.orm import joinedload
 
 from aleph.core import db
 from aleph.text import normalize_strong
@@ -27,6 +28,25 @@ class EntityCache(object):
         with lock:
             self._generate()
 
+    def get_entity_terms(self, entity):
+        # This is to find the shortest possible regex for each entity.
+        # If, for example, and entity matches both "Al Qaeda" and 
+        # "Al Qaeda in Iraq, Syria and the Levant", it is useless to
+        # search for the latter.
+        normalized = [normalize_strong(t) for t in entity.terms]
+        normalized = [' %s ' % t for t in normalized]
+        terms = set()
+        for term in normalized:
+            contained = False
+            for other in normalized:
+                if other == term:
+                    continue
+                if other in term:
+                    contained = True
+            if not contained:
+                terms.add(term.strip())
+        return terms
+
     def _generate(self):
         latest = Entity.latest()
         if self.latest is not None and self.latest >= latest:
@@ -36,9 +56,10 @@ class EntityCache(object):
         self.matches = defaultdict(set)
 
         q = Entity.all()
+        q = q.options(joinedload('other_names'))
         q = q.filter(Entity.state == Entity.STATE_ACTIVE)
         for entity in q:
-            for term in entity.terms:
+            for term in self.get_entity_terms(entity):
                 self.matches[normalize_strong(term)].add(entity.id)
 
         self.regexes = []

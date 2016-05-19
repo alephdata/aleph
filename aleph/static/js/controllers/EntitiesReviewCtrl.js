@@ -10,9 +10,6 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
 
   var loadNext = function() {
     $scope.reportLoading(true);
-    if (!Authz.is_admin()) {
-      $location.path('/entities');
-    }
     Metadata.get().then(function(metadata) {
       $scope.schemata = metadata.schemata;
       $http.get('/api/1/entities/_pending').then(function(res) {
