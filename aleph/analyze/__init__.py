@@ -75,6 +75,7 @@ def analyze_terms(terms, seen=None):
 
 @celery.task()
 def analyze_document(document_id):
+    return
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
@@ -83,6 +84,6 @@ def analyze_document(document_id):
     try:
         for cls in get_analyzers():
             cls().analyze(document, document.meta)
-        index_document(document_id)
     except Exception as ex:
         log.exception(ex)
+    index_document(document_id)
