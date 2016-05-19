@@ -75,7 +75,6 @@ def analyze_terms(terms, seen=None):
 
 @celery.task()
 def analyze_document(document_id):
-    return
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
