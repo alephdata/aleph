@@ -65,7 +65,7 @@ def update_entity_full(entity_id):
     query = db.session.query(Entity).filter(Entity.id == entity_id)
     entity = query.first()
     generate_entity_references(entity)
-    reindex_entity()
+    reindex_entity(entity)
     Alert.dedupe(entity.id)
 
 
