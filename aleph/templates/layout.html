@@ -103,8 +103,6 @@
       </div>
     </footer>
 
-    {% include "analytics.html" %}
-
     {% for path, tmpl in templates %}
       <script id="{{path}}" type="text/ng-template">{{ tmpl | safe }}</script>
     {% endfor %}
