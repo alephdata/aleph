@@ -14,6 +14,7 @@ from celery import Celery
 from elasticsearch import Elasticsearch
 
 from aleph import default_settings, archive
+from aleph.ext import get_init
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -66,6 +67,12 @@ def create_app(config={}):
     db.init_app(app)
     assets.init_app(app)
     admin.init_app(app)
+
+    # This executes all registered init-time plugins so that other
+    # applications can register their behaviour.
+    for name, plugin in get_init().items():
+        plugin(app=app)
+
     return app
 
 

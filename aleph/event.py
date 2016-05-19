@@ -3,12 +3,14 @@ import json
 import traceback
 
 from aleph.core import db, celery
+from aleph import signals
 from aleph.model import Event
 
 
 @celery.task()
 def store_report(origin, data):
     data = json.loads(data)
+    signals.report_event.send(origin=origin, data=data)
     event = Event()
     event.origin = origin
     event.data = data

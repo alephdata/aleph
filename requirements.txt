@@ -37,6 +37,7 @@ jsonmapping
 https://github.com/euske/pdfminer/tarball/master
 https://github.com/aboSamoor/polyglot/tarball/master
 langid==1.1.5
+blinker==1.4
 babel
 pyDBF==0.1
 pycountry>=1.18

@@ -1,3 +1,4 @@
+from aleph import signals
 from aleph.assets import assets, compile_assets  # noqa
 from aleph.admin import admin  # noqa
 from aleph.views.base_api import blueprint as base_api
@@ -27,4 +28,5 @@ def mount_app_blueprints(app):
     app.register_blueprint(exports_api)
     app.register_blueprint(sources_api)
     app.register_blueprint(alerts_api)
+    signals.register_blueprints.send(app=app)
     compile_assets(app)

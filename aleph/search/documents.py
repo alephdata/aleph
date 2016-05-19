@@ -3,8 +3,8 @@ from pprint import pprint  # noqa
 
 from werkzeug.datastructures import MultiDict
 
+from aleph import authz, signals
 from aleph.core import get_es, get_es_index, url_for
-from aleph import authz
 from aleph.model import Source
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import add_filter, authz_sources_filter, clean_highlight
@@ -55,6 +55,7 @@ def documents_query(args, fields=None, facets=True):
         aggs = facet_source(q, aggs, filters)
         q = entity_collections(q, aggs, args, filters)
 
+    signals.document_query_process.send(q=q, args=args)
     return {
         'sort': sort,
         'query': filter_query(q, filters, OR_FIELDS),

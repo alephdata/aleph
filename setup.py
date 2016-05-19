@@ -52,6 +52,8 @@ setup(
             'blacklight = aleph.crawlers.blacklight:BlacklightCrawler',
             'sourceafrica = aleph.crawlers.sourceafrica:SourceAfricaCrawler'
         ],
+        'aleph.init': [
+        ],
         'console_scripts': [
             'aleph = aleph.manage:main',
         ]

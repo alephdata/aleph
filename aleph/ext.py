@@ -14,6 +14,10 @@ def get_extensions(section):
     return EXTENSIONS[section]
 
 
+def get_init():
+    return get_extensions('aleph.init')
+
+
 def get_crawlers():
     return get_extensions('aleph.crawlers')
 
