@@ -50,7 +50,8 @@ setup(
             'idrequests = aleph.crawlers.idashboard:IDRequests',
             'idfiles = aleph.crawlers.idashboard:IDFiles',
             'blacklight = aleph.crawlers.blacklight:BlacklightCrawler',
-            'sourceafrica = aleph.crawlers.sourceafrica:SourceAfricaCrawler'
+            'sourceafrica = aleph.crawlers.documentcloud:SourceAfricaCrawler',
+            'dc.globalwitness = aleph.crawlers.documentcloud:GlobalWitnessDCCrawler',  # noqa
         ],
         'aleph.init': [
         ],

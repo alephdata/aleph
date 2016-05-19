@@ -1,11 +1,9 @@
 import logging
 import json
-from tempfile import NamedTemporaryFile
 
 from aleph.core import db
 from aleph.metadata import Metadata
 from aleph.model import Source, Document, Entity, Collection
-from aleph.ext import get_crawlers
 from aleph.ingest import ingest_url, ingest_file
 from aleph.index import index_entity, delete_entity
 from aleph.analyze import analyze_terms
@@ -82,10 +80,11 @@ class DocumentCrawler(Crawler):
                 'foreign_id': self.SOURCE_ID,
                 'label': self.SOURCE_LABEL or self.SOURCE_ID
             })
+            db.session.commit()
         return self._source
 
     def emit_file(self, meta, file_path, move=False):
         ingest_file(self.source.id, meta.clone(), file_path, move=move)
 
-    def emit_url(self, meta, source_url, move=False):
-        ingest_url.delay(self.source.id, meta.clone().data, source_url)
+    def emit_url(self, meta, url):
+        ingest_url.delay(self.source.id, meta.clone().data, url)

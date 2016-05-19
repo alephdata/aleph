@@ -55,10 +55,7 @@ class PDFIngestor(TextIngestor):
     EXTENSIONS = ['pdf']
 
     def ingest(self, meta, local_path):
-        try:
-            self.extract_pdf(meta, local_path)
-        except Exception as exception:
-            self.log_exception(meta, exception)
+        self.extract_pdf(meta, local_path)
 
     @classmethod
     def match(cls, meta, local_path):

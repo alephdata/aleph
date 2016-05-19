@@ -12,7 +12,7 @@ def get_iso3(languages):
         lang = lang.lower().strip()
         if len(lang) == 2:
             try:
-                c = pycountry.languages.get(iso639_1_code='de')
+                c = pycountry.languages.get(iso639_1_code=lang)
                 lang = c.iso639_3_code
             except KeyError:
                 continue

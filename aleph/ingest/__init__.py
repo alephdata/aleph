@@ -1,7 +1,7 @@
 import os
 import logging
 import requests
-from tempfile import NamedTemporaryFile
+from tempfile import mkstemp
 
 from aleph import event
 from aleph.core import get_archive, celery
@@ -26,22 +26,24 @@ def ingest_url(source_id, metadata, url):
     clear_session()
     meta = Metadata(data=metadata)
     try:
-        with NamedTemporaryFile() as fh:
-            log.info("Ingesting URL: %r", url)
-            res = requests.get(url, stream=True)
-            if res.status_code >= 400:
-                log.error("Error ingesting %r: %r", url, res.status_code)
+        fh, tmp_path = mkstemp()
+        os.close(fh)
+        log.info("Ingesting URL: %r", url)
+        res = requests.get(url, stream=True)
+        if res.status_code >= 400:
+            log.error("Error ingesting %r: %r", url, res.status_code)
+        with open(tmp_path, 'w') as fh:
             for chunk in res.iter_content(chunk_size=1024):
                 if chunk:
                     fh.write(chunk)
-            fh.flush()
-            if not meta.has('source_url'):
-                meta.source_url = res.url
-            meta.headers = res.headers
-            meta = get_archive().archive_file(fh.name, meta, move=True)
-            ingest.delay(source_id, meta.data)
+        if not meta.has('source_url'):
+            meta.source_url = res.url
+        meta.headers = res.headers
+        meta = get_archive().archive_file(tmp_path, meta, move=True)
+        ingest(source_id, meta.data)
     except Exception as ex:
         event.exception('aleph.ingest.ingest_url', metadata, ex)
+        log.exception(ex)
         raise
 
 
