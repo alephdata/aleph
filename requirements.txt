@@ -41,7 +41,7 @@ pycountry==1.18
 chardet==2.3.0
 rarfile==2.7
 xlrd==0.9.3
-flanker==0.4.38
+flanker==0.3.4
 jsonschema
 functools32
 pyyaml
