@@ -22,7 +22,7 @@ class Source(db.Model, IdModel, DatedModel, SchemaModel):
         if src is None:
             src = cls()
             src.foreign_id = foreign_id or make_token()
-        src.update(data)
+            src.update(data)
         db.session.flush()
         return src
 

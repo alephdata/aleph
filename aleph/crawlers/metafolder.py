@@ -2,7 +2,9 @@ from __future__ import absolute_import
 import logging
 import metafolder
 
-from aleph.model import Permission, Role
+from aleph.core import db
+from aleph.model import Permission, Role, Source
+from aleph.ingest import ingest_file
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
@@ -13,8 +15,7 @@ class MetaFolderCrawler(Crawler):
     name = 'metafolder'
 
     def normalize_metadata(self, item):
-        meta = self.metadata()
-        meta.data.update(item.meta)
+        meta = self.make_meta(item.meta)
         if not item.meta.get('foreign_id'):
             meta['foreign_id'] = item.identifier
         meta.dates = item.meta.get('dates', [])
@@ -23,30 +24,30 @@ class MetaFolderCrawler(Crawler):
         meta.keywords = item.meta.get('keywords', [])
         return meta
 
-    def crawl_item(self, item, sources, source):
+    def crawl_item(self, item, source):
         source_data = item.meta.get('source', {})
-        source_id = source_data.pop('foreign_id', source)
-        if source_id is None:
+        source_fk = source_data.pop('foreign_id', source)
+        if source_fk is None:
             raise ValueError("No foreign_id for source given: %r" % item)
-        if source_id not in sources:
-            label = source_data.get('label', source_id)
-            sources[source_id] = self.create_source(foreign_id=source_id,
-                                                    label=label)
+        if source_fk not in self.sources:
+            label = source_data.get('label', source_fk)
+            self.sources[source_fk] = Source.create({
+                'foreign_id': source_fk,
+                'label': label
+            })
             if source_data.get('public'):
-                Permission.grant_foreign(sources[source_id],
+                Permission.grant_foreign(self.sources[source_fk],
                                          Role.SYSTEM_GUEST,
                                          True, False)
-            if source_data.get('users'):
-                Permission.grant_foreign(sources[source_id],
-                                         Role.SYSTEM_USER,
-                                         True, False)
+            db.session.commit()
 
         log.info('Import: %r', item.identifier)
         meta = self.normalize_metadata(item)
-        self.emit_file(sources[source_id], meta, item.data_path)
+        ingest_file(self.sources[source_fk].id, meta,
+                    item.data_path, move=False)
 
     def crawl(self, folder, source=None):
         mf = metafolder.open(folder)
-        sources = {}
+        self.sources = {}
         for item in mf:
-            self.crawl_item(item, sources, source)
+            self.crawl_item(item, source)

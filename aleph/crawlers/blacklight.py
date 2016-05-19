@@ -47,7 +47,7 @@ class BlacklightCrawler(Crawler):
             return True
 
         response = response.json()
-        meta = self.metadata()
+        meta = self.make_meta()
         meta['source_url'] = source_url
 
         if 'document' in response['response']:
@@ -121,7 +121,10 @@ class BlacklightCrawler(Crawler):
             print 'Working on base_url: {}'.format(base_url)
             self.attributes = SITES[base_url]
             self.label= self.attributes['label']
-            self.source = self.create_source(label = self.label)
+            Source.create({
+                'label': self.label,
+                'foreign_id': 'blacklight'
+            })
             self.failed_articles = 0
             page_count = self.get_page_count(base_url)
             print "Pages: {}".format(page_count)

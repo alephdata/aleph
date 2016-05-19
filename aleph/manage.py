@@ -69,8 +69,8 @@ def crawldir(directory, source=None, language=None, country=None):
         meta['languages'] = [language]
     if country is not None:
         meta['countries'] = [country]
-    crawler = DirectoryCrawler(base_meta=meta)
-    crawler.execute(directory=directory, source=source)
+    crawler = DirectoryCrawler()
+    crawler.execute(directory=directory, source=source, meta=meta)
 
 
 @manager.command

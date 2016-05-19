@@ -7,6 +7,7 @@ log = logging.getLogger(__name__)
 SOURCE_AFRICA_URL = "http://dc.sourceafrica.net/api/search.json"
 RESULTS_PER_PAGE = 100
 
+
 class SourceAfricaCrawler(Crawler):
     '''
     '''
@@ -54,7 +55,7 @@ class SourceAfricaCrawler(Crawler):
                 doc = documents[idx]
                 print "Pg %s:: document %s of %s: %s | %s | {file_hash}".format(**doc) % (
                         page, idx, len(documents), doc['id'].encode('utf-8'), doc['title'].encode('utf-8'))
-                meta = self.metadata()
+                meta = self.make_meta()
                 meta.foreign_id = "sourceafrica.%s" % doc['id']
                 meta.title = "%s" % doc['title']
                 meta.mime_type = "application/pdf"

@@ -7,6 +7,9 @@ from sqlalchemy import create_engine
 from sqlalchemy import MetaData, select
 from sqlalchemy.schema import Table
 
+from aleph.core import db
+from aleph.model import Source
+from aleph.ingest import ingest_file
 from aleph.crawlers.crawler import Crawler
 
 log = logging.getLogger(__name__)
@@ -96,7 +99,7 @@ class SQLCrawler(Crawler):
     def crawl_query(self, engine, source, meta_base, name, query):
         meta_ = meta_base.copy()
         meta_.update(query.get('meta', {}))
-        meta = self.metadata()
+        meta = self.make_meta(meta_)
         meta.extension = 'csv'
         meta.mime_type = 'text/csv'
         meta.data.update(meta_)
@@ -119,14 +122,17 @@ class SQLCrawler(Crawler):
                 for row in rows:
                     writer.writerow(row[h] for h in headers)
             fh.close()
-            self.emit_file(source, meta, file_path, move=True)
+            ingest_file(source.id, meta, file_path, move=True)
         finally:
             if os.path.isfile(file_path):
                 os.unlink(file_path)
 
     def crawl_source(self, engine, foreign_id, data):
-        source = self.create_source(foreign_id=foreign_id,
-                                    label=data.get('label'))
+        source = Source.create({
+            'foreign_id': foreign_id,
+            'label': data.get('label')
+        })
+        db.session.commit()
         meta_base = data.get('meta', {})
         for name, query in data.get('queries', {}).items():
             self.crawl_query(engine, source, meta_base, name, query)
