@@ -24,11 +24,18 @@ Other dependencies
 ------------------
 
 - Requirements for the web interface are captured on `bower.json <https://github.com/codeforafrica/aleph/blob/master/bower.json>`_
-- Ruby
+- Ruby-sass: ``apt-get install ruby-sass`` or ``gem install sass``
+
+
+
 - Node.js and NPM
 - bower::
 
   $ npm install -g bower
+
+- uglifyjs::
+
+  $ npm install -g uglifyjs
 
 - Git::
 
