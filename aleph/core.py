@@ -3,7 +3,6 @@ from logging.handlers import SMTPHandler
 from urlparse import urljoin
 from flask import Flask, current_app
 from flask import url_for as flask_url_for
-from flask_admin import Admin
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.assets import Environment
 from flask.ext.migrate import Migrate
@@ -23,7 +22,6 @@ celery = Celery('aleph')
 assets = Environment()
 oauth = OAuth()
 oauth_provider = oauth.remote_app('provider', app_key='OAUTH')
-admin = Admin(template_mode='bootstrap3')
 
 
 def create_app(config={}):
@@ -66,7 +64,6 @@ def create_app(config={}):
     mail.init_app(app)
     db.init_app(app)
     assets.init_app(app)
-    admin.init_app(app)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.

@@ -1,6 +1,5 @@
 from aleph import signals
 from aleph.assets import assets, compile_assets  # noqa
-from aleph.admin import admin  # noqa
 from aleph.views.base_api import blueprint as base_api
 from aleph.views.cache import blueprint as cache_api
 from aleph.views.documents_api import blueprint as documents_api
