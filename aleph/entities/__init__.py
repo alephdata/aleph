@@ -58,7 +58,7 @@ def generate_entity_references(entity):
 
 
 def update_entity(entity):
-    reindex_entity(entity)
+    reindex_entity(entity, references=False)
     update_entity_full.delay(entity.id)
 
 
@@ -72,11 +72,12 @@ def update_entity_full(entity_id):
     Alert.dedupe(entity.id)
 
 
-def reindex_entity(entity):
+def reindex_entity(entity, references=True):
     log.info('Index [%s]: %s', entity.id, entity.name)
     if entity.state != Entity.STATE_ACTIVE:
         delete_entity(entity.id)
-        delete_entity_references(entity.id)
+        if references:
+            delete_entity_references(entity.id)
     else:
         index_entity(entity)
 
