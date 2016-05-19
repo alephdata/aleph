@@ -1,4 +1,5 @@
 import logging
+from elasticsearch.helpers import bulk, scan
 
 from aleph.core import get_es, get_es_index
 from aleph.text import latinize_text
@@ -12,6 +13,29 @@ def delete_entity(entity_id):
     """Delete an entity from the index."""
     get_es().delete(index=get_es_index(), doc_type=TYPE_ENTITY, id=entity_id,
                     ignore=[404])
+
+    q = {'query': {'term': {'entities.uuid': entity_id}}}
+
+    def updates():
+        for res in scan(get_es(), query=q, index=get_es_index(),
+                        doc_type=[TYPE_DOCUMENT]):
+            entities = []
+            for ent in res.get('_source').get('entities'):
+                if ent['uuid'] != entity_id:
+                    entities.append(ent)
+            body = res.get('_source')
+            body['entities'] = entities
+            yield {
+                '_id': res['_id'],
+                '_type': res['_type'],
+                '_index': res['_index'],
+                '_source': body
+            }
+    try:
+        bulk(get_es(), updates(), stats_only=True, chunk_size=100,
+             request_timeout=120.0)
+    except Exception:
+        log.debug("Failed to clear entity refs: %r", entity_id)
 
 
 def get_count(entity):
