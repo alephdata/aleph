@@ -13,7 +13,7 @@ class Event(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return '<Event(%r,%r)>' % (self.id)
+        return '<Event(%r,%r)>' % (self.id, self.origin)
 
     def __unicode__(self):
         return self.id

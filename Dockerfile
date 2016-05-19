@@ -11,7 +11,7 @@ RUN apt-get update -qq && apt-get -y dist-upgrade && apt-get install -y -q  \
         poppler-utils poppler-data unrtf pstotext python-numpy default-jdk \
         readpst libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
         libopenjpeg-dev imagemagick-common imagemagick unoconv \
-        libtesseract-dev ruby-sass wkhtmltopdf vim libjpeg-dev \
+        libtesseract-dev ruby-sass wkhtmltopdf vim libjpeg-dev libicu-dev \
         tesseract-ocr tesseract-ocr-bel tesseract-ocr-aze \
         tesseract-ocr-ces tesseract-ocr-eng tesseract-ocr-deu \
         tesseract-ocr-spa tesseract-ocr-fra tesseract-ocr-osd \
@@ -29,23 +29,22 @@ RUN echo "en_GB ISO-8859-1" >> /etc/locale.gen && \
     locale-gen
 
 # A Node, for good measure.
-RUN curl -sL https://deb.nodesource.com/setup | bash -
-RUN apt-get install -y nodejs && curl -L https://www.npmjs.org/install.sh | sh
-RUN npm install -g bower uglifyjs
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN apt-get install -yy nodejs
+RUN npm --quiet --silent install -g bower uglifyjs
 
 # WebKit HTML to X install since the one that comes with distros is hellishly outdated.
-RUN wget -O /tmp/wkhtmltox.tar.xv http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz \
+RUN wget --quiet -O /tmp/wkhtmltox.tar.xv http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz \
     && tar -xf /tmp/wkhtmltox.tar.xv -C /opt && rm -f /tmp/wkhtmltox.tar.xv
 ENV WKHTMLTOPDF_BIN /opt/wkhtmltox/bin/wkhtmltopdf
 
 # Begin python festivities
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install --upgrade pip && pip install functools32 \
-  && pip install -r /tmp/requirements.txt
+RUN pip install -q --upgrade pip && pip install -q functools32 \
+  && pip install -q -r /tmp/requirements.txt
 
 COPY . /aleph
 WORKDIR /aleph
 ENV ALEPH_SETTINGS /aleph/contrib/docker_settings.py
-RUN pip install -e /aleph \
-    && pip install --upgrade https://github.com/pudo/extractors/tarball/master
-RUN bower --allow-root install
+RUN pip install -q -e /aleph
+RUN rm -rf /aleph/.git && bower --allow-root --quiet install

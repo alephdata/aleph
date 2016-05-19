@@ -1,13 +1,16 @@
 from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, request_data, arg_bool
 from apikit import get_limit, get_offset
+from sqlalchemy import func
+from sqlalchemy.orm import aliased
 
 from aleph import authz
-from aleph.model import Entity, Collection, db
+from aleph.model import Entity, Collection, Reference, db
 from aleph.entities import update_entity
 from aleph.views.cache import enable_cache
 from aleph.search import entities_query, execute_entities_query
-from aleph.search import suggest_entities
+from aleph.search import suggest_entities, similar_entities
+from aleph.text import latinize_text
 
 blueprint = Blueprint('entities_api', __name__)
 
@@ -68,11 +71,36 @@ def suggest():
     return jsonify(suggest_entities(request.args))
 
 
+@blueprint.route('/api/1/entities/_pending', methods=['GET'])
+def pending():
+    q = db.session.query(Entity)
+    q = q.filter(Entity.state == Entity.STATE_PENDING)
+    clause = Collection.id.in_(authz.collections(authz.READ))
+    q = q.filter(Entity.collections.any(clause))
+    ref = aliased(Reference)
+    q = q.join(ref)
+    q = q.group_by(Entity)
+    q = q.order_by(func.sum(ref.weight).desc())
+    entity = q.first()
+    if entity is None:
+        return jsonify({'empty': True})
+    data = entity.to_dict()
+    data['name_latin'] = latinize_text(data['name'], lowercase=False)
+    return jsonify(data)
+
+
 @blueprint.route('/api/1/entities/<id>', methods=['GET'])
 def view(id):
     entity = obj_or_404(Entity.by_id(id))
     check_authz(entity, authz.READ)
     return jsonify(entity)
+
+
+@blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])
+def similar(id):
+    entity = obj_or_404(Entity.by_id(id))
+    check_authz(entity, authz.READ)
+    return jsonify(similar_entities(entity, request.args))
 
 
 @blueprint.route('/api/1/entities/_lookup', methods=['GET'])

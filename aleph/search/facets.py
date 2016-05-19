@@ -37,9 +37,12 @@ def convert_entities(entities):
         entity = entities.get(bucket.get('key'))
         if entity is None:
             continue
-        data = entity.to_dict()
-        data['count'] = bucket.get('doc_count')
-        results.append(data)
+        results.append({
+            'id': entity.id,
+            'name': entity.name,
+            '$schema': entity.type,
+            'count': bucket.get('doc_count')
+        })
     return results
 
 
@@ -64,6 +67,8 @@ def convert_sources(facet):
 def convert_collections(facet):
     output = {'values': []}
     ids = [b.get('key') for b in facet.get('buckets', [])]
+    if not len(ids):
+        return output
     collections = Collection.all_by_ids(ids).all()
     for bucket in facet.get('buckets', []):
         key = bucket.get('key')

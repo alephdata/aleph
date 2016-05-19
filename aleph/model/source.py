@@ -13,6 +13,7 @@ class Source(db.Model, IdModel, DatedModel, SchemaModel):
     label = db.Column(db.Unicode, nullable=True)
     category = db.Column(db.Unicode, nullable=True)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)
+    generate_entities = db.Column(db.Boolean, nullable=True)
 
     @classmethod
     def create(cls, data):

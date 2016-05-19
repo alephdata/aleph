@@ -5,7 +5,7 @@ from aleph.core import get_es, get_es_index
 from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD  # noqa
 from aleph.search.documents import documents_query, execute_documents_query  # noqa
 from aleph.search.entities import entities_query, execute_entities_query  # noqa
-from aleph.search.entities import suggest_entities  # noqa
+from aleph.search.entities import suggest_entities, similar_entities  # noqa
 from aleph.search.records import records_query, execute_records_query  # noqa
 
 PAGE = 1000

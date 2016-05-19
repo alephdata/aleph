@@ -8,7 +8,7 @@ from aleph import authz
 from aleph.model import Source
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import add_filter, authz_sources_filter, clean_highlight
-from aleph.search.util import execute_basic, parse_filters
+from aleph.search.util import execute_basic, parse_filters, FACET_SIZE
 from aleph.search.fragments import text_query_string, meta_query_string
 from aleph.search.fragments import match_all, child_record, aggregate
 from aleph.search.fragments import filter_query
@@ -98,7 +98,7 @@ def entity_collections(q, aggs, args, filters):
                 'filter': flt,
                 'aggs': {
                     'entities': {
-                        'terms': {'field': 'entities.uuid', 'size': 100}
+                        'terms': {'field': 'entities.uuid', 'size': FACET_SIZE}
                     }
                 }
             }

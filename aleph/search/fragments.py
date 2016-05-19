@@ -1,8 +1,8 @@
 from collections import defaultdict
 
 from aleph.index import TYPE_RECORD
-from aleph.util import latinize_text
-from aleph.search.util import add_filter
+from aleph.text import latinize_text
+from aleph.search.util import add_filter, FACET_SIZE
 
 
 def match_all():
@@ -54,7 +54,7 @@ def aggregate(q, args):
     """Generate aggregations, a generalized way to do facetting."""
     aggs = {'scoped': {'global': {}, 'aggs': {}}}
     for facet in args.getlist('facet'):
-        agg = {facet: {'terms': {'field': facet, 'size': 100}}}
+        agg = {facet: {'terms': {'field': facet, 'size': FACET_SIZE}}}
         aggs.update(agg)
     return aggs
 

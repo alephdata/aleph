@@ -2,8 +2,8 @@
 postgres:
   image: postgres:9.4
   volumes:
-    - "/srv/data/postgres:/var/lib/postgresql/data"
-    - "/srv/logs/postgres:/var/log"
+    - "/opt/aleph/data/postgres:/var/lib/postgresql/data"
+    - "/opt/aleph/logs/postgres:/var/log"
   environment:
     POSTGRES_USER:     aleph
     POSTGRES_PASSWORD: aleph
@@ -14,12 +14,12 @@ postgres:
 elasticsearch:
   image: elasticsearch:2.2.0
   volumes:
-    - "/srv/data/elasticsearch:/usr/share/elasticsearch/data"
-    - "/srv/logs/elasticsearch:/var/log"
+    - "/opt/aleph/data/elasticsearch:/usr/share/elasticsearch/data"
+    - "/opt/aleph/logs/elasticsearch:/var/log"
   ports:
     - "127.0.0.1:9201:9209"
-  environment:
-    ES_HEAP_SIZE: 4g
+  # environment:
+  # ES_HEAP_SIZE: 4g
 
 worker:
     build: .
@@ -29,12 +29,13 @@ worker:
       - elasticsearch
     volumes:
       - "/:/host"
-      - "/srv/logs/worker:/var/log"
+      - "/opt/aleph/data:/opt/aleph/data"
+      - "/opt/aleph/logs/worker:/var/log"
     environment:
-      C_FORCE_ROOT: true
+      C_FORCE_ROOT: 'true'
       ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
       ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-      EXTRACTORS_CACHE_DIR: /srv/data/extractors
+      POLYGLOT_DATA_PATH: /opt/aleph/data
       TESSDATA_PREFIX: /usr/share/tesseract-ocr
     env_file:
       - aleph.env
@@ -46,11 +47,10 @@ beat:
       - postgres
       - elasticsearch
     volumes:
-      - "/:/host"
-      - "/srv/logs/scheduler:/var/log"
-      - "/srv/run/scheduler:/var/run"
+      - "/opt/aleph/logs/beat:/var/log"
+      - "/opt/aleph/run/beat:/var/run"
     environment:
-      C_FORCE_ROOT: true
+      C_FORCE_ROOT: 'true'
       ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
       ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
     env_file:
@@ -65,7 +65,7 @@ web:
       - postgres
       - elasticsearch
     volumes:
-      - "/srv/logs/web:/var/log"
+      - "/opt/aleph/logs/web:/var/log"
     environment:
       ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
       ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph

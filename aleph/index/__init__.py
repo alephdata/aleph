@@ -3,7 +3,7 @@ from elasticsearch.helpers import bulk, scan
 
 from aleph.core import celery, get_es, get_es_index
 from aleph.model import Document
-from aleph.util import latinize_text
+from aleph.text import latinize_text
 from aleph.index.admin import init_search, upgrade_search  # noqa
 from aleph.index.admin import delete_index, optimize_search  # noqa
 from aleph.index.records import generate_records, clear_records

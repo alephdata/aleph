@@ -17,6 +17,11 @@ ARCHIVE_AWS_SECRET = env.get('AWS_SECRET_ACCESS_KEY')
 ARCHIVE_PATH = env.get('ARCHIVE_PATH', '/srv/data/aleph')
 
 OCR_DEFAULTS = ['en']
+TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')
+PDFTOPPM_BIN = env.get('PDFTOPPM_BIN', 'pdftoppm')
+CONVERT_BIN = env.get('CONVERT_BIN', 'convert')
+SOFFICE_BIN = env.get('SOFFICE_BIN', 'soffice')
+WKHTMLTOPDF_BIN = env.get('WKHTMLTOPDF_BIN', 'wkhtmltopdf')
 
 SECRET_KEY = env.get('SECRET_KEY')
 

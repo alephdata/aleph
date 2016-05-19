@@ -45,6 +45,12 @@
           Delete
         </a>
       </div>
+      <div class="btn-group" ng-if="authz.is_admin()">
+        <a ng-href="/entities/review" class="btn btn-primary">
+          <i class="fa fa-link" aria-hidden="true"></i>
+          Review
+        </a>
+      </div>
     </div>
   </div>
 </div>
@@ -75,7 +81,16 @@
           </td>
           <td width="1%">{{::entity.jurisdiction_code.toUpperCase()}}</td>
           <td class="numeric" width="1%">
-            <button type="button" class="btn btn-default btn-xs" ng-click="toggleAlert(entity)"
+            <button type="button" class="btn btn-default btn-xs"
+              ng-click="editEntity($event, entity)"
+              ng-if="authz.entityWrite(entity)">
+              <i class="fa fa-cog"></i>
+              Edit
+            </button>
+          </td>
+          <td class="numeric" width="1%">
+            <button type="button" class="btn btn-default btn-xs" ng-if="authz.logged_in()"
+                ng-click="toggleAlert(entity)"
                 ng-class="{'btn-primary': entity.alert_id}">
               <i class="fa fa-bell"></i>
               <span ng-show="entity.alert_id">Stop</span>
@@ -96,7 +111,7 @@
           </td>
           <td>
           </td>
-          <td colspan="4">
+          <td colspan="5">
             {{::entity.summary | limitTo:500}}
           </td>
         </tr>

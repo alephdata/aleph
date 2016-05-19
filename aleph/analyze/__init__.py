@@ -1,8 +1,10 @@
+from __future__ import absolute_import
 import logging
+from polyglot.downloader import downloader
 
 from aleph.core import celery
 from aleph.ext import get_analyzers
-from aleph.util import normalize_strong
+from aleph.text import normalize_strong
 from aleph.model import Document, Entity
 from aleph.search.fragments import text_query_string, meta_query_string
 from aleph.search.fragments import child_record
@@ -11,6 +13,14 @@ from aleph.search import scan_iter
 
 
 log = logging.getLogger(__name__)
+
+
+def install_analyzers():
+    # ['pos2', 'ner2', 'morph2', 'tsne2', 'counts2', 'embeddings2',
+    #  'sentiment2', 'sgns2', 'transliteration2']
+    for task in ['embeddings2', 'ner2']:
+        log.info("Downloading linguistic resources: %r...", task)
+        downloader.download('TASK:%s' % task, quiet=True)
 
 
 def query_doc_ids(query):

@@ -1,0 +1,233 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">Edit: {{originalName}}</h4>
+</div>
+
+<form role="form" name="editEntity" ng-submit="save(editEntity)">
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-8" ng-show="section == 'base'">
+        <div class="form-group" ng-class="{'has-error': editEntity.name.$invalid}">
+          <label class="control-label" for="name">
+            Name
+          </label>
+          <input type="text" class="form-control input-lg" id="name" name="name" ng-model="entity.name"
+            required ng-minlength="3">
+          <p class="help-block">
+            At least three letters, don't include any comments or alternate names.
+          </p>
+        </div>
+
+        <entity-jurisdiction entity="entity"></entity-jurisdiction>
+
+        <div class="form-group">
+          <label class="control-label" for="summary">
+            Summary
+          </label>
+          <div class="">
+            <textarea class="form-control" id="summary" name="summary"
+              ng-model="entity.summary" rows="2" maxlength="200"></textarea>
+            <p class="help-block">Describe the relevance of this entity in a sentence.</p>
+          </div>
+        </div>
+ 
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="entity.haveAlert"> Receive e-mail alerts about new, matching documents.
+          </label>
+        </div>
+      </div>
+
+      <div class="col-md-8" ng-show="section == 'other_names'">
+        <p class="help-block">Alternate names (<i>also known as</i>) can
+          be former names, spelling variations, names in other scripts or
+          well-known aliases.
+        </p>
+        <table class="table">
+          <tr ng-repeat="other_name in entity.other_names">
+            <td>
+              <input type="text" class="form-control input" id="new_name" name="new_name"
+                ng-model="other_name.display_name" ng-minlength="3"
+                ng-change="updateOtherName(other_name)">
+            </td>
+            <td width="1%">
+              <button type="button" class="btn btn-default btn"
+                ng-click="removeOtherName(other_name)">
+                <i class="fa fa-trash-o"></i>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="text" class="form-control input" id="new_name" name="new_name"
+                ng-model="newOtherName.name" placeholder="Add an alternate name..."
+                ng-focus="editOtherName(true)" ng-blur="editOtherName(false)">
+            </td>
+            <td width="1%">
+              <button type="button" class="btn btn-success btn"
+                ng-click="addOtherName()" ng-disabled="!canAddOtherName()">
+                <i class="fa fa-plus"></i>
+              </button>
+            </td>
+          </tr>
+        </table>
+        
+      </div>
+      
+      <div class="col-md-8" ng-show="section == 'details'">
+
+        <div class="form-group" ng-if="isCompany">
+          <label class="control-label" for="company_number">
+            Company registration number
+          </label>
+          <div>
+            <input type="text" class="form-control" id="company_number" name="company_number"
+              ng-model="entity.company_number" ng-minlength="3">
+            <p class="help-block">
+              As used by the jurisdiction's corporate registry.
+            </p>
+          </div>
+        </div>
+
+        <div class="row" ng-if="isPerson">
+          <div class="col-sm-6">
+            <div class="form-group" ng-class="{'has-error': editEntity.birth_date.$invalid}">
+              <label class="control-label" for="birth_date">Date of birth</label>
+              <div>
+               <input type="text" class="form-control" name="birth_date"
+                ng-model="entity.birth_date" placeholder="1970-01-01" autocomplete="off"
+                ng-pattern="'\\d{4}-[01]\\d-[0-3]\\d'" ng-trim="true">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group" ng-class="{'has-error': editEntity.death_date.$invalid}">
+              <label class="control-label" for="death_date">Date of death</label>
+              <div>
+               <input type="text" class="form-control" name="death_date"
+                ng-model="entity.death_date" placeholder="1970-01-01" autocomplete="off"
+                ng-pattern="'\\d{4}-[01]\\d-[0-3]\\d'" ng-trim="true">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" ng-if="isOrganization">
+          <div class="col-sm-6">
+            <div class="form-group" ng-class="{'has-error': editEntity.founding_date.$invalid}">
+              <label class="control-label" for="founding_date">Founding date</label>
+              <div>
+               <input type="text" class="form-control" name="founding_date"
+                ng-model="entity.founding_date" placeholder="1970-01-01" autocomplete="off"
+                ng-pattern="'\\d{4}-[01]\\d-[0-3]\\d'" ng-trim="true">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group" ng-class="{'has-error': editEntity.dissolution_date.$invalid}">
+              <label class="control-label" for="dissolution_date">Date of dissolution</label>
+              <div>
+               <input type="text" class="form-control" name="dissolution_date"
+                ng-model="entity.dissolution_date" placeholder="1970-01-01" autocomplete="off"
+                ng-pattern="'\\d{4}-[01]\\d-[0-3]\\d'" ng-trim="true">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group" ng-if="isPerson">
+          <label class="control-label" for="description">Gender</label>
+          <div>
+            <input type="text" class="form-control" id="gender"
+              ng-model="entity.gender"
+              placeholder="e.g. male, female">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="description">
+            <span ng-show="isEntity">Description</span>
+            <span ng-show="isCompany">Corporate</span>
+            <span ng-show="isOrganization">History</span>
+            <span ng-show="isPerson">Personal Biography</span>
+          </label>
+          <div class="">
+            <textarea class="form-control" id="description" name="description"
+              ng-model="entity.description" rows="4"></textarea>
+            <p class="help-block">Provide biographical background about this entity.</p>
+          </div>
+        </div>
+
+        <div class="form-group" ng-if="entity.identifiers.length">
+          <hr>
+          <label class="control-label" for="description">Data Identifiers</label>
+          <p class="help-block">Used when updating entity data from external sources.</p>
+          <div>
+            <table class="table table-condensed">
+              <tr>
+                <th>Scheme</th>
+                <th>Identifier</th>
+                <th></th>
+              </tr>
+              <tr ng-repeat="identifier in entity.identifiers">
+                <td>{{identifier.scheme}}</td>
+                <td>{{identifier.identifier}}</td>
+                <td width='0%'>
+                  <button type="button" class="btn btn-default btn-xs"
+                    ng-click="removeIdentifier(identifier)">
+                    <i class="fa fa-trash-o"></i>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-8" ng-show="section == 'dedupe'">
+        <table class="table table-striped">
+          <tr>
+            <th>Possible Duplicate</th>
+            <th width="1%">Country</th>
+            <th width="5%">Score</th>
+            <th width="1%"></th>
+          </tr>
+          <tr ng-repeat="opt in duplicateOptions">
+            <td><a ng-click="editDuplicate(opt)">{{opt.name}}</a></td>
+            <td class="numeric">{{opt.jurisdiction_code.toUpperCase()}}</td>
+            <td class="numeric">{{opt.score | number: 1}}</td>
+            <td>
+              <a ng-click="mergeDuplicate(opt)" class="btn btn-primary btn-xs">
+                <i class="fa fa-link" aria-hidden="true"></i>
+                Merge
+              </a>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="col-md-4">
+        <ul class="nav nav-pills nav-stacked">
+          <li ng-class="{'active': section == 'base'}">
+            <a ng-click="setSection('base')">Basic Information</a>
+          </li>
+          <li ng-class="{'active': section == 'other_names'}">
+            <a ng-click="setSection('other_names')">Alternate Names</a>
+          </li>
+          <li ng-class="{'active': section == 'details'}">
+            <a ng-click="setSection('details')">Additional Detail</a>
+          </li>
+          <li ng-class="{'active': section == 'dedupe'}">
+            <a ng-click="setSection('dedupe')">Possible Duplicates</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="!canSave()">Save</button>
+  </div>
+</form>
+

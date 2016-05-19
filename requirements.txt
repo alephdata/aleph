@@ -13,6 +13,8 @@ celery>=3.1.17
 elasticsearch==2.1.0
 psycopg2
 cssutils
+Pillow
+tesserwrap
 lxml
 normality>=0.1
 nose
@@ -28,16 +30,16 @@ Unidecode==0.04.17
 networkx
 XlsxWriter==0.6.6
 https://github.com/pudo/messytables/tarball/allow-parser-args
-https://github.com/pudo/extractors/tarball/master
 https://github.com/pudo/krauler/tarball/master
-https://github.com/pudo/metafolder/tarball/master
-https://github.com/pudo/jsonmapping/tarball/master
+metafolder
+jsonmapping
 # pdfminer==20140328
 https://github.com/euske/pdfminer/tarball/master
+https://github.com/aboSamoor/polyglot/tarball/master
 langid==1.1.5
 babel
 pyDBF==0.1
-pycountry==1.18
+pycountry>=1.18
 chardet==2.3.0
 rarfile==2.7
 xlrd==0.9.3

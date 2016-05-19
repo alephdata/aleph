@@ -23,8 +23,14 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     _schema = '/entity/entity.json#'
     _schema_recurse = True
 
+    STATE_ACTIVE = 'active'
+    STATE_PENDING = 'pending'
+    STATE_DELETED = 'deleted'
+
     name = db.Column(db.Unicode)
     type = db.Column('type', db.String(255), index=True)
+    state = db.Column(db.String(128), nullable=True,
+                      default=STATE_ACTIVE)
     summary = db.Column(db.Unicode, nullable=True)
     description = db.Column(db.Unicode, nullable=True)
     jurisdiction_code = db.Column(db.Unicode, nullable=True)
@@ -46,6 +52,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         q.delete(synchronize_session='fetch')
         for alert in self.alerts:
             alert.delete()
+        self.state = self.STATE_DELETED
         super(Entity, self).delete()
 
     def update(self, data, merge=False):
@@ -148,6 +155,9 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     @classmethod
     def save(cls, data, merge=False):
         ent = cls.by_id(data.get('id'))
+        if 'state' not in data:
+            data['state'] = cls.STATE_ACTIVE
+
         collections = data.pop('collections', [])
         for identifier in data.get('identifiers', []):
             if ent is None:
@@ -174,8 +184,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     @property
     def terms(self):
         terms = set([self.name])
-        # for other_name in self.other_names:
-        #    terms.update(other_name.terms)
+        for other_name in self.other_names:
+            terms.update(other_name.terms)
         return [t for t in terms if t is not None and len(t)]
 
     @classmethod
@@ -220,6 +230,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     @classmethod
     def latest(cls):
         q = db.session.query(func.max(cls.updated_at))
+        q = q.filter(cls.state == cls.STATE_ACTIVE)
         return q.scalar()
 
     def __repr__(self):
@@ -293,7 +304,6 @@ class EntityPerson(EntityLegalPerson):
     gender = db.Column(db.Unicode, nullable=True)
     birth_date = db.Column(db.Date, nullable=True)
     death_date = db.Column(db.Date, nullable=True)
-    biography = db.Column(db.Unicode, nullable=True)
 
     residential_address_id = db.Column(db.String(32), db.ForeignKey('entity_address.id'))  # noqa
     residential_address = db.relationship('EntityAddress',

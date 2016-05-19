@@ -5,6 +5,7 @@ from aleph import authz
 from aleph.core import get_es, get_es_index
 
 MARKS = re.compile(r'[_\.;,/]{2,}')
+FACET_SIZE = 50
 
 
 def authz_sources_filter(q):

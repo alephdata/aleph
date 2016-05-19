@@ -6,7 +6,7 @@ from tempfile import NamedTemporaryFile
 from aleph import event
 from aleph.core import get_archive, celery
 from aleph.model import clear_session
-from aleph.model.metadata import Metadata
+from aleph.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor
 
 log = logging.getLogger(__name__)
@@ -41,8 +41,8 @@ def ingest_url(source_id, metadata, url):
             meta = get_archive().archive_file(fh.name, meta, move=True)
             ingest.delay(source_id, meta.data)
     except Exception as ex:
-        log.exception(ex)
         event.exception('aleph.ingest.ingest_url', metadata, ex)
+        raise
 
 
 def ingest_file(source_id, meta, file_name, move=False):
@@ -54,8 +54,8 @@ def ingest_file(source_id, meta, file_name, move=False):
         meta = get_archive().archive_file(file_name, meta, move=move)
         ingest.delay(source_id, meta.data)
     except Exception as ex:
-        log.exception(ex)
         event.exception('aleph.ingest.ingest_file', meta.data, ex)
+        raise
 
 
 @celery.task()

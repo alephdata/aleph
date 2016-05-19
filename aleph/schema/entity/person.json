@@ -31,12 +31,6 @@
       "type": ["string", "null"],
       "format": "date"
     },
-    "biography": {
-      "title": "Biography",
-      "sortIndex": 76,
-      "description": "An extended account of a person's life",
-      "type": ["string", "null"]
-    },
     "residential_address": {
       "title": "Residential address",
       "$ref": "/entity/address.json#"

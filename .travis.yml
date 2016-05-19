@@ -13,8 +13,14 @@ addons:
     packages:
       - python-software-properties
       - libtesseract-dev
+      - wkhtmltopdf
+      - poppler-utils
+      - libreoffice
 env:
   - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y tesseract-ocr-eng readpst
 install:
   - gem install sass
   - pip install -r requirements.txt

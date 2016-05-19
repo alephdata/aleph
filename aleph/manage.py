@@ -9,7 +9,7 @@ from flask.ext.migrate import MigrateCommand
 from aleph.core import create_app
 from aleph.model import db, upgrade_db, Source, Document
 from aleph.views import mount_app_blueprints, assets
-from aleph.analyze import analyze_source
+from aleph.analyze import analyze_source, install_analyzers
 from aleph.alerts import check_alerts
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document
@@ -17,7 +17,7 @@ from aleph.entities import reindex_entities
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
-from aleph.crawlers.mf import MetaFolderCrawler
+from aleph.crawlers.metafolder import MetaFolderCrawler
 
 
 log = logging.getLogger('aleph')
@@ -146,6 +146,12 @@ def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_db()
     upgrade_search()
+
+
+@manager.command
+def installdata():
+    """Create or upgrade the search index and database."""
+    install_analyzers()
 
 
 @manager.command

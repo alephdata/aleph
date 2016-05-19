@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 def update_entity(entity):
     """Perform some update operations on entities."""
     try:
-        if entity.deleted_at:
+        if entity.state != Entity.STATE_ACTIVE:
             delete_entity(entity.id)
         else:
             index_entity(entity)

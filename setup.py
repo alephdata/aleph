@@ -24,15 +24,16 @@ setup(
     test_suite='nose.collector',
     entry_points={
         'aleph.ingestors': [
-            'html = aleph.ingest.text:HtmlIngestor',
-            'pdf = aleph.ingest.text:PDFIngestor',
-            'doc = aleph.ingest.text:DocumentIngestor',
-            'img = aleph.ingest.text:ImageIngestor',
-            'email = aleph.ingest.email:EmailFileIngestor',
             'skip = aleph.ingest.dummy:SkipIngestor',
+            'pdf = aleph.ingest.text:PDFIngestor',
+            'doc = aleph.ingest.document:DocumentIngestor',
+            'ppt = aleph.ingest.document:PresentationIngestor',
+            'html = aleph.ingest.html:HtmlIngestor',
+            'img = aleph.ingest.image:ImageIngestor',
+            'email = aleph.ingest.email:EmailFileIngestor',
             'pst = aleph.ingest.email:OutlookIngestor',
             'messy = aleph.ingest.tabular:MessyTablesIngestor',
-            'dbf = aleph.ingest.tabular:DBFIngestor',
+            'dbf = aleph.ingest.dbf:DBFIngestor',
             'rar = aleph.ingest.packages:RARIngestor',
             'zip = aleph.ingest.packages:ZipIngestor',
             'tar = aleph.ingest.packages:TarIngestor',
@@ -41,11 +42,11 @@ setup(
         ],
         'aleph.analyzers': [
             'lang = aleph.analyze.language:LanguageAnalyzer',
-            'entities = aleph.analyze.entities:EntityAnalyzer'
+            'regex = aleph.analyze.regex:RegexEntityAnalyzer',
+            'polyglot = aleph.analyze.polyglot:PolyglotEntityAnalyzer'
         ],
         'aleph.crawlers': [
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
-            'spindle = aleph.crawlers.spindle:SpindleCrawler',
             'idrequests = aleph.crawlers.idashboard:IDRequests',
             'idfiles = aleph.crawlers.idashboard:IDFiles',
             'blacklight = aleph.crawlers.blacklight:BlacklightCrawler',

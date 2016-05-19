@@ -9,7 +9,7 @@ from normality import slugify
 from collections import MutableMapping, Mapping
 
 from aleph.util import make_filename
-from aleph.model.tabular import Tabular
+from aleph.metadata.tabular import Tabular
 
 
 class PDFAlternative(object):

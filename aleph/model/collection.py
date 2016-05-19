@@ -38,16 +38,16 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         if collection is None:
             collection = cls.create(data, role)
             collection.foreign_id = foreign_id
-        collection.update(data)
-        db.session.add(collection)
-        db.session.flush()
+            collection.update(data)
+            db.session.add(collection)
+            db.session.flush()
         return collection
 
     @classmethod
     def create(cls, data, role):
         collection = cls()
         collection.update(data)
-        collection.foreign_id = data.get('foreign_id') or make_token()
+        collection.foreign_id = make_token()
         collection.creator = role
         db.session.add(collection)
         db.session.flush()

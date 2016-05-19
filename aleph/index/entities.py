@@ -1,7 +1,7 @@
 import logging
 
 from aleph.core import get_es, get_es_index
-from aleph.util import latinize_text
+from aleph.text import latinize_text
 from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.index.util import expand_json
 

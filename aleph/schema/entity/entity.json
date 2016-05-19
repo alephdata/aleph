@@ -3,7 +3,7 @@
   "id": "/entity/entity.json#",
   "title": "Other entities",
   "type": "object",
-  "faIcon": "fa-user",
+  "faIcon": "fa-square",
   "properties": {
     "id": {
       "title": "ID",
@@ -51,6 +51,11 @@
         "title": "Register name",
         "sortIndex": 92,
         "type": ["string", "null"]
+    },
+    "state": {
+      "title": "State",
+      "type": "string",
+      "enum": ["pending", "active", "deleted"]
     },
     "register_url": {
       "title": "Register link",

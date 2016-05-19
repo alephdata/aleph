@@ -9,10 +9,10 @@ from aleph.search.util import authz_collections_filter, authz_sources_filter
 from aleph.search.util import execute_basic, parse_filters
 from aleph.search.fragments import match_all, filter_query, aggregate
 from aleph.search.facets import convert_entity_aggregations
-from aleph.util import latinize_text
+from aleph.text import latinize_text
 
 DEFAULT_FIELDS = ['collections', 'name', 'summary', 'jurisdiction_code',
-                  'description', '$schema']
+                  '$schema']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
@@ -101,6 +101,55 @@ def suggest_entities(args):
             options.append(ent)
     return {
         'text': text,
+        'results': options
+    }
+
+
+def similar_entities(entity, args):
+    """Merge suggestions API."""
+    shoulds = []
+    for term in entity.terms:
+        shoulds.append({
+            'multi_match': {
+                "fields": ["name^50", "terms^25", "summary^5"],
+                "query": term,
+                "fuzziness": 2
+            }
+        })
+        shoulds.append({
+            'multi_match': {
+                "fields": ["name_latin^10", "terms_latin^5", "summary_latin"],
+                "query": latinize_text(term),
+                "fuzziness": 2
+            }
+        })
+
+    q = {
+        "bool": {
+            "should": shoulds,
+            "must_not": {
+                "ids": {
+                    "values": [entity.id]
+                }
+            },
+            "minimum_should_match": 1
+        }
+    }
+    q = {
+        'size': 10,
+        'query': authz_collections_filter(q),
+        '_source': DEFAULT_FIELDS
+    }
+    options = []
+    result = get_es().search(index=get_es_index(), doc_type=TYPE_ENTITY,
+                             body=q)
+    for res in result.get('hits', {}).get('hits', []):
+        entity = res.get('_source')
+        entity['id'] = res.get('_id')
+        entity['score'] = res.get('_score')
+        entity['api_url'] = url_for('entities_api.view', id=res.get('_id'))
+        options.append(entity)
+    return {
         'results': options
     }
 
