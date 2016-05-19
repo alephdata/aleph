@@ -1,34 +1,85 @@
+import re
 import logging
+from collections import defaultdict
 
 from aleph.core import db, celery
-from aleph.model import Entity, Alert
-from aleph.index import index_entity, delete_entity
-from aleph.analyze import analyze_entity
+from aleph.text import normalize_strong
+from aleph.model import Entity, Reference, Alert
+from aleph.index import index_entity, delete_entity, index_document
+from aleph.index.entities import delete_entity_references
+from aleph.search.records import scan_entity_mentions
 
 log = logging.getLogger(__name__)
 
 
-def update_entity(entity):
-    """Perform some update operations on entities."""
-    try:
-        if entity.state != Entity.STATE_ACTIVE:
-            delete_entity(entity.id)
-        else:
-            index_entity(entity)
-        Alert.dedupe(entity.id)
-    except Exception as ex:
-        log.exception(ex)
+def generate_entity_references(entity):
+    if entity.state != Entity.STATE_ACTIVE:
+        return
 
-    if entity.state == Entity.STATE_ACTIVE:
-        analyze_entity.delay(entity.id)
+    rex = '|'.join(entity.regex_terms)
+    rex = re.compile('( |^)(%s)( |$)' % rex)
+
+    documents = defaultdict(int)
+    try:
+        for document_id, text in scan_entity_mentions(entity):
+            text = normalize_strong(text)
+            if text is None or len(text) <= 2:
+                continue
+            for match in rex.finditer(text):
+                documents[document_id] += 1
+    except Exception:
+        log.exception('Failed to fully scan documents for entity refresh.')
+
+    q = db.session.query(Reference)
+    q = q.filter(Reference.entity_id == entity.id)
+    q = q.filter(Reference.origin == 'regex')
+    q.delete(synchronize_session='fetch')
+
+    log.info("Re-matching %r gave %r documents.", entity,
+             len(documents))
+
+    for document_id, weight in documents.items():
+        ref = Reference()
+        ref.document_id = document_id
+        ref.entity_id = entity.id
+        ref.origin = 'regex'
+        ref.weight = weight
+        db.session.add(ref)
+
+    db.session.commit()
+    delete_entity_references(entity.id)
+    q = db.session.query(Reference.document_id)
+    q = q.filter(Reference.entity_id == entity.id)
+    for document_id, in q:
+        index_document(document_id, records=False)
+
+
+def update_entity(entity):
+    reindex_entity(entity)
+    update_entity_full.delay(entity.id)
+
+
+@celery.task()
+def update_entity_full(entity_id):
+    """Perform some update operations on entities."""
+    query = db.session.query(Entity).filter(Entity.id == entity_id)
+    entity = query.first()
+    generate_entity_references(entity)
+    reindex_entity()
+    Alert.dedupe(entity.id)
+
+
+def reindex_entity(entity):
+    log.info('Index [%s]: %s', entity.id, entity.name)
+    if entity.state != Entity.STATE_ACTIVE:
+        delete_entity(entity.id)
+        delete_entity_references(entity.id)
+    else:
+        index_entity(entity)
 
 
 @celery.task()
 def reindex_entities():
     query = db.session.query(Entity)
     for entity in query.yield_per(1000):
-        log.info('Index [%s]: %s', entity.id, entity.name)
-        if entity.state != Entity.STATE_ACTIVE:
-            delete_entity(entity.id)
-        else:
-            index_entity(entity)
+        reindex_entity(entity)

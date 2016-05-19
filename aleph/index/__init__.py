@@ -7,7 +7,7 @@ from aleph.text import latinize_text
 from aleph.index.admin import init_search, upgrade_search  # noqa
 from aleph.index.admin import delete_index, optimize_search  # noqa
 from aleph.index.records import generate_records, clear_records
-from aleph.index.entities import index_entity, delete_entity  # noqa
+from aleph.index.entities import index_entity, delete_entity, generate_entities  # noqa
 from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD, TYPE_ENTITY  # noqa
 from aleph.index.mapping import DOCUMENT_MAPPING, RECORD_MAPPING, ENTITY_MAPPING  # noqa
 
@@ -44,24 +44,8 @@ def delete_source(source_id):
         log.debug("Failed to clear documents: %r", source_id)
 
 
-def generate_entities(document):
-    entities = []
-    for reference in document.references:
-        colls = [c.id for c in reference.entity.collections]
-        entities.append({
-            'id': reference.id,
-            'weight': reference.weight,
-            'uuid': reference.entity.id,
-            'collection_id': colls,
-            'collections': colls,
-            'name': reference.entity.name,
-            '$schema': reference.entity.type
-        })
-    return entities
-
-
 @celery.task()
-def index_document(document_id):
+def index_document(document_id, records=True):
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
@@ -73,6 +57,9 @@ def index_document(document_id):
     data['summary_latin'] = latinize_text(data.get('summary'))
     get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
                    id=document.id)
+
+    if not records:
+        return
 
     clear_records(document)
     bulk(get_es(), generate_records(document), stats_only=True,

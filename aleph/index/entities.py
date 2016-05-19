@@ -14,6 +14,8 @@ def delete_entity(entity_id):
     get_es().delete(index=get_es_index(), doc_type=TYPE_ENTITY, id=entity_id,
                     ignore=[404])
 
+
+def delete_entity_references(entity_id):
     q = {'query': {'term': {'entities.uuid': entity_id}}}
 
     def updates():
@@ -46,6 +48,21 @@ def get_count(entity):
                              doc_type=TYPE_DOCUMENT,
                              body=q)
     return result.get('hits', {}).get('total', 0)
+
+
+def generate_entities(document):
+    entities = []
+    seen = set()
+    for reference in document.references:
+        if reference.entity_id in seen:
+            continue
+        seen.add(reference.entity_id)
+        colls = [c.id for c in reference.entity.collections]
+        entities.append({
+            'uuid': reference.entity.id,
+            'collection_id': colls
+        })
+    return entities
 
 
 def index_entity(entity):

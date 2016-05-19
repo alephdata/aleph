@@ -3,10 +3,9 @@ import json
 
 from aleph.core import db
 from aleph.metadata import Metadata
-from aleph.model import Source, Document, Entity, Collection
+from aleph.model import Source, Entity, Collection
 from aleph.ingest import ingest_url, ingest_file
-from aleph.index import index_entity, delete_entity
-from aleph.analyze import analyze_terms
+from aleph.entities import update_entity_full
 
 log = logging.getLogger(__name__)
 
@@ -49,7 +48,7 @@ class EntityCrawler(Crawler):
         data['collections'] = [collection]
         entity = Entity.save(data, merge=True)
         db.session.flush()
-        index_entity(entity)
+        update_entity_full.delay(entity.id)
         log.info("Entity [%s]: %s", entity.id, entity.name)
         self.entity_cache[collection.id].append(entity)
         return entity
@@ -58,15 +57,15 @@ class EntityCrawler(Crawler):
         db.session.commit()
         entities = self.entity_cache.pop(collection.id, [])
 
+        deleted_ids = []
         for entity in collection.entities:
             if entity not in entities:
                 entity.delete()
-                delete_entity(entity.id)
+                deleted_ids.append(entity.id)
 
-        terms = set()
-        for entity in entities:
-            terms.update(entity.terms)
-        analyze_terms(terms)
+        db.session.commit()
+        for entity_id in deleted_ids:
+            update_entity_full.delay(entity_id)
 
 
 class DocumentCrawler(Crawler):

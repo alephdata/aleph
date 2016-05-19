@@ -5,6 +5,7 @@ from sqlalchemy.orm import aliased
 # from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
+from aleph.text import normalize_strong
 from aleph.model.collection import Collection
 from aleph.model.schema_model import SchemaModel
 from aleph.model.common import SoftDeleteModel, UuidModel, make_textid
@@ -181,13 +182,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         ent.update(data, merge=merge)
         return ent
 
-    @property
-    def terms(self):
-        terms = set([self.name])
-        for other_name in self.other_names:
-            terms.update(other_name.terms)
-        return [t for t in terms if t is not None and len(t)]
-
     @classmethod
     def filter_collections(cls, q, collections=None):
         if collections is None:
@@ -232,6 +226,34 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         q = db.session.query(func.max(cls.updated_at))
         q = q.filter(cls.state == cls.STATE_ACTIVE)
         return q.scalar()
+
+    @property
+    def terms(self):
+        terms = set([self.name])
+        for other_name in self.other_names:
+            terms.update(other_name.terms)
+        return [t for t in terms if t is not None and len(t)]
+
+    @property
+    def regex_terms(self):
+        # This is to find the shortest possible regex for each entity.
+        # If, for example, and entity matches both "Al Qaeda" and
+        # "Al Qaeda in Iraq, Syria and the Levant", it is useless to
+        # search for the latter.
+        terms = [' %s ' % normalize_strong(t) for t in self.terms]
+        regex_terms = set()
+        for term in terms:
+            if len(term) < 5:
+                continue
+            contained = False
+            for other in terms:
+                if other == term:
+                    continue
+                if other in term:
+                    contained = True
+            if not contained:
+                regex_terms.add(term.strip())
+        return regex_terms
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)
