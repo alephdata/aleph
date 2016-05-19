@@ -130,9 +130,9 @@ def index(foreign_id=None):
     else:
         delete_index()
         init_search()
-        indexentities()
     for doc_id, in q:
         index_document.delay(doc_id)
+    reindex_entities()
 
 
 @manager.command
