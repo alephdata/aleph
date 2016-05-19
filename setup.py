@@ -48,7 +48,9 @@ setup(
         'aleph.crawlers': [
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
             'idrequests = aleph.crawlers.idashboard:IDRequests',
-            'idfiles = aleph.crawlers.idashboard:IDFiles'
+            'idfiles = aleph.crawlers.idashboard:IDFiles',
+            'blacklight = aleph.crawlers.blacklight:BlacklightCrawler',
+            'sourceafrica = aleph.crawlers.sourceafrica:SourceAfricaCrawler'
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',

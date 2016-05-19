@@ -14,7 +14,7 @@ ARCHIVE_TYPE = 'file'
 ARCHIVE_AWS_KEY_ID = env.get('AWS_ACCESS_KEY_ID')
 ARCHIVE_AWS_SECRET = env.get('AWS_SECRET_ACCESS_KEY')
 # ARCHIVE_BUCKET = 'aleph2-dev.pudo.org'
-# ARCHIVE_PATH = '/srv/data/aleph'
+ARCHIVE_PATH = env.get('ARCHIVE_PATH', '/srv/data/aleph')
 
 OCR_DEFAULTS = ['en']
 TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')
@@ -60,8 +60,8 @@ CELERYBEAT_SCHEDULE = {
 }
 
 OAUTH = {
-    'consumer_key': '',
-    'consumer_secret': '',
+    'consumer_key': env.get('OAUTH_KEY'),
+    'consumer_secret': env.get('OAUTH_SECRET'),
     'request_token_params': {
         'scope': 'https://www.googleapis.com/auth/userinfo.email'
     },
