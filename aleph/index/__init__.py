@@ -76,4 +76,4 @@ def index_document(document_id):
 
     clear_records(document)
     bulk(get_es(), generate_records(document), stats_only=True,
-         chunk_size=2000, request_timeout=60.0)
+         chunk_size=1000, request_timeout=500.0)

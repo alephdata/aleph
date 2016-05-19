@@ -28,7 +28,7 @@ def clear_records(document):
 
     try:
         bulk(get_es(), gen_deletes(), stats_only=True, chunk_size=2000,
-             request_timeout=60.0)
+             request_timeout=600.0)
     except Exception:
         log.debug("Failed to clear previous index: %r", document)
 
