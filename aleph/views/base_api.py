@@ -67,6 +67,7 @@ def angular_templates():
 @blueprint.route('/help/<path:path>')
 @blueprint.route('/entities')
 @blueprint.route('/entities/<path:path>')
+@blueprint.route('/crawlers')
 @blueprint.route('/tabular/<path:path>')
 @blueprint.route('/text/<path:path>')
 def ui(**kwargs):

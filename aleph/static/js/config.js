@@ -53,6 +53,14 @@ aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
     resolve: {}
   });
 
+  $routeProvider.when('/crawlers', {
+    templateUrl: 'templates/crawlers_manage.html',
+    controller: 'CrawlersManageCtrl',
+    reloadOnSearch: false,
+    loginRequired: false,
+    resolve: {}
+  });
+
   $routeProvider.when('/help/:page', {
     templateUrl: 'templates/help.html',
     controller: 'HelpCtrl',

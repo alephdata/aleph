@@ -10,16 +10,21 @@ from aleph.entities import update_entity_full
 log = logging.getLogger(__name__)
 
 
+class CrawlerException(Exception):
+    pass
+
+
 class Crawler(object):
 
     def __init__(self):
-        pass
+        self.incremental = False
 
     def crawl(self, **kwargs):
         raise NotImplemented()
 
-    def execute(self, **kwargs):
+    def execute(self, incremental=False, **kwargs):
         try:
+            self.incremental = incremental
             self.crawl(**kwargs)
             db.session.commit()
         except Exception as ex:
@@ -27,11 +32,18 @@ class Crawler(object):
 
     def make_meta(self, data={}):
         data = json.loads(json.dumps(data))
-        data['crawler'] = self.__class__.__name__
+        data['crawler'] = self.get_id()
         return Metadata(data=data)
 
+    @classmethod
+    def get_id(cls):
+        name = cls.__module__ + "." + cls.__name__
+        if hasattr(cls, 'SOURCE_ID'):
+            name = '%s->%s' % (name, cls.SOURCE_ID)
+        return name
+
     def __repr__(self):
-        return '<%s()>' % self.__class__.__name__
+        return '<%s()>' % self.get_id()
 
 
 class EntityCrawler(Crawler):
@@ -87,3 +99,12 @@ class DocumentCrawler(Crawler):
 
     def emit_url(self, meta, url):
         ingest_url.delay(self.source.id, meta.clone().data, url)
+
+    def to_dict(self):
+        return {
+            'source': self.source,
+            'source_id': self.SOURCE_ID,
+            'source_label': self.SOURCE_LABEL,
+            'name': self.CRAWLER_NAME,
+            'id': self.get_id()
+        }

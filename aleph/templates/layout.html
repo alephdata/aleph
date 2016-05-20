@@ -50,6 +50,33 @@
                   <i class="fa fa-sign-in"></i> Sign in
                 </a>
               </li>
+              <li ng-show="session.logged_in && session.role.is_admin"
+                 ng-class="{'active': navSection =='admin'}" uib-dropdown>
+                <a href="#" uib-dropdown-toggle>
+                  <i class="fa fa-warning"></i> Admin
+                </a>
+                <ul uib-dropdown-menu role="menu">
+                  <li role="menuitem">
+                    <a href="/crawlers" class="click">
+                      <i class="fa fa-sitemap" aria-hidden="true"></i>
+                      Crawler Manager
+                    </a>
+                  </li>
+                  <li role="menuitem">
+                    <a href="/entities/review" class="click">
+                      <i class="fa fa-link" aria-hidden="true"></i>
+                      Entity Review
+                    </a>
+                  </li>
+                  <li class="divider"></li>
+                  <li role="menuitem">
+                    <a href="https://github.com/pudo/aleph/issues" class="click">
+                      <i class="fa fa-github-square"></i>
+                      GitHub Issues
+                    </a>
+                  </li>
+                </ul>
+              </li>
               <li ng-show="session.logged_in">
                 <a ng-click="editProfile($event)">
                   <i class="fa fa-cog"></i> Settings
