@@ -1,1 +1,46 @@
-xcvx
+
+<div class="alert alert-warning">
+  <strong>Careful, tiger!</strong> Running crawlers is a resource-intensive operation and
+  may influence system performance.
+</div>
+
+<table class="table">
+  <tr>
+    <th>Crawler ID</th>
+    <th>Source</th>
+    <th width="1%"></th>
+    <th width="1%"></th>
+    <th>Execute crawler</th>
+  </tr>
+
+  <tr ng-repeat="crawler in crawlers">
+    <td>
+      <strong ng-bind="::crawler.name"></strong>
+    </td>
+    <td>
+      {{crawler.source.label}}
+    </td>
+    <td>
+      <a href="/search?filter:source_id={{crawler.source.id}}">
+        <i class="fa fa-search"></i>
+      </a>
+    </td>
+    <td>
+      <a ng-click="editSource(crawler.source)">
+        <i class="fa fa-cog"></i>
+      </a>
+    </td>
+    <td>
+      <a class="btn btn-primary btn-xs"
+        ng-click="executeCrawler(crawler, false)"
+        ng-disabled="crawler.running">
+        Complete
+      </a>
+      <a class="btn btn-primary btn-xs"
+        ng-click="executeCrawler(crawler, true)"
+        ng-disabled="crawler.running">
+        Incremental
+      </a>
+    </td>
+  </tr>
+</table>

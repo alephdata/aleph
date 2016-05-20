@@ -58,7 +58,9 @@ aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
     controller: 'CrawlersManageCtrl',
     reloadOnSearch: false,
     loginRequired: false,
-    resolve: {}
+    resolve: {
+      'crawlers': loadCrawlers
+    }
   });
 
   $routeProvider.when('/help/:page', {
