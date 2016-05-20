@@ -35,12 +35,15 @@ def generate_custom_scss(app):
     # This is a hack to allow an extra SCSS file to be specified in the
     # settings.
     custom_scss = os.path.join(app.static_folder, 'style', '_custom.scss')
-    with open(custom_scss, 'w') as fout:
-        scss_text = ''
-        if app.config.get('CUSTOM_SCSS_PATH'):
-            with open(app.config['CUSTOM_SCSS_PATH'], 'r') as fin:
-                scss_text = fin.read()
-        fout.write(scss_text)
+    with open(custom_scss, 'r') as fh:
+        old_scss_text = fh.read()
+    scss_text = ''
+    if app.config.get('CUSTOM_SCSS_PATH'):
+        with open(app.config['CUSTOM_SCSS_PATH'], 'r') as fin:
+            scss_text = fin.read()
+    if scss_text != old_scss_text:
+        with open(custom_scss, 'w') as fout:
+            fout.write(scss_text)
 
 
 def compile_assets(app):
