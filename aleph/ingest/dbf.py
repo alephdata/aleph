@@ -11,6 +11,26 @@ class DBFIngestor(TabularIngestor):
     EXTENSIONS = ['dbf']
     BASE_SCORE = 7
 
+    def generate_rows(self, db, columns):
+        if db.numrec == 0:
+            return
+        text = []
+        for i in xrange(0, db.numrec):
+            for v in db.select(i).values():
+                if isinstance(v, str):
+                    text.append(v)
+
+        for i in xrange(0, db.numrec):
+            row = db.select(i)
+            record = {}
+            for k, value in row.items():
+                name = columns.get(k)
+                record[name] = string_value(value)
+            if len(record):
+                for name in columns.values():
+                    record[name] = record.get(name, None)
+                yield record
+
     def ingest(self, meta, local_path):
         with open(local_path, 'rb') as fh:
             db = DBF(fh)
@@ -21,27 +41,7 @@ class DBFIngestor(TabularIngestor):
                 return
             columns = {c.label: c.name for c in columns}
 
-            def generate_rows():
-                if db.numrec == 0:
-                    return
-                text = []
-                for i in xrange(0, db.numrec):
-                    for v in db.select(i).values():
-                        if isinstance(v, str):
-                            text.append(v)
-
-                for i in xrange(0, db.numrec):
-                    row = db.select(i)
-                    record = {}
-                    for k, value in row.items():
-                        name = columns.get(k)
-                        record[name] = string_value(value)
-                    if len(record):
-                        for name in columns.values():
-                            record[name] = record.get(name, None)
-                        yield record
-
-            document.insert_records(0, generate_rows())
+            document.insert_records(0, self.generate_rows(db, columns))
             meta.tables = [tabular]
             document.meta = meta
             self.emit(document)
