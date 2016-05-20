@@ -35,8 +35,10 @@ def generate_custom_scss(app):
     # This is a hack to allow an extra SCSS file to be specified in the
     # settings.
     custom_scss = os.path.join(app.static_folder, 'style', '_custom.scss')
-    with open(custom_scss, 'r') as fh:
-        old_scss_text = fh.read()
+    old_scss_text = None
+    if os.path.isfile(custom_scss):
+        with open(custom_scss, 'r') as fh:
+            old_scss_text = fh.read()
     scss_text = ''
     if app.config.get('CUSTOM_SCSS_PATH'):
         with open(app.config['CUSTOM_SCSS_PATH'], 'r') as fin:
