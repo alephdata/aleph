@@ -3,7 +3,6 @@ import logging
 import requests
 from tempfile import mkstemp
 
-from aleph import event
 from aleph.core import get_archive, celery
 from aleph.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor, IngestorException
@@ -40,22 +39,17 @@ def ingest_url(source_id, metadata, url):
         meta = get_archive().archive_file(tmp_path, meta, move=True)
         ingest(source_id, meta.data)
     except Exception as ex:
-        event.exception('aleph.ingest.ingest_url', metadata, ex)
         log.exception(ex)
         raise
 
 
 def ingest_file(source_id, meta, file_name, move=False):
-    try:
-        if not os.path.isfile(file_name):
-            raise IngestorException("No such file: %r", file_name)
-        if not meta.has('source_path'):
-            meta.source_path = file_name
-        meta = get_archive().archive_file(file_name, meta, move=move)
-        ingest.delay(source_id, meta.data)
-    except Exception as ex:
-        event.exception('aleph.ingest.ingest_file', meta.data, ex)
-        raise
+    if not os.path.isfile(file_name):
+        raise IngestorException("No such file: %r", file_name)
+    if not meta.has('source_path'):
+        meta.source_path = file_name
+    meta = get_archive().archive_file(file_name, meta, move=move)
+    ingest.delay(source_id, meta.data)
 
 
 @celery.task()

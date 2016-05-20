@@ -9,6 +9,3 @@ register_blueprints = signal('register_blueprints')
 
 # Post-process a documents search query.
 document_query_process = signal('document_query_process')
-
-# System event
-report_event = signal('report_event')

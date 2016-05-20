@@ -6,7 +6,6 @@ from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
 from elasticsearch import TransportError
 
-from aleph import event
 from aleph.core import get_config
 from aleph.model.constants import CORE_FACETS, SOURCE_CATEGORIES
 from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
@@ -15,34 +14,6 @@ from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('base_api', __name__)
 log = logging.getLogger(__name__)
-
-
-@blueprint.before_app_request
-def begin_event_track():
-    request._aleph_begin = time()
-
-
-@blueprint.after_app_request
-def end_event_track(resp):
-    duration = time() - request._aleph_begin
-    if request.endpoint == 'static':
-        return resp
-    origin = 'aleph.views.%s' % request.endpoint
-    log.debug("Request %s (%s): %sms", request.endpoint, resp.status_code,
-              int(duration * 1000))
-    event.report(origin, {
-        'endpoint': request.endpoint,
-        'duration': duration,
-        'url': request.url,
-        'query_string': request.query_string,
-        'headers': request.headers.items(),
-        'role': request.auth_role.id if request.logged_in else None,
-        'remote_addr': request.remote_addr,
-        'method': request.method,
-        'status_code': resp.status_code,
-        'response_length': resp.content_length
-    })
-    return resp
 
 
 def angular_templates():
