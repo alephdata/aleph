@@ -45,7 +45,7 @@ def delete_source(source_id):
 
 
 @celery.task()
-def index_document(document_id, records=True):
+def index_document(document_id, index_records=True):
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
@@ -58,7 +58,7 @@ def index_document(document_id, records=True):
     get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
                    id=document.id)
 
-    if records:
+    if index_records:
         clear_records(document)
         bulk(get_es(), generate_records(document), stats_only=True,
              chunk_size=1000, request_timeout=500.0)

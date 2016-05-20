@@ -54,7 +54,7 @@ def generate_entity_references(entity):
     q = db.session.query(Reference.document_id)
     q = q.filter(Reference.entity_id == entity.id)
     for document_id, in q:
-        index_document(document_id, records=False)
+        index_document(document_id, index_records=False)
 
 
 def update_entity(entity):
