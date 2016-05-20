@@ -28,7 +28,7 @@ def ingest_url(source_id, metadata, url):
         log.info("Ingesting URL: %r", url)
         res = requests.get(url, stream=True, verify=False)
         if res.status_code >= 400:
-            raise Exception("Error ingesting %r: %r" % (url, res.status_code))
+            raise Exception("HTTP Error %r: %r" % (url, res.status_code))
         with open(tmp_path, 'w') as fh:
             for chunk in res.iter_content(chunk_size=1024):
                 if chunk:
@@ -37,19 +37,21 @@ def ingest_url(source_id, metadata, url):
             meta.source_url = res.url
         meta.headers = res.headers
         meta = get_archive().archive_file(tmp_path, meta, move=True)
-        ingest(source_id, meta.data)
+        Ingestor.dispatch(source_id, meta)
     except Exception as ex:
-        log.exception(ex)
-        raise
+        Ingestor.handle_exception(meta, source_id, ex)
 
 
-def ingest_file(source_id, meta, file_name, move=False):
-    if not os.path.isfile(file_name):
-        raise IngestorException("No such file: %r", file_name)
-    if not meta.has('source_path'):
-        meta.source_path = file_name
-    meta = get_archive().archive_file(file_name, meta, move=move)
-    ingest.delay(source_id, meta.data)
+def ingest_file(source_id, meta, file_path, move=False):
+    try:
+        if not os.path.isfile(file_path):
+            raise IngestorException("No such file: %r", file_path)
+        if not meta.has('source_path'):
+            meta.source_path = file_path
+        meta = get_archive().archive_file(file_path, meta, move=move)
+        ingest.delay(source_id, meta.data)
+    except Exception as ex:
+        Ingestor.handle_exception(meta, source_id, ex)
 
 
 @celery.task()

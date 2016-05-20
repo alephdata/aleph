@@ -23,6 +23,7 @@ class ImageIngestor(TextIngestor):
         try:
             fh, pdf_path = mkstemp(suffix='.pdf')
             os.close(fh)
+            meta.title = meta.file_name
             convert = get_config('CONVERT_BIN')
             args = [convert, local_path, '-density', '300', '-define',
                     'pdf:fit-page=A4', pdf_path]

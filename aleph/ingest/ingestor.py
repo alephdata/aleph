@@ -1,8 +1,10 @@
+import sys
 import logging
+import traceback
 
 from aleph.core import db, get_archive
 from aleph.ext import get_ingestors
-from aleph.model import Document
+from aleph.model import Document, CrawlerState
 from aleph.analyze import analyze_document
 
 log = logging.getLogger(__name__)
@@ -48,6 +50,24 @@ class Ingestor(object):
         analyze_document(document.id)
 
     @classmethod
+    def handle_exception(cls, meta, source_id, exception):
+        db.session.rollback()
+        db.session.close()
+        (error_type, error_message, error_details) = sys.exc_info()
+        if error_type is not None:
+            error_message = unicode(error_message)
+            error_details = traceback.format_exc()
+        else:
+            error_message = unicode(exception)
+        error_type = exception.__class__.__name__
+        log.warning(error_message)
+        CrawlerState.store_fail(meta, source_id,
+                                error_type=error_type,
+                                error_message=error_message,
+                                error_details=error_details)
+        db.session.commit()
+
+    @classmethod
     def match(cls, meta, local_path):
         score = -1
         if meta.mime_type in cls.MIME_TYPES:
@@ -77,8 +97,9 @@ class Ingestor(object):
             best_cls = cls.auction_file(meta, local_path)
             log.debug("Dispatching %r to %r", meta.file_name, best_cls)
             best_cls(source_id).ingest(meta, local_path)
-        except Exception as ex:
-            db.session.rollback()
-            log.exception(ex)
+            CrawlerState.store_ok(meta, source_id)
+            db.session.commit()
+        except Exception as exception:
+            cls.handle_exception(meta, source_id, exception)
         finally:
             get_archive().cleanup_file(meta)

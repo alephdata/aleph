@@ -6,6 +6,7 @@ from tempfile import mkstemp
 from aleph.core import db
 from aleph.metadata import Metadata
 from aleph.model import Source, Entity, Collection
+from aleph.model.common import make_textid
 from aleph.ingest import ingest_url, ingest_file
 from aleph.entities import update_entity_full
 from aleph.crawlers.schedule import CrawlerSchedule
@@ -25,6 +26,7 @@ class Crawler(object):
 
     def __init__(self):
         self.incremental = False
+        self.crawler_run = make_textid()
 
     def crawl(self, **kwargs):
         raise NotImplemented()
@@ -40,6 +42,7 @@ class Crawler(object):
     def make_meta(self, data={}):
         data = json.loads(json.dumps(data))
         data['crawler'] = self.get_id()
+        data['crawler_run'] = self.crawler_run
         return Metadata(data=data)
 
     def save_response(self, res):
