@@ -1,13 +1,17 @@
 import os
 import logging
+import warnings
+import urllib3
 from sqlalchemy.exc import SAWarning
 
 # shut up useless SA warning:
-import warnings
 warnings.filterwarnings('ignore',
                         'Unicode type received non-unicode bind param value.')
 
 warnings.filterwarnings('ignore', category=SAWarning)
+
+# using SSL w/o certificate validation
+urllib3.disable_warnings()
 
 # loggers.
 logging.basicConfig(level=logging.DEBUG)

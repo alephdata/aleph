@@ -70,9 +70,6 @@ def extract_pdf(path, languages=None):
                 if k != 'pages':
                     result[k] = string_value(v)
 
-        if not doc.is_extractable:
-            raise TypeError("PDF not extractable: %s", path)
-
         for i, page in enumerate(PDFPage.create_pages(doc)):
             text = None
             try:
@@ -83,7 +80,7 @@ def extract_pdf(path, languages=None):
                 log.warning("Failed to parse PDF page: %r", ex)
 
             if text is None or len(text) < 3:
-                log.debug("Defaulting to OCR: %r, pg. %s", path, i + 1)
+                log.info("Defaulting to OCR: %r, pg. %s", path, i + 1)
                 text = _extract_image_page(path, i + 1, languages)
             result['pages'].append(text)
         device.close()
