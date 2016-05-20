@@ -18,6 +18,9 @@ log = logging.getLogger(__name__)
 # http://pybrary.net/pyPdf/pythondoc-pyPdf.pdf.html
 # https://svn.apache.org/viewvc/httpd/httpd/branches/2.2.x/docs/conf/mime.types?view=annotate
 
+# pdfminer.six: https://github.com/goulu/pdfminer
+# tesserocr: https://github.com/sirfz/tesserocr
+
 
 @celery.task()
 def ingest_url(source_id, metadata, url):
@@ -26,7 +29,7 @@ def ingest_url(source_id, metadata, url):
         fh, tmp_path = mkstemp()
         os.close(fh)
         log.info("Ingesting URL: %r", url)
-        res = requests.get(url, stream=True, verify=False)
+        res = requests.get(url, stream=True)
         if res.status_code >= 400:
             raise Exception("HTTP Error %r: %r" % (url, res.status_code))
         with open(tmp_path, 'w') as fh:
