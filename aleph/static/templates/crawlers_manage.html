@@ -10,6 +10,7 @@
     <th>Source</th>
     <th width="1%"></th>
     <th width="1%"></th>
+    <th class="numeric">Schedule</th>
     <th>Execute crawler</th>
   </tr>
 
@@ -29,6 +30,9 @@
       <a ng-click="editSource(crawler.source)">
         <i class="fa fa-cog"></i>
       </a>
+    </td>
+    <td class="numeric">
+      <span class="label label-default">{{crawler.schedule || 'none' }}</span>
     </td>
     <td>
       <a class="btn btn-primary btn-xs"

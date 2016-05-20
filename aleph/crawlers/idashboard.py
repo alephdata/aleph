@@ -40,6 +40,7 @@ class IDBase(object):  # pragma: no cover
 class IDFiles(IDBase, DocumentCrawler):  # pragma: no cover
     SOURCE_ID = 'idashboard:staff'
     SOURCE_LABEL = 'Investigative Dashboard Requests'
+    SCHEDULE = DocumentCrawler.DAILY
 
     def crawl_file(self, data):
         meta = self.make_meta({})

@@ -8,6 +8,7 @@ from aleph.metadata import Metadata
 from aleph.model import Source, Entity, Collection
 from aleph.ingest import ingest_url, ingest_file
 from aleph.entities import update_entity_full
+from aleph.crawlers.schedule import CrawlerSchedule
 
 log = logging.getLogger(__name__)
 
@@ -17,6 +18,10 @@ class CrawlerException(Exception):
 
 
 class Crawler(object):
+    HOURLY = CrawlerSchedule('hourly', hours=1)
+    DAILY = CrawlerSchedule('daily', days=1)
+    WEEKLY = CrawlerSchedule('weekly', weeks=1)
+    MONTHLY = CrawlerSchedule('monthly', weeks=4)
 
     def __init__(self):
         self.incremental = False
@@ -104,6 +109,7 @@ class EntityCrawler(Crawler):
 class DocumentCrawler(Crawler):
     SOURCE_ID = None
     SOURCE_LABEL = None
+    SCHEDULE = None
 
     @property
     def source(self):
@@ -127,5 +133,6 @@ class DocumentCrawler(Crawler):
             'source_id': self.SOURCE_ID,
             'source_label': self.SOURCE_LABEL,
             'name': self.CRAWLER_NAME,
+            'schedule': self.SCHEDULE,
             'id': self.get_id()
         }
