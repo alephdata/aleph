@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
@@ -52,6 +53,42 @@ class CrawlerState(db.Model):
         obj.error_message = error_message
         obj.error_details = error_details
         return obj
+
+    @classmethod
+    def crawler_last_run(cls, crawler_id):
+        q = db.session.query(cls.crawler_run, cls.created_at)
+        q = q.filter(cls.crawler_id == crawler_id)
+        q = q.order_by(cls.created_at.desc())
+        q = q.limit(1)
+        res = q.first()
+        if res is None:
+            return None, None
+        return (res.crawler_run, res.created_at)
+
+    @classmethod
+    def crawler_stats(cls, crawler_id):
+        stats = {}
+        col = func.count(func.distinct(cls.crawler_run))
+        q = db.session.query(col)
+        q = q.filter(cls.crawler_id == crawler_id)
+        stats['run_count'] = q.scalar()
+        last_run_id, last_run_time = cls.crawler_last_run(crawler_id)
+
+        q = db.session.query(func.count(cls.id))
+        q = q.filter(cls.crawler_id == crawler_id)
+        for section in ['last', 'all']:
+            data = {}
+            sq = q
+            if section == 'last':
+                sq = sq.filter(cls.crawler_run == last_run_id)
+            okq = sq.filter(cls.status == cls.STATUS_OK)
+            data['ok'] = okq.scalar() if last_run_id else 0
+            failq = sq.filter(cls.status == cls.STATUS_FAIL)
+            data['fail'] = failq.scalar() if last_run_id else 0
+            stats[section] = data
+        stats['last']['updated'] = last_run_time
+        stats['last']['run_id'] = last_run_id
+        return stats
 
     def __repr__(self):
         return '<CrawlerState(%r,%r)>' % (self.id, self.status)

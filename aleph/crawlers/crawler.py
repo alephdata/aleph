@@ -5,7 +5,7 @@ from tempfile import mkstemp
 
 from aleph.core import db
 from aleph.metadata import Metadata
-from aleph.model import Source, Entity, Collection
+from aleph.model import Source, Entity, Collection, CrawlerState
 from aleph.model.common import make_textid
 from aleph.ingest import ingest_url, ingest_file
 from aleph.entities import update_entity_full
@@ -131,11 +131,14 @@ class DocumentCrawler(Crawler):
         ingest_url.delay(self.source.id, meta.clone().data, url)
 
     def to_dict(self):
-        return {
+        data = CrawlerState.crawler_stats(self.get_id())
+        data.update({
             'source': self.source,
             'source_id': self.SOURCE_ID,
             'source_label': self.SOURCE_LABEL,
             'name': self.CRAWLER_NAME,
             'schedule': self.SCHEDULE,
             'id': self.get_id()
-        }
+        })
+        return data
+
