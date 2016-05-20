@@ -35,22 +35,12 @@
       </a>
     </td>
     <td class="numeric">
-      <span class="label label-success" ng-if="crawler.all.ok">
-        {{crawler.all.ok | number}}
-      </span>
-      &nbsp;
-      <span class="label label-danger" ng-if="crawler.all.fail">
-        {{crawler.all.fail | number}}
-      </span>
+      <span class="label label-danger" ng-if="crawler.all.fail">{{crawler.all.fail | number}}</span>
+      <span class="label label-success" ng-if="crawler.all.ok">{{crawler.all.ok | number}}</span>
     </td>
     <td class="numeric">
-      <span class="label label-success" ng-if="crawler.last.ok">
-        {{crawler.last.ok | number}}
-      </span>
-      &nbsp;
-      <span class="label label-danger" ng-if="crawler.last.fail">
-        {{crawler.last.fail | number}}
-      </span>
+      <span class="label label-danger" ng-if="crawler.last.fail">{{crawler.last.fail | number}}</span>
+      <span class="label label-success" ng-if="crawler.last.ok">{{crawler.last.ok | number}}</span>
     </td>
     <td class="numeric">
       <span ng-if="crawler.last.run_id">
@@ -64,12 +54,12 @@
       <a class="btn btn-primary btn-xs"
         ng-click="executeCrawler(crawler, false)"
         ng-disabled="crawler.running">
-        Complete
+        Full
       </a>
       <a class="btn btn-primary btn-xs"
         ng-click="executeCrawler(crawler, true)"
         ng-disabled="crawler.running">
-        Incremental
+        Update
       </a>
     </td>
   </tr>

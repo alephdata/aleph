@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
 
@@ -8,6 +8,8 @@ from aleph.model.source import Source
 
 class CrawlerState(db.Model):
     """Report the state of a file being processed."""
+
+    TIMEOUT = timedelta(minutes=60)
 
     STATUS_OK = 'ok'
     STATUS_FAIL = 'fail'
@@ -73,6 +75,11 @@ class CrawlerState(db.Model):
         q = q.filter(cls.crawler_id == crawler_id)
         stats['run_count'] = q.scalar()
         last_run_id, last_run_time = cls.crawler_last_run(crawler_id)
+
+        # Check if the crawler was active very recently, if so, don't
+        # allow the user to execute a new run right now.
+        timeout = (datetime.utcnow() - CrawlerState.TIMEOUT)
+        stats['running'] = last_run_time > timeout if last_run_time else False
 
         q = db.session.query(func.count(cls.id))
         q = q.filter(cls.crawler_id == crawler_id)

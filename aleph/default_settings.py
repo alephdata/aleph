@@ -61,6 +61,10 @@ CELERYBEAT_SCHEDULE = {
         'task': 'aleph.entities.reindex_entities',
         'schedule': crontab(hour='*/4', minute=0)
     },
+    'scheduled-crawlers': {
+        'task': 'aleph.crawlers.execute_scheduled',
+        'schedule': crontab(hour='*/4', minute=40)
+    },
 }
 
 OAUTH = {
