@@ -1,6 +1,4 @@
-import os
 import logging
-from tempfile import mkstemp
 from urlparse import urljoin
 import requests
 
@@ -44,30 +42,19 @@ class IDFiles(IDBase, DocumentCrawler):  # pragma: no cover
     SOURCE_LABEL = 'Investigative Dashboard Requests'
 
     def crawl_file(self, data):
-        fh, file_path = mkstemp(suffix=data['filename'])
-        try:
-            meta = self.make_meta({})
-            meta.foreign_id = data['id']
-            meta.file_name = data['filename']
-            meta.title = data['title']
-            meta.mime_type = data['mimetype']
-            meta.add_date(data['date_added'])
-            if len(data.get('description', '')):
-                meta.summary = data['description']
-            url = urljoin(self.host, '/podaci/file/%s/download' % data['id'])
-            res = self.session.get(url, stream=True)
-            fh = os.fdopen(fh, 'w')
-            for chunk in res.iter_content(chunk_size=1024):
-                if chunk:
-                    fh.write(chunk)
-            fh.close()
-            log.info("Importing %r", meta.title)
-            self.emit_file(meta, file_path, move=True)
-        except Exception as ex:
-            log.exception(ex)
-        finally:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
+        meta = self.make_meta({})
+        meta.foreign_id = data['id']
+        meta.file_name = data['filename']
+        meta.title = data['title']
+        meta.mime_type = data['mimetype']
+        meta.add_date(data['date_added'])
+        if len(data.get('description', '')):
+            meta.summary = data['description']
+        url = urljoin(self.host, '/podaci/file/%s/download' % data['id'])
+        res = self.session.get(url, stream=True)
+        file_path = self.save_response(res)
+        log.info("Importing %r", meta.title)
+        self.emit_file(meta, file_path, move=True)
 
     def crawl(self):
         url = urljoin(self.host, '/podaci/search/?q=+&format=json')
@@ -75,7 +62,10 @@ class IDFiles(IDBase, DocumentCrawler):  # pragma: no cover
             res = self.session.get(url)
             data = res.json()
             for filedata in data.get('results', []):
-                self.crawl_file(filedata)
+                try:
+                    self.crawl_file(filedata)
+                except Exception as ex:
+                    log.exception(ex)
             if not data.get('next'):
                 break
             url = data['next']

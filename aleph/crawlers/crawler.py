@@ -1,5 +1,7 @@
-import logging
+import os
 import json
+import logging
+from tempfile import mkstemp
 
 from aleph.core import db
 from aleph.metadata import Metadata
@@ -34,6 +36,25 @@ class Crawler(object):
         data = json.loads(json.dumps(data))
         data['crawler'] = self.get_id()
         return Metadata(data=data)
+
+    def save_response(self, res):
+        """Store the return data from a requests response to a file."""
+        # This must be a streaming response.
+        if res.status_code >= 400:
+            message = "Error ingesting %r: %r" % (res.url, res.status_code)
+            raise CrawlerException(message)
+        fh, file_path = mkstemp()
+        try:
+            fh = os.fdopen(fh, 'w')
+            for chunk in res.iter_content(chunk_size=1024):
+                if chunk:
+                    fh.write(chunk)
+            fh.close()
+            return file_path
+        except Exception:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            raise
 
     @classmethod
     def get_id(cls):
