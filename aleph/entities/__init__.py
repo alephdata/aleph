@@ -1,6 +1,7 @@
 import re
 import logging
 from collections import defaultdict
+from sqlalchemy import func
 
 from aleph.core import db, celery
 from aleph.text import normalize_strong
@@ -51,7 +52,7 @@ def generate_entity_references(entity):
 
     db.session.commit()
     delete_entity_references(entity.id)
-    q = db.session.query(Reference.document_id)
+    q = db.session.query(func.distinct(Reference.document_id))
     q = q.filter(Reference.entity_id == entity.id)
     for document_id, in q:
         index_document(document_id, index_records=False)

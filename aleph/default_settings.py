@@ -59,11 +59,11 @@ CELERYBEAT_SCHEDULE = {
     },
     'reindex-entities': {
         'task': 'aleph.entities.reindex_entities',
-        'schedule': crontab(hour='*/4', minute=0)
+        'schedule': crontab(hour=1, minute=0, day_of_week=1)
     },
     'scheduled-crawlers': {
         'task': 'aleph.crawlers.execute_scheduled',
-        'schedule': crontab(hour='*/4', minute=40)
+        'schedule': crontab(hour='*/6', minute=40)
     },
 }
 

@@ -147,7 +147,7 @@ class DocumentCrawler(Crawler):
         data.update({
             'source': self.source,
             'source_id': self.SOURCE_ID,
-            'source_label': self.SOURCE_LABEL,
+            'source_label': self.SOURCE_LABEL or self.SOURCE_ID,
             'name': self.CRAWLER_NAME,
             'schedule': self.SCHEDULE,
             'id': self.get_id()
