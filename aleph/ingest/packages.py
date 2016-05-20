@@ -28,26 +28,23 @@ class PackageIngestor(Ingestor):
         pass
 
     def emit_member(self, meta, name, fh, temp_dir):
-        try:
-            file_name = os.path.basename(os.path.normpath(name))
-            file_path = os.path.join(temp_dir, file_name)
-            child = meta.clone()
-            child.clear('title')
-            child.clear('extension')
-            child.clear('file_name')
-            child.clear('content_hash')
-            child.clear('mime_type')
-            child.clear('foreign_id')
-            child.parent = meta.clone()
-            child.file_name = file_name
-            child.source_path = name
-            child.foreign_id = '%s:%s' % (meta.foreign_id, name)
+        file_name = os.path.basename(os.path.normpath(name))
+        file_path = os.path.join(temp_dir, file_name)
+        child = meta.clone()
+        child.clear('title')
+        child.clear('extension')
+        child.clear('file_name')
+        child.clear('content_hash')
+        child.clear('mime_type')
+        child.clear('foreign_id')
+        child.parent = meta.clone()
+        child.file_name = file_name
+        child.source_path = name
+        child.foreign_id = '%s:%s' % (meta.foreign_id, name)
 
-            with open(file_path, 'wb') as dst:
-                shutil.copyfileobj(fh, dst)
-            ingest_file(self.source_id, child, file_path)
-        except Exception as ex:
-            log.exception(ex)
+        with open(file_path, 'wb') as dst:
+            shutil.copyfileobj(fh, dst)
+        ingest_file(self.source_id, child, file_path, move=True)
 
 
 class RARIngestor(PackageIngestor):
