@@ -19,7 +19,6 @@ class CrawlerException(Exception):
 
 
 class Crawler(object):
-    HOURLY = CrawlerSchedule('hourly', hours=1)
     DAILY = CrawlerSchedule('daily', days=1)
     WEEKLY = CrawlerSchedule('weekly', weeks=1)
     MONTHLY = CrawlerSchedule('monthly', weeks=4)
@@ -38,6 +37,19 @@ class Crawler(object):
             db.session.commit()
         except Exception as ex:
             log.exception(ex)
+
+    def skip_incremental(self, foreign_id, content_hash=None):
+        if not self.incremental:
+            return False
+        q = db.session.query(CrawlerState.id)
+        q = q.filter(CrawlerState.source_id == self.source.id)
+        q = q.filter(CrawlerState.foreign_id == unicode(foreign_id))
+        if content_hash is not None:
+            q = q.filter(CrawlerState.content_hash == content_hash)
+        skip = q.count() > 0
+        if skip:
+            log.info("Skip [%s]: %s", self.get_id(), foreign_id)
+        return skip
 
     def make_meta(self, data={}):
         data = json.loads(json.dumps(data))
@@ -141,4 +153,3 @@ class DocumentCrawler(Crawler):
             'id': self.get_id()
         })
         return data
-

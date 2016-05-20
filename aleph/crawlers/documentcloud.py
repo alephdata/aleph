@@ -19,6 +19,10 @@ class DocumentCloudCrawler(DocumentCrawler):
 
     def crawl_document(self, document):
         foreign_id = '%s:%s' % (self.DC_INSTANCE, document.get('id'))
+
+        if self.skip_incremental(foreign_id):
+            return
+
         meta = self.make_meta({
             'source_url': document.get('canonical_url'),
             'title': document.get('title'),

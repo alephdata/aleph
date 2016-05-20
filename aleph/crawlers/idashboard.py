@@ -43,6 +43,9 @@ class IDFiles(IDBase, DocumentCrawler):  # pragma: no cover
     SCHEDULE = DocumentCrawler.DAILY
 
     def crawl_file(self, data):
+        if self.skip_incremental(data['id']):
+            return
+
         meta = self.make_meta({})
         meta.foreign_id = data['id']
         meta.file_name = data['filename']
