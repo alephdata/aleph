@@ -1,11 +1,10 @@
 import os
-import six
-import chardet
 import logging
 from normality import slugify
 
 from aleph.core import db
 from aleph.model import Source
+from aleph.text import string_value
 from aleph.ingest import ingest_file
 from aleph.crawlers.crawler import Crawler
 
@@ -20,17 +19,10 @@ class DirectoryCrawler(Crawler):
     def crawl_file(self, source, file_path, base_meta):
         try:
             meta = self.make_meta(base_meta)
+            file_path = string_value(file_path)
             meta.foreign_id = file_path
-            if isinstance(file_path, six.text_type):
-                meta.source_path = file_path
-            else:
-                enc = chardet.detect(file_path)
-                enc = enc.get('encoding')
-                try:
-                    meta.source_path = file_path.decode(enc)
-                except:
-                    meta.source_path = file_path.decode('ascii', 'ignore')
-
+            meta.source_path = file_path
+            meta.file_name = os.path.basename(file_path)
             ingest_file(source.id, meta, file_path, move=False)
         except Exception as ex:
             log.exception(ex)
