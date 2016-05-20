@@ -91,8 +91,8 @@ class RegexEntityAnalyzer(Analyzer):
 
         duration_time = int((time() - begin_time) * 1000)
         if len(entities):
-            log.info("Tagged %r with %d entities (%sms)",
+            log.info("Regex tagged %r with %d entities (%sms)",
                      document, len(entities), duration_time)
         else:
-            log.info("No entities on %r (%sms)",
+            log.info("Regex found no entities on %r (%sms)",
                      document, duration_time)
