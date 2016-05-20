@@ -5,6 +5,7 @@ import subprocess
 from tempfile import mkdtemp
 
 from aleph.core import get_config
+from aleph.ingest.ingestor import IngestorException
 from aleph.ingest.text import TextIngestor
 
 log = logging.getLogger(__name__)
@@ -48,7 +49,7 @@ class DocumentIngestor(TextIngestor):
     def ingest(self, meta, local_path):
         pdf_path = self.generate_pdf_alternative(meta, local_path)
         if pdf_path is None or not os.path.isfile(pdf_path):
-            raise TypeError("Could not convert document: %r" % meta)
+            raise IngestorException("Could not convert document: %r" % meta)
         self.extract_pdf_alternative(meta, pdf_path)
 
 

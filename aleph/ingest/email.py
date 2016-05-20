@@ -10,7 +10,7 @@ from datetime import datetime
 from flanker import mime
 from flanker.addresslib import address
 
-from aleph.ingest import ingest_file
+from aleph.ingest import ingest_file, IngestorException
 from aleph.ingest.text import TextIngestor
 from aleph.ingest.html import HtmlIngestor
 from aleph.ingest.document import DocumentIngestor
@@ -104,8 +104,7 @@ class EmailFileIngestor(TextIngestor):
 
         out_path = ''
         if body_part is None:
-            log.warning("No body in E-Mail: %r" % meta)
-            return
+            raise IngestorException("No body in E-Mail: %r" % meta)
         try:
             if 'html' in body_type:
                 out_path = self.write_temp(body_part, '.htm')
@@ -150,7 +149,5 @@ class OutlookIngestor(TextIngestor):
                 for filename in filenames:
                     filepath = os.path.join(dirpath, filename)
                     self.ingest_message(filepath, child)
-        except Exception as ex:
-            self.log_exception(meta, ex)
         finally:
             shutil.rmtree(work_dir)

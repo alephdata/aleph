@@ -6,6 +6,7 @@ from lxml import html, etree
 from lxml.html.clean import Cleaner
 
 from aleph.core import get_config
+from aleph.ingest.ingestor import IngestorException
 from aleph.ingest.document import DocumentIngestor
 
 log = logging.getLogger(__name__)
@@ -51,7 +52,7 @@ class HtmlIngestor(DocumentIngestor):
 
             pdf_path = self.generate_pdf_version(out_path)
             if pdf_path is None or not os.path.isfile(pdf_path):
-                raise IOError("Could not convert document: %r", meta)
+                raise IngestorException("Could not convert document: %r", meta)
             self.extract_pdf_alternative(meta, pdf_path)
         finally:
             if os.path.isfile(out_path):

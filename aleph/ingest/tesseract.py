@@ -10,6 +10,7 @@ from tesserwrap import Tesseract, PageSegMode
 
 from aleph.core import get_config
 from aleph.model import Cache
+from aleph.ingest.ingestor import IngestorException
 from aleph.metadata.languages import get_iso3
 
 # https://tesserwrap.readthedocs.org/en/latest/#
@@ -21,17 +22,12 @@ def extract_image_data(data, languages=None):
     """Extract text from a binary string of data."""
     tessdata_prefix = get_config('TESSDATA_PREFIX')
     if tessdata_prefix is None:
-        raise ValueError('TESSDATA_PREFIX is not set, OCR will not work.')
+        raise IngestorException("TESSDATA_PREFIX is not set, OCR won't work.")
     languages = get_iso3(languages)
     text = Cache.get_ocr(data, languages)
     if text is not None:
         return text
-    try:
-        img = Image.open(StringIO(data))
-    except Exception as ex:
-        log.debug('Failed to parse image internally: %r', ex)
-        return ''
-
+    img = Image.open(StringIO(data))
     # TODO: play with contrast and sharpening the images.
     extractor = Tesseract(tessdata_prefix, lang=languages)
     extractor.set_page_seg_mode(PageSegMode.PSM_AUTO_OSD)

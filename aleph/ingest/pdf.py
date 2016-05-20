@@ -10,6 +10,7 @@ from pdfminer.pdfparser import PDFParser, PDFSyntaxError
 from pdfminer.pdfdocument import PDFDocument
 
 from aleph.text import string_value
+from aleph.ingest.ingestor import IngestorException
 from aleph.ingest.tesseract import _extract_image_page
 
 log = logging.getLogger(__name__)
@@ -55,13 +56,7 @@ def extract_pdf(path, languages=None):
         device = PDFPageAggregator(rsrcmgr, laparams=laparams)
         interpreter = PDFPageInterpreter(rsrcmgr, device)
         parser = PDFParser(fh)
-        try:
-            doc = PDFDocument(parser, '')
-        except PDFSyntaxError as pse:
-            if 'No /Root object!' in pse.message:
-                log.info("Invalid PDF file: %r", path)
-                return None
-            raise
+        doc = PDFDocument(parser, '')
 
         result = {'pages': []}
         if len(doc.info):

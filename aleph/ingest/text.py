@@ -31,10 +31,6 @@ class TextIngestor(Ingestor):
 
     def extract_pdf(self, meta, pdf_path):
         data = extract_pdf(pdf_path, languages=self.get_languages(meta))
-        if data is None:
-            log.error("Could not parse PDF: %r", meta)
-            return
-
         if not meta.has('author') and data.get('author'):
             meta['author'] = data.get('author')
 

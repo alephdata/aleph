@@ -17,10 +17,6 @@ from aleph.model.validation import validate # noqa
 log = logging.getLogger(__name__)
 
 
-def clear_session():
-    db.session.rollback()
-
-
 def upgrade_db():
     log.info("Beginning database migration...")
     migrate.upgrade()

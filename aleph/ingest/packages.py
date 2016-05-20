@@ -67,17 +67,12 @@ class RARIngestor(PackageIngestor):
 class ZipIngestor(PackageIngestor):
 
     def unpack(self, meta, local_path, temp_dir):
-        try:
-            with zipfile.ZipFile(local_path) as zf:
-                for info in zf.infolist():
-                    if info.file_size == 0:
-                        continue
-                    fh = zf.open(info)
-                    self.emit_member(meta, info.filename, fh, temp_dir)
-        except zipfile.BadZipfile as bad:
-            self.log_exception(meta, bad)
-        except IOError as ioe:
-            self.log_exception(meta, ioe)
+        with zipfile.ZipFile(local_path) as zf:
+            for info in zf.infolist():
+                if info.file_size == 0:
+                    continue
+                fh = zf.open(info)
+                self.emit_member(meta, info.filename, fh, temp_dir)
 
     @classmethod
     def match(cls, meta, local_path):

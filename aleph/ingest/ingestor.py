@@ -1,12 +1,15 @@
 import logging
 
-from aleph import event
 from aleph.core import db, get_archive
 from aleph.ext import get_ingestors
 from aleph.model import Document
 from aleph.analyze import analyze_document
 
 log = logging.getLogger(__name__)
+
+
+class IngestorException(Exception):
+    pass
 
 
 class Ingestor(object):
@@ -44,12 +47,6 @@ class Ingestor(object):
         log.debug("Ingested document: %r", document)
         analyze_document(document.id)
 
-    def log_exception(self, meta, exception):
-        origin = '%s.%s' % (self.__module__, self.__class__.__name__)
-        data = meta.data if hasattr(meta, 'data') else {}
-        data['source_id'] = self.source_id
-        event.exception(origin, data, exception)
-
     @classmethod
     def match(cls, meta, local_path):
         score = -1
@@ -67,21 +64,21 @@ class Ingestor(object):
             if score > best_score:
                 best_score = score
                 best_cls = cls
+        if best_cls is None:
+            raise IngestorException("No ingestor found: %r (%s, %s)" %
+                                    (meta.file_name, meta.extension,
+                                     meta.mime_type))
         return best_cls
 
     @classmethod
     def dispatch(cls, source_id, meta):
         local_path = get_archive().load_file(meta)
-        best_cls = cls.auction_file(meta, local_path)
-        if best_cls is None:
-            log.error("No ingestor found: %r (%r, %r)", meta.file_name,
-                      meta.extension, meta.mime_type)
-            return
-
-        log.debug("Dispatching %r to %r", meta.file_name, best_cls.__name__)
         try:
+            best_cls = cls.auction_file(meta, local_path)
+            log.debug("Dispatching %r to %r", meta.file_name, best_cls)
             best_cls(source_id).ingest(meta, local_path)
         except Exception as ex:
+            db.session.rollback()
             log.exception(ex)
         finally:
             get_archive().cleanup_file(meta)

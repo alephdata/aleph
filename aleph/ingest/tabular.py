@@ -46,7 +46,7 @@ class MessyTablesIngestor(TabularIngestor):
             return
 
         def generate_rows():
-            for row in row_set:
+            for i, row in enumerate(row_set):
                 record = {}
                 try:
                     for cell, column in zip(row, columns):
@@ -56,7 +56,8 @@ class MessyTablesIngestor(TabularIngestor):
                             record[column.name] = record.get(column.name, None)
                         yield record
                 except Exception as exception:
-                    self.log_exception(meta, exception)
+                    log.warning("Could not decode row %s in %s: %s",
+                                i, meta, exception)
 
         document.insert_records(sheet, generate_rows())
         return tabular
