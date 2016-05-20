@@ -8,7 +8,7 @@ class Cache(db.Model):
     """Store OCR computation results."""
 
     id = db.Column(db.BigInteger, primary_key=True)
-    key = db.Column(db.Unicode, unique=True)
+    key = db.Column(db.Unicode, index=True)
     value = db.Column(db.Unicode)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -20,8 +20,9 @@ class Cache(db.Model):
 
     @classmethod
     def get_ocr(cls, data, languages):
-        q = db.session.query(cls)
+        q = db.session.query(cls.value)
         q = q.filter_by(key=cls.get_ocr_key(data, languages))
+        q = q.order_by(cls.created_at.desc())
         cobj = q.first()
         if cobj is not None:
             return cobj.value
