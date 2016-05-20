@@ -32,6 +32,7 @@ class Cache(db.Model):
         cobj.key = cls.get_ocr_key(data, languages)
         cobj.value = value
         db.session.add(cobj)
+        db.session.flush()
 
     def __repr__(self):
         return '<Cache(%r)>' % self.key
