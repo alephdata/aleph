@@ -10,6 +10,7 @@ from aleph.index.records import generate_records, clear_records
 from aleph.index.entities import index_entity, delete_entity, generate_entities  # noqa
 from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD, TYPE_ENTITY  # noqa
 from aleph.index.mapping import DOCUMENT_MAPPING, RECORD_MAPPING, ENTITY_MAPPING  # noqa
+from aleph.index.util import bulk_op
 
 log = logging.getLogger(__name__)
 
@@ -37,15 +38,11 @@ def delete_source(source_id):
                 '_id': res.get('_id')
             }
 
-    try:
-        bulk(get_es(), deletes(), stats_only=True, chunk_size=2000,
-             request_timeout=60.0)
-    except Exception:
-        log.debug("Failed to clear documents: %r", source_id)
+    bulk_op(deletes())
 
 
 @celery.task()
-def index_document(document_id, index_records=True):
+def index_document(document_id):
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
@@ -58,7 +55,5 @@ def index_document(document_id, index_records=True):
     get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
                    id=document.id)
 
-    if index_records:
-        clear_records(document)
-        bulk(get_es(), generate_records(document), stats_only=True,
-             chunk_size=1000, request_timeout=500.0)
+    clear_records(document)
+    bulk_op(generate_records(document))
