@@ -1,13 +1,13 @@
 import re
 import logging
 from collections import defaultdict
-from sqlalchemy import func
 
 from aleph.core import db, celery
 from aleph.text import normalize_strong
 from aleph.model import Entity, Reference, Document, Alert
-from aleph.index import index_entity, delete_entity, index_document
+from aleph.index import index_entity, delete_entity
 from aleph.index.entities import delete_entity_references
+from aleph.index.entities import update_entity_references
 from aleph.search.records import scan_entity_mentions
 
 log = logging.getLogger(__name__)
@@ -17,6 +17,7 @@ def generate_entity_references(entity):
     if entity.state != Entity.STATE_ACTIVE:
         return
 
+    log.info("Updating document references: %r", entity)
     rex = '|'.join(entity.regex_terms)
     rex = re.compile('( |^)(%s)( |$)' % rex)
 
@@ -52,10 +53,7 @@ def generate_entity_references(entity):
 
     db.session.commit()
     delete_entity_references(entity.id)
-    q = db.session.query(func.distinct(Reference.document_id))
-    q = q.filter(Reference.entity_id == entity.id)
-    for document_id, in q:
-        index_document(document_id, index_records=False)
+    update_entity_references(entity.id)
 
 
 def update_entity(entity):

@@ -1,11 +1,13 @@
 import logging
+from collections import defaultdict
 from elasticsearch.helpers import bulk, scan
 
-from aleph.core import get_es, get_es_index
+from aleph.core import get_es, get_es_index, db
 from aleph.text import latinize_text
-from aleph.model import Entity
+from aleph.model import Entity, Reference
+from aleph.model.entity import collection_entity_table
 from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT
-from aleph.index.util import expand_json
+from aleph.index.util import expand_json, bulk_op
 
 log = logging.getLogger(__name__)
 
@@ -16,29 +18,54 @@ def delete_entity(entity_id):
                     ignore=[404])
 
 
+def document_updates(q, entity_id, references=None):
+    scanner = scan(get_es(), query=q, index=get_es_index(),
+                   doc_type=[TYPE_DOCUMENT])
+    for res in scanner:
+        body = res.get('_source')
+        entities = []
+        if references is not None:
+            entities.append({
+                'uuid': entity_id,
+                'collection_id': references[res['_id']]
+            })
+        for ent in res.get('_source').get('entities'):
+            if ent['uuid'] != entity_id:
+                entities.append(ent)
+        body['entities'] = entities
+        yield {
+            '_op_type': 'update',
+            '_id': res['_id'],
+            '_type': res['_type'],
+            '_index': res['_index'],
+            'doc': body
+        }
+
+
 def delete_entity_references(entity_id):
     q = {'query': {'term': {'entities.uuid': entity_id}}}
+    bulk_op(document_updates(q, entity_id))
 
-    def updates():
-        for res in scan(get_es(), query=q, index=get_es_index(),
-                        doc_type=[TYPE_DOCUMENT]):
-            entities = []
-            for ent in res.get('_source').get('entities'):
-                if ent['uuid'] != entity_id:
-                    entities.append(ent)
-            body = res.get('_source')
-            body['entities'] = entities
-            yield {
-                '_id': res['_id'],
-                '_type': res['_type'],
-                '_index': res['_index'],
-                '_source': body
-            }
-    try:
-        bulk(get_es(), updates(), stats_only=True, chunk_size=100,
-             request_timeout=120.0)
-    except Exception:
-        log.debug("Failed to clear entity refs: %r", entity_id)
+
+def update_entity_references(entity_id, max_query=1000):
+    """Same as above but runs in bulk for a particular entity."""
+    q = db.session.query(Reference.document_id)
+    q = q.filter(Reference.entity_id == entity_id)
+    q = q.filter(Entity.id == entity_id)
+    q = q.filter(Entity.state == Entity.STATE_ACTIVE)
+    q = q.filter(collection_entity_table.c.entity_id == Entity.id)
+    q = q.add_column(collection_entity_table.c.collection_id)
+    references = defaultdict(list)
+    for row in q:
+        references[str(row.document_id)].append(row.collection_id)
+
+    ids = references.keys()
+    for i in range(0, len(ids), max_query):
+        q = {'query': {'ids': {'values': ids[i:i + max_query]}}}
+        bulk_op(document_updates(q, entity_id, references))
+
+    log.info("Clearing ES cache...")
+    get_es().indices.clear_cache(index=get_es_index())
 
 
 def get_count(entity):
