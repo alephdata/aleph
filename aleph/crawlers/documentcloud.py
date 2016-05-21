@@ -69,9 +69,3 @@ class SourceAfricaCrawler(DocumentCloudCrawler):
     DC_INSTANCE = 'sourceafrica'
     SOURCE_ID = 'sourceafrica'
     SOURCE_LABEL = 'SourceAfrica.net'
-
-
-class GlobalWitnessDCCrawler(DocumentCloudCrawler):
-    SOURCE_ID = 'web:documentcloud.org:globalwitness'
-    SOURCE_LABEL = 'GlobalWitness (DC)'
-    DC_GROUP = 'globalwitness'

@@ -46,13 +46,12 @@ setup(
             'polyglot = aleph.analyze.polyglot:PolyglotEntityAnalyzer'
         ],
         'aleph.crawlers': [
-            'stub = aleph.crawlers.stub:StubCrawler',
+            # 'stub = aleph.crawlers.stub:StubCrawler',
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
             'idrequests = aleph.crawlers.idashboard:IDRequests',
             'idfiles = aleph.crawlers.idashboard:IDFiles',
             'blacklight = aleph.crawlers.blacklight:BlacklightCrawler',
-            'sourceafrica = aleph.crawlers.documentcloud:SourceAfricaCrawler',
-            'dc.globalwitness = aleph.crawlers.documentcloud:GlobalWitnessDCCrawler',  # noqa
+            'sourceafrica = aleph.crawlers.documentcloud:SourceAfricaCrawler'
         ],
         'aleph.init': [
         ],
