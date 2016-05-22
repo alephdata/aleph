@@ -58,7 +58,7 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     });
   };
 
-  var triggerDone() {
+  var triggerDone = function() {
     $scope.reportLoading(true);
     $scope.entity = null;
     loadNext();
