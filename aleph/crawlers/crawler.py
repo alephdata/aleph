@@ -33,6 +33,10 @@ class Crawler(object):
     def execute(self, incremental=False, **kwargs):
         try:
             self.incremental = incremental
+            CrawlerState.store_stub(self.source.id,
+                                    self.get_id(),
+                                    self.crawler_run)
+            db.session.commit()
             self.crawl(**kwargs)
             db.session.commit()
         except Exception as ex:

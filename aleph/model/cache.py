@@ -29,11 +29,12 @@ class Cache(db.Model):
 
     @classmethod
     def set_ocr(cls, data, languages, value):
+        session = db.sessionmaker(bind=db.engine)()
         cobj = cls()
         cobj.key = cls.get_ocr_key(data, languages)
         cobj.value = value
-        db.session.add(cobj)
-        db.session.flush()
+        session.add(cobj)
+        session.commit()
 
     def __repr__(self):
         return '<Cache(%r)>' % self.key
