@@ -40,7 +40,7 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
 
     $timeout(function() {
       if (!entityCacheDfd && !$scope.empty && entityCache.length < 22) {
-        var params = {params: {skip: entitySkipIds}}
+        var params = {params: {skip: entitySkipIds.slice(entitySkipIds.length - 50)}}
         entityCacheDfd = $http.get('/api/1/entities/_pending', params);
         entityCacheDfd.then(function(res) {
           for (var i in res.data.results) {
