@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, request_data, arg_bool
 from apikit import get_limit, get_offset
-from sqlalchemy import func
+from sqlalchemy import func, not_
 from sqlalchemy.orm import aliased
 
 from aleph import authz
@@ -74,6 +74,9 @@ def suggest():
 @blueprint.route('/api/1/entities/_pending', methods=['GET'])
 def pending():
     q = db.session.query(Entity)
+    skip_entities = request.args.getlist('skip')
+    if len(skip_entities):
+        q = q.filter(not_(Entity.id.in_(skip_entities)))
     q = q.filter(Entity.state == Entity.STATE_PENDING)
     clause = Collection.id.in_(authz.collections(authz.READ))
     q = q.filter(Entity.collections.any(clause))
@@ -81,12 +84,13 @@ def pending():
     q = q.join(ref)
     q = q.group_by(Entity)
     q = q.order_by(func.sum(ref.weight).desc())
-    entity = q.first()
-    if entity is None:
-        return jsonify({'empty': True})
-    data = entity.to_dict()
-    data['name_latin'] = latinize_text(data['name'], lowercase=False)
-    return jsonify(data)
+    q = q.limit(50)
+    entities = []
+    for entity in q.all():
+        data = entity.to_dict()
+        data['name_latin'] = latinize_text(entity.name, lowercase=False)
+        entities.append(data)
+    return jsonify({'results': entities, 'total': len(entities)})
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['GET'])

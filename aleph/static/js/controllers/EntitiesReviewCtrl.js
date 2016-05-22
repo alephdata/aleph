@@ -3,29 +3,58 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     function($scope, $route, $location, $http, $timeout, Collection, Entity, Metadata, Authz, Title) {
   
   $scope.reportLoading(true);
-  $scope.entity = {};
+  $scope.entity = null;
+  $scope.empty = false;
   $scope.schemata = {};
   $scope.duplicateOptions = [];
   Title.set("Review entities", "entities");
 
-  var loadNext = function() {
-    $scope.reportLoading(true);
+  var entityCache = [],
+      entitySkipIds = [],
+      entityCacheDfd = null;
+
+  var loadCachedEntity = function() {
     Metadata.get().then(function(metadata) {
       $scope.schemata = metadata.schemata;
-      $http.get('/api/1/entities/_pending').then(function(res) {
-        $scope.entity = res.data;
-        Title.set("Review: " + res.data.name, "entities");
-        $scope.entity.jurisdiction_code = $scope.entity.jurisdiction_code || null;
-        if (!$scope.entity.empty) {
-          $http.get('/api/1/entities/' + res.data.id + '/similar').then(function(res) {
-            $scope.duplicateOptions = res.data.results;
-            $scope.reportLoading(false);
-          });
-        } else {
-          $scope.duplicateOptions = [];
-          $scope.reportLoading(false);
-        }
+      $scope.entity = entityCache.splice(0, 1)[0];
+      Title.set("Review: " + $scope.entity.name, "entities");
+      $scope.entity.jurisdiction_code = $scope.entity.jurisdiction_code || null;
+      $scope.reportLoading(false);
+      $http.get('/api/1/entities/' + $scope.entity.id + '/similar').then(function(res) {
+        $scope.duplicateOptions = res.data.results;
+        $scope.reportLoading(false);
       });
+    });
+  };
+
+  var loadNext = function() {
+    // console.log("Cache size:", entityCache.length);
+
+    if ($scope.entity == null) {
+      if (entityCache.length) {
+        loadCachedEntity();
+      } else if ($scope.empty) {
+        $scope.reportLoading(false);
+      }  
+    }
+
+    $timeout(function() {
+      if (!entityCacheDfd && !$scope.empty && entityCache.length < 47) {
+        var params = {params: {skip: entitySkipIds}}
+        entityCacheDfd = $http.get('/api/1/entities/_pending', params);
+        entityCacheDfd.then(function(res) {
+          for (var i in res.data.results) {
+            var ent = res.data.results[i];
+            entitySkipIds.push(ent.id);
+            entityCache.push(ent);
+          }
+          if (res.data.total == 0) {
+            $scope.empty = true;
+          }
+          entityCacheDfd = null;
+          loadNext();
+        });  
+      }  
     });
   };
 
@@ -33,8 +62,9 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     if (!$scope.entity.id) {
       return;
     }
-    $scope.reportLoading(true);
     var entity = angular.copy($scope.entity);
+    $scope.reportLoading(true);
+    $scope.entity = null;
     entity.state = 'active';
     $http.post('/api/1/entities/' + entity.id, entity).then(function() {
       loadNext();
@@ -45,15 +75,18 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     if (!$scope.entity.id) {
       return;
     }
+    var url = '/api/1/entities/' + $scope.entity.id;
     $scope.reportLoading(true);
-    $http.delete('/api/1/entities/' + $scope.entity.id).then(function() {
+    $scope.entity = null;
+    $http.delete(url).then(function() {
       loadNext();
     });
   };
 
   $scope.mergeDuplicate = function(dup) {
-    $scope.reportLoading(true);
     var url = '/api/1/entities/' +  dup.id + '/merge/' + $scope.entity.id;
+    $scope.reportLoading(true);
+    $scope.entity = null;
     $http.delete(url).then(function() {
       loadNext();
     });
@@ -62,6 +95,18 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
   $scope.editDuplicate = function(dup) {
     Entity.edit(dup.id);
   };
+
+  $scope.$on('key-pressed', function(e, k) {
+    if (k == 65) {
+      $scope.activate();
+    }
+    if (k == 68) {
+      $scope.delete();
+    }
+    if (k == 77 && $scope.duplicateOptions.length) {
+      $scope.mergeDuplicate($scope.duplicateOptions[0]);
+    }
+  });
 
   loadNext();
 

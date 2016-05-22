@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <div class="panel panel-success" ng-if="entity.empty">
+    <div class="panel panel-success" ng-if="entity == null && empty">
       <div class="panel-heading">
         <h3 class="panel-title">Nothing to do</h3>
       </div>
@@ -8,7 +8,7 @@
         All pending entities have been processed. Thanks for your help!
       </div>
     </div>
-    <div class="panel panel-default" ng-if="!entity.empty">
+    <div class="panel panel-default" ng-if="entity != null">
       <!-- div class="panel-heading">Review: {{entity.name}}</div-->
       <div class="panel-body">
         <div class="form-group" ng-class="{'has-error': reviewEntity.name.$invalid}">
@@ -24,10 +24,10 @@
         <entity-jurisdiction entity="entity"></entity-jurisdiction>
         <div class="form-group" style="text-align: center;">
           <button type="button" class="btn btn-success btn-lg" ng-click="activate()">
-            Activate
+            Activate (a)
           </button>
           <button type="button" class="btn btn-danger btn-lg" ng-click="delete()">
-            Discard
+            Discard (d)
           </button>
         </div>
         <table class="table table-striped">
@@ -44,7 +44,7 @@
             <td>
               <a ng-click="mergeDuplicate(opt)" class="btn btn-primary btn-xs">
                 <i class="fa fa-link" aria-hidden="true"></i>
-                Merge
+                Merge <span ng-if="$first">(m)</span>
               </a>
             </td>
           </tr>

@@ -29,6 +29,12 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
     $scope.routeFailed = true;
   });
 
+  $scope.keyDownNotify = function($event) {
+    if(angular.lowercase($event.target.tagName) == 'body') {
+      $scope.$broadcast('key-pressed', $event.keyCode);
+    }
+  };
+
   $rootScope.reportError = function(message) {
     $scope.routeFailed = true;
   };

@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="{{ config.APP_FAVICON }}">
     <base href="{{url_for('.ui')}}">
   </head>
-  <body ng-controller="AppCtrl">
+  <body ng-controller="AppCtrl" ng-keyup="keyDownNotify($event)">
     <div id="page" ng-show="session.roles" ng-cloak>
       <nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container-fluid">
