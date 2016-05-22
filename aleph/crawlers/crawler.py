@@ -33,10 +33,6 @@ class Crawler(object):
     def execute(self, incremental=False, **kwargs):
         try:
             self.incremental = incremental
-            CrawlerState.store_stub(self.source.id,
-                                    self.get_id(),
-                                    self.crawler_run)
-            db.session.commit()
             self.crawl(**kwargs)
             db.session.commit()
         except Exception as ex:
@@ -139,6 +135,13 @@ class DocumentCrawler(Crawler):
             })
             db.session.commit()
         return self._source
+
+    def execute(self, **kwargs):
+        CrawlerState.store_stub(self.source.id,
+                                self.get_id(),
+                                self.crawler_run)
+        db.session.commit()
+        super(DocumentCrawler, self).execute(**kwargs)
 
     def emit_file(self, meta, file_path, move=False):
         ingest_file(self.source.id, meta.clone(), file_path, move=move)
