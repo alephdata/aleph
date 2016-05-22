@@ -187,21 +187,20 @@
       <div class="col-md-8" ng-show="section == 'dedupe'">
         <table class="table table-striped">
           <tr>
+            <th width="1%">Merge</th>
             <th>Possible Duplicate</th>
             <th width="1%">Country</th>
             <th width="5%">Score</th>
-            <th width="1%"></th>
           </tr>
           <tr ng-repeat="opt in duplicateOptions">
+            <td class="numeric">
+              <label>
+                <input type="checkbox" ng-model="opt.$merge">
+              </label>
+            </td>
             <td><a ng-click="editDuplicate(opt)">{{opt.name}}</a></td>
             <td class="numeric">{{opt.jurisdiction_code.toUpperCase()}}</td>
             <td class="numeric">{{opt.score | number: 1}}</td>
-            <td>
-              <a ng-click="mergeDuplicate(opt)" class="btn btn-primary btn-xs">
-                <i class="fa fa-link" aria-hidden="true"></i>
-                Merge
-              </a>
-            </td>
           </tr>
         </table>
       </div>

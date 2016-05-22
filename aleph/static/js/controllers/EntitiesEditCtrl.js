@@ -1,6 +1,7 @@
-aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Alert', 'Entity', 'Validation', 'entity', 'metadata', 'alerts',
-    function($scope, $http, $uibModalInstance, Metadata, Session, Authz, Alert, Entity, Validation, entity, metadata, alerts) {
+aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Alert', 'Entity', 'Validation', 'entity', 'metadata', 'alerts',
+    function($scope, $http, $q, $uibModalInstance, Metadata, Session, Authz, Alert, Entity, Validation, entity, metadata, alerts) {
 
+  $scope.blocked = false;
   $scope.entity = entity;
   $scope.entity.jurisdiction_code = entity.jurisdiction_code || null;
   $scope.originalName = entity.name + '';
@@ -68,15 +69,6 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
     };
   };
 
-  $scope.mergeDuplicate = function(dup) {
-    var idx = $scope.duplicateOptions.indexOf(dup);
-    if (idx != -1) {
-      $scope.duplicateOptions.splice(idx, 1);
-    };
-    var url = '/api/1/entities/' +  entity.id + '/merge/' + dup.id;
-    $http.delete(url);
-  };
-
   $scope.editDuplicate = function(dup) {
     Entity.edit(dup.id).then(function() {
       initDedupe();
@@ -84,7 +76,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
   };
 
   $scope.canSave = function() {
-    return $scope.editEntity.$valid;
+    return $scope.editEntity.$valid && !$scope.blocked;
   };
 
   $scope.setSection = function(section) {
@@ -95,12 +87,48 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
     $uibModalInstance.dismiss('cancel');
   };
 
+  var updateAlert = function() {
+    var done = $q.defer();
+    if ($scope.entity.haveAlert && !$scope.alertId) {
+      Alert.create({entity_id: entity.id}).then(function() {
+        done.resolve();
+      });
+    } else if (!$scope.entity.haveAlert && $scope.alertId) {
+      Alert.delete($scope.alertId).then(function() {
+        done.resolve();
+      });
+    } else {
+      done.resolve();
+    }
+    return done.promise;
+  };
+
+  var mergeDuplicates = function() {
+    var done = $q.defer(), 
+        merges = [];
+    for (var i in $scope.duplicateOptions) {
+      var dup = $scope.duplicateOptions[i];
+      if (dup.$merge) {
+        var url = '/api/1/entities/' +  $scope.entity.id + '/merge/' + dup.id;
+        merges.push($http.delete(url));
+      }
+    }
+    $q.all(merges).then(function() {
+      done.resolve();
+    })
+    return done.promise;
+  };
+
   $scope.save = function(form) {
     if (!$scope.canSave()) {
       return false;
     }
+    $scope.blocked = true;
 
+    // check that we're not in the process of adding alternate
+    // names and accidentally submitting the form.
     if ($scope.newOtherName.editing) {
+      // todo, detect save button clicks.
       if ($scope.canAddOtherName()) {
         $scope.addOtherName();
       }
@@ -110,17 +138,11 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$uibModalInstance', 'M
     var url = '/api/1/entities/' + $scope.entity.id;
     var res = $http.post(url, $scope.entity);
     res.then(function(res) {
-      if ($scope.entity.haveAlert && !$scope.alertId) {
-        Alert.create({entity_id: entity.id}).then(function() {
-          $uibModalInstance.close(res.data);  
+      updateAlert().then(function() {
+        mergeDuplicates().then(function() {
+          $uibModalInstance.close(res.data);
         });
-      } else if (!$scope.entity.haveAlert && $scope.alertId) {
-        Alert.delete($scope.alertId).then(function() {
-          $uibModalInstance.close(res.data);  
-        });
-      } else {
-        $uibModalInstance.close(res.data);
-      }
+      });
     });
   };
 

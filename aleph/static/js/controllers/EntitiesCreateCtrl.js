@@ -1,6 +1,7 @@
 aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Alert', 'Validation', 'entity',
     function($scope, $http, $uibModalInstance, Metadata, Session, Authz, Alert, Validation, entity) {
 
+  $scope.blocked = false;
   $scope.availableSchemata = ['/entity/person.json#', '/entity/company.json#',
                               '/entity/organization.json#'];
   $scope.selectSchema = !entity.$schema;
@@ -51,6 +52,9 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
   };
 
   $scope.canSave = function() {
+    if ($scope.blocked) {
+      return false;
+    }
     if ($scope.createCollection) {
       if (!$scope.collection.label || !$scope.collection.label.length > 2) {
         return false;
@@ -83,6 +87,7 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
     if (!$scope.canSave()) {
       return false;
     }
+    $scope.blocked = true;
 
     if (!$scope.createCollection) {
       $scope.saveEntity();

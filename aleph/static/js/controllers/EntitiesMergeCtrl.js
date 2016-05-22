@@ -1,6 +1,7 @@
 aleph.controller('EntitiesMergeCtrl', ['$scope', '$location', '$q', '$http', '$uibModalInstance', 'entities',
     function($scope, $location, $q, $http, $uibModalInstance, entities) {
 
+  $scope.blocked = false;
   $scope.entities = entities.sort(function(a, b) {
     return (b.doc_count || 0) - (a.doc_count || 0);
   });
@@ -11,6 +12,7 @@ aleph.controller('EntitiesMergeCtrl', ['$scope', '$location', '$q', '$http', '$u
   };
 
   $scope.confirm = function() {
+    $scope.blocked = true;
     var merges = [];
     for (var i in entities) {
       var id = entities[i].id;

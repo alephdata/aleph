@@ -1,6 +1,7 @@
 aleph.controller('EntitiesDeleteCtrl', ['$scope', '$location', '$q', '$http', '$uibModalInstance', 'entities',
     function($scope, $location, $q, $http, $uibModalInstance, entities) {
   
+  $scope.blocked = false;
   $scope.entities = entities;
 
   $scope.cancel = function() {
@@ -8,6 +9,7 @@ aleph.controller('EntitiesDeleteCtrl', ['$scope', '$location', '$q', '$http', '$
   };
 
   $scope.confirm = function() {
+    $scope.blocked = true;
     var deletes = [];
     for (var i in entities) {
       var id = entities[i].id;
