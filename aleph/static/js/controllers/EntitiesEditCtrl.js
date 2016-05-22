@@ -76,7 +76,10 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   };
 
   $scope.canSave = function() {
-    return $scope.editEntity.$valid && !$scope.blocked;
+    if ($scope.blocked) {
+      return false;
+    }
+    return $scope.editEntity.$valid;
   };
 
   $scope.setSection = function(section) {
@@ -123,8 +126,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
     if (!$scope.canSave()) {
       return false;
     }
-    $scope.blocked = true;
-
+    
     // check that we're not in the process of adding alternate
     // names and accidentally submitting the form.
     if ($scope.newOtherName.editing) {
@@ -135,6 +137,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
       return false;
     }
 
+    $scope.blocked = true;
     var url = '/api/1/entities/' + $scope.entity.id;
     var res = $http.post(url, $scope.entity);
     res.then(function(res) {
