@@ -39,7 +39,7 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     }
 
     $timeout(function() {
-      if (!entityCacheDfd && !$scope.empty && entityCache.length < 47) {
+      if (!entityCacheDfd && !$scope.empty && entityCache.length < 22) {
         var params = {params: {skip: entitySkipIds}}
         entityCacheDfd = $http.get('/api/1/entities/_pending', params);
         entityCacheDfd.then(function(res) {
@@ -58,17 +58,20 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     });
   };
 
+  var triggerDone() {
+    $scope.reportLoading(true);
+    $scope.entity = null;
+    loadNext();
+  };
+
   $scope.activate = function() {
     if (!$scope.entity.id) {
       return;
     }
     var entity = angular.copy($scope.entity);
-    $scope.reportLoading(true);
-    $scope.entity = null;
     entity.state = 'active';
-    $http.post('/api/1/entities/' + entity.id, entity).then(function() {
-      loadNext();
-    });
+    $http.post('/api/1/entities/' + entity.id, entity);
+    triggerDone();
   };
 
   $scope.delete = function() {
@@ -76,20 +79,14 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
       return;
     }
     var url = '/api/1/entities/' + $scope.entity.id;
-    $scope.reportLoading(true);
-    $scope.entity = null;
-    $http.delete(url).then(function() {
-      loadNext();
-    });
+    $http.delete(url)
+    triggerDone();
   };
 
   $scope.mergeDuplicate = function(dup) {
     var url = '/api/1/entities/' +  dup.id + '/merge/' + $scope.entity.id;
-    $scope.reportLoading(true);
-    $scope.entity = null;
-    $http.delete(url).then(function() {
-      loadNext();
-    });
+    $http.delete(url);
+    triggerDone();
   };
 
   $scope.editDuplicate = function(dup) {
