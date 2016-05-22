@@ -19,7 +19,6 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
       $scope.entity = entityCache.splice(0, 1)[0];
       Title.set("Review: " + $scope.entity.name, "entities");
       $scope.entity.jurisdiction_code = $scope.entity.jurisdiction_code || null;
-      $scope.reportLoading(false);
       $http.get('/api/1/entities/' + $scope.entity.id + '/similar').then(function(res) {
         $scope.duplicateOptions = res.data.results;
         $scope.reportLoading(false);
