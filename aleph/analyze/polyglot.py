@@ -100,6 +100,7 @@ class PolyglotEntityAnalyzer(Analyzer):
             ref = Reference()
             ref.document_id = document.id
             ref.entity_id = entity_id
+            ref.origin = self.origin
             ref.weight = weight
             db.session.add(ref)
         self.save(document, meta)
