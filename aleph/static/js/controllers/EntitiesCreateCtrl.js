@@ -1,5 +1,5 @@
-aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Alert', 'Validation', 'entity',
-    function($scope, $http, $uibModalInstance, Metadata, Session, Authz, Alert, Validation, entity) {
+aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Collection', 'Alert', 'Validation', 'entity',
+    function($scope, $http, $uibModalInstance, Metadata, Session, Authz, Collection, Alert, Validation, entity) {
 
   $scope.blocked = false;
   $scope.availableSchemata = ['/entity/person.json#', '/entity/company.json#',
@@ -14,25 +14,15 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
   $scope.collections = [];
   $scope.schemata = {};
 
-  Metadata.get().then(function(metadata) {
-    $scope.schemata = metadata.schemata;
-
-    var collections = [];
-    for (var cid in metadata.collections) {
-      var col = metadata.collections[cid];
-      if (Authz.collection(Authz.WRITE, col.id)) {
-        collections.push(col);
-      }
-    };
-    $scope.collections = collections.sort(function(a, b) {
-      if (a.updated_at == b.updated_at) {
-        return a.label.localeCompare(b.label);
-      }
-      return b.updated_at.localeCompare(a.updated_at);
-    });
+  Collection.getWriteable().then(function(collections) {
+    $scope.collections = collections;
     if (!$scope.hasCollections()) {
       $scope.setCreateCollection(true);
     }
+  });
+
+  Metadata.get().then(function(metadata) {
+    $scope.schemata = metadata.schemata;
   });
 
   $scope.setSchema = function(schema) {

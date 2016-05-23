@@ -1,6 +1,28 @@
-aleph.factory('Collection', ['$uibModal', function($uibModal) {
+aleph.factory('Collection', ['$q', '$uibModal', 'Metadata', 'Authz', function($q, $uibModal, Metadata, Authz) {
+
+  var getWriteable = function() {
+    var dfd = $q.defer();
+    Metadata.get().then(function(metadata) {
+      var collections = [];
+      for (var cid in metadata.collections) {
+        var col = metadata.collections[cid];
+        if (Authz.collection(Authz.WRITE, col.id)) {
+          collections.push(col);
+        }
+      }
+      collections = collections.sort(function(a, b) {
+        if (a.updated_at == b.updated_at) {
+          return a.label.localeCompare(b.label);
+        }
+        return b.updated_at.localeCompare(a.updated_at);
+      });
+      dfd.resolve(collections);
+    });
+    return dfd.promise;
+  };
 
   return {
+    getWriteable: getWriteable,
     edit: function(collection) {
       var instance = $uibModal.open({
         templateUrl: 'templates/collections_edit.html',

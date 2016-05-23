@@ -53,6 +53,14 @@ aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
     resolve: {}
   });
 
+  $routeProvider.when('/entities/bulk', {
+    templateUrl: 'templates/entity_bulk.html',
+    controller: 'EntitiesBulkCtrl',
+    reloadOnSearch: true,
+    loginRequired: false,
+    resolve: {}
+  });
+
   $routeProvider.when('/crawlers', {
     templateUrl: 'templates/crawlers_manage.html',
     controller: 'CrawlersManageCtrl',

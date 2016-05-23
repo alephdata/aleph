@@ -1,5 +1,5 @@
 <div class="form-group">
-  <label class="control-label" for="jurisdiction_code">
+  <label class="control-label" for="jurisdiction_code" ng-if="!simple">
     <span ng-hide="isPerson()">Jurisdiction</span>
     <span ng-show="isPerson()">Nationality</span>
   </label>
@@ -9,6 +9,6 @@
       ng-model-options="{debounce: { 'default': 500, 'blur': 250 }, getterSetter: true}" 
       uib-typeahead="jur.value as jur.label for jur in getJurisdictions() | filter:{label:$viewValue}"
       typeahead-show-hint="true" typeahead-min-length="1" typeahead-editable="false">
-    <p class="help-block">Leave this empty if multiple countries apply.</p>
+    <p class="help-block" ng-if="!simple">Leave this empty if multiple countries apply.</p>
   </div>
 </div>

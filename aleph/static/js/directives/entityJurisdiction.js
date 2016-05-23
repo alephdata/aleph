@@ -24,7 +24,8 @@ aleph.directive('entityJurisdiction', ['Metadata', function(Metadata) {
     restrict: 'E',
     transclude: true,
     scope: {
-      'entity': '='
+      'entity': '=',
+      'simple': '='
     },
     templateUrl: 'templates/entity_jurisdiction.html',
     link: function (scope, element, attrs, model) {

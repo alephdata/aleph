@@ -1,0 +1,66 @@
+
+<h3>Bulk Entity Creation</h3>
+
+<div class="alert alert-danger" ng-if="!hasCollections">
+  <strong>You don't have any watchlists yet.</strong> Please create at least one entity before
+  going into bulk mode.
+</div>
+
+<table class="table table-striped" ng-if="hasCollections">
+  <tr>
+    <th width="25%">Name</th>
+    <th width="15%">Type</th>
+    <th width="15%">Jurisdiction</th>
+    <th>Summary</th>
+  </tr>
+  <tr ng-repeat="entity in entities" ng-class="{'danger': isInvalid(entity)}">
+    <td>
+      <input type="text" class="form-control" id="name" name="name" ng-model="entity.name"
+        placeholder="Entity Name" ng-model-options="{'updateOn': 'blur'}"
+        ng-blur="update(entity)">
+    </td>
+    <td>
+      <select ng-model="entity.$schema" name="schema" class="form-control"
+        ng-init="entity.$schema = availableSchemata[0]"
+        ng-blur="update(entity)">
+        <option ng-repeat="schema in availableSchemata" value="{{schema}}">
+          {{schemata[schema].title}}
+        </option>
+      </select>
+    </td>
+    <td>
+      <entity-jurisdiction entity="entity" simple="true"></entity-jurisdiction>
+    </td>
+    <td>
+      <input type="text" class="form-control" id="summary" name="summary" ng-model="entity.summary"
+        placeholder="A short summary"
+        ng-blur="update(entity)" ng-focus="update(entity)"
+        ng-model-options="{'updateOn': 'blur'}">
+    </td>
+  </tr>
+</table>
+
+<div class="row" ng-if="hasCollections">
+  <div class="col-md-4">
+    <div class="form-group">
+      <label class="control-label" for="collection">
+        Add to watchlist
+      </label>
+      <div ng-hide="createCollection">
+        <select class="form-control" id="collection" name="collection"
+          ng-model="collection.id"
+          ng-options="c.id as c.label for c in collections"></select>
+        <p class="help-block">
+          Select the watchlist to which the new entities will be added.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="pull-right">
+      <br/>
+      <button class="btn btn-success btn-lg" type="button"
+        ng-disabled="!canSave()" ng-click="save()">Save</button>
+    </div>
+  </div>
+</div>

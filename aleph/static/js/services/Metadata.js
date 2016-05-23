@@ -1,5 +1,5 @@
 
-aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session) {
+aleph.factory('Metadata', ['$http', '$q', 'Session', 'Authz', function($http, $q, Session, Authz) {
     var dfd = null;
 
     var flush = function() {
@@ -39,7 +39,9 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', function($http, $q, Session
     };
 
     var get = function() {
-      if (dfd === null) { load(); }
+      if (dfd === null) {
+        load();
+      }
       return dfd.promise;
     };
 
