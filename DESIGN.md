@@ -129,6 +129,14 @@ De-dupe todo:
 9. update target entity
 
 
+mini-bugs: 
+
+* Country selector
+* Watchlist sorting
+* Watchlist edit when entity save
+* 
+
+
 -------------
 
 Alert
