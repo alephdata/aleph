@@ -132,13 +132,22 @@ def index(foreign_id=None):
         init_search()
     for doc_id, in q:
         index_document.delay(doc_id)
-    reindex_entities()
+    # reindex_entities()
 
 
 @manager.command
 def indexentities(foreign_id=None):
     """Re-index all the entities."""
     reindex_entities()
+
+
+@manager.command
+def init():
+    """Create or upgrade the search index and database."""
+    upgrade_db()
+    init_search()
+    upgrade_search()
+    install_analyzers()
 
 
 @manager.command
@@ -156,11 +165,21 @@ def installdata():
 
 @manager.command
 def evilshit():
-    """Delete all data and recreate the database."""
-    db.drop_all()
-    upgrade_db()
+    """EVIL: Delete all data and recreate the database."""
     delete_index()
-    init_search()
+    db.drop_all()
+    from sqlalchemy import Table, MetaData, inspect
+    from sqlalchemy.dialects.postgresql import ENUM
+    metadata = MetaData()
+    metadata.bind = db.engine
+    metadata.reflect()
+    for enum in inspect(db.engine).get_enums():
+        enum = ENUM(name=enum['name'])
+        enum.drop(bind=db.engine, checkfirst=True)
+    if db.engine.has_table('alembic_version'):
+        table = Table('alembic_version', metadata, autoload=True)
+        table.drop()
+    init()
 
 
 def main():

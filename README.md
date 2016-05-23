@@ -42,7 +42,10 @@ $ cp aleph.env.tmpl aleph.env
 $ docker-compose up -d
 $ docker-compose run worker /bin/bash
 # init the database (this will also delete it, hence the name):
-root@worker# aleph upgrade
+root@worker# aleph init
+# if you run into errors due to pre-existing DB objects, try:
+# WARNING: this will delete all of your DB and ElasticSearch index.
+root@worker# aleph evilshit
 ```
 
 This will launch containers for PostgreSQL and ElasticSearch as well as for the applications front- and backend. The application should become available at ``http://localhost:13376``. You can proxy this port to the public web, or install an HTTP cache to retain static assets (make sure to set ``CACHE = True`` in the settings file.
