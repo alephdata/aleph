@@ -16,14 +16,17 @@ log = logging.getLogger(__name__)
 
 class DirectoryCrawler(Crawler):
 
-    def crawl_file(self, source, file_path, base_meta):
+    def crawl_file(self, source_id, file_path, base_meta):
         try:
+            if not os.path.isfile(file_path):
+                log.info('Invalid file path: %r', file_path)
+                return
             meta = self.make_meta(base_meta)
             file_path = string_value(file_path)
             meta.foreign_id = file_path
             meta.source_path = file_path
             meta.file_name = os.path.basename(file_path)
-            ingest_file(source.id, meta, file_path, move=False)
+            ingest_file(source_id, meta, file_path, move=False)
         except Exception as ex:
             log.exception(ex)
 
@@ -34,9 +37,10 @@ class DirectoryCrawler(Crawler):
             'label': source
         })
         db.session.commit()
+        source_id = source.id
 
         if os.path.isfile(directory):
-            self.crawl_file(source, directory, meta)
+            self.crawl_file(source_id, directory, meta)
 
         directory = directory or os.getcwd()
         directory = directory.encode('utf-8')
@@ -47,9 +51,9 @@ class DirectoryCrawler(Crawler):
                 continue
             log.info("Descending: %r", dirname)
             for file_name in files:
+                dirname = string_value(dirname)
+                file_name = string_value(file_name)
                 if file_name in SKIP_FILES:
                     continue
                 file_path = os.path.join(dirname, file_name)
-                if not os.path.isfile(file_path):
-                    continue
-                self.crawl_file(source, file_path, meta)
+                self.crawl_file(source_id, file_path, meta)
