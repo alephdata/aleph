@@ -368,6 +368,7 @@ root@worker# aleph evilshit
 ``aleph`` is one of many document processing and search tools targeted at journalists, activists etc. Many of these are similar in scope, ``aleph`` aims to distinguish itself by providing entity cross-referencing and seamless support for both tabular and textual data.
 
 * [DocumentCloud](https://github.com/documentcloud), the biggest document hosting site for journalistic content, including OCR and organisation- and project-level access control.
+* [DARPA MEMEX](http://opencatalog.darpa.mil/MEMEX.html#), a coordinated research to make domain-specific deep web search engines.
 * [Transparency Toolkit](https://github.com/TransparencyToolkit), LookingGlass is an indexing server for JSON documents with support for theming, used mainly for scraped social media profiles.
 * [resourcecontracts.org](https://github.com/developmentseed/rw-contracts), visual browser for resource (oil, mining, etc.) contract documents.
 * [mma-dexter](https://github.com/Code4SA/mma-dexter), used by Media Monitoring Africa to do content classification and guided entity extraction of South African media.
