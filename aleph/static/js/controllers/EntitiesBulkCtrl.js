@@ -4,6 +4,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
   
   $scope.collection = {};
   $scope.entities = [{}, {}, {}, {}];
+  $scope.created = [];
   $scope.availableSchemata = ['/entity/person.json#', '/entity/company.json#',
                               '/entity/organization.json#', '/entity/entity.json#'];
   Title.set("Bulk create entities", "entities");
@@ -17,6 +18,10 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
     $scope.hasCollections = collections.length > 0;
   });
 
+  $scope.editEntity = function($event, entity) {
+    $event.stopPropagation();
+    Entity.edit(entity.id);
+  };
 
   $scope.isStub = function(entity) {
     if (!entity.name || !entity.name.length) {
@@ -85,6 +90,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
         entity.collections = [$scope.collection.id];
         $http.post('/api/1/entities', entity).then(function(res) {
           $scope.entities.splice(i, 1);
+          $scope.created.push(res.data);
           saveNextEntity();
         }, function(err) {
           $scope.entities[i].$invalid = true;

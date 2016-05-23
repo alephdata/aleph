@@ -64,3 +64,27 @@
     </div>
   </div>
 </div>
+
+<hr>
+<table class="table table-striped" ng-if="created.length">
+  <tr>
+    <th>Created entities</th>
+    <th width="20%">Type</th>
+    <th class="numeric" width="10%">Jurisdiction</th>
+    <th width="1%"></th>
+  </tr>
+  <tr ng-repeat="entity in created">
+    <td ng-bind="::entity.name"></td>
+    <td>
+      {{schemata[entity.$schema].title}}
+    </td>
+    <td class="numeric">{{entity.jurisdiction_code.toUpperCase()}}</td>
+    <td class="numeric" width="1%">
+      <button type="button" class="btn btn-default btn-xs"
+        ng-click="editEntity($event, entity)">
+        <i class="fa fa-cog"></i>
+        Revise
+      </button>
+    </td>
+  </tr>
+</table>

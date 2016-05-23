@@ -34,6 +34,12 @@
         </a>
       </div>
       <div class="btn-group">
+        <a ng-href="/entities/bulk" class="btn btn-primary" ng-disabled="!authz.logged_in()">
+          <i class="fa fa-plus-square" aria-hidden="true"></i>
+          Bulk
+        </a>
+      </div>
+      <div class="btn-group">
         <a ng-click="mergeSelection($event)" class="btn btn-primary" ng-disabled="!canMerge()">
           <i class="fa fa-link" aria-hidden="true"></i>
           Merge
