@@ -3,14 +3,13 @@ import logging
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
 from pdfminer.layout import LAParams, LTTextBox, LTTextLine, LTFigure
-# from pdfminer.layout import LTImage
+from pdfminer.layout import LTImage
 
 from pdfminer.pdfpage import PDFPage
-from pdfminer.pdfparser import PDFParser, PDFSyntaxError
+from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
 
 from aleph.text import string_value
-from aleph.ingest.ingestor import IngestorException
 from aleph.ingest.tesseract import _extract_image_page
 
 log = logging.getLogger(__name__)
@@ -27,6 +26,13 @@ def _find_objects(objects, cls):
 
 def _convert_page(layout, path):
     text_content = []
+    page_area = float(layout.width * layout.height)
+    for image_obj in _find_objects(layout._objs, LTImage):
+        image_area = float(image_obj.width * image_obj.height)
+        page_portion = image_area / page_area
+        # Go for OCR if an image makes up more than 70% of the page.
+        if page_portion > 0.7:
+            return None
     for text_obj in _find_objects(layout._objs, (LTTextBox, LTTextLine)):
         text = text_obj.get_text()
         if text is None:
@@ -36,10 +42,6 @@ def _convert_page(layout, path):
             text_content.append(text)
 
     text = '\n'.join(text_content)
-    # if len(text) < 2:
-    #     if len(list(_find_objects(layout._objs, LTImage))):
-    #         log.debug("Defaulting to OCR: %r, pg. %s", path, page_no)
-    #         text = _extract_image_page(path, page_no, languages)
     return text.strip()
 
 
