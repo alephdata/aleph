@@ -45,6 +45,7 @@ def index():
 @blueprint.route('/api/1/entities/_all', methods=['GET'])
 def all():
     q = Entity.all_ids()
+    q = q.filter(Entity.state == Entity.STATE_ACTIVE)
     clause = Collection.id.in_(authz.collections(authz.READ))
     q = q.filter(Entity.collections.any(clause))
     results = [r[0] for r in q.all()]
