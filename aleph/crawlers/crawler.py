@@ -133,8 +133,8 @@ class DocumentCrawler(Crawler):
                 'foreign_id': self.SOURCE_ID,
                 'label': self.SOURCE_LABEL or self.SOURCE_ID
             })
-            db.session.add(self._source)
             db.session.commit()
+        db.session.add(self._source)
         return self._source
 
     def execute(self, **kwargs):
