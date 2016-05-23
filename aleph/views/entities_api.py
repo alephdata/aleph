@@ -59,6 +59,9 @@ def create():
     for collection in data['collections']:
         authz.require(authz.collection_write(collection.id))
     entity = Entity.save(data)
+    for collection in entity.collections:
+        collection.touch()
+
     db.session.commit()
     update_entity(entity)
     return view(entity.id)
@@ -126,6 +129,8 @@ def update(id):
     data['collections'] = [c for c in get_collections(data)
                            if c.id in possible_collections]
     entity = Entity.save(data, merge=arg_bool('merge'))
+    for collection in entity.collections:
+        collection.touch()
     db.session.commit()
     update_entity(entity)
     return view(entity.id)

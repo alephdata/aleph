@@ -24,7 +24,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
 
     def delete(self):
         for entity in self.entities:
-            entity.delete()
+            if len(list(entity.collections)) == 1:
+                entity.delete()
         super(Collection, self).delete()
 
     def touch(self):

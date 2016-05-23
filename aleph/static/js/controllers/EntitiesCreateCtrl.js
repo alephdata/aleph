@@ -24,7 +24,12 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
         collections.push(col);
       }
     };
-    $scope.collections = collections;
+    $scope.collections = collections.sort(function(a, b) {
+      if (a.updated_at == b.updated_at) {
+        return a.label.localeCompare(b.label);
+      }
+      return b.updated_at.localeCompare(a.updated_at);
+    });
     if (!$scope.hasCollections()) {
       $scope.setCreateCollection(true);
     }
