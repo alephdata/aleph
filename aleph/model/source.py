@@ -29,7 +29,7 @@ class Source(db.Model, IdModel, DatedModel, SchemaModel):
     def update(self, data):
         self.schema_update(data)
 
-    def delete(self):
+    def delete(self, deleted_at=None):
         from aleph.model import Document, Reference
         from aleph.model import DocumentRecord, DocumentPage
         sq = db.session.query(Document.id)

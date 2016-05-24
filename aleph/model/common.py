@@ -67,7 +67,7 @@ class DatedModel(object):
             return
         return cls.all().filter_by(id=id).first()
 
-    def delete(self):
+    def delete(self, deleted_at=None):
         # hard delete
         db.session.delete(self)
 
@@ -92,8 +92,8 @@ class SoftDeleteModel(DatedModel):
         q = super(SoftDeleteModel, cls).all_ids()
         return q.filter(cls.deleted_at == None)  # noqa
 
-    def delete(self):
-        self.deleted_at = datetime.utcnow()
+    def delete(self, deleted_at=None):
+        self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
 
     def to_dict(self):

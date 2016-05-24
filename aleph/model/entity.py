@@ -46,15 +46,17 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     collections = db.relationship(Collection, secondary=collection_entity_table,  # noqa
                                   backref=db.backref('entities', lazy='dynamic'))  # noqa
 
-    def delete(self):
+    def delete(self, deleted_at=None):
         from aleph.model import Reference
         q = db.session.query(Reference)
         q = q.filter(Reference.entity_id == self.id)
         q.delete(synchronize_session='fetch')
+
+        deleted_at = deleted_at or datetime.utcnow()
         for alert in self.alerts:
-            alert.delete()
+            alert.delete(deleted_at=deleted_at)
         self.state = self.STATE_DELETED
-        super(Entity, self).delete()
+        super(Entity, self).delete(deleted_at=deleted_at)
 
     def update(self, data, merge=False):
         self.schema_update(data, merge=merge)
@@ -243,7 +245,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         terms = [' %s ' % normalize_strong(t) for t in self.terms]
         regex_terms = set()
         for term in terms:
-            if len(term) < 5:
+            if len(term) < 4 or len(term) > 120:
                 continue
             contained = False
             for other in terms:

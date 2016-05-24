@@ -29,8 +29,8 @@ class Alert(db.Model, SoftDeleteModel):
             return self.entity.name
         return self.query_text
 
-    def delete(self):
-        self.deleted_at = datetime.utcnow()
+    def delete(self, deleted_at=None):
+        self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
         db.session.flush()
 

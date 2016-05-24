@@ -149,18 +149,19 @@ class SchemaModel(object):
                 return False
         return True
 
-    def delete(self):
+    def delete(self, deleted_at=None):
+        deleted_at = deleted_at or datetime.utcnow()
         for prop in self.schema_visitor.properties:
             if prop.is_value:
                 continue
             if prop.is_array and prop.items.inline:
                 for item in getattr(self, prop.name):
-                    item.delete()
+                    item.delete(deleted_at=deleted_at)
             if prop.is_object and prop.inline:
                 value = getattr(self, prop.name)
                 if value is not None:
-                    value.delete()
-        super(SchemaModel, self).delete()
+                    value.delete(deleted_at=deleted_at)
+        super(SchemaModel, self).delete(deleted_at=deleted_at)
 
     def to_dict(self):
         parent = super(SchemaModel, self)
