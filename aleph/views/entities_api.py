@@ -48,6 +48,7 @@ def all():
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
     clause = Collection.id.in_(authz.collections(authz.READ))
     q = q.filter(Entity.collections.any(clause))
+    q = q.order_by(Entity.id.asc())
     return jsonify(Pager(q, limit=100))
 
 
