@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">Delete collection</h4>
+</div>
+
+<div class="modal-body">
+  Are you sure you want to delete <strong>{{collection.label}}</strong>?
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+  <button type="submit" class="btn btn-primary" ng-click="confirm()" ng-disabled="blocked">OK</button>
+</div>
+

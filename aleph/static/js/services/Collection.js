@@ -6,7 +6,7 @@ aleph.factory('Collection', ['$q', '$uibModal', 'Metadata', 'Authz', function($q
       var collections = [];
       for (var cid in metadata.collections) {
         var col = metadata.collections[cid];
-        if (Authz.collection(Authz.WRITE, col.id)) {
+        if (Authz.collection(Authz.WRITE, col.id) && !col.managed) {
           collections.push(col);
         }
       }
@@ -43,6 +43,20 @@ aleph.factory('Collection', ['$q', '$uibModal', 'Metadata', 'Authz', function($q
             });
             return dfd.promise;
           }]
+        }
+      });
+      return instance.result;
+    },
+    delete: function(collection) {
+      var instance = $uibModal.open({
+        templateUrl: 'templates/collections_delete.html',
+        controller: 'CollectionsDeleteCtrl',
+        backdrop: true,
+        size: 'md',
+        resolve: {
+          collection: function() {
+            return collection;
+          }
         }
       });
       return instance.result;
