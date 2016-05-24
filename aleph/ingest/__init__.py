@@ -24,9 +24,6 @@ log = logging.getLogger(__name__)
 
 @celery.task()
 def ingest_url(source_id, metadata, url):
-    # TEMP HACK HACK HACK
-    if source_id in [134, 136, 137]:
-        return
     meta = Metadata(data=metadata)
     try:
         fh, tmp_path = mkstemp()
