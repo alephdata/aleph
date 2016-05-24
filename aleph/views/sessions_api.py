@@ -74,7 +74,7 @@ def login():
 @blueprint.route('/api/1/sessions/logout')
 def logout():
     session.clear()
-    return redirect(url_for('base_api.ui'))
+    return redirect('/')
 
 
 @blueprint.route('/api/1/sessions/callback')
@@ -83,7 +83,7 @@ def callback():
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)
         # FIXME: notify the user, somehow.
-        return redirect(url_for('base_api.ui'))
+        return redirect('/')
 
     session['oauth'] = resp
     session['roles'] = [Role.system(Role.SYSTEM_USER)]
