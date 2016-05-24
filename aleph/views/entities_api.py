@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, request_data, arg_bool
-from apikit import get_limit, get_offset
+from apikit import get_limit, get_offset, Pager
 from sqlalchemy import func, not_
 from sqlalchemy.orm import aliased
 
@@ -37,19 +37,18 @@ def index():
     q = entities_query(request.args)
     q['size'] = get_limit(default=50)
     q['from'] = get_offset()
-    res = execute_entities_query(request.args, q,
-                                 doc_counts=arg_bool('doc_counts'))
+    doc_counts = arg_bool('doc_counts')
+    res = execute_entities_query(request.args, q, doc_counts=doc_counts)
     return jsonify(res)
 
 
 @blueprint.route('/api/1/entities/_all', methods=['GET'])
 def all():
-    q = Entity.all_ids()
+    q = Entity.all()
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
     clause = Collection.id.in_(authz.collections(authz.READ))
     q = q.filter(Entity.collections.any(clause))
-    results = [r[0] for r in q.all()]
-    return jsonify({'results': results, 'total': len(results)})
+    return jsonify(Pager(q, limit=100))
 
 
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
