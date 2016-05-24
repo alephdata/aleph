@@ -25,14 +25,22 @@ def _find_objects(objects, cls):
 
 
 def _convert_page(layout, path):
+    # If this returns None or an empty string, it'll trigger OCR.
     text_content = []
-    page_area = float(layout.width * layout.height)
-    for image_obj in _find_objects(layout._objs, LTImage):
-        image_area = float(image_obj.width * image_obj.height)
-        page_portion = image_area / page_area
-        # Go for OCR if an image makes up more than 70% of the page.
-        if page_portion > 0.7:
-            return None
+
+    try:
+        # Generous try/catch because pdfminers image support is
+        # horrible.
+        page_area = float(layout.width * layout.height)
+        for image_obj in _find_objects(layout._objs, LTImage):
+            image_area = float(image_obj.width * image_obj.height)
+            page_portion = image_area / page_area
+            # Go for OCR if an image makes up more than 70% of the page.
+            if page_portion > 0.7:
+                return None
+    except Exception as ex:
+        log.exception(ex)
+
     for text_obj in _find_objects(layout._objs, (LTTextBox, LTTextLine)):
         text = text_obj.get_text()
         if text is None:
