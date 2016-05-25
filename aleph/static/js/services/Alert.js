@@ -7,7 +7,7 @@ aleph.factory('Alert', ['$http', '$q', '$location', '$sce', '$uibModal',
     index: function(id) {
       if (indexDfd === null) {
         indexDfd = $q.defer();
-        $http.get('/api/1/alerts').then(function(res) {
+        $http.get('/api/1/alerts', {ignoreLoadingBar: true}).then(function(res) {
           indexDfd.resolve(res.data);
         }, function(err) {
           indexDfd.resolve({total: 0, results: []});

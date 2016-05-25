@@ -9,7 +9,11 @@ aleph.directive('searchBox', ['$location', '$q', '$route', '$http', '$rootScope'
     link: function (scope, element, attrs) {
       scope.suggestEntities = function(prefix) {
         var dfd = $q.defer();
-        var opts = {params: {'prefix': prefix}};
+        var opts = {
+          params: {'prefix': prefix, 'min_count': 2},
+          ignoreLoadingBar: true,
+          cache: true
+        };
         $http.get('/api/1/entities/_suggest', opts).then(function(res) {
           dfd.resolve(res.data.results);
         });

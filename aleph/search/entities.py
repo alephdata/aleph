@@ -82,13 +82,22 @@ def facet_collection(q, aggs, filters):
 def suggest_entities(args):
     """Auto-complete API."""
     text = args.get('prefix')
+    min_count = int(args.get('min_count', 0))
     options = []
     if text is not None and len(text.strip()):
-        q = {'match_phrase_prefix': {'terms': text.strip()}}
+        q = {
+            'bool': {
+                'must': [
+                    {'match_phrase_prefix': {'terms': text.strip()}},
+                    {'range': {'doc_count': {'gte': min_count}}}
+                ]
+            }
+        }
         q = {
             'size': 5,
+            'sort': [{'doc_count': 'desc'}, '_score'],
             'query': authz_collections_filter(q),
-            '_source': ['name', '$schema', 'terms']
+            '_source': ['name', '$schema', 'terms', 'doc_count']
         }
         ref = latinize_text(text)
         result = get_es().search(index=get_es_index(), doc_type=TYPE_ENTITY,

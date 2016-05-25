@@ -30,8 +30,12 @@ aleph.directive('searchEntitySuggest', ['$location', '$q', '$route', '$http', '$
         scope.queryText = q ? q.getQ() : null;
 
         if (scope.queryText && scope.queryText.length > 3) {
-          var params = {'prefix': scope.queryText};
-          $http.get('/api/1/entities/_suggest', {params: params}).then(function(res) {
+          var params = {
+              params: {'prefix': scope.queryText},
+              ignoreLoadingBar: true,
+              cache: true
+          };
+          $http.get('/api/1/entities/_suggest', params).then(function(res) {
             if (res.data.results && res.data.results.length && res.data.results[0].match) {
               scope.entity = res.data.results[0];
               scope.offerEntity = true;
