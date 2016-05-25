@@ -1,6 +1,6 @@
 
-aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http', '$timeout', 'Collection', 'Entity', 'data', 'metadata', 'Authz', 'Alert', 'Metadata', 'Title',
-    function($scope, $route, $location, $http, $timeout, Collection, Entity, data, metadata, Authz, Alert, Metadata, Title) {
+aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http', '$timeout', 'Collection', 'Entity', 'data', 'metadata', 'Authz', 'Alert', 'Title',
+    function($scope, $route, $location, $http, $timeout, Collection, Entity, data, metadata, Authz, Alert, Title) {
 
   $scope.result = data.result;
   $scope.error = data.result.error;

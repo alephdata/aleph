@@ -1,14 +1,10 @@
 aleph.controller('SourcesEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$uibModalInstance',
-                                     'Validation', 'Metadata', 'source',
-    function($scope, $location, $http, $routeParams, $uibModalInstance, Validation, Metadata, source) {
+                                     'Validation', 'Metadata', 'metadata', 'source',
+    function($scope, $location, $http, $routeParams, $uibModalInstance, Validation, Metadata, metadata, source) {
   
   $scope.source = source;
   $scope.processTriggered = false;
-  $scope.categories = {};
-
-  Metadata.get().then(function(metadata) {
-    $scope.categories = metadata.source_categories;
-  });
+  $scope.categories = metadata.source_categories;
 
   $scope.canSave = function() {
     return $scope.source.can_write;

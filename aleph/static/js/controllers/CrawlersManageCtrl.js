@@ -1,5 +1,6 @@
 
-aleph.controller('CrawlersManageCtrl', ['$scope', '$route', '$http', 'Title', 'Source', 'crawlers', function($scope, $route, $http, Title, Source, crawlers) {
+aleph.controller('CrawlersManageCtrl', ['$scope', '$route', '$http', 'Title', 'Source', 'crawlers',
+    function($scope, $route, $http, Title, Source, crawlers) {
   $scope.crawlers = crawlers;
   Title.set("Crawler Management", "admin");
 

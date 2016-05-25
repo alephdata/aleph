@@ -1,4 +1,5 @@
-aleph.directive('searchResult', ['$location', '$route', '$rootScope', 'Query', function($location, $route, $rootScope, Query) {
+aleph.directive('searchResult', ['$location', '$route', '$rootScope', 'Query',
+    function($location, $route, $rootScope, Query) {
   return {
     restrict: 'E',
     scope: {

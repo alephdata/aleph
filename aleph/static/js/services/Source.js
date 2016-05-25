@@ -1,5 +1,5 @@
 
-aleph.factory('Source', ['$uibModal', function($uibModal) {
+aleph.factory('Source', ['$uibModal', 'Metadata', function($uibModal, Metadata) {
 
   return {
     edit: function(source) {
@@ -21,7 +21,8 @@ aleph.factory('Source', ['$uibModal', function($uibModal) {
               dfd.reject(err);
             });
             return dfd.promise;
-          }]
+          }],
+          metadata: Metadata.get()
         }
       });
       return instance.result;

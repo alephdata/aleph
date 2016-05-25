@@ -1,18 +1,16 @@
 
-aleph.factory('Alert', ['$http', '$q', '$location', '$sce', '$uibModal', 'Session',
-    function($http, $q, $location, $sce, $uibModal, Session) {
+aleph.factory('Alert', ['$http', '$q', '$location', '$sce', '$uibModal',
+    function($http, $q, $location, $sce, $uibModal) {
   var indexDfd = null;
 
   return {
     index: function(id) {
       if (indexDfd === null) {
         indexDfd = $q.defer();
-        Session.get().then(function(session) {
-          $http.get('/api/1/alerts').then(function(res) {
-            indexDfd.resolve(res.data);
-          }, function(err) {
-            indexDfd.resolve({total: 0, results: []});
-          });
+        $http.get('/api/1/alerts').then(function(res) {
+          indexDfd.resolve(res.data);
+        }, function(err) {
+          indexDfd.resolve({total: 0, results: []});
         });
       }
       return indexDfd.promise;

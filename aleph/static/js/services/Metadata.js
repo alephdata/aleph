@@ -33,7 +33,8 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', 'Authz', function($http, $q
           'schemata': metadata.schemata,
           'source_categories': metadata.source_categories,
           'countries': metadata.countries, 
-          'languages': metadata.languages
+          'languages': metadata.languages,
+          flush: flush 
         });
       });
     };

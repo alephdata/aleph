@@ -1,6 +1,6 @@
 
-aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Metadata', 'Authz', 'Title', 'History', 'data',
-    function($scope, $location, $http, $sce, $sanitize, $filter, Metadata, Authz, Title, History, data) {
+aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Authz', 'Title', 'History', 'data',
+    function($scope, $location, $http, $sce, $sanitize, $filter, Authz, Title, History, data) {
 
   $scope.doc = data.doc;
   $scope.table = data.table;

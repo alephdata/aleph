@@ -1,17 +1,14 @@
 
-aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', '$timeout', '$q', 'Collection', 'Entity', 'Authz', 'Metadata', 'Title',
-    function($scope, $route, $location, $http, $timeout, $q, Collection, Entity, Authz, Metadata, Title) {
+aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', '$timeout', '$q', 'Collection', 'Entity', 'Authz', 'metadata', 'Title',
+    function($scope, $route, $location, $http, $timeout, $q, Collection, Entity, Authz, metadata, Title) {
   
   $scope.collection = {};
   $scope.entities = [{}, {}, {}, {}];
   $scope.created = [];
+  $scope.schemata = metadata.schemata;
   $scope.availableSchemata = ['/entity/person.json#', '/entity/company.json#',
                               '/entity/organization.json#', '/entity/entity.json#'];
   Title.set("Bulk create entities", "entities");
-
-  Metadata.get().then(function(metadata) {
-    $scope.schemata = metadata.schemata;
-  });
 
   Collection.getWriteable().then(function(collections) {
     $scope.collections = collections;

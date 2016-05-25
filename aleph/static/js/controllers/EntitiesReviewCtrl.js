@@ -1,6 +1,6 @@
 
-aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http', '$timeout', 'Collection', 'Entity', 'Metadata', 'Authz', 'Title',
-    function($scope, $route, $location, $http, $timeout, Collection, Entity, Metadata, Authz, Title) {
+aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http', '$timeout', 'Collection', 'Entity', 'metadata', 'Authz', 'Title',
+    function($scope, $route, $location, $http, $timeout, Collection, Entity, metadata, Authz, Title) {
   
   $scope.reportLoading(true);
   $scope.entity = null;
@@ -14,15 +14,13 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
       entityCacheDfd = null;
 
   var loadCachedEntity = function() {
-    Metadata.get().then(function(metadata) {
-      $scope.schemata = metadata.schemata;
-      $scope.entity = entityCache.splice(0, 1)[0];
-      Title.set("Review: " + $scope.entity.name, "entities");
-      $scope.entity.jurisdiction_code = $scope.entity.jurisdiction_code || null;
-      $http.get('/api/1/entities/' + $scope.entity.id + '/similar').then(function(res) {
-        $scope.duplicateOptions = res.data.results;
-        $scope.reportLoading(false);
-      });
+    $scope.schemata = metadata.schemata;
+    $scope.entity = entityCache.splice(0, 1)[0];
+    Title.set("Review: " + $scope.entity.name, "entities");
+    $scope.entity.jurisdiction_code = $scope.entity.jurisdiction_code || null;
+    $http.get('/api/1/entities/' + $scope.entity.id + '/similar').then(function(res) {
+      $scope.duplicateOptions = res.data.results;
+      $scope.reportLoading(false);
     });
   };
 

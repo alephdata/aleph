@@ -1,6 +1,6 @@
 
-var loadEntitiesIndex = ['$http', '$q', '$route', '$location', 'Session', 'Metadata', 'Alert', 'Query',
-    function($http, $q, $route, $location, Session, Metadata, Alert, Query) {
+var loadEntitiesIndex = ['$http', '$q', '$route', '$location', 'Alert', 'Query',
+    function($http, $q, $route, $location, Alert, Query) {
   var dfd = $q.defer();
   Alert.index().then(function(alerts) {
     var query = Query.parse(),

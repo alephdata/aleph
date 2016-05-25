@@ -1,5 +1,5 @@
-aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Collection', 'Alert', 'Validation', 'entity',
-    function($scope, $http, $uibModalInstance, Metadata, Session, Authz, Collection, Alert, Validation, entity) {
+aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Session', 'Authz', 'Collection', 'Alert', 'Validation', 'entity', 'metadata',
+    function($scope, $http, $uibModalInstance, Session, Authz, Collection, Alert, Validation, entity, metadata) {
 
   $scope.blocked = false;
   $scope.availableSchemata = ['/entity/person.json#', '/entity/company.json#',
@@ -12,17 +12,13 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
   $scope.collection = {};
   $scope.createCollection = false;
   $scope.collections = [];
-  $scope.schemata = {};
+  $scope.schemata = metadata.schemata;
 
   Collection.getWriteable().then(function(collections) {
     $scope.collections = collections;
     if (!$scope.hasCollections()) {
       $scope.setCreateCollection(true);
     }
-  });
-
-  Metadata.get().then(function(metadata) {
-    $scope.schemata = metadata.schemata;
   });
 
   $scope.setSchema = function(schema) {

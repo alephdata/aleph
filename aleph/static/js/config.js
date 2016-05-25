@@ -52,7 +52,9 @@ aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
     controller: 'EntitiesReviewCtrl',
     reloadOnSearch: true,
     loginRequired: false,
-    resolve: {}
+    resolve: {
+      'metadata': loadMetadata
+    }
   });
 
   $routeProvider.when('/entities/bulk', {
@@ -60,7 +62,9 @@ aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
     controller: 'EntitiesBulkCtrl',
     reloadOnSearch: true,
     loginRequired: false,
-    resolve: {}
+    resolve: {
+      'metadata': loadMetadata
+    }
   });
 
   $routeProvider.when('/crawlers', {

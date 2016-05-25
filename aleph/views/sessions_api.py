@@ -118,4 +118,4 @@ def callback():
     session['user'] = role.id
     db.session.commit()
     log.info("Logged in: %r", role)
-    return redirect(url_for('base_api.ui'))
+    return redirect('/')

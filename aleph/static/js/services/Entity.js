@@ -1,15 +1,13 @@
-aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Session', 'Metadata', 'Alert',
-    function($uibModal, $q, $http, Session, Metadata, Alert) {
+aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata',
+    function($uibModal, $q, $http, Alert, Metadata) {
 
   var getById = function(id) {
     var dfd = $q.defer(),
         url = '/api/1/entities/' + id;
-    Session.get().then(function(session) {
-      $http.get(url).then(function(res) {
-        dfd.resolve(res.data);
-      }, function(err) {
-        dfd.reject(err);
-      });
+    $http.get(url).then(function(res) {
+      dfd.resolve(res.data);
+    }, function(err) {
+      dfd.reject(err);
     });
     return dfd.promise;
   }
@@ -24,7 +22,8 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Session', 'Metadata', 'Ale
         resolve: {
           entity: function() {
             return entity;
-          }
+          },
+          metadata: Metadata.get()
         }
       });
       return instance.result;
