@@ -1,6 +1,5 @@
 var loadEntity = ['$http', '$q', '$location', '$route', 'Entity',
     function($http, $q, $location, $route, Entity) {
-  
   var dfd = $q.defer(),
       entitytId = $route.current.params.entity_id;
 

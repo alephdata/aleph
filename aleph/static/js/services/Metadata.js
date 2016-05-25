@@ -10,30 +10,30 @@ aleph.factory('Metadata', ['$http', '$q', 'Session', 'Authz', function($http, $q
 
     var load = function() {
       dfd = $q.defer();
-      Session.get().then(function(session) {
-        $q.all([
-          $http.get('/api/1/collections?limit=1000&_uid=' + session.cbq),
-          $http.get('/api/1/metadata', {cache: true})
-        ]).then(function(results) {
-            var collections = {},
-                collectionsCount = 0, 
-                metadata = results[1].data;
-            angular.forEach(results[0].data.results, function(c) {
-              collections[c.id] = c;
-              collectionsCount++;
-            });
+      $q.all([
+        Session.get(),
+        $http.get('/api/1/collections?limit=1000'),
+        $http.get('/api/1/metadata', {cache: true})
+      ]).then(function(results) {
+        var collections = {},
+            collectionsCount = 0, 
+            metadata = results[2].data;
 
-            dfd.resolve({
-              'session': session,
-              'collections': collections,
-              'collectionsList': results[0].data.results,
-              'collectionsCount': collectionsCount,
-              'fields': metadata.fields,
-              'schemata': metadata.schemata,
-              'source_categories': metadata.source_categories,
-              'countries': metadata.countries, 
-              'languages': metadata.languages
-            });
+        angular.forEach(results[1].data.results, function(c) {
+          collections[c.id] = c;
+          collectionsCount++;
+        });
+
+        dfd.resolve({
+          'session': results[0],
+          'collections': collections,
+          'collectionsList': results[1].data.results,
+          'collectionsCount': collectionsCount,
+          'fields': metadata.fields,
+          'schemata': metadata.schemata,
+          'source_categories': metadata.source_categories,
+          'countries': metadata.countries, 
+          'languages': metadata.languages
         });
       });
     };

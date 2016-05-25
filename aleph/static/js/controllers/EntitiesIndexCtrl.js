@@ -1,12 +1,12 @@
 
-aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http', '$timeout', 'Collection', 'Entity', 'data', 'Authz', 'Alert', 'Metadata', 'Title',
-    function($scope, $route, $location, $http, $timeout, Collection, Entity, data, Authz, Alert, Metadata, Title) {
+aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http', '$timeout', 'Collection', 'Entity', 'data', 'metadata', 'Authz', 'Alert', 'Metadata', 'Title',
+    function($scope, $route, $location, $http, $timeout, Collection, Entity, data, metadata, Authz, Alert, Metadata, Title) {
 
   $scope.result = data.result;
   $scope.error = data.result.error;
   $scope.query = data.query;
-  $scope.session = data.metadata.session;
-  $scope.metadata = data.metadata;
+  $scope.session = metadata.session;
+  $scope.metadata = metadata;
   $scope.authz = Authz;
   $scope.collectionFacet = data.query.sortFacet(data.result.collections.values,
                                                  'filter:collection_id');

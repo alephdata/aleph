@@ -8,7 +8,8 @@ aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
     reloadOnSearch: true,
     loginRequired: false,
     resolve: {
-      'data': loadSearch
+      'data': loadSearch,
+      'metadata': loadMetadata
     }
   });
 
@@ -41,7 +42,8 @@ aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
     reloadOnSearch: true,
     loginRequired: false,
     resolve: {
-      'data': loadEntitiesIndex
+      'data': loadEntitiesIndex,
+      'metadata': loadMetadata
     }
   });
 
@@ -93,7 +95,8 @@ aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
     reloadOnSearch: false,
     loginRequired: false,
     resolve: {
-      'data': loadHome
+      'data': loadHome,
+      'metadata': loadMetadata
     }
   });
 

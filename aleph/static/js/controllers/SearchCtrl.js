@@ -1,17 +1,17 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'Source', '$sce', 'data', 'Authz', 'Alert', 'Entity', 'Role', 'Title',
-    function($scope, $route, $location, $http, $uibModal, Source, $sce, data, Authz, Alert, Entity, Role, Title) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'Source', '$sce', 'Authz', 'Alert', 'Entity', 'Role', 'Title', 'data', 'metadata',
+    function($scope, $route, $location, $http, $uibModal, Source, $sce, Authz, Alert, Entity, Role, Title, data, metadata) {
 
   var isLoading = false;
   $scope.result = {};
   $scope.sourceFacets = [];
   $scope.entityFacets = [];
-  $scope.fields = data.metadata.fields;
+  $scope.fields = metadata.fields;
   $scope.error = data.result.error;
   $scope.suggestEntity = null;
   $scope.facets = [];
-  $scope.session = data.metadata.session;
-  $scope.metadata = data.metadata;
+  $scope.session = metadata.session;
+  $scope.metadata = metadata;
   $scope.query = data.query;
   $scope.originalText = data.query.state.q ? data.query.state.q : '';
   $scope.authz = Authz;
@@ -63,7 +63,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   };
 
   $scope.canCreateAlert = function() {
-    if (!data.metadata.session.logged_in || data.result.error) {
+    if (!metadata.session.logged_in || data.result.error) {
       return false;
     }
     if ($scope.originalText.length >= 3) {
@@ -135,10 +135,10 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     var queryFacets = query.getArray('facet'),
         facets = [];
 
-    for (var name in data.metadata.fields) {
+    for (var name in metadata.fields) {
       var facet = {
         field: name,
-        label: data.metadata.fields[name],
+        label: metadata.fields[name],
         active: queryFacets.indexOf(name) != -1
       };
       if (data.result.facets[name]) {
