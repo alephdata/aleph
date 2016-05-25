@@ -1,5 +1,5 @@
-aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$http', '$uibModal', '$q', 'Alert', 'Metadata',
-    function($scope, $rootScope, $location, $route, $http, $uibModal, $q, Alert, Metadata) {
+aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$route', '$http', '$uibModal', '$q', 'Alert', 'Metadata',
+    function($scope, $rootScope, $location, $anchorScroll, $route, $http, $uibModal, $q, Alert, Metadata) {
 
   $scope.session = {logged_in: false};
   $scope.routeLoaded = false;
@@ -34,6 +34,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$route', '$ht
   $rootScope.reportLoading = function(flag) {
     $scope.routeLoaded = !flag;
     if (flag) {
+      $anchorScroll();
       $scope.routeFailed = false;
     }
   };

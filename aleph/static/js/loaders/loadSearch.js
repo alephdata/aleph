@@ -1,5 +1,4 @@
 
-var loadSearch = ['$http', '$q', '$route', '$location', 'Document',
-    function($http, $q, $route, $location, Document) {
+var loadSearch = ['Document', function(Document) {
   return Document.search();
 }];

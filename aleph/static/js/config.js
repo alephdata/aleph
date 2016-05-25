@@ -1,6 +1,7 @@
 var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'pdf']);
 
-aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+aleph.config(['$routeProvider', '$locationProvider', '$compileProvider',
+    function($routeProvider, $locationProvider, $compileProvider) {
 
   $routeProvider.when('/search', {
     templateUrl: 'templates/search.html',
@@ -39,7 +40,7 @@ aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
   $routeProvider.when('/entities', {
     templateUrl: 'templates/entity_index.html',
     controller: 'EntitiesIndexCtrl',
-    reloadOnSearch: true,
+    reloadOnSearch: false,
     loginRequired: false,
     resolve: {
       'data': loadEntitiesIndex,
@@ -105,4 +106,5 @@ aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
   });
 
   $locationProvider.html5Mode(true);
+  $compileProvider.debugInfoEnabled(false);
 }]);

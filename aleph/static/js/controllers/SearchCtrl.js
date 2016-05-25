@@ -1,6 +1,6 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'Source', 'Authz', 'Alert', 'Document', 'Role', 'Title', 'data', 'metadata',
-    function($scope, $route, $location, $http, $uibModal, Source, Authz, Alert, Document, Role, Title, data, metadata) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Source', 'Authz', 'Alert', 'Document', 'Role', 'Title', 'data', 'metadata',
+    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Source, Authz, Alert, Document, Role, Title, data, metadata) {
 
   $scope.fields = metadata.fields;
   $scope.sourceFacets = [];
@@ -15,12 +15,13 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
 
   $scope.loadOffset = function(offset) {
     $scope.query.set('offset', offset);
+    $anchorScroll();
   };
 
   $scope.editSource = function(source, $event) {
     $event.stopPropagation();
     Source.edit(source).then(function() {
-      $route.reload();
+      reloadSearch();
     });
   };
 
@@ -100,15 +101,18 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
       }
       facets.push(facet);
     }
-
     $scope.facets = facets;
   };
 
-  $scope.$on('$locationChangeStart', function() {
+  $scope.$on('$routeUpdate', function() {
+    reloadSearch();
+  });
+
+  var reloadSearch = function() {
     Document.search().then(function(data) {
       updateSearch(data);
     });
-  });
+  };
 
   var updateSearch = function(data) {
     initFacets(data.query, data.result);

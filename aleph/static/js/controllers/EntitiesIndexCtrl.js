@@ -1,30 +1,13 @@
 
-aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http', '$timeout', 'Collection', 'Entity', 'data', 'metadata', 'Authz', 'Alert', 'Title',
-    function($scope, $route, $location, $http, $timeout, Collection, Entity, data, metadata, Authz, Alert, Title) {
+aleph.controller('EntitiesIndexCtrl', ['$scope', '$http', '$timeout', '$anchorScroll', 'Collection', 'Entity', 'data', 'metadata', 'Authz', 'Alert', 'Title',
+    function($scope, $http, $timeout, $anchorScroll, Collection, Entity, data, metadata, Authz, Alert, Title) {
 
-  $scope.result = data.result;
-  $scope.error = data.result.error;
-  $scope.query = data.query;
-  $scope.session = metadata.session;
-  $scope.metadata = metadata;
   $scope.authz = Authz;
-  $scope.collectionFacet = data.query.sortFacet(data.result.collections.values,
-                                                 'filter:collection_id');
-  $scope.jurisdictionFacet = data.query.sortFacet(data.result.facets.jurisdiction_code.values,
-                                                  'filter:jurisdiction_code');
-  $scope.schemaFacet = data.query.sortFacet(data.result.facets.$schema.values,
-                                            'filter:$schema');
   $scope.sortOptions = {
     score: 'Relevancy',
     alphabet: 'Alphabet',
     doc_count: 'Documents matched'
   };
-  
-  if (data.query.getQ()) {
-    Title.set("Browse for '" + data.query.getQ() + "'", "entities");
-  } else {
-    Title.set("Browse entities", "entities");  
-  }
 
   $scope.submitSearch = function(form) {
     data.query.set('q', $scope.query.state.q);
@@ -32,12 +15,13 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
 
   $scope.loadOffset = function(offset) {
     data.query.set('offset', offset);
+    $anchorScroll();
   };
 
   $scope.editCollection = function(collection, $event) {
     $event.stopPropagation();
     Collection.edit(collection).then(function() {
-      $route.reload();
+      reloadSearch();
     });
   };
 
@@ -60,7 +44,7 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
     $event.stopPropagation();
     Entity.create({name: name}).then(function() {
       $timeout(function() {
-        $route.reload();
+        reloadSearch();
       }, 500);
     });
   };
@@ -69,7 +53,7 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
     $event.stopPropagation();
     Entity.edit(entity.id).then(function() {
       $timeout(function() {
-        $route.reload();
+        reloadSearch();
       }, 500);
     });
   };
@@ -96,7 +80,7 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
   $scope.deleteSelection = function($event) {
     Entity.deleteMany($scope.getSelection()).then(function() {
       $timeout(function() {
-        $route.reload();
+        reloadSearch();
       }, 500);
     });
   };
@@ -104,9 +88,38 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$route', '$location', '$http',
   $scope.mergeSelection = function($event) {
     Entity.merge($scope.getSelection()).then(function() {
       $timeout(function() {
-        $route.reload();
+        reloadSearch();
       }, 500);
     });
   };
+
+  $scope.$on('$routeUpdate', function() {
+    reloadSearch();
+  });
+
+  var reloadSearch = function() {
+    Entity.search().then(function(data) {
+      updateSearch(data);
+    });
+  };
+
+  var updateSearch = function(data) {
+    $scope.collectionFacet = data.query.sortFacet(data.result.collections.values,
+                                                 'filter:collection_id');
+    $scope.jurisdictionFacet = data.query.sortFacet(data.result.facets.jurisdiction_code.values,
+                                                    'filter:jurisdiction_code');
+    $scope.schemaFacet = data.query.sortFacet(data.result.facets.$schema.values,
+                                              'filter:$schema');
+    $scope.result = data.result;
+    $scope.query = data.query;
+    
+    if (data.query.getQ()) {
+      Title.set("Browse for '" + data.query.getQ() + "'", "entities");
+    } else {
+      Title.set("Browse entities", "entities");  
+    }
+  };
+
+  updateSearch(data);
 
 }]);
