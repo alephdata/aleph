@@ -1,0 +1,24 @@
+
+<div class="alert alert-suggest" ng-if="offerEntity">
+  Looking for 
+  <a ng-click="setEntity(entity)">
+    <entity-icon schema="entity.$schema"></entity-icon> {{entity.name}}</a>?
+</div>
+
+<div class="alert alert-suggest" ng-if="offerCreate">
+  Do you want to track <strong>{{queryText}}</strong>? Add a 
+  <a ng-click="createQueryEntity('/entity/person.json#')">
+    <entity-icon schema="'/entity/person.json#'"></entity-icon> Person</a>,
+  <a ng-click="createQueryEntity('/entity/company.json#')">
+    <entity-icon schema="'/entity/company.json#'"></entity-icon> Company</a>,
+  or
+  <a ng-click="createQueryEntity('/entity/organization.json#')">
+    <entity-icon schema="'/entity/organization.json#'"></entity-icon> Organization</a>
+  to a watchlist.
+</div>
+
+<div class="alert alert-suggest" ng-if="offerSignin">
+  Want to keep track of <strong>{{queryText}}</strong>?
+  <a ng-href="/api/1/sessions/login" target="_self">Sign in</a>
+  to create watchlists of people and companies.
+</div>

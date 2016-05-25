@@ -1,12 +1,11 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'Source', '$sce', 'Authz', 'Alert', 'Entity', 'Role', 'Title', 'data', 'metadata',
-    function($scope, $route, $location, $http, $uibModal, Source, $sce, Authz, Alert, Entity, Role, Title, data, metadata) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'Source', 'Authz', 'Alert', 'Entity', 'Role', 'Title', 'data', 'metadata',
+    function($scope, $route, $location, $http, $uibModal, Source, Authz, Alert, Entity, Role, Title, data, metadata) {
 
   $scope.result = data.result;
   $scope.sourceFacets = [];
   $scope.entityFacets = [];
   $scope.fields = metadata.fields;
-  $scope.suggestEntity = null;
   $scope.facets = [];
   $scope.query = data.query;
   $scope.query_string = data.query.toString();
@@ -86,41 +85,6 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     }
   };
 
-  $scope.createQueryEntity = function(schema) {
-    var name = $scope.originalText;
-    name = name.replace(/[\"\'\(\)\[\]\+]*/, ' ');
-    name = titleCaps(name);
-    Entity.create({$schema: schema, name: name}).then(function() {
-      $route.reload();
-    });
-  };
-
-  $scope.setEntity = function(entity) {
-    data.query.set('q', '');
-    data.query.toggle('entity', entity.id);
-  };
-
-  $scope.showSuggest = function() {
-    return $scope.suggestEntity && $scope.suggestEntity.id;
-  };
-
-  $scope.showCreate = function() {
-    return !$scope.showSuggest() && $scope.originalText.length >= 3;
-  };
-
-  var initSuggest = function() {
-    if ($scope.originalText.length < 3) {
-      $scope.suggestEntity = null;
-      return;
-    }
-    var params = {'prefix': $scope.originalText};
-    $http.get('/api/1/entities/_suggest', {params: params}).then(function(res) {
-      if (res.data.results && res.data.results.length && res.data.results[0].match) {
-        $scope.suggestEntity = res.data.results[0];
-      }
-    });
-  };
-
   var initFacets = function() {
     if (data.result.error) {
       return;
@@ -149,6 +113,5 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   };
 
   initFacets();
-  initSuggest();
 
 }]);

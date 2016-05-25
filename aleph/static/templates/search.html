@@ -47,27 +47,7 @@
       {{::result.error.info.reason || result.error.message}}
     </div>
 
-    <div class="alert alert-suggest" ng-if="showSuggest()">
-      Looking for 
-      <a ng-click="setEntity(suggestEntity)">
-        <entity-icon schema="suggestEntity.$schema"></entity-icon> {{suggestEntity.name}}</a>?
-    </div>
-    <div class="alert alert-suggest" ng-if="showCreate() && authz.logged_in()">
-      Do you want to track <strong>{{originalText}}</strong>? Add a 
-      <a ng-click="createQueryEntity('/entity/person.json#')">
-        <entity-icon schema="'/entity/person.json#'"></entity-icon> Person</a>,
-      <a ng-click="createQueryEntity('/entity/company.json#')">
-        <entity-icon schema="'/entity/company.json#'"></entity-icon> Company</a>,
-      or
-      <a ng-click="createQueryEntity('/entity/organization.json#')">
-        <entity-icon schema="'/entity/organization.json#'"></entity-icon> Organization</a>
-      to your watchlists to receive email updates.
-    </div>
-    <div class="alert alert-suggest" ng-if="showCreate() && !authz.logged_in()">
-      Want to keep track of <strong>{{originalText}}</strong>?
-      <a ng-href="/api/1/sessions/login" target="_self">Sign in</a>
-      to create watchlists of people and companies.
-    </div>
+    <search-entity-suggest query="query"></search-entity-suggest>
 
     <div>
       <div ng-repeat="doc in result.results">
@@ -77,10 +57,10 @@
         <div class="pull-right">
           <response-pager response="result" load="loadOffset(offset)"></response-pager>
         </div>
-        <div class="total" ng-if="result.limit > 0 && !result.total">
+        <div class="total" ng-if="!result.total">
           No results were found.
         </div>
-        <div class="total" ng-if="result.limit > 0 && result.total">
+        <div class="total" ng-if="result.total">
           Found {{result.total | number}} documents.
         </div>
       </div>
