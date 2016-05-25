@@ -1,27 +1,32 @@
-aleph.directive('searchResult', ['$location', '$route', '$rootScope', 'Query',
-    function($location, $route, $rootScope, Query) {
+aleph.directive('searchResult', ['$location', '$route', '$sce',
+    function($location, $route, $sce) {
   return {
     restrict: 'E',
     scope: {
       'doc': '=',
-      'result': '='
+      'result': '=',
+      'query': '='
     },
     templateUrl: 'templates/search_result.html',
     link: function (scope, element, attrs) {
-      scope.source = {};
+      for (var i in scope.result.sources.values) {
+        var source = scope.result.sources.values[i];
+        if (source.id === scope.doc.source_id) {
+          scope.source = source;
+        }
+      }
+      for (var j in scope.doc.records.results) {
+        var rec = scope.doc.records.results[j];
+        rec.snippets = [];
+        for (var n in rec.text) {
+          var text = rec.text[n];
+          rec.snippets.push($sce.trustAsHtml(text));
+        }
+      }
 
       scope.filterSource = function(source_id) {
-        Query.set('filter:source_id', source_id + '');
+        scope.query.toggleFilter('source_id', source_id);
       };
-
-      scope.$watch('doc', function(doc) {
-        for (var i in scope.result.sources.values) {
-          var source = scope.result.sources.values[i];
-          if (source.id === doc.source_id) {
-            scope.source = source;
-          }
-        }
-      });
 
       scope.getUrl = function(rec) {
         var search = $location.search(),

@@ -151,22 +151,6 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   };
 
   var initResults = function() {
-    if (data.result.error) {
-      $scope.result = {'results': []};
-      return;
-    }
-    // allow HTML highlight results:
-    for (var i in data.result.results) {
-      var doc = data.result.results[i];
-      for (var j in doc.records.results) {
-        var rec = doc.records.results[j];
-        rec.snippets = [];
-        for (var n in rec.text) {
-          var text = rec.text[n];
-          rec.snippets.push($sce.trustAsHtml(text));
-        }
-      }
-    }
     $scope.result = data.result;
     isLoading = false;
   };

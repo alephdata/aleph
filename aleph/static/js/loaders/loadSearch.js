@@ -17,7 +17,8 @@ var loadSearch = ['$http', '$q', '$route', '$location', 'Query', 'History',
     if (err.status == 400) {
       dfd.resolve({
         'result': {
-          'error': err.data
+          'error': err.data,
+          'results': []
         },
         'query': query
       });
