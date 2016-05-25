@@ -4,6 +4,18 @@ aleph.filter('date', function() {
   };
 });
 
+aleph.filter('relativeDate', function() {
+  return function(val) {
+    return moment(val).fromNow();
+  };
+});
+
+aleph.filter('calendar', function() {
+  return function(val) {
+    return moment(val).calendar();
+  };
+});
+
 aleph.filter('host', function() {
   return function(val) {
     var l = document.createElement("a");

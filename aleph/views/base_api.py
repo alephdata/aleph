@@ -32,15 +32,16 @@ def angular_templates():
     return templates.items()
 
 
-@blueprint.route('/')
 @blueprint.route('/search')
 @blueprint.route('/help')
 @blueprint.route('/help/<path:path>')
 @blueprint.route('/entities')
 @blueprint.route('/entities/<path:path>')
 @blueprint.route('/crawlers')
+@blueprint.route('/crawlers/logs')
 @blueprint.route('/tabular/<path:path>')
 @blueprint.route('/text/<path:path>')
+@blueprint.route('/')
 def ui(**kwargs):
     enable_cache(server_side=True)
     return render_template("layout.html", templates=angular_templates())

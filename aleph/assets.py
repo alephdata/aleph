@@ -17,6 +17,7 @@ angular_assets = Bundle(
     'vendor/angular/angular.js',
     'vendor/angular-pdf/dist/angular-pdf.js',
     'vendor/angular-route/angular-route.js',
+    'vendor/angular-truncate/src/truncate.js',
     'vendor/angular-sanitize/angular-sanitize.js',
     'vendor/angular-loading-bar/src/loading-bar.js',
     'vendor/angular-animate/angular-animate.js',

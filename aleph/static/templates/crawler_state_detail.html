@@ -1,0 +1,65 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">Details: {{state.error_type}}</h4>
+</div>
+
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="control-label">
+          Crawler ID
+        </label>
+        <input type="text" class="form-control" readonly ng-model="state.crawler_id">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="control-label">
+          Crawler Run
+        </label>
+        <input type="text" class="form-control" readonly ng-model="state.crawler_run">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="control-label">
+          Foreign ID
+        </label>
+        <input type="text" class="form-control" readonly ng-model="state.foreign_id">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="control-label">
+          Content Hash
+        </label>
+        <input type="text" class="form-control" readonly ng-model="state.content_hash">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label" for="name">
+      Error Message
+    </label>
+    <input type="text" class="form-control" readonly ng-model="state.error_message">
+  </div>
+
+  <div class="form-group">
+    <label class="control-label" for="name">
+      Traceback
+    </label>
+    <pre ng-bind="state.error_details"></pre>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label" for="name">
+      Metadata
+    </label>
+    <pre ng-bind="metaJson"></pre>
+  </div>
+</div>

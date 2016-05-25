@@ -108,6 +108,22 @@ class CrawlerState(db.Model):
         stats['last']['run_id'] = last_run_id
         return stats
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'status': self.status,
+            'crawler_id': self.crawler_id,
+            'crawler_run': self.crawler_run,
+            'content_hash': self.content_hash,
+            'foreign_id': self.foreign_id,
+            'error_type': self.error_type,
+            'error_message': self.error_message,
+            'error_details': self.error_details,
+            'meta': self.meta,
+            'source_id': self.source_id,
+            'created_at': self.created_at
+        }
+
     def __repr__(self):
         return '<CrawlerState(%r,%r)>' % (self.id, self.status)
 

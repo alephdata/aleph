@@ -1,5 +1,5 @@
 var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'ui.bootstrap',
-                                     'angular-loading-bar', 'pdf']);
+                                     'angular-loading-bar', 'truncate', 'pdf']);
 
 aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoadingBarProvider',
     function($routeProvider, $locationProvider, $compileProvider, cfpLoadingBarProvider) {
@@ -76,6 +76,17 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     loginRequired: false,
     resolve: {
       'crawlers': loadCrawlers
+    }
+  });
+
+  $routeProvider.when('/crawlers/logs', {
+    templateUrl: 'templates/crawlers_states.html',
+    controller: 'CrawlersStatesCtrl',
+    reloadOnSearch: true,
+    loginRequired: false,
+    resolve: {
+      // 'crawlers': loadCrawlers,
+      'states': loadCrawlerStates
     }
   });
 

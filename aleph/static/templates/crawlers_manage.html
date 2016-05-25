@@ -13,6 +13,7 @@
     <th class="numeric">All OK/Failed</th>
     <th class="numeric">Last OK/Failed</th>
     <th class="numeric">Last updated</th>
+    <th width="1%">Logs</th>
     <th class="numeric">Schedule</th>
     <th>Execute crawler</th>
   </tr>
@@ -35,17 +36,26 @@
       </a>
     </td>
     <td class="numeric">
-      <span class="label label-danger" ng-if="crawler.all.fail">{{crawler.all.fail | number}}</span>
+      <a href="/crawlers/logs?crawler_id={{crawler.id}}" ng-if="crawler.all.fail" class="simple">
+        <span class="label label-danger">{{crawler.all.fail | number}}</span>
+      </a>
       <span class="label label-success" ng-if="crawler.all.ok">{{crawler.all.ok | number}}</span>
     </td>
     <td class="numeric">
-      <span class="label label-danger" ng-if="crawler.last.fail">{{crawler.last.fail | number}}</span>
+      <a href="/crawlers/logs?crawler_run={{crawler.last.run_id}}" ng-if="crawler.last.fail" class="simple">
+        <span class="label label-danger">{{crawler.last.fail | number}}</span>
+      </a>
       <span class="label label-success" ng-if="crawler.last.ok">{{crawler.last.ok | number}}</span>
     </td>
     <td class="numeric">
       <span ng-if="crawler.last.run_id">
-        {{crawler.last.updated | date:'fullDate'}}
+        {{crawler.last.updated | relativeDate}}
       </span>
+    </td>
+    <td>
+      <a href="/crawlers/logs?crawler_id={{crawler.id}}" ng-if="crawler.all.fail">
+        <i class="fa fa-list-ul" aria-hidden="true"></i>
+      </a>
     </td>
     <td class="numeric">
       <span class="label label-default">{{crawler.schedule || '' }}</span>
