@@ -1,30 +1,20 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'Source', 'Authz', 'Alert', 'Entity', 'Role', 'Title', 'data', 'metadata',
-    function($scope, $route, $location, $http, $uibModal, Source, Authz, Alert, Entity, Role, Title, data, metadata) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'Source', 'Authz', 'Alert', 'Document', 'Role', 'Title', 'data', 'metadata',
+    function($scope, $route, $location, $http, $uibModal, Source, Authz, Alert, Document, Role, Title, data, metadata) {
 
-  $scope.result = data.result;
+  $scope.fields = metadata.fields;
   $scope.sourceFacets = [];
   $scope.entityFacets = [];
-  $scope.fields = metadata.fields;
   $scope.facets = [];
-  $scope.query = data.query;
-  $scope.queryString = data.query.toString();
-  $scope.originalText = data.query.state.q ? data.query.state.q : '';
   $scope.authz = Authz;
   $scope.sortOptions = {
     score: 'Relevancy',
     newest: 'Newest',
     oldest: 'Oldest'
   };
-  
-  if (data.query.getQ()) {
-    Title.set("Search for '" + data.query.getQ() + "'", "documents");
-  } else {
-    Title.set("Search documents", "documents");  
-  }
 
   $scope.loadOffset = function(offset) {
-    data.query.set('offset', offset);
+    $scope.query.set('offset', offset);
   };
 
   $scope.editSource = function(source, $event) {
@@ -49,22 +39,25 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     });
 
     instance.result.then(function(collections) {
-      data.query.set('collection', collections);
+      $scope.query.set('collection', collections);
     });
   };
 
   $scope.hasAlert = function() {
-    return data.result.alert !== null;
+    return !$scope.result.error && $scope.result.alert !== null;
   };
 
   $scope.canCreateAlert = function() {
-    if (!metadata.session.logged_in || data.result.error) {
+    if (!metadata.session.logged_in) {
+      return false;
+    }
+    if ($scope.result.error) {
       return false;
     }
     if ($scope.originalText.length >= 3) {
       return true;
     }
-    if (data.query.getArray('entity').length == 1) {
+    if ($scope.query.getArray('entity').length == 1) {
       return true;
     }
     return false;
@@ -76,8 +69,8 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
       $scope.result.alert = null;
     } else {
       var alert = {query_text: $scope.originalText};
-      if (data.query.getArray('entity').length == 1) {
-        alert.entity_id = data.query.getArray('entity')[0];
+      if ($scope.query.getArray('entity').length == 1) {
+        alert.entity_id = $scope.query.getArray('entity')[0];
       }
       Alert.create(alert).then(function(alert) {
         $scope.result.alert = alert.id;
@@ -85,13 +78,12 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     }
   };
 
-  var initFacets = function() {
-    if (data.result.error) {
+  var initFacets = function(query, result) {
+    if (result.error) {
       return;
     }
-    var query = data.query;
-    $scope.sourceFacets = query.sortFacet(data.result.sources.values, 'filter:source_id');
-    $scope.entityFacets = query.sortFacet(data.result.entities, 'entity');
+    $scope.sourceFacets = query.sortFacet(result.sources.values, 'filter:source_id');
+    $scope.entityFacets = query.sortFacet(result.entities, 'entity');
 
     var queryFacets = query.getArray('facet'),
         facets = [];
@@ -102,8 +94,8 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
         label: metadata.fields[name],
         active: queryFacets.indexOf(name) != -1
       };
-      if (data.result.facets[name]) {
-        var values = data.result.facets[name].values;
+      if (result.facets[name]) {
+        var values = result.facets[name].values;
         facet.values = query.sortFacet(values, 'filter:' + name);  
       }
       facets.push(facet);
@@ -112,6 +104,26 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     $scope.facets = facets;
   };
 
-  initFacets();
+  $scope.$on('$locationChangeStart', function() {
+    Document.search().then(function(data) {
+      updateSearch(data);
+    });
+  });
+
+  var updateSearch = function(data) {
+    initFacets(data.query, data.result);
+    $scope.result = data.result;
+    $scope.query = data.query;
+    $scope.queryString = data.query.toString();
+    $scope.originalText = data.query.state.q ? data.query.state.q : '';
+    
+    if ($scope.query.getQ()) {
+      Title.set("Search for '" + $scope.query.getQ() + "'", "documents");
+    } else {
+      Title.set("Search documents", "documents");  
+    }
+  };
+
+  updateSearch(data);
 
 }]);

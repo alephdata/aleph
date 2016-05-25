@@ -5,7 +5,7 @@ aleph.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
   $routeProvider.when('/search', {
     templateUrl: 'templates/search.html',
     controller: 'SearchCtrl',
-    reloadOnSearch: true,
+    reloadOnSearch: false,
     loginRequired: false,
     resolve: {
       'data': loadSearch,

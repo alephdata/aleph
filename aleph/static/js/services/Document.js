@@ -1,8 +1,35 @@
 
-aleph.factory('Document', ['$http', '$q', '$location', '$sce',
-    function($http, $q, $location, $sce) {
+aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Query', 'History',
+    function($http, $q, $location, $sce, Query, History) {
 
   return {
+    search: function() {
+      var dfd = $q.defer();
+      var query = Query.parse(),
+          state = angular.copy(query.state);
+      state['limit'] = 30;
+      state['snippet'] = 140;
+      state['offset'] = state.offset || 0;
+      History.setLastSearch(query.state);
+      $http.get('/api/1/query', {cache: true, params: state}).then(function(res) {
+        dfd.resolve({
+          'query': query,
+          'result': res.data
+        });
+      }, function(err) {
+        if (err.status == 400) {
+          dfd.resolve({
+            'result': {
+              'error': err.data,
+              'results': []
+            },
+            'query': query
+          });
+        }
+        dfd.reject(err);  
+      });
+      return dfd.promise;
+    },
     get: function(id) {
       var dfd = $q.defer(),
           url = '/api/1/documents/' + id;

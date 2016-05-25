@@ -50,7 +50,7 @@
     <search-entity-suggest query="query"></search-entity-suggest>
 
     <div>
-      <div ng-repeat="doc in result.results">
+      <div ng-repeat="doc in result.results track by doc.id">
         <search-result doc="doc" result="result" query="query"></search-result>
       </div>
       <div class="bottom-pager">
@@ -126,7 +126,7 @@
       </ul>
     </div>
 
-    <div class="panel panel-default" ng-repeat="facet in facets">
+    <div class="panel panel-default" ng-repeat="facet in facets track by facet.field">
       <div class="panel-heading">
         <span class="pull-right">
           <a ng-click="query.toggle('facet', facet.field)">
