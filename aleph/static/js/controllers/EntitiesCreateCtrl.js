@@ -1,5 +1,5 @@
-aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Session', 'Authz', 'Collection', 'Alert', 'Validation', 'entity', 'metadata',
-    function($scope, $http, $uibModalInstance, Session, Authz, Collection, Alert, Validation, entity, metadata) {
+aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Authz', 'Collection', 'Alert', 'Validation', 'entity', 'metadata',
+    function($scope, $http, $uibModalInstance, Authz, Collection, Alert, Validation, entity, metadata) {
 
   $scope.blocked = false;
   $scope.availableSchemata = ['/entity/person.json#', '/entity/company.json#',
@@ -30,16 +30,14 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
   };
 
   $scope.setCreateCollection = function(flag) {
-    Session.get().then(function(session) {
-      $scope.createCollection = flag;
-      if (flag) {
-        $scope.collection = {
-          label: session.role.name + '\'s Watchlist'
-        };
-      } else {
-        $scope.collection = $scope.collections[0];
-      }
-    });
+    $scope.createCollection = flag;
+    if (flag) {
+      $scope.collection = {
+        label: metadata.session.role.name + '\'s Watchlist'
+      };
+    } else {
+      $scope.collection = $scope.collections[0];
+    }
   };
 
   $scope.canSave = function() {
@@ -86,7 +84,7 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
       var res = $http.post('/api/1/collections', $scope.collection);
       res.then(function(res) {
         $scope.collection = res.data;
-        Metadata.flush().then(function() {
+        metadata.flush().then(function() {
           $scope.saveEntity();
         });
       });

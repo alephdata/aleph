@@ -1,5 +1,5 @@
-aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstance', 'Metadata', 'Session', 'Authz', 'Alert', 'Entity', 'Validation', 'entity', 'metadata', 'alerts',
-    function($scope, $http, $q, $uibModalInstance, Metadata, Session, Authz, Alert, Entity, Validation, entity, metadata, alerts) {
+aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstance', 'Metadata', 'Authz', 'Alert', 'Entity', 'Validation', 'entity', 'metadata', 'alerts',
+    function($scope, $http, $q, $uibModalInstance, Metadata, Authz, Alert, Entity, Validation, entity, metadata, alerts) {
 
   $scope.blocked = false;
   $scope.entity = entity;
