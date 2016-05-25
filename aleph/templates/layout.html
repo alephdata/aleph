@@ -45,12 +45,12 @@
 
           <div id="navbar" class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
-              <li ng-show="::!session.logged_in">
+              <li ng-show="!session.logged_in">
                 <a href="{{url_for('sessions_api.login')}}" target="_self">
                   <i class="fa fa-sign-in"></i> Sign in
                 </a>
               </li>
-              <li ng-show="::session.logged_in && session.role.is_admin"
+              <li ng-show="session.logged_in && session.role.is_admin"
                  ng-class="{'active': navSection =='admin'}" uib-dropdown>
                 <a href="#" uib-dropdown-toggle>
                   <i class="fa fa-warning"></i> Admin
@@ -77,17 +77,17 @@
                   </li>
                 </ul>
               </li>
-              <li ng-show="::session.logged_in">
+              <li ng-show="session.logged_in">
                 <a ng-click="editProfile($event)">
                   <i class="fa fa-cog"></i> Settings
                 </a>
               </li>
-              <li ng-show="::session.logged_in">
+              <li ng-show="session.logged_in">
                 <a ng-click="manageAlerts($event)">
                   <i class="fa fa-bell"></i> Alerts
                 </a>
               </li>
-              <li ng-show="::session.logged_in">
+              <li ng-show="session.logged_in">
                 <a href="{{url_for('sessions_api.logout')}}" target="_self">
                   <i class="fa fa-sign-out"></i> Logout
                 </a>
