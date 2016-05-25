@@ -28,13 +28,13 @@
         </ul>
       </div>
       <div class="btn-group">
-        <a ng-click="createEntity($event)" class="btn btn-primary" ng-disabled="!authz.logged_in()">
+        <a ng-click="createEntity($event)" class="btn btn-primary" ng-disabled="::!authz.logged_in()">
           <i class="fa fa-plus-square" aria-hidden="true"></i>
           Create
         </a>
       </div>
       <div class="btn-group">
-        <a ng-href="/entities/bulk" class="btn btn-primary" ng-disabled="!authz.logged_in()">
+        <a ng-href="/entities/bulk" class="btn btn-primary" ng-disabled="::!authz.logged_in()">
           <i class="fa fa-plus-square" aria-hidden="true"></i>
           Bulk
         </a>

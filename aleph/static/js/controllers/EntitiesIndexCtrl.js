@@ -10,11 +10,11 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$http', '$timeout', '$anchorSc
   };
 
   $scope.submitSearch = function(form) {
-    data.query.set('q', $scope.query.state.q);
+    $scope.query.set('q', $scope.query.state.q);
   };
 
   $scope.loadOffset = function(offset) {
-    data.query.set('offset', offset);
+    $scope.query.set('offset', offset);
     $anchorScroll();
   };
 
@@ -60,8 +60,8 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$http', '$timeout', '$anchorSc
 
   $scope.getSelection = function() {
     var selection = [];
-    for (var i in data.result.results) {
-      var entity = data.result.results[i];
+    for (var i in $scope.result.results) {
+      var entity = $scope.result.results[i];
       if (entity.selected) {
         selection.push(entity);
       }
