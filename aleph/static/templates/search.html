@@ -46,13 +46,14 @@
       <strong>An error occurred while running your search.</strong>
       {{::result.error.info.reason || result.error.message}}
     </div>
+
     <div class="alert alert-suggest" ng-if="showSuggest()">
       Looking for 
       <a ng-click="setEntity(suggestEntity)">
         <entity-icon schema="suggestEntity.$schema"></entity-icon> {{suggestEntity.name}}</a>?
     </div>
     <div class="alert alert-suggest" ng-if="showCreate() && authz.logged_in()">
-      Do you want to track <strong>{{originalText}}</strong>? Set up a 
+      Do you want to track <strong>{{originalText}}</strong>? Add a 
       <a ng-click="createQueryEntity('/entity/person.json#')">
         <entity-icon schema="'/entity/person.json#'"></entity-icon> Person</a>,
       <a ng-click="createQueryEntity('/entity/company.json#')">
@@ -60,12 +61,14 @@
       or
       <a ng-click="createQueryEntity('/entity/organization.json#')">
         <entity-icon schema="'/entity/organization.json#'"></entity-icon> Organization</a>
-      to receive email updates.
+      to your watchlists to receive email updates.
     </div>
     <div class="alert alert-suggest" ng-if="showCreate() && !authz.logged_in()">
       Want to keep track of <strong>{{originalText}}</strong>?
-      <a ng-href="/api/1/sessions/login" target="_self">Sign in</a> to create email alerts.
+      <a ng-href="/api/1/sessions/login" target="_self">Sign in</a>
+      to create watchlists of people and companies.
     </div>
+
     <div>
       <div ng-repeat="doc in result.results">
         <search-result doc="doc" result="result" query="query"></search-result>
