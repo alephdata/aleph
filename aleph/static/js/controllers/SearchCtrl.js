@@ -2,17 +2,14 @@
 aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'Source', '$sce', 'Authz', 'Alert', 'Entity', 'Role', 'Title', 'data', 'metadata',
     function($scope, $route, $location, $http, $uibModal, Source, $sce, Authz, Alert, Entity, Role, Title, data, metadata) {
 
-  var isLoading = false;
-  $scope.result = {};
+  $scope.result = data.result;
   $scope.sourceFacets = [];
   $scope.entityFacets = [];
   $scope.fields = metadata.fields;
-  $scope.error = data.result.error;
   $scope.suggestEntity = null;
   $scope.facets = [];
-  $scope.session = metadata.session;
-  $scope.metadata = metadata;
   $scope.query = data.query;
+  $scope.query_string = data.query.toString();
   $scope.originalText = data.query.state.q ? data.query.state.q : '';
   $scope.authz = Authz;
   $scope.sortOptions = {
@@ -112,7 +109,8 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   };
 
   var initSuggest = function() {
-    if (!$scope.originalText.length > 3) {
+    if ($scope.originalText.length < 3) {
+      $scope.suggestEntity = null;
       return;
     }
     var params = {'prefix': $scope.originalText};
@@ -150,13 +148,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
     $scope.facets = facets;
   };
 
-  var initResults = function() {
-    $scope.result = data.result;
-    isLoading = false;
-  };
-
   initFacets();
-  initResults();
   initSuggest();
 
 }]);

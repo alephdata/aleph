@@ -42,9 +42,9 @@
 </div>
 <div class="row">
   <div class="col-md-8">
-    <div class="alert alert-danger" role="alert" ng-if="error">
+    <div class="alert alert-danger" role="alert" ng-if="result.error">
       <strong>An error occurred while running your search.</strong>
-      {{::error.info.reason || error.message}}
+      {{::result.error.info.reason || result.error.message}}
     </div>
     <div class="alert alert-suggest" ng-if="showSuggest()">
       Looking for 
@@ -78,7 +78,7 @@
           No results were found.
         </div>
         <div class="total" ng-if="result.limit > 0 && result.total">
-          Found {{::result.total | number}} documents.
+          Found {{result.total | number}} documents.
         </div>
       </div>
     </div>
@@ -87,7 +87,7 @@
   <div class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <strong>Document sources</strong> <small>{{::sourceFacets.length}}</small>
+        <strong>Document sources</strong> <small>{{sourceFacets.length}}</small>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
@@ -96,7 +96,7 @@
           ng-click="query.toggleFilter('source_id', source.id)">
           <span class="badge">{{::source.count | number}}</span>
           <span class="lbl">
-            {{source.label}}
+            {{::source.label}}
             <a ng-click="editSource(source, $event)" ng-show="authz.source(authz.WRITE, source.id)">
               <i class="fa fa-cog"></i>
             </a>
@@ -136,8 +136,7 @@
           ng-click="query.toggle('entity', entity.id)">
           <span class="badge">{{::entity.count | number}}</span>
           <entity-icon schema="entity.$schema"></entity-icon>
-          <span class="lbl" uib-tooltip="{{metadata.collections[entity.collection_id].label}}"
-            tooltip-append-to-body="true" tooltip-placement="right">
+          <span class="lbl">
             {{::entity.name}}
           </span>
         </li>
@@ -181,10 +180,10 @@
           in detail.
         </p>
         <a class="btn btn-primary"
-          ng-href="/api/1/query/export?{{query.queryString()}}"
+          ng-href="/api/1/query/export?{{query_string}}"
           download target="_self">
           <i class="fa fa-file-excel-o"></i>
-          Excel file ({{::result.total | number}} results)
+          Excel file ({{result.total | number}} results)
         </a>
       </div>
     </div>
@@ -202,7 +201,7 @@
         <p class="help-block">
           This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool. 
         </p>
-        <a ng-href="/api/1/graph?format=gexf&limit=2000&{{::query.queryString()}}" class="btn btn-primary" target="_self"
+        <a ng-href="/api/1/graph?format=gexf&limit=2000&{{query_string}}" class="btn btn-primary" target="_self"
         download="actors.gexf">
           <i class="fa fa-cloud-download"></i>
           Download Graph Exchange XML (GEXF)
