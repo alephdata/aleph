@@ -38,8 +38,8 @@ class EntityOtherName(db.Model, EntityDetails):
     honorific_prefix = db.Column(db.Unicode)
     honorific_suffix = db.Column(db.Unicode)
     patronymic_name = db.Column(db.Unicode)
-    start_date = db.Column(db.DateTime)
-    end_date = db.Column(db.DateTime)
+    start_date = db.Column(db.Unicode)
+    end_date = db.Column(db.Unicode)
 
     @property
     def display_name(self):
@@ -68,8 +68,8 @@ class EntityContactDetail(db.Model, EntityDetails):
     label = db.Column(db.Unicode)
     type = db.Column(db.Unicode)
     note = db.Column(db.Unicode)
-    valid_from = db.Column(db.DateTime)
-    valid_until = db.Column(db.DateTime)
+    valid_from = db.Column(db.Unicode)
+    valid_until = db.Column(db.Unicode)
 
 
 class EntityAddress(db.Model, EntityDetails):

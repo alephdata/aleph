@@ -66,14 +66,14 @@
       "sortIndex": 72,
       "description": "The date on which the name was adopted",
       "type": ["string", "null"],
-      "pattern": "^[0-9]{4}(-[0-9]{2}){0,2}$"
+      "format": "partial-date"
     },
     "end_date": {
       "title": "Patronymic name",
       "sortIndex": 74,
       "description": "The date on which the name was abandoned",
       "type": ["string", "null"],
-      "pattern": "^[0-9]{4}(-[0-9]{2}){0,2}$"
+      "format": "partial-date"
     }
   }
 }

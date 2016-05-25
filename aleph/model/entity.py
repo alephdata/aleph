@@ -277,7 +277,7 @@ class EntityAsset(Entity):
 
     valuation = db.Column(db.Integer, nullable=True)
     valuation_currency = db.Column(db.Unicode(100), nullable=True)
-    valuation_date = db.Column(db.Date, nullable=True)
+    valuation_date = db.Column(db.Unicode, nullable=True)
 
 
 class EntityLegalPerson(Entity):
@@ -326,8 +326,8 @@ class EntityPerson(EntityLegalPerson):
     }
 
     gender = db.Column(db.Unicode, nullable=True)
-    birth_date = db.Column(db.Date, nullable=True)
-    death_date = db.Column(db.Date, nullable=True)
+    birth_date = db.Column(db.Unicode, nullable=True)
+    death_date = db.Column(db.Unicode, nullable=True)
 
     residential_address_id = db.Column(db.String(32), db.ForeignKey('entity_address.id'))  # noqa
     residential_address = db.relationship('EntityAddress',
@@ -342,8 +342,8 @@ class EntityOrganization(EntityLegalPerson):
     }
 
     classification = db.Column(db.Unicode, nullable=True)
-    founding_date = db.Column(db.Date, nullable=True)
-    dissolution_date = db.Column(db.Date, nullable=True)
+    founding_date = db.Column(db.Unicode, nullable=True)
+    dissolution_date = db.Column(db.Unicode, nullable=True)
     current_status = db.Column(db.Unicode, nullable=True)
 
     registered_address_id = db.Column(db.String(32), db.ForeignKey('entity_address.id'))  # noqa

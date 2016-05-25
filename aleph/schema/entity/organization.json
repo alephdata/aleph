@@ -20,14 +20,14 @@
       "sortIndex": 71,
       "description": "A date of founding",
       "type": ["string", "null"],
-      "format": "date"
+      "format": "partial-date"
     },
     "dissolution_date": {
       "title": "Dissolution date",
       "sortIndex": 70,
       "description": "A date of dissolution",
       "type": ["string", "null"],
-      "format": "date"
+      "format": "partial-date"
     },
     "current_status": {
       "title": "Current status",

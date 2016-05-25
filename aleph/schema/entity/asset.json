@@ -24,7 +24,8 @@
       "sortIndex": 88,
       "title": "Date of valuation",
       "type": ["string", "null"],
-      "format": "date"
+      "format": "partial-date"
+
     },
     "owners": {
       "title": "Owners",

@@ -22,14 +22,14 @@
       "sortIndex": 86,
       "description": "A date of birth",
       "type": ["string", "null"],
-      "format": "date"
+      "format": "partial-date"
     },
     "death_date": {
       "title": "Death date",
       "sortIndex": 84,
       "description": "A date of death",
       "type": ["string", "null"],
-      "format": "date"
+      "format": "partial-date"
     },
     "residential_address": {
       "title": "Residential address",

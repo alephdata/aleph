@@ -38,13 +38,13 @@
       "title": "Valid from",
       "description": "The date from which the contact detail is valid",
       "type": ["string", "null"],
-      "format": "date"
+      "format": "partial-date"
     },
     "valid_until": {
       "title": "Valid until",
       "description": "The date from which the contact detail is no longer valid",
       "type": ["string", "null"],
-      "format": "date"
+      "format": "partial-date"
     }
   }
 }
