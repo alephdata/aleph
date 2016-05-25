@@ -59,6 +59,8 @@ def generate_graph(args):
         for entity in doc.get('_source').get('entities', []):
             if not graph.has_node(entity.get('uuid')):
                 obj = Entity.by_id(entity.get('uuid'))
+                if obj is None:
+                    continue
                 graph.add_node(entity.get('uuid'),
                                label=obj.name,
                                schema=obj.type)
