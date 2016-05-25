@@ -10,7 +10,7 @@
 
   <tr ng-repeat="state in states.results">
     <td><code>
-      <a ng-click="showDetail(state)" ng-bind="::state.meta.file_name || state.meta.foreign_id | characters:40"></a>
+      <a ng-click="showDetail(state)" ng-bind="::state.meta.file_name || state.meta.foreign_id | characters:25"></a>
     </code></td>
     <td><code ng-bind="::state.error_type"></code></td>
     <td>
