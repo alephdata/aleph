@@ -1,8 +1,8 @@
 
-aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', '$timeout', '$q', 'Collection', 'Entity', 'Authz', 'metadata', 'Title',
-    function($scope, $route, $location, $http, $timeout, $q, Collection, Entity, Authz, metadata, Title) {
+aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', '$timeout', '$q', 'Entity', 'Authz', 'metadata', 'Title',
+    function($scope, $route, $location, $http, $timeout, $q, Entity, Authz, metadata, Title) {
   
-  $scope.collection = {};
+  $scope.collectionCallback = null;
   $scope.entities = [{}, {}, {}, {}];
   $scope.created = [];
   $scope.schemata = metadata.schemata;
@@ -10,14 +10,13 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
                               '/entity/organization.json#', '/entity/entity.json#'];
   Title.set("Bulk create entities", "entities");
 
-  Collection.getWriteable().then(function(collections) {
-    $scope.collections = collections;
-    $scope.hasCollections = collections.length > 0;
-  });
-
   $scope.editEntity = function($event, entity) {
     $event.stopPropagation();
     Entity.edit(entity.id);
+  };
+
+  $scope.setCollection = function(callback) {
+    $scope.collectionCallback = callback;
   };
 
   $scope.isStub = function(entity) {
@@ -45,7 +44,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
   };
 
   $scope.canSave = function() {
-    if (!$scope.collection.id) {
+    if ($scope.collectionCallback == null) {
       return false;
     }
     var count = 0;
@@ -80,18 +79,18 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
     }
   };
 
-  var saveNextEntity = function() {
+  var saveNextEntity = function(collection) {
     for (var i in $scope.entities) {
       var entity = angular.copy($scope.entities[i]);
       if (!$scope.isStub(entity) && !$scope.isInvalid(entity)) {
-        entity.collections = [$scope.collection.id];
+        entity.collections = [collection.id];
         $http.post('/api/1/entities', entity).then(function(res) {
           $scope.entities.splice(i, 1);
           $scope.created.push(res.data);
-          saveNextEntity();
+          saveNextEntity(collection);
         }, function(err) {
           $scope.entities[i].$invalid = true;
-          saveNextEntity();
+          saveNextEntity(collection);
         });
         return;
       }
@@ -101,7 +100,9 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
 
   $scope.save = function() {
     $scope.reportLoading(true);
-    saveNextEntity();
+    $scope.collectionCallback().then(function(collection) {
+      saveNextEntity(collection);
+    });
   };
 
 }]);

@@ -1,0 +1,20 @@
+<div ng-hide="createCollection">
+  <select class="form-control" id="collection" name="collection"
+    ng-model="collection" ng-options="c as c.label for c in collections"
+    ng-change="update()"></select>
+  <p class="help-block">
+    Select an appropriate watchlist, or
+    <a ng-click="setCreateCollection(true)">create a new one</a>.
+  </p>
+</div>
+<div ng-show="createCollection">
+  <input type="text" class="form-control" ng-model="collection.label"
+    ng-change="update()" ng-model-options="{debounce: {default: 150}}">
+  <p class="help-block" ng-show="collections.length">
+    Name your new watchlist, or
+    <a ng-click="setCreateCollection(false)">use an existing one</a>.
+  </p>
+  <p class="help-block" ng-hide="collections.length">
+    Since you don't have any watchlists yet, we'll create one for you.
+  </p>
+</div>

@@ -1,12 +1,7 @@
 
-<h3>Bulk Entity Creation</h3>
+<h3>Bulk Entity Creator</h3>
 
-<div class="alert alert-danger" ng-if="!hasCollections">
-  <strong>You don't have any watchlists yet.</strong> Please create at least one entity before
-  going into bulk mode.
-</div>
-
-<table class="table table-striped" ng-if="hasCollections">
+<table class="table table-striped">
   <tr>
     <th width="25%">Name</th>
     <th width="15%">Type</th>
@@ -40,20 +35,13 @@
   </tr>
 </table>
 
-<div class="row" ng-if="hasCollections">
+<div class="row">
   <div class="col-md-4">
     <div class="form-group">
       <label class="control-label" for="collection">
         Add to watchlist
       </label>
-      <div ng-hide="createCollection">
-        <select class="form-control" id="collection" name="collection"
-          ng-model="collection.id"
-          ng-options="c.id as c.label for c in collections"></select>
-        <p class="help-block">
-          Select the watchlist to which the new entities will be added.
-        </p>
-      </div>
+      <entity-collection set-collection="setCollection(callback)"></entity-collection>
     </div>
   </div>
   <div class="col-md-8">
