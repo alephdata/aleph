@@ -30,14 +30,14 @@
             Discard (d)
           </button>
         </div>
-        <table class="table table-striped">
+        <table class="table table-striped" ng-if="duplicateOptions.length">
           <tr>
             <th>Possible Duplicate</th>
             <th width="1%">Country</th>
             <th width="5%">Score</th>
             <th width="1%"></th>
           </tr>
-          <tr ng-repeat="opt in duplicateOptions">
+          <tr ng-repeat="opt in duplicateOptions track by opt.id">
             <td><a ng-click="editDuplicate(opt)">{{opt.name}}</a></td>
             <td class="numeric">{{opt.jurisdiction_code.toUpperCase()}}</td>
             <td class="numeric">{{opt.score | number: 1}}</td>

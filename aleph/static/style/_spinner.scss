@@ -1,16 +1,21 @@
+#spinner-wrapper {
+    position: relative;
+}
+
 #spinner-overlay {
     position: absolute;
-    z-index: 1100;
+    z-index: 900;
+    margin-top: -20px;
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 30em;
+    min-height: 40em;
     height: 100%;
     // opacity: 0.6;
     background-color: $page-bg;
 
     .spinner {
-        margin-top: 3em;
+        margin-top: 5em;
         text-align: center;
         //color: $text-muted;
         color: $brand-primary;

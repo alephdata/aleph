@@ -15,7 +15,7 @@
     <base href="{{url_for('.ui')}}">
   </head>
   <body ng-controller="AppCtrl" ng-keyup="keyDownNotify($event)">
-    <div id="page" ng-show="session.roles" ng-cloak>
+    <div id="page" ng-show="session.roles">
       <nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container-fluid">
           <div class="navbar-header">
@@ -44,7 +44,7 @@
           </div>
 
           <div id="navbar" class="collapse navbar-collapse navbar-right">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" ng-cloak>
               <li ng-show="!session.logged_in">
                 <a href="{{url_for('sessions_api.login')}}" target="_self">
                   <i class="fa fa-sign-in"></i> Sign in
@@ -97,19 +97,21 @@
         </div>
       </nav>
 
-      <div id="spinner-overlay" ng-hide="routeLoaded">
-        <div class="spinner" ng-hide="routeFailed">
-          <i class="fa fa-circle-o-notch fa-spin"></i>
-        </div>
-        <div class="spinner failed" ng-show="routeFailed">
-          <i class="fa fa-exclamation-triangle"></i>
-          <div class="failure-note">
-            He's dead, Jim.
+      <div id="spinner-wrapper">
+        <div id="spinner-overlay" ng-hide="routeLoaded">
+          <div class="spinner" ng-hide="routeFailed">
+            <i class="fa fa-circle-o-notch fa-spin"></i>
+          </div>
+          <div class="spinner failed" ng-show="routeFailed" ng-cloak>
+            <i class="fa fa-exclamation-triangle"></i>
+            <div class="failure-note">
+              He's dead, Jim.
+            </div>
           </div>
         </div>
-      </div>
-      <div id="view" class="container-fluid">
-        <div ng-view autoscroll="true"></div>
+        <div id="view" class="container-fluid">
+          <div ng-view autoscroll="true"></div>
+        </div>
       </div>
     </div>
 
