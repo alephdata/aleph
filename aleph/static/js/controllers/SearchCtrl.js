@@ -8,7 +8,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$http', '$uibM
   $scope.fields = metadata.fields;
   $scope.facets = [];
   $scope.query = data.query;
-  $scope.query_string = data.query.toString();
+  $scope.queryString = data.query.toString();
   $scope.originalText = data.query.state.q ? data.query.state.q : '';
   $scope.authz = Authz;
   $scope.sortOptions = {

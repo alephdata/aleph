@@ -163,7 +163,7 @@
           in detail.
         </p>
         <a class="btn btn-primary"
-          ng-href="/api/1/query/export?{{query_string}}"
+          ng-href="/api/1/query/export?{{queryString}}"
           download target="_self">
           <i class="fa fa-file-excel-o"></i>
           Excel file ({{result.total | number}} results)
@@ -184,7 +184,7 @@
         <p class="help-block">
           This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool. 
         </p>
-        <a ng-href="/api/1/graph?format=gexf&limit=2000&{{query_string}}" class="btn btn-primary" target="_self"
+        <a ng-href="/api/1/graph?format=gexf&limit=2000&{{queryString}}" class="btn btn-primary" target="_self"
         download="actors.gexf">
           <i class="fa fa-cloud-download"></i>
           Download Graph Exchange XML (GEXF)
