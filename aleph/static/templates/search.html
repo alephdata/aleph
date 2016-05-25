@@ -50,7 +50,7 @@
     <search-entity-suggest query="query"></search-entity-suggest>
 
     <div>
-      <div ng-repeat="doc in result.results track by doc.id">
+      <div ng-repeat="doc in result.results">
         <search-result doc="doc" result="result" query="query"></search-result>
       </div>
       <div class="bottom-pager">
@@ -80,7 +80,7 @@
           <span class="badge">{{::source.count | number}}</span>
           <span class="lbl">
             {{::source.label}}
-            <a ng-click="editSource(source, $event)" ng-show="authz.source(authz.WRITE, source.id)">
+            <a ng-click="editSource(source, $event)" ng-show="::authz.source(authz.WRITE, source.id)">
               <i class="fa fa-cog"></i>
             </a>
           </span>
@@ -142,7 +142,7 @@
         </li>
         <li class="list-group-item facet animate toggle"
           ng-repeat="val in facet.values"
-          ng-class="{'active': query.hasFilter(facet.field, val.id)}"
+          ng-class="::{'active': query.hasFilter(facet.field, val.id)}"
           ng-click="query.toggleFilter(facet.field, val.id)">
           <span class="badge">{{::val.count | number}}</span>
           <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">

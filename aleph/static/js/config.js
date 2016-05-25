@@ -1,7 +1,8 @@
-var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'pdf']);
+var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'ui.bootstrap',
+                                     'angular-loading-bar', 'pdf']);
 
-aleph.config(['$routeProvider', '$locationProvider', '$compileProvider',
-    function($routeProvider, $locationProvider, $compileProvider) {
+aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoadingBarProvider',
+    function($routeProvider, $locationProvider, $compileProvider, cfpLoadingBarProvider) {
 
   $routeProvider.when('/search', {
     templateUrl: 'templates/search.html',
@@ -107,4 +108,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider',
 
   $locationProvider.html5Mode(true);
   $compileProvider.debugInfoEnabled(false);
+  cfpLoadingBarProvider.includeSpinner = false;
+  cfpLoadingBarProvider.latencyThreshold = 100;
 }]);

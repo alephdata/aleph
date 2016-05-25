@@ -4,7 +4,8 @@ from flask.ext.assets import Bundle
 from aleph.core import assets
 
 base_assets = Bundle(
-    'vendor/jquery/dist/jquery.js',
+    # include via CDN
+    # 'vendor/jquery/dist/jquery.js',
     'vendor/moment/moment.js',
     'vendor/pdfjs-dist/build/pdf.js',
     'vendor/pdfjs-dist/build/pdf.worker.js',
@@ -17,6 +18,7 @@ angular_assets = Bundle(
     'vendor/angular-pdf/dist/angular-pdf.js',
     'vendor/angular-route/angular-route.js',
     'vendor/angular-sanitize/angular-sanitize.js',
+    'vendor/angular-loading-bar/src/loading-bar.js',
     'vendor/angular-animate/angular-animate.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
     filters='uglifyjs',

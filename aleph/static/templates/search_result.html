@@ -1,36 +1,36 @@
 <div class="search-result">
   <div class="document-type">
     <a ng-click="viewDetails()">
-      <span ng-if="doc.type == 'tabular'">
+      <span ng-if="::doc.type == 'tabular'">
         <i class="fa fa-table"></i>
       </span>
-      <span ng-if="doc.type == 'text'">
+      <span ng-if="::doc.type == 'text'">
         <i class="fa fa-file-text-o"></i>
       </span>
     </a>
   </div>
   <div class="descriptor">
     <div class="title">
-      <a ng-href="{{getUrl()}}" ng-bind="::doc.title"></a>
+      <a ng-href="{{::getUrl()}}" ng-bind="::doc.title"></a>
       <span ng-if="doc.title != doc.file_name" class="addon" ng-bind="::doc.file_name"></span>
     </div>
 
     <div class="source">
-      <span ng-if="source.category" class="label label-primary">{{:: source.category | sourceCategory }}</span>
+      <span ng-if="::source.category" class="label label-primary">{{:: source.category | sourceCategory }}</span>
       <a ng-click="filterSource(doc.source_id)" class="source"
         ng-bind="::source.label"></a>
-      <span ng-if="doc.source_url">
+      <span ng-if="::doc.source_url">
         |
         <i class="fa fa-external-link"></i>
         from
         <a ng-href="{{::doc.source_url}}" target="_new">{{::doc.source_url | host}}</a>
       </span>
-      <span ng-if="doc.languages.length > 0 && doc.languages.length < 4">
+      <span ng-if="::doc.languages.length > 0 && doc.languages.length < 4">
         |
         <i class="fa fa-language"></i>
         in 
         <span ng-repeat="lang in doc.languages">
-          {{::lang | language}}<span ng-if="!$last">,</span>
+          {{::lang | language}}<span ng-if="::!$last">,</span>
         </span>
       </span>
       <span ng-if="doc.updated_at">
@@ -41,23 +41,23 @@
       </span>
     </div>
 
-    <div class="summary" ng-if="doc.summary && !doc.records.total">
+    <div class="summary" ng-if="::doc.summary && !doc.records.total">
       &bdquo;<span ng-bind="::doc.summary"></span>&ldquo;
     </div>
-    <div class="records" ng-if="doc.records.total">
+    <div class="records" ng-if="::doc.records.total">
       <ul ng-repeat="rec in doc.records.results">
         <li>
           &bdquo;<span ng-click="viewDetails(rec)" class="click" ng-repeat="snippet in rec.snippets"
             ng-bind-html="::snippet"></span>&ldquo;
           <span ng-if="doc.type == 'tabular'" class="ref">in
-            <a ng-href="{{::getUrl(rec)}}">row {{rec.row_id | number}}</a>
+            <a ng-href="{{::getUrl(rec)}}">row {{::rec.row_id | number}}</a>
           </span>
           <span ng-if="doc.type == 'text'" class="ref">on
-            <a ng-href="{{::getUrl(rec)}}">page {{rec.page | number}}</a>
+            <a ng-href="{{::getUrl(rec)}}">page {{::rec.page | number}}</a>
           </span>
         </li>
       </ul>
-      <span class="total" ng-if="doc.records.totals > doc.records.results.length">
+      <span class="total" ng-if="::doc.records.totals > doc.records.results.length">
         ({{::doc.records.total}} matches.
       </span>
     </div>

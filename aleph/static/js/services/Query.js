@@ -1,12 +1,13 @@
 
-aleph.factory('Query', ['$route', '$location', function($route, $location) {
+aleph.factory('Query', ['$route', '$location', '$httpParamSerializer',
+    function($route, $location, $httpParamSerializer) {
 
   var ParsedQuery = function() {
     this.state = $location.search();
   };
 
   ParsedQuery.prototype.toString = function() {
-    return queryString(this.state);
+    return $httpParamSerializer(this.state);
   };
 
   ParsedQuery.prototype.getArray = function(key) {

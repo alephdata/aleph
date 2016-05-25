@@ -16,27 +16,6 @@ function sortedKeys(obj) {
     return keys.sort();
 }
 
-function queryString(params) {
-    var parts = [];
-    forEachSorted(params, function(value, key) {
-      if (value === null || angular.isUndefined(value)) return;
-      if (!angular.isArray(value)) value = [value];
-
-      angular.forEach(value, function(v) {
-        if (angular.isObject(v)) {
-          if (angular.isDate(v)) {
-            v = v.toISOString();
-          } else {
-            v = angular.toJson(v);
-          }
-        }
-        parts.push(encodeURIComponent(key) + '=' +
-                   encodeURIComponent(v));
-      });
-    });
-    return parts.join('&');
-}
-
 function filterFloat(value) {
     if(/^(\-|\+)?([0-9]+(\.[0-9]+)?|Infinity)$/
       .test(value))

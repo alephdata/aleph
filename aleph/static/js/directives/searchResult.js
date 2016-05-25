@@ -1,5 +1,5 @@
-aleph.directive('searchResult', ['$location', '$route', '$sce',
-    function($location, $route, $sce) {
+aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSerializer',
+    function($location, $route, $sce, $httpParamSerializer) {
   return {
     restrict: 'E',
     scope: {
@@ -9,6 +9,7 @@ aleph.directive('searchResult', ['$location', '$route', '$sce',
     },
     templateUrl: 'templates/search_result.html',
     link: function (scope, element, attrs) {
+      
       for (var i in scope.result.sources.values) {
         var source = scope.result.sources.values[i];
         if (source.id === scope.doc.source_id) {
@@ -42,7 +43,7 @@ aleph.directive('searchResult', ['$location', '$route', '$sce',
           query.page = rec ? rec.page : 1;
           query.dq = search.q;
         }
-        return path + '?' + queryString(query);
+        return path + '?' + $httpParamSerializer(query);
       };
 
       scope.viewDetails = function(rec) {

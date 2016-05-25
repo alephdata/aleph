@@ -22,7 +22,7 @@ aleph.directive('searchEntitySuggest', ['$location', '$q', '$route', '$http', '$
         scope.query.toggle('entity', entity.id);
       };
 
-      scope.$watch('query', function(q) {
+      scope.$watch('query', function updateSearchEntitySuggest(q) {
         scope.entity = null;
         scope.offerCreate = false;
         scope.offerSignin = false;
