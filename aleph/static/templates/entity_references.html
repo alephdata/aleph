@@ -1,0 +1,15 @@
+<div class="panel panel-default" ng-if="references">
+  <div class="panel-heading">
+    <strong>People and Companies in this document</strong>
+  </div>
+  <ul class="list-group facet-list">
+    <li class="list-group-item facet animate toggle"
+      ng-repeat="ref in references">
+      <span class="badge">{{::ref.weight | number}}</span>
+      <span class="lbl">
+        <entity-icon schema="ref.entity.$schema"></entity-icon>
+        <a ng-click="lookupReference(ref)" class="click">{{::ref.entity.name}}</a>
+      </span>
+    </li>
+  </ul>
+</div>

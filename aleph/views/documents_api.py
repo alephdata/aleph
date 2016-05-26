@@ -4,9 +4,9 @@ from werkzeug.exceptions import BadRequest
 from flask import Blueprint, redirect, send_file, request
 from apikit import jsonify, Pager, get_limit, get_offset
 
-from aleph.core import get_archive, url_for
+from aleph.core import get_archive, url_for, db
 from aleph import authz
-from aleph.model import Document
+from aleph.model import Document, Entity, Reference, Collection
 from aleph.views.cache import enable_cache
 from aleph.search.tabular import tabular_query, execute_tabular_query
 from aleph.search.util import next_params
@@ -49,6 +49,19 @@ def view(document_id):
                                       document_id=document_id)
     data['source'] = doc.source
     return jsonify(data)
+
+
+@blueprint.route('/api/1/documents/<int:document_id>/references')
+def references(document_id):
+    doc = get_document(document_id)
+    q = db.session.query(Reference)
+    q = q.filter(Reference.document_id == doc.id)
+    q = q.join(Entity)
+    q = q.filter(Entity.state == Entity.STATE_ACTIVE)
+    clause = Collection.id.in_(authz.collections(authz.READ))
+    q = q.filter(Entity.collections.any(clause))
+    q = q.order_by(Reference.weight.desc())
+    return jsonify({'results': q.all()})
 
 
 @blueprint.route('/api/1/documents/<int:document_id>/file')

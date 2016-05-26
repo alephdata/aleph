@@ -1,10 +1,11 @@
 
-aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'History', 'data', 'pages',
-    function($scope, $location, $http, metadata, Authz, Document, Title, History, data, pages) {
+aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'History', 'data', 'pages', 'references',
+    function($scope, $location, $http, metadata, Authz, Document, Title, History, data, pages, references) {
 
   $scope.doc = data.doc;
   $scope.pageText = data.page.text;
   $scope.pages = pages;
+  $scope.references = references;
 
   $scope.loading = true;
   $scope.viewText = $location.search().view == 'text';

@@ -12,6 +12,11 @@
     text-align: right;   
 }
 
+.badge {
+    background-color: $page-bg;
+    color: $text-muted;
+}
+
 .facet-list {
     max-height: 15em;
     overflow-y: scroll;
@@ -22,12 +27,7 @@
         cursor: pointer;
         white-space: nowrap;
         text-overflow: hidden;
-        overflow-x: hidden;    
-        
-        .badge {
-            background-color: $page-bg;
-            color: $text-muted;
-        }
+        overflow-x: hidden;      
 
         &.empty {
             color: $text-muted;

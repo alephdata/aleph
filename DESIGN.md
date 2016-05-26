@@ -135,10 +135,15 @@ mini-bugs:
 * Watchlist sorting
 * Watchlist edit when entity save
 
-* Watchlist creator directive
+* [DONE] Watchlist creator directive
 * Alerts code
-* Fix up dates
+* [DONE] Fix up dates
+* ICTY crawler
+* Web crawler
 * Facet label truncation 
+* [DONE] Entities on document pages
+* Analyzers API
+* Email, URL, IP, CC, analyzer
 
 
 -------------

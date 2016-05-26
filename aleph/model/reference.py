@@ -26,5 +26,16 @@ class Reference(db.Model, IdModel, DatedModel):
             q = q.filter_by(origin=origin)
         q.delete(synchronize_session='fetch')
 
+    def to_dict(self):
+        return {
+            'entity': {
+                'id': self.entity.id,
+                'name': self.entity.name,
+                '$schema': self.entity.type
+            },
+            'weight': self.weight,
+            'origin': self.origin
+        }
+
     def __repr__(self):
         return '<Reference(%r, %r)>' % (self.document_id, self.entity_id)
