@@ -16,6 +16,11 @@ log = logging.getLogger(__name__)
 def generate_entity_references(entity):
     if entity.state != Entity.STATE_ACTIVE:
         return
+    # This is all a bit hacky: we're re-generating all the entity
+    # references for the given entity by effectively re-implementing
+    # the RegexEntityAnalyzer. The alternative was to conduct a
+    # search for potential matching documents, re-analyze them and
+    # re-index them. This proved to be too slow in reality.
 
     log.info("Updating document references: %r", entity)
     rex = '|'.join(entity.regex_terms)

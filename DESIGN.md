@@ -134,7 +134,11 @@ mini-bugs:
 * Country selector
 * Watchlist sorting
 * Watchlist edit when entity save
-* 
+
+* Watchlist creator directive
+* Alerts code
+* Fix up dates
+* Facet label truncation 
 
 
 -------------
