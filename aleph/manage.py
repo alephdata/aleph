@@ -168,17 +168,16 @@ def evilshit():
     """EVIL: Delete all data and recreate the database."""
     delete_index()
     db.drop_all()
-    from sqlalchemy import Table, MetaData, inspect
+    from sqlalchemy import MetaData, inspect
     from sqlalchemy.dialects.postgresql import ENUM
     metadata = MetaData()
     metadata.bind = db.engine
     metadata.reflect()
+    for table in metadata.sorted_tables:
+        table.drop(checkfirst=True)
     for enum in inspect(db.engine).get_enums():
         enum = ENUM(name=enum['name'])
         enum.drop(bind=db.engine, checkfirst=True)
-    if db.engine.has_table('alembic_version'):
-        table = Table('alembic_version', metadata, autoload=True)
-        table.drop()
     init()
 
 
