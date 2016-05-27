@@ -44,7 +44,7 @@ setup(
             'lang = aleph.analyze.language:LanguageAnalyzer',
             'emails = aleph.analyze.regex:EMailAnalyzer',
             'urls = aleph.analyze.regex:URLAnalyzer',
-            # regex = aleph.analyze.regex_entity:RegexEntityAnalyzer',
+            'regex = aleph.analyze.regex_entity:RegexEntityAnalyzer',
             'polyglot = aleph.analyze.polyglot_entity:PolyglotEntityAnalyzer'
         ],
         'aleph.crawlers': [
