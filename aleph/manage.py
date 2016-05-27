@@ -127,12 +127,17 @@ def index(foreign_id=None):
         if source is None:
             raise ValueError("No such source: %r" % foreign_id)
         q = q.filter(Document.source_id == source.id)
-    else:
-        delete_index()
-        init_search()
     for doc_id, in q:
         index_document.delay(doc_id)
-    # reindex_entities()
+    if foreign_id is None:
+        reindex_entities()
+
+
+@manager.command
+def resetindex():
+    """Re-create the ES index configuration, dropping all data."""
+    delete_index()
+    init_search()
 
 
 @manager.command

@@ -57,9 +57,7 @@ def string_value(value):
         return
     if isinstance(value, (date, datetime)):
         return value.isoformat()
-    elif isinstance(value, float):
-        if value.is_integer():
-            return int(value)
+    elif isinstance(value, (float, int)):
         return unicode(value)
     elif isinstance(value, six.string_types):
         if not isinstance(value, six.text_type):
@@ -69,8 +67,8 @@ def string_value(value):
             if enc is None:
                 enc = 'utf-8'
             value = value.decode(enc)
-            value = ''.join(ch for ch in value if category(ch)[0] != 'C')
-            value = value.replace(u'\xfe\xff', '')  # remove BOM
+        value = ''.join(ch for ch in value if category(ch)[0] != 'C')
+        value = value.replace(u'\xfe\xff', '')  # remove BOM
         if not len(value.strip()):
             return
         return value

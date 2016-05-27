@@ -64,6 +64,12 @@
     }
 }
 
+.highlights {
+    em {
+        @include highlighted;
+    }
+}
+
 // Search results 
 .search-result {
     padding: 1em 0 1.5em 0;

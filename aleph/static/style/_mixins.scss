@@ -8,8 +8,9 @@
 }
 
 @mixin highlighted {
-    background-color: yellow;
+    background-color: $aleph-highlights;
     font-style: normal;
+    font-weight: normal;
 }
 
 @mixin drop-shadow {

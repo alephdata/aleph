@@ -10,6 +10,10 @@ from aleph.ingest.text import TextIngestor
 log = logging.getLogger(__name__)
 
 
+class ImageIngestorException(IngestorException):
+    pass
+
+
 class ImageIngestor(TextIngestor):
     MIME_TYPES = ['image/png', 'image/tiff', 'image/x-tiff',
                   'image/jpeg', 'image/bmp', 'image/x-windows-bmp',
@@ -29,7 +33,8 @@ class ImageIngestor(TextIngestor):
                     'pdf:fit-page=A4', pdf_path]
             subprocess.call(args)
             if pdf_path is None or not os.path.isfile(pdf_path):
-                raise IngestorException("Could not convert image: %r" % meta)
+                msg = "Could not convert image: %r" % meta
+                raise ImageIngestorException(msg)
             self.store_pdf(meta, pdf_path)
             self.extract_pdf(meta, pdf_path)
         finally:

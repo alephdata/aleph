@@ -29,9 +29,10 @@ def ingest_url(source_id, metadata, url):
         fh, tmp_path = mkstemp()
         os.close(fh)
         log.info("Ingesting URL: %r", url)
-        res = requests.get(url, stream=True)
+        res = requests.get(url, stream=True, timeout=120)
         if res.status_code >= 400:
-            raise Exception("HTTP Error %r: %r" % (url, res.status_code))
+            msg = "HTTP Error %r: %r" % (url, res.status_code)
+            raise IngestorException(msg)
         with open(tmp_path, 'w') as fh:
             for chunk in res.iter_content(chunk_size=1024):
                 if chunk:

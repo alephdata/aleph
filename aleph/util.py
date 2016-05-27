@@ -20,13 +20,14 @@ def checksum(filename):
     return hash.hexdigest()
 
 
-def make_filename(source, sep='-'):
-    if source is not None:
-        source = os.path.basename(source)
-        slugs = [slugify(s, sep=sep) for s in source.split('.')]
-        source = '.'.join(slugs)
-        source = source.strip('.').strip(sep)
-    return source
+def make_filename(file_name, sep='-'):
+    if file_name is not None:
+        file_name = os.path.basename(file_name)
+        slugs = [slugify(s, sep=sep) for s in file_name.rsplit('.', 1)]
+        slugs = [s[:250] for s in slugs if s is not None]
+        file_name = '.'.join(slugs)
+        file_name = file_name.strip('.').strip(sep)
+    return file_name
 
 
 def find_subclasses(cls):

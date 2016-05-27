@@ -380,6 +380,7 @@ root@worker# aleph evilshit
 * [ICIJ Extract](https://github.com/icij/extract), Java-based OCR and content extraction pipeline used for large-scale leaks.
 * [nltk](http://www.nltk.org/), [patterns](http://www.clips.ua.ac.be/pattern)
 * [OpenCalais](http://www.opencalais.com/), LingPipe, AlchemyAPI
+* Omecca, eprints, fedora, dspace
 
 ## License
 
