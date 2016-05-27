@@ -24,7 +24,7 @@ def make_filename(file_name, sep='-'):
     if file_name is not None:
         file_name = os.path.basename(file_name)
         slugs = [slugify(s, sep=sep) for s in file_name.rsplit('.', 1)]
-        slugs = [s[:250] for s in slugs if s is not None]
+        slugs = [s[:200] for s in slugs if s is not None]
         file_name = '.'.join(slugs)
         file_name = file_name.strip('.').strip(sep)
     return file_name
