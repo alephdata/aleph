@@ -3,6 +3,7 @@ import re
 import six
 import chardet
 import logging
+from decimal import Decimal
 from unicodedata import category
 import unicodedata
 from datetime import datetime, date
@@ -57,8 +58,8 @@ def string_value(value):
         return
     if isinstance(value, (date, datetime)):
         return value.isoformat()
-    elif isinstance(value, (float, int)):
-        return unicode(value)
+    elif isinstance(value, (float, int, Decimal)):
+        return Decimal(value).to_eng_string()
     elif isinstance(value, six.string_types):
         if not isinstance(value, six.text_type):
             enc = chardet.detect(value)
