@@ -20,23 +20,23 @@ class LanguageAnalyzer(Analyzer):
                 LanguageIdentifier.from_modelstring(model, norm_probs=True)
         return LanguageAnalyzer._identifier
 
-    def analyze(self, document, meta):
-        if len(meta.languages):
+    def prepare(self):
+        self.disabled = len(self.meta.languages) > 0
+        self.languages = defaultdict(float)
+
+    def on_text(self, text):
+        if len(text.strip()) < CUTOFF:
+            return
+        lang, score = self.identifier.classify(text)
+        if score > THRESHOLD:
+            self.languages[lang] += score * len(text)
+
+    def finalize(self):
+        if not len(self.languages):
             return
 
-        languages = defaultdict(float)
-        for text, rec in document.text_parts():
-            if len(text.strip()) < CUTOFF:
-                continue
-            lang, score = self.identifier.classify(text)
-            if score > THRESHOLD:
-                languages[lang] += score * len(text)
-
-        if not len(languages):
-            return
-
-        languages = sorted(languages.items(), key=lambda (l, c): c,
+        languages = sorted(self.languages.items(), key=lambda (l, c): c,
                            reverse=True)
-        meta.add_language(languages[0][0])
-        log.info("Classified languages in %r: %r", document, languages[:10])
-        self.save(document, meta)
+        self.meta.add_language(languages[0][0])
+        log.info("Classified languages in %r: %r", self.document,
+                 languages[:10])

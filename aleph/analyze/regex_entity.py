@@ -1,6 +1,5 @@
 import re
 import logging
-from time import time
 from threading import RLock
 from itertools import count
 from collections import defaultdict
@@ -64,35 +63,27 @@ class RegexEntityAnalyzer(Analyzer):
     cache = EntityCache()
     origin = 'regex'
 
-    def analyze(self, document, meta):
-        begin_time = time()
+    def prepare(self):
         self.cache.generate()
-        entities = defaultdict(int)
-        for text, rec in document.text_parts():
-            text = normalize_strong(text)
-            if text is None or len(text) <= 2:
-                continue
-            for rex in self.cache.regexes:
-                for match in rex.finditer(text):
-                    match = match.group(2)
-                    # match = match.group(1)
-                    for entity_id in self.cache.matches.get(match, []):
-                        entities[entity_id] += 1
+        self.entities = defaultdict(int)
 
-        Reference.delete_document(document.id, origin=self.origin)
-        for entity_id, weight in entities.items():
+    def on_text(self, text):
+        text = normalize_strong(text)
+        if text is None or len(text) <= 2:
+            return
+        for rex in self.cache.regexes:
+            for match in rex.finditer(text):
+                match = match.group(2)
+                for entity_id in self.cache.matches.get(match, []):
+                    self.entities[entity_id] += 1
+
+    def finalize(self):
+        Reference.delete_document(self.document.id, origin=self.origin)
+        for entity_id, weight in self.entities.items():
             ref = Reference()
-            ref.document_id = document.id
+            ref.document_id = self.document.id
             ref.entity_id = entity_id
             ref.origin = self.origin
             ref.weight = weight
             db.session.add(ref)
-        self.save(document, meta)
-
-        duration_time = int((time() - begin_time) * 1000)
-        if len(entities):
-            log.info("Regex tagged %r with %d entities (%sms)",
-                     document, len(entities), duration_time)
-        else:
-            log.info("Regex found no entities on %r (%sms)",
-                     document, duration_time)
+        log.info('Regex extraced %s entities.', len(self.entities))

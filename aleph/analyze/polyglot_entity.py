@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 import logging
-from time import time
 from collections import defaultdict
 from polyglot.text import Text
 
@@ -23,30 +22,27 @@ class PolyglotEntityAnalyzer(Analyzer):
 
     origin = 'polyglot'
 
-    def extract_entities(self, document, meta):
-        entities = defaultdict(list)
-        for text, rec in document.text_parts():
-            if text is None or len(text) <= 100:
+    def prepare(self):
+        self.disabled = not self.document.source.generate_entities
+        self.entities = defaultdict(list)
+
+    def on_text(self, text):
+        if text is None or len(text) <= 100:
+            return
+        text = Text(text)
+        if len(self.meta.languages) == 1:
+            text.hint_language_code = self.meta.languages[0]
+        for entity in text.entities:
+            if entity.tag == 'I-LOC':
                 continue
-            text = Text(text)
-            if len(meta.languages) == 1:
-                text.hint_language_code = meta.languages[0]
-            for entity in text.entities:
-                if entity.tag == 'I-LOC':
-                    continue
-                parts = [t for t in entity if t.lower() != t.upper()]
-                if len(parts) < 2:
-                    continue
-                entity_name = ' '.join(parts)
-                if len(entity_name) < 5 or len(entity_name) > 150:
-                    continue
-                schema = SCHEMAS.get(entity.tag, DEFAULT_SCHEMA)
-                entities[entity_name].append(schema)
-        output = []
-        for entity_name, schemas in entities.items():
-            schema = max(set(schemas), key=schemas.count)
-            output.append((entity_name, len(schemas), schema))
-        return output
+            parts = [t for t in entity if t.lower() != t.upper()]
+            if len(parts) < 2:
+                continue
+            entity_name = ' '.join(parts)
+            if len(entity_name) < 5 or len(entity_name) > 150:
+                continue
+            schema = SCHEMAS.get(entity.tag, DEFAULT_SCHEMA)
+            self.entities[entity_name].append(schema)
 
     def load_collection(self):
         if not hasattr(self, '_collection'):
@@ -81,34 +77,21 @@ class PolyglotEntityAnalyzer(Analyzer):
         entity = Entity.save(data)
         return entity.id
 
-    def analyze(self, document, meta):
-        if not document.source.generate_entities:
-            return
+    def finalize(self):
+        output = []
+        for entity_name, schemas in self.entities.items():
+            schema = max(set(schemas), key=schemas.count)
+            output.append((entity_name, len(schemas), schema))
 
-        begin_time = time()
-        try:
-            entities = self.extract_entities(document, meta)
-        except Exception as ex:
-            log.warning(ex)
-            return
-
-        Reference.delete_document(document.id, origin=self.origin)
-        for name, weight, schema in entities:
+        Reference.delete_document(self.document.id, origin=self.origin)
+        for name, weight, schema in output:
             entity_id = self.load_entity(name, schema)
             if entity_id is None:
                 continue
             ref = Reference()
-            ref.document_id = document.id
+            ref.document_id = self.document.id
             ref.entity_id = entity_id
             ref.origin = self.origin
             ref.weight = weight
             db.session.add(ref)
-        self.save(document, meta)
-
-        duration_time = int((time() - begin_time) * 1000)
-        if len(entities):
-            log.info("Polyglot tagged %r with %d entities (%sms)",
-                     document, len(entities), duration_time)
-        else:
-            log.info("Polyglot found no entities on %r (%sms)",
-                     document, duration_time)
+        log.info('Polyglot extraced %s entities.', len(output))

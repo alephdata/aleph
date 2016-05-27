@@ -75,18 +75,6 @@ class Document(db.Model, DatedModel):
         if len(chunk):
             db.session.bulk_insert_mappings(DocumentRecord, chunk)
 
-    def text_parts(self):
-        """Utility method to get all text snippets in a document."""
-        if self.type == Document.TYPE_TEXT:
-            for page in self.pages:
-                if page.text is not None and len(page.text):
-                    yield page.text, page
-        if self.type == Document.TYPE_TABULAR:
-            for record in self.records:
-                for value in record.data.values():
-                    if isinstance(value, basestring) and len(value):
-                        yield value, record
-
     @classmethod
     def get_max_id(cls):
         q = db.session.query(func.max(cls.id))
@@ -125,6 +113,11 @@ class DocumentPage(db.Model):
     def __repr__(self):
         return '<DocumentPage(%r,%r)>' % (self.document_id, self.number)
 
+    def text_parts(self):
+        """Utility method to get all text snippets in a record."""
+        if self.text is not None and len(self.text):
+            yield self.text
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -156,6 +149,12 @@ class DocumentRecord(db.Model):
             return []
         text = [t for t in self.data.values() if t is not None]
         return list(set(text))
+
+    def text_parts(self):
+        """Utility method to get all text snippets in a record."""
+        for value in self.data.values():
+            if isinstance(value, basestring) and len(value):
+                yield value
 
     def __repr__(self):
         return '<DocumentRecord(%r,%r)>' % (self.document_id, self.row_id)
