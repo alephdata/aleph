@@ -121,7 +121,7 @@
           <response-pager response="result" load="loadOffset(offset)"></response-pager>
         </div>
         <div class="total" ng-if="result.limit > 0 && result.total">
-          Found {{::result.total | number}} entities.
+          Found {{result.total | number}} entities.
         </div>
       </div>
     </div>
