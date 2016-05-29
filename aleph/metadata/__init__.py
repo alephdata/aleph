@@ -155,7 +155,7 @@ class Metadata(MutableMapping):
         keyword = keyword.strip()
         keywords = self.keywords
         keywords.append(keyword)
-        self.data['keywords'] = list(keywords)
+        self.data['keywords'] = list(set(keywords))
 
     @property
     def recipients(self):
