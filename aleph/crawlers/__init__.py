@@ -3,6 +3,7 @@ import logging
 from aleph.core import celery
 from aleph.ext import get_crawlers
 from aleph.crawlers.crawler import DocumentCrawler, Crawler # noqa
+from aleph.crawlers.web import WebCrawler  # noqa
 
 log = logging.getLogger(__name__)
 

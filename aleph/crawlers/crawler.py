@@ -76,6 +76,19 @@ class Crawler(object):
                 os.unlink(file_path)
             raise
 
+    def save_data(self, data):
+        """Store a lump object of data to a temporary file."""
+        fh, file_path = mkstemp()
+        try:
+            fh = os.fdopen(fh, 'w')
+            fh.write(data)
+            fh.close()
+            return file_path
+        except Exception:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            raise
+
     @classmethod
     def get_id(cls):
         name = cls.__module__ + "." + cls.__name__
