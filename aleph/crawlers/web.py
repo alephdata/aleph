@@ -14,7 +14,8 @@ class AlephKrauler(Krauler):
         super(AlephKrauler, self).__init__({
             'crawl': crawler.CRAWL_RULES,
             'retain': crawler.RETAIN_RULES,
-            'seed': crawler.SEED
+            'seed': crawler.SEED,
+            'user_agent': 'Mozilla/5.0 (aleph)'
         })
 
     def emit(self, page):
