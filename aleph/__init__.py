@@ -1,6 +1,7 @@
 import os
 import logging
 import warnings
+import requests
 import urllib3
 from sqlalchemy.exc import SAWarning
 
@@ -12,6 +13,7 @@ warnings.filterwarnings('ignore', category=SAWarning)
 
 # using SSL w/o certificate validation
 urllib3.disable_warnings()
+requests.packages.urllib3.disable_warnings()
 
 # loggers.
 logging.basicConfig(level=logging.DEBUG)
