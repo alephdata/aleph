@@ -84,11 +84,13 @@ def pending():
     q = q.filter(Entity.state == Entity.STATE_PENDING)
     clause = Collection.id.in_(authz.collections(authz.READ))
     q = q.filter(Entity.collections.any(clause))
-    ref = aliased(Reference)
-    q = q.join(ref)
-    q = q.group_by(Entity)
-    q = q.order_by(func.count(ref.id).desc())
-    q = q.limit(25)
+    # this was too slow to actually work:
+    # ref = aliased(Reference)
+    # q = q.join(ref)
+    # q = q.group_by(Entity)
+    # q = q.order_by(func.count(ref.id).desc())
+    q = q.order_by(func.random())
+    q = q.limit(30)
     entities = []
     for entity in q.all():
         data = entity.to_dict()
