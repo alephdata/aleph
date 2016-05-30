@@ -15,6 +15,11 @@ assets:
 test:
 	nosetests --with-coverage --cover-package=aleph --cover-erase
 
+base:
+	docker build -t pudo/aleph-base:1.0 contrib/base
+	docker build -t pudo/aleph-base:latest contrib/base
+	docker push pudo/aleph-base
+
 build:
 	docker build -t pudo/aleph:latest .
 	docker push pudo/aleph
