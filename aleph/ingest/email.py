@@ -48,7 +48,6 @@ class EmailFileIngestor(TextIngestor):
         child.parent = meta.clone()
         child.file_name = unicode(part.detected_file_name)
         child.mime_type = unicode(part.detected_content_type)
-        # print unicode(part.detected_content_type)
 
         # Weird outlook RTF representations -- do we want them?
         if child.file_name == 'rtf-body.rtf':
@@ -66,11 +65,12 @@ class EmailFileIngestor(TextIngestor):
             addr = address.parse(msg.headers.get('From'))
             if addr is not None:
                 meta.author = addr.to_unicode()
+                meta.add_email(addr.address)
 
         for hdr in ['To', 'CC', 'BCC']:
             if msg.headers.get(hdr):
                 for addr in address.parse_list(msg.headers.get(hdr)):
-                    meta.add_recipient(addr.to_unicode())
+                    meta.add_email(addr.address)
 
         date = msg.headers.get('Date')
         date = rfc822.parsedate(date)

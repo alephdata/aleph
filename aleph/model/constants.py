@@ -8,7 +8,8 @@ CORE_FACETS = {
     'countries': 'Countries',
     'keywords': 'Keywords',
     'author': 'Document author',
-    'recipients': 'Message recipients',
+    'emails': 'E-Mail addresses',
+    'domains': 'Internet domains',
     'dates': 'Dates'
 }
 
