@@ -30,9 +30,8 @@ class EMailAnalyzer(RegexAnalyzer):
         if len(matches):
             log.info("Found emails: %r", matches)
 
-        emails = self.meta.get('emails') or []
-        emails.extend(matches)
-        self.meta['emails'] = emails
+        for email in matches:
+            self.meta.add_email(email)
 
 
 class URLAnalyzer(RegexAnalyzer):
@@ -45,6 +44,5 @@ class URLAnalyzer(RegexAnalyzer):
         if len(matches):
             log.info("Found URLs: %r", matches)
 
-        urls = self.meta.get('urls') or []
-        urls.extend(matches)
-        self.meta['urls'] = urls
+        for url in matches:
+            self.meta.add_url(url)
