@@ -9,6 +9,13 @@ DOCUMENT_MAPPING = {
     },
     "dynamic_templates": [
         {
+            # "extra_metadata": {
+            #     "match_mapping_type": "string",
+            #     "mapping": {
+            #         "type": "string",
+            #         "index": "not_analyzed"
+            #     }
+            # },
             "text": {
                 "match": "parent.*",
                 "mapping": {
@@ -30,6 +37,9 @@ DOCUMENT_MAPPING = {
         "countries": {"type": "string", "index": "not_analyzed"},
         "recipients": {"type": "string", "index": "not_analyzed"},
         "keywords": {"type": "string", "index": "not_analyzed"},
+        "emails": {"type": "string", "index": "not_analyzed"},
+        "urls": {"type": "string", "index": "not_analyzed"},
+        "domains": {"type": "string", "index": "not_analyzed"},
         "dates": {"type": "date", "format": "yyyy-MM-dd"},
         "mime_type": {"type": "string", "index": "not_analyzed"},
         "author": {"type": "string", "index": "not_analyzed"},

@@ -2,9 +2,10 @@ import os
 import six
 import cgi
 import mimetypes
+from flanker.addresslib import address
+from urlparse import urlparse
 from datetime import date, datetime
 from copy import deepcopy
-from urlparse import urlparse
 from normality import slugify
 from collections import MutableMapping, Mapping
 
@@ -158,19 +159,70 @@ class Metadata(MutableMapping):
         self.data['keywords'] = list(set(keywords))
 
     @property
-    def recipients(self):
-        return list(set(self.data.get('recipients', [])))
+    def emails(self):
+        return list(set(self.data.get('emails', [])))
 
-    @recipients.setter
-    def recipients(self, recipients):
-        self.data['recipients'] = []
-        for recipient in recipients:
-            self.add_recipient(recipient)
+    @emails.setter
+    def emails(self, emails):
+        self.data['emails'] = []
+        for email in emails:
+            self.add_email(email)
 
-    def add_recipient(self, recipient):
-        recipients = self.recipients
-        recipients.append(recipient)
-        self.data['recipients'] = list(recipients)
+    def add_email(self, email):
+        emails = self.emails
+        parsed = address.parse(email)
+        if parsed is None:
+            return
+        emails.append(parsed.address)
+        self.add_domain(parsed.hostname)
+        self.data['emails'] = list(emails)
+
+    @property
+    def urls(self):
+        return list(set(self.data.get('urls', [])))
+
+    @urls.setter
+    def urls(self, urls):
+        self.data['emails'] = []
+        for url in urls:
+            self.add_email(url)
+
+    def add_url(self, url):
+        urls = self.urls
+        if url is None or not len(url.strip()):
+            return
+        url = url.strip()
+        if url.startswith('//'):
+            url = 'http:%s' % url
+        elif '://' not in url:
+            url = 'http://%s' % url
+        parsed = urlparse(url)
+        urls.append(url)
+        self.add_domain(parsed.hostname)
+        self.data['urls'] = list(set(urls))
+
+    @property
+    def domains(self):
+        return list(set(self.data.get('domains', [])))
+
+    @domains.setter
+    def domains(self, domains):
+        self.data['domains'] = []
+        for domain in domains:
+            self.add_email(domain)
+
+    def add_domain(self, domain):
+        domains = self.domains
+        if domain is None or not len(domain.strip()):
+            return
+        domain = domain.strip().lower()
+        if '://' in domain:
+            parsed = urlparse(domain)
+            domain = parsed.hostname
+        if domain.startswith('www.'):
+            domain = domain[len('www.'):]
+        domains.append(domain)
+        self.data['domains'] = list(set(domains))
 
     @property
     def dates(self):
@@ -351,7 +403,8 @@ class Metadata(MutableMapping):
             'countries': self.countries,
             'languages': self.languages,
             'keywords': self.keywords,
-            'recipients': self.recipients,
+            'emails': self.emails,
+            'domains': self.domains,
             'extension': self.extension,
             'mime_type': self.mime_type,
             'headers': self.headers,
