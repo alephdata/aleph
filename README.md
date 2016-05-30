@@ -11,12 +11,13 @@ Sections: [Installation](#installation) | [Usage](#usage) | [Mailing list](#mail
 Here's some key features:
 
 * Web-based UI for search across large document and data sets.
+* Watchlist editor for making custom sets of entities to be tracked.
 * Equal support for structured (i.e. tabular) and unstructured (i.e. textual) sources.
 * Importers include a local filesystem traverser, web crawlers and a SQL query importer.
-* Document entity tagger (regular expressions-based, exploring NLP options).
+* Document entity tagger (regular expressions-based, and optionally using NLP).
 * Support for OCR, unpacking Zip/RAR/Tarballs, language and encoding detection.
 * Entity watchlist importers for [OpenNames](http://pudo.org/material/opennames/), 
-  [OCCRP Spindle](http://github.com/occrp/spindle/).
+  [Investigative Dashboard](https://investigativedashboard.org/).
 * OAuth authorization and access control on a per-source and per-watchlist basis.
 * Excel export for search result sets.
 * Ability to generate graph representations of entity co-occurrence.
@@ -211,9 +212,7 @@ root@worker# aleph metafolder /srv/data/my_meta_folder
 
 #### Generating metafolders
 
-Metafolder is a format developed for aleph, and thus there's a lack of applications creating them. One notable exception is [krauler](https://github.com/pudo/krauler) a simplistic web crawler which comes pre-installed with the default ``aleph`` docker container. It is usually configured using a YAML file and can be used to easily grab all of a web site, or (for example) all PDF files from a specific domain.
-
-The Python [metafolder API](https://github.com/pudo/metafolder) is also very easy to use in more specific scripts. It can be used in scrapers and data cleaning scripts.
+Metafolder is a format developed for aleph, and thus there's a lack of applications creating them. The Python [metafolder API](https://github.com/pudo/metafolder) is easy to use in more specific scripts. It can be used in scrapers and data cleaning scripts.
 
 ### Loading data from SQL databases
 
@@ -289,22 +288,22 @@ Crawlers are Python classes and exposed via the ``entry_point`` of a Python pack
 A basic crawler will extend the relevant ``Crawler`` class from ``aleph`` and implement it's ``crawl()`` method:
 
 ```python
-from aleph.crawlers.crawler import Crawler
+from aleph.crawlers import DocumentCrawler
 
-class ExampleCrawler(Crawler):
+class ExampleCrawler(DocumentCrawler):
+    SOURCE_ID = 'example'
 
     def crawl(self):
-	    source = self.create_source(foreign_id='example', label='Example.com Documents')
 	    for i in range(0, 1000):
 		     meta = self.metadata()
 	         meta.foreign_id = 'example-doc:%s' % i
              meta.title = 'Document Number %s' % i
              meta.mime_type = 'application/pdf'
              url = 'https://example.com/documents/%s.pdf' % i
-             self.emit_url(source, meta, url)
+             self.emit_url(meta, url)
 ```
 
-Besides ``emit_url``, results can also be forwarded using the ``emit_file(source, meta, file_path)`` and ``emit_content(source, meta, content)`` methods. If a crawler creates collections, it can use ``emit_collection(collection, entity_search_terms)`` which will start a partial re-index of documents.
+Besides ``emit_url``, results can also be forwarded using the ``emit_file(meta, file_path)`` method. If a crawler creates collections, it can use ``emit_collection(collection, entity_search_terms)`` which will start a partial re-index of documents.
 
 In order to make sure that ``aleph`` can find the new crawler, it must be added to the ``setup.py`` of your package:
 
@@ -352,10 +351,10 @@ $ docker-compose run worker /bin/bash
 root@worker# aleph analyze -f source_foreign_id
 
 # Re-index only:
-root@worker# aleph analyze -f source_foreign_id
+root@worker# aleph index -f source_foreign_id
 ```
 
-Finally, a pleasantly-named command is provided to delete and re-construct both the entire database and the search index.
+Finally, a pleasantly-named command is provided to delete and re-construct both the entire database and the search index. This will delete all the table in the configured database, so be very careful with using this script.
 
 ```bash
 $ docker-compose run worker /bin/bash
