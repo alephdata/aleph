@@ -87,7 +87,7 @@ def pending():
     ref = aliased(Reference)
     q = q.join(ref)
     q = q.group_by(Entity)
-    q = q.order_by(func.sum(ref.weight).desc())
+    q = q.order_by(func.count(ref.id).desc())
     q = q.limit(25)
     entities = []
     for entity in q.all():
