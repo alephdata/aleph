@@ -49,7 +49,7 @@ class HtmlIngestor(DocumentIngestor):
         for field in ['keywords', 'news_keywords']:
             value = doc.find('.//meta[@name="%s"]' % field)
             if value is not None:
-                value.get('content') or ''
+                value = value.get('content') or ''
                 for keyword in value.split(','):
                     meta.add_keyword(keyword.strip())
 

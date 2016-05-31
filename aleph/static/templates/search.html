@@ -142,7 +142,7 @@
         </li>
         <li class="list-group-item facet animate toggle"
           ng-repeat="val in facet.values track by val.id"
-          ng-class="::{'active': query.hasFilter(facet.field, val.id)}"
+          ng-class="{'active': query.hasFilter(facet.field, val.id)}"
           ng-click="query.toggleFilter(facet.field, val.id)">
           <span class="badge">{{val.count | number}}</span>
           <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
