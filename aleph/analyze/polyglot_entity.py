@@ -29,20 +29,23 @@ class PolyglotEntityAnalyzer(Analyzer):
     def on_text(self, text):
         if text is None or len(text) <= 100:
             return
-        text = Text(text)
-        if len(self.meta.languages) == 1:
-            text.hint_language_code = self.meta.languages[0]
-        for entity in text.entities:
-            if entity.tag == 'I-LOC':
-                continue
-            parts = [t for t in entity if t.lower() != t.upper()]
-            if len(parts) < 2:
-                continue
-            entity_name = ' '.join(parts)
-            if len(entity_name) < 5 or len(entity_name) > 150:
-                continue
-            schema = SCHEMAS.get(entity.tag, DEFAULT_SCHEMA)
-            self.entities[entity_name].append(schema)
+        try:
+            text = Text(text)
+            if len(self.meta.languages) == 1:
+                text.hint_language_code = self.meta.languages[0]
+            for entity in text.entities:
+                if entity.tag == 'I-LOC':
+                    continue
+                parts = [t for t in entity if t.lower() != t.upper()]
+                if len(parts) < 2:
+                    continue
+                entity_name = ' '.join(parts)
+                if len(entity_name) < 5 or len(entity_name) > 150:
+                    continue
+                schema = SCHEMAS.get(entity.tag, DEFAULT_SCHEMA)
+                self.entities[entity_name].append(schema)
+        except Exception as ex:
+            log.warning('NER failed: %r', ex)
 
     def load_collection(self):
         if not hasattr(self, '_collection'):
