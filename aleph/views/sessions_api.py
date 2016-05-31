@@ -3,7 +3,7 @@ from flask import session, Blueprint, redirect, request
 from flask_oauthlib.client import OAuthException
 from apikit import jsonify
 
-from aleph import authz
+from aleph import authz, signals
 from aleph.core import db, url_for, oauth_provider
 from aleph.model import Role
 from aleph.views.cache import enable_cache
@@ -77,6 +77,22 @@ def logout():
     return redirect('/')
 
 
+@signals.handle_oauth_session.connect
+def handle_google_oauth(sender, provider=None, session=None):
+    # If you wish to use another OAuth provider with your installation of
+    # aleph, you can create a Python extension package and include a 
+    # custom oauth handler like this, which will create roles and state
+    # for your session.
+    if 'googleapis.com' not in provider.base_url:
+        return
+    me = provider.get('userinfo')
+    user_id = 'google:%s' % me.data.get('id')
+    role = Role.load_or_create(user_id, Role.USER, me.data.get('name'),
+                               email=me.data.get('email'))
+    session['roles'].append(role.id)
+    session['user'] = role.id
+
+
 @blueprint.route('/api/1/sessions/callback')
 def callback():
     resp = oauth_provider.authorized_response()
@@ -87,35 +103,7 @@ def callback():
 
     session['oauth'] = resp
     session['roles'] = [Role.system(Role.SYSTEM_USER)]
-    if 'googleapis.com' in oauth_provider.base_url:
-        me = oauth_provider.get('userinfo')
-        user_id = 'google:%s' % me.data.get('id')
-        role = Role.load_or_create(user_id, Role.USER, me.data.get('name'),
-                                   email=me.data.get('email'))
-    elif 'occrp.org' in oauth_provider.base_url or \
-            'investigativedashboard.org' in oauth_provider.base_url:
-        me = oauth_provider.get('api/2/accounts/profile/')
-        user_id = 'idashboard:user:%s' % me.data.get('id')
-        role = Role.load_or_create(user_id, Role.USER,
-                                   me.data.get('display_name'),
-                                   email=me.data.get('email'),
-                                   is_admin=me.data.get('is_admin'))
-        for group in me.data.get('groups', []):
-            group_id = 'idashboard:%s' % group.get('id')
-            group_role = Role.load_or_create(group_id, Role.GROUP,
-                                             group.get('name'))
-            session['roles'].append(group_role.id)
-    elif 'correctiv.org' in oauth_provider.base_url:
-        me = oauth_provider.get('api/user/')
-        user_id = 'correctiv:user:%s' % me.data.get('id')
-        role = Role.load_or_create(user_id, Role.USER,
-               u'%s %s' % (me.data.get('first_name'), me.data.get('last_name')),
-               email=me.data.get('email'),
-               is_admin=me.data.get('is_superuser', False))
-    else:
-        raise RuntimeError("Unknown OAuth URL: %r" % oauth_provider.base_url)
-    session['roles'].append(role.id)
-    session['user'] = role.id
+    signals.handle_oauth_session.send(provider=oauth_provider, session=session)
     db.session.commit()
-    log.info("Logged in: %r", role)
+    log.info("Logged in: %r", session['user'])
     return redirect('/')
