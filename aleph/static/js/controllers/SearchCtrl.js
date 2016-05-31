@@ -1,6 +1,6 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Source', 'Authz', 'Alert', 'Document', 'Role', 'Title', 'data', 'alerts', 'metadata',
-    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Source, Authz, Alert, Document, Role, Title, data, alerts, metadata) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Source', 'Entity', 'Authz', 'Alert', 'Document', 'Role', 'Title', 'data', 'alerts', 'metadata',
+    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Source, Entity, Authz, Alert, Document, Role, Title, data, alerts, metadata) {
 
   $scope.fields = metadata.fields;
   $scope.sourceFacets = [];
@@ -22,6 +22,15 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
     $event.stopPropagation();
     Source.edit(source).then(function() {
       reloadSearch();
+    });
+  };
+
+  $scope.editEntity = function(entity, $event) {
+    $event.stopPropagation();
+    Entity.edit(entity.id).then(function() {
+      $timeout(function() {
+        reloadSearch();
+      }, 500);
     });
   };
 

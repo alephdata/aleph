@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 from sqlalchemy import func
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import aliased, joinedload
 # from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
@@ -217,6 +217,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
             return {}
         q = cls.all()
         q = cls.filter_collections(q, collections=collections)
+        q = q.options(joinedload('collections'))
         q = q.filter(cls.id.in_(ids))
         entities = {}
         for ent in q:
@@ -267,6 +268,14 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         data = super(Entity, self).to_dict()
         data['collections'] = [c.id for c in self.collections]
         return data
+
+    def to_ref(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            '$schema': self.type,
+            'collections': [c.id for c in self.collections]
+        }
 
 
 class EntityAsset(Entity):

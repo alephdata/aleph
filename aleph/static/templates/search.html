@@ -121,6 +121,9 @@
           <entity-icon schema="entity.$schema"></entity-icon>
           <span class="lbl">
             {{::entity.name | characters:35 }}
+            <a ng-click="editEntity(entity, $event)" ng-if="::authz.entityWrite(entity)">
+              <i class="fa fa-cog"></i>
+            </a>
           </span>
         </li>
       </ul>

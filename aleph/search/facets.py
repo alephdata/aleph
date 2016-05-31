@@ -37,12 +37,9 @@ def convert_entities(entities):
         entity = entities.get(bucket.get('key'))
         if entity is None:
             continue
-        results.append({
-            'id': entity.id,
-            'name': entity.name,
-            '$schema': entity.type,
-            'count': bucket.get('doc_count')
-        })
+        data = entity.to_ref()
+        data['count'] = bucket.get('doc_count')
+        results.append(data)
     return results
 
 

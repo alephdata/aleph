@@ -4,6 +4,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
   $scope.session = {logged_in: false};
   $scope.routeLoaded = false;
   $scope.routeFailed = false;
+  $scope.navbarCollapsed = true;
 
   Metadata.get().then(function(metadata) {
     $scope.session = metadata.session;
