@@ -1,6 +1,6 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Source', 'Authz', 'Alert', 'Document', 'Role', 'Title', 'data', 'metadata',
-    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Source, Authz, Alert, Document, Role, Title, data, metadata) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Source', 'Authz', 'Alert', 'Document', 'Role', 'Title', 'data', 'alerts', 'metadata',
+    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Source, Authz, Alert, Document, Role, Title, data, alerts, metadata) {
 
   $scope.fields = metadata.fields;
   $scope.sourceFacets = [];
@@ -44,8 +44,19 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
     });
   };
 
+  function getAlert() {
+    var alert = {};
+    if ($scope.originalText.length >= 3) {
+      alert.query_text = $scope.originalText;
+    }
+    if ($scope.query.getArray('entity').length == 1) {
+      alert.entity_id = $scope.query.getArray('entity')[0];
+    }
+    return alert;
+  };
+
   $scope.hasAlert = function() {
-    return !$scope.result.error && $scope.result.alert !== null;
+    return Alert.check(getAlert());
   };
 
   $scope.canCreateAlert = function() {
@@ -55,28 +66,11 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
     if ($scope.result.error) {
       return false;
     }
-    if ($scope.originalText.length >= 3) {
-      return true;
-    }
-    if ($scope.query.getArray('entity').length == 1) {
-      return true;
-    }
-    return false;
+    return Alert.valid(getAlert());
   };
 
   $scope.toggleAlert = function() {
-    if ($scope.hasAlert()) {
-      Alert.delete($scope.result.alert);
-      $scope.result.alert = null;
-    } else {
-      var alert = {query_text: $scope.originalText};
-      if ($scope.query.getArray('entity').length == 1) {
-        alert.entity_id = $scope.query.getArray('entity')[0];
-      }
-      Alert.create(alert).then(function(alert) {
-        $scope.result.alert = alert.id;
-      });
-    }
+    return Alert.toggle(getAlert());
   };
 
   var initFacets = function(query, result) {

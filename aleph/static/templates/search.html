@@ -74,12 +74,12 @@
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
-          ng-repeat="source in sourceFacets"
+          ng-repeat="source in sourceFacets track by source.id"
           ng-class="{'active': query.hasFilter('source_id', source.id)}"
           ng-click="query.toggleFilter('source_id', source.id)">
-          <span class="badge">{{::source.count | number}}</span>
+          <span class="badge">{{source.count | number}}</span>
           <span class="lbl">
-            {{::source.label}}
+            {{::source.label | characters:35 }}
             <a ng-click="editSource(source, $event)" ng-show="::authz.source(authz.WRITE, source.id)">
               <i class="fa fa-cog"></i>
             </a>
@@ -117,10 +117,10 @@
           ng-repeat="entity in entityFacets track by entity.id"
           ng-class="{'active': query.hasField('entity', entity.id)}"
           ng-click="query.toggle('entity', entity.id)">
-          <span class="badge">{{::entity.count | number}}</span>
+          <span class="badge">{{entity.count | number}}</span>
           <entity-icon schema="entity.$schema"></entity-icon>
           <span class="lbl">
-            {{::entity.name}}
+            {{::entity.name | characters:35 }}
           </span>
         </li>
       </ul>
@@ -141,12 +141,12 @@
           No documents with {{facet.label}} metadata.
         </li>
         <li class="list-group-item facet animate toggle"
-          ng-repeat="val in facet.values"
+          ng-repeat="val in facet.values track by val.id"
           ng-class="::{'active': query.hasFilter(facet.field, val.id)}"
           ng-click="query.toggleFilter(facet.field, val.id)">
-          <span class="badge">{{::val.count | number}}</span>
+          <span class="badge">{{val.count | number}}</span>
           <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
-            {{::val.label | limitTo:35 }}
+            {{::val.label | characters:35 }}
           </span>
         </li>
       </ul>

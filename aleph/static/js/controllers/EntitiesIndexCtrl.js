@@ -1,6 +1,6 @@
 
-aleph.controller('EntitiesIndexCtrl', ['$scope', '$http', '$timeout', '$anchorScroll', 'Collection', 'Entity', 'data', 'metadata', 'Authz', 'Alert', 'Title',
-    function($scope, $http, $timeout, $anchorScroll, Collection, Entity, data, metadata, Authz, Alert, Title) {
+aleph.controller('EntitiesIndexCtrl', ['$scope', '$http', '$timeout', '$anchorScroll', 'Collection', 'Entity', 'data', 'metadata', 'alerts', 'Authz', 'Alert', 'Title',
+    function($scope, $http, $timeout, $anchorScroll, Collection, Entity, data, metadata, alerts, Authz, Alert, Title) {
 
   $scope.authz = Authz;
   $scope.sortOptions = {
@@ -25,16 +25,12 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$http', '$timeout', '$anchorSc
     });
   };
 
+  $scope.hasAlert = function(entity) {
+    return Alert.check({entity_id: entity.id});
+  };
+
   $scope.toggleAlert = function(entity) {
-    if (entity.alert_id) {
-      Alert.delete(entity.alert_id);
-      entity.alert_id = null;
-    } else {
-      var alert = {entity_id: entity.id};
-      Alert.create(alert).then(function(alert) {
-        entity.alert_id = alert.id;
-      });
-    }
+    return Alert.toggle({entity_id: entity.id});
   };
 
   $scope.createEntity = function($event, name) {

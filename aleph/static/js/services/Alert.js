@@ -1,43 +1,109 @@
 
-aleph.factory('Alert', ['$http', '$q', '$location', '$sce', '$uibModal',
-    function($http, $q, $location, $sce, $uibModal) {
-  var indexDfd = null;
+aleph.factory('Alert', ['$http', '$q', '$location', '$sce', '$uibModal', 'Metadata',
+    function($http, $q, $location, $sce, $uibModal, Metadata) {
+  var indexDfd = null, indexAlerts = null;
 
-  var index = function() {
+  function index() {
     if (indexDfd === null) {
       indexDfd = $q.defer();
-      $http.get('/api/1/alerts', {ignoreLoadingBar: true}).then(function(res) {
-        indexDfd.resolve(res.data);
-      }, function(err) {
-        indexDfd.resolve({total: 0, results: []});
+      Metadata.get().then(function(metadata) {
+        indexAlerts = [];
+        if (!metadata.session.logged_in) {
+          indexDfd.resolve({total: 0, results: []});
+        } else {
+          $http.get('/api/1/alerts', {ignoreLoadingBar: true}).then(function(res) {
+            indexAlerts = res.data.results;
+            indexDfd.resolve(res.data);
+          }, function(err) {
+            indexDfd.reject(err);
+          });  
+        }
       });
     }
     return indexDfd.promise;
   };
 
-  return {
-    index: index,
-    check: function(alert) {
+  function flush() {
+    indexDfd = null;
+    indexAlerts = null;
+    return index();
+  };
 
-    },
-    toggle: function(alert) {
-      
-    },
-    delete: function(id) {
-      return $http.delete('/api/1/alerts/' + id).then(function(res) {
-        indexDfd = null;
-      });
-    },
-    create: function(alert) {
-      var dfd = $q.defer();
-      $http.post('/api/1/alerts', alert).then(function(res) {
-        indexDfd = null;
-        dfd.resolve(res.data);
+  function deleteAlert(id) {
+    var dfd = $q.defer();
+    $http.delete('/api/1/alerts/' + id).then(function(res) {
+      flush().then(function() {
+        dfd.resolve(id);
       }, function(err) {
-        indexDfd = null;
         dfd.reject(err);
       });
-      return dfd.promise;
+    });
+    return dfd.promise;
+  };
+
+  function createAlert(alert) {
+    var dfd = $q.defer();
+    $http.post('/api/1/alerts', alert).then(function(res) {
+      flush().then(function() {
+        dfd.resolve(res.data.id);
+      }, function(err) {
+        dfd.reject(err);
+      });
+    }, function(err) {
+      dfd.reject(err);
+    });
+    return dfd.promise;
+  };
+
+  function checkAlert(alert) {
+    // this is a sync function, but it is premised on alerts already being loaded. 
+    // use with care.
+    if (indexAlerts == null) {
+      return false;
     }
+    // normalize
+    if (alert.query_text && alert.query_text.trim().length < 2) {
+      alert.query_text = null;
+    }
+    for (var i in indexAlerts) {
+      var candidate = indexAlerts[i], 
+          sameId = candidate.entity_id == alert.entity_id,
+          sameQuery = alert.query_text && candidate.query_text && alert.query_text.toLowerCase() == candidate.query_text.toLowerCase();
+      if (!candidate.entity_id && !alert.entity_id && sameQuery) {
+        return candidate.id;
+      } else if (!candidate.query_text && !alert.query_text && sameId) {
+        return candidate.id;
+      } else if (sameId && sameQuery) {
+        return candidate.id;
+      }
+    }
+    return false;
+  };
+
+  function toggleAlert(alert) {
+    var alertId = checkAlert(alert);
+    if (!alertId) {
+      return createAlert(alert);
+    }
+    return deleteAlert(alertId);
+  };
+
+  function validAlert(alert) {
+    if (alert.query_text && alert.query_text.trim().length >= 2) {
+      return true;
+    }
+    if (alert.entity_id) {
+      return true
+    }
+    return false;
+  };
+
+  return {
+    index: index,
+    check: checkAlert,
+    toggle: toggleAlert,
+    delete: deleteAlert,
+    create: createAlert,
+    valid: validAlert
   };
 }]);

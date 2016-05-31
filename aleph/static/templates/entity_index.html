@@ -91,10 +91,10 @@
           <td class="numeric" width="1%">
             <button type="button" class="btn btn-default btn-xs" ng-if="authz.logged_in()"
                 ng-click="toggleAlert(entity)"
-                ng-class="{'btn-primary': entity.alert_id}">
+                ng-class="{'btn-primary': hasAlert(entity)}">
               <i class="fa fa-bell"></i>
-              <span ng-show="entity.alert_id">Stop</span>
-              <span ng-hide="entity.alert_id">Track</span>
+              <span ng-show="hasAlert(entity)">Stop</span>
+              <span ng-hide="hasAlert(entity)">Track</span>
             </button>
           </td>
           <td class="numeric" width="5%">
@@ -141,7 +141,7 @@
           ng-repeat="val in jurisdictionFacet"
           ng-class="{'active': query.hasFilter('jurisdiction_code', val.id)}"
           ng-click="query.toggleFilter('jurisdiction_code', val.id)">
-          <span class="badge">{{::val.count | number}}</span>
+          <span class="badge">{{val.count | number}}</span>
           <span class="lbl">
             {{::val.label | country}}
           </span>
@@ -159,7 +159,7 @@
           ng-repeat="collection in collectionFacet"
           ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
           ng-click="query.toggleFilter('collection_id', collection.id)">
-          <span class="badge">{{::collection.count | number}}</span>
+          <span class="badge">{{collection.count | number}}</span>
           <span class="lbl">
             {{::collection.label | limitTo:50 }}
             <a ng-click="editCollection(collection, $event)" ng-show="authz.collection(authz.WRITE, collection.id)">
@@ -183,7 +183,7 @@
           ng-repeat="val in schemaFacet"
           ng-class="{'active': query.hasFilter('$schema', val.id)}"
           ng-click="query.toggleFilter('$schema', val.id)">
-          <span class="badge">{{::val.count | number}}</span>
+          <span class="badge">{{val.count | number}}</span>
           <span class="lbl">
             <entity-icon schema="val.id"></entity-icon>
             {{::val.label | schemaPlural}}

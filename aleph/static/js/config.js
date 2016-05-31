@@ -11,7 +11,8 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     loginRequired: false,
     resolve: {
       'data': loadSearch,
-      'metadata': loadMetadata
+      'metadata': loadMetadata,
+      'alerts': loadAlertsIndex
     }
   });
 
@@ -47,7 +48,8 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     loginRequired: false,
     resolve: {
       'data': loadEntitiesIndex,
-      'metadata': loadMetadata
+      'metadata': loadMetadata,
+      'alerts': loadAlertsIndex
     }
   });
 

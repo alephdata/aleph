@@ -23,9 +23,6 @@ def query():
     query['size'] = get_limit(default=100)
     query['from'] = get_offset()
     result = execute_documents_query(request.args, query)
-    result['alert'] = None
-    if authz.logged_in():
-        result['alert'] = Alert.exists(request.args, request.auth_role)
     params = next_params(request.args, result)
     if params is not None:
         result['next'] = url_for('search_api.query', **params)
