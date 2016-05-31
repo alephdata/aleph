@@ -196,7 +196,10 @@ class Metadata(MutableMapping):
             url = 'http:%s' % url
         elif '://' not in url:
             url = 'http://%s' % url
-        parsed = urlparse(url)
+        try:
+            parsed = urlparse(url)
+        except ValueError:
+            return
         urls.append(url)
         self.add_domain(parsed.hostname)
         self.data['urls'] = list(set(urls))
@@ -217,8 +220,11 @@ class Metadata(MutableMapping):
             return
         domain = domain.strip().lower()
         if '://' in domain:
-            parsed = urlparse(domain)
-            domain = parsed.hostname
+            try:
+                parsed = urlparse(domain)
+                domain = parsed.hostname
+            except ValueError:
+                return
         if domain.startswith('www.'):
             domain = domain[len('www.'):]
         domains.append(domain)
