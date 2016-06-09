@@ -81,10 +81,6 @@ class CrawlerState(db.Model):
     @classmethod
     def crawler_stats(cls, crawler_id):
         stats = {}
-        col = func.count(func.distinct(cls.crawler_run))
-        q = db.session.query(col)
-        q = q.filter(cls.crawler_id == crawler_id)
-        stats['run_count'] = q.scalar()
         last_run_id, last_run_time = cls.crawler_last_run(crawler_id)
 
         # Check if the crawler was active very recently, if so, don't

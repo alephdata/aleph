@@ -12,7 +12,7 @@ blueprint = Blueprint('crawlers_api', __name__)
 def index():
     authz.require(authz.is_admin())
     crawlers = list(get_exposed_crawlers())
-    return jsonify({'results': crawlers, 'total': len(crawlers)})
+    return jsonify(Pager(crawlers, limit=20))
 
 
 @blueprint.route('/api/1/crawlers', methods=['POST', 'PUT'])
@@ -24,7 +24,7 @@ def queue():
         if crawler_id == cls.get_id():
             incremental = bool(data.get('incremental', False))
             execute_crawler.delay(crawler_id, incremental=incremental)
-            return jsonify({'status': 'queued'})
+            return jsonify({'status': 'queued'}) 
     return jsonify({'status': 'error', 'message': 'No such crawler'},
                    status=400)
 
@@ -41,5 +41,4 @@ def states():
     if 'error_type' in request.args:
         q = q.filter(CrawlerState.error_type == request.args.get('error_type'))
     q = q.order_by(CrawlerState.created_at.desc())
-    response = Pager(q).to_dict()
-    return jsonify(response)
+    return jsonify(Pager(q))

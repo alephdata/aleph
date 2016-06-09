@@ -76,7 +76,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   $routeProvider.when('/crawlers', {
     templateUrl: 'templates/crawlers_manage.html',
     controller: 'CrawlersManageCtrl',
-    reloadOnSearch: false,
+    reloadOnSearch: true,
     loginRequired: false,
     resolve: {
       'crawlers': loadCrawlers

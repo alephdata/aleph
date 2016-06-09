@@ -18,7 +18,7 @@
     <th>Execute crawler</th>
   </tr>
 
-  <tr ng-repeat="crawler in crawlers">
+  <tr ng-repeat="crawler in crawlers.results">
     <td>
       <strong ng-bind="::crawler.name"></strong>
     </td>
@@ -74,3 +74,12 @@
     </td>
   </tr>
 </table>
+
+<div class="bottom-pager">
+  <div class="pull-right">
+    <response-pager response="crawlers" load="loadOffset(offset)"></response-pager>
+  </div>
+  <div class="total" ng-if="crawlers.total">
+    Monitoring {{crawlers.total | number}} crawlers.
+  </div>
+</div>
