@@ -9,9 +9,15 @@ from sqlalchemy.orm.attributes import flag_modified
 from aleph.core import db
 from aleph.metadata import Metadata
 from aleph.model.source import Source
+from aleph.model.collection import Collection
 from aleph.model.common import DatedModel
 
 log = logging.getLogger(__name__)
+
+collection_document_table = db.Table('collection_document',
+    db.Column('document_id', db.BigInteger, db.ForeignKey('document.id')),  # noqa
+    db.Column('collection_id', db.Integer, db.ForeignKey('collection.id'))  # noqa
+)
 
 
 class Document(db.Model, DatedModel):
@@ -26,6 +32,9 @@ class Document(db.Model, DatedModel):
     source_id = db.Column(db.Integer(), db.ForeignKey('source.id'), index=True)
     source = db.relationship(Source, backref=db.backref('documents', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
     _meta = db.Column('meta', JSONB)
+
+    collections = db.relationship(Collection, secondary=collection_document_table,  # noqa
+                                  backref=db.backref('documents', lazy='dynamic'))  # noqa
 
     @property
     def title(self):
