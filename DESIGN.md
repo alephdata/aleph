@@ -128,6 +128,14 @@ De-dupe todo:
 8. update source entities
 9. update target entity
 
+Sources to-do:
+
+1. Source attributes: owner, bulk_source
+2. Merge collections and sources?
+3. Create source directive
+4. Create upload API, delayed file ingest, URL ingest (?)
+4. Create upload / edit metadata thing
+
 
 mini-bugs: 
 
