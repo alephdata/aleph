@@ -52,11 +52,8 @@ DOCUMENT_MAPPING = {
             "type": "nested",
             "include_in_parent": True,
             "properties": {
-                "uuid": {"type": "string", "index": "not_analyzed"},
-                "collection_id": {"type": "integer", "index": "not_analyzed"},
-                "name": {"type": "string", "index": "not_analyzed"},
-                "$schema": {"type": "string", "index": "not_analyzed"},
-                "weight": {"type": "string", "index": "not_analyzed"}
+                "id": {"type": "string", "index": "not_analyzed"},
+                "collection_id": {"type": "integer", "index": "not_analyzed"}
             }
         },
     }

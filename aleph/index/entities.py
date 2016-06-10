@@ -26,11 +26,11 @@ def document_updates(q, entity_id, references=None):
         entities = []
         if references is not None:
             entities.append({
-                'uuid': entity_id,
+                'id': entity_id,
                 'collection_ids': references[res['_id']]
             })
         for ent in res.get('_source').get('entities'):
-            if ent['uuid'] != entity_id:
+            if ent['id'] != entity_id:
                 entities.append(ent)
         body['entities'] = entities
         yield {
@@ -43,7 +43,7 @@ def document_updates(q, entity_id, references=None):
 
 
 def delete_entity_references(entity_id):
-    q = {'query': {'term': {'entities.uuid': entity_id}}}
+    q = {'query': {'term': {'entities.id': entity_id}}}
     bulk_op(document_updates(q, entity_id))
 
 
@@ -70,7 +70,7 @@ def update_entity_references(entity_id, max_query=1000):
 
 def get_count(entity):
     """Inaccurate, as it does not reflect auth."""
-    q = {'term': {'entities.uuid': entity.id}}
+    q = {'term': {'entities.id': entity.id}}
     q = {'size': 0, 'query': q}
     result = get_es().search(index=get_es_index(),
                              doc_type=TYPE_DOCUMENT,
@@ -89,7 +89,7 @@ def generate_entities(document):
         if reference.entity.state != Entity.STATE_ACTIVE:
             continue
         entities.append({
-            'uuid': reference.entity.id,
+            'id': reference.entity.id,
             'collection_ids': colls
         })
     return entities

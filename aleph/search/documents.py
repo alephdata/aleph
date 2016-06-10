@@ -47,7 +47,7 @@ def documents_query(args, fields=None, facets=True):
 
     filters = parse_filters(args)
     for entity in args.getlist('entity'):
-        filters.append(('entities.uuid', entity))
+        filters.append(('entities.id', entity))
 
     aggs = {}
     if facets:
@@ -84,7 +84,7 @@ def entity_collections(q, aggs, args, filters):
                 'and': [
                     {
                         'terms': {'entities.collection_id': readable},
-                        'terms': {'entities.uuid': entities},
+                        'terms': {'entities.id': entities},
                     }
                 ]
             }
@@ -99,7 +99,7 @@ def entity_collections(q, aggs, args, filters):
                 'filter': flt,
                 'aggs': {
                     'entities': {
-                        'terms': {'field': 'entities.uuid', 'size': FACET_SIZE}
+                        'terms': {'field': 'entities.id', 'size': FACET_SIZE}
                     }
                 }
             }
@@ -196,7 +196,7 @@ def alert_query(alert):
     q = text_query(alert.query_text)
     q = authz_sources_filter(q)
     if alert.entity_id:
-        q = filter_query(q, [('entities.uuid', alert.entity_id)], OR_FIELDS)
+        q = filter_query(q, [('entities.id', alert.entity_id)], OR_FIELDS)
     if alert.notified_at:
         q = add_filter(q, {
             "range": {

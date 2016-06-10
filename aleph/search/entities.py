@@ -175,7 +175,7 @@ def execute_entities_query(args, query, doc_counts=False):
         entity['api_url'] = url_for('entities_api.view', id=doc.get('_id'))
         output['results'].append(entity)
 
-        sq = {'term': {'entities.uuid': entity['id']}}
+        sq = {'term': {'entities.id': entity['id']}}
         sq = authz_sources_filter(sq)
         sq = {'size': 0, 'query': sq}
         sub_queries.append(json.dumps({}))
