@@ -1,5 +1,7 @@
 import re
 import logging
+import phonenumbers
+from phonenumbers.phonenumberutil import NumberParseException
 
 from aleph.analyze.analyzer import Analyzer
 # https://github.com/daviddrysdale/python-phonenumbers
@@ -46,3 +48,35 @@ class URLAnalyzer(RegexAnalyzer):
 
         for url in matches:
             self.meta.add_url(url)
+
+
+class PhoneNumberAnalyzer(RegexAnalyzer):
+    REGEX = r'(\+?[\d\-\(\)\/\s]{5,})'
+    CHARS = '+0123456789'
+    FLAG = re.IGNORECASE
+    FORMAT = phonenumbers.PhoneNumberFormat.INTERNATIONAL
+
+    def get_number(self, num, country=None):
+        if country is not None:
+            country = country.upper()
+        try:
+            num = phonenumbers.parse(num, country)
+            if phonenumbers.is_possible_number(num):
+                if phonenumbers.is_valid_number(num):
+                    return phonenumbers.format_number(num, self.FORMAT)
+            return None
+        except NumberParseException:
+            return None
+
+    def finalize(self):
+        for match in self.matches:
+            match = match.group(0)
+            match = ''.join([m for m in match if m in self.CHARS])
+            if len(match) < 5:
+                continue
+            countries = [None] + self.meta.countries
+            for country in countries:
+                num = self.get_number(match, country=country)
+                if num is not None:
+                    log.info("Extraced phone: %s", num)
+                    self.meta.add_phone_number(num)

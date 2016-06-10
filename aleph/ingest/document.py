@@ -32,9 +32,10 @@ class DocumentIngestor(TextIngestor):
                     '--nolockcheck', '--invisible', '--outdir', work_dir,
                     '--headless', local_path]
             log.debug('Converting document: %r', ' '.join(args))
-            subprocess.call(args)
+            subprocess.call(args, stderr=subprocess.STDOUT)
             for out_file in os.listdir(work_dir):
                 return os.path.join(work_dir, out_file)
+            raise IngestorException("Could not convert document: %r" % meta)
         finally:
             shutil.rmtree(instance_dir)
 
@@ -48,8 +49,6 @@ class DocumentIngestor(TextIngestor):
 
     def ingest(self, meta, local_path):
         pdf_path = self.generate_pdf_alternative(meta, local_path)
-        if pdf_path is None or not os.path.isfile(pdf_path):
-            raise IngestorException("Could not convert document: %r" % meta)
         self.extract_pdf_alternative(meta, pdf_path)
 
 

@@ -185,7 +185,7 @@ class Metadata(MutableMapping):
     def urls(self, urls):
         self.data['emails'] = []
         for url in urls:
-            self.add_email(url)
+            self.add_url(url)
 
     def add_url(self, url):
         urls = self.urls
@@ -212,7 +212,7 @@ class Metadata(MutableMapping):
     def domains(self, domains):
         self.data['domains'] = []
         for domain in domains:
-            self.add_email(domain)
+            self.add_domain(domain)
 
     def add_domain(self, domain):
         domains = self.domains
@@ -229,6 +229,21 @@ class Metadata(MutableMapping):
             domain = domain[len('www.'):]
         domains.append(domain)
         self.data['domains'] = list(set(domains))
+
+    @property
+    def phone_numbers(self):
+        return list(set(self.data.get('phone_numbers', [])))
+
+    @phone_numbers.setter
+    def phone_numbers(self, phone_numbers):
+        self.data['phone_numbers'] = []
+        for phone_number in phone_numbers:
+            self.add_phone_number(phone_number)
+
+    def add_phone_number(self, phone_number):
+        phone_numbers = self.phone_numbers
+        phone_numbers.append(phone_number)
+        self.data['phone_numbers'] = list(set(phone_numbers))
 
     @property
     def dates(self):

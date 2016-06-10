@@ -40,6 +40,7 @@ DOCUMENT_MAPPING = {
         "emails": {"type": "string", "index": "not_analyzed"},
         "urls": {"type": "string", "index": "not_analyzed"},
         "domains": {"type": "string", "index": "not_analyzed"},
+        "phone_numbers": {"type": "string", "index": "not_analyzed"},
         "dates": {"type": "date", "format": "yyyy-MM-dd"},
         "mime_type": {"type": "string", "index": "not_analyzed"},
         "author": {"type": "string", "index": "not_analyzed"},
