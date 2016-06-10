@@ -35,27 +35,27 @@
       "title": "Residential address",
       "$ref": "/entity/address.json#"
     },
-    "family_first": {
+    "relatives_left": {
       "title": "Family members (1)",
-      "rdfReverse": "first_person",
+      "rdfReverse": "person_left",
       "type": "array",
       "items": {"$ref": "/link/family.json#"}
     },
-    "family_second": {
+    "relatives_right": {
       "title": "Family members (2)",
-      "rdfReverse": "second_person",
+      "rdfReverse": "person_right",
       "type": "array",
       "items": {"$ref": "/link/family.json#"}
     },
-    "social_first": {
+    "associates_left": {
       "title": "Social relationships (1)",
-      "rdfReverse": "first_person",
+      "rdfReverse": "person_left",
       "type": "array",
       "items": {"$ref": "/link/social.json#"}
     },
-    "social_second": {
+    "associates_right": {
       "title": "Social relationships (2)",
-      "rdfReverse": "second_person",
+      "rdfReverse": "person_right",
       "type": "array",
       "items": {"$ref": "/link/social.json#"}
     }

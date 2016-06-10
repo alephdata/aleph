@@ -10,14 +10,8 @@
   "inline": false,
   "graph": "edge",
   "oneOf": [{"$ref": "/link/link.json#"}],
-  "required": ["role"],
+  "required": [],
   "properties": {
-    "role": {
-      "title": "Role",
-      "sortIndex": 90,
-      "description": "The role that the member fulfills in the organization",
-      "type": ["string", "null"]
-    },
     "person": {
       "title": "Member",
       "sortIndex": 85,

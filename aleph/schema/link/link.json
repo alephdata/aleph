@@ -10,19 +10,30 @@
       "hidden": true,
       "type": "integer"
     },
+    "role": {
+      "title": "Relationship",
+      "sortIndex": 95,
+      "type": ["string", "null"]
+    },
+    "summary": {
+      "title": "Summary",
+      "sortIndex": 95,
+      "type": ["string", "null"]
+    },
     "start_date": {
       "title": "Start date",
       "sortIndex": 71,
       "description": "The date on which the relationship began",
       "type": ["string", "null"],
-      "format": "date"
+      "format": "partial-date"
     },
     "end_date": {
       "title": "End date",
       "sortIndex": 70,
       "description": "The date on which the relationship ended",
       "type": ["string", "null"],
-      "format": "date"
+      "format": "partial-date"
     }
+
   }
 }
