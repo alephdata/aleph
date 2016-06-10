@@ -39,25 +39,25 @@
       "title": "Family members (1)",
       "rdfReverse": "person_left",
       "type": "array",
-      "items": {"$ref": "/link/family.json#"}
+      "items": {"$ref": "/link/relative.json#"}
     },
     "relatives_right": {
       "title": "Family members (2)",
       "rdfReverse": "person_right",
       "type": "array",
-      "items": {"$ref": "/link/family.json#"}
+      "items": {"$ref": "/link/relative.json#"}
     },
     "associates_left": {
       "title": "Social relationships (1)",
       "rdfReverse": "person_left",
       "type": "array",
-      "items": {"$ref": "/link/social.json#"}
+      "items": {"$ref": "/link/associate.json#"}
     },
     "associates_right": {
       "title": "Social relationships (2)",
       "rdfReverse": "person_right",
       "type": "array",
-      "items": {"$ref": "/link/social.json#"}
+      "items": {"$ref": "/link/associate.json#"}
     }
   }
 }
