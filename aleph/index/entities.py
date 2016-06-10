@@ -27,7 +27,7 @@ def document_updates(q, entity_id, references=None):
         if references is not None:
             entities.append({
                 'uuid': entity_id,
-                'collection_id': references[res['_id']]
+                'collection_ids': references[res['_id']]
             })
         for ent in res.get('_source').get('entities'):
             if ent['uuid'] != entity_id:
@@ -90,7 +90,7 @@ def generate_entities(document):
             continue
         entities.append({
             'uuid': reference.entity.id,
-            'collection_id': colls
+            'collection_ids': colls
         })
     return entities
 
@@ -100,7 +100,6 @@ def index_entity(entity):
     data = entity.to_dict()
     data.pop('id', None)
     data['doc_count'] = get_count(entity)
-    data['collection_id'] = data.get('collections')
     data['terms'] = entity.terms
     data['terms_latin'] = [latinize_text(t) for t in entity.terms]
     data['name_latin'] = latinize_text(data.get('name'))
