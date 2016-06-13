@@ -3,7 +3,7 @@ import logging
 import requests
 from tempfile import mkstemp
 
-from aleph.core import get_archive, celery
+from aleph.core import db, get_archive, celery
 from aleph.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor, IngestorException
 
@@ -46,6 +46,8 @@ def ingest_url(source_id, metadata, url):
         Ingestor.dispatch(source_id, meta)
     except Exception as ex:
         Ingestor.handle_exception(meta, source_id, ex)
+    finally:
+        db.session.remove()
 
 
 def ingest_file(source_id, meta, file_path, move=False):
@@ -58,6 +60,8 @@ def ingest_file(source_id, meta, file_path, move=False):
         ingest.delay(source_id, meta.data)
     except Exception as ex:
         Ingestor.handle_exception(meta, source_id, ex)
+    finally:
+        db.session.remove()
 
 
 @celery.task()

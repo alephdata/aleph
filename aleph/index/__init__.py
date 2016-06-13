@@ -1,7 +1,7 @@
 import logging
-from elasticsearch.helpers import bulk, scan
+from elasticsearch.helpers import scan
 
-from aleph.core import celery, get_es, get_es_index
+from aleph.core import celery, get_es, get_es_index, db
 from aleph.model import Document
 from aleph.text import latinize_text
 from aleph.index.admin import init_search, upgrade_search  # noqa
@@ -43,17 +43,20 @@ def delete_source(source_id):
 
 @celery.task()
 def index_document(document_id):
-    document = Document.by_id(document_id)
-    if document is None:
-        log.info("Could not find document: %r", document_id)
-        return
-    log.info("Index document: %r", document)
-    data = document.to_index_dict()
-    data['entities'] = generate_entities(document)
-    data['title_latin'] = latinize_text(data.get('title'))
-    data['summary_latin'] = latinize_text(data.get('summary'))
-    get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
-                   id=document.id)
+    try:
+        document = Document.by_id(document_id)
+        if document is None:
+            log.info("Could not find document: %r", document_id)
+            return
+        log.info("Index document: %r", document)
+        data = document.to_index_dict()
+        data['entities'] = generate_entities(document)
+        data['title_latin'] = latinize_text(data.get('title'))
+        data['summary_latin'] = latinize_text(data.get('summary'))
+        get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
+                       id=document.id)
 
-    clear_records(document)
-    bulk_op(generate_records(document))
+        clear_records(document)
+        bulk_op(generate_records(document))
+    finally:
+        db.session.remove()

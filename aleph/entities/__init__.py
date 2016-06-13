@@ -69,11 +69,14 @@ def update_entity(entity):
 @celery.task()
 def update_entity_full(entity_id):
     """Perform some update operations on entities."""
-    query = db.session.query(Entity).filter(Entity.id == entity_id)
-    entity = query.first()
-    generate_entity_references(entity)
-    reindex_entity(entity)
-    Alert.dedupe(entity.id)
+    try:
+        query = db.session.query(Entity).filter(Entity.id == entity_id)
+        entity = query.first()
+        generate_entity_references(entity)
+        reindex_entity(entity)
+        Alert.dedupe(entity.id)
+    finally:
+        db.session.remove()
 
 
 def reindex_entity(entity, references=True):
@@ -88,6 +91,9 @@ def reindex_entity(entity, references=True):
 
 @celery.task()
 def reindex_entities():
-    query = db.session.query(Entity)
-    for entity in query.yield_per(1000):
-        reindex_entity(entity)
+    try:
+        query = db.session.query(Entity)
+        for entity in query.yield_per(1000):
+            reindex_entity(entity)
+    finally:
+        db.session.remove()
