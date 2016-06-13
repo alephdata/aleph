@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 
 @celery.task()
 def ingest_url(source_id, metadata, url):
-    if source_id == 136:
+    if source_id in [132, 134, 135, 136, 137]:
         return
     meta = Metadata(data=metadata)
     try:
