@@ -70,17 +70,17 @@
   <div class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <strong>Document sources</strong> <small>{{sourceFacets.length}}</small>
+        <strong>Document collections</strong> <small>{{collectionFacets.length}}</small>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
-          ng-repeat="source in sourceFacets track by source.id"
-          ng-class="{'active': query.hasFilter('source_id', source.id)}"
-          ng-click="query.toggleFilter('source_id', source.id)">
-          <span class="badge">{{source.count | number}}</span>
+          ng-repeat="collection in collectionFacet track by collection.id"
+          ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
+          ng-click="query.toggleFilter('collection_id', collection.id)">
+          <span class="badge">{{collection.count | number}}</span>
           <span class="lbl">
-            {{::source.label | characters:35 }}
-            <a ng-click="editSource(source, $event)" ng-show="::authz.source(authz.WRITE, source.id)">
+            {{::collection.label | characters:35 }}
+            <a ng-click="editCollection(collection, $event)" ng-show="::authz.collection(authz.WRITE, collection.id)">
               <i class="fa fa-cog"></i>
             </a>
           </span>
@@ -91,10 +91,10 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <span class="pull-right">
-          <a class="btn btn-xs btn-default" ng-click="createQueryEntity()"
+          <!--a class="btn btn-xs btn-default" ng-click="createQueryEntity()"
               ng-if="authz.logged_in()">
             <i class="fa fa-plus"></i>
-          </a>
+          </a-->
           <a class="btn btn-xs btn-default" ng-click="selectCollections($event)">
             <i class="fa fa-filter"></i>
           </a>
@@ -105,7 +105,7 @@
         </small>
       </div>
       <ul class="list-group facet-list">
-        <li class="list-group-item facet empty" ng-if="!result.entities.length">
+        <li class="list-group-item facet empty" ng-if="!result.facets.entities.values.length">
           <span ng-hide="query.state.collection.length">
             <a ng-click="selectCollections($event)"><i class="fa fa-cog"></i> Select watchlists</a> to see tagged entities.
           </span>
@@ -114,7 +114,7 @@
           </span>
         </li>
         <li class="list-group-item facet animate toggle"
-          ng-repeat="entity in entityFacets track by entity.id"
+          ng-repeat="entity in entityFacet track by entity.id"
           ng-class="{'active': query.hasField('entity', entity.id)}"
           ng-click="query.toggle('entity', entity.id)">
           <span class="badge">{{entity.count | number}}</span>

@@ -38,7 +38,7 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope',
           collectionsCount: collectionsCount,
           fields: metadata.fields,
           schemata: metadata.schemata,
-          source_categories: metadata.source_categories,
+          collection_categories: metadata.collection_categories,
           countries: metadata.countries, 
           languages: metadata.languages,
           flush: flush 

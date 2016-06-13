@@ -10,12 +10,15 @@ aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSeria
     templateUrl: 'templates/search_result.html',
     link: function (scope, element, attrs) {
       
-      for (var i in scope.result.sources.values) {
-        var source = scope.result.sources.values[i];
-        if (source.id === scope.doc.source_id) {
-          scope.source = source;
+      var collections = [];
+      for (var i in scope.result.facets.collections.values) {
+        var collection = scope.result.facets.collections.values[i];
+        if (scope.doc.collection_id.indexOf(collection.id) != -1) {
+          collections.push(collection);
         }
       }
+      scope.collections = collections;
+
       for (var j in scope.doc.records.results) {
         var rec = scope.doc.records.results[j];
         rec.snippets = [];
@@ -25,8 +28,8 @@ aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSeria
         }
       }
 
-      scope.filterSource = function(source_id) {
-        scope.query.toggleFilter('source_id', source_id);
+      scope.filterCollection = function(collection_id) {
+        scope.query.toggleFilter('collection_id', collection_id);
       };
 
       scope.getUrl = function(rec) {

@@ -15,12 +15,15 @@
       <span ng-if="doc.title != doc.file_name" class="addon" ng-bind="::doc.file_name"></span>
     </div>
 
-    <div class="source">
-      <span ng-if="::source.category" class="label label-primary">{{:: source.category | sourceCategory }}</span>
-      <a ng-click="filterSource(doc.source_id)" class="source"
-        ng-bind="::source.label"></a>
+    <div class="context">
+      <span ng-repeat="coll in collections">
+        <span ng-if="::coll.category"
+          class="label label-primary">{{:: coll.category | collectionCategory }}</span>
+        <a ng-click="filterSource(coll.id)" class="source"
+          ng-bind="::coll.label"></a>
+        &middot;
+      </span>
       <span ng-if="::doc.source_url">
-        |
         <i class="fa fa-external-link"></i>
         from
         <a ng-href="{{::doc.source_url}}" target="_new">{{::doc.source_url | host}}</a>

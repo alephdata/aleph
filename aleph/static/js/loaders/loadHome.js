@@ -3,8 +3,8 @@ var loadHome = ['$http', '$q', '$route', function($http, $q, $route) {
   var query = {limit: 0};
   $http.get('/api/1/query', {cache: true, params: query}).then(function(res) {
     var collections = {};
-    for (var i in res.data.collections.values) {
-      var collection = res.data.collections.values[i],
+    for (var i in res.data.facets.collections.values) {
+      var collection = res.data.facets.collections.values[i],
           category = collection.category || 'other';
       if (!collections[category]) {
         collections[category] = [collection];

@@ -1,6 +1,6 @@
 
-aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Source', 'Collection', 'Authz', 'Role', 'Title', 'data', 'metadata',
-    function($scope, $location, $route, Source, Collection, Authz, Role, Title, data, metadata) {
+aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Collection', 'Authz', 'Role', 'Title', 'data', 'metadata',
+    function($scope, $location, $route, Collection, Authz, Role, Title, data, metadata) {
 
   $scope.result = data.result;
   $scope.sources = data.sources;
@@ -18,13 +18,6 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Source', 'Collec
   $scope.submitSearch = function(form) {
     $location.path('/search');
     $location.search({q: $scope.query.q});
-  };
-
-  $scope.editSource = function(source, $event) {
-    $event.stopPropagation();
-    Source.edit(source).then(function() {
-      $route.reload();
-    });
   };
 
   $scope.editCollection = function(collection, $event) {

@@ -3,8 +3,8 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
     function($scope, $route, $location, $anchorScroll, $http, $uibModal, Collection, Entity, Authz, Alert, Document, Role, Title, data, alerts, metadata) {
 
   $scope.fields = metadata.fields;
-  $scope.sourceFacets = [];
-  $scope.entityFacets = [];
+  $scope.collectionFacet = [];
+  $scope.entityFacet = [];
   $scope.facets = [];
   $scope.authz = Authz;
   $scope.sortOptions = {
@@ -86,8 +86,8 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
     if (result.error) {
       return;
     }
-    $scope.sourceFacets = query.sortFacet(result.sources.values, 'filter:source_id');
-    $scope.entityFacets = query.sortFacet(result.entities, 'entity');
+    $scope.collectionFacet = query.sortFacet(result.facets.collections.values, 'filter:collection_id');
+    $scope.entityFacet = query.sortFacet(result.facets.entities.values, 'entity');
 
     var queryFacets = query.getArray('facet'),
         facets = [];

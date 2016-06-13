@@ -4,6 +4,11 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
   
   $scope.collection = collection;
 
+  Metadata.get().then(function(metadata) {
+    $scope.categories = metadata.collection_categories;
+  });
+  
+
   $scope.cancel = function() {
     $uibModalInstance.dismiss('cancel');
   };

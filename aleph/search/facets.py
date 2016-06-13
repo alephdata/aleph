@@ -40,27 +40,27 @@ def convert_entities(entities):
         data = entity.to_ref()
         data['count'] = bucket.get('doc_count')
         results.append(data)
-    return results
+    return {'values': results}
 
 
 def convert_collections(facet):
-    output = {'values': []}
+    results = []
     ids = [b.get('key') for b in facet.get('buckets', [])]
     if not len(ids):
-        return output
+        return {'values': []}
     collections = Collection.all_by_ids(ids).all()
     for bucket in facet.get('buckets', []):
         key = bucket.get('key')
         for collection in collections:
             if collection.id != key:
                 continue
-            output['values'].append({
+            results.append({
                 'id': key,
                 'label': collection.label,
                 'category': collection.category,
                 'count': bucket.get('doc_count')
             })
-    return output
+    return {'values': results}
 
 
 def convert_facets(result, output, args):
@@ -78,20 +78,22 @@ def convert_facets(result, output, args):
 
 def convert_document_aggregations(result, output, args):
     """Traverse and get all facets."""
+    output = convert_facets(result, output, args)
     aggs = result.get('aggregations', {})
     scoped = aggs.get('scoped', {})
     collections = scoped.get('collections', {}).get('collections', {})
-    output['collections'] = convert_collections(collections)
+    output['facets']['collections'] = convert_collections(collections)
     entities = aggs.get('entities', {}).get('inner', {})
     entities = entities.get('entities', {})
-    output['entities'] = convert_entities(entities)
-    return convert_facets(result, output, args)
+    output['facets']['entities'] = convert_entities(entities)
+    return output
 
 
 def convert_entity_aggregations(result, output, args):
     """Traverse and get all facets."""
+    output = convert_facets(result, output, args)
     aggs = result.get('aggregations', {})
     scoped = aggs.get('scoped', {})
     collections = scoped.get('collections', {}).get('collections', {})
-    output['collections'] = convert_collections(collections)
-    return convert_facets(result, output, args)
+    output['facets']['collections'] = convert_collections(collections)
+    return output

@@ -18,8 +18,9 @@ def collections(action):
         else:
             q = Permission.all()
             q = q.filter(Permission.role_id.in_(request.auth_roles))
+            q = q.filter(Permission.collection_id != None)  # noqa
             for perm in q:
-                if perm.read:
+                if perm.read or perm.write:
                     request.auth_collections[READ].add(perm.collection_id)
                 if perm.write and request.logged_in:
                     request.auth_collections[WRITE].add(perm.collection_id)

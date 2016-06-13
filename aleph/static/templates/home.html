@@ -56,7 +56,7 @@
       and data sets.</p>
       <div ng-repeat="(category, lst) in sources | orderBy:category">
         <div class="heading">
-          <strong>{{::category | sourceCategory}}</strong>
+          <strong>{{::category | collectionCategory}}</strong>
         </div>
         <div class="row">
           <div class="col-md-6 source" ng-repeat="source in lst">

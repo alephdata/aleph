@@ -19,6 +19,7 @@ COLLECTION_CATEGORIES = {
     'gazette': 'Gazette notices',
     'court': 'Court cases',
     'company': 'Company records',
+    'watchlist': 'Watchlist',
     'scrape': 'Scrapes',
     'procurement': 'Procurement',
     'grey': 'Grey Literature'
