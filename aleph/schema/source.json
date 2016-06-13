@@ -10,10 +10,6 @@
         },
         "generate_entities": {
             "type": "boolean"
-        },
-        "category": {
-            "type": "string",
-            "format": "source-category"
         }
     },
     "required": ["label"]

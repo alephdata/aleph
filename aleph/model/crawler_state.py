@@ -3,7 +3,7 @@ from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
-from aleph.model.source import Source
+from aleph.model.collection import Collection
 
 
 class CrawlerState(db.Model):
@@ -24,14 +24,14 @@ class CrawlerState(db.Model):
     error_message = db.Column(db.Unicode(), nullable=True)
     error_details = db.Column(db.Unicode(), nullable=True)
     meta = db.Column(JSONB)
-    source_id = db.Column(db.Integer(), db.ForeignKey('source.id'), index=True)
-    source = db.relationship(Source, backref=db.backref('crawl_states', cascade='all, delete-orphan'))  # noqa
+    collection_id = db.Column(db.Integer(), db.ForeignKey('collection.id'), index=True)
+    collection = db.relationship(Collection, backref=db.backref('crawl_states', cascade='all, delete-orphan'))  # noqa
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     @classmethod
-    def _from_meta(cls, meta, source_id):
+    def _from_meta(cls, meta, collection_id):
         obj = cls()
-        obj.source_id = source_id
+        obj.collection_id = collection_id
         obj.crawler_id = meta.get('crawler')
         obj.crawler_run = meta.get('crawler_run')
         obj.foreign_id = meta.foreign_id
@@ -41,9 +41,9 @@ class CrawlerState(db.Model):
         return obj
 
     @classmethod
-    def store_stub(cls, source_id, crawler_id, crawler_run):
+    def store_stub(cls, collection_id, crawler_id, crawler_run):
         obj = cls()
-        obj.source_id = source_id
+        obj.collection_id = collection_id
         obj.crawler_id = crawler_id
         obj.crawler_run = crawler_run
         obj.error_type = 'init'
@@ -52,15 +52,15 @@ class CrawlerState(db.Model):
         return obj
 
     @classmethod
-    def store_ok(cls, meta, source_id):
-        obj = cls._from_meta(meta, source_id)
+    def store_ok(cls, meta, collection_id):
+        obj = cls._from_meta(meta, collection_id)
         obj.status = cls.STATUS_OK
         return obj
 
     @classmethod
-    def store_fail(cls, meta, source_id, error_type=None, error_message=None,
-                   error_details=None):
-        obj = cls._from_meta(meta, source_id)
+    def store_fail(cls, meta, collection_id, error_type=None,
+                   error_message=None, error_details=None):
+        obj = cls._from_meta(meta, collection_id)
         obj.status = cls.STATUS_FAIL
         obj.error_type = error_type
         obj.error_message = error_message
@@ -116,7 +116,7 @@ class CrawlerState(db.Model):
             'error_message': self.error_message,
             'error_details': self.error_details,
             'meta': self.meta,
-            'source_id': self.source_id,
+            'collection_id': self.collection_id,
             'created_at': self.created_at
         }
 

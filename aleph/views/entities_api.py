@@ -25,7 +25,7 @@ def check_authz(entity, permission):
 
 def get_collections(data):
     collections = []
-    for coll_id in data.get('collections'):
+    for coll_id in data.get('collection_id'):
         if isinstance(coll_id, dict):
             coll_id = coll_id.get('id')
         collections.append(coll_id)

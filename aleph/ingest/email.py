@@ -53,7 +53,7 @@ class EmailFileIngestor(TextIngestor):
         if child.file_name == 'rtf-body.rtf':
             return
 
-        ingest_file(self.source_id, child, out_path, move=True)
+        ingest_file(self.collection_id, child, out_path, move=True)
 
     def parse_headers(self, msg, meta):
         meta.title = msg.subject

@@ -8,7 +8,6 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db
 from aleph.metadata import Metadata
-from aleph.model.source import Source
 from aleph.model.collection import Collection
 from aleph.model.common import DatedModel
 
@@ -29,8 +28,6 @@ class Document(db.Model, DatedModel):
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)
-    source_id = db.Column(db.Integer(), db.ForeignKey('source.id'), index=True)
-    source = db.relationship(Source, backref=db.backref('documents', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
     _meta = db.Column('meta', JSONB)
 
     collections = db.relationship(Collection, secondary=collection_document_table,  # noqa
@@ -92,11 +89,17 @@ class Document(db.Model, DatedModel):
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.meta.title)
 
+    @property
+    def collection_ids(self):
+        if not hasattr(self, '_collection_ids_cache'):
+            self._collection_ids_cache = [c.id for c in self.collections]
+        return self._collection_ids_cache
+
     def _add_to_dict(self, data):
         data.update({
             'id': self.id,
             'type': self.type,
-            'source_id': self.source_id,
+            'collection_id': self.collection_ids,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         })

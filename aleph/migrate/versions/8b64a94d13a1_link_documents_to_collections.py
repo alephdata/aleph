@@ -26,6 +26,10 @@ def upgrade():
                   sa.Column('category', sa.Unicode(), nullable=True))
     op.add_column(u'collection',
                   sa.Column('generate_entities', sa.Boolean(), nullable=True))
+    op.add_column(u'crawler_state', sa.Column('collection_id', sa.Integer(),
+                  nullable=True))
+    op.add_column(u'permission', sa.Column('collection_id', sa.Integer(),
+                  nullable=True))
 
     bind = op.get_bind()
     meta = sa.MetaData()
@@ -50,6 +54,27 @@ def upgrade():
         q = sa.insert(perm_table).values(perm)
         bind.execute(q)
 
+    q = sa.select([perm_table]).where(perm_table.c.resource_type == 'collection')
+    for perm in bind.execute(q).fetchall():
+        q = sa.update(perm_table).where(perm_table.c.id == perm.id)
+        q = q.values(collection_id=perm.resource_id)
+        bind.execute(q)
+
+    # q = sa.delete(perm_table).where(perm_table.c.resource_type == 'source')
+    # bind.execute(q)
+
+    # print 'DOING CRAWLERS NOW'
+    cs_table = meta.tables['crawler_state']
+    rp = bind.execute(sa.select([cs_table]))
+    while True:
+        cs = rp.fetchone()
+        if cs is None:
+            break
+        q = sa.update(cs_table).where(cs_table.c.id == cs.id)
+        q = q.values(collection_id=cs.source_id + ID_OFFSET)
+        bind.execute(q)
+
+    # print 'DOING DOCS NOW'
     doc_table = meta.tables['document']
     coll_doc_table = meta.tables['collection_document']
     rp = bind.execute(sa.select([doc_table]))

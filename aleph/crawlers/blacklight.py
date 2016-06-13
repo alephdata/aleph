@@ -3,7 +3,7 @@ import logging
 import json
 
 from aleph.core import db
-from aleph.model import Source
+from aleph.model import Collection
 from aleph.crawlers.crawler import DocumentCrawler
 
 log = logging.getLogger(__name__)
@@ -65,7 +65,7 @@ class BlacklightCrawler(DocumentCrawler):
 
             content = doc[self.attributes['content']]
             log.info('Scraped doc {}'.format(id))
-            self.emit_content(self.source, meta, content)
+            self.emit_content(self.collection, meta, content)
             return True
         else:
             docs = len(response['response']['docs'])
@@ -79,7 +79,7 @@ class BlacklightCrawler(DocumentCrawler):
                         pass
                         # log.warning('Missing attribute:%s from %r', attr, source_url) #Probable key error
                 log.info("Scraped doc {}".format(doc['id']))
-                self.emit_content(self.source, meta, json.dumps(doc))
+                self.emit_content(self.collection, meta, json.dumps(doc))
             return True
 
     def crawl_page(self, base_url, page_number, page_count):
@@ -122,7 +122,7 @@ class BlacklightCrawler(DocumentCrawler):
             print 'Working on base_url: {}'.format(base_url)
             self.attributes = SITES[base_url]
             self.label = self.attributes['label']
-            Source.create({
+            collection = Collection.create({
                 'label': self.label,
                 'foreign_id': 'blacklight'
             })

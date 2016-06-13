@@ -17,7 +17,7 @@ class SearchApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         assert '<em>banana</em>' in res.data, res.json
-        assert 'Public Test Source' in res.data, res.json
+        assert 'Public Collection' in res.data, res.json
         assert 'TOP SECRET' not in res.data, res.json
 
         self.login(is_admin=True)

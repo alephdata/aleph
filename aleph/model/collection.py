@@ -40,29 +40,27 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         db.session.add(self)
 
     @classmethod
-    def by_foreign_id(cls, foreign_id, data, role=None):
-        q = cls.all().filter(cls.foreign_id == foreign_id)
-        collection = q.first()
+    def by_foreign_id(cls, foreign_id):
+        if foreign_id is None:
+            return
+        return cls.all().filter(cls.foreign_id == foreign_id).first()
+
+    @classmethod
+    def create(cls, data, role=None):
+        foreign_id = data.get('foreign_id') or make_token()
+        collection = cls.by_foreign_id(foreign_id)
         if collection is None:
-            collection = cls.create(data, role)
+            collection = cls()
             collection.foreign_id = foreign_id
+            collection.creator = role
             collection.update(data)
             db.session.add(collection)
             db.session.flush()
-        return collection
 
-    @classmethod
-    def create(cls, data, role):
-        collection = cls()
-        collection.update(data)
-        collection.foreign_id = make_token()
-        collection.creator = role
-        db.session.add(collection)
-        db.session.flush()
-        if role is not None:
-            Permission.grant_resource(Permission.COLLECTION,
-                                      collection.id,
-                                      role, True, True)
+            if role is not None:
+                Permission.grant_resource(Permission.COLLECTION,
+                                          collection.id,
+                                          role, True, True)
         return collection
 
     def __repr__(self):

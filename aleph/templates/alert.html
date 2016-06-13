@@ -64,15 +64,21 @@
             {% else %}
               <a href="{{app_url}}tabular/{{result.id}}/0?{{qs}}">{{result.title}}</a>
             {% endif %}
+          </td>
+        </tr>
+        <tr class="result">
+          <td>
             <span class="source-attr">
-              <a href="{{app_url}}search?filter:source_id={{result.source.id}}">
-                {{result.source.label}}
-              </a>
+              {% for collection in result.collections %}
+                <a href="{{app_url}}search?filter:collection_id={{collection.id}}">
+                  {{collection.label}}
+                </a>{% if not loop.last %},{% endif %}
+              {% endfor %}
             </span>
           </td>
         </tr>
         <tr class="teaser">
-          <td colspan="2">
+          <td>
             {% for rec in result.records.results %}
               {% for text in rec.text %}
                 {{text | safe}}

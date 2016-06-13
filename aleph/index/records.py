@@ -48,7 +48,7 @@ def generate_records(document):
                     'type': 'page',
                     'content_hash': document.content_hash,
                     'document_id': document.id,
-                    'source_id': document.source_id,
+                    'collection_id': document.collection_ids,
                     'page': page.number,
                     'text': page.text,
                     'text_latin': latinize_text(page.text)
@@ -68,7 +68,7 @@ def generate_records(document):
                     'type': 'row',
                     'content_hash': document.content_hash,
                     'document_id': document.id,
-                    'source_id': document.source_id,
+                    'collection_id': document.collection_ids,
                     'row_id': record.row_id,
                     'sheet': record.sheet,
                     'text': text,

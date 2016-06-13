@@ -5,7 +5,7 @@ from tempfile import mkstemp
 
 from aleph.core import db
 from aleph.metadata import Metadata
-from aleph.model import Source, Entity, Collection, CrawlerState
+from aleph.model import Entity, Collection, CrawlerState
 from aleph.model.common import make_textid
 from aleph.ingest import ingest_url, ingest_file
 from aleph.entities import update_entity_full
@@ -23,9 +23,24 @@ class Crawler(object):
     WEEKLY = CrawlerSchedule('weekly', weeks=1)
     MONTHLY = CrawlerSchedule('monthly', weeks=4)
 
+    COLLECTION_ID = None
+    COLLECTION_LABEL = None
+    SCHEDULE = None
+
     def __init__(self):
         self.incremental = False
         self.crawler_run = make_textid()
+
+    @property
+    def collection(self):
+        if not hasattr(self, '_collection'):
+            self._collection = Collection.create({
+                'foreign_id': self.COLLECTION_ID,
+                'label': self.COLLECTION_LABEL or self.COLLECTION_ID
+            })
+            db.session.commit()
+        db.session.add(self._collection)
+        return self._collection
 
     def crawl(self, **kwargs):
         raise NotImplemented()
@@ -42,7 +57,7 @@ class Crawler(object):
         if not self.incremental:
             return False
         q = db.session.query(CrawlerState.id)
-        q = q.filter(CrawlerState.source_id == self.source.id)
+        q = q.filter(CrawlerState.collection_id == self.collection.id)
         q = q.filter(CrawlerState.foreign_id == unicode(foreign_id))
         if content_hash is not None:
             q = q.filter(CrawlerState.content_hash == content_hash)
@@ -92,8 +107,8 @@ class Crawler(object):
     @classmethod
     def get_id(cls):
         name = cls.__module__ + "." + cls.__name__
-        if hasattr(cls, 'SOURCE_ID'):
-            name = '%s->%s' % (name, cls.SOURCE_ID)
+        if hasattr(cls, 'COLLECTION_ID'):
+            name = '%s->%s' % (name, cls.COLLECTION_ID)
         return name
 
     def __repr__(self):
@@ -135,40 +150,26 @@ class EntityCrawler(Crawler):
 
 
 class DocumentCrawler(Crawler):
-    SOURCE_ID = None
-    SOURCE_LABEL = None
-    SCHEDULE = None
-
-    @property
-    def source(self):
-        if not hasattr(self, '_source'):
-            self._source = Source.create({
-                'foreign_id': self.SOURCE_ID,
-                'label': self.SOURCE_LABEL or self.SOURCE_ID
-            })
-            db.session.commit()
-        db.session.add(self._source)
-        return self._source
 
     def execute(self, **kwargs):
-        CrawlerState.store_stub(self.source.id,
+        CrawlerState.store_stub(self.collection.id,
                                 self.get_id(),
                                 self.crawler_run)
         db.session.commit()
         super(DocumentCrawler, self).execute(**kwargs)
 
     def emit_file(self, meta, file_path, move=False):
-        ingest_file(self.source.id, meta.clone(), file_path, move=move)
+        ingest_file(self.collection.id, meta.clone(), file_path, move=move)
 
     def emit_url(self, meta, url):
-        ingest_url.delay(self.source.id, meta.clone().data, url)
+        ingest_url.delay(self.collection.id, meta.clone().data, url)
 
     def to_dict(self):
         data = CrawlerState.crawler_stats(self.get_id())
         data.update({
-            'source': self.source,
-            'source_id': self.SOURCE_ID,
-            'source_label': self.SOURCE_LABEL or self.SOURCE_ID,
+            'collection': self.collection,
+            'collection_id': self.COLLECTION_ID,
+            'collection_label': self.COLLECTION_LABEL or self.COLLECTION_ID,
             'name': self.CRAWLER_NAME,
             'schedule': self.SCHEDULE,
             'id': self.get_id()

@@ -6,7 +6,7 @@ from jsonschema import Draft4Validator, FormatChecker, RefResolver
 from jsonmapping import SchemaVisitor
 
 from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
-from aleph.model.constants import SOURCE_CATEGORIES
+from aleph.model.constants import COLLECTION_CATEGORIES
 
 
 resolver = RefResolver('core.json#', {})
@@ -40,9 +40,9 @@ def is_language_code(code):
     return code.lower() in LANGUAGE_NAMES.keys()
 
 
-@format_checker.checks('source-category')
-def is_source_category(cat):
-    return cat in SOURCE_CATEGORIES.keys()
+@format_checker.checks('collection-category')
+def is_collection_category(cat):
+    return cat in COLLECTION_CATEGORIES.keys()
 
 
 def validate(data, schema):

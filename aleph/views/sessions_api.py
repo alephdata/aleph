@@ -53,14 +53,8 @@ def status():
         'role': request.auth_role,
         'roles': list(request.auth_roles),
         'permissions': {
-            'collections': {
-                'read': authz.collections(authz.READ),
-                'write': authz.collections(authz.WRITE)
-            },
-            'sources': {
-                'read': authz.sources(authz.READ),
-                'write': authz.sources(authz.WRITE)
-            }
+            'read': authz.collections(authz.READ),
+            'write': authz.collections(authz.WRITE)
         },
         'logout': url_for('.logout')
     })

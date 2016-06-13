@@ -20,8 +20,10 @@ blueprint = Blueprint('documents_api', __name__)
 
 @blueprint.route('/api/1/documents', methods=['GET'])
 def index():
-    sources_ids = match_ids('sources', authz.sources(authz.READ))
-    q = Document.all().filter(Document.source_id.in_(sources_ids))
+    collection_ids = match_ids('collection', authz.collections(authz.READ))
+    q = Document.all()
+    clause = Collection.id.in_(collection_ids)
+    q = q.filter(Document.collections.any(clause))
     hashes = request.args.getlist('content_hash')
     if len(hashes):
         q = q.filter(Document.content_hash.in_(hashes))
@@ -47,7 +49,7 @@ def view(document_id):
         if data.get('pdf_url') is None:
             data['pdf_url'] = url_for('documents_api.pdf',
                                       document_id=document_id)
-    data['source'] = doc.source
+    data['collections'] = doc.collections
     return jsonify(data)
 
 

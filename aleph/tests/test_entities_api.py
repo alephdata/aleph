@@ -106,7 +106,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/building.json',
             'name': "Our house",
-            'collections': [self.col.id],
+            'collection_id': [self.col.id],
             'summary': "In the middle of our street"
         }
         res = self.client.post(url, data=json.dumps(data),
@@ -120,7 +120,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id],
+            'collection_id': [self.col.id],
             'other_names': [
                 {'name': "Usama bin Laden"},
                 {'name': "Osama bin Ladin"},
@@ -142,7 +142,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id],
+            'collection_id': [self.col.id],
             'other_names': [
                 {'name': "Usama bin Laden"},
                 {'name': "Osama bin Ladin"},
@@ -173,7 +173,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id],
+            'collection_id': [self.col.id],
             'other_names': [
                 {'name': "Usama bin Laden"},
                 {'name': "Osama bin Ladin"},
@@ -203,7 +203,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id],
+            'collection_id': [self.col.id],
             'residential_address': {
                 'text': 'Home',
                 'region': 'Netherlands',
@@ -231,7 +231,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id]
+            'collection_id': [self.col.id]
         }
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
@@ -249,7 +249,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id]
+            'collection_id': [self.col.id]
         }
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')

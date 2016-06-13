@@ -54,7 +54,14 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 200, res.json
         assert 'Collected' in res.json['label'], res.json
 
+        res = self.client.get(url)
         data['label'] = ''
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 400, res.json
+
+        res = self.client.get(url)
+        data['category'] = 'banana'
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 400, res.json

@@ -1,21 +1,20 @@
-
 var loadHome = ['$http', '$q', '$route', function($http, $q, $route) {
   var dfd = $q.defer();
   var query = {limit: 0};
   $http.get('/api/1/query', {cache: true, params: query}).then(function(res) {
-    var sources = {};
-    for (var i in res.data.sources.values) {
-      var source = res.data.sources.values[i],
-          category = source.category || 'other';
-      if (!sources[category]) {
-        sources[category] = [source];
+    var collections = {};
+    for (var i in res.data.collections.values) {
+      var collection = res.data.collections.values[i],
+          category = collection.category || 'other';
+      if (!collections[category]) {
+        collections[category] = [collection];
       } else {
-        sources[category].push(source);
+        collections[category].push(collection);
       }
     }
     dfd.resolve({
-      'sources': sources,
-      'result': res.data
+      collections: collections,
+      result: res.data
     });
   }, function(err) {
     dfd.reject(err);  

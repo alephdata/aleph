@@ -8,7 +8,7 @@ from sqlalchemy import MetaData, select
 from sqlalchemy.schema import Table
 
 from aleph.core import db
-from aleph.model import Source
+from aleph.model import Collection
 from aleph.ingest import ingest_file
 from aleph.crawlers.crawler import Crawler
 
@@ -96,14 +96,14 @@ class SQLCrawler(Crawler):
 
     name = 'sql'
 
-    def crawl_query(self, engine, source, meta_base, name, query):
+    def crawl_query(self, engine, collection, meta_base, name, query):
         meta_ = meta_base.copy()
         meta_.update(query.get('meta', {}))
         meta = self.make_meta(meta_)
         meta.extension = 'csv'
         meta.mime_type = 'text/csv'
         meta.data.update(meta_)
-        meta.foreign_id = '%s:%s' % (source.foreign_id, name)
+        meta.foreign_id = '%s:%s' % (collection.foreign_id, name)
 
         query = SQLQuery(engine, query)
 
@@ -122,27 +122,26 @@ class SQLCrawler(Crawler):
                 for row in rows:
                     writer.writerow(row[h] for h in headers)
             fh.close()
-            ingest_file(source.id, meta, file_path, move=True)
+            ingest_file(collection.id, meta, file_path, move=True)
         finally:
             if os.path.isfile(file_path):
                 os.unlink(file_path)
 
-    def crawl_source(self, engine, foreign_id, data):
-        source = Source.create({
+    def crawl_collection(self, engine, foreign_id, data):
+        collection = Collection.create({
             'foreign_id': foreign_id,
             'label': data.get('label')
         })
         db.session.commit()
         meta_base = data.get('meta', {})
         for name, query in data.get('queries', {}).items():
-            self.crawl_query(engine, source, meta_base, name, query)
+            self.crawl_query(engine, collection, meta_base, name, query)
 
-    def crawl(self, config=None, source=None):
+    def crawl(self, config=None):
         with open(config, 'rb') as fh:
             config = yaml.load(fh)
             engine_url = os.path.expandvars(config.get('url'))
             engine = create_engine(engine_url)
-            for name, data in config.get('sources', {}).items():
-                if source is None or source == name:
-                    foreign_id = '%s:%s' % (self.name, name)
-                    self.crawl_source(engine, foreign_id, data)
+            for name, data in config.get('collections', {}).items():
+                foreign_id = '%s:%s' % (self.name, name)
+                self.crawl_collection(engine, foreign_id, data)

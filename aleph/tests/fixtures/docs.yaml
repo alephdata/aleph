@@ -1,22 +1,13 @@
 
-- model: aleph.model.source.Source
-  records:
-    - id: 1000
-      label: Public Test Source
-      category: news
-      foreign_id: test_public
-    - id: 2000
-      label: Private Test Source
-      category: grey
-      foreign_id: test_private
-
 - model: aleph.model.collection.Collection
   records:
     - id: 1000
       label: Public Collection
+      category: news
       foreign_id: test_public
     - id: 2000
       label: Private Collection
+      category: grey
       foreign_id: test_private
 
 - model: aleph.model.permission.Permission
@@ -25,26 +16,22 @@
       role_id: 1
       read: true
       write: false
-      resource_id: 1000
-      resource_type: 'source'
+      collection_id: 1000
     - id: 100001
       role_id: 2
       read: true
       write: false
-      resource_id: 1000
-      resource_type: 'source'
+      collection_id: 1000
     - id: 100002
       role_id: 1
       read: true
       write: false
-      resource_id: 1000
-      resource_type: 'collection'
+      collection_id: 1000
     - id: 100003
       role_id: 2
       read: true
       write: false
-      resource_id: 1000
-      resource_type: 'collection'
+      collection_id: 1000
 
 - model: aleph.model.entity.EntityCompany
   records:
@@ -78,7 +65,6 @@
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8291
       foreign_id: test1
       type: text
-      source_id: 1000
       _meta:
         title: Foo Document
         file_name: foo.txt
@@ -88,7 +74,6 @@
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8292
       foreign_id: test2
       type: text
-      source_id: 2000
       _meta:
         title: Secret Document
         file_name: bar.txt
@@ -98,7 +83,6 @@
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8294
       foreign_id: test3
       type: text
-      source_id: 1000
       _meta:
         title: Does not mention fruit
         file_name: qux.txt
@@ -108,7 +92,6 @@
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8295
       foreign_id: test4
       type: tabular
-      source_id: 1000
       _meta:
         title: Tabular thingie
         file_name: test.csv
@@ -131,6 +114,16 @@
               - label: End_Date
                 name: End_Date
 
+- table: collection_document
+  records:
+    - document_id: 1000
+      collection_id: 1000
+    - document_id: 1001
+      collection_id: 2000
+    - document_id: 1002
+      collection_id: 1000
+    - document_id: 1003
+      collection_id: 1000
 
 - model: aleph.model.document.DocumentPage
   records:

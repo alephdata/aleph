@@ -1,6 +1,6 @@
 import logging
 from collections import defaultdict
-from elasticsearch.helpers import bulk, scan
+from elasticsearch.helpers import scan
 
 from aleph.core import get_es, get_es_index, db
 from aleph.text import latinize_text
@@ -27,7 +27,7 @@ def document_updates(q, entity_id, references=None):
         if references is not None:
             entities.append({
                 'id': entity_id,
-                'collection_ids': references[res['_id']]
+                'collection_id': references[res['_id']]
             })
         for ent in res.get('_source').get('entities'):
             if ent['id'] != entity_id:
@@ -90,7 +90,7 @@ def generate_entities(document):
             continue
         entities.append({
             'id': reference.entity.id,
-            'collection_ids': colls
+            'collection_id': colls
         })
     return entities
 

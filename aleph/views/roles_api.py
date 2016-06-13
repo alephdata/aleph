@@ -43,23 +43,10 @@ def update(id):
 
 
 @blueprint.route('/api/1/collections/<int:collection>/permissions')
-def collection_permissions_index(collection=None):
+def permissions_index(collection):
     authz.require(authz.collection_write(collection))
     q = Permission.all()
-    q = q.filter(Permission.resource_type == Permission.COLLECTION)
-    q = q.filter(Permission.resource_id == collection)
-    return jsonify({
-        'total': q.count(),
-        'results': q
-    })
-
-
-@blueprint.route('/api/1/sources/<int:source>/permissions')
-def source_permissions_index(source=None):
-    authz.require(authz.source_write(source))
-    q = Permission.all()
-    q = q.filter(Permission.resource_type == Permission.SOURCE)
-    q = q.filter(Permission.resource_id == source)
+    q = q.filter(Permission.collection_id == collection)
     return jsonify({
         'total': q.count(),
         'results': q
@@ -68,16 +55,8 @@ def source_permissions_index(source=None):
 
 @blueprint.route('/api/1/collections/<int:collection>/permissions',
                  methods=['POST', 'PUT'])
-@blueprint.route('/api/1/sources/<int:source>/permissions',
-                 methods=['POST', 'PUT'])
-def permissions_save(collection=None, source=None):
-    if collection is not None:
-        authz.require(authz.collection_write(collection))
-    if source is not None:
-        authz.require(authz.source_write(source))
-
-    resource_type = Permission.COLLECTION if collection else Permission.SOURCE
-    resource_id = collection or source
+def permissions_update(collection):
+    authz.require(authz.collection_write(collection))
     data = request_data()
     validate(data, 'permission.json#')
 
@@ -85,8 +64,8 @@ def permissions_save(collection=None, source=None):
     if role is None:
         raise BadRequest()
 
-    permission = Permission.grant_resource(resource_type, resource_id, role,
-                                           data['read'], data['write'])
+    permission = Permission.grant_resource(collection, role, data['read'],
+                                           data['write'])
     db.session.commit()
     return jsonify({
         'status': 'ok',

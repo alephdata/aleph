@@ -266,7 +266,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
 
     def to_dict(self):
         data = super(Entity, self).to_dict()
-        data['collection_ids'] = [c.id for c in self.collections]
+        data['collection_id'] = [c.id for c in self.collections]
         return data
 
     def to_ref(self):
@@ -274,7 +274,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
             'id': self.id,
             'name': self.name,
             '$schema': self.type,
-            'collection_ids': [c.id for c in self.collections]
+            'collection_id': [c.id for c in self.collections]
         }
 
 

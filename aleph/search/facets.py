@@ -3,7 +3,7 @@ from pprint import pprint  # noqa
 from babel import Locale
 from pycountry import countries
 
-from aleph.model import Entity, Source, Collection
+from aleph.model import Entity, Collection
 
 
 def convert_bucket(facet, bucket):
@@ -43,24 +43,6 @@ def convert_entities(entities):
     return results
 
 
-def convert_sources(facet):
-    output = {'values': []}
-    ids = [b.get('key') for b in facet.get('buckets', [])]
-    sources = Source.all_by_ids(ids).all()
-    for bucket in facet.get('buckets', []):
-        key = bucket.get('key')
-        for source in sources:
-            if source.id != key:
-                continue
-            output['values'].append({
-                'id': key,
-                'label': source.label,
-                'category': source.category,
-                'count': bucket.get('doc_count')
-            })
-    return output
-
-
 def convert_collections(facet):
     output = {'values': []}
     ids = [b.get('key') for b in facet.get('buckets', [])]
@@ -75,6 +57,7 @@ def convert_collections(facet):
             output['values'].append({
                 'id': key,
                 'label': collection.label,
+                'category': collection.category,
                 'count': bucket.get('doc_count')
             })
     return output
@@ -97,8 +80,8 @@ def convert_document_aggregations(result, output, args):
     """Traverse and get all facets."""
     aggs = result.get('aggregations', {})
     scoped = aggs.get('scoped', {})
-    sources = scoped.get('source', {}).get('source', {})
-    output['sources'] = convert_sources(sources)
+    collections = scoped.get('collections', {}).get('collections', {})
+    output['collections'] = convert_collections(collections)
     entities = aggs.get('entities', {}).get('inner', {})
     entities = entities.get('entities', {})
     output['entities'] = convert_entities(entities)
@@ -109,6 +92,6 @@ def convert_entity_aggregations(result, output, args):
     """Traverse and get all facets."""
     aggs = result.get('aggregations', {})
     scoped = aggs.get('scoped', {})
-    collections = scoped.get('collection', {}).get('collection', {})
+    collections = scoped.get('collections', {}).get('collections', {})
     output['collections'] = convert_collections(collections)
     return convert_facets(result, output, args)

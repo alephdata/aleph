@@ -7,7 +7,7 @@ from jsonschema import ValidationError
 from elasticsearch import TransportError
 
 from aleph.core import get_config
-from aleph.model.constants import CORE_FACETS, SOURCE_CATEGORIES
+from aleph.model.constants import CORE_FACETS, COLLECTION_CATEGORIES
 from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.model.validation import resolver
 from aleph.views.cache import enable_cache
@@ -65,7 +65,7 @@ def metadata():
     return jsonify({
         'status': 'ok',
         'fields': CORE_FACETS,
-        'source_categories': SOURCE_CATEGORIES,
+        'collection_categories': COLLECTION_CATEGORIES,
         'countries': COUNTRY_NAMES,
         'languages': LANGUAGE_NAMES,
         'schemata': schemata

@@ -13,7 +13,7 @@ CORE_FACETS = {
     'dates': 'Dates'
 }
 
-SOURCE_CATEGORIES = {
+COLLECTION_CATEGORIES = {
     'news': 'News reports',
     'leak': 'Leaks',
     'gazette': 'Gazette notices',

@@ -10,7 +10,6 @@ from aleph.views.roles_api import blueprint as roles_api
 from aleph.views.collections_api import blueprint as collections_api
 from aleph.views.entities_api import blueprint as entities_api
 from aleph.views.exports_api import blueprint as exports_api
-from aleph.views.sources_api import blueprint as sources_api
 from aleph.views.alerts_api import blueprint as alerts_api
 from aleph.views.crawlers_api import blueprint as crawlers_api
 
@@ -26,7 +25,6 @@ def mount_app_blueprints(app):
     app.register_blueprint(collections_api)
     app.register_blueprint(entities_api)
     app.register_blueprint(exports_api)
-    app.register_blueprint(sources_api)
     app.register_blueprint(alerts_api)
     app.register_blueprint(crawlers_api)
     signals.register_blueprints.send(app=app)
