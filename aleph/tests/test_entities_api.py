@@ -36,18 +36,18 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get('/api/1/entities')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
-        assert len(res.json['collections']['values']) == 0, res.json
+        assert len(res.json['facets']['collections']['values']) == 0, res.json
         self.login(is_admin=True)
         res = self.client.get('/api/1/entities')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
-        assert len(res.json['collections']['values']) == 1, res.json
-        col0 = res.json['collections']['values'][0]
+        assert len(res.json['facets']['collections']['values']) == 1, res.json
+        col0 = res.json['facets']['collections']['values'][0]
         assert col0['id'] == self.col.id, res.json
         assert col0['label'] == self.col.label, res.json
-        assert len(res.json['facets']) == 0, res.json
-        res = self.client.get('/api/1/entities?facet=jurisdiction_code')
         assert len(res.json['facets']) == 1, res.json
+        res = self.client.get('/api/1/entities?facet=jurisdiction_code')
+        assert len(res.json['facets']) == 2, res.json
         assert 'values' in res.json['facets']['jurisdiction_code'], res.json
 
     def test_all(self):

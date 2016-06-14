@@ -1,7 +1,7 @@
 import json
 
-from aleph.core import db
-from aleph.model import Collection, Permission, Role
+# from aleph.core import db
+# from aleph.model import Collection, Permission, Role
 from aleph.tests.util import TestCase
 
 
@@ -52,10 +52,10 @@ class SearchApiTestCase(TestCase):
         res = self.client.get('/api/1/query?collection=2000&limit=0')
         assert res.status_code == 200, res
         assert res.json['total'] == 3, res.json
-        assert not len(res.json['entities']), res.json
+        assert not len(res.json['facets']['entities']['values']), res.json
 
         self.login(is_admin=True)
         res = self.client.get('/api/1/query?collection=2000&limit=0')
-        ents = res.json['entities']
+        ents = res.json['facets']['entities']['values']
         assert len(ents) == 1, res.json
         assert ents[0]['name'] == 'BaNana', res.json
