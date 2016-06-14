@@ -70,7 +70,7 @@ class Document(db.Model, DatedModel):
         pq = db.session.query(Reference)
         pq = pq.filter(Reference.document_id == self.id)
         if origin is not None:
-            pq = pq.filter_by(Reference.origin == origin)
+            pq = pq.filter(Reference.origin == origin)
         pq.delete(synchronize_session='fetch')
         db.session.refresh(self)
 

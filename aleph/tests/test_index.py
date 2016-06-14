@@ -1,4 +1,5 @@
-from aleph.index import delete_collection, optimize_search
+from aleph.index import optimize_search
+from aleph.logic import delete_collection
 from aleph.model import Collection
 from aleph.tests.util import TestCase
 
