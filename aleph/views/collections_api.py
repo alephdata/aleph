@@ -4,7 +4,7 @@ from apikit import obj_or_404, jsonify, Pager, request_data
 from aleph import authz
 from aleph.model import Collection, db
 from aleph.views.cache import enable_cache
-from aleph.entities import update_entity
+from aleph.logic.collections import delete_collection
 from aleph.analyze import analyze_collection
 
 blueprint = Blueprint('collections_api', __name__)
@@ -56,8 +56,5 @@ def process(id):
 def delete(id):
     collection = obj_or_404(Collection.by_id(id))
     authz.require(authz.collection_write(id))
-    collection.delete()
-    for entity in collection.entities:
-        update_entity(entity)
-    db.session.commit()
+    delete_collection.delay(collection.id)
     return jsonify({'status': 'ok'})

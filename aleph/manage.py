@@ -13,7 +13,7 @@ from aleph.analyze import analyze_collection, install_analyzers
 from aleph.alerts import check_alerts
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document
-from aleph.entities import reindex_entities
+from aleph.logic import reindex_entities, delete_collection
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
@@ -93,13 +93,10 @@ def metafolder(folder):
 @manager.command
 def flush(foreign_id):
     """Reset the crawler state for a given collecton."""
-    from aleph.index import delete_collection
     collection = Collection.by_foreign_id(foreign_id)
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
     delete_collection(collection.id)
-    collection.delete()
-    db.session.commit()
 
 
 @manager.command

@@ -28,13 +28,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
     def update(self, data):
         self.schema_update(data)
 
-    def delete(self, deleted_at=None):
-        deleted_at = deleted_at or datetime.utcnow()
-        for entity in self.entities:
-            if len(list(entity.collections)) == 1:
-                entity.delete(deleted_at=deleted_at)
-        super(Collection, self).delete(deleted_at=deleted_at)
-
     def touch(self):
         self.updated_at = datetime.utcnow()
         db.session.add(self)

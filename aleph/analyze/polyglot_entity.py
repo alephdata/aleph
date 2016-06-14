@@ -89,7 +89,7 @@ class PolyglotEntityAnalyzer(Analyzer):
             schema = max(set(schemas), key=schemas.count)
             output.append((entity_name, len(schemas), schema))
 
-        Reference.delete_document(self.document.id, origin=self.origin)
+        self.document.delete_references(origin=self.origin)
         for name, weight, schema in output:
             entity_id = self.load_entity(name, schema)
             if entity_id is None:

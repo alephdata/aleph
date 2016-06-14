@@ -8,7 +8,7 @@ from aleph.metadata import Metadata
 from aleph.model import Entity, Collection, CrawlerState
 from aleph.model.common import make_textid
 from aleph.ingest import ingest_url, ingest_file
-from aleph.entities import update_entity_full
+from aleph.logic import update_entity_full
 from aleph.crawlers.schedule import CrawlerSchedule
 
 log = logging.getLogger(__name__)

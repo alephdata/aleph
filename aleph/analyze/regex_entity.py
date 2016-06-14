@@ -78,7 +78,7 @@ class RegexEntityAnalyzer(Analyzer):
                     self.entities[entity_id] += 1
 
     def finalize(self):
-        Reference.delete_document(self.document.id, origin=self.origin)
+        self.document.delete_references(origin=self.origin)
         for entity_id, weight in self.entities.items():
             ref = Reference()
             ref.document_id = self.document.id

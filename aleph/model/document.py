@@ -9,6 +9,7 @@ from sqlalchemy.orm.attributes import flag_modified
 from aleph.core import db
 from aleph.metadata import Metadata
 from aleph.model.collection import Collection
+from aleph.model.reference import Reference
 from aleph.model.common import DatedModel
 
 log = logging.getLogger(__name__)
@@ -64,6 +65,20 @@ class Document(db.Model, DatedModel):
         pq = pq.filter(DocumentRecord.document_id == self.id)
         pq.delete(synchronize_session='fetch')
         db.session.refresh(self)
+
+    def delete_references(self, origin=None):
+        pq = db.session.query(Reference)
+        pq = pq.filter(Reference.document_id == self.id)
+        if origin is not None:
+            pq = pq.filter_by(Reference.origin == origin)
+        pq.delete(synchronize_session='fetch')
+        db.session.refresh(self)
+
+    def delete(self, deleted_at=None):
+        self.delete_references()
+        self.delete_records()
+        self.delete_pages()
+        db.session.delete(self)
 
     def insert_records(self, sheet, iterable, chunk_size=1000):
         chunk = []

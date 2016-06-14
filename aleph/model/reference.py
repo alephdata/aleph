@@ -2,7 +2,6 @@ import logging
 
 from aleph.core import db
 from aleph.model.entity import Entity
-from aleph.model.document import Document
 from aleph.model.common import DatedModel, IdModel
 
 
@@ -17,14 +16,7 @@ class Reference(db.Model, IdModel, DatedModel):
     weight = db.Column(db.Integer)
 
     entity = db.relationship(Entity, backref=db.backref('references', lazy='dynamic'))
-    document = db.relationship(Document, backref=db.backref('references', lazy='dynamic'))
-
-    @classmethod
-    def delete_document(cls, document_id, origin=None):
-        q = cls.all().filter_by(document_id=document_id)
-        if origin is not None:
-            q = q.filter_by(origin=origin)
-        q.delete(synchronize_session='fetch')
+    document = db.relationship('Document', backref=db.backref('references', lazy='dynamic'))
 
     def to_dict(self):
         return {
