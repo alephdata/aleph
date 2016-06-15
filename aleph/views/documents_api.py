@@ -58,6 +58,7 @@ def references(document_id):
     doc = get_document(document_id)
     q = db.session.query(Reference)
     q = q.filter(Reference.document_id == doc.id)
+    q = q.filter(Reference.origin == 'regex')
     q = q.join(Entity)
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
     clause = Collection.id.in_(authz.collections(authz.READ))
