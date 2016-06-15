@@ -1,6 +1,6 @@
 
-aleph.controller('CrawlersStatesCtrl', ['$scope', '$location', '$http', '$uibModal', 'Title', 'Source', 'states',
-    function($scope, $location, $http, $uibModal, Title, Source, states) {
+aleph.controller('CrawlersStatesCtrl', ['$scope', '$location', '$http', '$uibModal', 'Title', 'states',
+    function($scope, $location, $http, $uibModal, Title, states) {
   // $scope.crawlers = crawlers;
   $scope.states = states;
   Title.set("Crawler Logs", "admin");

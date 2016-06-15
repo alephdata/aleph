@@ -1,6 +1,6 @@
 
-aleph.controller('CrawlersManageCtrl', ['$scope', '$route', '$location', '$http', 'Title', 'Source', 'crawlers',
-    function($scope, $route, $location, $http, Title, Source, crawlers) {
+aleph.controller('CrawlersManageCtrl', ['$scope', '$route', '$location', '$http', 'Title', 'Collection', 'crawlers',
+    function($scope, $route, $location, $http, Title, Collection, crawlers) {
   $scope.crawlers = crawlers;
   Title.set("Crawler Management", "admin");
 
@@ -10,8 +10,8 @@ aleph.controller('CrawlersManageCtrl', ['$scope', '$route', '$location', '$http'
     $location.search(query);
   };
 
-  $scope.editSource = function(source) {
-    Source.edit(source).then(function() {
+  $scope.editSource = function(collection) {
+    Collection.edit(collection).then(function() {
       $route.reload();
     });
   };
