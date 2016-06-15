@@ -37,7 +37,7 @@ def upgrade():
     meta.reflect()
     source_table = meta.tables['source']
     colls_table = meta.tables['collection']
-    bind.execute(sa.update(colls_table).values(caetgory='watchlist'))
+    bind.execute(sa.update(colls_table).values(category='watchlist'))
 
     for source in bind.execute(sa.select([source_table])).fetchall():
         source = dict(source)
