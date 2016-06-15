@@ -17,7 +17,7 @@ def expand_json(data):
 def bulk_op(iter):
     try:
         bulk(get_es(), iter, stats_only=True, chunk_size=1000,
-             request_timeout=220.0)
+             request_timeout=120.0)
     except Exception as ex:
         log.debug("Bulk operation failed: %r", ex)
 

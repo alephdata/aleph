@@ -67,23 +67,18 @@ def documents_query(args, fields=None, facets=True):
 def entity_collections(q, aggs, args, filters):
     """Filter entities, facet for collections."""
     entities = args.getlist('entity')
-    collections = []
-    readable = authz.collections(authz.READ)
-    requested = args.getlist('collection') or readable
-    for collection_id in requested:
-        collection_id = int(collection_id)
-        if authz.collection_read(collection_id):
-            collections.append(collection_id)
-
+    collections = authz.collections(authz.READ)
     flt = {
         'or': [
             {
-                'terms': {'entities.collection_id': collections}
+                'terms': {
+                    'entities.collection_id': collections
+                }
             },
             {
                 'and': [
                     {
-                        'terms': {'entities.collection_id': readable},
+                        'terms': {'entities.collection_id': collections},
                         'terms': {'entities.id': entities},
                     }
                 ]

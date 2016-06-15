@@ -30,26 +30,16 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
     Entity.edit(entity.id).then(function() {
       $timeout(function() {
         reloadSearch();
-      }, 500);
+      }, 100);
     });
   };
 
-  $scope.selectCollections = function($event) {
+  $scope.createEntity = function($event) {
     $event.stopPropagation();
-    var instance = $uibModal.open({
-      templateUrl: 'templates/collections_select.html',
-      controller: 'CollectionsSelectCtrl',
-      backdrop: true,
-      size: 'md',
-      resolve: {
-        collections: function() {
-          return data.query.getArray('collection');
-        }
-      }
-    });
-
-    instance.result.then(function(collections) {
-      $scope.query.set('collection', collections);
+    Entity.create({'name': $scope.originalText}).then(function() {
+      $timeout(function() {
+        reloadSearch();
+      }, 100);
     });
   };
 
