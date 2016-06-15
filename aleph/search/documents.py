@@ -49,11 +49,16 @@ def documents_query(args, fields=None, facets=True):
     for entity in args.getlist('entity'):
         filters.append(('entities.id', entity))
 
-    aggs = {}
+    aggs = {'scoped': {'global': {}, 'aggs': {}}}
     if facets:
-        aggs = aggregate(q, args)
-        aggs = facet_collections(q, aggs, filters)
-        q = entity_collections(q, aggs, args, filters)
+        facets = args.getlist('facet')
+        if 'collections' in facets:
+            aggs = facet_collections(q, aggs, filters)
+            facets.remove('collections')
+        if 'entities' in facets:
+            aggs = facet_entities(aggs, args)
+            facets.remove('entities')
+        aggs = aggregate(q, aggs, facets)
 
     signals.document_query_process.send(q=q, args=args)
     return {
@@ -64,7 +69,7 @@ def documents_query(args, fields=None, facets=True):
     }
 
 
-def entity_collections(q, aggs, args, filters):
+def facet_entities(aggs, args):
     """Filter entities, facet for collections."""
     entities = args.getlist('entity')
     collections = authz.collections(authz.READ)
@@ -100,7 +105,7 @@ def entity_collections(q, aggs, args, filters):
             }
         }
     }
-    return q
+    return aggs
 
 
 def facet_collections(q, aggs, filters):

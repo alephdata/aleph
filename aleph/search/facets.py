@@ -68,9 +68,10 @@ def convert_facets(result, output, args):
     aggs = result.get('aggregations', {})
     output['facets'] = {}
     for facet in args.getlist('facet'):
-        value = aggs.get(facet)
+        value = aggs.get(facet, {})
         data = {
-            'values': [convert_bucket(facet, b) for b in value.get('buckets')]
+            'values': [convert_bucket(facet, b)
+                       for b in value.get('buckets', [])]
         }
         output['facets'][facet] = data
     return output

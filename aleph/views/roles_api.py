@@ -64,8 +64,10 @@ def permissions_update(collection):
     if role is None:
         raise BadRequest()
 
-    permission = Permission.grant_resource(collection, role, data['read'],
-                                           data['write'])
+    permission = Permission.grant_collection(collection.id,
+                                             role,
+                                             data['read'],
+                                             data['write'])
     db.session.commit()
     return jsonify({
         'status': 'ok',

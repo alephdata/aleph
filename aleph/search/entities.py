@@ -42,10 +42,13 @@ def entities_query(args, fields=None, facets=True):
 
     q = authz_filter(q)
     filters = parse_filters(args)
-    aggs = {}
+    aggs = {'scoped': {'global': {}, 'aggs': {}}}
     if facets:
-        aggs = aggregate(q, args)
-        aggs = facet_collection(q, aggs, filters)
+        facets = args.getlist('facet')
+        if 'collections' in facets:
+            aggs = facet_collections(q, aggs, filters)
+            facets.remove('collections')
+        aggs = aggregate(q, aggs, facets)
 
     sort_mode = args.get('sort', '').strip().lower()
     default_sort = 'score' if len(text) else 'doc_count'
@@ -65,7 +68,7 @@ def entities_query(args, fields=None, facets=True):
     }
 
 
-def facet_collection(q, aggs, filters):
+def facet_collections(q, aggs, filters):
     aggs['scoped']['aggs']['collections'] = {
         'filter': {
             'query': filter_query(q, filters, OR_FIELDS, skip='collection_d')
