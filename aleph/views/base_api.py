@@ -65,7 +65,7 @@ def metadata():
     return jsonify({
         'status': 'ok',
         'fields': CORE_FACETS,
-        'collection_categories': COLLECTION_CATEGORIES,
+        'categories': COLLECTION_CATEGORIES,
         'countries': COUNTRY_NAMES,
         'languages': LANGUAGE_NAMES,
         'schemata': schemata
