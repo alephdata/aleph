@@ -19,10 +19,10 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
         role = Role.by_foreign_id(foreign_id)
         if role is None:
             return
-        cls.grant_resource(collection.id, role, read, write)
+        cls.grant_collection(collection.id, role, read, write)
 
     @classmethod
-    def grant_resource(cls, collection_id, role, read, write):
+    def grant_collection(cls, collection_id, role, read, write):
         q = cls.all()
         q = q.filter(Permission.role_id == role.id)
         q = q.filter(Permission.collection_id == collection_id)

@@ -31,7 +31,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
             role = Role.by_id(creator_id)
             if role is not None and role.type == Role.USER:
                 self.creator_id = role.id
-                Role.grant_resource(self.id, role, True, True)
+                Permission.grant_collection(self.id, role, True, True)
         self.schema_update(data)
 
     def touch(self):
@@ -57,9 +57,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
             db.session.flush()
 
             if role is not None:
-                Permission.grant_resource(Permission.COLLECTION,
-                                          collection.id,
-                                          role, True, True)
+                Permission.grant_collection(collection.id,
+                                            role, True, True)
         return collection
 
     def __repr__(self):
