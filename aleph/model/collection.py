@@ -26,6 +26,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
     creator = db.relationship(Role)
 
     def update(self, data):
+        creator_id = data.get('creator_id')
+        if creator_id is not None and creator_id != self.creator_id:
+            role = Role.by_id(creator_id)
+            if role is not None and role.type == Role.USER:
+                self.creator_id = role.id
+                Role.grant_resource(self.id, role, True, True)
         self.schema_update(data)
 
     def touch(self):

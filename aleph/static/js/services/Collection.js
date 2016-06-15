@@ -30,14 +30,26 @@ aleph.factory('Collection', ['$q', '$uibModal', 'Metadata', 'Authz', function($q
         backdrop: true,
         size: 'lg',
         resolve: {
-          collection: ['$q', '$http', 'Role', function($q, $http, Role) {
+          collection: ['$q', '$http', function($q, $http) {
+            var dfd = $q.defer();  
+            $http.get('/api/1/collections/' + collection.id).then(function(res) {
+              dfd.resolve(res.data);
+            }, function(err) {
+              dfd.reject(err);
+            });
+            return dfd.promise;
+          }],
+          roles: ['$q', 'Role', function($q, Role) {
             var dfd = $q.defer();
-            Role.getAll().then(function() {
-              $http.get('/api/1/collections/' + collection.id).then(function(res) {
-                dfd.resolve(res.data);
-              }, function(err) {
-                dfd.reject(err);
-              });
+            Role.getAll().then(function(res) {
+              var roles = [];
+              for (var i in res.results) {
+                var role = res.results[i];
+                if (role.type == 'user') {
+                  roles.push(role);  
+                }
+              }
+              dfd.resolve(roles);
             }, function(err) {
               dfd.reject(err);
             });

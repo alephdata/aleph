@@ -1,13 +1,15 @@
 aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$uibModalInstance',
-                                         'Validation', 'Metadata', 'Collection', 'collection',
-    function($scope, $location, $http, $routeParams, $uibModalInstance, Validation, Metadata, Collection, collection) {
+                                         'Validation', 'Metadata', 'Collection', 'collection', 'roles',
+    function($scope, $location, $http, $routeParams, $uibModalInstance, Validation, Metadata, Collection, collection, roles) {
   
   $scope.collection = collection;
+  $scope.roles = roles.filter(function(r) {
+    return r.type == 'user';
+  });
 
   Metadata.get().then(function(metadata) {
     $scope.categories = metadata.collection_categories;
   });
-  
 
   $scope.cancel = function() {
     $uibModalInstance.dismiss('cancel');

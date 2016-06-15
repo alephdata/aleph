@@ -24,6 +24,15 @@
         </div>
 
         <div class="form-group">
+          <label class="control-label" for="creator">Contact</label>
+          <div class="">
+            <select class="form-control" id="creator" name="creator"
+              ng-model="collection.creator_id"
+              ng-options="r.id as r.name for r in roles"></select>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label class="control-label" for="category">Category</label>
           <div class="">
             <select class="form-control" id="category" name="category" ng-model="collection.category"

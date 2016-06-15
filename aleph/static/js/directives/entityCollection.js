@@ -5,7 +5,8 @@ aleph.directive('entityCollection', ['$http', '$q', 'Metadata', 'Collection',
     transclude: true,
     scope: {
       'setCollection': '&setCollection',
-      'collection': '='
+      'collection': '=',
+      'category': '='
     },
     templateUrl: 'templates/entity_collection.html',
     link: function (scope, element, attrs, model) {
@@ -48,6 +49,7 @@ aleph.directive('entityCollection', ['$http', '$q', 'Metadata', 'Collection',
           scope.setCollection({'callback': function() {
             var dfd = $q.defer();
             if (scope.createCollection) {
+              scope.collection.category = scope.category;
               $http.post('/api/1/collections', scope.collection).then(function(res) {
                 scope.collections.push(res.data);
                 scope.createCollection = false;
