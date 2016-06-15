@@ -15,17 +15,14 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
 
   $scope.delete = function() {
     Collection.delete(collection).then(function() {
-      $uibModalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('ok');
     });
   };
   
   $scope.process = function() {
-    if (!$scope.processTriggered) {
-      $scope.processTriggered = true;
-      $http.post($scope.source.api_url + '/process').then(function() {
-        $uibModalInstance.dismiss('ok');
-      });
-    }
+    $http.post($scope.collecton.api_url + '/process').then(function() {
+      $uibModalInstance.dismiss('ok');
+    });
   };
 
   $scope.save = function(form) {
