@@ -1,5 +1,5 @@
 
-aleph.directive('metadataSidebar', ['Metadata', function(Metadata) {
+aleph.directive('metadataSidebar', ['Collection', function(Collection) {
   return {
     restrict: 'E',
     scope: {
@@ -7,11 +7,16 @@ aleph.directive('metadataSidebar', ['Metadata', function(Metadata) {
     },
     templateUrl: 'templates/metadata_sidebar.html',
     link: function (scope, element, attrs, model) {
-      Metadata.get().then(function(metadata) {
+      Collection.index().then(function(data) {
         var collections = [];
         for (var id in scope.doc.collection_id) {
           var id = scope.doc.collection_id[id];
-          collections.push(metadata.collections[id]);
+          for (var j in data) {
+            var collection = data[j];
+            if (collection.id == id) {
+              collections.push(collection);
+            }
+          }
         };
         scope.collections = collections;
       });

@@ -8,7 +8,7 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
   });
 
   Metadata.get().then(function(metadata) {
-    $scope.categories = metadata.collection_categories;
+    $scope.categories = metadata.categories;
   });
 
   $scope.cancel = function() {
@@ -31,7 +31,7 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
     var res = $http.post(collection.api_url, $scope.collection);
     res.success(function(data) {
       $scope.$on('permissionsSaved', function() {
-        Metadata.flush().then(function() {
+        Collection.flush().then(function() {
           $uibModalInstance.close(data.data);
         });
       });

@@ -72,7 +72,7 @@ aleph.filter('collectionCategory', ['Metadata', function(Metadata) {
   var categories = {};
 
   Metadata.get().then(function(md) {
-    categories = md.collection_categories;
+    categories = md.categories;
   });
 
   return function(code) {

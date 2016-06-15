@@ -14,18 +14,10 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope',
       dfd = $q.defer();
       $q.all([
         $http.get('/api/1/sessions', {cache: false, params: {'_': dt.getTime()}}),
-        $http.get('/api/1/collections?limit=1000'),
         $http.get('/api/1/metadata', {cache: true})
       ]).then(function(results) {
-        var collections = {},
-            collectionsCount = 0,
-            session = results[0].data,
-            metadata = results[2].data;
-
-        angular.forEach(results[1].data.results, function(c) {
-          collections[c.id] = c;
-          collectionsCount++;
-        });
+        var session = results[0].data,
+            metadata = results[1].data;
 
         // still needed?
         session.cbq = session.logged_in ? session.role.id : 'anon';
@@ -33,12 +25,9 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope',
 
         dfd.resolve({
           session: session,
-          collections: collections,
-          collectionsList: results[1].data.results,
-          collectionsCount: collectionsCount,
           fields: metadata.fields,
           schemata: metadata.schemata,
-          collection_categories: metadata.collection_categories,
+          categories: metadata.categories,
           countries: metadata.countries, 
           languages: metadata.languages,
           flush: flush 

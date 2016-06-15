@@ -17,9 +17,10 @@
 
     <div class="context">
       <span ng-repeat="coll in collections">
-        <span ng-if="::coll.category"
-          class="label label-primary">{{:: coll.category | collectionCategory }}</span>
-        <a ng-click="filterSource(coll.id)" class="source"
+        <span ng-if="::coll.category" class="label label-primary">
+          {{:: coll.category | collectionCategory }}</span>
+
+        <a ng-click="filterCollection(coll.id)" class="collection"
           ng-bind="::coll.label"></a>
         &middot;
       </span>
@@ -27,17 +28,17 @@
         <i class="fa fa-external-link"></i>
         from
         <a ng-href="{{::doc.source_url}}" target="_new">{{::doc.source_url | host}}</a>
+        &middot;
       </span>
       <span ng-if="::doc.languages.length > 0 && doc.languages.length < 4">
-        |
         <i class="fa fa-language"></i>
         in 
         <span ng-repeat="lang in doc.languages">
           {{::lang | language}}<span ng-if="::!$last">,</span>
         </span>
+        &middot;
       </span>
       <span ng-if="doc.updated_at">
-        |
         <i class="fa fa-clock-o"></i>
         as of
         {{::doc.updated_at | date}}

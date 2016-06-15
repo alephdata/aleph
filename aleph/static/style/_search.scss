@@ -12,16 +12,17 @@
     text-align: right;   
 }
 
-.badge {
-    background-color: $page-bg;
-    color: $text-muted;
-}
-
 .facet-list {
     max-height: 15em;
     overflow-y: scroll;
     overflow: -moz-scrollbars-vertical; 
     //margin: -3px -1px 0 -1px;
+
+    .badge {
+        background-color: $page-bg;
+        color: $text-muted;
+        padding-right: 0;
+    }
 
     .facet {
         cursor: pointer;
@@ -102,7 +103,7 @@
 
         a {
             color: $text-muted;
-            text-decoration: underline;
+            // text-decoration: underline;
         }
     }
 

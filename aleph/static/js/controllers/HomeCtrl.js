@@ -1,12 +1,12 @@
 
-aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Collection', 'Authz', 'Role', 'Title', 'data', 'metadata',
-    function($scope, $location, $route, Collection, Authz, Role, Title, data, metadata) {
+aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Collection', 'Authz', 'Role', 'Title', 'data', 'metadata', 'collections',
+    function($scope, $location, $route, Collection, Authz, Role, Title, data, metadata, collections) {
 
   $scope.result = data.result;
   $scope.sources = data.sources;
   $scope.session = metadata.session;
   $scope.metadata = metadata;
-  $scope.collections = metadata.collectionsList.sort(function(a, b) {
+  $scope.collections = collections.sort(function(a, b) {
     return a.label.localeCompare(b.label);
   });
   $scope.title = Title.getSiteTitle();

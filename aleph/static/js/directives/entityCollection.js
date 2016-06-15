@@ -23,7 +23,6 @@ aleph.directive('entityCollection', ['$http', '$q', 'Metadata', 'Collection',
         scope.collections = collections;
         if (!collections.length) {
           scope.setCreateCollection(true);
-          scope.collection = {};
         } else {
           scope.collection = collections[0];
           scope.update();
@@ -54,7 +53,9 @@ aleph.directive('entityCollection', ['$http', '$q', 'Metadata', 'Collection',
                 scope.collections.push(res.data);
                 scope.createCollection = false;
                 scope.collection = res.data;
-                dfd.resolve(res.data);
+                Collection.flush().then(function() {
+                  dfd.resolve(res.data);  
+                });
               }, function(err) {
                 dfd.reject();
               });

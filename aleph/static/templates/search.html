@@ -74,15 +74,17 @@
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
-          ng-repeat="collection in collectionFacet track by collection.id"
+          ng-repeat="collection in collectionFacet"
           ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
           ng-click="query.toggleFilter('collection_id', collection.id)">
-          <span class="badge">{{collection.count | number}}</span>
-          <span class="lbl">
-            {{::collection.label | characters:35 }}
-            <a ng-click="editCollection(collection, $event)" ng-show="::authz.collection(authz.WRITE, collection.id)">
+          <span class="badge">
+            {{collection.count | number}}
+            <a ng-click="editCollection(collection, $event)" ng-if="::authz.collection(authz.WRITE, collection.id)">
               <i class="fa fa-cog"></i>
             </a>
+          </span>
+          <span class="lbl">
+            {{::collection.label | characters:35 }}  
           </span>
         </li>
       </ul>
@@ -106,13 +108,15 @@
           ng-repeat="entity in entityFacet track by entity.id"
           ng-class="{'active': query.hasField('entity', entity.id)}"
           ng-click="query.toggle('entity', entity.id)">
-          <span class="badge">{{entity.count | number}}</span>
-          <entity-icon schema="entity.$schema"></entity-icon>
-          <span class="lbl">
-            {{::entity.name | characters:35 }}
+          <span class="badge">
+            {{entity.count | number}}
             <a ng-click="editEntity(entity, $event)" ng-if="::authz.entityWrite(entity)">
               <i class="fa fa-cog"></i>
             </a>
+          </span>
+          <entity-icon schema="entity.$schema"></entity-icon>
+          <span class="lbl">
+            {{::entity.name | characters:35 }}
           </span>
         </li>
       </ul>

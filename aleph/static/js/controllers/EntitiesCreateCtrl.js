@@ -37,7 +37,7 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
     }
     $scope.blocked = true;
     $scope.collectionCallback().then(function(collection) {
-      $scope.entity.collections = [collection.id];
+      $scope.entity.collection_id = [collection.id];
       $http.post('/api/1/entities', $scope.entity).then(function(res) {
         if ($scope.createAlert) {
           var alert = {entity_id: res.data.id};
