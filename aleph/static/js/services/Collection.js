@@ -28,7 +28,7 @@ aleph.factory('Collection', ['$q', '$uibModal', 'Metadata', 'Authz', function($q
         templateUrl: 'templates/collections_edit.html',
         controller: 'CollectionsEditCtrl',
         backdrop: true,
-        size: 'md',
+        size: 'lg',
         resolve: {
           collection: ['$q', '$http', 'Role', function($q, $http, Role) {
             var dfd = $q.defer();
