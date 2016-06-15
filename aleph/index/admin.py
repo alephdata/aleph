@@ -31,6 +31,7 @@ def upgrade_search():
 
 
 def optimize_search():
+    """Run a full index restructure. May take a while."""
     get_es().indices.optimize(index=get_es_index())
 
 

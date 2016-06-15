@@ -9,6 +9,7 @@ log = logging.getLogger(__name__)
 
 
 def expand_json(data):
+    """Make complex objects (w/ dates, to_dict) into JSON."""
     data = JSONEncoder().encode(data)
     return json.loads(data)
 
