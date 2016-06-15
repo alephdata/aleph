@@ -1,6 +1,7 @@
 import sys
 import logging
 import traceback
+from sqlalchemy.exc import SQLAlchemyError
 
 from aleph.core import db, get_archive
 from aleph.ext import get_ingestors
@@ -54,6 +55,9 @@ class Ingestor(object):
     def handle_exception(cls, meta, collection_id, exception):
         db.session.rollback()
         db.session.close()
+        if isinstance(exception, SQLAlchemyError):
+            log.exception(exception)
+            return
         (error_type, error_message, error_details) = sys.exc_info()
         if error_type is not None:
             error_message = unicode(error_message)
