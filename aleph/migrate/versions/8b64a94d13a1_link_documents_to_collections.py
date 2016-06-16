@@ -14,7 +14,6 @@ down_revision = '15a258b73a77'
 
 
 def upgrade():
-    op.drop_column(u'entity', 'test')
     op.create_table('collection_document',
                     sa.Column('document_id', sa.BigInteger(), nullable=True),
                     sa.Column('collection_id', sa.Integer(), nullable=True),
