@@ -2,11 +2,10 @@ from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, request_data, arg_bool
 from apikit import get_limit, get_offset, Pager
 from sqlalchemy import func, not_
-from sqlalchemy.orm import aliased
 
 from aleph import authz
-from aleph.model import Entity, Collection, Reference, db
-from aleph.entities import update_entity
+from aleph.model import Entity, Collection, db
+from aleph.logic import update_entity
 from aleph.views.cache import enable_cache
 from aleph.search import entities_query, execute_entities_query
 from aleph.search import suggest_entities, similar_entities
@@ -25,7 +24,8 @@ def check_authz(entity, permission):
 
 def get_collections(data):
     collections = []
-    for coll_id in data.get('collections'):
+    collection_id = data.get('collection_id') or []
+    for coll_id in collection_id:
         if isinstance(coll_id, dict):
             coll_id = coll_id.get('id')
         collections.append(coll_id)

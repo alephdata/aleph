@@ -30,7 +30,7 @@ DOCUMENT_MAPPING = {
         "title_latin": {"type": "string", "index": "analyzed"},
         "content_hash": {"type": "string", "index": "not_analyzed"},
         "file_name": {"type": "string", "index": "not_analyzed"},
-        "source_id": {"type": "integer", "index": "not_analyzed"},
+        "collection_id": {"type": "integer", "index": "not_analyzed"},
         "source_url": {"type": "string", "index": "not_analyzed"},
         "extension": {"type": "string", "index": "not_analyzed"},
         "languages": {"type": "string", "index": "not_analyzed"},
@@ -52,11 +52,8 @@ DOCUMENT_MAPPING = {
             "type": "nested",
             "include_in_parent": True,
             "properties": {
-                "uuid": {"type": "string", "index": "not_analyzed"},
-                "collection_id": {"type": "integer", "index": "not_analyzed"},
-                "name": {"type": "string", "index": "not_analyzed"},
-                "$schema": {"type": "string", "index": "not_analyzed"},
-                "weight": {"type": "string", "index": "not_analyzed"}
+                "id": {"type": "string", "index": "not_analyzed"},
+                "collection_id": {"type": "integer", "index": "not_analyzed"}
             }
         },
     }
@@ -84,7 +81,7 @@ RECORD_MAPPING = {
     "properties": {
         "type": {"type": "string", "index": "not_analyzed"},
         "content_hash": {"type": "string", "index": "not_analyzed"},
-        "source_id": {"type": "integer", "index": "not_analyzed"},
+        "collection_id": {"type": "integer", "index": "not_analyzed"},
         "document_id": {"type": "integer", "index": "not_analyzed"},
         "sheet": {"type": "integer", "index": "not_analyzed"},
         "row_id": {"type": "integer", "index": "not_analyzed"},
@@ -107,8 +104,7 @@ ENTITY_MAPPING = {
         "name_latin": {"type": "string", "index": "analyzed"},
         "terms": {"type": "string", "index": "analyzed"},
         "terms_latin": {"type": "string", "index": "analyzed"},
-        "collection_id": {"type": "integer", "index": "analyzed"},
-        "collections": {"type": "integer", "index": "analyzed"},
+        "collection_id": {"type": "integer", "index": "not_analyzed"},
         "$schema": {"type": "string", "index": "not_analyzed"},
         "summary": {"type": "string", "index": "analyzed"},
         "summary_latin": {"type": "string", "index": "analyzed"},

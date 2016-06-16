@@ -3,7 +3,7 @@ from pprint import pprint  # noqa
 from babel import Locale
 from pycountry import countries
 
-from aleph.model import Entity, Source, Collection
+from aleph.model import Entity, Collection
 
 
 def convert_bucket(facet, bucket):
@@ -40,44 +40,27 @@ def convert_entities(entities):
         data = entity.to_ref()
         data['count'] = bucket.get('doc_count')
         results.append(data)
-    return results
-
-
-def convert_sources(facet):
-    output = {'values': []}
-    ids = [b.get('key') for b in facet.get('buckets', [])]
-    sources = Source.all_by_ids(ids).all()
-    for bucket in facet.get('buckets', []):
-        key = bucket.get('key')
-        for source in sources:
-            if source.id != key:
-                continue
-            output['values'].append({
-                'id': key,
-                'label': source.label,
-                'category': source.category,
-                'count': bucket.get('doc_count')
-            })
-    return output
+    return {'values': results}
 
 
 def convert_collections(facet):
-    output = {'values': []}
+    results = []
     ids = [b.get('key') for b in facet.get('buckets', [])]
     if not len(ids):
-        return output
+        return {'values': []}
     collections = Collection.all_by_ids(ids).all()
     for bucket in facet.get('buckets', []):
         key = bucket.get('key')
         for collection in collections:
             if collection.id != key:
                 continue
-            output['values'].append({
+            results.append({
                 'id': key,
                 'label': collection.label,
+                'category': collection.category,
                 'count': bucket.get('doc_count')
             })
-    return output
+    return {'values': results}
 
 
 def convert_facets(result, output, args):
@@ -85,9 +68,10 @@ def convert_facets(result, output, args):
     aggs = result.get('aggregations', {})
     output['facets'] = {}
     for facet in args.getlist('facet'):
-        value = aggs.get(facet)
+        value = aggs.get(facet, {})
         data = {
-            'values': [convert_bucket(facet, b) for b in value.get('buckets')]
+            'values': [convert_bucket(facet, b)
+                       for b in value.get('buckets', [])]
         }
         output['facets'][facet] = data
     return output
@@ -95,20 +79,22 @@ def convert_facets(result, output, args):
 
 def convert_document_aggregations(result, output, args):
     """Traverse and get all facets."""
+    output = convert_facets(result, output, args)
     aggs = result.get('aggregations', {})
     scoped = aggs.get('scoped', {})
-    sources = scoped.get('source', {}).get('source', {})
-    output['sources'] = convert_sources(sources)
+    collections = scoped.get('collections', {}).get('collections', {})
+    output['facets']['collections'] = convert_collections(collections)
     entities = aggs.get('entities', {}).get('inner', {})
     entities = entities.get('entities', {})
-    output['entities'] = convert_entities(entities)
-    return convert_facets(result, output, args)
+    output['facets']['entities'] = convert_entities(entities)
+    return output
 
 
 def convert_entity_aggregations(result, output, args):
     """Traverse and get all facets."""
+    output = convert_facets(result, output, args)
     aggs = result.get('aggregations', {})
     scoped = aggs.get('scoped', {})
-    collections = scoped.get('collection', {}).get('collection', {})
-    output['collections'] = convert_collections(collections)
-    return convert_facets(result, output, args)
+    collections = scoped.get('collections', {}).get('collections', {})
+    output['facets']['collections'] = convert_collections(collections)
+    return output

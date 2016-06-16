@@ -49,10 +49,9 @@ class AuthApiTestCase(TestCase):
         db.session.commit()
         res = self.client.get('/api/1/sessions')
         perm = res.json['permissions']
-        assert not len(perm['sources']['write']), res.json
-        assert not len(perm['collections']['write']), res.json
+        assert not len(perm['write']), res.json
         self.login(foreign_id='admin', is_admin=True)
         res = self.client.get('/api/1/sessions')
         perm = res.json['permissions']
         # assert not len(perm['sources']['write']), res.json
-        assert len(perm['collections']['write']), res.json
+        assert len(perm['write']), res.json

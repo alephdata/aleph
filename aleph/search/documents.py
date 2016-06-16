@@ -5,9 +5,9 @@ from werkzeug.datastructures import MultiDict
 
 from aleph import authz, signals
 from aleph.core import get_es, get_es_index, url_for
-from aleph.model import Source
+from aleph.model import Collection
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
-from aleph.search.util import add_filter, authz_sources_filter, clean_highlight
+from aleph.search.util import add_filter, authz_filter, clean_highlight
 from aleph.search.util import execute_basic, parse_filters, FACET_SIZE
 from aleph.search.fragments import text_query_string, meta_query_string
 from aleph.search.fragments import match_all, child_record, aggregate
@@ -15,14 +15,14 @@ from aleph.search.fragments import filter_query
 from aleph.search.facets import convert_document_aggregations
 from aleph.search.records import records_query
 
-DEFAULT_FIELDS = ['source_id', 'title', 'file_name', 'extension', 'languages',
-                  'countries', 'source_url', 'created_at', 'updated_at',
-                  'type', 'summary', 'keywords', 'author', 'recipients']
+DEFAULT_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
+                  'languages', 'countries', 'source_url', 'created_at',
+                  'updated_at', 'type', 'summary']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
 # used to generate the facet values.
-OR_FIELDS = ['source_id']
+OR_FIELDS = ['collection_id']
 
 
 def documents_query(args, fields=None, facets=True):
@@ -31,7 +31,7 @@ def documents_query(args, fields=None, facets=True):
         args = MultiDict(args)
     text = args.get('q', '').strip()
     q = text_query(text)
-    q = authz_sources_filter(q)
+    q = authz_filter(q)
 
     # Sorting -- should this be passed into search directly, instead of
     # these aliases?
@@ -47,13 +47,18 @@ def documents_query(args, fields=None, facets=True):
 
     filters = parse_filters(args)
     for entity in args.getlist('entity'):
-        filters.append(('entities.uuid', entity))
+        filters.append(('entities.id', entity))
 
-    aggs = {}
+    aggs = {'scoped': {'global': {}, 'aggs': {}}}
     if facets:
-        aggs = aggregate(q, args)
-        aggs = facet_source(q, aggs, filters)
-        q = entity_collections(q, aggs, args, filters)
+        facets = args.getlist('facet')
+        if 'collections' in facets:
+            aggs = facet_collections(q, aggs, filters)
+            facets.remove('collections')
+        if 'entities' in facets:
+            aggs = facet_entities(aggs, args)
+            facets.remove('entities')
+        aggs = aggregate(q, aggs, facets)
 
     signals.document_query_process.send(q=q, args=args)
     return {
@@ -64,27 +69,22 @@ def documents_query(args, fields=None, facets=True):
     }
 
 
-def entity_collections(q, aggs, args, filters):
+def facet_entities(aggs, args):
     """Filter entities, facet for collections."""
     entities = args.getlist('entity')
-    collections = []
-    readable = authz.collections(authz.READ)
-    requested = args.getlist('collection') or readable
-    for collection_id in requested:
-        collection_id = int(collection_id)
-        if authz.collection_read(collection_id):
-            collections.append(collection_id)
-
+    collections = authz.collections(authz.READ)
     flt = {
         'or': [
             {
-                'terms': {'entities.collection_id': collections}
+                'terms': {
+                    'entities.collection_id': collections
+                }
             },
             {
                 'and': [
                     {
-                        'terms': {'entities.collection_id': readable},
-                        'terms': {'entities.uuid': entities},
+                        'terms': {'entities.collection_id': collections},
+                        'terms': {'entities.id': entities},
                     }
                 ]
             }
@@ -99,23 +99,23 @@ def entity_collections(q, aggs, args, filters):
                 'filter': flt,
                 'aggs': {
                     'entities': {
-                        'terms': {'field': 'entities.uuid', 'size': FACET_SIZE}
+                        'terms': {'field': 'entities.id', 'size': FACET_SIZE}
                     }
                 }
             }
         }
     }
-    return q
+    return aggs
 
 
-def facet_source(q, aggs, filters):
-    aggs['scoped']['aggs']['source'] = {
+def facet_collections(q, aggs, filters):
+    aggs['scoped']['aggs']['collections'] = {
         'filter': {
-            'query': filter_query(q, filters, OR_FIELDS, skip='source_id')
+            'query': filter_query(q, filters, OR_FIELDS, skip='collection_id')
         },
         'aggs': {
-            'source': {
-                'terms': {'field': 'source_id', 'size': 1000}
+            'collections': {
+                'terms': {'field': 'collection_id', 'size': 1000}
             }
         }
     }
@@ -194,9 +194,9 @@ def execute_documents_query(args, query):
 def alert_query(alert):
     """Execute the query and return a set of results."""
     q = text_query(alert.query_text)
-    q = authz_sources_filter(q)
+    q = authz_filter(q)
     if alert.entity_id:
-        q = filter_query(q, [('entities.uuid', alert.entity_id)], OR_FIELDS)
+        q = filter_query(q, [('entities.id', alert.entity_id)], OR_FIELDS)
     if alert.notified_at:
         q = add_filter(q, {
             "range": {
@@ -212,16 +212,19 @@ def alert_query(alert):
 
     result, hits, output = execute_basic(TYPE_DOCUMENT, q)
     sub_queries = []
-    sources = {}
+    collections = {}
     for doc in hits.get('hits', []):
         document = doc.get('_source')
         document['id'] = int(doc.get('_id'))
-        source_id = document['source_id']
-        if source_id not in sources:
-            sources[source_id] = Source.by_id(source_id)
-        if sources[source_id] is None:
-            continue
-        document['source'] = sources[source_id]
+        document['collections'] = []
+        for coll in document['collection_id']:
+            if coll not in authz.collections(authz.READ):
+                continue
+            if coll not in collections:
+                collections[coll] = Collection.by_id(coll)
+            if collections[coll] is None:
+                continue
+            document['collections'].append(collections[coll])
         document['records'] = {'results': [], 'total': 0}
 
         sq = records_query(document['id'], alert.to_query(), size=1)

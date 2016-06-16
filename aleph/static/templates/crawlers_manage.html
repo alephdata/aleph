@@ -23,15 +23,15 @@
       <strong ng-bind="::crawler.name"></strong>
     </td>
     <td>
-      {{crawler.source.label}}
+      {{crawler.collection.label}}
     </td>
     <td>
-      <a href="/search?filter:source_id={{crawler.source.id}}">
+      <a href="/search?filter:collection_id={{crawler.collection.id}}">
         <i class="fa fa-search"></i>
       </a>
     </td>
     <td>
-      <a ng-click="editSource(crawler.source)">
+      <a ng-click="editCollection(crawler.collection)">
         <i class="fa fa-cog"></i>
       </a>
     </td>

@@ -7,13 +7,13 @@ from flask.ext.assets import ManageAssets
 from flask.ext.migrate import MigrateCommand
 
 from aleph.core import create_app
-from aleph.model import db, upgrade_db, Source, Document
+from aleph.model import db, upgrade_db, Collection, Document
 from aleph.views import mount_app_blueprints, assets
-from aleph.analyze import analyze_source, install_analyzers
+from aleph.analyze import analyze_collection, install_analyzers
 from aleph.alerts import check_alerts
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document
-from aleph.entities import reindex_entities
+from aleph.logic import reindex_entities, delete_collection
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
@@ -30,10 +30,10 @@ manager.add_command('db', MigrateCommand)
 
 
 @manager.command
-def sources():
-    """List all sources."""
-    for source in Source.all():
-        print source.id, source.foreign_id, source.label
+def collections():
+    """List all collections."""
+    for collection in Collection.all():
+        print collection.id, collection.foreign_id, collection.label
 
 
 @manager.command
@@ -56,10 +56,9 @@ def crawl(name):
 
 
 @manager.command
-@manager.option('-s', '--source', dest='source')
 @manager.option('-l', '--language', dest='language', nargs='*')
 @manager.option('-c', '--country', dest='country', nargs='*')
-def crawldir(directory, source=None, language=None, country=None):
+def crawldir(directory, language=None, country=None):
     """Crawl the given directory."""
     directory = os.path.abspath(directory)
     directory = os.path.normpath(directory)
@@ -70,63 +69,59 @@ def crawldir(directory, source=None, language=None, country=None):
     if country is not None:
         meta['countries'] = [country]
     crawler = DirectoryCrawler()
-    crawler.execute(directory=directory, source=source, meta=meta)
+    crawler.execute(directory=directory, meta=meta)
 
 
 @manager.command
-@manager.option('-s', '--source', dest='source')
-def crawlsql(yaml_config, source=None):
+def crawlsql(yaml_config, collection=None):
     """Crawl the given database query file."""
     yaml_config = os.path.abspath(yaml_config)
     yaml_config = os.path.normpath(yaml_config)
     log.info('Crawling %r...', yaml_config)
-    SQLCrawler().execute(config=yaml_config, source=source)
+    SQLCrawler().execute(config=yaml_config)
     db.session.commit()
 
 
 @manager.command
-@manager.option('-s', '--source', dest='source')
-def metafolder(folder, source=None):
+def metafolder(folder):
     """Crawl the given metafolder path."""
     log.info('Importing %r...', folder)
-    MetaFolderCrawler().execute(folder=folder, source=source)
+    MetaFolderCrawler().execute(folder=folder)
     db.session.commit()
 
 
 @manager.command
 def flush(foreign_id):
-    """Reset the crawler state for a given source specification."""
-    from aleph.index import delete_source
-    source = Source.by_foreign_id(foreign_id)
-    if source is None:
-        raise ValueError("No such source: %r" % foreign_id)
-    delete_source(source.id)
-    source.delete()
-    db.session.commit()
+    """Reset the crawler state for a given collecton."""
+    collection = Collection.by_foreign_id(foreign_id)
+    if collection is None:
+        raise ValueError("No such collection: %r" % foreign_id)
+    delete_collection(collection.id)
 
 
 @manager.command
 def analyze(foreign_id=None):
-    """Re-analyze documents in the given source (or throughout)."""
+    """Re-analyze documents in the given collection (or throughout)."""
     if foreign_id:
-        source = Source.by_foreign_id(foreign_id)
-        if source is None:
-            raise ValueError("No such source: %r" % foreign_id)
-        analyze_source.delay(source.id)
+        collection = Collection.by_foreign_id(foreign_id)
+        if collection is None:
+            raise ValueError("No such collection: %r" % foreign_id)
+        analyze_collection.delay(collection.id)
     else:
-        for source in Source.all():
-            analyze_source.delay(source.id)
+        for collection in Collection.all():
+            analyze_collection.delay(collection.id)
 
 
 @manager.command
 def index(foreign_id=None):
-    """Index documents in the given source (or throughout)."""
+    """Index documents in the given collection (or throughout)."""
     q = Document.all_ids()
     if foreign_id:
-        source = Source.by_foreign_id(foreign_id)
-        if source is None:
-            raise ValueError("No such source: %r" % foreign_id)
-        q = q.filter(Document.source_id == source.id)
+        collection = Collection.by_foreign_id(foreign_id)
+        if collection is None:
+            raise ValueError("No such collection: %r" % foreign_id)
+        clause = Collection.id == collection.id
+        q = q.filter(Document.collections.any(clause))
     for doc_id, in q:
         index_document.delay(doc_id)
     if foreign_id is None:

@@ -33,21 +33,21 @@ class EntitiesApiTestCase(TestCase):
     def test_index(self):
         index_entity(self.ent)
         optimize_search()
-        res = self.client.get('/api/1/entities')
+        res = self.client.get('/api/1/entities?facet=collections')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
-        assert len(res.json['collections']['values']) == 0, res.json
+        assert len(res.json['facets']['collections']['values']) == 0, res.json
         self.login(is_admin=True)
-        res = self.client.get('/api/1/entities')
+        res = self.client.get('/api/1/entities?facet=collections')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
-        assert len(res.json['collections']['values']) == 1, res.json
-        col0 = res.json['collections']['values'][0]
+        assert len(res.json['facets']['collections']['values']) == 1, res.json
+        col0 = res.json['facets']['collections']['values'][0]
         assert col0['id'] == self.col.id, res.json
         assert col0['label'] == self.col.label, res.json
-        assert len(res.json['facets']) == 0, res.json
-        res = self.client.get('/api/1/entities?facet=jurisdiction_code')
         assert len(res.json['facets']) == 1, res.json
+        res = self.client.get('/api/1/entities?facet=jurisdiction_code')
+        assert len(res.json['facets']) == 2, res.json
         assert 'values' in res.json['facets']['jurisdiction_code'], res.json
 
     def test_all(self):
@@ -106,7 +106,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/building.json',
             'name': "Our house",
-            'collections': [self.col.id],
+            'collection_id': [self.col.id],
             'summary': "In the middle of our street"
         }
         res = self.client.post(url, data=json.dumps(data),
@@ -120,7 +120,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id],
+            'collection_id': [self.col.id],
             'other_names': [
                 {'name': "Usama bin Laden"},
                 {'name': "Osama bin Ladin"},
@@ -142,7 +142,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id],
+            'collection_id': [self.col.id],
             'other_names': [
                 {'name': "Usama bin Laden"},
                 {'name': "Osama bin Ladin"},
@@ -173,7 +173,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id],
+            'collection_id': [self.col.id],
             'other_names': [
                 {'name': "Usama bin Laden"},
                 {'name': "Osama bin Ladin"},
@@ -203,7 +203,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id],
+            'collection_id': [self.col.id],
             'residential_address': {
                 'text': 'Home',
                 'region': 'Netherlands',
@@ -231,7 +231,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id]
+            'collection_id': [self.col.id]
         }
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
@@ -249,7 +249,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             '$schema': '/entity/person.json#',
             'name': "Osama bin Laden",
-            'collections': [self.col.id]
+            'collection_id': [self.col.id]
         }
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')

@@ -8,13 +8,7 @@ MARKS = re.compile(r'[_\.;,/]{2,}')
 FACET_SIZE = 50
 
 
-def authz_sources_filter(q):
-    return add_filter(q, {
-        "terms": {"source_id": list(authz.sources(authz.READ))}
-    })
-
-
-def authz_collections_filter(q):
+def authz_filter(q):
     return add_filter(q, {
         "terms": {"collection_id": list(authz.collections(authz.READ))}
     })

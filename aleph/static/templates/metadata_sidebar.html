@@ -9,8 +9,12 @@
       <td>{{doc.title}}</td>
     </tr>
     <tr>
-      <th>Source</th>
-      <td>{{doc.source.label}}</td>
+      <th>Collections</th>
+      <td>
+        <span ng-repeat="coll in collections">
+          {{coll.label}}<span ng-if="!$last">,</span>
+        </span>
+      </td>
     </tr>
     <tr ng-if="doc.author">
       <th>Author</th>

@@ -13,12 +13,13 @@ CORE_FACETS = {
     'dates': 'Dates'
 }
 
-SOURCE_CATEGORIES = {
+COLLECTION_CATEGORIES = {
     'news': 'News reports',
     'leak': 'Leaks',
     'gazette': 'Gazette notices',
     'court': 'Court cases',
     'company': 'Company records',
+    'watchlist': 'Watchlist',
     'scrape': 'Scrapes',
     'procurement': 'Procurement',
     'grey': 'Grey Literature'

@@ -1,10 +1,10 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Source', 'Entity', 'Authz', 'Alert', 'Document', 'Role', 'Title', 'data', 'alerts', 'metadata',
-    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Source, Entity, Authz, Alert, Document, Role, Title, data, alerts, metadata) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Collection', 'Entity', 'Authz', 'Alert', 'Document', 'Role', 'Title', 'data', 'alerts', 'metadata',
+    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Collection, Entity, Authz, Alert, Document, Role, Title, data, alerts, metadata) {
 
   $scope.fields = metadata.fields;
-  $scope.sourceFacets = [];
-  $scope.entityFacets = [];
+  $scope.collectionFacet = [];
+  $scope.entityFacet = [];
   $scope.facets = [];
   $scope.authz = Authz;
   $scope.sortOptions = {
@@ -18,9 +18,9 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
     $anchorScroll();
   };
 
-  $scope.editSource = function(source, $event) {
+  $scope.editCollection = function(collection, $event) {
     $event.stopPropagation();
-    Source.edit(source).then(function() {
+    Collection.edit(collection).then(function() {
       reloadSearch();
     });
   };
@@ -30,26 +30,16 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
     Entity.edit(entity.id).then(function() {
       $timeout(function() {
         reloadSearch();
-      }, 500);
+      }, 100);
     });
   };
 
-  $scope.selectCollections = function($event) {
+  $scope.createEntity = function($event) {
     $event.stopPropagation();
-    var instance = $uibModal.open({
-      templateUrl: 'templates/collections_select.html',
-      controller: 'CollectionsSelectCtrl',
-      backdrop: true,
-      size: 'md',
-      resolve: {
-        collections: function() {
-          return data.query.getArray('collection');
-        }
-      }
-    });
-
-    instance.result.then(function(collections) {
-      $scope.query.set('collection', collections);
+    Entity.create({'name': $scope.originalText}).then(function() {
+      $timeout(function() {
+        reloadSearch();
+      }, 100);
     });
   };
 
@@ -86,8 +76,8 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
     if (result.error) {
       return;
     }
-    $scope.sourceFacets = query.sortFacet(result.sources.values, 'filter:source_id');
-    $scope.entityFacets = query.sortFacet(result.entities, 'entity');
+    $scope.collectionFacet = query.sortFacet(result.facets.collections.values, 'filter:collection_id');
+    $scope.entityFacet = query.sortFacet(result.facets.entities.values, 'entity');
 
     var queryFacets = query.getArray('facet'),
         facets = [];

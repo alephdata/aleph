@@ -8,10 +8,16 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db
 from aleph.metadata import Metadata
-from aleph.model.source import Source
+from aleph.model.collection import Collection
+from aleph.model.reference import Reference
 from aleph.model.common import DatedModel
 
 log = logging.getLogger(__name__)
+
+collection_document_table = db.Table('collection_document',
+    db.Column('document_id', db.BigInteger, db.ForeignKey('document.id')),  # noqa
+    db.Column('collection_id', db.Integer, db.ForeignKey('collection.id'))  # noqa
+)
 
 
 class Document(db.Model, DatedModel):
@@ -23,9 +29,10 @@ class Document(db.Model, DatedModel):
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)
-    source_id = db.Column(db.Integer(), db.ForeignKey('source.id'), index=True)
-    source = db.relationship(Source, backref=db.backref('documents', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
     _meta = db.Column('meta', JSONB)
+
+    collections = db.relationship(Collection, secondary=collection_document_table,  # noqa
+                                  backref=db.backref('documents', lazy='dynamic'))  # noqa
 
     @property
     def title(self):
@@ -59,6 +66,20 @@ class Document(db.Model, DatedModel):
         pq.delete(synchronize_session='fetch')
         db.session.refresh(self)
 
+    def delete_references(self, origin=None):
+        pq = db.session.query(Reference)
+        pq = pq.filter(Reference.document_id == self.id)
+        if origin is not None:
+            pq = pq.filter(Reference.origin == origin)
+        pq.delete(synchronize_session='fetch')
+        db.session.refresh(self)
+
+    def delete(self, deleted_at=None):
+        self.delete_references()
+        self.delete_records()
+        self.delete_pages()
+        db.session.delete(self)
+
     def insert_records(self, sheet, iterable, chunk_size=1000):
         chunk = []
         for i, data in enumerate(iterable):
@@ -83,11 +104,17 @@ class Document(db.Model, DatedModel):
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.meta.title)
 
+    @property
+    def collection_ids(self):
+        if not hasattr(self, '_collection_ids_cache'):
+            self._collection_ids_cache = [c.id for c in self.collections]
+        return self._collection_ids_cache
+
     def _add_to_dict(self, data):
         data.update({
             'id': self.id,
             'type': self.type,
-            'source_id': self.source_id,
+            'collection_id': self.collection_ids,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         })

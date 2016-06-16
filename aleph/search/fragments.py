@@ -50,12 +50,12 @@ def child_record(q):
     }
 
 
-def aggregate(q, args):
+def aggregate(q, aggs, facets):
     """Generate aggregations, a generalized way to do facetting."""
-    aggs = {'scoped': {'global': {}, 'aggs': {}}}
-    for facet in args.getlist('facet'):
-        agg = {facet: {'terms': {'field': facet, 'size': FACET_SIZE}}}
-        aggs.update(agg)
+    for facet in facets:
+        aggs.update({facet: {
+            'terms': {'field': facet, 'size': FACET_SIZE}}
+        })
     return aggs
 
 

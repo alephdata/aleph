@@ -1,4 +1,5 @@
 import os
+import re
 import six
 import cgi
 import mimetypes
@@ -11,6 +12,8 @@ from collections import MutableMapping, Mapping
 
 from aleph.util import make_filename
 from aleph.metadata.tabular import Tabular
+
+DATE_RE = re.compile(r'^[12]\d{3}-[012]?\d-[0123]?\d$')
 
 
 class PDFAlternative(object):
@@ -249,9 +252,11 @@ class Metadata(MutableMapping):
     def dates(self):
         _dates = set()
         for date_ in self.data.get('dates', []):
-            if date is not None:
-                _dates.add(date_.strip('.').strip())
-        return list(_dates)
+            if date_ is not None:
+                date_ = date_.strip().strip()
+                if DATE_RE.match(date_):
+                    _dates.add(date_)
+        return list(set(_dates))
 
     @dates.setter
     def dates(self, dates):

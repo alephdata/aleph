@@ -9,6 +9,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Query', 'History
           state = angular.copy(query.state);
       state['limit'] = 30;
       state['snippet'] = 140;
+      state['facet'] = query.getArray('facet').concat(['entities', 'collections']);
       state['offset'] = state.offset || 0;
       History.setLastSearch(query.state);
       $http.get('/api/1/query', {cache: true, params: state}).then(function(res) {

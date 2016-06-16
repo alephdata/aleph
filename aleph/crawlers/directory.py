@@ -3,7 +3,7 @@ import logging
 from normality import slugify
 
 from aleph.core import db
-from aleph.model import Source
+from aleph.model import Collection
 from aleph.text import string_value
 from aleph.ingest import ingest_file
 from aleph.crawlers.crawler import Crawler
@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 class DirectoryCrawler(Crawler):
 
-    def crawl_file(self, source_id, file_path, base_meta):
+    def crawl_file(self, collection_id, file_path, base_meta):
         try:
             if not os.path.isfile(file_path):
                 log.info('Invalid file path: %r', file_path)
@@ -26,21 +26,21 @@ class DirectoryCrawler(Crawler):
             meta.foreign_id = file_path
             meta.source_path = file_path
             meta.file_name = os.path.basename(file_path)
-            ingest_file(source_id, meta, file_path, move=False)
+            ingest_file(collection_id, meta, file_path, move=False)
         except Exception as ex:
             log.exception(ex)
 
-    def crawl(self, directory=None, source=None, meta={}):
-        source = source or directory
-        source = Source.create({
-            'foreign_id': 'directory:%s' % slugify(source),
-            'label': source
+    def crawl(self, directory=None, collection=None, meta={}):
+        collection = collection or directory
+        collection = Collection.create({
+            'foreign_id': 'directory:%s' % slugify(collection),
+            'label': collection
         })
         db.session.commit()
-        source_id = source.id
+        collection_id = collection.id
 
         if os.path.isfile(directory):
-            self.crawl_file(source_id, directory, meta)
+            self.crawl_file(collection_id, directory, meta)
 
         directory = directory or os.getcwd()
         directory = directory.encode('utf-8')
@@ -56,4 +56,4 @@ class DirectoryCrawler(Crawler):
                 if file_name in SKIP_FILES:
                     continue
                 file_path = os.path.join(dirname, file_name)
-                self.crawl_file(source_id, file_path, meta)
+                self.crawl_file(collection_id, file_path, meta)

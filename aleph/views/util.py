@@ -12,7 +12,8 @@ def get_document(document_id):
     document = Document.by_id(document_id)
     if document is None:
         raise NotFound()
-    authz.require(authz.source_read(document.source_id))
+    readable = [c for c in document.collection_ids if authz.collection_read(c)]
+    authz.require(len(readable))
     return document
 
 

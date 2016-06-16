@@ -5,7 +5,6 @@ from aleph.core import db # noqa
 from aleph.model.role import Role # noqa
 from aleph.model.alert import Alert # noqa
 from aleph.model.permission import Permission # noqa
-from aleph.model.source import Source # noqa
 from aleph.model.entity import Entity # noqa
 from aleph.model.reference import Reference # noqa
 from aleph.model.collection import Collection # noqa

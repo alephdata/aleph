@@ -21,8 +21,8 @@ def install_analyzers():
 
 
 @celery.task()
-def analyze_source(source_id):
-    query = {'term': {'source_id': source_id}}
+def analyze_collection(collection_id):
+    query = {'term': {'collection_id': collection_id}}
     query = {'query': query, '_source': False}
     for row in scan_iter(query):
         analyze_document.delay(row.get('_id'))

@@ -1,8 +1,15 @@
 aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$routeParams', '$uibModalInstance',
-                                         'Validation', 'Metadata', 'Collection', 'collection',
-    function($scope, $location, $http, $routeParams, $uibModalInstance, Validation, Metadata, Collection, collection) {
+                                         'Validation', 'Metadata', 'Collection', 'collection', 'roles',
+    function($scope, $location, $http, $routeParams, $uibModalInstance, Validation, Metadata, Collection, collection, roles) {
   
   $scope.collection = collection;
+  $scope.roles = roles.filter(function(r) {
+    return r.type == 'user';
+  });
+
+  Metadata.get().then(function(metadata) {
+    $scope.categories = metadata.categories;
+  });
 
   $scope.cancel = function() {
     $uibModalInstance.dismiss('cancel');
@@ -10,7 +17,13 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
 
   $scope.delete = function() {
     Collection.delete(collection).then(function() {
-      $uibModalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('ok');
+    });
+  };
+  
+  $scope.process = function() {
+    $http.post($scope.collecton.api_url + '/process').then(function() {
+      $uibModalInstance.dismiss('ok');
     });
   };
 
@@ -18,7 +31,7 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
     var res = $http.post(collection.api_url, $scope.collection);
     res.success(function(data) {
       $scope.$on('permissionsSaved', function() {
-        Metadata.flush().then(function() {
+        Collection.flush().then(function() {
           $uibModalInstance.close(data.data);
         });
       });

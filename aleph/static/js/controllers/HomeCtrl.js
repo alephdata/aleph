@@ -1,14 +1,10 @@
 
-aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Source', 'Collection', 'Authz', 'Role', 'Title', 'data', 'metadata',
-    function($scope, $location, $route, Source, Collection, Authz, Role, Title, data, metadata) {
+aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Collection', 'Authz', 'Role', 'Title', 'data', 'metadata', 'collections',
+    function($scope, $location, $route, Collection, Authz, Role, Title, data, metadata, collections) {
 
-  $scope.result = data.result;
-  $scope.sources = data.sources;
+  $scope.documents = data.documents;
   $scope.session = metadata.session;
   $scope.metadata = metadata;
-  $scope.collections = metadata.collectionsList.sort(function(a, b) {
-    return a.label.localeCompare(b.label);
-  });
   $scope.title = Title.getSiteTitle();
   $scope.query = {q: ''};
   $scope.authz = Authz;
@@ -20,17 +16,37 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Source', 'Collec
     $location.search({q: $scope.query.q});
   };
 
-  $scope.editSource = function(source, $event) {
-    $event.stopPropagation();
-    Source.edit(source).then(function() {
-      $route.reload();
-    });
-  };
-
   $scope.editCollection = function(collection, $event) {
     $event.stopPropagation();
     Collection.edit(collection).then(function() {
       $route.reload();
     });
   };
+
+  var handleCollections = function(collections, data) {
+    var documentCollections = {},
+        watchlists = [];
+    for (var i in data.documents.facets.collections.values) {
+      var collection = data.documents.facets.collections.values[i],
+          category = collection.category || 'other';
+      if (!documentCollections[category]) {
+        documentCollections[category] = [collection];
+      } else {
+        documentCollections[category].push(collection);
+      }
+    }
+
+    for (var i in collections) {
+      var collection = collections[i];
+      if (collection.category == 'watchlist') {
+        watchlists.push(collection);
+      }
+    }
+    $scope.watchlists = watchlists.sort(function(a, b) {
+      return a.label.localeCompare(b.label);
+    });
+    $scope.documentCollections = documentCollections;
+  }
+
+  handleCollections(collections, data);
 }]);

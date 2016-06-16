@@ -1,13 +1,15 @@
+from __future__ import absolute_import
+
 import logging
 from collections import defaultdict
-from elasticsearch.helpers import bulk, scan
+from elasticsearch.helpers import scan
 
 from aleph.core import get_es, get_es_index, db
 from aleph.text import latinize_text
 from aleph.model import Entity, Reference
 from aleph.model.entity import collection_entity_table
 from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT
-from aleph.index.util import expand_json, bulk_op
+from aleph.index.util import expand_json, bulk_op, flush_es
 
 log = logging.getLogger(__name__)
 
@@ -26,11 +28,11 @@ def document_updates(q, entity_id, references=None):
         entities = []
         if references is not None:
             entities.append({
-                'uuid': entity_id,
+                'id': entity_id,
                 'collection_id': references[res['_id']]
             })
         for ent in res.get('_source').get('entities'):
-            if ent['uuid'] != entity_id:
+            if ent['id'] != entity_id:
                 entities.append(ent)
         body['entities'] = entities
         yield {
@@ -43,8 +45,9 @@ def document_updates(q, entity_id, references=None):
 
 
 def delete_entity_references(entity_id):
-    q = {'query': {'term': {'entities.uuid': entity_id}}}
+    q = {'query': {'term': {'entities.id': entity_id}}}
     bulk_op(document_updates(q, entity_id))
+    flush_es()
 
 
 def update_entity_references(entity_id, max_query=1000):
@@ -63,14 +66,12 @@ def update_entity_references(entity_id, max_query=1000):
     for i in range(0, len(ids), max_query):
         q = {'query': {'ids': {'values': ids[i:i + max_query]}}}
         bulk_op(document_updates(q, entity_id, references))
-
-    log.info("Clearing ES cache...")
-    get_es().indices.clear_cache(index=get_es_index())
+    flush_es()
 
 
 def get_count(entity):
     """Inaccurate, as it does not reflect auth."""
-    q = {'term': {'entities.uuid': entity.id}}
+    q = {'term': {'entities.id': entity.id}}
     q = {'size': 0, 'query': q}
     result = get_es().search(index=get_es_index(),
                              doc_type=TYPE_DOCUMENT,
@@ -89,7 +90,7 @@ def generate_entities(document):
         if reference.entity.state != Entity.STATE_ACTIVE:
             continue
         entities.append({
-            'uuid': reference.entity.id,
+            'id': reference.entity.id,
             'collection_id': colls
         })
     return entities
@@ -100,7 +101,6 @@ def index_entity(entity):
     data = entity.to_dict()
     data.pop('id', None)
     data['doc_count'] = get_count(entity)
-    data['collection_id'] = data.get('collections')
     data['terms'] = entity.terms
     data['terms_latin'] = [latinize_text(t) for t in entity.terms]
     data['name_latin'] = latinize_text(data.get('name'))

@@ -83,7 +83,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
     for (var i in $scope.entities) {
       var entity = angular.copy($scope.entities[i]);
       if (!$scope.isStub(entity) && !$scope.isInvalid(entity)) {
-        entity.collections = [collection.id];
+        entity.collection_id = [collection.id];
         $http.post('/api/1/entities', entity).then(function(res) {
           $scope.entities.splice(i, 1);
           $scope.created.push(res.data);

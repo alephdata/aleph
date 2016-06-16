@@ -1,11 +1,33 @@
-aleph.factory('Collection', ['$q', '$uibModal', 'Metadata', 'Authz', function($q, $uibModal, Metadata, Authz) {
+aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', function($q, $http, $uibModal, Authz) {
+  var indexDfd = null;
+
+  function index() {
+    if (indexDfd === null) {
+      indexDfd = $q.defer();
+      var params = {
+        ignoreLoadingBar: true,
+        params: {limit: 10000}
+      }
+      $http.get('/api/1/collections', params).then(function(res) {
+        indexDfd.resolve(res.data.results);
+      }, function(err) {
+        indexDfd.reject(err);
+      });
+    }
+    return indexDfd.promise;
+  };
+
+  function flush() {
+    indexDfd = null;
+    return index();
+  };
 
   var getWriteable = function() {
     var dfd = $q.defer();
-    Metadata.get().then(function(metadata) {
+    index().then(function(res) {
       var collections = [];
-      for (var cid in metadata.collections) {
-        var col = metadata.collections[cid];
+      for (var cid in res) {
+        var col = res[cid];
         if (Authz.collection(Authz.WRITE, col.id) && !col.managed) {
           collections.push(col);
         }
@@ -22,22 +44,36 @@ aleph.factory('Collection', ['$q', '$uibModal', 'Metadata', 'Authz', function($q
   };
 
   return {
+    index: index,
+    flush: flush,
     getWriteable: getWriteable,
     edit: function(collection) {
       var instance = $uibModal.open({
         templateUrl: 'templates/collections_edit.html',
         controller: 'CollectionsEditCtrl',
         backdrop: true,
-        size: 'md',
+        size: 'lg',
         resolve: {
-          collection: ['$q', '$http', 'Role', function($q, $http, Role) {
+          collection: function() {
+            var dfd = $q.defer();  
+            $http.get('/api/1/collections/' + collection.id).then(function(res) {
+              dfd.resolve(res.data);
+            }, function(err) {
+              dfd.reject(err);
+            });
+            return dfd.promise;
+          },
+          roles: ['Role', function(Role) {
             var dfd = $q.defer();
-            Role.getAll().then(function() {
-              $http.get('/api/1/collections/' + collection.id).then(function(res) {
-                dfd.resolve(res.data);
-              }, function(err) {
-                dfd.reject(err);
-              });
+            Role.getAll().then(function(res) {
+              var roles = [];
+              for (var i in res.results) {
+                var role = res.results[i];
+                if (role.type == 'user') {
+                  roles.push(role);  
+                }
+              }
+              dfd.resolve(roles);
             }, function(err) {
               dfd.reject(err);
             });

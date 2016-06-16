@@ -30,10 +30,9 @@
 <ul>
   <li><strong>Documents</strong> (<code>/api/1/documents</code>) reflect a single text document or tabular document imported into Aleph. Every document is either imported as a text document with a number of text 
   pages associated with it, or as a tabular document, which as a number of rows.</li>
-  <li><strong>Sources</strong> (<code>/api/1/sources</code>) describe the origin of a particular document. Each document is associated with exactly one source, which is also used to control who has access to that document.</li>
+  <li><strong>Collections</strong> (<code>/api/1/collections</code>) group documents and entities into sets, such as all the documents from a particular source, all the people relevant to a particular investigation, or all the companies on a country's sanctions list. They also control who can access information about an entity or document.</li>
   <li><strong>Entities</strong> (<code>/api/1/entities</code>) reflect structured data about persons or companies. Each entity has a name, a number of aliases and other details, such as their jurisdiction,
   a short summary, or contact and passport details. Entities are identified through a UUID.</li>
-  <li><strong>Collections</strong> (<code>/api/1/collections</code>) group entities into sets, such as all the people relevant to a particular investigation, or all the companies on a country's sanctions list. They also control who can access information about an entity.</li>
   <li><strong>Roles</strong> represent users and user groups, and they are connected via 
   <strong>Permissions</strong> to sources and collections.</li>
 </ul>
@@ -74,10 +73,10 @@
 </ul>
 
 <p>
-  By default, all queries will return a facet of the document sources for which
+  By default, all queries will return a facet of the document collections for which
   matching documents have been found. This cannot currently be disabled, but a
-  filter can be applied to show only results from a particular source:
-  <code>?filter:source_id={source_id}</code>.
+  filter can be applied to show only results from a particular collection:
+  <code>?filter:collection_id={collection_id}</code>.
 </p>
 
 <h4>Search Results as Excel</h4>

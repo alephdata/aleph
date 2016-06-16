@@ -13,7 +13,7 @@ aleph.directive('permissionsEdit', ['$http', '$q', 'Role',
 
       scope.newRole = null;
       scope.types = [
-        {type: 'system', label: 'State'},
+        {type: 'system', label: 'States'},
         {type: 'group', label: 'Groups'},
         {type: 'user', label: 'Users'},
       ];

@@ -44,7 +44,7 @@ class PackageIngestor(Ingestor):
 
         with open(file_path, 'wb') as dst:
             shutil.copyfileobj(fh, dst)
-        ingest_file(self.source_id, child, file_path, move=True)
+        ingest_file(self.collection_id, child, file_path, move=True)
 
 
 class RARIngestor(PackageIngestor):
@@ -102,7 +102,14 @@ class SingleFilePackageIngestor(PackageIngestor):
     BASE_SCORE = 2
 
     def emit_file(self, meta, file_path):
-        ingest_file(self.source_id, meta, file_path)
+        child = meta.clone()
+        child.clear('extension')
+        child.clear('file_name')
+        child.clear('content_hash')
+        child.clear('mime_type')
+        # child.clear('foreign_id')
+        child.parent = meta.clone()
+        ingest_file(self.collection_id, child, file_path)
 
     def unpack(self, meta, local_path, temp_dir):
         file_name = meta.file_name

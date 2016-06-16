@@ -140,8 +140,8 @@ $ docker-compose run worker /bin/bash
 Before digging into the individual import methods for ``aleph``, here is some of the vocabulary used by the application.
 
 * ***Documents*** are the basic search results in ``aleph``. They can either be *text documents* (in which case they are expected to have a number of pages and are shown as a PDF in the user interface), or *tabular documents* (in which case they can have multiple sheets, each with a number of records. They will be shown as tables in the user interface).
-* ***Sources*** are units of content used to identify the origin of documents in aleph. This can be the name of an imported directory, or somethign more abstract, such as the name of an organisation or web site that has been ingested.
-* ***Foreign IDs*** exist both for documents and sources. They are a little piece of text used to identify the origin of information, e.g. the URL of a crawled document, or the path of an imported folder. Used to avoid duplicate imports when importing the same content twice.
+* ***Collections*** are units documents and entity data used to group items in aleph. This can be the name of an imported directory, database, or somethign more abstract, such as the name of an organisation or web site that has been ingested. It can also be used to group documents and entities relevant to a particular investigation.
+* ***Foreign IDs*** exist both for documents and collections. They are a little piece of text used to identify the origin of information, e.g. the URL of a crawled document, or the path of an imported folder. Used to avoid duplicate imports when importing the same content twice.
 * ***Metadata*** is used to describe the content of individual documents in ``aleph``. Common metadata fields in ``aleph`` include:
 	* ``title``: a short document title (will be extrapolated from the file name, if none is given).
 	* ``summary``: an optional short description, usually less than 200 characters.
@@ -196,7 +196,7 @@ Metafolders (see glossary above) can be used to bulk-import many documents while
 ```json
 {
 	"title": "Document title (not required)",
-	"source": {
+	"collection": {
 		"label": "The Banana Republic Leaks",
 		"foreign_id": "banana:republic"
 	}
@@ -224,8 +224,8 @@ To configure the ``crawlsql`` command, you must create a query specification as 
 # This can also be an environment variable, e.g. $DATABASE_URI
 url: "postgresql://user:pass@hostnmae/database_name"
 sources:
-    my_source_foreign_id:
-        label: "Source Label"
+    my_collection_foreign_id:
+        label: "Collection Label"
         # Specify metadata common to all documents from this source:
         meta:
             countries: ['de']
@@ -291,7 +291,7 @@ A basic crawler will extend the relevant ``Crawler`` class from ``aleph`` and im
 from aleph.crawlers import DocumentCrawler
 
 class ExampleCrawler(DocumentCrawler):
-    SOURCE_ID = 'example'
+    COLLECTION_ID = 'example'
 
     def crawl(self):
 	    for i in range(0, 1000):
@@ -328,30 +328,30 @@ root@worker# aleph crawl example
 
 ### Other maintenance commands
 
-``aleph`` also includes a set of command to perform a set of other maintenance operations. For starters, an admin can list all sources currently registered in the system:
+``aleph`` also includes a set of command to perform a set of other maintenance operations. For starters, an admin can list all collections currently registered in the system:
 
 ```bash
 $ docker-compose run worker /bin/bash
-root@worker# aleph sources
+root@worker# aleph collections
 ```
 
-To delete all documents in a given source, as well as the source itself, run:
+To delete all documents in a given collection, as well as the collection itself, run:
 
 ```bash
 $ docker-compose run worker /bin/bash
-root@worker# aleph flush source_foreign_id
+root@worker# aleph flush collection_foreign_id
 ```
 
-If you want to re-analyze or re-index all documents that are part of a given source, run:
+If you want to re-analyze or re-index all documents that are part of a given collection, run:
 
 ```bash
 $ docker-compose run worker /bin/bash
 
 # Perform analysis (i.e. entity extraction, language detection) and index:
-root@worker# aleph analyze -f source_foreign_id
+root@worker# aleph analyze -f collection_foreign_id
 
 # Re-index only:
-root@worker# aleph index -f source_foreign_id
+root@worker# aleph index -f collection_foreign_id
 ```
 
 Finally, a pleasantly-named command is provided to delete and re-construct both the entire database and the search index. This will delete all the table in the configured database, so be very careful with using this script.

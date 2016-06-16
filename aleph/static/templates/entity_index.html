@@ -17,7 +17,7 @@
         <button type="button" class="btn btn-primary dropdown-toggle"
           uib-dropdown-toggle>
           <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
-          Sort by...
+          Sort...
         </button>
         <ul class="uib-dropdown-menu" role="menu">
           <li ng-repeat="(field, label) in sortOptions"
@@ -151,7 +151,7 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        <strong>Watchlists</strong>
+        <strong>Entity collections</strong>
         <small>{{collectionFacet.length}}</small>
       </div>
       <ul class="list-group facet-list">
@@ -159,12 +159,14 @@
           ng-repeat="collection in collectionFacet"
           ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
           ng-click="query.toggleFilter('collection_id', collection.id)">
-          <span class="badge">{{collection.count | number}}</span>
-          <span class="lbl">
-            {{::collection.label | limitTo:50 }}
-            <a ng-click="editCollection(collection, $event)" ng-show="authz.collection(authz.WRITE, collection.id)">
+          <span class="badge">
+            {{collection.count | number}}
+            <a ng-click="editCollection(collection, $event)" ng-if="::authz.collection(authz.WRITE, collection.id)">
               <i class="fa fa-cog"></i>
             </a>
+          </span>
+          <span class="lbl">
+            {{::collection.label | characters:40 }}
           </span>
         </li>
       </ul>

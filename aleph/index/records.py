@@ -10,9 +10,9 @@ from aleph.index.mapping import TYPE_RECORD
 log = logging.getLogger(__name__)
 
 
-def clear_records(document):
+def clear_records(document_id):
     """Delete all records associated with the given document."""
-    q = {'query': {'term': {'document_id': document.id}},
+    q = {'query': {'term': {'document_id': document_id}},
          '_source': False}
 
     def gen_deletes():
@@ -30,7 +30,7 @@ def clear_records(document):
         bulk(get_es(), gen_deletes(), stats_only=True, chunk_size=2000,
              request_timeout=600.0)
     except Exception:
-        log.debug("Failed to clear previous index: %r", document)
+        log.debug("Failed to clear previous index: %r", document_id)
 
 
 def generate_records(document):
@@ -48,7 +48,7 @@ def generate_records(document):
                     'type': 'page',
                     'content_hash': document.content_hash,
                     'document_id': document.id,
-                    'source_id': document.source_id,
+                    'collection_id': document.collection_ids,
                     'page': page.number,
                     'text': page.text,
                     'text_latin': latinize_text(page.text)
@@ -68,7 +68,7 @@ def generate_records(document):
                     'type': 'row',
                     'content_hash': document.content_hash,
                     'document_id': document.id,
-                    'source_id': document.source_id,
+                    'collection_id': document.collection_ids,
                     'row_id': record.row_id,
                     'sheet': record.sheet,
                     'text': text,

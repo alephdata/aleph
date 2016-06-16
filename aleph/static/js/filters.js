@@ -68,11 +68,11 @@ aleph.filter('schemaPlural', ['Metadata', function(Metadata) {
 }]);
 
 
-aleph.filter('sourceCategory', ['Metadata', function(Metadata) {
+aleph.filter('collectionCategory', ['Metadata', function(Metadata) {
   var categories = {};
 
   Metadata.get().then(function(md) {
-    categories = md.source_categories;
+    categories = md.categories;
   });
 
   return function(code) {

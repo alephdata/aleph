@@ -23,9 +23,7 @@ log = logging.getLogger(__name__)
 
 
 @celery.task()
-def ingest_url(source_id, metadata, url):
-    if source_id in [132, 134, 135, 136, 137]:
-        return
+def ingest_url(collection_id, metadata, url):
     meta = Metadata(data=metadata)
     try:
         fh, tmp_path = mkstemp()
@@ -43,28 +41,28 @@ def ingest_url(source_id, metadata, url):
             meta.source_url = res.url
         meta.headers = res.headers
         meta = get_archive().archive_file(tmp_path, meta, move=True)
-        Ingestor.dispatch(source_id, meta)
+        Ingestor.dispatch(collection_id, meta)
     except Exception as ex:
-        Ingestor.handle_exception(meta, source_id, ex)
+        Ingestor.handle_exception(meta, collection_id, ex)
     finally:
         db.session.remove()
 
 
-def ingest_file(source_id, meta, file_path, move=False):
+def ingest_file(collection_id, meta, file_path, move=False):
     try:
         if not os.path.isfile(file_path):
             raise IngestorException("No such file: %r", file_path)
         if not meta.has('source_path'):
             meta.source_path = file_path
         meta = get_archive().archive_file(file_path, meta, move=move)
-        ingest.delay(source_id, meta.data)
+        ingest.delay(collection_id, meta.data)
     except Exception as ex:
-        Ingestor.handle_exception(meta, source_id, ex)
+        Ingestor.handle_exception(meta, collection_id, ex)
     finally:
         db.session.remove()
 
 
 @celery.task()
-def ingest(source_id, metadata):
+def ingest(collection_id, metadata):
     meta = Metadata(data=metadata)
-    Ingestor.dispatch(source_id, meta)
+    Ingestor.dispatch(collection_id, meta)

@@ -19,7 +19,7 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
           state = angular.copy(query.state);
       state['limit'] = 20;
       state['doc_counts'] = 'true';
-      state['facet'] = ['jurisdiction_code', '$schema'];
+      state['facet'] = ['jurisdiction_code', '$schema', 'collections'];
       state['offset'] = state.offset || 0;
       $http.get('/api/1/entities', {params: state}).then(function(res) {
         dfd.resolve({

@@ -21,7 +21,7 @@
       <div class="btn-group" uib-dropdown dropdown-append-to-body>
         <a href="/search" class="btn btn-primary">
           <i class="fa fa-times"></i>
-          Clear search
+          Clear
         </a>
       </div>
       <div class="btn-group">
@@ -70,19 +70,21 @@
   <div class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <strong>Document sources</strong> <small>{{sourceFacets.length}}</small>
+        <strong>Document collections</strong> <small>{{collectionFacets.length}}</small>
       </div>
       <ul class="list-group facet-list">
         <li class="list-group-item facet animate toggle"
-          ng-repeat="source in sourceFacets track by source.id"
-          ng-class="{'active': query.hasFilter('source_id', source.id)}"
-          ng-click="query.toggleFilter('source_id', source.id)">
-          <span class="badge">{{source.count | number}}</span>
-          <span class="lbl">
-            {{::source.label | characters:35 }}
-            <a ng-click="editSource(source, $event)" ng-show="::authz.source(authz.WRITE, source.id)">
+          ng-repeat="collection in collectionFacet"
+          ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
+          ng-click="query.toggleFilter('collection_id', collection.id)">
+          <span class="badge">
+            {{collection.count | number}}
+            <a ng-click="editCollection(collection, $event)" ng-if="::authz.collection(authz.WRITE, collection.id)">
               <i class="fa fa-cog"></i>
             </a>
+          </span>
+          <span class="lbl">
+            {{::collection.label | characters:35 }}  
           </span>
         </li>
       </ul>
@@ -91,39 +93,30 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <span class="pull-right">
-          <a class="btn btn-xs btn-default" ng-click="createQueryEntity()"
+          <a class="btn btn-xs btn-default" ng-click="createEntity($event)"
               ng-if="authz.logged_in()">
             <i class="fa fa-plus"></i>
           </a>
-          <a class="btn btn-xs btn-default" ng-click="selectCollections($event)">
-            <i class="fa fa-filter"></i>
-          </a>
         </span>
         <strong>Persons and Companies</strong>
-        <small ng-show="query.state.collection.length">
-          (from {{query.state.collection.length | number}} watchlists)
-        </small>
       </div>
       <ul class="list-group facet-list">
-        <li class="list-group-item facet empty" ng-if="!result.entities.length">
-          <span ng-hide="query.state.collection.length">
-            <a ng-click="selectCollections($event)"><i class="fa fa-cog"></i> Select watchlists</a> to see tagged entities.
-          </span>
-          <span ng-show="query.state.collection.length">
-            The selected watchlists don't match any documents.
-          </span>
+        <li class="list-group-item facet empty" ng-if="!result.facets.entities.values.length">
+          No persons and companies found in these documents.
         </li>
         <li class="list-group-item facet animate toggle"
-          ng-repeat="entity in entityFacets track by entity.id"
+          ng-repeat="entity in entityFacet track by entity.id"
           ng-class="{'active': query.hasField('entity', entity.id)}"
           ng-click="query.toggle('entity', entity.id)">
-          <span class="badge">{{entity.count | number}}</span>
-          <entity-icon schema="entity.$schema"></entity-icon>
-          <span class="lbl">
-            {{::entity.name | characters:35 }}
+          <span class="badge">
+            {{entity.count | number}}
             <a ng-click="editEntity(entity, $event)" ng-if="::authz.entityWrite(entity)">
               <i class="fa fa-cog"></i>
             </a>
+          </span>
+          <entity-icon schema="entity.$schema"></entity-icon>
+          <span class="lbl">
+            {{::entity.name | characters:35 }}
           </span>
         </li>
       </ul>

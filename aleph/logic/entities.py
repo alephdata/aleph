@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import re
 import logging
 from collections import defaultdict
@@ -14,13 +16,13 @@ log = logging.getLogger(__name__)
 
 
 def generate_entity_references(entity):
-    if entity.state != Entity.STATE_ACTIVE:
-        return
     # This is all a bit hacky: we're re-generating all the entity
     # references for the given entity by effectively re-implementing
     # the RegexEntityAnalyzer. The alternative was to conduct a
     # search for potential matching documents, re-analyze them and
     # re-index them. This proved to be too slow in reality.
+    if entity.state != Entity.STATE_ACTIVE:
+        return
 
     log.info("Updating document references: %r", entity)
     rex = '|'.join(entity.regex_terms)
@@ -36,21 +38,16 @@ def generate_entity_references(entity):
                 documents[document_id] += 1
     except Exception:
         log.exception('Failed to fully scan documents for entity refresh.')
-
-    q = db.session.query(Reference)
-    q = q.filter(Reference.entity_id == entity.id)
-    q = q.filter(Reference.origin == 'regex')
-    q.delete(synchronize_session='fetch')
-
     log.info("Re-matching %r gave %r documents.", entity,
              len(documents))
 
+    entity.delete_references(origin='regex')
     for document_id, weight in documents.items():
         doc = Document.by_id(document_id)
         if doc is None:
             continue
         ref = Reference()
-        ref.document_id = document_id
+        ref.document_id = doc.id
         ref.entity_id = entity.id
         ref.origin = 'regex'
         ref.weight = weight
@@ -68,7 +65,7 @@ def update_entity(entity):
 
 @celery.task()
 def update_entity_full(entity_id):
-    """Perform some update operations on entities."""
+    """Perform update operations on entities."""
     try:
         query = db.session.query(Entity).filter(Entity.id == entity_id)
         entity = query.first()

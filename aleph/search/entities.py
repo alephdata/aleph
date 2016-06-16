@@ -5,13 +5,13 @@ from werkzeug.datastructures import MultiDict
 
 from aleph.core import url_for, get_es, get_es_index
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
-from aleph.search.util import authz_collections_filter, authz_sources_filter
+from aleph.search.util import authz_filter
 from aleph.search.util import execute_basic, parse_filters
 from aleph.search.fragments import match_all, filter_query, aggregate
 from aleph.search.facets import convert_entity_aggregations
 from aleph.text import latinize_text
 
-DEFAULT_FIELDS = ['collections', 'name', 'summary', 'jurisdiction_code',
+DEFAULT_FIELDS = ['collection_id', 'name', 'summary', 'jurisdiction_code',
                   '$schema']
 
 # Scoped facets are facets where the returned facet values are returned such
@@ -40,12 +40,15 @@ def entities_query(args, fields=None, facets=True):
             }
         }
 
-    q = authz_collections_filter(q)
+    q = authz_filter(q)
     filters = parse_filters(args)
-    aggs = {}
+    aggs = {'scoped': {'global': {}, 'aggs': {}}}
     if facets:
-        aggs = aggregate(q, args)
-        aggs = facet_collection(q, aggs, filters)
+        facets = args.getlist('facet')
+        if 'collections' in facets:
+            aggs = facet_collections(q, aggs, filters)
+            facets.remove('collections')
+        aggs = aggregate(q, aggs, facets)
 
     sort_mode = args.get('sort', '').strip().lower()
     default_sort = 'score' if len(text) else 'doc_count'
@@ -65,14 +68,14 @@ def entities_query(args, fields=None, facets=True):
     }
 
 
-def facet_collection(q, aggs, filters):
-    aggs['scoped']['aggs']['collection'] = {
+def facet_collections(q, aggs, filters):
+    aggs['scoped']['aggs']['collections'] = {
         'filter': {
-            'query': filter_query(q, filters, OR_FIELDS, skip='collections')
+            'query': filter_query(q, filters, OR_FIELDS, skip='collection_d')
         },
         'aggs': {
-            'collection': {
-                'terms': {'field': 'collections', 'size': 1000}
+            'collections': {
+                'terms': {'field': 'collection_id', 'size': 1000}
             }
         }
     }
@@ -96,7 +99,7 @@ def suggest_entities(args):
         q = {
             'size': 5,
             'sort': [{'doc_count': 'desc'}, '_score'],
-            'query': authz_collections_filter(q),
+            'query': authz_filter(q),
             '_source': ['name', '$schema', 'terms', 'doc_count']
         }
         ref = latinize_text(text)
@@ -146,7 +149,7 @@ def similar_entities(entity, args):
     }
     q = {
         'size': 10,
-        'query': authz_collections_filter(q),
+        'query': authz_filter(q),
         '_source': DEFAULT_FIELDS
     }
     options = []
@@ -175,8 +178,8 @@ def execute_entities_query(args, query, doc_counts=False):
         entity['api_url'] = url_for('entities_api.view', id=doc.get('_id'))
         output['results'].append(entity)
 
-        sq = {'term': {'entities.uuid': entity['id']}}
-        sq = authz_sources_filter(sq)
+        sq = {'term': {'entities.id': entity['id']}}
+        sq = authz_filter(sq)
         sq = {'size': 0, 'query': sq}
         sub_queries.append(json.dumps({}))
         sub_queries.append(json.dumps(sq))

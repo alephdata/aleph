@@ -7,6 +7,7 @@ from sqlalchemy.orm import aliased, joinedload
 from aleph.core import db
 from aleph.text import normalize_strong
 from aleph.model.collection import Collection
+from aleph.model.reference import Reference
 from aleph.model.schema_model import SchemaModel
 from aleph.model.common import SoftDeleteModel, UuidModel, make_textid
 from aleph.model.entity_details import EntityOtherName, EntityIdentifier  # noqa
@@ -46,12 +47,16 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
     collections = db.relationship(Collection, secondary=collection_entity_table,  # noqa
                                   backref=db.backref('entities', lazy='dynamic'))  # noqa
 
-    def delete(self, deleted_at=None):
-        from aleph.model import Reference
-        q = db.session.query(Reference)
-        q = q.filter(Reference.entity_id == self.id)
-        q.delete(synchronize_session='fetch')
+    def delete_references(self, origin=None):
+        pq = db.session.query(Reference)
+        pq = pq.filter(Reference.entity_id == self.id)
+        if origin is not None:
+            pq = pq.filter(Reference.origin == origin)
+        pq.delete(synchronize_session='fetch')
+        db.session.refresh(self)
 
+    def delete(self, deleted_at=None):
+        self.delete_references()
         deleted_at = deleted_at or datetime.utcnow()
         for alert in self.alerts:
             alert.delete(deleted_at=deleted_at)
@@ -266,7 +271,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
 
     def to_dict(self):
         data = super(Entity, self).to_dict()
-        data['collections'] = [c.id for c in self.collections]
+        data['collection_id'] = [c.id for c in self.collections]
         return data
 
     def to_ref(self):
@@ -274,7 +279,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
             'id': self.id,
             'name': self.name,
             '$schema': self.type,
-            'collections': [c.id for c in self.collections]
+            'collection_id': [c.id for c in self.collections]
         }
 
 

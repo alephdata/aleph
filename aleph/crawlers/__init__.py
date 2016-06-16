@@ -13,7 +13,7 @@ def get_exposed_crawlers():
     for name, clazz in get_crawlers().items():
         if not issubclass(clazz, DocumentCrawler):
             continue
-        if clazz.SOURCE_ID is None:
+        if clazz.COLLECTION_ID is None:
             continue
         yield clazz()
 

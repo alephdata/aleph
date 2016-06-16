@@ -5,7 +5,8 @@ aleph.directive('entityCollection', ['$http', '$q', 'Metadata', 'Collection',
     transclude: true,
     scope: {
       'setCollection': '&setCollection',
-      'collection': '='
+      'collection': '=',
+      'category': '='
     },
     templateUrl: 'templates/entity_collection.html',
     link: function (scope, element, attrs, model) {
@@ -22,7 +23,6 @@ aleph.directive('entityCollection', ['$http', '$q', 'Metadata', 'Collection',
         scope.collections = collections;
         if (!collections.length) {
           scope.setCreateCollection(true);
-          scope.collection = {};
         } else {
           scope.collection = collections[0];
           scope.update();
@@ -48,11 +48,14 @@ aleph.directive('entityCollection', ['$http', '$q', 'Metadata', 'Collection',
           scope.setCollection({'callback': function() {
             var dfd = $q.defer();
             if (scope.createCollection) {
+              scope.collection.category = scope.category;
               $http.post('/api/1/collections', scope.collection).then(function(res) {
                 scope.collections.push(res.data);
                 scope.createCollection = false;
                 scope.collection = res.data;
-                dfd.resolve(res.data);
+                Collection.flush().then(function() {
+                  dfd.resolve(res.data);  
+                });
               }, function(err) {
                 dfd.reject();
               });
