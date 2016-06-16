@@ -33,12 +33,12 @@ class EntitiesApiTestCase(TestCase):
     def test_index(self):
         index_entity(self.ent)
         optimize_search()
-        res = self.client.get('/api/1/entities')
+        res = self.client.get('/api/1/entities?facet=collections')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
         assert len(res.json['facets']['collections']['values']) == 0, res.json
         self.login(is_admin=True)
-        res = self.client.get('/api/1/entities')
+        res = self.client.get('/api/1/entities?facet=collections')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         assert len(res.json['facets']['collections']['values']) == 1, res.json

@@ -1,6 +1,6 @@
 <div class="home">
   <div class="jumbotron">
-    <h1>{{result.total | number}} leads</h1>
+    <h1>{{documents.total | number}} leads</h1>
     <p class="teaser">for your investigations</p>
     <div class="search-area">
       <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
@@ -51,20 +51,22 @@
       <h3>
         Document sources
       </h3>
-      <p>{{result.sources.values.length | number}} document sources are included in
-      searches at the moment. Please feel free to contact us with any other suggested document 
-      and data sets.</p>
-      <div ng-repeat="(category, lst) in sources | orderBy:category">
+      <p>
+        {{documents.facets.collections.values.length | number}} document
+        sources are included in searches at the moment. Please feel free
+        to contact us with any other suggested document and data sets.
+      </p>
+      <div ng-repeat="(category, lst) in documentCollections | orderBy:category">
         <div class="heading">
           <strong>{{::category | collectionCategory}}</strong>
         </div>
         <div class="row">
-          <div class="col-md-6 source" ng-repeat="source in lst">
-            <a href="/search?filter:source_id={{source.id}}" class="mainlink">{{::source.label}}</a>
-            <a ng-click="editSource(source, $event)" ng-show="::authz.source(authz.WRITE, source.id)">
+          <div class="col-md-6 collection" ng-repeat="collection in lst">
+            <a href="/search?filter:collection_id={{collection.id}}" class="mainlink">{{::collection.label}}</a>
+            <a ng-click="editCollection(collection, $event)" ng-show="::authz.collection(authz.WRITE, collection.id)">
               <i class="fa fa-cog"></i>
             </a>
-            <span class="count">{{::source.count | number}}</span>
+            <span class="count">{{::collection.count | number}}</span>
           </div>
         </div>
       </div>
@@ -76,7 +78,7 @@
       </h3>
       <p>Select a watchlist to cross-reference it with documents:</p>
       <ul>
-        <li ng-repeat="collection in collections track by collection.id">
+        <li ng-repeat="collection in watchlists track by collection.id">
           <a ng-href="/entities?filter:collection_id={{::collection.id}}" class="mainlink" ng-bind="::collection.label"></a>
           <a ng-click="editCollection(collection, $event)" ng-show="::authz.collection(authz.WRITE, collection.id)">
             <i class="fa fa-cog"></i>

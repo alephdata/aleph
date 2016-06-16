@@ -13,7 +13,7 @@ class SearchApiTestCase(TestCase):
 
     def test_simplest_search(self):
         # self.login(is_admin=True)
-        res = self.client.get('/api/1/query?q=banana')
+        res = self.client.get('/api/1/query?q=banana&facet=collections')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         assert '<em>banana</em>' in res.data, res.json
