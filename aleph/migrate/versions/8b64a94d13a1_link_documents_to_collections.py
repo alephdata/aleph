@@ -12,8 +12,6 @@ import sqlalchemy as sa
 revision = '8b64a94d13a1'
 down_revision = '15a258b73a77'
 
-ID_OFFSET = 10000
-
 
 def upgrade():
     op.drop_column(u'entity', 'test')
@@ -39,22 +37,28 @@ def upgrade():
     colls_table = meta.tables['collection']
     bind.execute(sa.update(colls_table).values(category='watchlist'))
 
+    id_map = {}
+
     for source in bind.execute(sa.select([source_table])).fetchall():
         source = dict(source)
         source['managed'] = True
-        source['id'] = source['id'] + ID_OFFSET
+        source_id = source.pop('id')
         q = sa.insert(colls_table).values(source)
-        bind.execute(q)
+        rp = bind.execute(q)
+        new_id = rp.inserted_primary_key.pop()
+        id_map[source_id] = new_id
 
+    print 'Re-writing permissions...'
     perm_table = meta.tables['permission']
     q = sa.select([perm_table]).where(perm_table.c.resource_type == 'source')
     for perm in bind.execute(q).fetchall():
         perm = dict(perm)
         perm.pop('id')
-        perm['resource_type'] = 'collection'
-        perm['resource_id'] = perm['resource_id'] + ID_OFFSET
-        q = sa.insert(perm_table).values(perm)
-        bind.execute(q)
+        if perm['resource_id'] in id_map:
+            perm['resource_type'] = 'collection'
+            perm['resource_id'] = id_map[perm['resource_id']]
+            q = sa.insert(perm_table).values(perm)
+            bind.execute(q)
 
     q = sa.select([perm_table]).where(perm_table.c.resource_type == 'collection')
     for perm in bind.execute(q).fetchall():
@@ -65,7 +69,7 @@ def upgrade():
     # q = sa.delete(perm_table).where(perm_table.c.resource_type == 'source')
     # bind.execute(q)
 
-    # print 'DOING CRAWLERS NOW'
+    print 'Re-writing crawler states...'
     cs_table = meta.tables['crawler_state']
     rp = bind.execute(sa.select([cs_table]))
     while True:
@@ -73,10 +77,11 @@ def upgrade():
         if cs is None:
             break
         q = sa.update(cs_table).where(cs_table.c.id == cs.id)
-        q = q.values(collection_id=cs.source_id + ID_OFFSET)
+        q = q.values(collection_id=id_map[cs.source_id])
         bind.execute(q)
 
     # print 'DOING DOCS NOW'
+    print 'Writing document/collection associations...'
     doc_table = meta.tables['document']
     coll_doc_table = meta.tables['collection_document']
     rp = bind.execute(sa.select([doc_table]))
@@ -86,7 +91,7 @@ def upgrade():
         if doc is None:
             break
         refs.append({
-            'collection_id': doc.source_id + ID_OFFSET,
+            'collection_id': id_map[doc.source_id],
             'document_id': doc.id
         })
         if len(refs) > 10000:
