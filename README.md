@@ -283,7 +283,7 @@ Please note that importing entity collections requires re-indexing documents tha
 
 Custom crawlers are useful to directly import large amounts of data into the system. This can make sense for custom scrapers or crawlers where the indirection of using a metafolder is not desirable.
 
-Crawlers are Python classes and exposed via the ``entry_point`` of a Python package. To develop a custom crawler, start by setting up a separate Python package from ``aleph`` with it's own ``setup.py`` ([learn more](https://python-packaging.readthedocs.org/en/latest/)).
+Crawlers are Python classes and exposed via the ``entry_point`` of a Python package. To develop a custom crawler, start by setting up a separate Python package from ``aleph`` with it's own ``setup.py`` ([learn more](https://python-packaging.readthedocs.io/en/latest/)).
 
 A basic crawler will extend the relevant ``Crawler`` class from ``aleph`` and implement it's ``crawl()`` method:
 
