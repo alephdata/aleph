@@ -52,7 +52,8 @@ class PolyglotEntityAnalyzer(Analyzer):
 
     def load_collection(self):
         if not hasattr(self, '_collection'):
-            self._collection = Collection.by_foreign_id('polyglot:ner', {
+            self._collection = Collection.create({
+                'foreign_id': 'polyglot:ner',
                 'label': 'Automatically Extracted Persons and Companies',
                 'public': True
             })
