@@ -1,4 +1,5 @@
 from celery.schedules import crontab
+from tempfile import gettempdir
 from os import environ as env, path
 
 DEBUG = True
@@ -16,9 +17,14 @@ ARCHIVE_AWS_SECRET = env.get('AWS_SECRET_ACCESS_KEY')
 # ARCHIVE_BUCKET = 'aleph2-dev.pudo.org'
 ARCHIVE_PATH = env.get('ARCHIVE_PATH', '/srv/data/aleph')
 
+
+UPLOAD_FOLDER = path.join(gettempdir(), 'aleph_uploads')
+MAX_CONTENT_LENGTH = 500 * 1024 * 1024
+
 # Set up a custom SCSS file with additional style rules here.
 CUSTOM_SCSS_PATH = None
 CUSTOM_TEMPLATES_DIR = []
+
 
 OCR_DEFAULTS = ['en']
 TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')

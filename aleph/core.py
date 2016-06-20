@@ -1,3 +1,4 @@
+import os
 import logging
 from logging.handlers import SMTPHandler
 from urlparse import urljoin
@@ -107,6 +108,15 @@ def get_archive():
     if not hasattr(app, '_aleph_archive'):
         app._aleph_archive = archive.from_config(app.config)
     return app._aleph_archive
+
+
+def get_upload_folder():
+    folder = current_app.config.get('UPLOAD_FOLDER')
+    try:
+        os.makedirs(folder)
+    except:
+        pass
+    return folder
 
 
 def url_for(*a, **kw):
