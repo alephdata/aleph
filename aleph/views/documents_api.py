@@ -4,14 +4,13 @@ from werkzeug.exceptions import BadRequest
 from flask import Blueprint, redirect, send_file, request
 from apikit import jsonify, Pager, get_limit, get_offset
 
-from aleph.core import get_archive, url_for, db
 from aleph import authz
+from aleph.core import get_archive, url_for, db
 from aleph.model import Document, Entity, Reference, Collection
 from aleph.views.cache import enable_cache
 from aleph.search.tabular import tabular_query, execute_tabular_query
 from aleph.search.util import next_params
-from aleph.views.util import get_document, match_ids
-from aleph.views.util import get_tabular, get_page
+from aleph.views.util import get_document, get_tabular, get_page
 
 
 log = logging.getLogger(__name__)
@@ -20,7 +19,13 @@ blueprint = Blueprint('documents_api', __name__)
 
 @blueprint.route('/api/1/documents', methods=['GET'])
 def index():
-    collection_ids = match_ids('collection', authz.collections(authz.READ))
+    try:
+        authorized = authz.collections(authz.READ)
+        collection_ids = [int(f) for f in request.args.getlist('collection')]
+        collection_ids = collection_ids or authorized
+        collection_ids = [c for c in collection_ids if c in authorized]
+    except ValueError:
+        raise BadRequest()
     q = Document.all()
     clause = Collection.id.in_(collection_ids)
     q = q.filter(Document.collections.any(clause))
