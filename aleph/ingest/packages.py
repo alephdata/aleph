@@ -40,7 +40,8 @@ class PackageIngestor(Ingestor):
         child.parent = meta.clone()
         child.file_name = file_name
         child.source_path = name
-        child.foreign_id = '%s:%s' % (meta.foreign_id, name)
+        parent_id = meta.foreign_id or meta.content_hash
+        child.foreign_id = '%s:%s' % (parent_id, name)
 
         with open(file_path, 'wb') as dst:
             shutil.copyfileobj(fh, dst)
