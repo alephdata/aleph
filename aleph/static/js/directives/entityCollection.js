@@ -33,7 +33,7 @@ aleph.directive('entityCollection', ['$http', '$q', 'Metadata', 'Collection',
         scope.createCollection = flag;
         if (flag) {
           scope.collection = {
-            label: scope.roleName + '\'s Watchlist'
+            label: scope.roleName + '\'s Collection'
           };
         } else {
           scope.collection = scope.collections[0];
