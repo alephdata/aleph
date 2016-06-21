@@ -154,6 +154,14 @@ mini-bugs:
 * Email, URL, IP, CC, analyzer
 
 
+* Re-index entites scheduler bug
+* Metadata validation
+* Add doc to collection func
+* Hidden results func
+* Document metadata editing
+* Metadata on doc ingest?
+
+
 -------------
 
 Alert

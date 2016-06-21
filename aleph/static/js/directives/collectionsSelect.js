@@ -1,4 +1,4 @@
-aleph.directive('entityCollection', ['$http', '$q', 'Metadata', 'Collection',
+aleph.directive('collectionsSelect', ['$http', '$q', 'Metadata', 'Collection',
     function($http, $q, Metadata, Collection) {
   return {
     restrict: 'E',
@@ -8,7 +8,7 @@ aleph.directive('entityCollection', ['$http', '$q', 'Metadata', 'Collection',
       'collection': '=',
       'category': '='
     },
-    templateUrl: 'templates/entity_collection.html',
+    templateUrl: 'templates/collections_select.html',
     link: function (scope, element, attrs, model) {
       scope.roleName = null;
       scope.collections = [];
