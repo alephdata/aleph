@@ -28,7 +28,8 @@
     "angular-pdf": "~1.3.0",
     "moment": "~2.11.1",
     "angular-loading-bar": "^0.9.0",
-    "angular-truncate": "*"
+    "angular-truncate": "*",
+    "ng-file-upload": "^12.0.4"
   },
   "resolutions": {
     "angular": "~1.4.8"

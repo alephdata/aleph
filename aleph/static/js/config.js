@@ -1,5 +1,6 @@
 var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'ui.bootstrap',
-                                     'angular-loading-bar', 'truncate', 'pdf']);
+                                     'angular-loading-bar', 'ngFileUpload', 'truncate',
+                                     'pdf']);
 
 aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoadingBarProvider',
     function($routeProvider, $locationProvider, $compileProvider, cfpLoadingBarProvider) {

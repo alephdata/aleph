@@ -22,6 +22,7 @@ angular_assets = Bundle(
     'vendor/angular-loading-bar/src/loading-bar.js',
     'vendor/angular-animate/angular-animate.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
+    'vendor/ng-file-upload/ng-file-upload.js',
     filters='uglifyjs',
     output='assets/angular.js'
 )

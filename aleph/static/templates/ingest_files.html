@@ -1,0 +1,52 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title" ng-hide="isUploading()">Upload files</h4>
+  <h4 class="modal-title" ng-show="isUploading()">Uploading...</h4>
+</div>
+
+<form role="form" name="uploadForm" ng-submit="upload(uploadForm)">
+  <div class="modal-body" ng-hide="isUploading()">
+    <div class="form-group">
+      <label class="control-label" for="collection">
+        Files
+      </label>
+      <div class="input-group">
+        <input type="text" class="form-control" readonly="readonly" ng-value="getFileText()">
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-primary"
+            ngf-select ng-model="files" ngf-multiple="true"
+            ngf-keep="'distinct'">Add</button>
+        </div>
+      </div>
+      <p class="help-block">
+        Select documents, spreadsheets, presentations, 
+        email archives or zip packages.
+      </p>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="collection">
+        Collection
+      </label>
+      <collections-select set-collection="setCollection(callback)"
+        category="'watchlist'"></collections-select>
+    </div>
+  </div>
+
+  <div class="modal-body" ng-show="isUploading()">
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" style="width: {{progress}}%;">
+      </div>
+    </div>
+    <p class="help-block">
+      After upload, documents will be processed and analysed. It will take a
+      while for them to show up in searches.
+    </p>
+  </div>
+
+  <div class="modal-footer" ng-hide="isUploading()">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="!canUpload()">Upload</button>
+  </div>
+</form>
+
