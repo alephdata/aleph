@@ -64,7 +64,7 @@ def permissions_update(collection):
     if role is None:
         raise BadRequest()
 
-    permission = Permission.grant_collection(collection.id,
+    permission = Permission.grant_collection(collection,
                                              role,
                                              data['read'],
                                              data['write'])

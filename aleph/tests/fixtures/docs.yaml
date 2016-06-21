@@ -63,6 +63,7 @@
   records:
     - id: 1000
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8291
+      source_collection_id: 1000
       foreign_id: test1
       type: text
       _meta:
@@ -72,6 +73,7 @@
         languages: ['en']
     - id: 1001
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8292
+      source_collection_id: 2000
       foreign_id: test2
       type: text
       _meta:
@@ -81,6 +83,7 @@
         languages: ['en']
     - id: 1002
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8294
+      source_collection_id: 1000
       foreign_id: test3
       type: text
       _meta:
@@ -90,6 +93,7 @@
         languages: ['ru']
     - id: 1003
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8295
+      source_collection_id: 1000
       foreign_id: test4
       type: tabular
       _meta:

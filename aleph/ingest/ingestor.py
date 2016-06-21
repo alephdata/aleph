@@ -39,6 +39,7 @@ class Ingestor(object):
             document = q.first()
         if document is None:
             document = Document()
+            document.source_collection_id = self.collection_id
             document.collections = [Collection.by_id(self.collection_id)]
         document.meta = meta
         document.type = type or self.DOCUMENT_TYPE

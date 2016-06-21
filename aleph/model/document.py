@@ -33,6 +33,8 @@ class Document(db.Model, DatedModel):
 
     collections = db.relationship(Collection, secondary=collection_document_table,  # noqa
                                   backref=db.backref('documents', lazy='dynamic'))  # noqa
+    source_collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=True)  # noqa
+    source_collection = db.relationship(Collection)
 
     @property
     def title(self):
@@ -108,12 +110,15 @@ class Document(db.Model, DatedModel):
     def collection_ids(self):
         if not hasattr(self, '_collection_ids_cache'):
             self._collection_ids_cache = [c.id for c in self.collections]
+            if self.source_collection_id not in self._collection_ids_cache:
+                self._collection_ids_cache.append(self.source_collection_id)
         return self._collection_ids_cache
 
     def _add_to_dict(self, data):
         data.update({
             'id': self.id,
             'type': self.type,
+            'source_collection_id': self.source_collection_id,
             'collection_id': self.collection_ids,
             'created_at': self.created_at,
             'updated_at': self.updated_at
