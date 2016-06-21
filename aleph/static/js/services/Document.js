@@ -31,6 +31,17 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Query', 'History
       });
       return dfd.promise;
     },
+    peek: function() {
+      var dfd = $q.defer();
+      var query = Query.parse(),
+          state = angular.copy(query.state);
+      $http.get('/api/1/peek', {cache: true, params: state}).then(function(res) {
+        dfd.resolve(res.data);
+      }, function(err) {
+        dfd.reject(err);  
+      });
+      return dfd.promise;
+    },
     get: function(id) {
       var dfd = $q.defer(),
           url = '/api/1/documents/' + id;

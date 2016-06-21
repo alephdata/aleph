@@ -1,8 +1,9 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Collection', 'Entity', 'Authz', 'Alert', 'Document', 'Ingest', 'Role', 'Title', 'data', 'alerts', 'metadata',
-    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Collection, Entity, Authz, Alert, Document, Ingest, Role, Title, data, alerts, metadata) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Collection', 'Entity', 'Authz', 'Alert', 'Document', 'Ingest', 'Role', 'Title', 'data', 'peek', 'alerts', 'metadata',
+    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Collection, Entity, Authz, Alert, Document, Ingest, Role, Title, data, peek, alerts, metadata) {
 
   $scope.fields = metadata.fields;
+  $scope.peek = peek;
   $scope.collectionFacet = [];
   $scope.entityFacet = [];
   $scope.facets = [];
@@ -104,6 +105,9 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
   var reloadSearch = function() {
     Document.search().then(function(data) {
       updateSearch(data);
+    });
+    Document.peek().then(function(peek) {
+      $scope.peek = peek;
     });
   };
 

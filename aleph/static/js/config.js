@@ -12,6 +12,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     loginRequired: false,
     resolve: {
       'data': loadSearch,
+      'peek': loadPeek,
       'metadata': loadMetadata,
       'alerts': loadAlertsIndex
     }

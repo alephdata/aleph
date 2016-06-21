@@ -58,7 +58,15 @@ def peek_query(args):
                 'email': collection.creator.email,
                 'count': bucket.get('doc_count')
             }
+    roles = sorted(roles.values(), key=lambda r: r['count'], reverse=True)
+    cleaned_roles = []
+    for role in roles:
+        if role['count'] < 10:
+            role.pop('count')
+        cleaned_roles.append(role)
+    total = result.get('hits', {}).get('total')
+    total = 'A few' if 0 < total < 10 else total
     return {
-        'roles': sorted(roles.values(), key=lambda r: r['count']),
-        'total': result.get('hits', {}).get('total')
+        'roles': cleaned_roles,
+        'total': total
     }

@@ -33,8 +33,10 @@ def query():
 def peek():
     enable_cache(vary_user=True,
                  vary=authz.collections(authz.READ))
-    query = peek_query(request.args)
-    return jsonify(query)
+    response = peek_query(request.args)
+    if not authz.logged_in():
+        response.pop('roles', None)
+    return jsonify(response)
 
 
 @blueprint.route('/api/1/query/records/<int:document_id>')
