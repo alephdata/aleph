@@ -61,12 +61,12 @@
       </div>
 
       <!-- peek feature -->
-      <div class="alert alert-suggest" role="alert" ng-if="peek.total">
+      <div class="alert alert-suggest" role="alert" ng-if="peek.active">
         <strong>{{peek.total}} hidden results</strong> are available.
         <span ng-if="authz.logged_in()">
           For access, contact:
           <span ng-repeat="role in peek.roles">
-            <a href="mailto:{{role.email}}">{{role.name}}</a><span ng-if="role.count"> ({{role.count | number}})</span><span ng-if="!$last">,</span>
+            <a href="mailto:{{role.email}}">{{role.name}}</a><span ng-if="!$last">,</span>
           </span>
         </span>
         <span ng-if="!authz.logged_in()">

@@ -1,3 +1,4 @@
+import math
 from werkzeug.datastructures import MultiDict
 
 from aleph import authz
@@ -7,6 +8,27 @@ from aleph.model import Collection
 from aleph.search.documents import text_query
 from aleph.search.fragments import filter_query
 from aleph.search.util import parse_filters, add_filter
+
+
+def round(x, factor):
+    rnd = int(math.floor(x / float(factor))) * factor
+    return 'More than %s' % format(rnd, '0,.0f')
+
+
+def format_total(obj):
+    total = obj.pop('total', 0)
+    if total == 0:
+        total = 'No'
+    elif total < 15:
+        total = 'Some'
+    elif total < 100:
+        total = round(total, 10)
+    elif total < 1000:
+        total = round(total, 100)
+    else:
+        total = round(total, 1000)
+    obj['total'] = total
+    return obj
 
 
 def peek_query(args):
@@ -20,6 +42,12 @@ def peek_query(args):
         filters.append(('entities.id', entity))
 
     q = filter_query(q, filters, [])
+    if q == text_query(''):
+        return {
+            'total': 0,
+            'active': False,
+        }
+
     q = add_filter(q, {
         'not': {
             'terms': {
@@ -51,22 +79,19 @@ def peek_query(args):
         if collection is None:
             continue
         if collection.creator_id in roles:
-            roles[collection.creator_id]['count'] += bucket.get('doc_count')
+            roles[collection.creator_id]['total'] += bucket.get('doc_count')
         else:
             roles[collection.creator_id] = {
                 'name': collection.creator.name,
                 'email': collection.creator.email,
-                'count': bucket.get('doc_count')
+                'total': bucket.get('doc_count')
             }
-    roles = sorted(roles.values(), key=lambda r: r['count'], reverse=True)
-    cleaned_roles = []
-    for role in roles:
-        if role['count'] < 10:
-            role.pop('count')
-        cleaned_roles.append(role)
+
+    roles = sorted(roles.values(), key=lambda r: r['total'], reverse=True)
+    roles = [format_total(r) for r in roles]
     total = result.get('hits', {}).get('total')
-    total = 'A few' if 0 < total < 10 else total
-    return {
-        'roles': cleaned_roles,
+    return format_total({
+        'roles': roles,
+        'active': total > 0,
         'total': total
-    }
+    })
