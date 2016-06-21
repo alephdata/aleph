@@ -86,5 +86,5 @@ def reindex_entity(entity, references=True):
 @celery.task()
 def reindex_entities():
     query = db.session.query(Entity)
-    for entity in query.yield_per(1000):
+    for entity in query.yield_per(5000):
         reindex_entity(entity)
