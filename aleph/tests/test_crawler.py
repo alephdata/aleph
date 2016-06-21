@@ -11,6 +11,7 @@ class CrawlersTestCase(TestCase):
         self.bl = blacklight.BlacklightCrawler()
         self.pagecount = self.bl.get_page_count(self.demo_url)
 
+    '''
     def test_blacklight_crawldocument(self,):
         resp = self.bl.crawl_document(self.demo_url, '1')
         self.assertIsInstance(resp, bool)
@@ -33,7 +34,6 @@ class CrawlersTestCase(TestCase):
                 self.assertIn('pages', data['response'])
                 self.assertIn('total_count', data['response']['pages'])
 
-    '''
     def test_blacklight_crawlpage(self,):
         for site in blacklight.SITES:
             url = site + 'catalog.json'

@@ -64,7 +64,7 @@ CELERYBEAT_SCHEDULE = {
         'schedule': crontab(hour=1, minute=30)
     },
     'reindex-entities': {
-        'task': 'aleph.entities.entities.reindex_entities',
+        'task': 'aleph.logic.entities.reindex_entities',
         'schedule': crontab(hour=1, minute=0, day_of_week=1)
     },
     'scheduled-crawlers': {

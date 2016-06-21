@@ -154,7 +154,9 @@ mini-bugs:
 * Email, URL, IP, CC, analyzer
 
 
-* Re-index entites scheduler bug
+* [DONE] Login check on upload
+* Document source collection migration
+* [DONE] Re-index entites scheduler bug
 * Metadata validation
 * Add doc to collection func
 * Hidden results func
