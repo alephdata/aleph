@@ -15,6 +15,17 @@ from aleph.metadata.tabular import Tabular
 
 DATE_RE = re.compile(r'^[12]\d{3}-[012]?\d-[0123]?\d$')
 
+FACETS = {
+    'mime_type': 'Content type',
+    'languages': 'Languages',
+    'countries': 'Countries',
+    'keywords': 'Keywords',
+    'author': 'Document author',
+    'emails': 'E-Mail addresses',
+    'domains': 'Internet domains',
+    'dates': 'Dates'
+}
+
 
 class PDFAlternative(object):
     """Alternate PDF version."""

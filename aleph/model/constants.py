@@ -1,18 +1,6 @@
 from babel import Locale
 from pycountry import countries
 
-CORE_FACETS = {
-    # 'extension': 'File extension',
-    'mime_type': 'Content type',
-    'languages': 'Languages',
-    'countries': 'Countries',
-    'keywords': 'Keywords',
-    'author': 'Document author',
-    'emails': 'E-Mail addresses',
-    'domains': 'Internet domains',
-    'dates': 'Dates'
-}
-
 COLLECTION_CATEGORIES = {
     'news': 'News reports',
     'leak': 'Leaks',

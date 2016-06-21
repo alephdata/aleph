@@ -1,13 +1,13 @@
 import os
 import logging
-from time import time
 from apikit import jsonify
 from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
 from elasticsearch import TransportError
 
 from aleph.core import get_config
-from aleph.model.constants import CORE_FACETS, COLLECTION_CATEGORIES
+from aleph.metadata import FACETS
+from aleph.model.constants import COLLECTION_CATEGORIES
 from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.model.validation import resolver
 from aleph.views.cache import enable_cache
@@ -64,7 +64,7 @@ def metadata():
         }
     return jsonify({
         'status': 'ok',
-        'fields': CORE_FACETS,
+        'fields': FACETS,
         'categories': COLLECTION_CATEGORIES,
         'countries': COUNTRY_NAMES,
         'languages': LANGUAGE_NAMES,
