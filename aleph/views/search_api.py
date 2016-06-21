@@ -4,11 +4,11 @@ from apikit import get_limit, get_offset
 
 from aleph import authz
 from aleph.core import url_for
-from aleph.model import Alert
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document
 from aleph.search import documents_query, execute_documents_query
 from aleph.search import records_query, execute_records_query
+from aleph.search.peek import peek_query
 from aleph.search.util import next_params
 
 
@@ -27,6 +27,14 @@ def query():
     if params is not None:
         result['next'] = url_for('search_api.query', **params)
     return jsonify(result)
+
+
+@blueprint.route('/api/1/peek')
+def peek():
+    enable_cache(vary_user=True,
+                 vary=authz.collections(authz.READ))
+    query = peek_query(request.args)
+    return jsonify(query)
 
 
 @blueprint.route('/api/1/query/records/<int:document_id>')
