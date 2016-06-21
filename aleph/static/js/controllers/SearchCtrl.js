@@ -1,6 +1,6 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Collection', 'Entity', 'Authz', 'Alert', 'Document', 'Role', 'Title', 'data', 'alerts', 'metadata',
-    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Collection, Entity, Authz, Alert, Document, Role, Title, data, alerts, metadata) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Collection', 'Entity', 'Authz', 'Alert', 'Document', 'Ingest', 'Role', 'Title', 'data', 'alerts', 'metadata',
+    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Collection, Entity, Authz, Alert, Document, Ingest, Role, Title, data, alerts, metadata) {
 
   $scope.fields = metadata.fields;
   $scope.collectionFacet = [];

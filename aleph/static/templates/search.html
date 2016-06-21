@@ -18,10 +18,16 @@
           </li>
         </ul>
       </div>
-      <div class="btn-group" uib-dropdown dropdown-append-to-body>
+      <!-- div class="btn-group">
         <a href="/search" class="btn btn-primary">
           <i class="fa fa-times"></i>
           Clear
+        </a>
+      </div-->
+      <div class="btn-group">
+        <a class="btn btn-primary" ng-click="ingestFiles([], $event)">
+          <i class="fa fa-cloud-upload"></i>
+          Upload
         </a>
       </div>
       <div class="btn-group">
@@ -68,12 +74,12 @@
   </div>
 
   <div class="col-md-4">
-    <div class="panel panel-default">
+    <div class="panel panel-default panel-facet">
       <div class="panel-heading">
         <strong>Document collections</strong> <small>{{collectionFacets.length}}</small>
       </div>
-      <ul class="list-group facet-list">
-        <li class="list-group-item facet animate toggle"
+      <ul class="list-group">
+        <li class="list-group-item animate toggle"
           ng-repeat="collection in collectionFacet"
           ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
           ng-click="query.toggleFilter('collection_id', collection.id)">
@@ -90,7 +96,7 @@
       </ul>
     </div>
 
-    <div class="panel panel-default">
+    <div class="panel panel-default panel-facet">
       <div class="panel-heading">
         <span class="pull-right">
           <a class="btn btn-xs btn-default" ng-click="createEntity($event)"
@@ -100,11 +106,11 @@
         </span>
         <strong>Persons and Companies</strong>
       </div>
-      <ul class="list-group facet-list">
-        <li class="list-group-item facet empty" ng-if="!result.facets.entities.values.length">
+      <ul class="list-group">
+        <li class="list-group-item empty" ng-if="!result.facets.entities.values.length">
           No persons and companies found in these documents.
         </li>
-        <li class="list-group-item facet animate toggle"
+        <li class="list-group-item animate toggle"
           ng-repeat="entity in entityFacet track by entity.id"
           ng-class="{'active': query.hasField('entity', entity.id)}"
           ng-click="query.toggle('entity', entity.id)">
@@ -122,7 +128,8 @@
       </ul>
     </div>
 
-    <div class="panel panel-default" ng-repeat="facet in facets track by facet.field">
+    <div class="panel panel-default panel-facet"
+      ng-repeat="facet in facets track by facet.field">
       <div class="panel-heading">
         <span class="pull-right">
           <a ng-click="query.toggle('facet', facet.field)">
@@ -132,11 +139,11 @@
         </span>
         <strong>{{::facet.label}}</strong>
       </div>
-      <ul class="list-group facet-list" ng-if="facet.active">
+      <ul class="list-group" ng-if="facet.active">
         <li class="list-group-item facet empty" ng-if="!facet.values.length">
           No documents with {{facet.label}} metadata.
         </li>
-        <li class="list-group-item facet animate toggle"
+        <li class="list-group-item animate toggle"
           ng-repeat="val in facet.values track by val.id"
           ng-class="{'active': query.hasFilter(facet.field, val.id)}"
           ng-click="query.toggleFilter(facet.field, val.id)">
