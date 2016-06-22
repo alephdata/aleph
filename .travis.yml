@@ -18,12 +18,12 @@ addons:
       - libreoffice
 env:
   - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
-  - WKHTMLTOPDF_BIN=/opt/wkhtmltox/bin/wkhtmltopdf
+  - WKHTMLTOPDF_BIN=$TRAVIS_BUILD_DIR/wkhtmltox/bin/wkhtmltopdf
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y tesseract-ocr-eng readpst
   - wget --quiet -O /tmp/wkhtmltox.tar.xv http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
-  - tar -xf /tmp/wkhtmltox.tar.xv -C /opt
+  - tar -xf /tmp/wkhtmltox.tar.xv -C $TRAVIS_BUILD_DIR
 install:
   - gem install sass
   - pip install -r requirements.txt
