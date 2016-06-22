@@ -66,7 +66,7 @@ class Ingestor(object):
         else:
             error_message = unicode(exception)
         error_type = exception.__class__.__name__
-        log.warning(error_message)
+        log.exception(exception)
         CrawlerState.store_fail(meta, collection_id,
                                 error_type=error_type,
                                 error_message=error_message,

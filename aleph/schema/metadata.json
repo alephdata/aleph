@@ -91,7 +91,7 @@
             "type": "array",
             "items": {
                 "type": "string",
-                "format": "uri"
+                "format": "url"
             },
             "uniqueItems": true
         },
@@ -104,11 +104,11 @@
             "uniqueItems": true
         },
         "headers": {
-            "type": "object"
+            "type": ["null", "object"]
         },
         "parent": {
-            "type": "object"
+            "type": ["null", "object"]
         }
     },
-    "required": ["title", "file_name"]
+    "required": ["file_name"]
 }

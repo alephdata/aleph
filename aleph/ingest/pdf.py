@@ -73,7 +73,7 @@ def extract_pdf(path, languages=None):
             for k, v in doc.info[-1].items():
                 k = k.lower().strip()
                 v = string_value(v)
-                if k != 'pages' and '<PDFObjRef:' not in v:
+                if k != 'pages' and v is not None and '<PDFObjRef:' not in v:
                     result[k] = string_value(v)
 
         for i, page in enumerate(PDFPage.create_pages(doc)):

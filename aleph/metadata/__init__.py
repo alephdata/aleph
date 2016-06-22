@@ -315,17 +315,20 @@ class Metadata(object):
     def clone(self):
         return type(self).from_data(self.to_attr_dict())
 
-    @classmethod
-    def from_data(cls, data, safe=False):
-        """Instantiate a Metadata object based on a given dict."""
+    def update(self, data, safe=True):
         # This will assign to the proxied field names, i.e. input
         # processing will be applied to the data.
-        obj = cls()
-        for field in obj.fields.values():
+        for field in self.fields.values():
             if safe and field.protected:
                 continue
             if field.name in data:
-                setattr(obj, field.name, data[field.name])
+                setattr(self, field.name, data[field.name])
+
+    @classmethod
+    def from_data(cls, data, safe=False):
+        """Instantiate a Metadata object based on a given dict."""
+        obj = cls()
+        obj.update(data, safe=safe)
         return obj
 
     @classmethod

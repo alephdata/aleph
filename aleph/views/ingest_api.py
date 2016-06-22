@@ -9,7 +9,7 @@ from aleph import authz
 from aleph.metadata import Metadata
 from aleph.ingest import ingest_file
 from aleph.core import get_upload_folder
-from aleph.model import Collection
+from aleph.model import Collection, validate
 
 
 blueprint = Blueprint('ingest_api', __name__)
@@ -27,13 +27,14 @@ def ingest_upload(collection_id):
 
     metas = []
     for storage in request.files.values():
-        # TODO: metadata validation.
-        file_meta = Metadata.from_data(meta.copy())
+        file_meta = meta.copy()
+        file_meta['mime_type'] = storage.mimetype
+        file_meta['file_name'] = storage.filename
+        validate(file_meta, 'metadata.json#')
+        file_meta = Metadata.from_data(file_meta)
         sec_fn = os.path.join(get_upload_folder(),
                               secure_filename(storage.filename))
         storage.save(sec_fn)
-        file_meta.mime_type = storage.mimetype
-        file_meta.file_name = storage.filename
         ingest_file(collection.id, file_meta, sec_fn, move=True)
         metas.append(file_meta)
     return jsonify({'status': 'ok', 'metadata': metas})

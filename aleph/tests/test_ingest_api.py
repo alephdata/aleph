@@ -45,3 +45,21 @@ class IngestApiTestCase(TestCase):
         metas = res.json['metadata']
         assert len(metas) == 1, metas
         assert metas[0]['file_name'] == 'futz.html', metas
+
+        res = self.client.get('/api/1/documents')
+        assert res.json['total'] == 1, res.json
+        res = self.client.get('/api/1/documents/1')
+        assert res.json['countries'] == ['de', 'us'], res.json
+        res = self.client.get('/api/1/documents/1/file')
+        assert 'futz with a banana' in res.data
+        assert 'text/html' in res.content_type, res.content_type
+
+    def test_invalid_meta(self):
+        self.login(is_admin=True)
+        meta = {'title': 3, 'file_name': ''}
+        data = {
+            'meta': json.dumps(meta),
+            'foo': (StringIO("this is a futz with a banana"), 'futz.html')
+        }
+        res = self.client.post(self.url, data=data)
+        assert res.status_code == 400, res

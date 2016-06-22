@@ -1,6 +1,5 @@
+import json
 
-from aleph.core import db
-from aleph.model import Document
 from aleph.tests.util import TestCase
 
 
@@ -60,3 +59,66 @@ class DocumentsApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'results' in res.json, res.json
         assert len(res.json['results']) == 10, res.json
+
+    def test_view_pdf(self):
+        res = self.client.get('/api/1/documents/1003/pdf')
+        assert res.status_code == 400, res
+        res = self.client.get('/api/1/documents/1000/pdf')
+        assert res.status_code == 404, res
+
+    def test_view_references(self):
+        doc_id = 1001
+        res = self.client.get('/api/1/documents/%s/references' % doc_id)
+        assert res.status_code == 403, res
+
+        self.login(is_admin=True)
+        res = self.client.get('/api/1/documents/%s/references' % doc_id)
+        assert res.status_code == 200, res
+        assert 'results' in res.json, res.json
+        assert len(res.json['results']) == 2, res.json
+
+    def test_update_simple(self):
+        url = '/api/1/documents/1000'
+        res = self.client.get(url)
+        assert res.status_code == 200, res
+
+        data = res.json
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 403, res.json
+
+        data['title'] = 'Eaten by a pumpkin'
+        self.login(is_admin=True)
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, res.json
+        assert res.json['title'] == data['title']
+
+    def test_update_invalid(self):
+        url = '/api/1/documents/1000'
+        ores = self.client.get(url)
+        self.login(is_admin=True)
+
+        data = ores.json.copy()
+        data.pop('file_name')
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 400, res.json
+
+        data = ores.json.copy()
+        data['countries'] = ['xz']
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 400, res.json
+
+        data = ores.json.copy()
+        data['urls'] = ['lalala']
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 400, res.json
+
+        data = ores.json.copy()
+        data['dates'] = ['2011-XX-XX']
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 400, res.json

@@ -5,6 +5,7 @@ import json
 from jsonschema import Draft4Validator, FormatChecker, RefResolver
 from jsonmapping import SchemaVisitor
 
+from aleph.metadata.parsers import parse_url
 from aleph.metadata.reference import is_country_code, is_language_code
 
 
@@ -37,6 +38,11 @@ def is_partial_date(date):
 @format_checker.checks('language-code')
 def language_code(code):
     return is_language_code(code)
+
+
+@format_checker.checks('url')
+def valid_url(url):
+    return parse_url(url) is not None
 
 
 @format_checker.checks('collection-category')

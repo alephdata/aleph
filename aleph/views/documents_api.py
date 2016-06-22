@@ -1,12 +1,13 @@
 import logging
 
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
-from apikit import jsonify, Pager, get_limit, get_offset
+from apikit import jsonify, Pager, get_limit, get_offset, request_data
 
 from aleph import authz
 from aleph.core import get_archive, url_for, db
 from aleph.model import Document, Entity, Reference, Collection
+from aleph.model import validate
 from aleph.views.cache import enable_cache
 from aleph.search.tabular import tabular_query, execute_tabular_query
 from aleph.search.util import next_params
@@ -54,8 +55,25 @@ def view(document_id):
         if data.get('pdf_url') is None:
             data['pdf_url'] = url_for('documents_api.pdf',
                                       document_id=document_id)
-    data['collections'] = doc.collections
+    # data['collections'] = doc.collections
     return jsonify(data)
+
+
+@blueprint.route('/api/1/documents/<int:document_id>', methods=['POST', 'PUT'])
+def update(document_id):
+    document = get_document(document_id)
+    # This is a special requirement for documents, so
+    # they cannot escalate privs:
+    authz.require(authz.collection_write(document.source_collection_id))
+    data = request_data()
+    validate(data, 'metadata.json#')
+    print data
+    meta = document.meta
+    meta.update(data, safe=True)
+    document.meta = meta
+    db.session.commit()
+    # TODO: index
+    return view(document_id)
 
 
 @blueprint.route('/api/1/documents/<int:document_id>/references')
@@ -98,8 +116,11 @@ def pdf(document_id):
     if url is not None:
         return redirect(url)
 
-    local_path = get_archive().load_file(pdf)
-    fh = open(local_path, 'rb')
+    try:
+        local_path = get_archive().load_file(pdf)
+        fh = open(local_path, 'rb')
+    except Exception as ex:
+        raise NotFound("Missing PDF file: %r" % ex)
     return send_file(fh, mimetype=pdf.mime_type)
 
 
