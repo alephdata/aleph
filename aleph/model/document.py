@@ -45,14 +45,14 @@ class Document(db.Model, DatedModel):
         self._meta = self._meta or {}
         self._meta['content_hash'] = self.content_hash
         self._meta['foreign_id'] = self.foreign_id
-        return Metadata(data=self._meta or {})
+        return Metadata.from_data(self._meta or {})
 
     @meta.setter
     def meta(self, meta):
         if isinstance(meta, Metadata):
             self.content_hash = meta.content_hash
             self.foreign_id = meta.foreign_id
-            meta = meta.data
+            meta = meta.to_attr_dict()
         self._meta = meta
         flag_modified(self, '_meta')
 

@@ -68,9 +68,10 @@ class Crawler(object):
 
     def make_meta(self, data={}):
         data = json.loads(json.dumps(data))
-        data['crawler'] = self.get_id()
-        data['crawler_run'] = self.crawler_run
-        return Metadata(data=data)
+        meta = Metadata.from_data(data)
+        meta.crawler = self.get_id()
+        meta.crawler_run = self.crawler_run
+        return meta
 
     def save_response(self, res):
         """Store the return data from a requests response to a file."""
@@ -162,7 +163,7 @@ class DocumentCrawler(Crawler):
         ingest_file(self.collection.id, meta.clone(), file_path, move=move)
 
     def emit_url(self, meta, url):
-        ingest_url.delay(self.collection.id, meta.clone().data, url)
+        ingest_url.delay(self.collection.id, meta.to_attr_dict(), url)
 
     def to_dict(self):
         data = CrawlerState.crawler_stats(self.get_id())

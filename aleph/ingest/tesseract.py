@@ -11,7 +11,7 @@ from tesserwrap import Tesseract, PageSegMode
 from aleph.core import get_config
 from aleph.model import Cache
 from aleph.ingest.ingestor import IngestorException
-from aleph.metadata.languages import get_iso3
+from aleph.metadata.reference import get_languages_iso3
 
 # https://tesserwrap.readthedocs.org/en/latest/#
 # https://pillow.readthedocs.org/en/3.0.x/reference/Image.html
@@ -23,7 +23,7 @@ def extract_image_data(data, languages=None):
     tessdata_prefix = get_config('TESSDATA_PREFIX')
     if tessdata_prefix is None:
         raise IngestorException("TESSDATA_PREFIX is not set, OCR won't work.")
-    languages = get_iso3(languages)
+    languages = get_languages_iso3(languages)
     text = Cache.get_ocr(data, languages)
     if text is not None:
         return text

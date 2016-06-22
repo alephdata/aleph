@@ -1,30 +1,18 @@
 import os
-import re
 import six
 import cgi
 import mimetypes
+from collections import Mapping
 from flanker.addresslib import address
 from urlparse import urlparse
-from datetime import date, datetime
-from copy import deepcopy
 from normality import slugify
-from collections import MutableMapping, Mapping
 
 from aleph.util import make_filename
 from aleph.metadata.tabular import Tabular
-
-DATE_RE = re.compile(r'^[12]\d{3}-[012]?\d-[0123]?\d$')
-
-FACETS = {
-    'mime_type': 'Content type',
-    'languages': 'Languages',
-    'countries': 'Countries',
-    'keywords': 'Keywords',
-    'author': 'Document author',
-    'emails': 'E-Mail addresses',
-    'domains': 'Internet domains',
-    'dates': 'Dates'
-}
+from aleph.metadata.parsers import chomp, parse_date
+from aleph.metadata.parsers import parse_domain, parse_url
+from aleph.metadata.reference import is_country_code, is_language_code
+from aleph.metadata.base import MetadataFactory, Field
 
 
 class PDFAlternative(object):
@@ -38,61 +26,78 @@ class PDFAlternative(object):
 
     @property
     def content_hash(self):
-        return self.meta.data.get('pdf_version')
+        return self.meta.pdf_version
 
     @content_hash.setter
     def content_hash(self, content_hash):
-        self.meta.data['pdf_version'] = content_hash
+        self.meta.pdf_version = content_hash
 
 
-class Metadata(MutableMapping):
+class Metadata(object):
     """Handle all sorts of metadata normalization for documents."""
 
-    def __init__(self, data=None):
-        if data is None:
-            data = {}
-        self.data = data
+    __metaclass__ = MetadataFactory
+
+    content_hash = Field(protected=True)
+    crawler = Field(protected=True)
+    crawler_run = Field(protected=True)
+    _foreign_id = Field('foreign_id', protected=True)
+    _file_name = Field('file_name')
+    _title = Field('title')
+    _extension = Field('extension')
+    _mime_type = Field('mime_type', label='Content type')
+    author = Field(label='Document author')
+    summary = Field()
+    source_url = Field(protected=True)
+    source_path = Field(protected=True)
+    pdf_version = Field(protected=True)
+    _headers = Field('headers', protected=True)
+    _parent = Field('parent', protected=True)
+    _keywords = Field('keywords', multi=True, label='Keywords')
+    _phone_numbers = Field('phone_numbers', multi=True, label='Phone numbers')
+    _dates = Field('dates', multi=True, label='Dates')
+    _countries = Field('countries', multi=True, label='Countries')
+    _languages = Field('languages', multi=True, label='Languages')
+    _emails = Field('emails', multi=True, label='E-mail addresses')
+    _domains = Field('domains', multi=True, label='Domains')
+    _tables = Field('tables', multi=True, protected=True)
+
+    def __init__(self):
+        for field in self.fields.values():
+            setattr(self, field.attr, [] if field.multi else None)
 
     def has(self, name):
-        value = self.data.get(name)
+        value = getattr(self, self.fields[name].attr)
         if value is None:
             return False
-        if isinstance(value, (six.text_type, list, set, tuple)):
+        if isinstance(value, (list, set, tuple)):
             return len(value) > 0
+        if isinstance(value, six.string_types):
+            return len(value.strip()) > 0
         return True
-
-    def clear(self, name):
-        self.data.pop(name, None)
 
     @property
     def parent(self):
-        if 'parent' not in self.data or \
-                not isinstance(self.data.get('parent'), dict):
-            return None
-        return Metadata(data=self.data.get('parent'))
+        if self._parent is not None:
+            return Metadata.from_data(self._parent)
 
     @parent.setter
     def parent(self, parent):
-        if isinstance(parent, Metadata):
-            parent = parent.data
-        self.data['parent'] = parent
+        if isinstance(parent, Metadata) and isinstance(self._parent, dict):
+            parent = parent.to_attr_dict()
+        self._parent = parent
 
     @property
     def title(self):
-        title = self.data.get('title')
-        if title is None or not len(title.strip()):
-            if self.file_name:
-                title = self.file_name
-        return title
+        return self._title or self._file_name or self.file_name
 
     @title.setter
     def title(self, title):
-        self.data['title'] = title
+        self._title = chomp(title)
 
     @property
     def file_name(self):
-        file_name = self.data.get('file_name') \
-            if self.has('file_name') else None
+        file_name = self._file_name
 
         # derive file name from headers
         if file_name is None and 'content_disposition' in self.headers:
@@ -102,237 +107,151 @@ class Metadata(MutableMapping):
         if file_name is None and self.source_path:
             file_name = os.path.basename(self.source_path)
 
+        if file_name is None and self.source_url:
+            parsed = urlparse(self.source_url)
+            file_name = os.path.basename(parsed.path)
+
         return make_filename(file_name)
 
     @file_name.setter
     def file_name(self, file_name):
-        self.data['file_name'] = file_name
-
-    @property
-    def summary(self):
-        return self.data.get('summary')
-
-    @summary.setter
-    def summary(self, summary):
-        self.data['summary'] = summary
-
-    @property
-    def author(self):
-        return self.data.get('author')
-
-    @author.setter
-    def author(self, author):
-        self.data['author'] = author
+        self._file_name = chomp(file_name)
 
     @property
     def languages(self):
-        return list(set(self.data.get('languages', [])))
+        return self._languages
 
     @languages.setter
     def languages(self, languages):
-        self.data['languages'] = []
+        self._languages = []
         for lang in languages:
             self.add_language(lang)
 
     def add_language(self, language):
-        language = language.lower().strip()
-        languages = self.languages
-        languages.append(language)
-        self.data['languages'] = list(languages)
+        lang = chomp(language, lower=True)
+        if is_language_code(lang) and lang not in self._languages:
+            self._languages.append(lang)
 
     @property
     def countries(self):
-        return list(set(self.data.get('countries', [])))
+        return self._countries
 
     @countries.setter
     def countries(self, countries):
-        self.data['countries'] = []
+        self._countries = []
         for country in countries:
             self.add_country(country)
 
     def add_country(self, country):
-        country = country.lower().strip()
-        countries = self.countries
-        countries.append(country)
-        self.data['countries'] = list(countries)
+        country = chomp(country, lower=True)
+        if is_country_code(country) and country not in self._countries:
+            self._countries.append(country)
 
     @property
     def keywords(self):
-        return list(set(self.data.get('keywords', [])))
+        return self._keywords
 
     @keywords.setter
     def keywords(self, keywords):
-        self.data['keywords'] = []
+        self._keywords = []
         for kw in keywords:
             self.add_keyword(kw)
 
-    def add_keyword(self, keyword):
-        keyword = keyword.strip()
-        keywords = self.keywords
-        keywords.append(keyword)
-        self.data['keywords'] = list(set(keywords))
+    def add_keyword(self, kw):
+        kw = chomp(kw)
+        if kw is not None and kw not in self._keywords:
+            self._keywords.append(kw)
 
     @property
     def emails(self):
-        return list(set(self.data.get('emails', [])))
+        return self._emails
 
     @emails.setter
     def emails(self, emails):
-        self.data['emails'] = []
+        self._emails = []
         for email in emails:
             self.add_email(email)
 
     def add_email(self, email):
-        emails = self.emails
         parsed = address.parse(email)
         if parsed is None:
             return
-        emails.append(parsed.address)
         self.add_domain(parsed.hostname)
-        self.data['emails'] = list(emails)
+        if parsed.address not in self._emails:
+            self._emails.append(parsed.address)
 
     @property
     def urls(self):
-        return list(set(self.data.get('urls', [])))
+        return self._urls
 
     @urls.setter
     def urls(self, urls):
-        self.data['emails'] = []
+        self._urls = []
         for url in urls:
             self.add_url(url)
 
     def add_url(self, url):
-        urls = self.urls
-        if url is None or not len(url.strip()):
-            return
-        url = url.strip()
-        if url.startswith('//'):
-            url = 'http:%s' % url
-        elif '://' not in url:
-            url = 'http://%s' % url
-        try:
-            parsed = urlparse(url)
-        except ValueError:
-            return
-        urls.append(url)
-        self.add_domain(parsed.hostname)
-        self.data['urls'] = list(set(urls))
+        url = parse_url(url)
+        if url is not None and url not in self._urls:
+            self._urls.append(url)
+        self.add_domain(url)
 
     @property
     def domains(self):
-        return list(set(self.data.get('domains', [])))
+        return self._domains
 
     @domains.setter
     def domains(self, domains):
-        self.data['domains'] = []
+        self._domains = []
         for domain in domains:
             self.add_domain(domain)
 
     def add_domain(self, domain):
-        domains = self.domains
-        if domain is None or not len(domain.strip()):
-            return
-        domain = domain.strip().lower()
-        if '://' in domain:
-            try:
-                parsed = urlparse(domain)
-                domain = parsed.hostname
-            except ValueError:
-                return
-        if domain.startswith('www.'):
-            domain = domain[len('www.'):]
-        domains.append(domain)
-        self.data['domains'] = list(set(domains))
+        domain = parse_domain(domain)
+        if domain and domain not in self._domains:
+            self._domains.append(domain)
 
     @property
     def phone_numbers(self):
-        return list(set(self.data.get('phone_numbers', [])))
+        return self._phone_numbers
 
     @phone_numbers.setter
     def phone_numbers(self, phone_numbers):
-        self.data['phone_numbers'] = []
+        self._phone_numbers = []
         for phone_number in phone_numbers:
             self.add_phone_number(phone_number)
 
-    def add_phone_number(self, phone_number):
-        phone_numbers = self.phone_numbers
-        phone_numbers.append(phone_number)
-        self.data['phone_numbers'] = list(set(phone_numbers))
+    def add_phone_number(self, number):
+        number = chomp(number)
+        if number and number not in self._phone_numbers:
+            self._phone_numbers.append(number)
 
     @property
     def dates(self):
-        _dates = set()
-        for date_ in self.data.get('dates', []):
-            if date_ is not None:
-                date_ = date_.strip().strip()
-                if DATE_RE.match(date_):
-                    _dates.add(date_)
-        return list(set(_dates))
+        return self._dates
 
     @dates.setter
     def dates(self, dates):
-        self.data['dates'] = []
+        self._dates = []
         for obj in dates:
             self.add_date(obj)
 
     def add_date(self, obj):
-        if isinstance(obj, datetime):
-            obj = obj.date()
-        if isinstance(obj, date):
-            obj = obj.isoformat()
-        else:
-            if isinstance(obj, six.string_types):
-                obj = obj[:10]
-            else:
-                return
-            # this may raise ValueError etc.
-            datetime.strptime(obj, '%Y-%m-%d')
-        dates = self.dates
-        dates.append(obj)
-        self.data['dates'] = list(dates)
-
-    @property
-    def source_url(self):
-        return self.data.get('source_url')
-
-    @source_url.setter
-    def source_url(self, source_url):
-        self.data['source_url'] = source_url
-
-    @property
-    def source_path(self):
-        source_path = self.data.get('source_path') \
-            if self.has('source_path') else None
-        if source_path is None and self.source_url:
-            source_path = urlparse(self.source_url).path
-        return source_path
-
-    @source_path.setter
-    def source_path(self, source_path):
-        self.data['source_path'] = source_path
-
-    @property
-    def content_hash(self):
-        return self.data.get('content_hash')
-
-    @content_hash.setter
-    def content_hash(self, content_hash):
-        self.data['content_hash'] = content_hash
+        date = parse_date(obj)
+        if date is not None and date not in self._dates:
+            self._dates.append(date)
 
     @property
     def foreign_id(self):
-        foreign_id = self.data.get('foreign_id')
-        if foreign_id is not None:
-            return unicode(foreign_id)
+        return self._foreign_id
 
     @foreign_id.setter
     def foreign_id(self, foreign_id):
-        self.data['foreign_id'] = foreign_id
+        self._foreign_id = chomp(foreign_id)
 
     @property
     def extension(self):
-        extension = self.data.get('extension') \
-            if self.has('extension') else None
+        extension = self._extension
 
         if extension is None and self.file_name:
             _, extension = os.path.splitext(self.file_name)
@@ -343,12 +262,11 @@ class Metadata(MutableMapping):
 
     @extension.setter
     def extension(self, extension):
-        self.data['extension'] = extension
+        self._extension = chomp(extension)
 
     @property
     def mime_type(self):
-        mime_type = self.data.get('mime_type') \
-            if self.has('mime_type') else None
+        mime_type = self._mime_type
 
         if mime_type is None and self.file_name:
             mime_type, _ = mimetypes.guess_type(self.file_name)
@@ -357,105 +275,93 @@ class Metadata(MutableMapping):
         if mime_type is None and 'content_type' in self.headers:
             mime_type, _ = cgi.parse_header(self.headers['content_type'])
 
-        if mime_type in ['application/octet-stream']:
-            mime_type = None
-        return mime_type
+        if mime_type != 'application/octet-stream':
+            return mime_type
 
     @mime_type.setter
     def mime_type(self, mime_type):
-        if isinstance(mime_type, six.string_types):
-            mime_type = mime_type.strip()
-
-        self.data['mime_type'] = mime_type
+        self._mime_type = chomp(mime_type)
 
     @property
     def headers(self):
         # normalize header names
-        headers = {}
-        for k, v in self.data.get('headers', {}).items():
-            headers[slugify(k, sep='_')] = v
-        return headers
+        raw = self._headers or {}
+        return {slugify(k, sep='_'): v for k, v in raw.items()}
 
     @headers.setter
     def headers(self, headers):
-        if isinstance(headers, Mapping):
-            self.data['headers'] = dict(headers)
+        self._headers = dict(headers) if isinstance(headers, Mapping) else None
 
     @property
     def is_pdf(self):
-        if self.extension == 'pdf':
-            return True
-        if self.mime_type in ['application/pdf']:
-            return True
-        return False
+        return self.extension == 'pdf' or self.mime_type == 'application/pdf'
 
     @property
     def pdf(self):
-        if self.is_pdf:
-            return self
-        return PDFAlternative(self)
+        return self if self.is_pdf else PDFAlternative(self)
 
     @property
     def tables(self):
-        return [Tabular(s) for s in self.data.get('tables', [])]
+        return [Tabular(s) for s in self._tables]
 
     @tables.setter
     def tables(self, tables):
-        data = []
-        if isinstance(tables, (list, tuple, set)):
-            for schema in tables:
-                if isinstance(schema, Tabular):
-                    schema = schema.to_dict()
-                data.append(schema)
-        self.data['tables'] = data
-
-    def __getitem__(self, name):
-        return self.data.get(name)
-
-    def __setitem__(self, name, value):
-        self.data[name] = value
-
-    def __delitem__(self, name):
-        self.data.pop(name, None)
-
-    def __iter__(self):
-        return self.data.keys()
-
-    def __repr__(self):
-        return '<Metadata(%r,%r)>' % (self.file_name, self.content_hash)
-
-    def __len__(self):
-        return len(self.data)
+        self._tables = []
+        for schema in tables:
+            if isinstance(schema, Tabular):
+                schema = schema.to_dict()
+            self._tables.append(schema)
 
     def clone(self):
-        return Metadata(data=deepcopy(self.data))
+        return type(self).from_data(self.to_attr_dict())
+
+    @classmethod
+    def from_data(cls, data):
+        """Instantiate a Metadata object based on a given dict."""
+        # This will assign to the proxied field names, i.e. input
+        # processing will be applied to the data.
+        obj = cls()
+        for field in obj.fields.values():
+            if field.name in data:
+                setattr(obj, field.name, data[field.name])
+        return obj
+
+    @classmethod
+    def facets(cls):
+        facets = {}
+        for field in cls().fields.values():
+            if field.label is not None:
+                facets[field.name] = field.label
+        return facets
+
+    def to_attr_dict(self, compute=False):
+        """Return the data for each attribute."""
+        # This will return the underlying (uncomputed) values by default. They
+        # are suitable for serialization into the database, but not
+        # for indexing.
+        data = {}
+        for field in self.fields.values():
+            if self.has(field.name):
+                name = field.name if compute else field.attr
+                data[field.name] = getattr(self, name)
+        return data
 
     def to_index_dict(self):
-        return {
-            'content_hash': self.content_hash,
-            'foreign_id': self.foreign_id,
-            'file_name': self.file_name,
-            'author': self.author,
-            'dates': self.dates,
-            'countries': self.countries,
-            'languages': self.languages,
-            'keywords': self.keywords,
-            'emails': self.emails,
-            'domains': self.domains,
-            'extension': self.extension,
-            'mime_type': self.mime_type,
-            'headers': self.headers,
-            'source_path': self.source_path,
-            'source_url': self.source_url,
-            'title': self.title,
-            'summary': self.summary
-        }
+        """Generate ElasticSearch form."""
+        data = self.to_attr_dict(compute=True)
+        data.pop('parent', None)
+        data.pop('headers', None)
+        data.pop('tables', None)
+        data.pop('pdf_version', None)
+        return data
 
     def to_dict(self):
-        data = deepcopy(self.data)
-        if self.has('parent'):
-            data['parent'] = self.parent.to_dict()
-        data.update(self.to_index_dict())
+        """Generate REST API form."""
+        data = self.to_index_dict()
+        data['parent'] = self.parent
         data['is_pdf'] = self.is_pdf
         data['headers'] = self.headers
         return data
+
+    def __repr__(self):
+        return '<Metadata(%r,%r)>' % (self.file_name, self.content_hash)

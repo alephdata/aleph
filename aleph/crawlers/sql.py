@@ -100,9 +100,7 @@ class SQLCrawler(Crawler):
         meta_ = meta_base.copy()
         meta_.update(query.get('meta', {}))
         meta = self.make_meta(meta_)
-        meta.extension = 'csv'
         meta.mime_type = 'text/csv'
-        meta.data.update(meta_)
         meta.foreign_id = '%s:%s' % (collection.foreign_id, name)
 
         query = SQLQuery(engine, query)

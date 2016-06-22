@@ -31,7 +31,7 @@ class PhoneNumberTestCase(TestCase):
 
     def test_normalize(self):
         for number in PHONE_NUMBERS:
-            meta = Metadata(data={'countries': ['de']})
+            meta = Metadata.from_data({'countries': ['de']})
             analyzer = PhoneNumberAnalyzer(None, meta)
             analyzer.prepare()
             analyzer.on_text(number)

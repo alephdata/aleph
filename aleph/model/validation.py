@@ -5,8 +5,7 @@ import json
 from jsonschema import Draft4Validator, FormatChecker, RefResolver
 from jsonmapping import SchemaVisitor
 
-from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
-from aleph.model.constants import COLLECTION_CATEGORIES
+from aleph.metadata.reference import is_country_code, is_language_code
 
 
 resolver = RefResolver('core.json#', {})
@@ -20,29 +19,30 @@ for (root, dirs, files) in os.walk(schema_dir):
 
 format_checker = FormatChecker()
 # JS: '^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'
-date_re = re.compile('^([12]\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$')
+partial_date_re = re.compile('^([12]\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$')
 
 
 @format_checker.checks('country-code')
-def is_country_code(code):
-    return code.lower() in COUNTRY_NAMES.keys()
+def country_code(code):
+    return is_country_code(code)
 
 
 @format_checker.checks('partial-date')
 def is_partial_date(date):
     if date is None:
         return True
-    return date_re.match(date) is not None
+    return partial_date_re.match(date) is not None
 
 
 @format_checker.checks('language-code')
-def is_language_code(code):
-    return code.lower() in LANGUAGE_NAMES.keys()
+def language_code(code):
+    return is_language_code(code)
 
 
 @format_checker.checks('collection-category')
 def is_collection_category(cat):
-    return cat in COLLECTION_CATEGORIES.keys()
+    from aleph.model.collection import Collection
+    return cat in Collection.CATEGORIES.keys()
 
 
 def validate(data, schema):

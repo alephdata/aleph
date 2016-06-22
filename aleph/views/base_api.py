@@ -6,9 +6,9 @@ from jsonschema import ValidationError
 from elasticsearch import TransportError
 
 from aleph.core import get_config
-from aleph.metadata import FACETS
-from aleph.model.constants import COLLECTION_CATEGORIES
-from aleph.model.constants import COUNTRY_NAMES, LANGUAGE_NAMES
+from aleph.model import Collection
+from aleph.metadata import Metadata
+from aleph.metadata.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.model.validation import resolver
 from aleph.views.cache import enable_cache
 
@@ -64,8 +64,8 @@ def metadata():
         }
     return jsonify({
         'status': 'ok',
-        'fields': FACETS,
-        'categories': COLLECTION_CATEGORIES,
+        'fields': Metadata.facets(),
+        'categories': Collection.CATEGORIES,
         'countries': COUNTRY_NAMES,
         'languages': LANGUAGE_NAMES,
         'schemata': schemata

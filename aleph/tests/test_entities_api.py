@@ -259,3 +259,28 @@ class EntitiesApiTestCase(TestCase):
         data = res.json
         assert len(data['results']) == 1, data
         assert 'Laden' in data['results'][0]['name'], data
+
+    def test_similar_entity(self):
+        self.login(is_admin=True)
+        url = '/api/1/entities'
+        data = {
+            '$schema': '/entity/person.json#',
+            'name': "Osama bin Laden",
+            'collection_id': [self.col.id]
+        }
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        data = {
+            '$schema': '/entity/person.json#',
+            'name': "Osama ben Ladyn",
+            'collection_id': [self.col.id]
+        }
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        optimize_search()
+        res = self.client.get('/api/1/entities/%s/similar' % res.json['id'])
+        assert res.status_code == 200, (res.status_code, res.json)
+        data = res.json
+        assert len(data['results']) == 1, data
+        assert 'Laden' in data['results'][0]['name'], data
+        assert 'Pooh' not in res.data, res.data

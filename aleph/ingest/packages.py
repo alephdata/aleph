@@ -31,17 +31,14 @@ class PackageIngestor(Ingestor):
         file_name = os.path.basename(os.path.normpath(name))
         file_path = os.path.join(temp_dir, file_name)
         child = meta.clone()
-        child.clear('title')
-        child.clear('extension')
-        child.clear('file_name')
-        child.clear('content_hash')
-        child.clear('mime_type')
-        child.clear('foreign_id')
         child.parent = meta.clone()
         child.file_name = file_name
         child.source_path = name
-        parent_id = meta.foreign_id or meta.content_hash
-        child.foreign_id = '%s:%s' % (parent_id, name)
+        child.title = None
+        child.extension = None
+        child.content_hash = None
+        child.mime_type = None
+        child.foreign_id = None
 
         with open(file_path, 'wb') as dst:
             shutil.copyfileobj(fh, dst)

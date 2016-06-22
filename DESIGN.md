@@ -155,11 +155,11 @@ mini-bugs:
 
 
 * [DONE] Login check on upload
-* Document source collection migration
+* [DONE] Document source collection migration
 * [DONE] Re-index entites scheduler bug
 * Metadata validation
 * Add doc to collection func
-* Hidden results func
+* [DONE] Hidden results func
 * Document metadata editing
 * Metadata on doc ingest?
 

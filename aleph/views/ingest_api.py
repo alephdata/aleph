@@ -28,7 +28,7 @@ def ingest_upload(collection_id):
     metas = []
     for storage in request.files.values():
         # TODO: metadata validation.
-        file_meta = Metadata(data=meta.copy())
+        file_meta = Metadata.from_data(meta.copy())
         sec_fn = os.path.join(get_upload_folder(),
                               secure_filename(storage.filename))
         storage.save(sec_fn)

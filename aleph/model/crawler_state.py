@@ -32,11 +32,11 @@ class CrawlerState(db.Model):
     def _from_meta(cls, meta, collection_id):
         obj = cls()
         obj.collection_id = collection_id
-        obj.crawler_id = meta.get('crawler')
-        obj.crawler_run = meta.get('crawler_run')
+        obj.crawler_id = meta.crawler
+        obj.crawler_run = meta.crawler_run
         obj.foreign_id = meta.foreign_id
         obj.content_hash = meta.content_hash
-        obj.meta = meta.data
+        obj.meta = meta.to_attr_dict()
         db.session.add(obj)
         return obj
 

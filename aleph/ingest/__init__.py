@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 
 @celery.task()
 def ingest_url(collection_id, metadata, url):
-    meta = Metadata(data=metadata)
+    meta = Metadata.from_data(metadata)
     try:
         fh, tmp_path = mkstemp()
         os.close(fh)
@@ -55,7 +55,7 @@ def ingest_file(collection_id, meta, file_path, move=False):
         if not meta.has('source_path'):
             meta.source_path = file_path
         meta = get_archive().archive_file(file_path, meta, move=move)
-        ingest.delay(collection_id, meta.data)
+        ingest.delay(collection_id, meta.to_attr_dict())
     except Exception as ex:
         Ingestor.handle_exception(meta, collection_id, ex)
     finally:
@@ -64,5 +64,5 @@ def ingest_file(collection_id, meta, file_path, move=False):
 
 @celery.task()
 def ingest(collection_id, metadata):
-    meta = Metadata(data=metadata)
+    meta = Metadata.from_data(metadata)
     Ingestor.dispatch(collection_id, meta)
