@@ -316,12 +316,14 @@ class Metadata(object):
         return type(self).from_data(self.to_attr_dict())
 
     @classmethod
-    def from_data(cls, data):
+    def from_data(cls, data, safe=False):
         """Instantiate a Metadata object based on a given dict."""
         # This will assign to the proxied field names, i.e. input
         # processing will be applied to the data.
         obj = cls()
         for field in obj.fields.values():
+            if safe and field.protected:
+                continue
             if field.name in data:
                 setattr(obj, field.name, data[field.name])
         return obj

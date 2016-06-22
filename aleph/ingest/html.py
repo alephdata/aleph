@@ -39,7 +39,7 @@ class HtmlIngestor(DocumentIngestor):
         if not meta.has('title'):
             title = doc.findtext('.//title')
             if title is not None:
-                meta.title = title.strip()
+                meta.title = title
 
         if not meta.has('summary'):
             summary = doc.find('.//meta[@name="description"]')
@@ -51,7 +51,7 @@ class HtmlIngestor(DocumentIngestor):
             if value is not None:
                 value = value.get('content') or ''
                 for keyword in value.split(','):
-                    meta.add_keyword(keyword.strip())
+                    meta.add_keyword(keyword)
 
         self.cleaner(doc)
         try:

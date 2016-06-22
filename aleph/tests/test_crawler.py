@@ -1,53 +1,63 @@
-import requests
+import os
+
+from aleph.core import db
+from aleph.model import CrawlerState, Collection
 from aleph.tests.util import TestCase
-from aleph.crawlers import blacklight
+from aleph.crawlers import DocumentCrawler
 
 
-class CrawlersTestCase(TestCase):
+class TDocumentCrawler(DocumentCrawler):
+    COLLECTION_ID = 'test'
+
+    def crawl(self):
+        meta = self.make_meta({
+            'title': 'hello, kitty',
+            'foreign_id': self.test_path
+        })
+        if self.skip_incremental(self.test_path):
+            return
+        self.emit_file(meta, self.test_path)
+
+
+class CrawlerTestCase(TestCase):
 
     def setUp(self):
-        super(CrawlersTestCase, self).setUp()
-        self.demo_url = "http://demo.projectblacklight.org/"
-        self.bl = blacklight.BlacklightCrawler()
-        self.pagecount = self.bl.get_page_count(self.demo_url)
+        super(CrawlerTestCase, self).setUp()
+        TDocumentCrawler.test_path = self.get_fixture_path('demo.pdf')
 
-    '''
-    def test_blacklight_crawldocument(self,):
-        resp = self.bl.crawl_document(self.demo_url, '1')
-        self.assertIsInstance(resp, bool)
-        self.assertEqual(resp, True)
+    def test_crawler_basic(self):
+        assert TDocumentCrawler.COLLECTION_ID in TDocumentCrawler().get_id()
 
-    def test_blacklight_get_page_count(self,):
-        self.assertTrue(str(self.pagecount).isdigit())
+    def test_crawler_execute(self):
+        tdc = TDocumentCrawler()
+        ccnt = CrawlerState.all().count()
+        assert ccnt == 0, ccnt
+        tdc.execute()
+        states = CrawlerState.all().all()
+        assert len(states) == 2, len(states)
+        demo = states[1]
+        assert 'kitty' in demo.meta['title'], demo.meta
+        assert 'demo.pdf' in demo.meta['source_path'], demo.meta
 
-    def test_blacklight_sources(self,):
-        for site in blacklight.SITES:
-            resp = requests.get(site + 'catalog.json')
-            self.assertEqual(resp.status_code, 200)
-            data = resp.json()
-            try:
-                pagecount = data['response']['pages']['total_count']
-            except:
-                pagecount = 0
-            if not self.pagecount == 0:
-                self.assertIn('response', data)
-                self.assertIn('pages', data['response'])
-                self.assertIn('total_count', data['response']['pages'])
+        coll = Collection.by_foreign_id('test')
+        assert coll is not None, coll
+        assert len(list(coll.documents)) == 1, list(coll.documents)
 
-    def test_blacklight_crawlpage(self,):
-        for site in blacklight.SITES:
-            url = site + 'catalog.json'
-            resp = requests.get(url)
-            self.assertEqual(resp.status_code, 200)
-            data = resp.json()
-            try:
-                pagecount = data['response']['pages']['total_count']
-                page = random.randint(0, pagecount)
-                pageresp = requests.get(url + '?page={}'.format(page))
-                print page
-                pageresp = pageresp.json()
-                self.assertIn('response', pageresp)
-                self.assertIn('docs', pageresp['response'])
-            except KeyError:
-                pass
-                '''
+    def test_incremental(self):
+        tdc = TDocumentCrawler()
+        tdc.execute()
+        tdc.execute(incremental=True)
+        states = CrawlerState.all().all()
+        assert len(states) == 3, len(states)
+
+    def test_crawler_save_data(self):
+        tdc = TDocumentCrawler()
+        text = 'banana fruit shop'
+        file_path = tdc.save_data(text)
+        out_text = open(file_path, 'r').read()
+        os.unlink(file_path)
+        assert out_text == text, (out_text, text)
+
+        file_path = tdc.save_data(None)
+        out_text = open(file_path, 'r').read()
+        assert out_text == '', out_text

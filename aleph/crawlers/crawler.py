@@ -97,7 +97,7 @@ class Crawler(object):
         fh, file_path = mkstemp()
         try:
             fh = os.fdopen(fh, 'w')
-            fh.write(data)
+            fh.write(data or '')
             fh.close()
             return file_path
         except Exception:

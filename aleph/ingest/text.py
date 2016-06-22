@@ -33,7 +33,7 @@ class TextIngestor(Ingestor):
         languages = self.get_languages(meta)
         data = extract_pdf(pdf_path, languages=languages)
         if not meta.has('author') and data.get('author'):
-            meta['author'] = data.get('author')
+            meta.author = data.get('author')
 
         if not meta.has('title') and data.get('title'):
             meta.title = data.get('title')

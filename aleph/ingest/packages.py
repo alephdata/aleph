@@ -101,11 +101,11 @@ class SingleFilePackageIngestor(PackageIngestor):
 
     def emit_file(self, meta, file_path):
         child = meta.clone()
-        child.clear('extension')
-        child.clear('file_name')
-        child.clear('content_hash')
-        child.clear('mime_type')
-        # child.clear('foreign_id')
+        child.extension = None
+        child.file_name = None
+        child.content_hash = None
+        child.mime_type = None
+        child.foreign_id = None
         child.parent = meta.clone()
         ingest_file(self.collection_id, child, file_path)
 

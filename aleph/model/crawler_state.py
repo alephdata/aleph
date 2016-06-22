@@ -104,6 +104,10 @@ class CrawlerState(db.Model):
         stats['last']['run_id'] = last_run_id
         return stats
 
+    @classmethod
+    def all(cls):
+        return db.session.query(CrawlerState)
+
     def to_dict(self):
         return {
             'id': self.id,

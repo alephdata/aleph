@@ -126,10 +126,10 @@ class OutlookIngestor(TextIngestor):
 
     def ingest_message(self, filepath, meta):
         child = meta.clone()
-        child.clear('title')
-        child.clear('extension')
-        child.clear('file_name')
-        child.clear('mime_type')
+        child.title = None
+        child.extension = None
+        child.file_name = None
+        child.mime_type = None
         child.parent = meta.clone()
         child.source_path = filepath
         ingest_file(self.source_id, child, filepath, move=True)
