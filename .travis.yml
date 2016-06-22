@@ -17,8 +17,9 @@ addons:
       - poppler-utils
       - libreoffice
 env:
-  - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
-  - WKHTMLTOPDF_BIN=$TRAVIS_BUILD_DIR/wkhtmltox/bin/wkhtmltopdf
+  global:
+    - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
+    - WKHTMLTOPDF_BIN=$TRAVIS_BUILD_DIR/wkhtmltox/bin/wkhtmltopdf
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y tesseract-ocr-eng readpst
