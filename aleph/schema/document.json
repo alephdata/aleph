@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "metadata.json#",
+    "id": "document.json#",
     "type": "object",
     "properties": {
         "file_name": {
@@ -103,6 +103,13 @@
             },
             "uniqueItems": true
         },
+        "collection_id": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 1
+        },
         "headers": {
             "type": ["null", "object"]
         },
@@ -110,5 +117,5 @@
             "type": ["null", "object"]
         }
     },
-    "required": ["file_name"]
+    "required": ["file_name", "collection_id"]
 }

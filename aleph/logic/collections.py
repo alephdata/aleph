@@ -36,6 +36,8 @@ def delete_collection(collection_id=None):
             document.delete(deleted_at=deleted_at)
             delete_document(document.id)
         else:
+            if collection_id == document.source_collection_id:
+                document.source_collection_id = None
             db.session.add(document)
             index_document(document.id)
 

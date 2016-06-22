@@ -10,6 +10,7 @@ from aleph.core import db
 from aleph.metadata import Metadata
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
+from aleph.model.validation import validate
 from aleph.model.common import DatedModel
 
 log = logging.getLogger(__name__)
@@ -21,6 +22,8 @@ collection_document_table = db.Table('collection_document',
 
 
 class Document(db.Model, DatedModel):
+    _schema = 'document.json#'
+
     TYPE_TEXT = 'text'
     TYPE_TABULAR = 'tabular'
     TYPE_OTHER = 'other'
@@ -55,6 +58,24 @@ class Document(db.Model, DatedModel):
             meta = meta.to_attr_dict()
         self._meta = meta
         flag_modified(self, '_meta')
+
+    def update(self, data, writeable):
+        validate(data, self._schema)
+        collection_id = data.pop('collection_id', [])
+        for coll in self.collections:
+            if coll.id == self.source_collection_id:
+                continue
+            if coll.id not in collection_id and coll.id in writeable:
+                self.collections.remove(coll)
+        for coll_id in collection_id:
+            if coll_id in writeable:
+                coll = Collection.by_id(coll_id)
+                if coll not in self.collections:
+                    self.collections.append(coll)
+        meta = self.meta
+        meta.update(data, safe=True)
+        self.meta = meta
+        db.session.add(self)
 
     def delete_pages(self):
         pq = db.session.query(DocumentPage)
@@ -108,11 +129,11 @@ class Document(db.Model, DatedModel):
 
     @property
     def collection_ids(self):
-        if not hasattr(self, '_collection_ids_cache'):
-            self._collection_ids_cache = [c.id for c in self.collections]
-            if self.source_collection_id not in self._collection_ids_cache:
-                self._collection_ids_cache.append(self.source_collection_id)
-        return self._collection_ids_cache
+        collection_ids = [c.id for c in self.collections]
+        if self.source_collection_id not in collection_ids:
+            if self.source_collection_id is not None:
+                collection_ids.append(self.source_collection_id)
+        return collection_ids
 
     def _add_to_dict(self, data):
         data.update({

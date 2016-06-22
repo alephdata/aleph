@@ -67,12 +67,8 @@ def update(document_id):
     # they cannot escalate privs:
     authz.require(authz.collection_write(document.source_collection_id))
     data = request_data()
-    validate(data, 'metadata.json#')
-    meta = document.meta
-    meta.update(data, safe=True)
-    document.meta = meta
+    document.update(data, writeable=authz.collections(authz.WRITE))
     db.session.commit()
-    # update collections
     index_document.delay(document_id)
     return view(document_id)
 

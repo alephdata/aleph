@@ -1,5 +1,7 @@
 import json
 
+from aleph.core import db
+from aleph.model import Collection, Permission
 from aleph.tests.util import TestCase
 
 
@@ -122,3 +124,34 @@ class DocumentsApiTestCase(TestCase):
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 400, res.json
+
+    def test_update_collections(self):
+        url = '/api/1/documents/1000'
+        ores = self.client.get(url)
+        user = self.login()
+        Permission.grant_collection(1000, user, True, True)
+
+        can_write = Collection.create({'label': "Write"}, user)
+        no_write = Collection.create({'label': "No-write"})
+        db.session.commit()
+
+        data = ores.json.copy()
+        data['collection_id'].append(can_write.id)
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, res
+        assert can_write.id in res.json['collection_id'], res.json
+
+        data = ores.json.copy()
+        data['collection_id'] = [no_write.id]
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, res
+        assert no_write.id not in res.json['collection_id'], res.json
+        assert 1000 in res.json['collection_id'], res.json
+
+        data = ores.json.copy()
+        data['collection_id'] = ['foo']
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 400, res
