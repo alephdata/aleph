@@ -8,6 +8,7 @@ from aleph import authz
 from aleph.core import get_archive, url_for, db
 from aleph.model import Document, Entity, Reference, Collection
 from aleph.model import validate
+from aleph.index import index_document
 from aleph.views.cache import enable_cache
 from aleph.search.tabular import tabular_query, execute_tabular_query
 from aleph.search.util import next_params
@@ -67,12 +68,12 @@ def update(document_id):
     authz.require(authz.collection_write(document.source_collection_id))
     data = request_data()
     validate(data, 'metadata.json#')
-    print data
     meta = document.meta
     meta.update(data, safe=True)
     document.meta = meta
     db.session.commit()
-    # TODO: index
+    # update collections
+    index_document.delay(document_id)
     return view(document_id)
 
 
