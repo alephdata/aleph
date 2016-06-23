@@ -1,0 +1,34 @@
+<!--div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">Create a collection of documents and entities</h4>
+</div-->
+
+<form class="form" role="form" name="createCollection" ng-submit="save(createCollection)">
+  <div class="modal-body">
+    <div class="form-group" ng-class="{'has-error': createCollection.label.$invalid}">
+      <label class="control-label" for="label">Label</label>
+      <div class="">
+        <input type="text" class="form-control input-lg" id="label" name="label" ng-model="collection.label"
+          placeholder="New collection">
+        <p class="help-block" ng-show="createCollection.label.$invalid" ng-bind="createCollection.label.$message"></p>
+        <p class="help-block" ng-hide="createCollection.label.$invalid">
+          Select a name for your new collection of documents and entities.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="category">Category</label>
+      <div class="">
+        <select class="form-control" id="category" name="category" ng-model="collection.category"
+          ng-options="slug as label for (slug, label) in categories"></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="!canSave()">Create</button>
+  </div>
+</form>
+

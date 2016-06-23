@@ -125,7 +125,7 @@ class DocumentsApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 400, res.json
 
-    def test_update_collections(self):
+    def test_update_collections_via_doc_update(self):
         url = '/api/1/documents/1000'
         ores = self.client.get(url)
         user = self.login()
@@ -152,6 +152,36 @@ class DocumentsApiTestCase(TestCase):
 
         data = ores.json.copy()
         data['collection_id'] = ['foo']
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 400, res
+
+    def test_update_collections(self):
+        url = '/api/1/documents/1000/collections'
+        ores = self.client.get(url)
+        user = self.login()
+
+        can_write = Collection.create({'label': "Write"}, user)
+        no_write = Collection.create({'label': "No-write"})
+        db.session.commit()
+
+        data = list(ores.json)
+        data.append(can_write.id)
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, res
+        assert can_write.id in res.json, res.json
+
+        data = list(ores.json)
+        data = [no_write.id]
+        res = self.client.post(url, data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, res
+        assert no_write.id not in res.json, res.json
+        assert 1000 in res.json, res.json
+
+        data = list(ores.json)
+        data = ['foo']
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 400, res

@@ -1,4 +1,5 @@
-aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', function($q, $http, $uibModal, Authz) {
+aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
+    function($q, $http, $uibModal, Authz, Metadata) {
   var indexDfd = null;
 
   function index() {
@@ -47,6 +48,18 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', function($q, $
     index: index,
     flush: flush,
     getWriteable: getWriteable,
+    create: function() {
+      var instance = $uibModal.open({
+        templateUrl: 'templates/collections_create.html',
+        controller: 'CollectionsCreateCtrl',
+        backdrop: true,
+        size: 'md',
+        resolve: {
+          metadata: Metadata.get()
+        }
+      });
+      return instance.result;
+    },
     edit: function(collection) {
       var instance = $uibModal.open({
         templateUrl: 'templates/collections_edit.html',
@@ -54,6 +67,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', function($q, $
         backdrop: true,
         size: 'lg',
         resolve: {
+          metadata: Metadata.get(),
           collection: function() {
             var dfd = $q.defer();  
             $http.get('/api/1/collections/' + collection.id).then(function(res) {

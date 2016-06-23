@@ -20,17 +20,17 @@
         overflow-y: scroll;
         overflow: -moz-scrollbars-vertical;
 
-        .badge {
-            background-color: $page-bg;
-            color: $text-muted;
-            padding-right: 0;
-        }
-
-        .facet {
+        li.list-group-item {
             cursor: pointer;
             white-space: nowrap;
             text-overflow: hidden;
             overflow-x: hidden;      
+
+            .badge {
+                background-color: $page-bg;
+                color: $text-muted;
+                padding-right: 0;
+            }
 
             &.empty {
                 color: $text-muted;
@@ -40,6 +40,11 @@
 
             &.active {
                 a {
+                    color: white;
+                }
+
+                .badge {
+                    background-color: $brand-primary;
                     color: white;
                 }
             }

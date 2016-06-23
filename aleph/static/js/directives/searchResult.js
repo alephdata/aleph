@@ -1,5 +1,5 @@
-aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSerializer',
-    function($location, $route, $sce, $httpParamSerializer) {
+aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSerializer', 'Collection',
+    function($location, $route, $sce, $httpParamSerializer, Collection) {
   return {
     restrict: 'E',
     scope: {
@@ -9,15 +9,17 @@ aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSeria
     },
     templateUrl: 'templates/search_result.html',
     link: function (scope, element, attrs) {
-      
-      var collections = [];
-      for (var i in scope.result.facets.collections.values) {
-        var collection = scope.result.facets.collections.values[i];
-        if (scope.doc.collection_id.indexOf(collection.id) != -1) {
-          collections.push(collection);
+
+      scope.collection = null;
+      var coll_id = scope.doc.source_collection_id || scope.doc.collection_id[0];
+      Collection.index().then(function(collections) {
+        for (var i in collections) {
+          var collection = collections[i];
+          if (collection.id == coll_id) {
+            scope.collection = collection;
+          }
         }
-      }
-      scope.collections = collections;
+      });
 
       for (var j in scope.doc.records.results) {
         var rec = scope.doc.records.results[j];

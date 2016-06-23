@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 
 
 @celery.task()
-def index_document(document_id):
+def index_document(document_id, index_records=True):
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
@@ -25,8 +25,9 @@ def index_document(document_id):
     get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
                    id=document.id)
 
-    clear_records(document.id)
-    bulk_op(generate_records(document))
+    if index_records:
+        clear_records(document.id)
+        bulk_op(generate_records(document))
 
 
 def delete_document(document_id):

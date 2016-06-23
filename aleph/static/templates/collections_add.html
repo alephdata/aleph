@@ -1,0 +1,24 @@
+<span class="btn-group collection-add" uib-dropdown auto-close="outsideClick"
+  on-toggle="toggleDropdown(open)" ng-if="visible">
+  <a uib-dropdown-toggle class="btn btn-default" ng-class="class">
+    <i class="fa fa-list"></i> Collect
+  </a>
+  <ul class="uib-dropdown-menu dropdown-menu-right" role="menu">
+    <li role="menuitem" ng-repeat="coll in collections">
+      <a ng-click="toggleCollection(coll)" class="action">
+        <span ng-show="parts[coll.id]"><i class="fa fa-check-square"></i></span>
+        <span ng-hide="parts[coll.id]"><i class="fa fa-square"></i></span>
+        {{::coll.label}} {{coll.is_part}}
+        <span class="inline" ng-click="openCollection(coll, $event)">
+          <i class="fa fa-arrow-circle-right"></i>
+        </span>
+      </a>
+    </li>
+    <li class="divider" ng-show="collections.length"></li>
+    <li role="menuitem">
+      <a ng-click="createCollection()" class="action">
+        <i class="fa fa-plus-square"></i> New collection
+      </a>
+    </li>
+  </ul>
+</span>

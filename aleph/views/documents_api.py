@@ -69,8 +69,26 @@ def update(document_id):
     data = request_data()
     document.update(data, writeable=authz.collections(authz.WRITE))
     db.session.commit()
-    index_document.delay(document_id)
+    index_document(document_id, index_records=False)
     return view(document_id)
+
+
+@blueprint.route('/api/1/documents/<int:document_id>/collections')
+def view_collections(document_id):
+    doc = get_document(document_id)
+    return jsonify(doc.collection_ids)
+
+
+@blueprint.route('/api/1/documents/<int:document_id>/collections',
+                 methods=['POST', 'PUT'])
+def update_collections(document_id):
+    document = get_document(document_id)
+    data = document.to_dict()
+    data['collection_id'] = request_data()
+    document.update(data, writeable=authz.collections(authz.WRITE))
+    db.session.commit()
+    index_document(document_id, index_records=False)
+    return view_collections(document_id)
 
 
 @blueprint.route('/api/1/documents/<int:document_id>/references')
