@@ -13,8 +13,8 @@ from aleph.model import Cache
 from aleph.ingest.ingestor import IngestorException
 from aleph.metadata.reference import get_languages_iso3
 
-# https://tesserwrap.readthedocs.org/en/latest/#
-# https://pillow.readthedocs.org/en/3.0.x/reference/Image.html
+# https://tesserwrap.readthedocs.io/en/latest/#
+# https://pillow.readthedocs.io/en/3.0.x/reference/Image.html
 log = logging.getLogger(__name__)
 
 
