@@ -1,9 +1,9 @@
 var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'ui.bootstrap',
-                                     'angular-loading-bar', 'ngFileUpload', 'truncate',
-                                     'pdf']);
+                                     'ui.select', 'angular-loading-bar', 'ngFileUpload',
+                                     'truncate', 'pdf']);
 
-aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoadingBarProvider',
-    function($routeProvider, $locationProvider, $compileProvider, cfpLoadingBarProvider) {
+aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoadingBarProvider', 'uiSelectConfig',
+    function($routeProvider, $locationProvider, $compileProvider, cfpLoadingBarProvider, uiSelectConfig) {
 
   $routeProvider.when('/search', {
     templateUrl: 'templates/search.html',
@@ -128,4 +128,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   $compileProvider.debugInfoEnabled(false);
   cfpLoadingBarProvider.includeSpinner = false;
   cfpLoadingBarProvider.latencyThreshold = 100;
+
+  uiSelectConfig.theme = 'bootstrap';
 }]);

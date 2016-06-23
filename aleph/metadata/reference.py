@@ -36,8 +36,12 @@ def get_languages_iso3(codes):
 
 
 def is_country_code(code):
+    if code is None:
+        return False
     return code.lower() in COUNTRY_NAMES.keys()
 
 
 def is_language_code(code):
+    if code is None:
+        return False
     return code.lower() in LANGUAGE_NAMES.keys()

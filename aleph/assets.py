@@ -21,6 +21,7 @@ angular_assets = Bundle(
     'vendor/angular-sanitize/angular-sanitize.js',
     'vendor/angular-loading-bar/src/loading-bar.js',
     'vendor/angular-animate/angular-animate.js',
+    'vendor/angular-ui-select/dist/select.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
     'vendor/ng-file-upload/ng-file-upload.js',
     filters='uglifyjs',
@@ -29,6 +30,7 @@ angular_assets = Bundle(
 
 css_assets = Bundle(
     'style/aleph.scss',
+    'vendor/angular-ui-select/dist/select.css',
     depends=['**/*.scss'],
     filters='scss,cssutils',
     output='assets/style.css'

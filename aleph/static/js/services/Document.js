@@ -1,6 +1,17 @@
 
-aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Query', 'History',
-    function($http, $q, $location, $sce, Query, History) {
+aleph.factory('Document', ['$http', '$q', '$location', '$sce', '$uibModal', 'Metadata', 'Query', 'History',
+    function($http, $q, $location, $sce, $uibModal, Metadata, Query, History) {
+
+  var getDocumentById = function(id) {
+    var dfd = $q.defer(),
+        url = '/api/1/documents/' + id;
+    $http.get(url, {cache: true}).then(function(res) {
+      dfd.resolve(res.data);
+    }, function(err) {
+      dfd.reject(err);
+    });
+    return dfd.promise;
+  };
 
   return {
     search: function() {
@@ -42,15 +53,19 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', 'Query', 'History
       });
       return dfd.promise;
     },
-    get: function(id) {
-      var dfd = $q.defer(),
-          url = '/api/1/documents/' + id;
-      $http.get(url, {cache: true}).then(function(res) {
-        dfd.resolve(res.data);
-      }, function(err) {
-        dfd.reject(err);
+    get: getDocumentById,
+    edit: function(id) {
+      var instance = $uibModal.open({
+        templateUrl: 'templates/document_edit.html',
+        controller: 'DocumentsEditCtrl',
+        backdrop: true,
+        size: 'md',
+        resolve: {
+          doc: getDocumentById(id),
+          metadata: Metadata.get()
+        }
       });
-      return dfd.promise;
+      return instance.result;
     },
     queryPages: function(documentId, query) {
       var dfd = $q.defer();

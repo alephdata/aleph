@@ -1,24 +1,30 @@
 
 <div class="panel panel-default panel-metadata">
   <div class="panel-heading">
+    <span class="pull-right">
+      <a class="btn btn-xs btn-default" ng-click="editDocument($event)"
+          ng-if="authz.documentWrite(doc)">
+        <i class="fa fa-cog"></i>
+      </a>
+    </span>
     <strong>Metadata</strong>
   </div>
   <table class="table">
-    <tr ng-if="doc.title">
+    <tr ng-if="::doc.title">
       <th>Title</th>
-      <td>{{doc.title}}</td>
+      <td>{{::doc.title}}</td>
     </tr>
     <tr>
       <th>Collections</th>
       <td>
         <span ng-repeat="coll in collections">
-          {{coll.label}}<span ng-if="!$last">,</span>
+          {{::coll.label}}<span ng-if="!$last">,</span>
         </span>
       </td>
     </tr>
-    <tr ng-if="doc.author">
+    <tr ng-if="::doc.author">
       <th>Author</th>
-      <td>{{doc.author}}</td>
+      <td>{{::doc.author}}</td>
     </tr>
     <tr ng-if="doc.recipients && doc.recipients.length">
       <th>Recipients</th>
@@ -28,71 +34,71 @@
         </span>
       </td>
     </tr>
-    <tr ng-if="doc.dates && doc.dates.length == 1">
+    <tr ng-if="::doc.dates && doc.dates.length == 1">
       <th>Date</th>
       <td>
-       {{doc.dates[0] | date}}
+       {{::doc.dates[0] | date}}
       </td>
     </tr>
-    <tr ng-if="doc.languages && doc.languages.length">
+    <tr ng-if="::doc.languages && doc.languages.length">
       <th>Languages</th>
       <td>
         <span ng-repeat="lang in doc.languages">
-          {{lang | language}}<span ng-if="!$last">;</span>
+          {{::lang | language}}<span ng-if="!$last">;</span>
         </span>
       </td>
     </tr>
-    <tr ng-if="doc.countries && doc.countries.length">
+    <tr ng-if="::doc.countries && doc.countries.length">
       <th>Countries</th>
       <td>
         <span ng-repeat="cc in doc.countries">
-          {{cc | country}}<span ng-if="!$last">;</span>
+          {{::cc | country}}<span ng-if="!$last">;</span>
         </span>
       </td>
     </tr>
-    <tr ng-if="doc.keywords && doc.keywords.length">
+    <tr ng-if="::doc.keywords && doc.keywords.length">
       <th>Keywords</th>
       <td>
         <span ng-repeat="kw in doc.keywords">
-          {{kw}}<span ng-if="!$last">;</span>
+          {{::kw}}<span ng-if="!$last">;</span>
         </span>
       </td>
     </tr>
     <tr>
       <th>Updated</th>
-      <td>{{doc.updated_at | date}}</td>
+      <td>{{::doc.updated_at | date}}</td>
     </tr>
-    <tr ng-if="doc.summary">
+    <tr ng-if="::doc.summary">
       <th>Summary</th>
-      <td>{{doc.summary}}</td>
+      <td>{{::doc.summary}}</td>
     </tr>
-    <tr ng-if="doc.source_url">
+    <tr ng-if="::doc.source_url">
       <th>Source&nbsp;URL</th>
-      <td><a ng-href="{{doc.source_url}}" target="_new">{{doc.source_url | host}}</a></td>
+      <td><a ng-href="{{::doc.source_url}}" target="_new">{{::doc.source_url | host}}</a></td>
     </tr>
-    <tr ng-if="doc.file_name">
+    <tr ng-if="::doc.file_name">
       <th>File</th>
-      <td><code>{{doc.file_name}}</code></td>
+      <td><code>{{::doc.file_name}}</code></td>
     </tr>
-    <tr ng-if="doc.mime_type">
+    <tr ng-if="::doc.mime_type">
       <th>Type</th>
-      <td><code>{{doc.mime_type}}</code></td>
+      <td><code>{{::doc.mime_type}}</code></td>
     </tr>
-    <tr ng-if="doc.source_url">
+    <tr ng-if="::doc.source_url">
       <th>Checksum</th>
-      <td><code>{{doc.content_hash}}</code></td>
+      <td><code>{{::doc.content_hash}}</code></td>
     </tr>
     <tr>
       <td colspan="2">
         <div class="btn-group" role="group">
-          <a ng-href="/api/1/documents/{{doc.id}}/file" target="_self" download="{{doc.file_name}}" class="btn btn-default">
+          <a ng-href="/api/1/documents/{{::doc.id}}/file" target="_self" download="{{::doc.file_name}}" class="btn btn-default">
             <i class="fa fa-cloud-download"></i> Download
-            <span ng-if="doc.extension">
-              ({{doc.extension}})
+            <span ng-if="::doc.extension">
+              ({{::doc.extension}})
             </span>
           </a>
-          <a ng-if="doc.type =='text' && !doc.is_pdf"
-            ng-href="/api/1/documents/{{doc.id}}/pdf" target="_self" download="{{doc.file_name}}.pdf" class="btn btn-default">
+          <a ng-if="::doc.type =='text' && !doc.is_pdf"
+            ng-href="/api/1/documents/{{::doc.id}}/pdf" target="_self" download="{{::doc.file_name}}.pdf" class="btn btn-default">
             <i class="fa fa-cloud-download"></i> Download PDF
           </a>
         </div>

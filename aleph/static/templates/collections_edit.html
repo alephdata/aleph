@@ -26,9 +26,14 @@
         <div class="form-group">
           <label class="control-label" for="creator">Contact</label>
           <div class="">
-            <select class="form-control" id="creator" name="creator"
-              ng-model="collection.creator_id"
-              ng-options="r.id as r.name for r in roles"></select>
+            <div class="">
+              <ui-select ng-model="collection.creator_id">
+                <ui-select-match placeholder="Select user...">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="role.id as role in roles | filter: {'name': $select.search}">
+                  <div ng-bind-html="role.name | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
           </div>
         </div>
 

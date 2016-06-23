@@ -1,5 +1,5 @@
 
-aleph.directive('metadataSidebar', ['Collection', function(Collection) {
+aleph.directive('metadataSidebar', ['Collection', 'Document', 'Authz', function(Collection, Document, Authz) {
   return {
     restrict: 'E',
     scope: {
@@ -7,6 +7,14 @@ aleph.directive('metadataSidebar', ['Collection', function(Collection) {
     },
     templateUrl: 'templates/metadata_sidebar.html',
     link: function (scope, element, attrs, model) {
+      scope.authz = Authz;
+
+      scope.editDocument = function() {
+        Document.edit(scope.doc.id).then(function(res) {
+          scope.doc = res;
+        })
+      };
+
       Collection.index().then(function(data) {
         var collections = [];
         for (var id in scope.doc.collection_id) {

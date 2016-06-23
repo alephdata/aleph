@@ -1,5 +1,6 @@
 
 aleph.factory('Authz', ['$rootScope', function($rootScope) {
+
   var collection = function(right, collection_id) {
     if ($rootScope.session.permissions && $rootScope.session.permissions[right]) {
       return $rootScope.session.permissions[right].indexOf(collection_id) != -1;
@@ -17,6 +18,9 @@ aleph.factory('Authz', ['$rootScope', function($rootScope) {
         }
       }
       return false;
+    },
+    documentWrite: function(doc) {
+      return collection('write', doc.source_collection_id);
     },
     logged_in: function() {
       return $rootScope.session && $rootScope.session.logged_in;

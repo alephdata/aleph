@@ -2,120 +2,17 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "document.json#",
     "type": "object",
+    "oneOf": [
+        {"$ref": "metadata.json#"}
+    ],
     "properties": {
-        "file_name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2048
-        },
-        "foreign_id": {
-            "type": "string"
-        },
-        "content_hash": {
-            "type": "string"
-        },
-        "title": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2048
-        },
-        "summary": {
-            "type": "string"
-        },
-        "author": {
-            "type": "string"
-        },
-        "extension": {
-            "type": "string"
-        },
-        "mime_type": {
-            "type": "string"
-        },
-        "source_url": {
-            "type": "string"
-        },
-        "source_path": {
-            "type": "string"
-        },
-        "dates": {
-            "type": "array",
-            "items": {
-                "type": "string",
-                "format": "date"
-            },
-            "uniqueItems": true
-        },
-        "keywords": {
-            "type": "array",
-            "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 2048
-            },
-            "uniqueItems": true
-        },
-        "phone_numbers": {
-            "type": "array",
-            "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 256
-            },
-            "uniqueItems": true
-        },
-        "countries": {
-            "type": "array",
-            "items": {
-                "type": "string",
-                "format": "country-code"
-            },
-            "uniqueItems": true
-        },
-        "languages": {
-            "type": "array",
-            "items": {
-                "type": "string",
-                "format": "language-code"
-            },
-            "uniqueItems": true
-        },
-        "emails": {
-            "type": "array",
-            "items": {
-                "type": "string",
-                "format": "email"
-            },
-            "uniqueItems": true
-        },
-        "urls": {
-            "type": "array",
-            "items": {
-                "type": "string",
-                "format": "url"
-            },
-            "uniqueItems": true
-        },
-        "domains": {
-            "type": "array",
-            "items": {
-                "type": "string",
-                "format": "hostname"
-            },
-            "uniqueItems": true
-        },
         "collection_id": {
             "type": "array",
             "items": {
                 "type": "number"
             },
             "minItems": 1
-        },
-        "headers": {
-            "type": ["null", "object"]
-        },
-        "parent": {
-            "type": ["null", "object"]
         }
     },
-    "required": ["file_name", "collection_id"]
+    "required": ["collection_id"]
 }
