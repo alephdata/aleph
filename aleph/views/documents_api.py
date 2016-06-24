@@ -56,7 +56,6 @@ def view(document_id):
         if data.get('pdf_url') is None:
             data['pdf_url'] = url_for('documents_api.pdf',
                                       document_id=document_id)
-    # data['collections'] = doc.collections
     return jsonify(data)
 
 

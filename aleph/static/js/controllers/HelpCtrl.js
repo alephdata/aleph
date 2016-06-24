@@ -9,4 +9,11 @@ aleph.controller('HelpCtrl', ['$scope', '$location', '$routeParams', '$templateC
       htmlDoc = parser.parseFromString(template, "text/html");
   $scope.title = htmlDoc.getElementById('title').innerHTML;
   Title.set($scope.title || "Documentation", "help");
+
+  $scope.isActive = function(path) {
+    if ($location.path() == path) {
+      return 'active';
+    }
+  };
+
 }]);

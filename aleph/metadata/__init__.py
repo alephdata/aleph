@@ -363,10 +363,9 @@ class Metadata(object):
 
     def to_dict(self):
         """Generate REST API form."""
-        data = self.to_index_dict()
-        data['parent'] = self.parent
+        data = self.to_attr_dict(compute=True)
+        data.pop('pdf_version', None)
         data['is_pdf'] = self.is_pdf
-        data['headers'] = self.headers
         return data
 
     def __repr__(self):

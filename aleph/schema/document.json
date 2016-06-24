@@ -12,6 +12,16 @@
                 "type": "number"
             },
             "minItems": 1
+        },
+        "source_collection_id": {
+            "type": ["null", "number"]
+        },
+        "type": {
+            "type": "string",
+            "enum": ["tabular", "text", "other"]
+        },
+        "id": {
+            "type": "number"
         }
     },
     "required": ["collection_id"]

@@ -29,6 +29,7 @@ aleph.controller('DocumentsEditCtrl', ['$scope', '$http', '$q', '$uibModalInstan
       $uibModalInstance.close(res.data);
     }, function(err) {
       // handle error
+      $scope.blocked = false;
     });
   };
 

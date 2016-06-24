@@ -19,7 +19,9 @@
         font-family: $font-family-sans-serif;
     }
 
-    font-family: $font-family-serif;
-    font-size: $base-unit * 1.4;
-    line-height: 1.5em;
+    .help-page {
+        font-family: $font-family-serif;
+        font-size: $base-unit * 1.4;
+        line-height: 1.5em;    
+    }
 }

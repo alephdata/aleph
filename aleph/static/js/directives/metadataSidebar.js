@@ -1,5 +1,6 @@
 
-aleph.directive('metadataSidebar', ['Collection', 'Document', 'Authz', function(Collection, Document, Authz) {
+aleph.directive('metadataSidebar', ['$route', 'Collection', 'Document', 'Authz',
+    function($route, Collection, Document, Authz) {
   return {
     restrict: 'E',
     scope: {
@@ -11,7 +12,7 @@ aleph.directive('metadataSidebar', ['Collection', 'Document', 'Authz', function(
 
       scope.editDocument = function() {
         Document.edit(scope.doc.id).then(function(res) {
-          scope.doc = res;
+          $route.reload();
         })
       };
 

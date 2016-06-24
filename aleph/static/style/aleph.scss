@@ -79,9 +79,16 @@ footer {
     color: text-muted;
 }
 
-.list-group-item.active .badge {
-    background-color: $brand-primary;
+.list-group-item.active {
+    .badge {
+        background-color: $brand-primary;
+        color: $page-bg;
+    }
     color: $page-bg;
+
+    a {
+        color: $page-bg;        
+    }
 }
 
 .modal-table {
@@ -143,6 +150,13 @@ footer {
 
 
 // used by the collections dropdown-menu
+
+.btn.btn-default {
+    &:hover {
+        color: black;
+    }
+}
+
 .dropdown-menu li a {
     width: 100%;
     position: relative;

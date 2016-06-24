@@ -4,7 +4,7 @@
     <span class="pull-right">
       <a class="btn btn-xs btn-default" ng-click="editDocument($event)"
           ng-if="authz.documentWrite(doc)">
-        <i class="fa fa-cog"></i>
+        <i class="fa fa-edit"></i> Edit
       </a>
     </span>
     <strong>Metadata</strong>
@@ -91,7 +91,7 @@
     <tr>
       <td colspan="2">
         <div class="pull-right">
-          <collections-add doc="doc" class="btn-default"></collections-add>
+          <collections-add doc="doc" class="btn-primary"></collections-add>
         </div>
         <div class="btn-group" role="group">
           <a ng-href="/api/1/documents/{{::doc.id}}/file" target="_self" download="{{::doc.file_name}}" class="btn btn-default">

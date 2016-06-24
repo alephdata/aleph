@@ -109,6 +109,5 @@
         "parent": {
             "type": ["null", "object"]
         }
-    },
-    "required": ["file_name"]
+    }
 }

@@ -102,12 +102,6 @@ class DocumentsApiTestCase(TestCase):
         self.login(is_admin=True)
 
         data = ores.json.copy()
-        data.pop('file_name')
-        res = self.client.post(url, data=json.dumps(data),
-                               content_type='application/json')
-        assert res.status_code == 400, res.json
-
-        data = ores.json.copy()
         data['countries'] = ['xz']
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
