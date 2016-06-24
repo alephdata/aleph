@@ -25,8 +25,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     loginRequired: false,
     resolve: {
       'data': loadTabular,
-      'metadata': loadMetadata,
-      'references': loadReferences
+      'metadata': loadMetadata
     }
   });
 
@@ -38,8 +37,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     resolve: {
       'data': loadText,
       'metadata': loadMetadata,
-      'pages': loadPagesQuery,
-      'references': loadReferences
+      'pages': loadPagesQuery
     }
   });
 
