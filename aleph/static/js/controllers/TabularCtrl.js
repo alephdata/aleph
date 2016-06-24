@@ -1,11 +1,10 @@
 
-aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Authz', 'Title', 'History', 'data', 'references',
-    function($scope, $location, $http, $sce, $sanitize, $filter, Authz, Title, History, data, references) {
+aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Authz', 'Title', 'History', 'data',
+    function($scope, $location, $http, $sce, $sanitize, $filter, Authz, Title, History, data) {
 
   $scope.doc = data.doc;
   $scope.table = data.table;
   $scope.rows = data.rows;
-  $scope.references = references;
   $scope.moreLoading = false;
   $scope.searchCtx = $location.search().ctx;
   $scope.textQuery = $location.search().dq;
