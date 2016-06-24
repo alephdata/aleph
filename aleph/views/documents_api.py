@@ -102,7 +102,7 @@ def references(document_id):
     clause = Collection.id.in_(authz.collections(authz.READ))
     q = q.filter(Entity.collections.any(clause))
     q = q.order_by(Reference.weight.desc())
-    return jsonify({'results': q.all()})
+    return jsonify(Pager(q))
 
 
 @blueprint.route('/api/1/documents/<int:document_id>/file')
