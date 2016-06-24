@@ -18,7 +18,6 @@
       <table class="table table-bordered table-striped table-condensed">
         <thead>
           <tr>
-            <td>haha</td>
             <th ng-repeat="col in table.columns" data-type="{{::col.type}}">
               {{::col.label}}
             </th>
@@ -26,7 +25,6 @@
         </thead>
         <tbody>
           <tr ng-repeat="row in rows.results" ng-class="::{'highlight': isHighlighted(row)}">
-            <td>huhu</td>
             <td ng-repeat="col in table.columns" ng-class="::getClass(row, col)"
                 ng-bind-html="::formatCell(row, col)"></td>
           </tr>
