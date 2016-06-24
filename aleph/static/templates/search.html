@@ -8,7 +8,8 @@
         <button type="button" class="btn btn-primary dropdown-toggle"
           uib-dropdown-toggle>
           <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
-          Sort by...
+          Sort
+          <i class="fa fa-caret-down"></i>
         </button>
         <ul class="uib-dropdown-menu" role="menu">
           <li ng-repeat="(field, label) in sortOptions"
@@ -29,10 +30,10 @@
           ng-disabled="!canCreateAlert()"
           ng-class="{'btn-success': hasAlert(), 'btn-primary': !hasAlert()}">
           <i class="fa fa-bell"></i>
-          <span ng-show="hasAlert()">
+          <span ng-if="hasAlert()">
             Disable alert
           </span>
-          <span ng-hide="hasAlert()">
+          <span ng-if="!hasAlert()">
             Set alert
           </span>
         </button>
@@ -111,7 +112,7 @@
         <span class="pull-right">
           <a class="btn btn-xs btn-default" ng-click="createEntity($event)"
               ng-if="authz.logged_in()">
-            <i class="fa fa-plus"></i>
+            <i class="fa fa-plus"></i> New
           </a>
         </span>
         <strong>Persons and Companies</strong>
