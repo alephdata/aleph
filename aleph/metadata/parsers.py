@@ -56,8 +56,11 @@ def parse_url(text):
 
 def is_valid_domain(domain):
     """Validate an IDN compatible domain."""
-    domain = domain.encode('idna').lower()
-    return bool(VALID_DOMAIN.match(domain))
+    try:
+        domain = domain.encode('idna').lower()
+        return bool(VALID_DOMAIN.match(domain))
+    except:
+        return False
 
 
 def parse_domain(text):

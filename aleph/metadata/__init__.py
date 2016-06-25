@@ -84,7 +84,7 @@ class Metadata(object):
 
     @parent.setter
     def parent(self, parent):
-        if isinstance(parent, Metadata) and isinstance(self._parent, dict):
+        if isinstance(parent, Metadata):
             parent = parent.to_attr_dict()
         self._parent = parent
 
