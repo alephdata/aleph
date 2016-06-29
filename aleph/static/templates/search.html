@@ -51,10 +51,6 @@
     <search-entity-suggest query="query"></search-entity-suggest>
 
     <div>
-      <div ng-repeat="doc in result.results">
-        <search-result doc="doc" result="result" query="query"></search-result>
-      </div>
-
       <!-- peek feature -->
       <div class="alert alert-suggest" role="alert" ng-if="peek.active">
         <strong>{{peek.total}} hidden results</strong> are available.
@@ -68,6 +64,10 @@
           <a ng-href="/api/1/sessions/login" target="_self">Sign in</a>
           to see who to contact for access.
         </span>
+      </div>
+
+      <div ng-repeat="doc in result.results">
+        <search-result doc="doc" result="result" query="query"></search-result>
       </div>
 
       <div class="bottom-pager">
