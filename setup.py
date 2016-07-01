@@ -29,6 +29,7 @@ setup(
             'doc = aleph.ingest.document:DocumentIngestor',
             'ppt = aleph.ingest.document:PresentationIngestor',
             'html = aleph.ingest.html:HtmlIngestor',
+            'djvu = aleph.ingest.djvu:DjVuIngestor',
             'img = aleph.ingest.image:ImageIngestor',
             'email = aleph.ingest.email:EmailFileIngestor',
             'pst = aleph.ingest.email:OutlookIngestor',

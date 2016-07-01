@@ -32,6 +32,7 @@ PDFTOPPM_BIN = env.get('PDFTOPPM_BIN', 'pdftoppm')
 CONVERT_BIN = env.get('CONVERT_BIN', 'convert')
 SOFFICE_BIN = env.get('SOFFICE_BIN', 'soffice')
 WKHTMLTOPDF_BIN = env.get('WKHTMLTOPDF_BIN', 'wkhtmltopdf')
+DDJVU_BIN = env.get('DDJVU_BIN', 'ddjvu')
 
 SECRET_KEY = env.get('SECRET_KEY')
 

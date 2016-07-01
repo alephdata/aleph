@@ -347,9 +347,8 @@ class Metadata(object):
         # for indexing.
         data = {}
         for field in self.fields.values():
-            if self.has(field.name):
-                name = field.name if compute else field.attr
-                data[field.name] = getattr(self, name)
+            name = field.name if compute else field.attr
+            data[field.name] = getattr(self, name)
         return data
 
     def to_index_dict(self):
