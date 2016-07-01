@@ -19,7 +19,7 @@ RUN apt-get -y dist-upgrade && apt-get install -y -q  \
         tesseract-ocr-hrv tesseract-ocr-hun tesseract-ocr-rus \
         tesseract-ocr-pol tesseract-ocr-slk tesseract-ocr-slv \
         tesseract-ocr-sqi tesseract-ocr-srp tesseract-ocr-tur \
-        tesseract-ocr-ukr nodejs \ 
+        tesseract-ocr-ukr nodejs djvulibre-bin \ 
   && apt-get -y autoremove && apt-get clean
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
 
