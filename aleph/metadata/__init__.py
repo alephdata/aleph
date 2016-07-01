@@ -348,7 +348,9 @@ class Metadata(object):
         data = {}
         for field in self.fields.values():
             name = field.name if compute else field.attr
-            data[field.name] = getattr(self, name)
+            value = getattr(self, name)
+            if value is not None:
+                data[field.name] = value
         return data
 
     def to_index_dict(self):

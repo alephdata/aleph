@@ -16,6 +16,7 @@ addons:
       - wkhtmltopdf
       - poppler-utils
       - libreoffice
+      - djvulibre-bin
 env:
   global:
     - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
