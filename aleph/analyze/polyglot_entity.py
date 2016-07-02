@@ -23,14 +23,14 @@ class PolyglotEntityAnalyzer(Analyzer):
     origin = 'polyglot'
 
     def prepare(self):
-        self.disabled = True
+        self.collections = []
         for collection in self.document.collections:
             if collection.generate_entities:
-                self.disabled = False
+                self.collections.append(collection)
         self.entities = defaultdict(list)
 
     def on_text(self, text):
-        if self.disabled:
+        if not len(self.collections):
             return
         if text is None or len(text) <= 100:
             return
@@ -52,15 +52,6 @@ class PolyglotEntityAnalyzer(Analyzer):
         except Exception as ex:
             log.warning('NER failed: %r', ex)
 
-    def load_collection(self):
-        if not hasattr(self, '_collection'):
-            self._collection = Collection.create({
-                'foreign_id': 'polyglot:ner',
-                'label': 'Automatically Extracted Persons and Companies',
-                'public': True
-            })
-        return self._collection
-
     def load_entity(self, name, schema):
         q = db.session.query(EntityIdentifier)
         q = q.order_by(EntityIdentifier.deleted_at.desc().nullsfirst())
@@ -69,6 +60,7 @@ class PolyglotEntityAnalyzer(Analyzer):
         ident = q.first()
         if ident is not None:
             if ident.deleted_at is None:
+                # TODO: add to collections? Security risk here.
                 return ident.entity_id
             if ident.entity.deleted_at is None:
                 return None
@@ -81,13 +73,13 @@ class PolyglotEntityAnalyzer(Analyzer):
                 'scheme': self.origin,
                 'identifier': name
             }],
-            'collections': [self.load_collection()]
+            'collections': self.collections
         }
         entity = Entity.save(data)
         return entity.id
 
     def finalize(self):
-        if self.disabled:
+        if not len(self.collections):
             return
 
         output = []
