@@ -73,13 +73,13 @@ class Crawler(object):
         meta.crawler_run = self.crawler_run
         return meta
 
-    def save_response(self, res, suffix=None):
+    def save_response(self, res):
         """Store the return data from a requests response to a file."""
         # This must be a streaming response.
         if res.status_code >= 400:
             message = "Error ingesting %r: %r" % (res.url, res.status_code)
             raise CrawlerException(message)
-        fh, file_path = mkstemp(suffix=suffix)
+        fh, file_path = mkstemp()
         try:
             fh = os.fdopen(fh, 'w')
             for chunk in res.iter_content(chunk_size=1024):
