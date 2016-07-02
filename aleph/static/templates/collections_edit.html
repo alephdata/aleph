@@ -61,6 +61,17 @@
           <div class="">
             <div class="checkbox">
               <label>
+                <input type="checkbox" ng-model="collection.private">
+                Exclude collection from hidden document searches.
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="">
+            <div class="checkbox">
+              <label>
                 <input type="checkbox" ng-model="collection.generate_entities">
                 Detect and store entities found in documents.
               </label>

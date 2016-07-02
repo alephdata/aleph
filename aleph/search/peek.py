@@ -76,7 +76,7 @@ def peek_query(args):
     roles = {}
     for bucket in buckets:
         collection = objs.get(bucket.get('key'))
-        if collection is None:
+        if collection is None or collection.private:
             continue
         if collection.creator_id in roles:
             roles[collection.creator_id]['total'] += bucket.get('doc_count')

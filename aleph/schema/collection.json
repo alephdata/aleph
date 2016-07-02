@@ -11,6 +11,9 @@
         "managed": {
             "type": "boolean"
         },
+        "private": {
+            "type": "boolean"
+        },
         "generate_entities": {
             "type": "boolean"
         },
