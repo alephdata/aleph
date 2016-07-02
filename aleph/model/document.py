@@ -119,6 +119,16 @@ class Document(db.Model, DatedModel):
         if len(chunk):
             db.session.bulk_insert_mappings(DocumentRecord, chunk)
 
+    def text_parts(self):
+        if self.type == self.TYPE_TEXT:
+            for page in self.pages:
+                for text in page.text_parts():
+                    yield text
+        elif self.type == self.TYPE_TABULAR:
+            for record in self.records:
+                for text in record.text_parts():
+                    yield text
+
     @classmethod
     def get_max_id(cls):
         q = db.session.query(func.max(cls.id))

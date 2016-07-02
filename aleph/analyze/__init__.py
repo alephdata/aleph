@@ -38,34 +38,16 @@ def analyze_document(document_id):
     analyzers = []
     meta = document.meta
     for cls in get_analyzers():
-        try:
-            analyzer = cls(document, meta)
-            analyzer.prepare()
-            analyzers.append(analyzer)
-        except Exception as ex:
-            log.exception(ex)
+        analyzer = cls(document, meta)
+        analyzer.prepare()
+        analyzers.append(analyzer)
 
-    if document.type == Document.TYPE_TEXT:
-        for page in document.pages:
-            for analyzer in analyzers:
-                analyzer.on_page(page)
-            for text in page.text_parts():
-                for analyzer in analyzers:
-                    analyzer.on_text(text)
-
-    if document.type == Document.TYPE_TABULAR:
-        for record in document.records:
-            for analyzer in analyzers:
-                analyzer.on_record(record)
-            for text in record.text_parts():
-                for analyzer in analyzers:
-                    analyzer.on_text(text)
+    for text in document.text_parts():
+        for analyzer in analyzers:
+            analyzer.on_text(text)
 
     for analyzer in analyzers:
-        try:
-            analyzer.finalize()
-        except Exception as ex:
-            log.exception(ex)
+        analyzer.finalize()
     document.meta = meta
     db.session.add(document)
     db.session.commit()
