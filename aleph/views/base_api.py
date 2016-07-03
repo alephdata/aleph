@@ -5,7 +5,7 @@ from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
 from elasticsearch import TransportError
 
-from aleph.core import get_config
+from aleph.core import get_config, get_app_title, get_app_url
 from aleph.model import Collection
 from aleph.metadata import Metadata
 from aleph.metadata.reference import COUNTRY_NAMES, LANGUAGE_NAMES
@@ -64,6 +64,10 @@ def metadata():
         }
     return jsonify({
         'status': 'ok',
+        'app': {
+            'title': get_app_title(),
+            'url': get_app_url()
+        },
         'fields': Metadata.facets(),
         'categories': Collection.CATEGORIES,
         'countries': COUNTRY_NAMES,

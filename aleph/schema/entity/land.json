@@ -9,7 +9,7 @@
   "faIcon": "fa-map",
   "graph": "node",
   "oneOf": [
-      {"$ref": "asset.json#"}
+      {"$ref": "/entity/asset.json#"}
   ],
   "properties": {
     "parcel_number": {

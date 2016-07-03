@@ -25,6 +25,14 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$http', '$timeout', '$anchorSc
     });
   };
 
+  $scope.getReconciliationUrl = function() {
+    var url = metadata.app.url + 'api/freebase/reconcile';
+    if (metadata.session.logged_in) {
+      url += '?api_key=' + metadata.session.api_key;
+    }
+    return url;
+  };
+
   $scope.hasAlert = function(entity) {
     return Alert.check({entity_id: entity.id});
   };

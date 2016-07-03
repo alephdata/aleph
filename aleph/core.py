@@ -90,6 +90,14 @@ def get_app_url():
     return urljoin(current_app.config.get('APP_BASEURL'), '/')
 
 
+def get_app_name():
+    return current_app.config.get('APP_NAME', 'aleph')
+
+
+def get_app_title():
+    return current_app.config.get('APP_TITLE') or get_app_name()
+
+
 def get_es():
     app = current_app._get_current_object()
     if not hasattr(app, '_es_instance'):

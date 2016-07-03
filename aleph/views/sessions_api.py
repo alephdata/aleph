@@ -26,16 +26,16 @@ def load_role():
     request.auth_role = None
     request.logged_in = False
 
-    auth_header = request.headers.get('Authorization')
-
     if session.get('user'):
         request.auth_roles.update(session.get('roles', []))
         request.auth_role = Role.by_id(session.get('user'))
         request.logged_in = True
-    elif auth_header is not None:
-        if not auth_header.lower().startswith('apikey'):
-            return
-        api_key = auth_header.split(' ', 1).pop()
+    else:
+        api_key = request.args.get('api_key')
+        if api_key is None:
+            auth_header = request.headers.get('Authorization') or ''
+            if auth_header.lower().startswith('apikey'):
+                api_key = auth_header.split(' ', 1).pop()
         role = Role.by_api_key(api_key)
         if role is None:
             return

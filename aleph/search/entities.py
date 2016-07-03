@@ -7,7 +7,8 @@ from aleph.core import url_for, get_es, get_es_index
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.search.util import authz_filter
 from aleph.search.util import execute_basic, parse_filters
-from aleph.search.fragments import match_all, filter_query, aggregate
+from aleph.search.fragments import match_all, filter_query
+from aleph.search.fragments import add_filter, aggregate
 from aleph.search.facets import convert_entity_aggregations
 from aleph.text import latinize_text
 
@@ -82,37 +83,35 @@ def facet_collections(q, aggs, filters):
     return aggs
 
 
-def suggest_entities(args):
+def suggest_entities(prefix, min_count=0, schemas=None, size=5):
     """Auto-complete API."""
-    text = args.get('prefix')
-    min_count = int(args.get('min_count', 0))
     options = []
-    if text is not None and len(text.strip()):
+    if prefix is not None and len(prefix.strip()):
         q = {
-            'bool': {
-                'must': [
-                    {'match_phrase_prefix': {'terms': text.strip()}},
-                    {'range': {'doc_count': {'gte': min_count}}}
-                ]
-            }
+            'match_phrase_prefix': {'terms': prefix.strip()}
         }
+        if min_count > 0:
+            q = add_filter(q, {'range': {'doc_count': {'gte': min_count}}})
+        if schemas is not None and len(schemas):
+            q = add_filter(q, {'terms': {'$schema': schemas}})
         q = {
-            'size': 5,
+            'size': size,
             'sort': [{'doc_count': 'desc'}, '_score'],
             'query': authz_filter(q),
             '_source': ['name', '$schema', 'terms', 'doc_count']
         }
-        ref = latinize_text(text)
+        ref = latinize_text(prefix)
         result = get_es().search(index=get_es_index(), doc_type=TYPE_ENTITY,
                                  body=q)
         for res in result.get('hits', {}).get('hits', []):
             ent = res.get('_source')
             terms = [latinize_text(t) for t in ent.pop('terms', [])]
             ent['match'] = ref in terms
+            ent['score'] = res.get('_score')
             ent['id'] = res.get('_id')
             options.append(ent)
     return {
-        'text': text,
+        'prefix': prefix,
         'results': options
     }
 

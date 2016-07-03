@@ -70,10 +70,12 @@ def _check_schema_match(visitor, schema_uri):
 def implied_schemas(schema_uri):
     # Given a schema URI, return a list of implied (i.e. child) schema URIs,
     # with the original schema included.
-    schemas = [schema_uri]
+    if schema_uri is None or not len(schema_uri.strip()):
+        return []
+    schemas = set([schema_uri])
     for uri, data in resolver.store.items():
         if isinstance(data, dict):
             visitor = SchemaVisitor(data, resolver)
             if _check_schema_match(visitor, schema_uri):
-                schemas.append(data.get('id'))
-    return schemas
+                schemas.add(data.get('id'))
+    return list(schemas)

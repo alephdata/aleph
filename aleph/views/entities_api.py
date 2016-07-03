@@ -72,7 +72,9 @@ def create():
 def suggest():
     collections = authz.collections(authz.READ)
     enable_cache(vary=collections, server_side=False)
-    return jsonify(suggest_entities(request.args))
+    prefix = request.args.get('prefix')
+    min_count = int(request.args.get('min_count', 0))
+    return jsonify(suggest_entities(prefix, min_count))
 
 
 @blueprint.route('/api/1/entities/_pending', methods=['GET'])
