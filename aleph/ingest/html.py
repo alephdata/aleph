@@ -35,6 +35,8 @@ class HtmlIngestor(DocumentIngestor):
         os.close(fh)
         with open(local_path, 'rb') as fh:
             data = fh.read()
+        if meta.encoding:
+            data = data.decode(meta.encoding)
         doc = html.fromstring(data)
         if not meta.has('title'):
             title = doc.findtext('.//title')

@@ -21,10 +21,11 @@ class LanguageAnalyzer(Analyzer):
         return LanguageAnalyzer._identifier
 
     def prepare(self):
-        self.disabled = len(self.meta.languages) > 0
         self.languages = defaultdict(float)
 
     def on_text(self, text):
+        if len(self.meta.languages) > 0:
+            return
         if len(text.strip()) < CUTOFF:
             return
         lang, score = self.identifier.classify(text)
@@ -32,6 +33,8 @@ class LanguageAnalyzer(Analyzer):
             self.languages[lang] += score * len(text)
 
     def finalize(self):
+        if len(self.meta.languages) > 0:
+            return
         if not len(self.languages):
             return
 

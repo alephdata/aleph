@@ -36,7 +36,8 @@ class Crawler(object):
         if not hasattr(self, '_collection'):
             self._collection = Collection.create({
                 'foreign_id': self.COLLECTION_ID,
-                'label': self.COLLECTION_LABEL or self.COLLECTION_ID
+                'label': self.COLLECTION_LABEL or self.COLLECTION_ID,
+                'managed': True
             })
             db.session.commit()
         db.session.add(self._collection)
@@ -73,13 +74,13 @@ class Crawler(object):
         meta.crawler_run = self.crawler_run
         return meta
 
-    def save_response(self, res):
+    def save_response(self, res, suffix=''):
         """Store the return data from a requests response to a file."""
         # This must be a streaming response.
         if res.status_code >= 400:
             message = "Error ingesting %r: %r" % (res.url, res.status_code)
             raise CrawlerException(message)
-        fh, file_path = mkstemp()
+        fh, file_path = mkstemp(suffix=suffix)
         try:
             fh = os.fdopen(fh, 'w')
             for chunk in res.iter_content(chunk_size=1024):

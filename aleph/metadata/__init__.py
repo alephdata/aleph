@@ -46,6 +46,7 @@ class Metadata(object):
     _title = Field('title')
     _extension = Field('extension')
     _mime_type = Field('mime_type', label='Content type')
+    encoding = Field(protected=True)
     author = Field(label='Document author')
     summary = Field()
     source_url = Field(protected=True)
@@ -103,7 +104,7 @@ class Metadata(object):
         # derive file name from headers
         if file_name is None and 'content_disposition' in self.headers:
             _, attrs = cgi.parse_header(self.headers['content_disposition'])
-            file_name = attrs.get('filename')
+            file_name = chomp(attrs.get('filename'))
 
         if file_name is None and self.source_path:
             file_name = os.path.basename(self.source_path)

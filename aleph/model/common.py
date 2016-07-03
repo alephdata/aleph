@@ -50,22 +50,22 @@ class DatedModel(object):
                            onupdate=datetime.utcnow)
 
     @classmethod
-    def all(cls):
+    def all(cls, deleted=False):
         return db.session.query(cls)
 
     @classmethod
-    def all_ids(cls):
+    def all_ids(cls, deleted=False):
         return db.session.query(cls.id)
 
     @classmethod
-    def all_by_ids(cls, ids):
-        return cls.all().filter(cls.id.in_(ids))
+    def all_by_ids(cls, ids, deleted=False):
+        return cls.all(deleted=deleted).filter(cls.id.in_(ids))
 
     @classmethod
-    def by_id(cls, id):
+    def by_id(cls, id, deleted=False):
         if id is None:
             return
-        return cls.all().filter_by(id=id).first()
+        return cls.all(deleted=deleted).filter_by(id=id).first()
 
     def delete(self, deleted_at=None):
         # hard delete
@@ -83,14 +83,18 @@ class SoftDeleteModel(DatedModel):
     deleted_at = db.Column(db.DateTime, default=None, nullable=True)
 
     @classmethod
-    def all(cls):
+    def all(cls, deleted=False):
         q = super(SoftDeleteModel, cls).all()
-        return q.filter(cls.deleted_at == None)  # noqa
+        if not deleted:
+            q = q.filter(cls.deleted_at == None)  # noqa
+        return q
 
     @classmethod
-    def all_ids(cls):
+    def all_ids(cls, deleted=False):
         q = super(SoftDeleteModel, cls).all_ids()
-        return q.filter(cls.deleted_at == None)  # noqa
+        if not deleted:
+            q = q.filter(cls.deleted_at == None)  # noqa
+        return q
 
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
