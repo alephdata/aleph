@@ -11,7 +11,8 @@ RUN apt-get -y dist-upgrade && apt-get install -y -q  \
         libtiff5-dev libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev \
         poppler-utils poppler-data unrtf pstotext python-numpy default-jdk \
         readpst libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
-        libopenjpeg-dev imagemagick-common imagemagick unoconv \
+        libopenjpeg-dev imagemagick-common imagemagick unoconv
+RUN apt-get install -y -q  \
         libtesseract-dev ruby-sass wkhtmltopdf vim libjpeg-dev libicu-dev \
         tesseract-ocr tesseract-ocr-bel tesseract-ocr-aze \
         tesseract-ocr-ces tesseract-ocr-eng tesseract-ocr-deu \
@@ -23,9 +24,9 @@ RUN apt-get -y dist-upgrade && apt-get install -y -q  \
   && apt-get -y autoremove && apt-get clean
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
 
-RUN wget --quiet -X /tmp/kat.deb http://ftp.us.debian.org/debian/pool/main/t/tesseract-ocr-kat/tesseract-ocr-kat_3.04.00-1_all.deb \
+RUN wget --quiet -O /tmp/kat.deb http://ftp.us.debian.org/debian/pool/main/t/tesseract-ocr-kat/tesseract-ocr-kat_3.04.00-1_all.deb \
     && dpkg -x /tmp/kat.deb /tmp && cp /tmp/usr/share/tesseract-ocr/tessdata/kat.traineddata /usr/share/tesseract-ocr/tessdata \
-    && rm -f /tmp/kat.deb /tmp/usr
+    && rm -rf /tmp/kat.deb /tmp/usr
 
 RUN echo "en_GB ISO-8859-1" >> /etc/locale.gen && \
     echo "en_GB.ISO-8859-15 ISO-8859-15" >> /etc/locale.gen && \
