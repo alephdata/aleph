@@ -18,6 +18,10 @@ class CrawlerException(Exception):
     pass
 
 
+class RunLimitException(CrawlerException):
+    pass
+
+
 class Crawler(object):
     DAILY = CrawlerSchedule('daily', days=1)
     WEEKLY = CrawlerSchedule('weekly', weeks=1)
@@ -26,6 +30,8 @@ class Crawler(object):
     COLLECTION_ID = None
     COLLECTION_LABEL = None
     SCHEDULE = None
+    CRAWLER_NAME = None
+    RUN_LIMIT = None
 
     def __init__(self):
         self.incremental = False
@@ -47,12 +53,22 @@ class Crawler(object):
         raise NotImplemented()
 
     def execute(self, incremental=False, **kwargs):
+        self.run_count = 0
         try:
             self.incremental = incremental
             self.crawl(**kwargs)
             db.session.commit()
+        except RunLimitException:
+            log.info("Crawler has reached RUN_LIMIT")
+            db.session.commit()
         except Exception as ex:
             log.exception(ex)
+
+    def increment_count(self):
+        self.run_count += 1
+        if self.RUN_LIMIT is not None:
+            if self.run_count > self.RUN_LIMIT:
+                raise RunLimitException()
 
     def skip_incremental(self, foreign_id, content_hash=None):
         if not self.incremental:
@@ -109,12 +125,26 @@ class Crawler(object):
     @classmethod
     def get_id(cls):
         name = cls.__module__ + "." + cls.__name__
-        if hasattr(cls, 'COLLECTION_ID'):
+        if cls.COLLECTION_ID is not None:
             name = '%s->%s' % (name, cls.COLLECTION_ID)
         return name
 
     def __repr__(self):
         return '<%s()>' % self.get_id()
+
+    def to_dict(self):
+        data = CrawlerState.crawler_stats(self.get_id())
+        data.update({
+            'name': self.CRAWLER_NAME,
+            'schedule': self.SCHEDULE,
+            'id': self.get_id()
+        })
+        if self.COLLECTION_ID:
+            data.update({
+                'collection': self.collection,
+                'collection_id': self.COLLECTION_ID
+            })
+        return data
 
 
 class EntityCrawler(Crawler):
@@ -134,6 +164,7 @@ class EntityCrawler(Crawler):
         update_entity_full.delay(entity.id)
         log.info("Entity [%s]: %s", entity.id, entity.name)
         self.entity_cache[collection.id].append(entity)
+        self.increment_count()
         return entity
 
     def emit_collection(self, collection):
@@ -162,18 +193,8 @@ class DocumentCrawler(Crawler):
 
     def emit_file(self, meta, file_path, move=False):
         ingest_file(self.collection.id, meta.clone(), file_path, move=move)
+        self.increment_count()
 
     def emit_url(self, meta, url):
         ingest_url.delay(self.collection.id, meta.to_attr_dict(), url)
-
-    def to_dict(self):
-        data = CrawlerState.crawler_stats(self.get_id())
-        data.update({
-            'collection': self.collection,
-            'collection_id': self.COLLECTION_ID,
-            'collection_label': self.COLLECTION_LABEL or self.COLLECTION_ID,
-            'name': self.CRAWLER_NAME,
-            'schedule': self.SCHEDULE,
-            'id': self.get_id()
-        })
-        return data
+        self.increment_count()
