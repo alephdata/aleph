@@ -23,6 +23,10 @@ RUN apt-get -y dist-upgrade && apt-get install -y -q  \
   && apt-get -y autoremove && apt-get clean
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
 
+RUN wget --quiet -X /tmp/kat.deb http://ftp.us.debian.org/debian/pool/main/t/tesseract-ocr-kat/tesseract-ocr-kat_3.04.00-1_all.deb \
+    && dpkg -x /tmp/kat.deb && cp /tmp/usr/share/tesseract-ocr/tessdata/kat.traineddata /usr/share/tesseract-ocr/tessdata \
+    && rm -f /tmp/kat.deb /tmp/usr
+
 RUN echo "en_GB ISO-8859-1" >> /etc/locale.gen && \
     echo "en_GB.ISO-8859-15 ISO-8859-15" >> /etc/locale.gen && \
     echo "en_GB.UTF-8 UTF-8" >> /etc/locale.gen && \
