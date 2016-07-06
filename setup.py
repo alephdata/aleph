@@ -46,7 +46,7 @@ setup(
             'emails = aleph.analyze.regex:EMailAnalyzer',
             'urls = aleph.analyze.regex:URLAnalyzer',
             'phones = aleph.analyze.regex:PhoneNumberAnalyzer',
-            'regex = aleph.analyze.regex_entity:RegexEntityAnalyzer',
+            'regex = aleph.analyze.regex_entity:AhoCorasickEntityAnalyzer',
             'polyglot = aleph.analyze.polyglot_entity:PolyglotEntityAnalyzer'
         ],
         'aleph.crawlers': [

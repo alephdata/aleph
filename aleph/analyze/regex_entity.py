@@ -1,9 +1,8 @@
-import re
 import logging
 from threading import RLock
-from itertools import count
 from collections import defaultdict
 from sqlalchemy.orm import joinedload
+from ahocorasick import Automaton
 
 from aleph.core import db
 from aleph.text import normalize_strong
@@ -13,10 +12,9 @@ from aleph.analyze.analyzer import Analyzer
 
 log = logging.getLogger(__name__)
 lock = RLock()
-BATCH_SIZE = 1000
 
 
-class EntityCache(object):
+class AutomatonCache(object):
 
     def __init__(self):
         self.latest = None
@@ -31,36 +29,26 @@ class EntityCache(object):
         latest = Entity.latest()
         if self.latest is not None and self.latest >= latest:
             return
-
         self.latest = latest
-        self.matches = defaultdict(set)
 
+        matches = defaultdict(set)
         q = Entity.all()
         q = q.options(joinedload('other_names'))
         q = q.filter(Entity.state == Entity.STATE_ACTIVE)
         for entity in q:
             for term in entity.regex_terms:
-                self.matches[normalize_strong(term)].add(entity.id)
+                matches[term].add(entity.id)
 
-        self.regexes = []
-        terms = self.matches.keys()
-        terms = [t for t in terms if len(t) > 2]
-        for i in count(0):
-            terms_slice = terms[i * BATCH_SIZE:(i + 1) * BATCH_SIZE]
-            if not len(terms_slice):
-                break
-            body = '|'.join(terms_slice)
-            rex = re.compile('( |^)(%s)( |$)' % body)
-            # rex = re.compile('(%s)' % body)
-            self.regexes.append(rex)
-
-        log.info('Generating entity tagger: %r (%s terms)',
-                 latest, len(terms))
+        self.automaton = Automaton()
+        for term, entities in matches.items():
+            self.automaton.add_word(term.encode('utf-8'), entities)
+        self.automaton.make_automaton()
+        log.info('Generated automaton with %s terms', len(matches))
 
 
-class RegexEntityAnalyzer(Analyzer):
+class AhoCorasickEntityAnalyzer(Analyzer):
 
-    cache = EntityCache()
+    cache = AutomatonCache()
     origin = 'regex'
 
     def prepare(self):
@@ -71,11 +59,10 @@ class RegexEntityAnalyzer(Analyzer):
         text = normalize_strong(text)
         if text is None or len(text) <= 2:
             return
-        for rex in self.cache.regexes:
-            for match in rex.finditer(text):
-                match = match.group(2)
-                for entity_id in self.cache.matches.get(match, []):
-                    self.entities[entity_id] += 1
+        text = ' %s ' % text.encode('utf-8')
+        for match in self.cache.automaton.iter(text):
+            for entity_id in match[1]:
+                self.entities[entity_id] += 1
 
     def finalize(self):
         self.document.delete_references(origin=self.origin)
@@ -86,4 +73,4 @@ class RegexEntityAnalyzer(Analyzer):
             ref.origin = self.origin
             ref.weight = weight
             db.session.add(ref)
-        log.info('Regex extraced %s entities.', len(self.entities))
+        log.info('Aho Corasick extraced %s entities.', len(self.entities))

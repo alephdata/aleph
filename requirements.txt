@@ -53,3 +53,4 @@ PyICU==1.9.2
 dateparser==0.3.1
 jdatetime==1.7.2
 coverage
+pyahocorasick

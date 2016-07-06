@@ -4,7 +4,7 @@ from collections import defaultdict
 from polyglot.text import Text
 
 from aleph.core import db
-from aleph.model import Reference, Entity, Collection
+from aleph.model import Reference, Entity
 from aleph.model.entity_details import EntityIdentifier
 from aleph.analyze.analyzer import Analyzer
 
@@ -27,17 +27,19 @@ class PolyglotEntityAnalyzer(Analyzer):
         for collection in self.document.collections:
             if collection.generate_entities:
                 self.collections.append(collection)
+        self.disabled = not len(self.collections)
         self.entities = defaultdict(list)
 
     def on_text(self, text):
-        if not len(self.collections):
+        if self.disabled:
             return
         if text is None or len(text) <= 100:
             return
         try:
-            text = Text(text)
+            hint_language_code = None
             if len(self.meta.languages) == 1:
-                text.hint_language_code = self.meta.languages[0]
+                hint_language_code = self.meta.languages[0]
+            text = Text(text, hint_language_code=hint_language_code)
             for entity in text.entities:
                 if entity.tag == 'I-LOC':
                     continue
@@ -51,6 +53,7 @@ class PolyglotEntityAnalyzer(Analyzer):
                 self.entities[entity_name].append(schema)
         except Exception as ex:
             log.warning('NER failed: %r', ex)
+            self.disabled = True
 
     def load_entity(self, name, schema):
         q = db.session.query(EntityIdentifier)
@@ -79,7 +82,7 @@ class PolyglotEntityAnalyzer(Analyzer):
         return entity.id
 
     def finalize(self):
-        if not len(self.collections):
+        if self.disabled:
             return
 
         output = []
