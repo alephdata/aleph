@@ -90,7 +90,6 @@ def generate_entities(document):
             'id': entity_id,
             'collection_id': list(collections)
         })
-    print entities
     return entities
 
 
