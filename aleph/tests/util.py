@@ -58,8 +58,8 @@ class TestCase(FlaskTestCase):
         db.session.commit()
         reindex_entities()
         if process_documents:
-            for doc_id, in Document.all_ids():
-                analyze_document(doc_id)
+            for doc in Document.all():
+                analyze_document(doc)
             optimize_search()
 
     def setUp(self):

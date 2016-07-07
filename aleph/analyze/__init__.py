@@ -25,15 +25,19 @@ def analyze_collection(collection_id):
     query = {'term': {'collection_id': collection_id}}
     query = {'query': query, '_source': False}
     for row in scan_iter(query):
-        analyze_document.delay(row.get('_id'))
+        analyze_document_id.delay(row.get('_id'))
 
 
 @celery.task()
-def analyze_document(document_id):
+def analyze_document_id(document_id):
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
         return
+    analyze_document(document)
+
+
+def analyze_document(document):
     log.info("Analyze document: %r", document)
     analyzers = []
     meta = document.meta

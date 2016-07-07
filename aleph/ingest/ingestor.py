@@ -50,7 +50,7 @@ class Ingestor(object):
     def emit(self, document):
         db.session.commit()
         log.debug("Ingested document: %r", document)
-        analyze_document(document.id)
+        analyze_document(document)
 
     @classmethod
     def handle_exception(cls, meta, collection_id, exception):
