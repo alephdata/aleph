@@ -31,9 +31,7 @@ class PolyglotEntityAnalyzer(Analyzer):
         self.entities = defaultdict(list)
 
     def on_text(self, text):
-        if self.disabled:
-            return
-        if text is None or len(text) <= 100:
+        if self.disabled or text is None or len(text) <= 100:
             return
         try:
             hint_language_code = None
