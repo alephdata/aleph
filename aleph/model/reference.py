@@ -17,11 +17,18 @@ class Reference(db.Model, IdModel, DatedModel):
     entity = db.relationship('Entity', backref=db.backref('references', lazy='dynamic'))
     document = db.relationship('Document', backref=db.backref('references', lazy='dynamic'))
 
-    def get_collection_ids(self):
-        from aleph.model.entity import collection_entity_table
-        q = db.session.query(collection_entity_table.c.collection_id)
-        q = q.filter(collection_entity_table.c.entity_id == self.entity_id)
-        return [c for c, in q.all()]
+    @classmethod
+    def index_references(cls, document_id):
+        """Helper function to get reference data for indexing."""
+        # cf. aleph.index.entities.generate_entities()
+        from aleph.model.entity import Entity, collection_entity_table
+        cet = collection_entity_table.alias()
+        q = db.session.query(Reference.entity_id, cet.c.collection_id)
+        q = q.filter(cet.c.entity_id == Reference.entity_id)
+        q = q.filter(Reference.document_id == document_id)
+        q = q.filter(Entity.id == Reference.entity_id)
+        q = q.filter(Entity.state == Entity.STATE_ACTIVE)
+        return q.all()
 
     def to_dict(self):
         return {

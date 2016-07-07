@@ -80,16 +80,17 @@ def get_count(entity):
 
 
 def generate_entities(document):
+    colls = defaultdict(set)
+    for entity_id, collection_id in Reference.index_references(document.id):
+        colls[entity_id].add(collection_id)
+
     entities = []
-    seen = set()
-    for reference in document.references:
-        if reference.entity_id in seen:
-            continue
-        seen.add(reference.entity_id)
+    for entity_id, collections in colls.items():
         entities.append({
-            'id': reference.entity.id,
-            'collection_id': reference.get_collection_ids()
+            'id': entity_id,
+            'collection_id': list(collections)
         })
+    print entities
     return entities
 
 
