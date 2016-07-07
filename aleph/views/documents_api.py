@@ -68,7 +68,7 @@ def update(document_id):
     data = request_data()
     document.update(data, writeable=authz.collections(authz.WRITE))
     db.session.commit()
-    index_document(document_id, index_records=False)
+    index_document(document, index_records=False)
     return view(document_id)
 
 
@@ -86,7 +86,7 @@ def update_collections(document_id):
     data['collection_id'] = request_data()
     document.update(data, writeable=authz.collections(authz.WRITE))
     db.session.commit()
-    index_document(document_id, index_records=False)
+    index_document(document, index_records=False)
     return view_collections(document_id)
 
 

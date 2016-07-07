@@ -12,11 +12,15 @@ log = logging.getLogger(__name__)
 
 
 @celery.task()
-def index_document(document_id, index_records=True):
+def index_document_id(document_id, index_records=True):
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
         return
+    index_document(document)
+
+
+def index_document(document, index_records=True):
     log.info("Index document: %r", document)
     data = document.to_index_dict()
     data['entities'] = generate_entities(document)

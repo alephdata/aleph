@@ -39,7 +39,7 @@ def delete_collection(collection_id=None):
             if collection_id == document.source_collection_id:
                 document.source_collection_id = None
             db.session.add(document)
-            index_document(document.id)
+            index_document(document)
 
     collection.delete(deleted_at=deleted_at)
     db.session.commit()

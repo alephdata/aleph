@@ -51,4 +51,4 @@ def analyze_document(document_id):
     document.meta = meta
     db.session.add(document)
     db.session.commit()
-    index_document(document_id)
+    index_document(document)

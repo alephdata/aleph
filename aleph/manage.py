@@ -12,7 +12,7 @@ from aleph.views import mount_app_blueprints, assets
 from aleph.analyze import analyze_collection, install_analyzers
 from aleph.alerts import check_alerts
 from aleph.index import init_search, delete_index, upgrade_search
-from aleph.index import index_document
+from aleph.index import index_document_id
 from aleph.logic import reindex_entities, delete_collection
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
@@ -123,7 +123,7 @@ def index(foreign_id=None):
         clause = Collection.id == collection.id
         q = q.filter(Document.collections.any(clause))
     for doc_id, in q:
-        index_document.delay(doc_id)
+        index_document_id.delay(doc_id)
     if foreign_id is None:
         reindex_entities()
 
