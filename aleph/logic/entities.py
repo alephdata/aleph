@@ -22,6 +22,7 @@ def generate_entity_references(entity):
     # search for potential matching documents, re-analyze them and
     # re-index them. This proved to be too slow in reality.
     if entity.state != Entity.STATE_ACTIVE:
+        entity.delete_references(origin='regex')
         return
 
     log.info("Updating document references: %r", entity)

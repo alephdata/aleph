@@ -86,12 +86,9 @@ def generate_entities(document):
         if reference.entity_id in seen:
             continue
         seen.add(reference.entity_id)
-        colls = [c.id for c in reference.entity.collections]
-        if reference.entity.state != Entity.STATE_ACTIVE:
-            continue
         entities.append({
             'id': reference.entity.id,
-            'collection_id': colls
+            'collection_id': reference.get_collection_ids()
         })
     return entities
 

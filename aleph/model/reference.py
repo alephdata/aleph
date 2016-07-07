@@ -17,6 +17,12 @@ class Reference(db.Model, IdModel, DatedModel):
     entity = db.relationship('Entity', backref=db.backref('references', lazy='dynamic'))
     document = db.relationship('Document', backref=db.backref('references', lazy='dynamic'))
 
+    def get_collection_ids(self):
+        from aleph.model.entity import collection_entity_table
+        q = db.session.query(collection_entity_table.c.collection_id)
+        q = q.filter(collection_entity_table.c.entity_id == self.entity_id)
+        return [c for c, in q.all()]
+
     def to_dict(self):
         return {
             'entity': {
