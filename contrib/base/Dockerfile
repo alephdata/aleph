@@ -7,7 +7,7 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get -y dist-upgrade && apt-get install -y -q  \
         curl git python-pip python-virtualenv build-essential python-dev \
         libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates less \
-        postgresql-client-9.4 unrar unzip locales libreoffice libopenjpeg5 \
+        postgresql-client-9.4 unrar unrar-free unzip locales libreoffice libopenjpeg5 \
         libtiff5-dev libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev \
         poppler-utils poppler-data unrtf pstotext python-numpy default-jdk \
         readpst libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
