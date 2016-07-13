@@ -30,16 +30,9 @@ class PackageIngestor(Ingestor):
     def emit_member(self, meta, name, fh, temp_dir):
         file_name = os.path.basename(os.path.normpath(name))
         file_path = os.path.join(temp_dir, file_name)
-        child = meta.clone()
-        child.parent = meta.clone()
+        child = meta.make_child()
         child.file_name = file_name
         child.source_path = name
-        child.title = None
-        child.extension = None
-        child.content_hash = None
-        child.mime_type = None
-        child.foreign_id = None
-
         with open(file_path, 'wb') as dst:
             shutil.copyfileobj(fh, dst)
         ingest_file(self.collection_id, child, file_path, move=True)
@@ -100,13 +93,7 @@ class SingleFilePackageIngestor(PackageIngestor):
     BASE_SCORE = 2
 
     def emit_file(self, meta, file_path):
-        child = meta.clone()
-        child.extension = None
-        child.file_name = None
-        child.content_hash = None
-        child.mime_type = None
-        child.foreign_id = None
-        child.parent = meta.clone()
+        child = meta.make_child()
         ingest_file(self.collection_id, child, file_path)
 
     def unpack(self, meta, local_path, temp_dir):

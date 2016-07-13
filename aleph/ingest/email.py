@@ -40,12 +40,7 @@ class EmailFileIngestor(TextIngestor):
         if body is None:
             return
         out_path = self.write_temp(body, ext)
-        child = meta.clone()
-        child.clear('title')
-        child.clear('extension')
-        child.clear('mime_type')
-        child.clear('file_name')
-        child.parent = meta.clone()
+        child = meta.make_child()
         child.file_name = unicode(part.detected_file_name)
         child.mime_type = unicode(part.detected_content_type)
 
@@ -125,14 +120,8 @@ class OutlookIngestor(TextIngestor):
     BASE_SCORE = 5
 
     def ingest_message(self, filepath, meta):
-        child = meta.clone()
-        child.title = None
-        child.extension = None
-        child.file_name = None
-        child.mime_type = None
-        child.parent = meta.clone()
-        child.source_path = filepath
-        ingest_file(self.source_id, child, filepath, move=True)
+        meta.source_path = filepath
+        ingest_file(self.source_id, meta, filepath, move=True)
 
     def ingest(self, meta, local_path):
         work_dir = mkdtemp()
@@ -142,7 +131,7 @@ class OutlookIngestor(TextIngestor):
             log.debug('Converting Outlook PST file: %r', ' '.join(args))
             subprocess.call(args)
             for (dirpath, dirnames, filenames) in os.walk(work_dir):
-                child = meta.clone()
+                child = meta.make_child()
                 relpath = os.path.relpath(dirpath, work_dir)
                 for kw in relpath.split(os.path.sep):
                     child.add_keyword(kw)

@@ -317,6 +317,18 @@ class Metadata(object):
     def clone(self):
         return type(self).from_data(self.to_attr_dict())
 
+    def make_child(self):
+        child = self.clone()
+        child.parent = self.clone()
+        child.title = None
+        child.source_path = None
+        child.file_name = None
+        child.extension = None
+        child.content_hash = None
+        child.mime_type = None
+        child.foreign_id = None
+        return child
+
     def update(self, data, safe=True):
         # This will assign to the proxied field names, i.e. input
         # processing will be applied to the data.
