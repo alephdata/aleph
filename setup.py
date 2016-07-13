@@ -32,6 +32,7 @@ setup(
             'djvu = aleph.ingest.djvu:DjVuIngestor',
             'img = aleph.ingest.image:ImageIngestor',
             'email = aleph.ingest.email:EmailFileIngestor',
+            'cronos = aleph.ingest.cronos:CronosIngestor',
             'pst = aleph.ingest.email:OutlookIngestor',
             'messy = aleph.ingest.tabular:MessyTablesIngestor',
             'dbf = aleph.ingest.dbf:DBFIngestor',

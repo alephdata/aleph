@@ -106,7 +106,7 @@ class Ingestor(object):
             best_cls(collection_id).ingest(meta, local_path)
             CrawlerState.store_ok(meta, collection_id)
             db.session.commit()
-        except Exception as exception:
-            cls.handle_exception(meta, collection_id, exception)
+        except Exception as exc:
+            cls.handle_exception(meta, collection_id, exc)
         finally:
             get_archive().cleanup_file(meta)

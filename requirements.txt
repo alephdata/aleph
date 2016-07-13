@@ -37,6 +37,7 @@ jsonmapping
 # pdfminer==20140328
 https://github.com/euske/pdfminer/tarball/master
 https://github.com/aboSamoor/polyglot/tarball/master
+https://github.com/occrp/cronosparser/tarball/master
 langid==1.1.5
 blinker==1.4
 Babel==2.3.4

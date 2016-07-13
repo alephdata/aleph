@@ -5,22 +5,12 @@ from tempfile import mkstemp
 
 from aleph.core import db, get_archive, celery
 from aleph.text import string_value
+from aleph.ext import get_ingestors
 from aleph.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor, IngestorException
 
 log = logging.getLogger(__name__)
 
-# https://bugzilla.redhat.com/show_bug.cgi?id=191060#c1
-# https://github.com/deanmalmgren/textract/blob/master/textract/parsers/pptx_parser.py
-# https://github.com/chardet/chardet
-# http://poppler.freedesktop.org/
-# http://www.unixuser.org/~euske/python/pdfminer/index.html
-# https://mstamy2.github.io/PyPDF2/#documentation
-# http://pybrary.net/pyPdf/pythondoc-pyPdf.pdf.html
-# https://svn.apache.org/viewvc/httpd/httpd/branches/2.2.x/docs/conf/mime.types?view=annotate
-
-# pdfminer.six: https://github.com/goulu/pdfminer
-# tesserocr: https://github.com/sirfz/tesserocr
 SKIP_ENTRIES = ['.git', '.hg', '.DS_Store', '.gitignore', 'Thumbs.db']
 
 
@@ -64,11 +54,19 @@ def ingest_directory(collection_id, meta, local_path, base_path=None,
         child.source_path = base_path
         return ingest_file(collection_id, child, local_path, move=move)
 
+    # handle bundles
+    claimed = []
+    for cls in get_ingestors():
+        if not hasattr(cls, 'bundle'):
+            continue
+        bundler = cls(collection_id)
+        claimed.extend(bundler.bundle(meta, local_path))
+
     # recurse downward into the directory:
     for entry in os.listdir(local_path):
         entry_path = os.path.join(local_path, string_value(entry))
         entry_base = os.path.join(base_path, string_value(entry))
-        if entry in SKIP_ENTRIES:
+        if entry in SKIP_ENTRIES or entry in claimed:
             log.debug("Ignore: %r", entry_base)
             continue
         log.info("Handle: %r", entry_base)
