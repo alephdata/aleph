@@ -86,7 +86,7 @@ class Ingestor(object):
     @classmethod
     def auction_file(cls, meta, local_path):
         best_score, best_cls = 0, None
-        for cls in get_ingestors().values():
+        for cls in get_ingestors():
             score = cls.match(meta, local_path)
             if score > best_score:
                 best_score = score

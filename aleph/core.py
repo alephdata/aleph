@@ -68,7 +68,7 @@ def create_app(config={}):
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
-    for name, plugin in get_init().items():
+    for plugin in get_init():
         plugin(app=app)
 
     return app

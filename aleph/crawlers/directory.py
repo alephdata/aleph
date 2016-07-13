@@ -4,8 +4,7 @@ from normality import slugify
 
 from aleph.core import db
 from aleph.model import Collection
-from aleph.text import string_value
-from aleph.ingest import ingest_file
+from aleph.ingest import ingest_directory
 from aleph.crawlers.crawler import Crawler
 
 SKIP_DIRECTORIES = ['.git', '.hg']
@@ -16,44 +15,17 @@ log = logging.getLogger(__name__)
 
 class DirectoryCrawler(Crawler):
 
-    def crawl_file(self, collection_id, file_path, base_meta):
-        try:
-            if not os.path.isfile(file_path):
-                log.info('Invalid file path: %r', file_path)
-                return
-            meta = self.make_meta(base_meta)
-            file_path = string_value(file_path)
-            meta.foreign_id = file_path
-            meta.source_path = file_path
-            meta.file_name = os.path.basename(file_path)
-            ingest_file(collection_id, meta, file_path, move=False)
-        except Exception as ex:
-            log.exception(ex)
-
     def crawl(self, directory=None, collection=None, meta={}):
+        if directory is None or not os.path.exists(directory):
+            log.warning("Invalid directory: %r", directory)
+            return
+        directory = os.path.abspath(directory)
+        directory = os.path.normpath(directory)
         collection = collection or directory
         collection = Collection.create({
             'foreign_id': 'directory:%s' % slugify(collection),
             'label': collection
         })
         db.session.commit()
-        collection_id = collection.id
-
-        if os.path.isfile(directory):
-            self.crawl_file(collection_id, directory, meta)
-
-        directory = directory or os.getcwd()
-        directory = directory.encode('utf-8')
-        for (dirname, dirs, files) in os.walk(directory):
-            dirparts = [d for d in dirname.split(os.path.sep)
-                        if d in SKIP_DIRECTORIES]
-            if len(dirparts):
-                continue
-            log.info("Descending: %r", dirname)
-            for file_name in files:
-                dirname = string_value(dirname)
-                file_name = string_value(file_name)
-                if file_name in SKIP_FILES:
-                    continue
-                file_path = os.path.join(dirname, file_name)
-                self.crawl_file(collection_id, file_path, meta)
+        meta = self.make_meta(meta)
+        ingest_directory(collection.id, meta, directory)

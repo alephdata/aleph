@@ -245,7 +245,7 @@ class Metadata(object):
 
     @property
     def foreign_id(self):
-        return self._foreign_id
+        return self._foreign_id or self.source_url or self.source_path
 
     @foreign_id.setter
     def foreign_id(self, foreign_id):

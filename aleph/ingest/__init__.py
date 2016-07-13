@@ -20,6 +20,7 @@ log = logging.getLogger(__name__)
 
 # pdfminer.six: https://github.com/goulu/pdfminer
 # tesserocr: https://github.com/sirfz/tesserocr
+SKIP_ENTRIES = ['.git', '.hg', '.DS_Store', '.gitignore', 'Thumbs.db']
 
 
 @celery.task()
@@ -46,6 +47,30 @@ def ingest_url(collection_id, metadata, url):
         Ingestor.handle_exception(meta, collection_id, ex)
     finally:
         db.session.remove()
+
+
+def ingest_directory(collection_id, meta, local_path, base_path=None,
+                     move=False):
+    """Ingest all the files in a directory."""
+    # This is somewhat hacky, see issue #55 for the rationale.
+    base_path = base_path or local_path
+    if not os.path.isdir(local_path):
+        child = meta.make_child()
+        child.source_path = base_path
+        return ingest_file(collection_id, child, local_path, move=move)
+
+    # recurse downward into the directory:
+    for entry in os.listdir(local_path):
+        entry_path = os.path.join(local_path, entry)
+        entry_base = os.path.join(base_path, entry)
+        if entry in SKIP_ENTRIES:
+            log.debug("Ignore: %r", entry_base)
+            continue
+        log.info("Handle: %r", entry_base)
+        # We don't care if it is a file, this is handled at
+        # the beginning anyway.
+        ingest_directory(collection_id, meta, entry_path,
+                         base_path=entry_base, move=move)
 
 
 def ingest_file(collection_id, meta, file_path, move=False):

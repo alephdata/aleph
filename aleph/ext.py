@@ -15,7 +15,7 @@ def get_extensions(section):
 
 
 def get_init():
-    return get_extensions('aleph.init')
+    return get_extensions('aleph.init').values()
 
 
 def get_crawlers():
@@ -26,7 +26,7 @@ def get_crawlers():
 
 
 def get_ingestors():
-    return get_extensions('aleph.ingestors')
+    return get_extensions('aleph.ingestors').values()
 
 
 def get_analyzers():
