@@ -4,6 +4,7 @@ import requests
 from tempfile import mkstemp
 
 from aleph.core import db, get_archive, celery
+from aleph.text import string_value
 from aleph.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor, IngestorException
 
@@ -53,6 +54,10 @@ def ingest_directory(collection_id, meta, local_path, base_path=None,
                      move=False):
     """Ingest all the files in a directory."""
     # This is somewhat hacky, see issue #55 for the rationale.
+    if not os.path.exists(local_path):
+        log.error("Invalid path: %r", local_path)
+        return
+
     base_path = base_path or local_path
     if not os.path.isdir(local_path):
         child = meta.make_child()
@@ -61,8 +66,8 @@ def ingest_directory(collection_id, meta, local_path, base_path=None,
 
     # recurse downward into the directory:
     for entry in os.listdir(local_path):
-        entry_path = os.path.join(local_path, entry)
-        entry_base = os.path.join(base_path, entry)
+        entry_path = os.path.join(local_path, string_value(entry))
+        entry_base = os.path.join(base_path, string_value(entry))
         if entry in SKIP_ENTRIES:
             log.debug("Ignore: %r", entry_base)
             continue

@@ -3,6 +3,7 @@ import logging
 from normality import slugify
 
 from aleph.core import db
+from aleph.text import string_value
 from aleph.model import Collection
 from aleph.ingest import ingest_directory
 from aleph.crawlers.crawler import Crawler
@@ -21,6 +22,7 @@ class DirectoryCrawler(Crawler):
             return
         directory = os.path.abspath(directory)
         directory = os.path.normpath(directory)
+        directory = string_value(directory)
         collection = collection or directory
         collection = Collection.create({
             'foreign_id': 'directory:%s' % slugify(collection),

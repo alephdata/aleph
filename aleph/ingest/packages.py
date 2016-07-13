@@ -8,7 +8,7 @@ import zipfile
 import tarfile
 from tempfile import mkdtemp
 
-from aleph.ingest import ingest_file
+from aleph.ingest import ingest_directory
 from aleph.ingest.ingestor import Ingestor
 
 log = logging.getLogger(__name__)
@@ -21,32 +21,20 @@ class PackageIngestor(Ingestor):
         try:
             log.info("Descending into package: %r", meta.file_name)
             self.unpack(meta, local_path, temp_dir)
+            ingest_directory(self.collection_id, meta, temp_dir,
+                             base_path=meta.foreign_id, move=True)
         finally:
             shutil.rmtree(temp_dir)
 
     def unpack(self, meta, local_path, temp_dir):
         pass
 
-    def emit_member(self, meta, name, fh, temp_dir):
-        file_name = os.path.basename(os.path.normpath(name))
-        file_path = os.path.join(temp_dir, file_name)
-        child = meta.make_child()
-        child.file_name = file_name
-        child.source_path = name
-        with open(file_path, 'wb') as dst:
-            shutil.copyfileobj(fh, dst)
-        ingest_file(self.collection_id, child, file_path, move=True)
-
 
 class RARIngestor(PackageIngestor):
 
     def unpack(self, meta, local_path, temp_dir):
         with rarfile.RarFile(local_path) as rf:
-            for info in rf.infolist():
-                if info.file_size == 0:
-                    continue
-                fh = rf.open(info)
-                self.emit_member(meta, info.filename, fh, temp_dir)
+            rf.extractall(temp_dir)
 
     @classmethod
     def match(cls, meta, local_path):
@@ -59,11 +47,7 @@ class ZipIngestor(PackageIngestor):
 
     def unpack(self, meta, local_path, temp_dir):
         with zipfile.ZipFile(local_path) as zf:
-            for info in zf.infolist():
-                if info.file_size == 0:
-                    continue
-                fh = zf.open(info)
-                self.emit_member(meta, info.filename, fh, temp_dir)
+            zf.extractall(temp_dir)
 
     @classmethod
     def match(cls, meta, local_path):
@@ -76,11 +60,7 @@ class TarIngestor(PackageIngestor):
 
     def unpack(self, meta, local_path, temp_dir):
         with tarfile.open(name=local_path, mode='r:*') as tf:
-            for member in tf:
-                if not member.isfile():
-                    continue
-                fh = tf.extractfile(member)
-                self.emit_member(meta, member.name, fh, temp_dir)
+            tf.extractall(temp_dir)
 
     @classmethod
     def match(cls, meta, local_path):
@@ -91,10 +71,6 @@ class TarIngestor(PackageIngestor):
 
 class SingleFilePackageIngestor(PackageIngestor):
     BASE_SCORE = 2
-
-    def emit_file(self, meta, file_path):
-        child = meta.make_child()
-        ingest_file(self.collection_id, child, file_path)
 
     def unpack(self, meta, local_path, temp_dir):
         file_name = meta.file_name
@@ -120,7 +96,6 @@ class GzipIngestor(SingleFilePackageIngestor):
         with gzip.GzipFile(local_path) as src:
             with open(temp_file, 'wb') as dst:
                 shutil.copyfileobj(src, dst)
-        self.emit_file(meta, temp_file)
 
 
 class BZ2Ingestor(SingleFilePackageIngestor):
@@ -132,4 +107,3 @@ class BZ2Ingestor(SingleFilePackageIngestor):
         with bz2.BZ2File(local_path) as src:
             with open(temp_file, 'wb') as dst:
                 shutil.copyfileobj(src, dst)
-        self.emit_file(meta, temp_file)
