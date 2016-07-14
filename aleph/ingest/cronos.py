@@ -44,6 +44,7 @@ class CronosIngestor(TabularIngestor, BundleIngestor):
         tabulars = []
         sheet = 0
         for table in tables:
+            log.info("Loading table: %s", table['name'])
             tabular = self.create_tabular(sheet, table['name'])
             columns = [c.get('name') for c in table.get('columns')]
             columns = [tabular.add_column(c) for c in columns]
