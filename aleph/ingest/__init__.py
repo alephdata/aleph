@@ -11,7 +11,8 @@ from aleph.ingest.ingestor import Ingestor, IngestorException
 
 log = logging.getLogger(__name__)
 
-SKIP_ENTRIES = ['.git', '.hg', '.DS_Store', '.gitignore', 'Thumbs.db']
+SKIP_ENTRIES = ['.git', '.hg', '.DS_Store', '.gitignore', 'Thumbs.db',
+                '__MACOSX']
 
 
 @celery.task()
@@ -69,7 +70,7 @@ def ingest_directory(collection_id, meta, local_path, base_path=None,
         if entry in SKIP_ENTRIES or entry in claimed:
             log.debug("Ignore: %r", entry_base)
             continue
-        log.info("Handle: %r", entry_base)
+        log.info("Handle [%s]: %r", meta.crawler_run, entry_base)
         # We don't care if it is a file, this is handled at
         # the beginning anyway.
         ingest_directory(collection_id, meta, entry_path,

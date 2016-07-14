@@ -26,9 +26,11 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
     if (value === null || value === undefined) {
       return;
     }
-    if (value.toLowerCase().startsWith('http://') || value.toLowerCase().startsWith('https://')) {
-      value = '<a target="_new" href=' + value + '>' + $sanitize(value) + '</a>'
-      return $sce.trustAsHtml(value);
+    if (angular.isString(value)) {
+      if (value.toLowerCase().startsWith('http://') || value.toLowerCase().startsWith('https://')) {
+        value = '<a target="_new" href=' + value + '>' + $sanitize(value) + '</a>'
+        return $sce.trustAsHtml(value);
+      }
     }
     // if (!isNaN(filterFloat(value))) {
     //   return $filter('number')(value);

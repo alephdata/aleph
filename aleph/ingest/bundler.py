@@ -38,7 +38,6 @@ class BundleIngestor(Ingestor):
 
     def ingest(self, meta, local_path):
         temp_dir = mkdtemp()
-        print local_path
         try:
             log.info("Unpacking bundle: %r", meta.file_name)
             with ZipFile(local_path, 'r') as zf:
