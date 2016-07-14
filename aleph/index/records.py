@@ -1,5 +1,6 @@
 import logging
 from hashlib import sha1
+from elasticsearch.exceptions import NotFoundError
 from elasticsearch.helpers import bulk, scan
 
 from aleph.core import get_es, get_es_index
@@ -29,7 +30,7 @@ def clear_records(document_id):
     try:
         bulk(get_es(), gen_deletes(), stats_only=True, chunk_size=2000,
              request_timeout=600.0)
-    except Exception:
+    except (Exception, NotFoundError):
         log.debug("Failed to clear previous index: %r", document_id)
 
 

@@ -1,4 +1,5 @@
 import logging
+from elasticsearch.exceptions import NotFoundError
 
 from aleph.core import celery, get_es, get_es_index
 from aleph.model import Document
@@ -36,5 +37,8 @@ def index_document(document, index_records=True):
 
 def delete_document(document_id):
     clear_records(document_id)
-    get_es().delete(index=get_es_index(), doc_type=TYPE_DOCUMENT,
-                    id=document_id)
+    try:
+        get_es().delete(index=get_es_index(), doc_type=TYPE_DOCUMENT,
+                        id=document_id)
+    except NotFoundError:
+        pass
