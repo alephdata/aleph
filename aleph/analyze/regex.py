@@ -16,7 +16,8 @@ class RegexAnalyzer(Analyzer):
 
     def prepare(self):
         # TODO: re-think this.
-        self.disabled = self.document.type == self.document.TYPE_TABULAR
+        self.disabled = self.document is not None and \
+            self.document.type == self.document.TYPE_TABULAR
         self.matches = []
         self.regex = re.compile(self.REGEX, self.FLAG)
 
