@@ -1,15 +1,19 @@
 # coding: utf-8
 import os
 import gc
+import json
 import shutil
 import logging
+from os import path
 from tempfile import mkdtemp
 from hashlib import sha1
+from apikit.jsonify import JSONEncoder
 from normality import slugify
 
 from aleph.text import string_value
 
 log = logging.getLogger(__name__)
+TMP_PREFIX = 'aleph.tmp.'
 
 
 def checksum(filename):
@@ -36,14 +40,16 @@ def make_filename(file_name, sep='-'):
 
 def make_tempdir(name=None):
     name = string_value(name) or 'data'
-    path = os.path.join(mkdtemp(), name)
-    os.makedirs(path)
-    return path
+    dirpath = path.join(mkdtemp(prefix=TMP_PREFIX), name)
+    os.makedirs(dirpath)
+    return dirpath
 
 
-def remove_tempdir(path):
-    if path is not None and os.path.exists(path):
-        parent = os.path.normpath(os.path.join(path, '..'))
+def remove_tempdir(dirpath):
+    if dirpath is None:
+        return
+    parent = os.path.normpath(path.join(dirpath, '..'))
+    if path.exists(parent) and path.dirname(parent).startswith(TMP_PREFIX):
         shutil.rmtree(parent)
 
 
@@ -55,10 +61,10 @@ def make_tempfile(name=None, suffix=None):
     return os.path.join(make_tempdir(), name)
 
 
-def remove_tempfile(path):
-    if path is None:
+def remove_tempfile(filepath):
+    if filepath is None:
         return
-    remove_tempdir(os.path.dirname(path))
+    remove_tempdir(path.dirname(filepath))
 
 
 def find_subclasses(cls):
@@ -69,3 +75,9 @@ def find_subclasses(cls):
         if (isinstance(o, tuple) and getattr(o[0], "__mro__", None) is o):
             results.append(o[0])
     return results
+
+
+def expand_json(data):
+    """Make complex objects (w/ dates, to_dict) into JSON."""
+    data = JSONEncoder().encode(data)
+    return json.loads(data)

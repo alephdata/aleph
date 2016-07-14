@@ -362,8 +362,6 @@ class Metadata(object):
         for field in self.fields.values():
             name = field.name if compute else field.attr
             value = getattr(self, name)
-            if isinstance(value, type(self)):
-                value = value.to_attr_dict(compute=compute)
             if value is not None:
                 data[field.name] = value
         return data

@@ -6,10 +6,11 @@ from elasticsearch.helpers import scan
 
 from aleph.core import get_es, get_es_index, db
 from aleph.text import latinize_text
+from aleph.util import expand_json
 from aleph.model import Entity, Reference
 from aleph.model.entity import collection_entity_table
 from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT
-from aleph.index.util import expand_json, bulk_op, flush_es
+from aleph.index.util import bulk_op, flush_es
 
 log = logging.getLogger(__name__)
 

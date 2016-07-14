@@ -17,7 +17,7 @@ class DocumentIngestor(TextIngestor):
                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # noqa
                   'text/richtext', 'application/wordperfect', 'application/vnd.wordperfect']  # noqa
     EXTENSIONS = ['doc', 'docx', 'rtf', 'odt', 'sxw', 'dot', 'docm', 'hqx',
-                  'pdb', 'txt', 'wpd']
+                  'pdb', 'wpd']
     BASE_SCORE = 5
 
     def generate_pdf_alternative(self, meta, local_path):

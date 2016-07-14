@@ -3,6 +3,7 @@ from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
+from aleph.util import expand_json
 from aleph.model.collection import Collection
 
 
@@ -36,7 +37,7 @@ class CrawlerState(db.Model):
         obj.crawler_run = meta.crawler_run
         obj.foreign_id = meta.foreign_id
         obj.content_hash = meta.content_hash
-        obj.meta = meta.to_attr_dict(compute=True)
+        obj.meta = expand_json(meta.to_attr_dict(compute=True))
         db.session.add(obj)
         return obj
 

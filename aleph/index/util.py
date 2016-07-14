@@ -1,17 +1,9 @@
-import json
 import logging
-from apikit.jsonify import JSONEncoder
 from elasticsearch.helpers import bulk
 
 from aleph.core import get_es, get_es_index
 
 log = logging.getLogger(__name__)
-
-
-def expand_json(data):
-    """Make complex objects (w/ dates, to_dict) into JSON."""
-    data = JSONEncoder().encode(data)
-    return json.loads(data)
 
 
 def bulk_op(iter):

@@ -16,6 +16,8 @@ class BundleIngestor(Ingestor):
 
     def emit_bundle(self, meta, directory, files):
         bundle = meta.make_child()
+        bundle.source_path = os.path.join(meta.foreign_id,
+                                          self.BUNDLE_EXTENSION)
         bundle.mime_type = self.BUNDLE_MIME
         bundle.file_name = '%s.%s' % (meta.file_name,
                                       self.BUNDLE_EXTENSION)
