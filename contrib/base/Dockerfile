@@ -11,7 +11,8 @@ RUN apt-get -y dist-upgrade && apt-get install -y -q  \
         libtiff5-dev libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev \
         poppler-utils poppler-data unrtf pstotext python-numpy default-jdk \
         readpst libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
-        libopenjpeg-dev imagemagick-common imagemagick unoconv
+        libopenjpeg-dev imagemagick-common imagemagick unoconv mdbtools \
+        cabextract
 RUN apt-get install -y -q  \
         libtesseract-dev ruby-sass wkhtmltopdf vim libjpeg-dev libicu-dev \
         tesseract-ocr tesseract-ocr-bel tesseract-ocr-aze \

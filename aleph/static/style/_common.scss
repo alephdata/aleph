@@ -44,8 +44,8 @@ a {
         color: darken($brand-primary, 10%);
     }
 
-    &.btn:hover, &.btn.btn-primary:hover, 
-    &.btn:visited, &.btn.btn-primary:visited {
+    &.btn.btn-primary:hover, 
+    &.btn.btn-primary:visited {
         color: white;
     }
 }

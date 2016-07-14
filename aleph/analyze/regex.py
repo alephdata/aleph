@@ -15,12 +15,15 @@ class RegexAnalyzer(Analyzer):
     FLAG = None
 
     def prepare(self):
+        # TODO: re-think this.
+        self.disabled = self.document.type == self.document.TYPE_TABULAR
         self.matches = []
         self.regex = re.compile(self.REGEX, self.FLAG)
 
     def on_text(self, text):
-        for mobj in self.regex.finditer(text):
-            self.matches.append(mobj)
+        if not self.disabled:
+            for mobj in self.regex.finditer(text):
+                self.matches.append(mobj)
 
 
 class EMailAnalyzer(RegexAnalyzer):

@@ -34,6 +34,7 @@ setup(
             'email = aleph.ingest.email:EmailFileIngestor',
             'cronos = aleph.ingest.cronos:CronosIngestor',
             'pst = aleph.ingest.email:OutlookIngestor',
+            'mdb = aleph.ingest.mdb:AccessIngestor',
             'messy = aleph.ingest.tabular:MessyTablesIngestor',
             'dbf = aleph.ingest.dbf:DBFIngestor',
             'rar = aleph.ingest.packages:RARIngestor',
