@@ -11,8 +11,9 @@ VALID_DOMAIN = re.compile(r'^([0-9a-z][-\w]*[0-9a-z]\.)+[a-z0-9\-]{2,15}$')
 
 
 def chomp(text, lower=False):
+    text = string_value(text)
     if text is not None:
-        text = string_value(text).strip()
+        text = text.strip()
         if not len(text):
             return None
         return text.lower() if lower else text
