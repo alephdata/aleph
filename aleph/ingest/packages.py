@@ -23,6 +23,8 @@ class PackageIngestor(Ingestor):
             self.unpack(meta, local_path, temp_dir)
             ingest_directory(self.collection_id, meta, temp_dir,
                              base_path=meta.foreign_id, move=True)
+        except rarfile.NeedFirstVolume:
+            pass
         finally:
             shutil.rmtree(temp_dir)
 

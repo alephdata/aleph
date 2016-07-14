@@ -36,7 +36,7 @@ class CrawlerState(db.Model):
         obj.crawler_run = meta.crawler_run
         obj.foreign_id = meta.foreign_id
         obj.content_hash = meta.content_hash
-        obj.meta = meta.to_attr_dict()
+        obj.meta = meta.to_attr_dict(compute=True)
         db.session.add(obj)
         return obj
 
