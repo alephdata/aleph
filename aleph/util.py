@@ -1,9 +1,13 @@
 # coding: utf-8
 import os
 import gc
+import shutil
 import logging
+from tempfile import mkdtemp
 from hashlib import sha1
 from normality import slugify
+
+from aleph.text import string_value
 
 log = logging.getLogger(__name__)
 
@@ -28,6 +32,32 @@ def make_filename(file_name, sep='-'):
         file_name = '.'.join(slugs)
         file_name = file_name.strip('.').strip(sep)
     return file_name
+
+
+def make_tempdir(name=None):
+    name = string_value(name) or 'data'
+    path = os.path.join(mkdtemp(), name)
+    os.makedirs(path)
+    return path
+
+
+def remove_tempdir(path):
+    if path is not None and os.path.exists(path):
+        shutil.rmtree(os.path.join(path, '..'))
+
+
+def make_tempfile(name=None, suffix=None):
+    name = string_value(name) or 'data'
+    suffix = string_value(suffix)
+    if suffix is not None:
+        name = '%s.%s' % (name, suffix.strip('.'))
+    return os.path.join(make_tempdir(), name)
+
+
+def remove_tempfile(path):
+    if path is None:
+        return
+    remove_tempdir(os.path.dirname(path))
 
 
 def find_subclasses(cls):

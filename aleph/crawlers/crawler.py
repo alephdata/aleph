@@ -1,7 +1,5 @@
-import os
 import json
 import logging
-from tempfile import mkstemp
 
 from aleph.core import db
 from aleph.metadata import Metadata
@@ -10,6 +8,7 @@ from aleph.model.common import make_textid
 from aleph.ingest import ingest_url, ingest_file
 from aleph.logic import update_entity_full
 from aleph.crawlers.schedule import CrawlerSchedule
+from aleph.util import make_tempfile, remove_tempfile
 
 log = logging.getLogger(__name__)
 
@@ -90,36 +89,32 @@ class Crawler(object):
         meta.crawler_run = self.crawler_run
         return meta
 
-    def save_response(self, res, suffix=''):
+    def save_response(self, res, suffix=None):
         """Store the return data from a requests response to a file."""
         # This must be a streaming response.
         if res.status_code >= 400:
             message = "Error ingesting %r: %r" % (res.url, res.status_code)
             raise CrawlerException(message)
-        fh, file_path = mkstemp(suffix=suffix)
+        file_path = make_tempfile(suffix=suffix)
         try:
-            fh = os.fdopen(fh, 'w')
-            for chunk in res.iter_content(chunk_size=1024):
-                if chunk:
-                    fh.write(chunk)
-            fh.close()
+            with open(file_path, 'w') as fh:
+                for chunk in res.iter_content(chunk_size=1024):
+                    if chunk:
+                        fh.write(chunk)
             return file_path
         except Exception:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
+            remove_tempfile(file_path)
             raise
 
     def save_data(self, data):
         """Store a lump object of data to a temporary file."""
-        fh, file_path = mkstemp()
+        file_path = make_tempfile()
         try:
-            fh = os.fdopen(fh, 'w')
-            fh.write(data or '')
-            fh.close()
+            with open(file_path, 'w') as fh:
+                fh.write(data or '')
             return file_path
         except Exception:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
+            remove_tempfile(file_path)
             raise
 
     @classmethod

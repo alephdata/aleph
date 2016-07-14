@@ -1,13 +1,13 @@
 import os
 import logging
 import requests
-from tempfile import mkstemp
 
 from aleph.core import db, get_archive, celery
 from aleph.text import string_value
 from aleph.ext import get_ingestors
 from aleph.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor, IngestorException
+from aleph.util import make_tempfile, remove_tempfile
 
 log = logging.getLogger(__name__)
 
@@ -18,9 +18,8 @@ SKIP_ENTRIES = ['.git', '.hg', '.DS_Store', '.gitignore', 'Thumbs.db',
 @celery.task()
 def ingest_url(collection_id, metadata, url):
     meta = Metadata.from_data(metadata)
+    tmp_path = make_tempfile(meta.file_name, suffix=meta.extension)
     try:
-        fh, tmp_path = mkstemp()
-        os.close(fh)
         log.info("Ingesting URL: %r", url)
         res = requests.get(url, stream=True, timeout=120)
         if res.status_code >= 400:
@@ -39,6 +38,7 @@ def ingest_url(collection_id, metadata, url):
         Ingestor.handle_exception(meta, collection_id, ex)
     finally:
         db.session.remove()
+        remove_tempfile(tmp_path)
 
 
 def ingest_directory(collection_id, meta, local_path, base_path=None,
@@ -70,7 +70,7 @@ def ingest_directory(collection_id, meta, local_path, base_path=None,
         if entry in SKIP_ENTRIES or entry in claimed:
             log.debug("Ignore: %r", entry_base)
             continue
-        log.info("Handle [%s]: %r", meta.crawler_run, entry_base)
+        log.info("Handle [%s]: %s", meta.crawler_run, entry_base)
         # We don't care if it is a file, this is handled at
         # the beginning anyway.
         ingest_directory(collection_id, meta, entry_path,

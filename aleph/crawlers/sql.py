@@ -2,7 +2,6 @@ import os
 import yaml
 import logging
 import unicodecsv
-from tempfile import mkstemp
 from sqlalchemy import create_engine
 from sqlalchemy import MetaData, select
 from sqlalchemy.schema import Table
@@ -11,6 +10,7 @@ from aleph.core import db
 from aleph.model import Collection
 from aleph.ingest import ingest_file
 from aleph.crawlers.crawler import Crawler
+from aleph.util import make_tempfile, remove_tempfile
 
 log = logging.getLogger(__name__)
 
@@ -105,25 +105,23 @@ class SQLCrawler(Crawler):
 
         query = SQLQuery(engine, query)
 
-        fh, file_path = mkstemp(suffix='.csv')
+        file_path = make_tempfile(name=name, suffix='.csv')
         try:
-            fh = os.fdopen(fh, 'w')
-            headers = [query.alias(c) for c in query.columns]
-            writer = unicodecsv.writer(fh, quoting=unicodecsv.QUOTE_ALL)
-            writer.writerow(headers)
-            log.info('Query: %s', query.query)
-            rp = engine.execute(query.query)
-            while True:
-                rows = rp.fetchmany(10000)
-                if not rows:
-                    break
-                for row in rows:
-                    writer.writerow(row[h] for h in headers)
-            fh.close()
+            with open(file_path, 'w') as fh:
+                headers = [query.alias(c) for c in query.columns]
+                writer = unicodecsv.writer(fh, quoting=unicodecsv.QUOTE_ALL)
+                writer.writerow(headers)
+                log.info('Query: %s', query.query)
+                rp = engine.execute(query.query)
+                while True:
+                    rows = rp.fetchmany(10000)
+                    if not rows:
+                        break
+                    for row in rows:
+                        writer.writerow(row[h] for h in headers)
             ingest_file(collection.id, meta, file_path, move=True)
         finally:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
+            remove_tempfile(file_path)
 
     def crawl_collection(self, engine, foreign_id, data):
         collection = Collection.create({

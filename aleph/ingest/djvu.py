@@ -1,10 +1,9 @@
-import os
 import logging
 import subprocess
-from tempfile import mkstemp
 
 from aleph.core import get_config
 from aleph.ingest.document import DocumentIngestor
+from aleph.util import make_tempfile
 
 log = logging.getLogger(__name__)
 
@@ -16,8 +15,7 @@ class DjVuIngestor(DocumentIngestor):
 
     def generate_pdf_alternative(self, meta, local_path):
         """Convert DjVu book to PDF."""
-        fh, out_path = mkstemp(suffix='.pdf')
-        os.close(fh)
+        out_path = make_tempfile(meta.file_name, suffix='pdf')
         ddjvu = get_config('DDJVU_BIN')
         args = [ddjvu, '-format=pdf', '-quality=85', '-skip',
                 local_path, out_path]

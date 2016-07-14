@@ -1,13 +1,13 @@
 import os
 import logging
 import subprocess
-from tempfile import mkstemp
 from lxml import html, etree
 from lxml.html.clean import Cleaner
 
 from aleph.core import get_config
 from aleph.ingest.ingestor import IngestorException
 from aleph.ingest.document import DocumentIngestor
+from aleph.util import make_tempfile, remove_tempfile
 
 log = logging.getLogger(__name__)
 
@@ -20,19 +20,21 @@ class HtmlIngestor(DocumentIngestor):
                       embedded=True, forms=True, frames=True,
                       annoying_tags=True, meta=False, remove_tags=['a'])
 
-    def generate_pdf_version(self, html_path):
+    def handle_html(self, meta, html_path):
         """OK, this is weirder. Converting HTML to PDF via WebKit."""
-        fh, out_path = mkstemp(suffix='.pdf')
-        os.close(fh)
-        wkhtmltopdf = get_config('WKHTMLTOPDF_BIN')
-        args = [wkhtmltopdf, '--disable-javascript', '--no-outline',
-                '--no-images', '--quiet', html_path, out_path]
-        subprocess.call(args)
-        return out_path
+        out_path = make_tempfile(name=meta.file_name, suffix='pdf')
+        try:
+            wkhtmltopdf = get_config('WKHTMLTOPDF_BIN')
+            args = [wkhtmltopdf, '--disable-javascript', '--no-outline',
+                    '--no-images', '--quiet', html_path, out_path]
+            subprocess.call(args)
+            if not os.path.isfile(out_path):
+                raise IngestorException("Could not convert document: %r", meta)
+            self.extract_pdf_alternative(meta, out_path)
+        finally:
+            remove_tempfile(out_path)
 
     def ingest(self, meta, local_path):
-        fh, out_path = mkstemp(suffix='.htm')
-        os.close(fh)
         with open(local_path, 'rb') as fh:
             data = fh.read()
         if meta.encoding:
@@ -56,14 +58,10 @@ class HtmlIngestor(DocumentIngestor):
                     meta.add_keyword(keyword)
 
         self.cleaner(doc)
+        out_path = make_tempfile(name=meta.file_name, suffix='htm')
         try:
             with open(out_path, 'w') as fh:
                 fh.write(etree.tostring(doc))
-
-            pdf_path = self.generate_pdf_version(out_path)
-            if pdf_path is None or not os.path.isfile(pdf_path):
-                raise IngestorException("Could not convert document: %r", meta)
-            self.extract_pdf_alternative(meta, pdf_path)
+            self.handle_html(meta, out_path)
         finally:
-            if os.path.isfile(out_path):
-                os.unlink(out_path)
+            remove_tempfile(out_path)

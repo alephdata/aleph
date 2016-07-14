@@ -44,7 +44,7 @@ class DocumentIngestor(TextIngestor):
             self.store_pdf(meta, pdf_path)
             self.extract_pdf(meta, pdf_path)
         finally:
-            if pdf_path is not None and os.path.isfile(pdf_path):
+            if os.path.isfile(pdf_path):
                 os.unlink(pdf_path)
 
     def ingest(self, meta, local_path):

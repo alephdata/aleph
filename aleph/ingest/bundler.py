@@ -1,11 +1,10 @@
 import os
 import logging
-import shutil
 from zipfile import ZipFile, ZIP_STORED
-from tempfile import mkdtemp
 
 from aleph.ingest import ingest_file
 from aleph.ingest.ingestor import Ingestor
+from aleph.util import make_tempdir, remove_tempdir
 
 log = logging.getLogger(__name__)
 
@@ -18,10 +17,10 @@ class BundleIngestor(Ingestor):
     def emit_bundle(self, meta, directory, files):
         bundle = meta.make_child()
         bundle.mime_type = self.BUNDLE_MIME
-        bundle.file_name = '%s.%s' % (os.path.basename(directory),
+        bundle.file_name = '%s.%s' % (meta.file_name,
                                       self.BUNDLE_EXTENSION)
         log.info("Creating bundle: %r", bundle.file_name)
-        temp_dir = mkdtemp()
+        temp_dir = make_tempdir()
         try:
             bundle_path = os.path.join(temp_dir, bundle.file_name)
             with ZipFile(bundle_path, 'w', ZIP_STORED) as zf:
@@ -31,20 +30,20 @@ class BundleIngestor(Ingestor):
             ingest_file(self.collection_id, bundle, bundle_path,
                         move=True)
         finally:
-            shutil.rmtree(temp_dir)
+            remove_tempdir(temp_dir)
 
     def bundle(self, meta, directory):
         return []
 
     def ingest(self, meta, local_path):
-        temp_dir = mkdtemp()
+        temp_dir = make_tempdir()
         try:
             log.info("Unpacking bundle: %r", meta.file_name)
             with ZipFile(local_path, 'r') as zf:
                 zf.extractall(temp_dir)
             self.ingest_directory(meta, temp_dir)
         finally:
-            shutil.rmtree(temp_dir)
+            remove_tempdir(temp_dir)
 
     def ingest_directory(self, meta, temp_dir):
         raise NotImplemented()

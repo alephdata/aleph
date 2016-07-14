@@ -1,9 +1,7 @@
 import os
 import logging
-import shutil
 import rfc822
 import subprocess
-from tempfile import mkstemp, mkdtemp
 from time import mktime
 from datetime import datetime
 
@@ -14,6 +12,8 @@ from aleph.ingest import ingest_file, IngestorException
 from aleph.ingest.text import TextIngestor
 from aleph.ingest.html import HtmlIngestor
 from aleph.ingest.document import DocumentIngestor
+from aleph.util import make_tempfile, make_tempdir, remove_tempfile
+from aleph.util import remove_tempdir
 
 log = logging.getLogger(__name__)
 
@@ -23,9 +23,8 @@ class EmailFileIngestor(TextIngestor):
     EXTENSIONS = ['eml', 'rfc822', 'email']
     BASE_SCORE = 6
 
-    def write_temp(self, body, suffix=''):
-        fh, out_path = mkstemp(suffix=suffix)
-        os.close(fh)
+    def write_temp(self, body, suffix=None):
+        out_path = make_tempfile(suffix=suffix)
         with open(out_path, 'w') as fh:
             if isinstance(body, unicode):
                 body = body.encode('utf-8')
@@ -41,14 +40,15 @@ class EmailFileIngestor(TextIngestor):
             return
         out_path = self.write_temp(body, ext)
         child = meta.make_child()
-        child.file_name = unicode(part.detected_file_name)
-        child.mime_type = unicode(part.detected_content_type)
+        child.file_name = part.detected_file_name
+        child.mime_type = part.detected_content_type
 
         # Weird outlook RTF representations -- do we want them?
         if child.file_name == 'rtf-body.rtf':
             return
 
         ingest_file(self.collection_id, child, out_path, move=True)
+        remove_tempfile(out_path)
 
     def parse_headers(self, msg, meta):
         meta.title = msg.subject
@@ -102,16 +102,14 @@ class EmailFileIngestor(TextIngestor):
             raise IngestorException("No body in E-Mail: %r" % meta)
         try:
             if 'html' in body_type:
-                out_path = self.write_temp(body_part, '.htm')
+                out_path = self.write_temp(body_part, 'htm')
                 ing = HtmlIngestor(self.source_id)
             else:
-                out_path = self.write_temp(body_part, '.txt')
+                out_path = self.write_temp(body_part, 'txt')
                 ing = DocumentIngestor(self.source_id)
             ing.ingest(meta, out_path)
         finally:
-            if out_path is not None and len(out_path) and \
-                    os.path.isfile(out_path):
-                os.unlink(out_path)
+            remove_tempfile(out_path)
 
 
 class OutlookIngestor(TextIngestor):
@@ -119,24 +117,22 @@ class OutlookIngestor(TextIngestor):
     EXTENSIONS = ['pst']
     BASE_SCORE = 5
 
-    def ingest_message(self, filepath, meta):
-        meta.source_path = filepath
-        ingest_file(self.source_id, meta, filepath, move=True)
-
     def ingest(self, meta, local_path):
-        work_dir = mkdtemp()
+        work_dir = make_tempdir()
         try:
             bin_path = os.environ.get('READPST_BIN', 'readpst')
             args = [bin_path, '-D', '-e', '-o', work_dir, local_path]
             log.debug('Converting Outlook PST file: %r', ' '.join(args))
             subprocess.call(args)
             for (dirpath, dirnames, filenames) in os.walk(work_dir):
-                child = meta.make_child()
-                relpath = os.path.relpath(dirpath, work_dir)
-                for kw in relpath.split(os.path.sep):
-                    child.add_keyword(kw)
+                reldir = os.path.relpath(dirpath, work_dir)
                 for filename in filenames:
-                    filepath = os.path.join(dirpath, filename)
-                    self.ingest_message(filepath, child)
+                    child = meta.make_child()
+                    for kw in reldir.split(os.path.sep):
+                        child.add_keyword(kw)
+                    child.foreign_id = os.path.join(meta.foreign_id, reldir,
+                                                    filename)
+                    ingest_file(self.source_id, meta,
+                                os.path.join(dirpath, filename), move=True)
         finally:
-            shutil.rmtree(work_dir)
+            remove_tempdir(work_dir)
