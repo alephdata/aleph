@@ -1,5 +1,7 @@
 from normality import slugify
 
+from aleph.text import string_value
+
 
 class TabularColumn(object):
 
@@ -21,7 +23,7 @@ class Tabular(object):
             self.schema['columns'] = []
 
     def add_column(self, label):
-        label = unicode(label)
+        label = string_value(label)
         column = slugify(label or '', sep='_')
         column = column or 'column'
         column = column[:55]

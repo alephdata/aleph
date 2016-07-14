@@ -26,4 +26,5 @@ class DirectoryCrawler(Crawler):
         })
         db.session.commit()
         meta = self.make_meta(meta)
+        meta.source_path = directory
         ingest_directory(collection.id, meta, directory)

@@ -48,8 +48,10 @@ def make_tempdir(name=None):
 def remove_tempdir(dirpath):
     if dirpath is None:
         return
-    parent = os.path.normpath(path.join(dirpath, '..'))
-    if path.exists(parent) and path.dirname(parent).startswith(TMP_PREFIX):
+    parent = path.normpath(path.join(dirpath, '..'))
+    print 'DIR', dirpath, parent
+    name = path.dirname(parent)
+    if path.exists(parent) and name is not None and name.startswith(TMP_PREFIX):
         shutil.rmtree(parent)
 
 
