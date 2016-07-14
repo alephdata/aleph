@@ -6,10 +6,10 @@ import bz2
 import rarfile
 import zipfile
 import tarfile
-from tempfile import mkdtemp
 
 from aleph.ingest import ingest_directory
 from aleph.ingest.ingestor import Ingestor
+from aleph.util import make_tempdir, remove_tempdir
 
 log = logging.getLogger(__name__)
 
@@ -17,7 +17,11 @@ log = logging.getLogger(__name__)
 class PackageIngestor(Ingestor):
 
     def ingest(self, meta, local_path):
-        temp_dir = mkdtemp()
+        # Work-around: try to unpack multi-part files by changing into
+        # the directory containing the file.
+        prev_cwd = os.getcwd()
+        os.chdir(os.path.dirname(local_path))
+        temp_dir = make_tempdir(meta.file_name)
         try:
             log.info("Descending into package: %r", meta.file_name)
             self.unpack(meta, local_path, temp_dir)
@@ -26,7 +30,8 @@ class PackageIngestor(Ingestor):
         except rarfile.NeedFirstVolume:
             pass
         finally:
-            shutil.rmtree(temp_dir)
+            remove_tempdir(temp_dir)
+            os.chdir(prev_cwd)
 
     def unpack(self, meta, local_path, temp_dir):
         pass
