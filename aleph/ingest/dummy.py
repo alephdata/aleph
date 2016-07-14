@@ -7,7 +7,7 @@ log = logging.getLogger(__name__)
 
 class SkipIngestor(Ingestor):
     MIME_TYPES = []
-    EXTENSIONS = ['emf', 'rels', 'txt']
+    EXTENSIONS = ['emf', 'rels', 'txt', 'dll']
     BASE_SCORE = 10
 
     def ingest(self, meta, local_path):
