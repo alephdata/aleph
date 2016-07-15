@@ -16,6 +16,26 @@ log = logging.getLogger(__name__)
 
 class PackageIngestor(Ingestor):
 
+    def unpack_members(self, pack, temp_dir):
+        # Some archives come with non-Unicode file names, this
+        # attempts to avoid that issue by naming the destination
+        # explicitly.
+        for name in pack.namelist():
+            out_path = os.path.join(temp_dir, name)
+            if os.path.exists(out_path) or not out_path.startswith(temp_dir):
+                continue
+            if not os.path.exists(os.path.dirname(out_path)):
+                os.makedirs(os.path.dirname(out_path))
+            in_fh = pack.open(name)
+            try:
+                log.debug("Unpack: %s", out_path)
+                with open(out_path, 'w') as out_fh:
+                    shutil.copyfileobj(in_fh, out_fh)
+            except Exception as ex:
+                log.debug("Failed to unpack %s: %s", out_path, ex)
+            finally:
+                in_fh.close()
+
     def ingest(self, meta, local_path):
         # Work-around: try to unpack multi-part files by changing into
         # the directory containing the file.
@@ -41,7 +61,7 @@ class RARIngestor(PackageIngestor):
 
     def unpack(self, meta, local_path, temp_dir):
         with rarfile.RarFile(local_path) as rf:
-            rf.extractall(temp_dir)
+            self.unpack_members(rf, temp_dir)
 
     @classmethod
     def match(cls, meta, local_path):
@@ -54,7 +74,7 @@ class ZipIngestor(PackageIngestor):
 
     def unpack(self, meta, local_path, temp_dir):
         with zipfile.ZipFile(local_path) as zf:
-            zf.extractall(temp_dir)
+            self.unpack_members(zf, temp_dir)
 
     @classmethod
     def match(cls, meta, local_path):
