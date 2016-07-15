@@ -12,7 +12,7 @@ RUN apt-get -y dist-upgrade && apt-get install -y -q  \
         poppler-utils poppler-data unrtf pstotext python-numpy default-jdk \
         readpst libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
         libopenjpeg-dev imagemagick-common imagemagick unoconv mdbtools \
-        cabextract
+        cabextract p7zip-full
 RUN apt-get install -y -q  \
         libtesseract-dev ruby-sass wkhtmltopdf vim libjpeg-dev libicu-dev \
         tesseract-ocr tesseract-ocr-bel tesseract-ocr-aze \

@@ -6,7 +6,9 @@ import bz2
 import rarfile
 import zipfile
 import tarfile
+import subprocess
 
+from aleph.core import get_config
 from aleph.ingest import ingest_directory
 from aleph.ingest.ingestor import Ingestor
 from aleph.util import make_tempdir, remove_tempdir
@@ -94,6 +96,18 @@ class TarIngestor(PackageIngestor):
         if tarfile.is_tarfile(local_path):
             return 4
         return -1
+
+
+class SevenZipIngestor(PackageIngestor):
+    MIME_TYPES = ['application/x-7z-compressed']
+    EXTENSIONS = ['7z', '7zip']
+    BASE_SCORE = 4
+
+    def unpack(self, meta, local_path, temp_dir):
+        args = [get_config('SEVENZ_BIN'), 'x', local_path, '-y', '-r',
+                '-bb0', '-bd', '-oc:%s' % temp_dir]
+        print ' '.join(args)
+        subprocess.call(args, stderr=subprocess.STDOUT)
 
 
 class SingleFilePackageIngestor(PackageIngestor):

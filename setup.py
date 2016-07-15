@@ -40,6 +40,7 @@ setup(
             'rar = aleph.ingest.packages:RARIngestor',
             'zip = aleph.ingest.packages:ZipIngestor',
             'tar = aleph.ingest.packages:TarIngestor',
+            '7z = aleph.ingest.packages:SevenZipIngestor',
             'gz = aleph.ingest.packages:GzipIngestor',
             'bz2 = aleph.ingest.packages:BZ2Ingestor'
         ],
