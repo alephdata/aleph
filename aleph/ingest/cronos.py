@@ -45,6 +45,7 @@ class CronosIngestor(TabularIngestor, BundleIngestor):
         sheet = 0
         for table in tables:
             log.info("Loading table: %s", table['name'])
+            table['length'] = 0
             tabular = self.create_tabular(sheet, table['name'])
             columns = [c.get('name') for c in table.get('columns')]
             columns = [tabular.add_column(c) for c in columns]
@@ -53,11 +54,15 @@ class CronosIngestor(TabularIngestor, BundleIngestor):
                 for row in parse_data(os.path.join(data_dir, data_tad),
                                       os.path.join(data_dir, data_dat),
                                       table.get('id'), columns):
+                    table['length'] += 1
                     yield {c.name: v for c, v in zip(columns, row)}
 
             document.insert_records(sheet, generate_rows())
-            tabulars.append(tabular)
-            sheet += 1
-        meta.tables = tabulars
-        document.meta = meta
-        self.emit(document)
+            if table['length'] > 0:
+                tabulars.append(tabular)
+                sheet += 1
+
+        if len(tabulars):
+            meta.tables = tabulars
+            document.meta = meta
+            self.emit(document)
