@@ -28,15 +28,16 @@ class PackageIngestor(Ingestor):
                 continue
             if not os.path.exists(os.path.dirname(out_path)):
                 os.makedirs(os.path.dirname(out_path))
-            in_fh = pack.open(name)
             try:
-                log.debug("Unpack: %s", out_path)
-                with open(out_path, 'w') as out_fh:
-                    shutil.copyfileobj(in_fh, out_fh)
+                in_fh = pack.open(name)
+                try:
+                    log.debug("Unpack: %s", out_path)
+                    with open(out_path, 'w') as out_fh:
+                        shutil.copyfileobj(in_fh, out_fh)
+                finally:
+                    in_fh.close()
             except Exception as ex:
                 log.debug("Failed to unpack %s: %s", out_path, ex)
-            finally:
-                in_fh.close()
 
     def ingest(self, meta, local_path):
         # Work-around: try to unpack multi-part files by changing into
