@@ -1,5 +1,5 @@
 import logging
-from flask.ext import migrate
+import flask_migrate
 
 from aleph.core import db # noqa
 from aleph.model.role import Role # noqa
@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 
 def upgrade_db():
     log.info("Beginning database migration...")
-    migrate.upgrade()
+    flask_migrate.upgrade()
     create_system_roles()
 
 

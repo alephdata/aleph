@@ -4,9 +4,9 @@ from logging.handlers import SMTPHandler
 from urlparse import urljoin
 from flask import Flask, current_app
 from flask import url_for as flask_url_for
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.assets import Environment
-from flask.ext.migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+from flask_assets import Environment
+from flask_migrate import Migrate
 from flask_oauthlib.client import OAuth
 from flask_mail import Mail
 from kombu import Exchange, Queue

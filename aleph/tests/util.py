@@ -1,8 +1,8 @@
 import os
 import shutil
 from tempfile import mkdtemp
-from flask.ext.testing import TestCase as FlaskTestCase
-from flask.ext.fixtures import loaders, load_fixtures
+from flask_testing import TestCase as FlaskTestCase
+from flask_fixtures import loaders, load_fixtures
 
 from aleph.model import Role, Document, create_system_roles
 from aleph.index import delete_index, init_search, optimize_search

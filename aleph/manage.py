@@ -2,9 +2,9 @@
 import os
 import logging
 
-from flask.ext.script import Manager
-from flask.ext.assets import ManageAssets
-from flask.ext.migrate import MigrateCommand
+from flask_script import Manager
+from flask_assets import ManageAssets
+from flask_migrate import MigrateCommand
 
 from aleph.core import create_app
 from aleph.model import db, upgrade_db, Collection, Document
@@ -60,8 +60,6 @@ def crawl(name):
 @manager.option('-c', '--country', dest='country', nargs='*')
 def crawldir(directory, language=None, country=None):
     """Crawl the given directory."""
-    directory = os.path.abspath(directory)
-    directory = os.path.normpath(directory)
     log.info('Crawling %r...', directory)
     meta = {}
     if language is not None:

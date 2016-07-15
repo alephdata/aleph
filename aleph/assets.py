@@ -1,5 +1,5 @@
 import os
-from flask.ext.assets import Bundle
+from flask_assets import Bundle
 
 from aleph.core import assets
 
