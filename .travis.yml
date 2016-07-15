@@ -28,6 +28,7 @@ before_install:
   - tar -xf /tmp/wkhtmltox.tar.xv -C $TRAVIS_BUILD_DIR
 install:
   - gem install sass
+  - pip install --upgrade setuptools pip
   - pip install -r requirements.txt
   - pip install -e .
   - pip install psycopg2 coveralls
