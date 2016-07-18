@@ -26,7 +26,10 @@ def check_alerts():
 
 
 def make_document_query(alert):
-    return urlencode((('dq', alert.query_text),))
+    args = {}
+    if alert.query_text:
+        args['dq'] = alert.query_text
+    return urlencode(args.items())
 
 
 def check_role_alerts(role):

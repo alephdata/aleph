@@ -77,15 +77,6 @@
             </span>
           </td>
         </tr>
-        <tr class="teaser">
-          <td>
-            {% for rec in result.records.results %}
-              {% for text in rec.text %}
-                {{text | safe}}
-              {% endfor %}
-            {% endfor %}
-          </td>
-        </tr>
       {% endfor %}
       {% if results.total > 1 %}
         <tr class="tally-row">
