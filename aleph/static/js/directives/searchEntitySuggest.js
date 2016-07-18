@@ -23,6 +23,7 @@ aleph.directive('searchEntitySuggest', ['$location', '$q', '$route', '$http', '$
       };
 
       var shouldSuggest = function(text) {
+        if (!text) return false;
         text = text.trim();
         if (text && text.length > 3 && text.indexOf(' ') != -1) {
           return true;
