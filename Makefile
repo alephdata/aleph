@@ -23,4 +23,4 @@ base:
 
 build:
 	docker build -t pudo/aleph:latest .
-	docker push pudo/aleph
+	docker push pudo/aleph:latest
