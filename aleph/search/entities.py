@@ -13,7 +13,7 @@ from aleph.search.facets import convert_entity_aggregations
 from aleph.text import latinize_text
 
 DEFAULT_FIELDS = ['collection_id', 'name', 'summary', 'jurisdiction_code',
-                  '$schema']
+                  '$schema', 'doc_count']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
@@ -169,24 +169,10 @@ def execute_entities_query(args, query, doc_counts=False):
     """Execute the query and return a set of results."""
     result, hits, output = execute_basic(TYPE_ENTITY, query)
     convert_entity_aggregations(result, output, args)
-    sub_queries = []
     for doc in hits.get('hits', []):
         entity = doc.get('_source')
         entity['id'] = doc.get('_id')
         entity['score'] = doc.get('_score')
         entity['api_url'] = url_for('entities_api.view', id=doc.get('_id'))
         output['results'].append(entity)
-
-        sq = {'term': {'entities.id': entity['id']}}
-        sq = authz_filter(sq)
-        sq = {'size': 0, 'query': sq}
-        sub_queries.append(json.dumps({}))
-        sub_queries.append(json.dumps(sq))
-
-    if doc_counts and len(sub_queries):
-        res = get_es().msearch(index=get_es_index(),
-                               doc_type=TYPE_DOCUMENT,
-                               body='\n'.join(sub_queries))
-        for (entity, res) in zip(output['results'], res.get('responses')):
-            entity['doc_count'] = res.get('hits', {}).get('total')
     return output
