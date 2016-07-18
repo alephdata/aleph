@@ -42,12 +42,6 @@ def peek_query(args):
         filters.append(('entities.id', entity))
 
     q = filter_query(q, filters, [])
-    if q == text_query(''):
-        return {
-            'total': 0,
-            'active': False,
-        }
-
     q = add_filter(q, {
         'not': {
             'terms': {
@@ -65,6 +59,8 @@ def peek_query(args):
         },
         '_source': False
     }
+    # import json
+    # print json.dumps(q, indent=2)
     result = get_es().search(index=get_es_index(), body=q,
                              doc_type=TYPE_DOCUMENT)
 

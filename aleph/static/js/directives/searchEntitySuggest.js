@@ -22,14 +22,22 @@ aleph.directive('searchEntitySuggest', ['$location', '$q', '$route', '$http', '$
         scope.query.toggle('entity', entity.id);
       };
 
+      var shouldSuggest = function(text) {
+        text = text.trim();
+        if (text && text.length > 3 && text.indexOf(' ') != -1) {
+          return true;
+        }
+        return false;
+      };
+
       scope.$watch('query', function updateSearchEntitySuggest(q) {
         scope.entity = null;
         scope.offerCreate = false;
         scope.offerSignin = false;
         scope.offerEntity = false;
-        scope.queryText = q ? q.getQ() : null;
+        scope.queryText = q ? q.getQ() : '';
 
-        if (scope.queryText && scope.queryText.length > 3) {
+        if (shouldSuggest(scope.queryText)) {
           var params = {
               params: {'prefix': scope.queryText},
               ignoreLoadingBar: true,

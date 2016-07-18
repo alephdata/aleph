@@ -1,4 +1,6 @@
 import json
+import time
+import logging
 from pprint import pprint  # noqa
 
 from werkzeug.datastructures import MultiDict
@@ -13,7 +15,9 @@ from aleph.search.fragments import text_query_string, meta_query_string
 from aleph.search.fragments import match_all, child_record, aggregate
 from aleph.search.fragments import filter_query
 from aleph.search.facets import convert_document_aggregations
-from aleph.search.records import records_query
+from aleph.search.records import records_query_internal
+
+log = logging.getLogger(__name__)
 
 DEFAULT_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                   'languages', 'countries', 'source_url', 'created_at',
@@ -74,22 +78,10 @@ def facet_entities(aggs, args):
     entities = args.getlist('entity')
     collections = authz.collections(authz.READ)
     flt = {
-        'or': [
-            {
-                'terms': {
-                    'entities.collection_id': collections
-                }
-            },
-            {
-                'and': [
-                    {
-                        'terms': {'entities.collection_id': collections},
-                        'terms': {'entities.id': entities},
-                    }
-                ]
-            }
-        ]
+        'bool': {'must': [{'terms': {'entities.collection_id': collections}}]}
     }
+    if len(entities):
+        flt['bool']['must'].append({'terms': {'entities.id': entities}})
     aggs['entities'] = {
         'nested': {
             'path': 'entities'
@@ -167,8 +159,15 @@ def run_sub_queries(output, sub_queries):
 
 def execute_documents_query(args, query):
     """Execute the query and return a set of results."""
+    begin_time = time.time()
     result, hits, output = execute_basic(TYPE_DOCUMENT, query)
+    query_duration = (time.time() - begin_time) * 1000
+    log.debug('Query ES time: %.5fms', query_duration)
     convert_document_aggregations(result, output, args)
+    query_duration = (time.time() - begin_time) * 1000
+    log.debug('Post-facet accumulated: %.5fms', query_duration)
+    query_text = args.get('q', '').strip()
+
     sub_queries = []
     for doc in hits.get('hits', []):
         document = doc.get('_source')
@@ -176,18 +175,17 @@ def execute_documents_query(args, query):
         document['score'] = doc.get('_score')
         document['records'] = {'results': [], 'total': 0}
 
-        sq = records_query(document['id'], args)
+        # TODO: restore entity highlighting somehow.
+        sq = records_query_internal(document['id'], query_text, {})
         if sq is not None:
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))
 
-        document['api_url'] = url_for('documents_api.view',
-                                      document_id=doc.get('_id'))
-        document['data_url'] = url_for('documents_api.file',
-                                       document_id=doc.get('_id'))
         output['results'].append(document)
 
     run_sub_queries(output, sub_queries)
+    query_duration = (time.time() - begin_time) * 1000
+    log.debug('Post-subquery accumulated: %.5fms', query_duration)
     return output
 
 
@@ -211,7 +209,6 @@ def alert_query(alert):
     }
 
     result, hits, output = execute_basic(TYPE_DOCUMENT, q)
-    sub_queries = []
     collections = {}
     for doc in hits.get('hits', []):
         document = doc.get('_source')
@@ -226,12 +223,5 @@ def alert_query(alert):
                 continue
             document['collections'].append(collections[coll])
         document['records'] = {'results': [], 'total': 0}
-
-        sq = records_query(document['id'], alert.to_query(), size=1)
-        if sq is not None:
-            sub_queries.append(json.dumps({}))
-            sub_queries.append(json.dumps(sq))
         output['results'].append(document)
-
-    run_sub_queries(output, sub_queries)
     return output

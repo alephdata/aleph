@@ -6,14 +6,22 @@ from aleph.index import TYPE_RECORD
 from aleph.search.fragments import text_query_string
 from aleph.search.util import execute_basic
 
+SNIPPET_SIZE = 100
 
-def records_query(document_id, args, size=5, snippet_size=100):
-    shoulds = []
-    text = args.get('q', '').strip()
-    if len(text):
-        shoulds.append(text_query_string(text))
 
+def records_query(document_id, args, size=5):
+    query_text = args.get('q', '')
     entities = Entity.by_id_set(args.getlist('entity'))
+    return records_query_internal(document_id, query_text,
+                                  entities, size=size)
+
+
+def records_query_internal(document_id, query_text, entities, size=5):
+    shoulds = []
+    query_text = query_text.strip()
+    if len(query_text):
+        shoulds.append(text_query_string(query_text))
+
     for entity in entities.values():
         for term in entity.terms:
             shoulds.append({
@@ -38,23 +46,17 @@ def records_query(document_id, args, size=5, snippet_size=100):
         q['bool']['must'] = {
             'term': {'document_id': document_id}
         }
-
-    try:
-        snippet_size = int(args.get('snippet', snippet_size))
-    except:
-        pass
-
     return {
         'size': size,
         'query': q,
         'highlight': {
             'fields': {
                 'text': {
-                    'fragment_size': snippet_size,
+                    'fragment_size': SNIPPET_SIZE,
                     'number_of_fragments': 1
                 },
                 'text_latin': {
-                    'fragment_size': snippet_size,
+                    'fragment_size': SNIPPET_SIZE,
                     'number_of_fragments': 1
                 }
             }

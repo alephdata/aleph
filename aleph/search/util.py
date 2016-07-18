@@ -18,18 +18,13 @@ def add_filter(q, filter_):
     """Add the given filter ``filter_`` to the given query."""
     q = deepcopy(q)
     if 'filtered' not in q:
-        return {
+        q = {
             'filtered': {
                 'query': q,
-                'filter': filter_
+                'filter': {'bool': {'must': []}}
             }
         }
-
-    if 'and' in q['filtered']['filter']:
-        q['filtered']['filter']['and'].append(filter_)
-    else:
-        q['filtered']['filter'] = \
-            {'and': [filter_, q['filtered']['filter']]}
+    q['filtered']['filter']['bool']['must'].append(filter_)
     return q
 
 

@@ -22,6 +22,8 @@ def query():
     query = documents_query(request.args)
     query['size'] = get_limit(default=100)
     query['from'] = get_offset()
+    # import json
+    # print json.dumps(query, indent=2)
     result = execute_documents_query(request.args, query)
     params = next_params(request.args, result)
     if params is not None:

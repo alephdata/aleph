@@ -70,5 +70,6 @@ def filter_query(q, filters, or_fields, skip=None):
         else:
             q = add_filter(q, {'term': {field: value}})
     for field, value in or_filters.items():
-        q = add_filter(q, {'terms': {field: value}})
+        if len(value):
+            q = add_filter(q, {'terms': {field: value}})
     return q
