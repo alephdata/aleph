@@ -30,8 +30,7 @@ logging.getLogger('amqp').setLevel(logging.INFO)
 logging.getLogger('assets.cssutils').setLevel(logging.ERROR)
 logging.getLogger('cssutils').setLevel(logging.ERROR)
 logging.getLogger('polyglot').setLevel(logging.WARNING)
-
-logging.getLogger('extractors').setLevel(logging.DEBUG)
+logging.getLogger('PIL').setLevel(logging.WARNING)
 
 # Log all SQL statements:
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)

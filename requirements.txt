@@ -48,7 +48,6 @@ rarfile==2.7
 xlrd==0.9.3
 flanker==0.3.4
 jsonschema
-functools32==3.2.3-2
 PyYAML==3.11
 PyICU==1.9.2
 dateparser==0.3.1
@@ -56,3 +55,7 @@ jdatetime==1.7.2
 coverage
 pyahocorasick
 pycrypto
+
+# Python 3 backports
+subprocess32
+functools32>=3.2

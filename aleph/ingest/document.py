@@ -1,7 +1,7 @@
 import os
 import logging
 import shutil
-import subprocess
+import subprocess32 as subprocess
 from tempfile import mkdtemp
 
 from aleph.core import get_config
@@ -9,6 +9,8 @@ from aleph.ingest.ingestor import IngestorException
 from aleph.ingest.text import TextIngestor
 
 log = logging.getLogger(__name__)
+
+CONVERT_TIMEOUT = 5 * 60
 
 
 class DocumentIngestor(TextIngestor):
@@ -32,7 +34,7 @@ class DocumentIngestor(TextIngestor):
                     '--nolockcheck', '--invisible', '--outdir', work_dir,
                     '--headless', local_path]
             log.debug('Converting document: %r', ' '.join(args))
-            subprocess.call(args, stderr=subprocess.STDOUT)
+            subprocess.call(args, timeout=CONVERT_TIMEOUT)
             for out_file in os.listdir(work_dir):
                 return os.path.join(work_dir, out_file)
             raise IngestorException("Could not convert document: %r" % meta)
