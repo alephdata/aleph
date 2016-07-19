@@ -3,6 +3,7 @@ import logging
 import warnings
 import requests
 import urllib3
+from flask.exthook import ExtDeprecationWarning
 from sqlalchemy.exc import SAWarning
 
 # shut up useless SA warning:
@@ -10,6 +11,7 @@ warnings.filterwarnings('ignore',
                         'Unicode type received non-unicode bind param value.')
 
 warnings.filterwarnings('ignore', category=SAWarning)
+warnings.filterwarnings('ignore', category=ExtDeprecationWarning)
 
 # using SSL w/o certificate validation
 urllib3.disable_warnings()
