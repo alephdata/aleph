@@ -35,6 +35,8 @@ def make_filename(file_name, sep='-'):
         slugs = [s[:200] for s in slugs if s is not None]
         file_name = '.'.join(slugs)
         file_name = file_name.strip('.').strip(sep)
+        if not len(file_name.strip()):
+            file_name = None
     return file_name
 
 

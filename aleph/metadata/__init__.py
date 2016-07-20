@@ -113,7 +113,7 @@ class Metadata(object):
             parsed = urlparse(self.source_url)
             file_name = os.path.basename(parsed.path)
 
-        return make_filename(file_name)
+        return make_filename(file_name) or 'data'
 
     @file_name.setter
     def file_name(self, file_name):
