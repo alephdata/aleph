@@ -21,34 +21,49 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-4 feature">
+    <div class="col-md-3 feature">
       <h2>
         <i class="fa fa-file-text"></i>
         Search it all
       </h2>
       <p>
-        {{title}} lets you search across data and documents from previous investigations,
+        {{metadata.app.title}} lets you search across
+        {{statistics.collection_count | number}} collections
+        of documents from previous investigations,
         official sources, and scraped databases. 
       </p>
     </div>
-    <div class="col-md-4 feature">
+    <div class="col-md-3 feature">
+      <h2>
+        <i class="fa fa-cloud-upload"></i>
+        Personal archive
+      </h2>
+      <p>
+        Upload documents to make them searchable and keep
+        them organized. You can also share documents with others,
+        or make them fully public.
+      </p>
+    </div>
+    <div class="col-md-3 feature">
       <h2>
         <i class="fa fa-bell"></i>
         E-Mail Alerts
       </h2>
       <p>
-        As new material gets added, you can stay informed about any additional matches for
-        your previous searches by setting up e-mail alerts
+        As new material gets added, you can stay informed about
+        any additional matches for your previous searches by
+        setting up e-mail alerts.
       </p>
     </div>
-    <div class="col-md-4 feature">
+    <div class="col-md-3 feature">
       <h2>
         <i class="fa fa-male"></i>
         Persons of Interest
       </h2>
       <p>
-        Documents and databases are cross-referenced with watchlists based on OCCRP
-        research, and international sanctions lists.
+        Documents and databases are cross-referenced with
+        persons and companies derived from research and
+        international sanctions lists.
       </p>
     </div>
   </div>

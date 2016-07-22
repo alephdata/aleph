@@ -11,9 +11,6 @@ aleph.factory('Title', ['$rootScope', 'Metadata', function($rootScope, Metadata)
       set: function(text, navSection) {
         element.innerHTML = text + ' - ' + appTitle;
         $rootScope.navSection = navSection;
-      },
-      getSiteTitle: function() {
-        return appTitle;
       }
   };
 }]);

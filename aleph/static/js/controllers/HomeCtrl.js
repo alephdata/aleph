@@ -5,7 +5,6 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Collection', 'Au
   $scope.statistics = statistics;
   $scope.session = metadata.session;
   $scope.metadata = metadata;
-  $scope.title = Title.getSiteTitle();
   $scope.query = {q: ''};
   $scope.authz = Authz;
 
