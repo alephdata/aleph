@@ -29,8 +29,15 @@ CUSTOM_TEMPLATES_DIR = []
 # Shown on the home page as a few sample queries:
 SAMPLE_SEARCHES = ['Serbia', 'TeliaSonera', 'Vladimir Putin']
 
+# Language configuration
+DEFAULT_LANGUAGE = 'en'
+LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka',
+             'ar', 'tr', 'lb', 'el', 'lt', 'uk', 'zh', 'be',
+             'bg', 'bs', 'ja', 'cs', 'lv', 'pt', 'pl', 'hy',
+             'hr', 'hi', 'he', 'uz', 'mo', 'mn', 'ur', 'sq',
+             'ko', 'is', 'it', 'et', 'no', 'fa', 'sw', 'sl']
 
-OCR_DEFAULTS = ['en']
+
 TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')
 PDFTOPPM_BIN = env.get('PDFTOPPM_BIN', 'pdftoppm')
 CONVERT_BIN = env.get('CONVERT_BIN', 'convert')

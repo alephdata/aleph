@@ -25,7 +25,7 @@ class TextIngestor(Ingestor):
         return page
 
     def get_languages(self, meta):
-        default_languages = get_config('OCR_DEFAULTS', ['en'])
+        default_languages = [get_config('DEFAULT_LANGUAGE')]
         languages = meta.languages + default_languages
         return list(set(languages))
 

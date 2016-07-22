@@ -1,6 +1,8 @@
 from babel import Locale
 from pycountry import countries, languages
 
+from aleph.core import get_config
+
 LANGUAGE_NAMES = dict(Locale('en').languages.items())
 LANGUAGE_NAMES = {k: v for k, v in LANGUAGE_NAMES.items() if len(k) == 2}
 
@@ -12,6 +14,15 @@ COUNTRY_NAMES = {
 
 for country in countries:
     COUNTRY_NAMES[country.alpha2.lower()] = country.name
+
+
+def get_languages():
+    active = [c.lower().strip() for c in get_config('LANGUAGES')]
+    languages = {}
+    for code, label in LANGUAGE_NAMES.items():
+        if code in active:
+            languages[code] = label
+    return languages
 
 
 def get_languages_iso3(codes):
@@ -44,4 +55,4 @@ def is_country_code(code):
 def is_language_code(code):
     if code is None:
         return False
-    return code.lower() in LANGUAGE_NAMES.keys()
+    return code.lower() in get_languages().keys()
