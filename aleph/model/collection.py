@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from sqlalchemy import func
 
 from aleph.core import db, url_for
 from aleph.model.role import Role
@@ -14,15 +15,17 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
     _schema = 'collection.json#'
 
     CATEGORIES = {
-        'news': 'News reports',
+        'news': 'News archives',
         'leak': 'Leaks',
-        'gazette': 'Gazette notices',
-        'court': 'Court cases',
-        'company': 'Company records',
-        'watchlist': 'Watchlist',
+        'gazette': 'Gazettes',
+        'court': 'Court archives',
+        'company': 'Company registries',
+        'watchlist': 'Watchlists',
+        'investigation': 'Investigations',
+        'sanctions': 'Sanctions Lists',
         'scrape': 'Scrapes',
-        'procurement': 'Procurement',
-        'grey': 'Grey Literature'
+        'procurement': 'Procurement databases',
+        'grey': 'Grey Archives'
     }
 
     label = db.Column(db.Unicode)
@@ -76,6 +79,18 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
                                             role, True, True)
         collection.deleted_at = None
         return collection
+
+    @classmethod
+    def category_statistics(cls, collection_ids):
+        q = db.session.query(Collection.category, func.count(Collection.id))
+        q = q.filter(Collection.deleted_at == None)  # noqa
+        q = q.filter(Collection.id.in_(collection_ids))
+        q = q.group_by(Collection.category)
+        q = q.order_by(func.count(Collection.id).desc())
+        results = []
+        for category, count in q.all():
+            results.append({'category': category, 'count': count})
+        return results
 
     def __repr__(self):
         return '<Collection(%r, %r)>' % (self.id, self.label)

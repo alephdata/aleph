@@ -1,6 +1,6 @@
 <div class="home">
   <div class="jumbotron">
-    <h1>{{documents.total | number}} leads</h1>
+    <h1>{{statistics.document_count | number}} leads</h1>
     <p class="teaser">for your investigations</p>
     <div class="search-area">
       <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
@@ -28,7 +28,7 @@
       </h2>
       <p>
         {{title}} lets you search across data and documents from previous investigations,
-        official sources, and scraped databases.
+        official sources, and scraped databases. 
       </p>
     </div>
     <div class="col-md-4 feature">
@@ -53,45 +53,27 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-8 feature">
+  <!--div class="row">
+    <div class="col-md-12 feature">
       <h3>
         Document sources
       </h3>
       <p>
-        {{documents.facets.collections.values.length | number}} document
-        sources are included in searches at the moment. Please feel free
-        to contact us with any other suggested document and data sets.
-      </p>
-      <div ng-repeat="(category, lst) in documentCollections | orderBy:category">
-        <div class="heading">
-          <strong>{{::category | collectionCategory}}</strong>
-        </div>
-        <div class="row">
-          <div class="col-md-6 collection" ng-repeat="collection in lst">
-            <a href="/search?filter:collection_id={{collection.id}}" class="mainlink">{{::collection.label}}</a>
-            <a ng-click="editCollection(collection, $event)" ng-show="::authz.collection(authz.WRITE, collection.id)">
-              <i class="fa fa-cog"></i>
-            </a>
-            <span class="count">{{::collection.count | number}}</span>
-          </div>
-        </div>
-      </div>
-    </div>
+        {{statistics.collection_count | number}} collections are searched
+        at the moment. This includes
 
-    <div class="col-md-4 feature">
-      <h3>
-        Watchlists
-      </h3>
-      <p>Select a watchlist to cross-reference it with documents:</p>
-      <ul>
-        <li ng-repeat="collection in watchlists track by collection.id">
-          <a ng-href="/entities?filter:collection_id={{::collection.id}}" class="mainlink" ng-bind="::collection.label"></a>
-          <a ng-click="editCollection(collection, $event)" ng-show="::authz.collection(authz.WRITE, collection.id)">
-            <i class="fa fa-cog"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
+        They are grouped into 
+        {{statistics.collection_count | number}} collections:
+        <span ng-repeat="collection in statistics.collections">
+          <a href="">{{collection.count | number}}
+            {{collection.category | collectionCategory}}</a><span ng-if="!$last">,</span>
+        </span>
+        Please contact us to suggest other document and data sets.
+        
+        Please contact us to suggest other document and data sets.
+      </p>
+      <p>
+        
+      </p>
+  </div-->
 </div>

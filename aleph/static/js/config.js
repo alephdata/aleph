@@ -116,7 +116,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     reloadOnSearch: false,
     loginRequired: false,
     resolve: {
-      'data': loadHome,
+      'statistics': loadHome,
       'collections': loadCollections,
       'metadata': loadMetadata
     }
