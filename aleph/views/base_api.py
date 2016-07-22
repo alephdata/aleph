@@ -66,7 +66,8 @@ def metadata():
         'status': 'ok',
         'app': {
             'title': get_app_title(),
-            'url': get_app_url()
+            'url': get_app_url(),
+            'samples': get_config('SAMPLE_SEARCHES')
         },
         'fields': Metadata.facets(),
         'categories': Collection.CATEGORIES,

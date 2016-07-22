@@ -26,6 +26,9 @@ MAX_CONTENT_LENGTH = 500 * 1024 * 1024
 CUSTOM_SCSS_PATH = None
 CUSTOM_TEMPLATES_DIR = []
 
+# Shown on the home page as a few sample queries:
+SAMPLE_SEARCHES = ['Serbia', 'TeliaSonera', 'Vladimir Putin']
+
 
 OCR_DEFAULTS = ['en']
 TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')

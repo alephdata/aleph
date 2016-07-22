@@ -33,9 +33,6 @@ def records_query_internal(document_id, query_text, entities, size=5):
                 }
             })
 
-    if not len(shoulds):
-        return None
-
     q = {
         'bool': {
             'minimum_should_match': 1,

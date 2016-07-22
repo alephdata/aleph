@@ -16,7 +16,8 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
   Title.set(data.doc.title + " (Page " + $scope.pageNum + ")", "documents");
 
   $scope.onError = function(error) {
-    $scope.reportError("Could not load document.");
+    // $scope.reportError("Could not load document.");
+    console.log(error);
   }
 
   $scope.onLoad = function() {

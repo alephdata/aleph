@@ -10,6 +10,13 @@
             <button class="btn btn-primary" type="submit">Search</button>
           </span>
         </div>
+        <p class="sample-searches">
+          Try searches:
+          <span ng-repeat="sample in metadata.app.samples">
+            <span ng-if="$last">or</span>
+            <a href="/search?q={{::sample}}">{{::sample}}</a><span ng-if="!$last">,</span>
+          </span>
+        </p>
       </form>
     </div>
   </div>

@@ -1,6 +1,6 @@
 
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll', '$http', '$uibModal', 'Collection', 'Entity', 'Authz', 'Alert', 'Document', 'Ingest', 'Role', 'Title', 'data', 'peek', 'alerts', 'metadata',
-    function($scope, $route, $location, $anchorScroll, $http, $uibModal, Collection, Entity, Authz, Alert, Document, Ingest, Role, Title, data, peek, alerts, metadata) {
+aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$anchorScroll', '$http', '$uibModal', 'Collection', 'Entity', 'Authz', 'Alert', 'Document', 'Ingest', 'Role', 'Title', 'data', 'peek', 'alerts', 'metadata',
+    function($scope, $route, $location, $timeout, $anchorScroll, $http, $uibModal, Collection, Entity, Authz, Alert, Document, Ingest, Role, Title, data, peek, alerts, metadata) {
 
   $scope.fields = metadata.fields;
   $scope.peek = peek;
@@ -103,6 +103,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
   });
 
   var reloadSearch = function() {
+    $scope.reportLoading(true);
     Document.search().then(function(data) {
       updateSearch(data);
     });
@@ -123,6 +124,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$anchorScroll'
     } else {
       Title.set("Search documents", "documents");  
     }
+    $scope.reportLoading(false);
   };
 
   updateSearch(data);
