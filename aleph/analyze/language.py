@@ -38,8 +38,7 @@ class LanguageAnalyzer(Analyzer):
         if not len(self.languages):
             return
 
-        languages = sorted(self.languages.items(), key=lambda (l, c): c,
-                           reverse=True)
-        self.meta.add_language(languages[0][0])
+        for code, score in self.languages.items():
+            self.meta.add_language(code)
         log.info("Classified languages in %r: %r", self.document,
-                 languages[:10])
+                 self.meta.languages.keys())
