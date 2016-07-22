@@ -6,10 +6,12 @@ from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify
 
 from aleph import authz
+from aleph.events import log_event
 from aleph.metadata import Metadata
 from aleph.ingest import ingest_file
 from aleph.core import get_upload_folder
 from aleph.model import Collection, validate
+from aleph.model.common import make_textid
 
 
 blueprint = Blueprint('ingest_api', __name__)
@@ -20,6 +22,7 @@ blueprint = Blueprint('ingest_api', __name__)
 def ingest_upload(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))
     authz.require(authz.collection_write(collection.id))
+    log_event(request)
     try:
         meta = json.loads(request.form.get('meta', '{}'))
     except Exception as ex:
@@ -32,6 +35,8 @@ def ingest_upload(collection_id):
         file_meta['file_name'] = storage.filename
         validate(file_meta, 'metadata.json#')
         file_meta = Metadata.from_data(file_meta)
+        file_meta.crawler_id = 'user_upload:%s' % request.auth_role.id
+        file_meta.crawler_run = make_textid()
         sec_fn = os.path.join(get_upload_folder(),
                               secure_filename(storage.filename))
         storage.save(sec_fn)

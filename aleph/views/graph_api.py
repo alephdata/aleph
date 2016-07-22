@@ -8,6 +8,7 @@ from networkx.readwrite import json_graph
 from apikit import jsonify, arg_int
 
 from aleph.search import scan_iter, documents_query
+from aleph.events import log_event
 from aleph.model import Entity
 
 blueprint = Blueprint('graph_api', __name__)
@@ -74,6 +75,7 @@ def generate_graph(args):
 def query():
     graph = generate_graph(request.args)
     format = request.args.get('format', '').lower().strip()
+    log_event(request)
     if format == 'gexf':
         sio = StringIO()
         nx.write_gexf(graph, sio)

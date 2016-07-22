@@ -7,8 +7,8 @@ from apikit import jsonify, Pager, get_limit, get_offset, request_data
 from aleph import authz
 from aleph.core import get_archive, url_for, db
 from aleph.model import Document, Entity, Reference, Collection
-from aleph.model import validate
 from aleph.index import index_document
+from aleph.events import log_event
 from aleph.views.cache import enable_cache
 from aleph.search.tabular import tabular_query, execute_tabular_query
 from aleph.search.util import next_params
@@ -42,6 +42,7 @@ def view(document_id):
     doc = get_document(document_id)
     enable_cache()
     data = doc.to_dict()
+    log_event(request, document_id=doc.id)
     data['data_url'] = get_archive().generate_url(doc.meta)
     if data['data_url'] is None:
         data['data_url'] = url_for('documents_api.file',
@@ -68,6 +69,7 @@ def update(document_id):
     data = request_data()
     document.update(data, writeable=authz.collections(authz.WRITE))
     db.session.commit()
+    log_event(request, document_id=document.id)
     index_document(document, index_records=False)
     return view(document_id)
 
@@ -86,6 +88,7 @@ def update_collections(document_id):
     data['collection_id'] = request_data()
     document.update(data, writeable=authz.collections(authz.WRITE))
     db.session.commit()
+    log_event(request, document_id=document.id)
     index_document(document, index_records=False)
     return view_collections(document_id)
 
@@ -108,6 +111,7 @@ def references(document_id):
 def file(document_id):
     document = get_document(document_id)
     enable_cache(server_side=True)
+    log_event(request, document_id=document.id)
     url = get_archive().generate_url(document.meta)
     if url is not None:
         return redirect(url)
@@ -123,6 +127,7 @@ def file(document_id):
 def pdf(document_id):
     document = get_document(document_id)
     enable_cache(server_side=True)
+    log_event(request, document_id=document.id)
     if document.type != Document.TYPE_TEXT:
         raise BadRequest("PDF is only available for text documents")
     pdf = document.meta.pdf

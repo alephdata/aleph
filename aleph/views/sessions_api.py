@@ -6,6 +6,7 @@ from apikit import jsonify
 from aleph import authz, signals
 from aleph.core import db, url_for, oauth_provider
 from aleph.model import Role
+from aleph.events import log_event
 from aleph.views.cache import enable_cache
 
 
@@ -62,6 +63,7 @@ def status():
 
 @blueprint.route('/api/1/sessions/login')
 def login():
+    log_event(request)
     return oauth_provider.authorize(callback=url_for('.callback'))
 
 
@@ -74,7 +76,7 @@ def logout():
 @signals.handle_oauth_session.connect
 def handle_google_oauth(sender, provider=None, session=None):
     # If you wish to use another OAuth provider with your installation of
-    # aleph, you can create a Python extension package and include a 
+    # aleph, you can create a Python extension package and include a
     # custom oauth handler like this, which will create roles and state
     # for your session.
     if 'googleapis.com' not in provider.base_url:
@@ -99,5 +101,6 @@ def callback():
     session['roles'] = [Role.system(Role.SYSTEM_USER)]
     signals.handle_oauth_session.send(provider=oauth_provider, session=session)
     db.session.commit()
+    log_event(request, role_id=session['user'])
     log.info("Logged in: %r", session['user'])
     return redirect('/')

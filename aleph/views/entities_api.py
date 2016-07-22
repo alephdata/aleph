@@ -7,6 +7,7 @@ from aleph import authz
 from aleph.model import Entity, Collection, db
 from aleph.logic import update_entity
 from aleph.views.cache import enable_cache
+from aleph.events import log_event
 from aleph.search import entities_query, execute_entities_query
 from aleph.search import suggest_entities, similar_entities
 from aleph.text import latinize_text
@@ -64,6 +65,7 @@ def create():
         collection.touch()
 
     db.session.commit()
+    log_event(request, entity_id=entity.id)
     update_entity(entity)
     return view(entity.id)
 
@@ -105,6 +107,7 @@ def pending():
 def view(id):
     entity = obj_or_404(Entity.by_id(id))
     check_authz(entity, authz.READ)
+    log_event(request, entity_id=entity.id)
     return jsonify(entity)
 
 
@@ -137,6 +140,7 @@ def update(id):
     for collection in entity.collections:
         collection.touch()
     db.session.commit()
+    log_event(request, entity_id=entity.id)
     update_entity(entity)
     return view(entity.id)
 
@@ -151,6 +155,7 @@ def merge(id, other_id):
     db.session.commit()
     update_entity(entity)
     update_entity(other)
+    log_event(request, entity_id=entity.id)
     return view(entity.id)
 
 
@@ -161,4 +166,5 @@ def delete(id):
     entity.delete()
     db.session.commit()
     update_entity(entity)
+    log_event(request, entity_id=entity.id)
     return jsonify({'status': 'ok'})

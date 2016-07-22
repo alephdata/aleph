@@ -3,6 +3,7 @@ from apikit import obj_or_404, jsonify, Pager, request_data
 
 from aleph import authz
 from aleph.model import Collection, db
+from aleph.events import log_event
 from aleph.views.cache import enable_cache
 from aleph.logic.collections import delete_collection
 from aleph.analyze import analyze_collection
@@ -24,6 +25,7 @@ def create():
     authz.require(authz.logged_in())
     collection = Collection.create(request_data(), request.auth_role)
     db.session.commit()
+    log_event(request)
     return view(collection.id)
 
 
@@ -41,6 +43,7 @@ def update(id):
     collection.update(request_data())
     db.session.add(collection)
     db.session.commit()
+    log_event(request)
     return view(id)
 
 
@@ -49,6 +52,7 @@ def process(id):
     authz.require(authz.collection_write(id))
     collection = obj_or_404(Collection.by_id(id))
     analyze_collection.delay(collection.id)
+    log_event(request)
     return jsonify({'status': 'ok'})
 
 
@@ -57,4 +61,5 @@ def delete(id):
     collection = obj_or_404(Collection.by_id(id))
     authz.require(authz.collection_write(id))
     delete_collection.delay(collection.id)
+    log_event(request)
     return jsonify({'status': 'ok'})

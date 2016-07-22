@@ -4,6 +4,7 @@ from apikit import obj_or_404, request_data, jsonify
 
 from aleph import authz
 from aleph.core import db
+from aleph.events import log_event
 from aleph.model import Role, Permission, validate
 
 
@@ -39,6 +40,7 @@ def update(id):
     role.update(request_data())
     db.session.add(role)
     db.session.commit()
+    log_event(request)
     return jsonify(role)
 
 
@@ -69,6 +71,7 @@ def permissions_update(collection):
                                              data['read'],
                                              data['write'])
     db.session.commit()
+    log_event(request)
     return jsonify({
         'status': 'ok',
         'updated': permission

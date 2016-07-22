@@ -4,6 +4,7 @@ from apikit import obj_or_404, request_data, jsonify
 from aleph import authz
 from aleph.core import db
 from aleph.model import Alert
+from aleph.events import log_event
 from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('alerts_api', __name__)
@@ -23,6 +24,7 @@ def create():
     alert = Alert.create(request_data(),
                          request.auth_role)
     db.session.commit()
+    log_event(request)
     return view(alert.id)
 
 
@@ -40,4 +42,5 @@ def delete(id):
     alert = obj_or_404(Alert.by_id(id, role=request.auth_role))
     alert.delete()
     db.session.commit()
+    log_event(request)
     return jsonify({'status': 'ok'})

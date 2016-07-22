@@ -6,6 +6,7 @@ from apikit import jsonify
 from werkzeug.exceptions import BadRequest
 
 from aleph import authz
+from aleph.events import log_event
 from aleph.core import get_app_url, get_app_title
 from aleph.model.validation import implied_schemas, resolver
 from aleph.search.entities import suggest_entities
@@ -107,6 +108,7 @@ def reconcile():
     # authz.require(authz.system_read())
     data = request.args.copy()
     data.update(request.form.copy())
+    log_event(request)
 
     if 'query' in data:
         # single

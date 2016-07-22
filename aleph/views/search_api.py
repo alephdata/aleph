@@ -6,6 +6,7 @@ from aleph import authz
 from aleph.core import url_for
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document
+from aleph.events import log_event
 from aleph.search import documents_query, execute_documents_query
 from aleph.search import records_query, execute_records_query
 from aleph.search.peek import peek_query
@@ -26,6 +27,7 @@ def query():
     # print json.dumps(query, indent=2)
     result = execute_documents_query(request.args, query)
     params = next_params(request.args, result)
+    log_event(request)
     if params is not None:
         result['next'] = url_for('search_api.query', **params)
     return jsonify(result)
