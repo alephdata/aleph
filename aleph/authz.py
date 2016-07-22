@@ -1,6 +1,7 @@
 from flask import request
 from werkzeug.exceptions import Forbidden
 
+from aleph.core import db
 from aleph.model import Collection, Permission
 
 READ = 'read'
@@ -16,14 +17,17 @@ def collections(action):
                 request.auth_collections[READ].add(col_id)
                 request.auth_collections[WRITE].add(col_id)
         else:
-            q = Permission.all()
+            q = db.session.query(Permission.collection_id,
+                                 Permission.read,
+                                 Permission.write)
+            q = q.filter(Permission.deleted_at == None)  # noqa
             q = q.filter(Permission.role_id.in_(request.auth_roles))
             q = q.filter(Permission.collection_id != None)  # noqa
-            for perm in q:
-                if perm.read or perm.write:
-                    request.auth_collections[READ].add(perm.collection_id)
-                if perm.write and request.logged_in:
-                    request.auth_collections[WRITE].add(perm.collection_id)
+            for collection_id, read, write in q:
+                if read or write:
+                    request.auth_collections[READ].add(collection_id)
+                if write and request.logged_in:
+                    request.auth_collections[WRITE].add(collection_id)
     return list(request.auth_collections.get(action, []))
 
 

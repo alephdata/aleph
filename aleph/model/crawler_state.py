@@ -89,7 +89,7 @@ class CrawlerState(db.Model):
         timeout = (datetime.utcnow() - CrawlerState.TIMEOUT)
         stats['running'] = last_run_time > timeout if last_run_time else False
 
-        q = db.session.query(func.count(func.distinct(cls.id)))
+        q = db.session.query(func.count(cls.id))
         q = q.filter(cls.crawler_id == crawler_id)
         for section in ['last', 'all']:
             data = {}
