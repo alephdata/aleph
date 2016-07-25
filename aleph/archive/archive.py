@@ -21,10 +21,16 @@ class Archive(object):
         meta.content_hash = checksum(filename)
         return meta
 
+    def upgrade(self):
+        """Run maintenance on the store."""
+        pass
+
     def archive_file(self, filename, meta, move=False):
-        """ Import the given file into the archive, and return an
-        updated metadata object. If ``move`` is given, the original
-        file will not exist afterwards. """
+        """Import the given file into the archive.
+
+        Return an updated metadata object. If ``move`` is given, the
+        original file will not exist afterwards.
+        """
         pass
 
     def load_file(self, meta):

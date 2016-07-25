@@ -37,7 +37,21 @@ class S3Archive(Archive):  # pragma: no cover
                 })
             else:
                 raise
-        self.cors_configured = False
+
+    def upgrade(self):
+        """Make sure bucket policy is set correctly."""
+        cors = self.bucket.Cors()
+        config = {
+            'CORSRules': [
+                {
+                    'AllowedMethods': ['GET'],
+                    'AllowedOrigins': ['*'],
+                    'AllowedHeaders': ['*'],
+                    'MaxAgeSeconds': 84600 * 14
+                }
+            ]
+        }
+        cors.put(CORSConfiguration=config)
 
     def archive_file(self, filename, meta, move=False):
         meta = self._update_metadata(filename, meta)
@@ -72,20 +86,6 @@ class S3Archive(Archive):  # pragma: no cover
             os.unlink(path)
 
     def generate_url(self, meta):
-        if not self.cors_configured:
-            self.cors_configured = True
-            cors = self.bucket.Cors()
-            config = {
-                'CORSRules': [
-                    {
-                        'AllowedMethods': ['GET'],
-                        'AllowedOrigins': ['*'],
-                        'AllowedHeaders': ['*'],
-                        'MaxAgeSeconds': 84600 * 14
-                    }
-                ]
-            }
-            cors.put(CORSConfiguration=config)
         params = {
             'Bucket': self.bucket_name,
             'Key': self._get_file_path(meta)
