@@ -53,17 +53,18 @@ class S3Archive(Archive):  # pragma: no cover
         }
         cors.put(CORSConfiguration=config)
 
+    def _locate_key(self, meta):
+        key = self._get_file_path(meta)
+        prefix = os.path.dirname(key)
+        for obj in self.bucket.objects.filter(MaxKeys=1, Prefix=prefix):
+            return obj
+
     def archive_file(self, filename, meta, move=False):
         meta = self._update_metadata(filename, meta)
         path = self._get_file_path(meta)
-        key = self.bucket.Object(path)
-
-        try:
-            key.e_tag
-        except botocore.exceptions.ClientError as e:
-            error_code = int(e.response['Error']['Code'])
-            if error_code == 404:
-                self.bucket.upload_file(filename, path)
+        obj = self._locate_key(meta)
+        if obj is None:
+            self.bucket.upload_file(filename, path)
 
         if move:  # really?
             os.unlink(filename)
@@ -76,9 +77,10 @@ class S3Archive(Archive):  # pragma: no cover
 
     def load_file(self, meta):
         path = self._get_local_mirror(meta)
-        key = self._get_file_path(meta)
-        self.bucket.download_file(key, path)
-        return path
+        obj = self._locate_key(meta)
+        if obj is not None:
+            obj.download_file(path)
+            return path
 
     def cleanup_file(self, meta):
         path = self._get_local_mirror(meta)
@@ -86,10 +88,18 @@ class S3Archive(Archive):  # pragma: no cover
             os.unlink(path)
 
     def generate_url(self, meta):
+        obj = self._locate_key(meta)
+        if obj is None:
+            return
         params = {
             'Bucket': self.bucket_name,
-            'Key': self._get_file_path(meta)
+            'Key': obj.key
         }
+        if meta.mime_type:
+            params['ResponseContentType'] = meta.mime_type
+        if meta.file_name:
+            disposition = 'inline; filename=%s' % meta.file_name
+            params['ResponseContentDisposition'] = disposition
         return self.client.generate_presigned_url('get_object',
                                                   Params=params,
                                                   ExpiresIn=86400)
