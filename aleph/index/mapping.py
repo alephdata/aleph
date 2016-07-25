@@ -106,7 +106,7 @@ ENTITY_MAPPING = {
         "terms": {"type": "string", "index": "analyzed"},
         "terms_latin": {"type": "string", "index": "analyzed"},
         "collection_id": {"type": "integer", "index": "not_analyzed"},
-        "doc_count": {"type": "integer", "index": "not_analyzed"},
+        "doc_count": {"type": "long", "index": "not_analyzed"},
         "$schema": {"type": "string", "index": "not_analyzed"},
         "summary": {"type": "string", "index": "analyzed"},
         "summary_latin": {"type": "string", "index": "analyzed"},
