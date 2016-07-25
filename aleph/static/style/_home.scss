@@ -38,7 +38,7 @@
 
     .feature {
         margin-top: 1em;
-        margin-bottom: 3em;
+        margin-bottom: 1em;
 
         h2 {
             // text-align: center;
@@ -48,6 +48,7 @@
 
             i {
                 color: $brand-primary;
+                min-width: 1.3em;
             }
         }
 
