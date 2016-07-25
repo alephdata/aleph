@@ -85,7 +85,7 @@
   </div>
 
   <div class="col-md-4">
-    <div class="panel panel-default panel-facet">
+    <div class="panel panel-default panel-facet panel-facet-scroll">
       <div class="panel-heading">
         <strong>Document collections</strong> <small>{{collectionFacets.length}}</small>
       </div>
@@ -107,7 +107,7 @@
       </ul>
     </div>
 
-    <div class="panel panel-default panel-facet">
+    <div class="panel panel-default panel-facet panel-facet-scroll">
       <div class="panel-heading">
         <span class="pull-right">
           <a class="btn btn-xs btn-default" ng-click="createEntity($event)"
@@ -139,7 +139,7 @@
       </ul>
     </div>
 
-    <div class="panel panel-default panel-facet"
+    <div class="panel panel-default panel-facet panel-facet-scroll"
       ng-repeat="facet in facets track by facet.field">
       <div class="panel-heading">
         <span class="pull-right">

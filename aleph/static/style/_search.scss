@@ -15,11 +15,15 @@
 .panel.panel-default.panel-facet {
     margin-bottom: $padding-base-vertical * 2;
 
-    ul {
-        max-height: 15em;
-        overflow-y: scroll;
-        overflow: -moz-scrollbars-vertical;
+    &.panel-facet-scroll {
+        ul {
+            max-height: 15em;
+            overflow-y: scroll;
+            overflow: -moz-scrollbars-vertical;
+        }
+    }
 
+    ul {
         li.list-group-item {
             cursor: pointer;
             white-space: nowrap;
