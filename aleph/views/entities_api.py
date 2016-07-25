@@ -63,7 +63,6 @@ def create():
     entity = Entity.save(data)
     for collection in entity.collections:
         collection.touch()
-
     db.session.commit()
     log_event(request, entity_id=entity.id)
     update_entity(entity)

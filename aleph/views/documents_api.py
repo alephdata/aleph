@@ -7,7 +7,7 @@ from apikit import jsonify, Pager, get_limit, get_offset, request_data
 from aleph import authz
 from aleph.core import get_archive, url_for, db
 from aleph.model import Document, Entity, Reference, Collection
-from aleph.index import index_document
+from aleph.logic import update_document
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
 from aleph.search.tabular import tabular_query, execute_tabular_query
@@ -70,7 +70,7 @@ def update(document_id):
     document.update(data, writeable=authz.collections(authz.WRITE))
     db.session.commit()
     log_event(request, document_id=document.id)
-    index_document(document, index_records=False)
+    update_document(document)
     return view(document_id)
 
 
@@ -89,7 +89,7 @@ def update_collections(document_id):
     document.update(data, writeable=authz.collections(authz.WRITE))
     db.session.commit()
     log_event(request, document_id=document.id)
-    index_document(document, index_records=False)
+    update_document(document)
     return view_collections(document_id)
 
 

@@ -8,3 +8,4 @@
 from aleph.logic.entities import update_entity, update_entity_full  # noqa
 from aleph.logic.entities import reindex_entities  # noqa
 from aleph.logic.collections import delete_collection  # noqa
+from aleph.logic.documents import update_document  # noqa
