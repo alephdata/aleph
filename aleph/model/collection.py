@@ -22,10 +22,10 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         'company': 'Company registries',
         'watchlist': 'Watchlists',
         'investigation': 'Investigations',
-        'sanctions': 'Sanctions Lists',
+        'sanctions': 'Sanctions lists',
         'scrape': 'Scrapes',
-        'procurement': 'Procurement databases',
-        'grey': 'Grey Archives'
+        'procurement': 'Procurement',
+        'grey': 'Grey literature'
     }
 
     label = db.Column(db.Unicode)
