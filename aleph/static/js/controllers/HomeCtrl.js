@@ -1,6 +1,6 @@
 
-aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Collection', 'Authz', 'Role', 'Title', 'statistics', 'metadata', 'collections',
-    function($scope, $location, $route, Collection, Authz, Role, Title, statistics, metadata, collections) {
+aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Collection', 'Authz', 'Role', 'Title', 'statistics', 'metadata',
+    function($scope, $location, $route, Collection, Authz, Role, Title, statistics, metadata) {
 
   $scope.statistics = statistics;
   $scope.session = metadata.session;

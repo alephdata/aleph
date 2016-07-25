@@ -1,0 +1,33 @@
+
+<table class="table table-striped">
+  <tr>
+    <th colspan="2">Collection</th>
+    <th class="numeric" width="10%">Documents</th>
+    <th class="numeric" width="10%">Entities</th>
+  </tr>
+  <tr ng-repeat="collection in collections">
+    <td width="1%">
+      <span ng-if="::collection.category" class="label label-primary">
+        {{::collection.category | collectionCategory }}</span>
+    </td>
+    <td>
+      {{collection.label}}
+    </td>
+    <td class="numeric">
+      <span ng-if="collection.doc_count">
+        <a href="/search?filter:collection_id={{collection.id}}">
+          <i class="fa fa-search" aria-hidden="true"></i>
+          {{collection.doc_count | number}}
+        </a>
+      </span>
+    </td>
+    <td class="numeric">
+      <span ng-if="collection.entity_count">
+        <a href="/entities?filter:collection_id={{collection.id}}">
+          <i class="fa fa-search" aria-hidden="true"></i>
+          {{collection.entity_count | number}}
+        </a>
+      </span>
+    </td>
+  </tr>
+</table>
