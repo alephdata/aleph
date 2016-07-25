@@ -41,4 +41,4 @@ class LanguageAnalyzer(Analyzer):
         for code, score in self.languages.items():
             self.meta.add_language(code)
         log.info("Classified languages in %r: %r", self.document,
-                 self.meta.languages.keys())
+                 self.meta.languages)

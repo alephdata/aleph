@@ -39,6 +39,10 @@ class AutomatonCache(object):
             for term in entity.regex_terms:
                 matches[term].add(entity.id)
 
+        if not len(matches):
+            self.automaton = None
+            return
+
         self.automaton = Automaton()
         for term, entities in matches.items():
             self.automaton.add_word(term.encode('utf-8'), entities)
@@ -56,6 +60,8 @@ class AhoCorasickEntityAnalyzer(Analyzer):
         self.entities = defaultdict(int)
 
     def on_text(self, text):
+        if self.cache.automaton is None:
+            return
         text = normalize_strong(text)
         if text is None or len(text) <= 2:
             return
