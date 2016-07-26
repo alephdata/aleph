@@ -18,6 +18,7 @@ class Vocab(object):
     CONTACT_FOR = 'CONTACT_FOR'
     MENTIONS = 'MENTIONS'
     CONTAINS = 'CONTAINS'
+    AKA = 'AKA'
 
 
 def get_graph():

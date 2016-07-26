@@ -186,8 +186,9 @@ def buildgraph():
     from aleph import graph
     graph.upgrade()
     # graph.load_collections()
-    # graph.load_entities()
+    graph.load_entities()
     graph.load_documents()
+
 
 def main():
     manager.run()
