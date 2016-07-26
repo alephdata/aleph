@@ -24,17 +24,19 @@ class Vocab(object):
 def get_graph():
     app = current_app._get_current_object()
     if not hasattr(app, '_neo4j_instance'):
-        password = get_config('NEO4J_PASSWORD', 'neo4j')
-        app._neo4j_instance = Graph(host=get_config('NEO4J_HOST'),
-                                    user=get_config('NEO4J_USER', 'neo4j'),
-                                    password=password)
+        uri = get_config('NEO4J_URI')
+        if uri is None:
+            return None
+        app._neo4j_instance = Graph(uri)
         log.info("Connected to Neo4J graph.")
     return app._neo4j_instance
 
 
 def ensure_index(label, prop):
-    schema = get_graph().schema
-    indices = schema.get_indexes(label)
+    graph = get_graph()
+    if graph is None:
+        return
+    indices = graph.schema.get_indexes(label)
     if prop not in indices:
         log.info("Creating index: %s (%s)", label, prop)
-        schema.create_index(label, prop)
+        graph.schema.create_index(label, prop)
