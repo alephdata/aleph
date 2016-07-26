@@ -1,8 +1,8 @@
-aleph.controller('CollectionsCreateCtrl', ['$scope', '$location', '$q', '$http', '$uibModalInstance', 'Collection', 'metadata',
-    function($scope, $location, $q, $http, $uibModalInstance, Collection, metadata) {
+aleph.controller('CollectionsCreateCtrl', ['$scope', '$location', '$q', '$http', '$uibModalInstance', 'Collection', 'metadata', 'collection',
+    function($scope, $location, $q, $http, $uibModalInstance, Collection, metadata, collection) {
   
   $scope.blocked = false;
-  $scope.collection = {label: '', category: 'watchlist'};
+  $scope.collection = collection;
   $scope.categories = metadata.categories;
 
   $scope.cancel = function() {
@@ -21,7 +21,7 @@ aleph.controller('CollectionsCreateCtrl', ['$scope', '$location', '$q', '$http',
       return;
     }
     $scope.blocked = true;
-    $http.post('/api/1/collections').then(function(coll) {
+    $http.post('/api/1/collections', $scope.collection).then(function(coll) {
       Collection.flush().then(function(res) {
         $uibModalInstance.close(coll.data);  
       });

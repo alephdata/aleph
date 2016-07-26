@@ -9,6 +9,16 @@ aleph.controller('CollectionsIndexCtrl', ['$scope', '$http', '$route', '$timeout
 
   Title.set("Collections", "collections");
 
+  $scope.createCollection = function($event) {
+    $event.stopPropagation();
+    Collection.create({
+      'generate_entities': true,
+      'category': 'investigation'
+    }).then(function() {
+      $route.reload();
+    });
+  };
+
   $scope.editCollection = function(collection, $event) {
     $event.stopPropagation();
     Collection.edit(collection).then(function() {

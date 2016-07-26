@@ -19,8 +19,15 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
   };
 
   function flush() {
+    var dfd = $q.defer();
     indexDfd = null;
-    return index();
+    index().then(function(colls) {
+      // reload stored authz info.
+      Metadata.flush().then(function() {
+        dfd.resolve(colls);
+      })
+    });
+    return dfd.promise;
   };
 
   var getWriteable = function() {
@@ -48,14 +55,17 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
     index: index,
     flush: flush,
     getWriteable: getWriteable,
-    create: function() {
+    create: function(collection) {
       var instance = $uibModal.open({
         templateUrl: 'templates/collections_create.html',
         controller: 'CollectionsCreateCtrl',
         backdrop: true,
         size: 'md',
         resolve: {
-          metadata: Metadata.get()
+          metadata: Metadata.get(),
+          collection: function() {
+            return collection;
+          }
         }
       });
       return instance.result;

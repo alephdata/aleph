@@ -1,7 +1,5 @@
 
-aleph.factory('Metadata', ['$http', '$q', '$rootScope',
-      function($http, $q, $rootScope) {
-
+aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $rootScope) {
     var dfd = null;
 
     var flush = function() {
