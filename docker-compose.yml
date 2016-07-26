@@ -1,73 +1,81 @@
+version: "2"
 
-postgres:
-  image: postgres:9.4
-  volumes:
-    - "/opt/aleph/data/postgres:/var/lib/postgresql/data"
-    - "/opt/aleph/logs/postgres:/var/log"
-  environment:
-    POSTGRES_USER:     aleph
-    POSTGRES_PASSWORD: aleph
-    POSTGRES_DATABASE: aleph
-  ports:
-   - "127.0.0.1:5439:5432"
-
-elasticsearch:
-  image: elasticsearch:2.2.0
-  volumes:
-    - "/opt/aleph/data/elasticsearch:/usr/share/elasticsearch/data"
-    - "/opt/aleph/logs/elasticsearch:/var/log"
-  ports:
-    - "127.0.0.1:9201:9209"
-  # environment:
-  # ES_HEAP_SIZE: 4g
-
-worker:
-    build: .
-    command: celery -A aleph.queue worker -c 10 -l INFO --logfile=/var/log/celery.log
-    links:
-      - postgres
-      - elasticsearch
+services:
+  postgres:
+    image: postgres:9.4
     volumes:
-      - "/:/host"
-      - "/opt/aleph/data:/opt/aleph/data"
-      - "/opt/aleph/logs/worker:/var/log"
+      - "/opt/aleph/data/postgres:/var/lib/postgresql/data"
+      - "/opt/aleph/logs/postgres:/var/log"
     environment:
-      C_FORCE_ROOT: 'true'
-      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-      POLYGLOT_DATA_PATH: /opt/aleph/data
-      TESSDATA_PREFIX: /usr/share/tesseract-ocr
-    env_file:
-      - aleph.env
-
-beat:
-    build: .
-    command: celery -A aleph.queue beat -s /var/run/celerybeat-schedule
-    links:
-      - postgres
-      - elasticsearch
-    volumes:
-      - "/opt/aleph/logs/beat:/var/log"
-      - "/opt/aleph/run/beat:/var/run"
-    environment:
-      C_FORCE_ROOT: 'true'
-      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-    env_file:
-      - aleph.env
-
-web:
-    build: .
-    command: gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
+      POSTGRES_USER:     aleph
+      POSTGRES_PASSWORD: aleph
+      POSTGRES_DATABASE: aleph
     ports:
-      - "13376:8000"
-    links:
-      - postgres
-      - elasticsearch
+     - "127.0.0.1:5439:5432"
+
+  elasticsearch:
+    image: elasticsearch:2.2.0
     volumes:
-      - "/opt/aleph/logs/web:/var/log"
-    environment:
-      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-    env_file:
-      - aleph.env
+      - "/opt/aleph/data/elasticsearch:/usr/share/elasticsearch/data"
+      - "/opt/aleph/logs/elasticsearch:/var/log"
+    ports:
+      - "127.0.0.1:9201:9209"
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - 5672
+
+  worker:
+      build: .
+      command: celery -A aleph.queue worker -c 10 -l INFO --logfile=/var/log/celery.log
+      links:
+        - postgres
+        - elasticsearch
+      volumes:
+        - "/:/host"
+        - "/opt/aleph/data:/opt/aleph/data"
+        - "/opt/aleph/logs/worker:/var/log"
+      environment:
+        C_FORCE_ROOT: 'true'
+        ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
+        ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
+        POLYGLOT_DATA_PATH: /opt/aleph/data
+        TESSDATA_PREFIX: /usr/share/tesseract-ocr
+        ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+      env_file:
+        - aleph.env
+
+  beat:
+      build: .
+      command: celery -A aleph.queue beat -s /var/run/celerybeat-schedule
+      links:
+        - postgres
+        - elasticsearch
+      volumes:
+        - "/opt/aleph/logs/beat:/var/log"
+        - "/opt/aleph/run/beat:/var/run"
+      environment:
+        C_FORCE_ROOT: 'true'
+        ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
+        ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
+        ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+      env_file:
+        - aleph.env
+
+  web:
+      build: .
+      command: gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
+      ports:
+        - "13376:8000"
+      links:
+        - postgres
+        - elasticsearch
+      volumes:
+        - "/opt/aleph/logs/web:/var/log"
+      environment:
+        ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
+        ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
+        ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+      env_file:
+        - aleph.env
