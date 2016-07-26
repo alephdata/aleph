@@ -79,7 +79,7 @@ class S3Archive(Archive):  # pragma: no cover
         path = self._get_local_mirror(meta)
         obj = self._locate_key(meta)
         if obj is not None:
-            obj.download_file(path)
+            self.bucket.download_file(obj.key, path)
             return path
 
     def cleanup_file(self, meta):
