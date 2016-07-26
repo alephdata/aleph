@@ -42,6 +42,7 @@ def load_entity(tx, entity):
         alias = Node(Vocab.Entity,
                      fingerprint=fingerprint,
                      name=other_name.display_name,
+                     alephEntity=entity.id,
                      isAlias=True)
         tx.merge(alias, Vocab.Entity, 'fingerprint')
         rel = Relationship(node, Vocab.AKA, alias,

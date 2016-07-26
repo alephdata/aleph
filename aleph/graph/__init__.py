@@ -9,10 +9,7 @@ def upgrade():
     # graph.delete_all()
     ensure_index(Vocab.Collection, 'alephCollection')
     ensure_index(Vocab.Entity, 'fingerprint')
-    # ensure_index(Vocab.Entity, 'alephEntity')
+    ensure_index(Vocab.Entity, 'alephEntity')
     ensure_index(Vocab.Document, 'alephDocument')
     ensure_index(Vocab.Phone, 'fingerprint')
     ensure_index(Vocab.Email, 'fingerprint')
-
-    ensure_index(Vocab.MENTIONS, 'alephId')
-    ensure_index(Vocab.AKA, 'alephId')
