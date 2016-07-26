@@ -12,41 +12,40 @@ log = logging.getLogger(__name__)
 def load_entities():
     tx = get_graph().begin()
     for entity in Entity.all():
-        log.info("Load node [%s]: %s", entity.id, entity.name)
         load_entity(tx, entity)
     tx.commit()
 
 
 def load_entity(tx, entity):
-    data = {
-        'name': entity.name,
-        'alephState': entity.state,
-        'fingerprint': fingerprints.generate(entity.name),
-        'alephEntity': entity.id,
-        'isAlias': False
-    }
+    log.info("Load node [%s]: %s", entity.id, entity.name)
+    node = Node(Vocab.Entity,
+                fingerprint=fingerprints.generate(entity.name),
+                name=entity.name,
+                alephState=entity.state,
+                alephEntity=entity.id)
     if entity.jurisdiction_code is not None:
-        data['countryCode'] = entity.jurisdiction_code.upper()
-    node = Node(Vocab.Entity, **data)
+        node['countryCode'] = entity.jurisdiction_code.upper()
+
     tx.merge(node, Vocab.Entity, 'fingerprint')
     for collection in entity.collections:
         coll_node = load_collection(tx, collection)
-        rel = Relationship(coll_node, Vocab.CONTAINS, node)
-        tx.merge(rel, Vocab.CONTAINS)
+        rel = Relationship(node, Vocab.PART_OF, coll_node)
+        tx.merge(rel, Vocab.PART_OF)
 
-    fps = set([data['fingerprint']])
+    seen = set([node['fingerprint']])
     for other_name in entity.other_names:
-        fp = fingerprints.generate(other_name.display_name)
-        if fp in fps:
+        fingerprint = fingerprints.generate(other_name.display_name)
+        if fingerprint in seen or fingerprint is None:
             continue
-        fps.add(fp)
-        alias = Node(Vocab.Entity, name=other_name.display_name,
-                     fingerpint=fp, alephEntity=entity.id,
-                     isAlias=True, alephState=entity.state,
-                     countryCode=data.get('countryCode'))
-        tx.merge(alias, Vocab.Entity, 'fingerprint')
-        rel = Relationship(node, Vocab.AKA, alias)
-        tx.merge(rel, Vocab.AKA)
+        seen.add(fingerprint)
 
+        alias = Node(Vocab.Entity,
+                     fingerprint=fingerprint,
+                     name=other_name.display_name,
+                     isAlias=True)
+        tx.merge(alias, Vocab.Entity, 'fingerprint')
+        rel = Relationship(node, Vocab.AKA, alias,
+                           alephId=other_name.id)
+        tx.merge(rel, Vocab.AKA, 'alephId')
     # TODO contact details, addresses
     return node

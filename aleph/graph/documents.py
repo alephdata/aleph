@@ -33,8 +33,8 @@ def load_document(tx, document):
     tx.merge(node, Vocab.Document, 'alephDocument')
     for collection in document.collections:
         coll_node = load_collection(tx, collection)
-        rel = Relationship(coll_node, Vocab.CONTAINS, node)
-        tx.merge(rel, Vocab.CONTAINS)
+        rel = Relationship(node, Vocab.PART_OF, coll_node)
+        tx.merge(rel, Vocab.PART_OF)
     for email in meta.emails:
         cnode = Node(Vocab.Email, name=email, fingerprint=email)
         tx.merge(cnode, Vocab.Email, 'fingerprint')

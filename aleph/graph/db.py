@@ -17,7 +17,7 @@ class Vocab(object):
     LOCATED_AT = 'LOCATED_AT'
     CONTACT_FOR = 'CONTACT_FOR'
     MENTIONS = 'MENTIONS'
-    CONTAINS = 'CONTAINS'
+    PART_OF = 'PART_OF'
     AKA = 'AKA'
 
 
