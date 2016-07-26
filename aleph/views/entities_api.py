@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, request_data, arg_bool
-from apikit import get_limit, get_offset, Pager
+from apikit import get_limit, get_offset, Pager, arg_bool
 from sqlalchemy import func, not_
 
 from aleph import authz
@@ -114,7 +114,9 @@ def view(id):
 def similar(id):
     entity = obj_or_404(Entity.by_id(id))
     check_authz(entity, authz.READ)
-    return jsonify(similar_entities(entity, request.args))
+    action = authz.WRITE if arg_bool('writeable') else authz.READ
+    collections = authz.collections(action)
+    return jsonify(similar_entities(entity, request.args, collections))
 
 
 @blueprint.route('/api/1/entities/_lookup', methods=['GET'])

@@ -116,7 +116,7 @@ def suggest_entities(prefix, min_count=0, schemas=None, size=5):
     }
 
 
-def similar_entities(entity, args):
+def similar_entities(entity, args, collections):
     """Merge suggestions API."""
     shoulds = []
     for term in entity.terms:
@@ -141,6 +141,11 @@ def similar_entities(entity, args):
             "must_not": {
                 "ids": {
                     "values": [entity.id]
+                }
+            },
+            "must": {
+                "terms": {
+                    "collection_id": collections
                 }
             },
             "minimum_should_match": 1

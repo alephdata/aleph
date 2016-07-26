@@ -51,6 +51,16 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
     return dfd.promise;
   };
 
+  var getCollection = function(id) {
+    var dfd = $q.defer();  
+    $http.get('/api/1/collections/' + id).then(function(res) {
+      dfd.resolve(res.data);
+    }, function(err) {
+      dfd.reject(err);
+    });
+    return dfd.promise;
+  };
+
   return {
     index: index,
     flush: flush,
@@ -79,13 +89,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
         resolve: {
           metadata: Metadata.get(),
           collection: function() {
-            var dfd = $q.defer();  
-            $http.get('/api/1/collections/' + collection.id).then(function(res) {
-              dfd.resolve(res.data);
-            }, function(err) {
-              dfd.reject(err);
-            });
-            return dfd.promise;
+            return getCollection(collection.id);
           },
           roles: ['Role', function(Role) {
             var dfd = $q.defer();
@@ -107,6 +111,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
       });
       return instance.result;
     },
+    get: getCollection,
     delete: function(collection) {
       var instance = $uibModal.open({
         templateUrl: 'templates/collections_delete.html',
