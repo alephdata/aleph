@@ -42,6 +42,8 @@ langid==1.1.5
 blinker==1.4
 Babel==2.3.4
 pyDBF==0.1
+fingerprints
+py2neo
 pycountry>=1.18
 chardet==2.3.0
 rarfile==2.7
