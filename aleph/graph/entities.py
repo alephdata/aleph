@@ -29,7 +29,8 @@ def load_entity(tx, entity):
     tx.merge(node, Vocab.Entity, 'fingerprint')
     for collection in entity.collections:
         coll_node = load_collection(tx, collection)
-        rel = Relationship(node, Vocab.PART_OF, coll_node)
+        rel = Relationship(node, Vocab.PART_OF, coll_node,
+                           alephEntity=entity.id)
         tx.merge(rel, Vocab.PART_OF)
 
     seen = set([node['fingerprint']])
