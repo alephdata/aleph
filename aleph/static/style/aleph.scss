@@ -33,16 +33,8 @@ html {
 body {
     height: 100%;
     background-color: $text-muted;
-    /*
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    */
-}
-
-#page {
-    position: relative;
-    background-color: white;
-    padding-bottom: 2em;
 }
 
 footer {
@@ -67,18 +59,6 @@ footer {
 @import "spinner";
 @import "entities";
 
-.navbar.navbar-default {
-    background-color: $page-bg;
-    border-bottom: 0;
-    @include drop-shadow;
-}
-
-.intro-text {
-    font-size: 1.2em;
-    line-height: 1.7em;
-    color: text-muted;
-}
-
 .list-group-item.active {
     .badge {
         background-color: $brand-primary;
@@ -91,25 +71,10 @@ footer {
     }
 }
 
-.modal-table {
-    .active-switch {
-        padding-left: 1.5em;
-    }
-
-    .table {
-        .first-row td {
-            border-top: none;   
-        }
-    }
-}
-
-.modal-scroll {
-    max-height: 30em;
-    overflow-y: scroll;
-    @extend .modal-table;
-}
-
 #page {
+    position: relative;
+    background-color: white;
+    padding-bottom: 2em;
 
     #ingest-dropzone {
         display: none;
@@ -150,7 +115,6 @@ footer {
 
 
 // used by the collections dropdown-menu
-
 .btn.btn-default {
     &:hover {
         color: black;

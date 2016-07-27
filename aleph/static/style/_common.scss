@@ -6,11 +6,20 @@
 
 a, .click {
     cursor: pointer;
-}
 
-a.simple {
+    &.simple {
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
     &:hover {
-        text-decoration: none;
+        color: darken($brand-primary, 10%);
+    }
+
+    &.btn.btn-primary:hover, 
+    &.btn.btn-primary:visited {
+        color: white;
     }
 }
 
@@ -32,25 +41,21 @@ a.simple {
     }
 }
 
-em {
-    background-color: transparent;
-    font-weight: bolder;
-    font-style: normal;
-}
-
-a {
-    // color: $aleph-theme;
-    &:hover {
-        color: darken($brand-primary, 10%);
-    }
-
-    &.btn.btn-primary:hover, 
-    &.btn.btn-primary:visited {
-        color: white;
-    }
-}
+// em {
+//     background-color: transparent;
+//     font-weight: bolder;
+//     font-style: normal;
+// }
 
 code {
     background-color: lighten($aleph-dark, 70%);
     color: $aleph-dark;
 }
+
+td.numeric, th.numeric {
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+

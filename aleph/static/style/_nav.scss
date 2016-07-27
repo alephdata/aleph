@@ -1,5 +1,8 @@
 
-.navbar {
+.navbar.navbar-default {
+    background-color: $page-bg;
+    border-bottom: 0;
+    @include drop-shadow;
 
     .navbar-header {
         .navbar-brand {
@@ -8,9 +11,6 @@
                 max-width: 2.2em;
                 max-height: 2.2em;
             }
-
-            // color: $brand-primary;
-            // font-weight: 900;
         }
     }
 }
