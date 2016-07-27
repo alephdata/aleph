@@ -1,7 +1,6 @@
 from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, request_data, arg_bool
-from apikit import get_limit, get_offset, Pager, arg_bool
-from sqlalchemy import func, not_
+from apikit import get_limit, get_offset, Pager
 
 from aleph import authz
 from aleph.model import Entity, Collection, db
@@ -10,7 +9,6 @@ from aleph.views.cache import enable_cache
 from aleph.events import log_event
 from aleph.search import entities_query, execute_entities_query
 from aleph.search import suggest_entities, similar_entities
-from aleph.text import latinize_text
 
 blueprint = Blueprint('entities_api', __name__)
 
@@ -76,30 +74,6 @@ def suggest():
     prefix = request.args.get('prefix')
     min_count = int(request.args.get('min_count', 0))
     return jsonify(suggest_entities(prefix, min_count))
-
-
-@blueprint.route('/api/1/entities/_pending', methods=['GET'])
-def pending():
-    q = db.session.query(Entity)
-    skip_entities = request.args.getlist('skip')
-    if len(skip_entities):
-        q = q.filter(not_(Entity.id.in_(skip_entities)))
-    q = q.filter(Entity.state == Entity.STATE_PENDING)
-    clause = Collection.id.in_(authz.collections(authz.READ))
-    q = q.filter(Entity.collections.any(clause))
-    # this was too slow to actually work:
-    # ref = aliased(Reference)
-    # q = q.join(ref)
-    # q = q.group_by(Entity)
-    # q = q.order_by(func.count(ref.id).desc())
-    q = q.order_by(func.random())
-    q = q.limit(30)
-    entities = []
-    for entity in q.all():
-        data = entity.to_dict()
-        data['name_latin'] = latinize_text(entity.name, lowercase=False)
-        entities.append(data)
-    return jsonify({'results': entities, 'total': len(entities)})
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['GET'])

@@ -28,34 +28,27 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
   };
 
   var loadNext = function() {
-    // console.log("Cache size:", entityCache.length);
+    console.log("Cache size:", entityCache.length);
+    if ($scope.empty) {
+      $scope.reportLoading(false);
+      return;
+    }  
 
-    if ($scope.entity == null) {
-      if (entityCache.length) {
-        loadCachedEntity();
-      } else if ($scope.empty) {
-        $scope.reportLoading(false);
-      }  
+    $scope.reportLoading(true);
+    if (entityCache.length) {
+      loadCachedEntity();
+    } else {
+      var url = '/api/1/collections/' + $scope.collection.id + '/pending';
+      $http.get(url).then(function(res) {
+        for (var i in res.data.results) {
+          entityCache.push(res.data.results[i]);
+        }
+        if (res.data.total == 0) {
+          $scope.empty = true;
+        }
+        loadNext();
+      });  
     }
-
-    $timeout(function() {
-      if (!entityCacheDfd && !$scope.empty && entityCache.length < 22) {
-        var params = {params: {skip: entitySkipIds.slice(entitySkipIds.length - 50)}}
-        entityCacheDfd = $http.get('/api/1/entities/_pending', params);
-        entityCacheDfd.then(function(res) {
-          for (var i in res.data.results) {
-            var ent = res.data.results[i];
-            entitySkipIds.push(ent.id);
-            entityCache.push(ent);
-          }
-          if (res.data.total == 0) {
-            $scope.empty = true;
-          }
-          entityCacheDfd = null;
-          loadNext();
-        });  
-      }  
-    });
   };
 
   var triggerDone = function() {

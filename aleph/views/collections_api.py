@@ -7,6 +7,7 @@ from aleph.events import log_event
 from aleph.views.cache import enable_cache
 from aleph.logic.collections import delete_collection
 from aleph.analyze import analyze_collection
+from aleph.text import latinize_text
 
 blueprint = Blueprint('collections_api', __name__)
 
@@ -54,6 +55,20 @@ def process(id):
     analyze_collection.delay(collection.id)
     log_event(request)
     return jsonify({'status': 'ok'})
+
+
+@blueprint.route('/api/1/collections/<int:id>/pending', methods=['GET'])
+def pending(id):
+    collection = obj_or_404(Collection.by_id(id))
+    authz.require(authz.collection_read(id))
+    q = collection.pending_entities()
+    q = q.limit(30)
+    entities = []
+    for entity in q.all():
+        data = entity.to_dict()
+        data['name_latin'] = latinize_text(entity.name, lowercase=False)
+        entities.append(data)
+    return jsonify({'results': entities, 'total': len(entities)})
 
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['DELETE'])

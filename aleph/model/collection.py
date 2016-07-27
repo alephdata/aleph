@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 from sqlalchemy import func
+from sqlalchemy.orm import aliased
 
 from aleph.core import db, url_for
 from aleph.model.role import Role
@@ -54,6 +55,26 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
     def touch(self):
         self.updated_at = datetime.utcnow()
         db.session.add(self)
+
+    def pending_entities(self):
+        """Generate a ranked list of the most commonly used pending entities.
+
+        This is used for entity review.
+        """
+        from aleph.model.entity import Entity, collection_entity_table
+        from aleph.model.document import collection_document_table
+        from aleph.model.reference import Reference
+        cet = aliased(collection_entity_table)
+        cdt = aliased(collection_document_table)
+        q = db.session.query(Entity)
+        q = q.filter(Entity.state == Entity.STATE_PENDING)
+        q = q.join(Reference, Reference.entity_id == Entity.id)
+        q = q.join(cet, cet.c.entity_id == Entity.id)
+        q = q.join(cdt, cdt.c.document_id == Reference.document_id)
+        q = q.filter(cet.c.collection_id == self.id)
+        q = q.filter(cdt.c.collection_id == self.id)
+        q = q.group_by(Entity)
+        return q.order_by(func.count(Reference.id).desc())
 
     @classmethod
     def by_foreign_id(cls, foreign_id, deleted=False):
