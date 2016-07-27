@@ -38,6 +38,16 @@
       </div>
     </div>
     <div class="col-md-4">
+      <div class="alert alert-info" role="alert" ng-if="collection.pending_count && collection.can_edit">
+        <p>
+          We've found <strong>{{::collection.pending_count | number}}
+          new entities</strong> in the documents in this collection.
+          Please take a moment to check them.
+        </p>
+        <p>
+          <a ng-href="/collections/{{::collection.id}}/entities/review" class="btn btn-default">Review</a>
+        </p>
+      </div>
       <search-facets query="query" result="result" metadata="metadata"
                      collection="collection">
       </search-facets>
