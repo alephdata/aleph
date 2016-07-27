@@ -1,6 +1,6 @@
 
-aleph.factory('Document', ['$http', '$q', '$location', '$sce', '$uibModal', 'Metadata', 'Query', 'History',
-    function($http, $q, $location, $sce, $uibModal, Metadata, Query, History) {
+aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '$sce', '$uibModal', 'Metadata', 'Query', 'History',
+    function($http, $q, $location, $httpParamSerializer, $sce, $uibModal, Metadata, Query, History) {
 
   var getDocumentById = function(id) {
     var dfd = $q.defer(),
@@ -105,6 +105,22 @@ aleph.factory('Document', ['$http', '$q', '$location', '$sce', '$uibModal', 'Met
         dfd.reject(err);
       });
       return dfd.promise;
+    },
+    getUrl: function(doc, record) {
+      var search = $location.search(),
+          query = {},
+          path = null;
+      if (doc.type === 'tabular') {
+        var sheet = record ? record.sheet : 0,
+            row = record ? record.row_id : null;
+        query.row = row;
+        path = '/tabular/' + doc.id + '/' + sheet;
+      } else {
+        path = '/text/' + doc.id;
+        query.page = record ? record.page : 1;
+        query.dq = search.q;
+      }
+      return path + '?' + $httpParamSerializer(query);
     }
   };
 }]);

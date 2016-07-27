@@ -1,5 +1,5 @@
-aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSerializer', 'Collection',
-    function($location, $route, $sce, $httpParamSerializer, Collection) {
+aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSerializer', 'Collection', 'Document',
+    function($location, $route, $sce, $httpParamSerializer, Collection, Document) {
   return {
     restrict: 'E',
     scope: {
@@ -30,26 +30,13 @@ aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSeria
         }
       }
 
-      scope.getUrl = function(rec) {
-        var search = $location.search(),
-            query = {},
-            path = null;
-        if (scope.doc.type === 'tabular') {
-          var sheet = rec ? rec.sheet : 0,
-              row = rec ? rec.row_id : null;
-          query.row = row;
-          path = '/tabular/' + scope.doc.id + '/' + sheet;
-        } else {
-          path = '/text/' + scope.doc.id;
-          query.page = rec ? rec.page : 1;
-          query.dq = search.q;
-        }
-        return path + '?' + $httpParamSerializer(query);
+      scope.getUrl = function(record) {
+        return Document.getUrl(scope.doc, record);
       };
 
-      scope.viewDetails = function(rec) {
-        window.location.href = scope.getUrl(rec);
-      }
+      scope.viewDetails = function(record) {
+        window.location.href = scope.getUrl(record);
+      };
 
     }
   };

@@ -3,6 +3,7 @@ aleph.controller('CollectionsViewCtrl', ['$scope', '$location', '$http', '$ancho
 
   $scope.collection = collection;
   $scope.fields = metadata.fields;
+  $scope.getDocumentUrl = Document.getUrl;
   $scope.entityFacet = [];
   $scope.facets = [];
   $scope.authz = Authz;
