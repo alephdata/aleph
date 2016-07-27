@@ -47,8 +47,7 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
   };
 
   $scope.backToSearch = function() {
-    $location.path('/search');
-    $location.search(History.getLastSearch());
+    History.back();
   };
 
   $scope.updateTextQuery = function() {

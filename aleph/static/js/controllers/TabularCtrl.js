@@ -39,8 +39,7 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
   };
 
   $scope.backToSearch = function() {
-    $location.path('/search');
-    $location.search(History.getLastSearch());
+    History.back();
   };
 
   $scope.updateQuery = function() {

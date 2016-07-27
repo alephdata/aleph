@@ -1,13 +1,15 @@
 
-aleph.factory('History', [function() {
-  var lastSearch = {};
+aleph.factory('History', ['$location', function($location) {
+  var lastSearch = {}, lastPath = null;
 
   return {
-      setLastSearch: function(last) {
-        lastSearch = last;
+      setLastSearch: function(path, search) {
+        lastPath = path;
+        lastSearch = search;
       },
-      getLastSearch: function() {
-        return lastSearch;
+      back: function() {
+        $location.path(lastPath);
+        $location.search(lastSearch);
       }
   };
 }]);
