@@ -19,13 +19,6 @@ aleph.controller('CollectionsIndexCtrl', ['$scope', '$http', '$route', '$timeout
     });
   };
 
-  $scope.editCollection = function(collection, $event) {
-    $event.stopPropagation();
-    Collection.edit(collection).then(function() {
-      $route.reload();
-    });
-  };
-
   $scope.updateQuery = function() {
     $timeout.cancel(updateTimeout);
     $timeout(function() {
