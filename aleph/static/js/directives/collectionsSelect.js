@@ -19,7 +19,7 @@ aleph.directive('collectionsSelect', ['$http', '$q', 'Metadata', 'Collection',
         scope.roleName = metadata.session.role.name;
       });
 
-      Collection.getWriteable().then(function(collections) {
+      Collection.getUserCollections().then(function(collections) {
         scope.collections = collections;
         if (!collections.length) {
           scope.setCreateCollection(true);

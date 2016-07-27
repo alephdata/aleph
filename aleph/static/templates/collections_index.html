@@ -24,6 +24,12 @@
 
   <div class="row">
     <div class="col-md-9">
+      <div class="alert alert-suggest" ng-if="!authz.logged_in()">
+        Manage your research professionally!
+        <a href="/api/1/sessions/login" target="_self">Sign in</a> to upload
+        document archives and create entity watchlists.
+      </div>
+
       <table class="table table-striped">
         <tr ng-repeat="collection in collections track by collection.id">
           <td>

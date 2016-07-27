@@ -76,46 +76,11 @@ footer {
     position: relative;
     background-color: white;
     padding-bottom: 2em;
-
-    #ingest-dropzone {
-        display: none;
-        position: absolute;
-        z-index: 900;
-        margin-top: -20px;
-        top: 0;
-        left: 0;
-        width: 100%;
-        min-height: 40em;
-        height: 100%;
-        opacity: 0.6;
-        background-color: $page-bg;
-
-        #ingest-dropzone-icon {
-            margin-top: 5em;
-            text-align: center;
-            //color: $text-muted;
-            color: $brand-primary;
-
-            &.failed {
-                color: $brand-primary;
-            }
-
-            i {
-                font-size: 4em;
-                margin: 0.5em;
-            }
-        }
-    }
-
-    &.file-drop-area {
-        #ingest-dropzone {
-            display: block;
-        }
-    }
 }
 
 .screen {
     @extend .container-fluid;
+    min-height: 10em;
 }
 
 // used by the collections dropdown-menu

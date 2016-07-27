@@ -1,5 +1,6 @@
 aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
     function($q, $http, $uibModal, Authz, Metadata) {
+  var USER_CATEGORIES = ['investigation'];
   var indexDfd = null;
 
   function index() {
@@ -40,13 +41,14 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
     return coll;
   };
 
-  function getWriteable() {
+  function getUserCollections() {
     var dfd = $q.defer();
     index().then(function(res) {
       var collections = [];
       for (var cid in res) {
-        if (res[cid].can_add) {
-          collections.push(res[cid]);
+        var c = res[cid];
+        if (c.can_add && USER_CATEGORIES.indexOf(c.category) != -1) {
+          collections.push(c);
         }
       }
       collections = collections.sort(function(a, b) {
@@ -73,7 +75,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
   return {
     index: index,
     flush: flush,
-    getWriteable: getWriteable,
+    getUserCollections: getUserCollections,
     create: function(collection) {
       var instance = $uibModal.open({
         templateUrl: 'templates/collections_create.html',

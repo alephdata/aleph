@@ -14,7 +14,7 @@ aleph.directive('collectionsAdd', ['$http', '$q', '$location', 'Authz', 'Collect
 
       var loadCollections = function() {
         var dfd = $q.defer();
-        Collection.getWriteable().then(function(collections) {
+        Collection.getUserCollections().then(function(collections) {
           for (var i in collections) {
             var coll = collections[i];
             scope.parts[coll.id] = scope.doc.collection_id.indexOf(coll.id) > -1;

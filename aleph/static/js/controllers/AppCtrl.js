@@ -1,28 +1,10 @@
-aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$route', '$http', '$uibModal', '$q', 'Alert', 'Metadata', 'Ingest',
-    function($scope, $rootScope, $location, $anchorScroll, $route, $http, $uibModal, $q, Alert, Metadata, Ingest) {
+aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$route', '$http', '$uibModal', '$q', 'Alert', 'Metadata',
+    function($scope, $rootScope, $location, $anchorScroll, $route, $http, $uibModal, $q, Alert, Metadata) {
 
   $scope.session = {logged_in: false};
   $scope.routeLoaded = false;
   $scope.routeFailed = false;
   $scope.navbarCollapsed = true;
-  $scope.uploads = [];
-
-  $scope.$watch('uploads', function(files) {
-    if (files.length) {
-      $scope.ingestFiles(files);
-    }
-  });
-
-  $scope.ingestFiles = function(files, $event) {
-    if ($event) {
-      $event.stopPropagation();  
-    }
-    Ingest.files(files).then(function() {
-      $scope.uploads = [];
-    }, function(err) {
-      $scope.uploads = [];
-    });
-  };
 
   Metadata.get().then(function(metadata) {
     $scope.session = metadata.session;

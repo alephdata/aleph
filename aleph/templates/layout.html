@@ -15,9 +15,7 @@
     <base href="{{url_for('.ui')}}">
   </head>
   <body ng-controller="AppCtrl" ng-keyup="keyDownNotify($event)">
-    <div id="page" ng-show="session.roles" ngf-drop ng-model="uploads"
-      ngf-drag-over-class="'file-drop-area'" ngf-stop-propagation="true"
-      ngf-multiple="true" ngf-keep="'distinct'" ngf-drop-disabled="!session.logged_in">
+    <div id="page" ng-show="session.roles">
       <nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container-fluid">
           <div class="navbar-header">
@@ -107,11 +105,6 @@
             <div class="failure-note">
               He's dead, Jim.
             </div>
-          </div>
-        </div>
-        <div id="ingest-dropzone" ng-cloak>
-          <div id="ingest-dropzone-icon">
-            <i class="fa fa-cloud-upload"></i>
           </div>
         </div>
         <div ng-view autoscroll="true"></div>

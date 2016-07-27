@@ -2,7 +2,7 @@ aleph.factory('Ingest', ['$uibModal', '$q', '$http', 'Metadata', 'Query',
     function($uibModal, $q, $http, Metadata, Query) {
 
   return {
-    files: function(files) {
+    files: function(files, collection) {
       var instance = $uibModal.open({
         templateUrl: 'templates/ingest_files.html',
         controller: 'IngestFilesCtrl',
@@ -11,6 +11,9 @@ aleph.factory('Ingest', ['$uibModal', '$q', '$http', 'Metadata', 'Query',
         resolve: {
           files: function() {
             return files || [];
+          },
+          collection: function() {
+            return collection;
           },
           metadata: Metadata.get()
         }

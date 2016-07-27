@@ -1,6 +1,7 @@
-aleph.controller('IngestFilesCtrl', ['$scope', '$uibModalInstance', 'Upload', 'metadata', 'files',
-    function($scope, $uibModalInstance, Upload, metadata, files) {
+aleph.controller('IngestFilesCtrl', ['$scope', '$uibModalInstance', 'Upload', 'metadata', 'collection', 'files',
+    function($scope, $uibModalInstance, Upload, metadata, collection, files) {
 
+  $scope.collection = collection;
   $scope.files = files;
   $scope.collectionCallback = null;
 
@@ -10,11 +11,7 @@ aleph.controller('IngestFilesCtrl', ['$scope', '$uibModalInstance', 'Upload', 'm
     if (!$scope.files.length) {
       return false;
     }
-    return $scope.uploadForm.$valid && $scope.collectionCallback != null;
-  };
-
-  $scope.setCollection = function(callback) {
-    $scope.collectionCallback = callback;
+    return $scope.uploadForm.$valid;
   };
 
   $scope.getFileText = function() {
@@ -39,17 +36,15 @@ aleph.controller('IngestFilesCtrl', ['$scope', '$uibModalInstance', 'Upload', 'm
       return false;
     }
     $scope.progress = 0;
-    $scope.collectionCallback().then(function(collection) {
-      Upload.upload({
-        url: '/api/1/collections/' + collection.id + '/ingest',
-        data: {file: $scope.files}
-      }).then(function(res) {
-        $uibModalInstance.close(res.data);
-      }, function(err) {
-        $scope.progress = null;
-      }, function(evt) {
-        $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
-      });
+    Upload.upload({
+      url: '/api/1/collections/' + collection.id + '/ingest',
+      data: {file: $scope.files}
+    }).then(function(res) {
+      $uibModalInstance.close(res.data);
+    }, function(err) {
+      $scope.progress = null;
+    }, function(evt) {
+      $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
     });
   };
 

@@ -1,24 +1,66 @@
+#collections-screen {
+    .collection-header {
+        @extend .container-fluid;
 
-.collection-header {
-    @extend .container-fluid;
+        margin-top: -22px;
+        padding-top: 25px;
+        margin-bottom: 1em;
+        background-color: $gray-subtle;
 
-    margin-top: -22px;
-    padding-top: 25px;
-    margin-bottom: 1em;
-    background-color: $gray-subtle;
+        h2 {
+            font-size: 1.6em;
+            // font-weight: bolder;
+            margin-top: 0;
+            margin-bottom: 0.9em;
+            float: left;
+        }
 
-    h2 {
-        font-size: 1.6em;
-        // font-weight: bolder;
-        margin-top: 0;
-        margin-bottom: 0.9em;
-        float: left;
+        ul.nav.nav-tabs {
+            margin-bottom: 0;
+        }
+
+        .actions {
+        }
+
+        .nav-tabs .badge {
+            padding: 2px 7px;
+            // background-color: $gray-subtle;
+        }
     }
 
-    ul.nav.nav-tabs {
-        margin-bottom: 0;
+    #ingest-dropzone {
+        display: none;
+        position: absolute;
+        z-index: 900;
+        margin-top: -20px;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 40em;
+        height: 100%;
+        opacity: 0.6;
+        background-color: $page-bg;
+
+        #ingest-dropzone-icon {
+            margin-top: 5em;
+            text-align: center;
+            //color: $text-muted;
+            color: $brand-primary;
+
+            &.failed {
+                color: $brand-primary;
+            }
+
+            i {
+                font-size: 4em;
+                margin: 0.5em;
+            }
+        }
     }
 
-    .actions {
+    &.file-drop-area {
+        #ingest-dropzone {
+            display: block;
+        }
     }
 }
