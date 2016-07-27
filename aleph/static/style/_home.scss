@@ -1,41 +1,41 @@
-.home {
-    .jumbotron {
-        margin-top: -20px;
-        background-color: white;
-        background-image: url(/static/images/europe_asia.png);
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: 50% 50%;
+.jumbotron {
+    margin-top: -20px;
+    background-color: white;
+    background-image: url(/static/images/europe_asia.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
 
-        text-align: center;
-        padding-bottom: 3em;
+    text-align: center;
+    padding-bottom: 3em;
 
-        h1 {
-            // text-transform: uppercase;
-            font-size: 4em;
-            font-weight: bold;
-        }
-
-        p.teaser {
-            // text-transform: uppercase;
-            font-size: 2em;   
-            margin-bottom: 0;
-            font-weight: bold;
-            padding-bottom: 0;
-        }
-
-        .search-area {
-            max-width: 500px;
-            margin: 2em auto 0 auto;
-        }
-
-        .sample-searches {
-            margin-top: 0.7em;
-            font-size: 1em;
-            font-weight: bold;
-        }
+    h1 {
+        // text-transform: uppercase;
+        font-size: 4em;
+        font-weight: bold;
     }
 
+    p.teaser {
+        // text-transform: uppercase;
+        font-size: 2em;   
+        margin-bottom: 0;
+        font-weight: bold;
+        padding-bottom: 0;
+    }
+
+    .search-area {
+        max-width: 500px;
+        margin: 2em auto 0 auto;
+    }
+
+    .sample-searches {
+        margin-top: 0.7em;
+        font-size: 1em;
+        font-weight: bold;
+    }
+}
+
+.home {
     .feature {
         margin-top: 1em;
         margin-bottom: 1em;
