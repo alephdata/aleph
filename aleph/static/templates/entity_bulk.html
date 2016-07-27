@@ -1,79 +1,80 @@
+<div class="screen">
+  <h3>Bulk Entity Creator</h3>
 
-<h3>Bulk Entity Creator</h3>
+  <table class="table table-striped">
+    <tr>
+      <th width="25%">Name</th>
+      <th width="15%">Type</th>
+      <th width="15%">Jurisdiction</th>
+      <th>Summary</th>
+    </tr>
+    <tr ng-repeat="entity in entities" ng-class="{'danger': isInvalid(entity)}">
+      <td>
+        <input type="text" class="form-control" id="name" name="name" ng-model="entity.name"
+          placeholder="Entity Name" ng-model-options="{'updateOn': 'blur'}"
+          ng-blur="update(entity)">
+      </td>
+      <td>
+        <select ng-model="entity.$schema" name="schema" class="form-control"
+          ng-init="entity.$schema = availableSchemata[0]"
+          ng-blur="update(entity)">
+          <option ng-repeat="schema in availableSchemata" value="{{schema}}">
+            {{schemata[schema].title}}
+          </option>
+        </select>
+      </td>
+      <td>
+        <entity-jurisdiction entity="entity" simple="true"></entity-jurisdiction>
+      </td>
+      <td>
+        <input type="text" class="form-control" id="summary" name="summary" ng-model="entity.summary"
+          placeholder="A short summary"
+          ng-blur="update(entity)" ng-focus="update(entity)"
+          ng-model-options="{'updateOn': 'blur'}">
+      </td>
+    </tr>
+  </table>
 
-<table class="table table-striped">
-  <tr>
-    <th width="25%">Name</th>
-    <th width="15%">Type</th>
-    <th width="15%">Jurisdiction</th>
-    <th>Summary</th>
-  </tr>
-  <tr ng-repeat="entity in entities" ng-class="{'danger': isInvalid(entity)}">
-    <td>
-      <input type="text" class="form-control" id="name" name="name" ng-model="entity.name"
-        placeholder="Entity Name" ng-model-options="{'updateOn': 'blur'}"
-        ng-blur="update(entity)">
-    </td>
-    <td>
-      <select ng-model="entity.$schema" name="schema" class="form-control"
-        ng-init="entity.$schema = availableSchemata[0]"
-        ng-blur="update(entity)">
-        <option ng-repeat="schema in availableSchemata" value="{{schema}}">
-          {{schemata[schema].title}}
-        </option>
-      </select>
-    </td>
-    <td>
-      <entity-jurisdiction entity="entity" simple="true"></entity-jurisdiction>
-    </td>
-    <td>
-      <input type="text" class="form-control" id="summary" name="summary" ng-model="entity.summary"
-        placeholder="A short summary"
-        ng-blur="update(entity)" ng-focus="update(entity)"
-        ng-model-options="{'updateOn': 'blur'}">
-    </td>
-  </tr>
-</table>
-
-<div class="row">
-  <div class="col-md-4">
-    <div class="form-group">
-      <label class="control-label" for="collection">
-        Add to collection
-      </label>
-      <collections-select set-collection="setCollection(callback)"
-        category="'investigation'"></collections-select>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="control-label" for="collection">
+          Add to collection
+        </label>
+        <collections-select set-collection="setCollection(callback)"
+          category="'investigation'"></collections-select>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="pull-right">
+        <br/>
+        <button class="btn btn-success btn-lg" type="button"
+          ng-disabled="!canSave()" ng-click="save()">Save</button>
+      </div>
     </div>
   </div>
-  <div class="col-md-8">
-    <div class="pull-right">
-      <br/>
-      <button class="btn btn-success btn-lg" type="button"
-        ng-disabled="!canSave()" ng-click="save()">Save</button>
-    </div>
-  </div>
+
+  <hr>
+  <table class="table table-striped" ng-if="created.length">
+    <tr>
+      <th>Created entities</th>
+      <th width="20%">Type</th>
+      <th class="numeric" width="10%">Jurisdiction</th>
+      <th width="1%"></th>
+    </tr>
+    <tr ng-repeat="entity in created">
+      <td ng-bind="::entity.name"></td>
+      <td>
+        {{schemata[entity.$schema].title}}
+      </td>
+      <td class="numeric">{{entity.jurisdiction_code.toUpperCase()}}</td>
+      <td class="numeric" width="1%">
+        <button type="button" class="btn btn-default btn-xs"
+          ng-click="editEntity($event, entity)">
+          <i class="fa fa-cog"></i>
+          Revise
+        </button>
+      </td>
+    </tr>
+  </table>
 </div>
-
-<hr>
-<table class="table table-striped" ng-if="created.length">
-  <tr>
-    <th>Created entities</th>
-    <th width="20%">Type</th>
-    <th class="numeric" width="10%">Jurisdiction</th>
-    <th width="1%"></th>
-  </tr>
-  <tr ng-repeat="entity in created">
-    <td ng-bind="::entity.name"></td>
-    <td>
-      {{schemata[entity.$schema].title}}
-    </td>
-    <td class="numeric">{{entity.jurisdiction_code.toUpperCase()}}</td>
-    <td class="numeric" width="1%">
-      <button type="button" class="btn btn-default btn-xs"
-        ng-click="editEntity($event, entity)">
-        <i class="fa fa-cog"></i>
-        Revise
-      </button>
-    </td>
-  </tr>
-</table>

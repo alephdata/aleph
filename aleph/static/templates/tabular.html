@@ -1,58 +1,59 @@
-
-<div class="row">
-  <div class="col-md-8">
-    <div class="btn-toolbar" role="toolbar">
-      <button class="btn btn-default" ng-click="backToSearch()">
-        <i class="fa fa-chevron-left"></i>
-        Back to search
-      </button>
-      <div class="btn-group" role="group" ng-if="doc.tables.length > 1">
-        <a ng-repeat="tbl in doc.tables" class="btn btn-default" ng-class="{'active': tbl.sheet == table.sheet}"
-            ng-href="/tabular/{{doc.id}}/{{tbl.sheet}}?ctx={{searchCtx}}" ng-bind="tbl.sheet_name">
-        </a>
-      </div>
-    </div>
-    <br/>
-
-    <div class="data-table">
-      <table class="table table-bordered table-striped table-condensed">
-        <thead>
-          <tr>
-            <th ng-repeat="col in table.columns" data-type="{{::col.type}}">
-              {{::col.label}}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="row in rows.results" ng-class="::{'highlight': isHighlighted(row)}">
-            <td ng-repeat="col in table.columns" ng-class="::getClass(row, col)"
-                ng-bind-html="::formatCell(row, col)"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="bottom-pager">
-        <div class="pull-right">
-          <response-pager response="rows" load="loadOffset(offset)"></response-pager>
-        </div>
-        <div class="total">
-          {{::rows.total | number}} rows found.
+<div class="screen">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="btn-toolbar" role="toolbar">
+        <button class="btn btn-default" ng-click="backToSearch()">
+          <i class="fa fa-chevron-left"></i>
+          Back to search
+        </button>
+        <div class="btn-group" role="group" ng-if="doc.tables.length > 1">
+          <a ng-repeat="tbl in doc.tables" class="btn btn-default" ng-class="{'active': tbl.sheet == table.sheet}"
+              ng-href="/tabular/{{doc.id}}/{{tbl.sheet}}?ctx={{searchCtx}}" ng-bind="tbl.sheet_name">
+          </a>
         </div>
       </div>
-  </div>
+      <br/>
 
-  <div class="col-md-4">
-    <form class="form-horizontal pages-query" ng-submit="updateQuery()">
-      <div class="input-group">
-        <span class="input-group-addon">
-          <i class="fa fa-search"></i>
-        </span>
-        <input type="text" class="form-control"
-          ng-model="textQuery"
-          placeholder="Search within this dataset">
+      <div class="data-table">
+        <table class="table table-bordered table-striped table-condensed">
+          <thead>
+            <tr>
+              <th ng-repeat="col in table.columns" data-type="{{::col.type}}">
+                {{::col.label}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="row in rows.results" ng-class="::{'highlight': isHighlighted(row)}">
+              <td ng-repeat="col in table.columns" ng-class="::getClass(row, col)"
+                  ng-bind-html="::formatCell(row, col)"></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </form>
+      <div class="bottom-pager">
+          <div class="pull-right">
+            <response-pager response="rows" load="loadOffset(offset)"></response-pager>
+          </div>
+          <div class="total">
+            {{::rows.total | number}} rows found.
+          </div>
+        </div>
+    </div>
 
-    <metadata-sidebar doc="doc"></metadata-sidebar>
+    <div class="col-md-4">
+      <form class="form-horizontal pages-query" ng-submit="updateQuery()">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <i class="fa fa-search"></i>
+          </span>
+          <input type="text" class="form-control"
+            ng-model="textQuery"
+            placeholder="Search within this dataset">
+        </div>
+      </form>
+
+      <metadata-sidebar doc="doc"></metadata-sidebar>
+    </div>
   </div>
 </div>

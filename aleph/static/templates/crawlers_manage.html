@@ -1,85 +1,89 @@
+<div class="screen">
+  <table class="table">
+    <tr>
+      <th>Crawler ID</th>
+      <th>Source</th>
+      <th width="1%"></th>
+      <th width="1%"></th>
+      <th class="numeric">All OK/Failed</th>
+      <th class="numeric">Last OK/Failed</th>
+      <th class="numeric">Last updated</th>
+      <th width="1%">Logs</th>
+      <th class="numeric">Schedule</th>
+      <th>Execute crawler</th>
+    </tr>
 
-<div class="alert alert-warning">
-  <strong>Careful, tiger!</strong> Running crawlers is a resource-intensive operation and
-  may influence system performance.
-</div>
+    <tr ng-repeat="crawler in crawlers.results">
+      <td>
+        <strong ng-bind="::crawler.name"></strong>
+      </td>
+      <td>
+        {{crawler.collection.label}}
+      </td>
+      <td>
+        <a href="/search?filter:collection_id={{crawler.collection.id}}">
+          <i class="fa fa-search"></i>
+        </a>
+      </td>
+      <td>
+        <a ng-click="editCollection(crawler.collection)">
+          <i class="fa fa-cog"></i>
+        </a>
+      </td>
+      <td class="numeric">
+        <a href="/crawlers/logs?crawler_id={{crawler.id}}"
+           ng-if="crawler.all.fail" class="simple">
+          <span class="label label-danger">
+            {{crawler.all.fail | number}}</span>
+        </a>
+        &nbsp;
+        <span class="label label-success" ng-if="crawler.all.ok">
+          {{crawler.all.ok | number}}</span>
+      </td>
+      <td class="numeric">
+        <a href="/crawlers/logs?crawler_run={{crawler.last.run_id}}"
+           ng-if="crawler.last.fail" class="simple">
+          <span class="label label-danger">
+            {{crawler.last.fail | number}}</span>
+        </a>
+        &nbsp;
+        <span class="label label-success" ng-if="crawler.last.ok">
+          {{crawler.last.ok | number}}</span>
+      </td>
+      <td class="numeric">
+        <span ng-if="crawler.last.run_id">
+          {{crawler.last.updated | relativeDate}}
+        </span>
+      </td>
+      <td>
+        <a href="/crawlers/logs?crawler_id={{crawler.id}}" ng-if="crawler.all.fail">
+          <i class="fa fa-list-ul" aria-hidden="true"></i>
+        </a>
+      </td>
+      <td class="numeric">
+        <span class="label label-default">{{crawler.schedule || '' }}</span>
+      </td>
+      <td>
+        <a class="btn btn-primary btn-xs"
+          ng-click="executeCrawler(crawler, false)"
+          ng-disabled="crawler.running">
+          Full
+        </a>
+        <a class="btn btn-primary btn-xs"
+          ng-click="executeCrawler(crawler, true)"
+          ng-disabled="crawler.running">
+          Update
+        </a>
+      </td>
+    </tr>
+  </table>
 
-<table class="table">
-  <tr>
-    <th>Crawler ID</th>
-    <th>Source</th>
-    <th width="1%"></th>
-    <th width="1%"></th>
-    <th class="numeric">All OK/Failed</th>
-    <th class="numeric">Last OK/Failed</th>
-    <th class="numeric">Last updated</th>
-    <th width="1%">Logs</th>
-    <th class="numeric">Schedule</th>
-    <th>Execute crawler</th>
-  </tr>
-
-  <tr ng-repeat="crawler in crawlers.results">
-    <td>
-      <strong ng-bind="::crawler.name"></strong>
-    </td>
-    <td>
-      {{crawler.collection.label}}
-    </td>
-    <td>
-      <a href="/search?filter:collection_id={{crawler.collection.id}}">
-        <i class="fa fa-search"></i>
-      </a>
-    </td>
-    <td>
-      <a ng-click="editCollection(crawler.collection)">
-        <i class="fa fa-cog"></i>
-      </a>
-    </td>
-    <td class="numeric">
-      <a href="/crawlers/logs?crawler_id={{crawler.id}}" ng-if="crawler.all.fail" class="simple">
-        <span class="label label-danger">{{crawler.all.fail | number}}</span>
-      </a>
-      <span class="label label-success" ng-if="crawler.all.ok">{{crawler.all.ok | number}}</span>
-    </td>
-    <td class="numeric">
-      <a href="/crawlers/logs?crawler_run={{crawler.last.run_id}}" ng-if="crawler.last.fail" class="simple">
-        <span class="label label-danger">{{crawler.last.fail | number}}</span>
-      </a>
-      <span class="label label-success" ng-if="crawler.last.ok">{{crawler.last.ok | number}}</span>
-    </td>
-    <td class="numeric">
-      <span ng-if="crawler.last.run_id">
-        {{crawler.last.updated | relativeDate}}
-      </span>
-    </td>
-    <td>
-      <a href="/crawlers/logs?crawler_id={{crawler.id}}" ng-if="crawler.all.fail">
-        <i class="fa fa-list-ul" aria-hidden="true"></i>
-      </a>
-    </td>
-    <td class="numeric">
-      <span class="label label-default">{{crawler.schedule || '' }}</span>
-    </td>
-    <td>
-      <a class="btn btn-primary btn-xs"
-        ng-click="executeCrawler(crawler, false)"
-        ng-disabled="crawler.running">
-        Full
-      </a>
-      <a class="btn btn-primary btn-xs"
-        ng-click="executeCrawler(crawler, true)"
-        ng-disabled="crawler.running">
-        Update
-      </a>
-    </td>
-  </tr>
-</table>
-
-<div class="bottom-pager">
-  <div class="pull-right">
-    <response-pager response="crawlers" load="loadOffset(offset)"></response-pager>
-  </div>
-  <div class="total" ng-if="crawlers.total">
-    Monitoring {{crawlers.total | number}} crawlers.
+  <div class="bottom-pager">
+    <div class="pull-right">
+      <response-pager response="crawlers" load="loadOffset(offset)"></response-pager>
+    </div>
+    <div class="total" ng-if="crawlers.total">
+      Monitoring {{crawlers.total | number}} crawlers.
+    </div>
   </div>
 </div>

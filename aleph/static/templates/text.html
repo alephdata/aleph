@@ -1,34 +1,35 @@
+<div class="screen">
+  <div class="row">
+    <div class="col-md-8">  
+      <ng-pdf template-url="templates/text_viewer.html" canvasid="pdf" scale="page-fit"
+        page="{{pageNum}}"  ng-hide="loading"></ng-pdf>
+    </div>
 
-<div class="row">
-  <div class="col-md-8">  
-    <ng-pdf template-url="templates/text_viewer.html" canvasid="pdf" scale="page-fit"
-      page="{{pageNum}}"  ng-hide="loading"></ng-pdf>
-  </div>
+    <div class="col-md-4">
+      <form class="form-horizontal pages-query" ng-submit="updateTextQuery()">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <i class="fa fa-search"></i>
+          </span>
+          <input type="text" class="form-control"
+            ng-model="textQuery"
+            placeholder="Search within this document">
+        </div>
+        <div class="pages-list" ng-show="pages.total">
+          <table class="table">
+            <tr ng-repeat="page in pages.results" ng-class="{'selected': pageNum == page.page}">
+              <th width="1%">
+                <a ng-click="setPage(page.page)">pg.&nbsp;{{page.page}}</a>
+              </th>
+              <td>
+                <span ng-bind-html="page.snippet" class="highlights"></span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </form>
 
-  <div class="col-md-4">
-    <form class="form-horizontal pages-query" ng-submit="updateTextQuery()">
-      <div class="input-group">
-        <span class="input-group-addon">
-          <i class="fa fa-search"></i>
-        </span>
-        <input type="text" class="form-control"
-          ng-model="textQuery"
-          placeholder="Search within this document">
-      </div>
-      <div class="pages-list" ng-show="pages.total">
-        <table class="table">
-          <tr ng-repeat="page in pages.results" ng-class="{'selected': pageNum == page.page}">
-            <th width="1%">
-              <a ng-click="setPage(page.page)">pg.&nbsp;{{page.page}}</a>
-            </th>
-            <td>
-              <span ng-bind-html="page.snippet" class="highlights"></span>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </form>
-
-    <metadata-sidebar doc="doc"></metadata-sidebar>
+      <metadata-sidebar doc="doc"></metadata-sidebar>
+    </div>
   </div>
 </div>

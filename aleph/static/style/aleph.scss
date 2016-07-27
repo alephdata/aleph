@@ -113,6 +113,9 @@ footer {
     }
 }
 
+.screen {
+    @extend .container-fluid;
+}
 
 // used by the collections dropdown-menu
 .btn.btn-default {

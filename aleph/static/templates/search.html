@@ -1,211 +1,212 @@
-<div class="row search-bar">
-  <div class="col-md-8">
-    <search-box query="query"></search-box>
+<div class="screen">
+  <div class="row search-bar">
+    <div class="col-md-8">
+      <search-box query="query"></search-box>
+    </div>
+    <div class="col-md-4">
+      <div class="btn-group btn-group-justified" role="group">
+        <div class="btn-group" uib-dropdown dropdown-append-to-body>
+          <button type="button" class="btn btn-primary dropdown-toggle"
+            uib-dropdown-toggle>
+            <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+            Sort
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <ul class="uib-dropdown-menu" role="menu">
+            <li ng-repeat="(field, label) in sortOptions"
+                ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'score')}">
+              <a ng-click="query.set('sort', field)"
+                 ng-bind="::label"></a>
+            </li>
+          </ul>
+        </div>
+        <div class="btn-group">
+          <a class="btn btn-primary" ng-click="ingestFiles([], $event)">
+            <i class="fa fa-cloud-upload"></i>
+            Upload
+          </a>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn" ng-click="toggleAlert()"
+            ng-disabled="!canCreateAlert()"
+            ng-class="{'btn-success': hasAlert(), 'btn-primary': !hasAlert()}">
+            <i class="fa fa-bell"></i>
+            <span ng-if="hasAlert()">
+              Disable alert
+            </span>
+            <span ng-if="!hasAlert()">
+              Set alert
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col-md-4">
-    <div class="btn-group btn-group-justified" role="group">
-      <div class="btn-group" uib-dropdown dropdown-append-to-body>
-        <button type="button" class="btn btn-primary dropdown-toggle"
-          uib-dropdown-toggle>
-          <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
-          Sort
-          <i class="fa fa-caret-down"></i>
-        </button>
-        <ul class="uib-dropdown-menu" role="menu">
-          <li ng-repeat="(field, label) in sortOptions"
-              ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'score')}">
-            <a ng-click="query.set('sort', field)"
-               ng-bind="::label"></a>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="alert alert-danger" role="alert" ng-if="result.error">
+        <strong>An error occurred while running your search.</strong>
+        {{::result.error.info.reason || result.error.message}}
+      </div>
+
+      <search-entity-suggest query="query"></search-entity-suggest>
+
+      <div>
+        <!-- peek feature -->
+        <div class="alert alert-suggest" role="alert" ng-if="peek.active">
+          <strong>{{peek.total}} hidden results</strong> are available.
+          <span ng-if="authz.logged_in()">
+            For access, contact:
+            <span ng-repeat="role in peek.roles">
+              <a href="mailto:{{role.email}}">{{role.name}}</a><span ng-if="!$last">,</span>
+            </span>
+          </span>
+          <span ng-if="!authz.logged_in()">
+            <a ng-href="/api/1/sessions/login" target="_self">Sign in</a>
+            to see who to contact for access.
+          </span>
+        </div>
+
+        <div ng-repeat="doc in result.results">
+          <search-result doc="doc" result="result" query="query"></search-result>
+        </div>
+
+        <div class="bottom-pager">
+          <div class="pull-right">
+            <response-pager response="result" load="loadOffset(offset)"></response-pager>
+          </div>
+          <div class="total" ng-if="!result.total">
+            No results were found.
+          </div>
+          <div class="total" ng-if="result.total">
+            Found {{result.total | number}} documents.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-default panel-facet panel-facet-scroll">
+        <div class="panel-heading">
+          <strong>Document collections</strong> <small>{{collectionFacets.length}}</small>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item animate toggle"
+            ng-repeat="collection in collectionFacet"
+            ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
+            ng-click="query.toggleFilter('collection_id', collection.id)">
+            <span class="badge">
+              {{collection.count | number}}
+              <a ng-click="editCollection(collection, $event)" ng-if="::authz.collection(authz.WRITE, collection.id)">
+                <i class="fa fa-cog"></i>
+              </a>
+            </span>
+            <span class="lbl">
+              {{::collection.label | characters:35 }}  
+            </span>
           </li>
         </ul>
       </div>
-      <div class="btn-group">
-        <a class="btn btn-primary" ng-click="ingestFiles([], $event)">
-          <i class="fa fa-cloud-upload"></i>
-          Upload
-        </a>
-      </div>
-      <div class="btn-group">
-        <button type="button" class="btn" ng-click="toggleAlert()"
-          ng-disabled="!canCreateAlert()"
-          ng-class="{'btn-success': hasAlert(), 'btn-primary': !hasAlert()}">
-          <i class="fa fa-bell"></i>
-          <span ng-if="hasAlert()">
-            Disable alert
+
+      <div class="panel panel-default panel-facet panel-facet-scroll">
+        <div class="panel-heading">
+          <span class="pull-right">
+            <a class="btn btn-xs btn-default" ng-click="createEntity($event)"
+                ng-if="authz.logged_in()">
+              <i class="fa fa-plus"></i> New
+            </a>
           </span>
-          <span ng-if="!hasAlert()">
-            Set alert
-          </span>
-        </button>
+          <strong>Persons and Companies</strong>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item empty" ng-if="!result.facets.entities.values.length">
+            No persons and companies found in these documents.
+          </li>
+          <li class="list-group-item animate toggle"
+            ng-repeat="entity in entityFacet track by entity.id"
+            ng-class="{'active': query.hasField('entity', entity.id)}"
+            ng-click="query.toggle('entity', entity.id)">
+            <span class="badge">
+              {{entity.count | number}}
+              <a ng-click="editEntity(entity, $event)" ng-if="::authz.entityWrite(entity)">
+                <i class="fa fa-cog"></i>
+              </a>
+            </span>
+            <entity-icon schema="entity.$schema"></entity-icon>
+            <span class="lbl">
+              {{::entity.name | characters:35 }}
+            </span>
+          </li>
+        </ul>
       </div>
+
+      <div class="panel panel-default panel-facet panel-facet-scroll"
+        ng-repeat="facet in facets track by facet.field">
+        <div class="panel-heading">
+          <span class="pull-right">
+            <a ng-click="query.toggle('facet', facet.field)">
+              <i ng-if="!facet.active" class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+              <i ng-if="facet.active" class="fa fa-caret-square-o-up" aria-hidden="true"></i>
+            </a>
+          </span>
+          <strong>{{::facet.label}}</strong>
+        </div>
+        <ul class="list-group" ng-if="facet.active">
+          <li class="list-group-item facet empty" ng-if="!facet.values.length">
+            No documents with {{facet.label}} metadata.
+          </li>
+          <li class="list-group-item animate toggle"
+            ng-repeat="val in facet.values track by val.id"
+            ng-class="{'active': query.hasFilter(facet.field, val.id)}"
+            ng-click="query.toggleFilter(facet.field, val.id)">
+            <span class="badge">{{val.count | number}}</span>
+            <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
+              {{::val.label | characters:35 }}
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="panel panel-default" ng-if="result.total < 9500">
+        <div class="panel-heading">
+          <strong>Work with the result list</strong>
+        </div>
+        <div class="panel-body">
+          <p>
+            Download links and metadata for all documents
+            matching your search criteria to go through them
+            in detail.
+          </p>
+          <a class="btn btn-primary"
+            ng-href="/api/1/query/export?{{queryString}}"
+            download target="_self">
+            <i class="fa fa-file-excel-o"></i>
+            Excel file ({{result.total | number}} results)
+          </a>
+        </div>
+      </div>
+
+      <div class="panel panel-default" ng-if="result.total < 9500">
+        <div class="panel-heading">
+          <strong>Analyze entity network</strong>
+        </div>
+        <div class="panel-body">
+          <p>
+            Get data to further analyze the connections between
+            entities associated with the selected documents.
+            Links connect entities occuring in the same document.
+          </p>
+          <p class="help-block">
+            This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool. 
+          </p>
+          <a ng-href="/api/1/graph?format=gexf&limit=2000&{{queryString}}" class="btn btn-primary" target="_self"
+          download="actors.gexf">
+            <i class="fa fa-cloud-download"></i>
+            Download Graph Exchange XML (GEXF)
+          </a>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
-<div class="row">
-  <div class="col-md-8">
-    <div class="alert alert-danger" role="alert" ng-if="result.error">
-      <strong>An error occurred while running your search.</strong>
-      {{::result.error.info.reason || result.error.message}}
-    </div>
-
-    <search-entity-suggest query="query"></search-entity-suggest>
-
-    <div>
-      <!-- peek feature -->
-      <div class="alert alert-suggest" role="alert" ng-if="peek.active">
-        <strong>{{peek.total}} hidden results</strong> are available.
-        <span ng-if="authz.logged_in()">
-          For access, contact:
-          <span ng-repeat="role in peek.roles">
-            <a href="mailto:{{role.email}}">{{role.name}}</a><span ng-if="!$last">,</span>
-          </span>
-        </span>
-        <span ng-if="!authz.logged_in()">
-          <a ng-href="/api/1/sessions/login" target="_self">Sign in</a>
-          to see who to contact for access.
-        </span>
-      </div>
-
-      <div ng-repeat="doc in result.results">
-        <search-result doc="doc" result="result" query="query"></search-result>
-      </div>
-
-      <div class="bottom-pager">
-        <div class="pull-right">
-          <response-pager response="result" load="loadOffset(offset)"></response-pager>
-        </div>
-        <div class="total" ng-if="!result.total">
-          No results were found.
-        </div>
-        <div class="total" ng-if="result.total">
-          Found {{result.total | number}} documents.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="panel panel-default panel-facet panel-facet-scroll">
-      <div class="panel-heading">
-        <strong>Document collections</strong> <small>{{collectionFacets.length}}</small>
-      </div>
-      <ul class="list-group">
-        <li class="list-group-item animate toggle"
-          ng-repeat="collection in collectionFacet"
-          ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
-          ng-click="query.toggleFilter('collection_id', collection.id)">
-          <span class="badge">
-            {{collection.count | number}}
-            <a ng-click="editCollection(collection, $event)" ng-if="::authz.collection(authz.WRITE, collection.id)">
-              <i class="fa fa-cog"></i>
-            </a>
-          </span>
-          <span class="lbl">
-            {{::collection.label | characters:35 }}  
-          </span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="panel panel-default panel-facet panel-facet-scroll">
-      <div class="panel-heading">
-        <span class="pull-right">
-          <a class="btn btn-xs btn-default" ng-click="createEntity($event)"
-              ng-if="authz.logged_in()">
-            <i class="fa fa-plus"></i> New
-          </a>
-        </span>
-        <strong>Persons and Companies</strong>
-      </div>
-      <ul class="list-group">
-        <li class="list-group-item empty" ng-if="!result.facets.entities.values.length">
-          No persons and companies found in these documents.
-        </li>
-        <li class="list-group-item animate toggle"
-          ng-repeat="entity in entityFacet track by entity.id"
-          ng-class="{'active': query.hasField('entity', entity.id)}"
-          ng-click="query.toggle('entity', entity.id)">
-          <span class="badge">
-            {{entity.count | number}}
-            <a ng-click="editEntity(entity, $event)" ng-if="::authz.entityWrite(entity)">
-              <i class="fa fa-cog"></i>
-            </a>
-          </span>
-          <entity-icon schema="entity.$schema"></entity-icon>
-          <span class="lbl">
-            {{::entity.name | characters:35 }}
-          </span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="panel panel-default panel-facet panel-facet-scroll"
-      ng-repeat="facet in facets track by facet.field">
-      <div class="panel-heading">
-        <span class="pull-right">
-          <a ng-click="query.toggle('facet', facet.field)">
-            <i ng-if="!facet.active" class="fa fa-caret-square-o-down" aria-hidden="true"></i>
-            <i ng-if="facet.active" class="fa fa-caret-square-o-up" aria-hidden="true"></i>
-          </a>
-        </span>
-        <strong>{{::facet.label}}</strong>
-      </div>
-      <ul class="list-group" ng-if="facet.active">
-        <li class="list-group-item facet empty" ng-if="!facet.values.length">
-          No documents with {{facet.label}} metadata.
-        </li>
-        <li class="list-group-item animate toggle"
-          ng-repeat="val in facet.values track by val.id"
-          ng-class="{'active': query.hasFilter(facet.field, val.id)}"
-          ng-click="query.toggleFilter(facet.field, val.id)">
-          <span class="badge">{{val.count | number}}</span>
-          <span class="lbl" uib-tooltip="{{val.label}}" tooltip-append-to-body="true" tooltip-placement="left">
-            {{::val.label | characters:35 }}
-          </span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="panel panel-default" ng-if="result.total < 9500">
-      <div class="panel-heading">
-        <strong>Work with the result list</strong>
-      </div>
-      <div class="panel-body">
-        <p>
-          Download links and metadata for all documents
-          matching your search criteria to go through them
-          in detail.
-        </p>
-        <a class="btn btn-primary"
-          ng-href="/api/1/query/export?{{queryString}}"
-          download target="_self">
-          <i class="fa fa-file-excel-o"></i>
-          Excel file ({{result.total | number}} results)
-        </a>
-      </div>
-    </div>
-
-    <div class="panel panel-default" ng-if="result.total < 9500">
-      <div class="panel-heading">
-        <strong>Analyze entity network</strong>
-      </div>
-      <div class="panel-body">
-        <p>
-          Get data to further analyze the connections between
-          entities associated with the selected documents.
-          Links connect entities occuring in the same document.
-        </p>
-        <p class="help-block">
-          This data format is suited for import into <a href="http://gephi.org">Gephi</a>, an open source network analysis tool. 
-        </p>
-        <a ng-href="/api/1/graph?format=gexf&limit=2000&{{queryString}}" class="btn btn-primary" target="_self"
-        download="actors.gexf">
-          <i class="fa fa-cloud-download"></i>
-          Download Graph Exchange XML (GEXF)
-        </a>
-      </div>
-    </div>
-
-  </div>
-</div>
-

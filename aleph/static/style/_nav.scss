@@ -2,6 +2,7 @@
 .navbar.navbar-default {
     background-color: $page-bg;
     border-bottom: 0;
+
     @include drop-shadow;
 
     .navbar-header {
