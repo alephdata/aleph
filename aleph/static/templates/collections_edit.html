@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" ng-if="::authz.is_admin()">
           <label class="control-label" for="category">Category</label>
           <div class="">
             <select class="form-control" id="category" name="category" ng-model="collection.category"
@@ -83,13 +83,15 @@
 
     <div class="row">
       <div class="col-md-6">
-        <div>
-          <label class="control-label" for="managed">Admin Operations</label>
+        <div ng-if="::authz.is_admin()">
+          <div>
+            <label class="control-label" for="managed">Admin Operations</label>
+          </div>
+          <button type="button" class="btn btn-primary"
+                  ng-click="delete()">Delete</button>
+          <button type="button" class="btn btn-primary"
+                  ng-click="process()">Re-process documents</button>
         </div>
-        <button type="button" class="btn btn-primary"
-                ng-click="delete()">Delete</button>
-        <button type="button" class="btn btn-primary"
-                ng-click="process()">Re-process documents</button>
       </div>
       <div class="col-md-6">
         <div class="pull-right">

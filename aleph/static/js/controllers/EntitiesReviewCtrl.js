@@ -5,7 +5,6 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
   $scope.reportLoading(true);
   $scope.collection = collection;
   $scope.entity = null;
-  $scope.empty = false;
   $scope.schemata = {};
   $scope.duplicateOptions = [];
   Title.set("Review entities", "collections");
@@ -29,10 +28,6 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
 
   var loadNext = function() {
     console.log("Cache size:", entityCache.length);
-    if ($scope.empty) {
-      $scope.reportLoading(false);
-      return;
-    }  
 
     $scope.reportLoading(true);
     if (entityCache.length) {
@@ -40,13 +35,14 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     } else {
       var url = '/api/1/collections/' + $scope.collection.id + '/pending';
       $http.get(url).then(function(res) {
-        for (var i in res.data.results) {
-          entityCache.push(res.data.results[i]);
-        }
         if (res.data.total == 0) {
-          $scope.empty = true;
+          $location.path('/collections/' + $scope.collection.id + '/entities');
+        } else {
+          for (var i in res.data.results) {
+            entityCache.push(res.data.results[i]);
+          }
+          loadNext();  
         }
-        loadNext();
       });  
     }
   };

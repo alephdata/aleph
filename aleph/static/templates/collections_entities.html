@@ -43,22 +43,25 @@
 
       <div>
         <table ng-if="result.results.length" class="table table-striped">
-          <tr ng-if="collection.can_edit">
+          <tr ng-show="collection.can_edit">
             <th></th>
             <th colspan="6">
               <div class="btn-group">
-                <a ng-click="deleteSelection($event)" class="btn btn-primary btn-xs"
+                <a ng-click="deleteSelection($event)" class="btn btn-default btn-xs"
                   ng-disabled="!canDelete()">
                   <i class="fa fa-trash" aria-hidden="true"></i>
                   Delete entities
                 </a>
-                <a ng-click="mergeSelection($event)" class="btn btn-primary btn-xs"
+                <a ng-click="mergeSelection($event)" class="btn btn-default btn-xs"
                   ng-disabled="!canMerge()">
                   <i class="fa fa-link" aria-hidden="true"></i>
                   Merge duplicates
                 </a>
               </div>
             </th>
+          </tr>
+          <tr ng-show="false">
+            <th colspan='7'
           </tr>
           <tr ng-repeat-start="entity in result.results track by entity.id">
             <td width="1%" ng-if="authz.logged_in()">
@@ -90,10 +93,10 @@
             </td>
             <td class="numeric" width="5%">
               <a ng-href="/search?entity={{entity.id}}" ng-if="entity.doc_count">
-                <i class="fa fa-search" aria-hidden="true"></i> {{entity.doc_count | number}}
+                <i class="fa fa-file-text-o" aria-hidden="true"></i> {{entity.doc_count | number}}
               </a>
               <span ng-if="!entity.doc_count">
-                <i class="fa fa-search" aria-hidden="true"></i> 0
+                <i class="fa fa-file-text-o" aria-hidden="true"></i> 0
               </span>
             </td>
           </tr>
@@ -119,6 +122,17 @@
     </div>
 
     <div class="col-md-4">
+      <div class="alert alert-info" role="alert" ng-if="collection.pending_count && collection.can_edit">
+        <p>
+          We've found <strong>{{::collection.pending_count | number}}
+          new entities</strong> in the documents in this collection.
+          Please take a moment to check them.
+        </p>
+        <p>
+          <a ng-href="/collections/{{::collection.id}}/entities/review" class="btn btn-default">Review</a>
+        </p>
+      </div>
+
       <div class="panel panel-default panel-facet panel-facet-scroll">
         <div class="panel-heading">
           <strong>Countries</strong>

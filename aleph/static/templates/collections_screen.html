@@ -30,12 +30,14 @@
       <a ng-href="/collections/{{::collection.id}}">
         <i class="fa fa-file-text-o" aria-hidden="true"></i>
         Documents
+        <span class="badge">{{::collection.doc_count | number}}</span>
       </a>
     </li>
     <li role="presentation" ng-class="{'active': section == 'entities'}">
       <a ng-href="/collections/{{::collection.id}}/entities">
         <i class="fa fa-users" aria-hidden="true"></i>
         People and Companies
+        <span class="badge">{{::collection.entity_count | number}}</span>
       </a>
     </li>
     <li role="presentation" ng-class="{'active': section == 'settings'}"

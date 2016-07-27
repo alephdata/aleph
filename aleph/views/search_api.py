@@ -8,7 +8,7 @@ from aleph.core import url_for
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document
 from aleph.events import log_event
-from aleph.model import Collection
+# from aleph.model import Collection
 from aleph.search import documents_query, execute_documents_query
 from aleph.search import records_query, execute_records_query
 from aleph.search.peek import peek_query
@@ -42,11 +42,10 @@ def statistics():
     query = documents_query(MultiDict())
     query['size'] = 0
     result = execute_documents_query(MultiDict(), query)
-    collections = Collection.category_statistics(collections)
+    # collections = Collection.category_statistics(collections)
     return jsonify({
         'document_count': result['total'],
-        'collection_count': sum([c['count'] for c in collections]),
-        'collections': collections
+        'collection_count': len(collections)
     })
 
 

@@ -70,7 +70,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     loginRequired: false,
     resolve: {
       'collection': loadCollection,
-      'data': loadCollectionsEntities,
+      'data': loadCollectionEntities,
       'metadata': loadMetadata,
       'alerts': loadAlertsIndex
     }

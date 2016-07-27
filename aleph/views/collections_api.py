@@ -34,7 +34,9 @@ def create():
 def view(id):
     collection = obj_or_404(Collection.by_id(id))
     authz.require(authz.collection_read(id))
-    return jsonify(collection)
+    data = collection.to_dict()
+    data.update(collection.content_statistics())
+    return jsonify(data)
 
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['POST', 'PUT'])

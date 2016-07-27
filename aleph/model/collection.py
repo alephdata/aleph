@@ -76,6 +76,31 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         q = q.group_by(Entity)
         return q.order_by(func.count(Reference.id).desc())
 
+    def get_document_count(self):
+        from aleph.model.document import Document, collection_document_table
+        q = Document.all()
+        q = q.join(collection_document_table)
+        q = q.filter(collection_document_table.c.collection_id == self.id)
+        return q.count()
+
+    def get_entity_count(self, state=None):
+        from aleph.model.entity import Entity, collection_entity_table
+        q = Entity.all()
+        q = q.join(collection_entity_table)
+        q = q.filter(collection_entity_table.c.collection_id == self.id)
+        if state is not None:
+            q = q.filter(Entity.state == state)
+        return q.count()
+
+    def content_statistics(self):
+        """Query how many enitites and documents are in this collection."""
+        from aleph.model.entity import Entity
+        return {
+            'doc_count': self.get_document_count(),
+            'entity_count': self.get_entity_count(Entity.STATE_ACTIVE),
+            'pending_count': self.get_entity_count(Entity.STATE_PENDING)
+        }
+
     @classmethod
     def by_foreign_id(cls, foreign_id, deleted=False):
         if foreign_id is None:
@@ -101,17 +126,17 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         collection.deleted_at = None
         return collection
 
-    @classmethod
-    def category_statistics(cls, collection_ids):
-        q = db.session.query(Collection.category, func.count(Collection.id))
-        q = q.filter(Collection.deleted_at == None)  # noqa
-        q = q.filter(Collection.id.in_(collection_ids))
-        q = q.group_by(Collection.category)
-        q = q.order_by(func.count(Collection.id).desc())
-        results = []
-        for category, count in q.all():
-            results.append({'category': category, 'count': count})
-        return results
+    # @classmethod
+    # def category_statistics(cls, collection_ids):
+    #     q = db.session.query(Collection.category, func.count(Collection.id))
+    #     q = q.filter(Collection.deleted_at == None)  # noqa
+    #     q = q.filter(Collection.id.in_(collection_ids))
+    #     q = q.group_by(Collection.category)
+    #     q = q.order_by(func.count(Collection.id).desc())
+    #     results = []
+    #     for category, count in q.all():
+    #         results.append({'category': category, 'count': count})
+    #     return results
 
     def __repr__(self):
         return '<Collection(%r, %r)>' % (self.id, self.label)

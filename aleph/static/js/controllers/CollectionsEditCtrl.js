@@ -1,7 +1,7 @@
-aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$routeParams',
-                                         'Validation', 'Collection', 'Title', 'collection', 'roles', 'metadata',
-    function($scope, $location, $http, $routeParams, Validation, Collection, Title, collection, roles, metadata) {
+aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$routeParams', 'Validation', 'Collection', 'Authz', 'Title', 'collection', 'roles', 'metadata',
+    function($scope, $location, $http, $routeParams, Validation, Collection, Authz, Title, collection, roles, metadata) {
   
+  $scope.authz = Authz;
   $scope.collection = collection;
   $scope.roles = roles.filter(function(r) {
     return r.type == 'user';
