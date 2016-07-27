@@ -19,7 +19,8 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
   };
   
   $scope.process = function() {
-    $http.post($scope.collecton.api_url + '/process').then(function() {
+    var url ='/api/1/collections/' + $scope.collection.id + '/process';
+    $http.post(url).then(function() {
       $uibModalInstance.dismiss('ok');
     });
   };
