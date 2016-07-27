@@ -2,6 +2,17 @@
   <div class="row">
     <div class="col-md-8"> 
       <search-box query="query"></search-box>
+
+      <div class="alert alert-info" role="alert" ng-if="!collection.doc_count && collection.can_add">
+        <div>
+          <i class="fa fa-cloud-upload"></i>
+          <p>
+            Drag files or folders onto the browser window to import them
+            into the collection.
+          </p>
+        </div>
+      </div>
+
       <table class="table">
         <tr ng-repeat="doc in result.results track by doc.id">
           <td>

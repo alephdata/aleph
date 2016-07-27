@@ -61,7 +61,8 @@
 }
 
 .alert.alert-suggest {
-    background-color: $gray-subtle;
+    @extend .alert-info;
+    // background-color: $gray-subtle;
     // border: 1px solid $border-color;
 
     .entity-icon {
@@ -70,9 +71,11 @@
 
     a {
         font-weight: bold;
+        color: $alert-info-text;
 
         &:hover {
-            text-decoration: none;
+            // text-decoration: none;
+            color: $alert-info-text;
         }
     }
 }
