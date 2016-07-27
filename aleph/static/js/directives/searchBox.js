@@ -7,6 +7,12 @@ aleph.directive('searchBox', ['$location', '$q', '$route', '$http', '$rootScope'
     },
     templateUrl: 'templates/search_box.html',
     link: function (scope, element, attrs) {
+      scope.sortOptions = {
+        score: 'Relevancy',
+        newest: 'Newest',
+        oldest: 'Oldest'
+      };
+
       scope.suggestEntities = function(prefix) {
         var dfd = $q.defer();
         var opts = {
@@ -23,11 +29,9 @@ aleph.directive('searchBox', ['$location', '$q', '$route', '$http', '$rootScope'
       scope.acceptSuggestion = function($item) {
         scope.query.state.q = '';
         scope.query.toggle('entity', $item.id);
-        $location.path('/search');
       }
 
       scope.submitSearch = function(form) {
-        $location.path('/search');
         scope.query.set('q', scope.query.state.q);
       };
     }

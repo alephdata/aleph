@@ -18,7 +18,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       var dfd = $q.defer();
       var query = Query.parse(),
           state = angular.copy(query.state);
-      state['limit'] = 30;
+      state['limit'] = 20;
       state['snippet'] = 140;
       state['facet'] = query.getArray('facet');
       state['facet'].push('entities');

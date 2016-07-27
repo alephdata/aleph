@@ -53,8 +53,8 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   });
 
   $routeProvider.when('/collections/:collection_id', {
-    templateUrl: 'templates/collections_view.html',
-    controller: 'CollectionsViewCtrl',
+    templateUrl: 'templates/collections_documents.html',
+    controller: 'CollectionsDocumentsCtrl',
     reloadOnSearch: false,
     loginRequired: false,
     resolve: {

@@ -2,39 +2,14 @@
 aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$anchorScroll', '$http', '$uibModal', 'Collection', 'Entity', 'Authz', 'Alert', 'Document', 'Ingest', 'Role', 'Title', 'data', 'peek', 'alerts', 'metadata',
     function($scope, $route, $location, $timeout, $anchorScroll, $http, $uibModal, Collection, Entity, Authz, Alert, Document, Ingest, Role, Title, data, peek, alerts, metadata) {
 
-  $scope.fields = metadata.fields;
+  $scope.metadata = metadata;
   $scope.peek = peek;
   $scope.collectionFacet = [];
-  $scope.entityFacet = [];
-  $scope.facets = [];
   $scope.authz = Authz;
-  $scope.sortOptions = {
-    score: 'Relevancy',
-    newest: 'Newest',
-    oldest: 'Oldest'
-  };
 
   $scope.loadOffset = function(offset) {
     $scope.query.set('offset', offset);
     $anchorScroll();
-  };
-
-  $scope.editEntity = function(entity, $event) {
-    $event.stopPropagation();
-    Entity.edit(entity.id).then(function() {
-      $timeout(function() {
-        reloadSearch();
-      }, 100);
-    });
-  };
-
-  $scope.createEntity = function($event) {
-    $event.stopPropagation();
-    Entity.create({'name': $scope.originalText}).then(function() {
-      $timeout(function() {
-        reloadSearch();
-      }, 100);
-    });
   };
 
   function getAlert() {
@@ -71,24 +46,6 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
       return;
     }
     $scope.collectionFacet = query.sortFacet(result.facets.collections.values, 'filter:collection_id');
-    $scope.entityFacet = query.sortFacet(result.facets.entities.values, 'entity');
-
-    var queryFacets = query.getArray('facet'),
-        facets = [];
-
-    for (var name in metadata.fields) {
-      var facet = {
-        field: name,
-        label: metadata.fields[name],
-        active: queryFacets.indexOf(name) != -1
-      };
-      if (result.facets[name]) {
-        var values = result.facets[name].values;
-        facet.values = query.sortFacet(values, 'filter:' + name);  
-      }
-      facets.push(facet);
-    }
-    $scope.facets = facets;
   };
 
   $scope.$on('$routeUpdate', function() {
@@ -107,8 +64,8 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
 
   var updateSearch = function(data) {
     initFacets(data.query, data.result);
-    $scope.result = data.result;
     $scope.query = data.query;
+    $scope.result = data.result;
     $scope.queryString = data.query.toString();
     $scope.originalText = data.query.state.q ? data.query.state.q : '';
     

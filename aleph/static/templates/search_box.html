@@ -1,5 +1,5 @@
 <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
-  <div class="input-group">
+  <div class="input-group search-bar">
     <input type="text" class="form-control" autofocus
         ng-model="query.state.q" placeholder="Search across documents and data sources"
         uib-typeahead="entity for entity in suggestEntities($viewValue)"
@@ -9,6 +9,21 @@
         typeahead-template-url="templates/entity_link.html"
         typeahead-on-select="acceptSuggestion($item)">
     <span class="input-group-btn">
+      <div class="btn-group" uib-dropdown dropdown-append-to-body>
+        <button type="button" class="btn btn-primary dropdown-toggle"
+          uib-dropdown-toggle>
+          <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+          Sort
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <ul class="uib-dropdown-menu" role="menu">
+          <li ng-repeat="(field, label) in sortOptions"
+              ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'score')}">
+            <a ng-click="query.set('sort', field)"
+               ng-bind="::label"></a>
+          </li>
+        </ul>
+      </div>
       <button class="btn btn-primary" type="submit">Search</button>
     </span>
   </div>
