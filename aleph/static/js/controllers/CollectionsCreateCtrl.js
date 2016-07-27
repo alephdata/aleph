@@ -23,7 +23,8 @@ aleph.controller('CollectionsCreateCtrl', ['$scope', '$location', '$q', '$http',
     $scope.blocked = true;
     $http.post('/api/1/collections', $scope.collection).then(function(coll) {
       Collection.flush().then(function(res) {
-        $uibModalInstance.close(coll.data);  
+        $location.path('/collections/' + coll.data.id);
+        $uibModalInstance.close();
       });
     });
   };

@@ -12,7 +12,7 @@ aleph.controller('CollectionsDeleteCtrl', ['$scope', '$location', '$q', '$http',
     $scope.blocked = true;
     $http.delete('/api/1/collections/' + collection.id).then(function(res) {
       Collection.flush().then(function(res) {
-        $uibModalInstance.close();  
+        $uibModalInstance.close();
       });
     });
   };

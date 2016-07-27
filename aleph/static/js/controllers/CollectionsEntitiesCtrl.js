@@ -1,7 +1,8 @@
 
-aleph.controller('EntitiesIndexCtrl', ['$scope', '$http', '$timeout', '$anchorScroll', 'Collection', 'Entity', 'data', 'metadata', 'alerts', 'Authz', 'Alert', 'Title',
-    function($scope, $http, $timeout, $anchorScroll, Collection, Entity, data, metadata, alerts, Authz, Alert, Title) {
+aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$anchorScroll', 'Collection', 'Entity', 'data', 'metadata', 'collection', 'alerts', 'Authz', 'Alert', 'Title',
+    function($scope, $http, $timeout, $anchorScroll, Collection, Entity, data, metadata, collection, alerts, Authz, Alert, Title) {
 
+  $scope.collection = collection;
   $scope.authz = Authz;
   $scope.sortOptions = {
     score: 'Relevancy',
@@ -108,8 +109,6 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$http', '$timeout', '$anchorSc
   };
 
   var updateSearch = function(data) {
-    $scope.collectionFacet = data.query.sortFacet(data.result.facets.collections.values,
-                                                 'filter:collection_id');
     $scope.jurisdictionFacet = data.query.sortFacet(data.result.facets.jurisdiction_code.values,
                                                     'filter:jurisdiction_code');
     $scope.schemaFacet = data.query.sortFacet(data.result.facets.$schema.values,
@@ -118,9 +117,9 @@ aleph.controller('EntitiesIndexCtrl', ['$scope', '$http', '$timeout', '$anchorSc
     $scope.query = data.query;
     
     if (data.query.getQ()) {
-      Title.set("Browse for '" + data.query.getQ() + "'", "entities");
+      Title.set("Browse for '" + data.query.getQ() + "'", "collections");
     } else {
-      Title.set("Browse entities", "entities");  
+      Title.set("Browse entities", "collections");  
     }
   };
 

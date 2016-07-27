@@ -13,13 +13,14 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
   }
 
   return {
-    search: function() {
+    searchCollection: function(collection_id) {
       var dfd = $q.defer();
       var query = Query.parse(),
           state = angular.copy(query.state);
       state['limit'] = 20;
+      state['filter:collection_id'] = collection_id;
       state['doc_counts'] = 'true';
-      state['facet'] = ['jurisdiction_code', '$schema', 'collections'];
+      state['facet'] = ['jurisdiction_code', '$schema'];
       state['offset'] = state.offset || 0;
       $http.get('/api/1/entities', {params: state}).then(function(res) {
         dfd.resolve({

@@ -63,7 +63,20 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     }
   });
 
-  $routeProvider.when('/collections/:collection_id/review', {
+  $routeProvider.when('/collections/:collection_id/entities', {
+    templateUrl: 'templates/collections_entities.html',
+    controller: 'CollectionsEntitiesCtrl',
+    reloadOnSearch: false,
+    loginRequired: false,
+    resolve: {
+      'collection': loadCollection,
+      'data': loadCollectionsEntities,
+      'metadata': loadMetadata,
+      'alerts': loadAlertsIndex
+    }
+  });
+
+  $routeProvider.when('/collections/:collection_id/entities/review', {
     templateUrl: 'templates/entity_review.html',
     controller: 'EntitiesReviewCtrl',
     reloadOnSearch: false,
@@ -94,18 +107,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
       'collection': loadCollection,
       'metadata': loadMetadata,
       'roles': loadRoles
-    }
-  });
-
-  $routeProvider.when('/entities', {
-    templateUrl: 'templates/entity_index.html',
-    controller: 'EntitiesIndexCtrl',
-    reloadOnSearch: false,
-    loginRequired: false,
-    resolve: {
-      'data': loadEntitiesIndex,
-      'metadata': loadMetadata,
-      'alerts': loadAlertsIndex
     }
   });
 
