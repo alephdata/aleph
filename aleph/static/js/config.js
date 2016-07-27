@@ -59,6 +59,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     loginRequired: false,
     resolve: {
       'collection': loadCollection,
+      'data': loadCollectionDocuments,
       'metadata': loadMetadata
     }
   });
