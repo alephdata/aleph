@@ -24,6 +24,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       state['facet'].push('entities');
       if (collection_id) {
         state['filter:collection_id'] = collection_id;
+        state['scope'] = 'collection';
       } else {
         state['facet'].push('collections');
       }

@@ -77,6 +77,13 @@ def facet_entities(aggs, args):
     """Filter entities, facet for collections."""
     entities = args.getlist('entity')
     collections = authz.collections(authz.READ)
+    # This limits the entity facet collections to the same collections
+    # which apply to the document part of the query. It is used by the
+    # collections view to show only entity facets from the currently
+    # selected collection.
+    if 'collection' == args.get('scope'):
+        filters = args.getlist('filter:collection_id')
+        collections = [c for c in collections if str(c) in filters]
     flt = {
         'bool': {'must': [{'terms': {'entities.collection_id': collections}}]}
     }
