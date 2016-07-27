@@ -30,10 +30,6 @@ aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSeria
         }
       }
 
-      scope.filterCollection = function(collection_id) {
-        scope.query.toggleFilter('collection_id', collection_id);
-      };
-
       scope.getUrl = function(rec) {
         var search = $location.search(),
             query = {},

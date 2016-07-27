@@ -31,8 +31,7 @@ aleph.directive('collectionsAdd', ['$http', '$q', '$location', 'Authz', 'Collect
 
       scope.openCollection = function(collection, $event) {
         $event.stopPropagation();
-        $location.path('/search');
-        $location.search({'filter:collection_id': collection.id});
+        $location.path('/collections/' + collection.id);
       };
 
       scope.toggleCollection = function(collection) {

@@ -19,13 +19,6 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
     $anchorScroll();
   };
 
-  $scope.editCollection = function(collection, $event) {
-    $event.stopPropagation();
-    Collection.edit(collection).then(function() {
-      reloadSearch();
-    });
-  };
-
   $scope.editEntity = function(entity, $event) {
     $event.stopPropagation();
     Entity.edit(entity.id).then(function() {

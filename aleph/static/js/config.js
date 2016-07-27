@@ -85,6 +85,18 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     }
   });
 
+  $routeProvider.when('/collections/:collection_id/settings', {
+    templateUrl: 'templates/collections_edit.html',
+    controller: 'CollectionsEditCtrl',
+    reloadOnSearch: false,
+    loginRequired: false,
+    resolve: {
+      'collection': loadCollection,
+      'metadata': loadMetadata,
+      'roles': loadRoles
+    }
+  });
+
   $routeProvider.when('/entities', {
     templateUrl: 'templates/entity_index.html',
     controller: 'EntitiesIndexCtrl',

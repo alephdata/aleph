@@ -80,37 +80,6 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
       });
       return instance.result;
     },
-    edit: function(collection) {
-      var instance = $uibModal.open({
-        templateUrl: 'templates/collections_edit.html',
-        controller: 'CollectionsEditCtrl',
-        backdrop: true,
-        size: 'lg',
-        resolve: {
-          metadata: Metadata.get(),
-          collection: function() {
-            return getCollection(collection.id);
-          },
-          roles: ['Role', function(Role) {
-            var dfd = $q.defer();
-            Role.getAll().then(function(res) {
-              var roles = [];
-              for (var i in res.results) {
-                var role = res.results[i];
-                if (role.type == 'user') {
-                  roles.push(role);  
-                }
-              }
-              dfd.resolve(roles);
-            }, function(err) {
-              dfd.reject(err);
-            });
-            return dfd.promise;
-          }]
-        }
-      });
-      return instance.result;
-    },
     get: getCollection,
     delete: function(collection) {
       var instance = $uibModal.open({

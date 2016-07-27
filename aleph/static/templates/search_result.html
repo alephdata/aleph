@@ -22,7 +22,8 @@
       <span ng-if="::collection.category" class="label label-primary">
         {{::collection.category | collectionCategory }}</span>
 
-      <a ng-click="filterCollection(collection.id)" class="collection" ng-bind="::collection.label"></a>
+      <a ng-href="/collections/{{::collection.id}}" class="collection"
+        ng-bind="::collection.label"></a>
       &middot;
 
       <span ng-if="::doc.source_url">
