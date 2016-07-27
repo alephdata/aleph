@@ -27,7 +27,7 @@
 
   <ul class="nav nav-tabs">
     <li role="presentation" ng-class="{'active': section == 'documents'}">
-      <a href="#">
+      <a ng-href="/collections/{{::collection.id}}">
         <i class="fa fa-file-text-o" aria-hidden="true"></i>
         Documents
       </a>

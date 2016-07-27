@@ -1,12 +1,14 @@
 aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$routeParams',
-                                         'Validation', 'Collection', 'collection', 'roles', 'metadata',
-    function($scope, $location, $http, $routeParams, Validation, Collection, collection, roles, metadata) {
+                                         'Validation', 'Collection', 'Title', 'collection', 'roles', 'metadata',
+    function($scope, $location, $http, $routeParams, Validation, Collection, Title, collection, roles, metadata) {
   
   $scope.collection = collection;
   $scope.roles = roles.filter(function(r) {
     return r.type == 'user';
   });
   $scope.categories = metadata.categories;
+
+  Title.set("Settings: " + collection.label, "collections");
 
   $scope.delete = function() {
     Collection.delete(collection).then(function() {

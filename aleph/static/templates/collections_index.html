@@ -27,7 +27,7 @@
       <table class="table table-striped">
         <tr ng-repeat="collection in collections track by collection.id">
           <td>
-            {{::collection.label}}
+            <a ng-href="/collections/{{::collection.id}}">{{::collection.label}}</a>
           </td>
           <td width="10%">
             <span ng-if="::collection.category" class="label label-primary">

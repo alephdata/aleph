@@ -8,7 +8,7 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
   $scope.empty = false;
   $scope.schemata = {};
   $scope.duplicateOptions = [];
-  Title.set("Review entities", "entities");
+  Title.set("Review entities", "collections");
 
   var entityCache = [],
       entitySkipIds = [],
