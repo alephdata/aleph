@@ -11,7 +11,9 @@ log = logging.getLogger(__name__)
 
 def load_entities():
     tx = get_graph().begin()
-    for entity in Entity.all():
+    q = Entity.all()
+    q = q.filter(Entity.state == Entity.STATE_ACTIVE)
+    for entity in q:
         load_entity(tx, entity)
     tx.commit()
 
