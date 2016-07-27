@@ -1,5 +1,5 @@
-<div class="screen">
-  <h3>Bulk Entity Creator</h3>
+<collections-screen collection="collection" section="entities">
+  <!-- h3>Bulk Entity Creator</h3-->
 
   <table class="table table-striped">
     <tr>
@@ -36,25 +36,15 @@
   </table>
 
   <div class="row">
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="control-label" for="collection">
-          Add to collection
-        </label>
-        <collections-select set-collection="setCollection(callback)"
-          category="'investigation'"></collections-select>
-      </div>
-    </div>
-    <div class="col-md-8">
+    <div class="col-md-12">
       <div class="pull-right">
-        <br/>
-        <button class="btn btn-success btn-lg" type="button"
+        <button class="btn btn-default" type="button"
           ng-disabled="!canSave()" ng-click="save()">Save</button>
       </div>
     </div>
   </div>
 
-  <hr>
+  <hr ng-if="created.length">
   <table class="table table-striped" ng-if="created.length">
     <tr>
       <th>Created entities</th>
@@ -77,4 +67,4 @@
       </td>
     </tr>
   </table>
-</div>
+</collections-screen>

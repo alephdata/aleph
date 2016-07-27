@@ -74,6 +74,17 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     }
   });
 
+  $routeProvider.when('/collections/:collection_id/entities/bulk', {
+    templateUrl: 'templates/entity_bulk.html',
+    controller: 'EntitiesBulkCtrl',
+    reloadOnSearch: false,
+    loginRequired: false,
+    resolve: {
+      'collection': loadCollection,
+      'metadata': loadMetadata
+    }
+  });
+
   $routeProvider.when('/entities', {
     templateUrl: 'templates/entity_index.html',
     controller: 'EntitiesIndexCtrl',
@@ -83,16 +94,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
       'data': loadEntitiesIndex,
       'metadata': loadMetadata,
       'alerts': loadAlertsIndex
-    }
-  });
-
-  $routeProvider.when('/entities/bulk', {
-    templateUrl: 'templates/entity_bulk.html',
-    controller: 'EntitiesBulkCtrl',
-    reloadOnSearch: true,
-    loginRequired: false,
-    resolve: {
-      'metadata': loadMetadata
     }
   });
 

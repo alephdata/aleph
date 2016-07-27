@@ -5,11 +5,11 @@ aleph.directive('collectionsScreen', ['$http', '$q', '$location', 'Authz', 'Coll
     transclude: true,
     scope: {
       'collection': '=',
-      'section': '='
+      'section': '@'
     },
     templateUrl: 'templates/collections_screen.html',
     link: function (scope, element, attrs) {
-      scope.authz = Authz;
+      scope.writeable = Authz.collection(Authz.WRITE, scope.collection.id);
     }
   };
 }]);
