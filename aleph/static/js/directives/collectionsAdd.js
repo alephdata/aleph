@@ -31,6 +31,7 @@ aleph.directive('collectionsAdd', ['$http', '$q', '$location', 'Authz', 'Collect
 
       scope.openCollection = function(collection, $event) {
         $event.stopPropagation();
+        $location.search({});
         $location.path('/collections/' + collection.id);
       };
 

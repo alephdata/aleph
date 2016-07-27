@@ -1,10 +1,14 @@
 aleph.controller('IngestFilesCtrl', ['$scope', '$uibModalInstance', 'Upload', 'metadata', 'collection', 'files',
     function($scope, $uibModalInstance, Upload, metadata, collection, files) {
 
+  $scope.metadata = metadata;
+  $scope.document = {
+    languages: [],
+    countries: []
+  };
   $scope.collection = collection;
   $scope.files = files;
   $scope.collectionCallback = null;
-
   $scope.progress = null;
 
   $scope.canUpload = function() {
@@ -38,7 +42,7 @@ aleph.controller('IngestFilesCtrl', ['$scope', '$uibModalInstance', 'Upload', 'm
     $scope.progress = 0;
     Upload.upload({
       url: '/api/1/collections/' + collection.id + '/ingest',
-      data: {file: $scope.files}
+      data: {file: $scope.files, meta: JSON.stringify($scope.document)}
     }).then(function(res) {
       $uibModalInstance.close(res.data);
     }, function(err) {

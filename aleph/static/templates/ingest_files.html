@@ -23,6 +23,38 @@
         email archives or zip packages.
       </p>
     </div>
+
+    <div class="form-group">
+      <label class="control-label" for="countries">
+        Countries
+      </label>
+      <div class="">
+        <ui-select multiple ng-model="document.countries">
+          <ui-select-match placeholder="Select country...">{{$item.value}}</ui-select-match>
+          <ui-select-choices repeat="country.key as (key, country) in metadata.countries | filter: {'value': $select.search}">
+            <div ng-bind-html="country.value | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+      <p class="help-block">
+        Facilitates the extraction of country-specific information, 
+        such as phone numbers.
+      </p>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="languages">
+        Languages
+      </label>
+      <div class="">
+        <ui-select multiple ng-model="document.languages">
+          <ui-select-match placeholder="Select language...">{{$item.value}}</ui-select-match>
+          <ui-select-choices repeat="lang.key as (key, lang) in metadata.languages | filter: {'value': $select.search}">
+            <div ng-bind-html="lang.value | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
   </div>
 
   <div class="modal-body" ng-show="isUploading()">
