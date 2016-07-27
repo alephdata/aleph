@@ -1,0 +1,50 @@
+
+<div class="collection-header">
+  <h2>
+    <i class="fa fa-folder" aria-hidden="true"></i>
+    {{::collection.label}}
+  </h2>
+
+  <div class="actions">
+    <div class="btn-group" role="group">
+      <div class="btn-group">
+        <a ng-click="createEntity($event)" class="btn btn-primary" ng-disabled="::!authz.logged_in()">
+          <i class="fa fa-plus-square" aria-hidden="true"></i>
+          Create
+        </a>
+      </div>
+      <div class="btn-group">
+        <a ng-href="/entities/bulk" class="btn btn-primary" ng-disabled="::!authz.logged_in()">
+          <i class="fa fa-plus-square" aria-hidden="true"></i>
+          Bulk
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="clearfix"></div>
+
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active">
+      <a href="#">
+        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+        Documents
+      </a>
+    </li>
+    <li role="presentation">
+      <a href="#">
+        <i class="fa fa-users" aria-hidden="true"></i>
+        People and Companies
+      </a>
+    </li>
+    <li role="presentation">
+      <a href="#">
+        <i class="fa fa-cog" aria-hidden="true"></i>
+        Settings
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="screen">
+  <div ng-transclude></div>
+</div>

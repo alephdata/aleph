@@ -1,0 +1,23 @@
+
+.collection-header {
+    @extend .container-fluid;
+
+    margin-top: -22px;
+    padding-top: 25px;
+    background-color: $gray-subtle;
+
+    h2 {
+        font-size: 1.6em;
+        // font-weight: bolder;
+        margin-top: 0;
+        margin-bottom: 0.9em;
+        float: left;
+    }
+
+    ul.nav.nav-tabs {
+        margin-bottom: 0;
+    }
+
+    .actions {
+    }
+}
