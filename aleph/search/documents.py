@@ -6,7 +6,7 @@ from pprint import pprint  # noqa
 from werkzeug.datastructures import MultiDict
 
 from aleph import authz, signals
-from aleph.core import get_es, get_es_index, url_for
+from aleph.core import get_es, get_es_index
 from aleph.model import Collection
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import add_filter, authz_filter, clean_highlight
@@ -21,7 +21,7 @@ log = logging.getLogger(__name__)
 
 DEFAULT_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                   'languages', 'countries', 'source_url', 'created_at',
-                  'updated_at', 'type', 'summary']
+                  'updated_at', 'type', 'summary', 'source_collection_id']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query

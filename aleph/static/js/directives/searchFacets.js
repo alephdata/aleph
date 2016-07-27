@@ -5,7 +5,8 @@ aleph.directive('searchFacets', ['$location', '$q', '$route', '$http', '$timeout
     scope: {
       query: '=',
       result: '=',
-      metadata: '='
+      metadata: '=',
+      collection: '='
     },
     templateUrl: 'templates/search_facets.html',
     link: function (scope, element, attrs) {

@@ -1,5 +1,5 @@
-aleph.controller('CollectionsDocumentsCtrl', ['$scope', '$location', '$http', '$anchorScroll', 'Title', 'Collection', 'Document', 'Authz', 'collection', 'metadata', 'data',
-    function($scope, $location, $http, $anchorScroll, Title, Collection, Document, Authz, collection, metadata, data) {
+aleph.controller('CollectionsDocumentsCtrl', ['$scope', '$location', '$http', '$route', '$anchorScroll', 'Title', 'Collection', 'Document', 'Authz', 'collection', 'metadata', 'data',
+    function($scope, $location, $http, $route, $anchorScroll, Title, Collection, Document, Authz, collection, metadata, data) {
 
   $scope.collection = collection;
   $scope.metadata = metadata;
@@ -17,6 +17,12 @@ aleph.controller('CollectionsDocumentsCtrl', ['$scope', '$location', '$http', '$
   $scope.loadOffset = function(offset) {
     $scope.query.set('offset', offset);
     $anchorScroll();
+  };
+
+  $scope.editDocument = function(doc) {
+    Document.edit(doc.id).then(function(res) {
+      $route.reload();
+    })
   };
 
   $scope.$on('$routeUpdate', function() {

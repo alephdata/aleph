@@ -15,6 +15,17 @@
               {{::doc.title}}
             </a>
           </td>
+          <td width="1%" class="nobreak">
+            {{::doc.created_at | date}}
+          </td>
+          <td width="1%" class="nobreak">
+            <button type="button" class="btn btn-default btn-xs"
+              ng-click="editDocument(doc)"
+              ng-if="authz.documentWrite(doc)">
+              <i class="fa fa-cog"></i>
+              Edit
+            </button>
+          </td>
         </tr>
       </table>
       <div class="bottom-pager">
@@ -27,7 +38,9 @@
       </div>
     </div>
     <div class="col-md-4">
-      <search-facets query="query" result="result" metadata="metadata"></search-facets>
+      <search-facets query="query" result="result" metadata="metadata"
+                     collection="collection">
+      </search-facets>
     </div>
   </div>
 </collections-screen>

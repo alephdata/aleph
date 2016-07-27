@@ -54,6 +54,9 @@ code {
 
 td.numeric, th.numeric {
     text-align: right;
+}
+
+td.nobreak, th.nobreak, td.numeric, th.numeric {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
