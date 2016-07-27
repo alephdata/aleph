@@ -41,6 +41,10 @@
         <a ng-href="/collections/{{::collection.id}}/entities/bulk">create some now</a>?
       </div>
 
+      <div class="alert alert-suggest" ng-if="result.limit > 0 && !result.total && !collection.can_add">
+        No entities were found in this collection.
+      </div>
+
       <div>
         <table ng-if="result.results.length" class="table table-striped">
           <tr ng-show="collection.can_edit">
