@@ -84,9 +84,8 @@ def view_collections(document_id):
                  methods=['POST', 'PUT'])
 def update_collections(document_id):
     document = get_document(document_id)
-    data = document.to_dict()
-    data['collection_id'] = request_data()
-    document.update(data, writeable=authz.collections(authz.WRITE))
+    document.update_collections(request_data(),
+                                writeable=authz.collections(authz.WRITE))
     db.session.commit()
     log_event(request, document_id=document.id)
     update_document(document)

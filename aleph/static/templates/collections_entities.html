@@ -36,14 +36,14 @@
         {{result.error.info.reason || result.error.message}}
       </div>
 
-      <div class="alert alert-suggest" ng-if="result.limit > 0 && !result.total && authz.logged_in()">
+      <div class="alert alert-suggest" ng-if="result.limit > 0 && !result.total && collection.can_add">
         No entities were found,
         <a ng-href="/collections/{{::collection.id}}/entities/bulk">create some now</a>?
       </div>
 
       <div>
         <table ng-if="result.results.length" class="table table-striped">
-          <tr>
+          <tr ng-if="collection.can_edit">
             <th></th>
             <th colspan="6">
               <div class="btn-group">

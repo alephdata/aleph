@@ -10,7 +10,11 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
         params: {limit: 10000}
       }
       $http.get('/api/1/collections', params).then(function(res) {
-        indexDfd.resolve(res.data.results);
+        var collections = [];
+        for (var i in res.data.results) {
+          collections.push(addAuthzFlags(res.data.results[i]));
+        }
+        indexDfd.resolve(collections);
       }, function(err) {
         indexDfd.reject(err);
       });
@@ -30,14 +34,19 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
     return dfd.promise;
   };
 
-  var getWriteable = function() {
+  function addAuthzFlags(coll) {
+    coll.can_edit = Authz.collection(Authz.WRITE, coll.id);
+    coll.can_add = coll.can_edit && !coll.managed;
+    return coll;
+  };
+
+  function getWriteable() {
     var dfd = $q.defer();
     index().then(function(res) {
       var collections = [];
       for (var cid in res) {
-        var col = res[cid];
-        if (Authz.collection(Authz.WRITE, col.id) && !col.managed) {
-          collections.push(col);
+        if (res[cid].can_add) {
+          collections.push(res[cid]);
         }
       }
       collections = collections.sort(function(a, b) {
@@ -54,7 +63,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
   var getCollection = function(id) {
     var dfd = $q.defer();  
     $http.get('/api/1/collections/' + id).then(function(res) {
-      dfd.resolve(res.data);
+      dfd.resolve(addAuthzFlags(res.data));
     }, function(err) {
       dfd.reject(err);
     });

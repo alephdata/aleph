@@ -6,16 +6,16 @@
   </h2>
 
   <div class="actions">
-    <div class="btn-group" role="group" ng-if="::writeable">
-      <div class="btn-group" ng-if="::writeable">
-        <a ng-click="ingestFiles([], $event)" class="btn btn-primary">
+    <div class="btn-group" role="group">
+      <div class="btn-group" ng-if="::collection.can_add">
+        <a ng-click="ingestFiles([], $event)" class="btn btn-default">
           <i class="fa fa-cloud-upload"></i>
           Upload documents
         </a>
       </div>
-      <div class="btn-group" ng-if="::writeable">
+      <div class="btn-group" ng-if="::collection.can_add">
         <a ng-href="/collections/{{::collection.id}}/entities/bulk"
-          class="btn btn-primary">
+          class="btn btn-default">
           <i class="fa fa-plus-square" aria-hidden="true"></i>
           Create entities
         </a>
@@ -38,7 +38,8 @@
         People and Companies
       </a>
     </li>
-    <li role="presentation" ng-class="{'active': section == 'settings'}">
+    <li role="presentation" ng-class="{'active': section == 'settings'}"
+        ng-if="collection.can_edit">
       <a ng-href="/collections/{{::collection.id}}/settings">
         <i class="fa fa-cog" aria-hidden="true"></i>
         Settings

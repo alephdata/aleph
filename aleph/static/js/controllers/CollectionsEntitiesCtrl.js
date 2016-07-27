@@ -19,13 +19,6 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
     $anchorScroll();
   };
 
-  $scope.editCollection = function(collection, $event) {
-    $event.stopPropagation();
-    Collection.edit(collection).then(function() {
-      reloadSearch();
-    });
-  };
-
   $scope.getReconciliationUrl = function() {
     var url = metadata.app.url + 'api/freebase/reconcile';
     if (metadata.session.logged_in) {
@@ -40,18 +33,6 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
 
   $scope.toggleAlert = function(entity) {
     return Alert.toggle({entity_id: entity.id});
-  };
-
-  $scope.createEntity = function($event, name) {
-    if (name) {
-      name = titleCaps(name);
-    }
-    $event.stopPropagation();
-    Entity.create({name: name}).then(function() {
-      $timeout(function() {
-        reloadSearch();
-      }, 500);
-    });
   };
 
   $scope.editEntity = function($event, entity) {
@@ -103,7 +84,7 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
   });
 
   var reloadSearch = function() {
-    Entity.search().then(function(data) {
+    Entity.searchCollection(collection.id).then(function(data) {
       updateSearch(data);
     });
   };

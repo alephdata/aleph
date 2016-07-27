@@ -62,6 +62,13 @@ class Document(db.Model, DatedModel):
     def update(self, data, writeable):
         validate(data, self._schema)
         collection_id = data.pop('collection_id', [])
+        self.update_collections(collection_id, writeable)
+        meta = self.meta
+        meta.update(data, safe=True)
+        self.meta = meta
+        db.session.add(self)
+
+    def update_collections(self, collection_id, writeable):
         for coll in self.collections:
             if coll.id == self.source_collection_id:
                 continue
@@ -72,9 +79,6 @@ class Document(db.Model, DatedModel):
                 coll = Collection.by_id(coll_id)
                 if coll not in self.collections:
                     self.collections.append(coll)
-        meta = self.meta
-        meta.update(data, safe=True)
-        self.meta = meta
         db.session.add(self)
 
     def delete_pages(self):

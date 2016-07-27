@@ -35,7 +35,7 @@
           </td>
           <td class="numeric">
             <span ng-if="collection.entity_count">
-              <a href="/entities?filter:collection_id={{::collection.id}}">
+              <a href="/collections/{{::collection.id}}/entities">
                 <i class="fa fa-users" aria-hidden="true"></i>
                 {{::collection.entity_count | number}}
               </a>
