@@ -35,7 +35,8 @@ LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka',
              'ar', 'tr', 'lb', 'el', 'lt', 'uk', 'zh', 'be',
              'bg', 'bs', 'ja', 'cs', 'lv', 'pt', 'pl', 'hy',
              'hr', 'hi', 'he', 'uz', 'mo', 'mn', 'ur', 'sq',
-             'ko', 'is', 'it', 'et', 'no', 'fa', 'sw', 'sl']
+             'ko', 'is', 'it', 'et', 'no', 'fa', 'sw', 'sl',
+             'az']
 
 
 TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')

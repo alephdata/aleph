@@ -54,10 +54,11 @@ class PolyglotEntityAnalyzer(Analyzer):
             self.disabled = True
 
     def load_entity(self, name, schema):
+        identifier = name.lower().strip()
         q = db.session.query(EntityIdentifier)
         q = q.order_by(EntityIdentifier.deleted_at.desc().nullsfirst())
         q = q.filter(EntityIdentifier.scheme == self.origin)
-        q = q.filter(EntityIdentifier.identifier == name)
+        q = q.filter(EntityIdentifier.identifier == identifier)
         ident = q.first()
         if ident is not None:
             if ident.deleted_at is None:
@@ -72,7 +73,7 @@ class PolyglotEntityAnalyzer(Analyzer):
             'state': Entity.STATE_PENDING,
             'identifiers': [{
                 'scheme': self.origin,
-                'identifier': name
+                'identifier': identifier
             }],
             'collections': self.collections
         }
