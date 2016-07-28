@@ -15,7 +15,7 @@ from aleph.search.fragments import text_query_string, meta_query_string
 from aleph.search.fragments import match_all, child_record, aggregate
 from aleph.search.fragments import filter_query
 from aleph.search.facets import convert_document_aggregations
-from aleph.search.records import records_query_internal
+from aleph.search.records import records_query_internal, records_query_shoulds
 
 log = logging.getLogger(__name__)
 
@@ -173,7 +173,7 @@ def execute_documents_query(args, query):
     convert_document_aggregations(result, output, args)
     query_duration = (time.time() - begin_time) * 1000
     log.debug('Post-facet accumulated: %.5fms', query_duration)
-    query_text = args.get('q', '').strip()
+    sub_shoulds = records_query_shoulds(args)
 
     sub_queries = []
     for doc in hits.get('hits', []):
@@ -183,7 +183,7 @@ def execute_documents_query(args, query):
         document['records'] = {'results': [], 'total': 0}
 
         # TODO: restore entity highlighting somehow.
-        sq = records_query_internal(document['id'], query_text, {})
+        sq = records_query_internal(document['id'], sub_shoulds)
         if sq is not None:
             sub_queries.append(json.dumps({}))
             sub_queries.append(json.dumps(sq))

@@ -10,18 +10,17 @@ SNIPPET_SIZE = 100
 
 
 def records_query(document_id, args, size=5):
-    query_text = args.get('q', '')
-    entities = Entity.by_id_set(args.getlist('entity'))
-    return records_query_internal(document_id, query_text,
-                                  entities, size=size)
+    shoulds = records_query_shoulds(args)
+    return records_query_internal(document_id, shoulds, size=size)
 
 
-def records_query_internal(document_id, query_text, entities, size=5):
+def records_query_shoulds(args):
     shoulds = []
-    query_text = query_text.strip()
+    query_text = args.get('q', '').strip()
     if len(query_text):
         shoulds.append(text_query_string(query_text))
 
+    entities = Entity.by_id_set(args.getlist('entity'))
     for entity in entities.values():
         for term in entity.terms:
             shoulds.append({
@@ -32,7 +31,10 @@ def records_query_internal(document_id, query_text, entities, size=5):
                     'operator': 'AND'
                 }
             })
+    return shoulds
 
+
+def records_query_internal(document_id, shoulds, size=5):
     q = {
         'bool': {
             'minimum_should_match': 1,

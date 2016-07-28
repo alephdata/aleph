@@ -55,7 +55,7 @@
               &middot;
             </span>
             <span ng-if="collection.doc_count">
-              <a href="/search?filter:collection_id={{::collection.id}}">
+              <a href="/collections/{{::collection.id}}">
                 <i class="fa fa-file-text-o" aria-hidden="true"></i>
                 {{::collection.doc_count | number}}
               </a>
