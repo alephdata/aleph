@@ -84,8 +84,11 @@ def view_collections(document_id):
                  methods=['POST', 'PUT'])
 def update_collections(document_id):
     document = get_document(document_id)
-    document.update_collections(request_data(),
-                                writeable=authz.collections(authz.WRITE))
+    data = request_data()
+    if not isinstance(data, list) or \
+            False in [isinstance(d, int) for d in data]:
+        raise BadRequest()
+    document.update_collections(data, writeable=authz.collections(authz.WRITE))
     db.session.commit()
     log_event(request, document_id=document.id)
     update_document(document)
