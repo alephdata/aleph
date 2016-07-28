@@ -36,7 +36,7 @@
             <span ng-if="::collection.can_edit">
               <i class="fa fa-pencil-square" aria-hidden="true"></i>
             </span>  
-            <a ng-href="/collections/{{::collection.id}}">
+            <a ng-href="{{::collection.getPath()}}">
               {{::collection.label}}
             </a>
           </td>

@@ -13,7 +13,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
       $http.get('/api/1/collections', params).then(function(res) {
         var collections = [];
         for (var i in res.data.results) {
-          collections.push(addAuthzFlags(res.data.results[i]));
+          collections.push(addClientFields(res.data.results[i]));
         }
         indexDfd.resolve(collections);
       }, function(err) {
@@ -35,9 +35,21 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
     return dfd.promise;
   };
 
-  function addAuthzFlags(coll) {
+  function addClientFields(coll) {
     coll.can_edit = Authz.collection(Authz.WRITE, coll.id);
     coll.can_add = coll.can_edit && !coll.managed;
+
+    coll.getPath = function() {
+      // this is a function because in the collections index 
+      // the doc_count and entity_count is set after this is
+      // called.
+      var path = '/collections/' + coll.id;
+      if (!coll.doc_count && coll.entity_count) {
+        return path + '/entities';
+      }
+      return path;
+    };
+    
     return coll;
   };
 
@@ -65,7 +77,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
   var getCollection = function(id) {
     var dfd = $q.defer();  
     $http.get('/api/1/collections/' + id).then(function(res) {
-      dfd.resolve(addAuthzFlags(res.data));
+      dfd.resolve(addClientFields(res.data));
     }, function(err) {
       dfd.reject(err);
     });

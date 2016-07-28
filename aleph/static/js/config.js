@@ -9,7 +9,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/search.html',
     controller: 'SearchCtrl',
     reloadOnSearch: false,
-    loginRequired: false,
     resolve: {
       'data': loadSearch,
       'peek': loadPeek,
@@ -22,7 +21,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/tabular.html',
     controller: 'TabularCtrl',
     reloadOnSearch: true,
-    loginRequired: false,
     resolve: {
       'data': loadTabular,
       'metadata': loadMetadata
@@ -33,7 +31,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/text.html',
     controller: 'TextCtrl',
     reloadOnSearch: false,
-    loginRequired: false,
     resolve: {
       'data': loadText,
       'metadata': loadMetadata,
@@ -45,7 +42,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/collections_index.html',
     controller: 'CollectionsIndexCtrl',
     reloadOnSearch: false,
-    loginRequired: false,
     resolve: {
       'collections': loadCollections,
       'metadata': loadMetadata
@@ -56,7 +52,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/collections_documents.html',
     controller: 'CollectionsDocumentsCtrl',
     reloadOnSearch: false,
-    loginRequired: false,
     resolve: {
       'collection': loadCollection,
       'data': loadCollectionDocuments,
@@ -68,7 +63,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/collections_entities.html',
     controller: 'CollectionsEntitiesCtrl',
     reloadOnSearch: false,
-    loginRequired: false,
     resolve: {
       'collection': loadCollection,
       'data': loadCollectionEntities,
@@ -81,7 +75,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/entity_review.html',
     controller: 'EntitiesReviewCtrl',
     reloadOnSearch: false,
-    loginRequired: false,
     resolve: {
       'collection': loadCollection,
       'metadata': loadMetadata
@@ -92,7 +85,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/entity_bulk.html',
     controller: 'EntitiesBulkCtrl',
     reloadOnSearch: false,
-    loginRequired: false,
     resolve: {
       'collection': loadCollection,
       'metadata': loadMetadata
@@ -103,7 +95,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/collections_edit.html',
     controller: 'CollectionsEditCtrl',
     reloadOnSearch: false,
-    loginRequired: false,
     resolve: {
       'collection': loadCollection,
       'metadata': loadMetadata,
@@ -115,7 +106,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/crawlers_manage.html',
     controller: 'CrawlersManageCtrl',
     reloadOnSearch: true,
-    loginRequired: false,
     resolve: {
       'crawlers': loadCrawlers
     }
@@ -125,7 +115,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/crawlers_states.html',
     controller: 'CrawlersStatesCtrl',
     reloadOnSearch: true,
-    loginRequired: false,
     resolve: {
       // 'crawlers': loadCrawlers,
       'states': loadCrawlerStates
@@ -136,7 +125,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/help.html',
     controller: 'HelpCtrl',
     reloadOnSearch: false,
-    loginRequired: false,
     resolve: {}
   });
 
@@ -144,7 +132,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/help.html',
     controller: 'HelpCtrl',
     reloadOnSearch: false,
-    loginRequired: false,
     resolve: {}
   });
 
@@ -152,7 +139,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     templateUrl: 'templates/home.html',
     controller: 'HomeCtrl',
     reloadOnSearch: false,
-    loginRequired: false,
     resolve: {
       'statistics': loadHome,
       'metadata': loadMetadata
