@@ -15,7 +15,7 @@
              class="btn btn-primary"
              ng-disabled="::!authz.logged_in()">
             <i class="fa fa-plus-square" aria-hidden="true"></i>
-            New investigation
+            New user collection
           </a>
         </div>
       </div>
@@ -25,7 +25,7 @@
   <div class="row">
     <div class="col-md-9">
       <div class="alert alert-suggest" ng-if="!authz.logged_in()">
-        Manage your research.
+        Manage your research better.
         <a href="/api/1/sessions/login" target="_self">Sign in</a> to upload
         document archives and create entity watchlists.
       </div>
@@ -33,13 +33,18 @@
       <table class="table table-striped">
         <tr ng-repeat="collection in collections track by collection.id">
           <td>
-            <a ng-href="/collections/{{::collection.id}}">{{::collection.label}}</a>
+            <span ng-if="::collection.can_edit">
+              <i class="fa fa-pencil-square" aria-hidden="true"></i>
+            </span>  
+            <a ng-href="/collections/{{::collection.id}}">
+              {{::collection.label}}
+            </a>
           </td>
-          <td width="10%">
+          <td class="nobreak" width="1%">
             <span ng-if="::collection.category" class="label label-primary">
               {{::collection.category | collectionCategory }}</span>
           </td>
-          <td class="numeric">
+          <td class="nobreak" width="1%">
             <span ng-if="collection.entity_count">
               <a href="/collections/{{::collection.id}}/entities">
                 <i class="fa fa-users" aria-hidden="true"></i>
@@ -55,6 +60,9 @@
                 {{::collection.doc_count | number}}
               </a>
             </span>
+          </td>
+          <td class="nobreak" width="1%">
+            {{::collection.updated_at | date }}
           </td>
         </tr>
       </table>

@@ -22,7 +22,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         'court': 'Court archives',
         'company': 'Company registries',
         'watchlist': 'Watchlists',
-        'investigation': 'Investigations',
+        'investigation': 'User collections',
         'sanctions': 'Sanctions lists',
         'scrape': 'Scrapes',
         'procurement': 'Procurement',

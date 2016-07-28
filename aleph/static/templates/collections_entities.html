@@ -95,9 +95,10 @@
                 <span ng-hide="hasAlert(entity)">Track</span>
               </button>
             </td>
-            <td class="numeric" width="5%">
+            <td class="nobreak" width="1%">
               <a ng-href="/search?entity={{entity.id}}" ng-if="entity.doc_count">
-                <i class="fa fa-file-text-o" aria-hidden="true"></i> {{entity.doc_count | number}}
+                <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                {{entity.doc_count | number}}
               </a>
               <span ng-if="!entity.doc_count">
                 <i class="fa fa-file-text-o" aria-hidden="true"></i> 0
