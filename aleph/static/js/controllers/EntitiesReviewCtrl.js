@@ -23,6 +23,9 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     $http.get(url, params).then(function(res) {
       $scope.duplicateOptions = res.data.results;
       $scope.reportLoading(false);
+    }, function(err) {
+      console.log('Internal error', err);
+      loadNext();
     });
   };
 
