@@ -10,7 +10,7 @@ aleph.controller('CollectionsIndexCtrl', ['$scope', '$http', '$route', '$locatio
   Title.set("Collections", "collections");
 
   $scope.createCollection = function($event) {
-    if (!authz.logged_in()) return;
+    if (!Authz.logged_in()) return;
     $event.stopPropagation();
     Collection.create().then(function(coll) {
       $location.path('/collections/' + coll.id);
