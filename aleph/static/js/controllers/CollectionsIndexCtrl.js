@@ -1,6 +1,6 @@
 
-aleph.controller('CollectionsIndexCtrl', ['$scope', '$http', '$route', '$timeout', '$anchorScroll', 'Query', 'Collection', 'collections', 'metadata', 'Authz', 'Alert', 'Title',
-    function($scope, $http, $route, $timeout, $anchorScroll, Query, Collection, collections, metadata, Authz, Alert, Title) {
+aleph.controller('CollectionsIndexCtrl', ['$scope', '$http', '$route', '$location', '$timeout', '$anchorScroll', 'Query', 'Collection', 'collections', 'metadata', 'Authz', 'Alert', 'Title',
+    function($scope, $http, $route, $location, $timeout, $anchorScroll, Query, Collection, collections, metadata, Authz, Alert, Title) {
 
   var updateTimeout = null;
   $scope.authz = Authz;
@@ -11,11 +11,8 @@ aleph.controller('CollectionsIndexCtrl', ['$scope', '$http', '$route', '$timeout
 
   $scope.createCollection = function($event) {
     $event.stopPropagation();
-    Collection.create({
-      'generate_entities': true,
-      'category': 'investigation'
-    }).then(function() {
-      $route.reload();
+    Collection.create().then(function(coll) {
+      $location.path('/collections/' + coll.id);
     });
   };
 

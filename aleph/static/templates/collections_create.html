@@ -8,11 +8,11 @@
     <div class="form-group" ng-class="{'has-error': createCollection.label.$invalid}">
       <!-- label class="control-label" for="label">Label</label-->
       <div class="">
-        <input type="text" class="form-control input-lg" id="label" name="label" ng-model="collection.label"
-          placeholder="Collection label">
-        <p class="help-block" ng-show="createCollection.label.$invalid" ng-bind="createCollection.label.$message"></p>
-        <p class="help-block" ng-hide="createCollection.label.$invalid">
-          Choose a name for your new collection.
+        <input type="text" class="form-control input-lg" id="label" name="label"
+          ng-model="collection.label" ng-minlength="4" ng-required="true" ng-trim="true"
+          placeholder="Investigation name">
+        <p class="help-block">
+          Choose a name for this project, watchlist or collection of documents.
         </p>
       </div>
     </div>

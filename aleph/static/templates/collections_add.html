@@ -5,11 +5,11 @@
     Clip
   </a>
   <ul class="uib-dropdown-menu dropdown-menu-right" role="menu">
-    <li role="menuitem" ng-repeat="coll in collections">
+    <li role="menuitem" ng-repeat="coll in collections track by coll.id">
       <a ng-click="toggleCollection(coll)" class="action">
         <span ng-show="parts[coll.id]"><i class="fa fa-check-square"></i></span>
         <span ng-hide="parts[coll.id]"><i class="fa fa-square"></i></span>
-        {{::coll.label}} {{coll.is_part}}
+        {{::coll.label}}
         <span class="inline" ng-click="openCollection(coll, $event)">
           <i class="fa fa-arrow-circle-right"></i>
         </span>

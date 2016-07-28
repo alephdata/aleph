@@ -26,7 +26,9 @@ aleph.directive('collectionsAdd', ['$http', '$q', '$location', 'Authz', 'Collect
       };
 
       scope.toggleDropdown = function(open) {
-        loadCollections();
+        if (open && !scope.collections.length) {
+          loadCollections();  
+        }
       }
 
       scope.openCollection = function(collection, $event) {
@@ -48,16 +50,17 @@ aleph.directive('collectionsAdd', ['$http', '$q', '$location', 'Authz', 'Collect
           if (collections.length) {
             $http.post(url, collections).then(function(res) {
               scope.parts[collection.id] = idx == -1;
-            });  
+            });
           }
         });
       };
 
       scope.createCollection = function() {
         Collection.create().then(function(collection) {
-          loadCollections().then(function() {
-            scope.toggleCollection(collection);
-          });
+          collection.can_add = true;
+          collection.can_edit = true;
+          scope.collections.unshift(collection);
+          scope.toggleCollection(collection);
         });
       };
     }

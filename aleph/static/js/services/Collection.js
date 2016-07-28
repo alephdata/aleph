@@ -76,7 +76,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
     index: index,
     flush: flush,
     getUserCollections: getUserCollections,
-    create: function(collection) {
+    create: function() {
       var instance = $uibModal.open({
         templateUrl: 'templates/collections_create.html',
         controller: 'CollectionsCreateCtrl',
@@ -85,7 +85,11 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
         resolve: {
           metadata: Metadata.get(),
           collection: function() {
-            return collection;
+            return {
+              generate_entities: true,
+              managed: false,
+              category: 'investigation'
+            };
           }
         }
       });
