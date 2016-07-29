@@ -189,6 +189,13 @@ def buildgraph():
     graph.load_documents()
 
 
+@manager.command
+def testgraph():
+    from aleph import graph
+    graph.test()
+
+
+
 def main():
     manager.run()
 

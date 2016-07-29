@@ -1,87 +1,45 @@
-from itertools import combinations
-from StringIO import StringIO
+from flask import Blueprint, request
+from werkzeug.exceptions import NotImplemented
+from apikit import jsonify, get_limit, get_offset, request_data
 
-from flask import Blueprint, request, send_file
-import networkx as nx
-from networkx import degree
-from networkx.readwrite import json_graph
-from apikit import jsonify, arg_int
-
-from aleph.search import scan_iter, documents_query
-from aleph.events import log_event
-from aleph.model import Entity
+from aleph import authz
+from aleph.core import get_graph as _get_graph
+# from aleph.events import log_event
+from aleph.graph import queries
 
 blueprint = Blueprint('graph_api', __name__)
 
 
-def multigraph_to_weighted(multigraph):
-    graph = nx.Graph()
-    for id, data in multigraph.nodes_iter(data=True):
-        graph.add_node(id, **data)
-    for u, v, data in multigraph.edges_iter(data=True):
-        w = data['weight']
-        if graph.has_edge(u, v):
-            graph[u][v]['weight'] += w
-        else:
-            graph.add_edge(u, v, weight=w)
-    for id in multigraph.nodes_iter():
-        deg = degree(graph, id, weight='weight')
-        graph.node[id]['degree'] = deg
+def get_graph():
+    """Try and get a connection to Neo4J, ow raise HTTP exception."""
+    graph = _get_graph()
+    if graph is None:
+        raise NotImplemented('Graph API is disabled.')
     return graph
 
 
-def paginate_graph(graph):
-    graph.partial = None
-    limit = arg_int('limit')
-    if limit is None or graph.number_of_nodes() <= limit:
-        return graph
-
-    graph.partial = {
-        'total': graph.number_of_nodes(),
-        'shown': limit
-    }
-    nodes = sorted(graph.nodes_iter(data=True),
-                   key=lambda (id, d): d['degree'],
-                   reverse=True)
-    for id, data in nodes[limit:]:
-        graph.remove_node(id)
-    return graph
+def get_labels():
+    return []
 
 
-def generate_graph(args):
-    fields = ['id', 'collection', 'entities.id']
-    query = documents_query(args, fields=fields, facets=False)
-    query = {'query': query['query']}
-
-    graph = nx.MultiGraph()
-    for doc in scan_iter(query):
-        entities = set()
-        for entity in doc.get('_source').get('entities', []):
-            if not graph.has_node(entity.get('id')):
-                obj = Entity.by_id(entity.get('id'))
-                if obj is None:
-                    continue
-                graph.add_node(entity.get('id'),
-                               label=obj.name,
-                               schema=obj.type)
-            entities.add(entity.get('id'))
-        for (src, dst) in combinations(entities, 2):
-            graph.add_edge(src, dst, weight=1)
-    graph = multigraph_to_weighted(graph)
-    return paginate_graph(graph)
+@blueprint.route('/api/1/graph/suggest')
+def suggest_nodes():
+    collections = authz.collections(authz.READ)
+    prefix = request.args.get('prefix', '').strip()
+    if len(prefix) < 3:
+        return jsonify({'status': 'ok', 'nodes': []})
+    resp = queries.suggest_nodes(get_graph(), collections,
+                                 prefix, get_labels(),
+                                 get_limit(default=20),
+                                 get_offset())
+    return jsonify(resp)
 
 
-@blueprint.route('/api/1/graph')
-def query():
-    graph = generate_graph(request.args)
-    format = request.args.get('format', '').lower().strip()
-    log_event(request)
-    if format == 'gexf':
-        sio = StringIO()
-        nx.write_gexf(graph, sio)
-        sio.seek(0)
-        return send_file(sio, mimetype='application/xml')
-    else:
-        data = json_graph.node_link_data(graph)
-        data['partial'] = graph.partial
-        return jsonify(data)
+@blueprint.route('/api/1/graph/nodes')
+def load_nodes():
+    collections = authz.collections(authz.READ)
+    node_ids = request.args.getlist('id')
+    resp = queries.load_nodes(get_graph(), collections, node_ids,
+                              get_labels(), get_limit(default=20),
+                              get_offset())
+    return jsonify(resp)

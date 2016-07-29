@@ -1,7 +1,6 @@
 # coding: utf-8
 from aleph.graph.schema import NODE_TYPES
 from aleph.graph.db import Vocab, ensure_index, get_graph  # noqa
-# from aleph.graph.collections import load_collections  # noqa
 from aleph.graph.entities import load_entities  # noqa
 from aleph.graph.documents import load_documents  # noqa
 
@@ -10,9 +9,14 @@ def upgrade():
     graph = get_graph()
     if graph is None:
         return
-    # graph.delete_all()
+    graph.delete_all()
     for node_type in NODE_TYPES:
         node_type.ensure_indices(graph)
+
+
+def get_node_labels():
+    return [n.name for n in NODE_TYPES if not n.hidden]
+
 
 # minimal graph API:
 # /api/1/collections/<id>/graph
