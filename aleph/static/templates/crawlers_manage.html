@@ -3,8 +3,6 @@
     <tr>
       <th>Crawler ID</th>
       <th>Source</th>
-      <th width="1%"></th>
-      <th width="1%"></th>
       <th class="numeric">All OK/Failed</th>
       <th class="numeric">Last OK/Failed</th>
       <th class="numeric">Last updated</th>
@@ -18,16 +16,8 @@
         <strong ng-bind="::crawler.name"></strong>
       </td>
       <td>
-        {{crawler.collection.label | characters:35 }}
-      </td>
-      <td>
-        <a href="/search?filter:collection_id={{crawler.collection.id}}">
-          <i class="fa fa-search"></i>
-        </a>
-      </td>
-      <td>
-        <a ng-click="editCollection(crawler.collection)">
-          <i class="fa fa-cog"></i>
+        <a ng-href="/collections/{{::crawler.collection.id}}">
+          {{crawler.collection.label | characters:35 }}
         </a>
       </td>
       <td class="numeric">

@@ -6,18 +6,20 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
   function index() {
     if (indexDfd === null) {
       indexDfd = $q.defer();
-      var params = {
-        ignoreLoadingBar: true,
-        params: {limit: 10000}
-      }
-      $http.get('/api/1/collections', params).then(function(res) {
-        var collections = [];
-        for (var i in res.data.results) {
-          collections.push(addClientFields(res.data.results[i]));
+      Metadata.get().then(function() {
+        var params = {
+          ignoreLoadingBar: true,
+          params: {limit: 10000}
         }
-        indexDfd.resolve(collections);
-      }, function(err) {
-        indexDfd.reject(err);
+        $http.get('/api/1/collections', params).then(function(res) {
+          var collections = [];
+          for (var i in res.data.results) {
+            collections.push(addClientFields(res.data.results[i]));
+          }
+          indexDfd.resolve(collections);
+        }, function(err) {
+          indexDfd.reject(err);
+        });
       });
     }
     return indexDfd.promise;
@@ -76,10 +78,12 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
 
   var getCollection = function(id) {
     var dfd = $q.defer();  
-    $http.get('/api/1/collections/' + id).then(function(res) {
-      dfd.resolve(addClientFields(res.data));
-    }, function(err) {
-      dfd.reject(err);
+    Metadata.get().then(function() {
+      $http.get('/api/1/collections/' + id).then(function(res) {
+        dfd.resolve(addClientFields(res.data));
+      }, function(err) {
+        dfd.reject(err);
+      });
     });
     return dfd.promise;
   };
