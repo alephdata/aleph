@@ -102,6 +102,17 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     }
   });
 
+  $routeProvider.when('/collections/:collection_id/scenes', {
+    templateUrl: 'templates/scene_editor.html',
+    controller: 'SceneEditorCtrl',
+    reloadOnSearch: false,
+    resolve: {
+      'collection': loadCollection,
+      'metadata': loadMetadata
+    }
+  });
+
+
   $routeProvider.when('/crawlers', {
     templateUrl: 'templates/crawlers_manage.html',
     controller: 'CrawlersManageCtrl',
