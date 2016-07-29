@@ -57,6 +57,7 @@ jdatetime==1.7.2
 coverage
 pyahocorasick
 pycrypto
+pylru
 
 # Python 3 backports
 subprocess32

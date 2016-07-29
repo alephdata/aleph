@@ -11,10 +11,13 @@ from flask_oauthlib.client import OAuth
 from flask_mail import Mail
 from kombu import Exchange, Queue
 from celery import Celery
+from py2neo import Graph
 from elasticsearch import Elasticsearch
 
 from aleph import default_settings, archive
 from aleph.ext import get_init
+
+log = logging.getLogger(__name__)
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -116,6 +119,17 @@ def get_archive():
     if not hasattr(app, '_aleph_archive'):
         app._aleph_archive = archive.from_config(app.config)
     return app._aleph_archive
+
+
+def get_graph():
+    app = current_app._get_current_object()
+    if not hasattr(app, '_neo4j_instance'):
+        uri = get_config('NEO4J_URI')
+        if uri is None:
+            return None
+        app._neo4j_instance = Graph(uri)
+        log.info("Connected to Neo4J graph.")
+    return app._neo4j_instance
 
 
 def get_upload_folder():

@@ -1,22 +1,21 @@
 import logging
-from py2neo import Node
 
-from aleph.model import Collection
-from aleph.graph.db import get_graph, Vocab
+from aleph.graph.schema import CollectionNode, PART_OF
 
 log = logging.getLogger(__name__)
 
 
-def load_collections():
-    tx = get_graph().begin()
-    for collection in Collection.all():
-        log.info("Index collection: %s", collection.label)
-        load_collection(tx, collection)
-    tx.commit()
-
-
 def load_collection(tx, collection):
-    node = Node(Vocab.Collection, name=collection.label,
-                alephCollection=collection.id)
-    tx.merge(node, Vocab.Collection, 'alephCollection')
+    node = CollectionNode.get_cache(tx, collection.foreign_id)
+    if node is not None:
+        return node
+    node = CollectionNode.merge(tx, name=collection.label,
+                                fingerprint=collection.foreign_id,
+                                alephCollection=collection.id)
     return node
+
+
+def add_to_collections(tx, node, collections, **kw):
+    for collection in collections:
+        coll = load_collection(tx, collection)
+        PART_OF.merge(tx, node, coll, **kw)

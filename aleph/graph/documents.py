@@ -1,9 +1,10 @@
 import logging
-from py2neo import Node, Relationship
 
+from aleph.core import get_graph
 from aleph.model import Document
-from aleph.graph.db import get_graph, Vocab
-from aleph.graph.collections import load_collection
+from aleph.graph.schema import DocumentNode, EmailNode, PhoneNode
+from aleph.graph.schema import MENTIONS
+from aleph.graph.collections import add_to_collections
 from aleph.graph.entities import load_entity
 
 log = logging.getLogger(__name__)
@@ -27,28 +28,25 @@ def load_document(tx, document):
         'name': meta.title,
         'docType': document.type,
         'fileName': meta.file_name,
+        'fingerprint': document.content_hash,
         'alephDocument': document.id
     }
-    node = Node(Vocab.Document, **data)
-    tx.merge(node, Vocab.Document, 'alephDocument')
-    for collection in document.collections:
-        coll_node = load_collection(tx, collection)
-        rel = Relationship(node, Vocab.PART_OF, coll_node)
-        tx.merge(rel, Vocab.PART_OF)
+    node = DocumentNode.merge(tx, **data)
+    add_to_collections(tx, node, document.collections)
+
     for email in meta.emails:
-        cnode = Node(Vocab.Email, name=email, fingerprint=email)
-        tx.merge(cnode, Vocab.Email, 'fingerprint')
-        rel = Relationship(node, Vocab.MENTIONS, cnode)
-        tx.merge(rel, Vocab.MENTIONS)
+        enode = EmailNode.merge(tx, name=email, fingerprint=email)
+        MENTIONS.merge(tx, node, enode)
+        add_to_collections(tx, enode, document.collections)
+
     for phone in meta.phone_numbers:
-        cnode = Node(Vocab.Phone, name=phone, fingerprint=phone)
-        tx.merge(cnode, Vocab.Phone, 'fingerprint')
-        rel = Relationship(node, Vocab.MENTIONS, cnode)
-        tx.merge(rel, Vocab.MENTIONS)
+        pnode = PhoneNode.merge(tx, name=phone, fingerprint=phone)
+        MENTIONS.merge(tx, node, pnode)
+        add_to_collections(tx, pnode, document.collections)
+
     for reference in document.references:
+        if reference.origin == 'polyglot':
+            continue
         enode = load_entity(tx, reference.entity)
-        rel = Relationship(node, Vocab.MENTIONS, enode,
-                           weight=reference.weight,
-                           origin=reference.origin)
-        tx.merge(rel, Vocab.MENTIONS)
+        MENTIONS.merge(tx, node, enode, weight=reference.weight)
     return node
