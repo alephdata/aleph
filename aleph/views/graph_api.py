@@ -18,28 +18,20 @@ def get_graph():
     return graph
 
 
-def get_labels():
-    return []
-
-
 @blueprint.route('/api/1/graph/suggest')
 def suggest_nodes():
-    collections = authz.collections(authz.READ)
     prefix = request.args.get('prefix', '').strip()
-    if len(prefix) < 3:
+    collection_id = [int(c) for c in request.args.getlist('collection_id')]
+    if len(prefix) < 3 and not len(collection_id):
         return jsonify({'status': 'ok', 'nodes': []})
-    resp = queries.suggest_nodes(get_graph(), collections,
-                                 prefix, get_labels(),
-                                 get_limit(default=20),
-                                 get_offset())
+    resp = queries.suggest_nodes(get_graph(), collection_id, prefix,
+                                 get_limit(default=20), get_offset())
     return jsonify(resp)
 
 
 @blueprint.route('/api/1/graph/nodes')
 def load_nodes():
-    collections = authz.collections(authz.READ)
     node_ids = request.args.getlist('id')
-    resp = queries.load_nodes(get_graph(), collections, node_ids,
-                              get_labels(), get_limit(default=20),
-                              get_offset())
+    resp = queries.load_nodes(get_graph(), node_ids,
+                              get_limit(default=20), get_offset())
     return jsonify(resp)
