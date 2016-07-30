@@ -35,8 +35,8 @@ class TextIngestor(Ingestor):
         if not meta.has('author') and data.get('author'):
             meta.author = data.get('author')
 
-        if not meta.has('title') and data.get('title'):
-            meta.title = data.get('title')
+        # if not meta.has('title') and data.get('title'):
+        #     meta.title = data.get('title')
 
         document = self.create_document(meta)
         for i, page in enumerate(data['pages']):
