@@ -1,4 +1,39 @@
 
+
+
+/Scenes
+
+* Find *any* entity
+
+* New canvas for collection
+  * Add entities from sidebar
+  * Complete direct links between them
+
+* Click entity on the canvas
+  * Select relations + entities from sidebar
+  * Get their extended network
+
+* Click two entities, get their connections 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Use cases
 
 * As a journalist, I want to combine different types of facets which
@@ -162,6 +197,13 @@ mini-bugs:
 * [DONE] Hidden results func
 * Document metadata editing
 * Metadata on doc ingest?
+
+
+* [DONE] /collections/<id> redirector
+* [DONE] collection_create return
+* entities highlight
+* doc_count on entities search
+* [DONE] lingo issue
 
 
 -------------

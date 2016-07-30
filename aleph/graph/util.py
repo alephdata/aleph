@@ -86,7 +86,8 @@ class EdgeType(object):
             tx.merge(rel, self.name, self.key)
 
     def gen_id(self, source, target, data):
-        idkey = sha1(source['id'])
+        idkey = sha1(self.name)
+        idkey.update(source['id'])
         idkey.update(target['id'])
         if self.key is not None and self.key in data:
             key = unicode(data[self.key]).encode('utf-8')
