@@ -1,8 +1,9 @@
 # coding: utf-8
-from aleph.graph.schema import NODE_TYPES
-from aleph.graph.db import Vocab, ensure_index, get_graph  # noqa
+from aleph.core import get_graph
+from aleph.graph.schema import NodeType
 from aleph.graph.entities import load_entities  # noqa
 from aleph.graph.documents import load_documents  # noqa
+from aleph.graph.mapping import Mapping  # noqa
 
 
 def upgrade():
@@ -10,35 +11,12 @@ def upgrade():
     if graph is None:
         return
     graph.delete_all()
-    for node_type in NODE_TYPES:
+    for node_type in NodeType.all():
         node_type.ensure_indices(graph)
 
 
 def get_node_labels():
-    return [n.name for n in NODE_TYPES if not n.hidden]
-
-
-# minimal graph API:
-# /api/1/collections/<id>/graph
-#   -> return a basic set of all the nodes in this
-#      collection - e.g. documents, entities, phones
-#      must be paginated.
-# /api/1/graph/node/<id>
-#   -> return all the nodes adjacent to <id>, sorted
-#      by degree
-# /api/1/graph/complete?id=&length=<max_pathlen>
-#   -> given a list of node IDs (via GET or POST),
-#      return all connections between them.
-# /api/1/graph/suggest?prefix=&label=
-#   -> return all completions of the given prefix
-#      for a node title. Optional filter by label type.
-
-# Response format:
-#
-# nodes:
-#  - xxx
-# edges:
-#  - xxx
+    return [n.name for n in NodeType.all() if not n.hidden]
 
 
 def test():

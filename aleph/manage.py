@@ -190,10 +190,19 @@ def buildgraph():
 
 
 @manager.command
+def loadgraph(mapping_file):
+    import yaml
+    from aleph.graph import Mapping
+    with open(mapping_file, 'r') as fh:
+        config = yaml.load(fh)
+        mapping = Mapping(config)
+        mapping.load()
+
+
+@manager.command
 def testgraph():
     from aleph import graph
     graph.test()
-
 
 
 def main():

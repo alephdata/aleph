@@ -65,6 +65,7 @@ def is_valid_domain(domain):
 
 
 def parse_domain(text):
+    """Extract a domain name from a piece of text."""
     domain = chomp(text)
     if domain is not None:
         if '://' in domain:

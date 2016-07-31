@@ -1,10 +1,10 @@
 import logging
-import fingerprints
 
 from aleph.core import get_graph
 from aleph.model import Entity
 from aleph.graph.schema import EntityNode, AKA
 from aleph.graph.collections import add_to_collections
+from aleph.graph.util import fingerprint
 
 log = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ def load_entities():
 
 def load_entity(tx, entity):
     log.info("Load node [%s]: %s", entity.id, entity.name)
-    fp = fingerprints.generate(entity.name)
+    fp = fingerprint(entity.name)
     node = EntityNode.get_cache(tx, fp)
     if node is not None:
         return node
@@ -40,13 +40,13 @@ def load_entity(tx, entity):
 
     seen = set([fp])
     for other_name in entity.other_names:
-        fingerprint = fingerprints.generate(other_name.display_name)
-        if fingerprint in seen or fingerprint is None:
+        fp = fingerprint(other_name.display_name)
+        if fp in seen or fingerprint is None:
             continue
-        seen.add(fingerprint)
+        seen.add(fp)
 
         alias = EntityNode.merge(tx, name=other_name.display_name,
-                                 fingerprint=fingerprint,
+                                 fingerprint=fp,
                                  alephEntity=entity.id,
                                  isAlias=True)
         AKA.merge(tx, node, alias)

@@ -19,21 +19,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Use cases
 
 * As a journalist, I want to combine different types of facets which
