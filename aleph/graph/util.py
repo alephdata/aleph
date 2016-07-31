@@ -1,47 +1,41 @@
 import logging
-import fingerprints
-import phonenumbers
-from flanker.addresslib import address
 
-from aleph.text import string_value
+from aleph.graph.converter import Property
 
 log = logging.getLogger(__name__)
 
 
-def fingerprint(value, **kwargs):
-    return fingerprints.generate(string_value(value))
+class GraphType(object):
+    _instances = {}
+
+    @classmethod
+    def get(cls, name, **kw):
+        if name not in cls._instances:
+            cls._instances[name] = cls(name, **kw)
+        return cls._instances[name]
+
+    @classmethod
+    def all(cls):
+        return cls._instances.values()
 
 
-def trim(value, **kwargs):
-    return string_value(value).strip()
+class ItemMapping(object):
+    """Base class used by graph element mappers."""
 
+    def __init__(self, mapping, config):
+        self.mapping = mapping
+        self.config = config
+        self.label = config.get('label')
+        self.type = self.meta_type.get(self.label)
+        self.properties = []
+        for name, config in config.get('properties', {}).items():
+            self.properties.append(Property(self, name, config))
 
-def lowercase(value, **kwargs):
-    return string_value(value).lower()
-
-
-def addressfp(value, **kwargs):
-    value = string_value(value)
-    if value is None:
-        return
-    value = value.replace('<br/>', ' ')
-    return fingerprints.generate(value, keep_order=True)
-
-
-def email(value, **kwargs):
-    parsed = address.parse(value)
-    if parsed is None:
-        return None
-    return parsed.address
-
-
-def phone(value, prop=None, **kwargs):
-    try:
-        value = string_value(value)
-        if value is None:
-            return
-        num = phonenumbers.parse(value, prop.country)
-        if phonenumbers.is_possible_number(num):
-            return phonenumbers.format_number(num, phonenumbers.PhoneNumberFormat.INTERNATIONAL)  # noqa
-    except Exception:
-        return
+    def bind_properties(self, row):
+        """Fill graph properties from source row."""
+        props = {}
+        for prop in self.properties:
+            value = prop.bind(row)
+            if value is not None:
+                props[prop.name] = value
+        return props

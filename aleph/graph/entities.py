@@ -4,7 +4,7 @@ from aleph.core import get_graph
 from aleph.model import Entity
 from aleph.graph.schema import EntityNode, AKA
 from aleph.graph.collections import add_to_collections
-from aleph.graph.util import fingerprint
+from aleph.graph.converter import fingerprint
 
 log = logging.getLogger(__name__)
 

@@ -8,7 +8,8 @@ from sqlalchemy.schema import Table
 
 from aleph.core import get_graph
 from aleph.model.validation import validate
-from aleph.graph.mapping.item import NodeMapping, EdgeMapping
+from aleph.graph.nodes import NodeMapping
+from aleph.graph.edges import EdgeMapping
 
 log = logging.getLogger(__name__)
 
