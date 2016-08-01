@@ -10,7 +10,7 @@ def upgrade():
     graph = get_graph()
     if graph is None:
         return
-    graph.delete_all()
+    # graph.delete_all()
     for node_type in NodeType.all():
         node_type.ensure_indices(graph)
 
