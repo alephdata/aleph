@@ -50,15 +50,14 @@
                         "column": {"type": "string"},
                         "format": {"type": "string"},
                         "country": {"type": "string"},
-                        "literal": {"type": "string"},
+                        "literal": {},
                         "transform": {"type": "string"},
                         "transforms": {
                             "type": "array",
                             "items": {"type": "string"}
                         },
                         "nulls": {
-                            "type": "array",
-                            "items": {"type": "string"}
+                            "type": "array"
                         }
                     }
                 }
