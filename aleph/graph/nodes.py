@@ -9,6 +9,7 @@ log = logging.getLogger(__name__)
 
 
 class NodeType(GraphType):
+    _instances = {}
 
     def __init__(self, name, fingerprint='fingerprint', key=None,
                  hidden=False):
@@ -83,4 +84,12 @@ class NodeMapping(ItemMapping):
     def update(self, tx, row):
         """Prepare and load a node."""
         props = self.bind_properties(row)
-        return self.type.merge(tx, **props)
+        fp = props.get(self.type.fingerprint)
+        node = self.type.get_cache(tx, fp)
+        if node is not None:
+            return node
+        node = self.type.merge(tx, **props)
+        if node is not None:
+            from aleph.graph.collections import add_to_collections
+            add_to_collections(tx, node, [self.mapping.collection])
+        return node

@@ -6,8 +6,6 @@ log = logging.getLogger(__name__)
 
 
 class GraphType(object):
-    _instances = {}
-
     @classmethod
     def get(cls, name, **kw):
         if name not in cls._instances:

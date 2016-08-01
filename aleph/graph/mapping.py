@@ -6,7 +6,8 @@ from sqlalchemy.sql import text as sql_text
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.schema import Table
 
-from aleph.core import get_graph
+from aleph.core import get_graph, db
+from aleph.model import Collection
 from aleph.model.validation import validate
 from aleph.graph.nodes import NodeMapping
 from aleph.graph.edges import EdgeMapping
@@ -27,6 +28,13 @@ class Mapping(object):
         self.nodes = [NodeMapping(self, n, c) for (n, c)
                       in config.get('nodes').items()]
         self.edges = [EdgeMapping(self, c) for c in config.get('edges', [])]
+        self.collection = Collection.create({
+            'foreign_id': config.get('collection'),
+            'label': config.get('collection'),
+            'managed': True
+        })
+        db.session.add(self.collection)
+        db.session.commit()
 
     @property
     def query(self):

@@ -5,7 +5,6 @@ import phonenumbers
 from flanker.addresslib import address
 
 from aleph.text import string_value
-from aleph.exceptions import GraphException
 
 log = logging.getLogger(__name__)
 
@@ -64,8 +63,6 @@ class Property(object):
     def __init__(self, item, name, config):
         self.item = item
         self.name = name
-        self.config = config
-        self.key = config.get('key', False)
         self.column = config.get('column')
         self.literal = config.get('literal')
         self.format = config.get('format')
@@ -85,7 +82,8 @@ class Property(object):
             return self.literal
         for transform in self.transforms:
             if transform not in self.TRANSFORMS:
-                raise GraphException("No such transformer: %r" % transform)
+                log.warning("No such transformer: %r", transform)
+                continue
             value = self.TRANSFORMS[transform](value, row=row, prop=self)
             if value is None:
                 return

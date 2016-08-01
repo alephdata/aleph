@@ -15,10 +15,6 @@ def upgrade():
         node_type.ensure_indices(graph)
 
 
-def get_node_labels():
-    return [n.name for n in NodeType.all() if not n.hidden]
-
-
 def test():
     # from py2neo.database.cypher import cypher_repr
     graph = get_graph()

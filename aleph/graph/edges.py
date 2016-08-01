@@ -1,10 +1,14 @@
+import logging
 from hashlib import sha1
 from py2neo import Relationship
 
 from aleph.graph.util import GraphType, ItemMapping
 
+log = logging.getLogger(__name__)
+
 
 class EdgeType(GraphType):
+    _instances = {}
 
     def __init__(self, name, key=None, hidden=False):
         self.name = name
@@ -25,7 +29,7 @@ class EdgeType(GraphType):
         idkey = sha1(self.name)
         idkey.update(source['id'])
         idkey.update(target['id'])
-        if self.key is not None and self.key in data:
+        if self.key is not None and data.get(self.key):
             key = unicode(data[self.key]).encode('utf-8')
             idkey.update(key)
         return idkey.hexdigest()
@@ -57,5 +61,8 @@ class EdgeMapping(ItemMapping):
         source = nodes.get(self.source)
         target = nodes.get(self.target)
         if source is None or target is None:
+            return
+        if source['id'] == target['id']:
+            log.info("Skipping self-loop: %r", source)
             return
         return self.type.merge(tx, source, target, **props)
