@@ -53,12 +53,12 @@ class EntitiesApiTestCase(TestCase):
     def test_all(self):
         res = self.client.get('/api/1/entities/_all')
         assert res.status_code == 200, res
-        assert res.json['total'] == 0, res.json
+        assert len(res.json['results']) == 0, res.json
         self.login(is_admin=True)
         res = self.client.get('/api/1/entities/_all')
         assert res.status_code == 200, res
-        assert res.json['total'] == 1, res.json
-        assert res.json['results'][0]['id'] == self.ent.id, res.json
+        assert len(res.json['results']) == 1, res.json
+        assert res.json['results'][0] == self.ent.id, res.json
 
     def test_view(self):
         res = self.client.get('/api/1/entities/%s' % self.ent.id)
