@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, request_data, arg_bool
-from apikit import get_limit, get_offset, Pager
+from apikit import get_limit, get_offset
 
 from aleph import authz
 from aleph.model import Entity, Collection, db
@@ -43,12 +43,12 @@ def index():
 
 @blueprint.route('/api/1/entities/_all', methods=['GET'])
 def all():
-    q = Entity.all()
+    q = Entity.all_ids()
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
+    q = q.filter(Entity.deleted_at == None)  # noqa
     clause = Collection.id.in_(authz.collections(authz.READ))
     q = q.filter(Entity.collections.any(clause))
-    q = q.order_by(Entity.id.asc())
-    return jsonify(Pager(q, limit=100))
+    return jsonify({'results': [r[0] for r in q]})
 
 
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
