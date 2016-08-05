@@ -5,7 +5,6 @@ from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
 from elasticsearch import TransportError
 
-from aleph.authz import get_public_roles
 from aleph.core import get_config, get_app_title, get_app_url
 from aleph.model import Collection
 from aleph.metadata import Metadata
@@ -72,7 +71,6 @@ def metadata():
             'url': get_app_url(),
             'samples': get_config('SAMPLE_SEARCHES')
         },
-        'public': get_public_roles(),
         'fields': Metadata.facets(),
         'categories': Collection.CATEGORIES,
         'countries': COUNTRY_NAMES,

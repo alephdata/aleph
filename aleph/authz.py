@@ -32,10 +32,10 @@ def collections(action):
         q = q.filter(Permission.role_id.in_(request.auth_roles))
         q = q.filter(Permission.collection_id != None)  # noqa
         for collection_id, role_id, read, write in q:
-            if role_id in public_roles:
-                request.auth_collections[PUBLIC].add(collection_id)
             if read or write:
                 request.auth_collections[READ].add(collection_id)
+                if role_id in public_roles:
+                    request.auth_collections[PUBLIC].add(collection_id)
             if write and request.logged_in:
                 request.auth_collections[WRITE].add(collection_id)
         if is_admin():

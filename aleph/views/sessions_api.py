@@ -53,6 +53,7 @@ def status():
         'api_key': request.auth_role.api_key if authz.logged_in() else None,
         'role': request.auth_role,
         'roles': list(request.auth_roles),
+        'public_roles': authz.get_public_roles(),
         'permissions': {
             'read': authz.collections(authz.READ),
             'write': authz.collections(authz.WRITE)
