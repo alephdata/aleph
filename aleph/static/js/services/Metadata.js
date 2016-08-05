@@ -24,6 +24,7 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $roo
         dfd.resolve({
           session: session,
           app: metadata.app,
+          public: metadata.public,
           fields: metadata.fields,
           schemata: metadata.schemata,
           categories: metadata.categories,
