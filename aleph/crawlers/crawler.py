@@ -153,8 +153,7 @@ class EntityCrawler(Crawler):
         return collection
 
     def emit_entity(self, collection, data):
-        data['collections'] = [collection]
-        entity = Entity.save(data, merge=True)
+        entity = Entity.save(data, [collection], merge=True)
         db.session.flush()
         update_entity_full.delay(entity.id)
         log.info("Entity [%s]: %s", entity.id, entity.name)

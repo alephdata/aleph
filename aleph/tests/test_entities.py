@@ -25,7 +25,6 @@ class EntitiesTestCase(TestCase):
         db.session.flush()
         self.ent = Entity.save({
             'name': 'Winnie the Pooh',
-            'collections': [self.col],
             'jurisdiction_code': 'pa',
             'summary': 'a fictional teddy bear created by author A. A. Milne',
             'identifiers': [{
@@ -37,12 +36,11 @@ class EntitiesTestCase(TestCase):
             }, {
                 'name': 'Pooh Bear'
             }]
-        })
+        }, [self.col])
         db.session.add(self.ent)
         db.session.flush()
         self.other = Entity.save({
             'name': 'Pu der Bär',
-            'collections': [self.col_other],
             'jurisdiction_code': 'de',
             'description': 'he is a bear',
             'identifiers': [{
@@ -55,7 +53,7 @@ class EntitiesTestCase(TestCase):
             'other_names': [{
                 'name': u'Puh der Bär'
             }]
-        })
+        }, [self.col_other])
         db.session.add(self.other)
         self.alert = Alert()
         self.alert.entity = self.other

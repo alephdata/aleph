@@ -74,10 +74,9 @@ class PolyglotEntityAnalyzer(Analyzer):
             'identifiers': [{
                 'scheme': self.origin,
                 'identifier': identifier
-            }],
-            'collections': self.collections
+            }]
         }
-        entity = Entity.save(data)
+        entity = Entity.save(data, self.collections)
         return entity.id
 
     def finalize(self):

@@ -59,10 +59,10 @@ def all():
 def create():
     data = request_data()
     data.pop('id', None)
-    data['collections'] = get_collections(data)
-    for collection in data['collections']:
+    collections = get_collections(data)
+    for collection in collections:
         authz.require(authz.collection_write(collection.id))
-    entity = Entity.save(data)
+    entity = Entity.save(data, collections)
     for collection in entity.collections:
         collection.touch()
     db.session.commit()
@@ -113,9 +113,9 @@ def update(id):
     data['id'] = entity.id
     possible_collections = authz.collections(authz.WRITE)
     possible_collections.extend([c.id for c in entity.collections])
-    data['collections'] = [c for c in get_collections(data)
-                           if c.id in possible_collections]
-    entity = Entity.save(data, merge=arg_bool('merge'))
+    collections = [c for c in get_collections(data)
+                   if c.id in possible_collections]
+    entity = Entity.save(data, collections, merge=arg_bool('merge'))
     for collection in entity.collections:
         collection.touch()
     db.session.commit()
