@@ -24,6 +24,8 @@ def check_authz(entity, permission):
 def get_collections(data):
     collections = []
     collection_id = data.get('collection_id') or []
+    if not isinstance(collection_id, (list, set, tuple)):
+        collection_id = [collection_id]
     for coll_id in collection_id:
         if isinstance(coll_id, dict):
             coll_id = coll_id.get('id')
@@ -62,6 +64,7 @@ def create():
     collections = get_collections(data)
     for collection in collections:
         authz.require(authz.collection_write(collection.id))
+
     entity = Entity.save(data, collections)
     for collection in entity.collections:
         collection.touch()
