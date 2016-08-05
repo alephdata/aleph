@@ -181,6 +181,8 @@ def execute_documents_query(args, query):
         document['id'] = int(doc.get('_id'))
         document['score'] = doc.get('_score')
         document['records'] = {'results': [], 'total': 0}
+        collection_id = document.get('collection_id')
+        document['public'] = authz.collections_public(collection_id)
 
         # TODO: restore entity highlighting somehow.
         sq = records_query_internal(document['id'], sub_shoulds)

@@ -150,11 +150,17 @@ class Document(db.Model, DatedModel):
         return collection_ids
 
     def _add_to_dict(self, data):
+        collection_ids = self.collection_ids
+        try:
+            from aleph.authz import collections_public
+            data['public'] = collections_public(collection_ids)
+        except:
+            pass
         data.update({
             'id': self.id,
             'type': self.type,
             'source_collection_id': self.source_collection_id,
-            'collection_id': self.collection_ids,
+            'collection_id': collection_ids,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         })

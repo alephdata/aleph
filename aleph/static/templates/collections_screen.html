@@ -8,7 +8,14 @@
   </div>
   <div class="collection-header">
     <h2>
-      <i class="fa fa-folder" aria-hidden="true"></i>
+      <span ng-if="::!collection.public"
+          uib-tooltip="Only available to selected users"
+          tooltip-placement="right">
+        <i class="fa fa-lock" aria-hidden="true"></i>
+      </span>
+      <span ng-if="::collection.public">
+        <i class="fa fa-globe" aria-hidden="true"></i>
+      </span>
       <!-- span ng-if="::collection.category" class="label label-primary">
         {{::collection.category | collectionCategory }}</span-->
       {{::collection.label}}

@@ -146,6 +146,11 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
 
     def to_dict(self):
         data = super(Collection, self).to_dict()
+        try:
+            from aleph.authz import collection_public
+            data['public'] = collection_public(self)
+        except:
+            pass
         data['api_url'] = url_for('collections_api.view', id=self.id)
         data['foreign_id'] = self.foreign_id
         data['creator_id'] = self.creator_id
