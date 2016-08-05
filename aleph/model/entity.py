@@ -161,12 +161,11 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         db.session.flush()
 
     @classmethod
-    def save(cls, data, merge=False):
+    def save(cls, data, collections, merge=False):
         ent = cls.by_id(data.get('id'))
         if 'state' not in data:
             data['state'] = cls.STATE_ACTIVE
 
-        collections = data.pop('collections', [])
         for identifier in data.get('identifiers', []):
             if ent is None:
                 ent = cls.by_identifier(identifier.get('scheme'),
