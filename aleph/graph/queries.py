@@ -74,7 +74,7 @@ class NodeQuery(GraphQuery):
 
         q = "MATCH (node)-[:PART_OF]->(ncoll:Collection) " \
             "MATCH (node)-[r]-(other) " \
-            "MATCH (p)-[:PART_OF]->(ocoll:Collection) " \
+            "MATCH (other)-[:PART_OF]->(ocoll:Collection) " \
             "WHERE %s " \
             "WITH node, count(r) AS degree " \
             "ORDER BY degree DESC " \
