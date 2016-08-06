@@ -30,8 +30,7 @@ def load_entity(tx, entity):
         return
     if entity.state != Entity.STATE_ACTIVE:
         return remove_entity(tx, entity.id)
-
-    log.info("Load node [%s]: %s", entity.id, entity.name)
+    log.info("Graph node [%s]: %s", entity.id, entity.name)
     fp = fingerprint(entity.name)
     node = EntityNode.get_cache(tx, fp)
     if node is not None:

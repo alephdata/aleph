@@ -2,6 +2,7 @@ from __future__ import absolute_import
 import logging
 from polyglot.downloader import downloader
 
+from aleph import graph
 from aleph.core import celery, db
 from aleph.ext import get_analyzers
 from aleph.model import Document
@@ -56,3 +57,5 @@ def analyze_document(document):
     db.session.add(document)
     db.session.commit()
     index_document(document)
+    with graph.transaction() as tx:
+        graph.load_document(tx, document)

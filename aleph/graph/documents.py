@@ -14,7 +14,6 @@ def load_documents():
     graph = get_graph()
     tx = graph.begin()
     for i, document in enumerate(Document.all()):
-        log.info("Load doc [%s]: %r", document.id, document.meta)
         load_document(tx, document)
         if i > 0 and i % 1000 == 0:
             tx.commit()
@@ -25,6 +24,7 @@ def load_documents():
 def load_document(tx, document):
     if tx is None:
         return
+    log.info("Graph load [%s]: %r", document.id, document.meta)
     meta = document.meta
     data = {
         'name': meta.title,
