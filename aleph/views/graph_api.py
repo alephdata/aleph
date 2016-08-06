@@ -8,28 +8,6 @@ from aleph.graph.queries import NodeQuery, EdgeQuery
 
 blueprint = Blueprint('graph_api', __name__)
 
-# minimal graph API:
-# /api/1/collections/<id>/graph
-#   -> return a basic set of all the nodes in this
-#      collection - e.g. documents, entities, phones
-#      must be paginated.
-# /api/1/graph/node/<id>
-#   -> return all the nodes adjacent to <id>, sorted
-#      by degree
-# /api/1/graph/complete?id=&length=<max_pathlen>
-#   -> given a list of node IDs (via GET or POST),
-#      return all connections between them.
-# /api/1/graph/suggest?prefix=&label=
-#   -> return all completions of the given prefix
-#      for a node title. Optional filter by label type.
-
-# Response format:
-#
-# nodes:
-#  - xxx
-# edges:
-#  - xxx
-
 
 def get_graph():
     """Try and get a connection to Neo4J, ow raise HTTP exception."""

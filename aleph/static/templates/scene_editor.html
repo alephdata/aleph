@@ -1,3 +1,22 @@
 <collections-screen collection="collection">
-  <pre>{{ scene.toJSON() | json: 2 }}</pre>
+  <div class="row">
+    <div class="col-md-8">
+      <pre>{{ scene.toJSON() | json: 2 }}</pre>
+    </div>
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <form ng-submit="searchNodes()">
+          <input class="form-control" ng-model="search.text" placeholder="Search for nodes...">
+        </form>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="node in suggestedNodes">
+            {{node.name | characters:40 }}
+            <span class="badge">
+              <i class="fa fa-link" aria-hidden="true"></i> {{node.$degree}}
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </collections-screen>

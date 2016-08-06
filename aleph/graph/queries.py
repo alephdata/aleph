@@ -81,7 +81,7 @@ class NodeQuery(GraphQuery):
             "SKIP {offset} LIMIT {limit} " \
             "RETURN node, degree "
         q = q % ' AND '.join(filters)
-        # print args
+        print args, q
         return q, args
 
     def execute(self):
