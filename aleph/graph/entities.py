@@ -41,6 +41,7 @@ def load_entity(tx, entity):
         country_code = country_code.upper()
     node = EntityNode.merge(tx, name=entity.name,
                             fingerprint=fp,
+                            alephSchema=entity.type,
                             alephState=entity.state,
                             alephEntity=entity.id)
     add_to_collections(tx, node, entity.collections,
@@ -56,6 +57,7 @@ def load_entity(tx, entity):
         alias = EntityNode.merge(tx, name=other_name.display_name,
                                  fingerprint=fp,
                                  alephEntity=entity.id,
+                                 alephSchema=entity.type,
                                  isAlias=True)
         AKA.merge(tx, node, alias, alephEntity=entity.id)
         add_to_collections(tx, alias, entity.collections,

@@ -28,7 +28,7 @@ def load_document(tx, document):
     meta = document.meta
     data = {
         'name': meta.title,
-        'docType': document.type,
+        'alephType': document.type,
         'fileName': meta.file_name,
         'fingerprint': document.content_hash,
         'alephDocument': document.id
