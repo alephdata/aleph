@@ -17,6 +17,8 @@ class EdgeType(GraphType):
         self._instances[name] = self
 
     def merge(self, tx, source, target, **props):
+        if source is None or target is None:
+            return
         props['id'] = self.gen_id(source, target, props)
         rel = Relationship(source, self.name, target, **props)
         if self.key is None:
@@ -60,9 +62,4 @@ class EdgeMapping(ItemMapping):
         props = self.bind_properties(row)
         source = nodes.get(self.source)
         target = nodes.get(self.target)
-        if source is None or target is None:
-            return
-        if source['id'] == target['id']:
-            log.info("Skipping self-loop: %r", source)
-            return
         return self.type.merge(tx, source, target, **props)
