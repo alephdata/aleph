@@ -36,17 +36,18 @@ def load_document(tx, document):
 
     for email in meta.emails:
         enode = EmailNode.merge(tx, name=email, fingerprint=email)
-        MENTIONS.merge(tx, node, enode)
+        MENTIONS.merge(tx, node, enode, alephDocument=document.id)
         add_to_collections(tx, enode, document.collections)
 
     for phone in meta.phone_numbers:
         pnode = PhoneNode.merge(tx, name=phone, fingerprint=phone)
-        MENTIONS.merge(tx, node, pnode)
+        MENTIONS.merge(tx, node, pnode, alephDocument=document.id)
         add_to_collections(tx, pnode, document.collections)
 
     for reference in document.references:
         if reference.origin == 'polyglot':
             continue
         enode = load_entity(tx, reference.entity)
-        MENTIONS.merge(tx, node, enode, weight=reference.weight)
+        MENTIONS.merge(tx, node, enode, weight=reference.weight,
+                       alephDocument=document.id)
     return node

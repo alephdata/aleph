@@ -4,6 +4,7 @@ from pylru import lrucache
 from py2neo import Node
 
 from aleph.graph.util import GraphType, ItemMapping
+from aleph.graph.edges import EdgeType
 
 log = logging.getLogger(__name__)
 
@@ -81,7 +82,7 @@ class NodeMapping(ItemMapping):
         super(NodeMapping, self).__init__(mapping, config)
         self.name = name
 
-    def update(self, tx, row):
+    def update(self, tx, collection, row):
         """Prepare and load a node."""
         props = self.bind_properties(row)
         fp = props.get(self.type.fingerprint)
@@ -90,6 +91,5 @@ class NodeMapping(ItemMapping):
             return node
         node = self.type.merge(tx, **props)
         if node is not None:
-            from aleph.graph.collections import add_to_collections
-            add_to_collections(tx, node, [self.mapping.collection])
+            EdgeType.get('PART_OF').merge(tx, node, collection)
         return node

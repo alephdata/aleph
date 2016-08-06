@@ -14,6 +14,7 @@ from aleph.alerts import check_alerts
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document_id
 from aleph.logic import reindex_entities, delete_collection
+from aleph.graph import upgrade_graph, load_documents, load_entities
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
 from aleph.crawlers.sql import SQLCrawler
@@ -145,6 +146,7 @@ def init():
     upgrade_db()
     init_search()
     upgrade_search()
+    upgrade_graph()
     install_analyzers()
     get_archive().upgrade()
 
@@ -154,6 +156,7 @@ def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_db()
     upgrade_search()
+    upgrade_graph()
     get_archive().upgrade()
 
 
@@ -183,10 +186,8 @@ def evilshit():
 
 @manager.command
 def buildgraph():
-    from aleph import graph
-    graph.upgrade()
-    graph.load_entities()
-    graph.load_documents()
+    load_entities()
+    load_documents()
 
 
 @manager.command
@@ -195,8 +196,8 @@ def loadgraph(mapping_file):
     from aleph.graph import Mapping
     with open(mapping_file, 'r') as fh:
         config = yaml.load(fh)
-        mapping = Mapping(config)
-        mapping.load()
+    mapping = Mapping(config)
+    mapping.load()
 
 
 @manager.command

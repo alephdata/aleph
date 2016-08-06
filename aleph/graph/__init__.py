@@ -6,7 +6,7 @@ from aleph.graph.documents import load_documents  # noqa
 from aleph.graph.mapping import Mapping  # noqa
 
 
-def upgrade():
+def upgrade_graph():
     graph = get_graph()
     if graph is None:
         return

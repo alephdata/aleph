@@ -9,7 +9,7 @@ from sqlalchemy.schema import Table
 from aleph.core import get_graph, db
 from aleph.model import Collection
 from aleph.model.validation import validate
-from aleph.graph.nodes import NodeMapping
+from aleph.graph.nodes import NodeMapping, NodeType
 from aleph.graph.edges import EdgeMapping
 
 log = logging.getLogger(__name__)
@@ -28,13 +28,6 @@ class Mapping(object):
         self.nodes = [NodeMapping(self, n, c) for (n, c)
                       in config.get('nodes').items()]
         self.edges = [EdgeMapping(self, c) for c in config.get('edges', [])]
-        self.collection = Collection.create({
-            'foreign_id': config.get('collection'),
-            'label': config.get('collection'),
-            'managed': True
-        })
-        db.session.add(self.collection)
-        db.session.commit()
 
     @property
     def query(self):
@@ -50,9 +43,21 @@ class Mapping(object):
 
     def load(self):
         """Generate query rows and load them into the graph."""
+        collection = Collection.create({
+            'foreign_id': self.config.get('collection'),
+            'label': self.config.get('collection'),
+            'managed': True
+        })
+        db.session.commit()
+
         graph = get_graph()
+        coll_type = NodeType.get('Collection')
+        collection = coll_type.merge(graph, name=collection.label,
+                                     fingerprint=collection.foreign_id,
+                                     alephCollection=collection.id)
         begin_time = time()
         rp = self.engine.execute(self.query)
+
         log.debug("Query time: %.5fms", (time() - begin_time) * 1000)
         stats = {'rows': 0, 'nodes': 0, 'rels': 0}
         while True:
@@ -62,7 +67,7 @@ class Mapping(object):
                 break
             for row in rows:
                 stats['rows'] += 1
-                self.update(graphtx, dict(row.items()), stats)
+                self.update(graphtx, collection, dict(row.items()), stats)
 
                 if stats['rows'] % 1000 == 0:
                     elapsed = (time() - begin_time)
@@ -73,11 +78,11 @@ class Mapping(object):
         log.info("Done. Loaded %(rows)s rows, %(nodes)s nodes, "
                  "%(rels)s edges.", stats)
 
-    def update(self, graphtx, row, stats):
+    def update(self, graphtx, collection, row, stats):
         """Generate nodes and edges for a single row."""
         nodes = {}
         for node in self.nodes:
-            nodes[node.name] = node.update(graphtx, row)
+            nodes[node.name] = node.update(graphtx, collection, row)
             if nodes[node.name] is not None:
                 stats['nodes'] += 1
         for edge in self.edges:

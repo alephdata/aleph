@@ -49,7 +49,7 @@ def load_entity(tx, entity):
                                  fingerprint=fp,
                                  alephEntity=entity.id,
                                  isAlias=True)
-        AKA.merge(tx, node, alias)
+        AKA.merge(tx, node, alias, alephEntity=entity.id)
         add_to_collections(tx, node, entity.collections)
 
     # TODO contact details, addresses
