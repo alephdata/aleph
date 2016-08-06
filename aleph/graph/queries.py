@@ -64,17 +64,17 @@ class NodeQuery(GraphQuery):
             'limit': self.limit,
             'offset': self.offset,
             'text': self.text(),
-            # 'collection_id': self.collection_id()
+            'collection_id': self.collection_id()
         }
         filters = []
-        filters.append('nodeColl.alephCollection IN {acl}')
-        filters.append('otherColl.alephCollection IN {acl}')
+        filters.append('ncoll.alephCollection IN {collection_id}')
+        filters.append('ocoll.alephCollection IN {acl}')
         if args['text'] is not None:
             filters.append('node.name =~ {text}')
 
-        q = "MATCH (node)-[:PART_OF]->(nodeColl:Collection) " \
+        q = "MATCH (node)-[:PART_OF]->(ncoll:Collection) " \
             "MATCH (node)-[r]-(other) " \
-            "MATCH (p)-[:PART_OF]->(otherColl:Collection) " \
+            "MATCH (p)-[:PART_OF]->(ocoll:Collection) " \
             "WHERE %s " \
             "WITH node, count(r) AS degree " \
             "ORDER BY degree DESC " \
