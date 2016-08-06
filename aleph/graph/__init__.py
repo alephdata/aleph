@@ -3,7 +3,7 @@ from contextlib import contextmanager
 from aleph.core import get_graph
 from aleph.graph.schema import NodeType
 from aleph.graph.entities import load_entities, load_entity, remove_entity  # noqa
-from aleph.graph.entities import load_collections, load_collection, remove_collection  # noqa
+from aleph.graph.entities import load_collection, remove_collection  # noqa
 from aleph.graph.documents import load_documents, load_document, remove_document  # noqa
 from aleph.graph.mapping import Mapping  # noqa
 
