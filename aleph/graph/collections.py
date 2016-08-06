@@ -1,6 +1,7 @@
 import logging
 
 from aleph.graph.schema import CollectionNode, PART_OF
+from aleph.graph.util import delete_orphan_nodes
 
 log = logging.getLogger(__name__)
 
@@ -15,7 +16,14 @@ def load_collection(tx, collection):
     return node
 
 
+def remove_collection(tx, collection):
+    CollectionNode.set_cache(tx, collection.foreign_id, None)
+    query = "MATCH ()-[r {alephCollection: {id}}]-() DELETE r;"
+    tx.run(query, id=collection.id)
+    delete_orphan_nodes(tx)
+
+
 def add_to_collections(tx, node, collections, **kw):
     for collection in collections:
         coll = load_collection(tx, collection)
-        PART_OF.merge(tx, node, coll, **kw)
+        PART_OF.merge(tx, node, coll, alephCollection=collection.id, **kw)

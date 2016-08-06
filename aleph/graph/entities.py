@@ -5,6 +5,7 @@ from aleph.model import Entity
 from aleph.graph.schema import EntityNode, AKA
 from aleph.graph.collections import add_to_collections
 from aleph.graph.converter import fingerprint
+from aleph.graph.util import delete_orphan_nodes
 
 log = logging.getLogger(__name__)
 
@@ -23,6 +24,9 @@ def load_entities():
 
 
 def load_entity(tx, entity):
+    if entity.state != Entity.STATE_ACTIVE:
+        return remove_entity(tx, entity.id)
+
     log.info("Load node [%s]: %s", entity.id, entity.name)
     fp = fingerprint(entity.name)
     node = EntityNode.get_cache(tx, fp)
@@ -36,7 +40,8 @@ def load_entity(tx, entity):
                             fingerprint=fp,
                             alephState=entity.state,
                             alephEntity=entity.id)
-    add_to_collections(tx, node, entity.collections)
+    add_to_collections(tx, node, entity.collections,
+                       alephEntity=entity.id)
 
     seen = set([fp])
     for other_name in entity.other_names:
@@ -50,7 +55,14 @@ def load_entity(tx, entity):
                                  alephEntity=entity.id,
                                  isAlias=True)
         AKA.merge(tx, node, alias, alephEntity=entity.id)
-        add_to_collections(tx, node, entity.collections)
+        add_to_collections(tx, node, entity.collections,
+                           alephEntity=entity.id)
 
     # TODO contact details, addresses
     return node
+
+
+def remove_entity(tx, entity_id):
+    query = "MATCH ()-[r {alephEntity: {id}}]-() DELETE r;"
+    tx.run(query, id=entity_id)
+    delete_orphan_nodes(tx)

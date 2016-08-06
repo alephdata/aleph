@@ -37,3 +37,8 @@ class ItemMapping(object):
             if value is not None:
                 props[prop.name] = value
         return props
+
+
+def delete_orphan_nodes(tx):
+    cur = tx.run("MATCH (n) WHERE NOT (n)--() DELETE n;")
+    log.debug("Deleted %(nodes_deleted)s orphan nodes.", cur.stats())

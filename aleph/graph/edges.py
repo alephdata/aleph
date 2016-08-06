@@ -42,8 +42,6 @@ class EdgeType(GraphType):
     @classmethod
     def dict(cls, rel):
         data = dict(rel)
-        # for type in node.labels():
-        #     data['$label'] = label
         return data
 
 
