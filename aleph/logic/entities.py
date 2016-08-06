@@ -4,6 +4,7 @@ import re
 import logging
 from collections import defaultdict
 
+from aleph import graph
 from aleph.core import db, celery
 from aleph.text import normalize_strong
 from aleph.model import Entity, Reference, Document, Alert
@@ -62,12 +63,16 @@ def generate_entity_references(entity):
 
 def update_entity(entity):
     reindex_entity(entity, references=False)
+    with graph.transaction() as tx:
+        graph.load_entity(tx, entity)
     update_entity_full.delay(entity.id)
 
 
 def delete_entity(entity, deleted_at=None):
-    entity.delete(deleted_at=deleted_at)
     update_entity(entity)
+    with graph.transaction() as tx:
+        graph.remove_entity(tx, entity.id)
+    entity.delete(deleted_at=deleted_at)
 
 
 @celery.task()

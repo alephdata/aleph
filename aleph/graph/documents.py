@@ -23,6 +23,8 @@ def load_documents():
 
 
 def load_document(tx, document):
+    if tx is None:
+        return
     meta = document.meta
     data = {
         'name': meta.title,
@@ -58,6 +60,8 @@ def load_document(tx, document):
 
 
 def remove_document(tx, document_id):
+    if tx is None:
+        return
     query = "MATCH ()-[r {alephDocument: {id}}]-() DELETE r;"
     tx.run(query, id=document_id)
     delete_orphan_nodes(tx)

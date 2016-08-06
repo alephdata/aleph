@@ -26,6 +26,14 @@ services:
     ports:
       - 5672
 
+  neo4j:
+    image: neo4j:3.0
+    volumes:
+      - "/opt/aleph/data/neo4j:/data"
+    ports:
+      - 7474
+      - 7687
+
   worker:
       build: .
       command: celery -A aleph.queue worker -c 10 -l INFO --logfile=/var/log/celery.log
@@ -43,6 +51,7 @@ services:
         POLYGLOT_DATA_PATH: /opt/aleph/data
         TESSDATA_PREFIX: /usr/share/tesseract-ocr
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+        ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
       env_file:
         - aleph.env
 
@@ -60,6 +69,7 @@ services:
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+        ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
       env_file:
         - aleph.env
 
@@ -77,5 +87,6 @@ services:
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+        ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
       env_file:
         - aleph.env

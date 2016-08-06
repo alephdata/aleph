@@ -7,6 +7,8 @@ log = logging.getLogger(__name__)
 
 
 def load_collection(tx, collection):
+    if tx is None:
+        return
     node = CollectionNode.get_cache(tx, collection.foreign_id)
     if node is not None:
         return node
@@ -16,10 +18,11 @@ def load_collection(tx, collection):
     return node
 
 
-def remove_collection(tx, collection):
-    CollectionNode.set_cache(tx, collection.foreign_id, None)
+def remove_collection(tx, collection_id):
+    if tx is None:
+        return
     query = "MATCH ()-[r {alephCollection: {id}}]-() DELETE r;"
-    tx.run(query, id=collection.id)
+    tx.run(query, id=collection_id)
     delete_orphan_nodes(tx)
 
 

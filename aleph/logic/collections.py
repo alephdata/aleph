@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 
+from aleph import graph
 from aleph.core import db, celery
 from aleph.model import Collection
 from aleph.index.collections import delete_collection as index_delete
@@ -11,7 +12,8 @@ log = logging.getLogger(__name__)
 
 
 def update_collection(collection):
-    pass
+    with graph.transaction() as tx:
+        graph.load_collection(tx, collection)
 
 
 @celery.task()
@@ -48,3 +50,5 @@ def delete_collection(collection_id=None):
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
     index_delete(collection_id)
+    with graph.transaction() as tx:
+        graph.remove_collection(tx, collection_id)

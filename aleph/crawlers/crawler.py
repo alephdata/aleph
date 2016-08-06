@@ -6,7 +6,7 @@ from aleph.metadata import Metadata
 from aleph.model import Entity, Collection, CrawlerState
 from aleph.model.common import make_textid
 from aleph.ingest import ingest_url, ingest_file
-from aleph.logic import update_entity
+from aleph.logic import update_entity, update_collection
 from aleph.crawlers.schedule import CrawlerSchedule
 from aleph.util import make_tempfile, remove_tempfile
 
@@ -39,6 +39,7 @@ class Crawler(object):
     def load_collection(self, data):
         collection = Collection.create(data)
         db.session.commit()
+        update_collection(collection)
         return collection
 
     @property

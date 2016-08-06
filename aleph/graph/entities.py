@@ -12,6 +12,8 @@ log = logging.getLogger(__name__)
 
 def load_entities():
     graph = get_graph()
+    if graph is None:
+        return
     tx = graph.begin()
     q = Entity.all()
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
@@ -24,6 +26,8 @@ def load_entities():
 
 
 def load_entity(tx, entity):
+    if tx is None:
+        return
     if entity.state != Entity.STATE_ACTIVE:
         return remove_entity(tx, entity.id)
 
@@ -63,6 +67,8 @@ def load_entity(tx, entity):
 
 
 def remove_entity(tx, entity_id):
+    if tx is None:
+        return
     query = "MATCH ()-[r {alephEntity: {id}}]-() DELETE r;"
     tx.run(query, id=entity_id)
     delete_orphan_nodes(tx)
