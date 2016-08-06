@@ -128,7 +128,7 @@ def get_graph():
         if uri is None:
             return None
         app._neo4j_instance = Graph(uri)
-        log.info("Connected to Neo4J graph.")
+        log.info("Connected to graph: %s", app._neo4j_instance)
     return app._neo4j_instance
 
 

@@ -58,7 +58,7 @@ def load_entity(tx, entity):
                                  alephEntity=entity.id,
                                  isAlias=True)
         AKA.merge(tx, node, alias, alephEntity=entity.id)
-        add_to_collections(tx, node, entity.collections,
+        add_to_collections(tx, alias, entity.collections,
                            alephEntity=entity.id)
 
     # TODO contact details, addresses

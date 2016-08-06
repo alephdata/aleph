@@ -1,11 +1,10 @@
 from flask import Blueprint, request
 from werkzeug.exceptions import NotImplemented
-from apikit import jsonify, get_limit, get_offset, request_data
+from apikit import jsonify, request_data
 
-from aleph import authz
 from aleph.core import get_graph as _get_graph
-# from aleph.events import log_event
-from aleph.graph import queries
+from aleph.events import log_event
+from aleph.graph.queries import NodeQuery, EdgeQuery
 
 blueprint = Blueprint('graph_api', __name__)
 
@@ -40,20 +39,25 @@ def get_graph():
     return graph
 
 
-@blueprint.route('/api/1/graph/suggest')
-def suggest_nodes():
-    prefix = request.args.get('prefix', '').strip()
-    collection_id = [int(c) for c in request.args.getlist('collection_id')]
-    if len(prefix) < 3 and not len(collection_id):
-        return jsonify({'status': 'ok', 'nodes': []})
-    resp = queries.suggest_nodes(get_graph(), collection_id, prefix,
-                                 get_limit(default=20), get_offset())
-    return jsonify(resp)
+@blueprint.route('/api/1/graph/nodes', methods=['GET'])
+def get_nodes():
+    log_event(request)
+    return jsonify(NodeQuery(get_graph(), request.args.items()))
 
 
-@blueprint.route('/api/1/graph/nodes')
-def load_nodes():
-    node_ids = request.args.getlist('id')
-    resp = queries.load_nodes(get_graph(), node_ids,
-                              get_limit(default=20), get_offset())
-    return jsonify(resp)
+@blueprint.route('/api/1/graph/nodes', methods=['POST', 'PUT'])
+def post_nodes():
+    log_event(request)
+    return jsonify(NodeQuery(get_graph(), request_data()))
+
+
+@blueprint.route('/api/1/graph/edges', methods=['GET'])
+def get_edges():
+    log_event(request)
+    return jsonify(EdgeQuery(get_graph(), request.args.items()))
+
+
+@blueprint.route('/api/1/graph/edges', methods=['POST', 'PUT'])
+def post_edges():
+    log_event(request)
+    return jsonify(EdgeQuery(get_graph(), request_data()))

@@ -1,7 +1,7 @@
 import logging
 
 from aleph.core import get_graph
-from aleph.model import Document
+from aleph.model import Document, Entity
 from aleph.graph.schema import DocumentNode, EmailNode, PhoneNode, MENTIONS
 from aleph.graph.collections import add_to_collections
 from aleph.graph.entities import load_entity
@@ -50,7 +50,7 @@ def load_document(tx, document):
                            alephDocument=document.id)
 
     for reference in document.references:
-        if reference.origin == 'polyglot':
+        if reference.entity.state != Entity.STATE_ACTIVE:
             continue
         enode = load_entity(tx, reference.entity)
         MENTIONS.merge(tx, node, enode, weight=reference.weight,
