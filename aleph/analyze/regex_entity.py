@@ -19,7 +19,6 @@ class AutomatonCache(object):
     def __init__(self):
         self.latest = None
         self.matches = {}
-        self.regexes = []
 
     def generate(self):
         with lock:

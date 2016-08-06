@@ -25,8 +25,10 @@ class OpenNamesCrawler(EntityCrawler):  # pragma: no cover
         url = urljoin(JSON_PATH, json_file)
         source_name = source.get('source') or source.get('source_id')
         label = '%s - %s' % (source.get('publisher'), source_name)
-        collection = self.find_collection(url, {
-            'label': label
+        collection = self.load_collection({
+            'foreign_id': url,
+            'label': label,
+            'managed': True
         })
         Permission.grant_foreign(collection, Role.SYSTEM_GUEST, True, False)
         log.info(" > OpenNames collection: %s", collection.label)
@@ -46,7 +48,6 @@ class OpenNamesCrawler(EntityCrawler):  # pragma: no cover
                 on['name'] = on.pop('other_name', None)
                 data['other_names'].append(on)
             self.emit_entity(collection, data)
-        self.emit_collection(collection)
 
     def crawl(self):
         data = requests.get(JSON_PATH).json()

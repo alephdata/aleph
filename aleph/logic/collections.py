@@ -3,11 +3,15 @@ from datetime import datetime
 
 from aleph.core import db, celery
 from aleph.model import Collection
-from aleph.index import index_document, delete_document
 from aleph.index.collections import delete_collection as index_delete
-from aleph.logic.entities import reindex_entity
+from aleph.logic.entities import update_entity, delete_entity
+from aleph.logic.documents import update_document, delete_document
 
 log = logging.getLogger(__name__)
+
+
+def update_collection(collection):
+    pass
 
 
 @celery.task()
@@ -26,20 +30,20 @@ def delete_collection(collection_id=None):
                               if c.id != collection.id]
         db.session.add(entity)
         if not len(entity.collections):
-            entity.delete(deleted_at=deleted_at)
-        reindex_entity(entity)
+            delete_entity(entity)
+        else:
+            update_entity(entity)
 
     for document in collection.documents:
         document.collections = [c for c in document.collections
                                 if c.id != collection.id]
         if not len(document.collections):
-            document.delete(deleted_at=deleted_at)
-            delete_document(document.id)
+            delete_document(document, deleted_at=deleted_at)
         else:
             if collection_id == document.source_collection_id:
                 document.source_collection_id = None
             db.session.add(document)
-            index_document(document)
+            update_document(document)
 
     collection.delete(deleted_at=deleted_at)
     db.session.commit()

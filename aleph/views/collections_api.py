@@ -5,7 +5,7 @@ from aleph import authz
 from aleph.model import Collection, db
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
-from aleph.logic.collections import delete_collection
+from aleph.logic import delete_collection, update_collection
 from aleph.analyze import analyze_collection
 from aleph.text import latinize_text
 
@@ -26,6 +26,7 @@ def create():
     authz.require(authz.logged_in())
     collection = Collection.create(request_data(), request.auth_role)
     db.session.commit()
+    update_collection(collection)
     log_event(request)
     return view(collection.id)
 
@@ -46,6 +47,7 @@ def update(id):
     collection.update(request_data())
     db.session.add(collection)
     db.session.commit()
+    update_collection(collection)
     log_event(request)
     return view(id)
 

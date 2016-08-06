@@ -7,7 +7,8 @@ from collections import defaultdict
 from aleph.core import db, celery
 from aleph.text import normalize_strong
 from aleph.model import Entity, Reference, Document, Alert
-from aleph.index import index_entity, delete_entity
+from aleph.index import index_entity
+from aleph.index import delete_entity as index_delete
 from aleph.index.entities import delete_entity_references
 from aleph.index.entities import update_entity_references
 from aleph.search.records import scan_entity_mentions
@@ -64,6 +65,11 @@ def update_entity(entity):
     update_entity_full.delay(entity.id)
 
 
+def delete_entity(entity, deleted_at=None):
+    entity.delete(deleted_at=deleted_at)
+    update_entity(entity)
+
+
 @celery.task()
 def update_entity_full(entity_id):
     """Perform update operations on entities."""
@@ -77,7 +83,7 @@ def update_entity_full(entity_id):
 def reindex_entity(entity, references=True):
     log.info('Index [%s]: %s', entity.id, entity.name)
     if entity.state != Entity.STATE_ACTIVE:
-        delete_entity(entity.id)
+        index_delete(entity.id)
         if references:
             delete_entity_references(entity.id)
     else:

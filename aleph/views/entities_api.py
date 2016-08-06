@@ -4,7 +4,7 @@ from apikit import get_limit, get_offset
 
 from aleph import authz
 from aleph.model import Entity, Collection, db
-from aleph.logic import update_entity
+from aleph.logic import update_entity, delete_entity
 from aleph.views.cache import enable_cache
 from aleph.events import log_event
 from aleph.search import entities_query, execute_entities_query
@@ -145,8 +145,7 @@ def merge(id, other_id):
 def delete(id):
     entity = obj_or_404(Entity.by_id(id))
     check_authz(entity, authz.WRITE)
-    entity.delete()
+    delete_entity(entity)
     db.session.commit()
-    update_entity(entity)
     log_event(request, entity_id=entity.id)
     return jsonify({'status': 'ok'})

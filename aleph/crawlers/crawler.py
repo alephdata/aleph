@@ -6,7 +6,7 @@ from aleph.metadata import Metadata
 from aleph.model import Entity, Collection, CrawlerState
 from aleph.model.common import make_textid
 from aleph.ingest import ingest_url, ingest_file
-from aleph.logic import update_entity_full
+from aleph.logic import update_entity
 from aleph.crawlers.schedule import CrawlerSchedule
 from aleph.util import make_tempfile, remove_tempfile
 
@@ -36,15 +36,19 @@ class Crawler(object):
         self.incremental = False
         self.crawler_run = make_textid()
 
+    def load_collection(self, data):
+        collection = Collection.create(data)
+        db.session.commit()
+        return collection
+
     @property
     def collection(self):
         if not hasattr(self, '_collection'):
-            self._collection = Collection.create({
+            self._collection = self.load_collection({
                 'foreign_id': self.COLLECTION_ID,
                 'label': self.COLLECTION_LABEL or self.COLLECTION_ID,
                 'managed': True
             })
-            db.session.commit()
         db.session.add(self._collection)
         return self._collection
 
@@ -144,36 +148,13 @@ class Crawler(object):
 
 class EntityCrawler(Crawler):
 
-    def find_collection(self, foreign_id, data):
-        collection = Collection.by_foreign_id(foreign_id, data)
-        if not hasattr(self, 'entity_cache'):
-            self.entity_cache = {}
-        self.entity_cache[collection.id] = []
-        db.session.flush()
-        return collection
-
     def emit_entity(self, collection, data):
         entity = Entity.save(data, [collection], merge=True)
-        db.session.flush()
-        update_entity_full.delay(entity.id)
+        db.session.commit()
         log.info("Entity [%s]: %s", entity.id, entity.name)
-        self.entity_cache[collection.id].append(entity)
+        update_entity(entity)
         self.increment_count()
         return entity
-
-    def emit_collection(self, collection):
-        db.session.commit()
-        entities = self.entity_cache.pop(collection.id, [])
-
-        deleted_ids = []
-        for entity in collection.entities:
-            if entity not in entities:
-                entity.delete()
-                deleted_ids.append(entity.id)
-
-        db.session.commit()
-        for entity_id in deleted_ids:
-            update_entity_full.delay(entity_id)
 
 
 class DocumentCrawler(Crawler):
