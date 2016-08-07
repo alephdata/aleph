@@ -16,18 +16,16 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         // .scaleExtent([1, 10])
         .on("zoom", zoomed);
 
-      var rect = container.append("rect")
-        // .attr("width", width)
-        // .attr("height", height)
-        .style("fill", "none")
-        .style("stroke", "2")
-        .style("pointer-events", "all");
+      // var rect = container.append("rect")
+      //   // .attr("width", width)
+      //   // .attr("height", height)
+      //   .style("fill", "none")
+      //   .style("stroke", "2")
+      //   .style("pointer-events", "all");
 
-      // var drag = d3.drag()
-      //   .origin(function(d) { return d; })
-      //   .on("dragstart", dragstarted)
-      //   .on("drag", dragged)
-      //   .on("dragend", dragended);
+      var drag = d3.drag()
+        // .origin(function(d) { return d; })
+        .on("start", dragNode);
 
       var draw = function () {
         updateSize();
@@ -39,14 +37,12 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             height = d3.select("body").node().getBoundingClientRect().height * 0.7;
         svg.attr("width", width)
            .attr("height", height);
-        rect.attr("width", width)
-            .attr("height", height);
       };
 
       function drawNodes() {
         console.log(scope.scene.nodes);
         var nodes = nodeContainer.selectAll(".node")
-            .data(scope.scene.nodes)
+            .data(scope.scene.nodes, function(d) { return d.id; })
           .enter().append("g")
             .attr("class", "node");
 
@@ -54,25 +50,30 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             .attr("x", function(e) { return 30; })
             .attr("y", function(e) { return 30; })
             .attr("width", function(e) { return 100; })
-            .attr("height", function(e) { return 60; });
+            .attr("height", function(e) { return 60; })
+            .call(drag);
       };
 
       function zoomed() {
         container.attr("transform", d3.event.transform);
       }
 
-      // function dragstarted(d) {
-      //   d3.event.sourceEvent.stopPropagation();
-      //   d3.select(this).classed("dragging", true);
-      // }
+      function dragNode() {
+        var node = d3.select(this).classed("dragging", true),
+            xOffset = d3.event.x - parseInt(node.attr('x')),
+            yOffset = d3.event.y - parseInt(node.attr('y'));
 
-      // function dragged(d) {
-      //   d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-      // }
+        d3.event.on("drag", dragged).on("end", ended);
 
-      // function dragended(d) {
-      //   d3.select(this).classed("dragging", false);
-      // }
+        function dragged(d) {
+          node.attr('x', d3.event.x - xOffset);
+          node.attr('y', d3.event.y - yOffset);
+        }
+
+        function ended() {
+          node.classed("dragging", false);
+        }
+      }
 
       d3.select(window).on('resize', draw); 
       draw();
