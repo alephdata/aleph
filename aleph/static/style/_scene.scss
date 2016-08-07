@@ -7,6 +7,7 @@
         .node {
             fill: $gray-light;
             // stroke: 1px solid $panel-inner-border;
+            cursor: pointer;
 
             rect {
                 rx: $border-radius-base;
@@ -15,6 +16,8 @@
 
             .title {
                 fill: white;
+                user-select: none;
+                cursor: pointer;
             }
         }
 

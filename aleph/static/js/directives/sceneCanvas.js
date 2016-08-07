@@ -1,7 +1,8 @@
 aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
 
-  var SceneGrid = function() {
+  var SceneGrid = function(scene) {
     var self = this;
+    self.scene = scene;
     self.unit = 20;
     self.nodeWidthUnits = 5;
     self.nodeHeightUnits = 2;
@@ -35,6 +36,9 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
     };
 
     self.nodeTranslate = function(node) {
+      if (node.gridX === null && node.gridY === null)  {
+        node = self.placeNode(node);
+      }
       node.x = self.nodeX(node);
       node.y = self.nodeY(node);
       return 'translate(' + [node.x, node.y] + ')';
@@ -47,20 +51,68 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
     self.snapToGrid = function(node) {
       node.gridX = self.pixelToUnit(node.x);
       node.gridY = self.pixelToUnit(node.y);
+      node = self.placeNode(node);
+    };
+
+    self.placeNode = function(node) {
+      var iter = 1,
+          options = [[1, 0], [1, 1], [0, 1], [-1, 0],
+                     [0, -1], [-1, -1], [-1, 1], [1, -1]];
+      if (!self.hasOverlap(node)) {
+        return node;
+      }
+      while (true) {
+        for (var i in options) {
+          var pos = {
+            id: node.id,
+            gridX: node.gridX + (options[i][0] * iter),
+            gridY: node.gridY + (options[i][1] * iter),
+          };
+          if (!self.hasOverlap(pos)) {
+            node.gridX = pos.gridX;
+            node.gridY = pos.gridY;
+            return node;
+          }
+        };
+        iter += 1;
+      }
+    };
+
+    self.getNodeBox = function(node) {
+      var offsetX = self.nodeOffsetX(node),
+          offsetY = self.nodeOffsetY(node);
+      return {
+        left: self.nodeX(node) + offsetX,
+        right: self.nodeX(node) + (offsetX * -1),
+        top: self.nodeY(node) + offsetY,
+        bottom: self.nodeY(node) + (offsetY * -1),
+      };
+    };
+
+    self.hasOverlap = function(node) {
+      var box = self.getNodeBox(node);
+      for (var i in self.scene.nodes) {
+        var on = self.scene.nodes[i];
+        if (on.id != node.id) {
+          var other = self.getNodeBox(self.scene.nodes[i]);
+          if (!(box.left > other.right || box.right < other.left ||
+                box.top > other.bottom || box.bottom < other.top)) {
+            return true;
+          }
+        }
+      }
+      return false;
     };
   };
 
   return {
     restrict: 'E',
-    transclude: true,
-    scope: {
-      'scene': '='
-    },
+    require: '^sceneWorkspace',
     template: '<div id="scene-canvas"></div>',
-    link: function (scope, element, attrs, model) {
+    link: function (scope, element, attrs, ctrl) {
       var frame = d3.select("#scene-canvas"),
           svg = frame.append("svg"),
-          grid = new SceneGrid(),
+          grid = new SceneGrid(ctrl),
           container = svg.append("g"),
           nodeContainer = container.append("g");
 
@@ -71,6 +123,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       var nodeDrag = d3.drag().on("start", dragNode);
 
       function updateSize() {
+        // adapt to window resizing.
         var width = frame.node().getBoundingClientRect().width,
             height = d3.select("body").node().getBoundingClientRect().height * 0.7;
         svg.attr("width", width)
@@ -80,6 +133,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       };
 
       function adjustText(texts) {
+        // cut off the node label if it is longer than the node box.
         texts.each(function(node) {
           var text = d3.select(this),
               name = text.text(),
@@ -88,7 +142,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
               charWidth = Math.max(width, maxWidth) / name.length,
               maxChars = (maxWidth / charWidth);
           if (width > maxWidth) {
-            name = name.substring(0, maxChars - 1);
+            name = name.substring(0, maxChars - 3);
             name = name + '…';
             text.text(name); 
           }
@@ -96,8 +150,10 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       };
 
       function drawNodes() {
+        // this should update as well as create, i.e. you can
+        // run it repatedly.
         var nodes = nodeContainer.selectAll(".node")
-            .data(scope.scene.nodes, function(d) { return d.id; })
+            .data(ctrl.nodes, function(d) { return d.id; })
           .enter().append("g")
             .attr("class", "node")
             .attr("transform", grid.nodeTranslate)
@@ -114,11 +170,8 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             .attr("class", "title")
             .attr("text-anchor", "middle")
             .attr("font-size", grid.fontSize)
-            .text(function(d){ return d.props.name; })
+            .text(function(d){ return d.name; })
             .call(adjustText);
-
-        // console.log(texts);
-
       };
 
       function zoomed() {
@@ -141,6 +194,12 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
           element.attr('transform', grid.nodeTranslate(node));
         }
       }
+
+      var unsubscribe = scope.$on('updateScene', function(e) {
+        drawNodes();
+      });
+
+      scope.$on('$destroy', unsubscribe);
 
       function init() {
         d3.select(window).on('resize', updateSize); 
