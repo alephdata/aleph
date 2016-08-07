@@ -48,6 +48,10 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
         return node;
       };
 
+      self.getNodeIds = function() {
+        return self.nodes.map(function(n) { return n.id; });
+      }
+
       self.fromJSON = function(scene) {
         self.collection_id = scene.collection_id;
         for (var i in scene.nodes) {

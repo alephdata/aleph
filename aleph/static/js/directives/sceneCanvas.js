@@ -65,8 +65,8 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         for (var i in options) {
           var pos = {
             id: node.id,
-            gridX: node.gridX + (options[i][0] * iter),
-            gridY: node.gridY + (options[i][1] * iter),
+            gridX: node.gridX + (options[i][0] * iter * self.nodeWidthUnits),
+            gridY: node.gridY + (options[i][1] * iter * self.nodeHeightUnits),
           };
           if (!self.hasOverlap(pos)) {
             node.gridX = pos.gridX;

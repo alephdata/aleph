@@ -1,5 +1,4 @@
 import logging
-from werkzeug.datastructures import MultiDict
 
 from aleph import authz
 from aleph.graph.schema import NodeType
@@ -9,9 +8,9 @@ log = logging.getLogger(__name__)
 
 class GraphQuery(object):
 
-    def __init__(self, graph, items):
+    def __init__(self, graph, data):
         self.graph = graph
-        self.data = MultiDict(items)
+        self.data = data
 
     @property
     def limit(self):
@@ -58,12 +57,16 @@ class NodeQuery(GraphQuery):
                 collections.append(coll)
         return collections or acl
 
+    def ignore(self):
+        return self.data.getlist('ignore')
+
     def query(self):
         args = {
             'acl': authz.collections(authz.READ),
             'limit': self.limit,
             'offset': self.offset,
             'text': self.text(),
+            'ignore': self.ignore(),
             'collection_id': self.collection_id()
         }
         filters = []
@@ -71,6 +74,8 @@ class NodeQuery(GraphQuery):
         filters.append('ocoll.alephCollection IN {acl}')
         if args['text'] is not None:
             filters.append('node.name =~ {text}')
+        if len(args['ignore']):
+            filters.append('NOT (node.id IN {ignore})')
 
         q = "MATCH (node)-[:PART_OF]->(ncoll:Collection) " \
             "MATCH (node)-[r]-(other) " \
