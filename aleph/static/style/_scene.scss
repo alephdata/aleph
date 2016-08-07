@@ -1,14 +1,17 @@
-
-
 #scene-canvas {
-    background-color: #f0f0f0;
+    background-color: $gray-subtle;   
+    border: 1px solid $panel-inner-border;
+    border-radius: $border-radius-base;
 
     svg {
         .node {
-
+            rect {
+                rx: $border-radius-base;
+                ry: $border-radius-base;    
+            }
         }
 
-        .dragged {
+        .dragging {
             fill: red;
         }
     }

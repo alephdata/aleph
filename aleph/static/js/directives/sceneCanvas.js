@@ -13,19 +13,10 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
           nodeContainer = container.append("g");
 
       var zoom = d3.zoom()
-        // .scaleExtent([1, 10])
+        .scaleExtent([0.3, 6])
         .on("zoom", zoomed);
 
-      // var rect = container.append("rect")
-      //   // .attr("width", width)
-      //   // .attr("height", height)
-      //   .style("fill", "none")
-      //   .style("stroke", "2")
-      //   .style("pointer-events", "all");
-
-      var drag = d3.drag()
-        // .origin(function(d) { return d; })
-        .on("start", dragNode);
+      var nodeDrag = d3.drag().on("start", dragNode);
 
       var draw = function () {
         updateSize();
@@ -40,7 +31,6 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       };
 
       function drawNodes() {
-        console.log(scope.scene.nodes);
         var nodes = nodeContainer.selectAll(".node")
             .data(scope.scene.nodes, function(d) { return d.id; })
           .enter().append("g")
@@ -51,7 +41,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             .attr("y", function(e) { return 30; })
             .attr("width", function(e) { return 100; })
             .attr("height", function(e) { return 60; })
-            .call(drag);
+            .call(nodeDrag);
       };
 
       function zoomed() {
