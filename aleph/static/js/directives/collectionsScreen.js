@@ -9,6 +9,7 @@ aleph.directive('collectionsScreen', ['$http', '$q', '$location', 'Authz', 'Coll
     },
     templateUrl: 'templates/collections_screen.html',
     link: function (scope, element, attrs) {
+      scope.is_admin = Authz.is_admin();
       scope.writeable = Authz.collection(Authz.WRITE, scope.collection.id);
       scope.uploads = [];
 

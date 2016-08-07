@@ -8,6 +8,9 @@ aleph.factory('Scene', ['Metadata', function(Metadata) {
     var self = this;
     self.scene = scene;
     self.props = props;
+    self.gridX = 0;
+    self.gridY = 0;
+    self.id = props.id;
 
     self.toJSON = function() {
       return self.props;
@@ -20,7 +23,7 @@ aleph.factory('Scene', ['Metadata', function(Metadata) {
     var self = this;
     self.metadata = metadata;
     self.collection = collection;
-    self.nodes = [{'id': 3, 'name': 'this is a test'}];
+    self.nodes = [];
     self.edges = [];
 
     self.addNode = function(node) {

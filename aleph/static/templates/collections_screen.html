@@ -56,6 +56,14 @@
           <span class="badge">{{::collection.entity_count | number}}</span>
         </a>
       </li>
+      <li role="presentation" ng-if="is_admin"
+          ng-class="{'active': section == 'scenes'}">
+        <a ng-href="/collections/{{::collection.id}}/scenes">
+          <i class="fa fa-map-o" aria-hidden="true"></i>
+          Network analysis
+          <span class="label label-info">dev</span>
+        </a>
+      </li>
       <li role="presentation" ng-class="{'active': section == 'settings'}"
           ng-show="collection.can_edit">
         <a ng-href="/collections/{{::collection.id}}/settings">
