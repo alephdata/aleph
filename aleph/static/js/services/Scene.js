@@ -20,7 +20,7 @@ aleph.factory('Scene', ['Metadata', function(Metadata) {
     var self = this;
     self.metadata = metadata;
     self.collection = collection;
-    self.nodes = [];
+    self.nodes = [{'name': 'this is a test'}];
     self.edges = [];
 
     self.addNode = function(node) {

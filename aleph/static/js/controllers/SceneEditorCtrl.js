@@ -10,10 +10,12 @@ aleph.controller('SceneEditorCtrl', ['$scope', '$route', '$location', '$http', '
   Title.set(collection.label, "collections");  
 
   $scope.searchNodes = function() {
-    var params = angular.extend({'collection_id': collection.id}, $scope.search);
+    var params = {collection_id: collection.id, limit: 10};
+    params = angular.extend(params, $scope.search);
     $http.get('/api/1/graph/nodes', {params: params}).then(function(res) {
-      console.log(res.data);
+      // console.log(res.data);
       $scope.suggestedNodes = res.data.results;
+      $scope.scene.addNode(res.data.results[0]);
       // $scope.scene.fromJSON(res.data);
     });  
   };
