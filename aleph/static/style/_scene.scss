@@ -5,9 +5,16 @@
 
     svg {
         .node {
+            fill: $gray-light;
+            // stroke: 1px solid $panel-inner-border;
+
             rect {
                 rx: $border-radius-base;
                 ry: $border-radius-base;    
+            }
+
+            .title {
+                fill: white;
             }
         }
 

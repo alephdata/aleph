@@ -2,7 +2,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
 
   var SceneGrid = function() {
     var self = this;
-    self.unit = 20;
+    self.unit = 30;
     self.nodeWidthUnits = 3;
     self.nodeHeightUnits = 2;
 
@@ -15,22 +15,35 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
     };
 
     self.nodeX = function(node) {
-      return (node.gridX * self.unit) - (self.nodeWidth(node) / 2);
+      return (node.gridX * self.unit); // - (self.nodeWidth(node) / 2);
     };
 
     self.nodeY = function(node) {
-      return (node.gridY * self.unit) - (self.nodeHeight(node) / 2);
+      return (node.gridY * self.unit); // - (self.nodeHeight(node) / 2);
     };
+
+    self.nodeOffsetX = function(node) {
+      return (self.nodeWidth(node) / 2) * -1;
+    };
+
+    self.nodeOffsetY = function(node) {
+      return (self.nodeHeight(node) / 2) * -1;
+    };
+
+    self.nodeTranslate = function(node) {
+      node.x = self.nodeX(node);
+      node.y = self.nodeY(node);
+      return 'translate(' + [node.x, node.y] + ')';
+    }
 
     self.pixelToUnit = function(px) {
       return Math.round(px / self.unit);
     };
 
-    self.snapToGrid = function(node, el) {
-      node.gridX = self.pixelToUnit(parseInt(el.attr('x')) + (self.nodeWidth(node) / 2));
-      node.gridY = self.pixelToUnit(parseInt(el.attr('y')) + (self.nodeHeight(node) / 2));
+    self.snapToGrid = function(node) {
+      node.gridX = self.pixelToUnit(node.x);
+      node.gridY = self.pixelToUnit(node.y);
     };
-
   };
 
   return {
@@ -58,6 +71,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             height = d3.select("body").node().getBoundingClientRect().height * 0.7;
         svg.attr("width", width)
            .attr("height", height);
+        // drawNodes();
         return {width: width, height: height};
       };
 
@@ -65,14 +79,22 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         var nodes = nodeContainer.selectAll(".node")
             .data(scope.scene.nodes, function(d) { return d.id; })
           .enter().append("g")
-            .attr("class", "node");
+            .attr("class", "node")
+            .attr("transform", grid.nodeTranslate)
+            .call(nodeDrag);
 
         nodes.append("rect")
-            .attr("x", grid.nodeX)
-            .attr("y", grid.nodeY)
+            .attr("x", grid.nodeOffsetX)
+            .attr("y", grid.nodeOffsetY)
             .attr("width", grid.nodeWidth)
-            .attr("height", grid.nodeHeight)
-            .call(nodeDrag);
+            .attr("height", grid.nodeHeight);
+
+        nodes.append("text")
+            .attr("dy", function(d) { return 4; })
+            .attr("class", "title")
+            .attr("text-anchor", "middle")
+            .text(function(d){ return d.props.name; });
+
       };
 
       function zoomed() {
@@ -80,22 +102,19 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       }
 
       function dragNode() {
-        var element = d3.select(this).classed("dragging", true),
-            xOffset = d3.event.x - parseInt(element.attr('x')),
-            yOffset = d3.event.y - parseInt(element.attr('y'));
-
+        var element = d3.select(this).classed("dragging", true);
         d3.event.on("drag", dragged).on("end", ended);
 
-        function dragged(d) {
-          element.attr('x', d3.event.x - xOffset);
-          element.attr('y', d3.event.y - yOffset);
+        function dragged(node) {
+          node.x += d3.event.dx;
+          node.y += d3.event.dy;
+          element.attr('transform', 'translate(' + [node.x, node.y] + ')');
         }
 
-        function ended(d) {
+        function ended(node) {
           element.classed("dragging", false);
-          grid.snapToGrid(d, element);
-          element.attr('x', grid.nodeX(d));
-          element.attr('y', grid.nodeY(d));
+          grid.snapToGrid(node);
+          element.attr('transform', grid.nodeTranslate(node));
         }
       }
 
