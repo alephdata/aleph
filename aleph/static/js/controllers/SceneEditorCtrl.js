@@ -5,7 +5,7 @@ aleph.controller('SceneEditorCtrl', ['$scope', '$route', '$location', '$http', '
   $scope.collection = collection;
   $scope.metadata = metadata;
   $scope.scene = Scene.new(metadata, collection);
-  $scope.scene.addNode({'name': 'Demo', 'id': 3});
+  $scope.scene.addNode({'name': 'Ten Characters', 'id': 3});
 
   $scope.search = {'text': ''};
   Title.set(collection.label, "collections");  

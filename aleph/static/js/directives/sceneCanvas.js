@@ -2,8 +2,8 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
 
   var SceneGrid = function() {
     var self = this;
-    self.unit = 30;
-    self.nodeWidthUnits = 3;
+    self.unit = 20;
+    self.nodeWidthUnits = 5;
     self.nodeHeightUnits = 2;
 
     self.nodeWidth = function(node) {
@@ -12,6 +12,10 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
 
     self.nodeHeight = function(node) {
       return self.nodeHeightUnits * self.unit;
+    };
+
+    self.fontSize = function(node) {
+      return self.unit * 0.6;
     };
 
     self.nodeX = function(node) {
@@ -71,8 +75,24 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             height = d3.select("body").node().getBoundingClientRect().height * 0.7;
         svg.attr("width", width)
            .attr("height", height);
-        // drawNodes();
+        drawNodes();
         return {width: width, height: height};
+      };
+
+      function adjustText(texts) {
+        texts.each(function(node) {
+          var text = d3.select(this),
+              name = text.text(),
+              maxWidth = grid.nodeWidth(node) - 4,
+              width = text.node().getComputedTextLength(),
+              charWidth = Math.max(width, maxWidth) / name.length,
+              maxChars = (maxWidth / charWidth);
+          if (width > maxWidth) {
+            name = name.substring(0, maxChars - 1);
+            name = name + '…';
+            text.text(name); 
+          }
+        });
       };
 
       function drawNodes() {
@@ -93,7 +113,11 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             .attr("dy", function(d) { return 4; })
             .attr("class", "title")
             .attr("text-anchor", "middle")
-            .text(function(d){ return d.props.name; });
+            .attr("font-size", grid.fontSize)
+            .text(function(d){ return d.props.name; })
+            .call(adjustText);
+
+        // console.log(texts);
 
       };
 
