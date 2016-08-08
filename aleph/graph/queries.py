@@ -1,7 +1,7 @@
 import logging
 
 from aleph import authz
-from aleph.graph.schema import NodeType
+from aleph.graph.schema import NodeType, EdgeType
 
 log = logging.getLogger(__name__)
 
@@ -26,6 +26,9 @@ class GraphQuery(object):
         except:
             return 0
 
+    def ignore(self):
+        return self.data.getlist('ignore')
+
     def _as_json(self, results):
         """Helper to make query responses more uniform."""
         return {
@@ -34,6 +37,9 @@ class GraphQuery(object):
             'offset': self.offset,
             'results': results
         }
+
+    def to_dict(self):
+        return self._as_json(self.execute())
 
 
 class NodeQuery(GraphQuery):
@@ -56,9 +62,6 @@ class NodeQuery(GraphQuery):
             if coll in acl:
                 collections.append(coll)
         return collections or acl
-
-    def ignore(self):
-        return self.data.getlist('ignore')
 
     def query(self):
         args = {
@@ -98,11 +101,47 @@ class NodeQuery(GraphQuery):
             nodes.append(node)
         return nodes
 
-    def to_dict(self):
-        return self._as_json(self.execute())
-
 
 class EdgeQuery(GraphQuery):
 
-    def to_dict(self):
-        return self._as_json([], [])
+    def collection_id(self):
+        acl = authz.collections(authz.READ)
+        collections = []
+        for coll in self.data.getlist('collection_id'):
+            coll = int(coll)
+            if coll in acl:
+                collections.append(coll)
+        return collections or acl
+
+    def query(self):
+        args = {
+            'acl': authz.collections(authz.READ),
+            'limit': self.limit,
+            'offset': self.offset,
+            'ignore': self.ignore(),
+            'collection_id': self.collection_id()
+        }
+        filters = []
+        filters.append('sourcecoll.alephCollection IN {collection_id}')
+        filters.append('targetcoll.alephCollection IN {collection_id}')
+        if len(args['ignore']):
+            filters.append('NOT (rel.id IN {ignore})')
+
+        q = "MATCH (source)-[rel]-(target) " \
+            "MATCH (source)-[:PART_OF]->(sourcecoll:Collection) " \
+            "MATCH (target)-[:PART_OF]->(targetcoll:Collection) " \
+            "WHERE %s " \
+            "RETURN source.id AS source, rel, target.id AS target " \
+            "SKIP {offset} LIMIT {limit} "
+        q = q % ' AND '.join(filters)
+        return q, args
+
+    def execute(self):
+        query, args = self.query()
+        edges = []
+        for row in self.graph.run(query, **args):
+            data = EdgeType.dict(row.get('rel'))
+            data['$source'] = row.get('source')
+            data['$target'] = row.get('target')
+            edges.append(data)
+        return edges

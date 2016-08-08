@@ -42,6 +42,7 @@ class EdgeType(GraphType):
     @classmethod
     def dict(cls, rel):
         data = dict(rel)
+        data['$type'] = rel.type()
         return data
 
 
