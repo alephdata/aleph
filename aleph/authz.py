@@ -47,10 +47,12 @@ def collections(action):
 
 
 def collection_read(coll):
+    """Check if a given collection can be read."""
     return int(coll) in collections(READ)
 
 
 def collection_write(coll):
+    """Check if a given collection can be written."""
     return int(coll) in collections(WRITE)
 
 
@@ -62,6 +64,28 @@ def collection_public(coll):
 
 def collections_public(colls):
     return True in [collection_public(c) for c in colls]
+
+
+def collections_intersect(action, colls, default_all=True):
+    """Intersect the given and the available set of collections.
+
+    This will return all available collections if the given set is empty
+    and the ``default_all`` argument is ``True``.
+    """
+    available = collections(action)
+    intersect = set()
+    for collection_id in colls:
+        try:
+            if isinstance(collection_id, dict):
+                collection_id = collection_id.get('id')
+            collection_id = int(collection_id)
+            if collection_id in available:
+                intersect.add(collection_id)
+        except:
+            pass
+    if not len(intersect) and default_all:
+        return available
+    return list(intersect)
 
 
 def logged_in():

@@ -43,6 +43,7 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
           }
         }
         var node = new Node(self, data);
+        self.completeNode(node);
         self.nodes.push(node);
         self.update();
         return node;
@@ -50,7 +51,28 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
 
       self.getNodeIds = function() {
         return self.nodes.map(function(n) { return n.id; });
-      }
+      };
+
+      self.getEdgeIds = function() {
+        return self.edges.map(function(e) { return e.id; });
+      };
+
+      self.completeNode = function(node) {
+        var nodeIds = self.getNodeIds();
+        if (nodeIds.length < 2) {
+          return;
+        }
+        var params = {
+          ignore: self.getEdgeIds(),
+          source_id: [node.id],
+          target_id: nodeIds,
+          directed: false,
+          limit: 500
+        };
+        $http.post('/api/1/graph/edges', params).then(function(res) {
+          console.log(res.data.results);
+        });
+      };
 
       self.fromJSON = function(scene) {
         self.collection_id = scene.collection_id;

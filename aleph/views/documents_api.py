@@ -21,13 +21,8 @@ blueprint = Blueprint('documents_api', __name__)
 
 @blueprint.route('/api/1/documents', methods=['GET'])
 def index():
-    try:
-        authorized = authz.collections(authz.READ)
-        collection_ids = [int(f) for f in request.args.getlist('collection')]
-        collection_ids = collection_ids or authorized
-        collection_ids = [c for c in collection_ids if c in authorized]
-    except ValueError:
-        raise BadRequest()
+    collection_ids = request.args.getlist('collection')
+    collection_ids = authz.collections_intersect(authz.READ, collection_ids)
     q = Document.all()
     clause = Collection.id.in_(collection_ids)
     q = q.filter(Document.collections.any(clause))

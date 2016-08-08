@@ -4,15 +4,20 @@ aleph.directive('scenePanel', ['$http', function($http) {
     require: '^sceneWorkspace',
     templateUrl: 'templates/scene_panel.html',
     link: function (scope, element, attrs, ctrl) {
-      scope.search = {'text': ''};
+      scope.search = {
+        'text': '',
+        'collectionFilter': true
+      };
 
       scope.searchNodes = function() {
         var params = {
-          collection_id: ctrl.collection_id,
           ignore: ctrl.getNodeIds(),
-          limit: 10
+          limit: 10,
+          text: scope.search.text
         };
-        params = angular.extend(params, scope.search);
+        if (scope.search.collectionFilter) {
+          params.collection_id = ctrl.collection_id;
+        }
         $http.post('/api/1/graph/nodes', params).then(function(res) {
           scope.suggestedNodes = res.data.results;
         });  

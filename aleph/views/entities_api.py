@@ -45,14 +45,12 @@ def index():
 
 @blueprint.route('/api/1/entities/_all', methods=['GET'])
 def all():
-    collections = authz.collections(authz.READ)
-    if len(request.args.getlist('collection_id')):
-        colls = [int(c) for c in request.args.getlist('collection_id')]
-        collections = [c for c in colls if c in collections]
+    collection_id = request.args.getlist('collection_id')
+    collection_id = authz.collections_intersect(authz.READ, collection_id)
     q = Entity.all_ids()
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
     q = q.filter(Entity.deleted_at == None)  # noqa
-    clause = Collection.id.in_(collections)
+    clause = Collection.id.in_(collection_id)
     q = q.filter(Entity.collections.any(clause))
     return jsonify({'results': [r[0] for r in q]})
 

@@ -29,6 +29,13 @@ class GraphQuery(object):
     def ignore(self):
         return self.data.getlist('ignore')
 
+    def _bool(self, name, default=False):
+        """Fetch a query argument, as a boolean."""
+        v = unicode(self.data.get(name, '')).strip().lower()
+        if not len(v):
+            return default
+        return v in ['true', '1', 'yes', 'y', 't']
+
     def _as_json(self, results):
         """Helper to make query responses more uniform."""
         return {
@@ -55,13 +62,8 @@ class NodeQuery(GraphQuery):
         return text
 
     def collection_id(self):
-        acl = authz.collections(authz.READ)
-        collections = []
-        for coll in self.data.getlist('collection_id'):
-            coll = int(coll)
-            if coll in acl:
-                collections.append(coll)
-        return collections or acl
+        collection_id = self.data.getlist('collection_id')
+        return authz.collections_intersect(authz.READ, collection_id)
 
     def query(self):
         args = {
@@ -104,14 +106,29 @@ class NodeQuery(GraphQuery):
 
 class EdgeQuery(GraphQuery):
 
-    def collection_id(self):
-        acl = authz.collections(authz.READ)
-        collections = []
-        for coll in self.data.getlist('collection_id'):
-            coll = int(coll)
-            if coll in acl:
-                collections.append(coll)
-        return collections or acl
+    def source_collection_id(self):
+        collection_id = self.data.getlist('source_collection_id')
+        if not len(collection_id):
+            collection_id = self.data.getlist('collection_id')
+        return authz.collections_intersect(authz.READ, collection_id)
+
+    def target_collection_id(self):
+        collection_id = self.data.getlist('target_collection_id')
+        if not len(collection_id):
+            collection_id = self.data.getlist('collection_id')
+        return authz.collections_intersect(authz.READ, collection_id)
+
+    def source_id(self):
+        node_id = self.data.getlist('source_id')
+        if not len(node_id):
+            node_id = self.data.getlist('node_id')
+        return node_id
+
+    def target_id(self):
+        node_id = self.data.getlist('target_id')
+        if not len(node_id):
+            node_id = self.data.getlist('node_id')
+        return node_id
 
     def query(self):
         args = {
@@ -119,21 +136,30 @@ class EdgeQuery(GraphQuery):
             'limit': self.limit,
             'offset': self.offset,
             'ignore': self.ignore(),
-            'collection_id': self.collection_id()
+            'source_collection_id': self.source_collection_id(),
+            'target_collection_id': self.target_collection_id(),
+            'source_id': self.source_id(),
+            'target_id': self.target_id()
         }
+        directed = '>' if self._bool('directed') else ''
         filters = []
-        filters.append('sourcecoll.alephCollection IN {collection_id}')
-        filters.append('targetcoll.alephCollection IN {collection_id}')
+        filters.append('sourcecoll.alephCollection IN {source_collection_id}')
+        filters.append('targetcoll.alephCollection IN {target_collection_id}')
         if len(args['ignore']):
             filters.append('NOT (rel.id IN {ignore})')
+        if len(args['source_id']):
+            filters.append('source.id IN {source_id}')
+        if len(args['target_id']):
+            filters.append('target.id IN {target_id}')
 
-        q = "MATCH (source)-[rel]-(target) " \
+        q = "MATCH (source)-[rel]-%s(target) " \
             "MATCH (source)-[:PART_OF]->(sourcecoll:Collection) " \
             "MATCH (target)-[:PART_OF]->(targetcoll:Collection) " \
             "WHERE %s " \
             "RETURN source.id AS source, rel, target.id AS target " \
             "SKIP {offset} LIMIT {limit} "
-        q = q % ' AND '.join(filters)
+        filters = ' AND '.join(filters)
+        q = q % (directed, filters)
         return q, args
 
     def execute(self):
