@@ -28,9 +28,9 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
   function flush() {
     var dfd = $q.defer();
     indexDfd = null;
-    index().then(function(colls) {
-      // reload stored authz info.
-      Metadata.flush().then(function() {
+    // reload stored authz info.
+    Metadata.flush().then(function() {
+      index().then(function(colls) {
         dfd.resolve(colls);
       })
     });

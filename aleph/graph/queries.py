@@ -156,8 +156,9 @@ class EdgeQuery(GraphQuery):
             "MATCH (source)-[:PART_OF]->(sourcecoll:Collection) " \
             "MATCH (target)-[:PART_OF]->(targetcoll:Collection) " \
             "WHERE %s " \
-            "RETURN source.id AS source, rel, target.id AS target " \
-            "SKIP {offset} LIMIT {limit} "
+            "WITH DISTINCT source, rel, target " \
+            "SKIP {offset} LIMIT {limit} " \
+            "RETURN source AS source, rel, target AS target "
         filters = ' AND '.join(filters)
         q = q % (directed, filters)
         return q, args
@@ -167,7 +168,7 @@ class EdgeQuery(GraphQuery):
         edges = []
         for row in self.graph.run(query, **args):
             data = EdgeType.dict(row.get('rel'))
-            data['$source'] = row.get('source')
-            data['$target'] = row.get('target')
+            data['$source'] = NodeType.dict(row.get('source'))
+            data['$target'] = NodeType.dict(row.get('target'))
             edges.append(data)
         return edges
