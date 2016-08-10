@@ -30,9 +30,11 @@ def transaction():
     if graph is None:
         yield None
     else:
-        tx = graph.begin()
-        yield tx
-        tx.commit()
+        # this produces deadlocks en masse:
+        # tx = graph.begin()
+        # yield tx
+        # tx.commit()
+        yield graph
 
 
 def test():
