@@ -23,6 +23,21 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
     };
   };
 
+  var Edge = function(scene, edge, source, target) {
+    // An edge represents a connection between two nodes. It is
+    // directed.
+    var self = this;
+    self.scene = scene;
+    self.data = edge;
+    self.source = source;
+    self.target = target;
+    self.id = edge.id;
+
+    self.toJSON = function() {
+      return {id: self.id};
+    };
+  };
+
   return {
     restrict: 'E',
     scope: {
@@ -49,6 +64,22 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
         return node;
       };
 
+      self.addEdge = function(data) {
+        for (var i in self.edges) {
+          var edge = self.edges[i];
+          if (data.id == edge.id) {
+            return edge;
+          }
+        }
+        var edge = new Edge(self, data,
+                            self.addNode(data.$source),
+                            self.addNode(data.$target));
+        self.edges.push(edge);
+        // console.log('edge', data);
+        self.update();
+        return edge;
+      };
+
       self.getNodeIds = function() {
         return self.nodes.map(function(n) { return n.id; });
       };
@@ -70,7 +101,11 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
           limit: 500
         };
         $http.post('/api/1/graph/edges', params).then(function(res) {
-          console.log(res.data.results);
+          for (var i in res.data.results) {
+            var edge = res.data.results[i];
+            self.addEdge(edge);
+          }
+          self.update();
         });
       };
 

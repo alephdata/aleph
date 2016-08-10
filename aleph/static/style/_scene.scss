@@ -21,6 +21,11 @@
             }
         }
 
+        .edge {
+            stroke: green;
+            stroke-width: 2px;
+        }
+
         .dragging {
             fill: red;
         }

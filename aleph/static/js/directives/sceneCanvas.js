@@ -42,7 +42,16 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       node.x = self.nodeX(node);
       node.y = self.nodeY(node);
       return 'translate(' + [node.x, node.y] + ')';
-    }
+    };
+
+    self.edgePath = function(edge) {
+      // var source = [self.nodeX(edge.source), self.nodeY(edge.source)],
+      //     target = [self.nodeX(edge.target), self.nodeY(edge.target)];
+      var source = [edge.source.x, edge.source.y],
+          target = [edge.target.x, edge.target.y];
+      // TODO: make this way fancy.
+      return 'M' + source + 'L' + target;
+    };
 
     self.pixelToUnit = function(px) {
       return Math.round(px / self.unit);
@@ -114,6 +123,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
           svg = frame.append("svg"),
           grid = new SceneGrid(ctrl),
           container = svg.append("g"),
+          edgeContainer = container.append("g")
           nodeContainer = container.append("g");
 
       var zoom = d3.zoom()
@@ -128,7 +138,6 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             height = d3.select("body").node().getBoundingClientRect().height * 0.7;
         svg.attr("width", width)
            .attr("height", height);
-        drawNodes();
         return {width: width, height: height};
       };
 
@@ -172,6 +181,18 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             .attr("font-size", grid.fontSize)
             .text(function(d){ return d.name; })
             .call(adjustText);
+
+        nodes.exit().remove();
+      };
+
+      function drawEdges() {
+        var edges = edgeContainer.selectAll(".edge")
+            .data(ctrl.edges, function(e) { return e.id; })
+            .attr("d", grid.edgePath)
+          .enter().append("path")
+            .attr("class", "edge");
+
+        edges.exit().remove();
       };
 
       function zoomed() {
@@ -186,17 +207,20 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
           node.x += d3.event.dx;
           node.y += d3.event.dy;
           element.attr('transform', 'translate(' + [node.x, node.y] + ')');
+          drawEdges();
         }
 
         function ended(node) {
           element.classed("dragging", false);
           grid.snapToGrid(node);
           element.attr('transform', grid.nodeTranslate(node));
+          drawEdges();
         }
       }
 
       var unsubscribe = scope.$on('updateScene', function(e) {
         drawNodes();
+        drawEdges();
       });
 
       scope.$on('$destroy', unsubscribe);
@@ -207,6 +231,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         svg.call(zoom);
         zoom.translateBy(svg, (size.width/2), (size.height/2));
         drawNodes();
+        drawEdges();
       }
       
       init();
