@@ -54,8 +54,6 @@ class Ingestor(object):
 
     @classmethod
     def handle_exception(cls, meta, collection_id, exception):
-        db.session.rollback()
-        db.session.close()
         if isinstance(exception, SQLAlchemyError):
             log.exception(exception)
             return
@@ -67,12 +65,17 @@ class Ingestor(object):
         else:
             error_message = unicode(exception)
         error_type = exception.__class__.__name__
-        log.info(error_message)
-        CrawlerState.store_fail(meta, collection_id,
-                                error_type=error_type,
-                                error_message=error_message,
-                                error_details=error_details)
-        db.session.commit()
+        log.warn('Error [%r]: %s', error_type, error_message)
+        try:
+            db.session.rollback()
+            db.session.close()
+            CrawlerState.store_fail(meta, collection_id,
+                                    error_type=error_type,
+                                    error_message=error_message,
+                                    error_details=error_details)
+            db.session.commit()
+        except Exception as ex:
+            log.error("Error storing crawler exception: %r", ex)
 
     @classmethod
     def match(cls, meta, local_path):
