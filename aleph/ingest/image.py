@@ -45,7 +45,7 @@ class ImageIngestor(TextIngestor):
             if not self.check_image_size(meta, local_path):
                 return
             convert = get_config('CONVERT_BIN')
-            args = [convert, local_path, '-density', '300', '-define',
+            args = [convert, local_path, '-density', '450', '-define',
                     'pdf:fit-page=A4', pdf_path]
             subprocess.call(args)
             if not os.path.isfile(pdf_path):

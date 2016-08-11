@@ -95,3 +95,8 @@ def ingest_file(collection_id, meta, file_path, move=False):
 def ingest(collection_id, metadata):
     meta = Metadata.from_data(metadata)
     Ingestor.dispatch(collection_id, meta)
+
+
+def reingest_collection(collection):
+    for document in collection.documents:
+        ingest.delay(collection.id, document.meta.to_attr_dict())

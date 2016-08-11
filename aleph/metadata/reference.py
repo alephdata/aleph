@@ -43,6 +43,7 @@ def get_languages_iso3(codes):
                 continue
         supported.append(lang)
 
+    # if not len(supported):
     supported.append('eng')
     return '+'.join(sorted(set(supported)))
 

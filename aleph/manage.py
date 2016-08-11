@@ -11,6 +11,7 @@ from aleph.model import db, upgrade_db, Collection, Document
 from aleph.views import mount_app_blueprints, assets
 from aleph.analyze import analyze_collection, install_analyzers
 from aleph.alerts import check_alerts
+from aleph.ingest import reingest_collection
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document_id
 from aleph.logic import reindex_entities, delete_collection
@@ -109,6 +110,15 @@ def analyze(foreign_id=None):
     else:
         for collection in Collection.all():
             analyze_collection.delay(collection.id)
+
+
+@manager.command
+def reingest(foreign_id):
+    """Re-ingest documents in the given collection."""
+    collection = Collection.by_foreign_id(foreign_id)
+    if collection is None:
+        raise ValueError("No such collection: %r" % foreign_id)
+    reingest_collection(collection)
 
 
 @manager.command
