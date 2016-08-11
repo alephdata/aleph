@@ -1,6 +1,6 @@
 from apikit import request_data
 
-from aleph.core import db, celery
+from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import EventLog
 
 
@@ -19,8 +19,9 @@ def log_event(request, role_id=None, **data):
         query = request.args.to_dict(flat=False)
     else:
         query = request_data()
-    save_event.delay(request.endpoint, path, source_ip,
-                     query, data, role_id)
+    args = [request.endpoint, path, source_ip, query, data, role_id]
+    save_event.apply_async(args, queue=USER_QUEUE,
+                           routing_key=USER_ROUTING_KEY)
 
 
 @celery.task()

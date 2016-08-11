@@ -5,7 +5,7 @@ import logging
 from collections import defaultdict
 
 from aleph import graph
-from aleph.core import db, celery
+from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.text import normalize_strong
 from aleph.model import Entity, Reference, Document, Alert
 from aleph.index import index_entity
@@ -65,7 +65,8 @@ def update_entity(entity):
     reindex_entity(entity, references=False)
     with graph.transaction() as tx:
         graph.load_entity(tx, entity)
-    update_entity_full.delay(entity.id)
+    update_entity_full.apply_async([entity.id], queue=USER_QUEUE,
+                                   routing_key=USER_ROUTING_KEY)
 
 
 def delete_entity(entity, deleted_at=None):

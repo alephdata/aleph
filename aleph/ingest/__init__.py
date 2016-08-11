@@ -3,6 +3,7 @@ import logging
 import requests
 
 from aleph.core import db, get_archive, celery
+from aleph.core import WORKER_QUEUE, WORKER_ROUTING_KEY
 from aleph.text import string_value
 from aleph.ext import get_ingestors
 from aleph.metadata import Metadata
@@ -77,14 +78,18 @@ def ingest_directory(collection_id, meta, local_path, base_path=None,
                          base_path=entry_base, move=move)
 
 
-def ingest_file(collection_id, meta, file_path, move=False):
+def ingest_file(collection_id, meta, file_path, move=False,
+                queue=WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY):
+    # the queue and routing key arguments are a workaround to 
+    # expedite user uploads over long-running batch imports.
     try:
         if not os.path.isfile(file_path):
             raise IngestorException("No such file: %r", file_path)
         if not meta.has('source_path'):
             meta.source_path = file_path
         meta = get_archive().archive_file(file_path, meta, move=move)
-        ingest.delay(collection_id, meta.to_attr_dict())
+        ingest.apply_async([collection_id, meta.to_attr_dict()],
+                           queue=queue, routing_key=routing_key)
     except Exception as ex:
         Ingestor.handle_exception(meta, collection_id, ex)
     finally:

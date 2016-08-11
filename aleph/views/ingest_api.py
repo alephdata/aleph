@@ -6,6 +6,7 @@ from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify
 
 from aleph import authz
+from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.events import log_event
 from aleph.metadata import Metadata
 from aleph.ingest import ingest_file
@@ -40,6 +41,7 @@ def ingest_upload(collection_id):
         sec_fn = os.path.join(get_upload_folder(),
                               secure_filename(storage.filename))
         storage.save(sec_fn)
-        ingest_file(collection.id, file_meta, sec_fn, move=True)
+        ingest_file(collection.id, file_meta, sec_fn, move=True,
+                    queue=USER_QUEUE, routing_key=USER_ROUTING_KEY)
         metas.append(file_meta)
     return jsonify({'status': 'ok', 'metadata': metas})

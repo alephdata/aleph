@@ -9,7 +9,7 @@ from flask_assets import Environment
 from flask_migrate import Migrate
 from flask_oauthlib.client import OAuth
 from flask_mail import Mail
-from kombu import Exchange, Queue
+from kombu import Queue
 from celery import Celery
 from py2neo import Graph
 from elasticsearch import Elasticsearch
@@ -26,6 +26,15 @@ celery = Celery('aleph')
 assets = Environment()
 oauth = OAuth()
 oauth_provider = oauth.remote_app('provider', app_key='OAUTH')
+
+# these two queues are used so that background processing tasks
+# spawned by the user can be handled more quickly through a
+# separate worker daemon and don't get boxed in behind very
+# large bulk imports. see: https://github.com/pudo/aleph/issues/44
+USER_QUEUE = 'user'
+USER_ROUTING_KEY = 'user.process'
+WORKER_QUEUE = 'worker'
+WORKER_ROUTING_KEY = 'worker.process'
 
 
 def create_app(config={}):
@@ -53,10 +62,11 @@ def create_app(config={}):
     if 'postgres' not in app.config.get('SQLALCHEMY_DATABASE_URI', ''):
         raise RuntimeError("aleph database must be PostgreSQL!")
 
-    queue_name = app_name + '_q'
-    app.config['CELERY_DEFAULT_QUEUE'] = queue_name
+    app.config['CELERY_DEFAULT_QUEUE'] = WORKER_QUEUE
+    app.config['CELERY_DEFAULT_ROUTING_KEY'] = WORKER_ROUTING_KEY
     app.config['CELERY_QUEUES'] = (
-        Queue(queue_name, Exchange(queue_name), routing_key=queue_name),
+        Queue(WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY),
+        Queue(USER_QUEUE, routing_key=USER_ROUTING_KEY),
     )
     celery.conf.update(app.config)
     celery.conf.update({

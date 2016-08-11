@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, Pager, request_data
 
 from aleph import authz
+from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Collection, db
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
@@ -79,6 +80,7 @@ def pending(id):
 def delete(id):
     collection = obj_or_404(Collection.by_id(id))
     authz.require(authz.collection_write(id))
-    delete_collection.delay(collection.id)
+    delete_collection.apply_async([collection.id], queue=USER_QUEUE,
+                                  routing_key=USER_ROUTING_KEY)
     log_event(request)
     return jsonify({'status': 'ok'})
