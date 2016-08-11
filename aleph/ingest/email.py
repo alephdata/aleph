@@ -1,6 +1,7 @@
 import os
 import logging
 import rfc822
+import mailbox
 import subprocess
 from time import mktime
 from datetime import datetime
@@ -79,7 +80,9 @@ class EmailFileIngestor(TextIngestor):
 
     def ingest(self, meta, local_path):
         with open(local_path, 'rb') as emlfh:
-            data = emlfh.read()
+            self.ingest_message_data(meta, emlfh.read())
+
+    def ingest_message_data(self, meta, data):
         msg = mime.from_string(data)
         meta = self.parse_headers(msg, meta)
 
@@ -103,13 +106,28 @@ class EmailFileIngestor(TextIngestor):
         try:
             if 'html' in body_type:
                 out_path = self.write_temp(body_part, 'htm')
-                ing = HtmlIngestor(self.source_id)
+                ing = HtmlIngestor(self.collection_id)
             else:
                 out_path = self.write_temp(body_part, 'txt')
-                ing = DocumentIngestor(self.source_id)
+                ing = DocumentIngestor(self.collection_id)
             ing.ingest(meta, out_path)
         finally:
             remove_tempfile(out_path)
+
+
+class MboxFileIngestor(EmailFileIngestor):
+    MIME_TYPES = ['application/mbox']
+    EXTENSIONS = ['mbox']
+    BASE_SCORE = 6
+
+    def ingest(self, meta, local_path):
+        mbox = mailbox.mbox(local_path)
+        for msg in mbox:
+            try:
+                self.ingest_message_data(meta.clone(),
+                                         msg.as_string())
+            except Exception as ex:
+                log.exception(ex)
 
 
 class OutlookIngestor(TextIngestor):
@@ -132,7 +150,7 @@ class OutlookIngestor(TextIngestor):
                         child.add_keyword(kw)
                     child.foreign_id = os.path.join(meta.foreign_id, reldir,
                                                     filename)
-                    ingest_file(self.source_id, meta,
+                    ingest_file(self.collection_id, meta,
                                 os.path.join(dirpath, filename), move=True)
         finally:
             remove_tempdir(work_dir)
