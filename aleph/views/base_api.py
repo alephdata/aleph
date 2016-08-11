@@ -38,7 +38,7 @@ def angular_templates():
 @blueprint.route('/entities')
 @blueprint.route('/entities/<path:path>')
 @blueprint.route('/crawlers')
-@blueprint.route('/crawlers/logs')
+@blueprint.route('/crawlers/<path:path>')
 @blueprint.route('/collections')
 @blueprint.route('/collections/<path:path>')
 @blueprint.route('/tabular/<path:path>')

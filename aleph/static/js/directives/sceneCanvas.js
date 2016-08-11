@@ -1,8 +1,101 @@
 aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
 
+  var SceneGridPoint = function(x, y) {
+    var self = this;
+    self.x = x;
+    self.y = y;
+
+    self.distance = function(target) {
+      return Math.sqrt(Math.pow(target.x - self.x, 2) + Math.pow(target.y - self.y, 2));
+    };
+
+    self.is = function(point) {
+      return self.x == point.x && self.y == point.y;
+    };
+
+    self.inArray = function(points) {
+      for (var i in points) {
+        if (self.is(points[i])) {
+          return true;
+        }
+      }
+      return false;
+    };
+  } 
+
+  var SceneGridRouter = function(nodeMatrix, source, target) {
+    var self = this
+        // moveOptions = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+        moveOptions = [[1, 0], [1, 1], [0, 1], [-1, 0], [0, -1], [-1, -1], [-1, 1], [1, -1]],
+        deadPoints = [];
+    self.sourcePt = new SceneGridPoint(source.gridX, source.gridY);
+    self.targetPt = new SceneGridPoint(target.gridX, target.gridY);
+
+    self.getPenalty = function(point) {
+      // apply penalties to points that overlap with nodes.
+      var nodes = nodeMatrix[point.x];
+      if (nodes) {
+        var nodeId = nodes[point.y];
+        if (nodeId) {
+          if (nodeId != source.id && nodeId != target.id) {
+            return 100;
+          }
+          return 2;
+        }
+      }
+      return 1;
+    };
+
+    self.followPath = function(path) {
+      var lastPoint = path[path.length - 1];
+      while (true) {
+        var bestDistance = Infinity,
+            bestOption = null;
+        for (var o in moveOptions) {
+          // this tries out all the possible move options, i.e. up down left right
+          // each one is assigned a cost based on whether the next step is inside a
+          // node, or a "course change".
+          var opt = moveOptions[o],
+              nextPoint = new SceneGridPoint(lastPoint.x + opt[0], lastPoint.y + opt[1]),
+              nextDistance = nextPoint.distance(self.targetPt) * self.getPenalty(nextPoint);
+          if (nextPoint.is(self.targetPt)) {
+            return path;
+          }
+          // if (path.length > 1) {
+          //   var prevPoint = path[path.length - 2];
+          //   if (prevPoint.x != nextPoint.x && prevPoint.y != nextPoint.y) {
+          //     nextDistance += 0.8;
+          //   }
+          // }
+          if (nextDistance < bestDistance) {
+            // check if the point has been excluded from further path-finding.
+            // check if the given point is already on the path.
+            if (!nextPoint.inArray(deadPoints)) {
+              bestOption = nextPoint;
+              bestDistance = nextDistance;
+            }
+          }
+        };
+        if (bestOption == null || bestOption.inArray(path)) {
+          deadPoints.push(lastPoint);
+          return null;
+        }
+        var nextPath = self.followPath(path.concat([bestOption]));
+        if (nextPath != null) {
+          return nextPath;
+        }
+      }
+    };
+
+    self.path = function() {
+      return self.followPath([self.sourcePt]);
+    };
+  };
+
   var SceneGrid = function(scene) {
     var self = this;
     self.scene = scene;
+    self.edgePaths = {};
     self.unit = 20;
     self.nodeWidthUnits = 5;
     self.nodeHeightUnits = 2;
@@ -44,15 +137,6 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       return 'translate(' + [node.x, node.y] + ')';
     };
 
-    self.edgePath = function(edge) {
-      // var source = [self.nodeX(edge.source), self.nodeY(edge.source)],
-      //     target = [self.nodeX(edge.target), self.nodeY(edge.target)];
-      var source = [edge.source.x, edge.source.y],
-          target = [edge.target.x, edge.target.y];
-      // TODO: make this way fancy.
-      return 'M' + source + 'L' + target;
-    };
-
     self.pixelToUnit = function(px) {
       return Math.round(px / self.unit);
     };
@@ -68,6 +152,8 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
           options = [[1, 0], [1, 1], [0, 1], [-1, 0],
                      [0, -1], [-1, -1], [-1, 1], [1, -1]];
       if (!self.hasOverlap(node)) {
+        node.gridX = node.gridX || 0;
+        node.gridY = node.gridY || 0;
         return node;
       }
       while (true) {
@@ -111,6 +197,48 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         }
       }
       return false;
+    };
+
+    self.computePaths = function() {
+      // var matrix = self.getGridMatrix();
+
+      // for (var i in self.scene.edges) {
+      //   var edge = self.scene.edges[i],
+      //       route = new SceneGridRouter(matrix, edge.source, edge.target)
+      //   self.edgePaths[edge.id] = route.path();
+      // }
+    };
+
+    self.edgePath = function(edge) {
+      var source = [edge.source.x, edge.source.y],
+          target = [edge.target.x, edge.target.y];
+      return 'M' + source + 'L' + target;
+      // TODO: make this way fancy.
+      // var path = self.edgePaths[edge.id].map(function(n) {
+      //   return [n.x * self.unit, n.y * self.unit];
+      // });
+      // return 'M' + path.join('L');
+    };
+
+    self.getGridMatrix = function() {
+      var matrix = {};
+      for (var i in self.scene.nodes) {
+        var box = self.getNodeBox(self.scene.nodes[i]);
+        // todo: make a version that emits units.
+        box.left = self.pixelToUnit(box.left);
+        box.right = self.pixelToUnit(box.right);
+        box.top = self.pixelToUnit(box.top);
+        box.bottom = self.pixelToUnit(box.bottom);
+        for (var col = box.left; col <= box.right; col++) {
+          if (!matrix[col]) {
+             matrix[col] = {};
+          }
+          for (var row = box.top; row <= box.bottom; row++) {
+            matrix[col][row] = self.scene.nodes[i].id;
+          }
+        }
+      }
+      return matrix;
     };
   };
 
@@ -186,6 +314,8 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       };
 
       function drawEdges() {
+        grid.computePaths();
+
         var edges = edgeContainer.selectAll(".edge")
             .data(ctrl.edges, function(e) { return e.id; })
             .attr("d", grid.edgePath)
@@ -207,7 +337,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
           node.x += d3.event.dx;
           node.y += d3.event.dy;
           element.attr('transform', 'translate(' + [node.x, node.y] + ')');
-          drawEdges();
+          // drawEdges();
         }
 
         function ended(node) {
