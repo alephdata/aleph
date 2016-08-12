@@ -63,6 +63,7 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     var entity = angular.copy($scope.entity);
     entity.state = 'active';
     $http.post('/api/1/entities/' + entity.id, entity);
+    collection.entity_count++;
     triggerDone();
   };
 

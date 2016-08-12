@@ -30,7 +30,8 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       }
       state['offset'] = state.offset || 0;
       History.setLastSearch($location.path(), query.state);
-      $http.get('/api/1/query', {cache: true, params: state}).then(function(res) {
+      var params = {cache: !collection_id, params: state};
+      $http.get('/api/1/query', params).then(function(res) {
         dfd.resolve({
           'query': query,
           'result': res.data

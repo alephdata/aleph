@@ -53,7 +53,7 @@
         <a ng-href="/collections/{{::collection.id}}/entities">
           <i class="fa fa-users" aria-hidden="true"></i>
           People and Companies
-          <span class="badge">{{::collection.entity_count | number}}</span>
+          <span class="badge">{{collection.entity_count | number}}</span>
         </a>
       </li>
       <li role="presentation" ng-if="is_admin"
