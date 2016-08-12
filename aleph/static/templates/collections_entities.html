@@ -51,10 +51,10 @@
             <th></th>
             <th colspan="6">
               <div class="btn-group">
-                <a ng-click="deleteSelection($event)" class="btn btn-default btn-xs"
-                  ng-disabled="!canDelete()">
+                <a ng-click="removeSelection($event)" class="btn btn-default btn-xs"
+                  ng-disabled="!canRemove()">
                   <i class="fa fa-trash" aria-hidden="true"></i>
-                  Delete entities
+                  Remove entities
                 </a>
                 <a ng-click="mergeSelection($event)" class="btn btn-default btn-xs"
                   ng-disabled="!canMerge()">

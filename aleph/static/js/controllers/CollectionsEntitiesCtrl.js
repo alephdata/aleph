@@ -55,7 +55,7 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
     return selection;
   };
 
-  $scope.canDelete = function() {
+  $scope.canRemove = function() {
     return $scope.getSelection().length > 0;
   };
 
@@ -63,8 +63,34 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
     return $scope.getSelection().length > 1;
   };
 
-  $scope.deleteSelection = function($event) {
-    Entity.deleteMany($scope.getSelection()).then(function() {
+  $scope.removeSelection = function($event) {
+    // this has two distinct functions: delete entities which 
+    // are exclusive to this collection, and otherwise remove
+    // the entity from the current collection.
+    var entities = $scope.getSelection(),
+        toDelete = [];
+    for (var i in entities) {
+      var entity = entities[i];
+      if (entity.collection_id.length == 1) {
+        toDelete.push(entity);
+      } else {
+        // this entity is in other collections, just remove
+        // the current one.
+        Entity.get(entity.id).then(function(entity) {
+          // reloading. not entirely sure this is needed, but we
+          // don't want to save stale entities.
+          var collIdx = entity.collection_id.indexOf(collection.id);
+          entity.collection_id.splice(collIdx, 1);
+          Entity.save(entity).then(function() {
+            $timeout(function() {
+              reloadSearch();
+            }, 500);
+          });
+        });
+      }
+    }
+
+    Entity.deleteMany(toDelete).then(function() {
       $timeout(function() {
         reloadSearch();
       }, 500);

@@ -70,7 +70,22 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
       });
       return instance.result;
     },
+    save: function(entity) {
+      var dfd = $q.defer(),
+          url = '/api/1/entities/' + entity.id;
+      $http.post(url, entity).then(function(res) {
+        dfd.resolve(res.data);
+      }, function(err) {
+        dfd.reject(err);
+      });
+      return dfd.promise;
+    },
     deleteMany: function(entities) {
+      if (!entities.length) {
+        var dfd = $q.defer()
+        dfd.resolve();
+        return dfd.promise;
+      }
       var instance = $uibModal.open({
         templateUrl: 'templates/entity_delete.html',
         controller: 'EntitiesDeleteCtrl',

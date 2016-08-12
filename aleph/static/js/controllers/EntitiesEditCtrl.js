@@ -138,9 +138,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
     }
 
     $scope.blocked = true;
-    var url = '/api/1/entities/' + $scope.entity.id;
-    var res = $http.post(url, $scope.entity);
-    res.then(function(res) {
+    Entity.save($scope.entity).then(function(entity) {
       updateAlert().then(function() {
         mergeDuplicates().then(function() {
           $uibModalInstance.close(res.data);
