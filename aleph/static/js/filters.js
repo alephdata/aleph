@@ -4,17 +4,20 @@ aleph.filter('date', function() {
   };
 });
 
+
 aleph.filter('relativeDate', function() {
   return function(val) {
     return moment(val).fromNow();
   };
 });
 
+
 aleph.filter('calendar', function() {
   return function(val) {
     return moment(val).calendar();
   };
 });
+
 
 aleph.filter('host', function() {
   return function(val) {
@@ -23,6 +26,7 @@ aleph.filter('host', function() {
     return l.hostname;
   };
 });
+
 
 aleph.filter('country', ['Metadata', function(Metadata) {
   var countries = {};

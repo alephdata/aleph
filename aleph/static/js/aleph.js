@@ -159,7 +159,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   $locationProvider.html5Mode(true);
   $compileProvider.debugInfoEnabled(false);
   cfpLoadingBarProvider.includeSpinner = false;
-  cfpLoadingBarProvider.latencyThreshold = 100;
+  cfpLoadingBarProvider.latencyThreshold = 200;
 
   uiSelectConfig.theme = 'bootstrap';
 }]);

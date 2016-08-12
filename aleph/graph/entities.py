@@ -70,6 +70,5 @@ def load_entity(tx, entity):
 def remove_entity(tx, entity_id):
     if tx is None:
         return
-    query = "MATCH ()-[r {alephEntity: {id}}]-() DELETE r;"
-    tx.run(query, id=entity_id)
+    tx.run("MATCH ()-[r {alephEntity: {id}}]-() DELETE r;", id=entity_id)
     delete_orphan_nodes(tx)

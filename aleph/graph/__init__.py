@@ -24,6 +24,17 @@ def upgrade_graph():
         node_type.ensure_indices(graph)
 
 
+def graph_metadata():
+    graph = get_graph()
+    if graph is None:
+        return {'active': False}
+    labels = [l for l in graph.node_labels if l != 'Collection']
+    return {
+        'active': True,
+        'labels': labels
+    }
+
+
 @contextmanager
 def transaction():
     graph = get_graph()

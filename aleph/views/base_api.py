@@ -5,8 +5,9 @@ from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
 from elasticsearch import TransportError
 
-from aleph.core import get_config, get_app_title, get_app_url
+from aleph.core import get_config, get_app_title, get_app_url, get_graph
 from aleph.model import Collection
+from aleph.graph import graph_metadata
 from aleph.metadata import Metadata
 from aleph.metadata.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.model.validation import resolver
@@ -54,6 +55,9 @@ def metadata():
     enable_cache(server_side=False)
     schemata = {}
     for schema_id, schema in resolver.store.items():
+        # TODO: figure out if this is reliable.
+        if not schema_id.startswith('/entity/'):
+            continue
         if not schema_id.endswith('#'):
             schema_id = schema_id + '#'
         schemata[schema_id] = {
@@ -71,6 +75,7 @@ def metadata():
             'url': get_app_url(),
             'samples': get_config('SAMPLE_SEARCHES')
         },
+        'graph': graph_metadata(),
         'fields': Metadata.facets(),
         'categories': Collection.CATEGORIES,
         'countries': COUNTRY_NAMES,

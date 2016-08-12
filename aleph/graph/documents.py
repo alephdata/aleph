@@ -64,6 +64,5 @@ def load_document(tx, document):
 def remove_document(tx, document_id):
     if tx is None:
         return
-    query = "MATCH ()-[r {alephDocument: {id}}]-() DELETE r;"
-    tx.run(query, id=document_id)
+    tx.run("MATCH ()-[r {alephDocument: {id}}]-() DELETE r;", id=document_id)
     delete_orphan_nodes(tx)

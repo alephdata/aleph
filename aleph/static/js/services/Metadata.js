@@ -24,13 +24,12 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $roo
         dfd.resolve({
           session: session,
           app: metadata.app,
-          publicRoles: session.public_roles,
           fields: metadata.fields,
           schemata: metadata.schemata,
           categories: metadata.categories,
           countries: metadata.countries, 
           languages: metadata.languages,
-          flush: flush 
+          flush: flush
         });
       });
     };
