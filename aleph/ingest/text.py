@@ -1,6 +1,6 @@
 import logging
 
-from aleph.core import get_archive, get_config
+from aleph.core import get_archive
 from aleph.model import db, Document, DocumentPage
 from aleph.ingest.pdf import extract_pdf
 from aleph.ingest.ingestor import Ingestor
@@ -24,14 +24,8 @@ class TextIngestor(Ingestor):
         db.session.add(page)
         return page
 
-    def get_languages(self, meta):
-        default_languages = [get_config('DEFAULT_LANGUAGE')]
-        languages = meta.languages + default_languages
-        return list(set(languages))
-
     def extract_pdf(self, meta, pdf_path):
-        languages = self.get_languages(meta)
-        data = extract_pdf(pdf_path, languages=languages)
+        data = extract_pdf(pdf_path, languages=meta.languages)
         if not meta.has('author') and data.get('author'):
             meta.author = data.get('author')
 

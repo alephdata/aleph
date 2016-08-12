@@ -17,13 +17,8 @@ for country in countries:
     COUNTRY_NAMES[country.alpha2.lower()] = country.name
 
 
-def get_languages():
-    active = [c.lower().strip() for c in get_config('LANGUAGES')]
-    languages = {}
-    for code, label in LANGUAGE_NAMES.items():
-        if code in active:
-            languages[code] = label
-    return languages
+def get_language_whitelist():
+    return [c.lower().strip() for c in get_config('LANGUAGES')]
 
 
 def get_languages_iso3(codes):
@@ -57,4 +52,4 @@ def is_country_code(code):
 def is_language_code(code):
     if code is None:
         return False
-    return code.lower() in get_languages().keys()
+    return code.lower() in LANGUAGE_NAMES.keys()
