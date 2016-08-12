@@ -49,13 +49,15 @@ def load_document(tx, document):
         add_to_collections(tx, pnode, document.collections,
                            alephDocument=document.id)
 
+    seen = set()
     for reference in document.references:
-        if reference.entity.state != Entity.STATE_ACTIVE:
+        entity = reference.entity
+        if entity.state != Entity.STATE_ACTIVE or entity.id in seen:
             continue
-        enode = load_entity(tx, reference.entity)
+        seen.add(entity.id)
+        enode = load_entity(tx, entity)
         MENTIONS.merge(tx, node, enode, weight=reference.weight,
-                       alephDocument=document.id,
-                       alephEntity=reference.entity_id)
+                       alephDocument=document.id, alephEntity=entity.id)
     return node
 
 
