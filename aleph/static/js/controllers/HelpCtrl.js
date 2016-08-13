@@ -1,4 +1,3 @@
-
 aleph.controller('HelpCtrl', ['$scope', '$location', '$routeParams', '$templateCache', 'Title',
     function($scope, $location, $routeParams, $templateCache, Title) {
 
@@ -15,5 +14,4 @@ aleph.controller('HelpCtrl', ['$scope', '$location', '$routeParams', '$templateC
       return 'active';
     }
   };
-
 }]);

@@ -32,5 +32,4 @@ aleph.controller('DocumentsEditCtrl', ['$scope', '$http', '$q', '$uibModalInstan
       $scope.blocked = false;
     });
   };
-
 }]);

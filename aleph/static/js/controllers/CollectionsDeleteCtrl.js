@@ -10,11 +10,10 @@ aleph.controller('CollectionsDeleteCtrl', ['$scope', '$location', '$q', '$http',
 
   $scope.confirm = function() {
     $scope.blocked = true;
-    $http.delete('/api/1/collections/' + collection.id).then(function(res) {
+    $http.delete(collection.api_url).then(function(res) {
       Collection.flush().then(function(res) {
         $uibModalInstance.close();
       });
     });
   };
-
 }]);

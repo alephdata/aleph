@@ -51,5 +51,4 @@ aleph.controller('IngestFilesCtrl', ['$scope', '$uibModalInstance', 'Upload', 'm
       $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
     });
   };
-
 }]);

@@ -28,5 +28,4 @@ aleph.controller('EntitiesMergeCtrl', ['$scope', '$location', '$q', '$http', '$u
       $uibModalInstance.close($scope.select.primary);
     });
   };
-
 }]);

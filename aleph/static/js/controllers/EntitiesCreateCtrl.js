@@ -50,5 +50,4 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
       });
     });
   };
-
 }]);

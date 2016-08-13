@@ -32,9 +32,7 @@ aleph.directive('collectionsSelect', ['$http', '$q', 'Metadata', 'Collection',
       scope.setCreateCollection = function(flag) {
         scope.createCollection = flag;
         if (flag) {
-          scope.collection = {
-            label: scope.roleName + '\'s Investigation'
-          };
+          scope.collection = {label: scope.roleName + '\'s Collection'};
         } else {
           scope.collection = scope.collections[0];
         }

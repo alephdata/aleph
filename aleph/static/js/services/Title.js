@@ -8,9 +8,9 @@ aleph.factory('Title', ['$rootScope', 'Metadata', function($rootScope, Metadata)
   });
       
   return {
-      set: function(text, navSection) {
-        element.innerHTML = text + ' - ' + appTitle;
-        $rootScope.navSection = navSection;
-      }
+    set: function(text, navSection) {
+      element.innerHTML = text + ' - ' + appTitle;
+      $rootScope.navSection = navSection;
+    }
   };
 }]);

@@ -1,4 +1,3 @@
-
 aleph.controller('SceneEditorCtrl', ['$scope', '$route', '$location', '$http', 'Scene', 'Title', 'metadata', 'collection',
     function($scope, $route, $location, $http, Scene, Title, metadata, collection) {
 

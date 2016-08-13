@@ -1,5 +1,5 @@
-aleph.controller('ProfileCtrl', ['$scope', '$location', '$uibModalInstance', '$http', 'metadata',
-  function($scope, $location, $uibModalInstance, $http, metadata) {
+aleph.controller('ProfileCtrl', ['$scope', '$location', '$uibModalInstance', '$http', 'Metadata', 'metadata',
+    function($scope, $location, $uibModalInstance, $http, Metadata, metadata) {
   $scope.role = metadata.session.role;
   $scope.session = metadata.session;
 
@@ -12,7 +12,7 @@ aleph.controller('ProfileCtrl', ['$scope', '$location', '$uibModalInstance', '$h
     res.success(function(data) {
       $scope.role = data;
       $scope.session.role = data;
-      metadata.flush().then(function() {
+      Metadata.flush().then(function() {
         $uibModalInstance.close($scope.role);
       });
     });

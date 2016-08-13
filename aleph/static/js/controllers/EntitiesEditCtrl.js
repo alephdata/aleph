@@ -146,5 +146,4 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
       });
     });
   };
-
 }]);

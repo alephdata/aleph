@@ -131,5 +131,4 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
   };
 
   updateSearch(data);
-
 }]);

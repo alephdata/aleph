@@ -95,5 +95,4 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
     $scope.reportLoading(true);
     saveNextEntity();
   };
-
 }]);

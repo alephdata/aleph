@@ -75,5 +75,4 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
     });
     res.error(Validation.handle(form));
   };
-
 }]);

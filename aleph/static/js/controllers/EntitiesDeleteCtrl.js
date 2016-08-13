@@ -22,5 +22,4 @@ aleph.controller('EntitiesDeleteCtrl', ['$scope', '$location', '$q', '$http', '$
       $uibModalInstance.close(entities);
     });
   };
-
 }]);

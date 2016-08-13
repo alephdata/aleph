@@ -6,5 +6,4 @@ aleph.controller('CrawlersStateDetailCtrl', ['$scope', '$http', '$uibModalInstan
   $scope.close = function() {
     $uibModalInstance.dismiss('close');
   };
-
 }]);

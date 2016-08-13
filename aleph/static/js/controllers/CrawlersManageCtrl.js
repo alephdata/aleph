@@ -15,5 +15,4 @@ aleph.controller('CrawlersManageCtrl', ['$scope', '$route', '$location', '$http'
     var data = {'crawler_id': crawler.id, 'incremental': incremental};
     $http.post('/api/1/crawlers', data);
   };
-
 }]);

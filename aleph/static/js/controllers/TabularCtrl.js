@@ -1,4 +1,3 @@
-
 aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Authz', 'Title', 'History', 'data',
     function($scope, $location, $http, $sce, $sanitize, $filter, Authz, Title, History, data) {
 
@@ -61,5 +60,4 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
     query.offset = offset;
     $location.search(query);
   };
-
 }]);

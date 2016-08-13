@@ -39,5 +39,4 @@ aleph.controller('CrawlersStatesCtrl', ['$scope', '$location', '$http', '$uibMod
       }
     });
   };
-
 }]);

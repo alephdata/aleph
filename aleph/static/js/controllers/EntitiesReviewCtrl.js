@@ -99,5 +99,4 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
   });
 
   loadNext();
-
 }]);

@@ -27,5 +27,4 @@ aleph.controller('CollectionsCreateCtrl', ['$scope', '$location', '$q', '$http',
       });
     });
   };
-
 }]);

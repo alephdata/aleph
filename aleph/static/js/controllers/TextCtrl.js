@@ -1,4 +1,3 @@
-
 aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'History', 'data', 'pages',
     function($scope, $location, $http, metadata, Authz, Document, Title, History, data, pages) {
 
@@ -65,5 +64,4 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
       $scope.pages = pages;  
     });
   });
-
 }]);

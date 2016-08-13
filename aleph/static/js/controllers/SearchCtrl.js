@@ -1,4 +1,3 @@
-
 aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$anchorScroll', '$http', '$uibModal', 'Collection', 'Entity', 'Authz', 'Alert', 'Document', 'Ingest', 'Role', 'Title', 'data', 'peek', 'alerts', 'metadata',
     function($scope, $route, $location, $timeout, $anchorScroll, $http, $uibModal, Collection, Entity, Authz, Alert, Document, Ingest, Role, Title, data, peek, alerts, metadata) {
 
@@ -78,5 +77,4 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
   };
 
   updateSearch(data);
-
 }]);
