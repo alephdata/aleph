@@ -363,11 +363,12 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
           labelTexts.each(function(labelEdge) {
             if (labelEdge.id == edge.id) {
               var text = d3.select(this).node(), 
-                  box = text.getBBox();
+                  box = text.getBBox(),
+                  width = box.width + 4;
               rect
-                .attr('width', box.width)
+                .attr('width', width)
                 .attr('height', box.height)
-                .attr('transform', 'translate(' + [(box.width / 2) * -1, (box.height / 2) * -1] + ')');
+                .attr('transform', 'translate(' + [(width / 2) * -1, (box.height / 2) * -1] + ')');
             }
           });
         });
