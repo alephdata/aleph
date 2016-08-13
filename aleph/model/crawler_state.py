@@ -97,7 +97,7 @@ class CrawlerState(db.Model):
             if section == 'last':
                 sq = sq.filter(cls.crawler_run == last_run_id)
             okq = sq.filter(cls.status == cls.STATUS_OK)
-            data['ok'] = okq.scalar() if last_run_id else 0
+            data['ok'] = okq.scalar() - 1 if last_run_id else 0
             failq = sq.filter(cls.status == cls.STATUS_FAIL)
             data['fail'] = failq.scalar() if last_run_id else 0
             stats[section] = data
