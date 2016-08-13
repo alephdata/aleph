@@ -1,14 +1,43 @@
-aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$routeParams', 'Validation', 'Collection', 'Authz', 'Title', 'collection', 'roles', 'metadata',
-    function($scope, $location, $http, $routeParams, Validation, Collection, Authz, Title, collection, roles, metadata) {
-  
+aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '$routeParams', 'Validation', 'Collection', 'Role', 'Authz', 'Title', 'collection', 'roles', 'metadata',
+    function($scope, $q, $location, $http, $routeParams, Validation, Collection, Role, Authz, Title, collection, roles, metadata) {
+
   $scope.authz = Authz;
   $scope.collection = collection;
-  $scope.roles = roles.filter(function(r) {
+  $scope.ownerRoles = roles.filter(function(r) {
     return r.type == 'user';
   });
   $scope.categories = metadata.categories;
+  $scope.newRole = null;
+  $scope.roleTypes = [
+    {type: 'system', label: 'States'},
+    {type: 'group', label: 'Groups'},
+    {type: 'user', label: 'Users'},
+  ];
 
   Title.set("Settings: " + collection.label, "collections");
+
+  $scope.getActiveRoles = function() {
+    return roles.filter(function(r) {
+      return r.type != 'user' || r.read || r.write;
+    });
+  };
+
+  $scope.findRoles = function($value) {
+    var value = $value.toLowerCase();
+    return roles.filter(function(role) {
+      return role.name.toLowerCase().startsWith(value);
+    });
+  };
+
+  $scope.addRole = function($item, $model) {
+    $item.read = true;
+    $item.dirty = true;
+    $scope.newRole = {name: ''};
+  };
+
+  $scope.markDirty = function(role) {
+    role.dirty = true;
+  };
 
   $scope.delete = function() {
     Collection.delete(collection).then(function() {
@@ -26,12 +55,23 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$location', '$http', '$route
   $scope.save = function(form) {
     var res = $http.post(collection.api_url, $scope.collection);
     res.success(function(data) {
-      $scope.$on('permissionsSaved', function() {
+      var qs = [];
+      for (var j in roles) {
+        var role = roles[j];
+        if (role.dirty) {
+          qs.push($http.post(collection.api_url + '/permissions', {
+            role: role.id,
+            read: role.read,
+            write: role.write
+          }));
+        }
+      }
+
+      $q.all(qs).then(function() {
         Collection.flush().then(function() {
           $location.path('/collections/' + collection.id);
         });
       });
-      $scope.$broadcast('savePermissions', data.data);
     });
     res.error(Validation.handle(form));
   };

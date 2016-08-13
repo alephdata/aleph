@@ -1,14 +1,28 @@
-var loadRoles= ['$q', 'Role', function($q, Role) {
-  var dfd = $q.defer();
-  Role.getAll().then(function(res) {
-    var roles = [];
-    for (var i in res.results) {
-      var role = res.results[i];
-      if (role.type == 'user') {
-        roles.push(role);  
-      }
+var loadRoles = ['$q', '$route', '$http', 'Role', function($q, $route, $http, Role) {
+  var dfd = $q.defer(),
+      collectionId = $route.current.params.collection_id,
+      permUrl = '/api/1/collections/' + collectionId + '/permissions';
+  
+  Role.getAll().then(function(allRoles) {
+    for (var j in allRoles) {
+      var role = allRoles[j];
+      role.read = false;
+      role.write = false;
+      role.dirty = false;
     }
-    dfd.resolve(roles);
+    $http.get(permUrl).then(function(res) {
+      for (var i in res.data.results) {
+        var perm = res.data.results[i];
+        for (var j in allRoles) {
+          var role = allRoles[j];
+          if (role.id == perm.role) {
+            role.read = perm.read;
+            role.write = perm.write;
+          }
+        }
+      }
+      dfd.resolve(allRoles);
+    });
   }, function(err) {
     dfd.reject(err);
   });

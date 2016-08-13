@@ -24,7 +24,7 @@
             <div class="">
               <ui-select ng-model="collection.creator_id">
                 <ui-select-match placeholder="Select user...">{{$select.selected.name}}</ui-select-match>
-                <ui-select-choices repeat="role.id as role in roles | filter: {'name': $select.search}">
+                <ui-select-choices repeat="role.id as role in ownerRoles | filter: {'name': $select.search}">
                   <div ng-bind-html="role.name | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
@@ -77,7 +77,46 @@
       </div>
       <div class="col-md-6">
         <label class="control-label" for="permissions">Access Control</label>
-        <permissions-edit api-base="{{collection.api_url}}"></permissions-edit>
+        <table class="table roles">
+          <tbody ng-repeat="type in roleTypes">
+            <tr>
+              <th>{{type.label}}</th>
+              <th width="10%" class="numeric">
+                <span ng-show="$first">View</span>
+              </th>
+              <th width="10%" class="numeric">
+                  <span ng-show="$first">Edit</span>
+              </th>
+            </tr>
+            <tr ng-repeat="role in getActiveRoles() | filter:{type: type.type}">
+              <td>
+                {{role.name}}
+              </td>
+              <td class="numeric">
+                <input type="checkbox" ng-model="role.read" ng-change="markDirty(role)">
+              </td>
+              <td class="numeric">
+                <input type="checkbox" ng-model="role.write"
+                  ng-disabled="role.foreign_id == 'guest'"
+                  ng-change="markDirty(role)">
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>
+                <input type="input" class="form-control"
+                  placeholder="Grant access to more users..."
+                  ng-model="newRole"
+                  uib-typeahead="role as role.name for role in findRoles($viewValue)"
+                  typeahead-on-select="addRole($item, $model)"
+                  typeahead-editable="false">
+              </td>
+              <td colspan="2">
+              </td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </div>
 
