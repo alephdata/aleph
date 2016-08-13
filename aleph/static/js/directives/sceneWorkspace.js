@@ -70,10 +70,24 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
           }
         }
         var node = new Node(self, data);
-        self.completeNode(node);
+        // self.completeNode(node);
         self.nodes.push(node);
         self.update();
         return node;
+      };
+
+      self.removeNode = function(node) {
+        var idx = self.nodes.indexOf(node);
+        if (idx != -1) {
+          var edges = self.edges.filter(function(edge) {
+            return edge.source.id == node.id || edge.target.id == node.id;
+          });
+          for (var i in edges) {
+            self.removeEdge(edges[i]);
+          }
+          self.nodes.splice(idx, 1);
+          self.update();
+        }
       };
 
       self.addEdge = function(data) {
@@ -91,6 +105,14 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
         return edge;
       };
 
+      self.removeEdge = function(edge) {
+        var idx = self.edges.indexOf(edge);
+        if (idx != -1) {
+          self.edges.splice(idx, 1);
+          self.update();
+        }
+      };
+
       self.getNodeIds = function() {
         return self.nodes.map(function(n) { return n.id; });
       };
@@ -101,7 +123,7 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
 
       self.completeNode = function(node) {
         var nodeIds = self.getNodeIds();
-        if (nodeIds.length < 2) {
+        if (nodeIds.length <= 1) {
           return;
         }
         var params = {
@@ -120,6 +142,10 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
         });
       };
 
+      self.update = function() {
+        $scope.$broadcast('updateScene', self);
+      };
+
       self.fromJSON = function(scene) {
         self.collection_id = scene.collection_id;
         for (var i in scene.nodes) {
@@ -128,10 +154,6 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
         for (var i in scene.edges) {
           self.addEdge(scene.edges[i]); 
         }
-      };
-
-      self.update = function() {
-        $scope.$broadcast('updateScene', self);
       };
 
       self.toJSON = function() {

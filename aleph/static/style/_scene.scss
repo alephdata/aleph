@@ -33,9 +33,11 @@
         .edge {
             stroke: $gray;
             stroke-width: 2px;
+            cursor: pointer;
         }
 
         .edgelabel {
+            cursor: pointer;
             text {
                 fill: $gray;
                 text-anchor: middle;

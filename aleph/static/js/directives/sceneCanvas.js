@@ -302,6 +302,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         var enteringNodes = nodes.enter().append("g")
             .attr("class", "node")
             .attr("transform", grid.nodeTranslate)
+            .on("click", clickNode)
             .call(nodeDrag);
 
         enteringNodes.append("rect")
@@ -311,6 +312,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             .attr("height", grid.nodeHeight)
             .style("fill", function(n) { return n.getColor(); });
 
+        // the icon.
         enteringNodes.append("text")
             .attr("dy", function(d) { return -2; })
             .attr("class", "icon")
@@ -318,6 +320,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             .attr("font-family", "FontAwesome")
             .text(function(d){ return d.getIcon(); });
 
+        // the label for the node.
         enteringNodes.append("text")
             .attr("dy", function(d) { return grid.unit * 0.65; })
             .attr("class", "title")
@@ -332,20 +335,22 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       };
 
       function drawEdges() {
-        grid.computePaths();
+        // grid.computePaths();
 
         var edges = edgeContainer.selectAll(".edge")
             .data(ctrl.edges, function(e) { return e.id; })
             .attr("d", grid.edgePath);
         edges.enter().append("path")
             .attr("class", "edge")
-            .attr("id", function(e) { return 'edge' + e.id; });
+            .on("click", clickEdge);
+            // .attr("id", function(e) { return 'edge' + e.id; });
         edges.exit().remove();
 
         var labels = edgeContainer.selectAll('.edgelabel')
             .data(ctrl.edges, function(e) { return e.id; });
 
         var entering = labels.enter().append('g')
+            .on("click", clickEdge)
             .attr('class', 'edgelabel');
 
         labels.attr('transform', grid.edgeLabelTranslate);
@@ -354,10 +359,13 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         entering.append('text')
             .text(function(e) { return e.type; });
 
+        // resize the texts upon zoom.
         var labelTexts = labels.selectAll('text')
             .attr("dy", (fontSize * 0.8) / 3)
             .attr("font-size", fontSize * 0.8);
 
+        // make sure the background for the edge label is placed
+        // behind the actual text and has the same dimensions.
         labels.selectAll('rect').each(function(edge) {
           var rect = d3.select(this);
           labelTexts.each(function(labelEdge) {
@@ -401,6 +409,16 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         }
       }
 
+      function clickNode(node) {
+        // console.log(node);
+        ctrl.removeNode(node);
+      }
+
+      function clickEdge(edge) {
+        // console.log(edge);
+        ctrl.removeEdge(edge);
+      }
+
       var unsubscribe = scope.$on('updateScene', function(e) {
         drawNodes();
         drawEdges();
@@ -409,10 +427,15 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       scope.$on('$destroy', unsubscribe);
 
       function init() {
+        // make sure the SVG is sized responsively
         d3.select(window).on('resize', updateSize); 
         var size = updateSize();
         svg.call(zoom);
+
+        // move to the center.
         zoom.translateBy(svg, (size.width/2), (size.height/2));
+
+        // draw stuff.
         drawNodes();
         drawEdges();
       }

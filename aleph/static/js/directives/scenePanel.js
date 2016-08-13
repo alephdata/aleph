@@ -30,13 +30,14 @@ aleph.directive('scenePanel', ['$http', function($http) {
         }
         $http.post('/api/1/graph/nodes', params).then(function(res) {
           scope.suggestedNodes = res.data.results;
-        });  
+        });
       };
 
       scope.addNode = function(node) {
         var idx = scope.suggestedNodes.indexOf(node);
         scope.suggestedNodes.splice(idx, 1);
         ctrl.addNode(node);
+        ctrl.completeNode(node);
         scope.searchNodes();
       };
 
