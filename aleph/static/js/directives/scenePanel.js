@@ -9,6 +9,16 @@ aleph.directive('scenePanel', ['$http', function($http) {
         'collectionFilter': true
       };
 
+      scope.getIcon = function(data) {
+        var type = data.alephSchema || data.$label;
+        return ctrl.config.icons[type] || '\uf0c8'
+      };
+
+      scope.getColor = function(data) {
+        var type = data.alephSchema || data.$label;
+        return ctrl.config.colors[type] || '#777777'
+      };
+
       scope.searchNodes = function() {
         var params = {
           ignore: ctrl.getNodeIds(),

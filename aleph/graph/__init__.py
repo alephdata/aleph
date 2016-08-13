@@ -2,7 +2,7 @@
 import logging
 from contextlib import contextmanager
 
-from aleph.core import get_graph
+from aleph.core import get_graph, get_config
 from aleph.graph.schema import NodeType
 from aleph.graph.entities import load_entities, load_entity, remove_entity  # noqa
 from aleph.graph.collections import load_collection, remove_collection  # noqa
@@ -31,7 +31,9 @@ def graph_metadata():
     labels = [l for l in graph.node_labels if l != 'Collection']
     return {
         'active': True,
-        'labels': labels
+        'labels': labels,
+        'icons': get_config('GRAPH_ICONS'),
+        'colors': get_config('GRAPH_COLORS')
     }
 
 

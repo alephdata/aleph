@@ -6,7 +6,7 @@
   "description": "A for-profit company, with or without liability.",
   "sortIndex": 90,
   "type": "object",
-  "faIcon": "fa-suitcase",
+  "faIcon": "fa-building",
   "graph": "node",
   "allOf": [
       {"$ref": "/entity/organization.json#"}

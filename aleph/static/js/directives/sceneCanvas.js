@@ -97,7 +97,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
     self.scene = scene;
     self.edgePaths = {};
     self.unit = 20;
-    self.nodeWidthUnits = 5;
+    self.nodeWidthUnits = 6;
     self.nodeHeightUnits = 2;
 
     self.nodeWidth = function(node) {
@@ -213,7 +213,6 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       var source = [edge.source.x, edge.source.y],
           target = [edge.target.x, edge.target.y];
       return 'M' + source + 'L' + target;
-      // TODO: make this way fancy.
       // var path = self.edgePaths[edge.id].map(function(n) {
       //   return [n.x * self.unit, n.y * self.unit];
       // });
@@ -273,8 +272,9 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         // cut off the node label if it is longer than the node box.
         texts.each(function(node) {
           var text = d3.select(this),
-              name = text.text(),
-              maxWidth = grid.nodeWidth(node) - 4,
+              name = node.name + '';
+          text.text(name);
+          var maxWidth = grid.nodeWidth(node) - 4,
               width = text.node().getComputedTextLength(),
               charWidth = Math.max(width, maxWidth) / name.length,
               maxChars = (maxWidth / charWidth);
@@ -290,25 +290,38 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         // this should update as well as create, i.e. you can
         // run it repatedly.
         var nodes = nodeContainer.selectAll(".node")
-            .data(ctrl.nodes, function(d) { return d.id; })
-          .enter().append("g")
+            .data(ctrl.nodes, function(d) { return d.id; });
+
+        var enteringNodes = nodes.enter().append("g")
             .attr("class", "node")
             .attr("transform", grid.nodeTranslate)
             .call(nodeDrag);
 
-        nodes.append("rect")
+        enteringNodes.append("rect")
             .attr("x", grid.nodeOffsetX)
             .attr("y", grid.nodeOffsetY)
             .attr("width", grid.nodeWidth)
-            .attr("height", grid.nodeHeight);
+            .attr("height", grid.nodeHeight)
+            .style("fill", function(n) { return n.getColor(); });
 
-        nodes.append("text")
-            .attr("dy", function(d) { return 4; })
+        enteringNodes.append("text")
+            .attr("dy", function(d) { return -2; })
+            .attr("class", "icon")
+            .attr("text-anchor", "middle")
+            .attr("font-family", "FontAwesome")
+            .text(function(d){ return d.getIcon(); });
+
+        enteringNodes.append("text")
+            .attr("dy", function(d) { return grid.unit * 0.65; })
             .attr("class", "title")
             .attr("text-anchor", "middle")
-            .attr("font-size", grid.fontSize)
-            .text(function(d){ return d.name; })
-            .call(adjustText);
+            .text(function(d){ return d.name; });
+
+        nodeContainer.selectAll('.title')
+          .attr("font-size", function(d) {
+            return self.fontSize;
+          })
+          .call(adjustText);
 
         nodes.exit().remove();
       };
@@ -318,15 +331,32 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
 
         var edges = edgeContainer.selectAll(".edge")
             .data(ctrl.edges, function(e) { return e.id; })
-            .attr("d", grid.edgePath)
-          .enter().append("path")
-            .attr("class", "edge");
-
+            .attr("d", grid.edgePath);
+        edges.enter().append("path")
+            .attr("class", "edge")
+            .attr("id", function(e) { return 'edge' + e.id; });
         edges.exit().remove();
+
+        // var labels = edgeContainer.selectAll(".edgelabel")
+        //     .data(ctrl.edges, function(e) { return e.id; })
+        //   .enter().append('text')
+        //     .attr('class', 'edgelabel')
+        //     // .attr('dx', 80)
+        //     // .attr('dy', 0)
+        //     .attr('fill', '#777777')
+        //     .attr('font-size', 13)
+        //     //.text("Yay, my text is on a wavy path");
+        //   .append('textPath')
+        //     // .attr("xlink:href", function(e) { return '#edge' + e.id; })
+        //   //   // .style("text-anchor", "middle")
+        //   //   // .attr("startOffset", "50%")
+        //     .text("Yay, my text is on a wavy path");
       };
 
       function zoomed() {
         container.attr("transform", d3.event.transform);
+        self.fontSize = grid.fontSize() * (1 / Math.max(1, d3.event.transform.k));
+        drawNodes();
       }
 
       function dragNode() {
@@ -337,7 +367,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
           node.x += d3.event.dx;
           node.y += d3.event.dy;
           element.attr('transform', 'translate(' + [node.x, node.y] + ')');
-          // drawEdges();
+          drawEdges();
         }
 
         function ended(node) {

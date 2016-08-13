@@ -25,6 +25,7 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $roo
           session: session,
           app: metadata.app,
           fields: metadata.fields,
+          graph: metadata.graph,
           schemata: metadata.schemata,
           categories: metadata.categories,
           countries: metadata.countries, 

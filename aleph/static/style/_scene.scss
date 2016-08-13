@@ -4,27 +4,40 @@
     border-radius: $border-radius-base;
 
     svg {
+        // shape-rendering: crispEdges;
+
         .node {
             fill: $gray-light;
             // stroke: 1px solid $panel-inner-border;
             cursor: pointer;
 
             rect {
-                rx: $border-radius-base;
-                ry: $border-radius-base;    
+                rx: 2px;
+                ry: 2px;
             }
 
             .title {
                 fill: white;
+                font-weight: bolder;
                 user-select: none;
                 cursor: pointer;
+            }
+
+            .icon {
+                fill: white;
+                // font-weight: bolder;
+                user-select: none;
             }
         }
 
         .edge {
-            stroke: green;
+            stroke: $gray;
             stroke-width: 2px;
-            fill: none;
+        }
+
+        .shadow {
+            stroke: $gray-light;
+            stroke-width: 4px;
         }
 
         .dragging {

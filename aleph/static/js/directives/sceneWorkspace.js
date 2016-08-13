@@ -9,10 +9,19 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
     var self = this;
     self.scene = scene;
     self.data = node;
+    self.type = node.alephSchema || node.$label;
     self.name = node.name;
     self.gridX = node.gridX || null;
     self.gridY = node.gridY || null;
     self.id = node.id;
+
+    self.getColor = function() {
+      return scene.config.colors[self.type] || '#777777';
+    };
+
+    self.getIcon = function() {
+      return scene.config.icons[self.type] || '\uf0c8';
+    };
 
     self.toJSON = function() {
       return {
@@ -41,11 +50,13 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
   return {
     restrict: 'E',
     scope: {
-      scene: '='
+      scene: '=',
+      metadata: '='
     },
     templateUrl: 'templates/scene_workspace.html',
     controller: ['$scope', function($scope) {
       var self = this;
+      self.config = $scope.metadata.graph;
       self.collection_id = null;
       self.nodes = [];
       self.edges = [];
@@ -75,7 +86,6 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
                             self.addNode(data.$source),
                             self.addNode(data.$target));
         self.edges.push(edge);
-        // console.log('edge', data);
         self.update();
         return edge;
       };
@@ -112,8 +122,10 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       self.fromJSON = function(scene) {
         self.collection_id = scene.collection_id;
         for (var i in scene.nodes) {
-          var node = scene.nodes[i];
-          self.addNode(node); 
+          self.addNode(scene.nodes[i]); 
+        }
+        for (var i in scene.edges) {
+          self.addEdge(scene.edges[i]); 
         }
       };
 

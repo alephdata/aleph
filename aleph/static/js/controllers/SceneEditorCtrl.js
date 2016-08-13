@@ -4,6 +4,8 @@ aleph.controller('SceneEditorCtrl', ['$scope', '$route', '$location', '$http', '
 
   Title.set(collection.label, "collections");
   $scope.collection = collection;
+  $scope.metadata = metadata;
+
   $scope.scene = {
     collection_id: collection.id
   };

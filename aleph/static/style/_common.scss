@@ -47,6 +47,11 @@ a, .click {
 //     font-style: normal;
 // }
 
+.fa-codepoint {
+    font-family: 'FontAwesome';
+    font-style: normal;
+}
+
 code {
     background-color: lighten($aleph-dark, 70%);
     color: $aleph-dark;
