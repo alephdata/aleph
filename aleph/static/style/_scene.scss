@@ -35,9 +35,16 @@
             stroke-width: 2px;
         }
 
-        .shadow {
-            stroke: $gray-light;
-            stroke-width: 4px;
+        .edgelabel {
+            text {
+                fill: $gray;
+                text-anchor: middle;
+                font-weight: bolder;
+            }
+
+            rect {
+                fill: $gray-subtle;
+            }
         }
 
         .dragging {

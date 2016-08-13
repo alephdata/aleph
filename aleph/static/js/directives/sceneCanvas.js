@@ -108,7 +108,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       return self.nodeHeightUnits * self.unit;
     };
 
-    self.fontSize = function(node) {
+    self.fontSize = function() {
       return self.unit * 0.6;
     };
 
@@ -135,6 +135,12 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       node.x = self.nodeX(node);
       node.y = self.nodeY(node);
       return 'translate(' + [node.x, node.y] + ')';
+    };
+
+    self.edgeLabelTranslate = function(edge) {
+      var x = (edge.source.x + edge.target.x) / 2;
+      var y = (edge.source.y + edge.target.y) / 2;
+      return 'translate(' + [x, y] + ')';
     };
 
     self.pixelToUnit = function(px) {
@@ -249,6 +255,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       var frame = d3.select("#scene-canvas"),
           svg = frame.append("svg"),
           grid = new SceneGrid(ctrl),
+          fontSize = grid.fontSize(),
           container = svg.append("g"),
           edgeContainer = container.append("g")
           nodeContainer = container.append("g");
@@ -318,9 +325,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             .text(function(d){ return d.name; });
 
         nodeContainer.selectAll('.title')
-          .attr("font-size", function(d) {
-            return self.fontSize;
-          })
+          .attr("font-size", fontSize)
           .call(adjustText);
 
         nodes.exit().remove();
@@ -337,26 +342,43 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             .attr("id", function(e) { return 'edge' + e.id; });
         edges.exit().remove();
 
-        // var labels = edgeContainer.selectAll(".edgelabel")
-        //     .data(ctrl.edges, function(e) { return e.id; })
-        //   .enter().append('text')
-        //     .attr('class', 'edgelabel')
-        //     // .attr('dx', 80)
-        //     // .attr('dy', 0)
-        //     .attr('fill', '#777777')
-        //     .attr('font-size', 13)
-        //     //.text("Yay, my text is on a wavy path");
-        //   .append('textPath')
-        //     // .attr("xlink:href", function(e) { return '#edge' + e.id; })
-        //   //   // .style("text-anchor", "middle")
-        //   //   // .attr("startOffset", "50%")
-        //     .text("Yay, my text is on a wavy path");
+        var labels = edgeContainer.selectAll('.edgelabel')
+            .data(ctrl.edges, function(e) { return e.id; });
+
+        var entering = labels.enter().append('g')
+            .attr('class', 'edgelabel');
+
+        labels.attr('transform', grid.edgeLabelTranslate);
+
+        entering.append('rect');
+        entering.append('text')
+            .text(function(e) { return e.type; });
+
+        var labelTexts = labels.selectAll('text')
+            .attr("dy", (fontSize * 0.8) / 3)
+            .attr("font-size", fontSize * 0.8);
+
+        labels.selectAll('rect').each(function(edge) {
+          var rect = d3.select(this);
+          labelTexts.each(function(labelEdge) {
+            if (labelEdge.id == edge.id) {
+              var text = d3.select(this).node(), 
+                  box = text.getBBox();
+              rect
+                .attr('width', box.width)
+                .attr('height', box.height)
+                .attr('transform', 'translate(' + [(box.width / 2) * -1, (box.height / 2) * -1] + ')');
+            }
+          });
+        });
+        labels.exit().remove();
       };
 
       function zoomed() {
         container.attr("transform", d3.event.transform);
-        self.fontSize = grid.fontSize() * (1 / Math.max(1, d3.event.transform.k));
+        fontSize = grid.fontSize() * (1 / Math.max(1, d3.event.transform.k));
         drawNodes();
+        drawEdges();
       }
 
       function dragNode() {

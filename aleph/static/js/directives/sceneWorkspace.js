@@ -38,6 +38,7 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
     var self = this;
     self.scene = scene;
     self.data = edge;
+    self.type = edge.$type;
     self.source = source;
     self.target = target;
     self.id = edge.id;
