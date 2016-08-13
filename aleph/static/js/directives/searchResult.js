@@ -7,7 +7,7 @@ aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSeria
       'result': '=',
       'query': '='
     },
-    templateUrl: 'templates/search_result.html',
+    templateUrl: 'templates/documents/search_result.html',
     link: function (scope, element, attrs) {
 
       scope.collection = null;

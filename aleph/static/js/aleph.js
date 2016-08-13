@@ -6,7 +6,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     function($routeProvider, $locationProvider, $compileProvider, cfpLoadingBarProvider, uiSelectConfig) {
 
   $routeProvider.when('/search', {
-    templateUrl: 'templates/search.html',
+    templateUrl: 'templates/documents/search.html',
     controller: 'SearchCtrl',
     reloadOnSearch: false,
     resolve: {
@@ -18,7 +18,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   });
 
   $routeProvider.when('/tabular/:document_id/:table_id', {
-    templateUrl: 'templates/tabular.html',
+    templateUrl: 'templates/documents/tabular.html',
     controller: 'TabularCtrl',
     reloadOnSearch: true,
     resolve: {
@@ -28,7 +28,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   });
 
   $routeProvider.when('/text/:document_id', {
-    templateUrl: 'templates/text.html',
+    templateUrl: 'templates/documents/text.html',
     controller: 'TextCtrl',
     reloadOnSearch: false,
     resolve: {
@@ -39,7 +39,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   });
 
   $routeProvider.when('/collections', {
-    templateUrl: 'templates/collections_index.html',
+    templateUrl: 'templates/collections/index.html',
     controller: 'CollectionsIndexCtrl',
     reloadOnSearch: false,
     resolve: {
@@ -49,7 +49,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   });
 
   $routeProvider.when('/collections/:collection_id', {
-    templateUrl: 'templates/collections_documents.html',
+    templateUrl: 'templates/collections/documents.html',
     controller: 'CollectionsDocumentsCtrl',
     reloadOnSearch: false,
     resolve: {
@@ -60,7 +60,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   });
 
   $routeProvider.when('/collections/:collection_id/entities', {
-    templateUrl: 'templates/collections_entities.html',
+    templateUrl: 'templates/collections/entities.html',
     controller: 'CollectionsEntitiesCtrl',
     reloadOnSearch: false,
     resolve: {
@@ -72,7 +72,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   });
 
   $routeProvider.when('/collections/:collection_id/entities/review', {
-    templateUrl: 'templates/entity_review.html',
+    templateUrl: 'templates/entities/review.html',
     controller: 'EntitiesReviewCtrl',
     reloadOnSearch: false,
     resolve: {
@@ -82,7 +82,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   });
 
   $routeProvider.when('/collections/:collection_id/entities/bulk', {
-    templateUrl: 'templates/entity_bulk.html',
+    templateUrl: 'templates/entities/bulk.html',
     controller: 'EntitiesBulkCtrl',
     reloadOnSearch: false,
     resolve: {
@@ -92,7 +92,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   });
 
   $routeProvider.when('/collections/:collection_id/settings', {
-    templateUrl: 'templates/collections_edit.html',
+    templateUrl: 'templates/collections/edit.html',
     controller: 'CollectionsEditCtrl',
     reloadOnSearch: false,
     resolve: {
@@ -114,7 +114,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
 
 
   $routeProvider.when('/crawlers', {
-    templateUrl: 'templates/crawlers_manage.html',
+    templateUrl: 'templates/crawlers/manage.html',
     controller: 'CrawlersManageCtrl',
     reloadOnSearch: true,
     resolve: {
@@ -123,7 +123,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   });
 
   $routeProvider.when('/crawlers/logs', {
-    templateUrl: 'templates/crawlers_states.html',
+    templateUrl: 'templates/crawlers/states.html',
     controller: 'CrawlersStatesCtrl',
     reloadOnSearch: true,
     resolve: {

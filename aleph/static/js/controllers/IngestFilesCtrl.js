@@ -41,7 +41,7 @@ aleph.controller('IngestFilesCtrl', ['$scope', '$uibModalInstance', 'Upload', 'm
     }
     $scope.progress = 0;
     Upload.upload({
-      url: '/api/1/collections/' + collection.id + '/ingest',
+      url: collection.api_url + '/ingest',
       data: {file: $scope.files, meta: JSON.stringify($scope.document)}
     }).then(function(res) {
       $uibModalInstance.close(res.data);

@@ -8,7 +8,7 @@ aleph.directive('searchFacets', ['$location', '$q', '$route', '$http', '$timeout
       metadata: '=',
       collection: '='
     },
-    templateUrl: 'templates/search_facets.html',
+    templateUrl: 'templates/documents/search_facets.html',
     link: function (scope, element, attrs) {
       scope.authz = Authz;
       scope.entityFacet = [];

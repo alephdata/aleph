@@ -94,7 +94,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
     getUserCollections: getUserCollections,
     create: function() {
       var instance = $uibModal.open({
-        templateUrl: 'templates/collections_create.html',
+        templateUrl: 'templates/collections/create.html',
         controller: 'CollectionsCreateCtrl',
         backdrop: true,
         size: 'md',
@@ -114,7 +114,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
     get: getCollection,
     delete: function(collection) {
       var instance = $uibModal.open({
-        templateUrl: 'templates/collections_delete.html',
+        templateUrl: 'templates/collections/delete.html',
         controller: 'CollectionsDeleteCtrl',
         backdrop: true,
         size: 'md',

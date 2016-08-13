@@ -5,7 +5,7 @@ aleph.directive('searchBox', ['$location', '$q', '$route', '$http', '$rootScope'
     scope: {
       query: '='
     },
-    templateUrl: 'templates/search_box.html',
+    templateUrl: 'templates/documents/search_box.html',
     link: function (scope, element, attrs) {
       scope.sortOptions = {
         score: 'Relevancy',

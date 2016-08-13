@@ -6,7 +6,7 @@ aleph.directive('collectionsAdd', ['$http', '$q', '$location', 'Authz', 'Collect
       'doc': '=',
       'class': '@'
     },
-    templateUrl: 'templates/collections_add.html',
+    templateUrl: 'templates/collections/add.html',
     link: function (scope, element, attrs) {
       scope.visible = Authz.logged_in();
       scope.collections = [];

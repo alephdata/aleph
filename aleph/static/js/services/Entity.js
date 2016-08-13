@@ -42,7 +42,7 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
     },
     create: function(entity) {
       var instance = $uibModal.open({
-        templateUrl: 'templates/entity_create.html',
+        templateUrl: 'templates/entities/create.html',
         controller: 'EntitiesCreateCtrl',
         backdrop: true,
         size: 'md',
@@ -58,7 +58,7 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
     get: getById,
     edit: function(entity_id) {
       var instance = $uibModal.open({
-        templateUrl: 'templates/entity_edit.html',
+        templateUrl: 'templates/entities/edit.html',
         controller: 'EntitiesEditCtrl',
         backdrop: true,
         size: 'lg',
@@ -87,7 +87,7 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
         return dfd.promise;
       }
       var instance = $uibModal.open({
-        templateUrl: 'templates/entity_delete.html',
+        templateUrl: 'templates/entities/delete.html',
         controller: 'EntitiesDeleteCtrl',
         backdrop: true,
         size: 'md',
@@ -101,7 +101,7 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
     },
     merge: function(entities) {
       var instance = $uibModal.open({
-        templateUrl: 'templates/entity_merge.html',
+        templateUrl: 'templates/entities/merge.html',
         controller: 'EntitiesMergeCtrl',
         backdrop: true,
         size: 'md',

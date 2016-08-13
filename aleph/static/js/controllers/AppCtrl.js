@@ -55,7 +55,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
   $scope.manageAlerts = function($event) {
     $event.stopPropagation();
     var instance = $uibModal.open({
-      templateUrl: 'templates/alerts_manage.html',
+      templateUrl: 'templates/alerts/manage.html',
       controller: 'AlertsManageCtrl',
       backdrop: true,
       size: 'md',

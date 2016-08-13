@@ -5,7 +5,7 @@ aleph.directive('searchEntitySuggest', ['$location', '$q', '$route', '$http', '$
     scope: {
       query: '='
     },
-    templateUrl: 'templates/search_entity_suggest.html',
+    templateUrl: 'templates/documents/search_entity_suggest.html',
     link: function (scope, element, attrs) {
       
       scope.createQueryEntity = function(schema) {

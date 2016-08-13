@@ -28,7 +28,7 @@ aleph.controller('CrawlersStatesCtrl', ['$scope', '$location', '$http', '$uibMod
 
   $scope.showDetail = function(state) {
     var instance = $uibModal.open({
-      templateUrl: 'templates/crawler_state_detail.html',
+      templateUrl: 'templates/crawlers/state_detail.html',
       controller: 'CrawlersStateDetailCtrl',
       backdrop: true,
       size: 'lg',

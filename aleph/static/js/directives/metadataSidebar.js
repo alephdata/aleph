@@ -6,7 +6,7 @@ aleph.directive('metadataSidebar', ['$route', 'Collection', 'Document', 'Authz',
     scope: {
       'doc': '='
     },
-    templateUrl: 'templates/metadata_sidebar.html',
+    templateUrl: 'templates/documents/metadata.html',
     link: function (scope, element, attrs, model) {
       scope.authz = Authz;
 

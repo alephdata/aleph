@@ -8,7 +8,7 @@ aleph.directive('collectionsSelect', ['$http', '$q', 'Metadata', 'Collection',
       'collection': '=',
       'category': '='
     },
-    templateUrl: 'templates/collections_select.html',
+    templateUrl: 'templates/collections/select.html',
     link: function (scope, element, attrs, model) {
       scope.roleName = null;
       scope.collections = [];

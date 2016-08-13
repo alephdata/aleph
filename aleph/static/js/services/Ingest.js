@@ -4,7 +4,7 @@ aleph.factory('Ingest', ['$uibModal', '$q', '$http', 'Metadata', 'Query',
   return {
     files: function(files, collection) {
       var instance = $uibModal.open({
-        templateUrl: 'templates/ingest_files.html',
+        templateUrl: 'templates/documents/ingest.html',
         controller: 'IngestFilesCtrl',
         backdrop: true,
         size: 'md',

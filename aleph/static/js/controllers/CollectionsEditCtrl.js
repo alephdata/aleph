@@ -46,7 +46,7 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
   };
   
   $scope.process = function() {
-    var url ='/api/1/collections/' + $scope.collection.id + '/process';
+    var url = collection.api_url + '/process';
     $http.post(url).then(function() {
       $location.path('/collections/' + collection.id);
     });

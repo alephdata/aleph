@@ -27,7 +27,7 @@ aleph.directive('entityJurisdiction', ['Metadata', function(Metadata) {
       'entity': '=',
       'simple': '='
     },
-    templateUrl: 'templates/entity_jurisdiction.html',
+    templateUrl: 'templates/entities/jurisdiction.html',
     link: function (scope, element, attrs, model) {
       scope.getJurisdictions = function() {
         return jurisdictions;

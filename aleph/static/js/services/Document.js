@@ -64,7 +64,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
     get: getDocumentById,
     edit: function(id) {
       var instance = $uibModal.open({
-        templateUrl: 'templates/document_edit.html',
+        templateUrl: 'templates/documents/edit.html',
         controller: 'DocumentsEditCtrl',
         backdrop: true,
         size: 'md',
