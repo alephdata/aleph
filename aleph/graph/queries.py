@@ -141,7 +141,6 @@ class EdgeQuery(GraphQuery):
             'source_id': self.source_id(),
             'target_id': self.target_id()
         }
-        directed = '>' if self._bool('directed') else ''
         filters = []
         filters.append('sourcecoll.alephCollection IN {source_collection_id}')
         filters.append('targetcoll.alephCollection IN {target_collection_id}')
@@ -151,6 +150,9 @@ class EdgeQuery(GraphQuery):
             filters.append('source.id IN {source_id}')
         if len(args['target_id']):
             filters.append('target.id IN {target_id}')
+        directed = '>' if self._bool('directed') else ''
+        if not len(directed):
+            filters.append('source.id > target.id')
 
         q = "MATCH (source)-[rel]-%s(target) " \
             "MATCH (source)-[:PART_OF]->(sourcecoll:Collection) " \
@@ -158,7 +160,7 @@ class EdgeQuery(GraphQuery):
             "WHERE %s " \
             "WITH DISTINCT source, rel, target " \
             "SKIP {offset} LIMIT {limit} " \
-            "RETURN source AS source, rel, target AS target "
+            "RETURN source, rel, target "
         filters = ' AND '.join(filters)
         q = q % (directed, filters)
         return q, args

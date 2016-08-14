@@ -4,14 +4,14 @@
     Add nodes to this scene
   </div>
   <div class="panel-heading" ng-show="edgesMode">
-    Add nodes to this scene
+    Links for <strong ng-repeat="node in selection" ng-bind="node.name"></strong>
   </div>
   <div class="panel-body">
-    <form class="form-horizontal" ng-submit="searchNodes()">
+    <form class="form-horizontal" ng-submit="search()">
       <input class="form-control" ng-model="search.text" placeholder="Search for nodes...">
       <div class="checkbox">
         <label>
-          <input type="checkbox" ng-model="search.collectionFilter" ng-change="searchNodes()">
+          <input type="checkbox" ng-model="search.collectionFilter" ng-change="search()">
           Limit to this collection.
         </label>
       </div>
@@ -24,6 +24,13 @@
       <span class="badge">
         {{node.$degree}}
       </span>
+    </li>
+  </ul>
+  <ul class="list-group" ng-show="edgesMode">
+    <li class="list-group-item" ng-repeat="edge in suggestedEdges track by edge.id" ng-click="addEdge(edge)">
+      <span class="label label-primary">{{edge.$type}}</span>
+      <i class="fa-codepoint fa-fw" ng-bind="::getIcon(edge.$other)" />
+      {{::edge.$other.name | characters:30 }}
     </li>
   </ul>
 </div>

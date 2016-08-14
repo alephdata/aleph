@@ -37,20 +37,36 @@ aleph.directive('scenePanel', ['$http', function($http) {
       };
 
       scope.searchEdges = function() {
+        var nodeIds = scope.selection.map(function(n) {
+          return n.id;
+        });
         var params = {
           ignore: ctrl.getEdgeIds(),
           limit: 10,
-          source_id: ctrl.selection.map(function(n) {
-            return n.id;
-          }),
+          source_id: nodeIds,
           text: scope.search.text
         };
         if (scope.search.collectionFilter) {
           params.collection_id = ctrl.collection_id;
         }
         $http.post('/api/1/graph/edges', params).then(function(res) {
-          scope.suggestedEdges = res.data.results;
+          scope.suggestedEdges = res.data.results.map(function(edge) {
+            if (nodeIds.indexOf(edge.$source.id) == -1) {
+              edge.$other = edge.$source;
+            } else {
+              edge.$other = edge.$target;
+            }
+            return edge;
+          });
         });
+      };
+
+      scope.search = function() {
+        if (scope.nodesMode) {
+          scope.searchNodes();
+        } else {
+          scope.searchEdges();
+        }
       };
 
       scope.addNode = function(node) {
@@ -62,11 +78,12 @@ aleph.directive('scenePanel', ['$http', function($http) {
       };
 
       scope.addEdge = function(edge) {
-        var idx = scope.suggestedNodes.indexOf(node);
-        scope.suggestedNodes.splice(idx, 1);
-        ctrl.addNode(node);
-        ctrl.completeNode(node);
-        scope.searchNodes();
+        var idx = scope.suggestedEdges.indexOf(edge);
+        scope.suggestedEdges.splice(idx, 1);
+        // console.log(edge);
+        ctrl.addEdge(edge);
+        ctrl.update();
+        scope.searchEdges();
       };
 
       var unsub = scope.$on('updateSceneSelection', function(e, selection) {
@@ -75,9 +92,10 @@ aleph.directive('scenePanel', ['$http', function($http) {
         } else {
           scope.nodesMode = true;
         }
-        console.log(selection);
+        // console.log(selection);
         scope.edgesMode = !scope.nodesMode;
         scope.selection = selection;
+        scope.search();
       });
       scope.$on('$destroy', unsub);
 

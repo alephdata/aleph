@@ -411,14 +411,21 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         }
       }
 
+      function clickCanvas(node) {
+        ctrl.clearSelection();
+        scope.$apply();
+      }
+
       function clickNode(node) {
         // todo should shift be required for multiple select?
+        d3.event.stopPropagation();
         ctrl.toggleSelection(node);
         scope.$apply();
       }
 
       function clickEdge(edge) {
         // console.log(edge);
+        d3.event.stopPropagation();
         ctrl.removeEdge(edge);
         scope.$apply();
       }
@@ -433,6 +440,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         d3.select(window).on('resize', updateSize); 
         var size = updateSize();
         svg.call(zoom);
+        svg.on('click', clickCanvas);
 
         // move to the center.
         zoom.translateBy(svg, (size.width/2), (size.height/2));

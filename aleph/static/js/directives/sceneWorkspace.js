@@ -92,7 +92,6 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
             self.selection.splice(selectionIdx, 1);
           }
           self.update();
-
         }
       };
 
@@ -127,10 +126,17 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
         return self.edges.map(function(e) { return e.id; });
       };
 
+      self.clearSelection = function() {
+        self.selection = [];
+        $scope.$broadcast('updateSceneSelection', self.selection);
+        self.update();
+      };
+
       self.toggleSelection = function(node) {
         var idx = self.selection.indexOf(node);
         if (idx == -1) {
-          self.selection.unshift(node);
+          // self.selection.unshift(node);
+          self.selection = [node];
         } else {
           self.selection.splice(idx, 1);
         }
