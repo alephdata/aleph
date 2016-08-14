@@ -61,6 +61,7 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       self.collection_id = null;
       self.nodes = [];
       self.edges = [];
+      self.selection = [];
 
       self.addNode = function(data) {
         for (var i in self.nodes) {
@@ -86,7 +87,12 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
             self.removeEdge(edges[i]);
           }
           self.nodes.splice(idx, 1);
+          var selectionIdx = self.selection.indexOf(node);
+          if (selectionIdx != -1) {
+            self.selection.splice(selectionIdx, 1);
+          }
           self.update();
+
         }
       };
 
@@ -121,6 +127,20 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
         return self.edges.map(function(e) { return e.id; });
       };
 
+      self.toggleSelection = function(node) {
+        var idx = self.selection.indexOf(node);
+        if (idx == -1) {
+          self.selection.unshift(node);
+        } else {
+          self.selection.splice(idx, 1);
+        }
+        self.update();
+      };
+
+      self.isSelected = function(node) {
+        return self.selection.indexOf(node) != -1;
+      };
+
       self.completeNode = function(node) {
         var nodeIds = self.getNodeIds();
         if (nodeIds.length <= 1) {
@@ -145,6 +165,16 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       self.update = function() {
         $scope.$broadcast('updateScene', self);
       };
+
+      $scope.hasSelectedNodes = function() {
+        return self.selection.length > 0;
+      }
+
+      $scope.removeSelectedNodes = function() {
+        self.selection.forEach(function(node) {
+          self.removeNode(node);
+        });
+      }
 
       self.fromJSON = function(scene) {
         self.collection_id = scene.collection_id;

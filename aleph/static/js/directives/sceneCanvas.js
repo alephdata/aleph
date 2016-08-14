@@ -301,7 +301,6 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
 
         var enteringNodes = nodes.enter().append("g")
             .attr("class", "node")
-            .attr("transform", grid.nodeTranslate)
             .on("click", clickNode)
             .call(nodeDrag);
 
@@ -330,6 +329,10 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         nodeContainer.selectAll('.title')
           .attr("font-size", fontSize)
           .call(adjustText);
+
+        nodes
+          .attr("transform", grid.nodeTranslate)
+          .classed("selected", ctrl.isSelected);
 
         nodes.exit().remove();
       };
@@ -410,13 +413,15 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       }
 
       function clickNode(node) {
-        // console.log(node);
-        ctrl.removeNode(node);
+        // todo should shift be required for multiple select?
+        ctrl.toggleSelection(node);
+        scope.$apply();
       }
 
       function clickEdge(edge) {
         // console.log(edge);
         ctrl.removeEdge(edge);
+        scope.$apply();
       }
 
       var unsubscribe = scope.$on('updateScene', function(e) {

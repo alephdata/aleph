@@ -28,6 +28,13 @@
                 // font-weight: bolder;
                 user-select: none;
             }
+
+            &.selected {
+                rect {
+                    stroke: $gray;
+                    stroke-width: 2px;
+                }
+            }
         }
 
         .edge {

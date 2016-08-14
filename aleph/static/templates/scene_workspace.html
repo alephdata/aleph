@@ -1,3 +1,19 @@
+<div class="row search-bar">
+  <div class="col-md-9">
+  </div>
+  <div class="col-md-3">
+    <div class="btn-group" role="group">
+      <div class="btn-group">
+        <a class="btn btn-default" ng-click="removeSelectedNodes()"
+          ng-disabled="!hasSelectedNodes()">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+          Delete
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-md-9">
     <scene-canvas></scene-canvas>
