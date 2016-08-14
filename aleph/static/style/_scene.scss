@@ -31,8 +31,7 @@
 
             &.selected {
                 rect {
-                    stroke: $gray;
-                    stroke-width: 2px;
+                    fill: $brand-primary !important;
                 }
             }
         }

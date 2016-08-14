@@ -8,6 +8,9 @@ aleph.directive('scenePanel', ['$http', function($http) {
         'text': '',
         'collectionFilter': true
       };
+      scope.nodesMode = true;
+      scope.edgesMode = false;
+      scope.selection = [];
 
       scope.getIcon = function(data) {
         var type = data.alephSchema || data.$label;
@@ -33,6 +36,23 @@ aleph.directive('scenePanel', ['$http', function($http) {
         });
       };
 
+      scope.searchEdges = function() {
+        var params = {
+          ignore: ctrl.getEdgeIds(),
+          limit: 10,
+          source_id: ctrl.selection.map(function(n) {
+            return n.id;
+          }),
+          text: scope.search.text
+        };
+        if (scope.search.collectionFilter) {
+          params.collection_id = ctrl.collection_id;
+        }
+        $http.post('/api/1/graph/edges', params).then(function(res) {
+          scope.suggestedEdges = res.data.results;
+        });
+      };
+
       scope.addNode = function(node) {
         var idx = scope.suggestedNodes.indexOf(node);
         scope.suggestedNodes.splice(idx, 1);
@@ -40,6 +60,26 @@ aleph.directive('scenePanel', ['$http', function($http) {
         ctrl.completeNode(node);
         scope.searchNodes();
       };
+
+      scope.addEdge = function(edge) {
+        var idx = scope.suggestedNodes.indexOf(node);
+        scope.suggestedNodes.splice(idx, 1);
+        ctrl.addNode(node);
+        ctrl.completeNode(node);
+        scope.searchNodes();
+      };
+
+      var unsub = scope.$on('updateSceneSelection', function(e, selection) {
+        if (selection.length) {
+          scope.nodesMode = false;
+        } else {
+          scope.nodesMode = true;
+        }
+        console.log(selection);
+        scope.edgesMode = !scope.nodesMode;
+        scope.selection = selection;
+      });
+      scope.$on('$destroy', unsub);
 
       scope.searchNodes();
     }

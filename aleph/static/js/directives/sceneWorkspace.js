@@ -134,6 +134,7 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
         } else {
           self.selection.splice(idx, 1);
         }
+        $scope.$broadcast('updateSceneSelection', self.selection);
         self.update();
       };
 
@@ -171,9 +172,10 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       }
 
       $scope.removeSelectedNodes = function() {
-        self.selection.forEach(function(node) {
-          self.removeNode(node);
-        });
+        for (var i = self.selection.length - 1; i >= 0; i--) {
+          self.removeNode(self.selection[i]);
+        }
+        $scope.$broadcast('updateSceneSelection', self.selection);
       }
 
       self.fromJSON = function(scene) {

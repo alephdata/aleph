@@ -1,6 +1,11 @@
 
 <div class="panel panel-default">
-  <div class="panel-heading">Add nodes to this scene</div>
+  <div class="panel-heading" ng-show="nodesMode">
+    Add nodes to this scene
+  </div>
+  <div class="panel-heading" ng-show="edgesMode">
+    Add nodes to this scene
+  </div>
   <div class="panel-body">
     <form class="form-horizontal" ng-submit="searchNodes()">
       <input class="form-control" ng-model="search.text" placeholder="Search for nodes...">
@@ -12,7 +17,7 @@
       </div>
     </form>
   </div>
-  <ul class="list-group">
+  <ul class="list-group" ng-show="nodesMode">
     <li class="list-group-item" ng-repeat="node in suggestedNodes track by node.id" ng-click="addNode(node)">
       <i class="fa-codepoint fa-fw" ng-bind="::getIcon(node)" />
       {{::node.name | characters:30 }}

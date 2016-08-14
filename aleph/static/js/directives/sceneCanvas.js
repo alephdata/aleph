@@ -301,6 +301,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
 
         var enteringNodes = nodes.enter().append("g")
             .attr("class", "node")
+            .attr("transform", grid.nodeTranslate)
             .on("click", clickNode)
             .call(nodeDrag);
 
@@ -330,9 +331,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
           .attr("font-size", fontSize)
           .call(adjustText);
 
-        nodes
-          .attr("transform", grid.nodeTranslate)
-          .classed("selected", ctrl.isSelected);
+        nodes.classed("selected", ctrl.isSelected);
 
         nodes.exit().remove();
       };
@@ -424,12 +423,10 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         scope.$apply();
       }
 
-      var unsubscribe = scope.$on('updateScene', function(e) {
+      scope.$on('$destroy', scope.$on('updateScene', function(e) {
         drawNodes();
         drawEdges();
-      });
-
-      scope.$on('$destroy', unsubscribe);
+      }));
 
       function init() {
         // make sure the SVG is sized responsively
