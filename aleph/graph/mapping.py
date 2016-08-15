@@ -1,7 +1,6 @@
 import os
 import logging
 from time import time
-# from py2neo.database.status import TransientError
 from sqlalchemy.sql import text as sql_text
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.schema import Table
@@ -42,54 +41,49 @@ class Mapping(object):
         log.info("Query: %s", query)
         return query
 
-    def load(self):
-        """Generate query rows and load them into the graph."""
+    def create_collection(self, graph):
         collection = Collection.create({
             'foreign_id': self.config.get('collection'),
             'label': self.config.get('collection'),
             'managed': True
         })
         db.session.commit()
-
-        graph = get_graph()
         coll_type = NodeType.get('Collection')
-        collection = coll_type.merge(graph, name=collection.label,
-                                     fingerprint=collection.foreign_id,
-                                     alephCollection=collection.id)
+        return coll_type.merge(graph, name=collection.label,
+                               fingerprint=collection.foreign_id,
+                               alephCollection=collection.id)
+
+    def load(self):
+        """Generate query rows and load them into the graph."""
+        graph = get_graph()
+        self.collection = self.create_collection(graph)
         begin_time = time()
         rp = self.engine.execute(self.query)
 
-        log.debug("Query time: %.5fms", (time() - begin_time) * 1000)
-        stats = {'rows': 0, 'nodes': 0, 'rels': 0}
+        log.info("Query time: %.5fms", (time() - begin_time) * 1000)
+        row_count = 0
         while True:
             graphtx = graph.begin()
             rows = rp.fetchmany(10000)
             if not len(rows):
                 break
             for row in rows:
-                stats['rows'] += 1
-                self.update(graphtx, collection, dict(row.items()), stats)
+                row_count += 1
+                self.update(graphtx, dict(row.items()))
 
-                if stats['rows'] % 1000 == 0:
-                    elapsed = (time() - begin_time)
-                    stats['per_node'] = max(stats['nodes'], 1) / elapsed
-                    log.info("Loaded: %(rows)s [%(nodes)s nodes, "
-                             "%(rels)s edges], %(per_node).5f n/s", stats)
+                if row_count % 1000 == 0:
+                    per_sec = row_count / (time() - begin_time)
+                    log.info("Loaded: %s, %.1frows/s", row_count, per_sec)
             graphtx.commit()
-        log.info("Done. Loaded %(rows)s rows, %(nodes)s nodes, "
-                 "%(rels)s edges.", stats)
+        log.info("Finished %s rows.", row_count)
 
-    def update(self, graphtx, collection, row, stats):
+    def update(self, graphtx, row):
         """Generate nodes and edges for a single row."""
         nodes = {}
         for node in self.nodes:
-            nodes[node.name] = node.update(graphtx, collection, row)
-            if nodes[node.name] is not None:
-                stats['nodes'] += 1
+            nodes[node.name] = node.update(graphtx, row)
         for edge in self.edges:
-            rel = edge.update(graphtx, row, nodes)
-            if rel is not None:
-                stats['rels'] += 1
+            edge.update(graphtx, row, nodes)
 
 
 class ItemMapping(object):
@@ -136,7 +130,7 @@ class NodeMapping(ItemMapping):
         super(NodeMapping, self).__init__(mapping, config)
         self.name = name
 
-    def update(self, tx, collection, row):
+    def update(self, tx, row):
         """Prepare and load a node."""
         props = self.bind_properties(row)
         fp = props.get(self.type.fingerprint)
@@ -145,5 +139,5 @@ class NodeMapping(ItemMapping):
             return node
         node = self.type.merge(tx, **props)
         if node is not None:
-            EdgeType.get('PART_OF').merge(tx, node, collection)
+            EdgeType.get('PART_OF').merge(tx, node, self.mapping.collection)
         return node
