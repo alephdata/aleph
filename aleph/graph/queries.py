@@ -132,7 +132,6 @@ class EdgeQuery(GraphQuery):
 
     def query(self):
         args = {
-            'acl': authz.collections(authz.READ),
             'limit': self.limit,
             'offset': self.offset,
             'ignore': self.ignore(),

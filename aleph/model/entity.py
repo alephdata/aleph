@@ -234,6 +234,16 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         q = q.filter(cls.state == cls.STATE_ACTIVE)
         return q.scalar()
 
+    @classmethod
+    def all_by_document(cls, document_id):
+        from aleph.model.reference import Reference
+        q = cls.all()
+        q = q.options(joinedload('collections'))
+        q = q.filter(cls.state == cls.STATE_ACTIVE)
+        q = q.join(Reference)
+        q = q.filter(Reference.document_id == document_id)
+        return q.distinct()
+
     @property
     def terms(self):
         terms = set([self.name])

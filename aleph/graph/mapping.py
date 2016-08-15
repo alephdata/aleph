@@ -119,16 +119,11 @@ class EdgeMapping(ItemMapping):
 
     meta_type = EdgeType
 
-    def __init__(self, mapping, config):
-        super(EdgeMapping, self).__init__(mapping, config)
-        self.source = config.get('source')
-        self.target = config.get('target')
-
     def update(self, tx, row, nodes):
         """Prepare and load a graph edge."""
         props = self.bind_properties(row)
-        source = nodes.get(self.source)
-        target = nodes.get(self.target)
+        source = nodes.get(self.config.get('source'))
+        target = nodes.get(self.config.get('target'))
         return self.type.merge(tx, source, target, **props)
 
 
