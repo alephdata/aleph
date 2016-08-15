@@ -20,8 +20,7 @@
     "type": {
       "title": "Type",
       "description": "A type of medium, e.g. 'fax' or 'email'",
-      "type": "string",
-      "required": true
+      "enum": ["phone", "email", "fax", "twitter", "facebook"]
     },
     "value": {
       "title": "Value",

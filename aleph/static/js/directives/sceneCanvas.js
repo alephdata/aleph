@@ -155,11 +155,12 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
 
     self.placeNode = function(node) {
       var iter = 1,
+          ref = self.scene.gridRef(),
           options = [[1, 0], [1, 1], [0, 1], [-1, 0],
                      [0, -1], [-1, -1], [-1, 1], [1, -1]];
+      node.gridX = node.gridX || ref.gridX;
+      node.gridY = node.gridY || ref.gridY;  
       if (!self.hasOverlap(node)) {
-        node.gridX = node.gridX || 0;
-        node.gridY = node.gridY || 0;
         return node;
       }
       while (true) {
@@ -254,6 +255,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
     link: function (scope, element, attrs, ctrl) {
       var frame = d3.select("#scene-canvas"),
           svg = frame.append("svg"),
+          svgSize = null,
           grid = new SceneGrid(ctrl),
           fontSize = grid.fontSize(),
           container = svg.append("g"),
@@ -272,7 +274,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
             height = d3.select("body").node().getBoundingClientRect().height * 0.7;
         svg.attr("width", width)
            .attr("height", height);
-        return {width: width, height: height};
+        svgSize = {width: width, height: height};
       };
 
       function adjustText(texts) {
@@ -387,7 +389,13 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
 
       function zoomed() {
         container.attr("transform", d3.event.transform);
+        // rescale the font to make text smaller on large zoom labels.
         fontSize = grid.fontSize() * (1 / Math.max(1, d3.event.transform.k));
+        // store the current viewport offset 
+        ctrl.view.gridX = -1 * grid.pixelToUnit(d3.event.transform.x - (svgSize.width/2));
+        ctrl.view.gridY = -1 * grid.pixelToUnit(d3.event.transform.y - (svgSize.height/2));
+        ctrl.view.zoom = d3.event.transform.k;
+        // update display
         drawNodes();
         drawEdges();
       }
@@ -438,12 +446,14 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
       function init() {
         // make sure the SVG is sized responsively
         d3.select(window).on('resize', updateSize); 
-        var size = updateSize();
+        updateSize();
         svg.call(zoom);
         svg.on('click', clickCanvas);
 
-        // move to the center.
-        zoom.translateBy(svg, (size.width/2), (size.height/2));
+        // move to the viewport offset last used in this view.
+        zoom.translateBy(svg, grid.nodeX(ctrl.view) + (svgSize.width/2),
+                              grid.nodeY(ctrl.view) + (svgSize.height/2));
+        zoom.scaleBy(svg, ctrl.view.zoom);
 
         // draw stuff.
         drawNodes();

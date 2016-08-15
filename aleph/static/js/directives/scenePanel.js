@@ -5,8 +5,8 @@ aleph.directive('scenePanel', ['$http', function($http) {
     templateUrl: 'templates/scene_panel.html',
     link: function (scope, element, attrs, ctrl) {
       scope.search = {
-        'text': '',
-        'collectionFilter': true
+        text: '',
+        collectionFilter: true
       };
       scope.nodesMode = true;
       scope.edgesMode = false;
@@ -98,8 +98,7 @@ aleph.directive('scenePanel', ['$http', function($http) {
         scope.search();
       });
       scope.$on('$destroy', unsub);
-
-      scope.searchNodes();
+      scope.search();
     }
   };
 }]);

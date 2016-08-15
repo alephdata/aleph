@@ -59,6 +59,7 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       var self = this;
       self.config = $scope.metadata.graph;
       self.collection_id = null;
+      self.view = {};
       self.nodes = [];
       self.edges = [];
       self.selection = [];
@@ -148,6 +149,13 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
         return self.selection.indexOf(node) != -1;
       };
 
+      self.gridRef = function() {
+        if (self.selection.length) {
+          return self.selection[0];
+        }
+        return self.view;
+      };
+
       self.completeNode = function(node) {
         var nodeIds = self.getNodeIds();
         if (nodeIds.length <= 1) {
@@ -185,7 +193,11 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       }
 
       self.fromJSON = function(scene) {
+        var view = scene.view || {};
         self.collection_id = scene.collection_id;
+        self.view.gridX = view.gridX || 0;
+        self.view.gridY = view.gridY || 0;
+        self.view.zoom = view.zoom || 1;
         for (var i in scene.nodes) {
           self.addNode(scene.nodes[i]); 
         }
@@ -197,6 +209,11 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       self.toJSON = function() {
         return {
           collection_id: self.collection_id,
+          view: {
+            gridX: self.view.gridX,
+            gridY: self.view.gridY,
+            zoom: self.view.zoom,
+          },
           nodes: self.nodes.map(function(n) {
             return n.toJSON();
           }),
