@@ -9,8 +9,9 @@ from sqlalchemy.schema import Table
 from aleph.core import get_graph, db
 from aleph.model import Collection
 from aleph.model.validation import validate
-from aleph.graph.nodes import NodeMapping, NodeType
-from aleph.graph.edges import EdgeMapping
+from aleph.graph.nodes import NodeType
+from aleph.graph.edges import EdgeType
+from aleph.graph.converter import Property
 
 log = logging.getLogger(__name__)
 
@@ -89,3 +90,65 @@ class Mapping(object):
             rel = edge.update(graphtx, row, nodes)
             if rel is not None:
                 stats['rels'] += 1
+
+
+class ItemMapping(object):
+    """Base class used by graph element mappers."""
+
+    def __init__(self, mapping, config):
+        self.mapping = mapping
+        self.config = config
+        self.label = config.get('label')
+        self.type = self.meta_type.get(self.label)
+        self.properties = []
+        for name, config in config.get('properties', {}).items():
+            self.properties.append(Property(self, name, config))
+
+    def bind_properties(self, row):
+        """Fill graph properties from source row."""
+        props = {}
+        for prop in self.properties:
+            value = prop.bind(row)
+            if value is not None:
+                props[prop.name] = value
+        return props
+
+
+class EdgeMapping(ItemMapping):
+    """Map columns from the source data to a graph edge."""
+
+    meta_type = EdgeType
+
+    def __init__(self, mapping, config):
+        super(EdgeMapping, self).__init__(mapping, config)
+        self.source = config.get('source')
+        self.target = config.get('target')
+
+    def update(self, tx, row, nodes):
+        """Prepare and load a graph edge."""
+        props = self.bind_properties(row)
+        source = nodes.get(self.source)
+        target = nodes.get(self.target)
+        return self.type.merge(tx, source, target, **props)
+
+
+class NodeMapping(ItemMapping):
+    """Map columns from the source data to a graph node."""
+
+    meta_type = NodeType
+
+    def __init__(self, mapping, name, config):
+        super(NodeMapping, self).__init__(mapping, config)
+        self.name = name
+
+    def update(self, tx, collection, row):
+        """Prepare and load a node."""
+        props = self.bind_properties(row)
+        fp = props.get(self.type.fingerprint)
+        node = self.type.get_cache(tx, fp)
+        if node is not None:
+            return node
+        node = self.type.merge(tx, **props)
+        if node is not None:
+            EdgeType.get('PART_OF').merge(tx, node, collection)
+        return node

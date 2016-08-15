@@ -5,7 +5,6 @@ from aleph.model import Document, Entity
 from aleph.graph.schema import DocumentNode, EmailNode, PhoneNode, MENTIONS
 from aleph.graph.collections import add_to_collections
 from aleph.graph.entities import load_entity
-from aleph.graph.util import delete_orphan_nodes
 
 log = logging.getLogger(__name__)
 
@@ -65,4 +64,3 @@ def remove_document(tx, document_id):
     if tx is None:
         return
     tx.run("MATCH ()-[r {alephDocument: {id}}]-() DELETE r;", id=document_id)
-    delete_orphan_nodes(tx)

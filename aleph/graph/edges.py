@@ -2,7 +2,7 @@ import logging
 from hashlib import sha1
 from py2neo import Relationship
 
-from aleph.graph.util import GraphType, ItemMapping
+from aleph.graph.util import GraphType
 
 log = logging.getLogger(__name__)
 
@@ -44,21 +44,3 @@ class EdgeType(GraphType):
         data = dict(rel)
         data['$type'] = rel.type()
         return data
-
-
-class EdgeMapping(ItemMapping):
-    """Map columns from the source data to a graph edge."""
-
-    meta_type = EdgeType
-
-    def __init__(self, mapping, config):
-        super(EdgeMapping, self).__init__(mapping, config)
-        self.source = config.get('source')
-        self.target = config.get('target')
-
-    def update(self, tx, row, nodes):
-        """Prepare and load a graph edge."""
-        props = self.bind_properties(row)
-        source = nodes.get(self.source)
-        target = nodes.get(self.target)
-        return self.type.merge(tx, source, target, **props)

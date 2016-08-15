@@ -5,7 +5,6 @@ from aleph.model import Entity
 from aleph.graph.schema import EntityNode, AKA
 from aleph.graph.collections import add_to_collections
 from aleph.graph.converter import fingerprint
-from aleph.graph.util import delete_orphan_nodes
 
 log = logging.getLogger(__name__)
 
@@ -71,4 +70,3 @@ def remove_entity(tx, entity_id):
     if tx is None:
         return
     tx.run("MATCH ()-[r {alephEntity: {id}}]-() DELETE r;", id=entity_id)
-    delete_orphan_nodes(tx)

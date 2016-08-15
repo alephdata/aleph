@@ -3,8 +3,7 @@ from hashlib import sha1
 from pylru import lrucache
 from py2neo import Node
 
-from aleph.graph.util import GraphType, ItemMapping
-from aleph.graph.edges import EdgeType
+from aleph.graph.util import GraphType
 
 log = logging.getLogger(__name__)
 
@@ -71,25 +70,3 @@ class NodeType(GraphType):
         for label in node.labels():
             data['$label'] = label
         return data
-
-
-class NodeMapping(ItemMapping):
-    """Map columns from the source data to a graph node."""
-
-    meta_type = NodeType
-
-    def __init__(self, mapping, name, config):
-        super(NodeMapping, self).__init__(mapping, config)
-        self.name = name
-
-    def update(self, tx, collection, row):
-        """Prepare and load a node."""
-        props = self.bind_properties(row)
-        fp = props.get(self.type.fingerprint)
-        node = self.type.get_cache(tx, fp)
-        if node is not None:
-            return node
-        node = self.type.merge(tx, **props)
-        if node is not None:
-            EdgeType.get('PART_OF').merge(tx, node, collection)
-        return node

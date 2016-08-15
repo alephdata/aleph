@@ -48,31 +48,3 @@ def transaction():
         # yield tx
         # tx.commit()
         yield graph
-
-
-def test():
-    from aleph.model import Entity
-    graph = get_graph()
-    tx = graph.begin()
-    for entity_id in Entity.all_ids():
-        remove_entity(tx, entity_id)
-    tx.commit()
-
-    # # from py2neo.database.cypher import cypher_repr
-    # graph = get_graph()
-    # collections = range(1, 100)
-    # collections = [251]
-    # # collections = cypher_repr(collections)
-    # # print cypher_repr(u"huhu this has ' quotäää")
-    # # return
-    # q = "MATCH (n:Entity)-[r]-(d:Document) " \
-    #     "MATCH (n)-[:PART_OF]->(c1:Collection) " \
-    #     "MATCH (d)-[:PART_OF]->(c2:Collection) " \
-    #     "WHERE c1.alephCollection IN {acl} " \
-    #     "AND c2.alephCollection IN {acl} " \
-    #     "RETURN n, r, d LIMIT 5 "
-    # # q = q % (collections, collections)
-    # for res in graph.data(q, acl=collections):
-    #     print dir(res.get('r'))
-    #     print res.get('r').__uuid__
-    # # graph.delete_all()
