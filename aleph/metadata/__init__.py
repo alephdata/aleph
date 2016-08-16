@@ -373,6 +373,7 @@ class Metadata(object):
         data.pop('headers', None)
         data.pop('tables', None)
         data.pop('pdf_version', None)
+        # data.pop('crawler_run', None)
         return data
 
     def to_dict(self):

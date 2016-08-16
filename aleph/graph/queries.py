@@ -173,3 +173,46 @@ class EdgeQuery(GraphQuery):
             data['$target'] = NodeType.dict(row.get('target'))
             edges.append(data)
         return edges
+
+
+class PathQuery(GraphQuery):
+
+    def source_collection_id(self):
+        collection_id = self.data.getlist('collection_id')
+        return authz.collections_intersect(authz.READ, collection_id)
+
+    def node_id(self):
+        return self.data.getlist('node_id')
+
+    def query(self):
+        args = {
+            'acl': authz.collections(authz.READ),
+            'limit': self.limit,
+            'offset': self.offset,
+            'collection_id': self.source_collection_id(),
+            # 'node_id': self.node_id()
+        }
+        filters = []
+        filters.append('coll.alephCollection IN {collection_id}')
+        filters.append('nc.alephCollection IN {acl}')
+        filters.append('all(n IN nodes(pth) WHERE (n)<-[:PART_OF]-(nc))')
+        # if len(args['node_id']):
+        #     filters.append('NOT (rel.id IN {ignore})')
+        q = "MATCH (coll:Collection)<-[:PART_OF]-(src) " \
+            "MATCH pth = shortestPath((src)-[*1..3]-(dest)) " \
+            "MATCH (nc:Collection) " \
+            "WHERE %s " \
+            "RETURN pth SKIP {offset} LIMIT {limit} "
+        q = q % ' AND '.join(filters)
+        return q, args
+
+    def execute(self):
+        query, args = self.query()
+        paths = []
+        for row in self.graph.run(query, **args):
+            print row
+            # data = EdgeType.dict(row.get('rel'))
+            # data['$source'] = NodeType.dict(row.get('source'))
+            # data['$target'] = NodeType.dict(row.get('target'))
+            # edges.append(data)
+        return paths

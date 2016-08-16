@@ -4,7 +4,7 @@ aleph.directive('networkPanel', ['$http', function($http) {
     require: '^networkWorkspace',
     templateUrl: 'templates/networks/panel.html',
     link: function (scope, element, attrs, ctrl) {
-      scope.search = {
+      scope.query = {
         text: '',
         collectionFilter: true
       };
@@ -26,9 +26,9 @@ aleph.directive('networkPanel', ['$http', function($http) {
         var params = {
           ignore: ctrl.getNodeIds(),
           limit: 10,
-          text: scope.search.text
+          text: scope.query.text
         };
-        if (scope.search.collectionFilter) {
+        if (scope.query.collectionFilter) {
           params.collection_id = ctrl.collection_id;
         }
         $http.post('/api/1/graph/nodes', params).then(function(res) {
@@ -44,9 +44,9 @@ aleph.directive('networkPanel', ['$http', function($http) {
           ignore: ctrl.getEdgeIds(),
           limit: 10,
           source_id: nodeIds,
-          text: scope.search.text
+          text: scope.query.text
         };
-        if (scope.search.collectionFilter) {
+        if (scope.query.collectionFilter) {
           params.collection_id = ctrl.collection_id;
         }
         $http.post('/api/1/graph/edges', params).then(function(res) {
@@ -89,8 +89,10 @@ aleph.directive('networkPanel', ['$http', function($http) {
       var unsub = scope.$on('updateNetworkSelection', function(e, selection) {
         if (selection.length) {
           scope.nodesMode = false;
+          scope.query.collectionFilter = false;
         } else {
           scope.nodesMode = true;
+          scope.query.collectionFilter = true;
         }
         // console.log(selection);
         scope.edgesMode = !scope.nodesMode;

@@ -7,10 +7,10 @@
   </div>
   <div class="panel-body">
     <form class="form-horizontal" ng-submit="search()">
-      <input class="form-control" ng-model="search.text" placeholder="Search for nodes...">
+      <input class="form-control" ng-model="query.text" placeholder="Search for nodes...">
       <div class="checkbox">
         <label>
-          <input type="checkbox" ng-model="search.collectionFilter" ng-change="search()">
+          <input type="checkbox" ng-model="query.collectionFilter" ng-change="search()">
           Limit to this collection.
         </label>
       </div>

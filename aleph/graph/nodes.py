@@ -48,9 +48,6 @@ class NodeType(GraphType):
         if fp is None:
             return
         props['id'] = self.gen_id(fp)
-        # node = self.get_cache(tx, fp)
-        # if node is not None:
-        #     return node
         node = Node(self.name, **props)
         tx.merge(node, self.name, self.fingerprint)
         self.set_cache(tx, fp, node)
