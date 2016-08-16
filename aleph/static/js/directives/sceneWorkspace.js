@@ -2,52 +2,6 @@
 aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
     function($http, $rootScope, $location) {
 
-  var Node = function(scene, node) {
-    // A node represents one object (person, company, phone, email, ...)
-    // on the graph. This object is just interested in layout and grid
-    // positioning, not the actual management of the scene canvas.
-    var self = this;
-    self.scene = scene;
-    self.data = node;
-    self.type = node.alephSchema || node.$label;
-    self.name = node.name;
-    self.gridX = node.gridX || null;
-    self.gridY = node.gridY || null;
-    self.id = node.id;
-
-    self.getColor = function() {
-      return scene.config.colors[self.type] || '#777777';
-    };
-
-    self.getIcon = function() {
-      return scene.config.icons[self.type] || '\uf0c8';
-    };
-
-    self.toJSON = function() {
-      return {
-        id: self.id,
-        gridX: self.gridX,
-        gridY: self.grifY
-      };
-    };
-  };
-
-  var Edge = function(scene, edge, source, target) {
-    // An edge represents a connection between two nodes. It is
-    // directed.
-    var self = this;
-    self.scene = scene;
-    self.data = edge;
-    self.type = edge.$type;
-    self.source = source;
-    self.target = target;
-    self.id = edge.id;
-
-    self.toJSON = function() {
-      return {id: self.id};
-    };
-  };
-
   return {
     restrict: 'E',
     scope: {
@@ -71,7 +25,7 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
             return node;
           }
         }
-        var node = new Node(self, data);
+        var node = new alephNetwork.Node(self, data);
         // self.completeNode(node);
         self.nodes.push(node);
         self.update();
@@ -103,9 +57,9 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
             return edge;
           }
         }
-        var edge = new Edge(self, data,
-                            self.addNode(data.$source),
-                            self.addNode(data.$target));
+        var source = self.addNode(data.$source),
+            target = self.addNode(data.$target),
+            edge = new alephNetwork.Edge(self, data, source, target);
         self.edges.push(edge);
         self.update();
         return edge;
@@ -150,6 +104,9 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       };
 
       self.gridRef = function() {
+        // reference object based upon which new nodes will be placed.
+        // this is either the first selected element or the center of
+        // the current viewport
         if (self.selection.length) {
           return self.selection[0];
         }
@@ -157,6 +114,8 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       };
 
       self.completeNode = function(node) {
+        // given a new node added to the graph, find all edges that
+        // connect it to the existing nodes of that graph.
         var nodeIds = self.getNodeIds();
         if (nodeIds.length <= 1) {
           return;
@@ -178,6 +137,8 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       };
 
       self.update = function() {
+        // this will - amongst other things - trigger a re-draw of the 
+        // nodes and edges on the graph.
         $scope.$broadcast('updateScene', self);
       };
 
@@ -193,6 +154,8 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       }
 
       self.fromJSON = function(scene) {
+        // load a REST-returned scene configuration into the 
+        // relevant objects (nodes, edges, etc.)
         var view = scene.view || {};
         self.collection_id = scene.collection_id;
         self.view.gridX = view.gridX || 0;
@@ -207,6 +170,7 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       };
 
       self.toJSON = function() {
+        // serialize the current view
         return {
           collection_id: self.collection_id,
           view: {
@@ -223,6 +187,7 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
         };
       };
 
+      // load whatever was passed in.
       self.fromJSON($scope.scene);
     }]
   };
