@@ -102,9 +102,9 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     }
   });
 
-  $routeProvider.when('/collections/:collection_id/scenes', {
-    templateUrl: 'templates/scene_editor.html',
-    controller: 'SceneEditorCtrl',
+  $routeProvider.when('/collections/:collection_id/networks', {
+    templateUrl: 'templates/networks/editor.html',
+    controller: 'NetworksEditorCtrl',
     reloadOnSearch: false,
     resolve: {
       'collection': loadCollection,

@@ -1,14 +1,13 @@
-
-aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
+aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
     function($http, $rootScope, $location) {
 
   return {
     restrict: 'E',
     scope: {
-      scene: '=',
+      network: '=',
       metadata: '='
     },
-    templateUrl: 'templates/scene_workspace.html',
+    templateUrl: 'templates/networks/workspace.html',
     controller: ['$scope', function($scope) {
       var self = this;
       self.config = $scope.metadata.graph;
@@ -83,7 +82,7 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
 
       self.clearSelection = function() {
         self.selection = [];
-        $scope.$broadcast('updateSceneSelection', self.selection);
+        $scope.$broadcast('updateNetworkSelection', self.selection);
         self.update();
       };
 
@@ -95,13 +94,24 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
         } else {
           self.selection.splice(idx, 1);
         }
-        $scope.$broadcast('updateSceneSelection', self.selection);
+        $scope.$broadcast('updateNetworkSelection', self.selection);
         self.update();
       };
 
       self.isSelected = function(node) {
         return self.selection.indexOf(node) != -1;
       };
+
+      $scope.hasSelectedNodes = function() {
+        return self.selection.length > 0;
+      }
+
+      $scope.removeSelectedNodes = function() {
+        for (var i = self.selection.length - 1; i >= 0; i--) {
+          self.removeNode(self.selection[i]);
+        }
+        $scope.$broadcast('updateNetworkSelection', self.selection);
+      }
 
       self.gridRef = function() {
         // reference object based upon which new nodes will be placed.
@@ -139,19 +149,8 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       self.update = function() {
         // this will - amongst other things - trigger a re-draw of the 
         // nodes and edges on the graph.
-        $scope.$broadcast('updateScene', self);
+        $scope.$broadcast('updateNetwork', self);
       };
-
-      $scope.hasSelectedNodes = function() {
-        return self.selection.length > 0;
-      }
-
-      $scope.removeSelectedNodes = function() {
-        for (var i = self.selection.length - 1; i >= 0; i--) {
-          self.removeNode(self.selection[i]);
-        }
-        $scope.$broadcast('updateSceneSelection', self.selection);
-      }
 
       self.fromJSON = function(scene) {
         // load a REST-returned scene configuration into the 
@@ -188,7 +187,7 @@ aleph.directive('sceneWorkspace', ['$http', '$rootScope', '$location',
       };
 
       // load whatever was passed in.
-      self.fromJSON($scope.scene);
+      self.fromJSON($scope.network);
     }]
   };
 }]);

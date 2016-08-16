@@ -1,8 +1,8 @@
 var alephNetwork = alephNetwork || {};
 
-alephNetwork.Grid = function(scene) {
+alephNetwork.Grid = function(network) {
   var self = this;
-  self.scene = scene;
+  self.network = network;
   self.edgePaths = {};
   self.unit = 20;
   self.nodeWidthUnits = 6;
@@ -63,7 +63,7 @@ alephNetwork.Grid = function(scene) {
 
   self.placeNode = function(node) {
     var iter = 1,
-        ref = self.scene.gridRef(),
+        ref = self.network.gridRef(),
         options = [[1, 0], [1, 1], [0, 1], [-1, 0],
                    [0, -1], [-1, -1], [-1, 1], [1, -1]];
     node.gridX = node.gridX || ref.gridX;
@@ -101,10 +101,10 @@ alephNetwork.Grid = function(scene) {
 
   self.hasOverlap = function(node) {
     var box = self.getNodeBox(node);
-    for (var i in self.scene.nodes) {
-      var on = self.scene.nodes[i];
+    for (var i in self.network.nodes) {
+      var on = self.network.nodes[i];
       if (on.id != node.id) {
-        var other = self.getNodeBox(self.scene.nodes[i]);
+        var other = self.getNodeBox(self.network.nodes[i]);
         if (!(box.left > other.right || box.right < other.left ||
               box.top > other.bottom || box.bottom < other.top)) {
           return true;
@@ -117,9 +117,9 @@ alephNetwork.Grid = function(scene) {
   self.computePaths = function() {
     // var matrix = self.getGridMatrix();
 
-    // for (var i in self.scene.edges) {
-    //   var edge = self.scene.edges[i],
-    //       route = new SceneGridRouter(matrix, edge.source, edge.target)
+    // for (var i in self.network.edges) {
+    //   var edge = self.network.edges[i],
+    //       route = new alephNetwork.Router(matrix, edge.source, edge.target)
     //   self.edgePaths[edge.id] = route.path();
     // }
   };
@@ -136,8 +136,8 @@ alephNetwork.Grid = function(scene) {
 
   self.getGridMatrix = function() {
     var matrix = {};
-    for (var i in self.scene.nodes) {
-      var box = self.getNodeBox(self.scene.nodes[i]);
+    for (var i in self.network.nodes) {
+      var box = self.getNodeBox(self.network.nodes[i]);
       // todo: make a version that emits units.
       box.left = self.pixelToUnit(box.left);
       box.right = self.pixelToUnit(box.right);
@@ -148,7 +148,7 @@ alephNetwork.Grid = function(scene) {
            matrix[col] = {};
         }
         for (var row = box.top; row <= box.bottom; row++) {
-          matrix[col][row] = self.scene.nodes[i].id;
+          matrix[col][row] = self.network.nodes[i].id;
         }
       }
     }

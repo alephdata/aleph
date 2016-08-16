@@ -1,13 +1,13 @@
-aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
+aleph.directive('networkCanvas', ['Metadata', function(Metadata) {
   // main canvas for the network diagram, uses d3 to render out a set of 
   // nodes and edges and reacts to events both from interactions with the
   // canvas and the surrounding workspace directive.
   return {
     restrict: 'E',
-    require: '^sceneWorkspace',
-    template: '<div id="scene-canvas"></div>',
+    require: '^networkWorkspace',
+    template: '<div id="network-canvas"></div>',
     link: function (scope, element, attrs, ctrl) {
-      var frame = d3.select("#scene-canvas"),
+      var frame = d3.select("#network-canvas"),
           svg = frame.append("svg"),
           svgSize = null,
           grid = new alephNetwork.Grid(ctrl),
@@ -192,7 +192,7 @@ aleph.directive('sceneCanvas', ['Metadata', function(Metadata) {
         scope.$apply();
       }
 
-      scope.$on('$destroy', scope.$on('updateScene', function(e) {
+      scope.$on('$destroy', scope.$on('updateNetwork', function(e) {
         drawNodes();
         drawEdges();
       }));

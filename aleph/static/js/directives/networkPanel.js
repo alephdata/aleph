@@ -1,8 +1,8 @@
-aleph.directive('scenePanel', ['$http', function($http) {
+aleph.directive('networkPanel', ['$http', function($http) {
   return {
     restrict: 'E',
-    require: '^sceneWorkspace',
-    templateUrl: 'templates/scene_panel.html',
+    require: '^networkWorkspace',
+    templateUrl: 'templates/networks/panel.html',
     link: function (scope, element, attrs, ctrl) {
       scope.search = {
         text: '',
@@ -86,7 +86,7 @@ aleph.directive('scenePanel', ['$http', function($http) {
         scope.searchEdges();
       };
 
-      var unsub = scope.$on('updateSceneSelection', function(e, selection) {
+      var unsub = scope.$on('updateNetworkSelection', function(e, selection) {
         if (selection.length) {
           scope.nodesMode = false;
         } else {
