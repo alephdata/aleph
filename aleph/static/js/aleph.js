@@ -102,9 +102,19 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     }
   });
 
+  $routeProvider.when('/collections/:collection_id/analysis', {
+    templateUrl: 'templates/collections/analysis.html',
+    controller: 'CollectionsAnalysisCtrl',
+    reloadOnSearch: false,
+    resolve: {
+      'collection': loadCollection,
+      'metadata': loadMetadata
+    }
+  });
+
   $routeProvider.when('/collections/:collection_id/networks', {
-    templateUrl: 'templates/networks/editor.html',
-    controller: 'NetworksEditorCtrl',
+    templateUrl: 'templates/networks/create.html',
+    controller: 'NetworksCreateCtrl',
     reloadOnSearch: false,
     resolve: {
       'collection': loadCollection,

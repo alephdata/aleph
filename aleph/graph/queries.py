@@ -1,4 +1,5 @@
 import logging
+from py2neo import Node, Walkable
 
 from aleph import authz
 from aleph.graph.schema import NodeType, EdgeType
@@ -185,34 +186,42 @@ class PathQuery(GraphQuery):
         return self.data.getlist('node_id')
 
     def query(self):
+        # WARNING: this version of the path code only checks if the
+        # first and last node are visible to the user. Checking for
+        # each item in the path would be correct but made the query
+        # explode.
         args = {
             'acl': authz.collections(authz.READ),
             'limit': self.limit,
             'offset': self.offset,
-            'collection_id': self.source_collection_id(),
-            # 'node_id': self.node_id()
+            'collection_id': self.source_collection_id()
         }
         filters = []
-        filters.append('coll.alephCollection IN {collection_id}')
-        filters.append('nc.alephCollection IN {acl}')
-        filters.append('all(n IN nodes(pth) WHERE (n)<-[:PART_OF]-(nc))')
-        # if len(args['node_id']):
-        #     filters.append('NOT (rel.id IN {ignore})')
-        q = "MATCH (coll:Collection)<-[:PART_OF]-(src) " \
-            "MATCH pth = shortestPath((src)-[*1..3]-(dest)) " \
-            "MATCH (nc:Collection) " \
+        filters.append('srccoll.alephCollection IN {collection_id}')
+        filters.append('destcoll.alephCollection IN {acl}')
+        filters.append('destcoll.alephCollection <> srccoll.alephCollection')
+        filters.append('all(r IN relationships(pth) WHERE type(r) <> "PART_OF")')
+        q = "MATCH pth = shortestPath((src)-[*1..3]-(dest)) " \
+            "MATCH (src)-[:PART_OF]->(srccoll:Collection) " \
+            "MATCH (dest)-[:PART_OF]->(destcoll:Collection) " \
             "WHERE %s " \
             "RETURN pth SKIP {offset} LIMIT {limit} "
         q = q % ' AND '.join(filters)
+        print q, args
         return q, args
 
     def execute(self):
         query, args = self.query()
         paths = []
         for row in self.graph.run(query, **args):
-            print row
-            # data = EdgeType.dict(row.get('rel'))
-            # data['$source'] = NodeType.dict(row.get('source'))
-            # data['$target'] = NodeType.dict(row.get('target'))
-            # edges.append(data)
+            path = {'nodes': [], 'edges': []}
+            for node in row.get('pth').nodes():
+                path['nodes'].append(NodeType.dict(node))
+            for i, rel in enumerate(row.get('pth').relationships()):
+                data = EdgeType.dict(rel)
+                data['$source'] = rel.start_node().get('id')
+                data['$target'] = rel.end_node().get('id')
+                data['$inverted'] = data['$source'] != path['nodes'][i]['id']
+                path['edges'].append(data)
+            paths.append(path)
         return paths

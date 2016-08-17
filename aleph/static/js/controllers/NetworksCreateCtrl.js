@@ -1,4 +1,4 @@
-aleph.controller('NetworksEditorCtrl', ['$scope', '$route', '$location', '$http', 'Scene', 'Title', 'metadata', 'collection',
+aleph.controller('NetworksCreateCtrl', ['$scope', '$route', '$location', '$http', 'Scene', 'Title', 'metadata', 'collection',
     function($scope, $route, $location, $http, Scene, Title, metadata, collection) {
 
   Title.set(collection.label, "collections");

@@ -1,0 +1,26 @@
+<collections-screen collection="collection" section="analysis">
+  <div class="row">
+    <div class="col-md-8">
+      <table class="table">
+        <tbody ng-repeat="path in paths">
+          <tr ng-repeat="node in path.nodes" ng-if="$index > 0">
+            <td ng-if="$index == 1" rowspan="{{path.edges.length}}">{{path.nodes[0].name}}</td>
+            <td>
+              <span ng-if="path.edges[$index - 1].$inverted">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+              </span>
+              <span ng-if="!path.edges[$index - 1].$inverted">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+              </span>
+              <span class="label label-primary">{{path.edges[$index - 1].$type}}</span>
+            </td>
+            <td>{{node.name}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-4">
+      <code>*insert journalism here*</code>
+    </div>
+  </div>
+</collections-screen>
