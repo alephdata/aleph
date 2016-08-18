@@ -53,3 +53,5 @@ OAUTH = {
     'access_token_url': 'https://accounts.google.com/o/oauth2/token',
     'authorize_url': 'https://accounts.google.com/o/oauth2/auth',
 }
+
+PDF_OCR_IMAGE_PAGES = os.environ.get('ALEPH_PDF_OCR_IMAGE_PAGES', "true")
