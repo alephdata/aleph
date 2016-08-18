@@ -12,6 +12,8 @@ var loadAnalysis = ['$http', '$q', '$location', '$route', 'Query',
       collections: res.data.collections,
       query: query
     });
+  }, function(err) {
+    dfd.reject(err);
   });
   return dfd.promise;
 }];

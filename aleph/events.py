@@ -3,6 +3,8 @@ from apikit import request_data
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import EventLog
 
+HTTP_IP_HEADER = 'X-Real-IP'
+
 
 def log_event(request, role_id=None, **data):
     path = '%s %s' % (request.method, request.path)
@@ -12,8 +14,13 @@ def log_event(request, role_id=None, **data):
         role_id = request.auth_role.id
 
     source_ip = None
-    if len(request.access_route):
+    if HTTP_IP_HEADER in request.headers:
+        source_ip = request.headers.get(HTTP_IP_HEADER)
+    elif len(request.access_route):
         source_ip = request.access_route[0]
+
+    print request.headers
+    print request.access_route
 
     if request.method in ['GET']:
         query = request.args.to_dict(flat=False)
