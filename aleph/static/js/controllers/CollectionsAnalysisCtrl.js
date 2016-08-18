@@ -1,15 +1,11 @@
-aleph.controller('CollectionsAnalysisCtrl', ['$scope', '$route', '$location', '$http', 'Title', 'metadata', 'collection',
-    function($scope, $route, $location, $http, Title, metadata, collection) {
+aleph.controller('CollectionsAnalysisCtrl', ['$scope', '$route', '$location', '$http', 'Title', 'metadata', 'collection', 'analysis',
+    function($scope, $route, $location, $http, Title, metadata, collection, analysis) {
 
   Title.set(collection.label, "collections");
   $scope.collection = collection;
+  $scope.analysis = analysis;
+  $scope.query = analysis.query;
   $scope.metadata = metadata;
-  $scope.paths = [];
-
-  var data = {'collection_id': collection.id};
-  $http.post('/api/1/graph/paths', data).then(function(res) {
-    $scope.paths = res.data.results;
-  });
 
   $scope.viewPath = function(path) {
     var edges = path.edges.map(function(edge) { return edge.id });

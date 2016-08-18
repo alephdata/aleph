@@ -105,10 +105,11 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   $routeProvider.when('/collections/:collection_id/analysis', {
     templateUrl: 'templates/collections/analysis.html',
     controller: 'CollectionsAnalysisCtrl',
-    reloadOnSearch: false,
+    reloadOnSearch: true,
     resolve: {
       'collection': loadCollection,
-      'metadata': loadMetadata
+      'metadata': loadMetadata,
+      'analysis': loadAnalysis
     }
   });
 

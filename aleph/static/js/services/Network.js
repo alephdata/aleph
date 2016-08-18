@@ -5,7 +5,7 @@ aleph.factory('Network', ['$q', '$http', '$location', 'Metadata', 'Query', funct
       var dfd = $q.defer(),
           query = Query.parse(),
           edges = query.getArray('edge'),
-          params = {'edge_id': edges},
+          params = {edge_id: edges, limit: 30},
           network = {collection_id: collectionId};
 
       if (!edges.length) {

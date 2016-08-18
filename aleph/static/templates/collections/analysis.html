@@ -1,32 +1,48 @@
 <collections-screen collection="collection" section="analysis">
   <div class="row">
-    <div class="col-md-8">
-      <table class="table">
-        <tbody ng-repeat="path in paths">
-          <tr ng-repeat="node in path.nodes" ng-if="$index > 0">
-            <td ng-if="$index == 1" rowspan="{{path.edges.length}}">{{path.nodes[0].name}}</td>
-            <td>
-              <span ng-if="path.edges[$index - 1].$inverted">
-                <i class="fa fa-chevron-left" aria-hidden="true"></i>
-              </span>
-              <span ng-if="!path.edges[$index - 1].$inverted">
-                <i class="fa fa-chevron-right" aria-hidden="true"></i>
-              </span>
-              <span class="label label-primary">{{path.edges[$index - 1].$type}}</span>
-            </td>
-            <td>{{node.name}}</td>
-            <td ng-if="$index == 1" rowspan="{{path.edges.length}}" width="1%">
-              <button type="button" class="btn btn-default btn-xs" ng-click="viewPath(path)">
-                <i class="fa fa-link"></i>
-                Explore
-              </button>
-            </td>
-          </tr>
-        </tbody>
+    <div class="col-md-9">
+      <table class="table table-striped">
+        <tr>
+          <th>Origin</th>
+          <th class="numeric">Steps</th>
+          <th>Linked to</th>
+          <th>Collection</th>
+          <th></th>
+        </tr>
+        <tr ng-repeat="path in analysis.paths">
+          <td>
+            {{path.nodes[0].name}}
+          </td>
+          <td class="numeric">
+            <span class="badge">{{path.edges.length}}</span>
+          </td>
+          <td>{{path.nodes[path.nodes.length - 1].name}}</td>
+          <td>{{path.collection.label}}</td>
+          <td width="1%">
+            <button type="button" class="btn btn-default btn-xs" ng-click="viewPath(path)">
+              <i class="fa fa-link"></i>
+              Explore
+            </button>
+          </td>
+        </tr>
       </table>
     </div>
-    <div class="col-md-4">
-      <code>*insert journalism here*</code>
+    <div class="col-md-3">
+      <div class="panel panel-default panel-facet">
+        <div class="panel-heading">
+          <strong>Collections</strong>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item animate toggle"
+            ng-repeat="col in analysis.collections"
+            ng-class="{'active': query.hasField('end_collection_id', col.id)}"
+            ng-click="query.toggle('end_collection_id', col.id)">
+            <span class="lbl">
+              {{::col.label | characters:45 }}
+            </span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </collections-screen>

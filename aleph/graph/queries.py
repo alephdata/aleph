@@ -37,17 +37,13 @@ class GraphQuery(object):
             return default
         return v in ['true', '1', 'yes', 'y', 't']
 
-    def _as_json(self, results):
-        """Helper to make query responses more uniform."""
-        return {
-            'status': 'ok',
-            'limit': self.limit,
-            'offset': self.offset,
-            'results': results
-        }
-
     def to_dict(self):
-        return self._as_json(self.execute())
+        """Helper to make query responses more uniform."""
+        data = self.execute()
+        data['status'] = 'ok'
+        data['limit'] = self.limit
+        data['offset'] = self.offset
+        return data
 
 
 class NodeQuery(GraphQuery):
@@ -102,7 +98,7 @@ class NodeQuery(GraphQuery):
             node = NodeType.dict(row.get('node'))
             node['$degree'] = row.get('degree')
             nodes.append(node)
-        return nodes
+        return {'results': nodes}
 
 
 class EdgeQuery(GraphQuery):
@@ -179,61 +175,63 @@ class EdgeQuery(GraphQuery):
             data['$source'] = NodeType.dict(row.get('source'))
             data['$target'] = NodeType.dict(row.get('target'))
             edges.append(data)
-        return edges
+        return {'results': edges}
 
 
 class PathQuery(GraphQuery):
+    # WARNING: this version of the path code only checks if the
+    # first and last node are visible to the user. Checking for
+    # each item in the path would be correct but made the query
+    # explode.
 
-    def source_collection_id(self):
-        collection_id = self.data.getlist('collection_id')
+    def start_collection_id(self):
+        collection_id = self.data.getlist('start_collection_id')
         return authz.collections_intersect(authz.READ, collection_id)
 
-    def node_id(self):
-        return self.data.getlist('node_id')
+    def end_collection_id(self):
+        collection_id = self.data.getlist('end_collection_id')
+        return authz.collections_intersect(authz.READ, collection_id)
 
-    def query(self):
-        # WARNING: this version of the path code only checks if the
-        # first and last node are visible to the user. Checking for
-        # each item in the path would be correct but made the query
-        # explode.
+    def start_id(self):
+        return self.data.getlist('start_node_id')
+
+    def get_filters(self):
         args = {
-            'acl': authz.collections(authz.READ),
             'limit': self.limit,
             'offset': self.offset,
-            'collection_id': self.source_collection_id()
+            'start_node_id': self.start_id(),
+            'start_collection_id': self.start_collection_id(),
+            'end_collection_id': self.end_collection_id()
         }
         filters = []
-        filters.append('srccoll.alephCollection IN {collection_id}')
-        filters.append('destcoll.alephCollection IN {acl}')
-        filters.append('destcoll <> srccoll')
+        filters.append('startcoll.alephCollection IN {start_collection_id}')
+        filters.append('endcoll.alephCollection IN {end_collection_id}')
+        filters.append('startcoll <> endcoll')
         filters.append('all(r IN relationships(pth) WHERE type(r) <> "PART_OF")')
-        q = "MATCH pth = shortestPath((src)-[*1..3]-(dest)) " \
-            "MATCH (src)-[:PART_OF]->(srccoll:Collection) " \
-            "MATCH (dest)-[:PART_OF]->(destcoll:Collection) " \
+        return args, filters
+
+    def query(self):
+        args, filters = self.get_filters()
+        q = "MATCH pth = shortestPath((start)-[*1..3]-(end)) " \
+            "MATCH (start)-[:PART_OF]->(startcoll:Collection) " \
+            "MATCH (end)-[:PART_OF]->(endcoll:Collection) " \
             "WHERE %s " \
-            "RETURN pth, destcoll SKIP {offset} LIMIT {limit} "
+            "RETURN DISTINCT pth, endcoll SKIP {offset} LIMIT {limit} "
         q = q % ' AND '.join(filters)
         # print q, args
         return q, args
 
-    # def facet_query(self):
-    #     args = {
-    #         'acl': authz.collections(authz.READ),
-    #         'collection_id': self.source_collection_id()
-    #     }
-    #     filters = []
-    #     filters.append('srccoll.alephCollection IN {collection_id}')
-    #     filters.append('destcoll.alephCollection IN {acl}')
-    #     filters.append('destcoll.alephCollection <> srccoll.alephCollection')
-    #     filters.append('all(r IN relationships(pth) WHERE type(r) <> "PART_OF")')
-    #     q = "MATCH pth = (src)-[*1..3]-(dest) " \
-    #         "MATCH (src)-[:PART_OF]->(srccoll:Collection) " \
-    #         "MATCH (dest)-[:PART_OF]->(destcoll:Collection) " \
-    #         "WHERE %s " \
-    #         "RETURN DISTINCT destcoll.alephCollection, destcoll.name "
-    #     q = q % ' AND '.join(filters)
-    #     # print q, args
-    #     return q, args
+    def collections_query(self):
+        args, filters = self.get_filters()
+        args['end_collection_id'] = authz.collections(authz.READ)
+        q = "MATCH pth = shortestPath((start)-[*1..3]-(end)) " \
+            "MATCH (start)-[:PART_OF]->(startcoll:Collection) " \
+            "MATCH (end)-[:PART_OF]->(endcoll:Collection) " \
+            "WHERE %s " \
+            "RETURN DISTINCT endcoll.alephCollection AS id, endcoll.name AS label LIMIT 15"
+        q = q % ' AND '.join(filters)
+        # print q, args
+        return q, args
 
     def execute(self):
         query, args = self.query()
@@ -243,8 +241,8 @@ class PathQuery(GraphQuery):
                 'nodes': [],
                 'edges': [],
                 'collection': {
-                    'id': row.get('destcoll').get('alephCollection'),
-                    'label': row.get('destcoll').get('name')
+                    'id': row.get('endcoll').get('alephCollection'),
+                    'label': row.get('endcoll').get('name')
                 }
             }
             for node in row.get('pth').nodes():
@@ -256,17 +254,8 @@ class PathQuery(GraphQuery):
                 data['$inverted'] = data['$source'] != path['nodes'][i]['id']
                 path['edges'].append(data)
             paths.append(path)
-        return paths
-
-    # def facet_execute(self):
-    #     query, args = self.facet_query()
-    #     collections = []
-    #     for row in self.graph.run(query, **args):
-    #         collections.append(dict(row))
-    #     return collections
-
-    # def to_dict(self):
-    #     data = self._as_json(self.execute())
-    #     data['facets'] = {}
-    #     data['facets']['collections'] = self.facet_execute()
-    #     return data
+        collections = []
+        query, args = self.collections_query()
+        for row in self.graph.run(query, **args):
+            collections.append(dict(row))
+        return {'results': paths, 'collections': collections}
