@@ -62,6 +62,14 @@ aleph.directive('networkCanvas', ['Metadata', function(Metadata) {
             .call(nodeDrag);
 
         enteringNodes.append("rect")
+            .attr("class", "background")
+            .attr("x", grid.nodeOffsetX)
+            .attr("y", grid.nodeOffsetY)
+            .attr("width", grid.nodeWidth)
+            .attr("height", grid.nodeHeight);
+
+        enteringNodes.append("rect")
+            .attr("class", "foreground")
             .attr("x", grid.nodeOffsetX)
             .attr("y", grid.nodeOffsetY)
             .attr("width", grid.nodeWidth)

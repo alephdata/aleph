@@ -141,7 +141,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
     Entity.save($scope.entity).then(function(entity) {
       updateAlert().then(function() {
         mergeDuplicates().then(function() {
-          $uibModalInstance.close(res.data);
+          $uibModalInstance.close(entity);
         });
       });
     });

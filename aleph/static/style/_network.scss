@@ -30,8 +30,11 @@
             }
 
             &.selected {
-                rect {
-                    fill: $brand-primary !important;
+                rect.background {
+                    stroke: darken($gray-subtle, 10%);
+                    stroke-width: 10px;
+                    stroke-location: outside;
+                    stroke-alignment: outer;
                 }
             }
         }

@@ -15,6 +15,12 @@
               <span class="label label-primary">{{path.edges[$index - 1].$type}}</span>
             </td>
             <td>{{node.name}}</td>
+            <td ng-if="$index == 1" rowspan="{{path.edges.length}}" width="1%">
+              <button type="button" class="btn btn-default btn-xs" ng-click="viewPath(path)">
+                <i class="fa fa-link"></i>
+                Explore
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>

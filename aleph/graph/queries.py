@@ -1,5 +1,5 @@
 import logging
-from py2neo import Node, Walkable
+# from py2neo import Node, Walkable
 
 from aleph import authz
 from aleph.graph.schema import NodeType, EdgeType
@@ -131,6 +131,9 @@ class EdgeQuery(GraphQuery):
             node_id = self.data.getlist('node_id')
         return node_id
 
+    def edge_id(self):
+        return self.data.getlist('edge_id')
+
     def query(self):
         args = {
             'limit': self.limit,
@@ -138,6 +141,7 @@ class EdgeQuery(GraphQuery):
             'ignore': self.ignore(),
             'source_collection_id': self.source_collection_id(),
             'target_collection_id': self.target_collection_id(),
+            'edge_id': self.edge_id(),
             'source_id': self.source_id(),
             'target_id': self.target_id()
         }
@@ -146,6 +150,8 @@ class EdgeQuery(GraphQuery):
         filters.append('targetcoll.alephCollection IN {target_collection_id}')
         if len(args['ignore']):
             filters.append('NOT (rel.id IN {ignore})')
+        if len(args['edge_id']):
+            filters.append('rel.id IN {edge_id}')
         if len(args['source_id']):
             filters.append('source.id IN {source_id}')
         if len(args['target_id']):
@@ -199,22 +205,48 @@ class PathQuery(GraphQuery):
         filters = []
         filters.append('srccoll.alephCollection IN {collection_id}')
         filters.append('destcoll.alephCollection IN {acl}')
-        filters.append('destcoll.alephCollection <> srccoll.alephCollection')
+        filters.append('destcoll <> srccoll')
         filters.append('all(r IN relationships(pth) WHERE type(r) <> "PART_OF")')
         q = "MATCH pth = shortestPath((src)-[*1..3]-(dest)) " \
             "MATCH (src)-[:PART_OF]->(srccoll:Collection) " \
             "MATCH (dest)-[:PART_OF]->(destcoll:Collection) " \
             "WHERE %s " \
-            "RETURN pth SKIP {offset} LIMIT {limit} "
+            "RETURN pth, destcoll SKIP {offset} LIMIT {limit} "
         q = q % ' AND '.join(filters)
-        print q, args
+        # print q, args
         return q, args
+
+    # def facet_query(self):
+    #     args = {
+    #         'acl': authz.collections(authz.READ),
+    #         'collection_id': self.source_collection_id()
+    #     }
+    #     filters = []
+    #     filters.append('srccoll.alephCollection IN {collection_id}')
+    #     filters.append('destcoll.alephCollection IN {acl}')
+    #     filters.append('destcoll.alephCollection <> srccoll.alephCollection')
+    #     filters.append('all(r IN relationships(pth) WHERE type(r) <> "PART_OF")')
+    #     q = "MATCH pth = (src)-[*1..3]-(dest) " \
+    #         "MATCH (src)-[:PART_OF]->(srccoll:Collection) " \
+    #         "MATCH (dest)-[:PART_OF]->(destcoll:Collection) " \
+    #         "WHERE %s " \
+    #         "RETURN DISTINCT destcoll.alephCollection, destcoll.name "
+    #     q = q % ' AND '.join(filters)
+    #     # print q, args
+    #     return q, args
 
     def execute(self):
         query, args = self.query()
         paths = []
         for row in self.graph.run(query, **args):
-            path = {'nodes': [], 'edges': []}
+            path = {
+                'nodes': [],
+                'edges': [],
+                'collection': {
+                    'id': row.get('destcoll').get('alephCollection'),
+                    'label': row.get('destcoll').get('name')
+                }
+            }
             for node in row.get('pth').nodes():
                 path['nodes'].append(NodeType.dict(node))
             for i, rel in enumerate(row.get('pth').relationships()):
@@ -225,3 +257,16 @@ class PathQuery(GraphQuery):
                 path['edges'].append(data)
             paths.append(path)
         return paths
+
+    # def facet_execute(self):
+    #     query, args = self.facet_query()
+    #     collections = []
+    #     for row in self.graph.run(query, **args):
+    #         collections.append(dict(row))
+    #     return collections
+
+    # def to_dict(self):
+    #     data = self._as_json(self.execute())
+    #     data['facets'] = {}
+    #     data['facets']['collections'] = self.facet_execute()
+    #     return data

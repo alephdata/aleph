@@ -1,11 +1,9 @@
-aleph.controller('NetworksCreateCtrl', ['$scope', '$route', '$location', '$http', 'Scene', 'Title', 'metadata', 'collection',
-    function($scope, $route, $location, $http, Scene, Title, metadata, collection) {
+aleph.controller('NetworksCreateCtrl', ['$scope', '$route', '$location', '$http', 'Title', 'metadata', 'collection', 'network',
+    function($scope, $route, $location, $http, Title, metadata, collection, network) {
 
   Title.set(collection.label, "collections");
   $scope.collection = collection;
   $scope.metadata = metadata;
+  $scope.network = network;
 
-  $scope.network = {
-    collection_id: collection.id
-  };
 }]);

@@ -118,7 +118,8 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     reloadOnSearch: false,
     resolve: {
       'collection': loadCollection,
-      'metadata': loadMetadata
+      'metadata': loadMetadata,
+      'network': loadNetworkFromQuery
     }
   });
 
