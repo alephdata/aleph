@@ -34,13 +34,11 @@ aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
       self.removeNode = function(node) {
         var idx = self.nodes.indexOf(node);
         if (idx != -1) {
-          console.log(self.edges.length);
           self.edges.filter(function(edge) {
             return edge.source.id == node.id || edge.target.id == node.id;
           }).forEach(function(edge) {
             self.removeEdge(edge);
           });
-          // console.log(self.edges.length);
           self.nodes.splice(idx, 1);
           var selectionIdx = self.selection.indexOf(node);
           if (selectionIdx != -1) {

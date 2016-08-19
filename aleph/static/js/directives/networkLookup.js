@@ -30,6 +30,8 @@ aleph.directive('networkLookup', ['$http', function($http) {
         ctrl.completeNode(node);
         scope.search();
       };
+
+      scope.search();
     }
   };
 }]);

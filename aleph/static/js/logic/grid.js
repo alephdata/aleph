@@ -36,8 +36,7 @@ alephNetwork.Grid = function(network) {
   };
 
   self.isPlaced = function(node) {
-    if (!node) { return false; }
-    return node.gridX !== null && node.gridY !== null;
+    return node && node.gridX !== null && node.gridY !== null;
   }; 
 
   self.nodeTranslate = function(node) {
@@ -67,8 +66,8 @@ alephNetwork.Grid = function(network) {
 
   self.placeNode = function(node) {
     var iter = 1,
-        options = [[1, 0], [0, 1], [-1, 0], [0, -1], 
-                   [-1, 1], [1, -1]];
+        options = [[ 1, 0], [0,  1], [-1,  0], [0, -1], 
+                   [-1, 1], [1, -1], [-1, -1], [-1, 1]];
     if (!self.isPlaced(node)) {
       var ref = self.isPlaced(node.gridRef) ? node.gridRef : self.network.gridRef();
       node.gridX = ref.gridX;

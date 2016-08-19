@@ -153,8 +153,6 @@ class EdgeQuery(GraphQuery):
         if len(args['target_id']):
             filters.append('target.id IN {target_id}')
         directed = '>' if self._bool('directed') else ''
-        if not len(directed):
-            filters.append('source.id > target.id')
 
         q = "MATCH (source)-[rel]-%s(target) " \
             "MATCH (source)-[:PART_OF]->(sourcecoll:Collection) " \

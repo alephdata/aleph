@@ -1,14 +1,11 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-    Add nodes to this scene
-  </div>
   <div class="panel-body">
     <form class="form-horizontal" ng-submit="search()">
       <input class="form-control" ng-model="query.text" placeholder="Search for nodes...">
       <div class="checkbox">
         <label>
           <input type="checkbox" ng-model="query.collectionFilter" ng-change="search()">
-          Limit to this collection.
+          Search only within the current collection
         </label>
       </div>
     </form>
