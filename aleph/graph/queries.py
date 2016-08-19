@@ -207,14 +207,16 @@ class PathQuery(GraphQuery):
         filters.append('startcoll.alephCollection IN {start_collection_id}')
         filters.append('endcoll.alephCollection IN {end_collection_id}')
         filters.append('startcoll <> endcoll')
+        # filters.append('NOT ()-[:AKA]->(start)')
+        # filters.append('NOT ()-[:AKA]->(end)')
         filters.append('all(r IN relationships(pth) WHERE type(r) <> "PART_OF")')
         return args, filters
 
     def query(self):
         args, filters = self.get_filters()
-        q = "MATCH pth = shortestPath((start)-[*1..3]-(end)) " \
-            "MATCH (start)-[:PART_OF]->(startcoll:Collection) " \
-            "MATCH (end)-[:PART_OF]->(endcoll:Collection) " \
+        q = "MATCH pth = shortestPath((start:Entity)-[*1..3]-(end:Entity)) " \
+            "MATCH (start:Entity)-[:PART_OF]->(startcoll:Collection) " \
+            "MATCH (end:Entity)-[:PART_OF]->(endcoll:Collection) " \
             "WHERE %s " \
             "RETURN DISTINCT pth, endcoll SKIP {offset} LIMIT {limit} "
         q = q % ' AND '.join(filters)
@@ -224,9 +226,9 @@ class PathQuery(GraphQuery):
     def collections_query(self):
         args, filters = self.get_filters()
         args['end_collection_id'] = authz.collections(authz.READ)
-        q = "MATCH pth = shortestPath((start)-[*1..3]-(end)) " \
-            "MATCH (start)-[:PART_OF]->(startcoll:Collection) " \
-            "MATCH (end)-[:PART_OF]->(endcoll:Collection) " \
+        q = "MATCH pth = shortestPath((start:Entity)-[*1..3]-(end:Entity)) " \
+            "MATCH (start:Entity)-[:PART_OF]->(startcoll:Collection) " \
+            "MATCH (end:Entity)-[:PART_OF]->(endcoll:Collection) " \
             "WHERE %s " \
             "RETURN DISTINCT endcoll.alephCollection AS id, endcoll.name AS label LIMIT 15"
         q = q % ' AND '.join(filters)

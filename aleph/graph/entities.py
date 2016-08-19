@@ -56,8 +56,7 @@ def load_entity(tx, entity):
         alias = EntityNode.merge(tx, name=other_name.display_name,
                                  fingerprint=fp,
                                  alephEntity=entity.id,
-                                 alephSchema=entity.type,
-                                 isAlias=True)
+                                 alephSchema=entity.type)
         AKA.merge(tx, node, alias, alephEntity=entity.id)
         add_to_collections(tx, alias, entity.collections,
                            alephEntity=entity.id)
