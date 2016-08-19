@@ -11,12 +11,16 @@
         </tr>
         <tr ng-repeat="path in analysis.paths">
           <td>
+            <node-icon node="path.nodes[0]"></node-icon>
             {{path.nodes[0].name}}
           </td>
           <td class="numeric">
             <span class="badge">{{path.edges.length}}</span>
           </td>
-          <td>{{path.nodes[path.nodes.length - 1].name}}</td>
+          <td>
+            <node-icon node="path.nodes[path.nodes.length - 1]"></node-icon>
+            {{path.nodes[path.nodes.length - 1].name}}
+          </td>
           <td>{{path.collection.label}}</td>
           <td width="1%">
             <button type="button" class="btn btn-default btn-xs" ng-click="viewPath(path)">

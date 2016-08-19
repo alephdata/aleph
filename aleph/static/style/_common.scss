@@ -47,9 +47,12 @@ a, .click {
 //     font-style: normal;
 // }
 
-.fa-codepoint {
-    font-family: 'FontAwesome';
-    font-style: normal;
+.thing-icon {
+    // to be used by both entity icons and graph node icons
+    .fa-codepoint {
+        font-family: 'FontAwesome';
+        font-style: normal;
+    }
 }
 
 code {
