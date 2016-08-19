@@ -3,15 +3,11 @@
     <network-canvas></network-canvas>
   </div>
   <div class="col-md-3">
-     <div class="btn-group search-bar" role="group">
-      <div class="btn-group">
-        <a class="btn btn-default" ng-click="removeSelectedNodes()"
-          ng-disabled="!hasSelectedNodes()">
-          <i class="fa fa-trash" aria-hidden="true"></i>
-          Remove selected
-        </a>
-      </div>
-    </div>
-    <network-panel></network-panel>
+    <span ng-hide="selection.length">
+      <network-lookup></network-lookup>
+    </span>
+    <span ng-repeat="node in selection track by node.id">
+      <network-node node="node"></network-node>
+    </span>
   </div>
 </div>

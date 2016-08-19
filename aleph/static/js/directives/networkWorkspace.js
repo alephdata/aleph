@@ -34,12 +34,13 @@ aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
       self.removeNode = function(node) {
         var idx = self.nodes.indexOf(node);
         if (idx != -1) {
-          var edges = self.edges.filter(function(edge) {
+          console.log(self.edges.length);
+          self.edges.filter(function(edge) {
             return edge.source.id == node.id || edge.target.id == node.id;
+          }).forEach(function(edge) {
+            self.removeEdge(edge);
           });
-          for (var i in edges) {
-            self.removeEdge(edges[i]);
-          }
+          // console.log(self.edges.length);
           self.nodes.splice(idx, 1);
           var selectionIdx = self.selection.indexOf(node);
           if (selectionIdx != -1) {
@@ -59,6 +60,8 @@ aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
         var source = self.addNode(data.$source),
             target = self.addNode(data.$target),
             edge = new alephNetwork.Edge(self, data, source, target);
+        source.gridRef = target;
+        target.gridRef = source;
         self.edges.push(edge);
         self.update();
         return edge;
@@ -80,10 +83,15 @@ aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
         return self.edges.map(function(e) { return e.id; });
       };
 
+      self.updateSelection = function() {
+        $scope.selection = self.selection;
+        // $scope.$broadcast('updateNetworkSelection', self.selection);
+        self.update();
+      };
+
       self.clearSelection = function() {
         self.selection = [];
-        $scope.$broadcast('updateNetworkSelection', self.selection);
-        self.update();
+        self.updateSelection();
       };
 
       self.toggleSelection = function(node) {
@@ -94,24 +102,12 @@ aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
         } else {
           self.selection.splice(idx, 1);
         }
-        $scope.$broadcast('updateNetworkSelection', self.selection);
-        self.update();
+        self.updateSelection();
       };
 
       self.isSelected = function(node) {
         return self.selection.indexOf(node) != -1;
       };
-
-      $scope.hasSelectedNodes = function() {
-        return self.selection.length > 0;
-      }
-
-      $scope.removeSelectedNodes = function() {
-        for (var i = self.selection.length - 1; i >= 0; i--) {
-          self.removeNode(self.selection[i]);
-        }
-        $scope.$broadcast('updateNetworkSelection', self.selection);
-      }
 
       self.gridRef = function() {
         // reference object based upon which new nodes will be placed.
@@ -132,9 +128,9 @@ aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
         }
         var params = {
           ignore: self.getEdgeIds(),
-          source_id: [node.id],
+          source_id: nodeIds,
           target_id: nodeIds,
-          directed: false,
+          directed: true,
           limit: 500
         };
         $http.post('/api/1/graph/edges', params).then(function(res) {

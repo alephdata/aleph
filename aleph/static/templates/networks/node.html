@@ -1,0 +1,27 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <node-icon node="node"></node-icon> <strong ng-bind="node.name"></strong>
+  </div>
+  <div class="panel-body">
+    <div class="btn-group btn-justified" role="group">
+      <div class="btn-group">
+        <a class="btn btn-default" ng-click="remove()">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+          Remove
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <form class="form-horizontal" ng-submit="search()">
+      <input class="form-control" ng-model="query.text" placeholder="Filter relationships">
+    </form>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="edge in suggestedEdges track by edge.id" ng-click="addEdge(edge)">
+      <div class="pull-right"><span class="label label-primary">{{edge.$type}}</span></div>
+      <node-icon node="edge.$other"></node-icon>
+      {{::edge.$other.name | characters:30 }}
+    </li>
+  </ul>
+</div>

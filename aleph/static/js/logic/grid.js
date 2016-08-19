@@ -3,7 +3,6 @@ var alephNetwork = alephNetwork || {};
 alephNetwork.Grid = function(network) {
   var self = this;
   self.network = network;
-  self.edgePaths = {};
   self.unit = 20;
   self.nodeWidthUnits = 6;
   self.nodeHeightUnits = 2;
@@ -36,9 +35,14 @@ alephNetwork.Grid = function(network) {
     return (self.nodeHeight(node) / 2) * -1;
   };
 
+  self.isPlaced = function(node) {
+    if (!node) { return false; }
+    return node.gridX !== null && node.gridY !== null;
+  }; 
+
   self.nodeTranslate = function(node) {
-    if (node.gridX === null && node.gridY === null)  {
-      node = self.placeNode(node);
+    if (!self.isPlaced(node))  {
+      self.placeNode(node);
     }
     node.x = self.nodeX(node);
     node.y = self.nodeY(node);
@@ -58,16 +62,18 @@ alephNetwork.Grid = function(network) {
   self.snapToGrid = function(node) {
     node.gridX = self.pixelToUnit(node.x);
     node.gridY = self.pixelToUnit(node.y);
-    node = self.placeNode(node);
+    self.placeNode(node);
   };
 
   self.placeNode = function(node) {
     var iter = 1,
-        ref = self.network.gridRef(),
-        options = [[1, 0], [1, 1], [0, 1], [-1, 0],
-                   [0, -1], [-1, -1], [-1, 1], [1, -1]];
-    node.gridX = node.gridX || ref.gridX;
-    node.gridY = node.gridY || ref.gridY;  
+        options = [[1, 0], [0, 1], [-1, 0], [0, -1], 
+                   [-1, 1], [1, -1]];
+    if (!self.isPlaced(node)) {
+      var ref = self.isPlaced(node.gridRef) ? node.gridRef : self.network.gridRef();
+      node.gridX = ref.gridX;
+      node.gridY = ref.gridY;
+    }
     if (!self.hasOverlap(node)) {
       return node;
     }
@@ -114,44 +120,9 @@ alephNetwork.Grid = function(network) {
     return false;
   };
 
-  self.computePaths = function() {
-    // var matrix = self.getGridMatrix();
-
-    // for (var i in self.network.edges) {
-    //   var edge = self.network.edges[i],
-    //       route = new alephNetwork.Router(matrix, edge.source, edge.target)
-    //   self.edgePaths[edge.id] = route.path();
-    // }
-  };
-
   self.edgePath = function(edge) {
     var source = [edge.source.x, edge.source.y],
         target = [edge.target.x, edge.target.y];
     return 'M' + source + 'L' + target;
-    // var path = self.edgePaths[edge.id].map(function(n) {
-    //   return [n.x * self.unit, n.y * self.unit];
-    // });
-    // return 'M' + path.join('L');
-  };
-
-  self.getGridMatrix = function() {
-    var matrix = {};
-    for (var i in self.network.nodes) {
-      var box = self.getNodeBox(self.network.nodes[i]);
-      // todo: make a version that emits units.
-      box.left = self.pixelToUnit(box.left);
-      box.right = self.pixelToUnit(box.right);
-      box.top = self.pixelToUnit(box.top);
-      box.bottom = self.pixelToUnit(box.bottom);
-      for (var col = box.left; col <= box.right; col++) {
-        if (!matrix[col]) {
-           matrix[col] = {};
-        }
-        for (var row = box.top; row <= box.bottom; row++) {
-          matrix[col][row] = self.network.nodes[i].id;
-        }
-      }
-    }
-    return matrix;
   };
 };

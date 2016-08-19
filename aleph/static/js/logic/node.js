@@ -1,6 +1,6 @@
 var alephNetwork = alephNetwork || {};
 
-alephNetwork.Node = function(scene, node) {
+alephNetwork.Node = function(scene, node, gridRef) {
   // A node represents one object (person, company, phone, email, ...)
   // on the graph. This object is just interested in layout and grid
   // positioning, not the actual management of the scene canvas.
@@ -12,6 +12,7 @@ alephNetwork.Node = function(scene, node) {
   self.gridX = node.gridX || null;
   self.gridY = node.gridY || null;
   self.id = node.id;
+  self.gridRef = gridRef;
 
   self.getColor = function() {
     return scene.config.colors[self.type] || '#777777';
