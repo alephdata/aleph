@@ -1,17 +1,17 @@
 <collections-screen collection="collection" section="analysis">
-  <form role="form" name="createNetwork" ng-submit="save(createNetwork)">
+  <form role="form" name="editNetwork" ng-submit="save(editNetwork)">
     <div class="row">
       <div class="col-md-9">
-        <div class="form-group" ng-class="{'has-error': createNetwork.label.$invalid}">
+        <div class="form-group" ng-class="{'has-error': editNetwork.label.$invalid}">
           <input type="text" class="form-control" id="label"
                  required ng-minlength="3" ng-maxlength="2048" autocomplete="off" 
-                 ng-model="network.label" placeholder="Enter a name to save this network...">
+                 ng-model="network.label" placeholder="Network Label">
         </div>
       </div>
       <div class="col-md-3">
-        <button type="submit" class="btn btn-default" ng-disabled="!canSave(createNetwork)">
+        <button type="submit" class="btn btn-default" ng-disabled="!canSave(editNetwork)">
           <i class="fa fa-floppy-o" aria-hidden="true"></i>
-          Save this network
+          Save
         </button>
       </div>
     </div>

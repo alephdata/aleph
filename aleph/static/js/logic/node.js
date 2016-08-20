@@ -39,7 +39,7 @@ alephNetwork.Node = function(scene, node, gridRef) {
     return {
       id: self.id,
       gridX: self.gridX,
-      gridY: self.grifY
+      gridY: self.gridY
     };
   };
 };

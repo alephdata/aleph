@@ -124,6 +124,16 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     }
   });
 
+  $routeProvider.when('/collections/:collection_id/networks/:network_id', {
+    templateUrl: 'templates/networks/edit.html',
+    controller: 'NetworksEditCtrl',
+    reloadOnSearch: false,
+    resolve: {
+      'collection': loadCollection,
+      'metadata': loadMetadata,
+      'network': loadNetwork
+    }
+  });
 
   $routeProvider.when('/crawlers', {
     templateUrl: 'templates/crawlers/manage.html',

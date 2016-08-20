@@ -11,6 +11,7 @@ from aleph.model.collection import Collection # noqa
 from aleph.model.cache import Cache # noqa
 from aleph.model.crawler_state import CrawlerState # noqa
 from aleph.model.event_log import EventLog # noqa
+from aleph.model.network import Network # noqa
 from aleph.model.document import Document, DocumentPage, DocumentRecord # noqa
 from aleph.model.validation import validate # noqa
 

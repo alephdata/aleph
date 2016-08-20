@@ -96,7 +96,6 @@ aleph.directive('networkCanvas', ['Metadata', function(Metadata) {
           .call(adjustText);
 
         nodes.classed("selected", ctrl.isSelected);
-
         nodes.exit().remove();
       };
 
@@ -154,8 +153,8 @@ aleph.directive('networkCanvas', ['Metadata', function(Metadata) {
         // rescale the font to make text smaller on large zoom labels.
         fontSize = grid.fontSize() * (1 / Math.max(1, d3.event.transform.k));
         // store the current viewport offset 
-        ctrl.view.gridX = -1 * grid.pixelToUnit(d3.event.transform.x - (svgSize.width/2));
-        ctrl.view.gridY = -1 * grid.pixelToUnit(d3.event.transform.y - (svgSize.height/2));
+        ctrl.view.gridX = grid.pixelToUnit(d3.event.transform.x - (svgSize.width / 2));
+        ctrl.view.gridY = grid.pixelToUnit(d3.event.transform.y - (svgSize.height / 2));
         ctrl.view.zoom = d3.event.transform.k;
         // update display
         drawNodes();
@@ -189,6 +188,7 @@ aleph.directive('networkCanvas', ['Metadata', function(Metadata) {
       function clickNode(node) {
         // todo should shift be required for multiple select?
         d3.event.stopPropagation();
+        console.log(node);
         ctrl.toggleSelection(node);
         scope.$apply();
       }
@@ -209,14 +209,18 @@ aleph.directive('networkCanvas', ['Metadata', function(Metadata) {
         // make sure the SVG is sized responsively
         d3.select(window).on('resize', updateSize); 
         updateSize();
+        
+        // move to the viewport offset last used in this view.
+        // console.log('restore viewport', angular.copy(ctrl.view));
+        var t = d3.zoomIdentity;
+        t = t.translate(grid.nodeX(ctrl.view) + (svgSize.width / 2),
+                        grid.nodeY(ctrl.view) + (svgSize.height / 2));
+        t = t.scale(ctrl.view.zoom);
+        // console.log(t);
+        zoom.transform(svg, t);
+
         svg.call(zoom);
         svg.on('click', clickCanvas);
-
-        // move to the viewport offset last used in this view.
-        zoom.translateBy(svg, grid.nodeX(ctrl.view) + (svgSize.width/2),
-                              grid.nodeY(ctrl.view) + (svgSize.height/2));
-        zoom.scaleBy(svg, ctrl.view.zoom);
-
         // draw stuff.
         drawNodes();
         drawEdges();

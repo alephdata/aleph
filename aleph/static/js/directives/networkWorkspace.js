@@ -58,7 +58,7 @@ aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
         var source = self.addNode(data.$source),
             target = self.addNode(data.$target),
             edge = new alephNetwork.Edge(self, data, source, target);
-        source.gridRef = target;
+        // source.gridRef = target;
         target.gridRef = source;
         self.edges.push(edge);
         self.update();
@@ -146,20 +146,22 @@ aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
         $scope.$broadcast('updateNetwork', self);
       };
 
-      self.fromJSON = function(scene) {
-        // load a REST-returned scene configuration into the 
+      self.fromJSON = function(network) {
+        // load a REST-returned network configuration into the 
         // relevant objects (nodes, edges, etc.)
-        var view = scene.view || {};
-        self.collection_id = scene.collection_id;
+        var view = network.view || {};
+        self.collection_id = network.collection_id;
         self.view.gridX = view.gridX || 0;
         self.view.gridY = view.gridY || 0;
         self.view.zoom = view.zoom || 1;
-        for (var i in scene.nodes) {
-          self.addNode(scene.nodes[i]); 
+        for (var i in network.nodes) {
+          self.addNode(network.nodes[i]); 
         }
-        for (var i in scene.edges) {
-          self.addEdge(scene.edges[i]); 
+        for (var i in network.edges) {
+          self.addEdge(network.edges[i]); 
         }
+        self.update();
+        network.toJSON = self.toJSON;
       };
 
       self.toJSON = function() {

@@ -1,7 +1,7 @@
-aleph.controller('NetworksCreateCtrl', ['$scope', '$location', '$http', 'Title', 'metadata', 'collection', 'network',
+aleph.controller('NetworksEditCtrl', ['$scope', '$location', '$http', 'Title', 'metadata', 'collection', 'network',
     function($scope, $location, $http, Title, metadata, collection, network) {
 
-  Title.set(collection.label, "collections");
+  Title.set(network.label, "collections");
   $scope.collection = collection;
   $scope.metadata = metadata;
   $scope.network = network;
@@ -15,12 +15,11 @@ aleph.controller('NetworksCreateCtrl', ['$scope', '$location', '$http', 'Title',
       return;
     }
     var network = $scope.network.toJSON(),
-        url = collection.api_url + '/networks';
+        url = collection.api_url + '/networks/' + $scope.network.id;
     network.label = $scope.network.label;
+    console.log(network);
     $http.post(url, network).then(function(res) {
-      var path = '/collections/' + collection.id + '/networks/' + res.data.id;
-      $location.search({});
-      $location.path(path);
+      console.log(res);
     });
   };
 }]);

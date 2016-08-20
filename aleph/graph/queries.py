@@ -62,6 +62,9 @@ class NodeQuery(GraphQuery):
         collection_id = self.data.getlist('collection_id')
         return authz.collections_intersect(authz.READ, collection_id)
 
+    def node_id(self):
+        return self.data.getlist('node_id')
+
     def query(self):
         args = {
             'acl': authz.collections(authz.READ),
@@ -69,6 +72,7 @@ class NodeQuery(GraphQuery):
             'offset': self.offset,
             'text': self.text(),
             'ignore': self.ignore(),
+            'node_id': self.node_id(),
             'collection_id': self.collection_id()
         }
         filters = []
@@ -78,6 +82,8 @@ class NodeQuery(GraphQuery):
             filters.append('node.name =~ {text}')
         if len(args['ignore']):
             filters.append('NOT (node.id IN {ignore})')
+        if len(args['node_id']):
+            filters.append('node.id IN {node_id}')
 
         q = "MATCH (node)-[:PART_OF]->(ncoll:Collection) " \
             "MATCH (node)-[r]-(other) " \
