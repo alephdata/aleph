@@ -29,10 +29,12 @@ aleph.factory('Network', ['$q', '$http', '$location', 'Metadata', 'Query', funct
       $http.get(url).then(function(res) {
         var network = res.data,
             edgesParams = {
-              edge_id: network.edges.map(function(e) { return e.id; })
+              edge_id: network.edges.map(function(e) { return e.id; }),
+              limit: network.edges.length + 1
             },
             nodesParams = {
-              node_id: network.nodes.map(function(n) { return n.id; })
+              node_id: network.nodes.map(function(n) { return n.id; }),
+              limit: network.nodes.length + 1
             };
         $q.all([
           $http.post('/api/1/graph/edges', edgesParams),
@@ -48,6 +50,8 @@ aleph.factory('Network', ['$q', '$http', '$location', 'Metadata', 'Query', funct
                 return node;
               }
             }
+          }).filter(function(n) {
+            return !!n;
           });
           dfd.resolve(network);
         }, function(err) {

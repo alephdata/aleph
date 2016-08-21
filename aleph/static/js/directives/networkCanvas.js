@@ -153,8 +153,8 @@ aleph.directive('networkCanvas', ['Metadata', function(Metadata) {
         // rescale the font to make text smaller on large zoom labels.
         fontSize = grid.fontSize() * (1 / Math.max(1, d3.event.transform.k));
         // store the current viewport offset 
-        ctrl.view.gridX = grid.pixelToUnit(d3.event.transform.x - (svgSize.width / 2));
-        ctrl.view.gridY = grid.pixelToUnit(d3.event.transform.y - (svgSize.height / 2));
+        ctrl.view.gridX = -1 * grid.pixelToUnit(d3.event.transform.x - (svgSize.width / 2));
+        ctrl.view.gridY = -1 * grid.pixelToUnit(d3.event.transform.y - (svgSize.height / 2));
         ctrl.view.zoom = d3.event.transform.k;
         // update display
         drawNodes();
@@ -200,10 +200,16 @@ aleph.directive('networkCanvas', ['Metadata', function(Metadata) {
         scope.$apply();
       }
 
-      scope.$on('$destroy', scope.$on('updateNetwork', function(e) {
+      var unsubcriptUpdates = scope.$on('updateNetwork', function(e) {
         drawNodes();
         drawEdges();
-      }));
+      });
+
+      scope.$on('$destroy', unsubcriptUpdates);
+
+      scope.$on('$destroy', function() {
+        frame.remove();
+      });
 
       function init() {
         // make sure the SVG is sized responsively
@@ -213,8 +219,8 @@ aleph.directive('networkCanvas', ['Metadata', function(Metadata) {
         // move to the viewport offset last used in this view.
         // console.log('restore viewport', angular.copy(ctrl.view));
         var t = d3.zoomIdentity;
-        t = t.translate(grid.nodeX(ctrl.view) + (svgSize.width / 2),
-                        grid.nodeY(ctrl.view) + (svgSize.height / 2));
+        t = t.translate(-1 * grid.nodeX(ctrl.view) + (svgSize.width / 2),
+                        -1 * grid.nodeY(ctrl.view) + (svgSize.height / 2));
         t = t.scale(ctrl.view.zoom);
         // console.log(t);
         zoom.transform(svg, t);

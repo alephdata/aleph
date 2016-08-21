@@ -15,7 +15,7 @@ aleph.directive('networkNode', ['$http', '$httpParamSerializer', 'Entity', 'Docu
 
       scope.search = function() {
         var params = {
-          ignore: ctrl.getEdgeIds(),
+          context: ctrl.getEdgeIds(),
           limit: 10,
           directed: false,
           source_id: scope.node.id,
@@ -40,8 +40,7 @@ aleph.directive('networkNode', ['$http', '$httpParamSerializer', 'Entity', 'Docu
         var idx = scope.suggestedEdges.indexOf(edge);
         scope.suggestedEdges.splice(idx, 1);
         var edge = ctrl.addEdge(edge);
-        ctrl.completeNode(edge.source);
-        ctrl.completeNode(edge.target);
+        ctrl.completeEdges();
         ctrl.update();
         scope.search();
       };

@@ -31,7 +31,7 @@
 
             &.selected {
                 rect.background {
-                    stroke: darken($gray-subtle, 10%);
+                    stroke: darken($gray-subtle, 12%);
                     stroke-width: 10px;
                     stroke-location: outside;
                     stroke-alignment: outer;

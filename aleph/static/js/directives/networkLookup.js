@@ -11,7 +11,7 @@ aleph.directive('networkLookup', ['$http', function($http) {
 
       scope.search = function() {
         var params = {
-          ignore: ctrl.getNodeIds(),
+          context: ctrl.getNodeIds(),
           limit: 10,
           text: scope.query.text
         };
@@ -27,7 +27,7 @@ aleph.directive('networkLookup', ['$http', function($http) {
         var idx = scope.suggestedNodes.indexOf(node);
         scope.suggestedNodes.splice(idx, 1);
         ctrl.addNode(node);
-        ctrl.completeNode(node);
+        ctrl.completeEdges();
         scope.search();
       };
 

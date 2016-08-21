@@ -25,7 +25,7 @@ aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
           }
         }
         var node = new alephNetwork.Node(self, data);
-        // self.completeNode(node);
+        // self.completeEdges();
         self.nodes.push(node);
         self.update();
         return node;
@@ -117,15 +117,15 @@ aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
         return self.view;
       };
 
-      self.completeNode = function(node) {
-        // given a new node added to the graph, find all edges that
+      self.completeEdges = function() {
+        // given all nodes added to the graph, find all edges that
         // connect it to the existing nodes of that graph.
         var nodeIds = self.getNodeIds();
         if (nodeIds.length <= 1) {
           return;
         }
         var params = {
-          ignore: self.getEdgeIds(),
+          context: self.getEdgeIds(),
           source_id: nodeIds,
           target_id: nodeIds,
           directed: true,
@@ -160,6 +160,7 @@ aleph.directive('networkWorkspace', ['$http', '$rootScope', '$location',
         for (var i in network.edges) {
           self.addEdge(network.edges[i]); 
         }
+        self.completeEdges();
         self.update();
         network.toJSON = self.toJSON;
       };

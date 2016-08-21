@@ -27,8 +27,8 @@ class GraphQuery(object):
         except:
             return 0
 
-    def ignore(self):
-        return self.data.getlist('ignore')
+    def context(self):
+        return self.data.getlist('context')
 
     def _bool(self, name, default=False):
         """Fetch a query argument, as a boolean."""
@@ -71,7 +71,7 @@ class NodeQuery(GraphQuery):
             'limit': self.limit,
             'offset': self.offset,
             'text': self.text(),
-            'ignore': self.ignore(),
+            'context': self.context(),
             'node_id': self.node_id(),
             'collection_id': self.collection_id()
         }
@@ -80,8 +80,8 @@ class NodeQuery(GraphQuery):
         filters.append('ocoll.alephCollection IN {acl}')
         if args['text'] is not None:
             filters.append('node.name =~ {text}')
-        if len(args['ignore']):
-            filters.append('NOT (node.id IN {ignore})')
+        if len(args['context']):
+            filters.append('NOT (node.id IN {context})')
         if len(args['node_id']):
             filters.append('node.id IN {node_id}')
 
@@ -140,7 +140,7 @@ class EdgeQuery(GraphQuery):
         args = {
             'limit': self.limit,
             'offset': self.offset,
-            'ignore': self.ignore(),
+            'context': self.context(),
             'source_collection_id': self.source_collection_id(),
             'target_collection_id': self.target_collection_id(),
             'edge_id': self.edge_id(),
@@ -150,8 +150,8 @@ class EdgeQuery(GraphQuery):
         filters = []
         filters.append('sourcecoll.alephCollection IN {source_collection_id}')
         filters.append('targetcoll.alephCollection IN {target_collection_id}')
-        if len(args['ignore']):
-            filters.append('NOT (rel.id IN {ignore})')
+        if len(args['context']):
+            filters.append('NOT (rel.id IN {context})')
         if len(args['edge_id']):
             filters.append('rel.id IN {edge_id}')
         if len(args['source_id']):
