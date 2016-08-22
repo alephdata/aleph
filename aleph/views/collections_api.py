@@ -3,7 +3,7 @@ from apikit import obj_or_404, jsonify, Pager, request_data
 
 from aleph import authz
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY
-from aleph.model import Collection, db
+from aleph.model import Collection, Path, db
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
 from aleph.logic import delete_collection, update_collection
@@ -74,6 +74,14 @@ def pending(id):
         data['name_latin'] = latinize_text(entity.name, lowercase=False)
         entities.append(data)
     return jsonify({'results': entities, 'total': len(entities)})
+
+
+@blueprint.route('/api/1/collections/<int:id>/paths', methods=['GET'])
+def paths(id):
+    collection = obj_or_404(Collection.by_id(id))
+    authz.require(authz.collection_read(collection.id))
+    q = Path.find(collection, entity_id=request.args.get('entity_id'))
+    return jsonify(Pager(q, id=collection.id))
 
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['DELETE'])

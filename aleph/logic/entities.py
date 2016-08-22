@@ -63,8 +63,6 @@ def generate_entity_references(entity):
 
 def update_entity(entity):
     reindex_entity(entity, references=False)
-    with graph.transaction() as tx:
-        graph.load_entity(tx, entity)
     update_entity_full.apply_async([entity.id], queue=USER_QUEUE,
                                    routing_key=USER_ROUTING_KEY)
 
@@ -73,6 +71,7 @@ def delete_entity(entity, deleted_at=None):
     update_entity(entity)
     with graph.transaction() as tx:
         graph.remove_entity(tx, entity.id)
+        graph.delete_paths(entity.id)
     entity.delete(deleted_at=deleted_at)
 
 
@@ -82,6 +81,9 @@ def update_entity_full(entity_id):
     query = db.session.query(Entity).filter(Entity.id == entity_id)
     entity = query.first()
     generate_entity_references(entity)
+    with graph.transaction() as tx:
+        graph.load_entity(tx, entity)
+        graph.generate_paths(tx, entity)
     reindex_entity(entity)
     Alert.dedupe(entity.id)
 

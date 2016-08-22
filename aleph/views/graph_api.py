@@ -5,7 +5,7 @@ from apikit import jsonify, request_data
 
 from aleph.core import get_graph as _get_graph
 from aleph.events import log_event
-from aleph.graph.queries import NodeQuery, EdgeQuery, PathQuery
+from aleph.graph.queries import NodeQuery, EdgeQuery
 
 blueprint = Blueprint('graph_api', __name__)
 
@@ -51,15 +51,3 @@ def get_edges():
 def post_edges():
     log_event(request)
     return jsonify(EdgeQuery(get_graph(), get_post_multidict()))
-
-
-@blueprint.route('/api/1/graph/paths', methods=['GET'])
-def get_paths():
-    log_event(request)
-    return jsonify(PathQuery(get_graph(), request.args))
-
-
-@blueprint.route('/api/1/graph/paths', methods=['POST', 'PUT'])
-def post_paths():
-    log_event(request)
-    return jsonify(PathQuery(get_graph(), get_post_multidict()))

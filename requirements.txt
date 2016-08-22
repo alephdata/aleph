@@ -13,6 +13,7 @@ celery==3.1.23
 elasticsearch==2.3.0
 psycopg2==2.5.4
 cssutils==1.0.1
+webassets==0.10.1
 Pillow==3.2.0
 tesserwrap==0.1.6
 lxml==3.3.5

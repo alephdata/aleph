@@ -44,7 +44,8 @@ def load_entity(tx, entity):
                             alephState=entity.state,
                             alephEntity=entity.id)
     add_to_collections(tx, node, entity.collections,
-                       alephEntity=entity.id)
+                       alephEntity=entity.id,
+                       alephCanonical=entity.id)
 
     seen = set([fp])
     for other_name in entity.other_names:

@@ -7,6 +7,7 @@ from aleph.graph.schema import NodeType
 from aleph.graph.entities import load_entities, load_entity, remove_entity  # noqa
 from aleph.graph.collections import load_collection, remove_collection  # noqa
 from aleph.graph.documents import load_documents, load_document, remove_document  # noqa
+from aleph.graph.paths import generate_paths, delete_paths  # noqa
 from aleph.graph.mapping import Mapping  # noqa
 
 log = logging.getLogger(__name__)
@@ -29,9 +30,11 @@ def graph_metadata():
     if graph is None:
         return {'active': False}
     labels = [l for l in graph.node_labels if l != 'Collection']
+    types = [t for t in graph.relationship_types if t != 'PART_OF']
     return {
         'active': True,
         'labels': labels,
+        'types': types,
         'icons': get_config('GRAPH_ICONS'),
         'colors': get_config('GRAPH_COLORS')
     }
