@@ -18,6 +18,3 @@ var loadPaths = ['$http', '$q', '$location', '$route', 'Query',
   });
   return dfd.promise;
 }];
-
-
-

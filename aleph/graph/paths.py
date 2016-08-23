@@ -24,11 +24,12 @@ def generate_paths(graph, entity):
     # TODO: should max path length be configurable?
     q = "MATCH pth = shortestPath((start:Entity)-[*1..3]-(end:Entity)) " \
         "MATCH (start:Entity)-[startpart:PART_OF]->(startcoll:Collection) " \
-        "MATCH (end:Entity)-[:PART_OF]->(endcoll:Collection) " \
-        "WHERE startcoll <> endcoll AND " \
+        "MATCH (end:Entity)-[endpart:PART_OF]->(endcoll:Collection) " \
+        "WHERE NOT (end)-[:PART_OF]->(startcoll) AND " \
         "startpart.alephCanonical = {entity_id} AND " \
+        "endpart.alephEntity IS NOT NULL AND " \
         "all(r IN relationships(pth) WHERE type(r) <> \"PART_OF\") " \
-        "RETURN DISTINCT pth, endcoll.alephCollection AS end_collection_id"
+        "RETURN DISTINCT pth, endpart.alephEntity AS end_entity_id"
     for row in graph.run(q, entity_id=entity.id):
         path = row.get('pth')
         nodes = [NodeType.dict(n) for n in path.nodes()]
@@ -39,7 +40,7 @@ def generate_paths(graph, entity):
             data['$target'] = rel.end_node().get('id')
             data['$inverted'] = data['$source'] != nodes[i]['id']
             edges.append(data)
-        Path.from_data(entity, nodes, edges, row.get('end_collection_id'))
+        Path.from_data(entity, row.get('end_entity_id'), nodes, edges)
     db.session.commit()
     # TODO: send email to collection owners?
 

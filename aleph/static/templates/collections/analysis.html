@@ -38,17 +38,52 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="panel panel-default panel-facet">
+      <div class="panel panel-default panel-facet panel-facet">
         <div class="panel-heading">
           <strong>Collections</strong>
         </div>
         <ul class="list-group">
           <li class="list-group-item animate toggle"
-            ng-repeat="col in analysis.collections"
-            ng-class="{'active': query.hasField('end_collection_id', col.id)}"
-            ng-click="query.toggle('end_collection_id', col.id)">
+            ng-repeat="col in paths.facets.collection_id"
+            ng-class="{'active': query.hasField('collection_id', col.value)}"
+            ng-click="query.toggle('collection_id', col.value)">
+            <span class="badge">{{col.count | number}}</span>
             <span class="lbl">
               {{::col.label | characters:45 }}
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="panel panel-default panel-facet panel-facet">
+        <div class="panel-heading">
+          <strong>Link types</strong>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item animate toggle"
+            ng-repeat="facet in paths.facets.type"
+            ng-class="{'active': query.hasField('type', facet.value)}"
+            ng-click="query.toggle('type', facet.value)">
+            <span class="badge">{{facet.count | number}}</span>
+            <span class="lbl">
+              {{::facet.value | characters:45 }}
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="panel panel-default panel-facet panel-facet">
+        <div class="panel-heading">
+          <strong>Node categories</strong>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item animate toggle"
+            ng-repeat="facet in paths.facets.label"
+            ng-class="{'active': query.hasField('label', facet.value)}"
+            ng-click="query.toggle('label', facet.value)">
+            <span class="badge">{{facet.count | number}}</span>
+            <span class="lbl">
+              {{::facet.value | characters:45 }}
             </span>
           </li>
         </ul>

@@ -80,8 +80,19 @@ def pending(id):
 def paths(id):
     collection = obj_or_404(Collection.by_id(id))
     authz.require(authz.collection_read(collection.id))
-    q = Path.find(collection, entity_id=request.args.get('entity_id'))
-    return jsonify(Pager(q, id=collection.id))
+    start_entity_id = request.args.get('entity_id')
+    labels = request.args.getlist('label')
+    types = request.args.getlist('type')
+    collection_id = request.args.getlist('collection_id')
+    end_collection_id = authz.collections_intersect(authz.READ, collection_id)
+    q = Path.find(collection, start_entity_id=start_entity_id, labels=labels,
+                  types=types, end_collection_id=end_collection_id)
+    data = Pager(q, id=collection.id).to_dict()
+    data['facets'] = Path.facets(collection, start_entity_id=start_entity_id,
+                                 labels=labels, types=types,
+                                 end_collection_id=end_collection_id,
+                                 collection_id=authz.collections(authz.READ))
+    return jsonify(data)
 
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['DELETE'])
