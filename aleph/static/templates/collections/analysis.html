@@ -1,15 +1,14 @@
 <collections-screen collection="collection" section="analysis">
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-8">
       <table class="table table-striped">
         <tr>
           <th>Origin</th>
           <th class="numeric">Steps</th>
           <th>Linked to</th>
-          <th>Collection</th>
           <th></th>
         </tr>
-        <tr ng-repeat="path in analysis.paths">
+        <tr ng-repeat="path in paths.results">
           <td>
             <node-icon node="path.nodes[0]"></node-icon>
             {{path.nodes[0].name}}
@@ -21,7 +20,6 @@
             <node-icon node="path.nodes[path.nodes.length - 1]"></node-icon>
             {{path.nodes[path.nodes.length - 1].name}}
           </td>
-          <td>{{path.collection.label}}</td>
           <td width="1%">
             <button type="button" class="btn btn-default btn-xs" ng-click="viewPath(path)">
               <i class="fa fa-link"></i>
@@ -30,8 +28,16 @@
           </td>
         </tr>
       </table>
+      <div class="bottom-pager">
+        <div class="pull-right">
+          <response-pager response="paths" load="loadOffset(offset)"></response-pager>
+        </div>
+        <div class="total" ng-if="paths.limit > 0 && paths.total">
+          Found {{paths.total | number}} leads.
+        </div>
+      </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div class="panel panel-default panel-facet">
         <div class="panel-heading">
           <strong>Collections</strong>

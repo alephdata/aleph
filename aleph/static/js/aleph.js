@@ -109,7 +109,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     resolve: {
       'collection': loadCollection,
       'metadata': loadMetadata,
-      'analysis': loadAnalysis
+      'paths': loadPaths
     }
   });
 
