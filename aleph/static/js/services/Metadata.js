@@ -1,11 +1,9 @@
 
 aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $rootScope) {
-  var dfd = null,
-      metadata = null;
+  var dfd = null;
 
   var flush = function() {
     dfd = null;
-    metadata = null;
     return get();
   };
 
@@ -16,19 +14,10 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $roo
       $http.get('/api/1/sessions', {cache: false, params: {'_': dt.getTime()}}),
       $http.get('/api/1/metadata', {cache: true})
     ]).then(function(results) {
-      metadata = results[1].data;
-      $rootScope.session = results[0].data;
-
-      dfd.resolve({
-        session: results[0].data,
-        app: metadata.app,
-        fields: metadata.fields,
-        graph: metadata.graph,
-        schemata: metadata.schemata,
-        categories: metadata.categories,
-        countries: metadata.countries, 
-        languages: metadata.languages
-      });
+      var session = results[0].data,
+          metadata = angular.extend(results[1].data, {session: session});
+      $rootScope.session = session;
+      dfd.resolve(metadata);
     });
   };
 

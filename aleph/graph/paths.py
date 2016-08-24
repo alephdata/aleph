@@ -29,7 +29,7 @@ def generate_paths(graph, entity):
         "startpart.alephCanonical = {entity_id} AND " \
         "endpart.alephEntity IS NOT NULL AND " \
         "all(r IN relationships(pth) WHERE type(r) <> \"PART_OF\") " \
-        "RETURN DISTINCT pth, endpart.alephEntity AS end_entity_id"
+        "RETURN DISTINCT pth, endcoll.alephCollection AS end_collection_id"
     for row in graph.run(q, entity_id=entity.id):
         path = row.get('pth')
         nodes = [NodeType.dict(n) for n in path.nodes()]
@@ -40,7 +40,7 @@ def generate_paths(graph, entity):
             data['$target'] = rel.end_node().get('id')
             data['$inverted'] = data['$source'] != nodes[i]['id']
             edges.append(data)
-        Path.from_data(entity, row.get('end_entity_id'), nodes, edges)
+        Path.from_data(entity, row.get('end_collection_id'), nodes, edges)
     db.session.commit()
     # TODO: send email to collection owners?
 

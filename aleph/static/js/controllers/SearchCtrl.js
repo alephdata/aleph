@@ -40,6 +40,10 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
     return Alert.toggle(getAlert());
   };
 
+  $scope.hasPeek = function() {
+    return $scope.query.getQ().length > 1;
+  };
+
   var initFacets = function(query, result) {
     if (result.error) {
       return;
@@ -56,9 +60,14 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
     Document.search().then(function(data) {
       updateSearch(data);
     });
-    Document.peek().then(function(peek) {
-      $scope.peek = peek;
-    });
+    if ($scope.hasPeek()) {
+      Document.peek().then(function(peek) {
+        $scope.peek = peek;
+      });  
+    } else {
+      $scope.peek = {active: false};
+    }
+    
   };
 
   var updateSearch = function(data) {

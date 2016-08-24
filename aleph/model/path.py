@@ -16,13 +16,13 @@ class Path(db.Model, IdModel):
     labels = db.Column(ARRAY(db.Unicode()))
     types = db.Column(ARRAY(db.Unicode()))
     start_entity_id = db.Column(db.String(32), db.ForeignKey('entity.id'), index=True)  # noqa
-    end_entity_id = db.Column(db.String(32), db.ForeignKey('entity.id'), index=True)  # noqa
+    end_collection_id = db.Column(db.Integer(), db.ForeignKey('collection.id'), index=True)  # noqa
 
     @classmethod
-    def from_data(cls, start_entity, end_entity_id, nodes, edges):
+    def from_data(cls, start_entity, end_collection_id, nodes, edges):
         obj = cls()
         obj.start_entity_id = start_entity.id
-        obj.end_entity_id = end_entity_id
+        obj.end_collection_id = end_collection_id
         obj.length = len(edges)
         obj.labels = list(set([n['$label'] for n in nodes]))
         obj.types = list(set([e['$type'] for e in edges]))
@@ -51,10 +51,7 @@ class Path(db.Model, IdModel):
             cet = collection_entity_table.alias()
             q = q.join(cet, cet.c.entity_id == cls.start_entity_id)
             q = q.filter(cet.c.collection_id == start_collection.id)
-        if end_cet is None:
-            end_cet = collection_entity_table.alias()
-        q = q.join(end_cet, end_cet.c.entity_id == cls.end_entity_id)
-        q = q.filter(end_cet.c.collection_id.in_(end_collection_id))
+        q = q.filter(cls.end_collection_id.in_(end_collection_id))
         if len(labels):
             labels = cast(labels, ARRAY(db.Unicode()))
             q = q.filter(cls.labels.contained_by(labels))
@@ -96,16 +93,15 @@ class Path(db.Model, IdModel):
         facets['type'] = cls.facet_values(q, types_fld, types_cnt)
 
         # this is more complex, facet by collection:
-        cet = collection_entity_table.alias()
-        collections_fld = cet.c.collection_id
+        collections_fld = cls.end_collection_id
         collections_cnt = func.count(cls.id)
         q = db.session.query(collections_fld, Collection.label,
                              collections_cnt)
         q = q.select_from(cls)
         q = cls.filters(q, start_collection, start_entity_id=start_entity_id,
-                        end_collection_id=collection_id, end_cet=cet,
-                        labels=labels, types=types)
-        q = q.join(Collection, Collection.id == cet.c.collection_id)
+                        end_collection_id=collection_id, labels=labels,
+                        types=types)
+        q = q.join(Collection, Collection.id == collections_fld)
         q = q.group_by(collections_fld, Collection.label)
         q = q.order_by(collections_cnt.desc())
         cs = [{'value': v, 'label': l, 'count': c} for v, l, c in q]

@@ -1,7 +1,6 @@
 
 var loadPaths = ['$http', '$q', '$location', '$route', 'Query',
     function($http, $q, $location, $route, Query) {
-  
   var dfd = $q.defer(),
       collectionId = $route.current.params.collection_id,
       query = Query.parse();
