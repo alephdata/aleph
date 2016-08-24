@@ -127,17 +127,7 @@
     </div>
 
     <div class="col-md-4">
-      <div class="alert alert-info" role="alert" ng-if="collection.pending_count && collection.can_edit">
-        <p>
-          We've found <strong>{{::collection.pending_count | number}}
-          new entities</strong> in in this collection.
-          Please take a moment to check them.
-        </p>
-        <p>
-          <a ng-href="/collections/{{::collection.id}}/entities/review" class="btn btn-default">Review</a>
-        </p>
-      </div>
-
+      <collections-review-teaser collection="collection"></collections-review-teaser>
       <div class="panel panel-default panel-facet panel-facet-scroll">
         <div class="panel-heading">
           <strong>Countries</strong>
