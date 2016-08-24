@@ -25,7 +25,7 @@ def generate_paths(graph, entity, ignore_types=['PART_OF', 'MENTIONS']):
     q = "MATCH pth = shortestPath((start:Entity)-[*1..3]-(end:Entity)) " \
         "MATCH (start:Entity)-[startpart:PART_OF]->(startcoll:Collection) " \
         "MATCH (end:Entity)-[endpart:PART_OF]->(endcoll:Collection) " \
-        "WHERE NOT (end)-[:PART_OF]->(startcoll) AND " \
+        "WHERE startcoll.alephCollection <> endcoll.alephCollection AND " \
         "startpart.alephCanonical = {entity_id} AND " \
         "all(r IN relationships(pth) WHERE NOT type(r) IN {ignore_types}) " \
         "RETURN DISTINCT pth, endcoll.alephCollection AS end_collection_id"
@@ -44,7 +44,7 @@ def generate_paths(graph, entity, ignore_types=['PART_OF', 'MENTIONS']):
         count += 1
     db.session.commit()
     # TODO: send email to collection owners?
-    log.info("Generated %s path for %r", count, entity)
+    log.info("Generated %s paths for %r", count, entity)
 
 
 def delete_paths(entity_id):
