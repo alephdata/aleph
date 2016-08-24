@@ -9,12 +9,12 @@ from flask_migrate import MigrateCommand
 from aleph.core import create_app, get_archive
 from aleph.model import db, upgrade_db, Collection, Document
 from aleph.views import mount_app_blueprints, assets
-from aleph.analyze import analyze_collection, install_analyzers
+from aleph.analyze import install_analyzers
 from aleph.alerts import check_alerts
 from aleph.ingest import reingest_collection
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document_id
-from aleph.logic import reindex_entities, delete_collection
+from aleph.logic import reindex_entities, delete_collection, analyze_collection
 from aleph.graph import upgrade_graph, load_documents, load_entities
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler

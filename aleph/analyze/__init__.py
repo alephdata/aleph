@@ -21,8 +21,7 @@ def install_analyzers():
         downloader.download('TASK:%s' % task, quiet=True)
 
 
-@celery.task()
-def analyze_collection(collection_id):
+def analyze_documents(collection_id):
     query = {'term': {'collection_id': collection_id}}
     query = {'query': query, '_source': False}
     for row in scan_iter(query):

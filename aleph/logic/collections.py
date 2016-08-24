@@ -5,15 +5,34 @@ from aleph import graph
 from aleph.core import db, celery
 from aleph.model import Collection
 from aleph.index.collections import delete_collection as index_delete
+from aleph.analyze import analyze_documents
 from aleph.logic.entities import update_entity, delete_entity
+from aleph.logic.entities import update_entity_full
 from aleph.logic.documents import update_document, delete_document
 
 log = logging.getLogger(__name__)
 
 
 def update_collection(collection):
+    """Create or update a collection."""
     with graph.transaction() as tx:
         graph.load_collection(tx, collection)
+
+
+@celery.task()
+def analyze_collection(collection_id):
+    """Re-analyze the elements of this collection, documents and entities."""
+    q = db.session.query(Collection).filter(Collection.id == collection_id)
+    collection = q.first()
+    if collection is None:
+        log.error("No collection with ID: %r", collection_id)
+
+    # re-process the documents
+    analyze_documents(collection.id)
+
+    # re-process entities
+    for entity in collection.entities:
+        update_entity_full(entity.id)
 
 
 @celery.task()

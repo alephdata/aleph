@@ -1,24 +1,38 @@
 <collections-screen collection="collection" section="analysis">
-  <div class="row">
-    <div class="col-md-8">
+  
+  <div class="row" ng-if="paths.total">
+    <div class="col-md-9">
       <table class="table table-striped">
         <tr>
-          <th>Origin</th>
+          <th width="30%">Origin</th>
           <th class="numeric">Steps</th>
-          <th>Linked to</th>
+          <th width="30%">Linked to</th>
+          <th>Collection</th>
           <th></th>
         </tr>
         <tr ng-repeat="path in paths.results">
           <td>
-            <node-icon node="path.nodes[0]"></node-icon>
-            {{path.nodes[0].name}}
+            <a ng-if="authz.collectionWrite(collection.id)"
+               ng-click="editEntity(path.start_entity_id)">
+              <node-icon node="path.start"></node-icon>
+              {{path.start.name}}
+            </a>
+            <span ng-hide="authz.collectionWrite(collection.id)">
+              <node-icon node="path.start"></node-icon>
+              {{path.start.name}}
+            </span>
           </td>
           <td class="numeric">
-            <span class="badge">{{path.edges.length}}</span>
+            <span class="badge">{{path.length}}</span>
           </td>
           <td>
-            <node-icon node="path.nodes[path.nodes.length - 1]"></node-icon>
-            {{path.nodes[path.nodes.length - 1].name}}
+            <node-icon node="path.end"></node-icon>
+            {{path.end.name}}
+          </td>
+          <td>
+            <a ng-href="/collections/{{path.end_collection_id}}">
+              {{ collectionLabels[path.end_collection_id] | characters:45 }}
+            </a>
           </td>
           <td width="1%">
             <button type="button" class="btn btn-default btn-xs" ng-click="viewPath(path)">
@@ -37,7 +51,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="panel panel-default panel-facet panel-facet">
         <div class="panel-heading">
           <strong>Collections</strong>

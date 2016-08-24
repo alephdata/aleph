@@ -34,7 +34,16 @@ class Path(db.Model, IdModel):
         return obj
 
     def to_dict(self):
-        return self.data
+        return {
+            'start': self.data['nodes'][0],
+            'end': self.data['nodes'][-1],
+            'length': self.length,
+            # 'types': self.types,
+            # 'labels': self.labels,
+            'start_entity_id': self.start_entity_id,
+            'end_collection_id': self.end_collection_id,
+            'edges': [e['id'] for e in self.data['edges']],
+        }
 
     @classmethod
     def delete_by_entity(cls, start_entity_id):
@@ -44,7 +53,9 @@ class Path(db.Model, IdModel):
 
     @classmethod
     def filters(cls, q, start_collection, start_entity_id=None,
-                end_collection_id=[], end_cet=None, labels=[], types=[]):
+                end_collection_id=[], labels=[], types=[]):
+        end_collection_id = [c for c in end_collection_id
+                             if c != start_collection.id]
         if start_entity_id is not None:
             q = q.filter(cls.start_entity_id == start_entity_id)
         else:
@@ -70,9 +81,6 @@ class Path(db.Model, IdModel):
     def facets(cls, start_collection, start_entity_id=None,
                end_collection_id=[], labels=[], types=[],
                collection_id=[]):
-        collection_id = [c for c in collection_id if c != start_collection.id]
-        end_collection_id = [c for c in end_collection_id
-                             if c != start_collection.id]
         facets = {}
         # SELECT unnest(labels), COUNT(unnest(labels))
         #    FROM path GROUP BY unnest(labels);
@@ -115,6 +123,7 @@ class Path(db.Model, IdModel):
         q = cls.filters(q, start_collection, start_entity_id=start_entity_id,
                         end_collection_id=end_collection_id, labels=labels,
                         types=types)
+        q = q.order_by(Path.length.asc())
         return q
 
     def __repr__(self):

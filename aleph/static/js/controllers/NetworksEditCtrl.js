@@ -1,7 +1,8 @@
-aleph.controller('NetworksEditCtrl', ['$scope', '$location', '$http', 'Title', 'metadata', 'collection', 'network',
-    function($scope, $location, $http, Title, metadata, collection, network) {
+aleph.controller('NetworksEditCtrl', ['$scope', '$location', '$http', 'Title', 'Authz', 'metadata', 'collection', 'network',
+    function($scope, $location, $http, Title, Authz, metadata, collection, network) {
 
   Title.set(network.label, "collections");
+  $scope.authz = Authz;
   $scope.collection = collection;
   $scope.metadata = metadata;
   $scope.network = network;

@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 # re-generated.
 
 
-def generate_paths(graph, entity):
+def generate_paths(graph, entity, ignore_types=['PART_OF', 'MENTIONS']):
     """Generate all possible paths which end in a different collection."""
     Path.delete_by_entity(entity.id)
     if graph is None or entity.state != entity.STATE_ACTIVE:
@@ -27,10 +27,10 @@ def generate_paths(graph, entity):
         "MATCH (end:Entity)-[endpart:PART_OF]->(endcoll:Collection) " \
         "WHERE NOT (end)-[:PART_OF]->(startcoll) AND " \
         "startpart.alephCanonical = {entity_id} AND " \
-        "endpart.alephEntity IS NOT NULL AND " \
-        "all(r IN relationships(pth) WHERE type(r) <> \"PART_OF\") " \
+        "all(r IN relationships(pth) WHERE NOT type(r) IN {ignore_types}) " \
         "RETURN DISTINCT pth, endcoll.alephCollection AS end_collection_id"
-    for row in graph.run(q, entity_id=entity.id):
+    count = 0
+    for row in graph.run(q, entity_id=entity.id, ignore_types=ignore_types):
         path = row.get('pth')
         nodes = [NodeType.dict(n) for n in path.nodes()]
         edges = []
@@ -41,8 +41,10 @@ def generate_paths(graph, entity):
             data['$inverted'] = data['$source'] != nodes[i]['id']
             edges.append(data)
         Path.from_data(entity, row.get('end_collection_id'), nodes, edges)
+        count += 1
     db.session.commit()
     # TODO: send email to collection owners?
+    log.info("Generated %s path for %r", count, entity)
 
 
 def delete_paths(entity_id):

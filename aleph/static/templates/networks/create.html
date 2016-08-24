@@ -1,5 +1,6 @@
 <collections-screen collection="collection" section="analysis">
-  <form role="form" name="createNetwork" ng-submit="save(createNetwork)">
+  <form role="form" name="createNetwork" ng-submit="save(createNetwork)"
+        ng-if="authz.collectionWrite(collection.id)">
     <div class="row">
       <div class="col-md-9">
         <div class="form-group" ng-class="{'has-error': createNetwork.label.$invalid}">

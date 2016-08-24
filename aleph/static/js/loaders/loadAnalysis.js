@@ -8,8 +8,14 @@ var loadPaths = ['$http', '$q', '$location', '$route', 'Query',
   var url = '/api/1/collections/' + collectionId + '/paths',
       params = {params: query.state};
   $http.get(url, params).then(function(res) {
+    var collectionLabels = {};
+    res.data.facets.collection_id.forEach(function(c) {
+      collectionLabels[c.value] = c.label;
+    });
+
     dfd.resolve({
       data: res.data,
+      collectionLabels: collectionLabels,
       query: query
     });
   }, function(err) {

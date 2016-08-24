@@ -7,7 +7,7 @@ from aleph.model import Collection, Path, db
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
 from aleph.logic import delete_collection, update_collection
-from aleph.analyze import analyze_collection
+from aleph.logic import analyze_collection
 from aleph.text import latinize_text
 
 blueprint = Blueprint('collections_api', __name__)
@@ -57,7 +57,8 @@ def update(id):
 def process(id):
     authz.require(authz.collection_write(id))
     collection = obj_or_404(Collection.by_id(id))
-    analyze_collection.delay(collection.id)
+    analyze_collection.apply_async([collection.id], queue=USER_QUEUE,
+                                   routing_key=USER_ROUTING_KEY)
     log_event(request)
     return jsonify({'status': 'ok'})
 

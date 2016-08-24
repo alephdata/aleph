@@ -22,6 +22,9 @@ aleph.factory('Authz', ['$rootScope', function($rootScope) {
     documentWrite: function(doc) {
       return collection('write', doc.source_collection_id);
     },
+    collectionWrite: function(collection_id) {
+      return collection('write', collection_id);
+    },
     logged_in: function() {
       return $rootScope.session && $rootScope.session.logged_in;
     },
