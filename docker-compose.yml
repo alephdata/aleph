@@ -40,6 +40,7 @@ services:
       links:
         - postgres
         - elasticsearch
+        - neo4j
       volumes:
         - "/:/host"
         - "/opt/aleph/data:/opt/aleph/data"
@@ -81,6 +82,7 @@ services:
       links:
         - postgres
         - elasticsearch
+        - neo4j
       volumes:
         - "/opt/aleph/logs/web:/var/log"
       environment:
