@@ -1,6 +1,7 @@
 from celery.schedules import crontab
 from tempfile import gettempdir
 from os import environ as env, path
+import json
 
 DEBUG = True
 ASSETS_DEBUG = True
@@ -31,12 +32,13 @@ SAMPLE_SEARCHES = ['Serbia', 'TeliaSonera', 'Vladimir Putin']
 
 # Language configuration
 DEFAULT_LANGUAGE = 'en'
-LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka',
-             'ar', 'tr', 'lb', 'el', 'lt', 'uk', 'zh', 'be',
-             'bg', 'bs', 'ja', 'cs', 'lv', 'pt', 'pl', 'hy',
-             'hr', 'hi', 'he', 'uz', 'mo', 'mn', 'ur', 'sq',
-             'ko', 'is', 'it', 'et', 'no', 'fa', 'sw', 'sl',
-             'az']
+DEFAULT_LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka',
+                     'ar', 'tr', 'lb', 'el', 'lt', 'uk', 'zh', 'be',
+                     'bg', 'bs', 'ja', 'cs', 'lv', 'pt', 'pl', 'hy',
+                     'hr', 'hi', 'he', 'uz', 'mo', 'mn', 'ur', 'sq',
+                     'ko', 'is', 'it', 'et', 'no', 'fa', 'sw', 'sl',
+                     'az']
+LANGUAGES = json.loads(env.get('ALEPH_LANGUAGES', json.dumps(DEFAULT_LANGUAGES)))
 
 # Some styling info for the visual graph editor.
 # DEFAULT_GRAPH_ICON = '\uf0c8'  # http://fontawesome.io/icon/square/
