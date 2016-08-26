@@ -43,7 +43,6 @@ class Crawler(object):
             collection = Collection.create(data)
             db.session.commit()
             update_collection(collection)
-        db.session.add(collection)
         return collection
 
     @property
@@ -54,6 +53,7 @@ class Crawler(object):
                 'label': self.COLLECTION_LABEL or self.COLLECTION_ID,
                 'managed': True
             })
+        db.session.add(self._collection)
         return self._collection
 
     def crawl(self, **kwargs):
