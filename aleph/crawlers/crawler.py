@@ -37,9 +37,11 @@ class Crawler(object):
         self.crawler_run = make_textid()
 
     def load_collection(self, data):
-        collection = Collection.create(data)
-        db.session.commit()
-        update_collection(collection)
+        collection = Collection.by_foreign_id(data.get('foreign_id'))
+        if collection is None:
+            collection = Collection.create(data)
+            db.session.commit()
+            update_collection(collection)
         return collection
 
     @property
@@ -50,7 +52,6 @@ class Crawler(object):
                 'label': self.COLLECTION_LABEL or self.COLLECTION_ID,
                 'managed': True
             })
-        db.session.add(self._collection)
         return self._collection
 
     def crawl(self, **kwargs):
@@ -141,8 +142,7 @@ class Crawler(object):
         })
         if self.COLLECTION_ID:
             data.update({
-                'collection': self.collection,
-                'collection_id': self.COLLECTION_ID
+                'collection': self.collection
             })
         return data
 

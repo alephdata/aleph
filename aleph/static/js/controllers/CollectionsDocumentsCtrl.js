@@ -20,7 +20,7 @@ aleph.controller('CollectionsDocumentsCtrl', ['$scope', '$location', '$http', '$
   };
 
   $scope.editDocument = function(doc) {
-    Document.edit(doc.id).then(function(res) {
+    Document.edit(doc.id).then(function() {
       $route.reload();
     })
   };
