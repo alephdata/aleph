@@ -6,12 +6,12 @@ from aleph.graph.edges import EdgeType
 log = logging.getLogger(__name__)
 
 
-EntityNode = NodeType('Entity', key='alephEntity')
+EntityNode = NodeType('Entity', indices=['alephEntity'])
 PhoneNode = NodeType('Phone')
 EmailNode = NodeType('Email')
 AddressNode = NodeType('Address')
-CollectionNode = NodeType('Collection', key='alephCollection')
-DocumentNode = NodeType('Document', key='alephDocument')
+CollectionNode = NodeType('Collection', indices=['alephCollection'])
+DocumentNode = NodeType('Document', indices=['alephDocument'])
 
 LOCATED_AT = EdgeType('LOCATED_AT')
 CONTACT_FOR = EdgeType('CONTACT_FOR')

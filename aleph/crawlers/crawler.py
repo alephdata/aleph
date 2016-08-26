@@ -37,11 +37,14 @@ class Crawler(object):
         self.crawler_run = make_textid()
 
     def load_collection(self, data):
-        collection = Collection.by_foreign_id(data.get('foreign_id'))
-        if collection is None:
-            collection = Collection.create(data)
-            db.session.commit()
-            update_collection(collection)
+        foreign_id = data.get('foreign_id')
+        if foreign_id is not None:
+            collection = Collection.by_foreign_id(foreign_id)
+            if collection is None:
+                return collection
+        collection = Collection.create(data)
+        db.session.commit()
+        update_collection(collection)
         return collection
 
     @property

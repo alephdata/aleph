@@ -22,13 +22,15 @@ def generate_paths(graph, entity, ignore_types=['PART_OF', 'MENTIONS']):
         return
     log.info("Generating graph path cache: %r", entity)
     # TODO: should max path length be configurable?
-    q = "MATCH pth = shortestPath((start:Entity)-[*1..3]-(end:Entity)) " \
+    q = "MATCH pth = (start:Entity)-[*1..3]-(end:Entity) " \
         "MATCH (start:Entity)-[startpart:PART_OF]->(startcoll:Collection) " \
         "MATCH (end:Entity)-[endpart:PART_OF]->(endcoll:Collection) " \
         "WHERE startcoll.alephCollection <> endcoll.alephCollection AND " \
+        "start.alephEntity = {entity_id} AND " \
         "startpart.alephCanonical = {entity_id} AND " \
         "all(r IN relationships(pth) WHERE NOT type(r) IN {ignore_types}) " \
-        "RETURN DISTINCT pth, endcoll.alephCollection AS end_collection_id"
+        "WITH pth, endcoll.alephCollection AS ec " \
+        "RETURN pth, ec"
     count = 0
     for row in graph.run(q, entity_id=entity.id, ignore_types=ignore_types):
         path = row.get('pth')
@@ -40,7 +42,7 @@ def generate_paths(graph, entity, ignore_types=['PART_OF', 'MENTIONS']):
             data['$target'] = rel.end_node().get('id')
             data['$inverted'] = data['$source'] != nodes[i]['id']
             edges.append(data)
-        Path.from_data(entity, row.get('end_collection_id'), nodes, edges)
+        Path.from_data(entity, row.get('ec'), nodes, edges)
         count += 1
     db.session.commit()
     # TODO: send email to collection owners?

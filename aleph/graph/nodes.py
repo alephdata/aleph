@@ -11,23 +11,20 @@ log = logging.getLogger(__name__)
 class NodeType(GraphType):
     _instances = {}
 
-    def __init__(self, name, fingerprint='fingerprint', key=None,
+    def __init__(self, name, fingerprint='fingerprint', indices=[],
                  hidden=False):
         self.name = name
         self.fingerprint = fingerprint
-        self.key = key
+        self.indices = indices + ['id', fingerprint]
         self.hidden = hidden
         self._instances[name] = self
 
     def ensure_indices(self, graph):
-        indices = graph.schema.get_indexes(self.name)
+        existing = graph.schema.get_indexes(self.name)
         log.info("Creating indexes on: %s", self.name)
-        if self.fingerprint not in indices:
-            graph.schema.create_index(self.name, self.fingerprint)
-        if self.key is not None and self.key not in indices:
-            graph.schema.create_index(self.name, self.key)
-        if 'id' not in indices:
-            graph.schema.create_index(self.name, 'id')
+        for prop in self.indices:
+            if prop not in existing:
+                graph.schema.create_index(self.name, prop)
 
     def _get_tx_cache(self, tx):
         if not hasattr(tx, '_node_lru_cache'):
