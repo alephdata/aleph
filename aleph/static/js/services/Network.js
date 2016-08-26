@@ -28,22 +28,15 @@ aleph.factory('Network', ['$q', '$http', '$location', 'Metadata', 'Query', funct
       // separately.
       $http.get(url).then(function(res) {
         var network = res.data,
-            edgesParams = {
-              edge_id: network.edges.map(function(e) { return e.id; }),
-              limit: network.edges.length + 1
-            },
-            nodesParams = {
+            params = {
               node_id: network.nodes.map(function(n) { return n.id; }),
               limit: network.nodes.length + 1
             };
-        $q.all([
-          $http.post('/api/1/graph/edges', edgesParams),
-          $http.post('/api/1/graph/nodes', nodesParams)
-        ]).then(function(res) {
-          network.edges = res[0].data.results;
+        $http.post('/api/1/graph/nodes', nodesParams).then(function(res) {
+          network.edges = [];
           network.nodes = network.nodes.map(function(n) {
-            for (var i in res[1].data.results) {
-              var node = res[1].data.results[i];
+            for (var i in res.data.results) {
+              var node = res.data.results[i];
               if (node.id == n.id) {
                 node.gridX = n.gridX;
                 node.gridY = n.gridY;
