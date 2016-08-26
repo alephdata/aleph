@@ -32,7 +32,7 @@ aleph.factory('Network', ['$q', '$http', '$location', 'Metadata', 'Query', funct
               node_id: network.nodes.map(function(n) { return n.id; }),
               limit: network.nodes.length + 1
             };
-        $http.post('/api/1/graph/nodes', nodesParams).then(function(res) {
+        $http.post('/api/1/graph/nodes', params).then(function(res) {
           network.edges = [];
           network.nodes = network.nodes.map(function(n) {
             for (var i in res.data.results) {
