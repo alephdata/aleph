@@ -39,7 +39,7 @@ class Crawler(object):
     def load_collection(self, data):
         foreign_id = data.get('foreign_id')
         collection = Collection.by_foreign_id(foreign_id)
-        if collection is not None:
+        if collection is None:
             collection = Collection.create(data)
             db.session.commit()
             update_collection(collection)
