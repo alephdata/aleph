@@ -42,7 +42,7 @@ class Path(db.Model, IdModel):
             # 'labels': self.labels,
             'start_entity_id': self.start_entity_id,
             'end_collection_id': self.end_collection_id,
-            'edges': [e['id'] for e in self.data['edges']],
+            'nodes': [n['id'] for n in self.data['nodes']],
         }
 
     @classmethod

@@ -10,7 +10,7 @@ aleph.controller('CollectionsAnalysisCtrl', ['$scope', '$route', '$location', '$
   $scope.metadata = metadata;
 
   $scope.viewPath = function(path) {
-    $location.search({'edge': path.edges});
+    $location.search({'node': path.nodes});
     $location.path('/collections/' + collection.id + '/networks');
   };
 
