@@ -76,8 +76,7 @@ class NodeQuery(GraphQuery):
             'collection_id': self.collection_id()
         }
         filters = []
-        filters.append('ncoll.alephCollection IN {collection_id}')
-        filters.append('ocoll.alephCollection IN {acl}')
+        filters.append('coll.alephCollection IN {collection_id}')
         if args['text'] is not None:
             filters.append('node.name =~ {text}')
         if len(args['context']):
@@ -85,14 +84,9 @@ class NodeQuery(GraphQuery):
         if len(args['node_id']):
             filters.append('node.id IN {node_id}')
 
-        q = "MATCH (node)-[:PART_OF]->(ncoll:Collection) " \
-            "MATCH (node)-[r]-(other) " \
-            "MATCH (other)-[:PART_OF]->(ocoll:Collection) " \
+        q = "MATCH (node)-[:PART_OF]->(coll:Collection) " \
             "WHERE %s " \
-            "WITH node, count(r) AS degree " \
-            "ORDER BY degree DESC " \
-            "SKIP {offset} LIMIT {limit} " \
-            "RETURN node, degree "
+            "RETURN node SKIP {offset} LIMIT {limit} "
         q = q % ' AND '.join(filters)
         # print args, q
         return q, args
@@ -102,7 +96,7 @@ class NodeQuery(GraphQuery):
         nodes = []
         for row in self.graph.run(query, **args):
             node = NodeType.dict(row.get('node'))
-            node['$degree'] = row.get('degree')
+            # node['$degree'] = row.get('degree')
             nodes.append(node)
         return {'results': nodes}
 

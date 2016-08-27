@@ -137,8 +137,12 @@ def get_graph():
         uri = get_config('NEO4J_URI')
         if uri is None:
             return None
-        app._neo4j_instance = Graph(uri)
-        log.info("Connected to graph: %s", app._neo4j_instance)
+        try:
+            app._neo4j_instance = Graph(uri)
+            log.info("Connected to graph: %s", app._neo4j_instance)
+        except Exception as ex:
+            log.info("Could not connect to graph: %r", ex)
+            return None
     return app._neo4j_instance
 
 

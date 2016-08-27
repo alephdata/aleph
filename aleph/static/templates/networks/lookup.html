@@ -13,10 +13,10 @@
   <ul class="list-group">
     <li class="list-group-item" ng-repeat="node in suggestedNodes track by node.id" ng-click="addNode(node)">
       <node-icon node="node"></node-icon>
-      {{::node.name | characters:30 }}
-      <span class="badge">
+      {{::node.name | characters:40 }}
+      <!-- span class="badge">
         {{node.$degree}}
-      </span>
+      </span -->
     </li>
   </ul>
 </div>
