@@ -10,7 +10,7 @@ clear:
 
 assets:
 	bower install
-	python aleph/manage.py assets --parse-templates build
+	SASS_PATH=`pwd`/aleph/static/style/ python aleph/manage.py assets --parse-templates build
 
 test:
 	nosetests --with-coverage --cover-package=aleph --cover-erase
