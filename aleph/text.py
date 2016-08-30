@@ -25,6 +25,9 @@ CATEGORIES = {
 
 
 def latinize_text(text, lowercase=True):
+    """Transliterate a piece of text to the latin alphabet."""
+    # TODO: explore more versions of russian transliteration
+    # TODO: should this return an array of possible outcomes?
     if not isinstance(text, six.text_type):
         return text
     if lowercase:
@@ -34,6 +37,12 @@ def latinize_text(text, lowercase=True):
 
 
 def normalize_strong(text):
+    """Perform heavy normalisation of a given text.
+
+    The goal of this function is not to retain a readable version of the given
+    string, but rather to yield a normalised version suitable for comparisons
+    and machine analysis.
+    """
     if not isinstance(text, six.string_types):
         return
 
@@ -54,6 +63,12 @@ def normalize_strong(text):
 
 
 def string_value(value):
+    """Brute-force convert a given object to a string.
+
+    This will attempt an increasingly mean set of conversions to make a given
+    object into a unicode string. It is guaranteed to either return unicode or
+    None, if all conversions failed (or the value is indeed empty).
+    """
     if value is None:
         return
     if isinstance(value, (date, datetime)):
