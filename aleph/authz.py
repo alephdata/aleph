@@ -21,6 +21,12 @@ def get_public_roles():
 
 
 def collections(action):
+    """Pre-load collection authorisation info and cache the result.
+
+    This is the core authorisation function, and is called at least once per
+    request. It will query and cache the ID for all collections the current
+    user is authorised to read or write.
+    """
     if not hasattr(request, 'auth_collections'):
         public_roles = get_public_roles()
         request.auth_collections = {READ: set(), WRITE: set(), PUBLIC: set()}

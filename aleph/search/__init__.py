@@ -14,5 +14,6 @@ log = logging.getLogger(__name__)
 
 
 def scan_iter(query):
+    """Scan the results of a query. No pagination is applied."""
     return scan(get_es(), query=query, index=get_es_index(),
                 doc_type=[TYPE_DOCUMENT])

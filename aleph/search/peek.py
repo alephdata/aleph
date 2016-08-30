@@ -32,6 +32,12 @@ def format_total(obj):
 
 
 def peek_query(args):
+    """Peek into hidden collections.
+
+    This allows users to retrieve an approximate result count of a given query
+    against those collections which they are not authorised to view. It is a
+    rudimentary collaboration mechanism.
+    """
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
     text = args.get('q', '').strip()

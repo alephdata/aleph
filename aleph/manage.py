@@ -100,16 +100,12 @@ def flush(foreign_id):
 
 
 @manager.command
-def analyze(foreign_id=None):
+def analyze(foreign_id):
     """Re-analyze documents in the given collection (or throughout)."""
-    if foreign_id:
-        collection = Collection.by_foreign_id(foreign_id)
-        if collection is None:
-            raise ValueError("No such collection: %r" % foreign_id)
-        analyze_collection.delay(collection.id)
-    else:
-        for collection in Collection.all():
-            analyze_collection.delay(collection.id)
+    collection = Collection.by_foreign_id(foreign_id)
+    if collection is None:
+        raise ValueError("No such collection: %r" % foreign_id)
+    analyze_collection.delay(collection.id)
 
 
 @manager.command
