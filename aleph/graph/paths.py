@@ -3,7 +3,6 @@ import logging
 from aleph.core import db
 from aleph.model import Path
 from aleph.graph.nodes import NodeType
-from aleph.graph.edges import EdgeType
 
 log = logging.getLogger(__name__)
 
@@ -13,9 +12,10 @@ log = logging.getLogger(__name__)
 # -> Neo4J -> PSQL. That round trip is almost guaranteed to cause weird
 # artifacts when upstream items are deleted or the graph has to be
 # re-generated.
+SKIP_TYPES = ['PART_OF', 'MENTIONS']
 
 
-def generate_paths(graph, entity, ignore_types=['PART_OF', 'MENTIONS']):
+def generate_paths(graph, entity, ignore_types=SKIP_TYPES):
     """Generate all possible paths which end in a different collection."""
     Path.delete_by_entity(entity.id)
     if graph is None or entity.state != entity.STATE_ACTIVE:
@@ -29,20 +29,20 @@ def generate_paths(graph, entity, ignore_types=['PART_OF', 'MENTIONS']):
         "start.alephEntity = {entity_id} AND " \
         "startpart.alephCanonical = {entity_id} AND " \
         "all(r IN relationships(pth) WHERE NOT type(r) IN {ignore_types}) " \
-        "WITH pth, endcoll.alephCollection AS ec " \
-        "RETURN pth, ec"
+        "WITH DISTINCT start, end, " \
+        " COLLECT(DISTINCT extract(x IN nodes(pth) | x.id)) AS paths, " \
+        " COLLECT(DISTINCT extract(x IN nodes(pth) | labels(x))) AS labels, " \
+        " COLLECT(DISTINCT extract(r IN relationships(pth) | type(r))) AS types, " \
+        " COLLECT(DISTINCT endcoll.alephCollection) AS end_collection_id " \
+        "RETURN start, end, paths, types, labels, end_collection_id "
     count = 0
     for row in graph.run(q, entity_id=entity.id, ignore_types=ignore_types):
-        path = row.get('pth')
-        nodes = [NodeType.dict(n) for n in path.nodes()]
-        edges = []
-        for i, rel in enumerate(row.get('pth').relationships()):
-            data = EdgeType.dict(rel)
-            data['$source'] = rel.start_node().get('id')
-            data['$target'] = rel.end_node().get('id')
-            data['$inverted'] = data['$source'] != nodes[i]['id']
-            edges.append(data)
-        Path.from_data(entity, row.get('ec'), nodes, edges)
+        Path.from_data(entity, row.get('end_collection_id'),
+                       row.get('paths'),
+                       row.get('types'),
+                       row.get('labels'),
+                       NodeType.dict(row.get('start')),
+                       NodeType.dict(row.get('end')))
         count += 1
     db.session.commit()
     # TODO: send email to collection owners?

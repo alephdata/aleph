@@ -1,13 +1,12 @@
 <collections-screen collection="collection" section="analysis">
-  
+
   <div class="row" ng-if="paths.total">
     <div class="col-md-9">
       <table class="table table-striped">
         <tr>
-          <th width="30%">Origin</th>
+          <th width="40%">Origin</th>
           <th class="numeric">Steps</th>
-          <th width="30%">Linked to</th>
-          <th>Collection</th>
+          <th width="40%">Linked to</th>
           <th></th>
         </tr>
         <tr ng-repeat="path in paths.results">
@@ -28,11 +27,6 @@
           <td>
             <node-icon node="path.end"></node-icon>
             {{path.end.name}}
-          </td>
-          <td>
-            <a ng-href="/collections/{{path.end_collection_id}}">
-              {{ collectionLabels[path.end_collection_id] | characters:45 }}
-            </a>
           </td>
           <td width="1%">
             <button type="button" class="btn btn-default btn-xs" ng-click="viewPath(path)">
