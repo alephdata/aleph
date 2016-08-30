@@ -55,3 +55,6 @@ OAUTH = {
 }
 
 PDF_OCR_IMAGE_PAGES = os.environ.get('ALEPH_PDF_OCR_IMAGE_PAGES', "true")
+
+MAX_CONTENT_LENGTH = int(os.environ.get('ALEPH_MAX_CONTENT_LENGTH',
+                                        500 * 1024 * 1024))
