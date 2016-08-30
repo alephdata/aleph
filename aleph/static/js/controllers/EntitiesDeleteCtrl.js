@@ -1,6 +1,6 @@
 aleph.controller('EntitiesDeleteCtrl', ['$scope', '$location', '$q', '$http', '$uibModalInstance', 'entities',
     function($scope, $location, $q, $http, $uibModalInstance, entities) {
-  
+
   $scope.blocked = false;
   $scope.entities = entities;
 
@@ -18,8 +18,9 @@ aleph.controller('EntitiesDeleteCtrl', ['$scope', '$location', '$q', '$http', '$
     $q.all(deletes).then(function() {
       $uibModalInstance.close(entities);
     }, function(err) {
-      console.log('Delete error', err);
+      console.log('Error', err);
       $uibModalInstance.close(entities);
+      $scope.blocked = false;
     });
   };
 }]);

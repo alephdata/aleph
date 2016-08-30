@@ -16,8 +16,10 @@ aleph.factory('Alert', ['$http', '$q', '$location', '$sce', '$uibModal', 'Metada
             indexDfd.resolve(res.data);
           }, function(err) {
             indexDfd.reject(err);
-          });  
+          });
         }
+      }, function(err) {
+        indexDfd.reject(err);
       });
     }
     return indexDfd.promise;
@@ -37,6 +39,8 @@ aleph.factory('Alert', ['$http', '$q', '$location', '$sce', '$uibModal', 'Metada
       }, function(err) {
         dfd.reject(err);
       });
+    }, function(err) {
+      dfd.reject(err);
     });
     return dfd.promise;
   };
@@ -56,7 +60,7 @@ aleph.factory('Alert', ['$http', '$q', '$location', '$sce', '$uibModal', 'Metada
   };
 
   function checkAlert(alert) {
-    // this is a sync function, but it is premised on alerts already being loaded. 
+    // this is a sync function, but it is premised on alerts already being loaded.
     // use with care.
     if (indexAlerts == null) {
       return false;
@@ -66,7 +70,7 @@ aleph.factory('Alert', ['$http', '$q', '$location', '$sce', '$uibModal', 'Metada
       alert.query_text = null;
     }
     for (var i in indexAlerts) {
-      var candidate = indexAlerts[i], 
+      var candidate = indexAlerts[i],
           sameId = candidate.entity_id == alert.entity_id,
           sameQuery = alert.query_text && candidate.query_text && alert.query_text.toLowerCase() == candidate.query_text.toLowerCase();
       if (!candidate.entity_id && !alert.entity_id && sameQuery) {

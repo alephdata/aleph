@@ -1,5 +1,5 @@
-aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstance', 'Metadata', 'Authz', 'Alert', 'Entity', 'Validation', 'entity', 'metadata', 'alerts',
-    function($scope, $http, $q, $uibModalInstance, Metadata, Authz, Alert, Entity, Validation, entity, metadata, alerts) {
+aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstance', 'Metadata', 'Authz', 'Alert', 'Entity', 'entity', 'metadata', 'alerts',
+    function($scope, $http, $q, $uibModalInstance, Metadata, Authz, Alert, Entity, entity, metadata, alerts) {
 
   $scope.blocked = false;
   $scope.entity = entity;
@@ -17,6 +17,9 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   var initDedupe = function() {
     $http.get('/api/1/entities/' + entity.id + '/similar').then(function(res) {
       $scope.duplicateOptions = res.data.results;
+    }, function(err) {
+      console.log('Error', err);
+      $scope.duplicateOptions = [];
     });
   };
 
@@ -58,7 +61,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
 
   $scope.updateOtherName = function(other_name) {
     if (other_name.display_name.trim().length > 2) {
-      other_name.name = other_name.display_name;  
+      other_name.name = other_name.display_name;
     };
   };
 
@@ -72,6 +75,8 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   $scope.editDuplicate = function(dup) {
     Entity.edit(dup.id).then(function() {
       initDedupe();
+    }, function(err) {
+      console.log('Error', err);
     });
   };
 
@@ -107,7 +112,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   };
 
   var mergeDuplicates = function() {
-    var done = $q.defer(), 
+    var done = $q.defer(),
         merges = [];
     for (var i in $scope.duplicateOptions) {
       var dup = $scope.duplicateOptions[i];
@@ -126,7 +131,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
     if (!$scope.canSave()) {
       return false;
     }
-    
+
     // check that we're not in the process of adding alternate
     // names and accidentally submitting the form.
     if ($scope.newOtherName.editing) {
@@ -144,6 +149,9 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
           $uibModalInstance.close(entity);
         });
       });
+    }, function(err) {
+      console.log('Error', err);
+      $scope.blocked = false;
     });
   };
 }]);

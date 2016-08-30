@@ -18,8 +18,9 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
     $scope.reportLoading(false);
   });
 
-  $rootScope.$on("$routeChangeError", function (event, next, current) {
+  $rootScope.$on("$routeChangeError", function (event, next, current, rejection) {
     $scope.routeFailed = true;
+    console.log('Error', rejection);
   });
 
   $scope.keyDownNotify = function($event) {

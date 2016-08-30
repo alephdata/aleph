@@ -14,6 +14,8 @@ aleph.factory('Network', ['$q', '$http', '$location', 'Metadata', 'Query', funct
         $http.post('/api/1/graph/nodes', params).then(function(res) {
           network['nodes'] = res.data.results;
           dfd.resolve(network);
+        }, function(err) {
+          dfd.reject(err);
         });
       }
       return dfd.promise;
@@ -22,7 +24,7 @@ aleph.factory('Network', ['$q', '$http', '$location', 'Metadata', 'Query', funct
       var dfd = $q.defer(),
           url = '/api/1/collections/' + collectionId + '/networks/' + networkId;
 
-      // ok this is a bit longer than it should be. basically the network data 
+      // ok this is a bit longer than it should be. basically the network data
       // served out by the networks_api is just the IDs and positional info, the
       // actual node and edge data (such as names) need to be loaded and merged
       // separately.

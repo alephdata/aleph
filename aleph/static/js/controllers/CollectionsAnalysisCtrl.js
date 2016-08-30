@@ -5,7 +5,6 @@ aleph.controller('CollectionsAnalysisCtrl', ['$scope', '$route', '$location', '$
   $scope.authz = Authz;
   $scope.collection = collection;
   $scope.paths = paths.data;
-  $scope.collectionLabels = paths.collectionLabels;
   $scope.query = paths.query;
   $scope.metadata = metadata;
 

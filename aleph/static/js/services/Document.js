@@ -46,7 +46,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
             'query': query
           });
         }
-        dfd.reject(err);  
+        dfd.reject(err);
       });
       return dfd.promise;
     },
@@ -57,7 +57,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       $http.get('/api/1/peek', {cache: true, params: state}).then(function(res) {
         dfd.resolve(res.data);
       }, function(err) {
-        dfd.reject(err);  
+        dfd.reject(err);
       });
       return dfd.promise;
     },
@@ -87,10 +87,12 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
           for (var i in res.data.results) {
             var record = res.data.results[i];
             if (record && record.text && record.text.length) {
-              record.snippet = $sce.trustAsHtml(record.text[0]);  
+              record.snippet = $sce.trustAsHtml(record.text[0]);
             }
           }
           dfd.resolve(res.data);
+        }, function(err) {
+          dfd.reject(err);
         });
       } else {
         dfd.resolve({});

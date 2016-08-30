@@ -1,5 +1,5 @@
-aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '$routeParams', 'Validation', 'Collection', 'Role', 'Authz', 'Title', 'collection', 'roles', 'metadata',
-    function($scope, $q, $location, $http, $routeParams, Validation, Collection, Role, Authz, Title, collection, roles, metadata) {
+aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '$routeParams', 'Collection', 'Role', 'Authz', 'Title', 'collection', 'roles', 'metadata',
+    function($scope, $q, $location, $http, $routeParams, Collection, Role, Authz, Title, collection, roles, metadata) {
 
   $scope.authz = Authz;
   $scope.collection = collection;
@@ -44,7 +44,7 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
       $location.path('/collections');
     });
   };
-  
+
   $scope.process = function() {
     var url = collection.api_url + '/process';
     $http.post(url).then(function() {
@@ -73,6 +73,5 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
         });
       });
     });
-    res.error(Validation.handle(form));
   };
 }]);

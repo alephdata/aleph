@@ -18,9 +18,10 @@ aleph.controller('NetworksEditCtrl', ['$scope', '$location', '$http', 'Title', '
     var network = $scope.network.toJSON(),
         url = collection.api_url + '/networks/' + $scope.network.id;
     network.label = $scope.network.label;
-    console.log(network);
     $http.post(url, network).then(function(res) {
       console.log(res);
+    }, function(err) {
+      console.log('Error', err);
     });
   };
 }]);

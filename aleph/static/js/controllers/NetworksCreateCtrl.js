@@ -22,6 +22,8 @@ aleph.controller('NetworksCreateCtrl', ['$scope', '$location', '$http', 'Title',
       var path = '/collections/' + collection.id + '/networks/' + res.data.id;
       $location.search({});
       $location.path(path);
+    }, function(err) {
+      console.log('Error', err);
     });
   };
 }]);

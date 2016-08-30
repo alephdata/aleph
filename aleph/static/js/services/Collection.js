@@ -20,6 +20,8 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
         }, function(err) {
           indexDfd.reject(err);
         });
+      }, function(err) {
+        indexDfd.reject(err);
       });
     }
     return indexDfd.promise;
@@ -33,6 +35,8 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
       index().then(function(colls) {
         dfd.resolve(colls);
       })
+    }, function(err) {
+      dfd.reject(err);
     });
     return dfd.promise;
   };
@@ -42,7 +46,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
     coll.can_add = coll.can_edit && !coll.managed;
 
     coll.getPath = function() {
-      // this is a function because in the collections index 
+      // this is a function because in the collections index
       // the doc_count and entity_count is set after this is
       // called.
       var path = '/collections/' + coll.id;
@@ -51,7 +55,7 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
       }
       return path;
     };
-    
+
     return coll;
   };
 
@@ -72,18 +76,22 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
         return b.updated_at.localeCompare(a.updated_at);
       });
       dfd.resolve(collections);
+    }, function(err) {
+      dfd.reject(err);
     });
     return dfd.promise;
   };
 
   var getCollection = function(id) {
-    var dfd = $q.defer();  
+    var dfd = $q.defer();
     Metadata.get().then(function() {
       $http.get('/api/1/collections/' + id).then(function(res) {
         dfd.resolve(addClientFields(res.data));
       }, function(err) {
         dfd.reject(err);
       });
+    }, function(err) {
+      dfd.reject(err);
     });
     return dfd.promise;
   };
