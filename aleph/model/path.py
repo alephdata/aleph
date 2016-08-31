@@ -127,7 +127,7 @@ class Path(db.Model, IdModel):
         q = cls.filters(q, start_collection, start_entity_id=start_entity_id,
                         end_collection_id=end_collection_id, labels=labels,
                         types=types)
-        q = q.order_by(Path.weight.desc())
+        q = q.order_by(Path.weight.asc())
         return q
 
     def __repr__(self):

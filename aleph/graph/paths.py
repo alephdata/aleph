@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 # -> Neo4J -> PSQL. That round trip is almost guaranteed to cause weird
 # artifacts when upstream items are deleted or the graph has to be
 # re-generated.
-SKIP_TYPES = ['MENTIONS']
+SKIP_TYPES = ['PART_OF', 'MENTIONS']
 
 
 def generate_paths(graph, entity, ignore_types=SKIP_TYPES):
@@ -44,6 +44,8 @@ def generate_paths(graph, entity, ignore_types=SKIP_TYPES):
         labels = unwind(row.get('labels'))
         labels = [l for l in labels if l != BASE_NODE]
         types = unwind(row.get('types'))
+        if len(types) == 1 and 'AKA' in types:
+            continue
         Path.from_data(entity, row.get('end_collection_id'),
                        row.get('paths'), types, labels,
                        NodeType.dict(row.get('start')),
