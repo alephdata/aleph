@@ -25,8 +25,10 @@ def upgrade_graph():
     # Common base type indexes
     if 'fingerprint' not in graph.schema.get_indexes(BASE_NODE):
         graph.schema.create_index(BASE_NODE, 'fingerprint')
-    if 'id' not in graph.schema.get_uniqueness_constraints(BASE_NODE):
-        graph.schema.create_uniqueness_constraint(BASE_NODE, 'id')
+    # if 'id' not in graph.schema.get_uniqueness_constraints(BASE_NODE):
+    #     graph.schema.create_uniqueness_constraint(BASE_NODE, 'id')
+    if 'id' not in graph.schema.get_indexes(BASE_NODE):
+        graph.schema.create_index(BASE_NODE, 'id')
 
     for node_type in NodeType.all():
         node_type.ensure_indices(graph)
