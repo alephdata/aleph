@@ -2,7 +2,9 @@ import logging
 
 from aleph.core import db
 from aleph.model import Path
+from aleph.util import unwind
 from aleph.graph.nodes import NodeType
+from aleph.graph.util import BASE_NODE
 
 log = logging.getLogger(__name__)
 
@@ -12,7 +14,7 @@ log = logging.getLogger(__name__)
 # -> Neo4J -> PSQL. That round trip is almost guaranteed to cause weird
 # artifacts when upstream items are deleted or the graph has to be
 # re-generated.
-SKIP_TYPES = ['PART_OF', 'MENTIONS']
+SKIP_TYPES = ['MENTIONS']
 
 
 def generate_paths(graph, entity, ignore_types=SKIP_TYPES):
@@ -22,12 +24,12 @@ def generate_paths(graph, entity, ignore_types=SKIP_TYPES):
         return
     log.info("Generating graph path cache: %r", entity)
     # TODO: should max path length be configurable?
-    q = "MATCH pth = (start:Entity)-[*1..3]-(end:Entity) " \
-        "MATCH (start:Entity)-[startpart:PART_OF]->(startcoll:Collection) " \
-        "MATCH (end:Entity)-[endpart:PART_OF]->(endcoll:Collection) " \
-        "WHERE startcoll.alephCollection <> endcoll.alephCollection AND " \
-        "start.alephEntity = {entity_id} AND " \
+    q = "MATCH pth = (start:Aleph:Entity)-[*1..3]-(end:Aleph:Entity) " \
+        "MATCH (start)-[startpart:PART_OF]->(startcoll:Collection) " \
+        "MATCH (end)-[endpart:PART_OF]->(endcoll:Collection) " \
+        "WHERE start.fingerprint = {entity_fp} AND " \
         "startpart.alephCanonical = {entity_id} AND " \
+        "startcoll.alephCollection <> endcoll.alephCollection AND " \
         "all(r IN relationships(pth) WHERE NOT type(r) IN {ignore_types}) " \
         "WITH DISTINCT start, end, " \
         " COLLECT(DISTINCT extract(x IN nodes(pth) | x.id)) AS paths, " \
@@ -36,11 +38,14 @@ def generate_paths(graph, entity, ignore_types=SKIP_TYPES):
         " COLLECT(DISTINCT endcoll.alephCollection) AS end_collection_id " \
         "RETURN start, end, paths, types, labels, end_collection_id "
     count = 0
-    for row in graph.run(q, entity_id=entity.id, ignore_types=ignore_types):
+    for row in graph.run(q, entity_id=entity.id,
+                         entity_fp=entity.fingerprint,
+                         ignore_types=ignore_types):
+        labels = unwind(row.get('labels'))
+        labels = [l for l in labels if l != BASE_NODE]
+        types = unwind(row.get('types'))
         Path.from_data(entity, row.get('end_collection_id'),
-                       row.get('paths'),
-                       row.get('types'),
-                       row.get('labels'),
+                       row.get('paths'), types, labels,
                        NodeType.dict(row.get('start')),
                        NodeType.dict(row.get('end')))
         count += 1

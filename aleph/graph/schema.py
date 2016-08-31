@@ -10,7 +10,8 @@ EntityNode = NodeType('Entity', indices=['alephEntity'])
 PhoneNode = NodeType('Phone')
 EmailNode = NodeType('Email')
 AddressNode = NodeType('Address')
-CollectionNode = NodeType('Collection', indices=['alephCollection'])
+CollectionNode = NodeType('Collection', indices=['alephCollection'],
+                          node=False)
 DocumentNode = NodeType('Document', indices=['alephDocument'])
 
 LOCATED_AT = EdgeType('LOCATED_AT')

@@ -71,7 +71,8 @@ class Path(db.Model, IdModel):
             q = q.join(cet, cet.c.entity_id == cls.start_entity_id)
             q = q.filter(cet.c.collection_id == start_collection.id)
         q = q.filter(cls.end_collection_id.overlap(end_collection_id))
-        # q = q.filter(not_(cls.end_collection_id.contains([start_collection.id])))
+        pred = not_(cls.end_collection_id.contains([start_collection.id]))
+        q = q.filter(pred)
         if len(labels):
             labels = cast(labels, ARRAY(db.Unicode()))
             q = q.filter(cls.labels.contained_by(labels))

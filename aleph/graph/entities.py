@@ -4,7 +4,6 @@ from aleph.core import get_graph
 from aleph.model import Entity
 from aleph.graph.schema import EntityNode, AKA
 from aleph.graph.collections import add_to_collections
-from aleph.graph.converter import fingerprint
 
 log = logging.getLogger(__name__)
 
@@ -30,7 +29,7 @@ def load_entity(tx, entity):
     if entity.state != Entity.STATE_ACTIVE:
         return remove_entity(tx, entity.id)
     log.info("Graph node [%s]: %s", entity.id, entity.name)
-    fp = fingerprint(entity.name)
+    fp = entity.fingerprint
     node = EntityNode.get_cache(tx, fp)
     if node is not None:
         return node
@@ -49,8 +48,8 @@ def load_entity(tx, entity):
 
     seen = set([fp])
     for other_name in entity.other_names:
-        fp = fingerprint(other_name.display_name)
-        if fp in seen or fingerprint is None:
+        fp = other_name.fingerprint
+        if fp in seen or fp is None:
             continue
         seen.add(fp)
 

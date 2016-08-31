@@ -25,14 +25,9 @@ def load_document(tx, document):
         return
     log.info("Graph load [%s]: %r", document.id, document.meta)
     meta = document.meta
-    data = {
-        'name': meta.title,
-        'alephType': document.type,
-        'fileName': meta.file_name,
-        'fingerprint': document.content_hash,
-        'alephDocument': document.id
-    }
-    node = DocumentNode.merge(tx, **data)
+    node = DocumentNode.merge(tx, name=meta.title, alephTitle=document.type,
+                              fileName=meta.file_name, fingerprint=document.id,
+                              alephDocument=document.id)
     add_to_collections(tx, node, document.collections,
                        alephDocument=document.id)
 

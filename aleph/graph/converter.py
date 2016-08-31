@@ -5,12 +5,9 @@ import phonenumbers
 from flanker.addresslib import address
 
 from aleph.text import string_value
+from aleph.model.common import make_fingerprint
 
 log = logging.getLogger(__name__)
-
-
-def fingerprint(value, **kwargs):
-    return fingerprints.generate(string_value(value))
 
 
 def trim(value, **kwargs):
@@ -52,7 +49,7 @@ class Property(object):
     # Can apply either to a node or an edge.
 
     TRANSFORMS = {
-        'fingerprint': fingerprint,
+        'fingerprint': make_fingerprint,
         'addressfp': addressfp,
         'lowercase': lowercase,
         'email': email,

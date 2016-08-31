@@ -84,7 +84,7 @@ class NodeQuery(GraphQuery):
         if len(args['node_id']):
             filters.append('node.id IN {node_id}')
 
-        q = "MATCH (node)-[:PART_OF]->(coll:Collection) " \
+        q = "MATCH (node:Aleph)-[:PART_OF]->(coll:Collection) " \
             "WHERE %s " \
             "RETURN node SKIP {offset} LIMIT {limit} "
         q = q % ' AND '.join(filters)
@@ -154,7 +154,7 @@ class EdgeQuery(GraphQuery):
             filters.append('target.id IN {target_id}')
         directed = '>' if self._bool('directed') else ''
 
-        q = "MATCH (source)-[rel]-%s(target) " \
+        q = "MATCH (source:Aleph)-[rel]-%s(target:Aleph) " \
             "MATCH (source)-[:PART_OF]->(sourcecoll:Collection) " \
             "MATCH (target)-[:PART_OF]->(targetcoll:Collection) " \
             "WHERE %s " \

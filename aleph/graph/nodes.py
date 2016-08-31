@@ -3,7 +3,7 @@ from hashlib import sha1
 from pylru import lrucache
 from py2neo import Node
 
-from aleph.graph.util import GraphType
+from aleph.graph.util import BASE_NODE, GraphType
 
 log = logging.getLogger(__name__)
 
@@ -12,11 +12,15 @@ class NodeType(GraphType):
     _instances = {}
 
     def __init__(self, name, fingerprint='fingerprint', indices=[],
-                 hidden=False):
+                 hidden=False, node=True):
         self.name = name
         self.fingerprint = fingerprint
-        self.indices = indices + ['id', fingerprint]
+        self.indices = indices + [fingerprint]
         self.hidden = hidden
+        self.labels = [name]
+        # Collections don't have IDs and fingerprints:
+        if node:
+            self.labels.append(BASE_NODE)
         self._instances[name] = self
 
     def ensure_indices(self, graph):
@@ -45,7 +49,7 @@ class NodeType(GraphType):
         if fp is None:
             return
         props['id'] = self.gen_id(fp)
-        node = Node(self.name, **props)
+        node = Node(*self.labels, **props)
         tx.merge(node, self.name, self.fingerprint)
         self.set_cache(tx, fp, node)
         return node
@@ -62,5 +66,6 @@ class NodeType(GraphType):
     def dict(cls, node):
         data = dict(node)
         for label in node.labels():
-            data['$label'] = label
+            if label != BASE_NODE:
+                data['$label'] = label
         return data

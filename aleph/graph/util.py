@@ -1,4 +1,6 @@
 
+BASE_NODE = 'Aleph'
+
 
 class GraphType(object):
     @classmethod
