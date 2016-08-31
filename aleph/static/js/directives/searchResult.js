@@ -10,13 +10,13 @@ aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSeria
     templateUrl: 'templates/documents/search_result.html',
     link: function (scope, element, attrs) {
 
-      scope.collection = null;
+      scope.sourceCollection = null;
       var coll_id = scope.doc.source_collection_id || scope.doc.collection_id[0];
       Collection.index().then(function(collections) {
         for (var i in collections) {
           var collection = collections[i];
           if (collection.id == coll_id) {
-            scope.collection = collection;
+            scope.sourceCollection = collection;
           }
         }
       });

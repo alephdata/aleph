@@ -37,15 +37,6 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
           'result': res.data
         });
       }, function(err) {
-        if (err.status == 400) {
-          dfd.resolve({
-            'result': {
-              'error': err.data,
-              'results': []
-            },
-            'query': query
-          });
-        }
         dfd.reject(err);
       });
       return dfd.promise;

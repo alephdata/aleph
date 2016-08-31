@@ -46,7 +46,7 @@
           </span>
         </div>
 
-        <div ng-repeat="doc in result.results">
+        <div ng-repeat="doc in result.results track by doc.id">
           <search-result doc="doc" result="result" query="query"></search-result>
         </div>
 
@@ -81,7 +81,7 @@
               </a>
             </span>
             <span class="lbl">
-              {{::collection.label | characters:35 }}  
+              {{::collection.label | characters:35 }}
             </span>
           </li>
         </ul>

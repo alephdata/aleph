@@ -18,13 +18,13 @@
     <div class="pull-right">
       <collections-add doc="doc" class="btn-xs"></collections-add>
     </div>
-    <div class="context">  
-      <span ng-if="::collection.category" class="label label-primary">
-        {{::collection.category | collectionCategory }}</span>
+    <div class="context">
+      <span ng-if="::sourceCollection.category" class="label label-primary">
+        {{::sourceCollection.category | collectionCategory }}</span>
 
-      <a ng-href="/collections/{{::collection.id}}" class="collection"
-        ng-bind="::collection.label"></a>
-      <span ng-if="::!collection.public"
+      <a ng-href="/collections/{{::sourceCollection.id}}" class="collection"
+        ng-bind="::sourceCollection.label"></a>
+      <span ng-if="::!sourceCollection.public"
           uib-tooltip="Only available to selected users"
           tooltip-placement="bottom">
         <i class="fa fa-lock" aria-hidden="true"></i>
@@ -39,7 +39,7 @@
       </span>
       <span ng-if="::doc.languages.length > 0 && doc.languages.length < 4">
         <i class="fa fa-language"></i>
-        in 
+        in
         <span ng-repeat="lang in doc.languages">
           {{::lang | language}}<span ng-if="::!$last">,</span>
         </span>
