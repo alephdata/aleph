@@ -183,7 +183,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
                 if collection.id not in [c.id for c in collections]:
                     collections.append(collection)
         if not len(collections):
-            raise AttributeError("No collection specified.")
+            raise ValueError("No collection specified.")
 
         ent.collections = collections
         ent.update(data, merge=merge)

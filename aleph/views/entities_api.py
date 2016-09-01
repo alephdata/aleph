@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify, request_data, arg_bool
 from apikit import get_limit, get_offset
 
@@ -63,7 +64,10 @@ def create():
     for collection in collections:
         authz.require(authz.collection_write(collection.id))
 
-    entity = Entity.save(data, collections)
+    try:
+        entity = Entity.save(data, collections)
+    except ValueError as ve:
+        raise BadRequest(ve.message)
     for collection in entity.collections:
         collection.touch()
     db.session.commit()
@@ -116,7 +120,10 @@ def update(id):
     possible_collections.extend([c.id for c in entity.collections])
     collections = [c for c in get_collections(data)
                    if c.id in possible_collections]
-    entity = Entity.save(data, collections, merge=arg_bool('merge'))
+    try:
+        entity = Entity.save(data, collections, merge=arg_bool('merge'))
+    except ValueError as ve:
+        raise BadRequest(ve.message)
     for collection in entity.collections:
         collection.touch()
     db.session.commit()
