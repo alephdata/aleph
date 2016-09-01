@@ -24,7 +24,7 @@ def generate_paths(graph, entity, ignore_types=SKIP_TYPES):
         return
     log.info("Generating graph path cache: %r", entity)
     # TODO: should max path length be configurable?
-    q = "MATCH pth = (start:Aleph:Entity)-[*1..3]-(end:Aleph:Entity) " \
+    q = "MATCH pth = (start:Aleph:Entity)-[*1..2]-(end:Aleph:Entity) " \
         "MATCH (start)-[startpart:PART_OF]->(startcoll:Collection) " \
         "MATCH (end)-[endpart:PART_OF]->(endcoll:Collection) " \
         "WHERE start.fingerprint = {entity_fp} AND " \

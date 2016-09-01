@@ -33,7 +33,7 @@ class Path(db.Model, IdModel):
 
         lengths = map(len, paths)
         obj.length = min(lengths) - 1
-        average = float(sum(lengths)) / float(len(lengths))
+        average = (float(sum(lengths)) - len(lengths)) / float(len(lengths))
         obj.weight = len(paths) * (1.0 / max(1.0, average))
         obj.data = {
             'start': start,
@@ -127,7 +127,7 @@ class Path(db.Model, IdModel):
         q = cls.filters(q, start_collection, start_entity_id=start_entity_id,
                         end_collection_id=end_collection_id, labels=labels,
                         types=types)
-        q = q.order_by(Path.weight.asc())
+        q = q.order_by(Path.weight.desc())
         return q
 
     def __repr__(self):
