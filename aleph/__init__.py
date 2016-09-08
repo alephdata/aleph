@@ -34,6 +34,7 @@ logging.getLogger('cssutils').setLevel(logging.ERROR)
 logging.getLogger('polyglot').setLevel(logging.WARNING)
 logging.getLogger('PIL').setLevel(logging.WARNING)
 logging.getLogger('neo4j').setLevel(logging.WARNING)
+logging.getLogger('pdfminer').setLevel(logging.WARNING)
 logging.getLogger('httpstream').setLevel(logging.WARNING)
 
 # Log all SQL statements:

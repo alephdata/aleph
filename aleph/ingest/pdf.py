@@ -25,33 +25,43 @@ def _find_objects(objects, cls):
                 yield obj
 
 
-def _convert_page(layout, path):
+def _convert_page(interpreter, page, device, page_no, path, languages):
     # If this returns None or an empty string, it'll trigger OCR.
     text_content = []
+    ocr_required = False
+    try:
+        interpreter.process_page(page)
+        layout = device.get_result()
 
-    if get_config("PDF_OCR_IMAGE_PAGES") == "true":
-        try:
-            # Generous try/catch because pdfminers image support is
-            # horrible.
-            page_area = float(layout.width * layout.height)
-            for image_obj in _find_objects(layout._objs, LTImage):
-                image_area = float(image_obj.width * image_obj.height)
-                page_portion = image_area / page_area
-                # Go for OCR if an image makes up more than 70% of the page.
-                if page_portion > 0.7:
-                    return None
-        except Exception as ex:
-            log.exception(ex)
+        for text_obj in _find_objects(layout._objs, (LTTextBox, LTTextLine)):
+            text = text_obj.get_text()
+            if text is None:
+                continue
+            text = text.strip()
+            if len(text):
+                text_content.append(text)
 
-    for text_obj in _find_objects(layout._objs, (LTTextBox, LTTextLine)):
-        text = text_obj.get_text()
-        if text is None:
-            continue
-        text = text.strip()
-        if len(text):
-            text_content.append(text)
+        # Generous try/catch because pdfminers image support is
+        # horrible.
+        page_area = float(layout.width * layout.height)
+        for image_obj in _find_objects(layout._objs, LTImage):
+            image_area = float(image_obj.width * image_obj.height)
+            page_portion = image_area / page_area
+            # Go for OCR if an image makes up more than 70% of the page.
+            if page_portion > 0.7:
+                ocr_required = True
+
+    except Exception as ex:
+        log.exception(ex)
+        ocr_required = True
+
+    if ocr_required and get_config("PDF_OCR_IMAGE_PAGES") == "true":
+        log.info("Using OCR for %r, p.%s", path, page_no)
+        text_content.append(_extract_image_page(path, page_no, languages))
 
     text = '\n'.join(text_content)
+    log.debug("Extracted %d characters of text from %r, p.%s",
+              len(text), path, page_no)
     return text.strip()
 
 
@@ -79,17 +89,8 @@ def extract_pdf(path, languages=None):
                     result[k] = string_value(v)
 
         for i, page in enumerate(PDFPage.create_pages(doc)):
-            text = None
-            try:
-                interpreter.process_page(page)
-                layout = device.get_result()
-                text = _convert_page(layout, path)
-            except Exception as ex:
-                log.warning("Failed to parse PDF page: %r", ex)
-
-            if text is None or len(text) < 3:
-                log.info("OCR: %r, pg. %s", path, i + 1)
-                text = _extract_image_page(path, i + 1, languages)
-            result['pages'].append(text)
+            result['pages'].append(_convert_page(interpreter, page,
+                                                 device, i + 1,
+                                                 path, languages))
         device.close()
         return result

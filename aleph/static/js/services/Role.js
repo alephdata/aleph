@@ -25,6 +25,7 @@ aleph.factory('Role', ['$http', '$q', 'Metadata', function($http, $q, Metadata) 
     }, function(err) {
       dfd.reject(err);
     });
+    return dfd.promise;
   };
 
   return {
