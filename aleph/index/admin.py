@@ -16,8 +16,8 @@ def init_search():
             TYPE_RECORD: RECORD_MAPPING,
             TYPE_ENTITY: ENTITY_MAPPING
         }
-    })
-    get_es().indices.open(index=get_es_index())
+    }, ignore=[400, 404])
+    get_es().indices.open(index=get_es_index(), ignore=[400, 404])
 
 
 def upgrade_search():
@@ -36,4 +36,4 @@ def optimize_search():
 
 
 def delete_index():
-    get_es().indices.delete(get_es_index(), ignore=[404])
+    get_es().indices.delete(get_es_index(), ignore=[404, 400])
