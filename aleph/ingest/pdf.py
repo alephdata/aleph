@@ -8,6 +8,7 @@ from pdfminer.layout import LTImage
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdftypes import PDFException
 
 from aleph.core import get_config
 from aleph.text import string_value
@@ -51,6 +52,9 @@ def _convert_page(interpreter, page, device, page_no, path, languages):
             if page_portion > 0.7:
                 ocr_required = True
 
+    except PDFException as pdfex:
+        log.warn("PDF: %r", pdfex)
+        ocr_required = True
     except Exception as ex:
         log.exception(ex)
         ocr_required = True
