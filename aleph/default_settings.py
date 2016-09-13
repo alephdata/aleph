@@ -95,14 +95,15 @@ SPINDLE_URL = 'https://search.occrp.org/'
 SPINDLE_API_KEY = None
 
 CELERY_ALWAYS_EAGER = False
-# CELERY_IGNORE_RESULT = True
-# CELERYD_MAX_TASKS_PER_CHILD = 200
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
+CELERYD_MAX_TASKS_PER_CHILD = 200
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = 'UTC'
-# CELERY_RESULT_PERSISTENT = False
-# CELERY_ACKS_LATE = True
+CELERY_IGNORE_RESULT = True
+CELERY_RESULT_BACKEND = 'amqp'
+CELERY_RESULT_PERSISTENT = False
+CELERY_ACKS_LATE = True
 CELERY_BROKER_URL = env.get('RABBITMQ_BIGWIG_URL',
                             'amqp://guest:guest@localhost:5672//')
 CELERY_IMPORTS = ('aleph.queue')
@@ -111,10 +112,6 @@ CELERYBEAT_SCHEDULE = {
     'alert-every-night': {
         'task': 'aleph.alerts.check_alerts',
         'schedule': crontab(hour=1, minute=30)
-    },
-    'reindex-entities': {
-        'task': 'aleph.logic.entities.reindex_entities',
-        'schedule': crontab(hour=1, minute=0, day_of_week=1)
     },
     'scheduled-crawlers': {
         'task': 'aleph.crawlers.execute_scheduled',
