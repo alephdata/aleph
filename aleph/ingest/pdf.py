@@ -52,11 +52,8 @@ def _convert_page(interpreter, page, device, page_no, path, languages):
             if page_portion > 0.7:
                 ocr_required = True
 
-    except PDFException as pdfex:
-        log.warn("PDF: %r", pdfex)
-        ocr_required = True
     except Exception as ex:
-        log.exception(ex)
+        log.warn("PDF: %r", ex)
         ocr_required = True
 
     if ocr_required and get_config("PDF_OCR_IMAGE_PAGES") == "true":
