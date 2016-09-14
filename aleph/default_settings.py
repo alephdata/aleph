@@ -81,6 +81,8 @@ DDJVU_BIN = env.get('DDJVU_BIN', 'ddjvu')
 MDB_TABLES_BIN = env.get('MDB_TABLES_BIN', 'mdb-tables')
 MDB_EXPORT_BIN = env.get('MDB_EXPORT_BIN', 'mdb-export')
 SEVENZ_BIN = env.get('SEVENZ_BIN', '7z')
+OCR_PDF_PAGES = True
+OCR_DEFAULTS = ['en']
 
 SECRET_KEY = env.get('SECRET_KEY')
 

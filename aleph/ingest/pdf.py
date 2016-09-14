@@ -8,7 +8,6 @@ from pdfminer.layout import LTImage
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
-from pdfminer.pdftypes import PDFException
 
 from aleph.core import get_config
 from aleph.text import string_value
@@ -53,10 +52,10 @@ def _convert_page(interpreter, page, device, page_no, path, languages):
                 ocr_required = True
 
     except Exception as ex:
-        log.warn("PDF: %r", ex)
+        log.warning("PDF: %r", ex)
         ocr_required = True
 
-    if ocr_required and get_config("PDF_OCR_IMAGE_PAGES") == "true":
+    if ocr_required and get_config("OCR_PDF_PAGES"):
         log.info("Using OCR for %r, p.%s", path, page_no)
         text_content.append(_extract_image_page(path, page_no, languages))
 

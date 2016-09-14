@@ -54,7 +54,8 @@ OAUTH = {
     'authorize_url': 'https://accounts.google.com/o/oauth2/auth',
 }
 
-PDF_OCR_IMAGE_PAGES = os.environ.get('ALEPH_PDF_OCR_IMAGE_PAGES', "true")
+OCR_PDF_PAGES = os.environ.get('ALEPH_PDF_OCR_IMAGE_PAGES', 'true')
+OCR_PDF_PAGES = OCR_PDF_PAGES.strip().lower() == "true"
 
 MAX_CONTENT_LENGTH = int(os.environ.get('ALEPH_MAX_CONTENT_LENGTH',
                                         500 * 1024 * 1024))
