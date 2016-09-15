@@ -33,6 +33,7 @@ setup(
             'img = aleph.ingest.image:ImageIngestor',
             'email = aleph.ingest.email:EmailFileIngestor',
             'mbox = aleph.ingest.email:MboxFileIngestor',
+            'msg = aleph.ingest.msg:OutlookMsgIngestor',
             'cronos = aleph.ingest.cronos:CronosIngestor',
             'pst = aleph.ingest.email:OutlookIngestor',
             'mdb = aleph.ingest.mdb:AccessIngestor',

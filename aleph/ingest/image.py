@@ -31,7 +31,7 @@ class ImageIngestor(TextIngestor):
             with open(local_path, 'r') as fh:
                 img = Image.open(fh)
                 if img.width < self.MIN_WIDTH or img.height < self.MIN_HEIGHT:
-                    log.warn("Image too small [%r]: %s", meta, img.size)
+                    log.warn("Image too small %r: %s", meta, img.size)
                     return False
                 return True
         except Exception as exc:

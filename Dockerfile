@@ -4,7 +4,9 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Begin python festivities
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install -q --upgrade pip && pip install -q functools32 \
+RUN pip install -q --upgrade pip \
+  && pip install -q --upgrade setuptools \
+  && pip install -q functools32 \
   && pip install -q -r /tmp/requirements.txt
 
 COPY . /aleph

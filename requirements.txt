@@ -58,6 +58,7 @@ coverage
 pyahocorasick
 pycrypto
 pylru
+https://github.com/mattgwwalker/msg-extractor/tarball/master
 
 # Python 3 backports
 subprocess32
