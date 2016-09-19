@@ -42,10 +42,12 @@ class TextIngestor(Ingestor):
 
 
 class PDFIngestor(TextIngestor):
-    MIME_TYPES = ['application/pdf']
+    MIME_TYPE = 'application/pdf'
+    MIME_TYPES = [MIME_TYPE]
     EXTENSIONS = ['pdf']
 
     def ingest(self, meta, local_path):
+        meta.mime_type = self.MIME_TYPE
         self.extract_pdf(meta, local_path)
 
     @classmethod
