@@ -20,7 +20,7 @@ for (root, dirs, files) in os.walk(schema_dir):
 
 format_checker = FormatChecker()
 # JS: '^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'
-partial_date_re = re.compile('^([12]\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$')
+partial_date_re = re.compile('^([12]\d{3}(-[01]?[0-9](-[0123]?[0-9])?)?)?$')
 
 
 @format_checker.checks('country-code')
