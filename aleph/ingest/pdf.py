@@ -6,7 +6,7 @@ from pdfminer.layout import LAParams, LTTextBox, LTTextLine, LTFigure
 from pdfminer.layout import LTImage
 
 from pdfminer.pdfpage import PDFPage
-from pdfminer.pdfparser import PDFParser
+from pdfminer.pdfparser import PDFParser, PSEOF
 from pdfminer.pdfdocument import PDFDocument
 
 from aleph.core import get_config
@@ -52,7 +52,7 @@ def _convert_page(interpreter, page, device, page_no, path, languages):
                 ocr_required = True
 
     except Exception as ex:
-        log.warning("PDF: %r", ex)
+        log.exception(ex)
         ocr_required = True
 
     if ocr_required and get_config("OCR_PDF_PAGES"):
@@ -72,7 +72,9 @@ def extract_pdf(path, languages=None):
     This will attempt to use pdfminer to extract textual content from
     each page. If none is found, it'll send the images through OCR.
     """
-    with open(path, 'rb') as fh:
+    fh = open(path, 'rb')
+    result = {'pages': []}
+    try:
         rsrcmgr = PDFResourceManager()
         laparams = LAParams()
         device = PDFPageAggregator(rsrcmgr, laparams=laparams)
@@ -80,7 +82,6 @@ def extract_pdf(path, languages=None):
         parser = PDFParser(fh)
         doc = PDFDocument(parser, '')
 
-        result = {'pages': []}
         if len(doc.info):
             for k, v in doc.info[-1].items():
                 k = k.lower().strip()
@@ -94,3 +95,8 @@ def extract_pdf(path, languages=None):
                                                  path, languages))
         device.close()
         return result
+    except PSEOF as eof:
+        log.info("Unexpected EOF: %r", eof)
+        return result
+    finally:
+        fh.close()

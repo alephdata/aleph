@@ -6,6 +6,7 @@ except:
     from StringIO import StringIO
 
 from PIL import Image
+from PIL.Image import DecompressionBombWarning
 from tesserwrap import Tesseract, PageSegMode
 
 from aleph.core import get_config
@@ -27,7 +28,14 @@ def extract_image_data(data, languages=None):
     text = Cache.get_ocr(data, languages)
     if text is not None:
         return text
-    img = Image.open(StringIO(data))
+    try:
+        img = Image.open(StringIO(data))
+    except DecompressionBombWarning as dce:
+        log.debug("Image too large: %", dce)
+        return None
+    except IOError as ioe:
+        log.info("Unknown image format: %r", ioe)
+        return None
     # TODO: play with contrast and sharpening the images.
     extractor = Tesseract(tessdata_prefix, lang=languages)
     extractor.set_page_seg_mode(PageSegMode.PSM_AUTO_OSD)
@@ -44,7 +52,11 @@ def _extract_image_page(pdf_file, page, languages=None):
     # generate an image based on the given page in the PDF and then OCR
     # that.
     pdftoppm = get_config('PDFTOPPM_BIN')
-    args = [pdftoppm, pdf_file, '-singlefile', '-png', '-r', '400',
-            '-aa', 'yes', '-f', str(page)]
-    output = subprocess.check_output(args)
-    return extract_image_data(output, languages=languages)
+    try:
+        args = [pdftoppm, pdf_file, '-singlefile', '-gray', '-r', '400',
+                '-aa', 'yes', '-f', str(page)]
+        output = subprocess.check_output(args)
+        return extract_image_data(output, languages=languages)
+    except subprocess.CalledProcessError as cpe:
+        log.info("Error in pdftoppm: %r", cpe)
+        return None

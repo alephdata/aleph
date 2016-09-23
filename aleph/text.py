@@ -82,7 +82,7 @@ def string_value(value):
                 enc = enc.get('encoding')
             if enc is None:
                 enc = 'utf-8'
-            value = value.decode(enc)
+            value = value.decode(enc, 'replace')
         value = ''.join(ch for ch in value if category(ch)[0] != 'C')
         value = value.replace(u'\xfe\xff', '')  # remove BOM
         if not len(value.strip()):

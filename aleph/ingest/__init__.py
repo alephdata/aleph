@@ -16,16 +16,19 @@ SKIP_ENTRIES = ['.git', '.hg', '.DS_Store', '.gitignore', 'Thumbs.db',
                 '__MACOSX']
 
 
-@celery.task()
-def ingest_url(collection_id, metadata, url):
+@celery.task(bind=True, max_retries=3)
+def ingest_url(self, collection_id, metadata, url):
     meta = Metadata.from_data(metadata)
     tmp_path = make_tempfile(meta.file_name, suffix=meta.extension)
     try:
         log.info("Ingesting URL: %r", url)
         res = requests.get(url, stream=True, timeout=120)
-        if res.status_code >= 400:
-            msg = "HTTP Error %r: %r" % (url, res.status_code)
-            raise IngestorException(msg)
+        if res.status_code == 404:
+            log.info("HTTP not found %r: %r", url, res.status_code)
+            return
+        if res.status_code >= 399:
+            countdown = 3600 ** self.request.retries
+            self.retry(countdown=countdown)
         with open(tmp_path, 'w') as fh:
             for chunk in res.iter_content(chunk_size=1024):
                 if chunk:

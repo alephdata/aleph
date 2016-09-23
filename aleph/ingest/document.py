@@ -51,7 +51,8 @@ class DocumentIngestor(TextIngestor):
 
     def ingest(self, meta, local_path):
         pdf_path = self.generate_pdf_alternative(meta, local_path)
-        self.extract_pdf_alternative(meta, pdf_path)
+        if pdf_path is not None:
+            self.extract_pdf_alternative(meta, pdf_path)
 
 
 class PresentationIngestor(DocumentIngestor):

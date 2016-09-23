@@ -2,6 +2,7 @@ import os
 import logging
 import subprocess
 from PIL import Image
+from PIL.Image import DecompressionBombWarning
 
 from aleph.core import get_config
 from aleph.ingest.ingestor import IngestorException
@@ -34,6 +35,9 @@ class ImageIngestor(TextIngestor):
                     log.warn("Image too small %r: %s", meta, img.size)
                     return False
                 return True
+        except DecompressionBombWarning as dce:
+            log.debug("Image too large: %", dce)
+            return False
         except Exception as exc:
             log.info("Cannot parse image: %s", exc)
             return True
