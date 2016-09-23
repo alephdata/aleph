@@ -32,7 +32,7 @@ Unidecode==0.04.17
 networkx==1.9.1
 XlsxWriter==0.6.6
 https://github.com/okfn/messytables/tarball/master
-krauler>=0.2.1
+krauler>=0.2.2
 metafolder
 jsonmapping
 https://github.com/goulu/pdfminer/tarball/master
