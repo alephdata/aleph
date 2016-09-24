@@ -40,6 +40,7 @@ def extract_image_data(data, languages=None):
     extractor = Tesseract(tessdata_prefix, lang=languages)
     extractor.set_page_seg_mode(PageSegMode.PSM_AUTO_OSD)
     text = extractor.ocr_image(img)
+    extractor.clear()
     log.debug('OCR done: %s, %s characters extracted',
               languages, len(text))
     Cache.set_ocr(data, languages, text)
@@ -54,7 +55,7 @@ def _extract_image_page(pdf_file, page, languages=None):
     pdftoppm = get_config('PDFTOPPM_BIN')
     try:
         args = [pdftoppm, pdf_file, '-singlefile', '-gray', '-r', '400',
-                '-aa', 'yes', '-f', str(page)]
+                '-q', '-f', str(page)]
         output = subprocess.check_output(args)
         return extract_image_data(output, languages=languages)
     except subprocess.CalledProcessError as cpe:
