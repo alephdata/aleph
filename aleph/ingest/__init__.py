@@ -21,10 +21,10 @@ def ingest_url(self, collection_id, metadata, url):
     meta = Metadata.from_data(metadata)
     tmp_path = make_tempfile(meta.file_name, suffix=meta.extension)
     try:
-        log.info("Ingesting URL: %r", url)
-        res = requests.get(url, stream=True, timeout=120)
+        log.info("Ingesting URL: %s", url)
+        res = requests.get(url, stream=True)
         if res.status_code == 404:
-            log.info("HTTP not found %r: %r", url, res.status_code)
+            log.info("HTTP not found: %s", url)
             return
         if res.status_code >= 399:
             countdown = 3600 ** self.request.retries
@@ -38,6 +38,10 @@ def ingest_url(self, collection_id, metadata, url):
         meta.headers = res.headers
         meta = get_archive().archive_file(tmp_path, meta, move=True)
         Ingestor.dispatch(collection_id, meta)
+    except IOError as ioe:
+        log.info("IO Failure: %r", ioe)
+        countdown = 3600 ** self.request.retries
+        self.retry(countdown=countdown)
     except Exception as ex:
         Ingestor.handle_exception(meta, collection_id, ex)
     finally:
