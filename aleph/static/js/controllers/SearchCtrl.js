@@ -41,7 +41,8 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
   };
 
   $scope.hasPeek = function() {
-    return $scope.query.getQ().length > 1;
+    var query = $scope.query.getQ();
+    return query && query.trim().length > 1;
   };
 
   var initFacets = function(query, result) {
