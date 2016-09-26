@@ -31,6 +31,12 @@
 
   .navbar-nav {
     &> li {
+
+      &.active {
+        &> a {
+          color: #aaa;
+        }
+      }
       &> a {
         color: #fff;
         padding-top:25px;
