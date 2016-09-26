@@ -83,6 +83,8 @@ MDB_EXPORT_BIN = env.get('MDB_EXPORT_BIN', 'mdb-export')
 SEVENZ_BIN = env.get('SEVENZ_BIN', '7z')
 OCR_PDF_PAGES = True
 OCR_DEFAULTS = ['en']
+PDF_TEXT_MODULE = env.get('PDF_TEXT_MODULE', 'pdf')
+TIKA_URI = env.get('TIKA_URI')
 
 SECRET_KEY = env.get('SECRET_KEY')
 
