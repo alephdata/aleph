@@ -1,17 +1,41 @@
+.navbar-static-top {
+  border-width:0px;
+}
 
 .navbar.navbar-default {
-    background-color: $page-bg;
-    border-bottom: 0;
+  background-color: $brand-primary;
+  border-bottom:0;
+  color: #fff;
 
-    @include drop-shadow;
+  @include drop-shadow;
 
-    .navbar-header {
-        .navbar-brand {
-            img {
-                margin-top: -0.6em;
-                max-width: 2.2em;
-                max-height: 2.2em;
-            }
-        }
+  .navbar-brand {
+    color: #fff;
+    height:auto !important;
+    font-size:22px;
+    display:block;
+
+    &:nth-child(2) {
+      padding:10px 15px !important;
     }
+
+    &:nth-child(3) {
+      padding:25px 15px !important;
+    }
+
+    img {
+      width:50px;
+      height:auto;
+    }
+  }
+
+  .navbar-nav {
+    &> li {
+      &> a {
+        color: #fff;
+        padding-top:25px;
+        padding-bottom:25px;
+      }
+    }
+  }
 }

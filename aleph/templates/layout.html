@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google" content="notranslate" />
     <title>{{config.APP_TITLE}}</title>
-    
+
     {% assets "css" %}
       <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet">
     {% endassets %}
@@ -17,7 +17,7 @@
   <body ng-controller="AppCtrl" ng-keyup="keyDownNotify($event)">
     <div id="page" ng-show="session.roles">
       <nav class="navbar navbar-default navbar-static-top" role="navigation">
-        <div class="container-fluid">
+        <div class="container">
           <div class="navbar-header">
             <button class="navbar-toggle" type="button" ng-click="navbarCollapsed = !navbarCollapsed">
               <span class="sr-only">Toggle navigation</span>
@@ -33,18 +33,17 @@
             <ul class="nav navbar-nav">
               <li ng-class="{'active': navSection =='documents'}">
                 <a href="/search">
-                  Document Search
+                  Search
                 </a>
               </li>
-              <li ng-class="{'active': navSection =='collections'}">
-                <a href="/collections?category=investigation">
-                  Collections
-                </a>
+              <li>
+                <a href="http://opengazettes.org.za/about">About</a>
               </li>
-              <li ng-class="{'active': navSection =='help'}">
-                <a href="/help">
-                  Help
-                </a>
+              <li>
+                <a href="http://opengazettes.org.za/join">Join</a>
+              </li>
+              <li>
+                <a href="http://opengazettes.org.za/contact">Contact</a>
               </li>
             </ul>
 
