@@ -58,8 +58,6 @@ class Metadata(object):
     _phone_numbers = Field('phone_numbers', multi=True, label='Phone numbers')
     _dates = Field('dates', multi=True, label='Dates')
     _urls = Field('urls', multi=True)
-    _countries = Field('countries', multi=True, label='Countries')
-    _languages = Field('languages', multi=True, label='Languages')
     _emails = Field('emails', multi=True, label='E-mail addresses')
     _domains = Field('domains', multi=True, label='Domains')
     _tables = Field('tables', multi=True, protected=True)

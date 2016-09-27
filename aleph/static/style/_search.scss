@@ -1,5 +1,5 @@
 
-// List entities page 
+// List entities page
 .nav.nav-tabs {
     margin-bottom: 1em;
 }
@@ -9,7 +9,7 @@
 }
 
 .right-text {
-    text-align: right;   
+    text-align: right;
 }
 
 .panel.panel-default.panel-facet {
@@ -28,7 +28,7 @@
             cursor: pointer;
             white-space: nowrap;
             text-overflow: hidden;
-            overflow-x: hidden;      
+            overflow-x: hidden;
 
             .badge {
                 background-color: $page-bg;
@@ -52,8 +52,8 @@
                     color: white;
                 }
             }
-        }    
-    }      
+        }
+    }
 }
 
 .search-bar {
@@ -86,7 +86,7 @@
     }
 }
 
-// Search results 
+// Search results
 .search-result {
     padding: 1em 0 1.5em 0;
     border-bottom: 1px solid $gray-subtle;
