@@ -3,6 +3,7 @@ from pprint import pprint  # noqa
 from babel import Locale
 from pycountry import countries
 
+from aleph import authz
 from aleph.model import Entity, Collection
 
 
@@ -44,8 +45,10 @@ def convert_entities(entities):
 
 
 def convert_collections(facet):
+    readable = authz.collections(authz.READ)
+
     results = []
-    ids = [b.get('key') for b in facet.get('buckets', [])]
+    ids = [b.get('key') for b in facet.get('buckets', []) if b.get('key') in readable]
     if not len(ids):
         return {'values': []}
     collections = Collection.all_by_ids(ids).all()
