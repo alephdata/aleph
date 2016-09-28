@@ -107,7 +107,6 @@ class SevenZipIngestor(PackageIngestor):
     def unpack(self, meta, local_path, temp_dir):
         args = [get_config('SEVENZ_BIN'), 'x', local_path, '-y', '-r',
                 '-bb0', '-bd', '-oc:%s' % temp_dir]
-        print ' '.join(args)
         subprocess.call(args, stderr=subprocess.STDOUT)
 
 
