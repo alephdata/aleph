@@ -1,8 +1,10 @@
 import logging
 
 from aleph.core import get_archive
+from aleph.core import get_config
 from aleph.model import db, Document, DocumentPage
-from aleph.ingest.pdf import extract_pdf
+from aleph.ingest import pdf
+from aleph.ingest import tika
 from aleph.ingest.ingestor import Ingestor
 
 log = logging.getLogger(__name__)
@@ -25,7 +27,14 @@ class TextIngestor(Ingestor):
         return page
 
     def extract_pdf(self, meta, pdf_path):
-        data = extract_pdf(pdf_path, languages=meta.languages)
+        pdftext_module = get_config('PDF_TEXT_MODULE')
+        if pdftext_module == 'pdf':
+            mod = pdf
+        elif pdftext_module == 'tika':
+            mod = tika
+        else:
+            raise Exception("Unknown pdf to text module %s" % pdftext_module)
+        data = mod.extract_pdf(pdf_path, languages=meta.languages)
         if not meta.has('author') and data.get('author'):
             meta.author = data.get('author')
 
