@@ -1,5 +1,5 @@
 from aleph.core import get_config
-from bs4 import BeautifulSoup
+from lxml import html
 from urlparse import urljoin
 import requests
 
@@ -7,11 +7,11 @@ import requests
 def extract_pdf(path, languages=None):
     with open(path, 'rb') as f:
         headers = {'accept': 'text/html'}
-        tika_url = get_config("TIKA_URI")
-        r = requests.put(urljoin(tika_url, '/tika'), data=f, headers=headers)
+        tika_url = urljoin(get_config("TIKA_URI"), '/tika')
+        r = requests.put(tika_url, data=f, headers=headers)
         r.raise_for_status()
-        soup = BeautifulSoup(r.text.encode('utf8', 'replace'), 'html.parser')
+        doc = html.fromstring(r.content.decode('utf-8'))
         pages = []
-        for i, page in enumerate(soup.findAll('div', class_='page')):
-            pages.append(page.get_text())
+        for page in doc.findall('.//div[@class="page"]'):
+            pages.append(page.text_content())
         return {'pages': pages}
