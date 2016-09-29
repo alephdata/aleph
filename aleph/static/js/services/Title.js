@@ -1,7 +1,7 @@
 
 aleph.factory('Title', ['$rootScope', 'Metadata', function($rootScope, Metadata) {
   var element = angular.element('title')[0],
-      appTitle = 'Aleph';
+      appTitle = 'Open Gazettes South Africa';
 
   Metadata.get().then(function(metadata) {
     appTitle = metadata.app.title;
