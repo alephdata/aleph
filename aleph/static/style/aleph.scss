@@ -1,4 +1,4 @@
-$aleph-theme: #982022 !default;
+$aleph-theme: #333 !default;
 $aleph-dark: #3a4953 !default;
 $aleph-highlights: yellow !default;
 
@@ -17,6 +17,7 @@ $gray-subtle: #f9f9f9;
 $page-bg: #fff;
 $spacing: 0.5em;
 $base-unit: 12px;
+$link-color: #982022;
 
 // Style tiles, Fonts
 $font-family-sans-serif: 'Open Sans', sans-serif !default;
@@ -28,6 +29,10 @@ $input-border-focus: $brand-primary;
 
 html {
     height: 100%;
+}
+
+a {
+  color: $link-color;
 }
 
 body {
@@ -45,7 +50,7 @@ footer {
     a {
         color: white;
         text-decoration: underline;
-    }    
+    }
 }
 
 @import "loading_bar";
@@ -69,7 +74,7 @@ footer {
     color: $page-bg;
 
     a {
-        color: $page-bg;        
+        color: $page-bg;
     }
 }
 

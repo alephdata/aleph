@@ -5,10 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google" content="notranslate" />
     <title>{{config.APP_TITLE}}</title>
-    
+
     {% assets "css" %}
       <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet">
     {% endassets %}
+
+    <meta property="og:title" content="Open Gazettes South Africa" />
+    <meta name="description" content="Making South African Government Gazettes freely available." />
+    <meta property="og:description" content="Making South African Government Gazettes freely available." />
+    <link rel="canonical" href="http://opengazettes.org.za/" />
+    <meta property="og:url" content="http://opengazettes.org.za/" />
+    <meta property="og:site_name" content="Open Gazettes South Africa" />
+    <meta property="og:image" content="http://opengazettes.org.za/img/banner_5.png" />
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="{{ config.APP_FAVICON }}">
@@ -17,7 +25,7 @@
   <body ng-controller="AppCtrl" ng-keyup="keyDownNotify($event)">
     <div id="page" ng-show="session.roles">
       <nav class="navbar navbar-default navbar-static-top" role="navigation">
-        <div class="container-fluid">
+        <div class="container">
           <div class="navbar-header">
             <button class="navbar-toggle" type="button" ng-click="navbarCollapsed = !navbarCollapsed">
               <span class="sr-only">Toggle navigation</span>
@@ -32,19 +40,16 @@
           <div uib-collapse="navbarCollapsed" class="navbar-collapse bs-js-navbar-collapse">
             <ul class="nav navbar-nav">
               <li ng-class="{'active': navSection =='documents'}">
-                <a href="/search">
-                  Document Search
-                </a>
+                <a href="/">Search</a>
               </li>
-              <li ng-class="{'active': navSection =='collections'}">
-                <a href="/collections?category=investigation">
-                  Collections
-                </a>
+              <li>
+                <a href="http://opengazettes.org.za/join">Liberate Gazettes</a>
               </li>
-              <li ng-class="{'active': navSection =='help'}">
-                <a href="/help">
-                  Help
-                </a>
+              <li>
+                <a href="http://opengazettes.org.za/about">About</a>
+              </li>
+              <li>
+                <a href="http://opengazettes.org.za/about#contact-us">Contact</a>
               </li>
             </ul>
 

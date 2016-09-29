@@ -1,6 +1,6 @@
 <div class="jumbotron">
-  <h1>{{statistics.document_count | number}} leads</h1>
-  <p class="teaser">for your investigations</p>
+  <h1>{{statistics.document_count | number}} gazettes</h1>
+  <p class="teaser">from 2000 to 2016 available.</p>
   <div class="search-area">
     <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
       <div class="input-group input-group-lg">
@@ -30,23 +30,9 @@
       <p>
         {{metadata.app.title}} lets you search across
         <a href="/collections">{{statistics.collection_count | number}} collections
-        of documents</a> from previous investigations,
-        official sources, and scraped databases. 
+        of South African gazettes</a> from opengazettes.org.za.
       </p>
     </div>
-    <div class="col-md-6 feature">
-      <h2>
-        <i class="fa fa-cloud-upload"></i>
-        Personal archive
-      </h2>
-      <p>
-        <a href="/collections?category=investigation">Upload documents</a> to make
-        them searchable and keep them organized. You can also share documents with
-        others, or make them fully public.
-      </p>
-    </div>
-  </div>
-  <div class="row">
     <div class="col-md-6 feature">
       <h2>
         <i class="fa fa-bell"></i>
@@ -58,15 +44,15 @@
         setting up e-mail alerts.
       </p>
     </div>
+  </div>
+  <div class="row">
     <div class="col-md-6 feature">
       <h2>
         <i class="fa fa-users"></i>
         Persons of Interest
       </h2>
       <p>
-        Documents are cross-referenced with persons and companies derived from
-        research and <a href="/collections?category=sanctions">international
-        sanctions lists</a>.
+        Gazettes are cross-referenced with persons and companies by ID and CIPC numbers respectively.
       </p>
     </div>
   </div>
@@ -80,18 +66,18 @@
         {{statistics.collection_count | number}} collections are searched
         at the moment. This includes
 
-        They are grouped into 
+        They are grouped into
         {{statistics.collection_count | number}} collections:
         <span ng-repeat="collection in statistics.collections">
           <a href="">{{collection.count | number}}
             {{collection.category | collectionCategory}}</a><span ng-if="!$last">,</span>
         </span>
         Please contact us to suggest other document and data sets.
-        
+
         Please contact us to suggest other document and data sets.
       </p>
       <p>
-        
+
       </p>
   </div-->
 </div>
