@@ -1,5 +1,5 @@
 <div ng-if="mode == 'denied'">
-  <i class="fa fa-lock failure-icon"></i>
+  <i class="fa fa-lock big-icon"></i>
   <div class="failure-note">
     <span ng-bind="message"></span>
     <span ng-hide="session.logged_in">
@@ -10,6 +10,6 @@
   </div>
 </div>
 <div ng-if="mode == 'other'">
-  <i class="fa fa-exclamation-triangle failure-icon"></i>
+  <i class="fa fa-exclamation-triangle big-icon"></i>
   <div class="failure-note" ng-bind="message"></div>
 </div>
