@@ -26,7 +26,9 @@ aleph.directive('searchResult', ['$location', '$route', '$sce', '$httpParamSeria
         rec.snippets = [];
         for (var n in rec.text) {
           var text = rec.text[n];
-          rec.snippets.push($sce.trustAsHtml(text));
+          if (text && text.length > 2) {
+            rec.snippets.push($sce.trustAsHtml(text));  
+          }
         }
       }
 
