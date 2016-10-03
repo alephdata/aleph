@@ -5,7 +5,8 @@ from apikit import obj_or_404, request_data, jsonify
 from aleph import authz
 from aleph.core import db
 from aleph.events import log_event
-from aleph.model import Role, Permission, validate
+from aleph.model import Role, Collection, Permission, validate
+from aleph.logic.permissions import update_permission
 
 
 blueprint = Blueprint('roles_api', __name__)
@@ -63,16 +64,12 @@ def permissions_update(collection):
     validate(data, 'permission.json#')
 
     role = Role.all().filter(Role.id == data['role']).first()
-    if role is None:
+    collection = Collection.by_id(collection)
+    if role is None or collection is None:
         raise BadRequest()
-
-    permission = Permission.grant_collection(collection,
-                                             role,
-                                             data['read'],
-                                             data['write'])
-    db.session.commit()
+    perm = update_permission(role, collection, data['read'], data['write'])
     log_event(request)
     return jsonify({
         'status': 'ok',
-        'updated': permission
+        'updated': perm
     })

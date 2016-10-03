@@ -64,8 +64,7 @@ def check_role_alerts(role):
         alert.update()
         try:
             subject = '%s (%s new results)' % (alert.label, results['total'])
-            
-            html = render_template('alert.html', alert=alert, role=role,
+            html = render_template('email/alert.html', alert=alert, role=role,
                                    total=results.get('total'),
                                    results=format_results(alert, results),
                                    app_title=get_app_title(),
