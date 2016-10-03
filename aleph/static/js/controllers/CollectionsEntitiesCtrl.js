@@ -27,6 +27,10 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
     return url;
   };
 
+  $scope.isEmpty = function() {
+    return !$scope.query.isFiltered() && $scope.result.limit > 0 && $scope.result.total == 0;
+  };
+
   $scope.hasAlert = function(entity) {
     return Alert.check({entity_id: entity.id});
   };

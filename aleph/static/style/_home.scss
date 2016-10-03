@@ -48,7 +48,6 @@
 
             i {
                 color: $brand-primary;
-                min-width: 1.3em;
             }
         }
 
@@ -59,9 +58,7 @@
         }
 
         p {
-            font-size: 1.2em;
-            line-height: 1.5em;   
-            color: $text-muted;
+            @include teaser-text;
         }
 
         .count {

@@ -13,6 +13,8 @@ aleph.factory('Query', ['$route', '$location', '$httpParamSerializer',
   ParsedQuery.prototype.getArray = function(key) {
     return ensureArray(this.state[key]).map(function(v) {
       return v + '';
+    }).filter(function(v) {
+      return v.trim().length > 0;
     });
   };
 
@@ -59,6 +61,18 @@ aleph.factory('Query', ['$route', '$location', '$httpParamSerializer',
 
   ParsedQuery.prototype.toggleFilter = function(name, val) {
     return this.toggle('filter:' + name, val);
+  };
+
+  ParsedQuery.prototype.isFiltered = function() {
+    if (this.getQ()) {
+      return true;
+    }
+    for (var key in this.state) {
+      if (key.startsWith('filter:') && this.getArray(key).length > 0) {
+        return true;
+      }
+    }
+    return false;
   };
 
   ParsedQuery.prototype.sortFacet = function(data, name) {

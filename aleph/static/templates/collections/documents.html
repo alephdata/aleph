@@ -1,48 +1,15 @@
 <collections-screen collection="collection" section="documents">
-  <div class="row">
+  <div ng-show="isEmpty()">
+    <collections-empty-teaser collection="collection"></collections-empty-teaser>
+  </div>
+
+  <div class="row" ng-show="!isEmpty()">
     <div class="col-md-8">
       <search-box query="query"></search-box>
-
-      <div class="alert alert-info" role="alert" ng-if="!collection.doc_count && collection.can_add">
-        <div>
-          <i class="fa fa-cloud-upload"></i>
-          <p>
-            Drag files or folders onto the browser window to import them
-            into the collection.
-          </p>
-        </div>
-      </div>
 
       <div ng-repeat="doc in result.results track by doc.id">
         <search-result doc="doc" result="result" query="query"></search-result>
       </div>
-
-      <!--table class="table">
-        <tr ng-repeat="doc in result.results track by doc.id">
-          <td>
-            <a ng-href="{{::getDocumentUrl(doc)}}">
-              <span ng-if="::doc.type == 'tabular'">
-                <i class="fa fa-table"></i>
-              </span>
-              <span ng-if="::doc.type == 'text'">
-                <i class="fa fa-file-text-o"></i>
-              </span>
-              {{::doc.title}}
-            </a>
-          </td>
-          <td width="1%" class="nobreak">
-            {{::doc.created_at | date}}
-          </td>
-          <td width="1%" class="nobreak">
-            <button type="button" class="btn btn-default btn-xs"
-              ng-click="editDocument(doc)"
-              ng-if="authz.documentWrite(doc)">
-              <i class="fa fa-cog"></i>
-              Edit
-            </button>
-          </td>
-        </tr>
-      </table-->
 
       <div class="bottom-pager">
         <div class="pull-right">

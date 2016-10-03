@@ -25,6 +25,10 @@ aleph.controller('CollectionsDocumentsCtrl', ['$scope', '$location', '$http', '$
     })
   };
 
+  $scope.isEmpty = function() {
+    return !$scope.query.isFiltered() && $scope.result.limit > 0 && $scope.result.total == 0;
+  };
+
   $scope.$on('$routeUpdate', function() {
     reloadSearch();
   });

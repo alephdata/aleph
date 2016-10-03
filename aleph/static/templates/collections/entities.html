@@ -1,5 +1,9 @@
 <collections-screen collection="collection" section="entities">
-  <div class="row">
+  <div ng-show="isEmpty()">
+    <collections-empty-teaser collection="collection"></collections-empty-teaser>
+  </div>
+
+  <div class="row" ng-show="!isEmpty()">
     <div class="col-md-8">
       <div class="search-bar">
         <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
@@ -37,12 +41,9 @@
       </div>
 
       <div class="alert alert-suggest" ng-if="result.limit > 0 && !result.total && collection.can_add">
-        No entities were found,
-        <a ng-href="/collections/{{::collection.id}}/entities/bulk">create some now</a>?
-      </div>
-
-      <div class="alert alert-suggest" ng-if="result.limit > 0 && !result.total && !collection.can_add">
-        No entities were found in this collection.
+        No entities were found, 
+        <a ng-href="/collections/{{::collection.id}}/entities/bulk">
+          create some now</a>?
       </div>
 
       <div>

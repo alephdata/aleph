@@ -36,3 +36,9 @@
     -webkit-flex: $args;
     flex: $args;
 }
+
+@mixin teaser-text {
+    font-size: 1.2em;
+    line-height: 1.5em;   
+    color: $text-muted;
+}

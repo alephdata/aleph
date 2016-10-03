@@ -82,4 +82,28 @@
             display: block;
         }
     }
+
+    .collections-teaser {
+        h3 {
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-bottom: 1em;
+
+            i {
+                color: $brand-primary;
+            }
+        }
+
+        p {
+            @include teaser-text;
+            display: inline-block;
+            min-height: 5em;
+        }
+
+        .btn-group {
+            display: block;
+            margin-top: 1em;
+        }
+    }
 }
