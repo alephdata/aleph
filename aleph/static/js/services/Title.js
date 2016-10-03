@@ -1,16 +1,18 @@
 
 aleph.factory('Title', ['$rootScope', 'Metadata', function($rootScope, Metadata) {
   var element = angular.element('title')[0],
-      appTitle = 'Aleph';
+      appTitle = '', viewTitle = 'Welcome';
+
+  function set(text, navSection) {
+    viewTitle = text;
+    element.innerHTML = viewTitle + ' - ' + appTitle;
+    $rootScope.navSection = navSection;
+  }
 
   Metadata.get().then(function(metadata) {
     appTitle = metadata.app.title;
+    set(viewTitle, $rootScope.navSection);
   });
       
-  return {
-    set: function(text, navSection) {
-      element.innerHTML = text + ' - ' + appTitle;
-      $rootScope.navSection = navSection;
-    }
-  };
+  return {set: set};
 }]);
