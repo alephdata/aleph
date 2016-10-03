@@ -3,6 +3,7 @@ BASE_NODE = 'Aleph'
 
 
 class GraphType(object):
+
     @classmethod
     def get(cls, name, **kw):
         if name not in cls._instances:

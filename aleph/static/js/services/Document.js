@@ -77,7 +77,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
           for (var i in res.data.results) {
             var record = res.data.results[i];
             if (record && record.text && record.text.length > 2) {
-              record.snippet = $sce.trustAsHtml(record.text[0]);
+              record.snippet = $sce.trustAsHtml(record.text);
             }
           }
           dfd.resolve(res.data);

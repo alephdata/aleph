@@ -9,7 +9,6 @@
 
       a {
         color: #982022;
-        font-weight: bold;
       }
 
       table {
@@ -17,26 +16,32 @@
         width: 100%;
       }
 
-      hr {
-        margin-top: 1em;
-        border: 0;
-        height: 1px;
-        background: #999;
-      }
-
       p.footer {
+        border-top: 2px solid #999;
+        margin-top: 1em;
+        padding-top: 1em;
         font-size: 0.9em;
         color: #999;
       }
 
-      .source-attr a {
-        color: #999;
+      td.title {
+        font-size: 1.1em;
+      }
+
+      td a.title {
+        font-weight: bold;
+      }
+
+      td a.source {
+        color: #333;
+        font-weight: normal;
         text-decoration: none;
       }
 
       tr.teaser td {
         padding-bottom: 0.5em;
-        padding-left: 1em;
+        padding-right: 2em;
+        color: #999; 
       }
 
       tr.tally-row td {
@@ -56,41 +61,36 @@
     </p>
 
     <table>
-      {% for result in results.results %}
+      {% for result in results %}
         <tr class="result">
-          <td>
-            {% if result.type == 'text' %}
-              <a href="{{app_url}}text/{{result.id}}?{{qs}}">{{result.title}}</a>
-            {% else %}
-              <a href="{{app_url}}tabular/{{result.id}}/0?{{qs}}">{{result.title}}</a>
-            {% endif %}
+          <td class="title">
+            <a class="title" href="{{result.url}}">{{result.title}}</a>
+            <a class="source" href="{{app_url}}collections/{{result.collection.id}}">
+              ({{result.collection.label}})
+            </a>
           </td>
         </tr>
-        <tr class="result">
-          <td>
-            <span class="source-attr">
-              {% for collection in result.collections %}
-                <a href="{{app_url}}search?filter:collection_id={{collection.id}}">
-                  {{collection.label}}
-                </a>{% if not loop.last %},{% endif %}
-              {% endfor %}
-            </span>
-          </td>
-        </tr>
+        {% for snippet in result.snippets %}
+          <tr class="teaser">
+            <td>
+              {{ snippet | safe }}&hellip;
+            </td>
+          </tr>
+        {% endfor %}
       {% endfor %}
-      {% if results.total > 1 %}
+      {% if total > 1 %}
         <tr class="tally-row">
           <td colspan="2">
-            There were a total of {{results.total}} matches.
+            There were a total of {{total}} matches.
           </td>
         </tr>
       {% endif %}
     </table>
 
-    <hr>
     <p class="footer">
       You will receive notifications like this whenever {{app_title}} adds documents that
       match your search criteria. If you would like to stop receiving them, visit
-      <a href="{{app_url}}">{{app_url}}</a> to manage your active alerts.
+      <a href="{{app_url}}">{{app_title}}</a> to manage your active alerts.
+    </p>
   </body>
 </html>

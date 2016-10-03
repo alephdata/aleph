@@ -58,16 +58,15 @@
       &bdquo;<span ng-bind="::doc.summary"></span>&ldquo;
     </div>
     <div class="records" ng-if="::doc.records.total">
-      <ul ng-repeat="rec in doc.records.results">
+      <ul ng-repeat="record in doc.records.results">
         <li>
-          &bdquo;<span ng-click="viewDetails(rec)" class="click highlights"
-            ng-repeat="snippet in rec.snippets"
-            ng-bind-html="::snippet"></span>&ldquo;
+          &bdquo;<span ng-click="viewDetails(record)" class="click highlights"
+            ng-bind-html="::record.snippet"></span>&ldquo;
           <span ng-if="doc.type == 'tabular'" class="ref">in
-            <a ng-href="{{::getUrl(rec)}}">row {{::rec.row_id | number}}</a>
+            <a ng-href="{{::getUrl(record)}}">row {{::record.row_id | number}}</a>
           </span>
           <span ng-if="doc.type == 'text'" class="ref">on
-            <a ng-href="{{::getUrl(rec)}}">page {{::rec.page | number}}</a>
+            <a ng-href="{{::getUrl(record)}}">page {{::record.page | number}}</a>
           </span>
         </li>
       </ul>

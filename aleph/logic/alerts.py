@@ -1,17 +1,18 @@
 import logging
-from urllib import urlencode
+from urllib import quote_plus
 from flask import request, render_template, current_app
 
 from aleph.core import get_app_title, get_app_url, db, celery
-from aleph.model import Role, Alert
+from aleph.model import Role, Alert, Collection
 from aleph.notify import notify_role
-from aleph.search.documents import alert_query
+from aleph.search.alerts import alert_query
 
 log = logging.getLogger(__name__)
 
 
 @celery.task()
 def check_alerts():
+    """Go through all users and execute their alerts."""
     for role_id, in Role.notifiable():
         with current_app.test_request_context('/'):
             role = Role.by_id(role_id)
@@ -25,11 +26,29 @@ def check_alerts():
             check_role_alerts(role)
 
 
-def make_document_query(alert):
-    args = {}
-    if alert.query_text:
-        args['dq'] = alert.query_text
-    return urlencode(args.items())
+def format_results(alert, results):
+    # used to activate highlighting in results pages:
+    app_url = get_app_url()
+    qs = 'dq=%s' % quote_plus(alert.query_text or '')
+    output = []
+    for result in results['results']:
+        collection_id = result.pop('source_collection_id', None)
+        if not collection_id:
+            continue
+        result['collection'] = Collection.by_id(collection_id)
+
+        # generate document URL:
+        if 'tabular' == result.get('type'):
+            result['url'] = '%stabular/%s/0?%s' % (app_url, result['id'], qs)
+        else:
+            result['url'] = '%stext/%s?%s' % (app_url, result['id'], qs)
+
+        # preview snippets:
+        result['snippets'] = []
+        for record in result['records'].get('results', []):
+            result['snippets'].append(record['text'])
+        output.append(result)
+    return output
 
 
 def check_role_alerts(role):
@@ -41,13 +60,14 @@ def check_role_alerts(role):
         results = alert_query(alert)
         if results['total'] == 0:
             continue
-        log.info('Found: %d new results for: %r', results['total'],
-                 alert.label)
+        log.info('Found %d new results for: %r', results['total'], alert.label)
         alert.update()
         try:
             subject = '%s (%s new results)' % (alert.label, results['total'])
-            html = render_template('alert.html', alert=alert, results=results,
-                                   role=role, qs=make_document_query(alert),
+            
+            html = render_template('alert.html', alert=alert, role=role,
+                                   total=results.get('total'),
+                                   results=format_results(alert, results),
                                    app_title=get_app_title(),
                                    app_url=get_app_url())
             notify_role(role, subject, html)

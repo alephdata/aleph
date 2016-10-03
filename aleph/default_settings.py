@@ -115,7 +115,7 @@ CELERY_IMPORTS = ('aleph.queue')
 
 CELERYBEAT_SCHEDULE = {
     'alert-every-night': {
-        'task': 'aleph.alerts.check_alerts',
+        'task': 'aleph.logic.alerts.check_alerts',
         'schedule': crontab(hour=1, minute=30)
     },
     'scheduled-crawlers': {

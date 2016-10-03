@@ -41,6 +41,25 @@ def meta_query_string(text, literal=False):
     }
 
 
+def text_query(text):
+    """Part of a query which finds a piece of text."""
+    if text is None or not len(text.strip()):
+        return match_all()
+    return {
+        "bool": {
+            "minimum_should_match": 1,
+            "should": [
+                meta_query_string(text),
+                child_record({
+                    "bool": {
+                        "should": [text_query_string(text)]
+                    }
+                })
+            ]
+        }
+    }
+
+
 def child_record(q):
     return {
         "has_child": {

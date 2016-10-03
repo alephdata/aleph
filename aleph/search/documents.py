@@ -2,18 +2,14 @@ import json
 import time
 import logging
 from pprint import pprint  # noqa
-
 from werkzeug.datastructures import MultiDict
 
 from aleph import authz, signals
 from aleph.core import get_es, get_es_index
-from aleph.model import Collection
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
-from aleph.search.util import add_filter, authz_filter, clean_highlight
+from aleph.search.util import authz_filter, clean_highlight
 from aleph.search.util import execute_basic, parse_filters, FACET_SIZE
-from aleph.search.fragments import text_query_string, meta_query_string
-from aleph.search.fragments import match_all, child_record, aggregate
-from aleph.search.fragments import filter_query
+from aleph.search.fragments import aggregate, filter_query, text_query
 from aleph.search.facets import convert_document_aggregations
 from aleph.search.records import records_query_internal, records_query_shoulds
 
@@ -121,25 +117,6 @@ def facet_collections(q, aggs, filters):
     return aggs
 
 
-def text_query(text):
-    """Part of a query which finds a piece of text."""
-    if text is None or not len(text.strip()):
-        return match_all()
-    return {
-        "bool": {
-            "minimum_should_match": 1,
-            "should": [
-                meta_query_string(text),
-                child_record({
-                    "bool": {
-                        "should": [text_query_string(text)]
-                    }
-                })
-            ]
-        }
-    }
-
-
 def run_sub_queries(output, sub_queries):
     if len(sub_queries):
         res = get_es().msearch(index=get_es_index(), doc_type=TYPE_RECORD,
@@ -147,21 +124,18 @@ def run_sub_queries(output, sub_queries):
         for doc in output['results']:
             for sq in res.get('responses', []):
                 sqhits = sq.get('hits', {})
+                doc['records']['total'] = sqhits.get('total', 0)
                 for hit in sqhits.get('hits', {}):
                     record = hit.get('_source')
-                    if doc['id'] != record.get('document_id'):
+                    if doc['id'] != record['document_id']:
                         continue
-                    record['score'] = hit.get('_score')
-                    highlights = hit.get('highlight', {})
-                    if len(highlights.get('text', [])):
-                        record['text'] = highlights.get('text')
-                    elif len(highlights.get('text_latin', [])):
-                        record['text'] = highlights.get('text_latin', [])
-                    else:
-                        continue
-                    record['text'] = [clean_highlight(t) for t in record['text']]
-                    doc['records']['results'].append(record)
-                    doc['records']['total'] = sqhits.get('total', 0)
+                    hlt = hit.get('highlight', {})
+                    texts = hlt.get('text', []) or hlt.get('text_latin', [])
+                    texts = [clean_highlight(t) for t in texts]
+                    texts = [t for t in texts if len(t)]
+                    if len(texts):
+                        record['text'] = texts[0]
+                        doc['records']['results'].append(record)
 
 
 def execute_documents_query(args, query):
@@ -170,11 +144,12 @@ def execute_documents_query(args, query):
     result, hits, output = execute_basic(TYPE_DOCUMENT, query)
     query_duration = (time.time() - begin_time) * 1000
     log.debug('Query ES time: %.5fms', query_duration)
+
     convert_document_aggregations(result, output, args)
     query_duration = (time.time() - begin_time) * 1000
     log.debug('Post-facet accumulated: %.5fms', query_duration)
-    sub_shoulds = records_query_shoulds(args)
 
+    sub_shoulds = records_query_shoulds(args)
     sub_queries = []
     for doc in hits.get('hits', []):
         document = doc.get('_source')
@@ -195,42 +170,4 @@ def execute_documents_query(args, query):
     run_sub_queries(output, sub_queries)
     query_duration = (time.time() - begin_time) * 1000
     log.debug('Post-subquery accumulated: %.5fms', query_duration)
-    return output
-
-
-def alert_query(alert):
-    """Execute the query and return a set of results."""
-    q = text_query(alert.query_text)
-    q = authz_filter(q)
-    if alert.entity_id:
-        q = filter_query(q, [('entities.id', alert.entity_id)], OR_FIELDS)
-    if alert.notified_at:
-        q = add_filter(q, {
-            "range": {
-                "created_at": {
-                    "gt": alert.notified_at
-                }
-            }
-        })
-    q = {
-        'query': q,
-        'size': 150
-    }
-
-    result, hits, output = execute_basic(TYPE_DOCUMENT, q)
-    collections = {}
-    for doc in hits.get('hits', []):
-        document = doc.get('_source')
-        document['id'] = int(doc.get('_id'))
-        document['collections'] = []
-        for coll in document['collection_id']:
-            if coll not in authz.collections(authz.READ):
-                continue
-            if coll not in collections:
-                collections[coll] = Collection.by_id(coll)
-            if collections[coll] is None:
-                continue
-            document['collections'].append(collections[coll])
-        document['records'] = {'results': [], 'total': 0}
-        output['results'].append(document)
     return output
