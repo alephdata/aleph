@@ -20,11 +20,19 @@
         //color: $text-muted;
         color: $brand-primary;
 
+        a {
+            text-decoration: underline;
+        }
+
         &.failed {
             color: $brand-primary;
         }
 
-        i {
+        .failure-note {
+            margin-bottom: 1em;
+        }
+
+        i.failure-icon {
             font-size: 4em;
             margin: 0.5em;
         }

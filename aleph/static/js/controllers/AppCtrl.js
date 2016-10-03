@@ -4,6 +4,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
   $scope.session = {logged_in: false};
   $scope.routeLoaded = false;
   $scope.routeFailed = false;
+  $scope.routeError = null;
   $scope.navbarCollapsed = true;
 
   Metadata.get().then(function(metadata) {
@@ -20,6 +21,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
 
   $rootScope.$on("$routeChangeError", function (event, next, current, rejection) {
     $scope.routeFailed = true;
+    $scope.routeError = rejection;
     console.log('Error', rejection);
   });
 
@@ -29,15 +31,12 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
     }
   };
 
-  $rootScope.reportError = function(message) {
-    $scope.routeFailed = true;
-  };
-
   $rootScope.reportLoading = function(flag) {
     $scope.routeLoaded = !flag;
     if (flag) {
       $anchorScroll();
       $scope.routeFailed = false;
+      $scope.routeError = null;
     }
   };
 

@@ -58,6 +58,7 @@ def status():
             'read': authz.collections(authz.READ),
             'write': authz.collections(authz.WRITE)
         },
+        'login': url_for('.login'),
         'logout': url_for('.logout')
     })
 

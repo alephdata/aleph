@@ -101,10 +101,7 @@
             <i class="fa fa-circle-o-notch fa-spin"></i>
           </div>
           <div class="spinner failed" ng-show="routeFailed" ng-cloak>
-            <i class="fa fa-exclamation-triangle"></i>
-            <div class="failure-note">
-              He's dead, Jim.
-            </div>
+            <error-message error="routeError" session="session"></error-message>
           </div>
         </div>
         <div ng-view autoscroll="true"></div>

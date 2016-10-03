@@ -1,0 +1,15 @@
+<div ng-if="mode == 'denied'">
+  <i class="fa fa-lock failure-icon"></i>
+  <div class="failure-note">
+    <span ng-bind="message"></span>
+    <span ng-hide="session.logged_in">
+      <a ng-href="{{session.login}}">
+        Click here to sign in.
+      </a>
+    </span>
+  </div>
+</div>
+<div ng-if="mode == 'other'">
+  <i class="fa fa-exclamation-triangle failure-icon"></i>
+  <div class="failure-note" ng-bind="message"></div>
+</div>
