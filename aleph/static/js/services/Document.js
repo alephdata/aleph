@@ -22,11 +22,10 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       state['snippet'] = 140;
       state['facet'] = query.getArray('facet');
       state['facet'].push('entities');
+      state['facet'].push('collections');
       if (collection_id) {
         state['filter:collection_id'] = collection_id;
         state['scope'] = 'collection';
-      } else {
-        state['facet'].push('collections');
       }
       state['offset'] = state.offset || 0;
       History.setLastSearch($location.path(), query.state);
