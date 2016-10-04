@@ -14,7 +14,12 @@
               Disable alert
             </span>
             <span ng-if="!hasAlert()">
-              Set alert
+              <span ng-if="canCreateAlert()">
+                Set an alert
+              </span>
+              <span ng-if="!canCreateAlert()">
+                Sign in to set an alert
+              </span>
             </span>
           </button>
         </div>
