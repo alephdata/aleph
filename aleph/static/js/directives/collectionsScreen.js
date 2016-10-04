@@ -25,6 +25,7 @@ aleph.directive('collectionsScreen', ['$http', '$q', '$location', 'Authz', 'Coll
         }
         Ingest.files(files, scope.collection).then(function() {
           scope.uploads = [];
+          $location.path('/collections/' + scope.collection.id + '/states');
         }, function(err) {
           scope.uploads = [];
         });

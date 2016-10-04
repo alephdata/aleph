@@ -34,8 +34,12 @@ def queue():
 def collection_crawlerstates(id):
     authz.require(authz.collection_write(id))
     q = db.session.query(CrawlerState)
-    q = q.filter(CrawlerState.status == CrawlerState.STATUS_FAIL)
     q = q.filter(CrawlerState.collection_id == id)
+    q = q.filter(CrawlerState.error_type != 'init')
+
+    status = request.args.get('status')
+    if status:
+        q = q.filter(CrawlerState.status == status)
 
     crawler_id = request.args.get('crawler_id')
     if crawler_id:

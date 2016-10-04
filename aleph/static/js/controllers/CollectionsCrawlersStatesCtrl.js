@@ -1,6 +1,6 @@
 
-aleph.controller('CollectionsCrawlersStatesCtrl', ['$scope', '$location', '$http', '$uibModal', 'Title', 'states', 'collection',
-    function($scope, $location, $http, $uibModal, Title, states, collection) {
+aleph.controller('CollectionsCrawlersStatesCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'Title', 'states', 'collection',
+    function($scope, $route, $location, $http, $uibModal, Title, states, collection) {
   
   $scope.collection = collection;
   $scope.states = states;
@@ -10,6 +10,10 @@ aleph.controller('CollectionsCrawlersStatesCtrl', ['$scope', '$location', '$http
     var query = $location.search();
     query.offset = offset;
     $location.search(query);
+  };
+
+  $scope.reload = function() {
+    $route.reload();
   };
 
   $scope.showDetail = function(state) {

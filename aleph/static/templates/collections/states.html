@@ -1,24 +1,41 @@
 <collections-screen collection="collection" section="states">
-  <table class="table" ng-show="states.total">
+  <table class="table table-bordered" ng-show="states.total">
     <tr>
-      <th width="20%">File name</th>
-      <th width="15%">Error</th>
+      <th>File name</th>
+      <th width="15%">Status</th>
       <th>Message</th>
       <th width="15%">Date</th>
     </tr>
 
-    <tr ng-repeat="state in states.results">
-      <td><code>
-        <a ng-click="showDetail(state)" ng-bind="::state.meta.file_name || state.meta.foreign_id | characters:25"></a>
-      </code></td>
-      <td><code ng-bind="::state.error_type"></code></td>
+    <tr ng-repeat="state in states.results" ng-class="{'warning': state.status == 'fail'}">
+      <td>
+        <code>
+          <a ng-click="showDetail(state)" ng-bind="::state.meta.file_name || state.meta.foreign_id | characters:40"></a>
+        </code>
+      </td>
+      <td>
+        <span ng-if="state.status == 'ok'">
+          <i class="fa fa-check-circle" aria-hidden="true"></i>
+        </span>
+        <span ng-if="state.status == 'fail'">
+          <i class="fa fa-times-circle" aria-hidden="true"></i>
+        </span>
+        <code ng-if="state.error_type">
+          <span ng-bind="::state.error_type"></span>
+        </code>
+      </td>
       <td ng-bind="::state.error_message | characters:70"></td>
       <td ng-bind="::state.created_at | calendar"></td>
     </tr>
   </table>
 
   <div ng-hide="states.total">
-    <collections-empty-teaser collection="collection"></collections-empty-teaser>
+    <div class="alert alert-info">
+      <strong>No imports have started.</strong> If you have just uploaded files, please check back in
+      a few moments after the data has been processed.
+      <a ng-click="reload()" class="alert-link">Click here to refresh...</a>
+    </div>
+    <!-- collections-empty-teaser collection="collection"></collections-empty-teaser -->
   </div>
 
   <div class="bottom-pager">
