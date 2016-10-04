@@ -1,10 +1,10 @@
 import logging
-from flask import session, Blueprint, redirect, request
+from flask import session, Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
 from apikit import jsonify
 
 from aleph import authz, signals
-from aleph.core import db, url_for, oauth_provider
+from aleph.core import db, url_for, oauth
 from aleph.model import Role
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
@@ -14,11 +14,17 @@ log = logging.getLogger(__name__)
 blueprint = Blueprint('sessions_api', __name__)
 
 
-@oauth_provider.tokengetter
 def get_oauth_token():
     if 'oauth' in session:
         sig = session.get('oauth')
         return (sig.get('access_token'), '')
+
+
+# link the token getter to each oauth provider
+# TODO: this won't work when oauth providers are configured by create_app, since
+# this is done before that is run
+for provider in oauth.remote_apps.itervalues():
+    provider.tokengetter(get_oauth_token)
 
 
 @blueprint.before_app_request
@@ -63,9 +69,19 @@ def status():
 
 
 @blueprint.route('/api/1/sessions/login')
-def login():
+@blueprint.route('/api/1/sessions/login/<string:provider>')
+def login(provider=None):
+    if not provider:
+        # by default use the first provider if none is requested,
+        # which is a useful default if there's only one
+        provider = oauth.remote_apps.keys()[0]
+
+    oauth_provider = oauth.remote_apps.get(provider)
+    if not oauth_provider:
+        abort(404)
+
     log_event(request)
-    return oauth_provider.authorize(callback=url_for('.callback'))
+    return oauth_provider.authorize(callback=url_for('.callback', provider=provider))
 
 
 @blueprint.route('/api/1/sessions/logout')
@@ -90,8 +106,24 @@ def handle_google_oauth(sender, provider=None, session=None):
     session['user'] = role.id
 
 
-@blueprint.route('/api/1/sessions/callback')
-def callback():
+@signals.handle_oauth_session.connect
+def handle_facebook_oauth(sender, provider=None, session=None):
+    if 'facebook.com' not in provider.base_url:
+        return
+    me = provider.get('me?fields=id,name,email')
+    user_id = 'facebook:%s' % me.data.get('id')
+    role = Role.load_or_create(user_id, Role.USER, me.data.get('name'),
+                               email=me.data.get('email'))
+    session['roles'].append(role.id)
+    session['user'] = role.id
+
+
+@blueprint.route('/api/1/sessions/callback/<string:provider>')
+def callback(provider):
+    oauth_provider = oauth.remote_apps.get(provider)
+    if not oauth_provider:
+        abort(404)
+
     resp = oauth_provider.authorized_response()
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)
