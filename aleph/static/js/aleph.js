@@ -113,6 +113,17 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     }
   });
 
+  $routeProvider.when('/collections/:collection_id/states', {
+    templateUrl: 'templates/collections/states.html',
+    controller: 'CollectionsCrawlersStatesCtrl',
+    reloadOnSearch: true,
+    resolve: {
+      'collection': loadCollection,
+      'metadata': loadMetadata,
+      'states': loadCrawlerStates
+    }
+  });
+
   $routeProvider.when('/collections/:collection_id/networks', {
     templateUrl: 'templates/networks/create.html',
     controller: 'NetworksCreateCtrl',
@@ -141,16 +152,6 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     reloadOnSearch: true,
     resolve: {
       'crawlers': loadCrawlers
-    }
-  });
-
-  $routeProvider.when('/crawlers/logs', {
-    templateUrl: 'templates/crawlers/states.html',
-    controller: 'CrawlersStatesCtrl',
-    reloadOnSearch: true,
-    resolve: {
-      // 'crawlers': loadCrawlers,
-      'states': loadCrawlerStates
     }
   });
 

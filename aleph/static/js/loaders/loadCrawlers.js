@@ -13,8 +13,10 @@ var loadCrawlers = ['$http', '$q', '$route', '$location', function($http, $q, $r
 
 var loadCrawlerStates = ['$http', '$q', '$route', '$location', function($http, $q, $route, $location) {
   var dfd = $q.defer(),
-      query = $location.search();
-  $http.get('/api/1/crawlerstates', {params: query}).then(function(res) {
+      collectionId = $route.current.params.collection_id,
+      query = $location.search(),
+      url = '/api/1/collections/' + collectionId + '/crawlerstates';
+  $http.get(url, {params: query}).then(function(res) {
     dfd.resolve(res.data);
   }, function(err) {
     dfd.reject(err);  

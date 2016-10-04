@@ -1,9 +1,10 @@
 
-aleph.controller('CrawlersStatesCtrl', ['$scope', '$location', '$http', '$uibModal', 'Title', 'states',
-    function($scope, $location, $http, $uibModal, Title, states) {
-  // $scope.crawlers = crawlers;
+aleph.controller('CollectionsCrawlersStatesCtrl', ['$scope', '$location', '$http', '$uibModal', 'Title', 'states', 'collection',
+    function($scope, $location, $http, $uibModal, Title, states, collection) {
+  
+  $scope.collection = collection;
   $scope.states = states;
-  Title.set("Crawler Logs", "admin");
+  Title.set("Crawler Logs: " + collection.label, "collection");
 
   $scope.loadOffset = function(offset) {
     var query = $location.search();

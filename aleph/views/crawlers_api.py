@@ -24,21 +24,26 @@ def queue():
         if crawler_id == cls.get_id():
             incremental = bool(data.get('incremental', False))
             execute_crawler.delay(crawler_id, incremental=incremental)
-            return jsonify({'status': 'queued'}) 
+            return jsonify({'status': 'queued'})
     return jsonify({'status': 'error', 'message': 'No such crawler'},
                    status=400)
 
 
-@blueprint.route('/api/1/crawlerstates', methods=['GET'])
-def states():
-    authz.require(authz.is_admin())
+@blueprint.route('/api/1/collections/<int:id>/crawlerstates',
+                 methods=['GET'])
+def collection_crawlerstates(id):
+    authz.require(authz.collection_write(id))
     q = db.session.query(CrawlerState)
     q = q.filter(CrawlerState.status == CrawlerState.STATUS_FAIL)
-    if 'crawler_id' in request.args:
-        q = q.filter(CrawlerState.crawler_id == request.args.get('crawler_id'))
-    if 'crawler_run' in request.args:
-        q = q.filter(CrawlerState.crawler_run == request.args.get('crawler_run'))
-    if 'error_type' in request.args:
-        q = q.filter(CrawlerState.error_type == request.args.get('error_type'))
+    q = q.filter(CrawlerState.collection_id == id)
+
+    crawler_id = request.args.get('crawler_id')
+    if crawler_id:
+        q = q.filter(CrawlerState.crawler_id == crawler_id)
+
+    crawler_run = request.args.get('crawler_run')
+    if crawler_run:
+        q = q.filter(CrawlerState.crawler_run == crawler_run)
+
     q = q.order_by(CrawlerState.created_at.desc())
-    return jsonify(Pager(q))
+    return jsonify(Pager(q, id=id))

@@ -1,10 +1,10 @@
-<div class="screen">
+<collections-screen collection="collection" section="documents">
   <table class="table">
     <tr>
-      <th width="20%">FileName</th>
-      <th width="15%">ErrorType</th>
+      <th width="20%">File name</th>
+      <th width="15%">Error</th>
       <th width="1%"></th>
-      <th w>ErrorMessage</th>
+      <th>Message</th>
       <th width="15%">Date</th>
     </tr>
 
@@ -34,7 +34,7 @@
       No results were found.
     </div>
     <div class="total" ng-if="states.total">
-      Found {{states.total | number}} log entries.
+      Found {{states.total | number}} import log entries.
     </div>
   </div>
-</div>
+</collections-screen>
