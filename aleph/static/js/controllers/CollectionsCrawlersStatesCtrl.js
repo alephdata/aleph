@@ -12,21 +12,6 @@ aleph.controller('CollectionsCrawlersStatesCtrl', ['$scope', '$location', '$http
     $location.search(query);
   };
 
-  $scope.isFiltered = function(error_type) {
-    var query = $location.search();
-    return query.error_type == error_type;
-  };
-
-  $scope.filterType = function(error_type) {
-    var query = $location.search();
-    if ($scope.isFiltered(error_type)) {
-      query.error_type = null;
-    } else {
-      query.error_type = error_type;
-    }
-    $location.search(query);
-  };
-
   $scope.showDetail = function(state) {
     var instance = $uibModal.open({
       templateUrl: 'templates/crawlers/state_detail.html',

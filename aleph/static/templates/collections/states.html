@@ -1,9 +1,8 @@
-<collections-screen collection="collection" section="documents">
-  <table class="table">
+<collections-screen collection="collection" section="states">
+  <table class="table" ng-show="states.total">
     <tr>
       <th width="20%">File name</th>
       <th width="15%">Error</th>
-      <th width="1%"></th>
       <th>Message</th>
       <th width="15%">Date</th>
     </tr>
@@ -13,25 +12,21 @@
         <a ng-click="showDetail(state)" ng-bind="::state.meta.file_name || state.meta.foreign_id | characters:25"></a>
       </code></td>
       <td><code ng-bind="::state.error_type"></code></td>
-      <td>
-        <a ng-if="!isFiltered(state.error_type)" ng-click="filterType(state.error_type)">
-          <i class="fa fa-filter" aria-hidden="true"></i>
-        </a>
-        <a ng-if="isFiltered(state.error_type)" ng-click="filterType(state.error_type)">
-          <i class="fa fa-close" aria-hidden="true"></i>
-        </a>
-      </td>
       <td ng-bind="::state.error_message | characters:70"></td>
       <td ng-bind="::state.created_at | calendar"></td>
     </tr>
   </table>
+
+  <div ng-hide="states.total">
+    <collections-empty-teaser collection="collection"></collections-empty-teaser>
+  </div>
 
   <div class="bottom-pager">
     <div class="pull-right">
       <response-pager response="states" load="loadOffset(offset)"></response-pager>
     </div>
     <div class="total" ng-if="!states.total">
-      No results were found.
+      No import log entries were found.
     </div>
     <div class="total" ng-if="states.total">
       Found {{states.total | number}} import log entries.

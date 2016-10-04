@@ -64,6 +64,13 @@
           <span class="label label-info">dev</span>
         </a>
       </li>
+      <li role="presentation" ng-if="collection.can_edit"
+          ng-class="{'active': section == 'states'}">
+        <a ng-href="/collections/{{::collection.id}}/states">
+          <i class="fa fa-recycle" aria-hidden="true"></i>
+          Data Imports
+        </a>
+      </li>
       <li role="presentation" ng-class="{'active': section == 'settings'}"
           ng-show="collection.can_edit">
         <a ng-href="/collections/{{::collection.id}}/settings">
