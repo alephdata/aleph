@@ -1,16 +1,37 @@
 <collections-screen collection="collection" section="states">
+  <div ng-hide="states.total" class="row">
+    <div class="col-md-6 col-md-push-3">
+      <div class="alert alert-info">
+        <p>
+          <strong>No imports have started.</strong>
+        </p>
+        <p>
+          If you have just uploaded files, please check back in
+          a few moments after the data has been processed.
+        </p>
+        <p>
+          <a ng-click="reload()" class="alert-link">Click here to refresh...</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
   <table class="table table-bordered" ng-show="states.total">
     <tr>
       <th>File name</th>
-      <th width="15%">Status</th>
+      <th>Status</th>
       <th>Message</th>
-      <th width="15%">Date</th>
+      <th>Date</th>
     </tr>
 
     <tr ng-repeat="state in states.results" ng-class="{'warning': state.status == 'fail'}">
       <td>
-        <code>
-          <a ng-click="showDetail(state)" ng-bind="::state.meta.file_name || state.meta.foreign_id | characters:40"></a>
+        <code ng-if="state.status == 'fail'"
+              ng-bind="::state.meta.file_name || state.meta.foreign_id | characters:40">
+        </code>
+        <code ng-if="state.status == 'ok'">
+          <a ng-href="/collections/{{collection.id}}?filter:content_hash={{state.content_hash}}"
+             ng-bind="::state.meta.file_name || state.meta.foreign_id | characters:40"></a>
         </code>
       </td>
       <td>
@@ -21,24 +42,19 @@
           <i class="fa fa-times-circle" aria-hidden="true"></i>
         </span>
         <code ng-if="state.error_type">
-          <span ng-bind="::state.error_type"></span>
+          <a ng-click="showDetail(state)" ng-bind="::state.error_type"></a>
         </code>
+        <span ng-if="!state.error_message" class="text-muted">ok</span>
       </td>
-      <td ng-bind="::state.error_message | characters:70"></td>
+      <td>
+          <span ng-bind="::state.error_message | characters:70"></span>
+          <span ng-if="!state.error_message" class="text-muted">no message</span>
+      </td>
       <td ng-bind="::state.created_at | calendar"></td>
     </tr>
   </table>
 
-  <div ng-hide="states.total">
-    <div class="alert alert-info">
-      <strong>No imports have started.</strong> If you have just uploaded files, please check back in
-      a few moments after the data has been processed.
-      <a ng-click="reload()" class="alert-link">Click here to refresh...</a>
-    </div>
-    <!-- collections-empty-teaser collection="collection"></collections-empty-teaser -->
-  </div>
-
-  <div class="bottom-pager">
+  <div class="bottom-pager" ng-show="states.total">
     <div class="pull-right">
       <response-pager response="states" load="loadOffset(offset)"></response-pager>
     </div>

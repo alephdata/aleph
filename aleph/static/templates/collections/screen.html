@@ -42,14 +42,16 @@
     <div class="clearfix"></div>
 
     <ul class="nav nav-tabs">
-      <li role="presentation" ng-class="{'active': section == 'documents'}">
+      <li role="presentation" ng-class="{'active': section == 'documents'}"
+          ng-if="::show_documents">
         <a ng-href="/collections/{{::collection.id}}">
           <i class="fa fa-file-text-o" aria-hidden="true"></i>
           Documents
           <span class="badge">{{::collection.doc_count | number}}</span>
         </a>
       </li>
-      <li role="presentation" ng-class="{'active': section == 'entities'}">
+      <li role="presentation" ng-class="{'active': section == 'entities'}"
+          ng-if="::show_entities">
         <a ng-href="/collections/{{::collection.id}}/entities">
           <i class="fa fa-users" aria-hidden="true"></i>
           People and Companies
@@ -64,11 +66,12 @@
           <span class="label label-info">dev</span>
         </a>
       </li>
-      <li role="presentation" ng-if="collection.can_edit"
-          ng-class="{'active': section == 'states'}">
+      <li role="presentation" ng-class="{'active': section == 'states'}"
+          ng-if="::show_states">
         <a ng-href="/collections/{{::collection.id}}/states">
           <i class="fa fa-hourglass-half" aria-hidden="true"></i>
           Data Imports
+          <span class="badge">{{collection.crawler_state_count | number}}</span>
         </a>
       </li>
       <li role="presentation" ng-class="{'active': section == 'settings'}"

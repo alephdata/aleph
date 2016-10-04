@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy.orm import aliased
 
 from aleph.core import db, url_for
@@ -83,6 +83,16 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         q = q.filter(collection_document_table.c.collection_id == self.id)
         return q.count()
 
+    def get_crawler_state_count(self):
+        from aleph.model.crawler_state import CrawlerState
+        q = CrawlerState.all()
+        q = q.filter(CrawlerState.collection_id == self.id)
+        q = q.filter(or_(
+            CrawlerState.error_type != 'init',
+            CrawlerState.error_type == None  # noqa
+        ))
+        return q.count()
+
     def get_entity_count(self, state=None):
         from aleph.model.entity import Entity, collection_entity_table
         q = Entity.all()
@@ -97,6 +107,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         from aleph.model.entity import Entity
         return {
             'doc_count': self.get_document_count(),
+            'crawler_state_count': self.get_crawler_state_count(),
             'entity_count': self.get_entity_count(Entity.STATE_ACTIVE),
             'pending_count': self.get_entity_count(Entity.STATE_PENDING)
         }

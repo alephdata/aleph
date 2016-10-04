@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from apikit import request_data, jsonify, Pager
+from sqlalchemy import or_
 
 from aleph import authz
 from aleph.model import db, CrawlerState
@@ -35,7 +36,10 @@ def collection_crawlerstates(id):
     authz.require(authz.collection_write(id))
     q = db.session.query(CrawlerState)
     q = q.filter(CrawlerState.collection_id == id)
-    q = q.filter(CrawlerState.error_type != 'init')
+    q = q.filter(or_(
+        CrawlerState.error_type != 'init',
+        CrawlerState.error_type == None  # noqa
+    ))
 
     status = request.args.get('status')
     if status:
@@ -50,4 +54,5 @@ def collection_crawlerstates(id):
         q = q.filter(CrawlerState.crawler_run == crawler_run)
 
     q = q.order_by(CrawlerState.created_at.desc())
+    print q
     return jsonify(Pager(q, id=id))

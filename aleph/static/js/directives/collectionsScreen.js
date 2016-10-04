@@ -11,6 +11,15 @@ aleph.directive('collectionsScreen', ['$http', '$q', '$location', 'Authz', 'Coll
     link: function (scope, element, attrs) {
       scope.is_admin = Authz.is_admin();
       scope.writeable = Authz.collection(Authz.WRITE, scope.collection.id);
+
+      scope.show_documents = scope.collection.doc_count || scope.collection.can_add;
+      scope.show_documents = scope.show_documents || scope.section == 'documents';
+
+      scope.show_entities = scope.collection.entities_count || scope.section == 'entities';
+      
+      scope.show_states = scope.collection.can_edit && scope.collection.crawler_state_count;
+      scope.show_states = scope.show_states || scope.section == 'states';
+      
       scope.uploads = [];
 
       scope.$watch('uploads', function(files) {
