@@ -3,6 +3,7 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
 
   $scope.authz = Authz;
   $scope.collection = collection;
+  $scope.metadata = metadata;
   $scope.ownerRoles = roles.filter(function(r) {
     return r.type == 'user';
   });

@@ -3,6 +3,7 @@ aleph.controller('CollectionsCreateCtrl', ['$scope', '$location', '$q', '$http',
   
   $scope.blocked = false;
   $scope.collection = collection;
+  $scope.metadata = metadata;
   $scope.categories = metadata.categories;
 
   $scope.cancel = function() {
