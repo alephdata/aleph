@@ -25,6 +25,8 @@ def angular_templates():
             tmpl_dir = os.path.join(template_dir, tmpl_set)
             for (root, dirs, files) in os.walk(tmpl_dir):
                 for file_name in files:
+                    if file_name.startswith('.'):
+                        continue
                     file_path = os.path.join(root, file_name)
                     with open(file_path, 'rb') as fh:
                         file_name = file_path[len(template_dir) + 1:]
