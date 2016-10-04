@@ -15,20 +15,6 @@ log = logging.getLogger(__name__)
 class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
     _schema = 'collection.json#'
 
-    CATEGORIES = {
-        'news': 'News archives',
-        'leak': 'Leaks',
-        'gazette': 'Gazettes',
-        'court': 'Court archives',
-        'company': 'Company registries',
-        'watchlist': 'Watchlists',
-        'investigation': 'User collections',
-        'sanctions': 'Sanctions lists',
-        'scrape': 'Scrapes',
-        'procurement': 'Procurement',
-        'grey': 'Grey literature'
-    }
-
     label = db.Column(db.Unicode)
     category = db.Column(db.Unicode, nullable=True)
     foreign_id = db.Column(db.Unicode, unique=True, nullable=False)

@@ -5,8 +5,7 @@ from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
 from elasticsearch import TransportError
 
-from aleph.core import get_config, get_app_title, get_app_url, get_graph
-from aleph.model import Collection
+from aleph.core import get_config, get_app_title, get_app_url
 from aleph.graph import graph_metadata
 from aleph.metadata import Metadata
 from aleph.metadata.reference import COUNTRY_NAMES, LANGUAGE_NAMES
@@ -77,7 +76,7 @@ def metadata():
         },
         'graph': graph_metadata(),
         'fields': Metadata.facets(),
-        'categories': Collection.CATEGORIES,
+        'categories': get_config('COLLECTION_CATEGORIES', {}),
         'countries': COUNTRY_NAMES,
         'languages': LANGUAGE_NAMES,
         'schemata': schemata

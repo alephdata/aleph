@@ -40,6 +40,22 @@ DEFAULT_LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka',
                      'az']
 LANGUAGES = json.loads(env.get('ALEPH_LANGUAGES', json.dumps(DEFAULT_LANGUAGES)))
 
+# Category schema for collections.
+# TODO: add extra weight info.
+COLLECTION_CATEGORIES = {
+    'news': 'News archives',
+    'leak': 'Leaks',
+    'gazette': 'Gazettes',
+    'court': 'Court archives',
+    'company': 'Company registries',
+    'watchlist': 'Watchlists',
+    'investigation': 'User collections',
+    'sanctions': 'Sanctions lists',
+    'scrape': 'Scrapes',
+    'procurement': 'Procurement',
+    'grey': 'Grey literature'
+}
+
 # Some styling info for the visual graph editor.
 # DEFAULT_GRAPH_ICON = '\uf0c8'  # http://fontawesome.io/icon/square/
 GRAPH_ICONS = {
