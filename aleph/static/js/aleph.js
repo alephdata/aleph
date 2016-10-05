@@ -41,7 +41,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   $routeProvider.when('/collections', {
     templateUrl: 'templates/collections/index.html',
     controller: 'CollectionsIndexCtrl',
-    reloadOnSearch: false,
+    reloadOnSearch: true,
     resolve: {
       'collections': loadCollections,
       'metadata': loadMetadata

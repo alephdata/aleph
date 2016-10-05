@@ -1,21 +1,20 @@
 <div class="screen">
   <div class="row search-bar">
-    <div class="col-md-9">
+    <div class="col-md-8">
       <form class="form-horizontal" role="search" ng-submit="updateQuery()">
-        <input type="text" class="form-control" autofocus
-                 ng-model="query.state.q" ng-change="updateQuery()"
+        <input type="text" class="form-control" autofocus ng-model="query.state.q"
                  placeholder="Search investigations and document sources">
       </form>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div class="btn-group btn-group-justified" role="group">
         <div class="btn-group">
           <a ng-click="createCollection($event)"
              class="btn btn-primary"
              ng-disabled="::!authz.logged_in()">
             <i class="fa fa-plus-square" aria-hidden="true"></i>
-            New user collection
+            Create a collection
           </a>
         </div>
       </div>
@@ -23,7 +22,7 @@
   </div>
 
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-8">
       <div class="alert alert-suggest" ng-if="!authz.logged_in()">
         Manage your research better.
         <a href="/api/1/sessions/login" target="_self">Sign in</a> to upload
@@ -31,15 +30,15 @@
       </div>
 
       <table class="table table-striped">
-        <tr ng-repeat="collection in collections track by collection.id">
+        <tr ng-repeat="collection in collections.results track by collection.id">
           <td>
             <span ng-if="::!collection.public"
                 uib-tooltip="Only available to selected users"
                 tooltip-placement="right">
-              <i class="fa fa-lock" aria-hidden="true"></i>
+              <i class="fa fa-fw fa-lock" aria-hidden="true"></i>
             </span>
             <span ng-if="::collection.public">
-              <i class="fa fa-globe" aria-hidden="true"></i>
+              <i class="fa fa-fw fa-globe" aria-hidden="true"></i>
             </span>
             <a ng-href="{{::collection.getPath()}}">
               {{::collection.label}}
@@ -66,25 +65,54 @@
               </a>
             </span>
           </td>
-          <td class="nobreak" width="1%">
+          <td class="nobreak numeric" width="1%">
             {{::collection.updated_at | date }}
           </td>
         </tr>
       </table>
+
+      <div class="bottom-pager">
+          <div class="pull-right">
+            <response-pager response="collections" load="loadOffset(offset)"></response-pager>
+          </div>
+          <div class="total" ng-if="collections.limit > 0 && collections.total">
+            Found {{collections.total | number}} collections.
+          </div>
+        </div>
     </div>
-    <div class="col-md-3">
-      <div class="panel panel-default panel-facet">
+
+    <div class="col-md-4">
+      <div class="panel panel-default panel-facet"
+           ng-if="collections.facets.category.length">
         <div class="panel-heading">
           <strong>Categories</strong>
         </div>
         <ul class="list-group">
           <li class="list-group-item animate toggle"
-            ng-repeat="(name, count) in categories"
-            ng-class="{'active': query.hasField('category', name)}"
-            ng-click="query.toggle('category', name)">
-            <span class="badge">{{count | number}}</span>
+            ng-repeat="category in collections.facets.category"
+            ng-class="{'active': query.hasField('category', category.value)}"
+            ng-click="query.toggle('category', category.value)">
+            <span class="badge">{{::category.count | number}}</span>
             <span class="lbl">
-              {{::name | collectionCategory}}
+              {{::category.value | collectionCategory}}
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="panel panel-default panel-facet panel-facet-scroll"
+           ng-if="collections.facets.countries.length">
+        <div class="panel-heading">
+          <strong>Countries</strong>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item animate toggle"
+            ng-repeat="country in collections.facets.countries"
+            ng-class="{'active': query.hasField('countries', country.value)}"
+            ng-click="query.toggle('countries', country.value)">
+            <span class="badge">{{::country.count | number}}</span>
+            <span class="lbl">
+              {{::country.value | country}}
             </span>
           </li>
         </ul>

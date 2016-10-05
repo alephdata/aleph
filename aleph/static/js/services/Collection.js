@@ -1,5 +1,5 @@
-aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
-    function($q, $http, $uibModal, Authz, Metadata) {
+aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', 'Authz', 'Metadata',
+    function($q, $http, $location, $uibModal, Query, Authz, Metadata) {
   var USER_CATEGORIES = ['investigation'];
   var indexDfd = null;
 
@@ -120,6 +120,25 @@ aleph.factory('Collection', ['$q', '$http', '$uibModal', 'Authz', 'Metadata',
       return instance.result;
     },
     get: getCollection,
+    search: function(params) {
+      var dfd = $q.defer();
+      var query = Query.parse(),
+          state = angular.copy(query.state);
+      state['limit'] = 20;
+      angular.extend(state, params)
+      $http.get('/api/1/collections', {params: state}).then(function(res) {
+        res.data.results.forEach(function(coll) {
+          addClientFields(coll);
+        });
+        dfd.resolve({
+          'query': query,
+          'result': res.data
+        });
+      }, function(err) {
+        dfd.reject(err);
+      });
+      return dfd.promise;
+    },
     delete: function(collection) {
       var instance = $uibModal.open({
         templateUrl: 'templates/collections/delete.html',

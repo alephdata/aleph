@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from sqlalchemy import func, or_
+from sqlalchemy import func, cast, or_
 from sqlalchemy.orm import aliased
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -8,12 +8,13 @@ from aleph.core import db, url_for
 from aleph.model.role import Role
 from aleph.model.schema_model import SchemaModel
 from aleph.model.permission import Permission
+from aleph.model.facets import ModelFacets
 from aleph.model.common import SoftDeleteModel, IdModel, make_token
 
 log = logging.getLogger(__name__)
 
 
-class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
+class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel, ModelFacets):
     _schema = 'collection.json#'
 
     label = db.Column(db.Unicode)
@@ -67,6 +68,52 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         q = q.group_by(Entity)
         return q.order_by(func.count(Reference.id).desc())
 
+    @classmethod
+    def by_foreign_id(cls, foreign_id, deleted=False):
+        if foreign_id is None:
+            return
+        q = cls.all(deleted=deleted)
+        return q.filter(cls.foreign_id == foreign_id).first()
+
+    @classmethod
+    def create(cls, data, role=None):
+        foreign_id = data.get('foreign_id') or make_token()
+        collection = cls.by_foreign_id(foreign_id, deleted=True)
+        if collection is None:
+            collection = cls()
+            collection.foreign_id = foreign_id
+            collection.creator = role
+            collection.update(data)
+            db.session.add(collection)
+            db.session.flush()
+
+            if role is not None:
+                Permission.grant_collection(collection.id,
+                                            role, True, True)
+        collection.deleted_at = None
+        return collection
+
+    @classmethod
+    def find(cls, label=None, category=[], countries=[], collection_id=[]):
+        q = db.session.query(cls)
+        if label and len(label.strip()):
+            label = '%%%s%%' % label.strip()
+            q = q.filter(cls.label.ilike(label))
+        if len(collection_id):
+            q = q.filter(cls.id.in_(collection_id))
+        if len(category):
+            q = q.filter(cls.category.in_(category))
+        if len(countries):
+            types = cast(countries, ARRAY(db.Unicode()))
+            q = q.filter(cls.countries.contains(types))
+        return q
+
+    def __repr__(self):
+        return '<Collection(%r, %r)>' % (self.id, self.label)
+
+    def __unicode__(self):
+        return self.label
+
     def get_document_count(self):
         from aleph.model.document import Document, collection_document_table
         q = Document.all()
@@ -93,60 +140,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
             q = q.filter(Entity.state == state)
         return q.count()
 
-    def content_statistics(self):
-        """Query how many enitites and documents are in this collection."""
-        from aleph.model.entity import Entity
-        return {
-            'doc_count': self.get_document_count(),
-            'crawler_state_count': self.get_crawler_state_count(),
-            'entity_count': self.get_entity_count(Entity.STATE_ACTIVE),
-            'pending_count': self.get_entity_count(Entity.STATE_PENDING)
-        }
-
-    @classmethod
-    def by_foreign_id(cls, foreign_id, deleted=False):
-        if foreign_id is None:
-            return
-        q = cls.all(deleted=deleted)
-        return q.filter(cls.foreign_id == foreign_id).first()
-
-    @classmethod
-    def create(cls, data, role=None):
-        foreign_id = data.get('foreign_id') or make_token()
-        collection = cls.by_foreign_id(foreign_id, deleted=True)
-        if collection is None:
-            collection = cls()
-            collection.foreign_id = foreign_id
-            collection.creator = role
-            collection.update(data)
-            db.session.add(collection)
-            db.session.flush()
-
-            if role is not None:
-                Permission.grant_collection(collection.id,
-                                            role, True, True)
-        collection.deleted_at = None
-        return collection
-
-    # @classmethod
-    # def category_statistics(cls, collection_ids):
-    #     q = db.session.query(Collection.category, func.count(Collection.id))
-    #     q = q.filter(Collection.deleted_at == None)  # noqa
-    #     q = q.filter(Collection.id.in_(collection_ids))
-    #     q = q.group_by(Collection.category)
-    #     q = q.order_by(func.count(Collection.id).desc())
-    #     results = []
-    #     for category, count in q.all():
-    #         results.append({'category': category, 'count': count})
-    #     return results
-
-    def __repr__(self):
-        return '<Collection(%r, %r)>' % (self.id, self.label)
-
-    def __unicode__(self):
-        return self.label
-
-    def to_dict(self):
+    def to_dict(self, counts=False):
         data = super(Collection, self).to_dict()
         try:
             from aleph.authz import collection_public
@@ -156,4 +150,13 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         data['api_url'] = url_for('collections_api.view', id=self.id)
         data['foreign_id'] = self.foreign_id
         data['creator_id'] = self.creator_id
+        if counts:
+            # Query how many enitites and documents are in this collection.
+            from aleph.model.entity import Entity
+            data.update({
+                'doc_count': self.get_document_count(),
+                'crawler_state_count': self.get_crawler_state_count(),
+                'entity_count': self.get_entity_count(Entity.STATE_ACTIVE),
+                'pending_count': self.get_entity_count(Entity.STATE_PENDING)
+            })
         return data
