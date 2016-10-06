@@ -1,6 +1,5 @@
 aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', 'Authz', 'Metadata',
     function($q, $http, $location, $uibModal, Query, Authz, Metadata) {
-  var USER_CATEGORIES = ['investigation'];
   var indexDfd = null;
 
   function index() {
@@ -59,23 +58,35 @@ aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', '
     return coll;
   };
 
-  function getUserCollections() {
+  function search(params) {
     var dfd = $q.defer();
-    index().then(function(res) {
-      var collections = [];
-      for (var cid in res) {
-        var c = res[cid];
-        if (c.can_add && USER_CATEGORIES.indexOf(c.category) != -1) {
-          collections.push(c);
-        }
-      }
-      collections = collections.sort(function(a, b) {
-        if (a.updated_at == b.updated_at) {
-          return a.label.localeCompare(b.label);
-        }
-        return b.updated_at.localeCompare(a.updated_at);
+    var query = Query.parse(),
+        state = angular.copy(query.state);
+    state['limit'] = 20;
+    angular.extend(state, params)
+    $http.get('/api/1/collections', {params: state}).then(function(res) {
+      res.data.results.forEach(function(coll) {
+        addClientFields(coll);
       });
-      dfd.resolve(collections);
+      dfd.resolve({
+        'query': query,
+        'result': res.data
+      });
+    }, function(err) {
+      dfd.reject(err);
+    });
+    return dfd.promise;
+  }
+
+  function getUserCollections() {
+    var dfd = $q.defer(),
+        params = {
+          managed: true,
+          permission: Authz.WRITE,
+          limit: 100
+        };
+    search(params).then(function(res) {
+      dfd.resolve(res.result.results);
     }, function(err) {
       dfd.reject(err);
     });
@@ -120,25 +131,7 @@ aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', '
       return instance.result;
     },
     get: getCollection,
-    search: function(params) {
-      var dfd = $q.defer();
-      var query = Query.parse(),
-          state = angular.copy(query.state);
-      state['limit'] = 20;
-      angular.extend(state, params)
-      $http.get('/api/1/collections', {params: state}).then(function(res) {
-        res.data.results.forEach(function(coll) {
-          addClientFields(coll);
-        });
-        dfd.resolve({
-          'query': query,
-          'result': res.data
-        });
-      }, function(err) {
-        dfd.reject(err);
-      });
-      return dfd.promise;
-    },
+    search: search,
     delete: function(collection) {
       var instance = $uibModal.open({
         templateUrl: 'templates/collections/delete.html',

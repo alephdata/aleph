@@ -94,7 +94,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel, ModelFacets):
         return collection
 
     @classmethod
-    def find(cls, label=None, category=[], countries=[], collection_id=[]):
+    def find(cls, label=None, category=[], countries=[], collection_id=[],
+             managed=None):
         q = db.session.query(cls)
         if label and len(label.strip()):
             label = '%%%s%%' % label.strip()
@@ -106,6 +107,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel, ModelFacets):
         if len(countries):
             types = cast(countries, ARRAY(db.Unicode()))
             q = q.filter(cls.countries.contains(types))
+        if managed is not None:
+            q = q.filter(cls.managed == managed)
         return q
 
     def __repr__(self):

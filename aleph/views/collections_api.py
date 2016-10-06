@@ -14,18 +14,20 @@ blueprint = Blueprint('collections_api', __name__)
 
 @blueprint.route('/api/1/collections', methods=['GET'])
 def index():
-    collections = authz.collections(authz.READ)
+    permission = request.args.get('permission', authz.READ)
+    collections = authz.collections(permission)
     label = request.args.get('label')
     countries = request.args.getlist('countries')
     category = request.args.getlist('category')
+    managed = arg_bool('managed') if 'managed' in request.args else None
     counts = arg_bool('counts')
 
-    def converter(collections):
-        return [c.to_dict(counts=counts) for c in collections]
+    def converter(colls):
+        return [c.to_dict(counts=counts) for c in colls]
 
     facet = [f.lower().strip() for f in request.args.getlist('facet')]
     q = Collection.find(label=label, countries=countries, category=category,
-                        collection_id=collections)
+                        collection_id=collections, managed=managed)
     data = Pager(q).to_dict(results_converter=converter)
     facets = {}
     if 'countries' in facet:
