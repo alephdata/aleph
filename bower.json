@@ -30,7 +30,8 @@
     "angular-truncate": "*",
     "ng-file-upload": "^12.0.4",
     "angular-ui-select": "0.18.0",
-    "d3": "4.2.1"
+    "d3": "4.2.1",
+    "angulartics-google-analytics": "^0.3.0"
   },
   "resolutions": {
     "angular": "~1.4.8",
