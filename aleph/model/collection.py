@@ -94,15 +94,14 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel, ModelFacets):
         return collection
 
     @classmethod
-    def find(cls, label=None, category=[], countries=[], collection_id=[],
-             managed=None):
+    def find(cls, label=None, category=[], countries=[], managed=None,
+             collection_id=None):
         q = db.session.query(cls)
         q = q.filter(cls.deleted_at == None)  # noqa
         if label and len(label.strip()):
             label = '%%%s%%' % label.strip()
             q = q.filter(cls.label.ilike(label))
-        if len(collection_id):
-            q = q.filter(cls.id.in_(collection_id))
+        q = q.filter(cls.id.in_(collection_id))
         if len(category):
             q = q.filter(cls.category.in_(category))
         if len(countries):

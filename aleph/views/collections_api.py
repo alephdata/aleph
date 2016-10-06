@@ -14,12 +14,20 @@ blueprint = Blueprint('collections_api', __name__)
 
 @blueprint.route('/api/1/collections', methods=['GET'])
 def index():
-    permission = request.args.get('permission', authz.READ)
+    # allow to filter for writeable collections only, needed
+    # in some UI scenarios:
+    permission = request.args.get('permission')
+    if permission not in [authz.READ, authz.WRITE]:
+        permission = authz.READ
     collections = authz.collections(permission)
+
+    # Other filters for navigation
     label = request.args.get('label')
     countries = request.args.getlist('countries')
     category = request.args.getlist('category')
     managed = arg_bool('managed') if 'managed' in request.args else None
+
+    # Include counts (of entities, documents) in list view?
     counts = arg_bool('counts')
 
     def converter(colls):
