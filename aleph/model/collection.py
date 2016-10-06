@@ -97,6 +97,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel, ModelFacets):
     def find(cls, label=None, category=[], countries=[], collection_id=[],
              managed=None):
         q = db.session.query(cls)
+        q = q.filter(cls.deleted_at == None)  # noqa
         if label and len(label.strip()):
             label = '%%%s%%' % label.strip()
             q = q.filter(cls.label.ilike(label))
