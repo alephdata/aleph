@@ -59,3 +59,7 @@ OCR_PDF_PAGES = OCR_PDF_PAGES.strip().lower() == "true"
 
 MAX_CONTENT_LENGTH = int(os.environ.get('ALEPH_MAX_CONTENT_LENGTH',
                                         500 * 1024 * 1024))
+
+# Tell users to email the admins if their search has results in collections
+# that are hidden from them?
+ALLOW_PEEKING = True
