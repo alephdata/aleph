@@ -14,12 +14,10 @@
       <th>Title</th>
       <td>{{::doc.title}}</td>
     </tr>
-    <tr>
-      <th>Collections</th>
+    <tr ng-show="sourceCollection">
+      <th>Source</th>
       <td>
-        <span ng-repeat="coll in collections">
-          <a ng-href="/collections/{{::coll.id}}">{{::coll.label}}</a><span ng-if="!$last">,</span>
-        </span>
+        <a ng-href="{{sourceCollection.getPath()}}">{{sourceCollection.label}}</a>
       </td>
     </tr>
     <tr ng-if="::doc.author">

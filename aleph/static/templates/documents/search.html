@@ -7,20 +7,20 @@
       <div class="btn-group btn-group-justified" role="group">
         <div class="btn-group">
           <button type="button" class="btn" ng-click="toggleAlert()"
-            ng-disabled="!canCreateAlert()"
+            ng-if="::authz.logged_in()" ng-disabled="!canCreateAlert()"
             ng-class="{'btn-success': hasAlert(), 'btn-primary': !hasAlert()}">
             <i class="fa fa-bell"></i>
             <span ng-if="hasAlert()">
               Disable alert
             </span>
             <span ng-if="!hasAlert()">
-              <span ng-if="canCreateAlert()">
-                Set an alert
-              </span>
-              <span ng-if="!canCreateAlert()">
-                Sign in to set an alert
-              </span>
+              Set an alert
             </span>
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="triggerLogin()"
+            ng-if="::!authz.logged_in()" ng-disabled="!canCreateAlert()">
+            <i class="fa fa-bell"></i>
+            Sign in to set an alert
           </button>
         </div>
       </div>
@@ -50,8 +50,7 @@
             </span>
           </span>
           <span ng-if="!authz.logged_in()">
-            <a ng-href="/api/1/sessions/login" target="_self">Sign in</a>
-            to see who to contact for access.
+            <a ng-click="triggerLogin()">Sign in</a> to see who to contact for access.
           </span>
         </div>
 

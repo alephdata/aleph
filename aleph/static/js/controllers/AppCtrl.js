@@ -1,5 +1,5 @@
-aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$route', '$http', '$uibModal', '$q', 'Alert', 'Metadata',
-    function($scope, $rootScope, $location, $anchorScroll, $route, $http, $uibModal, $q, Alert, Metadata) {
+aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$route', '$http', '$httpParamSerializer', '$uibModal', '$q', 'Alert', 'Metadata',
+    function($scope, $rootScope, $location, $anchorScroll, $route, $http, $httpParamSerializer, $uibModal, $q, Alert, Metadata) {
 
   $scope.session = {logged_in: false};
   $scope.routeLoaded = false;
@@ -22,7 +22,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
   $rootScope.$on("$routeChangeError", function (event, next, current, rejection) {
     $scope.routeFailed = true;
     $scope.routeError = rejection;
-    console.log('Error', rejection);
+    // console.log('Error', rejection);
   });
 
   $scope.keyDownNotify = function($event) {
@@ -39,6 +39,11 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
       $scope.routeError = null;
     }
   };
+
+  $rootScope.triggerLogin = function() {
+    var url = $httpParamSerializer({next: $location.url()});
+    document.location.href = '/api/1/sessions/login?' + url;
+  };  
 
   $scope.editProfile = function($event) {
     $event.stopPropagation();

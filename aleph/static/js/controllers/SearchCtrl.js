@@ -27,9 +27,6 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
   };
 
   $scope.canCreateAlert = function() {
-    if (!metadata.session.logged_in) {
-      return false;
-    }
     if ($scope.result.error) {
       return false;
     }

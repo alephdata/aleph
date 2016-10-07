@@ -51,7 +51,7 @@ aleph.directive('collectionsSelect', ['$http', '$q', 'Metadata', 'Collection',
                 scope.collections.push(res.data);
                 scope.createCollection = false;
                 scope.collection = res.data;
-                Collection.flush().then(function() {
+                Metadata.flush().then(function() {
                   dfd.resolve(res.data);  
                 });
               }, function(err) {
