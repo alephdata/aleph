@@ -1,44 +1,5 @@
 aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', 'Authz', 'Metadata',
     function($q, $http, $location, $uibModal, Query, Authz, Metadata) {
-  var indexDfd = null;
-
-  function index() {
-    if (indexDfd === null) {
-      indexDfd = $q.defer();
-      Metadata.get().then(function() {
-        var params = {
-          ignoreLoadingBar: true,
-          params: {limit: 10000}
-        }
-        $http.get('/api/1/collections', params).then(function(res) {
-          var collections = [];
-          for (var i in res.data.results) {
-            collections.push(addClientFields(res.data.results[i]));
-          }
-          indexDfd.resolve(collections);
-        }, function(err) {
-          indexDfd.reject(err);
-        });
-      }, function(err) {
-        indexDfd.reject(err);
-      });
-    }
-    return indexDfd.promise;
-  };
-
-  function flush() {
-    var dfd = $q.defer();
-    indexDfd = null;
-    // reload stored authz info.
-    Metadata.flush().then(function() {
-      index().then(function(colls) {
-        dfd.resolve(colls);
-      })
-    }, function(err) {
-      dfd.reject(err);
-    });
-    return dfd.promise;
-  };
 
   function addClientFields(coll) {
     coll.can_edit = Authz.collection(Authz.WRITE, coll.id);
@@ -63,18 +24,22 @@ aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', '
     var query = Query.parse(),
         state = angular.copy(query.state);
     state['limit'] = 20;
-    angular.extend(state, params)
-    $http.get('/api/1/collections', {params: state}).then(function(res) {
-      res.data.results.forEach(function(coll) {
-        addClientFields(coll);
-      });
-      dfd.resolve({
-        'query': query,
-        'result': res.data
+    angular.extend(state, params);
+    Metadata.get().then(function() {
+      $http.get('/api/1/collections', {params: state}).then(function(res) {
+        res.data.results.forEach(function(coll) {
+          addClientFields(coll);
+        });
+        dfd.resolve({
+          'query': query,
+          'result': res.data
+        });
+      }, function(err) {
+        dfd.reject(err);
       });
     }, function(err) {
       dfd.reject(err);
-    });
+    });  
     return dfd.promise;
   }
 
@@ -108,8 +73,6 @@ aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', '
   };
 
   return {
-    index: index,
-    flush: flush,
     getUserCollections: getUserCollections,
     create: function() {
       var instance = $uibModal.open({

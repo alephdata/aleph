@@ -1,5 +1,5 @@
-aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '$routeParams', 'Collection', 'Role', 'Authz', 'Title', 'collection', 'roles', 'metadata',
-    function($scope, $q, $location, $http, $routeParams, Collection, Role, Authz, Title, collection, roles, metadata) {
+aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '$routeParams', 'Collection', 'Metadata', 'Role', 'Authz', 'Title', 'collection', 'roles', 'metadata',
+    function($scope, $q, $location, $http, $routeParams, Collection, Metadata, Role, Authz, Title, collection, roles, metadata) {
 
   $scope.authz = Authz;
   $scope.collection = collection;
@@ -69,7 +69,7 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
       }
 
       $q.all(qs).then(function() {
-        Collection.flush().then(function() {
+        Metadata.flush().then(function() {
           $location.path('/collections/' + collection.id);
         });
       });
