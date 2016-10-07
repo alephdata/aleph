@@ -4,7 +4,7 @@ from apikit import get_limit, get_offset
 from werkzeug.datastructures import MultiDict
 
 from aleph import authz
-from aleph.core import url_for
+from aleph.core import url_for, get_config
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document
 from aleph.events import log_event
@@ -51,6 +51,9 @@ def statistics():
 
 @blueprint.route('/api/1/peek')
 def peek():
+    if not get_config('ALLOW_PEEKING', True):
+        return jsonify({'active': False})
+
     enable_cache(vary_user=True,
                  vary=authz.collections(authz.READ))
     response = peek_query(request.args)
