@@ -45,7 +45,7 @@ class Metadata(object):
     _file_name = Field('file_name')
     _title = Field('title')
     _extension = Field('extension')
-    # _mime_type = Field('mime_type', label='Content type')
+    _mime_type = Field('mime_type', label='Content type', protected=True)
     encoding = Field(protected=True)
     # author = Field(label='Document author')
     summary = Field()
