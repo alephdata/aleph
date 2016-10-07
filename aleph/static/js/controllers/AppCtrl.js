@@ -69,8 +69,12 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
     $event.stopPropagation();
     var instance = $uibModal.open({
       templateUrl: 'templates/login.html',
+      controller: 'SessionCtrl',
       backdrop: true,
       size: 'md',
+      resolve: {
+        metadata: loadMetadata
+      }
     });
   };
 

@@ -64,7 +64,16 @@ def status():
             'read': authz.collections(authz.READ),
             'write': authz.collections(authz.WRITE)
         },
-        'logout': url_for('.logout')
+        'logout': url_for('.logout'),
+        'providers': [
+            {
+                'name': 'facebook',
+                'label': 'Facebook',
+            }, {
+                'name': 'twitter',
+                'label': 'Twitter',
+            }
+        ]
     })
 
 
