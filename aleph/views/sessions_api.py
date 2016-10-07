@@ -4,7 +4,8 @@ from flask_oauthlib.client import OAuthException
 from apikit import jsonify
 
 from aleph import authz, signals
-from aleph.core import db, url_for, oauth
+from aleph.core import db, url_for
+from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
@@ -12,19 +13,6 @@ from aleph.views.cache import enable_cache
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('sessions_api', __name__)
-
-
-def get_oauth_token():
-    if 'oauth' in session:
-        sig = session.get('oauth')
-        return (sig.get('access_token'), '')
-
-
-# link the token getter to each oauth provider
-# TODO: this won't work when oauth providers are configured by create_app, since
-# this is done before that is run
-for provider in oauth.remote_apps.itervalues():
-    provider.tokengetter(get_oauth_token)
 
 
 @blueprint.before_app_request
@@ -54,6 +42,14 @@ def load_role():
 @blueprint.route('/api/1/sessions')
 def status():
     enable_cache(vary_user=True)
+
+    providers = sorted(oauth.remote_apps.values(), key=lambda p: p.label)
+    providers = [{
+        'name': p.name,
+        'label': p.label,
+        'login': url_for('sessions_api.login', provider=p.name),
+    } for p in providers]
+
     return jsonify({
         'logged_in': authz.logged_in(),
         'api_key': request.auth_role.api_key if authz.logged_in() else None,
@@ -65,15 +61,7 @@ def status():
             'write': authz.collections(authz.WRITE)
         },
         'logout': url_for('.logout'),
-        'providers': [
-            {
-                'name': 'facebook',
-                'label': 'Facebook',
-            }, {
-                'name': 'twitter',
-                'label': 'Twitter',
-            }
-        ]
+        'providers': providers,
     })
 
 

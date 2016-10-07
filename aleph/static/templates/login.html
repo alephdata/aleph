@@ -6,7 +6,7 @@
 <div class="modal-body">
   <div class="text-center">
     <p ng-repeat="provider in providers">
-      <a href="/api/1/sessions/login/{{ provider.name }}" class="btn btn-default login-{{ provider.name }}" target="_self">Sign in with {{ provider.label }}</a>
+      <a href="{{ provider.login }}" class="btn btn-default login-{{ provider.name }}" target="_self">Sign in with {{ provider.label }}</a>
     </p>
   </div>
 </div>

@@ -7,7 +7,6 @@ from flask import url_for as flask_url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_assets import Environment
 from flask_migrate import Migrate
-from flask_oauthlib.client import OAuth
 from flask_mail import Mail
 from kombu import Queue
 from celery import Celery
@@ -16,6 +15,7 @@ from elasticsearch import Elasticsearch
 
 from aleph import default_settings, archive
 from aleph.ext import get_init
+from aleph.oauth import configure_oauth
 
 log = logging.getLogger(__name__)
 
@@ -24,8 +24,6 @@ migrate = Migrate()
 mail = Mail()
 celery = Celery('aleph')
 assets = Environment()
-oauth = OAuth()
-oauth_provider = oauth.remote_app('provider', app_key='OAUTH')
 
 # these two queues are used so that background processing tasks
 # spawned by the user can be handled more quickly through a
@@ -74,7 +72,7 @@ def create_app(config={}):
     })
 
     migrate.init_app(app, db, directory=app.config.get('ALEMBIC_DIR'))
-    oauth.init_app(app)
+    configure_oauth(app)
     mail.init_app(app)
     db.init_app(app)
     assets.init_app(app)
