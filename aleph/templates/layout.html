@@ -55,7 +55,7 @@
 
             <ul class="nav navbar-nav navbar-right" ng-cloak>
               <li ng-show="!session.logged_in">
-                <a href="{{url_for('sessions_api.login')}}" target="_self">
+                <a ng-click="showLogin($event)">
                   <i class="fa fa-sign-in"></i> Sign in
                 </a>
               </li>

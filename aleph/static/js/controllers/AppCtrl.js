@@ -65,4 +65,13 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
     });
   };
 
+  $scope.showLogin = function($event) {
+    $event.stopPropagation();
+    var instance = $uibModal.open({
+      templateUrl: 'templates/login.html',
+      backdrop: true,
+      size: 'md',
+    });
+  };
+
 }]);
