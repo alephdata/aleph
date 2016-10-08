@@ -4,10 +4,12 @@
 </div>
 
 <div class="modal-body">
-  <div class="text-center">
-    <p ng-repeat="provider in providers">
-      <a href="{{ provider.login }}" class="btn btn-default login-{{ provider.name }}" target="_self">Sign in with {{ provider.label }}</a>
-    </p>
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+      <p ng-repeat="provider in providers">
+        <a href="{{ provider.login }}" class="btn btn-default btn-block login-{{ provider.name }}" target="_self">Sign in with {{ provider.label }}</a>
+      </p>
+    </div>
   </div>
 </div>
 
