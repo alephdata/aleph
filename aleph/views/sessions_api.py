@@ -49,7 +49,7 @@ def status():
     providers = [{
         'name': p.name,
         'label': p.label,
-        'login': url_for('sessions_api.login', provider=p.name),
+        'login': url_for('.login', provider=p.name),
     } for p in providers]
 
     return jsonify({
@@ -62,7 +62,6 @@ def status():
             'read': authz.collections(authz.READ),
             'write': authz.collections(authz.WRITE)
         },
-        'login': url_for('.login'),
         'logout': url_for('.logout'),
         'providers': providers,
     })

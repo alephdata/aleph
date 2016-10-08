@@ -16,14 +16,14 @@ def get_oauth_token():
 def setup_providers(app):
     providers = app.config.get('OAUTH', [])
     if isinstance(providers, dict):
-        # support for legacy single provider
+        # support for legacy single google provider
+        if 'name' not in providers:
+            providers['name'] = 'google'
         providers = [providers]
 
     for provider in providers:
+        # OAUTH providers from the config MUST have a name entry
         name = provider.pop('name')
-        # legacy provider
-        if name == 'provider':
-            name = 'google'
         label = provider.pop('label', name.capitalize())
 
         provider = oauth.remote_app(name, **provider)
