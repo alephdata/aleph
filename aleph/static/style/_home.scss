@@ -61,30 +61,12 @@
             @include teaser-text;
         }
 
-        .count {
-            color: $text-muted;
-        }
-
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            li {
-                padding-bottom: 0.5em;
-                line-height: 1.6em;
-            }
-        }
-
         .heading {
             text-transform: uppercase;
             font-weight: bold;
             font-size: 1.1em;
             padding-top: 1em;
             padding-bottom: 0.5em;
-        }
-  
-        .collection {
-            min-height: 2em;   
         }
     }
 }
