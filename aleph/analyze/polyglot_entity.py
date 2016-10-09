@@ -31,7 +31,7 @@ class PolyglotEntityAnalyzer(Analyzer):
         self.entities = defaultdict(list)
 
     def on_text(self, text):
-        if self.disabled or text is None or len(text) <= 100:
+        if text is None or len(text) <= 100:
             return
         try:
             hint_language_code = None
@@ -82,9 +82,6 @@ class PolyglotEntityAnalyzer(Analyzer):
         return entity.id
 
     def finalize(self):
-        if self.disabled:
-            return
-
         output = []
         for entity_name, schemas in self.entities.items():
             schema = max(set(schemas), key=schemas.count)

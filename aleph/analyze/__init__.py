@@ -43,15 +43,18 @@ def analyze_document(document):
     meta = document.meta
     for cls in get_analyzers():
         analyzer = cls(document, meta)
-        analyzer.prepare()
+        if not analyzer.disabled:
+            analyzer.prepare()
         analyzers.append(analyzer)
 
     for text in document.text_parts():
         for analyzer in analyzers:
-            analyzer.on_text(text)
+            if not analyzer.disabled:
+                analyzer.on_text(text)
 
     for analyzer in analyzers:
-        analyzer.finalize()
+        if not analyzer.disabled:
+            analyzer.finalize()
     document.meta = meta
     db.session.add(document)
     db.session.commit()
