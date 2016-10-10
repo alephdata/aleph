@@ -46,7 +46,7 @@ aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', '
   function getUserCollections() {
     var dfd = $q.defer(),
         params = {
-          managed: true,
+          managed: 'false',
           permission: Authz.WRITE,
           limit: 100
         };

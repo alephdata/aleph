@@ -25,10 +25,10 @@ def index():
     label = request.args.get('label')
     countries = request.args.getlist('countries')
     category = request.args.getlist('category')
-    managed = arg_bool('managed') if 'managed' in request.args else None
+    managed = arg_bool('managed', True) if 'managed' in request.args else None
 
     # Include counts (of entities, documents) in list view?
-    counts = arg_bool('counts')
+    counts = arg_bool('counts', False)
 
     def converter(colls):
         return [c.to_dict(counts=counts) for c in colls]
