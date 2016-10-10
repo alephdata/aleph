@@ -20,11 +20,11 @@ alephNetwork.Grid = function(network) {
   };
 
   self.nodeX = function(node) {
-    return (node.gridX * self.unit); // - (self.nodeWidth(node) / 2);
+    return (node.gridX * self.unit);
   };
 
   self.nodeY = function(node) {
-    return (node.gridY * self.unit); // - (self.nodeHeight(node) / 2);
+    return (node.gridY * self.unit);
   };
 
   self.nodeOffsetX = function(node) {
@@ -35,14 +35,8 @@ alephNetwork.Grid = function(network) {
     return (self.nodeHeight(node) / 2) * -1;
   };
 
-  self.isPlaced = function(node) {
-    return node && node.gridX !== null && node.gridY !== null;
-  }; 
-
   self.nodeTranslate = function(node) {
-    if (!self.isPlaced(node))  {
-      self.placeNode(node);
-    }
+    node = self.placeNode(node);
     node.x = self.nodeX(node);
     node.y = self.nodeY(node);
     return 'translate(' + [node.x, node.y] + ')';
@@ -59,23 +53,18 @@ alephNetwork.Grid = function(network) {
   };
 
   self.snapToGrid = function(node) {
-    node.gridX = self.pixelToUnit(node.x);
-    node.gridY = self.pixelToUnit(node.y);
+    if (node.x && node.y) {
+      node.gridX = self.pixelToUnit(node.x);
+      node.gridY = self.pixelToUnit(node.y);
+    }
     self.placeNode(node);
+    // console.log(JSON.stringify(node.toJSON()));
   };
 
-  self.placeNode = function(node) {
+  self.findEmtpyPosition = function(node) {
     var iter = 1,
         options = [[ 1, 0], [0,  1], [-1,  0], [0, -1], 
                    [-1, 1], [1, -1], [-1, -1], [-1, 1]];
-    if (!self.isPlaced(node)) {
-      var ref = self.isPlaced(node.gridRef) ? node.gridRef : self.network.gridRef();
-      node.gridX = ref.gridX;
-      node.gridY = ref.gridY;
-    }
-    if (!self.hasOverlap(node)) {
-      return node;
-    }
     while (true) {
       for (var i in options) {
         var pos = {
@@ -91,6 +80,18 @@ alephNetwork.Grid = function(network) {
       };
       iter += 1;
     }
+  };
+
+  self.placeNode = function(node) {
+    if (!node.isPlaced()) {
+      var ref = node.gridRef ? node.gridRef : self.network.gridRef();
+      node.gridX = ref.gridX || 0;
+      node.gridY = ref.gridY || 0;
+    }
+    if (self.hasOverlap(node)) {
+      node = self.findEmtpyPosition(node);
+    }
+    return node;
   };
 
   self.getNodeBox = function(node) {

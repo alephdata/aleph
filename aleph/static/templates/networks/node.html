@@ -28,17 +28,17 @@
       <a class="btn btn-sm btn-default" ng-if="node.type == 'Document'"
          ng-href="{{getDocumentUrl()}}" target="_blank">
         <i class="fa fa-edit" aria-hidden="true"></i>
-        View document
+        View
       </a>
       <a class="btn btn-sm btn-default" ng-if="node.type != 'Document'"
          ng-href="/search?{{getSearchQuery()}}" target="_blank">
         <i class="fa fa-search" aria-hidden="true"></i>
-        Search documents
+        Search
       </a>
       <a class="btn btn-sm btn-default" ng-if="node.data.alephEntity"
           ng-click="editEntity()">
         <i class="fa fa-edit" aria-hidden="true"></i>
-        Edit entity
+        Edit
       </a>
       <a class="btn btn-sm btn-default" ng-click="remove()">
         <i class="fa fa-trash" aria-hidden="true"></i>

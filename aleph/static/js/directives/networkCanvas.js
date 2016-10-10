@@ -188,7 +188,7 @@ aleph.directive('networkCanvas', ['Metadata', function(Metadata) {
       function clickNode(node) {
         // todo should shift be required for multiple select?
         d3.event.stopPropagation();
-        console.log(node);
+        // console.log(node);
         ctrl.toggleSelection(node);
         scope.$apply();
       }

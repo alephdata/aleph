@@ -25,6 +25,10 @@ alephNetwork.Node = function(scene, node, gridRef) {
     return scene.config.icons[self.type] || '\uf0c8';
   };
 
+  self.isPlaced = function() {
+    return self.gridX !== null && self.gridY !== null;
+  }; 
+
   self.getAttributes = function()  {
     var attrs = {};
     for (var name in self.data) {
