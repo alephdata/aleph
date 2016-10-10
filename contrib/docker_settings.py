@@ -41,7 +41,14 @@ ARCHIVE_AWS_SECRET = os.environ.get('AWS_SECRET_ACCESS_KEY')
 ARCHIVE_BUCKET = os.environ.get('ALEPH_ARCHIVE_BUCKET')
 ARCHIVE_PATH = os.environ.get('ALEPH_ARCHIVE_PATH')
 
-OAUTH = {
+# Configure your choice of OAUTH login providers, one
+# entry for each provider, providing the details as described in
+# https://flask-oauthlib.readthedocs.io/en/latest/client.html
+#
+# In addition, include a 'name' entry and an optional 'label' entry.
+OAUTH = [{
+    'name': 'google',
+    'label': 'Google',
     'consumer_key': os.environ.get('ALEPH_OAUTH_KEY'),
     'consumer_secret': os.environ.get('ALEPH_OAUTH_SECRET'),
     'request_token_params': {
@@ -52,7 +59,7 @@ OAUTH = {
     'access_token_method': 'POST',
     'access_token_url': 'https://accounts.google.com/o/oauth2/token',
     'authorize_url': 'https://accounts.google.com/o/oauth2/auth',
-}
+}]
 
 PDF_OCR_IMAGE_PAGES = os.environ.get('ALEPH_PDF_OCR_IMAGE_PAGES', "true")
 
