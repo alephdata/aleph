@@ -2,7 +2,6 @@ from flask_oauthlib.client import OAuth
 from flask import session
 
 from aleph import signals
-from aleph.model import Role
 
 oauth = OAuth()
 
@@ -39,6 +38,8 @@ def configure_oauth(app):
 
 @signals.handle_oauth_session.connect
 def handle_google_oauth(sender, provider=None, session=None):
+    from aleph.model import Role
+
     # If you wish to use another OAuth provider with your installation of
     # aleph, you can create a Python extension package and include a
     # custom oauth handler like this, which will create roles and state
@@ -55,6 +56,8 @@ def handle_google_oauth(sender, provider=None, session=None):
 
 @signals.handle_oauth_session.connect
 def handle_facebook_oauth(sender, provider=None, session=None):
+    from aleph.model import Role
+
     if 'facebook.com' not in provider.base_url:
         return
     me = provider.get('me?fields=id,name,email')
