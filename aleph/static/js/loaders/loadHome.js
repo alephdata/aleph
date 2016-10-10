@@ -10,10 +10,3 @@ var loadCollectionFacets = ['$http', '$q', '$route', function($http, $q, $route)
     return res.data.facets;
   });
 }];
-
-var loadCollectionFacets = ['$http', '$q', '$route', function($http, $q, $route) {
-  var params = {cache: true, params: {limit: 0, facet: ['countries', 'category']}};
-  return $http.get('/api/1/collections', params).then(function(res) {
-    return res.data.facets;
-  });
-}];

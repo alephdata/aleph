@@ -45,20 +45,26 @@
             text-transform: uppercase;
             font-weight: bold;
             font-size: 1.5em;
+            margin-bottom: 0.5em;
 
             i {
                 color: $brand-primary;
             }
-        }
 
-        h3 {
-            text-transform: uppercase;
-            font-weight: bold;
-            font-size: 1.2em;
+            a {
+                text-transform: none;
+                i {
+                    color: white;
+                }
+            }
         }
 
         p {
             @include teaser-text;
+        }
+
+        table.table {
+            margin-top: 0.5em;
         }
 
         .heading {

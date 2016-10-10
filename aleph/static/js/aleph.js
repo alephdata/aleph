@@ -187,6 +187,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     resolve: {
       'statistics': loadStatistics,
       'facets': loadCollectionFacets,
+      'collections': loadUserCollections,
       'metadata': loadMetadata
     }
   });

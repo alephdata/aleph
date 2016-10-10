@@ -4,7 +4,8 @@
   <div class="search-area">
     <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
       <div class="input-group input-group-lg">
-        <input type="text" class="form-control" autofocus ng-model="query.q" placeholder="Search across documents and data sources">
+        <input type="text" class="form-control" autofocus ng-model="query.q"
+          placeholder="Search {{statistics.document_count | number}} documents and data sources">
         <span class="input-group-btn">
           <button class="btn btn-primary" type="submit">Search</button>
         </span>
@@ -35,7 +36,7 @@
       </p>
 
       <div class="row">
-        <div class="col-md-6 feature">
+        <div class="col-md-6">
           <table class="table">
             <tr>
               <th>Collections by country</th>
@@ -55,7 +56,7 @@
             </tr>
           </table>
         </div>
-        <div class="col-md-6 feature">
+        <div class="col-md-6">
           <table class="table">
             <tr>
               <th>Collections by category</th>
@@ -74,7 +75,7 @@
       </div>
     </div>
 
-    <div class="col-md-6 feature">
+    <div class="col-md-6 feature" ng-if="::!authz.logged_in()">
       <h2>
         <i class="fa fa-fw fa-cloud-upload"></i>
         Personal archive
@@ -85,7 +86,7 @@
         others, or make them fully public.
       </p>
     </div>
-    <div class="col-md-6 feature">
+    <div class="col-md-6 feature" ng-if="::!authz.logged_in()">
       <h2>
         <i class="fa fa-fw fa-bell"></i>
         E-Mail Alerts
@@ -96,7 +97,7 @@
         setting up e-mail alerts.
       </p>
     </div>
-    <div class="col-md-6 feature">
+    <div class="col-md-6 feature" ng-if="::!authz.logged_in()">
       <h2>
         <i class="fa fa-fw fa-users"></i>
         Persons of Interest
@@ -107,7 +108,62 @@
         sanctions lists</a>.
       </p>
     </div>
-    
-  </div>
+    <div class="col-md-6 feature" ng-if="::authz.logged_in()">
+      <h2>
+        <div class="pull-right">
+          <a ng-click="createCollection($event)" class="btn btn-xs btn-primary">
+            <i class="fa fa-plus-square" aria-hidden="true"></i>
+            New collection
+          </a>
+        </div>
+        
+        <i class="fa fa-fw fa-folder-open"></i>
+        Your collections
+      </h2>
+      <div ng-if="!collections.length">
+        <div class="alert alert-info">
+          <p>
+            You don't have any personal collections yet. Create a collection if you want to upload
+            documents to make them searchable or create a watchlist of persons and companies.
+          </p>
+        </div>
+      </div>
 
+      <div ng-if="collections.length">
+        <p>
+          Below are the personal collections that you're part of. Create a new personal
+          collection if you want to upload more documents or create a separate watchlist.
+        </p>
+        <table class="table">
+          <tr ng-repeat="collection in collections">
+            <td>
+              <span ng-if="::!collection.public"
+                  uib-tooltip="Only available to selected users"
+                  tooltip-placement="right">
+                <i class="fa fa-fw fa-lock" aria-hidden="true"></i>
+              </span>
+              <span ng-if="::collection.public">
+                <i class="fa fa-fw fa-globe" aria-hidden="true"></i>
+              </span>
+              <a ng-href="{{::collection.getPath()}}">
+                {{::collection.label}}
+              </a>
+            </td>
+            <td class="nobreak numeric" width="1%">
+              <span ng-if="collection.countries.length" class="label label-danger">
+                {{::collection.countries[0] | country}}
+              </span>
+              <span ng-if="collection.countries.length > 1">
+                &nbsp;<span class="label label-danger">&nbsp;&hellip;&nbsp;</span>
+              </span>
+              
+            </td>
+            <td class="nobreak numeric" width="1%">
+              {{::collection.updated_at | date }}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

@@ -49,7 +49,7 @@ COLLECTION_CATEGORIES = {
     'court': 'Court archives',
     'company': 'Company registries',
     'watchlist': 'Watchlists',
-    'investigation': 'User collections',
+    'investigation': 'Personal collections',
     'sanctions': 'Sanctions lists',
     'scrape': 'Scrapes',
     'procurement': 'Procurement',
