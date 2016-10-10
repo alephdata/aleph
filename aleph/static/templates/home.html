@@ -41,13 +41,17 @@
               <th>Collections by country</th>
               <th></th>
             </tr>
-            <tr ng-repeat="country in facets.countries">
+            <tr ng-repeat="country in facets.countries | limitTo: 10">
               <td>
                 <a ng-href="/collections?countries={{::country.value}}">
                   {{::country.value | country}}
                 </a>
               </td>
               <td class="numeric">{{::country.count | number}}</td>
+            </tr>
+            <tr>
+              <td><a href="/collections">Browse all...</a></td>
+              <td></td>
             </tr>
           </table>
         </div>
