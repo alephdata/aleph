@@ -33,7 +33,7 @@
           <a ng-href="/collections/{{::collection.id}}/entities/bulk"
             class="btn btn-default">
             <i class="fa fa-plus-square" aria-hidden="true"></i>
-            Create entities
+            Create watchlist
           </a>
         </div>
       </div>
@@ -56,15 +56,22 @@
           <span class="badge">{{collection.entity_count | number}}</span>
         </a>
       </li>
-      <li role="presentation" ng-if="is_admin"
+      <li role="presentation" ng-if="show_paths"
           ng-class="{'active': section == 'analysis'}">
         <a ng-href="/collections/{{::collection.id}}/analysis">
-          <i class="fa fa-map-o" aria-hidden="true"></i>
-          Analysis
-          <span class="label label-info">dev</span>
+          <i class="fa fa-map-signs" aria-hidden="true"></i>
+          Leads
         </a>
       </li>
-      <li role="presentation" ng-class="{'active': section == 'states', 'disabled': disable_states}"
+      <li role="presentation" ng-if="show_networks"
+          ng-class="{'active': section == 'networks'}">
+        <a ng-href="/collections/{{::collection.id}}/networks">
+          <i class="fa fa-map-o" aria-hidden="true"></i>
+          Network diagrams
+          <span class="badge">{{collection.network_count | number}}</span>
+        </a>
+      </li>
+      <li role="presentation" ng-class="{'active': section == 'states'}"
           ng-if="::show_states">
         <a ng-href="/collections/{{::collection.id}}/states">
           <i class="fa fa-hourglass-half" aria-hidden="true"></i>

@@ -1,5 +1,5 @@
 
-aleph.factory('Network', ['$q', '$http', '$location', 'Metadata', 'Query', function($q, $http, $location, Metadata, Query) {
+aleph.factory('Network', ['$q', '$http', '$location', '$uibModal', 'Metadata', 'Query', function($q, $http, $location, $uibModal, Metadata, Query) {
   return {
     fromQuery: function(collectionId) {
       var dfd = $q.defer(),
@@ -18,6 +18,16 @@ aleph.factory('Network', ['$q', '$http', '$location', 'Metadata', 'Query', funct
           dfd.reject(err);
         });
       }
+      return dfd.promise;
+    },
+    search: function(collectionId) {
+      var dfd = $q.defer(),
+          url = '/api/1/collections/' + collectionId + '/networks';
+      $http.get(url).then(function(res) {
+        dfd.resolve(res.data);
+      }, function(err) {
+        dfd.reject(err);
+      });
       return dfd.promise;
     },
     get: function(collectionId, networkId) {
@@ -56,6 +66,20 @@ aleph.factory('Network', ['$q', '$http', '$location', 'Metadata', 'Query', funct
         dfd.reject(err);
       });
       return dfd.promise;
+    },
+    delete: function(network) {
+      var instance = $uibModal.open({
+        templateUrl: 'templates/networks/delete.html',
+        controller: 'NetworksDeleteCtrl',
+        backdrop: true,
+        size: 'md',
+        resolve: {
+          network: function() {
+            return network;
+          }
+        }
+      });
+      return instance.result;
     }
   };
 }]);

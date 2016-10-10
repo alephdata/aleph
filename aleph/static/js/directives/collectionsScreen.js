@@ -12,8 +12,9 @@ aleph.directive('collectionsScreen', ['$http', '$q', '$location', 'Authz', 'Coll
       scope.is_admin = Authz.is_admin();
       scope.writeable = Authz.collection(Authz.WRITE, scope.collection.id);
 
-      scope.show_states = scope.collection.can_edit;
-      scope.disable_states = !scope.collection.crawler_state_count;
+      scope.show_paths = !!scope.collection.path_count;
+      scope.show_networks = !!scope.collection.network_count;
+      scope.show_states = scope.collection.can_edit && scope.collection.crawler_state_count;
       scope.disable_documents = !scope.collection.doc_count;
       scope.disable_entities = !scope.collection.entity_count;
       

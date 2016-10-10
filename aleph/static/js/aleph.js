@@ -125,6 +125,17 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   });
 
   $routeProvider.when('/collections/:collection_id/networks', {
+    templateUrl: 'templates/collections/networks.html',
+    controller: 'CollectionsNetworksCtrl',
+    reloadOnSearch: false,
+    resolve: {
+      'collection': loadCollection,
+      'metadata': loadMetadata,
+      'networks': loadNetworks
+    }
+  });
+
+  $routeProvider.when('/collections/:collection_id/networks/new', {
     templateUrl: 'templates/networks/create.html',
     controller: 'NetworksCreateCtrl',
     reloadOnSearch: false,

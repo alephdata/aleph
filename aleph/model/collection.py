@@ -143,6 +143,14 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel, ModelFacets):
             q = q.filter(Entity.state == state)
         return q.count()
 
+    def get_network_count(self):
+        from aleph.model.network import Network
+        return Network.all().filter(Network.collection_id == self.id).count()
+
+    # def get_path_count(self):
+    #     from aleph.model.network import Path
+    #     return Path.all().filter(Path.collection_id == self.id).count()
+
     def to_dict(self, counts=False):
         data = super(Collection, self).to_dict()
         try:
@@ -158,6 +166,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel, ModelFacets):
             from aleph.model.entity import Entity
             data.update({
                 'doc_count': self.get_document_count(),
+                'network_count': self.get_network_count(),
                 'crawler_state_count': self.get_crawler_state_count(),
                 'entity_count': self.get_entity_count(Entity.STATE_ACTIVE),
                 'pending_count': self.get_entity_count(Entity.STATE_PENDING)
