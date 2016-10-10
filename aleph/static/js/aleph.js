@@ -185,7 +185,8 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     controller: 'HomeCtrl',
     reloadOnSearch: false,
     resolve: {
-      'statistics': loadHome,
+      'statistics': loadStatistics,
+      'facets': loadCollectionFacets,
       'metadata': loadMetadata
     }
   });
