@@ -19,6 +19,7 @@ class DirectoryCrawler(Crawler):
             log.error("Invalid directory: %r", directory)
             return
         directory = os.path.abspath(os.path.normpath(directory))
+        collection = None
         if foreign_id is not None:
             collection = Collection.by_foreign_id(foreign_id)
         if collection is None:
