@@ -5,7 +5,7 @@
     <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
       <div class="input-group input-group-lg">
         <input type="text" class="form-control" autofocus ng-model="query.q"
-          placeholder="Search {{statistics.document_count | number}} documents and data sources">
+          placeholder="Search documents and data sources">
         <span class="input-group-btn">
           <button class="btn btn-primary" type="submit">Search</button>
         </span>
@@ -131,7 +131,7 @@
 
       <div ng-if="collections.length">
         <p>
-          Below are the personal collections that you're part of. Create a new personal
+          Below are the personal collections that you're part of. Create a new
           collection if you want to upload more documents or create a separate watchlist.
         </p>
         <table class="table">

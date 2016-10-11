@@ -60,7 +60,8 @@ def crawl(name):
 @manager.command
 @manager.option('-l', '--language', dest='language', nargs='*')
 @manager.option('-c', '--country', dest='country', nargs='*')
-def crawldir(directory, language=None, country=None):
+@manager.option('-f', '--foreign_id', dest='foreign_id')
+def crawldir(directory, language=None, country=None, foreign_id=None):
     """Crawl the given directory."""
     log.info('Crawling %r...', directory)
     meta = {}
@@ -69,7 +70,7 @@ def crawldir(directory, language=None, country=None):
     if country is not None:
         meta['countries'] = [country]
     crawler = DirectoryCrawler()
-    crawler.execute(directory=directory, meta=meta)
+    crawler.execute(directory=directory, meta=meta, foreign_id=foreign_id)
 
 
 @manager.command
