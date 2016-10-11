@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">Sign in</h4>
+</div>
+
+<div class="modal-body">
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+      <p ng-repeat="provider in providers">
+        <a href="{{ provider.login }}" class="btn btn-default btn-block login-{{ provider.name }}" target="_self">Sign in with {{ provider.label }}</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+</div>
