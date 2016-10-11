@@ -7,7 +7,7 @@
   <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
       <p ng-repeat="provider in providers">
-        <a href="{{ provider.login }}" class="btn btn-default btn-block login-{{ provider.name }}" target="_self">Sign in with {{ provider.label }}</a>
+        <a href="{{ provider.login }}?{{ next_url }}" class="btn btn-default btn-block login-{{ provider.name }}" target="_self">Sign in with {{ provider.label }}</a>
       </p>
     </div>
   </div>
