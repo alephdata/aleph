@@ -41,8 +41,20 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
   };
 
   $rootScope.triggerLogin = function() {
-    var url = $httpParamSerializer({next: $location.url()});
-    document.location.href = '/api/1/sessions/login?' + url;
+    if ($scope.session.providers.length == 1) {
+      var url = $httpParamSerializer({next: $location.url()});
+      document.location.href = $scope.session.providers[0].login + '?' + url;
+    } else {
+      $uibModal.open({
+        templateUrl: 'templates/login.html',
+        controller: 'SessionCtrl',
+        backdrop: true,
+        size: 'md',
+        resolve: {
+          metadata: loadMetadata
+        }
+      });
+    }
   };  
 
   $scope.editProfile = function($event) {
@@ -66,19 +78,6 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
       size: 'md',
       resolve: {
         alerts: Alert.index()
-      }
-    });
-  };
-
-  $scope.showLogin = function($event) {
-    $event.stopPropagation();
-    var instance = $uibModal.open({
-      templateUrl: 'templates/login.html',
-      controller: 'SessionCtrl',
-      backdrop: true,
-      size: 'md',
-      resolve: {
-        metadata: loadMetadata
       }
     });
   };
