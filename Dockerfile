@@ -1,11 +1,4 @@
-FROM pudo/aleph-base:1.4
-MAINTAINER Friedrich Lindenberg <friedrich@pudo.org>
-ENV DEBIAN_FRONTEND noninteractive
-
-# Begin python festivities
-COPY requirements.txt /tmp/requirements.txt
-RUN pip install -q --upgrade pip && pip install -q functools32 \
-  && pip install -q -r /tmp/requirements.txt
+FROM code4sa/aleph-python-base
 
 COPY . /aleph
 WORKDIR /aleph
