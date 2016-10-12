@@ -11,4 +11,4 @@ RUN pip install newrelic==2.46.0.37 \
 RUN pip install -q -e /aleph
 RUN rm -rf /aleph/.git && bower --allow-root --quiet install
 
-CMD newrelic-admin run-program gunicorn --workers 1 -b 0.0.0.0:8000 --worker-class gevent --timeout 600 --max-requests 3000 --max-requests-jitter 100 --log-file - --access-logfile - aleph.manage:app
+CMD newrelic-admin run-program gunicorn --workers 1 -b 0.0.0.0:5000 --worker-class gevent --timeout 600 --max-requests 3000 --max-requests-jitter 100 --log-file - --access-logfile - aleph.manage:app
