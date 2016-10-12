@@ -2,7 +2,7 @@ FROM code4sa/aleph-python-base
 
 COPY . /aleph
 WORKDIR /aleph
-ENV ALEPH_SETTINGS /aleph/contrib/docker_settings.py
+ENV ALEPH_SETTINGS /aleph/code4sa_aleph_config.py
 RUN pip install git+git://github.com/Code4SA/aleph_zagazettecrawler.git && \
     pip install -q -e /aleph && \
     rm -rf /aleph/.git && \
