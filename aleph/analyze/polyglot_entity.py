@@ -50,10 +50,8 @@ class PolyglotEntityAnalyzer(Analyzer):
                 schema = SCHEMAS.get(entity.tag, DEFAULT_SCHEMA)
                 self.entities[entity_name].append(schema)
         except ValueError as ve:
-            self.disabled = True
             log.info('NER value error: %r', ve)
         except Exception as ex:
-            self.disabled = True
             log.warning('NER failed: %r', ex)
 
     def load_entity(self, name, schema):
