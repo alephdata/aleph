@@ -73,6 +73,7 @@ def parse_domain(text):
                 domain = urlparse(domain).hostname
             except ValueError:
                 return
+        domain = domain.lower()
         if domain.startswith('www.'):
             domain = domain[len('www.'):]
         domain = domain.strip('.')
