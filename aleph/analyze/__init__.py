@@ -43,8 +43,7 @@ def analyze_document(document):
     meta = document.meta
     for cls in get_analyzers():
         analyzer = cls(document, meta)
-        if not analyzer.disabled:
-            analyzer.prepare()
+        analyzer.prepare()
         analyzers.append(analyzer)
 
     for text in document.text_parts():
