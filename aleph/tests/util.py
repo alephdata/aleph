@@ -10,6 +10,7 @@ from aleph.analyze import analyze_document
 from aleph.logic import reindex_entities
 from aleph.core import db, create_app
 from aleph.views import mount_app_blueprints
+from aleph.oauth import oauth
 
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
 
@@ -18,6 +19,7 @@ class TestCase(FlaskTestCase):
 
     def create_app(self):
         self.temp_dir = mkdtemp()
+        oauth.remote_apps = {}
         app = create_app({
             'DEBUG': True,
             'TESTING': True,

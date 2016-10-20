@@ -145,7 +145,8 @@ CELERYBEAT_SCHEDULE = {
     },
 }
 
-OAUTH = {
+OAUTH = [{
+    'name': 'google',
     'consumer_key': env.get('OAUTH_KEY'),
     'consumer_secret': env.get('OAUTH_SECRET'),
     'request_token_params': {
@@ -156,4 +157,4 @@ OAUTH = {
     'access_token_method': 'POST',
     'access_token_url': 'https://accounts.google.com/o/oauth2/token',
     'authorize_url': 'https://accounts.google.com/o/oauth2/auth',
-}
+}]
