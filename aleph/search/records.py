@@ -22,15 +22,8 @@ def records_query_shoulds(args):
 
     entities = Entity.by_id_set(args.getlist('entity'))
     for entity in entities.values():
-        for term in entity.terms:
-            shoulds.append({
-                'multi_match': {
-                    'query': term,
-                    'type': "best_fields",
-                    'fields': ['text^5', 'text_latin'],
-                    'operator': 'AND'
-                }
-            })
+        for term in entity.regex_terms:
+            shoulds.append(text_query_string(term))
     return shoulds
 
 

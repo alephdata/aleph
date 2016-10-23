@@ -37,3 +37,8 @@ def optimize_search():
 
 def delete_index():
     get_es().indices.delete(get_es_index(), ignore=[404, 400])
+
+
+def flush_index():
+    """Run a refresh to apply all indexing changes."""
+    get_es().indices.refresh(index=get_es_index())

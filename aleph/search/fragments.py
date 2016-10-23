@@ -17,7 +17,7 @@ def text_query_string(text, literal=False):
     return {
         'query_string': {
             'query': text,
-            'fields': ['text^6', 'text_latin^2'],
+            'fields': ['text^6', 'text_latin^2', '_all'],
             'default_operator': 'AND',
             'use_dis_max': True
         }
@@ -34,7 +34,7 @@ def meta_query_string(text, literal=False):
             "query": text,
             "fields": ['title^15', 'file_name',
                        'summary^10', 'title_latin^12',
-                       'summary_latin^8'],
+                       'summary_latin^8', '_all'],
             "default_operator": "AND",
             "use_dis_max": True
         }

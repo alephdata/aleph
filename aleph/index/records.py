@@ -13,8 +13,14 @@ log = logging.getLogger(__name__)
 
 def clear_records(document_id):
     """Delete all records associated with the given document."""
-    q = {'query': {'term': {'document_id': document_id}},
-         '_source': False}
+    q = {
+        'query': {
+            'term': {
+                'document_id': document_id
+            }
+        },
+        '_source': False
+    }
 
     def gen_deletes():
             for res in scan(get_es(), query=q, index=get_es_index(),

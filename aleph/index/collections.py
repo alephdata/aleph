@@ -2,7 +2,8 @@ from elasticsearch.helpers import scan
 
 from aleph.core import get_es, get_es_index
 from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD, TYPE_ENTITY  # noqa
-from aleph.index.util import bulk_op, flush_es
+from aleph.index.admin import flush_index
+from aleph.index.util import bulk_op
 
 
 def delete_collection(collection_id):
@@ -20,5 +21,5 @@ def delete_collection(collection_id):
                 '_id': res.get('_id')
             }
 
-    flush_es()
+    flush_index()
     bulk_op(deletes())

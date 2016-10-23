@@ -10,7 +10,8 @@ from aleph.util import expand_json
 from aleph.model import Entity, Reference
 from aleph.model.entity import collection_entity_table
 from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT
-from aleph.index.util import bulk_op, flush_es
+from aleph.index.admin import flush_index
+from aleph.index.util import bulk_op
 
 log = logging.getLogger(__name__)
 
@@ -48,7 +49,7 @@ def document_updates(q, entity_id, references=None):
 def delete_entity_references(entity_id):
     q = {'query': {'term': {'entities.id': entity_id}}}
     bulk_op(document_updates(q, entity_id))
-    flush_es()
+    flush_index()
 
 
 def update_entity_references(entity_id, max_query=1000):
@@ -67,7 +68,7 @@ def update_entity_references(entity_id, max_query=1000):
     for i in range(0, len(ids), max_query):
         q = {'query': {'ids': {'values': ids[i:i + max_query]}}}
         bulk_op(document_updates(q, entity_id, references))
-    flush_es()
+    flush_index()
 
 
 def get_count(entity):
