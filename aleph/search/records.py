@@ -24,19 +24,17 @@ def records_query_shoulds(state):
 
 
 def records_query_internal(document_id, shoulds, size=5):
-    q = {
-        'bool': {
-            'minimum_should_match': 1,
-            'should': shoulds
-        }
-    }
-    if document_id is not None:
-        q['bool']['must'] = {
-            'term': {'document_id': document_id}
-        }
     return {
         'size': size,
-        'query': q,
+        'query': {
+            'bool': {
+                'minimum_should_match': 1,
+                'should': shoulds,
+                'must': [
+                    {'term': {'document_id': document_id}}
+                ]
+            }
+        },
         'highlight': {
             'fields': {
                 'text': {
@@ -61,7 +59,10 @@ def scan_entity_mentions(entity):
 
     query = {
         'query': {
-            'bool': {'should': shoulds, "minimum_should_match": 1}
+            'bool': {
+                'should': shoulds,
+                'minimum_should_match': 1
+            }
         },
         'sort': [{'document_id': 'desc'}],
         '_source': ['document_id', 'text']

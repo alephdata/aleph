@@ -78,13 +78,13 @@ def aggregate(q, aggs, facets):
     return aggs
 
 
-def filter_query(q, filters, or_fields, skip=None):
+def filter_query(q, filters, skip=None):
     """Apply a list of filters to the given query."""
     or_filters = defaultdict(list)
     for field, value in filters:
         if field == skip:
             continue
-        if field in or_fields:
+        if field == 'collection_id':
             or_filters[field].append(value)
         else:
             q = add_filter(q, {'term': {field: value}})

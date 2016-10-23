@@ -102,6 +102,7 @@ def index_entity(entity):
     data['doc_count'] = get_count(entity)
     data['terms'] = entity.terms
     data['terms_latin'] = [latinize_text(t) for t in entity.terms]
+    data['name_sort'] = data.get('name')
     data['name_latin'] = latinize_text(data.get('name'))
     data['summary_latin'] = latinize_text(data.get('summary'))
     data['description_latin'] = latinize_text(data.get('description'))

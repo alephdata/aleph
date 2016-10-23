@@ -1,8 +1,6 @@
 import json
 from pprint import pprint  # noqa
 
-from werkzeug.datastructures import MultiDict
-
 from aleph.core import url_for, get_es, get_es_index
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.search.util import authz_filter
@@ -15,23 +13,13 @@ from aleph.text import latinize_text
 DEFAULT_FIELDS = ['collection_id', 'name', 'summary', 'jurisdiction_code',
                   '$schema']
 
-# Scoped facets are facets where the returned facet values are returned such
-# that any filter against the same field will not be applied in the sub-query
-# used to generate the facet values.
-OR_FIELDS = ['collections']
 
-
-def entities_query(args, fields=None, facets=True):
+def entities_query(state, fields=None, facets=True):
     """Parse a user query string, compose and execute a query."""
-    if not isinstance(args, MultiDict):
-        args = MultiDict(args)
-    text = args.get('q', '').strip()
-    if text is None or not len(text):
-        q = match_all()
-    else:
+    if state.has_text:
         q = {
             "query_string": {
-                "query": text,
+                "query": state.text,
                 "fields": ['name^15', 'name_latin^5',
                            'terms^12', 'terms_latin^3',
                            'summary^10', 'summary_latin^7',
@@ -40,30 +28,29 @@ def entities_query(args, fields=None, facets=True):
                 "use_dis_max": True
             }
         }
+    else:
+        q = match_all()
 
     q = authz_filter(q)
-    filters = parse_filters(args)
+    filters = parse_filters(state)
     aggs = {'scoped': {'global': {}, 'aggs': {}}}
     if facets:
-        facets = args.getlist('facet')
+        facets = state.getlist('facet')
         if 'collections' in facets:
             aggs = facet_collections(q, aggs, filters)
             facets.remove('collections')
         aggs = aggregate(q, aggs, facets)
 
-    sort_mode = args.get('sort', '').strip().lower()
-    default_sort = 'score' if len(text) else 'doc_count'
-    sort_mode = sort_mode or default_sort
-    if sort_mode == 'doc_count':
+    if state.sort == 'doc_count':
         sort = [{'doc_count': 'desc'}, '_score']
-    elif sort_mode == 'alphabet':
-        sort = [{'name': 'asc'}, '_score']
-    elif sort_mode == 'score':
+    elif state.sort == 'alphabet':
+        sort = [{'name_sort': 'asc'}, '_score']
+    else:
         sort = ['_score']
 
     return {
         'sort': sort,
-        'query': filter_query(q, filters, OR_FIELDS),
+        'query': filter_query(q, filters),
         'aggregations': aggs,
         '_source': fields or DEFAULT_FIELDS
     }
@@ -72,7 +59,7 @@ def entities_query(args, fields=None, facets=True):
 def facet_collections(q, aggs, filters):
     aggs['scoped']['aggs']['collections'] = {
         'filter': {
-            'query': filter_query(q, filters, OR_FIELDS, skip='collection_d')
+            'query': filter_query(q, filters, skip='collection_id')
         },
         'aggs': {
             'collections': {
@@ -116,7 +103,7 @@ def suggest_entities(prefix, min_count=0, schemas=None, size=5):
     }
 
 
-def similar_entities(entity, args, collections):
+def similar_entities(entity, collections):
     """Merge suggestions API."""
     shoulds = []
     for term in entity.terms:
@@ -170,10 +157,10 @@ def similar_entities(entity, args, collections):
     }
 
 
-def execute_entities_query(args, query, doc_counts=False):
+def execute_entities_query(state, query, doc_counts=False):
     """Execute the query and return a set of results."""
     result, hits, output = execute_basic(TYPE_ENTITY, query)
-    convert_entity_aggregations(result, output, args)
+    convert_entity_aggregations(result, output, state)
     sub_queries = []
     for doc in hits.get('hits', []):
         entity = doc.get('_source')
@@ -194,4 +181,5 @@ def execute_entities_query(args, query, doc_counts=False):
                                body='\n'.join(sub_queries))
         for (entity, res) in zip(output['results'], res.get('responses')):
             entity['doc_count'] = res.get('hits', {}).get('total')
+
     return output

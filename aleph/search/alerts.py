@@ -4,7 +4,7 @@ from pprint import pprint  # noqa
 from aleph import authz
 from aleph.search.util import add_filter, authz_filter
 from aleph.search.query import QueryState
-from aleph.search.documents import OR_FIELDS, execute_documents_query
+from aleph.search.documents import execute_documents_query
 from aleph.search.fragments import filter_query, text_query
 
 
@@ -23,7 +23,7 @@ def alert_query(alert):
     q = text_query(state)
     q = authz_filter(q)
     if alert.entity_id:
-        q = filter_query(q, [('entities.id', alert.entity_id)], OR_FIELDS)
+        q = filter_query(q, [('entities.id', alert.entity_id)])
     if alert.notified_at:
         q = add_filter(q, {
             "range": {

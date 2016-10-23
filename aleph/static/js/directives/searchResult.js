@@ -20,10 +20,12 @@ aleph.directive('searchResult', ['$location', '$route', '$sce', 'Document',
         }
       }
 
-      for (var j in scope.doc.records.results) {
-        var record = scope.doc.records.results[j];
-        record.snippet = $sce.trustAsHtml(record.text);
-      }
+      scope.$watch('doc', function(doc) {
+        for (var j in doc.records.results) {
+          var record = doc.records.results[j];
+          record.snippet = $sce.trustAsHtml(record.text);
+        }
+      });
 
       scope.getUrl = function(record) {
         return Document.getUrl(scope.doc, record);

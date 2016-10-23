@@ -18,11 +18,6 @@ DEFAULT_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                   'languages', 'countries', 'source_url', 'created_at',
                   'updated_at', 'type', 'summary', 'source_collection_id']
 
-# Scoped facets are facets where the returned facet values are returned such
-# that any filter against the same field will not be applied in the sub-query
-# used to generate the facet values.
-OR_FIELDS = ['collection_id']
-
 
 def documents_query(state, fields=None, facets=True):
     """Parse a user query string, compose and execute a query."""
@@ -56,7 +51,7 @@ def documents_query(state, fields=None, facets=True):
     signals.document_query_process.send(q=q, state=state)
     return {
         'sort': sort,
-        'query': filter_query(q, filters, OR_FIELDS),
+        'query': filter_query(q, filters),
         'aggregations': aggs,
         '_source': fields or DEFAULT_FIELDS
     }
@@ -64,7 +59,7 @@ def documents_query(state, fields=None, facets=True):
 
 def facet_entities(aggs, state):
     """Filter entities, facet for collections."""
-    entities = state.getlist('entity')
+    entities = state.entity_ids
     collections = state.authz_collections
     # This limits the entity facet collections to the same collections
     # which apply to the document part of the query. It is used by the
@@ -73,11 +68,14 @@ def facet_entities(aggs, state):
     if 'collection' == state.get('scope'):
         filters = state.getlist('filter:collection_id')
         collections = [c for c in collections if str(c) in filters]
+
     flt = {
         'bool': {'must': [{'terms': {'entities.collection_id': collections}}]}
     }
+
     if len(entities):
         flt['bool']['must'].append({'terms': {'entities.id': entities}})
+
     aggs['entities'] = {
         'nested': {
             'path': 'entities'
@@ -99,7 +97,7 @@ def facet_entities(aggs, state):
 def facet_collections(q, aggs, filters):
     aggs['scoped']['aggs']['collections'] = {
         'filter': {
-            'query': filter_query(q, filters, OR_FIELDS, skip='collection_id')
+            'query': filter_query(q, filters, skip='collection_id')
         },
         'aggs': {
             'collections': {
