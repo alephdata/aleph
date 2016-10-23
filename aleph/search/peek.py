@@ -1,5 +1,6 @@
 import math
 from werkzeug.datastructures import MultiDict
+from sqlalchemy import not_
 
 from aleph import authz
 from aleph.index import TYPE_DOCUMENT
@@ -38,6 +39,13 @@ def peek_query(args):
     against those collections which they are not authorised to view. It is a
     rudimentary collaboration mechanism.
     """
+    cq = Collection.all()
+    readable = authz.collections(authz.READ)
+    cq = cq.filter(not_(Collection.id.in_(readable)))
+    cq = cq.filter(Collection.creator_id != None)  # noqa
+    cq = cq.filter(Collection.private == False)  # noqa
+    collections = {c.id: c for c in cq.all()}
+
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
     text = args.get('q', '').strip()
@@ -49,10 +57,8 @@ def peek_query(args):
 
     q = filter_query(q, filters, [])
     q = add_filter(q, {
-        'not': {
-            'terms': {
-                'collection_id': authz.collections(authz.READ)
-            }
+        'terms': {
+            'collection_id': collections.keys()
         }
     })
     q = {
@@ -70,16 +76,10 @@ def peek_query(args):
     result = get_es().search(index=get_es_index(), body=q,
                              doc_type=TYPE_DOCUMENT)
 
-    aggs = result.get('aggregations', {}).get('collections', {})
-    buckets = aggs.get('buckets', [])
-    q = Collection.all_by_ids([b['key'] for b in buckets])
-    q = q.filter(Collection.creator_id != None)  # noqa
-    objs = {o.id: o for o in q.all()}
     roles = {}
-    for bucket in buckets:
-        collection = objs.get(bucket.get('key'))
-        if collection is None or collection.private:
-            continue
+    aggs = result.get('aggregations', {}).get('collections', {})
+    for bucket in aggs.get('buckets', []):
+        collection = collections.get(bucket.get('key'))
         if collection.creator_id in roles:
             roles[collection.creator_id]['total'] += bucket.get('doc_count')
         else:
