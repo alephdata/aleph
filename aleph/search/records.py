@@ -1,7 +1,6 @@
 from elasticsearch.helpers import scan
 
 from aleph.core import get_es, get_es_index
-from aleph.model import Entity
 from aleph.index import TYPE_RECORD
 from aleph.search.fragments import text_query_string
 from aleph.search.util import execute_basic
@@ -9,21 +8,18 @@ from aleph.search.util import execute_basic
 SNIPPET_SIZE = 100
 
 
-def records_query(document_id, args, size=5):
-    shoulds = records_query_shoulds(args)
+def records_query(document_id, state, size=5):
+    shoulds = records_query_shoulds(state)
     return records_query_internal(document_id, shoulds, size=size)
 
 
-def records_query_shoulds(args):
+def records_query_shoulds(state):
     shoulds = []
-    query_text = args.get('q', '').strip()
-    if len(query_text):
-        shoulds.append(text_query_string(query_text))
+    if state.has_text:
+        shoulds.append(text_query_string(state.text))
 
-    entities = Entity.by_id_set(args.getlist('entity'))
-    for entity in entities.values():
-        for term in entity.regex_terms:
-            shoulds.append(text_query_string(term))
+    for term in state.entity_terms:
+        shoulds.append(text_query_string(term))
     return shoulds
 
 

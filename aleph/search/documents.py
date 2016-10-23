@@ -2,7 +2,6 @@ import json
 import time
 import logging
 from pprint import pprint  # noqa
-from werkzeug.datastructures import MultiDict
 
 from aleph import authz, signals
 from aleph.core import get_es, get_es_index
@@ -25,42 +24,36 @@ DEFAULT_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
 OR_FIELDS = ['collection_id']
 
 
-def documents_query(args, fields=None, facets=True):
+def documents_query(state, fields=None, facets=True):
     """Parse a user query string, compose and execute a query."""
-    if not isinstance(args, MultiDict):
-        args = MultiDict(args)
-    text = args.get('q', '').strip()
-    q = text_query(text)
+    q = text_query(state.text)
     q = authz_filter(q)
 
     # Sorting -- should this be passed into search directly, instead of
     # these aliases?
-    sort_mode = args.get('sort', '').strip().lower()
-    if text or sort_mode == 'score':
-        sort = ['_score']
-    elif sort_mode == 'newest':
+    if state.sort == 'newest':
         sort = [{'dates': 'desc'}, {'created_at': 'desc'}, '_score']
-    elif sort_mode == 'oldest':
+    if state.sort == 'oldest':
         sort = [{'dates': 'asc'}, {'created_at': 'asc'}, '_score']
     else:
-        sort = [{'updated_at': 'desc'}, {'created_at': 'desc'}, '_score']
+        sort = ['_score']
 
-    filters = parse_filters(args)
-    for entity in args.getlist('entity'):
+    filters = parse_filters(state)
+    for entity in state.entity_ids:
         filters.append(('entities.id', entity))
 
     aggs = {'scoped': {'global': {}, 'aggs': {}}}
     if facets:
-        facets = args.getlist('facet')
+        facets = state.getlist('facet')
         if 'collections' in facets:
             aggs = facet_collections(q, aggs, filters)
             facets.remove('collections')
         if 'entities' in facets:
-            aggs = facet_entities(aggs, args)
+            aggs = facet_entities(aggs, state)
             facets.remove('entities')
         aggs = aggregate(q, aggs, facets)
 
-    signals.document_query_process.send(q=q, args=args)
+    signals.document_query_process.send(q=q, state=state)
     return {
         'sort': sort,
         'query': filter_query(q, filters, OR_FIELDS),
@@ -69,16 +62,16 @@ def documents_query(args, fields=None, facets=True):
     }
 
 
-def facet_entities(aggs, args):
+def facet_entities(aggs, state):
     """Filter entities, facet for collections."""
-    entities = args.getlist('entity')
-    collections = authz.collections(authz.READ)
+    entities = state.getlist('entity')
+    collections = state.authz_collections
     # This limits the entity facet collections to the same collections
     # which apply to the document part of the query. It is used by the
     # collections view to show only entity facets from the currently
     # selected collection.
-    if 'collection' == args.get('scope'):
-        filters = args.getlist('filter:collection_id')
+    if 'collection' == state.get('scope'):
+        filters = state.getlist('filter:collection_id')
         collections = [c for c in collections if str(c) in filters]
     flt = {
         'bool': {'must': [{'terms': {'entities.collection_id': collections}}]}
@@ -138,18 +131,18 @@ def run_sub_queries(output, sub_queries):
                         doc['records']['results'].append(record)
 
 
-def execute_documents_query(args, query):
+def execute_documents_query(state, query):
     """Execute the query and return a set of results."""
     begin_time = time.time()
     result, hits, output = execute_basic(TYPE_DOCUMENT, query)
     query_duration = (time.time() - begin_time) * 1000
     log.debug('Query ES time: %.5fms', query_duration)
 
-    convert_document_aggregations(result, output, args)
+    convert_document_aggregations(result, output, state)
     query_duration = (time.time() - begin_time) * 1000
     log.debug('Post-facet accumulated: %.5fms', query_duration)
 
-    sub_shoulds = records_query_shoulds(args)
+    sub_shoulds = records_query_shoulds(state)
     sub_queries = []
     for doc in hits.get('hits', []):
         document = doc.get('_source')

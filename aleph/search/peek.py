@@ -32,7 +32,7 @@ def format_total(obj):
     return obj
 
 
-def peek_query(args):
+def peek_query(state):
     """Peek into hidden collections.
 
     This allows users to retrieve an approximate result count of a given query
@@ -40,19 +40,15 @@ def peek_query(args):
     rudimentary collaboration mechanism.
     """
     cq = Collection.all()
-    readable = authz.collections(authz.READ)
-    cq = cq.filter(not_(Collection.id.in_(readable)))
+    cq = cq.filter(not_(Collection.id.in_(state.authz_collections)))
     cq = cq.filter(Collection.creator_id != None)  # noqa
     cq = cq.filter(Collection.private == False)  # noqa
     collections = {c.id: c for c in cq.all()}
 
-    if not isinstance(args, MultiDict):
-        args = MultiDict(args)
-    text = args.get('q', '').strip()
-    q = text_query(text)
+    q = text_query(state.text)
 
-    filters = parse_filters(args)
-    for entity in args.getlist('entity'):
+    filters = parse_filters(state)
+    for entity in state.entity_ids:
         filters.append(('entities.id', entity))
 
     q = filter_query(q, filters, [])

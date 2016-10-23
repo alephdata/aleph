@@ -33,11 +33,11 @@ def clean_highlight(hlt):
     return hlt.strip()
 
 
-def parse_filters(args):
+def parse_filters(state):
     # Extract filters, given in the form: &filter:foo_field=bla_value
     filters = []
-    for key in args.keys():
-        for value in args.getlist(key):
+    for key in state.args.keys():
+        for value in state.getlist(key):
             if not key.startswith('filter:'):
                 continue
             _, field = key.split(':', 1)
