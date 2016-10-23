@@ -1,5 +1,6 @@
 <div ngf-drop ng-model="uploads" ngf-drag-over-class="'file-drop-area'" 
-     ngf-stop-propagation="true" ngf-multiple="true" ngf-keep="'distinct'" 
+     ngf-stop-propagation="true" ngf-multiple="true" ngf-keep="'distinct'"
+     ngf-model-options="{updateOn: 'drop', allowInvalid: false}"
      ngf-drop-disabled="!collection.can_add" id="collections-screen">
   <div id="ingest-dropzone" ng-cloak>
     <div id="ingest-dropzone-icon">

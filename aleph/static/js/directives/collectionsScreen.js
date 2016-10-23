@@ -21,7 +21,7 @@ aleph.directive('collectionsScreen', ['$http', '$q', '$location', 'Authz', 'Coll
       scope.uploads = [];
 
       scope.$watch('uploads', function(files) {
-        if (files.length) {
+        if (files.length > 0) {
           scope.ingestFiles(files);
         }
       });
