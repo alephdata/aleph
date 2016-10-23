@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 from aleph.index import TYPE_RECORD
 from aleph.text import latinize_text
 from aleph.search.util import add_filter, FACET_SIZE
@@ -78,17 +76,12 @@ def aggregate(q, aggs, facets):
     return aggs
 
 
-def filter_query(q, filters, skip=None):
+def filter_query(q, filters):
     """Apply a list of filters to the given query."""
-    or_filters = defaultdict(list)
-    for field, value in filters:
-        if field == skip:
-            continue
+    for field, values in filters.items():
         if field == 'collection_id':
-            or_filters[field].append(value)
+            q = add_filter(q, {'terms': {field: values}})
         else:
-            q = add_filter(q, {'term': {field: value}})
-    for field, value in or_filters.items():
-        if len(value):
-            q = add_filter(q, {'terms': {field: value}})
+            for value in values:
+                q = add_filter(q, {'term': {field: value}})
     return q

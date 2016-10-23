@@ -1,14 +1,12 @@
 import math
-from werkzeug.datastructures import MultiDict
 from sqlalchemy import not_
+from pprint import pprint  # noqa
 
-from aleph import authz
 from aleph.index import TYPE_DOCUMENT
 from aleph.core import get_es, get_es_index
 from aleph.model import Collection
 from aleph.search.documents import text_query
 from aleph.search.fragments import filter_query
-from aleph.search.util import parse_filters, add_filter
 
 
 def round(x, factor):
@@ -39,36 +37,26 @@ def peek_query(state):
     against those collections which they are not authorised to view. It is a
     rudimentary collaboration mechanism.
     """
+    filters = state.filters
     cq = Collection.all()
     cq = cq.filter(not_(Collection.id.in_(state.authz_collections)))
     cq = cq.filter(Collection.creator_id != None)  # noqa
-    cq = cq.filter(Collection.private == False)  # noqa
-    collections = {c.id: c for c in cq.all()}
+    cq = cq.filter(Collection.private != True)  # noqa
+    collections = {c.id: c for c in cq}
+    filters['collection_id'] = collections.keys()
 
     q = text_query(state.text)
-
-    filters = parse_filters(state)
-    for entity in state.entity_ids:
-        filters.append(('entities.id', entity))
-
-    q = filter_query(q, filters, [])
-    q = add_filter(q, {
-        'terms': {
-            'collection_id': collections.keys()
-        }
-    })
     q = {
+        'query': filter_query(q, filters),
         'query': q,
         'size': 0,
         'aggregations': {
             'collections': {
-                'terms': {'field': 'collection_id', 'size': 30}
+                'terms': {'field': 'collection_id', 'size': 1000}
             }
         },
         '_source': False
     }
-    # import json
-    # print json.dumps(q, indent=2)
     result = get_es().search(index=get_es_index(), body=q,
                              doc_type=TYPE_DOCUMENT)
 
@@ -76,6 +64,8 @@ def peek_query(state):
     aggs = result.get('aggregations', {}).get('collections', {})
     for bucket in aggs.get('buckets', []):
         collection = collections.get(bucket.get('key'))
+        if collection is None or collection.creator is None:
+            continue
         if collection.creator_id in roles:
             roles[collection.creator_id]['total'] += bucket.get('doc_count')
         else:

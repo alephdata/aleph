@@ -85,7 +85,7 @@ def suggest():
     enable_cache(vary=collections, server_side=False)
     prefix = request.args.get('prefix')
     min_count = int(request.args.get('min_count', 0))
-    return jsonify(suggest_entities(prefix, min_count))
+    return jsonify(suggest_entities(prefix, collections, min_count))
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['GET'])

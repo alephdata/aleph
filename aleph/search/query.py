@@ -3,13 +3,13 @@ from werkzeug.datastructures import MultiDict
 
 from aleph.model import Entity
 
-SORTS = {
-    'score': ['_score'],
-    'newest': [{'dates': 'desc'}, {'created_at': 'desc'}, '_score'],
-    'oldest': [{'dates': 'asc'}, {'created_at': 'asc'}, '_score'],
-    'alphabet': [{'name': 'asc'}, '_score'],
-    'doc_count': [{'doc_count': 'desc'}, '_score']
-}
+# SORTS = {
+#     'score': ['_score'],
+#     'newest': [{'dates': 'desc'}, {'created_at': 'desc'}, '_score'],
+#     'oldest': [{'dates': 'asc'}, {'created_at': 'asc'}, '_score'],
+#     'alphabet': [{'name': 'asc'}, '_score'],
+#     'doc_count': [{'doc_count': 'desc'}, '_score']
+# }
 
 
 class QueryState(object):
@@ -21,6 +21,9 @@ class QueryState(object):
         self.args = args
         self.authz_collections = authz_collections
         self._limit = limit
+
+        self.facet_names = self.getlist('facet')
+        self.entity_ids = self.getlist('entity')
 
     @property
     def limit(self):
@@ -55,10 +58,6 @@ class QueryState(object):
         return self.get('sort', 'score').strip().lower()
 
     @property
-    def entity_ids(self):
-        return self.getlist('entity')
-
-    @property
     def entities(self):
         if not hasattr(self, '_entities'):
             cs = self.authz_collections
@@ -75,6 +74,23 @@ class QueryState(object):
         return self._entity_terms
 
     @property
+    def collection_id(self):
+        """Return the set of collection IDs to be queried.
+
+        Those are either based on authorization rules or filters applied by
+        the user.
+        """
+        collection_ids = set()
+        for value in self.get_filters('collection_id'):
+            try:
+                value = int(value)
+            except:
+                continue
+            if value in self.authz_collections:
+                collection_ids.add(value)
+        return list(collection_ids) or self.authz_collections
+
+    @property
     def filter_items(self):
         for key in self.args.keys():
             for value in self.getlist(key):
@@ -82,6 +98,24 @@ class QueryState(object):
                     continue
                 _, field = key.split(':', 1)
                 yield (field, value)
+
+    def get_filters(self, field):
+        for f, value in self.filter_items:
+            if f == field:
+                yield value
+
+    @property
+    def filters(self):
+        filters = {
+            'entities.id': set(self.entities.keys())
+        }
+        for field, value in self.filter_items:
+            if field not in filters:
+                filters[field] = set([value])
+            else:
+                filters[field].add(value)
+        filters['collection_id'] = self.collection_id
+        return filters
 
     @property
     def items(self):
@@ -97,7 +131,7 @@ class QueryState(object):
 
     def get(self, name, default=None):
         for value in self.getlist(name):
-            if len(value.strip()):
+            if value is not None and len(value.strip()):
                 return value
         return default
 

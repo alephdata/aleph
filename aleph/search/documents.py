@@ -6,10 +6,9 @@ from pprint import pprint  # noqa
 from aleph import authz, signals
 from aleph.core import get_es, get_es_index
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
-from aleph.search.util import authz_filter, clean_highlight
-from aleph.search.util import execute_basic, parse_filters, FACET_SIZE
+from aleph.search.util import clean_highlight, execute_basic, FACET_SIZE
 from aleph.search.fragments import aggregate, filter_query, text_query
-from aleph.search.facets import convert_document_aggregations
+from aleph.search.facet import parse_facet_result
 from aleph.search.records import records_query_internal, records_query_shoulds
 
 log = logging.getLogger(__name__)
@@ -22,10 +21,8 @@ DEFAULT_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
 def documents_query(state, fields=None, facets=True):
     """Parse a user query string, compose and execute a query."""
     q = text_query(state.text)
-    q = authz_filter(q)
 
-    # Sorting -- should this be passed into search directly, instead of
-    # these aliases?
+    # Sorting
     if state.sort == 'newest':
         sort = [{'dates': 'desc'}, {'created_at': 'desc'}, '_score']
     if state.sort == 'oldest':
@@ -33,15 +30,11 @@ def documents_query(state, fields=None, facets=True):
     else:
         sort = ['_score']
 
-    filters = parse_filters(state)
-    for entity in state.entity_ids:
-        filters.append(('entities.id', entity))
-
     aggs = {'scoped': {'global': {}, 'aggs': {}}}
     if facets:
-        facets = state.getlist('facet')
+        facets = list(state.facet_names)
         if 'collections' in facets:
-            aggs = facet_collections(q, aggs, filters)
+            aggs = facet_collections(q, aggs, state)
             facets.remove('collections')
         if 'entities' in facets:
             aggs = facet_entities(aggs, state)
@@ -51,7 +44,7 @@ def documents_query(state, fields=None, facets=True):
     signals.document_query_process.send(q=q, state=state)
     return {
         'sort': sort,
-        'query': filter_query(q, filters),
+        'query': filter_query(q, state.filters),
         'aggregations': aggs,
         '_source': fields or DEFAULT_FIELDS
     }
@@ -59,22 +52,13 @@ def documents_query(state, fields=None, facets=True):
 
 def facet_entities(aggs, state):
     """Filter entities, facet for collections."""
-    entities = state.entity_ids
-    collections = state.authz_collections
     # This limits the entity facet collections to the same collections
     # which apply to the document part of the query. It is used by the
     # collections view to show only entity facets from the currently
     # selected collection.
+    collections = state.authz_collections
     if 'collection' == state.get('scope'):
-        filters = state.getlist('filter:collection_id')
-        collections = [c for c in collections if str(c) in filters]
-
-    flt = {
-        'bool': {'must': [{'terms': {'entities.collection_id': collections}}]}
-    }
-
-    if len(entities):
-        flt['bool']['must'].append({'terms': {'entities.id': entities}})
+        collections = state.collection_id
 
     aggs['entities'] = {
         'nested': {
@@ -82,7 +66,7 @@ def facet_entities(aggs, state):
         },
         'aggs': {
             'inner': {
-                'filter': flt,
+                'filter': {'terms': {'entities.collection_id': collections}},
                 'aggs': {
                     'entities': {
                         'terms': {'field': 'entities.id', 'size': FACET_SIZE}
@@ -94,10 +78,12 @@ def facet_entities(aggs, state):
     return aggs
 
 
-def facet_collections(q, aggs, filters):
+def facet_collections(q, aggs, state):
+    filters = state.filters
+    filters['collection_id'] = state.authz_collections
     aggs['scoped']['aggs']['collections'] = {
         'filter': {
-            'query': filter_query(q, filters, skip='collection_id')
+            'query': filter_query(q, filters)
         },
         'aggs': {
             'collections': {
@@ -136,7 +122,7 @@ def execute_documents_query(state, query):
     query_duration = (time.time() - begin_time) * 1000
     log.debug('Query ES time: %.5fms', query_duration)
 
-    convert_document_aggregations(result, output, state)
+    output['facets'] = parse_facet_result(state, result)
     query_duration = (time.time() - begin_time) * 1000
     log.debug('Post-facet accumulated: %.5fms', query_duration)
 
@@ -148,7 +134,10 @@ def execute_documents_query(state, query):
         document['score'] = doc.get('_score')
         document['records'] = {'results': [], 'total': 0}
         collection_id = document.get('collection_id')
-        document['public'] = authz.collections_public(collection_id)
+        try:
+            document['public'] = authz.collections_public(collection_id)
+        except:
+            document['public'] = None
 
         # TODO: restore entity highlighting somehow.
         sq = records_query_internal(document['id'], sub_shoulds)

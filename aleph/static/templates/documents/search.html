@@ -69,13 +69,15 @@
     </div>
 
     <div class="col-md-4">
-      <div class="panel panel-default panel-facet panel-facet-scroll">
+      <div class="panel panel-default panel-facet panel-facet-scroll"
+           ng-if="result.facets.collections.values.length">
         <div class="panel-heading">
-          <strong>Document collections</strong> <small>{{collectionFacets.length}}</small>
+          <strong>Document collections</strong>
+          <small>{{result.facets.collections.values.length}}</small>
         </div>
         <ul class="list-group">
           <li class="list-group-item animate toggle"
-            ng-repeat="collection in collectionFacet"
+            ng-repeat="collection in result.facets.collections.values"
             ng-class="{'active': query.hasFilter('collection_id', collection.id)}"
             ng-click="query.toggleFilter('collection_id', collection.id)">
             <span class="badge">

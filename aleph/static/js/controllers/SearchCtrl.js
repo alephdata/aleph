@@ -46,7 +46,7 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
     if (result.error) {
       return;
     }
-    $scope.collectionFacet = query.sortFacet(result.facets.collections.values, 'filter:collection_id');
+    $scope.collectionFacet = result.facets.collections.values;
   };
 
   $scope.$on('$routeUpdate', function() {
@@ -69,7 +69,6 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
   };
 
   var updateSearch = function(data) {
-    initFacets(data.query, data.result);
     $scope.query = data.query;
     $scope.result = data.result;
     $scope.queryString = data.query.toString();

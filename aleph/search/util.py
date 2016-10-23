@@ -1,17 +1,10 @@
 import re
 from copy import deepcopy
 
-from aleph import authz
 from aleph.core import get_es, get_es_index
 
 MARKS = re.compile(r'[_\.;,/]{2,}')
 FACET_SIZE = 50
-
-
-def authz_filter(q):
-    return add_filter(q, {
-        "terms": {"collection_id": list(authz.collections(authz.READ))}
-    })
 
 
 def add_filter(q, filter_):
@@ -31,18 +24,6 @@ def add_filter(q, filter_):
 def clean_highlight(hlt):
     hlt = MARKS.sub('.', hlt)
     return hlt.strip()
-
-
-def parse_filters(state):
-    # Extract filters, given in the form: &filter:foo_field=bla_value
-    filters = []
-    for key in state.args.keys():
-        for value in state.getlist(key):
-            if not key.startswith('filter:'):
-                continue
-            _, field = key.split(':', 1)
-            filters.append((field, value))
-    return filters
 
 
 def execute_basic(doc_type, query):
