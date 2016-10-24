@@ -22,12 +22,13 @@ def extract_page(path, page, languages):
 
     texts = []
     for text in page.findall('.//text'):
-        if text.text is not None:
-            texts.append(text.text)
+        content = text.xpath('string()').strip()
+        if len(content):
+            texts.append(content)
 
     for image in page.findall('.//image'):
         ratio = element_size(image) / page_size
-        if len(texts) < 2 or ratio > 0.7:
+        if len(texts) < 2 or ratio > 0.3:
             log.info("Using OCR for %r, p.%s", path, page_no)
             with open(image.get('src'), 'r') as fh:
                 texts.append(extract_image_data(fh.read()))
