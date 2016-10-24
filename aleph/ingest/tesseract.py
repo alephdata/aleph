@@ -1,5 +1,4 @@
 import logging
-import subprocess
 try:
     from cStringIO import StringIO
 except:
@@ -45,19 +44,3 @@ def extract_image_data(data, languages=None):
               languages, len(text))
     Cache.set_ocr(data, languages, text)
     return text
-
-
-def _extract_image_page(pdf_file, page, languages=None):
-    # This is a somewhat hacky way of working around some of the formats
-    # and compression mechanisms not supported in pdfminer. It will
-    # generate an image based on the given page in the PDF and then OCR
-    # that.
-    pdftoppm = get_config('PDFTOPPM_BIN')
-    try:
-        args = [pdftoppm, pdf_file, '-singlefile', '-gray', '-r', '400',
-                '-q', '-f', str(page)]
-        output = subprocess.check_output(args)
-        return extract_image_data(output, languages=languages)
-    except subprocess.CalledProcessError as cpe:
-        log.info("Error in pdftoppm: %r", cpe)
-        return None

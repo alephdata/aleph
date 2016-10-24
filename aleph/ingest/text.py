@@ -3,7 +3,7 @@ import logging
 from aleph.core import get_archive
 from aleph.core import get_config
 from aleph.model import db, Document, DocumentPage
-from aleph.ingest.pdf import extract_pdf
+from aleph.ingest.poppler import extract_pdf
 from aleph.ingest.tika import extract_pdf as tika_pdf
 from aleph.ingest.ingestor import Ingestor
 

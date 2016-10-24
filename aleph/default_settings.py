@@ -90,6 +90,7 @@ GRAPH_COLORS = {
 # Binary paths for programs to which the ingestor shells out:
 TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')
 PDFTOPPM_BIN = env.get('PDFTOPPM_BIN', 'pdftoppm')
+PDFTOHTML_BIN = env.get('PDFTOHTML_BIN', 'pdftohtml')
 CONVERT_BIN = env.get('CONVERT_BIN', 'convert')
 SOFFICE_BIN = env.get('SOFFICE_BIN', 'soffice')
 WKHTMLTOPDF_BIN = env.get('WKHTMLTOPDF_BIN', 'wkhtmltopdf')

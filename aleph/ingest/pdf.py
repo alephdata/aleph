@@ -1,4 +1,5 @@
 import logging
+import subprocess
 
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
@@ -11,9 +12,25 @@ from pdfminer.pdfdocument import PDFDocument
 
 from aleph.core import get_config
 from aleph.text import string_value
-from aleph.ingest.tesseract import _extract_image_page
+from aleph.ingest.tesseract import extract_image_data
 
 log = logging.getLogger(__name__)
+
+
+def _extract_image_page(pdf_file, page, languages=None):
+    # This is a somewhat hacky way of working around some of the formats
+    # and compression mechanisms not supported in pdfminer. It will
+    # generate an image based on the given page in the PDF and then OCR
+    # that.
+    pdftoppm = get_config('PDFTOPPM_BIN')
+    try:
+        args = [pdftoppm, pdf_file, '-singlefile', '-gray', '-r', '400',
+                '-q', '-f', str(page)]
+        output = subprocess.check_output(args)
+        return extract_image_data(output, languages=languages)
+    except subprocess.CalledProcessError as cpe:
+        log.info("Error in pdftoppm: %r", cpe)
+        return None
 
 
 def _find_objects(objects, cls):
