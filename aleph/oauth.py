@@ -31,7 +31,8 @@ def setup_providers(app):
 
 
 def configure_oauth(app):
-    setup_providers(app)
+    if not app.config.get('TESTING'):
+        setup_providers(app)
     oauth.init_app(app)
     return oauth
 
