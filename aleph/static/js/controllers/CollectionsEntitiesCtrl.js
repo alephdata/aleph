@@ -120,10 +120,6 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
   };
 
   var updateSearch = function(data) {
-    $scope.jurisdictionFacet = data.query.sortFacet(data.result.facets.jurisdiction_code.values,
-                                                    'filter:jurisdiction_code');
-    $scope.schemaFacet = data.query.sortFacet(data.result.facets.$schema.values,
-                                              'filter:$schema');
     $scope.result = data.result;
     $scope.query = data.query;
     

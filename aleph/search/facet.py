@@ -1,3 +1,5 @@
+import six
+
 from aleph.model import Entity, Collection
 from aleph.metadata.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 
@@ -22,7 +24,7 @@ class Facet(object):
         buckets = self.get_data().get('buckets', [])
         values = self.get_values()
         for bucket in buckets:
-            bucket['id'] = str(bucket.pop('key'))
+            bucket['id'] = six.text_type(bucket.pop('key'))
             bucket['label'] = bucket['id']
             bucket['count'] = bucket.pop('doc_count', 0)
             bucket['active'] = bucket['id'] in values
@@ -90,7 +92,7 @@ class CollectionFacet(Facet):
     def expand(self, keys):
         collections = {}
         for collection in Collection.all_by_ids(keys).all():
-            collections[str(collection.id)] = {
+            collections[six.text_type(collection.id)] = {
                 'label': collection.label,
                 'category': collection.category
             }
@@ -104,6 +106,7 @@ def parse_facet_result(state, result):
         facet_cls = {
             'languages': LanguageFacet,
             'countries': CountryFacet,
+            'jurisdiction_code': CountryFacet,
             'entities': EntityFacet,
             'collections': CollectionFacet
         }.get(name, Facet)

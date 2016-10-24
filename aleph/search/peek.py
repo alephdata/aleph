@@ -59,13 +59,14 @@ def peek_query(state):
     }
     result = get_es().search(index=get_es_index(), body=q,
                              doc_type=TYPE_DOCUMENT)
-
     roles = {}
+    total = 0
     aggs = result.get('aggregations', {}).get('collections', {})
     for bucket in aggs.get('buckets', []):
         collection = collections.get(bucket.get('key'))
         if collection is None or collection.creator is None:
             continue
+        total += bucket.get('doc_count')
         if collection.creator_id in roles:
             roles[collection.creator_id]['total'] += bucket.get('doc_count')
         else:
@@ -77,7 +78,6 @@ def peek_query(state):
 
     roles = sorted(roles.values(), key=lambda r: r['total'], reverse=True)
     roles = [format_total(r) for r in roles]
-    total = result.get('hits', {}).get('total')
     return format_total({
         'roles': roles,
         'active': total > 0,

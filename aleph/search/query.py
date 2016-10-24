@@ -1,3 +1,4 @@
+import six
 from apikit.args import BOOL_TRUISH
 from werkzeug.datastructures import MultiDict
 
@@ -144,5 +145,5 @@ class QueryState(object):
 
     def getbool(self, name, default=False):
         value = self.get(name, default)
-        value = unicode(value).strip().lower()
+        value = six.text_type(value).strip().lower()
         return value in BOOL_TRUISH
