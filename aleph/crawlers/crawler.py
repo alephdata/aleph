@@ -1,7 +1,7 @@
 import json
 import logging
 
-from aleph.core import db
+from aleph.core import db, get_config
 from aleph.metadata import Metadata
 from aleph.model import Entity, Collection, CrawlerState
 from aleph.model.common import make_textid
@@ -60,6 +60,10 @@ class Crawler(object):
         raise NotImplemented()
 
     def execute(self, incremental=False, **kwargs):
+        # This an emergency flag intended for use when the queue
+        # has become too large and needs to drain.
+        if get_config('DISABLE_CRAWLERS', False):
+            return
         self.run_count = 0
         try:
             self.incremental = incremental
