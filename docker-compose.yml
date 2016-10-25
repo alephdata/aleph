@@ -26,13 +26,13 @@ services:
     ports:
       - 5672
 
-  neo4j:
-    image: neo4j:3.0
-    volumes:
-      - "/opt/aleph/data/neo4j:/data"
-    ports:
-      - 7474
-      - 7687
+  # neo4j:
+  #   image: neo4j:3.0
+  #   volumes:
+  #     - "/opt/aleph/data/neo4j:/data"
+  #   ports:
+  #     - 7474
+  #     - 7687
 
   worker:
       build: .
@@ -52,7 +52,7 @@ services:
         POLYGLOT_DATA_PATH: /opt/aleph/data
         TESSDATA_PREFIX: /usr/share/tesseract-ocr
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-        ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
+        # ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
       env_file:
         - aleph.env
 
@@ -65,12 +65,13 @@ services:
       volumes:
         - "/opt/aleph/logs/beat:/var/log"
         - "/opt/aleph/run/beat:/var/run"
+        - "/opt/aleph/data:/opt/aleph/data"
       environment:
         C_FORCE_ROOT: 'true'
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-        ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
+        # ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
       env_file:
         - aleph.env
 
@@ -85,10 +86,11 @@ services:
         - neo4j
       volumes:
         - "/opt/aleph/logs/web:/var/log"
+        - "/opt/aleph/data:/opt/aleph/data"
       environment:
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-        ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
+        # ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
       env_file:
         - aleph.env
