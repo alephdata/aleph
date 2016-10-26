@@ -4,6 +4,7 @@ import subprocess
 from lxml import etree
 
 from aleph.core import get_config
+from aleph.text import string_value
 from aleph.util import make_tempdir, remove_tempdir
 from aleph.ingest.tesseract import extract_image_data
 from aleph.ingest.ingestor import IngestorException
@@ -58,7 +59,9 @@ def extract_pdf(path, languages=None):
             raise IngestorException("Could not parse PDF: %s" % path)
 
         with open(out_file, 'r') as fh:
-            doc = etree.parse(fh)
+            xml = string_value(fh.read())
+            xml = xml.replace('encoding="UTF-8"', '')
+            doc = etree.fromstring(xml)
 
         pages = []
         for page in doc.findall('./page'):

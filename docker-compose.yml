@@ -43,13 +43,14 @@ services:
         # - neo4j
       volumes:
         - "/:/host"
-        - "/opt/aleph/data:/opt/aleph/data"
+        - "/opt/aleph/archive:/data"
         - "/opt/aleph/logs/worker:/var/log"
+        - "/opt/aleph/polyglot:/polyglot"
       environment:
         C_FORCE_ROOT: 'true'
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-        POLYGLOT_DATA_PATH: /opt/aleph/data
+        POLYGLOT_DATA_PATH: /polyglot
         TESSDATA_PREFIX: /usr/share/tesseract-ocr
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
         # ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
@@ -65,12 +66,14 @@ services:
       volumes:
         - "/opt/aleph/logs/beat:/var/log"
         - "/opt/aleph/run/beat:/var/run"
-        - "/opt/aleph/data:/opt/aleph/data"
+        - "/opt/aleph/polyglot:/polyglot"
+        - "/opt/aleph/archive:/data"
       environment:
         C_FORCE_ROOT: 'true'
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+        POLYGLOT_DATA_PATH: /polyglot
         # ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
       env_file:
         - aleph.env
@@ -86,11 +89,13 @@ services:
         # - neo4j
       volumes:
         - "/opt/aleph/logs/web:/var/log"
-        - "/opt/aleph/data:/opt/aleph/data"
+        - "/opt/aleph/archive:/data"
+        - "/opt/aleph/polyglot:/polyglot"
       environment:
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+        POLYGLOT_DATA_PATH: /polyglot
         # ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
       env_file:
         - aleph.env
