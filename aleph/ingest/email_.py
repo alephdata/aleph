@@ -13,7 +13,7 @@ from aleph.ingest import ingest_file, IngestorException
 from aleph.ingest.text import TextIngestor
 from aleph.ingest.html import HtmlIngestor
 from aleph.ingest.document import DocumentIngestor
-from aleph.text import string_value
+from aleph.text import string_value, encoded_value
 from aleph.util import make_tempfile, make_tempdir, remove_tempfile
 from aleph.util import remove_tempdir
 
@@ -144,16 +144,19 @@ class OutlookIngestor(TextIngestor):
             log.debug('Converting Outlook PST file: %r', ' '.join(args))
             subprocess.call(args)
             for (dirpath, dirnames, filenames) in os.walk(work_dir):
-                dirpath = string_value(dirpath)
-                reldir = string_value(os.path.relpath(dirpath, work_dir))
+                reldir = os.path.relpath(encoded_value(dirpath),
+                                         encoded_value(work_dir))
                 for filename in filenames:
                     filename = string_value(filename)
                     child = meta.make_child()
                     for kw in reldir.split(os.path.sep):
                         child.add_keyword(kw)
-                    child.foreign_id = os.path.join(meta.foreign_id, reldir,
-                                                    filename)
-                    ingest_file(self.collection_id, meta,
-                                os.path.join(dirpath, filename), move=True)
+                    fid = os.path.join(encoded_value(meta.foreign_id),
+                                       encoded_value(reldir),
+                                       encoded_value(filename))
+                    child.foreign_id = string_value(fid)
+                    file_path = os.path.join(encoded_value(dirpath),
+                                             encoded_value(filename))
+                    ingest_file(self.collection_id, child, file_path, move=True)
         finally:
             remove_tempdir(work_dir)

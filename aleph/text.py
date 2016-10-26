@@ -93,6 +93,12 @@ def string_value(value):
     return value
 
 
+def encoded_value(text):
+    if isinstance(text, six.binary_type):
+        return text
+    return six.text_type(text).encode('utf-8')
+
+
 def has_value(value):
     """Check a given value is not empty."""
     if value is None:
