@@ -13,6 +13,7 @@ from aleph.ingest import ingest_file, IngestorException
 from aleph.ingest.text import TextIngestor
 from aleph.ingest.html import HtmlIngestor
 from aleph.ingest.document import DocumentIngestor
+from aleph.text import string_value
 from aleph.util import make_tempfile, make_tempdir, remove_tempfile
 from aleph.util import remove_tempdir
 
@@ -143,8 +144,10 @@ class OutlookIngestor(TextIngestor):
             log.debug('Converting Outlook PST file: %r', ' '.join(args))
             subprocess.call(args)
             for (dirpath, dirnames, filenames) in os.walk(work_dir):
-                reldir = os.path.relpath(dirpath, work_dir)
+                dirpath = string_value(dirpath)
+                reldir = string_value(os.path.relpath(dirpath, work_dir))
                 for filename in filenames:
+                    filename = string_value(filename)
                     child = meta.make_child()
                     for kw in reldir.split(os.path.sep):
                         child.add_keyword(kw)
