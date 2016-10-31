@@ -3,7 +3,6 @@ import logging
 from timeit import default_timer as timer
 from polyglot.downloader import downloader
 
-from aleph import graph
 from aleph.core import celery, db
 from aleph.ext import get_analyzers
 from aleph.model import Document
@@ -73,5 +72,3 @@ def analyze_document(document):
 
     # next: update the search index.
     index_document(document)
-    with graph.transaction() as tx:
-        graph.load_document(tx, document)

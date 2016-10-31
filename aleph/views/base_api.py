@@ -6,7 +6,6 @@ from jsonschema import ValidationError
 from elasticsearch import TransportError
 
 from aleph.core import get_config, get_app_title, get_app_url
-from aleph.graph import graph_metadata
 from aleph.metadata import Metadata
 from aleph.metadata.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.model.validation import resolver
@@ -76,7 +75,6 @@ def metadata():
             'url': get_app_url(),
             'samples': get_config('SAMPLE_SEARCHES')
         },
-        'graph': graph_metadata(),
         'fields': Metadata.facets(),
         'categories': get_config('COLLECTION_CATEGORIES', {}),
         'countries': COUNTRY_NAMES,

@@ -7,6 +7,7 @@ log = logging.getLogger(__name__)
 
 
 def notify_role(role, subject, html):
+    """Send an email to a user with a given address."""
     if role.email is None:
         log.info("Role %r not have email, skip notify.", role)
         return

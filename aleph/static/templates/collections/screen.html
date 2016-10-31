@@ -57,21 +57,6 @@
           <span class="badge">{{collection.entity_count | number}}</span>
         </a>
       </li>
-      <li role="presentation" ng-if="show_paths"
-          ng-class="{'active': section == 'analysis'}">
-        <a ng-href="/collections/{{::collection.id}}/analysis">
-          <i class="fa fa-map-signs" aria-hidden="true"></i>
-          Leads
-        </a>
-      </li>
-      <li role="presentation" ng-if="show_networks"
-          ng-class="{'active': section == 'networks'}">
-        <a ng-href="/collections/{{::collection.id}}/networks">
-          <i class="fa fa-map-o" aria-hidden="true"></i>
-          Network diagrams
-          <span class="badge">{{collection.network_count | number}}</span>
-        </a>
-      </li>
       <li role="presentation" ng-class="{'active': section == 'states'}"
           ng-if="::show_states">
         <a ng-href="/collections/{{::collection.id}}/states">
