@@ -20,7 +20,8 @@ class ImageIngestor(TextIngestor):
     MIME_TYPES = ['image/png', 'image/tiff', 'image/x-tiff',
                   'image/jpeg', 'image/bmp', 'image/x-windows-bmp',
                   'image/x-portable-bitmap', 'application/postscript',
-                  'image/vnd.dxf', 'image/svg+xml']
+                  'image/vnd.dxf', 'image/svg+xml',
+                  'image/x-portable-graymap']
     EXTENSIONS = ['gif', 'png', 'jpg', 'jpeg', 'tif', 'tiff', 'bmp',
                   'jpe', 'pbm']
     BASE_SCORE = 5
