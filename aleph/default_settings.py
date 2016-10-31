@@ -56,40 +56,8 @@ COLLECTION_CATEGORIES = {
     'grey': 'Grey literature'
 }
 
-# Some styling info for the visual graph editor.
-# DEFAULT_GRAPH_ICON = '\uf0c8'  # http://fontawesome.io/icon/square/
-GRAPH_ICONS = {
-    '/entity/entity.json#': u'\uf0c8',
-    '/entity/legal_entity.json#': u'\uf0c8',
-    '/entity/person.json#': u'\uf007',
-    '/entity/company.json#': u'\uf1ad',
-    '/entity/organization.json#': u'\uf19c',
-    # http://fontawesome.io/icon/file-text/
-    'Document': u'\uf15c',
-    # http://fontawesome.io/icon/envelope/
-    'Email': u'\uf0e0',
-    # http://fontawesome.io/icon/phone/
-    'Phone': u'\uf095',
-    # http://fontawesome.io/icon/map-marker/
-    'Address': u'\uf041',
-}
-
-# DEFAULT_GRAPH_COLOR = '#777777'
-GRAPH_COLORS = {
-    '/entity/entity.json#': '#f57153',
-    '/entity/legal_entity.json#': '#f57153',
-    '/entity/person.json#': '#fed149',
-    '/entity/company.json#': '#f57153',
-    '/entity/organization.json#': '#f57153',
-    'Document': '#3b6b9a',
-    'Email': '#4890d9',
-    'Phone': '#4890d9',
-    'Address': '#4890d9',
-}
-
 # Binary paths for programs to which the ingestor shells out:
 TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')
-PDFTOPPM_BIN = env.get('PDFTOPPM_BIN', 'pdftoppm')
 PDFTOHTML_BIN = env.get('PDFTOHTML_BIN', 'pdftohtml')
 CONVERT_BIN = env.get('CONVERT_BIN', 'convert')
 SOFFICE_BIN = env.get('SOFFICE_BIN', 'soffice')
@@ -106,6 +74,8 @@ TIKA_URI = env.get('TIKA_URI')
 
 # Enable the Aho Corasick based entity string matcher:
 REGEX_ENTITIES = True
+
+# Disable all crawlers (temporarily?)
 DISABLE_CRAWLERS = False
 
 SECRET_KEY = env.get('SECRET_KEY')
@@ -131,7 +101,9 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_IGNORE_RESULT = True
 CELERY_RESULT_BACKEND = 'amqp'
 CELERY_RESULT_PERSISTENT = False
-CELERY_ACKS_LATE = True
+# CELERY_ACKS_LATE = True
+# ultra-high time limit to shoot hung tasks:
+CELERYD_TASK_TIME_LIMIT = 3600 * 3
 CELERY_BROKER_URL = env.get('RABBITMQ_BIGWIG_URL',
                             'amqp://guest:guest@localhost:5672//')
 CELERY_IMPORTS = ('aleph.queue')
