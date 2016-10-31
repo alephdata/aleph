@@ -50,18 +50,20 @@ def extract_pdf(path, languages=None):
     temp_dir = make_tempdir()
     try:
         out_file = os.path.join(temp_dir, 'pdf.xml')
+        log.info("Converting PDF to XML: %r...", path)
         pdftohtml = get_config('PDFTOHTML_BIN')
         args = [pdftohtml, '-xml', '-hidden', '-q', '-c', '-nodrm',
                 path, out_file]
         subprocess.call(args)
 
         if not os.path.exists(out_file):
-            raise IngestorException("Could not parse PDF: %s" % path)
+            raise IngestorException("Could not convert PDF to XML: %s" % path)
 
         with open(out_file, 'r') as fh:
             xml = string_value(fh.read())
             xml = xml.replace('encoding="UTF-8"', '')
             doc = etree.fromstring(xml)
+            log.debug("Parsed XML: %r", path)
 
         pages = []
         for page in doc.findall('./page'):
