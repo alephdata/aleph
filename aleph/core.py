@@ -10,7 +10,6 @@ from flask_migrate import Migrate
 from flask_mail import Mail
 from kombu import Queue
 from celery import Celery
-from py2neo import Graph
 from elasticsearch import Elasticsearch
 
 from aleph import default_settings, archive
@@ -127,21 +126,6 @@ def get_archive():
     if not hasattr(app, '_aleph_archive'):
         app._aleph_archive = archive.from_config(app.config)
     return app._aleph_archive
-
-
-def get_graph():
-    app = current_app._get_current_object()
-    if not hasattr(app, '_neo4j_instance'):
-        uri = get_config('NEO4J_URI')
-        if uri is None:
-            return None
-        try:
-            app._neo4j_instance = Graph(uri)
-            log.info("Connected to graph: %s", app._neo4j_instance)
-        except Exception as ex:
-            log.info("Could not connect to graph: %r", ex)
-            return None
-    return app._neo4j_instance
 
 
 def get_upload_folder():
