@@ -39,15 +39,12 @@ class EmailFileIngestor(TextIngestor):
             ext = ext.strip().lower()
         body = part.body
         if body is None:
+            log.debug("Empty attachment [%r]: %s", meta, part)
             return
         out_path = self.write_temp(body, ext)
         child = meta.make_child()
         child.file_name = part.detected_file_name
         child.mime_type = part.detected_content_type
-
-        # Weird outlook RTF representations -- do we want them?
-        if child.file_name == 'rtf-body.rtf':
-            return
 
         ingest_file(self.collection_id, child, out_path, move=True)
         remove_tempfile(out_path)
@@ -140,7 +137,7 @@ class OutlookIngestor(TextIngestor):
         work_dir = make_tempdir()
         try:
             bin_path = os.environ.get('READPST_BIN', 'readpst')
-            args = [bin_path, '-D', '-e', '-o', work_dir, local_path]
+            args = [bin_path, '-D', '-e', '-8', '-b', '-o', work_dir, local_path]
             log.debug('Converting Outlook PST file: %r', ' '.join(args))
             subprocess.call(args)
             for (dirpath, dirnames, filenames) in os.walk(work_dir):

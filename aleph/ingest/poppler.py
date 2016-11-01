@@ -52,8 +52,7 @@ def extract_pdf(path, languages=None):
         out_file = os.path.join(temp_dir, 'pdf.xml')
         log.info("Converting PDF to XML: %r...", path)
         pdftohtml = get_config('PDFTOHTML_BIN')
-        args = [pdftohtml, '-xml', '-hidden', '-q', '-c', '-nodrm',
-                path, out_file]
+        args = [pdftohtml, '-xml', '-hidden', '-q', '-nodrm', path, out_file]
         subprocess.call(args)
 
         if not os.path.exists(out_file):
