@@ -34,10 +34,10 @@
         </span>
       </td>
     </tr>
-    <tr ng-if="::doc.dates && doc.dates.length == 1">
+    <tr ng-if="::doc.publication_date ">
       <th>Date</th>
       <td>
-       {{::doc.dates[0] | date}}
+       {{::doc.publication_date | date}}
       </td>
     </tr>
     <tr ng-if="::doc.languages && doc.languages.length">

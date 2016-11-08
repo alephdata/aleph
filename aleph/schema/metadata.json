@@ -37,6 +37,10 @@
         "source_path": {
             "type": "string"
         },
+        "publication_date": {
+          "type": "string",
+          "format": "date"
+        },
         "dates": {
             "type": "array",
             "items": {
