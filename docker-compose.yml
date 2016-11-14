@@ -1,6 +1,12 @@
 version: "2"
 
 services:
+  resolvable:
+    image: mgood/resolvable
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock"
+      - "/etc/resolv.conf:/tmp/resolv.conf"
+
   postgres:
     image: postgres:9.4
     volumes:
