@@ -14,7 +14,7 @@ COUNTRY_NAMES = {
 }
 
 for country in countries:
-    COUNTRY_NAMES[country.alpha2.lower()] = country.name
+    COUNTRY_NAMES[country.alpha_2.lower()] = country.name
 
 
 def get_language_whitelist():
