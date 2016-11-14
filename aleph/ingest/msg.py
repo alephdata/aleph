@@ -1,8 +1,8 @@
-import logging
+import six
 import rfc822
+import logging
 from time import mktime
 from datetime import datetime
-import chardet
 
 from ExtractMsg import Message
 from olefile import isOleFile
@@ -11,6 +11,7 @@ from flanker.addresslib import address
 from aleph.ingest import ingest_file
 from aleph.ingest.text import TextIngestor
 from aleph.ingest.document import DocumentIngestor
+from aleph.text import string_value
 from aleph.util import make_tempfile, remove_tempfile
 
 log = logging.getLogger(__name__)
@@ -31,7 +32,7 @@ class OutlookMsgIngestor(TextIngestor):
             with open(out_path, 'w') as fh:
                 fh.write(attachment.data)
             child = meta.make_child()
-            child.file_name = attachment.longFilename
+            child.file_name = string_value(attachment.longFilename)
             ingest_file(self.collection_id, child, out_path, move=True)
             remove_tempfile(out_path)
         except Exception as ex:
@@ -41,7 +42,7 @@ class OutlookMsgIngestor(TextIngestor):
         meta.title = header.get('Subject')
 
         if header.get('Message-Id'):
-            meta.foreign_id = unicode(header.get('Message-Id'))
+            meta.foreign_id = string_value(header.get('Message-Id'))
 
         if header.get('From'):
             addr = address.parse(header.get('From'))
@@ -60,7 +61,7 @@ class OutlookMsgIngestor(TextIngestor):
             dt = datetime.fromtimestamp(mktime(date))
             meta.add_date(dt)
 
-        meta.headers = dict([(k, unicode(v)) for k, v in
+        meta.headers = dict([(k, string_value(v)) for k, v in
                              header.items()])
         return meta
 
@@ -75,16 +76,8 @@ class OutlookMsgIngestor(TextIngestor):
         if message.body is not None:
             out_path = make_tempfile(suffix='txt')
             with open(out_path, 'w') as fh:
-                body = message.body
                 # TODO: figure out if this is really IMAP UTF-7
-                if not isinstance(body, unicode):
-                    enc = chardet.detect(message.body).get('encoding')
-                    if enc is None:
-                        body = body.decode('utf-8', 'replace')
-                        log.warning("Cannot detect encoding of MSG: %r", meta)
-                    else:
-                        body = body.decode(enc, 'replace')
-
+                body = string_value(message.body)
                 fh.write(body.encode('utf-8'))
             ing = DocumentIngestor(self.collection_id)
             ing.ingest(meta, out_path)

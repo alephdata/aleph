@@ -1,4 +1,5 @@
 import os
+import six
 import logging
 import rfc822
 import mailbox
@@ -13,7 +14,7 @@ from aleph.ingest import ingest_file, IngestorException
 from aleph.ingest.text import TextIngestor
 from aleph.ingest.html import HtmlIngestor
 from aleph.ingest.document import DocumentIngestor
-from aleph.text import string_value, encoded_value
+from aleph.text import string_value
 from aleph.util import make_tempfile, make_tempdir, remove_tempfile
 from aleph.util import remove_tempdir
 
@@ -43,8 +44,8 @@ class EmailFileIngestor(TextIngestor):
             return
         out_path = self.write_temp(body, ext)
         child = meta.make_child()
-        child.file_name = part.detected_file_name
-        child.mime_type = part.detected_content_type
+        child.file_name = string_value(part.detected_file_name)
+        child.mime_type = string_value(part.detected_content_type)
 
         ingest_file(self.collection_id, child, out_path, move=True)
         remove_tempfile(out_path)
@@ -85,7 +86,7 @@ class EmailFileIngestor(TextIngestor):
         meta = self.parse_headers(msg, meta)
 
         body_type = 'text/plain'
-        body_part = msg.body
+        body_part = string_value(msg.body)
 
         for part in msg.walk():
             if not part.is_body():
@@ -95,18 +96,18 @@ class EmailFileIngestor(TextIngestor):
             body = part.body
             if 'html' not in body_type and \
                     body is not None and len(body.strip()):
-                body_type = unicode(part.detected_content_type)
-                body_part = body
+                body_type = six.text_type(part.detected_content_type)
+                body_part = string_value(body)
 
         out_path = ''
         if body_part is None:
             raise IngestorException("No body in E-Mail: %r" % meta)
         try:
             if 'html' in body_type:
-                out_path = self.write_temp(body_part, 'htm')
+                out_path = self.write_temp(body_part.encode('utf-8'), 'htm')
                 ing = HtmlIngestor(self.collection_id)
             else:
-                out_path = self.write_temp(body_part, 'txt')
+                out_path = self.write_temp(body_part.encode('utf-8'), 'txt')
                 ing = DocumentIngestor(self.collection_id)
             ing.ingest(meta, out_path)
         finally:
@@ -141,19 +142,17 @@ class OutlookIngestor(TextIngestor):
             log.debug('Converting Outlook PST file: %r', ' '.join(args))
             subprocess.call(args)
             for (dirpath, dirnames, filenames) in os.walk(work_dir):
-                reldir = os.path.relpath(encoded_value(dirpath),
-                                         encoded_value(work_dir))
+                reldir = os.path.relpath(string_value(dirpath),
+                                         string_value(work_dir))
                 for filename in filenames:
                     filename = string_value(filename)
                     child = meta.make_child()
                     for kw in reldir.split(os.path.sep):
                         child.add_keyword(kw)
-                    fid = os.path.join(encoded_value(meta.foreign_id),
-                                       encoded_value(reldir),
-                                       encoded_value(filename))
+                    fid = os.path.join(string_value(meta.foreign_id),
+                                       string_value(reldir), filename)
                     child.foreign_id = string_value(fid)
-                    file_path = os.path.join(encoded_value(dirpath),
-                                             encoded_value(filename))
+                    file_path = os.path.join(string_value(dirpath), filename)
                     ingest_file(self.collection_id, child, file_path, move=True)
         finally:
             remove_tempdir(work_dir)

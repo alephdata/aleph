@@ -8,6 +8,7 @@ from aleph.text import string_value
 from aleph.ext import get_ingestors
 from aleph.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor, IngestorException
+from aleph.text import string_value
 from aleph.util import make_tempfile, remove_tempfile
 
 log = logging.getLogger(__name__)
@@ -52,12 +53,14 @@ def ingest_url(self, collection_id, metadata, url):
 def ingest_directory(collection_id, meta, local_path, base_path=None,
                      move=False):
     """Ingest all the files in a directory."""
+    local_path = string_value(local_path)
+
     # This is somewhat hacky, see issue #55 for the rationale.
     if not os.path.exists(local_path):
         log.error("Invalid path: %r", local_path)
         return
 
-    base_path = base_path or local_path
+    base_path = string_value(base_path) or local_path
     if not os.path.isdir(local_path):
         child = meta.make_child()
         child.source_path = base_path
@@ -87,8 +90,9 @@ def ingest_directory(collection_id, meta, local_path, base_path=None,
 
 def ingest_file(collection_id, meta, file_path, move=False,
                 queue=WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY):
-    # the queue and routing key arguments are a workaround to 
+    # the queue and routing key arguments are a workaround to
     # expedite user uploads over long-running batch imports.
+    file_path = string_value(file_path)
     try:
         if not os.path.isfile(file_path):
             raise IngestorException("No such file: %r", file_path)

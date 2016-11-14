@@ -15,11 +15,11 @@ CONVERT_TIMEOUT = 5 * 60
 
 class DocumentIngestor(TextIngestor):
     MIME_TYPES = ['application/msword', 'application/rtf', 'application/x-rtf',
-                  'application/vnd.oasis.opendocument.text',
+                  'application/vnd.oasis.opendocument.text', 'text/plain',
                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # noqa
                   'text/richtext', 'application/wordperfect', 'application/vnd.wordperfect']  # noqa
     EXTENSIONS = ['doc', 'docx', 'rtf', 'odt', 'sxw', 'dot', 'docm', 'hqx',
-                  'pdb', 'wpd']
+                  'pdb', 'wpd', 'txt']
     BASE_SCORE = 5
 
     def generate_pdf_alternative(self, meta, local_path):

@@ -1,6 +1,7 @@
 # coding: utf-8
 import os
 import gc
+import six
 import json
 import shutil
 import logging
@@ -13,7 +14,7 @@ from normality import slugify
 from aleph.text import string_value
 
 log = logging.getLogger(__name__)
-TMP_PREFIX = 'aleph.tmp.'
+TMP_PREFIX = six.text_type('aleph.tmp.')
 
 
 def checksum(filename):
@@ -30,11 +31,12 @@ def checksum(filename):
 
 def make_filename(file_name, sep='-'):
     if file_name is not None:
-        file_name = os.path.basename(file_name)
+        file_name = os.path.basename(six.text_type(file_name))
         slugs = [slugify(s, sep=sep) for s in file_name.rsplit('.', 1)]
         slugs = [s[:200] for s in slugs if s is not None]
         file_name = '.'.join(slugs)
         file_name = file_name.strip('.').strip(sep)
+        file_name = six.text_type(file_name)
         if not len(file_name.strip()):
             file_name = None
     return file_name

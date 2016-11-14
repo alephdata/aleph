@@ -1,39 +1,16 @@
 # coding: utf-8
 import re
 import six
-import chardet
 import logging
 from decimal import Decimal
+from normality import guess_encoding, collapse_spaces
+from normality import latinize_text, category_replace
 from unicodedata import category
-import unicodedata
 from datetime import datetime, date
-from unidecode import unidecode
 
 log = logging.getLogger(__name__)
 COLLAPSE = re.compile(r'\s+')
 WS = ' '
-
-# Unicode character classes, see:
-# http://www.fileformat.info/info/unicode/category/index.htm
-CATEGORIES = {
-    'C': None,
-    'M': None,
-    'Z': WS,
-    'P': '',
-    'S': WS
-}
-
-
-def latinize_text(text, lowercase=True):
-    """Transliterate a piece of text to the latin alphabet."""
-    # TODO: explore more versions of russian transliteration
-    # TODO: should this return an array of possible outcomes?
-    if not isinstance(text, six.text_type):
-        return text
-    if lowercase:
-        text = text.lower()
-    text = text.replace(u'ə', 'a')
-    return unicode(unidecode(text))
 
 
 def normalize_strong(text):
@@ -43,26 +20,12 @@ def normalize_strong(text):
     string, but rather to yield a normalised version suitable for comparisons
     and machine analysis.
     """
-    if not isinstance(text, six.string_types):
-        return
-
-    if six.PY2 and not isinstance(text, six.text_type):
-        text = text.decode('utf-8')
-
-    text = latinize_text(text.lower())
-    text = unicodedata.normalize('NFKD', text)
-    characters = []
-    for character in text:
-        category = unicodedata.category(character)[0]
-        character = CATEGORIES.get(category, character)
-        if character is None:
-            continue
-        characters.append(character)
-    text = u''.join(characters)
-    return COLLAPSE.sub(WS, text).strip(WS)
+    text = latinize_text(string_value(text))
+    text = category_replace(text.lower())
+    return collapse_spaces(text)
 
 
-def string_value(value):
+def string_value(value, encoding_default='utf-8', encoding=None):
     """Brute-force convert a given object to a string.
 
     This will attempt an increasingly mean set of conversions to make a given
@@ -71,26 +34,25 @@ def string_value(value):
     """
     if value is None:
         return
+
     if isinstance(value, (date, datetime)):
         return value.isoformat()
-    elif isinstance(value, (float, int, Decimal)):
+
+    if isinstance(value, (float, Decimal)):
         return Decimal(value).to_eng_string()
-    elif isinstance(value, six.string_types):
+
+    if isinstance(value, six.string_types):
         if not isinstance(value, six.text_type):
-            enc = chardet.detect(value)
-            if enc is not None:
-                enc = enc.get('encoding')
-            if enc is None:
-                enc = 'utf-8'
-            value = value.decode(enc, 'replace')
+            if encoding is None:
+                encoding = guess_encoding(encoding_default)
+            value = value.decode(encoding, 'replace')
         value = ''.join(ch for ch in value if category(ch)[0] != 'C')
         value = value.replace(u'\xfe\xff', '')  # remove BOM
         if not len(value.strip()):
             return
         return value
-    else:
-        value = unicode(value)
-    return value
+
+    return six.text_type(value)
 
 
 def encoded_value(text):
