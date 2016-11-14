@@ -4,8 +4,8 @@ services:
   postgres:
     image: postgres:9.4
     volumes:
-      - "/opt/aleph/data/postgres:/var/lib/postgresql/data"
-      - "/opt/aleph/logs/postgres:/var/log"
+      - "${PWD}/build/data/postgres:/var/lib/postgresql/data"
+      - "${PWD}/build/logs/postgres:/var/log"
     environment:
       POSTGRES_USER:     aleph
       POSTGRES_PASSWORD: aleph
@@ -16,8 +16,8 @@ services:
   elasticsearch:
     image: elasticsearch:2.2.0
     volumes:
-      - "/opt/aleph/data/elasticsearch:/usr/share/elasticsearch/data"
-      - "/opt/aleph/logs/elasticsearch:/var/log"
+      - "${PWD}/build/data/elasticsearch:/usr/share/elasticsearch/data"
+      - "${PWD}/build/logs/elasticsearch:/var/log"
     ports:
       - "127.0.0.1:9201:9209"
 
@@ -29,7 +29,7 @@ services:
   # neo4j:
   #   image: neo4j:3.0
   #   volumes:
-  #     - "/opt/aleph/data/neo4j:/data"
+  #     - "${PWD}/build/data/neo4j:/data"
   #   ports:
   #     - 7474
   #     - 7687
@@ -43,9 +43,9 @@ services:
         # - neo4j
       volumes:
         - "/:/host"
-        - "/opt/aleph/archive:/data"
-        - "/opt/aleph/logs/worker:/var/log"
-        - "/opt/aleph/polyglot:/polyglot"
+        - "${PWD}/build/archive:/data"
+        - "${PWD}/build/logs/worker:/var/log"
+        - "${PWD}/build/polyglot:/polyglot"
       environment:
         C_FORCE_ROOT: 'true'
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
@@ -64,10 +64,10 @@ services:
         - postgres
         - elasticsearch
       volumes:
-        - "/opt/aleph/logs/beat:/var/log"
-        - "/opt/aleph/run/beat:/var/run"
-        - "/opt/aleph/polyglot:/polyglot"
-        - "/opt/aleph/archive:/data"
+        - "${PWD}/build/logs/beat:/var/log"
+        - "${PWD}/build/run/beat:/var/run"
+        - "${PWD}/build/polyglot:/polyglot"
+        - "${PWD}/build/archive:/data"
       environment:
         C_FORCE_ROOT: 'true'
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
@@ -88,9 +88,10 @@ services:
         - elasticsearch
         # - neo4j
       volumes:
-        - "/opt/aleph/logs/web:/var/log"
-        - "/opt/aleph/archive:/data"
-        - "/opt/aleph/polyglot:/polyglot"
+        - "${PWD}/build/logs/web:/var/log"
+        - "${PWD}/build/archive:/data"
+        - "${PWD}/build/polyglot:/polyglot"
+        - "${PWD}/aleph:/aleph"
       environment:
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
