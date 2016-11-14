@@ -34,6 +34,13 @@ class EmailFileIngestor(TextIngestor):
             fh.write(body)
         return out_path
 
+    def write_text(self, body, suffix=None):
+        body = string_value(body)
+        if body is None:
+            body = ''
+        body = body.encode('utf-8')
+        return self.write_temp(body, suffix=suffix)
+
     def ingest_attachment(self, part, meta):
         name, ext = os.path.splitext(part.detected_file_name)
         if len(ext):
@@ -84,32 +91,22 @@ class EmailFileIngestor(TextIngestor):
     def ingest_message_data(self, meta, data):
         msg = mime.from_string(data)
         meta = self.parse_headers(msg, meta)
-
-        body_type = 'text/plain'
-        body_part = string_value(msg.body)
+        bodies = {'text/plain': msg.body}
 
         for part in msg.walk():
-            if not part.is_body():
-                self.ingest_attachment(part, meta)
-                continue
-
-            body = part.body
-            if 'html' not in body_type and \
-                    body is not None and len(body.strip()):
-                body_type = six.text_type(part.detected_content_type)
-                body_part = string_value(body)
-
-        out_path = ''
-        if body_part is None:
-            raise IngestorException("No body in E-Mail: %r" % meta)
-        try:
-            if 'html' in body_type:
-                out_path = self.write_temp(body_part.encode('utf-8'), 'htm')
-                ing = HtmlIngestor(self.collection_id)
+            if part.is_body():
+                content_type = six.text_type(part.content_type)
+                bodies[content_type] = part.body
             else:
-                out_path = self.write_temp(body_part.encode('utf-8'), 'txt')
-                ing = DocumentIngestor(self.collection_id)
-            ing.ingest(meta, out_path)
+                self.ingest_attachment(part, meta)
+
+        try:
+            if 'text/html' in bodies:
+                out_path = self.write_text(bodies['text/html'], 'htm')
+                HtmlIngestor(self.collection_id).ingest(meta, out_path)
+            elif 'text/plain' in bodies:
+                out_path = self.write_text(bodies['text/plain'], 'txt')
+                DocumentIngestor(self.collection_id).ingest(meta, out_path)
         finally:
             remove_tempfile(out_path)
 

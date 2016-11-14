@@ -1,12 +1,14 @@
 import os
-import logging
+import six
 import shutil
+import logging
 import subprocess32 as subprocess
 from tempfile import mkdtemp
 
 from aleph.core import get_config
 from aleph.ingest.ingestor import IngestorException
 from aleph.ingest.text import TextIngestor
+from aleph.text import string_value
 
 log = logging.getLogger(__name__)
 
@@ -24,15 +26,15 @@ class DocumentIngestor(TextIngestor):
 
     def generate_pdf_alternative(self, meta, local_path):
         """Convert LibreOffice-supported documents to PDF."""
-        work_dir = mkdtemp()
-        instance_dir = mkdtemp()
+        work_dir = six.text_type(mkdtemp())
+        instance_dir = six.text_type(mkdtemp())
         try:
             soffice = get_config('SOFFICE_BIN')
-            instance_path = '"-env:UserInstallation=file://%s"' % instance_dir
+            instance_path = u'"-env:UserInstallation=file://%s"' % instance_dir
             args = [soffice, '--convert-to', 'pdf', '--nofirststartwizard',
                     instance_path, '--norestore', '--nologo', '--nodefault',
                     '--nolockcheck', '--invisible', '--outdir', work_dir,
-                    '--headless', local_path]
+                    '--headless', string_value(local_path)]
             log.debug('Converting document: %r', ' '.join(args))
             subprocess.call(args, timeout=CONVERT_TIMEOUT)
             for out_file in os.listdir(work_dir):
