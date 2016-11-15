@@ -258,8 +258,10 @@ class Metadata(object):
         if extension is None and self.file_name:
             _, extension = os.path.splitext(self.file_name)
 
-        if isinstance(extension, six.string_types):
-            extension = extension.lower().strip().strip('.')
+        if extension is None or not len(extension):
+            return None
+
+        extension = six.text_type(extension).lower().strip().strip('.')
         return extension
 
     @extension.setter

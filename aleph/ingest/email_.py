@@ -27,6 +27,8 @@ class EmailFileIngestor(TextIngestor):
     BASE_SCORE = 6
 
     def write_temp(self, body, suffix=None):
+        if suffix is not None and not suffix.startswith('.'):
+            suffix = '.' + suffix
         out_path = make_tempfile(suffix=suffix)
         with open(out_path, 'w') as fh:
             if isinstance(body, unicode):
@@ -41,18 +43,14 @@ class EmailFileIngestor(TextIngestor):
         return self.write_temp(body, suffix=suffix)
 
     def ingest_attachment(self, part, meta):
-        file_name = string_value(part.detected_file_name)
-        name, ext = os.path.splitext(file_name)
-        if len(ext):
-            ext = ext.strip().lower()
-        body = part.body
-        if body is None:
-            log.debug("Empty attachment [%r]: %s", meta, part)
+        if part.body is None:
+            log.warning("Empty attachment [%r]: %s", meta, part)
             return
-        out_path = self.write_temp(body, ext)
+
         child = meta.make_child()
-        child.file_name = six.text_type(file_name)
         child.mime_type = six.text_type(part.detected_content_type)
+        child.file_name = string_value(part.detected_file_name)
+        out_path = self.write_temp(part.body, child.extension)
 
         try:
             ingest_file(self.collection_id, child, out_path, move=True)

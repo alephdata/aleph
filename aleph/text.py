@@ -39,7 +39,7 @@ def string_value(value, encoding_default='utf-8', encoding=None):
     None, if all conversions failed (or the value is indeed empty).
     """
     if value is None:
-        return
+        return None
 
     if isinstance(value, (date, datetime)):
         return value.isoformat()
@@ -54,11 +54,12 @@ def string_value(value, encoding_default='utf-8', encoding=None):
             value = value.decode(encoding, 'replace')
         value = ''.join(ch for ch in value if category(ch)[0] != 'C')
         value = value.replace(u'\xfe\xff', '')  # remove BOM
-        if not len(value.strip()):
-            return
-        return value
+    else:
+        value = six.text_type(value)
 
-    return six.text_type(value)
+    if not len(value.strip()):
+        return None
+    return value
 
 
 def encoded_value(text):
