@@ -5,12 +5,18 @@ import logging
 from decimal import Decimal
 from normality import guess_encoding, collapse_spaces
 from normality import latinize_text, category_replace
+from normality import slugify as _slugify
 from unicodedata import category
 from datetime import datetime, date
 
 log = logging.getLogger(__name__)
 COLLAPSE = re.compile(r'\s+')
 WS = ' '
+
+
+def slugify(text, sep='-'):
+    text = latinize_text(text)
+    return _slugify(text, sep=sep)
 
 
 def normalize_strong(text):

@@ -10,7 +10,7 @@ from datetime import datetime
 from flanker import mime
 from flanker.addresslib import address
 
-from aleph.ingest import ingest_file, IngestorException
+from aleph.ingest import ingest_file
 from aleph.ingest.text import TextIngestor
 from aleph.ingest.html import HtmlIngestor
 from aleph.ingest.document import DocumentIngestor
@@ -37,12 +37,12 @@ class EmailFileIngestor(TextIngestor):
     def write_text(self, body, suffix=None):
         body = string_value(body)
         if body is None:
-            body = ''
-        body = body.encode('utf-8')
+            body = u''
         return self.write_temp(body, suffix=suffix)
 
     def ingest_attachment(self, part, meta):
-        name, ext = os.path.splitext(part.detected_file_name)
+        file_name = string_value(part.detected_file_name)
+        name, ext = os.path.splitext(file_name)
         if len(ext):
             ext = ext.strip().lower()
         body = part.body
@@ -51,11 +51,13 @@ class EmailFileIngestor(TextIngestor):
             return
         out_path = self.write_temp(body, ext)
         child = meta.make_child()
-        child.file_name = string_value(part.detected_file_name)
-        child.mime_type = string_value(part.detected_content_type)
+        child.file_name = six.text_type(file_name)
+        child.mime_type = six.text_type(part.detected_content_type)
 
-        ingest_file(self.collection_id, child, out_path, move=True)
-        remove_tempfile(out_path)
+        try:
+            ingest_file(self.collection_id, child, out_path, move=True)
+        finally:
+            remove_tempfile(out_path)
 
     def parse_headers(self, msg, meta):
         meta.title = msg.subject
@@ -135,7 +137,8 @@ class OutlookIngestor(TextIngestor):
         work_dir = make_tempdir()
         try:
             bin_path = os.environ.get('READPST_BIN', 'readpst')
-            args = [bin_path, '-D', '-e', '-8', '-b', '-o', work_dir, local_path]
+            args = [bin_path, '-D', '-e', '-8', '-b', '-o',
+                    work_dir, local_path]
             log.debug('Converting Outlook PST file: %r', ' '.join(args))
             subprocess.call(args)
             for (dirpath, dirnames, filenames) in os.walk(work_dir):

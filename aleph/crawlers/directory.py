@@ -1,9 +1,8 @@
 import os
 import logging
-from normality import slugify
 
 from aleph.core import db
-from aleph.text import string_value
+from aleph.text import string_value, slugify
 from aleph.model import Collection
 from aleph.ingest import ingest_directory
 from aleph.crawlers.crawler import Crawler

@@ -5,8 +5,8 @@ import mimetypes
 from collections import Mapping
 from flanker.addresslib import address
 from urlparse import urlparse
-from normality import slugify
 
+from aleph.text import slugify
 from aleph.util import make_filename
 from aleph.metadata.tabular import Tabular
 from aleph.metadata.parsers import chomp, parse_date

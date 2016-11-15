@@ -6,12 +6,11 @@ import json
 import shutil
 import logging
 from os import path
-from tempfile import mkdtemp
 from hashlib import sha1
+from tempfile import mkdtemp
 from apikit.jsonify import JSONEncoder
-from normality import slugify
 
-from aleph.text import string_value
+from aleph.text import string_value, slugify
 
 log = logging.getLogger(__name__)
 TMP_PREFIX = six.text_type('aleph.tmp.')
