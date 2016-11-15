@@ -2,6 +2,7 @@
 import logging
 
 from flask_script import Manager
+from flask_script.commands import ShowUrls
 from flask_assets import ManageAssets
 from flask_migrate import MigrateCommand
 
@@ -26,6 +27,7 @@ mount_app_blueprints(app)
 manager = Manager(app)
 manager.add_command('assets', ManageAssets(assets))
 manager.add_command('db', MigrateCommand)
+manager.add_command('routes', ShowUrls)
 
 
 @manager.command
