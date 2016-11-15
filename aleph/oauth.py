@@ -13,6 +13,9 @@ def get_oauth_token():
 
 
 def setup_providers(app):
+    # Reset the remote apps first!
+    oauth.remote_apps = {}
+
     providers = app.config.get('OAUTH', [])
     if isinstance(providers, dict):
         # support for legacy single google provider
