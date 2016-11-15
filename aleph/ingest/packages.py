@@ -34,11 +34,12 @@ class PackageIngestor(Ingestor):
 
         detector.close()
         encoding = detector.result.get('encoding', 'utf-8')
+        log.info('Detected filename encoding: %s', encoding)
 
         for name in pack.namelist():
             file_name = name
             if isinstance(name, six.binary_type):
-                file_name = name.decode(encoding)
+                file_name = name.decode(encoding, 'ignore')
 
             out_path = os.path.join(temp_dir, file_name)
             if os.path.exists(out_path) or not out_path.startswith(temp_dir):
