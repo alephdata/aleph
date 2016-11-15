@@ -27,6 +27,8 @@ def normalize_strong(text):
     and machine analysis.
     """
     text = latinize_text(string_value(text))
+    if text is None:
+        return
     text = category_replace(text.lower())
     return collapse_spaces(text)
 

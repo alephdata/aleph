@@ -54,5 +54,4 @@ def collection_crawlerstates(id):
         q = q.filter(CrawlerState.crawler_run == crawler_run)
 
     q = q.order_by(CrawlerState.created_at.desc())
-    print q
     return jsonify(Pager(q, id=id))

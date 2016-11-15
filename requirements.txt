@@ -43,13 +43,13 @@ Babel==2.3.4
 pyDBF==0.1
 fingerprints
 pycountry>=1.18
-chardet==2.3.0
 rarfile==2.7
 xlrd==0.9.3
 flanker==0.3.4
 jsonschema
 PyYAML==3.11
 PyICU
+chardet
 cchardet
 dateparser==0.3.1
 jdatetime==1.7.2

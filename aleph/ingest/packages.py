@@ -1,4 +1,5 @@
 import os
+import six
 import logging
 import shutil
 import gzip
@@ -7,6 +8,7 @@ import rarfile
 import zipfile
 import tarfile
 import subprocess
+from chardet.universaldetector import UniversalDetector
 
 from aleph.core import get_config
 from aleph.ingest import ingest_directory
@@ -23,12 +25,29 @@ class PackageIngestor(Ingestor):
         # Some archives come with non-Unicode file names, this
         # attempts to avoid that issue by naming the destination
         # explicitly.
+        detector = UniversalDetector()
         for name in pack.namelist():
-            out_path = os.path.join(temp_dir, string_value(name))
+            if isinstance(name, six.binary_type):
+                detector.feed(name)
+            if detector.done:
+                break
+
+        detector.close()
+        encoding = detector.result.get('encoding', 'utf-8')
+
+        for name in pack.namelist():
+            file_name = name
+            if isinstance(name, six.binary_type):
+                file_name = name.decode(encoding)
+
+            out_path = os.path.join(temp_dir, file_name)
             if os.path.exists(out_path) or not out_path.startswith(temp_dir):
                 continue
-            if not os.path.exists(os.path.dirname(out_path)):
-                os.makedirs(os.path.dirname(out_path))
+
+            out_dir = os.path.dirname(out_path)
+            if not os.path.exists(out_dir):
+                os.makedirs(out_dir)
+
             try:
                 in_fh = pack.open(name)
                 try:
