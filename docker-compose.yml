@@ -48,10 +48,10 @@ services:
         - elasticsearch
         # - neo4j
       volumes:
-        - "/:/host"
-        - "${PWD}/build/archive:/data"
-        - "${PWD}/build/logs/worker:/var/log"
-        - "${PWD}/build/polyglot:/polyglot"
+        - "./build/logs/worker:/var/log"
+        - "./build/archive:/data"
+        - "./build/polyglot:/polyglot"
+        - "./:/aleph"
       environment:
         C_FORCE_ROOT: 'true'
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
@@ -70,10 +70,9 @@ services:
         - postgres
         - elasticsearch
       volumes:
-        - "${PWD}/build/logs/beat:/var/log"
-        - "${PWD}/build/run/beat:/var/run"
-        - "${PWD}/build/polyglot:/polyglot"
-        - "${PWD}/build/archive:/data"
+        - "./build/logs/beat:/var/log"
+        - "./build/data/beat:/var/lib/"
+        - "./:/aleph"
       environment:
         C_FORCE_ROOT: 'true'
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
