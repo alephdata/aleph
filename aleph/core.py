@@ -21,7 +21,6 @@ log = logging.getLogger(__name__)
 db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
-celery = Celery('aleph')
 assets = Environment()
 
 # these two queues are used so that background processing tasks
@@ -32,7 +31,7 @@ USER_QUEUE = 'user'
 USER_ROUTING_KEY = 'user.process'
 WORKER_QUEUE = 'worker'
 WORKER_ROUTING_KEY = 'worker.process'
-
+CELERYD_MAX_TASKS_PER_CHILD = int(os.environ.get('CELERYD_MAX_TASKS_PER_CHILD', '10'))
 
 def create_app(config={}):
     app = Flask('aleph')
@@ -61,14 +60,12 @@ def create_app(config={}):
 
     app.config['CELERY_DEFAULT_QUEUE'] = WORKER_QUEUE
     app.config['CELERY_DEFAULT_ROUTING_KEY'] = WORKER_ROUTING_KEY
+    app.config['CELERYD_MAX_TASKS_PER_CHILD'] = CELERYD_MAX_TASKS_PER_CHILD
+
     app.config['CELERY_QUEUES'] = (
         Queue(WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY),
         Queue(USER_QUEUE, routing_key=USER_ROUTING_KEY),
     )
-    celery.conf.update(app.config)
-    celery.conf.update({
-        'BROKER_URL': app.config['CELERY_BROKER_URL']
-    })
 
     migrate.init_app(app, db, directory=app.config.get('ALEMBIC_DIR'))
     configure_oauth(app)
@@ -82,6 +79,24 @@ def create_app(config={}):
         plugin(app=app)
 
     return app
+
+
+def make_celery(flask_app):
+    celery = Celery('aleph', broker=flask_app.config['CELERY_BROKER_URL'])
+    celery.conf.update(flask_app.config)
+    celery.conf.update({
+        'BROKER_URL': flask_app.config['CELERY_BROKER_URL']
+    })
+    TaskBase = celery.Task
+
+    class ContextTask(TaskBase):
+        abstract = True
+
+        def __call__(self, *args, **kwargs):
+            with flask_app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+    celery.Task = ContextTask
+    return celery
 
 
 @migrate.configure
@@ -146,3 +161,5 @@ def url_for(*a, **kw):
         return flask_url_for(*a, **kw)
     except RuntimeError:
         return None
+
+celery = make_celery(create_app())
