@@ -32,7 +32,7 @@ css_assets = Bundle(
     'style/aleph.scss',
     'vendor/angular-ui-select/dist/select.css',
     depends=['**/*.scss'],
-    filters='scss,cssutils',
+    filters='libsass,cssutils',
     output='assets/style.css'
 )
 
