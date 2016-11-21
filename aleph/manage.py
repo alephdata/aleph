@@ -17,7 +17,6 @@ from aleph.logic import reindex_entities, delete_collection, analyze_collection
 from aleph.logic.alerts import check_alerts
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
-from aleph.crawlers.sql import SQLCrawler
 from aleph.crawlers.metafolder import MetaFolderCrawler
 
 
@@ -70,16 +69,6 @@ def crawldir(directory, language=None, country=None, foreign_id=None):
         meta['countries'] = [country]
     crawler = DirectoryCrawler()
     crawler.execute(directory=directory, meta=meta, foreign_id=foreign_id)
-
-
-@manager.command
-def crawlsql(yaml_config, collection=None):
-    """Crawl the given database query file."""
-    yaml_config = os.path.abspath(yaml_config)
-    yaml_config = os.path.normpath(yaml_config)
-    log.info('Crawling %r...', yaml_config)
-    SQLCrawler().execute(config=yaml_config)
-    db.session.commit()
 
 
 @manager.command
