@@ -1,3 +1,4 @@
+import os
 import logging
 
 from werkzeug.exceptions import BadRequest, NotFound
@@ -114,6 +115,9 @@ def file(document_id):
         return redirect(url)
 
     local_path = archive.load_file(document.meta)
+    if not os.path.isfile(local_path):
+        raise NotFound("File does not exist.")
+
     fh = open(local_path, 'rb')
     return send_file(fh, as_attachment=True,
                      attachment_filename=document.meta.file_name,

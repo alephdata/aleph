@@ -28,41 +28,43 @@
   </div>
   <div class="row">
     <div class="col-md-8">
-      <div class="alert alert-danger" role="alert" ng-if="result.error">
+      <div class="alert alert-danger" role="alert" ng-if="result.status == 'error'">
         <strong>An error occurred while running your search.</strong>
-        {{::result.error.info.reason || result.error.message}}
+        {{::result.info.reason || result.message}}
       </div>
 
-      <search-entity-suggest query="query"></search-entity-suggest>
+      <div ng-if="result.status == 'ok'">
+        <search-entity-suggest query="query"></search-entity-suggest>
 
-      <div>
-        <div ng-repeat="doc in result.results track by doc.id">
-          <search-result doc="doc" result="result" query="query"></search-result>
-        </div>
+        <div>
+          <div ng-repeat="doc in result.results track by doc.id">
+            <search-result doc="doc" result="result" query="query"></search-result>
+          </div>
 
-        <!-- peek feature -->
-        <div class="alert alert-suggest" role="alert" ng-if="peek.active">
-          <strong>{{peek.total}} hidden results</strong> are available.
-          <span ng-if="authz.logged_in()">
-            For access, contact:
-            <span ng-repeat="role in peek.roles">
-              <a href="mailto:{{role.email}}">{{role.name}}</a><span ng-if="!$last">,</span>
+          <!-- peek feature -->
+          <div class="alert alert-suggest" role="alert" ng-if="peek.active">
+            <strong>{{peek.total}} hidden results</strong> are available.
+            <span ng-if="authz.logged_in()">
+              For access, contact:
+              <span ng-repeat="role in peek.roles">
+                <a href="mailto:{{role.email}}">{{role.name}}</a><span ng-if="!$last">,</span>
+              </span>
             </span>
-          </span>
-          <span ng-if="!authz.logged_in()">
-            <a ng-click="triggerLogin()">Sign in</a> to see who to contact for access.
-          </span>
-        </div>
+            <span ng-if="!authz.logged_in()">
+              <a ng-click="triggerLogin()">Sign in</a> to see who to contact for access.
+            </span>
+          </div>
 
-        <div class="bottom-pager">
-          <div class="pull-right">
-            <response-pager response="result" load="loadOffset(offset)"></response-pager>
-          </div>
-          <div class="total" ng-if="!result.total">
-            No results were found.
-          </div>
-          <div class="total" ng-if="result.total">
-            Found {{result.total | number}} documents.
+          <div class="bottom-pager">
+            <div class="pull-right">
+              <response-pager response="result" load="loadOffset(offset)"></response-pager>
+            </div>
+            <div class="total" ng-if="!result.total">
+              No results were found.
+            </div>
+            <div class="total" ng-if="result.total">
+              Found {{result.total | number}} documents.
+            </div>
           </div>
         </div>
       </div>

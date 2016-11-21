@@ -38,7 +38,7 @@ aleph.directive('searchFacets', ['$location', '$q', '$route', '$http', '$timeout
             label: scope.metadata.fields[name],
             active: queryFacets.indexOf(name) != -1
           };
-          if (result.facets[name]) {
+          if (result.facets && result.facets[name]) {
             facet.values = result.facets[name].values;
           }
           facets.push(facet);

@@ -36,7 +36,14 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
           'result': res.data
         });
       }, function(err) {
-        dfd.reject(err);
+        if (err.status === 400) {
+          dfd.resolve({
+            'query': query,
+            'result': err.data
+          });
+        } else {
+          dfd.reject(err);  
+        }
       });
       return dfd.promise;
     },
@@ -47,7 +54,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       $http.get('/api/1/peek', {cache: true, params: state}).then(function(res) {
         dfd.resolve(res.data);
       }, function(err) {
-        dfd.reject(err);
+        dfd.resolve({});
       });
       return dfd.promise;
     },
