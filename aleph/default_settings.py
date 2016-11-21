@@ -88,22 +88,7 @@ ALEMBIC_DIR = path.join(path.dirname(__file__), 'migrate')
 ALEMBIC_DIR = path.abspath(ALEMBIC_DIR)
 
 CELERY_ALWAYS_EAGER = False
-CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
-CELERYD_MAX_TASKS_PER_CHILD = 200
-CELERYD_PREFETCH_MULTIPLIER = 5
-CELERY_DISABLE_RATE_LIMITS = True
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TIMEZONE = 'UTC'
-CELERY_IGNORE_RESULT = True
-# CELERY_RESULT_BACKEND = 'amqp'
-CELERY_RESULT_PERSISTENT = False
-# CELERY_ACKS_LATE = True
-# ultra-high time limit to shoot hung tasks:
-CELERYD_TASK_TIME_LIMIT = 3600 * 3
 CELERY_BROKER_URL = env.get('RABBITMQ_URL', 'amqp://guest:guest@localhost:5672//')  # noqa
-CELERY_IMPORTS = ('aleph.queue')
-
 CELERYBEAT_SCHEDULE = {
     'alert-every-night': {
         'task': 'aleph.logic.alerts.check_alerts',

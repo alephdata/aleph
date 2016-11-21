@@ -30,10 +30,6 @@ MAIL_USE_TLS = True
 MAIL_PORT = 587
 
 CELERY_BROKER_URL = os.environ.get('ALEPH_BROKER_URI')
-BROKER_TRANSPORT_OPTIONS = {
-    'region': 'eu-west-1',
-    'queue_name_prefix': '%s.' % os.environ.get('ALEPH_APP_NAME', 'aleph')
-}
 
 NEO4J_URI = os.environ.get('ALEPH_NEO4J_URI')
 
