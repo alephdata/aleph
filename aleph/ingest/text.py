@@ -1,7 +1,6 @@
 import logging
 
-from aleph.core import get_archive
-from aleph.core import get_config
+from aleph.core import get_config, archive
 from aleph.model import db, Document, DocumentPage
 from aleph.ingest.poppler import extract_pdf
 from aleph.ingest.tika import extract_pdf as tika_pdf
@@ -44,7 +43,7 @@ class TextIngestor(Ingestor):
         self.emit(document)
 
     def store_pdf(self, meta, pdf_path):
-        get_archive().archive_file(pdf_path, meta.pdf, move=False)
+        archive.archive_file(pdf_path, meta.pdf, move=False)
 
 
 class PDFIngestor(TextIngestor):

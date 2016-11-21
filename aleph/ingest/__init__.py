@@ -2,13 +2,12 @@ import os
 import logging
 import requests
 
-from aleph.core import db, get_archive, celery
+from aleph.core import db, archive, celery
 from aleph.core import WORKER_QUEUE, WORKER_ROUTING_KEY
 from aleph.text import string_value
 from aleph.ext import get_ingestors
 from aleph.metadata import Metadata
 from aleph.ingest.ingestor import Ingestor, IngestorException
-from aleph.text import string_value
 from aleph.util import make_tempfile, remove_tempfile
 
 log = logging.getLogger(__name__)
@@ -37,7 +36,7 @@ def ingest_url(self, collection_id, metadata, url):
         if not meta.has('source_url'):
             meta.source_url = res.url
         meta.headers = res.headers
-        meta = get_archive().archive_file(tmp_path, meta, move=True)
+        meta = archive.archive_file(tmp_path, meta, move=True)
         Ingestor.dispatch(collection_id, meta)
     except IOError as ioe:
         log.info("IO Failure: %r", ioe)
@@ -98,7 +97,7 @@ def ingest_file(collection_id, meta, file_path, move=False,
             raise IngestorException("No such file: %r", file_path)
         if not meta.has('source_path'):
             meta.source_path = file_path
-        meta = get_archive().archive_file(file_path, meta, move=move)
+        meta = archive.archive_file(file_path, meta, move=move)
         ingest.apply_async([collection_id, meta.to_attr_dict()],
                            queue=queue, routing_key=routing_key)
     except Exception as ex:

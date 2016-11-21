@@ -1,12 +1,11 @@
 # coding: utf-8
-import os
 import logging
 
 from flask_script import Manager
 from flask_assets import ManageAssets
 from flask_migrate import MigrateCommand
 
-from aleph.core import create_app, get_archive
+from aleph.core import create_app, archive
 from aleph.model import db, upgrade_db, Collection, Document
 from aleph.views import mount_app_blueprints, assets
 from aleph.analyze import install_analyzers
@@ -142,7 +141,7 @@ def init():
     init_search()
     upgrade_search()
     install_analyzers()
-    get_archive().upgrade()
+    archive.upgrade()
 
 
 @manager.command
@@ -150,7 +149,7 @@ def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_db()
     upgrade_search()
-    get_archive().upgrade()
+    archive.upgrade()
 
 
 @manager.command

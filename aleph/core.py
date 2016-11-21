@@ -2,6 +2,7 @@ import os
 import logging
 from logging.handlers import SMTPHandler
 from urlparse import urljoin
+from werkzeug.local import LocalProxy
 from flask import Flask, current_app
 from flask import url_for as flask_url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -12,7 +13,8 @@ from kombu import Queue
 from celery import Celery
 from elasticsearch import Elasticsearch
 
-from aleph import default_settings, archive
+from aleph import default_settings
+from aleph.archive import archive_from_config
 from aleph.ext import get_init
 from aleph.oauth import configure_oauth
 
@@ -124,7 +126,7 @@ def get_es_index():
 def get_archive():
     app = current_app._get_current_object()
     if not hasattr(app, '_aleph_archive'):
-        app._aleph_archive = archive.from_config(app.config)
+        app._aleph_archive = archive_from_config(app.config)
     return app._aleph_archive
 
 
@@ -135,6 +137,15 @@ def get_upload_folder():
     except:
         pass
     return folder
+
+
+app_name = LocalProxy(get_app_name)
+app_title = LocalProxy(get_app_title)
+app_url = LocalProxy(get_app_url)
+es = LocalProxy(get_es)
+es_index = LocalProxy(get_es_index)
+archive = LocalProxy(get_archive)
+upload_folder = LocalProxy(get_upload_folder)
 
 
 def url_for(*a, **kw):

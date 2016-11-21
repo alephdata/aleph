@@ -1,11 +1,12 @@
 import os
+import six
 import logging
 from apikit import jsonify
 from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
 from elasticsearch import TransportError
 
-from aleph.core import get_config, get_app_title, get_app_url
+from aleph.core import get_config, app_title, app_url
 from aleph.metadata import Metadata
 from aleph.metadata.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.model.validation import resolver
@@ -71,8 +72,8 @@ def metadata():
     return jsonify({
         'status': 'ok',
         'app': {
-            'title': get_app_title(),
-            'url': get_app_url(),
+            'title': six.text_type(app_title),
+            'url': six.text_type(app_url),
             'samples': get_config('SAMPLE_SEARCHES')
         },
         'fields': Metadata.facets(),

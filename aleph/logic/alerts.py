@@ -2,7 +2,7 @@ import logging
 from urllib import quote_plus
 from flask import request, render_template, current_app
 
-from aleph.core import get_app_title, get_app_url, db, celery
+from aleph.core import app_title, app_url, db, celery
 from aleph.model import Role, Alert, Collection
 from aleph.notify import notify_role
 from aleph.search.alerts import alert_query
@@ -28,7 +28,6 @@ def check_alerts():
 
 def format_results(alert, results):
     # used to activate highlighting in results pages:
-    app_url = get_app_url()
     qs = 'dq=%s' % quote_plus(alert.query_text or '')
     output = []
     for result in results['results']:
@@ -67,8 +66,8 @@ def check_role_alerts(role):
             html = render_template('email/alert.html', alert=alert, role=role,
                                    total=results.get('total'),
                                    results=format_results(alert, results),
-                                   app_title=get_app_title(),
-                                   app_url=get_app_url())
+                                   app_title=app_title,
+                                   app_url=app_url)
             notify_role(role, subject, html)
         except Exception as ex:
             log.exception(ex)

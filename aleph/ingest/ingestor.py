@@ -3,7 +3,7 @@ import logging
 import traceback
 from sqlalchemy.exc import SQLAlchemyError
 
-from aleph.core import db, get_archive
+from aleph.core import db, archive
 from aleph.ext import get_ingestors
 from aleph.model import Document, Collection, CrawlerState
 from aleph.analyze import analyze_document
@@ -102,7 +102,7 @@ class Ingestor(object):
 
     @classmethod
     def dispatch(cls, collection_id, meta):
-        local_path = get_archive().load_file(meta)
+        local_path = archive.load_file(meta)
         try:
             best_cls = cls.auction_file(meta, local_path)
             log.debug("Dispatching %r to %r", meta.file_name, best_cls)
@@ -112,4 +112,4 @@ class Ingestor(object):
         except Exception as exc:
             cls.handle_exception(meta, collection_id, exc)
         finally:
-            get_archive().cleanup_file(meta)
+            archive.cleanup_file(meta)
