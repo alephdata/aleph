@@ -101,8 +101,7 @@ CELERY_RESULT_PERSISTENT = False
 # CELERY_ACKS_LATE = True
 # ultra-high time limit to shoot hung tasks:
 CELERYD_TASK_TIME_LIMIT = 3600 * 3
-CELERY_BROKER_URL = env.get('RABBITMQ_BIGWIG_URL',
-                            'amqp://guest:guest@localhost:5672//')
+CELERY_BROKER_URL = env.get('RABBITMQ_URL', 'amqp://guest:guest@localhost:5672//')  # noqa
 CELERY_IMPORTS = ('aleph.queue')
 
 CELERYBEAT_SCHEDULE = {

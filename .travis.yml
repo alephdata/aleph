@@ -7,6 +7,7 @@ python:
 services:
   - postgresql
   - elasticsearch
+  - rabbitmq
 addons:
   postgresql: "9.4"
   apt:
