@@ -39,9 +39,9 @@ def entities_query(state, fields=None, facets=True):
         aggs = aggregate(q, aggs, facets)
 
     if state.sort == 'doc_count':
-        sort = [{'doc_count': 'desc'}, '_score']
+        sort = [{'doc_count': 'desc'}, {'name_sort': 'asc'}, '_score']
     elif state.sort == 'score':
-        sort = ['_score']
+        sort = ['_score', {'name_sort': 'asc'}]
     else:
         sort = [{'name_sort': 'asc'}]
 

@@ -20,7 +20,7 @@
                 </button>
                 <ul class="uib-dropdown-menu" role="menu">
                   <li ng-repeat="(field, label) in sortOptions"
-                      ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'score')}">
+                      ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'alphabet')}">
                     <a ng-click="query.set('sort', field)"
                        ng-bind="label"></a>
                   </li>
