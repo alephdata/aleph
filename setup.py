@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='aleph',
-    version='1.0',
+    version='1.1',
     description="Document sifting web frontend",
     long_description="",
     classifiers=[
@@ -14,7 +14,7 @@ setup(
     keywords='',
     author='Friedrich Lindenberg',
     author_email='friedrich@pudo.org',
-    url='http://grano.cc',
+    url='http://pudo.org',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'test']),
     namespace_packages=[],
@@ -65,7 +65,5 @@ setup(
             'aleph = aleph.manage:main',
         ]
     },
-    tests_require=[
-        'coverage', 'nose'
-    ]
+    tests_require=['coverage', 'nose']
 )
