@@ -59,6 +59,17 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     }
   });
 
+  $routeProvider.when('/collections/:collection_id/states', {
+    templateUrl: 'templates/collections/states.html',
+    controller: 'CollectionsCrawlersStatesCtrl',
+    reloadOnSearch: true,
+    resolve: {
+      'collection': loadCollection,
+      'metadata': loadMetadata,
+      'states': loadCrawlerStates
+    }
+  });
+
   $routeProvider.when('/collections/:collection_id/entities', {
     templateUrl: 'templates/collections/entities.html',
     controller: 'CollectionsEntitiesCtrl',
