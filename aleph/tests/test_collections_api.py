@@ -13,12 +13,14 @@ class CollectionsApiTestCase(TestCase):
         self.col = Collection()
         self.col.label = 'Test Collection'
         self.col.foreign_id = 'test_coll_entities_api'
+        self.col.category = 'leak'
+        self.col.countries = []
         db.session.add(self.col)
         db.session.flush()
         self.ent = Entity()
         self.ent.collection = self.col
         self.ent.update({
-            'name': 'Winnie the Pooh'
+            'name': 'Winnie the Pooh',
         })
         db.session.add(self.ent)
         db.session.commit()

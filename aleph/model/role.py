@@ -3,13 +3,13 @@ from uuid import uuid4
 from flask import current_app
 
 from aleph.core import db, url_for, get_config
-from aleph.model.schema_model import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
+from aleph.model.validation import validate
 
 log = logging.getLogger(__name__)
 
 
-class Role(db.Model, IdModel, SoftDeleteModel, SchemaModel):
+class Role(db.Model, IdModel, SoftDeleteModel):
     """A user, group or other access control subject."""
 
     _schema = 'role.json#'
@@ -32,7 +32,9 @@ class Role(db.Model, IdModel, SoftDeleteModel, SchemaModel):
     permissions = db.relationship("Permission", backref="role")
 
     def update(self, data):
-        self.schema_update(data)
+        validate(data, self._schema)
+        self.name = data.get('name', self.name)
+        self.email = data.get('email', self.email)
 
     @classmethod
     def notifiable(cls):
@@ -96,9 +98,12 @@ class Role(db.Model, IdModel, SoftDeleteModel, SchemaModel):
 
     def to_dict(self):
         data = super(Role, self).to_dict()
-        data['api_url'] = url_for('roles_api.view', id=self.id)
-        data['foreign_id'] = self.foreign_id
-        data['is_admin'] = self.is_admin
-        data['email'] = self.email
-        data['type'] = self.type
+        data.update({
+            'api_url': url_for('roles_api.view', id=self.id),
+            'foreign_id': self.foreign_id,
+            'is_admin': self.is_admin,
+            'email': self.email,
+            'name': self.name,
+            'type': self.type
+        })
         return data

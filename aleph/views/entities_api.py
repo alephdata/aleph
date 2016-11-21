@@ -105,14 +105,6 @@ def similar(id):
     return jsonify(similar_entities(entity, collections))
 
 
-@blueprint.route('/api/1/entities/_lookup', methods=['GET'])
-def lookup():
-    entity = obj_or_404(Entity.by_identifier(request.args.get('scheme'),
-                                             request.args.get('identifier')))
-    check_authz(entity, authz.READ)
-    return jsonify(entity)
-
-
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])
 def update(id):
     entity = obj_or_404(Entity.by_id(id))

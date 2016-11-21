@@ -5,7 +5,6 @@ from polyglot.text import Text
 
 from aleph.core import db
 from aleph.model import Reference, Entity
-from aleph.model.entity_details import EntityIdentifier
 from aleph.analyze.analyzer import Analyzer
 
 
@@ -56,17 +55,12 @@ class PolyglotEntityAnalyzer(Analyzer):
 
     def load_entity(self, name, schema):
         identifier = name.lower().strip()
-        q = db.session.query(EntityIdentifier)
-        q = q.order_by(EntityIdentifier.deleted_at.desc().nullsfirst())
-        q = q.filter(EntityIdentifier.scheme == self.origin)
-        q = q.filter(EntityIdentifier.identifier == identifier)
-        ident = q.first()
-        if ident is not None:
-            if ident.deleted_at is None:
-                # TODO: add to collections? Security risk here.
-                return ident.entity_id
-            if ident.entity.deleted_at is None:
-                return None
+        q = db.session.query(Entity)
+        q = q.order_by(Entity.deleted_at.desc().nullsfirst())
+        q = q.filter(Entity.name == name)
+        entity = q.first()
+        if entity is not None:
+            return entity
 
         data = {
             'name': name,

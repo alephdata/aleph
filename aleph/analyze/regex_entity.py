@@ -32,7 +32,6 @@ class AutomatonCache(object):
 
         matches = {}
         q = Entity.all()
-        q = q.options(joinedload('other_names'))
         q = q.filter(Entity.state == Entity.STATE_ACTIVE)
         for entity in q:
             for term in entity.regex_terms:

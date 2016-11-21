@@ -34,7 +34,7 @@ https://github.com/okfn/messytables/tarball/master
 krauler>=0.2.2
 metafolder
 jsonmapping
-https://github.com/aboSamoor/polyglot/tarball/master
+polyglot==16.7.4
 https://github.com/occrp/cronosparser/tarball/master
 langid==1.1.5
 blinker==1.4
@@ -47,15 +47,15 @@ xlrd==0.9.3
 flanker==0.3.4
 jsonschema
 PyYAML==3.11
-PyICU
-chardet
-cchardet
+PyICU==1.9.5
+chardet==2.3.0
+cchardet==1.1.1
 dateparser==0.3.1
 jdatetime==1.7.2
 coverage
 pyahocorasick
 pycrypto
-pylru
+pylru==1.0.9
 https://github.com/mattgwwalker/msg-extractor/tarball/master
 libsass==0.11.2
 

@@ -33,15 +33,20 @@
       write: false
       collection_id: 1000
 
-- model: aleph.model.entity.EntityCompany
+- model: aleph.model.entity.Entity
   records:
     - id: 9b052e79d3cbff66b4e9c1e943948bae
       name: KwaZulu
-
-- model: aleph.model.entity.EntityPerson
-  records:
+      type: /entity/company.json#
+      data:
+        other_names:
+          - name: kwazulu
     - id: 250e77f12a5ab6972a0895d290c4792f
       name: BaNana
+      type: /entity/person.json#
+      data:
+        other_names:
+          - name: banana
 
 - table: collection_entity
   records:
@@ -49,15 +54,6 @@
       collection_id: 2000
     - entity_id: 9b052e79d3cbff66b4e9c1e943948bae
       collection_id: 1000
-
-- model: aleph.model.entity_details.EntityOtherName
-  records:
-    - id: 1000
-      name: kwazulu
-      entity_id: 9b052e79d3cbff66b4e9c1e943948bae
-    - id: 2000
-      name: banana
-      entity_id: 250e77f12a5ab6972a0895d290c4792f
 
 - model: aleph.model.document.Document
   records:

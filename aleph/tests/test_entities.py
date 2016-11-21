@@ -24,6 +24,7 @@ class EntitiesTestCase(TestCase):
         db.session.add(self.col_other)
         db.session.flush()
         self.ent = Entity.save({
+            '$schema': '/entity/legal_person.json#',
             'name': 'Winnie the Pooh',
             'jurisdiction_code': 'pa',
             'summary': 'a fictional teddy bear created by author A. A. Milne',
@@ -40,6 +41,7 @@ class EntitiesTestCase(TestCase):
         db.session.add(self.ent)
         db.session.flush()
         self.other = Entity.save({
+            '$schema': '/entity/legal_person.json#',
             'name': 'Pu der Bär',
             'jurisdiction_code': 'de',
             'description': 'he is a bear',
@@ -64,9 +66,8 @@ class EntitiesTestCase(TestCase):
         self.ent.merge(self.other)
         db.session.flush()
         data = json.loads(jsonify(self.ent).data)
-        # pprint(data)
-        assert 'bear' in data['description']
-        assert 'pa' in data['jurisdiction_code']
+        assert 'bear' in data['description'], data
+        assert 'pa' in data['jurisdiction_code'], data
         db.session.refresh(self.alert)
         assert self.alert.label == data['name']
         assert self.other.deleted_at is not None, self.other

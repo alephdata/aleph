@@ -6,15 +6,15 @@ from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db, url_for
 from aleph.model.role import Role
-from aleph.model.schema_model import SchemaModel
 from aleph.model.permission import Permission
 from aleph.model.facets import ModelFacets
 from aleph.model.common import SoftDeleteModel, IdModel, make_token
+from aleph.model.validation import validate
 
 log = logging.getLogger(__name__)
 
 
-class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel, ModelFacets):
+class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
     _schema = 'collection.json#'
 
     label = db.Column(db.Unicode)
@@ -34,14 +34,19 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel, ModelFacets):
     creator = db.relationship(Role)
 
     def update(self, data):
+        validate(data, self._schema)
         creator_id = data.get('creator_id')
         if creator_id is not None and creator_id != self.creator_id:
             role = Role.by_id(creator_id)
             if role is not None and role.type == Role.USER:
                 self.creator_id = role.id
                 Permission.grant_collection(self.id, role, True, True)
-        self.schema_update(data)
-        # FIXME: this doesn't get saved otherwise:
+        self.label = data.get('label')
+        self.summary = data.get('summary', self.summary)
+        self.category = data.get('category', self.category)
+        self.managed = data.get('managed')
+        self.private = data.get('private')
+        self.generate_entities = data.get('generate_entities')
         self.countries = data.pop('countries', [])
 
     def touch(self):
@@ -153,14 +158,23 @@ class Collection(db.Model, IdModel, SoftDeleteModel, SchemaModel, ModelFacets):
 
     def to_dict(self, counts=False):
         data = super(Collection, self).to_dict()
+        data.update({
+            'api_url': url_for('collections_api.view', id=self.id),
+            'foreign_id': self.foreign_id,
+            'creator_id': self.creator_id,
+            'label': self.label,
+            'summary': self.summary,
+            'category': self.category,
+            'countries': self.countries,
+            'managed': self.managed,
+            'private': self.private,
+            'generate_entities': self.generate_entities
+        })
         try:
             from aleph.authz import collection_public
             data['public'] = collection_public(self)
         except:
             pass
-        data['api_url'] = url_for('collections_api.view', id=self.id)
-        data['foreign_id'] = self.foreign_id
-        data['creator_id'] = self.creator_id
         if counts:
             # Query how many enitites and documents are in this collection.
             from aleph.model.entity import Entity

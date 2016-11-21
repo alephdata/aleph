@@ -2,7 +2,6 @@ import json
 
 from aleph.core import db
 from aleph.model import Collection, Entity
-from aleph.model.entity_details import EntityAddress
 from aleph.index import index_entity, optimize_search
 from aleph.tests.util import TestCase
 
@@ -17,17 +16,15 @@ class EntitiesApiTestCase(TestCase):
         self.col.foreign_id = 'test_coll_entities_api'
         db.session.add(self.col)
         db.session.flush()
-        self.ent = Entity()
-        self.ent.collections = [self.col]
-        self.ent.update({
+        self.ent = Entity.save({
+            '$schema': '/entity/legal_person.json#',
             'name': 'Winnie the Pooh',
             'jurisdiction_code': 'pa',
             'identifiers': [{
                 'scheme': 'wikipedia',
                 'identifier': 'en:Winnie-the-Pooh'
             }]
-        })
-        db.session.add(self.ent)
+        }, [self.col])
         db.session.commit()
 
     def test_index(self):
@@ -66,21 +63,8 @@ class EntitiesApiTestCase(TestCase):
         self.login(is_admin=True)
         res = self.client.get('/api/1/entities/%s' % self.ent.id)
         assert res.status_code == 200, res
-        assert 'entity/entity' in res.json['$schema'], res.json
+        assert 'entity/legal' in res.json['$schema'], res.json
         assert 'Winnie' in res.json['name'], res.json
-
-    def test_lookup(self):
-        args = '?scheme=wikipedia&identifier=en:Winnie-the-Pooh'
-        res = self.client.get('/api/1/entities/_lookup%s' % args)
-        assert res.status_code == 403, res
-        self.login(is_admin=True)
-        res = self.client.get('/api/1/entities/_lookup%s' % args)
-        assert res.status_code == 200, res
-        assert 'entity/entity' in res.json['$schema'], res.json
-        assert 'Winnie' in res.json['name'], res.json
-        args = args + 'xxx'
-        res = self.client.get('/api/1/entities/_lookup%s' % args)
-        assert res.status_code == 404, res
 
     def test_update(self):
         self.login(is_admin=True)
@@ -210,12 +194,9 @@ class EntitiesApiTestCase(TestCase):
                 'country': 'nl'
             }
         }
-        assert not EntityAddress.all().count(), EntityAddress.all().all()
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
-        addr_count = EntityAddress.all().count()
-        assert addr_count, EntityAddress.all().all()
         data = res.json
         url = '/api/1/entities/%s' % data['id']
         data['residential_address']['region'] = 'Amsterdam'
@@ -223,7 +204,6 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
         assert res.json['residential_address']['region'] == 'Amsterdam', res.json
-        assert EntityAddress.all().count() == addr_count, EntityAddress.all().all()
 
     def test_delete_entity(self):
         self.login(is_admin=True)
