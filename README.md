@@ -16,7 +16,6 @@ Here's some key features:
   [Investigative Dashboard](https://investigativedashboard.org/).
 * OAuth authorization and access control on a per-source and per-watchlist basis.
 * Excel export for search result sets.
-* Ability to generate graph representations of entity co-occurrence.
 
 ## Documentation
 

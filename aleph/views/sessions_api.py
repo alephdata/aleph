@@ -87,7 +87,8 @@ def login(provider=None):
         if is_safe_url(target):
             next_url = target
     session['next_url'] = next_url
-    return oauth_provider.authorize(callback=url_for('.callback', provider=provider))
+    callback_url = url_for('.callback', provider=provider)
+    return oauth_provider.authorize(callback=callback_url)
 
 
 @blueprint.route('/api/1/sessions/logout')

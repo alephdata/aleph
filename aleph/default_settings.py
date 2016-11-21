@@ -75,6 +75,10 @@ DISABLE_CRAWLERS = False
 
 SECRET_KEY = env.get('SECRET_KEY')
 
+# Designate users with the given email as admins automatically:
+# Assumes a comma-separated list.
+AUTHZ_ADMINS = env.get('AUTHZ_ADMINS', '')
+
 SQLALCHEMY_DATABASE_URI = env.get('DATABASE_URL', 'sqlite:///aleph.sqlite3')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
