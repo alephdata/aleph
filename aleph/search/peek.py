@@ -3,7 +3,7 @@ from sqlalchemy import not_
 from pprint import pprint  # noqa
 
 from aleph.index import TYPE_DOCUMENT
-from aleph.core import get_es, get_es_index
+from aleph.core import es, es_index
 from aleph.model import Collection
 from aleph.search.documents import text_query
 from aleph.search.fragments import filter_query
@@ -57,8 +57,7 @@ def peek_query(state):
         },
         '_source': False
     }
-    result = get_es().search(index=get_es_index(), body=q,
-                             doc_type=TYPE_DOCUMENT)
+    result = es.search(index=es_index, body=q, doc_type=TYPE_DOCUMENT)
     roles = {}
     total = 0
     aggs = result.get('aggregations', {}).get('collections', {})

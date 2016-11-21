@@ -1,6 +1,6 @@
 from elasticsearch.helpers import scan
 
-from aleph.core import get_es, get_es_index
+from aleph.core import es, es_index
 from aleph.index import TYPE_RECORD
 from aleph.search.fragments import text_query_string
 from aleph.search.util import execute_basic
@@ -67,8 +67,7 @@ def scan_entity_mentions(entity):
         'sort': [{'document_id': 'desc'}],
         '_source': ['document_id', 'text']
     }
-    for res in scan(get_es(), query=query, index=get_es_index(),
-                    doc_type=[TYPE_RECORD]):
+    for res in scan(es, query=query, index=es_index, doc_type=[TYPE_RECORD]):
         text = res.get('_source').get('text')
         texts = text if isinstance(text, list) else [text]
         for text in texts:

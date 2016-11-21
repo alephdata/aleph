@@ -1,7 +1,7 @@
 import json
 from pprint import pprint  # noqa
 
-from aleph.core import url_for, get_es, get_es_index
+from aleph.core import url_for, es, es_index
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.search.util import execute_basic
 from aleph.search.fragments import match_all, filter_query
@@ -88,8 +88,7 @@ def suggest_entities(prefix, collections, min_count=0, schemas=None, size=5):
             '_source': ['name', '$schema', 'terms', 'doc_count']
         }
         ref = latinize_text(prefix)
-        result = get_es().search(index=get_es_index(), doc_type=TYPE_ENTITY,
-                                 body=q)
+        result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
         for res in result.get('hits', {}).get('hits', []):
             ent = res.get('_source')
             terms = [latinize_text(t) for t in ent.pop('terms', [])]
@@ -144,8 +143,7 @@ def similar_entities(entity, collections):
         '_source': DEFAULT_FIELDS
     }
     options = []
-    result = get_es().search(index=get_es_index(), doc_type=TYPE_ENTITY,
-                             body=q)
+    result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
     for res in result.get('hits', {}).get('hits', []):
         entity = res.get('_source')
         entity['id'] = res.get('_id')
@@ -180,9 +178,8 @@ def execute_entities_query(state, query, doc_counts=False):
         sub_queries.append(json.dumps(sq))
 
     if doc_counts and len(sub_queries):
-        res = get_es().msearch(index=get_es_index(),
-                               doc_type=TYPE_DOCUMENT,
-                               body='\n'.join(sub_queries))
+        body = '\n'.join(sub_queries)
+        res = es.msearch(index=es_index, doc_type=TYPE_DOCUMENT, body=body)
         for (entity, res) in zip(output['results'], res.get('responses')):
             entity['doc_count'] = res.get('hits', {}).get('total')
 

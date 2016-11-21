@@ -4,7 +4,7 @@ import logging
 from pprint import pprint  # noqa
 
 from aleph import authz, signals
-from aleph.core import get_es, get_es_index
+from aleph.core import es, es_index
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import clean_highlight, execute_basic, FACET_SIZE
 from aleph.search.fragments import aggregate, filter_query, text_query
@@ -96,8 +96,8 @@ def facet_collections(q, aggs, state):
 
 def run_sub_queries(output, sub_queries):
     if len(sub_queries):
-        res = get_es().msearch(index=get_es_index(), doc_type=TYPE_RECORD,
-                               body='\n'.join(sub_queries))
+        body = '\n'.join(sub_queries)
+        res = es.msearch(index=es_index, doc_type=TYPE_RECORD, body=body)
         for doc in output['results']:
             for sq in res.get('responses', []):
                 sqhits = sq.get('hits', {})

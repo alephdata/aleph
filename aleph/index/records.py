@@ -1,9 +1,10 @@
+import six
 import logging
 from hashlib import sha1
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch.helpers import bulk, scan
 
-from aleph.core import get_es, get_es_index
+from aleph.core import es, es_index
 from aleph.model import Document
 from aleph.text import latinize_text
 from aleph.index.mapping import TYPE_RECORD
@@ -23,18 +24,18 @@ def clear_records(document_id):
     }
 
     def gen_deletes():
-            for res in scan(get_es(), query=q, index=get_es_index(),
+            for res in scan(es, query=q, index=es_index,
                             doc_type=[TYPE_RECORD]):
                 yield {
                     '_op_type': 'delete',
-                    '_index': get_es_index(),
+                    '_index': six.text_type(es_index),
                     '_parent': res.get('_parent'),
                     '_type': res.get('_type'),
                     '_id': res.get('_id')
                 }
 
     try:
-        bulk(get_es(), gen_deletes(), stats_only=True, chunk_size=2000,
+        bulk(es, gen_deletes(), stats_only=True, chunk_size=2000,
              request_timeout=600.0)
     except (Exception, NotFoundError):
         log.debug("Failed to clear previous index: %r", document_id)
@@ -49,7 +50,7 @@ def generate_records(document):
             yield {
                 '_id': tid,
                 '_type': TYPE_RECORD,
-                '_index': get_es_index(),
+                '_index': six.text_type(es_index),
                 '_parent': document.id,
                 '_source': {
                     'type': 'page',
@@ -69,7 +70,7 @@ def generate_records(document):
             yield {
                 '_id': record.tid,
                 '_type': TYPE_RECORD,
-                '_index': get_es_index(),
+                '_index': six.text_type(es_index),
                 '_parent': document.id,
                 '_source': {
                     'type': 'row',

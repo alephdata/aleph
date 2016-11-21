@@ -1,7 +1,7 @@
 import logging
 from elasticsearch.exceptions import NotFoundError
 
-from aleph.core import celery, get_es, get_es_index
+from aleph.core import celery, es, es_index
 from aleph.model import Document
 from aleph.text import latinize_text
 from aleph.index.records import generate_records, clear_records
@@ -27,8 +27,8 @@ def index_document(document, index_records=True):
     data['entities'] = generate_entities(document)
     data['title_latin'] = latinize_text(data.get('title'))
     data['summary_latin'] = latinize_text(data.get('summary'))
-    get_es().index(index=get_es_index(), doc_type=TYPE_DOCUMENT, body=data,
-                   id=document.id)
+    es.index(index=es_index, doc_type=TYPE_DOCUMENT, body=data,
+             id=document.id)
 
     if index_records:
         clear_records(document.id)
@@ -38,7 +38,6 @@ def index_document(document, index_records=True):
 def delete_document(document_id):
     clear_records(document_id)
     try:
-        get_es().delete(index=get_es_index(), doc_type=TYPE_DOCUMENT,
-                        id=document_id)
+        es.delete(index=es_index, doc_type=TYPE_DOCUMENT, id=document_id)
     except NotFoundError:
         pass

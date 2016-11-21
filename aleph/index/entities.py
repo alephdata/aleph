@@ -4,7 +4,7 @@ import logging
 from collections import defaultdict
 from elasticsearch.helpers import scan
 
-from aleph.core import get_es, get_es_index, db
+from aleph.core import es, es_index, db
 from aleph.text import latinize_text
 from aleph.util import expand_json
 from aleph.model import Entity, Reference
@@ -18,13 +18,11 @@ log = logging.getLogger(__name__)
 
 def delete_entity(entity_id):
     """Delete an entity from the index."""
-    get_es().delete(index=get_es_index(), doc_type=TYPE_ENTITY, id=entity_id,
-                    ignore=[404])
+    es.delete(index=es_index, doc_type=TYPE_ENTITY, id=entity_id, ignore=[404])
 
 
 def document_updates(q, entity_id, references=None):
-    scanner = scan(get_es(), query=q, index=get_es_index(),
-                   doc_type=[TYPE_DOCUMENT])
+    scanner = scan(es, query=q, index=es_index, doc_type=[TYPE_DOCUMENT])
     for res in scanner:
         body = res.get('_source')
         entities = []
@@ -75,9 +73,7 @@ def get_count(entity):
     """Inaccurate, as it does not reflect auth."""
     q = {'term': {'entities.id': entity.id}}
     q = {'size': 0, 'query': q}
-    result = get_es().search(index=get_es_index(),
-                             doc_type=TYPE_DOCUMENT,
-                             body=q)
+    result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
     return result.get('hits', {}).get('total', 0)
 
 
@@ -107,5 +103,4 @@ def index_entity(entity):
     data['summary_latin'] = latinize_text(data.get('summary'))
     data['description_latin'] = latinize_text(data.get('description'))
     data = expand_json(data)
-    get_es().index(index=get_es_index(), doc_type=TYPE_ENTITY,
-                   id=entity.id, body=data)
+    es.index(index=es_index, doc_type=TYPE_ENTITY, id=entity.id, body=data)

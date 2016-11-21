@@ -6,11 +6,10 @@ from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify
 
 from aleph import authz
-from aleph.core import USER_QUEUE, USER_ROUTING_KEY
+from aleph.core import upload_folder, USER_QUEUE, USER_ROUTING_KEY
 from aleph.events import log_event
 from aleph.metadata import Metadata
 from aleph.ingest import ingest_file
-from aleph.core import get_upload_folder
 from aleph.model import Collection, validate
 from aleph.model.common import make_textid
 
@@ -38,8 +37,7 @@ def ingest_upload(collection_id):
         file_meta = Metadata.from_data(file_meta)
         file_meta.crawler_id = 'user_upload:%s' % request.auth_role.id
         file_meta.crawler_run = make_textid()
-        sec_fn = os.path.join(get_upload_folder(),
-                              secure_filename(storage.filename))
+        sec_fn = os.path.join(upload_folder, secure_filename(storage.filename))
         storage.save(sec_fn)
         ingest_file(collection.id, file_meta, sec_fn, move=True,
                     queue=USER_QUEUE, routing_key=USER_ROUTING_KEY)
