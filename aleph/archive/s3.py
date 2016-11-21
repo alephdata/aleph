@@ -4,7 +4,7 @@ import logging
 import tempfile
 
 from boto3.session import Session
-import botocore
+from botocore.exceptions import ClientError
 
 from aleph.archive.archive import Archive
 from aleph.util import make_filename
@@ -31,7 +31,7 @@ class S3Archive(Archive):  # pragma: no cover
 
         try:
             self.bucket.load()
-        except botocore.exceptions.ClientError as e:
+        except ClientError as e:
             error_code = int(e.response['Error']['Code'])
             if error_code == 404:
                 self.bucket.create(CreateBucketConfiguration={
