@@ -57,6 +57,7 @@ pyahocorasick
 pycrypto
 pylru
 https://github.com/mattgwwalker/msg-extractor/tarball/master
+libsass==0.11.2
 
 # Python 3 backports
 subprocess32
