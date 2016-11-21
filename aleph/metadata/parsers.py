@@ -10,15 +10,6 @@ DATE_RE = re.compile(r'^[12]\d{3}-[012]?\d-[0123]?\d$')
 VALID_DOMAIN = re.compile(r'^([0-9a-z][-\w]*[0-9a-z]\.)+[a-z0-9\-]{2,15}$')
 
 
-def chomp(text, lower=False):
-    text = string_value(text)
-    if text is not None:
-        text = text.strip()
-        if not len(text):
-            return None
-        return text.lower() if lower else text
-
-
 def is_valid_date(text):
     return DATE_RE.match(text) is not None
 
@@ -28,7 +19,7 @@ def parse_date(text):
         text = text.date()
     if isinstance(text, date):
         return text.isoformat()
-    text = chomp(text)[:10]
+    text = string_value(text)[:10]
     if is_valid_date(text):
         return text
 
@@ -45,7 +36,7 @@ def normalize_url(url):
 
 
 def parse_url(text):
-    url = chomp(text)
+    url = string_value(text)
     if url is not None:
         if url.startswith('//'):
             url = 'http:%s' % url
@@ -66,7 +57,7 @@ def is_valid_domain(domain):
 
 def parse_domain(text):
     """Extract a domain name from a piece of text."""
-    domain = chomp(text)
+    domain = string_value(text)
     if domain is not None:
         if '://' in domain:
             try:

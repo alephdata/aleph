@@ -88,13 +88,3 @@ def expand_json(data):
     """Make complex objects (w/ dates, to_dict) into JSON."""
     data = JSONEncoder().encode(data)
     return json.loads(data)
-
-
-def unwind(lst):
-    """Utility to make a nested list into a list with unique entries."""
-    out = set()
-    if not isinstance(lst, (list, set, tuple)):
-        return [lst]
-    for sublst in lst:
-        out.update(unwind(sublst))
-    return list(out)

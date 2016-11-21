@@ -3,7 +3,7 @@ from apikit import obj_or_404, jsonify, Pager, request_data, arg_bool
 
 from aleph import authz
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY
-from aleph.model import Collection, Path, db
+from aleph.model import Collection, db
 from aleph.events import log_event
 from aleph.logic import delete_collection, update_collection
 from aleph.logic import analyze_collection
@@ -99,25 +99,6 @@ def pending(id):
         data['name_latin'] = latinize_text(entity.name, lowercase=False)
         entities.append(data)
     return jsonify({'results': entities, 'total': len(entities)})
-
-
-@blueprint.route('/api/1/collections/<int:id>/paths', methods=['GET'])
-def paths(id):
-    collection = obj_or_404(Collection.by_id(id))
-    authz.require(authz.collection_read(collection.id))
-    start_entity_id = request.args.get('entity_id')
-    labels = request.args.getlist('label')
-    types = request.args.getlist('type')
-    collection_id = request.args.getlist('collection_id')
-    end_collection_id = authz.collections_intersect(authz.READ, collection_id)
-    q = Path.find(collection, start_entity_id=start_entity_id, labels=labels,
-                  types=types, end_collection_id=end_collection_id)
-    data = Pager(q, id=collection.id).to_dict()
-    data['facets'] = Path.facets(collection, start_entity_id=start_entity_id,
-                                 labels=labels, types=types,
-                                 end_collection_id=end_collection_id,
-                                 collection_id=authz.collections(authz.READ))
-    return jsonify(data)
 
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['DELETE'])

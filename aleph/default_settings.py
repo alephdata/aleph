@@ -1,7 +1,6 @@
 from celery.schedules import crontab
 from tempfile import gettempdir
 from os import environ as env, path
-import json
 
 DEBUG = True
 ASSETS_DEBUG = True
@@ -13,14 +12,17 @@ APP_LOGO = '/static/images/aleph_small.png'
 APP_FAVICON = '/static/images/aleph_small.png'
 APP_BASEURL = 'http://localhost:5000/'
 
+# Archive type (either S3 or file, i.e. local file system):
 ARCHIVE_TYPE = 'file'
 ARCHIVE_AWS_KEY_ID = env.get('AWS_ACCESS_KEY_ID')
 ARCHIVE_AWS_SECRET = env.get('AWS_SECRET_ACCESS_KEY')
 # ARCHIVE_BUCKET = 'aleph2-dev.pudo.org'
 ARCHIVE_PATH = env.get('ARCHIVE_PATH', '/srv/data/aleph')
 
-
+# A temporary folder for uploads:
 UPLOAD_FOLDER = path.join(gettempdir(), 'aleph_uploads')
+
+# Maximum upload size:
 MAX_CONTENT_LENGTH = 500 * 1024 * 1024
 
 # Set up a custom SCSS file with additional style rules here.
@@ -32,13 +34,6 @@ SAMPLE_SEARCHES = ['Serbia', 'TeliaSonera', 'Vladimir Putin']
 
 # Language configuration
 DEFAULT_LANGUAGE = 'en'
-DEFAULT_LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka',
-                     'ar', 'tr', 'lb', 'el', 'lt', 'uk', 'zh', 'be',
-                     'bg', 'bs', 'ja', 'cs', 'lv', 'pt', 'pl', 'hy',
-                     'hr', 'hi', 'he', 'uz', 'mo', 'mn', 'ur', 'sq',
-                     'ko', 'is', 'it', 'et', 'no', 'fa', 'sw', 'sl',
-                     'az']
-LANGUAGES = json.loads(env.get('ALEPH_LANGUAGES', json.dumps(DEFAULT_LANGUAGES)))
 
 # Category schema for collections.
 # TODO: add extra weight info.
@@ -82,13 +77,11 @@ SECRET_KEY = env.get('SECRET_KEY')
 
 SQLALCHEMY_DATABASE_URI = env.get('DATABASE_URL', 'sqlite:///aleph.sqlite3')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
 ELASTICSEARCH_URL = env.get('BONSAI_URL', 'http://localhost:9200')
 
 ALEMBIC_DIR = path.join(path.dirname(__file__), 'migrate')
 ALEMBIC_DIR = path.abspath(ALEMBIC_DIR)
-
-SPINDLE_URL = 'https://search.occrp.org/'
-SPINDLE_API_KEY = None
 
 CELERY_ALWAYS_EAGER = False
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
