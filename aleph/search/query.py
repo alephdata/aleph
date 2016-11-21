@@ -4,14 +4,6 @@ from werkzeug.datastructures import MultiDict
 
 from aleph.model import Entity
 
-# SORTS = {
-#     'score': ['_score'],
-#     'newest': [{'dates': 'desc'}, {'created_at': 'desc'}, '_score'],
-#     'oldest': [{'dates': 'asc'}, {'created_at': 'asc'}, '_score'],
-#     'alphabet': [{'name': 'asc'}, '_score'],
-#     'doc_count': [{'doc_count': 'desc'}, '_score']
-# }
-
 
 class QueryState(object):
     """Hold state for common query parameters."""
@@ -53,8 +45,16 @@ class QueryState(object):
         return len(self.text.strip()) > 0
 
     @property
-    def sort(self):
+    def has_query(self):
         if self.has_text:
+            return True
+        for (field, value) in self.filter_items:
+            return True
+        return False
+
+    @property
+    def sort(self):
+        if self.has_query:
             return 'score'
         return self.get('sort', 'score').strip().lower()
 

@@ -40,10 +40,10 @@ def entities_query(state, fields=None, facets=True):
 
     if state.sort == 'doc_count':
         sort = [{'doc_count': 'desc'}, '_score']
-    elif state.sort == 'alphabet':
-        sort = [{'name_sort': 'asc'}, '_score']
-    else:
+    elif state.sort == 'score':
         sort = ['_score']
+    else:
+        sort = [{'name_sort': 'asc'}]
 
     return {
         'sort': sort,
