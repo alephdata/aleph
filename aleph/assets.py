@@ -5,7 +5,7 @@ from aleph.core import assets
 
 base_assets = Bundle(
     # include via CDN
-    # 'vendor/jquery/dist/jquery.js',
+    'vendor/jquery/dist/jquery.js',
     'vendor/moment/moment.js',
     'vendor/pdfjs-dist/build/pdf.js',
     'vendor/pdfjs-dist/build/pdf.worker.js',
