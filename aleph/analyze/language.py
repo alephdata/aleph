@@ -4,7 +4,7 @@ from langid.langid import LanguageIdentifier, model
 # https://github.com/saffsd/langid.py
 
 from aleph.analyze.analyzer import Analyzer
-from aleph.metadata.reference import get_language_whitelist
+from aleph.reference import get_language_whitelist
 
 log = logging.getLogger(__name__)
 

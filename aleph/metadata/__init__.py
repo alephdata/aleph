@@ -8,9 +8,9 @@ from urlparse import urlparse
 
 from aleph.text import slugify, string_value
 from aleph.util import make_filename
+from aleph.reference import is_country_code, is_language_code
 from aleph.metadata.tabular import Tabular
 from aleph.metadata.parsers import parse_date, parse_domain, parse_url
-from aleph.metadata.reference import is_country_code, is_language_code
 from aleph.metadata.base import MetadataFactory, Field
 
 

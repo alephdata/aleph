@@ -6,9 +6,8 @@ from jsonschema import Draft4Validator, FormatChecker, RefResolver
 from jsonmapping import SchemaVisitor
 
 from aleph.core import get_config
+from aleph.reference import is_country_code, is_language_code
 from aleph.metadata.parsers import parse_url
-from aleph.metadata.reference import is_country_code, is_language_code
-
 
 resolver = RefResolver('core.json#', {})
 

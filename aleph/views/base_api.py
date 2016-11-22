@@ -8,7 +8,7 @@ from elasticsearch import TransportError
 
 from aleph.core import get_config, app_title, app_url
 from aleph.metadata import Metadata
-from aleph.metadata.reference import COUNTRY_NAMES, LANGUAGE_NAMES
+from aleph.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.model.validation import resolver
 from aleph.views.cache import enable_cache
 
