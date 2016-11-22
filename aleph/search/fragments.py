@@ -1,6 +1,8 @@
 from aleph.index import TYPE_RECORD
 from aleph.text import latinize_text
-from aleph.search.util import add_filter, FACET_SIZE
+from aleph.search.util import add_filter
+
+FACET_SIZE = 50
 
 
 def match_all():

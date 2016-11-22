@@ -35,6 +35,12 @@ SAMPLE_SEARCHES = ['Serbia', 'TeliaSonera', 'Vladimir Putin']
 # Language configuration
 DEFAULT_LANGUAGE = 'en'
 
+# Language whitelist
+LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
+             'el', 'lt', 'uk', 'zh', 'be', 'bg', 'bs', 'ja', 'cs', 'lv', 'pt',
+             'pl', 'hy', 'hr', 'hi', 'he', 'uz', 'mo', 'mn', 'ur', 'sq', 'ko',
+             'is', 'it', 'et', 'no', 'fa', 'sw', 'sl', 'az']
+
 # Category schema for collections.
 # TODO: add extra weight info.
 COLLECTION_CATEGORIES = {

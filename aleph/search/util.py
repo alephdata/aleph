@@ -4,7 +4,6 @@ from copy import deepcopy
 from aleph.core import es, es_index
 
 MARKS = re.compile(r'[_\.;,/]{2,}')
-FACET_SIZE = 50
 
 
 def add_filter(q, filter_):

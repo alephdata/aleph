@@ -6,8 +6,9 @@ from pprint import pprint  # noqa
 from aleph import authz, signals
 from aleph.core import es, es_index
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
-from aleph.search.util import clean_highlight, execute_basic, FACET_SIZE
+from aleph.search.util import clean_highlight, execute_basic
 from aleph.search.fragments import aggregate, filter_query, text_query
+from aleph.search.fragments import FACET_SIZE
 from aleph.search.facet import parse_facet_result
 from aleph.search.records import records_query_internal, records_query_shoulds
 

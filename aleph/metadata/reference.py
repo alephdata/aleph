@@ -10,7 +10,10 @@ LANGUAGE_NAMES = {k: v for k, v in LANGUAGE_NAMES.items() if len(k) == 2}
 COUNTRY_NAMES = {
     'zz': 'Global',
     'eu': 'European Union',
-    'xk': 'Kosovo'
+    'xk': 'Kosovo',
+    'yucs': 'Yugoslavia',
+    'csxx': 'Serbia and Montenegro',
+    'suhh': 'Soviet Union'
 }
 
 for country in countries:
