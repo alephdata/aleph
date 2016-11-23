@@ -1,6 +1,8 @@
+import os
 import six
 import logging
 from uuid import uuid4
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy import select, text as sql_text
 from sqlalchemy.schema import Table
 
@@ -21,7 +23,7 @@ class QueryTable(object):
         self.data = data
         self.table_ref = data.get('table')
         self.alias_ref = data.get('alias', self.table_ref)
-        self.table = Table(self.table_ref, meta, autoload=True)
+        self.table = Table(self.table_ref, self.query.meta, autoload=True)
         self.alias = self.table.alias(self.alias_ref)
 
         self.refs = {}
@@ -41,6 +43,10 @@ class Query(object):
     def __init__(self, dataset, data):
         self.dataset = dataset
         self.data = data
+        self.database_uri = os.path.expandvars(data.get('database'))
+        self.engine = create_engine(self.database_uri)
+        self.meta = MetaData()
+        self.meta.bind = self.engine
 
         tables = dict_list(data, 'table', 'tables')
         self.tables = [QueryTable(self, f) for f in tables]
@@ -106,13 +112,13 @@ class Query(object):
         q = self.apply_filters(q)
         return q
 
-    def iterrecords(self):
+    def iterrows(self):
         """Compose the actual query and return an iterator of ``Record``."""
         mapping = {self.get_column(r).name: r for r in self.active_refs}
 
         q = self.compose_query()
         log.info("Query [%s]: %s", self.dataset.name, q)
-        rp = engine.execute(q)
+        rp = self.engine.execute(q)
         log.info("Query executed, loading data...")
         while True:
             rows = rp.fetchmany(DATA_PAGE)

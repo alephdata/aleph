@@ -28,8 +28,12 @@ class Dataset(object):
         if not len(self.roles):
             raise ValueError("No roles for dataset: %s" % self.name)
 
-        queries = dict_list(data, 'queries', 'query')
-        self.queries = [Query(self, d) for d in queries]
+        self._queries = dict_list(data, 'queries', 'query')
+
+    @property
+    def queries(self):
+        for query in self._queries:
+            yield Query(self, query)
 
     def __repr__(self):
         return '<Dataset(%r, %r)>' % (self.name, self.label)

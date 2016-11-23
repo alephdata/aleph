@@ -14,6 +14,7 @@ from aleph.ingest import reingest_collection
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document_id
 from aleph.logic import reindex_entities, delete_collection, analyze_collection
+from aleph.logic import load_dataset
 from aleph.logic.alerts import check_alerts
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
