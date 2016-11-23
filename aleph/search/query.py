@@ -8,11 +8,12 @@ from aleph.model import Entity
 class QueryState(object):
     """Hold state for common query parameters."""
 
-    def __init__(self, args, authz_collections, limit=None):
+    def __init__(self, args, authz, limit=None):
         if not isinstance(args, MultiDict):
             args = MultiDict(args)
         self.args = args
-        self.authz_collections = authz_collections
+        self.authz = authz
+        self.authz_collections = authz.collections_read
         self._limit = limit
 
         self.facet_names = self.getlist('facet')

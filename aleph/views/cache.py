@@ -1,7 +1,6 @@
 from flask import request, Response, Blueprint
 from apikit import cache_hash
 
-from aleph import authz
 from aleph.core import get_config
 
 
@@ -31,7 +30,7 @@ def enable_cache(vary_user=False, vary=None, server_side=True):
     cache_parts = [args, vary]
 
     if vary_user:
-        cache_parts.extend((request.auth_roles))
+        cache_parts.extend((request.authz.roles))
 
     request._http_cache = get_config('CACHE')
     request._http_etag = cache_hash(*cache_parts)
@@ -70,7 +69,7 @@ def cache_response(resp):
 
         resp.set_etag(request._http_etag)
 
-    if authz.logged_in():
+    if request.authz.logged_in:
         resp.cache_control.private = True
     else:
         resp.cache_control.public = True

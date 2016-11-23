@@ -1,11 +1,9 @@
 import os
 import logging
-
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
 from apikit import jsonify, Pager, get_limit, get_offset, request_data
 
-from aleph import authz
 from aleph.core import archive, url_for, db
 from aleph.model import Document, Entity, Reference, Collection
 from aleph.logic import update_document
@@ -23,7 +21,7 @@ blueprint = Blueprint('documents_api', __name__)
 @blueprint.route('/api/1/documents', methods=['GET'])
 def index():
     collection_ids = request.args.getlist('collection')
-    collection_ids = authz.collections_intersect(authz.READ, collection_ids)
+    collection_ids = request.authz.collections_intersect(request.authz.READ, collection_ids)  # noqa
     q = Document.all()
     clause = Collection.id.in_(collection_ids)
     q = q.filter(Document.collections.any(clause))
@@ -61,9 +59,9 @@ def update(document_id):
     document = get_document(document_id)
     # This is a special requirement for documents, so
     # they cannot escalate privs:
-    authz.require(authz.collection_write(document.source_collection_id))
+    request.authz.require(request.authz.collection_write(document.source_collection_id))  # noqa
     data = request_data()
-    document.update(data, writeable=authz.collections(authz.WRITE))
+    document.update(data, authz=request.authz)
     db.session.commit()
     log_event(request, document_id=document.id)
     update_document(document)
@@ -84,7 +82,7 @@ def update_collections(document_id):
     if not isinstance(data, list) or \
             False in [isinstance(d, int) for d in data]:
         raise BadRequest()
-    document.update_collections(data, writeable=authz.collections(authz.WRITE))
+    document.update_collections(data, authz=request.authz)
     db.session.commit()
     log_event(request, document_id=document.id)
     update_document(document)
@@ -99,7 +97,7 @@ def references(document_id):
     q = q.filter(Reference.origin == 'regex')
     q = q.join(Entity)
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
-    clause = Collection.id.in_(authz.collections(authz.READ))
+    clause = Collection.id.in_(request.authz.collections_read)
     q = q.filter(Entity.collections.any(clause))
     q = q.order_by(Reference.weight.desc())
     return jsonify(Pager(q, document_id=document_id))

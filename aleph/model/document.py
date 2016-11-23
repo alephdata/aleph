@@ -59,23 +59,25 @@ class Document(db.Model, DatedModel):
         self._meta = meta
         flag_modified(self, '_meta')
 
-    def update(self, data, writeable):
+    def update(self, data, authz):
         validate(data, self._schema)
         collection_id = data.pop('collection_id', [])
-        self.update_collections(collection_id, writeable)
+        self.update_collections(collection_id, authz)
         meta = self.meta
         meta.update(data, safe=True)
         self.meta = meta
         db.session.add(self)
 
-    def update_collections(self, collection_id, writeable):
+    def update_collections(self, collection_id, authz):
+        writeable = authz.collections_write
         for coll in self.collections:
             if coll.id == self.source_collection_id:
                 continue
-            if coll.id not in collection_id and coll.id in writeable:
-                self.collections.remove(coll)
+            if coll.id not in collection_id:
+                if coll.id in authz.collections_write:
+                    self.collections.remove(coll)
         for coll_id in collection_id:
-            if coll_id in writeable:
+            if coll_id in authz.collections_write:
                 coll = Collection.by_id(coll_id)
                 if coll not in self.collections:
                     self.collections.append(coll)
@@ -150,17 +152,17 @@ class Document(db.Model, DatedModel):
         return collection_ids
 
     def _add_to_dict(self, data):
-        collection_ids = self.collection_ids
+        source_id = self.source_collection_id
         try:
-            from aleph.authz import collections_public
-            data['public'] = collections_public(collection_ids)
+            from flask import request
+            data['public'] = request.authz.collection_public(source_id)
         except:
-            pass
+            data['public'] = None
         data.update({
             'id': self.id,
             'type': self.type,
-            'source_collection_id': self.source_collection_id,
-            'collection_id': collection_ids,
+            'source_collection_id': source_id,
+            'collection_id': self.collection_ids,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         })

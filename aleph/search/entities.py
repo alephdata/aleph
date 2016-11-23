@@ -69,7 +69,7 @@ def facet_collections(q, aggs, state):
     return aggs
 
 
-def suggest_entities(prefix, collections, min_count=0, schemas=None, size=5):
+def suggest_entities(prefix, authz, min_count=0, schemas=None, size=5):
     """Auto-complete API."""
     options = []
     if prefix is not None and len(prefix.strip()):
@@ -80,7 +80,7 @@ def suggest_entities(prefix, collections, min_count=0, schemas=None, size=5):
             q = add_filter(q, {'range': {'doc_count': {'gte': min_count}}})
         if schemas is not None and len(schemas):
             q = add_filter(q, {'terms': {'$schema': schemas}})
-        q = add_filter(q, {'terms': {'collection_id': collections}})
+        q = add_filter(q, {'terms': {'collection_id': authz.collections_read}})
         q = {
             'size': size,
             'sort': [{'doc_count': 'desc'}, '_score'],
@@ -102,7 +102,7 @@ def suggest_entities(prefix, collections, min_count=0, schemas=None, size=5):
     }
 
 
-def similar_entities(entity, collections):
+def similar_entities(entity, authz, writeable=False):
     """Merge suggestions API."""
     shoulds = []
     for term in entity.terms:
@@ -121,6 +121,9 @@ def similar_entities(entity, collections):
             }
         })
 
+    collections = authz.collections_write
+    if writeable:
+        collections = authz.collections_read
     q = {
         "bool": {
             "should": shoulds,

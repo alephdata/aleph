@@ -2,7 +2,6 @@ from flask import Blueprint, request
 from apikit import request_data, jsonify, Pager
 from sqlalchemy import or_
 
-from aleph import authz
 from aleph.model import db, CrawlerState
 from aleph.crawlers import get_exposed_crawlers, execute_crawler
 
@@ -11,14 +10,14 @@ blueprint = Blueprint('crawlers_api', __name__)
 
 @blueprint.route('/api/1/crawlers', methods=['GET'])
 def index():
-    authz.require(authz.is_admin())
+    request.authz.require(request.authz.is_admin)
     crawlers = list(get_exposed_crawlers())
     return jsonify(Pager(crawlers, limit=20))
 
 
 @blueprint.route('/api/1/crawlers', methods=['POST', 'PUT'])
 def queue():
-    authz.require(authz.is_admin())
+    request.authz.require(request.authz.is_admin)
     data = request_data()
     crawler_id = data.get('crawler_id')
     for cls in get_exposed_crawlers():
@@ -33,7 +32,7 @@ def queue():
 @blueprint.route('/api/1/collections/<int:id>/crawlerstates',
                  methods=['GET'])
 def collection_crawlerstates(id):
-    authz.require(authz.collection_write(id))
+    request.authz.require(request.authz.collection_read(id))
     q = db.session.query(CrawlerState)
     q = q.filter(CrawlerState.collection_id == id)
     q = q.filter(or_(

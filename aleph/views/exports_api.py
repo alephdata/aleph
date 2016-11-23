@@ -1,6 +1,5 @@
 from flask import Blueprint, request, send_file
 
-from aleph import authz
 from aleph.core import url_for
 from aleph.model import Collection
 from aleph.events import log_event
@@ -11,9 +10,9 @@ blueprint = Blueprint('exports_api', __name__)
 
 
 XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-FIELDS = ['collections', 'title', 'file_name', 'summary', 'extension',
-          'mime_type', 'languages', 'countries', 'keywords', 'dates',
-          'file_url', 'source_url']
+FIELDS = ['collection', 'title', 'file_name', 'summary', 'extension', 'mime_type',
+          'languages', 'countries', 'keywords', 'dates', 'file_url',
+          'source_url']
 
 
 def get_results(query, limit):
@@ -26,18 +25,12 @@ def get_results(query, limit):
                                 document_id=row.get('_id'))
         }
         for name, value in row.get('_source').items():
-            if name == 'collection_id':
-                colls = []
-                for coll in value:
-                    if coll not in collections:
-                        source = Collection.by_id(coll)
-                        if source is None:
-                            collections[coll] = '[Deleted collection %s]' % value
-                        else:
-                            collections[coll] = source.label
-                    colls.append(collections[coll])
-                value = ', '.join(sorted(colls))
-                name = 'collections'
+            if name == 'source_collection_id':
+                if value not in collections:
+                    collections[value] = Collection.by_id(value)
+                if collections[value]:
+                    value = collections[value].label
+                name = 'collection'
             if name not in FIELDS:
                 continue
             if isinstance(value, (list, tuple, set)):
@@ -48,8 +41,7 @@ def get_results(query, limit):
 
 @blueprint.route('/api/1/query/export')
 def export():
-    authz_collections = authz.collections(authz.READ)
-    state = QueryState(request.args, authz_collections, limit=0)
+    state = QueryState(request.args, request.authz, limit=0)
     query = documents_query(state)
     query = {
         'query': query['query']

@@ -1,11 +1,9 @@
 import StringIO
 from flask import request
 from urlparse import urlparse, urljoin
-
 from werkzeug.exceptions import NotFound
 import xlsxwriter
 
-from aleph import authz
 from aleph.core import db
 from aleph.model import Document, DocumentPage
 
@@ -14,9 +12,10 @@ def get_document(document_id):
     document = Document.by_id(document_id)
     if document is None:
         raise NotFound()
-    readable = [c for c in document.collection_ids if authz.collection_read(c)]
-    authz.require(len(readable))
-    return document
+    for collection_id in document.collection_ids:
+        if request.authz.collection_read(collection_id):
+            return document
+    request.authz.require(False)
 
 
 def get_tabular(document_id, table_id):

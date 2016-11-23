@@ -2,7 +2,6 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify, request_data, arg_bool
 
-from aleph import authz
 from aleph.model import Entity, Collection, db
 from aleph.logic import update_entity, delete_entity
 from aleph.views.cache import enable_cache
@@ -15,11 +14,11 @@ blueprint = Blueprint('entities_api', __name__)
 
 
 def check_authz(entity, permission):
-    permissions = authz.collections(permission)
+    permissions = request.authz.collections.get(permission)
     for collection in entity.collections:
         if collection.id in permissions:
             return
-    authz.require(False)
+    request.authz.require(False)
 
 
 def get_collections(data):
@@ -36,9 +35,8 @@ def get_collections(data):
 
 @blueprint.route('/api/1/entities', methods=['GET'])
 def index():
-    authz_collections = authz.collections(authz.READ)
-    enable_cache(vary_user=True, vary=authz_collections)
-    state = QueryState(request.args, authz_collections)
+    enable_cache(vary_user=True)
+    state = QueryState(request.args, request.authz)
     query = entities_query(state)
     query['size'] = state.limit
     query['from'] = state.offset
@@ -50,7 +48,7 @@ def index():
 @blueprint.route('/api/1/entities/_all', methods=['GET'])
 def all():
     collection_id = request.args.getlist('collection_id')
-    collection_id = authz.collections_intersect(authz.READ, collection_id)
+    collection_id = request.authz.collections_intersect(request.authz.READ, collection_id)  # noqa
     q = Entity.all_ids()
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
     q = q.filter(Entity.deleted_at == None)  # noqa
@@ -65,7 +63,7 @@ def create():
     data.pop('id', None)
     collections = get_collections(data)
     for collection in collections:
-        authz.require(authz.collection_write(collection.id))
+        request.authz.require(request.authz.collection_write(collection.id))
 
     try:
         entity = Entity.save(data, collections)
@@ -79,39 +77,37 @@ def create():
     return view(entity.id)
 
 
-@blueprint.route('/api/1/entities/_suggest', methods=['GET'])
-def suggest():
-    collections = authz.collections(authz.READ)
-    enable_cache(vary=collections, server_side=False)
-    prefix = request.args.get('prefix')
-    min_count = int(request.args.get('min_count', 0))
-    return jsonify(suggest_entities(prefix, collections, min_count))
-
-
 @blueprint.route('/api/1/entities/<id>', methods=['GET'])
 def view(id):
     entity = obj_or_404(Entity.by_id(id))
-    check_authz(entity, authz.READ)
+    check_authz(entity, request.authz.READ)
     log_event(request, entity_id=entity.id)
     return jsonify(entity)
+
+
+@blueprint.route('/api/1/entities/_suggest', methods=['GET'])
+def suggest():
+    enable_cache(vary_user=True, server_side=False)
+    prefix = request.args.get('prefix')
+    min_count = int(request.args.get('min_count', 0))
+    return jsonify(suggest_entities(prefix, request.authz, min_count))
 
 
 @blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])
 def similar(id):
     entity = obj_or_404(Entity.by_id(id))
-    check_authz(entity, authz.READ)
-    action = authz.WRITE if arg_bool('writeable') else authz.READ
-    collections = authz.collections(action)
-    return jsonify(similar_entities(entity, collections))
+    check_authz(entity, request.authz.READ)
+    return jsonify(similar_entities(entity, request.authz,
+                                    writeable=arg_bool('writeable')))
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])
 def update(id):
     entity = obj_or_404(Entity.by_id(id))
-    check_authz(entity, authz.WRITE)
+    check_authz(entity, request.authz.WRITE)
     data = request_data()
     data['id'] = entity.id
-    possible_collections = authz.collections(authz.WRITE)
+    possible_collections = request.authz.collections_write
     possible_collections.extend([c.id for c in entity.collections])
     collections = [c for c in get_collections(data)
                    if c.id in possible_collections]
@@ -130,9 +126,9 @@ def update(id):
 @blueprint.route('/api/1/entities/<id>/merge/<other_id>', methods=['DELETE'])
 def merge(id, other_id):
     entity = obj_or_404(Entity.by_id(id))
-    check_authz(entity, authz.WRITE)
+    check_authz(entity, request.authz.WRITE)
     other = obj_or_404(Entity.by_id(other_id))
-    check_authz(other, authz.WRITE)
+    check_authz(other, request.authz.WRITE)
     entity.merge(other)
     db.session.commit()
     update_entity(entity)
@@ -144,7 +140,7 @@ def merge(id, other_id):
 @blueprint.route('/api/1/entities/<id>', methods=['DELETE'])
 def delete(id):
     entity = obj_or_404(Entity.by_id(id))
-    check_authz(entity, authz.WRITE)
+    check_authz(entity, request.authz.WRITE)
     delete_entity(entity)
     db.session.commit()
     log_event(request, entity_id=entity.id)

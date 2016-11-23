@@ -25,6 +25,6 @@ def upgrade_db():
 
 def create_system_roles():
     log.info("Creating system roles...")
-    Role.load_or_create(Role.SYSTEM_GUEST, Role.SYSTEM, 'All visitors')
-    Role.load_or_create(Role.SYSTEM_USER, Role.SYSTEM, 'Logged-in users')
+    Role.load_id(Role.SYSTEM_GUEST, Role.SYSTEM, 'All visitors')
+    Role.load_id(Role.SYSTEM_USER, Role.SYSTEM, 'Logged-in users')
     db.session.commit()

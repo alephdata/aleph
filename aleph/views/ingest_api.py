@@ -5,7 +5,6 @@ from werkzeug import secure_filename
 from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify
 
-from aleph import authz
 from aleph.core import upload_folder, USER_QUEUE, USER_ROUTING_KEY
 from aleph.events import log_event
 from aleph.metadata import Metadata
@@ -21,7 +20,7 @@ blueprint = Blueprint('ingest_api', __name__)
                  methods=['POST', 'PUT'])
 def ingest_upload(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))
-    authz.require(authz.collection_write(collection.id))
+    request.authz.require(request.authz.collection_write(collection.id))
     log_event(request)
     try:
         meta = json.loads(request.form.get('meta', '{}'))
@@ -35,7 +34,7 @@ def ingest_upload(collection_id):
         file_meta['file_name'] = storage.filename
         validate(file_meta, 'metadata.json#')
         file_meta = Metadata.from_data(file_meta)
-        file_meta.crawler_id = 'user_upload:%s' % request.auth_role.id
+        file_meta.crawler_id = 'user_upload:%s' % request.authz.role.id
         file_meta.crawler_run = make_textid()
         sec_fn = os.path.join(upload_folder, secure_filename(storage.filename))
         storage.save(sec_fn)

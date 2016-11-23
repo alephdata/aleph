@@ -46,8 +46,8 @@ class TestCase(FlaskTestCase):
         role = self.create_user(foreign_id=foreign_id, name=name, email=email,
                                 is_admin=is_admin)
         with self.client.session_transaction() as sess:
-            sess['roles'] = [Role.system(Role.SYSTEM_GUEST),
-                             Role.system(Role.SYSTEM_USER), role.id]
+            sess['roles'] = [Role.load_id(Role.SYSTEM_GUEST),
+                             Role.load_id(Role.SYSTEM_USER), role.id]
             sess['user'] = role.id
         return role
 

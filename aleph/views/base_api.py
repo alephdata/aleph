@@ -89,8 +89,8 @@ def handle_authz_error(err):
     return jsonify({
         'status': 'error',
         'message': 'You are not authorized to do this.',
-        'roles': request.auth_roles,
-        'user': request.auth_role
+        'roles': request.authz.roles,
+        'user': request.authz.role
     }, status=403)
 
 

@@ -3,7 +3,7 @@ import time
 import logging
 from pprint import pprint  # noqa
 
-from aleph import authz, signals
+from aleph import signals
 from aleph.core import es, es_index
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import clean_highlight, execute_basic
@@ -136,7 +136,7 @@ def execute_documents_query(state, query):
         document['records'] = {'results': [], 'total': 0}
         collection_id = document.get('collection_id')
         try:
-            document['public'] = authz.collections_public(collection_id)
+            document['public'] = state.authz.collection_public(collection_id)
         except:
             document['public'] = None
 

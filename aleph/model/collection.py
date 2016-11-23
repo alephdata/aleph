@@ -122,6 +122,16 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
     def __unicode__(self):
         return self.label
 
+    @property
+    def is_public(self):
+        if not hasattr(self, '_is_public'):
+            try:
+                from flask import request
+                self._is_public = request.authz.collection_public(self.id)
+            except:
+                self._is_public = None
+        return self._is_public
+
     def get_document_count(self):
         from aleph.model.document import Document, collection_document_table
         q = Document.all()
@@ -160,13 +170,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
             'countries': self.countries,
             'managed': self.managed,
             'private': self.private,
+            'public': self.is_public,
             'generate_entities': self.generate_entities
         })
-        try:
-            from aleph.authz import collection_public
-            data['public'] = collection_public(self)
-        except:
-            pass
         if counts:
             # Query how many enitites and documents are in this collection.
             from aleph.model.entity import Entity

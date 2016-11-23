@@ -4,8 +4,9 @@ from flask_oauthlib.client import OAuthException
 from apikit import jsonify
 from werkzeug.exceptions import Unauthorized
 
-from aleph import authz, signals
+from aleph import signals
 from aleph.core import db, url_for
+from aleph.authz import Authz, get_public_roles
 from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.events import log_event
@@ -19,14 +20,10 @@ blueprint = Blueprint('sessions_api', __name__)
 
 @blueprint.before_app_request
 def load_role():
-    request.auth_roles = set([Role.system(Role.SYSTEM_GUEST)])
-    request.auth_role = None
-    request.logged_in = False
-
+    request.authz = Authz(role=None)
     if session.get('user'):
-        request.auth_roles.update(session.get('roles', []))
-        request.auth_role = Role.by_id(session.get('user'))
-        request.logged_in = True
+        role = Role.by_id(session.get('user'))
+        request.authz = Authz(role=role)
     else:
         api_key = request.args.get('api_key')
         if api_key is None:
@@ -36,9 +33,7 @@ def load_role():
         role = Role.by_api_key(api_key)
         if role is None:
             return
-        request.auth_role = role
-        request.auth_roles.update([Role.system(Role.SYSTEM_USER), role.id])
-        request.logged_in = True
+        request.authz = Authz(role=role)
 
 
 @blueprint.route('/api/1/sessions')
@@ -51,16 +46,17 @@ def status():
         'label': p.label,
         'login': url_for('.login', provider=p.name),
     } for p in providers]
+    authz = request.authz
 
     return jsonify({
-        'logged_in': authz.logged_in(),
-        'api_key': request.auth_role.api_key if authz.logged_in() else None,
-        'role': request.auth_role,
-        'roles': list(request.auth_roles),
-        'public_roles': authz.get_public_roles(),
+        'logged_in': authz.logged_in,
+        'api_key': authz.role.api_key if authz.logged_in else None,
+        'role': authz.role,
+        'roles': authz.roles,
+        'public_roles': get_public_roles(),
         'permissions': {
-            'read': authz.collections(authz.READ),
-            'write': authz.collections(authz.WRITE)
+            'read': authz.collections[authz.READ],
+            'write': authz.collections[authz.WRITE]
         },
         'logout': url_for('.logout'),
         'providers': providers,
@@ -111,7 +107,7 @@ def callback(provider):
         return Unauthorized("Authentication has failed.")
 
     session['oauth'] = resp
-    session['roles'] = [Role.system(Role.SYSTEM_USER)]
+    session['roles'] = [Role.load_id(Role.SYSTEM_USER)]
     signals.handle_oauth_session.send(provider=oauth_provider, session=session)
     db.session.commit()
     log_event(request, role_id=session['user'])

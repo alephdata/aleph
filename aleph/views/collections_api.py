@@ -1,7 +1,6 @@
 from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, Pager, request_data, arg_bool
 
-from aleph import authz
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Collection, db
 from aleph.events import log_event
@@ -17,9 +16,9 @@ def index():
     # allow to filter for writeable collections only, needed
     # in some UI scenarios:
     permission = request.args.get('permission')
-    if permission not in [authz.READ, authz.WRITE]:
-        permission = authz.READ
-    collections = authz.collections(permission)
+    if permission not in [request.authz.READ, request.authz.WRITE]:
+        permission = request.authz.READ
+    collections = request.authz.collections[permission]
 
     # Other filters for navigation
     label = request.args.get('label')
@@ -48,7 +47,7 @@ def index():
 
 @blueprint.route('/api/1/collections', methods=['POST', 'PUT'])
 def create():
-    authz.require(authz.logged_in())
+    request.authz.require(request.authz.logged_in)
     collection = Collection.create(request_data(), request.auth_role)
     db.session.commit()
     update_collection(collection)
@@ -59,7 +58,7 @@ def create():
 @blueprint.route('/api/1/collections/<int:id>', methods=['GET'])
 def view(id):
     collection = obj_or_404(Collection.by_id(id))
-    authz.require(authz.collection_read(id))
+    request.authz.require(request.authz.collection_read(collection))
     data = collection.to_dict(counts=True)
     # data.update(collection.content_statistics())
     return jsonify(data)
@@ -67,8 +66,8 @@ def view(id):
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['POST', 'PUT'])
 def update(id):
-    authz.require(authz.collection_write(id))
     collection = obj_or_404(Collection.by_id(id))
+    request.authz.require(request.authz.collection_write(collection))
     collection.update(request_data())
     db.session.add(collection)
     db.session.commit()
@@ -79,8 +78,8 @@ def update(id):
 
 @blueprint.route('/api/1/collections/<int:id>/process', methods=['POST', 'PUT'])
 def process(id):
-    authz.require(authz.collection_write(id))
     collection = obj_or_404(Collection.by_id(id))
+    request.authz.require(request.authz.collection_write(collection))
     analyze_collection.apply_async([collection.id], queue=USER_QUEUE,
                                    routing_key=USER_ROUTING_KEY)
     log_event(request)
@@ -90,7 +89,7 @@ def process(id):
 @blueprint.route('/api/1/collections/<int:id>/pending', methods=['GET'])
 def pending(id):
     collection = obj_or_404(Collection.by_id(id))
-    authz.require(authz.collection_read(id))
+    request.authz.require(request.authz.collection_read(collection))
     q = collection.pending_entities()
     q = q.limit(30)
     entities = []
@@ -104,7 +103,7 @@ def pending(id):
 @blueprint.route('/api/1/collections/<int:id>', methods=['DELETE'])
 def delete(id):
     collection = obj_or_404(Collection.by_id(id))
-    authz.require(authz.collection_write(id))
+    request.authz.require(request.authz.collection_write(collection))
     delete_collection.apply_async([collection.id], queue=USER_QUEUE,
                                   routing_key=USER_ROUTING_KEY)
     log_event(request)

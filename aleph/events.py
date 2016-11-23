@@ -8,8 +8,8 @@ def log_event(request, role_id=None, **data):
     path = '%s %s' % (request.method, request.path)
     if len(request.query_string.strip()):
         path = '%s?%s' % (path, request.query_string)
-    if request.auth_role:
-        role_id = request.auth_role.id
+    if request.authz.logged_in:
+        role_id = request.authz.role.id
 
     source_ip = None
     if len(request.access_route):

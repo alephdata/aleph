@@ -76,17 +76,23 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
         db.session.add(role)
         db.session.flush()
-        log.info("Role: %r, admin: %s", role, role.is_admin)
         return role
 
     @classmethod
-    def system(cls, foreign_id):
+    def load_id(cls, foreign_id, type=None, name=None):
+        """Load a role and return the ID.
+
+        If type is given and no role is found, a new role will be created.
+        """
         if not hasattr(current_app, '_authz_roles'):
             current_app._authz_roles = {}
         if foreign_id not in current_app._authz_roles:
             role = cls.by_foreign_id(foreign_id)
             if role is None:
-                return
+                if type is None:
+                    return
+                name = name or foreign_id
+                role = cls.load_or_create(foreign_id, type, name)
             current_app._authz_roles[foreign_id] = role.id
         return current_app._authz_roles[foreign_id]
 

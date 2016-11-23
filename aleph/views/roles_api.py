@@ -2,7 +2,6 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, request_data, jsonify
 
-from aleph import authz
 from aleph.core import db
 from aleph.events import log_event
 from aleph.model import Role, Collection, Permission, validate
@@ -14,7 +13,7 @@ blueprint = Blueprint('roles_api', __name__)
 
 @blueprint.route('/api/1/roles', methods=['GET'])
 def index():
-    authz.require(authz.logged_in())
+    request.authz.require(request.authz.logged_in)
     users = []
     for role in Role.all():
         data = role.to_dict()
@@ -25,10 +24,10 @@ def index():
 
 @blueprint.route('/api/1/roles/<int:id>', methods=['GET'])
 def view(id):
-    authz.require(authz.logged_in())
+    request.authz.require(request.authz.logged_in)
     role = obj_or_404(Role.by_id(id))
     data = role.to_dict()
-    if role.id != request.auth_role.id:
+    if role.id != request.authz.role.id:
         del data['email']
     return jsonify(data)
 
@@ -36,8 +35,8 @@ def view(id):
 @blueprint.route('/api/1/roles/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     role = obj_or_404(Role.by_id(id))
-    authz.require(authz.logged_in())
-    authz.require(role.id == request.auth_role.id)
+    request.authz.require(request.authz.logged_in)
+    request.authz.require(role.id == request.authz.role.id)
     role.update(request_data())
     db.session.add(role)
     db.session.commit()
@@ -47,7 +46,7 @@ def update(id):
 
 @blueprint.route('/api/1/collections/<int:collection>/permissions')
 def permissions_index(collection):
-    authz.require(authz.collection_write(collection))
+    request.authz.require(request.authz.collection_write(collection))
     q = Permission.all()
     q = q.filter(Permission.collection_id == collection)
     return jsonify({
@@ -59,7 +58,7 @@ def permissions_index(collection):
 @blueprint.route('/api/1/collections/<int:collection>/permissions',
                  methods=['POST', 'PUT'])
 def permissions_update(collection):
-    authz.require(authz.collection_write(collection))
+    request.authz.require(request.authz.collection_write(collection))
     data = request_data()
     validate(data, 'permission.json#')
 

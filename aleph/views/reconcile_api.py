@@ -5,7 +5,6 @@ from flask import Blueprint, request, url_for
 from apikit import jsonify
 from werkzeug.exceptions import BadRequest
 
-from aleph import authz
 from aleph.events import log_event
 from aleph.core import app_url, app_title
 from aleph.model.validation import implied_schemas, resolver
@@ -63,7 +62,7 @@ def reconcile_op(query):
 
 def reconcile_index():
     domain = app_url.strip('/')
-    api_key = request.auth_role.api_key if authz.logged_in() else None
+    api_key = request.auth_role.api_key if request.authz.logged_in else None
     preview_uri = entity_link('{{id}}') + '&preview=true&api_key=%s' % api_key
     meta = {
         'name': app_title,
@@ -105,7 +104,6 @@ def reconcile():
 
     See: http://code.google.com/p/google-refine/wiki/ReconciliationServiceApi
     """
-    # authz.require(authz.system_read())
     data = request.args.copy()
     data.update(request.form.copy())
     log_event(request)
@@ -165,7 +163,6 @@ def suggest_entity():
 
 @blueprint.route('/api/freebase/property', methods=['GET', 'POST'])
 def suggest_property():
-    # authz.require(authz.system_read())
     prefix = request.args.get('prefix', '').lower().strip()
     properties = [{
         'id': 'jurisdiction_code',
