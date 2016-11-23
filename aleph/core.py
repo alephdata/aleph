@@ -16,6 +16,7 @@ from elasticsearch import Elasticsearch
 from aleph import default_settings
 from aleph.archive import archive_from_config
 from aleph.ext import get_init
+from aleph.util import load_config_file
 from aleph.oauth import configure_oauth
 
 log = logging.getLogger(__name__)
@@ -141,17 +142,21 @@ def get_archive():
     return app._aleph_archive
 
 
-def get_schema():
+def get_graph():
     app = current_app._get_current_object()
     if not hasattr(app, '_graph_model'):
-        app._graph_model = None
-    return app._graph_model
-
-
-def get_datasets():
-    app = current_app._get_current_object()
-    if not hasattr(app, '_graph_model'):
-        app._graph_model = None
+        graph_yaml = app.config.get('GRAPH_YAML')
+        log.info("Loading graph schema from: %s", graph_yaml)
+        datasets_yaml = app.config.get('DATASETS_YAML')
+        if datasets_yaml is not None:
+            log.info("Loading datasets from: %s", datasets_yaml)
+            datasets = load_config_file(datasets_yaml)
+        else:
+            log.warn("No datasets.yaml defined.")
+            datasets = {}
+        from aleph.graph import GraphModel
+        app._graph_model = GraphModel(load_config_file(graph_yaml),
+                                      datasets)
     return app._graph_model
 
 
@@ -170,8 +175,7 @@ app_url = LocalProxy(get_app_url)
 es = LocalProxy(get_es)
 es_index = LocalProxy(get_es_index)
 archive = LocalProxy(get_archive)
-schema = LocalProxy(get_schema)
-datasets = LocalProxy(get_datasets)
+graph = LocalProxy(get_graph)
 upload_folder = LocalProxy(get_upload_folder)
 
 

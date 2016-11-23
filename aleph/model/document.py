@@ -1,6 +1,5 @@
 import logging
 from hashlib import sha1
-
 from sqlalchemy import func
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSONB
@@ -8,9 +7,9 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db
 from aleph.metadata import Metadata
+from aleph.data.validation import validate
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
-from aleph.model.validation import validate
 from aleph.model.common import DatedModel
 
 log = logging.getLogger(__name__)

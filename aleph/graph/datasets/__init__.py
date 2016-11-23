@@ -1,8 +1,8 @@
 import six
 import logging
 
-from memorious.model.datasets.query import Query
-from memorious.util import dict_list
+from aleph.util import dict_list
+from aleph.graph.datasets.query import Query
 
 log = logging.getLogger(__name__)
 

@@ -2,7 +2,7 @@ import time
 import logging
 from elasticsearch import ElasticsearchException
 
-from aleph.core import celery, graph_model
+from aleph.core import celery, graph
 from aleph.graph import Schema
 from aleph.index import index_items
 
@@ -29,7 +29,7 @@ def map_row(query, row):
 @celery.task(bind=True)
 def load_rows(task, dataset_name, query_idx, rows):
     """Load a single batch of QUEUE_PAGE rows from the given query."""
-    dataset = model.get_dataset(dataset_name)
+    dataset = graph.get_dataset(dataset_name)
     items = []
     for row in rows:
         for item in map_row(dataset.queries[query_idx], row):

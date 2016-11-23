@@ -57,6 +57,10 @@ COLLECTION_CATEGORIES = {
     'grey': 'Grey literature'
 }
 
+# Graph / Databases component configuration
+GRAPH_YAML = path.join(path.dirname(__file__), 'graph.yaml')
+DATASETS_YAML = None
+
 # Binary paths for programs to which the ingestor shells out:
 TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')
 PDFTOHTML_BIN = env.get('PDFTOHTML_BIN', 'pdftohtml')

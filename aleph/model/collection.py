@@ -5,11 +5,11 @@ from sqlalchemy.orm import aliased
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db, url_for
+from aleph.data.validation import validate
 from aleph.model.role import Role
 from aleph.model.permission import Permission
 from aleph.model.util import ModelFacets
 from aleph.model.common import SoftDeleteModel, IdModel, make_token
-from aleph.model.validation import validate
 
 log = logging.getLogger(__name__)
 

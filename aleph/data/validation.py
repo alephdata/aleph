@@ -1,7 +1,6 @@
 import os
 import re
 import json
-
 from jsonschema import Draft4Validator, FormatChecker, RefResolver
 from jsonmapping import SchemaVisitor
 
@@ -11,8 +10,9 @@ from aleph.metadata.parsers import parse_url
 
 resolver = RefResolver('core.json#', {})
 
-schema_dir = os.path.join(os.path.dirname(__file__), '..', 'schema')
-for (root, dirs, files) in os.walk(schema_dir):
+SCHEMA_DIR = os.path.join(os.path.dirname(__file__), 'validation')
+
+for (root, dirs, files) in os.walk(SCHEMA_DIR):
     for schema_file in files:
         with open(os.path.join(root, schema_file), 'r') as fh:
             schema = json.load(fh)

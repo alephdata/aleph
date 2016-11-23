@@ -3,8 +3,8 @@ from werkzeug.datastructures import MultiDict
 from sqlalchemy import func
 
 from aleph.core import db
+from aleph.data.validation import validate
 from aleph.model.entity import Entity
-from aleph.model.validation import validate
 from aleph.model.common import SoftDeleteModel
 
 

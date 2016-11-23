@@ -2,10 +2,10 @@ import logging
 from pprint import pprint  # noqa
 from elasticsearch.helpers import bulk, scan
 
-from aleph.core import es, es_index, graph_model
+from aleph.core import es, es_index, graph
 from aleph.graph import Schema
 from aleph.index.util import merge_docs, remove_nulls
-from aleph.util import DATA_PAGE, unique_list
+from aleph.util import unique_list
 from aleph.util import is_list
 
 log = logging.getLogger(__name__)
@@ -33,6 +33,7 @@ def _index_updates(items):
             entities[doc_id] = source
 
     result = es.mget(index=es_index, body={'docs': queries})
+    merge_func = graph_model.merge_entity_schema
     for idx_doc in result.get('docs'):
         if not idx_doc.get('found', False):
             continue
@@ -40,8 +41,7 @@ def _index_updates(items):
         entity = entities.get(entity_id)
         existing = idx_doc.get('_source')
         combined = merge_docs(entity, existing)
-        combined['schema'] = model.merge_entity_schema(entity['schema'],
-                                                       existing['schema'])
+        combined['schema'] = merge_func(entity['schema'], existing['schema'])
         entities[entity_id] = combined
 
     for doc_id, link in links:
@@ -87,5 +87,6 @@ def delete_dataset(dataset_name):
             }
             if i > 0 and i % 10000 == 0:
                 log.info("Delete %s: %s", dataset_name, i)
+
     es.indices.refresh(index=es_index)
-    bulk(es, deletes(), stats_only=True, chunk_size=DATA_PAGE)
+    bulk(es, deletes(), stats_only=True, chunk_size=INDEX_PAGE)

@@ -36,6 +36,7 @@ metafolder
 jsonmapping
 polyglot==16.7.4
 https://github.com/occrp/cronosparser/tarball/master
+https://github.com/occrp/countrynames/tarball/master
 langid==1.1.5
 blinker==1.4
 Babel==2.3.4

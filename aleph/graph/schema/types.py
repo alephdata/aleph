@@ -7,7 +7,7 @@ from flanker.addresslib import address
 import phonenumbers
 from phonenumbers.phonenumberutil import NumberParseException
 
-from memorious.util import clean_text
+from aleph.text import clean_text
 
 
 class StringProperty(object):

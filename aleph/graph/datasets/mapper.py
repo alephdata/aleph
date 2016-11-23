@@ -3,10 +3,10 @@ import fingerprints
 from hashlib import sha1
 from pprint import pprint  # noqa
 
-from memorious.model.schema import Schema
-from memorious.model.datasets.formatting import Formatter
-from memorious.util import dict_list, unique_list, clean_text
-from memorious.util import latinize_text
+from aleph.graph.schema import Schema
+from aleph.graph.datasets.formatting import Formatter
+from aleph.util import dict_list, unique_list
+from aleph.text import latinize_text, clean_text
 
 
 class MapperProperty(object):

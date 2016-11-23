@@ -9,8 +9,9 @@ from aleph.core import upload_folder, USER_QUEUE, USER_ROUTING_KEY
 from aleph.events import log_event
 from aleph.metadata import Metadata
 from aleph.ingest import ingest_file
-from aleph.model import Collection, validate
+from aleph.model import Collection
 from aleph.model.common import make_textid
+from aleph.data.validation import validate
 
 
 blueprint = Blueprint('ingest_api', __name__)

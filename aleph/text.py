@@ -33,6 +33,13 @@ def normalize_strong(text):
     return collapse_spaces(text)
 
 
+def clean_text(text):
+    """Apply some very simple cleaning operations to a piece of text."""
+    text = string_value(text)
+    if text is not None:
+        return collapse_spaces(text)
+
+
 def string_value(value, encoding_default='utf-8', encoding=None):
     """Brute-force convert a given object to a string.
 

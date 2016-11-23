@@ -1,5 +1,5 @@
-from memorious.model.schema.types import resolve_type
-from memorious.util import dict_list
+from aleph.util import dict_list
+from aleph.graph.schema.types import resolve_type
 
 
 class SchemaProperty(object):

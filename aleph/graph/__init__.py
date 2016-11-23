@@ -11,16 +11,14 @@ class GraphModel(object):
     the datasets defined for import.
     """
 
-    def __init__(self, data):
-        self.data = data
-
+    def __init__(self, schema, datasets):
         self.schemata = []
         for section in Schema.SECTIONS:
-            for name, sconfig in data['schema'].get(section, {}).items():
+            for name, sconfig in schema.get(section, {}).items():
                 self.schemata.append(Schema(self, section, name, sconfig))
 
         self.datasets = []
-        for name, dconfig in data.get('datasets', {}).items():
+        for name, dconfig in datasets.get('datasets', {}).items():
             self.datasets.append(Dataset(self, name, dconfig))
 
     def get_schema(self, section, name):

@@ -4,10 +4,11 @@ from uuid import uuid4
 from sqlalchemy import select, text as sql_text
 from sqlalchemy.schema import Table
 
-from aleph.util import DATA_PAGE, dict_list
-from aleph.model.datasets.mapper import EntityMapper, LinkMapper
+from aleph.util import dict_list
+from aleph.graph.datasets.mapper import EntityMapper, LinkMapper
 
 log = logging.getLogger(__name__)
+DATA_PAGE = 10000
 
 
 class QueryTable(object):

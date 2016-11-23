@@ -7,7 +7,7 @@ from werkzeug.exceptions import BadRequest
 
 from aleph.events import log_event
 from aleph.core import app_url, app_title
-from aleph.model.validation import implied_schemas, resolver
+from aleph.data.validation import implied_schemas, resolver
 from aleph.search.entities import suggest_entities
 
 

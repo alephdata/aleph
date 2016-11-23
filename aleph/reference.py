@@ -17,10 +17,11 @@ COUNTRY_NAMES = {
 }
 
 for country in countries:
+    code = country.alpha_2.lower()
     if hasattr(country, 'common_name'):
-        COUNTRY_NAMES[country.alpha_2] = country.common_name
+        COUNTRY_NAMES[code] = country.common_name
     else:
-        COUNTRY_NAMES[country.alpha_2] = country.name
+        COUNTRY_NAMES[code] = country.name
 
 
 def get_language_whitelist():

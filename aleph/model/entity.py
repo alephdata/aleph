@@ -6,11 +6,11 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
 from aleph.text import normalize_strong
+from aleph.data.validation import validate
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
 from aleph.model.common import SoftDeleteModel, UuidModel
 from aleph.model.common import make_textid, make_fingerprint
-from aleph.model.validation import validate
 from aleph.model.util import merge_data
 
 log = logging.getLogger(__name__)
