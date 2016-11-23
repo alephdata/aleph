@@ -3,6 +3,7 @@ import os
 import gc
 import six
 import json
+import yaml
 import shutil
 import logging
 from os import path

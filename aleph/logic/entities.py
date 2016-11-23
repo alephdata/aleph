@@ -38,8 +38,8 @@ def generate_entity_references(entity):
                 continue
             for match in rex.finditer(text):
                 documents[document_id] += 1
-    except Exception:
-        log.exception('Failed to fully scan documents for entity refresh.')
+    except Exception as ex:
+        log.exception(ex)
     log.info("Re-matching %r gave %r documents.", entity,
              len(documents))
 

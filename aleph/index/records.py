@@ -16,9 +16,7 @@ def clear_records(document_id):
     """Delete all records associated with the given document."""
     q = {
         'query': {
-            'term': {
-                'document_id': document_id
-            }
+            'term': {'document_id': document_id}
         },
         '_source': False
     }
@@ -42,6 +40,7 @@ def clear_records(document_id):
 
 
 def generate_records(document):
+    """Generate index records, based on document rows or pages."""
     if document.type == Document.TYPE_TEXT:
         for page in document.pages:
             tid = sha1(str(document.id))

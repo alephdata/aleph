@@ -7,7 +7,7 @@ from flanker.addresslib import address
 import phonenumbers
 from phonenumbers.phonenumberutil import NumberParseException
 
-from aleph.text import clean_text
+from aleph.text import string_value, collapse_spaces
 
 
 class StringProperty(object):
@@ -17,7 +17,9 @@ class StringProperty(object):
         self.name = type(self).__name__.lower().replace('property', '')
 
     def clean(self, value, prop, record):
-        return clean_text(value)
+        value = string_value(value)
+        if value is not None:
+            return collapse_spaces(value)
 
     def normalize(self, values, prop, record):
         results = []

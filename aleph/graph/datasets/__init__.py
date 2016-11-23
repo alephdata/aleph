@@ -2,6 +2,7 @@ import six
 import logging
 
 from aleph.util import dict_list
+from aleph.model import Role
 from aleph.graph.datasets.query import Query
 
 log = logging.getLogger(__name__)
@@ -16,7 +17,16 @@ class Dataset(object):
         self.data = data
         self.label = data.get('label', name)
         self.info_url = data.get('info_url')
-        self.groups = dict_list(data, 'groups', 'group')
+        self.roles = []
+        for role in dict_list(data, 'roles', 'role'):
+            role_id = Role.load_id(role)
+            if role_id is not None:
+                self.roles.append(role_id)
+            else:
+                log.warning("Could not find role: %s", role)
+
+        if not len(self.roles):
+            raise ValueError("No roles for dataset: %s" % self.name)
 
         queries = dict_list(data, 'queries', 'query')
         self.queries = [Query(self, d) for d in queries]

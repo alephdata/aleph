@@ -6,7 +6,7 @@ from pprint import pprint  # noqa
 from aleph.graph.schema import Schema
 from aleph.graph.datasets.formatting import Formatter
 from aleph.util import dict_list, unique_list
-from aleph.text import latinize_text, clean_text
+from aleph.text import latinize_text, string_value
 
 
 class MapperProperty(object):
@@ -87,7 +87,7 @@ class Mapper(object):
             if self.key_fingerprint:
                 value = fingerprints.generate(value)
             else:
-                value = clean_text(value)
+                value = string_value(value)
             if value is None:
                 continue
             digest.update(value.encode('utf-8'))
@@ -113,7 +113,7 @@ class Mapper(object):
             'schema': self.schema.name,
             'schemata': schemata,
             'dataset': self.query.dataset.name,
-            'groups': self.query.dataset.groups,
+            'roles': self.query.dataset.roles,
             'properties': properties,
             'text': list(text)
         }
@@ -134,13 +134,12 @@ class EntityMapper(Mapper):
 
     def to_index(self, record):
         data = super(EntityMapper, self).to_index(record)
-        properties = data['properties']
         data['id'] = self.compute_key(record)
         if not data['id']:
             return
 
         for prop in self.properties:
-            values = properties.get(prop.name)
+            values = data['properties'].get(prop.name)
 
             # Find an set the name property
             if prop.schema.is_label and len(values):
@@ -170,10 +169,9 @@ class LinkMapper(Mapper):
         data['inverted'] = inverted
 
         source, target = self.data.get('source'), self.data.get('target')
+        origin, remote = entities.get(source), entities.get(target)
         if inverted:
-            origin, remote = entities.get(target), entities.get(source)
-        else:
-            origin, remote = entities.get(source), entities.get(target)
+            origin, remote = remote, origin
 
         if origin is None or remote is None:
             # If data was missing for either the source or target entity
