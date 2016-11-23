@@ -6,8 +6,8 @@ from apikit import jsonify
 from werkzeug.exceptions import BadRequest
 
 from aleph.events import log_event
-from aleph.core import app_url, app_title
-from aleph.data.validation import implied_schemas, resolver
+from aleph.core import app_url, app_title, graph
+from aleph.data.validate import resolver
 from aleph.search.entities import suggest_entities
 
 
@@ -23,12 +23,12 @@ def entity_link(id):
 
 def get_freebase_types():
     types = []
-    for uri in implied_schemas(DEFAULT_TYPE):
-        _, schema = resolver.resolve(uri)
-        types.append({
-            'id': uri,
-            'name': schema.get('title')
-        })
+    for schema in graph.schemata:
+        if schema.section == schema.ENTITY:
+            types.append({
+                'id': schema.name,
+                'name': schema.label
+            })
     return types
 
 

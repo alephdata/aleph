@@ -6,7 +6,7 @@ from aleph.core import db
 from aleph.events import log_event
 from aleph.model import Role, Collection, Permission
 from aleph.logic.permissions import update_permission
-from aleph.data.validation import validate
+from aleph.data.validate import validate
 
 
 blueprint = Blueprint('roles_api', __name__)

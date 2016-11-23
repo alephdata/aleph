@@ -56,26 +56,3 @@ def validate(data, schema):
     validator = Draft4Validator(schema, resolver=resolver,
                                 format_checker=format_checker)
     return validator.validate(data, schema)
-
-
-def _check_schema_match(visitor, schema_uri):
-    if visitor.id == schema_uri:
-        return True
-    for parent in visitor.inherited:
-        if _check_schema_match(parent, schema_uri):
-            return True
-    return False
-
-
-def implied_schemas(schema_uri):
-    # Given a schema URI, return a list of implied (i.e. child) schema URIs,
-    # with the original schema included.
-    if schema_uri is None or not len(schema_uri.strip()):
-        return []
-    schemas = set([schema_uri])
-    for uri, data in resolver.store.items():
-        if isinstance(data, dict):
-            visitor = SchemaVisitor(data, resolver)
-            if _check_schema_match(visitor, schema_uri):
-                schemas.add(data.get('id'))
-    return list(schemas)

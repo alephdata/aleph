@@ -7,7 +7,7 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db
 from aleph.metadata import Metadata
-from aleph.data.validation import validate
+from aleph.data.validate import validate
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
 from aleph.model.common import DatedModel

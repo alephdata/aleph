@@ -11,7 +11,7 @@ from aleph.metadata import Metadata
 from aleph.ingest import ingest_file
 from aleph.model import Collection
 from aleph.model.common import make_textid
-from aleph.data.validation import validate
+from aleph.data.validate import validate
 
 
 blueprint = Blueprint('ingest_api', __name__)
