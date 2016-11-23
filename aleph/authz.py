@@ -40,7 +40,11 @@ class Authz(object):
         # This is the core authorisation function, and is called at least once
         # per request. It will query and cache the ID for all collections the
         # current user is authorised to read or write.
-        self.collections = {self.READ: set(), self.WRITE: set(), self.PUBLIC: set()}
+        self.collections = {
+            self.READ: set(),
+            self.WRITE: set(),
+            self.PUBLIC: set()
+        }
         q = db.session.query(Permission.collection_id,
                              Permission.role_id,
                              Permission.read,

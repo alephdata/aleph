@@ -123,6 +123,25 @@ def index(foreign_id=None):
         reindex_entities()
 
 
+# @manager.command
+# def index_dataset():
+#     Index all datasets.
+#     for dataset in model.datasets:
+#         load_dataset(dataset)
+
+
+@manager.command
+def loaddataset(name):
+    """Index all the entities in a given dataset."""
+    dataset = model.get_dataset(name)
+    load_dataset(dataset)
+
+
+@manager.command
+def deletedataset(name):
+    delete_dataset(name)
+
+
 @manager.command
 def resetindex():
     """Re-create the ES index configuration, dropping all data."""

@@ -74,6 +74,64 @@ def remove_tempfile(filepath):
     remove_tempdir(path.dirname(filepath))
 
 
+def load_config_file(file_path):
+    """Load a YAML (or JSON) graph model configuration file."""
+    file_path = os.path.abspath(file_path)
+    with open(file_path, 'r') as fh:
+        data = yaml.load(fh) or {}
+    return resolve_includes(file_path, data)
+
+
+def resolve_includes(file_path, data):
+    """Handle include statements in the graph configuration file.
+
+    This allows the YAML graph configuration to be broken into
+    multiple smaller fragments that are easier to maintain."""
+    if isinstance(data, (list, tuple, set)):
+        data = [resolve_includes(file_path, i) for i in data]
+    elif isinstance(data, dict):
+        include_paths = data.pop('include', [])
+        if not isinstance(include_paths, (list, tuple, set)):
+            include_paths = [include_paths]
+        for include_path in include_paths:
+            dir_prefix = os.path.dirname(file_path)
+            include_path = os.path.join(dir_prefix, include_path)
+            data.update(load_config_file(include_path))
+        for key, value in data.items():
+            data[key] = resolve_includes(file_path, value)
+    return data
+
+
+def is_list(obj):
+    return isinstance(obj, (list, tuple, set))
+
+
+def unique_list(lst):
+    """Make a list unique, retaining order of initial appearance."""
+    uniq = []
+    for item in lst:
+        if item not in uniq:
+            uniq.append(item)
+    return uniq
+
+
+def ensure_list(obj):
+    """Make the returned object a list, otherwise wrap as single item."""
+    if obj is None:
+        return []
+    if not is_list(obj):
+        return [obj]
+    return obj
+
+
+def dict_list(data, *keys):
+    """Get an entry as a list from a dict. Provide a fallback key."""
+    for key in keys:
+        if key in data:
+            return ensure_list(data[key])
+    return []
+
+
 def find_subclasses(cls):
     # https://stackoverflow.com/questions/8956928
     all_refs = gc.get_referrers(cls)

@@ -141,6 +141,20 @@ def get_archive():
     return app._aleph_archive
 
 
+def get_schema():
+    app = current_app._get_current_object()
+    if not hasattr(app, '_graph_model'):
+        app._graph_model = None
+    return app._graph_model
+
+
+def get_datasets():
+    app = current_app._get_current_object()
+    if not hasattr(app, '_graph_model'):
+        app._graph_model = None
+    return app._graph_model
+
+
 def get_upload_folder():
     folder = current_app.config.get('UPLOAD_FOLDER')
     try:
@@ -156,6 +170,8 @@ app_url = LocalProxy(get_app_url)
 es = LocalProxy(get_es)
 es_index = LocalProxy(get_es_index)
 archive = LocalProxy(get_archive)
+schema = LocalProxy(get_schema)
+datasets = LocalProxy(get_datasets)
 upload_folder = LocalProxy(get_upload_folder)
 
 
