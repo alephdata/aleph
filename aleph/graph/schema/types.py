@@ -4,10 +4,9 @@ import fingerprints
 import countrynames
 from datetime import datetime
 from flanker.addresslib import address
-import phonenumbers
-from phonenumbers.phonenumberutil import NumberParseException
 
 from aleph.text import string_value, collapse_spaces
+from aleph.data.parse import parse_phone
 
 
 class StringProperty(object):
@@ -92,22 +91,14 @@ class AddressProperty(StringProperty):
 
 class PhoneProperty(StringProperty):
     index_invert = 'phones'
-    FORMAT = phonenumbers.PhoneNumberFormat.INTERNATIONAL
 
     def clean(self, value, prop, record):
         value = super(PhoneProperty, self).clean(value, prop, record)
         if value is None:
             return
-        try:
-            country = prop.data.get('country')
-            num = phonenumbers.parse(value, country)
-            if phonenumbers.is_possible_number(num):
-                # if phonenumbers.is_valid_number(num):
-                num = phonenumbers.format_number(num, self.FORMAT)
-                return num.replace(' ', '')
-        except NumberParseException:
-            pass
-        return value
+        country = prop.data.get('country')
+        number = parse_phone(value, country)
+        return number or value
 
 
 class EmailProperty(StringProperty):
