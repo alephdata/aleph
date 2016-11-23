@@ -9,6 +9,12 @@ from aleph.model.validation import validate
 log = logging.getLogger(__name__)
 
 
+membership = db.Table('role_membership',
+    db.Column('group_id', db.Integer, db.ForeignKey('role.id')),  # noqa
+    db.Column('member_id', db.Integer, db.ForeignKey('role.id'))  # noqa
+)
+
+
 class Role(db.Model, IdModel, SoftDeleteModel):
     """A user, group or other access control subject."""
 
@@ -35,6 +41,15 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         validate(data, self._schema)
         self.name = data.get('name', self.name)
         self.email = data.get('email', self.email)
+
+    def clear_roles(self):
+        self.roles = []
+        db.session.add(self)
+
+    def add_role(self, role):
+        self.roles.append(role)
+        db.session.add(role)
+        db.session.add(self)
 
     @classmethod
     def notifiable(cls):
@@ -113,3 +128,9 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             'type': self.type
         })
         return data
+
+
+Role.members = db.relationship(Role, secondary=membership,
+                               primaryjoin=Role.id == membership.c.group_id,
+                               secondaryjoin=Role.id == membership.c.member_id,
+                               backref="roles")

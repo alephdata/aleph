@@ -29,11 +29,12 @@ class Authz(object):
         self.logged_in = role is not None
         self.is_admin = False
 
-        # TODO figure out extra roles
         if self.logged_in:
+            self.is_admin = role.is_admin
             self.roles.append(role.id)
             self.roles.append(Role.load_id(Role.SYSTEM_USER))
-            self.is_admin = role.is_admin
+            for group in role.roles:
+                self.roles.append(group.id)
 
         # Pre-load collection authorisation info and cache the result.
         # This is the core authorisation function, and is called at least once

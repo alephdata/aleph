@@ -54,7 +54,6 @@ def handle_google_oauth(sender, provider=None, session=None):
     user_id = 'google:%s' % me.data.get('id')
     role = Role.load_or_create(user_id, Role.USER, me.data.get('name'),
                                email=me.data.get('email'))
-    session['roles'].append(role.id)
     session['user'] = role.id
 
 
@@ -68,5 +67,4 @@ def handle_facebook_oauth(sender, provider=None, session=None):
     user_id = 'facebook:%s' % me.data.get('id')
     role = Role.load_or_create(user_id, Role.USER, me.data.get('name'),
                                email=me.data.get('email'))
-    session['roles'].append(role.id)
     session['user'] = role.id
