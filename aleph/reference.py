@@ -48,15 +48,3 @@ def get_languages_iso3(codes):
     # if not len(supported):
     supported.append('eng')
     return '+'.join(sorted(set(supported)))
-
-
-def is_country_code(code):
-    if code is None:
-        return False
-    return code.lower() in COUNTRY_NAMES.keys()
-
-
-def is_language_code(code):
-    if code is None:
-        return False
-    return code.lower() in LANGUAGE_NAMES.keys()

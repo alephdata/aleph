@@ -5,8 +5,7 @@ from jsonschema import Draft4Validator, FormatChecker, RefResolver
 from jsonmapping import SchemaVisitor
 
 from aleph.core import get_config
-from aleph.reference import is_country_code, is_language_code
-from aleph.metadata.parsers import parse_url
+from aleph.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 
 resolver = RefResolver('core.json#', {})
 
@@ -20,28 +19,33 @@ for (root, dirs, files) in os.walk(SCHEMA_DIR):
 
 format_checker = FormatChecker()
 # JS: '^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'
-partial_date_re = re.compile('^([12]\d{3}(-[01]?[0-9](-[0123]?[0-9])?)?)?$')
+PARTIAL_DATE_RE = re.compile('^([12]\d{3}(-[01]?[0-9](-[0123]?[0-9])?)?)?$')
 
 
 @format_checker.checks('country-code')
-def country_code(code):
-    return is_country_code(code)
+def is_country_code(code):
+    if code is None:
+        return False
+    return code.lower() in COUNTRY_NAMES.keys()
 
 
 @format_checker.checks('partial-date')
 def is_partial_date(date):
     if date is None:
         return True
-    return partial_date_re.match(date) is not None
+    return PARTIAL_DATE_RE.match(date) is not None
 
 
 @format_checker.checks('language-code')
-def language_code(code):
-    return is_language_code(code)
+def is_language_code(code):
+    if code is None:
+        return False
+    return code.lower() in LANGUAGE_NAMES.keys()
 
 
 @format_checker.checks('url')
-def valid_url(url):
+def is_url(url):
+    from aleph.data.parse import parse_url
     return parse_url(url) is not None
 
 

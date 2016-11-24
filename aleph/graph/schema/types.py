@@ -1,12 +1,10 @@
 import re
 import dateparser
 import fingerprints
-import countrynames
 from datetime import datetime
-from flanker.addresslib import address
 
 from aleph.text import string_value, collapse_spaces
-from aleph.data.parse import parse_phone
+from aleph.data.parse import parse_phone, parse_country, parse_email
 
 
 class StringProperty(object):
@@ -76,10 +74,10 @@ class CountryProperty(StringProperty):
 
     def clean(self, value, prop, record):
         value = super(CountryProperty, self).clean(value, prop, record)
-        return countrynames.to_code(value) or value
+        return parse_country(value) or value
 
     def normalize_value(self, value, prop, record):
-        return [countrynames.to_code(value)]
+        return [parse_country(value)]
 
 
 class AddressProperty(StringProperty):
@@ -106,18 +104,11 @@ class EmailProperty(StringProperty):
 
     def clean(self, value, prop, record):
         value = super(EmailProperty, self).clean(value, prop, record)
-        if value is None:
-            return
-        parsed = address.parse(value)
-        if parsed is not None:
-            return parsed.address
-        return value
+        return parse_email(value) or value
 
     def normalize_value(self, value, prop, record):
-        parsed = address.parse(value)
-        if parsed is not None:
-            return [parsed.address]
-        return []
+        email = parse_email(value)
+        return [email] if email is not None else []
 
 
 class IdentiferProperty(StringProperty):
