@@ -10,7 +10,7 @@ aleph/static/.webassets-cache/*
 aleph/static/assets/*
 aleph/static/vendor/*
 aleph/static/style/_custom.scss
-docs/build/*
+build*
 
 celerybeat-schedule.db
 aleph.env
