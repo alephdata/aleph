@@ -2,7 +2,6 @@ import os
 import re
 import json
 from jsonschema import Draft4Validator, FormatChecker, RefResolver
-from jsonmapping import SchemaVisitor
 
 from aleph.core import get_config
 from aleph.reference import COUNTRY_NAMES, LANGUAGE_NAMES
