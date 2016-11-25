@@ -1,9 +1,3 @@
-# We can not extend services with liks and we don't want it,
-# overall, the app image is exactly the same.
-# Extend will build an extra copy per service while using
-# the `image` will basically _scale_ a new container.
-# See: https://github.com/docker/compose/issues/1617
-
 version: "2"
 
 services:
@@ -39,14 +33,6 @@ services:
     ports:
       - 5672
 
-  neo4j:
-    image: neo4j:3.0
-    volumes:
-      - "./build/data/neo4j:/data"
-    ports:
-      - 7474
-      - 7687
-
   worker:
       image: aleph_app
       command: make worker
@@ -54,7 +40,6 @@ services:
         - postgres
         - elasticsearch
         - rabbitmq
-        - neo4j
       volumes:
         - "./build/logs/worker:/var/log"
         - "./build/archive:/data"
@@ -65,7 +50,6 @@ services:
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-        ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
         POLYGLOT_DATA_PATH: /polyglot
       env_file:
         - aleph.env
@@ -77,7 +61,6 @@ services:
         - postgres
         - elasticsearch
         - rabbitmq
-        - neo4j
       volumes:
         - "./build/logs/beat:/var/log"
         - "./build/data/beat:/var/lib/"
@@ -89,7 +72,6 @@ services:
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-        ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
         POLYGLOT_DATA_PATH: /polyglot
       env_file:
         - aleph.env
@@ -103,7 +85,6 @@ services:
         - postgres
         - elasticsearch
         - rabbitmq
-        - neo4j
       volumes:
         - "./build/logs/web:/var/log"
         - "./build/archive:/data"
@@ -114,7 +95,6 @@ services:
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-        ALEPH_NEO4J_URI: http://neo4j:neo4j@neo4j/
         POLYGLOT_DATA_PATH: /polyglot
       env_file:
         - aleph.env
