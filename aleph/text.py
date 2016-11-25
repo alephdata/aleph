@@ -54,8 +54,8 @@ def string_value(value, encoding_default='utf-8', encoding=None):
             if encoding is None:
                 encoding = guess_encoding(encoding_default)
             value = value.decode(encoding, 'replace')
-        value = ''.join(ch for ch in value if category(ch)[0] != 'C')
-        value = value.replace(u'\xfe\xff', '')  # remove BOM
+            value = ''.join(ch for ch in value if category(ch)[0] != 'C')
+            value = value.replace(u'\xfe\xff', '')  # remove BOM
     else:
         value = six.text_type(value)
 

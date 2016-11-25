@@ -1,10 +1,15 @@
+import urlnorm
+import dateparser
 import countrynames
 import phonenumbers
+from urlparse import urlparse
+from datetime import date, datetime
+from urlparse import urldefrag
 from phonenumbers.phonenumberutil import NumberParseException
 from flanker.addresslib import address
 
 from aleph.text import string_value
-from aleph.data.validate import is_country_code
+from aleph.data.validate import is_country_code, is_domain, is_partial_date
 
 PHONE_FORMAT = phonenumbers.PhoneNumberFormat.INTERNATIONAL
 
@@ -18,6 +23,9 @@ def parse_phone(number, country=None):
 
     https://github.com/daviddrysdale/python-phonenumbers
     """
+    number = string_value(number)
+    if number is None:
+        return
     if country is not None:
         country = country.upper()
     try:
@@ -26,9 +34,9 @@ def parse_phone(number, country=None):
             if phonenumbers.is_valid_number(num):
                 num = phonenumbers.format_number(num, PHONE_FORMAT)
                 return num.replace(' ', '')
-        return None
+        return
     except phonenumbers.phonenumberutil.NumberParseException:
-        return None
+        return
 
 
 def parse_country(country, guess=True):
@@ -71,3 +79,57 @@ def parse_url(text):
         except:
             return None
     return None
+
+
+def parse_domain(text):
+    """Extract a domain name from a piece of text."""
+    domain = string_value(text)
+    if domain is not None:
+        try:
+            domain = urlparse(domain).hostname or domain
+        except ValueError:
+            pass
+        if '@' in domain:
+            _, domain = domain.rsplit('@', 1)
+        domain = domain.lower()
+        if domain.startswith('www.'):
+            domain = domain[len('www.'):]
+        domain = domain.strip('.')
+        if is_domain(domain):
+            return domain
+
+
+def parse_date(text, guess=True, date_format=None):
+    """The classic: date parsing, every which way."""
+    # handle date/datetime before converting to text.
+    if isinstance(text, datetime):
+        text = text.date()
+    if isinstance(text, date):
+        return text.isoformat()
+
+    text = string_value(text)
+    if text is None:
+        return
+
+    print [text]
+
+    if date_format is not None:
+        # parse with a specified format
+        try:
+            obj = datetime.strptime(text, date_format)
+            return obj.date().isoformat()
+        except:
+            pass
+    elif guess:
+        # use dateparser to guess the format
+        try:
+            obj = dateparser.parse(text)
+            return obj.date().isoformat()
+        except Exception as ex:
+            print ex
+    else:
+        # limit to the date part of a presumed date string
+        text = text[:10]
+
+    if is_partial_date(text):
+        return text

@@ -10,8 +10,8 @@ from aleph.text import slugify, string_value
 from aleph.util import make_filename
 from aleph.data.validate import is_country_code, is_language_code
 from aleph.data.parse import parse_email, parse_country, parse_url
+from aleph.data.parse import parse_domain, parse_date
 from aleph.metadata.tabular import Tabular
-from aleph.metadata.parsers import parse_date, parse_domain
 from aleph.metadata.base import MetadataFactory, Field
 
 
@@ -183,7 +183,7 @@ class Metadata(object):
         email = parse_email(email)
         if email is not None and email not in self._emails:
             self._emails.append(email)
-            # self.add_domain(parsed.hostname)
+            self.add_domain(email)
 
     @property
     def urls(self):
@@ -199,7 +199,7 @@ class Metadata(object):
         url = parse_url(url)
         if url is not None and url not in self._urls:
             self._urls.append(url)
-        self.add_domain(url)
+            self.add_domain(url)
 
     @property
     def domains(self):

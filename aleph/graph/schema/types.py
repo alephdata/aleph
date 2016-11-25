@@ -4,7 +4,9 @@ import fingerprints
 from datetime import datetime
 
 from aleph.text import string_value, collapse_spaces
+from aleph.data.validate import is_partial_date
 from aleph.data.parse import parse_phone, parse_country, parse_email
+from aleph.data.parse import parse_date
 
 
 class StringProperty(object):
@@ -46,27 +48,12 @@ class DateProperty(StringProperty):
 
     def clean(self, value, prop, record):
         value = super(DateProperty, self).clean(value, prop, record)
-        if value is None:
-            return value
-        date_format = prop.data.get('format')
-        if date_format is not None:
-            try:
-                date = datetime.strptime(value, date_format)
-                return date.date().isoformat()
-            except:
-                return value
-        else:
-            date = dateparser.parse(value)
-            if date is not None:
-                return date.date().isoformat()
-        return value
+        return parse_date(value, date_format=prop.data.get('format'))
 
     def normalize_value(self, value, prop, record):
-        try:
-            datetime.strptime(value, '%Y-%m-%d')
+        if is_partial_date(value):
             return [value]
-        except ValueError:
-            return []
+        return []
 
 
 class CountryProperty(StringProperty):
@@ -92,10 +79,7 @@ class PhoneProperty(StringProperty):
 
     def clean(self, value, prop, record):
         value = super(PhoneProperty, self).clean(value, prop, record)
-        if value is None:
-            return
-        country = prop.data.get('country')
-        number = parse_phone(value, country)
+        number = parse_phone(value, prop.data.get('country'))
         return number or value
 
 
@@ -117,9 +101,7 @@ class IdentiferProperty(StringProperty):
 
     def normalize_value(self, value, prop, record):
         value = self.clean_re.sub('', value).upper()
-        if not len(value):
-            return []
-        return [value]
+        return [value] if len(value) else []
 
 
 def resolve_type(name):

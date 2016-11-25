@@ -3,6 +3,7 @@ import logging
 import warnings
 import requests
 import urllib3
+from ruamel.yaml.error import UnsafeLoaderWarning
 from flask.exthook import ExtDeprecationWarning
 from sqlalchemy.exc import SAWarning
 
@@ -12,6 +13,7 @@ warnings.filterwarnings('ignore',
 
 warnings.filterwarnings('ignore', category=SAWarning)
 warnings.filterwarnings('ignore', category=ExtDeprecationWarning)
+warnings.simplefilter('ignore', UnsafeLoaderWarning)
 
 # using SSL w/o certificate validation
 urllib3.disable_warnings()

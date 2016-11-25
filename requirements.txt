@@ -33,7 +33,6 @@ XlsxWriter==0.6.6
 https://github.com/okfn/messytables/tarball/master
 krauler>=0.2.2
 metafolder
-jsonmapping
 polyglot==16.7.4
 https://github.com/occrp/cronosparser/tarball/master
 https://github.com/occrp/countrynames/tarball/master
@@ -51,8 +50,8 @@ PyYAML==3.11
 PyICU==1.9.5
 chardet==2.3.0
 cchardet==1.1.1
-dateparser==0.3.1
-jdatetime==1.7.2
+dateparser==0.5.0
+jdatetime==1.8.1
 coverage
 pyahocorasick
 pycrypto
