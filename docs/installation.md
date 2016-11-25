@@ -47,3 +47,10 @@ Your repository is mounted inside the docker container under the name
 `aleph_app_1`. You should also see the other Aleph services, `aleph_worker_1`
 and `aleph_beat_1`. You can access these services anytime by running
 `docker-compose run <app|worker|beat> bash`.
+
+### Running tests
+
+To run the tests, assuming you already have the `docker-compose` up and ready,
+run `docker-compose run app make test`.
+
+This will create a new database and run all the tests.
