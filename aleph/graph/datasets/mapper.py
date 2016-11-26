@@ -1,12 +1,15 @@
 import six
-import fingerprints
+import logging
 from hashlib import sha1
 from pprint import pprint  # noqa
 
 from aleph.graph.schema import Schema
 from aleph.graph.datasets.formatting import Formatter
+from aleph.data.keys import make_fingerprint
 from aleph.util import dict_list, unique_list
 from aleph.text import latinize_text, string_value
+
+log = logging.getLogger(__name__)
 
 
 class MapperProperty(object):
@@ -34,7 +37,7 @@ class MapperProperty(object):
             for ref in self.refs:
                 values.append(record.get(ref))
         values.extend(self.literals)
-        values = [self.schema.type.clean(v, self, record) for v in values]
+        values = [self.schema.type.clean(v, record, self.data) for v in values]
         values = [v for v in values if v is not None]
 
         if self.join is not None:
@@ -78,14 +81,15 @@ class Mapper(object):
 
     def compute_key(self, record):
         if not len(self.keys):
+            log.warning("No key criteria defined.")
             return None
+
         digest = sha1(self.query.dataset.name.encode('utf-8'))
-        # digest.update(self.schema.name.encode('utf-8'))
         has_key = False
         for key in self.keys:
             value = record.get(key)
             if self.key_fingerprint:
-                value = fingerprints.generate(value)
+                value = make_fingerprint(value)
             else:
                 value = string_value(value)
             if value is None:
@@ -151,7 +155,7 @@ class EntityMapper(Mapper):
             if type_.index_invert:
                 if type_.index_invert not in data:
                     data[type_.index_invert] = []
-                for norm in type_.normalize(values, prop, record):
+                for norm in type_.normalize(values, record, prop.data):
                     if norm not in data[type_.index_invert]:
                         data[type_.index_invert].append(norm)
 
