@@ -4,7 +4,7 @@ import json
 from jsonschema import Draft4Validator, FormatChecker, RefResolver
 
 from aleph.core import get_config
-from aleph.reference import COUNTRY_NAMES, LANGUAGE_NAMES
+from aleph.data.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 
 resolver = RefResolver('core.json#', {})
 
