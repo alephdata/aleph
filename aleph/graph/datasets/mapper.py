@@ -155,7 +155,7 @@ class EntityMapper(Mapper):
             if type_.index_invert:
                 if type_.index_invert not in data:
                     data[type_.index_invert] = []
-                for norm in type_.normalize(values, record, prop.data):
+                for norm in type_.normalize(values):
                     if norm not in data[type_.index_invert]:
                         data[type_.index_invert].append(norm)
 

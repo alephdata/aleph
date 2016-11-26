@@ -18,22 +18,22 @@ class StringProperty(object):
         if value is not None:
             return collapse_spaces(value)
 
-    def normalize(self, values, record, config):
+    def normalize(self, values):
         results = []
         for value in values:
-            norm = self.normalize_value(value, record, config)
+            norm = self.normalize_value(value)
             if norm is not None:
                 results.append(norm)
         return set(results)
 
-    def normalize_value(self, value, record, config):
-        return self.clean(value, record, config)
+    def normalize_value(self, value):
+        return self.clean(value)
 
 
 class NameProperty(StringProperty):
     index_invert = 'fingerprints'
 
-    def normalize_value(self, value, record, config):
+    def normalize_value(self, value):
         return make_fingerprint(value)
 
 
@@ -48,7 +48,7 @@ class DateProperty(StringProperty):
         value = super(DateProperty, self).clean(value, record, config)
         return parse_date(value, date_format=config.get('format'))
 
-    def normalize_value(self, value, record, config):
+    def normalize_value(self, value):
         if is_partial_date(value):
             return value
 
@@ -60,14 +60,14 @@ class CountryProperty(StringProperty):
         value = super(CountryProperty, self).clean(value, record, config)
         return parse_country(value) or value
 
-    def normalize_value(self, value, record, config):
+    def normalize_value(self, value):
         return parse_country(value)
 
 
 class AddressProperty(StringProperty):
     index_invert = 'addresses'
 
-    def normalize_value(self, value, record, config):
+    def normalize_value(self, value):
         return make_fingerprint(value)
 
 
@@ -87,7 +87,7 @@ class EmailProperty(StringProperty):
         value = super(EmailProperty, self).clean(value, record, config)
         return parse_email(value) or value
 
-    def normalize_value(self, value, record, config):
+    def normalize_value(self, value):
         return parse_email(value)
 
 
@@ -95,10 +95,11 @@ class IdentiferProperty(StringProperty):
     index_invert = 'fingerprints'
     clean_re = re.compile('[^a-zA-Z0-9]*')
 
-    def normalize_value(self, value, record, config):
+    def normalize_value(self, value):
         value = string_value(value)
         if value is not None:
-            return string_value(self.clean_re.sub('', value).upper())
+            value = self.clean_re.sub('', value).upper()
+            return string_value(value)
 
 
 def resolve_type(name):
