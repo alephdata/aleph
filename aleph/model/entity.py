@@ -7,11 +7,11 @@ from sqlalchemy.dialects.postgresql import JSONB
 from aleph.core import db
 from aleph.text import normalize_strong
 from aleph.data.validate import validate
+from aleph.data.keys import make_fingerprint
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
 from aleph.model.common import SoftDeleteModel, UuidModel
-from aleph.model.common import make_textid, make_fingerprint
-from aleph.model.util import merge_data
+from aleph.model.common import make_textid, merge_data
 
 log = logging.getLogger(__name__)
 

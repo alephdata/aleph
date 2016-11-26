@@ -1,12 +1,10 @@
 import re
-import dateparser
-import fingerprints
-from datetime import datetime
 
 from aleph.text import string_value, collapse_spaces
 from aleph.data.validate import is_partial_date
 from aleph.data.parse import parse_phone, parse_country, parse_email
 from aleph.data.parse import parse_date
+from aleph.data.keys import make_fingerprint
 
 
 class StringProperty(object):
@@ -36,7 +34,7 @@ class NameProperty(StringProperty):
     index_invert = 'fingerprints'
 
     def normalize_value(self, value, prop, record):
-        return [fingerprints.generate(value)]
+        return [make_fingerprint(value)]
 
 
 class URLProperty(StringProperty):
@@ -71,7 +69,7 @@ class AddressProperty(StringProperty):
     index_invert = 'addresses'
 
     def normalize_value(self, value, prop, record):
-        return [fingerprints.generate(value)]
+        return [make_fingerprint(value)]
 
 
 class PhoneProperty(StringProperty):

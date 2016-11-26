@@ -8,8 +8,8 @@ from aleph.core import db, url_for
 from aleph.data.validate import validate
 from aleph.model.role import Role
 from aleph.model.permission import Permission
-from aleph.model.util import ModelFacets
-from aleph.model.common import SoftDeleteModel, IdModel, make_token
+from aleph.model.common import IdModel, make_textid
+from aleph.model.common import ModelFacets, SoftDeleteModel
 
 log = logging.getLogger(__name__)
 
@@ -82,7 +82,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
 
     @classmethod
     def create(cls, data, role=None):
-        foreign_id = data.get('foreign_id') or make_token()
+        foreign_id = data.get('foreign_id') or make_textid()
         collection = cls.by_foreign_id(foreign_id, deleted=True)
         if collection is None:
             collection = cls()
