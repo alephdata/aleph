@@ -22,11 +22,8 @@ class PolyglotEntityAnalyzer(Analyzer):
     origin = 'polyglot'
 
     def prepare(self):
-        self.collections = []
-        for collection in self.document.collections:
-            if collection.generate_entities:
-                self.collections.append(collection)
-        self.disabled = not len(self.collections)
+        self.collection = self.document.collection
+        self.disabled = not self.collection.generate_entities
         self.entities = defaultdict(list)
 
     def on_text(self, text):
@@ -71,7 +68,7 @@ class PolyglotEntityAnalyzer(Analyzer):
                 'identifier': identifier
             }]
         }
-        entity = Entity.save(data, self.collections)
+        entity = Entity.save(data, [self.collection])
         return entity.id
 
     def finalize(self):

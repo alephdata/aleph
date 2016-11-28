@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 DEFAULT_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                   'languages', 'countries', 'source_url', 'created_at',
-                  'updated_at', 'type', 'summary', 'source_collection_id']
+                  'updated_at', 'type', 'summary']
 
 
 def documents_query(state, fields=None, facets=True):

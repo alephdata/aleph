@@ -34,13 +34,11 @@ class Ingestor(object):
                 q = q.filter(Document.foreign_id == meta.foreign_id)
             else:
                 q = q.filter(Document.content_hash == meta.content_hash)
-            clause = Collection.id == self.collection_id
-            q = q.filter(Document.collections.any(clause))
+            q = q.filter(Document.collection_id == self.collection_id)
             document = q.first()
         if document is None:
             document = Document()
-            document.source_collection_id = self.collection_id
-            document.collections = [Collection.by_id(self.collection_id)]
+            document.collection_id = self.collection_id
         document.meta = meta
         document.type = type or self.DOCUMENT_TYPE
         db.session.add(document)

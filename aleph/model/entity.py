@@ -27,7 +27,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     STATE_DELETED = 'deleted'
 
     name = db.Column(db.Unicode)
-    type = db.Column('type', db.String(255), index=True)
+    type = db.Column(db.String(255), index=True)
     state = db.Column(db.String(128), nullable=True,
                       default=STATE_ACTIVE)
     data = db.Column('data', JSONB)

@@ -13,7 +13,7 @@
             },
             "minItems": 1
         },
-        "source_collection_id": {
+        "collection_id": {
             "type": ["null", "number"]
         },
         "type": {

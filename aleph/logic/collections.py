@@ -7,7 +7,7 @@ from aleph.index.collections import delete_collection as index_delete
 from aleph.analyze import analyze_documents
 from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.entities import update_entity_full
-from aleph.logic.documents import update_document, delete_document
+from aleph.logic.documents import delete_document
 
 log = logging.getLogger(__name__)
 
@@ -54,16 +54,9 @@ def delete_collection(collection_id=None):
             update_entity(entity)
 
     for document in collection.documents:
-        document.collections = [c for c in document.collections
-                                if c.id != collection.id]
-        if not len(document.collections):
-            delete_document(document, deleted_at=deleted_at)
-        else:
-            if collection_id == document.source_collection_id:
-                document.source_collection_id = None
-            db.session.add(document)
-            update_document(document)
+        delete_document(document, deleted_at=deleted_at)
 
+    db.session.refresh(collection)
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
     index_delete(collection_id)

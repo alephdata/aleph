@@ -133,10 +133,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
         return self._is_public
 
     def get_document_count(self):
-        from aleph.model.document import Document, collection_document_table
+        from aleph.model.document import Document
         q = Document.all()
-        q = q.join(collection_document_table)
-        q = q.filter(collection_document_table.c.collection_id == self.id)
+        q = q.filter(Document.collection_id == self.id)
         return q.count()
 
     def get_crawler_state_count(self):

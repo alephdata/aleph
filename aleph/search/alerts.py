@@ -30,7 +30,6 @@ def alert_query(alert, authz):
     q = {
         'query': q,
         'size': 50,
-        '_source': ['title', 'id', 'type',
-                    'source_collection_id', 'collection_id']
+        '_source': ['title', 'id', 'type', 'collection_id']
     }
     return execute_documents_query(state, q)

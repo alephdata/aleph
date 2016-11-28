@@ -15,17 +15,14 @@
       <span ng-if="doc.title != doc.file_name" class="addon" ng-bind="::doc.file_name"></span>
     </div>
 
-    <div class="pull-right">
-      <collections-add doc="doc" class="btn-xs"></collections-add>
-    </div>
     <div class="context">
-      <span ng-show="::sourceCollection">
-        <span ng-if="::sourceCollection.category" class="label label-primary">
-          {{::sourceCollection.category | collectionCategory }}</span>
+      <span ng-show="::collection">
+        <span ng-if="::collection.category" class="label label-primary">
+          {{::collection.category | collectionCategory }}</span>
 
-        <a ng-href="/collections/{{::sourceCollection.id}}" class="collection"
-          ng-bind="::sourceCollection.label"></a>
-        <span ng-if="::!sourceCollection.public"
+        <a ng-href="/collections/{{::collection.id}}" class="collection"
+          ng-bind="::collection.label"></a>
+        <span ng-if="::!doc.public"
             uib-tooltip="Only available to selected users"
             tooltip-placement="bottom">
           <i class="fa fa-lock" aria-hidden="true"></i>

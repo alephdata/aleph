@@ -14,11 +14,6 @@ from aleph.model.common import DatedModel
 
 log = logging.getLogger(__name__)
 
-collection_document_table = db.Table('collection_document',
-    db.Column('document_id', db.BigInteger, db.ForeignKey('document.id')),  # noqa
-    db.Column('collection_id', db.Integer, db.ForeignKey('collection.id'))  # noqa
-)
-
 
 class Document(db.Model, DatedModel):
     _schema = 'document.json#'
@@ -33,10 +28,8 @@ class Document(db.Model, DatedModel):
     type = db.Column(db.Unicode(10), nullable=False, index=True)
     _meta = db.Column('meta', JSONB)
 
-    collections = db.relationship(Collection, secondary=collection_document_table,  # noqa
-                                  backref=db.backref('documents', lazy='dynamic'))  # noqa
-    source_collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=True)  # noqa
-    source_collection = db.relationship(Collection)
+    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
+    collection = db.relationship(Collection, backref='documents')
 
     @property
     def title(self):
@@ -58,28 +51,11 @@ class Document(db.Model, DatedModel):
         self._meta = meta
         flag_modified(self, '_meta')
 
-    def update(self, data, authz):
+    def update(self, data):
         validate(data, self._schema)
-        collection_id = data.pop('collection_id', [])
-        self.update_collections(collection_id, authz)
         meta = self.meta
         meta.update(data, safe=True)
         self.meta = meta
-        db.session.add(self)
-
-    def update_collections(self, collection_id, authz):
-        writeable = authz.collections_write
-        for coll in self.collections:
-            if coll.id == self.source_collection_id:
-                continue
-            if coll.id not in collection_id:
-                if coll.id in authz.collections_write:
-                    self.collections.remove(coll)
-        for coll_id in collection_id:
-            if coll_id in authz.collections_write:
-                coll = Collection.by_id(coll_id)
-                if coll not in self.collections:
-                    self.collections.append(coll)
         db.session.add(self)
 
     def delete_pages(self):
@@ -142,26 +118,17 @@ class Document(db.Model, DatedModel):
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.meta.title)
 
-    @property
-    def collection_ids(self):
-        collection_ids = [c.id for c in self.collections]
-        if self.source_collection_id not in collection_ids:
-            if self.source_collection_id is not None:
-                collection_ids.append(self.source_collection_id)
-        return collection_ids
-
     def _add_to_dict(self, data):
-        source_id = self.source_collection_id
         try:
             from flask import request
+            source_id = self.collection_id
             data['public'] = request.authz.collection_public(source_id)
         except:
             data['public'] = None
         data.update({
             'id': self.id,
             'type': self.type,
-            'source_collection_id': source_id,
-            'collection_id': self.collection_ids,
+            'collection_id': self.collection_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         })

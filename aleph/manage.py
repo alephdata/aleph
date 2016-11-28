@@ -184,14 +184,20 @@ def installdata():
 def evilshit():
     """EVIL: Delete all data and recreate the database."""
     delete_index()
-    db.drop_all()
     from sqlalchemy import MetaData, inspect
+    from sqlalchemy.exc import InternalError
     from sqlalchemy.dialects.postgresql import ENUM
     metadata = MetaData()
     metadata.bind = db.engine
     metadata.reflect()
-    for table in metadata.sorted_tables:
-        table.drop(checkfirst=True)
+    tables = list(metadata.sorted_tables)
+    while len(tables):
+        for table in tables:
+            try:
+                table.drop(checkfirst=True)
+                tables.remove(table)
+            except InternalError:
+                pass
     for enum in inspect(db.engine).get_enums():
         enum = ENUM(name=enum['name'])
         enum.drop(bind=db.engine, checkfirst=True)
