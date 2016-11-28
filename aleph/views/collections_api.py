@@ -95,7 +95,7 @@ def pending(id):
     entities = []
     for entity in q.all():
         data = entity.to_dict()
-        data['name_latin'] = latinize_text(entity.name, lowercase=False)
+        data['name_latin'] = latinize_text(entity.name)
         entities.append(data)
     return jsonify({'results': entities, 'total': len(entities)})
 

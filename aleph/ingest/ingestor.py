@@ -39,6 +39,8 @@ class Ingestor(object):
         if document is None:
             document = Document()
             document.collection_id = self.collection_id
+            document.foreign_id = meta.foreign_id
+            document.content_hash = meta.content_hash
         document.meta = meta
         document.type = type or self.DOCUMENT_TYPE
         db.session.add(document)

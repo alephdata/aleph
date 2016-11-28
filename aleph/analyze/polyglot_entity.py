@@ -57,7 +57,7 @@ class PolyglotEntityAnalyzer(Analyzer):
         q = q.filter(Entity.name == name)
         entity = q.first()
         if entity is not None:
-            return entity
+            return entity.id
 
         data = {
             'name': name,

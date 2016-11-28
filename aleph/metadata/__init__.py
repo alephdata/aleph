@@ -91,29 +91,33 @@ class Metadata(object):
 
     @property
     def title(self):
-        return self._title or self._file_name or self.file_name
+        return self._title or self.file_title
 
     @title.setter
     def title(self, title):
         self._title = string_value(title)
 
     @property
-    def file_name(self):
-        file_name = self._file_name
+    def file_title(self):
+        file_title = self._file_name
 
         # derive file name from headers
-        if file_name is None and 'content_disposition' in self.headers:
+        if file_title is None and 'content_disposition' in self.headers:
             _, attrs = cgi.parse_header(self.headers['content_disposition'])
-            file_name = string_value(attrs.get('filename'))
+            file_title = string_value(attrs.get('filename'))
 
-        if file_name is None and self.source_path:
-            file_name = os.path.basename(self.source_path)
+        if file_title is None and self.source_path:
+            file_title = os.path.basename(self.source_path)
 
-        if file_name is None and self.source_url:
+        if file_title is None and self.source_url:
             parsed = urlparse(self.source_url)
-            file_name = os.path.basename(parsed.path)
+            file_title = os.path.basename(parsed.path)
 
-        return make_filename(file_name) or 'data'
+        return file_title
+
+    @property
+    def file_name(self):
+        return make_filename(self.file_title) or 'data'
 
     @file_name.setter
     def file_name(self, file_name):
@@ -248,7 +252,7 @@ class Metadata(object):
 
     @property
     def foreign_id(self):
-        return self._foreign_id or self.source_url or self.source_path
+        return self._foreign_id
 
     @foreign_id.setter
     def foreign_id(self, foreign_id):
