@@ -27,6 +27,7 @@ setup(
             'skip = aleph.ingest.dummy:SkipIngestor',
             'pdf = aleph.ingest.text:PDFIngestor',
             'doc = aleph.ingest.document:DocumentIngestor',
+            'txt = aleph.ingest.document:PlainTextIngestor',
             'ppt = aleph.ingest.document:PresentationIngestor',
             'html = aleph.ingest.html:HtmlIngestor',
             'djvu = aleph.ingest.djvu:DjVuIngestor',

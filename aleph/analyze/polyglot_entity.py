@@ -24,6 +24,8 @@ class PolyglotEntityAnalyzer(Analyzer):
     def prepare(self):
         self.collection = self.document.collection
         self.disabled = not self.collection.generate_entities
+        if self.document.type != self.document.TYPE_TEXT:
+            self.disabled = True
         self.entities = defaultdict(list)
 
     def on_text(self, text):

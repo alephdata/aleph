@@ -13,7 +13,6 @@ from chardet.universaldetector import UniversalDetector
 from aleph.core import get_config
 from aleph.ingest import ingest_directory
 from aleph.ingest.ingestor import Ingestor
-from aleph.text import string_value
 from aleph.util import make_tempdir, remove_tempdir
 
 log = logging.getLogger(__name__)

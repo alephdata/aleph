@@ -111,22 +111,20 @@ def parse_date(text, guess=True, date_format=None):
     if text is None:
         return
 
-    print [text]
-
-    if date_format is not None:
+    elif date_format is not None:
         # parse with a specified format
         try:
             obj = datetime.strptime(text, date_format)
             return obj.date().isoformat()
         except:
             pass
-    elif guess:
+    elif guess and not is_partial_date(text):
         # use dateparser to guess the format
         try:
             obj = dateparser.parse(text)
             return obj.date().isoformat()
-        except Exception as ex:
-            print ex
+        except Exception:
+            pass
     else:
         # limit to the date part of a presumed date string
         text = text[:10]
