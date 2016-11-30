@@ -137,12 +137,14 @@ def indexentities(foreign_id=None):
 
 
 @manager.command
-def init():
+@manager.option('-s', '--skip-downloads', dest='skip', default='')
+def init(skip=''):
     """Create or upgrade the search index and database."""
     upgrade_db()
     init_search()
     upgrade_search()
-    install_analyzers()
+    if 'analyzers' not in skip:
+        install_analyzers()
     archive.upgrade()
 
 
