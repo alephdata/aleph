@@ -17,11 +17,10 @@ class CollectionsApiTestCase(TestCase):
         self.col.countries = []
         db.session.add(self.col)
         db.session.flush()
-        self.ent = Entity()
-        self.ent.collection = self.col
-        self.ent.update({
+        self.ent = Entity.save({
+            '$schema': 'Person',
             'name': 'Winnie the Pooh',
-        })
+        }, self.col)
         db.session.add(self.ent)
         db.session.commit()
 

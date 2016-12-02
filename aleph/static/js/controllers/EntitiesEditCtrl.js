@@ -45,7 +45,7 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   $scope.addAlias = function() {
     var newAlias = angular.copy($scope.newAlias);
     $scope.newAlias = null;
-    $scope.entity.aliases.push(newAlias);
+    $scope.entity.alias.push(newAlias);
   };
 
   $scope.canAddAlias = function() {
@@ -53,9 +53,9 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   };
 
   $scope.removeAlias = function(alias) {
-    var idx = $scope.entity.aliases.indexOf(alias);
+    var idx = $scope.entity.alias.indexOf(alias);
     if (idx != -1) {
-      $scope.entity.aliases.splice(idx, 1);
+      $scope.entity.alias.splice(idx, 1);
     };
   };
 

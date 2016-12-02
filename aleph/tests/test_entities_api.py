@@ -17,7 +17,7 @@ class EntitiesApiTestCase(TestCase):
         db.session.add(self.col)
         db.session.flush()
         self.ent = Entity.save({
-            '$schema': '/entity/legal_person.json#',
+            '$schema': 'LegalEntity',
             'name': 'Winnie the Pooh',
             'country': 'pa',
         }, self.col)
@@ -41,7 +41,7 @@ class EntitiesApiTestCase(TestCase):
         assert len(res.json['facets']) == 1, res.json
         res = self.client.get('/api/1/entities?facet=countries')
         assert len(res.json['facets']) == 1, res.json
-        assert 'values' in res.json['facets']['jurisdiction_code'], res.json
+        assert 'values' in res.json['facets']['countries'], res.json
 
     def test_all(self):
         res = self.client.get('/api/1/entities/_all')
@@ -59,7 +59,7 @@ class EntitiesApiTestCase(TestCase):
         self.login(is_admin=True)
         res = self.client.get('/api/1/entities/%s' % self.ent.id)
         assert res.status_code == 200, res
-        assert 'entity/legal' in res.json['$schema'], res.json
+        assert 'LegalEntity' in res.json['$schema'], res.json
         assert 'Winnie' in res.json['name'], res.json
 
     def test_update(self):
@@ -84,7 +84,7 @@ class EntitiesApiTestCase(TestCase):
         self.login(is_admin=True)
         url = '/api/1/entities'
         data = {
-            '$schema': '/entity/building.json',
+            '$schema': 'Asset',
             'name': "Our house",
             'collection_id': self.col.id,
             'summary': "In the middle of our street"
@@ -98,10 +98,10 @@ class EntitiesApiTestCase(TestCase):
         self.login(is_admin=True)
         url = '/api/1/entities'
         data = {
-            '$schema': '/entity/person.json#',
+            '$schema': 'Person',
             'name': "Osama bin Laden",
             'collection_id': self.col.id,
-            'aliases': [
+            'alias': [
                 "Usama bin Laden",
                 "Osama bin Ladin",
             ],
@@ -110,55 +110,49 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 200, res.json
-        assert 2 == len(res.json.get('aliases', [])), res.json
+        assert 2 == len(res.json.get('alias', [])), res.json
 
     def test_merge_nested(self):
         self.login(is_admin=True)
         url = '/api/1/entities'
         data = {
-            '$schema': '/entity/person.json#',
+            '$schema': 'Person',
             'name': "Osama bin Laden",
-            'collection_id': [self.col.id],
-            'other_names': ["Usama bin Laden", "Osama bin Ladin"],
+            'collection_id': self.col.id,
+            'alias': ["Usama bin Laden", "Osama bin Ladin"],
             'address': 'Home, Netherlands'
         }
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
         data = res.json
-        data['aliases'] = [
-            "Usama bin Laden",
-            "Usama bin Ladin",
-        ]
+        data['alias'] = ["Usama bin Laden", "Usama bin Ladin"]
         url = '/api/1/entities/%s?merge=true' % data['id']
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
-        assert 3 == len(res.json.get('aliases', [])), res.json
+        assert 3 == len(res.json.get('alias', [])), res.json
 
     def test_remove_nested(self):
         self.login(is_admin=True)
         url = '/api/1/entities'
         data = {
-            '$schema': '/entity/person.json#',
+            '$schema': 'Person',
             'name': "Osama bin Laden",
-            'collection_id': [self.col.id],
-            'aliases': [
-                "Usama bin Laden",
-                "Osama bin Ladin",
-            ]
+            'collection_id': self.col.id,
+            'alias': ["Usama bin Laden", "Osama bin Ladin"]
         }
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
         data = res.json
-        data['aliases'].pop()
-        assert 1 == len(data['aliases']), data
+        data['alias'].pop()
+        assert 1 == len(data['alias']), data
         url = '/api/1/entities/%s' % data['id']
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
-        assert 1 == len(res.json.get('aliases', [])), res.json
+        assert 1 == len(res.json.get('alias', [])), res.json
 
     def test_delete_entity(self):
         self.login(is_admin=True)

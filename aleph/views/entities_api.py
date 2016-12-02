@@ -44,7 +44,7 @@ def create():
 
     try:
         entity = Entity.save(data, collection)
-    except ValueError as ve:
+    except (ValueError, TypeError) as ve:
         raise BadRequest(ve.message)
 
     entity.collection.touch()

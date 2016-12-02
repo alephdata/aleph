@@ -27,7 +27,7 @@ class StringProperty(object):
         return set(results)
 
     def normalize_value(self, value):
-        return self.clean(value)
+        return self.clean(value, {}, {})
 
 
 class NameProperty(StringProperty):

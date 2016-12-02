@@ -145,7 +145,7 @@ def get_archive():
 def get_schemata():
     app = current_app._get_current_object()
     if not hasattr(app, '_schemata'):
-        schema_yaml = app.config.get('Schema_YAML')
+        schema_yaml = app.config.get('SCHEMA_YAML')
         log.info("Loading schema from: %s", schema_yaml)
         from aleph.schema import SchemaSet
         app._schemata = SchemaSet(load_config_file(schema_yaml))

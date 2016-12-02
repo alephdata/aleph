@@ -28,7 +28,7 @@ class EntitiesTestCase(TestCase):
             'name': 'Winnie the Pooh',
             'country': 'pa',
             'summary': 'a fictional teddy bear created by author A. A. Milne',
-            'aliases': [u'Puh der Bär', 'Pooh Bear']
+            'alias': [u'Puh der Bär', 'Pooh Bear']
         }, self.col)
         db.session.add(self.ent)
         db.session.flush()
@@ -37,7 +37,7 @@ class EntitiesTestCase(TestCase):
             'name': 'Pu der Bär',
             'country': 'de',
             'description': 'he is a bear',
-            'aliases': [u'Puh der Bär']
+            'alias': [u'Puh der Bär']
         }, self.col)
         db.session.add(self.other)
         self.alert = Alert()

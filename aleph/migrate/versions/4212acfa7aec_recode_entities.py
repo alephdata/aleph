@@ -76,13 +76,13 @@ def upgrade():
         data['country'] = data.pop('jurisdiction_code', None)
         data['birthDate'] = data.pop('birth_date', None)
         data['deathDate'] = data.pop('death_date', None)
-        data['aliases'] = []
+        data['alias'] = []
 
         for on in data.pop('other_names', []):
             name = on.get('name')
             if name is None:
                 continue
-            data['aliases'].append(name)
+            data['alias'].append(name)
 
         for k, v in data.items():
             if v is None or v == '':

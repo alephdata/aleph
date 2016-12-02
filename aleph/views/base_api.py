@@ -8,6 +8,7 @@ from elasticsearch import TransportError
 
 from aleph.core import get_config, app_title, app_url
 from aleph.metadata import Metadata
+from aleph.schema import SchemaValidationException
 from aleph.data.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.data.validate import resolver
 from aleph.views.cache import enable_cache
@@ -99,6 +100,14 @@ def handle_validation_error(err):
     return jsonify({
         'status': 'error',
         'message': err.message
+    }, status=400)
+
+
+@blueprint.app_errorhandler(SchemaValidationException)
+def handle_schema_validation_error(err):
+    return jsonify({
+        'status': 'error',
+        'errors': err.errors
     }, status=400)
 
 

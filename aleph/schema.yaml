@@ -12,6 +12,7 @@ entities:
         label: Name
         type: name
         hidden: true
+        required: true
       summary:
         label: Summary
       description:
@@ -22,9 +23,11 @@ entities:
       alias:
         label: Other name
         type: name
+        multiple: true
       previousName:
         label: Previous name
         type: name
+        multiple: true
       sourceUrl:
         label: Source link
         type: url
@@ -32,6 +35,7 @@ entities:
         label: Relevancy
       keywords:
         label: Keywords
+        multiple: true
       address:
         label: Address
         type: address

@@ -4,9 +4,9 @@ from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.dialects.postgresql import JSONB
 
-from aleph.core import db
+from aleph.core import db, schemata
+from aleph.schema import Schema
 from aleph.text import normalize_strong
-from aleph.data.validate import validate
 from aleph.data.keys import make_fingerprint
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
@@ -54,7 +54,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
         data = merge_data(self.data, other.data)
         if self.name.lower() != other.name.lower():
-            data = merge_data(data, {'other_names': [{'name': other.name}]})
+            data = merge_data(data, {'alias': [other.name]})
 
         self.data = data
         self.state = self.STATE_ACTIVE
@@ -78,12 +78,9 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         db.session.refresh(other)
 
     def update(self, data):
-        validate(data, self.type)
-        data.pop('deleted_at', None)
-        data.pop('updated_at', None)
-        data.pop('created_at', None)
-        data.pop('id', None)
-        self.name = data.pop('name')
+        schema = schemata.get(Schema.ENTITY, self.type)
+        data = schema.validate(data)
+        self.name = data.pop('name', None)
         self.state = data.pop('state', self.STATE_ACTIVE)
         self.data = data
         self.updated_at = datetime.utcnow()
