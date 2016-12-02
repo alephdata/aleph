@@ -45,13 +45,10 @@ def delete_collection(collection_id=None):
     log.info("Deleting collection [%r]: %r", collection.id, collection.label)
     deleted_at = datetime.utcnow()
     for entity in collection.entities:
-        entity.collections = [c for c in entity.collections
-                              if c.id != collection.id]
-        db.session.add(entity)
-        if not len(entity.collections):
-            delete_entity(entity)
-        else:
-            update_entity(entity)
+        # TODO: consider hard-deleting entities because the polyglot tagger
+        # cannot tell if a deleted match on a tagged term on a revived
+        # collection means not to tag this entity any more.
+        delete_entity(entity, deleted_at=deleted_at)
 
     for document in collection.documents:
         delete_document(document, deleted_at=deleted_at)

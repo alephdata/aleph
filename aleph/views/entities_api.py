@@ -13,26 +13,6 @@ from aleph.search import suggest_entities, similar_entities
 blueprint = Blueprint('entities_api', __name__)
 
 
-def check_authz(entity, permission):
-    permissions = request.authz.collections.get(permission)
-    for collection in entity.collections:
-        if collection.id in permissions:
-            return
-    request.authz.require(False)
-
-
-def get_collections(data):
-    collections = []
-    collection_id = data.get('collection_id') or []
-    if not isinstance(collection_id, (list, set, tuple)):
-        collection_id = [collection_id]
-    for coll_id in collection_id:
-        if isinstance(coll_id, dict):
-            coll_id = coll_id.get('id')
-        collections.append(coll_id)
-    return Collection.all_by_ids(collections).all()
-
-
 @blueprint.route('/api/1/entities', methods=['GET'])
 def index():
     enable_cache(vary_user=True)
@@ -52,21 +32,18 @@ def all():
     q = Entity.all_ids()
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
     q = q.filter(Entity.deleted_at == None)  # noqa
-    clause = Collection.id.in_(collection_id)
-    q = q.filter(Entity.collections.any(clause))
+    q = q.filter(Entity.collection_id.in_(collection_id))
     return jsonify({'results': [r[0] for r in q]})
 
 
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
 def create():
     data = request_data()
-    data.pop('id', None)
-    collections = get_collections(data)
-    for collection in collections:
-        request.authz.require(request.authz.collection_write(collection.id))
+    collection = Collection.by_id(data.get('collection_id'))
+    request.authz.require(request.authz.collection_write(collection.id))
 
     try:
-        entity = Entity.save(data, collections)
+        entity = Entity.save(data, collection)
     except ValueError as ve:
         raise BadRequest(ve.message)
     for collection in entity.collections:
@@ -80,7 +57,7 @@ def create():
 @blueprint.route('/api/1/entities/<id>', methods=['GET'])
 def view(id):
     entity = obj_or_404(Entity.by_id(id))
-    check_authz(entity, request.authz.READ)
+    request.authz.require(request.authz.collection_read(entity.collection_id))
     log_event(request, entity_id=entity.id)
     return jsonify(entity)
 
@@ -96,7 +73,7 @@ def suggest():
 @blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])
 def similar(id):
     entity = obj_or_404(Entity.by_id(id))
-    check_authz(entity, request.authz.READ)
+    request.authz.require(request.authz.collection_read(entity.collection_id))
     return jsonify(similar_entities(entity, request.authz,
                                     writeable=arg_bool('writeable')))
 
@@ -104,19 +81,16 @@ def similar(id):
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])
 def update(id):
     entity = obj_or_404(Entity.by_id(id))
-    check_authz(entity, request.authz.WRITE)
-    data = request_data()
-    data['id'] = entity.id
-    possible_collections = request.authz.collections_write
-    possible_collections.extend([c.id for c in entity.collections])
-    collections = [c for c in get_collections(data)
-                   if c.id in possible_collections]
+    request.authz.require(request.authz.collection_write(entity.collection_id))
+
     try:
-        entity = Entity.save(data, collections, merge=arg_bool('merge'))
+        entity = Entity.save(request_data(),
+                             entity.collection,
+                             merge=arg_bool('merge'))
     except ValueError as ve:
         raise BadRequest(ve.message)
-    for collection in entity.collections:
-        collection.touch()
+
+    entity.collection.touch()
     db.session.commit()
     log_event(request, entity_id=entity.id)
     update_entity(entity)
@@ -126,21 +100,26 @@ def update(id):
 @blueprint.route('/api/1/entities/<id>/merge/<other_id>', methods=['DELETE'])
 def merge(id, other_id):
     entity = obj_or_404(Entity.by_id(id))
-    check_authz(entity, request.authz.WRITE)
     other = obj_or_404(Entity.by_id(other_id))
-    check_authz(other, request.authz.WRITE)
-    entity.merge(other)
+    request.authz.require(request.authz.collection_write(entity.collection_id))
+    request.authz.require(request.authz.collection_write(other.collection_id))
+
+    try:
+        entity.merge(other)
+    except ValueError as ve:
+        raise BadRequest(ve.message)
+
     db.session.commit()
+    log_event(request, entity_id=entity.id)
     update_entity(entity)
     update_entity(other)
-    log_event(request, entity_id=entity.id)
     return view(entity.id)
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['DELETE'])
 def delete(id):
     entity = obj_or_404(Entity.by_id(id))
-    check_authz(entity, request.authz.WRITE)
+    request.authz.require(request.authz.collection_write(entity.collection_id))
     delete_entity(entity)
     db.session.commit()
     log_event(request, entity_id=entity.id)

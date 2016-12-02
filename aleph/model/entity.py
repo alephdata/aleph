@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 from sqlalchemy import func
-from sqlalchemy.orm import aliased, joinedload
+from sqlalchemy.orm import joinedload
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
@@ -10,15 +10,10 @@ from aleph.data.validate import validate
 from aleph.data.keys import make_fingerprint
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
-from aleph.model.common import SoftDeleteModel, UuidModel
+from aleph.model.common import SoftDeleteModel, UuidModel, IdModel, DatedModel
 from aleph.model.common import make_textid, merge_data
 
 log = logging.getLogger(__name__)
-
-collection_entity_table = db.Table('collection_entity',
-    db.Column('entity_id', db.String(32), db.ForeignKey('entity.id')),  # noqa
-    db.Column('collection_id', db.Integer, db.ForeignKey('collection.id'))  # noqa
-)
 
 
 class Entity(db.Model, UuidModel, SoftDeleteModel):
@@ -32,8 +27,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
                       default=STATE_ACTIVE)
     data = db.Column('data', JSONB)
 
-    collections = db.relationship(Collection, secondary=collection_entity_table,  # noqa
-                                  backref=db.backref('entities', lazy='dynamic'))  # noqa
+    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
+    collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic'))
 
     def delete_references(self, origin=None):
         pq = db.session.query(Reference)
@@ -53,13 +48,9 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
     def merge(self, other):
         if self.id == other.id:
-            return
-
-        # merge collections
-        collections = list(self.collections)
-        for collection in other.collections:
-            if collection not in collections:
-                self.collections.append(collection)
+            raise ValueError("Cannot merge an entity with itself.")
+        if self.collection_id != other.collection_id:
+            raise ValueError("Cannot merge entities from different collections.")  # noqa
 
         data = merge_data(self.data, other.data)
         if self.name.lower() != other.name.lower():
@@ -99,7 +90,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         db.session.add(self)
 
     @classmethod
-    def save(cls, data, collections, merge=False):
+    def save(cls, data, collection, merge=False):
         ent = cls.by_id(data.get('id'))
         if ent is None:
             ent = cls()
@@ -110,14 +101,11 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
         if merge:
             data = merge_data(data, ent.to_dict())
-            for collection in ent.collections:
-                if collection.id not in [c.id for c in collections]:
-                    collections.append(collection)
 
-        if not len(collections):
+        if collection is None:
             raise ValueError("No collection specified.")
 
-        ent.collections = collections
+        ent.collection = collection
         ent.update(data)
         return ent
 
@@ -130,10 +118,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             if isinstance(collection, Collection):
                 collection = collection.id
             collection_ids.append(collection)
-        coll = aliased(Collection)
-        q = q.join(coll, Entity.collections)
-        q = q.filter(coll.id.in_(collection_ids))
-        q = q.filter(coll.deleted_at == None)  # noqa
+        q = q.filter(Entity.collection_id.in_(collection_ids))
         return q
 
     @classmethod
@@ -142,7 +127,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             return {}
         q = cls.all()
         q = cls.filter_collections(q, collections=collections)
-        q = q.options(joinedload('collections'))
+        q = q.options(joinedload('collection'))
         q = q.filter(cls.id.in_(ids))
         entities = {}
         for ent in q:
@@ -210,7 +195,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             '$schema': self.type,
             'name': self.name,
             'state': self.state,
-            'collection_id': [c.id for c in self.collections]
+            'collection_id': self.collection_id
         })
         return data
 
@@ -219,5 +204,10 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             'id': self.id,
             'name': self.name,
             '$schema': self.type,
-            'collection_id': [c.id for c in self.collections]
+            'collection_id': self.collection_id
         }
+
+
+class EntityIdentity(db.Model, IdModel, DatedModel):
+    entity_id = db.Column(db.String(255), index=True)
+    identity = db.Column(db.String(255), index=True)

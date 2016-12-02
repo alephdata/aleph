@@ -57,7 +57,7 @@ def generate_entity_references(entity):
 
     db.session.commit()
     delete_entity_references(entity.id)
-    update_entity_references(entity.id)
+    update_entity_references(entity)
 
 
 def update_entity(entity):
@@ -67,8 +67,8 @@ def update_entity(entity):
 
 
 def delete_entity(entity, deleted_at=None):
-    update_entity(entity)
     entity.delete(deleted_at=deleted_at)
+    update_entity(entity)
 
 
 @celery.task()
