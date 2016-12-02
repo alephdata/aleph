@@ -130,7 +130,7 @@ def upgrade():
                 q = sa.insert(entity_table).values(ent)
                 bind.execute(q)
 
-            if len(colls):
+            if len(colls) > 1:
                 q = sa.insert(entity_identity_table).values({
                     'created_at': entity.updated_at,
                     'updated_at': entity.updated_at,
@@ -154,7 +154,7 @@ def upgrade():
                     ad.pop('id', None)
                     ad['entity_id'] = eid
                     q = sa.insert(alert_table).values(ad)
-                    rp = bind.execute(q)
+                    bind.execute(q)
 
             for ref in references:
                 collection_id = None
@@ -176,7 +176,7 @@ def upgrade():
                     rd.pop('id', None)
                     rd['entity_id'] = eid
                     q = sa.insert(reference_table).values(rd)
-                    rp = bind.execute(q)
+                    bind.execute(q)
 
     # cq = sa.select([entity_table])
     # cq = cq.where(entity_table.c.collection_id == None)
@@ -186,7 +186,6 @@ def upgrade():
     op.drop_table('collection_document')
     op.drop_table('collection_entity')
     op.alter_column('entity', 'collection_id', nullable=False)  # noqa
-    assert False
 
 
 def downgrade():

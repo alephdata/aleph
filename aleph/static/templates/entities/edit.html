@@ -30,7 +30,7 @@
             <p class="help-block">Describe the relevance of this entity in a sentence.</p>
           </div>
         </div>
- 
+
         <div class="checkbox">
           <label>
             <input type="checkbox" ng-model="entity.haveAlert"> Receive e-mail alerts about new, matching documents.
@@ -38,21 +38,20 @@
         </div>
       </div>
 
-      <div class="col-md-8" ng-show="section == 'other_names'">
-        <p class="help-block">Alternate names (<i>also known as</i>) can
-          be former names, spelling variations, names in other scripts or
-          well-known aliases.
+      <div class="col-md-8" ng-show="section == 'aliases'">
+        <p class="help-block">
+          Alternate names (<i>also known as</i>) can be former names, spelling
+          variations, names in other scripts or well-known aliases.
         </p>
         <table class="table">
-          <tr ng-repeat="other_name in entity.other_names">
+          <tr ng-repeat="alias in entity.aliases">
             <td>
               <input type="text" class="form-control input" id="new_name" name="new_name"
-                ng-model="other_name.display_name" ng-minlength="3"
-                ng-change="updateOtherName(other_name)">
+                ng-model="alias" ng-minlength="3">
             </td>
             <td width="1%">
               <button type="button" class="btn btn-default btn"
-                ng-click="removeOtherName(other_name)">
+                ng-click="removeAlias(alias)">
                 <i class="fa fa-trash-o"></i>
               </button>
             </td>
@@ -60,20 +59,20 @@
           <tr>
             <td>
               <input type="text" class="form-control input" id="new_name" name="new_name"
-                ng-model="newOtherName.name" placeholder="Add an alternate name..."
-                ng-focus="editOtherName(true)" ng-blur="editOtherName(false)">
+                ng-model="newAlias" placeholder="Add an alternate name..."
+                ng-focus="editAlias(true)" ng-blur="editAlias(false)">
             </td>
             <td width="1%">
               <button type="button" class="btn btn-success btn"
-                ng-click="addOtherName()" ng-disabled="!canAddOtherName()">
+                ng-click="addAlias()" ng-disabled="!canAddAlias()">
                 <i class="fa fa-plus"></i>
               </button>
             </td>
           </tr>
         </table>
-        
+
       </div>
-      
+
       <div class="col-md-8" ng-show="section == 'details'">
 
         <div class="form-group" ng-if="isCompany">
@@ -82,7 +81,7 @@
           </label>
           <div>
             <input type="text" class="form-control" id="company_number" name="company_number"
-              ng-model="entity.company_number" ng-minlength="3">
+              ng-model="entity.registrationNumber" ng-minlength="3">
             <p class="help-block">
               As used by the jurisdiction's corporate registry.
             </p>
@@ -91,21 +90,21 @@
 
         <div class="row" ng-if="isPerson">
           <div class="col-sm-6">
-            <div class="form-group" ng-class="{'has-error': editEntity.birth_date.$invalid}">
-              <label class="control-label" for="birth_date">Date of birth</label>
+            <div class="form-group" ng-class="{'has-error': editEntity.birthDate.$invalid}">
+              <label class="control-label" for="birthDate">Date of birth</label>
               <div>
-               <input type="text" class="form-control" name="birth_date"
-                ng-model="entity.birth_date" placeholder="1970-01-01" autocomplete="off"
+               <input type="text" class="form-control" name="birthDate"
+                ng-model="entity.birthDate" placeholder="1970-01-01" autocomplete="off"
                 ng-pattern="'^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'" ng-trim="true">
               </div>
             </div>
           </div>
           <div class="col-sm-6">
-            <div class="form-group" ng-class="{'has-error': editEntity.death_date.$invalid}">
-              <label class="control-label" for="death_date">Date of death</label>
+            <div class="form-group" ng-class="{'has-error': editEntity.deathDate.$invalid}">
+              <label class="control-label" for="deathDate">Date of death</label>
               <div>
-               <input type="text" class="form-control" name="death_date"
-                ng-model="entity.death_date" placeholder="1970-01-01" autocomplete="off"
+               <input type="text" class="form-control" name="deathDate"
+                ng-model="entity.deathDate" placeholder="1970-01-01" autocomplete="off"
                 ng-pattern="'^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'" ng-trim="true">
               </div>
             </div>
@@ -114,27 +113,27 @@
 
         <div class="row" ng-if="isOrganization">
           <div class="col-sm-6">
-            <div class="form-group" ng-class="{'has-error': editEntity.founding_date.$invalid}">
-              <label class="control-label" for="founding_date">Founding date</label>
+            <div class="form-group" ng-class="{'has-error': editEntity.incorporationDate.$invalid}">
+              <label class="control-label" for="incorporationDate">Founding date</label>
               <div>
-               <input type="text" class="form-control" name="founding_date"
-                ng-model="entity.founding_date" placeholder="1970-01-01" autocomplete="off"
+               <input type="text" class="form-control" name="incorporationDate"
+                ng-model="entity.incorporationDate" placeholder="1970-01-01" autocomplete="off"
                 ng-pattern="'^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'" ng-trim="true">
               </div>
             </div>
           </div>
           <div class="col-sm-6">
-            <div class="form-group" ng-class="{'has-error': editEntity.dissolution_date.$invalid}">
-              <label class="control-label" for="dissolution_date">Date of dissolution</label>
+            <div class="form-group" ng-class="{'has-error': editEntity.dissolutionDate.$invalid}">
+              <label class="control-label" for="dissolutionDate">Date of dissolution</label>
               <div>
-               <input type="text" class="form-control" name="dissolution_date"
-                ng-model="entity.dissolution_date" placeholder="1970-01-01" autocomplete="off"
+               <input type="text" class="form-control" name="dissolutionDate"
+                ng-model="entity.dissolutionDate" placeholder="1970-01-01" autocomplete="off"
                 ng-pattern="'^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'" ng-trim="true">
               </div>
             </div>
           </div>
         </div>
-        
+
         <div class="form-group" ng-if="isPerson">
           <label class="control-label" for="description">Gender</label>
           <div>
@@ -155,31 +154,6 @@
             <textarea class="form-control" id="description" name="description"
               ng-model="entity.description" rows="4"></textarea>
             <p class="help-block">Provide biographical background about this entity.</p>
-          </div>
-        </div>
-
-        <div class="form-group" ng-if="entity.identifiers.length">
-          <hr>
-          <label class="control-label" for="description">Data Identifiers</label>
-          <p class="help-block">Used when updating entity data from external sources.</p>
-          <div>
-            <table class="table table-condensed">
-              <tr>
-                <th>Scheme</th>
-                <th>Identifier</th>
-                <th></th>
-              </tr>
-              <tr ng-repeat="identifier in entity.identifiers">
-                <td>{{identifier.scheme}}</td>
-                <td>{{identifier.identifier}}</td>
-                <td width='0%'>
-                  <button type="button" class="btn btn-default btn-xs"
-                    ng-click="removeIdentifier(identifier)">
-                    <i class="fa fa-trash-o"></i>
-                  </button>
-                </td>
-              </tr>
-            </table>
           </div>
         </div>
       </div>
@@ -210,8 +184,8 @@
           <li ng-class="{'active': section == 'base'}">
             <a ng-click="setSection('base')">Basic Information</a>
           </li>
-          <li ng-class="{'active': section == 'other_names'}">
-            <a ng-click="setSection('other_names')">Alternate Names</a>
+          <li ng-class="{'active': section == 'aliases'}">
+            <a ng-click="setSection('aliases')">Alternate Names</a>
           </li>
           <li ng-class="{'active': section == 'details'}">
             <a ng-click="setSection('details')">Additional Detail</a>
@@ -229,4 +203,3 @@
     <button type="submit" class="btn btn-primary" ng-disabled="!canSave()">Save</button>
   </div>
 </form>
-

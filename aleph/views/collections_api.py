@@ -54,7 +54,7 @@ def create():
     db.session.commit()
     update_collection(collection)
     log_event(request)
-    return view(collection.id)
+    return jsonify(collection)
 
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['GET'])
@@ -78,7 +78,8 @@ def update(id):
     return view(id)
 
 
-@blueprint.route('/api/1/collections/<int:id>/process', methods=['POST', 'PUT'])
+@blueprint.route('/api/1/collections/<int:id>/process',
+                 methods=['POST', 'PUT'])
 def process(id):
     collection = obj_or_404(Collection.by_id(id))
     request.authz.require(request.authz.collection_write(collection))

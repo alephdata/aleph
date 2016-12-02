@@ -148,10 +148,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
         return q.count()
 
     def get_entity_count(self, state=None):
-        from aleph.model.entity import Entity, collection_entity_table
+        from aleph.model.entity import Entity
         q = Entity.all()
-        q = q.join(collection_entity_table)
-        q = q.filter(collection_entity_table.c.collection_id == self.id)
+        q = q.filter(Entity.collection_id == self.id)
         if state is not None:
             q = q.filter(Entity.state == state)
         return q.count()
