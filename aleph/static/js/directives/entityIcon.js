@@ -13,7 +13,7 @@ aleph.directive('entityIcon', ['Metadata', function(Metadata) {
     },
     templateUrl: 'templates/entities/icon.html',
     link: function (scope, element, attrs, model) {
-      scope.data = schemata[scope.schema];
+      scope.data = schemata.entities[scope.schema];
     }
   };
 }]);

@@ -17,7 +17,7 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     $scope.schemata = metadata.schemata;
     $scope.entity = entityCache.splice(0, 1)[0];
     Title.set("Review: " + $scope.entity.name, "entities");
-    $scope.entity.jurisdiction_code = $scope.entity.jurisdiction_code || null;
+    $scope.entity.country = $scope.entity.country || null;
     var params = {params: {writeable: true}},
         url = '/api/1/entities/' + $scope.entity.id + '/similar';
     $http.get(url, params).then(function(res) {

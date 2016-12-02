@@ -3,11 +3,10 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
 
   $scope.collectionCallback = null;
   $scope.blocked = false;
-  $scope.availableSchemata = ['/entity/person.json#', '/entity/company.json#',
-                              '/entity/organization.json#'];
+  $scope.availableSchemata = ['Person', 'Company', 'Organization'];
   $scope.selectSchema = !entity.$schema;
   $scope.entity = entity;
-  $scope.entity.jurisdiction_code = $scope.entity.jurisdiction_code || null;
+  $scope.entity.country = $scope.entity.country || null;
   $scope.entity.$schema = $scope.entity.$schema || $scope.availableSchemata[0];
   $scope.createAlert = true;
   $scope.schemata = metadata.schemata;

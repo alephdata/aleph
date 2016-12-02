@@ -6,8 +6,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
   $scope.entities = [{}, {}, {}, {}];
   $scope.created = [];
   $scope.schemata = metadata.schemata;
-  $scope.availableSchemata = ['/entity/person.json#', '/entity/company.json#',
-                              '/entity/organization.json#', '/entity/entity.json#'];
+  $scope.availableSchemata = ['Person', 'Company', 'Organization', 'LegalEntity'];
   Title.set("Bulk create entities", "collections");
 
   $scope.editEntity = function($event, entity) {
@@ -60,7 +59,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
         stubs++;
         if (lastEntity) {
           ent.$schema = lastEntity.$schema;
-          ent.jurisdiction_code = lastEntity.jurisdiction_code;
+          ent.country = lastEntity.country;
         }
       } else {
         lastEntity = angular.copy(ent);

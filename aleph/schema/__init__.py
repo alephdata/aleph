@@ -125,6 +125,9 @@ class Schema(object):
             raise SchemaValidationException(errors)
         return result
 
+    def to_dict(self):
+        return self.data
+
     def __repr__(self):
         return '<Schema(%r)>' % self.name
 
@@ -168,6 +171,15 @@ class SchemaSet(object):
             for right in rights:
                 if left == right:
                     return left
+
+    def to_dict(self):
+        data = {
+            Schema.ENTITY: {},
+            Schema.LINK: {}
+        }
+        for schema in self.schemata:
+            data[schema.section][schema.name] = schema
+        return data
 
     def __repr__(self):
         return '<SchemaSet(%r)>' % self.schemata

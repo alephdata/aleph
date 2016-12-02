@@ -24,11 +24,10 @@
             <button type="button" class="btn btn-default"
               ng-class="{'active': entity.$schema == schema}" ng-click="setSchema(schema)">
               <entity-icon schema="schema"></entity-icon>
-              {{schemata[schema].title}}
+              {{schemata.entities[schema].label}}
             </button>
           </div>
         </div>
-        <p class="help-block" ng-bind="schemata[entity.$schema].description"></p>
       </div>
     </div>
 
@@ -65,4 +64,3 @@
     <button type="submit" class="btn btn-primary" ng-disabled="!canSave()">Save</button>
   </div>
 </form>
-

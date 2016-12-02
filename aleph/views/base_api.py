@@ -6,11 +6,10 @@ from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
 from elasticsearch import TransportError
 
-from aleph.core import get_config, app_title, app_url
+from aleph.core import get_config, app_title, app_url, schemata
 from aleph.metadata import Metadata
 from aleph.schema import SchemaValidationException
 from aleph.data.reference import COUNTRY_NAMES, LANGUAGE_NAMES
-from aleph.data.validate import resolver
 from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('base_api', __name__)
@@ -55,21 +54,6 @@ def ui(**kwargs):
 @blueprint.route('/api/1/metadata')
 def metadata():
     enable_cache(server_side=False)
-    schemata = {}
-    for schema_id, schema in resolver.store.items():
-        # TODO: figure out if this is reliable.
-        if not schema_id.startswith('/entity/'):
-            continue
-        if not schema_id.endswith('#'):
-            schema_id = schema_id + '#'
-        schemata[schema_id] = {
-            'id': schema_id,
-            'title': schema.get('title'),
-            'faIcon': schema.get('faIcon'),
-            'plural': schema.get('plural', schema.get('title')),
-            'description': schema.get('description'),
-            'inline': schema.get('inline', False)
-        }
     return jsonify({
         'status': 'ok',
         'app': {

@@ -57,7 +57,6 @@ setup(
         ],
         'aleph.crawlers': [
             # 'stub = aleph.crawlers.stub:StubCrawler',
-            'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
             'sourceafrica = aleph.crawlers.documentcloud:SourceAfricaCrawler'
         ],
         'aleph.init': [

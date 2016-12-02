@@ -124,13 +124,6 @@ def index(foreign_id=None):
         reindex_entities()
 
 
-# @manager.command
-# def index_dataset():
-#     Index all datasets.
-#     for dataset in model.datasets:
-#         load_dataset(dataset)
-
-
 @manager.command
 def loaddataset(name):
     """Index all the entities in a given dataset."""
