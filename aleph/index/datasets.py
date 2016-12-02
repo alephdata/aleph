@@ -2,11 +2,9 @@ import logging
 from pprint import pprint  # noqa
 from elasticsearch.helpers import bulk, scan
 
-from aleph.core import es, es_index, graph
-from aleph.graph import Schema
-from aleph.index.util import merge_docs, remove_nulls
-from aleph.util import unique_list
-from aleph.util import is_list
+from aleph.core import es, es_index, schemata
+from aleph.schema import Schema
+from aleph.index.util import merge_docs
 
 log = logging.getLogger(__name__)
 INDEX_PAGE = 10000
@@ -33,7 +31,6 @@ def _index_updates(items):
             entities[doc_id] = source
 
     result = es.mget(index=es_index, body={'docs': queries})
-    merge_func = graph_model.merge_entity_schema
     for idx_doc in result.get('docs'):
         if not idx_doc.get('found', False):
             continue
@@ -41,7 +38,8 @@ def _index_updates(items):
         entity = entities.get(entity_id)
         existing = idx_doc.get('_source')
         combined = merge_docs(entity, existing)
-        combined['schema'] = merge_func(entity['schema'], existing['schema'])
+        combined['schema'] = schemata.merge_entity_schema(entity['schema'],
+                                                          existing['schema'])
         entities[entity_id] = combined
 
     for doc_id, link in links:

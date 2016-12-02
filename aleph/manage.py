@@ -6,13 +6,13 @@ from flask_script.commands import ShowUrls
 from flask_assets import ManageAssets
 from flask_migrate import MigrateCommand
 
-from aleph.core import create_app, archive, graph
+from aleph.core import create_app, archive, datasets
 from aleph.model import db, upgrade_db, Collection, Document
 from aleph.views import mount_app_blueprints, assets
 from aleph.analyze import install_analyzers
 from aleph.ingest import reingest_collection
 from aleph.index import init_search, delete_index, upgrade_search
-from aleph.index import index_document_id
+from aleph.index import index_document_id, delete_dataset
 from aleph.logic import reindex_entities, delete_collection, analyze_collection
 from aleph.logic import load_dataset
 from aleph.logic.alerts import check_alerts
@@ -134,7 +134,7 @@ def index(foreign_id=None):
 @manager.command
 def loaddataset(name):
     """Index all the entities in a given dataset."""
-    dataset = graph.get_dataset(name)
+    dataset = datasets.get(name)
     load_dataset(dataset)
 
 

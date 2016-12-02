@@ -1,5 +1,5 @@
 from aleph.util import dict_list
-from aleph.graph.schema.types import resolve_type
+from aleph.schema.types import resolve_type
 
 
 class SchemaProperty(object):
@@ -78,3 +78,43 @@ class Schema(object):
 
     def __repr__(self):
         return '<Schema(%r)>' % self.name
+
+
+class SchemaSet(object):
+    """A collection of schemata."""
+
+    def __init__(self, data):
+        self.schemata = []
+        for section in Schema.SECTIONS:
+            for name, sconfig in data.get(section, {}).items():
+                self.schemata.append(Schema(self, section, name, sconfig))
+
+    def get(self, section, name):
+        for schema in self.schemata:
+            if schema.section == section and schema.name == name:
+                return schema
+        raise TypeError("No such schema for %s: %s" % (section, name))
+
+    def merge_entity_schema(self, left, right):
+        if left == right:
+            return left
+        lefts = self.get(Schema.ENTITY, left)
+        lefts = [s.name for s in lefts.schemata]
+        if right in lefts:
+            return left
+
+        rights = self.get(Schema.ENTITY, right)
+        rights = [s.name for s in rights.schemata]
+        if left in rights:
+            return right
+
+        for left in lefts:
+            for right in rights:
+                if left == right:
+                    return left
+
+    # def __iter__(self):
+    #     return iter(self.schemata)
+
+    def __repr__(self):
+        return '<SchemaSet(%r)>' % self.schemata

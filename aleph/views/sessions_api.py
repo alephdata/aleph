@@ -107,9 +107,10 @@ def callback(provider):
         return Unauthorized("Authentication has failed.")
 
     session['oauth'] = resp
-    session['roles'] = [Role.load_id(Role.SYSTEM_USER)]
     signals.handle_oauth_session.send(provider=oauth_provider, session=session)
     db.session.commit()
+    if 'user' not in session:
+        return Unauthorized("Authentication has failed.")
     log_event(request, role_id=session['user'])
     log.info("Logged in: %r", session['user'])
     return redirect(next_url)

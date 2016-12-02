@@ -3,7 +3,7 @@ import logging
 
 from aleph.util import dict_list
 from aleph.model import Role
-from aleph.graph.datasets.query import Query
+from aleph.datasets.query import Query
 
 log = logging.getLogger(__name__)
 
@@ -11,8 +11,7 @@ log = logging.getLogger(__name__)
 class Dataset(object):
     """A dataset describes one set of data to be loaded."""
 
-    def __init__(self, model, name, data):
-        self.model = model
+    def __init__(self, name, data):
         self.name = six.text_type(name)
         self.data = data
         self.label = data.get('label', name)
@@ -37,3 +36,22 @@ class Dataset(object):
 
     def __repr__(self):
         return '<Dataset(%r, %r)>' % (self.name, self.label)
+
+
+class Frank(object):
+    # name was suggested by rysiek@occrp.org, please direct complaints
+    # there.
+
+    def __init__(self, datasets):
+        self.datasets = []
+        for name, dconfig in datasets.get('datasets', {}).items():
+            self.datasets.append(Dataset(self, name, dconfig))
+
+    def get(self, name):
+        for dataset in self.datasets:
+            if dataset.name == name:
+                return dataset
+        raise NameError("No such dataset: %s" % name)
+
+    def __repr__(self):
+        return '<DatasetSet(%r)>' % self.datasets

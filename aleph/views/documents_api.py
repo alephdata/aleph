@@ -73,8 +73,7 @@ def references(document_id):
     q = q.filter(Reference.origin == 'regex')
     q = q.join(Entity)
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
-    clause = Collection.id.in_(request.authz.collections_read)
-    q = q.filter(Entity.collections.any(clause))
+    q = q.filter(Entity.collection_id.in_(request.authz.collections_read))
     q = q.order_by(Reference.weight.desc())
     return jsonify(Pager(q, document_id=document_id))
 

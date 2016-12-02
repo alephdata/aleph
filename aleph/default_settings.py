@@ -58,7 +58,7 @@ COLLECTION_CATEGORIES = {
 }
 
 # Graph / Databases component configuration
-GRAPH_YAML = path.join(path.dirname(__file__), 'graph.yaml')
+SCHEMA_YAML = path.join(path.dirname(__file__), 'schema.yaml')
 DATASETS_YAML = None
 
 # Binary paths for programs to which the ingestor shells out:

@@ -46,8 +46,8 @@ def create():
         entity = Entity.save(data, collection)
     except ValueError as ve:
         raise BadRequest(ve.message)
-    for collection in entity.collections:
-        collection.touch()
+
+    entity.collection.touch()
     db.session.commit()
     log_event(request, entity_id=entity.id)
     update_entity(entity)

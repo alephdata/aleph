@@ -142,11 +142,19 @@ def get_archive():
     return app._aleph_archive
 
 
-def get_graph():
+def get_schemata():
     app = current_app._get_current_object()
-    if not hasattr(app, '_graph_model'):
-        graph_yaml = app.config.get('GRAPH_YAML')
-        log.info("Loading graph schema from: %s", graph_yaml)
+    if not hasattr(app, '_schemata'):
+        schema_yaml = app.config.get('Schema_YAML')
+        log.info("Loading schema from: %s", schema_yaml)
+        from aleph.schema import SchemaSet
+        app._schemata = SchemaSet(load_config_file(schema_yaml))
+    return app._schemata
+
+
+def get_datasets():
+    app = current_app._get_current_object()
+    if not hasattr(app, '_datasets'):
         datasets_yaml = app.config.get('DATASETS_YAML')
         if datasets_yaml is not None:
             log.info("Loading datasets from: %s", datasets_yaml)
@@ -154,10 +162,9 @@ def get_graph():
         else:
             log.warn("No datasets.yaml defined.")
             datasets = {}
-        from aleph.graph import GraphModel
-        app._graph_model = GraphModel(load_config_file(graph_yaml),
-                                      datasets)
-    return app._graph_model
+        from aleph.datasets import Frank
+        app._datasets = Frank(datasets)
+    return app._datasets
 
 
 def get_upload_folder():
@@ -175,7 +182,8 @@ app_url = LocalProxy(get_app_url)
 es = LocalProxy(get_es)
 es_index = LocalProxy(get_es_index)
 archive = LocalProxy(get_archive)
-graph = LocalProxy(get_graph)
+schemata = LocalProxy(get_schemata)
+datasets = LocalProxy(get_datasets)
 upload_folder = LocalProxy(get_upload_folder)
 
 

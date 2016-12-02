@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 import logging
-from collections import defaultdict
 from elasticsearch.helpers import scan
 
 from aleph.core import es, es_index, db
@@ -57,10 +56,9 @@ def update_entity_references(entity, max_query=1000):
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
     documents = [str(r.document_id) for r in q]
 
-    ids = documents.keys()
-    for i in range(0, len(ids), max_query):
-        q = {'query': {'ids': {'values': ids[i:i + max_query]}}}
-        bulk_op(document_updates(q, entity_id, entity.collection_id))
+    for i in range(0, len(documents), max_query):
+        q = {'query': {'ids': {'values': documents[i:i + max_query]}}}
+        bulk_op(document_updates(q, entity.id, entity.collection_id))
 
     flush_index()
 

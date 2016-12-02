@@ -6,7 +6,7 @@ from apikit import jsonify
 from werkzeug.exceptions import BadRequest
 
 from aleph.events import log_event
-from aleph.core import app_url, app_title, graph
+from aleph.core import app_url, app_title, schemata
 from aleph.data.validate import resolver
 from aleph.search.entities import suggest_entities
 
@@ -23,7 +23,7 @@ def entity_link(id):
 
 def get_freebase_types():
     types = []
-    for schema in graph.schemata:
+    for schema in schemata.schemata:
         if schema.section == schema.ENTITY:
             types.append({
                 'id': schema.name,
@@ -36,13 +36,13 @@ def reconcile_op(query):
     """Reconcile operation for a single query."""
     name = query.get('query', '').strip()
     size = int(query.get('limit', '5'))
-    schemas = implied_schemas(query.get('type'))
+    schema = query.get('type')
     types = get_freebase_types()
     # TODO: jurisdiction_code etc.
     # for p in query.get('properties', []):
     #    q[p.get('pid')] = p.get('v')
     matches = []
-    suggested = suggest_entities(name, schemas=schemas, size=size)
+    suggested = suggest_entities(name, schemas=schema, size=size)
     for entity in suggested.get('results'):
         types = [t for t in types if entity['$schema'] == t['id']]
         matches.append({

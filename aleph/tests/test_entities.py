@@ -24,38 +24,21 @@ class EntitiesTestCase(TestCase):
         db.session.add(self.col_other)
         db.session.flush()
         self.ent = Entity.save({
-            '$schema': '/entity/legal_person.json#',
+            '$schema': 'LegalEntity',
             'name': 'Winnie the Pooh',
-            'jurisdiction_code': 'pa',
+            'country': 'pa',
             'summary': 'a fictional teddy bear created by author A. A. Milne',
-            'identifiers': [{
-                'scheme': 'wikipedia',
-                'identifier': 'en:Winnie-the-Pooh'
-            }],
-            'other_names': [{
-                'name': u'Puh der Bär'
-            }, {
-                'name': 'Pooh Bear'
-            }]
-        }, [self.col])
+            'aliases': [u'Puh der Bär', 'Pooh Bear']
+        }, self.col)
         db.session.add(self.ent)
         db.session.flush()
         self.other = Entity.save({
-            '$schema': '/entity/legal_person.json#',
+            '$schema': 'LegalEntity',
             'name': 'Pu der Bär',
-            'jurisdiction_code': 'de',
+            'country': 'de',
             'description': 'he is a bear',
-            'identifiers': [{
-                'scheme': 'wikipedia',
-                'identifier': 'en:Winnie-the-Pooh'
-            }, {
-                'scheme': 'animals',
-                'identifier': 'bears.winnie.pooh'
-            }],
-            'other_names': [{
-                'name': u'Puh der Bär'
-            }]
-        }, [self.col_other])
+            'aliases': [u'Puh der Bär']
+        }, self.col)
         db.session.add(self.other)
         self.alert = Alert()
         self.alert.entity = self.other
@@ -67,7 +50,7 @@ class EntitiesTestCase(TestCase):
         db.session.flush()
         data = json.loads(jsonify(self.ent).data)
         assert 'bear' in data['description'], data
-        assert 'pa' in data['jurisdiction_code'], data
+        assert 'pa' in data['country'], data
         db.session.refresh(self.alert)
         assert self.alert.label == data['name']
         assert self.other.deleted_at is not None, self.other
@@ -80,4 +63,4 @@ class EntitiesTestCase(TestCase):
         res = self.client.delete(url, data={}, content_type='application/json')
         data = res.json
         assert 'bear' in data['description']
-        assert 'pa' in data['jurisdiction_code']
+        assert 'pa' in data['country']

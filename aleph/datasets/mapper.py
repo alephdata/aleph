@@ -3,8 +3,8 @@ import logging
 from hashlib import sha1
 from pprint import pprint  # noqa
 
-from aleph.graph.schema import Schema
-from aleph.graph.datasets.formatting import Formatter
+from aleph.schema import Schema
+from aleph.datasets.formatting import Formatter
 from aleph.data.keys import make_fingerprint
 from aleph.util import dict_list, unique_list
 from aleph.text import latinize_text, string_value

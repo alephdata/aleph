@@ -7,7 +7,7 @@ from sqlalchemy import select, text as sql_text
 from sqlalchemy.schema import Table
 
 from aleph.util import dict_list
-from aleph.graph.datasets.mapper import EntityMapper, LinkMapper
+from aleph.datasets.mapper import EntityMapper, LinkMapper
 
 log = logging.getLogger(__name__)
 DATA_PAGE = 10000
