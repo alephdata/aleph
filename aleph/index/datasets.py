@@ -3,7 +3,7 @@ from pprint import pprint  # noqa
 from elasticsearch.helpers import bulk, scan
 
 from aleph.core import es, es_index, schemata
-from aleph.schema import Schema
+from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK
 from aleph.index.util import merge_docs
 
 log = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ def _index_updates(items):
     """
     queries, links, entities = [], [], {}
     for (doc_type, doc_id, source) in items:
-        if doc_type == Schema.LINK:
+        if doc_type == TYPE_LINK:
             links.append((doc_id, source))
         else:
             queries.append({
@@ -50,7 +50,7 @@ def _index_updates(items):
         link['remote'] = entity
         yield {
             '_id': doc_id,
-            '_type': Schema.LINK,
+            '_type': TYPE_LINK,
             '_index': str(es_index),
             '_source': link
         }
@@ -59,7 +59,7 @@ def _index_updates(items):
         # pprint(entity)
         yield {
             '_id': doc_id,
-            '_type': Schema.ENTITY,
+            '_type': TYPE_ENTITY,
             '_index': str(es_index),
             '_source': entity
         }

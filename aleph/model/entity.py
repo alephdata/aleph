@@ -77,12 +77,12 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         db.session.commit()
         db.session.refresh(other)
 
-    def update(self, data):
-        schema = schemata.get(Schema.ENTITY, self.type)
-        data = schema.validate(data)
-        self.name = data.pop('name', None)
-        self.state = data.pop('state', self.STATE_ACTIVE)
-        self.data = data
+    def update(self, entity):
+        data = entity.get('data') or {}
+        data['name'] = entity.get('name')
+        self.data = self.schema.validate(data)
+        self.name = self.data.pop('name')
+        self.state = entity.pop('state', self.STATE_ACTIVE)
         self.updated_at = datetime.utcnow()
         db.session.add(self)
 
@@ -91,7 +91,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         ent = cls.by_id(data.get('id'))
         if ent is None:
             ent = cls()
-            ent.type = data.pop('$schema', None)
+            ent.type = data.pop('schema', None)
             if ent.type is None:
                 raise ValueError("No schema provided.")
             ent.id = make_textid()
@@ -148,6 +148,10 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return q.distinct()
 
     @property
+    def schema(self):
+        return schemata.get(Schema.ENTITY, self.type)
+
+    @property
     def fingerprint(self):
         return make_fingerprint(self.name)
 
@@ -186,12 +190,12 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return self.name
 
     def to_dict(self):
-        data = dict(self.data)
-        data.update(super(Entity, self).to_dict())
+        data = super(Entity, self).to_dict()
         data.update({
-            '$schema': self.type,
+            'schema': self.type,
             'name': self.name,
             'state': self.state,
+            'data': self.data,
             'collection_id': self.collection_id
         })
         return data
@@ -200,7 +204,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return {
             'id': self.id,
             'name': self.name,
-            '$schema': self.type,
+            'schema': self.type,
             'collection_id': self.collection_id
         }
 

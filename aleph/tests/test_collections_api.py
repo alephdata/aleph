@@ -18,7 +18,7 @@ class CollectionsApiTestCase(TestCase):
         db.session.add(self.col)
         db.session.flush()
         self.ent = Entity.save({
-            '$schema': 'Person',
+            'schema': 'Person',
             'name': 'Winnie the Pooh',
         }, self.col)
         db.session.add(self.ent)

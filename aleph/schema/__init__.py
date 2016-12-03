@@ -20,7 +20,6 @@ class SchemaProperty(object):
         self.label = data.get('label', name)
         self.is_hidden = data.get('hidden', False)
         self.is_multiple = data.get('multiple', False)
-        self.is_required = data.get('required', False)
         self.is_label = name == 'name'
         cls = resolve_type(data.get('type', 'string'))
         self.type = cls()
@@ -41,7 +40,7 @@ class SchemaProperty(object):
             value.append(val)
         if not self.is_multiple:
             value = value[0] if len(value) else None
-        if self.is_required and (value is None or not len(value)):
+        if self.is_label and (value is None or not len(value)):
             error = "Field is required."
         return value, error
 

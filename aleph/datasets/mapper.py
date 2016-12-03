@@ -1,13 +1,13 @@
-import six
 import logging
 from hashlib import sha1
 from pprint import pprint  # noqa
 
 from aleph.schema import Schema
-from aleph.datasets.formatting import Formatter
 from aleph.data.keys import make_fingerprint
 from aleph.util import dict_list, unique_list
-from aleph.text import latinize_text, string_value
+from aleph.text import string_value
+from aleph.datasets.formatting import Formatter
+from aleph.datasets.util import finalize_index
 
 log = logging.getLogger(__name__)
 
@@ -100,26 +100,10 @@ class Mapper(object):
             return digest.hexdigest()
 
     def to_index(self, record):
-        text = set()
-        properties = self.compute_properties(record)
-
-        for value in properties.values() + record.values():
-            if isinstance(value, six.string_types) and len(value.strip()) > 1:
-                text.add(value)
-                text.add(latinize_text(value))
-
-        schemata = []
-        for schema in self.schema.schemata:
-            if not schema.is_hidden:
-                schemata.append(schema.name)
-
         return {
-            'schema': self.schema.name,
-            'schemata': schemata,
             'dataset': self.query.dataset.name,
             'roles': self.query.dataset.roles,
-            'properties': properties,
-            'text': list(text)
+            'properties': self.compute_properties(record)
         }
 
     def __repr__(self):
@@ -139,27 +123,9 @@ class EntityMapper(Mapper):
     def to_index(self, record):
         data = super(EntityMapper, self).to_index(record)
         data['id'] = self.compute_key(record)
-        if not data['id']:
+        if data['id'] is None:
             return
-
-        for prop in self.properties:
-            values = data['properties'].get(prop.name)
-
-            # Find an set the name property
-            if prop.schema.is_label and len(values):
-                data['name'] = values[0]
-
-            # Add inverted properties. This takes all the properties
-            # of a specific type (names, dates, emails etc.)
-            type_ = prop.schema.type
-            if type_.index_invert:
-                if type_.index_invert not in data:
-                    data[type_.index_invert] = []
-                for norm in type_.normalize(values):
-                    if norm not in data[type_.index_invert]:
-                        data[type_.index_invert].append(norm)
-
-        return data
+        return finalize_index(data, self.schema)
 
 
 class LinkMapper(Mapper):
@@ -188,7 +154,7 @@ class LinkMapper(Mapper):
             'id': origin.get('id'),
             'fingerprints': origin.get('fingerprints'),
         }
-        data['text'].extend(remote.get('text', []))
+        # this is expanded post entity indexing.
         data['remote'] = remote.get('id')
 
         # Generate a link ID
@@ -200,4 +166,4 @@ class LinkMapper(Mapper):
         if key_digest is not None:
             digest.update(key_digest)
         data['id'] = digest.hexdigest()
-        return data
+        return finalize_index(data, self.schema)

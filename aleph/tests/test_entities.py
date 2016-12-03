@@ -24,20 +24,24 @@ class EntitiesTestCase(TestCase):
         db.session.add(self.col_other)
         db.session.flush()
         self.ent = Entity.save({
-            '$schema': 'LegalEntity',
+            'schema': 'LegalEntity',
             'name': 'Winnie the Pooh',
-            'country': 'pa',
-            'summary': 'a fictional teddy bear created by author A. A. Milne',
-            'alias': [u'Puh der Bär', 'Pooh Bear']
+            'data': {
+                'country': 'pa',
+                'summary': 'a fictional teddy bear created by A. A. Milne',
+                'alias': [u'Puh der Bär', 'Pooh Bear']
+            }
         }, self.col)
         db.session.add(self.ent)
         db.session.flush()
         self.other = Entity.save({
-            '$schema': 'LegalEntity',
+            'schema': 'LegalEntity',
             'name': 'Pu der Bär',
-            'country': 'de',
-            'description': 'he is a bear',
-            'alias': [u'Puh der Bär']
+            'data': {
+                'country': 'de',
+                'description': 'he is a bear',
+                'alias': [u'Puh der Bär']
+            }
         }, self.col)
         db.session.add(self.other)
         self.alert = Alert()
@@ -49,8 +53,8 @@ class EntitiesTestCase(TestCase):
         self.ent.merge(self.other)
         db.session.flush()
         data = json.loads(jsonify(self.ent).data)
-        assert 'bear' in data['description'], data
-        assert 'pa' in data['country'], data
+        assert 'bear' in data['data']['description'], data
+        assert 'pa' in data['data']['country'], data
         db.session.refresh(self.alert)
         assert self.alert.label == data['name']
         assert self.other.deleted_at is not None, self.other
@@ -62,5 +66,5 @@ class EntitiesTestCase(TestCase):
         self.login(is_admin=True)
         res = self.client.delete(url, data={}, content_type='application/json')
         data = res.json
-        assert 'bear' in data['description']
-        assert 'pa' in data['country']
+        assert 'bear' in data['data']['description']
+        assert 'pa' in data['data']['country']

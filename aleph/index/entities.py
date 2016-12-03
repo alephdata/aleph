@@ -4,9 +4,9 @@ import logging
 from elasticsearch.helpers import scan
 
 from aleph.core import es, es_index, db
-from aleph.text import latinize_text
-from aleph.util import expand_json
+from aleph.util import ensure_list
 from aleph.model import Entity, Reference
+from aleph.datasets.util import finalize_index
 from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.index.admin import flush_index
 from aleph.index.util import bulk_op
@@ -83,14 +83,15 @@ def generate_entities(document):
 
 def index_entity(entity):
     """Index an entity."""
-    data = entity.to_dict()
-    data.pop('id', None)
-    data['doc_count'] = get_count(entity)
-    data['terms'] = entity.terms
-    data['terms_latin'] = [latinize_text(t) for t in entity.terms]
-    data['name_sort'] = data.get('name')
-    data['name_latin'] = latinize_text(data.get('name'))
-    data['summary_latin'] = latinize_text(data.get('summary'))
-    data['description_latin'] = latinize_text(data.get('description'))
-    data = expand_json(data)
+    data = {
+        'data': entity.data,
+        'properties': {'name': [entity.name]},
+        'collection_id': entity.collection_id,
+        'created_at': entity.created_at,
+        'updated_at': entity.updated_at,
+        'doc_count': get_count(entity)
+    }
+    for k, v in entity.data.items():
+        data['properties'][k] = ensure_list(v)
+    data = finalize_index(data, entity.schema)
     es.index(index=es_index, doc_type=TYPE_ENTITY, id=entity.id, body=data)

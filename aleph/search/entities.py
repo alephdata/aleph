@@ -19,10 +19,7 @@ def entities_query(state, fields=None, facets=True):
         q = {
             "query_string": {
                 "query": state.text,
-                "fields": ['name^15', 'name_latin^5',
-                           'terms^12', 'terms_latin^3',
-                           'summary^10', 'summary_latin^7',
-                           'description^5', 'description_latin^3'],
+                "fields": ['name^5', 'text'],
                 "default_operator": "AND",
                 "use_dis_max": True
             }
@@ -74,7 +71,7 @@ def suggest_entities(prefix, authz, min_count=0, schemas=None, size=5):
     options = []
     if prefix is not None and len(prefix.strip()):
         q = {
-            'match_phrase_prefix': {'terms': prefix.strip()}
+            'match_phrase_prefix': {'name': prefix.strip()}
         }
         if min_count > 0:
             q = add_filter(q, {'range': {'doc_count': {'gte': min_count}}})
@@ -85,13 +82,13 @@ def suggest_entities(prefix, authz, min_count=0, schemas=None, size=5):
             'size': size,
             'sort': [{'doc_count': 'desc'}, '_score'],
             'query': q,
-            '_source': ['name', '$schema', 'terms', 'doc_count']
+            '_source': ['name', 'schema', 'fingerprints', 'doc_count']
         }
         ref = latinize_text(prefix)
         result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
         for res in result.get('hits', {}).get('hits', []):
             ent = res.get('_source')
-            terms = [latinize_text(t) for t in ent.pop('terms', [])]
+            terms = [latinize_text(t) for t in ent.pop('fingerprints', [])]
             ent['match'] = ref in terms
             ent['score'] = res.get('_score')
             ent['id'] = res.get('_id')
@@ -108,14 +105,14 @@ def similar_entities(entity, authz, writeable=False):
     for term in entity.terms:
         shoulds.append({
             'multi_match': {
-                "fields": ["name^50", "terms^25", "summary^5"],
+                "fields": ["name^5", "text"],
                 "query": term,
                 "fuzziness": 2
             }
         })
         shoulds.append({
             'multi_match': {
-                "fields": ["name_latin^10", "terms_latin^5", "summary_latin"],
+                "fields": ["name^5", "text"],
                 "query": latinize_text(term),
                 "fuzziness": 2
             }
@@ -172,9 +169,7 @@ def execute_entities_query(state, query, doc_counts=False):
 
         sq = {'term': {'entities.id': entity['id']}}
         sq = add_filter(sq, {
-            'terms': {
-                'collection_id': state.authz_collections
-            }
+            'terms': {'collection_id': state.authz_collections}
         })
         sq = {'size': 0, 'query': sq}
         sub_queries.append(json.dumps({}))
