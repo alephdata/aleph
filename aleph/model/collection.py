@@ -58,7 +58,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
         This is used for entity review.
         """
         from aleph.model.entity import Entity
-        from aleph.model.document import Document
         from aleph.model.reference import Reference
         q = db.session.query(Entity)
         q = q.filter(Entity.state == Entity.STATE_PENDING)

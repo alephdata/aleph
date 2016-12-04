@@ -81,7 +81,7 @@ def aggregate(q, aggs, facets):
 def filter_query(q, filters):
     """Apply a list of filters to the given query."""
     for field, values in filters.items():
-        if field == 'collection_id':
+        if field == 'collection_id' and len(values):
             q = add_filter(q, {'terms': {field: values}})
         else:
             for value in values:

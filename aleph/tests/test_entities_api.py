@@ -2,7 +2,7 @@ import json
 
 from aleph.core import db
 from aleph.model import Collection, Entity
-from aleph.index import index_entity, optimize_search
+from aleph.index import index_entity, flush_index
 from aleph.tests.util import TestCase
 
 
@@ -27,7 +27,7 @@ class EntitiesApiTestCase(TestCase):
 
     def test_index(self):
         index_entity(self.ent)
-        optimize_search()
+        flush_index()
         res = self.client.get('/api/1/entities?facet=collections')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
@@ -189,7 +189,7 @@ class EntitiesApiTestCase(TestCase):
         }
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
-        optimize_search()
+        flush_index()
         res = self.client.get('/api/1/entities/_suggest?prefix=osa')
         assert res.status_code == 200, (res.status_code, res.json)
         data = res.json
@@ -213,7 +213,7 @@ class EntitiesApiTestCase(TestCase):
         }
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
-        optimize_search()
+        flush_index()
         res = self.client.get('/api/1/entities/%s/similar' % res.json['id'])
         assert res.status_code == 200, (res.status_code, res.json)
         data = res.json

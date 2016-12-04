@@ -5,7 +5,7 @@ from flask_testing import TestCase as FlaskTestCase
 from flask_fixtures import loaders, load_fixtures
 
 from aleph.model import Role, Document, create_system_roles
-from aleph.index import delete_index, init_search, optimize_search
+from aleph.index import delete_index, init_search, flush_index
 from aleph.analyze import analyze_document
 from aleph.logic import reindex_entities
 from aleph.core import db, create_app
@@ -62,7 +62,7 @@ class TestCase(FlaskTestCase):
         if process_documents:
             for doc in Document.all():
                 analyze_document(doc)
-            optimize_search()
+        flush_index()
 
     def setUp(self):
         try:

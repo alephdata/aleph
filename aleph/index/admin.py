@@ -34,11 +34,6 @@ def upgrade_search():
                            doc_type=TYPE_LINK)
 
 
-def optimize_search():
-    """Run a full index restructure. May take a while."""
-    es.indices.optimize(index=es_index)
-
-
 def delete_index():
     es.indices.delete(es_index, ignore=[404, 400])
 

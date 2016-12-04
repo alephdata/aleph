@@ -7,7 +7,7 @@ from collections import defaultdict
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.text import normalize_strong
 from aleph.model import Entity, Reference, Document, Alert
-from aleph.index import index_entity
+from aleph.index import index_entity, flush_index
 from aleph.index import delete_entity as index_delete
 from aleph.index.entities import delete_entity_references
 from aleph.index.entities import update_entity_references
@@ -65,6 +65,8 @@ def update_entity(entity):
     reindex_entity(entity, references=False)
     update_entity_full.apply_async([entity.id], queue=USER_QUEUE,
                                    routing_key=USER_ROUTING_KEY)
+    # needed to make the call to view() work:
+    flush_index()
 
 
 def delete_entity(entity, deleted_at=None):

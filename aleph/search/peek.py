@@ -6,6 +6,7 @@ from aleph.index import TYPE_DOCUMENT
 from aleph.core import es, es_index
 from aleph.model import Collection
 from aleph.search.documents import text_query
+from aleph.search.documents import document_authz_filter
 from aleph.search.fragments import filter_query
 
 
@@ -39,7 +40,7 @@ def peek_query(state):
     """
     filters = state.filters
     cq = Collection.all()
-    cq = cq.filter(not_(Collection.id.in_(state.authz_collections)))
+    cq = cq.filter(not_(Collection.id.in_(state.authz.collections_read)))
     cq = cq.filter(Collection.creator_id != None)  # noqa
     cq = cq.filter(Collection.private != True)  # noqa
     collections = {c.id: c for c in cq}

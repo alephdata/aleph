@@ -4,6 +4,7 @@ from pprint import pprint  # noqa
 from aleph.search.util import add_filter
 from aleph.search.query import QueryState
 from aleph.search.documents import execute_documents_query
+from aleph.search.documents import document_authz_filter
 from aleph.search.fragments import filter_query, text_query
 
 
@@ -18,6 +19,7 @@ def alert_query(alert, authz):
     }
     state = QueryState(args, authz)
     q = text_query(state.text)
+    q = document_authz_filter(q, authz)
     q = filter_query(q, state.filters)
     if alert.notified_at:
         q = add_filter(q, {

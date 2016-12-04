@@ -6,7 +6,7 @@ from pprint import pprint  # noqa
 from aleph import signals
 from aleph.core import es, es_index
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
-from aleph.search.util import clean_highlight, execute_basic
+from aleph.search.util import clean_highlight, execute_basic, add_filter
 from aleph.search.fragments import aggregate, filter_query, text_query
 from aleph.search.fragments import FACET_SIZE
 from aleph.search.facet import parse_facet_result
@@ -19,9 +19,14 @@ DEFAULT_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                   'updated_at', 'type', 'summary']
 
 
+def document_authz_filter(q, authz):
+    return add_filter(q, {'terms': {'collection_id': authz.collections_read}})
+
+
 def documents_query(state, fields=None, facets=True):
     """Parse a user query string, compose and execute a query."""
     q = text_query(state.text)
+    q = document_authz_filter(q, state.authz)
 
     # Sorting
     if state.sort == 'newest':
@@ -57,7 +62,7 @@ def facet_entities(aggs, state):
     # which apply to the document part of the query. It is used by the
     # collections view to show only entity facets from the currently
     # selected collection.
-    collections = state.authz_collections
+    collections = state.authz.collections_read
     if 'collection' == state.get('scope'):
         collections = state.collection_id
 
@@ -81,7 +86,7 @@ def facet_entities(aggs, state):
 
 def facet_collections(q, aggs, state):
     filters = state.filters
-    filters['collection_id'] = state.authz_collections
+    filters['collection_id'] = state.authz.collections_read
     aggs['scoped']['aggs']['collections'] = {
         'filter': {
             'query': filter_query(q, filters)

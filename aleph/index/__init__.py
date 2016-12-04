@@ -1,5 +1,5 @@
 from aleph.index.admin import init_search, upgrade_search  # noqa
-from aleph.index.admin import delete_index, optimize_search  # noqa
+from aleph.index.admin import delete_index, flush_index  # noqa
 from aleph.index.entities import index_entity, delete_entity, generate_entities  # noqa
 from aleph.index.documents import index_document, index_document_id, delete_document  # noqa
 from aleph.index.datasets import index_items, delete_dataset  # noqa

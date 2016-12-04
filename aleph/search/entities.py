@@ -13,6 +13,15 @@ from aleph.text import latinize_text
 #                   'properties']
 
 
+def entity_authz_filter(q, authz):
+    return add_filter(q, {
+        "or": [
+            {'terms': {'roles': authz.roles}},
+            {'terms': {'collection_id': authz.collections_read}},
+        ]
+    })
+
+
 def entities_query(state, fields=None, facets=True):
     """Parse a user query string, compose and execute a query."""
     if state.has_text:
@@ -26,6 +35,7 @@ def entities_query(state, fields=None, facets=True):
         }
     else:
         q = match_all()
+    q = entity_authz_filter(q, state.authz)
 
     aggs = {'scoped': {'global': {}, 'aggs': {}}}
     if facets:
@@ -50,9 +60,23 @@ def entities_query(state, fields=None, facets=True):
     }
 
 
+def load_entity(entity_id, authz):
+    """Load a single entity by ID."""
+    q = {'term': {'_id': entity_id}}
+    q = entity_authz_filter(q, authz)
+    result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
+    hits = result.get('hits', {})
+    if hits.get('total') != 1:
+        return None
+    for hit in hits.get('hits', []):
+        document = hit.get('_source')
+        document['id'] = hit.get('_id')
+        return document
+
+
 def facet_collections(q, aggs, state):
     filters = state.filters
-    filters['collection_id'] = state.authz_collections
+    filters['collection_id'] = state.authz.collections_read
     aggs['scoped']['aggs']['collections'] = {
         'filter': {
             'query': filter_query(q, filters)
@@ -77,7 +101,10 @@ def suggest_entities(prefix, authz, min_count=0, schemas=None, size=5):
             q = add_filter(q, {'range': {'doc_count': {'gte': min_count}}})
         if schemas is not None and len(schemas):
             q = add_filter(q, {'terms': {'$schema': schemas}})
+
+        # TODO: is this correct? should we allow filter by dataset entities?
         q = add_filter(q, {'terms': {'collection_id': authz.collections_read}})
+
         q = {
             'size': size,
             'sort': [{'doc_count': 'desc'}, '_score'],
@@ -122,14 +149,10 @@ def similar_entities(entity):
         "bool": {
             "should": shoulds,
             "must_not": {
-                "ids": {
-                    "values": [entity.id]
-                }
+                "ids": {"values": [entity.id]}
             },
             "must": {
-                "term": {
-                    "collection_id": entity.collection_id
-                }
+                "term": {"collection_id": entity.collection_id}
             },
             "minimum_should_match": 1
         }
@@ -166,7 +189,7 @@ def execute_entities_query(state, query, doc_counts=False):
 
         sq = {'term': {'entities.id': entity['id']}}
         sq = add_filter(sq, {
-            'terms': {'collection_id': state.authz_collections}
+            'terms': {'collection_id': state.authz.collections_read}
         })
         sq = {'size': 0, 'query': sq}
         sub_queries.append(json.dumps({}))
