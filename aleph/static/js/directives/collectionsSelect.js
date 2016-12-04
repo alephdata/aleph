@@ -52,7 +52,7 @@ aleph.directive('collectionsSelect', ['$http', '$q', 'Metadata', 'Collection',
                 scope.createCollection = false;
                 scope.collection = res.data;
                 Metadata.flush().then(function() {
-                  dfd.resolve(res.data);  
+                  dfd.resolve(res.data);
                 });
               }, function(err) {
                 dfd.reject();

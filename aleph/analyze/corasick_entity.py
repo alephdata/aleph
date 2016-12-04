@@ -1,7 +1,6 @@
 import logging
 from threading import RLock
 from collections import defaultdict
-from sqlalchemy.orm import joinedload
 from ahocorasick import Automaton
 
 from aleph.core import db, get_config

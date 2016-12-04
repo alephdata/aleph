@@ -26,7 +26,7 @@
           </label>
           <div class="">
             <textarea class="form-control" id="summary" name="summary"
-              ng-model="entity.summary" rows="2" maxlength="2000"></textarea>
+              ng-model="entity.data.summary" rows="2" maxlength="2000"></textarea>
             <p class="help-block">Describe the relevance of this entity in a sentence.</p>
           </div>
         </div>
@@ -44,7 +44,7 @@
           variations, names in other scripts or well-known aliases.
         </p>
         <table class="table">
-          <tr ng-repeat="alias in entity.alias">
+          <tr ng-repeat="alias in entity.data.alias">
             <td>
               <input type="text" class="form-control input" id="new_name" name="new_name"
                 ng-model="alias" ng-minlength="3">
@@ -76,12 +76,12 @@
       <div class="col-md-8" ng-show="section == 'details'">
 
         <div class="form-group" ng-if="isCompany">
-          <label class="control-label" for="company_number">
+          <label class="control-label" for="registrationNumber">
             Company registration number
           </label>
           <div>
-            <input type="text" class="form-control" id="company_number" name="company_number"
-              ng-model="entity.registrationNumber" ng-minlength="3">
+            <input type="text" class="form-control" id="registrationNumber" name="registrationNumber"
+              ng-model="entity.data.registrationNumber" ng-minlength="3">
             <p class="help-block">
               As used by the jurisdiction's corporate registry.
             </p>
@@ -90,21 +90,21 @@
 
         <div class="row" ng-if="isPerson">
           <div class="col-sm-6">
-            <div class="form-group" ng-class="{'has-error': editEntity.birthDate.$invalid}">
+            <div class="form-group" ng-class="{'has-error': editEntity.data.birthDate.$invalid}">
               <label class="control-label" for="birthDate">Date of birth</label>
               <div>
                <input type="text" class="form-control" name="birthDate"
-                ng-model="entity.birthDate" placeholder="1970-01-01" autocomplete="off"
+                ng-model="entity.data.birthDate" placeholder="1970-01-01" autocomplete="off"
                 ng-pattern="'^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'" ng-trim="true">
               </div>
             </div>
           </div>
           <div class="col-sm-6">
-            <div class="form-group" ng-class="{'has-error': editEntity.deathDate.$invalid}">
+            <div class="form-group" ng-class="{'has-error': editEntity.data.deathDate.$invalid}">
               <label class="control-label" for="deathDate">Date of death</label>
               <div>
                <input type="text" class="form-control" name="deathDate"
-                ng-model="entity.deathDate" placeholder="1970-01-01" autocomplete="off"
+                ng-model="entity.data.deathDate" placeholder="1970-01-01" autocomplete="off"
                 ng-pattern="'^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'" ng-trim="true">
               </div>
             </div>
@@ -113,21 +113,21 @@
 
         <div class="row" ng-if="isOrganization">
           <div class="col-sm-6">
-            <div class="form-group" ng-class="{'has-error': editEntity.incorporationDate.$invalid}">
+            <div class="form-group" ng-class="{'has-error': editEntity.data.incorporationDate.$invalid}">
               <label class="control-label" for="incorporationDate">Founding date</label>
               <div>
                <input type="text" class="form-control" name="incorporationDate"
-                ng-model="entity.incorporationDate" placeholder="1970-01-01" autocomplete="off"
+                ng-model="entity.data.incorporationDate" placeholder="1970-01-01" autocomplete="off"
                 ng-pattern="'^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'" ng-trim="true">
               </div>
             </div>
           </div>
           <div class="col-sm-6">
-            <div class="form-group" ng-class="{'has-error': editEntity.dissolutionDate.$invalid}">
+            <div class="form-group" ng-class="{'has-error': editEntity.data.dissolutionDate.$invalid}">
               <label class="control-label" for="dissolutionDate">Date of dissolution</label>
               <div>
                <input type="text" class="form-control" name="dissolutionDate"
-                ng-model="entity.dissolutionDate" placeholder="1970-01-01" autocomplete="off"
+                ng-model="entity.data.dissolutionDate" placeholder="1970-01-01" autocomplete="off"
                 ng-pattern="'^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'" ng-trim="true">
               </div>
             </div>
@@ -135,10 +135,10 @@
         </div>
 
         <div class="form-group" ng-if="isPerson">
-          <label class="control-label" for="description">Gender</label>
+          <label class="control-label" for="gender">Gender</label>
           <div>
             <input type="text" class="form-control" id="gender"
-              ng-model="entity.gender"
+              ng-model="entity.data.gender"
               placeholder="e.g. male, female">
           </div>
         </div>
@@ -152,7 +152,7 @@
           </label>
           <div class="">
             <textarea class="form-control" id="description" name="description"
-              ng-model="entity.description" rows="4"></textarea>
+              ng-model="entity.data.description" rows="4"></textarea>
             <p class="help-block">Provide biographical background about this entity.</p>
           </div>
         </div>
@@ -173,7 +173,9 @@
               </label>
             </td>
             <td><a ng-click="editDuplicate(opt)">{{opt.name}}</a></td>
-            <td class="numeric">{{opt.country.toUpperCase()}}</td>
+            <td class="numeric">
+              <entity-country entity="opt"></entity-country>
+            </td>
             <td class="numeric">{{opt.score | number: 1}}</td>
           </tr>
         </table>

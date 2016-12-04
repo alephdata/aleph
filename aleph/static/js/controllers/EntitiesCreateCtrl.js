@@ -4,15 +4,16 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
   $scope.collectionCallback = null;
   $scope.blocked = false;
   $scope.availableSchemata = ['Person', 'Company', 'Organization'];
-  $scope.selectSchema = !entity.$schema;
+  $scope.selectSchema = !entity.schema;
   $scope.entity = entity;
+  $scope.entity.data = $scope.entity.data || {};
   $scope.entity.country = $scope.entity.country || null;
-  $scope.entity.$schema = $scope.entity.$schema || $scope.availableSchemata[0];
+  $scope.entity.schema = $scope.entity.schema || $scope.availableSchemata[0];
   $scope.createAlert = true;
   $scope.schemata = metadata.schemata;
 
   $scope.setSchema = function(schema) {
-    $scope.entity.$schema = schema;
+    $scope.entity.schema = schema;
   };
 
   $scope.setCollection = function(callback) {
@@ -36,7 +37,7 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
     }
     $scope.blocked = true;
     $scope.collectionCallback().then(function(collection) {
-      $scope.entity.collection_id = [collection.id];
+      $scope.entity.collection_id = collection.id;
       $http.post('/api/1/entities', $scope.entity).then(function(res) {
         if ($scope.createAlert) {
           var alert = {entity_id: res.data.id};

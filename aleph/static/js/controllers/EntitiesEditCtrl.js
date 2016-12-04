@@ -6,10 +6,10 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   $scope.entity.country = entity.country || null;
   $scope.originalName = entity.name + '';
   $scope.section = 'base';
-  $scope.isEntity = entity.$schema == 'LegalEntity';
-  $scope.isPerson = entity.$schema == 'Person';
-  $scope.isCompany = entity.$schema == 'Company';
-  $scope.isOrganization = (entity.$schema == 'Organization') || $scope.isCompany;
+  $scope.isEntity = entity.schema == 'LegalEntity';
+  $scope.isPerson = entity.schema == 'Person';
+  $scope.isCompany = entity.schema == 'Company';
+  $scope.isOrganization = (entity.schema == 'Organization') || $scope.isCompany;
   $scope.newAlias = null;
   $scope.newAliasEditing = false;
   $scope.duplicateOptions = [];
@@ -45,7 +45,8 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   $scope.addAlias = function() {
     var newAlias = angular.copy($scope.newAlias);
     $scope.newAlias = null;
-    $scope.entity.alias.push(newAlias);
+    $scope.entity.data.alias = $scope.entity.data.alias || [];
+    $scope.entity.data.alias.push(newAlias);
   };
 
   $scope.canAddAlias = function() {
@@ -53,9 +54,9 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   };
 
   $scope.removeAlias = function(alias) {
-    var idx = $scope.entity.alias.indexOf(alias);
+    var idx = $scope.entity.data.alias.indexOf(alias);
     if (idx != -1) {
-      $scope.entity.alias.splice(idx, 1);
+      $scope.entity.data.alias.splice(idx, 1);
     };
   };
 

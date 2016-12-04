@@ -7,7 +7,7 @@
       ng-repeat="ref in references">
       <span class="badge">{{::ref.weight | number}}</span>
       <span class="lbl">
-        <entity-icon schema="::ref.entity.$schema"></entity-icon>
+        <entity-icon schema="::ref.entity.schema"></entity-icon>
         <a ng-click="lookupReference(ref)" class="click">{{::ref.entity.name}}</a>
       </span>
     </li>

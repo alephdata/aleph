@@ -3,7 +3,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
     function($scope, $route, $location, $http, $timeout, $q, Entity, Authz, metadata, collection, Title) {
 
   $scope.collection = collection;
-  $scope.entities = [{}, {}, {}, {}];
+  $scope.entities = [{data: {}}, {data: {}}, {data: {}}, {data: {}}];
   $scope.created = [];
   $scope.schemata = metadata.schemata;
   $scope.availableSchemata = ['Person', 'Company', 'Organization', 'LegalEntity'];
@@ -16,7 +16,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
 
   $scope.isStub = function(entity) {
     if (!entity.name || !entity.name.length) {
-      if (!entity.summary || !entity.summary.length) {
+      if (!entity.data.summary || !entity.data.summary.length) {
         return true;
       }
     }
@@ -31,7 +31,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
       return true;
     }
     if (entity.name && entity.name.trim().length > 2) {
-      if ($scope.availableSchemata.indexOf(entity.$schema) != -1) {
+      if ($scope.availableSchemata.indexOf(entity.schema) != -1) {
         return false;
       }
     }
@@ -58,8 +58,8 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
       if ($scope.isStub(ent)) {
         stubs++;
         if (lastEntity) {
-          ent.$schema = lastEntity.$schema;
-          ent.country = lastEntity.country;
+          ent.schema = lastEntity.schema;
+          ent.data.country = lastEntity.data.country;
         }
       } else {
         lastEntity = angular.copy(ent);
@@ -67,7 +67,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
     }
 
     if (stubs < 2) {
-      $scope.entities.push({});
+      $scope.entities.push({data: {}});
     }
   };
 
@@ -75,7 +75,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
     for (var i in $scope.entities) {
       var entity = angular.copy($scope.entities[i]);
       if (!$scope.isStub(entity) && !$scope.isInvalid(entity)) {
-        entity.collection_id = [$scope.collection.id];
+        entity.collection_id = $scope.collection.id;
         $http.post('/api/1/entities', entity).then(function(res) {
           $scope.entities.splice(i, 1);
           $scope.created.push(res.data);

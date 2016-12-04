@@ -58,16 +58,14 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
 
         This is used for entity review.
         """
-        from aleph.model.entity import Entity, collection_entity_table
+        from aleph.model.entity import Entity
         from aleph.model.document import Document
         from aleph.model.reference import Reference
-        cet = aliased(collection_entity_table)
         q = db.session.query(Entity)
         q = q.filter(Entity.state == Entity.STATE_PENDING)
         q = q.join(Reference, Reference.entity_id == Entity.id)
-        q = q.join(cet, cet.c.entity_id == Entity.id)
         q = q.join(Document, Document.id == Reference.document_id)
-        q = q.filter(cet.c.collection_id == self.id)
+        q = q.filter(Entity.collection_id == self.id)
         q = q.filter(Document.collection_id == self.id)
         q = q.group_by(Entity)
         return q.order_by(func.count(Reference.id).desc())

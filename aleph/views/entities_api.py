@@ -74,8 +74,7 @@ def suggest():
 def similar(id):
     entity = obj_or_404(Entity.by_id(id))
     request.authz.require(request.authz.collection_read(entity.collection_id))
-    return jsonify(similar_entities(entity, request.authz,
-                                    writeable=arg_bool('writeable')))
+    return jsonify(similar_entities(entity))
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])

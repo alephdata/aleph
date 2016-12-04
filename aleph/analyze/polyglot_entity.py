@@ -11,10 +11,10 @@ from aleph.analyze.analyzer import Analyzer
 log = logging.getLogger(__name__)
 
 SCHEMAS = {
-    'I-PER': '/entity/person.json#',
-    'I-ORG': '/entity/organization.json#'
+    'I-PER': 'Person',
+    'I-ORG': 'Organization'
 }
-DEFAULT_SCHEMA = '/entity/entity.json#'
+DEFAULT_SCHEMA = 'LegalEntity'
 
 
 class PolyglotEntityAnalyzer(Analyzer):
@@ -53,7 +53,6 @@ class PolyglotEntityAnalyzer(Analyzer):
             log.warning('NER failed: %r', ex)
 
     def load_entity(self, name, schema):
-        identifier = name.lower().strip()
         q = db.session.query(Entity)
         q = q.order_by(Entity.deleted_at.desc().nullsfirst())
         q = q.filter(Entity.name == name)
@@ -63,14 +62,11 @@ class PolyglotEntityAnalyzer(Analyzer):
 
         data = {
             'name': name,
-            '$schema': schema,
+            'schema': schema,
             'state': Entity.STATE_PENDING,
-            'identifiers': [{
-                'scheme': self.origin,
-                'identifier': identifier
-            }]
+            'data': {}
         }
-        entity = Entity.save(data, [self.collection])
+        entity = Entity.save(data, self.collection)
         return entity.id
 
     def finalize(self):

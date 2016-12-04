@@ -83,14 +83,12 @@ def generate_entities(document):
 
 def index_entity(entity):
     """Index an entity."""
-    data = {
-        'data': entity.data,
+    data = entity.to_dict()
+    data.pop('id', None)
+    data.update({
         'properties': {'name': [entity.name]},
-        'collection_id': entity.collection_id,
-        'created_at': entity.created_at,
-        'updated_at': entity.updated_at,
         'doc_count': get_count(entity)
-    }
+    })
     for k, v in entity.data.items():
         data['properties'][k] = ensure_list(v)
     data = finalize_index(data, entity.schema)

@@ -106,7 +106,6 @@ def parse_facet_result(state, result):
         facet_cls = {
             'languages': LanguageFacet,
             'countries': CountryFacet,
-            'jurisdiction_code': CountryFacet,
             'entities': EntityFacet,
             'collections': CollectionFacet
         }.get(name, Facet)

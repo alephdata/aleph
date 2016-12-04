@@ -60,12 +60,12 @@ aleph.filter('schemaPlural', ['Metadata', function(Metadata) {
   var schemata = {};
 
   Metadata.get().then(function(md) {
-    schemata = md.schemata;
+    schemata = md.schemata.entities;
   });
 
   return function(schema_id) {
     if (schemata[schema_id]) {
-      return schemata[schema_id].plural;
+      return schemata[schema_id].plural || schemata[schema_id].label;
     }
     return schema_id;
   };

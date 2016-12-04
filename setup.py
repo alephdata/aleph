@@ -52,7 +52,7 @@ setup(
             'emails = aleph.analyze.regex:EMailAnalyzer',
             'urls = aleph.analyze.regex:URLAnalyzer',
             'phones = aleph.analyze.regex:PhoneNumberAnalyzer',
-            'regex = aleph.analyze.regex_entity:AhoCorasickEntityAnalyzer',
+            'corasick = aleph.analyze.corasick_entity:AhoCorasickEntityAnalyzer',  # noqa
             'polyglot = aleph.analyze.polyglot_entity:PolyglotEntityAnalyzer'
         ],
         'aleph.crawlers': [

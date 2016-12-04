@@ -35,14 +35,14 @@ aleph.directive('entityJurisdiction', ['Metadata', function(Metadata) {
 
       scope.value = function(code) {
         if (arguments.length) {
-          scope.entity.country = code;
+          scope.entity.data.country = code;
         } else {
-          return countries[scope.entity.country];
+          return countries[scope.entity.data.country];
         }
       };
 
       scope.isPerson = function() {
-        return scope.entity.$schema == 'Person';
+        return scope.entity.schema == 'Person';
       };
     }
   };

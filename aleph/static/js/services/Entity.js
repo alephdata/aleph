@@ -20,7 +20,7 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
       state['limit'] = 20;
       state['filter:collection_id'] = collection_id;
       state['doc_counts'] = 'true';
-      state['facet'] = ['countries', '$schema'];
+      state['facet'] = ['countries', 'schemata'];
       state['offset'] = state.offset || 0;
       $http.get('/api/1/entities', {params: state}).then(function(res) {
         dfd.resolve({

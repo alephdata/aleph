@@ -125,7 +125,7 @@ ENTITY_MAPPING = {
         "doc_count": {"type": "long", "index": "not_analyzed"},
         "fingerprints": {"type": "string", "index": "not_analyzed"},
         "countries": {"type": "string", "index": "not_analyzed"},
-        "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},
+        "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
         "emails": {"type": "string", "index": "not_analyzed"},
         "phones": {"type": "string", "index": "not_analyzed"},
         "addresses": {"type": "string", "index": "not_analyzed"},

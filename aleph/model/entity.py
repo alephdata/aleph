@@ -168,16 +168,17 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         # If, for example, and entity matches both "Al Qaeda" and
         # "Al Qaeda in Iraq, Syria and the Levant", it is useless to
         # search for the latter.
-        terms = [' %s ' % normalize_strong(t) for t in self.terms]
+        terms = [normalize_strong(t) for t in self.terms]
         regex_terms = set()
         for term in terms:
-            if len(term) < 4 or len(term) > 120:
+            if term is None or len(term) < 4 or len(term) > 120:
                 continue
+            term = ' %s ' % term
             contained = False
             for other in terms:
                 if other == term:
                     continue
-                if other in term:
+                if other is not None and other in term:
                     contained = True
             if not contained:
                 regex_terms.add(term.strip())

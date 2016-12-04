@@ -12,6 +12,7 @@ def finalize_index(data, schema):
             v = string_value(v)
             if v is None or len(v) < 2:
                 continue
+            v = v.strip()
             text.add(v)
             v = latinize_text(v)
             text.add(v)

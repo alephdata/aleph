@@ -50,7 +50,7 @@ def create():
     request.authz.require(request.authz.logged_in)
     data = request_data()
     data['generate_entities'] = True
-    collection = Collection.create(data, request.auth_role)
+    collection = Collection.create(data, request.authz.role)
     db.session.commit()
     update_collection(collection)
     log_event(request)

@@ -157,7 +157,7 @@ class Crawler(object):
 class EntityCrawler(Crawler):
 
     def emit_entity(self, collection, data):
-        entity = Entity.save(data, [collection], merge=True)
+        entity = Entity.save(data, collection, merge=True)
         db.session.commit()
         log.info("Entity [%s]: %s", entity.id, entity.name)
         update_entity(entity)

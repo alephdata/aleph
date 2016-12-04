@@ -35,11 +35,14 @@ class SchemaProperty(object):
             val = string_value(val)
             if val is None:
                 continue
+            val = val.strip()
             if self.type.normalize_value(val) is None:
                 error = "Invalid value"
             value.append(val)
         if not self.is_multiple:
             value = value[0] if len(value) else None
+        else:
+            value = list(set(value))
         if self.is_label and (value is None or not len(value)):
             error = "Field is required."
         return value, error

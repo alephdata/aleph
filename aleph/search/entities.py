@@ -9,8 +9,8 @@ from aleph.search.fragments import add_filter, aggregate
 from aleph.search.facet import parse_facet_result
 from aleph.text import latinize_text
 
-DEFAULT_FIELDS = ['collection_id', 'name', 'summary', 'jurisdiction_code',
-                  '$schema']
+# DEFAULT_FIELDS = ['collection_id', 'name', 'data', 'countries', 'schema',
+#                   'properties']
 
 
 def entities_query(state, fields=None, facets=True):
@@ -46,7 +46,7 @@ def entities_query(state, fields=None, facets=True):
         'sort': sort,
         'query': filter_query(q, state.filters),
         'aggregations': aggs,
-        '_source': fields or DEFAULT_FIELDS
+        '_source': fields or True
     }
 
 
@@ -99,7 +99,7 @@ def suggest_entities(prefix, authz, min_count=0, schemas=None, size=5):
     }
 
 
-def similar_entities(entity, authz, writeable=False):
+def similar_entities(entity):
     """Merge suggestions API."""
     shoulds = []
     for term in entity.terms:
@@ -118,9 +118,6 @@ def similar_entities(entity, authz, writeable=False):
             }
         })
 
-    collections = authz.collections_write
-    if writeable:
-        collections = authz.collections_read
     q = {
         "bool": {
             "should": shoulds,
@@ -130,8 +127,8 @@ def similar_entities(entity, authz, writeable=False):
                 }
             },
             "must": {
-                "terms": {
-                    "collection_id": collections
+                "term": {
+                    "collection_id": entity.collection_id
                 }
             },
             "minimum_should_match": 1
@@ -140,7 +137,7 @@ def similar_entities(entity, authz, writeable=False):
     q = {
         'size': 10,
         'query': q,
-        '_source': DEFAULT_FIELDS
+        '_source': True
     }
     options = []
     result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
