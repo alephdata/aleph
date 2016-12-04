@@ -159,8 +159,9 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     def terms(self):
         terms = set([self.name])
         for alias in self.data.get('alias', []):
-            terms.update(alias)
-        return [t for t in terms if t is not None and len(t)]
+            if alias is not None and len(alias):
+                terms.update(alias)
+        return terms
 
     @property
     def regex_terms(self):
@@ -169,19 +170,18 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         # "Al Qaeda in Iraq, Syria and the Levant", it is useless to
         # search for the latter.
         terms = [normalize_strong(t) for t in self.terms]
+        terms = [' %s ' % t for t in terms if t is not None]
         regex_terms = set()
         for term in terms:
-            if term is None or len(term) < 4 or len(term) > 120:
+            term_len = len(term) - 2
+            if term_len < 4 or term_len > 120:
                 continue
-            term = ' %s ' % term
             contained = False
             for other in terms:
-                if other == term:
-                    continue
-                if other is not None and other in term:
+                if other != term and other in term:
                     contained = True
             if not contained:
-                regex_terms.add(term.strip())
+                regex_terms.add(term)
         return regex_terms
 
     def __repr__(self):
