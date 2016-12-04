@@ -2,10 +2,10 @@ import logging
 from datetime import datetime
 
 from aleph.core import db, celery
-from aleph.model import Collection
+from aleph.model import Collection, Entity
 from aleph.index.collections import delete_collection as index_delete
 from aleph.analyze import analyze_documents
-from aleph.logic.entities import update_entity, delete_entity
+from aleph.logic.entities import delete_entity
 from aleph.logic.entities import update_entity_full
 from aleph.logic.documents import delete_document
 
@@ -20,6 +20,9 @@ def update_collection(collection):
 @celery.task()
 def analyze_collection(collection_id):
     """Re-analyze the elements of this collection, documents and entities."""
+    Entity.delete_dangling(collection_id)
+    db.session.commit()
+
     q = db.session.query(Collection).filter(Collection.id == collection_id)
     collection = q.first()
     if collection is None:

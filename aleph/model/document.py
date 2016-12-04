@@ -29,7 +29,7 @@ class Document(db.Model, DatedModel):
     _meta = db.Column('meta', JSONB)
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
-    collection = db.relationship(Collection, backref='documents')
+    collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))
 
     @property
     def title(self):

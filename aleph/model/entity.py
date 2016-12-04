@@ -2,11 +2,12 @@ import logging
 from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 
 from aleph.core import db, schemata
 from aleph.schema import Schema
-from aleph.text import normalize_strong
+from aleph.text import normalize_strong, string_value
+from aleph.util import ensure_list
 from aleph.data.keys import make_fingerprint
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
@@ -23,12 +24,12 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
     name = db.Column(db.Unicode)
     type = db.Column(db.String(255), index=True)
-    state = db.Column(db.String(128), nullable=True,
-                      default=STATE_ACTIVE)
+    state = db.Column(db.String(128), nullable=True, default=STATE_ACTIVE)
+    foreign_ids = db.Column(ARRAY(db.Unicode()))
     data = db.Column('data', JSONB)
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
-    collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic'))
+    collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic'))  # noqa
 
     def delete_references(self, origin=None):
         pq = db.session.query(Reference)
@@ -46,6 +47,23 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         self.state = self.STATE_DELETED
         super(Entity, self).delete(deleted_at=deleted_at)
 
+    @classmethod
+    def delete_dangling(cls, collection_id):
+        """Delete dangling entities.
+
+        Entities can dangle in pending state while they have no references
+        pointing to them, thus making it impossible to enable them. This is
+        a routine cleanup function.
+        """
+        q = db.session.query(cls)
+        q = q.filter(cls.collection_id == collection_id)
+        q = q.filter(cls.state == cls.STATE_PENDING)
+        q = q.outerjoin(Reference)
+        q = q.group_by(cls)
+        q = q.having(func.count(Reference.id) == 0)
+        for entity in q.all():
+            entity.delete()
+
     def merge(self, other):
         if self.id == other.id:
             raise ValueError("Cannot merge an entity with itself.")
@@ -58,6 +76,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
         self.data = data
         self.state = self.STATE_ACTIVE
+        self.foreign_ids = self.foreign_ids or []
+        self.foreign_ids += other.foreign_ids or []
         self.created_at = min((self.created_at, other.created_at))
         self.updated_at = datetime.utcnow()
 
@@ -82,6 +102,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         data['name'] = entity.get('name')
         self.data = self.schema.validate(data)
         self.name = self.data.pop('name')
+        fid = [string_value(f) for f in entity.get('foreign_ids') or []]
+        self.foreign_ids = list(set([f for f in fid if f is not None]))
         self.state = entity.pop('state', self.STATE_ACTIVE)
         self.updated_at = datetime.utcnow()
         db.session.add(self)
@@ -132,20 +154,22 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return entities
 
     @classmethod
+    def by_foreign_id(cls, foreign_id, collection_id, deleted=False):
+        foreign_id = string_value(foreign_id)
+        if foreign_id is None:
+            return None
+        q = cls.all(deleted=deleted)
+        q = q.filter(Entity.collection_id == collection_id)
+        foreign_id = func.cast([foreign_id], ARRAY(db.Unicode()))
+        q = q.filter(cls.foreign_ids.contains(foreign_id))
+        q = q.order_by(Entity.deleted_at.desc().nullsfirst())
+        return q.first()
+
+    @classmethod
     def latest(cls):
         q = db.session.query(func.max(cls.updated_at))
         q = q.filter(cls.state == cls.STATE_ACTIVE)
         return q.scalar()
-
-    @classmethod
-    def all_by_document(cls, document_id):
-        from aleph.model.reference import Reference
-        q = cls.all()
-        q = q.options(joinedload('collections'))
-        q = q.filter(cls.state == cls.STATE_ACTIVE)
-        q = q.join(Reference)
-        q = q.filter(Reference.document_id == document_id)
-        return q.distinct()
 
     @property
     def schema(self):
@@ -158,9 +182,9 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     @property
     def terms(self):
         terms = set([self.name])
-        for alias in self.data.get('alias', []):
+        for alias in ensure_list(self.data.get('alias')):
             if alias is not None and len(alias):
-                terms.update(alias)
+                terms.add(alias)
         return terms
 
     @property
@@ -169,16 +193,16 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         # If, for example, and entity matches both "Al Qaeda" and
         # "Al Qaeda in Iraq, Syria and the Levant", it is useless to
         # search for the latter.
-        terms = [normalize_strong(t) for t in self.terms]
-        terms = [' %s ' % t for t in terms if t is not None]
+        terms = set([normalize_strong(t) for t in self.terms])
         regex_terms = set()
         for term in terms:
-            term_len = len(term) - 2
-            if term_len < 4 or term_len > 120:
+            if term is None or len(term) < 4 or len(term) > 120:
                 continue
             contained = False
             for other in terms:
-                if other != term and other in term:
+                if other is None or other == term:
+                    continue
+                if other in term:
                     contained = True
             if not contained:
                 regex_terms.add(term)
@@ -197,6 +221,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             'name': self.name,
             'state': self.state,
             'data': self.data,
+            'foreign_ids': self.foreign_ids or [],
             'collection_id': self.collection_id
         })
         return data

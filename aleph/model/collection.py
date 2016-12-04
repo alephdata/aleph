@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime
 from sqlalchemy import func, cast, or_
-from sqlalchemy.orm import aliased
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db, url_for
@@ -64,11 +63,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
         q = db.session.query(Entity)
         q = q.filter(Entity.state == Entity.STATE_PENDING)
         q = q.join(Reference, Reference.entity_id == Entity.id)
-        q = q.join(Document, Document.id == Reference.document_id)
         q = q.filter(Entity.collection_id == self.id)
-        q = q.filter(Document.collection_id == self.id)
         q = q.group_by(Entity)
-        return q.order_by(func.count(Reference.id).desc())
+        return q.order_by(func.sum(Reference.weight).desc())
 
     @classmethod
     def by_foreign_id(cls, foreign_id, deleted=False):
@@ -130,10 +127,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
         return self._is_public
 
     def get_document_count(self):
-        from aleph.model.document import Document
-        q = Document.all()
-        q = q.filter(Document.collection_id == self.id)
-        return q.count()
+        return self.documents.count()
 
     def get_crawler_state_count(self):
         from aleph.model.crawler_state import CrawlerState

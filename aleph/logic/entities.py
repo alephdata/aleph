@@ -27,8 +27,8 @@ def generate_entity_references(entity):
         return
 
     log.info("Updating document references: %r", entity)
-    rex = '|'.join(entity.regex_terms)
-    rex = re.compile('( |^)(%s)( |$)' % rex)
+    rex = '|'.join([t for t in entity.regex_terms])
+    rex = re.compile('(%s)' % rex)
 
     documents = defaultdict(int)
     try:
@@ -40,6 +40,7 @@ def generate_entity_references(entity):
                 documents[document_id] += 1
     except Exception as ex:
         log.exception(ex)
+
     log.info("Re-matching %r gave %r documents.", entity,
              len(documents))
 

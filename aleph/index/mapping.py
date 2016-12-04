@@ -122,6 +122,7 @@ ENTITY_MAPPING = {
         "groups": {"type": "string", "index": "not_analyzed"},
         "text": {"type": "string", "index": "analyzed"},
         "collection_id": {"type": "integer", "index": "not_analyzed"},
+        "foreign_ids": {"type": "string", "index": "not_analyzed"},
         "doc_count": {"type": "long", "index": "not_analyzed"},
         "fingerprints": {"type": "string", "index": "not_analyzed"},
         "countries": {"type": "string", "index": "not_analyzed"},

@@ -68,7 +68,7 @@ class AhoCorasickEntityAnalyzer(Analyzer):
         text = normalize_strong(text)
         if text is None or len(text) <= 2:
             return
-        text = ' %s ' % text.encode('utf-8')
+        text = text.encode('utf-8')
         for match in self.cache.automaton.iter(text):
             for entity_id in match[1]:
                 self.entities[entity_id] += 1
