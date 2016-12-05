@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, ImATeapot
 from apikit import obj_or_404, jsonify, request_data, arg_bool
 
 from aleph.model import Entity, Collection, db
@@ -8,9 +8,31 @@ from aleph.views.cache import enable_cache
 from aleph.events import log_event
 from aleph.search import QueryState
 from aleph.search import entities_query, execute_entities_query
-from aleph.search import suggest_entities, similar_entities
+from aleph.search import suggest_entities, similar_entities, load_entity
 
 blueprint = Blueprint('entities_api', __name__)
+
+
+def get_entity(id, action):
+    """Load entities from both the ES index and the database."""
+    # This does not account for database entities which have not yet
+    # been indexed. That would be an operational error, and it's not
+    # the job of the web API to sort it out.
+    entity = obj_or_404(load_entity(id))
+    obj = Entity.by_id(id)
+    if obj is not None:
+        # Apply collection-based security to entities from the DB.
+        collections = request.authz.collections.get(action)
+        request.authz.require(obj.collection_id in collections)
+        entity.update(obj.to_dict())
+    else:
+        # Apply roles-based security to dataset-sourced entities.
+        roles = set(entity.get('roles', []))
+        request.authz.require(len(request.authz.roles.intersect(roles)))
+        # Cannot edit them:
+        if action == request.authz.WRITE:
+            raise ImATeapot("Cannot write this entity.")
+    return entity, obj
 
 
 @blueprint.route('/api/1/entities', methods=['GET'])
@@ -39,7 +61,12 @@ def all():
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
 def create():
     data = request_data()
-    collection = Collection.by_id(data.get('collection_id'))
+    collection_id = data.get('collection_id')
+    try:
+        collection_id = int(collection_id)
+    except (ValueError, TypeError) as ve:
+        raise BadRequest("Invalid collection_id")
+    collection = obj_or_404(Collection.by_id(collection_id))
     request.authz.require(request.authz.collection_write(collection.id))
 
     try:
@@ -56,9 +83,8 @@ def create():
 
 @blueprint.route('/api/1/entities/<id>', methods=['GET'])
 def view(id):
-    entity = obj_or_404(Entity.by_id(id))
-    request.authz.require(request.authz.collection_read(entity.collection_id))
-    log_event(request, entity_id=entity.id)
+    entity, obj = get_entity(id, request.authz.READ)
+    log_event(request, entity_id=id)
     return jsonify(entity)
 
 
@@ -72,21 +98,20 @@ def suggest():
 
 @blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])
 def similar(id):
-    entity = obj_or_404(Entity.by_id(id))
-    request.authz.require(request.authz.collection_read(entity.collection_id))
+    _, entity = get_entity(id, request.authz.READ)
+    if entity is None:
+        raise ImATeapot("API only enabled for watchlist entities.")
     return jsonify(similar_entities(entity))
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])
 def update(id):
-    entity = obj_or_404(Entity.by_id(id))
-    request.authz.require(request.authz.collection_write(entity.collection_id))
+    _, entity = get_entity(id, request.authz.WRITE)
 
     try:
-        entity = Entity.save(request_data(),
-                             entity.collection,
+        entity = Entity.save(request_data(), entity.collection,
                              merge=arg_bool('merge'))
-    except ValueError as ve:
+    except (ValueError, TypeError) as ve:
         raise BadRequest(ve.message)
 
     entity.collection.touch()
@@ -98,10 +123,8 @@ def update(id):
 
 @blueprint.route('/api/1/entities/<id>/merge/<other_id>', methods=['DELETE'])
 def merge(id, other_id):
-    entity = obj_or_404(Entity.by_id(id))
-    other = obj_or_404(Entity.by_id(other_id))
-    request.authz.require(request.authz.collection_write(entity.collection_id))
-    request.authz.require(request.authz.collection_write(other.collection_id))
+    _, entity = get_entity(id, request.authz.WRITE)
+    _, other = get_entity(other_id, request.authz.WRITE)
 
     try:
         entity.merge(other)
@@ -117,8 +140,7 @@ def merge(id, other_id):
 
 @blueprint.route('/api/1/entities/<id>', methods=['DELETE'])
 def delete(id):
-    entity = obj_or_404(Entity.by_id(id))
-    request.authz.require(request.authz.collection_write(entity.collection_id))
+    _, entity = get_entity(id, request.authz.WRITE)
     delete_entity(entity)
     db.session.commit()
     log_event(request, entity_id=entity.id)

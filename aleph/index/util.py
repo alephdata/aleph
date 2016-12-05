@@ -2,7 +2,7 @@ import logging
 from elasticsearch.helpers import bulk
 
 from aleph.core import es
-from aleph.util import is_list
+from aleph.util import is_list, unique_list
 
 log = logging.getLogger(__name__)
 

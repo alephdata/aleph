@@ -10,7 +10,7 @@ Flask-Migrate==1.8.0
 SQLAlchemy==1.0.13
 alembic==0.8.6
 celery==4.0.0
-elasticsearch==2.3.0
+elasticsearch==5.0.1
 psycopg2==2.6.2
 cssutils==1.0.1
 webassets==0.12

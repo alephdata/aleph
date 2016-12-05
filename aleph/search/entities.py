@@ -9,15 +9,16 @@ from aleph.search.fragments import add_filter, aggregate
 from aleph.search.facet import parse_facet_result
 from aleph.text import latinize_text
 
-# DEFAULT_FIELDS = ['collection_id', 'name', 'data', 'countries', 'schema',
-#                   'properties']
+DEFAULT_FIELDS = ['collection_id', 'roles', 'data', 'name', 'data',
+                  'countries', 'schema', 'schemata', 'properties',
+                  'fingerprints', 'state']
 
 
 def entity_authz_filter(q, authz):
     return add_filter(q, {
         "or": [
-            {'terms': {'roles': authz.roles}},
-            {'terms': {'collection_id': authz.collections_read}},
+            {'terms': {'roles': list(authz.roles)}},
+            {'terms': {'collection_id': list(authz.collections_read)}},
         ]
     })
 
@@ -56,22 +57,20 @@ def entities_query(state, fields=None, facets=True):
         'sort': sort,
         'query': filter_query(q, state.filters),
         'aggregations': aggs,
-        '_source': fields or True
+        '_source': fields or DEFAULT_FIELDS
     }
 
 
-def load_entity(entity_id, authz):
+def load_entity(entity_id):
     """Load a single entity by ID."""
-    q = {'term': {'_id': entity_id}}
-    q = entity_authz_filter(q, authz)
-    result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
-    hits = result.get('hits', {})
-    if hits.get('total') != 1:
-        return None
-    for hit in hits.get('hits', []):
-        document = hit.get('_source')
-        document['id'] = hit.get('_id')
-        return document
+    result = es.get(index=es_index, doc_type=TYPE_ENTITY, id=entity_id,
+                    ignore=[404])
+    if result.get('found') is False:
+        return
+    entity = result.get('_source')
+    entity.pop('text', None)
+    entity['id'] = result.get('_id')
+    return entity
 
 
 def facet_collections(q, aggs, state):
@@ -160,7 +159,7 @@ def similar_entities(entity):
     q = {
         'size': 10,
         'query': q,
-        '_source': True
+        '_source': DEFAULT_FIELDS
     }
     options = []
     result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)

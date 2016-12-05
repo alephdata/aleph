@@ -24,6 +24,7 @@ class EntitiesApiTestCase(TestCase):
             }
         }, self.col)
         db.session.commit()
+        index_entity(self.ent)
 
     def test_index(self):
         index_entity(self.ent)

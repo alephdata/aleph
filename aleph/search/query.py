@@ -85,7 +85,7 @@ class QueryState(object):
                 continue
             if value in self.authz.collections_read:
                 collection_ids.add(value)
-        return collection_ids
+        return list(collection_ids)
 
     @property
     def filter_items(self):

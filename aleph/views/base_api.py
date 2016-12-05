@@ -100,5 +100,5 @@ def handle_es_error(err):
     return jsonify({
         'status': 'error',
         'message': err.error,
-        'info': err.info.get('error', {}).get('root_cause', [])[-1]
+        # 'info': err.info.get('error', {}).get('root_cause', [])[-1]
     }, status=400)

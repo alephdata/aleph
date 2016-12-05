@@ -90,6 +90,8 @@ def index_entity(entity):
         'doc_count': get_count(entity)
     })
     for k, v in entity.data.items():
-        data['properties'][k] = ensure_list(v)
+        v = ensure_list(v)
+        if len(v):
+            data['properties'][k] = v
     data = finalize_index(data, entity.schema)
     es.index(index=es_index, doc_type=TYPE_ENTITY, id=entity.id, body=data)

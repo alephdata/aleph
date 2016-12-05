@@ -5,7 +5,7 @@ from apikit import jsonify
 
 from aleph.core import db
 from aleph.model import Collection, Entity, Alert
-# from aleph.model.entity_details import EntityAddress
+from aleph.index import index_entity
 from aleph.tests.util import TestCase
 
 
@@ -32,8 +32,6 @@ class EntitiesTestCase(TestCase):
                 'alias': [u'Puh der Bär', 'Pooh Bear']
             }
         }, self.col)
-        db.session.add(self.ent)
-        db.session.flush()
         self.other = Entity.save({
             'schema': 'LegalEntity',
             'name': 'Pu der Bär',
@@ -43,11 +41,12 @@ class EntitiesTestCase(TestCase):
                 'alias': [u'Puh der Bär']
             }
         }, self.col)
-        db.session.add(self.other)
         self.alert = Alert()
         self.alert.entity = self.other
         db.session.add(self.alert)
         db.session.commit()
+        index_entity(self.ent)
+        index_entity(self.other)
 
     def test_merge(self):
         self.ent.merge(self.other)
@@ -62,7 +61,7 @@ class EntitiesTestCase(TestCase):
     def test_api_merge(self):
         url = '/api/1/entities/%s/merge/%s' % (self.ent.id, self.other.id)
         res = self.client.delete(url, data={}, content_type='application/json')
-        assert res.status_code == 403, res.json
+        assert res.status_code == 403, res.status_code
         self.login(is_admin=True)
         res = self.client.delete(url, data={}, content_type='application/json')
         data = res.json
