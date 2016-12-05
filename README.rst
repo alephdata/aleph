@@ -13,16 +13,16 @@
 
 Here's some key features:
 
-  * Web-based UI for search across large document and data sets.
-  * Watchlist editor for making custom sets of entities to be tracked.
-  * Equal support for structured (i.e. tabular) and unstructured (i.e. textual) sources.
-  * Importers include a local filesystem traverser, web crawlers and a SQL query importer.
-  * Document entity tagger (regular expressions-based, and optionally using NLP).
-  * Support for OCR, unpacking Zip/RAR/Tarballs, language and encoding detection.
-  * Entity watchlist importers for `OpenNames <http://pudo.org/material/opennames/>`_ and
-    `Investigative Dashboard <https://investigativedashboard.org/>`_.
-  * OAuth authorization and access control on a per-source and per-watchlist basis.
-  * Excel export for search result sets.
+* Web-based UI for search across large document and data sets.
+* Watchlist editor for making custom sets of entities to be tracked.
+* Equal support for structured (i.e. tabular) and unstructured (i.e. textual) sources.
+* Importers include a local filesystem traverser, web crawlers and a SQL query importer.
+* Document entity tagger (regular expressions-based, and optionally using NLP).
+* Support for OCR, unpacking Zip/RAR/Tarballs, language and encoding detection.
+* Entity watchlist importers for `OpenNames <http://pudo.org/material/opennames/>`_ and
+  `Investigative Dashboard <https://investigativedashboard.org/>`_.
+* OAuth authorization and access control on a per-source and per-watchlist basis.
+* Excel export for search result sets.
 
 Mailing list
 ------------
