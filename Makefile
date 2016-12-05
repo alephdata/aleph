@@ -32,10 +32,10 @@ build:
 	docker push pudo/aleph:latest
 
 docs: docs-clean
-	sphinx-build -b html -d docs/_build/doctrees -c docs . docs/_build/html
+	sphinx-build -b html -d docs/_build/doctrees ./docs docs/_build/html
 
 docs-clean:
-	rm -rf docs/_build/html
+	rm -rf docs/_build
 
 docs-web:
 	python -m SimpleHTTPServer 8000
