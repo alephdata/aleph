@@ -4,7 +4,7 @@ from elasticsearch import ElasticsearchException
 
 from aleph.core import celery, datasets
 from aleph.schema import Schema
-from aleph.index import index_items
+from aleph.index import index_items, TYPE_LINK, TYPE_ENTITY
 
 log = logging.getLogger(__name__)
 QUEUE_PAGE = 1000
@@ -17,22 +17,23 @@ def map_row(query, row):
         data = entity.to_index(row)
         if data is not None:
             entities[entity.name] = data
-            yield (Schema.ENTITY, data['id'], data)
+            yield (TYPE_ENTITY, data['id'], data)
 
     for link in query.links:
         for inverted in [True, False]:
             data = link.to_index(row, entities, inverted=inverted)
             if data is not None:
-                yield (Schema.LINK, data['id'], data)
+                yield (TYPE_LINK, data['id'], data)
 
 
 @celery.task(bind=True)
 def load_rows(task, dataset_name, query_idx, rows):
     """Load a single batch of QUEUE_PAGE rows from the given query."""
     dataset = datasets.get(dataset_name)
+    query = list(dataset.queries)[query_idx]
     items = []
     for row in rows:
-        for item in map_row(dataset.queries[query_idx], row):
+        for item in map_row(query, row):
             items.append(item)
 
     try:

@@ -162,8 +162,8 @@ def get_datasets():
         else:
             log.warn("No datasets.yaml defined.")
             datasets = {}
-        from aleph.datasets import Frank
-        app._datasets = Frank(datasets)
+        from aleph.datasets import DatasetSet
+        app._datasets = DatasetSet(datasets)
     return app._datasets
 
 

@@ -38,14 +38,12 @@ class Dataset(object):
         return '<Dataset(%r, %r)>' % (self.name, self.label)
 
 
-class Frank(object):
-    # name was suggested by rysiek@occrp.org, please direct complaints
-    # there.
+class DatasetSet(object):
 
     def __init__(self, datasets):
         self.datasets = []
         for name, dconfig in datasets.get('datasets', {}).items():
-            self.datasets.append(Dataset(self, name, dconfig))
+            self.datasets.append(Dataset(name, dconfig))
 
     def get(self, name):
         for dataset in self.datasets:

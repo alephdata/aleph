@@ -2,6 +2,7 @@ import logging
 from hashlib import sha1
 from pprint import pprint  # noqa
 
+from aleph.core import schemata
 from aleph.schema import Schema
 from aleph.data.keys import make_fingerprint
 from aleph.util import dict_list, unique_list
@@ -58,8 +59,7 @@ class Mapper(object):
         self.keys = dict_list(data, 'keys', 'key')
         self.key_fingerprint = data.get('key_fingerprint', False)
 
-        model = query.dataset.model
-        self.schema = model.get_schema(self.section, data.get('schema'))
+        self.schema = schemata.get(self.section, data.get('schema'))
         if self.schema is None:
             raise TypeError("Invalid schema: %r" % data.get('schema'))
 
@@ -80,10 +80,6 @@ class Mapper(object):
         return {p.name: p.get_values(record) for p in self.properties}
 
     def compute_key(self, record):
-        if not len(self.keys):
-            log.warning("No key criteria defined.")
-            return None
-
         digest = sha1(self.query.dataset.name.encode('utf-8'))
         has_key = False
         for key in self.keys:
@@ -116,9 +112,8 @@ class EntityMapper(Mapper):
     def __init__(self, query, name, data):
         self.name = name
         super(EntityMapper, self).__init__(query, data)
-
         if not len(self.keys):
-            raise TypeError("No key column(s) defined: %s" % name)
+            log.warning("No key criteria defined: %r", data)
 
     def to_index(self, record):
         data = super(EntityMapper, self).to_index(record)

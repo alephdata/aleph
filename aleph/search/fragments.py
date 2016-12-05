@@ -83,6 +83,8 @@ def filter_query(q, filters):
     for field, values in filters.items():
         if field == 'collection_id' and len(values):
             q = add_filter(q, {'terms': {field: values}})
+        elif field == 'dataset' and len(values):
+            q = add_filter(q, {'terms': {field: values}})
         else:
             for value in values:
                 q = add_filter(q, {'term': {field: value}})

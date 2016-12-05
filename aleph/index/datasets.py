@@ -23,7 +23,7 @@ def _index_updates(items):
     for (doc_type, doc_id, source) in items:
         if doc_type == TYPE_LINK:
             links.append((doc_id, source))
-        else:
+        elif doc_type == TYPE_ENTITY:
             queries.append({
                 '_id': doc_id,
                 '_type': doc_type
@@ -43,8 +43,8 @@ def _index_updates(items):
         entities[entity_id] = combined
 
     for doc_id, link in links:
-        remote_id = link.pop('remote')
-        entity = dict(entities.get(remote_id))
+        link.pop('id', None)
+        entity = dict(entities.get(link.pop('remote')))
         link['text'].extend(entity.pop('text', []))
         link['text'] = list(set(link['text']))
         link['remote'] = entity
@@ -57,6 +57,7 @@ def _index_updates(items):
 
     for doc_id, entity in entities.items():
         # pprint(entity)
+        entity.pop('id', None)
         yield {
             '_id': doc_id,
             '_type': TYPE_ENTITY,

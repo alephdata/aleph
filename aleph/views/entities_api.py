@@ -18,14 +18,18 @@ def get_entity(id, action):
     # This does not account for database entities which have not yet
     # been indexed. That would be an operational error, and it's not
     # the job of the web API to sort it out.
-    entity = obj_or_404(load_entity(id))
+    entity = load_entity(id)
     obj = Entity.by_id(id)
     if obj is not None:
         # Apply collection-based security to entities from the DB.
         collections = request.authz.collections.get(action)
         request.authz.require(obj.collection_id in collections)
-        entity.update(obj.to_dict())
+        if entity is not None:
+            entity.update(obj.to_dict())
+        else:
+            entity = obj.to_dict()
     else:
+        entity = obj_or_404(entity)
         # Apply roles-based security to dataset-sourced entities.
         roles = set(entity.get('roles', []))
         request.authz.require(len(request.authz.roles.intersect(roles)))

@@ -9,7 +9,7 @@ from aleph.search.fragments import add_filter, aggregate
 from aleph.search.facet import parse_facet_result
 from aleph.text import latinize_text
 
-DEFAULT_FIELDS = ['collection_id', 'roles', 'data', 'name', 'data',
+DEFAULT_FIELDS = ['collection_id', 'roles', 'dataset', 'name', 'data',
                   'countries', 'schema', 'schemata', 'properties',
                   'fingerprints', 'state']
 
