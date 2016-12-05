@@ -23,7 +23,9 @@ This is a template of the configuration file. Make a copy of this file named
 To get the OAuth credentials please visit the [Google Developers Console](https://console.developers.google.com/).
 There you will need to [create an API key](https://support.google.com/googleapi/answer/6158862).
 In the **Authorized redirect URIs** section, use this URL:
-`http://lvh.me:13376/api/1/sessions/callback/google`.
+```
+http://lvh.me:13376/api/1/sessions/callback/google
+```
 Save the client ID and the client secret as `ALEPH_OAUTH_*` values.
 
 Finally you will need to provide a value for the `ALEPH_SECRET_KEY`. A good
