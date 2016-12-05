@@ -62,3 +62,6 @@ libsass==0.11.2
 # Python 3 backports
 subprocess32
 functools32>=3.2
+
+# Docs
+-r requirements-docs.txt
