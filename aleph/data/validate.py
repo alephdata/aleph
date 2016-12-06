@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import socket
 from jsonschema import Draft4Validator, FormatChecker, RefResolver
 
 from aleph.core import get_config
@@ -19,7 +20,6 @@ for (root, dirs, files) in os.walk(SCHEMA_DIR):
 format_checker = FormatChecker()
 # JS: '^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'
 PARTIAL_DATE_RE = re.compile('^([12]\d{3}(-[01]?[0-9](-[0123]?[0-9])?)?)?$')
-VALID_DOMAIN = re.compile(r'^([0-9a-z][-\w]*[0-9a-z]\.)+[a-z0-9\-]{2,15}$')
 
 
 @format_checker.checks('country-code')
@@ -54,7 +54,8 @@ def is_domain(domain):
     """Validate an IDN compatible domain."""
     try:
         domain = domain.encode('idna').lower()
-        return bool(VALID_DOMAIN.match(domain))
+        socket.getaddrinfo(domain, None)
+        return True
     except:
         return False
 
