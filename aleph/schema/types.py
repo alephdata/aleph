@@ -1,10 +1,11 @@
 import re
 
-from aleph.text import string_value, collapse_spaces
 from aleph.data.validate import is_partial_date
 from aleph.data.parse import parse_phone, parse_country, parse_email
 from aleph.data.parse import parse_date
 from aleph.data.keys import make_fingerprint
+from aleph.text import string_value, collapse_spaces, latinize_text
+from aleph.util import ensure_list
 
 
 class StringProperty(object):
@@ -19,22 +20,32 @@ class StringProperty(object):
             return collapse_spaces(value)
 
     def normalize(self, values):
-        results = []
+        results = set()
         for value in values:
-            norm = self.normalize_value(value)
-            if norm is not None:
-                results.append(norm)
-        return set(results)
+            results.update(ensure_list(self.normalize_value(value)))
+        return results
 
     def normalize_value(self, value):
         return self.clean(value, {}, {})
 
+    def fingerprint(self, values):
+        return []
+
 
 class NameProperty(StringProperty):
-    index_invert = 'fingerprints'
+    index_invert = 'names'
 
     def normalize_value(self, value):
-        return make_fingerprint(value)
+        value = collapse_spaces(value)
+        return value, latinize_text(value)
+
+    def fingerprint(self, values):
+        # TODO: this should not be a property thing, so that fp's can include
+        # dates etx.
+        fingerprints = set()
+        for value in values:
+            fingerprints.add(make_fingerprint(value))
+        return [fp for fp in fingerprints if fp is not None]
 
 
 class URLProperty(StringProperty):
@@ -92,7 +103,7 @@ class EmailProperty(StringProperty):
 
 
 class IdentiferProperty(StringProperty):
-    index_invert = 'fingerprints'
+    index_invert = 'identifiers'
     clean_re = re.compile('[^a-zA-Z0-9]*')
 
     def normalize_value(self, value):

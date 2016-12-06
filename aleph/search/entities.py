@@ -29,7 +29,7 @@ def entities_query(state, fields=None, facets=True):
         q = {
             "query_string": {
                 "query": state.text,
-                "fields": ['name^5', 'text'],
+                "fields": ['name^5', 'names^2', 'text'],
                 "default_operator": "AND",
                 "use_dis_max": True
             }
@@ -131,14 +131,14 @@ def similar_entities(entity):
     for term in entity.terms:
         shoulds.append({
             'multi_match': {
-                "fields": ["name^5", "text"],
+                "fields": ["name^5", "names^2", "text"],
                 "query": term,
                 "fuzziness": 2
             }
         })
         shoulds.append({
             'multi_match': {
-                "fields": ["name^5", "text"],
+                "fields": ["names^2", "text"],
                 "query": latinize_text(term),
                 "fuzziness": 2
             }

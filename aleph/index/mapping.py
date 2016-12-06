@@ -125,6 +125,8 @@ ENTITY_MAPPING = {
         "foreign_ids": {"type": "string", "index": "not_analyzed"},
         "doc_count": {"type": "long", "index": "not_analyzed"},
         "fingerprints": {"type": "string", "index": "not_analyzed"},
+        "names": {"type": "string", "index": "not_analyzed"},
+        "identifiers": {"type": "string", "index": "not_analyzed"},
         "countries": {"type": "string", "index": "not_analyzed"},
         "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
         "emails": {"type": "string", "index": "not_analyzed"},

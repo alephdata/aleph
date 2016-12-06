@@ -19,6 +19,7 @@ def finalize_index(data, schema):
             v = category_replace(v)
             text.add(v)
     data['text'] = list(text)
+    data['fingerprints'] = data.get('fingerprints', [])
 
     # Generate inverted representations of the data stored in properties.
     for prop in schema.properties:
@@ -29,6 +30,10 @@ def finalize_index(data, schema):
         # Find an set the name property
         if prop.is_label:
             data['name'] = values[0]
+
+        # Generate key material
+        # TODO: this should probably be record-based.
+        data['fingerprints'].extend(prop.type.fingerprint(values))
 
         # Add inverted properties. This takes all the properties
         # of a specific type (names, dates, emails etc.)
