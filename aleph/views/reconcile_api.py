@@ -7,18 +7,15 @@ from werkzeug.exceptions import BadRequest
 
 from aleph.events import log_event
 from aleph.core import app_url, app_title, schemata
-from aleph.data.validate import resolver
 from aleph.search.entities import suggest_entities
 
 
 blueprint = Blueprint('reconcile_api', __name__)
 log = logging.getLogger(__name__)
 
-DEFAULT_TYPE = '/entity/entity.json#'
-
 
 def entity_link(id):
-    return urljoin(app_url, '/search?entity=%s' % id)
+    return urljoin(app_url, '/entities/%s' % id)
 
 
 def get_freebase_types():
@@ -90,7 +87,7 @@ def reconcile_index():
             }
         },
         'defaultTypes': [{
-            'id': DEFAULT_TYPE,
+            'id': 'Entity',
             'name': 'Persons and Companies'
         }]
     }
@@ -140,7 +137,6 @@ def suggest_entity():
     # See: https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API
     prefix = request.args.get('prefix', '').lower()
     schemas = request.args.getlist('type')
-    schemas = list(set([implied_schemas(s) for s in schemas]))
     types = get_freebase_types()
     matches = []
     for entity in suggest_entities(prefix, schemas=schemas).get('results'):
@@ -150,7 +146,7 @@ def suggest_entity():
             'id': entity.get('id'),
             'name': entity.get('name'),
             'n:type': types_[0],
-            'type': [types[0]['name']],
+            'type': [types_[0]['name']],
             'r:score': entity.get('score'),
         })
     return jsonify({
@@ -165,17 +161,25 @@ def suggest_entity():
 def suggest_property():
     prefix = request.args.get('prefix', '').lower().strip()
     properties = [{
-        'id': 'jurisdiction_code',
-        'name': 'Jurisdiction',
+        'id': 'countries',
+        'name': 'Countries',
         'match': 'Jurisdiction, Country, Nationality'
     }, {
-        'id': 'identifiers.identifier',
-        'name': 'External Identifier',
+        'id': 'identifiers',
+        'name': 'External Identifiers',
         'match': 'Data identifier code company id'
     }, {
-        'id': 'contact_details.value',
-        'name': 'Contact Detail',
-        'match': 'Contact detail, phone number, email, fax, fon'
+        'id': 'phones',
+        'name': 'Phones',
+        'match': 'Phone number'
+    }, {
+        'id': 'emails',
+        'name': 'EMails',
+        'match': 'E-Mail addresses'
+    }, {
+        'id': 'addresses',
+        'name': 'Addresses',
+        'match': 'Geographic addresses'
     }]
     matches = []
     for prop in properties:

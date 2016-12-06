@@ -35,7 +35,7 @@ def parse_phone(number, country=None):
                 num = phonenumbers.format_number(num, PHONE_FORMAT)
                 return num.replace(' ', '')
         return
-    except phonenumbers.phonenumberutil.NumberParseException:
+    except NumberParseException:
         return
 
 
@@ -60,7 +60,9 @@ def parse_email(email):
     if email is not None:
         parsed = address.parse(email)
         if parsed is not None:
-            return parsed.address
+            email = parsed.address.lower()
+            email = email.strip("'").strip('"')
+            return email
 
 
 def parse_url(text):

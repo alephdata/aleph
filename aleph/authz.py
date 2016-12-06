@@ -3,6 +3,7 @@ from werkzeug.exceptions import Forbidden
 
 from aleph.core import db
 from aleph.model import Collection, Role, Permission
+from aleph.util import ensure_list
 
 
 def get_public_roles():
@@ -107,6 +108,10 @@ class Authz(object):
         if not len(intersect) and default_all:
             return available
         return list(intersect)
+
+    def check_roles(self, roles):
+        isect = self.roles.intersection(ensure_list(roles))
+        return len(isect)
 
     def require(self, pred):
         if not pred:

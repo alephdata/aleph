@@ -11,6 +11,7 @@ from aleph.data.validate import validate
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
 from aleph.model.common import DatedModel
+from aleph.text import string_value
 
 log = logging.getLogger(__name__)
 
@@ -156,7 +157,8 @@ class DocumentPage(db.Model):
 
     def text_parts(self):
         """Utility method to get all text snippets in a record."""
-        if self.text is not None and len(self.text):
+        text = string_value(self.text)
+        if text is not None:
             yield self.text
 
     def to_dict(self):
@@ -184,17 +186,11 @@ class DocumentRecord(db.Model):
         tid.update(str(self.row_id))
         return tid.hexdigest()
 
-    @property
-    def text(self):
-        if self.data is None:
-            return []
-        text = [t for t in self.data.values() if t is not None]
-        return list(set(text))
-
     def text_parts(self):
         """Utility method to get all text snippets in a record."""
         for value in self.data.values():
-            if isinstance(value, basestring) and len(value):
+            text = string_value(value)
+            if text is not None:
                 yield value
 
     def __repr__(self):

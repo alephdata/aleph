@@ -31,8 +31,7 @@ def get_entity(id, action):
     else:
         entity = obj_or_404(entity)
         # Apply roles-based security to dataset-sourced entities.
-        roles = set(entity.get('roles', []))
-        request.authz.require(len(request.authz.roles.intersect(roles)))
+        request.authz.require(request.authz.check_roles(entity.get('roles')))
         # Cannot edit them:
         if action == request.authz.WRITE:
             raise ImATeapot("Cannot write this entity.")

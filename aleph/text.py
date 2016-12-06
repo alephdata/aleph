@@ -43,21 +43,21 @@ def string_value(value, encoding_default='utf-8', encoding=None):
     if value is None:
         return None
 
-    if isinstance(value, (date, datetime)):
-        return value.isoformat()
+    if not isinstance(value, six.text_type):
+        if isinstance(value, (date, datetime)):
+            return value.isoformat()
 
-    if isinstance(value, (float, Decimal)):
-        return Decimal(value).to_eng_string()
+        if isinstance(value, (float, Decimal)):
+            return Decimal(value).to_eng_string()
 
-    if isinstance(value, six.string_types):
-        if not isinstance(value, six.text_type):
+        if isinstance(value, six.string_types):
             if encoding is None:
                 encoding = guess_encoding(encoding_default)
             value = value.decode(encoding, 'replace')
             value = ''.join(ch for ch in value if category(ch)[0] != 'C')
             value = value.replace(u'\xfe\xff', '')  # remove BOM
-    else:
-        value = six.text_type(value)
+        else:
+            value = six.text_type(value)
 
     if not len(value.strip()):
         return None

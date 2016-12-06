@@ -34,11 +34,14 @@ def angular_templates():
     return templates.items()
 
 
-@blueprint.route('/search')
 @blueprint.route('/help')
 @blueprint.route('/help/<path:path>')
 @blueprint.route('/entities')
 @blueprint.route('/entities/<path:path>')
+@blueprint.route('/documents')
+@blueprint.route('/documents/<path:path>')
+@blueprint.route('/datasets')
+@blueprint.route('/datasets/<path:path>')
 @blueprint.route('/crawlers')
 @blueprint.route('/crawlers/<path:path>')
 @blueprint.route('/collections')
