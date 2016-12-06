@@ -42,9 +42,9 @@ class NameProperty(StringProperty):
     def fingerprint(self, values):
         # TODO: this should not be a property thing, so that fp's can include
         # dates etx.
-        fingerprints = set()
+        fingerprints = []
         for value in values:
-            fingerprints.add(make_fingerprint(value))
+            fingerprints.append(make_fingerprint(value))
         return [fp for fp in fingerprints if fp is not None]
 
 

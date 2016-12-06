@@ -45,6 +45,8 @@ def finalize_index(data, schema):
                 if norm not in data[invert]:
                     data[invert].append(norm)
 
+    data['fingerprints'] = list(set(data['fingerprints']))
+
     # Get implied schemata (i.e. parents of the actual schema)
     data['schema'] = schema.name
     data['schemata'] = []

@@ -36,7 +36,7 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
       var dfd = $q.defer();
       var query = Query.parse(),
           state = angular.copy(query.state);
-      state['limit'] = 40;
+      state['limit'] = 30;
       state['doc_counts'] = 'false';
       state['facet'] = ['countries', 'schemata', 'dataset', 'collections'];
       state['offset'] = state.offset || 0;

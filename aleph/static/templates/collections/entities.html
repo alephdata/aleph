@@ -65,9 +65,6 @@
               </div>
             </th>
           </tr>
-          <tr ng-show="false">
-            <th colspan='7'
-          </tr>
           <tr ng-repeat-start="entity in result.results track by entity.id">
             <td width="1%" ng-if="authz.logged_in()">
               <input type="checkbox" ng-disabled="!authz.entityWrite(entity)" ng-model="entity.selected">

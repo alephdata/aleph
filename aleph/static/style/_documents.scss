@@ -1,4 +1,39 @@
 
+.data-table {
+    overflow-x: scroll;
+
+    table.table {
+        margin-bottom: 0;
+    }
+
+    th {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        background-color: $boxed-color;
+    }
+
+    td {
+        min-width: 50px;
+        max-width: 350px;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &.numeric {
+            min-width: 70px;
+            text-align: right;
+        }
+    }
+
+    tr.highlight {
+        td {
+            @include highlighted;
+        }
+    }
+}
+
 canvas#pdf {
     margin-top: 0.5em;
     margin-bottom: 2em;
@@ -19,7 +54,7 @@ pre {
 .pages-list {
     max-height: 25em;
     overflow-y: scroll;
-    overflow: -moz-scrollbars-vertical; 
+    overflow: -moz-scrollbars-vertical;
     // padding-top: 0.5em;
     margin-bottom: 1em;
 
@@ -45,6 +80,6 @@ pre {
             overflow: hidden;
             display: block;
             max-width: 95%;
-        }    
+        }
     }
 }

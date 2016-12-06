@@ -1,3 +1,24 @@
+<div class="entity-header">
+  <h2>
+    <entity-icon schema="entity.schema"></entity-icon>
+    {{::entity.name}}
+    <small>{{::entity.schema | schemaPlural}}</small>
+  </h2>
 
+  <div class="actions">
+    <div class="btn-group" role="group">
+      <div class="btn-group" ng-if="::authz.entityWrite(entity)">
+        <a ng-click="edit()" class="btn btn-default">
+          <i class="fa fa-edit"></i>
+          Edit
+        </a>
+      </div>
+    </div>
+  </div>
 
-{{entity.name}} {{entity.schema}}
+  <div class="clearfix"></div>
+</div>
+
+<div class="container-fluid">
+  <pre>{{entity | json: 2}}</pre>
+</div>

@@ -28,27 +28,7 @@
       </div>
 
       <div>
-        <table ng-if="result.results.length" class="table table-striped">
-          <tr ng-show="collection.can_edit">
-            <th></th>
-            <th colspan="6">
-              <div class="btn-group">
-                <a ng-click="removeSelection($event)" class="btn btn-default btn-xs"
-                  ng-disabled="!canRemove()">
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                  Remove entities
-                </a>
-                <a ng-click="mergeSelection($event)" class="btn btn-default btn-xs"
-                  ng-disabled="!canMerge()">
-                  <i class="fa fa-link" aria-hidden="true"></i>
-                  Merge duplicates
-                </a>
-              </div>
-            </th>
-          </tr>
-          <tr ng-show="false">
-            <th colspan='7'
-          </tr>
+        <table ng-if="result.results.length" class="table table-striped">    
           <tr ng-repeat-start="entity in result.results track by entity.id">
             <td width="0%">
               <entity-icon schema="entity.schema"></entity-icon>
