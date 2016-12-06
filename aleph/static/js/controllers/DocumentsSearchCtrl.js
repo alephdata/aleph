@@ -1,5 +1,5 @@
-aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$anchorScroll', '$http', '$uibModal', 'Collection', 'Entity', 'Authz', 'Alert', 'Document', 'Ingest', 'Role', 'Title', 'data', 'peek', 'alerts', 'metadata',
-    function($scope, $route, $location, $timeout, $anchorScroll, $http, $uibModal, Collection, Entity, Authz, Alert, Document, Ingest, Role, Title, data, peek, alerts, metadata) {
+aleph.controller('DocumentsSearchCtrl', ['$scope', '$route', '$location', '$timeout', '$anchorScroll', '$http', 'Entity', 'Authz', 'Alert', 'Document', 'Title', 'data', 'peek', 'alerts', 'metadata',
+    function($scope, $route, $location, $timeout, $anchorScroll, $http, Entity, Authz, Alert, Document, Title, data, peek, alerts, metadata) {
 
   $scope.metadata = metadata;
   $scope.peek = peek;
@@ -54,18 +54,18 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
   });
 
   var reloadSearch = function() {
-    $scope.reportLoading(true);
+    // $scope.reportLoading(true);
     Document.search().then(function(data) {
       updateSearch(data);
     });
     if ($scope.hasPeek()) {
       Document.peek().then(function(peek) {
         $scope.peek = peek;
-      });  
+      });
     } else {
       $scope.peek = {active: false};
     }
-    
+
   };
 
   var updateSearch = function(data) {
@@ -73,11 +73,11 @@ aleph.controller('SearchCtrl', ['$scope', '$route', '$location', '$timeout', '$a
     $scope.result = data.result;
     $scope.queryString = data.query.toString();
     $scope.originalText = data.query.state.q ? data.query.state.q : '';
-    
+
     if ($scope.query.getQ()) {
       Title.set("Search for '" + $scope.query.getQ() + "'", "documents");
     } else {
-      Title.set("Search documents", "documents");  
+      Title.set("Search documents", "documents");
     }
     $scope.reportLoading(false);
   };

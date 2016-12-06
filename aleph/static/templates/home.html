@@ -14,7 +14,7 @@
         Try searches:
         <span ng-repeat="sample in metadata.app.samples">
           <span ng-if="$last">or</span>
-          <a href="/search?q={{::sample}}">{{::sample}}</a><span ng-if="!$last">,</span>
+          <a href="/documents?q={{::sample}}">{{::sample}}</a><span ng-if="!$last">,</span>
         </span>
       </p>
     </form>
@@ -32,7 +32,7 @@
         {{metadata.app.title}} lets you search across
         <a href="/collections">{{statistics.collection_count | number}} collections
         of documents</a> from previous investigations,
-        official sources, and scraped databases. 
+        official sources, and scraped databases.
       </p>
 
       <div class="row">
@@ -116,7 +116,7 @@
             New collection
           </a>
         </div>
-        
+
         <i class="fa fa-fw fa-folder-open"></i>
         Your collections
       </h2>
@@ -156,7 +156,7 @@
               <span ng-if="collection.countries.length > 1">
                 &nbsp;<span class="label label-danger">&nbsp;&hellip;&nbsp;</span>
               </span>
-              
+
             </td>
             <td class="nobreak numeric" width="1%">
               {{::collection.updated_at | date }}

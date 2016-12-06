@@ -32,6 +32,24 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
       });
       return dfd.promise;
     },
+    search: function() {
+      var dfd = $q.defer();
+      var query = Query.parse(),
+          state = angular.copy(query.state);
+      state['limit'] = 40;
+      state['doc_counts'] = 'false';
+      state['facet'] = ['countries', 'schemata', 'dataset', 'collections'];
+      state['offset'] = state.offset || 0;
+      $http.get('/api/1/entities', {params: state}).then(function(res) {
+        dfd.resolve({
+          'query': query,
+          'result': res.data
+        });
+      }, function(err) {
+        dfd.reject(err);
+      });
+      return dfd.promise;
+    },
     create: function(entity) {
       var instance = $uibModal.open({
         templateUrl: 'templates/entities/create.html',

@@ -1,8 +1,4 @@
-<collections-screen collection="collection" section="entities">
-  <div ng-show="isEmpty()">
-    <collections-empty-teaser collection="collection"></collections-empty-teaser>
-  </div>
-
+<div class="screen">
   <div class="row" ng-show="!isEmpty()">
     <div class="col-md-8">
       <div class="search-bar">
@@ -11,21 +7,6 @@
             <input type="text" class="form-control" autofocus
                    ng-model="query.state.q" placeholder="Search people and companies">
             <span class="input-group-btn">
-              <div class="btn-group" uib-dropdown dropdown-append-to-body>
-                <button type="button" class="btn btn-primary dropdown-toggle"
-                  uib-dropdown-toggle>
-                  <!-- i class="fa fa-sort-alpha-asc" aria-hidden="true"></i-->
-                  Sort
-                  <i class="fa fa-caret-down"></i>
-                </button>
-                <ul class="uib-dropdown-menu" role="menu">
-                  <li ng-repeat="(field, label) in sortOptions"
-                      ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'alphabet')}">
-                    <a ng-click="query.set('sort', field)"
-                       ng-bind="label"></a>
-                  </li>
-                </ul>
-              </div>
               <button class="btn btn-primary" type="submit">
                 <i class="fa fa-search" aria-hidden="true"></i>
                 Search
@@ -69,51 +50,26 @@
             <th colspan='7'
           </tr>
           <tr ng-repeat-start="entity in result.results track by entity.id">
-            <td width="1%" ng-if="authz.logged_in()">
-              <input type="checkbox" ng-disabled="!authz.entityWrite(entity)" ng-model="entity.selected">
-            </td>
-            <td width="1%">
+            <td width="0%">
               <entity-icon schema="entity.schema"></entity-icon>
             </td>
             <td>
-              <strong>{{::entity.name}}</strong>
+              <strong>
+                <a href="/entities/{{::entity.id}}">{{::entity.name}}</a>
+              </strong>
             </td>
-            <td width="10%">
+            <td width="30%">
+              <entity-source entity="entity" facets="result.facets">
+              </entity-source>
+            </td>
+            <td width="10%" class="numeric">
               <entity-countries entity="entity"></entity-countries>
-            </td>
-            <td class="numeric" width="1%">
-              <button type="button" class="btn btn-default btn-xs"
-                ng-click="editEntity($event, entity)"
-                ng-if="authz.entityWrite(entity)">
-                <i class="fa fa-cog"></i>
-                Edit
-              </button>
-            </td>
-            <td class="numeric" width="1%">
-              <button type="button" class="btn btn-default btn-xs" ng-if="authz.logged_in()"
-                  ng-click="toggleAlert(entity)"
-                  ng-class="{'btn-primary': hasAlert(entity)}">
-                <i class="fa fa-bell"></i>
-                <span ng-show="hasAlert(entity)">Stop</span>
-                <span ng-hide="hasAlert(entity)">Track</span>
-              </button>
-            </td>
-            <td class="nobreak" width="1%">
-              <a ng-href="/documents?entity={{entity.id}}" ng-if="entity.doc_count">
-                <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                {{entity.doc_count | number}}
-              </a>
-              <span ng-if="!entity.doc_count">
-                <i class="fa fa-file-text-o" aria-hidden="true"></i> 0
-              </span>
             </td>
           </tr>
           <tr ng-repeat-end ng-show="entity.data.summary">
-            <td ng-if="authz.logged_in()">
-            </td>
             <td>
             </td>
-            <td colspan="5">
+            <td colspan="3">
               {{::entity.data.summary | limitTo:500}}
             </td>
           </tr>
@@ -130,7 +86,26 @@
     </div>
 
     <div class="col-md-4">
-      <collections-review-teaser collection="collection"></collections-review-teaser>
+      <div class="panel panel-default panel-facet panel-facet-scroll">
+        <div class="panel-heading">
+          <strong>Datasets</strong>
+          <small>{{result.facets.dataset.values.length}}</small>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item empty" ng-if="!result.facets.dataset.values.length">
+            No entities linked to datasets.
+          </li>
+          <li class="list-group-item animate toggle"
+            ng-repeat="val in result.facets.dataset.values"
+            ng-class="{'active': query.hasFilter('dataset', val.id)}"
+            ng-click="query.toggleFilter('dataset', val.id)">
+            <span class="badge">{{val.count | number}}</span>
+            <span class="lbl">
+              {{::val.label}}
+            </span>
+          </li>
+        </ul>
+      </div>
 
       <div class="panel panel-default panel-facet panel-facet-scroll">
         <div class="panel-heading">
@@ -195,4 +170,4 @@
       </div>
     </div>
   </div>
-</collections-screen>
+</div>

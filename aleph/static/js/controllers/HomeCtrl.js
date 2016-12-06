@@ -13,7 +13,7 @@ aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Collection', 'Au
   Title.set("Welcome");
 
   $scope.submitSearch = function(form) {
-    $location.path('/search');
+    $location.path('/documents');
     $location.search({q: $scope.query.q});
   };
 

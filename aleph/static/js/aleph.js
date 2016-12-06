@@ -5,12 +5,12 @@ var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'ui.b
 aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoadingBarProvider', 'uiSelectConfig',
     function($routeProvider, $locationProvider, $compileProvider, cfpLoadingBarProvider, uiSelectConfig) {
 
-  $routeProvider.when('/search', {
+  $routeProvider.when('/documents', {
     templateUrl: 'templates/documents/search.html',
-    controller: 'SearchCtrl',
+    controller: 'DocumentsSearchCtrl',
     reloadOnSearch: false,
     resolve: {
-      'data': loadSearch,
+      'data': loadDocumentsSearch,
       'peek': loadPeek,
       'metadata': loadMetadata,
       'alerts': loadAlertsIndex
@@ -35,6 +35,26 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
       'data': loadText,
       'metadata': loadMetadata,
       'pages': loadPagesQuery
+    }
+  });
+
+  $routeProvider.when('/entities', {
+    templateUrl: 'templates/entities/search.html',
+    controller: 'EntitiesSearchCtrl',
+    reloadOnSearch: false,
+    resolve: {
+      'data': loadEntitiesSearch,
+      'metadata': loadMetadata
+    }
+  });
+
+  $routeProvider.when('/entities/:entity_id', {
+    templateUrl: 'templates/entities/view.html',
+    controller: 'EntitiesViewCtrl',
+    reloadOnSearch: false,
+    resolve: {
+      'entity': loadEntity,
+      'metadata': loadMetadata
     }
   });
 

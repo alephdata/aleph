@@ -1,4 +1,4 @@
-var loadSearch = ['Document', function(Document) {
+var loadDocumentsSearch = ['Document', function(Document) {
   return Document.search();
 }];
 

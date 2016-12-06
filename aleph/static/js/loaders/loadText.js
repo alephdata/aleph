@@ -1,6 +1,6 @@
 var loadText = ['$http', '$q', '$location', '$route', 'Document',
     function($http, $q, $location, $route, Document) {
-  
+
   var dfd = $q.defer(),
       pageNumber = $location.search().page,
       documentId = $route.current.params.document_id;
@@ -10,7 +10,7 @@ var loadText = ['$http', '$q', '$location', '$route', 'Document',
       dfd.resolve({
         doc: doc,
         page: page,
-      });  
+      });
     }, function(err) {
       dfd.reject(err);
     });
@@ -21,5 +21,5 @@ var loadText = ['$http', '$q', '$location', '$route', 'Document',
 }];
 
 var loadPagesQuery = ['$route', '$location', 'Document', function($route, $location, Document) {
-  return Document.queryPages($route.current.params.document_id, $location.search()); 
+  return Document.queryPages($route.current.params.document_id, $location.search());
 }];

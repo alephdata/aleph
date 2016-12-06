@@ -30,7 +30,7 @@
     <div class="col-md-8">
       <div class="alert alert-danger" role="alert" ng-if="result.status == 'error'">
         <strong>An error occurred while running your search.</strong>
-        {{::result.info.reason || result.message}}
+        {{result.message}}
       </div>
 
       <div ng-if="result.status == 'ok'">
