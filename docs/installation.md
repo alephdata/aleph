@@ -50,9 +50,32 @@ Your repository is mounted inside the docker container under the name
 and `aleph_beat_1`. You can access these services anytime by running
 `docker-compose run <app|worker|beat> bash`.
 
-### Running tests
+## Production deployment
+
+Aleph runs on PostgreSQL and ElasticSearch along with a couple of system
+tools like OpenOffice, ImageMagik, Tesseract and wkhtmltopdf. For a full list
+of system dependencies please review the [`aleph_base`
+Ddockerfile](https://github.com/pudo/aleph/blob/master/contrib/base/Dockerfile).
+
+If you decide to not use Docker compose, you will have to provide all these
+dependencies and services and change the configuration file accordingly.
+An application only Docker image is also available at
+[`pudo/aleph`](https://hub.docker.com/r/pudo/aleph/).
+
+Finally, aleph is optimized to use certain Amazon Web Services: SQS and S3. To
+enable AWS features, you will need to set the AWS key ID and access key in the
+configuration file. Amazon SQS support is available for task queueing. Where
+S3 is available for file uploads.
+
+## Running tests
 
 To run the tests, assuming you already have the `docker-compose` up and ready,
 run `docker-compose run app make test`.
 
 This will create a new database and run all the tests.
+
+The test settings can also be configured by making a copy of the
+`test_settings.py.tmpl` file to `test_settings.py` and editing it to
+match your configuration. You must then set the environment
+variable ``ALEPH_TEST_SETTINGS`` to point to the absolute path of that
+settings file.
