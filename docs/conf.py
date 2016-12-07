@@ -36,6 +36,14 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.coverage',
+    'autoapi.extension'
+]
+
+# Document Python Code
+autoapi_dirs = ['../aleph']
+autoapi_ignore = [
+    '*tests/test_*',
+    '*migrate*',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
