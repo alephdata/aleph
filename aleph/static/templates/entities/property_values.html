@@ -1,0 +1,6 @@
+<span ng-repeat="value in values track by value">
+  <property-value value="value" property="property"></property-value>
+  <span ng-if="::!$last">
+    &middot;
+  </span>
+</span>

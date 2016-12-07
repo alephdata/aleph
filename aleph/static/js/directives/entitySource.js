@@ -1,7 +1,8 @@
-aleph.directive('entitySource', [function() {
+aleph.directive('entitySource', ['Dataset', 'Collection',
+    function(Dataset, Collection) {
   return {
     restrict: 'E',
-    transclude: true,
+    transclude: false,
     scope: {
       'entity': '=',
       'facets': '='
@@ -14,20 +15,35 @@ aleph.directive('entitySource', [function() {
       var facets = scope.facets || {};
 
       if (scope.isDataset) {
-        for (var i in facets.dataset.values) {
-          var cand = facets.dataset.values[i];
-          if (cand.id == scope.entity.dataset) {
-            scope.dataset = cand;
+        if (scope.facets) {
+          for (var i in facets.dataset.values) {
+            var cand = facets.dataset.values[i];
+            if (cand.id == scope.entity.dataset) {
+              scope.dataset = cand;
+            }
           }
+        }
+        if (!angular.isDefined(scope.dataset)) {
+          Dataset.getBase(scope.entity.dataset).then(function(dataset) {
+            scope.dataset = dataset;
+          })
         }
       }
 
       if (scope.isCollection) {
-        for (var i in facets.collections.values) {
-          var cand = facets.collections.values[i];
-          if (parseInt(cand.id, 10) == scope.entity.collection_id) {
-            scope.collection = cand;
+        if (scope.facets) {
+          for (var i in facets.collections.values) {
+            var cand = facets.collections.values[i];
+            if (parseInt(cand.id, 10) == scope.entity.collection_id) {
+              scope.collection = cand;
+            }
           }
+        }
+
+        if (!angular.isDefined(scope.collection)) {
+          Collection.get(scope.entity.collection_id).then(function(coll) {
+            scope.collection = coll;
+          })
         }
       }
     }

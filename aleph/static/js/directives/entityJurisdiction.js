@@ -22,7 +22,7 @@ aleph.directive('entityJurisdiction', ['Metadata', function(Metadata) {
 
   return {
     restrict: 'E',
-    transclude: true,
+    transclude: false,
     scope: {
       'entity': '=',
       'simple': '='

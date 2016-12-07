@@ -7,7 +7,7 @@ aleph.directive('entityCountries', ['Metadata', function(Metadata) {
 
   return {
     restrict: 'E',
-    transclude: true,
+    transclude: false,
     scope: {
       'entity': '='
     },

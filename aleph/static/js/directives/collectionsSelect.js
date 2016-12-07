@@ -2,7 +2,7 @@ aleph.directive('collectionsSelect', ['$http', '$q', 'Metadata', 'Collection',
     function($http, $q, Metadata, Collection) {
   return {
     restrict: 'E',
-    transclude: true,
+    transclude: false,
     scope: {
       'setCollection': '&setCollection',
       'collection': '=',

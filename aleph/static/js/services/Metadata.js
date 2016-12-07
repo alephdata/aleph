@@ -15,7 +15,14 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $roo
       $http.get('/api/1/metadata', {cache: true})
     ]).then(function(results) {
       var session = results[0].data,
-          metadata = angular.extend(results[1].data, {session: session});
+          metadata = angular.extend(results[1].data, {session: session}),
+          schemata = {};
+
+      for (var name in metadata.schemata) {
+        schemata[name] = new alephCore.Schema(name, metadata.schemata[name]);
+      }
+      metadata.schemata = schemata;
+
       $rootScope.session = session;
       dfd.resolve(metadata);
     }, function(err) {

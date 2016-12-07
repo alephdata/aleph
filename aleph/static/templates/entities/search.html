@@ -28,7 +28,7 @@
       </div>
 
       <div>
-        <table ng-if="result.results.length" class="table table-striped">    
+        <table ng-if="result.results.length" class="table">
           <tr ng-repeat-start="entity in result.results track by entity.id">
             <td width="0%">
               <entity-icon schema="entity.schema"></entity-icon>
@@ -124,7 +124,7 @@
             <span class="badge">{{val.count | number}}</span>
             <span class="lbl">
               <entity-icon schema="val.id"></entity-icon>
-              {{::val.label | schemaPlural}}
+              {{::val.label | schemaLabel : true}}
             </span>
           </li>
         </ul>

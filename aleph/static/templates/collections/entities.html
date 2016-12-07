@@ -166,7 +166,7 @@
             <span class="badge">{{val.count | number}}</span>
             <span class="lbl">
               <entity-icon schema="val.id"></entity-icon>
-              {{::val.label | schemaPlural}}
+              {{::val.label | schemaLabel : true}}
             </span>
           </li>
         </ul>

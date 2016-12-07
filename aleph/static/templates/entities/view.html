@@ -2,7 +2,7 @@
   <h2>
     <entity-icon schema="entity.schema"></entity-icon>
     {{::entity.name}}
-    <small>{{::entity.schema | schemaPlural}}</small>
+    <small>{{::entity.schema | schemaLabel : false}}</small>
   </h2>
 
   <div class="actions">
@@ -20,5 +20,20 @@
 </div>
 
 <div class="container-fluid">
-  <pre>{{entity | json: 2}}</pre>
+  <div class="row">
+    <div class="col-md-8">
+      <table class="table">
+        <tr ng-repeat="bind in entity.binds track by bind.property.name">
+          <th width="30%">{{::bind.property.label}}</th>
+          <td>
+            <property-values values="bind.values" property="bind.property">
+            </property-values>
+          </td>
+        </tr>
+      </table>
+      <p>
+        Source: <entity-source entity="entity"></entity-source>
+      </p>
+    </div>
+  </div>
 </div>
