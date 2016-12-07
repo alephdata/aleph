@@ -17,6 +17,7 @@ class Dataset(object):
         self.label = data.get('label', name)
         self.info_url = data.get('info_url')
         self.roles = []
+        self.doc_count = None
         for role in dict_list(data, 'roles', 'role'):
             role_id = Role.load_id(role)
             if role_id is not None:
@@ -34,6 +35,15 @@ class Dataset(object):
         for query in self._queries:
             yield Query(self, query)
 
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'label': self.label,
+            'info_url': self.info_url,
+            'roles': self.roles,
+            'doc_count': self.doc_count
+        }
+
     def __repr__(self):
         return '<Dataset(%r, %r)>' % (self.name, self.label)
 
@@ -50,6 +60,9 @@ class DatasetSet(object):
             if dataset.name == name:
                 return dataset
         raise NameError("No such dataset: %s" % name)
+
+    def __iter__(self):
+        return iter(self.datasets)
 
     def __repr__(self):
         return '<DatasetSet(%r)>' % self.datasets

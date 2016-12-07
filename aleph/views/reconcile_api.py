@@ -20,7 +20,7 @@ def entity_link(id):
 
 def get_freebase_types():
     types = []
-    for schema in schemata.schemata:
+    for schema in schemata.schemata.values():
         if schema.section == schema.ENTITY:
             types.append({
                 'id': schema.name,

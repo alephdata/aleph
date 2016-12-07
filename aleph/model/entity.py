@@ -5,7 +5,6 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 
 from aleph.core import db, schemata
-from aleph.schema import Schema
 from aleph.text import normalize_strong, string_value
 from aleph.util import ensure_list
 from aleph.data.keys import make_fingerprint
@@ -173,7 +172,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
     @property
     def schema(self):
-        return schemata.get(Schema.ENTITY, self.type)
+        return schemata.get(self.type)
 
     @property
     def fingerprint(self):

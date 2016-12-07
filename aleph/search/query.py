@@ -3,6 +3,7 @@ from apikit.args import BOOL_TRUISH
 from werkzeug.datastructures import MultiDict
 
 from aleph.model import Entity
+from aleph.text import string_value
 
 
 class QueryState(object):
@@ -128,7 +129,8 @@ class QueryState(object):
 
     def get(self, name, default=None):
         for value in self.getlist(name):
-            if value is not None and len(value.strip()):
+            value = string_value(value)
+            if value is not None:
                 return value
         return default
 

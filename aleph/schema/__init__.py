@@ -47,6 +47,14 @@ class SchemaProperty(object):
             error = "Field is required."
         return value, error
 
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'label': self.label,
+            'hidden': self.is_hidden,
+            'type': self.type.name
+        }
+
     def __repr__(self):
         return '<SchemaProperty(%r, %r)>' % (self.schema, self.name)
 
@@ -61,30 +69,30 @@ class Schema(object):
     LINK = 'links'
     SECTIONS = [ENTITY, LINK]
 
-    def __init__(self, model, section, name, data):
+    def __init__(self, schemata, section, name, data):
         assert section in self.SECTIONS, section
-        self.model = model
+        self._schemata = schemata
         self.section = section
         self.name = name
         self.data = data
         self.label = data.get('label', name)
+        self.plural = data.get('plural', self.label)
         self.icon = data.get('icon')
         self.is_hidden = data.get('hidden', False)
         self._extends = dict_list(data, 'extends')
+
         self._own_properties = []
         for name, prop in data.get('properties', {}).items():
             self._own_properties.append(SchemaProperty(self, name, prop))
 
-        if section == self.LINK:
-            # links only:
-            self.forward = data.get('forward', self.label)
-            self.reverse = data.get('reverse', self.label)
+        self.forward = data.get('forward', self.label)
+        self.reverse = data.get('reverse', self.label)
 
     @property
     def extends(self):
         """Return the inherited schemata."""
         for base in self._extends:
-            yield self.model.get(self.section, base)
+            yield self._schemata.get(base)
 
     @property
     def schemata(self):
@@ -97,10 +105,15 @@ class Schema(object):
     @property
     def properties(self):
         """Return properties, those defined locally and in ancestors."""
+        names = set()
         for prop in self._own_properties:
+            names.add(prop.name)
             yield prop
         for schema in self.extends:
             for prop in schema.properties:
+                if prop.name in names:
+                    continue
+                names.add(prop.name)
                 yield prop
 
     def get(self, name):
@@ -128,7 +141,17 @@ class Schema(object):
         return result
 
     def to_dict(self):
-        return self.data
+        data = {
+            'type': self.section,
+            'label': self.label,
+            'plural': self.plural,
+            'icon': self.icon,
+            'properties': list(self.properties)
+        }
+        if self.section == Schema.LINK:
+            data['forward'] = self.forward
+            data['reverse'] = self.reverse
+        return data
 
     def __repr__(self):
         return '<Schema(%r)>' % self.name
@@ -138,16 +161,19 @@ class SchemaSet(object):
     """A collection of schemata."""
 
     def __init__(self, data):
-        self.schemata = []
+        self.schemata = {}
+
         for section in Schema.SECTIONS:
             for name, sconfig in data.get(section, {}).items():
-                self.schemata.append(Schema(self, section, name, sconfig))
+                if name in self.schemata:
+                    raise TypeError("Duplicate schema name: %r" % name)
+                self.schemata[name] = Schema(self, section, name, sconfig)
 
-    def get(self, section, name):
-        for schema in self.schemata:
-            if schema.section == section and schema.name == name:
-                return schema
-        raise TypeError("No such schema for %s: %s" % (section, name))
+    def get(self, name):
+        schema = self.schemata.get(name)
+        if schema is None:
+            raise TypeError("No such schema: %r" % name)
+        return schema
 
     def merge_entity_schema(self, left, right):
         """Select the most narrow of two schemata.
@@ -159,12 +185,12 @@ class SchemaSet(object):
         """
         if left == right:
             return left
-        lefts = self.get(Schema.ENTITY, left)
+        lefts = self.get(left)
         lefts = [s.name for s in lefts.schemata]
         if right in lefts:
             return left
 
-        rights = self.get(Schema.ENTITY, right)
+        rights = self.get(right)
         rights = [s.name for s in rights.schemata]
         if left in rights:
             return right
@@ -175,12 +201,10 @@ class SchemaSet(object):
                     return left
 
     def to_dict(self):
-        data = {
-            Schema.ENTITY: {},
-            Schema.LINK: {}
-        }
-        for schema in self.schemata:
-            data[schema.section][schema.name] = schema
+        data = {}
+        for name, schema in self.schemata.items():
+            if not schema.is_hidden:
+                data[name] = schema
         return data
 
     def __repr__(self):

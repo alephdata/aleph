@@ -42,6 +42,7 @@ entities:
   LegalEntity:
     extends: Entity
     label: Legal entity
+    plural: Legal entities
     icon: fa-user-secret
     properties:
       email:
@@ -80,11 +81,13 @@ entities:
   Organization:
     extends: LegalEntity
     label: Organization
+    plural: Organizations
     icon: fa-university
 
   Person:
     extends: LegalEntity
     label: Person
+    plural: People
     icon: fa-user
     properties:
       title:
@@ -119,6 +122,7 @@ entities:
 
   Company:
     label: Company
+    plural: Companies
     icon: fa-industry
     extends:
       - Organization
@@ -143,6 +147,7 @@ entities:
 
   PublicBody:
     label: Public body
+    plural: Public bodies
     icon: fa-building
     extends: Organization
 
@@ -158,6 +163,7 @@ entities:
 
   Concession:
     label: Concession
+    plural: Concessions
     icon: fa-th
     extends: Asset
     properties:
@@ -168,6 +174,7 @@ entities:
 
   Land:
     label: Land
+    plural: Lands
     extends: Asset
     icon: fa-map
     properties:
@@ -191,6 +198,7 @@ entities:
 
   CourtCase:
     label: Court case
+    plural: Court cases
     extends: Entity
     icon: fa-briefcase
     properties:

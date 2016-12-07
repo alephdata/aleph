@@ -7,7 +7,7 @@ from aleph.logic import update_entity, delete_entity
 from aleph.views.cache import enable_cache
 from aleph.events import log_event
 from aleph.search import QueryState
-from aleph.search import entities_query, execute_entities_query
+from aleph.search import entities_query
 from aleph.search import suggest_entities, similar_entities, load_entity
 
 blueprint = Blueprint('entities_api', __name__)
@@ -42,11 +42,8 @@ def get_entity(id, action):
 def index():
     enable_cache(vary_user=True)
     state = QueryState(request.args, request.authz)
-    query = entities_query(state)
-    query['size'] = state.limit
-    query['from'] = state.offset
     doc_counts = state.getbool('doc_counts')
-    res = execute_entities_query(state, query, doc_counts=doc_counts)
+    res = entities_query(state, doc_counts=doc_counts)
     return jsonify(res)
 
 

@@ -23,7 +23,7 @@ def entity_authz_filter(q, authz):
     })
 
 
-def entities_query(state, fields=None, facets=True):
+def entities_query(state, fields=None, facets=True, doc_counts=False):
     """Parse a user query string, compose and execute a query."""
     if state.has_text:
         q = {
@@ -53,12 +53,41 @@ def entities_query(state, fields=None, facets=True):
     else:
         sort = [{'name_sort': 'asc'}]
 
-    return {
+    q = {
         'sort': sort,
         'query': filter_query(q, state.filters),
         'aggregations': aggs,
+        'size': state.limit,
+        'from': state.offset,
         '_source': fields or DEFAULT_FIELDS
     }
+
+    result, hits, output = execute_basic(TYPE_ENTITY, q)
+    output['facets'] = parse_facet_result(state, result)
+    sub_queries = []
+    for doc in hits.get('hits', []):
+        entity = doc.get('_source')
+        entity['id'] = doc.get('_id')
+        entity['score'] = doc.get('_score')
+        entity['api_url'] = url_for('entities_api.view', id=doc.get('_id'))
+        output['results'].append(entity)
+
+        sq = {'term': {'entities.id': entity['id']}}
+        sq = add_filter(sq, {
+            'terms': {'collection_id': state.authz.collections_read}
+        })
+        sq = {'size': 0, 'query': sq}
+        sub_queries.append(json.dumps({}))
+        sub_queries.append(json.dumps(sq))
+
+    if doc_counts and len(sub_queries):
+        # Get the number of matching documents for each entity.
+        body = '\n'.join(sub_queries)
+        res = es.msearch(index=es_index, doc_type=TYPE_DOCUMENT, body=body)
+        for (entity, res) in zip(output['results'], res.get('responses')):
+            entity['doc_count'] = res.get('hits', {}).get('total')
+
+    return output
 
 
 def load_entity(entity_id):
@@ -172,32 +201,3 @@ def similar_entities(entity):
     return {
         'results': options
     }
-
-
-def execute_entities_query(state, query, doc_counts=False):
-    """Execute the query and return a set of results."""
-    result, hits, output = execute_basic(TYPE_ENTITY, query)
-    output['facets'] = parse_facet_result(state, result)
-    sub_queries = []
-    for doc in hits.get('hits', []):
-        entity = doc.get('_source')
-        entity['id'] = doc.get('_id')
-        entity['score'] = doc.get('_score')
-        entity['api_url'] = url_for('entities_api.view', id=doc.get('_id'))
-        output['results'].append(entity)
-
-        sq = {'term': {'entities.id': entity['id']}}
-        sq = add_filter(sq, {
-            'terms': {'collection_id': state.authz.collections_read}
-        })
-        sq = {'size': 0, 'query': sq}
-        sub_queries.append(json.dumps({}))
-        sub_queries.append(json.dumps(sq))
-
-    if doc_counts and len(sub_queries):
-        body = '\n'.join(sub_queries)
-        res = es.msearch(index=es_index, doc_type=TYPE_DOCUMENT, body=body)
-        for (entity, res) in zip(output['results'], res.get('responses')):
-            entity['doc_count'] = res.get('hits', {}).get('total')
-
-    return output

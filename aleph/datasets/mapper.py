@@ -59,8 +59,8 @@ class Mapper(object):
         self.keys = dict_list(data, 'keys', 'key')
         self.key_fingerprint = data.get('key_fingerprint', False)
 
-        self.schema = schemata.get(self.section, data.get('schema'))
-        if self.schema is None:
+        self.schema = schemata.get(data.get('schema'))
+        if self.schema is None or self.schema.section != self.section:
             raise TypeError("Invalid schema: %r" % data.get('schema'))
 
         self.properties = []
