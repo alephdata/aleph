@@ -20,6 +20,9 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+from recommonmark.parser import CommonMarkParser
+from recommonmark.transform import AutoStructify
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -46,7 +49,6 @@ source_suffix = ['.rst', '.md']
 
 # Enable support for Markdown
 #
-from recommonmark.parser import CommonMarkParser
 source_parsers = {'.md': CommonMarkParser}
 
 # The encoding of source files.
@@ -352,3 +354,11 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
+
+
+# Better integration with markdown
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+        'enable_auto_doc_ref': True,
+    }, True)
+    app.add_transform(AutoStructify)
