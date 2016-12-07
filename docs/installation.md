@@ -67,6 +67,18 @@ enable AWS features, you will need to set the AWS key ID and access key in the
 configuration file. Amazon SQS support is available for task queueing. Where
 S3 is available for file uploads.
 
+### Upgrading
+
+Aleph does not provide automatic upgrades. You will have to download the new
+version Docker images or checkout the latest version using Git first.
+
+Once you have the latest version, you can run the command bellow to upgrade
+the existing installation.
+
+```
+$ docker-compose run app aleph upgrade
+```
+
 ## Running tests
 
 To run the tests, assuming you already have the `docker-compose` up and ready,
