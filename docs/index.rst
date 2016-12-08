@@ -7,3 +7,5 @@ Welcome to Aleph's documentation!
 
 .. toctree::
    installation.md
+   usage.md
+   glossary.md
