@@ -24,6 +24,20 @@ Related:
 
 * [Centipede](https://github.com/opennewslabs/centipede)
 
+## Entity merging
+
+De-dupe TODO:
+
+1. merge identifiers
+2. merge properties
+3. merge names, make merged names into a.k.a's
+4. merge collections
+5. update references
+6. update alerts
+7. delete source entities
+8. update source entities
+9. update target entity
+
 ## Open design questions
 
 ### Entity graph model
@@ -48,7 +62,7 @@ for modelling this:
   This fails because it is impossible to do an OR search on node labels in
   Neo4J.
 
-**Neo4J Lead Generation Patterns**
+Neo4J Lead Generation Patterns:
 
 ```cypher
 MATCH (c:Collection)<-[:PART_OF]-(src)
@@ -137,3 +151,50 @@ DROP INDEX ON :Address(fingerprint);
 CREATE CONSTRAINT ON (n:Aleph) ASSERT n.id IS UNIQUE;
 CREATE INDEX ON :Aleph(fingerprint);
 ```
+
+#### Loading external graph data
+
+The purpose of this function is to add structured graph data - such as
+company registries, contract or concessions info, or financial
+transactions to the graph database backing aleph. It will then make this
+graph data available as recommendations and through the scene editor.
+
+Medium-term, the intention is to make the mappings used by this component
+into user-editable parts of the aleph interface, such that any tabular
+data uploaded can be woven into the graph.
+
+Mapping file:
+
+```yaml
+## Database configuration URL:
+# Can also be defined as DATABASE_URI in the environment.
+database: postgresql://localhost/database
+
+## Destination collection configuration:
+collection: my_collection_foreign_id
+```
+
+##### Use case: African mining concessions
+
+* Which company holds the most concessions across all datasets?
+* Longest chains of ownership -
+* Can we track them back to Exhibit 21 structures, who is the BO?
+* Can we make links to offshore datasets (PP, OL, BS, PA)?
+
+##### Use case: Moldavian linkages
+
+* Small networks that have a large extent of control of Moldavian economy.
+* Small networks connected to political actors (e.g. Parliament).
+* Clusters within the larger economy
+* Public contracts that connect to PEPs
+* Public contracts that connect to the procurement blacklist
+
+##### Use case: PEPs and companies -- across all registers.
+
+* Run all PEPs from EP & Aleph against all offshore registers and point
+  out the ultimate children in an ownership chain.
+
+##### Use case: EU transparency data
+
+* Show all advisory group member companies and persons that also
+  were awarded EU-wide contracts.
