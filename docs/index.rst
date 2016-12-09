@@ -9,3 +9,4 @@ Welcome to Aleph's documentation!
    installation.md
    usage.md
    glossary.md
+   resources.md
