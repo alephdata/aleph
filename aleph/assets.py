@@ -24,6 +24,9 @@ angular_assets = Bundle(
     'vendor/angular-ui-select/dist/select.js',
     'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
     'vendor/ng-file-upload/ng-file-upload.js',
+    'vendor/ng-file-upload/ng-file-upload.js',
+    'vendor/angulartics/dist/angulartics.min.js',
+    'vendor/angulartics-google-analytics/dist/angulartics-ga.min.js',
     filters='uglifyjs',
     output='assets/angular.js'
 )

@@ -29,6 +29,9 @@ MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 MAIL_USE_TLS = True
 MAIL_PORT = 587
 
+# Google analytics ID
+# GA_TRACKING_ID = "UA-XXXXX"
+
 CELERY_BROKER_URL = os.environ.get('ALEPH_BROKER_URI')
 
 NEO4J_URI = os.environ.get('ALEPH_NEO4J_URI')
