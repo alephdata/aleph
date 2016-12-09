@@ -79,6 +79,31 @@ the existing installation.
 $ docker-compose run app aleph upgrade
 ```
 
+## Configuration
+
+Most of the Aleph configuration is handled via a set of values in a Python
+configuration file. The defaults are documented in the
+[default_settings.py](https://github.com/pudo/aleph/blob/master/aleph/default_settings.py)
+file and can be overridden by pointing to a bespoke configuration file using
+the environment variable ``ALEPH_SETTINGS``.
+
+While using Docker, the config file, in turn, is largely configured using
+environment variables in accordance with [12 factor
+principles](https://12factor.net/). These environment variables can be found also in
+[docker_settings.py](https://github.com/pudo/aleph/blob/master/contrib/docker_settings.py).
+
+### Feature options
+
+* ``TIKA_URI`` - when enabled, this will use Apache Tika to extract content
+  from PDF files, rather than the built-in ``pdfminer`` and ``tesseract``
+  modules. The URI must point to a Tika server endpoint, which is also
+  responsible for handling OCR.
+
+  **Note:** using Tika with OCR'd documents may yield
+  different results from the built-in mechanism and OCR may not be performed
+  on the same sections of a document's content
+  (See: [#104](https://github.com/pudo/aleph/issues/104)).
+
 ## Running tests
 
 To run the tests, assuming you already have the `docker-compose` up and ready,
