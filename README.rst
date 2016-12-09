@@ -40,6 +40,19 @@ The documentation for Aleph is available at
 Feel free to edit the source files in the ``docs`` folder and send pull
 requests for improvements.
 
+To build the documentation, please install the dependencies first and run
+``make docs``::
+
+  (host)$ docker-compose run app bash
+  (app) $ pip install -r requirements-docs.txt
+  (app) $ make docs
+
+
+Now you can browse the documentation locally at
+``http://lvh.me:8000/docs/_build/html/``::
+
+  (host)$ make docs-web
+
 Support
 -------
 
