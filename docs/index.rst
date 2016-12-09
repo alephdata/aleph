@@ -10,3 +10,4 @@ Welcome to Aleph's documentation!
    usage.md
    glossary.md
    resources.md
+   research.md
