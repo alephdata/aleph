@@ -5,6 +5,11 @@ Welcome to Aleph's documentation!
 
 .. include:: ../README.rst
 
+----
+
+Table of contents
+-----------------
+
 .. toctree::
    installation.md
    usage.md
