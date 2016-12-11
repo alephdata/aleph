@@ -1,0 +1,50 @@
+<div class="screen-header">
+  <h2>
+    <i class="fa fa-fw fa-database"></i>
+    Databases
+    <small>{{::datasets.total_doc_count | number}} entities</small>
+  </h2>
+
+  <div class="actions">
+    <div class="btn-group" role="group">
+      <div class="btn-group" ng-if="::authz.entityWrite(entity)">
+        <a ng-click="edit()" class="btn btn-default">
+          <i class="fa fa-edit"></i>
+          Edit
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="clearfix"></div>
+</div>
+
+
+<div class="screen">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="search-bar">
+        <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
+          <div class="input-group">
+            <input type="text" class="form-control" autofocus ng-model="query.q" placeholder="Search people and companies">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="submit">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                Search
+              </button>
+            </span>
+          </div>
+        </form>
+      </div>
+      <div class="list-group">
+        <a ng-repeat="dataset in datasets.results"
+           href="/entities?filter:dataset={{dataset.name}}" class="list-group-item">
+          <span class="badge">
+            {{dataset.doc_count | number}}
+          </span>
+          {{dataset.label}}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

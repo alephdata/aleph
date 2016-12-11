@@ -29,7 +29,8 @@ def index():
         dataset.doc_count = counts.get(dataset.name)
     return jsonify({
         'results': results,
-        'total': len(results)
+        'total': len(results),
+        'total_doc_count': res.get('total')
     })
 
 

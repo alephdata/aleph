@@ -32,7 +32,8 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
   };
 
   $rootScope.reportLoading = function(flag) {
-    $scope.routeLoaded = !flag;
+    // $scope.routeLoaded = !flag;
+    $scope.routeLoaded = true;
     if (flag) {
       $anchorScroll();
       $scope.routeFailed = false;
@@ -55,7 +56,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
         }
       });
     }
-  };  
+  };
 
   $scope.editProfile = function($event) {
     $event.stopPropagation();

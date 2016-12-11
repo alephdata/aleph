@@ -48,6 +48,15 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     }
   });
 
+  $routeProvider.when('/datasets', {
+    templateUrl: 'templates/datasets/index.html',
+    controller: 'DatasetsIndexCtrl',
+    reloadOnSearch: false,
+    resolve: {
+      'datasets': loadDatasets
+    }
+  });
+
   $routeProvider.when('/entities/:entity_id', {
     templateUrl: 'templates/entities/view.html',
     controller: 'EntitiesViewCtrl',
@@ -171,7 +180,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   $locationProvider.html5Mode(true);
   $compileProvider.debugInfoEnabled(false);
   cfpLoadingBarProvider.includeSpinner = false;
-  cfpLoadingBarProvider.latencyThreshold = 200;
+  cfpLoadingBarProvider.latencyThreshold = 100;
 
   uiSelectConfig.theme = 'bootstrap';
 }]);

@@ -18,7 +18,7 @@ aleph.factory('Dataset', ['$q', '$http', '$location', 'Authz', 'Metadata',
     get: function(name) {
       var dfd = $q.defer(),
           url = '/api/1/datasets/' + name;
-      $http.get(url).then(function(res) {
+      $http.get(url, {cache: true}).then(function(res) {
         dfd.resolve(res.data)
       }, function(err) {
         dfd.reject(err);
