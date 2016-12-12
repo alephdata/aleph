@@ -7,7 +7,7 @@ aleph.directive('entityIcon', ['Metadata', function(Metadata) {
 
   return {
     restrict: 'E',
-    transclude: true,
+    transclude: false,
     scope: {
       'schema': '='
     },

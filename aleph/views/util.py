@@ -5,17 +5,17 @@ from werkzeug.exceptions import NotFound
 import xlsxwriter
 
 from aleph.core import db
+from aleph.authz import Authz
 from aleph.model import Document, DocumentPage
 
 
-def get_document(document_id):
+def get_document(document_id, action=Authz.READ):
     document = Document.by_id(document_id)
     if document is None:
         raise NotFound()
-    for collection_id in document.collection_ids:
-        if request.authz.collection_read(collection_id):
-            return document
-    request.authz.require(False)
+    collections = request.authz.collections.get(action)
+    request.authz.require(document.collection_id in collections)
+    return document
 
 
 def get_tabular(document_id, table_id):

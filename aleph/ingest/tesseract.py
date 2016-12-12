@@ -11,7 +11,7 @@ from tesserwrap import Tesseract, PageSegMode
 from aleph.core import get_config
 from aleph.model import Cache
 from aleph.ingest.ingestor import IngestorException
-from aleph.reference import get_languages_iso3
+from aleph.data.reference import get_languages_iso3
 
 # https://tesserwrap.readthedocs.io/en/latest/#
 # https://pillow.readthedocs.io/en/3.0.x/reference/Image.html

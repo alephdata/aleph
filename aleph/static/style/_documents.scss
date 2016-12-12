@@ -1,0 +1,85 @@
+
+.data-table {
+    overflow-x: scroll;
+
+    table.table {
+        margin-bottom: 0;
+    }
+
+    th {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        background-color: $boxed-color;
+    }
+
+    td {
+        min-width: 50px;
+        max-width: 350px;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &.numeric {
+            min-width: 70px;
+            text-align: right;
+        }
+    }
+
+    tr.highlight {
+        td {
+            @include highlighted;
+        }
+    }
+}
+
+canvas#pdf {
+    margin-top: 0.5em;
+    margin-bottom: 2em;
+    border: 1px solid darken($gray-subtle, 20%);
+    box-shadow: 3px 3px 10px darken($gray-subtle, 20%);
+}
+
+pre {
+    margin-top: 0.5em;
+}
+
+.pages-query {
+    .input-group {
+        margin-bottom: 0.5em;
+    }
+}
+
+.pages-list {
+    max-height: 25em;
+    overflow-y: scroll;
+    overflow: -moz-scrollbars-vertical;
+    // padding-top: 0.5em;
+    margin-bottom: 1em;
+
+    td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .selected {
+        background-color: $gray-subtle;
+    }
+}
+
+.panel-metadata {
+    td {
+        position: relative;
+
+        code {
+            position: absolute;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+            max-width: 95%;
+        }
+    }
+}

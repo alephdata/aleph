@@ -1,0 +1,338 @@
+###################################################################
+#
+# Node types.
+#
+###################################################################
+entities:
+  Entity:
+    hidden: true
+    icon: fa-circle
+    properties:
+      name:
+        label: Name
+        type: name
+        hidden: true
+      summary:
+        label: Summary
+      description:
+        label: Description
+      country:
+        label: Country
+        type: country
+      alias:
+        label: Other name
+        type: name
+        multiple: true
+      previousName:
+        label: Previous name
+        type: name
+        multiple: true
+      sourceUrl:
+        label: Source link
+        type: url
+      tags:
+        label: Relevancy
+      keywords:
+        label: Keywords
+        multiple: true
+      address:
+        label: Address
+        type: address
+
+  LegalEntity:
+    extends: Entity
+    label: Legal entity
+    plural: Legal entities
+    icon: fa-user-secret
+    properties:
+      email:
+        label: E-Mail
+        type: email
+      phone:
+        label: Phone
+        type: phone
+      legalForm:
+        label: Legal form
+      incorporationDate:
+        label: Incorporation date
+        type: date
+      dissolutionDate:
+        label: Dissolution date
+        type: date
+      taxStatus:
+        label: Tax status
+      status:
+        label: Status
+      sector:
+        label: Sector
+      classification:
+        label: Classification
+      registrationNumber:
+        label: Registration number
+      bankAccount:
+        label: Bank account
+      jurisdiction:
+        label: Jurisdiction
+        type: country
+      mainCountry:
+        label: Country of origin
+        type: country
+
+  Organization:
+    extends: LegalEntity
+    label: Organization
+    plural: Organizations
+    icon: fa-university
+
+  Person:
+    extends: LegalEntity
+    label: Person
+    plural: People
+    icon: fa-user
+    properties:
+      title:
+        label: Title
+      firstName:
+        label: First name
+      middleName:
+        label: Middle name
+      lastName:
+        label: Last name
+      birthDate:
+        label: Birth date
+        type: date
+      birthPlace:
+        label: Place of birth
+      deathDate:
+        label: Death date
+        type: date
+      position:
+        label: Position
+      nationality:
+        label: Nationality
+        type: country
+      gender:
+        label: Gender
+      passportNumber:
+        label: Passport
+        type: identifier
+      idNumber:
+        label: ID Number
+        type: identifier
+
+  Company:
+    label: Company
+    plural: Companies
+    icon: fa-industry
+    extends:
+      - Organization
+      - Asset
+    properties:
+      capital:
+        label: "Capital"
+      voenCode:
+        label: "VOEN"
+      okpoCode:
+        label: "OKPO"
+      innCode:
+        label: "INN"
+      coatoCode:
+        label: "COATO"
+      vatCode:
+        label: "VAT Identifier"
+      irsCode:
+        label: "IRS Number"
+      cikCode:
+        label: "SEC Central Index Key"
+
+  PublicBody:
+    label: Public body
+    plural: Public bodies
+    icon: fa-building
+    extends: Organization
+
+  Asset:
+    hidden: true
+    extends: Entity
+    icon: fa-car
+    properties:
+      value:
+        label: Value
+      valueCurrency:
+        label: Value (Currency)
+
+  Concession:
+    label: Concession
+    plural: Concessions
+    icon: fa-th
+    extends: Asset
+    properties:
+      area:
+        label: Area
+      commodities:
+        label: Commodities
+
+  Land:
+    label: Land
+    plural: Lands
+    extends: Asset
+    icon: fa-map
+    properties:
+      address:
+        label: Address
+        type: address
+      location:
+        label: Location
+      cadastralCode:
+        label: Cadastral code
+      area:
+        label: Area
+      registrationNumber:
+        label: Registration number
+      propertyType:
+        label: Property type
+      landType:
+        label: Land type
+      createDate:
+        label: Record date
+
+  CourtCase:
+    label: Court case
+    plural: Court cases
+    extends: Entity
+    icon: fa-briefcase
+    properties:
+      category:
+        label: Category
+      type:
+        label: Type
+      status:
+        label: Status
+
+
+###################################################################
+#
+# Relationship types.
+#
+###################################################################
+links:
+  link:
+    label: "Link"
+    hidden: true
+    properties:
+      startDate:
+        label: "Start date"
+        type: date
+      endDate:
+        label: "End date"
+        type: date
+      date:
+        label: "Date"
+        type: date
+      summary:
+        label: "Summary"
+
+  controlledBy:
+    label: "Control"
+    forward: "Controlled by"
+    reverse: "Controls"
+    extends: link
+
+  ownedBy:
+    label: "Ownership"
+    forward: "Owned by"
+    reverse: "Owns"
+    extends: controlledBy
+    properties:
+      percentage:
+        label: "Percentage held"
+      value:
+        label: "Value of share owned"
+      legalBasis:
+        label: "Legal basis"
+      status:
+        label: "Status"
+
+  directedBy:
+    label: "Directorship"
+    forward: "Directed by"
+    reverse: "Directs"
+    extends: controlledBy
+    properties:
+      position:
+        label: "Position"
+      secretary:
+        label: "Secretary"
+
+  managedBy:
+    label: "Management"
+    forward: "Managed by"
+    reverse: "Manages"
+    extends: link
+    properties:
+      role:
+        label: "Role"
+
+  memberOf:
+    label: "Membership"
+    forward: "Member of"
+    reverse: "Has member"
+    extends: link
+    properties:
+      role:
+        label: "Role"
+
+  linkedTo:
+    label: "Assocation"
+    forward: "Linked to"
+    reverse: "Linked to"
+    extends: link
+
+  contractedBy:
+    label: "Contract awards"
+    forward: "Received contract to"
+    reverse: "Awarded contract from"
+    extends: link
+    properties:
+      totalValue:
+        label: Total value
+      type:
+        label: Type
+      procedureNumber:
+        label: Procedure number
+      documentNumber:
+        label: Document number
+      decisionReason:
+        label: Decision basis
+      documentDate:
+        label: Document date
+        type: date
+      cpvCode:
+        label: CPV code
+
+  paidBy:
+    label: "Payment"
+    forward: "Paid by"
+    reverse: "Paid"
+    extends: link
+    properties:
+      amount:
+        label: "Amount"
+      currency:
+        label: "Currency"
+      amountUsd:
+        label: "Amount (USD)"
+      sequenceNumber:
+        label: "Sequence Number"
+      transactionNumber:
+        label: "Transaction Number"
+      purpose:
+        label: "Purpose"
+      payerAccount:
+        label: "Payer account"
+      payerBank:
+        label: "Payer bank"
+      beneficiaryAccount:
+        label: "Beneficiary account"
+      beneficiaryBank:
+        label: "Beneficiary bank"

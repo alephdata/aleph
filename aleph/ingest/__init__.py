@@ -63,6 +63,7 @@ def ingest_directory(collection_id, meta, local_path, base_path=None,
     if not os.path.isdir(local_path):
         child = meta.make_child()
         child.source_path = base_path
+        child.foreign_id = base_path
         return ingest_file(collection_id, child, local_path, move=move)
 
     # handle bundles

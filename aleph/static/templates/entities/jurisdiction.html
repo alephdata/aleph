@@ -1,12 +1,12 @@
 <div class="form-group">
-  <label class="control-label" for="jurisdiction_code" ng-if="!simple">
+  <label class="control-label" for="country" ng-if="!simple">
     <span ng-hide="isPerson()">Jurisdiction</span>
     <span ng-show="isPerson()">Nationality</span>
   </label>
   <div class="">
-    <input class="form-control" id="jurisdiction_code" name="jurisdiction_code"
-      ng-model="value" autocomplete="off" 
-      ng-model-options="{debounce: { 'default': 250, 'blur': 250 }, getterSetter: true}" 
+    <input class="form-control" id="country" name="country"
+      ng-model="value" autocomplete="off"
+      ng-model-options="{debounce: { 'default': 250, 'blur': 250 }, getterSetter: true}"
       uib-typeahead="jur.value as jur.label for jur in getJurisdictions() | filter:{label:$viewValue}"
       typeahead-show-hint="true" typeahead-min-length="0" typeahead-editable="false">
     <p class="help-block" ng-if="!simple">Leave this empty if multiple countries apply.</p>

@@ -37,11 +37,11 @@
 
       <div class="alert alert-danger" role="alert" ng-if="result.error">
         <strong>An error occurred while running your search.</strong>
-        {{result.error.info.reason || result.error.message}}
+        {{result.error.message}}
       </div>
 
       <div class="alert alert-suggest" ng-if="result.limit > 0 && !result.total && collection.can_add">
-        No entities were found, 
+        No entities were found,
         <a ng-href="/collections/{{::collection.id}}/entities/bulk">
           create some now</a>?
       </div>
@@ -65,20 +65,19 @@
               </div>
             </th>
           </tr>
-          <tr ng-show="false">
-            <th colspan='7'
-          </tr>
           <tr ng-repeat-start="entity in result.results track by entity.id">
             <td width="1%" ng-if="authz.logged_in()">
               <input type="checkbox" ng-disabled="!authz.entityWrite(entity)" ng-model="entity.selected">
             </td>
             <td width="1%">
-              <entity-icon schema="entity.$schema"></entity-icon>
+              <entity-icon schema="entity.schema"></entity-icon>
             </td>
             <td>
               <strong>{{::entity.name}}</strong>
             </td>
-            <td width="1%">{{::entity.jurisdiction_code.toUpperCase()}}</td>
+            <td width="10%">
+              <entity-countries entity="entity"></entity-countries>
+            </td>
             <td class="numeric" width="1%">
               <button type="button" class="btn btn-default btn-xs"
                 ng-click="editEntity($event, entity)"
@@ -97,7 +96,7 @@
               </button>
             </td>
             <td class="nobreak" width="1%">
-              <a ng-href="/search?entity={{entity.id}}" ng-if="entity.doc_count">
+              <a ng-href="/documents?entity={{entity.id}}" ng-if="entity.doc_count">
                 <i class="fa fa-file-text-o" aria-hidden="true"></i>
                 {{entity.doc_count | number}}
               </a>
@@ -106,13 +105,13 @@
               </span>
             </td>
           </tr>
-          <tr ng-repeat-end ng-show="entity.summary">
+          <tr ng-repeat-end ng-show="entity.data.summary">
             <td ng-if="authz.logged_in()">
             </td>
             <td>
             </td>
             <td colspan="5">
-              {{::entity.summary | limitTo:500}}
+              {{::entity.data.summary | limitTo:500}}
             </td>
           </tr>
         </table>
@@ -133,16 +132,16 @@
       <div class="panel panel-default panel-facet panel-facet-scroll">
         <div class="panel-heading">
           <strong>Countries</strong>
-          <small>{{result.facets.jurisdiction_code.values.length}}</small>
+          <small>{{result.facets.countries.values.length}}</small>
         </div>
         <ul class="list-group">
-          <li class="list-group-item empty" ng-if="!result.facets.jurisdiction_code.values.length">
+          <li class="list-group-item empty" ng-if="!result.facets.countries.values.length">
             No entities with country associations.
           </li>
           <li class="list-group-item animate toggle"
-            ng-repeat="val in result.facets.jurisdiction_code.values"
-            ng-class="{'active': query.hasFilter('jurisdiction_code', val.id)}"
-            ng-click="query.toggleFilter('jurisdiction_code', val.id)">
+            ng-repeat="val in result.facets.countries.values"
+            ng-class="{'active': query.hasFilter('countries', val.id)}"
+            ng-click="query.toggleFilter('countries', val.id)">
             <span class="badge">{{val.count | number}}</span>
             <span class="lbl">
               {{::val.label}}
@@ -154,26 +153,26 @@
       <div class="panel panel-default panel-facet">
         <div class="panel-heading">
           <strong>Types</strong>
-          <small>{{result.facets.$schema.values.length}}</small>
+          <small>{{result.facets.schemata.values.length}}</small>
         </div>
         <ul class="list-group">
-          <li class="list-group-item empty" ng-if="!result.facets.$schema.values.length">
+          <li class="list-group-item empty" ng-if="!result.facets.schemata.values.length">
             No entities found.
           </li>
           <li class="list-group-item animate toggle"
-            ng-repeat="val in result.facets.$schema.values"
-            ng-class="{'active': query.hasFilter('$schema', val.id)}"
-            ng-click="query.toggleFilter('$schema', val.id)">
+            ng-repeat="val in result.facets.schemata.values"
+            ng-class="{'active': query.hasFilter('schemata', val.id)}"
+            ng-click="query.toggleFilter('schemata', val.id)">
             <span class="badge">{{val.count | number}}</span>
             <span class="lbl">
               <entity-icon schema="val.id"></entity-icon>
-              {{::val.label | schemaPlural}}
+              {{::val.label | schemaLabel : true}}
             </span>
           </li>
         </ul>
       </div>
 
-      <div class="panel panel-default" ng-if="result.total < 9500">
+      <div class="panel panel-default">
         <div class="panel-heading">
           <strong>Entity reconciliation</strong>
         </div>

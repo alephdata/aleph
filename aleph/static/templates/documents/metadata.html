@@ -14,10 +14,10 @@
       <th>Title</th>
       <td>{{::doc.title}}</td>
     </tr>
-    <tr ng-show="sourceCollection">
-      <th>Source</th>
+    <tr ng-show="collection">
+      <th>Collection</th>
       <td>
-        <a ng-href="{{sourceCollection.getPath()}}">{{sourceCollection.label}}</a>
+        <a ng-href="{{collection.getPath()}}">{{collection.label}}</a>
       </td>
     </tr>
     <tr ng-if="::doc.author">
@@ -88,9 +88,6 @@
     </tr>
     <tr>
       <td colspan="2">
-        <div class="pull-right">
-          <collections-add doc="doc" class="btn-primary"></collections-add>
-        </div>
         <div class="btn-group" role="group">
           <a ng-href="/api/1/documents/{{::doc.id}}/file" target="_self" download="{{::doc.file_name}}" class="btn btn-default">
             <i class="fa fa-cloud-download"></i> Download

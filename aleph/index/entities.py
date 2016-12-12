@@ -1,14 +1,12 @@
 from __future__ import absolute_import
 
 import logging
-from collections import defaultdict
 from elasticsearch.helpers import scan
 
 from aleph.core import es, es_index, db
-from aleph.text import latinize_text
-from aleph.util import expand_json
+from aleph.util import ensure_list
 from aleph.model import Entity, Reference
-from aleph.model.entity import collection_entity_table
+from aleph.datasets.util import finalize_index
 from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.index.admin import flush_index
 from aleph.index.util import bulk_op
@@ -21,15 +19,15 @@ def delete_entity(entity_id):
     es.delete(index=es_index, doc_type=TYPE_ENTITY, id=entity_id, ignore=[404])
 
 
-def document_updates(q, entity_id, references=None):
+def document_updates(q, entity_id, collection_id=None):
     scanner = scan(es, query=q, index=es_index, doc_type=[TYPE_DOCUMENT])
     for res in scanner:
         body = res.get('_source')
         entities = []
-        if references is not None:
+        if collection_id is not None:
             entities.append({
                 'id': entity_id,
-                'collection_id': references[res['_id']]
+                'collection_id': collection_id
             })
         for ent in res.get('_source').get('entities'):
             if ent['id'] != entity_id:
@@ -50,22 +48,18 @@ def delete_entity_references(entity_id):
     flush_index()
 
 
-def update_entity_references(entity_id, max_query=1000):
+def update_entity_references(entity, max_query=1000):
     """Same as above but runs in bulk for a particular entity."""
     q = db.session.query(Reference.document_id)
-    q = q.filter(Reference.entity_id == entity_id)
-    q = q.filter(Entity.id == entity_id)
+    q = q.filter(Reference.entity_id == entity.id)
+    q = q.filter(Entity.id == Reference.entity_id)
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
-    q = q.filter(collection_entity_table.c.entity_id == Entity.id)
-    q = q.add_column(collection_entity_table.c.collection_id)
-    references = defaultdict(list)
-    for row in q:
-        references[str(row.document_id)].append(row.collection_id)
+    documents = [str(r.document_id) for r in q]
 
-    ids = references.keys()
-    for i in range(0, len(ids), max_query):
-        q = {'query': {'ids': {'values': ids[i:i + max_query]}}}
-        bulk_op(document_updates(q, entity_id, references))
+    for i in range(0, len(documents), max_query):
+        q = {'query': {'ids': {'values': documents[i:i + max_query]}}}
+        bulk_op(document_updates(q, entity.id, entity.collection_id))
+
     flush_index()
 
 
@@ -78,15 +72,11 @@ def get_count(entity):
 
 
 def generate_entities(document):
-    colls = defaultdict(set)
-    for entity_id, collection_id in Reference.index_references(document.id):
-        colls[entity_id].add(collection_id)
-
     entities = []
-    for entity_id, collections in colls.items():
+    for entity_id, collection_id in Reference.index_references(document.id):
         entities.append({
             'id': entity_id,
-            'collection_id': list(collections)
+            'collection_id': collection_id
         })
     return entities
 
@@ -95,12 +85,13 @@ def index_entity(entity):
     """Index an entity."""
     data = entity.to_dict()
     data.pop('id', None)
-    data['doc_count'] = get_count(entity)
-    data['terms'] = entity.terms
-    data['terms_latin'] = [latinize_text(t) for t in entity.terms]
-    data['name_sort'] = data.get('name')
-    data['name_latin'] = latinize_text(data.get('name'))
-    data['summary_latin'] = latinize_text(data.get('summary'))
-    data['description_latin'] = latinize_text(data.get('description'))
-    data = expand_json(data)
+    data.update({
+        'properties': {'name': [entity.name]},
+        'doc_count': get_count(entity)
+    })
+    for k, v in entity.data.items():
+        v = ensure_list(v)
+        if len(v):
+            data['properties'][k] = v
+    data = finalize_index(data, entity.schema)
     es.index(index=es_index, doc_type=TYPE_ENTITY, id=entity.id, body=data)

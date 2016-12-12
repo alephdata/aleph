@@ -29,13 +29,13 @@ class MetadataTestCase(TestCase):
 
         meta.add_url('http://www.google.com/xxx')
         assert len(meta.urls) == 2, meta.urls
-        assert len(meta.domains) == 1, meta.domain
+        assert len(meta.domains) == 1, meta.domains
 
     def test_emails(self):
         meta = Metadata()
         meta.add_email('huhu@pudo.org')
-        assert len(meta.emails) == 1, meta.urls
-        assert len(meta.domains) == 1, meta.domain
+        assert len(meta.emails) == 1, meta.emails
+        assert len(meta.domains) == 1, (meta.emails, meta.domains)
         assert meta.domains[0] == 'pudo.org', meta.domains
 
         meta = Metadata()
@@ -44,8 +44,11 @@ class MetadataTestCase(TestCase):
 
     def test_dates(self):
         meta = Metadata()
-        meta.add_date('today')
+        meta.add_date('yada yada')
         assert len(meta.dates) == 0, meta.dates
+
+        # meta.add_date('today')
+        # assert len(meta.dates) == 1, meta.dates
 
         meta = Metadata()
         meta.add_date('2001-01-20')

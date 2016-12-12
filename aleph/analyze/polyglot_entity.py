@@ -4,6 +4,7 @@ from collections import defaultdict
 from polyglot.text import Text
 
 from aleph.core import db
+from aleph.text import slugify
 from aleph.model import Reference, Entity
 from aleph.analyze.analyzer import Analyzer
 
@@ -11,10 +12,10 @@ from aleph.analyze.analyzer import Analyzer
 log = logging.getLogger(__name__)
 
 SCHEMAS = {
-    'I-PER': '/entity/person.json#',
-    'I-ORG': '/entity/organization.json#'
+    'I-PER': 'Person',
+    'I-ORG': 'Organization'
 }
-DEFAULT_SCHEMA = '/entity/entity.json#'
+DEFAULT_SCHEMA = 'LegalEntity'
 
 
 class PolyglotEntityAnalyzer(Analyzer):
@@ -22,12 +23,12 @@ class PolyglotEntityAnalyzer(Analyzer):
     origin = 'polyglot'
 
     def prepare(self):
-        self.collections = []
-        for collection in self.document.collections:
-            if collection.generate_entities:
-                self.collections.append(collection)
-        self.disabled = not len(self.collections)
-        self.entities = defaultdict(list)
+        self.collection = self.document.collection
+        self.disabled = not self.collection.generate_entities
+        if self.document.type != self.document.TYPE_TEXT:
+            self.disabled = True
+        self.entity_schemata = defaultdict(list)
+        self.entity_names = {}
 
     def on_text(self, text):
         if text is None or len(text) <= 100:
@@ -43,52 +44,43 @@ class PolyglotEntityAnalyzer(Analyzer):
                 parts = [t for t in entity if t.lower() != t.upper()]
                 if len(parts) < 2:
                     continue
-                entity_name = ' '.join(parts)
-                if len(entity_name) < 5 or len(entity_name) > 150:
+                name = ' '.join(parts)
+                if len(name) < 5 or len(name) > 150:
                     continue
                 schema = SCHEMAS.get(entity.tag, DEFAULT_SCHEMA)
-                self.entities[entity_name].append(schema)
+                fk = '%s:%s' % (self.origin, slugify(name))
+                self.entity_schemata[fk].append(schema)
+                self.entity_names[fk] = name
         except ValueError as ve:
             log.info('NER value error: %r', ve)
         except Exception as ex:
             log.warning('NER failed: %r', ex)
 
-    def load_entity(self, name, schema):
-        identifier = name.lower().strip()
-        q = db.session.query(Entity)
-        q = q.order_by(Entity.deleted_at.desc().nullsfirst())
-        q = q.filter(Entity.name == name)
-        entity = q.first()
+    def load_entity(self, fk, name, schema):
+        entity = Entity.by_foreign_id(fk, self.collection.id, deleted=True)
         if entity is not None:
             return entity
 
-        data = {
+        return Entity.save({
             'name': name,
-            '$schema': schema,
+            'schema': schema,
+            'foreign_ids': [fk],
             'state': Entity.STATE_PENDING,
-            'identifiers': [{
-                'scheme': self.origin,
-                'identifier': identifier
-            }]
-        }
-        entity = Entity.save(data, self.collections)
-        return entity.id
+            'data': {}
+        }, self.collection)
 
     def finalize(self):
-        output = []
-        for entity_name, schemas in self.entities.items():
-            schema = max(set(schemas), key=schemas.count)
-            output.append((entity_name, len(schemas), schema))
-
         self.document.delete_references(origin=self.origin)
-        for name, weight, schema in output:
-            entity_id = self.load_entity(name, schema)
-            if entity_id is None:
+        for fk, schemas in self.entity_schemata.items():
+            schema = max(set(schemas), key=schemas.count)
+            name = self.entity_names.get(fk)
+            entity = self.load_entity(fk, name, schema)
+            if entity.deleted_at is not None:
                 continue
             ref = Reference()
             ref.document_id = self.document.id
-            ref.entity_id = entity_id
+            ref.entity_id = entity.id
             ref.origin = self.origin
-            ref.weight = weight
+            ref.weight = len(schemas)
             db.session.add(ref)
-        log.info('Polyglot extraced %s entities.', len(output))
+        log.info('Polyglot extracted %s entities.', len(self.entity_schemata))

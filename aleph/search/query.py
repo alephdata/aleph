@@ -3,6 +3,7 @@ from apikit.args import BOOL_TRUISH
 from werkzeug.datastructures import MultiDict
 
 from aleph.model import Entity
+from aleph.text import string_value
 
 
 class QueryState(object):
@@ -13,7 +14,6 @@ class QueryState(object):
             args = MultiDict(args)
         self.args = args
         self.authz = authz
-        self.authz_collections = authz.collections_read
         self._limit = limit
 
         self.facet_names = self.getlist('facet')
@@ -55,14 +55,14 @@ class QueryState(object):
 
     @property
     def sort(self):
-        if self.has_query:
+        if self.has_text:
             return 'score'
         return self.get('sort', 'score').strip().lower()
 
     @property
     def entities(self):
         if not hasattr(self, '_entities'):
-            cs = self.authz_collections
+            cs = self.authz.collections_read
             self._entities = Entity.by_id_set(self.entity_ids, collections=cs)
         return self._entities
 
@@ -77,20 +77,16 @@ class QueryState(object):
 
     @property
     def collection_id(self):
-        """Return the set of collection IDs to be queried.
-
-        Those are either based on authorization rules or filters applied by
-        the user.
-        """
+        """Return the set of collection IDs to be queried."""
         collection_ids = set()
         for value in self.get_filters('collection_id'):
             try:
                 value = int(value)
             except:
                 continue
-            if value in self.authz_collections:
+            if value in self.authz.collections_read:
                 collection_ids.add(value)
-        return list(collection_ids) or self.authz_collections
+        return list(collection_ids)
 
     @property
     def filter_items(self):
@@ -133,7 +129,8 @@ class QueryState(object):
 
     def get(self, name, default=None):
         for value in self.getlist(name):
-            if value is not None and len(value.strip()):
+            value = string_value(value)
+            if value is not None:
                 return value
         return default
 

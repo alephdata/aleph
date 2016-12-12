@@ -3,6 +3,7 @@ from werkzeug.exceptions import Forbidden
 
 from aleph.core import db
 from aleph.model import Collection, Role, Permission
+from aleph.util import ensure_list
 
 
 def get_public_roles():
@@ -24,23 +25,27 @@ class Authz(object):
     PUBLIC = 'public'
 
     def __init__(self, role=None):
-        self.roles = [Role.load_id(Role.SYSTEM_GUEST)]
+        self.roles = set([Role.load_id(Role.SYSTEM_GUEST)])
         self.role = role
         self.logged_in = role is not None
         self.is_admin = False
 
         if self.logged_in:
             self.is_admin = role.is_admin
-            self.roles.append(role.id)
-            self.roles.append(Role.load_id(Role.SYSTEM_USER))
+            self.roles.add(role.id)
+            self.roles.add(Role.load_id(Role.SYSTEM_USER))
             for group in role.roles:
-                self.roles.append(group.id)
+                self.roles.add(group.id)
 
         # Pre-load collection authorisation info and cache the result.
         # This is the core authorisation function, and is called at least once
         # per request. It will query and cache the ID for all collections the
         # current user is authorised to read or write.
-        self.collections = {self.READ: set(), self.WRITE: set(), self.PUBLIC: set()}
+        self.collections = {
+            self.READ: set(),
+            self.WRITE: set(),
+            self.PUBLIC: set()
+        }
         q = db.session.query(Permission.collection_id,
                              Permission.role_id,
                              Permission.read,
@@ -103,6 +108,10 @@ class Authz(object):
         if not len(intersect) and default_all:
             return available
         return list(intersect)
+
+    def check_roles(self, roles):
+        isect = self.roles.intersection(ensure_list(roles))
+        return len(isect)
 
     def require(self, pred):
         if not pred:

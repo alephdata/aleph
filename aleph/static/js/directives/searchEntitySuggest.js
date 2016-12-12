@@ -8,12 +8,12 @@ aleph.directive('searchEntitySuggest', ['$location', '$q', '$route', '$http', '$
     templateUrl: 'templates/documents/search_entity_suggest.html',
     link: function (scope, element, attrs) {
       scope.triggerLogin = $rootScope.triggerLogin;
-      
+
       scope.createQueryEntity = function(schema) {
         var name = scope.queryText;
         name = name.replace(/[\"\'\(\)\[\]\+]*/, ' ');
         name = titleCaps(name);
-        Entity.create({$schema: schema, name: name}).then(function() {
+        Entity.create({schema: schema, name: name}).then(function() {
           $route.reload();
         });
       };

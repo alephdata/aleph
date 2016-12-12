@@ -7,7 +7,7 @@
   <div class="modal-body">
     <div class="form-group" ng-class="{'has-error': createEntity.name.$invalid}">
       <label class="control-label" for="name">
-        Name <span ng-if="!selectSchema">of {{schemata[entity.$schema].title}}</span>
+        Name <span ng-if="!selectSchema">of {{schemata[entity.schema].label}}</span>
       </label>
       <input type="text" class="form-control input-lg" id="name" name="name" ng-model="entity.name"
         placeholder="New Entity Name" required ng-minlength="3">
@@ -22,19 +22,18 @@
         <div class="btn-group btn-group-justified" role="group">
           <div class="btn-group" role="group" ng-repeat="schema in availableSchemata">
             <button type="button" class="btn btn-default"
-              ng-class="{'active': entity.$schema == schema}" ng-click="setSchema(schema)">
+              ng-class="{'active': entity.schema == schema}" ng-click="setSchema(schema)">
               <entity-icon schema="schema"></entity-icon>
-              {{schemata[schema].title}}
+              {{schemata.entities[schema].label}}
             </button>
           </div>
         </div>
-        <p class="help-block" ng-bind="schemata[entity.$schema].description"></p>
       </div>
     </div>
 
     <div class="form-group">
       <label class="control-label" for="collection">
-        Investigation
+        Collection
       </label>
       <collections-select set-collection="setCollection(callback)"
         category="'investigation'"></collections-select>
@@ -48,7 +47,7 @@
       </label>
       <div class="">
         <textarea class="form-control" id="summary" name="summary"
-          ng-model="entity.summary" rows="2" maxlength="200"></textarea>
+          ng-model="entity.data.summary" rows="2" maxlength="200"></textarea>
         <p class="help-block">Describe the relevance of this entity in a sentence.</p>
       </div>
     </div>
@@ -65,4 +64,3 @@
     <button type="submit" class="btn btn-primary" ng-disabled="!canSave()">Save</button>
   </div>
 </form>
-

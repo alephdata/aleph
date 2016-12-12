@@ -32,9 +32,15 @@
           <div uib-collapse="navbarCollapsed" class="navbar-collapse bs-js-navbar-collapse">
             <ul class="nav navbar-nav">
               <li ng-class="{'active': navSection =='documents'}">
-                <a href="/search">
-                  <i class="fa fa-fw fa-search" aria-hidden="true"></i>
-                  Document Search
+                <a href="/documents">
+                  <i class="fa fa-fw fa-file-text" aria-hidden="true"></i>
+                  Documents
+                </a>
+              </li>
+              <li ng-class="{'active': navSection =='entities'}" ng-show="navSection =='entities'">
+                <a href="/datasets">
+                  <i class="fa fa-fw fa-database" aria-hidden="true"></i>
+                  Databases
                 </a>
               </li>
               <li ng-class="{'active': navSection =='collections'}">

@@ -45,7 +45,7 @@ footer {
     a {
         color: white;
         text-decoration: underline;
-    }    
+    }
 }
 
 @import "loading_bar";
@@ -54,9 +54,7 @@ footer {
 @import "nav";
 @import "home";
 @import "search";
-@import "network";
-@import "tabular";
-@import "text";
+@import "documents";
 @import "spinner";
 @import "entities";
 @import "collections";
@@ -70,7 +68,7 @@ footer {
     color: $page-bg;
 
     a {
-        color: $page-bg;        
+        color: $page-bg;
     }
 }
 

@@ -11,16 +11,10 @@ aleph.factory('Authz', ['$rootScope', function($rootScope) {
   return {
     collection: collection,
     entityWrite: function(entity) {
-      for (var i in entity.collection_id) {
-        var coll_id = entity.collection_id[i];
-        if (collection('write', coll_id)) {
-          return true;
-        }
-      }
-      return false;
+      return collection('write', entity.collection_id);
     },
     documentWrite: function(doc) {
-      return collection('write', doc.source_collection_id);
+      return collection('write', doc.collection_id);
     },
     collectionWrite: function(collection_id) {
       return collection('write', collection_id);

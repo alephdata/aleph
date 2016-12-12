@@ -48,11 +48,13 @@ def index():
 @blueprint.route('/api/1/collections', methods=['POST', 'PUT'])
 def create():
     request.authz.require(request.authz.logged_in)
-    collection = Collection.create(request_data(), request.auth_role)
+    data = request_data()
+    data['generate_entities'] = True
+    collection = Collection.create(data, request.authz.role)
     db.session.commit()
     update_collection(collection)
     log_event(request)
-    return view(collection.id)
+    return jsonify(collection)
 
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['GET'])
@@ -76,7 +78,8 @@ def update(id):
     return view(id)
 
 
-@blueprint.route('/api/1/collections/<int:id>/process', methods=['POST', 'PUT'])
+@blueprint.route('/api/1/collections/<int:id>/process',
+                 methods=['POST', 'PUT'])
 def process(id):
     collection = obj_or_404(Collection.by_id(id))
     request.authz.require(request.authz.collection_write(collection))
@@ -95,7 +98,7 @@ def pending(id):
     entities = []
     for entity in q.all():
         data = entity.to_dict()
-        data['name_latin'] = latinize_text(entity.name, lowercase=False)
+        data['name_latin'] = latinize_text(entity.name)
         entities.append(data)
     return jsonify({'results': entities, 'total': len(entities)})
 

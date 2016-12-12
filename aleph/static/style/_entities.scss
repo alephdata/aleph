@@ -1,6 +1,4 @@
 
-table.table {
-    .form-group {
-        margin-bottom: 0;
-    }
+.entity-header {
+    @extend .screen-header;
 }

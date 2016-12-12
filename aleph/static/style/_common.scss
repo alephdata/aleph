@@ -1,5 +1,5 @@
 
-// Angular ugliness fix 
+// Angular ugliness fix
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
@@ -17,9 +17,52 @@ a, .click {
         color: darken($brand-primary, 10%);
     }
 
-    &.btn.btn-primary:hover, 
+    &.btn.btn-primary:hover,
     &.btn.btn-primary:visited {
         color: white;
+    }
+}
+
+.screen-header {
+    @extend .container-fluid;
+
+    margin-top: -22px;
+    padding-top: 25px;
+    margin-bottom: 1em;
+    background-color: $gray-subtle;
+    // min-height: 15vH;
+
+    h2 {
+        font-size: 1.6em;
+        // font-weight: bolder;
+        // margin-top: 2vH;
+        margin-bottom: 0.9em;
+        float: left;
+
+        // .label {
+        //     display: inline-block;
+        //     font-size: 0.7em;
+        //     margin-top: -0.8em;
+        // }
+    }
+
+    ul.nav.nav-tabs {
+        margin-bottom: 0;
+    }
+
+    .actions {
+        // margin-top: 2vH;
+    }
+
+    .nav-tabs .badge {
+        padding: 2px 7px;
+        // background-color: $gray-subtle;
+    }
+}
+
+table.table {
+    .form-group {
+        margin-bottom: 0;
     }
 }
 
@@ -41,20 +84,6 @@ a, .click {
     }
 }
 
-// em {
-//     background-color: transparent;
-//     font-weight: bolder;
-//     font-style: normal;
-// }
-
-.thing-icon {
-    // to be used by both entity icons and graph node icons
-    .fa-codepoint {
-        font-family: 'FontAwesome';
-        font-style: normal;
-    }
-}
-
 code {
     background-color: lighten($aleph-dark, 70%);
     color: $aleph-dark;
@@ -69,4 +98,3 @@ td.nobreak, th.nobreak, td.numeric, th.numeric {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-

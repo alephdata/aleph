@@ -37,29 +37,24 @@
   records:
     - id: 9b052e79d3cbff66b4e9c1e943948bae
       name: KwaZulu
-      type: /entity/company.json#
+      type: Company
+      collection_id: 1000
       data:
         other_names:
           - name: kwazulu
     - id: 250e77f12a5ab6972a0895d290c4792f
       name: BaNana
-      type: /entity/person.json#
+      type: Person
+      collection_id: 2000
       data:
         other_names:
           - name: banana
-
-- table: collection_entity
-  records:
-    - entity_id: 250e77f12a5ab6972a0895d290c4792f
-      collection_id: 2000
-    - entity_id: 9b052e79d3cbff66b4e9c1e943948bae
-      collection_id: 1000
 
 - model: aleph.model.document.Document
   records:
     - id: 1000
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8291
-      source_collection_id: 1000
+      collection_id: 1000
       foreign_id: test1
       type: text
       _meta:
@@ -69,7 +64,7 @@
         languages: ['en']
     - id: 1001
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8292
-      source_collection_id: 2000
+      collection_id: 2000
       foreign_id: test2
       type: text
       _meta:
@@ -79,7 +74,7 @@
         languages: ['en']
     - id: 1002
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8294
-      source_collection_id: 1000
+      collection_id: 1000
       foreign_id: test3
       type: text
       _meta:
@@ -89,7 +84,7 @@
         languages: ['ru']
     - id: 1003
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8295
-      source_collection_id: 1000
+      collection_id: 1000
       foreign_id: test4
       type: tabular
       _meta:
@@ -113,17 +108,6 @@
                 name: Start_Date
               - label: End_Date
                 name: End_Date
-
-- table: collection_document
-  records:
-    - document_id: 1000
-      collection_id: 1000
-    - document_id: 1001
-      collection_id: 2000
-    - document_id: 1002
-      collection_id: 1000
-    - document_id: 1003
-      collection_id: 1000
 
 - model: aleph.model.document.DocumentPage
   records:

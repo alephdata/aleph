@@ -2,6 +2,7 @@ from elasticsearch.helpers import scan
 
 from aleph.core import es, es_index
 from aleph.index import TYPE_RECORD
+from aleph.util import ensure_list
 from aleph.search.fragments import text_query_string
 from aleph.search.util import execute_basic
 
@@ -68,9 +69,7 @@ def scan_entity_mentions(entity):
         '_source': ['document_id', 'text']
     }
     for res in scan(es, query=query, index=es_index, doc_type=[TYPE_RECORD]):
-        text = res.get('_source').get('text')
-        texts = text if isinstance(text, list) else [text]
-        for text in texts:
+        for text in ensure_list(res.get('_source').get('text')):
             yield (res.get('_source').get('document_id'), text)
 
 

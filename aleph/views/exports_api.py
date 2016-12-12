@@ -25,7 +25,7 @@ def get_results(query, limit):
                                 document_id=row.get('_id'))
         }
         for name, value in row.get('_source').items():
-            if name == 'source_collection_id':
+            if name == 'collection_id':
                 if value not in collections:
                     collections[value] = Collection.by_id(value)
                 if collections[value]:

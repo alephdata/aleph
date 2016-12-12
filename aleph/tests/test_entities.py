@@ -5,7 +5,7 @@ from apikit import jsonify
 
 from aleph.core import db
 from aleph.model import Collection, Entity, Alert
-# from aleph.model.entity_details import EntityAddress
+from aleph.index import index_entity
 from aleph.tests.util import TestCase
 
 
@@ -24,50 +24,36 @@ class EntitiesTestCase(TestCase):
         db.session.add(self.col_other)
         db.session.flush()
         self.ent = Entity.save({
-            '$schema': '/entity/legal_person.json#',
+            'schema': 'LegalEntity',
             'name': 'Winnie the Pooh',
-            'jurisdiction_code': 'pa',
-            'summary': 'a fictional teddy bear created by author A. A. Milne',
-            'identifiers': [{
-                'scheme': 'wikipedia',
-                'identifier': 'en:Winnie-the-Pooh'
-            }],
-            'other_names': [{
-                'name': u'Puh der Bär'
-            }, {
-                'name': 'Pooh Bear'
-            }]
-        }, [self.col])
-        db.session.add(self.ent)
-        db.session.flush()
+            'data': {
+                'country': 'pa',
+                'summary': 'a fictional teddy bear created by A. A. Milne',
+                'alias': [u'Puh der Bär', 'Pooh Bear']
+            }
+        }, self.col)
         self.other = Entity.save({
-            '$schema': '/entity/legal_person.json#',
+            'schema': 'LegalEntity',
             'name': 'Pu der Bär',
-            'jurisdiction_code': 'de',
-            'description': 'he is a bear',
-            'identifiers': [{
-                'scheme': 'wikipedia',
-                'identifier': 'en:Winnie-the-Pooh'
-            }, {
-                'scheme': 'animals',
-                'identifier': 'bears.winnie.pooh'
-            }],
-            'other_names': [{
-                'name': u'Puh der Bär'
-            }]
-        }, [self.col_other])
-        db.session.add(self.other)
+            'data': {
+                'country': 'de',
+                'description': 'he is a bear',
+                'alias': [u'Puh der Bär']
+            }
+        }, self.col)
         self.alert = Alert()
         self.alert.entity = self.other
         db.session.add(self.alert)
         db.session.commit()
+        index_entity(self.ent)
+        index_entity(self.other)
 
     def test_merge(self):
         self.ent.merge(self.other)
         db.session.flush()
         data = json.loads(jsonify(self.ent).data)
-        assert 'bear' in data['description'], data
-        assert 'pa' in data['jurisdiction_code'], data
+        assert 'bear' in data['data']['description'], data
+        assert 'pa' in data['data']['country'], data
         db.session.refresh(self.alert)
         assert self.alert.label == data['name']
         assert self.other.deleted_at is not None, self.other
@@ -75,9 +61,9 @@ class EntitiesTestCase(TestCase):
     def test_api_merge(self):
         url = '/api/1/entities/%s/merge/%s' % (self.ent.id, self.other.id)
         res = self.client.delete(url, data={}, content_type='application/json')
-        assert res.status_code == 403, res.json
+        assert res.status_code == 403, res.status_code
         self.login(is_admin=True)
         res = self.client.delete(url, data={}, content_type='application/json')
         data = res.json
-        assert 'bear' in data['description']
-        assert 'pa' in data['jurisdiction_code']
+        assert 'bear' in data['data']['description']
+        assert 'pa' in data['data']['country']

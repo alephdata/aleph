@@ -1,7 +1,8 @@
 import six
 
+from aleph.core import datasets
 from aleph.model import Entity, Collection
-from aleph.reference import COUNTRY_NAMES, LANGUAGE_NAMES
+from aleph.data.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 
 
 class Facet(object):
@@ -48,6 +49,18 @@ class Facet(object):
                                   key=lambda k: k['active'],
                                   reverse=True)),
         }
+
+
+class DatasetFacet(Facet):
+
+    def expand(self, keys):
+        labels = {}
+        for key in keys:
+            try:
+                labels[key] = {'label': datasets.get(key).label}
+            except NameError:
+                labels[key] = {'label': key}
+        return labels
 
 
 class CountryFacet(Facet):
@@ -106,7 +119,7 @@ def parse_facet_result(state, result):
         facet_cls = {
             'languages': LanguageFacet,
             'countries': CountryFacet,
-            'jurisdiction_code': CountryFacet,
+            'dataset': DatasetFacet,
             'entities': EntityFacet,
             'collections': CollectionFacet
         }.get(name, Facet)

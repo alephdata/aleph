@@ -15,11 +15,11 @@
           ng-blur="update(entity)">
       </td>
       <td>
-        <select ng-model="entity.$schema" name="schema" class="form-control"
-          ng-init="entity.$schema = availableSchemata[0]"
+        <select ng-model="entity.schema" name="schema" class="form-control"
+          ng-init="entity.schema = availableSchemata[0]"
           ng-blur="update(entity)">
           <option ng-repeat="schema in availableSchemata" value="{{schema}}">
-            {{schemata[schema].title}}
+            {{schemata.entities[schema].label}}
           </option>
         </select>
       </td>
@@ -27,8 +27,8 @@
         <entity-jurisdiction entity="entity" simple="true"></entity-jurisdiction>
       </td>
       <td>
-        <input type="text" class="form-control" id="summary" name="summary" ng-model="entity.summary"
-          placeholder="A short summary"
+        <input type="text" class="form-control" id="summary" name="summary"
+          ng-model="entity.data.summary" placeholder="A short summary"
           ng-blur="update(entity)" ng-focus="update(entity)"
           ng-model-options="{'updateOn': 'blur'}">
       </td>
@@ -55,9 +55,9 @@
     <tr ng-repeat="entity in created">
       <td ng-bind="::entity.name"></td>
       <td>
-        {{schemata[entity.$schema].title}}
+        {{schemata.entities[entity.schema].label}}
       </td>
-      <td class="numeric">{{entity.jurisdiction_code.toUpperCase()}}</td>
+      <td class="numeric">{{entity.country.toUpperCase()}}</td>
       <td class="numeric" width="1%">
         <button type="button" class="btn btn-default btn-xs"
           ng-click="editEntity($event, entity)">

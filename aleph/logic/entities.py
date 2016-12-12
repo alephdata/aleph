@@ -7,7 +7,7 @@ from collections import defaultdict
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.text import normalize_strong
 from aleph.model import Entity, Reference, Document, Alert
-from aleph.index import index_entity
+from aleph.index import index_entity, flush_index
 from aleph.index import delete_entity as index_delete
 from aleph.index.entities import delete_entity_references
 from aleph.index.entities import update_entity_references
@@ -27,8 +27,8 @@ def generate_entity_references(entity):
         return
 
     log.info("Updating document references: %r", entity)
-    rex = '|'.join(entity.regex_terms)
-    rex = re.compile('( |^)(%s)( |$)' % rex)
+    rex = '|'.join([t for t in entity.regex_terms])
+    rex = re.compile('(%s)' % rex)
 
     documents = defaultdict(int)
     try:
@@ -38,8 +38,9 @@ def generate_entity_references(entity):
                 continue
             for match in rex.finditer(text):
                 documents[document_id] += 1
-    except Exception:
-        log.exception('Failed to fully scan documents for entity refresh.')
+    except Exception as ex:
+        log.exception(ex)
+
     log.info("Re-matching %r gave %r documents.", entity,
              len(documents))
 
@@ -57,18 +58,20 @@ def generate_entity_references(entity):
 
     db.session.commit()
     delete_entity_references(entity.id)
-    update_entity_references(entity.id)
+    update_entity_references(entity)
 
 
 def update_entity(entity):
     reindex_entity(entity, references=False)
     update_entity_full.apply_async([entity.id], queue=USER_QUEUE,
                                    routing_key=USER_ROUTING_KEY)
+    # needed to make the call to view() work:
+    flush_index()
 
 
 def delete_entity(entity, deleted_at=None):
-    update_entity(entity)
     entity.delete(deleted_at=deleted_at)
+    update_entity(entity)
 
 
 @celery.task()

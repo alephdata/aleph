@@ -16,8 +16,8 @@ aleph.directive('metadataSidebar', ['$route', 'Collection', 'Document', 'Authz',
         })
       };
 
-      Collection.get(scope.doc.source_collection_id).then(function(coll) {
-        scope.sourceCollection = coll;
+      Collection.get(scope.doc.collection_id).then(function(coll) {
+        scope.collection = coll;
       });
     }
   };

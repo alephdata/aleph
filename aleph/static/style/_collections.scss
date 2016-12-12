@@ -1,37 +1,6 @@
 #collections-screen {
     .collection-header {
-        @extend .container-fluid;
-
-        margin-top: -22px;
-        padding-top: 25px;
-        margin-bottom: 1em;
-        background-color: $gray-subtle;
-
-        h2 {
-            font-size: 1.6em;
-            // font-weight: bolder;
-            margin-top: 0;
-            margin-bottom: 0.9em;
-            float: left;
-
-            // .label {
-            //     display: inline-block;
-            //     font-size: 0.7em;
-            //     margin-top: -0.8em;
-            // }
-        }
-
-        ul.nav.nav-tabs {
-            margin-bottom: 0;
-        }
-
-        .actions {
-        }
-
-        .nav-tabs .badge {
-            padding: 2px 7px;
-            // background-color: $gray-subtle;
-        }
+        @extend .screen-header;
     }
 
     #ingest-dropzone {

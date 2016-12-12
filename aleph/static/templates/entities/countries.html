@@ -1,0 +1,3 @@
+<span ng-repeat="country in entity.countries" uib-tooltip="{{countryNames[country]}}">
+  {{::country.toUpperCase()}} <span ng-if="!$last">&middot;</span>
+</span>

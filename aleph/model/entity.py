@@ -1,24 +1,19 @@
 import logging
 from datetime import datetime
 from sqlalchemy import func
-from sqlalchemy.orm import aliased, joinedload
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import joinedload
+from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 
-from aleph.core import db
-from aleph.text import normalize_strong
+from aleph.core import db, schemata
+from aleph.text import normalize_strong, string_value
+from aleph.util import ensure_list
+from aleph.data.keys import make_fingerprint
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
-from aleph.model.common import SoftDeleteModel, UuidModel
-from aleph.model.common import make_textid, make_fingerprint
-from aleph.model.validation import validate
-from aleph.model.util import merge_data
+from aleph.model.common import SoftDeleteModel, UuidModel, IdModel, DatedModel
+from aleph.model.common import make_textid, merge_data
 
 log = logging.getLogger(__name__)
-
-collection_entity_table = db.Table('collection_entity',
-    db.Column('entity_id', db.String(32), db.ForeignKey('entity.id')),  # noqa
-    db.Column('collection_id', db.Integer, db.ForeignKey('collection.id'))  # noqa
-)
 
 
 class Entity(db.Model, UuidModel, SoftDeleteModel):
@@ -27,13 +22,13 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     STATE_DELETED = 'deleted'
 
     name = db.Column(db.Unicode)
-    type = db.Column('type', db.String(255), index=True)
-    state = db.Column(db.String(128), nullable=True,
-                      default=STATE_ACTIVE)
+    type = db.Column(db.String(255), index=True)
+    state = db.Column(db.String(128), nullable=True, default=STATE_ACTIVE)
+    foreign_ids = db.Column(ARRAY(db.Unicode()))
     data = db.Column('data', JSONB)
 
-    collections = db.relationship(Collection, secondary=collection_entity_table,  # noqa
-                                  backref=db.backref('entities', lazy='dynamic'))  # noqa
+    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
+    collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic'))  # noqa
 
     def delete_references(self, origin=None):
         pq = db.session.query(Reference)
@@ -51,22 +46,37 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         self.state = self.STATE_DELETED
         super(Entity, self).delete(deleted_at=deleted_at)
 
+    @classmethod
+    def delete_dangling(cls, collection_id):
+        """Delete dangling entities.
+
+        Entities can dangle in pending state while they have no references
+        pointing to them, thus making it impossible to enable them. This is
+        a routine cleanup function.
+        """
+        q = db.session.query(cls)
+        q = q.filter(cls.collection_id == collection_id)
+        q = q.filter(cls.state == cls.STATE_PENDING)
+        q = q.outerjoin(Reference)
+        q = q.group_by(cls)
+        q = q.having(func.count(Reference.id) == 0)
+        for entity in q.all():
+            entity.delete()
+
     def merge(self, other):
         if self.id == other.id:
-            return
-
-        # merge collections
-        collections = list(self.collections)
-        for collection in other.collections:
-            if collection not in collections:
-                self.collections.append(collection)
+            raise ValueError("Cannot merge an entity with itself.")
+        if self.collection_id != other.collection_id:
+            raise ValueError("Cannot merge entities from different collections.")  # noqa
 
         data = merge_data(self.data, other.data)
         if self.name.lower() != other.name.lower():
-            data = merge_data(data, {'other_names': [{'name': other.name}]})
+            data = merge_data(data, {'alias': [other.name]})
 
         self.data = data
         self.state = self.STATE_ACTIVE
+        self.foreign_ids = self.foreign_ids or []
+        self.foreign_ids += other.foreign_ids or []
         self.created_at = min((self.created_at, other.created_at))
         self.updated_at = datetime.utcnow()
 
@@ -86,38 +96,34 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         db.session.commit()
         db.session.refresh(other)
 
-    def update(self, data):
-        validate(data, self.type)
-        data.pop('deleted_at', None)
-        data.pop('updated_at', None)
-        data.pop('created_at', None)
-        data.pop('id', None)
-        self.name = data.pop('name')
-        self.state = data.pop('state', self.STATE_ACTIVE)
-        self.data = data
+    def update(self, entity):
+        data = entity.get('data') or {}
+        data['name'] = entity.get('name')
+        self.data = self.schema.validate(data)
+        self.name = self.data.pop('name')
+        fid = [string_value(f) for f in entity.get('foreign_ids') or []]
+        self.foreign_ids = list(set([f for f in fid if f is not None]))
+        self.state = entity.pop('state', self.STATE_ACTIVE)
         self.updated_at = datetime.utcnow()
         db.session.add(self)
 
     @classmethod
-    def save(cls, data, collections, merge=False):
+    def save(cls, data, collection, merge=False):
         ent = cls.by_id(data.get('id'))
         if ent is None:
             ent = cls()
-            ent.type = data.pop('$schema', None)
+            ent.type = data.pop('schema', None)
             if ent.type is None:
                 raise ValueError("No schema provided.")
             ent.id = make_textid()
 
         if merge:
             data = merge_data(data, ent.to_dict())
-            for collection in ent.collections:
-                if collection.id not in [c.id for c in collections]:
-                    collections.append(collection)
 
-        if not len(collections):
+        if collection is None:
             raise ValueError("No collection specified.")
 
-        ent.collections = collections
+        ent.collection = collection
         ent.update(data)
         return ent
 
@@ -130,10 +136,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             if isinstance(collection, Collection):
                 collection = collection.id
             collection_ids.append(collection)
-        coll = aliased(Collection)
-        q = q.join(coll, Entity.collections)
-        q = q.filter(coll.id.in_(collection_ids))
-        q = q.filter(coll.deleted_at == None)  # noqa
+        q = q.filter(Entity.collection_id.in_(collection_ids))
         return q
 
     @classmethod
@@ -142,7 +145,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             return {}
         q = cls.all()
         q = cls.filter_collections(q, collections=collections)
-        q = q.options(joinedload('collections'))
+        q = q.options(joinedload('collection'))
         q = q.filter(cls.id.in_(ids))
         entities = {}
         for ent in q:
@@ -150,20 +153,26 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return entities
 
     @classmethod
+    def by_foreign_id(cls, foreign_id, collection_id, deleted=False):
+        foreign_id = string_value(foreign_id)
+        if foreign_id is None:
+            return None
+        q = cls.all(deleted=deleted)
+        q = q.filter(Entity.collection_id == collection_id)
+        foreign_id = func.cast([foreign_id], ARRAY(db.Unicode()))
+        q = q.filter(cls.foreign_ids.contains(foreign_id))
+        q = q.order_by(Entity.deleted_at.desc().nullsfirst())
+        return q.first()
+
+    @classmethod
     def latest(cls):
         q = db.session.query(func.max(cls.updated_at))
         q = q.filter(cls.state == cls.STATE_ACTIVE)
         return q.scalar()
 
-    @classmethod
-    def all_by_document(cls, document_id):
-        from aleph.model.reference import Reference
-        q = cls.all()
-        q = q.options(joinedload('collections'))
-        q = q.filter(cls.state == cls.STATE_ACTIVE)
-        q = q.join(Reference)
-        q = q.filter(Reference.document_id == document_id)
-        return q.distinct()
+    @property
+    def schema(self):
+        return schemata.get(self.type)
 
     @property
     def fingerprint(self):
@@ -172,9 +181,10 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     @property
     def terms(self):
         terms = set([self.name])
-        for other_name in self.data.get('other_names', []):
-            terms.update(other_name.get('name'))
-        return [t for t in terms if t is not None and len(t)]
+        for alias in ensure_list(self.data.get('alias')):
+            if alias is not None and len(alias):
+                terms.add(alias)
+        return terms
 
     @property
     def regex_terms(self):
@@ -182,19 +192,19 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         # If, for example, and entity matches both "Al Qaeda" and
         # "Al Qaeda in Iraq, Syria and the Levant", it is useless to
         # search for the latter.
-        terms = [' %s ' % normalize_strong(t) for t in self.terms]
+        terms = set([normalize_strong(t) for t in self.terms])
         regex_terms = set()
         for term in terms:
-            if len(term) < 4 or len(term) > 120:
+            if term is None or len(term) < 4 or len(term) > 120:
                 continue
             contained = False
             for other in terms:
-                if other == term:
+                if other is None or other == term:
                     continue
                 if other in term:
                     contained = True
             if not contained:
-                regex_terms.add(term.strip())
+                regex_terms.add(term)
         return regex_terms
 
     def __repr__(self):
@@ -204,13 +214,14 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return self.name
 
     def to_dict(self):
-        data = dict(self.data)
-        data.update(super(Entity, self).to_dict())
+        data = super(Entity, self).to_dict()
         data.update({
-            '$schema': self.type,
+            'schema': self.type,
             'name': self.name,
             'state': self.state,
-            'collection_id': [c.id for c in self.collections]
+            'data': self.data,
+            'foreign_ids': self.foreign_ids or [],
+            'collection_id': self.collection_id
         })
         return data
 
@@ -218,6 +229,11 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return {
             'id': self.id,
             'name': self.name,
-            '$schema': self.type,
-            'collection_id': [c.id for c in self.collections]
+            'schema': self.type,
+            'collection_id': self.collection_id
         }
+
+
+class EntityIdentity(db.Model, IdModel, DatedModel):
+    entity_id = db.Column(db.String(255), index=True)
+    identity = db.Column(db.String(255), index=True)

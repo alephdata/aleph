@@ -26,7 +26,7 @@ def format_results(alert, results):
     qs = 'dq=%s' % quote_plus(alert.query_text or '')
     output = []
     for result in results['results']:
-        collection_id = result.pop('source_collection_id', None)
+        collection_id = result.pop('collection_id', None)
         if not collection_id:
             continue
         result['collection'] = Collection.by_id(collection_id)

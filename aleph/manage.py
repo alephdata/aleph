@@ -6,14 +6,15 @@ from flask_script.commands import ShowUrls
 from flask_assets import ManageAssets
 from flask_migrate import MigrateCommand
 
-from aleph.core import create_app, archive
+from aleph.core import create_app, archive, datasets
 from aleph.model import db, upgrade_db, Collection, Document
 from aleph.views import mount_app_blueprints, assets
 from aleph.analyze import install_analyzers
 from aleph.ingest import reingest_collection
 from aleph.index import init_search, delete_index, upgrade_search
-from aleph.index import index_document_id
+from aleph.index import index_document_id, delete_dataset
 from aleph.logic import reindex_entities, delete_collection, analyze_collection
+from aleph.logic import load_dataset
 from aleph.logic.alerts import check_alerts
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
@@ -111,16 +112,29 @@ def reingest(foreign_id):
 def index(foreign_id=None):
     """Index documents in the given collection (or throughout)."""
     q = Document.all_ids()
+    # re-index newest document first.
+    q = q.order_by(Document.id.desc())
     if foreign_id:
         collection = Collection.by_foreign_id(foreign_id)
         if collection is None:
             raise ValueError("No such collection: %r" % foreign_id)
-        clause = Collection.id == collection.id
-        q = q.filter(Document.collections.any(clause))
-    for doc_id, in q:
+        q = q.filter(Document.collection_id == collection.id)
+    for doc_id, in q.yield_per(10000):
         index_document_id.delay(doc_id)
     if foreign_id is None:
         reindex_entities()
+
+
+@manager.command
+def loaddataset(name):
+    """Index all the entities in a given dataset."""
+    dataset = datasets.get(name)
+    load_dataset(dataset)
+
+
+@manager.command
+def deletedataset(name):
+    delete_dataset(name)
 
 
 @manager.command
@@ -166,14 +180,20 @@ def installdata():
 def evilshit():
     """EVIL: Delete all data and recreate the database."""
     delete_index()
-    db.drop_all()
     from sqlalchemy import MetaData, inspect
+    from sqlalchemy.exc import InternalError
     from sqlalchemy.dialects.postgresql import ENUM
     metadata = MetaData()
     metadata.bind = db.engine
     metadata.reflect()
-    for table in metadata.sorted_tables:
-        table.drop(checkfirst=True)
+    tables = list(metadata.sorted_tables)
+    while len(tables):
+        for table in tables:
+            try:
+                table.drop(checkfirst=True)
+                tables.remove(table)
+            except InternalError:
+                pass
     for enum in inspect(db.engine).get_enums():
         enum = ENUM(name=enum['name'])
         enum.drop(bind=db.engine, checkfirst=True)

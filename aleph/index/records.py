@@ -6,7 +6,7 @@ from elasticsearch.helpers import bulk, scan
 
 from aleph.core import es, es_index
 from aleph.model import Document
-from aleph.text import latinize_text
+from aleph.text import latinize_text, string_value
 from aleph.index.mapping import TYPE_RECORD
 
 log = logging.getLogger(__name__)
@@ -16,9 +16,7 @@ def clear_records(document_id):
     """Delete all records associated with the given document."""
     q = {
         'query': {
-            'term': {
-                'document_id': document_id
-            }
+            'term': {'document_id': document_id}
         },
         '_source': False
     }
@@ -42,11 +40,16 @@ def clear_records(document_id):
 
 
 def generate_records(document):
+    """Generate index records, based on document rows or pages."""
     if document.type == Document.TYPE_TEXT:
         for page in document.pages:
             tid = sha1(str(document.id))
             tid.update(str(page.id))
             tid = tid.hexdigest()
+
+            text = string_value(page.text)
+            latin = latinize_text(text)
+
             yield {
                 '_id': tid,
                 '_type': TYPE_RECORD,
@@ -56,17 +59,20 @@ def generate_records(document):
                     'type': 'page',
                     'content_hash': document.content_hash,
                     'document_id': document.id,
-                    'collection_id': document.collection_ids,
+                    'collection_id': document.collection_id,
                     'page': page.number,
-                    'text': page.text,
-                    'text_latin': latinize_text(page.text)
+                    'text': text,
+                    'text_latin': latin
                 }
             }
     elif document.type == Document.TYPE_TABULAR:
         for record in document.records:
-            text = record.text
+            data = {k: string_value(v) for (k, v) in record.data.items()}
+
+            text = [v for v in data.values() if v is not None]
             latin = [latinize_text(t) for t in text]
             latin = [t for t in latin if t not in text]
+
             yield {
                 '_id': record.tid,
                 '_type': TYPE_RECORD,
@@ -76,11 +82,11 @@ def generate_records(document):
                     'type': 'row',
                     'content_hash': document.content_hash,
                     'document_id': document.id,
-                    'collection_id': document.collection_ids,
+                    'collection_id': document.collection_id,
                     'row_id': record.row_id,
                     'sheet': record.sheet,
                     'text': text,
                     'text_latin': latin,
-                    'raw': record.data
+                    'raw': data
                 }
             }

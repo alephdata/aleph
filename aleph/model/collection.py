@@ -1,15 +1,14 @@
 import logging
 from datetime import datetime
 from sqlalchemy import func, cast, or_
-from sqlalchemy.orm import aliased
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db, url_for
+from aleph.data.validate import validate
 from aleph.model.role import Role
 from aleph.model.permission import Permission
-from aleph.model.util import ModelFacets
-from aleph.model.common import SoftDeleteModel, IdModel, make_token
-from aleph.model.validation import validate
+from aleph.model.common import IdModel, make_textid
+from aleph.model.common import ModelFacets, SoftDeleteModel
 
 log = logging.getLogger(__name__)
 
@@ -58,20 +57,14 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
 
         This is used for entity review.
         """
-        from aleph.model.entity import Entity, collection_entity_table
-        from aleph.model.document import collection_document_table
+        from aleph.model.entity import Entity
         from aleph.model.reference import Reference
-        cet = aliased(collection_entity_table)
-        cdt = aliased(collection_document_table)
         q = db.session.query(Entity)
         q = q.filter(Entity.state == Entity.STATE_PENDING)
         q = q.join(Reference, Reference.entity_id == Entity.id)
-        q = q.join(cet, cet.c.entity_id == Entity.id)
-        q = q.join(cdt, cdt.c.document_id == Reference.document_id)
-        q = q.filter(cet.c.collection_id == self.id)
-        q = q.filter(cdt.c.collection_id == self.id)
+        q = q.filter(Entity.collection_id == self.id)
         q = q.group_by(Entity)
-        return q.order_by(func.count(Reference.id).desc())
+        return q.order_by(func.sum(Reference.weight).desc())
 
     @classmethod
     def by_foreign_id(cls, foreign_id, deleted=False):
@@ -82,7 +75,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
 
     @classmethod
     def create(cls, data, role=None):
-        foreign_id = data.get('foreign_id') or make_token()
+        foreign_id = data.get('foreign_id') or make_textid()
         collection = cls.by_foreign_id(foreign_id, deleted=True)
         if collection is None:
             collection = cls()
@@ -133,11 +126,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
         return self._is_public
 
     def get_document_count(self):
-        from aleph.model.document import Document, collection_document_table
-        q = Document.all()
-        q = q.join(collection_document_table)
-        q = q.filter(collection_document_table.c.collection_id == self.id)
-        return q.count()
+        return self.documents.count()
 
     def get_crawler_state_count(self):
         from aleph.model.crawler_state import CrawlerState
@@ -150,10 +139,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
         return q.count()
 
     def get_entity_count(self, state=None):
-        from aleph.model.entity import Entity, collection_entity_table
+        from aleph.model.entity import Entity
         q = Entity.all()
-        q = q.join(collection_entity_table)
-        q = q.filter(collection_entity_table.c.collection_id == self.id)
+        q = q.filter(Entity.collection_id == self.id)
         if state is not None:
             q = q.filter(Entity.state == state)
         return q.count()

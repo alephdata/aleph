@@ -3,14 +3,15 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
 
   $scope.blocked = false;
   $scope.entity = entity;
-  $scope.entity.jurisdiction_code = entity.jurisdiction_code || null;
+  $scope.entity.country = entity.country || null;
   $scope.originalName = entity.name + '';
   $scope.section = 'base';
-  $scope.isEntity = entity.$schema == '/entity/entity.json#';
-  $scope.isPerson = entity.$schema == '/entity/person.json#';
-  $scope.isCompany = entity.$schema == '/entity/company.json#';
-  $scope.isOrganization = (entity.$schema == '/entity/organization.json#') || $scope.isCompany;
-  $scope.newOtherName = {editing: false};
+  $scope.isEntity = entity.schema == 'LegalEntity';
+  $scope.isPerson = entity.schema == 'Person';
+  $scope.isCompany = entity.schema == 'Company';
+  $scope.isOrganization = (entity.schema == 'Organization') || $scope.isCompany;
+  $scope.newAlias = null;
+  $scope.newAliasEditing = false;
   $scope.duplicateOptions = [];
   // console.log(entity, $scope.isPerson);
 
@@ -37,38 +38,25 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   initDedupe();
   initAlerts();
 
-  $scope.editOtherName = function(flag) {
-    $scope.newOtherName.editing = flag;
+  $scope.editAlias = function(flag) {
+    $scope.newAliasEditing = flag;
   };
 
-  $scope.addOtherName = function() {
-    var newOtherName = angular.copy($scope.newOtherName);
-    newOtherName.display_name = newOtherName.name;
-    $scope.newOtherName = {editing: true};
-    $scope.entity.other_names.push(newOtherName);
+  $scope.addAlias = function() {
+    var newAlias = angular.copy($scope.newAlias);
+    $scope.newAlias = null;
+    $scope.entity.data.alias = $scope.entity.data.alias || [];
+    $scope.entity.data.alias.push(newAlias);
   };
 
-  $scope.canAddOtherName = function() {
-    return $scope.newOtherName.name && $scope.newOtherName.name.length > 2;
+  $scope.canAddAlias = function() {
+    return $scope.newAlias && $scope.newAlias.length > 2;
   };
 
-  $scope.removeOtherName = function(other_name) {
-    var idx = $scope.entity.other_names.indexOf(other_name);
+  $scope.removeAlias = function(alias) {
+    var idx = $scope.entity.data.alias.indexOf(alias);
     if (idx != -1) {
-      $scope.entity.other_names.splice(idx, 1);
-    };
-  };
-
-  $scope.updateOtherName = function(other_name) {
-    if (other_name.display_name.trim().length > 2) {
-      other_name.name = other_name.display_name;
-    };
-  };
-
-  $scope.removeIdentifier = function(identifier) {
-    var idx = $scope.entity.identifiers.indexOf(identifier);
-    if (idx != -1) {
-      $scope.entity.identifiers.splice(idx, 1);
+      $scope.entity.data.alias.splice(idx, 1);
     };
   };
 
@@ -134,10 +122,10 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
 
     // check that we're not in the process of adding alternate
     // names and accidentally submitting the form.
-    if ($scope.newOtherName.editing) {
+    if ($scope.newAliasEditing) {
       // todo, detect save button clicks.
-      if ($scope.canAddOtherName()) {
-        $scope.addOtherName();
+      if ($scope.canAddAlias()) {
+        $scope.addAlias();
       }
       return false;
     }

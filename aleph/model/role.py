@@ -3,8 +3,8 @@ from uuid import uuid4
 from flask import current_app
 
 from aleph.core import db, url_for, get_config
+from aleph.data.validate import validate
 from aleph.model.common import SoftDeleteModel, IdModel
-from aleph.model.validation import validate
 
 log = logging.getLogger(__name__)
 

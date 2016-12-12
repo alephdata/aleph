@@ -13,7 +13,6 @@ from chardet.universaldetector import UniversalDetector
 from aleph.core import get_config
 from aleph.ingest import ingest_directory
 from aleph.ingest.ingestor import Ingestor
-from aleph.text import string_value
 from aleph.util import make_tempdir, remove_tempdir
 
 log = logging.getLogger(__name__)
@@ -33,7 +32,9 @@ class PackageIngestor(Ingestor):
                 break
 
         detector.close()
-        encoding = detector.result.get('encoding', 'utf-8')
+        encoding = detector.result.get('encoding')
+        if encoding in ['ascii', None]:
+            encoding = 'utf-8'
         log.info('Detected filename encoding: %s', encoding)
 
         for name in pack.namelist():

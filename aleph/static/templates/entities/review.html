@@ -6,7 +6,7 @@
         <div class="panel-body">
           <div class="form-group" ng-class="{'has-error': reviewEntity.name.$invalid}">
             <label class="control-label" for="name">
-              Name <span ng-if="!selectSchema">of {{schemata[entity.$schema].title}}</span>
+              Name <span ng-if="!selectSchema">of {{schemata.entities[entity.schema].label}}</span>
             </label>
             <input type="text" class="form-control input-lg" id="name" name="name" ng-model="entity.name"
               placeholder="Entity Name" required ng-minlength="3">
@@ -32,7 +32,7 @@
             </tr>
             <tr ng-repeat="opt in duplicateOptions track by opt.id">
               <td><a ng-click="editDuplicate(opt)">{{opt.name}}</a></td>
-              <td class="numeric">{{opt.jurisdiction_code.toUpperCase()}}</td>
+              <td class="numeric">{{opt.country.toUpperCase()}}</td>
               <td class="numeric">{{opt.score | number: 1}}</td>
               <td>
                 <a ng-click="mergeDuplicate(opt)" class="btn btn-primary btn-xs">

@@ -9,14 +9,13 @@ aleph.directive('searchResult', ['$location', '$route', '$sce', 'Document',
     },
     templateUrl: 'templates/documents/search_result.html',
     link: function (scope, element, attrs) {
-      var collectionId = scope.doc.source_collection_id || scope.doc.collection_id[0],
-          collectionFacet = scope.result.facets.collections || {},
+      var collectionFacet = scope.result.facets.collections || {},
           collections = collectionFacet.values || [];
 
       for (var i in collections) {
         var collection = collections[i];
-        if (collection.id == collectionId) {
-          scope.sourceCollection = collection;
+        if (collection.id == scope.doc.collection_id) {
+          scope.collection = collection;
         }
       }
 

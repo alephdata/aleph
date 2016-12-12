@@ -56,19 +56,19 @@ aleph.filter('language', ['Metadata', function(Metadata) {
 }]);
 
 
-aleph.filter('schemaPlural', ['Metadata', function(Metadata) {
+aleph.filter('schemaLabel', ['Metadata', function(Metadata) {
   var schemata = {};
 
   Metadata.get().then(function(md) {
     schemata = md.schemata;
   });
 
-  return function(schema_id) {
-    if (schemata[schema_id]) {
-      return schemata[schema_id].plural;
-    }
-    return schema_id;
+  return function(schema, plural) {
+    var obj = schemata[schema];
+    if (!obj) return schema;
+    return plural ? obj.plural : obj.label;
   };
+
 }]);
 
 
