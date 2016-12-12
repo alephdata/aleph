@@ -21,9 +21,6 @@ assets-dev: assets
 test:
 	PGPASSWORD=aleph psql -h postgres -U aleph -c 'drop database if exists aleph_test;'
 	PGPASSWORD=aleph psql -h postgres -U aleph -c 'create database aleph_test;'
-	ALEPH_TEST_SETTINGS=$(ALEPH_SETTINGS) \
-	SQLALCHEMY_DATABASE_URI=postgresql://aleph:aleph@postgres/aleph_test \
-	ELASTICSEARCH_INDEX=aleph_test \
 	nosetests --with-coverage --cover-package=aleph --cover-erase
 
 base:

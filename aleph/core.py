@@ -38,10 +38,7 @@ WORKER_ROUTING_KEY = 'worker.process'
 def create_app(config={}):
     app = Flask('aleph')
     app.config.from_object(default_settings)
-    if config.get('TESTING'):
-        app.config.from_envvar('ALEPH_TEST_SETTINGS', silent=True)
-    else:
-        app.config.from_envvar('ALEPH_SETTINGS', silent=True)
+    app.config.from_envvar('ALEPH_SETTINGS', silent=True)
     app.config.update(config)
     app_name = app.config.get('APP_NAME')
 

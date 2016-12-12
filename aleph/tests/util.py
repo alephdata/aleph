@@ -3,6 +3,7 @@ import shutil
 from tempfile import mkdtemp
 from flask_testing import TestCase as FlaskTestCase
 from flask_fixtures import loaders, load_fixtures
+from faker import Factory
 
 from aleph.model import Role, Document, create_system_roles
 from aleph.index import delete_index, init_search, flush_index
@@ -17,9 +18,13 @@ FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
 
 class TestCase(FlaskTestCase):
 
+    # Expose faker since it should be easy to use
+    fake = Factory.create()
+
     def create_app(self):
         self.temp_dir = mkdtemp()
         oauth.remote_apps = {}
+        app_name = 'aleph_test_name'
         app = create_app({
             'DEBUG': True,
             'TESTING': True,
@@ -27,8 +32,12 @@ class TestCase(FlaskTestCase):
             'SECRET_KEY': 'batman',
             'ARCHIVE_TYPE': 'file',
             'ARCHIVE_PATH': self.temp_dir,
-            'APP_NAME': 'aleph_test_name',
+            'APP_NAME': app_name,
             'PRESERVE_CONTEXT_ON_EXCEPTION': False,
+            'SQLALCHEMY_DATABASE_URI': (
+                os.environ.get('ALEPH_DATABASE_URI') + '_test'),
+            'ELASTICSEARCH_INDEX': (
+                os.environ.get('ELASTICSEARCH_INDEX', app_name) + '_test'),
             'CELERY_ALWAYS_EAGER': True
         })
         mount_app_blueprints(app)

@@ -1,0 +1,3 @@
+faker
+factory_boy
+nose
