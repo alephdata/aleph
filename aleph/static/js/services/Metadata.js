@@ -22,6 +22,11 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $roo
         schemata[name] = new alephCore.Schema(name, metadata.schemata[name]);
       }
       metadata.schemata = schemata;
+      metadata.bindSchema = function(obj) {
+        obj.$schema = metadata.schemata[obj.schema];
+        obj.binds = obj.$schema.bindData(obj);
+        return obj;
+      };
 
       $rootScope.session = session;
       dfd.resolve(metadata);

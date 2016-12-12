@@ -7,7 +7,7 @@ from aleph.logic import update_entity, delete_entity
 from aleph.views.cache import enable_cache
 from aleph.events import log_event
 from aleph.search import QueryState
-from aleph.search import entities_query
+from aleph.search import entities_query, links_query
 from aleph.search import suggest_entities, similar_entities, load_entity
 
 blueprint = Blueprint('entities_api', __name__)
@@ -58,6 +58,14 @@ def all():
     return jsonify({'results': [r[0] for r in q]})
 
 
+@blueprint.route('/api/1/entities/_suggest', methods=['GET'])
+def suggest():
+    enable_cache(vary_user=True, server_side=False)
+    prefix = request.args.get('prefix')
+    min_count = int(request.args.get('min_count', 0))
+    return jsonify(suggest_entities(prefix, request.authz, min_count))
+
+
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
 def create():
     data = request_data()
@@ -88,12 +96,12 @@ def view(id):
     return jsonify(entity)
 
 
-@blueprint.route('/api/1/entities/_suggest', methods=['GET'])
-def suggest():
-    enable_cache(vary_user=True, server_side=False)
-    prefix = request.args.get('prefix')
-    min_count = int(request.args.get('min_count', 0))
-    return jsonify(suggest_entities(prefix, request.authz, min_count))
+@blueprint.route('/api/1/entities/<id>/links', methods=['GET'])
+def links(id):
+    entity, obj = get_entity(id, request.authz.READ)
+    state = QueryState(request.args, request.authz)
+    res = links_query(entity['id'], state)
+    return jsonify(res)
 
 
 @blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])

@@ -28,3 +28,7 @@ alephCore.Schema.prototype.bindData = function(data) {
     return a.property.label.localeCompare(b.property.label);
   });
 };
+
+alephCore.Schema.prototype.getLinkLabel = function(obj) {
+  return obj.inverted ? this.data.reverse : this.data.forward;
+};

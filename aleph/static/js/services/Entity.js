@@ -4,51 +4,58 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
   var getById = function(id) {
     var dfd = $q.defer(),
         url = '/api/1/entities/' + id;
-    $http.get(url).then(function(res) {
-      dfd.resolve(res.data);
+    Metadata.get().then(function(metadata) {
+      $http.get(url).then(function(res) {
+        var entity = metadata.bindSchema(res.data);
+        dfd.resolve(entity);
+      }, function(err) {
+        dfd.reject(err);
+      });
     }, function(err) {
       dfd.reject(err);
     });
+
+    return dfd.promise;
+  }
+
+  var searchQuery = function(query, state) {
+    var dfd = $q.defer();
+    state['offset'] = state.offset || 0;
+    Metadata.get().then(function(metadata) {
+      $http.get('/api/1/entities', {params: state}).then(function(res) {
+        for (var i in res.data.results) {
+          metadata.bindSchema(res.data.results[i]);
+        }
+        dfd.resolve({
+          'query': query,
+          'result': res.data
+        });
+      }, function(err) {
+        dfd.reject(err);
+      });
+    }, function(err) {
+      dfd.reject(err);
+    });
+
     return dfd.promise;
   }
 
   return {
     searchCollection: function(collection_id) {
-      var dfd = $q.defer();
       var query = Query.parse(),
           state = angular.copy(query.state);
       state['limit'] = 20;
       state['filter:collection_id'] = collection_id;
       state['doc_counts'] = 'true';
       state['facet'] = ['countries', 'schemata'];
-      state['offset'] = state.offset || 0;
-      $http.get('/api/1/entities', {params: state}).then(function(res) {
-        dfd.resolve({
-          'query': query,
-          'result': res.data
-        });
-      }, function(err) {
-        dfd.reject(err);
-      });
-      return dfd.promise;
+      return searchQuery(query, state);
     },
     search: function() {
-      var dfd = $q.defer();
       var query = Query.parse(),
           state = angular.copy(query.state);
       state['limit'] = 30;
-      state['doc_counts'] = 'false';
       state['facet'] = ['countries', 'schemata', 'dataset', 'collections'];
-      state['offset'] = state.offset || 0;
-      $http.get('/api/1/entities', {params: state}).then(function(res) {
-        dfd.resolve({
-          'query': query,
-          'result': res.data
-        });
-      }, function(err) {
-        dfd.reject(err);
-      });
-      return dfd.promise;
+      return searchQuery(query, state);
     },
     create: function(entity) {
       var instance = $uibModal.open({

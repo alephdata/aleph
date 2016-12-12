@@ -63,6 +63,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     reloadOnSearch: false,
     resolve: {
       'entity': loadEntity,
+      'links': loadEntityLinks,
       'metadata': loadMetadata
     }
   });

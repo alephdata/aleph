@@ -112,13 +112,14 @@ def reingest(foreign_id):
 def index(foreign_id=None):
     """Index documents in the given collection (or throughout)."""
     q = Document.all_ids()
+    # re-index newest document first.
+    q = q.order_by(Document.id.desc())
     if foreign_id:
         collection = Collection.by_foreign_id(foreign_id)
         if collection is None:
             raise ValueError("No such collection: %r" % foreign_id)
-        clause = Collection.id == collection.id
-        q = q.filter(Document.collections.any(clause))
-    for doc_id, in q:
+        q = q.filter(Document.collection_id == collection.id)
+    for doc_id, in q.yield_per(10000):
         index_document_id.delay(doc_id)
     if foreign_id is None:
         reindex_entities()
