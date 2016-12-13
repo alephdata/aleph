@@ -53,8 +53,8 @@ def upgrade():
     q = sa.select([entity_table])
     rp = bind.execute(q)
     entities_all = rp.fetchall()
-    for entity in entities_all:
-        log.info("Process [%(id)s]: %(name)s", entity)
+    for i, entity in enumerate(entities_all):
+        log.info("Process [%s: %s]: %s", i, entity.id, entity.name)
 
         if entity.deleted_at is not None:
             cq = sa.delete(alert_table)
@@ -97,18 +97,15 @@ def upgrade():
         cq = cq.where(alert_table.c.entity_id == entity.id)
         alerts = bind.execute(cq).fetchall()
 
-        cq = sa.select([reference_table])
+        cq = sa.select([reference_table, document_table.c.collection_id])
+        cq = cq.select_from(reference_table.join(document_table, reference_table.c.document_id == document_table.c.id))  # noqa
         cq = cq.where(reference_table.c.entity_id == entity.id)
         references = bind.execute(cq).fetchall()
-        document_ids = [r.document_id for r in references]
-
-        cq = sa.select([document_table])
-        cq = cq.where(document_table.c.id.in_(document_ids))
-        documents = bind.execute(cq).fetchall()
 
         cq = sa.select([collection_entity_table])
         cq = cq.where(collection_entity_table.c.entity_id == entity.id)
         colls = bind.execute(cq).fetchall()
+
         identity = uuid.uuid4().hex
         for i, coll in enumerate(colls):
             coll_id = coll.collection_id
@@ -160,31 +157,18 @@ def upgrade():
                     bind.execute(q)
 
             for ref in references:
-                collection_id = None
-                for doc in documents:
-                    if doc.id == ref.document_id:
-                        collection_id = doc.collection_id
-                if collection_id is None:
-                    q = sa.delete(reference_table)
-                    q = q.where(reference_table.c.id == ref.id)
-                    bind.execute(q)
-                    continue
+                refdata = dict(ref)
+                collection_id = refdata.pop('collection_id')
                 if entity.state == 'pending' and coll_id == collection_id:
                     q = sa.update(reference_table)
                     q = q.where(reference_table.c.id == ref.id)
                     q = q.values(entity_id=eid)
                     bind.execute(q)
                 if entity.state == 'active' and eid != ref.entity_id:
-                    rd = dict(ref)
-                    rd.pop('id', None)
-                    rd['entity_id'] = eid
-                    q = sa.insert(reference_table).values(rd)
+                    refdata.pop('id', None)
+                    refdata['entity_id'] = eid
+                    q = sa.insert(reference_table).values(refdata)
                     bind.execute(q)
-
-    # cq = sa.select([entity_table])
-    # cq = cq.where(entity_table.c.collection_id == None)
-    # for e in bind.execute(cq).fetchall():
-    #     pprint(dict(e))
 
     op.drop_table('collection_document')
     op.drop_table('collection_entity')
