@@ -5,10 +5,14 @@ Revises: 235fd19bb942
 Create Date: 2016-12-01 10:24:07.638773
 
 """
-from pprint import pprint
+import logging
+
+# from pprint import pprint
 from alembic import op
 import sqlalchemy as sa
 import uuid
+
+log = logging.getLogger('migrate')
 
 revision = '4212acfa7aec'
 down_revision = '235fd19bb942'
@@ -48,10 +52,9 @@ def upgrade():
     alert_table = meta.tables['alert']
     q = sa.select([entity_table])
     rp = bind.execute(q)
-    while True:
-        entity = rp.fetchone()
-        if entity is None:
-            break
+    entities_all = rp.fetchall()
+    for entity in entities_all:
+        log.info("Process [%(id)s]: %(name)s", entity)
 
         if entity.deleted_at is not None:
             cq = sa.delete(alert_table)
