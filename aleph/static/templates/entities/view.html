@@ -38,10 +38,10 @@
   </div>
 </div>
 
-<div class="container-fluid" ng-if="links.total">
+<div class="container-fluid" ng-if="links.result.total">
   <div class="row">
     <div class="col-md-12">
-      <h3>Relationships</h3>
+      <h3><a id="links"></a>Relationships</h3>
     </div>
   </div>
   <div class="row">
@@ -51,7 +51,7 @@
           <th width="15%">Type</th>
           <th colspan="2">Entity</th>
         </tr>
-        <tbody ng-repeat="link in links.results track by link.id">
+        <tbody ng-repeat="link in links.result.results track by link.id">
           <tr>
             <td>{{::link.$schema.getLinkLabel(link)}}</td>
             <td colspan="2">
@@ -63,7 +63,7 @@
           </tr>
           <tr ng-repeat="bind in link.binds track by bind.property.name">
             <td></td>
-            <th width="30%">{{::bind.property.label}}</th>
+            <th width="20%">{{::bind.property.label}}</th>
             <td>
               <property-values values="bind.values" property="bind.property">
               </property-values>
@@ -73,12 +73,28 @@
       </table>
       <div class="bottom-pager">
         <div class="pull-right">
-          <response-pager response="links" load="loadLinksOffset(offset)"></response-pager>
+          <response-pager response="links.result" load="loadLinksOffset(offset)"></response-pager>
         </div>
-        <div class="total" ng-if="links.limit > 0 && links.total > links.limit">
-          {{links.total | number}} relationships.
+        <div class="total" ng-if="links.result.total > links.result.limit">
+          {{links.result.total | number}} relationships.
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h3><a id="debug"></a>Debug information</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <p>
+        Fingerprints:
+        <code ng-bind="entity.fingerprints | json"></code>
+      </p>
     </div>
   </div>
 </div>

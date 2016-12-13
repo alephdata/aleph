@@ -1,17 +1,16 @@
-aleph.controller('EntitiesViewCtrl', ['$scope', '$route', 'Authz', 'Title', 'Entity', 'entity', 'links', 'metadata',
-    function($scope, $route, Authz, Title, Entity, entity, links, metadata) {
+aleph.controller('EntitiesViewCtrl', ['$scope', '$route', '$location', '$anchorScroll', 'Authz', 'Title', 'Entity', 'Link', 'entity', 'links', 'metadata',
+    function($scope, $route, $location, $anchorScroll, Authz, Title, Entity, Link, entity, links, metadata) {
 
+  Title.set(entity.name, "entities");
   $scope.authz = Authz;
   $scope.metadata = metadata;
   $scope.entity = entity;
-
   $scope.links = links;
 
-  Title.set(entity.name, "entities");
-
   $scope.loadLinksOffset = function(offset) {
-    $scope.query.set('links_offset', offset);
-    // $anchorScroll();
+    $scope.links.query.set('offset', offset);
+    $location.hash('links')
+    $anchorScroll();
   };
 
   $scope.edit = function() {
@@ -19,5 +18,11 @@ aleph.controller('EntitiesViewCtrl', ['$scope', '$route', 'Authz', 'Title', 'Ent
       $route.reload();
     });
   };
+
+  $scope.$on('$routeUpdate', function() {
+    Link.search(entity.id).then(function(links) {
+      $scope.links = links;
+    });
+  });
 
 }]);

@@ -2,8 +2,29 @@
 aleph.factory('Query', ['$route', '$location', '$httpParamSerializer',
     function($route, $location, $httpParamSerializer) {
 
-  var ParsedQuery = function() {
-    this.state = $location.search();
+  var ParsedQuery = function(prefix) {
+    var search = $location.search();
+    this.prefix = prefix || '';
+    this.state = {};
+    for (var key in search) {
+      if (key.startsWith(this.prefix)) {
+        this.state[key.substr(this.prefix.length)] = search[key];
+      }
+    }
+  };
+
+  ParsedQuery.prototype.update = function() {
+    var search = angular.copy($location.search());
+    for (var key in search) {
+      if (key.startsWith(this.prefix)) {
+        delete search[key];
+      }
+    }
+    for (var key in this.state) {
+      search[this.prefix + key] = this.state[key];
+    }
+    $location.search(search);
+    return search;
   };
 
   ParsedQuery.prototype.toString = function() {
@@ -27,7 +48,7 @@ aleph.factory('Query', ['$route', '$location', '$httpParamSerializer',
   ParsedQuery.prototype.getQ = function() {
     var q = this.state.q || '';
     q = q.trim();
-    if (!q.length) { 
+    if (!q.length) {
       return null;
     }
     return q;
@@ -38,13 +59,14 @@ aleph.factory('Query', ['$route', '$location', '$httpParamSerializer',
   };
 
   ParsedQuery.prototype.clear = function() {
-    $location.search({});
+    this.state = {};
+    this.update();
   };
 
   ParsedQuery.prototype.set = function(name, val) {
     this.state.offset = 0;
     this.state[name] = val;
-    $location.search(this.state);
+    this.update();
   };
 
   ParsedQuery.prototype.toggle = function(name, val) {
@@ -76,8 +98,8 @@ aleph.factory('Query', ['$route', '$location', '$httpParamSerializer',
   };
 
   return {
-    parse: function() {
-      return new ParsedQuery();
+    parse: function(prefix) {
+      return new ParsedQuery(prefix);
     }
   };
 }]);

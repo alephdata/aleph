@@ -1,5 +1,5 @@
-aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$route', '$http', '$httpParamSerializer', '$uibModal', '$q', 'Alert', 'Metadata',
-    function($scope, $rootScope, $location, $anchorScroll, $route, $http, $httpParamSerializer, $uibModal, $q, Alert, Metadata) {
+aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$httpParamSerializer', '$uibModal', 'cfpLoadingBar', 'Alert', 'Metadata',
+    function($scope, $rootScope, $location, $anchorScroll, $httpParamSerializer, $uibModal, cfpLoadingBar, Alert, Metadata) {
 
   $scope.session = {logged_in: false};
   $scope.routeLoaded = false;
@@ -12,14 +12,17 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
   });
 
   $rootScope.$on("$routeChangeStart", function (event, next, current) {
+    cfpLoadingBar.start();
     $scope.reportLoading(true);
   });
 
   $rootScope.$on("$routeChangeSuccess", function (event, next, current) {
+    cfpLoadingBar.complete();
     $scope.reportLoading(false);
   });
 
   $rootScope.$on("$routeChangeError", function (event, next, current, rejection) {
+    cfpLoadingBar.complete();
     $scope.routeFailed = true;
     $scope.routeError = rejection;
     // console.log('Error', rejection);
