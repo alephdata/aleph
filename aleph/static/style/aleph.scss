@@ -72,6 +72,14 @@ footer {
     }
 }
 
+#maintenance {
+    text-align: center;
+    background-color: $brand-warning;
+    color: white;
+    font-weight: bold;
+    padding: 0.5em 0 0.5em 0;
+}
+
 #page {
     position: relative;
     min-height: 95vh;

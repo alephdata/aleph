@@ -9,6 +9,7 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
 
   Metadata.get().then(function(metadata) {
     $scope.session = metadata.session;
+    $scope.metadata = metadata;
   });
 
   $rootScope.$on("$routeChangeStart", function (event, next, current) {

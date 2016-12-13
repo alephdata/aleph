@@ -36,7 +36,7 @@ def view(id):
 @blueprint.route('/api/1/roles/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     role = obj_or_404(Role.by_id(id))
-    request.authz.require(request.authz.logged_in)
+    request.authz.require(request.authz.session_write())
     request.authz.require(role.id == request.authz.role.id)
     role.update(request_data())
     db.session.add(role)

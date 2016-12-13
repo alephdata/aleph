@@ -17,6 +17,7 @@ def index():
 
 @blueprint.route('/api/1/crawlers', methods=['POST', 'PUT'])
 def queue():
+    request.authz.require(request.authz.session_write())
     request.authz.require(request.authz.is_admin)
     data = request_data()
     crawler_id = data.get('crawler_id')

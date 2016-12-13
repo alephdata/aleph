@@ -12,6 +12,9 @@ APP_LOGO = '/static/images/aleph_small.png'
 APP_FAVICON = '/static/images/aleph_small.png'
 APP_BASEURL = 'http://localhost:5000/'
 
+# Puts the system into read-only mode and displays a warning.
+MAINTENANCE = False
+
 # Archive type (either S3 or file, i.e. local file system):
 ARCHIVE_TYPE = 'file'
 ARCHIVE_AWS_KEY_ID = env.get('AWS_ACCESS_KEY_ID')

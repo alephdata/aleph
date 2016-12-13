@@ -39,7 +39,6 @@ def load_role():
 @blueprint.route('/api/1/sessions')
 def status():
     enable_cache(vary_user=True)
-
     providers = sorted(oauth.remote_apps.values(), key=lambda p: p.label)
     providers = [{
         'name': p.name,

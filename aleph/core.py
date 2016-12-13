@@ -94,7 +94,6 @@ def create_app(config={}):
     # applications can register their behaviour.
     for plugin in get_init():
         plugin(app=app)
-
     return app
 
 

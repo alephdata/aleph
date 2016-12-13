@@ -59,6 +59,7 @@ def metadata():
     enable_cache(server_side=False)
     return jsonify({
         'status': 'ok',
+        'maintenance': request.authz.in_maintenance,
         'app': {
             'title': six.text_type(app_title),
             'url': six.text_type(app_url),

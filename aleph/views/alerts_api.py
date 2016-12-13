@@ -19,7 +19,7 @@ def index():
 
 @blueprint.route('/api/1/alerts', methods=['POST', 'PUT'])
 def create():
-    request.authz.require(request.authz.logged_in)
+    request.authz.require(request.authz.session_write())
     alert = Alert.create(request_data(), request.authz.role)
     db.session.commit()
     log_event(request)
@@ -36,7 +36,7 @@ def view(id):
 
 @blueprint.route('/api/1/alerts/<int:id>', methods=['DELETE'])
 def delete(id):
-    request.authz.require(request.authz.logged_in)
+    request.authz.require(request.authz.session_write())
     alert = obj_or_404(Alert.by_id(id, role=request.authz.role))
     alert.delete()
     db.session.commit()

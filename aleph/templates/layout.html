@@ -15,6 +15,11 @@
     <base href="{{url_for('.ui')}}">
   </head>
   <body ng-controller="AppCtrl" ng-keyup="keyDownNotify($event)">
+    <div id="maintenance" ng-cloak ng-if="metadata.maintenance">
+      {{config.APP_TITLE}} is currently under maintenance. No changes can be made
+      to the system.
+    </div>
+
     <div id="page" ng-show="session.roles">
       <nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container-fluid">
@@ -84,12 +89,12 @@
                   </li>
                 </ul>
               </li>
-              <li ng-show="session.logged_in">
+              <li ng-show="session.logged_in && !metadata.maintenance">
                 <a ng-click="editProfile($event)">
                   <i class="fa fa-fw fa-cog"></i> Settings
                 </a>
               </li>
-              <li ng-show="session.logged_in">
+              <li ng-show="session.logged_in && !metadata.maintenance">
                 <a ng-click="manageAlerts($event)">
                   <i class="fa fa-fw fa-bell"></i> Alerts
                 </a>

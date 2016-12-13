@@ -1,7 +1,6 @@
-from flask import request, current_app
 from werkzeug.exceptions import Forbidden
 
-from aleph.core import db
+from aleph.core import db, get_config
 from aleph.model import Collection, Role, Permission
 from aleph.util import ensure_list
 
@@ -29,6 +28,7 @@ class Authz(object):
         self.role = role
         self.logged_in = role is not None
         self.is_admin = False
+        self.in_maintenance = get_config('MAINTENANCE')
 
         if self.logged_in:
             self.is_admin = role.is_admin
@@ -65,6 +65,10 @@ class Authz(object):
             for collection_id, in q:
                 self.collections[self.READ].add(collection_id)
                 self.collections[self.WRITE].add(collection_id)
+
+        # Disable all in maintenance mode.
+        if self.in_maintenance:
+            self.collections[self.WRITE] = set()
 
         self.collections_read = list(self.collections[self.READ])
         self.collections_write = list(self.collections[self.WRITE])
@@ -108,6 +112,11 @@ class Authz(object):
         if not len(intersect) and default_all:
             return available
         return list(intersect)
+
+    def session_write(self):
+        if self.in_maintenance:
+            return False
+        return self.logged_in
 
     def check_roles(self, roles):
         isect = self.roles.intersection(ensure_list(roles))

@@ -18,6 +18,7 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $roo
           metadata = angular.extend(results[1].data, {session: session}),
           schemata = {};
 
+      // TODO: move the schema stuff somewhere else?
       for (var name in metadata.schemata) {
         schemata[name] = new alephCore.Schema(name, metadata.schemata[name]);
       }
@@ -29,6 +30,7 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $roo
       };
 
       $rootScope.session = session;
+
       dfd.resolve(metadata);
     }, function(err) {
       dfd.reject(err);
