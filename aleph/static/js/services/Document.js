@@ -42,7 +42,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
             'result': err.data
           });
         } else {
-          dfd.reject(err);  
+          dfd.reject(err);
         }
       });
       return dfd.promise;

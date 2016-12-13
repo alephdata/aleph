@@ -19,7 +19,7 @@
           ng-init="entity.schema = availableSchemata[0]"
           ng-blur="update(entity)">
           <option ng-repeat="schema in availableSchemata" value="{{schema}}">
-            {{schemata.entities[schema].label}}
+            {{schemata[schema].label}}
           </option>
         </select>
       </td>
@@ -55,7 +55,7 @@
     <tr ng-repeat="entity in created">
       <td ng-bind="::entity.name"></td>
       <td>
-        {{schemata.entities[entity.schema].label}}
+        {{schemata[entity.schema].label}}
       </td>
       <td class="numeric">{{entity.country.toUpperCase()}}</td>
       <td class="numeric" width="1%">

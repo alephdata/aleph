@@ -64,13 +64,6 @@ def records(document_id):
     enable_cache(vary_user=True)
     state = QueryState(request.args, request.authz)
     query = records_query(document.id, state)
-    if query is None:
-        return jsonify({
-            'status': 'ok',
-            'message': 'no query'
-        })
-    query['size'] = state.limit
-    query['from'] = state.offset
     result = execute_records_query(query)
     params = next_params(request.args, result)
     if params is not None:

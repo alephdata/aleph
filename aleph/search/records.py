@@ -11,7 +11,10 @@ SNIPPET_SIZE = 100
 
 def records_query(document_id, state, size=5):
     shoulds = records_query_shoulds(state)
-    return records_query_internal(document_id, shoulds, size=size)
+    query = records_query_internal(document_id, shoulds, size=size)
+    query['size'] = state.limit
+    query['from'] = state.offset
+    return query
 
 
 def records_query_shoulds(state):
@@ -79,6 +82,7 @@ def execute_records_query(query):
     for rec in hits.get('hits', []):
         record = rec.get('_source')
         record['score'] = rec.get('_score')
-        record['text'] = rec.get('highlight', {}).get('text')
+        for text in rec.get('highlight', {}).get('text', []):
+            record['text'] = text
         output['results'].append(record)
     return output
