@@ -24,7 +24,11 @@ class PolyglotEntityAnalyzer(Analyzer):
 
     def prepare(self):
         self.collection = self.document.collection
-        self.disabled = not self.collection.generate_entities
+        # Collections managed by the system do not use this advanced entity
+        # extraction. This used to be a separate toggle, but the use cases
+        # for managed collections and entity generation simply seem to
+        # overlap.
+        self.disabled = self.collection.managed
         if self.document.type != self.document.TYPE_TEXT:
             self.disabled = True
         self.entity_schemata = defaultdict(list)

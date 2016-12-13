@@ -49,7 +49,7 @@ def index():
 def create():
     request.authz.require(request.authz.logged_in)
     data = request_data()
-    data['generate_entities'] = True
+    data['managed'] = False
     collection = Collection.create(data, request.authz.role)
     db.session.commit()
     update_collection(collection)
