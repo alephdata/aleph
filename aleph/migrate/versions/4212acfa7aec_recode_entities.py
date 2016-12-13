@@ -172,7 +172,7 @@ def upgrade():
 
     op.drop_table('collection_document')
     op.drop_table('collection_entity')
-    op.alter_column('entity', 'collection_id', nullable=False)  # noqa
+    # op.alter_column('entity', 'collection_id', nullable=False)  # noqa
 
 
 def downgrade():

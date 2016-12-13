@@ -68,33 +68,8 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
   };
 
   $scope.removeSelection = function($event) {
-    // this has two distinct functions: delete entities which 
-    // are exclusive to this collection, and otherwise remove
-    // the entity from the current collection.
-    var entities = $scope.getSelection(),
-        toDelete = [];
-    for (var i in entities) {
-      var entity = entities[i];
-      if (entity.collection_id.length == 1) {
-        toDelete.push(entity);
-      } else {
-        // this entity is in other collections, just remove
-        // the current one.
-        Entity.get(entity.id).then(function(entity) {
-          // reloading. not entirely sure this is needed, but we
-          // don't want to save stale entities.
-          var collIdx = entity.collection_id.indexOf(collection.id);
-          entity.collection_id.splice(collIdx, 1);
-          Entity.save(entity).then(function() {
-            $timeout(function() {
-              reloadSearch();
-            }, 500);
-          });
-        });
-      }
-    }
-
-    Entity.deleteMany(toDelete).then(function() {
+    var entities = $scope.getSelection();
+    Entity.deleteMany(entities).then(function() {
       $timeout(function() {
         reloadSearch();
       }, 500);
@@ -122,11 +97,11 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
   var updateSearch = function(data) {
     $scope.result = data.result;
     $scope.query = data.query;
-    
+
     if (data.query.getQ()) {
       Title.set("Browse for '" + data.query.getQ() + "'", "collections");
     } else {
-      Title.set("Browse entities", "collections");  
+      Title.set("Browse entities", "collections");
     }
   };
 
