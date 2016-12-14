@@ -33,7 +33,8 @@ class MetaFolderCrawler(Crawler):
             label = coll_data.get('label', coll_fk)
             self.collections[coll_fk] = Collection.create({
                 'foreign_id': coll_fk,
-                'label': label
+                'label': label,
+                'managed': True
             })
             if coll_data.get('public'):
                 Permission.grant_foreign(self.collections[coll_fk],

@@ -1,12 +1,12 @@
 import logging
 from urllib import quote_plus
-from flask import request, render_template, current_app
+from flask import render_template, current_app
 
 from aleph.authz import Authz
 from aleph.core import app_title, app_url, db, celery
 from aleph.model import Role, Alert, Collection
 from aleph.notify import notify_role
-from aleph.search.alerts import alert_query
+from aleph.search import QueryState, documents_query
 
 log = logging.getLogger(__name__)
 
@@ -51,7 +51,13 @@ def check_role_alerts(authz):
         return
     log.info('Alerting %r, %d alerts...', authz.role, len(alerts))
     for alert in alerts:
-        results = alert_query(alert, authz)
+        args = {
+            'q': alert.query_text,
+            'entity': alert.entity_id,
+            'limit': 50
+        }
+        state = QueryState(args, authz)
+        results = documents_query(state, since=alert.notified_at)
         if results['total'] == 0:
             continue
         log.info('Found %d new results for: %r', results['total'], alert.label)

@@ -7,7 +7,7 @@ from aleph.views.util import get_document
 from aleph.events import log_event
 # from aleph.model import Collection
 from aleph.search import QueryState
-from aleph.search import documents_query, execute_documents_query
+from aleph.search import documents_query
 from aleph.search import records_query, execute_records_query
 from aleph.search.peek import peek_query
 from aleph.search.util import next_params
@@ -20,12 +20,7 @@ blueprint = Blueprint('search_api', __name__)
 def query():
     enable_cache(vary_user=True)
     state = QueryState(request.args, request.authz)
-    query = documents_query(state)
-    query['size'] = state.limit
-    query['from'] = state.offset
-    # import json
-    # print json.dumps(query, indent=2)
-    result = execute_documents_query(state, query)
+    result = documents_query(state)
     params = next_params(request.args, result)
     log_event(request)
     if params is not None:
@@ -37,9 +32,7 @@ def query():
 def statistics():
     enable_cache(vary_user=True)
     state = QueryState(request.args, request.authz, limit=0)
-    query = documents_query(state)
-    query['size'] = 0
-    result = execute_documents_query(state, query)
+    result = documents_query(state)
     return jsonify({
         'document_count': result['total'],
         'collection_count': len(request.authz.collections_read)

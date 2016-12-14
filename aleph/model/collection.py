@@ -53,7 +53,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
 
     def pending_entities(self):
         """Generate a ranked list of the most commonly used pending entities.
-
         This is used for entity review.
         """
         from aleph.model.entity import Entity

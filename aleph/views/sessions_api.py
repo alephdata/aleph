@@ -30,10 +30,10 @@ def load_role():
             auth_header = request.headers.get('Authorization') or ''
             if auth_header.lower().startswith('apikey'):
                 api_key = auth_header.split(' ', 1).pop()
+
         role = Role.by_api_key(api_key)
-        if role is None:
-            return
-        request.authz = Authz(role=role)
+        if role is not None:
+            request.authz = Authz(role=role)
 
 
 @blueprint.route('/api/1/sessions')

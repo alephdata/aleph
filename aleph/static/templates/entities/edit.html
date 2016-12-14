@@ -44,10 +44,10 @@
           variations, names in other scripts or well-known aliases.
         </p>
         <table class="table">
-          <tr ng-repeat="alias in entity.data.alias">
+          <tr ng-repeat="alias in entity.data.alias track by $index">
             <td>
               <input type="text" class="form-control input" id="new_name" name="new_name"
-                ng-model="alias" ng-minlength="3">
+                ng-model="alias" ng-minlength="3" ng-blur="editAlias($index, alias)">
             </td>
             <td width="1%">
               <button type="button" class="btn btn-default btn"
@@ -60,7 +60,7 @@
             <td>
               <input type="text" class="form-control input" id="new_name" name="new_name"
                 ng-model="newAlias" placeholder="Add an alternate name..."
-                ng-focus="editAlias(true)" ng-blur="editAlias(false)">
+                ng-focus="editNewAlias(true)" ng-blur="editNewAlias(false)">
             </td>
             <td width="1%">
               <button type="button" class="btn btn-success btn"
@@ -154,6 +154,16 @@
             <textarea class="form-control" id="description" name="description"
               ng-model="entity.data.description" rows="4"></textarea>
             <p class="help-block">Provide biographical background about this entity.</p>
+          </div>
+        </div>
+
+        <div class="form-group" ng-if="entity.foreign_ids.length">
+          <label class="control-label" for="foreign_ids">
+            Foreign ID
+          </label>
+          <div ng-repeat="foreign_id in entity.foreign_ids">
+            <input type="text" class="form-control" id="foreign_ids"
+                   ng-model="foreign_id" readonly>
           </div>
         </div>
       </div>

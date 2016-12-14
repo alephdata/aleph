@@ -30,6 +30,10 @@ class QueryState(object):
         return max(0, self.getint('offset', 0))
 
     @property
+    def facet_size(self):
+        return self.getint('offset', 50)
+
+    @property
     def page(self):
         if self.limit == 0:
             return 1

@@ -13,7 +13,6 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   $scope.newAlias = null;
   $scope.newAliasEditing = false;
   $scope.duplicateOptions = [];
-  // console.log(entity, $scope.isPerson);
 
   var initDedupe = function() {
     $http.get('/api/1/entities/' + entity.id + '/similar').then(function(res) {
@@ -38,8 +37,12 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   initDedupe();
   initAlerts();
 
-  $scope.editAlias = function(flag) {
+  $scope.editNewAlias = function(flag) {
     $scope.newAliasEditing = flag;
+  };
+
+  $scope.editAlias = function($index, value) {
+    $scope.entity.data.alias[$index] = value;
   };
 
   $scope.addAlias = function() {

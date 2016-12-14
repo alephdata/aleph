@@ -1,5 +1,6 @@
 import re
 from copy import deepcopy
+from elasticsearch.helpers import scan
 
 from aleph.core import es, es_index
 
@@ -50,3 +51,8 @@ def next_params(args, result):
                 continue
             params[k] = v
         return params
+
+
+def scan_iter(query, type):
+    """Scan the results of a query. No pagination is applied."""
+    return scan(es, query=query, index=es_index, doc_type=type)

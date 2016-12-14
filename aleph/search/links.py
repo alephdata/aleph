@@ -36,7 +36,7 @@ def links_query(origin_id, state):
     q = add_filter(q, {'terms': {'roles': list(state.authz.roles)}})
 
     aggs = {'scoped': {'global': {}, 'aggs': {}}}
-    aggs = aggregate(q, aggs, state.facet_names)
+    aggs = aggregate(state, q, aggs, state.facet_names)
 
     if state.sort == 'score':
         sort = ['_score']

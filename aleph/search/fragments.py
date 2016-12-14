@@ -2,8 +2,6 @@ from aleph.index import TYPE_RECORD
 from aleph.text import latinize_text
 from aleph.search.util import add_filter
 
-FACET_SIZE = 50
-
 
 def match_all():
     return {'match_all': {}}
@@ -69,11 +67,11 @@ def child_record(q):
     }
 
 
-def aggregate(q, aggs, facets):
+def aggregate(state, q, aggs, facets):
     """Generate aggregations, a generalized way to do facetting."""
     for facet in facets:
         aggs.update({facet: {
-            'terms': {'field': facet, 'size': FACET_SIZE}}
+            'terms': {'field': facet, 'size': state.facet_size}}
         })
     return aggs
 

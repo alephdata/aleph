@@ -42,9 +42,9 @@ def entities_query(state, fields=None, facets=True, doc_counts=False):
     if facets:
         facets = list(state.facet_names)
         if 'collections' in facets:
-            aggs = facet_collections(q, aggs, state)
+            aggs = facet_collections(state, q, aggs)
             facets.remove('collections')
-        aggs = aggregate(q, aggs, facets)
+        aggs = aggregate(state, q, aggs, facets)
 
     if state.sort == 'doc_count':
         sort = [{'doc_count': 'desc'}, '_score']
@@ -102,7 +102,7 @@ def load_entity(entity_id):
     return entity
 
 
-def facet_collections(q, aggs, state):
+def facet_collections(state, q, aggs):
     filters = state.filters
     filters['collection_id'] = state.authz.collections_read
     aggs['scoped']['aggs']['collections'] = {
@@ -111,7 +111,7 @@ def facet_collections(q, aggs, state):
         },
         'aggs': {
             'collections': {
-                'terms': {'field': 'collection_id', 'size': 1000}
+                'terms': {'field': 'collection_id', 'size': state.facet_size}
             }
         }
     }
