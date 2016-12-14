@@ -10,7 +10,8 @@ from aleph.model import db, upgrade_db, Collection, Document, Entity
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
 from aleph.ingest import reingest_collection
-from aleph.index import init_search, delete_index, upgrade_search
+from aleph.index import(
+    init_search, delete_index, upgrade_search, delete_pending)
 from aleph.index import index_document_id, delete_dataset
 from aleph.logic import reindex_entities, delete_collection, analyze_collection
 from aleph.logic import load_dataset, update_entity_full
@@ -204,6 +205,12 @@ def evilshit():
         enum = ENUM(name=enum['name'])
         enum.drop(bind=db.engine, checkfirst=True)
     init()
+
+
+@manager.command
+def delete_pending_entities():
+    """Deletes any pending entities and related items."""
+    delete_pending()
 
 
 def main():
