@@ -17,3 +17,5 @@ celerybeat-schedule.db
 aleph.env
 test_settings.py
 .coverage
+
+node_modules
