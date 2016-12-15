@@ -1,12 +1,14 @@
 from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, Pager, request_data, arg_bool
 
-from aleph.core import USER_QUEUE, USER_ROUTING_KEY
-from aleph.model import Collection, db
+from aleph.core import USER_QUEUE, USER_ROUTING_KEY, get_config, db
+from aleph.model import Collection
+from aleph.search import QueryState
 from aleph.events import log_event
 from aleph.logic import delete_collection, update_collection
 from aleph.logic import analyze_collection
 from aleph.text import latinize_text
+from aleph.data.reference import COUNTRY_NAMES
 
 blueprint = Blueprint('collections_api', __name__)
 
@@ -15,6 +17,7 @@ blueprint = Blueprint('collections_api', __name__)
 def index():
     # allow to filter for writeable collections only, needed
     # in some UI scenarios:
+    state = QueryState(request.args, request.authz)
     permission = request.args.get('permission')
     if permission not in [request.authz.READ, request.authz.WRITE]:
         permission = request.authz.READ
@@ -22,25 +25,33 @@ def index():
 
     # Other filters for navigation
     label = request.args.get('label')
-    countries = request.args.getlist('countries')
-    category = request.args.getlist('category')
-    managed = arg_bool('managed', True) if 'managed' in request.args else None
+    managed = state.getbool('managed', None)
 
     # Include counts (of entities, documents) in list view?
-    counts = arg_bool('counts', False)
+    counts = state.getbool('counts', False)
 
     def converter(colls):
         return [c.to_dict(counts=counts) for c in colls]
 
     facet = [f.lower().strip() for f in request.args.getlist('facet')]
-    q = Collection.find(label=label, countries=countries, category=category,
-                        collection_id=collections, managed=managed)
+    q = Collection.find(label=label,
+                        countries=state.getfilter('countries'),
+                        category=state.getfilter('category'),
+                        collection_id=collections,
+                        managed=managed)
     data = Pager(q).to_dict(results_converter=converter)
     facets = {}
     if 'countries' in facet:
-        facets['countries'] = Collection.facet_by(q, Collection.countries)
+        facets['countries'] = {
+            'values': Collection.facet_by(q, Collection.countries,
+                                          mapping=COUNTRY_NAMES)
+        }
     if 'category' in facet:
-        facets['category'] = Collection.facet_by(q, Collection.category)
+        mapping = get_config('COLLECTION_CATEGORIES', {})
+        facets['category'] = {
+            'values': Collection.facet_by(q, Collection.category,
+                                          mapping=mapping)
+        }
     data['facets'] = facets
     return jsonify(data)
 

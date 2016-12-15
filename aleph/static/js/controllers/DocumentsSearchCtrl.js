@@ -79,7 +79,7 @@ aleph.controller('DocumentsSearchCtrl', ['$scope', '$route', '$location', '$time
     } else {
       Title.set("Search documents", "documents");
     }
-    $scope.reportLoading(false);
+    // $scope.reportLoading(false);
   };
 
   updateSearch(data);

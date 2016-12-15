@@ -1,5 +1,5 @@
 
-// List entities page 
+// List entities page
 .nav.nav-tabs {
     margin-bottom: 1em;
 }
@@ -9,31 +9,41 @@
 }
 
 .right-text {
-    text-align: right;   
+    text-align: right;
 }
 
 .panel.panel-default.panel-facet {
     margin-bottom: $padding-base-vertical * 2;
 
-    &.panel-facet-scroll {
-        ul {
-            max-height: 15em;
-            overflow-y: scroll;
-            overflow: -moz-scrollbars-vertical;
-        }
-    }
-
     ul {
+        max-height: 20em;
+        overflow-y: scroll;
+        overflow: -moz-scrollbars-vertical;
+
         li.list-group-item {
-            cursor: pointer;
-            white-space: nowrap;
-            text-overflow: hidden;
-            overflow-x: hidden;      
+            display: -ms-flex;
+	        display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: row;
+            flex-direction: row;
+            align-items: center;
 
             .badge {
                 background-color: $page-bg;
                 color: $text-muted;
                 padding-right: 0;
+                float: none;
+                text-align: right;
+                flex-grow: 1;
+            }
+
+            .lbl {
+                cursor: pointer;
+                white-space: nowrap;
+                overflow-x: hidden;
+                text-overflow: ellipsis;
+                flex-shrink: 1;
+                // min-width: 0;
             }
 
             &.empty {
@@ -52,8 +62,8 @@
                     color: white;
                 }
             }
-        }    
-    }      
+        }
+    }
 }
 
 .search-bar {
@@ -86,7 +96,7 @@
     }
 }
 
-// Search results 
+// Search results
 .search-result {
     padding: 1em 0 1.5em 0;
     border-bottom: 1px solid $gray-subtle;

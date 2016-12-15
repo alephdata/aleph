@@ -1,4 +1,3 @@
-import six
 from apikit.args import BOOL_TRUISH
 from werkzeug.datastructures import MultiDict
 
@@ -119,6 +118,10 @@ class QueryState(object):
         filters['collection_id'] = self.collection_id
         return filters
 
+    def getfilter(self, name):
+        filters = self.filters.get(name) or []
+        return list(filters)
+
     @property
     def items(self):
         for (k, v) in self.args.iteritems(multi=True):
@@ -146,6 +149,7 @@ class QueryState(object):
             return default
 
     def getbool(self, name, default=False):
-        value = self.get(name, default)
-        value = six.text_type(value).strip().lower()
-        return value in BOOL_TRUISH
+        value = self.get(name)
+        if value is None:
+            return default
+        return value.lower() in BOOL_TRUISH

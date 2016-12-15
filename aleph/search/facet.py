@@ -1,6 +1,6 @@
 import six
 
-from aleph.core import datasets
+from aleph.core import datasets, schemata
 from aleph.model import Entity, Collection
 from aleph.data.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 
@@ -45,6 +45,7 @@ class Facet(object):
             results.append(bucket)
 
         return {
+            'type': type(self).__name__.replace('Facet', '').lower(),
             'values': list(sorted(results,
                                   key=lambda k: k['active'],
                                   reverse=True)),
@@ -58,6 +59,18 @@ class DatasetFacet(Facet):
         for key in keys:
             try:
                 labels[key] = {'label': datasets.get(key).label}
+            except NameError:
+                labels[key] = {'label': key}
+        return labels
+
+
+class SchemaFacet(Facet):
+
+    def expand(self, keys):
+        labels = {}
+        for key in keys:
+            try:
+                labels[key] = {'label': schemata.get(key).plural}
             except NameError:
                 labels[key] = {'label': key}
         return labels
@@ -121,6 +134,8 @@ def parse_facet_result(state, result):
             'countries': CountryFacet,
             'dataset': DatasetFacet,
             'entities': EntityFacet,
+            'schema': SchemaFacet,
+            'schemata': SchemaFacet,
             'collections': CollectionFacet
         }.get(name, Facet)
         facets[name] = facet_cls(state, name, aggs).to_dict()

@@ -42,10 +42,10 @@
               <th>Collections by country</th>
               <th></th>
             </tr>
-            <tr ng-repeat="country in facets.countries | limitTo: 10">
+            <tr ng-repeat="country in facets.countries.values | limitTo: 10">
               <td>
-                <a ng-href="/collections?countries={{::country.value}}">
-                  {{::country.value | country}}
+                <a ng-href="/collections?countries={{::country.id}}">
+                  {{::country.label | country}}
                 </a>
               </td>
               <td class="numeric">{{::country.count | number}}</td>
@@ -62,10 +62,10 @@
               <th>Collections by category</th>
               <th></th>
             </tr>
-            <tr ng-repeat="category in facets.category">
+            <tr ng-repeat="category in facets.category.values">
               <td>
-                <a ng-href="/collections?category={{::category.value}}">
-                  {{::category.value | collectionCategory}}</td>
+                <a ng-href="/collections?category={{::category.id}}">
+                  {{::category.label | collectionCategory}}</td>
                 </a>
               </td>
               <td class="numeric">{{::category.count | number}}</td>

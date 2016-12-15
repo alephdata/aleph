@@ -85,41 +85,12 @@
     </div>
 
     <div class="col-md-4">
-      <div class="panel panel-default panel-facet"
-           ng-if="collections.facets.category.length">
-        <div class="panel-heading">
-          <strong>Categories</strong>
-        </div>
-        <ul class="list-group">
-          <li class="list-group-item animate toggle"
-            ng-repeat="category in collections.facets.category"
-            ng-class="{'active': query.hasField('category', category.value)}"
-            ng-click="query.toggle('category', category.value)">
-            <span class="badge">{{::category.count | number}}</span>
-            <span class="lbl">
-              {{::category.value | collectionCategory}}
-            </span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="panel panel-default panel-facet panel-facet-scroll"
-           ng-if="collections.facets.countries.length">
-        <div class="panel-heading">
-          <strong>Countries</strong>
-        </div>
-        <ul class="list-group">
-          <li class="list-group-item animate toggle"
-            ng-repeat="country in collections.facets.countries"
-            ng-class="{'active': query.hasField('countries', country.value)}"
-            ng-click="query.toggle('countries', country.value)">
-            <span class="badge">{{::country.count | number}}</span>
-            <span class="lbl">
-              {{::country.value | country}}
-            </span>
-          </li>
-        </ul>
-      </div>
+      <search-facet result="collections" query="query" title="Categories"
+                    facet="category">
+      </search-facet>
+      <search-facet result="collections" query="query" title="Countries"
+                    facet="countries">
+      </search-facet>
     </div>
   </div>
 </div>

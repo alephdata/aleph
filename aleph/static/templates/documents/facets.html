@@ -1,0 +1,10 @@
+
+<search-facet result="result" query="query" title="Persons and Companies"
+              facet="entities" filter="entities.id">
+</search-facet>
+
+<div ng-repeat="facet in facets track by facet.field">
+  <search-facet result="result" query="query" expandable="true"
+                title="{{facet.label}}" facet="{{facet.field}}">
+  </search-facet>
+</div>

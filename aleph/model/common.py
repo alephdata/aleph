@@ -143,11 +143,12 @@ class SoftDeleteModel(DatedModel):
 class ModelFacets(object):
 
     @classmethod
-    def facet_by(cls, q, field, filter_null=False):
+    def facet_by(cls, q, field, filter_null=False, mapping={}):
         if isinstance(field.property.columns[0].type, ARRAY):
             field = func.unnest(field)
         cnt = func.count(field)
         q = q.from_self(field, cnt)
         q = q.group_by(field)
         q = q.order_by(cnt.desc())
-        return [{'value': v, 'count': c} for v, c in q if v is not None]
+        return [{'id': v, 'label': mapping.get(v, v), 'count': c}
+                for v, c in q if v is not None]
