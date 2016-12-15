@@ -38,6 +38,7 @@ def document_updates(q, entity_id, collection_id=None):
             '_id': res['_id'],
             '_type': res['_type'],
             '_index': res['_index'],
+            '_retry_on_conflict': 3,
             'doc': body
         }
 

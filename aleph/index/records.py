@@ -29,6 +29,7 @@ def clear_records(document_id):
                     '_index': six.text_type(es_index),
                     '_parent': res.get('_parent'),
                     '_type': res.get('_type'),
+                    '_retry_on_conflict': 3,
                     '_id': res.get('_id')
                 }
 
@@ -55,6 +56,7 @@ def generate_records(document):
                 '_type': TYPE_RECORD,
                 '_index': six.text_type(es_index),
                 '_parent': document.id,
+                '_retry_on_conflict': 3,
                 '_source': {
                     'type': 'page',
                     'content_hash': document.content_hash,
@@ -78,6 +80,7 @@ def generate_records(document):
                 '_type': TYPE_RECORD,
                 '_index': six.text_type(es_index),
                 '_parent': document.id,
+                '_retry_on_conflict': 3,
                 '_source': {
                     'type': 'row',
                     'content_hash': document.content_hash,
