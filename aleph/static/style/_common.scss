@@ -23,6 +23,32 @@ a, .click {
     }
 }
 
+h2, h3, h4 {
+    font-weight: bold;
+    text-transform: uppercase;
+
+    i {
+        color: $aleph-accent;
+        font-weight: normal;
+    }
+
+    small {
+        text-transform: none;
+    }
+}
+
+h2 {
+    font-size: 1.6em;
+}
+
+h3 {
+    font-size: 1.4em;
+}
+
+h4 {
+    font-size: 1.2em;
+}
+
 .screen-header {
     @extend .container-fluid;
 
@@ -30,39 +56,53 @@ a, .click {
     padding-top: 25px;
     margin-bottom: 1em;
     background-color: $gray-subtle;
-    // min-height: 15vH;
 
-    h2 {
-        font-size: 1.6em;
-        // font-weight: bolder;
-        // margin-top: 2vH;
-        margin-bottom: 0.9em;
-        float: left;
+    .header-body {
+        h2 {
+            margin-bottom: 1.5em;
+            margin-top: 0.5em;
 
-        // .label {
-        //     display: inline-block;
-        //     font-size: 0.7em;
-        //     margin-top: -0.8em;
-        // }
+
+        }
+
+        .actions {
+            float: right;
+            margin-top: -0.2em;
+        }
     }
 
     ul.nav.nav-tabs {
         margin-bottom: 0;
-    }
 
-    .actions {
-        // margin-top: 2vH;
+        .badhe {
+            padding: 2px 7px;
+        }
     }
+}
 
-    .nav-tabs .badge {
-        padding: 2px 7px;
-        // background-color: $gray-subtle;
+.section-header {
+    background-color: $gray-subtle;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding: 1.5em 0 1em 0;
+
+    h3 {
+        margin-top: 0;
+        margin-bottom: 0;
     }
 }
 
 table.table {
     .form-group {
         margin-bottom: 0;
+    }
+
+    tbody {
+        border-top: 0;
+    }
+
+    td.follow-up, th.follow-up {
+        border-top: 0;
     }
 }
 
@@ -85,8 +125,8 @@ table.table {
 }
 
 code {
-    background-color: lighten($aleph-dark, 70%);
-    color: $aleph-dark;
+    background-color: lighten($brand-primary, 70%);
+    color: $brand-primary;
 }
 
 td.numeric, th.numeric {

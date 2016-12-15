@@ -17,7 +17,7 @@
 
     p.teaser {
         // text-transform: uppercase;
-        font-size: 2em;   
+        font-size: 2em;
         margin-bottom: 0;
         font-weight: bold;
         padding-bottom: 0;
@@ -37,18 +37,15 @@
 
 .home {
     .feature {
-        margin-top: 1em;
+        margin-top: 0.5em;
         margin-bottom: 1em;
 
         h2 {
-            // text-align: center;
-            text-transform: uppercase;
-            font-weight: bold;
-            font-size: 1.5em;
+            margin-top: 0;
             margin-bottom: 0.5em;
 
             i {
-                color: $brand-primary;
+                color: $aleph-accent;
             }
 
             a {

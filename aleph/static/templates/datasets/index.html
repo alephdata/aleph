@@ -1,22 +1,11 @@
 <div class="screen-header">
-  <h2>
-    <i class="fa fa-fw fa-database"></i>
-    Databases
-    <small>{{::datasets.total_doc_count | number}} entities</small>
-  </h2>
-
-  <div class="actions">
-    <div class="btn-group" role="group">
-      <div class="btn-group" ng-if="::authz.entityWrite(entity)">
-        <a ng-click="edit()" class="btn btn-default">
-          <i class="fa fa-edit"></i>
-          Edit
-        </a>
-      </div>
-    </div>
+  <div class="header-body">
+    <h2>
+      <i class="fa fa-fw fa-database"></i>
+      Databases
+      <small>{{::datasets.total_doc_count | number}} entities</small>
+    </h2>
   </div>
-
-  <div class="clearfix"></div>
 </div>
 
 

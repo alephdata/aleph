@@ -65,7 +65,7 @@
             <tr ng-repeat="category in facets.category.values">
               <td>
                 <a ng-href="/collections?category={{::category.id}}">
-                  {{::category.label | collectionCategory}}</td>
+                  {{::category.label | collectionCategory}}
                 </a>
               </td>
               <td class="numeric">{{::category.count | number}}</td>
@@ -150,7 +150,7 @@
               </a>
             </td>
             <td class="nobreak numeric" width="1%">
-              <span ng-if="collection.countries.length" class="label label-danger">
+              <span ng-if="collection.countries.length" class="label label-primary">
                 {{::collection.countries[0] | country}}
               </span>
               <span ng-if="collection.countries.length > 1">

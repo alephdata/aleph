@@ -66,69 +66,15 @@
     </div>
 
     <div class="col-md-4">
-      <div class="panel panel-default panel-facet panel-facet-scroll">
-        <div class="panel-heading">
-          <strong>Datasets</strong>
-          <small>{{result.facets.dataset.values.length}}</small>
-        </div>
-        <ul class="list-group">
-          <li class="list-group-item empty" ng-if="!result.facets.dataset.values.length">
-            No entities linked to datasets.
-          </li>
-          <li class="list-group-item animate toggle"
-            ng-repeat="val in result.facets.dataset.values"
-            ng-class="{'active': query.hasFilter('dataset', val.id)}"
-            ng-click="query.toggleFilter('dataset', val.id)">
-            <span class="badge">{{val.count | number}}</span>
-            <span class="lbl">
-              {{::val.label}}
-            </span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="panel panel-default panel-facet panel-facet-scroll">
-        <div class="panel-heading">
-          <strong>Countries</strong>
-          <small>{{result.facets.countries.values.length}}</small>
-        </div>
-        <ul class="list-group">
-          <li class="list-group-item empty" ng-if="!result.facets.countries.values.length">
-            No entities with country associations.
-          </li>
-          <li class="list-group-item animate toggle"
-            ng-repeat="val in result.facets.countries.values"
-            ng-class="{'active': query.hasFilter('countries', val.id)}"
-            ng-click="query.toggleFilter('countries', val.id)">
-            <span class="badge">{{val.count | number}}</span>
-            <span class="lbl">
-              {{::val.label}}
-            </span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="panel panel-default panel-facet">
-        <div class="panel-heading">
-          <strong>Types</strong>
-          <small>{{result.facets.schemata.values.length}}</small>
-        </div>
-        <ul class="list-group">
-          <li class="list-group-item empty" ng-if="!result.facets.schemata.values.length">
-            No entities found.
-          </li>
-          <li class="list-group-item animate toggle"
-            ng-repeat="val in result.facets.schemata.values"
-            ng-class="{'active': query.hasFilter('schemata', val.id)}"
-            ng-click="query.toggleFilter('schemata', val.id)">
-            <span class="badge">{{val.count | number}}</span>
-            <span class="lbl">
-              <entity-icon schema="val.id"></entity-icon>
-              {{::val.label | schemaLabel : true}}
-            </span>
-          </li>
-        </ul>
-      </div>
+      <search-facet result="result" query="query" title="Datasets"
+                    facet="dataset">
+      </search-facet>
+      <search-facet result="result" query="query" title="Countries"
+                    facet="countries">
+      </search-facet>
+      <search-facet result="result" query="query" title="Types"
+                    facet="schemata">
+      </search-facet>
 
       <div class="panel panel-default">
         <div class="panel-heading">

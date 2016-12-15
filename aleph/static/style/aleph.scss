@@ -1,5 +1,5 @@
-$aleph-theme: #982022 !default;
-$aleph-dark: #3a4953 !default;
+$aleph-accent: #982022 !default;
+$aleph-theme: #3a4953 !default;
 $aleph-highlights: yellow !default;
 
 @import "custom";
@@ -32,7 +32,7 @@ html {
 
 body {
     min-height: 100vh;
-    background-color: $text-muted;
+    background-color: $aleph-theme;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }

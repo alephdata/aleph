@@ -1,30 +1,30 @@
 <div class="entity-header">
-  <h2>
-    <entity-icon schema="entity.schema"></entity-icon>
-    {{::entity.name}}
-    <small>{{::entity.schema | schemaLabel : false}}</small>
-  </h2>
-
-  <div class="actions">
-    <div class="btn-group" role="group">
-      <div class="btn-group" ng-if="::authz.entityWrite(entity)">
-        <a ng-click="edit()" class="btn btn-default">
-          <i class="fa fa-edit"></i>
-          Edit
-        </a>
+  <div class="header-body">
+    <div class="actions">
+      <div class="btn-group" role="group">
+        <div class="btn-group" ng-if="::authz.entityWrite(entity)">
+          <a ng-click="edit()" class="btn btn-default">
+            <i class="fa fa-edit"></i>
+            Edit
+          </a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="clearfix"></div>
+    <h2>
+      <entity-icon schema="entity.schema"></entity-icon>
+      {{::entity.name}}
+      <small>{{::entity.schema | schemaLabel : false}}</small>
+    </h2>
+  </div>
 </div>
 
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-8">
-      <table class="table">
+      <table class="table table-bordered">
         <tr ng-repeat="bind in entity.binds track by bind.property.name">
-          <th width="30%">{{::bind.property.label}}</th>
+          <th width="20%">{{::bind.property.label}}</th>
           <td>
             <property-values values="bind.values" property="bind.property">
             </property-values>
@@ -39,16 +39,20 @@
 </div>
 
 <div class="container-fluid" ng-if="links.result.total">
-  <div class="row">
+  <div class="row section-header">
     <div class="col-md-12">
-      <h3><a id="links"></a>Relationships</h3>
+      <h3>
+        <i class="fa fa-fw fa-link" aria-hidden="true"></i>
+        <a id="links"></a>
+        Relationships
+      </h3>
     </div>
   </div>
   <div class="row">
     <div class="col-md-8">
-      <table class="table table-condensed">
+      <table class="table">
         <tr>
-          <th width="15%">Type</th>
+          <th width="20%">Type</th>
           <th colspan="2">Entity</th>
         </tr>
         <tbody ng-repeat="link in links.result.results track by link.id">
@@ -62,7 +66,7 @@
             </td>
           </tr>
           <tr ng-repeat="bind in link.binds track by bind.property.name">
-            <td></td>
+            <td class="follow-up"></td>
             <th width="20%">{{::bind.property.label}}</th>
             <td>
               <property-values values="bind.values" property="bind.property">
@@ -84,9 +88,13 @@
 </div>
 
 <div class="container-fluid">
-  <div class="row">
+  <div class="row section-header">
     <div class="col-md-12">
-      <h3><a id="debug"></a>Debug information</h3>
+      <h3>
+        <i class="fa fa-fw fa-bug" aria-hidden="true"></i>
+        <a id="debug"></a>
+        Debug information
+      </h3>
     </div>
   </div>
   <div class="row">
@@ -95,6 +103,7 @@
         Fingerprints:
         <code ng-bind="entity.fingerprints | json"></code>
       </p>
+      <pre>{{entity.properties | json}}</pre>
     </div>
   </div>
 </div>

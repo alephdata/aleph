@@ -1,4 +1,4 @@
-<div ngf-drop ng-model="uploads" ngf-drag-over-class="'file-drop-area'" 
+<div ngf-drop ng-model="uploads" ngf-drag-over-class="'file-drop-area'"
      ngf-stop-propagation="true" ngf-multiple="true" ngf-keep="'distinct'"
      ngf-model-options="{updateOn: 'drop', allowInvalid: false}"
      ngf-drop-disabled="!collection.can_add" id="collections-screen">
@@ -8,40 +8,30 @@
     </div>
   </div>
   <div class="collection-header">
-    <h2>
-      <span ng-if="::!collection.public"
-          uib-tooltip="Only available to selected users"
-          tooltip-placement="right">
-        <i class="fa fa-lock" aria-hidden="true"></i>
-      </span>
-      <span ng-if="::collection.public">
-        <i class="fa fa-globe" aria-hidden="true"></i>
-      </span>
-      <!-- span ng-if="::collection.category" class="label label-primary">
-        {{::collection.category | collectionCategory }}</span-->
-      {{::collection.label}}
-    </h2>
-
-    <div class="actions">
-      <div class="btn-group" role="group">
-        <div class="btn-group" ng-if="::collection.can_add">
-          <a ng-click="ingestFiles([], $event)" class="btn btn-default">
-            <i class="fa fa-cloud-upload"></i>
-            Upload documents
-          </a>
-        </div>
-        <div class="btn-group" ng-if="::collection.can_add">
-          <a ng-href="/collections/{{::collection.id}}/entities/bulk"
-            class="btn btn-default">
-            <i class="fa fa-plus-square" aria-hidden="true"></i>
-            Create watchlist
-          </a>
+    <div class="header-body">
+      <div class="actions">
+        <div class="btn-group" role="group">
+          <div class="btn-group" ng-if="::collection.can_add">
+            <a ng-click="ingestFiles([], $event)" class="btn btn-default">
+              <i class="fa fa-cloud-upload"></i>
+              Upload documents
+            </a>
+          </div>
+          <div class="btn-group" ng-if="::collection.can_add">
+            <a ng-href="/collections/{{::collection.id}}/entities/bulk"
+              class="btn btn-default">
+              <i class="fa fa-plus-square" aria-hidden="true"></i>
+              Create watchlist
+            </a>
+          </div>
         </div>
       </div>
+
+      <h2>
+        <collections-icon collection="collection"></collections-icon>
+        {{::collection.label}}
+      </h2>
     </div>
-
-    <div class="clearfix"></div>
-
     <ul class="nav nav-tabs">
       <li role="presentation" ng-class="{'active': section == 'documents', 'disabled': disable_documents}">
         <a ng-href="/collections/{{::collection.id}}">

@@ -1,3 +1,26 @@
+<div class="screen-header">
+  <div class="header-body">
+    <div class="actions">
+      <a ng-click="createCollection($event)" ng-if="authz.logged_in()"
+         class="btn btn-default">
+        <i class="fa fa-plus-square" aria-hidden="true"></i>
+        Create a collection
+      </a>
+      <a ng-click="triggerLogin()" ng-if="!authz.logged_in()"
+         class="btn btn-default">
+        <i class="fa fa-plus-square" aria-hidden="true"></i>
+        Sign in to create a collection
+      </a>
+    </div>
+
+    <h2>
+      <i class="fa fa-fw fa-folder-open"></i>
+      Collections
+    </h2>
+  </div>
+</div>
+
+
 <div class="screen">
   <div class="row search-bar">
     <div class="col-md-8">
@@ -8,20 +31,6 @@
     </div>
 
     <div class="col-md-4">
-      <div class="btn-group btn-group-justified" role="group">
-        <div class="btn-group">
-          <a ng-click="createCollection($event)" ng-if="authz.logged_in()"
-             class="btn btn-primary">
-            <i class="fa fa-plus-square" aria-hidden="true"></i>
-            Create a collection
-          </a>
-          <a ng-click="triggerLogin()" ng-if="!authz.logged_in()"
-             class="btn btn-primary">
-            <i class="fa fa-plus-square" aria-hidden="true"></i>
-            Sign in to create a collection
-          </a>
-        </div>
-      </div>
     </div>
   </div>
 
