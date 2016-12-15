@@ -23,7 +23,9 @@ This is a template of the configuration file. Make a copy of this file named
 To get the OAuth credentials please visit the [Google Developers Console](https://console.developers.google.com/).
 There you will need to [create an API key](https://support.google.com/googleapi/answer/6158862).
 In the **Authorized redirect URIs** section, use this URL:
-`http://lvh.me:13376/api/1/sessions/callback/google`.
+```
+http://lvh.me:13376/api/1/sessions/callback/google
+```
 Save the client ID and the client secret as `ALEPH_OAUTH_*` values.
 
 Finally you will need to provide a value for the `ALEPH_SECRET_KEY`. A good
@@ -48,9 +50,69 @@ Your repository is mounted inside the docker container under the name
 and `aleph_beat_1`. You can access these services anytime by running
 `docker-compose run <app|worker|beat> bash`.
 
-### Running tests
+## Production deployment
+
+Aleph runs on PostgreSQL and ElasticSearch along with a couple of system
+tools like OpenOffice, ImageMagik, Tesseract and wkhtmltopdf. For a full list
+of system dependencies please review the [`aleph_base`
+Ddockerfile](https://github.com/pudo/aleph/blob/master/contrib/base/Dockerfile).
+
+If you decide to not use Docker compose, you will have to provide all these
+dependencies and services and change the configuration file accordingly.
+An application only Docker image is also available at
+[`pudo/aleph`](https://hub.docker.com/r/pudo/aleph/).
+
+Finally, aleph is optimized to use certain Amazon Web Services: SQS and S3. To
+enable AWS features, you will need to set the AWS key ID and access key in the
+configuration file. Amazon SQS support is available for task queueing. Where
+S3 is available for file uploads.
+
+### Upgrading
+
+Aleph does not provide automatic upgrades. You will have to download the new
+version Docker images or checkout the latest version using Git first.
+
+Once you have the latest version, you can run the command bellow to upgrade
+the existing installation.
+
+```
+$ docker-compose run app aleph upgrade
+```
+
+## Configuration
+
+Most of the Aleph configuration is handled via a set of values in a Python
+configuration file. The defaults are documented in the
+[default_settings.py](https://github.com/pudo/aleph/blob/master/aleph/default_settings.py)
+file and can be overridden by pointing to a bespoke configuration file using
+the environment variable ``ALEPH_SETTINGS``.
+
+While using Docker, the config file, in turn, is largely configured using
+environment variables in accordance with [12 factor
+principles](https://12factor.net/). These environment variables can be found also in
+[docker_settings.py](https://github.com/pudo/aleph/blob/master/contrib/docker_settings.py).
+
+### Feature options
+
+* ``TIKA_URI`` - when enabled, this will use Apache Tika to extract content
+  from PDF files, rather than the built-in ``pdfminer`` and ``tesseract``
+  modules. The URI must point to a Tika server endpoint, which is also
+  responsible for handling OCR.
+
+  **Note:** using Tika with OCR'd documents may yield
+  different results from the built-in mechanism and OCR may not be performed
+  on the same sections of a document's content
+  (See: [#104](https://github.com/pudo/aleph/issues/104)).
+
+## Running tests
 
 To run the tests, assuming you already have the `docker-compose` up and ready,
 run `docker-compose run app make test`.
 
 This will create a new database and run all the tests.
+
+The test settings can also be configured by making a copy of the
+`test_settings.py.tmpl` file to `test_settings.py` and editing it to
+match your configuration. You must then set the environment
+variable ``ALEPH_TEST_SETTINGS`` to point to the absolute path of that
+settings file.
