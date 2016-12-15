@@ -1,7 +1,3 @@
-// Don't ask, this is how Webpack operates
-require('../style/aleph.scss');
-
-
 var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'ui.bootstrap',
                                      'ui.select', 'angular-loading-bar', 'ngFileUpload',
                                      'truncate', 'pdf']);
