@@ -26,8 +26,8 @@ $input-border-focus: $brand-primary;
 // Fix bootstrap assets
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 
-// @import "angular-ui-select/dist/select.css";
-@import "bootstrap-sass/assets/stylesheets/_bootstrap";
+@import "~angular-ui-select/select.css";
+@import "~bootstrap-sass/assets/stylesheets/_bootstrap";
 @import "mixins";
 
 html {
