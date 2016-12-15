@@ -24,7 +24,7 @@
     <li class="list-group-item empty" ng-if="empty">
       There are no filters.
     </li>
-    <li class="list-group-item" ng-repeat="val in values track by val.id"
+    <li class="list-group-item" ng-repeat="val in values"
       ng-class="{'active': query.hasFilter(filter, val.id)}"
       ng-click="query.toggleFilter(filter, val.id)">
       <span class="lbl">
@@ -33,6 +33,9 @@
         </span>
         <span ng-if="::isSchema">
           <entity-icon schema="::val.id"></entity-icon>
+        </span>
+        <span ng-if="::isCollection">
+          <collections-icon collection="::val"></collections-icon>
         </span>
         <span>
           {{::val.label}}

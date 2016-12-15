@@ -120,7 +120,8 @@ class CollectionFacet(Facet):
         for collection in Collection.all_by_ids(keys).all():
             collections[six.text_type(collection.id)] = {
                 'label': collection.label,
-                'category': collection.category
+                'category': collection.category,
+                'public': self.state.authz.collection_public(collection.id)
             }
         return collections
 
