@@ -1,8 +1,11 @@
 var glob = require('glob');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var path = require('path');
 
-module.exports = function createWebpackConfig(env) {
+const APP_PATH = path.resolve(__dirname, './aleph/static');
+
+module.exports = function(env) {
   return {
     entry: {
       aleph: glob.sync('./aleph/static/js/**/*.js'),
@@ -26,37 +29,42 @@ module.exports = function createWebpackConfig(env) {
     },
     output: {
       filename: '[name].js?',
-      path: './aleph/static/dist',
+      path: path.resolve(APP_PATH, 'dist'),
       pathinfo: !env.prod,
     },
     devtool: env.prod ? 'source-map' : 'eval',
-    bail: env.prod,
-    resolve: {
-      extensions: ['.js', '.scss'],
-    },
-    target: 'web',
     module: {
       loaders: [
         {
+          test: /\.(jpg|png|gif|svg|woff2?|ttf|eot)$/,
+          use: 'file-loader?name=[name].[ext]'
+        },
+        {
           test: /\.(css|scss)$/,
-          include: ['./aleph/vendor/'],
-          loader: ExtractTextPlugin.extract('css-loader!sass-loader')
+          loader: ExtractTextPlugin.extract({
+            loader: 'css-loader!sass-loader',
+            query: {
+              sourceMap: true,
+              includePaths: [
+                path.resolve(APP_PATH, 'vendor')
+              ]
+            }
+          })
         }
       ]
     },
     plugins: [
-      // Optimize the order that items are bundled.
-      new webpack.optimize.OccurrenceOrderPlugin(),
-
       // Generate an external css file with a hash in the filename
       new ExtractTextPlugin({
         filename: 'aleph.css', disable: false, allChunks: true
       }),
 
       // Minify JS
-      // new webpack.optimize.UglifyJsPlugin({
-      //   compress: {warnings: true}
-      // }),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: true
+        }
+      }),
     ]
   };
 };
