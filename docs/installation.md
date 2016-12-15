@@ -50,6 +50,20 @@ Your repository is mounted inside the docker container under the name
 and `aleph_beat_1`. You can access these services anytime by running
 `docker-compose run <app|worker|beat> bash`.
 
+## Front-end
+
+Aleph is transitioning the front-end codebase towards a more modern
+architecture and while this is still a work-in-progress, some of the features
+already landed and should make the front-end development easier.
+
+Having an LTS version of Node.js with NPM, first you will need to install
+the development packages (at the moment the build tool uses Webpack 2):
+`npm install`.
+
+In order to build the front-end you will need to run: `npm run build`.
+
+TODO: Finish up.
+
 ## Production deployment
 
 Aleph runs on PostgreSQL and ElasticSearch along with a couple of system
