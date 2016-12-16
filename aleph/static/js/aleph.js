@@ -1,9 +1,24 @@
-var aleph = angular.module('aleph', ['ngRoute', 'ngAnimate', 'ngSanitize', 'ui.bootstrap',
-                                     'ui.select', 'angular-loading-bar', 'ngFileUpload',
-                                     'truncate', 'pdf']);
+import angular from 'angular';
 
-aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoadingBarProvider', 'uiSelectConfig',
-    function($routeProvider, $locationProvider, $compileProvider, cfpLoadingBarProvider, uiSelectConfig) {
+var aleph = angular.module('aleph', [
+  require('angular-route'),
+  require('angular-animate'),
+  require('angular-sanitize'),
+  require('angular-ui-bootstrap'),
+  require('angular-ui-select/select.js'),
+  require('angular-loading-bar'),
+  require('ng-file-upload'),
+  require('angular-truncate'),
+  require('angular-pdf')
+]);
+
+aleph.config([
+  '$routeProvider', '$locationProvider', '$compileProvider',
+  'cfpLoadingBarProvider', 'uiSelectConfig',
+  function(
+    $routeProvider, $locationProvider, $compileProvider, cfpLoadingBarProvider,
+    uiSelectConfig
+  ){
 
   $routeProvider.when('/documents', {
     templateUrl: 'templates/documents/search.html',

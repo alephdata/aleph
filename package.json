@@ -16,8 +16,22 @@
     "sass-loader": "4.1.0",
     "css-loader": "0.26.1",
     "file-loader": "0.9.0",
+    "bower": "*",
 
     "bootstrap-sass": "3.3.7",
-    "angular-ui-select": "0.12.100"
+
+    "moment": "~2.11.1",
+    "d3": "4.2.1",
+
+    "angular": "1.4.8",
+    "angular-route": "1.4.8",
+    "angular-animate": "1.4.8",
+    "angular-sanitize": "1.5.0",
+    "angular-ui-bootstrap": "0.14.3",
+    "angular-ui-select": "0.12.100",
+    "angular-loading-bar": "^0.9.0",
+    "ng-file-upload": "^12.2.12",
+    "angular-pdf": "~1.3.0",
+    "angular-truncate": "sparkalow/angular-truncate"
   }
 }

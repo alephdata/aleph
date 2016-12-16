@@ -16,7 +16,7 @@ module.exports = function(env) {
     },
     output: {
       filename: '[name].js?',
-      path: path.resolve(APP_PATH, 'dist'),
+      path: path.resolve(APP_PATH, 'assets'),
       pathinfo: !env.prod,
     },
     module: {
