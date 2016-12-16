@@ -11,7 +11,7 @@ clear:
 	celery purge -f -A aleph.queue
 
 assets:
-	./node_modules/webpack/bin/webpack.js --env.dev
+	./node_modules/webpack/bin/webpack.js --env.prod
 
 test:
 	PGPASSWORD=aleph psql -h postgres -U aleph -c 'drop database if exists aleph_test;'

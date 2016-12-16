@@ -10,7 +10,8 @@ RUN pip install -q --upgrade pip \
   && pip install -q --upgrade setuptools \
   && pip install -q -r /aleph/requirements.txt
 
-RUN pip install -q -e . && bower --allow-root --quiet install
+RUN pip install --pre -q -r /aleph/requirements-docs.txt
+RUN pip install -q -e . && npm --quiet --silent install .
 
 EXPOSE 8000
 

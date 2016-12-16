@@ -4,7 +4,10 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Enable non-free archive for `unrar`.
 RUN echo "deb http://http.us.debian.org/debian stable non-free" >/etc/apt/sources.list.d/nonfree.list
-RUN echo 'deb https://deb.nodesource.com/node_6.x jessie main' > /etc/apt/sources.list.d/nodesource.list
+# Enable Node.js archive
+RUN echo 'deb http://deb.nodesource.com/node_6.x jessie main' > /etc/apt/sources.list.d/nodesource.list
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 68576280
+
 RUN apt-get update -y -q && apt-get -y dist-upgrade && apt-get install -y -q  \
         curl git python-pip python-virtualenv build-essential python-dev \
         libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates less \
@@ -21,7 +24,7 @@ RUN apt-get update -y -q && apt-get -y dist-upgrade && apt-get install -y -q  \
         tesseract-ocr-hrv tesseract-ocr-hun tesseract-ocr-rus \
         tesseract-ocr-pol tesseract-ocr-slk tesseract-ocr-slv \
         tesseract-ocr-sqi tesseract-ocr-srp tesseract-ocr-tur \
-        tesseract-ocr-ukr nodejs nodejs-dev nodejs-legacy npm djvulibre-bin \
+        tesseract-ocr-ukr nodejs djvulibre-bin \
         && apt-get -y autoremove && apt-get clean
 
 RUN curl -s /tmp/pst.tgz http://www.five-ten-sg.com/libpst/packages/libpst-0.6.69.tar.gz > /tmp/pst.tgz \
@@ -39,6 +42,3 @@ RUN curl -s http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_lin
     && tar -xf /tmp/wkhtmltox.tar.xv -C /opt && rm -f /tmp/wkhtmltox.tar.xv
 ENV WKHTMLTOPDF_BIN /opt/wkhtmltox/bin/wkhtmltopdf
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
-
-# Node dependencies
-RUN npm --quiet --silent install -g bower uglifyjs
