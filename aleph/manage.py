@@ -3,12 +3,11 @@ import logging
 
 from flask_script import Manager
 from flask_script.commands import ShowUrls
-from flask_assets import ManageAssets
 from flask_migrate import MigrateCommand
 
 from aleph.core import create_app, archive, datasets
 from aleph.model import db, upgrade_db, Collection, Document
-from aleph.views import mount_app_blueprints, assets
+from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
 from aleph.ingest import reingest_collection
 from aleph.index import init_search, delete_index, upgrade_search
@@ -26,7 +25,6 @@ log = logging.getLogger('aleph')
 app = create_app()
 mount_app_blueprints(app)
 manager = Manager(app)
-manager.add_command('assets', ManageAssets(assets))
 manager.add_command('db', MigrateCommand)
 manager.add_command('routes', ShowUrls)
 

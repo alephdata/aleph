@@ -11,7 +11,7 @@ clear:
 	celery purge -f -A aleph.queue
 
 assets:
-	SASS_PATH=`pwd`/aleph/static/style/ bower install --allow-root -q && python aleph/manage.py assets --parse-templates build
+	./node_modules/webpack/bin/webpack.js --env.dev
 
 test:
 	PGPASSWORD=aleph psql -h postgres -U aleph -c 'drop database if exists aleph_test;'

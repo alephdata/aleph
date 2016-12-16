@@ -1,5 +1,4 @@
 from aleph import signals
-from aleph.assets import assets, compile_assets  # noqa
 from aleph.views.base_api import blueprint as base_api
 from aleph.views.cache import blueprint as cache_api
 from aleph.views.documents_api import blueprint as documents_api
@@ -32,4 +31,3 @@ def mount_app_blueprints(app):
     app.register_blueprint(reconcile_api)
     app.register_blueprint(datasets_api)
     signals.register_blueprints.send(app=app)
-    compile_assets(app)

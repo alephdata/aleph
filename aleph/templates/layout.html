@@ -6,9 +6,7 @@
     <meta name="google" content="notranslate" />
     <title>{{config.APP_TITLE}}</title>
 
-    {% assets "css" %}
-      <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet">
-    {% endassets %}
+    <link type="text/css" href="{{ url_for('static', filename='assets/aleph.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="{{ config.APP_FAVICON }}">
@@ -146,16 +144,6 @@
       <script id="{{path}}" type="text/ng-template">{{ tmpl | safe }}</script>
     {% endfor %}
 
-    {% assets "base" %}
-      <script src="{{ ASSET_URL }}"></script>
-    {% endassets %}
-
-    {% assets "angular" %}
-      <script src="{{ ASSET_URL }}"></script>
-    {% endassets %}
-
-    {% assets "app" %}
-      <script src="{{ ASSET_URL }}"></script>
-    {% endassets %}
+    <script src="{{ url_for('static', filename='assets/aleph.js') }}"></script>
   </body>
 </html>

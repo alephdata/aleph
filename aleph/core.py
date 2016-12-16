@@ -6,7 +6,6 @@ from werkzeug.local import LocalProxy
 from flask import Flask, current_app
 from flask import url_for as flask_url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_assets import Environment
 from flask_migrate import Migrate
 from flask_mail import Mail
 from kombu import Queue
@@ -25,7 +24,6 @@ db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
 celery = Celery('aleph')
-assets = Environment()
 
 # these two queues are used so that background processing tasks
 # spawned by the user can be handled more quickly through a
@@ -88,7 +86,6 @@ def create_app(config={}):
     configure_oauth(app)
     mail.init_app(app)
     db.init_app(app)
-    assets.init_app(app)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
