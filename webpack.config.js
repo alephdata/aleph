@@ -28,13 +28,7 @@ module.exports = function(env) {
         {
           test: /\.(css|scss)$/,
           loader: ExtractTextPlugin.extract({
-            loader: 'css-loader!sass-loader',
-            query: {
-              sourceMap: true,
-              includePaths: [
-                path.resolve(__dirname, 'node_modules')
-              ]
-            }
+            loader: 'css-loader?sourceMap!sass-loader?sourceMap'
           })
         }
       ]
