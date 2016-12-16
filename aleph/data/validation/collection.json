@@ -17,9 +17,6 @@
         "private": {
             "type": "boolean"
         },
-        "generate_entities": {
-            "type": "boolean"
-        },
         "category": {
             "type": "string",
             "format": "collection-category"
