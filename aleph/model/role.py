@@ -72,14 +72,14 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         if role is None:
             role = cls()
             role.foreign_id = foreign_id
+            role.name = name
             role.type = type
             role.is_admin = False
 
         if role.api_key is None:
             role.api_key = uuid4().hex
-        role.name = name
-        role.email = email
 
+        role.email = email
         if is_admin is not None:
             role.is_admin = is_admin
 
