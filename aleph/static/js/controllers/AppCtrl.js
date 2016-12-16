@@ -24,9 +24,9 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
 
   $rootScope.$on("$routeChangeError", function (event, next, current, rejection) {
     cfpLoadingBar.complete();
+    $scope.reportLoading(false);
     $scope.routeFailed = true;
     $scope.routeError = rejection;
-    // console.log('Error', rejection);
   });
 
   $scope.keyDownNotify = function($event) {

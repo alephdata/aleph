@@ -3,7 +3,7 @@
   <div class="failure-note">
     <span ng-bind="message"></span>
     <span ng-hide="session.logged_in">
-      <a ng-href="{{session.login}}" target="_self">
+      <a ng-click="login()" target="_self">
         Click here to sign in.
       </a>
     </span>
