@@ -26,7 +26,8 @@
     </li>
     <li class="list-group-item" ng-repeat="val in values track by val.id"
       ng-class="{'active': query.hasFilter(filter, val.id)}"
-      ng-click="query.toggleFilter(filter, val.id)">
+      ng-click="query.toggleFilter(filter, val.id)"
+      ng-if="::val.label">
       <span class="lbl">
         <span ng-if="::isEntity">
           <entity-icon schema="::val.schema"></entity-icon>

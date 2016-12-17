@@ -151,7 +151,9 @@ def facet_entities(state, aggs):
         },
         'aggs': {
             'inner': {
-                'filter': {'terms': {'entities.collection_id': collections}},
+                'filter': {
+                    'terms': {'entities.collection_id': collections}
+                },
                 'aggs': {
                     'entities': {
                         'terms': {

@@ -30,7 +30,7 @@ class QueryState(object):
 
     @property
     def facet_size(self):
-        return self.getint('offset', 50)
+        return self.getint('facet_size', 50)
 
     @property
     def page(self):

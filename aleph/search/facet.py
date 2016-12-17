@@ -101,7 +101,7 @@ class EntityFacet(Facet):
         entities = {}
         for entity in Entity.by_id_set(keys).values():
             data = entity.to_ref()
-            data['label'] = data.pop('name', entity.id)
+            data['label'] = data.pop('name', None)
             entities[entity.id] = data
         return entities
 
