@@ -11,7 +11,7 @@
 
     <span class="pull-right" ng-if="::isEntity">
       <a class="btn btn-xs btn-default"
-         ng-if="authz.logged_in()"
+         ng-if="::authz.logged_in()"
          ng-click="createEntity($event)">
         <i class="fa fa-plus"></i> New
       </a>
@@ -24,7 +24,7 @@
     <li class="list-group-item empty" ng-if="empty">
       There are no filters.
     </li>
-    <li class="list-group-item" ng-repeat="val in values"
+    <li class="list-group-item" ng-repeat="val in values track by val.id"
       ng-class="{'active': query.hasFilter(filter, val.id)}"
       ng-click="query.toggleFilter(filter, val.id)">
       <span class="lbl">
