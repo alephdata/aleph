@@ -18,8 +18,8 @@ aleph.directive('searchFacet', ['Authz', 'Entity', function(Authz, Entity) {
 
       scope.$watch('result', function(result) {
         var facets = result.facets || {},
-            facet = result.facets[scope.facet] || {},
-            missing = angular.isUndefined(result.facets[scope.facet]),
+            facet = facets[scope.facet] || {},
+            missing = angular.isUndefined(facets[scope.facet]),
             type = facet.type || '';
         scope.hidden = missing && !scope.expandable;
         scope.collapsed = missing && scope.expandable;

@@ -22,11 +22,7 @@
 
         <a ng-href="/collections/{{::collection.id}}" class="collection"
           ng-bind="::collection.label"></a>
-        <span ng-if="::!doc.public"
-            uib-tooltip="Only available to selected users"
-            tooltip-placement="bottom">
-          <i class="fa fa-lock" aria-hidden="true"></i>
-        </span>
+        <collections-icon collection="::collection"></collections-icon>
         &middot;
       </span>
 
