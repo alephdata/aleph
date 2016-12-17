@@ -1,7 +1,7 @@
 
 <ul ng-show="showPager" class="pagination pagination-sm pagination-cursors">
   <li ng-if="prev != -1"><a ng-click="load({offset: prev})">&laquo;</a></li-->
-  <li ng-repeat="page in pages" ng-class="{'active': page.current}">
+  <li ng-repeat="page in pages" ng-class="::{'active': page.current}">
     <a ng-click="load({offset: page.offset})">{{page.page}}</a>
   </li>
   <li ng-if="next != -1"><a ng-click="load({offset: next})">&raquo;</a></li-->

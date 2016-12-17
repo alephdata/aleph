@@ -17,8 +17,8 @@
       </a>
     </span>
 
-    <strong>{{title}}</strong>
-    <small ng-if="!empty">{{values.length}}</small>
+    <strong>{{::title}}</strong>
+    <small ng-if="!empty">{{::values.length}}</small>
   </div>
   <ul class="list-group" ng-hide="collapsed">
     <li class="list-group-item empty" ng-if="empty">

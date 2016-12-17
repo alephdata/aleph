@@ -15,10 +15,12 @@
     <base href="{{url_for('.ui')}}">
   </head>
   <body ng-controller="AppCtrl" ng-keyup="keyDownNotify($event)">
-    <div id="maintenance" ng-cloak ng-if="metadata.maintenance">
-      {{config.APP_TITLE}} is currently under maintenance. No changes can be made
-      to the system.
-    </div>
+    {% if config.MAINTENANCE %}
+      <div id="maintenance">
+        {{config.APP_TITLE}} is currently under maintenance. No changes can be made
+        to the system.
+      </div>
+    {% endif %}
 
     <div id="page" ng-show="session.roles">
       <nav class="navbar navbar-default navbar-static-top" role="navigation">
