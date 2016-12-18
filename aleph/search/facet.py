@@ -98,11 +98,9 @@ class EntityFacet(Facet):
             .get('entities', {})
 
     def expand(self, keys):
-        entities = {}
+        entities = {k: {'label': None} for k in keys}
         for entity in Entity.by_id_set(keys).values():
-            data = entity.to_ref()
-            data['label'] = data.pop('name', None)
-            entities[entity.id] = data
+            entities[entity.id] = entity.to_ref()
         return entities
 
 

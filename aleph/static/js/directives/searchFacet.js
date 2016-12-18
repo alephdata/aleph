@@ -22,15 +22,26 @@ aleph.directive('searchFacet', ['Authz', 'Entity', function(Authz, Entity) {
         var facets = result.facets || {},
             facet = facets[scope.facet] || {},
             missing = angular.isUndefined(facets[scope.facet]),
-            type = facet.type || '';
-        scope.hidden = missing && !scope.expandable;
-        scope.collapsed = missing && scope.expandable;
+            type = facet.type || '',
+            values = facet.values || [];
+
         scope.values = facet.values || [];
         scope.empty = scope.values.length < 1;
+        scope.hidden = missing && !scope.expandable;
+        scope.collapsed = missing && scope.expandable;
         scope.isEntity = type == 'entity';
         scope.isSchema = type == 'schema';
         scope.isCollection = type == 'collection';
       });
+
+      scope.toggle = function(value) {
+        scope.query.toggleFilter(scope.filter, value.id);
+        value.active = scope.query.hasFilter(scope.filter, value.id);
+      };
+
+      scope.facetKey = function(value) {
+        return value.id + value.active;
+      };
 
       scope.createEntity = function($event) {
         $event.stopPropagation();

@@ -6,14 +6,14 @@ from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
 from aleph.core import create_app, archive, datasets
-from aleph.model import db, upgrade_db, Collection, Document
+from aleph.model import db, upgrade_db, Collection, Document, Entity
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
 from aleph.ingest import reingest_collection
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document_id, delete_dataset
 from aleph.logic import reindex_entities, delete_collection, analyze_collection
-from aleph.logic import load_dataset
+from aleph.logic import load_dataset, update_entity_full
 from aleph.logic.alerts import check_alerts
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
@@ -143,9 +143,17 @@ def resetindex():
 
 
 @manager.command
-def indexentities(foreign_id=None):
+def indexentities():
     """Re-index all the entities."""
     reindex_entities()
+
+
+@manager.command
+def updateentities():
+    """Re-index all the entities."""
+    q = db.session.query(Entity.id)
+    for (entity_id,) in q:
+        update_entity_full.delay(entity_id)
 
 
 @manager.command
