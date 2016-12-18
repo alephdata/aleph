@@ -228,7 +228,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     def to_ref(self):
         return {
             'id': self.id,
-            'name': self.name,
+            'label': self.name,
             'schema': self.type,
             'collection_id': self.collection_id
         }

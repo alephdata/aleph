@@ -78,7 +78,7 @@ aleph.factory('Query', ['$route', '$location', '$httpParamSerializer',
     } else {
       values.splice(idx, 1);
     }
-    this.set(name, values);
+    return this.set(name, values);
   };
 
   ParsedQuery.prototype.toggleFilter = function(name, val) {
