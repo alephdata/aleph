@@ -231,6 +231,8 @@ links:
         type: date
       summary:
         label: "Summary"
+      role:
+        label: "Role"
 
   controlledBy:
     label: "Control"
@@ -269,18 +271,12 @@ links:
     forward: "Managed by"
     reverse: "Manages"
     extends: link
-    properties:
-      role:
-        label: "Role"
 
   memberOf:
     label: "Membership"
     forward: "Member of"
     reverse: "Has member"
     extends: link
-    properties:
-      role:
-        label: "Role"
 
   linkedTo:
     label: "Assocation"
