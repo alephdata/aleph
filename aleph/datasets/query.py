@@ -4,6 +4,7 @@ import logging
 from uuid import uuid4
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy import select, text as sql_text
+from sqlalchemy.pool import NullPool
 from sqlalchemy.schema import Table
 
 from aleph.util import dict_list
@@ -44,7 +45,7 @@ class Query(object):
         self.dataset = dataset
         self.data = data
         self.database_uri = os.path.expandvars(data.get('database'))
-        self.engine = create_engine(self.database_uri)
+        self.engine = create_engine(self.database_uri, poolclass=NullPool)
         self.meta = MetaData()
         self.meta.bind = self.engine
 
