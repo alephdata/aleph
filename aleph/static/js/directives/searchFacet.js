@@ -32,11 +32,6 @@ aleph.directive('searchFacet', ['Authz', 'Entity', function(Authz, Entity) {
         scope.isCollection = type == 'collection';
       });
 
-      scope.toggle = function(value) {
-        scope.query.toggleFilter(scope.filter, value.id);
-        value.active = scope.query.hasFilter(scope.filter, value.id);
-      };
-
       scope.facetKey = function(value) {
         return value.id + value.active;
       };

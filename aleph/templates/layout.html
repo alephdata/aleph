@@ -10,7 +10,7 @@
       <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet">
     {% endassets %}
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="{{ config.APP_FAVICON }}">
     <base href="{{url_for('.ui')}}">
   </head>
@@ -39,12 +39,12 @@
           <div uib-collapse="navbarCollapsed" class="navbar-collapse bs-js-navbar-collapse">
             <ul class="nav navbar-nav" ng-cloak>
               <li ng-class="{'active': navSection =='documents'}">
-                <a href="/documents">
+                <a href="/documents/sources">
                   <i class="fa fa-fw fa-file-text" aria-hidden="true"></i>
                   Documents
                 </a>
               </li>
-              <li ng-class="{'active': navSection =='entities'}" ng-show="navSection =='entities'">
+              <li ng-class="{'active': navSection =='entities'}">
                 <a href="/datasets">
                   <i class="fa fa-fw fa-database" aria-hidden="true"></i>
                   Databases
@@ -52,7 +52,7 @@
               </li>
               <li ng-class="{'active': navSection =='collections'}">
                 <a href="/collections">
-                  <i class="fa fa-fw fa-folder-open" aria-hidden="true"></i>
+                  <i class="fa fa-fw fa-address-book" aria-hidden="true"></i>
                   Collections
                 </a>
               </li>

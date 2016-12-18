@@ -15,7 +15,6 @@ aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', '
       }
       return path;
     };
-
     return coll;
   };
 
@@ -39,7 +38,7 @@ aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', '
       });
     }, function(err) {
       dfd.reject(err);
-    });  
+    });
     return dfd.promise;
   }
 
