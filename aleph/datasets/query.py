@@ -45,9 +45,6 @@ class Query(object):
         self.dataset = dataset
         self.data = data
         self.database_uri = os.path.expandvars(data.get('database'))
-        self.engine = create_engine(self.database_uri, poolclass=NullPool)
-        self.meta = MetaData()
-        self.meta.bind = self.engine
 
         tables = dict_list(data, 'table', 'tables')
         self.tables = [QueryTable(self, f) for f in tables]
@@ -59,6 +56,19 @@ class Query(object):
         self.links = []
         for ldata in data.get('links', []):
             self.links.append(LinkMapper(self, ldata))
+
+    @property
+    def engine(self):
+        if not hasattr(self, '_engine'):
+            self._engine = create_engine(self.database_uri, poolclass=NullPool)
+        return self._engine
+
+    @property
+    def meta(self):
+        if not hasattr(self, '_meta'):
+            self._meta = MetaData()
+            self._meta.bind = self.engine
+        return self._meta
 
     def get_column(self, ref):
         for table in self.tables:
