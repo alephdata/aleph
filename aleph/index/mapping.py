@@ -161,6 +161,10 @@ LINK_MAPPING = {
         "dataset": {"type": "string", "index": "not_analyzed"},
         "groups": {"type": "string", "index": "not_analyzed"},
         "collection_id": {"type": "integer", "index": "not_analyzed"},
+        "fingerprints": {"type": "string", "index": "not_analyzed"},
+        "names": {"type": "string", "index": "not_analyzed"},
+        "identifiers": {"type": "string", "index": "not_analyzed"},
+        "countries": {"type": "string", "index": "not_analyzed"},
         "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
         "emails": {"type": "string", "index": "not_analyzed"},
         "phones": {"type": "string", "index": "not_analyzed"},
