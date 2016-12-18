@@ -83,7 +83,7 @@ aleph.filter('collectionCategory', ['Metadata', function(Metadata) {
 
   return function(code) {
     if (!code) {
-      return 'Unclassified';
+      return 'Uncategorized';
     }
     var label = categories[code];
     return label || code;

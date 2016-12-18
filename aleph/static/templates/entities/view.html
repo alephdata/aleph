@@ -59,10 +59,12 @@
           <tr>
             <td>{{::link.$schema.getLinkLabel(link)}}</td>
             <td colspan="2">
-              <entity-icon schema="link.remote.schema"></entity-icon>
-              <a href="/entities/{{link.remote.id}}">
-                {{link.remote.name}}
-              </a>
+              <strong>
+                <entity-icon schema="link.remote.schema"></entity-icon>
+                <a href="/entities/{{link.remote.id}}">
+                  {{link.remote.name}}
+                </a>
+              </strong>
             </td>
           </tr>
           <tr ng-repeat="bind in link.binds track by bind.property.name">

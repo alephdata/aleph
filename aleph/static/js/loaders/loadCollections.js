@@ -1,5 +1,14 @@
-var loadCollections = ['$q', '$http', '$location', 'Collection', function($q, $http, $location, Collection) {
+var loadProjectCollections = ['Collection', function(Collection) {
   return Collection.search({
+    managed: false,
+    counts: true,
+    facet: ['countries']
+  });
+}];
+
+var loadSourceCollections = ['Collection', function(Collection) {
+  return Collection.search({
+    managed: true,
     counts: true,
     facet: ['countries', 'category']
   });

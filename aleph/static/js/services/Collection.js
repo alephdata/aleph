@@ -17,7 +17,6 @@ aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', '
       }
       return path;
     };
-
     return coll;
   };
 

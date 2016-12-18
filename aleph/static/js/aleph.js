@@ -56,6 +56,16 @@ aleph.config([
     }
   });
 
+  $routeProvider.when('/documents/sources', {
+    templateUrl: 'templates/documents/sources.html',
+    controller: 'DocumentsSourcesCtrl',
+    reloadOnSearch: false,
+    resolve: {
+      'collections': loadSourceCollections,
+      'metadata': loadMetadata
+    }
+  });
+
   $routeProvider.when('/tabular/:document_id/:table_id', {
     templateUrl: 'templates/documents/tabular.html',
     controller: 'TabularCtrl',
@@ -112,7 +122,7 @@ aleph.config([
     controller: 'CollectionsIndexCtrl',
     reloadOnSearch: true,
     resolve: {
-      'collections': loadCollections,
+      'collections': loadProjectCollections,
       'metadata': loadMetadata
     }
   });
