@@ -1,9 +1,7 @@
 import time
 import logging
-from elasticsearch import ElasticsearchException
 
 from aleph.core import celery, datasets
-from aleph.schema import Schema
 from aleph.index import index_items, TYPE_LINK, TYPE_ENTITY
 
 log = logging.getLogger(__name__)
@@ -38,9 +36,9 @@ def load_rows(task, dataset_name, query_idx, rows):
 
     try:
         index_items(items)
-    except ElasticsearchException as exc:
+    except Exception as exc:
         time.sleep(30)
-        raise task.retry(exc=exc, countdown=30, max_retries=5)
+        raise task.retry(exc=exc, countdown=10, max_retries=10)
 
     log.info("[%r] Indexed %s rows as %s documents...",
              dataset_name, len(rows), len(items))

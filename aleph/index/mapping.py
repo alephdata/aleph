@@ -35,7 +35,7 @@ DOCUMENT_MAPPING = {
         "urls": {"type": "string", "index": "not_analyzed"},
         "domains": {"type": "string", "index": "not_analyzed"},
         "phone_numbers": {"type": "string", "index": "not_analyzed"},
-        "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},
+        "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
         "mime_type": {"type": "string", "index": "not_analyzed"},
         "author": {"type": "string", "index": "not_analyzed"},
         "summary": {"type": "string", "index": "analyzed"},
@@ -161,6 +161,10 @@ LINK_MAPPING = {
         "dataset": {"type": "string", "index": "not_analyzed"},
         "groups": {"type": "string", "index": "not_analyzed"},
         "collection_id": {"type": "integer", "index": "not_analyzed"},
+        "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
+        "emails": {"type": "string", "index": "not_analyzed"},
+        "phones": {"type": "string", "index": "not_analyzed"},
+        "addresses": {"type": "string", "index": "not_analyzed"},
         "text": {"type": "string", "index": "analyzed"},
         "properties": {"type": "nested"},
         "origin": {
