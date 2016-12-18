@@ -59,10 +59,10 @@
           <tr>
             <td>{{::link.$schema.getLinkLabel(link)}}</td>
             <td colspan="2">
+              <entity-icon schema="::link.remote.schema"></entity-icon>
               <strong>
-                <entity-icon schema="link.remote.schema"></entity-icon>
-                <a href="/entities/{{link.remote.id}}">
-                  {{link.remote.name}}
+                <a href="/entities/{{::link.remote.id}}">
+                  {{::link.remote.name}}
                 </a>
               </strong>
             </td>
@@ -71,7 +71,7 @@
             <td class="follow-up"></td>
             <th width="20%">{{::bind.property.label}}</th>
             <td>
-              <property-values values="bind.values" property="bind.property">
+              <property-values values="::bind.values" property="::bind.property">
               </property-values>
             </td>
           </tr>
