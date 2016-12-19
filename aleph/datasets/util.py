@@ -1,5 +1,5 @@
 from aleph.util import ensure_list
-from aleph.text import string_value, latinize_text, category_replace
+from aleph.text import string_value, latinize_text
 
 
 def finalize_index(data, schema):
@@ -16,8 +16,9 @@ def finalize_index(data, schema):
             text.add(v)
             v = latinize_text(v)
             text.add(v)
-            v = category_replace(v)
-            text.add(v)
+            # v = category_replace(v)
+            # text.add(v)
+
     data['text'] = list(text)
     data['fingerprints'] = data.get('fingerprints', [])
 
@@ -46,6 +47,12 @@ def finalize_index(data, schema):
                     data[invert].append(norm)
 
     data['fingerprints'] = list(set(data['fingerprints']))
+
+    # Add latinised names
+    names = data.get('names', [])
+    for name in list(names):
+        names.append(latinize_text(name))
+    data['names'] = list(set(names))
 
     # Get implied schemata (i.e. parents of the actual schema)
     data['schema'] = schema.name
