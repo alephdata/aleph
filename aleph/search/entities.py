@@ -36,6 +36,10 @@ def entities_query(state, fields=None, facets=True, doc_counts=False):
         }
     else:
         q = match_all()
+
+    if state.raw_query:
+        q = {"bool": {"must": [q, state.raw_query]}}
+
     q = entity_authz_filter(q, state.authz)
 
     aggs = {'scoped': {'global': {}, 'aggs': {}}}
@@ -154,50 +158,45 @@ def suggest_entities(prefix, authz, min_count=0, schemas=None, size=5):
     }
 
 
-def similar_entities(entity):
-    """Merge suggestions API."""
-    shoulds = []
-    for term in entity.terms:
-        shoulds.append({
-            'multi_match': {
-                "fields": ["name^5", "names^2", "text"],
-                "query": term,
-                "fuzziness": 2
-            }
-        })
-        shoulds.append({
-            'multi_match': {
-                "fields": ["names^2", "text"],
-                "query": latinize_text(term),
-                "fuzziness": 2
-            }
-        })
-
-    q = {
-        "bool": {
-            "should": shoulds,
-            "must_not": {
-                "ids": {"values": [entity.id]}
-            },
-            "must": {
-                "term": {"collection_id": entity.collection_id}
-            },
-            "minimum_should_match": 1
+def multi_match(text, fields, fuzziness=0):
+    return {
+        'multi_match': {
+            "fields": fields,
+            "query": text,
+            "fuzziness": fuzziness
         }
     }
-    q = {
-        'size': 10,
-        'query': q,
-        '_source': DEFAULT_FIELDS
+
+
+def similar_entities(entity, state):
+    """Merge suggestions API."""
+    required = []
+    boosters = []
+    must = None
+
+    # search for fingerprints
+    for fp in entity.get('fingerprints', []):
+        required.append(multi_match(fp, ['fingerprints'], 1))
+
+    if not state.getbool('strict', False):
+        # broaden search to similar names
+        for name in entity.get('names', []):
+            required.append(multi_match(name, ['names', 'text'], 1))
+
+    # make it mandatory to have either a fingerprint or name match
+    must = {"bool": {"should": required, "minimum_should_match": 1}}
+
+    # boost by "contributing criteria"
+    for field in ['dates', 'countries', 'addresses']:
+        for val in entity.get(field, []):
+            boosters.append(multi_match(val, [field]))
+
+    state.raw_query = {
+        "bool": {
+            "should": boosters,
+            "must": must,
+            "must_not": {"ids": {"values": [entity.get('id')]}},
+        }
     }
-    options = []
-    result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
-    for res in result.get('hits', {}).get('hits', []):
-        entity = res.get('_source')
-        entity['id'] = res.get('_id')
-        entity['score'] = res.get('_score')
-        entity['api_url'] = url_for('entities_api.view', id=res.get('_id'))
-        options.append(entity)
-    return {
-        'results': options
-    }
+    # pprint(state.raw_query)
+    return entities_query(state)

@@ -4,6 +4,7 @@ from apikit import obj_or_404, jsonify, request_data, arg_bool
 
 from aleph.model import Entity, Collection, db
 from aleph.logic import update_entity, delete_entity
+from aleph.datasets.util import finalize_index
 from aleph.views.cache import enable_cache
 from aleph.events import log_event
 from aleph.search import QueryState
@@ -27,7 +28,8 @@ def get_entity(id, action):
         if entity is not None:
             entity.update(obj.to_dict())
         else:
-            entity = obj.to_dict()
+            entity = obj.to_index()
+            entity = finalize_index(entity, obj.schema)
     else:
         entity = obj_or_404(entity)
         # Apply roles-based security to dataset-sourced entities.
@@ -106,10 +108,9 @@ def links(id):
 
 @blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])
 def similar(id):
-    _, entity = get_entity(id, request.authz.READ)
-    if entity is None:
-        raise ImATeapot("API only enabled for watchlist entities.")
-    return jsonify(similar_entities(entity))
+    entity, _ = get_entity(id, request.authz.READ)
+    state = QueryState(request.args, request.authz)
+    return jsonify(similar_entities(entity, state))
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])

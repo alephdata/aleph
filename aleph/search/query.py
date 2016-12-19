@@ -14,6 +14,7 @@ class QueryState(object):
         self.args = args
         self.authz = authz
         self._limit = limit
+        self.raw_query = None
 
         self.facet_names = self.getlist('facet')
         self.entity_ids = self.getlist('entity')
