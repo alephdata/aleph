@@ -23,9 +23,11 @@ $font-family-sans-serif: 'Open Sans', sans-serif !default;
 $font-family-serif: 'Georgia', serif !default;
 $input-border-focus: $brand-primary;
 
-// Fix bootstrap assets
+// Fix asset paths
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+$fa-font-path: "~font-awesome/fonts";
 
+@import "~font-awesome/scss/font-awesome";
 @import "~angular-ui-select/select.css";
 @import "~bootstrap-sass/assets/stylesheets/_bootstrap";
 @import "mixins";

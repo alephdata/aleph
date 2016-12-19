@@ -19,6 +19,7 @@
     "bower": "*",
 
     "bootstrap-sass": "3.3.7",
+    "font-awesome": "4.7.0",
 
     "moment": "~2.11.1",
     "d3": "4.2.1",
