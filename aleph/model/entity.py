@@ -225,6 +225,15 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         })
         return data
 
+    def to_index(self):
+        entity = self.to_dict()
+        entity['properties'] = {'name': [self.name]}
+        for k, v in self.data.items():
+            v = ensure_list(v)
+            if len(v):
+                entity['properties'][k] = v
+        return entity
+
     def to_ref(self):
         return {
             'id': self.id,
