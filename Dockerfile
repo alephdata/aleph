@@ -12,6 +12,7 @@ RUN pip install -q --upgrade pip \
 
 RUN pip install --pre -q -r /aleph/requirements-docs.txt
 RUN pip install -q -e . && npm --quiet --silent install .
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 8000
 

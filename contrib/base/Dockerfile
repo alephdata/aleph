@@ -42,3 +42,5 @@ RUN curl -s http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_lin
     && tar -xf /tmp/wkhtmltox.tar.xv -C /opt && rm -f /tmp/wkhtmltox.tar.xv
 ENV WKHTMLTOPDF_BIN /opt/wkhtmltox/bin/wkhtmltopdf
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
