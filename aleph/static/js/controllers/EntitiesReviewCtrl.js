@@ -19,8 +19,9 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     $scope.entity = entityCache.splice(0, 1)[0];
     Title.set("Review: " + $scope.entity.name, "entities");
     $scope.entity.country = $scope.entity.country || null;
-    var url = '/api/1/entities/' + $scope.entity.id + '/similar';
-    $http.get(url).then(function(res) {
+    var url = '/api/1/entities/' + $scope.entity.id + '/similar',
+        params = {'filter:collection_id': collection.id, 'strict': false};
+    $http.get(url, {params: params}).then(function(res) {
       $scope.duplicateOptions = res.data.results;
       $scope.reportLoading(false);
     }, function(err) {
@@ -33,6 +34,8 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
     console.log("Cache size:", entityCache.length);
 
     $scope.reportLoading(true);
+    $scope.duplicateOptions = {};
+
     if (entityCache.length) {
       loadCachedEntity();
     } else {

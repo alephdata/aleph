@@ -20,11 +20,11 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
     return dfd.promise;
   }
 
-  var searchQuery = function(query, state) {
+  var searchQuery = function(url, query, state) {
     var dfd = $q.defer();
     state['offset'] = state.offset || 0;
     Metadata.get().then(function(metadata) {
-      $http.get('/api/1/entities', {params: state}).then(function(res) {
+      $http.get(url, {params: state}).then(function(res) {
         for (var i in res.data.results) {
           metadata.bindSchema(res.data.results[i]);
         }
@@ -50,14 +50,22 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
       state['filter:collection_id'] = collection_id;
       state['doc_counts'] = 'true';
       state['facet'] = ['countries', 'schemata'];
-      return searchQuery(query, state);
+      return searchQuery('/api/1/entities', query, state);
     },
     search: function() {
       var query = Query.parse(),
           state = angular.copy(query.state);
       state['limit'] = 30;
       state['facet'] = ['countries', 'schemata', 'dataset', 'collections'];
-      return searchQuery(query, state);
+      return searchQuery('/api/1/entities', query, state);
+    },
+    searchSimilar: function(entityId) {
+      var query = Query.parse(),
+          state = angular.copy(query.state);
+      state['limit'] = 5;
+      state['facet'] = [];
+      state['strict'] = state['strict'] || true;
+      return searchQuery('/api/1/entities/' + entityId + '/similar', query, state);
     },
     create: function(entity) {
       var instance = $uibModal.open({

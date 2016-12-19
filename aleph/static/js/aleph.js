@@ -113,6 +113,7 @@ aleph.config([
     resolve: {
       'entity': loadEntity,
       'links': loadEntityLinks,
+      'similar': loadSimilarEntities,
       'metadata': loadMetadata
     }
   });
