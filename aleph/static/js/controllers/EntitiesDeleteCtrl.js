@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('EntitiesDeleteCtrl', ['$scope', '$location', '$q', '$http', '$uibModalInstance', 'entities',
     function($scope, $location, $q, $http, $uibModalInstance, entities) {
 

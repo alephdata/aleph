@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('collectionsSelect', ['$http', '$q', 'Metadata', 'Collection',
     function($http, $q, Metadata, Collection) {
   return {

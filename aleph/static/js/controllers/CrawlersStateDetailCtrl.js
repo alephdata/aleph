@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('CrawlersStateDetailCtrl', ['$scope', '$http', '$uibModalInstance', 'state',
     function($scope, $http, $uibModalInstance, state) {
   $scope.state = state;

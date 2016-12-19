@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('EntitiesViewCtrl', ['$scope', '$route', '$location', '$anchorScroll', 'Authz', 'Title', 'Entity', 'Link', 'entity', 'links', 'metadata',
     function($scope, $route, $location, $anchorScroll, Authz, Title, Entity, Link, entity, links, metadata) {
 

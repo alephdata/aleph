@@ -1,3 +1,5 @@
+import {ensureArray} from './util';
+
 var alephCore = alephCore || {};
 
 alephCore.Schema = function(name, data) {
@@ -32,3 +34,5 @@ alephCore.Schema.prototype.bindData = function(data) {
 alephCore.Schema.prototype.getLinkLabel = function(obj) {
   return obj.inverted ? this.data.reverse : this.data.forward;
 };
+
+export default alephCore;

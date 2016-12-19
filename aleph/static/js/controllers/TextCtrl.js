@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'History', 'data', 'pages',
     function($scope, $location, $http, metadata, Authz, Document, Title, History, data, pages) {
 

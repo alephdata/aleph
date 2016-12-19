@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.controller('HomeCtrl', ['$scope', '$location', '$route', 'Collection', 'Authz', 'Role', 'Title', 'statistics', 'facets', 'collections', 'metadata',
     function($scope, $location, $route, Collection, Authz, Role, Title, statistics, facets, collections, metadata) {

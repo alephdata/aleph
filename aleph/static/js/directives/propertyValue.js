@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('propertyValue', ['Metadata', function(Metadata) {
   var metadata = {};
   Metadata.get().then(function(md) {

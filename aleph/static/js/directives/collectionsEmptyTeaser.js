@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('collectionsEmptyTeaser', ['$location', 'Ingest', function($location, Ingest) {
   return {
     restrict: 'E',

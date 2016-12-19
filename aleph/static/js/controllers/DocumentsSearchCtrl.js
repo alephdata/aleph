@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('DocumentsSearchCtrl', ['$scope', '$route', '$location', '$timeout', '$anchorScroll', '$http', 'Entity', 'Authz', 'Alert', 'Document', 'Title', 'data', 'peek', 'alerts', 'metadata',
     function($scope, $route, $location, $timeout, $anchorScroll, $http, Entity, Authz, Alert, Document, Title, data, peek, alerts, metadata) {
 

@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('DocumentsEditCtrl', ['$scope', '$http', '$q', '$uibModalInstance', 'Metadata', 'Document', 'doc', 'metadata',
     function($scope, $http, $q, $uibModalInstance, Metadata, Document, doc, metadata) {
 

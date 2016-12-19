@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('responsePager', ['$timeout', function ($timeout) {
   return {
     restrict: 'E',
@@ -8,7 +10,7 @@ aleph.directive('responsePager', ['$timeout', function ($timeout) {
     templateUrl: 'templates/response_pager.html',
     link: function (scope, element, attrs, model) {
       var pageOffset = function(page) {
-        return (page-1) * scope.response.limit;   
+        return (page-1) * scope.response.limit;
       }
 
       scope.$watch('response', function(e) {

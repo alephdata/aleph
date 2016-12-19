@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstance', 'Metadata', 'Authz', 'Alert', 'Entity', 'entity', 'metadata', 'alerts',
     function($scope, $http, $q, $uibModalInstance, Metadata, Authz, Alert, Entity, entity, metadata, alerts) {
 

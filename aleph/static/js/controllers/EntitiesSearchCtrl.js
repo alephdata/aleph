@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.controller('EntitiesSearchCtrl', ['$scope', '$http', '$timeout', '$anchorScroll', 'Entity', 'Authz', 'Title', 'data', 'metadata',
     function($scope, $http, $timeout, $anchorScroll, Entity, Authz, Title, data, metadata) {

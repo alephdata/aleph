@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+import alephCore from '../schema';
 
 aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $rootScope) {
   var dfd = null;

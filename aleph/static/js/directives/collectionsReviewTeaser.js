@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('collectionsReviewTeaser', [function() {
   return {
     restrict: 'E',

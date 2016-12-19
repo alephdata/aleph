@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.factory('Role', ['$http', '$q', 'Metadata', function($http, $q, Metadata) {
   var dfd = null;

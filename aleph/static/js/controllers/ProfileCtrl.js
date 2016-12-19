@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('ProfileCtrl', ['$scope', '$location', '$uibModalInstance', '$http', 'Role', 'metadata',
     function($scope, $location, $uibModalInstance, $http, Role, metadata) {
   $scope.role = metadata.session.role;

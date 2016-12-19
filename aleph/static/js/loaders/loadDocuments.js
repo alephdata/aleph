@@ -5,3 +5,5 @@ var loadDocumentsSearch = ['Document', function(Document) {
 var loadPeek = ['Document', function(Document) {
   return Document.peek();
 }];
+
+export {loadDocumentsSearch, loadPeek};

@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.factory('Authz', ['$rootScope', function($rootScope) {
 

@@ -2,7 +2,7 @@ var loadRoles = ['$q', '$route', '$http', 'Role', function($q, $route, $http, Ro
   var dfd = $q.defer(),
       collectionId = $route.current.params.collection_id,
       permUrl = '/api/1/collections/' + collectionId + '/permissions';
-  
+
   Role.getAll().then(function(allRoles) {
     for (var j in allRoles) {
       var role = allRoles[j];
@@ -28,3 +28,5 @@ var loadRoles = ['$q', '$route', '$http', 'Role', function($q, $route, $http, Ro
   });
   return dfd.promise;
 }];
+
+export default loadRoles;

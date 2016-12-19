@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$anchorScroll', 'Collection', 'Entity', 'data', 'metadata', 'collection', 'alerts', 'Authz', 'Alert', 'Title',
     function($scope, $http, $timeout, $anchorScroll, Collection, Entity, data, metadata, collection, alerts, Authz, Alert, Title) {

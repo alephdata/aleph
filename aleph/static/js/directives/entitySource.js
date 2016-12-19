@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('entitySource', ['Dataset', 'Collection',
     function(Dataset, Collection) {
   return {

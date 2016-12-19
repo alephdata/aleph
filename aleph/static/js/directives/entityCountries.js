@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('entityCountries', ['Metadata', function(Metadata) {
   var countries = {};
 

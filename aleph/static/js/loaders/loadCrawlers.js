@@ -5,7 +5,7 @@ var loadCrawlers = ['$http', '$q', '$route', '$location', function($http, $q, $r
   $http.get('/api/1/crawlers', {params: params}).then(function(res) {
     dfd.resolve(res.data);
   }, function(err) {
-    dfd.reject(err);  
+    dfd.reject(err);
   });
   return dfd.promise;
 }];
@@ -19,7 +19,9 @@ var loadCrawlerStates = ['$http', '$q', '$route', '$location', function($http, $
   $http.get(url, {params: query}).then(function(res) {
     dfd.resolve(res.data);
   }, function(err) {
-    dfd.reject(err);  
+    dfd.reject(err);
   });
   return dfd.promise;
 }];
+
+export {loadCrawlers, loadCrawlerStates};

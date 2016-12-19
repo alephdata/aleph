@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.factory('Ingest', ['$uibModal', '$q', '$http', 'Metadata', 'Query',
     function($uibModal, $q, $http, Metadata, Query) {
 

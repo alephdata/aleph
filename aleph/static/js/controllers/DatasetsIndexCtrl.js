@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.controller('DatasetsIndexCtrl', ['$scope', '$location', 'Title', 'datasets',
     function($scope, $location, Title, datasets) {

@@ -2,17 +2,39 @@
 require('expose-loader?$!expose-loader?jQuery!jquery');
 require('expose-loader?angular!angular');
 
+// These modules do not return anything
+require('angular-ui-select/select.js');
+require('angular-pdf');
+require('angular-truncate');
+
 var aleph = angular.module('aleph', [
   require('angular-route'),
   require('angular-animate'),
   require('angular-sanitize'),
   require('angular-ui-bootstrap'),
-  require('angular-ui-select/select.js'),
   require('angular-loading-bar'),
   require('ng-file-upload'),
-  require('angular-truncate'),
-  require('angular-pdf')
+  'ui.select',
+  'truncate',
+  'pdf'
 ]);
+
+import {loadDocumentsSearch, loadPeek} from './loaders/loadDocuments';
+import loadMetadata from './loaders/loadMetadata';
+import loadAlertsIndex from './loaders/loadAlertsIndex';
+import loadTabular from './loaders/loadAlertsIndex';
+import loadDatasets from './loaders/loadDatasets';
+import loadRoles from './loaders/loadRoles';
+import loadStatistics from './loaders/loadHome';
+import {loadText, loadPagesQuery} from './loaders/loadText';
+import {loadCrawlers, loadCrawlerStates} from './loaders/loadCrawlers';
+import {
+  loadEntitiesSearch, loadEntity, loadEntityLinks
+} from './loaders/loadEntities';
+import {
+  loadCollections, loadUserCollections, loadCollectionFacets, loadCollection,
+    loadCollectionDocuments, loadCollectionEntities
+} from './loaders/loadCollections';
 
 aleph.config([
   '$routeProvider', '$locationProvider', '$compileProvider',
@@ -202,3 +224,5 @@ aleph.config([
 
   uiSelectConfig.theme = 'bootstrap';
 }]);
+
+export default aleph;

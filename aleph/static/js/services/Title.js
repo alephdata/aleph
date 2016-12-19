@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.factory('Title', ['$rootScope', 'Metadata', function($rootScope, Metadata) {
   var element = angular.element('title')[0],
@@ -13,6 +14,6 @@ aleph.factory('Title', ['$rootScope', 'Metadata', function($rootScope, Metadata)
     appTitle = metadata.app.title;
     set(viewTitle, $rootScope.navSection);
   });
-      
+
   return {set: set};
 }]);

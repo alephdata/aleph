@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query',
     function($uibModal, $q, $http, Alert, Metadata, Query) {
 

@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('IngestFilesCtrl', ['$scope', '$uibModalInstance', 'Upload', 'metadata', 'collection', 'files',
     function($scope, $uibModalInstance, Upload, metadata, collection, files) {
 

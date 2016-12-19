@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '$routeParams', 'Collection', 'Metadata', 'Role', 'Authz', 'Title', 'collection', 'roles', 'metadata',
     function($scope, $q, $location, $http, $routeParams, Collection, Metadata, Role, Authz, Title, collection, roles, metadata) {
 

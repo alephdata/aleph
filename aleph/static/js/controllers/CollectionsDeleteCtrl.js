@@ -1,6 +1,8 @@
+import aleph from '../aleph';
+
 aleph.controller('CollectionsDeleteCtrl', ['$scope', '$location', '$q', '$http', '$uibModalInstance', 'Metadata', 'collection',
     function($scope, $location, $q, $http, $uibModalInstance, Metadata, collection) {
-  
+
   $scope.blocked = false;
   $scope.collection = collection;
 

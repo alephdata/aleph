@@ -11,3 +11,5 @@ var loadEntityLinks = ['$route', 'Link', function($route, Link) {
   var entityId = $route.current.params.entity_id;
   return Link.search(entityId, {});
 }];
+
+export {loadEntitiesSearch, loadEntity, loadEntityLinks};
