@@ -1,3 +1,4 @@
+import re
 import urlnorm
 import dateparser
 import countrynames
@@ -12,6 +13,7 @@ from aleph.text import string_value
 from aleph.data.validate import is_country_code, is_domain, is_partial_date
 
 PHONE_FORMAT = phonenumbers.PhoneNumberFormat.INTERNATIONAL
+CUT_ZEROES = re.compile(r'(\-00?)?\-00?$')
 
 
 def parse_phone(number, country=None):
@@ -130,6 +132,9 @@ def parse_date(text, guess=True, date_format=None):
     else:
         # limit to the date part of a presumed date string
         text = text[:10]
+
+    # strip -00-00 from dates because it makes ES barf.
+    text = CUT_ZEROES.sub('', text)
 
     if is_partial_date(text):
         return text
