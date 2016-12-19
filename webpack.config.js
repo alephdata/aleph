@@ -10,9 +10,10 @@ module.exports = function(env) {
     devtool: env.prod ? 'source-map' : 'eval',
     entry: {
       aleph: [
-        path.resolve(APP_PATH, 'js/aleph'),
-        path.resolve(APP_PATH, 'style/aleph.scss')
-      ],
+        path.resolve(APP_PATH, 'style/aleph.scss'),
+      ].concat(
+        glob.sync(path.resolve(APP_PATH, 'js/**/*.js'))
+      )
     },
     output: {
       filename: '[name].js?',

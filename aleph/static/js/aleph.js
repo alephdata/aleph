@@ -1,4 +1,6 @@
-import angular from 'angular';
+// Expose some API
+require('expose-loader?$!expose-loader?jQuery!jquery');
+require('expose-loader?angular!angular');
 
 var aleph = angular.module('aleph', [
   require('angular-route'),
