@@ -2,6 +2,7 @@ language: python
 cache:
   - apt
   - pip
+  - npm
 python:
   - "2.7"
 services:
@@ -42,6 +43,6 @@ before_script:
   - nosetests --version
   - psql --version
 script:
-  - nosetests --with-coverage --cover-package=aleph
+  - make assets && nosetests --with-coverage --cover-package=aleph
 after_success:
   - coveralls
