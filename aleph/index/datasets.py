@@ -56,7 +56,7 @@ def _index_updates(items):
         }
 
     for doc_id, entity in entities.items():
-        pprint(entity)
+        # pprint(entity)
         entity.pop('id', None)
         yield {
             '_id': doc_id,
