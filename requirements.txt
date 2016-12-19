@@ -22,7 +22,6 @@ psycopg2==2.6.2
 Pillow==3.2.0
 tesserwrap==0.1.6
 lxml==3.3.5
-normality>=0.3.6
 nose
 boto3==1.4.1
 requests>=2.5.1
@@ -39,13 +38,10 @@ https://github.com/okfn/messytables/tarball/master
 krauler>=0.2.2
 metafolder
 polyglot==16.7.4
-https://github.com/occrp/cronosparser/tarball/master
-https://github.com/occrp/countrynames/tarball/master
 langid==1.1.5
 blinker==1.4
 Babel==2.3.4
 pyDBF==0.1
-fingerprints
 pycountry>=1.18
 rarfile==2.7
 xlrd==0.9.3
@@ -62,6 +58,12 @@ pyahocorasick
 pycrypto
 pylru==1.0.9
 https://github.com/mattgwwalker/msg-extractor/tarball/master
+
+# weird pudo stuff
+https://github.com/occrp/cronosparser/tarball/master
+https://github.com/occrp/countrynames/tarball/master
+fingerprints>=0.3.2
+normality>=0.3.8
 
 # Python 3 backports
 subprocess32
