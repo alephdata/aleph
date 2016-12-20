@@ -44,6 +44,7 @@ before_script:
   - cp $TRAVIS_BUILD_DIR/test_settings.py.tmpl $TRAVIS_BUILD_DIR/test_settings.py
   - nosetests --version
   - psql --version
+  - node --version
 script:
   - make assets && nosetests --with-coverage --cover-package=aleph
 after_success:
