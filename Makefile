@@ -11,6 +11,8 @@ clear:
 	celery purge -f -A aleph.queue
 
 assets:
+	touch aleph/static/style/_custom.scss;
+	(test -f '$(CUSTOM_SCSS_PATH)' && cp -f $(CUSTOM_SCSS_PATH) aleph/static/style/_custom.scss) || return 0
 	./node_modules/webpack/bin/webpack.js --env.prod
 
 test:
