@@ -1,6 +1,3 @@
-.. figure:: https://api.travis-ci.org/pudo/aleph.png
-   :alt: Build Status
-
 .. epigraph::
 
   Truth cannot penetrate a closed mind. If all places in the universe are in
@@ -8,6 +5,10 @@
 
   -- `The Aleph <http://www.phinnweb.org/links/literature/borges/aleph.html>`_,
   Jorge Luis Borges
+
+.. figure:: https://api.travis-ci.org/pudo/aleph.png
+   :target: https://travis-ci.org/pudo/aleph/
+   :alt: Build Status
 
 **Aleph** is a tool for indexing large amounts of both unstructured (PDF, Word,
 HTML) and structured (CSV, XLS, SQL) data for easy browsing and search. It is
