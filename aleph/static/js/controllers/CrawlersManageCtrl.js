@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.controller('CrawlersManageCtrl', ['$scope', '$route', '$location', '$http', 'Title', 'crawlers',
     function($scope, $route, $location, $http, Title, crawlers) {

@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('collectionsIcon', [function() {
   return {
     restrict: 'E',

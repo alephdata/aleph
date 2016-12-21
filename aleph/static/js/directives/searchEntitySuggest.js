@@ -1,3 +1,6 @@
+import aleph from '../aleph';
+import {titleCaps} from '../util';
+
 aleph.directive('searchEntitySuggest', ['$location', '$q', '$route', '$http', '$rootScope', 'Authz', 'Entity',
     function($location, $q, $route, $http, $rootScope, Authz, Entity) {
   return {

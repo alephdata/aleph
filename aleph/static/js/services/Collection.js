@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.factory('Collection', ['$q', '$http', '$location', '$uibModal', 'Query', 'Authz', 'Metadata',
     function($q, $http, $location, $uibModal, Query, Authz, Metadata) {
 

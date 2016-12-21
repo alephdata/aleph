@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('searchFacet', ['Authz', 'Entity', function(Authz, Entity) {
   return {
     restrict: 'E',

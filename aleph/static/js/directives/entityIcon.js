@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('entityIcon', ['Metadata', function(Metadata) {
   var schemata = {};
 

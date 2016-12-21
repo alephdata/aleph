@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', '$timeout', '$q', 'Entity', 'Authz', 'metadata', 'collection', 'Title',
     function($scope, $route, $location, $http, $timeout, $q, Entity, Authz, metadata, collection, Title) {

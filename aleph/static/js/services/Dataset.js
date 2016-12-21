@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.factory('Dataset', ['$q', '$http', '$location', 'Authz', 'Metadata',
     function($q, $http, $location, Authz, Metadata) {
   var indexDfd = null;

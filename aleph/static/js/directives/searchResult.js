@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('searchResult', ['$location', '$route', '$sce', 'Document',
     function($location, $route, $sce, Document) {
   return {

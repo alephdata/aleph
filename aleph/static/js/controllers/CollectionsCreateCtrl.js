@@ -1,6 +1,8 @@
+import aleph from '../aleph';
+
 aleph.controller('CollectionsCreateCtrl', ['$scope', '$location', '$q', '$http', '$uibModalInstance', 'Metadata', 'metadata', 'collection',
     function($scope, $location, $q, $http, $uibModalInstance, Metadata, metadata, collection) {
-  
+
   $scope.blocked = false;
   $scope.collection = collection;
   $scope.metadata = metadata;

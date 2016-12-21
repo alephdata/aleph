@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('searchBox', ['$location', '$q', '$route', '$http', '$rootScope',
     function($location, $q, $route, $http, $rootScope) {
   return {

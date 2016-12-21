@@ -2,6 +2,7 @@ language: python
 cache:
   - apt
   - pip
+  - npm
 python:
   - "2.7"
 services:
@@ -20,6 +21,7 @@ addons:
       - djvulibre-bin
 env:
   global:
+    - NODE_VERSION=6.9.2
     - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
     - WKHTMLTOPDF_BIN=$TRAVIS_BUILD_DIR/wkhtmltox/bin/wkhtmltopdf
     - OAUTH_KEY=fake
@@ -34,14 +36,19 @@ install:
   - pip install -r requirements.txt
   - pip install -e .
   - pip install psycopg2 coveralls
-  - npm install -g bower uglifyjs
-  - bower install
+  - nvm install $NODE_VERSION
+  - nvm use $NODE_VERSION
+  - npm install bower
+  - npm install .
 before_script:
   - psql -c 'create database aleph_test;' -U postgres
   - cp $TRAVIS_BUILD_DIR/test_settings.py.tmpl $TRAVIS_BUILD_DIR/test_settings.py
   - nosetests --version
   - psql --version
+  - nvm use $NODE_VERSION
+  - node --version
 script:
-  - nosetests --with-coverage --cover-package=aleph
+  - nvm use $NODE_VERSION
+  - make assets && nosetests --with-coverage --cover-package=aleph
 after_success:
   - coveralls

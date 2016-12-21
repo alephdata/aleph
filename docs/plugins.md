@@ -43,10 +43,14 @@ The documentation for this part is missing at the moment.
 
 ## Custom SCSS
 
-An additional configuration option, ``CUSTOM_SCSS_PATH``, can be used to
+An additional environment variable, ``CUSTOM_SCSS_PATH``, can be used to
 specify the path to a SCSS file which will be imported into the application
 upon start. The given path must be  absolute, or relative to the run-time
-location of Aleph.
+location of Aleph. An example would be:
+
+```bash
+docker-compose run -e CUSTOM_SCSS_PATH=my.scss app make web
+```
 
 ## Creating new crawlers
 

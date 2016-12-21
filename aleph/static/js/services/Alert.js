@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.factory('Alert', ['$http', '$q', '$location', '$sce', '$uibModal', 'Metadata',
     function($http, $q, $location, $sce, $uibModal, Metadata) {

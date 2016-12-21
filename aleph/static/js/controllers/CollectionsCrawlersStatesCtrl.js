@@ -1,7 +1,8 @@
+import aleph from '../aleph';
 
 aleph.controller('CollectionsCrawlersStatesCtrl', ['$scope', '$route', '$location', '$http', '$uibModal', 'Title', 'states', 'collection',
     function($scope, $route, $location, $http, $uibModal, Title, states, collection) {
-  
+
   $scope.collection = collection;
   $scope.states = states;
   Title.set("Crawler Logs: " + collection.label, "collection");

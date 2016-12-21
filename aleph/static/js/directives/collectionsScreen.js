@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('collectionsScreen', ['$http', '$q', '$location', 'Authz', 'Collection', 'Ingest',
     function($http, $q, $location, Authz, Collection, Ingest) {
   return {
@@ -17,7 +19,7 @@ aleph.directive('collectionsScreen', ['$http', '$q', '$location', 'Authz', 'Coll
       scope.show_states = scope.collection.can_edit && scope.collection.crawler_state_count;
       scope.disable_documents = !scope.collection.doc_count;
       scope.disable_entities = !scope.collection.entity_count;
-      
+
       scope.uploads = [];
 
       scope.$watch('uploads', function(files) {
@@ -28,7 +30,7 @@ aleph.directive('collectionsScreen', ['$http', '$q', '$location', 'Authz', 'Coll
 
       scope.ingestFiles = function(files, $event) {
         if ($event) {
-          $event.stopPropagation();  
+          $event.stopPropagation();
         }
         Ingest.files(files, scope.collection).then(function() {
           scope.uploads = [];

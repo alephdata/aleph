@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.factory('History', ['$location', function($location) {
   var lastUrl = null;

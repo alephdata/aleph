@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.factory('Link', ['$q', '$http', 'Query', 'Metadata', function($q, $http, Query, Metadata) {
   return {
     search: function(entityId) {

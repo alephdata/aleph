@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.directive('metadataSidebar', ['$route', 'Collection', 'Document', 'Authz',
     function($route, Collection, Document, Authz) {

@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.directive('errorMessage', ['$route', '$location', '$rootScope', function($route, $location, $rootScope) {
   return {

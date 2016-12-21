@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Authz', 'Collection', 'Alert', 'entity', 'metadata',
     function($scope, $http, $uibModalInstance, Authz, Collection, Alert, entity, metadata) {
 

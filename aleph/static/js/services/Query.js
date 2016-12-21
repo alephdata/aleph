@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+import {ensureArray} from '../util';
 
 aleph.factory('Query', ['$route', '$location', '$httpParamSerializer',
     function($route, $location, $httpParamSerializer) {

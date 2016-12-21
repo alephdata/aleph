@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('searchFacets', [function() {
   return {
     restrict: 'E',

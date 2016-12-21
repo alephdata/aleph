@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('HelpCtrl', ['$scope', '$location', '$routeParams', '$templateCache', 'Title',
     function($scope, $location, $routeParams, $templateCache, Title) {
 

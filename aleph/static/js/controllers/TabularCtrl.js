@@ -1,3 +1,6 @@
+import aleph from '../aleph';
+import {ensureArray} from '../util';
+
 aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Authz', 'Title', 'History', 'data',
     function($scope, $location, $http, $sce, $sanitize, $filter, Authz, Title, History, data) {
 
@@ -50,11 +53,11 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
     q.dq = $scope.textQuery;
     // q.q = null; // wat.
     q.row = null;
-    $location.search(q);  
+    $location.search(q);
   };
 
   $scope.isHighlighted = function(row) {
-    var rows = ensureArray($location.search().row), 
+    var rows = ensureArray($location.search().row),
         id = row._id + '';
     return rows.indexOf(id) !== -1;
   };

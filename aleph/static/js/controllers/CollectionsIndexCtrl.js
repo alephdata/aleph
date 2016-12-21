@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.controller('CollectionsIndexCtrl', ['$scope', '$http', '$route', '$location', '$timeout', '$anchorScroll', 'Collection', 'collections', 'metadata', 'Authz', 'Alert', 'Title',
     function($scope, $http, $route, $location, $timeout, $anchorScroll, Collection, collections, metadata, Authz, Alert, Title) {

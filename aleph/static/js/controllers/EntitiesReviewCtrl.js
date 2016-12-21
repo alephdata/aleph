@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http', '$timeout', 'Collection', 'Entity', 'metadata', 'collection', 'Authz', 'Title',
     function($scope, $route, $location, $http, $timeout, Collection, Entity, metadata, collection, Authz, Title) {

@@ -1,3 +1,4 @@
+import aleph from '../aleph';
 
 aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '$sce', '$uibModal', 'Metadata', 'Query', 'History',
     function($http, $q, $location, $httpParamSerializer, $sce, $uibModal, Metadata, Query, History) {

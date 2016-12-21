@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('CollectionsDocumentsCtrl', ['$scope', '$location', '$http', '$route', '$anchorScroll', 'Title', 'Collection', 'Document', 'Authz', 'collection', 'metadata', 'data',
     function($scope, $location, $http, $route, $anchorScroll, Title, Collection, Document, Authz, collection, metadata, data) {
 

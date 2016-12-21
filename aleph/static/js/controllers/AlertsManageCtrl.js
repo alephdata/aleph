@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.controller('AlertsManageCtrl', ['$scope', '$uibModalInstance', '$location', '$route', 'alerts', 'Alert',
     function($scope, $uibModalInstance, $location, $route, alerts, Alert) {
 
