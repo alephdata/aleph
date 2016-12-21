@@ -3,7 +3,7 @@
     <h2>
       <i class="fa fa-fw fa-user-secret"></i>
       People and Companies
-      <small>{{::datasets.total_doc_count | number}} entities</small>
+      <small>{{::datasets.total_entities_count | number}} entities</small>
     </h2>
   </div>
 </div>
@@ -28,7 +28,7 @@
         <a ng-repeat="dataset in datasets.results"
            href="/entities?filter:dataset={{dataset.name}}" class="list-group-item">
           <span class="badge">
-            {{dataset.doc_count | number}}
+            {{dataset.entities_count | number}}
           </span>
           {{dataset.label}}
         </a>

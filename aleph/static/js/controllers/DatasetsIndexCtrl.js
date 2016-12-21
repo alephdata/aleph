@@ -6,9 +6,9 @@ aleph.controller('DatasetsIndexCtrl', ['$scope', '$location', 'Title', 'datasets
   $scope.query = {};
   $scope.datasets = datasets;
   $scope.datasets.results = datasets.results.filter(function(d) {
-    return d.doc_count != 0;
+    return d.entities_count != 0;
   }).sort(function(a, b) {
-    var doc_diff = b.doc_count - a.doc_count;
+    var doc_diff = b.entities_count - a.entities_count;
     if (doc_diff == 0) {
       return a.label.localeCompare(b.label);
     }

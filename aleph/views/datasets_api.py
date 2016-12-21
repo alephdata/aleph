@@ -26,11 +26,11 @@ def index():
     values = res.get('facets', {}).get('dataset', {}).get('values', [])
     counts = {v.get('id'): v.get('count') for v in values}
     for dataset in results:
-        dataset.doc_count = counts.get(dataset.name)
+        dataset.entities_count = counts.get(dataset.name)
     return jsonify({
         'results': results,
         'total': len(results),
-        'total_doc_count': res.get('total')
+        'total_entities_count': res.get('total')
     })
 
 

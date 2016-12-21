@@ -1,6 +1,7 @@
 import six
 import logging
 
+from aleph.authz import get_public_roles
 from aleph.util import dict_list
 from aleph.model import Role
 from aleph.datasets.query import Query
@@ -16,14 +17,19 @@ class Dataset(object):
         self.data = data
         self.label = data.get('label', name)
         self.info_url = data.get('info_url')
+        self.category = data.get('category')
         self.roles = []
-        self.doc_count = None
+        self.entities_count = None
+        self.public = False
+
         for role in dict_list(data, 'roles', 'role'):
             role_id = Role.load_id(role)
             if role_id is not None:
                 self.roles.append(role_id)
             else:
                 log.warning("Could not find role: %s", role)
+            if role_id in get_public_roles():
+                self.public = True
 
         if not len(self.roles):
             raise ValueError("No roles for dataset: %s" % self.name)
@@ -41,7 +47,8 @@ class Dataset(object):
             'label': self.label,
             'info_url': self.info_url,
             'roles': self.roles,
-            'doc_count': self.doc_count
+            'public': self.public,
+            'entities_count': self.entities_count
         }
 
     def __repr__(self):
