@@ -29,11 +29,12 @@ import loadStatistics from './loaders/loadHome';
 import {loadText, loadPagesQuery} from './loaders/loadText';
 import {loadCrawlers, loadCrawlerStates} from './loaders/loadCrawlers';
 import {
-  loadEntitiesSearch, loadEntity, loadEntityLinks
+  loadEntitiesSearch, loadEntity, loadSimilarEntities, loadEntityLinks,
+  loadEntityDocuments
 } from './loaders/loadEntities';
 import {
-  loadCollections, loadUserCollections, loadCollectionFacets, loadCollection,
-    loadCollectionDocuments, loadCollectionEntities
+  loadProjectCollections, loadSourceCollections, loadCollection,
+  loadCollectionDocuments, loadCollectionEntities
 } from './loaders/loadCollections';
 
 aleph.config([

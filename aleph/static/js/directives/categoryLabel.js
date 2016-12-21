@@ -1,3 +1,5 @@
+import aleph from '../aleph';
+
 aleph.directive('categoryLabel', ['Metadata', function(Metadata) {
   var categories = {};
 

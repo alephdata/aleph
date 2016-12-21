@@ -31,6 +31,6 @@ var loadCollectionEntities = ['$route', 'Entity', function($route, Entity) {
 
 
 export {
-  loadCollections, loadUserCollections, loadCollectionFacets, loadCollection,
-    loadCollectionDocuments, loadCollectionEntities
+  loadProjectCollections, loadSourceCollections, loadCollection,
+  loadCollectionDocuments, loadCollectionEntities
 };

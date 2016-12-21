@@ -22,4 +22,5 @@ var loadEntityDocuments = ['$route', 'Document', function($route, Document) {
   return Document.searchEntity(entityId, 'documents_');
 }];
 
-export {loadEntitiesSearch, loadEntity, loadEntityLinks};
+export {loadEntitiesSearch, loadEntity, loadSimilarEntities, loadEntityLinks,
+        loadEntityDocuments};
