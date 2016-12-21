@@ -65,12 +65,6 @@ https://github.com/occrp/countrynames/tarball/master
 fingerprints>=0.3.2
 normality>=0.3.9
 
-# weird pudo stuff
-https://github.com/occrp/cronosparser/tarball/master
-https://github.com/occrp/countrynames/tarball/master
-fingerprints>=0.3.2
-normality>=0.3.9
-
 # Python 3 backports
 subprocess32
 functools32>=3.2
