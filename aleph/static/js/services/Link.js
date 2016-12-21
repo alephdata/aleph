@@ -4,7 +4,7 @@ aleph.factory('Link', ['$q', '$http', 'Query', 'Metadata', function($q, $http, Q
   return {
     search: function(entityId, prefix) {
       var query = Query.parse(prefix),
-          state = angular.copy(query.state);
+          state = angular.copy(query.state),
           dfd = $q.defer(),
           url = '/api/1/entities/' + entityId + '/links';
       state['limit'] = 10;

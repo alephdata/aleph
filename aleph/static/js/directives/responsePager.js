@@ -21,7 +21,7 @@ aleph.directive('responsePager', ['$timeout', function ($timeout) {
           return;
         }
         var pages = [],
-          current = (scope.response.offset / scope.response.limit) + 1;
+          current = (scope.response.offset / scope.response.limit) + 1,
           num = Math.ceil(scope.response.total / scope.response.limit),
           range = 2,
           low = current - range,
