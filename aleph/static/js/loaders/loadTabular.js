@@ -1,7 +1,7 @@
 var loadTabular = ['$http', '$q', '$route', '$location', 'Document',
     function($http, $q, $route, $location, Document) {
 
-  var dfd = $q.defer();
+  var dfd = $q.defer(),
       documentId = $route.current.params.document_id,
       tableId = $route.current.params.table_id;
 

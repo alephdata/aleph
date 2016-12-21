@@ -1,5 +1,5 @@
 import aleph from '../aleph';
-import {ensureArray} from '../util';
+import {ensureArray, filterFloat} from '../util';
 
 aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Authz', 'Title', 'History', 'data',
     function($scope, $location, $http, $sce, $sanitize, $filter, Authz, Title, History, data) {
