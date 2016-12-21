@@ -2,11 +2,13 @@ import aleph from '../aleph';
 
 aleph.factory('Dataset', ['$q', '$http', '$location', 'Authz', 'Metadata',
     function($q, $http, $location, Authz, Metadata) {
+
   var indexDfd = null;
+
   var getIndex = function() {
     if (indexDfd === null) {
       indexDfd = $q.defer();
-      $http.get('/api/1/datasets').then(function(res) {
+      $http.get('/api/1/datasets', {cache: true}).then(function(res) {
         indexDfd.resolve(res.data)
       }, function(err) {
         indexDfd.reject(err);
