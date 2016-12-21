@@ -96,7 +96,7 @@
               </button>
             </td>
             <td class="nobreak" width="1%">
-              <a ng-href="/documents?entity={{entity.id}}" ng-if="entity.doc_count">
+              <a ng-href="/documents?filter:entities.id={{entity.id}}" ng-if="entity.doc_count">
                 <i class="fa fa-file-text-o" aria-hidden="true"></i>
                 {{entity.doc_count | number}}
               </a>

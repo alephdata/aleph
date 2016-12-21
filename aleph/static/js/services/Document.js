@@ -14,39 +14,48 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
     return dfd.promise;
   };
 
-  return {
-    search: function(collection_id) {
-      var dfd = $q.defer();
-      var query = Query.parse(),
-          state = angular.copy(query.state);
-      state['limit'] = 20;
-      state['snippet'] = 140;
-      state['facet'] = query.getArray('facet');
-      state['facet'].push('entities');
+  var search = function(url, prefix, collectionId) {
+    var dfd = $q.defer();
+    var query = Query.parse(prefix),
+        state = angular.copy(query.state);
+    state['limit'] = 20;
+    state['snippet'] = 140;
+    state['facet'] = query.getArray('facet');
+    state['facet'].push('entities');
+    if (collectionId) {
+      state['filter:collection_id'] = collectionId;
+      state['scope'] = 'collection';
+    } else {
       state['facet'].push('collections');
-      if (collection_id) {
-        state['filter:collection_id'] = collection_id;
-        state['scope'] = 'collection';
-      }
-      state['offset'] = state.offset || 0;
-      History.setLastSearch($location.url());
-      var params = {cache: !collection_id, params: state};
-      $http.get('/api/1/query', params).then(function(res) {
+    }
+    state['offset'] = state.offset || 0;
+    History.setLastSearch($location.url());
+    var params = {cache: !collectionId, params: state};
+    $http.get(url, params).then(function(res) {
+      dfd.resolve({
+        'query': query,
+        'result': res.data
+      });
+    }, function(err) {
+      if (err.status === 400) {
         dfd.resolve({
           'query': query,
-          'result': res.data
+          'result': err.data
         });
-      }, function(err) {
-        if (err.status === 400) {
-          dfd.resolve({
-            'query': query,
-            'result': err.data
-          });
-        } else {
-          dfd.reject(err);
-        }
-      });
-      return dfd.promise;
+      } else {
+        dfd.reject(err);
+      }
+    });
+    return dfd.promise;
+  };
+
+  return {
+    search: function(collectionId) {
+      return search('/api/1/query', '', collectionId);
+    },
+    searchEntity: function(entityId, prefix) {
+      var url = '/api/1/entities/' + entityId + '/documents';
+      return search(url, prefix);
     },
     peek: function() {
       var dfd = $q.defer();

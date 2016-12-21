@@ -1,1 +1,11 @@
-{{label}}
+<a ng-if="::isUrl" href="{{::label}}">
+  {{::label | host}}
+</a>
+<span ng-if="::isText">
+  {{::label}}
+</span>
+
+<a ng-if="::isAddress" href="https://www.google.com/maps?q={{value | urlencode}}"
+   tooltip-placement="top" uib-tooltip="View in Google Maps" target="_blank">
+  <i class="fa fa-fw fa-map"></i>
+</a>

@@ -20,6 +20,10 @@ aleph.filter('calendar', function() {
   };
 });
 
+aleph.filter('urlencode', function() {
+  return window.encodeURIComponent;
+});
+
 
 aleph.filter('host', function() {
   return function(val) {

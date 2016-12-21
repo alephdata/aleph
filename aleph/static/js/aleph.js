@@ -114,6 +114,7 @@ aleph.config([
       'entity': loadEntity,
       'links': loadEntityLinks,
       'similar': loadSimilarEntities,
+      'documents': loadEntityDocuments,
       'metadata': loadMetadata
     }
   });

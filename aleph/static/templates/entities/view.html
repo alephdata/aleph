@@ -52,9 +52,9 @@
     <div class="col-md-8">
       <table class="table">
         <tr>
-          <th>Entity</th>
-          <th>Source</th>
+          <th>Duplicate</th>
           <th>Countries</th>
+          <th>Source</th>
         </tr>
         <tbody ng-repeat="similar in similar.result.results track by similar.id">
           <tr>
@@ -67,10 +67,11 @@
               </strong>
             </td>
             <td>
-              <entity-source entity="similar"></entity-source>
+              <span ng-if="!similar.countries.length">&mdash;</span>
+              <entity-countries entity="similar"></entity-countries>
             </td>
             <td>
-              <entity-countries entity="similar"></entity-countries>
+              <entity-source entity="similar"></entity-source>
             </td>
           </tr>
         </tbody>
@@ -112,7 +113,7 @@
 
       <table class="table">
         <tr>
-          <th width="20%">Type</th>
+          <th width="20%">Relationship</th>
           <th colspan="2">Entity</th>
         </tr>
         <tbody ng-repeat="link in links.result.results track by link.id">
@@ -153,6 +154,44 @@
       <search-facet result="links.result" query="links.query" title="Countries"
                     facet="countries" filter="countries">
       </search-facet>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid" ng-if="::showDocuments">
+  <div class="row section-header">
+    <div class="col-md-12">
+      <h3>
+        <i class="fa fa-fw fa-file-text" aria-hidden="true"></i>
+        <a id="documents"></a>
+        Documents
+      </h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <span ng-if="::showDocumentsNav">
+        <search-box query="query"></search-box>
+      </span>
+
+      <div ng-repeat="doc in documents.result.results track by doc.id">
+        <search-result doc="doc" result="documents.result" query="documents.query">
+        </search-result>
+      </div>
+
+      <div class="bottom-pager" ng-if="documents.result.total > documents.result.limit">
+        <div class="pull-right">
+          <response-pager response="documents.result" load="loadDocumentsOffset(offset)"></response-pager>
+        </div>
+        <div class="total">
+          {{documents.result.total | number}} documents.
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4" ng-if="::showDocumentsNav">
+      <search-facets query="documents.query" result="documents.result" metadata="metadata">
+      </search-facets>
     </div>
   </div>
 </div>

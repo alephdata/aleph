@@ -2,8 +2,8 @@ import aleph from '../aleph';
 
 aleph.factory('Link', ['$q', '$http', 'Query', 'Metadata', function($q, $http, Query, Metadata) {
   return {
-    search: function(entityId) {
-      var query = Query.parse('links_'),
+    search: function(entityId, prefix) {
+      var query = Query.parse(prefix),
           state = angular.copy(query.state);
           dfd = $q.defer(),
           url = '/api/1/entities/' + entityId + '/links';

@@ -15,9 +15,15 @@ aleph.directive('propertyValue', ['Metadata', function(Metadata) {
     templateUrl: 'templates/entities/property_value.html',
     link: function (scope, element, attrs, model) {
       scope.label = scope.value;
-      if (scope.property.type == 'country') {
+      scope.isUrl = scope.property.type == 'url' || scope.property.type == 'uri';
+      scope.isAddress = scope.property.type == 'address';
+      scope.isCountry = scope.property.type == 'country';
+      scope.isText = !scope.isUrl;
+
+      if (scope.isCountry) {
         scope.label = metadata.countries[scope.value] || scope.value;
       }
+
     }
   };
 }]);

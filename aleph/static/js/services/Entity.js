@@ -64,7 +64,7 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
           state = angular.copy(query.state);
       state['limit'] = 5;
       state['facet'] = [];
-      state['strict'] = state['strict'] || true;
+      state['strict'] = state.strict || true;
       return searchQuery('/api/1/entities/' + entityId + '/similar', query, state);
     },
     create: function(entity) {
