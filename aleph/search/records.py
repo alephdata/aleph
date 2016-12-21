@@ -22,7 +22,7 @@ def records_query_shoulds(state):
     if state.has_text:
         shoulds.append(text_query_string(state.text))
 
-    for term in state.entity_terms:
+    for term in state.highlight_terms:
         shoulds.append(text_query_string(term))
     return shoulds
 

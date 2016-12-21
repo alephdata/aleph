@@ -68,13 +68,16 @@ def child_record(q):
 
 
 def multi_match(text, fields, fuzziness=0):
-    return {
+    q = {
         'multi_match': {
             "fields": fields,
             "query": text,
-            "fuzziness": fuzziness
+            "operator": "AND"
         }
     }
+    if fuzziness > 0:
+        q['multi_match']['fuzziness'] = fuzziness
+    return q
 
 
 def aggregate(state, q, aggs, facets):

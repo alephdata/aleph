@@ -17,7 +17,8 @@ class QueryState(object):
         self.raw_query = None
 
         self.facet_names = self.getlist('facet')
-        self.entity_ids = self.getlist('entity')
+        self.entity_ids = self.getlist('filter:entities.id')
+        self.highlight = []
 
     @property
     def limit(self):
@@ -78,6 +79,13 @@ class QueryState(object):
                 for term in entity.regex_terms:
                     self._entity_terms.add(term)
         return self._entity_terms
+
+    @property
+    def highlight_terms(self):
+        for term in self.highlight:
+            yield term
+        for term in self.entity_terms:
+            yield term
 
     @property
     def collection_id(self):

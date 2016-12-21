@@ -195,8 +195,13 @@ def entity_documents(entity, state):
     text_queries = []
 
     for name in entity.get('names', []):
-        text_queries.append(multi_match(name, ['text']))
+        text_queries.append(multi_match(name, ['text', 'text_latin']))
         shoulds.append(multi_match(name, ['title', 'summary']))
+        state.highlight.append(name)
+
+    for fp in entity.get('fingerprints', []):
+        text_queries.append(multi_match(fp, ['text']))
+        state.highlight.append(fp)
 
     # for ident in entity.get('identifiers', []):
     #     text_queries.append(multi_match(ident, ['text']))
@@ -207,7 +212,8 @@ def entity_documents(entity, state):
 
     state.raw_query = {
         "bool": {
-            "should": shoulds
+            "should": shoulds,
+            "minimum_should_match": 1
         }
     }
     # pprint(state.raw_query)
