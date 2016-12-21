@@ -7,7 +7,8 @@ from aleph.core import es, es_index
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import clean_highlight, execute_basic, add_filter
 from aleph.search.util import scan_iter
-from aleph.search.fragments import aggregate, filter_query, text_query
+from aleph.search.fragments import aggregate, filter_query, child_record
+from aleph.search.fragments import text_query, multi_match
 from aleph.search.facet import parse_facet_result
 from aleph.search.records import records_query_internal, records_query_shoulds
 
@@ -39,6 +40,10 @@ def documents_query(state, fields=None, facets=True, since=None):
     # clean this up, I think it should be based around an object model of
     # some sort.
     q = text_query(state.text)
+
+    if state.raw_query:
+        q = {"bool": {"must": [q, state.raw_query]}}
+
     q = document_authz_filter(q, state.authz)
 
     # Used by alerting to find only updated results:
@@ -182,3 +187,28 @@ def facet_collections(state, q, aggs):
         }
     }
     return aggs
+
+
+def entity_documents(entity, state):
+    """Try and find all documents mentioning a particular entity."""
+    shoulds = [{"term": {"entities.id": entity.get('id')}}]
+    text_queries = []
+
+    for name in entity.get('names', []):
+        text_queries.append(multi_match(name, ['text']))
+        shoulds.append(multi_match(name, ['title', 'summary']))
+
+    # for ident in entity.get('identifiers', []):
+    #     text_queries.append(multi_match(ident, ['text']))
+
+    shoulds.append(child_record({"bool": {"should": text_queries}}))
+    # TODO: add in other entity info like phone numbers, addresses, etc. for
+    # ranking.
+
+    state.raw_query = {
+        "bool": {
+            "should": shoulds
+        }
+    }
+    # pprint(state.raw_query)
+    return documents_query(state)

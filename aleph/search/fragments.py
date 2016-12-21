@@ -67,6 +67,16 @@ def child_record(q):
     }
 
 
+def multi_match(text, fields, fuzziness=0):
+    return {
+        'multi_match': {
+            "fields": fields,
+            "query": text,
+            "fuzziness": fuzziness
+        }
+    }
+
+
 def aggregate(state, q, aggs, facets):
     """Generate aggregations, a generalized way to do facetting."""
     for facet in facets:

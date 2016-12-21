@@ -8,7 +8,7 @@ from aleph.datasets.util import finalize_index
 from aleph.views.cache import enable_cache
 from aleph.events import log_event
 from aleph.search import QueryState
-from aleph.search import entities_query, links_query
+from aleph.search import entities_query, links_query, entity_documents
 from aleph.search import suggest_entities, similar_entities, load_entity
 
 blueprint = Blueprint('entities_api', __name__)
@@ -111,6 +111,13 @@ def similar(id):
     entity, _ = get_entity(id, request.authz.READ)
     state = QueryState(request.args, request.authz)
     return jsonify(similar_entities(entity, state))
+
+
+@blueprint.route('/api/1/entities/<id>/documents', methods=['GET'])
+def documents(id):
+    entity, _ = get_entity(id, request.authz.READ)
+    state = QueryState(request.args, request.authz)
+    return jsonify(entity_documents(entity, state))
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])

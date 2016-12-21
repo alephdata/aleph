@@ -4,7 +4,7 @@ from pprint import pprint  # noqa
 from aleph.core import url_for, es, es_index
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.search.util import execute_basic
-from aleph.search.fragments import match_all, filter_query
+from aleph.search.fragments import match_all, filter_query, multi_match
 from aleph.search.fragments import add_filter, aggregate
 from aleph.search.facet import parse_facet_result
 from aleph.text import latinize_text
@@ -155,16 +155,6 @@ def suggest_entities(prefix, authz, min_count=0, schemas=None, size=5):
     return {
         'prefix': prefix,
         'results': options
-    }
-
-
-def multi_match(text, fields, fuzziness=0):
-    return {
-        'multi_match': {
-            "fields": fields,
-            "query": text,
-            "fuzziness": fuzziness
-        }
     }
 
 
