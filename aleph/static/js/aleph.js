@@ -23,7 +23,7 @@ var aleph = angular.module('aleph', [
 import {loadDocumentsSearch, loadPeek} from './loaders/loadDocuments';
 import loadMetadata from './loaders/loadMetadata';
 import loadAlertsIndex from './loaders/loadAlertsIndex';
-import loadTabular from './loaders/loadAlertsIndex';
+import loadTabular from './loaders/loadTabular.js';
 import loadDatasets from './loaders/loadDatasets';
 import loadRoles from './loaders/loadRoles';
 import loadStatistics from './loaders/loadHome';
