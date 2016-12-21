@@ -49,6 +49,7 @@ LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
 COLLECTION_CATEGORIES = {
     'news': 'News archives',
     'leak': 'Leaks',
+    'land': 'Land registry',
     'gazette': 'Gazettes',
     'court': 'Court archives',
     'company': 'Company registries',
@@ -57,7 +58,8 @@ COLLECTION_CATEGORIES = {
     'sanctions': 'Sanctions lists',
     'scrape': 'Scrapes',
     'procurement': 'Procurement',
-    'grey': 'Grey literature'
+    'grey': 'Grey literature',
+    'regulatory': 'Regulatory filings'
 }
 
 # Graph / Databases component configuration
