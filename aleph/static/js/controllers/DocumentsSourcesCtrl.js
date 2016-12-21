@@ -1,5 +1,5 @@
-aleph.controller('DocumentsSourcesCtrl', ['$scope', '$route', '$location', 'Title', 'Collection', 'collections', 'metadata',
-    function($scope, $route, $location, Title, Collection, collections, metadata) {
+aleph.controller('DocumentsSourcesCtrl', ['$scope', '$route', '$location', '$anchorScroll', 'Title', 'Collection', 'collections', 'metadata',
+    function($scope, $route, $location, $anchorScroll, Title, Collection, collections, metadata) {
 
   Title.set("Document sources", "documents");
 

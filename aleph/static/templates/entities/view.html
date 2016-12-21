@@ -172,7 +172,7 @@
   <div class="row">
     <div class="col-md-8">
       <span ng-if="::showDocumentsNav">
-        <search-box query="query"></search-box>
+        <search-box query="documents.query"></search-box>
       </span>
 
       <div ng-repeat="doc in documents.result.results track by doc.id">

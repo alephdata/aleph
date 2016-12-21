@@ -58,7 +58,12 @@ class DatasetFacet(Facet):
         labels = {}
         for key in keys:
             try:
-                labels[key] = {'label': datasets.get(key).label}
+                dataset = datasets.get(key)
+                labels[key] = {
+                    'label': dataset.label,
+                    'category': dataset.category,
+                    'public': dataset.public,
+                }
             except NameError:
                 labels[key] = {'label': key}
         return labels

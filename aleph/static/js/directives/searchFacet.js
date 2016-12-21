@@ -32,6 +32,7 @@ aleph.directive('searchFacet', ['Authz', 'Entity', function(Authz, Entity) {
         scope.isEntity = type == 'entity';
         scope.isSchema = type == 'schema';
         scope.isCollection = type == 'collection';
+        scope.isDataset = type == 'dataset';
       });
 
       scope.facetKey = function(value) {

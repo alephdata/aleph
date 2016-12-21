@@ -1,21 +1,21 @@
 import aleph from '../aleph';
 
-aleph.directive('collectionsIcon', [function() {
+aleph.directive('privacyIcon', [function() {
   return {
     restrict: 'E',
     transclude: false,
     scope: {
-      'collection': '=',
+      'subject': '=',
       'label': '='
     },
-    templateUrl: 'templates/collections/icon.html',
+    templateUrl: 'templates/util/privacy_icon.html',
     link: function (scope, element, attrs, model) {
       scope.label = !!scope.label;
       scope.icon = 'fa-lock';
       scope.tooltip = 'Visible to some users';
 
-      if (!angular.isUndefined(scope.collection)) {
-        if (angular.isUndefined(scope.collection.public) || scope.collection.public) {
+      if (!angular.isUndefined(scope.subject)) {
+        if (angular.isUndefined(scope.subject.public) || scope.subject.public) {
           scope.icon = 'fa-globe';
           scope.tooltip = null;
         }

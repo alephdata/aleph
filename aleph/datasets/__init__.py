@@ -48,6 +48,7 @@ class Dataset(object):
             'info_url': self.info_url,
             'roles': self.roles,
             'public': self.public,
+            'category': self.category,
             'entities_count': self.entities_count
         }
 

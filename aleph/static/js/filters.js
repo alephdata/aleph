@@ -76,20 +76,3 @@ aleph.filter('schemaLabel', ['Metadata', function(Metadata) {
   };
 
 }]);
-
-
-aleph.filter('collectionCategory', ['Metadata', function(Metadata) {
-  var categories = {};
-
-  Metadata.get().then(function(md) {
-    categories = md.categories;
-  });
-
-  return function(code) {
-    if (!code) {
-      return 'Uncategorized';
-    }
-    var label = categories[code];
-    return label || code;
-  };
-}]);

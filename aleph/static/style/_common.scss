@@ -139,6 +139,13 @@ table.table {
     }
 }
 
+.label.label-category {
+    // font-weight: normal;
+    background-color: $brand-primary;
+    text-transform: uppercase;
+    font-size: 0.7em;
+}
+
 code {
     background-color: lighten($brand-primary, 70%);
     color: $brand-primary;

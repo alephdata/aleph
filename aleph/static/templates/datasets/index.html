@@ -28,9 +28,11 @@
         <a ng-repeat="dataset in datasets.results"
            href="/entities?filter:dataset={{dataset.name}}" class="list-group-item">
           <span class="badge">
-            {{dataset.entities_count | number}}
+            {{::dataset.entities_count | number}}
           </span>
-          {{dataset.label}}
+          <privacy-icon subject="dataset"></privacy-icon>
+          <strong>{{::dataset.label}}</strong>
+          <category-label subject="dataset"></category-label>
         </a>
       </div>
     </div>

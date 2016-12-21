@@ -17,12 +17,10 @@
 
     <div class="context">
       <span ng-show="::collection">
-        <span ng-if="::collection.category" class="label label-primary">
-          {{::collection.category | collectionCategory }}</span>
-
+        <privacy-icon subject="collection"></privacy-icon>
         <a ng-href="/collections/{{::collection.id}}" class="collection"
           ng-bind="::collection.label"></a>
-        <collections-icon collection="::collection"></collections-icon>
+        <category-label subject="collection"></category-label>
         &middot;
       </span>
 

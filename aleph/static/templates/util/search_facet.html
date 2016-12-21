@@ -35,8 +35,8 @@
         <span ng-if="::isSchema">
           <entity-icon schema="::val.id"></entity-icon>
         </span>
-        <span ng-if="::isCollection">
-          <collections-icon collection="::val"></collections-icon>
+        <span ng-if="::(isCollection || isDataset)">
+          <privacy-icon subject="::val"></privacy-icon>
         </span>
         <span>
           {{::val.label}}
