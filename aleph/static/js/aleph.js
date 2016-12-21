@@ -1,6 +1,7 @@
 // Expose some API
 require('expose-loader?$!expose-loader?jQuery!jquery');
 require('expose-loader?angular!angular');
+require('expose-loader?PDFJS!angular-pdf/bower_components/pdfjs-dist/build/pdf.combined.js');
 
 // These modules do not return anything
 require('angular-ui-select/select.js');

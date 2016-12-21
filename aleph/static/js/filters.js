@@ -1,6 +1,7 @@
 var moment = require('moment');
 
 import aleph from './aleph';
+import moment from 'moment';
 
 
 aleph.filter('date', function() {
