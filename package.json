@@ -32,7 +32,7 @@
     "angular-animate": "1.4.8",
     "angular-sanitize": "1.5.0",
     "angular-ui-bootstrap": "0.14.3",
-    "angular-ui-select": "angular-ui/ui-select#v0.14.8",
+    "ui-select": "angular-ui/ui-select#v0.14.8",
     "angular-loading-bar": "^0.9.0",
     "ng-file-upload": "^12.2.12",
     "angular-pdf": "~1.3.0",
