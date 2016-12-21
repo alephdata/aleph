@@ -34,7 +34,7 @@ services:
       - 5672
 
   worker:
-      image: aleph_app
+      image: pudo/aleph:latest
       command: make worker
       links:
         - postgres
@@ -55,7 +55,7 @@ services:
         - aleph.env
 
   beat:
-      image: aleph_app
+      image: pudo/aleph:latest
       command: make beat
       links:
         - postgres
@@ -77,7 +77,7 @@ services:
         - aleph.env
 
   app:
-      build: .
+      image: pudo/aleph:latest
       command: make web
       ports:
         - "13376:8000"
