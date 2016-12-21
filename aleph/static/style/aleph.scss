@@ -19,7 +19,7 @@ $spacing: 0.5em;
 $base-unit: 12px;
 
 // Style tiles, Fonts
-$font-family-sans-serif: 'Open Sans', sans-serif !default;
+$font-family-sans-serif: 'Open Sans', sans-serif;
 $font-family-serif: 'Georgia', serif !default;
 $input-border-focus: $brand-primary;
 
@@ -51,6 +51,11 @@ footer {
     a {
         color: white;
         text-decoration: underline;
+
+        &:hover {
+            color: white;
+            text-decoration: none;
+        }
     }
 }
 

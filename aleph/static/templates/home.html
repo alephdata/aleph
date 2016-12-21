@@ -1,169 +1,106 @@
 <div class="jumbotron">
-  <h1>{{statistics.document_count | number}} leads</h1>
+  <h1>{{::statistics.documents_count + statistics.entities_count | number}} leads</h1>
   <p class="teaser">for your investigations</p>
-  <div class="search-area">
-    <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
-      <div class="input-group input-group-lg">
-        <input type="text" class="form-control" autofocus ng-model="query.q"
-          placeholder="Search documents and data sources">
-        <span class="input-group-btn">
-          <button class="btn btn-primary" type="submit">Search</button>
-        </span>
-      </div>
-      <p class="sample-searches">
-        Try searches:
-        <span ng-repeat="sample in metadata.app.samples">
-          <span ng-if="$last">or</span>
-          <a href="/documents?q={{::sample}}">{{::sample}}</a><span ng-if="!$last">,</span>
-        </span>
-      </p>
-    </form>
-  </div>
 </div>
 
 <div class="home screen">
   <div class="row">
-    <div class="col-md-6 feature">
+    <div class="col-md-4 feature">
       <h2>
         <i class="fa fa-fw fa-file-text"></i>
-        Search it all
+        Search documents
       </h2>
+
       <p>
-        {{metadata.app.title}} lets you search across
-        <a href="/collections">{{statistics.collection_count | number}} collections
-        of documents</a> from previous investigations,
-        official sources, and scraped databases.
+        Search documents from previous investigations, official sources, and
+        scraped websites.
       </p>
 
-      <div class="row">
-        <div class="col-md-6">
-          <table class="table">
-            <tr>
-              <th>Collections by country</th>
-              <th></th>
-            </tr>
-            <tr ng-repeat="country in facets.countries.values | limitTo: 10">
-              <td>
-                <a ng-href="/collections?filter:countries={{::country.id}}">
-                  {{::country.label | country}}
-                </a>
-              </td>
-              <td class="numeric">{{::country.count | number}}</td>
-            </tr>
-            <tr>
-              <td><a href="/collections">Browse all...</a></td>
-              <td></td>
-            </tr>
-          </table>
+      <form class="form-horizontal actions" role="search" ng-submit="searchDocuments(form)">
+        <div class="input-group">
+          <input type="text" class="form-control" autofocus ng-model="documentsQuery.q"
+            placeholder="{{::statistics.documents_count | number}} documents">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="submit">Search</button>
+          </span>
         </div>
-        <div class="col-md-6">
-          <table class="table">
-            <tr>
-              <th>Collections by category</th>
-              <th></th>
-            </tr>
-            <tr ng-repeat="category in facets.category.values">
-              <td>
-                <a ng-href="/collections?filter:category={{::category.id}}">
-                  {{::category.label | collectionCategory}}
-                </a>
-              </td>
-              <td class="numeric">{{::category.count | number}}</td>
-            </tr>
-          </table>
-        </div>
-      </div>
+        <p class="context">
+          Examples:
+          <span ng-repeat="sample in metadata.app.samples">
+            <span ng-if="$last">or</span>
+            <a href="/documents?q={{::sample}}">{{::sample}}</a><span ng-if="!$last">,</span>
+          </span>,
+          or <a href="/documents/sources">browse sources</a>.
+        </p>
+      </form>
+
+
     </div>
 
-    <div class="col-md-6 feature" ng-if="::!authz.logged_in()">
+    <div class="col-md-4 feature">
       <h2>
-        <i class="fa fa-fw fa-cloud-upload"></i>
-        Personal archive
+        <i class="fa fa-fw fa-user-secret"></i>
+        Track people and companies
       </h2>
       <p>
-        <a href="/collections?category=investigation">Upload documents</a> to make
-        them searchable and keep them organized. You can also share documents with
-        others, or make them fully public.
+        Registries, leaks and sanctions lists help you to find persons of
+        interest and their assets.
       </p>
+
+      <form class="form-horizontal actions" role="search" ng-submit="searchEntities(form)">
+        <div class="input-group">
+          <input type="text" class="form-control" autofocus ng-model="entitiesQuery.q"
+            placeholder="{{::statistics.entities_count | number}} people and companies">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="submit">Search</button>
+          </span>
+        </div>
+        <p class="context">
+          <a href="/datasets">Browse databases</a>.
+        </p>
+      </form>
+
+
     </div>
-    <div class="col-md-6 feature" ng-if="::!authz.logged_in()">
+
+    <div class="col-md-4 feature">
       <h2>
-        <i class="fa fa-fw fa-bell"></i>
-        E-Mail Alerts
+        <i class="fa fa-fw fa-address-book"></i>
+        Manage your research
       </h2>
       <p>
-        As new material gets added, you can stay informed about
-        any additional matches for your previous searches by
-        setting up e-mail alerts.
+        Upload your own documents, manage entity watchlists and find leads
+        for your story.
       </p>
-    </div>
-    <div class="col-md-6 feature" ng-if="::!authz.logged_in()">
-      <h2>
-        <i class="fa fa-fw fa-users"></i>
-        Persons of Interest
-      </h2>
-      <p>
-        Documents are cross-referenced with persons and companies derived from
-        research and <a href="/collections?category=sanctions">international
-        sanctions lists</a>.
-      </p>
-    </div>
-    <div class="col-md-6 feature" ng-if="::authz.logged_in()">
-      <h2>
-        <div class="pull-right">
-          <a ng-click="createCollection($event)" class="btn btn-xs btn-primary">
-            <i class="fa fa-plus-square" aria-hidden="true"></i>
+
+      <div class="actions" ng-if="::authz.logged_in()">
+        <div class="btn-group btn-group-justified" role="group">
+          <a ng-click="createCollection($event)" class="btn btn-primary">
+            <i class="fa fa-fw fa-plus"></i>
             New collection
           </a>
+          <a href="/collections" class="btn btn-default">
+            Browse collections
+            <i class="fa fa-fw fa-chevron-right"></i>
+          </a>
         </div>
-
-        <i class="fa fa-fw fa-folder-open"></i>
-        Your collections
-      </h2>
-      <div ng-if="!collections.length">
-        <div class="alert alert-info">
-          <p>
-            You don't have any personal collections yet. Create a collection if you want to upload
-            documents to make them searchable or create a watchlist of persons and companies.
-          </p>
-        </div>
-      </div>
-
-      <div ng-if="collections.length">
-        <p>
-          Below are the personal collections that you're part of. Create a new
-          collection if you want to upload more documents or create a separate watchlist.
+        <p class="context">
+          <a ng-click="manageAlerts($event)">Manage your e-mail alerts</a>.
         </p>
-        <table class="table">
-          <tr ng-repeat="collection in collections">
-            <td>
-              <span ng-if="::!collection.public"
-                  uib-tooltip="Only available to selected users"
-                  tooltip-placement="right">
-                <i class="fa fa-fw fa-lock" aria-hidden="true"></i>
-              </span>
-              <span ng-if="::collection.public">
-                <i class="fa fa-fw fa-globe" aria-hidden="true"></i>
-              </span>
-              <a ng-href="{{::collection.getPath()}}">
-                {{::collection.label}}
-              </a>
-            </td>
-            <td class="nobreak numeric" width="1%">
-              <span ng-if="collection.countries.length" class="label label-primary">
-                {{::collection.countries[0] | country}}
-              </span>
-              <span ng-if="collection.countries.length > 1">
-                &nbsp;<span class="label label-danger">&nbsp;&hellip;&nbsp;</span>
-              </span>
-
-            </td>
-            <td class="nobreak numeric" width="1%">
-              {{::collection.updated_at | date }}
-            </td>
-          </tr>
-        </table>
       </div>
+
+      <div class="actions" ng-if="::!authz.logged_in()">
+        <div class="btn-group btn-group-justified" role="group">
+          <a ng-click="triggerLogin()" class="btn btn-primary">
+            <i class="fa fa-fw fa-sign-in"></i>
+            Sign in for watchlists and alerts
+          </a>
+        </div>
+        <p class="context">
+          Anyone can sign up for a free account.
+        </p>
+      </div>
+
     </div>
   </div>
 </div>

@@ -223,8 +223,6 @@ aleph.config([
     reloadOnSearch: false,
     resolve: {
       'statistics': loadStatistics,
-      'facets': loadCollectionFacets,
-      'collections': loadUserCollections,
       'metadata': loadMetadata
     }
   });

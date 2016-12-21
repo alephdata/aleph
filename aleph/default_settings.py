@@ -33,7 +33,7 @@ CUSTOM_SCSS_PATH = None
 CUSTOM_TEMPLATES_DIR = []
 
 # Shown on the home page as a few sample queries:
-SAMPLE_SEARCHES = ['Serbia', 'TeliaSonera', 'Vladimir Putin']
+SAMPLE_SEARCHES = ['TeliaSonera', 'Vladimir Putin']
 
 # Language configuration
 DEFAULT_LANGUAGE = 'en'

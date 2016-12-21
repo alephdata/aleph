@@ -8,6 +8,8 @@
 
     <link type="text/css" href="{{ url_for('static', filename='assets/aleph.css') }}" rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ config.APP_FAVICON }}">
     <base href="{{url_for('.ui')}}">
   </head>
@@ -41,10 +43,10 @@
                   Documents
                 </a>
               </li>
-              <li ng-class="{'active': navSection =='entities'}" ng-show="navSection =='entities'">
+              <li ng-class="{'active': navSection =='entities'}">
                 <a href="/datasets">
-                  <i class="fa fa-fw fa-database" aria-hidden="true"></i>
-                  Databases
+                  <i class="fa fa-fw fa-user-secret" aria-hidden="true"></i>
+                  People and Companies
                 </a>
               </li>
               <li ng-class="{'active': navSection =='collections'}">

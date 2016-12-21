@@ -28,17 +28,6 @@ def query():
     return jsonify(result)
 
 
-@blueprint.route('/api/1/statistics')
-def statistics():
-    enable_cache(vary_user=True)
-    state = QueryState(request.args, request.authz, limit=0)
-    result = documents_query(state)
-    return jsonify({
-        'document_count': result['total'],
-        'collection_count': len(request.authz.collections_read)
-    })
-
-
 @blueprint.route('/api/1/peek')
 def peek():
     if not get_config('ALLOW_PEEKING', True):
