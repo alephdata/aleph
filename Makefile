@@ -44,3 +44,5 @@ docs-clean:
 
 docs-web:
 	python -m SimpleHTTPServer 8000
+
+.PHONY: build
