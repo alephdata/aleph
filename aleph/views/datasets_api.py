@@ -1,12 +1,13 @@
 import logging
+from collections import defaultdict
 from werkzeug.exceptions import NotFound
 from flask import Blueprint, request
 from apikit import jsonify
 
-from aleph.core import datasets
-from aleph.search import QueryState
-from aleph.search import entities_query
+from aleph.core import datasets, get_config
+from aleph.search import QueryState, entities_query
 from aleph.views.cache import enable_cache
+from aleph.data.reference import COUNTRY_NAMES
 
 
 log = logging.getLogger(__name__)
@@ -25,11 +26,50 @@ def index():
     res = entities_query(state)
     values = res.get('facets', {}).get('dataset', {}).get('values', [])
     counts = {v.get('id'): v.get('count') for v in values}
+
+    countries_facet = defaultdict(int)
+    category_facet = defaultdict(int)
+    countries_filter = set(request.args.getlist('filter:countries'))
+    category_filter = set(request.args.getlist('filter:category'))
+
+    filtered = []
     for dataset in results:
         dataset.entities_count = counts.get(dataset.name)
+        if len(category_filter) and dataset.category not in category_filter:
+            continue
+        if len(countries_filter) and \
+           not len(countries_filter.intersection(dataset.countries)):
+            continue
+        for country in dataset.countries:
+            countries_facet[country] += 1
+        category_facet[dataset.category] += 1
+        filtered.append(dataset)
+
+    facets = {'countries': {'values': []}, 'category': {'values': []}}
+    categories = get_config('COLLECTION_CATEGORIES', {})
+
+    countries_facet = sorted(countries_facet.items(), key=lambda (k, c): c)
+    for key, count in countries_facet[::-1]:
+        facets['countries']['values'].append({
+            'id': key,
+            'count': count,
+            'label': COUNTRY_NAMES.get(key, key)
+        })
+
+    category_facet = sorted(category_facet.items(), key=lambda (k, c): c)
+    for key, count in category_facet[::-1]:
+        if key is None:
+            continue
+        facets['category']['values'].append({
+            'id': key,
+            'count': count,
+            'label': categories.get(key, key)
+        })
+
     return jsonify({
-        'results': results,
-        'total': len(results),
+        'results': filtered,
+        'facets': facets,
+        'total': len(filtered),
         'total_entities_count': res.get('total')
     })
 
