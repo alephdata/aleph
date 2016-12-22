@@ -16,10 +16,35 @@ def element_size(el):
     return float(el.attrib.get('width', 1)) * float(el.attrib.get('height', 1))
 
 
-def extract_page(path, page, languages):
+def ocr_page(path, temp_dir, page_no, languages):
+    """Extract a page as an image and perform OCR."""
+    # This is weird because pdftohtml already generates images, but sometimes
+    # they are really bad, e.g. inverted colors and weird rotations in TIFF
+    # files. So it seems like a good idea for precisions sake to make an image
+    # out of the whole page and OCR that.
+    try:
+        pdftoppm = get_config('PDFTOPPM_BIN')
+        out = os.path.join(temp_dir, page_no)
+        # TODO: figure out if there's something nicer than 300dpi. Seems like
+        # tesseract is trained on 300 and 600 actually sometimes gives worse
+        # results.
+        args = [pdftoppm, '-f', page_no, '-singlefile', '-r', '300', '-gray',
+                path, out]
+        out_path = out + '.pgm'
+        subprocess.call(args)
+        if os.path.exists(out_path):
+            with open(out_path, 'r') as fh:
+                return extract_image_data(fh.read(), languages=languages)
+    except Exception as ex:
+        log.exception(ex)
+    return ''
+
+
+def extract_page(path, temp_dir, page, languages):
     """Extract the contents of a single PDF page, using OCR if need be."""
     page_no = page.get('number')
     page_size = element_size(page)
+    is_ocr = False
 
     texts = []
     for text in page.findall('.//text'):
@@ -30,9 +55,11 @@ def extract_page(path, page, languages):
     for image in page.findall('.//image'):
         ratio = element_size(image) / page_size
         if len(texts) < 2 or ratio > 0.3:
-            log.info("Using OCR for %r, p.%s", path, page_no)
-            with open(image.get('src'), 'r') as fh:
-                texts.append(extract_image_data(fh.read()))
+            is_ocr = True
+
+    if is_ocr:
+        log.info("Using OCR for %r, p.%s", path, page_no)
+        texts.append(ocr_page(path, temp_dir, page_no, languages))
 
     text = '\n'.join(texts).strip()
     log.debug("Extracted %d characters of text from %r, p.%s",
@@ -66,7 +93,7 @@ def extract_pdf(path, languages=None):
 
         pages = []
         for page in doc.findall('./page'):
-            pages.append(extract_page(path, page, languages))
+            pages.append(extract_page(path, temp_dir, page, languages))
 
         return {'pages': pages}
     finally:
