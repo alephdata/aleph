@@ -17,7 +17,12 @@ aleph.controller('EntitiesEditCtrl', ['$scope', '$http', '$q', '$uibModalInstanc
   $scope.duplicateOptions = [];
 
   var initDedupe = function() {
-    $http.get('/api/1/entities/' + entity.id + '/similar').then(function(res) {
+    var url = '/api/1/entities/' + entity.id + '/similar',
+        params = {
+          strict: false,
+          'filter:collection_id': entity.collection_id
+        };
+    $http.get(url, {params: params}).then(function(res) {
       $scope.duplicateOptions = res.data.results;
     }, function(err) {
       console.log('Error', err);

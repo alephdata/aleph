@@ -202,7 +202,7 @@
           <li ng-class="{'active': section == 'details'}">
             <a ng-click="setSection('details')">Additional Detail</a>
           </li>
-          <li ng-class="{'active': section == 'dedupe'}">
+          <li ng-class="{'active': section == 'dedupe'}" ng-show="duplicateOptions.length">
             <a ng-click="setSection('dedupe')">Possible Duplicates</a>
           </li>
         </ul>
