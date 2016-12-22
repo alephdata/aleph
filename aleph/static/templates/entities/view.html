@@ -13,7 +13,7 @@
 
     <h2>
       <entity-icon schema="entity.schema"></entity-icon>
-      {{::entity.name}}
+      <entity-name entity="entity"></entity-name>
       <small>{{::entity.schema | schemaLabel : false}}</small>
     </h2>
   </div>
@@ -62,7 +62,7 @@
               <entity-icon schema="::similar.schema"></entity-icon>
               <strong>
                 <a href="/entities/{{::similar.id}}">
-                  {{::similar.name}}
+                  <entity-name entity="similar"></entity-name>
                 </a>
               </strong>
             </td>
@@ -123,7 +123,7 @@
               <entity-icon schema="::link.remote.schema"></entity-icon>
               <strong>
                 <a href="/entities/{{::link.remote.id}}">
-                  {{::link.remote.name}}
+                  <entity-name entity="link.remote"></entity-name>
                 </a>
               </strong>
             </td>
@@ -140,7 +140,8 @@
       </table>
       <div class="bottom-pager" ng-if="links.result.total > links.result.limit">
         <div class="pull-right">
-          <response-pager response="links.result" load="loadLinksOffset(offset)"></response-pager>
+          <response-pager response="links.result" load="loadLinksOffset(offset)">
+          </response-pager>
         </div>
         <div class="total">
           {{links.result.total | number}} relationships.
@@ -196,7 +197,7 @@
   </div>
 </div>
 
-<div class="container-fluid">
+<!-- div class="container-fluid">
   <div class="row section-header">
     <div class="col-md-12">
       <h3>
@@ -214,4 +215,4 @@
       </p>
     </div>
   </div>
-</div>
+</div -->

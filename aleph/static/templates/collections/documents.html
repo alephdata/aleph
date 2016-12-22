@@ -6,7 +6,10 @@
   <div class="row" ng-show="!isEmpty()">
     <div class="col-md-8">
       <search-box query="query"></search-box>
-
+    </div>
+  </div>
+  <div class="row" ng-show="!isEmpty()">
+    <div class="col-md-8">
       <div ng-repeat="doc in result.results track by doc.id">
         <search-result doc="doc" result="result" query="query"></search-result>
       </div>

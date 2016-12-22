@@ -14,14 +14,6 @@ aleph.controller('EntitiesSearchCtrl', ['$scope', '$http', '$timeout', '$anchorS
     $anchorScroll();
   };
 
-  $scope.getReconciliationUrl = function() {
-    var url = metadata.app.url + 'api/freebase/reconcile';
-    if (metadata.session.logged_in) {
-      url += '?api_key=' + metadata.session.api_key;
-    }
-    return url;
-  };
-
   $scope.$on('$routeUpdate', function() {
     reloadSearch();
   });

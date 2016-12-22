@@ -46,13 +46,13 @@ aleph.controller('EntitiesViewCtrl', ['$scope', '$route', '$location', '$anchorS
   };
 
   $scope.$on('$routeUpdate', function() {
-    Link.search(entity.id).then(function(links) {
+    Link.search(entity.id, 'links_').then(function(links) {
       $scope.links = links;
     });
-    Document.searchEntity(entity.id).then(function(documents) {
+    Document.searchEntity(entity.id, 'documents_').then(function(documents) {
       $scope.documents = documents;
     });
-    Entity.searchSimilar(entity.id).then(function(similar) {
+    Entity.searchSimilar(entity.id, 'similar_').then(function(similar) {
       $scope.similar = similar;
     });
   });

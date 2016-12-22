@@ -37,28 +37,22 @@
 
           <div uib-collapse="navbarCollapsed" class="navbar-collapse bs-js-navbar-collapse">
             <ul class="nav navbar-nav" ng-cloak>
-              <li ng-class="{'active': navSection =='documents'}">
+              <li ng-class="{'active': navSection == 'documents'}">
                 <a href="/documents/sources">
                   <i class="fa fa-fw fa-file-text" aria-hidden="true"></i>
                   Documents
                 </a>
               </li>
-              <li ng-class="{'active': navSection =='entities'}">
+              <li ng-class="{'active': navSection == 'entities'}">
                 <a href="/datasets">
                   <i class="fa fa-fw fa-user-secret" aria-hidden="true"></i>
                   People and Companies
                 </a>
               </li>
-              <li ng-class="{'active': navSection =='collections'}">
+              <li ng-class="{'active': navSection == 'collections'}">
                 <a href="/collections">
                   <i class="fa fa-fw fa-address-book" aria-hidden="true"></i>
                   Collections
-                </a>
-              </li>
-              <li ng-class="{'active': navSection =='help'}">
-                <a href="/help">
-                  <i class="fa fa-fw fa-info-circle" aria-hidden="true"></i>
-                  Help
                 </a>
               </li>
             </ul>
@@ -133,6 +127,8 @@
               aleph search engine &middot;
               <i class="fa fa-github-square"></i>
               <a href="https://github.com/pudo/aleph">source code</a>
+              &middot;
+              <a href="/help">search guide</a>
               &middot;
               <a href="/help/api">api documentation</a>
             </p>

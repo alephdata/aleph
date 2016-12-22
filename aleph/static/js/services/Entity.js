@@ -59,8 +59,8 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
       state['facet'] = ['countries', 'schemata', 'dataset', 'collections'];
       return searchQuery('/api/1/entities', query, state);
     },
-    searchSimilar: function(entityId) {
-      var query = Query.parse(),
+    searchSimilar: function(entityId, prefix) {
+      var query = Query.parse(prefix),
           state = angular.copy(query.state);
       state['limit'] = 5;
       state['facet'] = [];

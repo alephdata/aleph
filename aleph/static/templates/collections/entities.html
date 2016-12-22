@@ -34,7 +34,10 @@
           </div>
         </form>
       </div>
-
+    </div>
+  </div>
+  <div class="row" ng-show="!isEmpty()">
+    <div class="col-md-8">
       <div class="alert alert-danger" role="alert" ng-if="result.error">
         <strong>An error occurred while running your search.</strong>
         {{result.error.message}}

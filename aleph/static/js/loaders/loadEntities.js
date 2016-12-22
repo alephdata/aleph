@@ -9,7 +9,7 @@ var loadEntity = ['$route', 'Entity', function($route, Entity) {
 
 var loadSimilarEntities = ['$route', 'Entity', function($route, Entity) {
   var entityId = $route.current.params.entity_id;
-  return Entity.searchSimilar(entityId);
+  return Entity.searchSimilar(entityId, 'similar_');
 }];
 
 var loadEntityLinks = ['$route', 'Link', function($route, Link) {
