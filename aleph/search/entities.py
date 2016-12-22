@@ -190,3 +190,13 @@ def similar_entities(entity, state):
     }
     # pprint(state.raw_query)
     return entities_query(state)
+
+
+def get_dataset_countries(dataset_name):
+    """Create a list of the top 300 countries mentioned in a dataset."""
+    q = {'term': {'dataset': dataset_name}}
+    aggs = {'countries': {'terms': {'field': 'countries', 'size': 300}}}
+    q = {'size': 0, 'query': q, 'aggregations': aggs}
+    result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
+    result = result.get('aggregations', {}).get('countries', {})
+    return [b.get('key') for b in result.get('buckets', [])]

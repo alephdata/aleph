@@ -4,7 +4,6 @@ import logging
 from elasticsearch.helpers import scan
 
 from aleph.core import es, es_index, db
-from aleph.util import ensure_list
 from aleph.model import Entity, Reference
 from aleph.datasets.util import finalize_index
 from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT

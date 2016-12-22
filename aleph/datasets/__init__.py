@@ -37,6 +37,17 @@ class Dataset(object):
         self._queries = dict_list(data, 'queries', 'query')
 
     @property
+    def countries(self):
+        # This is cached only once for each run-time, basically as a really
+        # stupid cache. Perhaps configuring countries explicitly, or giving
+        # this into a memoization tool that timeouts every N hours would be
+        # a good idea.
+        if not hasattr(self, '_countries'):
+            from aleph.search.entities import get_dataset_countries
+            self._countries = get_dataset_countries(self.name)
+        return self._countries
+
+    @property
     def queries(self):
         for query in self._queries:
             yield Query(self, query)
@@ -49,6 +60,7 @@ class Dataset(object):
             'roles': self.roles,
             'public': self.public,
             'category': self.category,
+            'countries': self.countries,
             'entities_count': self.entities_count
         }
 
