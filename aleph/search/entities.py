@@ -177,7 +177,7 @@ def similar_entities(entity, state):
     must = {"bool": {"should": required, "minimum_should_match": 1}}
 
     # boost by "contributing criteria"
-    for field in ['dates', 'countries', 'addresses']:
+    for field in ['dates', 'countries', 'addresses', 'schemata']:
         for val in entity.get(field, []):
             boosters.append(multi_match(val, [field]))
 

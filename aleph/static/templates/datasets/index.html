@@ -31,7 +31,7 @@
       <div class="list-group">
         <a ng-repeat="dataset in result.results"
            href="/entities?filter:dataset={{dataset.name}}" class="list-group-item">
-          <span class="badge">
+          <span class="badge" ng-if="dataset.entities_count">
             {{::dataset.entities_count | number}}
           </span>
           <privacy-icon subject="dataset"></privacy-icon>
@@ -47,6 +47,8 @@
       <search-facet result="result" query="query" title="Countries"
                     facet="countries">
       </search-facet>
+
+      <entity-recon-teaser></entity-recon-teaser>
     </div>
   </div>
 </div>

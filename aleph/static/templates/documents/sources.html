@@ -33,7 +33,7 @@
         <a ng-repeat="collection in collections.results track by collection.id"
            href="/documents?filter:collection_id={{::collection.id}}"
            class="list-group-item">
-          <span class="badge">
+          <span class="badge" ng-if="collection.doc_count">
             {{::collection.doc_count | number}}
           </span>
           <privacy-icon subject="collection"></privacy-icon>

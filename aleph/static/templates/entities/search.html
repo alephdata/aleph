@@ -1,5 +1,5 @@
 <div class="screen">
-  <div class="row" ng-show="!isEmpty()">
+  <div class="row">
     <div class="col-md-8">
       <div class="search-bar">
         <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
@@ -15,7 +15,10 @@
           </div>
         </form>
       </div>
-
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
       <div class="alert alert-danger" role="alert" ng-if="result.error">
         <strong>An error occurred while running your search.</strong>
         {{result.error.message}}
@@ -76,24 +79,7 @@
                     facet="schemata">
       </search-facet>
 
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <strong>Entity reconciliation</strong>
-        </div>
-        <div class="panel-body">
-          <p>
-            Use <a href="http://openrefine.org" target="_blank">OpenRefine</a>
-            reconciliation to check what persons and companies are mentioned in
-            your raw data.
-            <a href="/help/reconcile">Learn more...</a>
-          </p>
-          <p class="help-block">
-            Add a standard service in OpenRefine with this URL:
-          </p>
-          <input type="text" value="{{::getReconciliationUrl()}}"
-            class="form-control" readonly="readonly"></div>
-        </div>
-      </div>
+      <entity-recon-teaser></entity-recon-teaser>
     </div>
   </div>
 </div>
