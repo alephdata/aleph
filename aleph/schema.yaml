@@ -30,6 +30,8 @@ entities:
       sourceUrl:
         label: Source link
         type: url
+      icijId:
+        label: ICIJ ID
       tags:
         label: Relevancy
       keywords:
@@ -38,6 +40,8 @@ entities:
       address:
         label: Address
         type: address
+      notes:
+        label: Notes
 
   LegalEntity:
     extends: Entity
@@ -249,7 +253,13 @@ links:
       percentage:
         label: "Percentage held"
       value:
-        label: "Value of share owned"
+        label: "Value of shares held"
+      shareCount:
+        label: "Number of shares held"
+      shareType:
+        label: "Type of shares held"
+      shareCurrency:
+        label: "Currency of shares held"
       legalBasis:
         label: "Legal basis"
       status:

@@ -59,6 +59,7 @@ COLLECTION_CATEGORIES = {
     'scrape': 'Scrapes',
     'procurement': 'Procurement',
     'grey': 'Grey literature',
+    'license': 'Licenses and concessions',
     'regulatory': 'Regulatory filings'
 }
 

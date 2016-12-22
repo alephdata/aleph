@@ -3,7 +3,6 @@ import logging
 
 from aleph.core import db
 from aleph.text import string_value, slugify
-from aleph.model import Collection
 from aleph.ingest import ingest_directory
 from aleph.crawlers.crawler import Crawler
 
@@ -19,14 +18,13 @@ class DirectoryCrawler(Crawler):
             return
         directory = os.path.abspath(os.path.normpath(directory))
         collection = None
-        if foreign_id is not None:
-            collection = Collection.by_foreign_id(foreign_id)
-        if collection is None:
-            foreign_id = foreign_id or 'directory:%s' % slugify(directory)
-            collection = Collection.create({
-                'foreign_id': foreign_id,
-                'label': directory
-            })
+        if foreign_id is None:
+            foreign_id = 'directory:%s' % slugify(directory)
+        collection = self.load_collection({
+            'foreign_id': foreign_id,
+            'label': directory,
+            'managed': True
+        })
         db.session.commit()
         meta = self.make_meta(meta)
         meta.source_path = directory
