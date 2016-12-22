@@ -1,19 +1,11 @@
 import aleph from '../aleph';
 
-aleph.controller('DatasetsIndexCtrl', ['$scope', '$location', 'Title', 'datasets',
-    function($scope, $location, Title, datasets) {
+aleph.controller('DatasetsIndexCtrl', ['$scope', '$location', 'Title', 'Dataset', 'datasets',
+    function($scope, $location, Title, Dataset, datasets) {
 
   $scope.query = {};
-  $scope.datasets = datasets;
-  $scope.datasets.results = datasets.results.filter(function(d) {
-    return d.entities_count != 0;
-  }).sort(function(a, b) {
-    var doc_diff = b.entities_count - a.entities_count;
-    if (doc_diff == 0) {
-      return a.label.localeCompare(b.label);
-    }
-    return doc_diff;
-  });
+  $scope.result = datasets.result;
+  $scope.query = datasets.query;
 
   Title.set("Databases", "entities");
 
@@ -21,4 +13,12 @@ aleph.controller('DatasetsIndexCtrl', ['$scope', '$location', 'Title', 'datasets
     $location.search($scope.query);
     $location.path('/entities');
   };
+
+  $scope.$on('$routeUpdate', function() {
+    Dataset.search().then(function(datasets) {
+      $scope.result = datasets.result;
+      $scope.query = datasets.query;
+    });
+  });
+
 }]);

@@ -18,12 +18,9 @@
     </span>
 
     <strong>{{::title}}</strong>
-    <small ng-if="!empty">{{::values.length}}</small>
+    <small ng-if="empty && !collapsed">no options</small>
   </div>
-  <ul class="list-group" ng-hide="collapsed">
-    <li class="list-group-item empty" ng-if="empty">
-      There are no filters.
-    </li>
+  <ul class="list-group" ng-hide="collapsed || empty">
     <li class="list-group-item" ng-repeat="val in values track by facetKey(val)"
       ng-click="query.toggleFilter(filter, val.id)"
       ng-class="{'active': query.hasFilter(filter, val.id)}"

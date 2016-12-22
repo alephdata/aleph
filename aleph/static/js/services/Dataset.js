@@ -1,7 +1,7 @@
 import aleph from '../aleph';
 
-aleph.factory('Dataset', ['$q', '$http', '$location', 'Authz', 'Metadata',
-    function($q, $http, $location, Authz, Metadata) {
+aleph.factory('Dataset', ['$q', '$http', '$location', 'Query', 'Authz', 'Metadata',
+    function($q, $http, $location, Query, Authz, Metadata) {
 
   var indexDfd = null;
 
@@ -19,6 +19,22 @@ aleph.factory('Dataset', ['$q', '$http', '$location', 'Authz', 'Metadata',
 
   return {
     index: getIndex,
+    search: function() {
+      var dfd = $q.defer();
+      var query = Query.parse(),
+          state = angular.copy(query.state),
+          params = {params: state, cache: true};
+      $http.get('/api/1/datasets', params).then(function(res) {
+        dfd.resolve({
+          'query': query,
+          'result': res.data
+        });
+      }, function(err) {
+        dfd.reject(err);
+      });
+      getIndex();
+      return dfd.promise;
+    },
     get: function(name) {
       var dfd = $q.defer(),
           url = '/api/1/datasets/' + name;

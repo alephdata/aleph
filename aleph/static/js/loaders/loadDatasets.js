@@ -1,5 +1,5 @@
 var loadDatasets = ['Dataset', function(Dataset) {
-  return Dataset.index();
+  return Dataset.search();
 }];
 
 export default loadDatasets;

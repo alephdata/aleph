@@ -3,7 +3,7 @@
     <h2>
       <i class="fa fa-fw fa-user-secret"></i>
       People and Companies
-      <small>{{::datasets.total_entities_count | number}} entities</small>
+      <small>{{::result.total_entities_count | number}} entities</small>
     </h2>
   </div>
 </div>
@@ -24,17 +24,29 @@
           </div>
         </form>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
       <div class="list-group">
-        <a ng-repeat="dataset in datasets.results"
+        <a ng-repeat="dataset in result.results"
            href="/entities?filter:dataset={{dataset.name}}" class="list-group-item">
           <span class="badge">
             {{::dataset.entities_count | number}}
           </span>
           <privacy-icon subject="dataset"></privacy-icon>
           <strong>{{::dataset.label}}</strong>
-          <category-label subject="dataset"></category-label>
+          <!-- category-label subject="dataset"></category-label -->
         </a>
       </div>
+    </div>
+    <div class="col-md-4">
+      <search-facet result="result" query="query" title="Categories"
+                    facet="category">
+      </search-facet>
+      <search-facet result="result" query="query" title="Countries"
+                    facet="countries">
+      </search-facet>
     </div>
   </div>
 </div>
