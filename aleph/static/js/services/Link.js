@@ -8,7 +8,7 @@ aleph.factory('Link', ['$q', '$http', 'Query', 'Metadata', function($q, $http, Q
           dfd = $q.defer(),
           url = '/api/1/entities/' + entityId + '/links';
       state['limit'] = 10;
-      state['facet'] = ['countries', 'schema'];
+      state['facet'] = ['remote.countries', 'schema'];
       state['offset'] = state.offset || 0;
       Metadata.get().then(function(metadata) {
         $http.get(url, {params: state}).then(function(res) {

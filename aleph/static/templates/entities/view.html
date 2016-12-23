@@ -24,7 +24,7 @@
     <div class="col-md-8">
       <table class="table table-bordered">
         <tr ng-repeat="bind in entity.binds track by bind.property.name">
-          <th width="20%">{{::bind.property.label}}</th>
+          <th width="25%">{{::bind.property.label}}</th>
           <td>
             <property-values values="bind.values" property="bind.property">
             </property-values>
@@ -113,7 +113,7 @@
 
       <table class="table">
         <tr>
-          <th width="20%">Relationship</th>
+          <th width="25%">Relationship</th>
           <th colspan="2">Entity</th>
         </tr>
         <tbody ng-repeat="link in links.result.results track by link.id">
@@ -130,7 +130,7 @@
           </tr>
           <tr ng-repeat="bind in link.binds track by bind.property.name">
             <td class="follow-up"></td>
-            <th width="20%">{{::bind.property.label}}</th>
+            <th width="25%">{{::bind.property.label}}</th>
             <td>
               <property-values values="::bind.values" property="::bind.property">
               </property-values>
@@ -153,7 +153,7 @@
                     facet="schema" filter="schemata">
       </search-facet>
       <search-facet result="links.result" query="links.query" title="Countries"
-                    facet="countries" filter="countries">
+                    facet="remote.countries" filter="remote.countries">
       </search-facet>
     </div>
   </div>
