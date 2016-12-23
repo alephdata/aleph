@@ -191,6 +191,10 @@
       </div>
     </div>
     <div class="col-md-4" ng-if="::showDocumentsNav">
+      <search-facet result="documents.result" query="documents.query" title="Collections"
+                    facet="collections" filter="collection_id">
+      </search-facet>
+
       <search-facets query="documents.query" result="documents.result" metadata="metadata">
       </search-facets>
     </div>

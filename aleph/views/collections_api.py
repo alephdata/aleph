@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from apikit import obj_or_404, jsonify, Pager, request_data, arg_bool
+from apikit import obj_or_404, jsonify, Pager, request_data
 
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY, get_config, db
 from aleph.model import Collection
