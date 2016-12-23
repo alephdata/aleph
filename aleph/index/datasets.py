@@ -88,4 +88,4 @@ def delete_dataset(dataset_name):
                 log.info("Delete %s: %s", dataset_name, i)
 
     es.indices.refresh(index=es_index)
-    bulk(es, deletes(), stats_only=True, chunk_size=INDEX_PAGE)
+    bulk(es, deletes(), stats_only=True, chunk_size=100)

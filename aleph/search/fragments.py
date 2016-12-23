@@ -80,6 +80,17 @@ def multi_match(text, fields, fuzziness=0):
     return q
 
 
+def phrase_match(text, field):
+    return {
+        'match_phrase': {
+            field: {
+                'query': text,
+                'slop': 3
+            }
+        }
+    }
+
+
 def aggregate(state, q, aggs, facets):
     """Generate aggregations, a generalized way to do facetting."""
     for facet in facets:
