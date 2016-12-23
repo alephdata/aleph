@@ -23,11 +23,11 @@ class Authz(object):
     WRITE = 'write'
     PUBLIC = 'public'
 
-    def __init__(self, role=None):
+    def __init__(self, role=None, override=False):
         self.roles = set([Role.load_id(Role.SYSTEM_GUEST)])
         self.role = role
         self.logged_in = role is not None
-        self.is_admin = False
+        self.override = self.is_admin = override
         self.in_maintenance = get_config('MAINTENANCE')
 
         if self.logged_in:
@@ -36,6 +36,9 @@ class Authz(object):
             self.roles.add(Role.load_id(Role.SYSTEM_USER))
             for group in role.roles:
                 self.roles.add(group.id)
+        elif override:
+            # TODO: load all roles.
+            pass
 
         # Pre-load collection authorisation info and cache the result.
         # This is the core authorisation function, and is called at least once

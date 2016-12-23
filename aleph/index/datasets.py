@@ -3,11 +3,10 @@ from pprint import pprint  # noqa
 from elasticsearch.helpers import bulk, scan
 
 from aleph.core import es, es_index, schemata
-from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK
+from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK, TYPE_LEAD
 from aleph.index.util import merge_docs
 
 log = logging.getLogger(__name__)
-INDEX_PAGE = 10000
 
 
 def _index_updates(items):
@@ -77,7 +76,7 @@ def delete_dataset(dataset_name):
 
     def deletes():
         docs = scan(es, query=q, index=es_index,
-                    doc_type=[TYPE_LINK, TYPE_ENTITY])
+                    doc_type=[TYPE_LINK, TYPE_ENTITY, TYPE_LEAD])
         for i, res in enumerate(docs):
             yield {
                 '_op_type': 'delete',

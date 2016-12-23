@@ -8,12 +8,13 @@ from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.text import normalize_strong
 from aleph.model import Entity, Reference, Document, Alert
 from aleph.datasets.util import finalize_index
-from aleph.index import index_entity, flush_index
+from aleph.index import index_entity, flush_index, delete_entity_leads
 from aleph.index import delete_entity as index_delete
 from aleph.search import load_entity
 from aleph.index.entities import delete_entity_references
 from aleph.index.entities import update_entity_references
 from aleph.search.records import scan_entity_mentions
+from aleph.logic.leads import generate_leads
 
 log = logging.getLogger(__name__)
 
@@ -89,6 +90,7 @@ def update_entity(entity):
 
 def delete_entity(entity, deleted_at=None):
     entity.delete(deleted_at=deleted_at)
+    delete_entity_leads(entity.id)
     update_entity_full(entity.id)
 
 
@@ -100,6 +102,7 @@ def update_entity_full(entity_id):
     generate_entity_references(entity)
     reindex_entity(entity)
     Alert.dedupe(entity.id)
+    generate_leads(entity.id)
 
 
 def reindex_entity(entity, references=True):

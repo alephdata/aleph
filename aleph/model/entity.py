@@ -7,7 +7,6 @@ from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from aleph.core import db, schemata
 from aleph.text import normalize_strong, string_value
 from aleph.util import ensure_list
-from aleph.data.keys import make_fingerprint
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
 from aleph.model.common import SoftDeleteModel, UuidModel, IdModel, DatedModel
@@ -38,8 +37,15 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         pq.delete(synchronize_session='fetch')
         db.session.refresh(self)
 
+    def delete_identities(self):
+        pq = db.session.query(EntityIdentity)
+        pq = pq.filter(EntityIdentity.entity_id == self.id)
+        pq.delete(synchronize_session='fetch')
+        db.session.refresh(self)
+
     def delete(self, deleted_at=None):
         self.delete_references()
+        self.delete_identities()
         deleted_at = deleted_at or datetime.utcnow()
         for alert in self.alerts:
             alert.delete(deleted_at=deleted_at)
@@ -175,10 +181,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return schemata.get(self.type)
 
     @property
-    def fingerprint(self):
-        return make_fingerprint(self.name)
-
-    @property
     def terms(self):
         terms = set([self.name])
         for alias in ensure_list(self.data.get('alias')):
@@ -206,12 +208,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             if not contained:
                 regex_terms.add(term)
         return regex_terms
-
-    def __repr__(self):
-        return '<Entity(%r, %r)>' % (self.id, self.name)
-
-    def __unicode__(self):
-        return self.name
 
     def to_dict(self):
         data = super(Entity, self).to_dict()
@@ -242,7 +238,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             'collection_id': self.collection_id
         }
 
+    def __unicode__(self):
+        return self.name
 
-class EntityIdentity(db.Model, IdModel, DatedModel):
-    entity_id = db.Column(db.String(255), index=True)
-    identity = db.Column(db.String(255), index=True)
+    def __repr__(self):
+        return '<Entity(%r, %r)>' % (self.id, self.name)

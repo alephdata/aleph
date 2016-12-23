@@ -35,7 +35,7 @@ import {
 } from './loaders/loadEntities';
 import {
   loadProjectCollections, loadSourceCollections, loadCollection,
-  loadCollectionDocuments, loadCollectionEntities
+  loadCollectionDocuments, loadCollectionEntities, loadCollectionLeads
 } from './loaders/loadCollections';
 
 aleph.config([
@@ -181,6 +181,17 @@ aleph.config([
     reloadOnSearch: false,
     resolve: {
       'collection': loadCollection,
+      'metadata': loadMetadata
+    }
+  });
+
+  $routeProvider.when('/collections/:collection_id/leads', {
+    templateUrl: 'templates/collections/leads.html',
+    controller: 'CollectionsLeadsCtrl',
+    reloadOnSearch: false,
+    resolve: {
+      'collection': loadCollection,
+      'leads': loadCollectionLeads,
       'metadata': loadMetadata
     }
   });

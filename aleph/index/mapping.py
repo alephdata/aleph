@@ -3,6 +3,7 @@ TYPE_DOCUMENT = 'document'
 TYPE_RECORD = 'record'
 TYPE_ENTITY = 'entity'
 TYPE_LINK = 'link'
+TYPE_LEAD = 'lead'
 
 DOCUMENT_MAPPING = {
     "_all": {
@@ -183,5 +184,22 @@ LINK_MAPPING = {
             "include_in_all": True,
             "properties": ENTITY_MAPPING.get('properties')
         }
+    }
+}
+
+LEAD_MAPPING = {
+    "_all": {"enabled": False},
+    "date_detection": False,
+    "properties": {
+        "entity_id": {"type": "integer", "index": "not_analyzed"},
+        "entity_collection_id": {"type": "integer", "index": "not_analyzed"},
+        "score": {"type": "float", "index": "not_analyzed"},
+        "match_id": {"type": "integer", "index": "not_analyzed"},
+        "judgement": {"type": "integer", "index": "not_analyzed"},
+        "schema": {"type": "string", "index": "not_analyzed"},
+        "schemata": {"type": "string", "index": "not_analyzed"},
+        "dataset": {"type": "string", "index": "not_analyzed"},
+        "roles": {"type": "string", "index": "not_analyzed"},
+        "collection_id": {"type": "integer", "index": "not_analyzed"},
     }
 }

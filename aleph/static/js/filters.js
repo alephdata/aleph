@@ -7,6 +7,12 @@ aleph.filter('date', function() {
   };
 });
 
+aleph.filter('percentage', function() {
+  return function(val) {
+    return parseInt(val * 100, 10);
+  };
+});
+
 
 aleph.filter('relativeDate', function() {
   return function(val) {

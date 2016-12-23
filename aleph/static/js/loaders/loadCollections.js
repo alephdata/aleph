@@ -29,8 +29,13 @@ var loadCollectionEntities = ['$route', 'Entity', function($route, Entity) {
   return Entity.searchCollection(collectionId);
 }];
 
+var loadCollectionLeads = ['$route', 'Lead', function($route, Lead) {
+  var collectionId = $route.current.params.collection_id;
+  return Lead.search(collectionId);
+}];
+
 
 export {
   loadProjectCollections, loadSourceCollections, loadCollection,
-  loadCollectionDocuments, loadCollectionEntities
+  loadCollectionDocuments, loadCollectionEntities, loadCollectionLeads
 };
