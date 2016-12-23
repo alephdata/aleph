@@ -8,7 +8,7 @@ from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import clean_highlight, execute_basic, add_filter
 from aleph.search.util import scan_iter
 from aleph.search.fragments import aggregate, filter_query, child_record
-from aleph.search.fragments import text_query, multi_match, phrase_match
+from aleph.search.fragments import text_query, phrase_match, authz_filter
 from aleph.search.facet import parse_facet_result
 from aleph.search.records import records_query_internal, records_query_shoulds
 
@@ -19,14 +19,10 @@ DEFAULT_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                   'updated_at', 'type', 'summary']
 
 
-def document_authz_filter(q, authz):
-    return add_filter(q, {'terms': {'collection_id': authz.collections_read}})
-
-
 def documents_iter(state, fields=None):
     """Iterate over a set of documents based on a query state."""
     q = text_query(state.text)
-    q = document_authz_filter(q, state.authz)
+    q = authz_filter(q, state.authz, roles=False)
     return scan_iter({
         'query': filter_query(q, state.filters),
         '_source': fields or DEFAULT_FIELDS
@@ -44,7 +40,7 @@ def documents_query(state, fields=None, facets=True, since=None):
     if state.raw_query:
         q = {"bool": {"must": [q, state.raw_query]}}
 
-    q = document_authz_filter(q, state.authz)
+    q = authz_filter(q, state.authz, roles=False)
 
     # Used by alerting to find only updated results:
     if since is not None:

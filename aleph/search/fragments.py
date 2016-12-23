@@ -22,6 +22,17 @@ def text_query_string(text, literal=False):
     }
 
 
+def authz_filter(q, authz, roles=False):
+    if authz.override:
+        return q
+    fq = {'terms': {'collection_id': list(authz.collections_read)}}
+    if roles:
+        fq = {
+            "or": [{'terms': {'roles': list(authz.roles)}}, fq]
+        }
+    return add_filter(q, fq)
+
+
 def meta_query_string(text, literal=False):
     if text is None or not len(text.strip()):
         return match_all()

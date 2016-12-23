@@ -68,8 +68,7 @@ def _index_updates(items):
 
 def index_items(items):
     """Index a set of links or entities."""
-    bulk(es, _index_updates(items), stats_only=True,
-         chunk_size=INDEX_PAGE, request_timeout=200.0)
+    bulk(es, _index_updates(items), stats_only=True, request_timeout=200.0)
 
 
 def delete_dataset(dataset_name):
@@ -86,9 +85,8 @@ def delete_dataset(dataset_name):
                 '_type': res.get('_type'),
                 '_id': res.get('_id')
             }
-            if i > 0 and i % INDEX_PAGE == 0:
+            if i > 0 and i % 10000 == 0:
                 log.info("Delete %s: %s", dataset_name, i)
 
     es.indices.refresh(index=es_index)
-    bulk(es, deletes(), stats_only=True, chunk_size=INDEX_PAGE / 10,
-         request_timeout=200.0)
+    bulk(es, deletes(), stats_only=True, request_timeout=200.0)

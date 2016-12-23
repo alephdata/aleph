@@ -2,21 +2,12 @@ from pprint import pprint  # noqa
 
 from aleph.index import TYPE_LINK
 from aleph.search.util import execute_basic
-from aleph.search.fragments import match_all, filter_query
+from aleph.search.fragments import match_all, filter_query, authz_filter
 from aleph.search.fragments import add_filter, aggregate
 from aleph.search.facet import parse_facet_result
 
 DEFAULT_FIELDS = ['roles', 'remote', 'origin', 'inverted', 'schema',
                   'schemata', 'properties']
-
-
-def entity_authz_filter(q, authz):
-    return add_filter(q, {
-        "or": [
-            {'terms': {'roles': list(authz.roles)}},
-            {'terms': {'collection_id': list(authz.collections_read)}},
-        ]
-    })
 
 
 def links_query(origin_id, state):
@@ -33,7 +24,7 @@ def links_query(origin_id, state):
     else:
         q = match_all()
     q = add_filter(q, {'term': {'origin.id': origin_id}})
-    q = add_filter(q, {'terms': {'roles': list(state.authz.roles)}})
+    q = authz_filter(q, state.authz, roles=True)
 
     aggs = {'scoped': {'global': {}, 'aggs': {}}}
     aggs = aggregate(state, q, aggs, state.facet_names)

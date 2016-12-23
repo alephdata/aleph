@@ -5,22 +5,13 @@ from aleph.core import url_for, es, es_index
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.search.util import execute_basic
 from aleph.search.fragments import match_all, filter_query, multi_match
-from aleph.search.fragments import add_filter, aggregate
+from aleph.search.fragments import add_filter, aggregate, authz_filter
 from aleph.search.facet import parse_facet_result
 from aleph.text import latinize_text
 
 DEFAULT_FIELDS = ['collection_id', 'roles', 'dataset', 'name', 'data',
                   'countries', 'schema', 'schemata', 'properties',
                   'fingerprints', 'state']
-
-
-def entity_authz_filter(q, authz):
-    return add_filter(q, {
-        "or": [
-            {'terms': {'roles': list(authz.roles)}},
-            {'terms': {'collection_id': list(authz.collections_read)}},
-        ]
-    })
 
 
 def entities_query(state, fields=None, facets=True, doc_counts=False):
@@ -40,7 +31,7 @@ def entities_query(state, fields=None, facets=True, doc_counts=False):
     if state.raw_query:
         q = {"bool": {"must": [q, state.raw_query]}}
 
-    q = entity_authz_filter(q, state.authz)
+    q = authz_filter(q, state.authz, roles=True)
 
     aggs = {'scoped': {'global': {}, 'aggs': {}}}
     if facets:

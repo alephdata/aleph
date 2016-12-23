@@ -5,9 +5,7 @@ from pprint import pprint  # noqa
 from aleph.index import TYPE_DOCUMENT
 from aleph.core import es, es_index
 from aleph.model import Collection
-from aleph.search.documents import text_query
-from aleph.search.documents import document_authz_filter
-from aleph.search.fragments import filter_query
+from aleph.search.fragments import text_query, filter_query
 
 
 def round(x, factor):
