@@ -45,6 +45,7 @@ def index():
         category_facet[dataset.category] += 1
         filtered.append(dataset)
 
+    filtered = sorted(filtered, key=lambda d: d.entities_count, reverse=True)
     facets = {'countries': {'values': []}, 'category': {'values': []}}
     categories = get_config('COLLECTION_CATEGORIES', {})
 

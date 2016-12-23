@@ -136,6 +136,7 @@ def parse_facet_result(state, result):
         facet_cls = {
             'languages': LanguageFacet,
             'countries': CountryFacet,
+            'remote.countries': CountryFacet,
             'dataset': DatasetFacet,
             'entities': EntityFacet,
             'schema': SchemaFacet,
