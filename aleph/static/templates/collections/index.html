@@ -45,27 +45,21 @@
         <a ng-repeat="collection in collections.results track by collection.id"
            ng-href="{{::collection.getPath()}}"
            class="list-group-item">
-          <h4 class="list-group-item-heading">
+          <span class="badge" ng-if="collection.doc_count">
+            <i class="fa fa-fw fa-file-text" aria-hidden="true"></i>
+            {{::collection.doc_count | number}}
+          </span>
+          <span class="badge" ng-if="collection.entity_count">
+            <i class="fa fa-fw fa-users" aria-hidden="true"></i>
+            {{::collection.entity_count | number}}
+          </span>
+          <privacy-icon subject="collection"></privacy-icon>
+          <strong class="list-group-item-heading">
             {{::collection.label}}
-          </h4>
+          </strong>
           <p class="list-group-item-text summary"
             ng-if="::collection.summary"
             ng-bind="::collection.summary">
-          </p>
-          <p class="list-group-item-text">
-            <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
-            {{::collection.doc_count | number}} Documents
-            &middot;
-            <i class="fa fa-users" aria-hidden="true"></i>
-            {{::collection.entity_count | number}} Persons and Companies
-
-            &middot;
-            <privacy-icon subject="collection" label="true">
-            </privacy-icon>
-
-            <span ng-repeat="country in collection.countries">
-              &middot; {{::country | country}}
-            </span>
           </p>
         </a>
       </div>

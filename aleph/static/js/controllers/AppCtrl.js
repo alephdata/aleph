@@ -1,4 +1,5 @@
 import aleph from '../aleph';
+import loadMetadata from '../loaders/loadMetadata';
 
 aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$httpParamSerializer', '$uibModal', 'cfpLoadingBar', 'Alert', 'Metadata',
     function($scope, $rootScope, $location, $anchorScroll, $httpParamSerializer, $uibModal, cfpLoadingBar, Alert, Metadata) {
