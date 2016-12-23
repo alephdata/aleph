@@ -3,40 +3,28 @@ from werkzeug.exceptions import BadRequest, ImATeapot
 from apikit import obj_or_404, jsonify, request_data, arg_bool
 
 from aleph.model import Entity, Collection, db
-from aleph.logic import update_entity, delete_entity
-from aleph.datasets.util import finalize_index
+from aleph.logic import update_entity, delete_entity, fetch_entity
 from aleph.views.cache import enable_cache
 from aleph.events import log_event
 from aleph.search import QueryState
 from aleph.search import entities_query, links_query, entity_documents
-from aleph.search import suggest_entities, similar_entities, load_entity
+from aleph.search import suggest_entities, similar_entities
 
 blueprint = Blueprint('entities_api', __name__)
 
 
 def get_entity(id, action):
-    """Load entities from both the ES index and the database."""
-    # This does not account for database entities which have not yet
-    # been indexed. That would be an operational error, and it's not
-    # the job of the web API to sort it out.
-    entity = load_entity(id)
-    obj = Entity.by_id(id)
-    if obj is not None:
-        # Apply collection-based security to entities from the DB.
-        collections = request.authz.collections.get(action)
-        request.authz.require(obj.collection_id in collections)
-        if entity is not None:
-            entity.update(obj.to_dict())
-        else:
-            entity = obj.to_index()
-            entity = finalize_index(entity, obj.schema)
-    else:
+    entity, obj = fetch_entity(id)
+    if obj is None:
         entity = obj_or_404(entity)
         # Apply roles-based security to dataset-sourced entities.
         request.authz.require(request.authz.check_roles(entity.get('roles')))
         # Cannot edit them:
         if action == request.authz.WRITE:
             raise ImATeapot("Cannot write this entity.")
+    else:
+        collections = request.authz.collections.get(action)
+        request.authz.require(obj.collection_id in collections)
     return entity, obj
 
 

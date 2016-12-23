@@ -7,13 +7,31 @@ from collections import defaultdict
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.text import normalize_strong
 from aleph.model import Entity, Reference, Document, Alert
+from aleph.datasets.util import finalize_index
 from aleph.index import index_entity, flush_index
 from aleph.index import delete_entity as index_delete
+from aleph.search import load_entity
 from aleph.index.entities import delete_entity_references
 from aleph.index.entities import update_entity_references
 from aleph.search.records import scan_entity_mentions
 
 log = logging.getLogger(__name__)
+
+
+def fetch_entity(entity_id):
+    """Load entities from both the ES index and the database."""
+    # This does not account for database entities which have not yet
+    # been indexed. That would be an operational error, and it's not
+    # the job of the web API to sort it out.
+    entity = load_entity(entity_id)
+    obj = Entity.by_id(entity_id)
+    if obj is not None:
+        if entity is not None:
+            entity.update(obj.to_dict())
+        else:
+            entity = obj.to_index()
+            entity = finalize_index(entity, obj.schema)
+    return entity, obj
 
 
 def generate_entity_references(entity):
@@ -71,7 +89,7 @@ def update_entity(entity):
 
 def delete_entity(entity, deleted_at=None):
     entity.delete(deleted_at=deleted_at)
-    update_entity(entity)
+    update_entity_full(entity.id)
 
 
 @celery.task()
