@@ -1,4 +1,4 @@
-FROM pudo/aleph-base:1.6
+FROM pudo/aleph-base:1.7
 MAINTAINER Friedrich Lindenberg <friedrich@pudo.org>
 ENV DEBIAN_FRONTEND noninteractive
 ENV ALEPH_SETTINGS /aleph/contrib/docker_settings.py
