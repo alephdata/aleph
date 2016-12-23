@@ -253,13 +253,13 @@ links:
       percentage:
         label: "Percentage held"
       value:
-        label: "Value of shares held"
+        label: "Value of shares"
       shareCount:
-        label: "Number of shares held"
+        label: "Number of shares"
       shareType:
-        label: "Type of shares held"
+        label: "Type of shares"
       shareCurrency:
-        label: "Currency of shares held"
+        label: "Currency of shares"
       legalBasis:
         label: "Legal basis"
       status:

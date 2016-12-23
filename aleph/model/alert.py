@@ -1,6 +1,5 @@
 from datetime import datetime
 from werkzeug.datastructures import MultiDict
-from sqlalchemy import func
 
 from aleph.core import db
 from aleph.data.validate import validate
