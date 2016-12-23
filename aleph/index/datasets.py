@@ -77,15 +77,18 @@ def delete_dataset(dataset_name):
     q = {'query': {'term': {'dataset': dataset_name}}, '_source': False}
 
     def deletes():
-        for i, res in enumerate(scan(es, query=q, index=es_index)):
+        docs = scan(es, query=q, index=es_index,
+                    doc_type=[TYPE_LINK, TYPE_ENTITY])
+        for i, res in enumerate(docs):
             yield {
                 '_op_type': 'delete',
                 '_index': str(es_index),
                 '_type': res.get('_type'),
                 '_id': res.get('_id')
             }
-            if i > 0 and i % 10000 == 0:
+            if i > 0 and i % INDEX_PAGE == 0:
                 log.info("Delete %s: %s", dataset_name, i)
 
     es.indices.refresh(index=es_index)
-    bulk(es, deletes(), stats_only=True, chunk_size=100)
+    bulk(es, deletes(), stats_only=True, chunk_size=INDEX_PAGE / 10,
+         request_timeout=200.0)
