@@ -20,14 +20,6 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
     $anchorScroll();
   };
 
-  $scope.getReconciliationUrl = function() {
-    var url = metadata.app.url + 'api/freebase/reconcile';
-    if (metadata.session.logged_in) {
-      url += '?api_key=' + metadata.session.api_key;
-    }
-    return url;
-  };
-
   $scope.isEmpty = function() {
     return !$scope.query.isFiltered() && $scope.result.limit > 0 && $scope.result.total == 0;
   };
