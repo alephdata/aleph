@@ -10,7 +10,7 @@ DEFAULT_FIELDS = ['roles', 'remote', 'origin', 'inverted', 'schema',
                   'schemata', 'properties']
 
 
-def links_query(origin_id, state):
+def links_query(origin, state):
     """Parse a user query string, compose and execute a query."""
     if state.has_text:
         q = {
@@ -23,7 +23,8 @@ def links_query(origin_id, state):
         }
     else:
         q = match_all()
-    q = add_filter(q, {'term': {'origin.id': origin_id}})
+    ids = origin.get('ids') or [origin.get('id')]
+    q = add_filter(q, {'terms': {'origin.id': ids}})
     q = authz_filter(q, state.authz, roles=True)
 
     aggs = {'scoped': {'global': {}, 'aggs': {}}}

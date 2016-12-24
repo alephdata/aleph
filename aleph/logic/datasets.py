@@ -37,8 +37,9 @@ def load_rows(task, dataset_name, query_idx, rows):
     try:
         index_items(items)
     except Exception as exc:
-        time.sleep(30)
-        raise task.retry(exc=exc, countdown=10, max_retries=10)
+        log.warning("Index failed. Sleep to ease congestion, then try again.")
+        time.sleep(120)
+        raise task.retry(exc=exc, max_retries=10)
 
     log.info("[%r] Indexed %s rows as %s documents...",
              dataset_name, len(rows), len(items))

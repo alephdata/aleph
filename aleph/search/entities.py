@@ -154,6 +154,7 @@ def similar_entities(entity, state):
     required = []
     boosters = []
     must = None
+    entity_ids = entity.get('ids') or [entity.get('id')]
 
     # search for fingerprints
     for fp in entity.get('fingerprints', []):
@@ -176,7 +177,7 @@ def similar_entities(entity, state):
         "bool": {
             "should": boosters,
             "must": must,
-            "must_not": {"ids": {"values": [entity.get('id')]}},
+            "must_not": {"ids": {"values": entity_ids}},
         }
     }
     # pprint(state.raw_query)

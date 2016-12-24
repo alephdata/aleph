@@ -6,7 +6,8 @@ from collections import defaultdict
 
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.text import normalize_strong
-from aleph.model import Entity, Reference, Document, Alert
+from aleph.model import Entity, EntityIdentity, Reference, Document, Alert
+from aleph.model.common import merge_data
 from aleph.datasets.util import finalize_index
 from aleph.index import index_entity, flush_index, delete_entity_leads
 from aleph.index import delete_entity as index_delete
@@ -21,9 +22,6 @@ log = logging.getLogger(__name__)
 
 def fetch_entity(entity_id):
     """Load entities from both the ES index and the database."""
-    # This does not account for database entities which have not yet
-    # been indexed. That would be an operational error, and it's not
-    # the job of the web API to sort it out.
     entity = load_entity(entity_id)
     obj = Entity.by_id(entity_id)
     if obj is not None:
@@ -32,7 +30,28 @@ def fetch_entity(entity_id):
         else:
             entity = obj.to_index()
             entity = finalize_index(entity, obj.schema)
+        entity['ids'] = EntityIdentity.entity_ids(entity_id)
+    elif entity is not None:
+        entity['ids'] = [entity.get('id')]
     return entity, obj
+
+
+def combined_entity(entity):
+    """Use EntityIdentity mappings to construct a combined model of the
+    entity with all data applied."""
+    if 'id' not in entity:
+        return entity
+    if 'ids' not in entity:
+        entity['ids'] = EntityIdentity.entity_ids(entity['id'])
+    combined = dict(entity)
+    for mapped_id in entity['ids']:
+        if mapped_id == entity['id']:
+            continue
+        mapped = load_entity(mapped_id)
+        if mapped is None:
+            continue
+        combined = merge_data(combined, mapped)
+    return combined
 
 
 def generate_entity_references(entity):
@@ -100,9 +119,9 @@ def update_entity_full(entity_id):
     query = db.session.query(Entity).filter(Entity.id == entity_id)
     entity = query.first()
     generate_entity_references(entity)
+    generate_leads(entity.id)
     reindex_entity(entity)
     Alert.dedupe(entity.id)
-    generate_leads(entity.id)
 
 
 def reindex_entity(entity, references=True):

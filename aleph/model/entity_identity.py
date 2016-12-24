@@ -26,6 +26,16 @@ class EntityIdentity(db.Model, IdModel, DatedModel):
         return {k: v for k, v in q.all()}
 
     @classmethod
+    def entity_ids(cls, entity_id):
+        q = db.session.query(cls.match_id)
+        q = q.filter(cls.entity_id == entity_id)
+        q = q.filter(cls.judgement == cls.CONFIRMED)
+        ids = [entity_id]
+        for mapped_id, in q.all():
+            ids.append(mapped_id)
+        return ids
+
+    @classmethod
     def by_entity_match(cls, entity_id, match_id):
         q = db.session.query(cls)
         q = q.filter(cls.entity_id == entity_id)

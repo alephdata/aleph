@@ -3,7 +3,7 @@ from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify, request_data, arg_bool
 
 from aleph.model import Entity, Collection, db
-from aleph.logic import update_entity, delete_entity
+from aleph.logic import update_entity, delete_entity, combined_entity
 from aleph.events import log_event
 from aleph.search import QueryState
 from aleph.search import entities_query, links_query, entity_documents
@@ -76,22 +76,23 @@ def view(id):
 def links(id):
     entity, obj = get_entity(id, request.authz.READ)
     state = QueryState(request.args, request.authz)
-    res = links_query(entity['id'], state)
-    return jsonify(res)
+    return jsonify(links_query(entity, state))
 
 
 @blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])
 def similar(id):
     entity, _ = get_entity(id, request.authz.READ)
     state = QueryState(request.args, request.authz)
-    return jsonify(similar_entities(entity, state))
+    combined = combined_entity(entity)
+    return jsonify(similar_entities(combined, state))
 
 
 @blueprint.route('/api/1/entities/<id>/documents', methods=['GET'])
 def documents(id):
     entity, _ = get_entity(id, request.authz.READ)
     state = QueryState(request.args, request.authz)
-    return jsonify(entity_documents(entity, state))
+    combined = combined_entity(entity)
+    return jsonify(entity_documents(combined, state))
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])
