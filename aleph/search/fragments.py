@@ -23,7 +23,7 @@ def text_query_string(text, literal=False):
 
 
 def authz_filter(q, authz, roles=False):
-    if authz.override:
+    if authz.is_admin:
         return q
     fq = {'terms': {'collection_id': list(authz.collections_read)}}
     if roles:

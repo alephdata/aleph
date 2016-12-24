@@ -36,9 +36,6 @@ class Authz(object):
             self.roles.add(Role.load_id(Role.SYSTEM_USER))
             for group in role.roles:
                 self.roles.add(group.id)
-        elif override:
-            # TODO: load all roles.
-            pass
 
         # Pre-load collection authorisation info and cache the result.
         # This is the core authorisation function, and is called at least once
@@ -122,8 +119,12 @@ class Authz(object):
         return self.logged_in
 
     def check_roles(self, roles):
+        if self.in_maintenance:
+            return False
+        if self.is_admin:
+            return True
         isect = self.roles.intersection(ensure_list(roles))
-        return len(isect)
+        return len(isect) > 0
 
     def require(self, pred):
         if not pred:
