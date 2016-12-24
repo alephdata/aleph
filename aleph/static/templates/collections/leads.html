@@ -12,6 +12,7 @@
             <th>Match</th>
             <th>Countries</th>
             <th>Source</th>
+            <th></th>
           </tr>
           <tr ng-repeat="lead in result.results track by lead.id">
             <td>{{::lead.score | percentage}}%</td>
@@ -33,6 +34,34 @@
             <td>
               <entity-source entity="::lead.match" facets="::result.facets">
               </entity-source>
+            </td>
+            <td class="numeric">
+              <div class="btn-group btn-group-xs" role="group">
+                <button type="button" class="btn btn-default"
+                        ng-click="setJudgement(lead, 1)"
+                        ng-class="{'active': lead.judgement == 1}"
+                        uib-tooltip="It's a match"
+                        tooltip-append-to-body="true"
+                        tooltip-popup-delay="500">
+                  <i class="fa fa-fw fa-check"></i>
+                </button>
+                <button type="button" class="btn btn-default"
+                        ng-click="setJudgement(lead, 2)"
+                        ng-class="{'active': lead.judgement == 2}"
+                        uib-tooltip="Not the same"
+                        tooltip-append-to-body="true"
+                        tooltip-popup-delay="500">
+                  <i class="fa fa-fw fa-close"></i>
+                </button>
+                <button type="button" class="btn btn-default"
+                        ng-click="setJudgement(lead, 3)"
+                        ng-class="{'active': lead.judgement == 3}"
+                        uib-tooltip="Unsure"
+                        tooltip-append-to-body="true"
+                        tooltip-popup-delay="500">
+                  <i class="fa fa-fw fa-question"></i>
+                </button>
+              </div>
             </td>
           </tr>
         </table>

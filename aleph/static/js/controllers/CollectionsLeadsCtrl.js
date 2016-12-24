@@ -16,6 +16,14 @@ aleph.controller('CollectionsLeadsCtrl', ['$scope', '$http', '$timeout', '$ancho
     return !$scope.query.isFiltered() && $scope.result.limit > 0 && $scope.result.total == 0;
   };
 
+  $scope.setJudgement = function(lead, judgement) {
+    var url = '/api/1/collections/' + collection.id + '/leads';
+    lead.judgement = judgement;
+    $http.post(url, lead).then(function(res) {
+      console.log(res.data);
+    });
+  };
+
   $scope.$on('$routeUpdate', function() {
     reloadSearch();
   });

@@ -1,31 +1,17 @@
 from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest, ImATeapot
+from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify, request_data, arg_bool
 
 from aleph.model import Entity, Collection, db
-from aleph.logic import update_entity, delete_entity, fetch_entity
-from aleph.views.cache import enable_cache
+from aleph.logic import update_entity, delete_entity
 from aleph.events import log_event
 from aleph.search import QueryState
 from aleph.search import entities_query, links_query, entity_documents
 from aleph.search import suggest_entities, similar_entities
+from aleph.views.util import get_entity
+from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('entities_api', __name__)
-
-
-def get_entity(id, action):
-    entity, obj = fetch_entity(id)
-    if obj is None:
-        entity = obj_or_404(entity)
-        # Apply roles-based security to dataset-sourced entities.
-        request.authz.require(request.authz.check_roles(entity.get('roles')))
-        # Cannot edit them:
-        if action == request.authz.WRITE:
-            raise ImATeapot("Cannot write this entity.")
-    else:
-        collections = request.authz.collections.get(action)
-        request.authz.require(obj.collection_id in collections)
-    return entity, obj
 
 
 @blueprint.route('/api/1/entities', methods=['GET'])

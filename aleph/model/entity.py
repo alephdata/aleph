@@ -9,7 +9,8 @@ from aleph.text import normalize_strong, string_value
 from aleph.util import ensure_list
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
-from aleph.model.common import SoftDeleteModel, UuidModel, IdModel, DatedModel
+from aleph.model.entity_identity import EntityIdentity
+from aleph.model.common import SoftDeleteModel, UuidModel
 from aleph.model.common import make_textid, merge_data
 
 log = logging.getLogger(__name__)

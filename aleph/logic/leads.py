@@ -3,9 +3,11 @@ import logging
 from Levenshtein import jaro_winkler
 
 from aleph.authz import Authz
+from aleph.core import db
 from aleph.index import delete_entity_leads, index_lead
 from aleph.search import QueryState
 from aleph.search.entities import load_entity, similar_entities
+from aleph.model import EntityIdentity
 
 log = logging.getLogger(__name__)
 
@@ -35,6 +37,7 @@ def generate_leads(entity_id):
     authz = Authz(override=True)
     state = QueryState({}, authz, limit=100)
     result = similar_entities(entity, state)
+    judgements = EntityIdentity.judgements_by_entity(entity_id)
     for other in result.get('results', []):
         score = entity_distance(entity, other)
         log.debug(" -[%.2f]-> %s", score, other.get('name'))
@@ -43,6 +46,7 @@ def generate_leads(entity_id):
             'entity_id': entity.get('id'),
             'entity_collection_id': entity.get('collection_id'),
             'score': score,
+            'judgement': judgements.get(other.get('id'), 0),
             'match_id': other.get('id'),
             'schema': other.get('schema'),
             'schemata': other.get('schemata'),
@@ -50,3 +54,22 @@ def generate_leads(entity_id):
             'dataset': other.get('dataset'),
             'roles': other.get('roles')
         })
+
+
+def update_lead(entity, match, judgement, judge=None):
+    EntityIdentity.save(entity.get('id'), match.get('id'),
+                        judgement, judge=judge)
+    db.session.commit()
+    score = entity_distance(entity, match)
+    index_lead({
+        'entity_id': entity.get('id'),
+        'entity_collection_id': entity.get('collection_id'),
+        'score': score,
+        'judgement': judgement,
+        'match_id': match.get('id'),
+        'schema': match.get('schema'),
+        'schemata': match.get('schemata'),
+        'collection_id': match.get('collection_id'),
+        'dataset': match.get('dataset'),
+        'roles': match.get('roles')
+    })

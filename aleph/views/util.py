@@ -1,12 +1,29 @@
 import StringIO
+from apikit import obj_or_404
 from flask import request
 from urlparse import urlparse, urljoin
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import NotFound, ImATeapot
 import xlsxwriter
 
 from aleph.core import db
 from aleph.authz import Authz
 from aleph.model import Document, DocumentPage
+from aleph.logic import fetch_entity
+
+
+def get_entity(id, action):
+    entity, obj = fetch_entity(id)
+    if obj is None:
+        entity = obj_or_404(entity)
+        # Apply roles-based security to dataset-sourced entities.
+        request.authz.require(request.authz.check_roles(entity.get('roles')))
+        # Cannot edit them:
+        if action == request.authz.WRITE:
+            raise ImATeapot("Cannot write this entity.")
+    else:
+        collections = request.authz.collections.get(action)
+        request.authz.require(obj.collection_id in collections)
+    return entity, obj
 
 
 def get_document(document_id, action=Authz.READ):

@@ -20,7 +20,7 @@ def leads_query(collection_id, state):
     aggs = aggregate(state, q, aggs, facets)
 
     q = {
-        'sort': [{'score': 'desc'}, {'match_id': 'asc'}],
+        'sort': [{'judgement': 'asc'}, {'score': 'desc'}, {'match_id': 'asc'}],
         'query': filter_query(q, state.filters),
         'aggregations': aggs,
         'size': state.limit,
