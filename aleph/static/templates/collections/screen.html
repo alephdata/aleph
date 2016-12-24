@@ -33,30 +33,35 @@
       </h2>
     </div>
     <ul class="nav nav-tabs">
-      <li role="presentation" ng-class="{'active': section == 'documents', 'disabled': disable_documents}">
+      <li role="presentation" ng-class="{'active': section == 'documents', 'disabled': disableDocuments}">
         <a ng-href="/collections/{{::collection.id}}">
           <i class="fa fa-file-text-o" aria-hidden="true"></i>
           Documents
           <span class="badge">{{::collection.doc_count | number}}</span>
         </a>
       </li>
-      <li role="presentation" ng-class="{'active': section == 'entities', 'disabled': disable_entities}">
+      <li role="presentation" ng-class="{'active': section == 'entities', 'disabled': disableEntities}">
         <a ng-href="/collections/{{::collection.id}}/entities">
           <i class="fa fa-users" aria-hidden="true"></i>
           People and Companies
           <span class="badge">{{collection.entity_count | number}}</span>
         </a>
       </li>
-      <li role="presentation" ng-class="{'active': section == 'states'}"
-          ng-if="::show_states">
+      <li role="presentation" ng-class="{'active': section == 'leads'}" ng-if="::showLeads">
+        <a ng-href="/collections/{{::collection.id}}/leads">
+          <i class="fa fa-compress" aria-hidden="true"></i>
+          Leads
+          <span class="badge">{{collection.lead_count | number}}</span>
+        </a>
+      </li>
+      <li role="presentation" ng-class="{'active': section == 'states'}" ng-if="::showStates">
         <a ng-href="/collections/{{::collection.id}}/states">
           <i class="fa fa-hourglass-half" aria-hidden="true"></i>
           Data Imports
           <span class="badge">{{collection.crawler_state_count | number}}</span>
         </a>
       </li>
-      <li role="presentation" ng-class="{'active': section == 'settings'}"
-          ng-show="collection.can_edit">
+      <li role="presentation" ng-class="{'active': section == 'settings'}" ng-show="collection.can_edit">
         <a ng-href="/collections/{{::collection.id}}/settings">
           <i class="fa fa-cog" aria-hidden="true"></i>
           Settings

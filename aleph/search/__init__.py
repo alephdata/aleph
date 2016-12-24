@@ -8,6 +8,7 @@ from aleph.search.entities import entities_query  # noqa
 from aleph.search.entities import suggest_entities, similar_entities  # noqa
 from aleph.search.entities import load_entity  # noqa
 from aleph.search.links import links_query  # noqa
+from aleph.search.leads import leads_query, lead_count  # noqa
 from aleph.search.records import records_query, execute_records_query  # noqa
 from aleph.search.util import scan_iter  # noqa
 

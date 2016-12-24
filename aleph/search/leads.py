@@ -1,5 +1,6 @@
 import logging
 
+from aleph.core import es, es_index
 from aleph.index import TYPE_LEAD, TYPE_ENTITY
 from aleph.search.util import execute_basic
 from aleph.search.fragments import filter_query, authz_filter, aggregate
@@ -48,3 +49,11 @@ def leads_query(collection_id, state):
             if result.get('entity_id') == entity['id']:
                 result['entity'] = entity
     return output
+
+
+def lead_count(collection_id):
+    """Inaccurate, as it does not reflect auth."""
+    q = {'term': {'entity_collection_id': collection_id}}
+    q = {'size': 0, 'query': q}
+    result = es.search(index=es_index, doc_type=TYPE_LEAD, body=q)
+    return result.get('hits', {}).get('total', 0)

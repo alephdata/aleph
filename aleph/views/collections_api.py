@@ -3,7 +3,7 @@ from apikit import obj_or_404, jsonify, Pager, request_data
 
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY, get_config, db
 from aleph.model import Collection
-from aleph.search import QueryState
+from aleph.search import QueryState, lead_count
 from aleph.events import log_event
 from aleph.logic import delete_collection, update_collection
 from aleph.logic import analyze_collection
@@ -73,7 +73,7 @@ def view(id):
     collection = obj_or_404(Collection.by_id(id))
     request.authz.require(request.authz.collection_read(collection))
     data = collection.to_dict(counts=True)
-    # data.update(collection.content_statistics())
+    data['lead_count'] = lead_count(id)
     return jsonify(data)
 
 
