@@ -53,9 +53,10 @@ def check_role_alerts(authz):
     for alert in alerts:
         args = {
             'q': alert.query_text,
-            'entity': alert.entity_id,
+            'filter:entities.id': alert.entity_id,
             'limit': 50
         }
+        print args
         state = QueryState(args, authz)
         results = documents_query(state, since=alert.notified_at)
         if results['total'] == 0:
