@@ -17,7 +17,6 @@ class QueryState(object):
         self.raw_query = None
 
         self.facet_names = self.getlist('facet')
-        self.entity_ids = self.getlist('filter:entities.id')
         self.highlight = []
 
     @property
@@ -68,7 +67,8 @@ class QueryState(object):
     def entities(self):
         if not hasattr(self, '_entities'):
             cs = self.authz.collections_read
-            self._entities = Entity.by_id_set(self.entity_ids, collections=cs)
+            ids = self.getlist('filter:entities.id')
+            self._entities = Entity.by_id_set(ids, collections=cs)
         return self._entities
 
     @property
@@ -103,10 +103,10 @@ class QueryState(object):
     @property
     def filter_items(self):
         for key in self.args.keys():
+            if not key.startswith('filter:'):
+                continue
+            _, field = key.split(':', 1)
             for value in self.getlist(key):
-                if not key.startswith('filter:'):
-                    continue
-                _, field = key.split(':', 1)
                 yield (field, value)
 
     def get_filters(self, field):
@@ -116,9 +116,7 @@ class QueryState(object):
 
     @property
     def filters(self):
-        filters = {
-            'entities.id': set(self.entities.keys())
-        }
+        filters = {}
         for field, value in self.filter_items:
             if field not in filters:
                 filters[field] = set([value])

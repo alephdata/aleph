@@ -121,5 +121,6 @@ def filter_query(q, filters):
             q = add_filter(q, {'terms': {field: list(values)}})
         else:
             for value in values:
-                q = add_filter(q, {'term': {field: value}})
+                if value is not None:
+                    q = add_filter(q, {'term': {field: value}})
     return q
