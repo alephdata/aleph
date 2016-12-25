@@ -96,7 +96,7 @@ class LanguageFacet(Facet):
 class EntityFacet(Facet):
 
     def get_values(self):
-        return set(self.state.filters.get('entities.id'))
+        return set(self.state.filters.get('entities.id', []))
 
     def get_data(self):
         return self.aggs.get('entities', {}).get('inner', {}) \
@@ -112,7 +112,7 @@ class EntityFacet(Facet):
 class CollectionFacet(Facet):
 
     def get_values(self):
-        return set(self.state.get_filters('collection_id'))
+        return set(self.state.get_filters('collection_id', []))
 
     def get_data(self):
         return self.aggs.get('scoped', {}).get('collections', {}) \

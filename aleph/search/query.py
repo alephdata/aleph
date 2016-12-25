@@ -116,7 +116,7 @@ class QueryState(object):
 
     @property
     def filters(self):
-        filters = {}
+        filters = {'entities.id': set()}
         for field, value in self.filter_items:
             if field not in filters:
                 filters[field] = set([value])
