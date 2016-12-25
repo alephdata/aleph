@@ -191,10 +191,10 @@ LEAD_MAPPING = {
     "_all": {"enabled": False},
     "date_detection": False,
     "properties": {
-        "entity_id": {"type": "integer", "index": "not_analyzed"},
+        "entity_id": {"type": "string", "index": "not_analyzed"},
         "entity_collection_id": {"type": "integer", "index": "not_analyzed"},
         "score": {"type": "float", "index": "not_analyzed"},
-        "match_id": {"type": "integer", "index": "not_analyzed"},
+        "match_id": {"type": "string", "index": "not_analyzed"},
         "judgement": {"type": "integer", "index": "not_analyzed"},
         "schema": {"type": "string", "index": "not_analyzed"},
         "schemata": {"type": "string", "index": "not_analyzed"},
