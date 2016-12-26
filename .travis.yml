@@ -22,7 +22,9 @@ addons:
 env:
   global:
     - NODE_VERSION=6.9.2
-    - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
+    - ALEPH_SETTINGS=$TRAVIS_BUILD_DIR/contrib/docker_settings.py
+    - ALEPH_DATABASE_NAME=aleph
+    - ALEPH_DATABASE_URI=postgresql://localhost/$ALEPH_DATABASE_NAME
     - WKHTMLTOPDF_BIN=$TRAVIS_BUILD_DIR/wkhtmltox/bin/wkhtmltopdf
     - OAUTH_KEY=fake
     - OAUTH_SECRET=fake
@@ -41,8 +43,7 @@ install:
   - npm install bower
   - npm install .
 before_script:
-  - psql -c 'create database aleph_test;' -U postgres
-  - cp $TRAVIS_BUILD_DIR/test_settings.py.tmpl $TRAVIS_BUILD_DIR/test_settings.py
+  - psql -c "create database ${ALEPH_DATABASE_NAME}_test;" -U postgres
   - nosetests --version
   - psql --version
   - nvm use $NODE_VERSION
