@@ -37,9 +37,11 @@ def extract_image_data(data, languages=None):
         return None
     # TODO: play with contrast and sharpening the images.
     extractor = Tesseract(tessdata_prefix, lang=languages)
+    extractor.set_image(img)
     extractor.set_page_seg_mode(PageSegMode.PSM_AUTO_OSD)
-    text = extractor.ocr_image(img)
-    extractor.clear()
+    text = extractor.get_text() or ''
+    text = text.decode(encoding="UTF-8")
+    # extractor.clear()
     log.debug('OCR done: %s, %s characters extracted',
               languages, len(text))
     Cache.set_ocr(data, languages, text)

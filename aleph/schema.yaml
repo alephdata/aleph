@@ -146,6 +146,8 @@ entities:
         label: "VAT Identifier"
       irsCode:
         label: "IRS Number"
+      ipoCode:
+        label: "IPO"
       cikCode:
         label: "SEC Central Index Key"
 
