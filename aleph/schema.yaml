@@ -73,6 +73,10 @@ entities:
         label: Classification
       registrationNumber:
         label: Registration number
+        type: identifier
+      idNumber:
+        label: ID Number
+        type: identifier
       bankAccount:
         label: Bank account
       jurisdiction:
@@ -119,9 +123,6 @@ entities:
         label: Gender
       passportNumber:
         label: Passport
-        type: identifier
-      idNumber:
-        label: ID Number
         type: identifier
 
   Company:
