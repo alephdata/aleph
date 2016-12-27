@@ -22,7 +22,6 @@ psycopg2==2.6.2
 Pillow==3.2.0
 tesserwrap==0.1.6
 lxml==3.3.5
-nose
 boto3==1.4.1
 requests>=2.5.1
 apikit
@@ -70,4 +69,7 @@ subprocess32
 functools32>=3.2
 
 # Docs
-# -r requirements-docs.txt
+-r requirements-docs.txt
+
+# Testing
+-r requirements-testing.txt
