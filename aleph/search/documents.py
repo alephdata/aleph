@@ -84,8 +84,6 @@ def documents_query(state, fields=None, facets=True, since=None):
         'aggregations': aggs,
         '_source': fields or DEFAULT_FIELDS
     }
-    print q
-
     result, hits, output = execute_basic(TYPE_DOCUMENT, q)
 
     # This will add labels and other contextual information.
