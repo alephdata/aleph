@@ -1,13 +1,30 @@
 import aleph from '../aleph';
 
-aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', '$timeout', '$q', 'Entity', 'Authz', 'metadata', 'collection', 'Title',
-    function($scope, $route, $location, $http, $timeout, $q, Entity, Authz, metadata, collection, Title) {
+aleph.controller('EntitiesBulkCtrl', [
+  '$scope', '$route', '$location', '$http', '$timeout', '$q', 'Entity',
+  'Authz', 'metadata', 'collection', 'Title',
+  function(
+    $scope, $route, $location, $http, $timeout, $q, Entity, Authz, metadata,
+    collection, Title
+  ) {
 
   $scope.collection = collection;
   $scope.entities = [{data: {}}, {data: {}}, {data: {}}, {data: {}}];
   $scope.created = [];
   $scope.schemata = metadata.schemata;
-  $scope.availableSchemata = ['Person', 'Company', 'Organization', 'LegalEntity'];
+  $scope.availableSchemata = [
+    'Person', 'Company', 'Organization', 'LegalEntity'
+  ];
+  $scope.settings = {
+    stretchH: 'all',
+    contextMenu: ['row_below', 'remove_row']
+  };
+
+  var countryCodes = Object.keys(metadata.countries);
+  var countryNames = countryCodes.map(
+    function(k) {return metadata.countries[k]});
+  $scope.countryOptions = countryNames.slice().sort();
+
   Title.set("Bulk create entities", "collections");
 
   $scope.editEntity = function($event, entity) {
@@ -51,6 +68,34 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
     return count > 0;
   };
 
+
+  $scope.settings.afterChange = function(changes) {
+    if (!changes || changes.length < 1) {
+      return;
+    }
+
+    for (var changeIndex in changes) {
+      var change = changes[changeIndex];
+
+      if (!change || change.length < 1) {
+        return;
+      }
+
+      var index = change[0];
+      var column = change[1];
+      var oldValue = change[2];
+      var newValue = change[3];
+      var entity = $scope.entities[index];
+
+      // Handsontable doesn't work with a key-value list for dropdowns :(
+      if (column == 'country' && (oldValue != newValue)) {
+        entity.data['country'] = countryCodes[
+          countryNames.indexOf(newValue)];
+      }
+
+    }
+  }
+
   $scope.update = function(entity) {
     entity.$invalid = false;
     var stubs = 0, lastEntity = null;
@@ -82,7 +127,6 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
           $scope.created.push(res.data);
           saveNextEntity();
         }, function(err) {
-          console.log('Error', err);
           $scope.entities[i].$invalid = true;
           saveNextEntity();
         });

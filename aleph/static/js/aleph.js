@@ -2,11 +2,13 @@
 require('expose-loader?$!expose-loader?jQuery!jquery');
 require('expose-loader?angular!angular');
 require('expose-loader?PDFJS!angular-pdf/bower_components/pdfjs-dist/build/pdf.combined.js');
+require('expose-loader?Handsontable!handsontable/dist/handsontable.full.js');
 
 // These modules do not return anything
 require('ui-select/dist/select.js');
 require('angular-pdf');
 require('angular-truncate');
+require('ng-handsontable/dist/ngHandsontable');
 
 var aleph = angular.module('aleph', [
   require('angular-route'),
@@ -15,6 +17,7 @@ var aleph = angular.module('aleph', [
   require('angular-ui-bootstrap'),
   require('angular-loading-bar'),
   require('ng-file-upload'),
+  'ngHandsontable',
   'ui.select',
   'truncate',
   'pdf'
