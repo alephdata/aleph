@@ -25,8 +25,8 @@ def map_row(query, row):
                 yield (TYPE_LINK, data['id'], data)
 
 
-@celery.task(bind=True)
-def load_rows(task, dataset_name, query_idx, rows):
+@celery.task()
+def load_rows(dataset_name, query_idx, rows):
     """Load a single batch of QUEUE_PAGE rows from the given query."""
     dataset = datasets.get(dataset_name)
     query = list(dataset.queries)[query_idx]
@@ -35,13 +35,14 @@ def load_rows(task, dataset_name, query_idx, rows):
         for item in map_row(query, row):
             items.append(item)
 
-    try:
-        index_items(items)
-    except Exception as exc:
-        delay = randrange(60, 180)
-        log.warning("Index failed. Sleep %ss to ease congestion.", delay)
-        time.sleep(delay)
-        raise task.retry(exc=exc, max_retries=10)
+    while True:
+        try:
+            index_items(items)
+            break
+        except Exception as exc:
+            delay = randrange(60, 180)
+            log.warning("Failed: %s. Sleep %ss...", exc, delay)
+            time.sleep(delay)
 
     log.info("[%r] Indexed %s rows as %s documents...",
              dataset_name, len(rows), len(items))
