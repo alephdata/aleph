@@ -1,5 +1,6 @@
 import time
 import logging
+from random import randrange
 
 from aleph.core import celery, datasets
 from aleph.index import index_items, TYPE_LINK, TYPE_ENTITY
@@ -37,8 +38,9 @@ def load_rows(task, dataset_name, query_idx, rows):
     try:
         index_items(items)
     except Exception as exc:
-        log.warning("Index failed. Sleep to ease congestion, then try again.")
-        time.sleep(120)
+        delay = randrange(60, 180)
+        log.warning("Index failed. Sleep %ss to ease congestion.", delay)
+        time.sleep(delay)
         raise task.retry(exc=exc, max_retries=10)
 
     log.info("[%r] Indexed %s rows as %s documents...",
