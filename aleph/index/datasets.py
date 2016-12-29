@@ -47,7 +47,10 @@ def _index_updates(items):
 
     for doc_id, link in links:
         link.pop('id', None)
-        entity = dict(entities.get(link.pop('remote')))
+        remote_id = link.pop('remote', None)
+        if remote_id is None or remote_id not in entities:
+            continue
+        entity = dict(entities.get(remote_id))
         link['text'].extend(entity.pop('text', []))
         link['text'] = list(set(link['text']))
         link['remote'] = entity
