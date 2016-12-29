@@ -40,9 +40,8 @@ def load_rows(dataset_name, query_idx, rows):
             index_items(items)
             break
         except Exception as exc:
-            log.exception(exc)
             delay = randrange(60, 180)
-            log.info("Sleep %ss...", exc, delay)
+            log.info("%s - Sleep %ss...", exc, delay)
             time.sleep(delay)
 
     log.info("[%r] Indexed %s rows as %s documents...",

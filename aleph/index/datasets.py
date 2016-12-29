@@ -29,10 +29,10 @@ def _index_updates(items):
             })
             entities[doc_id] = source
 
-    if len(queries):
-        result = es.mget(index=es_index, body={'docs': queries})
-    else:
-        result = {}
+    if not len(queries):
+        return
+
+    result = es.mget(index=es_index, body={'docs': queries})
     for idx_doc in result.get('docs', []):
         if not idx_doc.get('found', False):
             continue
