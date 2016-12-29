@@ -27,6 +27,9 @@ entities:
         label: Previous name
         type: name
         multiple: true
+      weakAlias:
+        label: Weak alias
+        multiple: true
       sourceUrl:
         label: Source link
         type: url
@@ -69,6 +72,8 @@ entities:
         label: Status
       sector:
         label: Sector
+      program: # Used by sanctions
+        label: Program
       classification:
         label: Classification
       registrationNumber:
@@ -102,6 +107,8 @@ entities:
         label: Title
       firstName:
         label: First name
+      secondName:
+        label: Second name
       middleName:
         label: Middle name
       lastName:

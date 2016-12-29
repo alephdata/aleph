@@ -84,7 +84,7 @@ def make_excel(result_iter, fields):
             val = data.get(field, '')
             if isinstance(val, (list, tuple, set)):
                 val = ', '.join(val)
-            worksheet.write(row, col, val)
+            worksheet.write_string(row, col, val)
             col += 1
         row += 1
 
