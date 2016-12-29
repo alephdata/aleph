@@ -29,8 +29,11 @@ def _index_updates(items):
             })
             entities[doc_id] = source
 
-    result = es.mget(index=es_index, body={'docs': queries})
-    for idx_doc in result.get('docs'):
+    if len(queries):
+        result = es.mget(index=es_index, body={'docs': queries})
+    else:
+        result = {}
+    for idx_doc in result.get('docs', []):
         if not idx_doc.get('found', False):
             continue
         entity_id = idx_doc['_id']
@@ -39,6 +42,7 @@ def _index_updates(items):
         combined = merge_docs(entity, existing)
         combined['schema'] = schemata.merge_entity_schema(entity['schema'],
                                                           existing['schema'])
+        combined['roles'] = existing.get('roles', [])
         entities[entity_id] = combined
 
     for doc_id, link in links:
