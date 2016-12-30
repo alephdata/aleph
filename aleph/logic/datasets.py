@@ -1,7 +1,7 @@
 import time
 import logging
 from random import randrange
-from elasticsearch import TransportError
+from elasticsearch.helpers import BulkIndexError
 
 from aleph.core import celery, datasets
 from aleph.index import index_items, TYPE_LINK, TYPE_ENTITY
@@ -40,7 +40,7 @@ def load_rows(dataset_name, query_idx, rows):
         try:
             index_items(items)
             break
-        except TransportError as exc:
+        except BulkIndexError as exc:
             delay = randrange(60, 180)
             log.info("%s - Sleep %ss...", exc, delay)
             time.sleep(delay)
