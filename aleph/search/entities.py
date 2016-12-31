@@ -1,7 +1,7 @@
 import json
 from pprint import pprint  # noqa
 
-from aleph.core import url_for, es, es_index
+from aleph.core import url_for, es, es_index, schemata
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.search.util import execute_basic
 from aleph.search.fragments import match_all, filter_query, multi_match
@@ -173,11 +173,17 @@ def similar_entities(entity, state):
         for val in entity.get(field, []):
             boosters.append(multi_match(val, [field]))
 
+    # filter types which cannot be resolved via fuzzy matching.
+    nonfuzzy = [s.name for s in schemata if not s.fuzzy]
+
     state.raw_query = {
         "bool": {
             "should": boosters,
             "must": must,
-            "must_not": {"ids": {"values": entity_ids}},
+            "must_not": [
+                {"ids": {"values": entity_ids}},
+                {"terms": {"schema": nonfuzzy}},
+            ]
         }
     }
     # pprint(state.raw_query)

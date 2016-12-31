@@ -164,11 +164,14 @@ entities:
     plural: Public bodies
     icon: fa-building
     extends: Organization
+    fuzzy: false
 
   Asset:
-    hidden: true
+    plural: Assets
     extends: Entity
     icon: fa-car
+    hidden: true
+    fuzzy: false
     properties:
       value:
         label: Value
@@ -178,8 +181,9 @@ entities:
   Concession:
     label: Concession
     plural: Concessions
-    icon: fa-th
     extends: Asset
+    icon: fa-th
+    fuzzy: false
     properties:
       area:
         label: Area
@@ -191,6 +195,7 @@ entities:
     plural: Lands
     extends: Asset
     icon: fa-map
+    fuzzy: false
     properties:
       address:
         label: Address
@@ -215,6 +220,7 @@ entities:
     plural: Court cases
     extends: Entity
     icon: fa-briefcase
+    fuzzy: false
     properties:
       category:
         label: Category
@@ -247,6 +253,8 @@ links:
         label: "Summary"
       role:
         label: "Role"
+      recordId:
+        label: "Record ID"
 
   controlledBy:
     label: "Control"

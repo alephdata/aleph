@@ -18,7 +18,7 @@ class SchemaProperty(object):
         self.name = name.strip()
         self.data = data
         self.label = data.get('label', name)
-        self.is_hidden = data.get('hidden', False)
+        self.hidden = data.get('hidden', False)
         self.is_multiple = data.get('multiple', False)
         self.is_label = name == 'name'
         cls = resolve_type(data.get('type', 'string'))
@@ -51,7 +51,7 @@ class SchemaProperty(object):
         return {
             'name': self.name,
             'label': self.label,
-            'hidden': self.is_hidden,
+            'hidden': self.hidden,
             'type': self.type.name
         }
 
@@ -78,7 +78,12 @@ class Schema(object):
         self.label = data.get('label', name)
         self.plural = data.get('plural', self.label)
         self.icon = data.get('icon')
-        self.is_hidden = data.get('hidden', False)
+        # Do not show in listings:
+        self.hidden = data.get('hidden', False)
+        # Try to perform fuzzy matching. Fuzzy similarity search does not
+        # make sense for entities which have a lot of similar names, such
+        # as land plots, assets etc.
+        self.fuzzy = data.get('fuzzy', True)
         self._extends = dict_list(data, 'extends')
 
         self._own_properties = []
@@ -146,6 +151,8 @@ class Schema(object):
             'label': self.label,
             'plural': self.plural,
             'icon': self.icon,
+            'hidden': self.hidden,
+            'fuzzy': self.fuzzy,
             'properties': list(self.properties)
         }
         if self.section == Schema.LINK:
@@ -203,9 +210,12 @@ class SchemaSet(object):
     def to_dict(self):
         data = {}
         for name, schema in self.schemata.items():
-            if not schema.is_hidden:
+            if not schema.hidden:
                 data[name] = schema
         return data
+
+    def __iter__(self):
+        return iter(self.schemata.values())
 
     def __repr__(self):
         return '<SchemaSet(%r)>' % self.schemata

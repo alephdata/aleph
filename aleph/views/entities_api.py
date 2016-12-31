@@ -2,7 +2,8 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify, request_data, arg_bool
 
-from aleph.model import Entity, Collection, db
+from aleph.core import db, schemata
+from aleph.model import Entity, Collection
 from aleph.logic import update_entity, delete_entity, combined_entity
 from aleph.events import log_event
 from aleph.search import QueryState
@@ -82,6 +83,13 @@ def links(id):
 @blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])
 def similar(id):
     entity, _ = get_entity(id, request.authz.READ)
+    schema = schemata.get(entity.get('schema'))
+    if not schema.fuzzy:
+        return jsonify({
+            'status': 'ignore',
+            'results': [],
+            'total': 0
+        })
     state = QueryState(request.args, request.authz)
     combined = combined_entity(entity)
     return jsonify(similar_entities(combined, state))
