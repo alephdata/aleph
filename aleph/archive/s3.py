@@ -49,8 +49,8 @@ class S3Archive(Archive):  # pragma: no cover
                     'AllowedMethods': ['GET'],
                     'AllowedOrigins': ['*'],
                     'AllowedHeaders': ['*'],
-                    'ExposedHeaders': ['Accept-Ranges', 'Content-Encoding',
-                                       'Content-Length', 'Content-Range'],
+                    'ExposeHeaders': ['Accept-Ranges', 'Content-Encoding',
+                                      'Content-Length', 'Content-Range'],
                     'MaxAgeSeconds': 84600 * 14
                 }
             ]
