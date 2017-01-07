@@ -58,6 +58,9 @@ entities:
       phone:
         label: Phone
         type: phone
+      website:
+        label: Website
+        type: url
       legalForm:
         label: Legal form
       incorporationDate:
