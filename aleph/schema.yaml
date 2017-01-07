@@ -205,6 +205,8 @@ entities:
         type: address
       location:
         label: Location
+      censusBlock:
+        label: Census block
       cadastralCode:
         label: Cadastral code
       area:
