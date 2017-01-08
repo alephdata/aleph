@@ -4,26 +4,10 @@ from random import randrange
 from elasticsearch.helpers import BulkIndexError
 
 from aleph.core import celery, datasets
-from aleph.index import index_items, TYPE_LINK, TYPE_ENTITY
+from aleph.index import index_items
 
 log = logging.getLogger(__name__)
 QUEUE_PAGE = 1000
-
-
-def map_row(query, row):
-    """Use the mapper to generate entities and links from a source row."""
-    entities = {}
-    for entity in query.entities:
-        data = entity.to_index(row)
-        if data is not None:
-            entities[entity.name] = data
-            yield (TYPE_ENTITY, data['id'], data)
-
-    for link in query.links:
-        for inverted in [True, False]:
-            data = link.to_index(row, entities, inverted=inverted)
-            if data is not None:
-                yield (TYPE_LINK, data['id'], data)
 
 
 @celery.task()
@@ -31,22 +15,33 @@ def load_rows(dataset_name, query_idx, rows):
     """Load a single batch of QUEUE_PAGE rows from the given query."""
     dataset = datasets.get(dataset_name)
     query = list(dataset.queries)[query_idx]
-    items = []
+    entities = {}
+    links = []
     for row in rows:
-        for item in map_row(query, row):
-            items.append(item)
+        entity_map = {}
+        for entity in query.entities:
+            data = entity.to_index(row)
+            if data is not None:
+                entity_map[entity.name] = data
+                entities[data['id']] = data
+
+        for link in query.links:
+            for inverted in [False, True]:
+                data = link.to_index(row, entity_map, inverted=inverted)
+                if data is not None:
+                    links.append(data)
 
     while True:
         try:
-            index_items(items)
+            index_items(entities, links)
             break
         except BulkIndexError as exc:
             delay = randrange(60, 180)
             log.info("%s - Sleep %ss...", exc, delay)
             time.sleep(delay)
 
-    log.info("[%r] Indexed %s rows as %s documents...",
-             dataset_name, len(rows), len(items))
+    log.info("[%r] Indexed %s rows as %s entities, %s links...",
+             dataset_name, len(rows), len(entities), len(links))
 
 
 def load_dataset(dataset):

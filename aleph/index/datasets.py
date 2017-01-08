@@ -9,7 +9,7 @@ from aleph.index.util import merge_docs
 log = logging.getLogger(__name__)
 
 
-def _index_updates(items):
+def _index_updates(entities, links):
     """Look up existing index documents and generate an updated form.
 
     This is necessary to make the index accumulative, i.e. if an entity or link
@@ -18,20 +18,10 @@ def _index_updates(items):
     document and losing field values. An alternative solution would be to
     implement this in Groovy on the ES.
     """
-    queries, links, entities = [], [], {}
-    for (doc_type, doc_id, source) in items:
-        if doc_type == TYPE_LINK:
-            links.append((doc_id, source))
-        elif doc_type == TYPE_ENTITY:
-            queries.append({
-                '_id': doc_id,
-                '_type': doc_type
-            })
-            entities[doc_id] = source
-
-    if not len(queries):
+    if not len(entities):
         return
 
+    queries = [{'_id': e, '_type': TYPE_ENTITY} for e in entities.keys()]
     result = es.mget(index=es_index, body={'docs': queries})
     for idx_doc in result.get('docs', []):
         if not idx_doc.get('found', False):
@@ -40,29 +30,30 @@ def _index_updates(items):
         entity = entities.get(entity_id)
         existing = idx_doc.get('_source')
         combined = merge_docs(entity, existing)
-        combined['schema'] = schemata.merge_entity_schema(entity['schema'],
-                                                          existing['schema'])
-        combined['roles'] = existing.get('roles', [])
+        combined['schema'] = schemata.merge_entity_schema(entity['schema'], existing['schema'])  # noqa
+        combined['roles'] = entity.get('roles', [])
         entities[entity_id] = combined
 
-    for doc_id, link in links:
-        link.pop('id', None)
-        remote_id = link.pop('remote', None)
-        if remote_id not in entities:
+    for link in links:
+        doc = dict(link)
+        doc_id = doc.pop('id', None)
+        if doc_id is None:
             continue
-        entity = dict(entities.get(remote_id))
-        link['text'].extend(entity.pop('text', []))
-        link['text'] = list(set(link['text']))
-        link['remote'] = entity
+        entity = entities.get(doc.get('remote'))
+        if entity is None:
+            continue
+        entity = dict(entity)
+        doc['text'].extend(entity.pop('text', []))
+        doc['text'] = list(set(doc['text']))
+        doc['remote'] = entity
         yield {
             '_id': doc_id,
             '_type': TYPE_LINK,
             '_index': str(es_index),
-            '_source': link
+            '_source': doc
         }
 
     for doc_id, entity in entities.items():
-        # pprint(entity)
         entity.pop('id', None)
         yield {
             '_id': doc_id,
@@ -72,9 +63,10 @@ def _index_updates(items):
         }
 
 
-def index_items(items):
+def index_items(entities, links):
     """Index a set of links or entities."""
-    bulk(es, _index_updates(items), stats_only=True, request_timeout=200.0)
+    bulk(es, _index_updates(entities, links), stats_only=True,
+         request_timeout=200.0)
 
 
 def delete_dataset(dataset_name):
