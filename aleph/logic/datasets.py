@@ -1,6 +1,7 @@
 import time
 import logging
 from random import randrange
+from elasticsearch import ElasticsearchException
 from elasticsearch.helpers import BulkIndexError
 
 from aleph.core import celery, datasets
@@ -35,7 +36,7 @@ def load_rows(dataset_name, query_idx, rows):
         try:
             index_items(entities, links)
             break
-        except BulkIndexError as exc:
+        except (ElasticsearchException, BulkIndexError) as exc:
             delay = randrange(60, 180)
             log.info("%s - Sleep %ss...", exc, delay)
             time.sleep(delay)
