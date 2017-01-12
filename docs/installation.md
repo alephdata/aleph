@@ -50,6 +50,16 @@ Your repository is mounted inside the docker container under the name
 and `aleph_beat_1`. You can access these services anytime by running
 `docker-compose run <app|worker|beat> bash`.
 
+### Building from a clean state
+
+You can also build the Aleph images locally. This could be useful while working
+on the Dockerfile changes and new dependency upgrades.
+
+Aleph provides two commands to build the images. First one is `make base`, this
+will build the `pudo/aleph-base` image (this is an intermediary image with
+system-level dependencies for Aleph). The second one is `make build`, this will
+build the `pudo/aleph` image (this will generate a production ready image).
+
 ## Front-end
 
 Aleph is transitioning the front-end codebase towards a more modern
@@ -76,7 +86,7 @@ docker-compose run app make assets-dev
 Aleph runs on PostgreSQL and ElasticSearch along with a couple of system
 tools like OpenOffice, ImageMagik, Tesseract and wkhtmltopdf. For a full list
 of system dependencies please review the [`aleph_base`
-Ddockerfile](https://github.com/pudo/aleph/blob/master/contrib/base/Dockerfile).
+Dockerfile](https://github.com/pudo/aleph/blob/master/contrib/base/Dockerfile).
 
 If you decide to not use Docker compose, you will have to provide all these
 dependencies and services and change the configuration file accordingly.
