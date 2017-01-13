@@ -10,7 +10,7 @@ SQLAlchemy==1.0.13
 alembic==0.8.6
 
 # celery==4.0.1
-git://github.com/alanhamlett/celery.git@73147a9da31f2932eb4778e9474fbe72f23d21c2#egg=Celery
+git+https://github.com/alanhamlett/celery.git@73147a9da31f2932eb4778e9474fbe72f23d21c2#egg=Celery
 billiard==3.5.0.2
 kombu==4.0.1
 
