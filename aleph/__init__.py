@@ -2,7 +2,7 @@ import os
 import logging
 import warnings
 import requests
-import urllib3\
+import urllib3
 from flask.exthook import ExtDeprecationWarning
 from sqlalchemy.exc import SAWarning
 
