@@ -50,7 +50,7 @@ PyYAML==3.11
 PyICU==1.9.5
 chardet==2.3.0
 cchardet==1.1.1
-dateparser==0.5.0
+parsedatetime==2.1
 jdatetime==1.8.1
 coverage
 pyahocorasick
