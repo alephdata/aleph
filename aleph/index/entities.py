@@ -43,7 +43,7 @@ def document_updates(q, entity_id, collection_id=None):
 
 
 def delete_entity_references(entity_id):
-    """Delete all entities associated with a collection.
+    """Delete all entities associated with any collection.
 
     This is used by the ``indexentities`` management command in order to clear
     out any leftover entities in the index.

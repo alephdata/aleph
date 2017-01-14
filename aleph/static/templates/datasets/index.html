@@ -14,7 +14,7 @@
       <div class="search-bar">
         <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
           <div class="input-group">
-            <input type="text" class="form-control" autofocus ng-model="query.q" placeholder="Search people and companies">
+            <input type="text" class="form-control" autofocus ng-model="search.q" placeholder="Search people and companies">
             <span class="input-group-btn">
               <button class="btn btn-primary" type="submit">
                 <i class="fa fa-search" aria-hidden="true"></i>
@@ -36,7 +36,6 @@
           </span>
           <privacy-icon subject="dataset"></privacy-icon>
           <strong>{{::dataset.label}}</strong>
-          <!-- category-label subject="dataset"></category-label -->
         </a>
       </div>
     </div>

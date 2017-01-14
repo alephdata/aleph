@@ -1,7 +1,6 @@
 import aleph from '../aleph';
 
-aleph.directive('entitySource', ['Dataset', 'Collection',
-    function(Dataset, Collection) {
+aleph.directive('entitySource', ['Dataset', 'Collection', function(Dataset, Collection) {
   return {
     restrict: 'E',
     transclude: false,
