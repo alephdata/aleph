@@ -114,7 +114,6 @@ def parse_date(text, guess=True, date_format=None):
     text = string_value(text)
     if text is None:
         return
-
     elif date_format is not None:
         # parse with a specified format
         try:

@@ -109,6 +109,7 @@ def callback(provider):
     signals.handle_oauth_session.send(provider=oauth_provider, session=session)
     db.session.commit()
     if 'user' not in session:
+        log.error("No OAuth handler for %r was installed.", provider)
         return Unauthorized("Authentication has failed.")
     log_event(request, role_id=session['user'])
     log.info("Logged in: %r", session['user'])

@@ -14,6 +14,7 @@ from aleph.index import delete_entity as index_delete
 from aleph.search import load_entity
 from aleph.index.entities import delete_entity_references
 from aleph.index.entities import update_entity_references
+from aleph.index.entities import delete_collection_entities
 from aleph.search.records import scan_entity_mentions
 from aleph.logic.leads import generate_leads
 
@@ -136,6 +137,7 @@ def reindex_entity(entity, references=True):
 
 @celery.task()
 def reindex_entities():
+    delete_collection_entities()
     query = db.session.query(Entity)
     for entity in query.yield_per(5000):
         reindex_entity(entity)

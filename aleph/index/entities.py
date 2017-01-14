@@ -43,9 +43,20 @@ def document_updates(q, entity_id, collection_id=None):
 
 
 def delete_entity_references(entity_id):
+    """Delete all entities associated with a collection.
+
+    This is used by the ``indexentities`` management command in order to clear
+    out any leftover entities in the index.
+    """
     q = {'query': {'term': {'entities.id': entity_id}}}
     bulk_op(document_updates(q, entity_id))
     flush_index()
+
+
+def delete_collection_entities():
+    q = {'query': {'exists': {'field': 'collection_id'}}}
+    for ent in scan(es, query=q, index=es_index, doc_type=[TYPE_ENTITY]):
+        es.delete(index=es_index, doc_type=TYPE_ENTITY, id=ent.get('_id'))
 
 
 def update_entity_references(entity, max_query=1000):
@@ -91,7 +102,7 @@ def index_entity(entity):
 
 
 def delete_pending():
-    """Deltes any pending entities."""
+    """Deletes any pending entities."""
     deleted = 0
     entities = db.session.query(Entity.id).filter(
         Entity.state == Entity.STATE_PENDING)

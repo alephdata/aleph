@@ -13,7 +13,13 @@ COUNTRY_NAMES = {
     'xk': 'Kosovo',
     'yucs': 'Yugoslavia',
     'csxx': 'Serbia and Montenegro',
-    'suhh': 'Soviet Union'
+    'suhh': 'Soviet Union',
+    'ge-ab': 'Abkhazia',
+    'x-so': 'South Ossetia',
+    'so-som': 'Somaliland',
+    'gb-wls': 'Wales',
+    'gb-sct': 'Scotland',
+    'md-pmr': 'Transnistria'
 }
 
 for country in countries:
