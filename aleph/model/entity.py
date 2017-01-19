@@ -23,7 +23,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
     name = db.Column(db.Unicode)
     type = db.Column(db.String(255), index=True)
-    state = db.Column(db.String(128), nullable=True, default=STATE_ACTIVE)
+    state = db.Column(db.String(128), nullable=True, default=STATE_ACTIVE, index=True)  # noqa
     foreign_ids = db.Column(ARRAY(db.Unicode()))
     data = db.Column('data', JSONB)
 

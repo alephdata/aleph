@@ -30,7 +30,7 @@ class Document(db.Model, DatedModel):
     _meta = db.Column('meta', JSONB)
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
-    collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))
+    collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa
 
     @property
     def title(self):
@@ -149,7 +149,7 @@ class DocumentPage(db.Model):
     id = db.Column(db.BigInteger, primary_key=True)
     number = db.Column(db.Integer(), nullable=False)
     text = db.Column(db.Unicode(), nullable=False)
-    document_id = db.Column(db.Integer(), db.ForeignKey('document.id'))
+    document_id = db.Column(db.Integer(), db.ForeignKey('document.id'), index=True)  # noqa
     document = db.relationship(Document, backref=db.backref('pages', cascade='all, delete-orphan'))  # noqa
 
     def __repr__(self):
@@ -176,7 +176,7 @@ class DocumentRecord(db.Model):
     sheet = db.Column(db.Integer, nullable=False)
     row_id = db.Column(db.Integer, nullable=False)
     data = db.Column(JSONB)
-    document_id = db.Column(db.Integer(), db.ForeignKey('document.id'))
+    document_id = db.Column(db.Integer(), db.ForeignKey('document.id'), index=True)  # noqa
     document = db.relationship(Document, backref=db.backref('records', cascade='all, delete-orphan'))  # noqa
 
     @property

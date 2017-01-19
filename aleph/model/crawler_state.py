@@ -18,14 +18,14 @@ class CrawlerState(db.Model):
     id = db.Column(db.BigInteger, primary_key=True)
     crawler_id = db.Column(db.Unicode(), index=True)
     crawler_run = db.Column(db.Unicode(), nullable=True)
-    content_hash = db.Column(db.Unicode(65), nullable=True)
-    foreign_id = db.Column(db.Unicode, nullable=True)
+    content_hash = db.Column(db.Unicode(65), nullable=True, index=True)
+    foreign_id = db.Column(db.Unicode, nullable=True, index=True)
     status = db.Column(db.Unicode(10), nullable=False)
     error_type = db.Column(db.Unicode(), nullable=True)
     error_message = db.Column(db.Unicode(), nullable=True)
     error_details = db.Column(db.Unicode(), nullable=True)
     meta = db.Column(JSONB)
-    collection_id = db.Column(db.Integer(), db.ForeignKey('collection.id'), index=True)
+    collection_id = db.Column(db.Integer(), db.ForeignKey('collection.id'), index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('crawl_states', cascade='all, delete-orphan'))  # noqa
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

@@ -12,10 +12,10 @@ class Reference(db.Model, IdModel, DatedModel):
     origin = db.Column(db.String(128))
     weight = db.Column(db.Integer)
 
-    document_id = db.Column(db.BigInteger, db.ForeignKey('document.id'))
+    document_id = db.Column(db.BigInteger, db.ForeignKey('document.id'), index=True)  # noqa
     document = db.relationship('Document', backref=db.backref('references', lazy='dynamic'))  # noqa
 
-    entity_id = db.Column(db.String(32), db.ForeignKey('entity.id'))
+    entity_id = db.Column(db.String(32), db.ForeignKey('entity.id'), index=True)  # noqa
     entity = db.relationship('Entity', backref=db.backref('references', lazy='dynamic'))  # noqa
 
     @classmethod

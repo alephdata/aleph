@@ -13,8 +13,7 @@ class EventLog(db.Model, IdModel, DatedModel):
     path = db.Column(db.Unicode(), nullable=True)
     query = db.Column(JSONB)
     data = db.Column(JSONB)
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'),
-                        nullable=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
 
     @classmethod
     def emit(cls, action, path, source_ip=None, query=None, data=None,
