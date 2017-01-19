@@ -63,7 +63,7 @@ def create_app(config={}):
     )
     # celery.conf.update(app.config)
     celery.conf.update(
-        imports=('aleph.queue'),
+        imports=('aleph.queues'),
         broker_url=app.config['CELERY_BROKER_URL'],
         task_always_eager=app.config['CELERY_ALWAYS_EAGER'],
         task_eager_propagates=True,

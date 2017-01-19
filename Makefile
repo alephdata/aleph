@@ -2,13 +2,13 @@ web: assets
 	python aleph/manage.py runserver -h 0.0.0.0 -p 8000
 
 worker:
-	celery -A aleph.queue -B -c 4 -l INFO worker --pidfile /var/lib/celery.pid
+	celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /var/lib/celery.pid
 
 beat:
-	celery -A aleph.queue beat -s /var/lib/celerybeat-schedule.db --pidfile /var/lib/celery.pid
+	celery -A aleph.queues beat -s /var/lib/celerybeat-schedule.db --pidfile /var/lib/celery.pid
 
 clear:
-	celery purge -f -A aleph.queue
+	celery purge -f -A aleph.queues
 
 assets:
 	touch aleph/static/style/_custom.scss;
