@@ -3,7 +3,7 @@ from elasticsearch.exceptions import NotFoundError
 
 from aleph.core import celery, es, es_index
 from aleph.model import Document
-from aleph.text import latinize_text
+from aleph.text import latinize_text, string_value
 from aleph.index.records import generate_records, clear_records
 from aleph.index.entities import generate_entities
 from aleph.index.mapping import TYPE_DOCUMENT
@@ -31,6 +31,7 @@ def get_text(document):
     """
     texts = []
     for text in document.text_parts():
+        text = string_value(text)
         texts.append(text)
         latin = latinize_text(text)
         if latin != text:
