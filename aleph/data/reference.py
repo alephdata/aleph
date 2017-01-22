@@ -1,7 +1,10 @@
+import logging
 from babel import Locale
 from pycountry import countries, languages
 
 from aleph.core import get_config
+
+log = logging.getLogger(__name__)
 
 LANGUAGE_NAMES = dict(Locale('en').languages.items())
 LANGUAGE_NAMES = {k: v for k, v in LANGUAGE_NAMES.items() if len(k) == 2}
@@ -45,9 +48,10 @@ def get_languages_iso3(codes):
         lang = lang.lower().strip()
         if len(lang) == 2:
             try:
-                c = languages.get(iso639_1_code=lang)
-                lang = c.iso639_3_code
-            except KeyError:
+                c = languages.get(alpha_2=lang)
+                lang = c.alpha_3
+            except KeyError as ke:
+                log.exception(ke)
                 continue
         supported.append(lang)
 
