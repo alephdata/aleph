@@ -36,7 +36,7 @@ class DocumentIngestor(TextIngestor):
                     instance_path, '--norestore', '--nologo', '--nodefault',
                     '--nolockcheck', '--invisible', '--outdir', work_dir,
                     '--headless', string_value(local_path)]
-            log.debug('Converting document: %r', ' '.join(args))
+            # log.debug('Converting document: %r', ' '.join(args))
             subprocess.call(args, timeout=CONVERT_TIMEOUT)
             for out_file in os.listdir(work_dir):
                 return os.path.join(work_dir, out_file)

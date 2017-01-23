@@ -88,7 +88,8 @@ def extract_pdf(path, languages=None):
         with open(out_file, 'r') as fh:
             xml = string_value(fh.read())
             xml = xml.replace('encoding="UTF-8"', '')
-            doc = etree.fromstring(xml)
+            parser = etree.XMLParser(recover=True, remove_comments=True)
+            doc = etree.fromstring(xml, parser=parser)
             log.debug("Parsed XML: %r", path)
 
         pages = []

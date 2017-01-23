@@ -65,5 +65,6 @@ class PhoneNumberAnalyzer(RegexAnalyzer):
             for country in [None] + self.meta.countries:
                 num = parse_phone(match, country=country)
                 if num is not None:
-                    log.info("Extraced phone: %s", num)
                     self.meta.add_phone_number(num)
+        if len(self.meta.phone_numbers):
+            log.info("Found phone numbers: %s", self.meta.phone_numbers)
