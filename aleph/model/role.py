@@ -1,10 +1,9 @@
 import logging
-from uuid import uuid4
 from flask import current_app
 
 from aleph.core import db, url_for, get_config
 from aleph.data.validate import validate
-from aleph.model.common import SoftDeleteModel, IdModel
+from aleph.model.common import SoftDeleteModel, IdModel, make_textid
 
 log = logging.getLogger(__name__)
 
@@ -77,7 +76,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.is_admin = False
 
         if role.api_key is None:
-            role.api_key = uuid4().hex
+            role.api_key = make_textid()
 
         role.email = email
         if is_admin is not None:
