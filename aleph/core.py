@@ -115,6 +115,10 @@ def get_app_title():
     return current_app.config.get('APP_TITLE') or get_app_name()
 
 
+def get_app_secret_key():
+    return current_app.config.get('SECRET_KEY')
+
+
 def get_es():
     app = current_app._get_current_object()
     if not hasattr(app, '_es_instance'):
@@ -178,6 +182,7 @@ archive = LocalProxy(get_archive)
 schemata = LocalProxy(get_schemata)
 datasets = LocalProxy(get_datasets)
 upload_folder = LocalProxy(get_upload_folder)
+secret_key = LocalProxy(get_app_secret_key)
 
 
 def url_for(*a, **kw):

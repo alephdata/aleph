@@ -1,12 +1,13 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, abort, render_template
 from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, request_data, jsonify
 
-from aleph.core import db
+from aleph.core import db, get_config, app_url
 from aleph.events import log_event
 from aleph.model import Role, Collection, Permission
 from aleph.logic.permissions import update_permission
 from aleph.data.validate import validate
+from aleph.notify import notify_role
 
 
 blueprint = Blueprint('roles_api', __name__)
@@ -30,6 +31,62 @@ def index():
         del data['email']
         users.append(data)
     return jsonify({'results': users, 'total': len(users)})
+
+
+@blueprint.route('/api/1/roles/invite', methods=['POST'])
+def invite_email():
+    data = request_data()
+    email = data.get('email')
+
+    if not email:
+        abort(400)
+
+    signature = Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
+    url = '{}signup/{}'.format(app_url, signature)
+    role = Role(email=email, name='Visitor')
+
+    notify_role(role=role, subject='Registration', html=render_template(
+        'email/registration_invitation.html', url=url, role=role)
+    )
+
+    return jsonify({'status': 'To proceed, please check your email.'}), 201
+
+
+@blueprint.route('/api/1/roles', methods=['POST'])
+def create():
+    data = request_data()
+    email = data.get('email')
+    password = data.get('password')
+    signature = data.get('code')
+
+    if not email or not password or not signature:
+        abort(400)
+
+    try:
+        # Make sure registration is allowed
+        assert get_config('PASSWORD_REGISTRATION')
+
+        # Make sure password is set and not too short
+        assert len(password) >= Role.PASSWORD_MIN_LENGTH
+
+        # Make sure the signature is valid
+        assert email == Role.SIGNATURE_SERIALIZER.loads(
+            signature, salt=email, max_age=Role.SIGNATURE_MAX_AGE)
+    except:
+        abort(400)
+
+    role = Role.load_or_create(
+        foreign_id='password:{}'.format(email),
+        type=Role.USER,
+        name=email,
+        email=email
+    )
+    role.set_password(password)
+
+    db.session.add(role)
+    db.session.flush()
+
+    return jsonify(dict(role=role.to_dict())), 201
 
 
 @blueprint.route('/api/1/roles/<int:id>', methods=['GET'])
