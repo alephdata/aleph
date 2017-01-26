@@ -130,3 +130,6 @@ OAUTH = [{
     'access_token_url': 'https://accounts.google.com/o/oauth2/token',
     'authorize_url': 'https://accounts.google.com/o/oauth2/auth',
 }]
+
+PASSWORD_LOGIN = True
+PASSWORD_REGISTRATION = True

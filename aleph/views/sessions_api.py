@@ -1,17 +1,17 @@
 import logging
 from flask import session, Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
-from apikit import jsonify
+from apikit import jsonify, request_data
 from werkzeug.exceptions import Unauthorized
 
 from aleph import signals
-from aleph.core import db, url_for
+from aleph.core import db, url_for, get_config
 from aleph.authz import Authz, get_public_roles
 from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
-from aleph.views.util import is_safe_url
+from aleph.views.util import extract_next_url
 
 
 log = logging.getLogger(__name__)
@@ -38,6 +38,7 @@ def load_role():
 
 @blueprint.route('/api/1/sessions')
 def status():
+    authz = request.authz
     enable_cache(vary_user=True)
     providers = sorted(oauth.remote_apps.values(), key=lambda p: p.label)
     providers = [{
@@ -45,7 +46,15 @@ def status():
         'label': p.label,
         'login': url_for('.login', provider=p.name),
     } for p in providers]
-    authz = request.authz
+
+    if get_config('PASSWORD_LOGIN'):
+        providers.append({
+            'name': 'password',
+            'label': 'Email',
+            'registration': get_config('PASSWORD_REGISTRATION'),
+            'login': url_for('.password_login'),
+            'register': url_for('roles_api.invite_email')
+        })
 
     return jsonify({
         'logged_in': authz.logged_in,
@@ -62,6 +71,33 @@ def status():
     })
 
 
+@blueprint.route('/api/1/sessions/login/password', methods=['POST'])
+def password_login():
+    """Provides email and password authentication."""
+    data = request_data()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        abort(404)
+
+    log_event(request)
+
+    role = Role.by_email(email).filter(Role.password_digest != None).first()
+
+    if not (role and role.check_password(password)):
+        return Unauthorized("Authentication has failed.")
+
+    session['user'] = role.id
+    session['next_url'] = extract_next_url(request)
+
+    return jsonify({
+        'logout': url_for('.logout'),
+        'api_key': role.api_key,
+        'role': role
+    })
+
+
 @blueprint.route('/api/1/sessions/login')
 @blueprint.route('/api/1/sessions/login/<string:provider>')
 def login(provider=None):
@@ -75,13 +111,7 @@ def login(provider=None):
         abort(404)
 
     log_event(request)
-    next_url = '/'
-    for target in request.args.get('next'), request.referrer:
-        if not target:
-            continue
-        if is_safe_url(target):
-            next_url = target
-    session['next_url'] = next_url
+    session['next_url'] = extract_next_url(request)
     callback_url = url_for('.callback', provider=provider)
     return oauth_provider.authorize(callback=callback_url)
 

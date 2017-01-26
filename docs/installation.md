@@ -69,7 +69,7 @@ already landed and should make the front-end development easier.
 An LTS version of Node.js with NPM is required before we continue.
 First you will need to install the development packages (at the moment the
 build tool uses Webpack 2): `npm install .`.
-If you are using Docker, none of this is not required.
+If you are using Docker, none of this is required.
 
 In order to build the front-end you will need to run: `make assets`.
 The front-end assets are always built when you start the application.
@@ -80,6 +80,9 @@ watcher in parallel:
 ```
 docker-compose run app make assets-dev
 ```
+
+While working on the front-end development, make sure you disable browser
+cache!
 
 ## Production deployment
 

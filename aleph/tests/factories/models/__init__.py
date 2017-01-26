@@ -1,2 +1,3 @@
-from .collection import CollectionFactory
-from .entity import EntityFactory
+from .collection import CollectionFactory  # noqa
+from .entity import EntityFactory  # noqa
+from .role import RoleFactory  # noqa

@@ -58,6 +58,8 @@ OAUTH = [{
     'access_token_url': 'https://accounts.google.com/o/oauth2/token',
     'authorize_url': 'https://accounts.google.com/o/oauth2/auth',
 }]
+PASSWORD_LOGIN = True
+PASSWORD_REGISTRATION = True
 
 OCR_PDF_PAGES = os.environ.get('ALEPH_PDF_OCR_IMAGE_PAGES', 'true')
 OCR_PDF_PAGES = OCR_PDF_PAGES.strip().lower() == "true"

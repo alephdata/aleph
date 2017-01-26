@@ -11,6 +11,8 @@ def notify_role(role, subject, html):
     if role.email is None:
         log.info("Role %r not have email, skip notify.", role)
         return
+    else:
+        log.info('Notify %r with:\n %r', role, html)
 
     sender = '%s <%s>' % (app_title, get_config('MAIL_FROM'))
     subject = '[%s] %s' % (app_title, subject)
