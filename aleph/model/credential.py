@@ -2,7 +2,7 @@ from aleph.core import db
 from aleph.model.common import UuidModel, DatedModel
 
 
-class Credential(UuidModel, DatedModel):
+class Credential(db.Model, UuidModel, DatedModel):
     """A role can own multiple credentials and can authenticate by using any of
     the credentials.
 
@@ -34,4 +34,3 @@ class Credential(UuidModel, DatedModel):
 
     #: Role relationship.
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
-    role = db.relationship('Role', backref=db.backref('credentials'))

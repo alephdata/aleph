@@ -4,6 +4,7 @@ from flask import current_app
 from aleph.core import db, url_for, get_config
 from aleph.data.validate import validate
 from aleph.model.common import SoftDeleteModel, IdModel, make_textid
+from aleph.model import Credential
 
 log = logging.getLogger(__name__)
 
@@ -28,13 +29,13 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     SYSTEM_GUEST = 'guest'
     SYSTEM_USER = 'user'
 
-    foreign_id = db.Column(db.Unicode(2048), nullable=False, unique=True)
     name = db.Column(db.Unicode, nullable=False)
     email = db.Column(db.Unicode, nullable=True)
     api_key = db.Column(db.Unicode, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     type = db.Column(db.Enum(*TYPES, name='role_type'), nullable=False)
-    permissions = db.relationship("Permission", backref="role")
+    permissions = db.relationship('Permission', backref='role')
+    credentials = db.relationship('Credential', backref='role')
 
     def update(self, data):
         validate(data, self._schema)
@@ -42,10 +43,12 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         self.email = data.get('email', self.email)
 
     def clear_roles(self):
+        """Removes any existing roles from group membership."""
         self.roles = []
         db.session.add(self)
 
     def add_role(self, role):
+        """Adds an existing role as a membership of a group."""
         self.roles.append(role)
         db.session.add(role)
         db.session.add(self)
@@ -57,7 +60,9 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def by_foreign_id(cls, foreign_id):
         if foreign_id is not None:
-            return cls.all().filter_by(foreign_id=foreign_id).first()
+            return cls.all().join(cls.credentials).filter(
+                Credential.foreign_id == foreign_id
+            ).first()
 
     @classmethod
     def by_api_key(cls, api_key):

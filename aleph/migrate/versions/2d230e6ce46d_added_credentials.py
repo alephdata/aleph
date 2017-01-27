@@ -65,8 +65,9 @@ def upgrade():
     creds_table = meta.tables['credential']
 
     credentials = []
+    roles_query = sa.select([role_table]).where(role_table.c.type == 'user')
 
-    for role in bind.execute(sa.select([role_table])).fetchall():
+    for role in bind.execute(roles_query).fetchall():
         credentials.append(
             dict(
                 id=make_textid(),
