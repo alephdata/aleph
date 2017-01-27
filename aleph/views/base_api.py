@@ -115,11 +115,17 @@ def handle_schema_validation_error(err):
 
 @blueprint.app_errorhandler(TransportError)
 def handle_es_error(err):
-    log.exception(err)
     message = err.error
-    for cause in err.info.get('error', {}).get('root_cause', []):
-        message = cause.get('reason', message)
+    try:
+        status = int(err.status_code)
+    except:
+        status = 500
+    try:
+        for cause in err.info.get('error', {}).get('root_cause', []):
+            message = cause.get('reason', message)
+    except Exception as ex:
+        log.debug(ex)
     return jsonify({
         'status': 'error',
         'message': message
-    }, status=400)
+    }, status=status)
