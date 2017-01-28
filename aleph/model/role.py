@@ -1,5 +1,8 @@
 import logging
+from datetime import datetime
+
 from flask import current_app
+from sqlalchemy.exc import IntegrityError
 
 from aleph.core import db, url_for, get_config
 from aleph.data.validate import validate
@@ -35,7 +38,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     type = db.Column(db.Enum(*TYPES, name='role_type'), nullable=False)
     permissions = db.relationship('Permission', backref='role')
-    credentials = db.relationship('Credential', backref='role')
 
     def update(self, data):
         validate(data, self._schema)
@@ -70,12 +72,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             return cls.all().filter_by(api_key=api_key).first()
 
     @classmethod
-    def load_or_create(cls, foreign_id, type, name, email=None,
-                       is_admin=None):
+    def load_or_create(cls, foreign_id, type, name, email=None, is_admin=None):
         role = cls.by_foreign_id(foreign_id)
         if role is None:
             role = cls()
-            role.foreign_id = foreign_id
             role.name = name
             role.type = type
             role.is_admin = False
@@ -95,6 +95,9 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
         db.session.add(role)
         db.session.flush()
+
+        role.load_or_create_credentials(foreign_id)
+
         return role
 
     @classmethod
@@ -115,8 +118,40 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             current_app._authz_roles[foreign_id] = role.id
         return current_app._authz_roles[foreign_id]
 
+    def load_or_create_credentials(self, foreign_id):
+        """Returns role credentials based on the foreign identifier.
+
+        If the credentials do not exist, it will create it.
+
+        :param string foreign_id: Foreign identifier, ex.: `oauth:ID`.
+        :rtype: :py:class:`aleph.model.Credential`
+        """
+        source = Credential.PASSWORD
+
+        for existing_source in Credential.SOURCES:
+            if existing_source in foreign_id:
+                source = existing_source
+
+        if source == Credential.PASSWORD:
+            foreign_id = '{}:{}'.format(source, self.id)
+
+        cred = Credential()
+        cred.role = self
+        cred.source = source
+        cred.foreign_id = foreign_id
+        cred.used_at = datetime.utcnow()
+        db.session.add(cred)
+
+        try:
+            db.session.commit()
+        except IntegrityError as err:
+            db.session.rollback()
+            cred = self.credentials.filter_by(foreign_id=foreign_id).first()
+
+        return cred
+
     def __repr__(self):
-        return '<Role(%r,%r)>' % (self.id, self.foreign_id)
+        return '<Role(%r,%r)>' % (self.id, self.email)
 
     def __unicode__(self):
         return self.name
@@ -125,7 +160,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         data = super(Role, self).to_dict()
         data.update({
             'api_url': url_for('roles_api.view', id=self.id),
-            'foreign_id': self.foreign_id,
             'is_admin': self.is_admin,
             'email': self.email,
             'name': self.name,

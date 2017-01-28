@@ -33,4 +33,7 @@ class Credential(db.Model, UuidModel, DatedModel):
     used_at = db.Column(db.DateTime)
 
     #: Role relationship.
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
+    role_id = db.Column(
+        db.Integer, db.ForeignKey('role.id', ondelete='CASCADE'), index=True)
+    role = db.relationship(
+        'Role', backref=db.backref('credentials', lazy='dynamic'))

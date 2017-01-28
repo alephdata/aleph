@@ -7,9 +7,6 @@ from aleph.tests.util import TestCase
 
 class EntityModelTest(TestCase):
 
-    def tearDown(self):
-        pass
-
     def setUp(self):
         super(EntityModelTest, self).setUp()
 
