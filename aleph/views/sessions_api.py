@@ -1,7 +1,7 @@
 import logging
 from flask import session, Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
-from apikit import jsonify
+from apikit import jsonify, request_data
 from werkzeug.exceptions import Unauthorized
 
 from aleph import signals
@@ -59,6 +59,32 @@ def status():
         },
         'logout': url_for('.logout'),
         'providers': providers,
+    })
+
+
+@blueprint.route('/api/1/sessions/login/password', methods=['POST'])
+def password_login():
+    """Provides email and password authentication."""
+    data = request_data()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        abort(404)
+
+    log_event(request)
+    role = Role.authenticate_using_credential(email, password)
+
+    if not role:
+        return Unauthorized("Authentication has failed.")
+
+    session['user'] = role.id
+    session['next_url'] = extract_next_url(request)
+
+    return jsonify({
+        'logout': url_for('.logout'),
+        'api_key': role.api_key,
+        'role': role
     })
 
 
