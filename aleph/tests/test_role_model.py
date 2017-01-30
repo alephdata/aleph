@@ -83,10 +83,12 @@ class RoleModelTest(TestCase):
             role=self.role, source=Credential.PASSWORD)
         cred.update_secret(secret)
 
+        self.assertIsNone(cred.used_at)
         self.assertEqual(
             self.role,
             Role.authenticate_using_credential(self.role.email, secret)
         )
+        self.assertIsNotNone(cred.used_at)
 
     def test_authenticate_using_credential_bad_source(self):
         secret = self.fake.password()

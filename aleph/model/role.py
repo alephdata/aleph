@@ -127,12 +127,20 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         :return: A matched role.
         :rtype: :py:class:`Role`
         """
-        return db.session.query(cls).join(Credential).filter(
+        credential = db.session.query(Credential).join(cls).filter(
             cls.email == email,
             Credential.secret != None,
             ~Credential.source.in_(Credential.EXTERNAL_SOURCES),
             db.func.crypt(password, Credential.secret) == Credential.secret
         ).first()
+
+        if not credential:
+            return
+
+        credential.used_at = datetime.utcnow()
+        db.session.commit()
+
+        return credential.role
 
     def load_or_create_credentials(self, foreign_id):
         """Returns role credentials based on the foreign identifier.
