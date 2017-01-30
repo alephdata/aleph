@@ -20,12 +20,14 @@ from aleph.model.common import make_textid
 
 
 def upgrade():
+    op.execute('create extension pgcrypto')
+
     op.create_table('credential',
         sa.Column('id', sa.String(length=32), nullable=False),
         sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.Column('updated_at', sa.DateTime(), nullable=True),
         sa.Column('used_at', sa.DateTime(), nullable=True),
-        sa.Column('secret', sa.LargeBinary(60)),
+        sa.Column('secret', sa.Unicode(60)),
         sa.Column('reset_token', sa.Unicode(32)),
         sa.Column(
             'foreign_id',

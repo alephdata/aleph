@@ -118,6 +118,22 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             current_app._authz_roles[foreign_id] = role.id
         return current_app._authz_roles[foreign_id]
 
+    @classmethod
+    def authenticate_using_credential(cls, email, password):
+        """Autheticates an user based on the email and password.
+
+        :param str email: User email.
+        :param str password: User password.
+        :return: A matched role.
+        :rtype: :py:class:`Role`
+        """
+        return db.session.query(cls).join(Credential).filter(
+            cls.email == email,
+            Credential.secret != None,
+            ~Credential.source.in_(Credential.EXTERNAL_SOURCES),
+            db.func.crypt(password, Credential.secret) == Credential.secret
+        ).first()
+
     def load_or_create_credentials(self, foreign_id):
         """Returns role credentials based on the foreign identifier.
 

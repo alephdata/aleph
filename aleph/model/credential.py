@@ -14,6 +14,7 @@ class Credential(db.Model, UuidModel, DatedModel):
     PASSWORD = 'password'
     LDAP = 'ldap'
     SOURCES = [OAUTH, PASSWORD, LDAP]
+    EXTERNAL_SOURCES = [OAUTH, LDAP]
 
     __tablename__ = 'credential'
 
@@ -26,7 +27,7 @@ class Credential(db.Model, UuidModel, DatedModel):
     #: Foreign identifier, migrated from the initial `role` table.
     foreign_id = db.Column(db.Unicode(2048), nullable=False, unique=True)
     #: Secret to _unlock_ the credential, aka password encrypted hash.
-    secret = db.Column(db.LargeBinary(60))
+    secret = db.Column(db.Unicode(60))
     #: Token to allow resetting the secret.
     reset_token = db.Column(db.Unicode(32), unique=True, index=True)
     #: Last date/time when credential was used.
@@ -37,3 +38,16 @@ class Credential(db.Model, UuidModel, DatedModel):
         db.Integer, db.ForeignKey('role.id', ondelete='CASCADE'), index=True)
     role = db.relationship(
         'Role', backref=db.backref('credentials', lazy='dynamic'))
+
+    def update_secret(self, password):
+        """Updated the credential secret by hashing the password.
+
+        :param str password: The password to hash.
+        :rtype: bool
+        """
+        self.secret = db.func.crypt(password, db.func.gen_salt('bf'))
+
+        db.session.add(self)
+        db.session.commit()
+
+        return self.secret

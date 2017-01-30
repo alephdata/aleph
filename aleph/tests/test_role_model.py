@@ -1,5 +1,5 @@
 from aleph.core import db
-from aleph.model import Credential
+from aleph.model import Role, Credential
 from aleph.tests.factories.models import RoleFactory, CredentialFactory
 from aleph.tests.util import TestCase
 
@@ -15,7 +15,7 @@ class RoleModelTest(TestCase):
     def test_attributes(self):
         self.assertEqual(self.role.credentials.count(), 0)
 
-        cred = CredentialFactory(role=self.role)
+        cred = CredentialFactory.create(role=self.role)
         db.session.flush()
 
         self.assertEqual(self.role.credentials.count(), 1)
@@ -51,3 +51,49 @@ class RoleModelTest(TestCase):
 
         self.assertEqual(existing_cred, cred)
         self.assertEqual(self.role.credentials.count(), 1)
+
+    def test_authenticate_using_credential_when_no_credentials(self):
+        self.assertIsNone(
+            Role.authenticate_using_credential(
+                self.fake.email(), self.fake.password()
+            )
+        )
+
+    def test_authenticate_using_credential_wrong_email_wrong_pass(self):
+        cred = CredentialFactory.create(role=self.role)
+
+        self.assertIsNone(
+            Role.authenticate_using_credential(
+                self.fake.email(), self.fake.password()
+            )
+        )
+
+    def test_authenticate_using_credential_existing_email_wrong_pass(self):
+        cred = CredentialFactory.create(role=self.role)
+
+        self.assertIsNone(
+            Role.authenticate_using_credential(
+                self.role.email, self.fake.password()
+            )
+        )
+
+    def test_authenticate_using_credential_existing_email_and_good_pass(self):
+        secret = self.fake.password()
+        cred = CredentialFactory.create(
+            role=self.role, source=Credential.PASSWORD)
+        cred.update_secret(secret)
+
+        self.assertEqual(
+            self.role,
+            Role.authenticate_using_credential(self.role.email, secret)
+        )
+
+    def test_authenticate_using_credential_bad_source(self):
+        secret = self.fake.password()
+        cred = CredentialFactory.create(
+            role=self.role, source=Credential.OAUTH)
+        cred.update_secret(secret)
+
+        self.assertIsNone(
+            Role.authenticate_using_credential(self.role.email, secret)
+        )
