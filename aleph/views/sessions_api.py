@@ -11,7 +11,7 @@ from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
-from aleph.views.util import is_safe_url
+from aleph.views.util import extract_next_url
 
 
 log = logging.getLogger(__name__)
@@ -75,13 +75,7 @@ def login(provider=None):
         abort(404)
 
     log_event(request)
-    next_url = '/'
-    for target in request.args.get('next'), request.referrer:
-        if not target:
-            continue
-        if is_safe_url(target):
-            next_url = target
-    session['next_url'] = next_url
+    session['next_url'] = extract_next_url(request)
     callback_url = url_for('.callback', provider=provider)
     return oauth_provider.authorize(callback=callback_url)
 
