@@ -1,7 +1,7 @@
 # coding: utf-8
 import logging
 
-from flask_script import Manager
+from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
@@ -21,6 +21,7 @@ from aleph.crawlers.metafolder import MetaFolderCrawler
 
 
 log = logging.getLogger('aleph')
+flask_script_commands.text_type = str
 
 app = create_app()
 mount_app_blueprints(app)
