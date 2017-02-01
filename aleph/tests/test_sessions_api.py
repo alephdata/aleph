@@ -1,8 +1,6 @@
-import json
-
-from aleph.core import db
+from aleph.model import Credential
 from aleph.tests.util import TestCase
-from aleph.tests.factories.models import RoleFactory, CredentialFactory
+from aleph.tests.factories.models import CredentialFactory
 
 
 class SessionsApiTestCase(TestCase):
@@ -10,7 +8,7 @@ class SessionsApiTestCase(TestCase):
     def setUp(self):
         super(SessionsApiTestCase, self).setUp()
 
-        self.credential = CredentialFactory.create()
+        self.credential = CredentialFactory.create(source=Credential.PASSWORD)
         self.role = self.credential.role
 
     def test_password_login_get(self):

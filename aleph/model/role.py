@@ -138,6 +138,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             return
 
         credential.used_at = datetime.utcnow()
+        db.session.add(credential)
         db.session.commit()
 
         return credential.role
