@@ -2,6 +2,7 @@ import json
 
 from aleph.model import Role
 from aleph.tests.util import TestCase
+from aleph.tests.factories.models import RoleFactory
 
 
 class RolesApiTestCase(TestCase):
@@ -126,12 +127,36 @@ class RolesApiTestCase(TestCase):
         password = self.fake.password()
         payload = dict(
             email=email,
+            name=self.fake.name(),
             password=password,
             code=Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
         )
         res = self.client.post('/api/1/roles', data=payload)
 
         self.assertEqual(res.status_code, 201)
-        self.assertEqual(res.json['role']['email'], email)
+        self.assertEqual(res.json['status'], 'ok')
 
-        self.assertTrue(Role.by_email(email).first().check_password(password))
+        role = Role.by_email(email).first()
+        self.assertIsNotNone(role)
+        self.assertTrue(role.check_password(password))
+        self.assertEqual(role.name, payload['name'])
+        self.assertEqual(role.email, payload['email'])
+
+    def test_create_on_existing_email(self):
+        email = self.fake.email()
+        password = self.fake.password()
+        payload = dict(
+            email=email,
+            name=self.fake.name(),
+            password=password,
+            code=Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
+        )
+
+        RoleFactory.create(email=email)
+        res = self.client.post('/api/1/roles', data=payload)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.json['status'], 'ok')
+        role = Role.by_email(email).first()
+        self.assertIsNotNone(role)
+        self.assertFalse(role.check_password(password))
