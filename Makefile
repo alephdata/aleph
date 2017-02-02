@@ -24,9 +24,9 @@ test:
 	nosetests --with-coverage --cover-package=aleph --cover-erase
 
 base:
-	docker build -t pudo/aleph-base:1.7 contrib/base
+	docker build -t pudo/aleph-base:1.8 contrib/base
 	docker build -t pudo/aleph-base:latest contrib/base
-	docker push pudo/aleph-base:1.7
+	docker push pudo/aleph-base:1.8
 	docker push pudo/aleph-base:latest
 
 build:

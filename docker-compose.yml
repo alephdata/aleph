@@ -33,8 +33,6 @@ services:
     volumes:
       - "./build/data/rabbitmq:/var/lib/rabbitmq"
       - "./build/logs/rabbitmq:/var/log"
-    ports:
-      - 5672
 
   worker:
       image: pudo/aleph:latest
