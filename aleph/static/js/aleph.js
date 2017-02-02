@@ -240,6 +240,11 @@ aleph.config([
     }
   });
 
+  $routeProvider.when('/signup/:code', {
+    templateUrl: 'templates/signup.html',
+    controller: 'SignupCtrl'
+  });
+
   $locationProvider.html5Mode(true);
   $compileProvider.debugInfoEnabled(false);
   cfpLoadingBarProvider.includeSpinner = false;
