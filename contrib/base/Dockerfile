@@ -17,7 +17,7 @@ RUN apt-get update -y -q && apt-get -y dist-upgrade && apt-get install -y -q  \
         libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
         libopenjpeg-dev imagemagick-common imagemagick unoconv mdbtools \
         cabextract p7zip-full libboost-python-dev libgsf-1-dev \
-        libtesseract-dev vim libjpeg-dev libicu-dev \
+        libtesseract-dev vim libjpeg-dev libicu-dev libldap2-dev libsasl2-dev \
         tesseract-ocr tesseract-ocr-bel tesseract-ocr-aze \
         tesseract-ocr-ces tesseract-ocr-eng tesseract-ocr-deu \
         tesseract-ocr-spa tesseract-ocr-fra tesseract-ocr-osd \
