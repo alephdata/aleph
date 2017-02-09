@@ -85,7 +85,13 @@ def password_login():
 
     role = Role.by_email(email).filter(Role.password_digest != None).first()
 
-    if not (role and role.check_password(password)):
+    # Try a password authentication and an LDAP authentication if it is enabled
+    if role and role.check_password(password) is False:
+        return Unauthorized("Authentication has failed.")
+    elif not role:
+        role = Role.authenticate_using_ldap(email, password)
+
+    if not role:
         return Unauthorized("Authentication has failed.")
 
     session['user'] = role.id
