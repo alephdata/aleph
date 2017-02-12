@@ -1,12 +1,6 @@
 version: "2"
 
 services:
-  resolvable:
-    image: mgood/resolvable
-    volumes:
-      - "/var/run/docker.sock:/tmp/docker.sock"
-      - "/etc/resolv.conf:/tmp/resolv.conf"
-
   postgres:
     image: postgres:9.4
     volumes:
@@ -16,16 +10,12 @@ services:
       POSTGRES_USER:     aleph
       POSTGRES_PASSWORD: aleph
       POSTGRES_DATABASE: aleph
-    ports:
-     - "127.0.0.1:5439:5432"
 
   elasticsearch:
     image: elasticsearch:2.2.0
     volumes:
       - "./build/data/elasticsearch:/usr/share/elasticsearch/data"
       - "./build/logs/elasticsearch:/var/log"
-    ports:
-      - "127.0.0.1:9201:9209"
 
   rabbitmq:
     image: rabbitmq
@@ -34,29 +24,30 @@ services:
       - "./build/logs/rabbitmq:/var/log"
 
   worker:
-      image: pudo/aleph:latest
-      command: make worker
+      build: .
+      command: celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /var/lib/celery.pid
       links:
         - postgres
         - elasticsearch
         - rabbitmq
       volumes:
         - "./build/logs/worker:/var/log"
-        - "./build/archive:/data"
+        - "./build/archive:/archive"
+        - "./build/incoming:/incoming"
         - "./build/polyglot:/polyglot"
-        - "./:/aleph"
       environment:
         C_FORCE_ROOT: 'true'
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+        ALEPH_ARCHIVE_PATH: /archive
         POLYGLOT_DATA_PATH: /polyglot
       env_file:
         - aleph.env
 
   beat:
-      image: pudo/aleph:latest
-      command: make beat
+      build: .
+      command: celery -A aleph.queues beat -s /var/lib/celerybeat-schedule.db --pidfile /var/lib/celery.pid
       links:
         - postgres
         - elasticsearch
@@ -64,21 +55,21 @@ services:
       volumes:
         - "./build/logs/beat:/var/log"
         - "./build/data/beat:/var/lib/"
-        - "./build/archive:/data"
+        - "./build/archive:/archive"
         - "./build/polyglot:/polyglot"
-        - "./:/aleph"
       environment:
         C_FORCE_ROOT: 'true'
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+        ALEPH_ARCHIVE_PATH: /archive
         POLYGLOT_DATA_PATH: /polyglot
       env_file:
         - aleph.env
 
-  app:
-      image: pudo/aleph:latest
-      command: make web
+  web:
+      build: .
+      command: gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
       ports:
         - "13376:8000"
       links:
@@ -87,14 +78,13 @@ services:
         - rabbitmq
       volumes:
         - "./build/logs/web:/var/log"
-        - "./build/archive:/data"
+        - "./build/archive:/archive"
         - "./build/polyglot:/polyglot"
-        - "./:/aleph"
       environment:
-        C_FORCE_ROOT: 'true'
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
         ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+        ALEPH_ARCHIVE_PATH: /archive
         POLYGLOT_DATA_PATH: /polyglot
       env_file:
         - aleph.env

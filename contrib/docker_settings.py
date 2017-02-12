@@ -33,7 +33,7 @@ CELERY_BROKER_URL = os.environ.get('ALEPH_BROKER_URI')
 
 NEO4J_URI = os.environ.get('ALEPH_NEO4J_URI')
 
-ARCHIVE_TYPE = os.environ.get('ALEPH_ARCHIVE_TYPE', 's3')
+ARCHIVE_TYPE = os.environ.get('ALEPH_ARCHIVE_TYPE', 'file')
 ARCHIVE_AWS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 ARCHIVE_AWS_SECRET = os.environ.get('AWS_SECRET_ACCESS_KEY')
 ARCHIVE_BUCKET = os.environ.get('ALEPH_ARCHIVE_BUCKET')

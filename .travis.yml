@@ -41,7 +41,6 @@ install:
   - pip install psycopg2 coveralls
   - nvm install $NODE_VERSION
   - nvm use $NODE_VERSION
-  - npm install bower
   - npm install .
 before_script:
   - sleep 10
@@ -54,6 +53,7 @@ before_script:
   - node --version
 script:
   - nvm use $NODE_VERSION
-  - make assets && nosetests --with-coverage --cover-package=aleph
+  - node_modules/webpack/bin/webpack.js --env.prod
+  - nosetests --with-coverage --cover-package=aleph
 after_success:
   - coveralls
