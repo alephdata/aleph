@@ -8,10 +8,8 @@ the chapters bellow.
 ## Use cases
 
 Below are some of common use cases Aleph was designed to cover. To learn more
-about the needs of such a tool, please refer to the notes about the
+about the needs of such a tool, please refer to the notes about the page on
 [user needs in investigative journalism](http://www.influencemapping.org/workshop/user_needs.html).
-A lot more resources are also available on the
-[Technology for Investigative Journalism Conference](http://www.influencemapping.org/workshop/) webpage.
 
 There's also a [glossary](glossary.md) describing the keywords used in Aleph.
 
@@ -67,26 +65,6 @@ The new loaders will provide support for this feature.
 If you are interested in bringing this feature back, please get in touch with
 us. The code is still available and can be packaged as a plugin.
 
-### Support for sanctions lists
-
-One of the key features of Aleph is its ability to cross-reference imported
-documents and databases with the names of entities of interest, such as
-politicians or companies.
-
-While you can use the application itself to manage such collections, it may be
-useful to bootstrap the database using data from international sanctions and
-police search lists. Such data is provided by
-[OpenNames](http://pudo.org/material/opennames/) and a tool to import this data is available by running:
-
-```bash
-docker-compose run app python aleph/manage.py crawl opennames
-```
-
-Please note that importing entity collections requires re-indexing documents
-that match the given entity search terms. If you already have documents
-indexed, expect a significant amount of background activity following the
-import of the OpenNames collections.
-
 ### Metafolders
 
 Is a format developed for Aleph to bulk-import many documents while retaining
@@ -101,7 +79,8 @@ the [krauler](https://github.com/pudo/krauler) web crawling/scraping tool.
 For the metafolder items to be loaded it is important to include the
 information on the document source which they are to be associated with.
 
-An example with minimal metadata is available below. To learn more about metadata fields available in Aleph, please check the [Glossary](glossary.md#metadata).
+An example with minimal metadata is available below. To learn more about metadata
+fields available in Aleph, please check the [Glossary](glossary.md#metadata).
 
 ```json
 {

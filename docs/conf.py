@@ -68,8 +68,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Aleph'
-copyright = u'2016, Friedrich Lindenberg'
-author = u'Friedrich Lindenberg'
+copyright = u'2016, aleph Contributors'
+author = u'aleph Contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

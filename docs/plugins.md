@@ -128,6 +128,8 @@ This is the code used at OCCRP for OAuth via the Investigative Dashboard (it
 requires the use of plugins to be activated:
 
 ```python
+from aleph import signals
+
 @signals.handle_oauth_session.connect
 def handle_occrp_oauth(sender, provider=None, session=None):
     from aleph.model import Role
@@ -139,14 +141,11 @@ def handle_occrp_oauth(sender, provider=None, session=None):
                                me.data.get('display_name'),
                                email=me.data.get('email'),
                                is_admin=me.data.get('is_admin'))
-    session['roles'].append(role.id)
-    session['user'] = role.id
+    role.clear_roles()
     for group in me.data.get('groups', []):
         group_id = 'idashboard:%s' % group.get('id')
         group_role = Role.load_or_create(group_id, Role.GROUP,
                                          group.get('name'))
-        session['roles'].append(group_role.id)
-
-def register(app=None):
-    pass
+        role.add_role(group_role)
+    session['user'] = role.id
 ```

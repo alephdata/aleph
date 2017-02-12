@@ -38,10 +38,10 @@ Metafolders can be generated using the Python
 
 ## Crawlers
 
-Little plug-ins to the Aleph engine which import
-data into the system. The included crawlers are very flexible, such as
-`SQLCrawler`, `DirectoryCrawler` or `MetaFolderCrawler`, but specific
-crawlers can be programmed that will import data from a specific source.
+Little plug-ins to the Aleph engine which import data into the system. The
+included crawlers are very flexible, such as `DirectoryCrawler` or
+`MetaFolderCrawler`, but specific crawlers can be programmed that will
+import data from a specific source.
 
 ## Ingestors
 
@@ -84,6 +84,7 @@ Common metadata fields include:
 * ``countries``: a list of lowercase two-letter ISO country codes, e.g ``['jp', 'en']``
 * ``dates``: a list of ISO 8601 dates relevant to the document, eg. ``['2001-01-28']``
 * ``keywords``: a list of key phrases.
+* ``emails``: email addresses extracted from the text.
 * ``headers``: a hash of the headers received upon download of the document via HTTP.
 * ``content_hash``: a SHA-1 checksum of the data (automatically generated).
 

@@ -34,13 +34,13 @@ support for both tabular and textual data.
   mainly for scraped social media profiles.
 * [resourcecontracts.org](https://github.com/developmentseed/rw-contracts),
   visual browser for resource (oil, mining, etc.) contract documents.
+* [ICIJ Extract](https://github.com/icij/extract), Java-based OCR and content
+  extraction pipeline used for large-scale leaks.
+* [Hoover](https://github.com/hoover), Python-based search engine.
 * [mma-dexter](https://github.com/Code4SA/mma-dexter), used by Media Monitoring
   Africa to do content classification and guided entity extraction of South
   African media.
-* [ICIJ Extract](https://github.com/icij/extract), Java-based OCR and content
-  extraction pipeline used for large-scale leaks.
-* [Hoover](https://github.com/hoover), aleph clone, trying to make it modular
-  Omecca, eprints, fedora, dspace
+* Omecca, eprints, fedora, dspace
 
 **Defunct but interesting**
 
