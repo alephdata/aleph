@@ -21,6 +21,7 @@ assets-dev: assets
 test:
 	PGPASSWORD=aleph psql -h postgres -U aleph -c 'drop database if exists aleph_test;'
 	PGPASSWORD=aleph psql -h postgres -U aleph -c 'create database aleph_test;'
+	PGPASSWORD=aleph psql -h postgres -U aleph aleph_test -c 'create extension pgcrypto;'
 	nosetests --with-coverage --cover-package=aleph --cover-erase
 
 base:

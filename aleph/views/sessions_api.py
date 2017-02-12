@@ -1,7 +1,7 @@
 import logging
 from flask import session, Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
-from apikit import jsonify
+from apikit import jsonify, request_data
 from werkzeug.exceptions import Unauthorized
 
 from aleph import signals
@@ -11,7 +11,7 @@ from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
-from aleph.views.util import is_safe_url
+from aleph.views.util import extract_next_url
 
 
 log = logging.getLogger(__name__)
@@ -62,6 +62,32 @@ def status():
     })
 
 
+@blueprint.route('/api/1/sessions/login/password', methods=['POST'])
+def password_login():
+    """Provides email and password authentication."""
+    data = request_data()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        abort(404)
+
+    log_event(request)
+    role = Role.authenticate_using_credential(email, password)
+
+    if not role:
+        return Unauthorized("Authentication has failed.")
+
+    session['user'] = role.id
+    session['next_url'] = extract_next_url(request)
+
+    return jsonify({
+        'logout': url_for('.logout'),
+        'api_key': role.api_key,
+        'role': role
+    })
+
+
 @blueprint.route('/api/1/sessions/login')
 @blueprint.route('/api/1/sessions/login/<string:provider>')
 def login(provider=None):
@@ -75,13 +101,7 @@ def login(provider=None):
         abort(404)
 
     log_event(request)
-    next_url = '/'
-    for target in request.args.get('next'), request.referrer:
-        if not target:
-            continue
-        if is_safe_url(target):
-            next_url = target
-    session['next_url'] = next_url
+    session['next_url'] = extract_next_url(request)
     callback_url = url_for('.callback', provider=provider)
     return oauth_provider.authorize(callback=callback_url)
 
