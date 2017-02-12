@@ -12,10 +12,6 @@ alembic==0.8.6
 # celery==4.0.1
 git+https://github.com/alanhamlett/celery.git@73147a9da31f2932eb4778e9474fbe72f23d21c2#egg=Celery
 
-Flask-Assets==0.10
-webassets==0.12
-cssutils==1.0.1
-
 elasticsearch==2.3.0
 psycopg2==2.6.2
 Pillow==3.2.0

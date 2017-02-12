@@ -11,9 +11,14 @@ RUN pip install -q --upgrade pip \
   && pip install -q -r /aleph/requirements.txt
 
 RUN pip install --pre -q -r /aleph/requirements-docs.txt
-RUN pip install -q -e . && npm --quiet --silent install .
+RUN pip install -q -e .
+
+RUN npm --quiet --silent install -g bower
+RUN echo '{ "allow_root": true }' > /root/.bowerrc
+RUN npm --quiet --silent install --prefix / .
 RUN touch aleph/static/style/_custom.scss && \
-    ./node_modules/webpack/bin/webpack.js --env.prod
+    /node_modules/webpack/bin/webpack.js --env.prod
+
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 8000
