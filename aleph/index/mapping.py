@@ -42,6 +42,7 @@ DOCUMENT_MAPPING = {
         "urls": {"type": "string", "index": "not_analyzed"},
         "domains": {"type": "string", "index": "not_analyzed"},
         "phone_numbers": {"type": "string", "index": "not_analyzed"},
+        "publication_date": {"type": "date", "format": "yyyy-MM-dd"},
         "dates": {"type": "date", "format": "yyyy-MM-dd"},
         "mime_type": {"type": "string", "index": "not_analyzed"},
         "author": {"type": "string", "index": "not_analyzed"},

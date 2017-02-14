@@ -13,7 +13,7 @@ blueprint = Blueprint('exports_api', __name__)
 XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 FIELDS = ['collections', 'title', 'file_name', 'summary', 'extension',
           'mime_type', 'languages', 'countries', 'keywords', 'dates',
-          'file_url', 'source_url']
+          'publication_date', 'file_url', 'source_url']
 
 
 def get_results(query, limit):
