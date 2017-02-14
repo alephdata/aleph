@@ -18,6 +18,8 @@ aleph.factory('Metadata', ['$http', '$q', '$rootScope', function($http, $q, $roo
           metadata = angular.extend(results[1].data, {session: session});
       $rootScope.session = session;
       dfd.resolve(metadata);
+    }, function(err) {
+      dfd.reject(err);
     });
   };
 

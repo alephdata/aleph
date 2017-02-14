@@ -21,7 +21,7 @@
         </a>
       </td>
       <td class="numeric">
-        <a href="/crawlers/logs?crawler_id={{crawler.id}}"
+        <a href="/collections/{{::crawler.collection.id}}/states?crawler_id={{crawler.id}}&status=fail"
            ng-if="crawler.all.fail" class="simple">
           <span class="label label-danger">
             {{crawler.all.fail | number}}</span>
@@ -31,7 +31,7 @@
           {{crawler.all.ok | number}}</span>
       </td>
       <td class="numeric">
-        <a href="/crawlers/logs?crawler_run={{crawler.last.run_id}}"
+        <a href="/collections/{{::crawler.collection.id}}/states?crawler_run={{crawler.last.run_id}}&status=fail"
            ng-if="crawler.last.fail" class="simple">
           <span class="label label-danger">
             {{crawler.last.fail | number}}</span>
@@ -46,7 +46,8 @@
         </span>
       </td>
       <td>
-        <a href="/crawlers/logs?crawler_id={{crawler.id}}" ng-if="crawler.all.fail">
+        <a ng-href="/collections/{{::crawler.collection.id}}/states?crawler_id={{crawler.id}}"
+           ng-if="crawler.all.fail + crawler.all.ok">
           <i class="fa fa-list-ul" aria-hidden="true"></i>
         </a>
       </td>

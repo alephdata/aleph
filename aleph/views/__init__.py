@@ -4,7 +4,6 @@ from aleph.views.base_api import blueprint as base_api
 from aleph.views.cache import blueprint as cache_api
 from aleph.views.documents_api import blueprint as documents_api
 from aleph.views.search_api import blueprint as search_api
-from aleph.views.graph_api import blueprint as graph_api
 from aleph.views.sessions_api import blueprint as sessions_api
 from aleph.views.roles_api import blueprint as roles_api
 from aleph.views.collections_api import blueprint as collections_api
@@ -22,7 +21,6 @@ def mount_app_blueprints(app):
     app.register_blueprint(cache_api)
     app.register_blueprint(documents_api)
     app.register_blueprint(search_api)
-    app.register_blueprint(graph_api)
     app.register_blueprint(sessions_api)
     app.register_blueprint(roles_api)
     app.register_blueprint(collections_api)

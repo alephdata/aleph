@@ -1,5 +1,5 @@
-aleph.controller('SessionCtrl', ['$scope', '$uibModalInstance', 'metadata',
-    function($scope, $uibModalInstance, metadata) {
+aleph.controller('SessionCtrl', ['$scope', '$location', '$uibModalInstance', '$httpParamSerializer', 'metadata',
+    function($scope, $location, $uibModalInstance, $httpParamSerializer, metadata) {
   $scope.providers = metadata.session.providers;
-
+  $scope.next_url = $httpParamSerializer({next: $location.url()});
 }]);

@@ -1,6 +1,7 @@
 from aleph.core import db
 from aleph.model.schema_model import SchemaModel
-from aleph.model.common import SoftDeleteModel, UuidModel, make_textid
+from aleph.model.common import SoftDeleteModel, UuidModel
+from aleph.model.common import make_textid, make_fingerprint
 
 
 class EntityDetails(UuidModel, SoftDeleteModel, SchemaModel):
@@ -46,6 +47,10 @@ class EntityOtherName(db.Model, EntityDetails):
         if self.name is not None:
             return self.name
         return ''
+
+    @property
+    def fingerprint(self):
+        return make_fingerprint(self.display_name)
 
     @property
     def terms(self):

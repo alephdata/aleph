@@ -15,7 +15,7 @@ aleph.directive('nodeIcon', ['Metadata', function(Metadata) {
     link: function (scope, element, attrs, model) {
       var codepoint = '\uf0c8';
       if (graph.active) {
-        if (scope.node.$label == 'Entity') {
+        if (scope.node.$label == 'Entity' && scope.node.alephSchema) {
           codepoint = graph.icons[scope.node.alephSchema] || codepoint;
         } else {
           codepoint = graph.icons[scope.node.$label] || codepoint;

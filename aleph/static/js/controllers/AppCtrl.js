@@ -1,9 +1,10 @@
-aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$route', '$http', '$uibModal', '$q', 'Alert', 'Metadata',
-    function($scope, $rootScope, $location, $anchorScroll, $route, $http, $uibModal, $q, Alert, Metadata) {
+aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$route', '$http', '$httpParamSerializer', '$uibModal', '$q', 'Alert', 'Metadata',
+    function($scope, $rootScope, $location, $anchorScroll, $route, $http, $httpParamSerializer, $uibModal, $q, Alert, Metadata) {
 
   $scope.session = {logged_in: false};
   $scope.routeLoaded = false;
   $scope.routeFailed = false;
+  $scope.routeError = null;
   $scope.navbarCollapsed = true;
 
   Metadata.get().then(function(metadata) {
@@ -18,8 +19,10 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
     $scope.reportLoading(false);
   });
 
-  $rootScope.$on("$routeChangeError", function (event, next, current) {
+  $rootScope.$on("$routeChangeError", function (event, next, current, rejection) {
     $scope.routeFailed = true;
+    $scope.routeError = rejection;
+    // console.log('Error', rejection);
   });
 
   $scope.keyDownNotify = function($event) {
@@ -28,17 +31,31 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
     }
   };
 
-  $rootScope.reportError = function(message) {
-    $scope.routeFailed = true;
-  };
-
   $rootScope.reportLoading = function(flag) {
     $scope.routeLoaded = !flag;
     if (flag) {
       $anchorScroll();
       $scope.routeFailed = false;
+      $scope.routeError = null;
     }
   };
+
+  $rootScope.triggerLogin = function() {
+    if ($scope.session.providers.length == 1) {
+      var url = $httpParamSerializer({next: $location.url()});
+      document.location.href = $scope.session.providers[0].login + '?' + url;
+    } else {
+      $uibModal.open({
+        templateUrl: 'templates/login.html',
+        controller: 'SessionCtrl',
+        backdrop: true,
+        size: 'md',
+        resolve: {
+          metadata: loadMetadata
+        }
+      });
+    }
+  };  
 
   $scope.editProfile = function($event) {
     $event.stopPropagation();
@@ -64,18 +81,4 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
       }
     });
   };
-
-  $scope.showLogin = function($event) {
-    $event.stopPropagation();
-    var instance = $uibModal.open({
-      templateUrl: 'templates/login.html',
-      controller: 'SessionCtrl',
-      backdrop: true,
-      size: 'md',
-      resolve: {
-        metadata: loadMetadata
-      }
-    });
-  };
-
 }]);

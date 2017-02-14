@@ -1,7 +1,7 @@
 
 aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', '$timeout', '$q', 'Entity', 'Authz', 'metadata', 'collection', 'Title',
     function($scope, $route, $location, $http, $timeout, $q, Entity, Authz, metadata, collection, Title) {
-  
+
   $scope.collection = collection;
   $scope.entities = [{}, {}, {}, {}];
   $scope.created = [];
@@ -82,6 +82,7 @@ aleph.controller('EntitiesBulkCtrl', ['$scope', '$route', '$location', '$http', 
           $scope.created.push(res.data);
           saveNextEntity();
         }, function(err) {
+          console.log('Error', err);
           $scope.entities[i].$invalid = true;
           saveNextEntity();
         });

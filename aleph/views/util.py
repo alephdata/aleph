@@ -1,6 +1,8 @@
 import StringIO
 from flask import request
-from werkzeug.exceptions import NotFound, BadRequest
+from urlparse import urlparse, urljoin
+
+from werkzeug.exceptions import NotFound
 import xlsxwriter
 
 from aleph import authz
@@ -35,6 +37,13 @@ def get_page(document_id, number):
     if page is None:
         raise NotFound("No such page: %s" % number)
     return document, page
+
+
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+        ref_url.netloc == test_url.netloc
 
 
 def make_excel(result_iter, fields):

@@ -2,7 +2,7 @@ import os
 import logging
 import requests
 
-from aleph.core import db, get_archive, celery
+from aleph.core import db, archive, celery
 from aleph.core import WORKER_QUEUE, WORKER_ROUTING_KEY
 from aleph.text import string_value
 from aleph.ext import get_ingestors
@@ -16,16 +16,19 @@ SKIP_ENTRIES = ['.git', '.hg', '.DS_Store', '.gitignore', 'Thumbs.db',
                 '__MACOSX']
 
 
-@celery.task()
-def ingest_url(collection_id, metadata, url):
+@celery.task(bind=True, max_retries=3)
+def ingest_url(self, collection_id, metadata, url):
     meta = Metadata.from_data(metadata)
     tmp_path = make_tempfile(meta.file_name, suffix=meta.extension)
     try:
-        log.info("Ingesting URL: %r", url)
-        res = requests.get(url, stream=True, timeout=120)
-        if res.status_code >= 400:
-            msg = "HTTP Error %r: %r" % (url, res.status_code)
-            raise IngestorException(msg)
+        log.info("Ingesting URL: %s", url)
+        res = requests.get(url, stream=True)
+        if res.status_code == 404:
+            log.info("HTTP not found: %s", url)
+            return
+        if res.status_code >= 399:
+            countdown = 3600 ** self.request.retries
+            self.retry(countdown=countdown)
         with open(tmp_path, 'w') as fh:
             for chunk in res.iter_content(chunk_size=1024):
                 if chunk:
@@ -33,8 +36,12 @@ def ingest_url(collection_id, metadata, url):
         if not meta.has('source_url'):
             meta.source_url = res.url
         meta.headers = res.headers
-        meta = get_archive().archive_file(tmp_path, meta, move=True)
+        meta = archive.archive_file(tmp_path, meta, move=True)
         Ingestor.dispatch(collection_id, meta)
+    except IOError as ioe:
+        log.info("IO Failure: %r", ioe)
+        countdown = 3600 ** self.request.retries
+        self.retry(countdown=countdown)
     except Exception as ex:
         Ingestor.handle_exception(meta, collection_id, ex)
     finally:
@@ -45,12 +52,14 @@ def ingest_url(collection_id, metadata, url):
 def ingest_directory(collection_id, meta, local_path, base_path=None,
                      move=False):
     """Ingest all the files in a directory."""
+    local_path = string_value(local_path)
+
     # This is somewhat hacky, see issue #55 for the rationale.
     if not os.path.exists(local_path):
         log.error("Invalid path: %r", local_path)
         return
 
-    base_path = base_path or local_path
+    base_path = string_value(base_path) or local_path
     if not os.path.isdir(local_path):
         child = meta.make_child()
         child.source_path = base_path
@@ -80,14 +89,15 @@ def ingest_directory(collection_id, meta, local_path, base_path=None,
 
 def ingest_file(collection_id, meta, file_path, move=False,
                 queue=WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY):
-    # the queue and routing key arguments are a workaround to 
+    # the queue and routing key arguments are a workaround to
     # expedite user uploads over long-running batch imports.
+    file_path = string_value(file_path)
     try:
         if not os.path.isfile(file_path):
             raise IngestorException("No such file: %r", file_path)
         if not meta.has('source_path'):
             meta.source_path = file_path
-        meta = get_archive().archive_file(file_path, meta, move=move)
+        meta = archive.archive_file(file_path, meta, move=move)
         ingest.apply_async([collection_id, meta.to_attr_dict()],
                            queue=queue, routing_key=routing_key)
     except Exception as ex:

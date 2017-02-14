@@ -1,17 +1,10 @@
 import re
 from copy import deepcopy
 
-from aleph import authz
-from aleph.core import get_es, get_es_index
+from aleph.core import es, es_index
 
 MARKS = re.compile(r'[_\.;,/]{2,}')
 FACET_SIZE = 50
-
-
-def authz_filter(q):
-    return add_filter(q, {
-        "terms": {"collection_id": list(authz.collections(authz.READ))}
-    })
 
 
 def add_filter(q, filter_):
@@ -33,22 +26,9 @@ def clean_highlight(hlt):
     return hlt.strip()
 
 
-def parse_filters(args):
-    # Extract filters, given in the form: &filter:foo_field=bla_value
-    filters = []
-    for key in args.keys():
-        for value in args.getlist(key):
-            if not key.startswith('filter:'):
-                continue
-            _, field = key.split(':', 1)
-            filters.append((field, value))
-    return filters
-
-
 def execute_basic(doc_type, query):
     """Common part of running a particular query."""
-    result = get_es().search(index=get_es_index(), doc_type=doc_type,
-                             body=query)
+    result = es.search(index=es_index, doc_type=doc_type, body=query)
     hits = result.get('hits', {})
     output = {
         'status': 'ok',

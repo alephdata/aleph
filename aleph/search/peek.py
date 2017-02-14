@@ -1,13 +1,12 @@
 import math
-from werkzeug.datastructures import MultiDict
+from sqlalchemy import not_
+from pprint import pprint  # noqa
 
-from aleph import authz
 from aleph.index import TYPE_DOCUMENT
-from aleph.core import get_es, get_es_index
+from aleph.core import es, es_index
 from aleph.model import Collection
 from aleph.search.documents import text_query
 from aleph.search.fragments import filter_query
-from aleph.search.util import parse_filters, add_filter
 
 
 def round(x, factor):
@@ -31,49 +30,42 @@ def format_total(obj):
     return obj
 
 
-def peek_query(args):
-    if not isinstance(args, MultiDict):
-        args = MultiDict(args)
-    text = args.get('q', '').strip()
-    q = text_query(text)
+def peek_query(state):
+    """Peek into hidden collections.
 
-    filters = parse_filters(args)
-    for entity in args.getlist('entity'):
-        filters.append(('entities.id', entity))
+    This allows users to retrieve an approximate result count of a given query
+    against those collections which they are not authorised to view. It is a
+    rudimentary collaboration mechanism.
+    """
+    filters = state.filters
+    cq = Collection.all()
+    cq = cq.filter(not_(Collection.id.in_(state.authz_collections)))
+    cq = cq.filter(Collection.creator_id != None)  # noqa
+    cq = cq.filter(Collection.private != True)  # noqa
+    collections = {c.id: c for c in cq}
+    filters['collection_id'] = collections.keys()
 
-    q = filter_query(q, filters, [])
-    q = add_filter(q, {
-        'not': {
-            'terms': {
-                'collection_id': authz.collections(authz.READ)
-            }
-        }
-    })
+    q = text_query(state.text)
     q = {
+        'query': filter_query(q, filters),
         'query': q,
         'size': 0,
         'aggregations': {
             'collections': {
-                'terms': {'field': 'collection_id', 'size': 30}
+                'terms': {'field': 'collection_id', 'size': 1000}
             }
         },
         '_source': False
     }
-    # import json
-    # print json.dumps(q, indent=2)
-    result = get_es().search(index=get_es_index(), body=q,
-                             doc_type=TYPE_DOCUMENT)
-
-    aggs = result.get('aggregations', {}).get('collections', {})
-    buckets = aggs.get('buckets', [])
-    q = Collection.all_by_ids([b['key'] for b in buckets])
-    q = q.filter(Collection.creator_id != None)  # noqa
-    objs = {o.id: o for o in q.all()}
+    result = es.search(index=es_index, body=q, doc_type=TYPE_DOCUMENT)
     roles = {}
-    for bucket in buckets:
-        collection = objs.get(bucket.get('key'))
-        if collection is None or collection.private:
+    total = 0
+    aggs = result.get('aggregations', {}).get('collections', {})
+    for bucket in aggs.get('buckets', []):
+        collection = collections.get(bucket.get('key'))
+        if collection is None or collection.creator is None:
             continue
+        total += bucket.get('doc_count')
         if collection.creator_id in roles:
             roles[collection.creator_id]['total'] += bucket.get('doc_count')
         else:
@@ -85,7 +77,6 @@ def peek_query(args):
 
     roles = sorted(roles.values(), key=lambda r: r['total'], reverse=True)
     roles = [format_total(r) for r in roles]
-    total = result.get('hits', {}).get('total')
     return format_total({
         'roles': roles,
         'active': total > 0,

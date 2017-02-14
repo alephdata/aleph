@@ -1,12 +1,13 @@
 from flask import Blueprint, request
+from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify, request_data, arg_bool
-from apikit import get_limit, get_offset
 
 from aleph import authz
 from aleph.model import Entity, Collection, db
 from aleph.logic import update_entity, delete_entity
 from aleph.views.cache import enable_cache
 from aleph.events import log_event
+from aleph.search import QueryState
 from aleph.search import entities_query, execute_entities_query
 from aleph.search import suggest_entities, similar_entities
 
@@ -35,11 +36,14 @@ def get_collections(data):
 
 @blueprint.route('/api/1/entities', methods=['GET'])
 def index():
-    q = entities_query(request.args)
-    q['size'] = get_limit(default=50)
-    q['from'] = get_offset()
-    doc_counts = arg_bool('doc_counts')
-    res = execute_entities_query(request.args, q, doc_counts=doc_counts)
+    authz_collections = authz.collections(authz.READ)
+    enable_cache(vary_user=True, vary=authz_collections)
+    state = QueryState(request.args, authz_collections)
+    query = entities_query(state)
+    query['size'] = state.limit
+    query['from'] = state.offset
+    doc_counts = state.getbool('doc_counts')
+    res = execute_entities_query(state, query, doc_counts=doc_counts)
     return jsonify(res)
 
 
@@ -63,7 +67,10 @@ def create():
     for collection in collections:
         authz.require(authz.collection_write(collection.id))
 
-    entity = Entity.save(data, collections)
+    try:
+        entity = Entity.save(data, collections)
+    except ValueError as ve:
+        raise BadRequest(ve.message)
     for collection in entity.collections:
         collection.touch()
     db.session.commit()
@@ -78,7 +85,7 @@ def suggest():
     enable_cache(vary=collections, server_side=False)
     prefix = request.args.get('prefix')
     min_count = int(request.args.get('min_count', 0))
-    return jsonify(suggest_entities(prefix, min_count))
+    return jsonify(suggest_entities(prefix, collections, min_count))
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['GET'])
@@ -95,7 +102,7 @@ def similar(id):
     check_authz(entity, authz.READ)
     action = authz.WRITE if arg_bool('writeable') else authz.READ
     collections = authz.collections(action)
-    return jsonify(similar_entities(entity, request.args, collections))
+    return jsonify(similar_entities(entity, collections))
 
 
 @blueprint.route('/api/1/entities/_lookup', methods=['GET'])
@@ -116,7 +123,10 @@ def update(id):
     possible_collections.extend([c.id for c in entity.collections])
     collections = [c for c in get_collections(data)
                    if c.id in possible_collections]
-    entity = Entity.save(data, collections, merge=arg_bool('merge'))
+    try:
+        entity = Entity.save(data, collections, merge=arg_bool('merge'))
+    except ValueError as ve:
+        raise BadRequest(ve.message)
     for collection in entity.collections:
         collection.touch()
     db.session.commit()

@@ -33,15 +33,6 @@
       "title": "Current status",
       "type": ["string", "null"]
     },
-    "members": {
-      "title": "Members",
-      "description": "The memberships of the members of the organization and of the organization itself",
-      "type": "array",
-      "rdfReverse": "organization",
-      "items": {
-        "$ref": "/link/membership.json#"
-      }
-    },
     "registered_address": {
       "title": "Registered address",
       "$ref": "/entity/address.json"

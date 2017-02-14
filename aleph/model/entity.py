@@ -9,7 +9,8 @@ from aleph.text import normalize_strong
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
 from aleph.model.schema_model import SchemaModel
-from aleph.model.common import SoftDeleteModel, UuidModel, make_textid
+from aleph.model.common import SoftDeleteModel, UuidModel
+from aleph.model.common import make_textid, make_fingerprint
 from aleph.model.entity_details import EntityOtherName, EntityIdentifier  # noqa
 from aleph.model.entity_details import EntityAddress, EntityContactDetail  # noqa
 
@@ -182,7 +183,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
                 if collection.id not in [c.id for c in collections]:
                     collections.append(collection)
         if not len(collections):
-            raise AttributeError("No collection specified.")
+            raise ValueError("No collection specified.")
 
         ent.collections = collections
         ent.update(data, merge=merge)
@@ -210,7 +211,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         q = cls.filter_collections(q, collections=collections)
         ident = aliased(EntityIdentifier)
         q = q.join(ident, Entity.identifiers)
-        q = q.filter(ident.deleted_at == None) # noqa
+        q = q.filter(ident.deleted_at == None)  # noqa
         q = q.filter(ident.scheme == scheme)
         q = q.filter(ident.identifier == identifier)
         return q.first()
@@ -243,6 +244,10 @@ class Entity(db.Model, UuidModel, SoftDeleteModel, SchemaModel):
         q = q.join(Reference)
         q = q.filter(Reference.document_id == document_id)
         return q.distinct()
+
+    @property
+    def fingerprint(self):
+        return make_fingerprint(self.name)
 
     @property
     def terms(self):

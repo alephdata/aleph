@@ -1,10 +1,10 @@
 from flask import Blueprint, request, send_file
-from apikit import get_limit
 
+from aleph import authz
 from aleph.core import url_for
 from aleph.model import Collection
 from aleph.events import log_event
-from aleph.search import scan_iter, documents_query
+from aleph.search import QueryState, scan_iter, documents_query
 from aleph.views.util import make_excel
 
 blueprint = Blueprint('exports_api', __name__)
@@ -48,10 +48,13 @@ def get_results(query, limit):
 
 @blueprint.route('/api/1/query/export')
 def export():
-    query = documents_query(request.args)
-    query = {'query': query['query']}
+    authz_collections = authz.collections(authz.READ)
+    state = QueryState(request.args, authz_collections, limit=0)
+    query = documents_query(state)
+    query = {
+        'query': query['query']
+    }
     log_event(request)
-    limit = min(10000, get_limit(default=50))
-    output = make_excel(get_results(query, limit), FIELDS)
+    output = make_excel(get_results(query, 50000), FIELDS)
     return send_file(output, mimetype=XLSX_MIME, as_attachment=True,
                      attachment_filename='export.xlsx')

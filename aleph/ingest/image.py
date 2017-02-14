@@ -2,6 +2,7 @@ import os
 import logging
 import subprocess
 from PIL import Image
+from PIL.Image import DecompressionBombWarning
 
 from aleph.core import get_config
 from aleph.ingest.ingestor import IngestorException
@@ -19,7 +20,8 @@ class ImageIngestor(TextIngestor):
     MIME_TYPES = ['image/png', 'image/tiff', 'image/x-tiff',
                   'image/jpeg', 'image/bmp', 'image/x-windows-bmp',
                   'image/x-portable-bitmap', 'application/postscript',
-                  'image/vnd.dxf', 'image/svg+xml']
+                  'image/vnd.dxf', 'image/svg+xml',
+                  'image/x-portable-graymap']
     EXTENSIONS = ['gif', 'png', 'jpg', 'jpeg', 'tif', 'tiff', 'bmp',
                   'jpe', 'pbm']
     BASE_SCORE = 5
@@ -31,9 +33,12 @@ class ImageIngestor(TextIngestor):
             with open(local_path, 'r') as fh:
                 img = Image.open(fh)
                 if img.width < self.MIN_WIDTH or img.height < self.MIN_HEIGHT:
-                    log.warn("Image too small [%r]: %s", meta, img.size)
+                    log.warn("Image too small %r: %s", meta, img.size)
                     return False
                 return True
+        except DecompressionBombWarning as dce:
+            log.debug("Image too large: %", dce)
+            return False
         except Exception as exc:
             log.info("Cannot parse image: %s", exc)
             return True

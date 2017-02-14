@@ -1,5 +1,5 @@
-aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Authz', 'Collection', 'Alert', 'Validation', 'entity', 'metadata',
-    function($scope, $http, $uibModalInstance, Authz, Collection, Alert, Validation, entity, metadata) {
+aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 'Authz', 'Collection', 'Alert', 'entity', 'metadata',
+    function($scope, $http, $uibModalInstance, Authz, Collection, Alert, entity, metadata) {
 
   $scope.collectionCallback = null;
   $scope.blocked = false;
@@ -42,10 +42,10 @@ aleph.controller('EntitiesCreateCtrl', ['$scope', '$http', '$uibModalInstance', 
         if ($scope.createAlert) {
           var alert = {entity_id: res.data.id};
           Alert.create({entity_id: res.data.id}).then(function() {
-            $uibModalInstance.close(res.data);  
+            $uibModalInstance.close(res.data);
           });
         } else {
-          $uibModalInstance.close(res.data);  
+          $uibModalInstance.close(res.data);
         }
       });
     });

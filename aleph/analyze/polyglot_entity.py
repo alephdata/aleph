@@ -31,7 +31,7 @@ class PolyglotEntityAnalyzer(Analyzer):
         self.entities = defaultdict(list)
 
     def on_text(self, text):
-        if self.disabled or text is None or len(text) <= 100:
+        if text is None or len(text) <= 100:
             return
         try:
             hint_language_code = None
@@ -49,9 +49,10 @@ class PolyglotEntityAnalyzer(Analyzer):
                     continue
                 schema = SCHEMAS.get(entity.tag, DEFAULT_SCHEMA)
                 self.entities[entity_name].append(schema)
+        except ValueError as ve:
+            log.info('NER value error: %r', ve)
         except Exception as ex:
             log.warning('NER failed: %r', ex)
-            self.disabled = True
 
     def load_entity(self, name, schema):
         identifier = name.lower().strip()
@@ -80,9 +81,6 @@ class PolyglotEntityAnalyzer(Analyzer):
         return entity.id
 
     def finalize(self):
-        if self.disabled:
-            return
-
         output = []
         for entity_name, schemas in self.entities.items():
             schema = max(set(schemas), key=schemas.count)

@@ -1,5 +1,9 @@
 <collections-screen collection="collection" section="entities">
-  <div class="row">
+  <div ng-show="isEmpty()">
+    <collections-empty-teaser collection="collection"></collections-empty-teaser>
+  </div>
+
+  <div class="row" ng-show="!isEmpty()">
     <div class="col-md-8">
       <div class="search-bar">
         <form class="form-horizontal" role="search" ng-submit="submitSearch(form)">
@@ -16,7 +20,7 @@
                 </button>
                 <ul class="uib-dropdown-menu" role="menu">
                   <li ng-repeat="(field, label) in sortOptions"
-                      ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'score')}">
+                      ng-class="{'active': query.state.sort == field || (!query.state.sort && field == 'alphabet')}">
                     <a ng-click="query.set('sort', field)"
                        ng-bind="label"></a>
                   </li>
@@ -37,12 +41,9 @@
       </div>
 
       <div class="alert alert-suggest" ng-if="result.limit > 0 && !result.total && collection.can_add">
-        No entities were found,
-        <a ng-href="/collections/{{::collection.id}}/entities/bulk">create some now</a>?
-      </div>
-
-      <div class="alert alert-suggest" ng-if="result.limit > 0 && !result.total && !collection.can_add">
-        No entities were found in this collection.
+        No entities were found, 
+        <a ng-href="/collections/{{::collection.id}}/entities/bulk">
+          create some now</a>?
       </div>
 
       <div>
@@ -128,22 +129,23 @@
 
     <div class="col-md-4">
       <collections-review-teaser collection="collection"></collections-review-teaser>
+
       <div class="panel panel-default panel-facet panel-facet-scroll">
         <div class="panel-heading">
           <strong>Countries</strong>
-          <small>{{jurisdictionFacet.length}}</small>
+          <small>{{result.facets.jurisdiction_code.values.length}}</small>
         </div>
         <ul class="list-group">
-          <li class="list-group-item empty" ng-if="!jurisdictionFacet.length">
+          <li class="list-group-item empty" ng-if="!result.facets.jurisdiction_code.values.length">
             No entities with country associations.
           </li>
           <li class="list-group-item animate toggle"
-            ng-repeat="val in jurisdictionFacet"
+            ng-repeat="val in result.facets.jurisdiction_code.values"
             ng-class="{'active': query.hasFilter('jurisdiction_code', val.id)}"
             ng-click="query.toggleFilter('jurisdiction_code', val.id)">
             <span class="badge">{{val.count | number}}</span>
             <span class="lbl">
-              {{::val.label | country}}
+              {{::val.label}}
             </span>
           </li>
         </ul>
@@ -152,14 +154,14 @@
       <div class="panel panel-default panel-facet">
         <div class="panel-heading">
           <strong>Types</strong>
-          <small>{{schemaFacet.length}}</small>
+          <small>{{result.facets.$schema.values.length}}</small>
         </div>
         <ul class="list-group">
-          <li class="list-group-item empty" ng-if="!schemaFacet.length">
+          <li class="list-group-item empty" ng-if="!result.facets.$schema.values.length">
             No entities found.
           </li>
           <li class="list-group-item animate toggle"
-            ng-repeat="val in schemaFacet"
+            ng-repeat="val in result.facets.$schema.values"
             ng-class="{'active': query.hasFilter('$schema', val.id)}"
             ng-click="query.toggleFilter('$schema', val.id)">
             <span class="badge">{{val.count | number}}</span>

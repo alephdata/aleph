@@ -34,12 +34,13 @@ logging.getLogger('cssutils').setLevel(logging.ERROR)
 logging.getLogger('polyglot').setLevel(logging.WARNING)
 logging.getLogger('PIL').setLevel(logging.WARNING)
 logging.getLogger('neo4j').setLevel(logging.WARNING)
+logging.getLogger('pdfminer').setLevel(logging.WARNING)
 logging.getLogger('httpstream').setLevel(logging.WARNING)
 
 # Log all SQL statements:
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
-# default locale settings
+# default locale settings for subprocess commands.
 os.environ['LC_ALL'] = 'en_US'
 os.environ['LC_LANG'] = 'en_US'
 os.environ['LC_CTYPE'] = 'en_US'

@@ -1,11 +1,13 @@
 import os
+import six
 import logging
 import tempfile
 
 from boto3.session import Session
-import botocore
+from botocore.exceptions import ClientError
 
 from aleph.archive.archive import Archive
+from aleph.util import make_filename
 
 log = logging.getLogger(__name__)
 
@@ -13,7 +15,7 @@ log = logging.getLogger(__name__)
 class S3Archive(Archive):  # pragma: no cover
 
     def __init__(self, config):
-        self.local_base = tempfile.gettempdir()
+        self.local_base = six.text_type(tempfile.gettempdir())
         self.key_id = config.get('ARCHIVE_AWS_KEY_ID')
         self.secret = config.get('ARCHIVE_AWS_SECRET')
         self.region = config.get('ARCHIVE_AWS_REGION', 'eu-west-1')
@@ -29,7 +31,7 @@ class S3Archive(Archive):  # pragma: no cover
 
         try:
             self.bucket.load()
-        except botocore.exceptions.ClientError as e:
+        except ClientError as e:
             error_code = int(e.response['Error']['Code'])
             if error_code == 404:
                 self.bucket.create(CreateBucketConfiguration={
@@ -72,8 +74,8 @@ class S3Archive(Archive):  # pragma: no cover
 
     def _get_local_mirror(self, meta):
         base = self._get_file_path(meta).split(os.path.sep)
-        file_name = '%s-%s' % (base[-2], base[-1])
-        return os.path.join(self.local_base, file_name)
+        file_name = '-'.join((base[-2], base[-1]))
+        return os.path.join(self.local_base, make_filename(file_name))
 
     def load_file(self, meta):
         path = self._get_local_mirror(meta)

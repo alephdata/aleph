@@ -26,7 +26,10 @@ class HtmlIngestor(DocumentIngestor):
         try:
             wkhtmltopdf = get_config('WKHTMLTOPDF_BIN')
             args = [wkhtmltopdf, '--disable-javascript', '--no-outline',
-                    '--no-images', '--quiet', html_path, out_path]
+                    '--no-images', '--lowquality', '--quiet',
+                    '--disable-forms', '--disable-local-file-access',
+                    '--load-error-handling', 'skip',
+                    html_path, out_path]
             subprocess.call(args)
             if not os.path.isfile(out_path):
                 raise IngestorException("Could not convert document: %r", meta)

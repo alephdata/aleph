@@ -22,16 +22,17 @@ def setup_providers(app):
 
     for provider in providers:
         # OAUTH providers from the config MUST have a name entry
-        name = provider.pop('name')
+        name = provider.get('name')
         label = provider.pop('label', name.capitalize())
 
-        provider = oauth.remote_app(name, **provider)
+        provider = oauth.remote_app(**provider)
         provider.label = label
         provider.tokengetter(get_oauth_token)
 
 
 def configure_oauth(app):
-    setup_providers(app)
+    if not app.config.get('TESTING'):
+        setup_providers(app)
     oauth.init_app(app)
     return oauth
 

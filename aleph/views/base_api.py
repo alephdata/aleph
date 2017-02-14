@@ -1,13 +1,12 @@
 import os
+import six
 import logging
 from apikit import jsonify
 from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
 from elasticsearch import TransportError
 
-from aleph.core import get_config, get_app_title, get_app_url, get_graph
-from aleph.model import Collection
-from aleph.graph import graph_metadata
+from aleph.core import get_config, app_title, app_url
 from aleph.metadata import Metadata
 from aleph.metadata.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.model.validation import resolver
@@ -73,13 +72,12 @@ def metadata():
     return jsonify({
         'status': 'ok',
         'app': {
-            'title': get_app_title(),
-            'url': get_app_url(),
+            'title': six.text_type(app_title),
+            'url': six.text_type(app_url),
             'samples': get_config('SAMPLE_SEARCHES')
         },
-        'graph': graph_metadata(),
         'fields': Metadata.facets(),
-        'categories': Collection.CATEGORIES,
+        'categories': get_config('COLLECTION_CATEGORIES', {}),
         'countries': COUNTRY_NAMES,
         'languages': LANGUAGE_NAMES,
         'schemata': schemata
@@ -98,8 +96,6 @@ def handle_authz_error(err):
 
 @blueprint.app_errorhandler(ValidationError)
 def handle_validation_error(err):
-    print err, dir(err)
-    print err.cause
     return jsonify({
         'status': 'error',
         'message': err.message

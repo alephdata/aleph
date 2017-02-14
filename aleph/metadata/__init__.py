@@ -5,12 +5,11 @@ import mimetypes
 from collections import Mapping
 from flanker.addresslib import address
 from urlparse import urlparse
-from normality import slugify
 
+from aleph.text import slugify, string_value
 from aleph.util import make_filename
 from aleph.metadata.tabular import Tabular
-from aleph.metadata.parsers import chomp, parse_date
-from aleph.metadata.parsers import parse_domain, parse_url
+from aleph.metadata.parsers import parse_date, parse_domain, parse_url
 from aleph.metadata.reference import is_country_code, is_language_code
 from aleph.metadata.base import MetadataFactory, Field
 
@@ -94,7 +93,7 @@ class Metadata(object):
 
     @title.setter
     def title(self, title):
-        self._title = chomp(title)
+        self._title = string_value(title)
 
     @property
     def file_name(self):
@@ -103,7 +102,7 @@ class Metadata(object):
         # derive file name from headers
         if file_name is None and 'content_disposition' in self.headers:
             _, attrs = cgi.parse_header(self.headers['content_disposition'])
-            file_name = chomp(attrs.get('filename'))
+            file_name = string_value(attrs.get('filename'))
 
         if file_name is None and self.source_path:
             file_name = os.path.basename(self.source_path)
@@ -116,7 +115,7 @@ class Metadata(object):
 
     @file_name.setter
     def file_name(self, file_name):
-        self._file_name = chomp(file_name)
+        self._file_name = string_value(file_name)
 
     @property
     def languages(self):
@@ -129,7 +128,10 @@ class Metadata(object):
             self.add_language(lang)
 
     def add_language(self, language):
-        lang = chomp(language, lower=True)
+        lang = string_value(language)
+        if lang is None:
+            return
+        lang = lang.lower()
         if is_language_code(lang) and lang not in self._languages:
             self._languages.append(lang)
 
@@ -144,7 +146,10 @@ class Metadata(object):
             self.add_country(country)
 
     def add_country(self, country):
-        country = chomp(country, lower=True)
+        country = string_value(country)
+        if country is None:
+            return
+        country = country.lower()
         if is_country_code(country) and country not in self._countries:
             self._countries.append(country)
 
@@ -159,7 +164,7 @@ class Metadata(object):
             self.add_keyword(kw)
 
     def add_keyword(self, kw):
-        kw = chomp(kw)
+        kw = string_value(kw)
         if kw is not None and kw not in self._keywords:
             self._keywords.append(kw)
 
@@ -223,7 +228,7 @@ class Metadata(object):
             self.add_phone_number(phone_number)
 
     def add_phone_number(self, number):
-        number = chomp(number)
+        number = string_value(number)
         if number and number not in self._phone_numbers:
             self._phone_numbers.append(number)
 
@@ -257,7 +262,7 @@ class Metadata(object):
 
     @foreign_id.setter
     def foreign_id(self, foreign_id):
-        self._foreign_id = chomp(foreign_id)
+        self._foreign_id = string_value(foreign_id)
 
     @property
     def extension(self):
@@ -266,13 +271,15 @@ class Metadata(object):
         if extension is None and self.file_name:
             _, extension = os.path.splitext(self.file_name)
 
-        if isinstance(extension, six.string_types):
-            extension = extension.lower().strip().strip('.')
+        if extension is None or not len(extension):
+            return None
+
+        extension = six.text_type(extension).lower().strip().strip('.')
         return extension
 
     @extension.setter
     def extension(self, extension):
-        self._extension = chomp(extension)
+        self._extension = string_value(extension)
 
     @property
     def mime_type(self):
@@ -290,7 +297,7 @@ class Metadata(object):
 
     @mime_type.setter
     def mime_type(self, mime_type):
-        self._mime_type = chomp(mime_type)
+        self._mime_type = string_value(mime_type)
 
     @property
     def headers(self):

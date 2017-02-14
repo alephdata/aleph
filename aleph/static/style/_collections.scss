@@ -34,19 +34,6 @@
         }
     }
 
-    .alert.alert-info {
-        .fa {
-            font-size: 2em;
-            float: left;
-            display: inline-block;
-            margin-right: 0.5em;
-        }
-
-        p {
-            display: block;
-        }
-    }
-
     #ingest-dropzone {
         display: none;
         position: absolute;
@@ -80,6 +67,30 @@
     &.file-drop-area {
         #ingest-dropzone {
             display: block;
+        }
+    }
+
+    .collections-teaser {
+        h3 {
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-bottom: 1em;
+
+            i {
+                color: $brand-primary;
+            }
+        }
+
+        p {
+            @include teaser-text;
+            display: inline-block;
+            min-height: 5em;
+        }
+
+        .btn-group {
+            display: block;
+            margin-top: 1em;
         }
     }
 }

@@ -1,6 +1,4 @@
-from normality import slugify
-
-from aleph.text import string_value
+from aleph.text import string_value, slugify
 
 
 class TabularColumn(object):

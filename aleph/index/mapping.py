@@ -103,6 +103,7 @@ ENTITY_MAPPING = {
     "date_detection": False,
     "properties": {
         "name": {"type": "string", "index": "analyzed"},
+        "name_sort": {"type": "string", "index": "not_analyzed"},
         "name_latin": {"type": "string", "index": "analyzed"},
         "terms": {"type": "string", "index": "analyzed"},
         "terms_latin": {"type": "string", "index": "analyzed"},

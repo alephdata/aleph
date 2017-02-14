@@ -8,6 +8,9 @@
             "minLength": 2,
             "maxLength": 255
         },
+        "summary": {
+            "type": ["null", "string"]
+        },
         "managed": {
             "type": "boolean"
         },
@@ -20,6 +23,13 @@
         "category": {
             "type": "string",
             "format": "collection-category"
+        },
+        "countries": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "format": "country-code"
+            }
         }
     },
     "required": ["label"]

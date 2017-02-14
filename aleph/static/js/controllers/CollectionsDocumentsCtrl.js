@@ -20,9 +20,13 @@ aleph.controller('CollectionsDocumentsCtrl', ['$scope', '$location', '$http', '$
   };
 
   $scope.editDocument = function(doc) {
-    Document.edit(doc.id).then(function(res) {
+    Document.edit(doc.id).then(function() {
       $route.reload();
     })
+  };
+
+  $scope.isEmpty = function() {
+    return !$scope.query.isFiltered() && $scope.result.limit > 0 && $scope.result.total == 0;
   };
 
   $scope.$on('$routeUpdate', function() {

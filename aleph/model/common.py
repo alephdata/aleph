@@ -1,8 +1,10 @@
 import uuid
 import string
+import fingerprints
 from datetime import datetime
 
 from aleph.core import db
+from aleph.text import string_value
 
 
 ALPHABET = string.ascii_lowercase + string.digits
@@ -21,6 +23,11 @@ def make_token():
 
 def make_textid():
     return uuid.uuid4().hex
+
+
+def make_fingerprint(text, **kwargs):
+    """Generate a normalised entity name, used for the graph."""
+    return fingerprints.generate(string_value(text))
 
 
 class IdModel(object):

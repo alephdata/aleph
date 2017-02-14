@@ -7,7 +7,7 @@ from werkzeug.exceptions import BadRequest
 
 from aleph import authz
 from aleph.events import log_event
-from aleph.core import get_app_url, get_app_title
+from aleph.core import app_url, app_title
 from aleph.model.validation import implied_schemas, resolver
 from aleph.search.entities import suggest_entities
 
@@ -19,7 +19,7 @@ DEFAULT_TYPE = '/entity/entity.json#'
 
 
 def entity_link(id):
-    return urljoin(get_app_url(), '/search?entity=%s' % id)
+    return urljoin(app_url, '/search?entity=%s' % id)
 
 
 def get_freebase_types():
@@ -62,11 +62,11 @@ def reconcile_op(query):
 
 
 def reconcile_index():
-    domain = get_app_url().strip('/')
+    domain = app_url.strip('/')
     api_key = request.auth_role.api_key if authz.logged_in() else None
     preview_uri = entity_link('{{id}}') + '&preview=true&api_key=%s' % api_key
     meta = {
-        'name': get_app_title(),
+        'name': app_title,
         'identifierSpace': 'http://rdf.freebase.com/ns/type.object.id',
         'schemaSpace': 'http://rdf.freebase.com/ns/type.object.id',
         'view': {'url': entity_link('{{id}}')},

@@ -1,8 +1,9 @@
-aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '$routeParams', 'Validation', 'Collection', 'Role', 'Authz', 'Title', 'collection', 'roles', 'metadata',
-    function($scope, $q, $location, $http, $routeParams, Validation, Collection, Role, Authz, Title, collection, roles, metadata) {
+aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '$routeParams', 'Collection', 'Metadata', 'Role', 'Authz', 'Title', 'collection', 'roles', 'metadata',
+    function($scope, $q, $location, $http, $routeParams, Collection, Metadata, Role, Authz, Title, collection, roles, metadata) {
 
   $scope.authz = Authz;
   $scope.collection = collection;
+  $scope.metadata = metadata;
   $scope.ownerRoles = roles.filter(function(r) {
     return r.type == 'user';
   });
@@ -44,7 +45,7 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
       $location.path('/collections');
     });
   };
-  
+
   $scope.process = function() {
     var url = collection.api_url + '/process';
     $http.post(url).then(function() {
@@ -68,11 +69,10 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
       }
 
       $q.all(qs).then(function() {
-        Collection.flush().then(function() {
+        Metadata.flush().then(function() {
           $location.path('/collections/' + collection.id);
         });
       });
     });
-    res.error(Validation.handle(form));
   };
 }]);

@@ -46,6 +46,7 @@ aleph.controller('IngestFilesCtrl', ['$scope', '$uibModalInstance', 'Upload', 'm
     }).then(function(res) {
       $uibModalInstance.close(res.data);
     }, function(err) {
+      console.log('Error', err);
       $scope.progress = null;
     }, function(evt) {
       $scope.progress = parseInt(100.0 * evt.loaded / evt.total);

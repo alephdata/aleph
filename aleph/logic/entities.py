@@ -4,7 +4,6 @@ import re
 import logging
 from collections import defaultdict
 
-from aleph import graph
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.text import normalize_strong
 from aleph.model import Entity, Reference, Document, Alert
@@ -69,9 +68,6 @@ def update_entity(entity):
 
 def delete_entity(entity, deleted_at=None):
     update_entity(entity)
-    with graph.transaction() as tx:
-        graph.remove_entity(tx, entity.id)
-        graph.delete_paths(entity.id)
     entity.delete(deleted_at=deleted_at)
 
 
@@ -81,9 +77,6 @@ def update_entity_full(entity_id):
     query = db.session.query(Entity).filter(Entity.id == entity_id)
     entity = query.first()
     generate_entity_references(entity)
-    with graph.transaction() as tx:
-        graph.load_entity(tx, entity)
-        graph.generate_paths(tx, entity)
     reindex_entity(entity)
     Alert.dedupe(entity.id)
 

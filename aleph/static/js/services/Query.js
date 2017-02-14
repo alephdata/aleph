@@ -13,6 +13,8 @@ aleph.factory('Query', ['$route', '$location', '$httpParamSerializer',
   ParsedQuery.prototype.getArray = function(key) {
     return ensureArray(this.state[key]).map(function(v) {
       return v + '';
+    }).filter(function(v) {
+      return v.trim().length > 0;
     });
   };
 
@@ -61,25 +63,16 @@ aleph.factory('Query', ['$route', '$location', '$httpParamSerializer',
     return this.toggle('filter:' + name, val);
   };
 
-  ParsedQuery.prototype.sortFacet = function(data, name) {
-    var self = this;
-    if (!data || !data.length) {
-      return [];
+  ParsedQuery.prototype.isFiltered = function() {
+    if (this.getQ()) {
+      return true;
     }
-
-    return data.sort(function(a, b) {
-      var af = self.hasField(name, a.id),
-          bf = self.hasField(name, b.id);
-      if (af && !bf) { return -1; }
-      if (!af && bf) { return 1; }
-      var counts = b.count - a.count;
-      if (counts !== 0) {
-        return counts;
+    for (var key in this.state) {
+      if (key.startsWith('filter:') && this.getArray(key).length > 0) {
+        return true;
       }
-      var al = a.label || a.name || a.id;
-      var bl = b.label || b.name || b.id;
-      return al.localeCompare(bl);
-    });
+    }
+    return false;
   };
 
   return {

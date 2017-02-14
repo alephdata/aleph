@@ -1,0 +1,91 @@
+<div class="row" ng-if="!collection.can_add">
+  <div class="col-md-12">
+    <div class="alert alert-info">
+      <strong>This collection is empty.</strong>
+      Items may still be uploaded or processed. Please check
+      back later.
+    </div>
+  </div>
+</div>
+
+<div class="row" ng-if="collection.can_add">
+  <div class="col-md-4">
+    <div class="collections-teaser">
+      <h3>
+        <i class="fa fa-file-text"></i>
+        Upload documents
+      </h3>
+      <p>
+        Upload source material, including documents, spreadsheets,
+        presentations or email archives.
+      </p>
+      <div class="btn-group" role="group">
+        <a class="btn btn-default btn-lg" ng-click="ingestFiles()">
+          <i class="fa fa-cloud-upload"></i> Upload documents
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="collections-teaser">
+      <h3> 
+        <i class="fa fa-fw fa-group"></i>
+        Create persons of interest
+      </h3>
+      <p>
+        Entities describe persons and companies that will be
+        cross-referenced with documents, and connect to
+        investigative networks.
+      </p>
+      <div class="btn-group" role="group">
+        <a class="btn btn-default btn-lg" ng-href="/collections/{{collection.id}}/entities/bulk">
+          <i class="fa fa-group"></i> Create entities
+        </a>
+        <a class="btn btn-default btn-lg" ng-if="collection.pending_count"
+          ng-href="/collections/{{::collection.id}}/entities/review">
+          Review
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="collections-teaser">
+      <h3>
+        <i class="fa fa-eye-slash"></i>
+        Control access
+      </h3>
+      <p>
+        You can allow colleagues to see the documents and entities in this
+        collection, or make it public.
+      </p>
+      <div class="btn-group" role="group">
+        <a class="btn btn-default btn-lg" ng-href="/collections/{{collection.id}}/settings">
+          <i class="fa fa-wrench"></i> Settings
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--
+<div>
+  <p>
+    We've found <strong>{{::collection.pending_count | number}}
+    new entities</strong> in in this collection.
+    Please take a moment to check them.
+  </p>
+  <p>
+    <a ng-href="/collections/{{::collection.id}}/entities/review" class="btn btn-default">Review</a>
+  </p>
+
+    <div>
+      <i class="fa fa-cloud-upload"></i>
+      <p>
+        Drag files or folders onto the browser window to import them
+        into the collection.
+      </p>
+    </div>
+  </div>
+</div>
+-->

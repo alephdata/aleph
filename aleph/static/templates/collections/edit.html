@@ -8,13 +8,17 @@
             <input type="text" class="form-control input-lg" id="label" name="label" ng-model="collection.label"
               placeholder="The collections's label">
             <p class="help-block" ng-show="editCollection.label.$invalid" ng-bind="editCollection.label.$message"></p>
+            <p class="help-block">Import ID: <code ng-bind="collection.foreign_id"></code>.</p>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="control-label" for="foreign_id">Import&nbsp;ID</label>
+          <label class="control-label" for="summary">
+            Summary
+          </label>
           <div class="">
-            <input type="text" class="form-control" id="foreign_id" name="foreign_id" ng-model="collection.foreign_id" readonly>
+            <textarea class="form-control" id="summary" name="summary"
+              ng-model="collection.summary" rows="2" maxlength="200"></textarea>
           </div>
         </div>
 
@@ -37,6 +41,20 @@
           <div class="">
             <select class="form-control" id="category" name="category" ng-model="collection.category"
               ng-options="slug as label for (slug, label) in categories"></select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="countries">
+            Countries
+          </label>
+          <div class="">
+            <ui-select multiple ng-model="collection.countries">
+              <ui-select-match placeholder="Select country...">{{$item.value}}</ui-select-match>
+              <ui-select-choices repeat="country.key as (key, country) in metadata.countries | filter: {'value': $select.search}">
+                <div ng-bind-html="country.value | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
         </div>
 
