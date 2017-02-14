@@ -57,7 +57,7 @@ class Metadata(object):
     # _keywords = Field('keywords', multi=True, label='Keywords')
     _phone_numbers = Field('phone_numbers', multi=True, label='Phone numbers')
     _publication_date = Field('publication_date', label='Publication Date')
-    # _dates = Field('dates', multi=True, label='Dates')
+    _dates = Field('dates', multi=True)
     _urls = Field('urls', multi=True)
     _emails = Field('emails', multi=True, label='E-mail addresses')
     _domains = Field('domains', multi=True, label='Domains')
