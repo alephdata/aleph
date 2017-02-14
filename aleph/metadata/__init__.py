@@ -233,7 +233,7 @@ class Metadata(object):
 
     @publication_date.setter
     def publication_date(self, publication_date):
-        self._publication_date = publication_date
+        self._publication_date = parse_date(publication_date)
 
     @property
     def dates(self):
