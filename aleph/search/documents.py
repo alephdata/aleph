@@ -43,9 +43,9 @@ def documents_query(args, fields=None, facets=True):
     if text or sort_mode == 'score':
         sort = ['_score']
     elif sort_mode == 'newest':
-        sort = [{'publication_date': 'desc'}, {'dates': 'desc'}, {'created_at': 'desc'}, '_score']
+        sort = [{'dates': 'desc'}, {'created_at': 'desc'}, '_score']
     elif sort_mode == 'oldest':
-        sort = [{'publication_date': 'asc'}, {'dates': 'asc'}, {'created_at': 'asc'}, '_score']
+        sort = [{'dates': 'asc'}, {'created_at': 'asc'}, '_score']
     else:
         sort = [{'updated_at': 'desc'}, {'created_at': 'desc'}, '_score']
 
