@@ -19,6 +19,8 @@ SQLALCHEMY_DATABASE_URI = os.environ.get('ALEPH_DATABASE_URI')
 
 PREFERRED_URL_SCHEME = os.environ.get('ALEPH_URL_SCHEME')
 
+REGEX_ENTITIES = False
+
 MAIL_FROM = os.environ.get('MAIL_FROM')
 MAIL_SERVER = os.environ.get('MAIL_HOST')
 MAIL_ADMINS = [os.environ.get('MAIL_ADMIN')]
@@ -30,11 +32,9 @@ MAIL_USE_TLS = True
 MAIL_PORT = 587
 
 CELERY_BROKER_URL = os.environ.get('ALEPH_BROKER_URI')
-CELERY = {
-    'broker_transport_options': {
-        'region': 'eu-west-1',
-        'queue_name_prefix': '%s.' % os.environ.get('ALEPH_APP_NAME', 'aleph')
-    }
+BROKER_TRANSPORT_OPTIONS = {
+    'region': 'eu-west-1',
+    'queue_name_prefix': '%s.' % os.environ.get('ALEPH_APP_NAME', 'aleph')
 }
 
 NEO4J_URI = os.environ.get('ALEPH_NEO4J_URI')
@@ -75,4 +75,7 @@ MAX_CONTENT_LENGTH = int(os.environ.get('ALEPH_MAX_CONTENT_LENGTH',
                                         500 * 1024 * 1024))
 
 GA_TRACKING_ID = 'UA-48399585-47'
+
+# Tell users to email the admins if their search has results in collections
+# that are hidden from them?
 ALLOW_PEEKING = False
