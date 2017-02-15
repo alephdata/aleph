@@ -2,7 +2,6 @@ import logging
 import flask_migrate
 
 from aleph.core import db  # noqa
-from aleph.model.credential import Credential  # noqa
 from aleph.model.role import Role  # noqa
 from aleph.model.alert import Alert  # noqa
 from aleph.model.permission import Permission  # noqa

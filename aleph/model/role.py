@@ -1,13 +1,10 @@
 import logging
-from datetime import datetime
-
+from uuid import uuid4
 from flask import current_app
-from sqlalchemy.exc import IntegrityError
 
 from aleph.core import db, url_for, get_config
 from aleph.data.validate import validate
-from aleph.model.common import SoftDeleteModel, IdModel, make_textid
-from aleph.model import Credential
+from aleph.model.common import SoftDeleteModel, IdModel
 
 log = logging.getLogger(__name__)
 
@@ -32,12 +29,13 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     SYSTEM_GUEST = 'guest'
     SYSTEM_USER = 'user'
 
+    foreign_id = db.Column(db.Unicode(2048), nullable=False, unique=True)
     name = db.Column(db.Unicode, nullable=False)
     email = db.Column(db.Unicode, nullable=True)
     api_key = db.Column(db.Unicode, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     type = db.Column(db.Enum(*TYPES, name='role_type'), nullable=False)
-    permissions = db.relationship('Permission', backref='role')
+    permissions = db.relationship("Permission", backref="role")
 
     def update(self, data):
         validate(data, self._schema)
@@ -45,12 +43,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         self.email = data.get('email', self.email)
 
     def clear_roles(self):
-        """Removes any existing roles from group membership."""
         self.roles = []
         db.session.add(self)
 
     def add_role(self, role):
-        """Adds an existing role as a membership of a group."""
         self.roles.append(role)
         db.session.add(role)
         db.session.add(self)
@@ -62,9 +58,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def by_foreign_id(cls, foreign_id):
         if foreign_id is not None:
-            return cls.all().join(cls.credentials).filter(
-                Credential.foreign_id == foreign_id
-            ).first()
+            return cls.all().filter_by(foreign_id=foreign_id).first()
 
     @classmethod
     def by_api_key(cls, api_key):
@@ -72,16 +66,18 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             return cls.all().filter_by(api_key=api_key).first()
 
     @classmethod
-    def load_or_create(cls, foreign_id, type, name, email=None, is_admin=None):
+    def load_or_create(cls, foreign_id, type, name, email=None,
+                       is_admin=None):
         role = cls.by_foreign_id(foreign_id)
         if role is None:
             role = cls()
+            role.foreign_id = foreign_id
             role.name = name
             role.type = type
             role.is_admin = False
 
         if role.api_key is None:
-            role.api_key = make_textid()
+            role.api_key = uuid4().hex
 
         role.email = email
         if is_admin is not None:
@@ -95,9 +91,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
         db.session.add(role)
         db.session.flush()
-
-        role.load_or_create_credentials(foreign_id)
-
         return role
 
     @classmethod
@@ -118,65 +111,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             current_app._authz_roles[foreign_id] = role.id
         return current_app._authz_roles[foreign_id]
 
-    @classmethod
-    def authenticate_using_credential(cls, email, password):
-        """Autheticates an user based on the email and password.
-
-        :param str email: User email.
-        :param str password: User password.
-        :return: A matched role.
-        :rtype: :py:class:`Role`
-        """
-        credential = db.session.query(Credential).join(cls).filter(
-            cls.email == email,
-            Credential.secret != None,
-            ~Credential.source.in_(Credential.EXTERNAL_SOURCES),
-            db.func.crypt(password, Credential.secret) == Credential.secret
-        ).first()
-
-        if not credential:
-            return
-
-        credential.used_at = datetime.utcnow()
-        db.session.add(credential)
-        db.session.commit()
-
-        return credential.role
-
-    def load_or_create_credentials(self, foreign_id):
-        """Returns role credentials based on the foreign identifier.
-
-        If the credentials do not exist, it will create it.
-
-        :param string foreign_id: Foreign identifier, ex.: `oauth:ID`.
-        :rtype: :py:class:`aleph.model.Credential`
-        """
-        source = Credential.PASSWORD
-
-        for existing_source in Credential.SOURCES:
-            if existing_source in foreign_id:
-                source = existing_source
-
-        if source == Credential.PASSWORD:
-            foreign_id = '{}:{}'.format(source, self.id)
-
-        cred = Credential()
-        cred.role = self
-        cred.source = source
-        cred.foreign_id = foreign_id
-        cred.used_at = datetime.utcnow()
-        db.session.add(cred)
-
-        try:
-            db.session.commit()
-        except IntegrityError as err:
-            db.session.rollback()
-            cred = self.credentials.filter_by(foreign_id=foreign_id).first()
-
-        return cred
-
     def __repr__(self):
-        return '<Role(%r,%r)>' % (self.id, self.email)
+        return '<Role(%r,%r)>' % (self.id, self.foreign_id)
 
     def __unicode__(self):
         return self.name
@@ -185,6 +121,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         data = super(Role, self).to_dict()
         data.update({
             'api_url': url_for('roles_api.view', id=self.id),
+            'foreign_id': self.foreign_id,
             'is_admin': self.is_admin,
             'email': self.email,
             'name': self.name,
