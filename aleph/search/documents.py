@@ -111,8 +111,8 @@ def documents_query(state, fields=None, facets=True, since=None):
             sub_queries.append(json.dumps(sq))
 
         output['results'].append(document)
-
-    if not len(sub_queries):
+    
+    if state.getbool('records', default=True) is False or not len(sub_queries):
         return output
 
     body = '\n'.join(sub_queries)
