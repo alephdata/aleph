@@ -1,24 +1,21 @@
 # coding: utf-8
-import os
 import logging
 
 from flask_script import Manager
 from flask_assets import ManageAssets
 from flask_migrate import MigrateCommand
 
-from aleph.core import create_app, get_archive
+from aleph.core import create_app, archive
 from aleph.model import db, upgrade_db, Collection, Document
 from aleph.views import mount_app_blueprints, assets
 from aleph.analyze import install_analyzers
-from aleph.alerts import check_alerts
 from aleph.ingest import reingest_collection
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document_id
 from aleph.logic import reindex_entities, delete_collection, analyze_collection
-from aleph.graph import upgrade_graph, load_documents, load_entities
+from aleph.logic.alerts import check_alerts
 from aleph.ext import get_crawlers
 from aleph.crawlers.directory import DirectoryCrawler
-from aleph.crawlers.sql import SQLCrawler
 from aleph.crawlers.metafolder import MetaFolderCrawler
 
 
@@ -60,7 +57,8 @@ def crawl(name):
 @manager.command
 @manager.option('-l', '--language', dest='language', nargs='*')
 @manager.option('-c', '--country', dest='country', nargs='*')
-def crawldir(directory, language=None, country=None):
+@manager.option('-f', '--foreign_id', dest='foreign_id')
+def crawldir(directory, language=None, country=None, foreign_id=None):
     """Crawl the given directory."""
     log.info('Crawling %r...', directory)
     meta = {}
@@ -69,17 +67,7 @@ def crawldir(directory, language=None, country=None):
     if country is not None:
         meta['countries'] = [country]
     crawler = DirectoryCrawler()
-    crawler.execute(directory=directory, meta=meta)
-
-
-@manager.command
-def crawlsql(yaml_config, collection=None):
-    """Crawl the given database query file."""
-    yaml_config = os.path.abspath(yaml_config)
-    yaml_config = os.path.normpath(yaml_config)
-    log.info('Crawling %r...', yaml_config)
-    SQLCrawler().execute(config=yaml_config)
-    db.session.commit()
+    crawler.execute(directory=directory, meta=meta, foreign_id=foreign_id)
 
 
 @manager.command
@@ -100,16 +88,12 @@ def flush(foreign_id):
 
 
 @manager.command
-def analyze(foreign_id=None):
+def analyze(foreign_id):
     """Re-analyze documents in the given collection (or throughout)."""
-    if foreign_id:
-        collection = Collection.by_foreign_id(foreign_id)
-        if collection is None:
-            raise ValueError("No such collection: %r" % foreign_id)
-        analyze_collection.delay(collection.id)
-    else:
-        for collection in Collection.all():
-            analyze_collection.delay(collection.id)
+    collection = Collection.by_foreign_id(foreign_id)
+    if collection is None:
+        raise ValueError("No such collection: %r" % foreign_id)
+    analyze_collection.delay(collection.id)
 
 
 @manager.command
@@ -156,9 +140,8 @@ def init():
     upgrade_db()
     init_search()
     upgrade_search()
-    upgrade_graph()
     install_analyzers()
-    get_archive().upgrade()
+    archive.upgrade()
 
 
 @manager.command
@@ -166,8 +149,7 @@ def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_db()
     upgrade_search()
-    upgrade_graph()
-    get_archive().upgrade()
+    archive.upgrade()
 
 
 @manager.command
@@ -192,28 +174,6 @@ def evilshit():
         enum = ENUM(name=enum['name'])
         enum.drop(bind=db.engine, checkfirst=True)
     init()
-
-
-@manager.command
-def buildgraph():
-    load_entities()
-    load_documents()
-
-
-@manager.command
-def loadgraph(mapping_file):
-    import yaml
-    from aleph.graph import Mapping
-    with open(mapping_file, 'r') as fh:
-        config = yaml.load(fh)
-    mapping = Mapping(config)
-    mapping.load()
-
-
-@manager.command
-def testgraph():
-    from aleph import graph
-    graph.test()
 
 
 def main():

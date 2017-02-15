@@ -18,18 +18,20 @@
     <div class="pull-right">
       <collections-add doc="doc" class="btn-xs"></collections-add>
     </div>
-    <div class="context">  
-      <span ng-if="::collection.category" class="label label-primary">
-        {{::collection.category | collectionCategory }}</span>
+    <div class="context">
+      <span ng-show="::sourceCollection">
+        <span ng-if="::sourceCollection.category" class="label label-primary">
+          {{::sourceCollection.category | collectionCategory }}</span>
 
-      <a ng-href="/collections/{{::collection.id}}" class="collection"
-        ng-bind="::collection.label"></a>
-      <span ng-if="::!collection.public"
-          uib-tooltip="Only available to selected users"
-          tooltip-placement="bottom">
-        <i class="fa fa-lock" aria-hidden="true"></i>
+        <a ng-href="/collections/{{::sourceCollection.id}}" class="collection"
+          ng-bind="::sourceCollection.label"></a>
+        <span ng-if="::!sourceCollection.public"
+            uib-tooltip="Only available to selected users"
+            tooltip-placement="bottom">
+          <i class="fa fa-lock" aria-hidden="true"></i>
+        </span>
+        &middot;
       </span>
-      &middot;
 
       <span ng-if="::doc.source_url">
         <i class="fa fa-external-link"></i>
@@ -39,7 +41,7 @@
       </span>
       <span ng-if="::doc.languages.length > 0 && doc.languages.length < 4">
         <i class="fa fa-language"></i>
-        in 
+        in
         <span ng-repeat="lang in doc.languages">
           {{::lang | language}}<span ng-if="::!$last">,</span>
         </span>
@@ -56,16 +58,15 @@
       &bdquo;<span ng-bind="::doc.summary"></span>&ldquo;
     </div>
     <div class="records" ng-if="::doc.records.total">
-      <ul ng-repeat="rec in doc.records.results">
+      <ul ng-repeat="record in doc.records.results">
         <li>
-          &bdquo;<span ng-click="viewDetails(rec)" class="click highlights"
-            ng-repeat="snippet in rec.snippets"
-            ng-bind-html="::snippet"></span>&ldquo;
+          &bdquo;<span ng-click="viewDetails(record)" class="click highlights"
+            ng-bind-html="::record.snippet"></span>&ldquo;
           <span ng-if="doc.type == 'tabular'" class="ref">in
-            <a ng-href="{{::getUrl(rec)}}">row {{::rec.row_id | number}}</a>
+            <a ng-href="{{::getUrl(record)}}">row {{::record.row_id | number}}</a>
           </span>
           <span ng-if="doc.type == 'text'" class="ref">on
-            <a ng-href="{{::getUrl(rec)}}">page {{::rec.page | number}}</a>
+            <a ng-href="{{::getUrl(record)}}">page {{::record.page | number}}</a>
           </span>
         </li>
       </ul>

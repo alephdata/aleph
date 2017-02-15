@@ -4,7 +4,7 @@ from collections import defaultdict
 from sqlalchemy.orm import joinedload
 from ahocorasick import Automaton
 
-from aleph.core import db
+from aleph.core import db, get_config
 from aleph.text import normalize_strong
 from aleph.model import Reference, Entity
 from aleph.analyze.analyzer import Analyzer
@@ -30,20 +30,23 @@ class AutomatonCache(object):
             return
         self.latest = latest
 
-        matches = defaultdict(set)
+        matches = {}
         q = Entity.all()
         q = q.options(joinedload('other_names'))
         q = q.filter(Entity.state == Entity.STATE_ACTIVE)
         for entity in q:
             for term in entity.regex_terms:
-                matches[term].add(entity.id)
+                if term in matches:
+                    matches[term].append(entity.id)
+                else:
+                    matches[term] = [entity.id]
 
         if not len(matches):
             self.automaton = None
             return
 
         self.automaton = Automaton()
-        for term, entities in matches.items():
+        for term, entities in matches.iteritems():
             self.automaton.add_word(term.encode('utf-8'), entities)
         self.automaton.make_automaton()
         log.info('Generated automaton with %s terms', len(matches))
@@ -55,8 +58,11 @@ class AhoCorasickEntityAnalyzer(Analyzer):
     origin = 'regex'
 
     def prepare(self):
-        self.cache.generate()
-        self.entities = defaultdict(int)
+        if get_config('REGEX_ENTITIES', True):
+            self.cache.generate()
+            self.entities = defaultdict(int)
+        else:
+            self.disabled = True
 
     def on_text(self, text):
         if self.cache.automaton is None:

@@ -1,37 +1,24 @@
 import json
 from pprint import pprint  # noqa
 
-from werkzeug.datastructures import MultiDict
-
-from aleph.core import url_for, get_es, get_es_index
+from aleph.core import url_for, es, es_index
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
-from aleph.search.util import authz_filter
-from aleph.search.util import execute_basic, parse_filters
+from aleph.search.util import execute_basic
 from aleph.search.fragments import match_all, filter_query
 from aleph.search.fragments import add_filter, aggregate
-from aleph.search.facets import convert_entity_aggregations
+from aleph.search.facet import parse_facet_result
 from aleph.text import latinize_text
 
 DEFAULT_FIELDS = ['collection_id', 'name', 'summary', 'jurisdiction_code',
                   '$schema']
 
-# Scoped facets are facets where the returned facet values are returned such
-# that any filter against the same field will not be applied in the sub-query
-# used to generate the facet values.
-OR_FIELDS = ['collections']
 
-
-def entities_query(args, fields=None, facets=True):
+def entities_query(state, fields=None, facets=True):
     """Parse a user query string, compose and execute a query."""
-    if not isinstance(args, MultiDict):
-        args = MultiDict(args)
-    text = args.get('q', '').strip()
-    if text is None or not len(text):
-        q = match_all()
-    else:
+    if state.has_text:
         q = {
             "query_string": {
-                "query": text,
+                "query": state.text,
                 "fields": ['name^15', 'name_latin^5',
                            'terms^12', 'terms_latin^3',
                            'summary^10', 'summary_latin^7',
@@ -40,39 +27,38 @@ def entities_query(args, fields=None, facets=True):
                 "use_dis_max": True
             }
         }
+    else:
+        q = match_all()
 
-    q = authz_filter(q)
-    filters = parse_filters(args)
     aggs = {'scoped': {'global': {}, 'aggs': {}}}
     if facets:
-        facets = args.getlist('facet')
+        facets = list(state.facet_names)
         if 'collections' in facets:
-            aggs = facet_collections(q, aggs, filters)
+            aggs = facet_collections(q, aggs, state)
             facets.remove('collections')
         aggs = aggregate(q, aggs, facets)
 
-    sort_mode = args.get('sort', '').strip().lower()
-    default_sort = 'score' if len(text) else 'doc_count'
-    sort_mode = sort_mode or default_sort
-    if sort_mode == 'doc_count':
-        sort = [{'doc_count': 'desc'}, '_score']
-    elif sort_mode == 'alphabet':
-        sort = [{'name': 'asc'}, '_score']
-    elif sort_mode == 'score':
-        sort = ['_score']
+    if state.sort == 'doc_count':
+        sort = [{'doc_count': 'desc'}, {'name_sort': 'asc'}, '_score']
+    elif state.sort == 'score':
+        sort = ['_score', {'name_sort': 'asc'}]
+    else:
+        sort = [{'name_sort': 'asc'}]
 
     return {
         'sort': sort,
-        'query': filter_query(q, filters, OR_FIELDS),
+        'query': filter_query(q, state.filters),
         'aggregations': aggs,
         '_source': fields or DEFAULT_FIELDS
     }
 
 
-def facet_collections(q, aggs, filters):
+def facet_collections(q, aggs, state):
+    filters = state.filters
+    filters['collection_id'] = state.authz_collections
     aggs['scoped']['aggs']['collections'] = {
         'filter': {
-            'query': filter_query(q, filters, OR_FIELDS, skip='collection_d')
+            'query': filter_query(q, filters)
         },
         'aggs': {
             'collections': {
@@ -83,7 +69,7 @@ def facet_collections(q, aggs, filters):
     return aggs
 
 
-def suggest_entities(prefix, min_count=0, schemas=None, size=5):
+def suggest_entities(prefix, collections, min_count=0, schemas=None, size=5):
     """Auto-complete API."""
     options = []
     if prefix is not None and len(prefix.strip()):
@@ -94,15 +80,15 @@ def suggest_entities(prefix, min_count=0, schemas=None, size=5):
             q = add_filter(q, {'range': {'doc_count': {'gte': min_count}}})
         if schemas is not None and len(schemas):
             q = add_filter(q, {'terms': {'$schema': schemas}})
+        q = add_filter(q, {'terms': {'collection_id': collections}})
         q = {
             'size': size,
             'sort': [{'doc_count': 'desc'}, '_score'],
-            'query': authz_filter(q),
+            'query': q,
             '_source': ['name', '$schema', 'terms', 'doc_count']
         }
         ref = latinize_text(prefix)
-        result = get_es().search(index=get_es_index(), doc_type=TYPE_ENTITY,
-                                 body=q)
+        result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
         for res in result.get('hits', {}).get('hits', []):
             ent = res.get('_source')
             terms = [latinize_text(t) for t in ent.pop('terms', [])]
@@ -116,7 +102,7 @@ def suggest_entities(prefix, min_count=0, schemas=None, size=5):
     }
 
 
-def similar_entities(entity, args, collections):
+def similar_entities(entity, collections):
     """Merge suggestions API."""
     shoulds = []
     for term in entity.terms:
@@ -153,12 +139,11 @@ def similar_entities(entity, args, collections):
     }
     q = {
         'size': 10,
-        'query': authz_filter(q),
+        'query': q,
         '_source': DEFAULT_FIELDS
     }
     options = []
-    result = get_es().search(index=get_es_index(), doc_type=TYPE_ENTITY,
-                             body=q)
+    result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
     for res in result.get('hits', {}).get('hits', []):
         entity = res.get('_source')
         entity['id'] = res.get('_id')
@@ -170,10 +155,10 @@ def similar_entities(entity, args, collections):
     }
 
 
-def execute_entities_query(args, query, doc_counts=False):
+def execute_entities_query(state, query, doc_counts=False):
     """Execute the query and return a set of results."""
     result, hits, output = execute_basic(TYPE_ENTITY, query)
-    convert_entity_aggregations(result, output, args)
+    output['facets'] = parse_facet_result(state, result)
     sub_queries = []
     for doc in hits.get('hits', []):
         entity = doc.get('_source')
@@ -183,15 +168,19 @@ def execute_entities_query(args, query, doc_counts=False):
         output['results'].append(entity)
 
         sq = {'term': {'entities.id': entity['id']}}
-        sq = authz_filter(sq)
+        sq = add_filter(sq, {
+            'terms': {
+                'collection_id': state.authz_collections
+            }
+        })
         sq = {'size': 0, 'query': sq}
         sub_queries.append(json.dumps({}))
         sub_queries.append(json.dumps(sq))
 
     if doc_counts and len(sub_queries):
-        res = get_es().msearch(index=get_es_index(),
-                               doc_type=TYPE_DOCUMENT,
-                               body='\n'.join(sub_queries))
+        body = '\n'.join(sub_queries)
+        res = es.msearch(index=es_index, doc_type=TYPE_DOCUMENT, body=body)
         for (entity, res) in zip(output['results'], res.get('responses')):
             entity['doc_count'] = res.get('hits', {}).get('total')
+
     return output

@@ -18,14 +18,15 @@ aleph.controller('EntitiesMergeCtrl', ['$scope', '$location', '$q', '$http', '$u
       var id = entities[i].id;
       if (id != $scope.select.primary) {
         var url = '/api/1/entities/' +   $scope.select.primary + '/merge/' + id;
-        merges.push($http.delete(url));  
+        merges.push($http.delete(url));
       }
     }
     $q.all(merges).then(function() {
       $uibModalInstance.close($scope.select.primary);
     }, function(err) {
-      console.log('Delete error', err);
+      console.log('Error', err);
       $uibModalInstance.close($scope.select.primary);
+      $scope.blocked = false;
     });
   };
 }]);

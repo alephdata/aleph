@@ -9,18 +9,17 @@ Flask-Mail==0.9.1
 Flask-Migrate==1.8.0
 SQLAlchemy==1.0.13
 alembic==0.8.6
-celery==3.1.23
+celery==4.0.0
 elasticsearch==2.3.0
-psycopg2==2.5.4
+psycopg2==2.6.2
 cssutils==1.0.1
 webassets==0.10.1
 Pillow==3.2.0
 tesserwrap==0.1.6
 lxml==3.3.5
-normality>=0.1
+normality>=0.3
 nose
-boto3==1.3.1
-boto
+boto3==1.4.1
 requests>=2.5.1
 apikit
 six
@@ -32,11 +31,9 @@ Unidecode==0.04.17
 networkx==1.9.1
 XlsxWriter==0.6.6
 https://github.com/okfn/messytables/tarball/master
-krauler>=0.2.1
+krauler>=0.2.2
 metafolder
 jsonmapping
-# pdfminer==20140328
-https://github.com/euske/pdfminer/tarball/master
 https://github.com/aboSamoor/polyglot/tarball/master
 https://github.com/occrp/cronosparser/tarball/master
 langid==1.1.5
@@ -44,21 +41,22 @@ blinker==1.4
 Babel==2.3.4
 pyDBF==0.1
 fingerprints
-py2neo
-pycountry>=1.18
-chardet==2.3.0
+pycountry>=16.0
 rarfile==2.7
 xlrd==0.9.3
 flanker==0.3.4
 jsonschema
 PyYAML==3.11
-PyICU==1.9.2
+PyICU
+chardet
+cchardet
 dateparser==0.3.1
 jdatetime==1.7.2
 coverage
 pyahocorasick
 pycrypto
 pylru
+https://github.com/mattgwwalker/msg-extractor/tarball/master
 
 # Python 3 backports
 subprocess32

@@ -7,7 +7,6 @@ base_assets = Bundle(
     # include via CDN
     # 'vendor/jquery/dist/jquery.js',
     'vendor/moment/moment.js',
-    'vendor/d3/d3.js',
     'vendor/pdfjs-dist/build/pdf.js',
     'vendor/pdfjs-dist/build/pdf.worker.js',
     filters='uglifyjs',

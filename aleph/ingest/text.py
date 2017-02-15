@@ -1,8 +1,9 @@
 import logging
 
-from aleph.core import get_archive
+from aleph.core import get_config, archive
 from aleph.model import db, Document, DocumentPage
-from aleph.ingest.pdf import extract_pdf
+from aleph.ingest.poppler import extract_pdf
+from aleph.ingest.tika import extract_pdf as tika_pdf
 from aleph.ingest.ingestor import Ingestor
 
 log = logging.getLogger(__name__)
@@ -25,7 +26,11 @@ class TextIngestor(Ingestor):
         return page
 
     def extract_pdf(self, meta, pdf_path):
-        data = extract_pdf(pdf_path, languages=meta.languages)
+        if get_config("TIKA_URI"):
+            data = tika_pdf(pdf_path, languages=meta.languages)
+        else:
+            data = extract_pdf(pdf_path, languages=meta.languages)
+
         if not meta.has('author') and data.get('author'):
             meta.author = data.get('author')
 
@@ -38,14 +43,16 @@ class TextIngestor(Ingestor):
         self.emit(document)
 
     def store_pdf(self, meta, pdf_path):
-        get_archive().archive_file(pdf_path, meta.pdf, move=False)
+        archive.archive_file(pdf_path, meta.pdf, move=False)
 
 
 class PDFIngestor(TextIngestor):
-    MIME_TYPES = ['application/pdf']
+    MIME_TYPE = 'application/pdf'
+    MIME_TYPES = [MIME_TYPE]
     EXTENSIONS = ['pdf']
 
     def ingest(self, meta, local_path):
+        meta.mime_type = self.MIME_TYPE
         self.extract_pdf(meta, local_path)
 
     @classmethod

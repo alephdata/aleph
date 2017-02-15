@@ -1,9 +1,12 @@
+import logging
 from uuid import uuid4
 from flask import current_app
 
-from aleph.core import db, url_for
+from aleph.core import db, url_for, get_config
 from aleph.model.schema_model import SchemaModel
 from aleph.model.common import SoftDeleteModel, IdModel
+
+log = logging.getLogger(__name__)
 
 
 class Role(db.Model, IdModel, SoftDeleteModel, SchemaModel):
@@ -63,8 +66,15 @@ class Role(db.Model, IdModel, SoftDeleteModel, SchemaModel):
         if is_admin is not None:
             role.is_admin = is_admin
 
+        # see: https://github.com/pudo/aleph/issues/111
+        auto_admins = get_config('AUTHZ_ADMINS', '')
+        auto_admins = [a.lower() for a in auto_admins.split(',')]
+        if email is not None and email.lower() in auto_admins:
+            role.is_admin = True
+
         db.session.add(role)
         db.session.flush()
+        log.info("Role: %r, admin: %s", role, role.is_admin)
         return role
 
     @classmethod

@@ -2,6 +2,7 @@ import logging
 from flask import session, Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
 from apikit import jsonify
+from werkzeug.exceptions import Unauthorized
 
 from aleph import authz, signals
 from aleph.core import db, url_for
@@ -9,6 +10,7 @@ from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
+from aleph.views.util import is_safe_url
 
 
 log = logging.getLogger(__name__)
@@ -47,7 +49,7 @@ def status():
     providers = [{
         'name': p.name,
         'label': p.label,
-        'login': url_for('sessions_api.login', provider=p.name),
+        'login': url_for('.login', provider=p.name),
     } for p in providers]
 
     return jsonify({
@@ -78,7 +80,15 @@ def login(provider=None):
         abort(404)
 
     log_event(request)
-    return oauth_provider.authorize(callback=url_for('.callback', provider=provider))
+    next_url = '/'
+    for target in request.args.get('next'), request.referrer:
+        if not target:
+            continue
+        if is_safe_url(target):
+            next_url = target
+    session['next_url'] = next_url
+    callback_url = url_for('.callback', provider=provider)
+    return oauth_provider.authorize(callback=callback_url)
 
 
 @blueprint.route('/api/1/sessions/logout')
@@ -93,11 +103,12 @@ def callback(provider):
     if not oauth_provider:
         abort(404)
 
+    next_url = session.pop('next_url', '/')
+
     resp = oauth_provider.authorized_response()
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)
-        # FIXME: notify the user, somehow.
-        return redirect('/')
+        return Unauthorized("Authentication has failed.")
 
     session['oauth'] = resp
     session['roles'] = [Role.system(Role.SYSTEM_USER)]
@@ -105,4 +116,4 @@ def callback(provider):
     db.session.commit()
     log_event(request, role_id=session['user'])
     log.info("Logged in: %r", session['user'])
-    return redirect('/')
+    return redirect(next_url)

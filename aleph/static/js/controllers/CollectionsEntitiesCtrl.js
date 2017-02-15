@@ -27,6 +27,10 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
     return url;
   };
 
+  $scope.isEmpty = function() {
+    return !$scope.query.isFiltered() && $scope.result.limit > 0 && $scope.result.total == 0;
+  };
+
   $scope.hasAlert = function(entity) {
     return Alert.check({entity_id: entity.id});
   };
@@ -116,10 +120,6 @@ aleph.controller('CollectionsEntitiesCtrl', ['$scope', '$http', '$timeout', '$an
   };
 
   var updateSearch = function(data) {
-    $scope.jurisdictionFacet = data.query.sortFacet(data.result.facets.jurisdiction_code.values,
-                                                    'filter:jurisdiction_code');
-    $scope.schemaFacet = data.query.sortFacet(data.result.facets.$schema.values,
-                                              'filter:$schema');
     $scope.result = data.result;
     $scope.query = data.query;
     

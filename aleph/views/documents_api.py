@@ -1,3 +1,4 @@
+import os
 import logging
 
 from werkzeug.exceptions import BadRequest, NotFound
@@ -5,7 +6,7 @@ from flask import Blueprint, redirect, send_file, request
 from apikit import jsonify, Pager, get_limit, get_offset, request_data
 
 from aleph import authz
-from aleph.core import get_archive, url_for, db
+from aleph.core import archive, url_for, db
 from aleph.model import Document, Entity, Reference, Collection
 from aleph.logic import update_document
 from aleph.events import log_event
@@ -38,7 +39,7 @@ def view(document_id):
     enable_cache()
     data = doc.to_dict()
     log_event(request, document_id=doc.id)
-    data['data_url'] = get_archive().generate_url(doc.meta)
+    data['data_url'] = archive.generate_url(doc.meta)
     if data['data_url'] is None:
         data['data_url'] = url_for('documents_api.file',
                                    document_id=document_id)
@@ -46,7 +47,7 @@ def view(document_id):
         data['pdf_url'] = data['data_url']
     else:
         try:
-            data['pdf_url'] = get_archive().generate_url(doc.meta.pdf)
+            data['pdf_url'] = archive.generate_url(doc.meta.pdf)
         except Exception as ex:
             log.info('Could not generate PDF url: %r', ex)
         if data.get('pdf_url') is None:
@@ -109,11 +110,14 @@ def file(document_id):
     document = get_document(document_id)
     enable_cache(server_side=True)
     log_event(request, document_id=document.id)
-    url = get_archive().generate_url(document.meta)
+    url = archive.generate_url(document.meta)
     if url is not None:
         return redirect(url)
 
-    local_path = get_archive().load_file(document.meta)
+    local_path = archive.load_file(document.meta)
+    if not os.path.isfile(local_path):
+        raise NotFound("File does not exist.")
+
     fh = open(local_path, 'rb')
     return send_file(fh, as_attachment=True,
                      attachment_filename=document.meta.file_name,
@@ -128,12 +132,12 @@ def pdf(document_id):
     if document.type != Document.TYPE_TEXT:
         raise BadRequest("PDF is only available for text documents")
     pdf = document.meta.pdf
-    url = get_archive().generate_url(pdf)
+    url = archive.generate_url(pdf)
     if url is not None:
         return redirect(url)
 
     try:
-        local_path = get_archive().load_file(pdf)
+        local_path = archive.load_file(pdf)
         fh = open(local_path, 'rb')
     except Exception as ex:
         raise NotFound("Missing PDF file: %r" % ex)

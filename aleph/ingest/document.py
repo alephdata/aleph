@@ -1,12 +1,14 @@
 import os
-import logging
+import six
 import shutil
+import logging
 import subprocess32 as subprocess
 from tempfile import mkdtemp
 
 from aleph.core import get_config
 from aleph.ingest.ingestor import IngestorException
 from aleph.ingest.text import TextIngestor
+from aleph.text import string_value
 
 log = logging.getLogger(__name__)
 
@@ -15,24 +17,24 @@ CONVERT_TIMEOUT = 5 * 60
 
 class DocumentIngestor(TextIngestor):
     MIME_TYPES = ['application/msword', 'application/rtf', 'application/x-rtf',
-                  'application/vnd.oasis.opendocument.text',
+                  'application/vnd.oasis.opendocument.text', 'text/plain',
                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # noqa
                   'text/richtext', 'application/wordperfect', 'application/vnd.wordperfect']  # noqa
     EXTENSIONS = ['doc', 'docx', 'rtf', 'odt', 'sxw', 'dot', 'docm', 'hqx',
-                  'pdb', 'wpd']
+                  'pdb', 'wpd', 'txt']
     BASE_SCORE = 5
 
     def generate_pdf_alternative(self, meta, local_path):
         """Convert LibreOffice-supported documents to PDF."""
-        work_dir = mkdtemp()
-        instance_dir = mkdtemp()
+        work_dir = six.text_type(mkdtemp())
+        instance_dir = six.text_type(mkdtemp())
         try:
             soffice = get_config('SOFFICE_BIN')
-            instance_path = '"-env:UserInstallation=file://%s"' % instance_dir
+            instance_path = u'"-env:UserInstallation=file://%s"' % instance_dir
             args = [soffice, '--convert-to', 'pdf', '--nofirststartwizard',
                     instance_path, '--norestore', '--nologo', '--nodefault',
                     '--nolockcheck', '--invisible', '--outdir', work_dir,
-                    '--headless', local_path]
+                    '--headless', string_value(local_path)]
             log.debug('Converting document: %r', ' '.join(args))
             subprocess.call(args, timeout=CONVERT_TIMEOUT)
             for out_file in os.listdir(work_dir):
@@ -51,7 +53,8 @@ class DocumentIngestor(TextIngestor):
 
     def ingest(self, meta, local_path):
         pdf_path = self.generate_pdf_alternative(meta, local_path)
-        self.extract_pdf_alternative(meta, pdf_path)
+        if pdf_path is not None:
+            self.extract_pdf_alternative(meta, pdf_path)
 
 
 class PresentationIngestor(DocumentIngestor):

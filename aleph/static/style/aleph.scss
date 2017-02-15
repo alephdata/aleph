@@ -36,7 +36,7 @@ a {
 }
 
 body {
-    height: 100%;
+    min-height: 100vh;
     background-color: $text-muted;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -81,6 +81,7 @@ footer {
 
 #page {
     position: relative;
+    min-height: 95vh;
     background-color: white;
     padding-bottom: 2em;
 }

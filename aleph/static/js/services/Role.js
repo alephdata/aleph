@@ -1,5 +1,5 @@
 
-aleph.factory('Role', ['$http', '$q', function($http, $q) {
+aleph.factory('Role', ['$http', '$q', 'Metadata', function($http, $q, Metadata) {
   var dfd = null;
 
   var getAll = function() {
@@ -15,7 +15,21 @@ aleph.factory('Role', ['$http', '$q', function($http, $q) {
     return dfd.promise;
   };
 
+  var save = function(role) {
+    var dfd = $q.defer(),
+        url = '/api/1/roles/' + role.id;
+    $http.post(url, role).then(function(res) {
+      Metadata.flush().then(function() {
+        dfd.resolve(res.data);
+      });
+    }, function(err) {
+      dfd.reject(err);
+    });
+    return dfd.promise;
+  };
+
   return {
-    getAll: getAll
+    getAll: getAll,
+    save: save
   };
 }]);

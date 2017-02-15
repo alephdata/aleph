@@ -22,14 +22,13 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       state['snippet'] = 140;
       state['facet'] = query.getArray('facet');
       state['facet'].push('entities');
+      state['facet'].push('collections');
       if (collection_id) {
         state['filter:collection_id'] = collection_id;
         state['scope'] = 'collection';
-      } else {
-        state['facet'].push('collections');
       }
       state['offset'] = state.offset || 0;
-      History.setLastSearch($location.path(), query.state);
+      History.setLastSearch($location.url());
       var params = {cache: !collection_id, params: state};
       $http.get('/api/1/query', params).then(function(res) {
         dfd.resolve({
@@ -37,16 +36,14 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
           'result': res.data
         });
       }, function(err) {
-        if (err.status == 400) {
+        if (err.status === 400) {
           dfd.resolve({
-            'result': {
-              'error': err.data,
-              'results': []
-            },
-            'query': query
+            'query': query,
+            'result': err.data
           });
+        } else {
+          dfd.reject(err);  
         }
-        dfd.reject(err);  
       });
       return dfd.promise;
     },
@@ -57,7 +54,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       $http.get('/api/1/peek', {cache: true, params: state}).then(function(res) {
         dfd.resolve(res.data);
       }, function(err) {
-        dfd.reject(err);  
+        dfd.resolve({});
       });
       return dfd.promise;
     },
@@ -86,11 +83,13 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
         $http.get(url, {cache: true, params: sq}).then(function(res) {
           for (var i in res.data.results) {
             var record = res.data.results[i];
-            if (record && record.text && record.text.length) {
-              record.snippet = $sce.trustAsHtml(record.text[0]);  
+            if (record && record.text && record.text.length > 2) {
+              record.snippet = $sce.trustAsHtml(record.text);
             }
           }
           dfd.resolve(res.data);
+        }, function(err) {
+          dfd.reject(err);
         });
       } else {
         dfd.resolve({});

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='aleph',
-    version='1.0',
+    version='1.1',
     description="Document sifting web frontend",
     long_description="",
     classifiers=[
@@ -14,7 +14,7 @@ setup(
     keywords='',
     author='Friedrich Lindenberg',
     author_email='friedrich@pudo.org',
-    url='http://grano.cc',
+    url='http://pudo.org',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'test']),
     namespace_packages=[],
@@ -31,10 +31,11 @@ setup(
             'html = aleph.ingest.html:HtmlIngestor',
             'djvu = aleph.ingest.djvu:DjVuIngestor',
             'img = aleph.ingest.image:ImageIngestor',
-            'email = aleph.ingest.email:EmailFileIngestor',
-            'mbox = aleph.ingest.email:MboxFileIngestor',
+            'email = aleph.ingest.email_:EmailFileIngestor',
+            'mbox = aleph.ingest.email_:MboxFileIngestor',
+            'msg = aleph.ingest.msg:OutlookMsgIngestor',
             'cronos = aleph.ingest.cronos:CronosIngestor',
-            'pst = aleph.ingest.email:OutlookIngestor',
+            'pst = aleph.ingest.email_:OutlookIngestor',
             'mdb = aleph.ingest.mdb:AccessIngestor',
             'messy = aleph.ingest.tabular:MessyTablesIngestor',
             'dbf = aleph.ingest.dbf:DBFIngestor',
@@ -56,7 +57,6 @@ setup(
         'aleph.crawlers': [
             # 'stub = aleph.crawlers.stub:StubCrawler',
             'opennames = aleph.crawlers.opennames:OpenNamesCrawler',
-            'blacklight = aleph.crawlers.blacklight:BlacklightCrawler',
             'sourceafrica = aleph.crawlers.documentcloud:SourceAfricaCrawler'
         ],
         'aleph.init': [
@@ -65,7 +65,5 @@ setup(
             'aleph = aleph.manage:main',
         ]
     },
-    tests_require=[
-        'coverage', 'nose'
-    ]
+    tests_require=['coverage', 'nose']
 )

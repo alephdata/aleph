@@ -19,6 +19,5 @@
 
 <div class="alert alert-suggest" ng-if="offerSignin">
   Want to keep track of <strong>{{queryText}}</strong>?
-  <a ng-href="/api/1/sessions/login" target="_self">Sign in</a>
-  to create watchlists of people and companies.
+  <a ng-click="triggerLogin()">Sign in</a> to create watchlists of people and companies.
 </div>

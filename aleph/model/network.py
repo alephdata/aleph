@@ -1,7 +1,7 @@
 import logging
 from sqlalchemy.dialects.postgresql import JSONB
 
-from aleph.core import db
+from aleph.core import db, url_for
 from aleph.model.role import Role
 from aleph.model.collection import Collection
 from aleph.model.common import IdModel, DatedModel
@@ -52,6 +52,10 @@ class Network(db.Model, IdModel, DatedModel):
         data['nodes'] = self.data.get('nodes')
         data['edges'] = self.data.get('edges')
         data['view'] = self.data.get('view')
+        data['creator'] = self.creator
+        data['api_url'] = url_for('networks_api.view',
+                                  collection_id=self.collection_id,
+                                  id=self.id)
         return data
 
     def __repr__(self):

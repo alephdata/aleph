@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 
 from aleph.core import db, mail
-from aleph.alerts import check_alerts
 from aleph.model import Alert
+from aleph.logic.alerts import check_alerts
 from aleph.tests.util import TestCase
 
 

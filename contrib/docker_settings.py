@@ -11,6 +11,8 @@ APP_BASEURL = os.environ.get('ALEPH_APP_URL')
 APP_LOGO = os.environ.get('ALEPH_LOGO')
 APP_FAVICON = os.environ.get('ALEPH_FAVICON')
 
+AUTHZ_ADMINS = os.environ.get('ALEPH_ADMINS')
+
 ELASTICSEARCH_URL = os.environ.get('ALEPH_ELASTICSEARCH_URI')
 
 SQLALCHEMY_DATABASE_URI = os.environ.get('ALEPH_DATABASE_URI')
@@ -28,10 +30,6 @@ MAIL_USE_TLS = True
 MAIL_PORT = 587
 
 CELERY_BROKER_URL = os.environ.get('ALEPH_BROKER_URI')
-BROKER_TRANSPORT_OPTIONS = {
-    'region': 'eu-west-1',
-    'queue_name_prefix': '%s.' % os.environ.get('ALEPH_APP_NAME', 'aleph')
-}
 
 NEO4J_URI = os.environ.get('ALEPH_NEO4J_URI')
 
@@ -61,7 +59,11 @@ OAUTH = [{
     'authorize_url': 'https://accounts.google.com/o/oauth2/auth',
 }]
 
-PDF_OCR_IMAGE_PAGES = os.environ.get('ALEPH_PDF_OCR_IMAGE_PAGES', "true")
+OCR_PDF_PAGES = os.environ.get('ALEPH_PDF_OCR_IMAGE_PAGES', 'true')
+OCR_PDF_PAGES = OCR_PDF_PAGES.strip().lower() == "true"
+
+MAX_CONTENT_LENGTH = int(os.environ.get('ALEPH_MAX_CONTENT_LENGTH',
+                                        500 * 1024 * 1024))
 
 # Tell users to email the admins if their search has results in collections
 # that are hidden from them?

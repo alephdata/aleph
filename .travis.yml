@@ -7,6 +7,7 @@ python:
 services:
   - postgresql
   - elasticsearch
+  - rabbitmq
 addons:
   postgresql: "9.4"
   apt:
@@ -21,6 +22,8 @@ env:
   global:
     - ALEPH_TEST_SETTINGS=$TRAVIS_BUILD_DIR/test_settings.py
     - WKHTMLTOPDF_BIN=$TRAVIS_BUILD_DIR/wkhtmltox/bin/wkhtmltopdf
+    - OAUTH_KEY=fake
+    - OAUTH_SECRET=fake
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y tesseract-ocr-eng readpst

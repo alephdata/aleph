@@ -23,7 +23,11 @@ def execute_crawler(crawler_id, incremental=False):
     for cls in get_exposed_crawlers():
         if cls.get_id() != crawler_id:
             continue
-        cls.execute(incremental=incremental)
+        # catch errors here in hopes they will not execute forever.
+        try:
+            cls.execute(incremental=incremental)
+        except Exception as exc:
+            log.exception(exc)
 
 
 @celery.task()

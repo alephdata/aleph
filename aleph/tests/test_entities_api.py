@@ -43,11 +43,11 @@ class EntitiesApiTestCase(TestCase):
         assert res.json['total'] == 1, res.json
         assert len(res.json['facets']['collections']['values']) == 1, res.json
         col0 = res.json['facets']['collections']['values'][0]
-        assert col0['id'] == self.col.id, res.json
+        assert col0['id'] == str(self.col.id), res.json
         assert col0['label'] == self.col.label, res.json
         assert len(res.json['facets']) == 1, res.json
         res = self.client.get('/api/1/entities?facet=jurisdiction_code')
-        assert len(res.json['facets']) == 2, res.json
+        assert len(res.json['facets']) == 1, res.json
         assert 'values' in res.json['facets']['jurisdiction_code'], res.json
 
     def test_all(self):

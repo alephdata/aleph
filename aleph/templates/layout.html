@@ -55,26 +55,26 @@
 
             <ul class="nav navbar-nav navbar-right" ng-cloak>
               <li ng-show="!session.logged_in">
-                <a ng-click="showLogin($event)">
-                  <i class="fa fa-sign-in"></i> Sign in
+                <a ng-click="triggerLogin()">
+                  <i class="fa fa-fw fa-sign-in"></i> Sign in
                 </a>
               </li>
               <li ng-show="session.logged_in && session.role.is_admin"
                  ng-class="{'active': navSection =='admin'}" uib-dropdown>
                 <a href="#" uib-dropdown-toggle>
-                  <i class="fa fa-warning"></i> Admin
+                  <i class="fa fa-fw fa-warning"></i> Admin
                 </a>
                 <ul uib-dropdown-menu role="menu">
                   <li role="menuitem">
                     <a href="/crawlers" class="click">
-                      <i class="fa fa-sitemap" aria-hidden="true"></i>
+                      <i class="fa fa-fw fa-sitemap" aria-hidden="true"></i>
                       Crawler Manager
                     </a>
                   </li>
                   <li class="divider"></li>
                   <li role="menuitem">
                     <a href="https://github.com/pudo/aleph/issues" class="click">
-                      <i class="fa fa-github-square"></i>
+                      <i class="fa fa-fw fa-github-square"></i>
                       GitHub Issues
                     </a>
                   </li>
@@ -82,17 +82,17 @@
               </li>
               <li ng-show="session.logged_in">
                 <a ng-click="editProfile($event)">
-                  <i class="fa fa-cog"></i> Settings
+                  <i class="fa fa-fw fa-cog"></i> Settings
                 </a>
               </li>
               <li ng-show="session.logged_in">
                 <a ng-click="manageAlerts($event)">
-                  <i class="fa fa-bell"></i> Alerts
+                  <i class="fa fa-fw fa-bell"></i> Alerts
                 </a>
               </li>
               <li ng-show="session.logged_in">
                 <a href="{{url_for('sessions_api.logout')}}" target="_self">
-                  <i class="fa fa-sign-out"></i> Logout
+                  <i class="fa fa-fw fa-sign-out"></i> Logout
                 </a>
               </li>
             </ul>
@@ -103,13 +103,10 @@
       <div id="spinner-wrapper">
         <div id="spinner-overlay" ng-hide="routeLoaded">
           <div class="spinner" ng-hide="routeFailed">
-            <i class="fa fa-circle-o-notch fa-spin"></i>
+            <i class="fa fa-circle-o-notch fa-spin big-icon"></i>
           </div>
           <div class="spinner failed" ng-show="routeFailed" ng-cloak>
-            <i class="fa fa-exclamation-triangle"></i>
-            <div class="failure-note">
-              He's dead, Jim.
-            </div>
+            <error-message error="routeError" session="session"></error-message>
           </div>
         </div>
         <div ng-view autoscroll="true"></div>

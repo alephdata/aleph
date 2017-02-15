@@ -2,7 +2,6 @@ from __future__ import absolute_import
 import os
 import logging
 import unicodedata
-from collections import defaultdict
 from cronos.parser import parse_structure, parse_data
 
 from aleph.core import db

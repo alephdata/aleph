@@ -173,6 +173,6 @@ class SchemaModel(object):
                 if value is not None:
                     data[prop.name] = value
             if prop.is_array and prop.items.inline:
-                value = getattr(self, prop.name)
+                value = getattr(self, prop.name) or []
                 data[prop.name] = list(value)
         return data

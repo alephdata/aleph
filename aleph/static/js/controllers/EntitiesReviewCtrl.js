@@ -1,7 +1,7 @@
 
 aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http', '$timeout', 'Collection', 'Entity', 'metadata', 'collection', 'Authz', 'Title',
     function($scope, $route, $location, $http, $timeout, Collection, Entity, metadata, collection, Authz, Title) {
-  
+
   $scope.reportLoading(true);
   $scope.collection = collection;
   $scope.entity = null;
@@ -24,7 +24,7 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
       $scope.duplicateOptions = res.data.results;
       $scope.reportLoading(false);
     }, function(err) {
-      console.log('Internal error', err);
+      console.log('Error', err);
       loadNext();
     });
   };
@@ -44,9 +44,11 @@ aleph.controller('EntitiesReviewCtrl', ['$scope', '$route', '$location', '$http'
           for (var i in res.data.results) {
             entityCache.push(res.data.results[i]);
           }
-          loadNext();  
+          loadNext();
         }
-      });  
+      }, function(err) {
+        console.log('Error', err);
+      });
     }
   };
 

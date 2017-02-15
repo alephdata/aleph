@@ -11,23 +11,6 @@
   "oneOf": [{"$ref": "/entity/entity.json#"}],
   "required": ["name"],
   "properties": {
-    "assets": {
-      "title": "Assets",
-      "type": "array",
-      "rdfReverse": "owner",
-      "items": {
-        "$ref": "/link/ownership.json#"
-      }
-    },
-    "memberships": {
-      "title": "Memberships",
-      "type": "array",
-      "description": "The person's memberships",
-      "rdfReverse": "person",
-      "items": {
-        "$ref": "/link/membership.json#"
-      }
-    },
     "contact_details": {
       "title": "Contact details",
       "description": "Means of contacting the organization",

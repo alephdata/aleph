@@ -41,7 +41,7 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
   $routeProvider.when('/collections', {
     templateUrl: 'templates/collections/index.html',
     controller: 'CollectionsIndexCtrl',
-    reloadOnSearch: false,
+    reloadOnSearch: true,
     resolve: {
       'collections': loadCollections,
       'metadata': loadMetadata
@@ -56,6 +56,17 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
       'collection': loadCollection,
       'data': loadCollectionDocuments,
       'metadata': loadMetadata
+    }
+  });
+
+  $routeProvider.when('/collections/:collection_id/states', {
+    templateUrl: 'templates/collections/states.html',
+    controller: 'CollectionsCrawlersStatesCtrl',
+    reloadOnSearch: true,
+    resolve: {
+      'collection': loadCollection,
+      'metadata': loadMetadata,
+      'states': loadCrawlerStates
     }
   });
 
@@ -102,55 +113,12 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     }
   });
 
-  $routeProvider.when('/collections/:collection_id/analysis', {
-    templateUrl: 'templates/collections/analysis.html',
-    controller: 'CollectionsAnalysisCtrl',
-    reloadOnSearch: true,
-    resolve: {
-      'collection': loadCollection,
-      'metadata': loadMetadata,
-      'paths': loadPaths
-    }
-  });
-
-  $routeProvider.when('/collections/:collection_id/networks', {
-    templateUrl: 'templates/networks/create.html',
-    controller: 'NetworksCreateCtrl',
-    reloadOnSearch: false,
-    resolve: {
-      'collection': loadCollection,
-      'metadata': loadMetadata,
-      'network': loadNetworkFromQuery
-    }
-  });
-
-  $routeProvider.when('/collections/:collection_id/networks/:network_id', {
-    templateUrl: 'templates/networks/edit.html',
-    controller: 'NetworksEditCtrl',
-    reloadOnSearch: false,
-    resolve: {
-      'collection': loadCollection,
-      'metadata': loadMetadata,
-      'network': loadNetwork
-    }
-  });
-
   $routeProvider.when('/crawlers', {
     templateUrl: 'templates/crawlers/manage.html',
     controller: 'CrawlersManageCtrl',
     reloadOnSearch: true,
     resolve: {
       'crawlers': loadCrawlers
-    }
-  });
-
-  $routeProvider.when('/crawlers/logs', {
-    templateUrl: 'templates/crawlers/states.html',
-    controller: 'CrawlersStatesCtrl',
-    reloadOnSearch: true,
-    resolve: {
-      // 'crawlers': loadCrawlers,
-      'states': loadCrawlerStates
     }
   });
 
@@ -173,7 +141,9 @@ aleph.config(['$routeProvider', '$locationProvider', '$compileProvider', 'cfpLoa
     controller: 'HomeCtrl',
     reloadOnSearch: false,
     resolve: {
-      'statistics': loadHome,
+      'statistics': loadStatistics,
+      'facets': loadCollectionFacets,
+      'collections': loadUserCollections,
       'metadata': loadMetadata
     }
   });

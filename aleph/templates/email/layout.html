@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <style>
+      body {
+        font-family: sans-serif;
+        font-size: 1em;
+        color: #333;
+      }
+
+      a {
+        color: #982022;
+      }
+
+      table {
+        border: 0;
+        width: 100%;
+      }
+
+      p.footer {
+        border-top: 2px solid #999;
+        margin-top: 1em;
+        padding-top: 1em;
+        font-size: 0.9em;
+        color: #999;
+      }
+
+      td.title {
+        font-size: 1.1em;
+      }
+
+      td a.title {
+        font-weight: bold;
+      }
+
+      td a.source {
+        color: #333;
+        font-weight: normal;
+        text-decoration: none;
+      }
+
+      tr.teaser td {
+        padding-bottom: 0.5em;
+        padding-right: 2em;
+        color: #999; 
+      }
+
+      tr.tally-row td {
+        padding-top: 1em;
+      }
+
+      em {
+        background-color: yellow;
+        font-style: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Dear {{role.name}},</p>
+    {% block content %}{% endblock %}
+
+    <p class="footer">
+      {% block footer %}
+        This email was sent by <a href="{{app_url}}">{{app_title}}</a>.
+      {% endblock %}
+    </p>
+  </body>
+</html>

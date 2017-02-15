@@ -1,0 +1,40 @@
+{% extends "email/layout.html" %}
+
+{% block content %}
+  <p>
+    new documents have been found for your alert: <strong>{{alert.label}}</strong>.
+  </p>
+
+  <table>
+    {% for result in results %}
+      <tr class="result">
+        <td class="title">
+          <a class="title" href="{{result.url}}">{{result.title}}</a>
+          <a class="source" href="{{app_url}}collections/{{result.collection.id}}">
+            ({{result.collection.label}})
+          </a>
+        </td>
+      </tr>
+      {% for snippet in result.snippets %}
+        <tr class="teaser">
+          <td>
+            {{ snippet | safe }}&hellip;
+          </td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+    {% if total > 1 %}
+      <tr class="tally-row">
+        <td colspan="2">
+          There were a total of {{total}} matches.
+        </td>
+      </tr>
+    {% endif %}
+  </table>
+{% endblock %}
+
+{% block footer %}
+  You will receive notifications like this whenever {{app_title}} adds documents that
+  match your search criteria. If you would like to stop receiving them, visit
+  <a href="{{app_url}}">{{app_title}}</a> to manage your active alerts.
+{% endblock %}

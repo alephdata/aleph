@@ -1,5 +1,6 @@
 <div ngf-drop ng-model="uploads" ngf-drag-over-class="'file-drop-area'" 
-     ngf-stop-propagation="true" ngf-multiple="true" ngf-keep="'distinct'" 
+     ngf-stop-propagation="true" ngf-multiple="true" ngf-keep="'distinct'"
+     ngf-model-options="{updateOn: 'drop', allowInvalid: false}"
      ngf-drop-disabled="!collection.can_add" id="collections-screen">
   <div id="ingest-dropzone" ng-cloak>
     <div id="ingest-dropzone-icon">
@@ -33,7 +34,7 @@
           <a ng-href="/collections/{{::collection.id}}/entities/bulk"
             class="btn btn-default">
             <i class="fa fa-plus-square" aria-hidden="true"></i>
-            Create entities
+            Create watchlist
           </a>
         </div>
       </div>
@@ -42,26 +43,26 @@
     <div class="clearfix"></div>
 
     <ul class="nav nav-tabs">
-      <li role="presentation" ng-class="{'active': section == 'documents'}">
+      <li role="presentation" ng-class="{'active': section == 'documents', 'disabled': disable_documents}">
         <a ng-href="/collections/{{::collection.id}}">
           <i class="fa fa-file-text-o" aria-hidden="true"></i>
           Documents
           <span class="badge">{{::collection.doc_count | number}}</span>
         </a>
       </li>
-      <li role="presentation" ng-class="{'active': section == 'entities'}">
+      <li role="presentation" ng-class="{'active': section == 'entities', 'disabled': disable_entities}">
         <a ng-href="/collections/{{::collection.id}}/entities">
           <i class="fa fa-users" aria-hidden="true"></i>
           People and Companies
           <span class="badge">{{collection.entity_count | number}}</span>
         </a>
       </li>
-      <li role="presentation" ng-if="is_admin"
-          ng-class="{'active': section == 'analysis'}">
-        <a ng-href="/collections/{{::collection.id}}/analysis">
-          <i class="fa fa-map-o" aria-hidden="true"></i>
-          Analysis
-          <span class="label label-info">dev</span>
+      <li role="presentation" ng-class="{'active': section == 'states'}"
+          ng-if="::show_states">
+        <a ng-href="/collections/{{::collection.id}}/states">
+          <i class="fa fa-hourglass-half" aria-hidden="true"></i>
+          Data Imports
+          <span class="badge">{{collection.crawler_state_count | number}}</span>
         </a>
       </li>
       <li role="presentation" ng-class="{'active': section == 'settings'}"

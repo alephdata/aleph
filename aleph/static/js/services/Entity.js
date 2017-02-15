@@ -26,16 +26,8 @@ aleph.factory('Entity', ['$uibModal', '$q', '$http', 'Alert', 'Metadata', 'Query
         dfd.resolve({
           'query': query,
           'result': res.data
-        });  
+        });
       }, function(err) {
-        if (err.status == 400) {
-          dfd.resolve({
-            'result': {
-              'error': err.data
-            },
-            'query': query
-          });
-        }
         dfd.reject(err);  
       });
       return dfd.promise;

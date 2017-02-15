@@ -1,4 +1,6 @@
 import os
+import six
+
 from aleph.util import checksum
 
 
@@ -15,7 +17,7 @@ class Archive(object):
         else:
             if meta.extension is not None:
                 file_name = '%s.%s' % (file_name, meta.extension)
-        return os.path.join(path, file_name)
+        return os.path.join(six.text_type(path), six.text_type(file_name))
 
     def _update_metadata(self, filename, meta):
         meta.content_hash = checksum(filename)

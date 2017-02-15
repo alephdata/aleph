@@ -1,4 +1,5 @@
 import os
+import six
 import logging
 import shutil
 import gzip
@@ -7,10 +8,12 @@ import rarfile
 import zipfile
 import tarfile
 import subprocess
+from chardet.universaldetector import UniversalDetector
 
 from aleph.core import get_config
 from aleph.ingest import ingest_directory
 from aleph.ingest.ingestor import Ingestor
+from aleph.text import string_value
 from aleph.util import make_tempdir, remove_tempdir
 
 log = logging.getLogger(__name__)
@@ -22,12 +25,30 @@ class PackageIngestor(Ingestor):
         # Some archives come with non-Unicode file names, this
         # attempts to avoid that issue by naming the destination
         # explicitly.
+        detector = UniversalDetector()
         for name in pack.namelist():
-            out_path = os.path.join(temp_dir, name)
+            if isinstance(name, six.binary_type):
+                detector.feed(name)
+            if detector.done:
+                break
+
+        detector.close()
+        encoding = detector.result.get('encoding', 'utf-8')
+        log.info('Detected filename encoding: %s', encoding)
+
+        for name in pack.namelist():
+            file_name = name
+            if isinstance(name, six.binary_type):
+                file_name = name.decode(encoding, 'ignore')
+
+            out_path = os.path.join(temp_dir, file_name)
             if os.path.exists(out_path) or not out_path.startswith(temp_dir):
                 continue
-            if not os.path.exists(os.path.dirname(out_path)):
-                os.makedirs(os.path.dirname(out_path))
+
+            out_dir = os.path.dirname(out_path)
+            if not os.path.exists(out_dir):
+                os.makedirs(out_dir)
+
             try:
                 in_fh = pack.open(name)
                 try:
@@ -107,7 +128,6 @@ class SevenZipIngestor(PackageIngestor):
     def unpack(self, meta, local_path, temp_dir):
         args = [get_config('SEVENZ_BIN'), 'x', local_path, '-y', '-r',
                 '-bb0', '-bd', '-oc:%s' % temp_dir]
-        print ' '.join(args)
         subprocess.call(args, stderr=subprocess.STDOUT)
 
 

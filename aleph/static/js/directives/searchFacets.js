@@ -28,8 +28,6 @@ aleph.directive('searchFacets', ['$location', '$q', '$route', '$http', '$timeout
         if (!result || result.error) {
           return;
         }
-        var entityValues = result.facets.entities.values;
-        scope.entityFacet = scope.query.sortFacet(entityValues, 'entity');
 
         var queryFacets = scope.query.getArray('facet'),
             facets = [];
@@ -40,9 +38,8 @@ aleph.directive('searchFacets', ['$location', '$q', '$route', '$http', '$timeout
             label: scope.metadata.fields[name],
             active: queryFacets.indexOf(name) != -1
           };
-          if (result.facets[name]) {
-            var values = result.facets[name].values;
-            facet.values = scope.query.sortFacet(values, 'filter:' + name);  
+          if (result.facets && result.facets[name]) {
+            facet.values = result.facets[name].values;
           }
           facets.push(facet);
         }

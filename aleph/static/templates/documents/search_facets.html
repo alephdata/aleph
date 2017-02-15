@@ -18,7 +18,7 @@
   </div>
   <ul class="list-group">
     <li class="list-group-item animate toggle"
-      ng-repeat="entity in entityFacet track by entity.id"
+      ng-repeat="entity in result.facets.entities.values track by entity.id"
       ng-class="{'active': query.hasField('entity', entity.id)}"
       ng-click="query.toggle('entity', entity.id)">
       <span class="badge">
@@ -29,7 +29,7 @@
       </span>
       <entity-icon schema="entity.$schema"></entity-icon>
       <span class="lbl">
-        {{::entity.name | characters:35 }}
+        {{::entity.label | characters:35 }}
       </span>
     </li>
   </ul>

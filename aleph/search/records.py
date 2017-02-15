@@ -1,7 +1,6 @@
 from elasticsearch.helpers import scan
 
-from aleph.core import get_es, get_es_index
-from aleph.model import Entity
+from aleph.core import es, es_index
 from aleph.index import TYPE_RECORD
 from aleph.search.fragments import text_query_string
 from aleph.search.util import execute_basic
@@ -9,45 +8,33 @@ from aleph.search.util import execute_basic
 SNIPPET_SIZE = 100
 
 
-def records_query(document_id, args, size=5):
-    shoulds = records_query_shoulds(args)
+def records_query(document_id, state, size=5):
+    shoulds = records_query_shoulds(state)
     return records_query_internal(document_id, shoulds, size=size)
 
 
-def records_query_shoulds(args):
+def records_query_shoulds(state):
     shoulds = []
-    query_text = args.get('q', '').strip()
-    if len(query_text):
-        shoulds.append(text_query_string(query_text))
+    if state.has_text:
+        shoulds.append(text_query_string(state.text))
 
-    entities = Entity.by_id_set(args.getlist('entity'))
-    for entity in entities.values():
-        for term in entity.terms:
-            shoulds.append({
-                'multi_match': {
-                    'query': term,
-                    'type': "best_fields",
-                    'fields': ['text^5', 'text_latin'],
-                    'operator': 'AND'
-                }
-            })
+    for term in state.entity_terms:
+        shoulds.append(text_query_string(term))
     return shoulds
 
 
 def records_query_internal(document_id, shoulds, size=5):
-    q = {
-        'bool': {
-            'minimum_should_match': 1,
-            'should': shoulds
-        }
-    }
-    if document_id is not None:
-        q['bool']['must'] = {
-            'term': {'document_id': document_id}
-        }
     return {
         'size': size,
-        'query': q,
+        'query': {
+            'bool': {
+                'minimum_should_match': 1,
+                'should': shoulds,
+                'must': [
+                    {'term': {'document_id': document_id}}
+                ]
+            }
+        },
         'highlight': {
             'fields': {
                 'text': {
@@ -72,13 +59,15 @@ def scan_entity_mentions(entity):
 
     query = {
         'query': {
-            'bool': {'should': shoulds, "minimum_should_match": 1}
+            'bool': {
+                'should': shoulds,
+                'minimum_should_match': 1
+            }
         },
         'sort': [{'document_id': 'desc'}],
         '_source': ['document_id', 'text']
     }
-    for res in scan(get_es(), query=query, index=get_es_index(),
-                    doc_type=[TYPE_RECORD]):
+    for res in scan(es, query=query, index=es_index, doc_type=[TYPE_RECORD]):
         text = res.get('_source').get('text')
         texts = text if isinstance(text, list) else [text]
         for text in texts:

@@ -5,6 +5,7 @@ import json
 from jsonschema import Draft4Validator, FormatChecker, RefResolver
 from jsonmapping import SchemaVisitor
 
+from aleph.core import get_config
 from aleph.metadata.parsers import parse_url
 from aleph.metadata.reference import is_country_code, is_language_code
 
@@ -20,7 +21,7 @@ for (root, dirs, files) in os.walk(schema_dir):
 
 format_checker = FormatChecker()
 # JS: '^([12]\\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$'
-partial_date_re = re.compile('^([12]\d{3}(-[01]?[1-9](-[0123]?[1-9])?)?)?$')
+partial_date_re = re.compile('^([12]\d{3}(-[01]?[0-9](-[0123]?[0-9])?)?)?$')
 
 
 @format_checker.checks('country-code')
@@ -47,8 +48,8 @@ def valid_url(url):
 
 @format_checker.checks('collection-category')
 def is_collection_category(cat):
-    from aleph.model.collection import Collection
-    return cat in Collection.CATEGORIES.keys()
+    categories = get_config('COLLECTION_CATEGORIES', {})
+    return cat in categories.keys()
 
 
 def validate(data, schema):

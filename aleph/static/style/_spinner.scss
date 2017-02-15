@@ -9,7 +9,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 40em;
+    min-height: 100vh;
     height: 100%;
     // opacity: 0.6;
     background-color: $page-bg;
@@ -20,11 +20,19 @@
         //color: $text-muted;
         color: $brand-primary;
 
+        a {
+            text-decoration: underline;
+        }
+
         &.failed {
             color: $brand-primary;
         }
 
-        i {
+        .failure-note {
+            margin-bottom: 1em;
+        }
+
+        i.big-icon {
             font-size: 4em;
             margin: 0.5em;
         }
