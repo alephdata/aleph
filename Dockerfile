@@ -1,4 +1,12 @@
-FROM code4sa/aleph-python-base
+FROM pudo/aleph-base:1.5
+ENV DEBIAN_FRONTEND noninteractive
+
+# Begin python festivities
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install -q --upgrade pip \
+  && pip install -q --upgrade setuptools \
+  && pip install -q functools32 \
+  && pip install -q -r /tmp/requirements.txt
 
 COPY . /aleph
 WORKDIR /aleph
