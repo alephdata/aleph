@@ -34,47 +34,18 @@ def authz_filter(q, authz, roles=False):
     return add_filter(q, fq)
 
 
-def meta_query_string(text, literal=False):
-    if text is None or not len(text.strip()):
-        return match_all()
-    if literal:
-        text = '"%s"' % latinize_text(text)
-    return {
-        "query_string": {
-            "query": text,
-            "fields": ['title^15', 'file_name',
-                       'summary^10', 'title_latin^12',
-                       'summary_latin^8', '_all'],
-            "default_operator": "AND",
-            "use_dis_max": True
-        }
-    }
-
-
 def text_query(text):
     """Part of a query which finds a piece of text."""
     if text is None or not len(text.strip()):
         return match_all()
     return {
-        "bool": {
-            "minimum_should_match": 1,
-            "should": [
-                meta_query_string(text),
-                child_record({
-                    "bool": {
-                        "should": [text_query_string(text)]
-                    }
-                })
-            ]
-        }
-    }
-
-
-def child_record(q):
-    return {
-        "has_child": {
-            "type": TYPE_RECORD,
-            "query": q
+        "query_string": {
+            "query": text,
+            "fields": ['title^5', 'title_latin^4',
+                       'summary^3', 'summary_latin^2',
+                       'file_name', 'text', '_all'],
+            "default_operator": "AND",
+            "use_dis_max": True
         }
     }
 

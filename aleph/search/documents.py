@@ -7,7 +7,7 @@ from aleph.core import es, es_index
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import clean_highlight, execute_basic, add_filter
 from aleph.search.util import scan_iter
-from aleph.search.fragments import aggregate, filter_query, child_record
+from aleph.search.fragments import aggregate, filter_query
 from aleph.search.fragments import text_query, phrase_match, authz_filter
 from aleph.search.facet import parse_facet_result
 from aleph.search.records import records_query_internal, records_query_shoulds
@@ -188,23 +188,20 @@ def facet_collections(state, q, aggs):
 def entity_documents(entity, state):
     """Try and find all documents mentioning a particular entity."""
     shoulds = [{"term": {"entities.id": entity.get('id')}}]
-    text_queries = []
 
     for name in entity.get('names', []):
-        text_queries.append(phrase_match(name, 'text'))
-        text_queries.append(phrase_match(name, 'text_latin'))
         shoulds.append(phrase_match(name, 'title'))
         shoulds.append(phrase_match(name, 'summary'))
+        shoulds.append(phrase_match(name, 'text'))
         state.highlight.append(name)
 
     for fp in entity.get('fingerprints', []):
-        text_queries.append(phrase_match(fp, 'text'))
+        shoulds.append(phrase_match(fp, 'text'))
         state.highlight.append(fp)
 
     # for ident in entity.get('identifiers', []):
     #     text_queries.append(multi_match(ident, ['text']))
 
-    shoulds.append(child_record({"bool": {"should": text_queries}}))
     # TODO: add in other entity info like phone numbers, addresses, etc. for
     # ranking.
 
