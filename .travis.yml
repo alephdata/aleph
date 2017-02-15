@@ -45,7 +45,6 @@ install:
 before_script:
   - sleep 10
   - psql -c "create database ${ALEPH_DATABASE_NAME}_test;" -U postgres
-  - psql -c "create extension pgcrypto;" -U postgres ${ALEPH_DATABASE_NAME}_test
   - elasticsearch --version
   - nosetests --version
   - psql --version
