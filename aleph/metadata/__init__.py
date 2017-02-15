@@ -4,6 +4,7 @@ import cgi
 import mimetypes
 from collections import Mapping
 from flanker.addresslib import address
+from urllib import unquote
 from urlparse import urlparse
 
 from aleph.text import slugify, string_value
@@ -104,14 +105,14 @@ class Metadata(object):
         # derive file name from headers
         if file_title is None and 'content_disposition' in self.headers:
             _, attrs = cgi.parse_header(self.headers['content_disposition'])
-            file_title = string_value(attrs.get('filename'))
+            file_title = string_value(unquote(attrs.get('filename')))
 
         if file_title is None and self.source_path:
             file_title = os.path.basename(self.source_path)
 
         if file_title is None and self.source_url:
             parsed = urlparse(self.source_url)
-            file_title = os.path.basename(parsed.path)
+            file_title = unquote(os.path.basename(parsed.path))
 
         return file_title
 
