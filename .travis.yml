@@ -53,7 +53,7 @@ before_script:
   - node --version
 script:
   - nvm use $NODE_VERSION
-  - node_modules/webpack/bin/webpack.js --env.prod
+  # - node_modules/webpack/bin/webpack.js --env.prod
   - nosetests --with-coverage --cover-package=aleph
 after_success:
   - coveralls

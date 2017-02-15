@@ -47,6 +47,8 @@ def entities_query(state, fields=None, facets=True, doc_counts=False):
         sort = ['_score', {'name_sort': 'asc'}]
     else:
         sort = [{'name_sort': 'asc'}]
+    
+    pprint(q)
 
     q = {
         'sort': sort,
