@@ -58,6 +58,7 @@ pyahocorasick
 pycrypto
 pylru
 https://github.com/mattgwwalker/msg-extractor/tarball/master
+Jinja2==2.8
 
 # Python 3 backports
 subprocess32
