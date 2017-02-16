@@ -39,6 +39,12 @@ def documents_query(state, fields=None, facets=True):
         if 'entities' in facets:
             aggs = facet_entities(aggs, state)
             facets.remove('entities')
+        # XXX make generic
+        if 'publication_date' in facets:
+            aggs['publication_date'] = {
+                'date_histogram': {'field': 'publication_date', 'interval': 'year'},
+            }
+            facets.remove('publication_date')
         aggs = aggregate(q, aggs, facets)
 
     signals.document_query_process.send(q=q, state=state)
