@@ -6,7 +6,9 @@ aleph.directive('searchFacets', ['$location', '$q', '$route', '$http', '$timeout
       query: '=',
       result: '=',
       metadata: '=',
-      collection: '='
+      collection: '=',
+      only: '@',
+      exclude: '@',
     },
     templateUrl: 'templates/documents/search_facets.html',
     link: function (scope, element, attrs) {
@@ -30,9 +32,15 @@ aleph.directive('searchFacets', ['$location', '$q', '$route', '$http', '$timeout
         }
 
         var queryFacets = scope.query.getArray('facet'),
-            facets = [];
+            facets = [],
+            only = scope.only ? scope.only.split(",") : [],
+            exclude = scope.exclude ? scope.exclude.split(",") : [];
 
         for (var name in scope.metadata.fields) {
+          if (only.length && only.indexOf(name) == -1 ||
+              exclude.indexOf(name) != -1)
+            continue;
+
           var facet = {
             field: name,
             label: scope.metadata.fields[name],

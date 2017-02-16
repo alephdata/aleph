@@ -1,3 +1,5 @@
+import datetime
+
 from aleph.index import TYPE_RECORD
 from aleph.text import latinize_text
 from aleph.search.util import add_filter, FACET_SIZE
@@ -81,6 +83,17 @@ def filter_query(q, filters):
     for field, values in filters.items():
         if field == 'collection_id':
             q = add_filter(q, {'terms': {field: values}})
+        elif field == 'publication_date':
+            # XXX handle multiple values
+            date_from = list(values)[0]
+
+            # YYYY-MM
+            date_from = date_from + "-01"
+            date_from = datetime.datetime.strptime(date_from, "%Y-%m-%d")
+            date_to = date_from + datetime.timedelta(days=32)
+            date_to = date_to.replace(day=1)
+
+            q = add_filter(q, {'range': {field: {'gte': date_from.strftime("%Y-%m-%d"), 'lt': date_to.strftime("%Y-%m-%d")}}})
         else:
             for value in values:
                 q = add_filter(q, {'term': {field: value}})
