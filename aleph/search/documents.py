@@ -25,7 +25,7 @@ def documents_query(state, fields=None, facets=True):
     # Sorting
     if state.sort == 'newest':
         sort = [{'dates': 'desc'}, {'created_at': 'desc'}, '_score']
-    if state.sort == 'oldest':
+    elif state.sort == 'oldest':
         sort = [{'dates': 'asc'}, {'created_at': 'asc'}, '_score']
     else:
         sort = ['_score']

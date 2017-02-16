@@ -54,8 +54,6 @@ class QueryState(object):
 
     @property
     def sort(self):
-        if self.has_query:
-            return 'score'
         return self.get('sort', 'score').strip().lower()
 
     @property
