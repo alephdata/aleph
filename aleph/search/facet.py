@@ -99,6 +99,21 @@ class CollectionFacet(Facet):
         return collections
 
 
+class PublicationDateFacet(Facet):
+    def get_data(self):
+        data = self.aggs.get(self.name, {})
+        # recode timestamps as YYYY-MM
+        for val in data.get('buckets', []):
+            val['key'] = val['key_as_string'][:7]
+        return data
+
+    def to_dict(self):
+        data = super(PublicationDateFacet, self).to_dict()
+        # sort by YYYY-MM
+        data['values'].sort(key=lambda k: k['id'])
+        return data
+
+
 def parse_facet_result(state, result):
     aggs = result.get('aggregations')
     facets = {}
@@ -108,7 +123,8 @@ def parse_facet_result(state, result):
             'countries': CountryFacet,
             'jurisdiction_code': CountryFacet,
             'entities': EntityFacet,
-            'collections': CollectionFacet
+            'collections': CollectionFacet,
+            'publication_date': PublicationDateFacet,
         }.get(name, Facet)
         facets[name] = facet_cls(state, name, aggs).to_dict()
     return facets
