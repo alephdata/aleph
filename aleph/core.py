@@ -61,27 +61,16 @@ def create_app(config={}):
     if 'postgres' not in app.config.get('SQLALCHEMY_DATABASE_URI', ''):
         raise RuntimeError("aleph database must be PostgreSQL!")
 
-    queues = (
+    app.config['CELERY_DEFAULT_QUEUE'] = WORKER_QUEUE
+    app.config['CELERY_DEFAULT_ROUTING_KEY'] = WORKER_ROUTING_KEY
+    app.config['CELERY_QUEUES'] = (
         Queue(WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY),
         Queue(USER_QUEUE, routing_key=USER_ROUTING_KEY),
     )
     celery.conf.update(app.config)
-    celery.conf.update(
-        imports=('aleph.queue'),
-        broker_url=app.config['CELERY_BROKER_URL'],
-        task_always_eager=app.config['CELERY_ALWAYS_EAGER'],
-        task_eager_propagates=True,
-        task_ignore_result=True,
-        result_persistent=False,
-        task_queues=queues,
-        task_default_queue=WORKER_QUEUE,
-        task_default_routing_key=WORKER_ROUTING_KEY,
-        # ultra-high time limit to shoot hung tasks:
-        task_time_limit=3600 * 3,
-        worker_max_tasks_per_child=200,
-        worker_disable_rate_limits=True,
-        beat_schedule=app.config['CELERYBEAT_SCHEDULE'],
-    )
+    celery.conf.update({
+        'BROKER_URL': app.config['CELERY_BROKER_URL']
+    })
 
     migrate.init_app(app, db, directory=app.config.get('ALEMBIC_DIR'))
     configure_oauth(app)
