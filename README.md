@@ -1,3 +1,7 @@
+# Code for SA Aleph
+
+This is Code for SA's copy of Aleph. See [aleph-dokku](https://github.com/Code4SA/aleph-dokku) for how we use it.
+
 # aleph [![Build Status](https://api.travis-ci.org/pudo/aleph.png)](https://travis-ci.org/pudo/aleph)
 
 *Truth cannot penetrate a closed mind. If all places in the universe are in the Aleph, then all stars, all lamps, all sources of light are in it, too.* - [The Aleph](http://www.phinnweb.org/links/literature/borges/aleph.html), Jorge Luis Borges
