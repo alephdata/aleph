@@ -20,6 +20,8 @@ SQLALCHEMY_DATABASE_URI = os.environ.get('ALEPH_DATABASE_URI')
 PREFERRED_URL_SCHEME = os.environ.get('ALEPH_URL_SCHEME')
 
 REGEX_ENTITIES = False
+# don't try to classify languages
+LANGUAGES = []
 
 MAIL_FROM = os.environ.get('MAIL_FROM')
 MAIL_SERVER = os.environ.get('MAIL_HOST')
