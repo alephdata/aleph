@@ -110,7 +110,7 @@ class PublicationDateFacet(Facet):
     def to_dict(self):
         data = super(PublicationDateFacet, self).to_dict()
         # sort by YYYY-MM
-        data['values'].sort(key=lambda k: k['id'])
+        data['values'].sort(key=lambda k: k['id'], reverse=True)
         return data
 
 
