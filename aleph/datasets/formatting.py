@@ -1,5 +1,6 @@
 import re
 import six
+from normality import collapse_spaces
 
 FORMAT_PATTERN = re.compile('{{([^(}})]*)}}')
 
@@ -21,4 +22,4 @@ class Formatter(object):
             ref_value = record.get(ref) or ''
             ref_value = six.text_type(ref_value)
             value = value.replace(repl, ref_value)
-        return value
+        return collapse_spaces(value).strip()
