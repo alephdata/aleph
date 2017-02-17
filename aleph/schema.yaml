@@ -260,6 +260,9 @@ links:
         label: "Role"
       recordId:
         label: "Record ID"
+      sourceUrl:
+        label: Source link
+        type: url
 
   controlledBy:
     label: "Control"
