@@ -42,7 +42,7 @@ def documents_query(state, fields=None, facets=True):
         # XXX make generic
         if 'publication_date' in facets:
             aggs['publication_date'] = {
-                'date_histogram': {'field': 'publication_date', 'interval': 'year'},
+                'date_histogram': {'field': 'publication_date', 'interval': 'month'},
             }
             facets.remove('publication_date')
         aggs = aggregate(q, aggs, facets)
