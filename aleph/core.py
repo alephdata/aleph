@@ -23,6 +23,7 @@ log = logging.getLogger(__name__)
 db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
+celery = Celery('aleph')
 assets = Environment()
 
 # these two queues are used so that background processing tasks
@@ -68,6 +69,24 @@ def create_app(config={}):
         Queue(WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY),
         Queue(USER_QUEUE, routing_key=USER_ROUTING_KEY),
     )
+    celery.conf.update(app.config)
+    celery.conf.update({
+        'BROKER_URL': app.config['CELERY_BROKER_URL']
+    })
+
+    # ensure celery tasks have app context
+    TaskBase = celery.Task
+
+    class ContextTask(TaskBase):
+        abstract = True
+        __aleph_decorated = True
+
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+
+    if not getattr(celery.Task, '__aleph_decorated', False):
+        celery.Task = ContextTask
 
     migrate.init_app(app, db, directory=app.config.get('ALEMBIC_DIR'))
     configure_oauth(app)
@@ -81,24 +100,6 @@ def create_app(config={}):
         plugin(app=app)
 
     return app
-
-
-def make_celery(flask_app):
-    celery = Celery('aleph', broker=flask_app.config['CELERY_BROKER_URL'])
-    celery.conf.update(flask_app.config)
-    celery.conf.update({
-        'BROKER_URL': flask_app.config['CELERY_BROKER_URL']
-    })
-    TaskBase = celery.Task
-
-    class ContextTask(TaskBase):
-        abstract = True
-
-        def __call__(self, *args, **kwargs):
-            with flask_app.app_context():
-                return TaskBase.__call__(self, *args, **kwargs)
-    celery.Task = ContextTask
-    return celery
 
 
 @migrate.configure
@@ -172,5 +173,3 @@ def url_for(*a, **kw):
         return flask_url_for(*a, **kw)
     except RuntimeError:
         return None
-
-celery = make_celery(create_app())
