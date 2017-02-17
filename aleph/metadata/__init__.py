@@ -70,6 +70,9 @@ class Metadata(object):
             setattr(self, field.attr, [] if field.multi else None)
 
     def has(self, name):
+        if name not in self.fields:
+            return False
+        
         value = getattr(self, self.fields[name].attr)
         if value is None:
             return False
