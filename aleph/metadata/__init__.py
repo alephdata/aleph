@@ -58,6 +58,7 @@ class Metadata(object):
     _publication_date = Field('publication_date', label='Publication Date')
     _dates = Field('dates', multi=True)
     _urls = Field('urls', multi=True)
+    _languages = Field('languages', multi=True)
     _emails = Field('emails', multi=True, label='E-mail addresses')
     _domains = Field('domains', multi=True, label='Domains')
     _tables = Field('tables', multi=True, protected=True)
