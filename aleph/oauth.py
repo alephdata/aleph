@@ -4,6 +4,7 @@ from flask import session
 from aleph import signals
 
 oauth = OAuth()
+_configured = False
 
 
 def get_oauth_token():
@@ -31,9 +32,16 @@ def setup_providers(app):
 
 
 def configure_oauth(app):
+    global _configured
+
+    if _configured:
+        return
+
     if not app.config.get('TESTING'):
         setup_providers(app)
     oauth.init_app(app)
+    _configured = True
+
     return oauth
 
 
