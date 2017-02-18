@@ -1,8 +1,8 @@
 import aleph from '../aleph';
 import loadMetadata from '../loaders/loadMetadata';
 
-aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$httpParamSerializer', '$uibModal', 'cfpLoadingBar', 'Alert', 'Metadata',
-    function($scope, $rootScope, $location, $anchorScroll, $httpParamSerializer, $uibModal, cfpLoadingBar, Alert, Metadata) {
+aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll', '$httpParamSerializer', '$uibModal', '$http', 'cfpLoadingBar', 'Alert', 'Metadata',
+    function($scope, $rootScope, $location, $anchorScroll, $httpParamSerializer, $uibModal, $http, cfpLoadingBar, Alert, Metadata) {
 
   $scope.session = {logged_in: false};
   $scope.routeLoaded = false;
@@ -48,8 +48,35 @@ aleph.controller('AppCtrl', ['$scope', '$rootScope', '$location', '$anchorScroll
     }
   };
 
+  $rootScope.inviteEmail = function(provider) {
+    var email = $rootScope.invitationEmail;
+    var url = provider.register;
+    $http.post(url, {email: email}).then(function(res){
+      $rootScope.hideInvitationFormMsg = res.data.status;
+    });
+  };
+
+  $rootScope.emailPasswordLogin = function() {
+    var provider = $scope.session.providers.filter(
+      function(p){ return p.name == 'password'});
+
+    if(provider.length < 1) {
+      return;
+    };
+
+    var url = provider[0].login;
+    var email = $rootScope.loginEmail;
+    var password = $rootScope.loginPassword;
+
+    $http.post(url, {email: email, password: password}).then(function(res){
+      document.location.href = '/';
+    });
+  };
+
   $rootScope.triggerLogin = function() {
-    if ($scope.session.providers.length == 1) {
+    var providers = $scope.session.providers;
+
+    if (providers.length == 1 && providers[0].name != 'password') {
       var url = $httpParamSerializer({next: $location.url()});
       document.location.href = $scope.session.providers[0].login + '?' + url;
     } else {

@@ -6,9 +6,62 @@
 <div class="modal-body">
   <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
-      <p ng-repeat="provider in providers">
-        <a href="{{ provider.login }}?{{ next_url }}" class="btn btn-default btn-block login-{{ provider.name }}" target="_self">Sign in with {{ provider.label }}</a>
-      </p>
+      <form ng-show="showPasswordLogin" class="form-horizontal actions"
+        role="login" ng-submit="emailPasswordLogin()">
+
+        <div class="form-group">
+          <input type="text" class="form-control" autofocus
+            ng-model="$root.loginEmail" placeholder="Your email...">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control col-sm-3"
+            ng-model="$root.loginPassword" placeholder="Your password...">
+        </div>
+        <div class="form-group text-left">
+          <a class="" ng-click="$root.showPasswordLogin = !$root.showPasswordLogin">Nevermind</a>
+          <button class="btn btn-primary pull-right" type="submit">Login</button>
+        </div>
+      </form>
+
+      <div ng-repeat="provider in providers" ng-show="!showPasswordLogin">
+        <p ng-if="provider.name != 'password'">
+          <a href="{{ provider.login }}?{{ next_url }}"
+            class="btn btn-default btn-block login-{{ provider.name }}"
+            target="_self">
+            Sign in with {{ provider.label }}
+          </a>
+        </p>
+
+        <div ng-if="provider.name == 'password' && provider.registration" >
+          <p>
+            <a ng-click="$root.showPasswordLogin = !$root.showPasswordLogin"
+              class="btn btn-default btn-block login-{{ provider.name }}">
+              Sign in with {{ provider.label }}
+            </a>
+          </p>
+
+          <p ng-show="$root.hideInvitationFormMsg" class="text-center">
+            {{$root.hideInvitationFormMsg}}
+          </p>
+
+          <form ng-if="provider.name == 'password' && !hideInvitationFormMsg"
+            class="form-horizontal actions" role="invitation"
+            ng-submit="inviteEmail(provider)"
+          >
+
+            <p class="text-center">or</p>
+
+            <div class="input-group">
+              <input type="text" class="form-control" autofocus ng-model="$root.invitationEmail"
+                placeholder="Your email...">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="submit">Register</button>
+              </span>
+            </div>
+          </form>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>
