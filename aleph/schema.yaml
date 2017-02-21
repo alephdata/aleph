@@ -161,6 +161,10 @@ entities:
         label: "IPO"
       cikCode:
         label: "SEC Central Index Key"
+      jibCode:
+        label: "JIB"
+      mbsCode:
+        label: "MBS"
 
   PublicBody:
     label: Public body
@@ -290,6 +294,8 @@ links:
         label: "Legal basis"
       status:
         label: "Status"
+      ownershipType:
+        label: "Type of ownership"
 
   directedBy:
     label: "Directorship"
