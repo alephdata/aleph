@@ -1,10 +1,10 @@
 import re
+from normality import ascii_text, stringify, collapse_spaces
 
 from aleph.data.validate import is_partial_date
 from aleph.data.parse import parse_phone, parse_country, parse_email
 from aleph.data.parse import parse_date
 from aleph.data.keys import make_fingerprint
-from aleph.text import string_value, collapse_spaces, latinize_text
 from aleph.util import ensure_list
 
 
@@ -15,7 +15,7 @@ class StringProperty(object):
         self.name = type(self).__name__.lower().replace('property', '')
 
     def clean(self, value, record, config):
-        value = string_value(value)
+        value = stringify(value)
         if value is not None:
             return collapse_spaces(value)
 
@@ -37,7 +37,7 @@ class NameProperty(StringProperty):
 
     def normalize_value(self, value):
         value = collapse_spaces(value)
-        return value, latinize_text(value)
+        return value, ascii_text(value)
 
     def fingerprint(self, values):
         # TODO: this should not be a property thing, so that fp's can include
@@ -107,10 +107,10 @@ class IdentiferProperty(StringProperty):
     clean_re = re.compile('[^a-zA-Z0-9]*')
 
     def normalize_value(self, value):
-        value = string_value(value)
+        value = stringify(value)
         if value is not None:
             value = self.clean_re.sub('', value).upper()
-            return string_value(value)
+            return stringify(value)
 
 
 def resolve_type(name):

@@ -1,12 +1,12 @@
 import six
 import logging
 from hashlib import sha1
+from normality import ascii_text, stringify
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch.helpers import bulk, scan
 
 from aleph.core import es, es_index
 from aleph.model import Document
-from aleph.text import latinize_text, string_value
 from aleph.index.mapping import TYPE_RECORD
 
 log = logging.getLogger(__name__)
@@ -47,8 +47,8 @@ def generate_records(document):
             tid.update(str(page.id))
             tid = tid.hexdigest()
 
-            text = string_value(page.text)
-            latin = latinize_text(text)
+            text = stringify(page.text)
+            latin = ascii_text(text)
 
             yield {
                 '_id': tid,
@@ -67,11 +67,11 @@ def generate_records(document):
             }
     elif document.type == Document.TYPE_TABULAR:
         for record in document.records:
-            data = {k: string_value(v) for (k, v) in record.data.items()}
+            data = {k: stringify(v) for (k, v) in record.data.items()}
 
-            text = [v for v in data.values() if v is not None]
-            latin = [latinize_text(t) for t in text]
-            latin = [t for t in latin if t not in text]
+            text = [v for v in data.values()]
+            latin = [ascii_text(t) for t in text]
+            latin = [t for t in latin if t not in text and t is not None]
 
             yield {
                 '_id': record.tid,

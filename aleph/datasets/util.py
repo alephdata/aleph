@@ -1,5 +1,6 @@
+from normality import ascii_text
 from aleph.util import ensure_list
-from aleph.text import string_value, latinize_text
+from aleph.text import string_value
 
 
 def finalize_index(data, schema):
@@ -14,7 +15,7 @@ def finalize_index(data, schema):
                 continue
             v = v.strip()
             text.add(v)
-            v = latinize_text(v)
+            v = ascii_text(v)
             text.add(v)
             # v = category_replace(v)
             # text.add(v)
@@ -51,7 +52,7 @@ def finalize_index(data, schema):
     # Add latinised names
     names = data.get('names', [])
     for name in list(names):
-        names.append(latinize_text(name))
+        names.append(ascii_text(name))
     data['names'] = list(set(names))
 
     # Get implied schemata (i.e. parents of the actual schema)

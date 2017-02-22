@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, Pager, request_data
+from normality import ascii_text
 
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY, get_config, db
 from aleph.model import Collection
@@ -7,7 +8,6 @@ from aleph.search import QueryState, lead_count
 from aleph.events import log_event
 from aleph.logic import delete_collection, update_collection
 from aleph.logic import analyze_collection
-from aleph.text import latinize_text
 from aleph.data.reference import COUNTRY_NAMES
 
 blueprint = Blueprint('collections_api', __name__)
@@ -109,7 +109,7 @@ def pending(id):
     entities = []
     for entity in q.all():
         data = entity.to_dict()
-        data['name_latin'] = latinize_text(entity.name)
+        data['name_latin'] = ascii_text(entity.name)
         entities.append(data)
     return jsonify({'results': entities, 'total': len(entities)})
 
