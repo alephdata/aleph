@@ -31,6 +31,7 @@ def authz_filter(q, authz, roles=False):
         fq = {
             "or": [{'terms': {'roles': list(authz.roles)}}, fq]
         }
+
     return add_filter(q, fq)
 
 

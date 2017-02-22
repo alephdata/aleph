@@ -55,7 +55,7 @@ def documents_query(state, fields=None, facets=True, since=None):
     # Sorting
     if state.sort == 'newest':
         sort = [{'dates': 'desc'}, {'created_at': 'desc'}, '_score']
-    if state.sort == 'oldest':
+    elif state.sort == 'oldest':
         sort = [{'dates': 'asc'}, {'created_at': 'asc'}, '_score']
     else:
         sort = ['_score']
@@ -111,7 +111,7 @@ def documents_query(state, fields=None, facets=True, since=None):
             sub_queries.append(json.dumps(sq))
 
         output['results'].append(document)
-    
+
     if state.getbool('records', default=True) is False or not len(sub_queries):
         return output
 
