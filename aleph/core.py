@@ -42,6 +42,17 @@ def create_app(config={}):
     app.config.update(config)
     app_name = app.config.get('APP_NAME')
 
+    if app.config.get("TESTING"):
+        # The testing configuration is inferred from the production
+        # settings, but it can only be derived after the config files
+        # have actually been evaluated.
+        database_uri = app.config.get('SQLALCHEMY_DATABASE_URI')
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_uri + '_test'
+
+        es_index = app.config.get('ELASTICSEARCH_INDEX',
+                                  app.config.get('APP_NAME'))
+        app.config['ELASTICSEARCH_INDEX'] = es_index + '_test'
+
     if not app.debug and app.config.get('MAIL_ADMINS'):
         credentials = (app.config.get('MAIL_USERNAME'),
                        app.config.get('MAIL_PASSWORD'))

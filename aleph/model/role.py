@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from aleph.core import db, url_for, get_config, secret_key
 from aleph.data.validate import validate
-from aleph.model.common import SoftDeleteModel, IdModel
+from aleph.model.common import SoftDeleteModel, IdModel, make_textid
 
 log = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     #: Signature maximum age, defaults to 1 day
     SIGNATURE_MAX_AGE = 60 * 60 * 24
 
-    #: Password minimum lenght
+    #: Password minimum length
     PASSWORD_MIN_LENGTH = 6
 
     foreign_id = db.Column(db.Unicode(2048), nullable=False, unique=True)
@@ -98,7 +98,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.is_admin = False
 
         if role.api_key is None:
-            role.api_key = uuid4().hex
+            role.api_key = make_textid()
 
         role.email = email
         if is_admin is not None:
