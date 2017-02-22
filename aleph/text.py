@@ -1,5 +1,4 @@
 # coding: utf-8
-import re
 import six
 import logging
 from decimal import Decimal
@@ -10,8 +9,6 @@ from unicodedata import category
 from datetime import datetime, date
 
 log = logging.getLogger(__name__)
-COLLAPSE = re.compile(r'\s+')
-WS = ' '
 
 
 def normalize_strong(text):
@@ -51,10 +48,12 @@ def string_value(value, encoding_default='utf-8', encoding=None):
             value = value.decode(encoding, 'replace')
             value = ''.join(ch for ch in value if category(ch)[0] != 'C')
             value = value.replace(u'\xfe\xff', '')  # remove BOM
+
         else:
             value = six.text_type(value)
 
-    if not len(value.strip()):
+    value = value.strip()
+    if not len(value):
         return None
     return value
 
