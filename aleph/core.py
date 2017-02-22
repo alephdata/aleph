@@ -72,7 +72,6 @@ def create_app(config={}):
         Queue(WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY),
         Queue(USER_QUEUE, routing_key=USER_ROUTING_KEY),
     )
-    # celery.conf.update(app.config)
     celery.conf.update(
         imports=('aleph.queues'),
         broker_url=app.config['CELERY_BROKER_URL'],
@@ -89,6 +88,7 @@ def create_app(config={}):
         worker_disable_rate_limits=True,
         beat_schedule=app.config['CELERYBEAT_SCHEDULE'],
     )
+    celery.conf.update(app.config.get('CELERY', {}))
 
     migrate.init_app(app, db, directory=app.config.get('ALEMBIC_DIR'))
     configure_oauth(app)
