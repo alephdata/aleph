@@ -111,11 +111,6 @@ class Document(db.Model, DatedModel):
                 for text in record.text_parts():
                     yield text
 
-    @classmethod
-    def get_max_id(cls):
-        q = db.session.query(func.max(cls.id))
-        return q.scalar()
-
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.meta.title)
 
