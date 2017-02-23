@@ -54,13 +54,6 @@
           <span class="badge">{{collection.lead_count | number}}</span>
         </a>
       </li>
-      <li role="presentation" ng-class="{'active': section == 'states'}" ng-if="::showStates">
-        <a ng-href="/collections/{{::collection.id}}/states">
-          <i class="fa fa-hourglass-half" aria-hidden="true"></i>
-          Data Imports
-          <span class="badge">{{collection.crawler_state_count | number}}</span>
-        </a>
-      </li>
       <li role="presentation" ng-class="{'active': section == 'settings'}" ng-show="collection.can_edit">
         <a ng-href="/collections/{{::collection.id}}/settings">
           <i class="fa fa-cog" aria-hidden="true"></i>

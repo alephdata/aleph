@@ -28,7 +28,7 @@ import loadDatasets from './loaders/loadDatasets';
 import loadRoles from './loaders/loadRoles';
 import loadStatistics from './loaders/loadHome';
 import {loadText, loadPagesQuery} from './loaders/loadText';
-import {loadCrawlers, loadCrawlerStates} from './loaders/loadCrawlers';
+import loadCrawlers from './loaders/loadCrawlers';
 import {
   loadEntitiesSearch, loadEntity, loadSimilarEntities, loadEntityLinks,
   loadEntityDocuments
@@ -139,17 +139,6 @@ aleph.config([
       'collection': loadCollection,
       'data': loadCollectionDocuments,
       'metadata': loadMetadata
-    }
-  });
-
-  $routeProvider.when('/collections/:collection_id/states', {
-    templateUrl: 'templates/collections/states.html',
-    controller: 'CollectionsCrawlersStatesCtrl',
-    reloadOnSearch: true,
-    resolve: {
-      'collection': loadCollection,
-      'metadata': loadMetadata,
-      'states': loadCrawlerStates
     }
   });
 
