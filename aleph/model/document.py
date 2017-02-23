@@ -1,5 +1,6 @@
 import logging
 from hashlib import sha1
+from datetime import datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSONB
@@ -23,11 +24,22 @@ class Document(db.Model, DatedModel):
     TYPE_TABULAR = 'tabular'
     TYPE_OTHER = 'other'
 
+    STATUS_PENDING = 'pending'
+    STATUS_SUCCESS = 'success'
+    STATUS_FAIL = 'fail'
+
     id = db.Column(db.BigInteger, primary_key=True)
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)
+    status = db.Column(db.Unicode(10), nullable=True, index=True)
     _meta = db.Column('meta', JSONB)
+
+    crawler = db.Column(db.Unicode(), index=True)
+    crawler_run = db.Column(db.Unicode())
+    error_type = db.Column(db.Unicode(), nullable=True)
+    error_message = db.Column(db.Unicode(), nullable=True)
+    error_details = db.Column(db.Unicode(), nullable=True)
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa
@@ -41,6 +53,8 @@ class Document(db.Model, DatedModel):
         self._meta = self._meta or {}
         self._meta['content_hash'] = self.content_hash
         self._meta['foreign_id'] = self.foreign_id
+        self._meta['crawler'] = self.crawler
+        self._meta['crawler_run'] = self.crawler_run
         return Metadata.from_data(self._meta or {})
 
     @meta.setter
@@ -48,6 +62,8 @@ class Document(db.Model, DatedModel):
         if isinstance(meta, Metadata):
             self.content_hash = meta.content_hash
             self.foreign_id = meta.foreign_id
+            self.crawler = meta.crawler
+            self.crawler_run = meta.crawler_run
             meta = meta.to_attr_dict()
         self._meta = meta
         flag_modified(self, '_meta')
@@ -111,8 +127,34 @@ class Document(db.Model, DatedModel):
                 for text in record.text_parts():
                     yield text
 
-    def __repr__(self):
-        return '<Document(%r,%r,%r)>' % (self.id, self.type, self.meta.title)
+    @classmethod
+    def crawler_last_run(cls, crawler_id):
+        q = db.session.query(func.max(cls.updated_at))
+        q = q.filter(cls.crawler == crawler_id)
+        return q.scalar()
+
+    @classmethod
+    def is_crawler_active(cls, crawler_id):
+        # TODO: add a function to see if a particular crawl is still running
+        # this should be defined as having "pending" documents.
+        last_run_time = cls.crawler_last_run(crawler_id)
+        return last_run_time > (datetime.utcnow() - timedelta(hours=1))
+
+    @classmethod
+    def crawler_stats(cls, crawler_id):
+        # Check if the crawler was active very recently, if so, don't
+        # allow the user to execute a new run right now.
+        stats = {
+            'updated': cls.crawler_last_run(crawler_id),
+            'running': cls.is_crawler_active()
+        }
+
+        q = db.session.query(cls.status, func.count(cls.id))
+        q = q.filter(cls.crawler_id == crawler_id)
+        q = q.group_by(cls.status)
+        for (status, count) in q:
+            stats[status] = count
+        return stats
 
     def _add_to_dict(self, data):
         try:
@@ -124,6 +166,10 @@ class Document(db.Model, DatedModel):
         data.update({
             'id': self.id,
             'type': self.type,
+            'status': self.status,
+            'error_type': self.error_type,
+            'error_message': self.error_message,
+            'error_details': self.error_details,
             'collection_id': self.collection_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
@@ -137,6 +183,9 @@ class Document(db.Model, DatedModel):
     def to_index_dict(self):
         data = self.meta.to_index_dict()
         return self._add_to_dict(data)
+
+    def __repr__(self):
+        return '<Document(%r,%r,%r)>' % (self.id, self.type, self.title)
 
 
 class DocumentPage(db.Model):

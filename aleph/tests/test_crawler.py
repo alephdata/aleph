@@ -1,7 +1,6 @@
 import os
 
-from aleph.core import db
-from aleph.model import CrawlerState, Collection
+from aleph.model import Document, Collection
 from aleph.tests.util import TestCase
 from aleph.crawlers import DocumentCrawler
 
@@ -30,14 +29,14 @@ class CrawlerTestCase(TestCase):
 
     def test_crawler_execute(self):
         tdc = TDocumentCrawler()
-        ccnt = CrawlerState.all().count()
+        ccnt = Document.all().count()
         assert ccnt == 0, ccnt
         tdc.execute()
-        states = CrawlerState.all().all()
-        assert len(states) == 2, len(states)
-        demo = states[1]
-        assert 'kitty' in demo.meta['title'], demo.meta
-        assert 'demo.pdf' in demo.meta['source_path'], demo.meta
+        states = Document.all().all()
+        assert len(states) == 1, len(states)
+        demo = states[0]
+        assert 'kitty' in demo.meta.title, demo.meta
+        assert 'demo.pdf' in demo.meta.source_path, demo.meta
 
         coll = Collection.by_foreign_id('test')
         assert coll is not None, coll
@@ -47,8 +46,8 @@ class CrawlerTestCase(TestCase):
         tdc = TDocumentCrawler()
         tdc.execute()
         tdc.execute(incremental=True)
-        states = CrawlerState.all().all()
-        assert len(states) == 3, len(states)
+        states = Document.all().all()
+        assert len(states) == 1, len(states)
 
     def test_crawler_save_data(self):
         tdc = TDocumentCrawler()

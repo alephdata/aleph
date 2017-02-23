@@ -23,6 +23,10 @@ DOCUMENT_MAPPING = {
     "properties": {
         "title": {"type": "string", "index": "analyzed"},
         "title_latin": {"type": "string", "index": "analyzed"},
+        "status": {"type": "string", "index": "not_analyzed"},
+        "error_type": {"type": "string", "index": "not_analyzed"},
+        "error_message": {"type": "string", "index": "analyzed"},
+        "error_details": {"type": "string", "index": "analyzed"},
         "content_hash": {"type": "string", "index": "not_analyzed"},
         "file_name": {"type": "string", "index": "not_analyzed"},
         "collection_id": {"type": "integer", "index": "not_analyzed"},

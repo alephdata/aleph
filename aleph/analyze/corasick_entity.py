@@ -25,6 +25,8 @@ class AutomatonCache(object):
 
     def _generate(self):
         latest = Entity.latest()
+        if latest is None:
+            return
         if self.latest is not None and self.latest >= latest:
             return
         self.latest = latest

@@ -11,7 +11,6 @@ from aleph.model.link import Link  # noqa
 from aleph.model.reference import Reference  # noqa
 from aleph.model.collection import Collection  # noqa
 from aleph.model.cache import Cache  # noqa
-from aleph.model.crawler_state import CrawlerState  # noqa
 from aleph.model.event_log import EventLog  # noqa
 from aleph.model.document import Document, DocumentPage, DocumentRecord  # noqa
 

@@ -126,16 +126,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
     def get_document_count(self):
         return self.documents.count()
 
-    def get_crawler_state_count(self):
-        from aleph.model.crawler_state import CrawlerState
-        q = CrawlerState.all()
-        q = q.filter(CrawlerState.collection_id == self.id)
-        q = q.filter(or_(
-            CrawlerState.error_type != 'init',
-            CrawlerState.error_type == None  # noqa
-        ))
-        return q.count()
-
     def get_entity_count(self, state=None):
         from aleph.model.entity import Entity
         q = Entity.all()
@@ -163,7 +153,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
             from aleph.model.entity import Entity
             data.update({
                 'doc_count': self.get_document_count(),
-                'crawler_state_count': self.get_crawler_state_count(),
                 'entity_count': self.get_entity_count(Entity.STATE_ACTIVE),
                 'pending_count': self.get_entity_count(Entity.STATE_PENDING)
             })
