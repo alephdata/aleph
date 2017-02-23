@@ -7,6 +7,7 @@ from aleph.core import db, archive
 from aleph.ext import get_ingestors
 from aleph.model import Document
 from aleph.analyze import analyze_document
+from aleph.index import index_document
 
 log = logging.getLogger(__name__)
 
@@ -84,6 +85,7 @@ class Ingestor(object):
             document.error_details = error_details
             db.session.add(document)
             db.session.commit()
+            index_document(document)
         except Exception as ex:
             log.error("Error storing crawler exception: %r", ex)
 

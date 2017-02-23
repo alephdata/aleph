@@ -138,6 +138,8 @@ class Document(db.Model, DatedModel):
         # TODO: add a function to see if a particular crawl is still running
         # this should be defined as having "pending" documents.
         last_run_time = cls.crawler_last_run(crawler_id)
+        if last_run_time is None:
+            return False
         return last_run_time > (datetime.utcnow() - timedelta(hours=1))
 
     @classmethod
@@ -146,11 +148,11 @@ class Document(db.Model, DatedModel):
         # allow the user to execute a new run right now.
         stats = {
             'updated': cls.crawler_last_run(crawler_id),
-            'running': cls.is_crawler_active()
+            'running': cls.is_crawler_active(crawler_id)
         }
 
         q = db.session.query(cls.status, func.count(cls.id))
-        q = q.filter(cls.crawler_id == crawler_id)
+        q = q.filter(cls.crawler == crawler_id)
         q = q.group_by(cls.status)
         for (status, count) in q:
             stats[status] = count

@@ -9,7 +9,8 @@ blueprint = Blueprint('crawlers_api', __name__)
 @blueprint.route('/api/1/crawlers', methods=['GET'])
 def index():
     request.authz.require(request.authz.is_admin)
-    crawlers = list(get_exposed_crawlers())
+    crawlers = list(sorted(get_exposed_crawlers(),
+                           key=lambda c: c.CRAWLER_NAME))
     return jsonify(Pager(crawlers, limit=20))
 
 
