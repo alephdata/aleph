@@ -136,6 +136,9 @@ REGEX_ENTITIES = env_bool('ALEPH_REGEX_ENTITIES', True)
 # Disable all crawlers (temporarily?)
 DISABLE_CRAWLERS = env_bool('ALEPH_DISABLE_CRAWLERS', False)
 
+# Automatically OCR pdf contents:
+PDF_OCR_PAGES = env_bool('ALEPH_PDF_OCR_PAGES', True)
+
 # Language whitelist
 LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
              'el', 'lt', 'uk', 'zh', 'be', 'bg', 'bs', 'ja', 'cs', 'lv', 'pt',
