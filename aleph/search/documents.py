@@ -16,7 +16,8 @@ log = logging.getLogger(__name__)
 
 DEFAULT_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                   'languages', 'countries', 'source_url', 'created_at',
-                  'updated_at', 'type', 'summary']
+                  'updated_at', 'type', 'summary', 'status', 'error_type',
+                  'error_message']
 
 
 def documents_iter(state, fields=None):

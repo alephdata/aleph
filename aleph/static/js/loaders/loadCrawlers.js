@@ -10,4 +10,4 @@ var loadCrawlers = ['$http', '$q', '$route', '$location', function($http, $q, $r
   return dfd.promise;
 }];
 
-export {loadCrawlers};
+export default loadCrawlers;

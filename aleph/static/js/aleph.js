@@ -20,7 +20,9 @@ var aleph = angular.module('aleph', [
   'pdf'
 ]);
 
-import {loadDocumentsSearch, loadPeek} from './loaders/loadDocuments';
+import {
+  loadDocumentsSearch, loadDocument, loadPeek
+} from './loaders/loadDocuments';
 import loadMetadata from './loaders/loadMetadata';
 import loadAlertsIndex from './loaders/loadAlertsIndex';
 import loadTabular from './loaders/loadTabular.js';
@@ -64,6 +66,16 @@ aleph.config([
     reloadOnSearch: false,
     resolve: {
       'collections': loadSourceCollections,
+      'metadata': loadMetadata
+    }
+  });
+
+  $routeProvider.when('/documents/:document_id', {
+    templateUrl: 'templates/documents/view.html',
+    controller: 'DocumentsViewCtrl',
+    reloadOnSearch: false,
+    resolve: {
+      'doc': loadDocument,
       'metadata': loadMetadata
     }
   });

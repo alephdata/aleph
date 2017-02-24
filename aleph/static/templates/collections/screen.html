@@ -40,7 +40,7 @@
           <span class="badge">{{::collection.doc_count | number}}</span>
         </a>
       </li>
-      <li role="presentation" ng-class="{'active': section == 'entities', 'disabled': disableEntities}">
+      <li role="presentation" ng-class="{'active': section == 'entities'}" ng-if="::!disableEntities">
         <a ng-href="/collections/{{::collection.id}}/entities">
           <i class="fa fa-users" aria-hidden="true"></i>
           People and Companies
@@ -54,7 +54,7 @@
           <span class="badge">{{collection.lead_count | number}}</span>
         </a>
       </li>
-      <li role="presentation" ng-class="{'active': section == 'settings'}" ng-show="collection.can_edit">
+      <li role="presentation" ng-class="{'active': section == 'settings'}" ng-if="collection.can_edit">
         <a ng-href="/collections/{{::collection.id}}/settings">
           <i class="fa fa-cog" aria-hidden="true"></i>
           Settings
