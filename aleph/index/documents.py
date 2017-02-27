@@ -52,6 +52,9 @@ def get_text(document):
 
 
 def index_document(document, index_records=True):
+    if document.status == Document.STATUS_PENDING:
+        return
+
     log.info("Index document: %r", document)
     data = document.to_index_dict()
     data['text'] = get_text(document)
