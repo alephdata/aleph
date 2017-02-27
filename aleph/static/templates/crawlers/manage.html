@@ -2,7 +2,7 @@
   <table class="table table-striped">
     <tr>
       <th>Crawler ID</th>
-      <th>Source</th>
+      <th>Collection</th>
       <th class="numeric" width="1%">Success</th>
       <th class="numeric" width="1%">Failed</th>
       <th class="numeric" width="1%">Pending</th>
@@ -20,17 +20,17 @@
         </a>
       </td>
       <td class="numeric">
-        <a href="/collections/{{::crawler.collection.id}}?filter:crawler={{crawler.id}}&filter:status=fail"
-           ng-if="crawler.all.fail" class="simple">
-          <span class="label label-danger">
-            {{crawler.fail | number}}</span>
+        <a href="/collections/{{::crawler.collection.id}}?filter:crawler={{crawler.id | urlencode}}&filter:status=success"
+           ng-if="crawler.success" class="simple">
+          <span class="label label-success">
+            {{crawler.success | number}}</span>
         </a>
       </td>
       <td class="numeric">
-        <a href="/collections/{{::crawler.collection.id}}?filter:crawler={{crawler.id}}&filter:status=success"
-           ng-if="crawler.all.fail" class="simple">
-          <span class="label label-success">
-            {{crawler.success | number}}</span>
+        <a href="/collections/{{::crawler.collection.id}}?filter:crawler={{crawler.id | urlencode}}&filter:status=fail"
+           ng-if="crawler.fail" class="simple">
+          <span class="label label-danger">
+            {{crawler.fail | number}}</span>
         </a>
       </td>
       <td class="numeric">
