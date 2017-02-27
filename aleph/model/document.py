@@ -154,7 +154,7 @@ class Document(db.Model, DatedModel):
         q = db.session.query(cls.status, func.count(cls.id))
         q = q.filter(cls.crawler == crawler_id)
         q = q.group_by(cls.status)
-        for (status, count) in q:
+        for (status, count) in q.all():
             stats[status] = count
         return stats
 

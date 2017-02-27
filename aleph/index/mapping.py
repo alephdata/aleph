@@ -24,6 +24,8 @@ DOCUMENT_MAPPING = {
         "title": {"type": "string", "index": "analyzed"},
         "title_latin": {"type": "string", "index": "analyzed"},
         "status": {"type": "string", "index": "not_analyzed"},
+        "crawler": {"type": "string", "index": "not_analyzed"},
+        "crawler_run": {"type": "string", "index": "not_analyzed"},
         "error_type": {"type": "string", "index": "not_analyzed"},
         "error_message": {"type": "string", "index": "analyzed"},
         "error_details": {"type": "string", "index": "analyzed"},
@@ -62,9 +64,6 @@ DOCUMENT_MAPPING = {
 RECORD_MAPPING = {
     "_all": {
         "enabled": True
-    },
-    "_parent": {
-        "type": TYPE_DOCUMENT
     },
     "dynamic_templates": [
         {

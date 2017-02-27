@@ -24,6 +24,15 @@ def upgrade():
     op.create_index(op.f('ix_document_crawler'), 'document', ['crawler'], unique=False)
     op.create_index(op.f('ix_document_status'), 'document', ['status'], unique=False)
 
+    bind = op.get_bind()
+    meta = sa.MetaData()
+    meta.bind = bind
+    meta.reflect()
+    document_table = meta.tables['document']
+    q = sa.update(document_table)
+    q = q.values(status='success')
+    bind.execute(q)
+
 
 def downgrade():
     pass
