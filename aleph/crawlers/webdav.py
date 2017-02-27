@@ -24,6 +24,7 @@ class WebDAVCrawler(DocumentCrawler):
 
         meta = self.make_meta({
             'source_url': url,
+            'foreign_id': url,
         })
 
         res = requests.get(url, auth=auth)
