@@ -56,6 +56,7 @@ def invite_email():
 def create():
     data = request_data()
     email = data.get('email')
+    name = data.get('name') or email
     password = data.get('password')
     signature = data.get('code')
 
@@ -75,6 +76,11 @@ def create():
     except:
         abort(400)
 
+    role = Role.by_email(email).first()
+
+    if role:
+        return jsonify(dict(status='ok')), 200
+
     role = Role.load_or_create(
         foreign_id='password:{}'.format(email),
         type=Role.USER,
@@ -86,7 +92,7 @@ def create():
     db.session.add(role)
     db.session.flush()
 
-    return jsonify(dict(role=role.to_dict())), 201
+    return jsonify(dict(status='ok')), 201
 
 
 @blueprint.route('/api/1/roles/<int:id>', methods=['GET'])

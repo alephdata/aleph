@@ -29,8 +29,23 @@ aleph.factory('Role', ['$http', '$q', 'Metadata', function($http, $q, Metadata) 
     return dfd.promise;
   };
 
+  var create = function(role) {
+    var dfd = $q.defer(),
+        url = '/api/1/roles';
+
+    $http.post(url, role).then(function(res) {
+      Metadata.flush().then(function() {
+        dfd.resolve(res.data);
+      });
+    }, function(err) {
+      dfd.reject(err);
+    });
+    return dfd.promise;
+  };
+
   return {
     getAll: getAll,
-    save: save
+    save: save,
+    create: create
   };
 }]);

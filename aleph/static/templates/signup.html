@@ -1,0 +1,39 @@
+<div class="signup screen">
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <h2>
+        <i class="fa fa-fw fa-user-circle-o"></i>
+        Registration
+      </h2>
+
+      <p ng-show="showError" class="text-danger">
+        Please fill-in all the fields and make sure you are using the
+        registration link we sent you in less than 24 hours.
+      </p>
+
+      <p ng-show="showSuccess" class="text-success">
+        Your account was created. Please use the sign-in link to login.
+      </p>
+
+      <form class="form-horizontal actions" role="search" ng-submit="register()" ng-show="!showSuccess">
+        <div class="form-group">
+          <input type="text" class="form-control" autofocus
+            ng-model="role.email" placeholder="Your email...">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" autofocus
+            ng-model="role.name" placeholder="Your name...">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control col-sm-3"
+            ng-model="role.password" placeholder="Your password...">
+        </div>
+        <div class="form-group text-left">
+          <button class="btn btn-primary pull-right" type="submit">Login</button>
+        </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>

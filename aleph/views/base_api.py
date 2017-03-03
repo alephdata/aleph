@@ -50,6 +50,7 @@ def angular_templates():
 @blueprint.route('/collections/<path:path>')
 @blueprint.route('/tabular/<path:path>')
 @blueprint.route('/text/<path:path>')
+@blueprint.route('/signup/<path:path>')
 @blueprint.route('/')
 def ui(**kwargs):
     enable_cache(server_side=True)

@@ -28,7 +28,7 @@ gunicorn==19.6.0
 Unidecode==0.04.17
 networkx==1.9.1
 XlsxWriter==0.6.6
-https://github.com/okfn/messytables/tarball/master
+messytables==0.15.2
 krauler>=0.2.2
 metafolder==0.1.2
 polyglot==16.7.4
@@ -51,7 +51,7 @@ coverage
 pyahocorasick==1.1.4
 pycrypto==2.6.1
 pylru==1.0.9
-https://github.com/mattgwwalker/msg-extractor/tarball/master
+https://github.com/mattgwwalker/msg-extractor/archive/2a24c9950d34932ed5979693cb70d758d78715df.zip#egg=extractmsg
 
 # weird pudo stuff
 countrynames>=1.1.1
