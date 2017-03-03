@@ -20,6 +20,18 @@ class RoleModelTest(TestCase):
         self.role = RoleFactory.create()
         db.session.commit()
 
+    def test_password(self):
+        password = self.fake.password()
+
+        role = RoleFactory.create()
+        self.assertFalse(role.check_password(password))
+
+        role.set_password(password)
+        self.assertTrue(role.check_password(password))
+
+        role.set_password(self.fake.password())
+        self.assertFalse(role.check_password(password))
+
     def test_authenticate_using_ldap_with_blank_password(self):
         secret = ''
 
