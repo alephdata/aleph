@@ -27,7 +27,6 @@ def clear_records(document_id):
                 yield {
                     '_op_type': 'delete',
                     '_index': six.text_type(es_index),
-                    '_parent': res.get('_parent'),
                     '_type': res.get('_type'),
                     '_id': res.get('_id')
                 }
@@ -54,7 +53,6 @@ def generate_records(document):
                 '_id': tid,
                 '_type': TYPE_RECORD,
                 '_index': six.text_type(es_index),
-                '_parent': document.id,
                 '_source': {
                     'type': 'page',
                     'content_hash': document.content_hash,
@@ -77,7 +75,6 @@ def generate_records(document):
                 '_id': record.tid,
                 '_type': TYPE_RECORD,
                 '_index': six.text_type(es_index),
-                '_parent': document.id,
                 '_source': {
                     'type': 'row',
                     'content_hash': document.content_hash,

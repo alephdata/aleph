@@ -87,9 +87,7 @@ RECORD_MAPPING = {
         "page": {"type": "integer", "index": "not_analyzed"},
         "text": {"type": "string", "index": "analyzed"},
         "text_latin": {"type": "string", "index": "analyzed"},
-        "raw": {
-            "type": "object"
-        }
+        "raw": {"type": "object"}
     }
 }
 
