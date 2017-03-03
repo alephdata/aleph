@@ -8,7 +8,7 @@ from flask import url_for as flask_url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
-from flask_simpleldap import LDAP
+from flask_simpleldap import LDAP, LDAPException
 from kombu import Queue
 from celery import Celery
 from elasticsearch import Elasticsearch
@@ -99,7 +99,7 @@ def create_app(config={}):
 
     try:
         ldap.init_app(app)
-    except LDAP.LDAPException as error:
+    except LDAPException as error:
         log.info(error)
 
     # This executes all registered init-time plugins so that other
