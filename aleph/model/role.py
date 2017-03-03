@@ -1,7 +1,6 @@
 import logging
 
 from flask import current_app
-from sqlalchemy.exc import IntegrityError
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -145,7 +144,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         :param str secret: The password to be checked.
         :rtype: bool
         """
-        return check_password_hash(self.password_digest, secret)
+        return check_password_hash(self.password_digest or '', secret)
 
     def __repr__(self):
         return '<Role(%r,%r)>' % (self.id, self.foreign_id)

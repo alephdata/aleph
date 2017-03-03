@@ -76,7 +76,7 @@ def create():
     except:
         abort(400)
 
-    role = Role.by_email(email)
+    role = Role.by_email(email).first()
 
     if role:
         return jsonify(dict(status='ok')), 200

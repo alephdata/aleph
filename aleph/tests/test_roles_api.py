@@ -139,7 +139,7 @@ class RolesApiTestCase(TestCase):
         role = Role.by_email(email).first()
         self.assertIsNotNone(role)
         self.assertTrue(role.check_password(password))
-        self.assertEqual(role.name, payload['name'])
+        self.assertEqual(role.name, payload['email'])
         self.assertEqual(role.email, payload['email'])
 
     def test_create_on_existing_email(self):
