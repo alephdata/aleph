@@ -96,7 +96,7 @@ ALLOW_PEEKING = env_bool('ALEPH_ALLOW_PEEKING', True)
 # LDAP Support
 LDAP_HOST = env.get('ALEPH_LDAP_HOST')
 LDAP_PORT = env.get('ALEPH_LDAP_PORT')
-LDAP_BASE_DN = env.get('ALEPH_LDAP_BASE_DN')
+LDAP_BASE_DN = env.get('ALEPH_LDAP_BASE_DN', 'uid={},dc=example,dc=com')
 LDAP_USERNAME = env.get("ALEPH_LDAP_USERNAME")
 LDAP_PASSWORD = env.get('ALEPH_LDAP_PASSWORD')
 

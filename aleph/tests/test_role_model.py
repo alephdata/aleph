@@ -5,10 +5,8 @@ from aleph.core import db
 from aleph.model import Role
 from aleph.tests.factories.models import RoleFactory
 
-from aleph.core import db, get_config
-from aleph.model import Role
+from aleph.core import get_config
 from aleph.model.role import LDAPException
-from aleph.tests.factories.models import RoleFactory
 from aleph.tests.util import TestCase
 
 
