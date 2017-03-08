@@ -1,6 +1,6 @@
 ### Mapping Files
 
-One of Aleph’s primary task is extracting entities from structured datasets. Aleph has a YAML syntax to represent the database operations necessary to do this. The syntax is translated into a Python `dict` under the hood.
+One of Aleph’s primary task is extracting entities from structured datasets. Aleph has a YAML syntax to represent the database operations necessary to do this. The syntax is then translated into a Python `dict` under the hood.
 
 Dataset paths are stored in a master YAML file, the location of which should be specified in `DATASETS_YAML`, in the format
 
