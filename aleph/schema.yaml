@@ -85,6 +85,9 @@ entities:
       idNumber:
         label: ID Number
         type: identifier
+      taxNumber:
+        label: Tax ID Number
+        type: identifier
       bankAccount:
         label: Bank account
       jurisdiction:
@@ -321,7 +324,7 @@ links:
     extends: link
 
   linkedTo:
-    label: "Assocation"
+    label: "Association"
     forward: "Linked to"
     reverse: "Linked to"
     extends: link
