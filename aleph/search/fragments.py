@@ -1,5 +1,5 @@
-from aleph.index import TYPE_RECORD
-from aleph.text import latinize_text
+from normality import ascii_text
+
 from aleph.search.util import add_filter
 
 
@@ -11,7 +11,7 @@ def text_query_string(text, literal=False):
     if text is None or not len(text.strip()):
         return match_all()
     if literal:
-        text = '"%s"' % latinize_text(text)
+        text = '"%s"' % ascii_text(text)
     return {
         'query_string': {
             'query': text,
@@ -31,6 +31,7 @@ def authz_filter(q, authz, roles=False):
         fq = {
             "or": [{'terms': {'roles': list(authz.roles)}}, fq]
         }
+
     return add_filter(q, fq)
 
 

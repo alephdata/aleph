@@ -1,6 +1,9 @@
 <div class="search-result">
   <div class="document-type">
-    <a ng-click="viewDetails()">
+    <a ng-href="::getUrl()()">
+      <span ng-if="::doc.status == 'fail'">
+        <i class="fa fa-exclamation-triangle"></i>
+      </span>
       <span ng-if="::doc.type == 'tabular'">
         <i class="fa fa-table"></i>
       </span>
@@ -12,10 +15,16 @@
   <div class="descriptor">
     <div class="title">
       <a ng-href="{{::getUrl()}}" ng-bind="::doc.title"></a>
+      <!--
       <span ng-if="::doc.title != doc.file_name" class="addon" ng-bind="::doc.file_name"></span>
+      -->
     </div>
 
-    <div class="context">
+    <div class="context" ng-if="::doc.status == 'fail'">
+      <span ng-bind="::doc.error_message"></span>
+    </div>
+
+    <div class="context" ng-if="::doc.status != 'fail'">
       <span ng-show="::collection">
         <privacy-icon subject="collection"></privacy-icon>
         <a ng-href="/collections/{{::collection.id}}" class="collection"

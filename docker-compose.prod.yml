@@ -23,6 +23,11 @@ services:
       - "./build/data/rabbitmq:/var/lib/rabbitmq"
       - "./build/logs/rabbitmq:/var/log"
 
+  ## If you enable Tika, also set ALEPH_TIKA_URI=http://tika:9998 on the
+  ## worker and web containers.
+  # tika:
+  #   image: logicalspark/docker-tikaserver
+
   worker:
       build: .
       command: celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /var/lib/celery.pid

@@ -10,6 +10,7 @@ from os import path
 from hashlib import sha1
 from tempfile import mkdtemp
 from apikit.jsonify import JSONEncoder
+from itsdangerous import TimestampSigner
 
 from aleph.text import string_value, slugify
 

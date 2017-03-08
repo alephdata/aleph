@@ -20,7 +20,9 @@ var aleph = angular.module('aleph', [
   'pdf'
 ]);
 
-import {loadDocumentsSearch, loadPeek} from './loaders/loadDocuments';
+import {
+  loadDocumentsSearch, loadDocument, loadPeek
+} from './loaders/loadDocuments';
 import loadMetadata from './loaders/loadMetadata';
 import loadAlertsIndex from './loaders/loadAlertsIndex';
 import loadTabular from './loaders/loadTabular.js';
@@ -28,7 +30,7 @@ import loadDatasets from './loaders/loadDatasets';
 import loadRoles from './loaders/loadRoles';
 import loadStatistics from './loaders/loadHome';
 import {loadText, loadPagesQuery} from './loaders/loadText';
-import {loadCrawlers, loadCrawlerStates} from './loaders/loadCrawlers';
+import loadCrawlers from './loaders/loadCrawlers';
 import {
   loadEntitiesSearch, loadEntity, loadSimilarEntities, loadEntityLinks,
   loadEntityDocuments
@@ -64,6 +66,16 @@ aleph.config([
     reloadOnSearch: false,
     resolve: {
       'collections': loadSourceCollections,
+      'metadata': loadMetadata
+    }
+  });
+
+  $routeProvider.when('/documents/:document_id', {
+    templateUrl: 'templates/documents/view.html',
+    controller: 'DocumentsViewCtrl',
+    reloadOnSearch: false,
+    resolve: {
+      'doc': loadDocument,
       'metadata': loadMetadata
     }
   });
@@ -139,17 +151,6 @@ aleph.config([
       'collection': loadCollection,
       'data': loadCollectionDocuments,
       'metadata': loadMetadata
-    }
-  });
-
-  $routeProvider.when('/collections/:collection_id/states', {
-    templateUrl: 'templates/collections/states.html',
-    controller: 'CollectionsCrawlersStatesCtrl',
-    reloadOnSearch: true,
-    resolve: {
-      'collection': loadCollection,
-      'metadata': loadMetadata,
-      'states': loadCrawlerStates
     }
   });
 
@@ -238,6 +239,11 @@ aleph.config([
       'statistics': loadStatistics,
       'metadata': loadMetadata
     }
+  });
+
+  $routeProvider.when('/signup/:code', {
+    templateUrl: 'templates/signup.html',
+    controller: 'SignupCtrl'
   });
 
   $locationProvider.html5Mode(true);

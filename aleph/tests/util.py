@@ -34,10 +34,6 @@ class TestCase(FlaskTestCase):
             'ARCHIVE_PATH': self.temp_dir,
             'APP_NAME': app_name,
             'PRESERVE_CONTEXT_ON_EXCEPTION': False,
-            'SQLALCHEMY_DATABASE_URI': (
-                os.environ.get('ALEPH_DATABASE_URI') + '_test'),
-            'ELASTICSEARCH_INDEX': (
-                os.environ.get('ELASTICSEARCH_INDEX', app_name) + '_test'),
             'CELERY_ALWAYS_EAGER': True
         })
         mount_app_blueprints(app)

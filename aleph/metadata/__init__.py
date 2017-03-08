@@ -3,7 +3,6 @@ import six
 import cgi
 import mimetypes
 from collections import Mapping
-from flanker.addresslib import address
 from urllib import unquote
 from urlparse import urlparse
 
@@ -70,6 +69,9 @@ class Metadata(object):
             setattr(self, field.attr, [] if field.multi else None)
 
     def has(self, name):
+        if name not in self.fields:
+            return False
+
         value = getattr(self, self.fields[name].attr)
         if value is None:
             return False

@@ -1,13 +1,16 @@
-web: assets
+egg-info:
+	pip install -q -e .
+
+web: egg-info assets
 	python aleph/manage.py runserver -h 0.0.0.0 -p 8000
 
-worker:
+worker: egg-info
 	celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /var/lib/celery.pid
 
-beat:
+beat: egg-info
 	celery -A aleph.queues beat -s /var/lib/celerybeat-schedule.db --pidfile /var/lib/celery.pid
 
-clear:
+clear: egg-info
 	celery purge -f -A aleph.queues
 
 assets:
@@ -18,7 +21,7 @@ assets:
 assets-dev: assets
 	/node_modules/webpack/bin/webpack.js --env.dev -w
 
-test:
+test: egg-info
 	PGPASSWORD=aleph psql -h postgres -U aleph -c 'drop database if exists aleph_test;'
 	PGPASSWORD=aleph psql -h postgres -U aleph -c 'create database aleph_test;'
 	nosetests --with-coverage --cover-package=aleph --cover-erase
@@ -33,7 +36,7 @@ build:
 	docker build -t pudo/aleph:latest .
 	docker push pudo/aleph:latest
 
-docs: docs-clean
+docs: egg-info docs-clean
 	sphinx-build -b html -d docs/_build/doctrees ./docs docs/_build/html
 
 docs-clean:

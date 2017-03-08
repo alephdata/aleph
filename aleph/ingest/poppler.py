@@ -57,7 +57,7 @@ def extract_page(path, temp_dir, page, languages):
         if len(texts) < 2 or ratio > 0.3:
             is_ocr = True
 
-    if is_ocr:
+    if is_ocr and get_config('PDF_OCR_PAGES'):
         log.info("Using OCR for %r, p.%s", path, page_no)
         texts.append(ocr_page(path, temp_dir, page_no, languages))
 
@@ -68,8 +68,7 @@ def extract_page(path, temp_dir, page, languages):
 
 
 def extract_pdf(path, languages=None):
-    """
-    Extract content from a PDF file.
+    """Extract content from a PDF file.
 
     This will convert the whole file to XML using `pdftohtml`, then run OCR
     on individual images within the file.

@@ -1,10 +1,12 @@
 import logging
-from uuid import uuid4
-from flask import current_app
 
-from aleph.core import db, url_for, get_config
+from flask import current_app
+from itsdangerous import URLSafeTimedSerializer
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from aleph.core import db, url_for, get_config, secret_key
 from aleph.data.validate import validate
-from aleph.model.common import SoftDeleteModel, IdModel
+from aleph.model.common import SoftDeleteModel, IdModel, make_textid
 
 log = logging.getLogger(__name__)
 
@@ -29,13 +31,24 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     SYSTEM_GUEST = 'guest'
     SYSTEM_USER = 'user'
 
+    #: Generates URL-safe signatures for invitations.
+    SIGNATURE_SERIALIZER = URLSafeTimedSerializer(secret_key)
+
+    #: Signature maximum age, defaults to 1 day
+    SIGNATURE_MAX_AGE = 60 * 60 * 24
+
+    #: Password minimum length
+    PASSWORD_MIN_LENGTH = 6
+
     foreign_id = db.Column(db.Unicode(2048), nullable=False, unique=True)
     name = db.Column(db.Unicode, nullable=False)
     email = db.Column(db.Unicode, nullable=True)
     api_key = db.Column(db.Unicode, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     type = db.Column(db.Enum(*TYPES, name='role_type'), nullable=False)
-    permissions = db.relationship("Permission", backref="role")
+    password_digest = db.Column(db.Unicode, nullable=True)
+    reset_token = db.Column(db.Unicode, nullable=True)
+    permissions = db.relationship('Permission', backref='role')
 
     def update(self, data):
         validate(data, self._schema)
@@ -43,10 +56,12 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         self.email = data.get('email', self.email)
 
     def clear_roles(self):
+        """Removes any existing roles from group membership."""
         self.roles = []
         db.session.add(self)
 
     def add_role(self, role):
+        """Adds an existing role as a membership of a group."""
         self.roles.append(role)
         db.session.add(role)
         db.session.add(self)
@@ -61,14 +76,19 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             return cls.all().filter_by(foreign_id=foreign_id).first()
 
     @classmethod
+    def by_email(cls, email):
+        if email:
+            return cls.all().filter_by(email=email)
+
+    @classmethod
     def by_api_key(cls, api_key):
         if api_key is not None:
             return cls.all().filter_by(api_key=api_key).first()
 
     @classmethod
-    def load_or_create(cls, foreign_id, type, name, email=None,
-                       is_admin=None):
+    def load_or_create(cls, foreign_id, type, name, email=None, is_admin=None):
         role = cls.by_foreign_id(foreign_id)
+
         if role is None:
             role = cls()
             role.foreign_id = foreign_id
@@ -77,20 +97,20 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.is_admin = False
 
         if role.api_key is None:
-            role.api_key = uuid4().hex
+            role.api_key = make_textid()
 
         role.email = email
         if is_admin is not None:
             role.is_admin = is_admin
 
         # see: https://github.com/pudo/aleph/issues/111
-        auto_admins = get_config('AUTHZ_ADMINS') or ''
-        auto_admins = [a.lower() for a in auto_admins.split(',')]
+        auto_admins = [a.lower() for a in get_config('AUTHZ_ADMINS')]
         if email is not None and email.lower() in auto_admins:
             role.is_admin = True
 
         db.session.add(role)
         db.session.flush()
+
         return role
 
     @classmethod
@@ -110,6 +130,21 @@ class Role(db.Model, IdModel, SoftDeleteModel):
                 role = cls.load_or_create(foreign_id, type, name)
             current_app._authz_roles[foreign_id] = role.id
         return current_app._authz_roles[foreign_id]
+
+    def set_password(self, secret):
+        """Hashes and sets the role password.
+
+        :param str secret: The password to be set.
+        """
+        self.password_digest = generate_password_hash(secret)
+
+    def check_password(self, secret):
+        """Checks the password if it matches the role password hash.
+
+        :param str secret: The password to be checked.
+        :rtype: bool
+        """
+        return check_password_hash(self.password_digest or '', secret)
 
     def __repr__(self):
         return '<Role(%r,%r)>' % (self.id, self.foreign_id)

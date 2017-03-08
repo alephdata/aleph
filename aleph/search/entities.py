@@ -1,4 +1,5 @@
 import json
+from normality import ascii_text
 from pprint import pprint  # noqa
 
 from aleph.core import url_for, es, es_index, schemata
@@ -7,7 +8,6 @@ from aleph.search.util import execute_basic
 from aleph.search.fragments import match_all, filter_query, multi_match
 from aleph.search.fragments import add_filter, aggregate, authz_filter
 from aleph.search.facet import parse_facet_result
-from aleph.text import latinize_text
 
 DEFAULT_FIELDS = ['collection_id', 'roles', 'dataset', 'name', 'data',
                   'countries', 'schema', 'schemata', 'properties',
@@ -135,11 +135,11 @@ def suggest_entities(prefix, authz, min_count=0, schemas=None, size=5):
             'query': q,
             '_source': ['name', 'schema', 'fingerprints', 'doc_count']
         }
-        ref = latinize_text(prefix)
+        ref = ascii_text(prefix)
         result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
         for res in result.get('hits', {}).get('hits', []):
             ent = res.get('_source')
-            terms = [latinize_text(t) for t in ent.pop('fingerprints', [])]
+            terms = [ascii_text(t) for t in ent.pop('fingerprints', [])]
             ent['match'] = ref in terms
             ent['score'] = res.get('_score')
             ent['id'] = res.get('_id')

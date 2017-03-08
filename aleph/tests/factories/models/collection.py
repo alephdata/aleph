@@ -10,7 +10,7 @@ class CollectionFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = Collection
         sqlalchemy_session = db.session
 
-    foreign_id = factory.Faker('first_name')
+    foreign_id = factory.Faker('uuid4')
     label = factory.Faker('company')
     countries = factory.Sequence(
         lambda n: [factory.Faker('country_code').generate({})])

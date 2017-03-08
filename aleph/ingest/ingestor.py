@@ -5,8 +5,9 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from aleph.core import db, archive
 from aleph.ext import get_ingestors
-from aleph.model import Document, Collection, CrawlerState
+from aleph.model import Document
 from aleph.analyze import analyze_document
+from aleph.index import index_document
 
 log = logging.getLogger(__name__)
 
@@ -28,20 +29,8 @@ class Ingestor(object):
         raise NotImplemented()
 
     def create_document(self, meta, type=None):
-        if meta.content_hash:
-            q = Document.all()
-            if meta.foreign_id:
-                q = q.filter(Document.foreign_id == meta.foreign_id)
-            else:
-                q = q.filter(Document.content_hash == meta.content_hash)
-            q = q.filter(Document.collection_id == self.collection_id)
-            document = q.first()
-        if document is None:
-            document = Document()
-            document.collection_id = self.collection_id
-            document.foreign_id = meta.foreign_id
-            document.content_hash = meta.content_hash
-        document.meta = meta
+        document = self.document_by_meta(self.collection_id, meta)
+        document.status = Document.STATUS_SUCCESS
         document.type = type or self.DOCUMENT_TYPE
         db.session.add(document)
         db.session.flush()
@@ -51,6 +40,25 @@ class Ingestor(object):
         db.session.commit()
         log.debug("Ingested document: %r", document)
         analyze_document(document)
+
+    @classmethod
+    def document_by_meta(cls, collection_id, meta):
+        q = Document.all()
+        if meta.foreign_id:
+            q = q.filter(Document.foreign_id == meta.foreign_id)
+        elif meta.content_hash:
+            q = q.filter(Document.content_hash == meta.content_hash)
+        else:
+            raise ValueError("No unique criterion for document: %s" % meta)
+        q = q.filter(Document.collection_id == collection_id)
+        document = q.first()
+        if document is None:
+            document = Document()
+            document.collection_id = collection_id
+            document.foreign_id = meta.foreign_id
+            document.content_hash = meta.content_hash
+        document.meta = meta
+        return document
 
     @classmethod
     def handle_exception(cls, meta, collection_id, exception):
@@ -69,11 +77,15 @@ class Ingestor(object):
         try:
             db.session.rollback()
             db.session.close()
-            CrawlerState.store_fail(meta, collection_id,
-                                    error_type=error_type,
-                                    error_message=error_message,
-                                    error_details=error_details)
+            document = cls.document_by_meta(collection_id, meta)
+            document.type = Document.TYPE_OTHER
+            document.status = Document.STATUS_FAIL
+            document.error_type = error_type
+            document.error_message = error_message
+            document.error_details = error_details
+            db.session.add(document)
             db.session.commit()
+            index_document(document)
         except Exception as ex:
             log.error("Error storing crawler exception: %r", ex)
 
@@ -107,7 +119,6 @@ class Ingestor(object):
             best_cls = cls.auction_file(meta, local_path)
             log.debug("Dispatching %r to %r", meta.file_name, best_cls)
             best_cls(collection_id).ingest(meta, local_path)
-            CrawlerState.store_ok(meta, collection_id)
             db.session.commit()
         except Exception as exc:
             cls.handle_exception(meta, collection_id, exc)

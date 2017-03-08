@@ -67,7 +67,7 @@ class IdModel(object):
 
 
 class UuidModel(object):
-    id = db.Column(db.String(32), primary_key=True, default=make_textid(),
+    id = db.Column(db.String(32), primary_key=True, default=make_textid,
                    nullable=False, unique=False)
 
     def to_dict(self):

@@ -1,9 +1,9 @@
 import logging
+from normality import ascii_text, stringify
 from elasticsearch.exceptions import NotFoundError
 
 from aleph.core import celery, es, es_index
 from aleph.model import Document
-from aleph.text import latinize_text, string_value
 from aleph.index.records import generate_records, clear_records
 from aleph.index.entities import generate_entities
 from aleph.index.mapping import TYPE_DOCUMENT
@@ -31,9 +31,9 @@ def get_text(document):
     """
     texts = []
     for text in document.text_parts():
-        text = string_value(text)
+        text = stringify(text)
         texts.append(text)
-        latin = latinize_text(text)
+        latin = ascii_text(text)
         if latin != text:
             texts.append(latin)
 
@@ -52,12 +52,15 @@ def get_text(document):
 
 
 def index_document(document, index_records=True):
+    if document.status == Document.STATUS_PENDING:
+        return
+
     log.info("Index document: %r", document)
     data = document.to_index_dict()
     data['text'] = get_text(document)
     data['entities'] = generate_entities(document)
-    data['title_latin'] = latinize_text(data.get('title'))
-    data['summary_latin'] = latinize_text(data.get('summary'))
+    data['title_latin'] = ascii_text(data.get('title'))
+    data['summary_latin'] = ascii_text(data.get('summary'))
     es.index(index=es_index, doc_type=TYPE_DOCUMENT, body=data, id=document.id)
 
     if index_records:

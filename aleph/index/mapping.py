@@ -23,6 +23,12 @@ DOCUMENT_MAPPING = {
     "properties": {
         "title": {"type": "string", "index": "analyzed"},
         "title_latin": {"type": "string", "index": "analyzed"},
+        "status": {"type": "string", "index": "not_analyzed"},
+        "crawler": {"type": "string", "index": "not_analyzed"},
+        "crawler_run": {"type": "string", "index": "not_analyzed"},
+        "error_type": {"type": "string", "index": "not_analyzed"},
+        "error_message": {"type": "string", "index": "analyzed"},
+        "error_details": {"type": "string", "index": "analyzed"},
         "content_hash": {"type": "string", "index": "not_analyzed"},
         "file_name": {"type": "string", "index": "not_analyzed"},
         "collection_id": {"type": "integer", "index": "not_analyzed"},
@@ -59,9 +65,6 @@ RECORD_MAPPING = {
     "_all": {
         "enabled": True
     },
-    "_parent": {
-        "type": TYPE_DOCUMENT
-    },
     "dynamic_templates": [
         {
             "fields": {
@@ -84,9 +87,7 @@ RECORD_MAPPING = {
         "page": {"type": "integer", "index": "not_analyzed"},
         "text": {"type": "string", "index": "analyzed"},
         "text_latin": {"type": "string", "index": "analyzed"},
-        "raw": {
-            "type": "object"
-        }
+        "raw": {"type": "object"}
     }
 }
 

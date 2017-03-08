@@ -121,6 +121,9 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       var search = $location.search(),
           query = {},
           path = null;
+      if (doc.status === 'fail') {
+        return '/documents/' + doc.id;
+      }
       if (doc.type === 'tabular') {
         var sheet = record ? record.sheet : 0,
             row = record ? record.row_id : null;

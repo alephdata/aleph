@@ -3,13 +3,13 @@ import urlnorm
 import parsedatetime
 import countrynames
 import phonenumbers
+from normality import stringify
 from urlparse import urlparse
 from datetime import date, datetime
 from urlparse import urldefrag
 from phonenumbers.phonenumberutil import NumberParseException
 from flanker.addresslib import address
 
-from aleph.text import string_value
 from aleph.data.validate import is_country_code, is_domain, is_partial_date
 
 PHONE_FORMAT = phonenumbers.PhoneNumberFormat.INTERNATIONAL
@@ -25,7 +25,7 @@ def parse_phone(number, country=None):
 
     https://github.com/daviddrysdale/python-phonenumbers
     """
-    number = string_value(number)
+    number = stringify(number)
     if number is None:
         return
     if country is not None:
@@ -70,7 +70,7 @@ def parse_email(email):
 def parse_url(text):
     """Clean and verify a URL."""
     # TODO: learn from https://github.com/hypothesis/h/blob/master/h/api/uri.py
-    url = string_value(text)
+    url = stringify(text)
     if url is not None:
         if url.startswith('//'):
             url = 'http:' + url
@@ -87,7 +87,7 @@ def parse_url(text):
 
 def parse_domain(text):
     """Extract a domain name from a piece of text."""
-    domain = string_value(text)
+    domain = stringify(text)
     if domain is not None:
         try:
             domain = urlparse(domain).hostname or domain
@@ -111,7 +111,7 @@ def parse_date(text, guess=True, date_format=None):
     if isinstance(text, date):
         return text.isoformat()
 
-    text = string_value(text)
+    text = stringify(text)
     if text is None:
         return
     elif date_format is not None:

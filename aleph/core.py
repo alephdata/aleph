@@ -42,6 +42,17 @@ def create_app(config={}):
     app.config.update(config)
     app_name = app.config.get('APP_NAME')
 
+    if app.config.get("TESTING"):
+        # The testing configuration is inferred from the production
+        # settings, but it can only be derived after the config files
+        # have actually been evaluated.
+        database_uri = app.config.get('SQLALCHEMY_DATABASE_URI')
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_uri + '_test'
+
+        es_index = app.config.get('ELASTICSEARCH_INDEX',
+                                  app.config.get('APP_NAME'))
+        app.config['ELASTICSEARCH_INDEX'] = es_index + '_test'
+
     if not app.debug and app.config.get('MAIL_ADMINS'):
         credentials = (app.config.get('MAIL_USERNAME'),
                        app.config.get('MAIL_PASSWORD'))
@@ -61,7 +72,6 @@ def create_app(config={}):
         Queue(WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY),
         Queue(USER_QUEUE, routing_key=USER_ROUTING_KEY),
     )
-    # celery.conf.update(app.config)
     celery.conf.update(
         imports=('aleph.queues'),
         broker_url=app.config['CELERY_BROKER_URL'],
@@ -78,6 +88,7 @@ def create_app(config={}):
         worker_disable_rate_limits=True,
         beat_schedule=app.config['CELERYBEAT_SCHEDULE'],
     )
+    celery.conf.update(app.config.get('CELERY', {}))
 
     migrate.init_app(app, db, directory=app.config.get('ALEMBIC_DIR'))
     configure_oauth(app)
@@ -113,6 +124,10 @@ def get_app_name():
 
 def get_app_title():
     return current_app.config.get('APP_TITLE') or get_app_name()
+
+
+def get_app_secret_key():
+    return current_app.config.get('SECRET_KEY')
 
 
 def get_es():
@@ -178,6 +193,7 @@ archive = LocalProxy(get_archive)
 schemata = LocalProxy(get_schemata)
 datasets = LocalProxy(get_datasets)
 upload_folder = LocalProxy(get_upload_folder)
+secret_key = LocalProxy(get_app_secret_key)
 
 
 def url_for(*a, **kw):

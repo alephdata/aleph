@@ -3,7 +3,7 @@ import logging
 
 from aleph.core import db, get_config
 from aleph.metadata import Metadata
-from aleph.model import Entity, Collection, CrawlerState
+from aleph.model import Entity, Collection, Document
 from aleph.model.common import make_textid
 from aleph.ingest import ingest_url, ingest_file
 from aleph.logic import update_entity_full, update_collection
@@ -62,9 +62,10 @@ class Crawler(object):
     def execute(self, incremental=False, **kwargs):
         # This an emergency flag intended for use when the queue
         # has become too large and needs to drain.
-        if get_config('DISABLE_CRAWLERS', False):
+        if get_config('DISABLE_CRAWLERS'):
             log.warning("Crawlers are disabled, skipping: %r", self)
             return
+
         self.run_count = 0
         try:
             self.incremental = incremental
@@ -85,11 +86,11 @@ class Crawler(object):
     def skip_incremental(self, foreign_id, content_hash=None):
         if not self.incremental:
             return False
-        q = db.session.query(CrawlerState.id)
-        q = q.filter(CrawlerState.collection_id == self.collection.id)
-        q = q.filter(CrawlerState.foreign_id == unicode(foreign_id))
+        q = db.session.query(Document.id)
+        q = q.filter(Document.collection_id == self.collection.id)
+        q = q.filter(Document.foreign_id == unicode(foreign_id))
         if content_hash is not None:
-            q = q.filter(CrawlerState.content_hash == content_hash)
+            q = q.filter(Document.content_hash == content_hash)
         skip = q.count() > 0
         if skip:
             log.info("Skip [%s]: %s", self.get_id(), foreign_id)
@@ -141,7 +142,7 @@ class Crawler(object):
         return '<%s()>' % self.get_id()
 
     def to_dict(self):
-        data = CrawlerState.crawler_stats(self.get_id())
+        data = Document.crawler_stats(self.get_id())
         data.update({
             'name': self.CRAWLER_NAME,
             'schedule': self.SCHEDULE,
@@ -168,9 +169,6 @@ class EntityCrawler(Crawler):
 class DocumentCrawler(Crawler):
 
     def execute(self, **kwargs):
-        CrawlerState.store_stub(self.collection.id,
-                                self.get_id(),
-                                self.crawler_run)
         db.session.commit()
         super(DocumentCrawler, self).execute(**kwargs)
 

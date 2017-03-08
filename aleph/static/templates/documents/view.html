@@ -1,0 +1,70 @@
+<div class="screen">
+  <div class="row">
+    <div class="col-md-8">
+
+      <div ng-if="doc.status == 'fail'">
+        <div class="alert alert-danger" role="alert">
+          <strong>This document could not be analysed.</strong> Its full contents are not
+          searchable and cannot be shown on the web. You can still download the original
+          file and open it on your computer. See below for more information about the error.
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label">
+                Crawler ID
+              </label>
+              <input type="text" class="form-control" readonly ng-model="doc.crawler">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label">
+                Crawler Run
+              </label>
+              <input type="text" class="form-control" readonly ng-model="doc.crawler_run">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label">
+                Foreign ID
+              </label>
+              <input type="text" class="form-control" readonly ng-model="doc.foreign_id">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label">
+                Content Hash
+              </label>
+              <input type="text" class="form-control" readonly ng-model="doc.content_hash">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="name">
+            Error Message
+          </label>
+          <input type="text" class="form-control" readonly ng-model="doc.error_message">
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="name">
+            Traceback
+          </label>
+          <pre ng-bind="doc.error_details"></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <metadata-sidebar doc="doc"></metadata-sidebar>
+    </div>
+  </div>
+</div>
