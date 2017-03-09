@@ -52,6 +52,7 @@ pyahocorasick==1.1.4
 pycrypto==2.6.1
 pylru==1.0.9
 https://github.com/mattgwwalker/msg-extractor/archive/2a24c9950d34932ed5979693cb70d758d78715df.zip#egg=extractmsg
+pandas==0.19.2
 
 # weird pudo stuff
 countrynames>=1.1.1

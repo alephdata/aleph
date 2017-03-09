@@ -49,7 +49,11 @@ def load_dataset(dataset):
     """Index all the entities and links in a given dataset."""
     for query_idx, query in enumerate(dataset.queries):
         rows = []
-        for row_idx, row in enumerate(query.iterrows()):
+        if query.db_connect:
+            generator = query.iterrows()
+        else:
+            generator = query.itercsvrows()
+        for row_idx, row in enumerate(generator):
             rows.append(row)
             if len(rows) >= QUEUE_PAGE:
                 load_rows.delay(dataset.name, query_idx, rows)
