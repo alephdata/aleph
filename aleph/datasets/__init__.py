@@ -4,7 +4,7 @@ import logging
 from aleph.authz import get_public_roles
 from aleph.util import dict_list
 from aleph.model import Role
-from aleph.datasets.query import Query
+from aleph.datasets.query import DBQuery, CSVQuery
 
 log = logging.getLogger(__name__)
 
@@ -50,7 +50,10 @@ class Dataset(object):
     @property
     def queries(self):
         for query in self._queries:
-            yield Query(self, query)
+            if 'database' in query or 'databases' in query:
+                yield DBQuery(self, query)
+            else:
+                yield CSVQuery(self, query)
 
     def to_dict(self):
         return {
