@@ -3,7 +3,6 @@ import unicodecsv
 import six
 import logging
 import requests
-import pandas as pd
 from uuid import uuid4
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy import select, text as sql_text
@@ -27,24 +26,41 @@ class QueryTable(object):
         self.data = data
         self.table_ref = data.get('table')
         self.alias_ref = data.get('alias', self.table_ref)
+
+    def __repr__(self):
+        return '<QueryTable(%r,%r)>' % (self.alias_ref, self.table_ref)
+
+
+class DBQueryTable(QueryTable):
+
+    def __init__(self, query, data):
+        super(DBQueryTable, self).__init__(query, data)
+        self.table = Table(self.table_ref, self.query.meta, autoload=True)
+        self.alias = self.table.alias(self.alias_ref)
+
+        self.refs = {}
+        for column in self.alias.columns:
+            name = '%s.%s' % (self.alias_ref, column.name)
+            labeled_column = column.label('col_%s' % uuid4().get_hex()[:10])
+            self.refs[name] = labeled_column
+            self.refs[column.name] = labeled_column
+
+    def __repr__(self):
+        return '<DBQueryTable(%r,%r)>' % (self.alias_ref, self.table_ref)
+
+
+class CSVQueryTable(QueryTable):
+
+    def __init__(self, query, data):
+        super(CSVQueryTable, self).__init__(query, data)
         self.table_location = data.get('table_location')
-        if self.table_location:
-            self.csv_reader, self.columns = self.create_csv_reader()
-        else:
-            self.table = Table(self.table_ref, self.query.meta, autoload=True)
-            self.alias = self.table.alias(self.alias_ref)
-            self.columns = self.alias.columns
+        self.csv_reader, self.columns = self.create_csv_reader()
+
         self.refs = {}
         for column in self.columns:
-            labeled_column = 'col_%s' % uuid4().get_hex()[:10]
-            if hasattr(column, 'name') and hasattr(column, 'label'):
-                column_name = column.name
-                labeled_column = column.label('col_%s' % uuid4().get_hex()[:10])
-            else:
-                column_name = column
-            name = '%s.%s' % (self.alias_ref, self.strip_cell(column_name))
-            self.refs[name] = labeled_column
-            self.refs[column_name] = labeled_column
+            name = '%s.%s' % (self.alias_ref, self.strip_cell(column))
+            self.refs[column] = name
+            self.refs[name] = column
 
     def strip_cell(self, fn):
         fn = fn.strip()
@@ -63,7 +79,7 @@ class QueryTable(object):
                 temp_reader = unicodecsv.reader(fh)
                 fieldnames = temp_reader.next()
         except requests.exceptions.RequestException as e:
-            log.info('create_reader: %s' % e)
+            log.info('create_csv_reader: %s' % e)
             return
         else:
             if r.encoding is None:
@@ -80,7 +96,7 @@ class QueryTable(object):
                 yield row
 
     def __repr__(self):
-        return '<QueryTable(%r,%r)>' % (self.alias_ref, self.table_ref)
+        return '<CSVQueryTable(%r,%r)>' % (self.alias_ref, self.table_ref)
 
 
 class Query(object):
@@ -89,13 +105,6 @@ class Query(object):
     def __init__(self, dataset, data):
         self.dataset = dataset
         self.data = data
-        self.db_connect = data.get('database') is not None
-        if self.db_connect:
-            self.database_uri = os.path.expandvars(data.get('database'))
-
-        tables = dict_list(data, 'table', 'tables')
-
-        self.tables = [QueryTable(self, f) for f in tables]
 
         self.entities = []
         for ename, edata in data.get('entities').items():
@@ -104,21 +113,6 @@ class Query(object):
         self.links = []
         for ldata in data.get('links', []):
             self.links.append(LinkMapper(self, ldata))
-
-    @property
-    def engine(self):
-        if self.db_connect:
-            if not hasattr(self, '_engine'):
-                self._engine = create_engine(self.database_uri,
-                                             poolclass=NullPool)
-            return self._engine
-
-    @property
-    def meta(self):
-        if not hasattr(self, '_meta'):
-            self._meta = MetaData()
-            self._meta.bind = self.engine
-        return self._meta
 
     def get_column(self, ref):
         for table in self.tables:
@@ -131,10 +125,6 @@ class Query(object):
             if ref == table.alias_ref:
                 return table
         raise TypeError("[%r] Cannot find table: %s" % (self, ref))
-
-    @property
-    def from_clause(self):
-        return [t.alias for t in self.tables]
 
     @property
     def active_refs(self):
@@ -153,42 +143,34 @@ class Query(object):
         """
         return [self.get_column(r) for r in self.active_refs]
 
-    def create_dataframe(self):
-        """Create dataframe from our CSV table(s)"""
-        dfs = {}
-        for table in self.tables:
-            data = []
-            for line in table.csv_reader:
-                datum = {}
-                for k, v in table.refs.items():
-                    if k in line.keys():
-                        datum[v] = table.strip_cell(line[k])
-                        data.append(datum)
-            df = pd.DataFrame(data)
-            for col, val in self.data.get('filters', {}).items():
-                if col in table.refs.keys():
-                    df = df[df[self.get_column(col)] == val]
-            for col, val in self.data.get('filters_not', {}).items():
-                if col in table.refs.keys():
-                    df = df[df[self.get_column(col)] != val]
-            dfs[table.table_ref] = df
-        # Now the joins
-        for join in self.data.get('joins', []):
-            left = dfs[join.get('left').split('.')[0]]
-            left_on = self.get_column(join.get('left'))
-            right = dfs[join.get('right').split('.')[0]]
-            right_on = self.get_column(join.get('right'))
-            dfs[join.get('left').split('.')[0]] = left.merge(right,
-                                                             left_on=left_on,
-                                                             right_on=right_on,
-                                                             how='inner')
-            final_df = dfs[join.get('left').split('.')[0]]
 
-        # In case we've only got a single dataframe and no joins
-        if len(dfs.keys()) == 1:
-            final_df = dfs[dfs.keys()[0]]
+class DBQuery(Query):
 
-        return final_df
+    def __init__(self, dataset, data):
+        super(DBQuery, self).__init__(dataset, data)
+
+        tables = dict_list(data, 'table', 'tables')
+
+        self.database_uri = os.path.expandvars(data.get('database'))
+        self.tables = [DBQueryTable(self, f) for f in tables]
+
+    @property
+    def engine(self):
+        if not hasattr(self, '_engine'):
+            self._engine = create_engine(self.database_uri,
+                                         poolclass=NullPool)
+        return self._engine
+
+    @property
+    def meta(self):
+        if not hasattr(self, '_meta'):
+            self._meta = MetaData()
+            self._meta.bind = self.engine
+        return self._meta
+
+    @property
+    def from_clause(self):
+        return [t.alias for t in self.tables]
 
     def apply_filters(self, q):
         for col, val in self.data.get('filters', {}).items():
@@ -210,25 +192,6 @@ class Query(object):
         q = self.apply_filters(q)
         return q
 
-    def compose_csv_query(self):
-        tables = '; '.join(['table "%s" from %s using columns %s' %
-                            (table.table_ref, table.table_location,
-                             ', '.join(['%s as %s' %
-                                        (ref, self.get_column(ref))
-                                        for ref in self.active_refs]))
-                           for table in self.tables])
-        filters = ['%s == %s' % (col, val)
-                   for col, val in self.data.get('filters', {}).items()]
-        filters_not = ['%s != %s' % (col, val)
-                       for col, val in self.data.get('filters_not', {}).items()] # noqa
-        joins = ['%s == %s' % (j.get('left'), j.get('right'))
-                 for j in self.data.get('joins', [])]
-        where = ''
-        if len(filters) or len(filters_not) or len(joins):
-            where += 'where '
-            where += ', '.join(filters + filters_not + joins)
-        return ', '.join([tables, where])
-
     def iterrows(self):
         """Compose the actual query and return an iterator of ``Record``."""
         mapping = {self.get_column(r).name: r for r in self.active_refs}
@@ -248,20 +211,61 @@ class Query(object):
                     data[k] = v
                 yield data
 
-    def itercsvrows(self):
+
+class CSVQuery(Query):
+    def __init__(self, dataset, data):
+        super(CSVQuery, self).__init__(dataset, data)
+
+        tables = dict_list(data, 'table', 'tables')
+
+        self.tables = [CSVQueryTable(self, f) for f in tables]
+
+    def compose_query(self):
+        tables = ', '.join(['table "%s" from %s' % (table.table_ref,
+                                                    table.table_location)
+                           for table in self.tables])
+        columns = 'on columns ' + ', '.join(['%s as %s' % (self.get_column(ref),
+                                                           ref)
+                                             for ref in self.active_refs])
+        filters = ['%s == %s' % (col, val)
+                   for col, val in self.data.get('filters', {}).items()]
+        filters_not = ['%s != %s' % (col, val)
+                       for col, val in self.data.get('filters_not', {}).items()] # noqa
+        joins = ['%s == %s' % (j.get('left'), j.get('right'))
+                 for j in self.data.get('joins', [])]
+        where = ''
+        if len(filters) or len(filters_not) or len(joins):
+            where += 'where '
+            where += ', '.join(filters + filters_not + joins)
+        return ', '.join([tables, columns, where])
+
+    def check_filters(self, data_k, data_v):
+        passes = True
+        for k, v in self.data.get('filters', {}).items():
+            if k == data_k and str(v).decode('utf-8') != data_v:
+                passes = False
+        for k, v in self.data.get('filters_not', {}).items():
+            if k == data_k and str(v).decode('utf-8') == data_v:
+                passes = False
+        return passes
+
+    def iterrows(self):
         """Compose the actual query and return an iterator of ``Record``."""
         mapping = {self.get_column(r): r for r in self.active_refs}
-        csv_q = self.compose_csv_query()
-        log.info("Query [%s]: %s", self.dataset.name, csv_q)
-        rp = self.create_dataframe()
+        q = self.compose_query()
+        log.info("Query [%s]: %s", self.dataset.name, q)
         log.info("Query executed, loading data...")
-        rows = rp.itertuples(index=False)
-        for row in rows:
-            data = {}
-            for f in row._fields:
-                mf = mapping.get(f, f)
-                data[mf] = getattr(row, f)
-            yield data
+        filters = self.data.get('filters')
+        filters_not = self.data.get('filters_not')
+        for table in self.tables:
+            for row in table.csv_reader:
+                data = {}
+                for k, v in row.items():
+                    k = mapping.get(k)
+                    if k is not None:
+                        if self.check_filters(k, v):
+                            data[k] = table.strip_cell(v)
+                yield data
         log.info("Loading done.")
 
     def __repr__(self):
