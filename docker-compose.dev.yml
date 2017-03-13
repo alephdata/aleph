@@ -15,42 +15,49 @@ services:
     image: rabbitmq
 
   worker:
-    image: pudo/aleph:latest
-    command: make worker
+    image: pudo/aleph-base:latest
+    working_dir: /aleph
+    command: ls
     links:
       - postgres
       - elasticsearch
       - rabbitmq
     volumes:
-      - "archive:/archive"
+      - "./build/logs/worker:/var/log"
+      - "./build/archive:/data"
+      - "./:/aleph"
       - "polyglot:/polyglot"
     environment: &environment
       C_FORCE_ROOT: "true"
       ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
       ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
       ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-      ALEPH_ARCHIVE_PATH: /archive
       POLYGLOT_DATA_PATH: /polyglot
     env_file:
       - aleph.env
 
   beat:
-    image: pudo/aleph:latest
-    command: make beat
+    image: pudo/aleph-base:latest
+    working_dir: /aleph
+    command: make install beat
     links:
       - postgres
       - elasticsearch
       - rabbitmq
     volumes:
-      - "archive:/archive"
+      - "./build/logs/beat:/var/log"
+      - "./build/data/beat:/var/lib"
+      - "./build/archive:/data"
+      - "./:/aleph"
       - "polyglot:/polyglot"
     environment: *environment
     env_file:
       - aleph.env
 
   app:
-    image: pudo/aleph:latest
-    command: make app
+    image: pudo/aleph-base:latest
+    working_dir: /aleph
+    command: make install app
     ports:
       - "13376:8000"
     links:
@@ -58,12 +65,13 @@ services:
       - elasticsearch
       - rabbitmq
     volumes:
-      - "archive:/archive"
+      - "./build/logs/web:/var/log"
+      - "./build/archive:/data"
+      - "./:/aleph"
       - "polyglot:/polyglot"
     environment: *environment
     env_file:
       - aleph.env
 
 volumes:
-  archive:
   polyglot:
