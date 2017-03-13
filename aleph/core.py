@@ -5,6 +5,7 @@ from urlparse import urljoin
 from werkzeug.local import LocalProxy
 from flask import Flask, current_app
 from flask import url_for as flask_url_for
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_assets import Environment
 from flask_migrate import Migrate
@@ -36,8 +37,10 @@ WORKER_QUEUE = 'worker'
 WORKER_ROUTING_KEY = 'worker.process'
 CELERYD_MAX_TASKS_PER_CHILD = int(os.environ.get('CELERYD_MAX_TASKS_PER_CHILD', '10'))
 
+
 def create_app(config={}):
     app = Flask('aleph')
+    CORS(app)
     app.config.from_object(default_settings)
     if config.get('TESTING'):
         app.config.from_envvar('ALEPH_TEST_SETTINGS', silent=True)
