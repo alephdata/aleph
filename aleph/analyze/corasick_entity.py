@@ -25,6 +25,7 @@ class AutomatonCache(object):
 
     def _generate(self):
         latest = Entity.latest()
+        self.automaton = Automaton()
         if latest is None:
             return
         if self.latest is not None and self.latest >= latest:
@@ -41,11 +42,10 @@ class AutomatonCache(object):
                 else:
                     matches[term] = [entity.id]
 
+
         if not len(matches):
-            self.automaton = None
             return
 
-        self.automaton = Automaton()
         for term, entities in matches.iteritems():
             self.automaton.add_word(term.encode('utf-8'), entities)
         self.automaton.make_automaton()
