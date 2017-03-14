@@ -33,8 +33,8 @@ alongside the actual files that are to be imported, while separating
 Aleph from previous workflow stages (e.g. the scraping of a web site).
 
 Metafolders can be generated using the Python
-[metafolder](https://github.com/pudo/metafolder) library, and the
-[krauler](https://github.com/pudo/krauler) web crawling/scraping tool.
+[metafolder](https://github.com/alephdata/metafolder) library, and the
+[krauler](https://github.com/alephdata/krauler) web crawling/scraping tool.
 
 ## Crawlers
 

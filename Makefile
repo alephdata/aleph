@@ -27,14 +27,14 @@ test: egg-info
 	nosetests --with-coverage --cover-package=aleph --cover-erase
 
 base:
-	docker build -t pudo/aleph-base:1.8 contrib/base
-	docker build -t pudo/aleph-base:latest contrib/base
-	docker push pudo/aleph-base:1.8
-	docker push pudo/aleph-base:latest
+	docker build -t alephdata/base:1.2 contrib/base
+	docker build -t alephdata/base:latest contrib/base
+	docker push alephdata/base:1.2
+	docker push alephdata/base:latest
 
 build:
-	docker build -t pudo/aleph:latest .
-	docker push pudo/aleph:latest
+	docker build -t alephdata/aleph:latest .
+	docker push alephdata/aleph:latest
 
 docs: egg-info docs-clean
 	sphinx-build -b html -d docs/_build/doctrees ./docs docs/_build/html

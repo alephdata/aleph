@@ -73,8 +73,8 @@ Aleph provides also the tools to work with the format and process Metafolder
 files.
 
 Metafolder files can be generated easily using the Python
-[metafolder](https://github.com/pudo/metafolder) library, and
-the [krauler](https://github.com/pudo/krauler) web crawling/scraping tool.
+[metafolder](https://github.com/alephdata/metafolder) library, and
+the [krauler](https://github.com/alephdata/krauler) web crawling/scraping tool.
 
 For the metafolder items to be loaded it is important to include the
 information on the document source which they are to be associated with.

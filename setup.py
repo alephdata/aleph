@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='aleph',
-    version='1.1',
+    version='1.2-dev',
     description="Document sifting web frontend",
     long_description="",
     classifiers=[
@@ -14,7 +14,7 @@ setup(
     keywords='',
     author='Friedrich Lindenberg',
     author_email='friedrich@pudo.org',
-    url='http://pudo.org',
+    url='http://aleph.readthedocs.io',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'test']),
     namespace_packages=[],

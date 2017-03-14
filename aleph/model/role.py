@@ -104,7 +104,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         if is_admin is not None:
             role.is_admin = is_admin
 
-        # see: https://github.com/pudo/aleph/issues/111
+        # see: https://github.com/alephdata/aleph/issues/111
         auto_admins = [a.lower() for a in get_config('AUTHZ_ADMINS')]
         if email is not None and email.lower() in auto_admins:
             role.is_admin = True

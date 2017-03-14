@@ -30,7 +30,7 @@ ldap = LDAP()
 # these two queues are used so that background processing tasks
 # spawned by the user can be handled more quickly through a
 # separate worker daemon and don't get boxed in behind very
-# large bulk imports. see: https://github.com/pudo/aleph/issues/44
+# large bulk imports. see: https://github.com/alephdata/aleph/issues/44
 USER_QUEUE = 'user'
 USER_ROUTING_KEY = 'user.process'
 WORKER_QUEUE = 'worker'

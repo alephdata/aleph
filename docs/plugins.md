@@ -27,7 +27,7 @@ setup(
 ```
 
 See the
-[main setup.py](https://github.com/pudo/aleph/blob/master/setup.py) for a real
+[main setup.py](https://github.com/alephdata/aleph/blob/master/setup.py) for a real
 example.
 
 The supported entry points include:

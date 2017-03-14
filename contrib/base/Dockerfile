@@ -11,10 +11,10 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 68576280
 RUN apt-get update -y -q && apt-get -y dist-upgrade && apt-get install -y -q  \
         curl git python-pip python-virtualenv build-essential python-dev \
         libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates less \
-        postgresql-client-9.4 unrar unrar-free unzip locales libreoffice libopenjpeg5 \
-        libtiff5-dev libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev \
-        poppler-utils poppler-data unrtf pstotext python-numpy default-jdk \
-        libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
+        postgresql-client-9.4 unrar unrar-free unzip locales libreoffice \
+        libopenjpeg5 libtiff5-dev libjpeg-dev zlib1g-dev libfreetype6-dev \
+        liblcms2-dev poppler-utils poppler-data unrtf pstotext python-numpy \
+        default-jdk libwebp-dev tcl8.6-dev tk8.6-dev python-tk python-pil \
         libopenjpeg-dev imagemagick-common imagemagick unoconv mdbtools \
         cabextract p7zip-full libboost-python-dev libgsf-1-dev \
         libtesseract-dev vim libjpeg-dev libicu-dev libldap2-dev libsasl2-dev \

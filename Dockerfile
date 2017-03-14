@@ -1,4 +1,4 @@
-FROM pudo/aleph-base:1.8
+FROM alephdata/base:latest
 MAINTAINER Friedrich Lindenberg <friedrich@pudo.org>
 ENV DEBIAN_FRONTEND noninteractive
 

@@ -56,9 +56,9 @@ You can also build the Aleph images locally. This could be useful while working
 on the Dockerfile changes and new dependency upgrades.
 
 Aleph provides two commands to build the images. First one is `make base`, this
-will build the `pudo/aleph-base` image (this is an intermediary image with
+will build the `alephdata/base` image (this is an intermediary image with
 system-level dependencies for Aleph). The second one is `make build`, this will
-build the `pudo/aleph` image (this will generate a production ready image).
+build the `alephdata/aleph` image (this will generate a production ready image).
 
 ## Front-end
 
@@ -89,12 +89,12 @@ cache!
 Aleph runs on PostgreSQL and ElasticSearch along with a couple of system
 tools like OpenOffice, ImageMagik, Tesseract and wkhtmltopdf. For a full list
 of system dependencies please review the [`aleph_base`
-Dockerfile](https://github.com/pudo/aleph/blob/master/contrib/base/Dockerfile).
+Dockerfile](https://github.com/alephdata/aleph/blob/master/contrib/base/Dockerfile).
 
 If you decide to not use Docker compose, you will have to provide all these
 dependencies and services and change the configuration file accordingly.
 An application only Docker image is also available at
-[`pudo/aleph`](https://hub.docker.com/r/pudo/aleph/).
+[`alephdata/aleph`](https://hub.docker.com/r/alephdata/aleph/).
 
 Finally, aleph is optimized to use certain Amazon Web Services: SQS and S3. To
 enable AWS features, you will need to set the AWS key ID and access key in the
@@ -117,14 +117,14 @@ $ docker-compose run app aleph upgrade
 
 Most of the Aleph configuration is handled via a set of values in a Python
 configuration file. The defaults are documented in the
-[default_settings.py](https://github.com/pudo/aleph/blob/master/aleph/default_settings.py)
+[default_settings.py](https://github.com/alephdata/aleph/blob/master/aleph/default_settings.py)
 file and can be overridden by pointing to a bespoke configuration file using
 the environment variable ``ALEPH_SETTINGS``.
 
 While using Docker, the config file, in turn, is largely configured using
 environment variables in accordance with [12 factor
 principles](https://12factor.net/). These environment variables can be found also in
-[docker_settings.py](https://github.com/pudo/aleph/blob/master/contrib/docker_settings.py).
+[docker_settings.py](https://github.com/alephdata/aleph/blob/master/contrib/docker_settings.py).
 
 ### Feature options
 
@@ -136,7 +136,7 @@ principles](https://12factor.net/). These environment variables can be found als
   **Note:** using Tika with OCR'd documents may yield
   different results from the built-in mechanism and OCR may not be performed
   on the same sections of a document's content
-  (See: [#104](https://github.com/pudo/aleph/issues/104)).
+  (See: [#104](https://github.com/alephdata/aleph/issues/104)).
 
 ## Running tests
 

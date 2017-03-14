@@ -6,8 +6,8 @@
   -- `The Aleph <http://www.phinnweb.org/links/literature/borges/aleph.html>`_,
   Jorge Luis Borges
 
-.. figure:: https://api.travis-ci.org/pudo/aleph.png
-   :target: https://travis-ci.org/pudo/aleph/
+.. figure:: https://api.travis-ci.org/alephdata/aleph.png
+   :target: https://travis-ci.org/alephdata/aleph/
    :alt: Build Status
 
 **Aleph** is a tool for indexing large amounts of both unstructured (PDF, Word,
@@ -62,5 +62,5 @@ OpenOil. For coordination, the following mailing list exists:
 `aleph-search <https://groups.google.com/forum/#!forum/aleph-search>`_
 
 If you find any errors or issues using Aleph please
-`file an issue on Github <https://github.com/pudo/aleph/issues/new>`_ or
+`file an issue on Github <https://github.com/alephdata/aleph/issues/new>`_ or
 contact the mailing list.
