@@ -17,6 +17,7 @@ class AutomatonCache(object):
 
     def __init__(self):
         self.latest = None
+        self.automaton = Automaton()
         self.matches = {}
 
     def generate(self):
@@ -25,7 +26,6 @@ class AutomatonCache(object):
 
     def _generate(self):
         latest = Entity.latest()
-        self.automaton = Automaton()
         if latest is None:
             return
         if self.latest is not None and self.latest >= latest:
