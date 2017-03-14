@@ -42,6 +42,7 @@ class AutomatonCache(object):
                 else:
                     matches[term] = [entity.id]
 
+
         if not len(matches):
             return
 
