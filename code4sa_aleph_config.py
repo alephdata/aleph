@@ -11,7 +11,7 @@ APP_BASEURL = os.environ.get('ALEPH_APP_URL')
 APP_LOGO = os.environ.get('ALEPH_LOGO')
 APP_FAVICON = os.environ.get('ALEPH_FAVICON')
 
-SAMPLE_SEARCHES = ['Eskom', 'SABC', '"call for comment"']
+SAMPLE_SEARCHES = ['SASSA', '"call for comment"', 'sheriff auction']
 
 ELASTICSEARCH_URL = os.environ.get('ALEPH_ELASTICSEARCH_URI')
 
