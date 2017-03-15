@@ -49,12 +49,12 @@ def match_form(text):
     The goal of this function is not to retain a readable version of the given
     string, but rather to yield a normalised version suitable for comparisons
     and machine analysis.
-    """"
+    """
     return normalize(text, lowercase=True, ascii=True)
 
 
 def string_value(value, encoding_default='utf-8', encoding=None):
-    return stringify(value, encoding=encoding
+    return stringify(value, encoding=encoding,
                      encoding_default=encoding_default)
 
 
