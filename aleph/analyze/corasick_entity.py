@@ -1,7 +1,7 @@
 import logging
 from threading import RLock
 from collections import defaultdict
-from ahocorasick import Automaton
+from ahocorasick import Automaton, EMPTY
 
 from aleph.core import db, get_config
 from aleph.text import normalize_strong
@@ -65,7 +65,7 @@ class AhoCorasickEntityAnalyzer(Analyzer):
             self.disabled = True
 
     def on_text(self, text):
-        if self.cache.automaton is None:
+        if self.cache.automaton.kind == EMPTY:
             return
         text = normalize_strong(text)
         if text is None or len(text) <= 2:
