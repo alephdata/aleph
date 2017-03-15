@@ -1,15 +1,16 @@
 import os
-import unicodecsv
 import six
 import logging
 import requests
 from uuid import uuid4
+from unicodecsv import DictReader
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy import select, text as sql_text
 from sqlalchemy.pool import NullPool
 from sqlalchemy.schema import Table
 
 from aleph.util import dict_list
+from aleph.text import string_value
 from aleph.datasets.mapper import EntityMapper, LinkMapper
 
 log = logging.getLogger(__name__)
@@ -161,70 +162,49 @@ class CSVQuery(Query):
 
     def __init__(self, dataset, data):
         super(CSVQuery, self).__init__(dataset, data)
+        self.csv_urls = set()
+        for csv_url in dict_list(data, 'csv_url', 'csv_urls'):
+            self.csv_urls.add(os.path.expandvars(csv_url))
 
-        self.table = dict_list(data, 'table', 'tables')[0]
+        if not len(self.csv_urls):
+            log.warning("[%s]: no CSV URLs specified", dataset.name)
 
-    @property
-    def csv_reader(self):
+    def read_csv(self, csv_url):
         try:
-            r = requests.get(self.table.get('csv_url'), stream=True)
-            r.raise_for_status()
-        except requests.exceptions.RequestException as e:
-            log.info('create_csv_reader: %s' % e)
+            res = requests.get(csv_url, stream=True)
+            res.raise_for_status()
+        except requests.exceptions.RequestException as exc:
+            log.error('Failed to open CSV [%s]: %s', csv_url, exc)
             return
 
-        if r.encoding is None:
-            r.encoding = 'utf-8'
-        reader = unicodecsv.DictReader(r.iter_lines(decode_unicode=True))
+        if res.encoding is None:
+            res.encoding = 'utf-8'
+        for row in DictReader(res.iter_lines(decode_unicode=True)):
+            yield row
 
-        return reader
-
-    def strip_cell(self, fn):
-        fn = fn.strip()
-        if len(fn) > 1 and fn[0] == '"' and fn[-1] == '"':
-            fn = fn[1:-1].strip()  # In case of interior whitespace
-        return fn
-
-    def query_message(self):
-        table = 'table "%s" from url %s' % (self.table.get('table'),
-                                            self.table.get('csv_url'))
-        columns = 'on columns ' + ', '.join(self.active_refs)
-        filters = ['%s == %s' % (col, val)
-                   for col, val in self.data.get('filters', {}).items()]
-        filters_not = ['%s != %s' % (col, val)
-                       for col, val in self.data.get('filters_not', {}).items()] # noqa
-        where = ''
-        if len(filters) or len(filters_not):
-            where += 'where '
-            where += ', '.join(filters + filters_not)
-        return ', '.join([table, columns, where])
-
-    def check_filters(self, data_k, data_v):
-        passes = True
+    def check_filters(self, data):
         for k, v in self.data.get('filters', {}).items():
-            if k == data_k and str(v).decode('utf-8') != data_v:
-                passes = False
+            if string_value(v) != data.get(k):
+                return False
         for k, v in self.data.get('filters_not', {}).items():
-            if k == data_k and str(v).decode('utf-8') == data_v:
-                passes = False
-        return passes
+            if string_value(v) == data.get(k):
+                return False
+        return True
 
     def iterrows(self):
         """Iterate through the table applying filters on-the-go."""
         mapping = {ref.split('.')[-1]: ref for ref in self.active_refs}
-        m = self.query_message()
-        log.info("Query [%s]: %s", self.dataset.name, m)
-        log.info("Query executed, loading data...")
-        count = 0
-        for row in self.csv_reader:
-            data = {}
-            for k, v in row.items():
-                k = mapping.get(self.strip_cell(k))
-                if k is not None:
-                    if self.check_filters(k, v):
-                        count += 1
-                        data[k] = self.strip_cell(v)
-                yield data
+        for csv_url in self.csv_urls:
+            log.info("Import [%s]: %s", self.dataset.name, csv_url)
+            for row in self.read_csv(csv_url):
+                data = {}
+                for k, v in row.items():
+                    k = mapping.get(string_value(k))
+                    if k is None:
+                        continue
+                    data[k] = string_value(v)
+                if self.check_filters(data):
+                    yield data
         log.info("Loading done.")
 
     def __repr__(self):
