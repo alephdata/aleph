@@ -5,7 +5,7 @@ import logging
 from collections import defaultdict
 
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
-from aleph.text import normalize_strong
+from aleph.text import match_form
 from aleph.model import Entity, EntityIdentity, Reference, Document, Alert
 from aleph.model.common import merge_data
 from aleph.datasets.util import finalize_index
@@ -72,7 +72,7 @@ def generate_entity_references(entity):
     documents = defaultdict(int)
     try:
         for document_id, text in scan_entity_mentions(entity):
-            text = normalize_strong(text)
+            text = match_form(text)
             if text is None or len(text) <= 2:
                 continue
             for match in rex.finditer(text):

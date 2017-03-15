@@ -5,7 +5,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 
 from aleph.core import db, schemata
-from aleph.text import normalize_strong, string_value
+from aleph.text import match_form, string_value
 from aleph.util import ensure_list
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
@@ -195,7 +195,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         # If, for example, and entity matches both "Al Qaeda" and
         # "Al Qaeda in Iraq, Syria and the Levant", it is useless to
         # search for the latter.
-        terms = set([normalize_strong(t) for t in self.terms])
+        terms = set([match_form(t) for t in self.terms])
         regex_terms = set()
         for term in terms:
             if term is None or len(term) < 4 or len(term) > 120:

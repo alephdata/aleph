@@ -15,7 +15,7 @@ def text_query_string(text, literal=False):
     return {
         'query_string': {
             'query': text,
-            'fields': ['text^6', 'text_latin^2', '_all'],
+            'fields': ['text'],
             'default_operator': 'AND',
             'use_dis_max': True
         }

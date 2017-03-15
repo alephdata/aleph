@@ -127,8 +127,7 @@ def documents_query(state, fields=None, facets=True, since=None):
                 if doc['id'] != record['document_id']:
                     continue
                 hlt = hit.get('highlight', {})
-                texts = hlt.get('text', []) or hlt.get('text_latin', [])
-                texts = [clean_highlight(t) for t in texts]
+                texts = [clean_highlight(t) for t in hlt.get('text', [])]
                 texts = [t for t in texts if len(t)]
                 if len(texts):
                     record['text'] = texts[0]

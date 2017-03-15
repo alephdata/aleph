@@ -4,7 +4,7 @@ from collections import defaultdict
 from ahocorasick import Automaton
 
 from aleph.core import db, get_config
-from aleph.text import normalize_strong
+from aleph.text import match_form
 from aleph.model import Reference, Entity
 from aleph.analyze.analyzer import Analyzer
 
@@ -67,7 +67,7 @@ class AhoCorasickEntityAnalyzer(Analyzer):
     def on_text(self, text):
         if self.cache.automaton is None:
             return
-        text = normalize_strong(text)
+        text = match_form(text)
         if text is None or len(text) <= 2:
             return
         text = text.encode('utf-8')

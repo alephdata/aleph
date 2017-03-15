@@ -1,26 +1,18 @@
 from normality import ascii_text
 from aleph.util import ensure_list
-from aleph.text import string_value
+from aleph.text import index_form
 
 
 def finalize_index(data, schema):
     """Apply final denormalisations to the index."""
     properties = data.get('properties', {})
 
-    text = set()
+    texts = []
     for vs in properties.values():
         for v in ensure_list(vs):
-            v = string_value(v)
-            if v is None or len(v) < 2:
-                continue
-            v = v.strip()
-            text.add(v)
-            v = ascii_text(v)
-            text.add(v)
-            # v = category_replace(v)
-            # text.add(v)
+            texts.append(v)
 
-    data['text'] = list(text)
+    data['text'] = index_form(texts)
     data['fingerprints'] = data.get('fingerprints', [])
 
     # Generate inverted representations of the data stored in properties.

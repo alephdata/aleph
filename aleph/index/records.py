@@ -1,13 +1,14 @@
 import six
 import logging
+from normality import stringify
 from hashlib import sha1
-from normality import ascii_text, stringify
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch.helpers import bulk, scan
 
 from aleph.core import es, es_index
 from aleph.model import Document
 from aleph.index.mapping import TYPE_RECORD
+from aleph.text import index_form
 
 log = logging.getLogger(__name__)
 
@@ -46,30 +47,21 @@ def generate_records(document):
             tid.update(str(page.id))
             tid = tid.hexdigest()
 
-            text = stringify(page.text)
-            latin = ascii_text(text)
-
             yield {
                 '_id': tid,
                 '_type': TYPE_RECORD,
                 '_index': six.text_type(es_index),
                 '_source': {
                     'type': 'page',
-                    'content_hash': document.content_hash,
                     'document_id': document.id,
                     'collection_id': document.collection_id,
                     'page': page.number,
-                    'text': text,
-                    'text_latin': latin
+                    'text': index_form([page.text])
                 }
             }
     elif document.type == Document.TYPE_TABULAR:
         for record in document.records:
             data = {k: stringify(v) for (k, v) in record.data.items()}
-
-            text = [v for v in data.values()]
-            latin = [ascii_text(t) for t in text]
-            latin = [t for t in latin if t not in text and t is not None]
 
             yield {
                 '_id': record.tid,
@@ -77,13 +69,11 @@ def generate_records(document):
                 '_index': six.text_type(es_index),
                 '_source': {
                     'type': 'row',
-                    'content_hash': document.content_hash,
                     'document_id': document.id,
                     'collection_id': document.collection_id,
                     'row_id': record.row_id,
                     'sheet': record.sheet,
-                    'text': text,
-                    'text_latin': latin,
+                    'text': index_form(data.values()),
                     'raw': data
                 }
             }

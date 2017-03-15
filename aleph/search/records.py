@@ -44,10 +44,6 @@ def records_query_internal(document_id, shoulds, size=5):
                 'text': {
                     'fragment_size': SNIPPET_SIZE,
                     'number_of_fragments': 1
-                },
-                'text_latin': {
-                    'fragment_size': SNIPPET_SIZE,
-                    'number_of_fragments': 1
                 }
             }
         },
