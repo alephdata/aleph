@@ -173,7 +173,7 @@ def init(skip=''):
 def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_db()
-    upgrade_search()
+    # upgrade_search()
     archive.upgrade()
 
 
