@@ -1,6 +1,8 @@
 import os
+import unicodecsv
 import six
 import logging
+import requests
 from uuid import uuid4
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy import select, text as sql_text
@@ -44,10 +46,6 @@ class Query(object):
     def __init__(self, dataset, data):
         self.dataset = dataset
         self.data = data
-        self.database_uri = os.path.expandvars(data.get('database'))
-
-        tables = dict_list(data, 'table', 'tables')
-        self.tables = [QueryTable(self, f) for f in tables]
 
         self.entities = []
         for ename, edata in data.get('entities').items():
@@ -58,9 +56,32 @@ class Query(object):
             self.links.append(LinkMapper(self, ldata))
 
     @property
+    def active_refs(self):
+        refs = set()
+        for item in self.entities + self.links:
+            for ref in item.refs:
+                refs.add(ref)
+        return refs
+
+    def __repr__(self):
+        return '<Query(%s)>' % self.dataset
+
+
+class DBQuery(Query):
+
+    def __init__(self, dataset, data):
+        super(DBQuery, self).__init__(dataset, data)
+
+        tables = dict_list(data, 'table', 'tables')
+
+        self.database_uri = os.path.expandvars(data.get('database'))
+        self.tables = [QueryTable(self, f) for f in tables]
+
+    @property
     def engine(self):
         if not hasattr(self, '_engine'):
-            self._engine = create_engine(self.database_uri, poolclass=NullPool)
+            self._engine = create_engine(self.database_uri,
+                                         poolclass=NullPool)
         return self._engine
 
     @property
@@ -69,6 +90,19 @@ class Query(object):
             self._meta = MetaData()
             self._meta.bind = self.engine
         return self._meta
+
+    @property
+    def from_clause(self):
+        return [t.alias for t in self.tables]
+
+    @property
+    def mapped_columns(self):
+        """Determine which columns must be selected.
+
+        This will check entity and link mappings for the set of columns
+        actually used in order to avoid loading superfluous data.
+        """
+        return [self.get_column(r) for r in self.active_refs]
 
     def get_column(self, ref):
         for table in self.tables:
@@ -81,27 +115,6 @@ class Query(object):
             if ref == table.alias_ref:
                 return table
         raise TypeError("[%r] Cannot find table: %s" % (self, ref))
-
-    @property
-    def from_clause(self):
-        return [t.alias for t in self.tables]
-
-    @property
-    def active_refs(self):
-        refs = set()
-        for item in self.entities + self.links:
-            for ref in item.refs:
-                refs.add(ref)
-        return refs
-
-    @property
-    def mapped_columns(self):
-        """Determine which columns must be selected.
-
-        This will check entity and link mappings for the set of columns
-        actually used in order to avoid loading superfluous data.
-        """
-        return [self.get_column(r) for r in self.active_refs]
 
     def apply_filters(self, q):
         for col, val in self.data.get('filters', {}).items():
@@ -126,7 +139,6 @@ class Query(object):
     def iterrows(self):
         """Compose the actual query and return an iterator of ``Record``."""
         mapping = {self.get_column(r).name: r for r in self.active_refs}
-
         q = self.compose_query()
         log.info("Query [%s]: %s", self.dataset.name, q)
         rp = self.engine.execute(q)
@@ -143,5 +155,77 @@ class Query(object):
                     data[k] = v
                 yield data
 
+
+class CSVQuery(Query):
+    """Special case for entity loading directly from a CSV URL"""
+
+    def __init__(self, dataset, data):
+        super(CSVQuery, self).__init__(dataset, data)
+
+        self.table = dict_list(data, 'table', 'tables')[0]
+
+    @property
+    def csv_reader(self):
+        try:
+            r = requests.get(self.table.get('csv_url'), stream=True)
+            r.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            log.info('create_csv_reader: %s' % e)
+            return
+
+        if r.encoding is None:
+            r.encoding = 'utf-8'
+        reader = unicodecsv.DictReader(r.iter_lines(decode_unicode=True))
+
+        return reader
+
+    def strip_cell(self, fn):
+        fn = fn.strip()
+        if len(fn) > 1 and fn[0] == '"' and fn[-1] == '"':
+            fn = fn[1:-1].strip()  # In case of interior whitespace
+        return fn
+
+    def query_message(self):
+        table = 'table "%s" from url %s' % (self.table.get('table'),
+                                            self.table.get('csv_url'))
+        columns = 'on columns ' + ', '.join(self.active_refs)
+        filters = ['%s == %s' % (col, val)
+                   for col, val in self.data.get('filters', {}).items()]
+        filters_not = ['%s != %s' % (col, val)
+                       for col, val in self.data.get('filters_not', {}).items()] # noqa
+        where = ''
+        if len(filters) or len(filters_not):
+            where += 'where '
+            where += ', '.join(filters + filters_not)
+        return ', '.join([table, columns, where])
+
+    def check_filters(self, data_k, data_v):
+        passes = True
+        for k, v in self.data.get('filters', {}).items():
+            if k == data_k and str(v).decode('utf-8') != data_v:
+                passes = False
+        for k, v in self.data.get('filters_not', {}).items():
+            if k == data_k and str(v).decode('utf-8') == data_v:
+                passes = False
+        return passes
+
+    def iterrows(self):
+        """Iterate through the table applying filters on-the-go."""
+        mapping = {ref.split('.')[-1]: ref for ref in self.active_refs}
+        m = self.query_message()
+        log.info("Query [%s]: %s", self.dataset.name, m)
+        log.info("Query executed, loading data...")
+        count = 0
+        for row in self.csv_reader:
+            data = {}
+            for k, v in row.items():
+                k = mapping.get(self.strip_cell(k))
+                if k is not None:
+                    if self.check_filters(k, v):
+                        count += 1
+                        data[k] = self.strip_cell(v)
+                yield data
+        log.info("Loading done.")
+
     def __repr__(self):
-        return '<Query(%s)>' % self.dataset
+        return '<CSVQuery(%s)>' % self.dataset
