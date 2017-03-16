@@ -39,7 +39,7 @@ def index_form(texts):
         if latin is None or latin == text:
             continue
         total_len += len(latin)
-        results.appebd(latin)
+        results.append(latin)
     return list(results)
 
 

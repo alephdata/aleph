@@ -198,6 +198,12 @@ class DocumentPage(db.Model):
     document_id = db.Column(db.Integer(), db.ForeignKey('document.id'), index=True)  # noqa
     document = db.relationship(Document, backref=db.backref('pages', cascade='all, delete-orphan'))  # noqa
 
+    @property
+    def tid(self):
+        tid = sha1(str(self.document_id))
+        tid.update(str(self.id))
+        return tid.hexdigest()
+
     def __repr__(self):
         return '<DocumentPage(%r,%r)>' % (self.document_id, self.number)
 

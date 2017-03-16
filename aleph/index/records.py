@@ -43,12 +43,8 @@ def generate_records(document):
     """Generate index records, based on document rows or pages."""
     if document.type == Document.TYPE_TEXT:
         for page in document.pages:
-            tid = sha1(str(document.id))
-            tid.update(str(page.id))
-            tid = tid.hexdigest()
-
             yield {
-                '_id': tid,
+                '_id': page.tid,
                 '_type': TYPE_RECORD,
                 '_index': six.text_type(es_index),
                 '_source': {
@@ -62,7 +58,6 @@ def generate_records(document):
     elif document.type == Document.TYPE_TABULAR:
         for record in document.records:
             data = {k: stringify(v) for (k, v) in record.data.items()}
-
             yield {
                 '_id': record.tid,
                 '_type': TYPE_RECORD,
