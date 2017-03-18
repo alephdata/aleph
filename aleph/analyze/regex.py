@@ -41,8 +41,8 @@ class EMailAnalyzer(RegexAnalyzer):
 
 
 class URLAnalyzer(RegexAnalyzer):
-    # https://gist.github.com/uogbuji/705383
-    REGEX = ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))'  # noqa
+    # http://www.noah.org/wiki/RegEx_Python
+    REGEX = ur'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'  # noqa
     FLAG = re.IGNORECASE
 
     def finalize(self):
