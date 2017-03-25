@@ -107,14 +107,17 @@ class Metadata(object):
         # derive file name from headers
         if file_title is None and 'content_disposition' in self.headers:
             _, attrs = cgi.parse_header(self.headers['content_disposition'])
-            file_title = string_value(unquote(attrs.get('filename')))
+            filename = attrs.get('filename') or ''
+            file_title = string_value(unquote(filename))
 
         if file_title is None and self.source_path:
-            file_title = os.path.basename(self.source_path)
+            file_title = os.path.basename(self.source_path) or ''
+            file_title = string_value(file_title)
 
         if file_title is None and self.source_url:
             parsed = urlparse(self.source_url)
-            file_title = unquote(os.path.basename(parsed.path))
+            file_title = os.path.basename(parsed.path) or ''
+            file_title = string_value(unquote(file_title))
 
         return file_title
 
