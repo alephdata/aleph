@@ -241,6 +241,29 @@ entities:
       status:
         label: Status
 
+  Vessel:
+    label: Vessel
+    plural: Vessels
+    extends: Asset
+    icon: fa-ship
+    fuzzy: false
+    properties:
+      imoNumber:
+        label: IMO Number
+      crsNumber:
+        label: CRS Number
+      type:
+        label: Vessel Type
+      flag:
+        label: Flag
+      registrationPort:
+        label: Port of Registration
+      navigationArea:
+          label: Navigation Area
+      tonnage:
+          label: Tonnage
+      nameChangeDate:
+          label: Date of Name Change
 
 ###################################################################
 #
