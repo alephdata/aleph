@@ -1,7 +1,7 @@
 import logging
 from threading import RLock
 from collections import defaultdict
-from ahocorasick import Automaton
+from ahocorasick import Automaton, EMPTY
 
 from aleph.core import db, get_config
 from aleph.text import match_form
@@ -17,6 +17,7 @@ class AutomatonCache(object):
 
     def __init__(self):
         self.latest = None
+        self.automaton = Automaton()
         self.matches = {}
 
     def generate(self):
@@ -41,11 +42,10 @@ class AutomatonCache(object):
                 else:
                     matches[term] = [entity.id]
 
+
         if not len(matches):
-            self.automaton = None
             return
 
-        self.automaton = Automaton()
         for term, entities in matches.iteritems():
             self.automaton.add_word(term.encode('utf-8'), entities)
         self.automaton.make_automaton()
@@ -65,7 +65,7 @@ class AhoCorasickEntityAnalyzer(Analyzer):
             self.disabled = True
 
     def on_text(self, text):
-        if self.cache.automaton is None:
+        if self.cache.automaton.kind == EMPTY:
             return
         text = match_form(text)
         if text is None or len(text) <= 2:
