@@ -241,13 +241,13 @@ entities:
       status:
         label: Status
       caseNumber:
-        label: Case Number
+        label: Case number
       court:
         label: Court
-      dateFiled:
-        label: Date Filed
-      dateClosed:
-        label: Date Closed
+      fileDate:
+        label: File date
+      closeDate:
+        label: Close date
 
 
 ###################################################################
