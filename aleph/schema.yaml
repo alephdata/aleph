@@ -240,6 +240,10 @@ entities:
         label: Type
       status:
         label: Status
+      caseNumber:
+        label: Case Number
+      court:
+        label: Court
 
 
 ###################################################################
