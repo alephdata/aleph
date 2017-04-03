@@ -99,21 +99,3 @@ def index_entity(entity):
     data['doc_count'] = get_count(entity)
     data = finalize_index(data, entity.schema)
     es.index(index=es_index, doc_type=TYPE_ENTITY, id=entity.id, body=data)
-
-
-def delete_pending():
-    """Deletes any pending entities."""
-    deleted = 0
-    entities = db.session.query(Entity.id).filter(
-        Entity.state == Entity.STATE_PENDING)
-    to_delete = [
-        entities,
-        db.session.query(Reference).filter(Reference.entity_id.in_(entities))
-    ]
-
-    for query in to_delete:
-        deleted += query.delete(synchronize_session='fetch')
-
-    log.debug('{} records deleted.'.format(deleted))
-    db.session.commit()
-    flush_index()

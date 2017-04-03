@@ -19,10 +19,10 @@ def generate_leads(entity_id):
 
     entity = load_entity(entity_id)
     if entity is None:
-        log.warning("[%r] not indexed, skip lead generation.", entity_id)
+        # log.warning("[%r] not indexed, skip lead generation.", entity_id)
         return
     if not entity.get('collection_id'):
-        log.warning("[%r] is not in a collecton, skip lead generation.", entity_id)  # noqa
+        # log.warning("[%r] is not in a collecton, skip lead generation.", entity_id)  # noqa
         return
 
     log.debug("Generating leads for [%(id)s]: %(name)s", entity)

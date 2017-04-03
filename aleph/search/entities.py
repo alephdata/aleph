@@ -90,9 +90,9 @@ def load_entity(entity_id):
     """Load a single entity by ID."""
     result = es.get(index=es_index, doc_type=TYPE_ENTITY, id=entity_id,
                     ignore=[404])
-    if result.get('found') is False:
-        return
     entity = result.get('_source')
+    if result.get('found') is False or entity is None:
+        return
     entity.pop('text', None)
     entity['id'] = result.get('_id')
     return entity

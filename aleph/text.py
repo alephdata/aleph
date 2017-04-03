@@ -40,7 +40,7 @@ def index_form(texts):
             continue
         total_len += len(latin)
         results.append(latin)
-    return list(results)
+    return results
 
 
 def match_form(text):
