@@ -145,21 +145,23 @@ def reindex_entities():
 
 def delete_pending(collection_id=None):
     """Deletes any pending entities."""
-    deleted = 0
     q = db.session.query(Entity.id)
     q = q.filter(Entity.state == Entity.STATE_PENDING)
 
     if collection_id is not None:
         q = q.filter(Entity.collection_id == collection_id)
 
-    for entity in q:
-        deleted += entity.delete(synchronize_session='fetch')
+    q.delete(synchronize_session='fetch')
 
     rq = db.session.query(Reference)
-    rq = rq.filter(Reference.entity_id.in_(q))
-    for reference in rq:
-        deleted += reference.delete(synchronize_session='fetch')
+    sq = db.session.query(Entity.id)
+    sq = sq.filter(Entity.state == Entity.STATE_PENDING)
 
-    log.debug('{} records deleted.'.format(deleted))
+    if collection_id is not None:
+        sq = sq.filter(Entity.collection_id == collection_id)
+
+    rq = rq.filter(Reference.entity_id.in_(sq))
+    rq.delete(synchronize_session='fetch')
+
     db.session.commit()
     flush_index()

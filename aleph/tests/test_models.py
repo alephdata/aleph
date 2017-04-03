@@ -1,6 +1,6 @@
 from aleph.core import db
 from aleph.model import Collection, Entity
-from aleph.index import delete_pending
+from aleph.logic import delete_pending
 from aleph.tests.factories.models import EntityFactory, CollectionFactory
 from aleph.tests.util import TestCase
 
