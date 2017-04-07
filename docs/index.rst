@@ -14,6 +14,7 @@ Table of contents
    installation.md
    usage.md
    plugins.md
+   mappings.md
    glossary.md
    resources.md
    research.md
