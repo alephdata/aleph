@@ -25,12 +25,15 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
     });
   };
 
-  $scope.findRoles = function($value) {
-    var value = $value.toLowerCase();
-    return roles.filter(function(role) {
-      return role.name.toLowerCase().startsWith(value);
-    });
-  };
+  $scope.findMatches = function($value) {
+      var value = $value.toLowerCase();
+
+      if(value.length > 2) {
+          return $http.get('/api/1/roles/match/' + value).then(function(res) {
+              return res.data;
+          });
+      }
+  }
 
   $scope.addRole = function($item, $model) {
     $item.read = true;

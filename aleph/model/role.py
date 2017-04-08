@@ -1,6 +1,7 @@
 import logging
 
 from flask import current_app
+from sqlalchemy import or_
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_simpleldap import LDAPException
@@ -131,6 +132,17 @@ class Role(db.Model, IdModel, SoftDeleteModel):
                 role = cls.load_or_create(foreign_id, type, name)
             current_app._authz_roles[foreign_id] = role.id
         return current_app._authz_roles[foreign_id]
+
+
+    @classmethod
+    def load_matches(cls, pattern):
+        """Load a list of roles matching a name, email address, or foreign_id."""
+        if pattern is not None:
+            foreign_id = cls.foreign_id.ilike(pattern + '%')
+            email = cls.email.ilike(pattern + '%')
+            name = cls.name.ilike(pattern + '%')
+            matches = cls.all().filter(or_(foreign_id, email, name)).all()
+            return matches
 
     def set_password(self, secret):
         """Hashes and sets the role password.

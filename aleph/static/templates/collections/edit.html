@@ -115,7 +115,7 @@
                 <input type="input" class="form-control"
                   placeholder="Grant access to more users..."
                   ng-model="newRole"
-                  uib-typeahead="role as role.name for role in findRoles($viewValue)"
+                  uib-typeahead="match for match in findMatches($viewValue)"
                   typeahead-on-select="addRole($item, $model)"
                   typeahead-editable="false">
               </td>

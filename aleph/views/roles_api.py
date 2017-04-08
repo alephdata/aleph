@@ -118,6 +118,21 @@ def update(id):
     return jsonify(role)
 
 
+@blueprint.route('/api/1/roles/match/<pattern>', methods=['GET'])
+def match(pattern):
+    matches = obj_or_404(Role.load_matches(pattern))
+    request.authz.require(request.authz.logged_in)
+    identifiers = []
+    for match in matches:
+        request.authz.require(check_visible(match))
+
+        if len(match.name):
+            identifiers.append(match.name)
+        else:
+            identifiers.append(match.email)
+
+    return jsonify(identifiers)
+
 @blueprint.route('/api/1/collections/<int:collection>/permissions')
 def permissions_index(collection):
     request.authz.require(request.authz.collection_write(collection))
