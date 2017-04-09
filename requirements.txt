@@ -53,6 +53,7 @@ flask-simpleldap==1.1.0
 cronosparser>=0.2
 fingerprints>=0.3.2
 normality>=0.4.0
+dalet>=1.0
 
 # Python 3 backports
 subprocess32
