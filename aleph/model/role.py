@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_simpleldap import LDAPException
 
 from aleph.core import db, ldap, url_for, get_config, secret_key
-from aleph.data.validate import validate
+from aleph.model.validate import validate
 from aleph.model.common import SoftDeleteModel, IdModel, make_textid
 
 log = logging.getLogger(__name__)

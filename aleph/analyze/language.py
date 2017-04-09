@@ -3,8 +3,8 @@ from collections import defaultdict
 from langid.langid import LanguageIdentifier, model
 # https://github.com/saffsd/langid.py
 
+from aleph.core import language_whitelist
 from aleph.analyze.analyzer import Analyzer
-from aleph.data.reference import get_language_whitelist
 
 log = logging.getLogger(__name__)
 
@@ -39,9 +39,9 @@ class LanguageAnalyzer(Analyzer):
         if not len(self.languages):
             return
 
-        whitelist = get_language_whitelist()
         for code, score in self.languages.items():
-            if code.lower() in whitelist:
+            if code.lower() in language_whitelist:
                 self.meta.add_language(code)
+
         log.info("Classified languages in %r: %r", self.document,
                  self.meta.languages)

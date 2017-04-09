@@ -31,30 +31,3 @@ for country in countries:
         COUNTRY_NAMES[code] = country.common_name
     else:
         COUNTRY_NAMES[code] = country.name
-
-
-def get_language_whitelist():
-    return [c.lower().strip() for c in get_config('LANGUAGES')]
-
-
-def get_languages_iso3(codes):
-    if codes is None:
-        codes = []
-
-    supported = []
-    for lang in codes:
-        if lang is None or len(lang.strip()) not in [2, 3]:
-            continue
-        lang = lang.lower().strip()
-        if len(lang) == 2:
-            try:
-                c = languages.get(alpha_2=lang)
-                lang = c.alpha_3
-            except KeyError as ke:
-                log.exception(ke)
-                continue
-        supported.append(lang)
-
-    # if not len(supported):
-    supported.append('eng')
-    return '+'.join(sorted(set(supported)))

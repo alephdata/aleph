@@ -2,7 +2,7 @@ from datetime import datetime
 from werkzeug.datastructures import MultiDict
 
 from aleph.core import db
-from aleph.data.validate import validate
+from aleph.model.validate import validate
 from aleph.model.entity import Entity
 from aleph.model.common import SoftDeleteModel
 
