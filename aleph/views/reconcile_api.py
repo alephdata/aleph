@@ -10,7 +10,7 @@ from werkzeug.exceptions import BadRequest
 from aleph.events import log_event
 from aleph.search import QueryState
 from aleph.util import ensure_list
-from aleph.data.keys import make_fingerprint
+from aleph.text import make_fingerprint
 from aleph.core import app_url, app_title, schemata
 from aleph.search.entities import suggest_entities, similar_entities
 
