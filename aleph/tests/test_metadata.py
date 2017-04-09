@@ -21,7 +21,7 @@ class MetadataTestCase(TestCase):
         meta = Metadata()
         meta.urls = ['http://google.com']
         assert len(meta.urls) == 1, meta.urls
-        assert len(meta.domains) == 1, meta.domain
+        assert len(meta.domains) == 1, meta.domains
         assert meta.domains[0] == 'google.com', meta.domains
 
         meta.add_url('http://')

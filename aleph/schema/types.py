@@ -1,9 +1,8 @@
 import re
 from normality import ascii_text, stringify, collapse_spaces
+from dalet import is_partial_date, parse_date
+from dalet import parse_phone, parse_country, parse_email
 
-from aleph.data.validate import is_partial_date
-from aleph.data.parse import parse_phone, parse_country, parse_email
-from aleph.data.parse import parse_date
 from aleph.text import make_fingerprint
 from aleph.util import ensure_list
 
