@@ -191,6 +191,10 @@ def get_upload_folder():
     return folder
 
 
+def get_language_whitelist():
+    return [c.lower().strip() for c in get_config('LANGUAGES')]
+
+
 app_name = LocalProxy(get_app_name)
 app_title = LocalProxy(get_app_title)
 app_url = LocalProxy(get_app_url)
@@ -201,6 +205,7 @@ schemata = LocalProxy(get_schemata)
 datasets = LocalProxy(get_datasets)
 upload_folder = LocalProxy(get_upload_folder)
 secret_key = LocalProxy(get_app_secret_key)
+language_whitelist = LocalProxy(get_language_whitelist)
 
 
 def url_for(*a, **kw):

@@ -6,7 +6,7 @@ from aleph.core import db, get_config, app_url
 from aleph.events import log_event
 from aleph.model import Role, Collection, Permission
 from aleph.logic.permissions import update_permission
-from aleph.data.validate import validate
+from aleph.model.validate import validate
 from aleph.notify import notify_role
 
 
