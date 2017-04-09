@@ -1,8 +1,8 @@
 import six
+from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 
 from aleph.core import datasets, schemata
 from aleph.model import Entity, Collection
-from aleph.data.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 
 
 class Facet(object):
