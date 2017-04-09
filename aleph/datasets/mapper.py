@@ -4,9 +4,8 @@ from pprint import pprint  # noqa
 
 from aleph.core import schemata
 from aleph.schema import Schema
-from aleph.data.keys import make_fingerprint
 from aleph.util import dict_list, unique_list
-from aleph.text import string_value
+from aleph.text import string_value, make_fingerprint
 from aleph.datasets.formatting import Formatter
 from aleph.datasets.util import finalize_index
 
