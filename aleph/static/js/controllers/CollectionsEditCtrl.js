@@ -29,7 +29,9 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
       var value = $value.toLowerCase();
 
       if(value.length > 2) {
-          return $http.get('/api/1/roles/match/' + value).then(function(res) {
+          var data = {'pattern': value};
+
+          return $http.post('/api/1/roles/match', data).then(function(res) {
               return res.data;
           });
       }

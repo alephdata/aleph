@@ -136,7 +136,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     @classmethod
     def load_matches(cls, pattern):
-        """Load a list of roles matching a name, email address, or foreign_id."""
+        """Load a list of roles matching a name, email address, or foreign_id.
+
+        :param str pattern: Pattern to match.
+        """
         if pattern is not None:
             foreign_id = cls.foreign_id.ilike(pattern + '%')
             email = cls.email.ilike(pattern + '%')

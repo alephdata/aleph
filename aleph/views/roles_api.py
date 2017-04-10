@@ -118,8 +118,10 @@ def update(id):
     return jsonify(role)
 
 
-@blueprint.route('/api/1/roles/match/<pattern>', methods=['GET'])
-def match(pattern):
+@blueprint.route('/api/1/roles/match', methods=['POST'])
+def match():
+    data = request.get_json()
+    pattern = data.get('pattern')
     matches = obj_or_404(Role.load_matches(pattern))
     request.authz.require(request.authz.logged_in)
     identifiers = []
