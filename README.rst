@@ -62,5 +62,5 @@ OpenOil. For coordination, the following mailing list exists:
 `aleph-search <https://groups.google.com/forum/#!forum/aleph-search>`_
 
 If you find any errors or issues using Aleph please
-`file an issue on Github <https://github.com/alephdata/aleph/issues/new>`_ or
+`file an issue on GitHub <https://github.com/alephdata/aleph/issues/new>`_ or
 contact the mailing list.
