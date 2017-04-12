@@ -43,6 +43,8 @@ entities:
       address:
         label: Address
         type: address
+      program: # Used by sanctions
+        label: Program
       notes:
         label: Notes
 
@@ -75,8 +77,6 @@ entities:
         label: Status
       sector:
         label: Sector
-      program: # Used by sanctions
-        label: Program
       classification:
         label: Classification
       registrationNumber:
@@ -267,11 +267,15 @@ entities:
       registrationPort:
         label: Port of Registration
       navigationArea:
-          label: Navigation Area
+        label: Navigation Area
       tonnage:
-          label: Tonnage
+        label: Tonnage
+      grossRegisteredTonnage:
+        label: Gross Registered Tonnage
       nameChangeDate:
-          label: Date of Name Change
+        label: Date of Name Change
+      callSign:
+        label: Call Sign
 
 ###################################################################
 #
