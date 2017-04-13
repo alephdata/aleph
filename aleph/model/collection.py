@@ -1,10 +1,10 @@
 import logging
 from datetime import datetime
-from sqlalchemy import func, cast, or_
+from sqlalchemy import func, cast
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db, url_for
-from aleph.data.validate import validate
+from aleph.model.validate import validate
 from aleph.model.role import Role
 from aleph.model.permission import Permission
 from aleph.model.common import IdModel, make_textid

@@ -1,10 +1,10 @@
 import logging
+import fingerprints
 from hashlib import sha1
 from pprint import pprint  # noqa
 
 from aleph.core import schemata
 from aleph.schema import Schema
-from aleph.data.keys import make_fingerprint
 from aleph.util import dict_list, unique_list
 from aleph.text import string_value
 from aleph.datasets.formatting import Formatter
@@ -85,7 +85,7 @@ class Mapper(object):
         for key in self.keys:
             value = record.get(key)
             if self.key_fingerprint:
-                value = make_fingerprint(value)
+                value = fingerprints.generate(value)
             else:
                 value = string_value(value)
             if value is None:

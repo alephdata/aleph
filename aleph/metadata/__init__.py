@@ -5,12 +5,12 @@ import mimetypes
 from collections import Mapping
 from urllib import unquote
 from urlparse import urlparse
+from dalet import is_country_code, is_language_code
+from dalet import parse_email, parse_country, parse_url
+from dalet import parse_domain, parse_date
 
 from aleph.text import slugify, string_value
 from aleph.util import make_filename
-from aleph.data.validate import is_country_code, is_language_code
-from aleph.data.parse import parse_email, parse_country, parse_url
-from aleph.data.parse import parse_domain, parse_date
 from aleph.metadata.tabular import Tabular
 from aleph.metadata.base import MetadataFactory, Field
 

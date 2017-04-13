@@ -3,12 +3,11 @@ from collections import defaultdict
 from werkzeug.exceptions import NotFound
 from flask import Blueprint, request
 from apikit import jsonify
+from dalet import COUNTRY_NAMES
 
 from aleph.core import datasets, get_config
 from aleph.search import QueryState, entities_query
 from aleph.views.cache import enable_cache
-from aleph.data.reference import COUNTRY_NAMES
-
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('datasets_api', __name__)

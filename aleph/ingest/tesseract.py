@@ -7,15 +7,37 @@ except:
 from PIL import Image
 from PIL.Image import DecompressionBombWarning
 from tesserwrap import Tesseract, PageSegMode
+from pycountry import languages
 
 from aleph.core import get_config
 from aleph.model import Cache
+from aleph.util import ensure_list
 from aleph.ingest.ingestor import IngestorException
-from aleph.data.reference import get_languages_iso3
 
 # https://tesserwrap.readthedocs.io/en/latest/#
 # https://pillow.readthedocs.io/en/3.0.x/reference/Image.html
 log = logging.getLogger(__name__)
+
+
+def get_languages_iso3(codes):
+    """Turn (pre-set) ISO2 language codes into ISO3 codes."""
+    supported = []
+    for lang in ensure_list(codes):
+        if lang is None or len(lang.strip()) not in [2, 3]:
+            continue
+        lang = lang.lower().strip()
+        if len(lang) == 2:
+            try:
+                c = languages.get(alpha_2=lang)
+                lang = c.alpha_3
+            except KeyError as ke:
+                log.exception(ke)
+                continue
+        supported.append(lang)
+
+    # if not len(supported):
+    supported.append('eng')
+    return '+'.join(sorted(set(supported)))
 
 
 def extract_image_data(data, languages=None):

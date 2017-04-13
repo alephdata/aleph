@@ -1,8 +1,8 @@
 import re
 import logging
+from dalet import parse_phone
 
 from aleph.analyze.analyzer import Analyzer
-from aleph.data.parse import parse_phone
 
 log = logging.getLogger(__name__)
 

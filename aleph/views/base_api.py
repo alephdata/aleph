@@ -5,13 +5,13 @@ from apikit import jsonify
 from flask import render_template, current_app, Blueprint, request
 from jsonschema import ValidationError
 from elasticsearch import TransportError
+from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 
 from aleph.core import get_config, app_title, app_url, schemata
 from aleph.metadata import Metadata
 from aleph.search import QueryState
 from aleph.search import documents_query, entities_query
 from aleph.schema import SchemaValidationException
-from aleph.data.reference import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('base_api', __name__)

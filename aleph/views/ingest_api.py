@@ -5,13 +5,13 @@ from werkzeug import secure_filename
 from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify
 
-from aleph.core import db, upload_folder, USER_QUEUE, USER_ROUTING_KEY
+from aleph.core import upload_folder, USER_QUEUE, USER_ROUTING_KEY
 from aleph.events import log_event
 from aleph.metadata import Metadata
 from aleph.ingest import ingest_file
 from aleph.model import Collection
 from aleph.model.common import make_textid
-from aleph.data.validate import validate
+from aleph.model.validate import validate
 
 
 blueprint = Blueprint('ingest_api', __name__)
