@@ -1,4 +1,5 @@
 import logging
+from elasticsearch.exceptions import NotFoundError
 
 from aleph.core import es, es_index
 from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD
@@ -25,11 +26,15 @@ def init_search():
 
 def upgrade_search():
     """Add any missing properties to the index mappings."""
-    es.indices.put_mapping(index=es_index, body=DOCUMENT_MAPPING, doc_type=TYPE_DOCUMENT)  # noqa
-    es.indices.put_mapping(index=es_index, body=RECORD_MAPPING, doc_type=TYPE_RECORD)  # noqa
-    es.indices.put_mapping(index=es_index, body=ENTITY_MAPPING, doc_type=TYPE_ENTITY)  # noqa
-    es.indices.put_mapping(index=es_index, body=LINK_MAPPING, doc_type=TYPE_LINK)  # noqa
-    es.indices.put_mapping(index=es_index, body=LEAD_MAPPING, doc_type=TYPE_LEAD)  # noqa
+    try:
+        es.indices.put_mapping(index=es_index, body=DOCUMENT_MAPPING, doc_type=TYPE_DOCUMENT)  # noqa
+        es.indices.put_mapping(index=es_index, body=RECORD_MAPPING, doc_type=TYPE_RECORD)  # noqa
+        es.indices.put_mapping(index=es_index, body=ENTITY_MAPPING, doc_type=TYPE_ENTITY)  # noqa
+        es.indices.put_mapping(index=es_index, body=LINK_MAPPING, doc_type=TYPE_LINK)  # noqa
+        es.indices.put_mapping(index=es_index, body=LEAD_MAPPING, doc_type=TYPE_LEAD)  # noqa
+    except NotFoundError:
+        log.info("Cannot upgrade search index, trying to create it...")
+        init_search()
 
 
 def delete_index():
