@@ -53,8 +53,10 @@ SAMPLE_SEARCHES = ['TeliaSonera', 'Vladimir Putin']
 SAMPLE_SEARCHES = env_list('ALEPH_SAMPLE_SEARCHES', SAMPLE_SEARCHES)
 
 # Graph / Databases component configuration
-SCHEMA_YAML = path.join(path.dirname(__file__), 'schema.yaml')
-DATASETS_YAML = env.get('ALEPH_DATASETS', '../mappings/default.yml')
+LOCAL_PATH = path.dirname(__file__)
+SCHEMA_YAML = path.join(LOCAL_PATH, 'schema.yaml')
+DATASETS_YAML = path.join(LOCAL_PATH, '../mappings/default.yml')
+DATASETS_YAML = env.get('ALEPH_DATASETS', DATASETS_YAML)
 
 # Set up a custom SCSS file with additional style rules here.
 CUSTOM_SCSS_PATH = None
