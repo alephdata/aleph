@@ -1,6 +1,7 @@
 import six
 import json
 import logging
+import fingerprints
 from pprint import pprint  # noqa
 from urlparse import urljoin
 from flask import Blueprint, request, url_for
@@ -10,7 +11,6 @@ from werkzeug.exceptions import BadRequest
 from aleph.events import log_event
 from aleph.search import QueryState
 from aleph.util import ensure_list
-from aleph.text import make_fingerprint
 from aleph.core import app_url, app_title, schemata
 from aleph.search.entities import suggest_entities, similar_entities
 
@@ -46,7 +46,7 @@ def reconcile_op(query):
     entity = {
         'id': 'fake',
         'names': [name],
-        'fingerprints': [make_fingerprint(name)],
+        'fingerprints': [fingerprints.generate(name)],
         'schemata': ensure_list(query.get('type'))
     }
 
