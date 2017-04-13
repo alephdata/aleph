@@ -2,15 +2,12 @@
 import os
 import gc
 import six
-import json
 import yaml
 import shutil
 import logging
 from os import path
 from hashlib import sha1
 from tempfile import mkdtemp
-from apikit.jsonify import JSONEncoder
-from itsdangerous import TimestampSigner
 
 from aleph.text import string_value, slugify
 
@@ -142,9 +139,3 @@ def find_subclasses(cls):
         if (isinstance(o, tuple) and getattr(o[0], "__mro__", None) is o):
             results.append(o[0])
     return results
-
-
-def expand_json(data):
-    """Make complex objects (w/ dates, to_dict) into JSON."""
-    data = JSONEncoder().encode(data)
-    return json.loads(data)

@@ -1,6 +1,7 @@
 import logging
 from hashlib import sha1
 from datetime import datetime, timedelta
+from normality import ascii_text
 from sqlalchemy import func
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSONB
@@ -12,13 +13,15 @@ from aleph.model.validate import validate
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
 from aleph.model.common import DatedModel
-from aleph.text import string_value
+from aleph.text import string_value, index_form
 
 log = logging.getLogger(__name__)
 
 
 class Document(db.Model, DatedModel):
     _schema = 'document.json#'
+
+    SCHEMA = 'Document'
 
     TYPE_TEXT = 'text'
     TYPE_TABULAR = 'tabular'
@@ -184,6 +187,12 @@ class Document(db.Model, DatedModel):
 
     def to_index_dict(self):
         data = self.meta.to_index_dict()
+        data['text'] = index_form(self.text_parts())
+        data['schema'] = self.SCHEMA
+        data['schemata'] = [self.SCHEMA]
+        data['name_sort'] = ascii_text(data.get('title'))
+        data['title_latin'] = ascii_text(data.get('title'))
+        data['summary_latin'] = ascii_text(data.get('summary'))
         return self._add_to_dict(data)
 
     def __repr__(self):

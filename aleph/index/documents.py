@@ -1,10 +1,8 @@
 import logging
-from normality import ascii_text, stringify
 from elasticsearch.exceptions import NotFoundError
 
 from aleph.core import celery, es, es_index
 from aleph.model import Document
-from aleph.text import index_form
 from aleph.index.records import generate_records, clear_records
 from aleph.index.entities import generate_entities
 from aleph.index.mapping import TYPE_DOCUMENT
@@ -28,10 +26,7 @@ def index_document(document, index_records=True):
 
     log.info("Index document: %r", document)
     data = document.to_index_dict()
-    data['text'] = index_form(document.text_parts())
     data['entities'] = generate_entities(document)
-    data['title_latin'] = ascii_text(data.get('title'))
-    data['summary_latin'] = ascii_text(data.get('summary'))
     es.index(index=es_index, doc_type=TYPE_DOCUMENT, body=data, id=document.id)
 
     if index_records:
