@@ -147,7 +147,6 @@ class DBQuery(Query):
         while True:
             rows = rp.fetchmany(DATA_PAGE)
             if not len(rows):
-                log.info("Loading done.")
                 break
             for row in rows:
                 data = {}
@@ -205,7 +204,6 @@ class CSVQuery(Query):
                     data[k] = string_value(v)
                 if self.check_filters(data):
                     yield data
-        log.info("Loading done.")
 
     def __repr__(self):
         return '<CSVQuery(%s)>' % self.dataset

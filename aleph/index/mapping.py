@@ -23,6 +23,7 @@ DOCUMENT_MAPPING = {
     "properties": {
         "title": {"type": "string", "index": "analyzed"},
         "title_latin": {"type": "string", "index": "analyzed"},
+        "name_sort": {"type": "string", "index": "not_analyzed"},
         "status": {"type": "string", "index": "not_analyzed"},
         "crawler": {"type": "string", "index": "not_analyzed"},
         "crawler_run": {"type": "string", "index": "not_analyzed"},

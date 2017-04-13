@@ -1,21 +1,16 @@
 import time
 import logging
-from random import randrange
 from elasticsearch import ElasticsearchException
 from elasticsearch.helpers import BulkIndexError
 
-from aleph.core import celery, datasets
 from aleph.index import index_items
 
 log = logging.getLogger(__name__)
-QUEUE_PAGE = 1000
+PAGE = 1000
 
 
-@celery.task()
-def load_rows(dataset_name, query_idx, rows):
+def load_rows(dataset, query, rows):
     """Load a single batch of QUEUE_PAGE rows from the given query."""
-    dataset = datasets.get(dataset_name)
-    query = list(dataset.queries)[query_idx]
     entities = {}
     links = []
     for row in rows:
@@ -37,24 +32,22 @@ def load_rows(dataset_name, query_idx, rows):
             index_items(entities, links)
             break
         except (ElasticsearchException, BulkIndexError) as exc:
-            delay = randrange(60, 180)
-            log.info("%s - Sleep %ss...", exc, delay)
-            time.sleep(delay)
+            log.exception(exc)
+            time.sleep(10)
 
-    log.info("[%r] Indexed %s rows as %s entities, %s links...",
-             dataset_name, len(rows), len(entities), len(links))
+    log.info("[%s] Indexed %s rows as %s entities, %s links...",
+             dataset.name, len(rows), len(entities), len(links))
 
 
 def load_dataset(dataset):
     """Index all the entities and links in a given dataset."""
-    for query_idx, query in enumerate(dataset.queries):
+    for query in dataset.queries:
         rows = []
-        for row_idx, row in enumerate(query.iterrows()):
+        for row_idx, row in enumerate(query.iterrows(), 1):
             rows.append(row)
-            if len(rows) >= QUEUE_PAGE:
-                load_rows.delay(dataset.name, query_idx, rows)
+            if len(rows) >= PAGE:
+                log.info("[%s] Tasked %s rows...", dataset.name, row_idx)
+                load_rows(dataset, query, rows)
                 rows = []
-            if row_idx != 0 and row_idx % 10000 == 0:
-                log.info("Tasked %s rows...", row_idx)
         if len(rows):
-            load_rows.delay(dataset.name, query_idx, rows)
+            load_rows(dataset, query, rows)
