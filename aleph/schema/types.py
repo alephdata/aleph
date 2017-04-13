@@ -1,9 +1,9 @@
 import re
+import fingerprints
 from normality import ascii_text, stringify, collapse_spaces
 from dalet import is_partial_date, parse_date
 from dalet import parse_phone, parse_country, parse_email
 
-from aleph.text import make_fingerprint
 from aleph.util import ensure_list
 
 
@@ -41,10 +41,10 @@ class NameProperty(StringProperty):
     def fingerprint(self, values):
         # TODO: this should not be a property thing, so that fp's can include
         # dates etx.
-        fingerprints = []
+        fps = []
         for value in values:
-            fingerprints.append(make_fingerprint(value))
-        return [fp for fp in fingerprints if fp is not None]
+            fps.append(fingerprints.generate(value))
+        return [fp for fp in fps if fp is not None]
 
 
 class URLProperty(StringProperty):
@@ -78,7 +78,7 @@ class AddressProperty(StringProperty):
     index_invert = 'addresses'
 
     def normalize_value(self, value):
-        return make_fingerprint(value)
+        return fingerprints.generate(value)
 
 
 class PhoneProperty(StringProperty):

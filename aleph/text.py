@@ -1,7 +1,6 @@
 # coding: utf-8
 import six
 import logging
-import fingerprints
 from normality import normalize, stringify, latinize_text, collapse_spaces
 from normality import slugify  # noqa
 from normality.cleaning import decompose_nfkd
@@ -57,14 +56,6 @@ def match_form(text):
 def string_value(value, encoding_default='utf-8', encoding=None):
     return stringify(value, encoding=encoding,
                      encoding_default=encoding_default)
-
-
-def make_fingerprint(text):
-    """Generate a normalised company or person name, useful for comparison."""
-    text = stringify(text)
-    if text is None:
-        return
-    return fingerprints.generate(text)
 
 
 def encoded_value(text):
