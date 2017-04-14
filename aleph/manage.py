@@ -130,8 +130,10 @@ def index(foreign_id=None):
         if collection is None:
             raise ValueError("No such collection: %r" % foreign_id)
         q = q.filter(Document.collection_id == collection.id)
-    for doc_id, in q.yield_per(10000):
+    for idx, doc_id, in enumerate(q.yield_per(10000), 1):
         index_document_id.delay(doc_id)
+        if idx % 1000 == 0:
+            log.info("Index: %s documents...", idx)
     if foreign_id is None:
         reindex_entities()
 
