@@ -119,8 +119,8 @@ class Authz(object):
         return self.logged_in
 
     def check_roles(self, roles):
-        if self.in_maintenance:
-            return False
+        # if self.in_maintenance:
+        #     return False
         if self.is_admin:
             return True
         isect = self.roles.intersection(ensure_list(roles))
