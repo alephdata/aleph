@@ -82,16 +82,6 @@ def get_count(entity):
     return result.get('hits', {}).get('total', 0)
 
 
-def generate_entities(document):
-    entities = []
-    for entity_id, collection_id in Reference.index_references(document.id):
-        entities.append({
-            'id': entity_id,
-            'collection_id': collection_id
-        })
-    return entities
-
-
 def index_entity(entity):
     """Index an entity."""
     data = entity.to_index()

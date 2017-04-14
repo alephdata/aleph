@@ -1,13 +1,11 @@
 import logging
 import time
 from pprint import pprint  # noqa
-from elasticsearch.helpers import bulk, scan
-from elasticsearch import ElasticsearchException
-from elasticsearch.helpers import BulkIndexError
+from elasticsearch.helpers import bulk, scan, BulkIndexError
 
 from aleph.core import es, es_index, schemata
 from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK, TYPE_LEAD
-from aleph.index.util import merge_docs
+from aleph.index.util import merge_docs, bulk_op
 
 log = logging.getLogger(__name__)
 
@@ -70,11 +68,10 @@ def index_items(entities, links):
     """Index a set of links or entities."""
     while True:
         try:
-            bulk(es, _index_updates(entities, links), stats_only=True,
-                 request_timeout=200.0)
+            bulk_op(_index_updates(entities, links))
             break
-        except (ElasticsearchException, BulkIndexError) as exc:
-            log.exception(exc)
+        except BulkIndexError as exc:
+            log.warning('Indexing error: %s', exc)
             time.sleep(10)
 
 
@@ -96,4 +93,4 @@ def delete_dataset(dataset_name):
                 log.info("Delete %s: %s", dataset_name, i)
 
     es.indices.refresh(index=es_index)
-    bulk(es, deletes(), stats_only=True, request_timeout=200.0)
+    bulk_op(deletes())

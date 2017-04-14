@@ -32,6 +32,7 @@ def upgrade_search():
         es.indices.put_mapping(index=es_index, body=ENTITY_MAPPING, doc_type=TYPE_ENTITY)  # noqa
         es.indices.put_mapping(index=es_index, body=LINK_MAPPING, doc_type=TYPE_LINK)  # noqa
         es.indices.put_mapping(index=es_index, body=LEAD_MAPPING, doc_type=TYPE_LEAD)  # noqa
+        log.info("Upgraded ElasticSearch index mapping.")
     except NotFoundError:
         log.info("Cannot upgrade search index, trying to create it...")
         init_search()

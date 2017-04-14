@@ -51,9 +51,11 @@ def delete_collection(collection_id=None):
         # TODO: consider hard-deleting entities because the polyglot tagger
         # cannot tell if a deleted match on a tagged term on a revived
         # collection means not to tag this entity any more.
+        log.info("Delete entity: %r", entity)
         delete_entity(entity, deleted_at=deleted_at)
 
     for document in collection.documents:
+        log.info("Delete document: %r", document)
         delete_document(document, deleted_at=deleted_at)
 
     db.session.refresh(collection)
