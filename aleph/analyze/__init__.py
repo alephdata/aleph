@@ -6,7 +6,7 @@ from polyglot.downloader import downloader
 from aleph.core import celery, db
 from aleph.ext import get_analyzers
 from aleph.model import Document
-from aleph.index import index_document
+from aleph.index import index_document, index_records
 from aleph.search import TYPE_DOCUMENT, scan_iter
 
 
@@ -72,3 +72,4 @@ def analyze_document(document):
 
     # next: update the search index.
     index_document(document)
+    index_records(document)

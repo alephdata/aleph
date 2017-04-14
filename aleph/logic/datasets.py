@@ -1,7 +1,4 @@
-import time
 import logging
-from elasticsearch import ElasticsearchException
-from elasticsearch.helpers import BulkIndexError
 
 from aleph.index import index_items
 

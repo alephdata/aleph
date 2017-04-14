@@ -13,7 +13,7 @@ def update_document(document):
     # write to a document or its metadata.
     analyze_document_id.apply_async([document.id], queue=USER_QUEUE,
                                     routing_key=USER_ROUTING_KEY)
-    index_document(document, index_records=False)
+    index_document(document)
 
 
 def delete_document(document, deleted_at=None):

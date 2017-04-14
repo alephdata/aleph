@@ -7,8 +7,9 @@ from aleph.util import is_list, unique_list
 log = logging.getLogger(__name__)
 
 
-def bulk_op(iter):
-    bulk(es, iter, stats_only=True, chunk_size=1000, request_timeout=120.0)
+def bulk_op(iter, chunk_size=500):
+    bulk(es, iter, stats_only=True, chunk_size=chunk_size,
+         request_timeout=200.0)
 
 
 def merge_docs(old, new):

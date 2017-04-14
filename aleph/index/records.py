@@ -1,42 +1,42 @@
 import six
+import time
 import logging
 from normality import stringify
-from hashlib import sha1
-from elasticsearch.exceptions import NotFoundError
-from elasticsearch.helpers import bulk, scan
+from elasticsearch.helpers import scan, BulkIndexError
 
 from aleph.core import es, es_index
 from aleph.model import Document
 from aleph.index.mapping import TYPE_RECORD
+from aleph.index.util import bulk_op
 from aleph.text import index_form
 
 log = logging.getLogger(__name__)
 
 
-def clear_records(document_id):
-    """Delete all records associated with the given document."""
+def generate_deletes(document_id):
     q = {
-        'query': {
-            'term': {'document_id': document_id}
-        },
+        'query': {'term': {'document_id': document_id}},
         '_source': False
     }
+    for res in scan(es, query=q, index=es_index,
+                    doc_type=[TYPE_RECORD]):
+        yield {
+            '_op_type': 'delete',
+            '_index': six.text_type(es_index),
+            '_type': res.get('_type'),
+            '_id': res.get('_id')
+        }
 
-    def gen_deletes():
-            for res in scan(es, query=q, index=es_index,
-                            doc_type=[TYPE_RECORD]):
-                yield {
-                    '_op_type': 'delete',
-                    '_index': six.text_type(es_index),
-                    '_type': res.get('_type'),
-                    '_id': res.get('_id')
-                }
 
-    try:
-        bulk(es, gen_deletes(), stats_only=True, chunk_size=2000,
-             request_timeout=600.0)
-    except (Exception, NotFoundError):
-        log.debug("Failed to clear previous index: %r", document_id)
+def clear_records(document_id):
+    """Delete all records associated with the given document."""
+    while True:
+        try:
+            bulk_op(generate_deletes(document_id))
+            break
+        except BulkIndexError as exc:
+            log.warning('Clear records error: %s', exc)
+            time.sleep(10)
 
 
 def generate_records(document):
@@ -72,3 +72,14 @@ def generate_records(document):
                     'raw': data
                 }
             }
+
+
+def index_records(document):
+    clear_records(document.id)
+    while True:
+        try:
+            bulk_op(generate_records(document))
+            break
+        except BulkIndexError as exc:
+            log.warning('Indexing error: %s', exc)
+            time.sleep(10)
