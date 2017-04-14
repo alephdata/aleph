@@ -16,7 +16,7 @@ from elasticsearch import Elasticsearch
 from aleph import default_settings
 from aleph.archive import archive_from_config
 from aleph.ext import get_init
-from aleph.util import load_config_file
+from aleph.util import load_config_file, SessionTask
 from aleph.oauth import configure_oauth
 
 log = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
-celery = Celery('aleph')
+celery = Celery('aleph', task_cls=SessionTask)
 ldap = LDAP()
 
 # these two queues are used so that background processing tasks
@@ -88,6 +88,7 @@ def create_app(config={}):
         task_time_limit=3600 * 3,
         worker_max_tasks_per_child=200,
         worker_disable_rate_limits=True,
+        worker_hijack_root_logger=False,
         beat_schedule=app.config['CELERYBEAT_SCHEDULE'],
     )
     celery.conf.update(app.config.get('CELERY', {}))
@@ -97,10 +98,11 @@ def create_app(config={}):
     mail.init_app(app)
     db.init_app(app)
 
-    try:
-        ldap.init_app(app)
-    except LDAPException as error:
-        log.info(error)
+    if app.config.get('LDAP_USERNAME'):
+        try:
+            ldap.init_app(app)
+        except LDAPException as error:
+            log.error(error)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
