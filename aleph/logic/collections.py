@@ -37,13 +37,14 @@ def analyze_collection(collection_id):
 
 
 @celery.task()
-def delete_collection(collection_id=None):
+def delete_collection(collection_id):
     # Deleting a collection affects many associated objects and requires
     # checks, so this is done manually and in detail here.
     q = db.session.query(Collection).filter(Collection.id == collection_id)
     collection = q.first()
     if collection is None:
         log.error("No collection with ID: %r", collection_id)
+        return
 
     log.info("Deleting collection [%r]: %r", collection.id, collection.label)
     deleted_at = datetime.utcnow()
