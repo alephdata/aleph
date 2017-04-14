@@ -4,14 +4,13 @@ import gc
 import six
 import yaml
 import shutil
-import logging
 from os import path
 from hashlib import sha1
+from celery import Task
 from tempfile import mkdtemp
 
 from aleph.text import string_value, slugify
 
-log = logging.getLogger(__name__)
 TMP_PREFIX = six.text_type('aleph.tmp.')
 
 
@@ -139,3 +138,10 @@ def find_subclasses(cls):
         if (isinstance(o, tuple) and getattr(o[0], "__mro__", None) is o):
             results.append(o[0])
     return results
+
+
+class SessionTask(Task):
+
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
+        from aleph.core import db
+        db.session.remove()
