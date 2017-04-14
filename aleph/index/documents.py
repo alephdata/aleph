@@ -1,5 +1,8 @@
 import logging
+import time
 from elasticsearch.exceptions import NotFoundError
+from elasticsearch import ElasticsearchException
+from elasticsearch.helpers import BulkIndexError
 
 from aleph.core import celery, es, es_index
 from aleph.model import Document
@@ -29,9 +32,17 @@ def index_document(document, index_records=True):
     data['entities'] = generate_entities(document)
     es.index(index=es_index, doc_type=TYPE_DOCUMENT, body=data, id=document.id)
 
-    if index_records:
-        clear_records(document.id)
-        bulk_op(generate_records(document))
+    if not index_records:
+        return
+
+    while True:
+        try:
+            clear_records(document.id)
+            bulk_op(generate_records(document))
+            break
+        except (ElasticsearchException, BulkIndexError) as exc:
+            log.exception(exc)
+            time.sleep(10)
 
 
 def delete_document(document_id):

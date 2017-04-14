@@ -27,14 +27,7 @@ def load_rows(dataset, query, rows):
                 if data is not None:
                     links.append(data)
 
-    while True:
-        try:
-            index_items(entities, links)
-            break
-        except (ElasticsearchException, BulkIndexError) as exc:
-            log.exception(exc)
-            time.sleep(10)
-
+    index_items(entities, links)
     log.info("[%s] Indexed %s rows as %s entities, %s links...",
              dataset.name, len(rows), len(entities), len(links))
 
