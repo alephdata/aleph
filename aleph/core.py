@@ -98,11 +98,10 @@ def create_app(config={}):
     mail.init_app(app)
     db.init_app(app)
 
-    if app.config.get('LDAP_USERNAME'):
-        try:
-            ldap.init_app(app)
-        except LDAPException as error:
-            log.error(error)
+    try:
+        ldap.init_app(app)
+    except LDAPException as error:
+        log.error(error)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
