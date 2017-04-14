@@ -14,13 +14,13 @@ class CrawlerSchedule(object):
 
     def check_due(self, crawler_id):
         # should this be utcnow?
-        _, last_run = Document.crawler_last_run(crawler_id)
-        if last_run is None:
-            return True
-        now = datetime.now()
         if Document.is_crawler_active(crawler_id):
             log.info("Crawler was active very recently. Skip due.")
             return False
+        last_run = Document.crawler_last_run(crawler_id)
+        if last_run is None:
+            return True
+        now = datetime.now()
         if now > last_run + self.delta:
             return True
         return False
