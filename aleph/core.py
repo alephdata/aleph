@@ -101,7 +101,7 @@ def create_app(config={}):
     try:
         ldap.init_app(app)
     except LDAPException as error:
-        log.error(error)
+        log.info(error)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
