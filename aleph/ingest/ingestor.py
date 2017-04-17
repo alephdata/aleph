@@ -44,13 +44,14 @@ class Ingestor(object):
     @classmethod
     def document_by_meta(cls, collection_id, meta):
         q = Document.all()
+        q = q.filter(Document.collection_id == collection_id)
         if meta.foreign_id:
             q = q.filter(Document.foreign_id == meta.foreign_id)
         elif meta.content_hash:
             q = q.filter(Document.content_hash == meta.content_hash)
         else:
             raise ValueError("No unique criterion for document: %s" % meta)
-        q = q.filter(Document.collection_id == collection_id)
+
         document = q.first()
         if document is None:
             document = Document()
@@ -73,7 +74,7 @@ class Ingestor(object):
         else:
             error_message = unicode(exception)
         error_type = exception.__class__.__name__
-        log.warn('Error [%r]: %s', error_type, error_message)
+        log.warn('Error [%s]: %s', error_type, error_message)
         try:
             db.session.rollback()
             db.session.close()
@@ -87,7 +88,7 @@ class Ingestor(object):
             db.session.commit()
             index_document(document)
         except Exception as ex:
-            log.error("Error storing crawler exception: %r", ex)
+            log.exception(ex)
 
     @classmethod
     def match(cls, meta, local_path):

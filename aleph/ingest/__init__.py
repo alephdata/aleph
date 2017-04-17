@@ -19,6 +19,8 @@ SKIP_ENTRIES = ['.git', '.hg', '.DS_Store', '.gitignore', 'Thumbs.db',
 @celery.task(bind=True, max_retries=3)
 def ingest_url(self, collection_id, metadata, url):
     meta = Metadata.from_data(metadata)
+    if meta.foreign_id is None:
+        meta.foreign_id = url
     tmp_path = make_tempfile(meta.file_name, suffix=meta.extension)
     try:
         log.info("Ingesting URL: %s", url)
