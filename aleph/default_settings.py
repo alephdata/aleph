@@ -6,6 +6,7 @@
 # ALEPH_SETTINGS to a new Python file that overrides the settings you need to
 # alter.
 from celery.schedules import crontab
+from apikit.args import BOOL_TRUISH
 from tempfile import gettempdir
 from os import environ as env, path
 
@@ -13,7 +14,7 @@ from os import environ as env, path
 def env_bool(name, default=False):
     """Extract a boolean value from the environment consistently."""
     if name in env:
-        return env.get(name).lower().strip() in ['true', 'yes', '1', 'on']
+        return env.get(name).lower().strip() in BOOL_TRUISH
     return default
 
 
