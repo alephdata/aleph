@@ -39,7 +39,7 @@ class Metadata(object):
 
     __metaclass__ = MetadataFactory
 
-    _content_hash = Field(protected=True)
+    _content_hash = Field('content_hash', protected=True)
     crawler = Field(protected=True)
     crawler_run = Field(protected=True)
     _foreign_id = Field('foreign_id', protected=True)
@@ -91,7 +91,7 @@ class Metadata(object):
 
     @content_hash.setter
     def content_hash(self, content_hash):
-        self._content_hash = content_hash
+        self._content_hash = string_value(content_hash)
 
     @property
     def parent(self):
