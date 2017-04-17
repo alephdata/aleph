@@ -4,6 +4,7 @@ import cgi
 import mimetypes
 from collections import Mapping
 from urllib import unquote
+from hashlib import sha1
 from urlparse import urlparse
 from dalet import is_country_code, is_language_code
 from dalet import parse_email, parse_country, parse_url
@@ -38,7 +39,7 @@ class Metadata(object):
 
     __metaclass__ = MetadataFactory
 
-    content_hash = Field(protected=True)
+    _content_hash = Field(protected=True)
     crawler = Field(protected=True)
     crawler_run = Field(protected=True)
     _foreign_id = Field('foreign_id', protected=True)
@@ -80,6 +81,17 @@ class Metadata(object):
         if isinstance(value, six.string_types):
             return len(value.strip()) > 0
         return True
+
+    @property
+    def content_hash(self):
+        if self._content_hash is not None:
+            return self._content_hash
+        if self._foreign_id is not None:
+            return sha1(self.foreign_id).hexdigest()
+
+    @content_hash.setter
+    def content_hash(self, content_hash):
+        self._content_hash = content_hash
 
     @property
     def parent(self):
