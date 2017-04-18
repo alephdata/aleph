@@ -27,7 +27,7 @@ import loadMetadata from './loaders/loadMetadata';
 import loadAlertsIndex from './loaders/loadAlertsIndex';
 import loadTabular from './loaders/loadTabular.js';
 import loadDatasets from './loaders/loadDatasets';
-import loadRoles from './loaders/loadRoles';
+import loadPermissions from './loaders/loadPermissions';
 import loadStatistics from './loaders/loadHome';
 import {loadText, loadPagesQuery} from './loaders/loadText';
 import loadCrawlers from './loaders/loadCrawlers';
@@ -37,7 +37,8 @@ import {
 } from './loaders/loadEntities';
 import {
   loadProjectCollections, loadSourceCollections, loadCollection,
-  loadCollectionDocuments, loadCollectionEntities, loadCollectionLeads
+  loadCollectionDocuments, loadCollectionEntities, loadCollectionLeads,
+  loadCollectionDeep
 } from './loaders/loadCollections';
 
 aleph.config([
@@ -202,9 +203,9 @@ aleph.config([
     controller: 'CollectionsEditCtrl',
     reloadOnSearch: false,
     resolve: {
-      'collection': loadCollection,
+      'collection': loadCollectionDeep,
       'metadata': loadMetadata,
-      'roles': loadRoles
+      'permissions': loadPermissions
     }
   });
 

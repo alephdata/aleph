@@ -1,16 +1,14 @@
 import aleph from '../aleph';
 
-aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '$routeParams', 'Collection', 'Metadata', 'Role', 'Authz', 'Title', 'collection', 'roles', 'metadata',
-    function($scope, $q, $location, $http, $routeParams, Collection, Metadata, Role, Authz, Title, collection, roles, metadata) {
+aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '$routeParams', 'Collection', 'Metadata', 'Role', 'Authz', 'Title', 'collection', 'permissions', 'metadata',
+    function($scope, $q, $location, $http, $routeParams, Collection, Metadata, Role, Authz, Title, collection, permissions, metadata) {
 
   $scope.authz = Authz;
   $scope.collection = collection;
   $scope.metadata = metadata;
-  $scope.ownerRoles = roles.filter(function(r) {
-    return r.type == 'user';
-  });
+  $scope.permissions = permissions;
   $scope.categories = metadata.categories;
-  $scope.newRole = null;
+  $scope.newPermission = {};
   $scope.roleTypes = [
     {type: 'system', label: 'States'},
     {type: 'group', label: 'Groups'},
@@ -19,28 +17,18 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
 
   Title.set("Settings: " + collection.label, "collections");
 
-  $scope.getActiveRoles = function() {
-    return roles.filter(function(r) {
-      return r.type != 'user' || r.read || r.write;
-    });
-  };
-
-  $scope.findMatches = function($value) {
-      var value = $value.toLowerCase();
-
-      if(value.length > 2) {
-          var data = {'pattern': value};
-
-          return $http.post('/api/1/roles/match', data).then(function(res) {
-              return res.data;
-          });
-      }
+  $scope.suggestRole = function($value) {
+    return Role.suggest($value);
   }
 
-  $scope.addRole = function($item, $model) {
-    $item.read = true;
-    $item.dirty = true;
-    $scope.newRole = {name: ''};
+  $scope.addPermission = function($item, $model) {
+    $scope.permissions.push({
+      'write': true,
+      'read': true,
+      'dirty': true,
+      'role': $item
+    });
+    $scope.newPermission = {'name': ''};
   };
 
   $scope.markDirty = function(role) {
@@ -64,11 +52,11 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
     var res = $http.post(collection.api_url, $scope.collection);
     res.success(function(data) {
       var qs = [];
-      for (var j in roles) {
-        var role = roles[j];
-        if (role.dirty) {
+      for (var j in $scope.permissions) {
+        var permission = $scope.permissions[j];
+        if (permission.dirty) {
           qs.push($http.post(collection.api_url + '/permissions', {
-            role: role.id,
+            role_id: permission.role.id,
             read: role.read,
             write: role.write
           }));
