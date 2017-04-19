@@ -1,8 +1,10 @@
 import logging
 
 from flask import current_app
+from sqlalchemy import or_
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
+from normality import stringify
 from flask_simpleldap import LDAPException
 
 from aleph.core import db, ldap, url_for, get_config, secret_key
@@ -132,6 +134,25 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             current_app._authz_roles[foreign_id] = role.id
         return current_app._authz_roles[foreign_id]
 
+    @classmethod
+    def by_prefix(cls, prefix):
+        """Load a list of roles matching a name, email address, or foreign_id.
+
+        :param str pattern: Pattern to match.
+        """
+        q = cls.all()
+        q = q.filter(Role.type == Role.USER)
+        q = q.filter(or_(
+            cls.foreign_id.ilike('%' + prefix + '%'),
+            cls.email.ilike('%' + prefix + '%'),
+            cls.name.ilike('%' + prefix + '%')
+        ))
+        return q
+
+    @classmethod
+    def all_groups(cls):
+        return cls.all().filter(Role.type != Role.USER)
+
     def set_password(self, secret):
         """Hashes and sets the role password.
 
@@ -184,7 +205,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             'api_url': url_for('roles_api.view', id=self.id),
             'foreign_id': self.foreign_id,
             'is_admin': self.is_admin,
-            'email': self.email,
+            # 'email': self.email,
             'name': self.name,
             'type': self.type
         })

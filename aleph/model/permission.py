@@ -44,7 +44,8 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
 
     def to_dict(self):
         return {
-            'role': self.role_id,
+            'role_id': self.role_id,
+            'role': self.role,
             'read': self.read,
             'write': self.write,
             'collection_id': self.collection_id

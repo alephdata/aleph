@@ -26,12 +26,13 @@
           <label class="control-label" for="creator">Contact</label>
           <div class="">
             <div class="">
-              <ui-select ng-model="collection.creator_id">
-                <ui-select-match placeholder="Select user...">{{$select.selected.name}}</ui-select-match>
-                <ui-select-choices repeat="role.id as role in ownerRoles | filter: {'name': $select.search}">
-                  <div ng-bind-html="role.name | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
+              <input type="input" class="form-control"
+                placeholder="Select contact person..."
+                ng-model="collection.creator" ng-required="true"
+                uib-typeahead="match.name for match in suggestRole($viewValue)"
+                typeahead-editable="false"
+                typeahead-focus-first="true"
+                typeahead-select-on-blur="true">
             </div>
           </div>
         </div>
@@ -85,7 +86,7 @@
       <div class="col-md-6">
         <label class="control-label" for="permissions">Access Control</label>
         <table class="table roles">
-          <tbody ng-repeat="type in roleTypes">
+          <tbody ng-repeat="type in roleTypes track by type.type">
             <tr>
               <th>{{type.label}}</th>
               <th width="10%" class="numeric">
@@ -95,17 +96,17 @@
                   <span ng-show="$first">Edit</span>
               </th>
             </tr>
-            <tr ng-repeat="role in getActiveRoles() | filter:{type: type.type}">
+            <tr ng-repeat="permission in permissions | filter:{role: {type: type.type}}">
               <td>
-                {{role.name}}
+                {{permission.role.name}}
               </td>
               <td class="numeric">
-                <input type="checkbox" ng-model="role.read" ng-change="markDirty(role)">
+                <input type="checkbox" ng-model="permission.read" ng-change="markDirty(permission)">
               </td>
               <td class="numeric">
-                <input type="checkbox" ng-model="role.write"
-                  ng-disabled="role.foreign_id == 'guest'"
-                  ng-change="markDirty(role)">
+                <input type="checkbox" ng-model="permission.write"
+                  ng-disabled="permission.role.foreign_id == 'guest'"
+                  ng-change="markDirty(permission)">
               </td>
             </tr>
           </tbody>
@@ -114,9 +115,9 @@
               <td>
                 <input type="input" class="form-control"
                   placeholder="Grant access to more users..."
-                  ng-model="newRole"
-                  uib-typeahead="role as role.name for role in findRoles($viewValue)"
-                  typeahead-on-select="addRole($item, $model)"
+                  ng-model="newPermission.name"
+                  uib-typeahead="match.name for match in suggestRole($viewValue)"
+                  typeahead-on-select="addPermission($item, $model)"
                   typeahead-editable="false">
               </td>
               <td colspan="2">

@@ -13,13 +13,13 @@ class RolesApiTestCase(TestCase):
         self.create_user(foreign_id='user_2')
         self.rolex = self.create_user(foreign_id='user_3')
 
-    def test_index(self):
-        res = self.client.get('/api/1/roles')
+    def test_suggest(self):
+        res = self.client.get('/api/1/roles/_suggest')
         assert res.status_code == 403, res
         self.login(is_admin=True)
-        res = self.client.get('/api/1/roles')
+        res = self.client.get('/api/1/roles/_suggest?prefix=user')
         assert res.status_code == 200, res
-        assert res.json['total'] >= 6, res.json
+        assert res.json['total'] >= 3, res.json
 
     def test_view(self):
         res = self.client.get('/api/1/roles/%s' % self.rolex)
@@ -124,10 +124,11 @@ class RolesApiTestCase(TestCase):
 
     def test_create_success(self):
         email = self.fake.email()
+        name = self.fake.name()
         password = self.fake.password()
         payload = dict(
             email=email,
-            name=self.fake.name(),
+            name=name,
             password=password,
             code=Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
         )
@@ -139,7 +140,7 @@ class RolesApiTestCase(TestCase):
         role = Role.by_email(email).first()
         self.assertIsNotNone(role)
         self.assertTrue(role.check_password(password))
-        self.assertEqual(role.name, payload['email'])
+        self.assertEqual(role.name, payload['name'])
         self.assertEqual(role.email, payload['email'])
 
     def test_create_on_existing_email(self):

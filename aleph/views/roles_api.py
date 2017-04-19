@@ -1,6 +1,7 @@
+from normality import stringify
 from flask import Blueprint, request, abort, render_template
 from werkzeug.exceptions import BadRequest
-from apikit import obj_or_404, request_data, jsonify
+from apikit import Pager, obj_or_404, request_data, jsonify
 
 from aleph.core import db, get_config, app_url
 from aleph.events import log_event
@@ -20,17 +21,21 @@ def check_visible(role):
     return role.type == Role.USER
 
 
-@blueprint.route('/api/1/roles', methods=['GET'])
-def index():
+@blueprint.route('/api/1/roles/_suggest', methods=['GET'])
+def suggest():
     request.authz.require(request.authz.logged_in)
-    users = []
-    for role in Role.all():
-        if not check_visible(role):
-            continue
-        data = role.to_dict()
-        del data['email']
-        users.append(data)
-    return jsonify({'results': users, 'total': len(users)})
+    prefix = stringify(request.args.get('prefix'))
+    if prefix is None or len(prefix) < 3:
+        # Do not return 400 because it's a routine event.
+        return jsonify({
+            'status': 'error',
+            'message': 'prefix filter is too short',
+            'results': [],
+            'total': 0
+        })
+    # this only returns users, not groups
+    q = Role.by_prefix(prefix)
+    return jsonify(Pager(q, limit=10))
 
 
 @blueprint.route('/api/1/roles/invite', methods=['POST'])
@@ -84,7 +89,7 @@ def create():
     role = Role.load_or_create(
         foreign_id='password:{}'.format(email),
         type=Role.USER,
-        name=email,
+        name=name,
         email=email
     )
     role.set_password(password)
@@ -101,8 +106,8 @@ def view(id):
     request.authz.require(request.authz.logged_in)
     request.authz.require(check_visible(role))
     data = role.to_dict()
-    if role.id != request.authz.role.id:
-        del data['email']
+    if role.id == request.authz.role.id:
+        data['email'] = role.email
     return jsonify(data)
 
 
@@ -124,9 +129,26 @@ def permissions_index(collection):
     q = Permission.all()
     q = q.filter(Permission.collection_id == collection)
     permissions = []
+    roles_seen = set()
     for permission in q.all():
         if check_visible(permission.role):
             permissions.append(permission)
+            roles_seen.add(permission.role.id)
+
+    # this workaround ensures that all groups are visible for the user to
+    # select in the UI even if they are not currently associated with the
+    # collection.
+    for role in Role.all_groups():
+        if check_visible(role):
+            if role.id not in roles_seen:
+                roles_seen.add(role.id)
+                permissions.append({
+                    'write': False,
+                    'read': False,
+                    'role': role,
+                    'role_id': role.id
+                })
+
     return jsonify({
         'total': len(permissions),
         'results': permissions
@@ -140,7 +162,7 @@ def permissions_update(collection):
     data = request_data()
     validate(data, 'permission.json#')
 
-    role = Role.all().filter(Role.id == data['role']).first()
+    role = Role.all().filter(Role.id == data['role_id']).first()
     collection = Collection.by_id(collection)
     if role is None or collection is None:
         raise BadRequest()
