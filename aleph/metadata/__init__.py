@@ -319,7 +319,12 @@ class Metadata(object):
 
     @headers.setter
     def headers(self, headers):
-        self._headers = dict(headers) if isinstance(headers, Mapping) else None
+        self._headers = {}
+        if not isinstance(headers, Mapping):
+            return
+        for key, value in headers.items():
+            key = slugify(key, sep='_')
+            self._headers[key] = string_value(value)
 
     @property
     def is_pdf(self):

@@ -52,7 +52,7 @@ flask-simpleldap==1.1.0
 # weird pudo stuff
 cronosparser>=0.2
 fingerprints>=0.3.2
-normality>=0.4.0
+normality>=0.4.2
 dalet>=1.0
 
 # Python 3 backports

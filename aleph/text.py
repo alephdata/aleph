@@ -3,7 +3,7 @@ import six
 import logging
 from normality import normalize, stringify, latinize_text, collapse_spaces
 from normality import slugify  # noqa
-from normality.cleaning import decompose_nfkd
+from normality.cleaning import decompose_nfkd, remove_control_chars
 
 log = logging.getLogger(__name__)
 INDEX_MAX_LEN = 1024 * 1024 * 100
@@ -53,9 +53,10 @@ def match_form(text):
     return normalize(text, lowercase=True, ascii=True)
 
 
-def string_value(value, encoding_default='utf-8', encoding=None):
-    return stringify(value, encoding=encoding,
-                     encoding_default=encoding_default)
+def string_value(value, encoding=None):
+    value = stringify(value, encoding=encoding, encoding_default='utf-8')
+    value = remove_control_chars(value)
+    return value
 
 
 def encoded_value(text):
