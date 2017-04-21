@@ -137,6 +137,9 @@ entities:
       passportNumber:
         label: Passport
         type: identifier
+      idNumber:
+        label: ID Number
+        type: identifier
 
   Company:
     label: Company
@@ -276,6 +279,21 @@ entities:
         label: Date of Name Change
       callSign:
         label: Call Sign
+
+  BankAccount:
+    label: Bank Account
+    plural: Bank Accounts
+    extends: Asset
+    icon: fa-bank
+    properties:
+      bankName:
+        label: Bank Name
+      accountNumber:
+        label: Account Number
+      accountType:
+        label: Account Type
+      balance:
+        label: Balance
 
 ###################################################################
 #
