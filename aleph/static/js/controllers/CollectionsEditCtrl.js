@@ -57,8 +57,8 @@ aleph.controller('CollectionsEditCtrl', ['$scope', '$q', '$location', '$http', '
         if (permission.dirty) {
           qs.push($http.post(collection.api_url + '/permissions', {
             role_id: permission.role.id,
-            read: role.read,
-            write: role.write
+            read: permission.read,
+            write: permission.write
           }));
         }
       }

@@ -3,7 +3,7 @@
     "id": "permission.json#",
     "type": "object",
     "properties": {
-        "role": {
+        "role_id": {
             "type": "integer"
         },
         "read": {
@@ -13,5 +13,5 @@
             "type": "boolean"
         }
     },
-    "required": ["role", "read", "write"]
+    "required": ["role_id", "read", "write"]
 }
