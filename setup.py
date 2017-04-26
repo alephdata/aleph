@@ -57,8 +57,7 @@ setup(
         ],
         'aleph.crawlers': [
             # 'stub = aleph.crawlers.stub:StubCrawler',
-            'sourceafrica = aleph.crawlers.documentcloud:SourceAfricaCrawler',
-            'personadeinteres = aleph_data.crawlers.personadeinteres:PersonaDeInteres'
+            'sourceafrica = aleph.crawlers.documentcloud:SourceAfricaCrawler'
         ],
         'aleph.init': [
         ],
