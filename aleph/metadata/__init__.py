@@ -117,8 +117,9 @@ class Metadata(object):
         file_title = self._file_name
 
         # derive file name from headers
-        if file_title is None and 'content_disposition' in self.headers:
-            _, attrs = cgi.parse_header(self.headers['content_disposition'])
+        disposition = self.headers.get('content_disposition')
+        if file_title is None and disposition is not None:
+            _, attrs = cgi.parse_header(disposition)
             filename = attrs.get('filename') or ''
             file_title = string_value(unquote(filename))
 
@@ -301,7 +302,7 @@ class Metadata(object):
             mime_type, _ = mimetypes.guess_type(self.file_name)
 
         # derive mime type from headers
-        if mime_type is None and 'content_type' in self.headers:
+        if mime_type is None and self.headers.get('content_type') is not None:
             mime_type, _ = cgi.parse_header(self.headers['content_type'])
 
         if mime_type != 'application/octet-stream':
