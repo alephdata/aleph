@@ -23,7 +23,8 @@ def check_alerts():
 
 def format_results(alert, results):
     # used to activate highlighting in results pages:
-    qs = 'dq=%s' % quote_plus(alert.query_text or '')
+    dq = alert.query_text or ''
+    qs = 'dq=%s' % quote_plus(dq.encode('utf-8'))
     output = []
     for result in results['results']:
         collection_id = result.pop('collection_id', None)
