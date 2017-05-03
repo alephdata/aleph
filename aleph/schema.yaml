@@ -137,9 +137,6 @@ entities:
       passportNumber:
         label: Passport
         type: identifier
-      idNumber:
-        label: ID Number
-        type: identifier
 
   Company:
     label: Company
