@@ -4,6 +4,7 @@ from datetime import datetime
 from aleph.core import db, celery
 from aleph.model import Collection, Entity
 from aleph.index.collections import delete_collection as index_delete
+from aleph.index.leads import delete_collection_leads
 from aleph.analyze import analyze_documents
 from aleph.logic.entities import delete_entity
 from aleph.logic.entities import update_entity_full
@@ -47,6 +48,7 @@ def delete_collection(collection_id):
         return
 
     log.info("Deleting collection [%r]: %r", collection.id, collection.label)
+    delete_collection_leads(collection.id)
     deleted_at = datetime.utcnow()
     for entity in collection.entities:
         # TODO: consider hard-deleting entities because the polyglot tagger

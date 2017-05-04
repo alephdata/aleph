@@ -11,8 +11,8 @@ log = logging.getLogger(__name__)
 
 
 def delete_entity_leads(entity_id):
-    """Delete all related leads from the index."""
-    q = {
+    """Delete all entity-related leads from the index."""
+    delete_leads({
         'query': {
             'bool': {
                 'should': [
@@ -22,8 +22,18 @@ def delete_entity_leads(entity_id):
             }
         },
         '_source': False
-    }
+    })
 
+
+def delete_collection_leads(collection_id):
+    """Delete all leads on a collection from the index."""
+    delete_leads({
+        'query': {'term': {'collection_id': collection_id}},
+        '_source': False
+    })
+
+
+def delete_leads(q):
     def deletes():
         docs = scan(es, query=q, index=es_index, doc_type=TYPE_LEAD)
         for i, res in enumerate(docs):
