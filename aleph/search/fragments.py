@@ -27,11 +27,13 @@ def authz_filter(q, authz, roles=False):
         return q
 
     fq = {'terms': {'collection_id': list(authz.collections_read)}}
-    if roles:
-        fq = {
-            "or": [{'terms': {'roles': list(authz.roles)}}, fq]
-        }
 
+    if roles:
+        iq = {'terms': {'roles': list(authz.roles)}}
+        fq = {'bool': {
+            'should': [iq, fq],
+            'minimum_should_match': 1
+        }}
     return add_filter(q, fq)
 
 
