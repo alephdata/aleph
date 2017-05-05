@@ -1,7 +1,7 @@
 import logging
 import time
 from pprint import pprint  # noqa
-from elasticsearch.helpers import bulk, scan, BulkIndexError
+from elasticsearch.helpers import scan, BulkIndexError
 
 from aleph.core import es, es_index, schemata
 from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK, TYPE_LEAD
