@@ -184,7 +184,6 @@ LINK_MAPPING = {
         },
         "remote": {
             "type": "object",
-            "include_in_all": True,
             "properties": ENTITY_MAPPING.get('properties')
         }
     }
