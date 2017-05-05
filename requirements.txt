@@ -12,7 +12,7 @@ alembic==0.8.6
 # celery==4.0.1
 git+https://github.com/alanhamlett/celery.git@73147a9da31f2932eb4778e9474fbe72f23d21c2#egg=Celery
 
-elasticsearch==2.3.0
+elasticsearch==5.3.0
 psycopg2==2.6.2
 Pillow==3.2.0
 tesserwrap==0.1.6

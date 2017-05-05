@@ -47,7 +47,6 @@ def peek_query(state):
     q = text_query(state.text)
     q = {
         'query': filter_query(q, filters),
-        'query': q,
         'size': 0,
         'aggregations': {
             'collections': {

@@ -10,14 +10,9 @@ MARKS = re.compile(r'[_\.;,/]{2,}')
 def add_filter(q, filter_):
     """Add the given filter ``filter_`` to the given query."""
     q = deepcopy(q)
-    if 'filtered' not in q:
-        q = {
-            'filtered': {
-                'query': q,
-                'filter': {'bool': {'must': []}}
-            }
-        }
-    q['filtered']['filter']['bool']['must'].append(filter_)
+    if 'bool' not in q:
+        q = {'bool': {'must': [q]}}
+    q['bool']['must'].append(filter_)
     return q
 
 

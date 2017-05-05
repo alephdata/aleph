@@ -102,9 +102,7 @@ def facet_collections(state, q, aggs):
     filters = state.filters
     filters['collection_id'] = state.authz.collections_read
     aggs['scoped']['aggs']['collections'] = {
-        'filter': {
-            'query': filter_query(q, filters)
-        },
+        'filter': filter_query(q, filters),
         'aggs': {
             'collections': {
                 'terms': {'field': 'collection_id', 'size': state.facet_size}
