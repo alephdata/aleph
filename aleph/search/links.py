@@ -12,6 +12,7 @@ DEFAULT_FIELDS = ['roles', 'remote', 'origin', 'inverted', 'schema',
 
 def links_query(origin, state):
     """Parse a user query string, compose and execute a query."""
+    q = match_all()
     if state.has_text:
         q = {
             "query_string": {
@@ -21,8 +22,6 @@ def links_query(origin, state):
                 "use_dis_max": True
             }
         }
-    else:
-        q = match_all()
     ids = origin.get('ids') or [origin.get('id')]
     q = add_filter(q, {'terms': {'origin.id': ids}})
     q = authz_filter(q, state.authz, roles=True)

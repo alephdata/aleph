@@ -87,7 +87,8 @@ class Metadata(object):
         if self._content_hash is not None:
             return self._content_hash
         if self._foreign_id is not None:
-            return sha1(self.foreign_id).hexdigest()
+            foreign_id = string_value(self.foreign_id).encode('utf-8')
+            return sha1(foreign_id).hexdigest()
 
     @content_hash.setter
     def content_hash(self, content_hash):

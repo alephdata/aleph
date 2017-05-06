@@ -22,13 +22,13 @@ def tabular_query(document_id, sheet, args):
         scored = True
         q = {
             "bool": {
-                "must": q,
-                "should": {
+                "must": [q],
+                "should": [{
                     "constant_score": {
                         "filter": {'terms': {'row_id': rows}},
                         "boost": 1000
                     }
-                }
+                }]
             }
         }
 
