@@ -19,8 +19,7 @@ def delete_entity(entity_id):
 
 
 def document_updates(q, entity_id, collection_id=None):
-    scanner = scan(es, query=q, index=es_index, doc_type=[TYPE_DOCUMENT])
-    for res in scanner:
+    for res in scan(es, query=q, index=str(es_index), doc_type=TYPE_DOCUMENT):
         body = res.get('_source')
         entities = []
         if collection_id is not None:
@@ -28,7 +27,7 @@ def document_updates(q, entity_id, collection_id=None):
                 'id': entity_id,
                 'collection_id': collection_id
             })
-        for ent in res.get('_source').get('entities'):
+        for ent in body.get('entities'):
             if ent['id'] != entity_id:
                 entities.append(ent)
         body['entities'] = entities
