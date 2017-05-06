@@ -1,6 +1,9 @@
+import io
 import sys
 import logging
 import traceback
+
+from ingestors.ingestor import Ingestor as IngestorsIngestor
 from sqlalchemy.exc import SQLAlchemyError
 
 from aleph.core import db, archive
@@ -96,10 +99,19 @@ class Ingestor(object):
     @classmethod
     def dispatch(cls, collection_id, meta):
         local_path = archive.load_file(meta)
+
         try:
             best_cls = cls.auction_file(meta, local_path)
             log.debug("Dispatching %r to %r", meta.file_name, best_cls)
-            best_cls(collection_id).ingest(meta, local_path)
+
+            if issubclass(best_cls, IngestorsIngestor):
+                with io.open(local_path, 'rb') as fio:
+                    ing = best_cls(fio, local_path)
+                    ing.collection_id = collection_id
+                    ing.run()
+            else:
+                best_cls(collection_id).ingest(meta, local_path)
+
             db.session.commit()
         except Exception as exc:
             cls.handle_exception(meta, collection_id, exc)

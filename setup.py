@@ -25,10 +25,10 @@ setup(
     entry_points={
         'aleph.ingestors': [
             'skip = aleph.ingest.dummy:SkipIngestor',
-            'pdf = aleph.ingest.text:PDFIngestor',
-            'doc = aleph.ingest.document:DocumentIngestor',
-            'txt = aleph.ingest.document:PlainTextIngestor',
-            'ppt = aleph.ingest.document:PresentationIngestor',
+            'pdf = aleph.ingest.all:AlephPDFIngestor',
+            'doc = aleph.ingest.all:AlephDocumentIngestor',
+            'txt = aleph.ingest.all:AlephTextIngestor',
+            'ppt = aleph.ingest.all:AlephPDFIngestor',
             'html = aleph.ingest.html:HtmlIngestor',
             'djvu = aleph.ingest.djvu:DjVuIngestor',
             'img = aleph.ingest.image:ImageIngestor',

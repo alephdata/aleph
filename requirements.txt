@@ -56,6 +56,8 @@ normality>=0.4.2
 countrynames>=1.4
 dalet>=1.1
 
+https://github.com/alephdata/ingestors/archive/master.zip#egg=ingestors
+
 # Python 3 backports
 subprocess32
 functools32>=3.2
