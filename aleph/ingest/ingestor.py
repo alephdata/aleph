@@ -108,6 +108,7 @@ class Ingestor(object):
                 with io.open(local_path, 'rb') as fio:
                     ing = best_cls(fio, local_path)
                     ing.collection_id = collection_id
+                    ing.aleph_meta = meta
                     ing.run()
             else:
                 best_cls(collection_id).ingest(meta, local_path)
