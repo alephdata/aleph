@@ -4,7 +4,7 @@ import sys
 from ingestors import PDFIngestor, DocumentIngestor, TextIngestor
 
 from aleph.core import db
-from aleph.model import Document, DocumentPage
+from aleph.model import Document
 from aleph.analyze import analyze_document
 from aleph.index import index_document
 
@@ -23,16 +23,18 @@ class AlephSupport(object):
     def match(cls, meta, local_path):
         score = -1
 
-        # Let's use the ingestors package matching as a backup.
         with io.open(local_path, 'rb') as fio:
             _, mime_type = TextIngestor.match(fio)
 
-        if meta.mime_type in cls.MIME_TYPES:
-            score += cls.BASE_SCORE
         if mime_type in cls.MIME_TYPES:
+            score += cls.BASE_SCORE
+
+        # Let's use the extension/mime-type matching as a backup.
+        if meta.mime_type in cls.MIME_TYPES:
             score += cls.BASE_SCORE
         if meta.extension in cls.EXTENSIONS:
             score += cls.BASE_SCORE
+
         return score
 
     def save_document_error(self, document):
@@ -95,12 +97,34 @@ class AlephSupport(object):
 
 
 class AlephTextIngestor(AlephSupport, TextIngestor):
-    pass
+    EXTENSIONS = [
+        'txt'
+    ]
 
 
 class AlephPDFIngestor(AlephSupport, PDFIngestor):
-    pass
+    EXTENSIONS = [
+        'pdf'
+    ]
 
 
 class AlephDocumentIngestor(AlephSupport, DocumentIngestor):
-    pass
+    EXTENSIONS = [
+        'doc',
+        'docx',
+        'rtf',
+        'odt',
+        'sxw',
+        'dot',
+        'docm',
+        'hqx',
+        'pdb',
+        'wpd',
+
+        'ppt',
+        'pptx',
+        'odp',
+        'pot',
+        'pps',
+        'ppa'
+    ]
