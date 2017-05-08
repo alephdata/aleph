@@ -152,7 +152,7 @@ class Document(db.Model, DatedModel):
             document.collection_id = collection_id
             document.foreign_id = meta.foreign_id
             document.content_hash = meta.content_hash
-        document.meta = meta
+            document.meta = meta
         return document
 
     @classmethod
