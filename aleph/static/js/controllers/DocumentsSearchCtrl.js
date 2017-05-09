@@ -1,10 +1,9 @@
 import aleph from '../aleph';
 
-aleph.controller('DocumentsSearchCtrl', ['$scope', '$route', '$location', '$timeout', '$anchorScroll', '$http', 'Entity', 'Authz', 'Alert', 'Document', 'Title', 'data', 'peek', 'alerts', 'metadata',
-    function($scope, $route, $location, $timeout, $anchorScroll, $http, Entity, Authz, Alert, Document, Title, data, peek, alerts, metadata) {
+aleph.controller('DocumentsSearchCtrl', ['$scope', '$route', '$location', '$timeout', '$anchorScroll', '$http', 'Entity', 'Authz', 'Alert', 'Document', 'Title', 'data', 'alerts', 'metadata',
+    function($scope, $route, $location, $timeout, $anchorScroll, $http, Entity, Authz, Alert, Document, Title, data, alerts, metadata) {
 
   $scope.metadata = metadata;
-  $scope.peek = peek;
   $scope.collectionFacet = [];
   $scope.authz = Authz;
 
@@ -39,11 +38,6 @@ aleph.controller('DocumentsSearchCtrl', ['$scope', '$route', '$location', '$time
     return Alert.toggle(getAlert());
   };
 
-  $scope.hasPeek = function() {
-    var query = $scope.query.getQ();
-    return query && query.trim().length > 1;
-  };
-
   var initFacets = function(query, result) {
     if (result.error) {
       return;
@@ -60,14 +54,6 @@ aleph.controller('DocumentsSearchCtrl', ['$scope', '$route', '$location', '$time
     Document.search().then(function(data) {
       updateSearch(data);
     });
-    if ($scope.hasPeek()) {
-      Document.peek().then(function(peek) {
-        $scope.peek = peek;
-      });
-    } else {
-      $scope.peek = {active: false};
-    }
-
   };
 
   var updateSearch = function(data) {

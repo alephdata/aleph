@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from apikit import jsonify
 
-from aleph.core import url_for, get_config
+from aleph.core import url_for
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document
 from aleph.events import log_event
@@ -9,7 +9,6 @@ from aleph.events import log_event
 from aleph.search import QueryState
 from aleph.search import documents_query
 from aleph.search import records_query, execute_records_query
-from aleph.search.peek import peek_query
 from aleph.search.util import next_params
 
 
@@ -26,18 +25,6 @@ def query():
     if params is not None:
         result['next'] = url_for('search_api.query', **params)
     return jsonify(result)
-
-
-@blueprint.route('/api/1/peek')
-def peek():
-    if not get_config('ALLOW_PEEKING', True):
-        return jsonify({'active': False})
-    enable_cache(vary_user=True)
-    state = QueryState(request.args, request.authz)
-    response = peek_query(state)
-    if not request.authz.logged_in:
-        response.pop('roles', None)
-    return jsonify(response)
 
 
 @blueprint.route('/api/1/query/records/<int:document_id>')

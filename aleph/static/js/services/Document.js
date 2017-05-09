@@ -57,17 +57,6 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       var url = '/api/1/entities/' + entityId + '/documents';
       return search(url, prefix);
     },
-    peek: function() {
-      var dfd = $q.defer();
-      var query = Query.parse(),
-          state = angular.copy(query.state);
-      $http.get('/api/1/peek', {cache: true, params: state}).then(function(res) {
-        dfd.resolve(res.data);
-      }, function(err) {
-        dfd.resolve({});
-      });
-      return dfd.promise;
-    },
     get: getDocumentById,
     edit: function(id) {
       var instance = $uibModal.open({

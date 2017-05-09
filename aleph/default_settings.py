@@ -92,10 +92,6 @@ SECRET_KEY = env.get('ALEPH_SECRET_KEY')
 PASSWORD_LOGIN = env_bool('ALEPH_PASSWORD_LOGIN', True)
 PASSWORD_REGISTRATION = env_bool('ALEPH_PASSWORD_REGISTRATION', True)
 
-# Tell users to email the admins if their search has results in collections
-# that are hidden from them?
-ALLOW_PEEKING = env_bool('ALEPH_ALLOW_PEEKING', True)
-
 # LDAP Support
 LDAP_HOST = env.get('ALEPH_LDAP_HOST')
 LDAP_PORT = env.get('ALEPH_LDAP_PORT')

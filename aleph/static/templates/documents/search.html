@@ -41,20 +41,6 @@
             <search-result doc="doc" result="result" query="query"></search-result>
           </div>
 
-          <!-- peek feature -->
-          <div class="alert alert-suggest" role="alert" ng-if="peek.active">
-            <strong>{{peek.total}} hidden results</strong> are available.
-            <span ng-if="authz.logged_in()">
-              For access, contact:
-              <span ng-repeat="role in peek.roles">
-                <a href="mailto:{{role.email}}">{{role.name}}</a><span ng-if="!$last">,</span>
-              </span>
-            </span>
-            <span ng-if="!authz.logged_in()">
-              <a ng-click="triggerLogin()">Sign in</a> to see who to contact for access.
-            </span>
-          </div>
-
           <div class="bottom-pager">
             <div class="pull-right">
               <response-pager response="result" load="loadOffset(offset)"></response-pager>

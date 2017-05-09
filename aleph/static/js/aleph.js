@@ -21,7 +21,7 @@ var aleph = angular.module('aleph', [
 ]);
 
 import {
-  loadDocumentsSearch, loadDocument, loadPeek
+  loadDocumentsSearch, loadDocument
 } from './loaders/loadDocuments';
 import loadMetadata from './loaders/loadMetadata';
 import loadAlertsIndex from './loaders/loadAlertsIndex';
@@ -55,7 +55,6 @@ aleph.config([
     reloadOnSearch: false,
     resolve: {
       'data': loadDocumentsSearch,
-      'peek': loadPeek,
       'metadata': loadMetadata,
       'alerts': loadAlertsIndex
     }
