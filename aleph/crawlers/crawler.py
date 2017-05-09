@@ -88,6 +88,7 @@ class Crawler(object):
             return False
         q = db.session.query(Document.id)
         q = q.filter(Document.collection_id == self.collection.id)
+        q = q.filter(Document.status != Document.STATUS_FAIL)
         q = q.filter(Document.foreign_id == unicode(foreign_id))
         if content_hash is not None:
             q = q.filter(Document.content_hash == content_hash)
