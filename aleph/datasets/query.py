@@ -14,7 +14,7 @@ from aleph.text import string_value
 from aleph.datasets.mapper import EntityMapper, LinkMapper
 
 log = logging.getLogger(__name__)
-DATA_PAGE = 10000
+DATA_PAGE = 2000
 
 
 class QueryTable(object):
@@ -134,8 +134,7 @@ class DBQuery(Query):
     def compose_query(self):
         q = select(columns=self.mapped_columns, from_obj=self.from_clause,
                    use_labels=True)
-        q = self.apply_filters(q)
-        return q
+        return self.apply_filters(q)
 
     def iterrows(self):
         """Compose the actual query and return an iterator of ``Record``."""
@@ -149,11 +148,7 @@ class DBQuery(Query):
             if not len(rows):
                 break
             for row in rows:
-                data = {}
-                for k, v in row.items():
-                    k = mapping.get(k, k)
-                    data[k] = v
-                yield data
+                yield {mapping.get(k, k): v for k, v in row.items()}
 
 
 class CSVQuery(Query):

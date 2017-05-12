@@ -49,10 +49,7 @@ def finalize_index(data, schema):
 
     # Get implied schemata (i.e. parents of the actual schema)
     data['schema'] = schema.name
-    data['schemata'] = []
-    for parent in schema.schemata:
-        if not parent.hidden:
-            data['schemata'].append(parent.name)
+    data['schemata'] = [p.name for p in schema.schemata if not p.hidden]
 
     # Second name field for non-tokenised sorting.
     if 'name' in data:

@@ -22,40 +22,42 @@ def _index_updates(entities, links):
     if not len(entities):
         return
 
-    queries = [{'_id': e, '_type': TYPE_ENTITY} for e in entities.keys()]
-    result = es.mget(index=es_index, body={'docs': queries})
-    for idx_doc in result.get('docs', []):
-        if not idx_doc.get('found', False):
+    result = es.mget(index=es_index, doc_type=TYPE_ENTITY,
+                     body={'ids': entities.keys()})
+    for doc in result.get('docs', []):
+        if not doc.get('found', False):
             continue
-        entity_id = idx_doc['_id']
+        entity_id = doc['_id']
         entity = entities.get(entity_id)
-        existing = idx_doc.get('_source')
+        existing = doc.get('_source')
         combined = merge_docs(entity, existing)
-        combined['schema'] = schemata.merge_entity_schema(entity['schema'], existing['schema'])  # noqa
+        combined['schema'] = schemata.merge_entity_schema(entity['schema'],
+                                                          existing['schema'])
         combined['roles'] = entity.get('roles', [])
         entities[entity_id] = combined
 
     for link in links:
-        doc = dict(link)
-        doc_id = doc.pop('id', None)
+        doc_id = link.pop('id', None)
         if doc_id is None:
             continue
-        entity = entities.get(doc.get('remote'))
+        entity = entities.get(link.pop('remote'))
         if entity is None:
             continue
         entity = dict(entity)
-        doc['text'].extend(entity.pop('text', []))
-        doc['text'] = list(set(doc['text']))
-        doc['remote'] = entity
+        link['text'].extend(entity.pop('text', []))
+        link['text'] = list(set(link['text']))
+        link['remote'] = entity
         yield {
             '_id': doc_id,
             '_type': TYPE_LINK,
             '_index': str(es_index),
-            '_source': doc
+            '_source': link
         }
 
     for doc_id, entity in entities.items():
         entity.pop('id', None)
+        # from pprint import pprint
+        # pprint(entity)
         yield {
             '_id': doc_id,
             '_type': TYPE_ENTITY,
