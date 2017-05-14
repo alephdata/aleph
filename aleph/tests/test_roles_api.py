@@ -1,5 +1,6 @@
 import json
 
+from aleph.core import db
 from aleph.model import Role
 from aleph.tests.util import TestCase
 from aleph.tests.factories.models import RoleFactory
@@ -133,6 +134,7 @@ class RolesApiTestCase(TestCase):
             code=Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
         )
         res = self.client.post('/api/1/roles', data=payload)
+        db.session.close()
 
         self.assertEqual(res.status_code, 201)
         self.assertEqual(res.json['status'], 'ok')
