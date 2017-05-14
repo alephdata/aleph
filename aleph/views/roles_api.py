@@ -95,7 +95,7 @@ def create():
     role.set_password(password)
 
     db.session.add(role)
-    db.session.flush()
+    db.session.commit()
 
     return jsonify(dict(status='ok')), 201
 
