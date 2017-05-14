@@ -38,7 +38,7 @@ class AlephSupport(object):
 
         return score
 
-    def exception_handler(self, none=None):
+    def exception_handler(self):
         """Legacy document error extraction and storage."""
         db.session.rollback()
         db.session.close()
@@ -61,7 +61,7 @@ class AlephSupport(object):
 
         db.session.commit()
 
-        super(AlephSupport, self).exception_handler(None)
+        super(AlephSupport, self).exception_handler()
 
     def save_results(self):
         """Extracts the ingestion results and stores them in the database."""
