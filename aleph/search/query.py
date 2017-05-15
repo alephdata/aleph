@@ -1,5 +1,5 @@
-from apikit.args import BOOL_TRUISH
 from werkzeug.datastructures import MultiDict
+from dalet import parse_boolean
 
 from aleph.model import Entity
 from aleph.text import string_value
@@ -154,7 +154,4 @@ class QueryState(object):
             return default
 
     def getbool(self, name, default=False):
-        value = self.get(name)
-        if value is None:
-            return default
-        return value.lower() in BOOL_TRUISH
+        return parse_boolean(self.get(name), default=default)

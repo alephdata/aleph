@@ -145,7 +145,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
             'category': self.category,
             'countries': self.countries,
             'managed': self.managed,
-            'private': self.private,
             'public': self.is_public
         })
         if counts:
