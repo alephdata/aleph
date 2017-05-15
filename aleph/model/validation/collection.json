@@ -14,9 +14,6 @@
         "managed": {
             "type": "boolean"
         },
-        "private": {
-            "type": "boolean"
-        },
         "category": {
             "type": "string",
             "format": "collection-category"
