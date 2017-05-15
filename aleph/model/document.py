@@ -2,7 +2,7 @@ import logging
 from hashlib import sha1
 from datetime import datetime, timedelta
 from normality import ascii_text
-from sqlalchemy import func
+from sqlalchemy import func, or_, and_
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
@@ -253,6 +253,16 @@ class DocumentRecord(db.Model):
             text = string_value(value)
             if text is not None:
                 yield value
+
+    @classmethod
+    def find_rows(cls, document_id, rows):
+        if not len(rows):
+            return []
+        q = db.session.query(cls)
+        q = q.filter(cls.document_id == document_id)
+        clauses = [and_(cls.sheet == r[0], cls.row_id == r[1]) for r in rows]
+        q = q.filter(or_(*clauses))
+        return q
 
     def __repr__(self):
         return '<DocumentRecord(%r,%r)>' % (self.document_id, self.row_id)

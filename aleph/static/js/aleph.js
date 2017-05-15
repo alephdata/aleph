@@ -80,7 +80,7 @@ aleph.config([
     }
   });
 
-  $routeProvider.when('/tabular/:document_id/:table_id', {
+  $routeProvider.when('/tabular/:document_id/:sheet', {
     templateUrl: 'templates/documents/tabular.html',
     controller: 'TabularCtrl',
     reloadOnSearch: true,

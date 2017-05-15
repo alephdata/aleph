@@ -55,12 +55,16 @@ class DocumentsApiTestCase(TestCase):
         res = self.client.get('/api/1/documents/%s/tables/444' % doc_id)
         assert res.status_code == 404, res
 
-    def test_view_table_rows(self):
-        doc_id = 1003
-        res = self.client.get('/api/1/documents/%s/tables/0/rows' % doc_id)
+    def test_view_records(self):
+        res = self.client.get('/api/1/documents/1003/records')
         assert res.status_code == 200, res
         assert 'results' in res.json, res.json
         assert len(res.json['results']) == 10, res.json
+
+    def test_records_search(self):
+        res = self.client.get('/api/1/documents/1003/records?q=kwazulu')
+        assert res.status_code == 200, res
+        assert res.json['total'] == 1, res.json
 
     def test_view_pdf(self):
         res = self.client.get('/api/1/documents/1003/pdf')

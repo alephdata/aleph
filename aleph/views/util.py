@@ -35,15 +35,6 @@ def get_document(document_id, action=Authz.READ):
     return document
 
 
-def get_tabular(document_id, table_id):
-    document = get_document(document_id)
-    try:
-        table = document.meta.tables[table_id]
-    except IndexError:
-        raise NotFound("No such table: %s" % table_id)
-    return document, table
-
-
 def get_page(document_id, number):
     document = get_document(document_id)
     q = db.session.query(DocumentPage)

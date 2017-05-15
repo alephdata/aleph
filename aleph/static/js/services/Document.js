@@ -74,11 +74,11 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
     queryPages: function(documentId, query) {
       var dfd = $q.defer();
       var sq = {'q': query.dq},
-          url = '/api/1/query/records/' + documentId;
+          url = '/api/1/documents/' + documentId + '/records';
 
       if (sq.q) {
         sq['snippet'] = 50;
-        sq['limit'] = 1000;
+        sq['limit'] = 50;
         $http.get(url, {cache: true, params: sq}).then(function(res) {
           for (var i in res.data.results) {
             var record = res.data.results[i];
