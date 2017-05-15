@@ -24,7 +24,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="row in rows.results" ng-class="::{'highlight': isHighlighted(row)}">
+            <tr ng-repeat="row in records.results" ng-class="::{'highlight': isHighlighted(row)}">
               <td ng-repeat="col in table.columns" ng-class="::getClass(row, col)"
                   ng-bind-html="::formatCell(row, col)"></td>
             </tr>
@@ -33,10 +33,10 @@
       </div>
       <div class="bottom-pager">
           <div class="pull-right">
-            <response-pager response="rows" load="loadOffset(offset)"></response-pager>
+            <response-pager response="records" load="loadOffset(offset)"></response-pager>
           </div>
           <div class="total">
-            {{::rows.total | number}} rows found.
+            {{::records.total | number}} rows found.
           </div>
         </div>
     </div>

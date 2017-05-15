@@ -5,15 +5,38 @@ from aleph.index import TYPE_RECORD
 from aleph.util import ensure_list
 from aleph.search.fragments import text_query_string
 from aleph.search.util import execute_basic
+from aleph.search.fragments import match_all, filter_query
+from aleph.model import DocumentRecord
 
 SNIPPET_SIZE = 100
 
 
-def records_query(document_id, state, size=5):
+def records_query(document_id, state):
+    try:
+        rows = [int(r) for r in state.getlist('row')]
+    except:
+        rows = []
+
+    score_query = state.has_text or len(rows)
     shoulds = records_query_shoulds(state)
-    query = records_query_internal(document_id, shoulds, size=size)
-    query['size'] = state.limit
+    if not len(shoulds):
+        shoulds = [match_all()]
+
+    if len(rows):
+        shoulds.append({
+            "constant_score": {
+                "filter": {'terms': {'row_id': rows}},
+                "boost": 1000
+            }
+        })
+
+    query = records_query_internal(document_id, shoulds, size=state.limit)
+    query['query'] = filter_query(query['query'], state.filters)
     query['from'] = state.offset
+
+    sort = [{'row_id': 'asc'}, {'page': 'asc'}]
+    if score_query:
+        sort.insert(0, '_score')
     return query
 
 
@@ -34,9 +57,7 @@ def records_query_internal(document_id, shoulds, size=5):
             'bool': {
                 'minimum_should_match': 1,
                 'should': shoulds,
-                'must': [
-                    {'term': {'document_id': document_id}}
-                ]
+                'filter': [{'term': {'document_id': document_id}}]
             }
         },
         'highlight': {
@@ -72,13 +93,22 @@ def scan_entity_mentions(entity):
             yield (res.get('_source').get('document_id'), text)
 
 
-def execute_records_query(query):
+def execute_records_query(document_id, state, query):
     """Execute a query against records and return a set of results."""
     result, hits, output = execute_basic(TYPE_RECORD, query)
+    rows = []
     for rec in hits.get('hits', []):
         record = rec.get('_source')
         record['score'] = rec.get('_score')
+        if record.get('row_id'):
+            rows.append((record.get('sheet'), record.get('row_id')))
+
         for text in rec.get('highlight', {}).get('text', []):
             record['text'] = text
         output['results'].append(record)
+
+    for record in DocumentRecord.find_rows(document_id, rows):
+        for res in output['results']:
+            if res['sheet'] == record.sheet and res['row_id'] == record.row_id:
+                res['data'] = record.data
     return output

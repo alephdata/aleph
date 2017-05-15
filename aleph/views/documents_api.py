@@ -2,16 +2,17 @@ import os
 import logging
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
-from apikit import jsonify, Pager, get_limit, get_offset, request_data
+from apikit import jsonify, Pager, request_data
 
 from aleph.core import archive, url_for, db
-from aleph.model import Document, Entity, Reference, Collection
+from aleph.model import Document, Entity, Reference
 from aleph.logic import update_document
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
-from aleph.search.tabular import tabular_query, execute_tabular_query
+from aleph.search import QueryState
+from aleph.search import records_query, execute_records_query
 from aleph.search.util import next_params
-from aleph.views.util import get_document, get_tabular, get_page
+from aleph.views.util import get_document, get_page
 
 
 log = logging.getLogger(__name__)
@@ -126,21 +127,24 @@ def page(document_id, number):
 
 @blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>')
 def table(document_id, table_id):
-    document, tabular = get_tabular(document_id, table_id)
+    document = get_document(document_id)
     enable_cache(vary_user=True)
-    return jsonify(tabular)
+    try:
+        return jsonify(document.meta.tables[table_id])
+    except IndexError:
+        raise NotFound("No such table: %s" % table_id)
 
 
-@blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>/rows')
-def rows(document_id, table_id):
-    document, tabular = get_tabular(document_id, table_id)
-    query = tabular_query(document_id, table_id, request.args)
-    query['size'] = get_limit(default=100)
-    query['from'] = get_offset()
-
-    result = execute_tabular_query(query)
+@blueprint.route('/api/1/documents/<int:document_id>/records')
+def records(document_id):
+    document = get_document(document_id)
+    enable_cache(vary_user=True)
+    state = QueryState(request.args, request.authz)
+    query = records_query(document.id, state)
+    result = execute_records_query(document.id, state, query)
     params = next_params(request.args, result)
     if params is not None:
-        result['next'] = url_for('documents_api.rows', document_id=document_id,
-                                 table_id=table_id, **params)
+        result['next'] = url_for('documents_api.records',
+                                 document_id=document_id,
+                                 **params)
     return jsonify(result)

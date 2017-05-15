@@ -6,7 +6,7 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
 
   $scope.doc = data.doc;
   $scope.table = data.table;
-  $scope.rows = data.rows;
+  $scope.records = data.records;
   $scope.moreLoading = false;
   $scope.searchCtx = $location.search().ctx;
   $scope.textQuery = $location.search().dq;
@@ -24,9 +24,10 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
   };
 
   $scope.formatCell = function(row, col) {
-    var value = row[col.name];
+    var data = row.data || {},
+        value = data[col.name];
     if (value === null || value === undefined) {
-      return;
+      return $sce.trustAsHtml('&nbsp;');
     }
     if (angular.isString(value)) {
       if (value.toLowerCase().startsWith('http://') || value.toLowerCase().startsWith('https://')) {
@@ -34,9 +35,6 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
         return $sce.trustAsHtml(value);
       }
     }
-    // if (!isNaN(filterFloat(value))) {
-    //   return $filter('number')(value);
-    // }
     return $sce.trustAsHtml($sanitize(value));
   };
 

@@ -68,8 +68,7 @@ def generate_records(document):
                     'collection_id': document.collection_id,
                     'row_id': record.row_id,
                     'sheet': record.sheet,
-                    'text': index_form(data.values()),
-                    'raw': data
+                    'text': index_form(data.values())
                 }
             }
 

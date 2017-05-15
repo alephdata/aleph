@@ -40,8 +40,3 @@ class SearchApiTestCase(TestCase):
         res = self.client.get('/api/1/query?filter:languages=ru')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
-
-    def test_records_search(self):
-        res = self.client.get('/api/1/query/records/1003?q=kwazulu')
-        assert res.status_code == 200, res
-        assert res.json['total'] == 1, res.json
