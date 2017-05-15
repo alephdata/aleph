@@ -23,11 +23,11 @@ def ingest_upload(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))
     request.authz.require(request.authz.collection_write(collection.id))
     log_event(request)
+
     try:
         meta = json.loads(request.form.get('meta', '{}'))
         meta['crawler_id'] = 'user_upload:%s' % request.authz.role.id
         meta['crawler_run'] = make_textid()
-
     except Exception as ex:
         raise BadRequest(unicode(ex))
 
