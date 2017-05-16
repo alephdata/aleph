@@ -109,35 +109,32 @@
               - label: End_Date
                 name: End_Date
 
-- model: aleph.model.document.DocumentPage
-  records:
-    - id: 1000
-      document_id: 1000
-      number: 1
-      text: >
-        This is a document about a banana!
-    - id: 1001
-      document_id: 1000
-      number: 2
-      text: >
-        It has two pages in total.
-    - id: 1002
-      document_id: 1001
-      number: 1
-      text: >
-        TOP SECRET BANANA SECRETS FROM KWAZULU NATAL!
-    - id: 1003
-      document_id: 1002
-      number: 1
-      text: >
-        This document makes no mention of specific fruit whatsoever.
-
 - model: aleph.model.document.DocumentRecord
   records:
+    - id: 100000
+      document_id: 1000
+      index: 1
+      text: >
+        This is a document about a banana!
+    - id: 100001
+      document_id: 1000
+      index: 2
+      text: >
+        It has two pages in total.
+    - id: 100002
+      document_id: 1001
+      index: 1
+      text: >
+        TOP SECRET BANANA SECRETS FROM KWAZULU NATAL!
+    - id: 100003
+      document_id: 1002
+      index: 1
+      text: >
+        This document makes no mention of specific fruit whatsoever.
     - id: 10000
       document_id: 1003
       sheet: 0
-      row_id: 1
+      index: 1
       data:
         ISSID: 261
         Municipality_metro: Western Cape - City of Cape Town
@@ -148,7 +145,7 @@
     - id: 10001
       document_id: 1003
       sheet: 0
-      row_id: 2
+      index: 2
       data:
         ISSID: 269
         Municipality_metro: Gauteng - City of Tshwane
@@ -159,7 +156,7 @@
     - id: 10002
       document_id: 1003
       sheet: 0
-      row_id: 3
+      index: 3
       data:
         ISSID: 262
         Municipality_metro: Gauteng - City of Tshwane
@@ -170,7 +167,7 @@
     - id: 10003
       document_id: 1003
       sheet: 0
-      row_id: 4
+      index: 4
       data:
         ISSID: 263
         Municipality_metro: Western Cape - City of Cape Town
@@ -181,7 +178,7 @@
     - id: 10004
       document_id: 1003
       sheet: 0
-      row_id: 5
+      index: 5
       data:
         ISSID: 272
         Municipality_metro: KwaZulu Natal - eThekwini
@@ -192,7 +189,7 @@
     - id: 10005
       document_id: 1003
       sheet: 0
-      row_id: 6
+      index: 6
       data:
         ISSID: 294
         Municipality_metro: Limpopo - Thulamela
@@ -203,7 +200,7 @@
     - id: 10006
       document_id: 1003
       sheet: 0
-      row_id: 7
+      index: 7
       data:
         ISSID: 342
         Municipality_metro: Gauteng - City of Johannesburg
@@ -214,7 +211,7 @@
     - id: 10007
       document_id: 1003
       sheet: 0
-      row_id: 8
+      index: 8
       data:
         ISSID: 268
         Municipality_metro: North West - Tlokwe City Council
@@ -225,7 +222,7 @@
     - id: 10008
       document_id: 1003
       sheet: 0
-      row_id: 9
+      index: 9
       data:
         ISSID: 341
         Municipality_metro: Western Cape - City of Cape Town
@@ -236,7 +233,7 @@
     - id: 10009
       document_id: 1003
       sheet: 0
-      row_id: 10
+      index: 10
       data:
         ISSID: 288
         Municipality_metro: Free State - Fezile Dabi

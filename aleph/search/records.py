@@ -25,7 +25,7 @@ def records_query(document_id, state):
     if len(rows):
         shoulds.append({
             "constant_score": {
-                "filter": {'terms': {'row_id': rows}},
+                "filter": {'terms': {'index': rows}},
                 "boost": 1000
             }
         })
@@ -68,7 +68,7 @@ def records_query_internal(document_id, shoulds, size=5):
                 }
             }
         },
-        '_source': ['document_id', 'sheet', 'row_id', 'page']
+        '_source': ['document_id', 'sheet', 'index']
     }
 
 

@@ -81,12 +81,10 @@ RECORD_MAPPING = {
     ],
     "date_detection": False,
     "properties": {
-        "type": {"type": "string", "index": "not_analyzed"},
         "collection_id": {"type": "integer", "index": "not_analyzed"},
         "document_id": {"type": "integer", "index": "not_analyzed"},
+        "index": {"type": "integer", "index": "not_analyzed"},
         "sheet": {"type": "integer", "index": "not_analyzed"},
-        "row_id": {"type": "integer", "index": "not_analyzed"},
-        "page": {"type": "integer", "index": "not_analyzed"},
         "text": {"type": "string", "index": "analyzed"},
         "raw": {"type": "object"}
     }

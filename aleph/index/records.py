@@ -1,11 +1,9 @@
 import six
 import time
 import logging
-from normality import stringify
 from elasticsearch.helpers import scan, BulkIndexError
 
 from aleph.core import es, es_index
-from aleph.model import Document
 from aleph.index.mapping import TYPE_RECORD
 from aleph.index.util import bulk_op
 from aleph.text import index_form
@@ -41,36 +39,23 @@ def clear_records(document_id):
 
 def generate_records(document):
     """Generate index records, based on document rows or pages."""
-    if document.type == Document.TYPE_TEXT:
-        for page in document.pages:
-            yield {
-                '_id': page.tid,
-                '_type': TYPE_RECORD,
-                '_index': six.text_type(es_index),
-                '_source': {
-                    'type': 'page',
-                    'document_id': document.id,
-                    'collection_id': document.collection_id,
-                    'page': page.number,
-                    'text': index_form([page.text])
-                }
+    for record in document.records.yield_per(1000):
+        texts = [record.text]
+        if record.data is not None:
+            texts.extend(record.data.values())
+
+        yield {
+            '_id': record.id,
+            '_type': TYPE_RECORD,
+            '_index': six.text_type(es_index),
+            '_source': {
+                'document_id': document.id,
+                'collection_id': document.collection_id,
+                'index': record.index,
+                'sheet': record.sheet,
+                'text': index_form(texts)
             }
-    elif document.type == Document.TYPE_TABULAR:
-        for record in document.records:
-            data = {k: stringify(v) for (k, v) in record.data.items()}
-            yield {
-                '_id': record.tid,
-                '_type': TYPE_RECORD,
-                '_index': six.text_type(es_index),
-                '_source': {
-                    'type': 'row',
-                    'document_id': document.id,
-                    'collection_id': document.collection_id,
-                    'row_id': record.row_id,
-                    'sheet': record.sheet,
-                    'text': index_form(data.values())
-                }
-            }
+        }
 
 
 def index_records(document):

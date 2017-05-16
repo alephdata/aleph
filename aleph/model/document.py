@@ -1,8 +1,7 @@
 import logging
-from hashlib import sha1
 from datetime import datetime, timedelta
 from normality import ascii_text
-from sqlalchemy import func, or_, and_
+from sqlalchemy import func
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
@@ -13,7 +12,8 @@ from aleph.model.validate import validate
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
 from aleph.model.common import DatedModel
-from aleph.text import string_value, index_form
+from aleph.model.document_record import DocumentRecord, DocumentPage
+from aleph.text import index_form
 
 log = logging.getLogger(__name__)
 
@@ -106,10 +106,10 @@ class Document(db.Model, DatedModel):
 
     def insert_records(self, sheet, iterable, chunk_size=1000):
         chunk = []
-        for i, data in enumerate(iterable):
+        for index, data in enumerate(iterable):
             chunk.append({
                 'document_id': self.id,
-                'row_id': i,
+                'index': index,
                 'sheet': sheet,
                 'data': data
             })
@@ -121,14 +121,9 @@ class Document(db.Model, DatedModel):
             db.session.bulk_insert_mappings(DocumentRecord, chunk)
 
     def text_parts(self):
-        if self.type == self.TYPE_TEXT:
-            for page in self.pages:
-                for text in page.text_parts():
-                    yield text
-        elif self.type == self.TYPE_TABULAR:
-            for record in self.records:
-                for text in record.text_parts():
-                    yield text
+        for record in self.records.yield_per(1000):
+            for text in record.text_parts():
+                yield text
 
     @classmethod
     def crawler_last_run(cls, crawler_id):
@@ -197,72 +192,3 @@ class Document(db.Model, DatedModel):
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.title)
-
-
-class DocumentPage(db.Model):
-
-    id = db.Column(db.BigInteger, primary_key=True)
-    number = db.Column(db.Integer(), nullable=False)
-    text = db.Column(db.Unicode(), nullable=False)
-    document_id = db.Column(db.Integer(), db.ForeignKey('document.id'), index=True)  # noqa
-    document = db.relationship(Document, backref=db.backref('pages', cascade='all, delete-orphan'))  # noqa
-
-    @property
-    def tid(self):
-        tid = sha1(str(self.document_id))
-        tid.update(str(self.id))
-        return tid.hexdigest()
-
-    def __repr__(self):
-        return '<DocumentPage(%r,%r)>' % (self.document_id, self.number)
-
-    def text_parts(self):
-        """Utility method to get all text snippets in a record."""
-        text = string_value(self.text)
-        if text is not None:
-            yield self.text
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'number': self.number,
-            'text': self.text,
-            'document_id': self.document_id
-        }
-
-
-class DocumentRecord(db.Model):
-
-    id = db.Column(db.BigInteger, primary_key=True)
-    sheet = db.Column(db.Integer, nullable=False)
-    row_id = db.Column(db.Integer, nullable=False)
-    data = db.Column(JSONB)
-    document_id = db.Column(db.Integer(), db.ForeignKey('document.id'), index=True)  # noqa
-    document = db.relationship(Document, backref=db.backref('records', cascade='all, delete-orphan'))  # noqa
-
-    @property
-    def tid(self):
-        tid = sha1(str(self.document_id))
-        tid.update(str(self.sheet))
-        tid.update(str(self.row_id))
-        return tid.hexdigest()
-
-    def text_parts(self):
-        """Utility method to get all text snippets in a record."""
-        for value in self.data.values():
-            text = string_value(value)
-            if text is not None:
-                yield value
-
-    @classmethod
-    def find_rows(cls, document_id, rows):
-        if not len(rows):
-            return []
-        q = db.session.query(cls)
-        q = q.filter(cls.document_id == document_id)
-        clauses = [and_(cls.sheet == r[0], cls.row_id == r[1]) for r in rows]
-        q = q.filter(or_(*clauses))
-        return q
-
-    def __repr__(self):
-        return '<DocumentRecord(%r,%r)>' % (self.document_id, self.row_id)
