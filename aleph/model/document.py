@@ -12,7 +12,7 @@ from aleph.model.validate import validate
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
 from aleph.model.common import DatedModel
-from aleph.model.document_record import DocumentRecord, DocumentPage
+from aleph.model.document_record import DocumentRecord
 from aleph.text import index_form
 
 log = logging.getLogger(__name__)
@@ -78,12 +78,6 @@ class Document(db.Model, DatedModel):
         self.meta = meta
         db.session.add(self)
 
-    def delete_pages(self):
-        pq = db.session.query(DocumentPage)
-        pq = pq.filter(DocumentPage.document_id == self.id)
-        pq.delete(synchronize_session='fetch')
-        db.session.refresh(self)
-
     def delete_records(self):
         pq = db.session.query(DocumentRecord)
         pq = pq.filter(DocumentRecord.document_id == self.id)
@@ -101,7 +95,6 @@ class Document(db.Model, DatedModel):
     def delete(self, deleted_at=None):
         self.delete_references()
         self.delete_records()
-        self.delete_pages()
         db.session.delete(self)
 
     def insert_records(self, sheet, iterable, chunk_size=1000):

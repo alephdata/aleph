@@ -5,9 +5,8 @@ from urlparse import urlparse, urljoin
 from werkzeug.exceptions import NotFound, ImATeapot
 import xlsxwriter
 
-from aleph.core import db
 from aleph.authz import Authz
-from aleph.model import Document, DocumentPage
+from aleph.model import Document
 from aleph.logic import fetch_entity
 
 
@@ -33,17 +32,6 @@ def get_document(document_id, action=Authz.READ):
     collections = request.authz.collections.get(action)
     request.authz.require(document.collection_id in collections)
     return document
-
-
-def get_page(document_id, number):
-    document = get_document(document_id)
-    q = db.session.query(DocumentPage)
-    q = q.filter(DocumentPage.document_id == document_id)
-    q = q.filter(DocumentPage.number == number)
-    page = q.first()
-    if page is None:
-        raise NotFound("No such page: %s" % number)
-    return document, page
 
 
 def is_safe_url(target):

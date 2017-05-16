@@ -14,7 +14,7 @@ class TextIngestor(Ingestor):
 
     def create_document(self, meta, type=None):
         document = super(TextIngestor, self).create_document(meta, type=type)
-        document.delete_pages()
+        document.delete_records()
         return document
 
     def create_page(self, document, text, number=1):

@@ -98,7 +98,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
     getPage: function(documentId, pageNumber) {
       var dfd = $q.defer(),
           page = parseInt(pageNumber, 10) || 1,
-          url = '/api/1/documents/' + documentId + '/pages/' + page;
+          url = '/api/1/documents/' + documentId + '/records/' + page;
       $http.get(url, {cache: true}).then(function(res) {
         dfd.resolve(res.data);
       }, function(err) {

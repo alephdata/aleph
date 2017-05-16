@@ -5,14 +5,14 @@ from flask import Blueprint, redirect, send_file, request
 from apikit import jsonify, Pager, request_data
 
 from aleph.core import archive, url_for, db
-from aleph.model import Document, Entity, Reference
+from aleph.model import Document, DocumentRecord, Entity, Reference
 from aleph.logic import update_document
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
 from aleph.search import QueryState
 from aleph.search import records_query, execute_records_query
 from aleph.search.util import next_params
-from aleph.views.util import get_document, get_page
+from aleph.views.util import get_document
 
 
 log = logging.getLogger(__name__)
@@ -118,13 +118,6 @@ def pdf(document_id):
     return send_file(fh, mimetype=pdf.mime_type)
 
 
-@blueprint.route('/api/1/documents/<int:document_id>/pages/<int:number>')
-def page(document_id, number):
-    document, page = get_page(document_id, number)
-    enable_cache(server_side=True)
-    return jsonify(page)
-
-
 @blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>')
 def table(document_id, table_id):
     document = get_document(document_id)
@@ -148,3 +141,16 @@ def records(document_id):
                                  document_id=document_id,
                                  **params)
     return jsonify(result)
+
+
+@blueprint.route('/api/1/documents/<int:document_id>/records/<int:index>')
+def record(document_id, index):
+    document = get_document(document_id)
+    q = db.session.query(DocumentRecord)
+    q = q.filter(DocumentRecord.document_id == document.id)
+    q = q.filter(DocumentRecord.index == index)
+    record = q.first()
+    if record is None:
+        raise NotFound("No such page: %s" % index)
+    enable_cache(server_side=True)
+    return jsonify(record)
