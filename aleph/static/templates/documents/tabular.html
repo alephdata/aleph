@@ -18,14 +18,14 @@
         <table class="table table-bordered table-striped table-condensed">
           <thead>
             <tr>
-              <th ng-repeat="col in table.columns" data-type="{{::col.type}}">
+              <th ng-repeat="col in table.columns track by col.name" data-type="{{::col.type}}">
                 {{::col.label}}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="row in records.results" ng-class="::{'highlight': isHighlighted(row)}">
-              <td ng-repeat="col in table.columns" ng-class="::getClass(row, col)"
+            <tr ng-repeat="row in records.results track by row.id" ng-class="::{'highlight': isHighlighted(row)}">
+              <td ng-repeat="col in table.columns track by col.name" ng-class="::getClass(row, col)"
                   ng-bind-html="::formatCell(row, col)"></td>
             </tr>
           </tbody>

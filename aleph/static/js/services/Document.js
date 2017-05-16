@@ -115,12 +115,12 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       }
       if (doc.type === 'tabular') {
         var sheet = record ? record.sheet : 0,
-            row = record ? record.row_id : null;
+            row = record ? record.index : null;
         query.row = row;
         path = '/tabular/' + doc.id + '/' + sheet;
       } else {
         path = '/text/' + doc.id;
-        query.page = record ? record.page : 1;
+        query.page = record ? record.index : 1;
         query.dq = search.q;
       }
       return path + '?' + $httpParamSerializer(query);

@@ -3,8 +3,9 @@ import time
 import logging
 from elasticsearch.helpers import scan, BulkIndexError
 
-from aleph.core import es, es_index
+from aleph.core import es, es_index, db
 from aleph.index.mapping import TYPE_RECORD
+from aleph.model import DocumentRecord
 from aleph.index.util import bulk_op
 from aleph.text import index_form
 
@@ -39,7 +40,9 @@ def clear_records(document_id):
 
 def generate_records(document):
     """Generate index records, based on document rows or pages."""
-    for record in document.records.yield_per(1000):
+    q = db.session.query(DocumentRecord)
+    q = q.filter(DocumentRecord.document_id == document.id)
+    for record in q.yield_per(1000):
         texts = [record.text]
         if record.data is not None:
             texts.extend(record.data.values())

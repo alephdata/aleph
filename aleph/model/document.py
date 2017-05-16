@@ -121,7 +121,9 @@ class Document(db.Model, DatedModel):
             db.session.bulk_insert_mappings(DocumentRecord, chunk)
 
     def text_parts(self):
-        for record in self.records.yield_per(1000):
+        pq = db.session.query(DocumentRecord)
+        pq = pq.filter(DocumentRecord.document_id == self.id)
+        for record in pq.yield_per(1000):
             for text in record.text_parts():
                 yield text
 

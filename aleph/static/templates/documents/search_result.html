@@ -63,10 +63,10 @@
           &bdquo;<span ng-click="viewDetails(record)" class="click highlights"
             ng-bind-html="::record.snippet"></span>&ldquo;
           <span ng-if="doc.type == 'tabular'" class="ref">in
-            <a ng-href="{{::getUrl(record)}}">row {{::record.row_id | number}}</a>
+            <a ng-href="{{::getUrl(record)}}">row {{::record.index | number}}</a>
           </span>
           <span ng-if="doc.type == 'text'" class="ref">on
-            <a ng-href="{{::getUrl(record)}}">page {{::record.page | number}}</a>
+            <a ng-href="{{::getUrl(record)}}">page {{::record.index | number}}</a>
           </span>
         </li>
       </ul>
