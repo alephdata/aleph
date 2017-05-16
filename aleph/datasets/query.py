@@ -82,7 +82,8 @@ class DBQuery(Query):
     def engine(self):
         if not hasattr(self, '_engine'):
             self._engine = create_engine(self.database_uri,
-                                         poolclass=NullPool)
+                                         poolclass=NullPool,
+                                         server_side_cursors=True)
         return self._engine
 
     @property
@@ -144,7 +145,7 @@ class DBQuery(Query):
         rp = self.engine.execute(q)
         log.info("Query executed, loading data...")
         while True:
-            rows = rp.fetchmany(DATA_PAGE)
+            rows = rp.fetchmany(size=DATA_PAGE)
             if not len(rows):
                 break
             for row in rows:
