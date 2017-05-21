@@ -1,12 +1,18 @@
 import sys
+import tempfile
 import traceback
+from functools import partial
 
 from ingestors import PDFIngestor, DocumentIngestor, TextIngestor
 
 from aleph.core import db, archive
 from aleph.model import Document
+from aleph.core import db, archive, WORKER_QUEUE, WORKER_ROUTING_KEY
+from aleph.model import Document, DocumentPage
+from aleph.metadata import Metadata
 from aleph.analyze import analyze_document
 from aleph.index import index_document
+from aleph.ingest import ingest
 
 
 class AlephSupport(object):
@@ -55,6 +61,67 @@ class AlephSupport(object):
 
         super(AlephSupport, self).exception_handler()
 
+    def detach(self, ingestor_class, fio, file_path, mime_type, extra=None):
+        if not file_path:
+            with tempfile.NamedTemporaryFile(delete=False) as tmp_ing_file:
+                for _bytes in iter(partial(fio.read, 1024), ''):
+                        tmp_ing_file.write(_bytes)
+
+            file_path = tmp_ing_file.name
+
+        document = Document.by_meta(self.collection_id, self.aleph_meta)
+        metadata = {
+            'parent_document_id': document.id,
+            'collection_id': self.collection_id,
+            'source_path': file_path,
+            'mime_type': mime_type
+        }
+
+        meta = Metadata.from_data(metadata)
+        meta = archive.archive_file(file_path, meta, move=True)
+
+        metadata.update(meta.to_attr_dict())
+
+        if extra:
+            metadata['ingestor_extra'] = extra
+
+        ingest.apply_async(
+            [self.collection_id, metadata],
+            queue=WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY
+        )
+
+    def save_page_results(self):
+        """Extracts the page results and stores them in the database."""
+        page = DocumentPage.query.filter(
+            DocumentPage.document_id == self.result.get('document_id'),
+            DocumentPage.id == self.result.get('page_id')
+        ).first()
+
+        # If this is not a page, return nothing
+        if not page:
+            return None
+
+        page.text = self.result.content
+        db.session.add(page)
+        db.session.commit()
+
+        document = page.document
+        unprocessed_pages = document.pages.filter(
+            DocumentPage.text == '', DocumentPage.number != 0).count()
+
+        if unprocessed_pages == 0:
+            document.status = Document.STATUS_SUCCESS
+        else:
+            document.status = Document.STATUS_PENDING
+
+        db.session.add(document)
+        db.session.commit()
+
+        if document.status == Document.STATUS_SUCCESS:
+            analyze_document(document)
+
+        return document
+
     def save_results(self):
         """Extracts the ingestion results and stores them in the database."""
         document = Document.by_meta(self.collection_id, self.aleph_meta)
@@ -93,6 +160,13 @@ class AlephSupport(object):
         return document
 
     def before(self):
+        if self.aleph_meta.ingestor_extra:
+            self.result.update(self.aleph_meta.ingestor_extra)
+
+        # Skip pages
+        if self.result.get('page_id'):
+            return
+
         document = Document.by_meta(self.collection_id, self.aleph_meta)
         document.type = self.DOCUMENT_TYPE
         document.status = Document.STATUS_PENDING
@@ -107,7 +181,9 @@ class AlephSupport(object):
     def after(self):
         if self.status == self.STATUSES.SUCCESS:
             try:
-                self.save_results()
+                # Try to save pages if any, fall-back to saving the document
+                if not self.save_page_results():
+                    self.save_results()
             except:
                 self.exception_handler()
         else:
@@ -115,6 +191,27 @@ class AlephSupport(object):
                 self.exception_handler()
             except:
                 self.log_exception()
+
+
+class AlephPagesSupport(AlephSupport):
+    """Provides database persistence support for paged documents."""
+
+    def detach(self, ingestor_class, fio, file_path, mime_type, extra=None):
+        """Will create a page record before detaching the ingestor work."""
+        extra = extra or {}
+        page_number = extra.get('order') or 0
+        document = Document.by_meta(self.collection_id, self.aleph_meta)
+        # TODO: Allow pages text to be nullable
+        page = document.add_page(text='', page_number=page_number)
+
+        db.session.add(page)
+        db.session.commit()
+
+        extra['document_id'] = document.id
+        extra['page_id'] = page.id
+
+        super(AlephPagesSupport, self).detach(
+            ingestor_class, fio, file_path, mime_type, extra)
 
 
 class AlephTextIngestor(AlephSupport, TextIngestor):

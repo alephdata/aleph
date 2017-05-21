@@ -64,6 +64,7 @@ class Metadata(object):
     _emails = Field('emails', multi=True, label='E-mail addresses')
     _domains = Field('domains', multi=True, label='Domains')
     _tables = Field('tables', multi=True, protected=True)
+    ingestor_extra = Field()
 
     def __init__(self):
         for field in self.fields.values():
