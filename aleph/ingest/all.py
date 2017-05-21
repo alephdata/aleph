@@ -1,12 +1,14 @@
 import sys
 import tempfile
 import traceback
+import subprocess32 as subprocess
 from functools import partial
+from distutils.spawn import find_executable
 
-from ingestors import PDFIngestor, DocumentIngestor, TextIngestor
+from ingestors import(
+    PDFIngestor, DocumentIngestor, TextIngestor, HTMLIngestor, ImageIngestor
+)
 
-from aleph.core import db, archive
-from aleph.model import Document
 from aleph.core import db, archive, WORKER_QUEUE, WORKER_ROUTING_KEY
 from aleph.model import Document, DocumentPage
 from aleph.metadata import Metadata
@@ -215,13 +217,64 @@ class AlephTextIngestor(AlephSupport, TextIngestor):
     ]
 
 
-class AlephPDFIngestor(AlephSupport, PDFIngestor):
+class AlephImageIngestor(AlephSupport, ImageIngestor):
+    EXTENSIONS = [
+        'gif',
+        'png',
+        'jpg',
+        'jpeg',
+        'tif',
+        'tiff',
+        'bmp',
+        'jpe',
+        'pbm'
+    ]
+
+    def ingest(self, config):
+        """Adds PDF conversion and storage."""
+        super(AlephImageIngestor, self).ingest(config)
+
+        document = Document.by_meta(self.collection_id, self.aleph_meta)
+
+        with tempfile.NamedTemporaryFile('r', suffix='.pdf') as pdfio:
+            convert = [
+                config['CONVERT_BIN'] or find_executable('convert'),
+                self.file_path,
+                '-density', '450',
+                '-define', 'pdf:fit-page=A4',
+                pdfio.name
+            ]
+            subprocess.call(convert)
+
+            file_meta = archive.archive_file(
+                pdfio.name, document.meta.pdf, move=False)
+
+            document._meta['pdf_version'] = file_meta.content_hash
+            # Weird SQLAlchemy stuff:
+            #   The meta column is never updated otherwise.
+            document.meta = document.meta
+
+            db.session.add(document)
+            db.session.commit()
+
+
+class AlephHTMLIngestor(AlephSupport, HTMLIngestor):
+    EXTENSIONS = [
+        'html',
+        'htm',
+        'asp',
+        'aspx',
+        'jsp'
+    ]
+
+
+class AlephPDFIngestor(AlephPagesSupport, PDFIngestor):
     EXTENSIONS = [
         'pdf'
     ]
 
 
-class AlephDocumentIngestor(AlephSupport, DocumentIngestor):
+class AlephDocumentIngestor(AlephPagesSupport, DocumentIngestor):
     EXTENSIONS = [
         'doc',
         'docx',
