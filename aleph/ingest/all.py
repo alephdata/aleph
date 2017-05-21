@@ -143,14 +143,9 @@ class AlephSupport(object):
         if self.result.get('authors'):
             document.meta.author = ','.join(self.result.authors)
 
-        if self.result.content:
-            page = document.add_page(self.result.content, self.result.order)
-            db.session.add(page)
-
-        for child in self.children:
-            page = document.add_page(child.result.content, child.result.order)
-
-            db.session.add(page)
+        page = document.add_page(
+            self.result.content or '', self.result.order or 1)
+        db.session.add(page)
 
         db.session.add(document)
         db.session.commit()
