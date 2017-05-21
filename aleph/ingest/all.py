@@ -1,4 +1,3 @@
-import io
 import sys
 import traceback
 
@@ -24,13 +23,6 @@ class AlephSupport(object):
     def match(cls, meta, local_path):
         score = -1
 
-        with io.open(local_path, 'rb') as fio:
-            _, mime_type = TextIngestor.match(fio)
-
-        if mime_type in cls.MIME_TYPES:
-            score += cls.BASE_SCORE
-
-        # Let's use the extension/mime-type matching as a backup.
         if meta.mime_type in cls.MIME_TYPES:
             score += cls.BASE_SCORE
         if meta.extension in cls.EXTENSIONS:
