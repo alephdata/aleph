@@ -64,6 +64,10 @@ class AlephSupport(object):
         super(AlephSupport, self).exception_handler()
 
     def detach(self, ingestor_class, fio, file_path, mime_type, extra=None):
+        """Archives a file and schedules an ingestor job for it.
+
+        If the path is blank, the IO object will be used to create the file.
+        """
         if not file_path:
             with tempfile.NamedTemporaryFile(delete=False) as tmp_ing_file:
                 for _bytes in iter(partial(fio.read, 1024), ''):
