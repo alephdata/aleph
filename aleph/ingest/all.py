@@ -149,9 +149,10 @@ class AlephSupport(object):
         if self.result.get('authors'):
             document.meta.author = ','.join(self.result.authors)
 
-        page = document.add_page(
-            self.result.content or '', self.result.order or 1)
-        db.session.add(page)
+        if self.result.content:
+            page = document.add_page(
+                self.result.content, self.result.order or 1)
+            db.session.add(page)
 
         db.session.add(document)
         db.session.commit()
@@ -209,7 +210,7 @@ class AlephPagesSupport(AlephSupport):
     def detach(self, ingestor_class, fio, file_path, mime_type, extra=None):
         """Will create a page record before detaching the ingestor work."""
         extra = extra or {}
-        page_number = extra.get('order') or 0
+        page_number = extra.get('order') or 1
         document = Document.by_meta(self.collection_id, self.aleph_meta)
         # TODO: Allow pages text to be nullable
         page = document.add_page(text='', page_number=page_number)
