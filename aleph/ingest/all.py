@@ -193,6 +193,15 @@ class AlephSupport(object):
             except:
                 self.log_exception()
 
+    def archive_pdf(self, file_path, document):
+        """Archives a PDF and updates the document meta."""
+        file_meta = archive.archive_file(
+            file_path, document.meta.pdf, move=False)
+
+        document._meta['pdf_version'] = file_meta.content_hash
+        # Weird SQLAlchemy stuff. The meta column is never updated otherwise.
+        document.meta = document.meta
+
 
 class AlephPagesSupport(AlephSupport):
     """Provides database persistence support for paged documents."""
@@ -250,13 +259,7 @@ class AlephImageIngestor(AlephSupport, ImageIngestor):
             ]
             subprocess.call(convert)
 
-            file_meta = archive.archive_file(
-                pdfio.name, document.meta.pdf, move=False)
-
-            document._meta['pdf_version'] = file_meta.content_hash
-            # Weird SQLAlchemy stuff:
-            #   The meta column is never updated otherwise.
-            document.meta = document.meta
+            self.archive_pdf(pdfio.name, document)
 
             db.session.add(document)
             db.session.commit()
@@ -303,12 +306,7 @@ class AlephDocumentIngestor(AlephPagesSupport, DocumentIngestor):
         """Archive the PDF before the XML converstion."""
         document = Document.by_meta(self.collection_id, self.aleph_meta)
 
-        file_meta = archive.archive_file(
-            kwargs.get('file_path', args[1]), document.meta.pdf, move=False)
-
-        document._meta['pdf_version'] = file_meta.content_hash
-        # Weird SQLAlchemy stuff. The meta column is never updated otherwise.
-        document.meta = document.meta
+        self.archive_pdf(kwargs.get('file_path', args[1]), document)
 
         db.session.add(document)
         db.session.commit()
