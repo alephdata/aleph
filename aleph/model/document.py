@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 from normality import ascii_text
-from sqlalchemy import func
+from sqlalchemy import func, or_, and_
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
