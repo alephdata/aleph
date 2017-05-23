@@ -2,6 +2,7 @@ import logging
 import time
 from pprint import pprint  # noqa
 from elasticsearch.helpers import scan, BulkIndexError
+from elasticsearch import TransportError
 
 from aleph.core import es, es_index, schemata
 from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK, TYPE_LEAD
@@ -72,7 +73,7 @@ def index_items(entities, links):
         try:
             bulk_op(_index_updates(entities, links))
             break
-        except BulkIndexError as exc:
+        except (BulkIndexError, TransportError) as exc:
             log.warning('Indexing error: %s', exc)
             time.sleep(10)
 
