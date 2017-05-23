@@ -1,6 +1,6 @@
 
 TYPE_DOCUMENT = 'document'
-TYPE_RECORD = 'record'
+TYPE_RECORD = 'record_v2'
 TYPE_ENTITY = 'entity'
 TYPE_LINK = 'link'
 TYPE_LEAD = 'lead'
@@ -68,27 +68,13 @@ RECORD_MAPPING = {
     "_all": {
         "enabled": True
     },
-    "dynamic_templates": [
-        {
-            "fields": {
-                "match": "raw.*",
-                "mapping": {
-                    "type": "string",
-                    "index": "not_analyzed"
-                }
-            }
-        }
-    ],
     "date_detection": False,
     "properties": {
-        "type": {"type": "string", "index": "not_analyzed"},
         "collection_id": {"type": "integer", "index": "not_analyzed"},
         "document_id": {"type": "integer", "index": "not_analyzed"},
+        "index": {"type": "integer", "index": "not_analyzed"},
         "sheet": {"type": "integer", "index": "not_analyzed"},
-        "row_id": {"type": "integer", "index": "not_analyzed"},
-        "page": {"type": "integer", "index": "not_analyzed"},
-        "text": {"type": "string", "index": "analyzed"},
-        "raw": {"type": "object"}
+        "text": {"type": "string", "index": "analyzed"}
     }
 }
 

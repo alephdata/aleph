@@ -83,7 +83,9 @@ def password_login():
 
     log_event(request)
 
-    role = Role.by_email(email).filter(Role.password_digest != None).first()
+    q = Role.by_email(email)
+    q = q.filter(Role.password_digest != None)  # noqa
+    role = q.first()
 
     # Try a password authentication and an LDAP authentication if it is enabled
     if role and role.check_password(password) is False:

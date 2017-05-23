@@ -1,7 +1,7 @@
 import logging
 
 from aleph.core import get_config, archive
-from aleph.model import db, Document, DocumentPage
+from aleph.model import db, Document, DocumentRecord
 from aleph.ingest.poppler import extract_pdf
 from aleph.ingest.tika import extract_pdf as tika_pdf
 from aleph.ingest.ingestor import Ingestor
@@ -14,16 +14,16 @@ class TextIngestor(Ingestor):
 
     def create_document(self, meta, type=None):
         document = super(TextIngestor, self).create_document(meta, type=type)
-        document.delete_pages()
+        document.delete_records()
         return document
 
     def create_page(self, document, text, number=1):
-        page = DocumentPage()
-        page.document_id = document.id
-        page.text = text
-        page.number = number
-        db.session.add(page)
-        return page
+        record = DocumentRecord()
+        record.document_id = document.id
+        record.text = text
+        record.index = number
+        db.session.add(record)
+        return record
 
     def extract_pdf(self, meta, pdf_path):
         if get_config("TIKA_URI"):

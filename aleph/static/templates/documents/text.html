@@ -1,6 +1,6 @@
 <div class="screen">
   <div class="row">
-    <div class="col-md-8">  
+    <div class="col-md-8">
       <ng-pdf template-url="templates/documents/pdf.html" canvasid="pdf" scale="page-fit"
         page="{{pageNum}}"  ng-hide="loading"></ng-pdf>
     </div>
@@ -17,9 +17,9 @@
         </div>
         <div class="pages-list" ng-show="pages.total">
           <table class="table">
-            <tr ng-repeat="page in pages.results" ng-class="{'selected': pageNum == page.page}">
+            <tr ng-repeat="page in pages.results" ng-class="{'selected': pageNum == page.index}">
               <th width="1%">
-                <a ng-click="setPage(page.page)">pg.&nbsp;{{page.page}}</a>
+                <a ng-click="setPage(page.index)">pg.&nbsp;{{page.index}}</a>
               </th>
               <td>
                 <span ng-bind-html="page.snippet" class="highlights"></span>

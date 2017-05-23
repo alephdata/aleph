@@ -25,7 +25,7 @@ def records_query(document_id, state):
     if len(rows):
         shoulds.append({
             "constant_score": {
-                "filter": {'terms': {'row_id': rows}},
+                "filter": {'terms': {'index': rows}},
                 "boost": 1000
             }
         })
@@ -68,7 +68,7 @@ def records_query_internal(document_id, shoulds, size=5):
                 }
             }
         },
-        '_source': ['document_id', 'sheet', 'row_id', 'page']
+        '_source': ['document_id', 'sheet', 'index']
     }
 
 
@@ -96,19 +96,19 @@ def scan_entity_mentions(entity):
 def execute_records_query(document_id, state, query):
     """Execute a query against records and return a set of results."""
     result, hits, output = execute_basic(TYPE_RECORD, query)
-    rows = []
+    ids = []
     for rec in hits.get('hits', []):
         record = rec.get('_source')
         record['score'] = rec.get('_score')
-        if record.get('row_id'):
-            rows.append((record.get('sheet'), record.get('row_id')))
-
+        record['id'] = int(rec.get('_id'))
+        ids.append(rec.get('_id'))
         for text in rec.get('highlight', {}).get('text', []):
             record['text'] = text
         output['results'].append(record)
 
-    for record in DocumentRecord.find_rows(document_id, rows):
-        for res in output['results']:
-            if res['sheet'] == record.sheet and res['row_id'] == record.row_id:
-                res['data'] = record.data
+    for record in DocumentRecord.find_records(document_id, ids):
+        for result in output['results']:
+            if result['id'] == record.id:
+                result['data'] = record.data
+                result['text'] = record.text
     return output
