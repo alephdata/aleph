@@ -18,6 +18,7 @@ addons:
       - poppler-utils
       - libreoffice
       - djvulibre-bin
+      - oracle-java8-installer
       - oracle-java8-set-default
 env:
   global:
