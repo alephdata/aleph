@@ -46,7 +46,7 @@ install:
 before_script:
   - sleep 10
   - psql -c "create database ${ALEPH_DATABASE_NAME}_test;" -U postgres
-  - elasticsearch --version
+  # - elasticsearch --version
   - nosetests --version
   - psql --version
   - nvm use $NODE_VERSION
