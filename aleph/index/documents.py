@@ -41,4 +41,4 @@ def delete_document(document_id):
     try:
         es.delete(index=es_index, doc_type=TYPE_DOCUMENT, id=document_id)
     except NotFoundError:
-        pass
+        log.info("Delete non-existent document from index: %s", document_id)

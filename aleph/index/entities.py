@@ -53,7 +53,7 @@ def delete_entity_references(entity_id):
 
 
 def delete_collection_entities():
-    q = {'query': {'exists': {'field': 'collection_id'}}}
+    q = {'exists': {'field': 'collection_id'}}
     query_delete(q, doc_type=TYPE_ENTITY)
 
 

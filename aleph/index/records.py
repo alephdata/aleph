@@ -14,10 +14,7 @@ log = logging.getLogger(__name__)
 
 def clear_records(document_id):
     """Delete all records associated with the given document."""
-    q = {
-        'query': {'term': {'document_id': document_id}},
-        '_source': False
-    }
+    q = {'term': {'document_id': document_id}}
     query_delete(q, doc_type=TYPE_RECORD)
 
 
@@ -49,7 +46,7 @@ def index_records(document):
     while True:
         try:
             bulk_op(generate_records(document))
-            break
+            return
         except BulkIndexError as exc:
             log.warning('Indexing error: %s', exc)
             time.sleep(10)

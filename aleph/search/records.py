@@ -34,7 +34,7 @@ def records_query(document_id, state):
     query['query'] = filter_query(query['query'], state.filters)
     query['from'] = state.offset
 
-    sort = [{'row_id': 'asc'}, {'page': 'asc'}]
+    sort = [{'index': 'asc'}, {'page': 'asc'}]
     if score_query:
         sort.insert(0, '_score')
     return query

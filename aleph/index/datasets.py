@@ -80,5 +80,5 @@ def index_items(entities, links):
 
 def delete_dataset(dataset_name):
     """Delete all entries from a particular dataset."""
-    q = {'query': {'term': {'dataset': dataset_name}}, '_source': False}
+    q = {'term': {'dataset': dataset_name}}
     query_delete(q, doc_type=[TYPE_LINK, TYPE_ENTITY, TYPE_LEAD])

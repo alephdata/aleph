@@ -13,11 +13,11 @@ def bulk_op(iter, chunk_size=500):
          request_timeout=200.0)
 
 
-def query_delete(query, doc_type=None):
+def query_delete(query, doc_type=None, wait=True):
     "Delete all documents matching the given query inside the doc_type(s)."
-    index = six.text_type(es_index)
-    es.delete_by_query(index=index, body=query, doc_type=doc_type,
-                       refresh=True, conflicts='proceed')
+    es.delete_by_query(index=six.text_type(es_index), body={'query': query},
+                       doc_type=doc_type, refresh=True, conflicts='proceed',
+                       wait_for_completion=wait)
 
 
 def merge_docs(old, new):

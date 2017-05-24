@@ -13,15 +13,12 @@ log = logging.getLogger(__name__)
 def delete_entity_leads(entity_id):
     """Delete all entity-related leads from the index."""
     q = {
-        'query': {
-            'bool': {
-                'should': [
-                    {'term': {'entity_id': entity_id}},
-                    {'term': {'match_id': entity_id}}
-                ]
-            }
-        },
-        '_source': False
+        'bool': {
+            'should': [
+                {'term': {'entity_id': entity_id}},
+                {'term': {'match_id': entity_id}}
+            ]
+        }
     }
     query_delete(q, doc_type=TYPE_LEAD)
 
