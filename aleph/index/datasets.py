@@ -1,12 +1,12 @@
 import logging
 import time
 from pprint import pprint  # noqa
-from elasticsearch.helpers import scan, BulkIndexError
+from elasticsearch.helpers import BulkIndexError
 from elasticsearch import TransportError
 
 from aleph.core import es, es_index, schemata
 from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK, TYPE_LEAD
-from aleph.index.util import merge_docs, bulk_op
+from aleph.index.util import merge_docs, bulk_op, query_delete
 
 log = logging.getLogger(__name__)
 
@@ -81,19 +81,4 @@ def index_items(entities, links):
 def delete_dataset(dataset_name):
     """Delete all entries from a particular dataset."""
     q = {'query': {'term': {'dataset': dataset_name}}, '_source': False}
-
-    def deletes():
-        docs = scan(es, query=q, index=es_index,
-                    doc_type=[TYPE_LINK, TYPE_ENTITY, TYPE_LEAD])
-        for i, res in enumerate(docs):
-            yield {
-                '_op_type': 'delete',
-                '_index': str(es_index),
-                '_type': res.get('_type'),
-                '_id': res.get('_id')
-            }
-            if i > 0 and i % 10000 == 0:
-                log.info("Delete %s: %s", dataset_name, i)
-
-    es.indices.refresh(index=es_index)
-    bulk_op(deletes())
+    query_delete(q, doc_type=[TYPE_LINK, TYPE_ENTITY, TYPE_LEAD])

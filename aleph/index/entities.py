@@ -8,7 +8,7 @@ from aleph.model import Entity, Reference
 from aleph.datasets.util import finalize_index
 from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.index.admin import flush_index
-from aleph.index.util import bulk_op
+from aleph.index.util import bulk_op, query_delete
 
 log = logging.getLogger(__name__)
 
@@ -54,8 +54,7 @@ def delete_entity_references(entity_id):
 
 def delete_collection_entities():
     q = {'query': {'exists': {'field': 'collection_id'}}}
-    for ent in scan(es, query=q, index=es_index, doc_type=[TYPE_ENTITY]):
-        es.delete(index=es_index, doc_type=TYPE_ENTITY, id=ent.get('_id'))
+    query_delete(q, doc_type=TYPE_ENTITY)
 
 
 def update_entity_references(entity, max_query=1000):

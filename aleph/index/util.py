@@ -1,7 +1,8 @@
+import six
 import logging
 from elasticsearch.helpers import bulk
 
-from aleph.core import es
+from aleph.core import es, es_index
 from aleph.util import is_list, unique_list
 
 log = logging.getLogger(__name__)
@@ -10,6 +11,13 @@ log = logging.getLogger(__name__)
 def bulk_op(iter, chunk_size=500):
     bulk(es, iter, stats_only=True, chunk_size=chunk_size,
          request_timeout=200.0)
+
+
+def query_delete(query, doc_type=None):
+    "Delete all documents matching the given query inside the doc_type(s)."
+    index = six.text_type(es_index)
+    es.delete_by_query(index=index, body=query, doc_type=doc_type,
+                       refresh=True, conflicts='proceed')
 
 
 def merge_docs(old, new):

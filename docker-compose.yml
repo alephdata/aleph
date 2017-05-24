@@ -20,7 +20,7 @@ services:
      - "127.0.0.1:5439:5432"
 
   elasticsearch:
-    image: elasticsearch:2.2.0
+    image: elasticsearch:5.4
     volumes:
       - "./build/data/elasticsearch:/usr/share/elasticsearch/data"
       - "./build/logs/elasticsearch:/var/log"
