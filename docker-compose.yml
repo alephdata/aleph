@@ -86,11 +86,14 @@ services:
       links:
         - postgres
         - elasticsearch
+        - rabbitmq
         # - neo4j
       volumes:
         - "/opt/aleph/logs/web:/var/log"
         - "/opt/aleph/archive:/data"
         - "/opt/aleph/polyglot:/polyglot"
+        - "./aleph/templates:/aleph/aleph/templates"
+        - "./aleph/static/templates:/aleph/aleph/static/templates"
       environment:
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
         ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
