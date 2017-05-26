@@ -14,7 +14,7 @@ class DocumentRecord(db.Model):
     text = db.Column(db.Unicode, nullable=True)
     data = db.Column(JSONB, nullable=True)
     document_id = db.Column(db.Integer(), db.ForeignKey('document.id'), index=True)  # noqa
-    document = db.relationship("Document", backref=db.backref('records', cascade='all, delete-orphan'))  # noqa
+    document = db.relationship("Document", backref=db.backref('records', lazy='dynamic', cascade='all, delete-orphan'))  # noqa
 
     def text_parts(self):
         """Utility method to get all text snippets in a record."""

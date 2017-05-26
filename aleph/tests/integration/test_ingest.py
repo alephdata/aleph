@@ -34,9 +34,9 @@ class IngestionIntegrationTest(TestCase):
 
         document = self.col.documents.first()
 
-        self.assertEqual(document.pages.count(), 2)
-        self.assertEqual(document.pages.all()[0].number, 1)
-        self.assertEqual(document.pages.all()[1].number, 2)
+        self.assertEqual(document.records.count(), 2)
+        self.assertEqual(document.records.all()[0].index, 1)
+        self.assertEqual(document.records.all()[1].index, 2)
 
     def test_ingest_non_paged_document(self):
         self.assertEqual(self.col.documents.count(), 0)
@@ -53,5 +53,5 @@ class IngestionIntegrationTest(TestCase):
 
         document = self.col.documents.first()
 
-        self.assertEqual(document.pages.count(), 1)
-        self.assertEqual(document.pages.all()[0].number, 1)
+        self.assertEqual(document.records.count(), 1)
+        self.assertEqual(document.records.all()[0].index, 1)

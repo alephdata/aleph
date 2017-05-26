@@ -10,7 +10,7 @@ from ingestors import(
 )
 
 from aleph.core import db, archive, WORKER_QUEUE, WORKER_ROUTING_KEY
-from aleph.model import Document, DocumentPage
+from aleph.model import Document, DocumentRecord
 from aleph.metadata import Metadata
 from aleph.analyze import analyze_document
 from aleph.index import index_document
@@ -98,9 +98,9 @@ class AlephSupport(object):
 
     def save_page_results(self):
         """Extracts the page results and stores them in the database."""
-        page = DocumentPage.query.filter(
-            DocumentPage.document_id == self.result.get('document_id'),
-            DocumentPage.id == self.result.get('page_id')
+        page = DocumentRecord.query.filter(
+            DocumentRecord.document_id == self.result.get('document_id'),
+            DocumentRecord.id == self.result.get('document_record_id')
         ).first()
 
         # If this is not a page, return nothing
@@ -112,8 +112,8 @@ class AlephSupport(object):
         db.session.commit()
 
         document = page.document
-        unprocessed_pages = document.pages.filter(
-            DocumentPage.text == '', DocumentPage.number != 0).count()
+        unprocessed_pages = document.records.filter(
+            DocumentRecord.text is None, DocumentRecord.index != 0).count()
 
         if unprocessed_pages == 0:
             document.status = Document.STATUS_SUCCESS
@@ -150,8 +150,11 @@ class AlephSupport(object):
             document.meta.author = ','.join(self.result.authors)
 
         if self.result.content:
-            page = document.add_page(
-                self.result.content, self.result.order or 1)
+            page = DocumentRecord(
+                document=document,
+                text=self.result.content,
+                index=(self.result.order or 1)
+            )
             db.session.add(page)
 
         db.session.add(document)
@@ -166,7 +169,7 @@ class AlephSupport(object):
             self.result.update(self.aleph_meta.ingestor_extra)
 
         # Skip pages
-        if self.result.get('page_id'):
+        if self.result.get('document_record_id'):
             return
 
         document = Document.by_meta(self.collection_id, self.aleph_meta)
@@ -175,9 +178,11 @@ class AlephSupport(object):
         document.error_type = None
         document.error_message = None
         document.error_details = None
-        document.delete_pages()
 
         db.session.add(document)
+
+        document.delete_records()
+
         db.session.commit()
 
     def after(self):
@@ -212,14 +217,14 @@ class AlephPagesSupport(AlephSupport):
         extra = extra or {}
         page_number = extra.get('order') or 1
         document = Document.by_meta(self.collection_id, self.aleph_meta)
-        # TODO: Allow pages text to be nullable
-        page = document.add_page(text='', page_number=page_number)
+
+        page = DocumentRecord(document=document, index=page_number)
 
         db.session.add(page)
         db.session.commit()
 
         extra['document_id'] = document.id
-        extra['page_id'] = page.id
+        extra['document_record_id'] = page.id
 
         super(AlephPagesSupport, self).detach(
             ingestor_class, fio, file_path, mime_type, extra)
