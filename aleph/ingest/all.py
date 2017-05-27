@@ -5,6 +5,7 @@ import subprocess32 as subprocess
 from functools import partial
 from distutils.spawn import find_executable
 
+from normality import stringify
 from ingestors import(
     PDFIngestor, DocumentIngestor, TextIngestor, HTMLIngestor, ImageIngestor
 )
@@ -52,8 +53,8 @@ class AlephSupport(object):
         document.type = Document.TYPE_OTHER
         document.status = Document.STATUS_FAIL
         document.error_type = error_type.__name__
-        document.error_message = unicode(error_message)
-        document.error_details = unicode(traceback.format_exc())
+        document.error_message = stringify(error_message)
+        document.error_details = stringify(traceback.format_exc())
 
         db.session.add(document)
 
