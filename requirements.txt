@@ -18,7 +18,8 @@ Pillow==3.2.0
 tesserwrap==0.1.6
 lxml==3.3.5
 boto3==1.4.1
-requests>=2.5.1
+requests>=2.17.3
+urllib3>=1.21.1
 apikit==0.3.2
 six
 unicodecsv==0.9.4
@@ -39,7 +40,7 @@ xlrd==0.9.3
 jsonschema==2.6.0
 PyYAML==3.11
 PyICU==1.9.5
-chardet==2.3.0
+chardet==3.0.3
 cchardet==1.1.1
 jdatetime==1.8.1
 coverage

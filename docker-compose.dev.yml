@@ -1,0 +1,55 @@
+version: "2"
+
+services:
+  postgres:
+    image: postgres:9.4
+    volumes:
+      - "./build/data/postgres:/var/lib/postgresql/data"
+      - "./build/logs/postgres:/var/log"
+    environment:
+      POSTGRES_USER: aleph
+      POSTGRES_PASSWORD: aleph
+      POSTGRES_DATABASE: aleph
+
+  elasticsearch:
+    image: elasticsearch:5.4
+    volumes:
+      - "./build/data/elasticsearch:/usr/share/elasticsearch/data"
+      - "./build/logs/elasticsearch:/var/log"
+
+  rabbitmq:
+    image: rabbitmq
+    volumes:
+      - "./build/data/rabbitmq:/var/lib/rabbitmq"
+      - "./build/logs/rabbitmq:/var/log"
+
+  app:
+      build: .
+      command: /bin/bash
+      expose:
+        - 5000
+      links:
+        - postgres
+        - elasticsearch
+        - rabbitmq
+      volumes:
+        - "./:/aleph"
+        - "./build/logs/app:/var/log"
+        - "./build/archive:/data"
+        - "./build/polyglot:/polyglot"
+        - "./build/docs:/aleph/docs/_build"
+        - "/:/host"
+      environment:
+        ALEPH_DEBUG: 'true'
+        ALEPH_SECRET_KEY: 'development'
+        ALEPH_CACHE: 'false'
+        ALEPH_URL_SCHEME: 'http'
+        ALEPH_ARCHIVE_TYPE: 'file'
+        ALEPH_ARCHIVE_PATH: '/data'
+        ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
+        ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
+        ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+        POLYGLOT_DATA_PATH: /polyglot
+        C_FORCE_ROOT: 'true'
+      env_file:
+        - aleph.env

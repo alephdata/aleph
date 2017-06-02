@@ -33,22 +33,21 @@ example of a value is the output of `openssl rand -hex 24`.
 
 ## Development installation steps
 
-Insider the Aleph repository you will find a `Docker` and a
-`docker-compose.yml` files. These are used to build a container with the
+Insider the Aleph repository you will find a `Dockerfile` and a
+`docker-compose.dev.yml` files. These are used to build a container with the
 application and start the relevant services.
 
 To proceed run:
 
- 1. `docker-compose up` to start the application and relevant services. You can
+ 1. `make build` to start the application and relevant services. You can
     leave this open to have access to the development logs.
- 2. `docker-compose run app python aleph/manage.py init -s analyzers` to run
-    the latest database migrations and create/update any indexes.
+ 2. `make upgrade` to run the latest database migrations and create/update
+    any indexes.
  3. Open `http://lvh.me:13376/` in your browser and proceed with the login.
 
 Your repository is mounted inside the docker container under the name
-`aleph_app_1`. You should also see the other Aleph services, `aleph_worker_1`
-and `aleph_beat_1`. You can access these services anytime by running
-`docker-compose run <app|worker|beat> bash`.
+`aleph_app`. You can access these services anytime by running
+`make shell`.
 
 ### Building from a clean state
 
@@ -78,7 +77,7 @@ If you are working on the front-end, you will need to start the assets
 watcher in parallel:
 
 ```
-docker-compose run app make assets-dev
+make assets-dev
 ```
 
 While working on the front-end development, make sure you disable browser
@@ -110,7 +109,7 @@ Once you have the latest version, you can run the command bellow to upgrade
 the existing installation.
 
 ```
-$ docker-compose run app aleph upgrade
+make upgrade
 ```
 
 ## Configuration
@@ -118,8 +117,8 @@ $ docker-compose run app aleph upgrade
 Most of the Aleph configuration is handled via a set of values in a Python
 configuration file. The defaults are documented in the
 [default_settings.py](https://github.com/alephdata/aleph/blob/master/aleph/default_settings.py)
-file and can be overridden by pointing to a bespoke configuration file using
-the environment variable ``ALEPH_SETTINGS``.
+file and can be overridden by creating a configuration file named
+``settings.py`` in the aleph base directory.
 
 While using Docker, the config file, in turn, is largely configured using
 environment variables in accordance with [12 factor
@@ -141,7 +140,7 @@ principles](https://12factor.net/). These environment variables can be found als
 ## Running tests
 
 To run the tests, assuming you already have the `docker-compose` up and ready,
-run `docker-compose run app make test`.
+run `make test`.
 
 This will create a new database and run all the tests.
 
