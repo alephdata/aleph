@@ -29,7 +29,7 @@ class Ingestor(object):
         raise NotImplemented()
 
     def create_document(self, meta, type=None):
-        document = self.document_by_meta(self.collection_id, meta)
+        document = Document.by_meta(self.collection_id, meta)
         document.status = Document.STATUS_SUCCESS
         document.type = type or self.DOCUMENT_TYPE
         db.session.add(document)
@@ -40,26 +40,6 @@ class Ingestor(object):
         db.session.commit()
         log.debug("Ingested document: %r", document)
         analyze_document(document)
-
-    @classmethod
-    def document_by_meta(cls, collection_id, meta):
-        q = Document.all()
-        q = q.filter(Document.collection_id == collection_id)
-        if meta.foreign_id:
-            q = q.filter(Document.foreign_id == meta.foreign_id)
-        elif meta.content_hash:
-            q = q.filter(Document.content_hash == meta.content_hash)
-        else:
-            raise ValueError("No unique criterion for document: %s" % meta)
-
-        document = q.first()
-        if document is None:
-            document = Document()
-            document.collection_id = collection_id
-            document.foreign_id = meta.foreign_id
-            document.content_hash = meta.content_hash
-        document.meta = meta
-        return document
 
     @classmethod
     def handle_exception(cls, meta, collection_id, exception):
@@ -78,7 +58,7 @@ class Ingestor(object):
         try:
             db.session.rollback()
             db.session.close()
-            document = cls.document_by_meta(collection_id, meta)
+            document = Document.by_meta(collection_id, meta)
             document.type = Document.TYPE_OTHER
             document.status = Document.STATUS_FAIL
             document.error_type = error_type

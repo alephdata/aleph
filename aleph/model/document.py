@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 from normality import ascii_text
-from sqlalchemy import func, or_, and_
+from sqlalchemy import func
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
@@ -184,6 +184,26 @@ class Document(db.Model, DatedModel):
         data['title_latin'] = ascii_text(data.get('title'))
         data['summary_latin'] = ascii_text(data.get('summary'))
         return self._add_to_dict(data)
+
+    @classmethod
+    def by_meta(cls, collection_id, meta):
+        q = cls.all()
+        q = q.filter(cls.collection_id == collection_id)
+        if meta.foreign_id:
+            q = q.filter(cls.foreign_id == meta.foreign_id)
+        elif meta.content_hash:
+            q = q.filter(cls.content_hash == meta.content_hash)
+        else:
+            raise ValueError("No unique criterion for document: %s" % meta)
+
+        document = q.first()
+        if document is None:
+            document = Document()
+            document.collection_id = collection_id
+            document.foreign_id = meta.foreign_id
+            document.content_hash = meta.content_hash
+        document.meta = meta
+        return document
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.title)
