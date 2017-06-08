@@ -5,7 +5,7 @@ from aleph.core import db, get_config
 from aleph.metadata import Metadata
 from aleph.model import Entity, Collection, Document
 from aleph.model.common import make_textid
-from aleph.ingest import ingest_url, ingest_file
+from aleph.ingest import ingest_url, ingest_path
 from aleph.logic import update_entity_full, update_collection
 from aleph.crawlers.schedule import CrawlerSchedule
 from aleph.util import make_tempfile, remove_tempfile
@@ -173,10 +173,15 @@ class DocumentCrawler(Crawler):
         db.session.commit()
         super(DocumentCrawler, self).execute(**kwargs)
 
-    def emit_file(self, meta, file_path, move=False):
-        ingest_file(self.collection.id, meta.clone(), file_path, move=move)
+    def emit_file(self, meta, file_path):
+        ingest_path(self.collection.id, file_path, meta.clone())
         self.increment_count()
 
     def emit_url(self, meta, url):
-        ingest_url.delay(self.collection.id, meta.to_attr_dict(), url)
+        if meta.source_url is None:
+            meta.source_url = url
+        document = Document.by_meta(self.collection.id, meta)
+        document.status = Document.STATUS_PENDING
+        db.session.commit()
+        ingest_url.delay(document.id, url)
         self.increment_count()

@@ -12,7 +12,7 @@ from aleph.views.cache import enable_cache
 from aleph.search import QueryState
 from aleph.search import records_query, execute_records_query
 from aleph.search.util import next_params
-from aleph.views.util import get_document
+from aleph.views.util import get_document, PDF_MIME
 
 
 log = logging.getLogger(__name__)
@@ -84,18 +84,22 @@ def file(document_id):
     document = get_document(document_id)
     enable_cache(server_side=True)
     log_event(request, document_id=document.id)
-    url = archive.generate_url(document.meta)
+    meta = document.meta
+    url = archive.generate_url(document.content_hash,
+                               file_name=meta.file_name,
+                               mime_type=meta.mime_type)
     if url is not None:
         return redirect(url)
 
-    local_path = archive.load_file(document.meta)
+    local_path = archive.load_file(document.content_hash,
+                                   file_name=meta.file_name)
     if not os.path.isfile(local_path):
         raise NotFound("File does not exist.")
 
     fh = open(local_path, 'rb')
     return send_file(fh, as_attachment=True,
-                     attachment_filename=document.meta.file_name,
-                     mimetype=document.meta.mime_type)
+                     attachment_filename=meta.file_name,
+                     mimetype=meta.mime_type)
 
 
 @blueprint.route('/api/1/documents/<int:document_id>/pdf')
@@ -103,19 +107,18 @@ def pdf(document_id):
     document = get_document(document_id)
     enable_cache(server_side=True)
     log_event(request, document_id=document.id)
+    meta = document.meta
     if document.type != Document.TYPE_TEXT:
         raise BadRequest("PDF is only available for text documents")
-    pdf = document.meta.pdf
-    url = archive.generate_url(pdf)
+    url = archive.generate_url(meta.pdf_version, mime_type=PDF_MIME)
     if url is not None:
         return redirect(url)
 
     try:
-        local_path = archive.load_file(pdf)
-        fh = open(local_path, 'rb')
+        path = archive.load_file(meta.pdf_version, file_name=meta.file_name)
+        return send_file(open(path, 'rb'), mimetype=PDF_MIME)
     except Exception as ex:
         raise NotFound("Missing PDF file: %r" % ex)
-    return send_file(fh, mimetype=pdf.mime_type)
 
 
 @blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>')

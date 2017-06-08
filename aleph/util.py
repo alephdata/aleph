@@ -1,6 +1,5 @@
 # coding: utf-8
 import os
-import gc
 import six
 import yaml
 import shutil
@@ -9,9 +8,10 @@ from hashlib import sha1
 from celery import Task
 from tempfile import mkdtemp
 
-from aleph.text import string_value, slugify
+from aleph.text import string_value
 
 TMP_PREFIX = six.text_type('aleph.tmp.')
+PDF_MIME = 'application/pdf'
 
 
 def checksum(filename):
@@ -24,19 +24,6 @@ def checksum(filename):
                 break
             hash.update(block)
     return hash.hexdigest()
-
-
-def make_filename(file_name, sep='-'):
-    if file_name is not None:
-        file_name = os.path.basename(six.text_type(file_name))
-        slugs = [slugify(s, sep=sep) for s in file_name.rsplit('.', 1)]
-        slugs = [s[:200] for s in slugs if s is not None]
-        file_name = '.'.join(slugs)
-        file_name = file_name.strip('.').strip(sep)
-        file_name = six.text_type(file_name)
-        if not len(file_name.strip()):
-            file_name = None
-    return file_name
 
 
 def make_tempdir(name=None):
@@ -128,16 +115,6 @@ def dict_list(data, *keys):
         if key in data:
             return ensure_list(data[key])
     return []
-
-
-def find_subclasses(cls):
-    # https://stackoverflow.com/questions/8956928
-    all_refs = gc.get_referrers(cls)
-    results = []
-    for o in all_refs:
-        if (isinstance(o, tuple) and getattr(o[0], "__mro__", None) is o):
-            results.append(o[0])
-    return results
 
 
 class SessionTask(Task):

@@ -32,6 +32,7 @@ class Document(db.Model, DatedModel):
     STATUS_FAIL = 'fail'
 
     id = db.Column(db.BigInteger, primary_key=True)
+    parent_id = db.Column(db.BigInteger, nullable=True)
     content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)

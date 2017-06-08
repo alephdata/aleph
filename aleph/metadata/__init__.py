@@ -9,9 +9,9 @@ from urlparse import urlparse
 from dalet import is_country_code, is_language_code
 from dalet import parse_email, parse_country, parse_url
 from dalet import parse_domain, parse_date
+from ingestors.util import make_filename
 
 from aleph.text import slugify, string_value
-from aleph.util import make_filename
 from aleph.metadata.tabular import Tabular
 from aleph.metadata.base import MetadataFactory, Field
 
@@ -44,6 +44,7 @@ class Metadata(object):
     crawler_run = Field(protected=True)
     _foreign_id = Field('foreign_id', protected=True)
     _file_name = Field('file_name')
+    file_size = Field(protected=True)
     _title = Field('title')
     _extension = Field('extension')
     _mime_type = Field('mime_type', label='Content type')
@@ -139,7 +140,7 @@ class Metadata(object):
 
     @property
     def file_name(self):
-        return make_filename(self.file_title) or 'data'
+        return make_filename(self.file_title, default='data')
 
     @file_name.setter
     def file_name(self, file_name):
