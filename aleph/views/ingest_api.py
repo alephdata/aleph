@@ -8,7 +8,7 @@ from apikit import obj_or_404, jsonify
 from aleph.core import upload_folder, USER_QUEUE, USER_ROUTING_KEY
 from aleph.events import log_event
 from aleph.metadata import Metadata
-from aleph.ingest import ingest_file
+from aleph.ingest import ingest_path
 from aleph.model import Collection
 from aleph.model.common import make_textid
 from aleph.model.validate import validate
@@ -41,7 +41,7 @@ def ingest_upload(collection_id):
         file_meta = Metadata.from_data(file_meta)
         sec_fn = os.path.join(upload_folder, secure_filename(storage.filename))
         storage.save(sec_fn)
-        ingest_file(collection_id, file_meta, sec_fn, move=True,
+        ingest_path(collection_id, file_meta, sec_fn, move=True,
                     queue=USER_QUEUE, routing_key=USER_ROUTING_KEY)
         metas.append(file_meta)
     return jsonify({'status': 'ok', 'metadata': metas})

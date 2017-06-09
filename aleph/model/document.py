@@ -43,7 +43,6 @@ class Document(db.Model, DatedModel):
     crawler_run = db.Column(db.Unicode())
     error_type = db.Column(db.Unicode(), nullable=True)
     error_message = db.Column(db.Unicode(), nullable=True)
-    error_details = db.Column(db.Unicode(), nullable=True)
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa
