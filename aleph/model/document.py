@@ -136,6 +136,26 @@ class Document(db.Model, DatedModel):
         return last_run_time > (datetime.utcnow() - timedelta(hours=1))
 
     @classmethod
+    def by_meta(cls, collection_id, meta):
+        q = cls.all()
+        q = q.filter(cls.collection_id == collection_id)
+        if meta.foreign_id:
+            q = q.filter(cls.foreign_id == meta.foreign_id)
+        elif meta.content_hash:
+            q = q.filter(cls.content_hash == meta.content_hash)
+        else:
+            raise ValueError("No unique criterion for document: %s" % meta)
+
+        document = q.first()
+        if document is None:
+            document = Document()
+            document.collection_id = collection_id
+            document.foreign_id = meta.foreign_id
+            document.content_hash = meta.content_hash
+            document.meta = meta
+        return document
+
+    @classmethod
     def crawler_stats(cls, crawler_id):
         # Check if the crawler was active very recently, if so, don't
         # allow the user to execute a new run right now.
