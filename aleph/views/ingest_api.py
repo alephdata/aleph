@@ -41,7 +41,8 @@ def ingest_upload(collection_id):
         file_meta = Metadata.from_data(file_meta)
         sec_fn = os.path.join(upload_folder, secure_filename(storage.filename))
         storage.save(sec_fn)
-        ingest_path(collection_id, file_meta, sec_fn, move=True,
-                    queue=USER_QUEUE, routing_key=USER_ROUTING_KEY)
+        ingest_path(collection_id, sec_fn, meta=file_meta)
+        # queue=USER_QUEUE, routing_key=USER_ROUTING_KEY)
+        os.unlink(sec_fn)
         metas.append(file_meta)
     return jsonify({'status': 'ok', 'metadata': metas})

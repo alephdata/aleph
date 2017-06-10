@@ -27,7 +27,7 @@ class LanguageAnalyzer(Analyzer):
     def on_text(self, text):
         if len(self.meta.languages) > 0:
             return
-        if len(text.strip()) < CUTOFF:
+        if len(text.strip()) <= CUTOFF:
             return
         lang, score = self.identifier.classify(text)
         if score > THRESHOLD:

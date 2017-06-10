@@ -1,11 +1,8 @@
-import os
 import logging
 import requests
 from lxml import etree
 from urlparse import urljoin
-from itertools import count
 from requests.auth import HTTPBasicAuth
-from pycountry import languages
 
 from aleph.crawlers.crawler import DocumentCrawler
 
@@ -30,7 +27,7 @@ class WebDAVCrawler(DocumentCrawler):
         res = requests.get(url, auth=auth)
         file_path = self.save_data(res.content)
         meta.headers = res.headers
-        self.emit_file(meta, file_path, move=True)
+        self.emit_file(meta, file_path)
 
     def crawl_collection(self, url, auth):
         log.info("WebDAV Index [%s]: %s", self.COLLECTION_ID, url)

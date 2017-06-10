@@ -18,19 +18,19 @@ class DocumentResult(Result):
         meta = document.meta
         self.pdf_hash = meta.pdf_version
         file_path = file_path or meta.source_path
-        super(DocumentResult, self).__init__(id=document.foreign_id,
+        super(DocumentResult, self).__init__(id=meta._foreign_id,
                                              checksum=document.content_hash,
-                                             title=meta.title,
+                                             title=meta._title,
                                              summary=meta.summary,
                                              author=meta.author,
                                              keywords=meta.keywords,
                                              file_path=file_path,
-                                             file_name=meta.file_name,
-                                             mime_type=meta.mime_type,
+                                             file_name=meta._file_name,
+                                             mime_type=meta._mime_type,
                                              encoding=meta.encoding,
                                              languages=meta.languages,
-                                             headers=meta.headers,
-                                             size=int(meta.file_size))
+                                             headers=meta._headers,
+                                             size=meta.file_size)
 
     def emit_page(self, index, text):
         """Emit a plain text page."""

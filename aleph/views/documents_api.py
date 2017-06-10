@@ -12,7 +12,8 @@ from aleph.views.cache import enable_cache
 from aleph.search import QueryState
 from aleph.search import records_query, execute_records_query
 from aleph.search.util import next_params
-from aleph.views.util import get_document, PDF_MIME
+from aleph.views.util import get_document
+from aleph.util import PDF_MIME
 
 
 log = logging.getLogger(__name__)

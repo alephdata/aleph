@@ -1,9 +1,12 @@
 import os
 import shutil
+import logging
 from ingestors.util import make_filename
 
 from aleph.archive.archive import Archive
 from aleph.util import checksum
+
+log = logging.getLogger(__name__)
 
 
 class FileArchive(Archive):
@@ -12,13 +15,18 @@ class FileArchive(Archive):
         self.path = config.get('ARCHIVE_PATH')
         if self.path is None:
             raise ValueError('No ARCHIVE_PATH is set.')
+        log.info("Local file system path: %s", self.path)
 
     def _locate_key(self, content_hash):
         prefix = self._get_prefix(content_hash)
-        for file_name in os.listdir(prefix):
-            return os.path.join(prefix, file_name)
+        path = os.path.join(self.path, prefix)
+        try:
+            for file_name in os.listdir(path):
+                return os.path.join(path, file_name)
+        except OSError:
+            return None
 
-    def archive_file(self, file_path, content_hash=None, move=False):
+    def archive_file(self, file_path, content_hash=None):
         """ Import the given file into the archive, and return an
         updated metadata object. If ``move`` is given, the original
         file will not exist afterwards. """
@@ -26,21 +34,16 @@ class FileArchive(Archive):
             content_hash = checksum(file_path)
 
         if self._locate_key(content_hash):
-            if move:  # really?
-                os.unlink(file_path)
             return content_hash
 
-        file_name = make_filename(file_path, default='data')
-        path = os.path.join(self._get_prefix(content_hash), file_name)
+        archive_path = os.path.join(self.path, self._get_prefix(content_hash))
         try:
-            os.makedirs(os.path.dirname(path))
+            os.makedirs(archive_path)
         except:
             pass
-
-        if move:
-            shutil.move(file_path, path)
-        else:
-            shutil.copy(file_path, path)
+        file_name = make_filename(file_path, default='data')
+        archive_path = os.path.join(archive_path, file_name)
+        shutil.copy(file_path, archive_path)
         return content_hash
 
     def load_file(self, content_hash, file_name=None):

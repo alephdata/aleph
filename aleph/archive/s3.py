@@ -63,7 +63,7 @@ class S3Archive(Archive):  # pragma: no cover
         for obj in self.bucket.objects.filter(MaxKeys=1, Prefix=prefix):
             return obj
 
-    def archive_file(self, file_path, content_hash=None, move=False):
+    def archive_file(self, file_path, content_hash=None):
         if content_hash is None:
             content_hash = checksum(file_path)
 
@@ -72,8 +72,6 @@ class S3Archive(Archive):  # pragma: no cover
             path = os.path.join(self._get_prefix(content_hash), 'data')
             self.bucket.upload_file(file_path, path)
 
-        if move:  # really?
-            os.unlink(file_path)
         return content_hash
 
     def _get_local_prefix(self, content_hash):

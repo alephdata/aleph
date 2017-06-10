@@ -55,7 +55,6 @@ class Metadata(object):
     source_path = Field(protected=True)
     pdf_version = Field(protected=True)
     _headers = Field('headers', protected=True)
-    _parent = Field('parent', protected=True)
     _keywords = Field('keywords', multi=True, label='Keywords')
     _phone_numbers = Field('phone_numbers', multi=True, label='Phone numbers')
     _dates = Field('dates', multi=True, label='Dates')
@@ -96,17 +95,6 @@ class Metadata(object):
     @content_hash.setter
     def content_hash(self, content_hash):
         self._content_hash = string_value(content_hash)
-
-    @property
-    def parent(self):
-        if self._parent is not None:
-            return Metadata.from_data(self._parent)
-
-    @parent.setter
-    def parent(self, parent):
-        if isinstance(parent, Metadata):
-            parent = parent.to_attr_dict()
-        self._parent = parent
 
     @property
     def title(self):
@@ -354,18 +342,6 @@ class Metadata(object):
     def clone(self):
         return type(self).from_data(self.to_attr_dict())
 
-    def make_child(self):
-        child = self.clone()
-        child.parent = self.clone()
-        child.title = None
-        child.source_path = None
-        child.file_name = None
-        child.extension = None
-        child.content_hash = None
-        child.mime_type = None
-        child.foreign_id = None
-        return child
-
     def update(self, data, safe=True):
         # This will assign to the proxied field names, i.e. input
         # processing will be applied to the data.
@@ -406,7 +382,6 @@ class Metadata(object):
     def to_index_dict(self):
         """Generate ElasticSearch form."""
         data = self.to_attr_dict(compute=True)
-        data.pop('parent', None)
         data.pop('headers', None)
         data.pop('tables', None)
         data.pop('pdf_version', None)

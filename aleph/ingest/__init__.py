@@ -52,7 +52,7 @@ def ingest_url(self, document_id, url):
         if not meta.has('foreign_id'):
             meta.foreign_id = res.url
         meta.headers = res.headers
-        meta.content_hash = archive.archive_file(tmp_path, move=True)
+        meta.content_hash = archive.archive_file(tmp_path)
         document.meta = meta
         db.session.commit()
         get_manager().ingest_document(document)
@@ -71,11 +71,12 @@ def ingest_url(self, document_id, url):
         remove_tempfile(tmp_path)
 
 
-def ingest_path(collection_id, file_path, meta=None):
+def ingest_path(collection_id, file_path, id=None, meta=None):
     get_manager().handle_child(parent=None,
                                collection_id=collection_id,
                                file_path=file_path,
-                               meta=meta)
+                               meta=meta,
+                               id=id)
 
 
 @celery.task()

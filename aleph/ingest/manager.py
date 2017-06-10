@@ -5,7 +5,7 @@ from ingestors import Manager
 from ingestors.util import decode_path
 
 from aleph.core import db
-from aleph.model import Document
+from aleph.model import Document, Cache
 from aleph.analyze import analyze_document
 from aleph.ingest.result import DocumentResult
 from aleph.util import checksum
@@ -34,53 +34,36 @@ class DocumentManager(Manager):
             log.debug('Ingested: %r', result.document)
         analyze_document(result.document)
 
-    def locate_document(self, parent=None, collection_id=None, foreign_id=None,
-                        content_hash=None):
-        """Try and find a document by various criteria."""
-        q = Document.all()
-        collection_id = parent.collection_id if parent else collection_id
-        assert collection_id, (parent, collection_id)
-        q = q.filter(Document.collection_id == collection_id)
+    def get_cache(self, key):
+        return Cache.get_cache(key)
 
-        if parent is not None:
-            q = q.filter(Document.parent_id == parent.id)
-
-        if foreign_id is not None:
-            q = q.filter(Document.foreign_id == foreign_id)
-        elif content_hash is not None:
-            q = q.filter(Document.content_hash == content_hash)
-        else:
-            raise ValueError("No unique criterion for document.")
-
-        document = q.first()
-        if document is None:
-            document = Document()
-            document.collection_id = collection_id
-            if parent is not None:
-                document.parent_id = parent.id
-            document.foreign_id = foreign_id
-            document.content_hash = content_hash
-            document.status = document.STATUS_PENDING
-            db.session.add(document)
-        return document
+    def set_cache(self, key, value):
+        Cache.set_cache(key, value)
 
     def handle_child(self, parent, file_path, title=None, mime_type=None,
-                     id=None, collection_id=None, meta=None):
-        foreign_id = id or os.path.basename(decode_path(file_path))
+                     id=None, collection_id=None, meta=None, file_name=None):
+        file_path = decode_path(file_path)
+        file_name = decode_path(file_name) or os.path.basename(file_path)
+        id = id or meta.foreign_id
         content_hash = None
         if not os.path.isdir(file_path):
             content_hash = checksum(file_path)
 
-        parent_doc = parent.document if parent else None
-        document = self.locate_document(parent=parent_doc,
-                                        collection_id=collection_id,
-                                        foreign_id=foreign_id,
-                                        content_hash=content_hash)
+        parent_id = None
+        if parent is not None:
+            parent_id = parent.document.id
+            collection_id = parent.document.collection_id
+
+        document = Document.by_keys(parent_id=parent_id,
+                                    collection_id=collection_id,
+                                    foreign_id=id,
+                                    content_hash=content_hash)
         meta = meta or document.meta
-        meta.foreign_id = meta.foreign_id or foreign_id
+        meta.foreign_id = meta.foreign_id or id
         meta.content_hash = content_hash
-        meta.title = title or meta.title
-        meta.mime_type = mime_type or meta.mime_type
+        meta.title = title or meta._title
+        meta.file_name = file_name or meta._file_name
+        meta.mime_type = mime_type or meta._mime_type
         meta.source_path = file_path or meta.source_path
         document.meta = meta
         db.session.commit()
@@ -88,6 +71,7 @@ class DocumentManager(Manager):
         if os.path.isdir(file_path):
             self.ingest_document(document, file_path=file_path)
         else:
+            self.archive.archive_file(file_path, content_hash=content_hash)
             from aleph.ingest import ingest
             ingest.delay(document.id)
 
@@ -110,4 +94,4 @@ class DocumentManager(Manager):
             result = DocumentResult(self, document)
             self.ingest(file_path, result=result)
         finally:
-            self.cleanup_file(document.content_hash)
+            self.archive.cleanup_file(document.content_hash)

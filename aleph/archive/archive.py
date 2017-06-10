@@ -13,7 +13,7 @@ class Archive(object):
         """Run maintenance on the store."""
         pass
 
-    def archive_file(self, file_path, content_hash=None, move=False):
+    def archive_file(self, file_path, content_hash=None):
         """Import the given file into the archive.
 
         Return an updated metadata object. If ``move`` is given, the

@@ -164,7 +164,6 @@ class Document(db.Model, DatedModel):
             'status': self.status,
             'error_type': self.error_type,
             'error_message': self.error_message,
-            'error_details': self.error_details,
             'collection_id': self.collection_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
@@ -187,22 +186,39 @@ class Document(db.Model, DatedModel):
 
     @classmethod
     def by_meta(cls, collection_id, meta):
+        document = cls.by_keys(collection_id=collection_id,
+                               foreign_id=meta.foreign_id,
+                               content_hash=meta.content_hash)
+        document.meta = meta
+        return document
+
+    @classmethod
+    def by_keys(cls, parent_id=None, collection_id=None, foreign_id=None,
+                content_hash=None):
+        """Try and find a document by various criteria."""
         q = cls.all()
-        q = q.filter(cls.collection_id == collection_id)
-        if meta.foreign_id:
-            q = q.filter(cls.foreign_id == meta.foreign_id)
-        elif meta.content_hash:
-            q = q.filter(cls.content_hash == meta.content_hash)
+        q = q.filter(Document.collection_id == collection_id)
+
+        if parent_id is not None:
+            q = q.filter(Document.parent_id == parent_id)
+
+        if foreign_id is not None:
+            q = q.filter(Document.foreign_id == foreign_id)
+        elif content_hash is not None:
+            q = q.filter(Document.content_hash == content_hash)
         else:
-            raise ValueError("No unique criterion for document: %s" % meta)
+            raise ValueError("No unique criterion for document.")
 
         document = q.first()
         if document is None:
-            document = Document()
+            document = cls()
+            document.type = cls.TYPE_OTHER
             document.collection_id = collection_id
-            document.foreign_id = meta.foreign_id
-            document.content_hash = meta.content_hash
-        document.meta = meta
+            document.parent_id = parent_id
+            document.foreign_id = foreign_id
+            document.content_hash = content_hash
+            document.status = document.STATUS_PENDING
+            db.session.add(document)
         return document
 
     def __repr__(self):

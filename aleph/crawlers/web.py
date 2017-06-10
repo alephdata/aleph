@@ -67,4 +67,4 @@ class WebCrawler(DocumentCrawler):
         meta.mime_type = page.mime_type
         meta.headers = page.response.headers
         log.info("Importing %r", page.url)
-        self.emit_file(meta, file_path, move=True)
+        self.emit_file(meta, file_path)

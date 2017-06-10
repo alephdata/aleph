@@ -87,7 +87,7 @@ def crawldir(directory, language=None, country=None, foreign_id=None):
         meta.add_language(language)
     if country is not None:
         meta.add_country(country)
-    ingest_path(collection.id, directory, meta=meta)
+    ingest_path(collection.id, directory, id=directory, meta=meta)
 
 
 @manager.command
