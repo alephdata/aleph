@@ -44,7 +44,10 @@ class DocumentManager(Manager):
                      id=None, collection_id=None, meta=None, file_name=None):
         file_path = decode_path(file_path)
         file_name = decode_path(file_name) or os.path.basename(file_path)
-        id = id or meta.foreign_id
+
+        if meta is not None:
+            id = id or meta.foreign_id
+
         content_hash = None
         if not os.path.isdir(file_path):
             content_hash = checksum(file_path)

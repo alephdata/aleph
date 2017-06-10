@@ -23,6 +23,10 @@ def index_document(document):
     if document.status == Document.STATUS_PENDING:
         return
 
+    # FIXME:
+    if document.type == Document.TYPE_OTHER:
+        return
+
     log.info("Index document: %r", document)
     data = document.to_index_dict()
 

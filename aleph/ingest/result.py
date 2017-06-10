@@ -41,19 +41,10 @@ class DocumentResult(Result):
         record.index = index
         db.session.add(record)
 
-    def _emit_row_records(self, iterator):
-        for index, row in enumerate(iterator):
-            yield {
-                'sheet': 0,
-                'index': index,
-                'data': row
-            }
-
     def emit_rows(self, iterator):
         """Emit rows of a tabular iterator."""
         # TODO: also generate a tabular rep for the metadata
         self.document.type = Document.TYPE_TABULAR
-        iterator = self._emit_row_records(iterator)
         self.document.insert_records(0, iterator)
 
     def update(self):

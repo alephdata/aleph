@@ -32,7 +32,7 @@ RUN curl -s /tmp/pst.tgz http://www.five-ten-sg.com/libpst/packages/libpst-0.6.6
     && ./configure && make && make install
 
 RUN locale-gen 'en_GB' 'en_GB.ISO-8859-15' 'en_GB.UTF-8' 'en_US.UTF-8' 'C.UTF-8'
-ENV LANG C.UTF-8
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # WebKit HTML to X install since the one that comes with distros is hellishly outdated.
 RUN curl -s http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz > /tmp/wkhtmltox.tar.xv \

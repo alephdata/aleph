@@ -94,7 +94,7 @@ def file(document_id):
 
     local_path = archive.load_file(document.content_hash,
                                    file_name=meta.file_name)
-    if not os.path.isfile(local_path):
+    if local_path is None:
         raise NotFound("File does not exist.")
 
     fh = open(local_path, 'rb')
@@ -115,11 +115,10 @@ def pdf(document_id):
     if url is not None:
         return redirect(url)
 
-    try:
-        path = archive.load_file(meta.pdf_version, file_name=meta.file_name)
-        return send_file(open(path, 'rb'), mimetype=PDF_MIME)
-    except Exception as ex:
-        raise NotFound("Missing PDF file: %r" % ex)
+    path = archive.load_file(meta.pdf_version, file_name=meta.file_name)
+    if path is None:
+        raise NotFound("Missing PDF file.")
+    return send_file(open(path, 'rb'), mimetype=PDF_MIME)
 
 
 @blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>')

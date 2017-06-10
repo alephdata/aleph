@@ -1,20 +1,25 @@
 # from datetime import datetime, timedelta
 
-from aleph.crawlers.directory import DirectoryCrawler
 from aleph.core import db
+from aleph.model import Collection
+from aleph.ingest import ingest_path
 from aleph.model import DocumentRecord, Document
 from aleph.tests.util import TestCase
 
 
-class ETLTestCase(TestCase):
+class IngestTestCase(TestCase):
 
     def setUp(self):
-        super(ETLTestCase, self).setUp()
+        super(IngestTestCase, self).setUp()
+        self.collection = Collection()
+        self.collection.label = 'Original Collection'
+        self.collection.foreign_id = 'test_coll_entities'
+        db.session.add(self.collection)
+        db.session.commit()
 
     def test_load_csv_file(self):
         csv_path = self.get_fixture_path('experts.csv')
-        crawler = DirectoryCrawler()
-        crawler.execute(directory=csv_path)
+        ingest_path(self.collection.id, csv_path)
         assert Document.all().count() == 1, Document.all().count()
         records = db.session.query(DocumentRecord).all()
         assert len(records) == 14, len(records)
@@ -32,7 +37,12 @@ class ETLTestCase(TestCase):
         records = db.session.query(DocumentRecord).all()
         assert len(records) == 0, len(records)
 
+    def test_load_pdf_file(self):
+        pdf_path = self.get_fixture_path('demo.pdf')
+        ingest_path(self.collection.id, pdf_path)
+        assert Document.all().count() == 1, Document.all().count()
+
     def test_load_sample_directory(self):
-        csv_path = self.get_fixture_path('samples')
-        crawler = DirectoryCrawler()
-        crawler.execute(directory=csv_path)
+        samples_path = self.get_fixture_path('samples')
+        ingest_path(self.collection.id, samples_path, id='samples')
+        assert Document.all().count() == 5, Document.all().count()
