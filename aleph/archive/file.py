@@ -19,12 +19,14 @@ class FileArchive(Archive):
 
     def _locate_key(self, content_hash):
         prefix = self._get_prefix(content_hash)
+        if prefix is None:
+            return
         path = os.path.join(self.path, prefix)
         try:
             for file_name in os.listdir(path):
                 return os.path.join(path, file_name)
         except OSError:
-            return None
+            return
 
     def archive_file(self, file_path, content_hash=None):
         """ Import the given file into the archive, and return an

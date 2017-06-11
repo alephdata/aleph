@@ -4,10 +4,11 @@ import os
 class Archive(object):
 
     def _get_prefix(self, content_hash):
-        if content_hash is None:
-            raise ValueError("No content hash available.")
-        return os.path.join(content_hash[:2], content_hash[2:4],
-                            content_hash[4:6], content_hash)
+        if content_hash is not None:
+            return os.path.join(content_hash[:2],
+                                content_hash[2:4],
+                                content_hash[4:6],
+                                content_hash)
 
     def upgrade(self):
         """Run maintenance on the store."""

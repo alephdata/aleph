@@ -60,6 +60,8 @@ class S3Archive(Archive):  # pragma: no cover
 
     def _locate_key(self, content_hash):
         prefix = self._get_prefix(content_hash)
+        if prefix is None:
+            return
         for obj in self.bucket.objects.filter(MaxKeys=1, Prefix=prefix):
             return obj
 

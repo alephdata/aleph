@@ -174,7 +174,7 @@ class DocumentCrawler(Crawler):
         super(DocumentCrawler, self).execute(**kwargs)
 
     def emit_file(self, meta, file_path):
-        ingest_path(self.collection.id, file_path, meta.clone())
+        ingest_path(self.collection.id, file_path, meta=meta.clone())
         self.increment_count()
 
     def emit_url(self, meta, url):
