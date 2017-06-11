@@ -1,12 +1,10 @@
-import json
 import logging
 
 from aleph.core import db, get_config
-from aleph.metadata import Metadata
-from aleph.model import Entity, Collection, Document
+from aleph.model import Collection, Document
 from aleph.model.common import make_textid
-from aleph.ingest import ingest_url, ingest_path
-from aleph.logic import update_entity_full, update_collection
+from aleph.ingest import ingest_url, ingest_document
+from aleph.logic import update_collection
 from aleph.crawlers.schedule import CrawlerSchedule
 from aleph.util import make_tempfile, remove_tempfile
 
@@ -97,12 +95,14 @@ class Crawler(object):
             log.info("Skip [%s]: %s", self.get_id(), foreign_id)
         return skip
 
-    def make_meta(self, data={}):
-        data = json.loads(json.dumps(data))
-        meta = Metadata.from_data(data)
-        meta.crawler = self.get_id()
-        meta.crawler_run = self.crawler_run
-        return meta
+    def create_document(self, foreign_id=None, content_hash=None):
+        document = Document.by_keys(collection_id=self.collection.id,
+                                    foreign_id=foreign_id,
+                                    content_hash=content_hash)
+        document.crawler = self.get_id()
+        document.crawler_run = self.crawler_run
+        document.status = Document.STATUS_PENDING
+        return document
 
     def save_response(self, res, suffix=None):
         """Store the return data from a requests response to a file."""
@@ -156,32 +156,19 @@ class Crawler(object):
         return data
 
 
-class EntityCrawler(Crawler):
-
-    def emit_entity(self, collection, data):
-        entity = Entity.save(data, collection, merge=True)
-        db.session.commit()
-        log.info("Entity [%s]: %s", entity.id, entity.name)
-        update_entity_full(entity.id)
-        self.increment_count()
-        return entity
-
-
 class DocumentCrawler(Crawler):
 
     def execute(self, **kwargs):
         db.session.commit()
         super(DocumentCrawler, self).execute(**kwargs)
 
-    def emit_file(self, meta, file_path):
-        ingest_path(self.collection.id, file_path, meta=meta.clone())
+    def emit_file(self, document, file_path):
+        ingest_document(document, file_path)
         self.increment_count()
 
-    def emit_url(self, meta, url):
-        if meta.source_url is None:
-            meta.source_url = url
-        document = Document.by_meta(self.collection.id, meta)
-        document.status = Document.STATUS_PENDING
+    def emit_url(self, document, url):
+        if document.source_url is None:
+            document.source_url = url
         db.session.commit()
         ingest_url.delay(document.id, url)
         self.increment_count()

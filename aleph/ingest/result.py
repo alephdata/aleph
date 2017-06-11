@@ -15,22 +15,21 @@ class DocumentResult(Result):
     def __init__(self, manager, document, file_path=None):
         self.manager = manager
         self.document = document
-        meta = document.meta
-        self.pdf_hash = meta.pdf_version
-        file_path = file_path or meta.source_path
-        super(DocumentResult, self).__init__(id=meta._foreign_id,
-                                             checksum=document.content_hash,
-                                             title=meta._title,
-                                             summary=meta.summary,
-                                             author=meta.author,
-                                             keywords=meta.keywords,
-                                             file_path=file_path,
-                                             file_name=meta._file_name,
-                                             mime_type=meta._mime_type,
-                                             encoding=meta.encoding,
-                                             languages=meta.languages,
-                                             headers=meta._headers,
-                                             size=meta.file_size)
+        self.pdf_hash = document.pdf_version
+        bind = super(DocumentResult, self)
+        bind.__init__(id=document.foreign_id,
+                      checksum=document.content_hash,
+                      file_path=file_path,
+                      title=document.meta.get('title'),
+                      summary=document.meta.get('summary'),
+                      author=document.meta.get('author'),
+                      keywords=document.meta.get('keywords', []),
+                      file_name=document.meta.get('file_name'),
+                      mime_type=document.meta.get('mime_type'),
+                      encoding=document.meta.get('encoding'),
+                      languages=document.meta.get('languages', []),
+                      headers=document.meta.get('headers'),
+                      size=document.meta.get('file_size'))
 
     def emit_page(self, index, text):
         """Emit a plain text page."""
@@ -60,22 +59,19 @@ class DocumentResult(Result):
             self.document.status = Document.STATUS_FAIL
             self.document.type = Document.TYPE_OTHER
             self.document.error_message = self.error_message
-        meta = self.document.meta
-        meta.foreign_id = stringify(self.id)
+        self.document.foreign_id = stringify(self.id)
         if self.checksum:
-            meta.content_hash = self.checksum
-        meta.file_size = self.size
-        meta.title = stringify(self.title)
-        meta.summary = stringify(self.summary)
-        meta.author = stringify(self.author)
-        meta.keywords = self.keywords
-        meta.source_path = stringify(self.file_path)
-        meta.mime_type = stringify(self.mime_type)
-        meta.encoding = self.encoding
-        meta.languages = self.languages
-        meta.headers = self.headers
-        meta.pdf_version = self.pdf_hash
-        self.document.meta = meta
+            self.document.content_hash = self.checksum
+        self.document.file_size = self.size
+        self.document.title = stringify(self.title)
+        self.document.summary = stringify(self.summary)
+        self.document.author = stringify(self.author)
+        self.document.keywords = self.keywords
+        self.document.mime_type = stringify(self.mime_type)
+        self.document.encoding = self.encoding
+        self.document.languages = self.languages
+        self.document.headers = self.headers
+        self.document.pdf_version = self.pdf_hash
 
     def emit_pdf_alternative(self, file_path):
         self.pdf_hash = self.manager.archive.archive_file(file_path)

@@ -1,5 +1,5 @@
 import re
-from aleph.metadata import Metadata
+from aleph.model import Document
 from aleph.tests.util import TestCase
 from aleph.analyze.regex import PhoneNumberAnalyzer
 
@@ -31,8 +31,9 @@ class PhoneNumberTestCase(TestCase):
 
     def test_normalize(self):
         for number in PHONE_NUMBERS:
-            meta = Metadata.from_data({'countries': ['de']})
-            analyzer = PhoneNumberAnalyzer(None, meta)
+            document = Document()
+            document.add_country('de')
+            analyzer = PhoneNumberAnalyzer(document)
             analyzer.prepare()
             analyzer.on_text(number)
             analyzer.finalize()

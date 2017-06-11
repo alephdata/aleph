@@ -46,42 +46,24 @@ class DocumentManager(Manager):
         Cache.set_cache(key, value)
 
     def handle_child(self, parent, file_path, title=None, mime_type=None,
-                     id=None, collection_id=None, meta=None, file_name=None):
+                     id=None, file_name=None):
         file_path = decode_path(file_path)
         file_name = decode_path(file_name) or os.path.basename(file_path)
-
-        if meta is not None:
-            id = id or meta.foreign_id
 
         content_hash = None
         if not os.path.isdir(file_path):
             content_hash = checksum(file_path)
 
-        parent_id = None
-        if parent is not None:
-            parent_id = parent.document.id
-            collection_id = parent.document.collection_id
-
-        document = Document.by_keys(parent_id=parent_id,
-                                    collection_id=collection_id,
+        document = Document.by_keys(parent_id=parent.document.id,
+                                    collection_id=parent.document.collection_id,  # noqa
                                     foreign_id=id,
                                     content_hash=content_hash)
-        meta = meta or document.meta
-        meta.foreign_id = meta.foreign_id or id
-        meta.content_hash = content_hash
-        meta.title = title or meta._title
-        meta.file_name = file_name or meta._file_name
-        meta.mime_type = mime_type or meta._mime_type
-        meta.source_path = file_path or meta.source_path
-        document.meta = meta
-        db.session.commit()
+        document.title = title or document.meta.get('title')
+        document.file_name = file_name or document.meta.get('file_name')
+        document.mime_type = mime_type or document.meta.get('mime_type')
 
-        if os.path.isdir(file_path):
-            self.ingest_document(document, file_path=file_path)
-        else:
-            self.archive.archive_file(file_path, content_hash=content_hash)
-            from aleph.ingest import ingest
-            ingest.delay(document.id)
+        from aleph.ingest import ingest_document
+        ingest_document(document, file_path)
 
     def ingest_document(self, document, file_path=None):
         """Ingest a database-backed document.
@@ -89,9 +71,8 @@ class DocumentManager(Manager):
         First retrieve it's data and then call the actual ingestor.
         """
         if file_path is None:
-            file_name = document.meta.file_name
             file_path = self.archive.load_file(document.content_hash,
-                                               file_name=file_name)
+                                               file_name=document.file_name)
 
         if file_path is None:
             # TODO: save this to the document?
@@ -99,7 +80,7 @@ class DocumentManager(Manager):
             return
 
         try:
-            result = DocumentResult(self, document)
+            result = DocumentResult(self, document, file_path=file_path)
             self.ingest(file_path, result=result)
         finally:
             self.archive.cleanup_file(document.content_hash)

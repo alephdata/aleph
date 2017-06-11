@@ -1,4 +1,4 @@
-from aleph.metadata import Metadata
+from aleph.model.metadata import Metadata
 from aleph.tests.util import TestCase
 
 
@@ -8,11 +8,10 @@ class MetadataTestCase(TestCase):
         super(MetadataTestCase, self).setUp()
 
     def test_basic_functions(self):
-        meta = Metadata.from_data({
-            'file_name': 'foo.doc',
-            'title': '  ',
-            'languages': ['en', 'xx']
-        })
+        meta = Metadata()
+        meta.file_name = 'foo.doc'
+        meta.title = '  '
+        meta.languages = ['en', 'xx']
         assert meta.file_name == 'foo.doc', meta.file_name
         assert meta.title == 'foo.doc', meta.title
         assert not len(meta.countries), meta.countries
@@ -24,11 +23,13 @@ class MetadataTestCase(TestCase):
         assert len(meta.domains) == 1, meta.domains
         assert meta.domains[0] == 'google.com', meta.domains
 
+        meta = Metadata()
         meta.add_url('http://')
-        assert len(meta.urls) == 1, meta.urls
+        assert len(meta.urls) == 0, meta.urls
 
+        meta = Metadata()
         meta.add_url('http://www.google.com/xxx')
-        assert len(meta.urls) == 2, meta.urls
+        assert len(meta.urls) == 1, meta.urls
         assert len(meta.domains) == 1, meta.domains
 
     def test_emails(self):

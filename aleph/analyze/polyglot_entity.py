@@ -39,8 +39,8 @@ class PolyglotEntityAnalyzer(Analyzer):
             return
         try:
             hint_language_code = None
-            if len(self.meta.languages) == 1:
-                hint_language_code = self.meta.languages[0]
+            if len(self.document.languages) == 1:
+                hint_language_code = self.document.languages[0]
             text = Text(text, hint_language_code=hint_language_code)
             for entity in text.entities:
                 if entity.tag == 'I-LOC':

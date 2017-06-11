@@ -1,3 +1,4 @@
+import os
 import six
 import logging
 import requests
@@ -30,30 +31,30 @@ def ingest_url(self, document_id, url):
     if document is None:
         log.error("Could not find document: %s", document_id)
         return
-    meta = document.meta
-    tmp_path = make_tempfile(meta.file_name, suffix=meta.extension)
+
+    tmp_path = make_tempfile(document.file_name, suffix=document.extension)
     try:
         log.info("Ingesting URL: %s", url)
         res = requests.get(url, stream=True)
         if res.status_code >= 500:
             countdown = 3600 ** self.request.retries
             self.retry(countdown=countdown)
+            return
         if res.status_code >= 400:
             document.status = Document.STATUS_FAIL
-            document.error_message = "HTTP not found: %s", url
+            document.error_message = "HTTP %s: %s" % (res.status_code, url)
             db.session.commit()
             return
         with open(tmp_path, 'w') as fh:
             for chunk in res.iter_content(chunk_size=1024):
                 if chunk:
                     fh.write(chunk)
-        if not meta.has('source_url'):
-            meta.source_url = res.url
-        if not meta.has('foreign_id'):
-            meta.foreign_id = res.url
-        meta.headers = res.headers
-        meta.content_hash = archive.archive_file(tmp_path)
-        document.meta = meta
+        if not document.has_meta('source_url'):
+            document.source_url = res.url
+        if document.foreign_id:
+            document.foreign_id = res.url
+        document.headers = res.headers
+        document.content_hash = archive.archive_file(tmp_path)
         db.session.commit()
         get_manager().ingest_document(document)
     except IOError as ioe:
@@ -71,12 +72,17 @@ def ingest_url(self, document_id, url):
         remove_tempfile(tmp_path)
 
 
-def ingest_path(collection_id, file_path, id=None, meta=None):
-    get_manager().handle_child(parent=None,
-                               collection_id=collection_id,
-                               file_path=file_path,
-                               meta=meta,
-                               id=id)
+def ingest_document(document, file_path):
+    document.status = Document.STATUS_PENDING
+    if os.path.isdir(file_path):
+        manager = get_manager()
+        manager.ingest_document(document, file_path=file_path)
+    else:
+        ch = archive.archive_file(file_path,
+                                  content_hash=document.content_hash)
+        document.content_hash = ch or document.content_hash
+        db.session.commit()
+        ingest.delay(document.id)
 
 
 @celery.task()

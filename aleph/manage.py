@@ -10,9 +10,8 @@ from flask_migrate import MigrateCommand
 from aleph.core import create_app, archive, datasets
 from aleph.model import db, upgrade_db, Collection, Document, Entity
 from aleph.views import mount_app_blueprints
-from aleph.metadata import Metadata
 from aleph.analyze import install_analyzers
-from aleph.ingest import reingest_collection, ingest_path
+from aleph.ingest import reingest_collection, ingest_document
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document_id, delete_dataset
 from aleph.logic import reindex_entities, delete_collection, analyze_collection
@@ -81,13 +80,14 @@ def crawldir(directory, language=None, country=None, foreign_id=None):
         db.session.commit()
         update_collection(collection)
 
-    log.info('Crawling %r to %r...', directory, collection)
-    meta = Metadata.from_data({})
+    log.info('Crawling %r to %r...', directory, collection.foreign_id)
+    document = Document.by_keys(collection_id=collection.id,
+                                foreign_id=directory)
     if language is not None:
-        meta.add_language(language)
+        document.add_language(language)
     if country is not None:
-        meta.add_country(country)
-    ingest_path(collection.id, directory, id=directory, meta=meta)
+        document.add_country(country)
+    ingest_document(document, directory)
 
 
 @manager.command

@@ -1,7 +1,5 @@
 import json
 
-from aleph.core import db
-from aleph.model import Collection, Permission
 from aleph.tests.util import TestCase
 
 
@@ -98,7 +96,7 @@ class DocumentsApiTestCase(TestCase):
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 200, res.json
-        assert res.json['title'] == data['title']
+        assert res.json['title'] == data['title'], res.json
 
     def test_update_invalid(self):
         url = '/api/1/documents/1000'

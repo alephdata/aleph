@@ -34,7 +34,7 @@ class EMailAnalyzer(RegexAnalyzer):
             log.info("Found emails: %r", matches)
 
         for email in matches:
-            self.meta.add_email(email)
+            self.document.add_email(email)
 
 
 class URLAnalyzer(RegexAnalyzer):
@@ -48,7 +48,7 @@ class URLAnalyzer(RegexAnalyzer):
             log.info("Found URLs: %r", matches)
 
         for url in matches:
-            self.meta.add_url(url)
+            self.document.add_url(url)
 
 
 class PhoneNumberAnalyzer(RegexAnalyzer):
@@ -62,9 +62,9 @@ class PhoneNumberAnalyzer(RegexAnalyzer):
             match = ''.join([m for m in match if m in self.CHARS])
             if len(match) < 5:
                 continue
-            for country in [None] + self.meta.countries:
+            for country in [None] + self.document.countries:
                 num = parse_phone(match, country=country)
                 if num is not None:
-                    self.meta.add_phone_number(num)
-        if len(self.meta.phone_numbers):
-            log.info("Found phone numbers: %s", self.meta.phone_numbers)
+                    self.document.add_phone_number(num)
+        if len(self.document.phone_numbers):
+            log.info("Found phone numbers: %s", self.document.phone_numbers)

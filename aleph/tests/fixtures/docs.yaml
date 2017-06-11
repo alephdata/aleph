@@ -57,7 +57,7 @@
       collection_id: 1000
       foreign_id: test1
       type: text
-      _meta:
+      meta:
         title: Foo Document
         file_name: foo.txt
         extension: txt
@@ -67,7 +67,7 @@
       collection_id: 2000
       foreign_id: test2
       type: text
-      _meta:
+      meta:
         title: Secret Document
         file_name: bar.txt
         extension: txt
@@ -77,7 +77,7 @@
       collection_id: 1000
       foreign_id: test3
       type: text
-      _meta:
+      meta:
         title: Does not mention fruit
         file_name: qux.txt
         extension: txt
@@ -87,7 +87,7 @@
       collection_id: 1000
       foreign_id: test4
       type: tabular
-      _meta:
+      meta:
         title: Tabular thingie
         file_name: test.csv
         extension: csv

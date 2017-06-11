@@ -7,13 +7,6 @@
     ],
     "properties": {
         "collection_id": {
-            "type": "array",
-            "items": {
-                "type": "number"
-            },
-            "minItems": 1
-        },
-        "collection_id": {
             "type": ["null", "number"]
         },
         "type": {

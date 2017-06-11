@@ -19,15 +19,11 @@ class WebDAVCrawler(DocumentCrawler):
             return
         log.info("WebDAV Fetch [%s]: %s", self.COLLECTION_ID, url)
 
-        meta = self.make_meta({
-            'source_url': url,
-            'foreign_id': url,
-        })
-
+        document = self.create_document(foreign_id=url)
         res = requests.get(url, auth=auth)
         file_path = self.save_data(res.content)
-        meta.headers = res.headers
-        self.emit_file(meta, file_path)
+        document.headers = res.headers
+        self.emit_file(document, file_path)
 
     def crawl_collection(self, url, auth):
         log.info("WebDAV Index [%s]: %s", self.COLLECTION_ID, url)

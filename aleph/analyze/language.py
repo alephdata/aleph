@@ -25,7 +25,7 @@ class LanguageAnalyzer(Analyzer):
         self.languages = defaultdict(float)
 
     def on_text(self, text):
-        if len(self.meta.languages) > 0:
+        if len(self.document.languages) > 0:
             return
         if len(text.strip()) <= CUTOFF:
             return
@@ -34,14 +34,14 @@ class LanguageAnalyzer(Analyzer):
             self.languages[lang] += score * len(text)
 
     def finalize(self):
-        if len(self.meta.languages) > 0:
+        if len(self.document.languages) > 0:
             return
         if not len(self.languages):
             return
 
         for code, score in self.languages.items():
             if code.lower() in language_whitelist:
-                self.meta.add_language(code)
+                self.document.add_language(code)
 
         log.info("Classified languages in %r: %r", self.document,
-                 self.meta.languages)
+                 self.document.languages)

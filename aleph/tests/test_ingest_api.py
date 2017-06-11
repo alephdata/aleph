@@ -42,9 +42,9 @@ class IngestApiTestCase(TestCase):
         }
         res = self.client.post(self.url, data=data)
         assert res.status_code == 200, res
-        metas = res.json['metadata']
-        assert len(metas) == 1, metas
-        assert metas[0]['file_name'] == 'futz.html', metas
+        docs = res.json['documents']
+        assert len(docs) == 1, docs
+        assert docs[0]['file_name'] == 'futz.html', docs
 
         res = self.client.get('/api/1/documents')
         assert res.json['total'] == 1, res.json

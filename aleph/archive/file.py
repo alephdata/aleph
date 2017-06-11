@@ -29,9 +29,7 @@ class FileArchive(Archive):
             return
 
     def archive_file(self, file_path, content_hash=None):
-        """ Import the given file into the archive, and return an
-        updated metadata object. If ``move`` is given, the original
-        file will not exist afterwards. """
+        """Import the given file into the archive."""
         if content_hash is None:
             content_hash = checksum(file_path)
 

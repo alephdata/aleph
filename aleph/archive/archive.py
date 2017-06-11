@@ -15,11 +15,7 @@ class Archive(object):
         pass
 
     def archive_file(self, file_path, content_hash=None):
-        """Import the given file into the archive.
-
-        Return an updated metadata object. If ``move`` is given, the
-        original file will not exist afterwards.
-        """
+        """Import the given file into the archive."""
         pass
 
     def load_file(self, content_hash, file_name=None):
