@@ -14,6 +14,11 @@ log = logging.getLogger(__name__)
 
 
 class DocumentManager(Manager):
+    """Handle the process of ingesting documents.
+
+    This includes creating and flushing records, setting document state and
+    dispatching child ingestors as needed.
+    """
 
     RESULT_CLASS = DocumentResult
 

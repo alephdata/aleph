@@ -41,11 +41,15 @@ class DocumentResult(Result):
         record.index = index
         db.session.add(record)
 
+    def _emit_iterator_rows(self, iterator):
+        for row in iterator:
+            yield row
+
     def emit_rows(self, iterator):
         """Emit rows of a tabular iterator."""
         # TODO: also generate a tabular rep for the metadata
         self.document.type = Document.TYPE_TABULAR
-        self.document.insert_records(0, iterator)
+        self.document.insert_records(0, self._emit_iterator_rows(iterator))
 
     def update(self):
         """Apply the outcome of the result to the document."""

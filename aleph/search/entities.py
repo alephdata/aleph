@@ -122,7 +122,7 @@ def suggest_entities(prefix, authz, min_count=0, schemas=None, size=5):
         if min_count > 0:
             q = add_filter(q, {'range': {'doc_count': {'gte': min_count}}})
         if schemas is not None and len(schemas):
-            q = add_filter(q, {'terms': {'$schema': schemas}})
+            q = add_filter(q, {'terms': {'schema': schemas}})
 
         # TODO: is this correct? should we allow filter by dataset entities?
         q = add_filter(q, {'terms': {'collection_id': authz.collections_read}})

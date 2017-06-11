@@ -16,24 +16,6 @@ from aleph.metadata.tabular import Tabular
 from aleph.metadata.base import MetadataFactory, Field
 
 
-class PDFAlternative(object):
-    """Alternate PDF version."""
-
-    def __init__(self, meta):
-        self.meta = meta
-        self.extension = 'pdf'
-        self.mime_type = 'application/pdf'
-        self.file_name = self.meta.file_name + '.pdf'
-
-    @property
-    def content_hash(self):
-        return self.meta.pdf_version
-
-    @content_hash.setter
-    def content_hash(self, content_hash):
-        self.meta.pdf_version = content_hash
-
-
 class Metadata(object):
     """Handle all sorts of metadata normalization for documents."""
 
@@ -322,10 +304,6 @@ class Metadata(object):
     @property
     def is_pdf(self):
         return self.extension == 'pdf' or self.mime_type == 'application/pdf'
-
-    @property
-    def pdf(self):
-        return self if self.is_pdf else PDFAlternative(self)
 
     @property
     def tables(self):

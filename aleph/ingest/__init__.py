@@ -81,6 +81,8 @@ def ingest_path(collection_id, file_path, id=None, meta=None):
 
 @celery.task()
 def ingest(document_id):
+    """Process a given document by extracting its contents.
+    This may include creating or updating child documents."""
     document = Document.by_id(document_id)
     if document is None:
         log.error("Could not find document: %s", document_id)

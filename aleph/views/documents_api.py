@@ -46,13 +46,7 @@ def view(document_id):
     if doc.meta.is_pdf:
         data['pdf_url'] = data['data_url']
     else:
-        try:
-            data['pdf_url'] = archive.generate_url(doc.meta.pdf)
-        except Exception as ex:
-            log.info('Could not generate PDF url: %r', ex)
-        if data.get('pdf_url') is None:
-            data['pdf_url'] = url_for('documents_api.pdf',
-                                      document_id=document_id)
+        data['pdf_url'] = url_for('documents_api.pdf', document_id=document_id)
     return jsonify(data)
 
 
@@ -111,11 +105,12 @@ def pdf(document_id):
     meta = document.meta
     if document.type != Document.TYPE_TEXT:
         raise BadRequest("PDF is only available for text documents")
-    url = archive.generate_url(meta.pdf_version, mime_type=PDF_MIME)
+    pdf_version = meta.pdf_version or meta.content_hash
+    url = archive.generate_url(pdf_version, mime_type=PDF_MIME)
     if url is not None:
         return redirect(url)
 
-    path = archive.load_file(meta.pdf_version, file_name=meta.file_name)
+    path = archive.load_file(pdf_version, file_name=meta.file_name)
     if path is None:
         raise NotFound("Missing PDF file.")
     return send_file(open(path, 'rb'), mimetype=PDF_MIME)

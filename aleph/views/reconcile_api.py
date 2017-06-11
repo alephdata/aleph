@@ -156,7 +156,7 @@ def suggest_entity():
     matches = []
     suggested = suggest_entities(prefix, request.authz, schemas=schemas)
     for entity in suggested.get('results'):
-        types_ = [t for t in types if entity['$schema'] == t['id']]
+        types_ = [t for t in types if entity['schema'] == t['id']]
         matches.append({
             'quid': entity.get('id'),
             'id': entity.get('id'),
@@ -191,7 +191,7 @@ def suggest_property():
     }, {
         'id': 'emails',
         'name': 'EMails',
-        'match': 'E-Mail addresses'
+        'match': 'E-Mail addresses, Email'
     }, {
         'id': 'addresses',
         'name': 'Addresses',
