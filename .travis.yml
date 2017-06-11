@@ -9,7 +9,7 @@ services:
   - postgresql
   - rabbitmq
 addons:
-  postgresql: "9.6"
+  postgresql: "9.5"
   apt:
     packages:
       - python-software-properties
