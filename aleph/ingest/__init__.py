@@ -11,8 +11,6 @@ from aleph.ingest.manager import DocumentManager
 from aleph.util import make_tempfile, remove_tempfile
 
 log = logging.getLogger(__name__)
-
-# TODO: cache
 # TODO: queues
 
 
@@ -73,6 +71,8 @@ def ingest_url(self, document_id, url):
 
 
 def ingest_document(document, file_path):
+    """Given a stub document and file path, extract information.
+    This does not attempt to infer metadata such as a file name."""
     document.status = Document.STATUS_PENDING
     if os.path.isdir(file_path):
         manager = get_manager()

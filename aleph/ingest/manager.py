@@ -27,6 +27,7 @@ class DocumentManager(Manager):
         self.archive = archive
 
     def before(self, result):
+        db.session.flush()
         result.document.status = Document.STATUS_PENDING
         result.document.delete_records()
 

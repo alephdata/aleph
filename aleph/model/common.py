@@ -1,6 +1,5 @@
 import uuid
 import string
-import fingerprints
 from hashlib import sha1
 from datetime import datetime
 from sqlalchemy import func

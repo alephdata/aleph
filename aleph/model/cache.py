@@ -5,7 +5,8 @@ class Cache(db.Model):
     """Store OCR computation results."""
     __tablename__ = 'cache'
 
-    key = db.Column(db.Unicode, primary_key=True)
+    id = db.Column(db.BigInteger, primary_key=True)
+    key = db.Column(db.Unicode, index=True)
     value = db.Column(db.Unicode)
 
     @classmethod
@@ -18,10 +19,12 @@ class Cache(db.Model):
 
     @classmethod
     def set_cache(cls, key, value):
+        session = db.sessionmaker(bind=db.engine)()
         cobj = cls()
         cobj.key = key
         cobj.value = value
-        db.session.add(cobj)
+        session.add(cobj)
+        session.commit()
 
     def __repr__(self):
         return '<Cache(%r)>' % self.key

@@ -46,6 +46,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
         self.managed = data.get('managed')
         self.private = data.get('private')
         self.countries = data.pop('countries', [])
+        self.touch()
 
     def touch(self):
         self.updated_at = datetime.utcnow()

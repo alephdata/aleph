@@ -107,7 +107,6 @@ def handle_authz_error(err):
 
 @blueprint.app_errorhandler(ValidationError)
 def handle_validation_error(err):
-    print 'XXXXX', err
     return jsonify({
         'status': 'error',
         'message': err.message
