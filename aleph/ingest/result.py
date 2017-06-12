@@ -1,5 +1,5 @@
 import logging
-
+from collections import OrderedDict
 from ingestors import Result
 from normality import stringify
 
@@ -16,6 +16,7 @@ class DocumentResult(Result):
         self.manager = manager
         self.document = document
         self.pdf_hash = document.pdf_version
+        self.columns = OrderedDict()
         bind = super(DocumentResult, self)
         bind.__init__(id=document.foreign_id,
                       checksum=document.content_hash,
@@ -42,6 +43,8 @@ class DocumentResult(Result):
 
     def _emit_iterator_rows(self, iterator):
         for row in iterator:
+            for column in row.keys():
+                self.columns[column] = None
             yield row
 
     def emit_rows(self, iterator):
@@ -72,6 +75,7 @@ class DocumentResult(Result):
         self.document.languages = self.languages
         self.document.headers = self.headers
         self.document.pdf_version = self.pdf_hash
+        self.document.columns = self.columns.keys()
 
     def emit_pdf_alternative(self, file_path):
         self.pdf_hash = self.manager.archive.archive_file(file_path)

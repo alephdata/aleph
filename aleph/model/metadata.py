@@ -321,7 +321,21 @@ class Metadata(object):
         self.update_meta()
 
     @property
+    def columns(self):
+        return self.meta.get('columns', [])
+
+    @columns.setter
+    def columns(self, columns):
+        self.meta['columns'] = columns
+        self.update_meta()
+
+    @property
     def tables(self):
+        if len(self.columns):
+            schema = dict(sheet=0, sheet_name=self.title, columns=[])
+            for column in self.columns:
+                schema['columns'].append({'name': column, 'label': column})
+            return [Tabular(schema)]
         return [Tabular(s) for s in self.meta.get('tables', [])]
 
     @tables.setter
