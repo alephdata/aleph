@@ -12,6 +12,7 @@ from aleph.model.collection import Collection
 from aleph.model.reference import Reference
 from aleph.model.common import DatedModel
 from aleph.model.document_record import DocumentRecord
+from aleph.model.document_tag import DocumentTag
 from aleph.text import index_form
 
 log = logging.getLogger(__name__)
@@ -64,16 +65,25 @@ class Document(db.Model, DatedModel, Metadata):
     def delete_records(self):
         pq = db.session.query(DocumentRecord)
         pq = pq.filter(DocumentRecord.document_id == self.id)
-        pq.delete(synchronize_session='fetch')
-        db.session.refresh(self)
+        # pq.delete(synchronize_session='fetch')
+        pq.delete()
+        db.session.flush()
+
+    def delete_tags(self):
+        pq = db.session.query(DocumentTag)
+        pq = pq.filter(DocumentTag.document_id == self.id)
+        # pq.delete(synchronize_session='fetch')
+        pq.delete()
+        db.session.flush()
 
     def delete_references(self, origin=None):
         pq = db.session.query(Reference)
         pq = pq.filter(Reference.document_id == self.id)
         if origin is not None:
             pq = pq.filter(Reference.origin == origin)
-        pq.delete(synchronize_session='fetch')
-        db.session.refresh(self)
+        # pq.delete(synchronize_session='fetch')
+        pq.delete()
+        db.session.flush()
 
     def delete(self, deleted_at=None):
         self.delete_references()
@@ -145,8 +155,11 @@ class Document(db.Model, DatedModel, Metadata):
             'id': self.id,
             'type': self.type,
             'status': self.status,
+            'parent_id': self.parent_id,
             'foreign_id': self.foreign_id,
             'content_hash': self.content_hash,
+            'crawler': self.crawler,
+            'crawler_run': self.crawler_run,
             'error_type': self.error_type,
             'error_message': self.error_message,
             'collection_id': self.collection_id,

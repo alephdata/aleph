@@ -21,6 +21,7 @@ DOCUMENT_MAPPING = {
     ],
     "date_detection": False,
     "properties": {
+        "parent_id": {"type": "integer", "index": "not_analyzed"},
         "title": {"type": "string", "index": "analyzed"},
         "title_latin": {"type": "string", "index": "analyzed"},
         "name_sort": {"type": "string", "index": "not_analyzed"},
