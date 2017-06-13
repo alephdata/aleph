@@ -26,7 +26,7 @@ networkx==1.9.1
 XlsxWriter==0.6.6
 krauler>=0.2.2
 polyglot==16.7.4
-langid==1.1.5
+langid==1.1.6
 blinker==1.4
 Babel==2.3.4
 xlrd==0.9.3
@@ -48,6 +48,10 @@ normality>=0.4.2
 countrynames>=1.4
 dalet>=1.1
 ingestors>=0.3.7
+
+# Workarounds
+cryptography>=1.9
+cffi>=1.10.0
 
 # Python 3 backports
 functools32>=3.2
