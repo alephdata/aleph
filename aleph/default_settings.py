@@ -109,18 +109,18 @@ AUTHZ_ADMINS = env_list('ALEPH_ADMINS')
 #
 # In addition, include a 'name' entry and an optional 'label' entry.
 OAUTH = [{
-    'name': 'google',
-    'label': 'Google',
+    'name': env.get('ALEPH_OAUTH_NAME', 'google'),
+    'label': env.get('ALEPH_OAUTH_LABEL', 'Google'),
     'consumer_key': env.get('ALEPH_OAUTH_KEY'),
     'consumer_secret': env.get('ALEPH_OAUTH_SECRET'),
     'request_token_params': {
-        'scope': 'https://www.googleapis.com/auth/userinfo.email'
+        'scope': env.get('ALEPH_OAUTH_SCOPE', 'https://www.googleapis.com/auth/userinfo.email')  # noqa
     },
-    'base_url': 'https://www.googleapis.com/oauth2/v1/',
+    'base_url': env.get('ALEPH_OAUTH_BASE_URL', 'https://www.googleapis.com/oauth2/v1/'),  # noqa
     'request_token_url': None,
     'access_token_method': 'POST',
-    'access_token_url': 'https://accounts.google.com/o/oauth2/token',
-    'authorize_url': 'https://accounts.google.com/o/oauth2/auth',
+    'access_token_url': env.get('ALEPH_OAUTH_TOKEN_URL', 'https://accounts.google.com/o/oauth2/token'),  # noqa
+    'authorize_url': env.get('ALEPH_OAUTH_AUTHORIZE_URL', 'https://accounts.google.com/o/oauth2/auth'),  # noqa
 }]
 
 
