@@ -50,7 +50,7 @@ dalet>=1.1
 ingestors>=0.3.7
 
 # Workarounds
-cryptography>=1.9
+pyopenssl>=17.0.0
 cffi>=1.10.0
 
 # Python 3 backports
