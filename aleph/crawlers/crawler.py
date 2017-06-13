@@ -1,7 +1,8 @@
+import json
 import logging
 
 from aleph.core import db, get_config
-from aleph.model import Collection, Document
+from aleph.model import Collection, Document, Metadata
 from aleph.model.common import make_textid
 from aleph.ingest import ingest_url, ingest_document
 from aleph.logic import update_collection
@@ -17,6 +18,14 @@ class CrawlerException(Exception):
 
 class RunLimitException(CrawlerException):
     pass
+
+
+class CrawlerMetadata(Metadata):
+
+    def __init__(self, data):
+        self.foreign_id = data.pop('foreign_id', None)
+        self.content_hash = data.pop('content_hash', None)
+        self.meta = data
 
 
 class Crawler(object):
@@ -95,6 +104,13 @@ class Crawler(object):
             log.info("Skip [%s]: %s", self.get_id(), foreign_id)
         return skip
 
+    def make_meta(self, data={}):
+        data = json.loads(json.dumps(data))
+        meta = CrawlerMetadata(data)
+        meta.crawler = self.get_id()
+        meta.crawler_run = self.crawler_run
+        return meta
+
     def create_document(self, foreign_id=None, content_hash=None):
         document = Document.by_keys(collection_id=self.collection.id,
                                     foreign_id=foreign_id,
@@ -140,7 +156,7 @@ class Crawler(object):
         return name
 
     def __repr__(self):
-        return '<%s()>' % self.get_id()
+        return '<Crawler(%s)>' % self.COLLECTION_ID
 
     def to_dict(self):
         data = Document.crawler_stats(self.get_id())
@@ -162,11 +178,21 @@ class DocumentCrawler(Crawler):
         db.session.commit()
         super(DocumentCrawler, self).execute(**kwargs)
 
-    def emit_file(self, document, file_path):
+    def emit_file(self, document, file_path, move=False):
+        if isinstance(document, CrawlerMetadata):
+            doc = self.create_document(foreign_id=document.foreign_id,
+                                       content_hash=document.content_hash)
+            doc.meta.update(document.meta)
+            document = doc
         ingest_document(document, file_path)
         self.increment_count()
 
     def emit_url(self, document, url):
+        if isinstance(document, CrawlerMetadata):
+            doc = self.create_document(foreign_id=document.foreign_id,
+                                       content_hash=document.content_hash)
+            doc.meta.update(document.meta)
+            document = doc
         if document.source_url is None:
             document.source_url = url
         db.session.commit()

@@ -19,6 +19,7 @@ def get_manager():
     if not hasattr(DocumentManager, '_instance'):
         DocumentManager._instance = DocumentManager(current_app.config,
                                                     archive)
+        log.info("Loaded ingestors: %r", DocumentManager._instance.ingestors)
     return DocumentManager._instance
 
 

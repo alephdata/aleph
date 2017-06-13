@@ -14,6 +14,7 @@ from aleph.model.event_log import EventLog  # noqa
 from aleph.model.document import Document  # noqa
 from aleph.model.document_record import DocumentRecord  # noqa
 from aleph.model.document_tag import DocumentTag, DocumentTagCollector  # noqa
+from aleph.model.metadata import Metadata  # noqa
 
 log = logging.getLogger(__name__)
 
