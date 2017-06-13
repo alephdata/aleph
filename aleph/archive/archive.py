@@ -1,45 +1,28 @@
 import os
-import six
-
-from aleph.util import checksum
 
 
 class Archive(object):
 
-    def _get_file_path(self, meta):
-        ch = meta.content_hash
-        if ch is None:
-            raise ValueError("No content hash available.")
-        path = os.path.join(ch[:2], ch[2:4], ch[4:6], ch)
-        file_name = 'data'
-        if meta.file_name is not None:
-            file_name = meta.file_name
-        else:
-            if meta.extension is not None:
-                file_name = '%s.%s' % (file_name, meta.extension)
-        return os.path.join(six.text_type(path), six.text_type(file_name))
-
-    def _update_metadata(self, filename, meta):
-        meta.content_hash = checksum(filename)
-        return meta
+    def _get_prefix(self, content_hash):
+        if content_hash is not None:
+            return os.path.join(content_hash[:2],
+                                content_hash[2:4],
+                                content_hash[4:6],
+                                content_hash)
 
     def upgrade(self):
         """Run maintenance on the store."""
         pass
 
-    def archive_file(self, filename, meta, move=False):
-        """Import the given file into the archive.
-
-        Return an updated metadata object. If ``move`` is given, the
-        original file will not exist afterwards.
-        """
+    def archive_file(self, file_path, content_hash=None):
+        """Import the given file into the archive."""
         pass
 
-    def load_file(self, meta):
+    def load_file(self, content_hash, file_name=None):
         pass
 
-    def cleanup_file(self, meta):
+    def cleanup_file(self, content_hash):
         pass
 
-    def generate_url(self, meta):
+    def generate_url(self, content_hash, file_name=None, mime_type=None):
         return

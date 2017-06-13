@@ -8,7 +8,6 @@ from elasticsearch import TransportError
 from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 
 from aleph.core import get_config, app_title, app_url, schemata
-from aleph.metadata import Metadata
 from aleph.search import QueryState
 from aleph.search import documents_query, entities_query
 from aleph.schema import SchemaValidationException
@@ -68,7 +67,15 @@ def metadata():
             'url': six.text_type(app_url),
             'samples': get_config('SAMPLE_SEARCHES')
         },
-        'fields': Metadata.facets(),
+        'fields': {
+            'countries': 'Countries',
+            'languages': 'Languages',
+            # 'domains': 'Domains',
+            'keywords': 'Keywords',
+            'phone_numbers': 'Phone numbers',
+            'emails': 'E-mail addresses',
+            'mime_type': 'Content type'
+        },
         'categories': get_config('COLLECTION_CATEGORIES', {}),
         'countries': COUNTRY_NAMES,
         'languages': LANGUAGE_NAMES,

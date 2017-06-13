@@ -1,4 +1,3 @@
-import os
 import logging
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
@@ -13,6 +12,7 @@ from aleph.search import QueryState
 from aleph.search import records_query, execute_records_query
 from aleph.search.util import next_params
 from aleph.views.util import get_document
+from aleph.util import PDF_MIME
 
 
 log = logging.getLogger(__name__)
@@ -38,20 +38,13 @@ def view(document_id):
     enable_cache()
     data = doc.to_dict()
     log_event(request, document_id=doc.id)
-    data['data_url'] = archive.generate_url(doc.meta)
+    data['data_url'] = archive.generate_url(doc.content_hash)
     if data['data_url'] is None:
         data['data_url'] = url_for('documents_api.file',
                                    document_id=document_id)
-    if doc.meta.is_pdf:
-        data['pdf_url'] = data['data_url']
-    else:
-        try:
-            data['pdf_url'] = archive.generate_url(doc.meta.pdf)
-        except Exception as ex:
-            log.info('Could not generate PDF url: %r', ex)
-        if data.get('pdf_url') is None:
-            data['pdf_url'] = url_for('documents_api.pdf',
-                                      document_id=document_id)
+    if doc.pdf_version:
+        data['pdf_url'] = url_for('documents_api.pdf',
+                                  document_id=document_id)
     return jsonify(data)
 
 
@@ -84,18 +77,21 @@ def file(document_id):
     document = get_document(document_id)
     enable_cache(server_side=True)
     log_event(request, document_id=document.id)
-    url = archive.generate_url(document.meta)
+    url = archive.generate_url(document.content_hash,
+                               file_name=document.file_name,
+                               mime_type=document.mime_type)
     if url is not None:
         return redirect(url)
 
-    local_path = archive.load_file(document.meta)
-    if not os.path.isfile(local_path):
+    local_path = archive.load_file(document.content_hash,
+                                   file_name=document.file_name)
+    if local_path is None:
         raise NotFound("File does not exist.")
 
     fh = open(local_path, 'rb')
     return send_file(fh, as_attachment=True,
-                     attachment_filename=document.meta.file_name,
-                     mimetype=document.meta.mime_type)
+                     attachment_filename=document.file_name,
+                     mimetype=document.mime_type)
 
 
 @blueprint.route('/api/1/documents/<int:document_id>/pdf')
@@ -105,17 +101,15 @@ def pdf(document_id):
     log_event(request, document_id=document.id)
     if document.type != Document.TYPE_TEXT:
         raise BadRequest("PDF is only available for text documents")
-    pdf = document.meta.pdf
-    url = archive.generate_url(pdf)
+    url = archive.generate_url(document.pdf_version, mime_type=PDF_MIME)
     if url is not None:
         return redirect(url)
 
-    try:
-        local_path = archive.load_file(pdf)
-        fh = open(local_path, 'rb')
-    except Exception as ex:
-        raise NotFound("Missing PDF file: %r" % ex)
-    return send_file(fh, mimetype=pdf.mime_type)
+    path = archive.load_file(document.pdf_version,
+                             file_name=document.file_name)
+    if path is None:
+        raise NotFound("Missing PDF file.")
+    return send_file(open(path, 'rb'), mimetype=PDF_MIME)
 
 
 @blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>')
@@ -123,7 +117,7 @@ def table(document_id, table_id):
     document = get_document(document_id)
     enable_cache(vary_user=True)
     try:
-        return jsonify(document.meta.tables[table_id])
+        return jsonify(document.tables[table_id])
     except IndexError:
         raise NotFound("No such table: %s" % table_id)
 

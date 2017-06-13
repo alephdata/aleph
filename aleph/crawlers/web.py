@@ -53,18 +53,17 @@ class WebCrawler(DocumentCrawler):
         if self.skip_incremental(page.url):
             log.info("Skip: %r", page.url)
 
-        meta = self.make_meta(self.META.copy())
+        document = self.create_document(foreign_id=page.url)
         if page.is_html:
             data = self.get_content(page)
             file_path = self.save_data(data)
         else:
             file_path = self.save_response(page.response)
 
-        meta.source_url = page.url
-        meta.foreign_id = page.url
+        document.source_url = page.url
         if page.file_name and len(page.file_name.strip()) > 2:
-            meta.file_name = page.file_name
-        meta.mime_type = page.mime_type
-        meta.headers = page.response.headers
+            document.file_name = page.file_name
+        document.mime_type = page.mime_type
+        document.headers = page.response.headers
         log.info("Importing %r", page.url)
-        self.emit_file(meta, file_path, move=True)
+        self.emit_file(document, file_path)

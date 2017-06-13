@@ -9,13 +9,11 @@ class TDocumentCrawler(DocumentCrawler):
     COLLECTION_ID = 'test'
 
     def crawl(self):
-        meta = self.make_meta({
-            'title': 'hello, kitty',
-            'foreign_id': self.test_path
-        })
+        doc = self.create_document(foreign_id=self.test_path)
+        doc.title = 'hello, kitty'
         if self.skip_incremental(self.test_path):
             return
-        self.emit_file(meta, self.test_path)
+        self.emit_file(doc, self.test_path)
 
 
 class CrawlerTestCase(TestCase):
@@ -35,8 +33,7 @@ class CrawlerTestCase(TestCase):
         states = Document.all().all()
         assert len(states) == 1, len(states)
         demo = states[0]
-        assert 'kitty' in demo.meta.title, demo.meta
-        assert 'demo.pdf' in demo.meta.source_path, demo.meta
+        assert 'kitty' in demo.title, demo.meta
 
         coll = Collection.by_foreign_id('test')
         assert coll is not None, coll

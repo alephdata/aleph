@@ -6,10 +6,9 @@ log = logging.getLogger(__name__)
 
 class Analyzer(object):
 
-    def __init__(self, document, meta):
+    def __init__(self, document):
         self.disabled = False
         self.document = document
-        self.meta = meta
 
     def prepare(self):
         pass

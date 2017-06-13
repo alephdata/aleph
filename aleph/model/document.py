@@ -2,23 +2,23 @@ import logging
 from datetime import datetime, timedelta
 from normality import ascii_text
 from sqlalchemy import func
-from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db
-from aleph.metadata import Metadata
+from aleph.model.metadata import Metadata
 from aleph.model.validate import validate
 from aleph.model.collection import Collection
 from aleph.model.reference import Reference
 from aleph.model.common import DatedModel
 from aleph.model.document_record import DocumentRecord
+from aleph.model.document_tag import DocumentTag
 from aleph.text import index_form
 
 log = logging.getLogger(__name__)
 
 
-class Document(db.Model, DatedModel):
+class Document(db.Model, DatedModel, Metadata):
     _schema = 'document.json#'
 
     SCHEMA = 'Document'
@@ -32,65 +32,58 @@ class Document(db.Model, DatedModel):
     STATUS_FAIL = 'fail'
 
     id = db.Column(db.BigInteger, primary_key=True)
-    content_hash = db.Column(db.Unicode(65), nullable=False, index=True)
+    parent_id = db.Column(db.BigInteger, nullable=True)
+    content_hash = db.Column(db.Unicode(65), nullable=True, index=True)
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)
     status = db.Column(db.Unicode(10), nullable=True, index=True)
-    _meta = db.Column('meta', JSONB)
+    meta = db.Column(JSONB, default={})
 
     crawler = db.Column(db.Unicode(), index=True)
     crawler_run = db.Column(db.Unicode())
     error_type = db.Column(db.Unicode(), nullable=True)
     error_message = db.Column(db.Unicode(), nullable=True)
-    error_details = db.Column(db.Unicode(), nullable=True)
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa
 
-    @property
-    def title(self):
-        return self.meta.title
-
-    @hybrid_property
-    def meta(self):
-        self._meta = self._meta or {}
-        self._meta['content_hash'] = self.content_hash
-        self._meta['foreign_id'] = self.foreign_id
-        self._meta['crawler'] = self.crawler
-        self._meta['crawler_run'] = self.crawler_run
-        return Metadata.from_data(self._meta or {})
-
-    @meta.setter
-    def meta(self, meta):
-        if isinstance(meta, Metadata):
-            self.content_hash = meta.content_hash
-            self.foreign_id = meta.foreign_id
-            self.crawler = meta.crawler
-            self.crawler_run = meta.crawler_run
-            meta = meta.to_attr_dict()
-        self._meta = meta
-        flag_modified(self, '_meta')
+    def __init__(self, **kw):
+        self.meta = {}
+        super(Document, self).__init__(**kw)
 
     def update(self, data):
         validate(data, self._schema)
-        meta = self.meta
-        meta.update(data, safe=True)
-        self.meta = meta
+        self.title = data.get('title')
+        self.summary = data.get('summary')
+        self.languages = data.get('languages')
+        self.countries = data.get('countries')
         db.session.add(self)
+
+    def update_meta(self):
+        flag_modified(self, 'meta')
 
     def delete_records(self):
         pq = db.session.query(DocumentRecord)
         pq = pq.filter(DocumentRecord.document_id == self.id)
-        pq.delete(synchronize_session='fetch')
-        db.session.refresh(self)
+        # pq.delete(synchronize_session='fetch')
+        pq.delete()
+        db.session.flush()
+
+    def delete_tags(self):
+        pq = db.session.query(DocumentTag)
+        pq = pq.filter(DocumentTag.document_id == self.id)
+        # pq.delete(synchronize_session='fetch')
+        pq.delete()
+        db.session.flush()
 
     def delete_references(self, origin=None):
         pq = db.session.query(Reference)
         pq = pq.filter(Reference.document_id == self.id)
         if origin is not None:
             pq = pq.filter(Reference.origin == origin)
-        pq.delete(synchronize_session='fetch')
-        db.session.refresh(self)
+        # pq.delete(synchronize_session='fetch')
+        pq.delete()
+        db.session.flush()
 
     def delete(self, deleted_at=None):
         self.delete_references()
@@ -151,58 +144,68 @@ class Document(db.Model, DatedModel):
             stats[status] = count
         return stats
 
-    def _add_to_dict(self, data):
+    def to_dict(self):
+        data = self.to_meta_dict()
         try:
-            from flask import request
-            source_id = self.collection_id
-            data['public'] = request.authz.collection_public(source_id)
+            from flask import request  # noqa
+            data['public'] = request.authz.collection_public(self.collection_id)  # noqa
         except:
             data['public'] = None
         data.update({
             'id': self.id,
             'type': self.type,
             'status': self.status,
+            'parent_id': self.parent_id,
+            'foreign_id': self.foreign_id,
+            'content_hash': self.content_hash,
+            'crawler': self.crawler,
+            'crawler_run': self.crawler_run,
             'error_type': self.error_type,
             'error_message': self.error_message,
-            'error_details': self.error_details,
             'collection_id': self.collection_id,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         })
         return data
 
-    def to_dict(self):
-        data = self.meta.to_dict()
-        return self._add_to_dict(data)
-
     def to_index_dict(self):
-        data = self.meta.to_index_dict()
+        data = self.to_dict()
         data['text'] = index_form(self.text_parts())
         data['schema'] = self.SCHEMA
         data['schemata'] = [self.SCHEMA]
         data['name_sort'] = ascii_text(data.get('title'))
         data['title_latin'] = ascii_text(data.get('title'))
         data['summary_latin'] = ascii_text(data.get('summary'))
-        return self._add_to_dict(data)
+        data.pop('tables')
+        return data
 
     @classmethod
-    def by_meta(cls, collection_id, meta):
+    def by_keys(cls, parent_id=None, collection_id=None, foreign_id=None,
+                content_hash=None):
+        """Try and find a document by various criteria."""
         q = cls.all()
-        q = q.filter(cls.collection_id == collection_id)
-        if meta.foreign_id:
-            q = q.filter(cls.foreign_id == meta.foreign_id)
-        elif meta.content_hash:
-            q = q.filter(cls.content_hash == meta.content_hash)
+        q = q.filter(Document.collection_id == collection_id)
+
+        if parent_id is not None:
+            q = q.filter(Document.parent_id == parent_id)
+
+        if foreign_id is not None:
+            q = q.filter(Document.foreign_id == foreign_id)
+        elif content_hash is not None:
+            q = q.filter(Document.content_hash == content_hash)
         else:
-            raise ValueError("No unique criterion for document: %s" % meta)
+            raise ValueError("No unique criterion for document.")
 
         document = q.first()
         if document is None:
-            document = Document()
+            document = cls()
+            document.type = cls.TYPE_OTHER
             document.collection_id = collection_id
-            document.foreign_id = meta.foreign_id
-            document.content_hash = meta.content_hash
-        document.meta = meta
+            document.parent_id = parent_id
+            document.foreign_id = foreign_id
+            document.content_hash = content_hash
+            document.status = document.STATUS_PENDING
+            db.session.add(document)
         return document
 
     def __repr__(self):

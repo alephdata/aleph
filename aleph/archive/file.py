@@ -1,7 +1,12 @@
 import os
 import shutil
+import logging
+from ingestors.util import make_filename
 
 from aleph.archive.archive import Archive
+from aleph.util import checksum
+
+log = logging.getLogger(__name__)
 
 
 class FileArchive(Archive):
@@ -10,29 +15,36 @@ class FileArchive(Archive):
         self.path = config.get('ARCHIVE_PATH')
         if self.path is None:
             raise ValueError('No ARCHIVE_PATH is set.')
+        log.info("Local file system path: %s", self.path)
 
-    def _get_local_path(self, meta):
-        return os.path.join(self.path, self._get_file_path(meta))
-
-    def archive_file(self, filename, meta, move=False):
-        """ Import the given file into the archive, and return an
-        updated metadata object. If ``move`` is given, the original
-        file will not exist afterwards. """
-        meta = self._update_metadata(filename, meta)
-        path = self._get_local_path(meta)
-        if os.path.isfile(path):
-            if move:  # really?
-                os.unlink(filename)
-            return meta
+    def _locate_key(self, content_hash):
+        prefix = self._get_prefix(content_hash)
+        if prefix is None:
+            return
+        path = os.path.join(self.path, prefix)
         try:
-            os.makedirs(os.path.dirname(path))
+            for file_name in os.listdir(path):
+                return os.path.join(path, file_name)
+        except OSError:
+            return
+
+    def archive_file(self, file_path, content_hash=None):
+        """Import the given file into the archive."""
+        if content_hash is None:
+            content_hash = checksum(file_path)
+
+        if self._locate_key(content_hash):
+            return content_hash
+
+        archive_path = os.path.join(self.path, self._get_prefix(content_hash))
+        try:
+            os.makedirs(archive_path)
         except:
             pass
-        if move:
-            shutil.move(filename, path)
-        else:
-            shutil.copy(filename, path)
-        return meta
+        file_name = make_filename(file_path, default='data')
+        archive_path = os.path.join(archive_path, file_name)
+        shutil.copy(file_path, archive_path)
+        return content_hash
 
-    def load_file(self, meta):
-        return self._get_local_path(meta)
+    def load_file(self, content_hash, file_name=None):
+        return self._locate_key(content_hash)

@@ -1,5 +1,7 @@
 # coding: utf-8
+import os
 import logging
+from normality import slugify
 
 from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
@@ -9,15 +11,14 @@ from aleph.core import create_app, archive, datasets
 from aleph.model import db, upgrade_db, Collection, Document, Entity
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
-from aleph.ingest import reingest_collection
+from aleph.ingest import reingest_collection, ingest_document
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document_id, delete_dataset
 from aleph.logic import reindex_entities, delete_collection, analyze_collection
 from aleph.logic import load_dataset, update_entity_full, delete_pending
+from aleph.logic import update_collection
 from aleph.logic.alerts import check_alerts
 from aleph.ext import get_crawlers
-from aleph.crawlers.directory import DirectoryCrawler
-from aleph.crawlers.metafolder import MetaFolderCrawler
 
 
 log = logging.getLogger('aleph')
@@ -62,22 +63,31 @@ def crawl(name):
 @manager.option('-f', '--foreign_id', dest='foreign_id')
 def crawldir(directory, language=None, country=None, foreign_id=None):
     """Crawl the given directory."""
-    log.info('Crawling %r...', directory)
-    meta = {}
+    if directory is None or not os.path.exists(directory):
+        log.error("Invalid directory: %r", directory)
+        return
+    directory = os.path.abspath(os.path.normpath(directory))
+
+    if foreign_id is None:
+        foreign_id = 'directory:%s' % slugify(directory)
+    collection = Collection.by_foreign_id(foreign_id)
+    if collection is None:
+        collection = Collection.create({
+            'foreign_id': foreign_id,
+            'label': directory,
+            'managed': True
+        })
+        db.session.commit()
+        update_collection(collection)
+
+    log.info('Crawling %r to %r...', directory, collection.foreign_id)
+    document = Document.by_keys(collection_id=collection.id,
+                                foreign_id=directory)
     if language is not None:
-        meta['languages'] = [language]
+        document.add_language(language)
     if country is not None:
-        meta['countries'] = [country]
-    crawler = DirectoryCrawler()
-    crawler.execute(directory=directory, meta=meta, foreign_id=foreign_id)
-
-
-@manager.command
-def metafolder(folder):
-    """Crawl the given metafolder path."""
-    log.info('Importing %r...', folder)
-    MetaFolderCrawler().execute(folder=folder)
-    db.session.commit()
+        document.add_country(country)
+    ingest_document(document, directory)
 
 
 @manager.command

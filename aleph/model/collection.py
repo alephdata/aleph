@@ -46,6 +46,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
         self.managed = data.get('managed')
         self.private = data.get('private')
         self.countries = data.pop('countries', [])
+        self.touch()
 
     def touch(self):
         self.updated_at = datetime.utcnow()
@@ -122,6 +123,13 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
             except:
                 self._is_public = None
         return self._is_public
+
+    @property
+    def roles(self):
+        q = db.session.query(Permission.role_id)
+        q = q.filter(Permission.collection_id == self.id)  # noqa
+        q = q.filter(Permission.read == True)  # noqa
+        return [e.role_id for e in q.all()]
 
     def get_document_count(self):
         return self.documents.count()

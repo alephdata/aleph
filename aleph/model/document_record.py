@@ -8,11 +8,14 @@ log = logging.getLogger(__name__)
 
 
 class DocumentRecord(db.Model):
+    """A record reflects a row or page of a document."""
+
     id = db.Column(db.BigInteger, primary_key=True)
     sheet = db.Column(db.Integer, nullable=True)
     index = db.Column(db.Integer, nullable=True, index=True)
     text = db.Column(db.Unicode, nullable=True)
     data = db.Column(JSONB, nullable=True)
+
     document_id = db.Column(db.Integer(), db.ForeignKey('document.id'), index=True)  # noqa
     document = db.relationship("Document", backref=db.backref('records', cascade='all, delete-orphan'))  # noqa
 

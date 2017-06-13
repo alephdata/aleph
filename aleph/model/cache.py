@@ -1,37 +1,27 @@
-from datetime import datetime
-from hashlib import sha1
-
 from aleph.core import db
 
 
 class Cache(db.Model):
     """Store OCR computation results."""
+    __tablename__ = 'cache'
 
     id = db.Column(db.BigInteger, primary_key=True)
     key = db.Column(db.Unicode, index=True)
     value = db.Column(db.Unicode)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     @classmethod
-    def get_ocr_key(cls, data, languages):
-        key = sha1(data)
-        key.update(languages)
-        return key.hexdigest()
-
-    @classmethod
-    def get_ocr(cls, data, languages):
+    def get_cache(cls, key):
         q = db.session.query(cls.value)
-        q = q.filter_by(key=cls.get_ocr_key(data, languages))
-        q = q.order_by(cls.created_at.desc())
+        q = q.filter_by(key=key)
         cobj = q.first()
         if cobj is not None:
             return cobj.value
 
     @classmethod
-    def set_ocr(cls, data, languages, value):
+    def set_cache(cls, key, value):
         session = db.sessionmaker(bind=db.engine)()
         cobj = cls()
-        cobj.key = cls.get_ocr_key(data, languages)
+        cobj.key = key
         cobj.value = value
         session.add(cobj)
         session.commit()

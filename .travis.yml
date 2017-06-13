@@ -9,7 +9,7 @@ services:
   - postgresql
   - rabbitmq
 addons:
-  postgresql: "9.6"
+  postgresql: "9.5"
   apt:
     packages:
       - python-software-properties
@@ -31,15 +31,16 @@ env:
     - OAUTH_SECRET=fake
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y tesseract-ocr-eng readpst
+  - sudo apt-get install -y tesseract-ocr-eng readpst libmagic1
   - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.4.0.deb && sudo dpkg -i --force-confnew elasticsearch-5.4.0.deb && sudo service elasticsearch start
-  - wget --quiet -O /tmp/wkhtmltox.tar.xv http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
+  - wget --quiet -O /tmp/wkhtmltox.tar.xv https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
   - tar -xf /tmp/wkhtmltox.tar.xv -C $TRAVIS_BUILD_DIR
 install:
   - pip install --upgrade setuptools pip
   - pip install -r requirements.txt
   - pip install -e .
-  - pip install psycopg2 coveralls
+  - pip install --upgrade git+https://github.com/alephdata/ingestors.git#egg=ingestors
+  - pip install coveralls
   - nvm install $NODE_VERSION
   - nvm use $NODE_VERSION
   - npm install .

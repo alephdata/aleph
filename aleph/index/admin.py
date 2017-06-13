@@ -21,7 +21,7 @@ def init_search():
             TYPE_LINK: LINK_MAPPING,
             TYPE_LEAD: LEAD_MAPPING
         }
-    }, ignore=[404])
+    }, ignore=[404, 400])
     es.indices.open(index=es_index, ignore=[400, 404])
 
 

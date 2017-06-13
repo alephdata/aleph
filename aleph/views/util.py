@@ -60,7 +60,7 @@ def make_excel(result_iter, fields):
     for data in result_iter:
         col = 0
         for field in fields:
-            val = data.get(field, '')
+            val = data.get(field) or ''
             if isinstance(val, (list, tuple, set)):
                 val = ', '.join(val)
             worksheet.write_string(row, col, val)

@@ -1,13 +1,14 @@
 import os
-import six
+import shutil
 import logging
 import tempfile
 
 from boto3.session import Session
 from botocore.exceptions import ClientError
+from ingestors.util import make_filename
 
 from aleph.archive.archive import Archive
-from aleph.util import make_filename
+from aleph.util import checksum
 
 log = logging.getLogger(__name__)
 
@@ -15,7 +16,7 @@ log = logging.getLogger(__name__)
 class S3Archive(Archive):  # pragma: no cover
 
     def __init__(self, config):
-        self.local_base = six.text_type(tempfile.gettempdir())
+        self.local_base = tempfile.gettempdir()
         self.key_id = config.get('ARCHIVE_AWS_KEY_ID')
         self.secret = config.get('ARCHIVE_AWS_SECRET')
         self.region = config.get('ARCHIVE_AWS_REGION', 'eu-west-1')
@@ -57,52 +58,57 @@ class S3Archive(Archive):  # pragma: no cover
         }
         cors.put(CORSConfiguration=config)
 
-    def _locate_key(self, meta):
-        key = self._get_file_path(meta)
-        prefix = os.path.dirname(key)
+    def _locate_key(self, content_hash):
+        prefix = self._get_prefix(content_hash)
+        if prefix is None:
+            return
         for obj in self.bucket.objects.filter(MaxKeys=1, Prefix=prefix):
             return obj
 
-    def archive_file(self, filename, meta, move=False):
-        meta = self._update_metadata(filename, meta)
-        path = self._get_file_path(meta)
-        obj = self._locate_key(meta)
+    def archive_file(self, file_path, content_hash=None):
+        if content_hash is None:
+            content_hash = checksum(file_path)
+
+        obj = self._locate_key(content_hash)
         if obj is None:
-            self.bucket.upload_file(filename, path)
+            path = os.path.join(self._get_prefix(content_hash), 'data')
+            self.bucket.upload_file(file_path, path)
 
-        if move:  # really?
-            os.unlink(filename)
-        return meta
+        return content_hash
 
-    def _get_local_mirror(self, meta):
-        base = self._get_file_path(meta).split(os.path.sep)
-        file_name = '-'.join((base[-2], base[-1]))
-        return os.path.join(self.local_base, make_filename(file_name))
+    def _get_local_prefix(self, content_hash):
+        return os.path.join(self.local_base, content_hash)
 
-    def load_file(self, meta):
-        path = self._get_local_mirror(meta)
-        obj = self._locate_key(meta)
+    def load_file(self, content_hash, file_name=None):
+        obj = self._locate_key(content_hash)
         if obj is not None:
+            path = self._get_local_prefix(content_hash)
+            try:
+                os.makedirs(path)
+            except:
+                pass
+            file_name = make_filename(file_name, default='data')
+            path = os.path.join(path, file_name)
             self.bucket.download_file(obj.key, path)
             return path
 
-    def cleanup_file(self, meta):
-        path = self._get_local_mirror(meta)
-        if os.path.isfile(path):
-            os.unlink(path)
+    def cleanup_file(self, content_hash):
+        path = self._get_local_prefix(content_hash)
+        if os.path.isdir(path):
+            shutil.rmtree(path)
 
-    def generate_url(self, meta):
-        obj = self._locate_key(meta)
+    def generate_url(self, content_hash, file_name=None, mime_type=None):
+        obj = self._locate_key(content_hash)
         if obj is None:
             return
         params = {
             'Bucket': self.bucket_name,
             'Key': obj.key
         }
-        if meta.mime_type:
-            params['ResponseContentType'] = meta.mime_type
-        if meta.file_name:
-            disposition = 'inline; filename=%s' % meta.file_name
+        if mime_type:
+            params['ResponseContentType'] = mime_type
+        if file_name:
+            disposition = 'inline; filename=%s' % file_name
             params['ResponseContentDisposition'] = disposition
         return self.client.generate_presigned_url('get_object',
                                                   Params=params,
