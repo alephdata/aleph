@@ -15,6 +15,7 @@ RUN npm --quiet --silent install --prefix / /tmp
 COPY . /aleph
 WORKDIR /aleph
 RUN pip install -q -e .
+RUN pip install --upgrade git+https://github.com/alephdata/ingestors.git#egg=ingestors
 RUN touch aleph/static/style/_custom.scss && \
     /node_modules/webpack/bin/webpack.js --env.prod
 
