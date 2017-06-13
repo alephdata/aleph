@@ -47,8 +47,7 @@ fingerprints>=0.3.2
 normality>=0.4.2
 countrynames>=1.4
 dalet>=1.1
-
-ingestors>=0.3.4
+ingestors>=0.3.5
 
 # Python 3 backports
 functools32>=3.2

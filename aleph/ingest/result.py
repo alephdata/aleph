@@ -5,6 +5,7 @@ from normality import stringify
 
 from aleph.core import db
 from aleph.model import Document, DocumentRecord
+from aleph.model import DocumentTag, DocumentTagCollector
 
 log = logging.getLogger(__name__)
 
@@ -53,6 +54,9 @@ class DocumentResult(Result):
         self.document.type = Document.TYPE_TABULAR
         self.document.insert_records(0, self._emit_iterator_rows(iterator))
 
+    def emit_pdf_alternative(self, file_path):
+        self.pdf_hash = self.manager.archive.archive_file(file_path)
+
     def update(self):
         """Apply the outcome of the result to the document."""
         if self.status == self.STATUS_SUCCESS:
@@ -77,5 +81,9 @@ class DocumentResult(Result):
         self.document.pdf_version = self.pdf_hash
         self.document.columns = self.columns.keys()
 
-    def emit_pdf_alternative(self, file_path):
-        self.pdf_hash = self.manager.archive.archive_file(file_path)
+        collector = DocumentTagCollector(self.document, 'ingestors')
+        for entity in self.entities:
+            collector.emit(entity, DocumentTag.TYPE_PERSON)
+        for email in self.emails:
+            collector.emit(email, DocumentTag.TYPE_EMAIL)
+        collector.save()

@@ -14,15 +14,12 @@ down_revision = '6d68a2c945cc'
 
 def upgrade():
     op.create_table('document_tag',
-                    sa.Column('created_at', sa.DateTime(), nullable=True),
-                    sa.Column('updated_at', sa.DateTime(), nullable=True),
                     sa.Column('id', sa.BigInteger(), nullable=False),
                     sa.Column('origin', sa.Unicode(length=255), nullable=False),  # noqa
                     sa.Column('type', sa.Unicode(length=16), nullable=False),
                     sa.Column('weight', sa.Integer(), nullable=True),
                     sa.Column('key', sa.Unicode(length=1024), nullable=False),
                     sa.Column('text', sa.Unicode(length=1024), nullable=True),
-                    sa.Column('display_text', sa.Unicode(length=1024), nullable=False),  # noqa
                     sa.Column('document_id', sa.Integer(), nullable=True),
                     sa.ForeignKeyConstraint(['document_id'], ['document.id'], ),  # noqa
                     sa.PrimaryKeyConstraint('id')

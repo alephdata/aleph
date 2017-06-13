@@ -306,7 +306,7 @@ class Metadata(object):
         self.meta['headers'] = {}
         if isinstance(headers, Mapping):
             for key, value in headers.items():
-                self._headers[key] = string_value(value)
+                self.meta['headers'][key] = string_value(value)
             self.update_meta()
 
     @property

@@ -13,7 +13,7 @@ from aleph.model.cache import Cache  # noqa
 from aleph.model.event_log import EventLog  # noqa
 from aleph.model.document import Document  # noqa
 from aleph.model.document_record import DocumentRecord  # noqa
-from aleph.model.document_tag import DocumentTag  # noqa
+from aleph.model.document_tag import DocumentTag, DocumentTagCollector  # noqa
 
 log = logging.getLogger(__name__)
 
