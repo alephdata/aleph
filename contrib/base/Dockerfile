@@ -35,7 +35,7 @@ RUN locale-gen 'en_GB' 'en_GB.ISO-8859-15' 'en_GB.UTF-8' 'en_US.UTF-8' 'C.UTF-8'
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # WebKit HTML to X install since the one that comes with distros is hellishly outdated.
-RUN curl -s http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz > /tmp/wkhtmltox.tar.xv \
+RUN curl -s /tmp/wkhtmltox.tar.xv https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz > /tmp/wkhtmltox.tar.xv \
     && tar -xf /tmp/wkhtmltox.tar.xv -C /opt && rm -f /tmp/wkhtmltox.tar.xv
 ENV WKHTMLTOPDF_BIN /opt/wkhtmltox/bin/wkhtmltopdf
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
