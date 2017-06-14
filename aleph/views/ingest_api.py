@@ -35,7 +35,7 @@ def ingest_upload(collection_id):
         sec_fn = os.path.join(upload_folder, secure_filename(storage.filename))
         storage.save(sec_fn)
         content_hash = checksum(sec_fn)
-        document = Document.by_keys(collection_id=collection.id,
+        document = Document.by_keys(collection=collection,
                                     content_hash=content_hash)
         document.crawler = 'user_upload:%s' % request.authz.role.id
         document.crawler_run = crawler_run
