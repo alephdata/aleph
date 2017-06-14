@@ -143,6 +143,7 @@ ENTITY_MAPPING = {
         "roles": {"type": "long", "index": "not_analyzed"},
         "foreign_ids": {"type": "string", "index": "not_analyzed"},
         "doc_count": {"type": "long", "index": "not_analyzed"},
+        "$physical": {"type": "boolean", "index": "not_analyzed"},
         "fingerprints": {"type": "string", "index": "not_analyzed"},
         "names": {"type": "string", "index": "not_analyzed"},
         "identifiers": {"type": "string", "index": "not_analyzed"},

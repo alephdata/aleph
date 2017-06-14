@@ -192,6 +192,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
     def to_index_dict(self):
         entity = self.to_dict()
+        entity['$physical'] = True
         entity['properties'] = {'name': [self.name]}
         for k, v in self.data.items():
             v = ensure_list(v)
