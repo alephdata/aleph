@@ -20,6 +20,8 @@ class IngestTestCase(TestCase):
         csv_path = self.get_fixture_path('experts.csv')
         document = Document.by_keys(collection_id=self.collection.id,
                                     foreign_id='experts.csv')
+        db.session.commit()
+        db.session.refresh(document)
         ingest_document(document, csv_path)
         assert Document.all().count() == 1, Document.all().count()
         records = db.session.query(DocumentRecord).all()
@@ -38,6 +40,8 @@ class IngestTestCase(TestCase):
         pdf_path = self.get_fixture_path('demo.pdf')
         document = Document.by_keys(collection_id=self.collection.id,
                                     foreign_id='demo.pdf')
+        db.session.commit()
+        db.session.refresh(document)
         ingest_document(document, pdf_path)
         assert Document.all().count() == 1, Document.all().count()
 
@@ -45,5 +49,7 @@ class IngestTestCase(TestCase):
         samples_path = self.get_fixture_path('samples')
         document = Document.by_keys(collection_id=self.collection.id,
                                     foreign_id='samples')
+        db.session.commit()
+        db.session.refresh(document)
         ingest_document(document, samples_path)
         assert Document.all().count() == 5, Document.all().count()
