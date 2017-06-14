@@ -5,7 +5,8 @@ import requests
 from flask import current_app
 
 from aleph.core import db, archive, celery
-# from aleph.core import WORKER_QUEUE, WORKER_ROUTING_KEY
+from aleph.core import USER_QUEUE, USER_ROUTING_KEY
+from aleph.core import WORKER_QUEUE, WORKER_ROUTING_KEY
 from aleph.model import Document
 from aleph.ingest.manager import DocumentManager
 from aleph.util import make_tempfile, remove_tempfile
@@ -71,7 +72,7 @@ def ingest_url(self, document_id, url):
         remove_tempfile(tmp_path)
 
 
-def ingest_document(document, file_path):
+def ingest_document(document, file_path, user_queue=False):
     """Given a stub document and file path, extract information.
     This does not attempt to infer metadata such as a file name."""
     document.status = Document.STATUS_PENDING
@@ -83,11 +84,13 @@ def ingest_document(document, file_path):
                                   content_hash=document.content_hash)
         document.content_hash = ch or document.content_hash
         db.session.commit()
-        ingest.delay(document.id)
+        queue = USER_QUEUE if user_queue else WORKER_QUEUE
+        routing_key = USER_ROUTING_KEY if user_queue else WORKER_ROUTING_KEY
+        ingest.apply_async([document.id], queue=queue, routing_key=routing_key)
 
 
 @celery.task()
-def ingest(document_id):
+def ingest(document_id, user_queue=False):
     """Process a given document by extracting its contents.
     This may include creating or updating child documents."""
     document = Document.by_id(document_id)
@@ -95,7 +98,7 @@ def ingest(document_id):
         log.error("Could not find document: %s", document_id)
         return
 
-    get_manager().ingest_document(document)
+    get_manager().ingest_document(document, user_queue=user_queue)
 
 
 def reingest_collection(collection):

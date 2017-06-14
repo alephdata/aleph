@@ -13,8 +13,9 @@ log = logging.getLogger(__name__)
 class DocumentResult(Result):
     """Wrapper to link a Document to an ingestor result object."""
 
-    def __init__(self, manager, document, file_path=None):
+    def __init__(self, manager, document, file_path=None, user_queue=False):
         self.manager = manager
+        self.user_queue = user_queue
         self.document = document
         self.pdf_hash = document.pdf_version
         self.columns = OrderedDict()

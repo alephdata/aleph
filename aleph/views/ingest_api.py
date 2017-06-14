@@ -6,7 +6,6 @@ from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify
 
 from aleph.core import upload_folder
-# , USER_QUEUE, USER_ROUTING_KEY
 from aleph.events import log_event
 from aleph.ingest import ingest_document
 from aleph.model import Collection, Document
@@ -50,7 +49,7 @@ def ingest_upload(collection_id):
         except Exception as ex:
             raise BadRequest(unicode(ex))
 
-        ingest_document(document, sec_fn)
+        ingest_document(document, sec_fn, user_queue=True)
         os.unlink(sec_fn)
         documents.append(document)
     return jsonify({'status': 'ok', 'documents': documents})
