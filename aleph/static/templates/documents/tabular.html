@@ -36,13 +36,14 @@
         </table>
       </div>
       <div class="bottom-pager">
-          <div class="pull-right">
-            <response-pager response="records" load="loadOffset(offset)"></response-pager>
-          </div>
-          <div class="total">
-            {{::records.total | number}} rows found.
-          </div>
+        <div class="pull-right">
+          <response-pager response="records" load="loadOffset(offset)"></response-pager>
         </div>
+        <div class="total">
+          {{::records.total | number}} rows found.
+        </div>
+      </div>
+      <document-children children="children" doc="doc"></document-children>
     </div>
 
     <div class="col-md-4">

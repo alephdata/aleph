@@ -1,10 +1,11 @@
 import aleph from '../aleph';
 import {ensureArray, filterFloat} from '../util';
 
-aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Authz', 'Title', 'History', 'data',
-    function($scope, $location, $http, $sce, $sanitize, $filter, Authz, Title, History, data) {
+aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Authz', 'Title', 'History', 'data', 'children',
+    function($scope, $location, $http, $sce, $sanitize, $filter, Authz, Title, History, data, children) {
 
   $scope.doc = data.doc;
+  $scope.children = children;
   $scope.table = data.table;
   $scope.records = data.records;
   $scope.moreLoading = false;
@@ -39,7 +40,7 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
   };
 
   $scope.openParent = function() {
-    $location.path(Document.getUrl($scope.doc.parent));
+    $location.url(Document.getUrl($scope.doc.parent));
   };
 
   $scope.backToSearch = function() {

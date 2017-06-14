@@ -1,9 +1,10 @@
 import aleph from '../aleph';
 
-aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'History', 'data', 'pages',
-    function($scope, $location, $http, metadata, Authz, Document, Title, History, data, pages) {
+aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'History', 'data', 'pages', 'children',
+    function($scope, $location, $http, metadata, Authz, Document, Title, History, data, pages, children) {
 
   $scope.doc = data.doc;
+  $scope.children = children;
   $scope.pageText = data.page.text;
   $scope.pages = pages;
 
@@ -56,7 +57,7 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
   };
 
   $scope.openParent = function() {
-    $location.path(Document.getUrl($scope.doc.parent));
+    $location.url(Document.getUrl($scope.doc.parent));
   };
 
   $scope.updateTextQuery = function() {

@@ -1,9 +1,10 @@
 import aleph from '../aleph';
 
-aleph.controller('DocumentsViewCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'History', 'doc',
-    function($scope, $location, $http, metadata, Authz, Document, Title, History, doc) {
+aleph.controller('DocumentsViewCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz', 'Document', 'Title', 'History', 'doc', 'children',
+    function($scope, $location, $http, metadata, Authz, Document, Title, History, doc, children) {
 
   $scope.doc = doc;
+  $scope.children = children;
 
   Title.set(doc.title, "documents");
 

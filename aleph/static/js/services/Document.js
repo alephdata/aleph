@@ -21,7 +21,7 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
     state['limit'] = 20;
     state['snippet'] = 140;
     state['facet'] = query.getArray('facet');
-    state['facet'].push('entities');
+    // state['facet'].push('entities');
     if (collectionId) {
       state['filter:collection_id'] = collectionId;
       state['scope'] = 'collection';
@@ -93,6 +93,18 @@ aleph.factory('Document', ['$http', '$q', '$location', '$httpParamSerializer', '
       } else {
         dfd.resolve({});
       }
+      return dfd.promise;
+    },
+    queryChildren: function(parentId, offset) {
+      var dfd = $q.defer(),
+          documentId = parentId,
+          offset = $location.search().children_offset || 0,
+          params = {offset: offset, 'filter:parent_id': documentId};
+      $http.get('/api/1/query', {params: params}).then(function(res) {
+        dfd.resolve(res.data);
+      }, function(err) {
+        dfd.reject(err);
+      });
       return dfd.promise;
     },
     getPage: function(documentId, pageNumber) {

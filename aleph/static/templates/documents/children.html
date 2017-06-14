@@ -1,0 +1,16 @@
+<div class="panel panel-default" ng-if="children.total">
+  <div class="panel-heading">
+    <strong>
+      <i class="fa fa-folder" aria-hidden="true"></i>
+      Child documents ({{children.total | number}})
+    </strong>
+  </div>
+  <table class="table">
+    <tr ng-repeat="child in children.results track by child.id">
+      <td><a ng-href="{{::getUrl(child)}}">{{::child.title}}</a></td>
+    </tr>
+  </table>
+  <div class="pull-right">
+    <response-pager response="children" load="loadOffset(offset)"></response-pager>
+  </div>
+</div>
