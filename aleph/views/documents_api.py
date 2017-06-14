@@ -37,6 +37,8 @@ def view(document_id):
     doc = get_document(document_id)
     enable_cache()
     data = doc.to_dict()
+    if doc.parent is not None:
+        data['parent'] = doc.parent.to_dict()
     log_event(request, document_id=doc.id)
     data['data_url'] = archive.generate_url(doc.content_hash)
     if data['data_url'] is None:

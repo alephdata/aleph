@@ -32,7 +32,6 @@ class Document(db.Model, DatedModel, Metadata):
     STATUS_FAIL = 'fail'
 
     id = db.Column(db.BigInteger, primary_key=True)
-    parent_id = db.Column(db.BigInteger, nullable=True)
     content_hash = db.Column(db.Unicode(65), nullable=True, index=True)
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
     type = db.Column(db.Unicode(10), nullable=False, index=True)
@@ -43,6 +42,9 @@ class Document(db.Model, DatedModel, Metadata):
     crawler_run = db.Column(db.Unicode())
     error_type = db.Column(db.Unicode(), nullable=True)
     error_message = db.Column(db.Unicode(), nullable=True)
+
+    parent_id = db.Column(db.BigInteger, db.ForeignKey('document.id'), nullable=True)  # noqa
+    children = db.relationship('Document', backref=db.backref('parent', uselist=False, remote_side=[id]))  # noqa
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa

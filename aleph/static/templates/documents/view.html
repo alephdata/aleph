@@ -9,7 +9,7 @@
           file and open it on your computer. See below for more information about the error.
         </div>
 
-        <div class="row">
+        <div class="row" ng-if="doc.crawler">
           <div class="col-md-6">
             <div class="form-group">
               <label class="control-label">
@@ -47,18 +47,11 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" ng-if="doc.error_message">
           <label class="control-label" for="name">
             Error Message
           </label>
           <input type="text" class="form-control" readonly ng-model="doc.error_message">
-        </div>
-
-        <div class="form-group">
-          <label class="control-label" for="name">
-            Traceback
-          </label>
-          <pre ng-bind="doc.error_details"></pre>
         </div>
       </div>
     </div>

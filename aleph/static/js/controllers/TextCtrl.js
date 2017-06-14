@@ -55,6 +55,10 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
     return History.hasLastSearch();
   };
 
+  $scope.openParent = function() {
+    $location.path(Document.getUrl($scope.doc.parent));
+  };
+
   $scope.updateTextQuery = function() {
     var q = $location.search();
     q.dq = $scope.textQuery;

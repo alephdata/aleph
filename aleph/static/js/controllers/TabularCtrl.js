@@ -38,6 +38,10 @@ aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanit
     return $sce.trustAsHtml($sanitize(value));
   };
 
+  $scope.openParent = function() {
+    $location.path(Document.getUrl($scope.doc.parent));
+  };
+
   $scope.backToSearch = function() {
     History.back();
   };

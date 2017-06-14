@@ -4,6 +4,10 @@
     <i class="fa fa-chevron-left"></i>
     Back to search
   </button>
+  <button class="btn btn-default" ng-click="openParent()" ng-show="doc.parent">
+    <i class="fa fa-chevron-up"></i>
+    <strong ng-bind="::doc.parent.title | characters: 40"></strong>
+  </button>
   <div class="btn-group" role="group">
     <button class="btn btn-default" ng-click="goPrevious()">
       <i class="fa fa-chevron-left"></i>
