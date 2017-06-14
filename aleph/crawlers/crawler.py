@@ -60,7 +60,7 @@ class Crawler(object):
                 'label': self.COLLECTION_LABEL or self.COLLECTION_ID,
                 'managed': True
             })
-        db.session.add(self._collection)
+            db.session.add(self._collection)
         return self._collection
 
     def crawl(self, **kwargs):
@@ -112,7 +112,7 @@ class Crawler(object):
         return meta
 
     def create_document(self, foreign_id=None, content_hash=None):
-        document = Document.by_keys(collection_id=self.collection.id,
+        document = Document.by_keys(collection=self.collection,
                                     foreign_id=foreign_id,
                                     content_hash=content_hash)
         document.crawler = self.get_id()

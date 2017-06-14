@@ -18,7 +18,7 @@ class IngestTestCase(TestCase):
 
     def test_load_csv_file(self):
         csv_path = self.get_fixture_path('experts.csv')
-        document = Document.by_keys(collection_id=self.collection.id,
+        document = Document.by_keys(collection=self.collection,
                                     foreign_id='experts.csv')
         db.session.commit()
         db.session.refresh(document)
@@ -38,7 +38,7 @@ class IngestTestCase(TestCase):
 
     def test_load_pdf_file(self):
         pdf_path = self.get_fixture_path('demo.pdf')
-        document = Document.by_keys(collection_id=self.collection.id,
+        document = Document.by_keys(collection=self.collection,
                                     foreign_id='demo.pdf')
         db.session.commit()
         db.session.refresh(document)
@@ -47,7 +47,7 @@ class IngestTestCase(TestCase):
 
     def test_load_sample_directory(self):
         samples_path = self.get_fixture_path('samples')
-        document = Document.by_keys(collection_id=self.collection.id,
+        document = Document.by_keys(collection=self.collection,
                                     foreign_id='samples')
         db.session.commit()
         db.session.refresh(document)

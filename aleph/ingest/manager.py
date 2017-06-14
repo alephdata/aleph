@@ -56,12 +56,11 @@ class DocumentManager(Manager):
             content_hash = checksum(file_path)
 
         document = Document.by_keys(parent_id=parent.document.id,
-                                    collection_id=parent.document.collection_id,  # noqa
+                                    collection=parent.document.collection,
                                     foreign_id=id, content_hash=content_hash)
         document.title = title or document.meta.get('title')
         document.file_name = file_name or document.meta.get('file_name')
         document.mime_type = mime_type or document.meta.get('mime_type')
-        document.collection = parent.document.collection
 
         from aleph.ingest import ingest_document
         ingest_document(document, file_path, user_queue=parent.user_queue)

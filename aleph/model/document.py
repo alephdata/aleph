@@ -147,11 +147,13 @@ class Document(db.Model, DatedModel, Metadata):
         return stats
 
     @classmethod
-    def by_keys(cls, parent_id=None, collection_id=None, foreign_id=None,
+    def by_keys(cls, parent_id=None, collection=None, foreign_id=None,
                 content_hash=None):
         """Try and find a document by various criteria."""
         q = cls.all()
-        q = q.filter(Document.collection_id == collection_id)
+
+        if collection is not None:
+            q = q.filter(Document.collection_id == collection.id)
 
         if parent_id is not None:
             q = q.filter(Document.parent_id == parent_id)
@@ -167,7 +169,8 @@ class Document(db.Model, DatedModel, Metadata):
         if document is None:
             document = cls()
             document.type = cls.TYPE_OTHER
-            document.collection_id = collection_id
+            document.collection_id = collection.id
+            document.collection = collection
             document.parent_id = parent_id
             document.foreign_id = foreign_id
             document.content_hash = content_hash

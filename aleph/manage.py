@@ -86,9 +86,8 @@ def crawldir(directory, language=None, country=None, foreign_id=None):
     update_collection(collection)
 
     log.info('Crawling %r to %r...', directory, collection.foreign_id)
-    document = Document.by_keys(collection_id=collection.id,
+    document = Document.by_keys(collection=collection,
                                 foreign_id=directory)
-    document.collection = collection
     ingest_document(document, directory)
 
 
