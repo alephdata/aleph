@@ -1,48 +1,49 @@
 <collections-screen collection="collection" section="entities">
-  <!-- h3>Bulk Entity Creator</h3-->
 
-  <table class="table table-striped">
-    <tr>
-      <th width="25%">Name</th>
-      <th width="15%">Type</th>
-      <th width="15%">Jurisdiction</th>
-      <th>Summary</th>
-    </tr>
-    <tr ng-repeat="entity in entities" ng-class="{'danger': isInvalid(entity)}">
-      <td>
-        <input type="text" class="form-control" id="name" name="name" ng-model="entity.name"
-          placeholder="Entity Name" ng-model-options="{'updateOn': 'blur'}"
-          ng-blur="update(entity)">
-      </td>
-      <td>
-        <select ng-model="entity.schema" name="schema" class="form-control"
-          ng-init="entity.schema = availableSchemata[0]"
-          ng-blur="update(entity)">
-          <option ng-repeat="schema in availableSchemata" value="{{schema}}">
-            {{schemata[schema].label}}
-          </option>
-        </select>
-      </td>
-      <td>
-        <entity-jurisdiction entity="entity" simple="true"></entity-jurisdiction>
-      </td>
-      <td>
-        <input type="text" class="form-control" id="summary" name="summary"
-          ng-model="entity.data.summary" placeholder="A short summary"
-          ng-blur="update(entity)" ng-focus="update(entity)"
-          ng-model-options="{'updateOn': 'blur'}">
-      </td>
-    </tr>
-  </table>
-
-  <div class="row">
-    <div class="col-md-12">
-      <div class="pull-right">
-        <button class="btn btn-primary" type="button"
-          ng-disabled="!canSave()" ng-click="save()">Save</button>
-      </div>
-    </div>
+  <div class="alert alert-info small" role="alert">
+    You can copy paste entries from spreadsheets like Google Docs and Excel.
+    Use right click to access extra options. The successfully saved entities
+    will appear below the main table. If an entry is not saving, double check
+    the lenght of the name and that it is mapped to a specific type.
   </div>
+
+  <hot-table
+    settings="settings"
+    col-headers="true"
+    datarows="entities"
+    stretchH="all"
+  >
+    <hot-column
+      data="name"
+      title="'Name'"
+      placeholder="'Entity Name'"
+    ></hot-column>
+    <hot-column
+      data="data.summary"
+      title="'Summary'"
+    ></hot-column>
+    <hot-column
+      data="country"
+      title="'Jurisdiction'"
+      type="'dropdown'"
+      source="countryOptions"
+      strict="true"
+    ></hot-column>
+    <hot-column
+      data="schema" title="'Type'"
+      type="'dropdown'"
+      source="availableSchemata"
+      strict="true"
+    ></hot-column>
+
+  </hot-table>
+
+  <br/>
+
+  <p class="pull-right">
+    <button class="btn btn-primary" type="button"
+      ng-disabled="!canSave()" ng-click="save()">Save</button>
+  </p>
 
   <hr ng-if="created.length">
   <table class="table table-striped" ng-if="created.length">
@@ -57,7 +58,7 @@
       <td>
         {{schemata[entity.schema].label}}
       </td>
-      <td class="numeric">{{entity.country.toUpperCase()}}</td>
+      <td class="numeric">{{entity.data.country.toUpperCase()}}</td>
       <td class="numeric" width="1%">
         <button type="button" class="btn btn-default btn-xs"
           ng-click="editEntity($event, entity)">
