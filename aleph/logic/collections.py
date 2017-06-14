@@ -15,10 +15,11 @@ log = logging.getLogger(__name__)
 
 def update_collection(collection):
     """Create or update a collection."""
-    if collection.deleted_at:
+    if collection.deleted_at is not None:
         index_delete(collection.id)
         return
 
+    log.info("Updating: %r", collection)
     index_collection(collection)
 
 

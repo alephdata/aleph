@@ -20,43 +20,6 @@ def index():
     result = collections_query(state)
     return jsonify(result)
 
-    # permission = request.args.get('permission')
-    # if permission not in [request.authz.READ, request.authz.WRITE]:
-    #     permission = request.authz.READ
-    # collections = request.authz.collections[permission]
-    #
-    # # Other filters for navigation
-    # label = request.args.get('label')
-    # managed = state.getbool('managed', None)
-    #
-    # # Include counts (of entities, documents) in list view?
-    # counts = state.getbool('counts', False)
-    #
-    # def converter(colls):
-    #     return [c.to_dict(counts=counts) for c in colls]
-    #
-    # facet = [f.lower().strip() for f in request.args.getlist('facet')]
-    # q = Collection.find(label=label,
-    #                     countries=state.getfilter('countries'),
-    #                     category=state.getfilter('category'),
-    #                     collection_id=collections,
-    #                     managed=managed)
-    # data = Pager(q).to_dict(results_converter=converter)
-    # facets = {}
-    # if 'countries' in facet:
-    #     facets['countries'] = {
-    #         'values': Collection.facet_by(q, Collection.countries,
-    #                                       mapping=COUNTRY_NAMES)
-    #     }
-    # if 'category' in facet:
-    #     mapping = get_config('COLLECTION_CATEGORIES', {})
-    #     facets['category'] = {
-    #         'values': Collection.facet_by(q, Collection.category,
-    #                                       mapping=mapping)
-    #     }
-    # data['facets'] = facets
-    # return jsonify(data)
-
 
 @blueprint.route('/api/1/collections', methods=['POST', 'PUT'])
 def create():
@@ -74,7 +37,7 @@ def create():
 def view(id):
     collection = obj_or_404(Collection.by_id(id))
     request.authz.require(request.authz.collection_read(collection))
-    data = collection.to_dict(counts=True)
+    data = collection.to_dict()
     data['lead_count'] = lead_count(id)
     return jsonify(data)
 

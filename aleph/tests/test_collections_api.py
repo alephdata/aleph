@@ -2,6 +2,8 @@ import json
 
 from aleph.core import db
 from aleph.model import Collection, Entity
+from aleph.logic import update_collection
+from aleph.index import flush_index
 from aleph.tests.util import TestCase
 
 
@@ -25,6 +27,8 @@ class CollectionsApiTestCase(TestCase):
         db.session.commit()
 
     def test_index(self):
+        update_collection(self.col)
+        flush_index()
         res = self.client.get('/api/1/collections')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
