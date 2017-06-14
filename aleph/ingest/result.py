@@ -70,6 +70,7 @@ class DocumentResult(Result):
         if self.checksum:
             self.document.content_hash = self.checksum
         self.document.file_size = self.size
+        self.document.file_name = self.file_name
         self.document.title = stringify(self.title)
         self.document.summary = stringify(self.summary)
         self.document.author = stringify(self.author)

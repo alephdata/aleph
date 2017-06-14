@@ -1,6 +1,5 @@
 import logging
-import fingerprints
-from normality import stringify, collapse_spaces
+from normality import stringify, slugify, collapse_spaces
 
 from aleph.core import db
 from aleph.model.common import IdModel
@@ -65,7 +64,7 @@ class DocumentTagCollector(object):
             key = text.lower()
             if type in [DocumentTag.TYPE_PERSON,
                         DocumentTag.TYPE_ORGANIZATION]:
-                key = fingerprints.generate(key)
+                key = slugify(key, sep='-')
                 if key is None or len(key) <= 4:
                     return
 

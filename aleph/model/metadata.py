@@ -72,6 +72,9 @@ class Metadata(object):
 
     @property
     def file_title(self):
+        """The file title is a human-readable interpretation of the file name.
+        It is used for labelling or as a backup title. It should not be used
+        to generate an actual file system path."""
         file_title = self.meta.get('file_name')
 
         # derive file name from headers
@@ -90,6 +93,8 @@ class Metadata(object):
 
     @property
     def file_name(self):
+        """File name is a slugified version of the file title that is safe to
+        use as part of a file system path."""
         return make_filename(self.file_title, default='data')
 
     @file_name.setter
