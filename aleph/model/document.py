@@ -146,6 +146,35 @@ class Document(db.Model, DatedModel, Metadata):
             stats[status] = count
         return stats
 
+    @classmethod
+    def by_keys(cls, parent_id=None, collection_id=None, foreign_id=None,
+                content_hash=None):
+        """Try and find a document by various criteria."""
+        q = cls.all()
+        q = q.filter(Document.collection_id == collection_id)
+
+        if parent_id is not None:
+            q = q.filter(Document.parent_id == parent_id)
+
+        if foreign_id is not None:
+            q = q.filter(Document.foreign_id == foreign_id)
+        elif content_hash is not None:
+            q = q.filter(Document.content_hash == content_hash)
+        else:
+            raise ValueError("No unique criterion for document.")
+
+        document = q.first()
+        if document is None:
+            document = cls()
+            document.type = cls.TYPE_OTHER
+            document.collection_id = collection_id
+            document.parent_id = parent_id
+            document.foreign_id = foreign_id
+            document.content_hash = content_hash
+            document.status = document.STATUS_PENDING
+            db.session.add(document)
+        return document
+
     def to_dict(self):
         data = self.to_meta_dict()
         try:
@@ -180,35 +209,6 @@ class Document(db.Model, DatedModel, Metadata):
         data['summary_latin'] = ascii_text(data.get('summary'))
         data.pop('tables')
         return data
-
-    @classmethod
-    def by_keys(cls, parent_id=None, collection_id=None, foreign_id=None,
-                content_hash=None):
-        """Try and find a document by various criteria."""
-        q = cls.all()
-        q = q.filter(Document.collection_id == collection_id)
-
-        if parent_id is not None:
-            q = q.filter(Document.parent_id == parent_id)
-
-        if foreign_id is not None:
-            q = q.filter(Document.foreign_id == foreign_id)
-        elif content_hash is not None:
-            q = q.filter(Document.content_hash == content_hash)
-        else:
-            raise ValueError("No unique criterion for document.")
-
-        document = q.first()
-        if document is None:
-            document = cls()
-            document.type = cls.TYPE_OTHER
-            document.collection_id = collection_id
-            document.parent_id = parent_id
-            document.foreign_id = foreign_id
-            document.content_hash = content_hash
-            document.status = document.STATUS_PENDING
-            db.session.add(document)
-        return document
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.title)

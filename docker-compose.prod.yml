@@ -40,6 +40,7 @@ services:
         - "./build/archive:/archive"
         - "./build/incoming:/incoming"
         - "./build/polyglot:/polyglot"
+        - "./build/tmp/worker:/tmp"
       environment:
         C_FORCE_ROOT: 'true'
         ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
