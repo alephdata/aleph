@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, send_file, request
 from apikit import jsonify, Pager, request_data
 
 from aleph.core import archive, url_for, db
-from aleph.model import Document, DocumentRecord, Entity, Reference
+from aleph.model import Document, DocumentRecord, Entity
 from aleph.logic import update_document
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
@@ -59,19 +59,6 @@ def update(document_id):
     log_event(request, document_id=document.id)
     update_document(document)
     return view(document_id)
-
-
-@blueprint.route('/api/1/documents/<int:document_id>/references')
-def references(document_id):
-    doc = get_document(document_id)
-    q = db.session.query(Reference)
-    q = q.filter(Reference.document_id == doc.id)
-    q = q.filter(Reference.origin == 'regex')
-    q = q.join(Entity)
-    q = q.filter(Entity.state == Entity.STATE_ACTIVE)
-    q = q.filter(Entity.collection_id.in_(request.authz.collections_read))
-    q = q.order_by(Reference.weight.desc())
-    return jsonify(Pager(q, document_id=document_id))
 
 
 @blueprint.route('/api/1/documents/<int:document_id>/file')

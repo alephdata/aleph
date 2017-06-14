@@ -15,7 +15,7 @@ from aleph.ingest import reingest_collection, ingest_document
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document_id, delete_dataset
 from aleph.logic import reindex_entities, delete_collection, analyze_collection
-from aleph.logic import load_dataset, update_entity_full, delete_pending
+from aleph.logic import load_dataset, update_entity_full
 from aleph.logic import update_collection
 from aleph.logic.alerts import check_alerts
 from aleph.ext import get_crawlers
@@ -98,18 +98,6 @@ def flush(foreign_id):
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
     delete_collection(collection.id)
-
-
-@manager.command
-def deletepending(foreign_id=None):
-    """Deletes any pending entities and related items."""
-    collection_id = None
-    if foreign_id is None:
-        collection = Collection.by_foreign_id(foreign_id)
-        if collection is None:
-            raise ValueError("No such collection: %r" % foreign_id)
-        collection_id = collection.id
-    delete_pending(collection_id=collection_id)
 
 
 @manager.command

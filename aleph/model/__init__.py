@@ -7,7 +7,6 @@ from aleph.model.alert import Alert  # noqa
 from aleph.model.permission import Permission  # noqa
 from aleph.model.entity import Entity  # noqa
 from aleph.model.entity_identity import EntityIdentity  # noqa
-from aleph.model.reference import Reference  # noqa
 from aleph.model.collection import Collection  # noqa
 from aleph.model.cache import Cache  # noqa
 from aleph.model.event_log import EventLog  # noqa

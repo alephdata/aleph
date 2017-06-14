@@ -9,7 +9,6 @@ from aleph.core import db
 from aleph.model.metadata import Metadata
 from aleph.model.validate import validate
 from aleph.model.collection import Collection
-from aleph.model.reference import Reference
 from aleph.model.common import DatedModel
 from aleph.model.document_record import DocumentRecord
 from aleph.model.document_tag import DocumentTag
@@ -78,17 +77,7 @@ class Document(db.Model, DatedModel, Metadata):
         pq.delete()
         db.session.flush()
 
-    def delete_references(self, origin=None):
-        pq = db.session.query(Reference)
-        pq = pq.filter(Reference.document_id == self.id)
-        if origin is not None:
-            pq = pq.filter(Reference.origin == origin)
-        # pq.delete(synchronize_session='fetch')
-        pq.delete()
-        db.session.flush()
-
     def delete(self, deleted_at=None):
-        self.delete_references()
         self.delete_records()
         db.session.delete(self)
 

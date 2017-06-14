@@ -70,17 +70,6 @@ class DocumentsApiTestCase(TestCase):
         res = self.client.get('/api/1/documents/1000/pdf')
         assert res.status_code == 404, res
 
-    def test_view_references(self):
-        doc_id = 1001
-        res = self.client.get('/api/1/documents/%s/references' % doc_id)
-        assert res.status_code == 403, res
-
-        self.login(is_admin=True)
-        res = self.client.get('/api/1/documents/%s/references' % doc_id)
-        assert res.status_code == 200, res
-        assert 'results' in res.json, res.json
-        # assert len(res.json['results']) == 2, res.json
-
     def test_update_simple(self):
         url = '/api/1/documents/1000'
         res = self.client.get(url)

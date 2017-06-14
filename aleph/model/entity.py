@@ -8,7 +8,6 @@ from aleph.core import db, schemata
 from aleph.text import match_form, string_value
 from aleph.util import ensure_list
 from aleph.model.collection import Collection
-from aleph.model.reference import Reference
 from aleph.model.entity_identity import EntityIdentity
 from aleph.model.common import SoftDeleteModel, UuidModel
 from aleph.model.common import make_textid, merge_data
@@ -30,14 +29,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic'))  # noqa
 
-    def delete_references(self, origin=None):
-        pq = db.session.query(Reference)
-        pq = pq.filter(Reference.entity_id == self.id)
-        if origin is not None:
-            pq = pq.filter(Reference.origin == origin)
-        pq.delete(synchronize_session='fetch')
-        db.session.refresh(self)
-
     def delete_identities(self):
         pq = db.session.query(EntityIdentity)
         pq = pq.filter(EntityIdentity.entity_id == self.id)
@@ -45,30 +36,12 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         db.session.refresh(self)
 
     def delete(self, deleted_at=None):
-        self.delete_references()
         self.delete_identities()
         deleted_at = deleted_at or datetime.utcnow()
         for alert in self.alerts:
             alert.delete(deleted_at=deleted_at)
         self.state = self.STATE_DELETED
         super(Entity, self).delete(deleted_at=deleted_at)
-
-    @classmethod
-    def delete_dangling(cls, collection_id):
-        """Delete dangling entities.
-
-        Entities can dangle in pending state while they have no references
-        pointing to them, thus making it impossible to enable them. This is
-        a routine cleanup function.
-        """
-        q = db.session.query(cls)
-        q = q.filter(cls.collection_id == collection_id)
-        q = q.filter(cls.state == cls.STATE_PENDING)
-        q = q.outerjoin(Reference)
-        q = q.group_by(cls)
-        q = q.having(func.count(Reference.id) == 0)
-        for entity in q.all():
-            entity.delete()
 
     def merge(self, other):
         if self.id == other.id:
@@ -90,11 +63,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         # update alerts
         from aleph.model.alert import Alert
         q = db.session.query(Alert).filter(Alert.entity_id == other.id)
-        q.update({'entity_id': self.id})
-
-        # update document references
-        from aleph.model.reference import Reference
-        q = db.session.query(Reference).filter(Reference.entity_id == other.id)
         q.update({'entity_id': self.id})
 
         # delete source entities
