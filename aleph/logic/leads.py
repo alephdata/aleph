@@ -7,7 +7,7 @@ from aleph.index import delete_entity_leads, index_lead
 from aleph.search import QueryState
 from aleph.search.entities import load_entity, similar_entities
 from aleph.model import EntityIdentity
-from aleph.logic.distance import entity_distance
+from aleph.logic.xref.distance import entity_distance
 
 log = logging.getLogger(__name__)
 
