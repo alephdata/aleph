@@ -19,7 +19,7 @@ class S3Archive(Archive):  # pragma: no cover
         self.local_base = tempfile.gettempdir()
         self.key_id = config.get('ARCHIVE_AWS_KEY_ID')
         self.secret = config.get('ARCHIVE_AWS_SECRET')
-        self.region = config.get('ARCHIVE_AWS_REGION', 'eu-west-1')
+        self.region = config.get('ARCHIVE_AWS_REGION')
         self.bucket_name = config.get('ARCHIVE_BUCKET')
 
         self.session = Session(aws_access_key_id=self.key_id,

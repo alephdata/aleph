@@ -1,8 +1,8 @@
 import aleph from '../aleph';
 import {ensureArray, filterFloat} from '../util';
 
-aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Authz', 'Title', 'History', 'data', 'children',
-    function($scope, $location, $http, $sce, $sanitize, $filter, Authz, Title, History, data, children) {
+aleph.controller('TabularCtrl', ['$scope', '$location', '$http', '$sce', '$sanitize', '$filter', 'Authz', 'Title', 'History', 'Document', 'data', 'children',
+    function($scope, $location, $http, $sce, $sanitize, $filter, Authz, Title, History, Document, data, children) {
 
   $scope.doc = data.doc;
   $scope.children = children;
