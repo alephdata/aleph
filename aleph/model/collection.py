@@ -43,7 +43,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.summary = data.get('summary', self.summary)
         self.category = data.get('category') or self.category
         self.managed = data.get('managed') or True
-        self.countries = data.pop('countries') or []
+        self.countries = data.get('countries') or []
         self.touch()
 
     def touch(self):

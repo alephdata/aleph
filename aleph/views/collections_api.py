@@ -14,8 +14,6 @@ blueprint = Blueprint('collections_api', __name__)
 
 @blueprint.route('/api/1/collections', methods=['GET'])
 def index():
-    # allow to filter for writeable collections only, needed
-    # in some UI scenarios:
     state = QueryState(request.args, request.authz)
     result = collections_query(state)
     return jsonify(result)

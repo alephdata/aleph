@@ -9,6 +9,7 @@ from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.core import WORKER_QUEUE, WORKER_ROUTING_KEY
 from aleph.model import Document
 from aleph.ingest.manager import DocumentManager
+from aleph.logic.collections import update_collection
 from aleph.util import make_tempfile, remove_tempfile
 
 log = logging.getLogger(__name__)
@@ -84,9 +85,15 @@ def ingest_document(document, file_path, user_queue=False):
                                   content_hash=document.content_hash)
         document.content_hash = ch or document.content_hash
         db.session.commit()
-        queue = USER_QUEUE if user_queue else WORKER_QUEUE
-        routing_key = USER_ROUTING_KEY if user_queue else WORKER_ROUTING_KEY
-        ingest.apply_async([document.id], queue=queue, routing_key=routing_key)
+        if user_queue:
+            queue = USER_QUEUE
+            routing_key = USER_ROUTING_KEY
+        else:
+            queue = WORKER_QUEUE
+            routing_key = WORKER_ROUTING_KEY
+        ingest.apply_async([document.id],
+                           queue=queue,
+                           routing_key=routing_key)
 
 
 @celery.task()
@@ -99,6 +106,11 @@ def ingest(document_id, user_queue=False):
         return
 
     get_manager().ingest_document(document, user_queue=user_queue)
+
+    pending = Document.pending_count(collection_id=document.collection.id)
+    if pending == 0:
+        update_collection(document.collection)
+        # TODO: email notifications, #68.
 
 
 def reingest_collection(collection):

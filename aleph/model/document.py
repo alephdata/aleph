@@ -131,6 +131,14 @@ class Document(db.Model, DatedModel, Metadata):
         return last_run_time > (datetime.utcnow() - timedelta(hours=1))
 
     @classmethod
+    def pending_count(cls, collection_id=None):
+        q = db.session.query(func.count(cls.id))
+        q = q.filter(cls.status == cls.STATUS_PENDING)
+        if collection_id is not None:
+            q = q.filter(cls.collection_id == collection_id)
+        return q.scalar()
+
+    @classmethod
     def crawler_stats(cls, crawler_id):
         # Check if the crawler was active very recently, if so, don't
         # allow the user to execute a new run right now.
