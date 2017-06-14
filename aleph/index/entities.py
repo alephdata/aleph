@@ -82,7 +82,7 @@ def get_count(entity):
 
 def index_entity(entity):
     """Index an entity."""
-    data = entity.to_index()
+    data = entity.to_index_dict()
     data.pop('id', None)
     data['doc_count'] = get_count(entity)
     data = finalize_index(data, entity.schema)

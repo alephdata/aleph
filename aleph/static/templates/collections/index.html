@@ -45,13 +45,13 @@
         <a ng-repeat="collection in collections.results track by collection.id"
            ng-href="{{::collection.getPath()}}"
            class="list-group-item">
-          <span class="badge" ng-if="collection.doc_count">
+          <span class="badge" ng-if="collection.$documents">
             <i class="fa fa-fw fa-file-text" aria-hidden="true"></i>
-            {{::collection.doc_count | number}}
+            {{::collection.$documents | number}}
           </span>
-          <span class="badge" ng-if="collection.entity_count">
+          <span class="badge" ng-if="collection.$entities">
             <i class="fa fa-fw fa-users" aria-hidden="true"></i>
-            {{::collection.entity_count | number}}
+            {{::collection.$entities | number}}
           </span>
           <privacy-icon subject="collection"></privacy-icon>
           <strong class="list-group-item-heading">

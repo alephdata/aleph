@@ -5,7 +5,7 @@ aleph.controller('TextCtrl', ['$scope', '$location', '$http', 'metadata', 'Authz
 
   $scope.doc = data.doc;
   $scope.children = children;
-  $scope.pageText = data.page.text;
+  $scope.pageText = data.page ? data.page.text : '';
   $scope.pages = pages;
 
   $scope.loading = true;

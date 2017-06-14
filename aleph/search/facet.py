@@ -1,7 +1,7 @@
 import six
 from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 
-from aleph.core import datasets, schemata
+from aleph.core import datasets, schemata, get_config
 from aleph.model import Entity, Collection
 
 
@@ -93,6 +93,13 @@ class LanguageFacet(Facet):
         return {k: {'label': LANGUAGE_NAMES.get(k, k)} for k in keys}
 
 
+class CategoryFacet(Facet):
+
+    def expand(self, keys):
+        categories = get_config('COLLECTION_CATEGORIES', {})
+        return {k: {'label': categories.get(k)} for k in keys}
+
+
 class EntityFacet(Facet):
 
     def get_values(self):
@@ -136,6 +143,7 @@ def parse_facet_result(state, result):
         facet_cls = {
             'languages': LanguageFacet,
             'countries': CountryFacet,
+            'category': CategoryFacet,
             'remote.countries': CountryFacet,
             'dataset': DatasetFacet,
             'entities': EntityFacet,

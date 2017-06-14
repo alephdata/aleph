@@ -49,7 +49,6 @@ class Crawler(object):
         if collection is None:
             collection = Collection.create(data)
             db.session.commit()
-            update_collection(collection)
         return collection
 
     @property
@@ -83,6 +82,7 @@ class Crawler(object):
             db.session.commit()
         except Exception as ex:
             log.exception(ex)
+        update_collection(self.collection)
 
     def increment_count(self):
         self.run_count += 1

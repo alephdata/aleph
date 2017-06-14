@@ -222,7 +222,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         })
         return data
 
-    def to_index(self):
+    def to_index_dict(self):
         entity = self.to_dict()
         entity['properties'] = {'name': [self.name]}
         for k, v in self.data.items():

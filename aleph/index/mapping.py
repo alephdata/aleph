@@ -1,9 +1,35 @@
 
+TYPE_COLLECTION = 'collection_v3'
 TYPE_DOCUMENT = 'document'
 TYPE_RECORD = 'record_v2'
 TYPE_ENTITY = 'entity'
 TYPE_LINK = 'link'
 TYPE_LEAD = 'lead'
+
+
+COLLECTION_MAPPING = {
+    "_all": {
+        "enabled": True
+    },
+    "date_detection": False,
+    "properties": {
+        "label": {"type": "string", "index": "analyzed"},
+        "name_sort": {"type": "string", "index": "not_analyzed"},
+        "roles": {"type": "long", "index": "not_analyzed"},
+        "foreign_id": {"type": "string", "index": "not_analyzed"},
+        "creator_id": {"type": "long", "index": "not_analyzed"},
+        "languages": {"type": "keyword", "index": "not_analyzed"},
+        "countries": {"type": "keyword", "index": "not_analyzed"},
+        "category": {"type": "keyword", "index": "not_analyzed"},
+        "summary": {"type": "string", "index": "analyzed"},
+        "managed": {"type": "boolean", "index": "not_analyzed"},
+        "created_at": {"type": "date", "index": "not_analyzed"},
+        "updated_at": {"type": "date", "index": "not_analyzed"},
+        "$total": {"type": "long", "index": "not_analyzed"},
+        "$entities": {"type": "long", "index": "not_analyzed"},
+        "$documents": {"type": "long", "index": "not_analyzed"},
+    }
+}
 
 DOCUMENT_MAPPING = {
     "_all": {

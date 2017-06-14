@@ -232,6 +232,14 @@ def evilshit():
     init()
 
 
+@manager.command
+def experiment():
+    """Create or upgrade the search index and database."""
+    from aleph.logic.collections import update_collection
+    for collection in Collection.all():
+        update_collection(collection)
+
+
 def main():
     manager.run()
 

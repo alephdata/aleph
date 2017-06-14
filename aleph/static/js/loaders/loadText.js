@@ -12,7 +12,14 @@ var loadText = ['$http', '$q', '$location', '$route', 'Document',
         page: page,
       });
     }, function(err) {
-      dfd.reject(err);
+      if (err.status === 404) {
+        dfd.resolve({
+          doc: doc,
+          page: null
+        });
+      } else {
+          dfd.reject(err);
+      }
     });
   }, function(err) {
     dfd.reject(err);

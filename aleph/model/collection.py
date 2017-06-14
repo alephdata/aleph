@@ -27,8 +27,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
     # shouldn't be allowed to add entities or documents to them. They also
     # don't use advanced entity extraction features for performance reasons.
     managed = db.Column(db.Boolean, default=False)
-    # Private collections don't show up in peek queries.
-    private = db.Column(db.Boolean, default=False)
 
     creator_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
     creator = db.relationship(Role)
@@ -45,7 +43,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
         self.summary = data.get('summary', self.summary)
         self.category = data.get('category', self.category)
         self.managed = data.get('managed')
-        self.private = data.get('private')
         self.countries = data.pop('countries', [])
         self.touch()
 
@@ -153,6 +150,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
             'summary': self.summary,
             'category': self.category,
             'countries': self.countries,
+            'languages': self.languages,
             'managed': self.managed,
             'public': self.is_public
         })
@@ -164,4 +162,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel, ModelFacets):
                 'entity_count': self.get_entity_count(Entity.STATE_ACTIVE),
                 'pending_count': self.get_entity_count(Entity.STATE_PENDING)
             })
+        return data
+
+    def to_index_dict(self):
+        data = self.to_dict()
+        data['roles'] = self.roles
         return data

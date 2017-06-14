@@ -4,6 +4,7 @@ from datetime import datetime
 from aleph.core import db, celery
 from aleph.model import Collection, Entity
 from aleph.index.collections import delete_collection as index_delete
+from aleph.index.collections import index_collection
 from aleph.analyze import analyze_documents
 from aleph.logic.entities import delete_entity
 from aleph.logic.entities import update_entity_full
@@ -14,7 +15,11 @@ log = logging.getLogger(__name__)
 
 def update_collection(collection):
     """Create or update a collection."""
-    pass
+    if collection.deleted_at:
+        index_delete(collection.id)
+        return
+
+    index_collection(collection)
 
 
 @celery.task()

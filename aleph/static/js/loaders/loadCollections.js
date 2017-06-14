@@ -1,15 +1,13 @@
 var loadProjectCollections = ['Collection', function(Collection) {
   return Collection.search({
-    managed: false,
-    counts: true,
+    'filter:managed': 'false',
     facet: ['countries']
   });
 }];
 
 var loadSourceCollections = ['Collection', function(Collection) {
   return Collection.search({
-    managed: true,
-    counts: true,
+    'filter:managed': 'true',
     facet: ['countries', 'category']
   });
 }];

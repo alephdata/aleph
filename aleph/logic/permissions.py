@@ -3,6 +3,7 @@ from flask import render_template
 
 from aleph.core import db, app_url, app_title
 from aleph.notify import notify_role
+from aleph.index.collections import update_roles, index_collection
 from aleph.model import Permission
 
 log = logging.getLogger(__name__)
@@ -13,6 +14,8 @@ def update_permission(role, collection, read, write):
     pre = Permission.by_collection_role(collection.id, role)
     post = Permission.grant_collection(collection.id, role, read, write)
     db.session.commit()
+    update_roles(collection)
+    index_collection(collection)
 
     try:
         url = '%scollections/%s' % (app_url, collection.id)
