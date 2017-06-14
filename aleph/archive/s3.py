@@ -59,6 +59,8 @@ class S3Archive(Archive):  # pragma: no cover
         cors.put(CORSConfiguration=config)
 
     def _locate_key(self, content_hash):
+        if content_hash is None:
+            return
         prefix = self._get_prefix(content_hash)
         if prefix is None:
             return
@@ -93,6 +95,9 @@ class S3Archive(Archive):  # pragma: no cover
             return path
 
     def cleanup_file(self, content_hash):
+        """Delete the local cached version of the file."""
+        if content_hash is None:
+            return
         path = self._get_local_prefix(content_hash)
         if os.path.isdir(path):
             shutil.rmtree(path)
