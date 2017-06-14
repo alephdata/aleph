@@ -31,9 +31,9 @@ class PolyglotEntityAnalyzer(Analyzer):
                 hint_language_code = self.document.languages[0]
             text = Text(text, hint_language_code=hint_language_code)
             for entity in text.entities:
-                print len(entity), entity
-                if entity.tag == 'I-LOC' or len(entity) < 2:
+                if entity.tag == 'I-LOC' or len(entity) == 1:
                     continue
+
                 label = ' '.join(entity)
                 if len(label) < 4 or len(label) > 200:
                     continue

@@ -77,16 +77,17 @@ def crawldir(directory, language=None, country=None, foreign_id=None):
             'label': directory,
             'managed': True
         })
-        db.session.commit()
-        update_collection(collection)
+
+    if language is not None:
+        collection.languages = [language]
+    if country is not None:
+        collection.countries = [country]
+    db.session.commit()
+    update_collection(collection)
 
     log.info('Crawling %r to %r...', directory, collection.foreign_id)
     document = Document.by_keys(collection_id=collection.id,
                                 foreign_id=directory)
-    if language is not None:
-        document.add_language(language)
-    if country is not None:
-        document.add_country(country)
     ingest_document(document, directory)
 
 

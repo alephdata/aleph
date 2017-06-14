@@ -9,7 +9,7 @@ from aleph.analyze.analyzer import Analyzer
 log = logging.getLogger(__name__)
 
 THRESHOLD = 0.9
-CUTOFF = 30
+CUTOFF = 50
 
 
 class LanguageAnalyzer(Analyzer):
@@ -34,8 +34,6 @@ class LanguageAnalyzer(Analyzer):
             self.languages[lang] += score * len(text)
 
     def finalize(self):
-        if len(self.document.languages) > 0:
-            return
         if not len(self.languages):
             return
 

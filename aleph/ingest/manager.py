@@ -81,6 +81,12 @@ class DocumentManager(Manager):
             return
 
         try:
+            if not len(document.languages):
+                document.languages = document.collection.languages or []
+
+            if not len(document.countries):
+                document.countries = document.collection.countries or []
+
             result = DocumentResult(self, document, file_path=file_path)
             self.ingest(file_path, result=result)
         finally:
