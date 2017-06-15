@@ -63,9 +63,9 @@ class DocumentManager(Manager):
         document.mime_type = mime_type or document.meta.get('mime_type')
 
         from aleph.ingest import ingest_document
-        ingest_document(document, file_path, user_queue=parent.user_queue)
+        ingest_document(document, file_path, role_id=parent.role_id)
 
-    def ingest_document(self, document, file_path=None, user_queue=False):
+    def ingest_document(self, document, file_path=None, role_id=None):
         """Ingest a database-backed document.
 
         First retrieve it's data and then call the actual ingestor.
@@ -88,7 +88,7 @@ class DocumentManager(Manager):
 
             result = DocumentResult(self, document,
                                     file_path=file_path,
-                                    user_queue=user_queue)
+                                    role_id=role_id)
             self.ingest(file_path, result=result)
         finally:
             self.archive.cleanup_file(document.content_hash)

@@ -13,9 +13,9 @@ log = logging.getLogger(__name__)
 class DocumentResult(Result):
     """Wrapper to link a Document to an ingestor result object."""
 
-    def __init__(self, manager, document, file_path=None, user_queue=False):
+    def __init__(self, manager, document, file_path=None, role_id=None):
         self.manager = manager
-        self.user_queue = user_queue
+        self.role_id = role_id
         self.document = document
         self.pdf_hash = document.pdf_version
         self.columns = OrderedDict()
@@ -70,6 +70,7 @@ class DocumentResult(Result):
         self.document.foreign_id = stringify(self.id)
         if self.checksum:
             self.document.content_hash = self.checksum
+        self.document.uploader_id = self.role_id or self.document.uploader_id
         self.document.file_size = self.size
         self.document.file_name = self.file_name
         self.document.title = stringify(self.title)

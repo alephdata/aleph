@@ -42,6 +42,8 @@ class Document(db.Model, DatedModel, Metadata):
     error_type = db.Column(db.Unicode(), nullable=True)
     error_message = db.Column(db.Unicode(), nullable=True)
 
+    uploader_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
+
     parent_id = db.Column(db.BigInteger, db.ForeignKey('document.id'), nullable=True)  # noqa
     children = db.relationship('Document', backref=db.backref('parent', uselist=False, remote_side=[id]))  # noqa
 

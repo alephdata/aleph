@@ -49,7 +49,7 @@ def ingest_upload(collection_id):
         except Exception as ex:
             raise BadRequest(unicode(ex))
 
-        ingest_document(document, sec_fn, user_queue=True)
+        ingest_document(document, sec_fn, role_id=request.authz.role.id)
         os.unlink(sec_fn)
         documents.append(document)
     return jsonify({'status': 'ok', 'documents': documents})
