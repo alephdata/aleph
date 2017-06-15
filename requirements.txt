@@ -36,7 +36,7 @@ https://github.com/okfn/messytables/tarball/master
 krauler>=0.2.2
 metafolder
 jsonmapping
-https://github.com/aboSamoor/polyglot/tarball/master
+https://github.com/aboSamoor/polyglot/tarball/b262c228
 https://github.com/occrp/cronosparser/tarball/master
 langid==1.1.5
 blinker==1.4
