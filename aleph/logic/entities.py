@@ -9,7 +9,6 @@ from aleph.datasets.util import finalize_index
 from aleph.index import index_entity, flush_index, delete_entity_leads
 from aleph.index import delete_entity as index_delete
 from aleph.search import load_entity
-from aleph.index.entities import delete_collection_entities
 from aleph.logic.leads import generate_leads
 
 log = logging.getLogger(__name__)
@@ -83,7 +82,6 @@ def reindex_entity(entity):
 
 @celery.task()
 def reindex_entities():
-    delete_collection_entities()
     query = db.session.query(Entity)
     for entity in query.yield_per(5000):
         reindex_entity(entity)
