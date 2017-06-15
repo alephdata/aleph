@@ -20,7 +20,7 @@ def get_collection_stats(data):
             }
         },
         'aggs': {
-            'schemata': {'terms': {'field': 'schemata', 'size': 1000}},
+            'schema': {'terms': {'field': 'schema', 'size': 1000}},
             'countries': {'terms': {'field': 'countries', 'size': 250}},
             'languages': {'terms': {'field': 'languages', 'size': 100}},
         }
@@ -34,7 +34,7 @@ def get_collection_stats(data):
     data['$total'] = result.get('hits').get('total')
 
     # expose both entities by schema count and totals for docs and entities.
-    for schema in aggregations.get('schemata').get('buckets'):
+    for schema in aggregations.get('schema').get('buckets'):
         key = schema.get('key')
         count = schema.get('doc_count')
         data['$schemata'][key] = count

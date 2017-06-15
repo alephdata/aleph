@@ -31,7 +31,7 @@ def index_entity(entity):
     """Index an entity."""
     data = entity.to_index_dict()
     data.pop('id', None)
-    data['doc_count'] = get_count(entity)
+    data['$documents'] = get_count(entity)
     data = finalize_index(data, entity.schema)
     es.index(index=es_index, doc_type=TYPE_ENTITY, id=entity.id, body=data)
 
