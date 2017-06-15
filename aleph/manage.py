@@ -11,10 +11,10 @@ from aleph.core import create_app, archive, datasets
 from aleph.model import db, upgrade_db, Collection, Document, Entity
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
-from aleph.ingest import reingest_collection, ingest_document
+from aleph.ingest import ingest_document
 from aleph.index import init_search, delete_index, upgrade_search
-from aleph.index import index_document_id, delete_dataset
-from aleph.logic import reindex_entities, delete_collection, analyze_collection
+from aleph.index import index_document_id
+from aleph.logic import reindex_entities, delete_collection, process_collection
 from aleph.logic import load_dataset, update_entity_full
 from aleph.logic import update_collection
 from aleph.logic.alerts import check_alerts
@@ -101,21 +101,12 @@ def flush(foreign_id):
 
 
 @manager.command
-def analyze(foreign_id):
-    """Re-analyze documents in the given collection (or throughout)."""
+def process(foreign_id):
+    """Re-process documents in the given collection."""
     collection = Collection.by_foreign_id(foreign_id)
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
-    analyze_collection.delay(collection.id)
-
-
-@manager.command
-def reingest(foreign_id):
-    """Re-ingest documents in the given collection."""
-    collection = Collection.by_foreign_id(foreign_id)
-    if collection is None:
-        raise ValueError("No such collection: %r" % foreign_id)
-    reingest_collection(collection)
+    process_collection(collection)
 
 
 @manager.command
@@ -142,11 +133,6 @@ def loaddataset(name):
     """Index all the entities in a given dataset."""
     dataset = datasets.get(name)
     load_dataset(dataset)
-
-
-@manager.command
-def deletedataset(name):
-    delete_dataset(name)
 
 
 @manager.command

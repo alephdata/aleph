@@ -9,11 +9,9 @@ from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.core import WORKER_QUEUE, WORKER_ROUTING_KEY
 from aleph.model import Document
 from aleph.ingest.manager import DocumentManager
-from aleph.logic.collections import update_collection
 from aleph.util import make_tempfile, remove_tempfile
 
 log = logging.getLogger(__name__)
-# TODO: queues
 
 
 def get_manager():
@@ -109,10 +107,6 @@ def ingest(document_id, user_queue=False):
 
     pending = Document.pending_count(collection_id=document.collection.id)
     if pending == 0:
+        from aleph.logic.collections import update_collection
         update_collection(document.collection)
         # TODO: email notifications, #68.
-
-
-def reingest_collection(collection):
-    for document in collection.documents:
-        ingest.delay(document.id)

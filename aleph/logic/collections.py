@@ -2,15 +2,23 @@ import logging
 from datetime import datetime
 
 from aleph.core import db, celery
-from aleph.model import Collection, Entity
+from aleph.ingest import ingest
+from aleph.model import Collection, Document
 from aleph.index.collections import delete_collection as index_delete
-from aleph.index.collections import index_collection
-from aleph.analyze import analyze_documents
-from aleph.logic.entities import delete_entity
-from aleph.logic.entities import update_entity_full
+from aleph.index.collections import index_collection, get_collection_stats
+from aleph.logic.entities import delete_entity, update_entity_full
 from aleph.logic.documents import delete_document
 
 log = logging.getLogger(__name__)
+
+
+def fetch_collection(entity_id):
+    """Load entities from both the ES index and the database."""
+    collection = Collection.by_id(entity_id)
+    if collection is None:
+        return
+    data = collection.to_dict()
+    return get_collection_stats(data)
 
 
 def update_collection(collection):
@@ -24,22 +32,25 @@ def update_collection(collection):
 
 
 @celery.task()
-def analyze_collection(collection_id):
+def process_collection(collection_id):
     """Re-analyze the elements of this collection, documents and entities."""
-    Entity.delete_dangling(collection_id)
-    db.session.commit()
-
     q = db.session.query(Collection).filter(Collection.id == collection_id)
     collection = q.first()
     if collection is None:
         log.error("No collection with ID: %r", collection_id)
 
     # re-process the documents
-    analyze_documents(collection.id)
+    q = db.session.query(Document)
+    q = q.filter(Document.collection_id == collection_id)
+    q = q.filter(Document.parent_id == None)  # noqa
+    for document in q:
+        ingest.delay(document.id)
 
     # re-process entities
     for entity in collection.entities:
         update_entity_full(entity.id)
+
+    update_collection(collection)
 
 
 @celery.task()

@@ -6,8 +6,8 @@ from aleph.core import USER_QUEUE, USER_ROUTING_KEY, db
 from aleph.model import Collection
 from aleph.search import QueryState, lead_count, collections_query
 from aleph.events import log_event
-from aleph.logic import delete_collection, update_collection
-from aleph.logic import analyze_collection
+from aleph.logic.collections import delete_collection, update_collection
+from aleph.logic.collections import process_collection, fetch_collection
 
 blueprint = Blueprint('collections_api', __name__)
 
@@ -33,10 +33,9 @@ def create():
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['GET'])
 def view(id):
-    collection = obj_or_404(Collection.by_id(id))
-    request.authz.require(request.authz.collection_read(collection))
-    data = collection.to_dict()
-    data['lead_count'] = lead_count(id)
+    data = obj_or_404(fetch_collection(id))
+    request.authz.require(request.authz.collection_read(id))
+    data['$leads'] = lead_count(id)
     return jsonify(data)
 
 
@@ -57,7 +56,8 @@ def update(id):
 def process(id):
     collection = obj_or_404(Collection.by_id(id))
     request.authz.require(request.authz.collection_write(collection))
-    analyze_collection.apply_async([collection.id], queue=USER_QUEUE,
+    process_collection.apply_async([collection.id],
+                                   queue=USER_QUEUE,
                                    routing_key=USER_ROUTING_KEY)
     log_event(request)
     return jsonify({'status': 'ok'})

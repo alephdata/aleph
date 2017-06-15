@@ -13,9 +13,9 @@ aleph.directive('collectionsScreen', ['$http', '$q', '$location', 'Authz', 'Coll
     link: function (scope, element, attrs) {
       scope.is_admin = Authz.is_admin();
       scope.writeable = Authz.collection(Authz.WRITE, scope.collection.id);
-      scope.showLeads = scope.collection.lead_count;
-      scope.disableDocuments = !scope.collection.doc_count;
-      scope.disableEntities = !scope.collection.entity_count;
+      scope.showLeads = scope.collection.$leads;
+      scope.disableDocuments = !scope.collection.$documents;
+      scope.disableEntities = !scope.collection.$entities;
 
       scope.uploads = [];
 

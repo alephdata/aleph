@@ -1,6 +1,6 @@
 import logging
 
-from aleph.index import index_items
+from aleph.index import index_bulk
 
 log = logging.getLogger(__name__)
 PAGE = 1000
@@ -24,7 +24,7 @@ def load_rows(dataset, query, rows):
                 if data is not None:
                     links.append(data)
 
-    index_items(entities, links)
+    index_bulk(entities, links)
     log.info("[%s] Indexed %s rows as %s entities, %s links...",
              dataset.name, len(rows), len(entities), len(links))
 

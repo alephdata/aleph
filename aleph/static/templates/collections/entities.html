@@ -99,11 +99,11 @@
               </button>
             </td>
             <td class="nobreak" width="1%">
-              <a ng-href="/documents?filter:entities.id={{entity.id}}" ng-if="entity.doc_count">
+              <a ng-href="/documents?filter:entities.id={{entity.id}}" ng-if="entity.$documents">
                 <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                {{entity.doc_count | number}}
+                {{entity.$documents | number}}
               </a>
-              <span ng-if="!entity.doc_count">
+              <span ng-if="!entity.$documents">
                 <i class="fa fa-file-text-o" aria-hidden="true"></i> 0
               </span>
             </td>
