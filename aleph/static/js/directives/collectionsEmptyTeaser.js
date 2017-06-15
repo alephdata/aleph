@@ -10,7 +10,7 @@ aleph.directive('collectionsEmptyTeaser', ['$location', 'Ingest', function($loca
     link: function (scope, element, attrs) {
       scope.ingestFiles = function() {
         Ingest.files([], scope.collection).then(function() {
-          $location.path('/collections/' + scope.collection.id + '/states');
+          $location.path('/collections/' + scope.collection.id);
         });
       };
     }
