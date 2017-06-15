@@ -1,26 +1,14 @@
 aleph.directive('searchEntitySuggest', ['$location', '$q', '$route', '$http', '$rootScope', 'Authz', 'Entity',
-  function($location, $q, $route, $http, $rootScope, Authz, Entity, Alert) {
+    function($location, $q, $route, $http, $rootScope, Authz, Entity) {
   return {
     restrict: 'E',
     scope: {
       query: '='
     },
-
-    $scope.hasAlert = function() {
-      return Alert.check(getAlert());
-    };
-
-    $scope.canCreateAlert = function() {
-      if ($scope.result.error) {
-        return false;
-      }
-      return Alert.valid(getAlert());
-    };
-
     templateUrl: 'templates/documents/search_entity_suggest.html',
     link: function (scope, element, attrs) {
       scope.triggerLogin = $rootScope.triggerLogin;
-
+      
       scope.createQueryEntity = function(schema) {
         var name = scope.queryText;
         name = name.replace(/[\"\'\(\)\[\]\+]*/, ' ');
