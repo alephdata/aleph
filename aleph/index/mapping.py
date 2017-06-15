@@ -1,7 +1,7 @@
 
-TYPE_COLLECTION = 'collection_v3'
+TYPE_COLLECTION = 'collection'
 TYPE_DOCUMENT = 'document'
-TYPE_RECORD = 'record_v2'
+TYPE_RECORD = 'record'
 TYPE_ENTITY = 'entity'
 TYPE_LINK = 'link'
 TYPE_LEAD = 'lead'
@@ -142,8 +142,6 @@ ENTITY_MAPPING = {
         "collection_id": {"type": "integer", "index": "not_analyzed"},
         "roles": {"type": "long", "index": "not_analyzed"},
         "foreign_ids": {"type": "string", "index": "not_analyzed"},
-        "doc_count": {"type": "long", "index": "not_analyzed"},
-        "$physical": {"type": "boolean", "index": "not_analyzed"},
         "fingerprints": {"type": "string", "index": "not_analyzed"},
         "names": {"type": "string", "index": "not_analyzed"},
         "identifiers": {"type": "string", "index": "not_analyzed"},
@@ -156,6 +154,8 @@ ENTITY_MAPPING = {
         "data": {"type": "nested"},
         "created_at": {"type": "date", "index": "not_analyzed"},
         "updated_at": {"type": "date", "index": "not_analyzed"},
+        "$documents": {"type": "long", "index": "not_analyzed"},
+        "$physical": {"type": "boolean", "index": "not_analyzed"}
     }
 }
 

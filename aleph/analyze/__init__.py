@@ -7,7 +7,6 @@ from aleph.core import celery, db
 from aleph.ext import get_analyzers
 from aleph.model import Document
 from aleph.index import index_document, index_records
-from aleph.search import TYPE_DOCUMENT, scan_iter
 
 
 log = logging.getLogger(__name__)
@@ -20,13 +19,6 @@ def install_analyzers():
     for task in ['embeddings2', 'ner2']:
         log.info("Downloading linguistic resources: %r...", task)
         downloader.download('TASK:%s' % task, quiet=True)
-
-
-def analyze_documents(collection_id):
-    query = {'term': {'collection_id': collection_id}}
-    query = {'query': query, '_source': False}
-    for row in scan_iter(query, TYPE_DOCUMENT):
-        analyze_document_id.delay(row.get('_id'))
 
 
 @celery.task()

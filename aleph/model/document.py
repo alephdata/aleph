@@ -150,9 +150,7 @@ class Document(db.Model, DatedModel, Metadata):
                 content_hash=None):
         """Try and find a document by various criteria."""
         q = cls.all()
-
-        if collection is not None:
-            q = q.filter(Document.collection_id == collection.id)
+        q = q.filter(Document.collection_id == collection.id)
 
         if parent_id is not None:
             q = q.filter(Document.parent_id == parent_id)
@@ -165,6 +163,7 @@ class Document(db.Model, DatedModel, Metadata):
             raise ValueError("No unique criterion for document.")
 
         document = q.first()
+        print parent_id, collection.id, foreign_id, content_hash, document
         if document is None:
             document = cls()
             document.type = cls.TYPE_OTHER

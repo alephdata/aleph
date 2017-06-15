@@ -7,6 +7,7 @@ from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.search.util import execute_basic
 from aleph.search.fragments import match_all, filter_query, multi_match
 from aleph.search.fragments import add_filter, aggregate, authz_filter
+from aleph.search.fragments import facet_collections
 from aleph.search.facet import parse_facet_result
 
 DEFAULT_FIELDS = ['collection_id', 'roles', 'name', 'data', 'countries',
@@ -95,20 +96,6 @@ def load_entity(entity_id):
     entity.pop('text', None)
     entity['id'] = result.get('_id')
     return entity
-
-
-def facet_collections(state, q, aggs):
-    filters = state.filters
-    filters['collection_id'] = state.authz.collections_read
-    aggs['scoped']['aggs']['collections'] = {
-        'filter': filter_query(q, filters),
-        'aggs': {
-            'collections': {
-                'terms': {'field': 'collection_id', 'size': state.facet_size}
-            }
-        }
-    }
-    return aggs
 
 
 def suggest_entities(prefix, authz, min_count=0, schemas=None, size=5):

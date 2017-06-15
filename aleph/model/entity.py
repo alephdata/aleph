@@ -200,14 +200,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
                 entity['properties'][k] = v
         return entity
 
-    def to_ref(self):
-        return {
-            'id': self.id,
-            'label': self.name,
-            'schema': self.type,
-            'collection_id': self.collection_id
-        }
-
     def __unicode__(self):
         return self.name
 

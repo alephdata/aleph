@@ -1,14 +1,15 @@
 import json
 import logging
 from pprint import pprint  # noqa
+from elasticsearch.helpers import scan
 
 from aleph import signals
 from aleph.core import es, es_index
 from aleph.index import TYPE_RECORD, TYPE_DOCUMENT
 from aleph.search.util import clean_highlight, execute_basic, add_filter
-from aleph.search.util import scan_iter
 from aleph.search.fragments import aggregate, filter_query
 from aleph.search.fragments import text_query, phrase_match, authz_filter
+from aleph.search.fragments import facet_collections
 from aleph.search.facet import parse_facet_result
 from aleph.search.records import records_query_internal, records_query_shoulds
 
@@ -24,10 +25,11 @@ def documents_iter(state, fields=None):
     """Iterate over a set of documents based on a query state."""
     q = text_query(state.text)
     q = authz_filter(q, state.authz, roles=False)
-    return scan_iter({
+    q = {
         'query': filter_query(q, state.filters),
         '_source': fields or DEFAULT_FIELDS
-    }, TYPE_DOCUMENT)
+    }
+    return scan(es, query=q, index=es_index, doc_type=TYPE_DOCUMENT)
 
 
 def documents_query(state, fields=None, facets=True, since=None):
@@ -69,9 +71,6 @@ def documents_query(state, fields=None, facets=True, since=None):
         if 'collections' in facets:
             aggs = facet_collections(state, q, aggs)
             facets.remove('collections')
-        if 'entities' in facets:
-            aggs = facet_entities(state, aggs)
-            facets.remove('entities')
         aggs = aggregate(state, q, aggs, facets)
 
     # allow plug-ins to post-process the query.
@@ -134,53 +133,6 @@ def documents_query(state, fields=None, facets=True, since=None):
                     doc['records']['results'].append(record)
 
     return output
-
-
-def facet_entities(state, aggs):
-    """Filter entities, facet for collections."""
-    # This limits the entity facet collections to the same collections
-    # which apply to the document part of the query. It is used by the
-    # collections view to show only entity facets from the currently
-    # selected collection.
-    collections = state.authz.collections_read
-    if 'collection' == state.get('scope'):
-        collections = state.collection_id
-
-    aggs['entities'] = {
-        'nested': {
-            'path': 'entities'
-        },
-        'aggs': {
-            'inner': {
-                'filter': {
-                    'terms': {'entities.collection_id': collections}
-                },
-                'aggs': {
-                    'entities': {
-                        'terms': {
-                            'field': 'entities.id',
-                            'size': state.facet_size
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return aggs
-
-
-def facet_collections(state, q, aggs):
-    filters = state.filters
-    filters['collection_id'] = state.authz.collections_read
-    aggs['scoped']['aggs']['collections'] = {
-        'filter': filter_query(q, filters),
-        'aggs': {
-            'collections': {
-                'terms': {'field': 'collection_id', 'size': state.facet_size}
-            }
-        }
-    }
-    return aggs
 
 
 def entity_documents(entity, state):

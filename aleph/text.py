@@ -28,6 +28,7 @@ def index_form(texts):
         if text is None:
             continue
         text = collapse_spaces(text)
+
         # XXX: is NFKD a great idea?
         text = decompose_nfkd(text)
         total_len += len(text)

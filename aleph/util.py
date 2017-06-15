@@ -19,7 +19,7 @@ def checksum(filename):
     hash = sha1()
     with open(filename, 'rb') as fh:
         while True:
-            block = fh.read(2 ** 10)
+            block = fh.read(8192)
             if not block:
                 break
             hash.update(block)
