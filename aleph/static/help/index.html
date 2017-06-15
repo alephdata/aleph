@@ -6,6 +6,10 @@
   use of some of it's advanced search operators.
 </p>
 
+<p>
+  This is is important when someone made a mistake typing up the document, but it's even more important for documents that have been scanned, and the text had to be reconstructed.
+</p>
+
 <h3>Advanced Search Operators</h3>
 
 <p>
@@ -24,13 +28,15 @@
   the requested search terms within a given distance from each other:
 </p>
 
-<pre>"Bank America"~2</pre>
+<pre>"Call for Comment"~2</pre>
 
 <p>
-  This will find relevant matches with the terms "Bank" and "America"
-  occuring within two words from each other, such as "Bank of America",
-  "Bank in America", even "America has a Bank".
+  This will find relevant matches with the terms "Call" "for", and "Comment"
+  occuring within two words from each other, such as "Call for Comment",
+  "Call for public comment", even "Comment for a call".
 </p>
+
+<img src="/static/images/gazettes-call-for-public-comment.png" alt="Proximity search for Call for Comment" style="width: 100%; border: 1px solid black">
 
 <h4>Spelling Errors</h4>
 
@@ -50,6 +56,8 @@
   permissible distance too high, you will get very slow searches and
   many false results.
 </p>
+
+<img src="/static/images/gazettes-typo.png" alt="Find Auction spelled as Auciton" style="border: 1px solid black">
 
 <h4>Composite queries</h4>
 
