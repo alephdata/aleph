@@ -7,8 +7,8 @@ from aleph.core import schemata
 from aleph.schema import Schema
 from aleph.util import dict_list, unique_list
 from aleph.text import string_value
-from aleph.datasets.formatting import Formatter
-from aleph.datasets.util import finalize_index
+from aleph.logic.bulk.formatting import Formatter
+from aleph.index.entities import finalize_index
 
 log = logging.getLogger(__name__)
 
@@ -80,7 +80,7 @@ class Mapper(object):
         return {p.name: p.get_values(record) for p in self.properties}
 
     def compute_key(self, record):
-        digest = sha1(self.query.dataset.name.encode('utf-8'))
+        digest = sha1(self.query.collection.foreign_id.encode('utf-8'))
         has_key = False
         for key in self.keys:
             value = record.get(key)
@@ -97,9 +97,10 @@ class Mapper(object):
 
     def to_index(self, record):
         return {
-            'dataset': self.query.dataset.name,
-            'roles': self.query.dataset.roles,
-            'properties': self.compute_properties(record)
+            'collection_id': self.query.collection.id,
+            'roles': self.query.roles,
+            'properties': self.compute_properties(record),
+            '$physical': False
         }
 
     def __repr__(self):

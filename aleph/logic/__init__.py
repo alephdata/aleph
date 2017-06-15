@@ -13,5 +13,4 @@ from aleph.logic.collections import update_collection, delete_collection  # noqa
 from aleph.logic.collections import process_collection  # noqa
 from aleph.logic.leads import generate_leads, update_lead  # noqa
 from aleph.logic.documents import update_document, delete_document  # noqa
-from aleph.logic.datasets import load_rows, load_dataset  # noqa
 from aleph.logic.alerts import check_alerts  # noqa

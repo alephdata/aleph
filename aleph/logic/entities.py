@@ -5,9 +5,9 @@ import logging
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Entity, EntityIdentity, Alert
 from aleph.model.common import merge_data
-from aleph.datasets.util import finalize_index
 from aleph.index import index_entity, flush_index, delete_entity_leads
 from aleph.index import delete_entity as index_delete
+from aleph.index.entities import finalize_index
 from aleph.search import load_entity
 from aleph.logic.leads import generate_leads
 

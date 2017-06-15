@@ -13,7 +13,6 @@ from aleph.views.leads_api import blueprint as leads_api
 from aleph.views.crawlers_api import blueprint as crawlers_api
 from aleph.views.ingest_api import blueprint as ingest_api
 from aleph.views.reconcile_api import blueprint as reconcile_api
-from aleph.views.datasets_api import blueprint as datasets_api
 
 
 def mount_app_blueprints(app):
@@ -31,5 +30,4 @@ def mount_app_blueprints(app):
     app.register_blueprint(crawlers_api)
     app.register_blueprint(ingest_api)
     app.register_blueprint(reconcile_api)
-    app.register_blueprint(datasets_api)
     signals.register_blueprints.send(app=app)

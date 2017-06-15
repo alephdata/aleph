@@ -1,0 +1,48 @@
+kek:
+    label: KEK
+    category: scrape
+    roles:
+      - guest
+    queries:
+      - database: ${ALEPH_TEST_BULK_DATABASE_URI}
+        tables:
+          - table: company
+            alias: comp
+          - table: company
+            alias: sub
+          - table: shares
+            alias: shares
+        joins:
+          - left: comp.id
+            right: shares.shareholder
+          - left: sub.id
+            right: shares.owns
+        entities:
+          company:
+            schema: Company
+            keys:
+              - comp.id
+            key_fingerprint: true
+            properties:
+              name:
+                column: comp.name
+              address:
+                column: comp.address
+              sourceUrl:
+                column: comp.url
+          subsidiary:
+            schema: Company
+            key: sub.id
+            key_fingerprint: true
+            properties:
+              name:
+                column: sub.name
+              address:
+                column: comp.address
+        links:
+          - schema: ownedBy
+            source: subsidiary
+            target: company
+            properties:
+              percentage:
+                column: shares.share

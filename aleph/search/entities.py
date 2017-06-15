@@ -9,9 +9,8 @@ from aleph.search.fragments import match_all, filter_query, multi_match
 from aleph.search.fragments import add_filter, aggregate, authz_filter
 from aleph.search.facet import parse_facet_result
 
-DEFAULT_FIELDS = ['collection_id', 'roles', 'dataset', 'name', 'data',
-                  'countries', 'schema', 'schemata', 'properties',
-                  'fingerprints', 'state']
+DEFAULT_FIELDS = ['collection_id', 'roles', 'name', 'data', 'countries',
+                  'schema', 'schemata', 'properties', 'fingerprints', 'state']
 
 
 def entities_query(state, fields=None, facets=True, doc_counts=False):

@@ -7,7 +7,7 @@ from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
-from aleph.core import create_app, archive, datasets
+from aleph.core import create_app, archive
 from aleph.model import db, upgrade_db, Collection, Document, Entity
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
@@ -15,10 +15,11 @@ from aleph.ingest import ingest_document
 from aleph.index import init_search, delete_index, upgrade_search
 from aleph.index import index_document_id
 from aleph.logic import reindex_entities, delete_collection, process_collection
-from aleph.logic import load_dataset, update_entity_full
-from aleph.logic import update_collection
+from aleph.logic import update_entity_full, update_collection
 from aleph.logic.alerts import check_alerts
+from aleph.logic.bulk import bulk_load
 from aleph.ext import get_crawlers
+from aleph.util import load_config_file
 
 
 log = logging.getLogger('aleph')
@@ -129,10 +130,11 @@ def index(foreign_id=None):
 
 
 @manager.command
-def loaddataset(name):
+def bulkload(file_name):
     """Index all the entities in a given dataset."""
-    dataset = datasets.get(name)
-    load_dataset(dataset)
+    log.info("Loading datasets from: %s", file_name)
+    config = load_config_file(file_name)
+    bulk_load(config)
 
 
 @manager.command

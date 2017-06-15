@@ -168,21 +168,6 @@ def get_schemata():
     return app._schemata
 
 
-def get_datasets():
-    app = current_app._get_current_object()
-    if not hasattr(app, '_datasets'):
-        datasets_yaml = app.config.get('DATASETS_YAML')
-        if datasets_yaml is not None:
-            log.info("Loading datasets from: %s", datasets_yaml)
-            datasets = load_config_file(datasets_yaml)
-        else:
-            log.warn("No datasets.yaml defined.")
-            datasets = {}
-        from aleph.datasets import DatasetSet
-        app._datasets = DatasetSet(datasets)
-    return app._datasets
-
-
 def get_upload_folder():
     folder = current_app.config.get('UPLOAD_FOLDER')
     try:
@@ -203,7 +188,6 @@ es = LocalProxy(get_es)
 es_index = LocalProxy(get_es_index)
 archive = LocalProxy(get_archive)
 schemata = LocalProxy(get_schemata)
-datasets = LocalProxy(get_datasets)
 upload_folder = LocalProxy(get_upload_folder)
 secret_key = LocalProxy(get_app_secret_key)
 language_whitelist = LocalProxy(get_language_whitelist)

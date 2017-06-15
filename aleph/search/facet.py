@@ -1,7 +1,7 @@
 import six
 from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 
-from aleph.core import datasets, schemata, get_config
+from aleph.core import schemata, get_config
 from aleph.model import Entity, Collection
 
 
@@ -50,23 +50,6 @@ class Facet(object):
                                   key=lambda k: k['active'],
                                   reverse=True)),
         }
-
-
-class DatasetFacet(Facet):
-
-    def expand(self, keys):
-        labels = {}
-        for key in keys:
-            try:
-                dataset = datasets.get(key)
-                labels[key] = {
-                    'label': dataset.label,
-                    'category': dataset.category,
-                    'public': dataset.public,
-                }
-            except NameError:
-                labels[key] = {'label': key}
-        return labels
 
 
 class SchemaFacet(Facet):
@@ -145,7 +128,6 @@ def parse_facet_result(state, result):
             'countries': CountryFacet,
             'category': CategoryFacet,
             'remote.countries': CountryFacet,
-            'dataset': DatasetFacet,
             'entities': EntityFacet,
             'schema': SchemaFacet,
             'schemata': SchemaFacet,

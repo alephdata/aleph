@@ -11,7 +11,7 @@ from sqlalchemy.schema import Table
 
 from aleph.util import dict_list
 from aleph.text import string_value
-from aleph.datasets.mapper import EntityMapper, LinkMapper
+from aleph.logic.bulk.mapper import EntityMapper, LinkMapper
 
 log = logging.getLogger(__name__)
 DATA_PAGE = 2000
@@ -44,8 +44,9 @@ class QueryTable(object):
 class Query(object):
     """A dataset describes one set of data to be loaded."""
 
-    def __init__(self, dataset, data):
-        self.dataset = dataset
+    def __init__(self, collection, data):
+        self.collection = collection
+        self.roles = collection.roles
         self.data = data
 
         self.entities = []
@@ -65,13 +66,13 @@ class Query(object):
         return refs
 
     def __repr__(self):
-        return '<Query(%s)>' % self.dataset
+        return '<Query(%s)>' % self.collection.foreign_id
 
 
-class DBQuery(Query):
+class DatabaseQuery(Query):
 
-    def __init__(self, dataset, data):
-        super(DBQuery, self).__init__(dataset, data)
+    def __init__(self, collection, data):
+        super(DatabaseQuery, self).__init__(collection, data)
 
         tables = dict_list(data, 'table', 'tables')
 
@@ -81,9 +82,12 @@ class DBQuery(Query):
     @property
     def engine(self):
         if not hasattr(self, '_engine'):
+            kwargs = {}
+            if self.database_uri.lower().startswith('postgres'):
+                kwargs['server_side_cursors'] = True
             self._engine = create_engine(self.database_uri,
                                          poolclass=NullPool,
-                                         server_side_cursors=True)
+                                         **kwargs)
         return self._engine
 
     @property
@@ -141,7 +145,7 @@ class DBQuery(Query):
         """Compose the actual query and return an iterator of ``Record``."""
         mapping = {self.get_column(r).name: r for r in self.active_refs}
         q = self.compose_query()
-        log.info("Query [%s]: %s", self.dataset.name, q)
+        log.info("Query [%s]: %s", self.collection.foreign_id, q)
         rp = self.engine.execute(q)
         log.info("Query executed, loading data...")
         while True:
@@ -155,14 +159,14 @@ class DBQuery(Query):
 class CSVQuery(Query):
     """Special case for entity loading directly from a CSV URL"""
 
-    def __init__(self, dataset, data):
-        super(CSVQuery, self).__init__(dataset, data)
+    def __init__(self, collection, data):
+        super(CSVQuery, self).__init__(collection, data)
         self.csv_urls = set()
         for csv_url in dict_list(data, 'csv_url', 'csv_urls'):
             self.csv_urls.add(os.path.expandvars(csv_url))
 
         if not len(self.csv_urls):
-            log.warning("[%s]: no CSV URLs specified", dataset.name)
+            log.warning("[%s]: no CSV URLs specified", collection.foreign_id)
 
     def read_csv(self, csv_url):
         try:
@@ -190,7 +194,7 @@ class CSVQuery(Query):
         """Iterate through the table applying filters on-the-go."""
         mapping = {ref.split('.')[-1]: ref for ref in self.active_refs}
         for csv_url in self.csv_urls:
-            log.info("Import [%s]: %s", self.dataset.name, csv_url)
+            log.info("Import [%s]: %s", self.collection.foreign_id, csv_url)
             for row in self.read_csv(csv_url):
                 data = {}
                 for k, v in row.items():
@@ -202,4 +206,4 @@ class CSVQuery(Query):
                     yield data
 
     def __repr__(self):
-        return '<CSVQuery(%s)>' % self.dataset
+        return '<CSVQuery(%s)>' % self.collection.foreign_id
