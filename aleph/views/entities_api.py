@@ -4,7 +4,7 @@ from apikit import obj_or_404, jsonify, request_data, arg_bool
 
 from aleph.core import db, schemata
 from aleph.model import Entity, Collection
-from aleph.logic import update_entity, delete_entity, combined_entity
+from aleph.logic import update_entity, delete_entity
 from aleph.events import log_event
 from aleph.search import QueryState
 from aleph.search import entities_query, links_query, entity_documents
@@ -91,16 +91,14 @@ def similar(id):
             'total': 0
         })
     state = QueryState(request.args, request.authz)
-    combined = combined_entity(entity)
-    return jsonify(similar_entities(combined, state))
+    return jsonify(similar_entities(entity, state))
 
 
 @blueprint.route('/api/1/entities/<id>/documents', methods=['GET'])
 def documents(id):
     entity, _ = get_entity(id, request.authz.READ)
     state = QueryState(request.args, request.authz)
-    combined = combined_entity(entity)
-    return jsonify(entity_documents(combined, state))
+    return jsonify(entity_documents(entity, state))
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])

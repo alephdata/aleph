@@ -1,5 +1,4 @@
 from pprint import pprint  # noqa
-from elasticsearch.exceptions import NotFoundError
 
 from aleph.core import es, es_index
 from aleph.model import Document
@@ -58,6 +57,9 @@ def get_collection_stats(data):
 
 def index_collection(collection):
     """Index a collection."""
+    if collection.deleted_at is not None:
+        return delete_collection(collection.id)
+
     data = collection.to_index_dict()
     data = get_collection_stats(data)
     data.pop('id', None)
@@ -86,7 +88,7 @@ def delete_collection(collection_id):
     """Delete all documents from a particular collection."""
     query_delete({'term': {'collection_id': collection_id}})
     query_delete({'term': {'entity_collection_id': collection_id}})
-    try:
-        es.delete(index=es_index, doc_type=TYPE_COLLECTION, id=collection_id)
-    except NotFoundError:
-        pass
+    es.delete(index=es_index,
+              doc_type=TYPE_COLLECTION,
+              id=collection_id,
+              ignore=[404])

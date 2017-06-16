@@ -163,7 +163,6 @@ class Document(db.Model, DatedModel, Metadata):
             raise ValueError("No unique criterion for document.")
 
         document = q.first()
-        print parent_id, collection.id, foreign_id, content_hash, document
         if document is None:
             document = cls()
             document.type = cls.TYPE_OTHER
@@ -203,12 +202,13 @@ class Document(db.Model, DatedModel, Metadata):
     def to_index_dict(self):
         data = self.to_dict()
         data['text'] = index_form(self.text_parts())
+        data['text'].extend(index_form(ascii_text(data.get('title'))))
+        data['text'].extend(index_form(ascii_text(data.get('summary'))))
         data['schema'] = self.SCHEMA
         data['schemata'] = [self.SCHEMA]
         data['name_sort'] = ascii_text(data.get('title'))
-        data['title_latin'] = ascii_text(data.get('title'))
-        data['summary_latin'] = ascii_text(data.get('summary'))
         data.pop('tables')
+        data.pop('headers')
         return data
 
     def __repr__(self):

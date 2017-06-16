@@ -92,10 +92,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
 
     @property
     def roles(self):
-        q = db.session.query(Permission.role_id)
-        q = q.filter(Permission.collection_id == self.id)  # noqa
-        q = q.filter(Permission.read == True)  # noqa
-        return [e.role_id for e in q.all()]
+        if not hasattr(self, '_roles'):
+            q = db.session.query(Permission.role_id)
+            q = q.filter(Permission.collection_id == self.id)  # noqa
+            q = q.filter(Permission.read == True)  # noqa
+            self._roles = [e.role_id for e in q.all()]
+        return self._roles
 
     def to_dict(self):
         data = super(Collection, self).to_dict()

@@ -42,7 +42,7 @@ def entities_query(state, fields=None, facets=True, doc_counts=False):
         aggs = aggregate(state, q, aggs, facets)
 
     if state.sort == 'doc_count':
-        sort = [{'doc_count': 'desc'}, '_score']
+        sort = [{'$documents': 'desc'}, '_score']
     elif state.sort == 'score':
         sort = ['_score', {'name_sort': 'asc'}]
     else:

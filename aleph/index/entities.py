@@ -8,6 +8,7 @@ from elasticsearch.helpers import BulkIndexError
 from elasticsearch import TransportError
 
 from aleph.core import es, es_index, schemata
+from aleph.model import Entity
 from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT, TYPE_LINK
 from aleph.index.util import merge_docs, bulk_op
 from aleph.util import ensure_list
@@ -31,6 +32,9 @@ def get_count(entity):
 
 def index_entity(entity):
     """Index an entity."""
+    if entity.state != Entity.STATE_ACTIVE:
+        return delete_entity(entity.id)
+
     data = entity.to_index_dict()
     data.pop('id', None)
     data['$documents'] = get_count(entity)

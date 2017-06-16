@@ -13,21 +13,22 @@ COLLECTION_MAPPING = {
     },
     "date_detection": False,
     "properties": {
-        "label": {"type": "string", "index": "analyzed"},
-        "name_sort": {"type": "string", "index": "not_analyzed"},
-        "roles": {"type": "long", "index": "not_analyzed"},
-        "foreign_id": {"type": "string", "index": "not_analyzed"},
-        "creator_id": {"type": "long", "index": "not_analyzed"},
-        "languages": {"type": "keyword", "index": "not_analyzed"},
-        "countries": {"type": "keyword", "index": "not_analyzed"},
-        "category": {"type": "keyword", "index": "not_analyzed"},
-        "summary": {"type": "string", "index": "analyzed"},
+        "label": {"type": "text"},
+        "name_sort": {"type": "keyword"},
+        "roles": {"type": "long"},
+        "foreign_id": {"type": "keyword"},
+        "creator_id": {"type": "long"},
+        "languages": {"type": "keyword"},
+        "countries": {"type": "keyword"},
+        "category": {"type": "keyword"},
+        "summary": {"type": "text"},
         "managed": {"type": "boolean", "index": "not_analyzed"},
-        "created_at": {"type": "date", "index": "not_analyzed"},
-        "updated_at": {"type": "date", "index": "not_analyzed"},
-        "$total": {"type": "long", "index": "not_analyzed"},
-        "$entities": {"type": "long", "index": "not_analyzed"},
-        "$documents": {"type": "long", "index": "not_analyzed"},
+        "created_at": {"type": "date"},
+        "updated_at": {"type": "date"},
+        "$total": {"type": "long"},
+        "$entities": {"type": "long"},
+        "$documents": {"type": "long"},
+        "$schemata": {"type": "object"},
     }
 }
 
@@ -35,60 +36,38 @@ DOCUMENT_MAPPING = {
     "_all": {
         "enabled": True
     },
-    "dynamic_templates": [
-        {
-            "text": {
-                "match": "parent.*",
-                "mapping": {
-                    "type": "string"
-                }
-            }
-        }
-    ],
     "date_detection": False,
     "properties": {
-        "parent_id": {"type": "integer", "index": "not_analyzed"},
-        "title": {"type": "string", "index": "analyzed"},
-        "title_latin": {"type": "string", "index": "analyzed"},
-        "name_sort": {"type": "string", "index": "not_analyzed"},
-        "schema": {"type": "string", "index": "not_analyzed"},
-        "schemata": {"type": "string", "index": "not_analyzed"},
-        "status": {"type": "string", "index": "not_analyzed"},
-        "crawler": {"type": "string", "index": "not_analyzed"},
-        "crawler_run": {"type": "string", "index": "not_analyzed"},
-        "error_type": {"type": "string", "index": "not_analyzed"},
-        "error_message": {"type": "string", "index": "analyzed"},
-        "error_details": {"type": "string", "index": "analyzed"},
-        "content_hash": {"type": "string", "index": "not_analyzed"},
-        "file_name": {"type": "string", "index": "not_analyzed"},
-        "collection_id": {"type": "integer", "index": "not_analyzed"},
-        "roles": {"type": "long", "index": "not_analyzed"},
-        "source_url": {"type": "string", "index": "not_analyzed"},
-        "extension": {"type": "string", "index": "not_analyzed"},
-        "languages": {"type": "string", "index": "not_analyzed"},
-        "countries": {"type": "string", "index": "not_analyzed"},
-        "recipients": {"type": "string", "index": "not_analyzed"},
-        "keywords": {"type": "string", "index": "not_analyzed"},
-        "emails": {"type": "string", "index": "not_analyzed"},
-        "urls": {"type": "string", "index": "not_analyzed"},
-        "domains": {"type": "string", "index": "not_analyzed"},
-        "phone_numbers": {"type": "string", "index": "not_analyzed"},
+        "parent_id": {"type": "long"},
+        "title": {"type": "text"},
+        "name_sort": {"type": "keyword"},
+        "schema": {"type": "keyword"},
+        "schemata": {"type": "keyword"},
+        "status": {"type": "keyword"},
+        "crawler": {"type": "keyword"},
+        "crawler_run": {"type": "keyword"},
+        "error_type": {"type": "keyword"},
+        "error_message": {"type": "text"},
+        "content_hash": {"type": "keyword"},
+        "file_name": {"type": "keyword"},
+        "collection_id": {"type": "long"},
+        "roles": {"type": "long"},
+        "source_url": {"type": "keyword"},
+        "extension": {"type": "keyword"},
+        "languages": {"type": "keyword"},
+        "countries": {"type": "keyword"},
+        "keywords": {"type": "keyword"},
+        "emails": {"type": "keyword"},
+        "urls": {"type": "keyword"},
+        "domains": {"type": "keyword"},
+        "phone_numbers": {"type": "keyword"},
         "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
-        "mime_type": {"type": "string", "index": "not_analyzed"},
-        "author": {"type": "string", "index": "not_analyzed"},
-        "summary": {"type": "string", "index": "analyzed"},
-        "summary_latin": {"type": "string", "index": "analyzed"},
-        "text": {"type": "string", "index": "analyzed"},
-        "created_at": {"type": "date", "index": "not_analyzed"},
-        "updated_at": {"type": "date", "index": "not_analyzed"},
-        "entities": {
-            "type": "nested",
-            "include_in_parent": True,
-            "properties": {
-                "id": {"type": "string", "index": "not_analyzed"},
-                "collection_id": {"type": "integer", "index": "not_analyzed"}
-            }
-        },
+        "mime_type": {"type": "keyword"},
+        "author": {"type": "text"},
+        "summary": {"type": "text"},
+        "text": {"type": "text"},
+        "created_at": {"type": "date"},
+        "updated_at": {"type": "date"},
     }
 }
 
@@ -98,11 +77,11 @@ RECORD_MAPPING = {
     },
     "date_detection": False,
     "properties": {
-        "collection_id": {"type": "integer", "index": "not_analyzed"},
-        "document_id": {"type": "integer", "index": "not_analyzed"},
-        "index": {"type": "integer", "index": "not_analyzed"},
-        "sheet": {"type": "integer", "index": "not_analyzed"},
-        "text": {"type": "string", "index": "analyzed"}
+        "collection_id": {"type": "long"},
+        "document_id": {"type": "long"},
+        "index": {"type": "long"},
+        "sheet": {"type": "long"},
+        "text": {"type": "text"}
     }
 }
 
@@ -115,8 +94,7 @@ ENTITY_MAPPING = {
             "fields": {
                 "match": "properties.*",
                 "mapping": {
-                    "type": "string",
-                    "index": "analyzed"
+                    "type": "text"
                 }
             }
         },
@@ -124,38 +102,36 @@ ENTITY_MAPPING = {
             "fields": {
                 "match": "data.*",
                 "mapping": {
-                    "type": "string",
-                    "index": "not_analyzed"
+                    "type": "keyword"
                 }
             }
         }
     ],
     "date_detection": False,
     "properties": {
-        "name": {"type": "string", "index": "analyzed"},
-        "name_sort": {"type": "string", "index": "not_analyzed"},
-        "schema": {"type": "string", "index": "not_analyzed"},
-        "schemata": {"type": "string", "index": "not_analyzed"},
-        "dataset": {"type": "string", "index": "not_analyzed"},
-        "roles": {"type": "long", "index": "not_analyzed"},
-        "text": {"type": "string", "index": "analyzed"},
-        "collection_id": {"type": "integer", "index": "not_analyzed"},
-        "roles": {"type": "long", "index": "not_analyzed"},
-        "foreign_ids": {"type": "string", "index": "not_analyzed"},
-        "fingerprints": {"type": "string", "index": "not_analyzed"},
-        "names": {"type": "string", "index": "not_analyzed"},
-        "identifiers": {"type": "string", "index": "not_analyzed"},
-        "countries": {"type": "string", "index": "not_analyzed"},
+        "name": {"type": "text"},
+        "name_sort": {"type": "keyword"},
+        "schema": {"type": "keyword"},
+        "schemata": {"type": "keyword"},
+        "roles": {"type": "long"},
+        "text": {"type": "text"},
+        "collection_id": {"type": "long"},
+        "roles": {"type": "long"},
+        "foreign_ids": {"type": "keyword"},
+        "fingerprints": {"type": "keyword"},
+        "names": {"type": "text"},
+        "identifiers": {"keyword": "text"},
+        "countries": {"type": "keyword"},
         "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
-        "emails": {"type": "string", "index": "not_analyzed"},
-        "phones": {"type": "string", "index": "not_analyzed"},
-        "addresses": {"type": "string", "index": "not_analyzed"},
-        "properties": {"type": "nested"},
-        "data": {"type": "nested"},
-        "created_at": {"type": "date", "index": "not_analyzed"},
-        "updated_at": {"type": "date", "index": "not_analyzed"},
-        "$documents": {"type": "long", "index": "not_analyzed"},
-        "$physical": {"type": "boolean", "index": "not_analyzed"}
+        "emails": {"type": "keyword"},
+        "phones": {"type": "keyword"},
+        "addresses": {"type": "keyword"},
+        "properties": {"type": "object"},
+        "data": {"type": "object"},
+        "created_at": {"type": "date"},
+        "updated_at": {"type": "date"},
+        "$documents": {"type": "long"},
+        "$physical": {"type": "boolean"}
     }
 }
 
@@ -168,34 +144,33 @@ LINK_MAPPING = {
             "fields": {
                 "match": "properties.*",
                 "mapping": {
-                    "type": "string",
-                    "index": "not_analyzed"
+                    "type": "text"
                 }
             }
         }
     ],
     "date_detection": False,
     "properties": {
-        "schema": {"type": "string", "index": "not_analyzed"},
-        "schemata": {"type": "string", "index": "not_analyzed"},
-        "dataset": {"type": "string", "index": "not_analyzed"},
-        "collection_id": {"type": "integer", "index": "not_analyzed"},
-        "roles": {"type": "long", "index": "not_analyzed"},
-        "fingerprints": {"type": "string", "index": "not_analyzed"},
-        "names": {"type": "string", "index": "not_analyzed"},
-        "identifiers": {"type": "string", "index": "not_analyzed"},
-        "countries": {"type": "string", "index": "not_analyzed"},
+        "schema": {"type": "keyword"},
+        "schemata": {"type": "keyword"},
+        "dataset": {"type": "keyword"},
+        "collection_id": {"type": "long"},
+        "roles": {"type": "long"},
+        "fingerprints": {"type": "keyword"},
+        "names": {"type": "text"},
+        "identifiers": {"type": "keyword"},
+        "countries": {"type": "keyword"},
         "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
-        "emails": {"type": "string", "index": "not_analyzed"},
-        "phones": {"type": "string", "index": "not_analyzed"},
-        "addresses": {"type": "string", "index": "not_analyzed"},
-        "text": {"type": "string", "index": "analyzed"},
-        "properties": {"type": "nested"},
+        "emails": {"type": "keyword"},
+        "phones": {"type": "keyword"},
+        "addresses": {"type": "text"},
+        "text": {"type": "text"},
+        "properties": {"type": "object"},
         "origin": {
             "type": "object",
             "properties": {
-                "id": {"type": "string", "index": "not_analyzed"},
-                "fingerprints": {"type": "string", "index": "not_analyzed"}
+                "id": {"type": "keyword"},
+                "fingerprints": {"type": "keyword"}
             }
         },
         "remote": {
@@ -206,18 +181,19 @@ LINK_MAPPING = {
 }
 
 LEAD_MAPPING = {
-    "_all": {"enabled": False},
+    "_all": {
+        "enabled": False
+    },
     "date_detection": False,
     "properties": {
-        "entity_id": {"type": "string", "index": "not_analyzed"},
-        "entity_collection_id": {"type": "long", "index": "not_analyzed"},
-        "score": {"type": "double", "index": "not_analyzed"},
-        "match_id": {"type": "string", "index": "not_analyzed"},
-        "judgement": {"type": "integer", "index": "not_analyzed"},
-        "schema": {"type": "string", "index": "not_analyzed"},
-        "schemata": {"type": "string", "index": "not_analyzed"},
-        "dataset": {"type": "string", "index": "not_analyzed"},
-        "roles": {"type": "long", "index": "not_analyzed"},
-        "collection_id": {"type": "integer", "index": "not_analyzed"},
+        "entity_id": {"type": "keyword"},
+        "entity_collection_id": {"type": "long"},
+        "score": {"type": "double"},
+        "match_id": {"type": "keyword"},
+        "judgement": {"type": "integer"},
+        "schema": {"type": "keyword"},
+        "schemata": {"type": "keyword"},
+        "roles": {"type": "long"},
+        "collection_id": {"type": "long"},
     }
 }

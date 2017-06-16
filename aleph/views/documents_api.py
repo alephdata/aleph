@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, send_file, request
 from apikit import jsonify, Pager, request_data
 
 from aleph.core import archive, url_for, db
-from aleph.model import Document, DocumentRecord, Entity
+from aleph.model import Document, DocumentRecord
 from aleph.logic import update_document
 from aleph.events import log_event
 from aleph.views.cache import enable_cache

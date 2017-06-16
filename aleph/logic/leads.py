@@ -43,7 +43,6 @@ def generate_leads(entity_id):
             'schema': other.get('schema'),
             'schemata': other.get('schemata'),
             'collection_id': other.get('collection_id'),
-            'dataset': other.get('dataset'),
             'roles': other.get('roles')
         })
 
