@@ -35,7 +35,6 @@ def index():
 @blueprint.route('/api/1/documents/<int:document_id>')
 def view(document_id):
     doc = get_document(document_id)
-    enable_cache()
     data = doc.to_dict()
     if doc.parent is not None:
         data['parent'] = doc.parent.to_dict()
@@ -64,7 +63,6 @@ def update(document_id):
 @blueprint.route('/api/1/documents/<int:document_id>/file')
 def file(document_id):
     document = get_document(document_id)
-    enable_cache(server_side=True)
     log_event(request, document_id=document.id)
     url = archive.generate_url(document.content_hash,
                                file_name=document.file_name,
@@ -72,6 +70,7 @@ def file(document_id):
     if url is not None:
         return redirect(url)
 
+    enable_cache()
     local_path = archive.load_file(document.content_hash,
                                    file_name=document.file_name)
     if local_path is None:
@@ -86,7 +85,6 @@ def file(document_id):
 @blueprint.route('/api/1/documents/<int:document_id>/pdf')
 def pdf(document_id):
     document = get_document(document_id)
-    enable_cache(server_side=True)
     log_event(request, document_id=document.id)
     if document.type != Document.TYPE_TEXT:
         raise BadRequest("PDF is only available for text documents")
@@ -94,6 +92,7 @@ def pdf(document_id):
     if url is not None:
         return redirect(url)
 
+    enable_cache()
     path = archive.load_file(document.pdf_version,
                              file_name=document.file_name)
     if path is None:
@@ -103,8 +102,8 @@ def pdf(document_id):
 
 @blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>')
 def table(document_id, table_id):
+    enable_cache()
     document = get_document(document_id)
-    enable_cache(vary_user=True)
     try:
         return jsonify(document.tables[table_id])
     except IndexError:
@@ -113,8 +112,8 @@ def table(document_id, table_id):
 
 @blueprint.route('/api/1/documents/<int:document_id>/records')
 def records(document_id):
+    enable_cache()
     document = get_document(document_id)
-    enable_cache(vary_user=True)
     state = QueryState(request.args, request.authz)
     query = records_query(document.id, state)
     result = execute_records_query(document.id, state, query)
@@ -128,6 +127,7 @@ def records(document_id):
 
 @blueprint.route('/api/1/documents/<int:document_id>/records/<int:index>')
 def record(document_id, index):
+    enable_cache()
     document = get_document(document_id)
     q = db.session.query(DocumentRecord)
     q = q.filter(DocumentRecord.document_id == document.id)
@@ -135,5 +135,4 @@ def record(document_id, index):
     record = q.first()
     if record is None:
         raise NotFound("No such page: %s" % index)
-    enable_cache(server_side=True)
     return jsonify(record)

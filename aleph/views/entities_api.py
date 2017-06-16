@@ -17,7 +17,7 @@ blueprint = Blueprint('entities_api', __name__)
 
 @blueprint.route('/api/1/entities', methods=['GET'])
 def index():
-    enable_cache(vary_user=True)
+    enable_cache()
     state = QueryState(request.args, request.authz)
     doc_counts = state.getbool('doc_counts')
     res = entities_query(state, doc_counts=doc_counts)
@@ -37,7 +37,7 @@ def all():
 
 @blueprint.route('/api/1/entities/_suggest', methods=['GET'])
 def suggest():
-    enable_cache(vary_user=True, server_side=False)
+    enable_cache()
     prefix = request.args.get('prefix')
     min_count = int(request.args.get('min_count', 0))
     return jsonify(suggest_entities(prefix, request.authz, min_count))
@@ -76,6 +76,7 @@ def view(id):
 @blueprint.route('/api/1/entities/<id>/links', methods=['GET'])
 def links(id):
     entity, obj = get_entity(id, request.authz.READ)
+    enable_cache()
     state = QueryState(request.args, request.authz)
     return jsonify(links_query(entity, state))
 
@@ -83,6 +84,7 @@ def links(id):
 @blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])
 def similar(id):
     entity, _ = get_entity(id, request.authz.READ)
+    enable_cache()
     schema = schemata.get(entity.get('schema'))
     if not schema.fuzzy:
         return jsonify({
@@ -97,6 +99,7 @@ def similar(id):
 @blueprint.route('/api/1/entities/<id>/documents', methods=['GET'])
 def documents(id):
     entity, _ = get_entity(id, request.authz.READ)
+    enable_cache()
     state = QueryState(request.args, request.authz)
     return jsonify(entity_documents(entity, state))
 

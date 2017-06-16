@@ -10,7 +10,6 @@ from aleph.authz import Authz, get_public_roles
 from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.events import log_event
-from aleph.views.cache import enable_cache
 from aleph.views.util import extract_next_url
 
 
@@ -39,7 +38,6 @@ def load_role():
 @blueprint.route('/api/1/sessions')
 def status():
     authz = request.authz
-    enable_cache(vary_user=True)
     providers = sorted(oauth.remote_apps.values(), key=lambda p: p.label)
     providers = [{
         'name': p.name,

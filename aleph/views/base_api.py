@@ -52,13 +52,13 @@ def angular_templates():
 @blueprint.route('/signup/<path:path>')
 @blueprint.route('/')
 def ui(**kwargs):
-    enable_cache(server_side=True)
+    enable_cache(vary_user=False)
     return render_template("layout.html", templates=angular_templates())
 
 
 @blueprint.route('/api/1/metadata')
 def metadata():
-    enable_cache(server_side=False)
+    enable_cache(vary_user=False)
     return jsonify({
         'status': 'ok',
         'maintenance': request.authz.in_maintenance,
@@ -85,7 +85,7 @@ def metadata():
 
 @blueprint.route('/api/1/statistics')
 def statistics():
-    enable_cache(vary_user=True)
+    enable_cache()
     documents = documents_query(QueryState({}, request.authz, limit=0))
     entities = entities_query(QueryState({}, request.authz, limit=0))
     return jsonify({

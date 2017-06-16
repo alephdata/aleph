@@ -22,7 +22,7 @@ def setup_caching():
     request._http_server = True
 
 
-def enable_cache(vary_user=False, vary=None, server_side=True):
+def enable_cache(vary_user=True, vary=None, server_side=False):
     args = sorted(set(request.args.items()))
     # jquery where is your god now?!?
     args = filter(lambda (k, v): k != '_', args)

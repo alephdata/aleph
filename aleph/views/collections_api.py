@@ -1,6 +1,5 @@
 from flask import Blueprint, request
 from apikit import obj_or_404, jsonify, request_data
-from normality import ascii_text
 
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY, db
 from aleph.model import Collection
@@ -61,20 +60,6 @@ def process(id):
                                    routing_key=USER_ROUTING_KEY)
     log_event(request)
     return jsonify({'status': 'ok'})
-
-
-@blueprint.route('/api/1/collections/<int:id>/pending', methods=['GET'])
-def pending(id):
-    collection = obj_or_404(Collection.by_id(id))
-    request.authz.require(request.authz.collection_read(collection))
-    q = collection.pending_entities()
-    q = q.limit(30)
-    entities = []
-    for entity in q.all():
-        data = entity.to_dict()
-        data['name_latin'] = ascii_text(entity.name)
-        entities.append(data)
-    return jsonify({'results': entities, 'total': len(entities)})
 
 
 @blueprint.route('/api/1/collections/<int:id>', methods=['DELETE'])

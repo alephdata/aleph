@@ -4,7 +4,6 @@ from apikit import obj_or_404, request_data, jsonify
 from aleph.core import db
 from aleph.model import Alert
 from aleph.events import log_event
-from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('alerts_api', __name__)
 
@@ -28,7 +27,6 @@ def create():
 
 @blueprint.route('/api/1/alerts/<int:id>', methods=['GET'])
 def view(id):
-    enable_cache(vary_user=True)
     request.authz.require(request.authz.logged_in)
     alert = obj_or_404(Alert.by_id(id, role=request.authz.role))
     return jsonify(alert)
