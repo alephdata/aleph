@@ -7,8 +7,9 @@ from aleph.model import Entity, Collection
 from aleph.logic import update_entity, delete_entity
 from aleph.events import log_event
 from aleph.search import QueryState
-from aleph.search import entities_query, links_query, entity_documents
+from aleph.search import entities_query, entity_documents
 from aleph.search import suggest_entities, similar_entities
+from aleph.search import LinksQuery
 from aleph.views.util import get_entity
 from aleph.views.cache import enable_cache
 
@@ -77,8 +78,8 @@ def view(id):
 def links(id):
     entity, obj = get_entity(id, request.authz.READ)
     enable_cache()
-    state = QueryState(request.args, request.authz)
-    return jsonify(links_query(entity, state))
+    result = LinksQuery.handle_request(request, entity=entity)
+    return jsonify(result)
 
 
 @blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])

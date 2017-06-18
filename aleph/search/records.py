@@ -8,11 +8,7 @@ SNIPPET_SIZE = 100
 
 
 def records_query(document_id, state):
-    try:
-        rows = [int(r) for r in state.getlist('row')]
-    except:
-        rows = []
-
+    rows = state.getintlist('row')
     score_query = state.has_text or len(rows)
     shoulds = records_query_shoulds(state)
     if not len(shoulds):
@@ -66,27 +62,6 @@ def records_query_internal(document_id, shoulds, size=5):
         },
         '_source': ['document_id', 'sheet', 'index']
     }
-
-
-# def scan_entity_mentions(entity):
-#     """Find mentions of a given entity in all records."""
-#     shoulds = []
-#     for term in entity.regex_terms:
-#         shoulds.append(text_query_string(term))
-#
-#     query = {
-#         'query': {
-#             'bool': {
-#                 'should': shoulds,
-#                 'minimum_should_match': 1
-#             }
-#         },
-#         'sort': [{'document_id': 'desc'}],
-#         '_source': ['document_id', 'text']
-#     }
-#     for res in scan(es, query=query, index=es_index, doc_type=[TYPE_RECORD]):
-#         for text in ensure_list(res.get('_source').get('text')):
-#             yield (res.get('_source').get('document_id'), text)
 
 
 def execute_records_query(document_id, state, query):

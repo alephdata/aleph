@@ -10,7 +10,7 @@ from aleph.search.util import clean_highlight, execute_basic, add_filter
 from aleph.search.fragments import aggregate, filter_query
 from aleph.search.fragments import text_query, phrase_match, authz_filter
 from aleph.search.fragments import facet_collections
-from aleph.search.facet import parse_facet_result
+# from aleph.search.facet import parse_facet_result
 from aleph.search.records import records_query_internal, records_query_shoulds
 
 log = logging.getLogger(__name__)
@@ -87,7 +87,7 @@ def documents_query(state, fields=None, facets=True, since=None):
     result, hits, output = execute_basic(TYPE_DOCUMENT, q)
 
     # This will add labels and other contextual information.
-    output['facets'] = parse_facet_result(state, result)
+    # output['facets'] = parse_facet_result(state, result)
 
     # After the main query has run, a sub-query will be run for each returned
     # result in order to find relevant records for result highlighting.

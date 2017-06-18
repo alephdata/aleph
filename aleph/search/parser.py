@@ -1,9 +1,10 @@
-from werkzeug.datastructures import MultiDict
+import six
 from normality import stringify
 from dalet import parse_boolean
+from werkzeug.datastructures import MultiDict
 
 
-class BaseQuery(object):
+class QueryParser(object):
     """Hold state for common query parameters."""
 
     def __init__(self, args, authz, limit=None):
@@ -39,7 +40,7 @@ class BaseQuery(object):
             if field == 'collection_id':
                 for value in self.getintlist(key):
                     if value in self.authz.collections_read:
-                        yield (field, value)
+                        yield (field, six.text_type(value))
             else:
                 for value in self.getlist(key):
                     yield (field, value)
@@ -56,15 +57,16 @@ class BaseQuery(object):
 
     @property
     def items(self):
-        for (k, v) in self.args.iteritems(multi=True):
-            if k == 'offset':
+        for key in self.args.keys():
+            if key == 'offset':
                 continue
-            yield k, v
+            for value in self.getlist(key):
+                yield key, value
 
     def getlist(self, name, default=None):
         values = []
         for value in self.args.getlist(name):
-            value = stringify(value)
+            value = stringify(value, encoding='utf-8')
             if value:
                 values.append(value)
         return values or (default or [])
@@ -90,3 +92,32 @@ class BaseQuery(object):
 
     def getbool(self, name, default=False):
         return parse_boolean(self.get(name), default=default)
+
+
+class SearchQueryParser(QueryParser):
+    """ElasticSearch-specific query parameters."""
+
+    def __init__(self, args, authz, limit=None):
+        super(SearchQueryParser, self).__init__(args, authz, limit=limit)
+        self.raw_query = None
+        self.facet_names = self.getlist('facet')
+        self.facet_size = self.getint('facet_size', 50)
+        self.text = stringify(self.get('q'))
+        self.has_text = self.text is not None
+        self.sort = self.get('sort', 'default').strip().lower()
+        self.highlight = []
+
+    @property
+    def has_query(self):
+        if self.has_text:
+            return True
+        for (field, value) in self.filter_items:
+            return True
+        return False
+
+    @property
+    def highlight_terms(self):
+        if self.has_text:
+            yield self.text
+        for term in self.highlight:
+            yield term

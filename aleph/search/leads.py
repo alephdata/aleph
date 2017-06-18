@@ -5,7 +5,7 @@ from aleph.index import TYPE_LEAD, TYPE_ENTITY
 from aleph.search.util import execute_basic
 from aleph.search.fragments import filter_query, authz_filter, aggregate
 from aleph.search.entities import facet_collections
-from aleph.search.facet import parse_facet_result
+# from aleph.search.facet import parse_facet_result
 
 log = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ def leads_query(collection_id, state):
         'from': state.offset
     }
     result, hits, output = execute_basic(TYPE_LEAD, q)
-    output['facets'] = parse_facet_result(state, result)
+    # output['facets'] = parse_facet_result(state, result)
     entities = set([])
     for doc in hits.get('hits', []):
         link = doc.get('_source')

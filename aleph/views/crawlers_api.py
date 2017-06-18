@@ -1,6 +1,7 @@
 from flask import Blueprint, request
-from apikit import request_data, jsonify, Pager
+from apikit import request_data, jsonify
 
+from aleph.search import QueryParser, QueryResult
 from aleph.crawlers import get_exposed_crawlers, execute_crawler
 
 blueprint = Blueprint('crawlers_api', __name__)
@@ -9,9 +10,11 @@ blueprint = Blueprint('crawlers_api', __name__)
 @blueprint.route('/api/1/crawlers', methods=['GET'])
 def index():
     request.authz.require(request.authz.is_admin)
-    crawlers = list(sorted(get_exposed_crawlers(),
-                           key=lambda c: c.CRAWLER_NAME))
-    return jsonify(Pager(crawlers, limit=20))
+    parser = QueryParser(request.args, request.authz, limit=20)
+    crawlers = sorted(get_exposed_crawlers(), key=lambda c: c.CRAWLER_NAME)
+    result = QueryResult(request, parser=parser, total=len(crawlers),
+                         results=crawlers[parser.offset:parser.limit])
+    return jsonify(result)
 
 
 @blueprint.route('/api/1/crawlers', methods=['POST', 'PUT'])

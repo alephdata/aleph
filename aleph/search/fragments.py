@@ -105,8 +105,6 @@ def filter_query(q, filters):
     for field, values in filters.items():
         if field == 'collection_id' and len(values):
             q = add_filter(q, {'terms': {field: list(values)}})
-        elif field == 'dataset' and len(values):
-            q = add_filter(q, {'terms': {field: list(values)}})
         else:
             for value in values:
                 if value is not None:

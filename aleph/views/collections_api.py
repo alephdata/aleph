@@ -3,7 +3,7 @@ from apikit import obj_or_404, jsonify, request_data
 
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY, db
 from aleph.model import Collection
-from aleph.search import QueryState, lead_count, collections_query
+from aleph.search import CollectionsQuery, lead_count
 from aleph.events import log_event
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.collections import process_collection, fetch_collection
@@ -13,8 +13,7 @@ blueprint = Blueprint('collections_api', __name__)
 
 @blueprint.route('/api/1/collections', methods=['GET'])
 def index():
-    state = QueryState(request.args, request.authz)
-    result = collections_query(state)
+    result = CollectionsQuery.handle_request(request)
     return jsonify(result)
 
 
@@ -43,15 +42,13 @@ def update(id):
     collection = obj_or_404(Collection.by_id(id))
     request.authz.require(request.authz.collection_write(collection))
     collection.update(request_data())
-    db.session.add(collection)
     db.session.commit()
     update_collection(collection)
     log_event(request)
     return view(id)
 
 
-@blueprint.route('/api/1/collections/<int:id>/process',
-                 methods=['POST', 'PUT'])
+@blueprint.route('/api/1/collections/<int:id>/process', methods=['POST', 'PUT'])  # noqa
 def process(id):
     collection = obj_or_404(Collection.by_id(id))
     request.authz.require(request.authz.collection_write(collection))

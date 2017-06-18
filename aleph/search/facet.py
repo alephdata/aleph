@@ -7,114 +7,92 @@ from aleph.model import Collection
 
 class Facet(object):
 
-    def __init__(self, state, name, aggs):
-        self.state = state
+    def __init__(self, name, aggregations, parser):
         self.name = name
-        self.aggs = aggs
-
-    def get_data(self):
-        return self.aggs.get(self.name, {})
-
-    def get_values(self):
-        return self.state.filters.get(self.name, set())
+        self.parser = parser
+        self.data = aggregations.get('scoped', {}).get(name, {}).get(name)
+        if self.data is None:
+            self.data = aggregations.get(name)
 
     def expand(self, keys):
-        return {}
+        pass
+
+    def update(self, result):
+        pass
 
     def to_dict(self):
-        buckets = self.get_data().get('buckets', [])
-        values = self.get_values()
-        for bucket in buckets:
-            bucket['id'] = six.text_type(bucket.pop('key'))
-            bucket['label'] = bucket['id']
-            bucket['count'] = bucket.pop('doc_count', 0)
-            bucket['active'] = bucket['id'] in values
-            if bucket['active']:
-                values.discard(bucket['id'])
-        for value in values:
-            buckets.append({
-                'id': value,
-                'label': value,
+        results = []
+        active = list(self.parser.filters.get(self.name, []))
+
+        for bucket in self.data.get('buckets', []):
+            key = six.text_type(bucket.get('key'))
+            results.append({
+                'id': key,
+                'label': key,
+                'count': bucket.pop('doc_count', 0),
+                'active': key in active
+            })
+            if key in active:
+                active.remove(key)
+
+        for key in active:
+            results.insert(0, {
+                'id': key,
+                'label': key,
                 'count': 0,
                 'active': True
             })
-        results = []
-        expanded = self.expand([b.get('id') for b in buckets])
-        for bucket in buckets:
-            bucket.update(expanded.get(bucket.get('id'), {}))
-            results.append(bucket)
 
+        self.expand([r.get('id') for r in results])
+        for result in results:
+            self.update(result, result.get('id'))
+
+        results = sorted(results, key=lambda k: k['active'], reverse=True)
         return {
-            'type': type(self).__name__.replace('Facet', '').lower(),
-            'values': list(sorted(results,
-                                  key=lambda k: k['active'],
-                                  reverse=True)),
+            'values': results,
         }
 
 
 class SchemaFacet(Facet):
 
-    def expand(self, keys):
-        labels = {}
-        for key in keys:
-            try:
-                labels[key] = {'label': schemata.get(key).plural}
-            except NameError:
-                labels[key] = {'label': key}
-        return labels
+    def update(self, result, key):
+        key = result.get('id')
+        try:
+            result['label'] = schemata.get(key).plural
+        except NameError:
+            result['label'] = key
 
 
 class CountryFacet(Facet):
 
-    def expand(self, keys):
-        return {k: {'label': COUNTRY_NAMES.get(k, k)} for k in keys}
+    def update(self, result, key):
+        result['label'] = COUNTRY_NAMES.get(key, key)
 
 
 class LanguageFacet(Facet):
 
-    def expand(self, keys):
-        return {k: {'label': LANGUAGE_NAMES.get(k, k)} for k in keys}
+    def update(self, result, key):
+        result['label'] = LANGUAGE_NAMES.get(key, key)
 
 
 class CategoryFacet(Facet):
 
     def expand(self, keys):
-        categories = get_config('COLLECTION_CATEGORIES', {})
-        return {k: {'label': categories.get(k)} for k in keys}
+        self.categories = get_config('COLLECTION_CATEGORIES', {})
+
+    def update(self, result, key):
+        result['label'] = self.categories.get(key, key)
 
 
 class CollectionFacet(Facet):
 
-    def get_values(self):
-        return self.state.filters.get('collection_id', set())
-
-    def get_data(self):
-        return self.aggs.get('scoped', {}).get('collections', {}) \
-            .get('collections', {})
-
     def expand(self, keys):
-        collections = {}
-        for collection in Collection.all_by_ids(keys).all():
-            collections[six.text_type(collection.id)] = {
-                'label': collection.label,
-                'category': collection.category,
-                'public': self.state.authz.collection_public(collection.id)
-            }
-        return collections
+        self.collections = Collection.all_by_ids(keys).all()
 
-
-def parse_facet_result(state, result):
-    aggs = result.get('aggregations')
-    facets = {}
-    for name in state.facet_names:
-        facet_cls = {
-            'languages': LanguageFacet,
-            'countries': CountryFacet,
-            'category': CategoryFacet,
-            'remote.countries': CountryFacet,
-            'schema': SchemaFacet,
-            'schemata': SchemaFacet,
-            'collections': CollectionFacet
-        }.get(name, Facet)
-        facets[name] = facet_cls(state, name, aggs).to_dict()
-    return facets
+    def update(self, result, key):
+        authz = self.parser.authz
+        for collection in self.collections:
+            if six.text_type(collection.id) == key:
+                result['label'] = collection.label
+                result['category'] = collection.category
+                result['public'] = authz.collection_public(collection.id)

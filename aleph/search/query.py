@@ -1,28 +1,20 @@
 from normality import stringify
 
-from aleph.pager import BaseQuery
+from aleph.search.parser import QueryParser
 
 
-class QueryState(BaseQuery):
-    """Hold state for common query parameters."""
+class QueryState(QueryParser):
+    """ElasticSearch-specific query parameters."""
 
     def __init__(self, args, authz, limit=None):
         super(QueryState, self).__init__(args, authz, limit=limit)
         self.raw_query = None
         self.facet_names = self.getlist('facet')
+        self.facet_size = self.getint('facet_size', 50)
+        self.text = stringify(self.get('q'))
+        self.has_text = self.text is not None
+        self.sort = self.get('sort', 'score').strip().lower()
         self.highlight = []
-
-    @property
-    def facet_size(self):
-        return self.getint('facet_size', 50)
-
-    @property
-    def text(self):
-        return stringify(self.get('q'))
-
-    @property
-    def has_text(self):
-        return self.text is not None
 
     @property
     def has_query(self):
@@ -31,10 +23,6 @@ class QueryState(BaseQuery):
         for (field, value) in self.filter_items:
             return True
         return False
-
-    @property
-    def sort(self):
-        return self.get('sort', 'score').strip().lower()
 
     @property
     def highlight_terms(self):

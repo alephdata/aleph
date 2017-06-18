@@ -1,20 +1,19 @@
-import json
 from normality import ascii_text
 from pprint import pprint  # noqa
 
 from aleph.core import url_for, es, es_index, schemata
-from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
+from aleph.index import TYPE_ENTITY
 from aleph.search.util import execute_basic
 from aleph.search.fragments import match_all, filter_query, multi_match
 from aleph.search.fragments import add_filter, aggregate, authz_filter
 from aleph.search.fragments import facet_collections
-from aleph.search.facet import parse_facet_result
+# from aleph.search.facet import parse_facet_result
 
 DEFAULT_FIELDS = ['collection_id', 'roles', 'name', 'data', 'countries',
                   'schema', 'schemata', 'properties', 'fingerprints', 'state']
 
 
-def entities_query(state, fields=None, facets=True, doc_counts=False):
+def entities_query(state, fields=None, facets=True):
     """Parse a user query string, compose and execute a query."""
     if state.has_text:
         q = {
@@ -59,30 +58,13 @@ def entities_query(state, fields=None, facets=True, doc_counts=False):
     }
 
     result, hits, output = execute_basic(TYPE_ENTITY, q)
-    output['facets'] = parse_facet_result(state, result)
-    sub_queries = []
+    # output['facets'] = parse_facet_result(state, result)
     for doc in hits.get('hits', []):
         entity = doc.get('_source')
         entity['id'] = doc.get('_id')
         entity['score'] = doc.get('_score')
         entity['api_url'] = url_for('entities_api.view', id=doc.get('_id'))
         output['results'].append(entity)
-
-        sq = {'term': {'entities.id': entity['id']}}
-        sq = add_filter(sq, {
-            'terms': {'collection_id': state.authz.collections_read}
-        })
-        sq = {'size': 0, 'query': sq}
-        sub_queries.append(json.dumps({}))
-        sub_queries.append(json.dumps(sq))
-
-    if doc_counts and len(sub_queries):
-        # Get the number of matching documents for each entity.
-        body = '\n'.join(sub_queries)
-        res = es.msearch(index=es_index, doc_type=TYPE_DOCUMENT, body=body)
-        for (entity, res) in zip(output['results'], res.get('responses')):
-            entity['doc_count'] = res.get('hits', {}).get('total')
-
     return output
 
 
@@ -98,19 +80,18 @@ def load_entity(entity_id):
     return entity
 
 
-def suggest_entities(prefix, authz, min_count=0, schemas=None, size=5):
+def suggest_entities(prefix, authz, schemas=None, size=5):
     """Auto-complete API."""
     options = []
     if prefix is not None and len(prefix.strip()):
         q = {
             'match_phrase_prefix': {'name': prefix.strip()}
         }
-        if min_count > 0:
-            q = add_filter(q, {'range': {'doc_count': {'gte': min_count}}})
         if schemas is not None and len(schemas):
             q = add_filter(q, {'terms': {'schema': schemas}})
 
         # TODO: is this correct? should we allow filter by dataset entities?
+        # XXXX broken use $physical
         q = add_filter(q, {'terms': {'collection_id': authz.collections_read}})
 
         q = {
@@ -173,13 +154,3 @@ def similar_entities(entity, state):
     }
     # pprint(state.raw_query)
     return entities_query(state)
-
-
-def get_dataset_countries(dataset_name):
-    """Create a list of the top 300 countries mentioned in a dataset."""
-    q = {'term': {'dataset': dataset_name}}
-    aggs = {'countries': {'terms': {'field': 'countries', 'size': 300}}}
-    q = {'size': 0, 'query': q, 'aggregations': aggs}
-    result = es.search(index=es_index, doc_type=TYPE_ENTITY, body=q)
-    result = result.get('aggregations', {}).get('countries', {})
-    return [b.get('key') for b in result.get('buckets', [])]

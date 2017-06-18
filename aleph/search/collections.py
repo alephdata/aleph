@@ -5,7 +5,7 @@ from aleph.index import TYPE_COLLECTION
 from aleph.search.util import execute_basic
 from aleph.search.fragments import match_all, filter_query
 from aleph.search.fragments import aggregate, authz_filter
-from aleph.search.facet import parse_facet_result
+# from aleph.search.facet import parse_facet_result
 
 
 def collections_query(state, fields=None):
@@ -41,7 +41,7 @@ def collections_query(state, fields=None):
     }
 
     result, hits, output = execute_basic(TYPE_COLLECTION, q)
-    output['facets'] = parse_facet_result(state, result)
+    # output['facets'] = parse_facet_result(state, result)
     for doc in hits.get('hits', []):
         collection = doc.get('_source')
         collection['id'] = doc.get('_id')

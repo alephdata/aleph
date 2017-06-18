@@ -202,11 +202,12 @@ class Document(db.Model, DatedModel, Metadata):
     def to_index_dict(self):
         data = self.to_dict()
         data['text'] = index_form(self.text_parts())
-        data['text'].extend(index_form(ascii_text(data.get('title'))))
-        data['text'].extend(index_form(ascii_text(data.get('summary'))))
+        data['text'].extend(index_form([ascii_text(data.get('title'))]))
+        data['text'].extend(index_form([ascii_text(data.get('summary'))]))
         data['schema'] = self.SCHEMA
         data['schemata'] = [self.SCHEMA]
         data['name_sort'] = ascii_text(data.get('title'))
+        data['roles'] = self.collection.roles
         data.pop('tables')
         data.pop('headers')
         return data

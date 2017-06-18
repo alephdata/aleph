@@ -1,7 +1,7 @@
 import logging
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
-from apikit import jsonify, Pager, request_data
+from apikit import jsonify, request_data
 
 from aleph.core import archive, url_for, db
 from aleph.model import Document, DocumentRecord
@@ -12,6 +12,7 @@ from aleph.search import QueryState
 from aleph.search import records_query, execute_records_query
 from aleph.search.util import next_params
 from aleph.views.util import get_document
+from aleph.search import DocumentsQuery
 from aleph.util import PDF_MIME
 
 
@@ -21,15 +22,8 @@ blueprint = Blueprint('documents_api', __name__)
 
 @blueprint.route('/api/1/documents', methods=['GET'])
 def index():
-    authz = request.authz
-    collections = request.args.getlist('collection')
-    collections = authz.collections_intersect(authz.READ, collections)
-    q = Document.all()
-    q = q.filter(Document.collection_id.in_(collections))
-    hashes = request.args.getlist('content_hash')
-    if len(hashes):
-        q = q.filter(Document.content_hash.in_(hashes))
-    return jsonify(Pager(q))
+    result = DocumentsQuery.handle_request(request)
+    return jsonify(result)
 
 
 @blueprint.route('/api/1/documents/<int:document_id>')
@@ -134,5 +128,5 @@ def record(document_id, index):
     q = q.filter(DocumentRecord.index == index)
     record = q.first()
     if record is None:
-        raise NotFound("No such page: %s" % index)
+        raise NotFound("No such record: %s" % index)
     return jsonify(record)
