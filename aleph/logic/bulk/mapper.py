@@ -7,6 +7,7 @@ from aleph.core import schemata
 from aleph.schema import Schema
 from aleph.util import dict_list, unique_list
 from aleph.text import string_value
+from datetime import datetime
 from aleph.logic.bulk.formatting import Formatter
 from aleph.index.entities import finalize_index
 
@@ -96,11 +97,14 @@ class Mapper(object):
             return digest.hexdigest()
 
     def to_index(self, record):
+        now = datetime.utcnow()
         return {
             'collection_id': self.query.collection.id,
             'roles': self.query.roles,
             'properties': self.compute_properties(record),
-            '$physical': False
+            'created_at': now,
+            'updated_at': now,
+            '$bulk': True
         }
 
     def __repr__(self):

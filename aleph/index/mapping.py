@@ -140,7 +140,7 @@ ENTITY_MAPPING = {
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
         "$documents": {"type": "long"},
-        "$physical": {"type": "boolean"}
+        "$bulk": {"type": "boolean"}
     }
 }
 

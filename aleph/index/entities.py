@@ -9,7 +9,7 @@ from elasticsearch import TransportError
 
 from aleph.core import es, es_index, schemata
 from aleph.model import Entity
-from aleph.index.mapping import TYPE_ENTITY, TYPE_DOCUMENT, TYPE_LINK
+from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK
 from aleph.index.util import merge_docs, bulk_op
 from aleph.util import ensure_list
 from aleph.text import index_form
@@ -22,14 +22,6 @@ def delete_entity(entity_id):
     es.delete(index=es_index, doc_type=TYPE_ENTITY, id=entity_id, ignore=[404])
 
 
-def get_count(entity):
-    """Inaccurate, as it does not reflect auth."""
-    q = {'term': {'entities.id': entity.id}}
-    q = {'size': 0, 'query': q}
-    result = es.search(index=es_index, doc_type=TYPE_DOCUMENT, body=q)
-    return result.get('hits', {}).get('total', 0)
-
-
 def index_entity(entity):
     """Index an entity."""
     if entity.state != Entity.STATE_ACTIVE:
@@ -37,7 +29,8 @@ def index_entity(entity):
 
     data = entity.to_index_dict()
     data.pop('id', None)
-    data['$documents'] = get_count(entity)
+    data['$bulk'] = False
+    # data['$documents'] = get_count(entity)
     data = finalize_index(data, entity.schema)
     es.index(index=es_index, doc_type=TYPE_ENTITY, id=entity.id, body=data)
 

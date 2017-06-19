@@ -111,7 +111,7 @@ class Query(object):
 
     def search(self):
         """Execute the query as assmbled."""
-        pprint(self.get_body())
+        # pprint(self.get_body())
         return es.search(index=es_index,
                          doc_type=self.DOC_TYPES,
                          body=self.get_body())

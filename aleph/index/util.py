@@ -30,7 +30,9 @@ def merge_docs(old, new):
     old = remove_nulls(old)
     new = dict(remove_nulls(new))
     for k, v in old.items():
-        if k in new:
+        if k == 'created_at':
+            new[k] = v
+        elif k in new:
             if is_list(v):
                 v = new[k] + v
                 new[k] = unique_list(v)

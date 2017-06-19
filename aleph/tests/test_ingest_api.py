@@ -3,6 +3,7 @@ from StringIO import StringIO
 
 from aleph.core import db
 from aleph.model import Collection
+from aleph.index import flush_index
 from aleph.tests.util import TestCase
 
 
@@ -45,6 +46,7 @@ class IngestApiTestCase(TestCase):
         docs = res.json['documents']
         assert len(docs) == 1, docs
         assert docs[0]['file_name'] == 'futz.html', docs
+        flush_index()
 
         res = self.client.get('/api/1/documents')
         assert res.json['total'] == 1, res.json
