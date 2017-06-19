@@ -25,10 +25,10 @@ def get_results(query, limit):
         if collection_id not in collections:
             obj = Collection.by_id(collection_id)
             if obj is None:
-                collections[collection_id] = obj.label or '[Missing]'
+                collections[collection_id] = obj.label
 
         data = {
-            'collection': collections[collection_id],
+            'collection': collections.get(collection_id, '[Missing]'),
             'file_url': url_for('documents_api.file',
                                 document_id=row.get('_id'))
         }

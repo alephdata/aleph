@@ -12,12 +12,11 @@ class AlertsApiTestCase(TestCase):
 
     def test_index(self):
         res = self.client.get('/api/1/alerts')
-        assert res.status_code == 200, res
-        assert res.json['total'] == 0, res.json
+        assert res.status_code == 403, res
         self.login()
         res = self.client.get('/api/1/alerts')
         assert res.status_code == 200, res
-        assert res.json['total'] == 0, res.json
+        assert res.json.get('total') == 0, res.json
 
     def test_create(self):
         data = {'query_text': 'banana pumpkin'}

@@ -29,16 +29,18 @@ class EntitiesApiTestCase(TestCase):
     def test_index(self):
         index_entity(self.ent)
         flush_index()
-        res = self.client.get('/api/1/entities?facet=collections')
+        res = self.client.get('/api/1/entities?facet=collection_id')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
-        assert len(res.json['facets']['collections']['values']) == 0, res.json
+        assert len(res.json['facets']['collection_id']['values']) == 0, \
+            res.json
         self.login(is_admin=True)
-        res = self.client.get('/api/1/entities?facet=collections')
+        res = self.client.get('/api/1/entities?facet=collection_id')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
-        assert len(res.json['facets']['collections']['values']) == 1, res.json
-        col0 = res.json['facets']['collections']['values'][0]
+        assert len(res.json['facets']['collection_id']['values']) == 1, \
+            res.json
+        col0 = res.json['facets']['collection_id']['values'][0]
         assert col0['id'] == str(self.col.id), res.json
         assert col0['label'] == self.col.label, res.json
         assert len(res.json['facets']) == 1, res.json

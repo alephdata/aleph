@@ -9,7 +9,7 @@ from aleph.index.mapping import TYPE_ENTITY, TYPE_LEAD  # noqa
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.result import SearchQueryResult  # noqa
-from aleph.search.query import AuthzQuery
+from aleph.search.query import Query, AuthzQuery
 
 log = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ class DocumentsQuery(AuthzQuery):
     RETURN_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                      'languages', 'countries', 'source_url', 'created_at',
                      'updated_at', 'type', 'summary', 'status', 'error_type',
-                     'error_message']
+                     'error_message', 'content_hash']
     SORT = {
         'default': ['_score', {'name_sort': 'asc'}],
         'name': [{'name_sort': 'asc'}, '_score'],
@@ -142,18 +142,23 @@ class SimilarEntitiesQuery(EntitiesQuery):
         # boost by "contributing criteria"
         for field in ['dates', 'countries', 'addresses', 'schemata']:
             for val in self.entity.get(field, []):
-                fq = self.get_multi_match(val, [field])
-                query['bool']['should'].append(fq)
+                query['bool']['should'].append({
+                    'term': {field: val}
+                })
 
         # filter types which cannot be resolved via fuzzy matching.
-        query['bool']['must_not'].append({
-            "ids": {
-                "values": [self.entity.get('id')]
+        query['bool']['must_not'].append([
+            {
+                "ids": {
+                    "values": [self.entity.get('id')]
+                }
             },
-            "terms": {
-                "schema": [s.name for s in schemata if not s.fuzzy]
+            {
+                "terms": {
+                    "schema": [s.name for s in schemata if not s.fuzzy]
+                }
             }
-        })
+        ])
         return query
 
 
@@ -266,11 +271,11 @@ class RecordsQueryResult(SearchQueryResult):
                     result['text'] = record.text
 
 
-class RecordsQuery(AuthzQuery):
+class RecordsQuery(Query):
     DOC_TYPES = [TYPE_RECORD]
     RESULT_CLASS = RecordsQueryResult
     RETURN_FIELDS = ['document_id', 'sheet', 'index']
-    TEXT_FIELDS = ['text^2', '_all']
+    TEXT_FIELDS = ['text']
     SORT = {
         'default': [{'index': 'asc'}],
         'score': ['_score', {'index': 'asc'}],

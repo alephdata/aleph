@@ -19,7 +19,7 @@ class DocumentsApiTestCase(TestCase):
         assert res.json['total'] == 4, res.json
 
         fix = '720badc9cfa9a80fc455239f86c56273dc5c8291'
-        res = self.client.get('/api/1/documents?content_hash=%s' % fix)
+        res = self.client.get('/api/1/documents?filter:content_hash=%s' % fix)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         assert res.json['results'][0]['content_hash'] == fix, res.json

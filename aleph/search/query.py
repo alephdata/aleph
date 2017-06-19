@@ -1,3 +1,4 @@
+from pprint import pprint  # noqa
 from elasticsearch.helpers import scan
 
 from aleph.core import es, es_index
@@ -5,7 +6,7 @@ from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 
 
-class QueryCompiler(object):
+class Query(object):
     RESULT_CLASS = SearchQueryResult
     DOC_TYPES = []
     RETURN_FIELDS = True
@@ -110,6 +111,7 @@ class QueryCompiler(object):
 
     def search(self):
         """Execute the query as assmbled."""
+        pprint(self.get_body())
         return es.search(index=es_index,
                          doc_type=self.DOC_TYPES,
                          body=self.get_body())
@@ -133,7 +135,7 @@ class QueryCompiler(object):
         return cls.RESULT_CLASS(request, parser, result)
 
 
-class AuthzQuery(QueryCompiler):
+class AuthzQuery(Query):
     """Apply roles-based filtering to the results.
 
     This enforces the authorization (access control) rules on a particular

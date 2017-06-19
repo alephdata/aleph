@@ -43,11 +43,13 @@ def reconcile_op(query):
     }, request.authz)
 
     name = query.get('query', '')
+    schema = query.get('type') or 'Entity'
     entity = {
         'id': 'fake',
         'names': [name],
         'fingerprints': [fingerprints.generate(name)],
-        'schemata': ensure_list(query.get('type'))
+        'schemata': ensure_list(schema),
+        'schema': schema
     }
 
     for p in query.get('properties', []):
@@ -121,24 +123,22 @@ def reconcile():
 
     See: http://code.google.com/p/google-refine/wiki/ReconciliationServiceApi
     """
-    data = request.args.copy()
-    data.update(request.form.copy())
     log_event(request)
 
-    if 'query' in data:
+    if 'query' in request.values:
         # single
-        q = data.get('query')
+        q = request.values.get('query')
         if q.startswith('{'):
             try:
                 q = json.loads(q)
             except ValueError:
                 raise BadRequest()
         else:
-            q = data
+            q = request.values
         return jsonify(reconcile_op(q))
-    elif 'queries' in data:
+    elif 'queries' in request.values:
         # multiple requests in one query
-        qs = data.get('queries')
+        qs = request.values.get('queries')
         try:
             qs = json.loads(qs)
         except ValueError:
@@ -158,22 +158,23 @@ def suggest_entity():
         'prefix': request.args.get('prefix'),
         'filter:schemata': request.args.getlist('type')
     }
-    parser = SearchQueryParser(args, request.authz)
-    query = SuggestEntitiesQuery(parser)
     matches = []
-    for doc in query.search().get('hits').get('hits'):
-        source = doc.get('_source')
-        match = {
-            'quid': doc.get('_id'),
-            'id': doc.get('_id'),
-            'name': source.get('name'),
-            'r:score': doc.get('_score'),
-        }
-        for type_ in get_freebase_types():
-            if source.get('schema') == type_['id']:
-                match['n:type'] = type_
-                match['type'] = [type_['name']]
-        matches.append(match)
+    parser = SearchQueryParser(args, request.authz)
+    if parser.prefix is not None:
+        query = SuggestEntitiesQuery(parser)
+        for doc in query.search().get('hits').get('hits'):
+            source = doc.get('_source')
+            match = {
+                'quid': doc.get('_id'),
+                'id': doc.get('_id'),
+                'name': source.get('name'),
+                'r:score': doc.get('_score'),
+            }
+            for type_ in get_freebase_types():
+                if source.get('schema') == type_['id']:
+                    match['n:type'] = type_
+                    match['type'] = [type_['name']]
+            matches.append(match)
 
     return jsonify({
         "code": "/api/status/ok",
