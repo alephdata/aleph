@@ -55,7 +55,7 @@ def ui(**kwargs):
     return render_template("layout.html", templates=angular_templates())
 
 
-@blueprint.route('/api/1/metadata')
+@blueprint.route('/api/2/metadata')
 def metadata():
     enable_cache(vary_user=False)
     return jsonify({
@@ -82,10 +82,18 @@ def metadata():
     })
 
 
-@blueprint.route('/api/1/statistics')
+@blueprint.route('/api/2/statistics')
 def statistics():
     enable_cache()
     return jsonify(get_instance_stats(request.authz))
+
+
+@blueprint.route('/api/1/<path:path>')
+def api_v1_message():
+    return jsonify({
+        'status': 'error',
+        'message': '/api/1/ is deprecated, please use /api/2/.'
+    }, status=410)
 
 
 @blueprint.app_errorhandler(403)

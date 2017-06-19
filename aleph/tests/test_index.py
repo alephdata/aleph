@@ -12,9 +12,9 @@ class IndexTestCase(TestCase):
 
     def test_delete_source(self):
         collection = Collection.by_id(1000)
-        res = self.client.get('/api/1/query?q="mention fruit"')
+        res = self.client.get('/api/2/query?q="mention fruit"')
         assert res.json['total'] == 1, res.json
         delete_collection(collection.id)
         flush_index()
-        res = self.client.get('/api/1/query?q="mention fruit"')
+        res = self.client.get('/api/2/query?q="mention fruit"')
         assert res.json['total'] == 0, res.json

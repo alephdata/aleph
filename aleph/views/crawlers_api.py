@@ -7,7 +7,7 @@ from aleph.crawlers import get_exposed_crawlers, execute_crawler
 blueprint = Blueprint('crawlers_api', __name__)
 
 
-@blueprint.route('/api/1/crawlers', methods=['GET'])
+@blueprint.route('/api/2/crawlers', methods=['GET'])
 def index():
     request.authz.require(request.authz.is_admin)
     parser = QueryParser(request.args, request.authz, limit=20)
@@ -17,7 +17,7 @@ def index():
     return jsonify(result)
 
 
-@blueprint.route('/api/1/crawlers', methods=['POST', 'PUT'])
+@blueprint.route('/api/2/crawlers', methods=['POST', 'PUT'])
 def queue():
     request.authz.require(request.authz.session_write())
     request.authz.require(request.authz.is_admin)

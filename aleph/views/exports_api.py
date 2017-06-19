@@ -41,7 +41,7 @@ def get_results(query, limit):
         yield data
 
 
-@blueprint.route('/api/1/query/export')
+@blueprint.route('/api/2/query/export')
 def export():
     parser = SearchQueryParser(request.args, request.authz)
     query = DocumentsQuery(parser)

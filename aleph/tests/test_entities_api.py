@@ -29,13 +29,13 @@ class EntitiesApiTestCase(TestCase):
     def test_index(self):
         index_entity(self.ent)
         flush_index()
-        res = self.client.get('/api/1/entities?facet=collection_id')
+        res = self.client.get('/api/2/entities?facet=collection_id')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
         assert len(res.json['facets']['collection_id']['values']) == 0, \
             res.json
         self.login(is_admin=True)
-        res = self.client.get('/api/1/entities?facet=collection_id')
+        res = self.client.get('/api/2/entities?facet=collection_id')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         assert len(res.json['facets']['collection_id']['values']) == 1, \
@@ -44,32 +44,32 @@ class EntitiesApiTestCase(TestCase):
         assert col0['id'] == str(self.col.id), res.json
         assert col0['label'] == self.col.label, res.json
         assert len(res.json['facets']) == 1, res.json
-        res = self.client.get('/api/1/entities?facet=countries')
+        res = self.client.get('/api/2/entities?facet=countries')
         assert len(res.json['facets']) == 1, res.json
         assert 'values' in res.json['facets']['countries'], res.json
 
     def test_all(self):
-        res = self.client.get('/api/1/entities/_all')
+        res = self.client.get('/api/2/entities/_all')
         assert res.status_code == 200, res
         assert len(res.json['results']) == 0, res.json
         self.login(is_admin=True)
-        res = self.client.get('/api/1/entities/_all')
+        res = self.client.get('/api/2/entities/_all')
         assert res.status_code == 200, res
         assert len(res.json['results']) == 1, res.json
         assert res.json['results'][0] == self.ent.id, res.json
 
     def test_view(self):
-        res = self.client.get('/api/1/entities/%s' % self.ent.id)
+        res = self.client.get('/api/2/entities/%s' % self.ent.id)
         assert res.status_code == 403, res
         self.login(is_admin=True)
-        res = self.client.get('/api/1/entities/%s' % self.ent.id)
+        res = self.client.get('/api/2/entities/%s' % self.ent.id)
         assert res.status_code == 200, res
         assert 'LegalEntity' in res.json['schema'], res.json
         assert 'Winnie' in res.json['name'], res.json
 
     def test_update(self):
         self.login(is_admin=True)
-        url = '/api/1/entities/%s' % self.ent.id
+        url = '/api/2/entities/%s' % self.ent.id
         res = self.client.get(url)
         assert res.status_code == 200, res
 
@@ -87,7 +87,7 @@ class EntitiesApiTestCase(TestCase):
 
     def test_create(self):
         self.login(is_admin=True)
-        url = '/api/1/entities'
+        url = '/api/2/entities'
         data = {
             'schema': 'Asset',
             'name': "Our house",
@@ -103,7 +103,7 @@ class EntitiesApiTestCase(TestCase):
 
     def test_create_nested(self):
         self.login(is_admin=True)
-        url = '/api/1/entities'
+        url = '/api/2/entities'
         data = {
             'schema': 'Person',
             'name': "Osama bin Laden",
@@ -120,7 +120,7 @@ class EntitiesApiTestCase(TestCase):
 
     def test_merge_nested(self):
         self.login(is_admin=True)
-        url = '/api/1/entities'
+        url = '/api/2/entities'
         data = {
             'schema': 'Person',
             'name': "Osama bin Laden",
@@ -135,7 +135,7 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, (res.status_code, res.json)
         data = res.json
         data['data']['alias'] = ["Usama bin Laden", "Usama bin Ladin"]
-        url = '/api/1/entities/%s?merge=true' % data['id']
+        url = '/api/2/entities/%s?merge=true' % data['id']
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
@@ -143,7 +143,7 @@ class EntitiesApiTestCase(TestCase):
 
     def test_remove_nested(self):
         self.login(is_admin=True)
-        url = '/api/1/entities'
+        url = '/api/2/entities'
         data = {
             'schema': 'Person',
             'name': "Osama bin Laden",
@@ -158,7 +158,7 @@ class EntitiesApiTestCase(TestCase):
         data = res.json
         data['data']['alias'].pop()
         assert 1 == len(data['data']['alias']), data
-        url = '/api/1/entities/%s' % data['id']
+        url = '/api/2/entities/%s' % data['id']
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
@@ -166,7 +166,7 @@ class EntitiesApiTestCase(TestCase):
 
     def test_delete_entity(self):
         self.login(is_admin=True)
-        url = '/api/1/entities'
+        url = '/api/2/entities'
         data = {
             'schema': 'Person',
             'name': "Osama bin Laden",
@@ -176,7 +176,7 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
         data = res.json
-        url = '/api/1/entities/%s' % data['id']
+        url = '/api/2/entities/%s' % data['id']
         res = self.client.delete(url)
         assert res.status_code == 200, (res.status_code, res.json)
         res = self.client.get(url)
@@ -184,7 +184,7 @@ class EntitiesApiTestCase(TestCase):
 
     def test_suggest_entity(self):
         self.login(is_admin=True)
-        url = '/api/1/entities'
+        url = '/api/2/entities'
         data = {
             'schema': 'Person',
             'name': "Osama bin Laden",
@@ -193,7 +193,7 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         flush_index()
-        res = self.client.get('/api/1/entities/_suggest?prefix=osa')
+        res = self.client.get('/api/2/entities/_suggest?prefix=osa')
         assert res.status_code == 200, (res.status_code, res.json)
         data = res.json
         assert len(data['results']) == 1, data
@@ -201,7 +201,7 @@ class EntitiesApiTestCase(TestCase):
 
     def test_similar_entity(self):
         self.login(is_admin=True)
-        url = '/api/1/entities'
+        url = '/api/2/entities'
         data = {
             'schema': 'Person',
             'name': "Osama bin Laden",
@@ -217,7 +217,7 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         flush_index()
-        res = self.client.get('/api/1/entities/%s/similar' % res.json['id'])
+        res = self.client.get('/api/2/entities/%s/similar' % res.json['id'])
         assert res.status_code == 200, (res.status_code, res.json)
         data = res.json
         assert len(data['results']) == 1, data

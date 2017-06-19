@@ -29,26 +29,26 @@ class CollectionsApiTestCase(TestCase):
     def test_index(self):
         update_collection(self.col)
         flush_index()
-        res = self.client.get('/api/1/collections')
+        res = self.client.get('/api/2/collections')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
         self.login(is_admin=True)
-        res = self.client.get('/api/1/collections')
+        res = self.client.get('/api/2/collections')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
 
     def test_view(self):
-        res = self.client.get('/api/1/collections/%s' % self.col.id)
+        res = self.client.get('/api/2/collections/%s' % self.col.id)
         assert res.status_code == 403, res
         self.login(is_admin=True)
-        res = self.client.get('/api/1/collections/%s' % self.col.id)
+        res = self.client.get('/api/2/collections/%s' % self.col.id)
         assert res.status_code == 200, res
         assert 'test_coll' in res.json['foreign_id'], res.json
         assert 'Winnie' not in res.json['label'], res.json
 
     def test_update(self):
         self.login(is_admin=True)
-        url = '/api/1/collections/%s' % self.col.id
+        url = '/api/2/collections/%s' % self.col.id
         res = self.client.get(url)
         assert res.status_code == 200, res
 
@@ -73,7 +73,7 @@ class CollectionsApiTestCase(TestCase):
 
     def test_delete(self):
         self.login(is_admin=True)
-        url = '/api/1/collections/%s' % self.col.id
+        url = '/api/2/collections/%s' % self.col.id
         res = self.client.get(url)
         assert res.status_code == 200, res
         res = self.client.delete(url)

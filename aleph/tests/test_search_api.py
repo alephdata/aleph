@@ -11,7 +11,7 @@ class SearchApiTestCase(TestCase):
 
     def test_simplest_search(self):
         # self.login(is_admin=True)
-        res = self.client.get('/api/1/query?q=banana&facet=collection_id')
+        res = self.client.get('/api/2/query?q=banana&facet=collection_id')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         # assert '<em>banana</em>' in res.data, res.json
@@ -19,13 +19,13 @@ class SearchApiTestCase(TestCase):
         assert 'Secret Document' not in res.data, res.json
 
         self.login(is_admin=True)
-        res = self.client.get('/api/1/query?q=banana')
+        res = self.client.get('/api/2/query?q=banana')
         assert res.status_code == 200, res
         assert res.json['total'] == 2, res.json
         assert 'Secret Document' in res.data, res.json
 
     def test_facet_attribute(self):
-        res = self.client.get('/api/1/query?facet=languages')
+        res = self.client.get('/api/2/query?facet=languages')
         assert res.status_code == 200, res
         lang_facet = res.json['facets']['languages']
         assert len(lang_facet['values']) == 2
@@ -33,10 +33,10 @@ class SearchApiTestCase(TestCase):
         assert '"ru"' in text, lang_facet
 
     def test_basic_filters(self):
-        res = self.client.get('/api/1/query?filter:source_id=23')
+        res = self.client.get('/api/2/query?filter:source_id=23')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
 
-        res = self.client.get('/api/1/query?filter:languages=ru')
+        res = self.client.get('/api/2/query?filter:languages=ru')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json

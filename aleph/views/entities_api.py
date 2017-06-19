@@ -14,14 +14,14 @@ from aleph.views.cache import enable_cache
 blueprint = Blueprint('entities_api', __name__)
 
 
-@blueprint.route('/api/1/entities', methods=['GET'])
+@blueprint.route('/api/2/entities', methods=['GET'])
 def index():
     enable_cache()
     result = EntitiesQuery.handle_request(request)
     return jsonify(result)
 
 
-@blueprint.route('/api/1/entities/_all', methods=['GET'])
+@blueprint.route('/api/2/entities/_all', methods=['GET'])
 def all():
     collection_id = request.args.getlist('collection_id')
     collection_id = request.authz.collections_intersect(request.authz.READ, collection_id)  # noqa
@@ -32,14 +32,14 @@ def all():
     return jsonify({'results': [r[0] for r in q]})
 
 
-@blueprint.route('/api/1/entities/_suggest', methods=['GET'])
+@blueprint.route('/api/2/entities/_suggest', methods=['GET'])
 def suggest():
     enable_cache()
     result = SuggestEntitiesQuery.handle_request(request)
     return jsonify(result)
 
 
-@blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
+@blueprint.route('/api/2/entities', methods=['POST', 'PUT'])
 def create():
     data = request_data()
     collection_id = data.get('collection_id')
@@ -62,14 +62,14 @@ def create():
     return view(entity.id)
 
 
-@blueprint.route('/api/1/entities/<id>', methods=['GET'])
+@blueprint.route('/api/2/entities/<id>', methods=['GET'])
 def view(id):
     entity, obj = get_entity(id, request.authz.READ)
     log_event(request, entity_id=id)
     return jsonify(entity)
 
 
-@blueprint.route('/api/1/entities/<id>/links', methods=['GET'])
+@blueprint.route('/api/2/entities/<id>/links', methods=['GET'])
 def links(id):
     enable_cache()
     entity, obj = get_entity(id, request.authz.READ)
@@ -77,7 +77,7 @@ def links(id):
     return jsonify(result)
 
 
-@blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])
+@blueprint.route('/api/2/entities/<id>/similar', methods=['GET'])
 def similar(id):
     enable_cache()
     entity, _ = get_entity(id, request.authz.READ)
@@ -85,7 +85,7 @@ def similar(id):
     return jsonify(result)
 
 
-@blueprint.route('/api/1/entities/<id>/documents', methods=['GET'])
+@blueprint.route('/api/2/entities/<id>/documents', methods=['GET'])
 def documents(id):
     enable_cache()
     entity, _ = get_entity(id, request.authz.READ)
@@ -93,7 +93,7 @@ def documents(id):
     return jsonify(result)
 
 
-@blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])
+@blueprint.route('/api/2/entities/<id>', methods=['POST', 'PUT'])
 def update(id):
     _, entity = get_entity(id, request.authz.WRITE)
 
@@ -110,7 +110,7 @@ def update(id):
     return view(entity.id)
 
 
-@blueprint.route('/api/1/entities/<id>/merge/<other_id>', methods=['DELETE'])
+@blueprint.route('/api/2/entities/<id>/merge/<other_id>', methods=['DELETE'])
 def merge(id, other_id):
     _, entity = get_entity(id, request.authz.WRITE)
     _, other = get_entity(other_id, request.authz.WRITE)
@@ -127,7 +127,7 @@ def merge(id, other_id):
     return view(entity.id)
 
 
-@blueprint.route('/api/1/entities/<id>', methods=['DELETE'])
+@blueprint.route('/api/2/entities/<id>', methods=['DELETE'])
 def delete(id):
     _, entity = get_entity(id, request.authz.WRITE)
     delete_entity(entity)

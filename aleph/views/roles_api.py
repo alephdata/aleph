@@ -21,7 +21,7 @@ def check_visible(role):
     return role.type == Role.USER
 
 
-@blueprint.route('/api/1/roles/_suggest', methods=['GET'])
+@blueprint.route('/api/2/roles/_suggest', methods=['GET'])
 def suggest():
     request.authz.require(request.authz.logged_in)
     parser = QueryParser(request.args, request.authz, limit=10)
@@ -39,7 +39,7 @@ def suggest():
     return jsonify(result)
 
 
-@blueprint.route('/api/1/roles/invite', methods=['POST'])
+@blueprint.route('/api/2/roles/invite', methods=['POST'])
 def invite_email():
     data = request_data()
     email = data.get('email')
@@ -58,7 +58,7 @@ def invite_email():
     return jsonify({'status': 'To proceed, please check your email.'}), 201
 
 
-@blueprint.route('/api/1/roles', methods=['POST'])
+@blueprint.route('/api/2/roles', methods=['POST'])
 def create():
     data = request_data()
     email = data.get('email')
@@ -101,7 +101,7 @@ def create():
     return jsonify(dict(status='ok')), 201
 
 
-@blueprint.route('/api/1/roles/<int:id>', methods=['GET'])
+@blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
 def view(id):
     role = obj_or_404(Role.by_id(id))
     request.authz.require(request.authz.logged_in)
@@ -112,7 +112,7 @@ def view(id):
     return jsonify(data)
 
 
-@blueprint.route('/api/1/roles/<int:id>', methods=['POST', 'PUT'])
+@blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     role = obj_or_404(Role.by_id(id))
     request.authz.require(request.authz.session_write())
@@ -124,7 +124,7 @@ def update(id):
     return jsonify(role)
 
 
-@blueprint.route('/api/1/collections/<int:collection>/permissions')
+@blueprint.route('/api/2/collections/<int:collection>/permissions')
 def permissions_index(collection):
     request.authz.require(request.authz.collection_write(collection))
     q = Permission.all()
@@ -156,7 +156,7 @@ def permissions_index(collection):
     })
 
 
-@blueprint.route('/api/1/collections/<int:collection>/permissions',
+@blueprint.route('/api/2/collections/<int:collection>/permissions',
                  methods=['POST', 'PUT'])
 def permissions_update(collection):
     request.authz.require(request.authz.collection_write(collection))

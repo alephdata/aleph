@@ -11,13 +11,13 @@ from aleph.logic.collections import process_collection, fetch_collection
 blueprint = Blueprint('collections_api', __name__)
 
 
-@blueprint.route('/api/1/collections', methods=['GET'])
+@blueprint.route('/api/2/collections', methods=['GET'])
 def index():
     result = CollectionsQuery.handle_request(request)
     return jsonify(result)
 
 
-@blueprint.route('/api/1/collections', methods=['POST', 'PUT'])
+@blueprint.route('/api/2/collections', methods=['POST', 'PUT'])
 def create():
     request.authz.require(request.authz.logged_in)
     data = request_data()
@@ -29,7 +29,7 @@ def create():
     return jsonify(collection)
 
 
-@blueprint.route('/api/1/collections/<int:id>', methods=['GET'])
+@blueprint.route('/api/2/collections/<int:id>', methods=['GET'])
 def view(id):
     data = obj_or_404(fetch_collection(id))
     request.authz.require(request.authz.collection_read(id))
@@ -37,7 +37,7 @@ def view(id):
     return jsonify(data)
 
 
-@blueprint.route('/api/1/collections/<int:id>', methods=['POST', 'PUT'])
+@blueprint.route('/api/2/collections/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     collection = obj_or_404(Collection.by_id(id))
     request.authz.require(request.authz.collection_write(collection))
@@ -48,7 +48,7 @@ def update(id):
     return view(id)
 
 
-@blueprint.route('/api/1/collections/<int:id>/process', methods=['POST', 'PUT'])  # noqa
+@blueprint.route('/api/2/collections/<int:id>/process', methods=['POST', 'PUT'])  # noqa
 def process(id):
     collection = obj_or_404(Collection.by_id(id))
     request.authz.require(request.authz.collection_write(collection))
@@ -59,7 +59,7 @@ def process(id):
     return jsonify({'status': 'ok'})
 
 
-@blueprint.route('/api/1/collections/<int:id>', methods=['DELETE'])
+@blueprint.route('/api/2/collections/<int:id>', methods=['DELETE'])
 def delete(id):
     collection = obj_or_404(Collection.by_id(id))
     request.authz.require(request.authz.collection_write(collection))

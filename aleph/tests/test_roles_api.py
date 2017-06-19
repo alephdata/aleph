@@ -15,26 +15,26 @@ class RolesApiTestCase(TestCase):
         self.rolex = self.create_user(foreign_id='user_3')
 
     def test_suggest(self):
-        res = self.client.get('/api/1/roles/_suggest')
+        res = self.client.get('/api/2/roles/_suggest')
         assert res.status_code == 403, res
         self.login(is_admin=True)
-        res = self.client.get('/api/1/roles/_suggest?prefix=user')
+        res = self.client.get('/api/2/roles/_suggest?prefix=user')
         assert res.status_code == 200, res
         assert res.json['total'] >= 3, res.json
 
     def test_view(self):
-        res = self.client.get('/api/1/roles/%s' % self.rolex)
+        res = self.client.get('/api/2/roles/%s' % self.rolex)
         assert res.status_code == 404, res
         role = self.login()
-        res = self.client.get('/api/1/roles/%s' % role.id)
+        res = self.client.get('/api/2/roles/%s' % role.id)
         assert res.status_code == 200, res
         # assert res.json['total'] >= 6, res.json
 
     def test_update(self):
-        res = self.client.post('/api/1/roles/%s' % self.rolex)
+        res = self.client.post('/api/2/roles/%s' % self.rolex)
         assert res.status_code == 404, res
         role = self.login()
-        url = '/api/1/roles/%s' % role.id
+        url = '/api/2/roles/%s' % role.id
         res = self.client.get(url)
         assert res.status_code == 200, res
         data = res.json
@@ -50,19 +50,19 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 400, res
 
     def test_invite_email_when_no_email(self):
-        res = self.client.post('/api/1/roles/invite')
+        res = self.client.post('/api/2/roles/invite')
         assert res.status_code == 400, res
 
     def test_invite_email_has_email(self):
         res = self.client.post(
-            '/api/1/roles/invite',
+            '/api/2/roles/invite',
             data=dict(email=self.fake.email)
         )
 
         assert res.status_code == 201, res
 
     def test_create_no_payload(self):
-        res = self.client.post('/api/1/roles')
+        res = self.client.post('/api/2/roles')
         assert res.status_code == 400, res
 
     def test_create_no_email(self):
@@ -71,7 +71,7 @@ class RolesApiTestCase(TestCase):
             password=self.fake.password(),
             code=self.fake.md5()
         )
-        res = self.client.post('/api/1/roles', data=payload)
+        res = self.client.post('/api/2/roles', data=payload)
         assert res.status_code == 400, res
 
     def test_create_no_pass(self):
@@ -80,7 +80,7 @@ class RolesApiTestCase(TestCase):
             password='',
             code=self.fake.md5()
         )
-        res = self.client.post('/api/1/roles', data=payload)
+        res = self.client.post('/api/2/roles', data=payload)
         assert res.status_code == 400, res
 
     def test_create_no_code(self):
@@ -89,7 +89,7 @@ class RolesApiTestCase(TestCase):
             password=self.fake.password(),
             code=''
         )
-        res = self.client.post('/api/1/roles', data=payload)
+        res = self.client.post('/api/2/roles', data=payload)
         assert res.status_code == 400, res
 
     def test_create_registration_disabled(self):
@@ -100,7 +100,7 @@ class RolesApiTestCase(TestCase):
             password=self.fake.password(),
             code=Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
         )
-        res = self.client.post('/api/1/roles', data=payload)
+        res = self.client.post('/api/2/roles', data=payload)
         assert res.status_code == 400, res
 
     def test_create_short_pass(self):
@@ -110,7 +110,7 @@ class RolesApiTestCase(TestCase):
             password=self.fake.password()[:3],
             code=Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
         )
-        res = self.client.post('/api/1/roles', data=payload)
+        res = self.client.post('/api/2/roles', data=payload)
         assert res.status_code == 400, res
 
     def test_create_bad_code(self):
@@ -120,7 +120,7 @@ class RolesApiTestCase(TestCase):
             password=self.fake.password()[:3],
             code=Role.SIGNATURE_SERIALIZER.dumps(email, salt='')
         )
-        res = self.client.post('/api/1/roles', data=payload)
+        res = self.client.post('/api/2/roles', data=payload)
         assert res.status_code == 400, res
 
     def test_create_success(self):
@@ -133,7 +133,7 @@ class RolesApiTestCase(TestCase):
             password=password,
             code=Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
         )
-        res = self.client.post('/api/1/roles', data=payload)
+        res = self.client.post('/api/2/roles', data=payload)
         db.session.close()
 
         self.assertEqual(res.status_code, 201)
@@ -156,7 +156,7 @@ class RolesApiTestCase(TestCase):
         )
 
         RoleFactory.create(email=email)
-        res = self.client.post('/api/1/roles', data=payload)
+        res = self.client.post('/api/2/roles', data=payload)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json['status'], 'ok')

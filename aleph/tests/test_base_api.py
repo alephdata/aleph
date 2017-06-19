@@ -13,7 +13,7 @@ class BaseApiTestCase(TestCase):
         assert 'ng-view' in res.data, res.data
 
     def test_metadata(self):
-        res = self.client.get('/api/1/metadata')
+        res = self.client.get('/api/2/metadata')
         assert res.status_code == 200, res
         assert 'countries' in res.json, res.json
         countries = res.json['countries']

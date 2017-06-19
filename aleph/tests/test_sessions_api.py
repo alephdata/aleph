@@ -10,7 +10,7 @@ class SessionsApiTestCase(TestCase):
         self.role = RoleFactory.create()
 
     def test_status_get_with_password_registration_enabled(self):
-        res = self.client.get('/api/1/sessions')
+        res = self.client.get('/api/2/sessions')
         assert res.status_code == 200, res
         assert len(res.json['providers']) == 1, res
         assert res.json['providers'][0]['name'] == 'password', res
@@ -19,7 +19,7 @@ class SessionsApiTestCase(TestCase):
     def test_status_get_with_password_registration_disabled(self):
         self.app.config['PASSWORD_REGISTRATION'] = False
 
-        res = self.client.get('/api/1/sessions')
+        res = self.client.get('/api/2/sessions')
         assert res.status_code == 200, res
         assert len(res.json['providers']) == 1, res
         assert res.json['providers'][0]['name'] == 'password', res
@@ -28,16 +28,16 @@ class SessionsApiTestCase(TestCase):
     def test_status_get_without_password_login(self):
         self.app.config['PASSWORD_LOGIN'] = False
 
-        res = self.client.get('/api/1/sessions')
+        res = self.client.get('/api/2/sessions')
         assert res.status_code == 200, res
         assert len(res.json['providers']) == 0, res
 
     def test_password_login_get(self):
-        res = self.client.get('/api/1/sessions/login/password')
+        res = self.client.get('/api/2/sessions/login/password')
         assert res.status_code == 404, res
 
     def test_password_login_post_no_data(self):
-        res = self.client.post('/api/1/sessions/login/password')
+        res = self.client.post('/api/2/sessions/login/password')
         assert res.status_code == 404, res
 
     def test_password_login_post_good_email_and_password(self):
@@ -45,7 +45,7 @@ class SessionsApiTestCase(TestCase):
         self.role.set_password(secret)
         data = dict(email=self.role.email, password=secret)
 
-        res = self.client.post('/api/1/sessions/login/password', data=data)
+        res = self.client.post('/api/2/sessions/login/password', data=data)
 
         assert res.status_code == 200, res
         assert res.json['role']['id'] == self.role.id, res

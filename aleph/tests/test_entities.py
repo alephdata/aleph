@@ -59,7 +59,7 @@ class EntitiesTestCase(TestCase):
         assert self.other.deleted_at is not None, self.other
 
     def test_api_merge(self):
-        url = '/api/1/entities/%s/merge/%s' % (self.ent.id, self.other.id)
+        url = '/api/2/entities/%s/merge/%s' % (self.ent.id, self.other.id)
         res = self.client.delete(url, data={}, content_type='application/json')
         assert res.status_code == 403, res.status_code
         self.login(is_admin=True)

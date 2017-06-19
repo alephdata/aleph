@@ -9,7 +9,7 @@ from aleph.search import DocumentsQuery
 blueprint = Blueprint('search_api', __name__)
 
 
-@blueprint.route('/api/1/query')
+@blueprint.route('/api/2/query')
 def query():
     enable_cache(vary_user=True)
     log_event(request)

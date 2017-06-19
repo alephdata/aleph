@@ -35,7 +35,7 @@ def load_role():
             request.authz = Authz(role=role)
 
 
-@blueprint.route('/api/1/sessions')
+@blueprint.route('/api/2/sessions')
 def status():
     authz = request.authz
     providers = sorted(oauth.remote_apps.values(), key=lambda p: p.label)
@@ -69,7 +69,7 @@ def status():
     })
 
 
-@blueprint.route('/api/1/sessions/login/password', methods=['POST'])
+@blueprint.route('/api/2/sessions/login/password', methods=['POST'])
 def password_login():
     """Provides email and password authentication."""
     data = request_data()
@@ -104,8 +104,8 @@ def password_login():
     })
 
 
-@blueprint.route('/api/1/sessions/login')
-@blueprint.route('/api/1/sessions/login/<string:provider>')
+@blueprint.route('/api/2/sessions/login')
+@blueprint.route('/api/2/sessions/login/<string:provider>')
 def login(provider=None):
     if not provider:
         # by default use the first provider if none is requested,
@@ -122,13 +122,13 @@ def login(provider=None):
     return oauth_provider.authorize(callback=callback_url)
 
 
-@blueprint.route('/api/1/sessions/logout')
+@blueprint.route('/api/2/sessions/logout')
 def logout():
     session.clear()
     return redirect('/')
 
 
-@blueprint.route('/api/1/sessions/callback/<string:provider>')
+@blueprint.route('/api/2/sessions/callback/<string:provider>')
 def callback(provider):
     oauth_provider = oauth.remote_apps.get(provider)
     if not oauth_provider:

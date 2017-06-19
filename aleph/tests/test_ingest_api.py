@@ -18,7 +18,7 @@ class IngestApiTestCase(TestCase):
         db.session.add(self.col)
         db.session.flush()
         db.session.commit()
-        self.url = '/api/1/collections/%s/ingest' % self.col.id
+        self.url = '/api/2/collections/%s/ingest' % self.col.id
         self.meta = {
             'countries': ['de', 'us'],
             'languages': ['en']
@@ -48,11 +48,11 @@ class IngestApiTestCase(TestCase):
         assert docs[0]['file_name'] == 'futz.html', docs
         flush_index()
 
-        res = self.client.get('/api/1/documents')
+        res = self.client.get('/api/2/documents')
         assert res.json['total'] == 1, res.json
-        res = self.client.get('/api/1/documents/1')
+        res = self.client.get('/api/2/documents/1')
         assert res.json['countries'] == ['de', 'us'], res.json
-        res = self.client.get('/api/1/documents/1/file')
+        res = self.client.get('/api/2/documents/1/file')
         assert 'futz with a banana' in res.data
         assert 'text/html' in res.content_type, res.content_type
 

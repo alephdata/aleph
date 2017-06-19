@@ -26,7 +26,7 @@ class BulkLoadTestCase(TestCase):
         count = Collection.all().count()
         assert 1 == count, count
 
-        res = self.client.get('/api/1/entities?q=friede+springer')
+        res = self.client.get('/api/2/entities?q=friede+springer')
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         res0 = res.json['results'][0]

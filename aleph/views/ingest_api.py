@@ -17,7 +17,7 @@ from aleph.util import checksum
 blueprint = Blueprint('ingest_api', __name__)
 
 
-@blueprint.route('/api/1/collections/<int:collection_id>/ingest',
+@blueprint.route('/api/2/collections/<int:collection_id>/ingest',
                  methods=['POST', 'PUT'])
 def ingest_upload(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))

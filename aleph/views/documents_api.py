@@ -17,13 +17,13 @@ log = logging.getLogger(__name__)
 blueprint = Blueprint('documents_api', __name__)
 
 
-@blueprint.route('/api/1/documents', methods=['GET'])
+@blueprint.route('/api/2/documents', methods=['GET'])
 def index():
     result = DocumentsQuery.handle_request(request)
     return jsonify(result)
 
 
-@blueprint.route('/api/1/documents/<int:document_id>')
+@blueprint.route('/api/2/documents/<int:document_id>')
 def view(document_id):
     doc = get_document(document_id)
     data = doc.to_dict()
@@ -40,7 +40,7 @@ def view(document_id):
     return jsonify(data)
 
 
-@blueprint.route('/api/1/documents/<int:document_id>', methods=['POST', 'PUT'])
+@blueprint.route('/api/2/documents/<int:document_id>', methods=['POST', 'PUT'])
 def update(document_id):
     document = get_document(document_id, action=request.authz.WRITE)
     data = request_data()
@@ -51,7 +51,7 @@ def update(document_id):
     return view(document_id)
 
 
-@blueprint.route('/api/1/documents/<int:document_id>/file')
+@blueprint.route('/api/2/documents/<int:document_id>/file')
 def file(document_id):
     document = get_document(document_id)
     log_event(request, document_id=document.id)
@@ -73,7 +73,7 @@ def file(document_id):
                      mimetype=document.mime_type)
 
 
-@blueprint.route('/api/1/documents/<int:document_id>/pdf')
+@blueprint.route('/api/2/documents/<int:document_id>/pdf')
 def pdf(document_id):
     document = get_document(document_id)
     log_event(request, document_id=document.id)
@@ -91,7 +91,7 @@ def pdf(document_id):
     return send_file(open(path, 'rb'), mimetype=PDF_MIME)
 
 
-@blueprint.route('/api/1/documents/<int:document_id>/tables/<int:table_id>')
+@blueprint.route('/api/2/documents/<int:document_id>/tables/<int:table_id>')
 def table(document_id, table_id):
     enable_cache()
     document = get_document(document_id)
@@ -101,7 +101,7 @@ def table(document_id, table_id):
         raise NotFound("No such table: %s" % table_id)
 
 
-@blueprint.route('/api/1/documents/<int:document_id>/records')
+@blueprint.route('/api/2/documents/<int:document_id>/records')
 def records(document_id):
     enable_cache()
     document = get_document(document_id)
@@ -109,7 +109,7 @@ def records(document_id):
     return jsonify(result)
 
 
-@blueprint.route('/api/1/documents/<int:document_id>/records/<int:index>')
+@blueprint.route('/api/2/documents/<int:document_id>/records/<int:index>')
 def record(document_id, index):
     enable_cache()
     document = get_document(document_id)

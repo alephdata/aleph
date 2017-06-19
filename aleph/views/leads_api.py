@@ -11,7 +11,7 @@ from aleph.views.util import get_entity
 blueprint = Blueprint('leads_api', __name__)
 
 
-@blueprint.route('/api/1/collections/<int:collection_id>/leads',
+@blueprint.route('/api/2/collections/<int:collection_id>/leads',
                  methods=['GET'])
 def index(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))
@@ -20,7 +20,7 @@ def index(collection_id):
     return jsonify(result)
 
 
-@blueprint.route('/api/1/collections/<int:collection_id>/leads',
+@blueprint.route('/api/2/collections/<int:collection_id>/leads',
                  methods=['POST', 'PUT'])
 def update(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))
