@@ -6,8 +6,7 @@ from collections import Mapping
 from urllib import unquote
 from urlparse import urlparse
 from dalet import is_country_code, is_language_code
-from dalet import parse_email, parse_country, parse_url
-from dalet import parse_domain, parse_date
+from dalet import parse_country, parse_date
 from ingestors.util import make_filename
 
 from aleph.text import slugify, string_value
@@ -168,79 +167,6 @@ class Metadata(object):
             self.update_meta()
 
     @property
-    def emails(self):
-        return self.meta.get('emails', [])
-
-    @emails.setter
-    def emails(self, emails):
-        self.meta['emails'] = []
-        for email in emails:
-            self.add_email(email)
-
-    def add_email(self, email):
-        self.meta.setdefault('emails', [])
-        email = parse_email(email)
-        if email is not None and email not in self.meta['emails']:
-            if self.add_domain(email):
-                self.meta['emails'].append(email)
-                self.update_meta()
-
-    @property
-    def urls(self):
-        return self.meta.get('urls', [])
-
-    @urls.setter
-    def urls(self, urls):
-        self.meta['urls'] = []
-        for url in urls:
-            self.add_url(url)
-
-    def add_url(self, url):
-        self.meta.setdefault('urls', [])
-        url = parse_url(url)
-        if url is not None and url not in self.meta['urls']:
-            if self.add_domain(url):
-                self.meta['urls'].append(url)
-                self.update_meta()
-
-    @property
-    def domains(self):
-        return self.meta.get('domains', [])
-
-    @domains.setter
-    def domains(self, domains):
-        self.meta.setdefault('domains', [])
-        for domain in domains:
-            self.add_domain(domain)
-
-    def add_domain(self, domain):
-        self.meta.setdefault('domains', [])
-        domain = parse_domain(domain)
-        if domain is None:
-            return False
-        if domain not in self.meta['domains']:
-            self.meta['domains'].append(domain)
-            self.update_meta()
-        return True
-
-    @property
-    def phone_numbers(self):
-        return self.meta.get('phone_numbers', [])
-
-    @phone_numbers.setter
-    def phone_numbers(self, phone_numbers):
-        self.meta['phone_numbers'] = []
-        for phone_number in phone_numbers:
-            self.add_phone_number(phone_number)
-
-    def add_phone_number(self, number):
-        self.meta.setdefault('phone_numbers', [])
-        number = string_value(number)
-        if number and number not in self.meta['phone_numbers']:
-            self.meta['phone_numbers'].append(number)
-            self.update_meta()
-
-    @property
     def dates(self):
         return self.meta.get('dates', [])
 
@@ -361,16 +287,13 @@ class Metadata(object):
             'source_url': self.source_url,
             'languages': self.languages,
             'countries': self.countries,
-            'phone_numbers': self.phone_numbers,
-            'urls': self.urls,
-            'domains': self.domains,
             'dates': self.dates,
-            'emails': self.emails,
             'keywords': self.keywords,
             'encoding': self.encoding,
             'extension': self.extension,
             'mime_type': self.mime_type,
             'headers': self.headers,
             'pdf_version': self.pdf_version,
+            'columns': self.columns,
             'tables': self.tables
         }

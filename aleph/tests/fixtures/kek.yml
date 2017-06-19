@@ -38,7 +38,7 @@ kek:
               name:
                 column: sub.name
               address:
-                column: comp.address
+                template: "{{comp.address}}"
         links:
           - schema: ownedBy
             source: subsidiary

@@ -12,36 +12,36 @@ class MetadataTestCase(TestCase):
         meta.file_name = 'foo.doc'
         meta.title = '  '
         meta.languages = ['en', 'xx']
+        meta.author = 'The Man'
         assert meta.file_name == 'foo.doc', meta.file_name
         assert meta.title == 'foo.doc', meta.title
+        assert meta.extension == 'doc', meta.extension
         assert not len(meta.countries), meta.countries
+        assert meta.author == 'The Man', meta.author
 
-    def test_urls(self):
+    def test_file_names(self):
         meta = Metadata()
-        meta.urls = ['http://google.com']
-        assert len(meta.urls) == 1, meta.urls
-        assert len(meta.domains) == 1, meta.domains
-        assert meta.domains[0] == 'google.com', meta.domains
+        meta.file_name = 'Foo Schnasel.doc'
+        assert meta.file_name == 'foo_schnasel.doc', meta.file_name
+        assert meta.file_title == 'Foo Schnasel.doc', meta.file_title
 
+    def test_keywords(self):
         meta = Metadata()
-        meta.add_url('http://')
-        assert len(meta.urls) == 0, meta.urls
+        meta.keywords = ['test']
+        assert len(meta.keywords) == 1, meta.keywords
+        assert meta.keywords[0] == 'test', meta.keywords
 
+    def test_countries(self):
         meta = Metadata()
-        meta.add_url('http://www.google.com/xxx')
-        assert len(meta.urls) == 1, meta.urls
-        assert len(meta.domains) == 1, meta.domains
+        meta.countries = ['xx', 'de']
+        assert len(meta.countries) == 1, meta.countries
+        assert meta.countries[0] == 'de', meta.countries
 
-    def test_emails(self):
+    def test_languages(self):
         meta = Metadata()
-        meta.add_email('huhu@pudo.org')
-        assert len(meta.emails) == 1, meta.emails
-        assert len(meta.domains) == 1, (meta.emails, meta.domains)
-        assert meta.domains[0] == 'pudo.org', meta.domains
-
-        meta = Metadata()
-        meta.add_email('not-an-email')
-        assert len(meta.emails) == 0, meta.emails
+        meta.countries = ['xx', 'de']
+        assert len(meta.countries) == 1, meta.countries
+        assert meta.countries[0] == 'de', meta.countries
 
     def test_dates(self):
         meta = Metadata()
