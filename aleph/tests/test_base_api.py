@@ -19,3 +19,16 @@ class BaseApiTestCase(TestCase):
         countries = res.json['countries']
         assert 'ar' in countries, countries
         assert countries['ar'] == 'Argentina', countries
+
+    def test_statistics(self):
+        res = self.client.get('/api/2/statistics')
+        assert res.status_code == 200, res
+        assert '$total' in res.json, res.json
+        assert res.json['$total'] == 0, res.json
+        self.load_fixtures('docs.yaml')
+        res = self.client.get('/api/2/statistics')
+        assert res.status_code == 200, res
+        assert res.json['$total'] == 5, res.json
+        assert res.json['$documents'] == 3, res.json
+        assert res.json['$entities'] == 1, res.json
+        assert res.json['$collections'] == 1, res.json
