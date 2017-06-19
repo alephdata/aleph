@@ -11,6 +11,16 @@ COLLECTION_MAPPING = {
     "_all": {
         "enabled": True
     },
+    "dynamic_templates": [
+        {
+            "fields": {
+                "match": "$schemata.*",
+                "mapping": {
+                    "type": "keyword"
+                }
+            }
+        }
+    ],
     "date_detection": False,
     "properties": {
         "label": {"type": "text"},
@@ -113,14 +123,13 @@ ENTITY_MAPPING = {
         "name_sort": {"type": "keyword"},
         "schema": {"type": "keyword"},
         "schemata": {"type": "keyword"},
-        "roles": {"type": "long"},
         "text": {"type": "text"},
         "collection_id": {"type": "long"},
         "roles": {"type": "long"},
         "foreign_ids": {"type": "keyword"},
         "fingerprints": {"type": "keyword"},
         "names": {"type": "text"},
-        "identifiers": {"keyword": "text"},
+        "identifiers": {"type": "keyword"},
         "countries": {"type": "keyword"},
         "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
         "emails": {"type": "keyword"},
@@ -163,7 +172,7 @@ LINK_MAPPING = {
         "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
         "emails": {"type": "keyword"},
         "phones": {"type": "keyword"},
-        "addresses": {"type": "text"},
+        "addresses": {"type": "keyword"},
         "text": {"type": "text"},
         "properties": {"type": "object"},
         "origin": {

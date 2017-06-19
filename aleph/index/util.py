@@ -3,7 +3,7 @@ import logging
 from elasticsearch.helpers import bulk
 
 from aleph.core import es, es_index
-from aleph.util import is_list, unique_list
+from aleph.util import is_list, unique_list, remove_nulls
 
 log = logging.getLogger(__name__)
 
@@ -17,8 +17,11 @@ def query_delete(query, doc_type=None, wait=True):
     "Delete all documents matching the given query inside the doc_type(s)."
     if doc_type is None:
         doc_type = '*'
-    es.delete_by_query(index=six.text_type(es_index), body={'query': query},
-                       doc_type=doc_type, refresh=True, conflicts='proceed',
+    es.delete_by_query(index=six.text_type(es_index),
+                       body={'query': query},
+                       doc_type=doc_type,
+                       refresh=True,
+                       conflicts='proceed',
                        wait_for_completion=wait)
 
 
@@ -36,15 +39,3 @@ def merge_docs(old, new):
         else:
             new[k] = v
     return new
-
-
-def remove_nulls(data):
-    """Remove None-valued keys from a dictionary, recursively."""
-    if isinstance(data, dict):
-        for k, v in data.items():
-            if v is None:
-                data.pop(k)
-            data[k] = remove_nulls(v)
-    elif is_list(data):
-        data = [remove_nulls(d) for d in data if d is not None]
-    return data

@@ -2,14 +2,12 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404, jsonify, request_data, arg_bool
 
-from aleph.core import db, schemata
+from aleph.core import db
 from aleph.model import Entity, Collection
 from aleph.logic import update_entity, delete_entity
 from aleph.events import log_event
-from aleph.search import QueryState
-from aleph.search import entity_documents
-from aleph.search import suggest_entities, similar_entities
 from aleph.search import LinksQuery, EntitiesQuery, EntityDocumentsQuery
+from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.views.util import get_entity
 from aleph.views.cache import enable_cache
 
@@ -37,9 +35,8 @@ def all():
 @blueprint.route('/api/1/entities/_suggest', methods=['GET'])
 def suggest():
     enable_cache()
-    prefix = request.args.get('prefix')
-    min_count = int(request.args.get('min_count', 0))
-    return jsonify(suggest_entities(prefix, request.authz, min_count))
+    result = SuggestEntitiesQuery.handle_request(request)
+    return jsonify(result)
 
 
 @blueprint.route('/api/1/entities', methods=['POST', 'PUT'])
@@ -82,24 +79,17 @@ def links(id):
 
 @blueprint.route('/api/1/entities/<id>/similar', methods=['GET'])
 def similar(id):
-    entity, _ = get_entity(id, request.authz.READ)
     enable_cache()
-    schema = schemata.get(entity.get('schema'))
-    if not schema.fuzzy:
-        return jsonify({
-            'status': 'ignore',
-            'results': [],
-            'total': 0
-        })
-    state = QueryState(request.args, request.authz)
-    return jsonify(similar_entities(entity, state))
+    entity, _ = get_entity(id, request.authz.READ)
+    result = SimilarEntitiesQuery.handle_request(request, entity=entity)
+    return jsonify(result)
 
 
 @blueprint.route('/api/1/entities/<id>/documents', methods=['GET'])
 def documents(id):
     enable_cache()
     entity, _ = get_entity(id, request.authz.READ)
-    result = EntityDocumentsQuery.handle_request(request)
+    result = EntityDocumentsQuery.handle_request(request, entity=entity)
     return jsonify(result)
 
 

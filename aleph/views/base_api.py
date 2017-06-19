@@ -8,8 +8,7 @@ from elasticsearch import TransportError
 from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 
 from aleph.core import get_config, app_title, app_url, schemata
-from aleph.search import QueryState
-from aleph.search import documents_query, entities_query
+from aleph.index.stats import get_instance_stats
 from aleph.schema import SchemaValidationException
 from aleph.views.cache import enable_cache
 
@@ -86,13 +85,7 @@ def metadata():
 @blueprint.route('/api/1/statistics')
 def statistics():
     enable_cache()
-    documents = documents_query(QueryState({}, request.authz, limit=0))
-    entities = entities_query(QueryState({}, request.authz, limit=0))
-    return jsonify({
-        'documents_count': documents.get('total'),
-        'entities_count': entities.get('total'),
-        'collections_count': len(request.authz.collections_read)
-    })
+    return jsonify(get_instance_stats(request.authz))
 
 
 @blueprint.app_errorhandler(403)

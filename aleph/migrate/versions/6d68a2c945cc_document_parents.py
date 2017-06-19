@@ -18,7 +18,6 @@ def upgrade():
                   nullable=True))
     op.drop_column('document', 'error_details')
     op.create_index(op.f('ix_entity_state'), 'entity', ['state'], unique=False)
-    op.drop_index('role_reset_token', table_name='role')
 
 
 def downgrade():

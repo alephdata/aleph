@@ -117,6 +117,18 @@ def dict_list(data, *keys):
     return []
 
 
+def remove_nulls(data):
+    """Remove None-valued keys from a dictionary, recursively."""
+    if isinstance(data, dict):
+        for k, v in data.items():
+            if v is None:
+                data.pop(k)
+            data[k] = remove_nulls(v)
+    elif is_list(data):
+        data = [remove_nulls(d) for d in data if d is not None]
+    return data
+
+
 class SessionTask(Task):
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):

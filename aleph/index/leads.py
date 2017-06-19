@@ -17,7 +17,8 @@ def delete_entity_leads(entity_id):
             'should': [
                 {'term': {'entity_id': entity_id}},
                 {'term': {'match_id': entity_id}}
-            ]
+            ],
+            'minimum_should_match': 1
         }
     }
     query_delete(q, doc_type=TYPE_LEAD)

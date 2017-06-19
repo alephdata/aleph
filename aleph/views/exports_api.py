@@ -4,7 +4,6 @@ from aleph.core import url_for
 from aleph.model import Collection
 from aleph.events import log_event
 from aleph.search import DocumentsQuery, SearchQueryParser
-from aleph.search import QueryState, documents_iter
 from aleph.views.util import make_excel
 
 blueprint = Blueprint('exports_api', __name__)

@@ -47,6 +47,7 @@ class QueryCompiler(object):
             'bool': {
                 'should': [],
                 'must': [self.get_text_query()],
+                'must_not': [],
                 'filter': self.get_filters()
             }
         }

@@ -1,58 +1,12 @@
 from pprint import pprint  # noqa
 
 from aleph.core import es, es_index
-from aleph.model import Document
 from aleph.index.util import query_delete
+from aleph.index.stats import get_collection_stats
 from aleph.index.mapping import TYPE_LINK, TYPE_DOCUMENT, TYPE_ENTITY
 from aleph.index.mapping import TYPE_COLLECTION
 
 CHILD_TYPES = [TYPE_LINK, TYPE_DOCUMENT, TYPE_ENTITY]
-
-
-def get_collection_stats(data):
-    """Compute some statistics on the content of a collection."""
-    query = {
-        'size': 0,
-        'query': {
-            'term': {
-                'collection_id': data.get('id')
-            }
-        },
-        'aggs': {
-            'schema': {'terms': {'field': 'schema', 'size': 1000}},
-            'countries': {'terms': {'field': 'countries', 'size': 250}},
-            'languages': {'terms': {'field': 'languages', 'size': 100}},
-        }
-    }
-    result = es.search(index=es_index,
-                       doc_type=[TYPE_DOCUMENT, TYPE_ENTITY],
-                       body=query)
-    aggregations = result.get('aggregations')
-    data['$schemata'] = {}
-    data['$entities'] = 0
-    data['$total'] = result.get('hits').get('total')
-
-    # expose both entities by schema count and totals for docs and entities.
-    for schema in aggregations.get('schema').get('buckets'):
-        key = schema.get('key')
-        count = schema.get('doc_count')
-        data['$schemata'][key] = count
-        if key == Document.SCHEMA:
-            data['$documents'] = count
-        else:
-            data['$entities'] += count
-
-    # if no countries or langs are given, take the most common from the data.
-    if not data.get('countries') or not len(data.get('countries')):
-        countries = aggregations.get('countries').get('buckets')
-        data['countries'] = [c.get('key') for c in countries]
-
-    if not data.get('languages') or not len(data.get('languages')):
-        countries = aggregations.get('languages').get('buckets')
-        data['languages'] = [c.get('key') for c in countries]
-
-    # pprint(data)
-    return data
 
 
 def index_collection(collection):

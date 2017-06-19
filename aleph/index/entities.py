@@ -42,6 +42,16 @@ def index_entity(entity):
     es.index(index=es_index, doc_type=TYPE_ENTITY, id=entity.id, body=data)
 
 
+def get_entity(entity_id):
+    result = es.get(index=es_index, doc_type=TYPE_ENTITY, id=entity_id,
+                    ignore=[404])
+    entity = result.get('_source', {})
+    if result.get('found'):
+        entity.pop('text', None)
+        entity['id'] = result.get('_id')
+        return entity
+
+
 def _index_updates(entities, links):
     """Look up existing index documents and generate an updated form.
 
