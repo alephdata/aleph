@@ -13,6 +13,7 @@ class QueryParser(object):
         self.args = args
         self.authz = authz
         self._limit = limit
+        self.prefix = stringify(self.get('prefix'))
 
     @property
     def limit(self):
@@ -103,13 +104,12 @@ class SearchQueryParser(QueryParser):
         self.facet_names = self.getlist('facet')
         self.facet_size = self.getint('facet_size', 50)
         self.text = stringify(self.get('q'))
-        self.has_text = self.text is not None
         self.sort = self.get('sort', 'default').strip().lower()
         self.highlight = []
 
     @property
     def has_query(self):
-        if self.has_text:
+        if self.text is not None:
             return True
         for (field, value) in self.filter_items:
             return True
@@ -117,7 +117,7 @@ class SearchQueryParser(QueryParser):
 
     @property
     def highlight_terms(self):
-        if self.has_text:
+        if self.text is not None:
             yield self.text
         for term in self.highlight:
             yield term

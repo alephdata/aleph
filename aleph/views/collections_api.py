@@ -3,7 +3,7 @@ from apikit import obj_or_404, jsonify, request_data
 
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY, db
 from aleph.model import Collection
-from aleph.search import CollectionsQuery, lead_count
+from aleph.search import CollectionsQuery
 from aleph.events import log_event
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.collections import process_collection, fetch_collection
@@ -33,7 +33,7 @@ def create():
 def view(id):
     data = obj_or_404(fetch_collection(id))
     request.authz.require(request.authz.collection_read(id))
-    data['$leads'] = lead_count(id)
+    # data['$leads'] = lead_count(id)
     return jsonify(data)
 
 

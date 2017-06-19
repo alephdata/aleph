@@ -3,8 +3,7 @@ from apikit import obj_or_404, jsonify, request_data
 from werkzeug.exceptions import BadRequest
 
 from aleph.model import Collection, EntityIdentity
-from aleph.search import QueryState
-from aleph.search.leads import leads_query
+from aleph.search import LeadsQuery
 from aleph.logic import update_entity, update_lead
 from aleph.events import log_event
 from aleph.views.util import get_entity
@@ -17,9 +16,8 @@ blueprint = Blueprint('leads_api', __name__)
 def index(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))
     request.authz.require(request.authz.collection_read(collection))
-    state = QueryState(request.args, request.authz)
-    results = leads_query(collection_id, state)
-    return jsonify(results)
+    result = LeadsQuery.handle_request(request, collection_id=collection_id)
+    return jsonify(result)
 
 
 @blueprint.route('/api/1/collections/<int:collection_id>/leads',

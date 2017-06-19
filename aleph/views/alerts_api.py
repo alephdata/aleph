@@ -4,6 +4,7 @@ from apikit import obj_or_404, request_data, jsonify
 from aleph.core import db
 from aleph.model import Alert
 from aleph.events import log_event
+from aleph.search import DatabaseQueryResult
 
 blueprint = Blueprint('alerts_api', __name__)
 
@@ -11,8 +12,9 @@ blueprint = Blueprint('alerts_api', __name__)
 @blueprint.route('/api/1/alerts', methods=['GET'])
 def index():
     request.authz.require(request.authz.logged_in)
-    alerts = Alert.by_role(request.authz.role).all()
-    return jsonify({'results': alerts, 'total': len(alerts)})
+    query = Alert.by_role(request.authz.role)
+    result = DatabaseQueryResult(request, query)
+    return jsonify(result)
 
 
 @blueprint.route('/api/1/alerts', methods=['POST', 'PUT'])

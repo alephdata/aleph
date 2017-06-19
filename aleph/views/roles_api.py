@@ -1,10 +1,10 @@
-from normality import stringify
 from flask import Blueprint, request, abort, render_template
 from werkzeug.exceptions import BadRequest
-from apikit import Pager, obj_or_404, request_data, jsonify
+from apikit import obj_or_404, request_data, jsonify
 
 from aleph.core import db, get_config, app_url
 from aleph.events import log_event
+from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Collection, Permission
 from aleph.logic.permissions import update_permission
 from aleph.model.validate import validate
@@ -24,8 +24,8 @@ def check_visible(role):
 @blueprint.route('/api/1/roles/_suggest', methods=['GET'])
 def suggest():
     request.authz.require(request.authz.logged_in)
-    prefix = stringify(request.args.get('prefix'))
-    if prefix is None or len(prefix) < 3:
+    parser = QueryParser(request.args, request.authz, limit=10)
+    if parser.prefix is None or len(parser.prefix) < 3:
         # Do not return 400 because it's a routine event.
         return jsonify({
             'status': 'error',
@@ -34,8 +34,9 @@ def suggest():
             'total': 0
         })
     # this only returns users, not groups
-    q = Role.by_prefix(prefix)
-    return jsonify(Pager(q, limit=10))
+    q = Role.by_prefix(parser.prefix)
+    result = DatabaseQueryResult(request, q, parser=parser)
+    return jsonify(result)
 
 
 @blueprint.route('/api/1/roles/invite', methods=['POST'])

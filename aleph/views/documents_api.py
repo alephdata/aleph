@@ -8,11 +8,8 @@ from aleph.model import Document, DocumentRecord
 from aleph.logic import update_document
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
-from aleph.search import QueryState
-from aleph.search import records_query, execute_records_query
-from aleph.search.util import next_params
 from aleph.views.util import get_document
-from aleph.search import DocumentsQuery
+from aleph.search import DocumentsQuery, RecordsQuery
 from aleph.util import PDF_MIME
 
 
@@ -108,14 +105,7 @@ def table(document_id, table_id):
 def records(document_id):
     enable_cache()
     document = get_document(document_id)
-    state = QueryState(request.args, request.authz)
-    query = records_query(document.id, state)
-    result = execute_records_query(document.id, state, query)
-    params = next_params(request.args, result)
-    if params is not None:
-        result['next'] = url_for('documents_api.records',
-                                 document_id=document_id,
-                                 **params)
+    result = RecordsQuery.handle_request(request, document=document)
     return jsonify(result)
 
 

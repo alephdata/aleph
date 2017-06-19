@@ -31,11 +31,10 @@ class DocumentRecord(db.Model):
             yield text
 
     @classmethod
-    def find_records(cls, document_id, ids):
+    def find_records(cls, ids):
         if not len(ids):
             return []
         q = db.session.query(cls)
-        q = q.filter(cls.document_id == document_id)
         q = q.filter(cls.id.in_(ids))
         return q
 

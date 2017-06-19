@@ -74,6 +74,10 @@ class SearchQueryResult(QueryResult):
             data['id'] = doc.pop('_id')
             data['$score'] = doc.pop('_score')
             data['$doc_type'] = doc.pop('_type')
+            if len(doc.get('highlight', {})):
+                data['$highlight'] = {}
+                for key, value in doc.get('highlight', {}).items():
+                    data['$highlight'][key] = value
             self.results.append(data)
 
     def get_facets(self):

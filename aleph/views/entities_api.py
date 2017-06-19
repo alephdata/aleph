@@ -7,9 +7,9 @@ from aleph.model import Entity, Collection
 from aleph.logic import update_entity, delete_entity
 from aleph.events import log_event
 from aleph.search import QueryState
-from aleph.search import entities_query, entity_documents
+from aleph.search import entity_documents
 from aleph.search import suggest_entities, similar_entities
-from aleph.search import LinksQuery
+from aleph.search import LinksQuery, EntitiesQuery, EntityDocumentsQuery
 from aleph.views.util import get_entity
 from aleph.views.cache import enable_cache
 
@@ -19,10 +19,8 @@ blueprint = Blueprint('entities_api', __name__)
 @blueprint.route('/api/1/entities', methods=['GET'])
 def index():
     enable_cache()
-    state = QueryState(request.args, request.authz)
-    doc_counts = state.getbool('doc_counts')
-    res = entities_query(state, doc_counts=doc_counts)
-    return jsonify(res)
+    result = EntitiesQuery.handle_request(request)
+    return jsonify(result)
 
 
 @blueprint.route('/api/1/entities/_all', methods=['GET'])
@@ -76,8 +74,8 @@ def view(id):
 
 @blueprint.route('/api/1/entities/<id>/links', methods=['GET'])
 def links(id):
-    entity, obj = get_entity(id, request.authz.READ)
     enable_cache()
+    entity, obj = get_entity(id, request.authz.READ)
     result = LinksQuery.handle_request(request, entity=entity)
     return jsonify(result)
 
@@ -99,10 +97,10 @@ def similar(id):
 
 @blueprint.route('/api/1/entities/<id>/documents', methods=['GET'])
 def documents(id):
-    entity, _ = get_entity(id, request.authz.READ)
     enable_cache()
-    state = QueryState(request.args, request.authz)
-    return jsonify(entity_documents(entity, state))
+    entity, _ = get_entity(id, request.authz.READ)
+    result = EntityDocumentsQuery.handle_request(request)
+    return jsonify(result)
 
 
 @blueprint.route('/api/1/entities/<id>', methods=['POST', 'PUT'])

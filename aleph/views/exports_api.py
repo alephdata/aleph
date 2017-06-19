@@ -3,6 +3,7 @@ from flask import Blueprint, request, send_file
 from aleph.core import url_for
 from aleph.model import Collection
 from aleph.events import log_event
+from aleph.search import DocumentsQuery, SearchQueryParser
 from aleph.search import QueryState, documents_iter
 from aleph.views.util import make_excel
 
@@ -15,22 +16,24 @@ FIELDS = ['collection', 'title', 'file_name', 'summary', 'extension',
           'file_url', 'source_url']
 
 
-def get_results(state, limit):
+def get_results(query, limit):
     collections = {}
-    for i, row in enumerate(documents_iter(state)):
+    for i, row in enumerate(query.scan()):
         if i >= limit:
             return
+        source = row.get('_source')
+        collection_id = source.pop('collection_id')
+        if collection_id not in collections:
+            obj = Collection.by_id(collection_id)
+            if obj is None:
+                collections[collection_id] = obj.label or '[Missing]'
+
         data = {
+            'collection': collections[collection_id],
             'file_url': url_for('documents_api.file',
                                 document_id=row.get('_id'))
         }
-        for name, value in row.get('_source').items():
-            if name == 'collection_id':
-                if value not in collections:
-                    collections[value] = Collection.by_id(value)
-                if collections[value]:
-                    value = collections[value].label
-                name = 'collection'
+        for name, value in source.items():
             if name not in FIELDS:
                 continue
             if isinstance(value, (list, tuple, set)):
@@ -41,8 +44,9 @@ def get_results(state, limit):
 
 @blueprint.route('/api/1/query/export')
 def export():
-    state = QueryState(request.args, request.authz, limit=0)
+    parser = SearchQueryParser(request.args, request.authz)
+    query = DocumentsQuery(parser)
     log_event(request)
-    output = make_excel(get_results(state, 50000), FIELDS)
+    output = make_excel(get_results(query, 50000), FIELDS)
     return send_file(output, mimetype=XLSX_MIME, as_attachment=True,
                      attachment_filename='export.xlsx')
