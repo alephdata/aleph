@@ -89,7 +89,7 @@ def statistics():
 
 
 @blueprint.route('/api/1/<path:path>')
-def api_v1_message():
+def api_v1_message(path):
     return jsonify({
         'status': 'error',
         'message': '/api/1/ is deprecated, please use /api/2/.'
