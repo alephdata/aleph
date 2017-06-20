@@ -1,12 +1,14 @@
-import queryString from 'query-string';
+import axios from 'axios';
+// import queryString from 'query-string';
 
-const buildURL = (endpoint, params) => {
-  let extra = queryString.stringify(params);
-  extra = extra ? '?' + extra : '';
+// const buildURL = (endpoint, params) => {
+//   let extra = queryString.stringify(params);
+//   extra = extra ? '?' + extra : '';
+//
+//   return `${endpoint}${extra}`;
+// }
 
-  return `${endpoint}${extra}`;
-}
-
-export const getDocuments = (params) => {
-  return fetch(buildURL('/api/documents', params));
-}
+export const endpoint = axios.create({
+  baseURL: 'http://localhost:3000/api/2',
+  headers: {}
+});

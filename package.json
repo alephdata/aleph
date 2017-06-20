@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.16.2",
     "lodash": "^4.17.4",
     "normalizr": "^3.2.2",
     "query-string": "^4.3.4",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.4",
+    "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
@@ -31,5 +33,5 @@
     "eject": "react-scripts eject",
     "start-mocks": "node mocks/server.js"
   },
-  "proxy": "http://localhost:3001/"
+  "proxy": "http://localhost:5000/"
 }

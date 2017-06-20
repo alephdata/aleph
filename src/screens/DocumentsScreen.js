@@ -17,14 +17,14 @@ class DocumentsScreen extends Component {
 
   componentDidUpdate(prevProps) {
     // should account for multiple filters in the future
-    if (this.props.filters.search !== prevProps.filters.search) {
+    if (this.props.query.q !== prevProps.query.q) {
       this.fetchData();
     }
   }
 
   fetchData() {
-    const { filters, fetchDocuments } = this.props;
-    fetchDocuments(filters);
+    const { query, fetchDocuments } = this.props;
+    fetchDocuments(query);
   }
 
   render() {
@@ -32,7 +32,7 @@ class DocumentsScreen extends Component {
       <div>
         <SearchWithRouter />
         <DocumentsContainer />
-      </div>      
+      </div>
     )
   }
 }
@@ -41,9 +41,7 @@ const mapStateToProps = (state, { location }) => {
   const params = queryString.parse(location.search);
 
   return {
-    filters: {
-      search: params.search
-    }
+    query: params
   };
 }
 

@@ -1,4 +1,4 @@
-import * as api from '../api';
+import { endpoint } from '../api';
 
 export const fetchDocuments = (filters) => (dispatch) => {
   dispatch({
@@ -6,11 +6,11 @@ export const fetchDocuments = (filters) => (dispatch) => {
     filters
   });
 
-  return api.getDocuments(filters)
-    .then((response) => response.json())
-    .then((json) => dispatch({
+  return endpoint.get('search', {params: filters})
+    .then((response) => response.data)
+    .then((data) => dispatch({
       type: 'FETCH_DOCUMENTS_SUCCESS',
       filters,
-      documents: json.results
+      documents: data.results
     }));
 }

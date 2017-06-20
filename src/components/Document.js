@@ -1,8 +1,10 @@
 import React from 'react'
 
-const Document = ({ title }) => (
+const Document = (doc) => (
   <li>
-    {title}
+    <strong>{doc.title || doc.name}</strong>
+    <code>{doc.file_name}</code>
+    <code>{doc.schema}</code>
   </li>
 )
 
