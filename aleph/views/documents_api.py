@@ -5,7 +5,7 @@ from apikit import jsonify, request_data
 
 from aleph.core import archive, url_for, db
 from aleph.model import Document, DocumentRecord
-from aleph.logic import update_document
+from aleph.logic.documents import update_document, delete_document
 from aleph.events import log_event
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document
@@ -49,6 +49,14 @@ def update(document_id):
     log_event(request, document_id=document.id)
     update_document(document)
     return view(document_id)
+
+
+@blueprint.route('/api/2/documents/<int:document_id>', methods=['DELETE'])
+def delete(document_id):
+    document = get_document(document_id, action=request.authz.WRITE)
+    delete_document(document)
+    log_event(request)
+    return jsonify({'status': 'ok'})
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/file')
