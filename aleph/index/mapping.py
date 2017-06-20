@@ -48,7 +48,6 @@ DOCUMENT_MAPPING = {
     },
     "date_detection": False,
     "properties": {
-        "parent_id": {"type": "long"},
         "title": {"type": "text"},
         "name_sort": {"type": "keyword"},
         "schema": {"type": "keyword"},
@@ -73,6 +72,14 @@ DOCUMENT_MAPPING = {
         "author": {"type": "text"},
         "summary": {"type": "text"},
         "text": {"type": "text"},
+        "parent": {
+            "type": "object",
+            "properties": {
+                "id": {"type": "long"},
+                "type": {"type": "keyword"},
+                "title": {"type": "keyword"}
+            }
+        },
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
     }

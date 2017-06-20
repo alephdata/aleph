@@ -10,9 +10,8 @@ from elasticsearch import TransportError
 from aleph.core import es, es_index, schemata
 from aleph.model import Entity
 from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK
-from aleph.index.util import merge_docs, bulk_op
+from aleph.index.util import merge_docs, bulk_op, index_form
 from aleph.util import ensure_list
-from aleph.text import index_form
 
 log = logging.getLogger(__name__)
 
@@ -27,9 +26,16 @@ def index_entity(entity):
     if entity.state != Entity.STATE_ACTIVE:
         return delete_entity(entity.id)
 
-    data = entity.to_index_dict()
+    data = entity.to_dict()
     data.pop('id', None)
     data['$bulk'] = False
+    data['roles'] = entity.collection.roles
+    data['properties'] = {'name': [entity.name]}
+    for k, v in entity.data.items():
+        v = ensure_list(v)
+        if len(v):
+            data['properties'][k] = v
+
     # data['$documents'] = get_count(entity)
     data = finalize_index(data, entity.schema)
     es.index(index=es_index, doc_type=TYPE_ENTITY, id=entity.id, body=data)

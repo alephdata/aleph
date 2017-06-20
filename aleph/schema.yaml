@@ -48,6 +48,14 @@ entities:
       notes:
         label: Notes
 
+  Document:
+    extends: Entity
+    label: Document
+    plural: Documents
+    icon: fa-file-text
+    hidden: true
+    fuzzy: false
+
   LegalEntity:
     extends: Entity
     label: Legal entity

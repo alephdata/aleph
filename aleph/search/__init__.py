@@ -20,7 +20,7 @@ class DocumentsQuery(AuthzQuery):
     RETURN_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                      'languages', 'countries', 'source_url', 'created_at',
                      'updated_at', 'type', 'summary', 'status', 'error_type',
-                     'error_message', 'content_hash']
+                     'error_message', 'content_hash', 'parent']
     SORT = {
         'default': ['_score', {'name_sort': 'asc'}],
         'name': [{'name_sort': 'asc'}, '_score'],
@@ -90,7 +90,7 @@ class EntitiesQuery(AuthzQuery):
     DOC_TYPES = [TYPE_ENTITY]
     RETURN_FIELDS = ['collection_id', 'roles', 'name', 'data', 'countries',
                      'schema', 'schemata', 'properties', 'fingerprints',
-                     'state']
+                     'state', 'created_at', 'updated_at']
     SORT = {
         'default': ['_score', {'$documents': 'desc'}, {'name_sort': 'asc'}],
         'name': [{'name_sort': 'asc'}, {'$documents': 'desc'}, '_score'],
@@ -187,6 +187,17 @@ class SuggestEntitiesQuery(EntitiesQuery):
             }
         })
         return query
+
+
+class CombinedQuery(AuthzQuery):
+    DOC_TYPES = [TYPE_ENTITY, TYPE_DOCUMENT]
+    RETURN_FIELDS = set(DocumentsQuery.RETURN_FIELDS)
+    RETURN_FIELDS = list(set(EntitiesQuery.RETURN_FIELDS).union(RETURN_FIELDS))
+
+    SORT = {
+        'default': ['_score', {'$documents': 'desc'}, {'name_sort': 'asc'}],
+        'name': [{'name_sort': 'asc'}, {'$documents': 'desc'}, '_score']
+    }
 
 
 class CollectionsQuery(AuthzQuery):

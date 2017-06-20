@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime, timedelta
-from normality import ascii_text
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
@@ -12,7 +11,6 @@ from aleph.model.collection import Collection
 from aleph.model.common import DatedModel
 from aleph.model.document_record import DocumentRecord
 from aleph.model.document_tag import DocumentTag
-from aleph.text import index_form
 
 log = logging.getLogger(__name__)
 
@@ -197,19 +195,6 @@ class Document(db.Model, DatedModel, Metadata):
             'created_at': self.created_at,
             'updated_at': self.updated_at
         })
-        return data
-
-    def to_index_dict(self):
-        data = self.to_dict()
-        data['text'] = index_form(self.text_parts())
-        data['text'].extend(index_form([ascii_text(data.get('title'))]))
-        data['text'].extend(index_form([ascii_text(data.get('summary'))]))
-        data['schema'] = self.SCHEMA
-        data['schemata'] = [self.SCHEMA]
-        data['name_sort'] = ascii_text(data.get('title'))
-        data['roles'] = self.collection.roles
-        data.pop('tables')
-        data.pop('headers')
         return data
 
     def __repr__(self):

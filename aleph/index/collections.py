@@ -1,10 +1,10 @@
 from pprint import pprint  # noqa
 
 from aleph.core import es, es_index
-from aleph.index.util import query_delete
 from aleph.index.stats import get_collection_stats
 from aleph.index.mapping import TYPE_LINK, TYPE_DOCUMENT, TYPE_ENTITY
 from aleph.index.mapping import TYPE_COLLECTION
+from aleph.index.util import query_delete
 
 CHILD_TYPES = [TYPE_LINK, TYPE_DOCUMENT, TYPE_ENTITY]
 
@@ -14,7 +14,8 @@ def index_collection(collection):
     if collection.deleted_at is not None:
         return delete_collection(collection.id)
 
-    data = collection.to_index_dict()
+    data = collection.to_dict()
+    data['roles'] = collection.roles
     data = get_collection_stats(data)
     data.pop('id', None)
     es.index(index=es_index,

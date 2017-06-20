@@ -41,6 +41,24 @@ def is_safe_url(target):
         ref_url.netloc == test_url.netloc
 
 
+def extract_next_url(req):
+    """Extracts the URL/path to follow when redirects/unauthorization occurs.
+
+    :param object req: Flask request object to extract from.
+    :return: Path of the next target URL.
+    :rtype: str
+    """
+    next_url = '/'
+
+    for target in req.args.get('next'), req.referrer:
+        if not target:
+            continue
+        if is_safe_url(target):
+            next_url = target
+
+    return next_url
+
+
 def make_excel(result_iter, fields):
     output = StringIO.StringIO()
     workbook = xlsxwriter.Workbook(output)
@@ -71,21 +89,3 @@ def make_excel(result_iter, fields):
     workbook.close()
     output.seek(0)
     return output
-
-
-def extract_next_url(req):
-    """Extracts the URL/path to follow when redirects/unauthorization occurs.
-
-    :param object req: Flask request object to extract from.
-    :return: Path of the next target URL.
-    :rtype: str
-    """
-    next_url = '/'
-
-    for target in req.args.get('next'), req.referrer:
-        if not target:
-            continue
-        if is_safe_url(target):
-            next_url = target
-
-    return next_url

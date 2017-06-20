@@ -4,7 +4,6 @@ from flask import current_app
 from sqlalchemy import or_
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
-from normality import stringify
 from flask_simpleldap import LDAPException
 
 from aleph.core import db, ldap, url_for, get_config, secret_key

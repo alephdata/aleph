@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import ARRAY
 
-from aleph.core import db, url_for
+from aleph.core import db
 from aleph.model.validate import validate
 from aleph.model.role import Role
 from aleph.model.permission import Permission
@@ -102,7 +102,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     def to_dict(self):
         data = super(Collection, self).to_dict()
         data.update({
-            'api_url': url_for('collections_api.view', id=self.id),
             'foreign_id': self.foreign_id,
             'creator_id': self.creator_id,
             'label': self.label,
@@ -113,9 +112,4 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             'managed': self.managed,
             'public': self.is_public
         })
-        return data
-
-    def to_index_dict(self):
-        data = self.to_dict()
-        data['roles'] = self.roles
         return data

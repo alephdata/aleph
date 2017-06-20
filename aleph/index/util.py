@@ -1,11 +1,14 @@
 import six
 import logging
 from elasticsearch.helpers import bulk
+from normality import stringify, latinize_text, collapse_spaces
+from normality.cleaning import decompose_nfkd
 
 from aleph.core import es, es_index
 from aleph.util import is_list, unique_list, remove_nulls
 
 log = logging.getLogger(__name__)
+INDEX_MAX_LEN = 1024 * 1024 * 100
 
 
 def bulk_op(iter, chunk_size=500):
@@ -41,3 +44,38 @@ def merge_docs(old, new):
         else:
             new[k] = v
     return new
+
+
+def index_form(texts):
+    """Turn a set of strings into the appropriate form for indexing."""
+    results = []
+    total_len = 0
+
+    for text in texts:
+        # We don't want to store more than INDEX_MAX_LEN of text per doc
+        if total_len > INDEX_MAX_LEN:
+            # TODO: there might be nicer techniques for dealing with overly
+            # long text buffers?
+            results = list(set(results))
+            total_len = sum((len(t) for t in results))
+            if total_len > INDEX_MAX_LEN:
+                break
+
+        text = stringify(text)
+        if text is None:
+            continue
+        text = collapse_spaces(text)
+
+        # XXX: is NFKD a great idea?
+        text = decompose_nfkd(text)
+        total_len += len(text)
+        results.append(text)
+
+        # Make latinized text version
+        latin = latinize_text(text)
+        latin = stringify(latin)
+        if latin is None or latin == text:
+            continue
+        total_len += len(latin)
+        results.append(latin)
+    return results

@@ -1,9 +1,11 @@
 import logging
+from normality import ascii_text
 
 from aleph.core import celery, es, es_index
 from aleph.model import Document
 from aleph.index.records import index_records, clear_records
 from aleph.index.mapping import TYPE_DOCUMENT
+from aleph.index.util import index_form
 
 log = logging.getLogger(__name__)
 
@@ -26,9 +28,28 @@ def index_document(document):
     if document.type == Document.TYPE_OTHER:
         return
 
-    log.info("Index document: %r", document)
-    data = document.to_index_dict()
-    es.index(index=es_index, doc_type=TYPE_DOCUMENT, body=data, id=document.id)
+    log.info("Index document [%s]: %s", document.id, document.title)
+    data = document.to_dict()
+    if document.parent_id is not None:
+        data['parent'] = {
+            'id': document.parent_id,
+            'type': document.parent.type,
+            'title': document.parent.title,
+        }
+    data['text'] = index_form(document.text_parts())
+    data['text'].extend(index_form([ascii_text(data.get('title'))]))
+    data['text'].extend(index_form([ascii_text(data.get('summary'))]))
+    data['schema'] = document.SCHEMA
+    data['schemata'] = [document.SCHEMA]
+    data['name_sort'] = ascii_text(data.get('title'))
+    data['roles'] = document.collection.roles
+    data.pop('tables')
+    data.pop('headers')
+
+    es.index(index=es_index,
+             doc_type=TYPE_DOCUMENT,
+             body=data,
+             id=document.id)
 
 
 def delete_document(document_id):

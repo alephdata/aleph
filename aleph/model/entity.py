@@ -190,17 +190,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         })
         return data
 
-    def to_index_dict(self):
-        entity = self.to_dict()
-        entity['$physical'] = True
-        entity['roles'] = self.collection.roles
-        entity['properties'] = {'name': [self.name]}
-        for k, v in self.data.items():
-            v = ensure_list(v)
-            if len(v):
-                entity['properties'][k] = v
-        return entity
-
     def __unicode__(self):
         return self.name
 
