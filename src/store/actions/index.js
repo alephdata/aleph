@@ -14,3 +14,15 @@ export const fetchDocuments = (filters) => (dispatch) => {
       documents: data.results
     }));
 }
+
+export const fetchMetadata = () => (dispatch) => {
+  dispatch({
+    type: 'FETCH_METADATA_REQUEST'
+  });
+
+  return endpoint.get('metadata')
+    .then((response) => dispatch({
+      type: 'FETCH_METADATA_SUCCESS',
+      metadata: response.data
+    }));
+}
