@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 // import queryString from 'query-string';
 
-import { fetchMetadata } from '../store/actions';
+import { fetchMetadata, fetchSession } from '../store/actions';
 
 class Layout extends Component {
   componentWillMount() {
     this.props.fetchMetadata()
+    this.props.fetchSession()
   }
 
   render() {
@@ -25,7 +26,7 @@ const mapStateToProps = (state, ownProps) => {
 
 Layout = connect(
   mapStateToProps,
-  { fetchMetadata }
+  { fetchMetadata, fetchSession }
 )(Layout);
 
 export default Layout;

@@ -26,3 +26,15 @@ export const fetchMetadata = () => (dispatch) => {
       metadata: response.data
     }));
 }
+
+export const fetchSession = () => (dispatch) => {
+  dispatch({
+    type: 'FETCH_SESSION_REQUEST'
+  });
+
+  return endpoint.get('sessions')
+    .then((response) => dispatch({
+      type: 'FETCH_SESSION_SUCCESS',
+      session: response.data
+    }));
+}
