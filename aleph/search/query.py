@@ -44,7 +44,7 @@ class Query(object):
         return filters
 
     def get_query(self):
-        query = {
+        return {
             'bool': {
                 'should': [],
                 'must': [self.get_text_query()],
@@ -52,10 +52,6 @@ class Query(object):
                 'filter': self.get_filters()
             }
         }
-        # TODO: can this be entirely replacing the text query?
-        if self.parser.raw_query is not None:
-            query['bool']['must'] = self.parser.raw_query
-        return query
 
     def get_aggregations(self):
         """Aggregate the query in order to generate faceted results."""

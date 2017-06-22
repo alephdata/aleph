@@ -3,6 +3,9 @@ from normality import stringify
 from dalet import parse_boolean
 from werkzeug.datastructures import MultiDict
 
+# cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
+MAX_RESULT_WINDOW = 10000
+
 
 class QueryParser(object):
     """Hold state for common query parameters."""
@@ -12,18 +15,11 @@ class QueryParser(object):
             args = MultiDict(args)
         self.args = args
         self.authz = authz
-        self._limit = limit
+        self.offset = max(0, self.getint('offset', 0))
+        if limit is None:
+            limit = min(MAX_RESULT_WINDOW, max(0, self.getint('limit', 20)))
+        self.limit = limit
         self.prefix = stringify(self.get('prefix'))
-
-    @property
-    def limit(self):
-        if self._limit is not None:
-            return self._limit
-        return min(1000, max(0, self.getint('limit', 30)))
-
-    @property
-    def offset(self):
-        return max(0, self.getint('offset', 0))
 
     @property
     def page(self):
@@ -100,7 +96,9 @@ class SearchQueryParser(QueryParser):
 
     def __init__(self, args, authz, limit=None):
         super(SearchQueryParser, self).__init__(args, authz, limit=limit)
-        self.raw_query = None
+        self.offset = min(MAX_RESULT_WINDOW, self.offset)
+        if (self.limit + self.offset) > MAX_RESULT_WINDOW:
+            self.limit = max(0, MAX_RESULT_WINDOW - self.offset)
         self.facet_names = self.getlist('facet')
         self.facet_size = self.getint('facet_size', 50)
         self.text = stringify(self.get('q'))

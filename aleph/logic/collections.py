@@ -3,7 +3,7 @@ from datetime import datetime
 
 from aleph.core import db, celery
 from aleph.ingest import ingest
-from aleph.model import Collection, Document
+from aleph.model import Collection, Document, Entity
 from aleph.index.collections import delete_collection as index_delete
 from aleph.index.collections import index_collection, get_collection_stats
 from aleph.logic.entities import delete_entity, update_entity_full
@@ -66,17 +66,21 @@ def delete_collection(collection_id):
     log.info("Deleting collection [%r]: %r", collection.id, collection.label)
     index_delete(collection_id)
     deleted_at = datetime.utcnow()
-    for entity in collection.entities:
+
+    q = db.session.query(Entity)
+    q = q.filter(Entity.collection_id == collection.id)
+    for entity in q.yield_per(5000):
         # TODO: consider hard-deleting entities because the polyglot tagger
         # cannot tell if a deleted match on a tagged term on a revived
         # collection means not to tag this entity any more.
         log.info("Delete entity: %r", entity)
         delete_entity(entity, deleted_at=deleted_at)
 
-    for document in collection.documents:
+    q = db.session.query(Document)
+    q = q.filter(Document.collection_id == collection.id)
+    for document in q.yield_per(5000):
         log.info("Delete document: %r", document)
         delete_document(document, deleted_at=deleted_at)
 
-    db.session.refresh(collection)
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
