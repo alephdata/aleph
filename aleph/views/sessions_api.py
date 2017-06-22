@@ -95,6 +95,7 @@ def password_login():
 
     session['user'] = role.id
     session['next_url'] = extract_next_url(request)
+    request.authz = Authz(role=role)
     return status()
 
 
