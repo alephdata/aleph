@@ -31,8 +31,7 @@ def load_role():
                 api_key = auth_header.split(' ', 1).pop()
 
         role = Role.by_api_key(api_key)
-        if role is not None:
-            request.authz = Authz(role=role)
+        request.authz = Authz(role=role)
 
 
 @blueprint.route('/api/2/sessions')
@@ -96,12 +95,7 @@ def password_login():
 
     session['user'] = role.id
     session['next_url'] = extract_next_url(request)
-
-    return jsonify({
-        'logout': url_for('.logout'),
-        'api_key': role.api_key,
-        'role': role
-    })
+    return status()
 
 
 @blueprint.route('/api/2/sessions/login')
@@ -135,18 +129,21 @@ def callback(provider):
         abort(404)
 
     next_url = session.pop('next_url', '/')
-
     resp = oauth_provider.authorized_response()
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)
         return Unauthorized("Authentication has failed.")
 
-    session['oauth'] = resp
-    signals.handle_oauth_session.send(provider=oauth_provider, session=session)
+    response = signals.handle_oauth_session.send(provider=oauth_provider,
+                                                 oauth=resp)
     db.session.commit()
-    if 'user' not in session:
-        log.error("No OAuth handler for %r was installed.", provider)
-        return Unauthorized("Authentication has failed.")
-    log_event(request, role_id=session['user'])
-    log.info("Logged in: %r", session['user'])
-    return redirect(next_url)
+    for (_, role) in response:
+        if role is None:
+            continue
+        session['user'] = role.id
+        log_event(request, role_id=role.id)
+        log.info("Logged in: %r", role)
+        return redirect(next_url)
+
+    log.error("No OAuth handler for %r was installed.", provider)
+    return Unauthorized("Authentication has failed.")

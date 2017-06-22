@@ -1,18 +1,11 @@
 import jwt
 import logging
 from flask_oauthlib.client import OAuth
-from flask import session
 
 from aleph import signals
 
 oauth = OAuth()
 log = logging.getLogger(__name__)
-
-
-def get_oauth_token():
-    if 'oauth' in session:
-        sig = session.get('oauth')
-        return (sig.get('access_token'), '')
 
 
 def setup_providers(app):
@@ -30,7 +23,6 @@ def setup_providers(app):
 
         provider = oauth.remote_app(**provider)
         provider.label = label
-        provider.tokengetter(get_oauth_token)
 
 
 def configure_oauth(app):
@@ -41,61 +33,54 @@ def configure_oauth(app):
 
 
 @signals.handle_oauth_session.connect
-def handle_google_oauth(sender, provider=None, session=None):
+def handle_google_oauth(sender, provider=None, oauth=None):
     from aleph.model import Role
-
-    # If you wish to use another OAuth provider with your installation of
-    # aleph, you can create a Python extension package and include a
-    # custom oauth handler like this, which will create roles and state
-    # for your session.
     if 'googleapis.com' not in provider.base_url:
         return
 
-    me = provider.get('userinfo')
+    token = (oauth.get('access_token'), '')
+    me = provider.get('userinfo', token=token)
     user_id = 'google:%s' % me.data.get('id')
-    role = Role.load_or_create(user_id, Role.USER, me.data.get('name'),
+    return Role.load_or_create(user_id, Role.USER, me.data.get('name'),
                                email=me.data.get('email'))
-    session['user'] = role.id
 
 
 @signals.handle_oauth_session.connect
-def handle_facebook_oauth(sender, provider=None, session=None):
+def handle_facebook_oauth(sender, provider=None, oauth=None):
     from aleph.model import Role
-
     if 'facebook.com' not in provider.base_url:
         return
 
-    me = provider.get('me?fields=id,name,email')
+    token = (oauth.get('access_token'), '')
+    me = provider.get('me?fields=id,name,email', token=token)
     user_id = 'facebook:%s' % me.data.get('id')
-    role = Role.load_or_create(user_id, Role.USER, me.data.get('name'),
+    return Role.load_or_create(user_id, Role.USER, me.data.get('name'),
                                email=me.data.get('email'))
-    session['user'] = role.id
 
 
 @signals.handle_oauth_session.connect
-def handle_keycloak_oauth(sender, provider=None, session=None):
+def handle_keycloak_oauth(sender, provider=None, oauth=None):
     from aleph.model import Role
     superuser_role = 'superuser'
 
     if 'secure.occrp.org' not in provider.base_url:
         return
 
-    access_token = session.get('oauth', {}).get('access_token')
-    access_token = jwt.decode(access_token, verify=False)
-    clients = access_token.get('resource_access', {})
+    access_token = oauth.get('access_token')
+    token_data = jwt.decode(access_token, verify=False)
+    clients = token_data.get('resource_access', {})
     client = clients.get(provider.consumer_key, {})
     roles = set(client.get('roles', []))
 
-    user_id = 'kc:%s' % access_token.get('email')
-    if access_token.get('idashboard'):
-        user_id = 'idashboard:user:%s' % access_token.get('idashboard')
+    user_id = 'kc:%s' % token_data.get('email')
+    if token_data.get('idashboard'):
+        user_id = 'idashboard:user:%s' % token_data.get('idashboard')
 
     role = Role.load_or_create(user_id, Role.USER,
-                               access_token.get('name'),
-                               email=access_token.get('email'),
+                               token_data.get('name'),
+                               email=token_data.get('email'),
                                is_admin=superuser_role in roles)
     role.clear_roles()
-
     for role_name in roles:
         if role_name == superuser_role:
             continue
@@ -105,4 +90,4 @@ def handle_keycloak_oauth(sender, provider=None, session=None):
         role.add_role(group_role)
         log.debug("User %r is member of %r", role, group_role)
 
-    session['user'] = role.id
+    return role
