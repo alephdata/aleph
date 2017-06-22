@@ -5,20 +5,11 @@ from aleph.core import db, celery
 from aleph.ingest import ingest
 from aleph.model import Collection, Document, Entity
 from aleph.index.collections import delete_collection as index_delete
-from aleph.index.collections import index_collection, get_collection_stats
+from aleph.index.collections import index_collection
 from aleph.logic.entities import delete_entity, update_entity_full
 from aleph.logic.documents import delete_document
 
 log = logging.getLogger(__name__)
-
-
-def fetch_collection(entity_id):
-    """Load entities from both the ES index and the database."""
-    collection = Collection.by_id(entity_id)
-    if collection is None:
-        return
-    data = collection.to_dict()
-    return get_collection_stats(data)
 
 
 def update_collection(collection):

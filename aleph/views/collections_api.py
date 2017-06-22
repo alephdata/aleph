@@ -1,12 +1,14 @@
 from flask import Blueprint, request
-from apikit import obj_or_404, jsonify, request_data
+from apikit import jsonify, request_data
 
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY, db
 from aleph.model import Collection
 from aleph.search import CollectionsQuery
 from aleph.events import log_event
+from aleph.index.collections import get_collection_stats
 from aleph.logic.collections import delete_collection, update_collection
-from aleph.logic.collections import process_collection, fetch_collection
+from aleph.logic.collections import process_collection
+from aleph.views.util import get_collection, require
 
 blueprint = Blueprint('collections_api', __name__)
 
@@ -19,7 +21,7 @@ def index():
 
 @blueprint.route('/api/2/collections', methods=['POST', 'PUT'])
 def create():
-    request.authz.require(request.authz.logged_in)
+    require(request.authz.logged_in)
     data = request_data()
     data['managed'] = False
     collection = Collection.create(data, request.authz.role)
@@ -31,16 +33,15 @@ def create():
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['GET'])
 def view(id):
-    data = obj_or_404(fetch_collection(id))
-    request.authz.require(request.authz.collection_read(id))
-    # data['$leads'] = lead_count(id)
+    collection = get_collection(id)
+    data = collection.to_dict()
+    data = get_collection_stats(data)
     return jsonify(data)
 
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['POST', 'PUT'])
 def update(id):
-    collection = obj_or_404(Collection.by_id(id))
-    request.authz.require(request.authz.collection_write(collection))
+    collection = get_collection(id, request.authz.WRITE)
     collection.update(request_data())
     db.session.commit()
     update_collection(collection)
@@ -50,8 +51,7 @@ def update(id):
 
 @blueprint.route('/api/2/collections/<int:id>/process', methods=['POST', 'PUT'])  # noqa
 def process(id):
-    collection = obj_or_404(Collection.by_id(id))
-    request.authz.require(request.authz.collection_write(collection))
+    collection = get_collection(id, request.authz.WRITE)
     process_collection.apply_async([collection.id],
                                    queue=USER_QUEUE,
                                    routing_key=USER_ROUTING_KEY)
@@ -61,8 +61,7 @@ def process(id):
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['DELETE'])
 def delete(id):
-    collection = obj_or_404(Collection.by_id(id))
-    request.authz.require(request.authz.collection_write(collection))
+    collection = get_collection(id, request.authz.WRITE)
     delete_collection.apply_async([collection.id],
                                   queue=USER_QUEUE,
                                   routing_key=USER_ROUTING_KEY)

@@ -2,12 +2,18 @@ import StringIO
 from apikit import obj_or_404
 from flask import request
 from urlparse import urlparse, urljoin
-from werkzeug.exceptions import NotFound, ImATeapot
+from werkzeug.exceptions import NotFound, ImATeapot, Forbidden
 import xlsxwriter
 
 from aleph.authz import Authz
-from aleph.model import Document
+from aleph.model import Document, Collection
 from aleph.logic import fetch_entity
+
+
+def require(*predicates):
+    for predicate in predicates:
+        if not predicate:
+            raise Forbidden("Sorry, you're not permitted to do this!")
 
 
 def get_entity(id, action):
@@ -15,13 +21,12 @@ def get_entity(id, action):
     if obj is None:
         entity = obj_or_404(entity)
         # Apply roles-based security to dataset-sourced entities.
-        request.authz.require(request.authz.check_roles(entity.get('roles')))
+        require(request.authz.check_roles(entity.get('roles')))
         # Cannot edit them:
         if action == request.authz.WRITE:
             raise ImATeapot("Cannot write this entity.")
     else:
-        collections = request.authz.collections.get(action)
-        request.authz.require(obj.collection_id in collections)
+        require(request.authz.can(obj.collection_id, action))
     return entity, obj
 
 
@@ -29,9 +34,16 @@ def get_document(document_id, action=Authz.READ):
     document = Document.by_id(document_id)
     if document is None:
         raise NotFound()
-    collections = request.authz.collections.get(action)
-    request.authz.require(document.collection_id in collections)
+    require(request.authz.can(document.collection_id, action))
     return document
+
+
+def get_collection(collection_id, action=Authz.READ):
+    collection = Collection.by_id(collection_id)
+    if collection is None:
+        raise NotFound()
+    require(request.authz.can(collection.id, action))
+    return collection
 
 
 def is_safe_url(target):

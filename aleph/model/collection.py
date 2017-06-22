@@ -81,16 +81,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return self.label
 
     @property
-    def is_public(self):
-        if not hasattr(self, '_is_public'):
-            try:
-                from flask import request
-                self._is_public = request.authz.collection_public(self.id)
-            except:
-                self._is_public = None
-        return self._is_public
-
-    @property
     def roles(self):
         if not hasattr(self, '_roles'):
             q = db.session.query(Permission.role_id)
@@ -109,7 +99,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             'category': self.category,
             'countries': self.countries,
             'languages': self.languages,
-            'managed': self.managed,
-            'public': self.is_public
+            'managed': self.managed
         })
         return data

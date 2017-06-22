@@ -5,10 +5,11 @@ from apikit import obj_or_404, request_data, jsonify
 from aleph.core import db, get_config, app_url
 from aleph.events import log_event
 from aleph.search import QueryParser, DatabaseQueryResult
-from aleph.model import Role, Collection, Permission
+from aleph.model import Role, Permission
 from aleph.logic.permissions import update_permission
 from aleph.model.validate import validate
 from aleph.notify import notify_role
+from aleph.views.util import require, get_collection
 
 
 blueprint = Blueprint('roles_api', __name__)
@@ -23,7 +24,7 @@ def check_visible(role):
 
 @blueprint.route('/api/2/roles/_suggest', methods=['GET'])
 def suggest():
-    request.authz.require(request.authz.logged_in)
+    require(request.authz.logged_in)
     parser = QueryParser(request.args, request.authz, limit=10)
     if parser.prefix is None or len(parser.prefix) < 3:
         # Do not return 400 because it's a routine event.
@@ -60,6 +61,7 @@ def invite_email():
 
 @blueprint.route('/api/2/roles', methods=['POST'])
 def create():
+    require(request.authz.session_write)
     data = request_data()
     email = data.get('email')
     name = data.get('name') or email
@@ -98,14 +100,14 @@ def create():
     db.session.add(role)
     db.session.commit()
 
-    return jsonify(dict(status='ok')), 201
+    return jsonify({'status': 'ok'}, status=201)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
 def view(id):
     role = obj_or_404(Role.by_id(id))
-    request.authz.require(request.authz.logged_in)
-    request.authz.require(check_visible(role))
+    require(request.authz.logged_in,
+            check_visible(role))
     data = role.to_dict()
     if role.id == request.authz.role.id:
         data['email'] = role.email
@@ -115,8 +117,8 @@ def view(id):
 @blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     role = obj_or_404(Role.by_id(id))
-    request.authz.require(request.authz.session_write())
-    request.authz.require(role.id == request.authz.role.id)
+    require(request.authz.session_write,
+            role.id == request.authz.role.id)
     role.update(request_data())
     db.session.add(role)
     db.session.commit()
@@ -124,11 +126,11 @@ def update(id):
     return jsonify(role)
 
 
-@blueprint.route('/api/2/collections/<int:collection>/permissions')
-def permissions_index(collection):
-    request.authz.require(request.authz.collection_write(collection))
+@blueprint.route('/api/2/collections/<int:id>/permissions')
+def permissions_index(id):
+    collection = get_collection(id, request.authz.WRITE)
     q = Permission.all()
-    q = q.filter(Permission.collection_id == collection)
+    q = q.filter(Permission.collection_id == collection.id)
     permissions = []
     roles_seen = set()
     for permission in q.all():
@@ -146,8 +148,7 @@ def permissions_index(collection):
                 permissions.append({
                     'write': False,
                     'read': False,
-                    'role': role,
-                    'role_id': role.id
+                    'role': role
                 })
 
     return jsonify({
@@ -156,18 +157,17 @@ def permissions_index(collection):
     })
 
 
-@blueprint.route('/api/2/collections/<int:collection>/permissions',
+@blueprint.route('/api/2/collections/<int:id>/permissions',
                  methods=['POST', 'PUT'])
-def permissions_update(collection):
-    request.authz.require(request.authz.collection_write(collection))
+def permissions_update(id):
+    collection = get_collection(id, request.authz.WRITE)
     data = request_data()
     validate(data, 'permission.json#')
 
-    role = Role.all().filter(Role.id == data['role_id']).first()
-    collection = Collection.by_id(collection)
-    if role is None or collection is None:
+    role_id = data.get('role', {}).get('id')
+    role = Role.all().filter(Role.id == role_id).first()
+    if role is None or not check_visible(role):
         raise BadRequest()
-    request.authz.require(check_visible(role))
 
     perm = update_permission(role, collection, data['read'], data['write'])
     log_event(request)

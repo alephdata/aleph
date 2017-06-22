@@ -8,7 +8,8 @@ from aleph.logic import update_entity, delete_entity
 from aleph.events import log_event
 from aleph.search import LinksQuery, EntitiesQuery, EntityDocumentsQuery
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
-from aleph.views.util import get_entity
+from aleph.search import DatabaseQueryResult, QueryParser
+from aleph.views.util import get_entity, require
 from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('entities_api', __name__)
@@ -23,13 +24,14 @@ def index():
 
 @blueprint.route('/api/2/entities/_all', methods=['GET'])
 def all():
-    collection_id = request.args.getlist('collection_id')
-    collection_id = request.authz.collections_intersect(request.authz.READ, collection_id)  # noqa
-    q = Entity.all_ids()
+    parser = QueryParser(request.args, request.authz)
+    q = Entity.all_ids(authz=request.authz)
     q = q.filter(Entity.state == Entity.STATE_ACTIVE)
-    q = q.filter(Entity.deleted_at == None)  # noqa
-    q = q.filter(Entity.collection_id.in_(collection_id))
-    return jsonify({'results': [r[0] for r in q]})
+    collection_ids = parser.getintlist('collection_id')
+    if len(collection_ids):
+        q = q.filter(Entity.collection_id.in_(collection_ids))
+    result = DatabaseQueryResult(request, q, parser=parser)
+    return jsonify(result)
 
 
 @blueprint.route('/api/2/entities/_suggest', methods=['GET'])
@@ -48,7 +50,7 @@ def create():
     except (ValueError, TypeError) as ve:
         raise BadRequest("Invalid collection_id")
     collection = obj_or_404(Collection.by_id(collection_id))
-    request.authz.require(request.authz.collection_write(collection.id))
+    require(request.authz.can_write(collection.id))
 
     try:
         entity = Entity.save(data, collection)

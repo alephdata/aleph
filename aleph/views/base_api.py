@@ -66,15 +66,6 @@ def metadata():
             'url': six.text_type(app_url),
             'samples': get_config('SAMPLE_SEARCHES')
         },
-        'fields': {
-            'countries': 'Countries',
-            'languages': 'Languages',
-            # 'domains': 'Domains',
-            'keywords': 'Keywords',
-            'phone_numbers': 'Phone numbers',
-            'emails': 'E-mail addresses',
-            'mime_type': 'Content type'
-        },
         'categories': get_config('COLLECTION_CATEGORIES', {}),
         'countries': COUNTRY_NAMES,
         'languages': LANGUAGE_NAMES,

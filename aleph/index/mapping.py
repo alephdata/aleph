@@ -61,6 +61,7 @@ DOCUMENT_MAPPING = {
         "file_name": {"type": "keyword"},
         "collection_id": {"type": "long"},
         "roles": {"type": "long"},
+        "$children": {"type": "long"},
         "source_url": {"type": "keyword"},
         "extension": {"type": "keyword"},
         "languages": {"type": "keyword"},

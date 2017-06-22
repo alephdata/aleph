@@ -11,6 +11,7 @@ from aleph.ingest import ingest_document
 from aleph.model import Collection, Document
 from aleph.model.common import make_textid
 from aleph.model.validate import validate
+from aleph.views.util import require
 from aleph.util import checksum
 
 
@@ -21,7 +22,7 @@ blueprint = Blueprint('ingest_api', __name__)
                  methods=['POST', 'PUT'])
 def ingest_upload(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))
-    request.authz.require(request.authz.collection_write(collection.id))
+    require(request.authz.can_write(collection.id))
     log_event(request)
     crawler_run = make_textid()
 

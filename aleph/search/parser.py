@@ -1,4 +1,3 @@
-import six
 from normality import stringify
 from dalet import parse_boolean
 from werkzeug.datastructures import MultiDict
@@ -34,13 +33,8 @@ class QueryParser(object):
                 continue
             _, field = key.split(':', 1)
 
-            if field == 'collection_id':
-                for value in self.getintlist(key):
-                    if value in self.authz.collections_read:
-                        yield (field, six.text_type(value))
-            else:
-                for value in self.getlist(key):
-                    yield (field, value)
+            for value in self.getlist(key):
+                yield (field, value)
 
     @property
     def filters(self):

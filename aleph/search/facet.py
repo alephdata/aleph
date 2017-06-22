@@ -87,12 +87,11 @@ class CategoryFacet(Facet):
 class CollectionFacet(Facet):
 
     def expand(self, keys):
-        self.collections = Collection.all_by_ids(keys).all()
+        q = Collection.all_by_ids(keys, authz=self.parser.authz)
+        self.collections = q.all()
 
     def update(self, result, key):
-        authz = self.parser.authz
         for collection in self.collections:
             if six.text_type(collection.id) == key:
                 result['label'] = collection.label
                 result['category'] = collection.category
-                result['public'] = authz.collection_public(collection.id)

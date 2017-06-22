@@ -3,13 +3,14 @@ from apikit import request_data, jsonify
 
 from aleph.search import QueryParser, QueryResult
 from aleph.crawlers import get_exposed_crawlers, execute_crawler
+from aleph.views.util import require
 
 blueprint = Blueprint('crawlers_api', __name__)
 
 
 @blueprint.route('/api/2/crawlers', methods=['GET'])
 def index():
-    request.authz.require(request.authz.is_admin)
+    require(request.authz.is_admin)
     parser = QueryParser(request.args, request.authz, limit=20)
     crawlers = sorted(get_exposed_crawlers(), key=lambda c: c.CRAWLER_NAME)
     result = QueryResult(request, parser=parser, total=len(crawlers),
@@ -19,8 +20,8 @@ def index():
 
 @blueprint.route('/api/2/crawlers', methods=['POST', 'PUT'])
 def queue():
-    request.authz.require(request.authz.session_write())
-    request.authz.require(request.authz.is_admin)
+    require(request.authz.session_write,
+            request.authz.is_admin)
     data = request_data()
     crawler_id = data.get('crawler_id')
     for cls in get_exposed_crawlers():

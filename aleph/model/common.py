@@ -85,7 +85,9 @@ class DatedModel(object):
 
     @classmethod
     def all_ids(cls, deleted=False):
-        return db.session.query(cls.id)
+        q = db.session.query(cls.id)
+        q = q.order_by(cls.id.asc())
+        return q
 
     @classmethod
     def all_by_ids(cls, ids, deleted=False):

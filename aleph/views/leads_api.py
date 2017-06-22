@@ -6,7 +6,7 @@ from aleph.model import Collection, EntityIdentity
 from aleph.search import LeadsQuery
 from aleph.logic import update_entity, update_lead
 from aleph.events import log_event
-from aleph.views.util import get_entity
+from aleph.views.util import get_entity, require
 
 blueprint = Blueprint('leads_api', __name__)
 
@@ -15,7 +15,7 @@ blueprint = Blueprint('leads_api', __name__)
                  methods=['GET'])
 def index(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))
-    request.authz.require(request.authz.collection_read(collection))
+    require(request.authz.can_read(collection))
     result = LeadsQuery.handle_request(request, collection_id=collection_id)
     return jsonify(result)
 
@@ -24,7 +24,7 @@ def index(collection_id):
                  methods=['POST', 'PUT'])
 def update(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))
-    request.authz.require(request.authz.collection_write(collection))
+    require(request.authz.can_write(collection))
     data = request_data()
     entity, obj = get_entity(data.get('entity_id'), request.authz.WRITE)
     if obj.collection_id != collection_id:

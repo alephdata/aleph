@@ -1,13 +1,13 @@
 import logging
 from datetime import datetime
 from sqlalchemy import func
-from sqlalchemy.orm import joinedload
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 
 from aleph.core import db, schemata
 from aleph.text import match_form, string_value
 from aleph.util import ensure_list
 from aleph.model.collection import Collection
+from aleph.model.permission import Permission
 from aleph.model.entity_identity import EntityIdentity
 from aleph.model.common import SoftDeleteModel, UuidModel
 from aleph.model.common import make_textid, merge_data
@@ -103,31 +103,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return ent
 
     @classmethod
-    def filter_collections(cls, q, collections=None):
-        if collections is None:
-            return q
-        collection_ids = []
-        for collection in collections:
-            if isinstance(collection, Collection):
-                collection = collection.id
-            collection_ids.append(collection)
-        q = q.filter(Entity.collection_id.in_(collection_ids))
-        return q
-
-    @classmethod
-    def by_id_set(cls, ids, collections=None):
-        if not len(ids):
-            return {}
-        q = cls.all()
-        q = cls.filter_collections(q, collections=collections)
-        q = q.options(joinedload('collection'))
-        q = q.filter(cls.id.in_(ids))
-        entities = {}
-        for ent in q:
-            entities[ent.id] = ent
-        return entities
-
-    @classmethod
     def by_foreign_id(cls, foreign_id, collection_id, deleted=False):
         foreign_id = string_value(foreign_id)
         if foreign_id is None:
@@ -138,6 +113,28 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         q = q.filter(cls.foreign_ids.contains(foreign_id))
         q = q.order_by(Entity.deleted_at.desc().nullsfirst())
         return q.first()
+
+    @classmethod
+    def _filter_by_authz(cls, q, authz=None):
+        if authz is not None:
+            q = q.join(Permission,
+                       cls.collection_id == Permission.collection_id)
+            q = q.filter(Permission.deleted_at == None)  # noqa
+            q = q.filter(Permission.read == True)  # noqa
+            q = q.filter(Permission.role_id.in_(authz.roles))
+        return q
+
+    @classmethod
+    def all_by_ids(cls, ids, deleted=False, authz=None):
+        q = super(Entity, cls).all_by_ids(ids, deleted=deleted)
+        q = cls._filter_by_authz(q, authz=authz)
+        return q
+
+    @classmethod
+    def all_ids(cls, deleted=False, authz=None):
+        q = super(Entity, cls).all_ids(deleted=deleted)
+        q = cls._filter_by_authz(q, authz=authz)
+        return q
 
     @classmethod
     def latest(cls):
@@ -189,9 +186,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             'collection_id': self.collection_id
         })
         return data
-
-    def __unicode__(self):
-        return self.name
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)

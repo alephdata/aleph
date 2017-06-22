@@ -6,7 +6,7 @@ from werkzeug.exceptions import Unauthorized
 
 from aleph import signals
 from aleph.core import db, url_for, get_config
-from aleph.authz import Authz, get_public_roles
+from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.events import log_event
@@ -58,11 +58,6 @@ def status():
         'api_key': authz.role.api_key if authz.logged_in else None,
         'role': authz.role,
         'roles': authz.roles,
-        'public_roles': get_public_roles(),
-        'permissions': {
-            'read': authz.collections[authz.READ],
-            'write': authz.collections[authz.WRITE]
-        },
         'logout': url_for('.logout'),
         'providers': providers,
     })
