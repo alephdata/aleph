@@ -15,7 +15,3 @@ const documents = (state = initialState, action) => {
 };
 
 export default documents;
-
-export const getDocuments = (state) => state.items;
-
-export const getIsFetching = (state) => state.isFetching;
