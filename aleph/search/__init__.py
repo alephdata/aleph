@@ -20,7 +20,7 @@ class DocumentsQuery(AuthzQuery):
     RETURN_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                      'languages', 'countries', 'source_url', 'created_at',
                      'updated_at', 'type', 'summary', 'status', 'error_type',
-                     'error_message', 'content_hash', 'parent']
+                     'error_message', 'content_hash', 'parent', '$children']
     SORT = {
         'default': ['_score', {'name_sort': 'asc'}],
         'name': [{'name_sort': 'asc'}, '_score'],
@@ -89,8 +89,8 @@ class AlertDocumentsQuery(EntityDocumentsQuery):
 class EntitiesQuery(AuthzQuery):
     DOC_TYPES = [TYPE_ENTITY]
     RETURN_FIELDS = ['collection_id', 'roles', 'name', 'data', 'countries',
-                     'schema', 'schemata', 'properties', 'fingerprints',
-                     'state', 'created_at', 'updated_at']
+                     'schema', 'schemata', 'properties', 'created_at',
+                     'updated_at']
     SORT = {
         'default': ['_score', {'$documents': 'desc'}, {'name_sort': 'asc'}],
         'name': [{'name_sort': 'asc'}, {'$documents': 'desc'}, '_score'],

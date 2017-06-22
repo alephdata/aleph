@@ -115,25 +115,14 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return q.first()
 
     @classmethod
-    def _filter_by_authz(cls, q, authz=None):
-        if authz is not None:
+    def all_ids(cls, deleted=False, authz=None):
+        q = super(Entity, cls).all_ids(deleted=deleted)
+        if authz is not None and not authz.is_admin:
             q = q.join(Permission,
                        cls.collection_id == Permission.collection_id)
             q = q.filter(Permission.deleted_at == None)  # noqa
             q = q.filter(Permission.read == True)  # noqa
             q = q.filter(Permission.role_id.in_(authz.roles))
-        return q
-
-    @classmethod
-    def all_by_ids(cls, ids, deleted=False, authz=None):
-        q = super(Entity, cls).all_by_ids(ids, deleted=deleted)
-        q = cls._filter_by_authz(q, authz=authz)
-        return q
-
-    @classmethod
-    def all_ids(cls, deleted=False, authz=None):
-        q = super(Entity, cls).all_ids(deleted=deleted)
-        q = cls._filter_by_authz(q, authz=authz)
         return q
 
     @classmethod

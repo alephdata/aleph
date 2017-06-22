@@ -4,7 +4,8 @@ from apikit import obj_or_404, jsonify, request_data, arg_bool
 
 from aleph.core import db
 from aleph.model import Entity, Collection
-from aleph.logic import update_entity, delete_entity
+from aleph.logic.entities import update_entity, delete_entity
+from aleph.logic.collections import update_collection
 from aleph.events import log_event
 from aleph.search import LinksQuery, EntitiesQuery, EntityDocumentsQuery
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
@@ -57,10 +58,11 @@ def create():
     except (ValueError, TypeError) as ve:
         raise BadRequest(ve.message)
 
-    entity.collection.touch()
+    collection.touch()
     db.session.commit()
     log_event(request, entity_id=entity.id)
     update_entity(entity)
+    update_collection(collection)
     return view(entity.id)
 
 
@@ -109,6 +111,7 @@ def update(id):
     db.session.commit()
     log_event(request, entity_id=entity.id)
     update_entity(entity)
+    update_collection(entity.collection)
     return view(entity.id)
 
 
@@ -126,6 +129,7 @@ def merge(id, other_id):
     log_event(request, entity_id=entity.id)
     update_entity(entity)
     update_entity(other)
+    update_collection(entity.collection)
     return view(entity.id)
 
 
@@ -133,6 +137,7 @@ def merge(id, other_id):
 def delete(id):
     _, entity = get_entity(id, request.authz.WRITE)
     delete_entity(entity)
+    update_collection(entity.collection)
     db.session.commit()
     log_event(request, entity_id=entity.id)
     return jsonify({'status': 'ok'})

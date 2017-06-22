@@ -61,7 +61,7 @@ def invite_email():
 
 @blueprint.route('/api/2/roles', methods=['POST'])
 def create():
-    require(request.authz.session_write)
+    require(not request.authz.in_maintenance)
     data = request_data()
     email = data.get('email')
     name = data.get('name') or email

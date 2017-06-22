@@ -22,16 +22,6 @@
       read: true
       write: false
       collection_id: 1000
-    - id: 100002
-      role_id: 1
-      read: true
-      write: false
-      collection_id: 1000
-    - id: 100003
-      role_id: 2
-      read: true
-      write: false
-      collection_id: 1000
 
 - model: aleph.model.entity.Entity
   records:

@@ -57,6 +57,16 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return q.filter(cls.foreign_id == foreign_id).first()
 
     @classmethod
+    def all_by_ids(cls, ids, deleted=False, authz=None):
+        q = super(Collection, cls).all_by_ids(ids, deleted=deleted)
+        if authz is not None and not authz.is_admin:
+            q = q.join(Permission, cls.id == Permission.collection_id)
+            q = q.filter(Permission.deleted_at == None)  # noqa
+            q = q.filter(Permission.read == True)  # noqa
+            q = q.filter(Permission.role_id.in_(authz.roles))
+        return q
+
+    @classmethod
     def create(cls, data, role=None):
         foreign_id = data.get('foreign_id') or make_textid()
         collection = cls.by_foreign_id(foreign_id, deleted=True)

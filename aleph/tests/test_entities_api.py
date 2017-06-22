@@ -56,7 +56,7 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get('/api/2/entities/_all')
         assert res.status_code == 200, res
         assert len(res.json['results']) == 1, res.json
-        assert res.json['results'][0] == self.ent.id, res.json
+        assert res.json['results'][0] == [self.ent.id], res.json
 
     def test_view(self):
         res = self.client.get('/api/2/entities/%s' % self.ent.id)

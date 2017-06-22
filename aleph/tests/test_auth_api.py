@@ -47,11 +47,6 @@ class AuthApiTestCase(TestCase):
         self.wl.creator = self.create_user('watcher')
         db.session.add(self.wl)
         db.session.commit()
-        res = self.client.get('/api/2/sessions')
-        perm = res.json['permissions']
-        assert not len(perm['write']), res.json
         self.login(foreign_id='admin', is_admin=True)
-        res = self.client.get('/api/2/sessions')
-        perm = res.json['permissions']
-        # assert not len(perm['sources']['write']), res.json
-        assert len(perm['write']), res.json
+        res = self.client.get('/api/2/collections/%s' % self.wl.id)
+        assert res.status_code == 200, res

@@ -20,13 +20,11 @@ def get_entity(id, action):
     entity, obj = fetch_entity(id)
     if obj is None:
         entity = obj_or_404(entity)
-        # Apply roles-based security to dataset-sourced entities.
-        require(request.authz.check_roles(entity.get('roles')))
         # Cannot edit them:
         if action == request.authz.WRITE:
             raise ImATeapot("Cannot write this entity.")
-    else:
-        require(request.authz.can(obj.collection_id, action))
+    coll_id = obj.collection_id if obj is None else entity.get('collection_id')
+    require(request.authz.can(coll_id, action))
     return entity, obj
 
 

@@ -49,7 +49,7 @@ class Authz(object):
         q = db.session.query(Permission.id)
         q = q.filter(Permission.deleted_at == None)  # noqa
         q = q.filter(Permission.role_id.in_(self.roles))
-        q = q.filter(Permission.collection_id != int(collection))
+        q = q.filter(Permission.collection_id == int(collection))
         if action == self.READ:
             q = q.filter(Permission.read == True)  # noqa
         if action == self.WRITE:
