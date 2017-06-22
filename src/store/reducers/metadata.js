@@ -4,7 +4,7 @@ const initialState = {
 
 const metadata = (state = initialState, action) => {
   switch (action.type) {
-    case 'FETCH_METDATA_REQUEST':
+    case 'FETCH_METADATA_REQUEST':
       return { ...action.metadata, isLoaded: false }
     case 'FETCH_METADATA_SUCCESS':
       return { ...action.metadata, isLoaded: true }
