@@ -41,6 +41,7 @@ def index_document(document):
     data['text'].extend(index_form([ascii_text(data.get('summary'))]))
     data['schema'] = document.SCHEMA
     data['schemata'] = [document.SCHEMA]
+    data['$children'] = document.children.count()
     data['name_sort'] = ascii_text(data.get('title'))
     data['roles'] = document.collection.roles
     data.pop('tables')

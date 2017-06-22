@@ -30,23 +30,37 @@ class Document(db.Model, DatedModel, Metadata):
 
     id = db.Column(db.BigInteger, primary_key=True)
     content_hash = db.Column(db.Unicode(65), nullable=True, index=True)
-    foreign_id = db.Column(db.Unicode, unique=False, nullable=True)
-    type = db.Column(db.Unicode(10), nullable=False, index=True)
-    status = db.Column(db.Unicode(10), nullable=True, index=True)
+    foreign_id = db.Column(db.Unicode, unique=False, nullable=True, index=True)
+    type = db.Column(db.Unicode(10), nullable=False)
+    status = db.Column(db.Unicode(10), nullable=True)
     meta = db.Column(JSONB, default={})
 
-    crawler = db.Column(db.Unicode(), index=True)
+    crawler = db.Column(db.Unicode())
     crawler_run = db.Column(db.Unicode())
     error_type = db.Column(db.Unicode(), nullable=True)
     error_message = db.Column(db.Unicode(), nullable=True)
 
-    uploader_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
+    uploader_id = db.Column(db.Integer,
+                            db.ForeignKey('role.id'),
+                            nullable=True)
 
-    parent_id = db.Column(db.BigInteger, db.ForeignKey('document.id'), nullable=True)  # noqa
-    children = db.relationship('Document', backref=db.backref('parent', uselist=False, remote_side=[id]))  # noqa
+    parent_id = db.Column(db.BigInteger,
+                          db.ForeignKey('document.id'),
+                          nullable=True,
+                          index=True)
+    children = db.relationship('Document',
+                               lazy='dynamic',
+                               backref=db.backref('parent',
+                                                  uselist=False,
+                                                  remote_side=[id]))
 
-    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
-    collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa
+    collection_id = db.Column(db.Integer,
+                              db.ForeignKey('collection.id'),
+                              nullable=False,
+                              index=True)
+    collection = db.relationship(Collection,
+                                 backref=db.backref('documents',
+                                                    lazy='dynamic'))
 
     def __init__(self, **kw):
         self.meta = {}
@@ -175,11 +189,6 @@ class Document(db.Model, DatedModel, Metadata):
 
     def to_dict(self):
         data = self.to_meta_dict()
-        try:
-            from flask import request  # noqa
-            data['public'] = request.authz.collection_public(self.collection_id)  # noqa
-        except:
-            data['public'] = None
         data.update({
             'id': self.id,
             'type': self.type,
