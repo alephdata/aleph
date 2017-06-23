@@ -6,7 +6,7 @@ from flask_fixtures import loaders, load_fixtures
 from faker import Factory
 
 from aleph.model import Role, Document, create_system_roles
-from aleph.index import delete_index, init_search, flush_index
+from aleph.index import delete_index, upgrade_search, flush_index
 from aleph.analyze import analyze_document
 from aleph.logic import reindex_entities
 from aleph.core import db, create_app
@@ -75,7 +75,7 @@ class TestCase(FlaskTestCase):
         except:
             pass
         delete_index()
-        init_search()
+        upgrade_search()
         db.drop_all()
         db.create_all()
         create_system_roles()
