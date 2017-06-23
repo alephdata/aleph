@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import time
 import logging
+import fingerprints
 from pprint import pprint  # noqa
 from normality import ascii_text
 from elasticsearch.helpers import BulkIndexError
@@ -26,11 +27,23 @@ def index_entity(entity):
     if entity.state != Entity.STATE_ACTIVE:
         return delete_entity(entity.id)
 
-    data = entity.to_dict()
-    data.pop('id', None)
-    data['$bulk'] = False
-    data['roles'] = entity.collection.roles
-    data['properties'] = {'name': [entity.name]}
+    data = {
+        'name': entity.name,
+        'names': [entity.name],
+        'type': entity.type,
+        'state': entity.state,
+        'foreign_ids': entity.foreign_ids,
+        'data': entity.data,
+        'created_at': entity.created_at,
+        'updated_at': entity.updated_at,
+        '$bulk': False,
+        'roles': entity.collection.roles,
+        'collection_id': entity.collection_id,
+        'properties': {
+            'name': [entity.name]
+        }
+    }
+
     for k, v in entity.data.items():
         v = ensure_list(v)
         if len(v):
@@ -38,12 +51,17 @@ def index_entity(entity):
 
     # data['$documents'] = get_count(entity)
     data = finalize_index(data, entity.schema)
-    es.index(index=es_index, doc_type=TYPE_ENTITY, id=entity.id, body=data)
+    es.index(index=es_index,
+             doc_type=TYPE_ENTITY,
+             id=entity.id,
+             body=data)
 
 
 def get_entity(entity_id):
     """Fetch an entity from the index."""
-    result = es.get(index=es_index, doc_type=TYPE_ENTITY, id=entity_id,
+    result = es.get(index=es_index,
+                    doc_type=TYPE_ENTITY,
+                    id=entity_id,
                     ignore=[404])
     entity = result.get('_source', {})
     if result.get('found'):
@@ -129,7 +147,6 @@ def finalize_index(data, schema):
             texts.append(v)
 
     data['text'] = index_form(texts)
-    data['fingerprints'] = data.get('fingerprints', [])
 
     # Generate inverted representations of the data stored in properties.
     for prop in schema.properties:
@@ -141,10 +158,6 @@ def finalize_index(data, schema):
         if prop.is_label:
             data['name'] = values[0]
 
-        # Generate key material
-        # TODO: this should probably be record-based.
-        data['fingerprints'].extend(prop.type.fingerprint(values))
-
         # Add inverted properties. This takes all the properties
         # of a specific type (names, dates, emails etc.)
         invert = prop.type.index_invert
@@ -155,10 +168,12 @@ def finalize_index(data, schema):
                 if norm not in data[invert]:
                     data[invert].append(norm)
 
-    data['fingerprints'] = list(set(data['fingerprints']))
+    names = data.get('names', [])
+    fps = [fingerprints.generate(name) for name in names]
+    fps = [fp for fp in fps if fp is not None]
+    data['fingerprints'] = list(set(fps))
 
     # Add latinised names
-    names = data.get('names', [])
     for name in list(names):
         names.append(ascii_text(name))
     data['names'] = list(set(names))
@@ -170,4 +185,6 @@ def finalize_index(data, schema):
     # Second name field for non-tokenised sorting.
     if 'name' in data:
         data['name_sort'] = data.get('name')
+
+    # pprint(data)
     return data

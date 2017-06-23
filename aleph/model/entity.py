@@ -74,8 +74,10 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     def update(self, entity):
         data = entity.get('data') or {}
         data['name'] = entity.get('name')
-        self.data = self.schema.validate(data)
-        self.name = self.data.pop('name')
+        data = self.schema.validate(data)
+        self.name = data.pop('name')
+        self.data = data
+
         fid = [string_value(f) for f in entity.get('foreign_ids') or []]
         self.foreign_ids = list(set([f for f in fid if f is not None]))
         self.state = entity.pop('state', self.STATE_ACTIVE)

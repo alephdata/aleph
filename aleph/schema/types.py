@@ -1,5 +1,4 @@
 import re
-import fingerprints
 from normality import ascii_text, stringify, collapse_spaces
 from dalet import is_partial_date, parse_date
 from dalet import parse_phone, parse_country, parse_email
@@ -27,9 +26,6 @@ class StringProperty(object):
     def normalize_value(self, value):
         return self.clean(value, {}, {})
 
-    def fingerprint(self, values):
-        return []
-
 
 class NameProperty(StringProperty):
     index_invert = 'names'
@@ -37,14 +33,6 @@ class NameProperty(StringProperty):
     def normalize_value(self, value):
         value = collapse_spaces(value)
         return value, ascii_text(value)
-
-    def fingerprint(self, values):
-        # TODO: this should not be a property thing, so that fp's can include
-        # dates etx.
-        fps = []
-        for value in values:
-            fps.append(fingerprints.generate(value))
-        return [fp for fp in fps if fp is not None]
 
 
 class URLProperty(StringProperty):
@@ -78,7 +66,7 @@ class AddressProperty(StringProperty):
     index_invert = 'addresses'
 
     def normalize_value(self, value):
-        return fingerprints.generate(value)
+        return stringify(value)
 
 
 class PhoneProperty(StringProperty):
