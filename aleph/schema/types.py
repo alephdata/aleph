@@ -1,5 +1,5 @@
 import re
-from normality import ascii_text, stringify, collapse_spaces
+from normality import stringify, collapse_spaces
 from dalet import is_partial_date, parse_date
 from dalet import parse_phone, parse_country, parse_email
 
@@ -31,8 +31,7 @@ class NameProperty(StringProperty):
     index_invert = 'names'
 
     def normalize_value(self, value):
-        value = collapse_spaces(value)
-        return value, ascii_text(value)
+        return collapse_spaces(value)
 
 
 class URLProperty(StringProperty):

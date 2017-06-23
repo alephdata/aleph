@@ -1,4 +1,5 @@
 import os
+from unittest import skip  # noqa
 
 from aleph.tests.util import TestCase
 from aleph.util import load_config_file

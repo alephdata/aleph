@@ -1,7 +1,5 @@
 import os
-import six
 import logging
-import requests
 from flask import current_app
 
 from aleph.core import db, archive, celery, app_url
@@ -9,7 +7,6 @@ from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.core import WORKER_QUEUE, WORKER_ROUTING_KEY
 from aleph.model import Document, Role
 from aleph.ingest.manager import DocumentManager
-from aleph.util import make_tempfile, remove_tempfile
 from aleph.notify import notify_role_template
 
 log = logging.getLogger(__name__)
@@ -22,54 +19,6 @@ def get_manager():
                                                     archive)
         log.info("Loaded ingestors: %r", DocumentManager._instance.ingestors)
     return DocumentManager._instance
-
-
-@celery.task(bind=True, max_retries=3)
-def ingest_url(self, document_id, url):
-    """Load the given URL into the document specified by document_id."""
-    document = Document.by_id(document_id)
-    if document is None:
-        log.error("Could not find document: %s", document_id)
-        return
-
-    tmp_path = make_tempfile(document.file_name, suffix=document.extension)
-    try:
-        log.info("Ingesting URL: %s", url)
-        res = requests.get(url, stream=True)
-        if res.status_code >= 500:
-            countdown = 3600 ** self.request.retries
-            self.retry(countdown=countdown)
-            return
-        if res.status_code >= 400:
-            document.status = Document.STATUS_FAIL
-            document.error_message = "HTTP %s: %s" % (res.status_code, url)
-            db.session.commit()
-            return
-        with open(tmp_path, 'w') as fh:
-            for chunk in res.iter_content(chunk_size=1024):
-                if chunk:
-                    fh.write(chunk)
-        if not document.has_meta('source_url'):
-            document.source_url = res.url
-        if document.foreign_id:
-            document.foreign_id = res.url
-        document.headers = res.headers
-        document.content_hash = archive.archive_file(tmp_path)
-        db.session.commit()
-        get_manager().ingest_document(document)
-    except IOError as ioe:
-        log.info("IO Failure: %r", ioe)
-        countdown = 3600 ** self.request.retries
-        self.retry(countdown=countdown)
-    except Exception as ex:
-        document.status = Document.STATUS_FAIL
-        document.error_type = type(ex).__name__
-        document.error_message = six.text_type(ex)
-        db.session.commit()
-        log.exception(ex)
-    finally:
-        db.session.remove()
-        remove_tempfile(tmp_path)
 
 
 def ingest_document(document, file_path, role_id=None):

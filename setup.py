@@ -30,9 +30,6 @@ setup(
             'corasick = aleph.analyze.corasick_entity:AhoCorasickEntityAnalyzer',  # noqa
             'polyglot = aleph.analyze.polyglot_entity:PolyglotEntityAnalyzer'
         ],
-        'aleph.crawlers': [
-            'sourceafrica = aleph.crawlers.documentcloud:SourceAfricaCrawler'
-        ],
         'aleph.init': [],
         'console_scripts': [
             'aleph = aleph.manage:main',

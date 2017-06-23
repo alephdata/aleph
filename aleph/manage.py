@@ -18,7 +18,6 @@ from aleph.logic import reindex_entities, delete_collection, process_collection
 from aleph.logic import update_collection
 from aleph.logic.alerts import check_alerts
 from aleph.logic.bulk import bulk_load
-from aleph.ext import get_crawlers
 from aleph.util import load_config_file
 
 
@@ -43,19 +42,6 @@ def collections():
 def alerts():
     """Generate alert notifications."""
     check_alerts.delay()
-
-
-@manager.command
-def crawl(name):
-    """Execute the given crawler."""
-    log.info('Crawling %r...', name)
-    crawlers = get_crawlers()
-    if name not in crawlers:
-        log.info('No such crawler: %r', name)
-    else:
-        crawler = crawlers.get(name)()
-        crawler.execute()
-    db.session.commit()
 
 
 @manager.command

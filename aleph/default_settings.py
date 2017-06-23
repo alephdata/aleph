@@ -140,9 +140,6 @@ TIKA_URI = env.get('ALEPH_TIKA_URI')
 # Enable the Aho Corasick based entity string matcher:
 REGEX_ENTITIES = env_bool('ALEPH_REGEX_ENTITIES', True)
 
-# Disable all crawlers (temporarily?)
-DISABLE_CRAWLERS = env_bool('ALEPH_DISABLE_CRAWLERS', False)
-
 # Automatically OCR pdf contents:
 PDF_OCR_PAGES = env_bool('ALEPH_PDF_OCR_PAGES', True)
 

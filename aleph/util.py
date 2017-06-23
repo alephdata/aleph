@@ -1,16 +1,9 @@
 # coding: utf-8
 import os
-import six
 import yaml
-import shutil
-from os import path
 from hashlib import sha1
 from celery import Task
-from tempfile import mkdtemp
 
-from aleph.text import string_value
-
-TMP_PREFIX = six.text_type('aleph.tmp.')
 PDF_MIME = 'application/pdf'
 
 
@@ -24,39 +17,6 @@ def checksum(filename):
                 break
             hash.update(block)
     return hash.hexdigest()
-
-
-def make_tempdir(name=None):
-    name = string_value(name) or 'data'
-    dirpath = path.join(mkdtemp(prefix=TMP_PREFIX), name)
-    os.makedirs(dirpath)
-    return dirpath
-
-
-def remove_tempdir(dirpath):
-    if dirpath is None:
-        return
-    parent = path.normpath(path.join(dirpath, '..'))
-    name = path.dirname(parent)
-    if path.exists(parent) and name is not None \
-            and name.startswith(TMP_PREFIX):
-        shutil.rmtree(parent)
-    elif path.isdir(dirpath):
-        shutil.rmtree(dirpath)
-
-
-def make_tempfile(name=None, suffix=None):
-    name = string_value(name) or 'data'
-    suffix = string_value(suffix)
-    if suffix is not None:
-        name = '%s.%s' % (name, suffix.strip('.'))
-    return os.path.join(make_tempdir(), name)
-
-
-def remove_tempfile(filepath):
-    if filepath is None:
-        return
-    remove_tempdir(path.dirname(filepath))
 
 
 def load_config_file(file_path):

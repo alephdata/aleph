@@ -24,7 +24,6 @@ gunicorn==19.6.0
 Unidecode==0.04.17
 networkx==1.9.1
 XlsxWriter==0.6.6
-krauler>=0.2.2
 polyglot==16.7.4
 langid==1.1.6
 blinker==1.4

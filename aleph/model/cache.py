@@ -15,8 +15,9 @@ class Cache(db.Model):
         q = session.query(cls.value)
         q = q.filter_by(key=key)
         cobj = q.first()
-        if cobj is not None:
-            return cobj.value
+        value = cobj.value if cobj is not None else None
+        session.close()
+        return value
 
     @classmethod
     def set_cache(cls, key, value):
@@ -30,3 +31,4 @@ class Cache(db.Model):
         cobj.value = value
         session.add(cobj)
         session.commit()
+        session.close()

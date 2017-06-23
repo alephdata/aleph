@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
@@ -119,43 +118,12 @@ class Document(db.Model, DatedModel, Metadata):
                 yield text
 
     @classmethod
-    def crawler_last_run(cls, crawler_id):
-        q = db.session.query(func.max(cls.updated_at))
-        q = q.filter(cls.crawler == crawler_id)
-        return q.scalar()
-
-    @classmethod
-    def is_crawler_active(cls, crawler_id):
-        # TODO: add a function to see if a particular crawl is still running
-        # this should be defined as having "pending" documents.
-        last_run_time = cls.crawler_last_run(crawler_id)
-        if last_run_time is None:
-            return False
-        return last_run_time > (datetime.utcnow() - timedelta(hours=1))
-
-    @classmethod
     def pending_count(cls, collection_id=None):
         q = db.session.query(func.count(cls.id))
         q = q.filter(cls.status == cls.STATUS_PENDING)
         if collection_id is not None:
             q = q.filter(cls.collection_id == collection_id)
         return q.scalar()
-
-    @classmethod
-    def crawler_stats(cls, crawler_id):
-        # Check if the crawler was active very recently, if so, don't
-        # allow the user to execute a new run right now.
-        stats = {
-            'updated': cls.crawler_last_run(crawler_id),
-            'running': cls.is_crawler_active(crawler_id)
-        }
-
-        q = db.session.query(cls.status, func.count(cls.id))
-        q = q.filter(cls.crawler == crawler_id)
-        q = q.group_by(cls.status)
-        for (status, count) in q.all():
-            stats[status] = count
-        return stats
 
     @classmethod
     def by_keys(cls, parent_id=None, collection=None, foreign_id=None,

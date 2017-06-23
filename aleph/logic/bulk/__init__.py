@@ -4,6 +4,7 @@ from aleph.core import db
 from aleph.util import dict_list
 from aleph.model import Collection, Role, Permission
 from aleph.index.entities import index_bulk
+from aleph.index.collections import index_collection
 from aleph.logic.bulk.query import DatabaseQuery, CSVQuery
 
 PAGE = 1000
@@ -54,6 +55,8 @@ def load_query(collection, query):
             rows = []
     if len(rows):
         load_rows(query, rows)
+
+    index_collection(collection)
 
 
 def load_rows(query, rows):

@@ -22,7 +22,6 @@ class TestCase(FlaskTestCase):
     fake = Factory.create()
 
     def create_app(self):
-        self.temp_dir = mkdtemp()
         oauth.remote_apps = {}
         app_name = 'aleph_test_name'
         app = create_app({
@@ -70,10 +69,6 @@ class TestCase(FlaskTestCase):
         flush_index()
 
     def setUp(self):
-        try:
-            os.makedirs(self.temp_dir)
-        except:
-            pass
         delete_index()
         upgrade_search()
         db.drop_all()
@@ -82,4 +77,15 @@ class TestCase(FlaskTestCase):
 
     def tearDown(self):
         db.session.close()
-        shutil.rmtree(self.temp_dir)
+
+    @classmethod
+    def setUpClass(cls):
+        cls.temp_dir = mkdtemp()
+        try:
+            os.makedirs(cls.temp_dir)
+        except:
+            pass
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.temp_dir)

@@ -18,16 +18,5 @@ def get_init():
     return get_extensions('aleph.init').values()
 
 
-def get_crawlers():
-    crawlers = get_extensions('aleph.crawlers')
-    for name, clazz in crawlers.items():
-        clazz.CRAWLER_NAME = name
-    return crawlers
-
-
-def get_ingestors():
-    return get_extensions('aleph.ingestors').values()
-
-
 def get_analyzers():
     return get_extensions('aleph.analyzers').values()

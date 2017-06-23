@@ -74,7 +74,9 @@ class CollectionsApiTestCase(TestCase):
     def test_delete(self):
         self.login(is_admin=True)
         url = '/api/2/collections/%s' % self.col.id
+        # print 'X1'
         res = self.client.get(url)
+        # print 'X2'
         assert res.status_code == 200, res
         res = self.client.delete(url)
         assert res.status_code == 200, res

@@ -2,7 +2,6 @@ import six
 import logging
 from elasticsearch.helpers import bulk
 from normality import stringify, latinize_text, collapse_spaces
-from normality.cleaning import decompose_nfkd
 
 from aleph.core import es, es_index
 from aleph.util import is_list, unique_list, remove_nulls
@@ -65,9 +64,6 @@ def index_form(texts):
         if text is None:
             continue
         text = collapse_spaces(text)
-
-        # XXX: is NFKD a great idea?
-        text = decompose_nfkd(text)
         total_len += len(text)
         results.append(text)
 

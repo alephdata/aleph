@@ -1,4 +1,5 @@
 from aleph.tests.util import TestCase
+from unittest import skip  # noqa
 
 from aleph.core import db
 from aleph.model import Cache

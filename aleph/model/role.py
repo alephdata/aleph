@@ -211,7 +211,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return data
 
 
-Role.members = db.relationship(Role, secondary=membership,
+Role.members = db.relationship(Role,
+                               secondary=membership,
                                primaryjoin=Role.id == membership.c.group_id,
                                secondaryjoin=Role.id == membership.c.member_id,
                                backref="roles")

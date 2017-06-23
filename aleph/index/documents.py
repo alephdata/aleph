@@ -1,5 +1,4 @@
 import logging
-from normality import ascii_text
 
 from aleph.core import celery, es, es_index
 from aleph.model import Document
@@ -42,7 +41,7 @@ def index_document(document):
     data['schema'] = document.SCHEMA
     data['schemata'] = [document.SCHEMA]
     data['$children'] = document.children.count()
-    data['name_sort'] = ascii_text(data.get('title'))
+    data['name_sort'] = data.get('title')
     data['roles'] = document.collection.roles
     data.pop('tables')
     data.pop('headers')
