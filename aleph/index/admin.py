@@ -11,11 +11,6 @@ from aleph.index.mapping import TYPE_LINK, LINK_MAPPING
 log = logging.getLogger(__name__)
 
 
-def init_search():
-    upgrade_search()
-    es.indices.open(index=es_index, ignore=[400, 404])
-
-
 def upgrade_search():
     """Add any missing properties to the index mappings."""
     log.info("Creating ElasticSearch index and uploading mapping...")
@@ -26,6 +21,8 @@ def upgrade_search():
     es.indices.put_mapping(index=es_index, body=ENTITY_MAPPING, doc_type=TYPE_ENTITY)  # noqa
     es.indices.put_mapping(index=es_index, body=LINK_MAPPING, doc_type=TYPE_LINK)  # noqa
     es.indices.put_mapping(index=es_index, body=LEAD_MAPPING, doc_type=TYPE_LEAD)  # noqa
+    es.indices.open(index=es_index, ignore=[400, 404])
+    flush_index()
 
 
 def delete_index():

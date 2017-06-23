@@ -8,14 +8,14 @@ from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
 from aleph.core import create_app, archive
-from aleph.model import db, upgrade_db, Collection, Document, Entity
+from aleph.model import db, upgrade_db, Collection, Document
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
 from aleph.ingest import ingest_document
-from aleph.index import init_search, delete_index, upgrade_search
+from aleph.index import delete_index, upgrade_search
 from aleph.index import index_document_id
 from aleph.logic import reindex_entities, delete_collection, process_collection
-from aleph.logic import update_entity_full, update_collection
+from aleph.logic import update_collection
 from aleph.logic.alerts import check_alerts
 from aleph.logic.bulk import bulk_load
 from aleph.ext import get_crawlers
@@ -132,7 +132,7 @@ def index(foreign_id=None):
 @manager.command
 def bulkload(file_name):
     """Index all the entities in a given dataset."""
-    log.info("Loading datasets from: %s", file_name)
+    log.info("Loading bulk data from: %s", file_name)
     config = load_config_file(file_name)
     bulk_load(config)
 
@@ -141,7 +141,7 @@ def bulkload(file_name):
 def resetindex():
     """Re-create the ES index configuration, dropping all data."""
     delete_index()
-    init_search()
+    upgrade_search()
 
 
 @manager.command
@@ -151,30 +151,13 @@ def indexentities():
 
 
 @manager.command
-def updateentities():
-    """Re-index all the entities."""
-    q = db.session.query(Entity.id)
-    for (entity_id,) in q:
-        update_entity_full.delay(entity_id)
-
-
-@manager.command
 @manager.option('-s', '--skip-downloads', dest='skip', default='')
-def init(skip=''):
+def upgrade(skip=''):
     """Create or upgrade the search index and database."""
     upgrade_db()
-    init_search()
     upgrade_search()
     if 'analyzers' not in skip:
         install_analyzers()
-    archive.upgrade()
-
-
-@manager.command
-def upgrade():
-    """Create or upgrade the search index and database."""
-    upgrade_db()
-    upgrade_search()
     archive.upgrade()
 
 
@@ -205,7 +188,7 @@ def evilshit():
     for enum in inspect(db.engine).get_enums():
         enum = ENUM(name=enum['name'])
         enum.drop(bind=db.engine, checkfirst=True)
-    init()
+    upgrade()
 
 
 @manager.command
