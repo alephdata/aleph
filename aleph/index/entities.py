@@ -42,6 +42,7 @@ def index_entity(entity):
 
 
 def get_entity(entity_id):
+    """Fetch an entity from the index."""
     result = es.get(index=es_index, doc_type=TYPE_ENTITY, id=entity_id,
                     ignore=[404])
     entity = result.get('_source', {})

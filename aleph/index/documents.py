@@ -37,8 +37,8 @@ def index_document(document):
             'title': document.parent.title,
         }
     data['text'] = index_form(document.text_parts())
-    data['text'].extend(index_form([ascii_text(data.get('title'))]))
-    data['text'].extend(index_form([ascii_text(data.get('summary'))]))
+    data['text'].extend(index_form([data.get('title'),
+                                    data.get('summary')]))
     data['schema'] = document.SCHEMA
     data['schemata'] = [document.SCHEMA]
     data['$children'] = document.children.count()
