@@ -2,7 +2,7 @@ import StringIO
 from apikit import obj_or_404
 from flask import request
 from urlparse import urlparse, urljoin
-from werkzeug.exceptions import NotFound, ImATeapot, Forbidden
+from werkzeug.exceptions import NotFound, ImATeapot, Forbidden, BadRequest
 import xlsxwriter
 
 from aleph.authz import Authz
@@ -37,6 +37,10 @@ def get_document(document_id, action=Authz.READ):
 
 
 def get_collection(collection_id, action=Authz.READ):
+    try:
+        collection_id = int(collection_id)
+    except (ValueError, TypeError):
+        raise BadRequest("Invalid collection ID")
     collection = Collection.by_id(collection_id)
     if collection is None:
         raise NotFound()

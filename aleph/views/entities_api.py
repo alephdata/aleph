@@ -1,16 +1,16 @@
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
-from apikit import obj_or_404, jsonify, request_data, arg_bool
+from apikit import jsonify, request_data, arg_bool
 
 from aleph.core import db
-from aleph.model import Entity, Collection
+from aleph.model import Entity
 from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.collections import update_collection
 from aleph.events import log_event
 from aleph.search import LinksQuery, EntitiesQuery, EntityDocumentsQuery
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.search import DatabaseQueryResult, QueryParser
-from aleph.views.util import get_entity, require
+from aleph.views.util import get_entity, get_collection
 from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('entities_api', __name__)
@@ -45,14 +45,8 @@ def suggest():
 @blueprint.route('/api/2/entities', methods=['POST', 'PUT'])
 def create():
     data = request_data()
-    collection_id = data.get('collection_id')
-    try:
-        collection_id = int(collection_id)
-    except (ValueError, TypeError) as ve:
-        raise BadRequest("Invalid collection_id")
-    collection = obj_or_404(Collection.by_id(collection_id))
-    require(request.authz.can_write(collection.id))
-
+    collection = get_collection(data.get('collection_id'),
+                                request.authz.WRITE)
     try:
         entity = Entity.save(data, collection)
     except (ValueError, TypeError) as ve:
@@ -102,7 +96,8 @@ def update(id):
     _, entity = get_entity(id, request.authz.WRITE)
 
     try:
-        entity = Entity.save(request_data(), entity.collection,
+        entity = Entity.save(request_data(),
+                             entity.collection,
                              merge=arg_bool('merge'))
     except (ValueError, TypeError) as ve:
         raise BadRequest(ve.message)

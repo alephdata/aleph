@@ -124,7 +124,8 @@ def resolve_type(name):
         'email': EmailProperty,
         'url': URLProperty,
         'uri': URLProperty,
-        'identifier': IdentiferProperty
+        'identifier': IdentiferProperty,
+        'code': IdentiferProperty,
     }
     type_ = types.get(name.strip().lower())
     if type_ is None:
