@@ -101,16 +101,6 @@ def pdf(document_id):
     return send_file(open(path, 'rb'), mimetype=PDF_MIME)
 
 
-@blueprint.route('/api/2/documents/<int:document_id>/tables/<int:table_id>')
-def table(document_id, table_id):
-    enable_cache()
-    document = get_document(document_id)
-    try:
-        return jsonify(document.tables[table_id])
-    except IndexError:
-        raise NotFound("No such table: %s" % table_id)
-
-
 @blueprint.route('/api/2/documents/<int:document_id>/records')
 def records(document_id):
     enable_cache()

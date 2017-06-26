@@ -10,7 +10,6 @@ from dalet import parse_country, parse_date
 from ingestors.util import make_filename
 
 from aleph.text import slugify, string_value
-from aleph.model.tabular import Tabular
 
 
 class Metadata(object):
@@ -260,23 +259,6 @@ class Metadata(object):
         self.meta['columns'] = columns
         self.update_meta()
 
-    @property
-    def tables(self):
-        if len(self.columns):
-            schema = dict(sheet=0, sheet_name=self.title, columns=[])
-            for column in self.columns:
-                schema['columns'].append({'name': column, 'label': column})
-            return [Tabular(schema)]
-        return [Tabular(s) for s in self.meta.get('tables', [])]
-
-    @tables.setter
-    def tables(self, tables):
-        self.meta['tables'] = []
-        for schema in tables:
-            if isinstance(schema, Tabular):
-                schema = schema.to_dict()
-            self.meta['tables'].append(schema)
-
     def to_meta_dict(self):
         """Generate ElasticSearch form."""
         return {
@@ -294,6 +276,5 @@ class Metadata(object):
             'mime_type': self.mime_type,
             'headers': self.headers,
             'pdf_version': self.pdf_version,
-            'columns': self.columns,
-            'tables': self.tables
+            'columns': self.columns
         }

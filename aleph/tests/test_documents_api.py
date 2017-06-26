@@ -33,15 +33,6 @@ class DocumentsApiTestCase(TestCase):
         res = self.client.get('/api/2/documents/328984')
         assert res.status_code == 404, res
 
-    def test_view_tables(self):
-        doc_id = 1003
-        res = self.client.get('/api/2/documents/%s/tables/0' % doc_id)
-        assert res.status_code == 200, res
-        assert 'sheet_name' in res.json, res.json
-
-        res = self.client.get('/api/2/documents/%s/tables/444' % doc_id)
-        assert res.status_code == 404, res
-
     def test_view_records(self):
         res = self.client.get('/api/2/documents/1003/records')
         assert res.status_code == 200, res
