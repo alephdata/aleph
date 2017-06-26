@@ -1,6 +1,5 @@
 from aleph.core import db
 from aleph.model.common import SoftDeleteModel, IdModel
-from aleph.model.role import Role
 
 
 class Permission(db.Model, IdModel, SoftDeleteModel):
@@ -15,14 +14,7 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
     collection_id = db.Column(db.Integer, nullable=False)
 
     @classmethod
-    def grant_foreign(cls, collection, foreign_id, read, write):
-        role = Role.by_foreign_id(foreign_id)
-        if role is None:
-            return
-        cls.grant_collection(collection.id, role, read, write)
-
-    @classmethod
-    def grant_collection(cls, collection_id, role, read, write):
+    def grant(cls, collection_id, role, read, write):
         permission = cls.by_collection_role(collection_id, role)
         if permission is None:
             permission = Permission()

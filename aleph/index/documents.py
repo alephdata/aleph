@@ -43,7 +43,6 @@ def index_document(document):
     data['$children'] = document.children.count()
     data['name_sort'] = data.get('title')
     data['roles'] = document.collection.roles
-    data.pop('tables')
     data.pop('headers')
 
     es.index(index=es_index,

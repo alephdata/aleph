@@ -1,5 +1,4 @@
 from datetime import datetime
-from werkzeug.datastructures import MultiDict
 
 from aleph.core import db
 from aleph.model.validate import validate
@@ -71,23 +70,6 @@ class Alert(db.Model, SoftDeleteModel):
         return alert
 
     @classmethod
-    def exists(cls, query, role):
-        q = cls.all_ids().filter(cls.role_id == role.id)
-        query_text = query.get('q')
-        if query_text is not None:
-            query_text = query_text.strip()
-            if not len(query_text):
-                query_text = None
-        q = q.filter(cls.query_text == query_text)
-        entities = query.getlist('entity')
-        if len(entities) == 1:
-            q = q.filter(cls.entity_id == entities[0])
-        else:
-            q = q.filter(cls.entity_id == None)  # noqa
-        q = q.limit(1)
-        return q.scalar()
-
-    @classmethod
     def dedupe(cls, entity_id):
         alerts = cls.all().filter_by(entity_id=entity_id).all()
         for left in alerts:
@@ -99,12 +81,6 @@ class Alert(db.Model, SoftDeleteModel):
 
     def __repr__(self):
         return '<Alert(%r, %r)>' % (self.id, self.label)
-
-    def to_query(self):
-        return MultiDict({
-            'q': self.query_text or '',
-            'entity': self.entity_id
-        })
 
     def to_dict(self):
         return {

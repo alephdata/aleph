@@ -22,6 +22,7 @@ class Authz(object):
     PUBLIC = 'public'
 
     def __init__(self, role=None, override=False):
+        self._cache = {}
         self.roles = set([Role.load_id(Role.SYSTEM_GUEST)])
         self.role = role
         self.logged_in = role is not None
@@ -46,6 +47,10 @@ class Authz(object):
         if isinstance(collection, Collection):
             collection = collection.id
 
+        key = (collection, action)
+        if key in self._cache:
+            return self._cache[key]
+
         q = db.session.query(Permission.id)
         q = q.filter(Permission.deleted_at == None)  # noqa
         q = q.filter(Permission.role_id.in_(self.roles))
@@ -54,7 +59,9 @@ class Authz(object):
             q = q.filter(Permission.read == True)  # noqa
         if action == self.WRITE:
             q = q.filter(Permission.write == True)  # noqa
-        return q.count() > 0
+        perm = q.count() > 0
+        self._cache[key] = perm
+        return perm
 
     def can_write(self, collection):
         """Check if a given collection can be written."""
