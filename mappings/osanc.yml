@@ -1,0 +1,36 @@
+osanc:
+    label: OpenSanctions.org
+    info_url: https://opensanctions.org
+    category: sanctions
+    roles:
+      - guest
+    queries:
+      - csv_url: 
+        filters:
+          type: individual
+        entities:
+          person:
+            schema: Person
+            key: id
+            properties:
+              name:
+                column: name
+              firstName:
+                column: first_name
+              secondName:
+              	column: second_name
+              middleName:
+              	column: third_name
+              lastName:
+              	column: last_name
+              title:
+              	column: title
+              gender:
+              	column: gender
+              program:
+                column: program
+              notes:
+              	column: summary
+              sourceUrl:
+                column: url
+      
