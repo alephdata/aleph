@@ -36,7 +36,7 @@ def suggest():
         })
     # this only returns users, not groups
     q = Role.by_prefix(parser.prefix)
-    result = DatabaseQueryResult(request, q, parser=parser)
+    result = DatabaseQueryResult(request, q, parser=parser, schema=RoleSchema)
     return jsonify(result)
 
 
@@ -80,7 +80,7 @@ def create():
         role.set_password(data.get('password'))
         db.session.add(role)
         db.session.commit()
-    request.authz.role = role
+    request.authz.id = role.id
     return jsonify(role, schema=RoleSchema, status=status)
 
 
@@ -138,6 +138,7 @@ def permissions_index(id):
 @blueprint.route('/api/2/collections/<int:id>/permissions',
                  methods=['POST', 'PUT'])
 def permissions_update(id):
+    # TODO: consider using a list to bundle permission writes
     collection = get_collection(id, request.authz.WRITE)
     data = parse_request(schema=PermissionSchema)
     role = Role.all().filter(Role.id == data['role']['id']).first()

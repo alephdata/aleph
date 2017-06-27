@@ -1,10 +1,11 @@
 from flask import Blueprint, request
-from apikit import obj_or_404, request_data, jsonify
+from apikit import obj_or_404
 
 from aleph.core import db
 from aleph.model import Alert
 from aleph.search import DatabaseQueryResult
 from aleph.views.util import require
+from aleph.views.serializers import jsonify, parse_request, AlertSchema
 
 blueprint = Blueprint('alerts_api', __name__)
 
@@ -13,14 +14,15 @@ blueprint = Blueprint('alerts_api', __name__)
 def index():
     require(request.authz.logged_in)
     query = Alert.by_role(request.authz.role)
-    result = DatabaseQueryResult(request, query)
+    result = DatabaseQueryResult(request, query, schema=AlertSchema)
     return jsonify(result)
 
 
 @blueprint.route('/api/2/alerts', methods=['POST', 'PUT'])
 def create():
     require(request.authz.session_write)
-    alert = Alert.create(request_data(), request.authz.role)
+    data = parse_request(schema=AlertSchema)
+    alert = Alert.create(data, request.authz.role)
     db.session.commit()
     return view(alert.id)
 
@@ -29,7 +31,7 @@ def create():
 def view(id):
     require(request.authz.logged_in)
     alert = obj_or_404(Alert.by_id(id, role=request.authz.role))
-    return jsonify(alert)
+    return jsonify(alert, schema=AlertSchema)
 
 
 @blueprint.route('/api/2/alerts/<int:id>', methods=['DELETE'])

@@ -9,7 +9,6 @@ from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 from aleph.core import get_config, app_title, app_url, schemata
 from aleph.index.stats import get_instance_stats
 from aleph.schema import SchemaValidationException
-from aleph.views.serializers import ValidationException
 from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('base_api', __name__)
@@ -94,14 +93,6 @@ def handle_authz_error(err):
         'message': 'You are not authorized to do this.',
         'roles': request.authz.roles
     }, status=403)
-
-
-@blueprint.app_errorhandler(ValidationException)
-def handle_validation_exception(exc):
-    return jsonify({
-        'status': 'error',
-        'errors': exc.errors
-    }, status=400)
 
 
 @blueprint.app_errorhandler(SchemaValidationException)

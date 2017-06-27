@@ -9,9 +9,11 @@ from aleph.search.facet import LanguageFacet, SchemaFacet, Facet
 
 class QueryResult(object):
 
-    def __init__(self, request, parser=None, results=None, total=None):
+    def __init__(self, request, parser=None, results=None, total=None,
+                 schema=None):
         self.request = request
         self.parser = parser or QueryParser(request.args, request.authz)
+        self.schema = schema
         self.results = results or []
         self.total = total or 0
 
@@ -31,9 +33,12 @@ class QueryResult(object):
         return self.request.base_url + '?' + urlencode(args)
 
     def to_dict(self):
+        results = list(self.results)
+        if self.schema:
+            results = self.schema().dump(results, many=True)
         return {
             'status': 'ok',
-            'results': self.results,
+            'results': results,
             'total': self.total,
             'page': self.parser.page,
             'limit': self.parser.limit,
@@ -46,8 +51,10 @@ class QueryResult(object):
 
 class DatabaseQueryResult(QueryResult):
 
-    def __init__(self, request, query, parser=None):
-        super(DatabaseQueryResult, self).__init__(request, parser=parser)
+    def __init__(self, request, query, parser=None, schema=None):
+        super(DatabaseQueryResult, self).__init__(request,
+                                                  parser=parser,
+                                                  schema=schema)
         self.total = query.count()
         results = query.limit(self.parser.limit)
         self.results = results.offset(self.parser.offset)
@@ -64,8 +71,10 @@ class SearchQueryResult(QueryResult):
         'schemata': SchemaFacet
     }
 
-    def __init__(self, request, parser, result):
-        super(SearchQueryResult, self).__init__(request, parser=parser)
+    def __init__(self, request, parser, result, schema=None):
+        super(SearchQueryResult, self).__init__(request,
+                                                parser=parser,
+                                                schema=schema)
         self.result = result
         hits = self.result.get('hits', {})
         self.total = hits.get('total')

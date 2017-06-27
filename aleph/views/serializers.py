@@ -1,18 +1,12 @@
 from apikit import jsonify as jsonify_
 from flask import request
+from werkzeug.exceptions import BadRequest
 from marshmallow import Schema, post_dump
 from marshmallow.fields import Nested, Integer, Str, Bool, DateTime
 from marshmallow.validate import Email, Length
 
 from aleph.core import url_for
 from aleph.model import Role
-
-
-class ValidationException(Exception):
-    """Return a standard HTTP 400 when data validation fails."""
-
-    def __init__(self, errors):
-        self.errors = errors
 
 
 class DatedSchema(object):
@@ -70,6 +64,21 @@ class PermissionSchema(Schema, DatedSchema):
     role = Nested(RoleReferenceSchema)
 
 
+class AlertSchema(Schema, DatedSchema):
+    id = Integer(dump_only=True)
+    query_text = Str()
+    entity_id = Str()
+    label = Str()
+    role = Nested(RoleReferenceSchema, dump_only=True)
+    notified_at = DateTime(dump_only=True)
+
+    @post_dump
+    def transient(self, data):
+        data['$uri'] = url_for('alerts_api.view', id=data.get('id'))
+        data['$writeable'] = True
+        return data
+
+
 def jsonify(obj, schema=None, status=200, **kwargs):
     if schema is not None:
         obj, _ = schema().dump(obj)
@@ -84,5 +93,8 @@ def parse_request(schema=None):
     if schema is not None:
         data, errors = schema().load(data)
         if len(errors):
-            raise ValidationException(errors)
+            raise BadRequest(response=jsonify({
+                'status': 'error',
+                'errors': errors
+            }, status=400))
     return data
