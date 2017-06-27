@@ -5,7 +5,7 @@ osanc:
     roles:
       - guest
     queries:
-      - csv_url: 
+      - csv_url: ../entities.csv
         filters:
           type: individual
         entities:
@@ -29,8 +29,123 @@ osanc:
               	column: gender
               program:
                 column: program
-              notes:
+              summary:
               	column: summary
               sourceUrl:
                 column: url
-      
+              position:
+                column: function
+      - csv_url: ../entities.csv
+        filters_not:
+          type: individual
+          type: vessel
+        entities:
+          entity:
+            schema: LegalEntity
+            key: id
+            properties:
+              name:
+                column: name
+              program:
+                column: program
+              sourceUrl:
+                column: url
+              summary:
+                column: summary
+      - csv_url: ../identifiers.csv
+      filters:
+        type: passport
+      entities:
+        entity:
+          schema: Person
+          key: entity_id
+          properties:
+            passportNumber:
+              column: number
+            nationality:
+              column: country_code
+            summary:
+              column: summary
+      - csv_url: ../identifiers.csv
+      filters_not:
+        type: passport
+      entities:
+        entity:
+          schema: LegalEntity
+          key: entity_id
+          properties:
+            idNumber:
+              column: number
+            country:
+              column: country_code
+            summary:
+              column: summary
+            notes:
+              column: description
+      - csv_url: ../addresses.csv
+      entities:
+        entity:
+          schema: Entity
+          key: entity_id
+          properties:
+            address:
+              columns:
+                  - street
+                  - street_2
+                  - region
+                  - city
+                  - postal_code
+                  - country
+                join: ', '
+            country:
+              column: country_code
+      - csv_url: ../aliases.csv
+      filters:
+        quality: strong
+      entities:
+        entity:
+          schema: Entity
+          key: entity_id
+          properties: 
+            alias:
+              column: name
+            notes:
+              column: description
+      - csv_url: ../aliases.csv
+      filters:
+        quality: weak
+      entities:
+        entity:
+          schema: Entity
+          key: entity_id
+          properties: 
+            weakAlias:
+              column: name
+            notes:
+              column: description
+      - csv_url: ../birthdates.csv
+      entities:
+        entity:
+          schema: Person
+          key: entity_id
+          properties: 
+            birthDate:
+              column: date
+      - csv_url: ../birthplaces.csv
+      entities:
+        entity:
+          schema: Entity
+          key: entity_id
+          properties: 
+            country:
+              column: country_code
+            notes:
+              column: place
+      - csv_url: ../nationalities.csv
+      entities:
+        entity:
+          schema: Person
+          key: entity_id
+          properties: 
+            nationality:
+              column: country_code
