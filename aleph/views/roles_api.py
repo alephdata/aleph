@@ -3,7 +3,6 @@ from werkzeug.exceptions import BadRequest
 from apikit import obj_or_404
 
 from aleph.core import db, get_config, app_url
-from aleph.events import log_event
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Permission
 from aleph.logic.permissions import update_permission
@@ -97,12 +96,11 @@ def view(id):
 def update(id):
     role = obj_or_404(Role.by_id(id))
     require(request.authz.session_write,
-            role.id == request.authz.role.id)
+            role.id == request.authz.id)
     data = parse_request(schema=RoleSchema)
     role.update(data)
     db.session.add(role)
     db.session.commit()
-    log_event(request)
     return view(role.id)
 
 
@@ -150,8 +148,7 @@ def permissions_update(id):
                              collection,
                              data['read'],
                              data['write'])
-    log_event(request)
     return jsonify({
         'status': 'ok',
-        'updated': perm
+        'updated': PermissionSchema().dump(perm)
     })

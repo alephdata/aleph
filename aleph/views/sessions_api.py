@@ -9,7 +9,6 @@ from aleph.core import db, url_for, get_config
 from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
-from aleph.events import log_event
 from aleph.views.util import extract_next_url
 
 
@@ -73,8 +72,6 @@ def password_login():
     if not email or not password:
         abort(404)
 
-    log_event(request)
-
     q = Role.by_email(email)
     q = q.filter(Role.password_digest != None)  # noqa
     role = q.first()
@@ -106,7 +103,6 @@ def login(provider=None):
     if not oauth_provider:
         abort(404)
 
-    log_event(request)
     session['next_url'] = extract_next_url(request)
     callback_url = url_for('.callback', provider=provider)
     return oauth_provider.authorize(callback=callback_url)
@@ -137,7 +133,6 @@ def callback(provider):
         if role is None:
             continue
         session['user'] = role.id
-        log_event(request, role_id=role.id)
         log.info("Logged in: %r", role)
         return redirect(next_url)
 

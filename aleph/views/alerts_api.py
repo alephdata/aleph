@@ -3,7 +3,6 @@ from apikit import obj_or_404, request_data, jsonify
 
 from aleph.core import db
 from aleph.model import Alert
-from aleph.events import log_event
 from aleph.search import DatabaseQueryResult
 from aleph.views.util import require
 
@@ -23,7 +22,6 @@ def create():
     require(request.authz.session_write)
     alert = Alert.create(request_data(), request.authz.role)
     db.session.commit()
-    log_event(request)
     return view(alert.id)
 
 
@@ -40,5 +38,4 @@ def delete(id):
     alert = obj_or_404(Alert.by_id(id, role=request.authz.role))
     alert.delete()
     db.session.commit()
-    log_event(request)
     return jsonify({'status': 'ok'})

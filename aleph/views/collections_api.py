@@ -4,7 +4,6 @@ from apikit import jsonify, request_data
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY, db
 from aleph.model import Collection
 from aleph.search import CollectionsQuery
-from aleph.events import log_event
 from aleph.index.collections import get_collection_stats
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.collections import process_collection
@@ -27,7 +26,6 @@ def create():
     collection = Collection.create(data, request.authz.role)
     db.session.commit()
     update_collection(collection)
-    log_event(request)
     return view(collection.id)
 
 
@@ -45,7 +43,6 @@ def update(id):
     collection.update(request_data())
     db.session.commit()
     update_collection(collection)
-    log_event(request)
     return view(id)
 
 
@@ -55,7 +52,6 @@ def process(id):
     process_collection.apply_async([collection.id],
                                    queue=USER_QUEUE,
                                    routing_key=USER_ROUTING_KEY)
-    log_event(request)
     return jsonify({'status': 'ok'})
 
 
@@ -65,5 +61,4 @@ def delete(id):
     delete_collection.apply_async([collection.id],
                                   queue=USER_QUEUE,
                                   routing_key=USER_ROUTING_KEY)
-    log_event(request)
     return jsonify({'status': 'ok'})

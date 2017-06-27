@@ -1,27 +1,37 @@
+from flask import request, Blueprint
+
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import EventLog
 
+blueprint = Blueprint('events', __name__)
 
-def log_event(request, role_id=None, **data):
-    path = '%s %s' % (request.method, request.full_path)
-    if request.authz.logged_in:
-        role_id = request.authz.role.id
+
+@blueprint.after_app_request
+def log_response(resp):
+    if request.endpoint == 'static':
+        return resp
 
     source_ip = None
     if len(request.access_route):
         source_ip = request.access_route[0]
 
-    if request.method in ['GET']:
-        query = request.args.to_dict(flat=False)
-    else:
+    query = request.args.to_dict(flat=False)
+    if request.method in ['POST', 'PUT']:
         if request.is_json:
             query = request.get_json()
         else:
             query = request.values.to_dict(flat=False)
-    args = [request.endpoint, path, source_ip, query, data, role_id]
+
+    args = [request.endpoint,
+            '%s %s' % (request.method, request.full_path),
+            source_ip,
+            query,
+            request.view_args,
+            request.authz.id]
     save_event.apply_async(args,
                            queue=USER_QUEUE,
                            routing_key=USER_ROUTING_KEY)
+    return resp
 
 
 @celery.task()

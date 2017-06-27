@@ -2,7 +2,6 @@ from flask import Blueprint, request, send_file
 
 from aleph.core import url_for
 from aleph.model import Collection
-from aleph.events import log_event
 from aleph.search import DocumentsQuery, SearchQueryParser
 from aleph.views.util import make_excel
 
@@ -45,7 +44,6 @@ def get_results(query, limit):
 def export():
     parser = SearchQueryParser(request.args, request.authz)
     query = DocumentsQuery(parser)
-    log_event(request)
     output = make_excel(get_results(query, 50000), FIELDS)
     return send_file(output, mimetype=XLSX_MIME, as_attachment=True,
                      attachment_filename='export.xlsx')

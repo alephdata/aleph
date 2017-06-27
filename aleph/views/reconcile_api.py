@@ -8,7 +8,6 @@ from flask import Blueprint, request, url_for
 from apikit import jsonify
 from werkzeug.exceptions import BadRequest
 
-from aleph.events import log_event
 from aleph.util import ensure_list
 from aleph.core import app_url, app_title, schemata
 from aleph.search import SearchQueryParser
@@ -123,8 +122,6 @@ def reconcile():
 
     See: http://code.google.com/p/google-refine/wiki/ReconciliationServiceApi
     """
-    log_event(request)
-
     if 'query' in request.values:
         # single
         q = request.values.get('query')
