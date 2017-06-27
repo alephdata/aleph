@@ -4,7 +4,7 @@ from apikit import cache_hash
 from aleph.core import get_config
 
 
-blueprint = Blueprint('cache_api', __name__)
+blueprint = Blueprint('cache', __name__)
 
 
 class NotModified(Exception):
