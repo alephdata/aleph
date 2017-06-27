@@ -3,13 +3,13 @@ import six
 import logging
 from apikit import jsonify
 from flask import render_template, current_app, Blueprint, request
-from jsonschema import ValidationError
 from elasticsearch import TransportError
 from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 
 from aleph.core import get_config, app_title, app_url, schemata
 from aleph.index.stats import get_instance_stats
 from aleph.schema import SchemaValidationException
+from aleph.views.serializers import ValidationException
 from aleph.views.cache import enable_cache
 
 blueprint = Blueprint('base_api', __name__)
@@ -92,16 +92,15 @@ def handle_authz_error(err):
     return jsonify({
         'status': 'error',
         'message': 'You are not authorized to do this.',
-        'roles': request.authz.roles,
-        'user': request.authz.role
+        'roles': request.authz.roles
     }, status=403)
 
 
-@blueprint.app_errorhandler(ValidationError)
-def handle_validation_error(err):
+@blueprint.app_errorhandler(ValidationException)
+def handle_validation_exception(exc):
     return jsonify({
         'status': 'error',
-        'message': err.message
+        'errors': exc.errors
     }, status=400)
 
 

@@ -40,8 +40,10 @@ class TestCase(FlaskTestCase):
 
     def create_user(self, foreign_id='tester', name=None, email=None,
                     is_admin=False):
-        role = Role.load_or_create(foreign_id, Role.USER, name or foreign_id,
-                                   email=email, is_admin=is_admin)
+        role = Role.load_or_create(foreign_id, Role.USER,
+                                   name or foreign_id,
+                                   email=email or self.fake.email(),
+                                   is_admin=is_admin)
         db.session.commit()
         return role
 

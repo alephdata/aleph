@@ -1,6 +1,6 @@
 import json
 
-from aleph.core import db
+from aleph.core import db, mail
 from aleph.model import Role
 from aleph.tests.util import TestCase
 from aleph.tests.factories.models import RoleFactory
@@ -39,7 +39,8 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 200, res
         data = res.json
         data['name'] = 'John Doe'
-        res = self.client.post(url, data=json.dumps(data),
+        res = self.client.post(url,
+                               data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 200, res
         assert res.json['name'] == data['name'], res.json
@@ -50,22 +51,29 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 400, res
 
     def test_invite_email_when_no_email(self):
-        res = self.client.post('/api/2/roles/invite')
-        assert res.status_code == 400, res
+        with mail.record_messages() as outbox:
+            res = self.client.post('/api/2/roles/invite')
+            assert res.status_code == 400, res
+            assert len(outbox) == 0, outbox
 
     def test_invite_email_has_email(self):
-        res = self.client.post(
-            '/api/2/roles/invite',
-            data=dict(email=self.fake.email)
-        )
-
-        assert res.status_code == 201, res
+        email = self.fake.email()
+        with mail.record_messages() as outbox:
+            res = self.client.post(
+                '/api/2/roles/invite',
+                data=dict(email=email)
+            )
+            assert res.status_code == 200, res
+            assert len(outbox) == 1, outbox
+            assert email in outbox[0].recipients, outbox[0]
 
     def test_create_no_payload(self):
+        self.app.config['PASSWORD_REGISTRATION'] = True
         res = self.client.post('/api/2/roles')
         assert res.status_code == 400, res
 
     def test_create_no_email(self):
+        self.app.config['PASSWORD_REGISTRATION'] = True
         payload = dict(
             email='',
             password=self.fake.password(),
@@ -75,6 +83,7 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 400, res
 
     def test_create_no_pass(self):
+        self.app.config['PASSWORD_REGISTRATION'] = True
         payload = dict(
             email=self.fake.email(),
             password='',
@@ -84,6 +93,7 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 400, res
 
     def test_create_no_code(self):
+        self.app.config['PASSWORD_REGISTRATION'] = True
         payload = dict(
             email=self.fake.email(),
             password=self.fake.password(),
@@ -98,32 +108,35 @@ class RolesApiTestCase(TestCase):
         payload = dict(
             email=email,
             password=self.fake.password(),
-            code=Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
+            code=Role.SIGNATURE.dumps(email)
         )
         res = self.client.post('/api/2/roles', data=payload)
-        assert res.status_code == 400, res
+        assert res.status_code == 403, res
 
     def test_create_short_pass(self):
+        self.app.config['PASSWORD_REGISTRATION'] = True
         email = self.fake.email()
         payload = dict(
             email=email,
             password=self.fake.password()[:3],
-            code=Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
+            code=Role.SIGNATURE.dumps(email)
         )
         res = self.client.post('/api/2/roles', data=payload)
         assert res.status_code == 400, res
 
     def test_create_bad_code(self):
+        self.app.config['PASSWORD_REGISTRATION'] = True
         email = self.fake.email()
         payload = dict(
             email=email,
             password=self.fake.password()[:3],
-            code=Role.SIGNATURE_SERIALIZER.dumps(email, salt='')
+            code=Role.SIGNATURE.dumps('huhu')
         )
         res = self.client.post('/api/2/roles', data=payload)
         assert res.status_code == 400, res
 
     def test_create_success(self):
+        self.app.config['PASSWORD_REGISTRATION'] = True
         email = self.fake.email()
         name = self.fake.name()
         password = self.fake.password()
@@ -131,13 +144,13 @@ class RolesApiTestCase(TestCase):
             email=email,
             name=name,
             password=password,
-            code=Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
+            code=Role.SIGNATURE.dumps(email)
         )
         res = self.client.post('/api/2/roles', data=payload)
         db.session.close()
 
         self.assertEqual(res.status_code, 201)
-        self.assertEqual(res.json['status'], 'ok')
+        self.assertEqual(res.json['email'], payload['email'])
 
         role = Role.by_email(email).first()
         self.assertIsNotNone(role)
@@ -146,20 +159,21 @@ class RolesApiTestCase(TestCase):
         self.assertEqual(role.email, payload['email'])
 
     def test_create_on_existing_email(self):
+        self.app.config['PASSWORD_REGISTRATION'] = True
         email = self.fake.email()
         password = self.fake.password()
         payload = dict(
             email=email,
             name=self.fake.name(),
             password=password,
-            code=Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
+            code=Role.SIGNATURE.dumps(email)
         )
 
         RoleFactory.create(email=email)
         res = self.client.post('/api/2/roles', data=payload)
 
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.json['status'], 'ok')
+        self.assertEqual(res.json['email'], email)
         role = Role.by_email(email).first()
         self.assertIsNotNone(role)
         self.assertFalse(role.check_password(password))

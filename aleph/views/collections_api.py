@@ -28,7 +28,7 @@ def create():
     db.session.commit()
     update_collection(collection)
     log_event(request)
-    return jsonify(collection)
+    return view(collection.id)
 
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['GET'])
