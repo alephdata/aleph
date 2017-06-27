@@ -1,13 +1,9 @@
-from apikit import request_data
-
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import EventLog
 
 
 def log_event(request, role_id=None, **data):
-    path = '%s %s' % (request.method, request.path)
-    if len(request.query_string.strip()):
-        path = '%s?%s' % (path, request.query_string)
+    path = '%s %s' % (request.method, request.full_path)
     if request.authz.logged_in:
         role_id = request.authz.role.id
 
@@ -18,9 +14,13 @@ def log_event(request, role_id=None, **data):
     if request.method in ['GET']:
         query = request.args.to_dict(flat=False)
     else:
-        query = request_data()
+        if request.is_json:
+            query = request.get_json()
+        else:
+            query = request.values.to_dict(flat=False)
     args = [request.endpoint, path, source_ip, query, data, role_id]
-    save_event.apply_async(args, queue=USER_QUEUE,
+    save_event.apply_async(args,
+                           queue=USER_QUEUE,
                            routing_key=USER_ROUTING_KEY)
 
 
