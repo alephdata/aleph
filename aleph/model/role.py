@@ -6,8 +6,7 @@ from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_simpleldap import LDAPException
 
-from aleph.core import db, ldap, url_for, get_config, secret_key
-from aleph.model.validate import validate
+from aleph.core import db, ldap, get_config, secret_key
 from aleph.model.common import SoftDeleteModel, IdModel, make_textid
 
 log = logging.getLogger(__name__)
@@ -21,8 +20,6 @@ membership = db.Table('role_membership',
 
 class Role(db.Model, IdModel, SoftDeleteModel):
     """A user, group or other access control subject."""
-
-    _schema = 'role.json#'
     __tablename__ = 'role'
 
     USER = 'user'
@@ -34,7 +31,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     SYSTEM_USER = 'user'
 
     #: Generates URL-safe signatures for invitations.
-    SIGNATURE_SERIALIZER = URLSafeTimedSerializer(secret_key)
+    SIGNATURE = URLSafeTimedSerializer(secret_key)
 
     #: Signature maximum age, defaults to 1 day
     SIGNATURE_MAX_AGE = 60 * 60 * 24
@@ -53,7 +50,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     permissions = db.relationship('Permission', backref='role')
 
     def update(self, data):
-        validate(data, self._schema)
         self.name = data.get('name', self.name)
         self.email = data.get('email', self.email)
 
@@ -194,21 +190,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     def __repr__(self):
         return '<Role(%r,%r)>' % (self.id, self.foreign_id)
-
-    def __unicode__(self):
-        return self.name
-
-    def to_dict(self):
-        data = super(Role, self).to_dict()
-        data.update({
-            'api_url': url_for('roles_api.view', id=self.id),
-            'foreign_id': self.foreign_id,
-            'is_admin': self.is_admin,
-            # 'email': self.email,
-            'name': self.name,
-            'type': self.type
-        })
-        return data
 
 
 Role.members = db.relationship(Role,

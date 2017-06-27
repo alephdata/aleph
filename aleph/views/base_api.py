@@ -3,7 +3,6 @@ import six
 import logging
 from apikit import jsonify
 from flask import render_template, current_app, Blueprint, request
-from jsonschema import ValidationError
 from elasticsearch import TransportError
 from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 
@@ -92,17 +91,8 @@ def handle_authz_error(err):
     return jsonify({
         'status': 'error',
         'message': 'You are not authorized to do this.',
-        'roles': request.authz.roles,
-        'user': request.authz.role
+        'roles': request.authz.roles
     }, status=403)
-
-
-@blueprint.app_errorhandler(ValidationError)
-def handle_validation_error(err):
-    return jsonify({
-        'status': 'error',
-        'message': err.message
-    }, status=400)
 
 
 @blueprint.app_errorhandler(SchemaValidationException)

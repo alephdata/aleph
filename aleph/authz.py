@@ -26,6 +26,7 @@ class Authz(object):
         self.roles = set([Role.load_id(Role.SYSTEM_GUEST)])
         self.role = role
         self.logged_in = role is not None
+        self.id = role.id if role is not None else None
         self.is_admin = override
         self.in_maintenance = get_config('MAINTENANCE')
 

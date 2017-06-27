@@ -7,7 +7,6 @@ from aleph.core import archive, url_for, db
 from aleph.model import Document, DocumentRecord
 from aleph.logic.documents import update_document, delete_document
 from aleph.logic.collections import update_collection
-from aleph.events import log_event
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document
 from aleph.search import DocumentsQuery, RecordsQuery
@@ -30,7 +29,6 @@ def view(document_id):
     data = doc.to_dict()
     if doc.parent is not None:
         data['parent'] = doc.parent.to_dict()
-    log_event(request, document_id=doc.id)
     data['data_url'] = archive.generate_url(doc.content_hash)
     if data['data_url'] is None:
         data['data_url'] = url_for('documents_api.file',
@@ -47,7 +45,6 @@ def update(document_id):
     data = request_data()
     document.update(data)
     db.session.commit()
-    log_event(request, document_id=document.id)
     update_document(document)
     return view(document_id)
 
@@ -57,14 +54,12 @@ def delete(document_id):
     document = get_document(document_id, request.authz.WRITE)
     delete_document(document)
     update_collection(document.collection)
-    log_event(request)
     return jsonify({'status': 'ok'})
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/file')
 def file(document_id):
     document = get_document(document_id)
-    log_event(request, document_id=document.id)
     url = archive.generate_url(document.content_hash,
                                file_name=document.file_name,
                                mime_type=document.mime_type)
@@ -86,7 +81,6 @@ def file(document_id):
 @blueprint.route('/api/2/documents/<int:document_id>/pdf')
 def pdf(document_id):
     document = get_document(document_id)
-    log_event(request, document_id=document.id)
     if document.type != Document.TYPE_TEXT:
         raise BadRequest("PDF is only available for text documents")
     url = archive.generate_url(document.pdf_version, mime_type=PDF_MIME)

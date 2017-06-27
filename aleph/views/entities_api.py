@@ -6,7 +6,6 @@ from aleph.core import db
 from aleph.model import Entity
 from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.collections import update_collection
-from aleph.events import log_event
 from aleph.search import LinksQuery, EntitiesQuery, EntityDocumentsQuery
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.search import DatabaseQueryResult, QueryParser
@@ -54,7 +53,6 @@ def create():
 
     collection.touch()
     db.session.commit()
-    log_event(request, entity_id=entity.id)
     update_entity(entity)
     update_collection(collection)
     return view(entity.id)
@@ -63,7 +61,6 @@ def create():
 @blueprint.route('/api/2/entities/<id>', methods=['GET'])
 def view(id):
     entity, obj = get_entity(id, request.authz.READ)
-    log_event(request, entity_id=id)
     return jsonify(entity)
 
 
@@ -104,7 +101,6 @@ def update(id):
 
     entity.collection.touch()
     db.session.commit()
-    log_event(request, entity_id=entity.id)
     update_entity(entity)
     update_collection(entity.collection)
     return view(entity.id)
@@ -121,7 +117,6 @@ def merge(id, other_id):
         raise BadRequest(ve.message)
 
     db.session.commit()
-    log_event(request, entity_id=entity.id)
     update_entity(entity)
     update_entity(other)
     update_collection(entity.collection)
@@ -134,5 +129,4 @@ def delete(id):
     delete_entity(entity)
     update_collection(entity.collection)
     db.session.commit()
-    log_event(request, entity_id=entity.id)
     return jsonify({'status': 'ok'})

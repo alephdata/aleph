@@ -5,7 +5,6 @@ from werkzeug.exceptions import BadRequest
 from aleph.model import Collection, EntityIdentity
 from aleph.search import LeadsQuery
 from aleph.logic import update_entity, update_lead
-from aleph.events import log_event
 from aleph.views.util import get_entity, require
 
 blueprint = Blueprint('leads_api', __name__)
@@ -35,6 +34,5 @@ def update(collection_id):
     if judgement not in EntityIdentity.JUDGEMENTS:
         raise BadRequest("Invalid judgement.")
     update_lead(entity, match, judgement, judge=request.authz.role)
-    log_event(request)
     update_entity(obj)
     return jsonify({'status': 'ok'})

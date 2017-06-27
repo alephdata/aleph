@@ -1,16 +1,16 @@
-from flask import Blueprint, request, abort, render_template
+from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
-from apikit import obj_or_404, request_data, jsonify
+from apikit import obj_or_404
 
 from aleph.core import db, get_config, app_url
-from aleph.events import log_event
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Permission
 from aleph.logic.permissions import update_permission
-from aleph.model.validate import validate
-from aleph.notify import notify_role
+from aleph.notify import notify_role_template
+from aleph.views.serializers import jsonify, parse_request
+from aleph.views.serializers import RoleSchema, PermissionSchema
+from aleph.views.serializers import RoleInviteSchema, RoleCreateSchema
 from aleph.views.util import require, get_collection
-
 
 blueprint = Blueprint('roles_api', __name__)
 
@@ -36,71 +36,52 @@ def suggest():
         })
     # this only returns users, not groups
     q = Role.by_prefix(parser.prefix)
-    result = DatabaseQueryResult(request, q, parser=parser)
+    result = DatabaseQueryResult(request, q, parser=parser, schema=RoleSchema)
     return jsonify(result)
 
 
 @blueprint.route('/api/2/roles/invite', methods=['POST'])
 def invite_email():
-    data = request_data()
-    email = data.get('email')
-
-    if not email:
-        abort(400)
-
-    signature = Role.SIGNATURE_SERIALIZER.dumps(email, salt=email)
+    data = parse_request(schema=RoleInviteSchema)
+    signature = Role.SIGNATURE.dumps(data['email'])
     url = '{}signup/{}'.format(app_url, signature)
-    role = Role(email=email, name='Visitor')
-
-    notify_role(role=role, subject='Registration', html=render_template(
-        'email/registration_invitation.html', url=url, role=role)
-    )
-
-    return jsonify({'status': 'To proceed, please check your email.'}), 201
+    role = Role(email=data['email'], name='Visitor')
+    notify_role_template(role, 'Registration',
+                         'email/registration_invitation.html',
+                         url=url)
+    return jsonify({
+        'status': 'ok',
+        'message': 'To proceed, please check your email.'
+    })
 
 
 @blueprint.route('/api/2/roles', methods=['POST'])
 def create():
-    require(not request.authz.in_maintenance)
-    data = request_data()
-    email = data.get('email')
-    name = data.get('name') or email
-    password = data.get('password')
-    signature = data.get('code')
-
-    if not email or not password or not signature:
-        abort(400)
-
+    require(not request.authz.in_maintenance,
+            get_config('PASSWORD_REGISTRATION'))
+    data = parse_request(schema=RoleCreateSchema)
     try:
-        # Make sure registration is allowed
-        assert get_config('PASSWORD_REGISTRATION')
-
-        # Make sure password is set and not too short
-        assert len(password) >= Role.PASSWORD_MIN_LENGTH
-
-        # Make sure the signature is valid
-        assert email == Role.SIGNATURE_SERIALIZER.loads(
-            signature, salt=email, max_age=Role.SIGNATURE_MAX_AGE)
-    except:
-        abort(400)
+        code = data.get('code')
+        email = Role.SIGNATURE.loads(code, max_age=Role.SIGNATURE_MAX_AGE)
+        assert email == data.get('email')
+    except Exception:
+        raise BadRequest("Invalid signature")
 
     role = Role.by_email(email).first()
-
-    if role:
-        return jsonify(dict(status='ok')), 200
-
-    role = Role.load_or_create(
-        foreign_id='password:{}'.format(email),
-        type=Role.USER,
-        name=name,
-        email=email
-    )
-    role.set_password(password)
-
-    db.session.add(role)
-    db.session.commit()
-
-    return jsonify({'status': 'ok'}, status=201)
+    status = 200
+    if role is None:
+        status = 201
+        role = Role.load_or_create(
+            foreign_id='password:{}'.format(email),
+            type=Role.USER,
+            name=data.get('name') or email,
+            email=email
+        )
+        role.set_password(data.get('password'))
+        db.session.add(role)
+        db.session.commit()
+    request.authz.id = role.id
+    return jsonify(role, schema=RoleSchema, status=status)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
@@ -108,22 +89,19 @@ def view(id):
     role = obj_or_404(Role.by_id(id))
     require(request.authz.logged_in,
             check_visible(role))
-    data = role.to_dict()
-    if role.id == request.authz.role.id:
-        data['email'] = role.email
-    return jsonify(data)
+    return jsonify(role, schema=RoleSchema)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     role = obj_or_404(Role.by_id(id))
     require(request.authz.session_write,
-            role.id == request.authz.role.id)
-    role.update(request_data())
+            role.id == request.authz.id)
+    data = parse_request(schema=RoleSchema)
+    role.update(data)
     db.session.add(role)
     db.session.commit()
-    log_event(request)
-    return jsonify(role)
+    return view(role.id)
 
 
 @blueprint.route('/api/2/collections/<int:id>/permissions')
@@ -132,46 +110,46 @@ def permissions_index(id):
     q = Permission.all()
     q = q.filter(Permission.collection_id == collection.id)
     permissions = []
-    roles_seen = set()
+    roles = [r for r in Role.all_groups() if check_visible(r)]
     for permission in q.all():
-        if check_visible(permission.role):
-            permissions.append(permission)
-            roles_seen.add(permission.role.id)
+        if not check_visible(permission.role):
+            continue
+        permissions.append(permission)
+        if permission.role in roles:
+            roles.remove(permission.role)
 
     # this workaround ensures that all groups are visible for the user to
     # select in the UI even if they are not currently associated with the
     # collection.
-    for role in Role.all_groups():
-        if check_visible(role):
-            if role.id not in roles_seen:
-                roles_seen.add(role.id)
-                permissions.append({
-                    'write': False,
-                    'read': False,
-                    'role': role
-                })
+    for role in roles:
+        permissions.append({
+            'collection_id': collection.id,
+            'write': False,
+            'read': False,
+            'role': role
+        })
 
     return jsonify({
         'total': len(permissions),
-        'results': permissions
+        'results': PermissionSchema().dump(permissions, many=True)
     })
 
 
 @blueprint.route('/api/2/collections/<int:id>/permissions',
                  methods=['POST', 'PUT'])
 def permissions_update(id):
+    # TODO: consider using a list to bundle permission writes
     collection = get_collection(id, request.authz.WRITE)
-    data = request_data()
-    validate(data, 'permission.json#')
-
-    role_id = data.get('role', {}).get('id')
-    role = Role.all().filter(Role.id == role_id).first()
+    data = parse_request(schema=PermissionSchema)
+    role = Role.all().filter(Role.id == data['role']['id']).first()
     if role is None or not check_visible(role):
         raise BadRequest()
 
-    perm = update_permission(role, collection, data['read'], data['write'])
-    log_event(request)
+    perm = update_permission(role,
+                             collection,
+                             data['read'],
+                             data['write'])
     return jsonify({
         'status': 'ok',
-        'updated': perm
+        'updated': PermissionSchema().dump(perm)
     })
