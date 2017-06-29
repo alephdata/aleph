@@ -90,7 +90,7 @@ class EntitiesQuery(AuthzQuery):
     DOC_TYPES = [TYPE_ENTITY]
     RETURN_FIELDS = ['collection_id', 'roles', 'name', 'data', 'countries',
                      'schema', 'schemata', 'properties', 'created_at',
-                     'updated_at']
+                     'updated_at', 'creator']
     SORT = {
         'default': ['_score', {'$documents': 'desc'}, {'name_sort': 'asc'}],
         'name': [{'name_sort': 'asc'}, {'$documents': 'desc'}, '_score'],
@@ -272,8 +272,9 @@ class LeadsQuery(AuthzQuery):
 
 class RecordsQueryResult(SearchQueryResult):
 
-    def __init__(self, request, parser, result):
-        super(RecordsQueryResult, self).__init__(request, parser, result)
+    def __init__(self, request, parser, result, schema=None):
+        super(RecordsQueryResult, self).__init__(request, parser, result,
+                                                 schema=schema)
         ids = [res.get('id') for res in self.results]
         for record in DocumentRecord.find_records(ids):
             for result in self.results:

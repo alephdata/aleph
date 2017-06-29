@@ -38,6 +38,14 @@ class DocumentRecord(db.Model):
         q = q.filter(cls.id.in_(ids))
         return q
 
+    @classmethod
+    def by_index(cls, document_id, index):
+        q = db.session.query(cls)
+        q = db.session.query(DocumentRecord)
+        q = q.filter(cls.document_id == document_id)
+        q = q.filter(cls.index == index)
+        return q.first()
+
     def to_dict(self):
         return {
             'id': self.id,

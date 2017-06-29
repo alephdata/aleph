@@ -33,11 +33,3 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
         q = q.filter(Permission.collection_id == collection_id)
         permission = q.first()
         return permission
-
-    def to_dict(self):
-        return {
-            'role': self.role,
-            'read': self.read,
-            'write': self.write,
-            'collection_id': self.collection_id
-        }

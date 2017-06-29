@@ -3,7 +3,6 @@ from datetime import datetime
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db
-from aleph.model.validate import validate
 from aleph.model.role import Role
 from aleph.model.permission import Permission
 from aleph.model.common import IdModel, make_textid
@@ -13,8 +12,8 @@ log = logging.getLogger(__name__)
 
 
 class Collection(db.Model, IdModel, SoftDeleteModel):
-    _schema = 'collection.json#'
-
+    """A set of documents and entities against which access control is
+    enforced."""
     label = db.Column(db.Unicode)
     summary = db.Column(db.Unicode, nullable=True)
     category = db.Column(db.Unicode, nullable=True)
@@ -31,23 +30,38 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     creator = db.relationship(Role)
 
     def update(self, data):
-        validate(data, self._schema)
-        creator_id = data.get('creator_id')
-        if creator_id is not None and creator_id != self.creator_id:
-            role = Role.by_id(creator_id)
-            if role is not None and role.type == Role.USER:
-                self.creator_id = role.id
-                Permission.grant_collection(self.id, role, True, True)
-        self.label = data.get('label')
+        self.label = data.get('label', self.label)
         self.summary = data.get('summary', self.summary)
-        self.category = data.get('category') or self.category
+        self.category = data.get('category', self.category)
         self.managed = data.get('managed', False)
-        self.countries = data.get('countries') or []
+        self.countries = data.get('countries', [])
+        creator = data.get('creator') or {}
+        self.update_creator(creator.get('id'))
         self.touch()
+
+    def update_creator(self, role):
+        """Set the creator (and admin) of a collection."""
+        if not isinstance(role, Role):
+            role = Role.by_id(role)
+        if role is None or role.type != Role.USER:
+            return
+        self.creator = role
+        db.session.add(self)
+        db.session.flush()
+        Permission.grant(self.id, role, True, True)
 
     def touch(self):
         self.updated_at = datetime.utcnow()
         db.session.add(self)
+
+    @property
+    def roles(self):
+        if not hasattr(self, '_roles'):
+            q = db.session.query(Permission.role_id)
+            q = q.filter(Permission.collection_id == self.id)  # noqa
+            q = q.filter(Permission.read == True)  # noqa
+            self._roles = [e.role_id for e in q.all()]
+        return self._roles
 
     @classmethod
     def by_foreign_id(cls, foreign_id, deleted=False):
@@ -73,42 +87,10 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         if collection is None:
             collection = cls()
             collection.foreign_id = foreign_id
-            collection.creator = role
             collection.update(data)
-            db.session.add(collection)
-            db.session.flush()
-
-            if role is not None:
-                Permission.grant_collection(collection.id,
-                                            role, True, True)
+            collection.update_creator(role)
         collection.deleted_at = None
         return collection
 
     def __repr__(self):
         return '<Collection(%r, %r)>' % (self.id, self.label)
-
-    def __unicode__(self):
-        return self.label
-
-    @property
-    def roles(self):
-        if not hasattr(self, '_roles'):
-            q = db.session.query(Permission.role_id)
-            q = q.filter(Permission.collection_id == self.id)  # noqa
-            q = q.filter(Permission.read == True)  # noqa
-            self._roles = [e.role_id for e in q.all()]
-        return self._roles
-
-    def to_dict(self):
-        data = super(Collection, self).to_dict()
-        data.update({
-            'foreign_id': self.foreign_id,
-            'creator_id': self.creator_id,
-            'label': self.label,
-            'summary': self.summary,
-            'category': self.category,
-            'countries': self.countries,
-            'languages': self.languages,
-            'managed': self.managed
-        })
-        return data

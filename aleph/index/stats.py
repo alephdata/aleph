@@ -42,13 +42,13 @@ def get_instance_stats(authz):
     return data
 
 
-def get_collection_stats(data):
+def get_collection_stats(collection_id):
     """Compute some statistics on the content of a collection."""
     query = {
         'size': 0,
         'query': {
             'term': {
-                'collection_id': data.get('id')
+                'collection_id': collection_id
             }
         },
         'aggs': {
@@ -61,9 +61,11 @@ def get_collection_stats(data):
                        doc_type=[TYPE_DOCUMENT, TYPE_ENTITY],
                        body=query)
     aggregations = result.get('aggregations')
-    data['$schemata'] = {}
-    data['$entities'] = 0
-    data['$total'] = result.get('hits').get('total')
+    data = {
+        '$schemata': {},
+        '$entities': 0,
+        '$total': result.get('hits').get('total')
+    }
 
     # expose both entities by schema count and totals for docs and entities.
     for schema in aggregations.get('schema').get('buckets'):

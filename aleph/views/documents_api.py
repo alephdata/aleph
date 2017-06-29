@@ -19,6 +19,7 @@ blueprint = Blueprint('documents_api', __name__)
 
 @blueprint.route('/api/2/documents', methods=['GET'])
 def index():
+    enable_cache()
     result = DocumentsQuery.handle_request(request)
     return jsonify(result)
 
@@ -26,6 +27,7 @@ def index():
 @blueprint.route('/api/2/documents/<int:document_id>')
 def view(document_id):
     doc = get_document(document_id)
+    enable_cache()
     data = doc.to_dict()
     if doc.parent is not None:
         data['parent'] = doc.parent.to_dict()
@@ -57,25 +59,31 @@ def delete(document_id):
     return jsonify({'status': 'ok'})
 
 
-@blueprint.route('/api/2/documents/<int:document_id>/file')
-def file(document_id):
-    document = get_document(document_id)
-    url = archive.generate_url(document.content_hash,
-                               file_name=document.file_name,
-                               mime_type=document.mime_type)
+def _serve_archive(content_hash, file_name, mime_type):
+    """Serve a file from the archive or by generating an external URL."""
+    url = archive.generate_url(content_hash,
+                               file_name=file_name,
+                               mime_type=mime_type)
     if url is not None:
         return redirect(url)
 
     enable_cache()
-    local_path = archive.load_file(document.content_hash,
-                                   file_name=document.file_name)
+    local_path = archive.load_file(content_hash, file_name=file_name)
     if local_path is None:
         raise NotFound("File does not exist.")
 
-    fh = open(local_path, 'rb')
-    return send_file(fh, as_attachment=True,
-                     attachment_filename=document.file_name,
-                     mimetype=document.mime_type)
+    return send_file(open(local_path, 'rb'),
+                     as_attachment=True,
+                     attachment_filename=file_name,
+                     mimetype=mime_type)
+
+
+@blueprint.route('/api/2/documents/<int:document_id>/file')
+def file(document_id):
+    document = get_document(document_id)
+    return _serve_archive(document.content_hash,
+                          document.file_name,
+                          document.mime_type)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/pdf')
@@ -83,16 +91,9 @@ def pdf(document_id):
     document = get_document(document_id)
     if document.type != Document.TYPE_TEXT:
         raise BadRequest("PDF is only available for text documents")
-    url = archive.generate_url(document.pdf_version, mime_type=PDF_MIME)
-    if url is not None:
-        return redirect(url)
-
-    enable_cache()
-    path = archive.load_file(document.pdf_version,
-                             file_name=document.file_name)
-    if path is None:
-        raise NotFound("Missing PDF file.")
-    return send_file(open(path, 'rb'), mimetype=PDF_MIME)
+    return _serve_archive(document.pdf_version,
+                          document.file_name,
+                          PDF_MIME)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/records')
@@ -107,10 +108,7 @@ def records(document_id):
 def record(document_id, index):
     enable_cache()
     document = get_document(document_id)
-    q = db.session.query(DocumentRecord)
-    q = q.filter(DocumentRecord.document_id == document.id)
-    q = q.filter(DocumentRecord.index == index)
-    record = q.first()
+    record = DocumentRecord.by_index(document.id, index)
     if record is None:
         raise NotFound("No such record: %s" % index)
     return jsonify(record)

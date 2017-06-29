@@ -27,7 +27,6 @@ COLLECTION_MAPPING = {
         "name_sort": {"type": "keyword"},
         "roles": {"type": "long"},
         "foreign_id": {"type": "keyword"},
-        "creator_id": {"type": "long"},
         "languages": {"type": "keyword"},
         "countries": {"type": "keyword"},
         "category": {"type": "keyword"},
@@ -39,6 +38,14 @@ COLLECTION_MAPPING = {
         "$entities": {"type": "long"},
         "$documents": {"type": "long"},
         "$schemata": {"type": "object"},
+        "creator": {
+            "type": "object",
+            "properties": {
+                "id": {"type": "long"},
+                "type": {"type": "keyword"},
+                "name": {"type": "keyword"}
+            }
+        },
     }
 }
 

@@ -35,7 +35,7 @@ class QueryResult(object):
     def to_dict(self):
         results = list(self.results)
         if self.schema:
-            results = self.schema().dump(results, many=True)
+            results, _ = self.schema().dump(results, many=True)
         return {
             'status': 'ok',
             'results': results,
@@ -57,7 +57,8 @@ class DatabaseQueryResult(QueryResult):
                                                   schema=schema)
         self.total = query.count()
         results = query.limit(self.parser.limit)
-        self.results = results.offset(self.parser.offset)
+        results.offset(self.parser.offset)
+        self.results = results.all()
 
 
 class SearchQueryResult(QueryResult):

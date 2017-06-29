@@ -14,10 +14,25 @@ def index_collection(collection):
     if collection.deleted_at is not None:
         return delete_collection(collection.id)
 
-    data = collection.to_dict()
-    data['roles'] = collection.roles
-    data = get_collection_stats(data)
-    data.pop('id', None)
+    data = {
+        'foreign_id': collection.foreign_id,
+        'created_at': collection.created_at,
+        'updated_at': collection.updated_at,
+        'label': collection.label,
+        'summary': collection.summary,
+        'category': collection.category,
+        'countries': collection.countries,
+        'languages': collection.languages,
+        'managed': collection.managed,
+        'roles': collection.roles
+    }
+    if collection.creator is not None:
+        data['creator'] = {
+            'id': collection.creator.id,
+            'type': collection.creator.type,
+            'name': collection.creator.name
+        }
+    data.update(get_collection_stats(collection.id))
     es.index(index=es_index,
              doc_type=TYPE_COLLECTION,
              id=collection.id,
