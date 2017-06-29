@@ -1,8 +1,7 @@
-import os
 import six
 import logging
 from apikit import jsonify
-from flask import render_template, current_app, Blueprint, request
+from flask import render_template, Blueprint, request
 from elasticsearch import TransportError
 from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 
@@ -15,24 +14,6 @@ blueprint = Blueprint('base_api', __name__)
 log = logging.getLogger(__name__)
 
 
-def angular_templates():
-    templates = {}
-    template_dirs = [current_app.static_folder]
-    template_dirs.extend(get_config('CUSTOM_TEMPLATES_DIR'))
-    for template_dir in template_dirs:
-        for tmpl_set in ['templates', 'help']:
-            tmpl_dir = os.path.join(template_dir, tmpl_set)
-            for (root, dirs, files) in os.walk(tmpl_dir):
-                for file_name in files:
-                    if file_name.startswith('.'):
-                        continue
-                    file_path = os.path.join(root, file_name)
-                    with open(file_path, 'rb') as fh:
-                        file_name = file_path[len(template_dir) + 1:]
-                        templates[file_name] = fh.read().decode('utf-8')
-    return templates.items()
-
-
 @blueprint.route('/help')
 @blueprint.route('/help/<path:path>')
 @blueprint.route('/entities')
@@ -41,8 +22,6 @@ def angular_templates():
 @blueprint.route('/documents/<path:path>')
 @blueprint.route('/datasets')
 @blueprint.route('/datasets/<path:path>')
-@blueprint.route('/crawlers')
-@blueprint.route('/crawlers/<path:path>')
 @blueprint.route('/collections')
 @blueprint.route('/collections/<path:path>')
 @blueprint.route('/tabular/<path:path>')
@@ -51,7 +30,7 @@ def angular_templates():
 @blueprint.route('/')
 def ui(**kwargs):
     enable_cache(vary_user=False)
-    return render_template("layout.html", templates=angular_templates())
+    return render_template("layout.html")
 
 
 @blueprint.route('/api/2/metadata')

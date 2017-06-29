@@ -12,7 +12,7 @@
 
     <base href="{{url_for('.ui')}}">
   </head>
-  <body ng-controller="AppCtrl" ng-keyup="keyDownNotify($event)">
+  <body>
     {% if config.MAINTENANCE %}
       <div id="maintenance">
         {{config.APP_TITLE}} is currently under maintenance. No changes can be made
@@ -20,102 +20,6 @@
       </div>
     {% endif %}
 
-    <div id="page" ng-show="session.roles">
-      <nav class="navbar navbar-default navbar-static-top" role="navigation">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button class="navbar-toggle" type="button" ng-click="navbarCollapsed = !navbarCollapsed">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/"><img alt="{{config.APP_TITLE}}" src="{{config.APP_LOGO}}"></a>
-            <a class="navbar-brand" href="/">{{config.APP_TITLE}}</a>
-          </div>
-
-          <div uib-collapse="navbarCollapsed" class="navbar-collapse bs-js-navbar-collapse">
-            <ul class="nav navbar-nav" ng-cloak>
-              <li ng-class="{'active': navSection == 'documents'}">
-                <a href="/documents/sources">
-                  <i class="fa fa-fw fa-file-text" aria-hidden="true"></i>
-                  Documents
-                </a>
-              </li>
-              <li ng-class="{'active': navSection == 'entities'}">
-                <a href="/datasets">
-                  <i class="fa fa-fw fa-user-secret" aria-hidden="true"></i>
-                  People and Companies
-                </a>
-              </li>
-              <li ng-class="{'active': navSection == 'collections'}">
-                <a href="/collections">
-                  <i class="fa fa-fw fa-address-book" aria-hidden="true"></i>
-                  Collections
-                </a>
-              </li>
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right" ng-cloak>
-              <li ng-show="!session.logged_in">
-                <a ng-click="triggerLogin()">
-                  <i class="fa fa-fw fa-sign-in"></i> Sign in
-                </a>
-              </li>
-              <li ng-show="session.logged_in && session.role.is_admin"
-                 ng-class="{'active': navSection =='admin'}" uib-dropdown>
-                <a href="#" uib-dropdown-toggle>
-                  <i class="fa fa-fw fa-warning"></i> Admin
-                </a>
-                <ul uib-dropdown-menu role="menu">
-                  <li role="menuitem">
-                    <a href="/crawlers" class="click">
-                      <i class="fa fa-fw fa-sitemap" aria-hidden="true"></i>
-                      Crawler Manager
-                    </a>
-                  </li>
-                  <li class="divider"></li>
-                  <li role="menuitem">
-                    <a href="https://github.com/alephdata/aleph/issues" class="click">
-                      <i class="fa fa-fw fa-github-square"></i>
-                      GitHub Issues
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li ng-show="session.logged_in && !metadata.maintenance">
-                <a ng-click="editProfile($event)">
-                  <i class="fa fa-fw fa-cog"></i> Settings
-                </a>
-              </li>
-              <li ng-show="session.logged_in && !metadata.maintenance">
-                <a ng-click="manageAlerts($event)">
-                  <i class="fa fa-fw fa-bell"></i> Alerts
-                </a>
-              </li>
-              <li ng-show="session.logged_in">
-                <a href="{{url_for('sessions_api.logout')}}" target="_self">
-                  <i class="fa fa-fw fa-sign-out"></i> Logout
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
-      <div id="spinner-wrapper">
-        <div id="spinner-overlay" ng-hide="routeLoaded && !routeError">
-          <div class="spinner" ng-hide="routeFailed">
-            <i class="fa fa-circle-o-notch fa-spin big-icon"></i>
-          </div>
-          <div class="spinner failed" ng-show="routeFailed" ng-cloak>
-            <error-message error="routeError" session="session">
-            </error-message>
-          </div>
-        </div>
-        <div ng-view autoscroll="true"></div>
-      </div>
-    </div>
 
     <footer>
       <div class="container-fluid">
@@ -126,20 +30,10 @@
               aleph search engine &middot;
               <i class="fa fa-github-square"></i>
               <a href="https://github.com/alephdata/aleph">source code</a>
-              &middot;
-              <a href="/help">search guide</a>
-              &middot;
-              <a href="/help/api">api documentation</a>
             </p>
           </div>
         </div>
       </div>
     </footer>
-
-    {% for path, tmpl in templates %}
-      <script id="{{path}}" type="text/ng-template">{{ tmpl | safe }}</script>
-    {% endfor %}
-
-    <script src="{{ url_for('static', filename='assets/aleph.js') }}"></script>
   </body>
 </html>

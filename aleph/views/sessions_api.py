@@ -10,6 +10,7 @@ from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.views.util import extract_next_url
+from aleph.views.serializers import RoleSchema
 
 
 log = logging.getLogger(__name__)
@@ -55,7 +56,7 @@ def status():
     return jsonify({
         'logged_in': authz.logged_in,
         'api_key': authz.role.api_key if authz.logged_in else None,
-        'role': authz.role,
+        'role': RoleSchema().dump(authz.role),
         'roles': authz.roles,
         'logout': url_for('.logout'),
         'providers': providers,
