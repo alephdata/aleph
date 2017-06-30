@@ -1,9 +1,10 @@
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
-from apikit import jsonify, request_data, arg_bool
+from apikit import arg_bool
 
 from aleph.core import db
 from aleph.model import Entity
+from aleph.model.common import merge_data
 from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.collections import update_collection
 from aleph.search import LinksQuery, EntitiesQuery, EntityDocumentsQuery
@@ -11,6 +12,8 @@ from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.search import DatabaseQueryResult, QueryParser
 from aleph.views.util import get_entity, get_collection
 from aleph.views.cache import enable_cache
+from aleph.views.serializers import jsonify, parse_request
+from aleph.views.serializers import EntitySchema, LinkSchema, DocumentSchema
 
 blueprint = Blueprint('entities_api', __name__)
 
@@ -18,7 +21,7 @@ blueprint = Blueprint('entities_api', __name__)
 @blueprint.route('/api/2/entities', methods=['GET'])
 def index():
     enable_cache()
-    result = EntitiesQuery.handle_request(request)
+    result = EntitiesQuery.handle_request(request, schema=EntitySchema)
     return jsonify(result)
 
 
@@ -37,21 +40,16 @@ def all():
 @blueprint.route('/api/2/entities/_suggest', methods=['GET'])
 def suggest():
     enable_cache()
-    result = SuggestEntitiesQuery.handle_request(request)
+    result = SuggestEntitiesQuery.handle_request(request, schema=EntitySchema)
     return jsonify(result)
 
 
 @blueprint.route('/api/2/entities', methods=['POST', 'PUT'])
 def create():
-    data = request_data()
+    data = parse_request(schema=EntitySchema)
     collection = get_collection(data.get('collection_id'),
                                 request.authz.WRITE)
-    try:
-        entity = Entity.save(data, collection)
-    except (ValueError, TypeError) as ve:
-        raise BadRequest(ve.message)
-
-    collection.touch()
+    entity = Entity.create(data, collection)
     db.session.commit()
     update_entity(entity)
     update_collection(collection)
@@ -61,14 +59,16 @@ def create():
 @blueprint.route('/api/2/entities/<id>', methods=['GET'])
 def view(id):
     entity, obj = get_entity(id, request.authz.READ)
-    return jsonify(entity)
+    return jsonify(entity, schema=EntitySchema)
 
 
 @blueprint.route('/api/2/entities/<id>/links', methods=['GET'])
 def links(id):
     enable_cache()
     entity, obj = get_entity(id, request.authz.READ)
-    result = LinksQuery.handle_request(request, entity=entity)
+    result = LinksQuery.handle_request(request,
+                                       entity=entity,
+                                       schema=LinkSchema)
     return jsonify(result)
 
 
@@ -76,7 +76,9 @@ def links(id):
 def similar(id):
     enable_cache()
     entity, _ = get_entity(id, request.authz.READ)
-    result = SimilarEntitiesQuery.handle_request(request, entity=entity)
+    result = SimilarEntitiesQuery.handle_request(request,
+                                                 entity=entity,
+                                                 schema=EntitySchema)
     return jsonify(result)
 
 
@@ -84,22 +86,20 @@ def similar(id):
 def documents(id):
     enable_cache()
     entity, _ = get_entity(id, request.authz.READ)
-    result = EntityDocumentsQuery.handle_request(request, entity=entity)
+    result = EntityDocumentsQuery.handle_request(request,
+                                                 entity=entity,
+                                                 schema=DocumentSchema)
     return jsonify(result)
 
 
 @blueprint.route('/api/2/entities/<id>', methods=['POST', 'PUT'])
 def update(id):
     _, entity = get_entity(id, request.authz.WRITE)
-
-    try:
-        entity = Entity.save(request_data(),
-                             entity.collection,
-                             merge=arg_bool('merge'))
-    except (ValueError, TypeError) as ve:
-        raise BadRequest(ve.message)
-
-    entity.collection.touch()
+    data = parse_request(schema=EntitySchema)
+    if arg_bool('merge'):
+        data['data'] = merge_data(data.get('data') or {},
+                                  entity.data or {})
+    entity.update(data)
     db.session.commit()
     update_entity(entity)
     update_collection(entity.collection)

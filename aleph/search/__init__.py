@@ -90,7 +90,7 @@ class EntitiesQuery(AuthzQuery):
     DOC_TYPES = [TYPE_ENTITY]
     RETURN_FIELDS = ['collection_id', 'roles', 'name', 'data', 'countries',
                      'schema', 'schemata', 'properties', 'created_at',
-                     'updated_at', 'creator']
+                     'updated_at', 'creator', '$bulk']
     SORT = {
         'default': ['_score', {'$documents': 'desc'}, {'name_sort': 'asc'}],
         'name': [{'name_sort': 'asc'}, {'$documents': 'desc'}, '_score'],

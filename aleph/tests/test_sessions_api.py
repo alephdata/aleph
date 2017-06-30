@@ -6,15 +6,27 @@ class SessionsApiTestCase(TestCase):
 
     def setUp(self):
         super(SessionsApiTestCase, self).setUp()
-
         self.role = RoleFactory.create()
+
+    def test_session_anonymous(self):
+        res = self.client.get('/api/2/sessions')
+        assert res.status_code == 200, res
+        assert not res.json['logged_in'], res.json
+        assert 'role' not in res.json, res.json
+
+    def test_session_with_user(self):
+        role = self.login(is_admin=True)
+        res = self.client.get('/api/2/sessions')
+        print res.json
+        assert res.json['logged_in'], res.json
+        assert res.json['role']['id'] == role.id, res.json
 
     def test_status_get_with_password_registration_enabled(self):
         res = self.client.get('/api/2/sessions')
         assert res.status_code == 200, res
         assert len(res.json['providers']) == 1, res
         assert res.json['providers'][0]['name'] == 'password', res
-        assert res.json['providers'][0]['registration'] == True, res
+        assert res.json['providers'][0]['registration'], res
 
     def test_status_get_with_password_registration_disabled(self):
         self.app.config['PASSWORD_REGISTRATION'] = False
@@ -23,7 +35,7 @@ class SessionsApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert len(res.json['providers']) == 1, res
         assert res.json['providers'][0]['name'] == 'password', res
-        assert res.json['providers'][0]['registration'] == False, res
+        assert not res.json['providers'][0]['registration'], res
 
     def test_status_get_without_password_login(self):
         self.app.config['PASSWORD_LOGIN'] = False

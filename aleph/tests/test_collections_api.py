@@ -19,7 +19,7 @@ class CollectionsApiTestCase(TestCase):
         self.col.countries = []
         db.session.add(self.col)
         db.session.flush()
-        self.ent = Entity.save({
+        self.ent = Entity.create({
             'schema': 'Person',
             'name': 'Winnie the Pooh',
         }, self.col)
@@ -46,7 +46,7 @@ class CollectionsApiTestCase(TestCase):
         assert 'test_coll' in res.json['foreign_id'], res.json
         assert 'Winnie' not in res.json['label'], res.json
 
-    def test_update(self):
+    def test_update_valid(self):
         self.login(is_admin=True)
         url = '/api/2/collections/%s' % self.col.id
         res = self.client.get(url)
@@ -60,7 +60,11 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 200, res.json
         assert 'Collected' in res.json['label'], res.json
 
+    def test_update_no_label(self):
+        self.login(is_admin=True)
+        url = '/api/2/collections/%s' % self.col.id
         res = self.client.get(url)
+        data = res.json
         data['label'] = ''
         res = self.client.post(url,
                                data=json.dumps(data),
@@ -68,6 +72,7 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 400, res.json
 
         res = self.client.get(url)
+        data = res.json
         data['category'] = 'banana'
         res = self.client.post(url,
                                data=json.dumps(data),

@@ -46,6 +46,7 @@ def merge_data(base, merge):
         return data.values()
     if isinstance(base, dict):
         data = dict(base)
+        merge = merge or dict()
         for k, v in merge.items():
             b = base.get(k, v)
             data[k] = merge_data(b, v)

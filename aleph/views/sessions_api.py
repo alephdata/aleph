@@ -53,14 +53,17 @@ def status():
             'register': url_for('roles_api.invite_email')
         })
 
-    return jsonify({
+    data = {
         'logged_in': authz.logged_in,
-        'api_key': authz.role.api_key if authz.logged_in else None,
-        'role': RoleSchema().dump(authz.role),
         'roles': authz.roles,
         'logout': url_for('.logout'),
         'providers': providers,
-    })
+    }
+
+    if authz.logged_in:
+        data['role'], _ = RoleSchema().dump(authz.role)
+        data['api_key'] = authz.role.api_key
+    return jsonify(data)
 
 
 @blueprint.route('/api/2/sessions/login/password', methods=['POST'])

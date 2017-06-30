@@ -3,12 +3,12 @@ from flask import request
 from werkzeug.exceptions import BadRequest
 from dalet import is_country_code, is_language_code
 from marshmallow import Schema, post_dump
-from marshmallow.fields import Nested, Integer, String, Bool, DateTime, List
-from marshmallow.fields import Raw, Dict
+from marshmallow.fields import Nested, Integer, String, DateTime, List
+from marshmallow.fields import Raw, Dict, Boolean
 from marshmallow.exceptions import ValidationError
 from marshmallow.validate import Email, Length
 
-from aleph.core import url_for, get_config
+from aleph.core import url_for, get_config, schemata
 from aleph.model import Role
 
 
@@ -34,6 +34,15 @@ class Country(String):
             raise ValidationError('Invalid country code.')
 
 
+class SchemaName(String):
+
+    def _validate(self, value):
+        try:
+            schemata.get(value)
+        except TypeError:
+            raise ValidationError('Invalid schema name.')
+
+
 class DatedSchema(object):
     # these are raw because dumping fails if the dates are already strings, as
     # in the case of data coming from the ES index.
@@ -48,7 +57,7 @@ class RoleSchema(Schema, DatedSchema):
     api_key = String(dump_only=True)
     type = String(dump_only=True)
     foreign_id = String(dump_only=True)
-    is_admin = Bool(dump_only=True)
+    is_admin = Boolean(dump_only=True)
 
     @post_dump
     def transient(self, data):
@@ -84,8 +93,8 @@ class RoleReferenceSchema(Schema):
 
 class PermissionSchema(Schema, DatedSchema):
     id = Integer(dump_only=True)
-    write = Bool(required=True)
-    read = Bool(required=True)
+    write = Boolean(required=True)
+    read = Boolean(required=True)
     collection_id = Integer(dump_only=True, required=True)
     role = Nested(RoleReferenceSchema)
 
@@ -110,9 +119,9 @@ class CollectionSchema(Schema, DatedSchema):
     label = String(validate=Length(min=2, max=500), required=True)
     foreign_id = String()
     summary = String(allow_none=True)
-    countries = List(Country)
-    lanaguages = List(Language)
-    managed = Bool()
+    countries = List(Country())
+    lanaguages = List(Language())
+    managed = Boolean()
     category = Category(required=True)
     creator = Nested(RoleReferenceSchema, required=False, allow_none=True)
 
@@ -132,6 +141,47 @@ class CollectionIndexSchema(CollectionSchema):
                         dump_only=True, default=0)
     schemata = Dict(dump_to='$schemata', attribute='$schemata',
                     dump_only=True, default={})
+
+
+class EntitySchema(Schema, DatedSchema):
+    id = String(dump_only=True)
+    collection_id = Integer(required=True)
+    name = String(validate=Length(min=2, max=500), required=True)
+    names = List(String(), dump_only=True)
+    foreign_ids = List(String())
+    countries = List(Country(), dump_only=True)
+    schema = SchemaName(required=True)
+    schemata = List(SchemaName(), dump_only=True)
+    data = Dict()
+    properties = Dict(dump_only=True)
+    bulk = Boolean(dump_to='$bulk', attribute='$bulk', dump_only=True)
+
+    @post_dump
+    def transient(self, data):
+        data['$uri'] = url_for('entities_api.view', id=data.get('id'))
+        if data.get('$bulk'):
+            data['$writeable'] = False
+        else:
+            collection_id = data.get('collection_id')
+            data['$writeable'] = request.authz.can_write(collection_id)
+        return data
+
+
+class LinkSchema(Schema, DatedSchema):
+    id = String(dump_only=True)
+    collection_id = Integer(dump_only=True, required=True)
+    name = String(validate=Length(min=2, max=500), required=True)
+    foreign_ids = List(String())
+    countries = List(Country())
+    schema = SchemaName()
+    schemata = List(SchemaName())
+
+
+class DocumentSchema(Schema, DatedSchema):
+    id = String(dump_only=True)
+    collection_id = Integer(dump_only=True, required=True)
+    schema = SchemaName(dump_only=True)
+    schemata = List(SchemaName(), dump_only=True)
 
 
 def jsonify(obj, schema=None, status=200, **kwargs):

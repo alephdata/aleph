@@ -17,10 +17,9 @@ from aleph.util import checksum
 blueprint = Blueprint('ingest_api', __name__)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/ingest',
-                 methods=['POST', 'PUT'])
-def ingest_upload(collection_id):
-    collection = obj_or_404(Collection.by_id(collection_id))
+@blueprint.route('/api/2/collections/<int:id>/ingest', methods=['POST', 'PUT'])
+def ingest_upload(id):
+    collection = obj_or_404(Collection.by_id(id))
     require(request.authz.can_write(collection.id))
     crawler_run = make_textid()
 
@@ -51,4 +50,7 @@ def ingest_upload(collection_id):
         ingest_document(document, sec_fn, role_id=request.authz.id)
         os.unlink(sec_fn)
         documents.append(document)
-    return jsonify({'status': 'ok', 'documents': documents})
+    return jsonify({
+        'status': 'ok',
+        'documents': documents
+    })

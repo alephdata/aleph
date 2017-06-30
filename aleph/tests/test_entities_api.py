@@ -16,7 +16,7 @@ class EntitiesApiTestCase(TestCase):
         self.col.foreign_id = 'test_coll_entities_api'
         db.session.add(self.col)
         db.session.flush()
-        self.ent = Entity.save({
+        self.ent = Entity.create({
             'schema': 'LegalEntity',
             'name': 'Winnie the Pooh',
             'data': {
@@ -170,6 +170,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             'schema': 'Person',
             'name': "Osama bin Laden",
+            'data': {},
             'collection_id': self.col.id
         }
         res = self.client.post(url, data=json.dumps(data),
@@ -188,10 +189,12 @@ class EntitiesApiTestCase(TestCase):
         data = {
             'schema': 'Person',
             'name': "Osama bin Laden",
+            'data': {},
             'collection_id': self.col.id
         }
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
+        assert res.status_code == 200, res
         flush_index()
         res = self.client.get('/api/2/entities/_suggest?prefix=osa')
         assert res.status_code == 200, (res.status_code, res.json)

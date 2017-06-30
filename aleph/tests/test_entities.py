@@ -1,6 +1,6 @@
 # coding: utf-8
 import json
-from pprint import pprint
+from pprint import pprint  # noqa
 from apikit import jsonify
 
 from aleph.core import db
@@ -23,7 +23,7 @@ class EntitiesTestCase(TestCase):
         self.col_other.foreign_id = 'test_coll_entities_other'
         db.session.add(self.col_other)
         db.session.flush()
-        self.ent = Entity.save({
+        self.ent = Entity.create({
             'schema': 'LegalEntity',
             'name': 'Winnie the Pooh',
             'data': {
@@ -32,7 +32,7 @@ class EntitiesTestCase(TestCase):
                 'alias': [u'Puh der Bär', 'Pooh Bear']
             }
         }, self.col)
-        self.other = Entity.save({
+        self.other = Entity.create({
             'schema': 'LegalEntity',
             'name': 'Pu der Bär',
             'data': {

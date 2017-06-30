@@ -80,28 +80,19 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
         fid = [string_value(f) for f in entity.get('foreign_ids') or []]
         self.foreign_ids = list(set([f for f in fid if f is not None]))
-        self.state = entity.pop('state', self.STATE_ACTIVE)
+        self.state = entity.get('state', self.STATE_ACTIVE)
         self.updated_at = datetime.utcnow()
+        self.collection.touch()
         db.session.add(self)
 
     @classmethod
-    def save(cls, data, collection, merge=False):
-        ent = cls.by_id(data.get('id'))
-        if ent is None:
-            ent = cls()
-            ent.type = data.pop('schema', None)
-            if ent.type is None:
-                raise ValueError("No schema provided.")
-            ent.id = make_textid()
-
-        if merge:
-            data = merge_data(data, ent.to_dict())
-
-        if collection is None:
-            raise ValueError("No collection specified.")
-
+    def create(cls, data, collection):
+        ent = cls()
+        ent.type = data.pop('schema', None)
+        ent.id = make_textid()
         ent.collection = collection
         ent.update(data)
+        ent.collection.touch()
         return ent
 
     @classmethod

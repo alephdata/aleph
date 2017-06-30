@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import logging
 
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
-from aleph.model import Collection, Entity, EntityIdentity, Alert
+from aleph.model import Collection, Entity, Alert
 from aleph.index import index_entity, flush_index, delete_entity_leads
 from aleph.index.entities import get_entity
 from aleph.index.collections import index_collection
@@ -17,9 +17,7 @@ def fetch_entity(entity_id):
     entity = get_entity(entity_id)
     obj = Entity.by_id(entity_id)
     if obj is not None:
-        entity['ids'] = EntityIdentity.entity_ids(entity_id)
-    elif entity is not None:
-        entity['ids'] = [entity.get('id')]
+        entity['data'] = obj.data
     return entity, obj
 
 

@@ -10,7 +10,7 @@ class BaseApiTestCase(TestCase):
         res = self.client.get('/')
         assert res.status_code == 200, res
         assert '<title>' in res.data, res.data
-        assert 'ng-view' in res.data, res.data
+        assert 'notranslate' in res.data, res.data
 
     def test_metadata(self):
         res = self.client.get('/api/2/metadata')

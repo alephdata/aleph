@@ -12,4 +12,6 @@ blueprint = Blueprint('search_api', __name__)
 def search():
     enable_cache()
     result = CombinedQuery.handle_request(request)
+    # TODO do we want to include alerting info ("is the user subscribed to
+    # the results of this query?")
     return jsonify(result)

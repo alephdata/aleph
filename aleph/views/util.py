@@ -2,7 +2,7 @@ import StringIO
 from apikit import obj_or_404
 from flask import request
 from urlparse import urlparse, urljoin
-from werkzeug.exceptions import NotFound, ImATeapot, Forbidden, BadRequest
+from werkzeug.exceptions import ImATeapot, Forbidden, BadRequest
 import xlsxwriter
 
 from aleph.authz import Authz
@@ -18,20 +18,15 @@ def require(*predicates):
 
 def get_entity(id, action):
     entity, obj = fetch_entity(id)
-    if obj is None:
-        entity = obj_or_404(entity)
-        # Cannot edit them:
-        if action == request.authz.WRITE:
-            raise ImATeapot("Cannot write this entity.")
-    coll_id = obj.collection_id if obj is None else entity.get('collection_id')
-    require(request.authz.can(coll_id, action))
+    obj_or_404(entity)
+    if entity.get('$bulk') and action == request.authz.WRITE:
+        raise ImATeapot("Cannot write this entity.")
+    require(request.authz.can(entity.get('collection_id'), action))
     return entity, obj
 
 
 def get_document(document_id, action=Authz.READ):
-    document = Document.by_id(document_id)
-    if document is None:
-        raise NotFound()
+    document = obj_or_404(Document.by_id(document_id))
     require(request.authz.can(document.collection_id, action))
     return document
 
@@ -41,9 +36,7 @@ def get_collection(collection_id, action=Authz.READ):
         collection_id = int(collection_id)
     except (ValueError, TypeError):
         raise BadRequest("Invalid collection ID")
-    collection = Collection.by_id(collection_id)
-    if collection is None:
-        raise NotFound()
+    collection = obj_or_404(Collection.by_id(collection_id))
     require(request.authz.can(collection.id, action))
     return collection
 
