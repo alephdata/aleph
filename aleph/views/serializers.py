@@ -91,6 +91,11 @@ class RoleReferenceSchema(Schema):
     type = String(dump_only=True)
 
 
+class LoginSchema(Schema):
+    email = String(validate=Email(), required=True)
+    password = String(validate=Length(min=3))
+
+
 class PermissionSchema(Schema, DatedSchema):
     id = Integer(dump_only=True)
     write = Boolean(required=True)

@@ -1,7 +1,6 @@
 import logging
 from flask import session, Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
-from apikit import jsonify, request_data
 from werkzeug.exceptions import Unauthorized
 
 from aleph import signals
@@ -10,7 +9,8 @@ from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.views.util import extract_next_url
-from aleph.views.serializers import RoleSchema
+from aleph.views.serializers import parse_request, jsonify
+from aleph.views.serializers import RoleSchema, LoginSchema
 
 
 log = logging.getLogger(__name__)
@@ -69,24 +69,21 @@ def status():
 @blueprint.route('/api/2/sessions/login/password', methods=['POST'])
 def password_login():
     """Provides email and password authentication."""
-    data = request_data()
-    email = data.get('email')
-    password = data.get('password')
+    data = parse_request(login=LoginSchema)
 
-    if not email or not password:
-        abort(404)
-
-    q = Role.by_email(email)
+    q = Role.by_email(data.get('email'))
     q = q.filter(Role.password_digest != None)  # noqa
     role = q.first()
-
     # Try a password authentication and an LDAP authentication if it is enabled
-    if role and role.check_password(password) is False:
-        return Unauthorized("Authentication has failed.")
-    elif not role:
-        role = Role.authenticate_using_ldap(email, password)
+    if role is not None:
+        if not role.check_password(data.get('password')):
+            return Unauthorized("Authentication has failed.")
 
-    if not role:
+    if role is None:
+        role = Role.authenticate_using_ldap(data.get('email'),
+                                            data.get('password'))
+
+    if role is None:
         return Unauthorized("Authentication has failed.")
 
     session['user'] = role.id
