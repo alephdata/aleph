@@ -18,19 +18,19 @@ osanc:
               firstName:
                 column: first_name
               secondName:
-              	column: second_name
+                column: second_name
               middleName:
-              	column: third_name
+                column: third_name
               lastName:
-              	column: last_name
+                column: last_name
               title:
-              	column: title
+                column: title
               gender:
-              	column: gender
+                column: gender
               program:
                 column: program
               summary:
-              	column: summary
+                column: summary
               sourceUrl:
                 column: url
               position:
@@ -53,43 +53,43 @@ osanc:
               summary:
                 column: summary
       - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/identifiers.csv
-      filters:
-        type: passport
-      entities:
-        entity:
-          schema: Person
-          key: entity_id
-          properties:
-            passportNumber:
-              column: number
-            nationality:
-              column: country_code
-            summary:
-              column: summary
+        filters:
+          type: passport
+        entities:
+          entity:
+            schema: Person
+            key: entity_id
+            properties:
+              passportNumber:
+                column: number
+              nationality:
+                column: country_code
+              summary:
+                column: summary
       - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/identifiers.csv
-      filters_not:
-        type: passport
-      entities:
-        entity:
-          schema: LegalEntity
-          key: entity_id
-          properties:
-            idNumber:
-              column: number
-            country:
-              column: country_code
-            summary:
-              column: summary
-            notes:
-              column: description
+        filters_not:
+          type: passport
+        entities:
+          entity:
+            schema: LegalEntity
+            key: entity_id
+            properties:
+              idNumber:
+                column: number
+              country:
+                column: country_code
+              summary:
+                column: summary
+              notes:
+                column: description
       - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/addresses.csv
-      entities:
-        entity:
-          schema: Entity
-          key: entity_id
-          properties:
-            address:
-              columns:
+        entities:
+          entity:
+            schema: Entity
+            key: entity_id
+            properties:
+              address:
+                columns:
                   - street
                   - street_2
                   - region
@@ -97,55 +97,55 @@ osanc:
                   - postal_code
                   - country
                 join: ', '
-            country:
-              column: country_code
+              country:
+                column: country_code
       - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/aliases.csv
-      filters:
-        quality: strong
-      entities:
-        entity:
-          schema: Entity
-          key: entity_id
-          properties: 
-            alias:
-              column: name
-            notes:
-              column: description
+        filters:
+          quality: strong
+        entities:
+          entity:
+            schema: Entity
+            key: entity_id
+            properties: 
+              alias:
+                column: name
+              notes:
+                column: description
       - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/aliases.csv
-      filters:
-        quality: weak
-      entities:
-        entity:
-          schema: Entity
-          key: entity_id
-          properties: 
-            weakAlias:
-              column: name
-            notes:
-              column: description
+        filters:
+          quality: weak
+        entities:
+          entity:
+            schema: Entity
+            key: entity_id
+            properties: 
+              weakAlias:
+                column: name
+              notes:
+                column: description
       - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/birthdates.csv
-      entities:
-        entity:
-          schema: Person
-          key: entity_id
-          properties: 
-            birthDate:
-              column: date
+        entities:
+          entity:
+            schema: Person
+            key: entity_id
+            properties: 
+              birthDate:
+                column: date
       - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/birthplaces.csv
-      entities:
-        entity:
-          schema: Entity
-          key: entity_id
-          properties: 
-            country:
-              column: country_code
-            notes:
-              column: place
+        entities:
+          entity:
+            schema: Entity
+            key: entity_id
+            properties: 
+              country:
+                column: country_code
+              notes:
+                column: place
       - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/nationalities.csv
-      entities:
-        entity:
-          schema: Person
-          key: entity_id
-          properties: 
-            nationality:
-              column: country_code
+        entities:
+          entity:
+            schema: Person
+            key: entity_id
+            properties: 
+              nationality:
+                column: country_code
