@@ -1,4 +1,17 @@
-aliases:
+slugs:
+  - un-sc-sanctions
+  - us-cia-world-leaders
+  - ua-sdfm-blacklist
+  - ch-seco-sanctions
+  - us-ofac
+  - us-bis-denied
+  - gb-hm-sanctionslist
+  - gb-coh-disqualified
+  - eu-eeas-sanctions
+  - kg-fiu-national
+  - interpol-red-notices
+  - everypolitician
+urls:
   - &entities http://data.opensanctions.org/v1/sources/${OSANC_SLUG}/latest/entities.csv
   - &identifiers http://data.opensanctions.org/v1/sources/${OSANC_SLUG}/latest/identifiers.csv
   - &addresses http://data.opensanctions.org/v1/sources/${OSANC_SLUG}/latest/addresses.csv
