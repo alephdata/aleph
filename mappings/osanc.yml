@@ -1,3 +1,11 @@
+aliases:
+  - &entities http://data.opensanctions.org/v1/sources/${OSANC_SLUG}/latest/entities.csv
+  - &identifiers http://data.opensanctions.org/v1/sources/${OSANC_SLUG}/latest/identifiers.csv
+  - &addresses http://data.opensanctions.org/v1/sources/${OSANC_SLUG}/latest/addresses.csv
+  - &birthdates http://data.opensanctions.org/v1/sources/${OSANC_SLUG}/latest/birthdates.csv
+  - &birthplaces http://data.opensanctions.org/v1/sources/${OSANC_SLUG}/latest/birthplaces.csv
+  - &nationalities http://data.opensanctions.org/v1/sources/${OSANC_SLUG}/latest/nationalities.csv
+  - &aliases http://data.opensanctions.org/v1/sources/${OSANC_SLUG}/latest/aliases.csv
 osanc:
     label: OpenSanctions.org
     info_url: https://opensanctions.org
@@ -5,7 +13,7 @@ osanc:
     roles:
       - guest
     queries:
-      - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/entities.csv
+      - csv_url: *entities
         filters:
           type: individual
         entities:
@@ -35,7 +43,7 @@ osanc:
                 column: url
               position:
                 column: function
-      - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/entities.csv
+      - csv_url: *entities
         filters_not:
           type: individual
           type: vessel
@@ -52,7 +60,7 @@ osanc:
                 column: url
               summary:
                 column: summary
-      - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/identifiers.csv
+      - csv_url: *identifiers
         filters:
           type: passport
         entities:
@@ -66,7 +74,7 @@ osanc:
                 column: country_code
               summary:
                 column: summary
-      - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/identifiers.csv
+      - csv_url: *identifiers
         filters_not:
           type: passport
         entities:
@@ -82,7 +90,7 @@ osanc:
                 column: summary
               notes:
                 column: description
-      - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/addresses.csv
+      - csv_url: *addresses
         entities:
           entity:
             schema: Entity
@@ -99,7 +107,7 @@ osanc:
                 join: ', '
               country:
                 column: country_code
-      - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/aliases.csv
+      - csv_url: *aliases
         filters:
           quality: strong
         entities:
@@ -111,7 +119,7 @@ osanc:
                 column: name
               notes:
                 column: description
-      - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/aliases.csv
+      - csv_url: *aliases
         filters:
           quality: weak
         entities:
@@ -123,7 +131,7 @@ osanc:
                 column: name
               notes:
                 column: description
-      - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/birthdates.csv
+      - csv_url: *birthdates
         entities:
           entity:
             schema: Person
@@ -131,7 +139,7 @@ osanc:
             properties: 
               birthDate:
                 column: date
-      - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/birthplaces.csv
+      - csv_url: *birthplaces
         entities:
           entity:
             schema: Entity
@@ -141,7 +149,7 @@ osanc:
                 column: country_code
               notes:
                 column: place
-      - csv_url: http://data.opensanctions.org/v1/sources/us-ofac/latest/nationalities.csv
+      - csv_url: *nationalities
         entities:
           entity:
             schema: Person
