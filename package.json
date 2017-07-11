@@ -7,6 +7,7 @@
     "axios": "^0.16.2",
     "bourbon": "^4.3.2",
     "lodash": "^4.17.4",
+    "node-sass-package-importer": "^3.0.4",
     "normalizr": "^3.2.2",
     "query-string": "^4.3.4",
     "react": "^15.6.1",
