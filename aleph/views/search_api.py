@@ -1,8 +1,8 @@
 from flask import Blueprint, request
-from apikit import jsonify
 
 from aleph.views.cache import enable_cache
 from aleph.search import CombinedQuery
+from aleph.views.serializers import jsonify, SearchResultSchema
 
 
 blueprint = Blueprint('search_api', __name__)
@@ -11,7 +11,7 @@ blueprint = Blueprint('search_api', __name__)
 @blueprint.route('/api/2/search')
 def search():
     enable_cache()
-    result = CombinedQuery.handle_request(request)
+    result = CombinedQuery.handle_request(request, schema=SearchResultSchema)
     # TODO do we want to include alerting info ("is the user subscribed to
     # the results of this query?")
     return jsonify(result)

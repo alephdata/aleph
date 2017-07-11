@@ -9,7 +9,9 @@ from marshmallow.exceptions import ValidationError
 from marshmallow.validate import Email, Length
 
 from aleph.core import url_for, get_config, schemata
+from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.model import Role
+from aleph.util import ensure_list
 
 
 class Category(String):
@@ -246,13 +248,33 @@ class RecordSchema(Schema):
         return data
 
 
+class SearchResultSchema(object):
+
+    SCHEMATA = {
+        TYPE_ENTITY: EntitySchema,
+        TYPE_DOCUMENT: DocumentSchema
+    }
+
+    def dump(self, data, many=False):
+        results = []
+        for res in ensure_list(data):
+            schema = self.SCHEMATA[res['$doc_type']]
+            res = schema().dump(res)
+            if not many:
+                return res
+            results.append(res.data)
+        return results, []
+
+
 def jsonify(obj, schema=None, status=200, **kwargs):
+    """Serialize to JSON and also dump from the given schema."""
     if schema is not None:
         obj, _ = schema().dump(obj)
     return jsonify_(obj, status=status, **kwargs)
 
 
 def validate_data(data, schema):
+    """Validate the data inside a request against a schema."""
     # from pprint import pprint
     # pprint(data)
     data, errors = schema().load(data)
@@ -264,6 +286,7 @@ def validate_data(data, schema):
 
 
 def parse_request(schema=None):
+    """Get request form data or body and validate it against a schema."""
     if request.is_json:
         data = request.get_json()
     else:
