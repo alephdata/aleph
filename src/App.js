@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import { Provider } from 'react-redux'
 import store from './store'
 
+import * as Blueprint from "@blueprintjs/core";
+
 import DocumentsScreen  from './screens/DocumentsScreen';
 import ErrorScreen      from './screens/ErrorScreen';
 import Layout      from './screens/Layout';
