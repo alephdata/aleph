@@ -19,7 +19,7 @@ class DocumentsQuery(AuthzQuery):
     TEXT_FIELDS = ['title^3', 'summary', 'text', '_all']
     RETURN_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                      'languages', 'countries', 'source_url', 'created_at',
-                     'updated_at', 'type', 'summary', 'status', 'error_type',
+                     'updated_at', 'type', 'summary', 'status',
                      'error_message', 'content_hash', 'parent', '$children']
     SORT = {
         'default': ['_score', {'name_sort': 'asc'}],

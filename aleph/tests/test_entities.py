@@ -1,7 +1,5 @@
 # coding: utf-8
-import json
 from pprint import pprint  # noqa
-from apikit import jsonify
 
 from aleph.core import db
 from aleph.model import Collection, Entity, Alert
@@ -51,11 +49,11 @@ class EntitiesTestCase(TestCase):
     def test_merge(self):
         self.ent.merge(self.other)
         db.session.flush()
-        data = json.loads(jsonify(self.ent).data)
-        assert 'bear' in data['data']['description'], data
-        assert 'pa' in data['data']['country'], data
+        data = dict(self.ent.data)
+        assert 'bear' in data['description'], data
+        assert 'pa' in data['country'], data
         db.session.refresh(self.alert)
-        assert self.alert.label == data['name']
+        assert self.alert.label == self.ent.name
         assert self.other.deleted_at is not None, self.other
 
     def test_api_merge(self):

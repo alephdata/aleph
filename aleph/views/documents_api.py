@@ -1,14 +1,15 @@
 import logging
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
-from apikit import jsonify, request_data
 
-from aleph.core import archive, url_for, db
+from aleph.core import archive, db
 from aleph.model import Document, DocumentRecord
 from aleph.logic.documents import update_document, delete_document
 from aleph.logic.collections import update_collection
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document
+from aleph.views.serializers import jsonify, parse_request
+from aleph.views.serializers import DocumentSchema, RecordSchema
 from aleph.search import DocumentsQuery, RecordsQuery
 from aleph.util import PDF_MIME
 
@@ -20,31 +21,21 @@ blueprint = Blueprint('documents_api', __name__)
 @blueprint.route('/api/2/documents', methods=['GET'])
 def index():
     enable_cache()
-    result = DocumentsQuery.handle_request(request)
+    result = DocumentsQuery.handle_request(request, schema=DocumentSchema)
     return jsonify(result)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>')
 def view(document_id):
-    doc = get_document(document_id)
     enable_cache()
-    data = doc.to_dict()
-    if doc.parent is not None:
-        data['parent'] = doc.parent.to_dict()
-    data['data_url'] = archive.generate_url(doc.content_hash)
-    if data['data_url'] is None:
-        data['data_url'] = url_for('documents_api.file',
-                                   document_id=document_id)
-    if doc.pdf_version:
-        data['pdf_url'] = url_for('documents_api.pdf',
-                                  document_id=document_id)
-    return jsonify(data)
+    document = get_document(document_id)
+    return jsonify(document, schema=DocumentSchema)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>', methods=['POST', 'PUT'])
 def update(document_id):
     document = get_document(document_id, request.authz.WRITE)
-    data = request_data()
+    data = parse_request(schema=DocumentSchema)
     document.update(data)
     db.session.commit()
     update_document(document)
@@ -56,7 +47,7 @@ def delete(document_id):
     document = get_document(document_id, request.authz.WRITE)
     delete_document(document)
     update_collection(document.collection)
-    return jsonify({'status': 'ok'})
+    return jsonify({'status': 'ok'}, status=410)
 
 
 def _serve_archive(content_hash, file_name, mime_type):
@@ -100,7 +91,8 @@ def pdf(document_id):
 def records(document_id):
     enable_cache()
     document = get_document(document_id)
-    result = RecordsQuery.handle_request(request, document=document)
+    result = RecordsQuery.handle_request(request, document=document,
+                                         schema=RecordSchema)
     return jsonify(result)
 
 
@@ -111,4 +103,4 @@ def record(document_id, index):
     record = DocumentRecord.by_index(document.id, index)
     if record is None:
         raise NotFound("No such record: %s" % index)
-    return jsonify(record)
+    return jsonify(record, schema=RecordSchema)

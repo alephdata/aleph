@@ -28,22 +28,46 @@ def index_document(document):
         return
 
     log.info("Index document [%s]: %s", document.id, document.title)
-    data = document.to_dict()
+    data = {
+        'schema': document.SCHEMA,
+        'schemata': [document.SCHEMA],
+        'collection_id': document.collection_id,
+        'roles': document.collection.roles,
+        'type': document.type,
+        'status': document.status,
+        'content_hash': document.content_hash,
+        'foreign_id': document.foreign_id,
+        'crawler': document.crawler,
+        'crawler_run': document.crawler_run,
+        'error_message': document.error_message,
+        'uploader_id': document.uploader_id,
+        'created_at': document.created_at,
+        'updated_at': document.updated_at,
+        'title': document.title,
+        'name_sort': document.title,
+        'summary': document.summary,
+        'author': document.author,
+        'file_size': document.file_size,
+        'file_name': document.file_title,
+        'source_url': document.source_url,
+        'languages': document.languages,
+        'countries': document.countries,
+        'keywords': document.keywords,
+        'dates': document.dates,
+        'extension': document.extension,
+        'encoding': document.encoding,
+        'mime_type': document.mime_type,
+        'pdf_version': document.pdf_version,
+        'columns': document.columns,
+        '$children': document.children.count(),
+        'text': index_form(document.text_parts())
+    }
     if document.parent_id is not None:
         data['parent'] = {
             'id': document.parent_id,
             'type': document.parent.type,
             'title': document.parent.title,
         }
-    data['text'] = index_form(document.text_parts())
-    data['text'].extend(index_form([data.get('title'),
-                                    data.get('summary')]))
-    data['schema'] = document.SCHEMA
-    data['schemata'] = [document.SCHEMA]
-    data['$children'] = document.children.count()
-    data['name_sort'] = data.get('title')
-    data['roles'] = document.collection.roles
-    data.pop('headers')
 
     es.index(index=es_index,
              doc_type=TYPE_DOCUMENT,

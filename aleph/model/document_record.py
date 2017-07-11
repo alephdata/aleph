@@ -46,15 +46,5 @@ class DocumentRecord(db.Model):
         q = q.filter(cls.index == index)
         return q.first()
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'sheet': self.sheet,
-            'index': self.index,
-            'data': self.data,
-            'text': self.text,
-            'document_id': self.document_id
-        }
-
     def __repr__(self):
         return '<DocumentRecord(%r,%r)>' % (self.document_id, self.index)

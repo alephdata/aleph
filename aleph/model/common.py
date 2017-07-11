@@ -1,13 +1,9 @@
 import uuid
-import string
 from hashlib import sha1
 from datetime import datetime
 
 from aleph.core import db
 from aleph.text import string_value
-
-
-ALPHABET = string.ascii_lowercase + string.digits
 
 
 def make_textid():
@@ -57,22 +53,10 @@ def merge_data(base, merge):
 class IdModel(object):
     id = db.Column(db.Integer(), primary_key=True)
 
-    def to_dict(self):
-        parent = super(IdModel, self)
-        data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
-        data['id'] = self.id
-        return data
-
 
 class UuidModel(object):
     id = db.Column(db.String(32), primary_key=True, default=make_textid,
                    nullable=False, unique=False)
-
-    def to_dict(self):
-        parent = super(UuidModel, self)
-        data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
-        data['id'] = self.id
-        return data
 
 
 class DatedModel(object):
@@ -104,13 +88,6 @@ class DatedModel(object):
         # hard delete
         db.session.delete(self)
 
-    def to_dict(self):
-        parent = super(DatedModel, self)
-        data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
-        data['created_at'] = self.created_at
-        data['updated_at'] = self.updated_at
-        return data
-
 
 class SoftDeleteModel(DatedModel):
     deleted_at = db.Column(db.DateTime, default=None, nullable=True)
@@ -132,9 +109,3 @@ class SoftDeleteModel(DatedModel):
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
-
-    def to_dict(self):
-        parent = super(SoftDeleteModel, self)
-        data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
-        data['deleted_at'] = self.deleted_at
-        return data

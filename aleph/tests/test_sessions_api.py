@@ -50,7 +50,7 @@ class SessionsApiTestCase(TestCase):
 
     def test_password_login_post_no_data(self):
         res = self.client.post('/api/2/sessions/login/password')
-        assert res.status_code == 404, res
+        assert res.status_code == 400, res
 
     def test_password_login_post_good_email_and_password(self):
         secret = self.fake.password()

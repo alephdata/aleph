@@ -5,7 +5,6 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db
 from aleph.model.metadata import Metadata
-from aleph.model.validate import validate
 from aleph.model.collection import Collection
 from aleph.model.common import DatedModel
 from aleph.model.document_record import DocumentRecord
@@ -15,8 +14,6 @@ log = logging.getLogger(__name__)
 
 
 class Document(db.Model, DatedModel, Metadata):
-    _schema = 'document.json#'
-
     SCHEMA = 'Document'
 
     TYPE_TEXT = 'text'
@@ -36,7 +33,6 @@ class Document(db.Model, DatedModel, Metadata):
 
     crawler = db.Column(db.Unicode())
     crawler_run = db.Column(db.Unicode())
-    error_type = db.Column(db.Unicode(), nullable=True)
     error_message = db.Column(db.Unicode(), nullable=True)
 
     uploader_id = db.Column(db.Integer,
@@ -66,11 +62,11 @@ class Document(db.Model, DatedModel, Metadata):
         super(Document, self).__init__(**kw)
 
     def update(self, data):
-        validate(data, self._schema)
         self.title = data.get('title')
         self.summary = data.get('summary')
-        self.languages = data.get('languages')
-        self.countries = data.get('countries')
+        self.languages = data.get('languages', [])
+        self.countries = data.get('countries', [])
+        self.keywords = data.get('keywords', [])
         db.session.add(self)
 
     def update_meta(self):
@@ -111,6 +107,10 @@ class Document(db.Model, DatedModel, Metadata):
             db.session.bulk_insert_mappings(DocumentRecord, chunk)
 
     def text_parts(self):
+        if self.title:
+            yield self.title
+        if self.summary:
+            yield self.summary
         pq = db.session.query(DocumentRecord)
         pq = pq.filter(DocumentRecord.document_id == self.id)
         for record in pq.yield_per(1000):
@@ -154,25 +154,6 @@ class Document(db.Model, DatedModel, Metadata):
             document.status = document.STATUS_PENDING
             db.session.add(document)
         return document
-
-    def to_dict(self):
-        data = self.to_meta_dict()
-        data.update({
-            'id': self.id,
-            'type': self.type,
-            'status': self.status,
-            'parent_id': self.parent_id,
-            'foreign_id': self.foreign_id,
-            'content_hash': self.content_hash,
-            'crawler': self.crawler,
-            'crawler_run': self.crawler_run,
-            'error_type': self.error_type,
-            'error_message': self.error_message,
-            'collection_id': self.collection_id,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
-        })
-        return data
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.title)

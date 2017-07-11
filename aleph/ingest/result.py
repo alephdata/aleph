@@ -67,9 +67,11 @@ class DocumentResult(Result):
             self.document.status = Document.STATUS_FAIL
             self.document.type = Document.TYPE_OTHER
             self.document.error_message = self.error_message
+
         self.document.foreign_id = stringify(self.id)
         if self.checksum:
             self.document.content_hash = self.checksum
+
         self.document.uploader_id = self.role_id or self.document.uploader_id
         self.document.file_size = self.size
         self.document.file_name = self.file_name

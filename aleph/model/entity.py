@@ -157,17 +157,5 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
                 regex_terms.add(term)
         return regex_terms
 
-    def to_dict(self):
-        data = super(Entity, self).to_dict()
-        data.update({
-            'schema': self.type,
-            'name': self.name,
-            'state': self.state,
-            'data': self.data,
-            'foreign_ids': self.foreign_ids or [],
-            'collection_id': self.collection_id
-        })
-        return data
-
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)

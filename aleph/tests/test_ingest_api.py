@@ -42,7 +42,7 @@ class IngestApiTestCase(TestCase):
             'foo': (StringIO("this is a futz with a banana"), 'futz.html')
         }
         res = self.client.post(self.url, data=data)
-        assert res.status_code == 200, res
+        assert res.status_code == 200, (res, res.data)
         docs = res.json['documents']
         assert len(docs) == 1, docs
         assert docs[0]['file_name'] == 'futz.html', docs

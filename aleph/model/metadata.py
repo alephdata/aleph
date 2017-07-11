@@ -258,23 +258,3 @@ class Metadata(object):
     def columns(self, columns):
         self.meta['columns'] = columns
         self.update_meta()
-
-    def to_meta_dict(self):
-        """Generate ElasticSearch form."""
-        return {
-            'title': self.title,
-            'summary': self.summary,
-            'file_name': self.file_name,
-            'file_size': self.file_size,
-            'source_url': self.source_url,
-            'languages': self.languages,
-            'countries': self.countries,
-            'dates': self.dates,
-            'keywords': self.keywords,
-            'encoding': self.encoding,
-            'extension': self.extension,
-            'mime_type': self.mime_type,
-            'headers': self.headers,
-            'pdf_version': self.pdf_version,
-            'columns': self.columns
-        }

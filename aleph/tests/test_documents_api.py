@@ -90,13 +90,7 @@ class DocumentsApiTestCase(TestCase):
         assert res.status_code == 400, res.json
 
         data = ores.json.copy()
-        data['urls'] = ['lalala']
-        res = self.client.post(url, data=json.dumps(data),
-                               content_type='application/json')
-        assert res.status_code == 400, res.json
-
-        data = ores.json.copy()
-        data['dates'] = ['2011-XX-XX']
+        data['keywords'] = ['']
         res = self.client.post(url, data=json.dumps(data),
                                content_type='application/json')
         assert res.status_code == 400, res.json
@@ -108,6 +102,6 @@ class DocumentsApiTestCase(TestCase):
         assert res.status_code == 403, res
         self.login(is_admin=True)
         res = self.client.delete('/api/2/documents/1003')
-        assert res.status_code == 200, res
+        assert res.status_code == 410, res
         res = self.client.get('/api/2/documents/1003')
         assert res.status_code == 404, res

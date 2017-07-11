@@ -69,7 +69,7 @@ def status():
 @blueprint.route('/api/2/sessions/login/password', methods=['POST'])
 def password_login():
     """Provides email and password authentication."""
-    data = parse_request(login=LoginSchema)
+    data = parse_request(schema=LoginSchema)
 
     q = Role.by_email(data.get('email'))
     q = q.filter(Role.password_digest != None)  # noqa

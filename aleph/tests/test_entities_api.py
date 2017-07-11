@@ -179,7 +179,7 @@ class EntitiesApiTestCase(TestCase):
         data = res.json
         url = '/api/2/entities/%s' % data['id']
         res = self.client.delete(url)
-        assert res.status_code == 200, (res.status_code, res.json)
+        assert res.status_code == 410, (res.status_code, res.json)
         res = self.client.get(url)
         assert res.status_code == 404, (res.status_code, res.json)
 

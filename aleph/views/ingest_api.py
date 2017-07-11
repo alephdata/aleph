@@ -9,7 +9,7 @@ from aleph.core import upload_folder
 from aleph.ingest import ingest_document
 from aleph.model import Collection, Document
 from aleph.model.common import make_textid
-from aleph.model.validate import validate
+from aleph.views.serializers import validate_data, DocumentSchema
 from aleph.views.util import require
 from aleph.util import checksum
 
@@ -27,6 +27,7 @@ def ingest_upload(id):
         meta = json.loads(request.form.get('meta', '{}'))
     except Exception as ex:
         raise BadRequest(unicode(ex))
+    validate_data(meta, DocumentSchema)
 
     documents = []
     for storage in request.files.values():
@@ -35,22 +36,17 @@ def ingest_upload(id):
         content_hash = checksum(sec_fn)
         document = Document.by_keys(collection=collection,
                                     content_hash=content_hash)
+        # TODO: allow user to override.
         document.crawler = 'user_upload:%s' % request.authz.id
         document.crawler_run = crawler_run
         document.mime_type = storage.mimetype
         document.file_name = storage.filename
-
-        try:
-            meta = json.loads(request.form.get('meta', '{}'))
-            validate(meta, 'metadata.json#')
-            document.meta.update(meta)
-        except Exception as ex:
-            raise BadRequest(unicode(ex))
-
+        document.update(meta)
         ingest_document(document, sec_fn, role_id=request.authz.id)
         os.unlink(sec_fn)
         documents.append(document)
+
     return jsonify({
         'status': 'ok',
-        'documents': documents
+        'documents': [DocumentSchema().dump(d).data for d in documents]
     })

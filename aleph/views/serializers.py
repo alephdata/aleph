@@ -1,7 +1,7 @@
 from apikit import jsonify as jsonify_
 from flask import request
 from werkzeug.exceptions import BadRequest
-from dalet import is_country_code, is_language_code
+from dalet import is_country_code, is_language_code, is_partial_date
 from marshmallow import Schema, post_dump
 from marshmallow.fields import Nested, Integer, String, DateTime, List
 from marshmallow.fields import Raw, Dict, Boolean
@@ -32,6 +32,13 @@ class Country(String):
     def _validate(self, value):
         if not is_country_code(value):
             raise ValidationError('Invalid country code.')
+
+
+class PartialDate(String):
+
+    def _validate(self, value):
+        if not is_partial_date(value):
+            raise ValidationError('Invalid date.')
 
 
 class SchemaName(String):
@@ -187,6 +194,56 @@ class DocumentSchema(Schema, DatedSchema):
     collection_id = Integer(dump_only=True, required=True)
     schema = SchemaName(dump_only=True)
     schemata = List(SchemaName(), dump_only=True)
+    status = String(dump_only=True)
+    type = String(dump_only=True)
+    foreign_id = String(dump_only=True)
+    content_hash = String(dump_only=True)
+    parent = Dict(dump_only=True)  # TODO: make writeable?
+    uploader_id = Integer(dump_only=True)
+    crawler = String(dump_only=True)
+    crawler_run = String(dump_only=True)
+    error_message = String(dump_only=True)
+    # title = String(validate=Length(min=2, max=5000), missing=None)
+    title = String(missing=None)
+    summary = String(missing=None)
+    countries = List(Country(), missing=[])
+    languages = List(Language(), missing=[])
+    keywords = List(String(validate=Length(min=1, max=5000)), missing=[])
+    dates = List(PartialDate(), dump_only=True)
+    file_name = String(dump_only=True)
+    file_size = Integer(dump_only=True)
+    author = String(dump_only=True)
+    mime_type = String(dump_only=True)
+    extension = String(dump_only=True)
+    encoding = String(dump_only=True)
+    source_url = String(dump_only=True)
+    pdf_version = String(dump_only=True)
+    columns = List(String(), dump_only=True)
+    children = Boolean(dump_to='$children', attribute='$children',
+                       dump_only=True)
+
+    @post_dump
+    def transient(self, data):
+        data['$uri'] = url_for('documents_api.view',
+                               document_id=data.get('id'))
+        collection_id = data.get('collection_id')
+        data['$writeable'] = request.authz.can_write(collection_id)
+        return data
+
+
+class RecordSchema(Schema):
+    id = String(dump_only=True)
+    document_id = Integer(dump_only=True)
+    index = Integer(dump_only=True)
+    text = String(dump_only=True)
+    data = Dict(dump_only=True)
+
+    @post_dump
+    def transient(self, data):
+        data['$uri'] = url_for('documents_api.record',
+                               document_id=data.get('document_id'),
+                               index=data.get('index'))
+        return data
 
 
 def jsonify(obj, schema=None, status=200, **kwargs):
@@ -195,18 +252,22 @@ def jsonify(obj, schema=None, status=200, **kwargs):
     return jsonify_(obj, status=status, **kwargs)
 
 
+def validate_data(data, schema):
+    # from pprint import pprint
+    # pprint(data)
+    data, errors = schema().load(data)
+    if len(errors):
+        raise BadRequest(response=jsonify({
+            'status': 'error',
+            'errors': errors
+        }, status=400))
+
+
 def parse_request(schema=None):
     if request.is_json:
         data = request.get_json()
     else:
         data = request.form.to_dict(flat=True)
     if schema is not None:
-        # from pprint import pprint
-        # pprint(data)
-        data, errors = schema().load(data)
-        if len(errors):
-            raise BadRequest(response=jsonify({
-                'status': 'error',
-                'errors': errors
-            }, status=400))
+        validate_data(data, schema)
     return data
