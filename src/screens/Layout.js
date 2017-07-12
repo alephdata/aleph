@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 // import queryString from 'query-string';
 
-import { fetchMetadata, fetchSession } from '../store/actions';
+import { fetchMetadata, fetchSession } from '../actions';
 
 class Layout extends Component {
   componentWillMount() {

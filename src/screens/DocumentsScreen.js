@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import queryString from 'query-string';
 
-import { fetchDocuments } from '../store/actions';
+import { fetchDocuments } from '../actions';
 
 import DocumentsContainer from '../containers/DocumentsContainer';
 import Search from '../components/Search';
