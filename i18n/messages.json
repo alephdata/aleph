@@ -1,0 +1,12 @@
+[
+  {
+    "id": "nav.home",
+    "defaultMessage": "Home",
+    "filepath": "src/components/PageNavbar.js"
+  },
+  {
+    "id": "nav.documents",
+    "defaultMessage": "Documents",
+    "filepath": "src/components/PageNavbar.js"
+  }
+]
