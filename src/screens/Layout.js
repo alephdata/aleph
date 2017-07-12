@@ -1,19 +1,30 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-// import queryString from 'query-string';
 
 import { fetchMetadata, fetchSession } from '../actions';
+import { Spinner } from "@blueprintjs/core";
+import PageNavbar from '../components/PageNavbar';
 
 class Layout extends Component {
+
   componentWillMount() {
     this.props.fetchMetadata()
     this.props.fetchSession()
   }
 
   render() {
+    var isLoaded = this.props.metadata && this.props.metadata.app && this.props.session;
+    if (!isLoaded) {
+      return (
+        <div>
+          <Spinner className="pt-large"></Spinner>
+        </div>
+      )
+    }
+
     return (
       <div>
-        <h3>Aleph test</h3>
+        <PageNavbar metadata={this.props.metadata} session={this.props.session} />
         {this.props.children}
       </div>
     )
@@ -21,7 +32,7 @@ class Layout extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return ownProps;
+  return state;
 }
 
 Layout = connect(
