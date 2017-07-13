@@ -1,0 +1,16 @@
+filters_not:
+  type: individual
+  type: vessel
+entities:
+  entity:
+    schema: LegalEntity
+    key: id
+    properties:
+      name:
+        column: name
+      program:
+        column: program
+      sourceUrl:
+        column: url
+      summary:
+        column: summary

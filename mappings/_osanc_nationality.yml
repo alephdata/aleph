@@ -1,0 +1,7 @@
+entities:
+  entity:
+    schema: Person
+    key: entity_id
+    properties: 
+      nationality:
+        column: country_code
