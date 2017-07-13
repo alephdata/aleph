@@ -5,7 +5,7 @@ import queryString from 'query-string';
 
 import { fetchSearchResults } from '../actions';
 
-import DocumentList from '../components/DocumentList';
+import SearchResultList from '../components/SearchResultList';
 import Search from '../components/Search';
 
 const SearchWithRouter = withRouter(Search);
@@ -31,7 +31,7 @@ class SearchScreen extends Component {
     return (
       <div>
         <SearchWithRouter />
-        <DocumentList result={this.props.searchResults} />
+        <SearchResultList result={this.props.searchResults} />
       </div>
     )
   }
