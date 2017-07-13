@@ -11,7 +11,7 @@ import es from 'react-intl/locale-data/es';
 import translations from './translations.json';
 
 import store from './store'
-import DocumentsScreen from './screens/DocumentsScreen';
+import SearchScreen from './screens/SearchScreen';
 import ErrorScreen from './screens/ErrorScreen';
 import PageLayout from './screens/PageLayout';
 
@@ -31,8 +31,8 @@ const App = () =>  (
         <PageLayout>
           <Router>
             <Switch>
-              <Redirect exact from="/" to="/documents"/>
-              <Route path="/documents" exact component={DocumentsScreen}/>
+              <Redirect exact from="/" to="/search"/>
+              <Route path="/search" exact component={SearchScreen}/>
               <Route component={ErrorScreen}/>
             </Switch>
           </Router>

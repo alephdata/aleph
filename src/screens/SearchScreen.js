@@ -5,12 +5,12 @@ import queryString from 'query-string';
 
 import { fetchSearchResults } from '../actions';
 
-import DocumentsContainer from '../containers/DocumentsContainer';
+import DocumentList from '../components/DocumentList';
 import Search from '../components/Search';
 
 const SearchWithRouter = withRouter(Search);
 
-class DocumentsScreen extends Component {
+class SearchScreen extends Component {
   componentDidMount() {
     this.fetchData();
   }
@@ -31,23 +31,26 @@ class DocumentsScreen extends Component {
     return (
       <div>
         <SearchWithRouter />
-        <DocumentsContainer />
+        <DocumentList result={this.props.searchResults} />
       </div>
     )
   }
 }
 
-const mapStateToProps = (state, { location }) => {
-  const params = queryString.parse(location.search);
+const mapStateToProps = (state, ownProps) => {
+  const params = queryString.parse(ownProps.location.search);
+
+  console.log(state);
 
   return {
-    query: params
+    query: params,
+    searchResults: state.searchResults
   };
 }
 
-DocumentsScreen = connect(
+SearchScreen = connect(
   mapStateToProps,
   { fetchSearchResults }
-)(DocumentsScreen);
+)(SearchScreen);
 
-export default DocumentsScreen;
+export default SearchScreen;

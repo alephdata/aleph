@@ -8,7 +8,6 @@ const searchResults = (state = initialState, action) => {
     case 'FETCH_SEARCH_REQUEST':
       return { ...state, isFetching: true }
     case 'FETCH_SEARCH_SUCCESS':
-    console.log(action.result);
       return { ...action.result, isFetching: false }
     default:
       return state;
