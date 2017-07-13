@@ -2,11 +2,11 @@ import React from 'react';
 
 import Document from './Document'
 
-const DocumentList = ({ items, isFetching }) => (
+const DocumentList = ({ results, isFetching }) => (
   <div>
     { isFetching && <div className='spinner'>Loading...</div> }
     <ul>
-      {items.map(doc =>
+      {results.map(doc =>
         <Document
           key={doc.id}
           {...doc}

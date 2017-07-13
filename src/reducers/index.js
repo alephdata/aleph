@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux'
 
-import documents from './documents'
+import searchResults from './search'
 import metadata from './metadata'
 import session from './session'
 
 const rootReducer = combineReducers({
-  documents,
+  searchResults,
   metadata,
   session
 })

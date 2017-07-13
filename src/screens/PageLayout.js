@@ -5,7 +5,7 @@ import { fetchMetadata, fetchSession } from '../actions';
 import { Spinner } from "@blueprintjs/core";
 import PageNavbar from '../components/PageNavbar';
 
-class Layout extends Component {
+class PageLayout extends Component {
 
   componentWillMount() {
     this.props.fetchMetadata()
@@ -35,9 +35,9 @@ const mapStateToProps = (state, ownProps) => {
   return state;
 }
 
-Layout = connect(
+PageLayout = connect(
   mapStateToProps,
   { fetchMetadata, fetchSession }
-)(Layout);
+)(PageLayout);
 
-export default Layout;
+export default PageLayout;

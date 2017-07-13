@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import DocumentList from '../components/DocumentList'
 
 const mapStateToProps = (state) => {
-  return state.documents
+  return state.searchResults
 }
 
 const DocumentsContainer = connect(

@@ -13,7 +13,7 @@ import translations from './translations.json';
 import store from './store'
 import DocumentsScreen from './screens/DocumentsScreen';
 import ErrorScreen from './screens/ErrorScreen';
-import Layout from './screens/Layout';
+import PageLayout from './screens/PageLayout';
 
 import './App.css';
 
@@ -24,14 +24,11 @@ FocusStyleManager.onlyShowFocusOnTabs();
 addLocaleData([...en, ...de, ...es, ...ru]);
 
 
-console.log(translations);
-
-
 const App = () =>  (
   <div className="App">
     <Provider store={store}>
       <IntlProvider locale="de" messages={translations.de}>
-        <Layout>
+        <PageLayout>
           <Router>
             <Switch>
               <Redirect exact from="/" to="/documents"/>
@@ -39,7 +36,7 @@ const App = () =>  (
               <Route component={ErrorScreen}/>
             </Switch>
           </Router>
-        </Layout>
+        </PageLayout>
       </IntlProvider>
     </Provider>
   </div>

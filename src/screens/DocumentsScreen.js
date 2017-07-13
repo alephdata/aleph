@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import queryString from 'query-string';
 
-import { fetchDocuments } from '../actions';
+import { fetchSearchResults } from '../actions';
 
 import DocumentsContainer from '../containers/DocumentsContainer';
 import Search from '../components/Search';
@@ -23,8 +23,8 @@ class DocumentsScreen extends Component {
   }
 
   fetchData() {
-    const { query, fetchDocuments } = this.props;
-    fetchDocuments(query);
+    const { query, fetchSearchResults } = this.props;
+    fetchSearchResults(query);
   }
 
   render() {
@@ -47,7 +47,7 @@ const mapStateToProps = (state, { location }) => {
 
 DocumentsScreen = connect(
   mapStateToProps,
-  { fetchDocuments }
+  { fetchSearchResults }
 )(DocumentsScreen);
 
 export default DocumentsScreen;
