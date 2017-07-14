@@ -6,9 +6,8 @@ from aleph.search import CollectionsQuery
 from aleph.index.collections import get_collection_stats
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.collections import process_collection
-from aleph.views.serializers import jsonify, parse_request
 from aleph.views.serializers import CollectionSchema, CollectionIndexSchema
-from aleph.views.util import get_collection, require
+from aleph.views.util import get_collection, require, jsonify, parse_request
 
 blueprint = Blueprint('collections_api', __name__)
 

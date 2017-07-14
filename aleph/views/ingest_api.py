@@ -3,14 +3,13 @@ import json
 from flask import Blueprint, request
 from werkzeug import secure_filename
 from werkzeug.exceptions import BadRequest
-from apikit import obj_or_404, jsonify
 
 from aleph.core import upload_folder
 from aleph.ingest import ingest_document
 from aleph.model import Collection, Document
 from aleph.model.common import make_textid
-from aleph.views.serializers import validate_data, DocumentSchema
-from aleph.views.util import require
+from aleph.views.serializers import DocumentSchema
+from aleph.views.util import require, obj_or_404, jsonify, validate_data
 from aleph.util import checksum
 
 

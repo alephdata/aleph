@@ -8,8 +8,7 @@ from aleph.core import db, url_for, get_config
 from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
-from aleph.views.util import extract_next_url
-from aleph.views.serializers import parse_request, jsonify
+from aleph.views.util import extract_next_url, parse_request, jsonify
 from aleph.views.serializers import RoleSchema, LoginSchema
 
 

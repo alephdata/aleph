@@ -1,16 +1,15 @@
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
-from apikit import obj_or_404
 
 from aleph.core import db, get_config, app_url
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Permission
 from aleph.logic.permissions import update_permission
 from aleph.notify import notify_role_template
-from aleph.views.serializers import jsonify, parse_request
 from aleph.views.serializers import RoleSchema, PermissionSchema
 from aleph.views.serializers import RoleInviteSchema, RoleCreateSchema
-from aleph.views.util import require, get_collection
+from aleph.views.util import require, get_collection, jsonify, parse_request
+from aleph.views.util import obj_or_404
 
 blueprint = Blueprint('roles_api', __name__)
 

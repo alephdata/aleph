@@ -1,6 +1,5 @@
 import six
 import logging
-from apikit import jsonify
 from flask import render_template, Blueprint, request
 from elasticsearch import TransportError
 from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
@@ -9,6 +8,7 @@ from aleph.core import get_config, app_title, app_url, schemata
 from aleph.index.stats import get_instance_stats
 from aleph.schema import SchemaValidationException
 from aleph.views.cache import enable_cache
+from aleph.views.util import jsonify
 
 blueprint = Blueprint('base_api', __name__)
 log = logging.getLogger(__name__)

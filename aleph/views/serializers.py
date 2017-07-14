@@ -1,6 +1,4 @@
-from apikit import jsonify as jsonify_
 from flask import request
-from werkzeug.exceptions import BadRequest
 from dalet import is_country_code, is_language_code, is_partial_date
 from marshmallow import Schema, post_dump
 from marshmallow.fields import Nested, Integer, String, DateTime, List
@@ -264,33 +262,3 @@ class SearchResultSchema(object):
                 return res
             results.append(res.data)
         return results, []
-
-
-def jsonify(obj, schema=None, status=200, **kwargs):
-    """Serialize to JSON and also dump from the given schema."""
-    if schema is not None:
-        obj, _ = schema().dump(obj)
-    return jsonify_(obj, status=status, **kwargs)
-
-
-def validate_data(data, schema):
-    """Validate the data inside a request against a schema."""
-    # from pprint import pprint
-    # pprint(data)
-    data, errors = schema().load(data)
-    if len(errors):
-        raise BadRequest(response=jsonify({
-            'status': 'error',
-            'errors': errors
-        }, status=400))
-
-
-def parse_request(schema=None):
-    """Get request form data or body and validate it against a schema."""
-    if request.is_json:
-        data = request.get_json()
-    else:
-        data = request.form.to_dict(flat=True)
-    if schema is not None:
-        validate_data(data, schema)
-    return data

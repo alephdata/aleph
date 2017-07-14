@@ -5,13 +5,13 @@ import fingerprints
 from pprint import pprint  # noqa
 from urlparse import urljoin
 from flask import Blueprint, request, url_for
-from apikit import jsonify
 from werkzeug.exceptions import BadRequest
 
 from aleph.util import ensure_list
 from aleph.core import app_url, app_title, schemata
 from aleph.search import SearchQueryParser
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
+from aleph.views.util import jsonify
 
 # See: https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API
 
