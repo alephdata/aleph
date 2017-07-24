@@ -78,6 +78,10 @@ DOCUMENT_MAPPING = {
         "languages": {"type": "keyword"},
         "countries": {"type": "keyword"},
         "keywords": {"type": "keyword"},
+        "fingerprints": {"type": "text"},
+        "names": {"type": "text"},
+        "emails": {"type": "keyword"},
+        "phones": {"type": "keyword"},
         "columns": {"type": "keyword"},
         "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
         "author": {"type": "text"},

@@ -2,16 +2,14 @@ from __future__ import absolute_import
 
 import time
 import logging
-import fingerprints
 from pprint import pprint  # noqa
-from normality import ascii_text
 from elasticsearch.helpers import BulkIndexError
 from elasticsearch import TransportError
 
 from aleph.core import es, es_index, schemata
 from aleph.model import Entity
 from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK
-from aleph.index.util import merge_docs, bulk_op, index_form
+from aleph.index.util import merge_docs, bulk_op, index_form, index_names
 from aleph.util import ensure_list
 
 log = logging.getLogger(__name__)
@@ -168,15 +166,7 @@ def finalize_index(data, schema):
                 if norm not in data[invert]:
                     data[invert].append(norm)
 
-    names = data.get('names', [])
-    fps = [fingerprints.generate(name) for name in names]
-    fps = [fp for fp in fps if fp is not None]
-    data['fingerprints'] = list(set(fps))
-
-    # Add latinised names
-    for name in list(names):
-        names.append(ascii_text(name))
-    data['names'] = list(set(names))
+    index_names(data)
 
     # Get implied schemata (i.e. parents of the actual schema)
     data['schema'] = schema.name

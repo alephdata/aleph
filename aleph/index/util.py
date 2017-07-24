@@ -1,7 +1,8 @@
 import six
 import logging
+import fingerprints
 from elasticsearch.helpers import bulk
-from normality import stringify, latinize_text, collapse_spaces
+from normality import stringify, latinize_text, collapse_spaces, ascii_text
 
 from aleph.core import es, es_index
 from aleph.util import is_list, unique_list, remove_nulls
@@ -75,3 +76,16 @@ def index_form(texts):
         total_len += len(latin)
         results.append(latin)
     return results
+
+
+def index_names(data):
+    """Handle entity names on documents and entities."""
+    names = data.get('names', [])
+    fps = [fingerprints.generate(name) for name in names]
+    fps = [fp for fp in fps if fp is not None]
+    data['fingerprints'] = list(set(fps))
+
+    # Add latinised names
+    for name in list(names):
+        names.append(ascii_text(name))
+    data['names'] = list(set(names))

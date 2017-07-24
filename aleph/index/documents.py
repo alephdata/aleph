@@ -1,12 +1,20 @@
 import logging
 
-from aleph.core import celery, es, es_index
-from aleph.model import Document
+from aleph.core import celery, db, es, es_index
+from aleph.model import Document, DocumentTag
+from aleph.schema.types import PhoneProperty, EmailProperty, NameProperty
 from aleph.index.records import index_records, clear_records
 from aleph.index.mapping import TYPE_DOCUMENT
-from aleph.index.util import index_form
+from aleph.index.util import index_form, index_names
 
 log = logging.getLogger(__name__)
+
+TAG_FIELDS = {
+    DocumentTag.TYPE_EMAIL: EmailProperty.index_invert,
+    DocumentTag.TYPE_PHONE: PhoneProperty.index_invert,
+    DocumentTag.TYPE_PERSON: NameProperty.index_invert,
+    DocumentTag.TYPE_ORGANIZATION: NameProperty.index_invert
+}
 
 
 @celery.task()
@@ -68,6 +76,20 @@ def index_document(document):
             'type': document.parent.type,
             'title': document.parent.title,
         }
+
+    q = db.session.query(DocumentTag)
+    q = q.filter(DocumentTag.document_id == document.id)
+    for tag in q.yield_per(5000):
+        field = TAG_FIELDS.get(tag.type)
+        if field is None:
+            log.warning("Cannot index doc tag: %r", tag)
+            continue
+        if field not in data:
+            data[field] = []
+        data[field].append(tag.text)
+        print tag, tag.text, field
+
+    index_names(data)
 
     es.index(index=es_index,
              doc_type=TYPE_DOCUMENT,
