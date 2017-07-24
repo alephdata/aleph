@@ -5,7 +5,7 @@ from aleph.model import DocumentRecord
 from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD  # noqa
 from aleph.index.mapping import TYPE_COLLECTION, TYPE_LINK  # noqa
 from aleph.index.mapping import TYPE_ENTITY, TYPE_LEAD  # noqa
-
+from aleph.index.xref import entity_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.result import SearchQueryResult  # noqa
@@ -39,8 +39,22 @@ class EntityDocumentsQuery(DocumentsQuery):
         if self.entity is None:
             return query
 
+        fingerprints = self.entity.get('fingerprints', [])
+
+        for fp in fingerprints:
+            query['bool']['should'].append({
+                'match': {
+                    'fingerprints': {
+                        'query': fp,
+                        'fuzziness': 2,
+                        'operator': 'and',
+                        'boost': 2.0
+                    }
+                }
+            })
+
         names = self.entity.get('names', [])
-        names.extend(self.entity.get('fingerprints', []))
+        names.extend(fingerprints)
 
         for name in names:
             for field in ['title', 'summary', 'text']:
@@ -105,61 +119,9 @@ class SimilarEntitiesQuery(EntitiesQuery):
         super(SimilarEntitiesQuery, self).__init__(parser)
         self.entity = entity
 
-    def get_multi_match(self, text, fields):
-        return {
-            'multi_match': {
-                "fields": fields,
-                "query": text,
-                "fuzziness": 1,
-                "operator": "AND"
-            }
-        }
-
     def get_query(self):
         query = super(SimilarEntitiesQuery, self).get_query()
-        schema = schemata.get(self.entity.get('schema'))
-        if not schema.fuzzy:
-            return {'match_none': {}}
-
-        required = []
-        # search for fingerprints
-        for fp in self.entity.get('fingerprints', []):
-            required.append(self.get_multi_match(fp, ['fingerprints']))
-
-        if not self.parser.getbool('strict', False):
-            # broaden search to similar names
-            for name in self.entity.get('names', []):
-                required.append(self.get_multi_match(name, ['names', 'text']))
-
-        # make it mandatory to have either a fingerprint or name match
-        query['bool']['must'].append({
-            "bool": {
-                "should": required,
-                "minimum_should_match": 1
-            }
-        })
-
-        # boost by "contributing criteria"
-        for field in ['dates', 'countries', 'addresses', 'schemata']:
-            for val in self.entity.get(field, []):
-                query['bool']['should'].append({
-                    'term': {field: val}
-                })
-
-        # filter types which cannot be resolved via fuzzy matching.
-        query['bool']['must_not'].append([
-            {
-                "ids": {
-                    "values": [self.entity.get('id')]
-                }
-            },
-            {
-                "terms": {
-                    "schema": [s.name for s in schemata if not s.fuzzy]
-                }
-            }
-        ])
-        return query
+        return entity_query(self.entity, query)
 
 
 class SuggestEntitiesQuery(EntitiesQuery):

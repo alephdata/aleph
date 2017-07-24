@@ -93,4 +93,5 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return collection
 
     def __repr__(self):
-        return '<Collection(%r, %r)>' % (self.id, self.label)
+        return '<Collection(%r, %r, %r)>' % \
+            (self.id, self.foreign_id, self.label)
