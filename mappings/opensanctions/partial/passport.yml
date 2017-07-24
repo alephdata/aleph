@@ -9,5 +9,5 @@ entities:
         column: number
       nationality:
         column: country_code
-      summary:
-        column: summary
+      # summary:
+      #   column: summary

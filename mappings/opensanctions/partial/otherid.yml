@@ -9,7 +9,7 @@ entities:
         column: number
       country:
         column: country_code
-      summary:
-        column: summary
-      notes:
-        column: description
+      # summary:
+      #   column: summary
+      # notes:
+      #   column: description

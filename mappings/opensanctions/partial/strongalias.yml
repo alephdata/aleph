@@ -4,8 +4,8 @@ entities:
   entity:
     schema: Entity
     key: entity_id
-    properties: 
+    properties:
       alias:
         column: name
-      notes:
-        column: description
+      # notes:
+      #   column: description

@@ -2,8 +2,8 @@ entities:
   entity:
     schema: Entity
     key: entity_id
-    properties: 
+    properties:
       country:
         column: country_code
-      notes:
-        column: place
+      # notes:
+      #   column: place
