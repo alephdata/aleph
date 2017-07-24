@@ -178,7 +178,7 @@ class CSVQuery(Query):
 
         if res.encoding is None:
             res.encoding = 'utf-8'
-        for row in DictReader(res.iter_lines(decode_unicode=True)):
+        for row in DictReader(res.iter_lines()):
             yield row
 
     def check_filters(self, data):
