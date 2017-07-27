@@ -6,6 +6,7 @@ from sqlalchemy.orm.attributes import flag_modified
 from aleph.core import db
 from aleph.model.metadata import Metadata
 from aleph.model.collection import Collection
+from aleph.model.match import Match
 from aleph.model.common import DatedModel
 from aleph.model.document_record import DocumentRecord
 from aleph.model.document_tag import DocumentTag
@@ -86,8 +87,16 @@ class Document(db.Model, DatedModel, Metadata):
         pq.delete()
         db.session.flush()
 
+    def delete_matches(self):
+        pq = db.session.query(Match)
+        pq = pq.filter(Match.document_id == self.id)
+        pq.delete()
+        db.session.flush()
+
     def delete(self, deleted_at=None):
         self.delete_records()
+        self.delete_tags()
+        self.delete_matches()
         db.session.delete(self)
 
     def insert_records(self, sheet, iterable, chunk_size=1000):

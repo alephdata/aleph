@@ -4,10 +4,10 @@ import logging
 
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Collection, Entity, Alert
-from aleph.index import index_entity, flush_index, delete_entity_leads
+from aleph.index import index_entity, flush_index
 from aleph.index.entities import get_entity
 from aleph.index.collections import index_collection
-from aleph.logic.leads import generate_leads
+# from aleph.logic.xref import xref_item
 
 log = logging.getLogger(__name__)
 
@@ -32,7 +32,6 @@ def update_entity(entity):
 
 def delete_entity(entity, deleted_at=None):
     entity.delete(deleted_at=deleted_at)
-    delete_entity_leads(entity.id)
     update_entity_full(entity.id)
 
 
@@ -41,9 +40,12 @@ def update_entity_full(entity_id):
     """Perform update operations on entities."""
     query = db.session.query(Entity).filter(Entity.id == entity_id)
     entity = query.first()
-    generate_leads(entity.id)
-    index_entity(entity)
+    if entity is None:
+        log.error("No entity with ID: %r", entity_id)
+        return
     Alert.dedupe(entity.id)
+    index_entity(entity)
+    # xref_item(item)
 
 
 @celery.task()

@@ -1,10 +1,12 @@
 import logging
 from datetime import datetime
+from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db
 from aleph.model.role import Role
 from aleph.model.permission import Permission
+from aleph.model.match import Match
 from aleph.model.common import IdModel, make_textid
 from aleph.model.common import SoftDeleteModel
 
@@ -49,6 +51,17 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         db.session.add(self)
         db.session.flush()
         Permission.grant(self.id, role, True, True)
+
+    def delete_matches(self):
+        pq = db.session.query(Match)
+        pq = pq.filter(or_(
+            Match.collection_id == self.id,
+            Match.match_collection_id == self.id))
+        pq.delete(synchronize_session='fetch')
+
+    def delete(self, deleted_at=None):
+        self.delete_matches()
+        super(Collection, self).delete(deleted_at=deleted_at)
 
     def touch(self):
         self.updated_at = datetime.utcnow()

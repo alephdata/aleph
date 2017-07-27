@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 
 from aleph.core import db, schemata
@@ -8,7 +8,7 @@ from aleph.text import match_form, string_value
 from aleph.util import ensure_list
 from aleph.model.collection import Collection
 from aleph.model.permission import Permission
-from aleph.model.entity_identity import EntityIdentity
+from aleph.model.match import Match
 from aleph.model.common import SoftDeleteModel, UuidModel
 from aleph.model.common import make_textid, merge_data
 
@@ -29,14 +29,16 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic'))  # noqa
 
-    def delete_identities(self):
-        pq = db.session.query(EntityIdentity)
-        pq = pq.filter(EntityIdentity.entity_id == self.id)
+    def delete_matches(self):
+        pq = db.session.query(Match)
+        pq = pq.filter(or_(
+            Match.entity_id == self.id,
+            Match.match_id == self.id))
         pq.delete(synchronize_session='fetch')
         db.session.refresh(self)
 
     def delete(self, deleted_at=None):
-        self.delete_identities()
+        self.delete_matches()
         deleted_at = deleted_at or datetime.utcnow()
         for alert in self.alerts:
             alert.delete(deleted_at=deleted_at)

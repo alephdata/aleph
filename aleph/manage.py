@@ -18,6 +18,7 @@ from aleph.logic import reindex_entities, delete_collection, process_collection
 from aleph.logic import update_collection
 from aleph.logic.alerts import check_alerts
 from aleph.logic.bulk import bulk_load
+from aleph.logic.xref import xref_collection
 from aleph.util import load_config_file
 
 
@@ -93,7 +94,16 @@ def process(foreign_id):
     collection = Collection.by_foreign_id(foreign_id)
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
-    process_collection(collection)
+    process_collection(collection.id)
+
+
+@manager.command
+def xref(foreign_id):
+    """Cross-reference all entities and documents in a collection."""
+    collection = Collection.by_foreign_id(foreign_id)
+    if collection is None:
+        raise ValueError("No such collection: %r" % foreign_id)
+    xref_collection(collection)
 
 
 @manager.command
@@ -107,7 +117,7 @@ def index(foreign_id=None):
         if collection is None:
             raise ValueError("No such collection: %r" % foreign_id)
         q = q.filter(Document.collection_id == collection.id)
-    for idx, (doc_id,) in enumerate(q.yield_per(10000), 1):
+    for idx, (doc_id,) in enumerate(q.yield_per(5000), 1):
         index_document_id.delay(doc_id)
         if idx % 1000 == 0:
             log.info("Index: %s documents...", idx)

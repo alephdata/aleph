@@ -9,6 +9,13 @@ log = logging.getLogger(__name__)
 def entity_query(sample, query=None):
     """Given a document or entity in indexed form, build a query that
     will find similar entities based on a variety of criteria."""
+
+    # Do not attempt to find xrefs for entity types such as land, buildings,
+    # etc.
+    schema = schemata.get(sample.get('schema'))
+    if sample.get('schema') != Document.SCHEMA and not schema.fuzzy:
+        return {'match_none': {}}
+
     if query is None:
         query = {
             'bool': {
@@ -18,10 +25,6 @@ def entity_query(sample, query=None):
                 'must_not': []
             }
         }
-    schema = schemata.get(sample.get('schema'))
-    if sample.get('schema') != Document.SCHEMA and not schema.fuzzy:
-        return {'match_none': {}}
-
     required = []
 
     for fp in sample.get('fingerprints', []):
@@ -59,6 +62,10 @@ def entity_query(sample, query=None):
                     }
                 }
             })
+
+    if not len(required):
+        # e.g. a document from which no features have been extracted.
+        return {'match_none': {}}
 
     # make it mandatory to have either a fingerprint or name match
     query['bool']['must'].append({
