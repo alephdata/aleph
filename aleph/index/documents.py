@@ -82,19 +82,20 @@ def index_document(document):
     for tag in q.yield_per(5000):
         field = TAG_FIELDS.get(tag.type)
         if field is None:
-            log.warning("Cannot index doc tag: %r", tag)
+            log.warning("Cannot index document tag: %r", tag)
             continue
         if field not in data:
             data[field] = []
         data[field].append(tag.text)
-        print tag, tag.text, field
 
     index_names(data)
-
     es.index(index=es_index,
              doc_type=TYPE_DOCUMENT,
              body=data,
              id=document.id)
+    data['id'] = document.id
+    data['$type'] = TYPE_DOCUMENT
+    return data
 
 
 def delete_document(document_id):

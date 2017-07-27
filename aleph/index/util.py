@@ -11,6 +11,17 @@ log = logging.getLogger(__name__)
 INDEX_MAX_LEN = 1024 * 1024 * 100
 
 
+def unpack_result(res):
+    if 'found' in res and not res.get('found'):
+        return
+    data = res.get('_source')
+    data['id'] = res.get('_id')
+    data['$type'] = res.get('_type')
+    if '_score' in res:
+        data['$score'] = res.get('_score')
+    return data
+
+
 def bulk_op(iter, chunk_size=500):
     bulk(es, iter, stats_only=True, chunk_size=chunk_size,
          request_timeout=200.0)

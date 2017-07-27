@@ -9,7 +9,8 @@ from elasticsearch import TransportError
 from aleph.core import es, es_index, schemata
 from aleph.model import Entity
 from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK
-from aleph.index.util import merge_docs, bulk_op, index_form, index_names
+from aleph.index.util import merge_docs, bulk_op, index_form
+from aleph.index.util import index_names, unpack_result
 from aleph.util import ensure_list
 
 log = logging.getLogger(__name__)
@@ -53,6 +54,9 @@ def index_entity(entity):
              doc_type=TYPE_ENTITY,
              id=entity.id,
              body=data)
+    data['id'] = entity.id
+    data['$type'] = TYPE_ENTITY
+    return data
 
 
 def get_entity(entity_id):
@@ -61,11 +65,10 @@ def get_entity(entity_id):
                     doc_type=TYPE_ENTITY,
                     id=entity_id,
                     ignore=[404])
-    entity = result.get('_source', {})
-    if result.get('found'):
+    entity = unpack_result(result)
+    if entity is not None:
         entity.pop('text', None)
-        entity['id'] = result.get('_id')
-        return entity
+    return entity
 
 
 def _index_updates(entities, links):
