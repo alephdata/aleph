@@ -4,7 +4,7 @@ import logger from 'redux-logger'
 
 import rootReducer from './reducers'
 
-let store = createStore(
+const store = createStore(
   rootReducer,
   applyMiddleware(
     thunk,

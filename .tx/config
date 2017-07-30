@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[aleph-ui.messagespot]
+file_filter = i18n/translations/<lang>.po
+source_file = i18n/messages.pot
+source_lang = en
+type = PO

@@ -9,7 +9,7 @@ class Search extends Component {
     const params = queryString.parse(props.location.search);
 
     this.state = {
-      searchTerm: params.search || ''
+      searchTerm: params.q || ''
     }
 
     this.onChange = this.onChange.bind(this);
@@ -20,12 +20,12 @@ class Search extends Component {
 
   updateLocation(searchTerm) {
     const { history, location } = this.props;
-    
+
     const params = queryString.parse(location.search);
-    const newParams = { ...params, search: searchTerm };
+    const newParams = { ...params, q: searchTerm };
 
     if (!searchTerm) {
-      delete newParams.search;
+      delete newParams.q;
     }
 
     history.push({
@@ -41,16 +41,21 @@ class Search extends Component {
   }
 
   onChange(e) {
-    this.setState({ 
+    this.setState({
       searchTerm: e.target.value
     });
   }
 
   render() {
     const { searchTerm } = this.state;
-    
+
     return (
-      <input type="text" onChange={this.onChange} value={searchTerm} />
+      <div class="pt-form-group">
+        <div className="pt-input-group">
+          <span className="pt-icon pt-icon-search"></span>
+          <input className="pt-input" type="text" onChange={this.onChange} value={searchTerm} />
+        </div>
+      </div>
     );
   }
 }
