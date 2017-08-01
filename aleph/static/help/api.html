@@ -58,15 +58,41 @@
   such as <code>languages</code>, <code>countries</code>, <code>mime_type</code>
   or <code>extension</code>. This can be specified multiple times for more than one
   facet to be added.</li>
-  <li><code>filter:{field_name}</code>, filter the results by the given field.
-  This is useful when used in conjunction with <code>facet</code> to create a
-  drill-down mechanism.</li>
+  <li>
+    <code>filter:{field_name}</code>, filter the results by the given field.
+    This is useful when used in conjunction with <code>facet</code> to create a
+    drill-down mechanism. Useful fields are:
+    <ul>
+      <li><code>entities.id</code>, documents tagged with a particular entity.</li>
+      <li><code>collection_id</code>, documents belonging to a particular collection
+      .</li>
+      <li><code>title</code>, of the document.</li>
+      <li><code>file_name</code>, of the source file.</li>
+      <li><code>source_url</code>, URL of the source file.</li>
+      <li><code>extension</code>, file extension of the source file.</li>
+      <li><code>languages</code>, in the document.</li>
+      <li><code>countries</code>, associated with the document.</li>
+      <li><code>keywords</code>, from the document.</li>
+      <li><code>emails</code>, email addresses mentioned in the document.</li>
+      <li><code>domains</code>, websites mentioned in the document.</li>
+      <li><code>phone_numbers,</code> mentioned in the document.</li>
+      <li><code>dates</code>, in any of the following formats: <code>yyyy-MM-dd</code>,
+      <code>yyyy-MM</code>, <code>yyyy-MM-d</code>, <code>yyyy-M</code>, <code>yyyy
+      </code></li>
+      <li><code>mime_type</code>, of the source file.</li>
+      <li><code>author</code>, according to the source file's metadata.</li>
+      <li><code>summary</code>, of the document.</li>
+      <li><code>text</code>, entire text extracted from the document.</li>
+      <li><code>created_at</code>, when the document was added to aleph (<code>yyyy-mm
+      -ddThh:ii:ss.uuuuuu</code>).</li>
+      <li><code>updated_at</code>, when the document was modified in aleph (<code>yyyy
+      -mm-ddThh:ii:ss.uuuuuu</code>).</li>
+    </ul>
+  </li>
   <li><code>collection</code>, like <code>facet</code> for entity collections:
   all entities which are tagged in result set documents and part of the given
   collection will be returned. This can be specified multiple times for more
   than one collection to be added.</li>
-  <li><code>entity</code>, given the UUID of a particular entity, return only 
-  documents which have been tagged with it.</li>
   <li><code>limit</code>, the number of results to return, max. 10,000.</li>
   <li><code>offset</code>, the number of results to skip at the beginning of the
   result set.</li>

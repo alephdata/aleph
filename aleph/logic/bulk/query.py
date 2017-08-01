@@ -168,7 +168,7 @@ class CSVQuery(Query):
         if not len(self.csv_urls):
             log.warning("[%s]: no CSV URLs specified", collection.foreign_id)
 
-    def read_csv(self, csv_url):
+    def read_remote_csv(self, csv_url):
         try:
             res = requests.get(csv_url, stream=True)
             res.raise_for_status()
@@ -178,8 +178,20 @@ class CSVQuery(Query):
 
         if res.encoding is None:
             res.encoding = 'utf-8'
-        for row in DictReader(res.iter_lines()):
+        for row in DictReader(res.iter_lines(decode_unicode=False), skipinitialspace=True):
             yield row
+
+    def read_local_csv(self, path):
+        with open(path, "r") as f:
+            for row in DictReader(f, skipinitialspace=True):
+                yield row
+
+    def read_csv(self, csv_url):
+        parsed_url = requests.utils.urlparse(csv_url)
+        if parsed_url.scheme == 'file':
+            return self.read_local_csv(parsed_url.path)
+        else:
+            return self.read_remote_csv(csv_url)
 
     def check_filters(self, data):
         for k, v in self.data.get('filters', {}).items():

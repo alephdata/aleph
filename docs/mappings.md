@@ -80,7 +80,8 @@ A query has the following form:
 
 Note that `-` is interpreted as an item in a list. Tables, keys, joins, and filters can all be referred to in the singular if only one item is needed (i.e. `table: <table name>`) without `-`.
 
-- DATABASE: A database uri.
+- DATABASE: A database uri. Example: `postgresql://user:password@postgres/database`
+- CSV_URL: Alternative to DATABASE. Supported protocols: http, https, file
 - TABLES: A table or list of tables with (optional) aliases.
 - JOINS: Join(s) to perform (note that under the hood, this is a WHERE a = b operation; may change in the future) (optional).
 - FILTERS/FILTERS_NOT: Filter by column values (optional).
