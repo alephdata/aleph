@@ -1,6 +1,6 @@
 from flask import request
 from dalet import is_country_code, is_language_code, is_partial_date
-from marshmallow import Schema, post_dump, pre_dump
+from marshmallow import Schema, post_dump
 from marshmallow.fields import Nested, Integer, String, DateTime, List
 from marshmallow.fields import Raw, Dict, Boolean, Float
 from marshmallow.exceptions import ValidationError
