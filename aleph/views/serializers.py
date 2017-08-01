@@ -1,8 +1,8 @@
 from flask import request
 from dalet import is_country_code, is_language_code, is_partial_date
-from marshmallow import Schema, post_dump
+from marshmallow import Schema, post_dump, pre_dump
 from marshmallow.fields import Nested, Integer, String, DateTime, List
-from marshmallow.fields import Raw, Dict, Boolean
+from marshmallow.fields import Raw, Dict, Boolean, Float
 from marshmallow.exceptions import ValidationError
 from marshmallow.validate import Email, Length
 
@@ -244,6 +244,27 @@ class RecordSchema(Schema):
                                document_id=data.get('document_id'),
                                index=data.get('index'))
         return data
+
+
+class MatchSchema(Schema, DatedSchema):
+    entity_id = String(dump_only=True)
+    document_id = Integer(dump_only=True)
+    collection_id = Integer(dump_only=True)
+    match_collection_id = Integer(dump_only=True)
+    match_id = String(dump_only=True)
+    score = Float(dump_only=True)
+
+
+class MatchCollectionsSchema(Schema, DatedSchema):
+    matches = Integer(dump_only=True)
+    parent = Integer(dump_only=True)
+    collection = Nested(CollectionSchema, required=True)
+
+    @post_dump
+    def transient(self, data):
+        data['$uri'] = url_for('xref_api.matches',
+                               id=data.pop('parent'),
+                               other_id=data.get('collection').get('id'))
 
 
 class SearchResultSchema(object):
