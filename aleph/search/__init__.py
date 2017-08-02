@@ -6,6 +6,7 @@ from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD  # noqa
 from aleph.index.mapping import TYPE_COLLECTION, TYPE_LINK  # noqa
 from aleph.index.mapping import TYPE_ENTITY, TYPE_LEAD  # noqa
 from aleph.index.xref import entity_query
+from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.result import SearchQueryResult  # noqa
@@ -46,9 +47,9 @@ class EntityDocumentsQuery(DocumentsQuery):
                 'match': {
                     'fingerprints': {
                         'query': fp,
-                        'fuzziness': 2,
+                        'fuzziness': 1,
                         'operator': 'and',
-                        'boost': 2.0
+                        'boost': 3.0
                     }
                 }
             })
@@ -196,40 +197,36 @@ class LinksQuery(AuthzQuery):
         return filters
 
 
-class LeadsQueryResult(SearchQueryResult):
-    """Leads only include entity IDs, this will expand them into entities."""
+class MatchQueryResult(DatabaseQueryResult):
+    """Matches only include entity IDs, this will expand them into entities."""
 
-    def __init__(self, request, parser, result):
-        super(LeadsQueryResult, self).__init__(request, parser, result)
-        ids = [res.get('id') for res in self.results]
-        ids = {'ids': list(set(ids))}
+    def __init__(self, request, query, parser=None, schema=None):
+        super(MatchQueryResult, self).__init__(request, query,
+                                               parser=parser,
+                                               schema=schema)
+        ids = set()
+        for match in self.results:
+            ids.add(match.match_id)
+            ids.add(match.entity_id)
+        ids = {'ids': list(ids)}
+
         result = es.mget(index=es_index, doc_type=TYPE_ENTITY, body=ids)
         for doc in result.get('docs', []):
-            if not doc.get('found', False):
+            entity = unpack_result(doc)
+            if entity is None:
                 continue
-            entity = doc.get('_source')
-            entity['id'] = doc.get('_id')
-            for result in self.results:
-                if result.get('match_id') == entity['id']:
-                    result['match'] = entity
-                if result.get('entity_id') == entity['id']:
-                    result['entity'] = entity
+            for match in self.results:
+                if match.match_id == entity['id']:
+                    match.match = entity
+                if match.entity_id == entity['id']:
+                    match.entity = entity
 
-
-class LeadsQuery(AuthzQuery):
-    DOC_TYPES = [TYPE_LEAD]
-    RESULT_CLASS = LeadsQueryResult
-
-    def __init__(self, parser, collection_id=None):
-        super(LinksQuery, self).__init__(parser)
-        self.collection_id = collection_id
-
-    def get_query(self):
-        return {
-            'term': {
-                'entity_collection_id': self.collection_id
-            }
-        }
+        # Do not return results if the entity has been removed in the mean
+        # time. Not sure this is the ideal way of doing this, as it'll mess
+        # with pagination counts etc.
+        for match in list(self.results):
+            if not hasattr(match, 'match') or not hasattr(match, 'entity'):
+                self.results.remove(match)
 
 
 class RecordsQueryResult(SearchQueryResult):

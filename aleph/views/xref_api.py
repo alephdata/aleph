@@ -2,7 +2,7 @@ from flask import Blueprint, request
 
 from aleph.model import Collection, Match
 from aleph.views.util import require, obj_or_404, jsonify
-from aleph.search import QueryParser, DatabaseQueryResult
+from aleph.search import QueryParser, DatabaseQueryResult, MatchQueryResult
 from aleph.views.serializers import MatchSchema, MatchCollectionsSchema
 
 
@@ -15,7 +15,8 @@ def summary(id):
     require(request.authz.can_read(collection.id))
     parser = QueryParser(request.args, request.authz, limit=10)
     q = Match.group_by_collection(collection.id)
-    result = DatabaseQueryResult(request, q, parser=parser,
+    result = DatabaseQueryResult(request, q,
+                                 parser=parser,
                                  schema=MatchCollectionsSchema)
     return jsonify(result)
 
@@ -26,7 +27,8 @@ def matches(id, other_id):
     require(request.authz.can_read(collection.id))
     require(request.authz.can_read(other_id))
     parser = QueryParser(request.args, request.authz, limit=10)
-
     q = Match.find_by_collection(collection.id, other_id)
-    result = DatabaseQueryResult(request, q, parser=parser, schema=MatchSchema)
+    result = MatchQueryResult(request, q,
+                              parser=parser,
+                              schema=MatchSchema)
     return jsonify(result)

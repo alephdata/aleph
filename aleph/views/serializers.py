@@ -247,11 +247,8 @@ class RecordSchema(Schema):
 
 
 class MatchSchema(Schema, DatedSchema):
-    entity_id = String(dump_only=True)
-    document_id = Integer(dump_only=True)
-    collection_id = Integer(dump_only=True)
-    match_collection_id = Integer(dump_only=True)
-    match_id = String(dump_only=True)
+    entity = Nested(EntitySchema, required=True)
+    match = Nested(EntitySchema, required=True)
     score = Float(dump_only=True)
 
 

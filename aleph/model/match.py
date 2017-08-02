@@ -23,10 +23,11 @@ class Match(db.Model, IdModel, DatedModel):
 
     @classmethod
     def find_by_collection(cls, collection_id, other_id):
-        q = cls.all()
-        q = q.filter(cls.collection_id == collection_id)
-        q = q.filter(cls.match_collection_id == other_id)
-        q = q.order_by(cls.score.desc())
+        q = Match.all()
+        q = q.filter(Match.collection_id == collection_id)
+        q = q.filter(Match.document_id == None)  # noqa
+        q = q.filter(Match.match_collection_id == other_id)
+        q = q.order_by(Match.score.desc())
         return q
 
     @classmethod
@@ -37,6 +38,7 @@ class Match(db.Model, IdModel, DatedModel):
         coll = aliased(Collection, name='collection')
         q = db.session.query(cnt, parent)
         q = q.filter(Match.collection_id == collection_id)
+        q = q.filter(Match.document_id == None)  # noqa
         q = q.filter(Match.match_collection_id != collection_id)
         q = q.join(coll, Match.match_collection_id == coll.id)
         q = q.add_entity(coll)
