@@ -68,23 +68,64 @@ def xref_collection(collection):
     db.session.commit()
 
 
-def generate_excel(collection, results):
+def generate_excel(collection, summary, matches):
     output = StringIO.StringIO()
     workbook = xlsxwriter.Workbook(output)
-    worksheet = workbook.add_worksheet('%s Summary' % collection.label)
 
     bold = workbook.add_format({'bold': 1})
+    link_format = workbook.add_format({
+        'font_color': 'blue',
+        'underline': 1
+    })
 
-    worksheet.write(0, 0, 'Collection ID', bold)
-    worksheet.write(0, 1, 'Collection', bold)
-    worksheet.write(0, 2, 'Matches', bold)
+    summary_sheet = workbook.add_worksheet('%s Summary' % collection.label)
+    summary_sheet.write(0, 0, 'Collection', bold)
+    summary_sheet.write(0, 1, 'Matches', bold)
 
     col = 0
-    for row, result in enumerate(results.all()):
+    row = 1
+    for result in summary.all():
+        url = "/collections/%s" % result.collection.id  # TODO: full URL
+        summary_sheet.write_url(
+            row, col, url, link_format, result.collection.label)
+        summary_sheet.write_number(row, col+1, result.matches)
         row += 1
-        worksheet.write_string(row, col, str(result.collection.id))
-        worksheet.write_string(row, col+1, result.collection.label)
-        worksheet.write_number(row, col+2, result.matches)
+
+    details_sheet = workbook.add_worksheet('%s Matches' % collection.label)
+
+    headers = ['Collection', 'Score',
+               'Entity', 'Entity type', 'Entity jurisdiction',
+               'Match', 'Match type', 'Match jurisdiction']
+    for col, header in enumerate(headers):
+        details_sheet.write(0, col, header, bold)
+
+    col = 0
+    row = 1
+    for match in matches:
+        for result in match.results:
+            
+            col_url = "/collections/%s" % result.match['collection_id'] # TODO: full URL
+            ent_url = "/entities/%s" % result.entity_id  # TODO: full URL
+            match_url = "/entities/%s" % result.match_id  # TODO: full URL
+
+            details_sheet.write_url(row, col, col_url, link_format, str(result.match[
+                                    'collection_id']))  # TODO: Collection name
+            details_sheet.write_number(row, col+1, result.score)
+
+            details_sheet.write_url(
+                row, col+2, ent_url, link_format, result.entity['name'])
+            details_sheet.write_string(row, col+3, result.entity['schema'])
+            details_sheet.write_string(row, col+4, ', '.join(result.entity['countries']))
+
+            details_sheet.write_url(
+                row, col+5, match_url, link_format, result.match['name'])
+            details_sheet.write_string(row, col+6, result.match['schema'])
+            try:
+                details_sheet.write_string(row, col+7, ', '.join(result.match['countries']))
+            except KeyError:
+                continue
+
+            row += 1
 
     workbook.close()
     output.seek(0)
