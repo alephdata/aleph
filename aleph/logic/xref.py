@@ -1,6 +1,8 @@
 import logging
 from pprint import pprint  # noqa
 from elasticsearch.helpers import scan
+import xlsxwriter
+import StringIO
 
 from aleph.core import db, es, es_index
 from aleph.model import Match
@@ -64,3 +66,26 @@ def xref_collection(collection):
         if i % 1000 == 0 and i != 0:
             db.session.commit()
     db.session.commit()
+
+
+def generate_excel(collection, results):
+    output = StringIO.StringIO()
+    workbook = xlsxwriter.Workbook(output)
+    worksheet = workbook.add_worksheet('%s Summary' % collection.label)
+
+    bold = workbook.add_format({'bold': 1})
+
+    worksheet.write(0, 0, 'Collection ID', bold)
+    worksheet.write(0, 1, 'Collection', bold)
+    worksheet.write(0, 2, 'Matches', bold)
+
+    col = 0
+    for row, result in enumerate(results.all()):
+        row += 1
+        worksheet.write_string(row, col, str(result.collection.id))
+        worksheet.write_string(row, col+1, result.collection.label)
+        worksheet.write_number(row, col+2, result.matches)
+
+    workbook.close()
+    output.seek(0)
+    return output
