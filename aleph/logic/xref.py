@@ -109,20 +109,22 @@ def generate_excel(collection):
     col = 0
     row = 1
     
+    collection_labels = {}
     for result in q_summary.all():
         url = collection_url(result.collection.id)
         summary_sheet.write_url(
             row, col, url, link_format, result.collection.label)
         summary_sheet.write_number(row, col+1, result.matches)
         row += 1
+        collection_labels[result.collection.id] = result.collection.label
 
     # Write the details worksheet (pairs of matches and scores)
     ws_matches_name = make_excel_safe_name('Matches %s' % collection.label)
     details_sheet = workbook.add_worksheet(ws_matches_name)
 
-    headers = ['Collection', 'Score',
-               'Entity', 'Entity type', 'Entity jurisdiction',
-               'Match', 'Match type', 'Match jurisdiction']
+    headers = ['Score',
+               'Search', 'Searched thing type', 'Searched thing jurisdiction', 'Search source',
+               'Match', 'Match type', 'Match jurisdiction', 'Match collection']
     for col, header in enumerate(headers):
         details_sheet.write(0, col, header, bold)
 
@@ -137,14 +139,13 @@ def generate_excel(collection):
             ent_url = entity_url(result.entity_id)
             match_url = entity_url(result.match_id)
 
-            details_sheet.write_url(row, col, col_url, link_format, str(result.match[
-                                    'collection_id']))  # TODO: Collection name
-            details_sheet.write_number(row, col+1, result.score)
+            details_sheet.write_number(row, col, result.score)
 
             details_sheet.write_url(
-                row, col+2, ent_url, link_format, result.entity['name'])
-            details_sheet.write_string(row, col+3, result.entity['schema'])
-            details_sheet.write_string(row, col+4, ', '.join(result.entity['countries']))
+                row, col+1, ent_url, link_format, result.entity['name'])
+            details_sheet.write_string(row, col+2, result.entity['schema'])
+            details_sheet.write_string(row, col+3, ', '.join(result.entity['countries']))
+            details_sheet.write_string(row, col+4, ', '.join(result.entity['properties']['sourceUrl']))
 
             details_sheet.write_url(
                 row, col+5, match_url, link_format, result.match['name'])
@@ -153,8 +154,14 @@ def generate_excel(collection):
                 details_sheet.write_string(row, col+7, ', '.join(result.match['countries']))
             except KeyError:
                 continue
+            details_sheet.write_url(row, col+8, col_url, link_format, collection_labels[result.match[
+                                    'collection_id']])
 
             row += 1
+
+    summary_sheet.freeze_panes(1, 0)
+    details_sheet.freeze_panes(1, 0)
+    details_sheet.autofilter(0, 0, row, len(headers)-1)
 
     workbook.close()
     output.seek(0)
