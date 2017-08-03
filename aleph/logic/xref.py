@@ -10,6 +10,7 @@ from aleph.model.common import make_ui_url
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.index.xref import entity_query
 from aleph.index.util import unpack_result
+from aleph.views.util import make_excel_safe_name
 
 log = logging.getLogger(__name__)
 
@@ -79,7 +80,8 @@ def generate_excel(collection, summary, matches):
         'underline': 1
     })
 
-    summary_sheet = workbook.add_worksheet('%s Summary' % collection.label)
+    ws_summary_name = make_excel_safe_name('Summary for %s' % collection.label)
+    summary_sheet = workbook.add_worksheet(ws_summary_name)
     summary_sheet.write(0, 0, 'Collection', bold)
     summary_sheet.write(0, 1, 'Matches', bold)
 
@@ -92,7 +94,8 @@ def generate_excel(collection, summary, matches):
         summary_sheet.write_number(row, col+1, result.matches)
         row += 1
 
-    details_sheet = workbook.add_worksheet('%s Matches' % collection.label)
+    ws_matches_name = make_excel_safe_name('Matches for %s' % collection.label)
+    details_sheet = workbook.add_worksheet(ws_matches_name)
 
     headers = ['Collection', 'Score',
                'Entity', 'Entity type', 'Entity jurisdiction',
