@@ -125,8 +125,3 @@ def make_excel(result_iter, fields):
     workbook.close()
     output.seek(0)
     return output
-
-
-def make_excel_safe_name(name):
-    name.replace("_", " ").strip()
-    return name[:30]

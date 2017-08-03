@@ -1,17 +1,19 @@
 import logging
 from pprint import pprint  # noqa
 from elasticsearch.helpers import scan
+from flask import request
 import xlsxwriter
 import StringIO
 
 from aleph.core import db, es, es_index
-from aleph.model import Match
+from aleph.model import Collection, Match
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.index.xref import entity_query
 from aleph.index.util import unpack_result
-from aleph.views.util import make_excel_safe_name
+from aleph.search import QueryParser, MatchQueryResult
+from aleph.views.serializers import MatchSchema
 
 log = logging.getLogger(__name__)
 
@@ -71,7 +73,22 @@ def xref_collection(collection):
     db.session.commit()
 
 
-def generate_excel(collection, summary, matches):
+def get_matched_entities(collection, matches_summary):
+    """ Returns a list of entities from a summary query. """
+    # TODO: Do something about auth here
+    parser = QueryParser(request.args, request.authz, limit=1000)
+    matches = []
+    for match in matches_summary.all():
+        q_match = Match.find_by_collection(collection.id, match.collection.id)
+        results_match = MatchQueryResult(request, q_match,
+                                         parser=parser,
+                                         schema=MatchSchema)
+        matches.append(results_match)
+    return matches
+
+
+def generate_excel(collection):
+
     output = StringIO.StringIO()
     workbook = xlsxwriter.Workbook(output)
 
@@ -81,21 +98,26 @@ def generate_excel(collection, summary, matches):
         'underline': 1
     })
 
-    ws_summary_name = make_excel_safe_name('Summary for %s' % collection.label)
+    # Query for all the collections with matches
+    q_summary = Match.group_by_collection(collection.id)
+
+    # Write the summary worksheet (Collection names and count)
+    ws_summary_name = make_excel_safe_name('Summary %s' % collection.label)
     summary_sheet = workbook.add_worksheet(ws_summary_name)
     summary_sheet.write(0, 0, 'Collection', bold)
     summary_sheet.write(0, 1, 'Matches', bold)
-
     col = 0
     row = 1
-    for result in summary.all():
+    
+    for result in q_summary.all():
         url = collection_url(result.collection.id)
         summary_sheet.write_url(
             row, col, url, link_format, result.collection.label)
         summary_sheet.write_number(row, col+1, result.matches)
         row += 1
 
-    ws_matches_name = make_excel_safe_name('Matches for %s' % collection.label)
+    # Write the details worksheet (pairs of matches and scores)
+    ws_matches_name = make_excel_safe_name('Matches %s' % collection.label)
     details_sheet = workbook.add_worksheet(ws_matches_name)
 
     headers = ['Collection', 'Score',
@@ -106,7 +128,9 @@ def generate_excel(collection, summary, matches):
 
     col = 0
     row = 1
-    for match in matches:
+    # Fetch individual matches from summary results and write them
+    all_matches = get_matched_entities(collection, q_summary)
+    for match in all_matches:
         for result in match.results:
             
             col_url = collection_url(result.match['collection_id'])
@@ -135,3 +159,7 @@ def generate_excel(collection, summary, matches):
     workbook.close()
     output.seek(0)
     return output
+
+def make_excel_safe_name(name):
+    name.replace("_", " ").strip()
+    return name[:30]
