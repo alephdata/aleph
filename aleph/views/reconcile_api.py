@@ -12,15 +12,12 @@ from aleph.core import app_url, app_title, schemata
 from aleph.search import SearchQueryParser
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.views.util import jsonify
+from aleph.logic.entities import entity_url
 
 # See: https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API
 
 blueprint = Blueprint('reconcile_api', __name__)
 log = logging.getLogger(__name__)
-
-
-def entity_link(id):
-    return urljoin(app_url, '/entities/%s' % id)
 
 
 def get_freebase_types():
@@ -62,7 +59,7 @@ def reconcile_op(query):
             'id': doc.get('_id'),
             'name': source.get('name'),
             'score': min(100, doc.get('_score') * 10),
-            'uri': entity_link(doc.get('_id')),
+            'uri': entity_url(doc.get('_id')),
             'match': source.get('name') == name
         }
         for type_ in get_freebase_types():
@@ -85,10 +82,10 @@ def reconcile_index():
         'identifierSpace': 'http://rdf.freebase.com/ns/type.object.id',
         'schemaSpace': 'http://rdf.freebase.com/ns/type.object.id',
         'view': {
-            'url': entity_link('{{id}}')
+            'url': entity_url('{{id}}')
         },
         'preview': {
-            'url': entity_link('{{id}}') + '?api_key=%s' % api_key,
+            'url': entity_url('{{id}}') + '?api_key=%s' % api_key,
             'width': 800,
             'height': 400
         },
