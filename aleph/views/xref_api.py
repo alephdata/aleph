@@ -5,6 +5,7 @@ from aleph.views.util import require, obj_or_404, jsonify
 from aleph.search import QueryParser, DatabaseQueryResult, MatchQueryResult
 from aleph.views.serializers import MatchSchema, MatchCollectionsSchema
 from aleph.logic.xref import generate_excel
+from aleph.text import string_value
 
 
 blueprint = Blueprint('xref_api', __name__)
@@ -54,5 +55,5 @@ def report(id):
         all_matches.append(results_match)
 
     output=generate_excel(collection, q_summary, all_matches)
-    outputfile="%s_xref.xlsx" % collection.label
+    outputfile="%s_xref.xlsx" % string_value(collection.label)
     return send_file(output, attachment_filename = outputfile)
