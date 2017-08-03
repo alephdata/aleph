@@ -6,7 +6,8 @@ import StringIO
 
 from aleph.core import db, es, es_index
 from aleph.model import Match
-from aleph.model.common import make_ui_url
+from aleph.logic.collections import collection_url
+from aleph.logic.entities import entity_url
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.index.xref import entity_query
 from aleph.index.util import unpack_result
@@ -88,7 +89,7 @@ def generate_excel(collection, summary, matches):
     col = 0
     row = 1
     for result in summary.all():
-        url = make_ui_url('collections', result.collection.id)
+        url = collection_url(result.collection.id)
         summary_sheet.write_url(
             row, col, url, link_format, result.collection.label)
         summary_sheet.write_number(row, col+1, result.matches)
@@ -108,9 +109,9 @@ def generate_excel(collection, summary, matches):
     for match in matches:
         for result in match.results:
             
-            col_url = make_ui_url('collections', result.match['collection_id'])
-            ent_url = make_ui_url('entities', result.entity_id)
-            match_url = make_ui_url('entities', result.match_id)
+            col_url = collection_url(result.match['collection_id'])
+            ent_url = entity_url(result.entity_id)
+            match_url = entity_url(result.match_id)
 
             details_sheet.write_url(row, col, col_url, link_format, str(result.match[
                                     'collection_id']))  # TODO: Collection name

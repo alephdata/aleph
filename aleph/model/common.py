@@ -2,7 +2,7 @@ import uuid
 from hashlib import sha1
 from datetime import datetime
 
-from aleph.core import db, app_url
+from aleph.core import db
 from aleph.text import string_value
 
 
@@ -31,13 +31,6 @@ def object_key(obj):
             key.update(v.encode('utf-8'))
 
     return key.hexdigest()
-
-
-def make_ui_url(thing_type, thing_id=None):
-    if thing_id is None:
-        return "%s%s" % (app_url, thing_type)
-    else:
-        return "%s%s/%s" % (app_url, thing_type, thing_id)
 
 
 def merge_data(base, merge):
