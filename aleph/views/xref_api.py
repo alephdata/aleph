@@ -49,11 +49,11 @@ def report(id):
     for result in q_summary.all():
         # TODO: require auth for each match
         q_match = Match.find_by_collection(collection.id, result.collection.id)
-        results_match = MatchQueryResult(request, q_match, 
-                                         parser = parser, 
-                                         schema = MatchSchema)
+        results_match = MatchQueryResult(request, q_match,
+                                         parser=parser,
+                                         schema=MatchSchema)
         all_matches.append(results_match)
 
-    output=generate_excel(collection, q_summary, all_matches)
-    outputfile="%s_xref.xlsx" % string_value(collection.label)
-    return send_file(output, attachment_filename = outputfile)
+    output = generate_excel(collection, q_summary, all_matches)
+    outputfile = "%s_xref.xlsx" % string_value(collection.label)
+    return send_file(output, as_attachment=True, attachment_filename=outputfile)
