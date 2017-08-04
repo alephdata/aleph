@@ -1,8 +1,14 @@
-.App {
+html, body {
+  height: 100%;
+  background: #F6F8FA;
 }
 
 .spinner {
   position: absolute;
   top: 20px;
   left: 40px;
+}
+
+main {
+  padding: 1rem;
 }
