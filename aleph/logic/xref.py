@@ -153,7 +153,7 @@ def generate_excel(collection, authz):
     sheet.freeze_panes(1, 0)
 
     # Query for all the collections with matches
-    collections = Match.group_by_collection(collection.id)
+    collections = Match.group_by_collection(collection.id, authz=authz)
     max_label = 0
     for row, result in enumerate(collections, 1):
         url = collection_url(result.collection.id)

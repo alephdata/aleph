@@ -31,8 +31,8 @@ class Match(db.Model, IdModel, DatedModel):
         return q
 
     @classmethod
-    def group_by_collection(cls, collection_id):
-        from aleph.model import Collection
+    def group_by_collection(cls, collection_id, authz=None):
+        from aleph.model import Collection, Permission
         cnt = func.count(Match.id).label('matches')
         parent = Match.collection_id.label('parent')
         coll = aliased(Collection, name='collection')
@@ -41,6 +41,12 @@ class Match(db.Model, IdModel, DatedModel):
         q = q.filter(Match.document_id == None)  # noqa
         q = q.filter(Match.match_collection_id != collection_id)
         q = q.join(coll, Match.match_collection_id == coll.id)
+        if authz is not None and not authz.is_admin:
+            q = q.join(Permission,
+                       Match.match_collection_id == Permission.collection_id)
+            q = q.filter(Permission.deleted_at == None)  # noqa
+            q = q.filter(Permission.read == True)  # noqa
+            q = q.filter(Permission.role_id.in_(authz.roles))
         q = q.add_entity(coll)
         q = q.group_by(coll, parent)
         q = q.order_by(cnt.desc())

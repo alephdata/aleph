@@ -16,7 +16,7 @@ def summary(id):
     collection = obj_or_404(Collection.by_id(id))
     require(request.authz.can_read(collection.id))
     parser = QueryParser(request.args, request.authz, limit=10)
-    q = Match.group_by_collection(collection.id)
+    q = Match.group_by_collection(collection.id, authz=request.authz)
     result = DatabaseQueryResult(request, q,
                                  parser=parser,
                                  schema=MatchCollectionsSchema)
