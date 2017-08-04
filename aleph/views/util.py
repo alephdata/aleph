@@ -110,6 +110,7 @@ def make_excel(result_iter, fields):
         field = field.replace('_', ' ').capitalize()
         worksheet.write(0, col, field, header)
         col += 1
+
     row = 1
     for data in result_iter:
         col = 0

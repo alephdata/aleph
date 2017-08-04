@@ -13,7 +13,6 @@ blueprint = Blueprint('xref_api', __name__)
 
 @blueprint.route('/api/2/collections/<int:id>/xref')
 def summary(id):
-
     collection = obj_or_404(Collection.by_id(id))
     require(request.authz.can_read(collection.id))
     parser = QueryParser(request.args, request.authz, limit=10)
@@ -41,6 +40,8 @@ def matches(id, other_id):
 def report(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))
     require(request.authz.can_read(collection.id))
-    output = generate_excel(collection)
+    output = generate_excel(collection, request.authz)
     outputfile = "%s_xref.xlsx" % string_value(collection.label)
-    return send_file(output, as_attachment=True, attachment_filename=outputfile)
+    return send_file(output,
+                     as_attachment=True,
+                     attachment_filename=outputfile)
