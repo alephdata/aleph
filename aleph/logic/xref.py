@@ -80,38 +80,37 @@ def make_excel_safe_name(collection):
 
 def generate_matches_sheet(workbook, collection, match_collection, authz):
     from aleph.views.serializers import MatchSchema
-    bold = workbook.add_format({'bold': 1})
-    link_format = workbook.add_format({
-        'font_color': 'blue',
-        'underline': 1
-    })
 
     sheet_name = make_excel_safe_name(match_collection)
     sheet = workbook.add_worksheet(sheet_name)
+    sheet.set_zoom(125)
     parser = QueryParser({}, authz, limit=1000)
     q_match = Match.find_by_collection(collection.id, match_collection.id)
     matches = MatchQueryResult({}, q_match, parser=parser, schema=MatchSchema)
 
-    sheet.write(1, 0, 'Score', bold)
-    sheet.merge_range(0, 1, 0, 4, collection.label, bold)
-    sheet.write(1, 1, 'Name', bold)
-    sheet.write(1, 2, 'Type', bold)
-    sheet.write(1, 3, 'Country', bold)
-    sheet.write(1, 4, 'Source URL', bold)
-    sheet.merge_range(0, 5, 0, 7, match_collection.label, bold)
-    sheet.write(1, 5, 'Name', bold)
-    sheet.write(1, 6, 'Type', bold)
-    sheet.write(1, 7, 'Country', bold)
+    sheet.write(0, 0, '', workbook.header_format)
+    sheet.write(1, 0, 'Score', workbook.header_format)
+    sheet.merge_range(0, 1, 0, 4, collection.label, workbook.header_format)
+    sheet.write(1, 1, 'Name', workbook.header_format)
+    sheet.write(1, 2, 'Type', workbook.header_format)
+    sheet.write(1, 3, 'Country', workbook.header_format)
+    sheet.write(1, 4, 'Source URL', workbook.header_format)
+    sheet.merge_range(0, 5, 0, 7,
+                      match_collection.label,
+                      workbook.header_format)
+    sheet.write(1, 5, 'Name', workbook.header_format)
+    sheet.write(1, 6, 'Type', workbook.header_format)
+    sheet.write(1, 7, 'Country', workbook.header_format)
 
     sheet.freeze_panes(2, 0)
-    sheet.autofilter(1, 1, 2 + len(matches.results), 8)
+    sheet.autofilter(1, 1, 2 + len(matches.results), 7)
     widths = {}
     for row, result in enumerate(matches.results, 2):
         sheet.write_number(row, 0, int(result.score))
         name = result.entity.get('name')
         ent_url = entity_url(result.entity_id)
         widths[1] = max(widths.get(1, 0), len(name))
-        sheet.write_url(row, 1, ent_url, link_format, name)
+        sheet.write_url(row, 1, ent_url, workbook.link_format, name)
         schema = schemata.get(result.entity['schema'])
         sheet.write_string(row, 2, schema.label)
         countries = ', '.join(result.entity.get('countries', []))
@@ -123,7 +122,7 @@ def generate_matches_sheet(workbook, collection, match_collection, authz):
         name = result.match.get('name')
         match_url = entity_url(result.match_id)
         widths[5] = max(widths.get(5, 0), len(name))
-        sheet.write_url(row, 5, match_url, link_format, name)
+        sheet.write_url(row, 5, match_url, workbook.link_format, name)
         schema = schemata.get(result.match['schema'])
         sheet.write_string(row, 6, schema.label)
         countries = ', '.join(result.match.get('countries', []))
@@ -139,25 +138,34 @@ def generate_matches_sheet(workbook, collection, match_collection, authz):
 def generate_excel(collection, authz):
     output = StringIO.StringIO()
     workbook = xlsxwriter.Workbook(output)
-    link_format = workbook.add_format({
+    workbook.link_format = workbook.add_format({
         'font_color': 'blue',
-        'underline': 1
+        'underline': False
+    })
+    workbook.header_format = workbook.add_format({
+        'font_color': 'white',
+        'fg_color': '#982022',
+        'bold': True
     })
 
     # Write the summary worksheet (Collection names and count)
     sheet = workbook.add_worksheet('Summary')
-    bold = workbook.add_format({'bold': 1})
-    sheet.write(0, 0, 'Collection', bold)
-    sheet.write(0, 1, 'Matches', bold)
-    sheet.write(0, 2, 'Details', bold)
+    sheet.set_zoom(125)
+    title = 'Cross-referencing: %s' % collection.label
+    sheet.merge_range(0, 0, 0, 2, title, workbook.header_format)
+    sheet.write(1, 0, 'Collection', workbook.header_format)
+    sheet.write(1, 1, 'Matches', workbook.header_format)
+    sheet.write(1, 2, 'Details', workbook.header_format)
+    sheet.set_column(2, 2, 20)
     sheet.freeze_panes(1, 0)
 
     # Query for all the collections with matches
     collections = Match.group_by_collection(collection.id, authz=authz)
-    max_label = 0
-    for row, result in enumerate(collections, 1):
+    max_label = 70
+    for row, result in enumerate(collections, 2):
         url = collection_url(result.collection.id)
-        sheet.write_url(row, 0, url, link_format, result.collection.label)
+        sheet.write_url(row, 0, url, workbook.link_format,
+                        result.collection.label)
         max_label = max(max_label, len(result.collection.label))
         sheet.set_column(0, 0, float(max_label))
         sheet.write_number(row, 1, result.matches)
@@ -166,7 +174,7 @@ def generate_excel(collection, authz):
                                       result.collection,
                                       authz)
         url = "internal:'%s'!B3" % name
-        sheet.write_url(row, 2, url, link_format, 'See matches')
+        sheet.write_url(row, 2, url, workbook.link_format, 'See matches')
 
     workbook.close()
     output.seek(0)
