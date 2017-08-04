@@ -1,5 +1,3 @@
-import json
-
 from aleph.core import db
 from aleph.model import Collection, Entity, Permission, Role
 from aleph.index import index_entity, flush_index
@@ -23,7 +21,7 @@ class XrefApiTestCase(TestCase):
         db.session.add(self.residents)
         db.session.flush()
         Permission.grant(self.residents.id, self.guest, True, False)
-        
+
         self.ent = Entity.create({
             'schema': 'Person',
             'name': 'Garak',
@@ -44,7 +42,7 @@ class XrefApiTestCase(TestCase):
         db.session.add(self.dabo)
         db.session.flush()
         Permission.grant(self.dabo.id, self.guest, True, False)
-        
+
         self.ent3 = Entity.create({
             'schema': 'Person',
             'name': 'MPella',
@@ -71,7 +69,7 @@ class XrefApiTestCase(TestCase):
         }, role=self.creator)
         db.session.add(self.obsidian)
         db.session.flush()
-        
+
         self.ent6 = Entity.create({
             'schema': 'Person',
             'name': 'Elim Garak',
@@ -97,7 +95,6 @@ class XrefApiTestCase(TestCase):
         xref_collection(self.residents)
 
     def test_summary(self):
-
         res = self.client.get('/api/2/collections/%s' % self.obsidian.id)
         assert res.status_code == 403, res
 
@@ -105,56 +102,57 @@ class XrefApiTestCase(TestCase):
         res = self.client.get('/api/2/collections/%s/xref' % self.residents.id)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
-        assert 'Obsidian Order' not in res.json['results'][0]['collection']['label'], res.json
-        assert 'Dabo Girls' in res.json['results'][0]['collection']['label'], res.json
+        coll0 = res.json['results'][0]['collection']
+        assert 'Obsidian Order' not in coll0['label'], res.json
+        assert 'Dabo Girls' in coll0['label'], res.json
 
         # Logged in as outsider (restricted access)
-        self.login('outsider')
+        self.login(foreign_id='outsider')
         res = self.client.get('/api/2/collections/%s/xref' % self.residents.id)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
-        assert 'Obsidian Order' not in res.json['results'][0]['collection']['label'], res.json
-        assert 'Dabo Girls' in res.json['results'][0]['collection']['label'], res.json
+        coll0 = res.json['results'][0]['collection']
+        assert 'Obsidian Order' not in coll0['label'], res.json
+        assert 'Dabo Girls' in coll0['label'], res.json
 
         # Logged in as creator (all access)
-        self.login('creator')
+        self.login(foreign_id='creator')
         res = self.client.get('/api/2/collections/%s/xref' % self.residents.id)
         assert res.status_code == 200, res
         assert res.json['total'] == 2, res.json
-        assert 'Obsidian Order' in res.json['results'][0]['collection']['label'], res.json
-        assert 'Dabo Girls' in res.json['results'][0]['collection']['label'], res.json
-        
+        labels = [m['collection']['label'] for m in res.json['results']]
+        assert 'Obsidian Order' in labels, res.json
+        assert 'Dabo Girls' in labels, res.json
 
     def test_matches(self):
-
         # Not logged in
         match_dabo = self.client.get('/api/2/collections/%s/xref/%s' %
-                              (self.residents.id, self.dabo.id))
+                                     (self.residents.id, self.dabo.id))
         assert match_dabo.status_code == 200, match_dabo
         assert match_dabo.json['total'] == 1, match_dabo.json
         assert 'Leeta' in match_dabo.json['results'][0]['entity']['name']
         assert 'Garak' not in match_dabo.json['results'][0]['entity']['name']
         assert 'Tain' not in match_dabo.json['results'][0]['match']['name']
         assert 'MPella' not in match_dabo.json['results'][0]['match']['name']
-        
+
         match_obsidian = self.client.get('/api/2/collections/%s/xref/%s' %
-                              (self.residents.id, self.obsidian.id))
+                                         (self.residents.id, self.obsidian.id))
         assert match_obsidian.status_code == 403, match_obsidian
 
         # Logged in as outsider (restricted)
         self.login('outsider')
-        
+
         match_dabo = self.client.get('/api/2/collections/%s/xref/%s' %
-                              (self.residents.id, self.dabo.id))
+                                     (self.residents.id, self.dabo.id))
         assert match_dabo.status_code == 200, match_dabo
         assert match_dabo.json['total'] == 1, match_dabo.json
         assert 'Leeta' in match_dabo.json['results'][0]['entity']['name']
         assert 'Garak' not in match_dabo.json['results'][0]['entity']['name']
         assert 'Tain' not in match_dabo.json['results'][0]['match']['name']
         assert 'MPella' not in match_dabo.json['results'][0]['match']['name']
-        
+
         match_obsidian = self.client.get('/api/2/collections/%s/xref/%s' %
-                              (self.residents.id, self.obsidian.id))
+                                         (self.residents.id, self.obsidian.id))
         assert match_obsidian.status_code == 403, match_obsidian
 
         # Logged in as creator (all access)
@@ -168,7 +166,7 @@ class XrefApiTestCase(TestCase):
         assert 'Garak' not in match_dabo.json['results'][0]['entity']['name']
         assert 'Tain' not in match_dabo.json['results'][0]['match']['name']
         assert 'MPella' not in match_dabo.json['results'][0]['match']['name']
-        
+
         match_obsidian = self.client.get('/api/2/collections/%s/xref/%s' %
                               (self.residents.id, self.obsidian.id))
         assert match_obsidian.status_code == 200, match_obsidian
