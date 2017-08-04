@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Route, Switch, Redirect} from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 import {connect} from 'react-redux'
 
 import {fetchMetadata, fetchSession} from '../actions';
@@ -7,6 +7,7 @@ import {Spinner} from "@blueprintjs/core";
 import PageNavbar from '../components/PageNavbar';
 
 import SearchScreen from './SearchScreen';
+import LoginScreen from "./LoginScreen";
 import ErrorScreen from './ErrorScreen';
 
 class PageLayout extends Component {
@@ -33,6 +34,7 @@ class PageLayout extends Component {
           <Switch>
             <Redirect exact from="/" to="/search"/>
             <Route path="/search" exact component={SearchScreen}/>
+            <Route path="/login" exact component={LoginScreen}/>
             <Route component={ErrorScreen}/>
           </Switch>
         </main>

@@ -1,1 +1,32 @@
-{"de":{"nav.home":"Zuhause","nav.documents":"Dokumente"},"es":{"nav.home":"","nav.documents":""},"ru":{"nav.home":"","nav.documents":""}}
+{
+  "de": {
+    "nav.logoff": "",
+    "nav.login": "",
+    "nav.home": "Zuhause",
+    "nav.documents": "Dokumente",
+    "login.email": "",
+    "login.password": "",
+    "login.submit": "",
+    "login.provider": ""
+  },
+  "es": {
+    "nav.logoff": "",
+    "nav.login": "",
+    "nav.home": "",
+    "nav.documents": "",
+    "login.email": "",
+    "login.password": "",
+    "login.submit": "",
+    "login.provider": ""
+  },
+  "ru": {
+    "nav.logoff": "",
+    "nav.login": "",
+    "nav.home": "",
+    "nav.documents": "",
+    "login.email": "",
+    "login.password": "",
+    "login.submit": "",
+    "login.provider": ""
+  }
+}
