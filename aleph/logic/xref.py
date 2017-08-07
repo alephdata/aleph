@@ -63,7 +63,9 @@ def xref_collection(collection):
     scanner = scan(es,
                    index=es_index,
                    doc_type=[TYPE_ENTITY, TYPE_DOCUMENT],
-                   query=query)
+                   query=query,
+                   scroll='15m',
+                   size=1000)
     for i, res in enumerate(scanner):
         xref_item(unpack_result(res))
         if i % 1000 == 0 and i != 0:
