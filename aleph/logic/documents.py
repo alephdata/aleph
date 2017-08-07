@@ -1,19 +1,15 @@
 import logging
-from urlparse import urljoin
 
-from aleph.core import app_url, USER_QUEUE, USER_ROUTING_KEY
+from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.index import documents as index
 from aleph.analyze import analyze_document_id
+from aleph.logic.util import ui_url
 
 log = logging.getLogger(__name__)
 
 
-def document_url(document_id=None):
-    path = "documents"
-    if document_id is None:
-        return urljoin(app_url, path)
-    else:
-        return urljoin(app_url, "%s/%s" % (path, document_id))
+def document_url(document_id=None, **query):
+    return ui_url('documents', id=document_id, **query)
 
 
 def update_document(document):

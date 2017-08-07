@@ -8,6 +8,9 @@ from marshmallow.validate import Email, Length
 
 from aleph.core import url_for, get_config, schemata
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
+from aleph.logic.collections import collection_url
+from aleph.logic.entities import entity_url
+from aleph.logic.documents import document_url
 from aleph.model import Role
 from aleph.util import ensure_list
 
@@ -140,6 +143,7 @@ class CollectionSchema(Schema, DatedSchema):
     @post_dump
     def transient(self, data):
         data['$uri'] = url_for('collections_api.view', id=data.get('id'))
+        data['$ui'] = collection_url(data.get('id'))
         data['$writeable'] = request.authz.can_write(data.get('id'))
         return data
 
@@ -171,6 +175,7 @@ class EntitySchema(Schema, DatedSchema):
     @post_dump
     def transient(self, data):
         data['$uri'] = url_for('entities_api.view', id=data.get('id'))
+        data['$ui'] = entity_url(data.get('id'))
         if data.get('$bulk'):
             data['$writeable'] = False
         else:
@@ -226,6 +231,7 @@ class DocumentSchema(Schema, DatedSchema):
     def transient(self, data):
         data['$uri'] = url_for('documents_api.view',
                                document_id=data.get('id'))
+        data['$ui'] = document_url(data.get('id'))
         collection_id = data.get('collection_id')
         data['$writeable'] = request.authz.can_write(collection_id)
         return data

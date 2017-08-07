@@ -1,6 +1,5 @@
 import logging
 from pprint import pprint  # noqa
-from urllib import quote_plus
 from flask import render_template, current_app
 
 from aleph.authz import Authz
@@ -8,6 +7,7 @@ from aleph.core import app_title, app_url, db, celery
 from aleph.model import Role, Alert, Collection
 from aleph.notify import notify_role
 from aleph.index.entities import get_entity
+from aleph.index.util import unpack_result
 from aleph.search import AlertDocumentsQuery, SearchQueryParser
 from aleph.logic.documents import document_url
 
@@ -25,14 +25,11 @@ def check_alerts():
 
 
 def format_results(alert, results):
-    dq = alert.query_text or ''
-    qs = 'dq=%s' % quote_plus(dq.encode('utf-8'))
     output = []
     for result in results.get('hits', []):
-        document = result.pop('_source')
-        document['id'] = result.pop('_id')
+        document = unpack_result(result)
         # generate document URL:
-        document['url'] = '%s?%s' % (document_url(document['id']), qs)
+        document['url'] = document_url(document['id'], dq=alert.query_text)
         collection = Collection.by_id(document.pop('collection_id'))
         if not collection:
             continue

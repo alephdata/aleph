@@ -1,14 +1,13 @@
 from __future__ import absolute_import
 
 import logging
-from urlparse import urljoin
 
-from aleph.core import db, celery, app_url, USER_QUEUE, USER_ROUTING_KEY
+from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Collection, Entity, Alert
 from aleph.index import index_entity, flush_index
 from aleph.index.entities import get_entity
 from aleph.index.collections import index_collection
-# from aleph.logic.xref import xref_item
+from aleph.logic.util import ui_url
 
 log = logging.getLogger(__name__)
 
@@ -22,12 +21,8 @@ def fetch_entity(entity_id):
     return entity, obj
 
 
-def entity_url(entity_id=None):
-    path = "entities"
-    if entity_id is None:
-        return urljoin(app_url, path)
-    else:
-        return urljoin(app_url, "%s/%s" % (path, entity_id))
+def entity_url(entity_id=None, **query):
+    return ui_url('entities', id=entity_id, **query)
 
 
 def update_entity(entity):

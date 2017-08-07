@@ -1,6 +1,7 @@
 # coding: utf-8
 import six
 import logging
+from urllib import urlencode
 from normality import normalize, stringify
 from normality import slugify  # noqa
 from normality.cleaning import remove_control_chars
@@ -24,10 +25,17 @@ def string_value(value, encoding=None):
     return value
 
 
-def encoded_value(text):
-    if isinstance(text, six.binary_type):
-        return text
-    return six.text_type(text).encode('utf-8')
+def query_string(items):
+    query = []
+    for (field, value) in items:
+        value = stringify(value)
+        if value is None:
+            continue
+        value = value.encode('utf-8')
+        query.append((field, value))
+    if not len(query):
+        return ''
+    return '?' + urlencode(query)
 
 
 def has_value(value):

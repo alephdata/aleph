@@ -1,7 +1,7 @@
 import six
 import math
-from urllib import urlencode
 
+from aleph.text import query_string
 from aleph.search.parser import QueryParser
 from aleph.search.facet import CategoryFacet, CollectionFacet, CountryFacet
 from aleph.search.facet import LanguageFacet, SchemaFacet, Facet
@@ -29,8 +29,7 @@ class QueryResult(object):
         offset = (page - 1) * self.parser.limit
         args = [('offset', six.text_type(offset))]
         args.extend(self.parser.items)
-        args = [(k, v.encode('utf-8')) for (k, v) in args]
-        return self.request.base_url + '?' + urlencode(args)
+        return self.request.base_url + query_string(args)
 
     def to_dict(self):
         results = list(self.results)

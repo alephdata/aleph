@@ -1,24 +1,20 @@
 import logging
 from datetime import datetime
-from urlparse import urljoin
 
-from aleph.core import db, celery, app_url
+from aleph.core import db, celery
 from aleph.ingest import ingest
 from aleph.model import Collection, Document, Entity
 from aleph.index.collections import delete_collection as index_delete
 from aleph.index.collections import index_collection
 from aleph.logic.entities import delete_entity, update_entity_full
 from aleph.logic.documents import delete_document
+from aleph.logic.util import ui_url
 
 log = logging.getLogger(__name__)
 
 
-def collection_url(collection_id=None):
-    path = "collections"
-    if collection_id is None:
-        return urljoin(app_url, path)
-    else:
-        return urljoin(app_url, "%s/%s" % (path, collection_id))
+def collection_url(collection_id=None, **query):
+    return ui_url('collections', id=collection_id, **query)
 
 
 def update_collection(collection):
