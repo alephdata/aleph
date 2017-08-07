@@ -1,4 +1,5 @@
 from flask import Blueprint, request, send_file
+from apikit import arg_bool
 
 from aleph.model import Collection, Match
 from aleph.views.util import require, obj_or_404, jsonify
@@ -40,7 +41,9 @@ def matches(id, other_id):
 def report(collection_id):
     collection = obj_or_404(Collection.by_id(collection_id))
     require(request.authz.can_read(collection.id))
-    output = generate_excel(collection, request.authz)
+    output = generate_excel(collection,
+                            request.authz,
+                            links=arg_bool('links'))
     outputfile = "%s_xref.xlsx" % string_value(collection.label)
     return send_file(output,
                      as_attachment=True,

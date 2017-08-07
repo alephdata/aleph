@@ -80,7 +80,8 @@ def make_excel_safe_name(collection):
     return name[:30]
 
 
-def generate_matches_sheet(workbook, collection, match_collection, authz):
+def generate_matches_sheet(workbook, collection, match_collection, authz,
+                           links=True):
     from aleph.views.serializers import MatchSchema
 
     sheet_name = make_excel_safe_name(match_collection)
@@ -110,24 +111,30 @@ def generate_matches_sheet(workbook, collection, match_collection, authz):
     for row, result in enumerate(matches.results, 2):
         sheet.write_number(row, 0, int(result.score))
         name = result.entity.get('name')
-        ent_url = entity_url(result.entity_id)
         widths[1] = max(widths.get(1, 0), len(name))
-        sheet.write_url(row, 1, ent_url, workbook.link_format, name)
+        if links:
+            url = entity_url(result.entity_id)
+            sheet.write_url(row, 1, url, workbook.link_format, name)
+        else:
+            sheet.write_string(row, 1, name)
         schema = schemata.get(result.entity['schema'])
         sheet.write_string(row, 2, schema.label)
-        countries = ', '.join(result.entity.get('countries', []))
+        countries = ', '.join(sorted(result.entity.get('countries', [])))
         sheet.write_string(row, 3, countries.upper())
         ent_props = result.entity.get('properties', {})
         source_url = ', '.join(ent_props.get('sourceUrl'))
         sheet.write_string(row, 4, source_url)
 
         name = result.match.get('name')
-        match_url = entity_url(result.match_id)
         widths[5] = max(widths.get(5, 0), len(name))
-        sheet.write_url(row, 5, match_url, workbook.link_format, name)
+        if links:
+            url = entity_url(result.match_id)
+            sheet.write_url(row, 5, url, workbook.link_format, name)
+        else:
+            sheet.write_string(row, 5, name)
         schema = schemata.get(result.match['schema'])
         sheet.write_string(row, 6, schema.label)
-        countries = ', '.join(result.match.get('countries', []))
+        countries = ', '.join(sorted(result.match.get('countries', [])))
         sheet.write_string(row, 7, countries.upper())
 
     for idx, max_len in widths.items():
@@ -137,12 +144,12 @@ def generate_matches_sheet(workbook, collection, match_collection, authz):
     return sheet_name
 
 
-def generate_excel(collection, authz):
+def generate_excel(collection, authz, links=True):
     output = StringIO.StringIO()
     workbook = xlsxwriter.Workbook(output)
     workbook.link_format = workbook.add_format({
         'font_color': 'blue',
-        'underline': False
+        'underline': True
     })
     workbook.header_format = workbook.add_format({
         'font_color': 'white',
@@ -165,16 +172,20 @@ def generate_excel(collection, authz):
     collections = Match.group_by_collection(collection.id, authz=authz)
     max_label = 70
     for row, result in enumerate(collections, 2):
-        url = collection_url(result.collection.id)
-        sheet.write_url(row, 0, url, workbook.link_format,
-                        result.collection.label)
+        if links:
+            url = collection_url(result.collection.id)
+            sheet.write_url(row, 0, url, workbook.link_format,
+                            result.collection.label)
+        else:
+            sheet.write_string(row, 0, result.collection.label)
         max_label = max(max_label, len(result.collection.label))
         sheet.set_column(0, 0, float(max_label))
         sheet.write_number(row, 1, result.matches)
         name = generate_matches_sheet(workbook,
                                       collection,
                                       result.collection,
-                                      authz)
+                                      authz,
+                                      links=links)
         url = "internal:'%s'!B3" % name
         sheet.write_url(row, 2, url, workbook.link_format, 'See matches')
 

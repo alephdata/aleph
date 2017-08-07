@@ -9,6 +9,7 @@ from aleph.model import Role, Alert, Collection
 from aleph.notify import notify_role
 from aleph.index.entities import get_entity
 from aleph.search import AlertDocumentsQuery, SearchQueryParser
+from aleph.logic.documents import document_url
 
 log = logging.getLogger(__name__)
 
@@ -31,8 +32,7 @@ def format_results(alert, results):
         document = result.pop('_source')
         document['id'] = result.pop('_id')
         # generate document URL:
-        document['url'] = '%sdocuments/%s?%s' % (app_url, document['id'], qs)
-
+        document['url'] = '%s?%s' % (document_url(document['id']), qs)
         collection = Collection.by_id(document.pop('collection_id'))
         if not collection:
             continue
