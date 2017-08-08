@@ -1,4 +1,5 @@
 import logging
+from urlparse import urldefrag
 from flask import session, Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
 from werkzeug.exceptions import Unauthorized
@@ -86,7 +87,6 @@ def password_login():
         return Unauthorized("Authentication has failed.")
 
     session['user'] = role.id
-    session['next_url'] = extract_next_url(request)
     request.authz = Authz(role=role)
     return status()
 
@@ -103,8 +103,9 @@ def login(provider=None):
     if not oauth_provider:
         abort(404)
 
-    session['next_url'] = extract_next_url(request)
-    callback_url = url_for('.callback', provider=provider)
+    callback_url = url_for('.callback',
+                           provider=provider,
+                           next=extract_next_url(request))
     return oauth_provider.authorize(callback=callback_url)
 
 
@@ -120,7 +121,6 @@ def callback(provider):
     if not oauth_provider:
         abort(404)
 
-    next_url = session.pop('next_url', '/')
     resp = oauth_provider.authorized_response()
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)
@@ -134,6 +134,10 @@ def callback(provider):
             continue
         session['user'] = role.id
         log.info("Logged in: %r", role)
+        next_url = extract_next_url(request)
+        next_url, _ = urldefrag(next_url)
+        # TODO: make this a token?
+        next_url = '%s#api_key=%s' % (next_url, role.api_key)
         return redirect(next_url)
 
     log.error("No OAuth handler for %r was installed.", provider)
