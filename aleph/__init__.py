@@ -1,4 +1,3 @@
-import os
 import logging
 import warnings
 import requests
@@ -39,9 +38,3 @@ logging.getLogger('factory').setLevel(logging.WARNING)
 
 # Log all SQL statements:
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
-
-# default locale settings for subprocess commands.
-os.environ['LC_ALL'] = 'en_US'
-os.environ['LC_LANG'] = 'en_US'
-os.environ['LC_CTYPE'] = 'en_US'
-os.environ['LANG'] = 'en_US'
