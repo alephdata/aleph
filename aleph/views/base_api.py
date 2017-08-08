@@ -4,9 +4,10 @@ from flask import render_template, Blueprint, request
 from elasticsearch import TransportError
 from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 
-from aleph.core import get_config, app_title, app_url, schemata
+from aleph.core import get_config, app_title, app_url, schemata, url_for
 from aleph.index.stats import get_instance_stats
 from aleph.schema import SchemaValidationException
+from aleph.oauth import oauth
 from aleph.views.cache import enable_cache
 from aleph.views.util import jsonify
 
@@ -36,6 +37,24 @@ def ui(**kwargs):
 @blueprint.route('/api/2/metadata')
 def metadata():
     enable_cache(vary_user=False)
+    providers = []
+    for provider in oauth.remote_apps.values():
+        providers.append({
+            'name': provider.name,
+            'label': provider.label,
+            'login': url_for('sessions_api.login', provider=provider.name),
+        })
+
+    auth = {
+        'password_login': get_config('PASSWORD_LOGIN'),
+        'oauth': providers
+    }
+
+    if auth['password_login']:
+        auth['registration'] = get_config('PASSWORD_REGISTRATION')
+        auth['password_login_uri'] = url_for('sessions_api.password_login')
+        auth['registration_uri'] = url_for('roles_api.invite_email')
+
     return jsonify({
         'status': 'ok',
         'maintenance': request.authz.in_maintenance,
@@ -47,7 +66,8 @@ def metadata():
         'categories': get_config('COLLECTION_CATEGORIES', {}),
         'countries': COUNTRY_NAMES,
         'languages': LANGUAGE_NAMES,
-        'schemata': schemata
+        'schemata': schemata,
+        'auth': auth
     })
 
 

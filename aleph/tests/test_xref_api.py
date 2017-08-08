@@ -107,8 +107,9 @@ class XrefApiTestCase(TestCase):
         assert 'Dabo Girls' in coll0['label'], res.json
 
         # Logged in as outsider (restricted access)
-        self.login(foreign_id='outsider')
-        res = self.client.get('/api/2/collections/%s/xref' % self.residents.id)
+        _, headers = self.login(foreign_id='outsider')
+        res = self.client.get('/api/2/collections/%s/xref' % self.residents.id,
+                              headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         coll0 = res.json['results'][0]['collection']
@@ -116,8 +117,9 @@ class XrefApiTestCase(TestCase):
         assert 'Dabo Girls' in coll0['label'], res.json
 
         # Logged in as creator (all access)
-        self.login(foreign_id='creator')
-        res = self.client.get('/api/2/collections/%s/xref' % self.residents.id)
+        _, headers = self.login(foreign_id='creator')
+        res = self.client.get('/api/2/collections/%s/xref' % self.residents.id,
+                              headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 2, res.json
         labels = [m['collection']['label'] for m in res.json['results']]
@@ -140,10 +142,11 @@ class XrefApiTestCase(TestCase):
         assert match_obsidian.status_code == 403, match_obsidian
 
         # Logged in as outsider (restricted)
-        self.login('outsider')
+        _, headers = self.login('outsider')
 
         match_dabo = self.client.get('/api/2/collections/%s/xref/%s' %
-                                     (self.residents.id, self.dabo.id))
+                                     (self.residents.id, self.dabo.id),
+                                     headers=headers)
         assert match_dabo.status_code == 200, match_dabo
         assert match_dabo.json['total'] == 1, match_dabo.json
         assert 'Leeta' in match_dabo.json['results'][0]['entity']['name']
@@ -152,14 +155,16 @@ class XrefApiTestCase(TestCase):
         assert 'MPella' not in match_dabo.json['results'][0]['match']['name']
 
         match_obsidian = self.client.get('/api/2/collections/%s/xref/%s' %
-                                         (self.residents.id, self.obsidian.id))
+                                         (self.residents.id, self.obsidian.id),
+                                         headers=headers)
         assert match_obsidian.status_code == 403, match_obsidian
 
         # Logged in as creator (all access)
-        self.login('creator')
+        _, headers = self.login('creator')
 
         match_dabo = self.client.get('/api/2/collections/%s/xref/%s' %
-                              (self.residents.id, self.dabo.id))
+                                     (self.residents.id, self.dabo.id),
+                                     headers=headers)
         assert match_dabo.status_code == 200, match_dabo
         assert match_dabo.json['total'] == 1, match_dabo.json
         assert 'Leeta' in match_dabo.json['results'][0]['entity']['name']
@@ -168,10 +173,11 @@ class XrefApiTestCase(TestCase):
         assert 'MPella' not in match_dabo.json['results'][0]['match']['name']
 
         match_obsidian = self.client.get('/api/2/collections/%s/xref/%s' %
-                              (self.residents.id, self.obsidian.id))
+                                         (self.residents.id, self.obsidian.id),
+                                         headers=headers)
         assert match_obsidian.status_code == 200, match_obsidian
         assert match_obsidian.json['total'] == 1, match_obsidian.json
         assert 'Garak' in match_obsidian.json['results'][0]['entity']['name']
-        assert 'Leeta' not in match_obsidian.json['results'][0]['entity']['name']
+        assert 'Leeta' not in match_obsidian.json['results'][0]['entity']['name']  # noqa
         assert 'Tain' not in match_obsidian.json['results'][0]['match']['name']
-        assert 'MPella' not in match_obsidian.json['results'][0]['match']['name']
+        assert 'MPella' not in match_obsidian.json['results'][0]['match']['name']  # noqa

@@ -18,8 +18,9 @@ class SearchApiTestCase(TestCase):
         assert 'Public Collection' in res.data, res.json
         assert 'Secret Document' not in res.data, res.json
 
-        self.login(is_admin=True)
-        res = self.client.get('/api/2/search?q=banana')
+        _, headers = self.login(is_admin=True)
+        res = self.client.get('/api/2/search?q=banana',
+                              headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 3, res.json
         assert 'Secret Document' in res.data, res.json

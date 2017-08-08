@@ -13,13 +13,14 @@ class DocumentsApiTestCase(TestCase):
         res = self.client.get('/api/2/documents')
         assert res.status_code == 200, res
 
-        self.login(is_admin=True)
-        res = self.client.get('/api/2/documents')
+        _, headers = self.login(is_admin=True)
+        res = self.client.get('/api/2/documents', headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 4, res.json
 
         fix = '720badc9cfa9a80fc455239f86c56273dc5c8291'
-        res = self.client.get('/api/2/documents?filter:content_hash=%s' % fix)
+        res = self.client.get('/api/2/documents?filter:content_hash=%s' % fix,
+                              headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         assert res.json['results'][0]['content_hash'] == fix, res.json
@@ -72,8 +73,10 @@ class DocumentsApiTestCase(TestCase):
         assert res.status_code == 403, res.json
 
         data['title'] = 'Eaten by a pumpkin'
-        self.login(is_admin=True)
-        res = self.client.post(url, data=json.dumps(data),
+        _, headers = self.login(is_admin=True)
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert res.json['title'] == data['title'], res.json
@@ -81,17 +84,21 @@ class DocumentsApiTestCase(TestCase):
     def test_update_invalid(self):
         url = '/api/2/documents/1000'
         ores = self.client.get(url)
-        self.login(is_admin=True)
+        _, headers = self.login(is_admin=True)
 
         data = ores.json.copy()
         data['countries'] = ['xz']
-        res = self.client.post(url, data=json.dumps(data),
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
                                content_type='application/json')
         assert res.status_code == 400, res.json
 
         data = ores.json.copy()
         data['keywords'] = ['']
-        res = self.client.post(url, data=json.dumps(data),
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
                                content_type='application/json')
         assert res.status_code == 400, res.json
 
@@ -100,8 +107,10 @@ class DocumentsApiTestCase(TestCase):
         assert res.status_code == 200, res
         res = self.client.delete('/api/2/documents/1003')
         assert res.status_code == 403, res
-        self.login(is_admin=True)
-        res = self.client.delete('/api/2/documents/1003')
+        _, headers = self.login(is_admin=True)
+        res = self.client.delete('/api/2/documents/1003',
+                                 headers=headers)
         assert res.status_code == 410, res
-        res = self.client.get('/api/2/documents/1003')
+        res = self.client.get('/api/2/documents/1003',
+                              headers=headers)
         assert res.status_code == 404, res

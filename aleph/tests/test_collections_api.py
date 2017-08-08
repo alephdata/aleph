@@ -32,61 +32,72 @@ class CollectionsApiTestCase(TestCase):
         res = self.client.get('/api/2/collections')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
-        self.login(is_admin=True)
-        res = self.client.get('/api/2/collections')
+        _, headers = self.login(is_admin=True)
+        res = self.client.get('/api/2/collections',
+                              headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
 
     def test_view(self):
         res = self.client.get('/api/2/collections/%s' % self.col.id)
         assert res.status_code == 403, res
-        self.login(is_admin=True)
-        res = self.client.get('/api/2/collections/%s' % self.col.id)
+        _, headers = self.login(is_admin=True)
+        res = self.client.get('/api/2/collections/%s' % self.col.id,
+                              headers=headers)
         assert res.status_code == 200, res
         assert 'test_coll' in res.json['foreign_id'], res.json
         assert 'Winnie' not in res.json['label'], res.json
 
     def test_update_valid(self):
-        self.login(is_admin=True)
+        _, headers = self.login(is_admin=True)
         url = '/api/2/collections/%s' % self.col.id
-        res = self.client.get(url)
+        res = self.client.get(url,
+                              headers=headers)
         assert res.status_code == 200, res
 
         data = res.json
         data['label'] = 'Collected Collection'
         res = self.client.post(url,
                                data=json.dumps(data),
+                               headers=headers,
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 'Collected' in res.json['label'], res.json
 
     def test_update_no_label(self):
-        self.login(is_admin=True)
+        _, headers = self.login(is_admin=True)
         url = '/api/2/collections/%s' % self.col.id
-        res = self.client.get(url)
+        res = self.client.get(url,
+                              headers=headers)
         data = res.json
         data['label'] = ''
         res = self.client.post(url,
                                data=json.dumps(data),
+                               headers=headers,
                                content_type='application/json')
         assert res.status_code == 400, res.json
 
-        res = self.client.get(url)
+        res = self.client.get(url,
+                              headers=headers)
         data = res.json
         data['category'] = 'banana'
         res = self.client.post(url,
                                data=json.dumps(data),
+                               headers=headers,
                                content_type='application/json')
         assert res.status_code == 400, res.json
 
     def test_delete(self):
-        self.login(is_admin=True)
+        _, headers = self.login(is_admin=True)
         url = '/api/2/collections/%s' % self.col.id
         # print 'X1'
-        res = self.client.get(url)
+        res = self.client.get(url,
+                              headers=headers)
         # print 'X2'
         assert res.status_code == 200, res
-        res = self.client.delete(url)
+        res = self.client.delete(url,
+                                 headers=headers)
         assert res.status_code == 200, res
-        res = self.client.get(url)
+        res = self.client.get(url,
+                              headers=headers)
         assert res.status_code == 404, res

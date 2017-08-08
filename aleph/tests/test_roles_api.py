@@ -17,36 +17,40 @@ class RolesApiTestCase(TestCase):
     def test_suggest(self):
         res = self.client.get('/api/2/roles/_suggest')
         assert res.status_code == 403, res
-        self.login(is_admin=True)
-        res = self.client.get('/api/2/roles/_suggest?prefix=user')
+        _, headers = self.login(is_admin=True)
+        res = self.client.get('/api/2/roles/_suggest?prefix=user',
+                              headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] >= 3, res.json
 
     def test_view(self):
         res = self.client.get('/api/2/roles/%s' % self.rolex)
         assert res.status_code == 404, res
-        role = self.login()
-        res = self.client.get('/api/2/roles/%s' % role.id)
+        role, headers = self.login()
+        res = self.client.get('/api/2/roles/%s' % role.id,
+                              headers=headers)
         assert res.status_code == 200, res
         # assert res.json['total'] >= 6, res.json
 
     def test_update(self):
         res = self.client.post('/api/2/roles/%s' % self.rolex)
         assert res.status_code == 404, res
-        role = self.login()
+        role, headers = self.login()
         url = '/api/2/roles/%s' % role.id
-        res = self.client.get(url)
+        res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
         data = res.json
         data['name'] = 'John Doe'
         res = self.client.post(url,
                                data=json.dumps(data),
+                               headers=headers,
                                content_type='application/json')
         assert res.status_code == 200, res
         assert res.json['name'] == data['name'], res.json
 
         data['name'] = ''
         res = self.client.post(url, data=json.dumps(data),
+                               headers=headers,
                                content_type='application/json')
         assert res.status_code == 400, res
 

@@ -58,10 +58,15 @@ class EntitiesTestCase(TestCase):
 
     def test_api_merge(self):
         url = '/api/2/entities/%s/merge/%s' % (self.ent.id, self.other.id)
-        res = self.client.delete(url, data={}, content_type='application/json')
+        res = self.client.delete(url,
+                                 data={},
+                                 content_type='application/json')
         assert res.status_code == 403, res.status_code
-        self.login(is_admin=True)
-        res = self.client.delete(url, data={}, content_type='application/json')
+        _, headers = self.login(is_admin=True)
+        res = self.client.delete(url,
+                                 data={},
+                                 headers=headers,
+                                 content_type='application/json')
         data = res.json
         assert 'bear' in data['data']['description']
         assert 'pa' in data['data']['country']

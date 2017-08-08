@@ -23,7 +23,7 @@ class XrefTestCase(TestCase):
         db.session.commit()
 
     def test_xref(self):
-        self.login(foreign_id=self.user.foreign_id)
+        _, headers = self.login(foreign_id=self.user.foreign_id)
         url = '/api/2/entities'
 
         entity = {
@@ -35,6 +35,7 @@ class XrefTestCase(TestCase):
             }
         }
         self.client.post(url, data=json.dumps(entity),
+                         headers=headers,
                          content_type='application/json')
         entity = {
             'schema': 'Person',
@@ -45,6 +46,7 @@ class XrefTestCase(TestCase):
             }
         }
         self.client.post(url, data=json.dumps(entity),
+                         headers=headers,
                          content_type='application/json')
         entity = {
             'schema': 'Company',
@@ -55,6 +57,7 @@ class XrefTestCase(TestCase):
             }
         }
         self.client.post(url, data=json.dumps(entity),
+                         headers=headers,
                          content_type='application/json')
         entity = {
             'schema': 'Person',
@@ -65,6 +68,7 @@ class XrefTestCase(TestCase):
             }
         }
         self.client.post(url, data=json.dumps(entity),
+                         headers=headers,
                          content_type='application/json')
 
         q = db.session.query(Match)
