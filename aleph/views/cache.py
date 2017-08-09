@@ -17,12 +17,21 @@ def handle_not_modified(exc):
 
 @blueprint.before_app_request
 def setup_caching():
+    """Set some request attributes at the beginning of the request.
+
+    By default, caching will be disabled."""
     request._http_cache = False
     request._http_etag = None
     request._http_server = True
 
 
 def enable_cache(vary_user=True, vary=None, server_side=False):
+    """Enable caching in the context of a view.
+
+    If desired, instructions on the cache parameters can be included, such as
+    if the data is fit for public caches (default: no, vary_user) and what
+    values to include in the generation of an etag.
+    """
     args = sorted(set(request.args.items()))
     # jquery where is your god now?!?
     args = filter(lambda (k, v): k != '_', args)
@@ -42,6 +51,7 @@ def enable_cache(vary_user=True, vary=None, server_side=False):
 
 @blueprint.after_app_request
 def cache_response(resp):
+    """Post-request processing to set cache parameters."""
     if request.endpoint == 'static':
         enable_cache()
         request._http_cache = True
