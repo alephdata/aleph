@@ -9,27 +9,22 @@ from aleph.model import Match
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
-from aleph.index.xref import entity_query, entity_collection_query
+from aleph.index.xref import entity_query
 from aleph.index.util import unpack_result
 from aleph.search import QueryParser, MatchQueryResult
 
 log = logging.getLogger(__name__)
 
 
-def xref_item(item, against_coll_id=None):
+def xref_item(item, collection=None):
     """Cross-reference an entity or document, given as an indexed document."""
     title = item.get('name') or item.get('title')
     log.info("Xref [%s]: %s", item['$type'], title)
 
-    if against_coll_id is None:
-        query = entity_query(item)
-    else:
-        query = entity_collection_query(item, against_coll_id)
-
     result = es.search(index=es_index,
                        doc_type=TYPE_ENTITY,
                        body={
-                           'query': query,
+                           'query': entity_query(item, collection),
                            'size': 100,
                            '_source': ['collection_id'],
                        })
@@ -57,7 +52,7 @@ def xref_item(item, against_coll_id=None):
     db.session.bulk_save_objects(matches)
 
 
-def xref_collection(collection, collection2=None):
+def xref_collection(collection, other=None):
     """Cross-reference all the entities and documents in a collection."""
     log.info("Cross-reference collection: %r", collection)
     query = {
@@ -72,13 +67,8 @@ def xref_collection(collection, collection2=None):
                    scroll='15m',
                    size=1000)
 
-    try:
-        against_id = collection2.id
-    except AttributeError:
-        against_id = None
-
     for i, res in enumerate(scanner):
-        xref_item(unpack_result(res), against_id)
+        xref_item(unpack_result(res), other)
         if i % 1000 == 0 and i != 0:
             db.session.commit()
     db.session.commit()

@@ -6,7 +6,7 @@ from aleph.model import Document
 log = logging.getLogger(__name__)
 
 
-def entity_query(sample, query=None):
+def entity_query(sample, collection=None, query=None):
     """Given a document or entity in indexed form, build a query that
     will find similar entities based on a variety of criteria."""
 
@@ -26,6 +26,11 @@ def entity_query(sample, query=None):
             }
         }
     required = []
+
+    if collection is not None:
+        query['bool']['must'].append({
+            'term': {'collection_id': collection.id}
+        })
 
     for fp in sample.get('fingerprints', []):
         required.append({
@@ -97,17 +102,3 @@ def entity_query(sample, query=None):
         {"terms": {"schema": [s.name for s in schemata if not s.fuzzy]}}
     ])
     return query
-
-
-def entity_collection_query(sample, collection_id):
-    query = {
-        'bool': {
-            'should': [],
-            'filter': [],
-            'must': [{
-                'term': {'collection_id': collection_id}
-            }],
-            'must_not': []
-        }
-    }
-    return entity_query(sample, query)
