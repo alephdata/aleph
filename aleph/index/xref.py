@@ -97,3 +97,17 @@ def entity_query(sample, query=None):
         {"terms": {"schema": [s.name for s in schemata if not s.fuzzy]}}
     ])
     return query
+
+
+def entity_collection_query(sample, collection_id):
+    query = {
+        'bool': {
+            'should': [],
+            'filter': [],
+            'must': [{
+                'term': {'collection_id': collection_id}
+            }],
+            'must_not': []
+        }
+    }
+    return entity_query(sample, query)

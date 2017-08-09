@@ -9,22 +9,27 @@ from aleph.model import Match
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
-from aleph.index.xref import entity_query
+from aleph.index.xref import entity_query, entity_collection_query
 from aleph.index.util import unpack_result
 from aleph.search import QueryParser, MatchQueryResult
 
 log = logging.getLogger(__name__)
 
 
-def xref_item(item):
+def xref_item(item, against_coll_id=None):
     """Cross-reference an entity or document, given as an indexed document."""
     title = item.get('name') or item.get('title')
     log.info("Xref [%s]: %s", item['$type'], title)
 
+    if against_coll_id is None:
+        query = entity_query(item)
+    else:
+        query = entity_collection_query(item, against_coll_id)
+
     result = es.search(index=es_index,
                        doc_type=TYPE_ENTITY,
                        body={
-                           'query': entity_query(item),
+                           'query': query,
                            'size': 100,
                            '_source': ['collection_id'],
                        })
@@ -52,7 +57,7 @@ def xref_item(item):
     db.session.bulk_save_objects(matches)
 
 
-def xref_collection(collection):
+def xref_collection(collection, collection2=None):
     """Cross-reference all the entities and documents in a collection."""
     log.info("Cross-reference collection: %r", collection)
     query = {
@@ -66,8 +71,14 @@ def xref_collection(collection):
                    query=query,
                    scroll='15m',
                    size=1000)
+
+    try:
+        against_id = collection2.id
+    except AttributeError:
+        against_id = None
+
     for i, res in enumerate(scanner):
-        xref_item(unpack_result(res))
+        xref_item(unpack_result(res), against_id)
         if i % 1000 == 0 and i != 0:
             db.session.commit()
     db.session.commit()
