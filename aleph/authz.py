@@ -29,6 +29,7 @@ class Authz(object):
         self.id = role.id if role is not None else None
         self.is_admin = override
         self.in_maintenance = get_config('MAINTENANCE')
+        self.session_write = not self.in_maintenance and self.logged_in
 
         if self.logged_in and not self.is_admin:
             self.is_admin = role.is_admin
@@ -71,12 +72,6 @@ class Authz(object):
     def can_read(self, collection):
         """Check if a given collection can be read."""
         return self.can(collection, self.READ)
-
-    @property
-    def session_write(self):
-        if self.in_maintenance:
-            return False
-        return self.logged_in
 
     def check_roles(self, roles):
         if self.is_admin:

@@ -50,7 +50,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.creator = role
         db.session.add(self)
         db.session.flush()
-        Permission.grant(self.id, role, True, True)
+        Permission.grant(self, role, True, True)
 
     def delete_matches(self):
         pq = db.session.query(Match)

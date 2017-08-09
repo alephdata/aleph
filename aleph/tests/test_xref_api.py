@@ -20,7 +20,7 @@ class XrefApiTestCase(TestCase):
         }, role=self.creator)
         db.session.add(self.residents)
         db.session.flush()
-        Permission.grant(self.residents.id, self.guest, True, False)
+        Permission.grant(self.residents, self.guest, True, False)
 
         self.ent = Entity.create({
             'schema': 'Person',
@@ -41,7 +41,7 @@ class XrefApiTestCase(TestCase):
         }, role=self.creator)
         db.session.add(self.dabo)
         db.session.flush()
-        Permission.grant(self.dabo.id, self.guest, True, False)
+        Permission.grant(self.dabo, self.guest, True, False)
 
         self.ent3 = Entity.create({
             'schema': 'Person',

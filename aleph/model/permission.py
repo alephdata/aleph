@@ -14,12 +14,12 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
     collection_id = db.Column(db.Integer, nullable=False)
 
     @classmethod
-    def grant(cls, collection_id, role, read, write):
-        permission = cls.by_collection_role(collection_id, role)
+    def grant(cls, collection, role, read, write):
+        permission = cls.by_collection_role(collection, role)
         if permission is None:
             permission = Permission()
             permission.role_id = role.id
-            permission.collection_id = collection_id
+            permission.collection_id = collection.id
         permission.read = read
         permission.write = write
         db.session.add(permission)
@@ -27,9 +27,9 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
         return permission
 
     @classmethod
-    def by_collection_role(cls, collection_id, role):
+    def by_collection_role(cls, collection, role):
         q = cls.all()
         q = q.filter(Permission.role_id == role.id)
-        q = q.filter(Permission.collection_id == collection_id)
+        q = q.filter(Permission.collection_id == collection.id)
         permission = q.first()
         return permission

@@ -31,7 +31,7 @@ def bulk_load(config):
         for role_fk in dict_list(data, 'roles', 'role'):
             role = Role.by_foreign_id(role_fk)
             if role is not None:
-                Permission.grant(collection.id, role, True, False)
+                Permission.grant(collection, role, True, False)
             else:
                 log.warning("Could not find role: %s", role_fk)
 

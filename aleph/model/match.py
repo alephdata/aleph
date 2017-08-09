@@ -41,6 +41,7 @@ class Match(db.Model, IdModel, DatedModel):
         q = q.filter(Match.document_id == None)  # noqa
         q = q.filter(Match.match_collection_id != collection_id)
         q = q.join(coll, Match.match_collection_id == coll.id)
+        q = q.filter(coll.deleted_at == None)  # noqa
         if authz is not None and not authz.is_admin:
             q = q.join(Permission,
                        Match.match_collection_id == Permission.collection_id)

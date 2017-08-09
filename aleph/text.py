@@ -26,6 +26,7 @@ def string_value(value, encoding=None):
 
 
 def query_string(items):
+    """Given a list of tuples, returns a query string for URL building."""
     query = []
     for (field, value) in items:
         value = stringify(value)
