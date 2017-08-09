@@ -4,7 +4,6 @@ TYPE_DOCUMENT = 'document'
 TYPE_RECORD = 'record'
 TYPE_ENTITY = 'entity'
 TYPE_LINK = 'link'
-TYPE_LEAD = 'lead'
 
 
 COLLECTION_MAPPING = {
@@ -158,7 +157,6 @@ ENTITY_MAPPING = {
         "data": {"type": "object"},
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
-        "$documents": {"type": "long"},
         "$bulk": {"type": "boolean"}
     }
 }
@@ -205,23 +203,5 @@ LINK_MAPPING = {
             "type": "object",
             "properties": ENTITY_MAPPING.get('properties')
         }
-    }
-}
-
-LEAD_MAPPING = {
-    "_all": {
-        "enabled": False
-    },
-    "date_detection": False,
-    "properties": {
-        "entity_id": {"type": "keyword"},
-        "entity_collection_id": {"type": "long"},
-        "score": {"type": "double"},
-        "match_id": {"type": "keyword"},
-        "judgement": {"type": "integer"},
-        "schema": {"type": "keyword"},
-        "schemata": {"type": "keyword"},
-        "roles": {"type": "long"},
-        "collection_id": {"type": "long"},
     }
 }

@@ -12,6 +12,7 @@ INDEX_MAX_LEN = 1024 * 1024 * 100
 
 
 def unpack_result(res):
+    """Turn a document hit from ES into a more traditional JSON object."""
     if 'found' in res and not res.get('found'):
         return
     data = res.get('_source')
@@ -23,6 +24,7 @@ def unpack_result(res):
 
 
 def bulk_op(iter, chunk_size=500):
+    """Standard parameters for bulk operations."""
     bulk(es, iter, stats_only=True, chunk_size=chunk_size,
          request_timeout=200.0)
 

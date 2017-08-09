@@ -7,5 +7,4 @@ from aleph.index.mapping import TYPE_DOCUMENT, DOCUMENT_MAPPING  # noqa
 from aleph.index.mapping import TYPE_RECORD, RECORD_MAPPING  # noqa
 from aleph.index.mapping import TYPE_ENTITY, ENTITY_MAPPING  # noqa
 from aleph.index.mapping import TYPE_COLLECTION, COLLECTION_MAPPING  # noqa
-from aleph.index.mapping import TYPE_LEAD, LEAD_MAPPING  # noqa
 from aleph.index.mapping import TYPE_LINK, LINK_MAPPING  # noqa
