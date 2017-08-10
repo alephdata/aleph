@@ -4,7 +4,6 @@ from aleph.model.common import SoftDeleteModel, IdModel
 
 class Permission(db.Model, IdModel, SoftDeleteModel):
     """A set of rights granted to a role on a resource."""
-
     __tablename__ = 'permission'
 
     id = db.Column(db.Integer, primary_key=True)

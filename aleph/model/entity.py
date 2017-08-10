@@ -65,7 +65,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         # update alerts
         from aleph.model.alert import Alert
         q = db.session.query(Alert).filter(Alert.entity_id == other.id)
-        q.update({'entity_id': self.id})
+        q.update({Alert.entity_id: self.id})
 
         # delete source entities
         other.delete()

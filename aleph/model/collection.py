@@ -52,20 +52,27 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         db.session.flush()
         Permission.grant(self, role, True, True)
 
+    def touch(self):
+        self.updated_at = datetime.utcnow()
+        db.session.add(self)
+
     def delete_matches(self):
         pq = db.session.query(Match)
         pq = pq.filter(or_(
             Match.collection_id == self.id,
             Match.match_collection_id == self.id))
-        pq.delete(synchronize_session='fetch')
+        pq.delete(synchronize_session=False)
+
+    def delete_permissions(self, deleted_at):
+        pq = db.session.query(Permission)
+        pq = pq.filter(Permission.collection_id == self.id)
+        pq.update({Permission.deleted_at: deleted_at},
+                  synchronize_session=False)
 
     def delete(self, deleted_at=None):
         self.delete_matches()
+        self.delete_permissions(deleted_at=deleted_at)
         super(Collection, self).delete(deleted_at=deleted_at)
-
-    def touch(self):
-        self.updated_at = datetime.utcnow()
-        db.session.add(self)
 
     @property
     def roles(self):
