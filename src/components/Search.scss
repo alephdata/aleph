@@ -1,0 +1,17 @@
+@import "~@blueprintjs/core/dist/variables";
+
+.top {
+  background-color: $gray3;
+  padding: $pt-grid-size * 2;
+
+  display: flex;
+}
+
+.top__search {
+  flex: 1;
+  padding-right: $pt-grid-size;
+
+  & > input[type=search] {
+    border-radius: $pt-border-radius;
+  }
+}

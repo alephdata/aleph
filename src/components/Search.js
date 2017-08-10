@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { Button } from '@blueprintjs/core';
+
 import queryString from 'query-string';
 import debounce from 'lodash/debounce';
+
+import './Search.css';
 
 class Search extends Component {
   constructor(props)  {
@@ -50,12 +55,18 @@ class Search extends Component {
     const { searchTerm } = this.state;
 
     return (
-      <div className="pt-form-group">
-        <div className="pt-input-group">
-          <span className="pt-icon pt-icon-search"></span>
-          <input className="pt-input" type="text" onChange={this.onChange} value={searchTerm} />
+      <form className="top">
+        <div className="top__search pt-input-group pt-large">
+          <span className="pt-icon pt-icon-search"/>
+          <input className="pt-input" type="search" onChange={this.onChange} value={searchTerm}/>
         </div>
-      </div>
+        <div className="pt-large">
+          <Button rightIconName="caret-down">
+            <FormattedMessage id="search.collections" defaultMessage="Collections"/>
+            {' '}(55)
+          </Button>
+        </div>
+      </form>
     );
   }
 }

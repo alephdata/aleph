@@ -8,5 +8,10 @@
     "id": "nav.documents",
     "defaultMessage": "Documents",
     "filepath": "src/components/PageNavbar.js"
+  },
+  {
+    "id": "search.collections",
+    "defaultMessage": "Collections",
+    "filepath": "src/components/Search.js"
   }
 ]
