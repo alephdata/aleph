@@ -5,7 +5,7 @@ import xlsxwriter
 import StringIO
 
 from aleph.core import db, es, es_index, schemata
-from aleph.model import Match
+from aleph.model import Match, Collection
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
@@ -74,6 +74,22 @@ def xref_collection(collection, other=None):
         if i % 1000 == 0 and i != 0:
             db.session.commit()
     db.session.commit()
+
+
+@celery.task()
+def process_xref(collection_id, other_id=None):
+    q = db.session.query(Collection).filter(Collection.id == collection_id)
+    collection = q.first()
+    if collection is None:
+        log.error("No collection with ID: %r", collection_id)
+
+    if other_id is not None:
+        q = db.session.query(Collection).filter(Collection.id == other_id)
+        other = q.first()
+    else:
+        other = None
+
+    xref_collection(collection, other)
 
 
 def make_excel_safe_name(collection):

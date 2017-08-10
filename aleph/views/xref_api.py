@@ -1,11 +1,12 @@
 from flask import Blueprint, request, send_file
 from apikit import arg_bool
 
+from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Collection, Match
-from aleph.views.util import require, obj_or_404, jsonify
+from aleph.views.util import get_collection, require, obj_or_404, jsonify
 from aleph.search import QueryParser, DatabaseQueryResult, MatchQueryResult
 from aleph.views.serializers import MatchSchema, MatchCollectionsSchema
-from aleph.logic.xref import generate_excel
+from aleph.logic.xref import generate_excel, process_xref
 from aleph.text import string_value
 
 
@@ -48,3 +49,12 @@ def report(collection_id):
     return send_file(output,
                      as_attachment=True,
                      attachment_filename=outputfile)
+
+
+@blueprint.route('/api/2/collections/<int:collection_id>/xref', methods=['POST']):
+def generate_matches(collection_id):
+    collection = get_collection(collection_id, request.authz.WRITE)
+    process_xref(collection).apply_async([collection.id],
+                                   queue=USER_QUEUE,
+                                   routing_key=USER_ROUTING_KEY)
+    return jsonify({'status': 'accepted'}, status=202)

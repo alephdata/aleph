@@ -92,9 +92,8 @@ class XrefApiTestCase(TestCase):
         index_entity(self.ent7)
         flush_index()
 
-        xref_collection(self.residents)
-
     def test_summary(self):
+        xref_collection(self.residents)
         res = self.client.get('/api/2/collections/%s' % self.obsidian.id)
         assert res.status_code == 403, res
 
@@ -127,6 +126,7 @@ class XrefApiTestCase(TestCase):
         assert 'Dabo Girls' in labels, res.json
 
     def test_matches(self):
+        xref_collection(self.residents)
         # Not logged in
         match_dabo = self.client.get('/api/2/collections/%s/xref/%s' %
                                      (self.residents.id, self.dabo.id))
@@ -181,3 +181,10 @@ class XrefApiTestCase(TestCase):
         assert 'Leeta' not in match_obsidian.json['results'][0]['entity']['name']  # noqa
         assert 'Tain' not in match_obsidian.json['results'][0]['match']['name']
         assert 'MPella' not in match_obsidian.json['results'][0]['match']['name']  # noqa
+
+    def test_create_matches(self):
+        res = self.client.post('/api/2/collections/%s/xref' % self.residents.id)
+
+    def test_create_matches_against(self):
+        res = self.client.post('/api/2/collections/%s/xref/%s' %
+                               (self.residents.id, self.obsidian.id))
