@@ -1,0 +1,372 @@
+
+<span id="title">Developer API v2</span>
+
+<p>
+  Aleph supports an extensive API for searching documents and entities. It 
+  can also be used to retrieve raw metadata, source documents and other
+  useful details.
+</p>
+
+<h3>General Overview</h3>
+
+<p>
+  Aleph's API tries to follow a pragmatic approach based on the following
+  principles:
+</p>
+
+<ul>
+  <li>All API calls are prefixed with an API version; this version is <code>/api/2/</code>.</li>
+  <li>Responses and requests are both encoded as JSON. Requests should have the <code>Content-Type</code> and <code>Accept</code> headers set to <code>application/json</code>.</li>
+  <li>The application uses Representational State Transfer (REST) principles where convenient, but also has some procedural API calls.</li>
+</ul>
+
+<h4>Domain Model and REST Resources</h4>
+
+<p>
+  Aleph exposes all significant aspects of it's domain model, which is explained
+  in short below.
+</p>
+
+<ul>
+  <li><strong>Documents</strong> (<code>/api/2/documents</code>) reflect a single text document or tabular document imported into Aleph. Every document is either imported as a text document with a number of text 
+  pages associated with it, or as a tabular document, which as a number of rows.</li>
+  <li><strong>Collections</strong> (<code>/api/2/collections</code>) group documents and entities into sets, such as all the documents from a particular source, all the people relevant to a particular investigation, or all the companies on a country's sanctions list. They also control who can access information about an entity or document.</li>
+  <li><strong>Entities</strong> (<code>/api/2/entities</code>) reflect structured data about persons or companies. Each entity has a name, a number of aliases and other details, such as their jurisdiction,
+  a short summary, or contact and passport details. Entities are identified through a UUID.</li>
+  <li><strong>Roles</strong> represent users and user groups, and they are connected via 
+  <strong>Permissions</strong> to sources and collections.</li>
+</ul>
+
+<h3>Searching for Documents</h3>
+
+<p>
+  The main search endpoint allows for a set of complex queries to be executed. Results will
+  include document metadata, record snippets (for highlighting) and facet values that can be
+  used to further summarize the result set.
+</p>
+
+<pre>GET /api/2/query</pre>
+
+<p>
+  This accepts the following arguments:
+</p>
+
+<ul>
+  <li><code>q</code>, a query string in ElasticSearch query syntax. Can include
+  field searches, such as <code>title:penguin</code>.</li>
+  <li><code>facet</code>, return facet values for the given metadata field, 
+  such as <code>languages</code>, <code>countries</code>, <code>mime_type</code>
+  or <code>extension</code>. This can be specified multiple times for more than one
+  facet to be added.</li>
+  <li>
+    <code>filter:{field_name}</code>, filter the results by the given field.
+    This is useful when used in conjunction with <code>facet</code> to create a
+    drill-down mechanism. Useful fields are:
+    <ul>
+      <li><code>entities.id</code>, documents tagged with a particular entity.</li>
+      <li><code>collection_id</code>, documents belonging to a particular collection
+      .</li>
+      <li><code>title</code>, of the document.</li>
+      <li><code>file_name</code>, of the source file.</li>
+      <li><code>source_url</code>, URL of the source file.</li>
+      <li><code>extension</code>, file extension of the source file.</li>
+      <li><code>languages</code>, in the document.</li>
+      <li><code>countries</code>, associated with the document.</li>
+      <li><code>keywords</code>, from the document.</li>
+      <li><code>emails</code>, email addresses mentioned in the document.</li>
+      <li><code>domains</code>, websites mentioned in the document.</li>
+      <li><code>phone_numbers,</code> mentioned in the document.</li>
+      <li><code>dates</code>, in any of the following formats: <code>yyyy-MM-dd</code>,
+      <code>yyyy-MM</code>, <code>yyyy-MM-d</code>, <code>yyyy-M</code>, <code>yyyy
+      </code></li>
+      <li><code>mime_type</code>, of the source file.</li>
+      <li><code>author</code>, according to the source file's metadata.</li>
+      <li><code>summary</code>, of the document.</li>
+      <li><code>text</code>, entire text extracted from the document.</li>
+      <li><code>created_at</code>, when the document was added to aleph (<code>yyyy-mm
+      -ddThh:ii:ss.uuuuuu</code>).</li>
+      <li><code>updated_at</code>, when the document was modified in aleph (<code>yyyy
+      -mm-ddThh:ii:ss.uuuuuu</code>).</li>
+    </ul>
+  </li>
+  <li><code>collection</code>, like <code>facet</code> for entity collections:
+  all entities which are tagged in result set documents and part of the given
+  collection will be returned. This can be specified multiple times for more
+  than one collection to be added.</li>
+  <li><code>limit</code>, the number of results to return, max. 10,000.</li>
+  <li><code>offset</code>, the number of results to skip at the beginning of the
+  result set.</li>
+</ul>
+
+<p>
+  By default, all queries will return a facet of the document collections for which
+  matching documents have been found. This cannot currently be disabled, but a
+  filter can be applied to show only results from a particular collection:
+  <code>?filter:collection_id={collection_id}</code>.
+</p>
+
+<h4>Search Results as Excel</h4>
+
+<p>
+  A second endpoint exists that accepts the same query parameters and will return an Excel 2007 (XML) file as it's result. The returned file contains a shortened representation of
+  the results, but it is limited to 10,000 rows.
+</p>
+
+<pre>GET /api/2/query/export?q=pickles</pre>
+
+<h4>Search Results as a Co-occurrence Graph</h4>
+
+<p>
+  Another way of interpreting search results is as edges in a graph of entities. In this
+  representation, each document is treated as a link between any permutation of entities 
+  which that document has been tagged with. The returned graph can be used to understand
+  the connectivity between those tagged entities. A result format can be specified using
+  the <code>format</code> parameter, either as <code>gexf</code> (Graph Exchange Format
+  XML) or <code>d3</code>, a JSON format suitable for use in D3.js-based force-directed graphs.
+</p>
+
+<pre>GET /api/2/query/graph?q=pickles&format=gexf</pre>
+
+<p>
+  Note that this query type is only useful if entities are loaded into the Aleph instance 
+  and at least one collection is specified as a search facet.
+</p>
+
+<h3>Reading and writing Collections</h3>
+
+<p>
+  Collections can contain documents and/or entities. To get a (paged) list of all collections you have access to:
+</p>
+
+<pre>GET /api/2/collections</pre>
+
+<p>
+  For the entities and documents in a particular collection:
+</p>
+
+<pre>GET /api/2/collections/{collection_id}</pre>
+
+<h4>Updating collections</h4>
+
+<p>
+  To update or delete a collection respectively, send a <code>POST</code> request with the new metadata to
+  be added or a <code>DELETE</code> request to:
+<p>
+
+<pre>/api/2/collections/{collection_id}</pre>
+
+<p>
+  To add new entities to a collection, you need to use the entities API. Deleting a collection also deletes all of the entities in the collection. 
+</p>
+
+<p>
+  To create a new collection, <code>POST</code> the JSON metadata to:
+</p>
+
+<pre>/api/2/collections</pre>
+
+<h4>Processing collection contents</h4>
+
+<p>
+  To re-analyze and re-index all of the documents and entities in a collection:
+</p>
+
+<pre>POST /api/2/collections/{collection_id}/process</pre>
+
+<h4>Cross-referencing</h4>
+
+<p>
+  Cross-referencing lets you check if any of the entities in one collection appear in another collection. The results will only show from collections you are authorized to read. To see a summary list of all collections in the database containing matching entities:
+</p>
+
+<pre>GET /api/2/collections/{collection_id}/xref</pre>
+
+<p>
+  To cross-reference one collection against a specific other one and see the list of matching entities:
+</p>
+
+<pre>GET /api/2/collections/{collection_id}/xref/{other_id}</pre>
+
+<p>
+  If there are no results, it's possible the cross-referencer hasn't been run on these collections yet. To trigger it, send <code>POST</code> requests to either of the above two endpoints. You can retrieve the results with a new <code>GET</code> request; you may need to wait a few minutes.
+</p>
+
+<p>
+  To get both the summary and matches lists as an Excel file download:
+</p>
+
+<pre>GET /api/2/collections/{collection_id}/xref.xlsx</pre>
+
+<h3>Fetching Documents and Metadata</h3>
+
+<p>
+  Once you've located a document, you may want to access it's metadata in full:
+</p>
+
+<pre>GET /api/2/documents/{document_id}</pre>
+
+<p>
+  This will return the full set of fields stored for the given document. If you also 
+  want to access the original source data (e.g. a PDF document, CSV spreadsheet etc.),
+  you can request it like this:
+</p>
+
+<pre>GET /api/2/documents/{document_id}/file</pre>
+
+<p>
+  This may return an HTTP 302 redirect if the storage location for the document is a
+  public URL.
+</p>
+
+<h4>PDF Representations</h4>
+
+<p>
+  For all documents that are identified as text documents (including images, Word
+  documents, E-Mails), Aleph generates a PDF representation that is used by the 
+  document viewer. This PDF form can be retrieved using the following API call:
+</p>
+
+<pre>GET /api/2/documents/{document_id}/pdf</pre>
+
+<p>
+  This may return an HTTP 302 redirect if the storage location for the document is
+  a public URL.
+</p>
+
+<h4>In-document Text Searches</h4>
+
+<p>
+  For documents (text and tabular) the following API call will query the contained
+  records (i.e. data rows or pages):
+</p>
+
+<pre>GET /api/2/query/records/{document_id}</pre>
+
+<p>
+  This accepts the following arguments:
+</p>
+
+<ul>
+  <li><code>q</code>, a query string in ElasticSearch query syntax. This can include
+  field searches, such as <code>raw.my_column:penguin</code> to search the contents
+  of a table which has the given column.</li>
+  <li><code>limit</code>, the number of results to return, max. 10,000.</li>
+  <li><code>offset</code>, the number of results to skip at the beginning of the
+  result set.</li>
+</ul>
+
+<h4>Getting page contents</h4>
+
+<p>
+  For text documents the recognized text of a particular page can be retrieved
+  using the following API call:
+</p>
+
+<pre>GET /api/2/documents/{document_id}/pages/{page_no}</pre>
+
+<h4>Tabular data API</h4>
+
+<p>
+  Tabular documents are divided into several, numbered sheets which reflect the
+  structure of an (Excel) worksheet. The first (and for most tables only) sheet
+  will be 0. Metadata about a particular sheet is available at the following 
+  endpoint:
+</p>
+
+<pre>GET /api/2/documents/{document_id}/tabular/{sheet_no}</pre>
+
+<p>
+  Each sheet can also be queried using the following end point, which returns
+  only the raw tabular data:
+</p>
+
+<pre>GET /api/2/documents/{document_id}/pages/{sheet_no}/rows</pre>
+
+<p>
+  This is internally build as a search endpoint, and thus accepts the following arguments:
+</p>
+
+<ul>
+  <li><code>q</code>, a query string in ElasticSearch query syntax.</li>
+  <li><code>row</code>, the ID of a particular row, which should be presented as the first result.</li>
+  <li><code>limit</code>, the number of results to return, max. 10,000.</li>
+  <li><code>offset</code>, the number of results to skip at the beginning of the
+  result set.</li>
+</ul>
+
+<h3>Fetching Entities and Metadata</h3>
+
+<p>
+  Similarly to the documents API, metadata about entities can be accessed
+  provided you are authorized to read from the collection the entity is part of.
+</p>
+
+<pre>GET /api/2/entities/{entity_id}</pre>
+
+<p>
+  You can see the documents an entity appears in, including a relevance score:
+</p>
+
+<pre>GET /api/2/entities/{entity_id}/documents</pre>
+
+<p>
+  To get an entity's links to other entities such as organisations or property, use:
+</p>
+
+<pre>GET /api/2/entities/{entity_id}/links</pre>
+
+<p>
+  To see a list of similar entities in the store, including a relevance score, use:
+</p>
+
+<pre>GET /api/2/entities/{entity_id}/similar</pre>
+
+<h4>Entities write API</h4>
+
+<p>
+  To create a new entity, you can <code>POST</code> the metadata as JSON to the entities
+  endpoint. It must include a <code>collection_id</code> for a collection to which you are
+  authorized to write.
+</p>
+
+<pre>POST /api/2/entities</pre>
+
+<p>
+  To update or delete an entity respectively, send a <code>POST</code> request with the new metadata to
+  be added or a <code>DELETE</code> request to:
+<p>
+
+<pre>/api/2/entities/{entity_id}</pre>
+
+<p>
+  The metadata of two entities can be merged into one. The resulting entity is added to the collection to which the first entity belonged, and the originals are deleted.
+</p>
+
+<pre>DELETE /api/2/entities/{entity_id}/merge/{other_id}</pre>
+
+<h3>Authorization and Access Control</h3>
+
+<p>
+  By default, any Aleph search will return only public documents in 
+  responses to API requests. If you want to access documents which are
+  not marked public, you will need to sign into the tool. This can be
+  done either using the OAuth login flow (i.e. by directing the user to
+  <code>/api/2/sessions/login</code>, and then making all further requests using
+  the resulting session cookie), or through the use of an
+  <strong>API key</strong>. 
+</p>
+
+<p>
+  The API key for any account can be found by clicking on the "Profile"
+  menu item in the navigation menu. It must be sent on all queries using
+  the <code>Authorization</code> HTTP header:
+</p>
+
+<pre>Authorization: ApiKey 363af1e2b03b41c6b3adc604956e2f66</pre>
+
+<p>
+  The authorization status of a user can be checked at any time by calling the
+  <code>/api/2/sessions</code> endpoint, which also includes the user profile
+  and details regarding their access rights.
+</p>
+
