@@ -182,9 +182,50 @@ class XrefApiTestCase(TestCase):
         assert 'Tain' not in match_obsidian.json['results'][0]['match']['name']
         assert 'MPella' not in match_obsidian.json['results'][0]['match']['name']  # noqa
 
-    def test_create_matches(self):
-        res = self.client.post('/api/2/collections/%s/xref' % self.residents.id)
+    def test_create_summary(self):
+        res = self.client.post('/api/2/collections/%s/xref' %
+                               self.residents.id)
+        assert res.status_code == 403, res
 
-    def test_create_matches_against(self):
+        _, headers = self.login('outsider')
+        res = self.client.post('/api/2/collections/%s/xref' %
+                               self.residents.id, headers=headers)
+        assert res.status_code == 403, res
+
+        _, headers = self.login('creator')
+        res = self.client.post('/api/2/collections/%s/xref' %
+                               self.residents.id, headers=headers)
+
+        summary = self.client.get('/api/2/collections/%s/xref' % self.residents.id,
+                              headers=headers)
+        assert res.status_code == 202, res
+        assert summary.status_code == 200, summary
+        assert summary.json['total'] == 2, summary.json
+        labels = [m['collection']['label'] for m in summary.json['results']]
+        assert 'Obsidian Order' in labels, summary.json
+        assert 'Dabo Girls' in labels, summary.json
+
+    def test_create_matches(self):
         res = self.client.post('/api/2/collections/%s/xref/%s' %
                                (self.residents.id, self.obsidian.id))
+        assert res.status_code == 403, res
+
+        _, headers = self.login('outsider')
+        res = self.client.post('/api/2/collections/%s/xref/%s' %
+                               (self.residents.id, self.obsidian.id), headers=headers)
+        assert res.status_code == 403, res
+
+        _, headers = self.login('creator')
+        res = self.client.post('/api/2/collections/%s/xref/%s' %
+                               (self.residents.id, self.obsidian.id), headers=headers)
+
+        match_obsidian = self.client.get('/api/2/collections/%s/xref/%s' %
+                                         (self.residents.id, self.obsidian.id),
+                                         headers=headers)
+        assert res.status_code == 202, res
+        assert match_obsidian.status_code == 200, match_obsidian
+        assert match_obsidian.json['total'] == 1, match_obsidian.json
+        assert 'Garak' in match_obsidian.json['results'][0]['entity']['name']
+        assert 'Leeta' not in match_obsidian.json['results'][0]['entity']['name']  # noqa
+        assert 'Tain' not in match_obsidian.json['results'][0]['match']['name']
+        assert 'MPella' not in match_obsidian.json['results'][0]['match']['name']  # noqa
