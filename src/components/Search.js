@@ -55,7 +55,7 @@ class Search extends Component {
     const { searchTerm } = this.state;
 
     return (
-      <form className="top">
+      <div className="top">
         <div className="top__search pt-input-group pt-large">
           <span className="pt-icon pt-icon-search"/>
           <input className="pt-input" type="search" onChange={this.onChange} value={searchTerm}/>
@@ -66,7 +66,7 @@ class Search extends Component {
             {' '}(55)
           </Button>
         </div>
-      </form>
+      </div>
     );
   }
 }
