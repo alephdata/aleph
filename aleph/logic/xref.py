@@ -4,7 +4,7 @@ from elasticsearch.helpers import scan
 import xlsxwriter
 import StringIO
 
-from aleph.core import db, es, es_index, schemata
+from aleph.core import db, es, es_index, schemata, celery
 from aleph.model import Match, Collection
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
