@@ -22,7 +22,6 @@ addons:
       - oracle-java8-set-default
 env:
   global:
-    - NODE_VERSION=6.9.2
     - ALEPH_SETTINGS=$TRAVIS_BUILD_DIR/contrib/docker_settings.py
     - ALEPH_DATABASE_NAME=aleph
     - ALEPH_DATABASE_URI=postgresql://localhost/$ALEPH_DATABASE_NAME
@@ -41,20 +40,12 @@ install:
   - pip install -e .
   - pip install --upgrade git+https://github.com/alephdata/ingestors.git#egg=ingestors
   - pip install coveralls
-  - nvm install $NODE_VERSION
-  - nvm use $NODE_VERSION
-  - npm install .
 before_script:
   - sleep 10
   - psql -c "create database ${ALEPH_DATABASE_NAME}_test;" -U postgres
-  # - elasticsearch --version
   - nosetests --version
   - psql --version
-  - nvm use $NODE_VERSION
-  - node --version
 script:
-  - nvm use $NODE_VERSION
-  # - node_modules/webpack/bin/webpack.js --env.prod
   - nosetests --with-coverage --cover-package=aleph
 after_success:
   - coveralls
