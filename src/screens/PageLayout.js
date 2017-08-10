@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
 import {connect} from 'react-redux'
 
-import {fetchMetadata, fetchSession} from '../actions';
+import {fetchMetadata} from '../actions';
 import {Spinner} from "@blueprintjs/core";
 import PageNavbar from '../components/PageNavbar';
 
@@ -14,7 +14,6 @@ class PageLayout extends Component {
 
   componentWillMount() {
     this.props.fetchMetadata();
-    this.props.fetchSession();
   }
 
   render() {
@@ -49,7 +48,7 @@ const mapStateToProps = (state) => {
 
 PageLayout = connect(
   mapStateToProps,
-  {fetchMetadata, fetchSession}
+  {fetchMetadata}
 )(PageLayout);
 
 export default PageLayout;

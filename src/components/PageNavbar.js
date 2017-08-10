@@ -16,8 +16,8 @@ const PageNavbar = ({metadata, session}) => (
       </button>
     </div>
     <div className="pt-navbar-group pt-align-right">
-      {session.logged_in && <button className="pt-button pt-minimal pt-icon-cog"/>}
-      {session.logged_in && <button className="pt-button pt-minimal pt-icon-notifications"/>}
+      {session.loggedIn && <button className="pt-button pt-minimal pt-icon-cog"/>}
+      {session.loggedIn && <button className="pt-button pt-minimal pt-icon-notifications"/>}
       <AuthButton session={session}/>
     </div>
   </nav>

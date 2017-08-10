@@ -1,4 +1,4 @@
-import { endpoint } from '../api';
+import {endpoint} from '../api';
 
 export const fetchSearchResults = (filters) => (dispatch) => {
   dispatch({
@@ -13,7 +13,7 @@ export const fetchSearchResults = (filters) => (dispatch) => {
       filters,
       result: data
     }));
-}
+};
 
 export const fetchMetadata = () => (dispatch) => {
   dispatch({
@@ -25,16 +25,4 @@ export const fetchMetadata = () => (dispatch) => {
       type: 'FETCH_METADATA_SUCCESS',
       metadata: response.data
     }));
-}
-
-export const fetchSession = () => (dispatch) => {
-  dispatch({
-    type: 'FETCH_SESSION_REQUEST'
-  });
-
-  return endpoint.get('sessions')
-    .then((response) => dispatch({
-      type: 'FETCH_SESSION_SUCCESS',
-      session: response.data
-    }));
-}
+};

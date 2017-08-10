@@ -1,29 +1,21 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
-import {withRouter} from 'react-router-dom'
-import {getProviderLoginUrl} from "../utils/utils";
+import {Link} from 'react-router-dom'
 
-const AuthButton = ({session, history}) => {
-  if (session.logged_in) {
-    const logout = function () {
-      window.location.href = session.logout;
-    };
-    return <button className="pt-button pt-minimal pt-icon-user" onClick={logout}>
-      <FormattedMessage id="nav.logoff" defaultMessage="Logout"/>
-    </button>;
+const AuthButton = ({session}) => {
+  if (session.loggedIn) {
+    return <Link to="/logout">
+      <button className="pt-button pt-minimal pt-icon-user">
+        <FormattedMessage id="nav.logoff" defaultMessage="Logout"/>
+      </button>
+    </Link>;
   } else {
-    const login = function () {
-      const providers = session.providers;
-      if (providers.length === 1 && providers[0].name !== 'password') {
-        window.location.href = getProviderLoginUrl(providers[0]);
-      } else {
-        history.push("/login");
-      }
-    };
-    return <button className="pt-button pt-minimal pt-icon-user" onClick={login}>
-      <FormattedMessage id="nav.login" defaultMessage="Login"/>
-    </button>
+    return <Link to="/login">
+      <button className="pt-button pt-minimal pt-icon-user">
+        <FormattedMessage id="nav.login" defaultMessage="Login"/>
+      </button>
+    </Link>
   }
 };
 
-export default withRouter(AuthButton);
+export default AuthButton;
