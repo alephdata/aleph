@@ -42,7 +42,8 @@ def metadata():
         providers.append({
             'name': provider.name,
             'label': provider.label,
-            'login': url_for('sessions_api.login', provider=provider.name),
+            'login': url_for('sessions_api.oauth_init',
+                             provider=provider.name),
         })
 
     auth = {

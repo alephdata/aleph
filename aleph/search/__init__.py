@@ -4,7 +4,7 @@ from aleph.core import es, es_index, schemata
 from aleph.model import DocumentRecord
 from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD  # noqa
 from aleph.index.mapping import TYPE_COLLECTION, TYPE_LINK  # noqa
-from aleph.index.mapping import TYPE_ENTITY, TYPE_LEAD  # noqa
+from aleph.index.mapping import TYPE_ENTITY  # noqa
 from aleph.index.xref import entity_query
 from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa

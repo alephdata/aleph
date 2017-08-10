@@ -34,11 +34,14 @@ def xref_item(item, collection=None):
         document_id = item.get('id')
     else:
         entity_id = item.get('id')
+
     dq = db.session.query(Match)
     dq = dq.filter(Match.entity_id == entity_id)
     dq = dq.filter(Match.document_id == document_id)
+    if collection is not None:
+        dq = dq.filter(Match.match_collection_id == collection.id)
     dq.delete()
-    matches = []
+
     for result in results:
         source = result.get('_source', {})
         obj = Match()
@@ -48,8 +51,7 @@ def xref_item(item, collection=None):
         obj.match_id = result.get('_id')
         obj.match_collection_id = source.get('collection_id')
         obj.score = result.get('_score')
-        matches.append(obj)
-    db.session.bulk_save_objects(matches)
+        db.session.add(obj)
 
 
 def xref_collection(collection, other=None):
