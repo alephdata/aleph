@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import queryString from 'query-string';
 
-import { fetchSearchResults } from '../actions';
+import { fetchSearchResults, filterSearchEntities } from '../actions/search';
 
 import SearchResultList from '../components/SearchResultList';
 import Search from '../components/Search';
@@ -11,6 +11,11 @@ import Search from '../components/Search';
 const SearchWithRouter = withRouter(Search);
 
 class SearchScreen extends Component {
+  constructor() {
+    super();
+    this.changeEntityFilter = this.changeEntityFilter.bind(this);
+  }
+
   componentDidMount() {
     this.fetchData();
   }
@@ -27,11 +32,16 @@ class SearchScreen extends Component {
     fetchSearchResults(query);
   }
 
+  changeEntityFilter(entityType) {
+    this.props.filterSearchEntities(entityType);
+  }
+
   render() {
     return (
       <div>
         <SearchWithRouter />
-        <SearchResultList result={this.props.searchResults} />
+        <SearchResultList result={this.props.searchResults}
+          changeEntityFilter={this.changeEntityFilter} />
       </div>
     )
   }
@@ -40,17 +50,15 @@ class SearchScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const params = queryString.parse(ownProps.location.search);
 
-  console.log(state);
-
   return {
     query: params,
-    searchResults: state.searchResults
+    searchResults: state.searchResults,
   };
 }
 
 SearchScreen = connect(
   mapStateToProps,
-  { fetchSearchResults }
+  { fetchSearchResults, filterSearchEntities }
 )(SearchScreen);
 
 export default SearchScreen;
