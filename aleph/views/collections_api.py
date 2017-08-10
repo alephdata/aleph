@@ -54,7 +54,7 @@ def process(id):
     process_collection.apply_async([collection.id],
                                    queue=USER_QUEUE,
                                    routing_key=USER_ROUTING_KEY)
-    return jsonify({'status': 'ok'})
+    return jsonify({'status': 'accepted'}, status=202)
 
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['DELETE'])
@@ -63,4 +63,4 @@ def delete(id):
     delete_collection.apply_async([collection.id],
                                   queue=USER_QUEUE,
                                   routing_key=USER_ROUTING_KEY)
-    return jsonify({'status': 'ok'})
+    return jsonify({'status': 'accepted'}, status=202)
