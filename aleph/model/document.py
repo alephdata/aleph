@@ -76,14 +76,12 @@ class Document(db.Model, DatedModel, Metadata):
     def delete_records(self):
         pq = db.session.query(DocumentRecord)
         pq = pq.filter(DocumentRecord.document_id == self.id)
-        # pq.delete(synchronize_session='fetch')
         pq.delete()
         db.session.flush()
 
     def delete_tags(self):
         pq = db.session.query(DocumentTag)
         pq = pq.filter(DocumentTag.document_id == self.id)
-        # pq.delete(synchronize_session='fetch')
         pq.delete()
         db.session.flush()
 

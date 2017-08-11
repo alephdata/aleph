@@ -99,12 +99,15 @@ def make_excel_safe_name(collection):
     return name[:30]
 
 
-def generate_matches_sheet(workbook, collection, match_collection, authz,
-                           links=True):
+def generate_matches_sheet(workbook, sheet, collection, match_collection, authz,
+                           links=True, one_sheet=False):
     from aleph.views.serializers import MatchSchema
 
-    sheet_name = make_excel_safe_name(match_collection)
-    sheet = workbook.add_worksheet(sheet_name)
+    if one_sheet:
+        sheet_label = "All matches"
+    else:
+        sheet_label = match_collection.label
+
     sheet.set_zoom(125)
     parser = QueryParser({}, authz, limit=1000)
     q_match = Match.find_by_collection(collection.id, match_collection.id)
@@ -117,15 +120,17 @@ def generate_matches_sheet(workbook, collection, match_collection, authz,
     sheet.write(1, 2, 'Type', workbook.header_format)
     sheet.write(1, 3, 'Country', workbook.header_format)
     sheet.write(1, 4, 'Source URL', workbook.header_format)
-    sheet.merge_range(0, 5, 0, 7,
-                      match_collection.label,
+    sheet.merge_range(0, 5, 0, 8,
+                      sheet_label,
                       workbook.header_format)
     sheet.write(1, 5, 'Name', workbook.header_format)
     sheet.write(1, 6, 'Type', workbook.header_format)
     sheet.write(1, 7, 'Country', workbook.header_format)
+    if one_sheet:
+        sheet.write(1, 8, 'Collection', workbook.header_format)
 
     sheet.freeze_panes(2, 0)
-    sheet.autofilter(1, 1, 2 + len(matches.results), 7)
+    sheet.autofilter(1, 1, 2 + len(matches.results), 8)
     widths = {}
     for row, result in enumerate(matches.results, 2):
         sheet.write_number(row, 0, int(result.score))
@@ -155,15 +160,17 @@ def generate_matches_sheet(workbook, collection, match_collection, authz,
         sheet.write_string(row, 6, schema.label)
         countries = ', '.join(sorted(result.match.get('countries', [])))
         sheet.write_string(row, 7, countries.upper())
+        if one_sheet:
+            sheet.write_string(row, 8, match_collection.label)
 
     for idx, max_len in widths.items():
         max_len = min(70, max(7, max_len + 1))
         sheet.set_column(idx, idx, float(max_len))
 
-    return sheet_name
+    return sheet
 
 
-def generate_excel(collection, authz, links=True):
+def generate_excel(collection, authz, links=True, one_sheet=False):
     output = StringIO.StringIO()
     workbook = xlsxwriter.Workbook(output)
     workbook.link_format = workbook.add_format({
@@ -183,7 +190,8 @@ def generate_excel(collection, authz, links=True):
     sheet.merge_range(0, 0, 0, 2, title, workbook.header_format)
     sheet.write(1, 0, 'Collection', workbook.header_format)
     sheet.write(1, 1, 'Matches', workbook.header_format)
-    sheet.write(1, 2, 'Details', workbook.header_format)
+    if not one_sheet:
+        sheet.write(1, 2, 'Details', workbook.header_format)
     sheet.set_column(2, 2, 20)
     sheet.freeze_panes(1, 0)
 
@@ -200,13 +208,25 @@ def generate_excel(collection, authz, links=True):
         max_label = max(max_label, len(result.collection.label))
         sheet.set_column(0, 0, float(max_label))
         sheet.write_number(row, 1, result.matches)
-        name = generate_matches_sheet(workbook,
-                                      collection,
-                                      result.collection,
-                                      authz,
-                                      links=links)
-        url = "internal:'%s'!B3" % name
-        sheet.write_url(row, 2, url, workbook.link_format, 'See matches')
+
+        if not one_sheet:
+            matches_sheet_name = make_excel_safe_name(result.collection)
+            matches_sheet = workbook.add_worksheet(matches_sheet_name)
+            url = "internal:'%s'!B3" % matches_sheet_name
+            sheet.write_url(row, 2, url, workbook.link_format, 'See matches')
+
+        try:
+            matches_sheet
+        except NameError:
+            matches_sheet = workbook.add_worksheet("All matches")
+
+        matches_sheet = generate_matches_sheet(workbook,
+                               matches_sheet,
+                               collection,
+                               result.collection,
+                               authz,
+                               links=links,
+                               one_sheet=one_sheet)
 
     workbook.close()
     output.seek(0)

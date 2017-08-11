@@ -4,7 +4,7 @@ from aleph.core import db
 from aleph.util import dict_list
 from aleph.model import Collection, Role, Permission
 from aleph.index.entities import index_bulk
-from aleph.index.collections import index_collection
+from aleph.logic.collections import update_collection
 from aleph.logic.bulk.query import DatabaseQuery, CSVQuery
 
 PAGE = 1000
@@ -27,6 +27,7 @@ def bulk_load(config):
                 'summary': data.get('summary'),
                 'category': data.get('category'),
             })
+            update_collection(collection)
 
         for role_fk in dict_list(data, 'roles', 'role'):
             role = Role.by_foreign_id(role_fk)
@@ -56,7 +57,7 @@ def load_query(collection, query):
     if len(rows):
         load_rows(query, rows)
 
-    index_collection(collection)
+    update_collection(collection)
 
 
 def load_rows(query, rows):

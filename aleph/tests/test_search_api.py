@@ -43,7 +43,7 @@ class SearchApiTestCase(TestCase):
         res = self.client.get('/api/2/search?facet=schema&filter:schema=Company')  # noqa
         assert res.status_code == 200, res
         facet = res.json['facets']['schema']
-        assert len(facet['values']) == 1
+        assert len(facet['values']) == 2, facet['values']
         assert facet['values'][0]['label'] == 'Companies', facet
 
     def test_basic_filters(self):

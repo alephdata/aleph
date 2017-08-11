@@ -68,9 +68,6 @@ def delete_collection(collection_id):
     q = db.session.query(Entity)
     q = q.filter(Entity.collection_id == collection.id)
     for entity in q.yield_per(5000):
-        # TODO: consider hard-deleting entities because the polyglot tagger
-        # cannot tell if a deleted match on a tagged term on a revived
-        # collection means not to tag this entity any more.
         log.info("Delete entity: %r", entity)
         delete_entity(entity, deleted_at=deleted_at)
 
