@@ -3,11 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Button } from '@blueprintjs/core';
 
 import queryString from 'query-string';
-import debounce from 'lodash/debounce';
-import isEqual from 'lodash/isEqual';
-import invert from 'lodash/invert';
-import mapValues from 'lodash/mapValues';
-import pickBy from 'lodash/pickBy';
+import { debounce, isEqual, invert, mapValues, pickBy } from 'lodash';
 
 import SearchFilterEntities from './SearchFilterEntities';
 
