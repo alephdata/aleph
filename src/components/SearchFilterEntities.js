@@ -3,7 +3,8 @@ import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Tab2, Tabs2 } from '@blueprintjs/core';
 
 const SearchFilterEntities = ({ onChange, result, value }) => (
-  <Tabs2 id="entityTypes" className="pt-large pt-dark" onChange={onChange} selectedId={value}>
+  <Tabs2 id="entityTypes" className="pt-large pt-dark" onChange={onChange}
+    selectedTabId={value}>
     <Tab2 id="All">
       <FormattedMessage id="search.entities.All" defaultMessage="All Results"/>
       {' '}(<FormattedNumber value={result.total} />)
