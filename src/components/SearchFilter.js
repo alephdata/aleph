@@ -1,83 +1,69 @@
 import React, { Component } from 'react';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { Button, Tab2, Tabs2 } from '@blueprintjs/core';
+import { FormattedMessage } from 'react-intl';
+import { Button } from '@blueprintjs/core';
 
 import queryString from 'query-string';
 import debounce from 'lodash/debounce';
 import isEqual from 'lodash/isEqual';
+import invert from 'lodash/invert';
+import mapValues from 'lodash/mapValues';
+import pickBy from 'lodash/pickBy';
+
+import SearchFilterEntities from './SearchFilterEntities';
 
 import './SearchFilter.css';
 
-const schemas = [
-  {
-    'id': 'Document',
-    'label': 'Documents'
-  },
-  {
-    'id': 'Person',
-    'label': 'People'
-  },
-  {
-    'id': 'Company',
-    'label': 'Companies'
-  },
-  {
-    'id': 'LegalEntity',
-    'label': 'Legal Entities'
-  }
-];
+const stateToFilter = {
+  searchTerm: 'q',
+  entityType: 'filter:schema'
+};
+
+const filterToState = invert(stateToFilter);
 
 class SearchFilter extends Component {
   constructor(props)  {
     super(props);
 
-    const params = queryString.parse(props.location.search);
-
-    this.state = {
-      searchTerm: params.q || ''
-    };
+    const filters = queryString.parse(props.location.search);
+    this.state = mapValues(stateToFilter, filter => filters[filter] || '');
 
     this.onTextChange = this.onTextChange.bind(this);
-    this.onEntityChange = this.onTextChange.bind(this);
+    this.onEntityChange = this.onEntityChange.bind(this);
 
     this.debouncedUpdate = debounce(this.updateLocation, 250);
   }
 
-  updateLocation({ searchTerm, entityType }) {
+  updateLocation() {
     const { history, location } = this.props;
-
-    const params = queryString.parse(location.search);
-    const newParams = { ...params, q: searchTerm, e: entityType};
-
-    if (!searchTerm) {
-      delete newParams.q;
-    }
-    if (!entityType) {
-      delete newParams.e;
-    }
+    const params = mapValues(filterToState, s => this.state[s]);
+    const nonEmptyParams = pickBy(params, v => !!v);
 
     history.push({
       pathname: location.pathname,
-      search: queryString.stringify(newParams)
+      search: queryString.stringify(nonEmptyParams)
     });
   }
 
-  componentWillUpdate(nextProps, props) {
-    if (!isEqual(nextProps, props)) {
-      this.debouncedUpdate(props);
+  componentWillUpdate(nextProps, nextState) {
+    if (!isEqual(nextState, this.state)) {
+      this.debouncedUpdate();
     }
   }
 
   onTextChange(e) {
-    this.setState({searchTerm: e.target.value});
+    this.setState({
+      searchTerm: e.target.value
+    });
   }
 
-  onEntityChange(entityType) {
-    this.setState({entityType});
+  onEntityChange(type) {
+    this.setState({
+      entityType: type === 'All' ? null : type
+    });
   }
 
   render() {
-    const { searchTerm } = this.state;
+    const { searchTerm, entityType } = this.state;
     const { result } = this.props;
 
     return (
@@ -94,18 +80,8 @@ class SearchFilter extends Component {
             </Button>
           </div>
         </div>
-        <Tabs2 id="entityTypes" className="pt-large pt-dark" onChange={this.onEntityChange}>
-          <Tab2 id="All">
-            <FormattedMessage id="search.entities.All" defaultMessage="All Results"/>
-            { !result.isFetching && <span> (<FormattedNumber value={result.total} />)</span> }
-          </Tab2>
-          {schemas.map(schema => (
-            <Tab2 id={schema.id} key={schema.id}>
-              <FormattedMessage id={`search.entities.${schema.id}`} defaultMessage={schema.label}/>
-              {' '}(0)
-            </Tab2>
-          ))}
-        </Tabs2>
+        { result.total > 0 &&
+          <SearchFilterEntities onChange={this.onEntityChange} result={result} value={entityType} /> }
       </div>
     );
   }

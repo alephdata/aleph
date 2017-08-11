@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import queryString from 'query-string';
+import isEqual from 'lodash/isEqual';
 
 import { fetchSearchResults } from '../actions';
 
@@ -16,8 +17,7 @@ class SearchScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // should account for multiple filters in the future
-    if (this.props.query.q !== prevProps.query.q) {
+    if (!isEqual(this.props.query, prevProps.query)) {
       this.fetchData();
     }
   }
