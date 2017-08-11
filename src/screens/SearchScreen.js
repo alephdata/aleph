@@ -42,7 +42,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     query: params,
-    searchResults: state.searchResults,
+    searchResults: state.searchResults
   };
 }
 

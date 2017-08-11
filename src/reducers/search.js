@@ -1,7 +1,6 @@
 const initialState = {
   isFetching: false,
-  results: [],
-  schemaFilter: 'All'
+  results: []
 };
 
 const searchResults = (state = initialState, action) => {
@@ -9,9 +8,7 @@ const searchResults = (state = initialState, action) => {
     case 'FETCH_SEARCH_REQUEST':
       return { ...state, isFetching: true }
     case 'FETCH_SEARCH_SUCCESS':
-      return { ...state, ...action.result, isFetching: false }
-    case 'FILTER_SEARCH_ENTITIES':
-      return { ...state, schemaFilter: action.entityType }
+      return { ...action.result, isFetching: false }
     default:
       return state;
   }
