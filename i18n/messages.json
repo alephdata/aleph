@@ -12,6 +12,11 @@
   {
     "id": "search.collections",
     "defaultMessage": "Collections",
-    "filepath": "src/components/Search.js"
+    "filepath": "src/components/SearchFilter.js"
+  },
+  {
+    "id": "search.entities.All",
+    "defaultMessage": "All Results",
+    "filepath": "src/components/SearchFilterEntities.js"
   }
 ]
