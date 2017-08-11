@@ -11,7 +11,7 @@ const SearchFilterEntities = ({ onChange, result, value }) => {
     <Tabs2 id="entityTypes" className="pt-large pt-dark" onChange={_onChange}
       selectedTabId={value}>
       <Tab2 id={ALL_ENTITIES}>
-        <FormattedMessage id="search.entities.All" defaultMessage="All Results"/>
+        <FormattedMessage id="search.entities.all" defaultMessage="All Results"/>
         {' '}(<FormattedNumber value={result.total} />)
       </Tab2>
       {result.facets.schema.values.map(schema => (
