@@ -3,18 +3,16 @@ import { FormattedMessage } from 'react-intl';
 import { Button } from '@blueprintjs/core';
 
 import queryString from 'query-string';
-import { debounce, isEqual, invert, mapValues, pickBy } from 'lodash';
+import { debounce, isEqual, pickBy } from 'lodash';
 
 import SearchFilterEntities from './SearchFilterEntities';
 
 import './SearchFilter.css';
 
-const stateToParam = {
-  searchTerm: 'q',
-  entityType: 'filter:schema'
-};
-
-const paramToState = invert(stateToParam);
+const VALID_PARAMS = [
+  'q',
+  'filter:schema'
+];
 
 class SearchFilter extends Component {
   constructor(props)  {
@@ -22,7 +20,7 @@ class SearchFilter extends Component {
 
     const params = queryString.parse(props.location.search);
     this.state = {
-      filters: mapValues(stateToParam, param => params[param] || '')
+      params: Object.assign({}, ...VALID_PARAMS.map(param => ({[param]: params[param]})))
     };
 
     this.onTextChange = this.onTextChange.bind(this);
@@ -33,8 +31,7 @@ class SearchFilter extends Component {
 
   updateLocation() {
     const { history, location } = this.props;
-    const params = mapValues(paramToState, s => this.state.filters[s]);
-    const nonEmptyParams = pickBy(params, v => !!v);
+    const nonEmptyParams = pickBy(this.state.params, v => !!v);
 
     history.push({
       pathname: location.pathname,
@@ -42,32 +39,31 @@ class SearchFilter extends Component {
     });
   }
 
-  componentWillUpdate(nextProps, { filters }) {
-    if (!isEqual(filters, this.state.filters)) {
+  componentWillUpdate(nextProps, { params }) {
+    if (!isEqual(params, this.state.params)) {
       this.debouncedUpdate();
     }
   }
 
-  onTextChange(e) {
+  handleParamChange(param, newValue) {
     this.setState({
-      filters: {
-        ...this.state.filters,
-        searchTerm: e.target.value
+      params: {
+        ...this.state.params,
+        [param]: newValue
       }
     });
+  }
+
+  onTextChange(e) {
+    this.handleParamChange('q', e.target.value);
   }
 
   onEntityChange(type) {
-    this.setState({
-      filters: {
-        ...this.state.filters,
-        entityType: type === 'All' ? null : type
-      }
-    });
+    this.handleParamChange('filter:schema', type);
   }
 
   render() {
-    const { searchTerm, entityType } = this.state.filters;
+    const { params } = this.state;
     const { result } = this.props;
 
     return (
@@ -75,7 +71,8 @@ class SearchFilter extends Component {
         <div className="search-query">
           <div className="search-query__text pt-input-group pt-large">
             <span className="pt-icon pt-icon-search"/>
-            <input className="pt-input" type="search" onChange={this.onTextChange} value={searchTerm}/>
+            <input className="pt-input" type="search" onChange={this.onTextChange}
+              value={params.q}/>
           </div>
           <div className="pt-large">
             <Button rightIconName="caret-down">
@@ -85,7 +82,8 @@ class SearchFilter extends Component {
           </div>
         </div>
         { result.total > 0 &&
-          <SearchFilterEntities onChange={this.onEntityChange} result={result} value={entityType} /> }
+          <SearchFilterEntities onChange={this.onEntityChange} result={result}
+            value={params['filter:schema']} /> }
       </div>
     );
   }
