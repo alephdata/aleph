@@ -6,9 +6,9 @@ import queryString from 'query-string';
 import { fetchSearchResults, filterSearchEntities } from '../actions/search';
 
 import SearchResultList from '../components/SearchResultList';
-import Search from '../components/Search';
+import SearchFilter from '../components/SearchFilter';
 
-const SearchWithRouter = withRouter(Search);
+const SearchFilterWithRouter = withRouter(SearchFilter);
 
 class SearchScreen extends Component {
   constructor() {
@@ -39,7 +39,7 @@ class SearchScreen extends Component {
   render() {
     return (
       <div>
-        <SearchWithRouter />
+        <SearchFilterWithRouter />
         <SearchResultList result={this.props.searchResults}
           changeEntityFilter={this.changeEntityFilter} />
       </div>

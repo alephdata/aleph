@@ -5,9 +5,9 @@ import { Button } from '@blueprintjs/core';
 import queryString from 'query-string';
 import debounce from 'lodash/debounce';
 
-import './Search.css';
+import './SearchFilter.css';
 
-class Search extends Component {
+class SearchFilter extends Component {
   constructor(props)  {
     super(props);
 
@@ -71,4 +71,4 @@ class Search extends Component {
   }
 }
 
-export default Search;
+export default SearchFilter;
