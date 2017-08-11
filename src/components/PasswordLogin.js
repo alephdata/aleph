@@ -1,8 +1,8 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
-import {endpoint} from '../api';
+import axios from 'axios';
 
-const PasswordLogin = ({authMetadata}) => {
+const PasswordLogin = ({authMetadata, onLogin}) => {
   let emailElement, passwordElement;
 
   const login = function (event) {
@@ -14,8 +14,8 @@ const PasswordLogin = ({authMetadata}) => {
       password: passwordElement.value
     };
 
-    endpoint.post(url, data).then((res) => {
-      console.log(res); // TODO
+    axios.post(url, data).then((res) => {
+      onLogin(res.data.token);
     }).catch(e => {
       console.error(e); // TODO
     });

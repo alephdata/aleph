@@ -9,6 +9,7 @@ import PageNavbar from '../components/PageNavbar';
 import SearchScreen from './SearchScreen';
 import LoginScreen from "./LoginScreen";
 import ErrorScreen from './ErrorScreen';
+import LogoutScreen from "./LogoutScreen";
 
 class PageLayout extends Component {
 
@@ -34,6 +35,7 @@ class PageLayout extends Component {
             <Redirect exact from="/" to="/search"/>
             <Route path="/search" exact component={SearchScreen}/>
             <Route path="/login" exact component={LoginScreen}/>
+            <Route path="/logout" exact component={LogoutScreen}/>
             <Route component={ErrorScreen}/>
           </Switch>
         </main>

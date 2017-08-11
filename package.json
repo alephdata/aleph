@@ -21,7 +21,8 @@
     "react-router-dom": "^4.1.1",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "jwt-decode": "latest"
   },
   "devDependencies": {
     "faker": "^4.1.0",
