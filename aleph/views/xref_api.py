@@ -44,7 +44,8 @@ def report(collection_id):
     require(request.authz.can_read(collection.id))
     output = generate_excel(collection,
                             request.authz,
-                            links=arg_bool('links'))
+                            links=arg_bool('links'),
+                            one_sheet=arg_bool('merge'))
     outputfile = "%s_xref.xlsx" % string_value(collection.label)
     return send_file(output,
                      as_attachment=True,
