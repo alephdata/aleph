@@ -9,18 +9,12 @@ import SearchFilterEntities from './SearchFilterEntities';
 
 import './SearchFilter.css';
 
-const VALID_PARAMS = [
-  'q',
-  'filter:schema'
-];
-
 class SearchFilter extends Component {
   constructor(props)  {
     super(props);
 
-    const params = queryString.parse(props.location.search);
     this.state = {
-      params: Object.assign({}, ...VALID_PARAMS.map(param => ({[param]: params[param]})))
+      params: queryString.parse(props.location.search)
     };
 
     this.onTextChange = this.onTextChange.bind(this);
