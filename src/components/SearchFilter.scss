@@ -1,13 +1,17 @@
 @import "~@blueprintjs/core/dist/variables";
 
-.top {
-  background-color: $gray3;
+.search-filter {
   padding: $pt-grid-size * 2;
-
-  display: flex;
+  margin-bottom: $pt-grid-size * 2;
+  background-color: $gray3;
+  color: white;
 }
 
-.top__search {
+.search-query {
+    display: flex;
+}
+
+.search-query__text {
   flex: 1;
   padding-right: $pt-grid-size;
 
