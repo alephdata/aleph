@@ -13,19 +13,21 @@ import SearchFilterEntities from './SearchFilterEntities';
 
 import './SearchFilter.css';
 
-const stateToFilter = {
+const stateToParam = {
   searchTerm: 'q',
   entityType: 'filter:schema'
 };
 
-const filterToState = invert(stateToFilter);
+const paramToState = invert(stateToParam);
 
 class SearchFilter extends Component {
   constructor(props)  {
     super(props);
 
-    const filters = queryString.parse(props.location.search);
-    this.state = mapValues(stateToFilter, filter => filters[filter] || '');
+    const params = queryString.parse(props.location.search);
+    this.state = {
+      filters: mapValues(stateToParam, param => params[param] || '')
+    };
 
     this.onTextChange = this.onTextChange.bind(this);
     this.onEntityChange = this.onEntityChange.bind(this);
@@ -35,7 +37,7 @@ class SearchFilter extends Component {
 
   updateLocation() {
     const { history, location } = this.props;
-    const params = mapValues(filterToState, s => this.state[s]);
+    const params = mapValues(paramToState, s => this.state.filters[s]);
     const nonEmptyParams = pickBy(params, v => !!v);
 
     history.push({
@@ -44,26 +46,32 @@ class SearchFilter extends Component {
     });
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if (!isEqual(nextState, this.state)) {
+  componentWillUpdate(nextProps, { filters }) {
+    if (!isEqual(filters, this.state.filters)) {
       this.debouncedUpdate();
     }
   }
 
   onTextChange(e) {
     this.setState({
-      searchTerm: e.target.value
+      filters: {
+        ...this.state.filters,
+        searchTerm: e.target.value
+      }
     });
   }
 
   onEntityChange(type) {
     this.setState({
-      entityType: type === 'All' ? null : type
+      filters: {
+        ...this.state.filters,
+        entityType: type === 'All' ? null : type
+      }
     });
   }
 
   render() {
-    const { searchTerm, entityType } = this.state;
+    const { searchTerm, entityType } = this.state.filters;
     const { result } = this.props;
 
     return (
