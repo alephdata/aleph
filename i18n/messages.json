@@ -15,8 +15,8 @@
     "filepath": "src/components/SearchFilter.js"
   },
   {
-    "id": "search.entities.all",
+    "id": "search.schema.all",
     "defaultMessage": "All Results",
-    "filepath": "src/components/SearchFilterEntities.js"
+    "filepath": "src/components/SearchFilterSchema.js"
   }
 ]

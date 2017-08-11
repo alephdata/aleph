@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2017-08-11T12:43:35.482Z\n"
+"POT-Creation-Date: 2017-08-11T14:51:32.389Z\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "MIME-Version: 1.0\n"
@@ -8,7 +8,7 @@ msgstr ""
 
 
 #: i18n/messages.json
-#. [search.entities.all]
+#. [search.schema.all]
 #. defaultMessage is:
 #. All Results
 msgid "All Results"

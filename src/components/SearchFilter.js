@@ -5,7 +5,7 @@ import { Button } from '@blueprintjs/core';
 import queryString from 'query-string';
 import { debounce, isEqual, pickBy } from 'lodash';
 
-import SearchFilterEntities from './SearchFilterEntities';
+import SearchFilterSchema from './SearchFilterSchema';
 
 import './SearchFilter.css';
 
@@ -18,7 +18,7 @@ class SearchFilter extends Component {
     };
 
     this.onTextChange = this.onTextChange.bind(this);
-    this.onEntityChange = this.onEntityChange.bind(this);
+    this.onSchemaChange = this.onSchemaChange.bind(this);
 
     this.debouncedUpdate = debounce(this.updateLocation, 250);
   }
@@ -52,7 +52,7 @@ class SearchFilter extends Component {
     this.handleParamChange('q', e.target.value);
   }
 
-  onEntityChange(type) {
+  onSchemaChange(type) {
     this.handleParamChange('filter:schema', type);
   }
 
@@ -76,7 +76,7 @@ class SearchFilter extends Component {
           </div>
         </div>
         { result.total > 0 &&
-          <SearchFilterEntities onChange={this.onEntityChange} result={result}
+          <SearchFilterSchema onChange={this.onSchemaChange} result={result}
             value={params['filter:schema']} /> }
       </div>
     );
