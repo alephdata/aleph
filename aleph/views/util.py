@@ -10,6 +10,7 @@ from aleph.core import app_url
 from aleph.authz import Authz
 from aleph.model import Document, Collection
 from aleph.logic import fetch_entity
+from aleph.index.documents import get_document as _get_index_document
 
 
 def require(*predicates):
@@ -61,6 +62,12 @@ def get_entity(id, action):
 def get_document(document_id, action=Authz.READ):
     document = obj_or_404(Document.by_id(document_id))
     require(request.authz.can(document.collection_id, action))
+    return document
+
+
+def get_index_document(document_id, action=Authz.READ):
+    document = obj_or_404(_get_index_document(document_id))
+    require(request.authz.can(document.get('collection_id'), action))
     return document
 
 

@@ -7,7 +7,8 @@ from aleph.model import Document, DocumentRecord
 from aleph.logic.documents import update_document, delete_document
 from aleph.logic.collections import update_collection
 from aleph.views.cache import enable_cache
-from aleph.views.util import get_document, jsonify, parse_request
+from aleph.views.util import get_document, get_index_document
+from aleph.views.util import jsonify, parse_request
 from aleph.views.serializers import DocumentSchema, RecordSchema
 from aleph.search import DocumentsQuery, RecordsQuery
 from aleph.util import PDF_MIME
@@ -27,7 +28,7 @@ def index():
 @blueprint.route('/api/2/documents/<int:document_id>')
 def view(document_id):
     enable_cache()
-    document = get_document(document_id)
+    document = get_index_document(document_id)
     return jsonify(document, schema=DocumentSchema)
 
 

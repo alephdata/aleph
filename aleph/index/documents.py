@@ -5,7 +5,7 @@ from aleph.model import Document, DocumentTag
 from aleph.schema.types import PhoneProperty, EmailProperty, NameProperty
 from aleph.index.records import index_records, clear_records
 from aleph.index.mapping import TYPE_DOCUMENT
-from aleph.index.util import index_form, index_names
+from aleph.index.util import index_form, index_names, unpack_result
 
 log = logging.getLogger(__name__)
 
@@ -96,6 +96,18 @@ def index_document(document):
     data['id'] = document.id
     data['$type'] = TYPE_DOCUMENT
     return data
+
+
+def get_document(document_id):
+    """Fetch a document from the index."""
+    result = es.get(index=es_index,
+                    doc_type=TYPE_DOCUMENT,
+                    id=document_id,
+                    ignore=[404])
+    document = unpack_result(result)
+    if document is not None:
+        document.pop('text', None)
+    return document
 
 
 def delete_document(document_id):
