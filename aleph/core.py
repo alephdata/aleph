@@ -1,7 +1,7 @@
 import os
 import logging
 from logging.handlers import SMTPHandler
-from urlparse import urljoin
+from urlparse import urlparse
 from werkzeug.local import LocalProxy
 from flask import Flask, current_app
 from flask import url_for as flask_url_for
@@ -123,7 +123,13 @@ def get_config(name, default=None):
 
 
 def get_app_url():
-    return urljoin(current_app.config.get('APP_BASEURL'), '/')
+    app = current_app._get_current_object()
+    if not hasattr(app, '_app_baseurl'):
+        parsed = urlparse(current_app.config.get('APP_BASEURL'))
+        if get_config('PREFERRED_URL_SCHEME'):
+            parsed = parsed._replace(scheme=get_config('PREFERRED_URL_SCHEME'))
+        app._app_baseurl = parsed.geturl()
+    return app._app_baseurl
 
 
 def get_app_name():
