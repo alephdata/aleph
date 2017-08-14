@@ -25,7 +25,8 @@ def summary(id):
     return jsonify(result)
 
 
-@blueprint.route('/api/2/collections/<int:id>/xref/<int:other_id>', methods=['GET'])
+@blueprint.route('/api/2/collections/<int:id>/xref/<int:other_id>',
+                 methods=['GET'])
 def matches(id, other_id):
     collection = obj_or_404(Collection.by_id(id))
     require(request.authz.can_read(collection.id))
@@ -46,13 +47,14 @@ def report(collection_id):
                             request.authz,
                             links=arg_bool('links'),
                             one_sheet=arg_bool('merge'))
-    outputfile = "%s_xref.xlsx" % string_value(collection.label)
+    outputfile = "%s Cross-referenced.xlsx" % string_value(collection.label)
     return send_file(output,
                      as_attachment=True,
                      attachment_filename=outputfile)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/xref', methods=['POST'])
+@blueprint.route('/api/2/collections/<int:collection_id>/xref',
+                 methods=['POST'])
 def generate_summary(collection_id):
     collection = get_collection(collection_id, request.authz.WRITE)
     process_xref.apply_async([collection.id],
@@ -61,7 +63,8 @@ def generate_summary(collection_id):
     return jsonify({'status': 'accepted'}, status=202)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/xref/<int:other_id>', methods=['POST'])
+@blueprint.route('/api/2/collections/<int:collection_id>/xref/<int:other_id>',
+                 methods=['POST'])
 def generate_matches(collection_id, other_id):
     collection = get_collection(collection_id, request.authz.WRITE)
     other = get_collection(other_id, request.authz.WRITE)
