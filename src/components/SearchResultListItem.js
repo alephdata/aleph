@@ -1,17 +1,44 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 
-import DocumentListItem from './DocumentListItem';
-import EntityListItem from './EntityListItem';
+const DocumentListItem = ({ title, collection }) => (
+  <tr className="result result--document">
+    <td>{ title }</td>
+    <td></td>
+    <td></td>
+  </tr>
+);
 
-class SearchResultListItem extends Component {
-  render() {
-    var result = this.props.result;
-    if (result.schema === 'Document') {
-      return (<DocumentListItem {...result} />);
-    } else {
-      return (<EntityListItem {...result} />);
-    }
-  }
-}
+const PersonListItem = ({ name, collection }) => (
+  <tr className="result result--person">
+    <td>{ name }</td>
+    <td>{ collection && collection.label }</td>
+    <td></td>
+  </tr>
+);
 
-export default SearchResultListItem;
+const LegalEntityListItem = ({ name }) => (
+  <tr className="result result--legal-entity">
+    <td>{ name }</td>
+    <td></td>
+    <td></td>
+  </tr>
+);
+
+const ListItems = {
+  'Document': DocumentListItem,
+  'Person': PersonListItem,
+  'LegalEntity': PersonListItem,
+  'Company': PersonListItem
+};
+
+const SearchResultListItem = ({ result, collection }) => {
+  const ListItem = ListItems[result.schema];
+  return <ListItem collection={collection} {...result} />;
+};
+
+const mapStateToProps = ({ collections }, { result }) => ({
+  collection: collections[result.collection_id]
+});
+
+export default connect(mapStateToProps)(SearchResultListItem);

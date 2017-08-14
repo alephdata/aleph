@@ -1,4 +1,23 @@
+import uniq from 'lodash/uniq';
+import queryString from 'query-string';
+
 import { endpoint } from '../api';
+
+export const fetchCollections = (ids) => (dispatch, getState) => {
+  const { collections } = getState();
+  const newIds = uniq(ids).filter(id => !collections[id]);
+
+  if (newIds.length > 0) {
+    return endpoint.get('collections', {
+        params: {'filter:id': newIds},
+        paramsSerializer: queryString.stringify
+      })
+      .then(response => dispatch({
+        type: 'FETCH_COLLECTIONS_SUCCESS',
+        collections: response.data
+      }));
+  }
+};
 
 export const fetchSearchResults = (filters) => (dispatch) => {
   dispatch({
@@ -7,12 +26,18 @@ export const fetchSearchResults = (filters) => (dispatch) => {
   });
 
   return endpoint.get('search', {params: {...filters, facet: 'schema'}})
-    .then((response) => response.data)
-    .then((data) => dispatch({
-      type: 'FETCH_SEARCH_SUCCESS',
-      filters,
-      result: data
-    }));
+    .then(response => {
+      const result = response.data;
+
+      dispatch({
+        type: 'FETCH_SEARCH_SUCCESS',
+        filters,
+        result
+      });
+
+      const collectionIds = result.results.map(result => result.collection_id);
+      dispatch(fetchCollections(collectionIds));
+    });
 };
 
 export const fetchMetadata = () => (dispatch) => {
