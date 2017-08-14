@@ -1,16 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const DocumentListItem = ({ title, collection }) => (
-  <tr className="result result--document">
+const DocumentListItem = ({ title, collection, schema }) => (
+  <tr className={`result result--${schema}`}>
     <td>{ title }</td>
-    <td></td>
+    <td className="result__collection">{ collection && collection.label }</td>
     <td></td>
   </tr>
 );
 
-const PersonListItem = ({ name, collection }) => (
-  <tr className="result result--person">
+const PersonListItem = ({ name, collection, schema }) => (
+  <tr className={`result result--${schema}`}>
     <td className="result__name">{ name }</td>
     <td className="result__collection">{ collection && collection.label }</td>
     <td></td>

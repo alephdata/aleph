@@ -35,16 +35,10 @@
         background-color: $gray3;
         border-radius: 100px;
 
-        .result--document & {
-            background-image: url(./icons/Document.svg);
-        }
-
-        .result--person & {
-            background-image: url(./icons/Person.svg);
-        }
-
-        .result--legal-entity & {
-            background-image: url(./icons/LegalEntity.svg);
+        @each $schema in (Document, Person, LegalEntity, Company) {
+            .result--#{$schema} & {
+                background-image: url(./icons/#{$schema}.svg);
+            }
         }
     }
 }
