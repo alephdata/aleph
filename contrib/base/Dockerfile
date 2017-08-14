@@ -3,9 +3,10 @@ MAINTAINER Friedrich Lindenberg <friedrich@pudo.org>
 ENV DEBIAN_FRONTEND noninteractive
 
 # Enable non-free archive for `unrar`.
-RUN echo "deb http://http.us.debian.org/debian stable non-free" >/etc/apt/sources.list.d/nonfree.list
+RUN echo "deb http://http.us.debian.org/debian jessie non-free" >/etc/apt/sources.list.d/nonfree.list
 
-RUN apt-get update -y -q && apt-get -y dist-upgrade && apt-get install -y -q  \
+RUN apt-get update -y -q && apt-get -y -q dist-upgrade
+RUN apt-get install -y -q  \
         curl git python-pip python-virtualenv build-essential python-dev \
         libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates less \
         postgresql-client-9.4 unrar unrar-free unzip locales libreoffice \
