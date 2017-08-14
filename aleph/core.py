@@ -196,8 +196,8 @@ language_whitelist = LocalProxy(get_language_whitelist)
 def url_for(*a, **kw):
     """Generate external URLs with HTTPS (if configured)."""
     try:
-        kw['_external'] = True
-        if get_config('PREFERRED_URL_SCHEME'):
+        kw['_external'] = not kw.pop('_relative', False)
+        if kw['_external'] and get_config('PREFERRED_URL_SCHEME'):
             kw['_scheme'] = get_config('PREFERRED_URL_SCHEME')
         return flask_url_for(*a, **kw)
     except RuntimeError:

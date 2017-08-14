@@ -53,8 +53,8 @@ def metadata():
 
     if auth['password_login']:
         auth['registration'] = get_config('PASSWORD_REGISTRATION')
-        auth['password_login_uri'] = url_for('sessions_api.password_login')
-        auth['registration_uri'] = url_for('roles_api.invite_email')
+        auth['password_login_uri'] = url_for('sessions_api.password_login', _relative=True)
+        auth['registration_uri'] = url_for('roles_api.invite_email', _relative=True)
 
     return jsonify({
         'status': 'ok',
