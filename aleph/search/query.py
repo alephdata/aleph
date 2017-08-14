@@ -36,7 +36,9 @@ class Query(object):
         for field, values in self.parser.filters.items():
             if field == exclude:
                 continue
-            if field in self.MULTI_FIELDS:
+            if field in ['id', '_id']:
+                filters.append({'ids': {'values': list(values)}})
+            elif field in self.MULTI_FIELDS:
                 filters.append({'terms': {field: list(values)}})
             else:
                 for value in values:
