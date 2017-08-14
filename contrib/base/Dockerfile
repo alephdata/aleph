@@ -4,9 +4,6 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Enable non-free archive for `unrar`.
 RUN echo "deb http://http.us.debian.org/debian stable non-free" >/etc/apt/sources.list.d/nonfree.list
-# Enable Node.js archive
-RUN echo 'deb http://deb.nodesource.com/node_6.x jessie main' > /etc/apt/sources.list.d/nodesource.list
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 68576280
 
 RUN apt-get update -y -q && apt-get -y dist-upgrade && apt-get install -y -q  \
         curl git python-pip python-virtualenv build-essential python-dev \
@@ -24,7 +21,7 @@ RUN apt-get update -y -q && apt-get -y dist-upgrade && apt-get install -y -q  \
         tesseract-ocr-hrv tesseract-ocr-hun tesseract-ocr-rus \
         tesseract-ocr-pol tesseract-ocr-slk tesseract-ocr-slv \
         tesseract-ocr-sqi tesseract-ocr-srp tesseract-ocr-tur \
-        tesseract-ocr-ukr nodejs djvulibre-bin \
+        tesseract-ocr-ukr djvulibre-bin \
         && apt-get -y autoremove && apt-get clean
 
 RUN curl -s /tmp/pst.tgz http://www.five-ten-sg.com/libpst/packages/libpst-0.6.69.tar.gz > /tmp/pst.tgz \
@@ -32,7 +29,6 @@ RUN curl -s /tmp/pst.tgz http://www.five-ten-sg.com/libpst/packages/libpst-0.6.6
     && ./configure && make && make install
 
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    sed -i -e 's/# en_GB.UTF-8 UTF-8/en_GB.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# en_GB.ISO-8859-15 ISO-8859-15/en_GB.ISO-8859-15 ISO-8859-15/' /etc/locale.gen && \
     locale-gen
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
