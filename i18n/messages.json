@@ -8,5 +8,15 @@
     "id": "nav.documents",
     "defaultMessage": "Documents",
     "filepath": "src/components/PageNavbar.js"
+  },
+  {
+    "id": "search.collections",
+    "defaultMessage": "Collections",
+    "filepath": "src/components/SearchFilter.js"
+  },
+  {
+    "id": "search.schema.all",
+    "defaultMessage": "All Results",
+    "filepath": "src/components/SearchFilterSchema.js"
   }
 ]

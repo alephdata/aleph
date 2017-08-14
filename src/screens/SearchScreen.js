@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import queryString from 'query-string';
+import isEqual from 'lodash/isEqual';
 
 import { fetchSearchResults } from '../actions';
 
 import SearchResultList from '../components/SearchResultList';
-import Search from '../components/Search';
+import SearchFilter from '../components/SearchFilter';
 
-const SearchWithRouter = withRouter(Search);
+const SearchFilterWithRouter = withRouter(SearchFilter);
 
 class SearchScreen extends Component {
   componentDidMount() {
@@ -16,8 +17,7 @@ class SearchScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // should account for multiple filters in the future
-    if (this.props.query.q !== prevProps.query.q) {
+    if (!isEqual(this.props.query, prevProps.query)) {
       this.fetchData();
     }
   }
@@ -30,7 +30,7 @@ class SearchScreen extends Component {
   render() {
     return (
       <div>
-        <SearchWithRouter />
+        <SearchFilterWithRouter result={this.props.searchResults} />
         <SearchResultList result={this.props.searchResults} />
       </div>
     )
@@ -39,8 +39,6 @@ class SearchScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const params = queryString.parse(ownProps.location.search);
-
-  console.log(state);
 
   return {
     query: params,
