@@ -1,7 +1,7 @@
 import os
 import logging
 from logging.handlers import SMTPHandler
-from urlparse import urlparse
+from urlparse import urlparse, urljoin
 from werkzeug.local import LocalProxy
 from flask import Flask, current_app
 from flask import url_for as flask_url_for
@@ -126,8 +126,9 @@ def get_app_url():
     app = current_app._get_current_object()
     if not hasattr(app, '_app_baseurl'):
         parsed = urlparse(current_app.config.get('APP_BASEURL'))
-        if get_config('PREFERRED_URL_SCHEME'):
-            parsed = parsed._replace(scheme=get_config('PREFERRED_URL_SCHEME'))
+        scheme = get_config('PREFERRED_URL_SCHEME')
+        if scheme:
+            parsed = parsed._replace(scheme=scheme)
         app._app_baseurl = parsed.geturl()
     return app._app_baseurl
 
@@ -202,9 +203,8 @@ language_whitelist = LocalProxy(get_language_whitelist)
 def url_for(*a, **kw):
     """Generate external URLs with HTTPS (if configured)."""
     try:
-        kw['_external'] = not kw.pop('_relative', False)
-        if kw['_external'] and get_config('PREFERRED_URL_SCHEME'):
-            kw['_scheme'] = get_config('PREFERRED_URL_SCHEME')
-        return flask_url_for(*a, **kw)
+        kw['_external'] = False
+        path = flask_url_for(*a, **kw)
+        return urljoin(get_app_url(), path)
     except RuntimeError:
         return None
