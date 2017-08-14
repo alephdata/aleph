@@ -1,0 +1,31 @@
+@import "~@blueprintjs/core/dist/variables";
+
+.results {
+    width: 100%;
+}
+
+.result {
+    & td:first-child::before {
+        content: "";
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: $pt-grid-size;
+        width: 30px;
+        height: 30px;
+        background-size: cover;
+        background-color: $gray3;
+        border-radius: 100px;
+    }
+
+    &.result--document td:first-child::before {
+        background-image: url(./icons/Document.svg);
+    }
+
+    &.result--person td:first-child::before {
+        background-image: url(./icons/Person.svg);
+    }
+
+    &.result--legal-entity td:first-child::before {
+        background-image: url(./icons/LegalEntity.svg);
+    }
+}
