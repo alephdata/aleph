@@ -11,16 +11,8 @@ const DocumentListItem = ({ title, collection }) => (
 
 const PersonListItem = ({ name, collection }) => (
   <tr className="result result--person">
-    <td>{ name }</td>
-    <td>{ collection && collection.label }</td>
-    <td></td>
-  </tr>
-);
-
-const LegalEntityListItem = ({ name }) => (
-  <tr className="result result--legal-entity">
-    <td>{ name }</td>
-    <td></td>
+    <td className="result__name">{ name }</td>
+    <td className="result__collection">{ collection && collection.label }</td>
     <td></td>
   </tr>
 );
