@@ -27,7 +27,6 @@ def bulk_load(config):
                 'summary': data.get('summary'),
                 'category': data.get('category'),
             })
-            update_collection(collection)
 
         for role_fk in dict_list(data, 'roles', 'role'):
             role = Role.by_foreign_id(role_fk)
@@ -37,6 +36,7 @@ def bulk_load(config):
                 log.warning("Could not find role: %s", role_fk)
 
         db.session.commit()
+        update_collection(collection)
 
         for query in dict_list(data, 'queries', 'query'):
             load_query(collection, query)
