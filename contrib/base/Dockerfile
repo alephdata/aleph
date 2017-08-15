@@ -5,8 +5,8 @@ ENV DEBIAN_FRONTEND noninteractive
 # Enable non-free archive for `unrar`.
 RUN echo "deb http://http.us.debian.org/debian jessie non-free" >/etc/apt/sources.list.d/nonfree.list
 
-RUN apt-get update -y -q && apt-get -y -q dist-upgrade
-RUN apt-get install -y -q  \
+RUN apt-get -qq -y update && apt-get -qq -y dist-upgrade
+RUN apt-get -qq -y install  \
         curl git python-pip python-virtualenv build-essential python-dev \
         libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates less \
         postgresql-client-9.4 unrar unrar-free unzip locales libreoffice \
@@ -22,12 +22,16 @@ RUN apt-get install -y -q  \
         tesseract-ocr-hrv tesseract-ocr-hun tesseract-ocr-rus \
         tesseract-ocr-pol tesseract-ocr-slk tesseract-ocr-slv \
         tesseract-ocr-sqi tesseract-ocr-srp tesseract-ocr-tur \
-        tesseract-ocr-ukr djvulibre-bin \
-        && apt-get -y autoremove && apt-get clean
+        tesseract-ocr-ukr djvulibre-bin
 
 RUN curl -s http://www.five-ten-sg.com/libpst/packages/libpst-0.6.69.tar.gz > /tmp/pst.tgz \
-    && cd /tmp && tar xvfz pst.tgz && cd libpst-0.6.69 && ln -s /usr/bin/python /usr/bin/python2.7.10 \
-    && ./configure && make && make install
+    && cd /tmp \
+    && tar xfz pst.tgz \
+    && cd libpst-0.6.69 \
+    && ln -s /usr/bin/python /usr/bin/python2.7.10 \
+    && ./configure \
+    && make \
+    && make install
 
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i -e 's/# en_GB.ISO-8859-15 ISO-8859-15/en_GB.ISO-8859-15 ISO-8859-15/' /etc/locale.gen && \
@@ -36,8 +40,12 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # WebKit HTML to X install since the one that comes with distros is hellishly outdated.
 RUN curl -L -s https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz > /tmp/wkhtmltox.tar.xv \
-    && tar -xf /tmp/wkhtmltox.tar.xv -C /opt && rm -f /tmp/wkhtmltox.tar.xv
+    && tar -xf /tmp/wkhtmltox.tar.xv -C /opt \
+    && rm -f /tmp/wkhtmltox.tar.xv
+
 ENV WKHTMLTOPDF_BIN /opt/wkhtmltox/bin/wkhtmltopdf
 ENV TESSDATA_PREFIX /usr/share/tesseract-ocr
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get -qq -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
