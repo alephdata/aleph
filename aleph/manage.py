@@ -188,11 +188,10 @@ def evilshit():
 
 
 @manager.command
-def experiment():
-    """Create or upgrade the search index and database."""
-    from aleph.logic.collections import update_collection
-    for collection in Collection.all():
-        update_collection(collection)
+def cleanup():
+    """Periodic system cleanup tasks."""
+    from aleph.logic import cleanup_system
+    cleanup_system()
 
 
 def main():

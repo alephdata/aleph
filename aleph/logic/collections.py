@@ -79,3 +79,9 @@ def delete_collection(collection_id):
 
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
+
+
+def cleanup_collections():
+    """Reindex collections periodically."""
+    for collection in Collection.all():
+        update_collection(collection)

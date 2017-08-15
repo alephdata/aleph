@@ -6,10 +6,17 @@ the model but that also depends on components (like ES search)
 which in turn themselves depend on the model.
 """
 
+from aleph.core import celery
 from aleph.logic.entities import update_entity, update_entity_full  # noqa
 from aleph.logic.entities import reindex_entities, delete_entity  # noqa
 from aleph.logic.entities import fetch_entity  # noqa
 from aleph.logic.collections import update_collection, delete_collection  # noqa
-from aleph.logic.collections import process_collection  # noqa
+from aleph.logic.collections import process_collection, cleanup_collections  # noqa
 from aleph.logic.documents import update_document, delete_document  # noqa
 from aleph.logic.alerts import check_alerts  # noqa
+
+
+@celery.task()
+def cleanup_system():
+    """Periodic cleanup tasks run by the system to maintain consistency."""
+    cleanup_collections()

@@ -99,8 +99,8 @@ def make_excel_safe_name(collection):
     return name[:30]
 
 
-def generate_matches_sheet(workbook, sheet, collection, match_collection, authz,
-                           links=True, one_sheet=False):
+def generate_matches_sheet(workbook, sheet, collection, match_collection,
+                           authz, links=True, one_sheet=False):
     from aleph.views.serializers import MatchSchema
 
     if one_sheet:
@@ -221,12 +221,12 @@ def generate_excel(collection, authz, links=True, one_sheet=False):
             matches_sheet = workbook.add_worksheet("All matches")
 
         matches_sheet = generate_matches_sheet(workbook,
-                               matches_sheet,
-                               collection,
-                               result.collection,
-                               authz,
-                               links=links,
-                               one_sheet=one_sheet)
+                                               matches_sheet,
+                                               collection,
+                                               result.collection,
+                                               authz,
+                                               links=links,
+                                               one_sheet=one_sheet)
 
     workbook.close()
     output.seek(0)

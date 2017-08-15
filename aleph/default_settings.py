@@ -207,24 +207,8 @@ CELERYBEAT_SCHEDULE = {
         'task': 'aleph.logic.alerts.check_alerts',
         'schedule': crontab(hour=1, minute=30)
     },
-    'scheduled-crawlers': {
-        'task': 'aleph.crawlers.execute_scheduled',
-        'schedule': crontab(hour='*/6', minute=40)
+    'periodic-cleanup': {
+        'task': 'aleph.logic.cleanup_system',
+        'schedule': crontab(hour='*/6')
     },
 }
-
-
-###############################################################################
-# Binary paths for programs
-
-# TODO: do these need to be prefixed for aleph? Seems counter-productive
-TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')
-PDFTOHTML_BIN = env.get('PDFTOHTML_BIN', 'pdftohtml')
-PDFTOPPM_BIN = env.get('PDFTOPPM_BIN', 'pdftoppm')
-CONVERT_BIN = env.get('CONVERT_BIN', 'convert')
-SOFFICE_BIN = env.get('SOFFICE_BIN', 'soffice')
-WKHTMLTOPDF_BIN = env.get('WKHTMLTOPDF_BIN', 'wkhtmltopdf')
-DDJVU_BIN = env.get('DDJVU_BIN', 'ddjvu')
-MDB_TABLES_BIN = env.get('MDB_TABLES_BIN', 'mdb-tables')
-MDB_EXPORT_BIN = env.get('MDB_EXPORT_BIN', 'mdb-export')
-SEVENZ_BIN = env.get('SEVENZ_BIN', '7z')
