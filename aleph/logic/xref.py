@@ -100,39 +100,43 @@ def make_excel_safe_name(collection):
 
 
 def generate_matches_sheet(workbook, sheet, collection, match_collection,
-                           authz, links=True, one_sheet=False):
+                           authz, links=True, one_sheet=False, offset=0,
+                           limit=1000):
     from aleph.views.serializers import MatchSchema
 
     if one_sheet:
-        sheet_label = "All matches"
+        sheet_label = "All matches (top %s per collection)" % limit
     else:
-        sheet_label = match_collection.label
+        sheet_label = "%s (top %s)" % (match_collection.label, limit)
 
     sheet.set_zoom(125)
-    parser = QueryParser({}, authz, limit=1000)
+    parser = QueryParser({}, authz, limit=limit)
     q_match = Match.find_by_collection(collection.id, match_collection.id)
     matches = MatchQueryResult({}, q_match, parser=parser, schema=MatchSchema)
 
-    sheet.write(0, 0, '', workbook.header_format)
-    sheet.write(1, 0, 'Score', workbook.header_format)
-    sheet.merge_range(0, 1, 0, 4, collection.label, workbook.header_format)
-    sheet.write(1, 1, 'Name', workbook.header_format)
-    sheet.write(1, 2, 'Type', workbook.header_format)
-    sheet.write(1, 3, 'Country', workbook.header_format)
-    sheet.write(1, 4, 'Source URL', workbook.header_format)
-    sheet.merge_range(0, 5, 0, 8,
-                      sheet_label,
-                      workbook.header_format)
-    sheet.write(1, 5, 'Name', workbook.header_format)
-    sheet.write(1, 6, 'Type', workbook.header_format)
-    sheet.write(1, 7, 'Country', workbook.header_format)
-    if one_sheet:
-        sheet.write(1, 8, 'Collection', workbook.header_format)
+    if offset < 3:
 
-    sheet.freeze_panes(2, 0)
-    sheet.autofilter(1, 1, 2 + len(matches.results), 8)
+        sheet.write(0, 0, '', workbook.header_format)
+        sheet.write(1, 0, 'Score', workbook.header_format)
+        sheet.merge_range(0, 1, 0, 4, collection.label, workbook.header_format)
+        sheet.write(1, 1, 'Name', workbook.header_format)
+        sheet.write(1, 2, 'Type', workbook.header_format)
+        sheet.write(1, 3, 'Country', workbook.header_format)
+        sheet.write(1, 4, 'Source URL', workbook.header_format)
+        sheet.merge_range(0, 5, 0, 8,
+                          sheet_label,
+                          workbook.header_format)
+        sheet.write(1, 5, 'Name', workbook.header_format)
+        sheet.write(1, 6, 'Type', workbook.header_format)
+        sheet.write(1, 7, 'Country', workbook.header_format)
+        if one_sheet:
+            sheet.write(1, 8, 'Collection', workbook.header_format)
+
+        sheet.freeze_panes(2, 0)
+        sheet.autofilter(1, 1, 2 + len(matches.results), 8)
+    
     widths = {}
-    for row, result in enumerate(matches.results, 2):
+    for row, result in enumerate(matches.results, offset):
         sheet.write_number(row, 0, int(result.score))
         name = result.entity.get('name')
         widths[1] = max(widths.get(1, 0), len(name))
@@ -171,6 +175,9 @@ def generate_matches_sheet(workbook, sheet, collection, match_collection,
 
 
 def generate_excel(collection, authz, links=True, one_sheet=False):
+
+    limit = 1000
+
     output = StringIO.StringIO()
     workbook = xlsxwriter.Workbook(output)
     workbook.link_format = workbook.add_format({
@@ -198,6 +205,7 @@ def generate_excel(collection, authz, links=True, one_sheet=False):
     # Query for all the collections with matches
     collections = Match.group_by_collection(collection.id, authz=authz)
     max_label = 70
+    offset = 2 # Number of header rows
     for row, result in enumerate(collections, 2):
         if links:
             url = collection_url(result.collection.id)
@@ -214,7 +222,7 @@ def generate_excel(collection, authz, links=True, one_sheet=False):
             matches_sheet = workbook.add_worksheet(matches_sheet_name)
             url = "internal:'%s'!B3" % matches_sheet_name
             sheet.write_url(row, 2, url, workbook.link_format, 'See matches')
-
+        
         try:
             matches_sheet
         except NameError:
@@ -226,7 +234,15 @@ def generate_excel(collection, authz, links=True, one_sheet=False):
                                                result.collection,
                                                authz,
                                                links=links,
-                                               one_sheet=one_sheet)
+                                               one_sheet=one_sheet,
+                                               offset=offset,
+                                               limit=limit)
+
+        if one_sheet:
+            if result.matches > limit:
+                offset = offset + limit
+            else:
+                offset = offset + result.matches
 
     workbook.close()
     output.seek(0)
