@@ -181,7 +181,8 @@ class LinksQuery(AuthzQuery):
     TEXT_FIELDS = ['names^2', '_all']
     SORT = {
         'default': [{'properties.start_date': 'desc'},
-                    {'properties.end_date': 'desc'}],
+                    {'properties.end_date': 'desc'},
+                    {'properties.date': 'desc'}],
         'score': ['_score', {'name_sort': 'asc'}],
     }
 
