@@ -20,6 +20,16 @@
     "filepath": "src/components/PageNavbar.js"
   },
   {
+    "id": "search.collections",
+    "defaultMessage": "Collections",
+    "filepath": "src/components/SearchFilter.js"
+  },
+  {
+    "id": "search.schema.all",
+    "defaultMessage": "All Results",
+    "filepath": "src/components/SearchFilterSchema.js"
+  },
+  {
     "id": "login.email",
     "defaultMessage": "E-Mail address",
     "filepath": "src/screens/LoginScreen.js"

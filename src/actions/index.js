@@ -6,7 +6,7 @@ export const fetchSearchResults = (filters) => (dispatch) => {
     filters
   });
 
-  return endpoint.get('search', {params: filters})
+  return endpoint.get('search', {params: {...filters, facet: 'schema'}})
     .then((response) => response.data)
     .then((data) => dispatch({
       type: 'FETCH_SEARCH_SUCCESS',
