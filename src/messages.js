@@ -41,6 +41,16 @@ let messages = {
         id: 'login.not_available.desc',
         defaultMessage: 'There is no login provider configured for this app'
       }
+    },
+    already_logged_in: {
+      title: {
+        id: 'login.already_logged_in.title',
+        defaultMessage: 'You are already logged in'
+      },
+      desc: {
+        id: 'login.already_logged_in.desc',
+        defaultMessage: 'Go ahead and use the app!'
+      }
     }
   }
 };
