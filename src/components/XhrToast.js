@@ -10,7 +10,10 @@ const defaultStatusMap = {
 export const xhrToast = (response, intl, statusMap, showToastFn, fallbackMessageKey) => {
   if (!statusMap) statusMap = {};
   statusMap = Object.assign({}, defaultStatusMap, statusMap);
-  const messageKey = statusMap[response.status] ? statusMap[response.status] : fallbackMessageKey
+  let messageKey = fallbackMessageKey;
+  if (response && statusMap[response.status]) {
+    messageKey = statusMap[response.status];
+  }
   showToastFn(intl.formatMessage(messageKey));
 };
 

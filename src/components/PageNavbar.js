@@ -1,6 +1,13 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
 import AuthButton from "./AuthButton";
+import {Link} from "react-router-dom";
+
+const SignupButton = () => <Link to="/invite">
+  <button className="pt-button pt-minimal pt-icon-user">
+    <FormattedMessage id="nav.signup" defaultMessage="Sign Up"/>
+  </button>
+</Link>;
 
 const PageNavbar = ({metadata, session}) => (
   <nav className="pt-navbar pt-dark">
@@ -19,6 +26,7 @@ const PageNavbar = ({metadata, session}) => (
       {session.loggedIn && <button className="pt-button pt-minimal pt-icon-cog"/>}
       {session.loggedIn && <button className="pt-button pt-minimal pt-icon-notifications"/>}
       <AuthButton session={session}/>
+      {!session.loggedIn && metadata.auth.registration && <SignupButton/>}
     </div>
   </nav>
 );

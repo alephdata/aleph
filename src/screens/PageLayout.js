@@ -10,6 +10,8 @@ import SearchScreen from './SearchScreen';
 import LoginScreen from "./LoginScreen";
 import ErrorScreen from './ErrorScreen';
 import LogoutScreen from "./LogoutScreen";
+import InviteScreen from "./InviteScreen";
+import SignupScreen from "./SignupScreen";
 
 class PageLayout extends Component {
 
@@ -36,6 +38,8 @@ class PageLayout extends Component {
             <Route path="/search" exact component={SearchScreen}/>
             <Route path="/login" exact component={LoginScreen}/>
             <Route path="/logout" exact component={LogoutScreen}/>
+            <Route path="/invite" exact component={InviteScreen}/>
+            <Route path="/signup/:code" exact component={SignupScreen}/>
             <Route component={ErrorScreen}/>
           </Switch>
         </main>

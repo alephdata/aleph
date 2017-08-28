@@ -52,6 +52,28 @@ let messages = {
         defaultMessage: 'Go ahead and use the app!'
       }
     }
+  },
+  invite: {
+    not_available: {
+      title: {
+        id: 'invite.not_available.title',
+        defaultMessage: 'Registration is disabled'
+      },
+      desc: {
+        id: 'invite.not_available.desc',
+        defaultMessage: 'Please contact the site admin to get an account'
+      }
+    },
+    submitted: {
+      title: {
+        id: 'invite.submitted.title',
+        defaultMessage: 'Check your inbox'
+      },
+      desc: {
+        id: 'invite.submitted.desc',
+        defaultMessage: 'To proceed with sign up, please check your email.'
+      }
+    }
   }
 };
 
