@@ -22,6 +22,10 @@ let messages = {
       id: 'status.unknown_error',
       defaultMessage: 'An unexpected error occured'
     },
+    logout_success: {
+      id: 'status.logout_success',
+      defaultMessage: 'Logout successful'
+    },
     success: {
       id: 'status.success',
       defaultMessage: 'Success'
