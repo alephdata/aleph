@@ -33,12 +33,13 @@ class LoginScreen extends Component {
   }
 
   render() {
-    const {metadata} = this.props;
+    const {metadata, intl} = this.props;
     const passwordLogin = metadata.auth.password_login;
     const oauthLogin = Array.isArray(metadata.auth.oauth) && metadata.auth.oauth.length > 0;
 
-    if (!passwordLogin && !oauthLogin) return <Callout modifier="warning" title="login.unavailable.title"
-                                                       desc="login.unavailable.desc"/>;
+    if (!passwordLogin && !oauthLogin) return <Callout modifier="warning"
+                                                       title={intl.formatMessage(messages.login.not_available.title)}
+                                                       desc={intl.formatMessage(messages.login.not_available.desc)}/>;
 
     return <section>
       {passwordLogin && <PasswordLogin authMetadata={metadata.auth} onLogin={(token) => this.login(token)}/>}

@@ -30,6 +30,18 @@ let messages = {
       id: 'status.success',
       defaultMessage: 'Success'
     }
+  },
+  login: {
+    not_available: {
+      title: {
+        id: 'login.not_available.title',
+        defaultMessage: 'Login is disabled'
+      },
+      desc: {
+        id: 'login.not_available.desc',
+        defaultMessage: 'There is no login provider configured for this app'
+      }
+    }
   }
 };
 
