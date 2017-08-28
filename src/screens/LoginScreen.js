@@ -5,10 +5,20 @@ import OAuthLogin, {handleOAuthCallback} from "../components/OAuthLogin";
 import Callout from "../components/Callout";
 import {login} from "../actions/sessionActions";
 import {withRouter} from "react-router";
+import {showErrorToast, showSuccessToast} from "../components/Toast";
+import messages from "../messages";
+import {injectIntl} from "react-intl";
 
 class LoginScreen extends Component {
   login(token) {
-    this.props.dispatch(login(token));
+    const {dispatch, intl} = this.props;
+    try {
+      dispatch(login(token));
+      showSuccessToast(intl.formatMessage(messages.status.success));
+    } catch (e) {
+      console.error("invalid login token", e);
+      showErrorToast(intl.formatMessage(messages.status.unknown_error))
+    }
   }
 
   componentWillMount() {
@@ -41,4 +51,4 @@ class LoginScreen extends Component {
 }
 
 const mapStateToProps = (state) => ({session: state.session, metadata: state.metadata});
-export default connect(mapStateToProps)(withRouter(LoginScreen));
+export default connect(mapStateToProps)(withRouter(injectIntl(LoginScreen)));
