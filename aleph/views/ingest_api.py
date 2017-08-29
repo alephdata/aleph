@@ -3,6 +3,7 @@ import json
 from flask import Blueprint, request
 from werkzeug import secure_filename
 from werkzeug.exceptions import BadRequest
+from storagelayer import checksum
 
 from aleph.core import upload_folder
 from aleph.ingest import ingest_document
@@ -10,7 +11,6 @@ from aleph.model import Collection, Document
 from aleph.model.common import make_textid
 from aleph.views.serializers import DocumentSchema
 from aleph.views.util import require, obj_or_404, jsonify, validate_data
-from aleph.util import checksum
 
 
 blueprint = Blueprint('ingest_api', __name__)

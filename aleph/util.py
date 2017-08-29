@@ -1,22 +1,9 @@
 # coding: utf-8
 import os
 import yaml
-from hashlib import sha1
 from celery import Task
 
 PDF_MIME = 'application/pdf'
-
-
-def checksum(filename):
-    """Generate a hash for a given file name."""
-    hash = sha1()
-    with open(filename, 'rb') as fh:
-        while True:
-            block = fh.read(8192)
-            if not block:
-                break
-            hash.update(block)
-    return hash.hexdigest()
 
 
 def load_config_file(file_path):

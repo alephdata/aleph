@@ -3,12 +3,12 @@ import logging
 
 from ingestors import Manager
 from ingestors.util import decode_path
+from storagelayer import checksum
 
 from aleph.core import db
 from aleph.model import Document, Cache
 from aleph.analyze import analyze_document
 from aleph.ingest.result import DocumentResult
-from aleph.util import checksum
 
 log = logging.getLogger(__name__)
 
