@@ -95,6 +95,14 @@ def handle_authz_error(err):
     }, status=403)
 
 
+@blueprint.app_errorhandler(404)
+def handle_not_found_error(err):
+    return jsonify({
+        'status': 'error',
+        'message': 'This path does not exist.'
+    }, status=404)
+
+
 @blueprint.app_errorhandler(SchemaValidationException)
 def handle_schema_validation_error(err):
     return jsonify({
