@@ -22,7 +22,7 @@ def setup_caching():
     By default, caching will be disabled."""
     request._http_cache = False
     request._http_etag = None
-    request._http_server = True
+    request._http_private = False
 
 
 def enable_cache(vary_user=True, vary=None, server_side=False):
@@ -40,10 +40,10 @@ def enable_cache(vary_user=True, vary=None, server_side=False):
 
     if vary_user:
         cache_parts.extend((request.authz.roles))
+        request._http_private = True
 
     request._http_cache = get_config('CACHE')
     request._http_etag = cache_hash(*cache_parts)
-    request._http_server = server_side
 
     if request.if_none_match == request._http_etag:
         raise NotModified()
@@ -55,7 +55,7 @@ def cache_response(resp):
     if request.endpoint == 'static':
         enable_cache()
         request._http_cache = True
-        resp.set_etag(request._http_etag)
+        # resp.set_etag(request._http_etag)
         resp.cache_control.public = True
         resp.cache_control.max_age = 3600 * 24 * 14
         return resp
@@ -79,13 +79,10 @@ def cache_response(resp):
 
         resp.set_etag(request._http_etag)
 
-    if request.authz.logged_in:
+    if request._http_private:
         resp.cache_control.private = True
-    else:
-        resp.cache_control.public = True
-
-    if request._http_server:
         resp.expires = -1
     else:
-        resp.cache_control.max_age = 3600 * 2
+        resp.cache_control.public = True
+        resp.cache_control.max_age = 3600 * 12
     return resp
