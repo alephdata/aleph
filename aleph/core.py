@@ -12,9 +12,9 @@ from flask_simpleldap import LDAP, LDAPException
 from kombu import Queue
 from celery import Celery
 from elasticsearch import Elasticsearch
+import storagelayer
 
 from aleph import default_settings
-from aleph.archive import archive_from_config
 from aleph.ext import get_init
 from aleph.util import load_config_file, SessionTask
 from aleph.oauth import configure_oauth
@@ -161,7 +161,13 @@ def get_es_index():
 def get_archive():
     app = current_app._get_current_object()
     if not hasattr(app, '_aleph_archive'):
-        app._aleph_archive = archive_from_config(app.config)
+        archive = storagelayer.init(app.config.get('ARCHIVE_TYPE'),
+                                    path=app.config.get('ARCHIVE_PATH'),
+                                    aws_key_id=app.config.get('ARCHIVE_AWS_KEY_ID'),  # noqa
+                                    aws_secret=app.config.get('ARCHIVE_AWS_SECRET'),  # noqa
+                                    aws_region=app.config.get('ARCHIVE_AWS_REGION'),  # noqa
+                                    bucket=app.config.get('ARCHIVE_BUCKET'))  # noqa
+        app._aleph_archive = archive
     return app._aleph_archive
 
 

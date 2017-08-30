@@ -12,6 +12,12 @@ class BaseApiTestCase(TestCase):
     #     assert '<title>' in res.data, res.data
     #     assert 'notranslate' in res.data, res.data
 
+    def test_404(self):
+        res = self.client.get('/banana/split')
+        assert res.status_code == 404, res
+        assert 'status' in res.json, res.json
+        assert 'message' in res.json, res.json
+
     def test_metadata(self):
         res = self.client.get('/api/2/metadata')
         assert res.status_code == 200, res
