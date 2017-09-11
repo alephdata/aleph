@@ -16,7 +16,8 @@ from aleph.search import QueryParser, MatchQueryResult
 log = logging.getLogger(__name__)
 
 
-def xref_item(item, collection=None):
+@celery.task()
+def xref_item(item, collection_id=None):
     """Cross-reference an entity or document, given as an indexed document."""
     title = item.get('name') or item.get('title')
     log.info("Xref [%s]: %s", item['$type'], title)
@@ -24,7 +25,7 @@ def xref_item(item, collection=None):
     result = es.search(index=es_index,
                        doc_type=TYPE_ENTITY,
                        body={
-                           'query': entity_query(item, collection),
+                           'query': entity_query(item, collection_id),
                            'size': 100,
                            '_source': ['collection_id'],
                        })
@@ -38,8 +39,8 @@ def xref_item(item, collection=None):
     dq = db.session.query(Match)
     dq = dq.filter(Match.entity_id == entity_id)
     dq = dq.filter(Match.document_id == document_id)
-    if collection is not None:
-        dq = dq.filter(Match.match_collection_id == collection.id)
+    if collection_id is not None:
+        dq = dq.filter(Match.match_collection_id == collection_id)
     dq.delete()
 
     for result in results:
@@ -52,11 +53,13 @@ def xref_item(item, collection=None):
         obj.match_collection_id = source.get('collection_id')
         obj.score = result.get('_score')
         db.session.add(obj)
+    db.session.commit()
 
 
 def xref_collection(collection, other=None):
     """Cross-reference all the entities and documents in a collection."""
     log.info("Cross-reference collection: %r", collection)
+    other_id = other.id if other is not None else None
     query = {
         'query': {
             'term': {'collection_id': collection.id}
@@ -70,10 +73,7 @@ def xref_collection(collection, other=None):
                    size=1000)
 
     for i, res in enumerate(scanner):
-        xref_item(unpack_result(res), other)
-        if i % 1000 == 0 and i != 0:
-            db.session.commit()
-    db.session.commit()
+        xref_item.delay(unpack_result(res), other_id)
 
 
 @celery.task()
@@ -134,7 +134,7 @@ def generate_matches_sheet(workbook, sheet, collection, match_collection,
 
         sheet.freeze_panes(2, 0)
         sheet.autofilter(1, 1, 2 + len(matches.results), 8)
-    
+
     widths = {}
     for row, result in enumerate(matches.results, offset):
         sheet.write_number(row, 0, int(result.score))
@@ -222,7 +222,7 @@ def generate_excel(collection, authz, links=True, one_sheet=False):
             matches_sheet = workbook.add_worksheet(matches_sheet_name)
             url = "internal:'%s'!B3" % matches_sheet_name
             sheet.write_url(row, 2, url, workbook.link_format, 'See matches')
-        
+
         try:
             matches_sheet
         except NameError:

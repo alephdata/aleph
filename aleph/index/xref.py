@@ -6,7 +6,7 @@ from aleph.model import Document
 log = logging.getLogger(__name__)
 
 
-def entity_query(sample, collection=None, query=None):
+def entity_query(sample, collection_id=None, query=None):
     """Given a document or entity in indexed form, build a query that
     will find similar entities based on a variety of criteria."""
 
@@ -27,9 +27,9 @@ def entity_query(sample, collection=None, query=None):
         }
     required = []
 
-    if collection is not None:
+    if collection_id is not None:
         query['bool']['must'].append({
-            'term': {'collection_id': collection.id}
+            'term': {'collection_id': collection_id}
         })
 
     for fp in sample.get('fingerprints', []):
