@@ -49,8 +49,11 @@ To use this tool, run
 docker-compose run app python aleph/manage.py crawldir <DIRECTORY|FILE PATH>
 ```
 
-Some extra parameters to specify the language and the country are also
-available.
+optional `crawldir` parameters:
+
+* `-f, --foreign_id COLLECTION_IMPORT_ID` look up the import id in the settings tab of a collection
+* `-c, --country COUNTRY`
+* `-l, --language LANGUAGE`
 
 It is important to mention that importing the same directory
 multiple times will not duplicate the source files as long as the base path of
