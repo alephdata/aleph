@@ -440,15 +440,17 @@ links:
         label: "Beneficiary bank"
 
 
-    sanctionedBy:
-      label: Sanctions
-      forward: "Sanctioned by"
-      reverse: "Sanctions on"
-      extends: link
-      properties:
-        sanctionReason:
-          label: "Reason for sanction"
-        sanctionDuration:
-          label: "Duration"
-        sanctionOccurrence:
-          label: "Occurrence"
+  sanctionedBy:
+    label: Sanctions
+    forward: "Sanctioned by"
+    reverse: "Sanctions on"
+    extends: link
+    properties:
+      sanctionReason:
+        label: "Reason for sanctions"
+      sanctionDuration:
+        label: "Duration of sanctions"
+      sanctionOccurrence:
+        label: "Occurrence"
+      sanctionStatus:
+        label: "Status of sanctions"
