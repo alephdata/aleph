@@ -1,4 +1,4 @@
-### Mapping Files
+# Mapping Files
 
 One of Aleph’s primary task is bulk entity loading from structured datasets. Aleph has a YAML syntax to represent the database operations necessary to do this. The syntax is then translated into a Python `dict` under the hood.
 
@@ -12,7 +12,9 @@ datasets:
 ```
 
 
-Mappings are loaded with `aleph loaddataset <mapping name>`. The mapping's name is the top-level property of a mapping file. A mapping consists of information identifying the datasets, their sources, their types, and possible access information, and a list of database queries:
+Mappings are loaded with `aleph bulkload <mapping name>`. The mapping's name is the top-level property of a mapping file. Mappings may also be loaded with `aleph bulkload </path/to/yaml/file.yaml>`.
+
+A mapping consists of information identifying the datasets, their sources, their types, and possible access information, and a list of database queries:
 
 
 ```
@@ -28,14 +30,14 @@ Mappings are loaded with `aleph loaddataset <mapping name>`. The mapping's name 
 ```
 
 
-- MAPPING NAME: A string to identify this mapping. Is used with `aleph loaddataset` to load entities from a set of tables.
+- MAPPING NAME: A string to identify this mapping. Is used with `aleph bulkload` to load entities from a set of tables.
 - LABEL: The name of the source.
 - INFO_URL: The source url.
 - CATEGORY: What kind of record the source provides (company, land, etc.)
 - ROLES: User roles that are permitted to access this information. When no credentials are required, ‘guest’ suffices.
 - QUERIES: The database operations that construct entities and links from DB records.
 
-### Queries
+## Queries
 
 A basic query specifies an entity to build out of the data in a given table. We can extend this operation by adding additional tables and filters, and by identifying links between different entities. Entities and links have schemas specified in `aleph/schema.yaml` (such as Entity, LegalEntity, Company, Directorship, etc.) that provide structure for the objects and relations that we're interested in loading.
 
@@ -97,7 +99,7 @@ Note that `-` is interpreted as an item in a list. Tables, keys, joins, and filt
 	- SOURCE: The source of the link is its object--if we are linking a person to a company as its director, for instance, we refer to the company as the source.
 	- TARGET: The entity that is the subject of the link. In the above example, the company's director would be the target of the link.
 
-### Notes for making a good mapping (chill the join)
+## Notes for making a good mapping (chill the join)
 
 Mappings are *not* intended to perform expensive cleanup operations. Data should be reasonably structured and indexed where necessary. This also means keeping queries reasonable. In general, when linking, it's best practice to fully specify entities in their own queries, and then to join them using a skeleton representation. That means that rather than do this
 
