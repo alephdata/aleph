@@ -61,14 +61,6 @@ A second endpoint exists that accepts the same query parameters and will return 
 
 <pre>GET /api/2/query/export?q=pickles</pre>
 
-#### Search Results as a Co-occurrence Graph
-
-Another way of interpreting search results is as edges in a graph of entities. In this representation, each document is treated as a link between any permutation of entities which that document has been tagged with. The returned graph can be used to understand the connectivity between those tagged entities. A result format can be specified using the `format` parameter, either as `gexf` (Graph Exchange Format XML) or `d3`, a JSON format suitable for use in D3.js-based force-directed graphs.
-
-<pre>GET /api/2/query/graph?q=pickles&format=gexf</pre>
-
-Note that this query type is only useful if entities are loaded into the Aleph instance and at least one collection is specified as a search facet.
-
 ### Reading and writing Collections
 
 Collections can contain documents and/or entities. To get a (paged) list of all collections you have access to:
