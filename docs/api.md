@@ -108,6 +108,12 @@ To get both the summary and matches lists as an Excel file download:
 
 ### Fetching Documents and Metadata
 
+You can access all documents (subject to your access rights) with:
+
+<pre>GET /api/2/documents/</pre>
+
+And search/filter them using the same query arguments as [/search](#searching).
+
 Once you've located a document, you may want to access it's metadata in full:
 
 <pre>GET /api/2/documents/{document_id}</pre>
@@ -163,7 +169,11 @@ This is internally build as a search endpoint, and thus accepts the following ar
 
 ### Fetching Entities and Metadata
 
-Similarly to the documents API, metadata about entities can be accessed provided you are authorized to read from the collection the entity is part of.
+Similarly to the documents API, metadata about entities can be accessed provided you are authorized to read from the collection the entity is part of. You can access all entities (subject to your access rights) with:
+
+<pre>GET /api/2/entities/</pre>
+
+And search/filter them using the same query arguments as [/search](#searching).
 
 <pre>GET /api/2/entities/{entity_id}</pre>
 
