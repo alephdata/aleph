@@ -49,7 +49,6 @@ This accepts the following arguments:
     *   `text`, entire text extracted from the document.
     *   `created_at`, when the document was added to aleph (`yyyy-mm -ddThh:ii:ss.uuuuuu`).
     *   `updated_at`, when the document was modified in aleph (`yyyy -mm-ddThh:ii:ss.uuuuuu`).
-*   `collection`, like `facet` for entity collections: all entities which are tagged in result set documents and part of the given collection will be returned. This can be specified multiple times for more than one collection to be added.
 *   `limit`, the number of results to return, max. 10,000.
 *   `offset`, the number of results to skip at the beginning of the result set.
 
