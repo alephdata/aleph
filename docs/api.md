@@ -19,11 +19,11 @@ Aleph exposes all significant aspects of it's domain model, which is explained i
 *   **Entities** (`/api/2/entities`) reflect structured data about persons or companies. Each entity has a name, a number of aliases and other details, such as their jurisdiction, a short summary, or contact and passport details. Entities are identified through a UUID.
 *   **Roles** represent users and user groups, and they are connected via **Permissions** to sources and collections.
 
-### Searching for Documents
+### Searching
 
-The main search endpoint allows for a set of complex queries to be executed. Results will include document metadata, record snippets (for highlighting) and facet values that can be used to further summarize the result set.
+The main search endpoint allows for a set of complex queries to be executed. Results will include documents _and_ entities, and their metadata, record snippets (for highlighting) and facet values that can be used to further summarize the result set.
 
-<pre>GET /api/2/query</pre>
+<pre>GET /api/2/search</pre>
 
 This accepts the following arguments:
 
@@ -52,13 +52,15 @@ This accepts the following arguments:
 *   `limit`, the number of results to return, max. 10,000.
 *   `offset`, the number of results to skip at the beginning of the result set.
 
-By default, all queries will return a facet of the document collections for which matching documents have been found. This cannot currently be disabled, but a filter can be applied to show only results from a particular collection: `?filter:collection_id={collection_id}`.
+By default, all queries will return a facet of the collections for which matching documents/entities have been found. A filter can be applied to show only results from a particular collection: `?filter:collection_id={collection_id}`.
+
+If you know you only want to search documents (unstructured, ingested data) or entities (structured data which may have been extracted from a dataset, or entered by a human) you can use these arguments with the [/documents](#fetching-documents-and-metadata) or [/entities](#fetching-entities-and-metadata) endpoints.
 
 #### Search Results as Excel
 
 A second endpoint exists that accepts the same query parameters and will return an Excel 2007 (XML) file as it's result. The returned file contains a shortened representation of the results, but it is limited to 10,000 rows.
 
-<pre>GET /api/2/query/export?q=pickles</pre>
+<pre>GET /api/2/search/export?q=pickles</pre>
 
 ### Reading and writing Collections
 
@@ -128,7 +130,7 @@ This may return an HTTP 302 redirect if the storage location for the document is
 
 For documents (text and tabular) the following API call will query the contained records (i.e. data rows or pages):
 
-<pre>GET /api/2/query/records/{document_id}</pre>
+<pre>GET /api/2/search/records/{document_id}</pre>
 
 This accepts the following arguments:
 
