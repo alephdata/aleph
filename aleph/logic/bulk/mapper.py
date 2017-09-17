@@ -2,10 +2,11 @@ import logging
 import fingerprints
 from hashlib import sha1
 from pprint import pprint  # noqa
+from banal import unique_list
 
 from aleph.core import schemata
 from aleph.schema import Schema
-from aleph.util import dict_list, unique_list
+from aleph.util import dict_list
 from aleph.text import string_value
 from datetime import datetime
 from aleph.logic.bulk.formatting import Formatter

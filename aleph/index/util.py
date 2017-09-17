@@ -2,10 +2,10 @@ import six
 import logging
 import fingerprints
 from elasticsearch.helpers import bulk
+from banal import clean_dict, unique_list, is_sequence
 from normality import stringify, latinize_text, collapse_spaces, ascii_text
 
 from aleph.core import es, es_index
-from aleph.util import is_list, unique_list, remove_nulls
 
 log = logging.getLogger(__name__)
 INDEX_MAX_LEN = 1024 * 1024 * 100
@@ -43,13 +43,13 @@ def query_delete(query, doc_type=None, wait=True):
 
 def merge_docs(old, new):
     """Exend the values of the new doc with extra values from the old."""
-    old = remove_nulls(old)
-    new = dict(remove_nulls(new))
+    old = clean_dict(old)
+    new = dict(clean_dict(new))
     for k, v in old.items():
         if k == 'created_at':
             new[k] = v
         elif k in new:
-            if is_list(v):
+            if is_sequence(v):
                 v = new[k] + v
                 new[k] = unique_list(v)
             elif isinstance(v, dict):
