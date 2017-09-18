@@ -24,6 +24,7 @@ const PersonListItem = ({ name, collection, schema }) => (
 
 const ListItems = {
   'Document': DocumentListItem,
+  'Land': DocumentListItem,
   'Person': PersonListItem,
   'LegalEntity': PersonListItem,
   'Company': PersonListItem
