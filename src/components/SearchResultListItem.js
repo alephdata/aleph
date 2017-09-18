@@ -6,7 +6,9 @@ import SchemaIcon from './SchemaIcon';
 const ListItem = ({ name, collection, schema }) => (
   <tr className={`result result--${schema}`}>
     <td className="result__name">
-      <SchemaIcon schemaId={schema} />
+      <span className="result__icon">
+        <SchemaIcon schemaId={schema} />
+      </span>
       { name }
     </td>
     <td className="result__collection">
