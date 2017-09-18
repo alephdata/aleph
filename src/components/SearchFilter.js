@@ -68,7 +68,13 @@ class SearchFilter extends Component {
             <input className="pt-input" type="search" onChange={this.onTextChange}
               value={params.q}/>
           </div>
-          <div className="pt-large">
+          <div className="search-query__button pt-large">
+            <Button rightIconName="caret-down">
+              <FormattedMessage id="search.collections" defaultMessage="Countries"/>
+              {' '}(41)
+            </Button>
+          </div>
+          <div className="search-query__button pt-large">
             <Button rightIconName="caret-down">
               <FormattedMessage id="search.collections" defaultMessage="Collections"/>
               {' '}(55)

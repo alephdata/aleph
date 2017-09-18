@@ -8,15 +8,23 @@
 }
 
 .search-query {
-    display: flex;
+  display: flex;
 }
 
 .search-query__text {
   flex: 1;
-  padding-right: $pt-grid-size;
 
   & > input[type=search] {
     border-radius: $pt-border-radius;
+  }
+}
+
+.search-query__text,
+.search-query__button {
+  padding-right: $pt-grid-size;
+
+  &:last-child {
+    padding-right: none;
   }
 }
 
