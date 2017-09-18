@@ -5,6 +5,7 @@ import { Button } from '@blueprintjs/core';
 import queryString from 'query-string';
 import { debounce, isEqual, pickBy } from 'lodash';
 
+import SearchFilterCountries from './SearchFilterCountries';
 import SearchFilterSchema from './SearchFilterSchema';
 
 import './SearchFilter.css';
@@ -18,6 +19,7 @@ class SearchFilter extends Component {
     };
 
     this.onTextChange = this.onTextChange.bind(this);
+    this.onCountriesChange = this.onCountriesChange.bind(this);
     this.onSchemaChange = this.onSchemaChange.bind(this);
 
     this.debouncedUpdate = debounce(this.updateLocation, 250);
@@ -52,6 +54,11 @@ class SearchFilter extends Component {
     this.handleParamChange('q', e.target.value);
   }
 
+  onCountriesChange(countries) {
+    // TODO list of countries
+    this.handleParamChange('filter:countries', countries[0]);
+  }
+
   onSchemaChange(type) {
     this.handleParamChange('filter:schema', type);
   }
@@ -69,10 +76,8 @@ class SearchFilter extends Component {
               value={params.q}/>
           </div>
           <div className="search-query__button pt-large">
-            <Button rightIconName="caret-down">
-              <FormattedMessage id="search.collections" defaultMessage="Countries"/>
-              {' '}(41)
-            </Button>
+            <SearchFilterCountries onChange={this.onCountriesChange}
+              value={params['filter:countries']} params={params} />
           </div>
           <div className="search-query__button pt-large">
             <Button rightIconName="caret-down">

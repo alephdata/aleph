@@ -8,7 +8,7 @@ const SearchFilterSchema = ({ onChange, result, value }) => {
   const schemas = result.facets.schema.values.sort((a, b) => a.label < b.label ? -1 : 1);
 
   return (
-    <Tabs2 id="schemaTypes" className="search-filter__schema pt-large pt-dark" onChange={onChange}
+    <Tabs2 id="schemaTypes" className="search-filter-schema pt-large pt-dark" onChange={onChange}
       selectedTabId={value}>
       <Tab2 id={null}>
         <FormattedMessage id="search.schema.all" defaultMessage="All Results"/>

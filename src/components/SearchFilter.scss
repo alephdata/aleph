@@ -28,6 +28,28 @@
   }
 }
 
-.search-filter__schema > .pt-tab-list {
+.search-filter-schema > .pt-tab-list {
   flex-wrap: wrap;
+}
+
+.search-filter-countries {
+  color: $dark-gray1;
+  min-width: 150px;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.search-filter-countries-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  & > li {
+    cursor: pointer;
+    padding: ($pt-grid-size / 2) $pt-grid-size;
+
+    &:hover {
+      background-color: $gray5;
+    }
+  }
 }
