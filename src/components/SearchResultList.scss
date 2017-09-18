@@ -26,21 +26,6 @@
     width: 50%;
     font-size: 14px;
     font-weight: bold;
-
-    &::before {
-        content: "";
-        margin-right: $pt-grid-size;
-        width: 30px;
-        height: 30px;
-        background-color: $gray3;
-        border-radius: 100px;
-
-        @each $schema in (Document, Person, LegalEntity, Company) {
-            .result--#{$schema} & {
-                background-image: url(./icons/#{$schema}.svg);
-            }
-        }
-    }
 }
 
 .result__collection {

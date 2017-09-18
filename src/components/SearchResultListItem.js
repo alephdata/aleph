@@ -1,17 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const DocumentListItem = ({ title, collection, schema }) => (
-  <tr className={`result result--${schema}`}>
-    <td>{ title }</td>
-    <td className="result__collection">{ collection && collection.label }</td>
-    <td></td>
-  </tr>
-);
+import SchemaIcon from './SchemaIcon';
 
-const PersonListItem = ({ name, collection, schema }) => (
+const ListItem = ({ name, collection, schema }) => (
   <tr className={`result result--${schema}`}>
-    <td className="result__name">{ name }</td>
+    <td className="result__name">
+      <SchemaIcon schemaId={schema} />
+      { name }
+    </td>
     <td className="result__collection">
         { collection ?
             collection.label :
@@ -23,11 +20,11 @@ const PersonListItem = ({ name, collection, schema }) => (
 );
 
 const ListItems = {
-  'Document': DocumentListItem,
-  'Land': DocumentListItem,
-  'Person': PersonListItem,
-  'LegalEntity': PersonListItem,
-  'Company': PersonListItem
+  'Document': ListItem,
+  'Land': ListItem,
+  'Person': ListItem,
+  'LegalEntity': ListItem,
+  'Company': ListItem
 };
 
 const SearchResultListItem = ({ result, collection }) => {

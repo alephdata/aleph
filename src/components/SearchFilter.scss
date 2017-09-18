@@ -19,3 +19,7 @@
     border-radius: $pt-border-radius;
   }
 }
+
+.search-filter__schema > .pt-tab-list {
+  flex-wrap: wrap;
+}
