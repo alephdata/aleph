@@ -12,7 +12,12 @@ const DocumentListItem = ({ title, collection, schema }) => (
 const PersonListItem = ({ name, collection, schema }) => (
   <tr className={`result result--${schema}`}>
     <td className="result__name">{ name }</td>
-    <td className="result__collection">{ collection && collection.label }</td>
+    <td className="result__collection">
+        { collection ?
+            collection.label :
+            <span className="pt-skeleton">Loading collection</span>
+        }
+    </td>
     <td></td>
   </tr>
 );
