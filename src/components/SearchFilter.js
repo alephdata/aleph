@@ -51,7 +51,7 @@ class SearchFilter extends Component {
 
   onCountriesOpen() {
     if (!this.state.countriesLoaded) {
-      endpoint.get('search', {params: {...this.state.query, 'facet': 'countries'}})
+      endpoint.get('search', {params: {q: this.state.query.q, facet: 'countries'}})
         .then(response => {
           this.setState({
             countries: response.data.facets.countries.values,
