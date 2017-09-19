@@ -15,14 +15,15 @@ class SearchFilter extends Component {
 
     this.state = {
       query: props.query,
-      countries: []
+      countries: [],
+      countriesLoaded: false
     };
 
     this.onTextChange = this.onTextChange.bind(this);
     this.onCountriesChange = this.onCountriesChange.bind(this);
     this.onSchemaChange = this.onSchemaChange.bind(this);
 
-    this.loadCountries = this.loadCountries.bind(this);
+    this.onCountriesOpen = this.onCountriesOpen.bind(this);
   }
 
   handleQueryChange(key, value) {
@@ -37,7 +38,7 @@ class SearchFilter extends Component {
 
   onTextChange(e) {
     this.handleQueryChange('q', e.target.value);
-    this.setState({countries: null});
+    this.setState({countriesLoaded: false});
   }
 
   onCountriesChange(countries) {
@@ -48,15 +49,20 @@ class SearchFilter extends Component {
     this.handleQueryChange('filter:schema', type);
   }
 
-  loadCountries() {
-    endpoint.get('search', {params: {...this.state.query, 'facet': 'countries'}})
-      .then(response => {
-        this.setState({countries: response.data.facets.countries.values});
-      });
+  onCountriesOpen() {
+    if (!this.state.countriesLoaded) {
+      endpoint.get('search', {params: {...this.state.query, 'facet': 'countries'}})
+        .then(response => {
+          this.setState({
+            countries: response.data.facets.countries.values,
+            countriesLoaded: true
+          });
+        });
+    }
   }
 
   render() {
-    const { query, countries } = this.state;
+    const { query, countries, countriesLoaded } = this.state;
     const { result } = this.props;
 
     return (
@@ -68,8 +74,8 @@ class SearchFilter extends Component {
               value={query.q}/>
           </div>
           <div className="search-query__button pt-large">
-            <SearchFilterCountries onChange={this.onCountriesChange} loadCountries={this.loadCountries}
-              value={query['filter:countries'] || []} countries={countries} />
+            <SearchFilterCountries onChange={this.onCountriesChange} onOpen={this.onCountriesOpen}
+              value={query['filter:countries'] || []} countries={countries} loaded={countriesLoaded} />
           </div>
           <div className="search-query__button pt-large">
             <Button rightIconName="caret-down">
