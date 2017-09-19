@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button } from '@blueprintjs/core';
 
-import queryString from 'query-string';
-import { debounce, isEqual, pickBy } from 'lodash';
+import { endpoint } from '../api';
 
 import SearchFilterCountries from './SearchFilterCountries';
 import SearchFilterSchema from './SearchFilterSchema';
@@ -15,56 +14,39 @@ class SearchFilter extends Component {
     super(props);
 
     this.state = {
-      params: queryString.parse(props.location.search)
+      query: props.query
     };
 
     this.onTextChange = this.onTextChange.bind(this);
     this.onCountriesChange = this.onCountriesChange.bind(this);
     this.onSchemaChange = this.onSchemaChange.bind(this);
 
-    this.debouncedUpdate = debounce(this.updateLocation, 250);
   }
 
-  updateLocation() {
-    const { history, location } = this.props;
-    const nonEmptyParams = pickBy(this.state.params, v => !!v);
+  handleQueryChange(key, value) {
+    const query = {
+      ...this.state.query,
+      [key]: value
+    };
 
-    history.push({
-      pathname: location.pathname,
-      search: queryString.stringify(nonEmptyParams)
-    });
-  }
-
-  componentWillUpdate(nextProps, { params }) {
-    if (!isEqual(params, this.state.params)) {
-      this.debouncedUpdate();
-    }
-  }
-
-  handleParamChange(param, newValue) {
-    this.setState({
-      params: {
-        ...this.state.params,
-        [param]: newValue
-      }
-    });
+    this.setState({query});
+    this.props.updateQuery(query);
   }
 
   onTextChange(e) {
-    this.handleParamChange('q', e.target.value);
+    this.handleQueryChange('q', e.target.value);
   }
 
   onCountriesChange(countries) {
-    // TODO list of countries
-    this.handleParamChange('filter:countries', countries[0]);
+    this.handleQueryChange('filter:countries', countries);
   }
 
   onSchemaChange(type) {
-    this.handleParamChange('filter:schema', type);
+    this.handleQueryChange('filter:schema', type);
   }
 
   render() {
-    const { params } = this.state;
+    const { query, countries } = this.state;
     const { result } = this.props;
 
     return (
@@ -73,11 +55,11 @@ class SearchFilter extends Component {
           <div className="search-query__text pt-input-group pt-large">
             <span className="pt-icon pt-icon-search"/>
             <input className="pt-input" type="search" onChange={this.onTextChange}
-              value={params.q}/>
+              value={query.q}/>
           </div>
           <div className="search-query__button pt-large">
-            <SearchFilterCountries onChange={this.onCountriesChange}
-              value={params['filter:countries']} params={params} />
+            <SearchFilterCountries onChange={this.onCountriesChange} loadCountries={this.loadCountries}
+              value={query['filter:countries'] || []} countries={countries} />
           </div>
           <div className="search-query__button pt-large">
             <Button rightIconName="caret-down">
@@ -88,7 +70,7 @@ class SearchFilter extends Component {
         </div>
         { result.total > 0 &&
           <SearchFilterSchema onChange={this.onSchemaChange} result={result}
-            value={params['filter:schema']} /> }
+            value={query['filter:schema']} /> }
       </div>
     );
   }
