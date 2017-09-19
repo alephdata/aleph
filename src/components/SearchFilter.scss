@@ -37,6 +37,13 @@
   min-width: 150px;
   max-height: 90vh;
   overflow: auto;
+  padding: ($pt-grid-size / 2) 0;
+
+  & > .pt-spinner:not(.pt-svg-spinner) {
+    display: block;
+    margin: 0 auto;
+    overflow: hidden;
+  }
 }
 
 .search-filter-countries-list {
@@ -45,8 +52,17 @@
   padding: 0;
 
   & > li {
+    position: relative;
     cursor: pointer;
     padding: ($pt-grid-size / 2) $pt-grid-size;
+    padding-left: ($pt-icon-size-standard + $pt-grid-size * 2);
+
+    & > .pt-icon-standard {
+      position: absolute;
+      left: $pt-grid-size;
+      top: ($pt-grid-size / 2);
+      line-height: $pt-line-height;
+    }
 
     &:hover {
       background-color: $gray5;

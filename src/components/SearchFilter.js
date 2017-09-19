@@ -14,13 +14,15 @@ class SearchFilter extends Component {
     super(props);
 
     this.state = {
-      query: props.query
+      query: props.query,
+      countries: []
     };
 
     this.onTextChange = this.onTextChange.bind(this);
     this.onCountriesChange = this.onCountriesChange.bind(this);
     this.onSchemaChange = this.onSchemaChange.bind(this);
 
+    this.loadCountries = this.loadCountries.bind(this);
   }
 
   handleQueryChange(key, value) {
@@ -35,6 +37,7 @@ class SearchFilter extends Component {
 
   onTextChange(e) {
     this.handleQueryChange('q', e.target.value);
+    this.setState({countries: null});
   }
 
   onCountriesChange(countries) {
@@ -43,6 +46,13 @@ class SearchFilter extends Component {
 
   onSchemaChange(type) {
     this.handleQueryChange('filter:schema', type);
+  }
+
+  loadCountries() {
+    endpoint.get('search', {params: {...this.state.query, 'facet': 'countries'}})
+      .then(response => {
+        this.setState({countries: response.data.facets.countries.values});
+      });
   }
 
   render() {
