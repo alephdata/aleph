@@ -40,7 +40,7 @@ coverage
 pyahocorasick==1.1.4
 pycrypto==2.6.1
 pylru==1.0.9
-pyjwt==1.5.0
+pyjwt
 
 # weird pudo stuff
 cronosparser>=0.2
