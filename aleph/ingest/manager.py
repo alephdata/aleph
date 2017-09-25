@@ -74,7 +74,7 @@ class DocumentManager(Manager):
             file_path = self.archive.load_file(document.content_hash,
                                                file_name=document.file_name)
 
-        if file_path is None:
+        if file_path is None or not os.path.exists(file_path):
             # TODO: save this to the document?
             log.error("Cannot load data: %r", document)
             return

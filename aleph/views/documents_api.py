@@ -59,14 +59,17 @@ def _serve_archive(content_hash, file_name, mime_type):
         return redirect(url)
 
     enable_cache()
-    local_path = archive.load_file(content_hash, file_name=file_name)
-    if local_path is None:
-        raise NotFound("File does not exist.")
+    try:
+        local_path = archive.load_file(content_hash, file_name=file_name)
+        if local_path is None:
+            raise NotFound("File does not exist.")
 
-    return send_file(open(local_path, 'rb'),
-                     as_attachment=True,
-                     attachment_filename=file_name,
-                     mimetype=mime_type)
+        return send_file(open(local_path, 'rb'),
+                         as_attachment=True,
+                         attachment_filename=file_name,
+                         mimetype=mime_type)
+    finally:
+        archive.cleanup_file(content_hash)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/file')
