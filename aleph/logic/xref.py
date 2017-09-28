@@ -150,7 +150,10 @@ def generate_matches_sheet(workbook, sheet, collection, match_collection,
         countries = ', '.join(sorted(result.entity.get('countries', [])))
         sheet.write_string(row, 3, countries.upper())
         ent_props = result.entity.get('properties', {})
-        source_url = ', '.join(ent_props.get('sourceUrl'))
+        if(ent_props.get('sourceUrl') is not None):
+            source_url = ', '.join(ent_props.get('sourceUrl'))
+        else:
+            source_url = ''
         sheet.write_string(row, 4, source_url)
 
         name = result.match.get('name')
