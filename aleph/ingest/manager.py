@@ -74,9 +74,16 @@ class DocumentManager(Manager):
             file_path = self.archive.load_file(document.content_hash,
                                                file_name=document.file_name)
 
-        if file_path is None or not os.path.exists(file_path):
-            # TODO: save this to the document?
-            log.error("Cannot load data: %r", document)
+        if file_path is None:
+            # When a directory is ingested, the data is not stored. Thus, try
+            # to recurse transparently.
+            for child in Document.by_parent(document):
+                self.ingest_document(child, role_id=role_id)
+            return
+            
+        if not os.path.exists(file_path):
+            # Probably indicative of file system encoding issues.
+            log.warn("Ingest non-existant path [%r]: %s", document, file_path)
             return
 
         try:

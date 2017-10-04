@@ -162,5 +162,11 @@ class Document(db.Model, DatedModel, Metadata):
             db.session.add(document)
         return document
 
+    @classmethod
+    def by_parent(cls, parent_id):
+        q = cls.all()
+        q = q.filter(Document.parent_id == parent_id)
+        return q
+
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.title)
