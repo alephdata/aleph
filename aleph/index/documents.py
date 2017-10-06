@@ -45,8 +45,6 @@ def index_document(document):
         'status': document.status,
         'content_hash': document.content_hash,
         'foreign_id': document.foreign_id,
-        'crawler': document.crawler,
-        'crawler_run': document.crawler_run,
         'error_message': document.error_message,
         'uploader_id': document.uploader_id,
         'created_at': document.created_at,

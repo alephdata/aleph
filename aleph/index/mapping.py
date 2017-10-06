@@ -7,9 +7,6 @@ TYPE_LINK = 'link'
 
 
 COLLECTION_MAPPING = {
-    "_all": {
-        "enabled": True
-    },
     "dynamic_templates": [
         {
             "fields": {
@@ -49,9 +46,6 @@ COLLECTION_MAPPING = {
 }
 
 DOCUMENT_MAPPING = {
-    "_all": {
-        "enabled": True
-    },
     "date_detection": False,
     "properties": {
         "title": {"type": "text"},
@@ -60,8 +54,6 @@ DOCUMENT_MAPPING = {
         "schemata": {"type": "keyword"},
         "type": {"type": "keyword"},
         "status": {"type": "keyword"},
-        "crawler": {"type": "keyword"},
-        "crawler_run": {"type": "keyword"},
         "error_message": {"type": "text"},
         "content_hash": {"type": "keyword"},
         "foreign_id": {"type": "keyword"},
@@ -100,9 +92,6 @@ DOCUMENT_MAPPING = {
 }
 
 RECORD_MAPPING = {
-    "_all": {
-        "enabled": True
-    },
     "date_detection": False,
     "properties": {
         "collection_id": {"type": "long"},
@@ -114,9 +103,6 @@ RECORD_MAPPING = {
 }
 
 ENTITY_MAPPING = {
-    "_all": {
-        "enabled": True
-    },
     "dynamic_templates": [
         {
             "fields": {

@@ -8,7 +8,6 @@ from storagelayer import checksum
 from aleph.core import upload_folder
 from aleph.ingest import ingest_document
 from aleph.model import Collection, Document
-from aleph.model.common import make_textid
 from aleph.views.serializers import DocumentSchema
 from aleph.views.util import require, obj_or_404, jsonify, validate_data
 
@@ -20,7 +19,6 @@ blueprint = Blueprint('ingest_api', __name__)
 def ingest_upload(id):
     collection = obj_or_404(Collection.by_id(id))
     require(request.authz.can_write(collection.id))
-    crawler_run = make_textid()
 
     try:
         meta = json.loads(request.form.get('meta', '{}'))
@@ -35,9 +33,6 @@ def ingest_upload(id):
         content_hash = checksum(sec_fn)
         document = Document.by_keys(collection=collection,
                                     content_hash=content_hash)
-        # TODO: allow user to override.
-        document.crawler = 'user_upload:%s' % request.authz.id
-        document.crawler_run = crawler_run
         document.mime_type = storage.mimetype
         document.file_name = storage.filename
         document.update(meta)

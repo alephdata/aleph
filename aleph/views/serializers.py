@@ -205,8 +205,6 @@ class DocumentSchema(Schema, DatedSchema):
     content_hash = String(dump_only=True)
     parent = Dict(dump_only=True)  # TODO: make writeable?
     uploader_id = Integer(dump_only=True)
-    crawler = String(dump_only=True)
-    crawler_run = String(dump_only=True)
     error_message = String(dump_only=True)
     # title = String(validate=Length(min=2, max=5000), missing=None)
     title = String(missing=None)

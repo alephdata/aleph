@@ -31,9 +31,6 @@ class Document(db.Model, DatedModel, Metadata):
     type = db.Column(db.Unicode(10), nullable=False)
     status = db.Column(db.Unicode(10), nullable=True)
     meta = db.Column(JSONB, default={})
-
-    crawler = db.Column(db.Unicode())
-    crawler_run = db.Column(db.Unicode())
     error_message = db.Column(db.Unicode(), nullable=True)
 
     uploader_id = db.Column(db.Integer,
