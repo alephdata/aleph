@@ -76,7 +76,7 @@ class DocumentManager(Manager):
 
         if file_path is None:
             # TODO: save this to the document?
-            log.error("Cannot load data: %r", document)
+            log.warning("Cannot load data: %r", document)
             return
 
         try:
