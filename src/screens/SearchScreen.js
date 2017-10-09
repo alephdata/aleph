@@ -1,12 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
-import { debounce, isEqual, pickBy } from 'lodash';
+import { debounce, isEqual, pickBy, mergeWith, isArray } from 'lodash';
 
 import { fetchSearchResults } from '../actions';
 
 import SearchResultList from '../components/SearchResultList';
 import SearchFilter from '../components/SearchFilter';
+
+function parseQuery(search) {
+  const searchQuery = queryString.parse(search);
+
+  return mergeWith({
+    'q': '',
+    'filter:schema': '',
+    'filter:countries': []
+  }, searchQuery, (defaultValue, newValue) => {
+    return newValue !== undefined ?
+      isArray(defaultValue) ? defaultValue.concat(newValue) : newValue :
+      defaultValue;
+  });
+}
 
 class SearchScreen extends Component {
   constructor() {
@@ -52,7 +66,7 @@ class SearchScreen extends Component {
 }
 
 const mapStateToProps = ({ searchResults }, { location }) => {
-  const query = queryString.parse(location.search);
+  const query = parseQuery(location.search);
   return { query, searchResults };
 }
 
