@@ -2,7 +2,7 @@ import uniq from 'lodash/uniq';
 
 import { endpoint } from '../api';
 
-export const fetchCollections = (ids) => (dispatch, getState) => {
+export const fetchCollections = (ids, params={}) => (dispatch, getState) => {
   const { collections } = getState();
   const newIds = uniq(ids).filter(id => !collections[id]);
 
@@ -10,7 +10,7 @@ export const fetchCollections = (ids) => (dispatch, getState) => {
     const limit = 50;
 
     return endpoint.get('collections', {
-        params: { 'filter:id': newIds, limit, offset: (page - 1) * limit }
+        params: { ...params, 'filter:id': newIds, limit, offset: (page - 1) * limit }
       })
       .then(response => {
         dispatch({

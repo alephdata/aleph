@@ -1,10 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Popover, Position, Spinner } from '@blueprintjs/core';
 
-const SearchFilterCollectionsItem = ({ collection }) => (
+const mapStateToProps = ({ collections },  { collection }) => ({
+  collection: collections[collection.id] || collection
+});
+
+const SearchFilterCollectionsItem = connect(mapStateToProps)(collection => (
   <li>{ collection.name }</li>
-);
+));
 
 const SearchFilterCollections = ({ loaded, collections, currentValue, onOpen, onChange }) => (
   <Popover position={Position.BOTTOM} popoverWillOpen={onOpen} inline>
@@ -14,9 +19,9 @@ const SearchFilterCollections = ({ loaded, collections, currentValue, onOpen, on
       </Button>
       <div className="search-filter-collections">
         {loaded ?
-          <ul class="search-filter-collections-list">
+          <ul className="search-filter-collections-list">
             {collections.map(collection => (
-              <SearchFilterCollectionsItem collection={collection} />
+              <SearchFilterCollectionsItem collection={collection} key={collection.id} />
             ))}
           </ul> :
           <Spinner className="pt-large" />}

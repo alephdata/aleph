@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import { endpoint } from '../api';
+import { fetchCollections } from '../actions';
 
 import SearchFilterCountries from './SearchFilterCountries';
 import SearchFilterCollections from './SearchFilterCollections';
@@ -57,10 +59,13 @@ class SearchFilter extends Component {
     if (!this.state.collectionsLoaded) {
       endpoint.get('search', {params: {q: this.state.query.q, facet: 'collection_id'}})
         .then(response => {
-          this.setState({
-            collections: response.data.facets.collection_id.values,
-            collectionsLoaded: true
-          });
+          const collections = response.data.facets.collection_id.values;
+          this.setState({collections, collectionsLoaded: true});
+
+          this.props.fetchCollections(
+            collections.map(collection => collection.id),
+            {facet: ['category', 'countries']}
+          );
         });
     }
   }
@@ -99,5 +104,7 @@ class SearchFilter extends Component {
     );
   }
 }
+
+SearchFilter = connect(undefined, { fetchCollections })(SearchFilter);
 
 export default SearchFilter;
