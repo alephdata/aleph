@@ -20,7 +20,10 @@ const SearchFilterCollectionsItem = connect(mapStateToProps)(({ collection }) =>
 const SearchFilterCollectionsList = ({ collections }) => (
   <div className="search-filter-collections-col">
     <div className="search-filter-collections-col__blah">
-      <input type="search" />
+      <div className="pt-input-group pt-large">
+        <span className="pt-icon pt-icon-search"/>
+        <input className="search-input pt-input" type="search" />
+      </div>
     </div>
     <div className="search-filter-collections-col__fill">
       <ul className="search-filter-collections-list">

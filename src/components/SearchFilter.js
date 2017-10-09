@@ -86,7 +86,7 @@ class SearchFilter extends Component {
         <div className="search-query">
           <div className="search-query__text pt-input-group pt-large">
             <span className="pt-icon pt-icon-search"/>
-            <input className="pt-input" type="search" onChange={this.onTextChange} value={query.q} />
+            <input className="search-input pt-input" type="search" onChange={this.onTextChange} value={query.q} />
           </div>
           <div className="search-query__button pt-large">
             <SearchFilterCountries onOpen={this.onCountriesOpen} countries={countries}
