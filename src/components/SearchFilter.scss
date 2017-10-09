@@ -112,6 +112,7 @@
     position: relative;
     padding: $pt-grid-size $pt-grid-size 0 ($pt-grid-size * 2 + 16px);
     overflow: auto;
+    width: 100%;
 
     &::before {
         content: "";
