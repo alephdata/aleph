@@ -4,11 +4,17 @@ import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Popover, Position, Spinner } from '@blueprintjs/core';
 
 const mapStateToProps = ({ collections },  { collection }) => ({
-  collection: collections[collection.id] || collection
+  // Use more detailed collection data if we have it, fallback to basic
+  // TEMP: parseInt until collection ids are made to be strings
+  // https://github.com/alephdata/aleph/issues/224
+  collection: collections[parseInt(collection.id, 10)] || collection
 });
 
-const SearchFilterCollectionsItem = connect(mapStateToProps)(collection => (
-  <li>{ collection.name }</li>
+const SearchFilterCollectionsItem = connect(mapStateToProps)(({ collection }) => (
+  <li>
+    <p>{ collection.label }</p>
+    <p>{ collection.summary }</p>
+  </li>
 ));
 
 const SearchFilterCollections = ({ loaded, collections, currentValue, onOpen, onChange }) => (
