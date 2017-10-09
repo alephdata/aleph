@@ -6,15 +6,26 @@ export const fetchCollections = (ids) => (dispatch, getState) => {
   const { collections } = getState();
   const newIds = uniq(ids).filter(id => !collections[id]);
 
-  if (newIds.length > 0) {
+  function fetchCollectionsPages(page=1) {
+    const limit = 50;
+
     return endpoint.get('collections', {
-        params: {'filter:id': newIds},
-        paramsSerializer: queryString.stringify
+        params: { 'filter:id': newIds, limit, offset: (page - 1) * limit }
       })
-      .then(response => dispatch({
-        type: 'FETCH_COLLECTIONS_SUCCESS',
-        collections: response.data
-      }));
+      .then(response => {
+        dispatch({
+          type: 'FETCH_COLLECTIONS_SUCCESS',
+          collections: response.data
+        });
+
+        if (page < response.data.pages) {
+          fetchCollectionsPages(page + 1);
+        }
+      });
+  }
+
+  if (newIds.length > 0) {
+    fetchCollectionsPages();
   }
 };
 
