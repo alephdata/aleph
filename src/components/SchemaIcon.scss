@@ -1,0 +1,14 @@
+@import "~@blueprintjs/core/dist/variables";
+
+.schema-icon {
+    display: inline-block;
+    vertical-align: middle;
+    width: 30px;
+    height: 30px;
+
+    @each $schema in (Document, Person, LegalEntity, Company) {
+        &.schema-icon--#{$schema} {
+            background-image: url(./icons/#{$schema}.svg);
+        }
+    }
+}

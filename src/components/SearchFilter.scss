@@ -8,14 +8,64 @@
 }
 
 .search-query {
-    display: flex;
+  display: flex;
 }
 
 .search-query__text {
   flex: 1;
-  padding-right: $pt-grid-size;
 
   & > input[type=search] {
     border-radius: $pt-border-radius;
+  }
+}
+
+.search-query__text,
+.search-query__button {
+  padding-right: $pt-grid-size;
+
+  &:last-child {
+    padding-right: none;
+  }
+}
+
+.search-filter-schema > .pt-tab-list {
+  flex-wrap: wrap;
+}
+
+.search-filter-countries {
+  color: $dark-gray1;
+  min-width: 150px;
+  max-height: 90vh;
+  overflow: auto;
+  padding: ($pt-grid-size / 2) 0;
+
+  & > .pt-spinner:not(.pt-svg-spinner) {
+    display: block;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+}
+
+.search-filter-countries-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  & > li {
+    position: relative;
+    cursor: pointer;
+    padding: ($pt-grid-size / 2) $pt-grid-size;
+    padding-left: ($pt-icon-size-standard + $pt-grid-size * 2);
+
+    & > .pt-icon-standard {
+      position: absolute;
+      left: $pt-grid-size;
+      top: ($pt-grid-size / 2);
+      line-height: $pt-line-height;
+    }
+
+    &:hover {
+      background-color: $gray5;
+    }
   }
 }
