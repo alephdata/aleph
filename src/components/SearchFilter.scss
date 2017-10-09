@@ -35,10 +35,6 @@
 .search-filter-countries,
 .search-filter-collections {
   color: $dark-gray1;
-  min-width: 150px;
-  max-height: 90vh;
-  overflow: auto;
-  padding: ($pt-grid-size / 2) 0;
 
   & > .pt-spinner:not(.pt-svg-spinner) {
     display: block;
@@ -47,27 +43,87 @@
   }
 }
 
+.search-filter-countries {
+  overflow: auto;
+  width: 150px;
+  max-height: 90vh;
+  padding: ($pt-grid-size / 2) 0;
+}
+
+.search-filter-collections.pt-dialog {
+  left: ($pt-grid-size * 2);
+  right: ($pt-grid-size * 2);
+  bottom: $pt-grid-size;
+  width: auto;
+  transform: scale(1);
+  padding: $pt-grid-size;
+  flex-direction: row;
+  background-color: $white;
+}
+
+.search-filter-collections-col {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &:last-child {
+        border-left: 2px solid $light-gray2;
+        width: 300px;
+    }
+}
+
+.search-filter-collections-col__blah,
+.search-filter-collections-col__fill {
+    margin: $pt-grid-size;
+}
+
+.search-filter-collections-col__fill {
+    flex: 1;
+    overflow: auto;
+}
+
 .search-filter-countries-list,
 .search-filter-collections-list {
   list-style: none;
   margin: 0;
   padding: 0;
 
-  & > li {
-    position: relative;
-    cursor: pointer;
-    padding: ($pt-grid-size / 2) $pt-grid-size;
-    padding-left: ($pt-icon-size-standard + $pt-grid-size * 2);
+}
 
-    & > .pt-icon-standard {
-      position: absolute;
-      left: $pt-grid-size;
-      top: ($pt-grid-size / 2);
-      line-height: $pt-line-height;
-    }
+.search-filter-countries-list > li {
+  position: relative;
+  cursor: pointer;
+  padding: ($pt-grid-size / 2) $pt-grid-size;
+  padding-left: ($pt-icon-size-standard + $pt-grid-size * 2);
 
-    &:hover {
-      background-color: $gray5;
-    }
+  & > .pt-icon-standard {
+    position: absolute;
+    left: $pt-grid-size;
+    top: ($pt-grid-size / 2);
+    line-height: $pt-line-height;
   }
+
+  &:hover {
+    background-color: $gray5;
+  }
+}
+
+.search-filter-collections-list > li {
+    position: relative;
+    padding: $pt-grid-size $pt-grid-size 0 ($pt-grid-size * 2 + 16px);
+    overflow: auto;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: $pt-grid-size;;
+        left: $pt-grid-size;
+        background-image: url(./icons/collection.svg);
+        width: 16px;
+        height: 16px;
+    }
+
+    &:nth-child(odd) {
+        background: $light-gray4;
+    }
 }
