@@ -14,7 +14,8 @@ function parseQuery(search) {
   return mergeWith({
     'q': '',
     'filter:schema': '',
-    'filter:countries': []
+    'filter:countries': [],
+    'filter:collection_id': []
   }, searchQuery, (defaultValue, newValue) => {
     return newValue !== undefined ?
       isArray(defaultValue) ? defaultValue.concat(newValue) : newValue :

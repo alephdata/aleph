@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Button } from '@blueprintjs/core';
 
 import { endpoint } from '../api';
 
 import SearchFilterCountries from './SearchFilterCountries';
+import SearchFilterCollections from './SearchFilterCollections';
 import SearchFilterSchema from './SearchFilterSchema';
 
 import './SearchFilter.css';
@@ -16,13 +15,14 @@ class SearchFilter extends Component {
     this.state = {
       query: props.query,
       countries: [],
-      countriesLoaded: false
+      countriesLoaded: false,
+      collections: [],
+      collectionsLoaded: false
     };
 
     this.onTextChange = this.onTextChange.bind(this);
-    this.onCountriesChange = this.onCountriesChange.bind(this);
-    this.onSchemaChange = this.onSchemaChange.bind(this);
 
+    this.onCollectionsOpen = this.onCollectionsOpen.bind(this);
     this.onCountriesOpen = this.onCountriesOpen.bind(this);
   }
 
@@ -38,15 +38,7 @@ class SearchFilter extends Component {
 
   onTextChange(e) {
     this.handleQueryChange('q', e.target.value);
-    this.setState({countriesLoaded: false});
-  }
-
-  onCountriesChange(countries) {
-    this.handleQueryChange('filter:countries', countries);
-  }
-
-  onSchemaChange(type) {
-    this.handleQueryChange('filter:schema', type);
+    this.setState({countriesLoaded: false, collectionsLoaded: false});
   }
 
   onCountriesOpen() {
@@ -61,9 +53,28 @@ class SearchFilter extends Component {
     }
   }
 
+  onCollectionsOpen() {
+    if (!this.state.collectionsLoaded) {
+      endpoint.get('search', {params: {q: this.state.query.q, facet: 'collection_id'}})
+        .then(response => {
+          this.setState({
+            collections: response.data.facets.collection_id.values,
+            collectionsLoaded: true
+          });
+        });
+    }
+  }
+
   render() {
-    const { query, countries, countriesLoaded } = this.state;
+    const { query, countries, countriesLoaded, collections, collectionsLoaded } = this.state;
     const { result } = this.props;
+
+    const filterProps = key => {
+      return {
+        onChange: value => this.handleQueryChange(key, value),
+        currentValue: query[key]
+      };
+    };
 
     return (
       <div className="search-filter">
@@ -73,19 +84,17 @@ class SearchFilter extends Component {
             <input className="pt-input" type="search" onChange={this.onTextChange} value={query.q} />
           </div>
           <div className="search-query__button pt-large">
-            <SearchFilterCountries onChange={this.onCountriesChange} onOpen={this.onCountriesOpen}
-              currentCountries={query['filter:countries']} countries={countries} loaded={countriesLoaded} />
+            <SearchFilterCountries onOpen={this.onCountriesOpen} countries={countries}
+              loaded={countriesLoaded} {...filterProps('filter:countries')} />
           </div>
           <div className="search-query__button pt-large">
-            <Button rightIconName="caret-down">
-              <FormattedMessage id="search.collections" defaultMessage="Collections"/>
-              {' '}(55)
-            </Button>
+            <SearchFilterCollections onOpen={this.onCollectionsOpen} collections={collections}
+              loaded={collectionsLoaded} {...filterProps('filter:collection_id')} />
           </div>
         </div>
         { result.total > 0 &&
-          <SearchFilterSchema onChange={this.onSchemaChange} result={result}
-            currentSchema={query['filter:schema']} /> }
+          <SearchFilterSchema schemas={result.facets.schema.values}
+            {...filterProps('filter:schema')} /> }
       </div>
     );
   }

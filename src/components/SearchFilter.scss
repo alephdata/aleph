@@ -32,7 +32,8 @@
   flex-wrap: wrap;
 }
 
-.search-filter-countries {
+.search-filter-countries,
+.search-filter-collections {
   color: $dark-gray1;
   min-width: 150px;
   max-height: 90vh;
@@ -46,7 +47,8 @@
   }
 }
 
-.search-filter-countries-list {
+.search-filter-countries-list,
+.search-filter-collections-list {
   list-style: none;
   margin: 0;
   padding: 0;
