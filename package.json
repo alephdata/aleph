@@ -26,13 +26,13 @@
   "devDependencies": {
     "faker": "^4.1.0",
     "json-server": "^0.10.0",
-    "node-sass": "^4.5.2",
+    "node-sass-chokidar": "0.0.3",
     "npm-run-all": "^4.0.2",
     "react-scripts": "0.9.5"
   },
   "scripts": {
-    "build-css": "node-sass src/ -o src/ --importer=node_modules/node-sass-package-importer/dist/cli.js",
-    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive --importer=node_modules/node-sass-package-importer/dist/cli.js",
+    "build-css": "node-sass-chokidar src/ -o src/ --importer=node_modules/node-sass-package-importer/dist/cli.js",
+    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive --importer=node_modules/node-sass-package-importer/dist/cli.js",
     "messages": "react-intl-cra 'src/**/*.js' 'i18n/messages.json'",
     "json2pot": "react-intl-po json2pot 'i18n/messages.json' -o 'i18n/messages.pot'",
     "po2json": "react-intl-po po2json 'i18n/translations/*.po' -m 'i18n/messages.json' -o src/translations.json",
