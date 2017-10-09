@@ -4,12 +4,12 @@ import { Tab2, Tabs2 } from '@blueprintjs/core';
 
 import SchemaIcon from './SchemaIcon';
 
-const SearchFilterSchema = ({ onChange, result, value }) => {
+const SearchFilterSchema = ({ onChange, result, currentSchema }) => {
   const schemas = result.facets.schema.values.sort((a, b) => a.label < b.label ? -1 : 1);
 
   return (
     <Tabs2 id="schemaTypes" className="search-filter-schema pt-large pt-dark" onChange={onChange}
-      selectedTabId={value}>
+      selectedTabId={currentSchema}>
       <Tab2 id={null}>
         <FormattedMessage id="search.schema.all" defaultMessage="All Results"/>
         {' '}(<FormattedNumber value={schemas.reduce((total, schema) => total + schema.count, 0)} />)

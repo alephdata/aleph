@@ -53,6 +53,7 @@ class SearchScreen extends Component {
 
 const mapStateToProps = ({ searchResults }, { location }) => {
   const query = queryString.parse(location.search);
+  console.warn(query);
   return { query, searchResults };
 }
 

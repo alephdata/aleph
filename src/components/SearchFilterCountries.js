@@ -2,11 +2,11 @@ import React from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Popover, Position, Spinner } from '@blueprintjs/core';
 
-const SearchFilterCountries = ({ loaded, countries, value, onOpen, onChange }) => {
+const SearchFilterCountries = ({ loaded, countries, currentCountries, onOpen, onChange }) => {
 
   function toggleCountryId(countryId) {
-    const newValue = value.indexOf(countryId) > -1 ?
-      value.filter(i => i !== countryId) : [...value, countryId];
+    const newValue = currentCountries.indexOf(countryId) > -1 ?
+      currentCountries.filter(i => i !== countryId) : [...currentCountries, countryId];
 
     onChange(newValue);
   }
@@ -23,7 +23,7 @@ const SearchFilterCountries = ({ loaded, countries, value, onOpen, onChange }) =
             {countries.map(country => (
               <li onClick={toggleCountryId.bind(null, country.id)} key={country.id}>
                 <span className="pt-icon-standard pt-icon-tick"
-                  style={{'visibility': value.indexOf(country.id) > -1 ? 'visible': 'hidden'}} />
+                  style={{'visibility': currentCountries.indexOf(country.id) > -1 ? 'visible': 'hidden'}} />
                 {country.label}
               </li>
             ))}
