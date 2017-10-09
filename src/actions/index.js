@@ -1,5 +1,4 @@
 import uniq from 'lodash/uniq';
-import queryString from 'query-string';
 
 import { endpoint } from '../api';
 
@@ -25,10 +24,7 @@ export const fetchSearchResults = (filters) => (dispatch) => {
     filters
   });
 
-  return endpoint.get('search', {
-      params: { ...filters, facet: 'schema' },
-      paramsSerializer: queryString.stringify
-    })
+  return endpoint.get('search', { params: { ...filters, facet: 'schema' } })
     .then(response => {
       const result = response.data;
 
