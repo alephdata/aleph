@@ -12,7 +12,7 @@ const SearchFilterCountries = ({ loaded, countries, currentValue, onOpen, onChan
   }
 
   return (
-    <Popover position={Position.BOTTOM} popoverWillOpen={onOpen} inline={true}>
+    <Popover position={Position.BOTTOM} popoverWillOpen={onOpen} inline>
       <Button rightIconName="caret-down">
         <FormattedMessage id="search.countries" defaultMessage="Countries"/>
         {loaded && <span> (<FormattedNumber value={countries.length} />)</span>}
