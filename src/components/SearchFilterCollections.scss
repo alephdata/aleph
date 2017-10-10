@@ -1,12 +1,15 @@
 @import "~@blueprintjs/core/dist/variables";
 
 // Overrides some .pt-dialog CSS
-.search-filter-collections.pt-dialog {
+.search-filter-collections-dialog.pt-dialog {
+  top: $pt-grid-size;
   bottom: $pt-grid-size;
   width: calc(100% - #{$pt-grid-size * 4});
-  padding: $pt-grid-size 0;
-  flex-direction: row;
-  background-color: $white;
+}
+
+.search-filter-collections {
+  display: flex;
+  height: 100%;
 }
 
 .search-filter-collections-col {
@@ -57,7 +60,7 @@
     }
 
     &:nth-child(odd) {
-      background: $light-gray4;
+      background: $light-gray5;
     }
 
     &:hover {
@@ -77,7 +80,7 @@
     padding: ($pt-grid-size / 2) $pt-grid-size;
     padding-left: ($pt-icon-size-standard + $pt-grid-size * 2);
 
-    & > .pt-icon-standard {
+    & > .search-tick {
       position: absolute;
       left: $pt-grid-size;
       top: ($pt-grid-size / 2);

@@ -139,13 +139,13 @@ class SearchFilterCollections extends Component {
           <FormattedMessage id="search.collections" defaultMessage="Collections"/>
           {loaded && <span> (<FormattedNumber value={collections.length} />)</span>}
         </Button>
-        <Dialog isOpen={isOpen} onClose={this.toggleOpen} className="search-filter-collections">
+        <Dialog isOpen={isOpen} onClose={this.toggleOpen} title="Select collections"
+                className="search-filter-collections-dialog">
           {loaded ?
-            // No wrapping element so we can use Dialog's flexbox
-            [
-              <SearchFilterCollectionsList collections={collections} details={details} key={1} />,
+            <div className="search-filter-collections">
+              <SearchFilterCollectionsList collections={collections} details={details} onClick={this.toggleCollection} key={1} />,
               <SearchFilterCollectionsFacets facets={facets} onClick={this.toggleFacetItem} key={2} />
-            ] :
+            </div> :
             <Spinner className="search-filter-loading pt-large" />}
         </Dialog>
       </div>
