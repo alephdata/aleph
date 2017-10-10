@@ -3,7 +3,8 @@
 .search-filter-countries {
   color: $dark-gray1;
   overflow: auto;
-  width: 150px;
+  min-width: 150px;
+  white-space: nowrap;
   max-height: 90vh;
   padding: ($pt-grid-size / 2) 0;
 }

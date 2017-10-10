@@ -22,13 +22,15 @@ const SearchFilterCountries = ({ loaded, countries, currentValue, onOpen, onChan
       <div className="search-filter-countries">
         {loaded ?
           <ul className="search-filter-countries-list">
-            {countries.map(country => (
-              <li onClick={toggleCountryId.bind(null, country.id)} key={country.id}>
-                <span className="pt-icon-standard pt-icon-tick"
-                  style={{'visibility': currentValue.indexOf(country.id) > -1 ? 'visible': 'hidden'}} />
-                {country.label}
-              </li>
-            ))}
+            {countries
+              .sort((a, b) => a.label < b.label ? -1 : 1)
+              .map(country => (
+                <li onClick={toggleCountryId.bind(null, country.id)} key={country.id}>
+                  <span className="pt-icon-standard pt-icon-tick"
+                    style={{'visibility': currentValue.indexOf(country.id) > -1 ? 'visible': 'hidden'}} />
+                  {country.label}
+                </li>
+              ))}
           </ul> :
           <Spinner className="search-filter-loading pt-large" />}
       </div>
