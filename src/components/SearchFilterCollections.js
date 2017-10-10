@@ -80,8 +80,10 @@ class SearchFilterCollections extends Component {
         <FormattedMessage id="search.collections" defaultMessage="Collections"/>
         {loaded && <span> (<FormattedNumber value={collections.length} />)</span>}
       </Button>
-      <Dialog isOpen={isOpen} onClose={this.toggleDialog} className="search-filter-dialog search-filter-collections">
+      <Dialog isOpen={isOpen} onClose={this.toggleDialog} className="search-filter-collections">
         {loaded ?
+          // Doesn't use wrapping element so these are a direct descedent of Dialog
+          // and can use its flexbox
           [
             <SearchFilterCollectionsList collections={collections} key={1} />,
             <SearchFilterCollectionsFilter key={2} />
