@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Popover, Position, Spinner } from '@blueprintjs/core';
+import orderBy from 'lodash/orderBy';
 
 import { endpoint } from '../api';
 
@@ -50,6 +51,8 @@ class SearchFilterCountries extends Component {
     const { currentValue } = this.props;
     const { countries, loaded } = this.state;
 
+    const isTicked = country => currentValue.indexOf(country.id) > -1;
+
     return (
       <Popover position={Position.BOTTOM} popoverWillOpen={this.onOpen} inline>
         <Button rightIconName="caret-down">
@@ -58,12 +61,11 @@ class SearchFilterCountries extends Component {
         </Button>
         {loaded ?
           <ul className="search-filter-countries">
-            {countries
-              .sort((a, b) => a.label < b.label ? -1 : 1)
+            {orderBy(countries, [isTicked, 'label'], ['desc', 'asc'])
               .map(country => (
                 <li onClick={this.toggleCountryId.bind(null, country.id)} key={country.id}>
                   <span className="pt-icon-standard pt-icon-tick"
-                    style={{'visibility': currentValue.indexOf(country.id) > -1 ? 'visible': 'hidden'}} />
+                    style={{'visibility': isTicked(country) ? 'visible': 'hidden'}} />
                   {country.label}
                 </li>
               ))}
