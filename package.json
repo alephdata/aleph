@@ -6,6 +6,7 @@
     "@blueprintjs/core": "^1.22.0",
     "axios": "^0.16.2",
     "bourbon": "^4.3.2",
+    "classnames": "^2.2.5",
     "lodash": "^4.17.4",
     "node-sass-package-importer": "^3.0.4",
     "normalizr": "^3.2.2",

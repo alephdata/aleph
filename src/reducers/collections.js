@@ -1,11 +1,19 @@
 import keyBy from 'lodash/keyBy';
 
-const initialState = {};
+const initialState = {
+  results: []
+};
 
 const collections = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH_COLLECTIONS_SUCCESS':
-      return { ...state, ...keyBy(action.collections.results, 'id') };
+      return {
+        ...action.collections,
+        results: {
+          ...state.results,
+          ...keyBy(action.collections.results, 'id')
+        }
+      };
     default:
       return state;
   }

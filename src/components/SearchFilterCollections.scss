@@ -1,15 +1,18 @@
 @import "~@blueprintjs/core/dist/variables";
 
 // Overrides some .pt-dialog CSS
-.search-filter-collections.pt-dialog {
-  left: ($pt-grid-size * 2);
-  right: ($pt-grid-size * 2);
-  bottom: $pt-grid-size;
-  width: auto;
-  transform: scale(1);
-  padding: $pt-grid-size 0;
-  flex-direction: row;
-  background-color: $white;
+.search-filter-collections-dialog.pt-dialog {
+  top: ($pt-grid-size * 2);
+  bottom: ($pt-grid-size * 2);
+  width: calc(100% - #{$pt-grid-size * 4});
+  margin-bottom: 0;
+  padding-bottom: $pt-grid-size;
+}
+
+.search-filter-collections {
+  display: flex;
+  height: 100%;
+  margin-top: $pt-grid-size;
 }
 
 .search-filter-collections-col {
@@ -23,7 +26,7 @@
 
   &:last-child {
     border-left: 2px solid $light-gray2;
-    width: 300px;
+    width: 250px;
   }
 }
 
@@ -44,6 +47,7 @@
 
   & > li {
     position: relative;
+    cursor: pointer;
     padding: $pt-grid-size $pt-grid-size 0 ($pt-grid-size * 2 + 16px);
     overflow: auto;
     width: 100%;
@@ -59,7 +63,35 @@
     }
 
     &:nth-child(odd) {
-      background: $light-gray4;
+      background: $light-gray5;
+    }
+
+    &:hover {
+      background-color: $gray5;
+    }
+  }
+}
+
+.search-filter-collections-facet {
+  list-style: none;
+  margin: 0;
+  padding: ($pt-grid-size / 2) 0;
+
+  & > li {
+    position: relative;
+    cursor: pointer;
+    padding: ($pt-grid-size / 2) $pt-grid-size;
+    padding-left: ($pt-icon-size-standard + $pt-grid-size * 2);
+
+    & > .search-tick {
+      position: absolute;
+      left: $pt-grid-size;
+      top: ($pt-grid-size / 2);
+      line-height: $pt-line-height;
+    }
+
+    &:hover {
+      background-color: $gray5;
     }
   }
 }

@@ -17,7 +17,7 @@
     padding: ($pt-grid-size / 2) $pt-grid-size;
     padding-left: ($pt-icon-size-standard + $pt-grid-size * 2);
 
-    & > .pt-icon-standard {
+    & > .search-tick {
       position: absolute;
       left: $pt-grid-size;
       top: ($pt-grid-size / 2);
