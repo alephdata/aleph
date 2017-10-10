@@ -2,11 +2,8 @@
 
 // Overrides some .pt-dialog CSS
 .search-filter-collections.pt-dialog {
-  left: ($pt-grid-size * 2);
-  right: ($pt-grid-size * 2);
   bottom: $pt-grid-size;
-  width: auto;
-  transform: scale(1);
+  width: calc(100% - #{$pt-grid-size * 4});
   padding: $pt-grid-size 0;
   flex-direction: row;
   background-color: $white;
@@ -72,8 +69,6 @@
 .search-filter-collections-facet {
   list-style: none;
   margin: 0;
-  padding: 0;
-
   padding: ($pt-grid-size / 2) 0;
 
   & > li {
