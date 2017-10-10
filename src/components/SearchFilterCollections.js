@@ -5,6 +5,8 @@ import { keyBy, xor, debounce, fromPairs } from 'lodash';
 
 import { endpoint } from '../api';
 
+import SearchFilterTick from './SearchFilterTick';
+
 import './SearchFilterCollections.css';
 
 const SearchFilterCollectionsList = ({ collections, details }) => (
@@ -36,8 +38,7 @@ const SearchFilterCollectionsFacets = ({ facets, onClick }) => (
         <ul className="search-filter-collections-facet">
           {facet.items.map(item => (
             <li key={item.id} onClick={onClick.bind(null, facet.id, item.id)}>
-              <span className="pt-icon-standard pt-icon-tick"
-                style={{'visibility': facet.selectedItems.indexOf(item.id) > -1 ? 'visible': 'hidden'}} />
+              <SearchFilterTick isTicked={facet.selectedItems.indexOf(item.id) > -1} />
               {item.label}
             </li>
           ))}

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Popover, Position, Spinner } from '@blueprintjs/core';
-import orderBy from 'lodash/orderBy';
 import xor from 'lodash/xor';
 
 import { endpoint } from '../api';
+
+import SearchFilterTick from './SearchFilterTick';
 
 import './SearchFilterCountries.css';
 
@@ -59,11 +60,11 @@ class SearchFilterCountries extends Component {
         </Button>
         {loaded ?
           <ul className="search-filter-countries">
-            {orderBy(countries, [isTicked, 'label'], ['desc', 'asc'])
+            {countries
+              .sort((a, b) => a.label < b.label ? -1 : 1)
               .map(country => (
                 <li onClick={this.toggleCountryId.bind(null, country.id)} key={country.id}>
-                  <span className="pt-icon-standard pt-icon-tick"
-                    style={{'visibility': isTicked(country) ? 'visible': 'hidden'}} />
+                  <SearchFilterTick isTicked={isTicked(country)} />
                   {country.label}
                 </li>
               ))}
