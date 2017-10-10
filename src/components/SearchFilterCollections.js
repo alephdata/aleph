@@ -1,25 +1,10 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Dialog, Spinner } from '@blueprintjs/core';
 
 import './SearchFilterCollections.css';
 
-const mapStateToProps = ({ collections },  { collection }) => ({
-  // Use more detailed collection data if we have it, fallback to basic
-  // TEMP: parseInt until collection ids are made to be strings
-  // https://github.com/alephdata/aleph/issues/224
-  collection: collections.results[parseInt(collection.id, 10)] || collection
-});
-
-const SearchFilterCollectionsItem = connect(mapStateToProps)(({ collection }) => (
-  <li>
-    <h6>{ collection.label }</h6>
-    <p>{ collection.summary }</p>
-  </li>
-));
-
-const SearchFilterCollectionsList = ({ collections }) => (
+const SearchFilterCollectionsList = ({ collections, details }) => (
   <div className="search-filter-collections-col">
     <div className="search-filter-collections-col__row">
       <div className="pt-input-group pt-large">
@@ -30,22 +15,29 @@ const SearchFilterCollectionsList = ({ collections }) => (
     <div className="search-filter-collections-col__flex-row">
       <ul className="search-filter-collections-list">
         {collections.map(collection => (
-          <SearchFilterCollectionsItem collection={collection} key={collection.id} />
+          <li key={collection.id}>
+            <h6>{ collection.label }</h6>
+            {details[collection.id] && <p>{ details[collection.id].summary }</p>}
+          </li>
         ))}
       </ul>
     </div>
   </div>
 );
 
-const SearchFilterCollectionsFilter = () => (
+const SearchFilterCollectionsFilter = ({ categories, countries }) => (
   <div className="search-filter-collections-col">
     <div className="search-filter-collections-col__flex-row">
       <h4>Categories</h4>
-      stuff here
+      <ul className="search-filter-collections-facet">
+        {categories.map(category => <li key={category.id}>{category.label}</li>)}
+      </ul>
     </div>
     <div className="search-filter-collections-col__flex-row">
-      <h4>Collections</h4>
-      here too
+      <h4>Countries</h4>
+      <ul className="search-filter-collections-facet">
+        {countries.map(country => <li key={country.id}>{country.label}</li>)}
+      </ul>
     </div>
   </div>
 );
@@ -72,7 +64,7 @@ class SearchFilterCollections extends Component {
 
   render() {
     const { isOpen } = this.state;
-    const { loaded, collections } = this.props;
+    const { loaded, collections, details, categories, countries } = this.props;
 
     return (
     <div>
@@ -85,8 +77,8 @@ class SearchFilterCollections extends Component {
           // Doesn't use wrapping element so these are a direct descedent of Dialog
           // and can use its flexbox
           [
-            <SearchFilterCollectionsList collections={collections} key={1} />,
-            <SearchFilterCollectionsFilter key={2} />
+            <SearchFilterCollectionsList collections={collections} details={details} key={1} />,
+            <SearchFilterCollectionsFilter categories={categories} countries={countries} key={2} />
           ] :
           <Spinner className="search-filter-loading pt-large" />}
       </Dialog>

@@ -44,6 +44,7 @@
 
   & > li {
     position: relative;
+    cursor: pointer;
     padding: $pt-grid-size $pt-grid-size 0 ($pt-grid-size * 2 + 16px);
     overflow: auto;
     width: 100%;
@@ -60,6 +61,36 @@
 
     &:nth-child(odd) {
       background: $light-gray4;
+    }
+
+    &:hover {
+      background-color: $gray5;
+    }
+  }
+}
+
+.search-filter-collections-facet {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  padding: ($pt-grid-size / 2) 0;
+
+  & > li {
+    position: relative;
+    cursor: pointer;
+    padding: ($pt-grid-size / 2) $pt-grid-size;
+    padding-left: ($pt-icon-size-standard + $pt-grid-size * 2);
+
+    & > .pt-icon-standard {
+      position: absolute;
+      left: $pt-grid-size;
+      top: ($pt-grid-size / 2);
+      line-height: $pt-line-height;
+    }
+
+    &:hover {
+      background-color: $gray5;
     }
   }
 }

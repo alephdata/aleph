@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import keyBy from 'lodash/keyBy';
 
 import { endpoint } from '../api';
-import { fetchCollections } from '../actions';
 
 import SearchFilterCountries from './SearchFilterCountries';
 import SearchFilterCollections from './SearchFilterCollections';
@@ -19,6 +18,9 @@ class SearchFilter extends Component {
       countries: [],
       countriesLoaded: false,
       collections: [],
+      collectionDetails: {},
+      collectionCategories: [],
+      collectionCountries: [],
       collectionsLoaded: false
     };
 
@@ -62,16 +64,22 @@ class SearchFilter extends Component {
           const collections = response.data.facets.collection_id.values;
           this.setState({collections, collectionsLoaded: true});
 
-          this.props.fetchCollections(
-            collections.map(collection => collection.id),
-            {facet: ['category', 'countries']}
-          );
-        });
+          return endpoint.get('collections', {params: {
+            'filter:id': collections.map(collection => collection.id),
+            'facet': ['countries', 'category']
+          }});
+        })
+        .then(response => this.setState({
+          collectionDetails: keyBy(response.data.results, collection => collection.id),
+          collectionCountries: response.data.facets.countries.values,
+          collectionCategories: response.data.facets.category.values
+        }));
     }
   }
 
   render() {
-    const { query, countries, countriesLoaded, collections, collectionsLoaded } = this.state;
+    const { query, countries, countriesLoaded, collections, collectionsLoaded,
+      collectionDetails, collectionCategories, collectionCountries } = this.state;
     const { result } = this.props;
 
     const filterProps = key => {
@@ -94,7 +102,9 @@ class SearchFilter extends Component {
           </div>
           <div className="search-query__button pt-large">
             <SearchFilterCollections onOpen={this.onCollectionsOpen} collections={collections}
-              loaded={collectionsLoaded} {...filterProps('filter:collection_id')} />
+              details={collectionDetails} categories={collectionCategories}
+              countries={collectionCountries} loaded={collectionsLoaded}
+              {...filterProps('filter:collection_id')} />
           </div>
         </div>
         { result.total > 0 &&
@@ -104,7 +114,5 @@ class SearchFilter extends Component {
     );
   }
 }
-
-SearchFilter = connect(undefined, { fetchCollections })(SearchFilter);
 
 export default SearchFilter;
