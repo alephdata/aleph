@@ -43,7 +43,7 @@ class SearchScreen extends Component {
 
   fetchData() {
     const { query, fetchSearchResults } = this.props;
-    fetchSearchResults(query);
+    fetchSearchResults(pickBy(query, v => !!v));
   }
 
   updateQuery(newQuery) {
