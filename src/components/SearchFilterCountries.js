@@ -2,6 +2,8 @@ import React from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Popover, Position, Spinner } from '@blueprintjs/core';
 
+import './SearchFilterCountries.css';
+
 const SearchFilterCountries = ({ loaded, countries, currentValue, onOpen, onChange }) => {
 
   function toggleCountryId(countryId) {
@@ -12,7 +14,7 @@ const SearchFilterCountries = ({ loaded, countries, currentValue, onOpen, onChan
   }
 
   return (
-    <Popover position={Position.BOTTOM} popoverWillOpen={onOpen} inline>
+    <Popover className="search-filter-dialog" position={Position.BOTTOM} popoverWillOpen={onOpen} inline>
       <Button rightIconName="caret-down">
         <FormattedMessage id="search.countries" defaultMessage="Countries"/>
         {loaded && <span> (<FormattedNumber value={countries.length} />)</span>}

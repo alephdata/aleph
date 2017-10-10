@@ -1,0 +1,59 @@
+@import "~@blueprintjs/core/dist/variables";
+
+.search-filter-collections.pt-dialog {
+  left: ($pt-grid-size * 2);
+  right: ($pt-grid-size * 2);
+  bottom: $pt-grid-size;
+  width: auto;
+  transform: scale(1);
+  padding: $pt-grid-size 0;
+  flex-direction: row;
+  background-color: $white;
+}
+
+.search-filter-collections-col {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &:last-child {
+    border-left: 2px solid $light-gray2;
+    width: 300px;
+  }
+}
+
+.search-filter-collections-col__blah,
+.search-filter-collections-col__fill {
+  margin: $pt-grid-size ($pt-grid-size * 2);
+}
+
+.search-filter-collections-col__fill {
+  flex: 1;
+  overflow: auto;
+}
+
+.search-filter-collections-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  & > li {
+    position: relative;
+    padding: $pt-grid-size $pt-grid-size 0 ($pt-grid-size * 2 + 16px);
+    overflow: auto;
+    width: 100%;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: $pt-grid-size;;
+      left: $pt-grid-size;
+      background-image: url(./icons/collection.svg);
+      width: 16px;
+      height: 16px;
+    }
+
+    &:nth-child(odd) {
+      background: $light-gray4;
+    }
+  }
+}

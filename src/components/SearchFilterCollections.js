@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Dialog, Spinner } from '@blueprintjs/core';
 
+import './SearchFilterCollections.css';
+
 const mapStateToProps = ({ collections },  { collection }) => ({
   // Use more detailed collection data if we have it, fallback to basic
   // TEMP: parseInt until collection ids are made to be strings
@@ -78,7 +80,7 @@ class SearchFilterCollections extends Component {
         <FormattedMessage id="search.collections" defaultMessage="Collections"/>
         {loaded && <span> (<FormattedNumber value={collections.length} />)</span>}
       </Button>
-      <Dialog isOpen={isOpen} onClose={this.toggleDialog} className="search-filter-collections">
+      <Dialog isOpen={isOpen} onClose={this.toggleDialog} className="search-filter-dialog search-filter-collections">
         {loaded ?
           [
             <SearchFilterCollectionsList collections={collections} key={1} />,
