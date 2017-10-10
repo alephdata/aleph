@@ -27,12 +27,12 @@
   }
 }
 
-.search-filter-collections-col__blah,
-.search-filter-collections-col__fill {
+.search-filter-collections-col__row,
+.search-filter-collections-col__flex-row {
   margin: $pt-grid-size ($pt-grid-size * 2);
 }
 
-.search-filter-collections-col__fill {
+.search-filter-collections-col__flex-row {
   flex: 1;
   overflow: auto;
 }

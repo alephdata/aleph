@@ -21,13 +21,13 @@ const SearchFilterCollectionsItem = connect(mapStateToProps)(({ collection }) =>
 
 const SearchFilterCollectionsList = ({ collections }) => (
   <div className="search-filter-collections-col">
-    <div className="search-filter-collections-col__blah">
+    <div className="search-filter-collections-col__row">
       <div className="pt-input-group pt-large">
         <span className="pt-icon pt-icon-search"/>
         <input className="search-input pt-input" type="search" />
       </div>
     </div>
-    <div className="search-filter-collections-col__fill">
+    <div className="search-filter-collections-col__flex-row">
       <ul className="search-filter-collections-list">
         {collections.map(collection => (
           <SearchFilterCollectionsItem collection={collection} key={collection.id} />
@@ -39,11 +39,11 @@ const SearchFilterCollectionsList = ({ collections }) => (
 
 const SearchFilterCollectionsFilter = () => (
   <div className="search-filter-collections-col">
-    <div className="search-filter-collections-col__fill">
+    <div className="search-filter-collections-col__flex-row">
       <h4>Categories</h4>
       stuff here
     </div>
-    <div className="search-filter-collections-col__fill">
+    <div className="search-filter-collections-col__flex-row">
       <h4>Collections</h4>
       here too
     </div>
