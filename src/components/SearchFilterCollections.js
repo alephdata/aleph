@@ -94,21 +94,21 @@ class SearchFilterCollections extends Component {
     const { isOpen, loaded, collections, details, categories, countries } = this.state;
 
     return (
-    <div>
-      <Button rightIconName="caret-down" onClick={this.toggleDialog}>
-        <FormattedMessage id="search.collections" defaultMessage="Collections"/>
-        {loaded && <span> (<FormattedNumber value={collections.length} />)</span>}
-      </Button>
-      <Dialog isOpen={isOpen} onClose={this.toggleDialog} className="search-filter-collections">
-        {loaded ?
-          // No wrapping element so these are direct descedents of Dialog for its flexbox
-          [
-            <SearchFilterCollectionsList collections={collections} details={details} key={1} />,
-            <SearchFilterCollectionsFilter categories={categories} countries={countries} key={2} />
-          ] :
-          <Spinner className="search-filter-loading pt-large" />}
-      </Dialog>
-    </div>
+      <div>
+        <Button rightIconName="caret-down" onClick={this.toggleDialog}>
+          <FormattedMessage id="search.collections" defaultMessage="Collections"/>
+          {loaded && <span> (<FormattedNumber value={collections.length} />)</span>}
+        </Button>
+        <Dialog isOpen={isOpen} onClose={this.toggleDialog} className="search-filter-collections">
+          {loaded ?
+            // No wrapping element so we can use Dialog's flexbox
+            [
+              <SearchFilterCollectionsList collections={collections} details={details} key={1} />,
+              <SearchFilterCollectionsFilter categories={categories} countries={countries} key={2} />
+            ] :
+            <Spinner className="search-filter-loading pt-large" />}
+        </Dialog>
+      </div>
     );
   }
 }
