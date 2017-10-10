@@ -9,7 +9,7 @@ import SearchFilterTick from './SearchFilterTick';
 
 import './SearchFilterCollections.css';
 
-const SearchFilterCollectionsList = ({ collections, details }) => (
+const SearchFilterCollectionsList = ({ collections, details, onClick }) => (
   <div className="search-filter-collections-col">
     <div className="search-filter-collections-col__row">
       <div className="pt-input-group pt-large">
@@ -20,7 +20,7 @@ const SearchFilterCollectionsList = ({ collections, details }) => (
     <div className="search-filter-collections-col__flex-row">
       <ul className="search-filter-collections-list">
         {collections.map(collection => (
-          <li key={collection.id}>
+          <li key={collection.id} onClick={onClick.bind(null, collection.id)}>
             <h6>{ collection.label }</h6>
             {details[collection.id] && <p>{ details[collection.id].summary }</p>}
           </li>
@@ -69,6 +69,7 @@ class SearchFilterCollections extends Component {
 
     this.toggleOpen = this.toggleOpen.bind(this);
     this.toggleFacetItem = this.toggleFacetItem.bind(this);
+    this.toggleCollection = this.toggleCollection.bind(this);
   }
 
   componentDidUpdate({ queryText }) {
@@ -128,6 +129,12 @@ class SearchFilterCollections extends Component {
 
     this.setState({facets});
     this.fetchCollections();
+  }
+
+  toggleCollection(collectionId) {
+    const { currentValue, onChange } = this.props;
+    const newValue = xor(currentValue, [collectionId]);
+    onChange(newValue);
   }
 
   render() {

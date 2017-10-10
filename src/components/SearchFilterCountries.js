@@ -19,7 +19,7 @@ class SearchFilterCountries extends Component {
     };
 
     this.onOpen = this.onOpen.bind(this);
-    this.toggleCountryId = this.toggleCountryId.bind(this);
+    this.toggleCountry = this.toggleCountry.bind(this);
   }
 
   componentDidUpdate({ queryText }) {
@@ -40,7 +40,7 @@ class SearchFilterCountries extends Component {
     }
   }
 
-  toggleCountryId(countryId) {
+  toggleCountry(countryId) {
     const { currentValue, onChange } = this.props;
     const newValue = xor(currentValue, [countryId]);
     onChange(newValue);
@@ -63,7 +63,7 @@ class SearchFilterCountries extends Component {
             {countries
               .sort((a, b) => a.label < b.label ? -1 : 1)
               .map(country => (
-                <li onClick={this.toggleCountryId.bind(null, country.id)} key={country.id}>
+                <li onClick={this.toggleCountry.bind(null, country.id)} key={country.id}>
                   <SearchFilterTick isTicked={isTicked(country)} />
                   {country.label}
                 </li>

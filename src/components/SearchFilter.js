@@ -39,7 +39,7 @@ class SearchFilter extends Component {
 
     const filterProps = key => {
       return {
-        onChange: value => this.onChange(key, value),
+        onChange: this.onChange.bind(this, key),
         currentValue: query[key],
         queryText: query.q
       };
