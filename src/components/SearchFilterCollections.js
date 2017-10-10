@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Dialog, Spinner } from '@blueprintjs/core';
-import { keyBy, xor, debounce } from 'lodash';
+import { keyBy, xor, debounce, fromPairs } from 'lodash';
 
 import { endpoint } from '../api';
 
@@ -80,20 +80,30 @@ class SearchFilterCollections extends Component {
     endpoint.get('search', {params: {q: this.props.queryText, facet: 'collection_id'}})
       .then(response => {
         const collections = response.data.facets.collection_id.values;
+
         this.setState({collections, loaded: true});
 
+        const filters = this.state.facets
+          .filter(facet => facet.selectedItems.length > 0)
+          .map(facet => {
+            return [`filter:${facet.id}`, facet.selectedItems];
+          });
+
         return endpoint.get('collections', {params: {
+          'facet': FACETS.map(facet => facet.id),
           'filter:id': collections.map(collection => collection.id),
-          'facet': FACETS.map(facet => facet.id)
+          ...fromPairs(filters)
         }});
       })
-      .then(response => this.setState({
-        details: keyBy(response.data.results, 'id'),
-        facets: this.state.facets.map(facet => ({
-          ...facet,
-          items: response.data.facets[facet.id].values
-        }))
-      }));
+      .then(response => {
+        this.setState({
+          details: keyBy(response.data.results, 'id'),
+          facets: this.state.facets.map(facet => ({
+            ...facet,
+            items: response.data.facets[facet.id].values
+          }))
+        });
+      });
   }
 
   toggleOpen() {
