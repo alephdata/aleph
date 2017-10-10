@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import c from 'classnames';
-import sum from 'lodash/sum';
+import sumBy from 'lodash/sumBy';
 
 import SchemaIcon from './SchemaIcon';
 
@@ -13,7 +13,7 @@ const SearchFilterSchema = ({ schemas, onChange, currentValue }) => (
       <SchemaIcon />
       <span className="search-filter-schema-type">
         <FormattedMessage id="search.schema.all" defaultMessage="All Results"/><br />
-        {' '}(<FormattedNumber value={sum(schemas.map(schema => schema.count))} />)
+        {' '}(<FormattedNumber value={sumBy(schemas, 'count')} />)
       </span>
     </li>
     {schemas
