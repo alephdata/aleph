@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Dialog, Spinner } from '@blueprintjs/core';
+import keyBy from 'lodash/keyBy';
+
+import { endpoint } from '../api';
 
 import './SearchFilterCollections.css';
 
@@ -47,24 +50,48 @@ class SearchFilterCollections extends Component {
     super(props);
 
     this.state = {
-      isOpen: false
+      isOpen: false,
+      collections: [],
+      details: {},
+      categories: [],
+      countries: [],
+      loaded: false
     };
 
     this.toggleDialog = this.toggleDialog.bind(this);
+  }
+
+  componentDidUpdate({ queryText }) {
+    if (queryText !== this.props.queryText) {
+      this.setState({ loaded: false });
+    }
   }
 
   toggleDialog() {
     const isOpen = !this.state.isOpen;
     this.setState({ isOpen });
 
-    if (isOpen) {
-      this.props.onOpen();
+    if (isOpen && !this.state.loaded) {
+      endpoint.get('search', {params: {q: this.props.queryText, facet: 'collection_id'}})
+        .then(response => {
+          const collections = response.data.facets.collection_id.values;
+          this.setState({collections, loaded: true});
+
+          return endpoint.get('collections', {params: {
+            'filter:id': collections.map(collection => collection.id),
+            'facet': ['countries', 'category']
+          }});
+        })
+        .then(response => this.setState({
+          details: keyBy(response.data.results, collection => collection.id),
+          countries: response.data.facets.countries.values,
+          categories: response.data.facets.category.values
+        }));
     }
   }
 
   render() {
-    const { isOpen } = this.state;
-    const { loaded, collections, details, categories, countries } = this.props;
+    const { isOpen, loaded, collections, details, categories, countries } = this.state;
 
     return (
     <div>
@@ -74,8 +101,7 @@ class SearchFilterCollections extends Component {
       </Button>
       <Dialog isOpen={isOpen} onClose={this.toggleDialog} className="search-filter-collections">
         {loaded ?
-          // Doesn't use wrapping element so these are a direct descedent of Dialog
-          // and can use its flexbox
+          // No wrapping element so these are direct descedents of Dialog for its flexbox
           [
             <SearchFilterCollectionsList collections={collections} details={details} key={1} />,
             <SearchFilterCollectionsFilter categories={categories} countries={countries} key={2} />
