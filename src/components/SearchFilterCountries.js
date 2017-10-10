@@ -14,26 +14,24 @@ const SearchFilterCountries = ({ loaded, countries, currentValue, onOpen, onChan
   }
 
   return (
-    <Popover className="search-filter-dialog" position={Position.BOTTOM} popoverWillOpen={onOpen} inline>
+    <Popover position={Position.BOTTOM} popoverWillOpen={onOpen} inline>
       <Button rightIconName="caret-down">
         <FormattedMessage id="search.countries" defaultMessage="Countries"/>
         {loaded && <span> (<FormattedNumber value={countries.length} />)</span>}
       </Button>
-      <div className="search-filter-countries">
-        {loaded ?
-          <ul className="search-filter-countries-list">
-            {countries
-              .sort((a, b) => a.label < b.label ? -1 : 1)
-              .map(country => (
-                <li onClick={toggleCountryId.bind(null, country.id)} key={country.id}>
-                  <span className="pt-icon-standard pt-icon-tick"
-                    style={{'visibility': currentValue.indexOf(country.id) > -1 ? 'visible': 'hidden'}} />
-                  {country.label}
-                </li>
-              ))}
-          </ul> :
-          <Spinner className="search-filter-loading pt-large" />}
-      </div>
+      {loaded ?
+        <ul className="search-filter-countries">
+          {countries
+            .sort((a, b) => a.label < b.label ? -1 : 1)
+            .map(country => (
+              <li onClick={toggleCountryId.bind(null, country.id)} key={country.id}>
+                <span className="pt-icon-standard pt-icon-tick"
+                  style={{'visibility': currentValue.indexOf(country.id) > -1 ? 'visible': 'hidden'}} />
+                {country.label}
+              </li>
+            ))}
+        </ul> :
+        <Spinner className="search-filter-loading pt-large" />}
     </Popover>
   );
 };
