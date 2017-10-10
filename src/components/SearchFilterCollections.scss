@@ -2,14 +2,17 @@
 
 // Overrides some .pt-dialog CSS
 .search-filter-collections-dialog.pt-dialog {
-  top: $pt-grid-size;
-  bottom: $pt-grid-size;
+  top: ($pt-grid-size * 2);
+  bottom: ($pt-grid-size * 2);
   width: calc(100% - #{$pt-grid-size * 4});
+  margin-bottom: 0;
+  padding-bottom: $pt-grid-size;
 }
 
 .search-filter-collections {
   display: flex;
   height: 100%;
+  margin-top: $pt-grid-size;
 }
 
 .search-filter-collections-col {
@@ -23,7 +26,7 @@
 
   &:last-child {
     border-left: 2px solid $light-gray2;
-    width: 300px;
+    width: 250px;
   }
 }
 

@@ -150,8 +150,8 @@ class SearchFilterCollections extends Component {
                 className="search-filter-collections-dialog">
           {loaded ?
             <div className="search-filter-collections">
-              <SearchFilterCollectionsList collections={collections} details={details} onClick={this.toggleCollection} key={1} />,
-              <SearchFilterCollectionsFacets facets={facets} onClick={this.toggleFacetItem} key={2} />
+              <SearchFilterCollectionsList collections={collections} details={details} onClick={this.toggleCollection} />
+              <SearchFilterCollectionsFacets facets={facets} onClick={this.toggleFacetItem} />
             </div> :
             <Spinner className="search-filter-loading pt-large" />}
         </Dialog>
