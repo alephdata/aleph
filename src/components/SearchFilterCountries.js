@@ -30,7 +30,7 @@ const SearchFilterCountries = ({ loaded, countries, currentValue, onOpen, onChan
               </li>
             ))}
           </ul> :
-          <Spinner className="pt-large" />}
+          <Spinner className="search-filter-loading pt-large" />}
       </div>
     </Popover>
   );

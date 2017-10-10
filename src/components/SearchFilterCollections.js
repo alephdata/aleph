@@ -86,7 +86,7 @@ class SearchFilterCollections extends Component {
             <SearchFilterCollectionsList collections={collections} key={1} />,
             <SearchFilterCollectionsFilter key={2} />
           ] :
-          <Spinner className="pt-large" />}
+          <Spinner className="search-filter-loading pt-large" />}
       </Dialog>
     </div>
     );

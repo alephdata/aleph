@@ -32,12 +32,8 @@
   flex-wrap: wrap;
 }
 
-.search-filter-dialog {
-  color: $dark-gray1;
-
-  & > .pt-spinner:not(.pt-svg-spinner) {
-    display: block;
-    margin: 0 auto;
-    overflow: hidden;
-  }
+.search-filter-loading.pt-spinner:not(.ptv-svg-spinner) {
+  display: block;
+  margin: 0 auto;
+  overflow: hidden;
 }
