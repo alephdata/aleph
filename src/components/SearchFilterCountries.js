@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Popover, Position, Spinner } from '@blueprintjs/core';
 import orderBy from 'lodash/orderBy';
+import xor from 'lodash/xor';
 
 import { endpoint } from '../api';
 
@@ -40,10 +41,7 @@ class SearchFilterCountries extends Component {
 
   toggleCountryId(countryId) {
     const { currentValue, onChange } = this.props;
-
-    const newValue = currentValue.indexOf(countryId) > -1 ?
-      currentValue.filter(i => i !== countryId) : [...currentValue, countryId];
-
+    const newValue = xor(currentValue, [countryId]);
     onChange(newValue);
   }
 
