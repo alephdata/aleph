@@ -1,25 +1,33 @@
 import React from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { Tab2, Tabs2 } from '@blueprintjs/core';
+import c from 'classnames';
+import sum from 'lodash/sum';
 
 import SchemaIcon from './SchemaIcon';
 
-const SearchFilterSchema = ({ onChange, schemas, currentValue }) => (
-  <Tabs2 id="schemaTypes" className="search-filter-schema pt-large pt-dark" onChange={onChange}
-    selectedTabId={currentValue}>
-    <Tab2 id={null}>
-      <FormattedMessage id="search.schema.all" defaultMessage="All Results"/>
-      {' '}(<FormattedNumber value={schemas.reduce((total, schema) => total + schema.count, 0)} />)
-    </Tab2>
+import './SearchFilterSchema.css';
+
+const SearchFilterSchema = ({ schemas, onChange, currentValue }) => (
+  <ul className="search-filter-schema">
+    <li className={c({'is-selected': !currentValue})} onClick={onChange.bind(null, null)}>
+      <SchemaIcon />
+      <span className="search-filter-schema-type">
+        <FormattedMessage id="search.schema.all" defaultMessage="All Results"/><br />
+        {' '}(<FormattedNumber value={sum(schemas.map(schema => schema.count))} />)
+      </span>
+    </li>
     {schemas
       .sort((a, b) => a.label < b.label ? -1 : 1)
       .map(schema => (
-        <Tab2 id={schema.id} key={schema.id}>
+        <li className={c({'is-selected': currentValue === schema.id})} onClick={onChange.bind(null, schema.id)} key={schema.id}>
           <SchemaIcon schemaId={schema.id} />
-          {schema.label} (<FormattedNumber value={schema.count} />)
-        </Tab2>
+          <span className="search-filter-schema-type">
+            {schema.label}<br />
+            (<FormattedNumber value={schema.count} />)
+          </span>
+        </li>
       ))}
-  </Tabs2>
+  </ul>
 );
 
 export default SearchFilterSchema;

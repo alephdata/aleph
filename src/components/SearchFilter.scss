@@ -22,14 +22,9 @@
 .search-query__text,
 .search-query__button {
   padding-right: $pt-grid-size;
-
   &:last-child {
     padding-right: 0;
   }
-}
-
-.search-filter-schema > .pt-tab-list {
-  flex-wrap: wrap;
 }
 
 .search-filter-loading.pt-spinner:not(.ptv-svg-spinner) {
