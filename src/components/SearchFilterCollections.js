@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Dialog, Spinner } from '@blueprintjs/core';
-import keyBy from 'lodash/keyBy';
+import { keyBy, xor, debounce } from 'lodash';
 
 import { endpoint } from '../api';
 
@@ -28,22 +28,29 @@ const SearchFilterCollectionsList = ({ collections, details }) => (
   </div>
 );
 
-const SearchFilterCollectionsFilter = ({ categories, countries }) => (
+const SearchFilterCollectionsFacets = ({ facets, onClick }) => (
   <div className="search-filter-collections-col">
-    <div className="search-filter-collections-col__flex-row">
-      <h4>Categories</h4>
-      <ul className="search-filter-collections-facet">
-        {categories.map(category => <li key={category.id}>{category.label}</li>)}
-      </ul>
-    </div>
-    <div className="search-filter-collections-col__flex-row">
-      <h4>Countries</h4>
-      <ul className="search-filter-collections-facet">
-        {countries.map(country => <li key={country.id}>{country.label}</li>)}
-      </ul>
-    </div>
+    {facets.map(facet => (
+      <div className="search-filter-collections-col__flex-row" key={facet.id}>
+        <h4>{facet.label}</h4>
+        <ul className="search-filter-collections-facet">
+          {facet.items.map(item => (
+            <li key={item.id} onClick={onClick.bind(null, facet.id, item.id)}>
+              <span className="pt-icon-standard pt-icon-tick"
+                style={{'visibility': facet.selectedItems.indexOf(item.id) > -1 ? 'visible': 'hidden'}} />
+              {item.label}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
   </div>
 );
+
+const FACETS = [
+  {id: 'category', label: 'Categories'},
+  {id: 'countries', label: 'Countries'}
+];
 
 class SearchFilterCollections extends Component {
   constructor(props) {
@@ -53,12 +60,14 @@ class SearchFilterCollections extends Component {
       isOpen: false,
       collections: [],
       details: {},
-      categories: [],
-      countries: [],
+      facets: FACETS.map(facet => ({...facet, items: [], selectedItems: []})),
       loaded: false
     };
 
-    this.toggleDialog = this.toggleDialog.bind(this);
+    this.fetchCollections = debounce(this.fetchCollections, 200);
+
+    this.toggleOpen = this.toggleOpen.bind(this);
+    this.toggleFacetItem = this.toggleFacetItem.bind(this);
   }
 
   componentDidUpdate({ queryText }) {
@@ -67,44 +76,64 @@ class SearchFilterCollections extends Component {
     }
   }
 
-  toggleDialog() {
+  fetchCollections() {
+    endpoint.get('search', {params: {q: this.props.queryText, facet: 'collection_id'}})
+      .then(response => {
+        const collections = response.data.facets.collection_id.values;
+        this.setState({collections, loaded: true});
+
+        return endpoint.get('collections', {params: {
+          'filter:id': collections.map(collection => collection.id),
+          'facet': FACETS.map(facet => facet.id)
+        }});
+      })
+      .then(response => this.setState({
+        details: keyBy(response.data.results, 'id'),
+        facets: this.state.facets.map(facet => ({
+          ...facet,
+          items: response.data.facets[facet.id].values
+        }))
+      }));
+  }
+
+  toggleOpen() {
     const isOpen = !this.state.isOpen;
     this.setState({ isOpen });
 
     if (isOpen && !this.state.loaded) {
-      endpoint.get('search', {params: {q: this.props.queryText, facet: 'collection_id'}})
-        .then(response => {
-          const collections = response.data.facets.collection_id.values;
-          this.setState({collections, loaded: true});
-
-          return endpoint.get('collections', {params: {
-            'filter:id': collections.map(collection => collection.id),
-            'facet': ['countries', 'category']
-          }});
-        })
-        .then(response => this.setState({
-          details: keyBy(response.data.results, collection => collection.id),
-          countries: response.data.facets.countries.values,
-          categories: response.data.facets.category.values
-        }));
+      this.fetchCollections();
     }
   }
 
+  toggleFacetItem(facetId, itemId) {
+    const facets = this.state.facets.map(facet => {
+      if (facet.id === facetId) {
+        const selectedItems = xor(facet.selectedItems, [itemId]);
+        return {...facet, selectedItems};
+      } else {
+        return facet;
+      }
+    });
+
+    this.setState({facets});
+    this.fetchCollections();
+  }
+
   render() {
-    const { isOpen, loaded, collections, details, categories, countries } = this.state;
+    const { isOpen, loaded, collections, details, facets } = this.state;
 
     return (
       <div>
-        <Button rightIconName="caret-down" onClick={this.toggleDialog}>
+        <Button rightIconName="caret-down" onClick={this.toggleOpen}>
           <FormattedMessage id="search.collections" defaultMessage="Collections"/>
           {loaded && <span> (<FormattedNumber value={collections.length} />)</span>}
         </Button>
-        <Dialog isOpen={isOpen} onClose={this.toggleDialog} className="search-filter-collections">
+        <Dialog isOpen={isOpen} onClose={this.toggleOpen} className="search-filter-collections">
           {loaded ?
             // No wrapping element so we can use Dialog's flexbox
             [
               <SearchFilterCollectionsList collections={collections} details={details} key={1} />,
-              <SearchFilterCollectionsFilter categories={categories} countries={countries} key={2} />
+              <SearchFilterCollectionsFacets facets={facets} onClick={this.toggleFacetItem} key={2} />
             ] :
             <Spinner className="search-filter-loading pt-large" />}
         </Dialog>
