@@ -4,7 +4,7 @@ import { endpoint } from '../api';
 
 export const fetchCollections = (ids, params={}) => (dispatch, getState) => {
   const { collections } = getState();
-  const newIds = uniq(ids).filter(id => !collections[id]);
+  const newIds = uniq(ids).filter(id => !collections.results[id]);
 
   function fetchCollectionsPages(page=1) {
     const limit = 50;

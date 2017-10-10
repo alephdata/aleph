@@ -35,7 +35,7 @@ const SearchResultListItem = ({ result, collection }) => {
 };
 
 const mapStateToProps = ({ collections }, { result }) => ({
-  collection: collections[result.collection_id]
+  collection: collections.results[result.collection_id]
 });
 
 export default connect(mapStateToProps)(SearchResultListItem);

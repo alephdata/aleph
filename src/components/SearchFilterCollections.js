@@ -9,7 +9,7 @@ const mapStateToProps = ({ collections },  { collection }) => ({
   // Use more detailed collection data if we have it, fallback to basic
   // TEMP: parseInt until collection ids are made to be strings
   // https://github.com/alephdata/aleph/issues/224
-  collection: collections[parseInt(collection.id, 10)] || collection
+  collection: collections.results[parseInt(collection.id, 10)] || collection
 });
 
 const SearchFilterCollectionsItem = connect(mapStateToProps)(({ collection }) => (
