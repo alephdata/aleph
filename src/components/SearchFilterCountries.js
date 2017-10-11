@@ -5,7 +5,7 @@ import xor from 'lodash/xor';
 
 import { endpoint } from '../api';
 
-import SearchFilterTick from './SearchFilterTick';
+import SearchFilterList from './SearchFilterList';
 
 import './SearchFilterCountries.css';
 
@@ -50,25 +50,16 @@ class SearchFilterCountries extends Component {
     const { currentValue } = this.props;
     const { countries, loaded } = this.state;
 
-    const isTicked = country => currentValue.indexOf(country.id) > -1;
-
     return (
-      <Popover position={Position.BOTTOM} popoverWillOpen={this.onOpen} inline>
+      <Popover popoverClassName="search-filter-countries" position={Position.BOTTOM}
+               popoverWillOpen={this.onOpen} inline>
         <Button rightIconName="caret-down">
           <FormattedMessage id="search.countries" defaultMessage="Countries"/>
           {loaded && <span> (<FormattedNumber value={countries.length} />)</span>}
         </Button>
         {loaded ?
-          <ul className="search-filter-countries">
-            {countries
-              .sort((a, b) => a.label < b.label ? -1 : 1)
-              .map(country => (
-                <li onClick={this.toggleCountry.bind(null, country.id)} key={country.id}>
-                  <SearchFilterTick isTicked={isTicked(country)} />
-                  {country.label}
-                </li>
-              ))}
-          </ul> :
+          <SearchFilterList items={countries} selectedItems={currentValue}
+            onItemClick={this.toggleCountry} /> :
           <Spinner className="search-filter-loading pt-large" />}
       </Popover>
     );

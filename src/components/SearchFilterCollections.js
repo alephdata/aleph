@@ -1,48 +1,33 @@
 import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Dialog, Spinner } from '@blueprintjs/core';
-import { keyBy, xor, debounce, fromPairs } from 'lodash';
+import { xor, debounce, fromPairs } from 'lodash';
 
 import { endpoint } from '../api';
 
-import SearchFilterTick from './SearchFilterTick';
+import SearchFilterList from './SearchFilterList';
+import SearchFilterText from './SearchFilterText';
 
 import './SearchFilterCollections.css';
 
-const SearchFilterCollectionsList = ({ collections, details, onClick }) => (
-  <div className="search-filter-collections-col">
-    <div className="search-filter-collections-col__row">
-      <div className="pt-input-group pt-large">
-        <span className="pt-icon pt-icon-search"/>
-        <input className="search-input pt-input" type="search" />
-      </div>
-    </div>
-    <div className="search-filter-collections-col__flex-row">
-      <ul className="search-filter-collections-list">
-        {collections.map(collection => (
-          <li key={collection.id} onClick={onClick.bind(null, collection.id)}>
-            <h6>{ collection.label }</h6>
-            {details[collection.id] && <p>{ details[collection.id].summary }</p>}
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
+const SearchFilterCollectionsList = ({ collections, onClick }) => (
+  <ul className="search-filter-collections-list">
+    {collections.map(collection => (
+      <li key={collection.id} onClick={onClick.bind(null, collection.id)}>
+        <h6>{ collection.label }</h6>
+        <p>{ collection.summary }</p>
+      </li>
+    ))}
+  </ul>
 );
 
-const SearchFilterCollectionsFacets = ({ facets, onClick }) => (
-  <div className="search-filter-collections-col">
+const SearchFilterCollectionsFacets = ({ facets, toggleFacetItem }) => (
+  <div className="search-filter-collections__col">
     {facets.map(facet => (
-      <div className="search-filter-collections-col__flex-row" key={facet.id}>
+      <div className="search-filter-collections__col__flex-row" key={facet.id}>
         <h4>{facet.label}</h4>
-        <ul className="search-filter-collections-facet">
-          {facet.items.map(item => (
-            <li key={item.id} onClick={onClick.bind(null, facet.id, item.id)}>
-              <SearchFilterTick isTicked={facet.selectedItems.indexOf(item.id) > -1} />
-              {item.label}
-            </li>
-          ))}
-        </ul>
+        <SearchFilterList items={facet.items} selectedItems={facet.selectedItems}
+          onItemClick={toggleFacetItem.bind(null, facet.id)}/>
       </div>
     ))}
   </div>
@@ -53,38 +38,57 @@ const FACETS = [
   {id: 'countries', label: 'Countries'}
 ];
 
+const FACET_IDS = FACETS.map(facet => facet.id);
+
 class SearchFilterCollections extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       isOpen: false,
+      searchText: '',
       collections: [],
-      details: {},
       facets: FACETS.map(facet => ({...facet, items: [], selectedItems: []})),
-      loaded: false
+      hasLoaded: false
     };
 
     this.fetchCollections = debounce(this.fetchCollections, 200);
+    this.lastFetchTime = null;
+    this.lastCollectionIds = null;
 
     this.toggleOpen = this.toggleOpen.bind(this);
     this.toggleFacetItem = this.toggleFacetItem.bind(this);
     this.toggleCollection = this.toggleCollection.bind(this);
+    this.onTextChange = this.onTextChange.bind(this);
   }
 
-  componentDidUpdate({ queryText }) {
+  componentDidUpdate({ queryText }, { searchText }) {
     if (queryText !== this.props.queryText) {
-      this.setState({ loaded: false });
+      this.setState({ hasLoaded: false });
+    }
+
+    if (this.state.isOpen && (!this.state.hasLoaded || searchText !== this.state.searchText)) {
+      this.fetchCollections();
     }
   }
 
+  fetchCollectionIds() {
+    return this.state.hasLoaded ?
+      Promise.resolve(this.lastCollectionIds) :
+      endpoint.get('search', {
+          params: {q: this.props.queryText, facet: 'collection_id'}
+        }).then(({ data }) => {
+          this.lastCollectionIds = data.facets.collection_id.values.map(collection => collection.id);
+          return this.lastCollectionIds;
+        });
+  }
+
   fetchCollections() {
-    endpoint.get('search', {params: {q: this.props.queryText, facet: 'collection_id'}})
-      .then(response => {
-        const collections = response.data.facets.collection_id.values;
+    const fetchTime = Date.now();
+    this.lastFetchTime = fetchTime;
 
-        this.setState({collections, loaded: true});
-
+    this.fetchCollectionIds()
+      .then(collectionIds => {
         const filters = this.state.facets
           .filter(facet => facet.selectedItems.length > 0)
           .map(facet => {
@@ -92,29 +96,29 @@ class SearchFilterCollections extends Component {
           });
 
         return endpoint.get('collections', {params: {
-          'facet': FACETS.map(facet => facet.id),
-          'filter:id': collections.map(collection => collection.id),
+          facet: FACET_IDS,
+          q: this.state.searchText,
+          'filter:id': collectionIds,
           ...fromPairs(filters)
         }});
       })
-      .then(response => {
-        this.setState({
-          details: keyBy(response.data.results, 'id'),
-          facets: this.state.facets.map(facet => ({
-            ...facet,
-            items: response.data.facets[facet.id].values
-          }))
-        });
+      .then(({ data }) => {
+        // Stop race conditions where an earlier fetch returns after a later one
+        if (fetchTime === this.lastFetchTime) {
+          this.setState({
+            collections: data.results,
+            hasLoaded: true,
+            facets: this.state.facets.map(facet => ({
+              ...facet,
+              items: data.facets[facet.id].values
+            }))
+          });
+        }
       });
   }
 
   toggleOpen() {
-    const isOpen = !this.state.isOpen;
-    this.setState({ isOpen });
-
-    if (isOpen && !this.state.loaded) {
-      this.fetchCollections();
-    }
+    this.setState({ isOpen: !this.state.isOpen });
   }
 
   toggleFacetItem(facetId, itemId) {
@@ -137,21 +141,33 @@ class SearchFilterCollections extends Component {
     onChange(newValue);
   }
 
+  onTextChange(searchText) {
+    this.setState({searchText});
+  }
+
   render() {
-    const { isOpen, loaded, collections, details, facets } = this.state;
+    const { isOpen, hasLoaded, searchText, collections, facets } = this.state;
 
     return (
       <div>
         <Button rightIconName="caret-down" onClick={this.toggleOpen}>
           <FormattedMessage id="search.collections" defaultMessage="Collections"/>
-          {loaded && <span> (<FormattedNumber value={collections.length} />)</span>}
+          {hasLoaded && <span> (<FormattedNumber value={collections.length} />)</span>}
         </Button>
         <Dialog isOpen={isOpen} onClose={this.toggleOpen} title="Select collections"
                 className="search-filter-collections-dialog">
-          {loaded ?
+          {hasLoaded ?
             <div className="search-filter-collections">
-              <SearchFilterCollectionsList collections={collections} details={details} onClick={this.toggleCollection} />
-              <SearchFilterCollectionsFacets facets={facets} onClick={this.toggleFacetItem} />
+              <div className="search-filter-collections__col">
+                <div className="search-filter-collections__col__row">
+                  <SearchFilterText onChange={this.onTextChange} currentValue={searchText} />
+                </div>
+                <div className="search-filter-collections__col__flex-row">
+                  <SearchFilterCollectionsList collections={collections} onClick={this.toggleCollection} />
+                </div>
+              </div>
+
+              <SearchFilterCollectionsFacets facets={facets} toggleFacetItem={this.toggleFacetItem} />
             </div> :
             <Spinner className="search-filter-loading pt-large" />}
         </Dialog>

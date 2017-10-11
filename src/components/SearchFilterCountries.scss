@@ -1,31 +1,8 @@
 @import "~@blueprintjs/core/dist/variables";
 
-.search-filter-countries {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.search-filter-countries .search-filter-list {
   color: $dark-gray1;
+  width: 250px;
   overflow: auto;
-  min-width: 150px;
-  max-height: 90vh;
-  white-space: nowrap;
-  padding: ($pt-grid-size / 2) 0;
-
-  & > li {
-    position: relative;
-    cursor: pointer;
-    padding: ($pt-grid-size / 2) $pt-grid-size;
-    padding-left: ($pt-icon-size-standard + $pt-grid-size * 2);
-
-    & > .search-tick {
-      position: absolute;
-      left: $pt-grid-size;
-      top: ($pt-grid-size / 2);
-      line-height: $pt-line-height;
-    }
-
-    &:hover {
-      background-color: $gray5;
-    }
-  }
+  max-height: 50vh;
 }
