@@ -27,12 +27,14 @@ const SearchFilterCollectionsFacets = ({ facets, onClick }) => (
       <div className="search-filter-collections__col__flex-row" key={facet.id}>
         <h4>{facet.label}</h4>
         <ul className="search-filter-collections-facet">
-          {facet.items.map(item => (
-            <li key={item.id} onClick={onClick.bind(null, facet.id, item.id)}>
-              <SearchFilterTick isTicked={facet.selectedItems.indexOf(item.id) > -1} />
-              {item.label}
-            </li>
-          ))}
+          {facet.items
+            .sort((a, b) => a.label < b.label ? -1 : 1)
+            .map(item => (
+              <li key={item.id} onClick={onClick.bind(null, facet.id, item.id)}>
+                <SearchFilterTick isTicked={facet.selectedItems.indexOf(item.id) > -1} />
+                {item.label}
+              </li>
+            ))}
         </ul>
       </div>
     ))}
