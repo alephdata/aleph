@@ -302,6 +302,16 @@ entities:
       callSign:
         label: Call Sign
         type: identifier
+      pastNames:
+        label: Past Names
+      pastFlags:
+        label: Past Flags
+      pastTypes:
+        label: Past Types
+      buildDate:
+        label: Build Date
+      mmsi:
+        label: MMSI
 
   BankAccount:
     label: Bank Account
@@ -318,6 +328,7 @@ entities:
         label: Account Type
       balance:
         label: Balance
+
 
 ###################################################################
 #
@@ -408,8 +419,8 @@ links:
 
   contractedBy:
     label: "Contract awards"
-    forward: "Received contract to"
-    reverse: "Awarded contract from"
+    forward: "Received contract from"
+    reverse: "Awarded contract to"
     extends: link
     properties:
       totalValue:
@@ -454,3 +465,19 @@ links:
         label: "Beneficiary account"
       beneficiaryBank:
         label: "Beneficiary bank"
+
+
+  sanctionedBy:
+    label: Sanctions
+    forward: "Sanctioned by"
+    reverse: "Sanctions on"
+    extends: link
+    properties:
+      sanctionReason:
+        label: "Reason for sanctions"
+      sanctionDuration:
+        label: "Duration of sanctions"
+      sanctionOccurrence:
+        label: "Occurrence"
+      sanctionStatus:
+        label: "Status of sanctions"

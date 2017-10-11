@@ -2,7 +2,7 @@ FROM alephdata/base:develop
 MAINTAINER Friedrich Lindenberg <friedrich@pudo.org>
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN pip install -q --upgrade pip && pip install -q --upgrade setuptools
+RUN pip install -q --upgrade pip && pip install -q --upgrade setuptools six
 COPY requirements.txt requirements-docs.txt requirements-testing.txt /tmp/
 RUN pip install -q -r /tmp/requirements.txt \
   && pip install --pre -q -r /tmp/requirements-docs.txt
