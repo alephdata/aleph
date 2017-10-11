@@ -9,7 +9,7 @@ from aleph.model import Match, Collection
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
-from aleph.index.xref import entity_query
+from aleph.index.xref import entity_query, FIELDS_XREF
 from aleph.index.util import unpack_result
 from aleph.search import QueryParser, MatchQueryResult
 
@@ -19,15 +19,13 @@ log = logging.getLogger(__name__)
 @celery.task()
 def xref_item(item, collection_id=None):
     """Cross-reference an entity or document, given as an indexed document."""
-    title = item.get('name') or item.get('title')
-    log.info("Xref [%s]: %s", item['$type'], title)
-
+    name = item.get('name') or item.get('title')
     result = es.search(index=es_index,
                        doc_type=TYPE_ENTITY,
                        body={
                            'query': entity_query(item, collection_id),
-                           'size': 100,
-                           '_source': ['collection_id'],
+                           'size': 10,
+                           '_source': ['collection_id', 'name'],
                        })
     results = result.get('hits').get('hits')
     entity_id, document_id = None, None
@@ -45,6 +43,8 @@ def xref_item(item, collection_id=None):
 
     for result in results:
         source = result.get('_source', {})
+        log.info("Xref [%.1f]: %s <=> %s", result.get('_score'),
+                 name, source.get('name'))
         obj = Match()
         obj.entity_id = entity_id
         obj.document_id = document_id
@@ -63,7 +63,8 @@ def xref_collection(collection, other=None):
     query = {
         'query': {
             'term': {'collection_id': collection.id}
-        }
+        },
+        '_source': FIELDS_XREF
     }
     scanner = scan(es,
                    index=es_index,
@@ -73,7 +74,8 @@ def xref_collection(collection, other=None):
                    size=1000)
 
     for i, res in enumerate(scanner):
-        xref_item.delay(unpack_result(res), other_id)
+        # xref_item.delay(unpack_result(res), other_id)
+        xref_item(unpack_result(res), other_id)
 
 
 @celery.task()

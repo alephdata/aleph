@@ -5,6 +5,10 @@ from aleph.model import Document
 
 log = logging.getLogger(__name__)
 
+FIELDS_XREF = ['schema', 'collection_id', 'name', 'fingerprints', 'emails',
+               'phones', 'dates', 'countries', 'schemata', 'identifiers',
+               'addresses']
+
 
 def entity_query(sample, collection_id=None, query=None):
     """Given a document or entity in indexed form, build a query that
@@ -34,35 +38,33 @@ def entity_query(sample, collection_id=None, query=None):
 
     for fp in sample.get('fingerprints', []):
         required.append({
-            'match': {
+            'fuzzy': {
                 'fingerprints': {
-                    'query': fp,
+                    'value': fp,
                     'fuzziness': 2,
-                    'operator': 'and',
                     'boost': 3.0
                 }
             }
         })
 
-    for index in ['names', 'fingerprints']:
-        for value in sample.get(index, []):
-            required.append({
-                'match': {
-                    index: {
-                        'query': value,
-                        'operator': 'and'
-                    }
-                }
-            })
+    # TODO: put names in FIELDS_XREF up there ^^^ 
+    # for value in sample.get('names', []):
+    #     required.append({
+    #         'match': {
+    #             'names': {
+    #                 'query': value,
+    #                 'operator': 'and',
+    #                 'cutoff_frequency': 0.01,
+    #             }
+    #         }
+    #     })
 
     for index in ['emails', 'phones']:
         for value in sample.get(index, []):
             required.append({
-                'match': {
+                'term': {
                     index: {
-                        'query': value,
-                        'fuzziness': 2,
-                        'operator': 'and',
+                        'value': value,
                         'boost': 2
                     }
                 }
