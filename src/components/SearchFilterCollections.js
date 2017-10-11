@@ -57,11 +57,12 @@ class SearchFilterCollections extends Component {
       searchText: '',
       collections: [],
       facets: FACETS.map(facet => ({...facet, items: [], selectedItems: []})),
-      loaded: false
+      hasLoaded: false
     };
 
     this.fetchCollections = debounce(this.fetchCollections, 200);
     this.lastFetchTime = null;
+    this.lastCollectionIds = null;
 
     this.toggleOpen = this.toggleOpen.bind(this);
     this.toggleFacetItem = this.toggleFacetItem.bind(this);
@@ -70,24 +71,33 @@ class SearchFilterCollections extends Component {
   }
 
   componentDidUpdate({ queryText }, { searchText }) {
-    if (queryText !== this.props.queryText || searchText !== this.state.searchText) {
-      // Don't show loading while category searching is in progress
-      this.setState({ loaded: queryText === this.props.queryText });
-
-      if (this.state.isOpen) {
-        this.fetchCollections();
-      }
+    if (queryText !== this.props.queryText) {
+      this.lastCollectionIds = null;
+      this.setState({ hasLoaded: false });
     }
+
+    if (this.state.isOpen && (!this.state.hasLoaded || searchText !== this.state.searchText)) {
+      this.fetchCollections();
+    }
+  }
+
+  fetchCollectionIds() {
+    return this.state.hasLoaded ?
+      Promise.resolve(this.lastCollectionIds) :
+      endpoint.get('search', {
+          params: {q: this.props.queryText, facet: 'collection_id'}
+        }).then(({ data }) => {
+          this.lastCollectionIds = data.facets.collection_id.values.map(collection => collection.id);
+          return this.lastCollectionIds;
+        });
   }
 
   fetchCollections() {
     const fetchTime = Date.now();
     this.lastFetchTime = fetchTime;
 
-    endpoint.get('search', {params: {q: this.props.queryText, facet: 'collection_id'}})
-      .then(({ data }) => {
-        const collectionIds = data.facets.collection_id.values.map(collection => collection.id);
-
+    this.fetchCollectionIds()
+      .then(collectionIds => {
         const filters = this.state.facets
           .filter(facet => facet.selectedItems.length > 0)
           .map(facet => {
@@ -95,19 +105,18 @@ class SearchFilterCollections extends Component {
           });
 
         return endpoint.get('collections', {params: {
-          'facet': FACET_IDS,
-          'q': this.state.searchText,
+          facet: FACET_IDS,
+          q: this.state.searchText,
           'filter:id': collectionIds,
           ...fromPairs(filters)
         }});
       })
       .then(({ data }) => {
-        // Protect against race conditions where an earlier fetch returns
-        // after a later fetch
+        // Stop race conditions where an earlier fetch returns after a later one
         if (fetchTime === this.lastFetchTime) {
           this.setState({
             collections: data.results,
-            loaded: true,
+            hasLoaded: true,
             facets: this.state.facets.map(facet => ({
               ...facet,
               items: data.facets[facet.id].values
@@ -118,12 +127,7 @@ class SearchFilterCollections extends Component {
   }
 
   toggleOpen() {
-    const isOpen = !this.state.isOpen;
-    this.setState({ isOpen });
-
-    if (isOpen && !this.state.loaded) {
-      this.fetchCollections();
-    }
+    this.setState({ isOpen: !this.state.isOpen });
   }
 
   toggleFacetItem(facetId, itemId) {
@@ -151,17 +155,17 @@ class SearchFilterCollections extends Component {
   }
 
   render() {
-    const { isOpen, loaded, searchText, collections, facets } = this.state;
+    const { isOpen, hasLoaded, searchText, collections, facets } = this.state;
 
     return (
       <div>
         <Button rightIconName="caret-down" onClick={this.toggleOpen}>
           <FormattedMessage id="search.collections" defaultMessage="Collections"/>
-          {loaded && <span> (<FormattedNumber value={collections.length} />)</span>}
+          {hasLoaded && <span> (<FormattedNumber value={collections.length} />)</span>}
         </Button>
         <Dialog isOpen={isOpen} onClose={this.toggleOpen} title="Select collections"
                 className="search-filter-collections-dialog">
-          {loaded ?
+          {hasLoaded ?
             <div className="search-filter-collections">
               <div className="search-filter-collections__col">
                 <div className="search-filter-collections__col__row">
