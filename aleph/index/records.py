@@ -4,10 +4,9 @@ import logging
 from elasticsearch.helpers import BulkIndexError
 
 from aleph.core import es_index, db
-from aleph.index.mapping import TYPE_RECORD
 from aleph.model import DocumentRecord
-from aleph.index.util import bulk_op, query_delete
-from aleph.text import index_form
+from aleph.index.mapping import TYPE_RECORD
+from aleph.index.util import bulk_op, query_delete, index_form
 
 log = logging.getLogger(__name__)
 

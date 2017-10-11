@@ -7,8 +7,5 @@ from blinker import signal
 # Register additional API endpoints.
 register_blueprints = signal('register_blueprints')
 
-# Post-process a documents search query.
-document_query_process = signal('document_query_process')
-
 # Handle OAuth return values.
 handle_oauth_session = signal('handle_oauth_session')

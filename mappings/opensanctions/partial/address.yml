@@ -1,0 +1,16 @@
+entities:
+  entity:
+    schema: Entity
+    key: entity_id
+    properties:
+      address:
+        columns:
+          - street
+          - street_2
+          - region
+          - city
+          - postal_code
+          - country
+        join: ', '
+      country:
+        column: country_code

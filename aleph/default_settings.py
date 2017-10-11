@@ -109,20 +109,23 @@ AUTHZ_ADMINS = env_list('ALEPH_ADMINS')
 # https://flask-oauthlib.readthedocs.io/en/latest/client.html
 #
 # In addition, include a 'name' entry and an optional 'label' entry.
-OAUTH = [{
-    'name': env.get('ALEPH_OAUTH_NAME', 'google'),
-    'label': env.get('ALEPH_OAUTH_LABEL', 'Google'),
-    'consumer_key': env.get('ALEPH_OAUTH_KEY'),
-    'consumer_secret': env.get('ALEPH_OAUTH_SECRET'),
-    'request_token_params': {
-        'scope': env.get('ALEPH_OAUTH_SCOPE', 'https://www.googleapis.com/auth/userinfo.email')  # noqa
-    },
-    'base_url': env.get('ALEPH_OAUTH_BASE_URL', 'https://www.googleapis.com/oauth2/v1/'),  # noqa
-    'request_token_url': None,
-    'access_token_method': 'POST',
-    'access_token_url': env.get('ALEPH_OAUTH_TOKEN_URL', 'https://accounts.google.com/o/oauth2/token'),  # noqa
-    'authorize_url': env.get('ALEPH_OAUTH_AUTHORIZE_URL', 'https://accounts.google.com/o/oauth2/auth'),  # noqa
-}]
+OAUTH = []
+
+if env_bool('ALEPH_OAUTH', True):
+    OAUTH.append({
+        'name': env.get('ALEPH_OAUTH_NAME', 'google'),
+        'label': env.get('ALEPH_OAUTH_LABEL', 'Google'),
+        'consumer_key': env.get('ALEPH_OAUTH_KEY'),
+        'consumer_secret': env.get('ALEPH_OAUTH_SECRET'),
+        'request_token_params': {
+            'scope': env.get('ALEPH_OAUTH_SCOPE', 'https://www.googleapis.com/auth/userinfo.email')  # noqa
+        },
+        'base_url': env.get('ALEPH_OAUTH_BASE_URL', 'https://www.googleapis.com/oauth2/v1/'),  # noqa
+        'request_token_url': None,
+        'access_token_method': 'POST',
+        'access_token_url': env.get('ALEPH_OAUTH_TOKEN_URL', 'https://accounts.google.com/o/oauth2/token'),  # noqa
+        'authorize_url': env.get('ALEPH_OAUTH_AUTHORIZE_URL', 'https://accounts.google.com/o/oauth2/auth'),  # noqa
+    })
 
 
 ###############################################################################
@@ -139,9 +142,6 @@ TIKA_URI = env.get('ALEPH_TIKA_URI')
 
 # Enable the Aho Corasick based entity string matcher:
 REGEX_ENTITIES = env_bool('ALEPH_REGEX_ENTITIES', True)
-
-# Disable all crawlers (temporarily?)
-DISABLE_CRAWLERS = env_bool('ALEPH_DISABLE_CRAWLERS', False)
 
 # Automatically OCR pdf contents:
 PDF_OCR_PAGES = env_bool('ALEPH_PDF_OCR_PAGES', True)
@@ -207,24 +207,8 @@ CELERYBEAT_SCHEDULE = {
         'task': 'aleph.logic.alerts.check_alerts',
         'schedule': crontab(hour=1, minute=30)
     },
-    'scheduled-crawlers': {
-        'task': 'aleph.crawlers.execute_scheduled',
-        'schedule': crontab(hour='*/6', minute=40)
+    'periodic-cleanup': {
+        'task': 'aleph.logic.cleanup_system',
+        'schedule': crontab(hour='*/6')
     },
 }
-
-
-###############################################################################
-# Binary paths for programs
-
-# TODO: do these need to be prefixed for aleph? Seems counter-productive
-TESSDATA_PREFIX = env.get('TESSDATA_PREFIX')
-PDFTOHTML_BIN = env.get('PDFTOHTML_BIN', 'pdftohtml')
-PDFTOPPM_BIN = env.get('PDFTOPPM_BIN', 'pdftoppm')
-CONVERT_BIN = env.get('CONVERT_BIN', 'convert')
-SOFFICE_BIN = env.get('SOFFICE_BIN', 'soffice')
-WKHTMLTOPDF_BIN = env.get('WKHTMLTOPDF_BIN', 'wkhtmltopdf')
-DDJVU_BIN = env.get('DDJVU_BIN', 'ddjvu')
-MDB_TABLES_BIN = env.get('MDB_TABLES_BIN', 'mdb-tables')
-MDB_EXPORT_BIN = env.get('MDB_EXPORT_BIN', 'mdb-export')
-SEVENZ_BIN = env.get('SEVENZ_BIN', '7z')

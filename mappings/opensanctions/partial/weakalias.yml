@@ -1,0 +1,11 @@
+filters:
+  quality: weak
+entities:
+  entity:
+    schema: Entity
+    key: entity_id
+    properties:
+      weakAlias:
+        column: name
+      # notes:
+      #   column: description

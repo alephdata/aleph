@@ -1,15 +1,14 @@
 import logging
 from datetime import datetime
-from sqlalchemy import func
-from sqlalchemy.orm import joinedload
+from sqlalchemy import func, or_
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 
 from aleph.core import db, schemata
 from aleph.text import match_form, string_value
 from aleph.util import ensure_list
 from aleph.model.collection import Collection
-from aleph.model.reference import Reference
-from aleph.model.entity_identity import EntityIdentity
+from aleph.model.permission import Permission
+from aleph.model.match import Match
 from aleph.model.common import SoftDeleteModel, UuidModel
 from aleph.model.common import make_textid, merge_data
 
@@ -30,45 +29,21 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic'))  # noqa
 
-    def delete_references(self, origin=None):
-        pq = db.session.query(Reference)
-        pq = pq.filter(Reference.entity_id == self.id)
-        if origin is not None:
-            pq = pq.filter(Reference.origin == origin)
-        pq.delete(synchronize_session='fetch')
-        db.session.refresh(self)
-
-    def delete_identities(self):
-        pq = db.session.query(EntityIdentity)
-        pq = pq.filter(EntityIdentity.entity_id == self.id)
+    def delete_matches(self):
+        pq = db.session.query(Match)
+        pq = pq.filter(or_(
+            Match.entity_id == self.id,
+            Match.match_id == self.id))
         pq.delete(synchronize_session='fetch')
         db.session.refresh(self)
 
     def delete(self, deleted_at=None):
-        self.delete_references()
-        self.delete_identities()
+        self.delete_matches()
         deleted_at = deleted_at or datetime.utcnow()
         for alert in self.alerts:
             alert.delete(deleted_at=deleted_at)
         self.state = self.STATE_DELETED
         super(Entity, self).delete(deleted_at=deleted_at)
-
-    @classmethod
-    def delete_dangling(cls, collection_id):
-        """Delete dangling entities.
-
-        Entities can dangle in pending state while they have no references
-        pointing to them, thus making it impossible to enable them. This is
-        a routine cleanup function.
-        """
-        q = db.session.query(cls)
-        q = q.filter(cls.collection_id == collection_id)
-        q = q.filter(cls.state == cls.STATE_PENDING)
-        q = q.outerjoin(Reference)
-        q = q.group_by(cls)
-        q = q.having(func.count(Reference.id) == 0)
-        for entity in q.all():
-            entity.delete()
 
     def merge(self, other):
         if self.id == other.id:
@@ -90,12 +65,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         # update alerts
         from aleph.model.alert import Alert
         q = db.session.query(Alert).filter(Alert.entity_id == other.id)
-        q.update({'entity_id': self.id})
-
-        # update document references
-        from aleph.model.reference import Reference
-        q = db.session.query(Reference).filter(Reference.entity_id == other.id)
-        q.update({'entity_id': self.id})
+        q.update({Alert.entity_id: self.id})
 
         # delete source entities
         other.delete()
@@ -106,58 +76,26 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     def update(self, entity):
         data = entity.get('data') or {}
         data['name'] = entity.get('name')
-        self.data = self.schema.validate(data)
-        self.name = self.data.pop('name')
+        data = self.schema.validate(data)
+        self.name = data.pop('name')
+        self.data = data
+
         fid = [string_value(f) for f in entity.get('foreign_ids') or []]
         self.foreign_ids = list(set([f for f in fid if f is not None]))
-        self.state = entity.pop('state', self.STATE_ACTIVE)
+        self.state = entity.get('state', self.STATE_ACTIVE)
         self.updated_at = datetime.utcnow()
+        self.collection.touch()
         db.session.add(self)
 
     @classmethod
-    def save(cls, data, collection, merge=False):
-        ent = cls.by_id(data.get('id'))
-        if ent is None:
-            ent = cls()
-            ent.type = data.pop('schema', None)
-            if ent.type is None:
-                raise ValueError("No schema provided.")
-            ent.id = make_textid()
-
-        if merge:
-            data = merge_data(data, ent.to_dict())
-
-        if collection is None:
-            raise ValueError("No collection specified.")
-
+    def create(cls, data, collection):
+        ent = cls()
+        ent.type = data.pop('schema', None)
+        ent.id = make_textid()
         ent.collection = collection
         ent.update(data)
+        ent.collection.touch()
         return ent
-
-    @classmethod
-    def filter_collections(cls, q, collections=None):
-        if collections is None:
-            return q
-        collection_ids = []
-        for collection in collections:
-            if isinstance(collection, Collection):
-                collection = collection.id
-            collection_ids.append(collection)
-        q = q.filter(Entity.collection_id.in_(collection_ids))
-        return q
-
-    @classmethod
-    def by_id_set(cls, ids, collections=None):
-        if not len(ids):
-            return {}
-        q = cls.all()
-        q = cls.filter_collections(q, collections=collections)
-        q = q.options(joinedload('collection'))
-        q = q.filter(cls.id.in_(ids))
-        entities = {}
-        for ent in q:
-            entities[ent.id] = ent
-        return entities
 
     @classmethod
     def by_foreign_id(cls, foreign_id, collection_id, deleted=False):
@@ -170,6 +108,17 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         q = q.filter(cls.foreign_ids.contains(foreign_id))
         q = q.order_by(Entity.deleted_at.desc().nullsfirst())
         return q.first()
+
+    @classmethod
+    def all_ids(cls, deleted=False, authz=None):
+        q = super(Entity, cls).all_ids(deleted=deleted)
+        if authz is not None and not authz.is_admin:
+            q = q.join(Permission,
+                       cls.collection_id == Permission.collection_id)
+            q = q.filter(Permission.deleted_at == None)  # noqa
+            q = q.filter(Permission.read == True)  # noqa
+            q = q.filter(Permission.role_id.in_(authz.roles))
+        return q
 
     @classmethod
     def latest(cls):
@@ -209,38 +158,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             if not contained:
                 regex_terms.add(term)
         return regex_terms
-
-    def to_dict(self):
-        data = super(Entity, self).to_dict()
-        data.update({
-            'schema': self.type,
-            'name': self.name,
-            'state': self.state,
-            'data': self.data,
-            'foreign_ids': self.foreign_ids or [],
-            'collection_id': self.collection_id
-        })
-        return data
-
-    def to_index(self):
-        entity = self.to_dict()
-        entity['properties'] = {'name': [self.name]}
-        for k, v in self.data.items():
-            v = ensure_list(v)
-            if len(v):
-                entity['properties'][k] = v
-        return entity
-
-    def to_ref(self):
-        return {
-            'id': self.id,
-            'label': self.name,
-            'schema': self.type,
-            'collection_id': self.collection_id
-        }
-
-    def __unicode__(self):
-        return self.name
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)

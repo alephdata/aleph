@@ -1,4 +1,3 @@
-import os
 import logging
 import warnings
 import requests
@@ -25,9 +24,6 @@ logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
 logging.getLogger('pyelasticsearch').setLevel(logging.WARNING)
 logging.getLogger('elasticsearch').setLevel(logging.WARNING)
-logging.getLogger('boto3').setLevel(logging.WARNING)
-logging.getLogger('boto').setLevel(logging.WARNING)
-logging.getLogger('botocore').setLevel(logging.WARNING)
 logging.getLogger('s3transfer').setLevel(logging.WARNING)
 logging.getLogger('amqp').setLevel(logging.INFO)
 logging.getLogger('polyglot').setLevel(logging.WARNING)
@@ -39,9 +35,3 @@ logging.getLogger('factory').setLevel(logging.WARNING)
 
 # Log all SQL statements:
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
-
-# default locale settings for subprocess commands.
-os.environ['LC_ALL'] = 'en_US'
-os.environ['LC_LANG'] = 'en_US'
-os.environ['LC_CTYPE'] = 'en_US'
-os.environ['LANG'] = 'en_US'

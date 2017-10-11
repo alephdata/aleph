@@ -1,15 +1,9 @@
 import uuid
-import string
 from hashlib import sha1
 from datetime import datetime
-from sqlalchemy import func
-from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db
 from aleph.text import string_value
-
-
-ALPHABET = string.ascii_lowercase + string.digits
 
 
 def make_textid():
@@ -48,6 +42,7 @@ def merge_data(base, merge):
         return data.values()
     if isinstance(base, dict):
         data = dict(base)
+        merge = merge or dict()
         for k, v in merge.items():
             b = base.get(k, v)
             data[k] = merge_data(b, v)
@@ -58,22 +53,10 @@ def merge_data(base, merge):
 class IdModel(object):
     id = db.Column(db.Integer(), primary_key=True)
 
-    def to_dict(self):
-        parent = super(IdModel, self)
-        data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
-        data['id'] = self.id
-        return data
-
 
 class UuidModel(object):
     id = db.Column(db.String(32), primary_key=True, default=make_textid,
                    nullable=False, unique=False)
-
-    def to_dict(self):
-        parent = super(UuidModel, self)
-        data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
-        data['id'] = self.id
-        return data
 
 
 class DatedModel(object):
@@ -87,7 +70,9 @@ class DatedModel(object):
 
     @classmethod
     def all_ids(cls, deleted=False):
-        return db.session.query(cls.id)
+        q = db.session.query(cls.id)
+        q = q.order_by(cls.id.asc())
+        return q
 
     @classmethod
     def all_by_ids(cls, ids, deleted=False):
@@ -102,13 +87,6 @@ class DatedModel(object):
     def delete(self, deleted_at=None):
         # hard delete
         db.session.delete(self)
-
-    def to_dict(self):
-        parent = super(DatedModel, self)
-        data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
-        data['created_at'] = self.created_at
-        data['updated_at'] = self.updated_at
-        return data
 
 
 class SoftDeleteModel(DatedModel):
@@ -131,23 +109,3 @@ class SoftDeleteModel(DatedModel):
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
-
-    def to_dict(self):
-        parent = super(SoftDeleteModel, self)
-        data = parent.to_dict() if hasattr(parent, 'to_dict') else {}
-        data['deleted_at'] = self.deleted_at
-        return data
-
-
-class ModelFacets(object):
-
-    @classmethod
-    def facet_by(cls, q, field, filter_null=False, mapping={}):
-        if isinstance(field.property.columns[0].type, ARRAY):
-            field = func.unnest(field)
-        cnt = func.count(field)
-        q = q.from_self(field, cnt)
-        q = q.group_by(field)
-        q = q.order_by(cnt.desc())
-        return [{'id': v, 'label': mapping.get(v, v), 'count': c}
-                for v, c in q if v is not None]

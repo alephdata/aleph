@@ -31,23 +31,20 @@ class DocumentRecord(db.Model):
             yield text
 
     @classmethod
-    def find_records(cls, document_id, ids):
+    def find_records(cls, ids):
         if not len(ids):
             return []
         q = db.session.query(cls)
-        q = q.filter(cls.document_id == document_id)
         q = q.filter(cls.id.in_(ids))
         return q
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'sheet': self.sheet,
-            'index': self.index,
-            'data': self.data,
-            'text': self.text,
-            'document_id': self.document_id
-        }
+    @classmethod
+    def by_index(cls, document_id, index):
+        q = db.session.query(cls)
+        q = db.session.query(DocumentRecord)
+        q = q.filter(cls.document_id == document_id)
+        q = q.filter(cls.index == index)
+        return q.first()
 
     def __repr__(self):
         return '<DocumentRecord(%r,%r)>' % (self.document_id, self.index)

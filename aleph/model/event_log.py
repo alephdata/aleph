@@ -31,6 +31,3 @@ class EventLog(db.Model, IdModel, DatedModel):
 
     def __repr__(self):
         return '<EventLog(%r, %r)>' % (self.id, self.action)
-
-    def __unicode__(self):
-        return self.action

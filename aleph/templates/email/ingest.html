@@ -1,0 +1,11 @@
+{% extends "email/layout.html" %}
+
+{% block content %}
+  <p>
+    We've finished processing the documents you uploaded to
+    <a href="{{url}}">{{collection.label}}</a>. You now search all of them, or
+    upload additional material.
+    <br><br>
+    Visit: <a href="{{url}}">{{url}}</a>
+  </p>
+{% endblock %}

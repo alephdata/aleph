@@ -1,17 +1,17 @@
 import logging
-from flask import session, Blueprint, redirect, request, abort
+from urlparse import urldefrag
+from flask import Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
-from apikit import jsonify, request_data
 from werkzeug.exceptions import Unauthorized
 
 from aleph import signals
-from aleph.core import db, url_for, get_config
-from aleph.authz import Authz, get_public_roles
+from aleph.core import db, url_for
+from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
-from aleph.events import log_event
-from aleph.views.cache import enable_cache
-from aleph.views.util import extract_next_url
+from aleph.logic.sessions import create_token, check_token
+from aleph.views.util import extract_next_url, parse_request, jsonify
+from aleph.views.serializers import LoginSchema
 
 
 log = logging.getLogger(__name__)
@@ -20,135 +20,81 @@ blueprint = Blueprint('sessions_api', __name__)
 
 @blueprint.before_app_request
 def load_role():
-    request.authz = Authz(role=None)
-    if session.get('user'):
-        role = Role.by_id(session.get('user'))
-        request.authz = Authz(role=role)
-    else:
-        api_key = request.args.get('api_key')
-        if api_key is None:
-            auth_header = request.headers.get('Authorization') or ''
-            if auth_header.lower().startswith('apikey'):
-                api_key = auth_header.split(' ', 1).pop()
-
-        role = Role.by_api_key(api_key)
-        if role is not None:
-            request.authz = Authz(role=role)
-
-
-@blueprint.route('/api/1/sessions')
-def status():
-    authz = request.authz
-    enable_cache(vary_user=True)
-    providers = sorted(oauth.remote_apps.values(), key=lambda p: p.label)
-    providers = [{
-        'name': p.name,
-        'label': p.label,
-        'login': url_for('.login', provider=p.name),
-    } for p in providers]
-
-    if get_config('PASSWORD_LOGIN'):
-        providers.append({
-            'name': 'password',
-            'label': 'Email',
-            'registration': get_config('PASSWORD_REGISTRATION'),
-            'login': url_for('.password_login'),
-            'register': url_for('roles_api.invite_email')
-        })
-
-    return jsonify({
-        'logged_in': authz.logged_in,
-        'api_key': authz.role.api_key if authz.logged_in else None,
-        'role': authz.role,
-        'roles': authz.roles,
-        'public_roles': get_public_roles(),
-        'permissions': {
-            'read': authz.collections[authz.READ],
-            'write': authz.collections[authz.WRITE]
-        },
-        'logout': url_for('.logout'),
-        'providers': providers,
-    })
+    role = None
+    if 'Authorization' in request.headers:
+        credential = request.headers.get('Authorization')
+        if ' ' in credential:
+            mechanism, credential = credential.split(' ', 1)
+        data = check_token(credential)
+        if data is not None:
+            role = Role.by_id(data.get('id'))
+        else:
+            role = Role.by_api_key(credential)
+    elif 'api_key' in request.args:
+        role = Role.by_api_key(request.args.get('api_key'))
+    request.authz = Authz(role=role)
 
 
-@blueprint.route('/api/1/sessions/login/password', methods=['POST'])
+@blueprint.route('/api/2/sessions/login', methods=['POST'])
 def password_login():
     """Provides email and password authentication."""
-    data = request_data()
-    email = data.get('email')
-    password = data.get('password')
-
-    if not email or not password:
-        abort(404)
-
-    log_event(request)
-
-    q = Role.by_email(email)
+    data = parse_request(schema=LoginSchema)
+    q = Role.by_email(data.get('email'))
     q = q.filter(Role.password_digest != None)  # noqa
     role = q.first()
 
     # Try a password authentication and an LDAP authentication if it is enabled
-    if role and role.check_password(password) is False:
-        return Unauthorized("Authentication has failed.")
-    elif not role:
-        role = Role.authenticate_using_ldap(email, password)
+    if role is not None:
+        if not role.check_password(data.get('password')):
+            return Unauthorized("Authentication has failed.")
 
-    if not role:
-        return Unauthorized("Authentication has failed.")
+    if role is None:
+        role = Role.authenticate_using_ldap(data.get('email'),
+                                            data.get('password'))
 
-    session['user'] = role.id
-    session['next_url'] = extract_next_url(request)
+    if role is None:
+        return Unauthorized("Authentication has failed.")
 
     return jsonify({
-        'logout': url_for('.logout'),
-        'api_key': role.api_key,
-        'role': role
+        'status': 'ok',
+        'token': create_token(role)
     })
 
 
-@blueprint.route('/api/1/sessions/login')
-@blueprint.route('/api/1/sessions/login/<string:provider>')
-def login(provider=None):
-    if not provider:
-        # by default use the first provider if none is requested,
-        # which is a useful default if there's only one
-        provider = oauth.remote_apps.keys()[0]
-
+@blueprint.route('/api/2/sessions/oauth/<string:provider>')
+def oauth_init(provider):
     oauth_provider = oauth.remote_apps.get(provider)
     if not oauth_provider:
         abort(404)
 
-    log_event(request)
-    session['next_url'] = extract_next_url(request)
-    callback_url = url_for('.callback', provider=provider)
+    callback_url = url_for('.oauth_callback',
+                           provider=provider,
+                           next=extract_next_url(request))
     return oauth_provider.authorize(callback=callback_url)
 
 
-@blueprint.route('/api/1/sessions/logout')
-def logout():
-    session.clear()
-    return redirect('/')
-
-
-@blueprint.route('/api/1/sessions/callback/<string:provider>')
-def callback(provider):
+@blueprint.route('/api/2/sessions/callback/<string:provider>')
+def oauth_callback(provider):
     oauth_provider = oauth.remote_apps.get(provider)
     if not oauth_provider:
         abort(404)
-
-    next_url = session.pop('next_url', '/')
 
     resp = oauth_provider.authorized_response()
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)
         return Unauthorized("Authentication has failed.")
 
-    session['oauth'] = resp
-    signals.handle_oauth_session.send(provider=oauth_provider, session=session)
+    response = signals.handle_oauth_session.send(provider=oauth_provider,
+                                                 oauth=resp)
     db.session.commit()
-    if 'user' not in session:
-        log.error("No OAuth handler for %r was installed.", provider)
-        return Unauthorized("Authentication has failed.")
-    log_event(request, role_id=session['user'])
-    log.info("Logged in: %r", session['user'])
-    return redirect(next_url)
+    for (_, role) in response:
+        if role is None:
+            continue
+        log.info("Logged in: %r", role)
+        next_url = extract_next_url(request)
+        next_url, _ = urldefrag(next_url)
+        next_url = '%s#token=%s' % (next_url, create_token(role))
+        return redirect(next_url)
+
+    log.error("No OAuth handler for %r was installed.", provider)
+    return Unauthorized("Authentication has failed.")

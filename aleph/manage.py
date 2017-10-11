@@ -7,18 +7,19 @@ from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
-from aleph.core import create_app, archive, datasets
-from aleph.model import db, upgrade_db, Collection, Document, Entity
+from aleph.core import create_app, archive
+from aleph.model import db, upgrade_db, Collection, Document
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
-from aleph.ingest import reingest_collection, ingest_document
-from aleph.index import init_search, delete_index, upgrade_search
-from aleph.index import index_document_id, delete_dataset
-from aleph.logic import reindex_entities, delete_collection, analyze_collection
-from aleph.logic import load_dataset, update_entity_full, delete_pending
+from aleph.ingest import ingest_document
+from aleph.index import delete_index, upgrade_search
+from aleph.index import index_document_id
+from aleph.logic import reindex_entities, delete_collection, process_collection
 from aleph.logic import update_collection
 from aleph.logic.alerts import check_alerts
-from aleph.ext import get_crawlers
+from aleph.logic.bulk import bulk_load
+from aleph.logic.xref import xref_collection
+from aleph.util import load_config_file
 
 
 log = logging.getLogger('aleph')
@@ -42,19 +43,6 @@ def collections():
 def alerts():
     """Generate alert notifications."""
     check_alerts.delay()
-
-
-@manager.command
-def crawl(name):
-    """Execute the given crawler."""
-    log.info('Crawling %r...', name)
-    crawlers = get_crawlers()
-    if name not in crawlers:
-        log.info('No such crawler: %r', name)
-    else:
-        crawler = crawlers.get(name)()
-        crawler.execute()
-    db.session.commit()
 
 
 @manager.command
@@ -101,33 +89,21 @@ def flush(foreign_id):
 
 
 @manager.command
-def deletepending(foreign_id=None):
-    """Deletes any pending entities and related items."""
-    collection_id = None
-    if foreign_id is None:
-        collection = Collection.by_foreign_id(foreign_id)
-        if collection is None:
-            raise ValueError("No such collection: %r" % foreign_id)
-        collection_id = collection.id
-    delete_pending(collection_id=collection_id)
-
-
-@manager.command
-def analyze(foreign_id):
-    """Re-analyze documents in the given collection (or throughout)."""
+def process(foreign_id):
+    """Re-process documents in the given collection."""
     collection = Collection.by_foreign_id(foreign_id)
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
-    analyze_collection.delay(collection.id)
+    process_collection(collection.id)
 
 
 @manager.command
-def reingest(foreign_id):
-    """Re-ingest documents in the given collection."""
+def xref(foreign_id):
+    """Cross-reference all entities and documents in a collection."""
     collection = Collection.by_foreign_id(foreign_id)
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
-    reingest_collection(collection)
+    xref_collection(collection)
 
 
 @manager.command
@@ -141,7 +117,7 @@ def index(foreign_id=None):
         if collection is None:
             raise ValueError("No such collection: %r" % foreign_id)
         q = q.filter(Document.collection_id == collection.id)
-    for idx, (doc_id,) in enumerate(q.yield_per(10000), 1):
+    for idx, (doc_id,) in enumerate(q.yield_per(5000), 1):
         index_document_id.delay(doc_id)
         if idx % 1000 == 0:
             log.info("Index: %s documents...", idx)
@@ -150,48 +126,24 @@ def index(foreign_id=None):
 
 
 @manager.command
-def loaddataset(name):
+def bulkload(file_name):
     """Index all the entities in a given dataset."""
-    dataset = datasets.get(name)
-    load_dataset(dataset)
-
-
-@manager.command
-def deletedataset(name):
-    delete_dataset(name)
+    log.info("Loading bulk data from: %s", file_name)
+    config = load_config_file(file_name)
+    bulk_load(config)
 
 
 @manager.command
 def resetindex():
     """Re-create the ES index configuration, dropping all data."""
     delete_index()
-    init_search()
+    upgrade_search()
 
 
 @manager.command
 def indexentities():
     """Re-index all the entities."""
     reindex_entities()
-
-
-@manager.command
-def updateentities():
-    """Re-index all the entities."""
-    q = db.session.query(Entity.id)
-    for (entity_id,) in q:
-        update_entity_full.delay(entity_id)
-
-
-@manager.command
-@manager.option('-s', '--skip-downloads', dest='skip', default='')
-def init(skip=''):
-    """Create or upgrade the search index and database."""
-    upgrade_db()
-    init_search()
-    upgrade_search()
-    if 'analyzers' not in skip:
-        install_analyzers()
-    archive.upgrade()
 
 
 @manager.command
@@ -229,7 +181,14 @@ def evilshit():
     for enum in inspect(db.engine).get_enums():
         enum = ENUM(name=enum['name'])
         enum.drop(bind=db.engine, checkfirst=True)
-    init()
+    upgrade()
+
+
+@manager.command
+def cleanup():
+    """Periodic system cleanup tasks."""
+    from aleph.logic import cleanup_system
+    cleanup_system()
 
 
 def main():

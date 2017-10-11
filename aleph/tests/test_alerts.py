@@ -13,7 +13,8 @@ class AlertsTestCase(TestCase):
         self.load_fixtures('docs.yaml')
         self.email = 'test@pudo.org'
         self.role_email = self.create_user('with_email', email=self.email)
-        self.role_no_email = self.create_user('without_email', email=None)
+        self.role_no_email = self.create_user('without_email')
+        self.role_no_email.email = None
 
     def test_notify(self):
         data = {'query_text': '', 'label': 'Test Alert'}

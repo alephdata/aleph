@@ -2,8 +2,7 @@ from flask import Blueprint, request, send_file
 
 from aleph.core import url_for
 from aleph.model import Collection
-from aleph.events import log_event
-from aleph.search import QueryState, documents_iter
+from aleph.search import DocumentsQuery, SearchQueryParser
 from aleph.views.util import make_excel
 
 blueprint = Blueprint('exports_api', __name__)
@@ -15,22 +14,24 @@ FIELDS = ['collection', 'title', 'file_name', 'summary', 'extension',
           'file_url', 'source_url']
 
 
-def get_results(state, limit):
+def get_results(query, limit):
     collections = {}
-    for i, row in enumerate(documents_iter(state)):
+    for i, row in enumerate(query.scan()):
         if i >= limit:
             return
+        source = row.get('_source')
+        collection_id = source.pop('collection_id')
+        if collection_id not in collections:
+            obj = Collection.by_id(collection_id)
+            if obj is None:
+                collections[collection_id] = obj.label
+
         data = {
+            'collection': collections.get(collection_id, '[Missing]'),
             'file_url': url_for('documents_api.file',
                                 document_id=row.get('_id'))
         }
-        for name, value in row.get('_source').items():
-            if name == 'collection_id':
-                if value not in collections:
-                    collections[value] = Collection.by_id(value)
-                if collections[value]:
-                    value = collections[value].label
-                name = 'collection'
+        for name, value in source.items():
             if name not in FIELDS:
                 continue
             if isinstance(value, (list, tuple, set)):
@@ -39,10 +40,10 @@ def get_results(state, limit):
         yield data
 
 
-@blueprint.route('/api/1/query/export')
+@blueprint.route('/api/2/query/export')
 def export():
-    state = QueryState(request.args, request.authz, limit=0)
-    log_event(request)
-    output = make_excel(get_results(state, 50000), FIELDS)
+    parser = SearchQueryParser(request.args, request.authz)
+    query = DocumentsQuery(parser)
+    output = make_excel(get_results(query, 50000), FIELDS)
     return send_file(output, mimetype=XLSX_MIME, as_attachment=True,
                      attachment_filename='export.xlsx')

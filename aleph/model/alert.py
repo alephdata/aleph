@@ -1,15 +1,13 @@
 from datetime import datetime
-from werkzeug.datastructures import MultiDict
+from normality import stringify
 
 from aleph.core import db
-from aleph.model.validate import validate
 from aleph.model.entity import Entity
 from aleph.model.common import SoftDeleteModel
 
 
 class Alert(db.Model, SoftDeleteModel):
     """A subscription to notifications on a given query."""
-
     __tablename__ = 'alert'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -58,34 +56,13 @@ class Alert(db.Model, SoftDeleteModel):
 
     @classmethod
     def create(cls, data, role):
-        validate(data, 'alert.json#')
         alert = cls()
         alert.role_id = role.id
-        alert.query_text = data.get('query_text')
-        if alert.query_text is not None:
-            alert.query_text = alert.query_text.strip()
-            alert.query_text = alert.query_text or None
-        alert.entity_id = data.get('entity_id') or None
-        alert.custom_label = data.get('label')
+        alert.query_text = stringify(data.get('query_text'))
+        alert.entity_id = stringify(data.get('entity_id'))
+        alert.custom_label = stringify(data.get('label'))
         alert.update()
         return alert
-
-    @classmethod
-    def exists(cls, query, role):
-        q = cls.all_ids().filter(cls.role_id == role.id)
-        query_text = query.get('q')
-        if query_text is not None:
-            query_text = query_text.strip()
-            if not len(query_text):
-                query_text = None
-        q = q.filter(cls.query_text == query_text)
-        entities = query.getlist('entity')
-        if len(entities) == 1:
-            q = q.filter(cls.entity_id == entities[0])
-        else:
-            q = q.filter(cls.entity_id == None)  # noqa
-        q = q.limit(1)
-        return q.scalar()
 
     @classmethod
     def dedupe(cls, entity_id):
@@ -99,21 +76,3 @@ class Alert(db.Model, SoftDeleteModel):
 
     def __repr__(self):
         return '<Alert(%r, %r)>' % (self.id, self.label)
-
-    def to_query(self):
-        return MultiDict({
-            'q': self.query_text or '',
-            'entity': self.entity_id
-        })
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'label': self.label,
-            'role_id': self.role_id,
-            'query_text': self.query_text,
-            'entity_id': self.entity_id,
-            'created_at': self.created_at,
-            'notified_at': self.notified_at,
-            'updated_at': self.updated_at
-        }

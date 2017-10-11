@@ -1,7 +1,7 @@
 import os
 import logging
 from logging.handlers import SMTPHandler
-from urlparse import urljoin
+from urlparse import urlparse, urljoin
 from werkzeug.local import LocalProxy
 from flask import Flask, current_app
 from flask import url_for as flask_url_for
@@ -12,9 +12,9 @@ from flask_simpleldap import LDAP, LDAPException
 from kombu import Queue
 from celery import Celery
 from elasticsearch import Elasticsearch
+import storagelayer
 
 from aleph import default_settings
-from aleph.archive import archive_from_config
 from aleph.ext import get_init
 from aleph.util import load_config_file, SessionTask
 from aleph.oauth import configure_oauth
@@ -123,7 +123,14 @@ def get_config(name, default=None):
 
 
 def get_app_url():
-    return urljoin(current_app.config.get('APP_BASEURL'), '/')
+    app = current_app._get_current_object()
+    if not hasattr(app, '_app_baseurl'):
+        parsed = urlparse(current_app.config.get('APP_BASEURL'))
+        scheme = get_config('PREFERRED_URL_SCHEME')
+        if scheme:
+            parsed = parsed._replace(scheme=scheme)
+        app._app_baseurl = parsed.geturl()
+    return app._app_baseurl
 
 
 def get_app_name():
@@ -154,7 +161,13 @@ def get_es_index():
 def get_archive():
     app = current_app._get_current_object()
     if not hasattr(app, '_aleph_archive'):
-        app._aleph_archive = archive_from_config(app.config)
+        archive = storagelayer.init(app.config.get('ARCHIVE_TYPE'),
+                                    path=app.config.get('ARCHIVE_PATH'),
+                                    aws_key_id=app.config.get('ARCHIVE_AWS_KEY_ID'),  # noqa
+                                    aws_secret=app.config.get('ARCHIVE_AWS_SECRET'),  # noqa
+                                    aws_region=app.config.get('ARCHIVE_AWS_REGION'),  # noqa
+                                    bucket=app.config.get('ARCHIVE_BUCKET'))  # noqa
+        app._aleph_archive = archive
     return app._aleph_archive
 
 
@@ -166,21 +179,6 @@ def get_schemata():
         from aleph.schema import SchemaSet
         app._schemata = SchemaSet(load_config_file(schema_yaml))
     return app._schemata
-
-
-def get_datasets():
-    app = current_app._get_current_object()
-    if not hasattr(app, '_datasets'):
-        datasets_yaml = app.config.get('DATASETS_YAML')
-        if datasets_yaml is not None:
-            log.info("Loading datasets from: %s", datasets_yaml)
-            datasets = load_config_file(datasets_yaml)
-        else:
-            log.warn("No datasets.yaml defined.")
-            datasets = {}
-        from aleph.datasets import DatasetSet
-        app._datasets = DatasetSet(datasets)
-    return app._datasets
 
 
 def get_upload_folder():
@@ -203,7 +201,6 @@ es = LocalProxy(get_es)
 es_index = LocalProxy(get_es_index)
 archive = LocalProxy(get_archive)
 schemata = LocalProxy(get_schemata)
-datasets = LocalProxy(get_datasets)
 upload_folder = LocalProxy(get_upload_folder)
 secret_key = LocalProxy(get_app_secret_key)
 language_whitelist = LocalProxy(get_language_whitelist)
@@ -212,9 +209,8 @@ language_whitelist = LocalProxy(get_language_whitelist)
 def url_for(*a, **kw):
     """Generate external URLs with HTTPS (if configured)."""
     try:
-        kw['_external'] = True
-        if get_config('PREFERRED_URL_SCHEME'):
-            kw['_scheme'] = get_config('PREFERRED_URL_SCHEME')
-        return flask_url_for(*a, **kw)
+        kw['_external'] = False
+        path = flask_url_for(*a, **kw)
+        return urljoin(get_app_url(), path)
     except RuntimeError:
         return None

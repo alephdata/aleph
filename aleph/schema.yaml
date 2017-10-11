@@ -48,6 +48,14 @@ entities:
       notes:
         label: Notes
 
+  Document:
+    extends: Entity
+    label: Document
+    plural: Documents
+    icon: fa-file-text
+    hidden: true
+    fuzzy: false
+
   LegalEntity:
     extends: Entity
     label: Legal entity
@@ -90,6 +98,7 @@ entities:
         type: identifier
       bankAccount:
         label: Bank account
+        type: identifier
       jurisdiction:
         label: Jurisdiction
         type: country
@@ -150,24 +159,34 @@ entities:
         label: "Capital"
       voenCode:
         label: "VOEN"
+        type: identifier
       okpoCode:
         label: "OKPO"
+        type: identifier
       innCode:
         label: "INN"
+        type: identifier
       coatoCode:
         label: "COATO"
+        type: identifier
       vatCode:
         label: "VAT Identifier"
+        type: identifier
       irsCode:
         label: "IRS Number"
+        type: identifier
       ipoCode:
         label: "IPO"
+        type: identifier
       cikCode:
         label: "SEC Central Index Key"
+        type: identifier
       jibCode:
         label: "JIB"
+        type: identifier
       mbsCode:
         label: "MBS"
+        type: identifier
 
   PublicBody:
     label: Public body
@@ -216,10 +235,12 @@ entities:
         label: Census block
       cadastralCode:
         label: Cadastral code
+        type: identifier
       area:
         label: Area
       registrationNumber:
         label: Registration number
+        type: identifier
       propertyType:
         label: Property type
       landType:
@@ -242,6 +263,7 @@ entities:
         label: Status
       caseNumber:
         label: Case number
+        type: identifier
       court:
         label: Court
       fileDate:
@@ -258,8 +280,10 @@ entities:
     properties:
       imoNumber:
         label: IMO Number
+        type: identifier
       crsNumber:
         label: CRS Number
+        type: identifier
       type:
         label: Vessel Type
       flag:
@@ -274,8 +298,10 @@ entities:
         label: Gross Registered Tonnage
       nameChangeDate:
         label: Date of Name Change
+        type: date
       callSign:
         label: Call Sign
+        type: identifier
       pastNames:
         label: Past Names
       pastFlags:
@@ -297,6 +323,7 @@ entities:
         label: Bank Name
       accountNumber:
         label: Account Number
+        type: identifier
       accountType:
         label: Account Type
       balance:

@@ -1,46 +1,12 @@
 # coding: utf-8
 import six
 import logging
-from normality import normalize, stringify, latinize_text, collapse_spaces
+from urllib import urlencode
+from normality import normalize, stringify
 from normality import slugify  # noqa
-from normality.cleaning import decompose_nfkd, remove_control_chars
+from normality.cleaning import remove_control_chars
 
 log = logging.getLogger(__name__)
-INDEX_MAX_LEN = 1024 * 1024 * 100
-
-
-def index_form(texts):
-    """Turn a set of strings into the appropriate form for indexing."""
-    results = []
-    total_len = 0
-
-    for text in texts:
-        # We don't want to store more than INDEX_MAX_LEN of text per doc
-        if total_len > INDEX_MAX_LEN:
-            # TODO: there might be nicer techniques for dealing with overly
-            # long text buffers?
-            results = list(set(results))
-            total_len = sum((len(t) for t in results))
-            if total_len > INDEX_MAX_LEN:
-                break
-
-        text = stringify(text)
-        if text is None:
-            continue
-        text = collapse_spaces(text)
-        # XXX: is NFKD a great idea?
-        text = decompose_nfkd(text)
-        total_len += len(text)
-        results.append(text)
-
-        # Make latinized text version
-        latin = latinize_text(text)
-        latin = stringify(latin)
-        if latin is None or latin == text:
-            continue
-        total_len += len(latin)
-        results.append(latin)
-    return results
 
 
 def match_form(text):
@@ -59,10 +25,18 @@ def string_value(value, encoding=None):
     return value
 
 
-def encoded_value(text):
-    if isinstance(text, six.binary_type):
-        return text
-    return six.text_type(text).encode('utf-8')
+def query_string(items):
+    """Given a list of tuples, returns a query string for URL building."""
+    query = []
+    for (field, value) in items:
+        value = stringify(value)
+        if value is None:
+            continue
+        value = value.encode('utf-8')
+        query.append((field, value))
+    if not len(query):
+        return ''
+    return '?' + urlencode(query)
 
 
 def has_value(value):

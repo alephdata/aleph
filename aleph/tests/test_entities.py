@@ -1,7 +1,5 @@
 # coding: utf-8
-import json
-from pprint import pprint
-from apikit import jsonify
+from pprint import pprint  # noqa
 
 from aleph.core import db
 from aleph.model import Collection, Entity, Alert
@@ -23,7 +21,7 @@ class EntitiesTestCase(TestCase):
         self.col_other.foreign_id = 'test_coll_entities_other'
         db.session.add(self.col_other)
         db.session.flush()
-        self.ent = Entity.save({
+        self.ent = Entity.create({
             'schema': 'LegalEntity',
             'name': 'Winnie the Pooh',
             'data': {
@@ -32,7 +30,7 @@ class EntitiesTestCase(TestCase):
                 'alias': [u'Puh der Bär', 'Pooh Bear']
             }
         }, self.col)
-        self.other = Entity.save({
+        self.other = Entity.create({
             'schema': 'LegalEntity',
             'name': 'Pu der Bär',
             'data': {
@@ -51,19 +49,24 @@ class EntitiesTestCase(TestCase):
     def test_merge(self):
         self.ent.merge(self.other)
         db.session.flush()
-        data = json.loads(jsonify(self.ent).data)
-        assert 'bear' in data['data']['description'], data
-        assert 'pa' in data['data']['country'], data
+        data = dict(self.ent.data)
+        assert 'bear' in data['description'], data
+        assert 'pa' in data['country'], data
         db.session.refresh(self.alert)
-        assert self.alert.label == data['name']
+        assert self.alert.label == self.ent.name
         assert self.other.deleted_at is not None, self.other
 
     def test_api_merge(self):
-        url = '/api/1/entities/%s/merge/%s' % (self.ent.id, self.other.id)
-        res = self.client.delete(url, data={}, content_type='application/json')
+        url = '/api/2/entities/%s/merge/%s' % (self.ent.id, self.other.id)
+        res = self.client.delete(url,
+                                 data={},
+                                 content_type='application/json')
         assert res.status_code == 403, res.status_code
-        self.login(is_admin=True)
-        res = self.client.delete(url, data={}, content_type='application/json')
+        _, headers = self.login(is_admin=True)
+        res = self.client.delete(url,
+                                 data={},
+                                 headers=headers,
+                                 content_type='application/json')
         data = res.json
         assert 'bear' in data['data']['description']
         assert 'pa' in data['data']['country']

@@ -15,6 +15,7 @@ Table of contents
    usage.md
    plugins.md
    mappings.md
+   api.md
    glossary.md
    resources.md
    research.md

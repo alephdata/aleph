@@ -6,7 +6,7 @@ from flask_fixtures import loaders, load_fixtures
 from faker import Factory
 
 from aleph.model import Role, Document, create_system_roles
-from aleph.index import delete_index, init_search, flush_index
+from aleph.index import delete_index, upgrade_search, flush_index
 from aleph.analyze import analyze_document
 from aleph.logic import reindex_entities
 from aleph.core import db, create_app
@@ -22,7 +22,6 @@ class TestCase(FlaskTestCase):
     fake = Factory.create()
 
     def create_app(self):
-        self.temp_dir = mkdtemp()
         oauth.remote_apps = {}
         app_name = 'aleph_test_name'
         app = create_app({
@@ -41,8 +40,10 @@ class TestCase(FlaskTestCase):
 
     def create_user(self, foreign_id='tester', name=None, email=None,
                     is_admin=False):
-        role = Role.load_or_create(foreign_id, Role.USER, name or foreign_id,
-                                   email=email, is_admin=is_admin)
+        role = Role.load_or_create(foreign_id, Role.USER,
+                                   name or foreign_id,
+                                   email=email or self.fake.email(),
+                                   is_admin=is_admin)
         db.session.commit()
         return role
 
@@ -50,11 +51,8 @@ class TestCase(FlaskTestCase):
               is_admin=False):
         role = self.create_user(foreign_id=foreign_id, name=name, email=email,
                                 is_admin=is_admin)
-        with self.client.session_transaction() as sess:
-            sess['roles'] = [Role.load_id(Role.SYSTEM_GUEST),
-                             Role.load_id(Role.SYSTEM_USER), role.id]
-            sess['user'] = role.id
-        return role
+        headers = {'Authorization': role.api_key}
+        return role, headers
 
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
@@ -70,16 +68,23 @@ class TestCase(FlaskTestCase):
         flush_index()
 
     def setUp(self):
-        try:
-            os.makedirs(self.temp_dir)
-        except:
-            pass
         delete_index()
-        init_search()
+        upgrade_search()
         db.drop_all()
         db.create_all()
         create_system_roles()
 
     def tearDown(self):
         db.session.close()
-        shutil.rmtree(self.temp_dir)
+
+    @classmethod
+    def setUpClass(cls):
+        cls.temp_dir = mkdtemp()
+        try:
+            os.makedirs(cls.temp_dir)
+        except:
+            pass
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.temp_dir)

@@ -3,12 +3,12 @@ import logging
 
 from ingestors import Manager
 from ingestors.util import decode_path
+from storagelayer import checksum
 
 from aleph.core import db
 from aleph.model import Document, Cache
 from aleph.analyze import analyze_document
 from aleph.ingest.result import DocumentResult
-from aleph.util import checksum
 
 log = logging.getLogger(__name__)
 
@@ -63,9 +63,9 @@ class DocumentManager(Manager):
         document.mime_type = mime_type or document.meta.get('mime_type')
 
         from aleph.ingest import ingest_document
-        ingest_document(document, file_path, user_queue=parent.user_queue)
+        ingest_document(document, file_path, role_id=parent.role_id)
 
-    def ingest_document(self, document, file_path=None, user_queue=False):
+    def ingest_document(self, document, file_path=None, role_id=None):
         """Ingest a database-backed document.
 
         First retrieve it's data and then call the actual ingestor.
@@ -75,8 +75,15 @@ class DocumentManager(Manager):
                                                file_name=document.file_name)
 
         if file_path is None:
-            # TODO: save this to the document?
-            log.warning("Cannot load data: %r", document)
+            # When a directory is ingested, the data is not stored. Thus, try
+            # to recurse transparently.
+            for child in Document.by_parent(document):
+                self.ingest_document(child, role_id=role_id)
+            return
+            
+        if not os.path.exists(file_path):
+            # Probably indicative of file system encoding issues.
+            log.warn("Ingest non-existant path [%r]: %s", document, file_path)
             return
 
         try:
@@ -88,7 +95,7 @@ class DocumentManager(Manager):
 
             result = DocumentResult(self, document,
                                     file_path=file_path,
-                                    user_queue=user_queue)
+                                    role_id=role_id)
             self.ingest(file_path, result=result)
         finally:
             self.archive.cleanup_file(document.content_hash)

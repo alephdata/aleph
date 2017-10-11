@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='aleph',
-    version='1.2-dev',
+    version='2.0.0',
     description="Document sifting web frontend",
     long_description="",
     classifiers=[
@@ -29,9 +29,6 @@ setup(
             'phones = aleph.analyze.regex:PhoneNumberAnalyzer',
             'corasick = aleph.analyze.corasick_entity:AhoCorasickEntityAnalyzer',  # noqa
             'polyglot = aleph.analyze.polyglot_entity:PolyglotEntityAnalyzer'
-        ],
-        'aleph.crawlers': [
-            'sourceafrica = aleph.crawlers.documentcloud:SourceAfricaCrawler'
         ],
         'aleph.init': [],
         'console_scripts': [

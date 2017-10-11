@@ -1,157 +1,152 @@
-from werkzeug.datastructures import MultiDict
-from dalet import parse_boolean
+from pprint import pprint  # noqa
+from elasticsearch.helpers import scan
 
-from aleph.model import Entity
-from aleph.text import string_value
+from aleph.core import es, es_index
+from aleph.search.result import SearchQueryResult
+from aleph.search.parser import SearchQueryParser
 
 
-class QueryState(object):
-    """Hold state for common query parameters."""
+class Query(object):
+    RESULT_CLASS = SearchQueryResult
+    DOC_TYPES = []
+    RETURN_FIELDS = True
+    TEXT_FIELDS = ['_all']
+    MULTI_FIELDS = ['collection_id', 'schema']
+    SORT = {
+        'default': ['_score']
+    }
 
-    def __init__(self, args, authz, limit=None):
-        if not isinstance(args, MultiDict):
-            args = MultiDict(args)
-        self.args = args
-        self.authz = authz
-        self._limit = limit
-        self.raw_query = None
+    def __init__(self, parser):
+        self.parser = parser
 
-        self.facet_names = self.getlist('facet')
-        self.highlight = []
+    def get_text_query(self):
+        if not self.parser.text:
+            return {'match_all': {}}
+        return {
+            "simple_query_string": {
+                "query": self.parser.text,
+                "fields": self.TEXT_FIELDS,
+                "default_operator": "AND"
+            }
+        }
 
-    @property
-    def limit(self):
-        if self._limit is not None:
-            return self._limit
-        return min(1000, max(0, self.getint('limit', 30)))
-
-    @property
-    def offset(self):
-        return max(0, self.getint('offset', 0))
-
-    @property
-    def facet_size(self):
-        return self.getint('facet_size', 50)
-
-    @property
-    def page(self):
-        if self.limit == 0:
-            return 1
-        return (self.offset / self.limit) + 1
-
-    @property
-    def text(self):
-        return self.get('q') or ''
-
-    @property
-    def has_text(self):
-        if self.text is None:
-            return False
-        return len(self.text.strip()) > 0
-
-    @property
-    def has_query(self):
-        if self.has_text:
-            return True
-        for (field, value) in self.filter_items:
-            return True
-        return False
-
-    @property
-    def sort(self):
-        return self.get('sort', 'score').strip().lower()
-
-    @property
-    def entities(self):
-        if not hasattr(self, '_entities'):
-            cs = self.authz.collections_read
-            ids = self.getlist('filter:entities.id')
-            self._entities = Entity.by_id_set(ids, collections=cs)
-        return self._entities
-
-    @property
-    def entity_terms(self):
-        if not hasattr(self, '_entity_terms'):
-            self._entity_terms = set()
-            for entity in self.entities.values():
-                for term in entity.regex_terms:
-                    self._entity_terms.add(term)
-        return self._entity_terms
-
-    @property
-    def highlight_terms(self):
-        for term in self.highlight:
-            yield term
-        for term in self.entity_terms:
-            yield term
-
-    @property
-    def collection_id(self):
-        """Return the set of collection IDs to be queried."""
-        collection_ids = set()
-        for value in self.get_filters('collection_id'):
-            try:
-                value = int(value)
-            except:
+    def get_filters(self, exclude=None):
+        """Apply query filters from the user interface."""
+        filters = []
+        for field, values in self.parser.filters.items():
+            if field == exclude:
                 continue
-            if value in self.authz.collections_read:
-                collection_ids.add(value)
-        return list(collection_ids)
-
-    @property
-    def filter_items(self):
-        for key in self.args.keys():
-            if not key.startswith('filter:'):
-                continue
-            _, field = key.split(':', 1)
-            for value in self.getlist(key):
-                yield (field, value)
-
-    def get_filters(self, field):
-        for f, value in self.filter_items:
-            if f == field:
-                yield value
-
-    @property
-    def filters(self):
-        filters = {}
-        for field, value in self.filter_items:
-            if field not in filters:
-                filters[field] = set([value])
+            if field in ['id', '_id']:
+                filters.append({'ids': {'values': list(values)}})
+            elif field in self.MULTI_FIELDS:
+                filters.append({'terms': {field: list(values)}})
             else:
-                filters[field].add(value)
-        filters['collection_id'] = self.collection_id
+                for value in values:
+                    filters.append({'term': {field: value}})
         return filters
 
-    def getfilter(self, name):
-        filters = self.filters.get(name) or []
-        return list(filters)
+    def get_query(self):
+        return {
+            'bool': {
+                'should': [],
+                'must': [self.get_text_query()],
+                'must_not': [],
+                'filter': self.get_filters()
+            }
+        }
 
-    @property
-    def items(self):
-        for (k, v) in self.args.iteritems(multi=True):
-            if k == 'offset':
-                continue
-            yield k, v
+    def get_aggregations(self):
+        """Aggregate the query in order to generate faceted results."""
+        aggs = {}
+        for name in self.parser.facet_names:
+            facet = {
+                name: {
+                    'terms': {
+                        'field': name,
+                        'size': self.parser.facet_size
+                    }
+                }
+            }
+            # Fields to be excluded from their own aggregation. This is true
+            # when a filter on a faceted fied is not supposed to affect the
+            # selection of aggregations.
+            if name in self.MULTI_FIELDS:
+                if 'scoped' not in aggs:
+                    aggs['scoped'] = {
+                        'global': {},
+                        'aggregations': {}
+                    }
+                aggs['scoped']['aggregations'][name] = {
+                    'filter': {
+                        'bool': {
+                            'filter': self.get_filters(exclude=name)
+                        }
+                    },
+                    'aggregations': facet
+                }
+            else:
+                aggs.update(facet)
+        return aggs
 
-    def getlist(self, name, default=None):
-        if name not in self.args:
-            return default or []
-        return self.args.getlist(name)
+    def get_sort(self):
+        """Pick one of a set of named result orderings."""
+        default = self.SORT.get('default')
+        return self.SORT.get(self.parser.sort, default)
 
-    def get(self, name, default=None):
-        for value in self.getlist(name):
-            value = string_value(value)
-            if value is not None:
-                return value
-        return default
+    def get_highlight(self):
+        return {}
 
-    def getint(self, name, default=None):
-        value = self.get(name, default)
-        try:
-            return int(value)
-        except (ValueError, TypeError):
-            return default
+    def get_body(self):
+        return {
+            'query': self.get_query(),
+            'from': self.parser.offset,
+            'size': self.parser.limit,
+            'aggregations': self.get_aggregations(),
+            'sort': self.get_sort(),
+            'highlight': self.get_highlight(),
+            '_source': self.RETURN_FIELDS
+        }
 
-    def getbool(self, name, default=False):
-        return parse_boolean(self.get(name), default=default)
+    def search(self):
+        """Execute the query as assmbled."""
+        # pprint(self.get_body())
+        return es.search(index=es_index,
+                         doc_type=self.DOC_TYPES,
+                         body=self.get_body())
+
+    def scan(self):
+        """Return an iterator over the whole result set, unpaginated and
+        without aggregations."""
+        body = {
+            'query': self.get_query(),
+            '_source': self.RETURN_FIELDS
+        }
+        return scan(es,
+                    index=es_index,
+                    doc_type=self.DOC_TYPES,
+                    query=body)
+
+    @classmethod
+    def handle_request(cls, request, limit=None, schema=None, **kwargs):
+        parser = SearchQueryParser(request.args, request.authz, limit=limit)
+        result = cls(parser, **kwargs).search()
+        return cls.RESULT_CLASS(request, parser, result, schema=schema)
+
+
+class AuthzQuery(Query):
+    """Apply roles-based filtering to the results.
+
+    This enforces the authorization (access control) rules on a particular
+    query by comparing the roles a user is in with the ones on the document.
+    """
+
+    def get_filters(self, exclude=None):
+        filters = super(AuthzQuery, self).get_filters(exclude=exclude)
+        # Hot-wire authorization entirely for admins.
+        if not self.parser.authz.is_admin:
+            filters.append({
+                'terms': {
+                    'roles': list(self.parser.authz.roles)
+                }
+            })
+        return filters
