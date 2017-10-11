@@ -5,7 +5,7 @@ import { xor, debounce, fromPairs } from 'lodash';
 
 import { endpoint } from '../api';
 
-import SearchFilterTick from './SearchFilterTick';
+import SearchFilterList from './SearchFilterList';
 import SearchFilterText from './SearchFilterText';
 
 import './SearchFilterCollections.css';
@@ -21,21 +21,13 @@ const SearchFilterCollectionsList = ({ collections, onClick }) => (
   </ul>
 );
 
-const SearchFilterCollectionsFacets = ({ facets, onClick }) => (
+const SearchFilterCollectionsFacets = ({ facets, toggleFacetItem }) => (
   <div className="search-filter-collections__col">
     {facets.map(facet => (
       <div className="search-filter-collections__col__flex-row" key={facet.id}>
         <h4>{facet.label}</h4>
-        <ul className="search-filter-collections-facet">
-          {facet.items
-            .sort((a, b) => a.label < b.label ? -1 : 1)
-            .map(item => (
-              <li key={item.id} onClick={onClick.bind(null, facet.id, item.id)}>
-                <SearchFilterTick isTicked={facet.selectedItems.indexOf(item.id) > -1} />
-                {item.label}
-              </li>
-            ))}
-        </ul>
+        <SearchFilterList items={facet.items} selectedItems={facet.selectedItems}
+          onItemClick={toggleFacetItem.bind(null, facet.id)}/>
       </div>
     ))}
   </div>
@@ -72,7 +64,6 @@ class SearchFilterCollections extends Component {
 
   componentDidUpdate({ queryText }, { searchText }) {
     if (queryText !== this.props.queryText) {
-      this.lastCollectionIds = null;
       this.setState({ hasLoaded: false });
     }
 
@@ -176,7 +167,7 @@ class SearchFilterCollections extends Component {
                 </div>
               </div>
 
-              <SearchFilterCollectionsFacets facets={facets} onClick={this.toggleFacetItem} />
+              <SearchFilterCollectionsFacets facets={facets} toggleFacetItem={this.toggleFacetItem} />
             </div> :
             <Spinner className="search-filter-loading pt-large" />}
         </Dialog>

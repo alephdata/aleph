@@ -13,7 +13,7 @@ const SearchFilterSchema = ({ schemas, onChange, currentValue }) => (
       <SchemaIcon />
       <span className="search-filter-schema-type">
         <FormattedMessage id="search.schema.all" defaultMessage="All Results"/><br />
-        {' '}(<FormattedNumber value={sumBy(schemas, 'count')} />)
+        <FormattedNumber value={sumBy(schemas, 'count')} />
       </span>
     </li>
     {schemas
@@ -23,7 +23,7 @@ const SearchFilterSchema = ({ schemas, onChange, currentValue }) => (
           <SchemaIcon schemaId={schema.id} />
           <span className="search-filter-schema-type">
             {schema.label}<br />
-            (<FormattedNumber value={schema.count} />)
+            <FormattedNumber value={schema.count} />
           </span>
         </li>
       ))}

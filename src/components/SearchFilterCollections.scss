@@ -63,30 +63,6 @@
   }
 }
 
-.search-filter-collections-facet {
-  list-style: none;
-  margin: 0;
-  padding: ($pt-grid-size / 2) 0;
-
-  & > li {
-    position: relative;
-    cursor: pointer;
-    padding: ($pt-grid-size / 2) $pt-grid-size;
-    padding-left: ($pt-icon-size-standard + $pt-grid-size * 2);
-
-    & > .search-tick {
-      position: absolute;
-      left: $pt-grid-size;
-      top: ($pt-grid-size / 2);
-      line-height: $pt-line-height;
-    }
-
-    &:hover {
-      background-color: $gray5;
-    }
-  }
-}
-
 // Overrides some .pt-dialog CSS
 .search-filter-collections-dialog.pt-dialog {
   top: ($pt-grid-size * 2);
