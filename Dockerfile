@@ -54,7 +54,7 @@ RUN pip install -q --upgrade pip && pip install -q --upgrade setuptools six
 COPY requirements.txt requirements-docs.txt requirements-testing.txt /tmp/
 RUN pip install -q -r /tmp/requirements.txt \
   && pip install --pre -q -r /tmp/requirements-docs.txt
-RUN pip install --upgrade git+https://github.com/alephdata/ingestors.git#egg=ingestors
+RUN pip install -q --upgrade git+https://github.com/alephdata/ingestors.git#egg=ingestors
 
 # Install aleph
 COPY . /aleph
