@@ -20,8 +20,8 @@ RUN apt-get -qq -y install  \
         tesseract-ocr-hrv tesseract-ocr-hun tesseract-ocr-rus \
         tesseract-ocr-pol tesseract-ocr-slk tesseract-ocr-slv \
         tesseract-ocr-sqi tesseract-ocr-srp tesseract-ocr-tur \
-        tesseract-ocr-ukr djvulibre-bin
-RUN apt-get -qq -y autoremove \
+        tesseract-ocr-ukr djvulibre-bin \
+    && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -33,7 +33,8 @@ RUN curl -s http://www.five-ten-sg.com/libpst/packages/libpst-0.6.69.tar.gz > /t
     && ln -s /usr/bin/python /usr/bin/python2.7.10 \
     && ./configure \
     && make \
-    && make install
+    && make install \
+    && rm -rf /tmp/pst.tgz /tmp/libpst-0.6.69
 
 # WebKit HTML install since the one that comes with distros is hellishly outdated.
 RUN curl -L -s https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz > /tmp/wkhtmltox.tar.xv \
