@@ -13,8 +13,10 @@ Table of contents
 .. toctree::
    installation.md
    usage.md
+   search.md
    plugins.md
    mappings.md
+   reconcile.md
    api.md
    glossary.md
    resources.md
