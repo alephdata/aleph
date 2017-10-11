@@ -4,6 +4,7 @@
 *.sqlite3
 
 .env
+.vscode/*
 settings.py
 
 aleph/static/.webassets-cache/*
