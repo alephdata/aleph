@@ -15,25 +15,6 @@ blueprint = Blueprint('base_api', __name__)
 log = logging.getLogger(__name__)
 
 
-# @blueprint.route('/help')
-# @blueprint.route('/help/<path:path>')
-# @blueprint.route('/entities')
-# @blueprint.route('/entities/<path:path>')
-# @blueprint.route('/documents')
-# @blueprint.route('/documents/<path:path>')
-# @blueprint.route('/datasets')
-# @blueprint.route('/datasets/<path:path>')
-# @blueprint.route('/collections')
-# @blueprint.route('/collections/<path:path>')
-# @blueprint.route('/tabular/<path:path>')
-# @blueprint.route('/text/<path:path>')
-# @blueprint.route('/signup/<path:path>')
-# @blueprint.route('/')
-# def ui(**kwargs):
-#     enable_cache(vary_user=False)
-#     return render_template("layout.html")
-
-
 @blueprint.route('/api/2/metadata')
 def metadata():
     enable_cache(vary_user=False)

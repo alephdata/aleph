@@ -91,7 +91,7 @@ def extract_next_url(req):
     :return: Path of the next target URL.
     :rtype: str
     """
-    next_url = '/'
+    next_url = app_url
 
     for target in req.args.get('next'), req.referrer:
         if not target:

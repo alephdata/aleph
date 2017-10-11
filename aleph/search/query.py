@@ -11,7 +11,7 @@ class Query(object):
     DOC_TYPES = []
     RETURN_FIELDS = True
     TEXT_FIELDS = ['_all']
-    MULTI_FIELDS = ['collection_id', 'schema']
+    MULTI_FIELDS = ['collection_id', 'schema', 'countries']
     SORT = {
         'default': ['_score']
     }

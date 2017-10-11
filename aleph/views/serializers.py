@@ -61,7 +61,7 @@ class DatedSchema(object):
 
 
 class RoleSchema(Schema, DatedSchema):
-    id = Integer(dump_only=True)
+    id = String(dump_only=True)
     name = String(validate=Length(min=3))
     email = String(validate=Email())
     api_key = String(dump_only=True)
@@ -96,7 +96,7 @@ class RoleCreateSchema(Schema, DatedSchema):
 
 
 class RoleReferenceSchema(Schema):
-    id = Integer(required=True)
+    id = String(required=True)
     name = String(dump_only=True)
     type = String(dump_only=True)
 
@@ -107,15 +107,15 @@ class LoginSchema(Schema):
 
 
 class PermissionSchema(Schema, DatedSchema):
-    id = Integer(dump_only=True)
+    id = String(dump_only=True)
     write = Boolean(required=True)
     read = Boolean(required=True)
-    collection_id = Integer(dump_only=True, required=True)
+    collection_id = String(dump_only=True, required=True)
     role = Nested(RoleReferenceSchema)
 
 
 class AlertSchema(Schema, DatedSchema):
-    id = Integer(dump_only=True)
+    id = String(dump_only=True)
     query_text = String()
     entity_id = String()
     label = String()
@@ -130,7 +130,7 @@ class AlertSchema(Schema, DatedSchema):
 
 
 class CollectionSchema(Schema, DatedSchema):
-    id = Integer(dump_only=True)
+    id = String(dump_only=True)
     label = String(validate=Length(min=2, max=500), required=True)
     foreign_id = String()
     summary = String(allow_none=True)
@@ -142,9 +142,10 @@ class CollectionSchema(Schema, DatedSchema):
 
     @post_dump
     def transient(self, data):
-        data['$uri'] = url_for('collections_api.view', id=data.get('id'))
-        data['$ui'] = collection_url(data.get('id'))
-        data['$writeable'] = request.authz.can_write(data.get('id'))
+        id_ = str(data.get('id'))
+        data['$uri'] = url_for('collections_api.view', id=id_)
+        data['$ui'] = collection_url(id_)
+        data['$writeable'] = request.authz.can_write(id_)
         return data
 
 
