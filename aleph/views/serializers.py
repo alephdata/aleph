@@ -73,7 +73,7 @@ class RoleSchema(Schema, DatedSchema):
     def transient(self, data):
         data['$uri'] = url_for('roles_api.view', id=data.get('id'))
         writeable = False
-        if request.authz.id == data.get('id'):
+        if str(request.authz.id) == str(data.get('id')):
             writeable = True
         data['$writeable'] = writeable
         if not request.authz.is_admin and not writeable:

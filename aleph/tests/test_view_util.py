@@ -11,13 +11,11 @@ class ViewUtilTest(TestCase):
 
     def test_extract_next_url_blank(self):
         req = Request.from_values('')
-
-        self.assertEqual('/', extract_next_url(req))
+        self.assertEqual('http://localhost:5000/', extract_next_url(req))
 
     def test_extract_next_url_unsafe(self):
         req = Request.from_values('/?next={}'.format(self.fake.url()))
-
-        self.assertEqual('/', extract_next_url(req))
+        self.assertEqual('http://localhost:5000/', extract_next_url(req))
 
     def test_extract_next_url_safe(self):
         req = Request.from_values('/?next=/help')

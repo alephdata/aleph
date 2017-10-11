@@ -67,4 +67,4 @@ class SessionsApiTestCase(TestCase):
 
         assert res.status_code == 200, res
         data = jwt.decode(res.json['token'], verify=False)
-        assert data['role']['id'] == self.role.id, res
+        assert data['role']['id'] == str(self.role.id), res
