@@ -6,34 +6,25 @@ import { keyBy, xor, debounce, fromPairs } from 'lodash';
 import { endpoint } from '../api';
 
 import SearchFilterTick from './SearchFilterTick';
+import SearchFilterText from './SearchFilterText';
 
 import './SearchFilterCollections.css';
 
 const SearchFilterCollectionsList = ({ collections, details, onClick }) => (
-  <div className="search-filter-collections-col">
-    <div className="search-filter-collections-col__row">
-      <div className="pt-input-group pt-large">
-        <span className="pt-icon pt-icon-search"/>
-        <input className="search-input pt-input" type="search" />
-      </div>
-    </div>
-    <div className="search-filter-collections-col__flex-row">
-      <ul className="search-filter-collections-list">
-        {collections.map(collection => (
-          <li key={collection.id} onClick={onClick.bind(null, collection.id)}>
-            <h6>{ collection.label }</h6>
-            {details[collection.id] && <p>{ details[collection.id].summary }</p>}
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
+  <ul className="search-filter-collections-list">
+    {collections.map(collection => (
+      <li key={collection.id} onClick={onClick.bind(null, collection.id)}>
+        <h6>{ collection.label }</h6>
+        {details[collection.id] && <p>{ details[collection.id].summary }</p>}
+      </li>
+    ))}
+  </ul>
 );
 
 const SearchFilterCollectionsFacets = ({ facets, onClick }) => (
-  <div className="search-filter-collections-col">
+  <div className="search-filter-collections__col">
     {facets.map(facet => (
-      <div className="search-filter-collections-col__flex-row" key={facet.id}>
+      <div className="search-filter-collections__col__flex-row" key={facet.id}>
         <h4>{facet.label}</h4>
         <ul className="search-filter-collections-facet">
           {facet.items.map(item => (
@@ -53,12 +44,15 @@ const FACETS = [
   {id: 'countries', label: 'Countries'}
 ];
 
+const FACET_IDS = FACETS.map(facet => facet.id);
+
 class SearchFilterCollections extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       isOpen: false,
+      text: '',
       collections: [],
       details: {},
       facets: FACETS.map(facet => ({...facet, items: [], selectedItems: []})),
@@ -70,11 +64,17 @@ class SearchFilterCollections extends Component {
     this.toggleOpen = this.toggleOpen.bind(this);
     this.toggleFacetItem = this.toggleFacetItem.bind(this);
     this.toggleCollection = this.toggleCollection.bind(this);
+    this.onTextChange = this.onTextChange.bind(this);
   }
 
-  componentDidUpdate({ queryText }) {
-    if (queryText !== this.props.queryText) {
-      this.setState({ loaded: false });
+  componentDidUpdate({ queryText }, { text }) {
+    if (queryText !== this.props.queryText || text !== this.state.text) {
+      // Don't show loading while category searching is in progress
+      this.setState({ loaded: queryText === this.props.queryText });
+
+      if (this.state.isOpen) {
+        this.fetchCollections();
+      }
     }
   }
 
@@ -92,7 +92,8 @@ class SearchFilterCollections extends Component {
           });
 
         return endpoint.get('collections', {params: {
-          'facet': FACETS.map(facet => facet.id),
+          'facet': FACET_IDS,
+          'q': this.state.text,
           'filter:id': collections.map(collection => collection.id),
           ...fromPairs(filters)
         }});
@@ -137,8 +138,12 @@ class SearchFilterCollections extends Component {
     onChange(newValue);
   }
 
+  onTextChange(text) {
+    this.setState({text});
+  }
+
   render() {
-    const { isOpen, loaded, collections, details, facets } = this.state;
+    const { isOpen, loaded, text, collections, details, facets } = this.state;
 
     return (
       <div>
@@ -150,7 +155,15 @@ class SearchFilterCollections extends Component {
                 className="search-filter-collections-dialog">
           {loaded ?
             <div className="search-filter-collections">
-              <SearchFilterCollectionsList collections={collections} details={details} onClick={this.toggleCollection} />
+              <div className="search-filter-collections__col">
+                <div className="search-filter-collections__col__row">
+                  <SearchFilterText onChange={this.onTextChange} currentValue={text} />
+                </div>
+                <div className="search-filter-collections__col__flex-row">
+                  <SearchFilterCollectionsList collections={collections} details={details} onClick={this.toggleCollection} />
+                </div>
+              </div>
+
               <SearchFilterCollectionsFacets facets={facets} onClick={this.toggleFacetItem} />
             </div> :
             <Spinner className="search-filter-loading pt-large" />}

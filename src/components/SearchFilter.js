@@ -3,16 +3,9 @@ import React, { Component } from 'react';
 import SearchFilterCountries from './SearchFilterCountries';
 import SearchFilterCollections from './SearchFilterCollections';
 import SearchFilterSchema from './SearchFilterSchema';
+import SearchFilterText from './SearchFilterText';
 
 import './SearchFilter.css';
-
-const SearchFilterText = ({ currentValue, onChange }) => (
-  <div className="search-query__text pt-input-group pt-large">
-    <span className="pt-icon pt-icon-search"/>
-    <input className="search-input pt-input" type="search"
-      onChange={evt => onChange(evt.target.value)} value={currentValue} />
-  </div>
-);
 
 class SearchFilter extends Component {
   constructor(props)  {

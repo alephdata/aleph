@@ -1,21 +1,12 @@
 @import "~@blueprintjs/core/dist/variables";
 
-// Overrides some .pt-dialog CSS
-.search-filter-collections-dialog.pt-dialog {
-  top: ($pt-grid-size * 2);
-  bottom: ($pt-grid-size * 2);
-  width: calc(100% - #{$pt-grid-size * 4});
-  margin-bottom: 0;
-  padding-bottom: $pt-grid-size;
-}
-
 .search-filter-collections {
   display: flex;
   height: 100%;
   margin-top: $pt-grid-size;
 }
 
-.search-filter-collections-col {
+.search-filter-collections__col {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -30,12 +21,12 @@
   }
 }
 
-.search-filter-collections-col__row,
-.search-filter-collections-col__flex-row {
+.search-filter-collections__col__row,
+.search-filter-collections__col__flex-row {
   margin: $pt-grid-size ($pt-grid-size * 2);
 }
 
-.search-filter-collections-col__flex-row {
+.search-filter-collections__col__flex-row {
   flex: 1;
   overflow: auto;
 }
@@ -94,4 +85,13 @@
       background-color: $gray5;
     }
   }
+}
+
+// Overrides some .pt-dialog CSS
+.search-filter-collections-dialog.pt-dialog {
+  top: ($pt-grid-size * 2);
+  bottom: ($pt-grid-size * 2);
+  width: calc(100% - #{$pt-grid-size * 4});
+  margin-bottom: 0;
+  padding-bottom: $pt-grid-size;
 }
