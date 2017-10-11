@@ -205,10 +205,12 @@ The metadata of two entities can be merged into one. The resulting entity is add
 
 ### Authorization and Access Control
 
-By default, any Aleph search will return only public documents in responses to API requests. If you want to access documents which are not marked public, you will need to sign into the tool. This can be done either using the OAuth login flow (i.e. by directing the user to `/api/2/sessions/login`, and then making all further requests using the resulting session cookie), or through the use of an **API key**.
+By default, any Aleph search will return only public documents in responses to API requests. If you want to access documents which are not marked public, you will need to sign into the tool. This can be done using the OAuth login flow (i.e. by directing the user to `/api/2/sessions/login`), with a password-based login that returns a JSON Web Token (JWT), or through the use of an **API key**.
 
 The API key for any account can be found by clicking on the "Profile" menu item in the navigation menu. It must be sent on all queries using the `Authorization` HTTP header:
 
 <pre>Authorization: ApiKey 363af1e2b03b41c6b3adc604956e2f66</pre>
 
-The authorization status of a user can be checked at any time by calling the `/api/2/sessions` endpoint, which also includes the user profile and details regarding their access rights.
+Similarly, a JWT can be sent in the Authorization header, after it has been returned by the login and/or OAuth processes.
+
+Aleph does not use session cookies or any other type of stateful API.
