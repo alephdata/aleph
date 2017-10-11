@@ -57,9 +57,3 @@ cffi>=1.10.0
 
 # Python 3 backports
 functools32>=3.2
-
-# Docs
-# -r requirements-docs.txt
-
-# Testing
--r requirements-testing.txt
