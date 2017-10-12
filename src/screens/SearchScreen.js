@@ -4,6 +4,7 @@ import queryString from 'query-string';
 import { debounce, isEqual, pickBy, mergeWith, isArray } from 'lodash';
 
 import { fetchSearchResults } from '../actions';
+import filters from '../filters';
 
 import SearchResultList from '../components/SearchResultList';
 import SearchFilter from '../components/SearchFilter';
@@ -13,9 +14,9 @@ function parseQuery(search) {
 
   return mergeWith({
     'q': '',
-    'filter:schema': '',
-    'filter:countries': [],
-    'filter:collection_id': []
+    [filters.SCHEMA]: '',
+    [filters.COUNTRIES]: [],
+    [filters.COLLECTIONS]: []
   }, searchQuery, (defaultValue, newValue) => {
     return newValue !== undefined ?
       isArray(defaultValue) ? defaultValue.concat(newValue) : newValue :

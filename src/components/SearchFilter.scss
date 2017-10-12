@@ -1,10 +1,7 @@
 @import "~@blueprintjs/core/dist/variables";
 
 .search-filter {
-  padding: $pt-grid-size * 2;
   margin-bottom: $pt-grid-size * 2;
-  background-color: $gray3;
-  color: white;
 }
 
 .search-input.pt-input[type="search"] {
@@ -13,17 +10,33 @@
 
 .search-query {
   display: flex;
+  flex-wrap: wrap;
+  padding: $pt-grid-size * 2;
+  padding-right: $pt-grid-size;
+  padding-bottom: $pt-grid-size;
+  background-color: $gray3;
+  color: $white;
+
+  & > div {
+    margin-right: $pt-grid-size;
+    margin-bottom: $pt-grid-size;
+  }
 }
 
 .search-query__text {
   flex: 1;
 }
 
-.search-query__text,
-.search-query__button {
-  padding-right: $pt-grid-size;
-  &:last-child {
-    padding-right: 0;
+.search-query__filters {
+  width: 100%;
+  font-size: $pt-font-size-small;
+
+  .pt-tag[data-filter='filter:collection_id'] {
+    background-color: transparentize($blue1, 0.6);
+  }
+
+  .pt-tag[data-filter='filter:countries'] {
+    background-color: transparentize($blue3, 0.6);
   }
 }
 

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { fetchMetadata, fetchSession } from '../actions';
+import { fetchCollections, fetchMetadata, fetchSession } from '../actions';
 import { Spinner } from "@blueprintjs/core";
 import PageNavbar from '../components/PageNavbar';
 
 class PageLayout extends Component {
 
   componentWillMount() {
+    this.props.fetchCollections()
     this.props.fetchMetadata()
     this.props.fetchSession()
   }
@@ -37,7 +38,7 @@ const mapStateToProps = (state, ownProps) => {
 
 PageLayout = connect(
   mapStateToProps,
-  { fetchMetadata, fetchSession }
+  { fetchCollections, fetchMetadata, fetchSession }
 )(PageLayout);
 
 export default PageLayout;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Button, Popover, Position, Spinner } from '@blueprintjs/core';
-import xor from 'lodash/xor';
 
 import { endpoint } from '../api';
 
@@ -15,51 +14,42 @@ class SearchFilterCountries extends Component {
 
     this.state = {
       countries: [],
-      loaded: false
+      hasLoaded: false
     };
 
     this.onOpen = this.onOpen.bind(this);
-    this.toggleCountry = this.toggleCountry.bind(this);
   }
 
   componentDidUpdate({ queryText }) {
     if (queryText !== this.props.queryText) {
-      this.setState({loaded: false});
+      this.setState({hasLoaded: false});
     }
   }
 
   onOpen() {
-    if (!this.state.loaded) {
+    if (!this.state.hasLoaded) {
       endpoint.get('search', {params: {q: this.props.queryText, facet: 'countries'}})
         .then(response => {
           this.setState({
             countries: response.data.facets.countries.values,
-            loaded: true
+            hasLoaded: true
           });
         });
     }
   }
 
-  toggleCountry(countryId) {
-    const { currentValue, onChange } = this.props;
-    const newValue = xor(currentValue, [countryId]);
-    onChange(newValue);
-  }
-
   render() {
-    const { currentValue } = this.props;
-    const { countries, loaded } = this.state;
+    const { currentValue, onChange } = this.props;
+    const { countries, hasLoaded } = this.state;
 
     return (
       <Popover popoverClassName="search-filter-countries" position={Position.BOTTOM}
                popoverWillOpen={this.onOpen} inline>
         <Button rightIconName="caret-down">
           <FormattedMessage id="search.countries" defaultMessage="Countries"/>
-          {loaded && <span> (<FormattedNumber value={countries.length} />)</span>}
         </Button>
-        {loaded ?
-          <SearchFilterList items={countries} selectedItems={currentValue}
-            onItemClick={this.toggleCountry} /> :
+        {hasLoaded ?
+          <SearchFilterList items={countries} selectedItems={currentValue} onItemClick={onChange} /> :
           <Spinner className="search-filter-loading pt-large" />}
       </Popover>
     );

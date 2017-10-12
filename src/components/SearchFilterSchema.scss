@@ -2,15 +2,17 @@
 
 .search-filter-schema {
   list-style: none;
-  margin: $pt-grid-size 0 0;
-  padding: 0;
+  margin: 0;
+  padding: $pt-grid-size ($pt-grid-size * 2) 0;
+  background-color: $gray4;
+  color: $dark-gray5;
 
   & > li {
     display: inline-block;
-    padding: $pt-grid-size;
+    padding: ($pt-grid-size / 2) $pt-grid-size;
     cursor: pointer;
-    border-radius: $pt-border-radius;
     white-space: nowrap;
+    border-bottom: 2px solid transparent;
 
     & > .schema-icon {
       float: left;
@@ -21,8 +23,8 @@
     }
 
     &.is-selected {
-      transition: background-color 0.2s ease-out;
-      background-color: $gray1;
+      transition: border-bottom-color 0.2s ease-out;
+      border-bottom-color: $dark-gray5;
     }
   }
 }
