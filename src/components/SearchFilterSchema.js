@@ -12,7 +12,7 @@ const SearchFilterSchema = ({ schemas, onChange, currentValue }) => (
     <li className={c({'is-selected': !currentValue})} onClick={onChange.bind(null, null)}>
       <SchemaIcon />
       <span className="search-filter-schema-type">
-        <FormattedMessage id="search.schema.all" defaultMessage="All Results"/><br />
+        <FormattedMessage id="search.schema.all" defaultMessage="All results"/><br />
         <FormattedNumber value={sumBy(schemas, 'count')} />
       </span>
     </li>

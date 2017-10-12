@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Button, Checkbox, Dialog, Spinner } from '@blueprintjs/core';
-import { xor, debounce, fromPairs } from 'lodash';
+import { xor, debounce, fromPairs, isEqual } from 'lodash';
 
 import { endpoint } from '../api';
 
@@ -60,16 +60,16 @@ class SearchFilterCollections extends Component {
 
     this.toggleOpen = this.toggleOpen.bind(this);
     this.toggleFacetItem = this.toggleFacetItem.bind(this);
-    this.toggleCollection = this.toggleCollection.bind(this);
     this.onTextChange = this.onTextChange.bind(this);
   }
 
-  componentDidUpdate({ queryText }, { searchText }) {
+  componentDidUpdate({ queryText }, { searchText, facets }) {
     if (queryText !== this.props.queryText) {
       this.setState({ hasLoaded: false });
     }
 
-    if (this.state.isOpen && (!this.state.hasLoaded || searchText !== this.state.searchText)) {
+    if (this.state.isOpen && (!this.state.hasLoaded || searchText !== this.state.searchText ||
+                              !isEqual(facets, this.state.facets))) {
       this.fetchCollections();
     }
   }
@@ -108,9 +108,7 @@ class SearchFilterCollections extends Component {
         // Stop race conditions where an earlier fetch returns after a later one
         if (fetchTime === this.lastFetchTime) {
           this.setState({
-            // TODO: remove cast of ID to string when collection IDs become strings
-            // https://github.com/alephdata/aleph/issues/224
-            collections: data.results.map(collection => ({...collection, id: '' + collection.id})),
+            collections: data.results,
             hasLoaded: true,
             facets: this.state.facets.map(facet => ({
               ...facet,
@@ -136,13 +134,6 @@ class SearchFilterCollections extends Component {
     });
 
     this.setState({facets});
-    this.fetchCollections();
-  }
-
-  toggleCollection(collectionId) {
-    const { currentValue, onChange } = this.props;
-    const newValue = xor(currentValue, [collectionId]);
-    onChange(newValue);
   }
 
   onTextChange(searchText) {
@@ -151,13 +142,12 @@ class SearchFilterCollections extends Component {
 
   render() {
     const { isOpen, hasLoaded, searchText, collections, facets } = this.state;
-    const { currentValue } = this.props;
+    const { currentValue, onChange } = this.props;
 
     return (
       <div>
         <Button rightIconName="caret-down" onClick={this.toggleOpen}>
-          <FormattedMessage id="search.collections" defaultMessage="Collections"/>
-          {hasLoaded && <span> (<FormattedNumber value={collections.length} />)</span>}
+          <FormattedMessage id="search.collections" defaultMessage="Collections" />
         </Button>
         <Dialog isOpen={isOpen} onClose={this.toggleOpen} title="Select collections"
                 className="search-filter-collections-dialog">
@@ -169,7 +159,7 @@ class SearchFilterCollections extends Component {
                 </div>
                 <div className="search-filter-collections__col__flex-row">
                   <SearchFilterCollectionsList collections={collections}
-                    selectedCollections={currentValue} onClick={this.toggleCollection} />
+                    selectedCollections={currentValue} onClick={onChange} />
                 </div>
               </div>
 

@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { mapValues, xor } from 'lodash';
+
+import filters from '../filters';
 
 import SearchFilterCountries from './SearchFilterCountries';
 import SearchFilterCollections from './SearchFilterCollections';
@@ -14,47 +18,98 @@ class SearchFilter extends Component {
     this.state = {
       query: props.query
     };
+
+    this.onSingleFilterChange = this.onMultiFilterChange.bind(this);
+    this.onMultiFilterChange = this.onMultiFilterChange.bind(this);
   }
 
-  onChange(key, value) {
+  onSingleFilterChange(filter, value) {
     const query = {
       ...this.state.query,
-      [key]: value
-    };
+      [filter]: value
+    }
+
+    this.setState({query});
+    this.props.updateQuery(query);
+  }
+
+  onMultiFilterChange(filter, value) {
+    const query = {
+      ...this.state.query,
+      [filter]: xor(this.state.query[filter], [value])
+    }
 
     this.setState({query});
     this.props.updateQuery(query);
   }
 
   render() {
-    const { result } = this.props;
+    const { result, collections, countries } = this.props;
     const { query } = this.state;
 
-    const filterProps = key => {
+    // Standardised props passed to filters
+    const filterProps = onChange => filter => {
       return {
-        onChange: this.onChange.bind(this, key),
-        currentValue: query[key],
+        onChange: onChange.bind(null, filter),
+        currentValue: query[filter],
         queryText: query.q
       };
     };
 
+    const singleFilterProps = filterProps(this.onSingleFilterChange);
+    const multiFilterProps = filterProps(this.onMultiFilterChange);
+
+    // Generate list of active filters we want to display
+    const activeFilterTagsFn = (filter, labels) =>
+      query[filter]
+        .map(id => ({ id, filter, label: labels[id] }))
+        .sort((a, b) => a.label < b.label ? -1 : 1)
+
+    const activeFilterTags = [
+      ...activeFilterTagsFn(filters.COUNTRIES, countries),
+      ...activeFilterTagsFn(filters.COLLECTIONS, collections)
+    ];
+
     return (
       <div className="search-filter">
         <div className="search-query">
-          <SearchFilterText {...filterProps('q')} />
-          <div className="search-query__button pt-large">
-            <SearchFilterCountries {...filterProps('filter:countries')} />
+          <div className="search-query__text">
+            <SearchFilterText {...singleFilterProps('q')} />
           </div>
-          <div className="search-query__button pt-large">
-            <SearchFilterCollections {...filterProps('filter:collection_id')} />
+          <div className="pt-large">
+            <SearchFilterCountries {...multiFilterProps(filters.COUNTRIES)} />
           </div>
+          <div className="pt-large">
+            <SearchFilterCollections {...multiFilterProps(filters.COLLECTIONS)} />
+          </div>
+          {activeFilterTags.length > 0 &&
+            <div className="search-query__filters">
+              Filtering for
+              {activeFilterTags.map((tag, i) => (
+                <span key={tag.id}>
+                  {i > 0 ? (i < activeFilterTags.length - 1 ? ', ' : ' or ') : ' '}
+                  <span className="pt-tag pt-tag-removable" data-filter={tag.filter}>
+                    {tag.label}
+                    <button className="pt-tag-remove"
+                      onClick={this.onMultiFilterChange.bind(null, tag.filter, tag.id)} />
+                  </span>
+                </span>
+              ))}
+          </div>}
         </div>
         { result.total > 0 &&
           <SearchFilterSchema schemas={result.facets.schema.values}
-            {...filterProps('filter:schema')} /> }
+            {...singleFilterProps(filters.SCHEMA)} /> }
       </div>
     );
   }
 }
+
+const mapStateToProps = ({ metadata, collections }) => ({
+  countries: metadata.countries,
+  collections: mapValues(collections.results, 'label')
+});
+
+SearchFilter = connect(mapStateToProps)(SearchFilter);
 
 export default SearchFilter;

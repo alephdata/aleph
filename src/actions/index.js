@@ -1,16 +1,11 @@
-import uniq from 'lodash/uniq';
-
 import { endpoint } from '../api';
 
-export const fetchCollections = ids => (dispatch, getState) => {
-  const { collections } = getState();
-  const newIds = uniq(ids).filter(id => !collections.results[id]);
+export const fetchCollections = () => (dispatch) => {
+  const limit = 5000;
 
   function fetchCollectionsPages(page=1) {
-    const limit = 50;
-
     return endpoint.get('collections', {
-        params: { 'filter:id': newIds, limit, offset: (page - 1) * limit }
+        params: { limit, offset: (page - 1) * limit }
       })
       .then(response => {
         dispatch({
@@ -24,9 +19,7 @@ export const fetchCollections = ids => (dispatch, getState) => {
       });
   }
 
-  if (newIds.length > 0) {
-    fetchCollectionsPages();
-  }
+  fetchCollectionsPages();
 };
 
 export const fetchSearchResults = (filters) => (dispatch) => {
@@ -44,9 +37,6 @@ export const fetchSearchResults = (filters) => (dispatch) => {
         filters,
         result
       });
-
-      const collectionIds = result.results.map(result => result.collection_id);
-      dispatch(fetchCollections(collectionIds));
     });
 };
 
