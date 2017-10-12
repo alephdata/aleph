@@ -35,31 +35,41 @@
   list-style: none;
   margin: 0;
   padding: 0;
+}
 
-  & > li {
-    position: relative;
-    cursor: pointer;
-    padding: $pt-grid-size $pt-grid-size 0 ($pt-grid-size * 2 + 16px);
-    overflow: auto;
-    width: 100%;
+.search-filter-collections-list-item {
+  position: relative;
+  padding-top: $pt-grid-size;
+  padding-right: ($pt-grid-size * 2 + 16px);
+  padding-left: ($pt-grid-size * 2 + 16px);
+  cursor: pointer;
+  overflow: auto;
+  width: 100%;
 
-    &::before {
-      content: "";
-      position: absolute;
-      top: $pt-grid-size;;
-      left: $pt-grid-size;
-      background-image: url(./icons/collection.svg);
-      width: 16px;
-      height: 16px;
-    }
+  &::before {
+    content: "";
+    position: absolute;
+    top: $pt-grid-size;;
+    left: $pt-grid-size;
+    background-image: url(./icons/collection.svg);
+    width: 16px;
+    height: 16px;
+  }
 
-    &:nth-child(odd) {
-      background: $light-gray5;
-    }
+  &:nth-child(odd) {
+    background: $light-gray5;
+  }
 
-    &:hover {
-      background-color: $gray5;
-    }
+  &:hover {
+    background-color: $gray5;
+  }
+
+  & > .pt-checkbox {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    right: 0;
+    margin: 0;
   }
 }
 

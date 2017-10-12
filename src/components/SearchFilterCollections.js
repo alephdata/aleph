@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { Button, Dialog, Spinner } from '@blueprintjs/core';
+import { Button, Checkbox, Dialog, Spinner } from '@blueprintjs/core';
 import { xor, debounce, fromPairs } from 'lodash';
 
 import { endpoint } from '../api';
@@ -10,12 +10,14 @@ import SearchFilterText from './SearchFilterText';
 
 import './SearchFilterCollections.css';
 
-const SearchFilterCollectionsList = ({ collections, onClick }) => (
+const SearchFilterCollectionsList = ({ collections, selectedCollections, onClick }) => (
   <ul className="search-filter-collections-list">
     {collections.map(collection => (
-      <li key={collection.id} onClick={onClick.bind(null, collection.id)}>
-        <h6>{ collection.label }</h6>
-        <p>{ collection.summary }</p>
+      <li className="search-filter-collections-list-item"
+          onClick={onClick.bind(null, '' + collection.id)} key={collection.id}>
+        <h6>{collection.label}</h6>
+        <p>{collection.summary}</p>
+        <Checkbox checked={selectedCollections.indexOf(collection.id) > -1} readOnly />
       </li>
     ))}
   </ul>
@@ -106,7 +108,9 @@ class SearchFilterCollections extends Component {
         // Stop race conditions where an earlier fetch returns after a later one
         if (fetchTime === this.lastFetchTime) {
           this.setState({
-            collections: data.results,
+            // TODO: remove cast of ID to string when collection IDs become strings
+            // https://github.com/alephdata/aleph/issues/224
+            collections: data.results.map(collection => ({...collection, id: '' + collection.id})),
             hasLoaded: true,
             facets: this.state.facets.map(facet => ({
               ...facet,
@@ -147,6 +151,7 @@ class SearchFilterCollections extends Component {
 
   render() {
     const { isOpen, hasLoaded, searchText, collections, facets } = this.state;
+    const { currentValue } = this.props;
 
     return (
       <div>
@@ -163,7 +168,8 @@ class SearchFilterCollections extends Component {
                   <SearchFilterText onChange={this.onTextChange} currentValue={searchText} />
                 </div>
                 <div className="search-filter-collections__col__flex-row">
-                  <SearchFilterCollectionsList collections={collections} onClick={this.toggleCollection} />
+                  <SearchFilterCollectionsList collections={collections}
+                    selectedCollections={currentValue} onClick={this.toggleCollection} />
                 </div>
               </div>
 
