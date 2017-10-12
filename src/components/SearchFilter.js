@@ -19,7 +19,7 @@ class SearchFilter extends Component {
       query: props.query
     };
 
-    this.onSingleFilterChange = this.onMultiFilterChange.bind(this);
+    this.onSingleFilterChange = this.onSingleFilterChange.bind(this);
     this.onMultiFilterChange = this.onMultiFilterChange.bind(this);
   }
 
