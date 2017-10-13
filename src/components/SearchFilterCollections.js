@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, Checkbox, Dialog, Spinner } from '@blueprintjs/core';
+import { Button, Checkbox, Dialog, NonIdealState, Spinner } from '@blueprintjs/core';
 import { debounce, fromPairs, xor } from 'lodash';
 
 import { endpoint } from '../api';
@@ -147,6 +147,9 @@ class SearchFilterCollections extends Component {
                     isFetching={isStale} />
                 </div>
                 <div className="search-filter-collections__col__flex-row">
+                  {filteredCollections.length === 0 && 
+                    <NonIdealState visual="search" title="No matching collections found"
+                      description="Try making your search more general" />}
                   <SearchFilterCollectionsList collections={filteredCollections}
                     selectedCollections={currentValue} onClick={onChange} />
                 </div>
