@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { mapValues, xor } from 'lodash';
 
+import { endpoint } from '../api';
 import filters from '../filters';
 
 import SearchFilterCountries from './SearchFilterCountries';
@@ -16,11 +17,25 @@ class SearchFilter extends Component {
     super(props);
 
     this.state = {
-      query: props.query
+      query: props.query,
+      queryCountries: null,
+      queryCollectionIds: null
     };
 
     this.onSingleFilterChange = this.onSingleFilterChange.bind(this);
     this.onMultiFilterChange = this.onMultiFilterChange.bind(this);
+
+    this.onCountriesOpen = this.onCountriesOpen.bind(this);
+    this.onCollectionsOpen = this.onCollectionsOpen.bind(this);
+  }
+
+  componentDidUpdate(prevProps, { query }) {
+    if (query.q !== this.state.query.q) {
+      this.setState({
+        queryCountries: null,
+        queryCollectionIds: null
+      });
+    }
   }
 
   onSingleFilterChange(filter, value) {
@@ -43,16 +58,33 @@ class SearchFilter extends Component {
     this.props.updateQuery(query);
   }
 
+  onCountriesOpen() {
+    if (this.state.queryCountries === null) {
+      endpoint.get('search', {params: {q: this.state.query.q, facet: 'countries'}})
+        .then(({ data }) => this.setState({
+          queryCountries: data.facets.countries.values
+        }));
+    }
+  }
+
+  onCollectionsOpen() {
+    if (this.state.queryCollectionIds === null) {
+      endpoint.get('search', {params: {q: this.props.queryText, facet: 'collection_id'}})
+        .then(({ data }) => this.setState({
+          queryCollectionIds: data.facets.collection_id.values.map(collection => collection.id)
+        }));
+    }
+  }
+
   render() {
     const { result, collections, countries } = this.props;
-    const { query } = this.state;
+    const { query, queryCountries, queryCollectionIds } = this.state;
 
     // Standardised props passed to filters
     const filterProps = onChange => filter => {
       return {
         onChange: onChange.bind(null, filter),
-        currentValue: query[filter],
-        queryText: query.q
+        currentValue: query[filter]
       };
     };
 
@@ -74,13 +106,15 @@ class SearchFilter extends Component {
       <div className="search-filter">
         <div className="search-query">
           <div className="search-query__text">
-            <SearchFilterText {...singleFilterProps('q')} />
+            <SearchFilterText {...singleFilterProps('q')} isFetching={result.isFetching} />
           </div>
           <div className="pt-large">
-            <SearchFilterCountries {...multiFilterProps(filters.COUNTRIES)} />
+            <SearchFilterCountries onOpen={this.onCountriesOpen} countries={queryCountries}
+              {...multiFilterProps(filters.COUNTRIES)} />
           </div>
           <div className="pt-large">
-            <SearchFilterCollections {...multiFilterProps(filters.COLLECTIONS)} />
+            <SearchFilterCollections onOpen={this.onCollectionsOpen} collectionIds={queryCollectionIds}
+              {...multiFilterProps(filters.COLLECTIONS)} />
           </div>
           {activeFilterTags.length > 0 &&
             <div className="search-query__filters">

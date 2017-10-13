@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, Checkbox, Dialog, Spinner } from '@blueprintjs/core';
-import { xor, debounce, fromPairs, isEqual } from 'lodash';
+import { debounce, fromPairs, xor } from 'lodash';
 
 import { endpoint } from '../api';
 
@@ -48,68 +48,52 @@ class SearchFilterCollections extends Component {
 
     this.state = {
       isOpen: false,
+      isStale: false,
       searchText: '',
-      collections: [],
       facets: FACETS.map(facet => ({...facet, items: [], selectedItems: []})),
-      hasLoaded: false
+      filteredCollections: null
     };
 
     this.fetchCollections = debounce(this.fetchCollections, 200);
     this.lastFetchTime = null;
-    this.lastCollectionIds = null;
 
     this.toggleOpen = this.toggleOpen.bind(this);
     this.toggleFacetItem = this.toggleFacetItem.bind(this);
     this.onTextChange = this.onTextChange.bind(this);
   }
 
-  componentDidUpdate({ queryText }, { searchText, facets }) {
-    if (queryText !== this.props.queryText) {
-      this.setState({ hasLoaded: false });
+  componentDidUpdate({ collectionIds }) {
+    if (collectionIds !== this.props.collectionIds) {
+      this.setState({filteredCollections: null});
     }
 
-    if (this.state.isOpen && (!this.state.hasLoaded || searchText !== this.state.searchText ||
-                              !isEqual(facets, this.state.facets))) {
+    const { isOpen, isStale, filteredCollections } = this.state;
+    if (isOpen && (isStale || !filteredCollections)) {
       this.fetchCollections();
     }
-  }
-
-  fetchCollectionIds() {
-    return this.state.hasLoaded ?
-      Promise.resolve(this.lastCollectionIds) :
-      endpoint.get('search', {
-          params: {q: this.props.queryText, facet: 'collection_id'}
-        }).then(({ data }) => {
-          this.lastCollectionIds = data.facets.collection_id.values.map(collection => collection.id);
-          return this.lastCollectionIds;
-        });
   }
 
   fetchCollections() {
     const fetchTime = Date.now();
     this.lastFetchTime = fetchTime;
 
-    this.fetchCollectionIds()
-      .then(collectionIds => {
-        const filters = this.state.facets
-          .filter(facet => facet.selectedItems.length > 0)
-          .map(facet => {
-            return [`filter:${facet.id}`, facet.selectedItems];
-          });
+    const filters = this.state.facets
+      .filter(facet => facet.selectedItems.length > 0)
+      .map(facet => {
+        return [`filter:${facet.id}`, facet.selectedItems];
+      });
 
-        return endpoint.get('collections', {params: {
-          facet: FACET_IDS,
-          q: this.state.searchText,
-          'filter:id': collectionIds,
-          ...fromPairs(filters)
-        }});
-      })
-      .then(({ data }) => {
+    endpoint.get('collections', {params: {
+        facet: FACET_IDS,
+        q: this.state.searchText,
+        'filter:id': this.props.collectionIds,
+        ...fromPairs(filters)
+      }}).then(({ data }) => {
         // Stop race conditions where an earlier fetch returns after a later one
         if (fetchTime === this.lastFetchTime) {
           this.setState({
-            collections: data.results,
-            hasLoaded: true,
+            isStale: false,
+            filteredCollections: data.results,
             facets: this.state.facets.map(facet => ({
               ...facet,
               items: data.facets[facet.id].values
@@ -120,7 +104,11 @@ class SearchFilterCollections extends Component {
   }
 
   toggleOpen() {
-    this.setState({ isOpen: !this.state.isOpen });
+    const isOpen = !this.state.isOpen;
+    this.setState({isOpen});
+    if (isOpen) {
+      this.props.onOpen();
+    }
   }
 
   toggleFacetItem(facetId, itemId) {
@@ -133,15 +121,15 @@ class SearchFilterCollections extends Component {
       }
     });
 
-    this.setState({facets});
+    this.setState({facets, isStale: true});
   }
 
   onTextChange(searchText) {
-    this.setState({searchText});
+    this.setState({searchText, isStale: true});
   }
 
   render() {
-    const { isOpen, hasLoaded, searchText, collections, facets } = this.state;
+    const { isOpen, isStale, searchText, facets, filteredCollections } = this.state;
     const { currentValue, onChange } = this.props;
 
     return (
@@ -151,19 +139,21 @@ class SearchFilterCollections extends Component {
         </Button>
         <Dialog isOpen={isOpen} onClose={this.toggleOpen} title="Select collections"
                 className="search-filter-collections-dialog">
-          {hasLoaded ?
+          {filteredCollections !== null ?
             <div className="search-filter-collections">
               <div className="search-filter-collections__col">
                 <div className="search-filter-collections__col__row">
-                  <SearchFilterText onChange={this.onTextChange} currentValue={searchText} />
+                  <SearchFilterText onChange={this.onTextChange} currentValue={searchText}
+                    isFetching={isStale} />
                 </div>
                 <div className="search-filter-collections__col__flex-row">
-                  <SearchFilterCollectionsList collections={collections}
+                  <SearchFilterCollectionsList collections={filteredCollections}
                     selectedCollections={currentValue} onClick={onChange} />
                 </div>
               </div>
 
-              <SearchFilterCollectionsFacets facets={facets} toggleFacetItem={this.toggleFacetItem} />
+              <SearchFilterCollectionsFacets facets={facets}
+                toggleFacetItem={this.toggleFacetItem} />
             </div> :
             <Spinner className="search-filter-loading pt-large" />}
         </Dialog>

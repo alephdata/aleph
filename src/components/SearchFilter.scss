@@ -4,8 +4,18 @@
   margin-bottom: $pt-grid-size * 2;
 }
 
-.search-input.pt-input[type="search"] {
-  border-radius: $pt-border-radius;
+.search-input {
+  position: relative;
+
+  & > .pt-input[type="search"] {
+    border-radius: $pt-border-radius;
+  }
+
+  & > .pt-spinner {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 }
 
 .search-query {
