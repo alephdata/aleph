@@ -1,5 +1,6 @@
 const initialState = {
-  isFetching: false,
+  // Gets rid of a FOUC but technically not great
+  isFetching: true,
   results: []
 };
 
