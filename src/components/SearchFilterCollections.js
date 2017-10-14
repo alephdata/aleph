@@ -144,7 +144,7 @@ class SearchFilterCollections extends Component {
               <div className="search-filter-collections__col">
                 <div className="search-filter-collections__col__row">
                   <SearchFilterText onChange={this.onTextChange} currentValue={searchText}
-                    isFetching={isStale} />
+                    showSpinner={isStale} />
                 </div>
                 <div className="search-filter-collections__col__flex-row">
                   {filteredCollections.length === 0 && 

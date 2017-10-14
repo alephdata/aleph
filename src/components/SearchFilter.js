@@ -106,7 +106,7 @@ class SearchFilter extends Component {
       <div className="search-filter">
         <div className="search-query">
           <div className="search-query__text">
-            <SearchFilterText {...singleFilterProps('q')} isFetching={result.isFetching} />
+            <SearchFilterText {...singleFilterProps('q')} showSpinner={result.isFetching} />
           </div>
           <div className="pt-large">
             <SearchFilterCountries onOpen={this.onCountriesOpen} countries={queryCountries}
