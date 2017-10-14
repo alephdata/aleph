@@ -30,12 +30,14 @@
 }
 
 .result__name {
-    width: 50%;
+    width: 40%;
     font-size: 14px;
     font-weight: bold;
 }
 
 .result__collection {
+    width: 20%;
+
     &::before {
         content: "";
         background-image: url(./icons/collection.svg);
@@ -43,4 +45,17 @@
         height: 16px;
         margin-right: $pt-grid-size / 2;
     }
+}
+
+.result-property {
+  &::before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 10px;
+    height: 10px;
+    border-radius: 100px;
+    margin-right: $pt-grid-size;
+    background-color: $blue1;
+  }
 }
