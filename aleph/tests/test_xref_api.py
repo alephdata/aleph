@@ -24,7 +24,7 @@ class XrefApiTestCase(TestCase):
 
         self.ent = Entity.create({
             'schema': 'Person',
-            'name': 'Garak',
+            'name': 'Elim Garak',
         }, self.residents)
         db.session.add(self.ent)
 
@@ -72,7 +72,7 @@ class XrefApiTestCase(TestCase):
 
         self.ent6 = Entity.create({
             'schema': 'Person',
-            'name': 'Elim Garak',
+            'name': 'Elim Garack',
         }, self.obsidian)
         db.session.add(self.ent6)
 

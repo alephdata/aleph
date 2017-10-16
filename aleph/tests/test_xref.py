@@ -43,7 +43,7 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'Person',
-            'name': 'Carlos Danger, Jr.',
+            'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
             'data': {
                 'nationality': 'US'
@@ -54,7 +54,7 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'Company',
-            'name': 'Carlos Danger, Ltd',
+            'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
             'data': {
                 'nationality': 'GB'
@@ -100,7 +100,7 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'Person',
-            'name': 'Carlos Danger, Jr.',
+            'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
             'data': {
                 'nationality': 'US'
@@ -111,7 +111,7 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'Company',
-            'name': 'Carlos Danger, Ltd',
+            'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
             'data': {
                 'nationality': 'GB'
@@ -134,7 +134,7 @@ class XrefTestCase(TestCase):
 
         entity = {
             'schema': 'Company',
-            'name': 'Carlos Danger Enterprises Plc',
+            'name': 'Carlof Danger',
             'collection_id': self.coll_c.id,
             'data': {
                 'nationality': 'FR'
