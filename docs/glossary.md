@@ -2,14 +2,6 @@
 
 Here is some of the vocabulary used by the application.
 
-## Documents
-
-These are the basic search results in Aleph. They can either be *text
-documents* (in which case they are expected to have a number of pages and are
-shown as a PDF in the user interface), or *tabular documents* (in which case
-they can have multiple sheets, each with a number of records. They will be
-shown as tables in the user interface).
-
 ## Collections
 
 These are units documents and entity data used to group items in
@@ -18,6 +10,14 @@ more abstract, such as the name of an organisation or web site that has been
 ingested. It can also be used to group documents and entities relevant to a
 particular investigation.
 
+## Documents
+
+These are the basic search results in Aleph. They can either be *text
+documents* (in which case they are expected to have a number of pages and are
+shown as a PDF in the user interface), or *tabular documents* (in which case
+they can have multiple sheets, each with a number of records. They will be
+shown as tables in the user interface).
+
 ## Foreign IDs
 
 These exist both for documents and collections. They are a little
@@ -25,31 +25,13 @@ piece of text used to identify the origin of information, e.g. the URL of a
 crawled document, or the path of an imported folder. Used to avoid duplicate
 imports when importing the same content twice.
 
-## Metafolder
-
-Represents a format and tools to store a set of documents before
-importing them into Aleph. It's benefit is storing [metadata](#metadata)
-alongside the actual files that are to be imported, while separating
-Aleph from previous workflow stages (e.g. the scraping of a web site).
-
-Metafolders can be generated using the Python
-[metafolder](https://github.com/alephdata/metafolder) library, and the
-[krauler](https://github.com/alephdata/krauler) web crawling/scraping tool.
-
-## Crawlers
-
-Little plug-ins to the Aleph engine which import data into the system. The
-included crawlers are very flexible, such as `DirectoryCrawler` or
-`MetaFolderCrawler`, but specific crawlers can be programmed that will
-import data from a specific source.
-
 ## Ingestors
 
-Plug-ins to the Aleph engine which accept crawled
-files and attempt to extract text pages or tabular rows from them so that
-they can be imported into the system. Ingestors for common file formats like
-Word documents, PDF files or CSV spreadsheets are included, but more exotic
-types can be supported by programming additional ingestors.
+Plug-ins to the Aleph engine which accept crawled files and attempt to extract
+text pages or tabular rows from them so that they can be imported into the
+system. Ingestors for common file formats like Word documents, PDF files or
+CSV spreadsheets are included, but more exotic types can be supported by
+programming additional ingestors.
 
 ## Analyzers
 

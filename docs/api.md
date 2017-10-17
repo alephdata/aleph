@@ -1,10 +1,13 @@
 # Developer API v2.0
 
-Aleph supports an extensive API for searching documents and entities. It can also be used to retrieve raw metadata, source documents and other useful details.
+Aleph supports an extensive API for searching documents and entities. It
+can also be used to retrieve raw metadata, source documents and other useful
+details.
 
 ### General Overview
 
-Aleph's API tries to follow a pragmatic approach based on the following principles:
+Aleph's API tries to follow a pragmatic approach based on the following
+principles:
 
 *   All API calls are prefixed with an API version; this version is `/api/2/`.
 *   Responses and requests are both encoded as JSON. Requests should have the `Content-Type` and `Accept` headers set to `application/json`.

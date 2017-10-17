@@ -47,7 +47,7 @@ def entity_query(sample, collection_id=None, query=None):
             }
         })
 
-    # TODO: put names in FIELDS_XREF up there ^^^ 
+    # TODO: put names in FIELDS_XREF up there ^^^
     # for value in sample.get('names', []):
     #     required.append({
     #         'match': {

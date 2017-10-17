@@ -19,23 +19,18 @@ setup(
         'aleph.init': [
             'occrpext = aleph_occrp:register'
         ]
-        'aleph.crawlers': [
-            'my_crawler = aleph_occrp.my_crawler:CrawlerClass'
-        ]
     }
 )
 ```
 
-See the
-[main setup.py](https://github.com/alephdata/aleph/blob/master/setup.py) for a real
-example.
+See the [main setup.py](https://github.com/alephdata/aleph/blob/master/setup.py)
+for a real example.
 
 The supported entry points include:
 
 * ``aleph.init``, for simple functions to be executed upon system startup.
-* ``aleph.crawlers``, for [Crawlers](#crawlers)
-* ``aleph.ingestors`` to support additional file type imports.
-* ``aleph.analyzers``, which are run to extract structured metadata from documents after they have been imported.
+* ``aleph.analyzers``, which are run to extract structured metadata from
+  documents after they have been imported.
 
 ## Signals
 
@@ -50,74 +45,6 @@ location of Aleph. An example would be:
 
 ```bash
 docker-compose run -e CUSTOM_SCSS_PATH=my.scss app make web
-```
-
-## Creating new crawlers
-
-Custom crawlers are useful to directly import large amounts of data into the
-system. This can make sense for custom scrapers or crawlers where the
-indirection of using [Metafolders](glossary.md#metafolders) is not desirable.
-
-Crawlers are Python classes and exposed via the `entry_point` of a Python
-package. To develop a custom crawler, start by setting up a separate Python
-package with it's own `setup.py` ([learn
-more](https://python-packaging.readthedocs.io/en/latest/)).
-
-A basic crawler will extend the relevant `Crawler` class from Aleph and
-implement its `crawl()` method, below you can find an example:
-
-```python
-from aleph.crawlers import DocumentCrawler
-
-class ExampleCrawler(DocumentCrawler):
-    COLLECTION_ID = 'example'
-
-    def crawl(self):
-	    for i in range(0, 1000):
-		     meta = self.metadata()
-	         meta.foreign_id = 'example-doc:%s' % i
-             meta.title = 'Document Number %s' % i
-             meta.mime_type = 'application/pdf'
-             url = 'https://example.com/documents/%s.pdf' % i
-             self.emit_url(meta, url)
-```
-
-Besides `emit_url`, results can also be forwarded using the `emit_file(meta,
-file_path)` method. If a crawler creates collections, it can use
-`emit_collection(collection, entity_search_terms)` which will start a partial
-re-index of documents.
-
-To support indexing only new documents on incremental/update crawls, you can
-use `self.skip_incremental`:
-
-```python
-    if self.skip_incremental(foreign_id):
-        logger.info("Skipping known %s", foreign_id)
-        return
-```
-
-In order to make sure that Aleph can find the new crawler, it must be added
-to the `setup.py` of your package, see above how plugins work:
-
-```python
-setup(
-    name='mypackage',
-    ...
-    entry_points={
-        'aleph.crawlers': [
-            'example = mypackage.example:ExampleCrawler'
-        ]
-    }
-)
-```
-
-Finally, you must ensure that the plugin package is installed in your `aleph`
-docker container (or using your deployment method), for example by extending
-the `Dockerfile` to include the plugin package. Once this is ready, run the
-crawler from inside the container:
-
-```bash
-docker-compose run app python aleph/manage.py crawl example
 ```
 
 ## Custom OAuth

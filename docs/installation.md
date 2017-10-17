@@ -23,9 +23,11 @@ This is a template of the configuration file. Make a copy of this file named
 To get the OAuth credentials please visit the [Google Developers Console](https://console.developers.google.com/).
 There you will need to [create an API key](https://support.google.com/googleapi/answer/6158862).
 In the **Authorized redirect URIs** section, use this URL:
+
 ```
-http://lvh.me:13376/api/1/sessions/callback/google
+http://localhost:5000/api/1/sessions/callback/google
 ```
+
 Save the client ID and the client secret as `ALEPH_OAUTH_*` values.
 
 Finally you will need to provide a value for the `ALEPH_SECRET_KEY`. A good
@@ -43,11 +45,11 @@ To proceed run:
     leave this open to have access to the development logs.
  2. `make upgrade` to run the latest database migrations and create/update
     any indexes.
- 3. Open `http://lvh.me:13376/` in your browser and proceed with the login.
+ 3. `make web` to run the web-based API server.
+ 4. Open `http://localhost:5000/` in your browser to visit the API server.
 
 Your repository is mounted inside the docker container under the name
-`aleph_app`. You can access these services anytime by running
-`make shell`.
+`aleph_app`. You can access these services anytime by running `make shell`.
 
 ### Building from a clean state
 
@@ -59,7 +61,7 @@ will build the `alephdata/base` image (this is an intermediary image with
 system-level dependencies for Aleph). The second one is `make build`, this will
 build the `alephdata/aleph` image (this will generate a production ready image).
 
-## Front-end
+<!-- ## Front-end
 
 Aleph is transitioning the front-end codebase towards a more modern
 architecture and while this is still a work-in-progress, some of the features
@@ -81,7 +83,7 @@ make assets-dev
 ```
 
 While working on the front-end development, make sure you disable browser
-cache!
+cache! -->
 
 ## Production deployment
 

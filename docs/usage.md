@@ -41,7 +41,7 @@ _virtual_ folders and all their content will be imported under its name.
 
 It is important to note that this method of loadig data provides very limited
 ways of including metadata (ex.: document titles, source URLs or document
-languages). To overcome this, read about [Metafolders](#metafolders).
+languages).
 
 To use this tool, run
 
@@ -60,43 +60,7 @@ multiple times will not duplicate the source files as long as the base path of
 the crawl is identical. The base path of the file is used to identify the
 document source.
 
-### From SQL
+### From SQL and CSV
 
-This method was removed in Aleph 1.1 to make place for future graph loaders.
-The new loaders will provide support for this feature.
-
-If you are interested in bringing this feature back, please get in touch with
-us. The code is still available and can be packaged as a plugin.
-
-### Metafolders
-
-Is a format developed for Aleph to bulk-import many documents while retaining
-relevant metadata. It can be used in scrapers and data cleaning scripts.
-Aleph provides also the tools to work with the format and process Metafolder
-files.
-
-Metafolder files can be generated easily using the Python
-[metafolder](https://github.com/alephdata/metafolder) library, and
-the [krauler](https://github.com/alephdata/krauler) web crawling/scraping tool.
-
-For the metafolder items to be loaded it is important to include the
-information on the document source which they are to be associated with.
-
-An example with minimal metadata is available below. To learn more about metadata
-fields available in Aleph, please check the [Glossary](glossary.md#metadata).
-
-```json
-{
-  "title": "Document title (not required)",
-    "collection": {
-      "label": "The Banana Republic Leaks",
-      "foreign_id": "banana:republic"
-    }
-}
-```
-
-Now this folder can be loaded using:
-
-```bash
-docker-compose run app python aleph/manage.py metafolder <YOUR METAFOLDER PATH>
-```
+See [mappings](mappings.md) for information about how to load structured data
+from SQL databases or CSV files.
