@@ -2,10 +2,8 @@ filters:
   quality: strong
 entities:
   entity:
-    schema: Entity
+    schema: Thing
     key: entity_id
     properties:
       alias:
         column: name
-      # notes:
-      #   column: description

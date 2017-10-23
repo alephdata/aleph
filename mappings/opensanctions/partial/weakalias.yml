@@ -2,10 +2,8 @@ filters:
   quality: weak
 entities:
   entity:
-    schema: Entity
+    schema: Thing
     key: entity_id
     properties:
       weakAlias:
         column: name
-      # notes:
-      #   column: description

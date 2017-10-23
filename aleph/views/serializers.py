@@ -1,4 +1,5 @@
 from flask import request
+from followthemoney import model
 from dalet import is_country_code, is_language_code, is_partial_date
 from marshmallow import Schema, post_dump
 from marshmallow.fields import Nested, Integer, String, DateTime, List
@@ -6,7 +7,7 @@ from marshmallow.fields import Raw, Dict, Boolean, Float
 from marshmallow.exceptions import ValidationError
 from marshmallow.validate import Email, Length
 
-from aleph.core import url_for, get_config, schemata
+from aleph.core import url_for, get_config
 from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
@@ -47,9 +48,8 @@ class PartialDate(String):
 class SchemaName(String):
 
     def _validate(self, value):
-        try:
-            schemata.get(value)
-        except TypeError:
+        schema = model.get(value)
+        if schema is None:
             raise ValidationError('Invalid schema name.')
 
 

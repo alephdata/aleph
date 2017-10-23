@@ -1,10 +1,11 @@
 import logging
-from pprint import pprint  # noqa
-from elasticsearch.helpers import scan
-import xlsxwriter
 import StringIO
+import xlsxwriter
+from pprint import pprint  # noqa
+from followthemoney import model
+from elasticsearch.helpers import scan
 
-from aleph.core import db, es, es_index, schemata, celery
+from aleph.core import db, es, es_index, celery
 from aleph.model import Match, Collection
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
@@ -147,7 +148,7 @@ def generate_matches_sheet(workbook, sheet, collection, match_collection,
             sheet.write_url(row, 1, url, workbook.link_format, name)
         else:
             sheet.write_string(row, 1, name)
-        schema = schemata.get(result.entity['schema'])
+        schema = model.get(result.entity['schema'])
         sheet.write_string(row, 2, schema.label)
         countries = ', '.join(sorted(result.entity.get('countries', [])))
         sheet.write_string(row, 3, countries.upper())
@@ -165,7 +166,7 @@ def generate_matches_sheet(workbook, sheet, collection, match_collection,
             sheet.write_url(row, 5, url, workbook.link_format, name)
         else:
             sheet.write_string(row, 5, name)
-        schema = schemata.get(result.match['schema'])
+        schema = model.get(result.match['schema'])
         sheet.write_string(row, 6, schema.label)
         countries = ', '.join(sorted(result.match.get('countries', [])))
         sheet.write_string(row, 7, countries.upper())

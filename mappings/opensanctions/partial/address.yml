@@ -1,6 +1,6 @@
 entities:
   entity:
-    schema: Entity
+    schema: Thing
     key: entity_id
     properties:
       address:

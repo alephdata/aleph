@@ -3,7 +3,7 @@ from unittest import skip  # noqa
 
 from aleph.tests.util import TestCase
 from aleph.util import load_config_file
-from aleph.logic.bulk import bulk_load
+from aleph.logic.entities import bulk_load
 from aleph.model import Collection
 from aleph.index import flush_index
 

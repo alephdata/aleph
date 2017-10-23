@@ -1,9 +1,10 @@
 import logging
 from datetime import datetime
+from followthemoney import model
 from sqlalchemy import func, or_
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 
-from aleph.core import db, schemata
+from aleph.core import db
 from aleph.text import match_form, string_value
 from aleph.util import ensure_list
 from aleph.model.collection import Collection
@@ -128,7 +129,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
     @property
     def schema(self):
-        return schemata.get(self.type)
+        return model.get(self.type)
 
     @property
     def terms(self):

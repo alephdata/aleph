@@ -22,7 +22,6 @@ kek:
             schema: Company
             keys:
               - comp.id
-            key_fingerprint: true
             properties:
               name:
                 column: comp.name
@@ -33,16 +32,21 @@ kek:
           subsidiary:
             schema: Company
             key: sub.id
-            key_fingerprint: true
             properties:
               name:
                 column: sub.name
               address:
                 template: "{{comp.address}}"
-        links:
-          - schema: ownedBy
-            source: subsidiary
-            target: company
+          ownership:
+            schema: Ownership
+            keys:
+              - comp.id
+              - sub.id
+              - shares.share
             properties:
+              owner:
+                entity: company
+              asset:
+                entity: subsidiary
               percentage:
                 column: shares.share

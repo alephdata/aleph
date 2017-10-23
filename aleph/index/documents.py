@@ -1,8 +1,8 @@
 import logging
+from followthemoney.types import PhoneProperty, EmailProperty, NameProperty
 
 from aleph.core import celery, db, es, es_index
 from aleph.model import Document, DocumentTag
-from aleph.schema.types import PhoneProperty, EmailProperty, NameProperty
 from aleph.index.records import index_records, clear_records
 from aleph.index.mapping import TYPE_DOCUMENT
 from aleph.index.util import index_form, index_names, unpack_result

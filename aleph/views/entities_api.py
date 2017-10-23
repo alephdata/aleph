@@ -7,12 +7,12 @@ from aleph.model import Entity
 from aleph.model.common import merge_data
 from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.collections import update_collection
-from aleph.search import LinksQuery, EntitiesQuery, EntityDocumentsQuery
+from aleph.search import EntitiesQuery, EntityDocumentsQuery
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.search import DatabaseQueryResult, QueryParser
 from aleph.views.util import get_entity, get_collection, jsonify, parse_request
 from aleph.views.cache import enable_cache
-from aleph.views.serializers import EntitySchema, LinkSchema, DocumentSchema
+from aleph.views.serializers import EntitySchema, DocumentSchema
 
 blueprint = Blueprint('entities_api', __name__)
 
@@ -59,16 +59,6 @@ def create():
 def view(id):
     entity, obj = get_entity(id, request.authz.READ)
     return jsonify(entity, schema=EntitySchema)
-
-
-@blueprint.route('/api/2/entities/<id>/links', methods=['GET'])
-def links(id):
-    enable_cache()
-    entity, obj = get_entity(id, request.authz.READ)
-    result = LinksQuery.handle_request(request,
-                                       entity=entity,
-                                       schema=LinkSchema)
-    return jsonify(result)
 
 
 @blueprint.route('/api/2/entities/<id>/similar', methods=['GET'])

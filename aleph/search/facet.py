@@ -1,7 +1,8 @@
 import six
+from followthemoney import model
 from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 
-from aleph.core import schemata, get_config
+from aleph.core import get_config
 from aleph.model import Collection
 
 
@@ -58,7 +59,7 @@ class SchemaFacet(Facet):
     def update(self, result, key):
         key = result.get('id')
         try:
-            result['label'] = schemata.get(key).plural
+            result['label'] = model.get(key).plural
         except NameError:
             result['label'] = key
 

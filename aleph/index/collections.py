@@ -2,11 +2,11 @@ from pprint import pprint  # noqa
 
 from aleph.core import es, es_index
 from aleph.index.stats import get_collection_stats
-from aleph.index.mapping import TYPE_LINK, TYPE_DOCUMENT, TYPE_ENTITY
+from aleph.index.mapping import TYPE_DOCUMENT, TYPE_ENTITY
 from aleph.index.mapping import TYPE_COLLECTION
 from aleph.index.util import query_delete
 
-CHILD_TYPES = [TYPE_LINK, TYPE_DOCUMENT, TYPE_ENTITY]
+CHILD_TYPES = [TYPE_DOCUMENT, TYPE_ENTITY]
 
 
 def index_collection(collection):
