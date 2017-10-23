@@ -1,10 +1,10 @@
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
+from followthemoney.util import merge_data
 from apikit import arg_bool
 
 from aleph.core import db
 from aleph.model import Entity
-from aleph.model.common import merge_data
 from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.collections import update_collection
 from aleph.search import EntitiesQuery, EntityDocumentsQuery
