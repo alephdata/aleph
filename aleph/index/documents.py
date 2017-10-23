@@ -1,4 +1,5 @@
 import logging
+from followthemoney import model
 from followthemoney.types import PhoneProperty, EmailProperty, NameProperty
 
 from aleph.core import celery, db, es, es_index
@@ -36,9 +37,10 @@ def index_document(document):
         return
 
     log.info("Index document [%s]: %s", document.id, document.title)
+    schema = model.get(Document.SCHEMA)
     data = {
-        'schema': document.SCHEMA,
-        'schemata': [document.SCHEMA],
+        'schema': schema.name,
+        'schemata': schema.names,
         'collection_id': document.collection_id,
         'roles': document.collection.roles,
         'type': document.type,

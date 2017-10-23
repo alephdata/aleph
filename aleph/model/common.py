@@ -33,23 +33,6 @@ def object_key(obj):
     return key.hexdigest()
 
 
-def merge_data(base, merge):
-    """Merge two objects such that values in base are kept
-    and updated only if merge has additional info."""
-    if isinstance(base, (list, set, tuple)):
-        data = base + merge
-        data = {object_key(d): d for d in data}
-        return data.values()
-    if isinstance(base, dict):
-        data = dict(base)
-        merge = merge or dict()
-        for k, v in merge.items():
-            b = base.get(k, v)
-            data[k] = merge_data(b, v)
-        return data
-    return merge if base is None else base
-
-
 class IdModel(object):
     id = db.Column(db.Integer(), primary_key=True)
 

@@ -110,8 +110,6 @@ def _index_updates(collection, entities):
         if 'created_at' not in entity:
             entity['created_at'] = entity.get('updated_at')
         schema = model.get(entity.get('schema'))
-        if schema is None:
-            pprint(entity)
         entity = finalize_index(entity, schema)
         # pprint(entity)
         yield {
@@ -169,7 +167,7 @@ def finalize_index(data, schema):
 
     # Get implied schemata (i.e. parents of the actual schema)
     data['schema'] = schema.name
-    data['schemata'] = [p.name for p in schema.schemata if not p.hidden]
+    data['schemata'] = schema.names
 
     # Second name field for non-tokenised sorting.
     if 'name' in data:

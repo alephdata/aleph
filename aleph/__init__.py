@@ -1,7 +1,7 @@
 import logging
 import warnings
-import requests
-import urllib3
+# import requests
+# import urllib3
 from flask.exthook import ExtDeprecationWarning
 from sqlalchemy.exc import SAWarning
 
@@ -13,8 +13,8 @@ warnings.filterwarnings('ignore', category=SAWarning)
 warnings.filterwarnings('ignore', category=ExtDeprecationWarning)
 
 # using SSL w/o certificate validation
-urllib3.disable_warnings()
-requests.packages.urllib3.disable_warnings()
+# urllib3.disable_warnings()
+# requests.packages.urllib3.disable_warnings()
 
 # loggers.
 logging.basicConfig(level=logging.DEBUG)

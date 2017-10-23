@@ -2,7 +2,6 @@ import six
 import logging
 import fingerprints
 from elasticsearch.helpers import bulk
-from banal import clean_dict, unique_list, is_sequence
 from normality import stringify, latinize_text, collapse_spaces, ascii_text
 
 from aleph.core import es, es_index
