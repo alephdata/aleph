@@ -26,7 +26,7 @@ COLLECTION_MAPPING = {
         "countries": {"type": "keyword"},
         "category": {"type": "keyword"},
         "summary": {"type": "text"},
-        "managed": {"type": "boolean", "index": "not_analyzed"},
+        "managed": {"type": "boolean"},
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
         "$total": {"type": "long"},

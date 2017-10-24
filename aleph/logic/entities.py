@@ -126,7 +126,7 @@ def bulk_load_query(collection, query):
             entities = {}
 
     if len(entities):
-        index_bulk(collection, entities)
+        index_bulk(collection, entities, chunk_size=BULK_PAGE)
 
     # Update collection stats
     index_collection(collection)

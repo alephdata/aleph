@@ -15,7 +15,8 @@ def document_url(document_id=None, **query):
 def update_document(document):
     # These are operations that should be executed after each
     # write to a document or its metadata.
-    analyze_document_id.apply_async([document.id], queue=USER_QUEUE,
+    analyze_document_id.apply_async([document.id],
+                                    queue=USER_QUEUE,
                                     routing_key=USER_ROUTING_KEY)
     index.index_document(document)
 

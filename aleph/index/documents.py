@@ -32,10 +32,6 @@ def index_document(document):
     if document.status == Document.STATUS_PENDING:
         return
 
-    # FIXME:
-    if document.type == Document.TYPE_OTHER:
-        return
-
     log.info("Index document [%s]: %s", document.id, document.title)
     schema = model.get(Document.SCHEMA)
     data = {

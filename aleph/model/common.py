@@ -10,29 +10,6 @@ def make_textid():
     return uuid.uuid4().hex
 
 
-def object_key(obj):
-    """Generate a checksum for a nested object or list."""
-    key = sha1()
-
-    if isinstance(obj, (list, set, tuple)):
-        for o in obj:
-            o = object_key(o)
-            if o is not None:
-                key.update(o)
-    elif isinstance(obj, dict):
-        for k, v in obj.items():
-            v = object_key(v)
-            if v is not None:
-                key.update(k)
-                key.update(v)
-    else:
-        v = string_value(obj)
-        if v is not None:
-            key.update(v.encode('utf-8'))
-
-    return key.hexdigest()
-
-
 class IdModel(object):
     id = db.Column(db.Integer(), primary_key=True)
 
