@@ -18,7 +18,7 @@ const ListItem = ({ name, schema, properties, collection }) => (
     </td>
     <td>
       {properties.map(property => (
-        <span className="result-property" data-property={property.name}>
+        <span className="result-property" data-property={property.name} key={property.name}>
           {property.label}
         </span>
       ))}

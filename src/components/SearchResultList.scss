@@ -1,7 +1,12 @@
 @import "~@blueprintjs/core/dist/variables";
 
-.results {
+.results-table {
     width: 100%;
+}
+
+.results-loading {
+  padding: $pt-grid-size;
+  text-align: center;
 }
 
 .result {

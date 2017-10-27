@@ -40,6 +40,20 @@ export const fetchSearchResults = (filters) => (dispatch) => {
     });
 };
 
+export const fetchNextSearchResults = () => (dispatch, getState) => {
+  const { searchResults } = getState();
+
+  if (searchResults.next) {
+    return endpoint.get(searchResults.next)
+      .then(response => {
+        dispatch({
+          type: 'FETCH_SEARCH_NEXT_SUCCESS',
+          result: response.data
+        });
+      });
+  }
+};
+
 export const fetchMetadata = () => (dispatch) => {
   dispatch({
     type: 'FETCH_METADATA_REQUEST'
