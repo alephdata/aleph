@@ -1,0 +1,53 @@
+@import "~@blueprintjs/core/dist/variables";
+
+.results-table {
+    width: 100%;
+}
+
+.results-loading {
+  padding: $pt-grid-size;
+  text-align: center;
+}
+
+.result {
+    font-size: 12px;
+
+    & > td {
+        vertical-align: middle !important;
+        max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &::before {
+            display: inline-block;
+            vertical-align: middle;
+            background-size: cover;
+        }
+    }
+
+    .pt-icon {
+        margin-right: ($pt-grid-size / 4);
+    }
+}
+
+.result__icon {
+    display: inline-block;
+    background-color: $gray3;
+    border-radius: 100px;
+    margin-right: $pt-grid-size;
+}
+
+.result__name {
+    width: 40%;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.result__collection {
+    width: 20%;
+}
+
+.result-property {
+  margin-right: ($pt-grid-size * 2);
+}

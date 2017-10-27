@@ -1,17 +1,37 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { connect } from 'react-redux';
 import queryString from 'query-string';
-import isEqual from 'lodash/isEqual';
+import { debounce, isEqual, pickBy, mergeWith, isArray } from 'lodash';
 
 import { fetchSearchResults } from '../actions';
+import filters from '../filters';
 
 import SearchResultList from '../components/SearchResultList';
 import SearchFilter from '../components/SearchFilter';
 
-const SearchFilterWithRouter = withRouter(SearchFilter);
+function parseQuery(search) {
+  const searchQuery = queryString.parse(search);
+
+  return mergeWith({
+    'q': '',
+    [filters.SCHEMA]: '',
+    [filters.COUNTRIES]: [],
+    [filters.COLLECTIONS]: []
+  }, searchQuery, (defaultValue, newValue) => {
+    return newValue !== undefined ?
+      isArray(defaultValue) ? defaultValue.concat(newValue) : newValue :
+      defaultValue;
+  });
+}
 
 class SearchScreen extends Component {
+  constructor() {
+    super();
+
+    this.fetchData = debounce(this.fetchData, 200);
+    this.updateQuery = this.updateQuery.bind(this);
+  }
+
   componentDidMount() {
     this.fetchData();
   }
@@ -24,26 +44,32 @@ class SearchScreen extends Component {
 
   fetchData() {
     const { query, fetchSearchResults } = this.props;
-    fetchSearchResults(query);
+    fetchSearchResults(pickBy(query, v => !!v));
+  }
+
+  updateQuery(newQuery) {
+    const { history, location } = this.props;
+
+    history.push({
+      pathname: location.pathname,
+      search: queryString.stringify(pickBy(newQuery, v => !!v))
+    });
   }
 
   render() {
+    const { query, searchResults } = this.props;
     return (
       <div>
-        <SearchFilterWithRouter result={this.props.searchResults} />
-        <SearchResultList result={this.props.searchResults} />
+        <SearchFilter result={searchResults} query={query} updateQuery={this.updateQuery} />
+        <SearchResultList result={searchResults} />
       </div>
     )
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const params = queryString.parse(ownProps.location.search);
-
-  return {
-    query: params,
-    searchResults: state.searchResults
-  };
+const mapStateToProps = ({ searchResults }, { location }) => {
+  const query = parseQuery(location.search);
+  return { query, searchResults };
 }
 
 SearchScreen = connect(

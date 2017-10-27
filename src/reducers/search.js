@@ -1,5 +1,8 @@
+import uniqBy from 'lodash/uniqBy';
+
 const initialState = {
-  isFetching: false,
+  // Gets rid of a FOUC but technically not great
+  isFetching: true,
   results: []
 };
 
@@ -8,7 +11,10 @@ const searchResults = (state = initialState, action) => {
     case 'FETCH_SEARCH_REQUEST':
       return { ...state, isFetching: true }
     case 'FETCH_SEARCH_SUCCESS':
-      return { ...action.result, isFetching: false }
+      return { ...state, ...action.result, isFetching: false }
+    case 'FETCH_SEARCH_NEXT_SUCCESS':
+      return { ...state, ...action.result,
+        results: uniqBy([...state.results, ...action.result.results], 'id')};
     default:
       return state;
   }

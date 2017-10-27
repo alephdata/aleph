@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
-import {Redirect, Route, Switch} from 'react-router-dom';
-import {connect} from 'react-redux'
+import React, { Component } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Spinner } from "@blueprintjs/core";
 
-import {fetchMetadata} from '../actions';
-import {Spinner} from "@blueprintjs/core";
+import { fetchCollections, fetchMetadata } from '../actions';
+
 import PageNavbar from '../components/PageNavbar';
 
 import SearchScreen from './SearchScreen';
@@ -16,6 +17,7 @@ import SignupScreen from "./SignupScreen";
 class PageLayout extends Component {
 
   componentWillMount() {
+    this.props.fetchCollections();
     this.props.fetchMetadata();
   }
 
@@ -54,7 +56,7 @@ const mapStateToProps = (state) => {
 
 PageLayout = connect(
   mapStateToProps,
-  {fetchMetadata}
+  { fetchCollections, fetchMetadata }
 )(PageLayout);
 
 export default PageLayout;

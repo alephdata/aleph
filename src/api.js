@@ -1,8 +1,11 @@
 import axios from 'axios';
+import queryString from 'query-string';
 
 export const endpoint = axios.create({
   baseURL: 'http://localhost:3000/api/2',
-  headers: {}
+  headers: {},
+  // Use non-bracket array params format
+  paramsSerializer: queryString.stringify
 });
 
 export const setAuthHeader = function (value) {

@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Button } from '@blueprintjs/core';
+import { connect } from 'react-redux';
+import { mapValues, xor } from 'lodash';
 
-import queryString from 'query-string';
-import { debounce, isEqual, pickBy } from 'lodash';
+import { endpoint } from '../api';
+import filters from '../filters';
 
+import SearchFilterCountries from './SearchFilterCountries';
+import SearchFilterCollections from './SearchFilterCollections';
 import SearchFilterSchema from './SearchFilterSchema';
+import SearchFilterText from './SearchFilterText';
 
 import './SearchFilter.css';
 
@@ -14,73 +17,133 @@ class SearchFilter extends Component {
     super(props);
 
     this.state = {
-      params: queryString.parse(props.location.search)
+      query: props.query,
+      queryCountries: null,
+      queryCollectionIds: null
     };
 
-    this.onTextChange = this.onTextChange.bind(this);
-    this.onSchemaChange = this.onSchemaChange.bind(this);
+    this.onSingleFilterChange = this.onSingleFilterChange.bind(this);
+    this.onMultiFilterChange = this.onMultiFilterChange.bind(this);
 
-    this.debouncedUpdate = debounce(this.updateLocation, 250);
+    this.onCountriesOpen = this.onCountriesOpen.bind(this);
+    this.onCollectionsOpen = this.onCollectionsOpen.bind(this);
   }
 
-  updateLocation() {
-    const { history, location } = this.props;
-    const nonEmptyParams = pickBy(this.state.params, v => !!v);
-
-    history.push({
-      pathname: location.pathname,
-      search: queryString.stringify(nonEmptyParams)
-    });
-  }
-
-  componentWillUpdate(nextProps, { params }) {
-    if (!isEqual(params, this.state.params)) {
-      this.debouncedUpdate();
+  componentDidUpdate(prevProps, { query }) {
+    if (query.q !== this.state.query.q) {
+      this.setState({
+        queryCountries: null,
+        queryCollectionIds: null
+      });
     }
   }
 
-  handleParamChange(param, newValue) {
-    this.setState({
-      params: {
-        ...this.state.params,
-        [param]: newValue
-      }
-    });
+  onSingleFilterChange(filter, value) {
+    const query = {
+      ...this.state.query,
+      [filter]: value
+    }
+
+    this.setState({query});
+    this.props.updateQuery(query);
   }
 
-  onTextChange(e) {
-    this.handleParamChange('q', e.target.value);
+  onMultiFilterChange(filter, value) {
+    const query = {
+      ...this.state.query,
+      [filter]: xor(this.state.query[filter], [value])
+    }
+
+    this.setState({query});
+    this.props.updateQuery(query);
   }
 
-  onSchemaChange(type) {
-    this.handleParamChange('filter:schema', type);
+  onCountriesOpen() {
+    if (this.state.queryCountries === null) {
+      endpoint.get('search', {params: {q: this.state.query.q, facet: 'countries'}})
+        .then(({ data }) => this.setState({
+          queryCountries: data.facets.countries.values
+        }));
+    }
+  }
+
+  onCollectionsOpen() {
+    if (this.state.queryCollectionIds === null) {
+      endpoint.get('search', {params: {q: this.props.queryText, facet: 'collection_id'}})
+        .then(({ data }) => this.setState({
+          queryCollectionIds: data.facets.collection_id.values.map(collection => collection.id)
+        }));
+    }
   }
 
   render() {
-    const { params } = this.state;
-    const { result } = this.props;
+    const { result, collections, countries } = this.props;
+    const { query, queryCountries, queryCollectionIds } = this.state;
+
+    // Standardised props passed to filters
+    const filterProps = onChange => filter => {
+      return {
+        onChange: onChange.bind(null, filter),
+        currentValue: query[filter]
+      };
+    };
+
+    const singleFilterProps = filterProps(this.onSingleFilterChange);
+    const multiFilterProps = filterProps(this.onMultiFilterChange);
+
+    // Generate list of active filters we want to display
+    const activeFilterTagsFn = (filter, labels) =>
+      query[filter]
+        .map(id => ({ id, filter, label: labels[id] }))
+        .sort((a, b) => a.label < b.label ? -1 : 1)
+
+    const activeFilterTags = [
+      ...activeFilterTagsFn(filters.COUNTRIES, countries),
+      ...activeFilterTagsFn(filters.COLLECTIONS, collections)
+    ];
 
     return (
       <div className="search-filter">
         <div className="search-query">
-          <div className="search-query__text pt-input-group pt-large">
-            <span className="pt-icon pt-icon-search"/>
-            <input className="pt-input" type="search" onChange={this.onTextChange}
-              value={params.q}/>
+          <div className="search-query__text">
+            <SearchFilterText {...singleFilterProps('q')} showSpinner={result.isFetching} />
           </div>
           <div className="pt-large">
-            <Button rightIconName="caret-down">
-              <FormattedMessage id="search.collections" defaultMessage="Collections"/>
-              {' '}(55)
-            </Button>
+            <SearchFilterCountries onOpen={this.onCountriesOpen} countries={queryCountries}
+              {...multiFilterProps(filters.COUNTRIES)} />
           </div>
+          <div className="pt-large">
+            <SearchFilterCollections onOpen={this.onCollectionsOpen} collectionIds={queryCollectionIds}
+              {...multiFilterProps(filters.COLLECTIONS)} />
+          </div>
+          {activeFilterTags.length > 0 &&
+            <div className="search-query__filters">
+              Filtering for
+              {activeFilterTags.map((tag, i) => (
+                <span key={tag.id}>
+                  {i > 0 ? (i < activeFilterTags.length - 1 ? ', ' : ' or ') : ' '}
+                  <span className="pt-tag pt-tag-removable" data-filter={tag.filter}>
+                    {tag.label}
+                    <button className="pt-tag-remove"
+                      onClick={this.onMultiFilterChange.bind(null, tag.filter, tag.id)} />
+                  </span>
+                </span>
+              ))}
+          </div>}
         </div>
         { result.total > 0 &&
-          <SearchFilterSchema onChange={this.onSchemaChange} result={result}
-            value={params['filter:schema']} /> }
+          <SearchFilterSchema schemas={result.facets.schema.values}
+            {...singleFilterProps(filters.SCHEMA)} /> }
       </div>
     );
   }
 }
+
+const mapStateToProps = ({ metadata, collections }) => ({
+  countries: metadata.countries,
+  collections: mapValues(collections.results, 'label')
+});
+
+SearchFilter = connect(mapStateToProps)(SearchFilter);
 
 export default SearchFilter;

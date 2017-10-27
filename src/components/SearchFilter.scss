@@ -1,21 +1,70 @@
 @import "~@blueprintjs/core/dist/variables";
 
 .search-filter {
-  padding: $pt-grid-size * 2;
   margin-bottom: $pt-grid-size * 2;
-  background-color: $gray3;
-  color: white;
+}
+
+.search-input {
+  position: relative;
+
+  & > .pt-input[type="search"] {
+    border-radius: $pt-border-radius;
+  }
+
+  & > .pt-spinner {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 }
 
 .search-query {
-    display: flex;
+  display: flex;
+  flex-wrap: wrap;
+  padding: $pt-grid-size * 2;
+  padding-right: $pt-grid-size;
+  padding-bottom: $pt-grid-size;
+  background-color: $gray3;
+  color: $white;
+
+  & > div {
+    margin-right: $pt-grid-size;
+    margin-bottom: $pt-grid-size;
+  }
 }
 
 .search-query__text {
   flex: 1;
-  padding-right: $pt-grid-size;
+}
 
-  & > input[type=search] {
-    border-radius: $pt-border-radius;
+.search-query__filters {
+  width: 100%;
+  font-size: $pt-font-size-small;
+
+  .pt-tag[data-filter='filter:collection_id'] {
+    background-color: transparentize($blue1, 0.6);
+  }
+
+  .pt-tag[data-filter='filter:countries'] {
+    background-color: transparentize($blue3, 0.6);
+  }
+}
+
+.search-filter-loading.pt-spinner:not(.ptv-svg-spinner) {
+  display: block;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: $pt-grid-size;
+}
+
+.search-tick {
+  &::before {
+    content: $pt-icon-tick;
+  }
+
+  opacity: 0.1;
+  &.is-ticked {
+    transition: opacity 0.2s ease-out;
+    opacity: 1;
   }
 }
