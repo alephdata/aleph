@@ -15,6 +15,7 @@ const SearchFilterCollectionsList = ({ collections, selectedCollections, onClick
     {collections.map(collection => (
       <li className="search-filter-collections-list-item"
           onClick={onClick.bind(null, '' + collection.id)} key={collection.id}>
+        <span className="pt-icon pt-icon-globe" />
         <h6>{collection.label}</h6>
         <p>{collection.summary}</p>
         <Checkbox checked={selectedCollections.indexOf(collection.id) > -1} readOnly />
@@ -144,7 +145,7 @@ class SearchFilterCollections extends Component {
               <div className="search-filter-collections__col">
                 <div className="search-filter-collections__col__row">
                   <SearchFilterText onChange={this.onTextChange} currentValue={searchText}
-                    isFetching={isStale} />
+                    showSpinner={isStale} />
                 </div>
                 <div className="search-filter-collections__col__flex-row">
                   {filteredCollections.length === 0 && 

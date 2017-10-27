@@ -46,14 +46,9 @@
   overflow: auto;
   width: 100%;
 
-  &::before {
-    content: "";
+  & > .pt-icon {
     position: absolute;
-    top: $pt-grid-size;;
     left: $pt-grid-size;
-    background-image: url(./icons/collection.svg);
-    width: 16px;
-    height: 16px;
   }
 
   &:nth-child(odd) {

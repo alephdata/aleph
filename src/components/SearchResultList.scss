@@ -1,7 +1,12 @@
 @import "~@blueprintjs/core/dist/variables";
 
-.results {
+.results-table {
     width: 100%;
+}
+
+.results-loading {
+  padding: $pt-grid-size;
+  text-align: center;
 }
 
 .result {
@@ -20,6 +25,10 @@
             background-size: cover;
         }
     }
+
+    .pt-icon {
+        margin-right: ($pt-grid-size / 4);
+    }
 }
 
 .result__icon {
@@ -30,17 +39,15 @@
 }
 
 .result__name {
-    width: 50%;
+    width: 40%;
     font-size: 14px;
     font-weight: bold;
 }
 
 .result__collection {
-    &::before {
-        content: "";
-        background-image: url(./icons/collection.svg);
-        width: 16px;
-        height: 16px;
-        margin-right: $pt-grid-size / 2;
-    }
+    width: 20%;
+}
+
+.result-property {
+  margin-right: ($pt-grid-size * 2);
 }

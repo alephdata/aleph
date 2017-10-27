@@ -3,39 +3,52 @@ import { connect } from 'react-redux';
 
 import SchemaIcon from './SchemaIcon';
 
-const ListItem = ({ name, collection, schema }) => (
+const ListItem = ({ name, schema, properties, collection }) => (
   <tr className={`result result--${schema}`}>
     <td className="result__name">
       <span className="result__icon">
         <SchemaIcon schemaId={schema} />
       </span>
-      { name }
+      <span title={name}>{ name }</span>
     </td>
     <td className="result__collection">
-        { collection ?
-            collection.label :
-            <span className="pt-skeleton">Loading collection</span>
-        }
+      {collection ?
+        <span title={collection.label}>
+          <span className="pt-icon pt-icon-globe" /> {collection.label}
+        </span> :
+        <span className="pt-skeleton">Loading collection</span>}
     </td>
-    <td></td>
+    <td>
+      {properties.map(property => (
+        <span className="result-property" data-property={property.name} key={property.name}>
+          <span className={`pt-icon pt-icon-${property.icon}`} /> {property.label}
+        </span>
+      ))}
+    </td>
   </tr>
 );
 
-const ListItems = {
-  'Document': ListItem,
-  'Land': ListItem,
-  'Person': ListItem,
-  'LegalEntity': ListItem,
-  'Company': ListItem
+const SearchResultListItem = ({ result, collection, countries }) => {
+  const schemaProperties = {
+    'Document': () => [],
+    'Company': () => [],
+    'LegalEntity': () => [],
+    'Land': () => [],
+    'Person': ({ nationality, address }) => [
+      {name: 'nationality', icon: 'flag', label: countries[nationality]},
+      {name: 'address', icon: 'map', label: address}
+    ]
+  };
+
+  const properties = schemaProperties[result.schema](result.properties)
+    .filter(property => !!property.label);
+
+  return <ListItem {...result} collection={collection} properties={properties} />;
 };
 
-const SearchResultListItem = ({ result, collection }) => {
-  const ListItem = ListItems[result.schema];
-  return <ListItem collection={collection} {...result} />;
-};
-
-const mapStateToProps = ({ collections }, { result }) => ({
-  collection: collections.results[result.collection_id]
+const mapStateToProps = ({ collections, metadata }, { result }) => ({
+  collection: collections.results[result.collection_id],
+  countries: metadata.countries
 });
 
 export default connect(mapStateToProps)(SearchResultListItem);
