@@ -13,13 +13,15 @@ const ListItem = ({ name, schema, properties, collection }) => (
     </td>
     <td className="result__collection">
       {collection ?
-        <span title={collection.label}>{collection.label}</span> :
+        <span title={collection.label}>
+          <span className="pt-icon pt-icon-globe" /> {collection.label}
+        </span> :
         <span className="pt-skeleton">Loading collection</span>}
     </td>
     <td>
       {properties.map(property => (
         <span className="result-property" data-property={property.name} key={property.name}>
-          {property.label}
+          <span className={`pt-icon pt-icon-${property.icon}`} /> {property.label}
         </span>
       ))}
     </td>
@@ -33,14 +35,15 @@ const SearchResultListItem = ({ result, collection, countries }) => {
     'LegalEntity': () => [],
     'Land': () => [],
     'Person': ({ nationality, address }) => [
-      {name: 'nationality', label: countries[nationality]},
-      {name: 'address', label: address}
+      {name: 'nationality', icon: 'flag', label: countries[nationality]},
+      {name: 'address', icon: 'map', label: address}
     ]
   };
 
-  const properties = schemaProperties[result.schema](result.properties).filter(property => !!property.label);
+  const properties = schemaProperties[result.schema](result.properties)
+    .filter(property => !!property.label);
 
-  return <ListItem {...result} collection={collection} properties={properties} />
+  return <ListItem {...result} collection={collection} properties={properties} />;
 };
 
 const mapStateToProps = ({ collections, metadata }, { result }) => ({

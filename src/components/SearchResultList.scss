@@ -25,6 +25,10 @@
             background-size: cover;
         }
     }
+
+    .pt-icon {
+        margin-right: ($pt-grid-size / 4);
+    }
 }
 
 .result__icon {
@@ -42,25 +46,8 @@
 
 .result__collection {
     width: 20%;
-
-    &::before {
-        content: "";
-        background-image: url(./icons/collection.svg);
-        width: 16px;
-        height: 16px;
-        margin-right: $pt-grid-size / 2;
-    }
 }
 
 .result-property {
-  &::before {
-    content: "";
-    display: inline-block;
-    vertical-align: middle;
-    width: 10px;
-    height: 10px;
-    border-radius: 100px;
-    margin-right: $pt-grid-size;
-    background-color: $blue1;
-  }
+  margin-right: ($pt-grid-size * 2);
 }

@@ -15,6 +15,7 @@ const SearchFilterCollectionsList = ({ collections, selectedCollections, onClick
     {collections.map(collection => (
       <li className="search-filter-collections-list-item"
           onClick={onClick.bind(null, '' + collection.id)} key={collection.id}>
+        <span className="pt-icon pt-icon-globe" />
         <h6>{collection.label}</h6>
         <p>{collection.summary}</p>
         <Checkbox checked={selectedCollections.indexOf(collection.id) > -1} readOnly />

@@ -17,7 +17,7 @@ class SearchResultList extends Component {
     window.addEventListener('scroll', this.handler);
   }
 
-  componentDidUnmount() {
+  componentWillUnmount() {
     window.removeEventListener('resize', this.handler);
     window.removeEventListener('scroll', this.handler);
   }
