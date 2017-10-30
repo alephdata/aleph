@@ -18,6 +18,6 @@ class ViewUtilTest(TestCase):
         self.assertEqual('http://localhost:5000/', extract_next_url(req))
 
     def test_extract_next_url_safe(self):
-        req = Request.from_values('/?next=/help')
-
+        headers = {'Referer': '/blah'}
+        req = Request.from_values('/?next=/help', headers=headers)
         self.assertEqual('/help', extract_next_url(req))
