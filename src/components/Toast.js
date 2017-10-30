@@ -6,8 +6,7 @@ export const Toast = Toaster.create({
 
 const showToast = (userProps, intentProps) => {
   if (typeof userProps === "string") userProps = {message: userProps};
-  const props = Object.assign(userProps, intentProps);
-  Toast.show(props);
+  Toast.show({...userProps, ...intentProps});
 };
 
 export const showInfoToast = (props) => showToast(props, {
