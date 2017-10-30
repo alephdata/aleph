@@ -50,7 +50,7 @@ class InviteScreen extends Component {
           <FormattedMessage id="invite.email" defaultMessage="E-Mail address"/>
           <input className="pt-input" type="email" name="email" required ref={(el) => this.emailElement = el}/>
         </label>
-        <Button iconName="log-in">
+        <Button iconName="log-in" type="submit">
           <FormattedMessage id="invite.submit" defaultMessage="Signup"/>
         </Button>
       </form>

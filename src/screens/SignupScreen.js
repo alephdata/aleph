@@ -56,7 +56,7 @@ class SignupScreen extends Component {
           <input className="pt-input" type="password" name="password" required
                  ref={(el) => this.elements["password"] = el}/>
         </label>
-        <Button iconName="log-in" intent={Intent.PRIMARY}>
+        <Button iconName="log-in" intent={Intent.PRIMARY} type="submit">
           <FormattedMessage id="signup.submit" defaultMessage="Signup"/>
         </Button>
       </form>

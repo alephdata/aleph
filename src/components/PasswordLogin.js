@@ -35,7 +35,7 @@ const PasswordLogin = ({authMetadata, onLogin, intl}) => {
       <FormattedMessage id="login.password" defaultMessage="Password"/>
       <input className="pt-input" type="password" name="password" required ref={(el) => passwordElement = el}/>
     </label>
-    <Button iconName="log-in" intent={Intent.PRIMARY}>
+    <Button iconName="log-in" intent={Intent.PRIMARY} type="submit">
       <FormattedMessage id="login.submit" defaultMessage="Log in"/>
     </Button>
   </form>
