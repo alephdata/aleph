@@ -16,10 +16,10 @@ const PageNavbar = ({metadata, session}) => (
       <div className="pt-navbar-heading">
         {metadata.app.title}
       </div>
-      <Button iconName="home">
+      <Button iconName="home" className="pt-minimal">
         <FormattedMessage id="nav.home" defaultMessage="Home"/>
       </Button>
-      <Button iconName="document">
+      <Button iconName="document" className="pt-minimal">
         <FormattedMessage id="nav.documents" defaultMessage="Documents"/>
       </Button>
     </div>
