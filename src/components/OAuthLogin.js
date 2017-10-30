@@ -1,5 +1,6 @@
 import React from 'react';
 import {FormattedMessage} from "react-intl";
+import {AnchorButton, Intent} from '@blueprintjs/core';
 import queryString from "query-string";
 
 const OAuthLogin = ({providers, onLogin}) => {
@@ -9,10 +10,10 @@ const OAuthLogin = ({providers, onLogin}) => {
 
   return <div className="pt-button-group pt-vertical pt-align-left pt-large">
     {providers.map(provider => <p key={provider.name}>
-      <a href={`${provider.login}${loginUrlQueryString}`} className="pt-button pt-intent-primary pt-icon-log-in">
+      <AnchorButton href={`${provider.login}${loginUrlQueryString}`} intent={Intent.PRIMARY}>
         <FormattedMessage id="login.provider" defaultMessage="Sign in with {label}"
                           values={{label: provider.label}}/>
-      </a>
+      </AnchorButton>
     </p>)}
   </div>
 };
