@@ -7,16 +7,10 @@ const defaultStatusMap = {
   500: messages.status.server_error
 };
 
-export const xhrToast = (response, intl, statusMap, showToastFn, fallbackMessageKey) => {
-  if (!statusMap) statusMap = {};
-  statusMap = Object.assign({}, defaultStatusMap, statusMap);
-  let messageKey = fallbackMessageKey;
-  if (response && statusMap[response.status]) {
-    messageKey = statusMap[response.status];
-  }
-  showToastFn(intl.formatMessage(messageKey));
+const xhrToastFn = (showToastFn, fallbackMessageKey) => (response, intl, statusMap={}) => {
+  const messageKey = response && (statusMap[response.status] || defaultStatusMap[response.status]);
+  showToastFn(intl.formatMessage(messageKey || fallbackMessageKey));
 };
 
-export const xhrErrorToast = (response, intl, statusMap) => xhrToast(response, intl, statusMap, showErrorToast, messages.status.unknown_error);
-
-export const xhrSuccessToast = (response, intl, statusMap) => xhrToast(response, intl, statusMap, showSuccessToast, messages.status.success);
+export const xhrErrorToast = xhrToastFn(showErrorToast, messages.status.unknown_error);
+export const xhrSuccessToast = xhrToastFn(showSuccessToast, messages.status.success);
