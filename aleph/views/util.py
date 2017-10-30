@@ -84,6 +84,13 @@ def is_safe_url(target):
         urlparse(app_url).hostname == test_url.hostname
 
 
+def get_best_next_url(*urls):
+    """Returns the safest URL to redirect to from a given list or defaults to app_url. """
+    for url in urls + (app_url,):
+        if url and is_safe_url(url):
+            return url
+
+
 def extract_next_url(req):
     """Extracts the URL/path to follow when redirects/unauthorization occurs.
 

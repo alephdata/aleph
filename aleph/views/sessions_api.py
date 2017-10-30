@@ -10,7 +10,7 @@ from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.logic.sessions import create_token, check_token
-from aleph.views.util import extract_next_url, parse_request, jsonify
+from aleph.views.util import get_best_next_url, parse_request, jsonify
 from aleph.views.serializers import LoginSchema
 
 
@@ -67,10 +67,10 @@ def oauth_init(provider):
     if not oauth_provider:
         abort(404)
 
-    callback_url = url_for('.oauth_callback',
-                           provider=provider,
-                           next=extract_next_url(request))
-    return oauth_provider.authorize(callback=callback_url)
+    callback_url = url_for('.oauth_callback', provider=provider)
+    state = get_best_next_url(request.args.get('next'), request.referrer)
+
+    return oauth_provider.authorize(callback=callback_url, state=state)
 
 
 @blueprint.route('/api/2/sessions/callback/<string:provider>')
@@ -91,7 +91,7 @@ def oauth_callback(provider):
         if role is None:
             continue
         log.info("Logged in: %r", role)
-        next_url = extract_next_url(request)
+        next_url = get_best_next_url(request.args.get('state'), request.referrer)
         next_url, _ = urldefrag(next_url)
         next_url = '%s#token=%s' % (next_url, create_token(role))
         return redirect(next_url)
