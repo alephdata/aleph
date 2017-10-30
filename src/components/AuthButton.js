@@ -1,19 +1,20 @@
 import React from 'react';
+import {Button} from '@blueprintjs/core';
 import {FormattedMessage} from 'react-intl';
 import {Link} from 'react-router-dom'
 
 const AuthButton = ({session}) => {
   if (session.loggedIn) {
     return <Link to="/logout">
-      <button className="pt-button pt-minimal pt-icon-user">
+      <Button iconName="user" className="pt-minimal">
         <FormattedMessage id="nav.logoff" defaultMessage="Logout"/>
-      </button>
+      </Button>
     </Link>;
   } else {
     return <Link to="/login">
-      <button className="pt-button pt-minimal pt-icon-user">
+      <Button iconName="user" className="pt-minimal">
         <FormattedMessage id="nav.login" defaultMessage="Login"/>
-      </button>
+      </Button>
     </Link>
   }
 };

@@ -1,12 +1,13 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
+import {Button} from '@blueprintjs/core';
 import AuthButton from "./AuthButton";
 import {Link} from "react-router-dom";
 
 const SignupButton = () => <Link to="/invite">
-  <button className="pt-button pt-minimal pt-icon-user">
+  <Button iconName="user" className="pt-minimal">
     <FormattedMessage id="nav.signup" defaultMessage="Sign Up"/>
-  </button>
+  </Button>
 </Link>;
 
 const PageNavbar = ({metadata, session}) => (
@@ -15,16 +16,16 @@ const PageNavbar = ({metadata, session}) => (
       <div className="pt-navbar-heading">
         {metadata.app.title}
       </div>
-      <button className="pt-button pt-minimal pt-icon-home">
+      <Button iconName="home">
         <FormattedMessage id="nav.home" defaultMessage="Home"/>
-      </button>
-      <button className="pt-button pt-minimal pt-icon-document">
+      </Button>
+      <Button iconName="document">
         <FormattedMessage id="nav.documents" defaultMessage="Documents"/>
-      </button>
+      </Button>
     </div>
     <div className="pt-navbar-group pt-align-right">
-      {session.loggedIn && <button className="pt-button pt-minimal pt-icon-cog"/>}
-      {session.loggedIn && <button className="pt-button pt-minimal pt-icon-notifications"/>}
+      {session.loggedIn && <Button iconName="cog" className="pt-minimal"/>}
+      {session.loggedIn && <Button iconName="notifications" className="pt-minimal"/>}
       <AuthButton session={session}/>
       {!session.loggedIn && metadata.auth.registration && <SignupButton/>}
     </div>

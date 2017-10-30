@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Redirect, withRouter} from "react-router";
 import {FormattedMessage, injectIntl} from "react-intl";
+import {Button, Intent} from '@blueprintjs/core';
 import {endpoint} from "../api";
 import {xhrErrorToast, xhrSuccessToast} from "../components/XhrToast";
 import {connect} from "react-redux";
@@ -55,9 +56,9 @@ class SignupScreen extends Component {
           <input className="pt-input" type="password" name="password" required
                  ref={(el) => this.elements["password"] = el}/>
         </label>
-        <button type="submit" className="pt-button pt-intent-primary pt-icon-log-in">
+        <Button iconName="log-in" intent={Intent.PRIMARY}>
           <FormattedMessage id="signup.submit" defaultMessage="Signup"/>
-        </button>
+        </Button>
       </form>
     </section>
   }

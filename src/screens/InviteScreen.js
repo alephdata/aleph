@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {FormattedMessage, injectIntl} from "react-intl";
+import {Button} from '@blueprintjs/core';
 import {connect} from "react-redux";
 import {xhrErrorToast} from "../components/XhrToast";
 import Callout from "../components/Callout";
@@ -49,9 +50,9 @@ class InviteScreen extends Component {
           <FormattedMessage id="invite.email" defaultMessage="E-Mail address"/>
           <input className="pt-input" type="email" name="email" required ref={(el) => this.emailElement = el}/>
         </label>
-        <button type="submit" className="pt-button pt-intent-primary pt-icon-log-in">
+        <Button iconName="log-in">
           <FormattedMessage id="invite.submit" defaultMessage="Signup"/>
-        </button>
+        </Button>
       </form>
     </section>
   }
