@@ -12,15 +12,14 @@ class InviteScreen extends Component {
   state = {submitted: false};
 
   submit(event) {
-    const {metadata, intl} = this.props;
     event.preventDefault();
     const data = {email: this.emailElement.value};
 
-    endpoint.post(metadata.auth.registration_uri, data).then(() => {
+    endpoint.post('/roles/invite', data).then(() => {
       this.setState({submitted: true})
     }).catch(e => {
       console.log(e);
-      xhrErrorToast(e.response, intl);
+      xhrErrorToast(e.response, this.props.intl);
     });
   }
 

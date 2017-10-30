@@ -1,23 +1,22 @@
 import React from 'react';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import {Button, Intent} from '@blueprintjs/core';
-import axios from 'axios';
+import {endpoint} from '../api';
 import messages from "../messages";
 import {xhrErrorToast} from "./XhrToast";
 
-const PasswordLogin = ({authMetadata, onLogin, intl}) => {
+const PasswordLogin = ({onLogin, intl}) => {
   let emailElement, passwordElement;
 
   const login = function (event) {
     event.preventDefault();
 
-    const url = authMetadata.password_login_uri;
     const data = {
       email: emailElement.value,
       password: passwordElement.value
     };
 
-    axios.post(url, data).then((res) => {
+    endpoint.post('/sessions/login', data).then(res => {
       onLogin(res.data.token);
     }).catch(e => {
       xhrErrorToast(e.response, intl, {
