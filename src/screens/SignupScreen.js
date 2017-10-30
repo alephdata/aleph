@@ -6,6 +6,7 @@ import {endpoint} from "../api";
 import {xhrErrorToast, xhrSuccessToast} from "../components/XhrToast";
 import {connect} from "react-redux";
 import {login} from "../actions/sessionActions";
+import mapValues from 'lodash/mapValues';
 
 class SignupScreen extends Component {
   elements = {};
@@ -14,8 +15,7 @@ class SignupScreen extends Component {
     const {match: {params}, intl, metadata, dispatch} = this.props;
     event.preventDefault();
 
-    const data = {code: params.code};
-    Object.keys(this.elements).forEach(key => data[key] = this.elements[key].value);
+    const data = {code: params.code, ...mapValues(this.elements, 'value')};
 
     endpoint.post('/roles', data).then((res) => {
       xhrSuccessToast(res, intl);

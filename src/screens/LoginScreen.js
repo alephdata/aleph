@@ -10,6 +10,11 @@ import messages from "../messages";
 import {injectIntl} from "react-intl";
 
 class LoginScreen extends Component {
+  constructor() {
+    super();
+    this.login = this.login.bind(this);
+  }
+
   login(token) {
     const {dispatch, intl} = this.props;
     try {
@@ -22,7 +27,7 @@ class LoginScreen extends Component {
   }
 
   componentWillMount() {
-    handleOAuthCallback((token) => this.login(token));
+    handleOAuthCallback(this.login);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -53,11 +58,11 @@ class LoginScreen extends Component {
     }
 
     return <section>
-      {passwordLogin && <PasswordLogin authMetadata={metadata.auth} onLogin={(token) => this.login(token)}/>}
+      {passwordLogin && <PasswordLogin authMetadata={metadata.auth} onLogin={this.login}/>}
 
       <hr/>
 
-      {oauthLogin && <OAuthLogin providers={metadata.auth.oauth} onLogin={(token) => this.login(token)}/>}
+      {oauthLogin && <OAuthLogin providers={metadata.auth.oauth} onLogin={this.login}/>}
     </section>
   }
 }
