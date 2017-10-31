@@ -12,7 +12,7 @@ class SignupScreen extends Component {
   elements = {};
 
   submit(event) {
-    const {match: {params}, intl, metadata, dispatch} = this.props;
+    const {match: {params}, intl, metadata, login} = this.props;
     event.preventDefault();
 
     const data = {code: params.code, ...mapValues(this.elements, 'value')};
@@ -20,7 +20,7 @@ class SignupScreen extends Component {
     endpoint.post('/roles', data).then((res) => {
       xhrSuccessToast(res, intl);
       endpoint.post(metadata.auth.password_login_uri, data).then((res) => {
-        dispatch(login(res.data.token));
+        login(res.data.token);
       }).catch(e => {
         console.error("automatic login after signup failed", e);
       });
@@ -64,5 +64,11 @@ class SignupScreen extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({session: state.session, metadata: state.metadata});
-export default connect(mapStateToProps)(withRouter(injectIntl(SignupScreen)));
+const mapStateToProps = ({session, metadata}) => ({session, metadata});
+
+SignupScreen = connect(
+  mapStateToProps,
+  {login}
+)(withRouter(injectIntl(SignupScreen)));
+
+export default SignupScreen;

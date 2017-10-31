@@ -16,9 +16,9 @@ class LoginScreen extends Component {
   }
 
   login(token) {
-    const {dispatch, intl} = this.props;
+    const {intl, login} = this.props;
     try {
-      dispatch(login(token));
+      login(token);
       showSuccessToast(intl.formatMessage(messages.status.success));
     } catch (e) {
       console.error("invalid login token", e);
@@ -68,4 +68,10 @@ class LoginScreen extends Component {
 }
 
 const mapStateToProps = (state) => ({session: state.session, metadata: state.metadata});
-export default connect(mapStateToProps)(withRouter(injectIntl(LoginScreen)));
+
+LoginScreen = connect(
+  mapStateToProps,
+  {login}
+)(withRouter(injectIntl(LoginScreen)));
+
+export default LoginScreen;

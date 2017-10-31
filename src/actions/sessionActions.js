@@ -1,14 +1,11 @@
 import {setAuthHeader} from "../api";
 
-export const LOGIN = 'LOGIN';
-export const LOGOUT = 'LOGOUT';
-
-export const login = (token) => {
+export const login = (token) => dispatch => {
   setAuthHeader(`Bearer ${token}`);
-  return {type: LOGIN, token};
+  dispatch({type: 'LOGIN', token});
 };
 
-export const logout = () => {
+export const logout = () => dispatch => {
   setAuthHeader(null);
-  return {type: LOGOUT};
+  dispatch({type: 'LOGOUT'});
 };

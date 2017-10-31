@@ -1,4 +1,3 @@
-import {LOGIN, LOGOUT} from "../actions/sessionActions";
 import jwt_decode from "jwt-decode";
 
 const initialState = {
@@ -16,9 +15,9 @@ const login = (token) => {
 
 const session = (state = initialState, action) => {
   switch (action.type) {
-    case LOGIN:
+    case 'LOGIN':
       return login(action.token);
-    case LOGOUT:
+    case 'LOGOUT':
       return {loggedIn: false};
     default:
       return state;
