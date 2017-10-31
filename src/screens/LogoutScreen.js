@@ -8,8 +8,8 @@ import messages from "../messages";
 
 class LogoutScreen extends Component {
   componentWillMount() {
-    const {dispatch, history, intl} = this.props;
-    dispatch(logout());
+    const {logout, history, intl} = this.props;
+    logout();
     showSuccessToast(intl.formatMessage(messages.status.logout_success));
     history.push('/');
   }
@@ -19,4 +19,4 @@ class LogoutScreen extends Component {
   }
 }
 
-export default connect()(withRouter(injectIntl(LogoutScreen)));
+export default connect(null, {logout})(withRouter(injectIntl(LogoutScreen)));
