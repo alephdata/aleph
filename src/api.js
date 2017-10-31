@@ -9,5 +9,9 @@ export const endpoint = axios.create({
 });
 
 export const setAuthHeader = function (value) {
-  endpoint.defaults.headers.common['Authorization'] = value;
+  if (value) {
+    endpoint.defaults.headers.common['Authorization'] = value;
+  } else {
+    delete endpoint.defaults.headers.common['Authorization'];
+  }
 };
