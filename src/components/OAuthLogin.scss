@@ -1,5 +1,9 @@
 @import "~@blueprintjs/core/dist/variables";
 
+$provider-logos: (
+  google: url(./icons/google_auth.png)
+)
+
 .oauth-provider {
   text-align: center;
   display: inline-block;
@@ -14,9 +18,9 @@
     background-size: cover;
   }
 
-  @each $provider in (google) {
+  @each $provider, $logo in $provider-logos {
     &[data-name='#{$provider}']::before {
-      background-image: url(./icons/google_auth.png);
+      background-image: $logo;
     }
   }
 }
