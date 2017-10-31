@@ -9,7 +9,7 @@ import {endpoint} from '../api';
 
 import Callout from '../components/Callout';
 import OAuthLogin from '../components/OAuthLogin';
-import PasswordInvite from '../components/PasswordInvite';
+import PasswordSignup from '../components/PasswordSignup';
 import {xhrErrorToast} from '../components/XhrToast';
 
 class InviteScreen extends Component {
@@ -51,7 +51,7 @@ class InviteScreen extends Component {
     return (
       <section className="small-screen">
         <h2><FormattedMessage id="invite.signup" defaultMessage="Sign up"/></h2>
-        <PasswordInvite onSignup={this.submit} />
+        <PasswordSignup onSignup={this.submit} />
         {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
       </section>
     );
