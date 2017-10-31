@@ -11,9 +11,7 @@ const OAuthLogin = ({providers}) => {
 
   return (
     <div className="pt-card">
-      <span>
-        <FormattedMessage id="login.oauth" defaultMessage="Sign in with" />
-      </span>
+      <FormattedMessage id="login.oauth" defaultMessage="Sign in with" />
 
       {providers.map(provider => (
         <span key={provider.name}>
