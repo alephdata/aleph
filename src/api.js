@@ -1,5 +1,6 @@
 import axios from 'axios';
 import queryString from 'query-string';
+import store from './store';
 
 export const endpoint = axios.create({
   baseURL: 'http://localhost:5000/api/2',
@@ -8,10 +9,10 @@ export const endpoint = axios.create({
   paramsSerializer: queryString.stringify
 });
 
-export const setAuthHeader = function (value) {
-  if (value) {
-    endpoint.defaults.headers.common['Authorization'] = value;
-  } else {
-    delete endpoint.defaults.headers.common['Authorization'];
+endpoint.interceptors.request.use(config => {
+  const { session } = store.getState();
+  if (session.loggedIn) {
+    config.headers.common['Authorization'] = `Bearer ${session.token}`;
   }
-};
+  return config;
+});

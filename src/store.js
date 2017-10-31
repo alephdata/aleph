@@ -5,7 +5,6 @@ import {loadState, saveState} from "./storage";
 import {throttle} from "lodash";
 
 import rootReducer from './reducers';
-import {setAuthHeader} from "./api";
 
 const persistedState = loadState();
 const store = createStore(
@@ -16,11 +15,6 @@ const store = createStore(
     logger
   )
 );
-
-const initialState = store.getState();
-if (initialState.session && initialState.session.token) {
-  setAuthHeader(`Bearer ${initialState.session.token}`);
-}
 
 store.subscribe(throttle(() => {
   saveState({
