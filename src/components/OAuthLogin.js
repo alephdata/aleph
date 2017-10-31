@@ -1,21 +1,27 @@
 import React from 'react';
 import {FormattedMessage} from "react-intl";
-import {AnchorButton, Intent} from '@blueprintjs/core';
 import queryString from "query-string";
+
+import './OAuthLogin.css';
 
 const OAuthLogin = ({providers, onLogin}) => {
   const location = window.location;
   const targetUrl = `${location.protocol}//${location.host}/login`;
   const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
 
-  return <div className="pt-button-group pt-vertical pt-align-left pt-large">
-    {providers.map(provider => <p key={provider.name}>
-      <AnchorButton href={`${provider.login}${loginUrlQueryString}`} intent={Intent.PRIMARY}>
-        <FormattedMessage id="login.provider" defaultMessage="Sign in with {label}"
-                          values={{label: provider.label}}/>
-      </AnchorButton>
-    </p>)}
-  </div>
+  return (
+    <div className="pt-card">
+      <span>
+        <FormattedMessage id="login.oauth" defaultMessage="Sign in with" />
+      </span>
+
+      {providers.map(provider => (
+        <span key={provider.name}>
+          <a className="oauth-provider" href={`${provider.login}${loginUrlQueryString}`}
+             data-name={provider.name}></a>
+        </span>))}
+    </div>
+  );
 };
 
 export const handleOAuthCallback = (onLoginFn) => {

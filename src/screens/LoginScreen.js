@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
+import {injectIntl} from 'react-intl';
 import {connect} from 'react-redux'
-import PasswordLogin from "../components/PasswordLogin";
-import OAuthLogin, {handleOAuthCallback} from "../components/OAuthLogin";
-import Callout from "../components/Callout";
-import {login} from "../actions/sessionActions";
-import {Redirect, withRouter} from "react-router";
-import {showErrorToast, showSuccessToast} from "../components/Toast";
-import messages from "../messages";
-import {injectIntl} from "react-intl";
+import {Redirect} from 'react-router';
+import {NonIdealState} from '@blueprintjs/core';
+
+import messages from '../messages';
+import {login} from '../actions/sessionActions';
+
+import OAuthLogin, {handleOAuthCallback} from '../components/OAuthLogin';
+import PasswordLogin from '../components/PasswordLogin';
+import {showErrorToast, showSuccessToast} from '../components/Toast';
 
 class LoginScreen extends Component {
   constructor() {
@@ -21,7 +23,7 @@ class LoginScreen extends Component {
       login(token);
       showSuccessToast(intl.formatMessage(messages.status.success));
     } catch (e) {
-      console.error("invalid login token", e);
+      console.error('Invalid login token', e);
       showErrorToast(intl.formatMessage(messages.status.unknown_error))
     }
   }
@@ -30,43 +32,34 @@ class LoginScreen extends Component {
     handleOAuthCallback(this.login);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {session, history} = nextProps;
-    if (session.loggedIn) {
-      history.push('/');
-    }
-  }
-
   render() {
     const {metadata, intl, session} = this.props;
     const passwordLogin = metadata.auth.password_login;
     const oauthLogin = Array.isArray(metadata.auth.oauth) && metadata.auth.oauth.length > 0;
 
-    if (session.loggedIn) {
-      return <Redirect to="/"/>;
-    }
+    const hasLogin = passwordLogin || oauthLogin;
 
-    if (!passwordLogin && !oauthLogin) {
-      return <Callout modifier="warning"
-                      title={intl.formatMessage(messages.login.not_available.title)}
-                      desc={intl.formatMessage(messages.login.not_available.desc)}/>;
-    }
+    return session.loggedIn ?
+      <Redirect to="/"/> :
+      <section className="small-screen">
+        {hasLogin && <h2>Sign in</h2>}
 
-    return <section>
-      {passwordLogin && <PasswordLogin authMetadata={metadata.auth} onLogin={this.login}/>}
+        {passwordLogin && <PasswordLogin onLogin={this.login}/>}
+        {oauthLogin && <OAuthLogin providers={metadata.auth.oauth} onLogin={this.login}/>}
 
-      <hr/>
-
-      {oauthLogin && <OAuthLogin providers={metadata.auth.oauth} onLogin={this.login}/>}
-    </section>
+        {!hasLogin &&
+          <NonIdealState visual="log-in"
+            title={intl.formatMessage(messages.login.not_available.title)}
+            description={intl.formatMessage(messages.login.not_available.desc)}/>}
+      </section>
   }
 }
 
-const mapStateToProps = (state) => ({session: state.session, metadata: state.metadata});
+const mapStateToProps = ({session, metadata}) => ({session, metadata});
 
 LoginScreen = connect(
   mapStateToProps,
   {login}
-)(withRouter(injectIntl(LoginScreen)));
+)(injectIntl(LoginScreen));
 
 export default LoginScreen;

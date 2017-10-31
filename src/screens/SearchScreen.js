@@ -59,10 +59,10 @@ class SearchScreen extends Component {
   render() {
     const { query, searchResults } = this.props;
     return (
-      <div>
+      <section>
         <SearchFilter result={searchResults} query={query} updateQuery={this.updateQuery} />
         <SearchResultList result={searchResults} />
-      </div>
+      </section>
     )
   }
 }

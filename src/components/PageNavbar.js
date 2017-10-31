@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 
 const SignupButton = () => <Link to="/invite">
   <Button iconName="user" className="pt-minimal">
-    <FormattedMessage id="nav.signup" defaultMessage="Sign Up"/>
+    <FormattedMessage id="nav.signup" defaultMessage="Sign up"/>
   </Button>
 </Link>;
 

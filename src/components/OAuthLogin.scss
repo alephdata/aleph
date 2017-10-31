@@ -1,0 +1,22 @@
+@import "~@blueprintjs/core/dist/variables";
+
+.oauth-provider {
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: $pt-grid-size;
+
+  &::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 40px;
+    background-size: cover;
+  }
+
+  @each $provider in (google) {
+    &[data-name='#{$provider}']::before {
+      background-image: url(./icons/google_auth.png);
+    }
+  }
+}

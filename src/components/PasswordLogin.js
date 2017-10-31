@@ -1,8 +1,11 @@
 import React from 'react';
 import {FormattedMessage, injectIntl} from 'react-intl';
+import {Link} from 'react-router-dom';
 import {Button, Intent} from '@blueprintjs/core';
+
 import {endpoint} from '../api';
 import messages from "../messages";
+
 import {xhrErrorToast} from "./XhrToast";
 
 const PasswordLogin = ({onLogin, intl}) => {
@@ -25,18 +28,26 @@ const PasswordLogin = ({onLogin, intl}) => {
     });
   };
 
-  return <form onSubmit={(e) => login(e)}>
+  return <form onSubmit={login} className="pt-card">
     <label className="pt-label">
-      <FormattedMessage id="login.email" defaultMessage="E-Mail address"/>
-      <input className="pt-input" type="email" name="email" required ref={(el) => emailElement = el}/>
+      <FormattedMessage id="login.email" defaultMessage="Email address"/>
+      <input className="pt-input pt-fill" type="email" name="email" required ref={(el) => emailElement = el}/>
     </label>
     <label className="pt-label">
       <FormattedMessage id="login.password" defaultMessage="Password"/>
-      <input className="pt-input" type="password" name="password" required ref={(el) => passwordElement = el}/>
+      <input className="pt-input pt-fill" type="password" name="password" required ref={(el) => passwordElement = el}/>
     </label>
-    <Button iconName="log-in" intent={Intent.PRIMARY} type="submit">
-      <FormattedMessage id="login.submit" defaultMessage="Log in"/>
-    </Button>
+    <div className="flex-row">
+      <span>
+        <Button className="pt-large" intent={Intent.PRIMARY} type="submit">
+          <FormattedMessage id="login.submit" defaultMessage="Sign in"/>
+        </Button>
+      </span>
+      <span>
+        <FormattedMessage id="login.no_account" defaultMessage="Haven't got an account?" />{' '}
+        <Link to="/login"><FormattedMessage id="login.signup" defaultMessage="Sign up"/></Link>
+      </span>
+    </div>
   </form>
 };
 
