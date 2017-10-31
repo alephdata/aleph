@@ -27,7 +27,7 @@ blinker==1.4
 Babel==2.5.1
 xlrd==0.9.3
 PyYAML==3.11
-PyICU==1.9.5
+PyICU==1.9.7
 chardet==3.0.3
 cchardet==1.1.1
 pyahocorasick==1.1.4

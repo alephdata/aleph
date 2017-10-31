@@ -21,8 +21,8 @@ blueprint = Blueprint('sessions_api', __name__)
 @blueprint.before_app_request
 def load_role():
     role = None
-    if 'Authorization' in request.headers:
-        credential = request.headers.get('Authorization')
+    credential = request.headers.get('Authorization', '')
+    if len(credential):
         if ' ' in credential:
             mechanism, credential = credential.split(' ', 1)
         data = check_token(credential)
