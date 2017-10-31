@@ -39,7 +39,7 @@ class DocumentResult(Result):
         self.document.type = Document.TYPE_TEXT
         record = DocumentRecord()
         record.document_id = self.document.id
-        record.text = text
+        record.text = stringify(text)
         record.index = index
         db.session.add(record)
 

@@ -37,7 +37,9 @@ class DocumentManager(Manager):
         if result.error_message:
             log.warn('Error [%r]: %s', result, result.error_message)
         else:
-            log.debug('Ingested: %r', result.document)
+            log.debug('Ingested [%s]: %s',
+                      result.document.id,
+                      result.document.title)
         analyze_document(result.document)
 
     def get_cache(self, key):

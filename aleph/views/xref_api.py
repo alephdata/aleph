@@ -7,7 +7,6 @@ from aleph.views.util import get_collection, require, obj_or_404, jsonify
 from aleph.search import QueryParser, DatabaseQueryResult, MatchQueryResult
 from aleph.views.serializers import MatchSchema, MatchCollectionsSchema
 from aleph.logic.xref import generate_excel, process_xref
-from aleph.text import string_value
 
 
 blueprint = Blueprint('xref_api', __name__)
@@ -47,7 +46,7 @@ def report(collection_id):
                             request.authz,
                             links=arg_bool('links'),
                             one_sheet=arg_bool('merge'))
-    outputfile = "%s Cross-referenced.xlsx" % string_value(collection.label)
+    outputfile = "%s Cross-referenced.xlsx" % collection.label
     return send_file(output,
                      as_attachment=True,
                      attachment_filename=outputfile)

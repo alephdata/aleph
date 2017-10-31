@@ -67,25 +67,26 @@ class AhoCorasickEntityAnalyzer(Analyzer):
 
     cache = AutomatonCache()
 
-    def prepare(self):
+    def __init__(self):
         self.disabled = not get_config('REGEX_ENTITIES', True)
-        if not self.disabled:
-            self.cache.generate()
-        self.collector = DocumentTagCollector(self.document, self.ORIGIN)
 
-    def on_text(self, text):
-        if self.cache.automaton.kind == EMPTY:
-            return
+    def analyze(self, document):
+        text = document.text
         if text is None or len(text) <= self.MIN_LENGTH:
             return
         text = match_form(text)
         if text is None or len(text) <= self.MIN_LENGTH:
             return
+
+        self.cache.generate()
+        if self.cache.automaton.kind == EMPTY:
+            return
+
         text = text.encode('utf-8')
+        collector = DocumentTagCollector(document, self.ORIGIN)
         for match in self.cache.automaton.iter(text):
             for (text, type) in match[1]:
-                self.collector.emit(text, type)
+                collector.emit(text, type)
 
-    def finalize(self):
-        log.info('Aho Corasick extraced %s entities.', len(self.collector))
-        self.collector.save()
+        log.info('Aho Corasick extraced %s entities.', len(collector))
+        collector.save()

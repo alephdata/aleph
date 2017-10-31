@@ -13,47 +13,40 @@ log = logging.getLogger(__name__)
 
 
 class RegexAnalyzer(Analyzer):
-    REGEX = None
-    FLAG = None
 
-    def prepare(self):
-        # TODO: re-think this.
-        self.disabled = self.document.type == self.document.TYPE_TABULAR
-        self.collector = DocumentTagCollector(self.document, self.ORIGIN)
-        self.regex = re.compile(self.REGEX, self.FLAG)
+    def extract_match(self, document, match):
+        return match.group(0)
 
-    def on_text(self, text):
-        if not self.disabled:
-            for mobj in self.regex.finditer(text):
-                self.on_match(mobj)
-
-    def finalize(self):
-        self.collector.save()
+    def analyze(self, document):
+        collector = DocumentTagCollector(document, self.ORIGIN)
+        for match in self.RE.finditer(document.text):
+            text = self.extract_match(document, match)
+            if text is not None:
+                collector.emit(text, self.TYPE)
+        collector.save()
 
 
 class EMailAnalyzer(RegexAnalyzer):
     REGEX = '[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}'
-    FLAG = re.IGNORECASE
+    RE = re.compile(REGEX, re.IGNORECASE)
     ORIGIN = 'regex:email'
-
-    def on_match(self, match):
-        text = match.group(0)
-        self.collector.emit(text, DocumentTag.TYPE_EMAIL)
+    TYPE = DocumentTag.TYPE_EMAIL
 
 
 class PhoneNumberAnalyzer(RegexAnalyzer):
     REGEX = r'(\+?[\d\-\(\)\/\s]{5,})'
+    RE = re.compile(REGEX, re.IGNORECASE)
     CHARS = '+0123456789'
-    FLAG = re.IGNORECASE
     ORIGIN = 'regex:phones'
+    TYPE = DocumentTag.TYPE_PHONE
 
-    def on_match(self, match):
-        match = match.group(0)
-        match = ''.join([m for m in match if m in self.CHARS])
-        if len(match) < 5:
+    def extract_match(self, document, match):
+        text = match.group(0)
+        text = ''.join([m for m in text if m in self.CHARS])
+        if len(text) < 5:
             return
-        for country in [None] + self.document.countries:
-            num = parse_phone(match, country=country)
+        for country in [None] + document.countries:
+            num = parse_phone(text, country=country)
             if num is None:
                 continue
-            self.collector.emit(num, DocumentTag.TYPE_PHONE)
+            return num

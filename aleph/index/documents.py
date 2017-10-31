@@ -1,4 +1,5 @@
 import logging
+from banal import clean_dict
 from followthemoney import model
 from followthemoney.types import PhoneProperty, EmailProperty, NameProperty
 
@@ -64,7 +65,7 @@ def index_document(document):
         'pdf_version': document.pdf_version,
         'columns': document.columns,
         '$children': document.children.count(),
-        'text': index_form(document.text_parts())
+        'text': index_form(document.texts)
     }
     if document.parent_id is not None:
         data['parent'] = {
@@ -85,6 +86,7 @@ def index_document(document):
         data[field].append(tag.text)
 
     index_names(data)
+    data = clean_dict(data)
     es.index(index=es_index,
              doc_type=TYPE_DOCUMENT,
              body=data,

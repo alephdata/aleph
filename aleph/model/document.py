@@ -17,6 +17,10 @@ log = logging.getLogger(__name__)
 class Document(db.Model, DatedModel, Metadata):
     SCHEMA = 'Document'
 
+    # This means that text beyond the first 100 MB will not be indexed or
+    # processed using NLP.
+    MAX_TEXT_LENGTH = 1024 * 1024 * 100
+
     TYPE_TEXT = 'text'
     TYPE_TABULAR = 'tabular'
     TYPE_OTHER = 'other'
@@ -110,16 +114,29 @@ class Document(db.Model, DatedModel, Metadata):
         if len(chunk):
             db.session.bulk_insert_mappings(DocumentRecord, chunk)
 
-    def text_parts(self):
-        if self.title:
-            yield self.title
-        if self.summary:
-            yield self.summary
-        pq = db.session.query(DocumentRecord)
-        pq = pq.filter(DocumentRecord.document_id == self.id)
-        for record in pq.yield_per(1000):
-            for text in record.text_parts():
-                yield text
+    @property
+    def texts(self):
+        if not hasattr(self, '_texts'):
+            self._texts = []
+            if self.title:
+                self._texts.append(self.title)
+            if self.summary:
+                self._texts.append(self.summary)
+            if self.status == self.STATUS_SUCCESS:  
+                length = 0  
+                pq = db.session.query(DocumentRecord)
+                pq = pq.filter(DocumentRecord.document_id == self.id)
+                for record in pq.yield_per(1000):
+                    for text in record.texts:
+                        self._texts.append(text)
+                        length += len(text)
+                    if length >= self.MAX_TEXT_LENGTH:
+                        break
+        return self._texts
+
+    @property
+    def text(self):
+        return '\n\n'.join(self.texts)
 
     @classmethod
     def pending_count(cls, collection_id=None):

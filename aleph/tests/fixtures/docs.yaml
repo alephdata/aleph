@@ -47,6 +47,7 @@
       collection_id: 1000
       foreign_id: test1
       type: text
+      status: success
       meta:
         title: Foo Document
         file_name: foo.txt
@@ -57,6 +58,7 @@
       collection_id: 2000
       foreign_id: test2
       type: text
+      status: success
       meta:
         title: Secret Document
         file_name: bar.txt
@@ -67,6 +69,7 @@
       collection_id: 1000
       foreign_id: test3
       type: text
+      status: success
       meta:
         title: Does not mention fruit
         file_name: qux.txt
@@ -77,6 +80,7 @@
       collection_id: 1000
       foreign_id: test4
       type: tabular
+      status: success
       meta:
         title: Tabular thingie
         file_name: test.csv

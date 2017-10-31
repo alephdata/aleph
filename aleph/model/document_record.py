@@ -1,8 +1,8 @@
+import six
 import logging
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
-from aleph.text import string_value
 
 log = logging.getLogger(__name__)
 
@@ -19,16 +19,15 @@ class DocumentRecord(db.Model):
     document_id = db.Column(db.Integer(), db.ForeignKey('document.id'), index=True)  # noqa
     document = db.relationship("Document", backref=db.backref('records', cascade='all, delete-orphan'))  # noqa
 
-    def text_parts(self):
+    @property
+    def texts(self):
         """Utility method to get all text snippets in a record."""
         if self.data is not None:
             for value in self.data.values():
-                text = string_value(value)
-                if text is not None:
-                    yield text
-        text = string_value(self.text)
-        if text is not None:
-            yield text
+                if isinstance(value, six.text_type):
+                    yield value
+        if self.text is not None:
+            yield self.text
 
     @classmethod
     def find_records(cls, ids):

@@ -31,32 +31,20 @@ def analyze_document_id(document_id):
 
 def analyze_document(document):
     """Run analyzers (such as NER) on a given document."""
-    log.info("Analyze document: %r", document)
+    log.info("Analyze document [%s]: %s",
+             document.id, document.title)
     start = timer()
 
-    # initialise the analyzers
-    analyzers = []
     for cls in get_analyzers():
-        analyzer = cls(document)
-        analyzer.prepare()
-        analyzers.append(analyzer)
-
-    # run the analyzers on each fragment of text in the given
-    # document (row cells or text pages).
-    for text in document.text_parts():
-        for analyzer in analyzers:
-            if not analyzer.disabled:
-                analyzer.on_text(text)
-
-    # collect outputs.
-    for analyzer in analyzers:
+        analyzer = cls()
         if not analyzer.disabled:
-            analyzer.finalize()
+            analyzer.analyze(document)
+
     db.session.add(document)
     db.session.commit()
-
     end = timer()
-    log.info("Completed analysis: %r (elapsed: %.2fms)", document, end - start)
+    log.info("Completed analysis [%s]: %s (elapsed: %.2fs)",
+             document.id, document.title, end - start)
 
     # next: update the search index.
     index_document(document)

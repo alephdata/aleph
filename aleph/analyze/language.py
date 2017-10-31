@@ -1,5 +1,4 @@
 import logging
-from collections import defaultdict
 from langid.langid import LanguageIdentifier, model
 # https://github.com/saffsd/langid.py
 
@@ -8,7 +7,7 @@ from aleph.analyze.analyzer import Analyzer
 
 log = logging.getLogger(__name__)
 
-THRESHOLD = 0.9
+THRESHOLD = 0.8
 CUTOFF = 50
 
 
@@ -16,30 +15,20 @@ class LanguageAnalyzer(Analyzer):
 
     @property
     def identifier(self):
-        if not hasattr(LanguageAnalyzer, '_identifier'):
-            LanguageAnalyzer._identifier = \
-                LanguageIdentifier.from_modelstring(model, norm_probs=True)
-        return LanguageAnalyzer._identifier
+        cls = type(self)
+        if not hasattr(cls, '_identifier'):
+            cls._identifier = LanguageIdentifier.from_modelstring(model, norm_probs=True)  # noqa
+        return cls._identifier
 
-    def prepare(self):
-        self.languages = defaultdict(float)
-
-    def on_text(self, text):
-        if len(self.document.languages) > 0:
+    def analyze(self, document):
+        if len(document.languages) > 0:
             return
-        if len(text.strip()) <= CUTOFF:
+        lang, score = self.identifier.classify(document.text)
+        if score < THRESHOLD:
             return
-        lang, score = self.identifier.classify(text)
-        if score > THRESHOLD:
-            self.languages[lang] += score * len(text)
-
-    def finalize(self):
-        if not len(self.languages):
+        lang = lang.lower()
+        if lang not in language_whitelist:
             return
-
-        for code, score in self.languages.items():
-            if code.lower() in language_whitelist:
-                self.document.add_language(code)
-
-        log.info("Classified languages in %r: %r", self.document,
-                 self.document.languages)
+        document.add_language(lang)
+        log.info("Classified language [%s]: %r",
+                 document.id, document.languages)

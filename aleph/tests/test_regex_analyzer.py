@@ -33,8 +33,6 @@ class PhoneNumberTestCase(TestCase):
         for number in PHONE_NUMBERS:
             document = Document()
             document.add_country('de')
-            analyzer = PhoneNumberAnalyzer(document)
-            analyzer.prepare()
-            analyzer.on_text(number)
-            analyzer.finalize()
-            # assert meta.phone_numbers
+            analyzer = PhoneNumberAnalyzer()
+            analyzer.analyze(document)
+            # assert document.phone_numbers
