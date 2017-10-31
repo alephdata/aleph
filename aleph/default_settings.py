@@ -18,14 +18,14 @@ def env_bool(name, default=False):
     return default
 
 
-def env_list(name, default=[]):
+def env_list(name, default=[], seperator=':'):
     """Extract a list of values from the environment consistently.
 
-    Multiple values are expected to be separated by a colon (':'), like in the
-    UNIX $PATH variable.
+    Multiple values are by default expected to be separated by a colon (':'),
+    like in the UNIX $PATH variable.
     """
     if name in env:
-        return [e.strip() for e in env.get(name).split(':')]
+        return [e.strip() for e in env.get(name).split(seperator)]
     return default
 
 
@@ -62,6 +62,9 @@ DATASETS_YAML = env.get('ALEPH_DATASETS', DATASETS_YAML)
 # Set up a custom SCSS file with additional style rules here.
 CUSTOM_SCSS_PATH = None
 CUSTOM_TEMPLATES_DIR = []
+
+# Cross-origin resource sharing
+CORS_ORIGINS = env_list('ALEPH_CORS_ORIGINS', seperator='|')
 
 
 ###############################################################################
