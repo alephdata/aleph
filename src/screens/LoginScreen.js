@@ -43,12 +43,7 @@ class LoginScreen extends Component {
     const oauthLogin = Array.isArray(metadata.auth.oauth) && metadata.auth.oauth.length > 0;
 
     if (session.loggedIn) {
-      return <section>
-        <Callout modifier="primary"
-                 title={intl.formatMessage(messages.login.already_logged_in.title)}
-                 desc={intl.formatMessage(messages.login.already_logged_in.desc)}/>
-        <Redirect to="/"/>
-      </section>;
+      return <Redirect to="/"/>;
     }
 
     if (!passwordLogin && !oauthLogin) {
