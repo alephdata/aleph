@@ -5,31 +5,18 @@ import {Redirect} from 'react-router';
 import {NonIdealState} from '@blueprintjs/core';
 
 import messages from '../messages';
-import {login} from '../actions/sessionActions';
+import {loginWithPassword, loginWithToken} from '../actions/sessionActions';
 
 import OAuthLogin, {handleOAuthCallback} from '../components/OAuthLogin';
-import PasswordLogin from '../components/PasswordLogin';
-import {showErrorToast, showSuccessToast} from '../components/Toast';
+import {PasswordLogin} from '../components/PasswordAuthLogin';
 
 class LoginScreen extends Component {
-  constructor() {
-    super();
-    this.login = this.login.bind(this);
-  }
-
-  login(token) {
-    const {intl, login} = this.props;
-    try {
-      login(token);
-      showSuccessToast(intl.formatMessage(messages.status.success));
-    } catch (e) {
-      console.error('Invalid login token', e);
-      showErrorToast(intl.formatMessage(messages.status.unknown_error))
-    }
+  onLogin(data) {
+    this.props.loginWithPassword(data.email, data.password);
   }
 
   componentWillMount() {
-    handleOAuthCallback(this.login);
+    handleOAuthCallback(this.props.loginWithToken);
   }
 
   render() {
@@ -44,7 +31,7 @@ class LoginScreen extends Component {
       <section className="small-screen">
         {hasLogin && <h2>Sign in</h2>}
 
-        {passwordLogin && <PasswordLogin onLogin={this.login}/>}
+        {passwordLogin && <PasswordLogin onSubmit={this.onLogin.bind(this)}/>}
         {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
 
         {!hasLogin &&
@@ -59,7 +46,7 @@ const mapStateToProps = ({session, metadata}) => ({session, metadata});
 
 LoginScreen = connect(
   mapStateToProps,
-  {login}
+  {loginWithToken, loginWithPassword}
 )(injectIntl(LoginScreen));
 
 export default LoginScreen;

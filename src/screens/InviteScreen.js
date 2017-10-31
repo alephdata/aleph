@@ -9,13 +9,13 @@ import {endpoint} from '../api';
 
 import Callout from '../components/Callout';
 import OAuthLogin from '../components/OAuthLogin';
-import PasswordSignup from '../components/PasswordSignup';
+import {PasswordSignup} from '../components/PasswordAuthLogin';
 import {xhrErrorToast} from '../components/XhrToast';
 
 class InviteScreen extends Component {
   state = {submitted: false};
 
-  submit(data) {
+  onSignup(data) {
     endpoint.post('/roles/invite', data).then(() => {
       this.setState({submitted: true})
     }).catch(e => {
@@ -51,7 +51,7 @@ class InviteScreen extends Component {
     return (
       <section className="small-screen">
         <h2><FormattedMessage id="invite.signup" defaultMessage="Sign up"/></h2>
-        <PasswordSignup onSignup={this.submit} />
+        <PasswordSignup onSubmit={this.onSignup.bind(this)} />
         {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
       </section>
     );

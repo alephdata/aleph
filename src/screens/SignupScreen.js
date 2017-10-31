@@ -4,24 +4,17 @@ import {Redirect} from 'react-router';
 import {injectIntl} from 'react-intl';
 
 import {endpoint} from '../api';
-import {login} from '../actions/sessionActions';
+import {loginWithPassword} from '../actions/sessionActions';
 
-import PasswordSignup from '../components/PasswordSignup';
-import {xhrErrorToast, xhrSuccessToast} from '../components/XhrToast';
+import {PasswordSignup} from '../components/PasswordAuthLogin';
+import {xhrErrorToast} from '../components/XhrToast';
 
 class SignupScreen extends Component {
-  elements = {};
-
-  submit(data) {
-    const {match: {params}, intl, metadata, login} = this.props;
+  onSignup(data) {
+    const {match: {params}, intl, loginWithPassword} = this.props;
 
     endpoint.post('/roles', {code: params.code, ...data}).then((res) => {
-      xhrSuccessToast(res, intl);
-      endpoint.post(metadata.auth.password_login_uri, data).then((res) => {
-        login(res.data.token);
-      }).catch(e => {
-        console.error("automatic login after signup failed", e);
-      });
+      return loginWithPassword(data.email, data.password);
     }).catch(e => {
       console.log(e);
       xhrErrorToast(e.response, intl);
@@ -42,17 +35,17 @@ class SignupScreen extends Component {
     return (
       <section className="small-screen">
         <h2>Complete sign up</h2>
-        <PasswordSignup onSignup={data => this.submit(data)} showFull/>
+        <PasswordSignup onSignup={this.onSignup.bind(this)} showFull/>
       </section>
     );
   }
 }
 
-const mapStateToProps = ({session, metadata}) => ({session, metadata});
+const mapStateToProps = ({session}) => ({session});
 
 SignupScreen = connect(
   mapStateToProps,
-  {login}
+  {loginWithPassword}
 )(injectIntl(SignupScreen));
 
 export default SignupScreen;
