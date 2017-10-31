@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
-import {injectIntl} from 'react-intl';
+import {injectIntl, FormattedMessage} from 'react-intl';
 
 import {endpoint} from '../api';
 import {loginWithPassword} from '../actions/sessionActions';
@@ -34,7 +34,7 @@ class SignupScreen extends Component {
 
     return (
       <section className="small-screen">
-        <h2>Complete sign up</h2>
+        <h2><FormattedMessage id="signup.title" defaultMessage="Activate your account"/></h2>
         <PasswordSignup onSignup={this.onSignup.bind(this)} showFull/>
       </section>
     );
