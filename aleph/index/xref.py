@@ -1,6 +1,6 @@
 import logging
+from followthemoney import model
 
-from aleph.core import schemata
 from aleph.model import Document
 
 log = logging.getLogger(__name__)
@@ -16,7 +16,9 @@ def entity_query(sample, collection_id=None, query=None):
 
     # Do not attempt to find xrefs for entity types such as land, buildings,
     # etc.
-    schema = schemata.get(sample.get('schema'))
+    schema = model.get(sample.get('schema'))
+    if schema is None:
+        return {'match_none': {}}
     if sample.get('schema') != Document.SCHEMA and not schema.fuzzy:
         return {'match_none': {}}
 
@@ -101,6 +103,6 @@ def entity_query(sample, collection_id=None, query=None):
     # filter types which cannot be resolved via fuzzy matching.
     query['bool']['must_not'].append([
         {"ids": {"values": [sample.get('id')]}},
-        {"terms": {"schema": [s.name for s in schemata if not s.fuzzy]}}
+        {"terms": {"schema": [s.name for s in model if not s.fuzzy]}}
     ])
     return query

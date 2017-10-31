@@ -1,8 +1,9 @@
 import logging
+from followthemoney import model
+from followthemoney.types import PhoneProperty, EmailProperty, NameProperty
 
 from aleph.core import celery, db, es, es_index
 from aleph.model import Document, DocumentTag
-from aleph.schema.types import PhoneProperty, EmailProperty, NameProperty
 from aleph.index.records import index_records, clear_records
 from aleph.index.mapping import TYPE_DOCUMENT
 from aleph.index.util import index_form, index_names, unpack_result
@@ -31,14 +32,11 @@ def index_document(document):
     if document.status == Document.STATUS_PENDING:
         return
 
-    # FIXME:
-    if document.type == Document.TYPE_OTHER:
-        return
-
     log.info("Index document [%s]: %s", document.id, document.title)
+    schema = model.get(Document.SCHEMA)
     data = {
-        'schema': document.SCHEMA,
-        'schemata': [document.SCHEMA],
+        'schema': schema.name,
+        'schemata': schema.names,
         'collection_id': document.collection_id,
         'roles': document.collection.roles,
         'type': document.type,

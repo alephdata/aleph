@@ -1,10 +1,10 @@
 import logging
+from followthemoney import model
 
-from aleph.core import es, es_index, schemata
+from aleph.core import es, es_index
 from aleph.model import DocumentRecord
 from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD  # noqa
-from aleph.index.mapping import TYPE_COLLECTION, TYPE_LINK  # noqa
-from aleph.index.mapping import TYPE_ENTITY  # noqa
+from aleph.index.mapping import TYPE_COLLECTION, TYPE_ENTITY  # noqa
 from aleph.index.xref import entity_query
 from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
@@ -146,7 +146,7 @@ class SuggestEntitiesQuery(EntitiesQuery):
         # filter types which cannot be resolved via fuzzy matching.
         query['bool']['must_not'].append({
             "terms": {
-                "schema": [s.name for s in schemata if not s.fuzzy]
+                "schema": [s.name for s in model if not s.fuzzy]
             }
         })
         return query
@@ -172,30 +172,6 @@ class CollectionsQuery(AuthzQuery):
         'score': ['_score', {'name_sort': 'asc'}],
         'name': [{'name_sort': 'asc'}],
     }
-
-
-class LinksQuery(AuthzQuery):
-    DOC_TYPES = [TYPE_LINK]
-    RETURN_FIELDS = ['roles', 'remote', 'origin', 'inverted', 'schema',
-                     'schemata', 'properties']
-    TEXT_FIELDS = ['names^2', '_all']
-    SORT = {
-        'default': [{'properties.start_date': 'desc'},
-                    {'properties.end_date': 'desc'},
-                    {'properties.date': 'desc'}],
-        'score': ['_score', {'name_sort': 'asc'}],
-    }
-
-    def __init__(self, parser, entity=None):
-        super(LinksQuery, self).__init__(parser)
-        self.entity = entity
-
-    def get_filters(self, exclude=None):
-        filters = super(LinksQuery, self).get_filters(exclude=exclude)
-        if self.entity is not None:
-            ids = self.entity.get('ids') or [self.entity.get('id')]
-            filters.append({'terms': {'origin.id': ids}})
-        return filters
 
 
 class MatchQueryResult(DatabaseQueryResult):

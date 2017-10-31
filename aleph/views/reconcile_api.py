@@ -3,12 +3,12 @@ import json
 import logging
 import fingerprints
 from pprint import pprint  # noqa
-from urlparse import urljoin
 from flask import Blueprint, request, url_for
 from werkzeug.exceptions import BadRequest
+from followthemoney import model
 
 from aleph.util import ensure_list
-from aleph.core import app_url, app_title, schemata
+from aleph.core import app_url, app_title
 from aleph.search import SearchQueryParser
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.views.util import jsonify
@@ -22,12 +22,11 @@ log = logging.getLogger(__name__)
 
 def get_freebase_types():
     types = []
-    for schema in schemata.schemata.values():
-        if schema.section == schema.ENTITY:
-            types.append({
-                'id': schema.name,
-                'name': schema.label
-            })
+    for schema in model:
+        types.append({
+            'id': schema.name,
+            'name': schema.label
+        })
     return types
 
 
@@ -39,7 +38,7 @@ def reconcile_op(query):
     }, request.authz)
 
     name = query.get('query', '')
-    schema = query.get('type') or 'Entity'
+    schema = query.get('type') or 'Thing'
     entity = {
         'id': 'fake',
         'names': [name],

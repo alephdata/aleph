@@ -17,7 +17,7 @@ from aleph.index import index_document_id
 from aleph.logic import reindex_entities, delete_collection, process_collection
 from aleph.logic import update_collection
 from aleph.logic.alerts import check_alerts
-from aleph.logic.bulk import bulk_load
+from aleph.logic.entities import bulk_load
 from aleph.logic.xref import xref_collection
 from aleph.util import load_config_file
 

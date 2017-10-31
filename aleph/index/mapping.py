@@ -3,7 +3,6 @@ TYPE_COLLECTION = 'collection'
 TYPE_DOCUMENT = 'document'
 TYPE_RECORD = 'record'
 TYPE_ENTITY = 'entity'
-TYPE_LINK = 'link'
 
 
 COLLECTION_MAPPING = {
@@ -27,7 +26,7 @@ COLLECTION_MAPPING = {
         "countries": {"type": "keyword"},
         "category": {"type": "keyword"},
         "summary": {"type": "text"},
-        "managed": {"type": "boolean", "index": "not_analyzed"},
+        "managed": {"type": "boolean"},
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
         "$total": {"type": "long"},
@@ -144,50 +143,5 @@ ENTITY_MAPPING = {
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
         "$bulk": {"type": "boolean"}
-    }
-}
-
-LINK_MAPPING = {
-    "_all": {
-        "enabled": True
-    },
-    "dynamic_templates": [
-        {
-            "fields": {
-                "match": "properties.*",
-                "mapping": {
-                    "type": "text"
-                }
-            }
-        }
-    ],
-    "date_detection": False,
-    "properties": {
-        "schema": {"type": "keyword"},
-        "schemata": {"type": "keyword"},
-        "dataset": {"type": "keyword"},
-        "collection_id": {"type": "long"},
-        "roles": {"type": "long"},
-        "fingerprints": {"type": "keyword"},
-        "names": {"type": "text"},
-        "identifiers": {"type": "keyword"},
-        "countries": {"type": "keyword"},
-        "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
-        "emails": {"type": "keyword"},
-        "phones": {"type": "keyword"},
-        "addresses": {"type": "text"},
-        "text": {"type": "text"},
-        "properties": {"type": "object"},
-        "origin": {
-            "type": "object",
-            "properties": {
-                "id": {"type": "keyword"},
-                "fingerprints": {"type": "keyword"}
-            }
-        },
-        "remote": {
-            "type": "object",
-            "properties": ENTITY_MAPPING.get('properties')
-        }
     }
 }

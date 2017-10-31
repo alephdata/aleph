@@ -1,16 +1,18 @@
 import logging
 from datetime import datetime
+from followthemoney import model
 from sqlalchemy import func, or_
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
+from followthemoney.util import merge_data
 
-from aleph.core import db, schemata
+from aleph.core import db
 from aleph.text import match_form, string_value
 from aleph.util import ensure_list
 from aleph.model.collection import Collection
 from aleph.model.permission import Permission
 from aleph.model.match import Match
 from aleph.model.common import SoftDeleteModel, UuidModel
-from aleph.model.common import make_textid, merge_data
+from aleph.model.common import make_textid
 
 log = logging.getLogger(__name__)
 
@@ -55,6 +57,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         if self.name.lower() != other.name.lower():
             data = merge_data(data, {'alias': [other.name]})
 
+        self.type = model.precise_schema(self.type, other.type)
         self.data = data
         self.state = self.STATE_ACTIVE
         self.foreign_ids = self.foreign_ids or []
@@ -128,7 +131,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
     @property
     def schema(self):
-        return schemata.get(self.type)
+        return model.get(self.type)
 
     @property
     def terms(self):

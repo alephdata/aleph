@@ -3,13 +3,15 @@ from __future__ import absolute_import
 import time
 import logging
 from pprint import pprint  # noqa
+from followthemoney import model
+from datetime import datetime
 from elasticsearch.helpers import BulkIndexError
 from elasticsearch import TransportError
 
-from aleph.core import es, es_index, schemata
+from aleph.core import es, es_index
 from aleph.model import Entity
-from aleph.index.mapping import TYPE_ENTITY, TYPE_LINK
-from aleph.index.util import merge_docs, bulk_op, index_form
+from aleph.index.mapping import TYPE_ENTITY
+from aleph.index.util import bulk_op, index_form
 from aleph.index.util import index_names, unpack_result
 from aleph.util import ensure_list
 
@@ -27,9 +29,6 @@ def index_entity(entity):
         return delete_entity(entity.id)
 
     data = {
-        'name': entity.name,
-        'names': [entity.name],
-        'type': entity.type,
         'state': entity.state,
         'foreign_ids': entity.foreign_ids,
         'data': entity.data,
@@ -44,9 +43,7 @@ def index_entity(entity):
     }
 
     for k, v in entity.data.items():
-        v = ensure_list(v)
-        if len(v):
-            data['properties'][k] = v
+        data['properties'][k] = ensure_list(v)
 
     # data['$documents'] = get_count(entity)
     data = finalize_index(data, entity.schema)
@@ -71,7 +68,7 @@ def get_entity(entity_id):
     return entity
 
 
-def _index_updates(entities, links):
+def _index_updates(collection, entities):
     """Look up existing index documents and generate an updated form.
 
     This is necessary to make the index accumulative, i.e. if an entity or link
@@ -80,44 +77,37 @@ def _index_updates(entities, links):
     document and losing field values. An alternative solution would be to
     implement this in Groovy on the ES.
     """
+    common = {
+        'collection_id': collection.id,
+        '$bulk': True,
+        'state': Entity.STATE_ACTIVE,
+        'roles': collection.roles,
+        'updated_at': datetime.utcnow()
+    }
     if not len(entities):
         return
 
     result = es.mget(index=es_index, doc_type=TYPE_ENTITY,
-                     body={'ids': entities.keys()})
+                     body={'ids': entities.keys()},
+                     _source=['schema', 'properties', 'created_at'])
     for doc in result.get('docs', []):
         if not doc.get('found', False):
             continue
         entity_id = doc['_id']
         entity = entities.get(entity_id)
         existing = doc.get('_source')
-        combined = merge_docs(entity, existing)
-        combined['schema'] = schemata.merge_entity_schema(entity['schema'],
-                                                          existing['schema'])
-        combined['roles'] = entity.get('roles', [])
+        combined = model.merge(existing, entity)
+        combined['created_at'] = existing.get('created_at')
         entities[entity_id] = combined
-
-    for link in links:
-        doc_id = link.pop('id', None)
-        if doc_id is None:
-            continue
-        entity = entities.get(link.pop('remote'))
-        if entity is None:
-            continue
-        entity = dict(entity)
-        link['text'].extend(entity.pop('text', []))
-        link['text'] = list(set(link['text']))
-        link['remote'] = entity
-        yield {
-            '_id': doc_id,
-            '_type': TYPE_LINK,
-            '_index': str(es_index),
-            '_source': link
-        }
 
     for doc_id, entity in entities.items():
         entity.pop('id', None)
-        # from pprint import pprint
+        entity.pop('data', None)
+        entity.update(common)
+        if 'created_at' not in entity:
+            entity['created_at'] = entity.get('updated_at')
+        schema = model.get(entity.get('schema'))
+        entity = finalize_index(entity, schema)
         # pprint(entity)
         yield {
             '_id': doc_id,
@@ -127,11 +117,12 @@ def _index_updates(entities, links):
         }
 
 
-def index_bulk(entities, links):
-    """Index a set of links or entities."""
+def index_bulk(collection, entities, chunk_size=500):
+    """Index a set of entities."""
     while True:
         try:
-            bulk_op(_index_updates(entities, links))
+            bulk_op(_index_updates(collection, entities),
+                    chunk_size=chunk_size)
             break
         except (BulkIndexError, TransportError) as exc:
             log.warning('Indexing error: %s', exc)
@@ -173,7 +164,7 @@ def finalize_index(data, schema):
 
     # Get implied schemata (i.e. parents of the actual schema)
     data['schema'] = schema.name
-    data['schemata'] = [p.name for p in schema.schemata if not p.hidden]
+    data['schemata'] = schema.names
 
     # Second name field for non-tokenised sorting.
     if 'name' in data:

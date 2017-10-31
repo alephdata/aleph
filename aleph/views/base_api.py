@@ -3,10 +3,11 @@ import logging
 from flask import Blueprint, request
 from elasticsearch import TransportError
 from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
+from followthemoney import model
+from followthemoney.exc import InvalidData
 
-from aleph.core import get_config, app_title, app_url, schemata, url_for
+from aleph.core import get_config, app_title, app_url, url_for
 from aleph.index.stats import get_instance_stats
-from aleph.schema import SchemaValidationException
 from aleph.oauth import oauth
 from aleph.views.cache import enable_cache
 from aleph.views.util import jsonify
@@ -48,7 +49,7 @@ def metadata():
         'categories': get_config('COLLECTION_CATEGORIES', {}),
         'countries': COUNTRY_NAMES,
         'languages': LANGUAGE_NAMES,
-        'schemata': schemata,
+        'schemata': model,
         'auth': auth
     })
 
@@ -84,8 +85,8 @@ def handle_not_found_error(err):
     }, status=404)
 
 
-@blueprint.app_errorhandler(SchemaValidationException)
-def handle_schema_validation_error(err):
+@blueprint.app_errorhandler(InvalidData)
+def handle_invalid_data(err):
     return jsonify({
         'status': 'error',
         'errors': err.errors

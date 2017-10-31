@@ -16,7 +16,7 @@ import storagelayer
 
 from aleph import default_settings
 from aleph.ext import get_init
-from aleph.util import load_config_file, SessionTask
+from aleph.util import SessionTask
 from aleph.oauth import configure_oauth
 
 log = logging.getLogger(__name__)
@@ -171,16 +171,6 @@ def get_archive():
     return app._aleph_archive
 
 
-def get_schemata():
-    app = current_app._get_current_object()
-    if not hasattr(app, '_schemata'):
-        schema_yaml = app.config.get('SCHEMA_YAML')
-        log.info("Loading schema from: %s", schema_yaml)
-        from aleph.schema import SchemaSet
-        app._schemata = SchemaSet(load_config_file(schema_yaml))
-    return app._schemata
-
-
 def get_upload_folder():
     folder = current_app.config.get('UPLOAD_FOLDER')
     try:
@@ -200,7 +190,6 @@ app_url = LocalProxy(get_app_url)
 es = LocalProxy(get_es)
 es_index = LocalProxy(get_es_index)
 archive = LocalProxy(get_archive)
-schemata = LocalProxy(get_schemata)
 upload_folder = LocalProxy(get_upload_folder)
 secret_key = LocalProxy(get_app_secret_key)
 language_whitelist = LocalProxy(get_language_whitelist)

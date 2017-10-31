@@ -1,12 +1,11 @@
 from aleph.core import es, es_index
 from aleph.model import Document
-from aleph.index.mapping import TYPE_LINK, TYPE_DOCUMENT, TYPE_ENTITY
+from aleph.index.mapping import TYPE_DOCUMENT, TYPE_ENTITY
 from aleph.index.mapping import TYPE_COLLECTION
 
 TYPES = {
     TYPE_DOCUMENT: '$documents',
     TYPE_ENTITY: '$entities',
-    TYPE_LINK: '$links',
     TYPE_COLLECTION: '$collections',
 }
 

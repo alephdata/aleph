@@ -35,12 +35,10 @@ before_install:
   - wget --quiet -O /tmp/wkhtmltox.tar.xv https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
   - tar -xf /tmp/wkhtmltox.tar.xv -C $TRAVIS_BUILD_DIR
 install:
-  - pip install --upgrade setuptools pip
+  - pip install -q --upgrade setuptools pip
   - pip install -r requirements.txt
-  - pip install -r requirements-testing.txt
+  - pip install -q -r requirements-testing.txt
   - pip install -e .
-  - pip install --upgrade git+https://github.com/alephdata/ingestors.git#egg=ingestors
-  - pip install coveralls
 before_script:
   - sleep 10
   - psql -c "create database ${ALEPH_DATABASE_NAME}_test;" -U postgres
