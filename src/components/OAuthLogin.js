@@ -4,7 +4,7 @@ import queryString from "query-string";
 
 import './OAuthLogin.css';
 
-const OAuthLogin = ({providers, onLogin}) => {
+const OAuthLogin = ({providers}) => {
   const location = window.location;
   const targetUrl = `${location.protocol}//${location.host}/login`;
   const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;

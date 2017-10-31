@@ -1,20 +1,21 @@
 import React, {Component} from 'react';
-import {FormattedMessage, injectIntl} from "react-intl";
-import {Button} from '@blueprintjs/core';
-import {connect} from "react-redux";
-import {xhrErrorToast} from "../components/XhrToast";
-import Callout from "../components/Callout";
-import messages from "../messages";
-import {endpoint} from "../api";
-import {Redirect} from "react-router";
+import {FormattedMessage, injectIntl} from 'react-intl';
+import {connect} from 'react-redux';
+import {Redirect} from 'react-router';
+import {NonIdealState} from '@blueprintjs/core';
+
+import messages from '../messages';
+import {endpoint} from '../api';
+
+import Callout from '../components/Callout';
+import OAuthLogin from '../components/OAuthLogin';
+import PasswordInvite from '../components/PasswordInvite';
+import {xhrErrorToast} from '../components/XhrToast';
 
 class InviteScreen extends Component {
   state = {submitted: false};
 
-  submit(event) {
-    event.preventDefault();
-    const data = {email: this.emailElement.value};
-
+  submit(data) {
     endpoint.post('/roles/invite', data).then(() => {
       this.setState({submitted: true})
     }).catch(e => {
@@ -27,14 +28,18 @@ class InviteScreen extends Component {
     const {submitted} = this.state;
     const {metadata, intl, session} = this.props;
 
+    const oauthLogin = Array.isArray(metadata.auth.oauth) && metadata.auth.oauth.length > 0;
+
     if (session.loggedIn) {
       return <Redirect to="/"/>;
     }
 
     if (!metadata.auth.registration) {
-      return <Callout modifier="warning"
-                      title={intl.formatMessage(messages.invite.not_available.title)}
-                      desc={intl.formatMessage(messages.invite.not_available.desc)}/>;
+      return (
+        <NonIdealState visual=""
+          title={intl.formatMessage(messages.invite.not_available.title)}
+          description={intl.formatMessage(messages.invite.not_available.desc)}/>
+      );
     }
 
     if (submitted) {
@@ -43,19 +48,16 @@ class InviteScreen extends Component {
                       desc={intl.formatMessage(messages.invite.submitted.desc)}/>
     }
 
-    return <section>
-      <form onSubmit={(e) => this.submit(e)}>
-        <label className="pt-label">
-          <FormattedMessage id="invite.email" defaultMessage="E-Mail address"/>
-          <input className="pt-input" type="email" name="email" required ref={(el) => this.emailElement = el}/>
-        </label>
-        <Button iconName="log-in" type="submit">
-          <FormattedMessage id="invite.submit" defaultMessage="Signup"/>
-        </Button>
-      </form>
-    </section>
+    return (
+      <section className="small-screen">
+        <h2><FormattedMessage id="invite.signup" defaultMessage="Sign up"/></h2>
+        <PasswordInvite onSignup={this.submit} />
+        {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
+      </section>
+    );
   }
 }
 
-const mapStateToProps = (state) => ({session: state.session, metadata: state.metadata});
+const mapStateToProps = ({session, metadata}) => ({session, metadata});
+
 export default connect(mapStateToProps)(injectIntl(InviteScreen));

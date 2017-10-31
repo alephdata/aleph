@@ -45,7 +45,7 @@ class LoginScreen extends Component {
         {hasLogin && <h2>Sign in</h2>}
 
         {passwordLogin && <PasswordLogin onLogin={this.login}/>}
-        {oauthLogin && <OAuthLogin providers={metadata.auth.oauth} onLogin={this.login}/>}
+        {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
 
         {!hasLogin &&
           <NonIdealState visual="log-in"
