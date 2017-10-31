@@ -2,7 +2,7 @@ import logging
 from flask_mail import Message
 from flask import render_template
 
-from aleph.core import get_config, app_title, app_url, mail
+from aleph.core import get_config, app_title, app_ui_url, mail
 
 log = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ def notify_role_template(role, subject, template, **kwargs):
     try:
         html = render_template(template,
                                role=role,
-                               app_url=app_url,
+                               ui_url=app_ui_url,
                                app_title=app_title,
                                **kwargs)
         notify_role(role, subject, html)

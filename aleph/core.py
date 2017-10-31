@@ -3,7 +3,7 @@ import logging
 from logging.handlers import SMTPHandler
 from urlparse import urlparse, urljoin
 from werkzeug.local import LocalProxy
-from flask import Flask, current_app
+from flask import Flask, current_app, request
 from flask import url_for as flask_url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -98,7 +98,7 @@ def create_app(config={}):
     configure_oauth(app)
     mail.init_app(app)
     db.init_app(app)
-    CORS(app, origins=app.config.get('CORS_ORIGINS', []));
+    CORS(app, origins=app.config.get('CORS_ORIGINS', []))
 
     try:
         ldap.init_app(app)
@@ -124,15 +124,8 @@ def get_config(name, default=None):
     return current_app.config.get(name, default)
 
 
-def get_app_url():
-    app = current_app._get_current_object()
-    if not hasattr(app, '_app_baseurl'):
-        parsed = urlparse(current_app.config.get('APP_BASEURL'))
-        scheme = get_config('PREFERRED_URL_SCHEME')
-        if scheme:
-            parsed = parsed._replace(scheme=scheme)
-        app._app_baseurl = parsed.geturl()
-    return app._app_baseurl
+def get_app_ui_url():
+    return current_app.config.get('APP_UI_URL')
 
 
 def get_app_name():
@@ -188,7 +181,7 @@ def get_language_whitelist():
 
 app_name = LocalProxy(get_app_name)
 app_title = LocalProxy(get_app_title)
-app_url = LocalProxy(get_app_url)
+app_ui_url = LocalProxy(get_app_ui_url)
 es = LocalProxy(get_es)
 es_index = LocalProxy(get_es_index)
 archive = LocalProxy(get_archive)
@@ -200,8 +193,18 @@ language_whitelist = LocalProxy(get_language_whitelist)
 def url_for(*a, **kw):
     """Generate external URLs with HTTPS (if configured)."""
     try:
+        api_url = get_config('APP_API_URL')
+        if api_url is None:
+            api_url = request.url_root
+
+        scheme = get_config('PREFERRED_URL_SCHEME')
+        if scheme is not None:
+            parsed = urlparse(api_url)
+            parsed = parsed._replace(scheme=scheme)
+            api_url = parsed.geturl()
+
         kw['_external'] = False
         path = flask_url_for(*a, **kw)
-        return urljoin(get_app_url(), path)
+        return urljoin(api_url, path)
     except RuntimeError:
         return None

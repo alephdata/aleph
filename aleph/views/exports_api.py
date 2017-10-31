@@ -1,9 +1,9 @@
 from flask import Blueprint, request, send_file
 
-from aleph.core import url_for
 from aleph.model import Collection
 from aleph.search import DocumentsQuery, SearchQueryParser
 from aleph.views.util import make_excel
+from aleph.logic.documents import document_url
 
 blueprint = Blueprint('exports_api', __name__)
 
@@ -28,8 +28,7 @@ def get_results(query, limit):
 
         data = {
             'collection': collections.get(collection_id, '[Missing]'),
-            'file_url': url_for('documents_api.file',
-                                document_id=row.get('_id'))
+            'url': document_url(row.get('_id'))
         }
         for name, value in source.items():
             if name not in FIELDS:

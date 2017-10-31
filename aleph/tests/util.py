@@ -14,7 +14,7 @@ from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
 
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
-
+UI_URL = 'http://aleph.ui/'
 
 class TestCase(FlaskTestCase):
 
@@ -31,6 +31,7 @@ class TestCase(FlaskTestCase):
             'SECRET_KEY': 'batman',
             'ARCHIVE_TYPE': 'file',
             'ARCHIVE_PATH': self.temp_dir,
+            'APP_UI_URL': UI_URL,
             'APP_NAME': app_name,
             'PRESERVE_CONTEXT_ON_EXCEPTION': False,
             'CELERY_ALWAYS_EAGER': True

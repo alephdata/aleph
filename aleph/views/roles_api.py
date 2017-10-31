@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
-from aleph.core import db, get_config, app_url
+from aleph.core import db, get_config, app_ui_url
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Permission
 from aleph.logic.permissions import update_permission
@@ -43,7 +43,7 @@ def suggest():
 def invite_email():
     data = parse_request(schema=RoleInviteSchema)
     signature = Role.SIGNATURE.dumps(data['email'])
-    url = '{}signup/{}'.format(app_url, signature)
+    url = '{}signup/{}'.format(app_ui_url, signature)
     role = Role(email=data['email'], name='Visitor')
     notify_role_template(role, 'Registration',
                          'email/registration_invitation.html',

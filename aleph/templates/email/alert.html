@@ -10,7 +10,7 @@
       <tr class="result">
         <td class="title">
           <a class="title" href="{{result.url}}">{{result.title}}</a>
-          <a class="source" href="{{app_url}}collections/{{result.collection.id}}">
+          <a class="source" href="{{ui_url}}collections/{{result.collection.id}}">
             ({{result.collection.label}})
           </a>
         </td>
@@ -35,6 +35,6 @@
 
 {% block footer %}
   You will receive notifications like this whenever {{app_title}} adds documents that
-  match your search criteria. If you would like to stop receiving them, visit
-  <a href="{{app_url}}">{{app_title}}</a> to manage your active alerts.
+  match your search criteria. Visit <a href="{{ui_url}}">{{app_title}}</a> to manage
+  your alerts.
 {% endblock %}

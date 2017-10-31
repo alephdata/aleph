@@ -42,7 +42,8 @@ MAINTENANCE = env_bool('ALEPH_MAINTENANCE', False)
 
 APP_TITLE = env.get('ALEPH_APP_TITLE', 'Aleph')
 APP_NAME = env.get('ALEPH_APP_NAME', 'aleph')
-APP_BASEURL = env.get('ALEPH_APP_URL', 'http://localhost:5000/')
+APP_API_URL = env.get('ALEPH_API_URL')
+APP_UI_URL = env.get('ALEPH_UI_URL', 'http://localhost:3000/')
 APP_LOGO = env.get('ALEPH_LOGO', '/static/images/aleph_small.png')
 APP_FAVICON = env.get('ALEPH_FAVICON', '/static/images/aleph_small.png')
 
@@ -52,12 +53,6 @@ PREFERRED_URL_SCHEME = env.get('ALEPH_URL_SCHEME', 'http')
 # Shown on the home page as a few sample queries:
 SAMPLE_SEARCHES = ['TeliaSonera', 'Vladimir Putin']
 SAMPLE_SEARCHES = env_list('ALEPH_SAMPLE_SEARCHES', SAMPLE_SEARCHES)
-
-# Graph / Databases component configuration
-LOCAL_PATH = path.dirname(__file__)
-SCHEMA_YAML = path.join(LOCAL_PATH, 'schema.yaml')
-DATASETS_YAML = path.join(LOCAL_PATH, '../mappings/default.yml')
-DATASETS_YAML = env.get('ALEPH_DATASETS', DATASETS_YAML)
 
 # Set up a custom SCSS file with additional style rules here.
 CUSTOM_SCSS_PATH = None

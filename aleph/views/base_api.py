@@ -6,7 +6,7 @@ from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
 from followthemoney import model
 from followthemoney.exc import InvalidData
 
-from aleph.core import get_config, app_title, app_url, url_for
+from aleph.core import get_config, app_title, app_ui_url, url_for
 from aleph.index.stats import get_instance_stats
 from aleph.oauth import oauth
 from aleph.views.cache import enable_cache
@@ -43,7 +43,7 @@ def metadata():
         'maintenance': request.authz.in_maintenance,
         'app': {
             'title': six.text_type(app_title),
-            'url': six.text_type(app_url),
+            'ui_uri': six.text_type(app_ui_url),
             'samples': get_config('SAMPLE_SEARCHES')
         },
         'categories': get_config('COLLECTION_CATEGORIES', {}),

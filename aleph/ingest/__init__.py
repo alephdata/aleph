@@ -2,7 +2,7 @@ import os
 import logging
 from flask import current_app
 
-from aleph.core import db, archive, celery, app_url
+from aleph.core import db, archive, celery
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.core import WORKER_QUEUE, WORKER_ROUTING_KEY
 from aleph.model import Document, Role
@@ -63,11 +63,13 @@ def ingest(document_id, role_id=None):
 
 def ingest_complete(collection, role_id=None):
     """Operations supposed to be performed when an ingest process completes."""
-    from aleph.logic.collections import update_collection  # noqa
+    from aleph.logic.collections import update_collection, collection_url  # noqa
     update_collection(collection)
     role = Role.by_id(role_id)
     if role is not None:
         # notify the user that their import is completed.
-        url = '%scollections/%s' % (app_url, collection.id)
-        notify_role_template(role, collection.label, 'email/ingest.html',
-                             collection=collection, url=url)
+        notify_role_template(role,
+                             collection.label,
+                             'email/ingest.html',
+                             collection=collection,
+                             url=collection_url(collection.id))

@@ -8,7 +8,7 @@ from werkzeug.exceptions import BadRequest
 from followthemoney import model
 
 from aleph.util import ensure_list
-from aleph.core import app_url, app_title
+from aleph.core import app_ui_url, app_title
 from aleph.search import SearchQueryParser
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.views.util import jsonify
@@ -74,7 +74,7 @@ def reconcile_op(query):
 
 
 def reconcile_index():
-    domain = app_url.strip('/')
+    domain = app_ui_url.strip('/')
     api_key = request.authz.role.api_key if request.authz.logged_in else None
     meta = {
         'name': six.text_type(app_title),

@@ -3,13 +3,14 @@ from pprint import pprint  # noqa
 from flask import render_template, current_app
 
 from aleph.authz import Authz
-from aleph.core import app_title, app_url, db, celery
+from aleph.core import app_title, app_ui_url, db, celery
 from aleph.model import Role, Alert, Collection
 from aleph.notify import notify_role
 from aleph.index.entities import get_entity
 from aleph.index.util import unpack_result
 from aleph.search import AlertDocumentsQuery, SearchQueryParser
 from aleph.logic.documents import document_url
+from aleph.logic.collections import collection_url
 
 log = logging.getLogger(__name__)
 
@@ -33,7 +34,10 @@ def format_results(alert, results):
         collection = Collection.by_id(document.pop('collection_id'))
         if not collection:
             continue
-        document['collection'] = collection
+        document['collection'] = {
+            'label': collection.label,
+            'url': collection_url(collection.id)
+        }
 
         # preview snippets:
         result['snippets'] = []
@@ -68,7 +72,7 @@ def check_role_alerts(authz):
                                    total=results.get('total'),
                                    results=format_results(alert, results),
                                    app_title=app_title,
-                                   app_url=app_url)
+                                   ui_url=app_ui_url)
             notify_role(authz.role, subject, html)
         except Exception as ex:
             log.exception(ex)

@@ -6,7 +6,7 @@ from urlparse import urlparse, urljoin
 from werkzeug.exceptions import ImATeapot, Forbidden, BadRequest
 import xlsxwriter
 
-from aleph.core import app_url
+from aleph.core import app_ui_url
 from aleph.authz import Authz
 from aleph.model import Document, Collection
 from aleph.logic import fetch_entity
@@ -79,14 +79,15 @@ def get_collection(collection_id, action=Authz.READ):
 
 def is_safe_url(target):
     """Check if the forward URL is on the same host as the site."""
-    test_url = urlparse(urljoin(request.host_url, target))
+    test_url = urlparse(target)
     return test_url.scheme in ('http', 'https') and \
-        urlparse(app_url).hostname == test_url.hostname
+        urlparse(app_ui_url).hostname == test_url.hostname
 
 
 def get_best_next_url(*urls):
-    """Returns the safest URL to redirect to from a given list or defaults to app_url. """
-    for url in urls + (app_url,):
+    """Returns the safest URL to redirect to from a given list."""
+    for url in urls + (app_ui_url,):
+        url = urljoin(app_ui_url, url)
         if url and is_safe_url(url):
             return url
 

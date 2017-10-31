@@ -7,7 +7,7 @@ from urllib import unquote
 from urlparse import urlparse
 from dalet import is_country_code, is_language_code
 from dalet import parse_country, parse_date
-from ingestors.util import make_filename
+from normality import safe_filename
 
 from aleph.text import slugify, string_value
 
@@ -93,7 +93,7 @@ class Metadata(object):
     def file_name(self):
         """File name is a slugified version of the file title that is safe to
         use as part of a file system path."""
-        return make_filename(self.file_title, default='data')
+        return safe_filename(self.file_title, default='data')
 
     @file_name.setter
     def file_name(self, file_name):
