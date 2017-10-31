@@ -44,6 +44,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "start-mocks": "node mocks/server.js"
-  },
-  "proxy": "http://localhost:5000/"
+  }
 }
