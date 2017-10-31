@@ -9,6 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_simpleldap import LDAP, LDAPException
+from flask_cors import CORS
 from kombu import Queue
 from celery import Celery
 from elasticsearch import Elasticsearch
@@ -97,6 +98,7 @@ def create_app(config={}):
     configure_oauth(app)
     mail.init_app(app)
     db.init_app(app)
+    CORS(app, origins=app.config.get('CORS_ORIGINS', []));
 
     try:
         ldap.init_app(app)
