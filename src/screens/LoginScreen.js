@@ -8,7 +8,7 @@ import messages from '../messages';
 import {loginWithPassword, loginWithToken} from '../actions/sessionActions';
 
 import OAuthLogin, {handleOAuthCallback} from '../components/OAuthLogin';
-import {PasswordLogin} from '../components/PasswordAuthLogin';
+import {PasswordAuthLogin} from '../components/PasswordAuth';
 
 class LoginScreen extends Component {
   onLogin(data) {
@@ -31,7 +31,7 @@ class LoginScreen extends Component {
       <section className="small-screen">
         {hasLogin && <h2>Sign in</h2>}
 
-        {passwordLogin && <PasswordLogin onSubmit={this.onLogin.bind(this)}/>}
+        {passwordLogin && <PasswordAuthLogin onSubmit={this.onLogin.bind(this)}/>}
         {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
 
         {!hasLogin &&

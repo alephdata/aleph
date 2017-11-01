@@ -4,7 +4,7 @@ import {Button} from '@blueprintjs/core';
 import AuthButton from "./AuthButton";
 import {Link} from "react-router-dom";
 
-const SignupButton = () => <Link to="/invite">
+const SignupButton = () => <Link to="/signup">
   <Button iconName="user" className="pt-minimal">
     <FormattedMessage id="nav.signup" defaultMessage="Sign up"/>
   </Button>
