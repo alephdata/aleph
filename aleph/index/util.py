@@ -30,8 +30,6 @@ def bulk_op(iter, chunk_size=500):
 
 def query_delete(query, doc_type=None, wait=True):
     "Delete all documents matching the given query inside the doc_type(s)."
-    if doc_type is None:
-        doc_type = '*'
     es.delete_by_query(index=six.text_type(es_index),
                        body={'query': query},
                        doc_type=doc_type,

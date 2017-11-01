@@ -6,8 +6,7 @@ from aleph.ingest import ingest
 from aleph.model import Collection, Document, Entity, Match, Permission
 from aleph.index.collections import delete_collection as index_delete
 from aleph.index.collections import index_collection
-from aleph.logic.entities import delete_entity, update_entity_full
-from aleph.logic.documents import delete_document
+from aleph.logic.entities import update_entity_full
 from aleph.logic.util import ui_url
 
 log = logging.getLogger(__name__)
@@ -64,7 +63,7 @@ def delete_collection(collection_id):
 
     log.info("Deleting collection [%r]: %r", collection.id, collection.label)
     deleted_at = datetime.utcnow()
-    index_delete(collection_id)
+    index_delete(collection_id, wait=False)
 
     log.info("Delete cross-referencing matches...")
     Match.delete_by_collection(collection_id)

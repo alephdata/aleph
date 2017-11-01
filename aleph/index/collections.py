@@ -54,12 +54,9 @@ def update_roles(collection):
                        wait_for_completion=False)
 
 
-def delete_collection(collection_id):
+def delete_collection(collection_id, wait=True):
     """Delete all documents from a particular collection."""
-    query_delete({'term': {'collection_id': collection_id}},
-                 wait=False)
-    query_delete({'term': {'entity_collection_id': collection_id}},
-                 wait=False)
+    query_delete({'term': {'collection_id': collection_id}}, wait=wait)
     es.delete(index=es_index,
               doc_type=TYPE_COLLECTION,
               id=collection_id,
