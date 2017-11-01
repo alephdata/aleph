@@ -1,9 +1,7 @@
 import uuid
-from hashlib import sha1
 from datetime import datetime
 
 from aleph.core import db
-from aleph.text import string_value
 
 
 def make_textid():

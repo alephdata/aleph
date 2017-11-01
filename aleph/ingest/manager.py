@@ -70,7 +70,7 @@ class DocumentManager(Manager):
     def ingest_document(self, document, file_path=None, role_id=None):
         """Ingest a database-backed document.
 
-        First retrieve it's data and then call the actual ingestor.
+        First retrieve its data and then call the actual ingestor.
         """
         if file_path is None:
             file_path = self.archive.load_file(document.content_hash,
@@ -82,7 +82,7 @@ class DocumentManager(Manager):
             for child in Document.by_parent(document):
                 self.ingest_document(child, role_id=role_id)
             return
-            
+
         if not os.path.exists(file_path):
             # Probably indicative of file system encoding issues.
             log.warn("Ingest non-existant path [%r]: %s", document, file_path)

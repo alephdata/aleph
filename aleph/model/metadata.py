@@ -59,6 +59,15 @@ class Metadata(object):
         self.update_meta()
 
     @property
+    def crawler(self):
+        return self.meta.get('crawler')
+
+    @crawler.setter
+    def crawler(self, crawler):
+        self.meta['crawler'] = string_value(crawler)
+        self.update_meta()
+
+    @property
     def file_size(self):
         file_size = self.meta.get('file_size')
         return None if file_size is None else int(file_size)

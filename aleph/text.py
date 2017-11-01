@@ -1,5 +1,4 @@
 # coding: utf-8
-import six
 import logging
 from urllib import urlencode
 from normality import normalize, stringify

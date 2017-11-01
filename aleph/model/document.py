@@ -66,6 +66,12 @@ class Document(db.Model, DatedModel, Metadata):
     def update(self, data):
         self.title = data.get('title')
         self.summary = data.get('summary')
+        self.author = data.get('author', self.author)
+        self.crawler = data.get('crawler', self.crawler)
+        self.source_url = data.get('source_url', self.source_url)
+        self.file_name = data.get('file_name', self.meta.get('file_name'))
+        self.mime_type = data.get('mime_type', self.meta.get('mime_type'))
+        self.headers = data.get('headers', self.headers)
         self.languages = data.get('languages', [])
         self.countries = data.get('countries', [])
         self.keywords = data.get('keywords', [])
@@ -203,6 +209,16 @@ class Document(db.Model, DatedModel, Metadata):
         q = cls.all()
         q = q.filter(Document.parent_id == parent_id)
         return q
+
+    @classmethod
+    def by_id(cls, id, collection_id=None):
+        if id is None:
+            return
+        q = cls.all()
+        q = q.filter(cls.id == id)
+        if collection_id is not None:
+            q = q.filter(cls.collection_id == collection_id)
+        return q.first()
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.type, self.title)

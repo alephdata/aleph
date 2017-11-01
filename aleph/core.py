@@ -166,15 +166,6 @@ def get_archive():
     return app._aleph_archive
 
 
-def get_upload_folder():
-    folder = current_app.config.get('UPLOAD_FOLDER')
-    try:
-        os.makedirs(folder)
-    except:
-        pass
-    return folder
-
-
 def get_language_whitelist():
     return [c.lower().strip() for c in get_config('LANGUAGES')]
 
@@ -185,7 +176,6 @@ app_ui_url = LocalProxy(get_app_ui_url)
 es = LocalProxy(get_es)
 es_index = LocalProxy(get_es_index)
 archive = LocalProxy(get_archive)
-upload_folder = LocalProxy(get_upload_folder)
 secret_key = LocalProxy(get_app_secret_key)
 language_whitelist = LocalProxy(get_language_whitelist)
 

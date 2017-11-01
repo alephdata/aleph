@@ -12,7 +12,7 @@ from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
 from aleph.logic.documents import document_url
-from aleph.model import Role
+from aleph.model import Role, Document
 from aleph.util import ensure_list
 
 
@@ -195,6 +195,13 @@ class LinkSchema(Schema, DatedSchema):
     schemata = List(SchemaName())
 
 
+class DocumentReference(Schema):
+    id = String()
+    foreign_id = String()
+    title = String()
+    type = String(dump_only=True)
+
+
 class DocumentSchema(Schema, DatedSchema):
     id = String(dump_only=True)
     collection_id = Integer(dump_only=True, required=True)
@@ -202,25 +209,25 @@ class DocumentSchema(Schema, DatedSchema):
     schemata = List(SchemaName(), dump_only=True)
     status = String(dump_only=True)
     type = String(dump_only=True)
-    foreign_id = String(dump_only=True)
+    foreign_id = String()
     content_hash = String(dump_only=True)
-    parent = Dict(dump_only=True)  # TODO: make writeable?
+    parent = Nested(DocumentReference())
     uploader_id = Integer(dump_only=True)
     error_message = String(dump_only=True)
     # title = String(validate=Length(min=2, max=5000), missing=None)
-    title = String(missing=None)
-    summary = String(missing=None)
+    title = String()
+    summary = String()
     countries = List(Country(), missing=[])
     languages = List(Language(), missing=[])
     keywords = List(String(validate=Length(min=1, max=5000)), missing=[])
     dates = List(PartialDate(), dump_only=True)
-    file_name = String(dump_only=True)
+    file_name = String()
     file_size = Integer(dump_only=True)
-    author = String(dump_only=True)
-    mime_type = String(dump_only=True)
+    author = String()
+    mime_type = String()
     extension = String(dump_only=True)
     encoding = String(dump_only=True)
-    source_url = String(dump_only=True)
+    source_url = String()
     pdf_version = String(dump_only=True)
     columns = List(String(), dump_only=True)
     children = Boolean(dump_to='$children', attribute='$children',
