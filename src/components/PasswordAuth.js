@@ -70,8 +70,5 @@ export const PasswordAuthSignup = ({onSubmit}) => (
 
 export const PasswordAuthActivate = ({onSubmit}) => (
   <PasswordAuth onSubmit={onSubmit} showPassword showName
-                buttonText={<FormattedMessage id="password_auth.activate" defaultMessage="Activate"/>}>
-    <FormattedMessage id="password_auth.has_account" defaultMessage="Already have an account?"/>{' '}
-    <Link to="/login"><FormattedMessage id="password_auth.signin" defaultMessage="Sign in"/></Link>
-  </PasswordAuth>
+                buttonText={<FormattedMessage id="password_auth.activate" defaultMessage="Activate"/>}/>
 );
