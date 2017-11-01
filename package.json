@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "^1.22.0",
+    "@blueprintjs/core": "^1.32.0",
     "axios": "^0.16.2",
     "bourbon": "^4.3.2",
     "classnames": "^2.2.5",
