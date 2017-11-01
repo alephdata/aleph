@@ -3,7 +3,7 @@ from datetime import datetime
 
 from aleph.core import db, celery
 from aleph.ingest import ingest
-from aleph.model import Collection, Document, Entity
+from aleph.model import Collection, Document, Entity, Match, Permission
 from aleph.index.collections import delete_collection as index_delete
 from aleph.index.collections import index_collection
 from aleph.logic.entities import delete_entity, update_entity_full
@@ -55,27 +55,28 @@ def process_collection(collection_id):
 def delete_collection(collection_id):
     # Deleting a collection affects many associated objects and requires
     # checks, so this is done manually and in detail here.
-    q = db.session.query(Collection).filter(Collection.id == collection_id)
+    q = db.session.query(Collection)
+    q = q.filter(Collection.id == collection_id)
     collection = q.first()
     if collection is None:
         log.error("No collection with ID: %r", collection_id)
         return
 
     log.info("Deleting collection [%r]: %r", collection.id, collection.label)
-    index_delete(collection_id)
     deleted_at = datetime.utcnow()
+    index_delete(collection_id)
 
-    q = db.session.query(Entity)
-    q = q.filter(Entity.collection_id == collection.id)
-    for entity in q.yield_per(5000):
-        log.info("Delete entity: %r", entity)
-        delete_entity(entity, deleted_at=deleted_at)
+    log.info("Delete cross-referencing matches...")
+    Match.delete_by_collection(collection_id)
 
-    q = db.session.query(Document)
-    q = q.filter(Document.collection_id == collection.id)
-    for document in q.yield_per(5000):
-        log.info("Delete document: %r", document)
-        delete_document(document, deleted_at=deleted_at)
+    log.info("Delete permissions...")
+    Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
+
+    log.info("Delete documents...")
+    Document.delete_by_collection(collection_id, deleted_at=deleted_at)
+
+    log.info("Delete entities...")
+    Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
 
     collection.delete(deleted_at=deleted_at)
     db.session.commit()

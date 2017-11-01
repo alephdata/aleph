@@ -82,7 +82,7 @@ def crawldir(directory, language=None, country=None, foreign_id=None):
 @manager.command
 def flush(foreign_id):
     """Reset the crawler state for a given collecton."""
-    collection = Collection.by_foreign_id(foreign_id)
+    collection = Collection.by_foreign_id(foreign_id, deleted=True)
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
     delete_collection(collection.id)
@@ -150,7 +150,7 @@ def indexentities():
 def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_db()
-    # upgrade_search()
+    upgrade_search()
     archive.upgrade()
 
 

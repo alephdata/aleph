@@ -1,12 +1,10 @@
 import logging
 from datetime import datetime
-from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db
 from aleph.model.role import Role
 from aleph.model.permission import Permission
-from aleph.model.match import Match
 from aleph.model.common import IdModel, make_textid
 from aleph.model.common import SoftDeleteModel
 
@@ -56,28 +54,11 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.updated_at = datetime.utcnow()
         db.session.add(self)
 
-    def delete_matches(self):
-        pq = db.session.query(Match)
-        pq = pq.filter(or_(
-            Match.collection_id == self.id,
-            Match.match_collection_id == self.id))
-        pq.delete(synchronize_session=False)
-
-    def delete_permissions(self, deleted_at):
-        pq = db.session.query(Permission)
-        pq = pq.filter(Permission.collection_id == self.id)
-        pq.update({Permission.deleted_at: deleted_at},
-                  synchronize_session=False)
-
-    def delete(self, deleted_at=None):
-        self.delete_matches()
-        self.delete_permissions(deleted_at=deleted_at)
-        super(Collection, self).delete(deleted_at=deleted_at)
-
     @property
     def roles(self):
         if not hasattr(self, '_roles'):
             q = db.session.query(Permission.role_id)
+            q = q.filter(Permission.deleted_at == None)  # noqa
             q = q.filter(Permission.collection_id == self.id)  # noqa
             q = q.filter(Permission.read == True)  # noqa
             self._roles = [e.role_id for e in q.all()]

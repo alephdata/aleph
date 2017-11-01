@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 from followthemoney import model
-from sqlalchemy import func, or_
+from sqlalchemy import func, select, or_
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from followthemoney.util import merge_data
 
@@ -31,7 +31,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         pq = pq.filter(or_(
             Match.entity_id == self.id,
             Match.match_id == self.id))
-        pq.delete(synchronize_session='fetch')
+        pq.delete(synchronize_session=False)
         db.session.refresh(self)
 
     def delete(self, deleted_at=None):
@@ -40,6 +40,34 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         for alert in self.alerts:
             alert.delete(deleted_at=deleted_at)
         super(Entity, self).delete(deleted_at=deleted_at)
+
+    @classmethod
+    def delete_by_collection(cls, collection_id, deleted_at=None):
+        from aleph.model import Alert
+        deleted_at = deleted_at or datetime.utcnow()
+
+        entities = db.session.query(cls.id)
+        entities = entities.filter(cls.collection_id == collection_id)
+        entities = entities.subquery()
+
+        pq = db.session.query(Alert)
+        pq = pq.filter(Alert.entity_id.in_(entities))
+        pq.update({Alert.deleted_at: deleted_at},
+                  synchronize_session=False)
+
+        pq = db.session.query(Match)
+        pq = pq.filter(Match.entity_id.in_(entities))
+        pq.delete(synchronize_session=False)
+
+        pq = db.session.query(Match)
+        pq = pq.filter(Match.match_id.in_(entities))
+        pq.delete(synchronize_session=False)
+
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.collection_id == collection_id)
+        pq = pq.filter(cls.deleted_at == None)  # noqa
+        pq.update({cls.deleted_at: deleted_at},
+                  synchronize_session=False)
 
     def merge(self, other):
         if self.id == other.id:

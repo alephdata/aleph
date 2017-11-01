@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from aleph.core import db
 from aleph.model.common import SoftDeleteModel, IdModel
 
@@ -32,3 +34,12 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
         q = q.filter(Permission.collection_id == collection.id)
         permission = q.first()
         return permission
+
+    @classmethod
+    def delete_by_collection(cls, collection_id, deleted_at=None):
+        if deleted_at is None:
+            deleted_at = datetime.utcnow()
+        q = db.session.query(cls)
+        q = q.filter(cls.collection_id == collection_id)
+        q.update({cls.deleted_at: deleted_at},
+                 synchronize_session=False)

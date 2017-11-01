@@ -1,6 +1,6 @@
 import logging
 # from datetime import datetime
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy.orm import aliased
 
 from aleph.core import db
@@ -29,6 +29,15 @@ class Match(db.Model, IdModel, DatedModel):
         q = q.filter(Match.match_collection_id == other_id)
         q = q.order_by(Match.score.desc())
         return q
+
+    @classmethod
+    def delete_by_collection(cls, collection_id, deleted_at=None):
+        q = db.session.query(cls)
+        q = q.filter(or_(
+            cls.collection_id == collection_id,
+            cls.match_collection_id == collection_id
+        ))
+        q.delete(synchronize_session=False)
 
     @classmethod
     def group_by_collection(cls, collection_id, authz=None):

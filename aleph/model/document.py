@@ -1,5 +1,5 @@
 import logging
-from sqlalchemy import func
+from sqlalchemy import func, select, subquery
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -97,6 +97,28 @@ class Document(db.Model, DatedModel, Metadata):
         self.delete_tags()
         self.delete_matches()
         db.session.delete(self)
+
+    @classmethod
+    def delete_by_collection(cls, collection_id, deleted_at=None):
+        documents = db.session.query(cls.id)
+        documents = documents.filter(cls.collection_id == collection_id)
+        documents = documents.subquery()
+
+        pq = db.session.query(DocumentRecord)
+        pq = pq.filter(DocumentRecord.document_id.in_(documents))
+        pq.delete(synchronize_session=False)
+
+        pq = db.session.query(DocumentTag)
+        pq = pq.filter(DocumentTag.document_id.in_(documents))
+        pq.delete(synchronize_session=False)
+
+        pq = db.session.query(Match)
+        pq = pq.filter(Match.document_id.in_(documents))
+        pq.delete(synchronize_session=False)
+
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.collection_id == collection_id)
+        pq.delete(synchronize_session=False)
 
     def insert_records(self, sheet, iterable, chunk_size=1000):
         chunk = []
