@@ -18,13 +18,8 @@ log = logging.getLogger(__name__)
 
 
 class Entity(db.Model, UuidModel, SoftDeleteModel):
-    STATE_ACTIVE = 'active'
-    STATE_PENDING = 'pending'
-    STATE_DELETED = 'deleted'
-
     name = db.Column(db.Unicode)
     type = db.Column(db.String(255), index=True)
-    state = db.Column(db.String(128), nullable=True, default=STATE_ACTIVE, index=True)  # noqa
     foreign_ids = db.Column(ARRAY(db.Unicode()))
     data = db.Column('data', JSONB)
 
@@ -44,7 +39,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         deleted_at = deleted_at or datetime.utcnow()
         for alert in self.alerts:
             alert.delete(deleted_at=deleted_at)
-        self.state = self.STATE_DELETED
         super(Entity, self).delete(deleted_at=deleted_at)
 
     def merge(self, other):
@@ -59,7 +53,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
         self.type = model.precise_schema(self.type, other.type)
         self.data = data
-        self.state = self.STATE_ACTIVE
         self.foreign_ids = self.foreign_ids or []
         self.foreign_ids += other.foreign_ids or []
         self.created_at = min((self.created_at, other.created_at))
@@ -85,7 +78,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
         fid = [string_value(f) for f in entity.get('foreign_ids') or []]
         self.foreign_ids = list(set([f for f in fid if f is not None]))
-        self.state = entity.get('state', self.STATE_ACTIVE)
         self.updated_at = datetime.utcnow()
         self.collection.touch()
         db.session.add(self)
@@ -126,7 +118,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     @classmethod
     def latest(cls):
         q = db.session.query(func.max(cls.updated_at))
-        q = q.filter(cls.state == cls.STATE_ACTIVE)
+        q = q.filter(cls.deleted_at == None)  # noqa
         return q.scalar()
 
     @property

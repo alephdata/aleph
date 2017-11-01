@@ -41,7 +41,6 @@ class AutomatonCache(object):
 
         matches = {}
         q = Entity.all()
-        q = q.filter(Entity.state == Entity.STATE_ACTIVE)
         for entity in q:
             for term in entity.regex_terms:
                 type_ = self.TYPES.get(entity.type)

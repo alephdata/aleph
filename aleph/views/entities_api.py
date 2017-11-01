@@ -28,7 +28,6 @@ def index():
 def all():
     parser = QueryParser(request.args, request.authz)
     q = Entity.all_ids(authz=request.authz)
-    q = q.filter(Entity.state == Entity.STATE_ACTIVE)
     collection_ids = parser.getintlist('collection_id')
     if len(collection_ids):
         q = q.filter(Entity.collection_id.in_(collection_ids))

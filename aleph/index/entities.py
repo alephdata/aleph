@@ -25,11 +25,10 @@ def delete_entity(entity_id):
 
 def index_entity(entity):
     """Index an entity."""
-    if entity.state != Entity.STATE_ACTIVE:
+    if entity.deleted_at is not None:
         return delete_entity(entity.id)
 
     data = {
-        'state': entity.state,
         'foreign_ids': entity.foreign_ids,
         'data': entity.data,
         'created_at': entity.created_at,
@@ -80,7 +79,6 @@ def _index_updates(collection, entities):
     common = {
         'collection_id': collection.id,
         '$bulk': True,
-        'state': Entity.STATE_ACTIVE,
         'roles': collection.roles,
         'updated_at': datetime.utcnow()
     }
