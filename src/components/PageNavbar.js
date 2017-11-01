@@ -1,23 +1,33 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import {FormattedMessage} from 'react-intl';
+import {Button} from '@blueprintjs/core';
+import AuthButton from "./AuthButton";
+import {Link} from "react-router-dom";
 
-const PageNavbar = ({ metadata, session }) => (
+const SignupButton = () => <Link to="/signup">
+  <Button iconName="user" className="pt-minimal">
+    <FormattedMessage id="nav.signup" defaultMessage="Sign up"/>
+  </Button>
+</Link>;
+
+const PageNavbar = ({metadata, session}) => (
   <nav className="pt-navbar pt-dark">
     <div className="pt-navbar-group pt-align-left">
       <div className="pt-navbar-heading">
         {metadata.app.title}
       </div>
-      <button className="pt-button pt-minimal pt-icon-home">
-        <FormattedMessage id="nav.home" defaultMessage="Home" />
-      </button>
-      <button className="pt-button pt-minimal pt-icon-document">
-        <FormattedMessage id="nav.documents" defaultMessage="Documents" />
-      </button>
+      <Button iconName="home" className="pt-minimal">
+        <FormattedMessage id="nav.home" defaultMessage="Home"/>
+      </Button>
+      <Button iconName="document" className="pt-minimal">
+        <FormattedMessage id="nav.documents" defaultMessage="Documents"/>
+      </Button>
     </div>
     <div className="pt-navbar-group pt-align-right">
-      <button className="pt-button pt-minimal pt-icon-user"></button>
-      <button className="pt-button pt-minimal pt-icon-notifications"></button>
-      <button className="pt-button pt-minimal pt-icon-cog"></button>
+      {session.loggedIn && <Button iconName="cog" className="pt-minimal"/>}
+      {session.loggedIn && <Button iconName="notifications" className="pt-minimal"/>}
+      <AuthButton session={session}/>
+      {!session.loggedIn && metadata.auth.registration && <SignupButton/>}
     </div>
   </nav>
 );

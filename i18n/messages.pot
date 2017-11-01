@@ -29,8 +29,50 @@ msgid "Documents"
 msgstr ""
 
 #: i18n/messages.json
+#. [login.email]
+#. defaultMessage is:
+#. E-Mail address
+msgid "E-Mail address"
+msgstr ""
+
+#: i18n/messages.json
 #. [nav.home]
 #. defaultMessage is:
 #. Home
 msgid "Home"
+msgstr ""
+
+#: i18n/messages.json
+#. [login.submit]
+#. defaultMessage is:
+#. Log in
+msgid "Log in"
+msgstr ""
+
+#: i18n/messages.json
+#. [nav.login]
+#. defaultMessage is:
+#. Login
+msgid "Login"
+msgstr ""
+
+#: i18n/messages.json
+#. [nav.logoff]
+#. defaultMessage is:
+#. Logout
+msgid "Logout"
+msgstr ""
+
+#: i18n/messages.json
+#. [login.password]
+#. defaultMessage is:
+#. Password
+msgid "Password"
+msgstr ""
+
+#: i18n/messages.json
+#. [login.provider]
+#. defaultMessage is:
+#. Sign in with {label}
+msgid "Sign in with {label}"
 msgstr ""

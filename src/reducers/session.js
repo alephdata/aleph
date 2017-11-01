@@ -1,13 +1,24 @@
+import jwt_decode from "jwt-decode";
+
 const initialState = {
-  isLoaded: false
+  loggedIn: false
+};
+
+const login = (token) => {
+  const data = jwt_decode(token);
+  return {
+    ...data,
+    token,
+    loggedIn: true
+  };
 };
 
 const session = (state = initialState, action) => {
   switch (action.type) {
-    case 'FETCH_SESSION_REQUEST':
-      return { isLoaded: false }
-    case 'FETCH_SESSION_SUCCESS':
-      return { ...action.session, isLoaded: true }
+    case 'LOGIN':
+      return login(action.token);
+    case 'LOGOUT':
+      return {loggedIn: false};
     default:
       return state;
   }

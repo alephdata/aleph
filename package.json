@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "^1.22.0",
+    "@blueprintjs/core": "^1.32.0",
     "axios": "^0.16.2",
     "bourbon": "^4.3.2",
     "classnames": "^2.2.5",
@@ -22,7 +22,8 @@
     "react-router-dom": "^4.1.1",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "jwt-decode": "latest"
   },
   "devDependencies": {
     "faker": "^4.1.0",
@@ -43,6 +44,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "start-mocks": "node mocks/server.js"
-  },
-  "proxy": "http://localhost:5000/"
+  }
 }

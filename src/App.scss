@@ -1,8 +1,52 @@
-.App {
+$icon-font-path: "~@blueprintjs/core/resources/icons";
+
+@import "~@blueprintjs/core/src/blueprint.scss";
+@import "~@blueprintjs/core/dist/variables";
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: $light-gray5;
+  min-height: 100%;
 }
 
 .spinner {
   position: absolute;
   top: 20px;
   left: 40px;
+}
+
+.pt-navbar a {
+  color: inherit;
+}
+
+.pt-card + .pt-card {
+  margin-top: $pt-grid-size;
+}
+
+.small-screen {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: ($pt-grid-size * 2);
+
+  h2 {
+    line-height: inherit;
+  }
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 0 (-$pt-grid-size);
+
+  & > * {
+    padding: 0 $pt-grid-size;
+  }
 }

@@ -1,5 +1,15 @@
 [
   {
+    "id": "nav.logoff",
+    "defaultMessage": "Logout",
+    "filepath": "src/components/AuthButton.js"
+  },
+  {
+    "id": "nav.login",
+    "defaultMessage": "Login",
+    "filepath": "src/components/AuthButton.js"
+  },
+  {
     "id": "nav.home",
     "defaultMessage": "Home",
     "filepath": "src/components/PageNavbar.js"
@@ -18,5 +28,25 @@
     "id": "search.schema.all",
     "defaultMessage": "All Results",
     "filepath": "src/components/SearchFilterSchema.js"
+  },
+  {
+    "id": "login.email",
+    "defaultMessage": "E-Mail address",
+    "filepath": "src/screens/LoginScreen.js"
+  },
+  {
+    "id": "login.password",
+    "defaultMessage": "Password",
+    "filepath": "src/screens/LoginScreen.js"
+  },
+  {
+    "id": "login.submit",
+    "defaultMessage": "Log in",
+    "filepath": "src/screens/LoginScreen.js"
+  },
+  {
+    "id": "login.provider",
+    "defaultMessage": "Sign in with {label}",
+    "filepath": "src/screens/LoginScreen.js"
   }
 ]
