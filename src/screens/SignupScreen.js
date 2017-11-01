@@ -2,12 +2,11 @@ import React, {Component} from 'react';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
-import {NonIdealState} from '@blueprintjs/core';
+import {Callout, Intent, NonIdealState} from '@blueprintjs/core';
 
 import messages from '../messages';
 import {endpoint} from '../api';
 
-import Callout from '../components/Callout';
 import OAuthLogin from '../components/OAuthLogin';
 import {PasswordAuthSignup} from '../components/PasswordAuth';
 import {xhrErrorToast} from '../components/XhrToast';
@@ -42,17 +41,19 @@ class SignupScreen extends Component {
       );
     }
 
-    if (submitted) {
-      return <Callout modifier="primary"
-                      title={intl.formatMessage(messages.signup.submitted.title)}
-                      desc={intl.formatMessage(messages.signup.submitted.desc)}/>
-    }
-
     return (
       <section className="small-screen">
         <h2><FormattedMessage id="signup.signup" defaultMessage="Sign up"/></h2>
-        <PasswordAuthSignup onSubmit={this.onSignup.bind(this)} />
-        {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
+        {submitted ?
+          <Callout intent={Intent.SUCCESS} iconName="tick">
+            <h5><FormattedMessage id="signup.inbox.title" defaultMessage="Check your inbox"/></h5>
+            <FormattedMessage id="signup.inbox.desc" defaultMessage="We've sent you an email, please follow the link to complete your registration"/>
+          </Callout> :
+          <span>
+            <PasswordAuthSignup onSubmit={this.onSignup.bind(this)}/>
+            {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
+          </span>}
+
       </section>
     );
   }
