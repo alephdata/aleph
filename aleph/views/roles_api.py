@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
+from itsdangerous import BadSignature
 
 from aleph.core import db, get_config, app_url
 from aleph.search import QueryParser, DatabaseQueryResult
@@ -7,7 +8,7 @@ from aleph.model import Role, Permission
 from aleph.logic.permissions import update_permission
 from aleph.notify import notify_role_template
 from aleph.views.serializers import RoleSchema, PermissionSchema
-from aleph.views.serializers import RoleInviteSchema, RoleCreateSchema
+from aleph.views.serializers import RoleCodeCreateSchema, RoleCreateSchema
 from aleph.views.util import require, get_collection, jsonify, parse_request
 from aleph.views.util import obj_or_404
 
@@ -39,14 +40,14 @@ def suggest():
     return jsonify(result)
 
 
-@blueprint.route('/api/2/roles/invite', methods=['POST'])
-def invite_email():
-    data = parse_request(schema=RoleInviteSchema)
+@blueprint.route('/api/2/roles/code', methods=['POST'])
+def create_code():
+    data = parse_request(schema=RoleCodeCreateSchema)
     signature = Role.SIGNATURE.dumps(data['email'])
     url = '{}signup/{}'.format(app_url, signature)
     role = Role(email=data['email'], name='Visitor')
     notify_role_template(role, 'Registration',
-                         'email/registration_invitation.html',
+                         'email/registration_code.html',
                          url=url)
     return jsonify({
         'status': 'ok',
@@ -59,28 +60,31 @@ def create():
     require(not request.authz.in_maintenance,
             get_config('PASSWORD_REGISTRATION'))
     data = parse_request(schema=RoleCreateSchema)
-    try:
-        code = data.get('code')
-        email = Role.SIGNATURE.loads(code, max_age=Role.SIGNATURE_MAX_AGE)
-        assert email == data.get('email')
-    except Exception:
-        raise BadRequest("Invalid signature")
 
-    role = Role.by_email(email).first()
-    status = 200
-    if role is None:
-        status = 201
-        role = Role.load_or_create(
-            foreign_id='password:{}'.format(email),
-            type=Role.USER,
-            name=data.get('name') or email,
-            email=email
-        )
-        role.set_password(data.get('password'))
-        db.session.add(role)
-        db.session.commit()
-    request.authz.id = role.id
-    return jsonify(role, schema=RoleSchema, status=status)
+    try:
+        email = Role.SIGNATURE.loads(data.get('code'), max_age=Role.SIGNATURE_MAX_AGE)
+
+        role = Role.by_email(email).first()
+        if role is None:
+            role = Role.load_or_create(
+                foreign_id='password:{}'.format(email),
+                type=Role.USER,
+                name=data.get('name') or email,
+                email=email
+            )
+            role.set_password(data.get('password'))
+            db.session.add(role)
+            db.session.commit()
+            # Let the serializer return more info about this user
+            request.authz.id = role.id
+            return jsonify(role, schema=RoleSchema, status=201)
+        else:
+            return jsonify({
+                'status': 'error',
+                'message': 'Email is already registered'
+            }, status=409)
+    except BadSignature:
+        return jsonify({'status': 'error', 'message': 'Invalid code'}, status=400)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])

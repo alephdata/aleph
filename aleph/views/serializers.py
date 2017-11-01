@@ -83,12 +83,11 @@ class RoleSchema(Schema, DatedSchema):
         return data
 
 
-class RoleInviteSchema(Schema, DatedSchema):
+class RoleCodeCreateSchema(Schema, DatedSchema):
     email = String(validate=Email(), required=True)
 
 
 class RoleCreateSchema(Schema, DatedSchema):
-    email = String(validate=Email(), required=True)
     name = String()
     password = String(validate=Length(min=Role.PASSWORD_MIN_LENGTH),
                       required=True)
