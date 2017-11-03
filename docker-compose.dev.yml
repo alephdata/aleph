@@ -26,6 +26,7 @@ services:
   unoservice:
     image: alephdata/unoservice
     tmpfs: /tmp
+    restart: on-failure
     expose:
       - 3000
 

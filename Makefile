@@ -7,6 +7,8 @@ test:
 	$(DEVDOCKER) contrib/test.sh
 
 upgrade: build
+	docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
+	sleep 5
 	$(DEVDOCKER) aleph upgrade
 	$(DEVDOCKER) aleph installdata
 
