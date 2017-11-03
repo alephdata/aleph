@@ -3,7 +3,6 @@ import logging
 from urllib import urlencode
 from normality import normalize, stringify
 from normality import slugify  # noqa
-from normality.cleaning import remove_control_chars
 
 log = logging.getLogger(__name__)
 
@@ -16,12 +15,6 @@ def match_form(text):
     and machine analysis.
     """
     return normalize(text, lowercase=True, ascii=True)
-
-
-def string_value(value, encoding=None):
-    value = stringify(value, encoding=encoding, encoding_default='utf-8')
-    value = remove_control_chars(value)
-    return value
 
 
 def query_string(items):
