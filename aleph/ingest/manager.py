@@ -34,9 +34,7 @@ class DocumentManager(Manager):
     def after(self, result):
         result.update()
         db.session.commit()
-        if result.error_message:
-            log.warn('Error [%r]: %s', result, result.error_message)
-        else:
+        if not result.error_message:
             log.debug('Ingested [%s]: %s',
                       result.document.id,
                       result.document.title)
