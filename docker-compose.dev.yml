@@ -23,33 +23,41 @@ services:
       - "./build/data/rabbitmq:/var/lib/rabbitmq"
       - "./build/logs/rabbitmq:/var/log"
 
+  unoservice:
+    image: alephdata/unoservice
+    tmpfs: /tmp
+    expose:
+      - 3000
+
   app:
-      build: .
-      command: /bin/bash
-      expose:
-        - 5000
-      links:
-        - postgres
-        - elasticsearch
-        - rabbitmq
-      volumes:
-        - "./:/aleph"
-        - "./build/logs/app:/var/log"
-        - "./build/archive:/data"
-        - "./build/polyglot:/polyglot"
-        - "./build/docs:/aleph/docs/_build"
-        - "/:/host"
-      environment:
-        ALEPH_DEBUG: 'true'
-        ALEPH_SECRET_KEY: 'development'
-        ALEPH_CACHE: 'false'
-        ALEPH_URL_SCHEME: 'http'
-        ALEPH_ARCHIVE_TYPE: 'file'
-        ALEPH_ARCHIVE_PATH: '/data'
-        ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-        ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-        ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-        POLYGLOT_DATA_PATH: /polyglot
-        C_FORCE_ROOT: 'true'
-      env_file:
-        - aleph.env
+    build: .
+    command: /bin/bash
+    expose:
+      - 5000
+    links:
+      - postgres
+      - elasticsearch
+      - rabbitmq
+      - unoservice
+    volumes:
+      - "./:/aleph"
+      - "./build/logs/app:/var/log"
+      - "./build/archive:/data"
+      - "./build/polyglot:/polyglot"
+      - "./build/docs:/aleph/docs/_build"
+      - "/:/host"
+    environment:
+      ALEPH_DEBUG: 'true'
+      ALEPH_SECRET_KEY: 'development'
+      ALEPH_CACHE: 'false'
+      ALEPH_URL_SCHEME: 'http'
+      ALEPH_ARCHIVE_TYPE: 'file'
+      ALEPH_ARCHIVE_PATH: '/data'
+      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
+      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
+      ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+      POLYGLOT_DATA_PATH: /polyglot
+      UNOSERVICE_URL: http://unoservice:3000/convert
+      C_FORCE_ROOT: 'true'
+    env_file:
+      - aleph.env
