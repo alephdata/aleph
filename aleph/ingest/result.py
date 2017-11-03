@@ -19,6 +19,7 @@ class DocumentResult(Result):
         self.document = document
         self.pdf_hash = document.pdf_version
         self.columns = OrderedDict()
+        self.pages = []
         bind = super(DocumentResult, self)
         bind.__init__(id=document.foreign_id,
                       checksum=document.content_hash,
@@ -34,14 +35,26 @@ class DocumentResult(Result):
                       headers=document.meta.get('headers'),
                       size=document.meta.get('file_size'))
 
+    def emit_html_body(self, html, text):
+        self.document.type = Document.TYPE_HTML
+        self.document.body_raw = html
+        self.document.body_text = text
+
+    def emit_text_body(self, text):
+        self.document.type = Document.TYPE_SCROLL
+        self.document.body_text = text
+
     def emit_page(self, index, text):
         """Emit a plain text page."""
-        self.document.type = Document.TYPE_TEXT
+        self.document.type = Document.TYPE_PDF
+        text = stringify(text)
         record = DocumentRecord()
         record.document_id = self.document.id
-        record.text = stringify(text)
+        record.text = text
         record.index = index
         db.session.add(record)
+        if text is not None:
+            self.pages.append(text)
 
     def _emit_iterator_rows(self, iterator):
         for row in iterator:
@@ -51,11 +64,11 @@ class DocumentResult(Result):
 
     def emit_rows(self, iterator):
         """Emit rows of a tabular iterator."""
-        # TODO: also generate a tabular rep for the metadata
         self.document.type = Document.TYPE_TABULAR
         self.document.insert_records(0, self._emit_iterator_rows(iterator))
 
     def emit_pdf_alternative(self, file_path):
+        self.document.type = Document.TYPE_PDF
         self.pdf_hash = self.manager.archive.archive_file(file_path)
 
     def update(self):
@@ -85,6 +98,9 @@ class DocumentResult(Result):
         self.document.headers = self.headers
         self.document.pdf_version = self.pdf_hash
         self.document.columns = self.columns.keys()
+
+        if len(self.pages):
+            self.document.body_text = '\n\n'.join(self.pages)
 
         collector = DocumentTagCollector(self.document, 'ingestors')
         for entity in self.entities:

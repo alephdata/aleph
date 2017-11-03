@@ -95,6 +95,10 @@ def ingest_upload(id):
             documents.append(document)
 
         if not len(request.files):
+            # If there is no files uploaded, try to create an empty
+            # directory instead. Maybe this should be more explicit,
+            # but it seemed like the most simple way of fitting it
+            # into the API.
             document = Document.by_keys(collection=collection,
                                         parent_id=parent_id,
                                         foreign_id=foreign_id)

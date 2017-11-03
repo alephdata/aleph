@@ -22,10 +22,6 @@ def generate_records(document):
     q = db.session.query(DocumentRecord)
     q = q.filter(DocumentRecord.document_id == document.id)
     for record in q.yield_per(1000):
-        texts = [record.text]
-        if record.data is not None:
-            texts.extend(record.data.values())
-
         yield {
             '_id': record.id,
             '_type': TYPE_RECORD,
@@ -35,7 +31,7 @@ def generate_records(document):
                 'collection_id': document.collection_id,
                 'index': record.index,
                 'sheet': record.sheet,
-                'text': index_form(texts)
+                'text': index_form(record.texts)
             }
         }
 

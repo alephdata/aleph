@@ -1,5 +1,5 @@
 import logging
-from sqlalchemy import func, select, subquery
+from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -21,7 +21,9 @@ class Document(db.Model, DatedModel, Metadata):
     # processed using NLP.
     MAX_TEXT_LENGTH = 1024 * 1024 * 100
 
-    TYPE_TEXT = 'text'
+    TYPE_PDF = 'text'  # mismatch for historic reasons
+    TYPE_SCROLL = 'scroll'  # plain text which does not have pages
+    TYPE_HTML = 'html'
     TYPE_TABULAR = 'tabular'
     TYPE_OTHER = 'other'
 
@@ -36,6 +38,8 @@ class Document(db.Model, DatedModel, Metadata):
     status = db.Column(db.Unicode(10), nullable=True)
     meta = db.Column(JSONB, default={})
     error_message = db.Column(db.Unicode(), nullable=True)
+    body_text = db.Column(db.Unicode(), nullable=True)
+    body_raw = db.Column(db.Unicode(), nullable=True)
 
     uploader_id = db.Column(db.Integer,
                             db.ForeignKey('role.id'),
@@ -144,23 +148,27 @@ class Document(db.Model, DatedModel, Metadata):
 
     @property
     def texts(self):
-        if not hasattr(self, '_texts'):
-            self._texts = []
-            if self.title:
-                self._texts.append(self.title)
-            if self.summary:
-                self._texts.append(self.summary)
-            if self.status == self.STATUS_SUCCESS:  
-                length = 0  
-                pq = db.session.query(DocumentRecord)
-                pq = pq.filter(DocumentRecord.document_id == self.id)
-                for record in pq.yield_per(1000):
-                    for text in record.texts:
-                        self._texts.append(text)
-                        length += len(text)
-                    if length >= self.MAX_TEXT_LENGTH:
-                        break
-        return self._texts
+        if self.title is not None:
+            yield self.title
+        if self.summary is not None:
+            yield self.summary
+        if self.status != self.STATUS_SUCCESS:
+            return
+        if self.body_text is not None:
+            yield self.body_text[:self.MAX_TEXT_LENGTH]
+            return
+
+        # iterate over all the associated records.
+        length = 0
+        pq = db.session.query(DocumentRecord)
+        pq = pq.filter(DocumentRecord.document_id == self.id)
+        pq = pq.order_by(DocumentRecord.index.asc())
+        for record in pq.yield_per(1000):
+            for text in record.texts:
+                yield text
+                length += len(text)
+            if length >= self.MAX_TEXT_LENGTH:
+                break
 
     @property
     def text(self):

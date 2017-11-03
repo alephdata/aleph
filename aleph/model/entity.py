@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 from followthemoney import model
-from sqlalchemy import func, select, or_
+from sqlalchemy import func, or_
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from followthemoney.util import merge_data
 
