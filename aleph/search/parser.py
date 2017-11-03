@@ -100,14 +100,6 @@ class SearchQueryParser(QueryParser):
         self.highlight = []
 
     @property
-    def has_query(self):
-        if self.text is not None:
-            return True
-        for (field, value) in self.filter_items:
-            return True
-        return False
-
-    @property
     def highlight_terms(self):
         if self.text is not None:
             yield self.text
