@@ -2,7 +2,6 @@
 import logging
 from urllib import urlencode
 from normality import normalize, stringify
-from normality import slugify  # noqa
 
 log = logging.getLogger(__name__)
 
