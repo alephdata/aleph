@@ -1,4 +1,3 @@
-import os
 import logging
 from logging.handlers import SMTPHandler
 from urlparse import urlparse, urljoin

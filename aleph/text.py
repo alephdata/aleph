@@ -1,9 +1,5 @@
 # coding: utf-8
-import logging
-from urllib import urlencode
-from normality import normalize, stringify
-
-log = logging.getLogger(__name__)
+from normality import normalize
 
 
 def match_form(text):
@@ -14,17 +10,3 @@ def match_form(text):
     and machine analysis.
     """
     return normalize(text, lowercase=True, ascii=True)
-
-
-def query_string(items):
-    """Given a list of tuples, returns a query string for URL building."""
-    query = []
-    for (field, value) in items:
-        value = stringify(value)
-        if value is None:
-            continue
-        value = value.encode('utf-8')
-        query.append((field, value))
-    if not len(query):
-        return ''
-    return '?' + urlencode(query)

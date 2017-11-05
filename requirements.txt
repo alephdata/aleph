@@ -19,6 +19,7 @@ marshmallow==2.13.5
 psycopg2==2.7.1
 apikit==0.3.2
 banal>=0.1
+urlnormalizer >= 1.1.0
 gunicorn >= 19.6.0
 XlsxWriter==0.6.6
 polyglot==16.7.4

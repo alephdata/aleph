@@ -1,7 +1,7 @@
 import six
 import math
+from urlnormalizer import query_string
 
-from aleph.text import query_string
 from aleph.search.parser import QueryParser
 from aleph.search.facet import CategoryFacet, CollectionFacet, CountryFacet
 from aleph.search.facet import LanguageFacet, SchemaFacet, Facet
