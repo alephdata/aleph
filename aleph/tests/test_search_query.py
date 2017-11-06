@@ -10,6 +10,30 @@ class QueryTestCase(TestCase):
         # Allow list elements to be in any order
         self.addTypeEqualityFunc(list, self.assertItemsEqual)
 
+    # The standard assertDictEqual doesn't compare values
+    # using assertEquals, so it fails to allow lists to be
+    # in any order
+    def assertDictEqual(self, d1, d2, msg=None):
+        for k,v1 in d1.iteritems():
+            self.assertIn(k, d2, msg)
+            v2 = d2[k]
+            self.assertEqual(v1, v2, msg)
+
+    # The standard assertItemsEqual doesn't use assertEquals
+    # so fails to correctly compare complex data types
+    def assertItemsEqual(self, items1, items2, msg=None):
+        for item1 in items1:
+            has_equal = False
+            for item2 in items2:
+                try:
+                    self.assertEqual(item1, item2)
+                    has_equal = True
+                    break
+                except:
+                    pass
+            if not has_equal:
+                self.fail('Item %r missing' % item1)
+
     def test_no_text(self):
         q = query([])
         self.assertEqual(q.get_text_query(), {'match_all': {}})
@@ -27,10 +51,11 @@ class QueryTestCase(TestCase):
             ('filter:_id', '3')
         ])
 
-        filters = q.get_filters()
-        self.assertEqual(len(filters), 1)
-        self.assertEqual(filters[0].keys(), ['ids'])
-        self.assertEqual(filters[0]['ids']['values'], ['8', '5', '2', '3'])
+        self.assertEqual(q.get_filters(), [{
+            'ids': {
+                'values': ['8', '5', '2', '3']}
+            }
+        ])
 
     def test_filters(self):
         q = query([
@@ -40,20 +65,51 @@ class QueryTestCase(TestCase):
             ('filter:key2', 'blahblah')
         ])
 
-        filters = q.get_filters()
-        self.assertEqual(len(filters), 2)
-        self.assertEqual(filters[0].keys(), ['terms'])
-        self.assertEqual(filters[1].keys(), ['terms'])
-
-        # Extract filters without assuming order
-        filter_key1 = filter(lambda f: ['key1'] == f['terms'].keys(), filters)[0]['terms']['key1']
-        filter_key2 = filter(lambda f: ['key2'] == f['terms'].keys(), filters)[0]['terms']['key2']
-
-        self.assertEquals(filter_key1, ['foo', 'bar'])
-        self.assertEquals(filter_key2, ['blah', 'blahblah'])
+        self.assertEqual(q.get_filters(), [
+            {
+                'terms': {
+                    'key1': ['foo' ,'bar']
+                }
+            },
+            {
+                'terms': {
+                    'key2': ['blah', 'blahblah']
+                }
+            }
+        ])
 
     def test_offset(self):
         q = query([('offset', 10), ('limit', 100)])
         body = q.get_body()
-        self.assertEqual(body['from'], 10)
-        self.assertEqual(body['size'], 100)
+        self.assertDictContainsSubset({'from': 10, 'size': 100}, q.get_body())
+
+    def test_post_filters(self):
+        q = query([
+            ('filter:key1', 'foo'),
+            ('post_filter:key2', 'foo'),
+            ('post_filter:key2', 'bar'),
+            ('post_filter:key3', 'blah'),
+            ('post_filter:key3', 'blahblah')
+        ])
+        self.assertEqual(q.get_filters(), [{
+            'terms': {
+                'key1': ['foo']
+            }
+        }])
+
+        self.assertEqual(q.get_body()['post_filter'], {
+            'bool': {
+                'filter': [
+                    {
+                        'terms': {
+                            'key2': ['foo' ,'bar']
+                        }
+                    },
+                    {
+                        'terms': {
+                            'key3': ['blah', 'blahblah']
+                        }
+                    }
+                ]
+            }
+        })
