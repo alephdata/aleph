@@ -33,16 +33,22 @@ class Query(object):
     def get_filters(self, exclude=None):
         """Apply query filters from the user interface."""
         filters = []
+        id_values = []
         for field, values in self.parser.filters.items():
             if field == exclude:
                 continue
+            # Combine id or _id into one filter
             if field in ['id', '_id']:
-                filters.append({'ids': {'values': list(values)}})
+                id_values.extend(values)
             elif field in self.MULTI_FIELDS:
                 filters.append({'terms': {field: list(values)}})
             else:
                 for value in values:
                     filters.append({'term': {field: value}})
+
+        if id_values:
+            filters.append({'ids': {'values': id_values}})
+
         return filters
 
     def get_query(self):
