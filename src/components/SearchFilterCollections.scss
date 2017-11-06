@@ -73,6 +73,10 @@
   top: ($pt-grid-size * 2);
   bottom: ($pt-grid-size * 2);
   width: calc(100% - #{$pt-grid-size * 4});
-  margin-bottom: 0;
+  margin: 0;
   padding-bottom: $pt-grid-size;
+
+  .pt-dialog-container > & {
+    position: absolute !important;
+  }
 }
