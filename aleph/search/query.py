@@ -11,7 +11,6 @@ class Query(object):
     DOC_TYPES = []
     RETURN_FIELDS = True
     TEXT_FIELDS = ['_all']
-    MULTI_FIELDS = ['collection_id', 'schema', 'countries']
     SORT = {
         'default': ['_score']
     }
@@ -40,11 +39,8 @@ class Query(object):
             # Combine id or _id into one filter
             if field in ['id', '_id']:
                 id_values.extend(values)
-            elif field in self.MULTI_FIELDS:
-                filters.append({'terms': {field: list(values)}})
             else:
-                for value in values:
-                    filters.append({'term': {field: value}})
+                filters.append({'terms': {field: list(values)}})
 
         if id_values:
             filters.append({'ids': {'values': id_values}})
@@ -73,25 +69,7 @@ class Query(object):
                     }
                 }
             }
-            # Fields to be excluded from their own aggregation. This is true
-            # when a filter on a faceted fied is not supposed to affect the
-            # selection of aggregations.
-            if name in self.MULTI_FIELDS:
-                if 'scoped' not in aggs:
-                    aggs['scoped'] = {
-                        'global': {},
-                        'aggregations': {}
-                    }
-                aggs['scoped']['aggregations'][name] = {
-                    'filter': {
-                        'bool': {
-                            'filter': self.get_filters(exclude=name)
-                        }
-                    },
-                    'aggregations': facet
-                }
-            else:
-                aggs.update(facet)
+            aggs.update(facet)
         return aggs
 
     def get_sort(self):
