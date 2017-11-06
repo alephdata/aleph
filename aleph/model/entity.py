@@ -1,12 +1,13 @@
 import logging
 from datetime import datetime
+from normality import stringify
 from followthemoney import model
 from sqlalchemy import func, or_
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from followthemoney.util import merge_data
 
 from aleph.core import db
-from aleph.text import match_form, string_value
+from aleph.text import match_form
 from aleph.util import ensure_list
 from aleph.model.collection import Collection
 from aleph.model.permission import Permission
@@ -104,7 +105,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         self.name = data.pop('name')
         self.data = data
 
-        fid = [string_value(f) for f in entity.get('foreign_ids') or []]
+        fid = [stringify(f) for f in entity.get('foreign_ids') or []]
         self.foreign_ids = list(set([f for f in fid if f is not None]))
         self.updated_at = datetime.utcnow()
         self.collection.touch()
@@ -122,7 +123,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
     @classmethod
     def by_foreign_id(cls, foreign_id, collection_id, deleted=False):
-        foreign_id = string_value(foreign_id)
+        foreign_id = stringify(foreign_id)
         if foreign_id is None:
             return None
         q = cls.all(deleted=deleted)

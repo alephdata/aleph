@@ -38,11 +38,11 @@ class DocumentResult(Result):
     def emit_html_body(self, html, text):
         self.document.type = Document.TYPE_HTML
         self.document.body_raw = html
-        self.document.body_text = text
+        self.document.body_text = stringify(text)
 
     def emit_text_body(self, text):
         self.document.type = Document.TYPE_SCROLL
-        self.document.body_text = text
+        self.document.body_text = stringify(text)
 
     def emit_page(self, index, text):
         """Emit a plain text page."""
@@ -87,13 +87,13 @@ class DocumentResult(Result):
 
         self.document.uploader_id = self.role_id or self.document.uploader_id
         self.document.file_size = self.size
-        self.document.file_name = self.file_name
+        self.document.file_name = stringify(self.file_name)
         self.document.title = stringify(self.title)
         self.document.summary = stringify(self.summary)
         self.document.author = stringify(self.author)
         self.document.keywords = self.keywords
         self.document.mime_type = stringify(self.mime_type)
-        self.document.encoding = self.encoding
+        self.document.encoding = stringify(self.encoding)
         self.document.languages = self.languages
         self.document.headers = self.headers
         self.document.pdf_version = self.pdf_hash

@@ -28,69 +28,82 @@ services:
   # tika:
   #   image: logicalspark/docker-tikaserver
 
+  unoservice:
+    image: alephdata/unoservice
+    tmpfs: /tmp
+    restart: on-failure
+    expose:
+      - 3000
+
   worker:
-      build: .
-      command: celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /var/lib/celery.pid
-      links:
-        - postgres
-        - elasticsearch
-        - rabbitmq
-      volumes:
-        - "./build/logs/worker:/var/log"
-        - "./build/archive:/archive"
-        - "./build/incoming:/incoming"
-        - "./build/polyglot:/polyglot"
-        - "./build/tmp/worker:/tmp"
-      environment:
-        C_FORCE_ROOT: 'true'
-        ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-        ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-        ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-        ALEPH_ARCHIVE_PATH: /archive
-        POLYGLOT_DATA_PATH: /polyglot
-      env_file:
-        - aleph.env
+    build: .
+    command: celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /var/lib/celery.pid
+    links:
+      - postgres
+      - elasticsearch
+      - rabbitmq
+      - unoservice
+    volumes:
+      - "./build/logs/worker:/var/log"
+      - "./build/archive:/archive"
+      - "./build/incoming:/incoming"
+      - "./build/polyglot:/polyglot"
+      - "./build/tmp/worker:/tmp"
+    environment:
+      C_FORCE_ROOT: 'true'
+      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
+      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
+      ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+      ALEPH_ARCHIVE_PATH: /archive
+      POLYGLOT_DATA_PATH: /polyglot
+      UNOSERVICE_URL: http://unoservice:3000/convert
+    env_file:
+      - aleph.env
 
   beat:
-      build: .
-      command: celery -A aleph.queues beat -s /var/lib/celerybeat-schedule.db --pidfile /var/lib/celery.pid
-      links:
-        - postgres
-        - elasticsearch
-        - rabbitmq
-      volumes:
-        - "./build/logs/beat:/var/log"
-        - "./build/data/beat:/var/lib/"
-        - "./build/archive:/archive"
-        - "./build/polyglot:/polyglot"
-      environment:
-        C_FORCE_ROOT: 'true'
-        ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-        ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-        ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-        ALEPH_ARCHIVE_PATH: /archive
-        POLYGLOT_DATA_PATH: /polyglot
-      env_file:
-        - aleph.env
+    build: .
+    command: celery -A aleph.queues beat -s /var/lib/celerybeat-schedule.db --pidfile /var/lib/celery.pid
+    links:
+      - postgres
+      - elasticsearch
+      - rabbitmq
+      - unoservice
+    volumes:
+      - "./build/logs/beat:/var/log"
+      - "./build/data/beat:/var/lib/"
+      - "./build/archive:/archive"
+      - "./build/polyglot:/polyglot"
+    environment:
+      C_FORCE_ROOT: 'true'
+      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
+      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
+      ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+      ALEPH_ARCHIVE_PATH: /archive
+      POLYGLOT_DATA_PATH: /polyglot
+      UNOSERVICE_URL: http://unoservice:3000/convert
+    env_file:
+      - aleph.env
 
   web:
-      build: .
-      command: gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
-      ports:
-        - "13376:8000"
-      links:
-        - postgres
-        - elasticsearch
-        - rabbitmq
-      volumes:
-        - "./build/logs/web:/var/log"
-        - "./build/archive:/archive"
-        - "./build/polyglot:/polyglot"
-      environment:
-        ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-        ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-        ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-        ALEPH_ARCHIVE_PATH: /archive
-        POLYGLOT_DATA_PATH: /polyglot
-      env_file:
-        - aleph.env
+    build: .
+    command: gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
+    ports:
+      - "13376:8000"
+    links:
+      - postgres
+      - elasticsearch
+      - rabbitmq
+      - unoservice
+    volumes:
+      - "./build/logs/web:/var/log"
+      - "./build/archive:/archive"
+      - "./build/polyglot:/polyglot"
+    environment:
+      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
+      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
+      ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
+      ALEPH_ARCHIVE_PATH: /archive
+      POLYGLOT_DATA_PATH: /polyglot
+      UNOSERVICE_URL: http://unoservice:3000/convert
+    env_file:
+      - aleph.env

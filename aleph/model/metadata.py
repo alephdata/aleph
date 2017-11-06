@@ -7,9 +7,7 @@ from urllib import unquote
 from urlparse import urlparse
 from dalet import is_country_code, is_language_code
 from dalet import parse_country, parse_date
-from normality import safe_filename
-
-from aleph.text import slugify, string_value
+from normality import safe_filename, stringify, slugify
 
 
 class Metadata(object):
@@ -37,7 +35,7 @@ class Metadata(object):
 
     @title.setter
     def title(self, title):
-        self.meta['title'] = string_value(title)
+        self.meta['title'] = stringify(title)
         self.update_meta()
 
     @property
@@ -46,7 +44,7 @@ class Metadata(object):
 
     @summary.setter
     def summary(self, summary):
-        self.meta['summary'] = string_value(summary)
+        self.meta['summary'] = stringify(summary)
         self.update_meta()
 
     @property
@@ -55,7 +53,7 @@ class Metadata(object):
 
     @author.setter
     def author(self, author):
-        self.meta['author'] = string_value(author)
+        self.meta['author'] = stringify(author)
         self.update_meta()
 
     @property
@@ -64,7 +62,7 @@ class Metadata(object):
 
     @crawler.setter
     def crawler(self, crawler):
-        self.meta['crawler'] = string_value(crawler)
+        self.meta['crawler'] = stringify(crawler)
         self.update_meta()
 
     @property
@@ -89,12 +87,12 @@ class Metadata(object):
         if file_title is None and disposition is not None:
             _, attrs = cgi.parse_header(disposition)
             filename = attrs.get('filename') or ''
-            file_title = string_value(unquote(filename))
+            file_title = stringify(unquote(filename))
 
         if file_title is None and self.source_url:
             parsed = urlparse(self.source_url)
             file_title = os.path.basename(parsed.path) or ''
-            file_title = string_value(unquote(file_title))
+            file_title = stringify(unquote(file_title))
 
         return file_title
 
@@ -106,7 +104,7 @@ class Metadata(object):
 
     @file_name.setter
     def file_name(self, file_name):
-        self.meta['file_name'] = string_value(file_name)
+        self.meta['file_name'] = stringify(file_name)
         self.update_meta()
 
     @property
@@ -115,7 +113,7 @@ class Metadata(object):
 
     @source_url.setter
     def source_url(self, source_url):
-        self.meta['source_url'] = string_value(source_url)
+        self.meta['source_url'] = stringify(source_url)
         self.update_meta()
 
     @property
@@ -130,7 +128,7 @@ class Metadata(object):
 
     def add_language(self, language):
         self.meta.setdefault('languages', [])
-        lang = string_value(language)
+        lang = stringify(language)
         if lang is None:
             return
         lang = lang.lower()
@@ -169,7 +167,7 @@ class Metadata(object):
 
     def add_keyword(self, kw):
         self.meta.setdefault('keywords', [])
-        kw = string_value(kw)
+        kw = stringify(kw)
         if kw is not None and kw not in self.meta['keywords']:
             self.meta['keywords'].append(kw)
             self.update_meta()
@@ -206,7 +204,7 @@ class Metadata(object):
 
     @extension.setter
     def extension(self, extension):
-        self.meta['extension'] = string_value(extension)
+        self.meta['extension'] = stringify(extension)
 
     @property
     def encoding(self):
@@ -214,7 +212,7 @@ class Metadata(object):
 
     @encoding.setter
     def encoding(self, encoding):
-        self.meta['encoding'] = string_value(encoding)
+        self.meta['encoding'] = stringify(encoding)
         self.update_meta()
 
     @property
@@ -233,7 +231,7 @@ class Metadata(object):
 
     @mime_type.setter
     def mime_type(self, mime_type):
-        self.meta['mime_type'] = string_value(mime_type)
+        self.meta['mime_type'] = stringify(mime_type)
 
     @property
     def headers(self):
@@ -245,7 +243,7 @@ class Metadata(object):
         self.meta['headers'] = {}
         if isinstance(headers, Mapping):
             for key, value in headers.items():
-                self.meta['headers'][key] = string_value(value)
+                self.meta['headers'][key] = stringify(value)
             self.update_meta()
 
     @property
@@ -256,7 +254,7 @@ class Metadata(object):
 
     @pdf_version.setter
     def pdf_version(self, pdf_version):
-        self.meta['pdf_version'] = string_value(pdf_version)
+        self.meta['pdf_version'] = stringify(pdf_version)
         self.update_meta()
 
     @property

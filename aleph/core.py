@@ -1,4 +1,3 @@
-import os
 import logging
 from logging.handlers import SMTPHandler
 from urlparse import urlparse, urljoin
@@ -89,7 +88,6 @@ def create_app(config={}):
         task_time_limit=3600 * 3,
         worker_max_tasks_per_child=500,
         worker_disable_rate_limits=True,
-        # worker_hijack_root_logger=False,
         beat_schedule=app.config['CELERYBEAT_SCHEDULE'],
     )
     celery.conf.update(app.config.get('CELERY', {}))
