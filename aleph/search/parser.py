@@ -33,8 +33,8 @@ class QueryParser(object):
         }
 
     @property
-    def drilldowns(self):
-        return self.prefixed_items('drilldown:')
+    def post_filters(self):
+        return self.prefixed_items('post_filter:')
 
     @property
     def filters(self):

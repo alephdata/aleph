@@ -5,6 +5,21 @@ from aleph.core import es, es_index
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 
+def convert_filters(filters):
+    ret = []
+    id_values = []
+
+    for field, values in filters.iteritems():
+        # Combine id or _id into one filter
+        if field in ['id', '_id']:
+            id_values.extend(values)
+        else:
+            ret.append({'terms': {field: list(values)}})
+
+    if id_values:
+        ret.append({'ids': {'values': id_values}})
+
+    return ret
 
 class Query(object):
     RESULT_CLASS = SearchQueryResult
@@ -29,23 +44,13 @@ class Query(object):
             }
         }
 
-    def get_filters(self, exclude=None):
+    def get_filters(self):
         """Apply query filters from the user interface."""
-        filters = []
-        id_values = []
-        for field, values in self.parser.filters.items():
-            if field == exclude:
-                continue
-            # Combine id or _id into one filter
-            if field in ['id', '_id']:
-                id_values.extend(values)
-            else:
-                filters.append({'terms': {field: list(values)}})
+        return convert_filters(self.parser.filters)
 
-        if id_values:
-            filters.append({'ids': {'values': id_values}})
-
-        return filters
+    def get_post_filters(self):
+        """Apply post-aggregation query filters."""
+        return convert_filters(self.parser.post_filters)
 
     def get_query(self):
         return {
@@ -59,18 +64,15 @@ class Query(object):
 
     def get_aggregations(self):
         """Aggregate the query in order to generate faceted results."""
-        aggs = {}
-        for name in self.parser.facet_names:
-            facet = {
-                name: {
-                    'terms': {
-                        'field': name,
-                        'size': self.parser.facet_size
-                    }
+        return {
+            name: {
+                'terms': {
+                    'field': name,
+                    'size': self.parser.facet_size
                 }
             }
-            aggs.update(facet)
-        return aggs
+            for name in self.parser.facet_names
+        }
 
     def get_sort(self):
         """Pick one of a set of named result orderings."""
@@ -81,7 +83,7 @@ class Query(object):
         return {}
 
     def get_body(self):
-        return {
+        body = {
             'query': self.get_query(),
             'from': self.parser.offset,
             'size': self.parser.limit,
@@ -90,6 +92,16 @@ class Query(object):
             'highlight': self.get_highlight(),
             '_source': self.RETURN_FIELDS
         }
+
+        post_filters = self.get_post_filters()
+        if post_filters:
+            body['post_filter'] = {
+                'bool': {
+                    'filter': post_filters
+                }
+            }
+
+        return body
 
     def search(self):
         """Execute the query as assmbled."""
@@ -124,8 +136,9 @@ class AuthzQuery(Query):
     query by comparing the roles a user is in with the ones on the document.
     """
 
-    def get_filters(self, exclude=None):
-        filters = super(AuthzQuery, self).get_filters(exclude=exclude)
+    def get_filters(self):
+        filters = super(AuthzQuery, self).get_filters()
+
         # Hot-wire authorization entirely for admins.
         if not self.parser.authz.is_admin:
             filters.append({
