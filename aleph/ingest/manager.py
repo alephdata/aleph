@@ -7,7 +7,6 @@ from storagelayer import checksum
 
 from aleph.core import db
 from aleph.model import Document, Cache
-from aleph.logic.documents import process_document
 from aleph.ingest.result import DocumentResult
 
 log = logging.getLogger(__name__)
@@ -32,6 +31,7 @@ class DocumentManager(Manager):
         result.document.delete_records()
 
     def after(self, result):
+        from aleph.logic.documents import process_document
         result.update()
         db.session.commit()
         document = result.document
