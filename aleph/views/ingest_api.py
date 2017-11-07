@@ -88,7 +88,8 @@ def ingest_upload(id):
                                         foreign_id=foreign_id,
                                         content_hash=content_hash)
             document.mime_type = storage.mimetype
-            document.file_name = storage.filename
+            if storage.filename:
+                document.file_name = os.path.basename(storage.filename)
             document.update(meta)
             ingest_document(document, path,
                             role_id=request.authz.id)
