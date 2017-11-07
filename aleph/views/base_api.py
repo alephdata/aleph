@@ -2,7 +2,7 @@ import six
 import logging
 from flask import Blueprint, request
 from elasticsearch import TransportError
-from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
+from exactitude import countries, languages
 from followthemoney import model
 from followthemoney.exc import InvalidData
 
@@ -47,8 +47,8 @@ def metadata():
             'samples': get_config('SAMPLE_SEARCHES')
         },
         'categories': get_config('COLLECTION_CATEGORIES', {}),
-        'countries': COUNTRY_NAMES,
-        'languages': LANGUAGE_NAMES,
+        'countries': countries.names,
+        'languages': languages.names,
         'schemata': model,
         'auth': auth
     })

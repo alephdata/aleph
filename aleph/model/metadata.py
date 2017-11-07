@@ -5,8 +5,7 @@ import mimetypes
 from collections import Mapping
 from urllib import unquote
 from urlparse import urlparse
-from dalet import is_country_code, is_language_code
-from dalet import parse_country, parse_date
+from exactitude import countries, languages, dates, urls
 from normality import safe_filename, stringify, slugify
 
 
@@ -113,7 +112,7 @@ class Metadata(object):
 
     @source_url.setter
     def source_url(self, source_url):
-        self.meta['source_url'] = stringify(source_url)
+        self.meta['source_url'] = urls.clean(source_url)
         self.update_meta()
 
     @property
@@ -128,11 +127,8 @@ class Metadata(object):
 
     def add_language(self, language):
         self.meta.setdefault('languages', [])
-        lang = stringify(language)
-        if lang is None:
-            return
-        lang = lang.lower()
-        if is_language_code(lang) and lang not in self.meta['languages']:
+        lang = languages.clean(language)
+        if lang is not None and lang not in self.meta['languages']:
             self.meta['languages'].append(lang)
             self.update_meta()
 
@@ -148,10 +144,8 @@ class Metadata(object):
 
     def add_country(self, country):
         self.meta.setdefault('countries', [])
-        country = parse_country(country)
-        if country is None:
-            return
-        if is_country_code(country) and country not in self.meta['countries']:
+        country = countries.clean(country)
+        if country is not None and country not in self.meta['countries']:
             self.meta['countries'].append(country)
             self.update_meta()
 
@@ -184,7 +178,7 @@ class Metadata(object):
 
     def add_date(self, obj):
         self.meta.setdefault('dates', [])
-        date = parse_date(obj)
+        date = dates.clean(obj)
         if date is not None and date not in self.meta['dates']:
             self.meta['dates'].append(date)
             self.update_meta()

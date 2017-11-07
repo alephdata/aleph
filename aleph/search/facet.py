@@ -1,6 +1,6 @@
 import six
 from followthemoney import model
-from dalet import COUNTRY_NAMES, LANGUAGE_NAMES
+from exactitude import countries, languages
 
 from aleph.core import get_config
 from aleph.model import Collection
@@ -67,13 +67,13 @@ class SchemaFacet(Facet):
 class CountryFacet(Facet):
 
     def update(self, result, key):
-        result['label'] = COUNTRY_NAMES.get(key, key)
+        result['label'] = countries.names.get(key, key)
 
 
 class LanguageFacet(Facet):
 
     def update(self, result, key):
-        result['label'] = LANGUAGE_NAMES.get(key, key)
+        result['label'] = languages.names.get(key, key)
 
 
 class CategoryFacet(Facet):
