@@ -26,25 +26,19 @@ class QueryParser(object):
             return 1
         return (self.offset / self.limit) + 1
 
-    @property
-    def filter_items(self):
-        for key in self.args.keys():
-            if not key.startswith('filter:'):
-                continue
-            _, field = key.split(':', 1)
+    def prefixed_items(self, prefix):
+        return {
+            key[len(prefix):]: set(self.getlist(key))
+                for key in self.args.keys() if key.startswith(prefix)
+        }
 
-            for value in self.getlist(key):
-                yield (field, value)
+    @property
+    def post_filters(self):
+        return self.prefixed_items('post_filter:')
 
     @property
     def filters(self):
-        filters = {}
-        for field, value in self.filter_items:
-            if field not in filters:
-                filters[field] = set([value])
-            else:
-                filters[field].add(value)
-        return filters
+        return self.prefixed_items('filter:')
 
     @property
     def items(self):
@@ -98,14 +92,6 @@ class SearchQueryParser(QueryParser):
         self.text = stringify(self.get('q'))
         self.sort = self.get('sort', 'default').strip().lower()
         self.highlight = []
-
-    @property
-    def has_query(self):
-        if self.text is not None:
-            return True
-        for (field, value) in self.filter_items:
-            return True
-        return False
 
     @property
     def highlight_terms(self):
