@@ -9,7 +9,6 @@ from elasticsearch.helpers import BulkIndexError
 from elasticsearch import TransportError
 
 from aleph.core import es, es_index
-from aleph.model import Entity
 from aleph.index.mapping import TYPE_ENTITY
 from aleph.index.util import bulk_op, index_form
 from aleph.index.util import index_names, unpack_result

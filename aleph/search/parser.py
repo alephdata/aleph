@@ -1,5 +1,5 @@
+from banal import as_bool
 from normality import stringify
-from dalet import parse_boolean
 from werkzeug.datastructures import MultiDict
 
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
@@ -82,7 +82,7 @@ class QueryParser(object):
         return default
 
     def getbool(self, name, default=False):
-        return parse_boolean(self.get(name), default=default)
+        return as_bool(self.get(name), default=default)
 
 
 class SearchQueryParser(QueryParser):
