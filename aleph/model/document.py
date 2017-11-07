@@ -130,6 +130,13 @@ class Document(db.Model, DatedModel, Metadata):
         pq = pq.filter(cls.collection_id == collection_id)
         pq.delete(synchronize_session=False)
 
+    def has_records(self):
+        # Slightly unintuitive naming: this just checks the document type,
+        # not if there actually are any records.
+        if self.type not in [self.TYPE_PDF, self.TYPE_TABULAR]:
+            return False
+        return True
+
     def insert_records(self, sheet, iterable, chunk_size=1000):
         chunk = []
         for index, data in enumerate(iterable):
@@ -156,19 +163,19 @@ class Document(db.Model, DatedModel, Metadata):
             return
         if self.body_text is not None:
             yield self.body_text[:self.MAX_TEXT_LENGTH]
-            return
 
-        # iterate over all the associated records.
-        length = 0
-        pq = db.session.query(DocumentRecord)
-        pq = pq.filter(DocumentRecord.document_id == self.id)
-        pq = pq.order_by(DocumentRecord.index.asc())
-        for record in pq.yield_per(1000):
-            for text in record.texts:
-                yield text
-                length += len(text)
-            if length >= self.MAX_TEXT_LENGTH:
-                break
+        if self.has_records():
+            # iterate over all the associated records.
+            length = 0
+            pq = db.session.query(DocumentRecord)
+            pq = pq.filter(DocumentRecord.document_id == self.id)
+            pq = pq.order_by(DocumentRecord.index.asc())
+            for record in pq.yield_per(1000):
+                for text in record.texts:
+                    yield text
+                    length += len(text)
+                if length >= self.MAX_TEXT_LENGTH:
+                    break
 
     @property
     def text(self):
