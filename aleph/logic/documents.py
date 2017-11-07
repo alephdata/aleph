@@ -1,8 +1,9 @@
 import logging
 
-from aleph.core import USER_QUEUE, USER_ROUTING_KEY
+from aleph.core import celery
+from aleph.model import Document
 from aleph.index import documents as index
-from aleph.analyze import analyze_document_id
+from aleph.analyze import analyze_document
 from aleph.logic.util import ui_url
 
 log = logging.getLogger(__name__)
@@ -15,12 +16,23 @@ def document_url(document_id=None, **query):
 def update_document(document):
     # These are operations that should be executed after each
     # write to a document or its metadata.
-    analyze_document_id.apply_async([document.id],
-                                    queue=USER_QUEUE,
-                                    routing_key=USER_ROUTING_KEY)
+    process_document_id.delay(document.id)
     index.index_document(document)
 
 
 def delete_document(document, deleted_at=None):
     index.delete_document(document.id)
     document.delete(deleted_at=deleted_at)
+
+
+@celery.task()
+def process_document_id(document_id):
+    """Perform post-ingest tasks like analysis and indexing."""
+    analyze_document(Document.by_id(document_id))
+
+
+def process_document(document):
+    """Perform post-ingest tasks like analysis and indexing."""
+    analyze_document(document)
+    index.index_document(document)
+    index.index_records(document)

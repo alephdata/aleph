@@ -7,7 +7,6 @@ from storagelayer import checksum
 
 from aleph.core import db
 from aleph.model import Document, Cache
-from aleph.analyze import analyze_document
 from aleph.ingest.result import DocumentResult
 
 log = logging.getLogger(__name__)
@@ -32,13 +31,12 @@ class DocumentManager(Manager):
         result.document.delete_records()
 
     def after(self, result):
+        from aleph.logic.documents import process_document
         result.update()
         db.session.commit()
-        if not result.error_message:
-            log.debug('Ingested [%s]: %s',
-                      result.document.id,
-                      result.document.title)
-        analyze_document(result.document)
+        document = result.document
+        log.debug('Ingested [%s]: %s', document.id, document.title)
+        process_document(document)
 
     def get_cache(self, key):
         return Cache.get_cache(key)

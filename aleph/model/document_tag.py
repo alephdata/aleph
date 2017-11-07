@@ -1,5 +1,6 @@
 import logging
-from normality import stringify, slugify, collapse_spaces
+import exactitude
+from normality import slugify
 
 from aleph.core import db
 from aleph.model.common import IdModel
@@ -49,6 +50,14 @@ class DocumentTagCollector(object):
     This is useful when many tags about the same documented are emitted by a
     particular source."""
 
+    CLEANERS = {
+        DocumentTag.TYPE_PERSON: exactitude.names,
+        DocumentTag.TYPE_ORGANIZATION: exactitude.names,
+        DocumentTag.TYPE_EMAIL: exactitude.emails,
+        DocumentTag.TYPE_PHONE: exactitude.phones,
+        DocumentTag.TYPE_LOCATION: exactitude.addresses,
+    }
+
     def __init__(self, document, origin):
         self.document = document
         self.origin = origin
@@ -56,20 +65,15 @@ class DocumentTagCollector(object):
 
     def emit(self, text, type, key=None, weight=1):
         "Create a tag, this can be called multiple times with the same text."
-        text = stringify(text)
+        cleaner = self.CLEANERS[type]
+        text = cleaner.clean(text, countries=self.document.countries)
         if text is None:
             return
 
         if key is None:
-            key = text.lower()
-            if type in [DocumentTag.TYPE_PERSON,
-                        DocumentTag.TYPE_ORGANIZATION]:
-                key = slugify(key, sep='-')
-                if key is None or len(key) <= 4:
-                    return
+            key = slugify(text, sep='-')
 
         if (key, type) not in self.keyed:
-            text = collapse_spaces(text)
             self.keyed[(key, type)] = dict(text=text, weight=weight)
         else:
             self.keyed[(key, type)]['weight'] += weight

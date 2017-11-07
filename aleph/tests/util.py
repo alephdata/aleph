@@ -7,7 +7,7 @@ from faker import Factory
 
 from aleph.model import Role, Document, create_system_roles
 from aleph.index import delete_index, upgrade_search, flush_index
-from aleph.analyze import analyze_document
+from aleph.logic.documents import process_document
 from aleph.logic import reindex_entities
 from aleph.core import db, create_app
 from aleph.views import mount_app_blueprints
@@ -65,7 +65,7 @@ class TestCase(FlaskTestCase):
         reindex_entities()
         if process_documents:
             for doc in Document.all():
-                analyze_document(doc)
+                process_document(doc)
         flush_index()
 
     def setUp(self):

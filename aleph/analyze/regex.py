@@ -1,6 +1,6 @@
 import re
 import logging
-from dalet import parse_phone
+from exactitude import phones
 
 from aleph.analyze.analyzer import Analyzer
 from aleph.model import DocumentTag, DocumentTagCollector
@@ -36,17 +36,5 @@ class EMailAnalyzer(RegexAnalyzer):
 class PhoneNumberAnalyzer(RegexAnalyzer):
     REGEX = r'(\+?[\d\-\(\)\/\s]{5,})'
     RE = re.compile(REGEX, re.IGNORECASE)
-    CHARS = '+0123456789'
     ORIGIN = 'regex:phones'
     TYPE = DocumentTag.TYPE_PHONE
-
-    def extract_match(self, document, match):
-        text = match.group(0)
-        text = ''.join([m for m in text if m in self.CHARS])
-        if len(text) < 5:
-            return
-        for country in [None] + document.countries:
-            num = parse_phone(text, country=country)
-            if num is None:
-                continue
-            return num

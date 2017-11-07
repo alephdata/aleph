@@ -1,7 +1,8 @@
 import logging
+from pprint import pprint  # noqa
 from banal import clean_dict
 from followthemoney import model
-from followthemoney.types import PhoneProperty, EmailProperty, NameProperty
+from followthemoney.types import TYPES
 
 from aleph.core import celery, db, es, es_index
 from aleph.model import Document, DocumentTag
@@ -12,10 +13,10 @@ from aleph.index.util import index_form, index_names, unpack_result
 log = logging.getLogger(__name__)
 
 TAG_FIELDS = {
-    DocumentTag.TYPE_EMAIL: EmailProperty.index_invert,
-    DocumentTag.TYPE_PHONE: PhoneProperty.index_invert,
-    DocumentTag.TYPE_PERSON: NameProperty.index_invert,
-    DocumentTag.TYPE_ORGANIZATION: NameProperty.index_invert
+    DocumentTag.TYPE_EMAIL: TYPES['email'].invert,
+    DocumentTag.TYPE_PHONE: TYPES['phone'].invert,
+    DocumentTag.TYPE_PERSON: TYPES['name'].invert,
+    DocumentTag.TYPE_ORGANIZATION: TYPES['name'].invert
 }
 
 
@@ -87,6 +88,7 @@ def index_document(document):
 
     index_names(data)
     data = clean_dict(data)
+    # pprint(data)
     es.index(index=es_index,
              doc_type=TYPE_DOCUMENT,
              body=data,

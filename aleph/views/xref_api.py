@@ -1,5 +1,5 @@
+from banal import as_bool
 from flask import Blueprint, request, send_file
-from apikit import arg_bool
 
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Collection, Match
@@ -44,8 +44,8 @@ def report(collection_id):
     require(request.authz.can_read(collection.id))
     output = generate_excel(collection,
                             request.authz,
-                            links=arg_bool('links'),
-                            one_sheet=arg_bool('merge'))
+                            links=as_bool(request.args.get('links')),
+                            one_sheet=as_bool(request.args.get('merge')))
     outputfile = "%s Cross-referenced.xlsx" % collection.label
     return send_file(output,
                      as_attachment=True,

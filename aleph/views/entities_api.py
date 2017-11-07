@@ -1,7 +1,7 @@
+from banal import as_bool
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from followthemoney.util import merge_data
-from apikit import arg_bool
 
 from aleph.core import db
 from aleph.model import Entity
@@ -84,7 +84,7 @@ def documents(id):
 def update(id):
     _, entity = get_entity(id, request.authz.WRITE)
     data = parse_request(schema=EntitySchema)
-    if arg_bool('merge'):
+    if as_bool(request.args.get('merge')):
         data['data'] = merge_data(data.get('data') or {},
                                   entity.data or {})
     entity.update(data)

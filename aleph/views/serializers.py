@@ -1,6 +1,6 @@
 from flask import request
 from followthemoney import model
-from dalet import is_country_code, is_language_code, is_partial_date
+from exactitude import countries, languages, dates
 from marshmallow import Schema, post_dump
 from marshmallow.fields import Nested, Integer, String, DateTime, List
 from marshmallow.fields import Raw, Dict, Boolean, Float
@@ -12,7 +12,7 @@ from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
 from aleph.logic.documents import document_url
-from aleph.model import Role, Document
+from aleph.model import Role
 from aleph.util import ensure_list
 
 
@@ -27,21 +27,21 @@ class Category(String):
 class Language(String):
 
     def _validate(self, value):
-        if not is_language_code(value):
+        if not languages.validate(value):
             raise ValidationError('Invalid language code.')
 
 
 class Country(String):
 
     def _validate(self, value):
-        if not is_country_code(value):
+        if not countries.validate(value):
             raise ValidationError('Invalid country code.')
 
 
 class PartialDate(String):
 
     def _validate(self, value):
-        if not is_partial_date(value):
+        if not dates.validate(value):
             raise ValidationError('Invalid date.')
 
 
