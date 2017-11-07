@@ -228,6 +228,8 @@ class DocumentSchema(Schema, DatedSchema):
     encoding = String(dump_only=True)
     source_url = String()
     pdf_version = String(dump_only=True)
+    text = String(dump_only=True)
+    html = String(dump_only=True)
     columns = List(String(), dump_only=True)
     children = Boolean(dump_to='$children', attribute='$children',
                        dump_only=True)

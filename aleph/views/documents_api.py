@@ -11,6 +11,7 @@ from aleph.views.util import get_document, get_index_document
 from aleph.views.util import jsonify, parse_request
 from aleph.views.serializers import DocumentSchema, RecordSchema
 from aleph.search import DocumentsQuery, RecordsQuery
+from aleph.text import sanitize_html
 from aleph.util import PDF_MIME
 
 
@@ -29,6 +30,15 @@ def index():
 def view(document_id):
     enable_cache()
     document = get_index_document(document_id)
+    # TODO: should this be it's own API? Probably so, but for that it would
+    # be unclear if we should JSON wrap it, or serve plain with the correct
+    # MIME type?
+    if document.get('type') == Document.TYPE_SCROLL:
+        obj = get_document(document_id)
+        document['text'] = obj.body_text
+    elif document.get('type') == Document.TYPE_HTML:
+        obj = get_document(document_id)
+        document['html'] = sanitize_html(obj.body_raw)
     return jsonify(document, schema=DocumentSchema)
 
 
@@ -94,6 +104,8 @@ def pdf(document_id):
 def records(document_id):
     enable_cache()
     document = get_document(document_id)
+    if not document.has_records():
+        raise BadRequest("This document does not have records.")
     result = RecordsQuery.handle_request(request, document=document,
                                          schema=RecordSchema)
     return jsonify(result)
@@ -103,6 +115,8 @@ def records(document_id):
 def record(document_id, index):
     enable_cache()
     document = get_document(document_id)
+    if not document.has_records():
+        raise BadRequest("This document does not have records.")
     record = DocumentRecord.by_index(document.id, index)
     if record is None:
         raise NotFound("No such record: %s" % index)
