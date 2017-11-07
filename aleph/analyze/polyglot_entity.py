@@ -15,7 +15,7 @@ class PolyglotEntityAnalyzer(Analyzer):
     TYPES = {
         'I-PER': DocumentTag.TYPE_PERSON,
         'I-ORG': DocumentTag.TYPE_ORGANIZATION,
-        'I-LOC': DocumentTag.TYPE_LOCATION
+        # 'I-LOC': DocumentTag.TYPE_LOCATION
     }
 
     def analyze(self, document):
@@ -37,7 +37,7 @@ class PolyglotEntityAnalyzer(Analyzer):
                 label = ' '.join(entity)
                 if len(label) < 4 or len(label) > 200:
                     continue
-                collector.emit(label, self.TYPES.get(entity.tag))
+                collector.emit(label, self.TYPES[entity.tag])
 
         except ValueError as ve:
             log.info('NER value error: %r', ve)

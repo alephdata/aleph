@@ -36,10 +36,5 @@ class EMailAnalyzer(RegexAnalyzer):
 class PhoneNumberAnalyzer(RegexAnalyzer):
     REGEX = r'(\+?[\d\-\(\)\/\s]{5,})'
     RE = re.compile(REGEX, re.IGNORECASE)
-    CHARS = '+0123456789'
     ORIGIN = 'regex:phones'
     TYPE = DocumentTag.TYPE_PHONE
-
-    def extract_match(self, document, match):
-        text = match.group(0)
-        return phones.clean(text, countries=document.countries)

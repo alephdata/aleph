@@ -131,36 +131,18 @@ def finalize_index(data, schema):
     properties = data.get('properties', {})
 
     texts = []
-    for vs in properties.values():
-        for v in ensure_list(vs):
-            texts.append(v)
+    for prop in schema.properties:
+        if prop.name not in properties:
+            continue
+        if prop.type_name in ['date', 'url', 'uri', 'country']:
+            continue
+        texts.extend(ensure_list(properties[prop.name]))
 
     data['text'] = index_form(texts)
-
-    # Generate inverted representations of the data stored in properties.
-    for prop in schema.properties:
-        values = properties.get(prop.name, [])
-        if not len(values):
-            continue
-
-        # Find an set the name property
-        if prop.is_label:
-            data['name'] = values[0]
-
-        # Add inverted properties. This takes all the properties
-        # of a specific type (names, dates, emails etc.)
-        invert = prop.type.index_invert
-        if invert:
-            if invert not in data:
-                data[invert] = []
-            for norm in prop.type.normalize(values):
-                if norm not in data[invert]:
-                    data[invert].append(norm)
-
+    data = schema.invert(data)
     index_names(data)
-
-    # Get implied schemata (i.e. parents of the actual schema)
     data['schema'] = schema.name
+    # Get implied schemata (i.e. parents of the actual schema)
     data['schemata'] = schema.names
 
     # Second name field for non-tokenised sorting.

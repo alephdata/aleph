@@ -1,5 +1,4 @@
 import logging
-# from aleph.core import db
 
 log = logging.getLogger(__name__)
 

@@ -1,4 +1,5 @@
 import logging
+from pprint import pprint  # noqa
 from banal import clean_dict
 from followthemoney import model
 from followthemoney.types import TYPES
@@ -87,6 +88,7 @@ def index_document(document):
 
     index_names(data)
     data = clean_dict(data)
+    # pprint(data)
     es.index(index=es_index,
              doc_type=TYPE_DOCUMENT,
              body=data,
