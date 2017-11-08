@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { mapValues, xor } from 'lodash';
+import { mapValues, size, xor } from 'lodash';
 
 import { endpoint } from '../api';
 import filters from '../filters';
@@ -60,19 +60,27 @@ class SearchFilter extends Component {
 
   onCountriesOpen() {
     if (this.state.queryCountries === null) {
-      endpoint.get('search', {params: {q: this.state.query.q, facet: 'countries'}})
-        .then(({ data }) => this.setState({
-          queryCountries: data.facets.countries.values
-        }));
+      endpoint.get('search', {params: {
+        q: this.state.query.q,
+        facet: 'countries',
+        facet_size: this.props.countriesCount,
+        limit: 0
+      }}).then(({ data }) => this.setState({
+        queryCountries: data.facets.countries.values
+      }));
     }
   }
 
   onCollectionsOpen() {
     if (this.state.queryCollectionIds === null) {
-      endpoint.get('search', {params: {q: this.props.queryText, facet: 'collection_id'}})
-        .then(({ data }) => this.setState({
-          queryCollectionIds: data.facets.collection_id.values.map(collection => collection.id)
-        }));
+      endpoint.get('search', {params: {
+        q: this.props.queryText,
+        facet: 'collection_id',
+        facet_size: this.props.collectionsCount,
+        limit: 0
+      }}).then(({ data }) => this.setState({
+        queryCollectionIds: data.facets.collection_id.values.map(collection => collection.id)
+      }));
     }
   }
 
@@ -141,7 +149,9 @@ class SearchFilter extends Component {
 
 const mapStateToProps = ({ metadata, collections }) => ({
   countries: metadata.countries,
-  collections: mapValues(collections.results, 'label')
+  countriesCount: size(metadata.countries),
+  collections: mapValues(collections.results, 'label'),
+  collectionsCount: size(collections.results)
 });
 
 SearchFilter = connect(mapStateToProps)(SearchFilter);
