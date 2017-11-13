@@ -17,7 +17,7 @@ def get_manager():
     if not hasattr(DocumentManager, '_instance'):
         DocumentManager._instance = DocumentManager(current_app.config,
                                                     archive)
-        log.info("Loaded ingestors: %r", DocumentManager._instance.ingestors)
+        # log.info("Loaded ingestors: %r", DocumentManager._instance.ingestors)
     return DocumentManager._instance
 
 
@@ -33,14 +33,13 @@ def ingest_document(document, file_path, role_id=None):
                                   content_hash=document.content_hash)
         document.content_hash = ch or document.content_hash
         db.session.commit()
+        queue = WORKER_QUEUE
+        routing_key = WORKER_ROUTING_KEY
         if role_id is not None:
             queue = USER_QUEUE
             routing_key = USER_ROUTING_KEY
-        else:
-            queue = WORKER_QUEUE
-            routing_key = WORKER_ROUTING_KEY
         ingest.apply_async(args=[document.id],
-                           kwargs=dict(role_id=role_id),
+                           kwargs={'role_id': role_id},
                            queue=queue,
                            routing_key=routing_key)
 
