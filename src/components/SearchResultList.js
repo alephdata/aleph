@@ -31,9 +31,9 @@ class SearchResultList extends Component {
           </tbody>
         </table>
         { result.next && (
-          <Waypoint onEnter={this.bottomReachedHandler.bind(this)}>
-            <div className="results-loading"><Spinner /></div>
-          </Waypoint>
+            result.isFetchingNext
+              ? <div className="results-loading"><Spinner /></div>
+              : <Waypoint onEnter={this.bottomReachedHandler.bind(this)} />
         )}
       </div>
     );
