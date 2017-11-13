@@ -7,6 +7,7 @@
     "axios": "^0.16.2",
     "bourbon": "^4.3.2",
     "classnames": "^2.2.5",
+    "jwt-decode": "latest",
     "lodash": "^4.17.4",
     "node-sass-package-importer": "^3.0.4",
     "normalizr": "^3.2.2",
@@ -22,8 +23,7 @@
     "react-router-dom": "^4.1.1",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
-    "redux-thunk": "^2.2.0",
-    "jwt-decode": "latest"
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "faker": "^4.1.0",
