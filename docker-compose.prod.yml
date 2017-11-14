@@ -12,7 +12,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: elasticsearch:5.4
+    image: elasticsearch:6.0.0
     volumes:
       - "./build/data/elasticsearch:/usr/share/elasticsearch/data"
       - "./build/logs/elasticsearch:/var/log"
