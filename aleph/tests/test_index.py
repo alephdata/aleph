@@ -10,11 +10,11 @@ class IndexTestCase(TestCase):
         super(IndexTestCase, self).setUp()
         self.load_fixtures('docs.yaml')
 
-    def test_delete_source(self):
+    def test_delete_collection(self):
         collection = Collection.by_id(1000)
         res = self.client.get('/api/2/search?q="mention fruit"')
         assert res.json['total'] == 1, res.json
-        delete_collection(collection.id)
+        delete_collection(collection.id, wait=True)
         flush_index()
         res = self.client.get('/api/2/search?q="mention fruit"')
         assert res.json['total'] == 0, res.json

@@ -3,7 +3,7 @@ COLLECTION_MAPPING = {
     "dynamic_templates": [
         {
             "fields": {
-                "match": "$schemata.*",
+                "match": "schemata.*",
                 "mapping": {
                     "type": "keyword"
                 }
@@ -29,8 +29,10 @@ COLLECTION_MAPPING = {
         "managed": {"type": "boolean"},
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
-        "total": {"type": "long"},
-        "schemata": {"type": "object"},
+        "count": {"type": "long"},
+        "schemata": {
+            "type": "object"
+        },
         "creator": {
             "type": "object",
             "properties": {
@@ -93,7 +95,10 @@ ENTITY_MAPPING = {
         "identifiers": {"type": "keyword"},
         "addresses": {"type": "text"},
         "columns": {"type": "keyword"},
-        "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
+        "dates": {
+            "type": "date",
+            "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"  # noqa
+        },
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
         "author": {"type": "text"},

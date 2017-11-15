@@ -4,7 +4,8 @@ from aleph.core import es
 from aleph.index.stats import get_collection_stats
 from aleph.index.core import collection_type
 from aleph.index.core import collection_index, collections_index
-from aleph.index.core import entity_type, entity_index
+from aleph.index.core import entities_index, entity_type, entity_index
+from aleph.index.core import records_index
 from aleph.index.util import query_delete
 
 
@@ -55,7 +56,9 @@ def update_roles(collection):
 
 def delete_collection(collection_id, wait=True):
     """Delete all documents from a particular collection."""
-    query_delete({'term': {'collection_id': collection_id}}, wait=wait)
+    query = {'term': {'collection_id': collection_id}}
+    query_delete(records_index(), query, wait=wait)
+    query_delete(entities_index(), query, wait=wait)
     es.delete(index=collections_index(),
               doc_type=collection_type(),
               id=collection_id,

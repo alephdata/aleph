@@ -38,7 +38,7 @@ def collection_index():
 
 def collections_index():
     """Combined index to run all queries against."""
-    return record_index()
+    return collection_index()
 
 
 def collection_type():

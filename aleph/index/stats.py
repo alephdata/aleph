@@ -19,7 +19,7 @@ def get_instance_stats(authz):
                        body=query)
     aggregations = result.get('aggregations')
     data = {
-        'total': result.get('hits').get('total'),
+        'count': result.get('hits').get('total'),
         'schemata': {}
     }
     for schema in aggregations.get('schema').get('buckets'):
@@ -50,23 +50,21 @@ def get_collection_stats(collection_id):
     aggregations = result.get('aggregations')
     data = {
         'schemata': {},
-        'total': result.get('hits').get('total')
+        'count': result['hits']['total']
     }
 
     # expose entities by schema count.
-    for schema in aggregations.get('schema').get('buckets'):
-        key = schema.get('key')
-        count = schema.get('doc_count')
-        data['schemata'][key] = count
+    for schema in aggregations['schema']['buckets']:
+        data['schemata'][schema['key']] = schema['doc_count']
 
     # if no countries or langs are given, take the most common from the data.
-    if not data.get('countries') or not len(data.get('countries')):
-        countries = aggregations.get('countries').get('buckets')
-        data['countries'] = [c.get('key') for c in countries]
+    if not len(data.get('countries', [])):
+        countries = aggregations['countries']['buckets']
+        data['countries'] = [c['key'] for c in countries]
 
-    if not data.get('languages') or not len(data.get('languages')):
-        countries = aggregations.get('languages').get('buckets')
-        data['languages'] = [c.get('key') for c in countries]
+    if not len(data.get('languages', [])):
+        countries = aggregations['languages']['buckets']
+        data['languages'] = [c['key'] for c in countries]
 
     # pprint(data)
     return data
