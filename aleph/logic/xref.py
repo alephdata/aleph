@@ -5,11 +5,11 @@ from pprint import pprint  # noqa
 from followthemoney import model
 from elasticsearch.helpers import scan
 
-from aleph.core import db, es, es_index, celery
-from aleph.model import Match, Collection
+from aleph.core import db, es, celery
+from aleph.model import Match, Collection, Document
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
-from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
+from aleph.index.core import entities_index, entity_type
 from aleph.index.xref import entity_query, FIELDS_XREF
 from aleph.index.util import unpack_result
 from aleph.search import QueryParser, MatchQueryResult
@@ -21,8 +21,7 @@ log = logging.getLogger(__name__)
 def xref_item(item, collection_id=None):
     """Cross-reference an entity or document, given as an indexed document."""
     name = item.get('name') or item.get('title')
-    result = es.search(index=es_index,
-                       doc_type=TYPE_ENTITY,
+    result = es.search(index=entities_index(),
                        body={
                            'query': entity_query(item, collection_id),
                            'size': 10,
@@ -30,7 +29,7 @@ def xref_item(item, collection_id=None):
                        })
     results = result.get('hits').get('hits')
     entity_id, document_id = None, None
-    if item.get('$type') == TYPE_DOCUMENT:
+    if item.get('schema') == Document.SCHEMA:
         document_id = item.get('id')
     else:
         entity_id = item.get('id')
@@ -68,8 +67,8 @@ def xref_collection(collection, other=None):
         '_source': FIELDS_XREF
     }
     scanner = scan(es,
-                   index=es_index,
-                   doc_type=[TYPE_ENTITY, TYPE_DOCUMENT],
+                   index=entities_index(),
+                   doc_type=entity_type(),
                    query=query,
                    scroll='15m',
                    size=1000)
@@ -118,7 +117,6 @@ def generate_matches_sheet(workbook, sheet, collection, match_collection,
     matches = MatchQueryResult({}, q_match, parser=parser, schema=MatchSchema)
 
     if offset < 3:
-
         sheet.write(0, 0, '', workbook.header_format)
         sheet.write(1, 0, 'Score', workbook.header_format)
         sheet.merge_range(0, 1, 0, 4, collection.label, workbook.header_format)
@@ -211,7 +209,7 @@ def generate_excel(collection, authz, links=True, one_sheet=False):
     # Query for all the collections with matches
     collections = Match.group_by_collection(collection.id, authz=authz)
     max_label = 70
-    offset = 2 # Number of header rows
+    offset = 2  # Number of header rows
     for row, result in enumerate(collections, 2):
         if links:
             url = collection_url(result.collection.id)

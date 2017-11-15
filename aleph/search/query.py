@@ -1,9 +1,10 @@
 from pprint import pprint  # noqa
 from elasticsearch.helpers import scan
 
-from aleph.core import es, es_index
+from aleph.core import es
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
+
 
 def convert_filters(filters):
     ret = []
@@ -21,9 +22,9 @@ def convert_filters(filters):
 
     return ret
 
+
 class Query(object):
     RESULT_CLASS = SearchQueryResult
-    DOC_TYPES = []
     RETURN_FIELDS = True
     TEXT_FIELDS = ['_all']
     SORT = {
@@ -106,8 +107,8 @@ class Query(object):
     def search(self):
         """Execute the query as assmbled."""
         # pprint(self.get_body())
-        return es.search(index=es_index,
-                         doc_type=self.DOC_TYPES,
+        return es.search(index=self.get_index(),
+                         doc_type=self.get_doc_type(),
                          body=self.get_body())
 
     def scan(self):
@@ -118,8 +119,8 @@ class Query(object):
             '_source': self.RETURN_FIELDS
         }
         return scan(es,
-                    index=es_index,
-                    doc_type=self.DOC_TYPES,
+                    index=self.get_index(),
+                    doc_type=self.get_doc_type(),
                     query=body)
 
     @classmethod

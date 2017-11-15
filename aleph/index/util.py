@@ -1,10 +1,9 @@
-import six
 import logging
 import fingerprints
 from elasticsearch.helpers import bulk
 from normality import stringify, latinize_text, collapse_spaces, ascii_text
 
-from aleph.core import es, es_index
+from aleph.core import es
 
 log = logging.getLogger(__name__)
 INDEX_MAX_LEN = 1024 * 1024 * 100
@@ -16,7 +15,6 @@ def unpack_result(res):
         return
     data = res.get('_source')
     data['id'] = res.get('_id')
-    data['$type'] = res.get('_type')
     if '_score' in res:
         data['$score'] = res.get('_score')
     return data
@@ -24,15 +22,16 @@ def unpack_result(res):
 
 def bulk_op(iter, chunk_size=500):
     """Standard parameters for bulk operations."""
-    bulk(es, iter, stats_only=True, chunk_size=chunk_size,
+    bulk(es, iter,
+         stats_only=True,
+         chunk_size=chunk_size,
          request_timeout=200.0)
 
 
-def query_delete(query, doc_type=None, wait=True):
-    "Delete all documents matching the given query inside the doc_type(s)."
-    es.delete_by_query(index=six.text_type(es_index),
+def query_delete(index, query, wait=True):
+    "Delete all documents matching the given query inside the index."
+    es.delete_by_query(index=index,
                        body={'query': query},
-                       doc_type=doc_type,
                        refresh=True,
                        conflicts='proceed',
                        wait_for_completion=wait)
@@ -81,3 +80,4 @@ def index_names(data):
     for name in list(names):
         names.append(ascii_text(name))
     data['names'] = list(set(names))
+    return data

@@ -8,11 +8,10 @@ from marshmallow.exceptions import ValidationError
 from marshmallow.validate import Email, Length
 
 from aleph.core import url_for, get_config
-from aleph.index import TYPE_ENTITY, TYPE_DOCUMENT
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
 from aleph.logic.documents import document_url
-from aleph.model import Role
+from aleph.model import Role, Document
 from aleph.util import ensure_list
 
 
@@ -279,16 +278,13 @@ class MatchCollectionsSchema(Schema, DatedSchema):
 
 class SearchResultSchema(object):
 
-    SCHEMATA = {
-        TYPE_ENTITY: EntitySchema,
-        TYPE_DOCUMENT: DocumentSchema
-    }
-
     def dump(self, data, many=False):
         results = []
         for res in ensure_list(data):
-            schema = self.SCHEMATA[res['$doc_type']]
-            res = schema().dump(res)
+            if res.get('schema') == Document.SCHEMA:
+                res = DocumentSchema().dump(res)
+            else:
+                res = EntitySchema().dump(res)
             if not many:
                 return res
             results.append(res.data)

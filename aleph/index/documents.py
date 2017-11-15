@@ -4,10 +4,10 @@ from banal import clean_dict
 from followthemoney import model
 from followthemoney.types import TYPES
 
-from aleph.core import celery, db, es, es_index
+from aleph.core import celery, db, es
 from aleph.model import Document, DocumentTag
 from aleph.index.records import index_records, clear_records
-from aleph.index.mapping import TYPE_DOCUMENT
+from aleph.index.core import entity_type, entity_index, entities_index
 from aleph.index.util import index_form, index_names, unpack_result
 
 log = logging.getLogger(__name__)
@@ -50,7 +50,7 @@ def index_document(document):
         'created_at': document.created_at,
         'updated_at': document.updated_at,
         'title': document.title,
-        'name_sort': document.title,
+        'name': document.title,
         'summary': document.summary,
         'author': document.author,
         'file_size': document.file_size,
@@ -65,7 +65,7 @@ def index_document(document):
         'mime_type': document.mime_type,
         'pdf_version': document.pdf_version,
         'columns': document.columns,
-        '$children': document.children.count(),
+        'children': document.children.count(),
         'text': index_form(document.texts)
     }
     if document.parent_id is not None:
@@ -89,19 +89,18 @@ def index_document(document):
     index_names(data)
     data = clean_dict(data)
     # pprint(data)
-    es.index(index=es_index,
-             doc_type=TYPE_DOCUMENT,
+    es.index(index=entity_index(),
+             doc_type=entity_type(),
              body=data,
              id=document.id)
     data['id'] = document.id
-    data['$type'] = TYPE_DOCUMENT
     return data
 
 
 def get_document(document_id):
     """Fetch a document from the index."""
-    result = es.get(index=es_index,
-                    doc_type=TYPE_DOCUMENT,
+    result = es.get(index=entities_index(),
+                    doc_type=entity_type(),
                     id=document_id,
                     ignore=[404])
     document = unpack_result(result)
@@ -112,7 +111,7 @@ def get_document(document_id):
 
 def delete_document(document_id):
     clear_records(document_id)
-    es.delete(index=es_index,
-              doc_type=TYPE_DOCUMENT,
+    es.delete(index=entities_index(),
+              doc_type=entity_type(),
               id=document_id,
               ignore=[404])

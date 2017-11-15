@@ -8,8 +8,8 @@ from datetime import datetime
 from elasticsearch.helpers import BulkIndexError
 from elasticsearch import TransportError
 
-from aleph.core import es, es_index
-from aleph.index.mapping import TYPE_ENTITY
+from aleph.core import es
+from aleph.index.core import entity_type, entity_index, entities_index
 from aleph.index.util import bulk_op, index_form
 from aleph.index.util import index_names, unpack_result
 from aleph.util import ensure_list
@@ -19,7 +19,10 @@ log = logging.getLogger(__name__)
 
 def delete_entity(entity_id):
     """Delete an entity from the index."""
-    es.delete(index=es_index, doc_type=TYPE_ENTITY, id=entity_id, ignore=[404])
+    es.delete(index=entities_index(),
+              doc_type=entity_type(),
+              id=entity_id,
+              ignore=[404])
 
 
 def index_entity(entity):
@@ -32,7 +35,7 @@ def index_entity(entity):
         'data': entity.data,
         'created_at': entity.created_at,
         'updated_at': entity.updated_at,
-        '$bulk': False,
+        'bulk': False,
         'roles': entity.collection.roles,
         'collection_id': entity.collection_id,
         'properties': {
@@ -45,19 +48,18 @@ def index_entity(entity):
 
     # data['$documents'] = get_count(entity)
     data = finalize_index(data, entity.schema)
-    es.index(index=es_index,
-             doc_type=TYPE_ENTITY,
+    es.index(index=entity_index(),
+             doc_type=entity_type(),
              id=entity.id,
              body=data)
     data['id'] = entity.id
-    data['$type'] = TYPE_ENTITY
     return data
 
 
 def get_entity(entity_id):
     """Fetch an entity from the index."""
-    result = es.get(index=es_index,
-                    doc_type=TYPE_ENTITY,
+    result = es.get(index=entities_index(),
+                    doc_type=entity_type(),
                     id=entity_id,
                     ignore=[404])
     entity = unpack_result(result)
@@ -77,14 +79,15 @@ def _index_updates(collection, entities):
     """
     common = {
         'collection_id': collection.id,
-        '$bulk': True,
+        'bulk': True,
         'roles': collection.roles,
         'updated_at': datetime.utcnow()
     }
     if not len(entities):
         return
 
-    result = es.mget(index=es_index, doc_type=TYPE_ENTITY,
+    result = es.mget(index=entities_index(),
+                     doc_type=entity_type(),
                      body={'ids': entities.keys()},
                      _source=['schema', 'properties', 'created_at'])
     for doc in result.get('docs', []):
@@ -108,8 +111,8 @@ def _index_updates(collection, entities):
         # pprint(entity)
         yield {
             '_id': doc_id,
-            '_type': TYPE_ENTITY,
-            '_index': str(es_index),
+            '_index': entity_index(),
+            '_type': entity_type(),
             '_source': entity
         }
 
@@ -144,10 +147,6 @@ def finalize_index(data, schema):
     data['schema'] = schema.name
     # Get implied schemata (i.e. parents of the actual schema)
     data['schemata'] = schema.names
-
-    # Second name field for non-tokenised sorting.
-    if 'name' in data:
-        data['name_sort'] = data.get('name')
 
     # pprint(data)
     return data

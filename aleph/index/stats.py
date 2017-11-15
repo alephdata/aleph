@@ -1,13 +1,5 @@
-from aleph.core import es, es_index
-from aleph.model import Document
-from aleph.index.mapping import TYPE_DOCUMENT, TYPE_ENTITY
-from aleph.index.mapping import TYPE_COLLECTION
-
-TYPES = {
-    TYPE_DOCUMENT: '$documents',
-    TYPE_ENTITY: '$entities',
-    TYPE_COLLECTION: '$collections',
-}
+from aleph.core import es
+from aleph.index.core import entity_type, entity_index, entities_index
 
 
 def get_instance_stats(authz):
@@ -19,25 +11,21 @@ def get_instance_stats(authz):
             }
         },
         'aggs': {
-            'schema': {'terms': {'field': 'schema', 'size': 1000}},
-            'types': {'terms': {'field': '_type', 'size': len(TYPES)}}
+            'schema': {'terms': {'field': 'schema', 'size': 1000}}
         }
     }
-    result = es.search(index=es_index,
-                       doc_type=TYPES.keys(),
+    result = es.search(index=entities_index(),
+                       doc_type=entity_type(),
                        body=query)
     aggregations = result.get('aggregations')
     data = {
-        '$total': result.get('hits').get('total'),
-        '$schemata': {}
+        'total': result.get('hits').get('total'),
+        'schemata': {}
     }
     for schema in aggregations.get('schema').get('buckets'):
         key = schema.get('key')
-        data['$schemata'][key] = schema.get('doc_count')
+        data['schemata'][key] = schema.get('doc_count')
 
-    for doc_type in aggregations.get('types').get('buckets'):
-        key = TYPES.get(doc_type.get('key'))
-        data[key] = doc_type.get('doc_count')
     return data
 
 
@@ -56,25 +44,20 @@ def get_collection_stats(collection_id):
             'languages': {'terms': {'field': 'languages', 'size': 100}},
         }
     }
-    result = es.search(index=es_index,
-                       doc_type=[TYPE_DOCUMENT, TYPE_ENTITY],
+    result = es.search(index=entity_index(),
+                       doc_type=entity_type(),
                        body=query)
     aggregations = result.get('aggregations')
     data = {
-        '$schemata': {},
-        '$entities': 0,
-        '$total': result.get('hits').get('total')
+        'schemata': {},
+        'total': result.get('hits').get('total')
     }
 
-    # expose both entities by schema count and totals for docs and entities.
+    # expose entities by schema count.
     for schema in aggregations.get('schema').get('buckets'):
         key = schema.get('key')
         count = schema.get('doc_count')
-        data['$schemata'][key] = count
-        if key == Document.SCHEMA:
-            data['$documents'] = count
-        else:
-            data['$entities'] += count
+        data['schemata'][key] = count
 
     # if no countries or langs are given, take the most common from the data.
     if not data.get('countries') or not len(data.get('countries')):
