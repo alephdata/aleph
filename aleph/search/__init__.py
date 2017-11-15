@@ -1,12 +1,13 @@
 import logging
 from followthemoney import model
 
-from aleph.core import es, es_index
+from aleph.core import es
 from aleph.model import DocumentRecord
-from aleph.index.mapping import TYPE_DOCUMENT, TYPE_RECORD  # noqa
-from aleph.index.mapping import TYPE_COLLECTION, TYPE_ENTITY  # noqa
 from aleph.index.xref import entity_query
 from aleph.index.util import unpack_result
+from aleph.index.core import entities_index, entity_type
+from aleph.index.core import records_index, record_type
+from aleph.index.core import collections_index, collection_type
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.result import SearchQueryResult  # noqa
@@ -16,16 +17,21 @@ log = logging.getLogger(__name__)
 
 
 class DocumentsQuery(AuthzQuery):
-    DOC_TYPES = [TYPE_DOCUMENT]
-    TEXT_FIELDS = ['title^3', 'summary', 'text', '_all']
+    TEXT_FIELDS = ['title^3', 'summary', 'text']
     RETURN_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                      'languages', 'countries', 'source_url', 'created_at',
                      'updated_at', 'type', 'summary', 'status',
                      'error_message', 'content_hash', 'parent', '$children']
     SORT = {
-        'default': ['_score', {'name_sort': 'asc'}],
-        'name': [{'name_sort': 'asc'}, '_score'],
+        'default': ['_score', {'name.kw': 'asc'}],
+        'name': [{'name.kw': 'asc'}, '_score'],
     }
+
+    def get_index(self):
+        return entities_index()
+
+    def get_doc_type(self):
+        return entity_type()
 
 
 class EntityDocumentsQuery(DocumentsQuery):
@@ -102,15 +108,19 @@ class AlertDocumentsQuery(EntityDocumentsQuery):
 
 
 class EntitiesQuery(AuthzQuery):
-    DOC_TYPES = [TYPE_ENTITY]
     RETURN_FIELDS = ['collection_id', 'roles', 'name', 'data', 'countries',
                      'schema', 'schemata', 'properties', 'created_at',
                      'updated_at', 'creator', '$bulk']
     SORT = {
-        'default': ['_score', {'$documents': 'desc'}, {'name_sort': 'asc'}],
-        'name': [{'name_sort': 'asc'}, {'$documents': 'desc'}, '_score'],
-        'documents': [{'$documents': 'desc'}, {'name_sort': 'asc'}, '_score']
+        'default': ['_score', {'name.kw': 'asc'}],
+        'name': [{'name.kw': 'asc'}, '_score']
     }
+
+    def get_index(self):
+        return entities_index()
+
+    def get_doc_type(self):
+        return entity_type()
 
 
 class SimilarEntitiesQuery(EntitiesQuery):
@@ -129,7 +139,7 @@ class SuggestEntitiesQuery(EntitiesQuery):
     """Given a text prefix, find the most similar other entities."""
     RETURN_FIELDS = ['name', 'schema', 'fingerprints', '$documents']
     SORT = {
-        'default': ['_score', {'$documents': 'desc'}, {'name_sort': 'asc'}]
+        'default': ['_score', {'name.kw': 'asc'}]
     }
 
     def __init__(self, parser):
@@ -153,25 +163,35 @@ class SuggestEntitiesQuery(EntitiesQuery):
 
 
 class CombinedQuery(AuthzQuery):
-    DOC_TYPES = [TYPE_ENTITY, TYPE_DOCUMENT]
     RETURN_FIELDS = set(DocumentsQuery.RETURN_FIELDS)
     RETURN_FIELDS = list(set(EntitiesQuery.RETURN_FIELDS).union(RETURN_FIELDS))
 
     SORT = {
-        'default': ['_score', {'$documents': 'desc'}, {'name_sort': 'asc'}],
-        'name': [{'name_sort': 'asc'}, {'$documents': 'desc'}, '_score']
+        'default': ['_score', {'name.kw': 'asc'}],
+        'name': [{'name.kw': 'asc'}, '_score']
     }
+
+    def get_index(self):
+        return entities_index()
+
+    def get_doc_type(self):
+        return entity_type()
 
 
 class CollectionsQuery(AuthzQuery):
-    DOC_TYPES = [TYPE_COLLECTION]
     RETURN_FIELDS = True
-    TEXT_FIELDS = ['label^3', '_all']
+    TEXT_FIELDS = ['label^3', 'summary']
     SORT = {
-        'default': [{'$total': 'desc'}, {'name_sort': 'asc'}],
-        'score': ['_score', {'name_sort': 'asc'}],
-        'name': [{'name_sort': 'asc'}],
+        'default': [{'total': 'desc'}, {'label.kw': 'asc'}],
+        'score': ['_score', {'label.kw': 'asc'}],
+        'label': [{'label.kw': 'asc'}],
     }
+
+    def get_index(self):
+        return collections_index()
+
+    def get_doc_type(self):
+        return collection_type()
 
 
 class MatchQueryResult(DatabaseQueryResult):
@@ -187,7 +207,9 @@ class MatchQueryResult(DatabaseQueryResult):
             ids.add(match.entity_id)
         ids = {'ids': list(ids)}
 
-        result = es.mget(index=es_index, doc_type=TYPE_ENTITY, body=ids)
+        result = es.mget(index=entities_index(),
+                         doc_type=entity_type(),
+                         body=ids)
         for doc in result.get('docs', []):
             entity = unpack_result(doc)
             if entity is None:
@@ -220,7 +242,6 @@ class RecordsQueryResult(SearchQueryResult):
 
 
 class RecordsQuery(Query):
-    DOC_TYPES = [TYPE_RECORD]
     RESULT_CLASS = RecordsQueryResult
     RETURN_FIELDS = ['document_id', 'sheet', 'index']
     TEXT_FIELDS = ['text']
@@ -233,6 +254,12 @@ class RecordsQuery(Query):
         super(RecordsQuery, self).__init__(parser)
         self.document = document
         self.rows = parser.getintlist('row')
+
+    def get_index(self):
+        return records_index()
+
+    def get_doc_type(self):
+        return record_type()
 
     def get_sort(self):
         if len(self.rows) or self.parser.text:

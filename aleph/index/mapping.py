@@ -1,10 +1,4 @@
 
-TYPE_COLLECTION = 'collection'
-TYPE_DOCUMENT = 'document'
-TYPE_RECORD = 'record'
-TYPE_ENTITY = 'entity'
-
-
 COLLECTION_MAPPING = {
     "dynamic_templates": [
         {
@@ -18,8 +12,14 @@ COLLECTION_MAPPING = {
     ],
     "date_detection": False,
     "properties": {
-        "label": {"type": "text"},
-        "name_sort": {"type": "keyword"},
+        "label": {
+            "type": "text",
+            "fields": {
+                "kw": {
+                    "type": "keyword"
+                }
+            }
+        },
         "roles": {"type": "long"},
         "foreign_id": {"type": "keyword"},
         "languages": {"type": "keyword"},
@@ -29,10 +29,8 @@ COLLECTION_MAPPING = {
         "managed": {"type": "boolean"},
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
-        "$total": {"type": "long"},
-        "$entities": {"type": "long"},
-        "$documents": {"type": "long"},
-        "$schemata": {"type": "object"},
+        "total": {"type": "long"},
+        "schemata": {"type": "object"},
         "creator": {
             "type": "object",
             "properties": {
@@ -41,52 +39,6 @@ COLLECTION_MAPPING = {
                 "name": {"type": "keyword"}
             }
         },
-    }
-}
-
-DOCUMENT_MAPPING = {
-    "date_detection": False,
-    "properties": {
-        "title": {"type": "text"},
-        "name_sort": {"type": "keyword"},
-        "schema": {"type": "keyword"},
-        "schemata": {"type": "keyword"},
-        "type": {"type": "keyword"},
-        "status": {"type": "keyword"},
-        "error_message": {"type": "text"},
-        "content_hash": {"type": "keyword"},
-        "foreign_id": {"type": "keyword"},
-        "file_name": {"type": "keyword"},
-        "collection_id": {"type": "long"},
-        "roles": {"type": "long"},
-        "uploader_id": {"type": "long"},
-        "$children": {"type": "long"},
-        "source_url": {"type": "keyword"},
-        "extension": {"type": "keyword"},
-        "mime_type": {"type": "keyword"},
-        "encoding": {"type": "keyword"},
-        "languages": {"type": "keyword"},
-        "countries": {"type": "keyword"},
-        "keywords": {"type": "keyword"},
-        "fingerprints": {"type": "keyword"},
-        "names": {"type": "text"},
-        "emails": {"type": "keyword"},
-        "phones": {"type": "keyword"},
-        "columns": {"type": "keyword"},
-        "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
-        "author": {"type": "text"},
-        "summary": {"type": "text"},
-        "text": {"type": "text"},
-        "parent": {
-            "type": "object",
-            "properties": {
-                "id": {"type": "long"},
-                "type": {"type": "keyword"},
-                "title": {"type": "keyword"}
-            }
-        },
-        "created_at": {"type": "date"},
-        "updated_at": {"type": "date"},
     }
 }
 
@@ -102,6 +54,66 @@ RECORD_MAPPING = {
 }
 
 ENTITY_MAPPING = {
+    "date_detection": False,
+    "properties": {
+        "title": {"type": "text"},
+        "name": {
+            "type": "text",
+            "fields": {
+                "kw": {
+                    "type": "keyword"
+                }
+            }
+        },
+        "schema": {"type": "keyword"},
+        "schemata": {"type": "keyword"},
+        "type": {"type": "keyword"},
+        "bulk": {"type": "boolean"},
+        "status": {"type": "keyword"},
+        "error_message": {"type": "text"},
+        "content_hash": {"type": "keyword"},
+        "foreign_id": {"type": "keyword"},
+        "foreign_ids": {"type": "keyword"},
+        "file_name": {"type": "keyword"},
+        "collection_id": {"type": "long"},
+        "roles": {"type": "long"},
+        "uploader_id": {"type": "long"},
+        "children": {"type": "long"},
+        "source_url": {"type": "keyword"},
+        "extension": {"type": "keyword"},
+        "mime_type": {"type": "keyword"},
+        "encoding": {"type": "keyword"},
+        "languages": {"type": "keyword"},
+        "countries": {"type": "keyword"},
+        "keywords": {"type": "keyword"},
+        "fingerprints": {"type": "keyword"},
+        "names": {"type": "text"},
+        "emails": {"type": "keyword"},
+        "phones": {"type": "keyword"},
+        "identifiers": {"type": "keyword"},
+        "addresses": {"type": "text"},
+        "columns": {"type": "keyword"},
+        "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
+        "created_at": {"type": "date"},
+        "updated_at": {"type": "date"},
+        "author": {"type": "text"},
+        "summary": {"type": "text"},
+        "text": {"type": "text"},
+        "properties": {
+            "type": "object"
+        },
+        "data": {
+            "type": "object"
+        },
+        "parent": {
+            "type": "object",
+            "properties": {
+                "id": {"type": "long"},
+                "type": {"type": "keyword"},
+                "title": {"type": "keyword"}
+            }
+        },
+    },
     "dynamic_templates": [
         {
             "fields": {
@@ -119,29 +131,5 @@ ENTITY_MAPPING = {
                 }
             }
         }
-    ],
-    "date_detection": False,
-    "properties": {
-        "name": {"type": "text"},
-        "name_sort": {"type": "keyword"},
-        "schema": {"type": "keyword"},
-        "schemata": {"type": "keyword"},
-        "text": {"type": "text"},
-        "collection_id": {"type": "long"},
-        "roles": {"type": "long"},
-        "foreign_ids": {"type": "keyword"},
-        "fingerprints": {"type": "keyword"},
-        "names": {"type": "text"},
-        "identifiers": {"type": "keyword"},
-        "countries": {"type": "keyword"},
-        "dates": {"type": "date", "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"},  # noqa
-        "emails": {"type": "keyword"},
-        "phones": {"type": "keyword"},
-        "addresses": {"type": "text"},
-        "properties": {"type": "object"},
-        "data": {"type": "object"},
-        "created_at": {"type": "date"},
-        "updated_at": {"type": "date"},
-        "$bulk": {"type": "boolean"}
-    }
+    ]
 }

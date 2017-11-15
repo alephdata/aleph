@@ -1,12 +1,11 @@
 from pprint import pprint  # noqa
 
-from aleph.core import es, es_index
+from aleph.core import es
 from aleph.index.stats import get_collection_stats
-from aleph.index.mapping import TYPE_DOCUMENT, TYPE_ENTITY
-from aleph.index.mapping import TYPE_COLLECTION
+from aleph.index.core import collection_type
+from aleph.index.core import collection_index, collections_index
+from aleph.index.core import entity_type, entity_index
 from aleph.index.util import query_delete
-
-CHILD_TYPES = [TYPE_DOCUMENT, TYPE_ENTITY]
 
 
 def index_collection(collection):
@@ -33,8 +32,8 @@ def index_collection(collection):
             'name': collection.creator.name
         }
     data.update(get_collection_stats(collection.id))
-    es.index(index=es_index,
-             doc_type=TYPE_COLLECTION,
+    es.index(index=collection_index(),
+             doc_type=collection_type(),
              id=collection.id,
              body=data)
 
@@ -48,8 +47,8 @@ def update_roles(collection):
             'inline': 'ctx._source.roles = [%s]' % roles
         }
     }
-    es.update_by_query(index=es_index,
-                       doc_type=CHILD_TYPES,
+    es.update_by_query(index=entity_index(),
+                       doc_type=entity_type(),
                        body=body,
                        wait_for_completion=False)
 
@@ -57,7 +56,7 @@ def update_roles(collection):
 def delete_collection(collection_id, wait=True):
     """Delete all documents from a particular collection."""
     query_delete({'term': {'collection_id': collection_id}}, wait=wait)
-    es.delete(index=es_index,
-              doc_type=TYPE_COLLECTION,
+    es.delete(index=collections_index(),
+              doc_type=collection_type(),
               id=collection_id,
               ignore=[404])
