@@ -70,11 +70,11 @@ class RoleSchema(Schema, DatedSchema):
 
     @post_dump
     def transient(self, data):
-        data['$uri'] = url_for('roles_api.view', id=data.get('id'))
+        data['uri'] = url_for('roles_api.view', id=data.get('id'))
         writeable = False
         if str(request.authz.id) == str(data.get('id')):
             writeable = True
-        data['$writeable'] = writeable
+        data['writeable'] = writeable
         if not request.authz.is_admin and not writeable:
             data.pop('email')
         if not writeable:
@@ -122,8 +122,8 @@ class AlertSchema(Schema, DatedSchema):
 
     @post_dump
     def transient(self, data):
-        data['$uri'] = url_for('alerts_api.view', id=data.get('id'))
-        data['$writeable'] = True
+        data['uri'] = url_for('alerts_api.view', id=data.get('id'))
+        data['writeable'] = True
         return data
 
 
@@ -141,21 +141,15 @@ class CollectionSchema(Schema, DatedSchema):
     @post_dump
     def transient(self, data):
         id_ = str(data.get('id'))
-        data['$uri'] = url_for('collections_api.view', id=id_)
-        data['$ui'] = collection_url(id_)
-        data['$writeable'] = request.authz.can_write(id_)
+        data['uri'] = url_for('collections_api.view', id=id_)
+        data['ui'] = collection_url(id_)
+        data['writeable'] = request.authz.can_write(id_)
         return data
 
 
 class CollectionIndexSchema(CollectionSchema):
-    total = Integer(dump_to='$total', attribute='$total',
-                    dump_only=True, default=0)
-    entities = Integer(dump_to='$entities', attribute='$entities',
-                       dump_only=True, default=0)
-    documents = Integer(dump_to='$documents', attribute='$documents',
-                        dump_only=True, default=0)
-    schemata = Dict(dump_to='$schemata', attribute='$schemata',
-                    dump_only=True, default={})
+    count = Integer(dump_only=True)
+    schemata = Dict(dump_only=True, default={})
 
 
 class EntitySchema(Schema, DatedSchema):
@@ -169,17 +163,17 @@ class EntitySchema(Schema, DatedSchema):
     schemata = List(SchemaName(), dump_only=True)
     data = Dict()
     properties = Dict(dump_only=True)
-    bulk = Boolean(dump_to='$bulk', attribute='$bulk', dump_only=True)
+    bulk = Boolean(dump_only=True)
 
     @post_dump
     def transient(self, data):
-        data['$uri'] = url_for('entities_api.view', id=data.get('id'))
-        data['$ui'] = entity_url(data.get('id'))
-        if data.get('$bulk'):
-            data['$writeable'] = False
+        data['uri'] = url_for('entities_api.view', id=data.get('id'))
+        data['ui'] = entity_url(data.get('id'))
+        if data.get('bulk'):
+            data['writeable'] = False
         else:
             collection_id = data.get('collection_id')
-            data['$writeable'] = request.authz.can_write(collection_id)
+            data['writeable'] = request.authz.can_write(collection_id)
         return data
 
 
@@ -230,16 +224,15 @@ class DocumentSchema(Schema, DatedSchema):
     text = String(dump_only=True)
     html = String(dump_only=True)
     columns = List(String(), dump_only=True)
-    children = Boolean(dump_to='$children', attribute='$children',
-                       dump_only=True)
+    children = Boolean(dump_only=True)
 
     @post_dump
     def transient(self, data):
-        data['$uri'] = url_for('documents_api.view',
-                               document_id=data.get('id'))
-        data['$ui'] = document_url(data.get('id'))
+        data['uri'] = url_for('documents_api.view',
+                              document_id=data.get('id'))
+        data['ui'] = document_url(data.get('id'))
         collection_id = data.get('collection_id')
-        data['$writeable'] = request.authz.can_write(collection_id)
+        data['writeable'] = request.authz.can_write(collection_id)
         return data
 
 
@@ -252,9 +245,9 @@ class RecordSchema(Schema):
 
     @post_dump
     def transient(self, data):
-        data['$uri'] = url_for('documents_api.record',
-                               document_id=data.get('document_id'),
-                               index=data.get('index'))
+        data['uri'] = url_for('documents_api.record',
+                              document_id=data.get('document_id'),
+                              index=data.get('index'))
         return data
 
 
@@ -271,9 +264,9 @@ class MatchCollectionsSchema(Schema, DatedSchema):
 
     @post_dump
     def transient(self, data):
-        data['$uri'] = url_for('xref_api.matches',
-                               id=data.pop('parent'),
-                               other_id=data.get('collection').get('id'))
+        data['uri'] = url_for('xref_api.matches',
+                              id=data.pop('parent'),
+                              other_id=data.get('collection').get('id'))
 
 
 class SearchResultSchema(object):

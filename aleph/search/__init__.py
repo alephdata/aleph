@@ -2,7 +2,7 @@ import logging
 from followthemoney import model
 
 from aleph.core import es
-from aleph.model import DocumentRecord
+from aleph.model import Document, DocumentRecord
 from aleph.index.xref import entity_query
 from aleph.index.util import unpack_result
 from aleph.index.core import entities_index, entity_type
@@ -26,6 +26,13 @@ class DocumentsQuery(AuthzQuery):
         'default': ['_score', {'name.kw': 'asc'}],
         'name': [{'name.kw': 'asc'}, '_score'],
     }
+
+    def get_filters(self):
+        filters = super(DocumentsQuery, self).get_filters()
+        filters.append({
+            'term': {'schema': Document.SCHEMA}
+        })
+        return filters
 
     def get_index(self):
         return entities_index()
@@ -182,7 +189,7 @@ class CollectionsQuery(AuthzQuery):
     RETURN_FIELDS = True
     TEXT_FIELDS = ['label^3', 'summary']
     SORT = {
-        'default': [{'total': 'desc'}, {'label.kw': 'asc'}],
+        'default': [{'count': 'desc'}, {'label.kw': 'asc'}],
         'score': ['_score', {'label.kw': 'asc'}],
         'label': [{'label.kw': 'asc'}],
     }

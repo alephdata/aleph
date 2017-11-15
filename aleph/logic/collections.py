@@ -51,7 +51,7 @@ def process_collection(collection_id):
 
 
 @celery.task()
-def delete_collection(collection_id):
+def delete_collection(collection_id, wait=False):
     # Deleting a collection affects many associated objects and requires
     # checks, so this is done manually and in detail here.
     q = db.session.query(Collection)
@@ -63,7 +63,7 @@ def delete_collection(collection_id):
 
     log.info("Deleting collection [%r]: %r", collection.id, collection.label)
     deleted_at = datetime.utcnow()
-    index_delete(collection_id, wait=False)
+    index_delete(collection_id, wait=wait)
 
     log.info("Delete cross-referencing matches...")
     Match.delete_by_collection(collection_id)
