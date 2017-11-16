@@ -21,7 +21,7 @@ def generate_records(document):
     """Generate index records, based on document rows or pages."""
     q = db.session.query(DocumentRecord)
     q = q.filter(DocumentRecord.document_id == document.id)
-    for record in q:
+    for idx, record in enumerate(q):
         yield {
             '_id': record.id,
             '_index': record_index(),
@@ -34,6 +34,9 @@ def generate_records(document):
                 'text': index_form(record.texts)
             }
         }
+
+        if idx > 0 and idx % 1000 == 0:
+            log.info("Indexed [%s]: %s records...", document.id, idx)
 
 
 def index_records(document):
