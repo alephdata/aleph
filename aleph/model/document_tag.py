@@ -73,6 +73,9 @@ class DocumentTagCollector(object):
         if key is None:
             key = slugify(text, sep='-')
 
+        if key is None:
+            return
+
         if (key, type) not in self.keyed:
             self.keyed[(key, type)] = dict(text=text, weight=weight)
         else:
