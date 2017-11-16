@@ -147,6 +147,5 @@ def finalize_index(data, schema):
     data['schema'] = schema.name
     # Get implied schemata (i.e. parents of the actual schema)
     data['schemata'] = schema.names
-
     # pprint(data)
     return data

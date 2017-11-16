@@ -7,7 +7,7 @@ from aleph.core import es
 
 log = logging.getLogger(__name__)
 INDEX_MAX_LEN = 1024 * 1024 * 100
-TIMEOUT = 600.0
+TIMEOUT = '60m'
 
 
 def unpack_result(res):
