@@ -38,14 +38,15 @@ ENV LANG='en_US.UTF-8' \
 
 # Install Python dependencies
 RUN pip install -q --upgrade pip && pip install -q --upgrade setuptools six
-COPY requirements.txt requirements-docs.txt requirements-testing.txt /tmp/
-RUN pip install -q -r /tmp/requirements.txt \
-  && pip install --pre -q -r /tmp/requirements-docs.txt
+COPY requirements-docs.txt requirements-testing.txt /tmp/
+RUN pip install -r /tmp/requirements-docs.txt
+COPY requirements.txt /tmp/
+RUN pip install -r /tmp/requirements.txt
 
 # Install aleph
 COPY . /aleph
 WORKDIR /aleph
-RUN pip install -q -e .
+RUN pip install -e .
 RUN pip install --upgrade ingestors
 
 # Expose the green unicorn
