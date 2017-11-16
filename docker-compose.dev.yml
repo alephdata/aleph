@@ -2,7 +2,7 @@ version: "2"
 
 services:
   postgres:
-    image: postgres:9.4
+    image: postgres:10.0
     volumes:
       - "./build/data/postgres:/var/lib/postgresql/data"
       - "./build/logs/postgres:/var/log"
