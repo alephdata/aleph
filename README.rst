@@ -26,9 +26,7 @@ Here's some key features:
   importer.
 * Document entity tagger (regular expressions-based, and optionally using NLP).
 * Support for OCR, unpacking Zip/RAR/Tarballs, language and encoding detection.
-* Entity watchlist importers for
-  `OpenNames <http://pudo.org/material/opennames/>`_ and
-  `Investigative Dashboard <https://investigativedashboard.org/>`_.
+* Entity watchlist importers for `OpenSanctions <http://opensanctions.org/>`_.
 * OAuth authorization and access control on a per-source and per-watchlist
   basis.
 * Excel export for search result sets.
