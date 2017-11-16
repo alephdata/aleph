@@ -7,6 +7,7 @@ from aleph.core import es
 
 log = logging.getLogger(__name__)
 INDEX_MAX_LEN = 1024 * 1024 * 100
+TIMEOUT = 600.0
 
 
 def unpack_result(res):
@@ -25,7 +26,7 @@ def bulk_op(iter, chunk_size=500):
     bulk(es, iter,
          stats_only=True,
          chunk_size=chunk_size,
-         request_timeout=200.0)
+         timeout=TIMEOUT)
 
 
 def query_delete(index, query, wait=True):
@@ -34,6 +35,7 @@ def query_delete(index, query, wait=True):
                        body={'query': query},
                        refresh=True,
                        conflicts='proceed',
+                       timeout=TIMEOUT,
                        wait_for_completion=wait)
 
 
