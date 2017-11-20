@@ -95,9 +95,8 @@ def pdf(document_id):
     document = get_document(document_id)
     if document.type != Document.TYPE_PDF:
         raise BadRequest("PDF is only available for text documents")
-    return _serve_archive(document.pdf_version,
-                          document.file_name,
-                          PDF_MIME)
+    file_name = '%.pdf' % document.safe_file_name
+    return _serve_archive(document.pdf_version, file_name, PDF_MIME)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/records')

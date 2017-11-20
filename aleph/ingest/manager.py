@@ -53,15 +53,15 @@ class DocumentManager(Manager):
         if not os.path.isdir(file_path):
             content_hash = checksum(file_path)
 
-        document = Document.by_keys(parent_id=parent.document.id,
-                                    collection=parent.document.collection,
-                                    foreign_id=id, content_hash=content_hash)
-        document.title = title or document.meta.get('title')
-        document.file_name = file_name or document.meta.get('file_name')
-        document.mime_type = mime_type or document.meta.get('mime_type')
+        doc = Document.by_keys(parent_id=parent.document.id,
+                               collection=parent.document.collection,
+                               foreign_id=id, content_hash=content_hash)
+        doc.title = title or doc.meta.get('title')
+        doc.file_name = file_name or doc.meta.get('file_name')
+        doc.mime_type = mime_type or doc.meta.get('mime_type')
 
         from aleph.ingest import ingest_document
-        ingest_document(document, file_path, role_id=parent.role_id)
+        ingest_document(doc, file_path, role_id=parent.role_id)
 
     def ingest_document(self, document, file_path=None, role_id=None):
         """Ingest a database-backed document.

@@ -28,14 +28,27 @@ class Metadata(object):
     def update_meta(self):
         pass
 
+    def _meta_text(self, field, value):
+        value = stringify(value)
+        if value is None:
+            self.meta.pop(field, None)
+        self.meta[field] = value
+        self.update_meta()
+
+    def _meta_add(self, field, value):
+        values = self.meta.pop(field, [])
+        if value is not None and value not in values:
+            values.append(value)
+        if len(values):
+            self.meta[field] = values
+
     @property
     def title(self):
-        return self.meta.get('title') or self.file_title
+        return self.meta.get('title') or self.file_name
 
     @title.setter
     def title(self, title):
-        self.meta['title'] = stringify(title)
-        self.update_meta()
+        self._meta_text('title', title)
 
     @property
     def summary(self):
@@ -43,8 +56,7 @@ class Metadata(object):
 
     @summary.setter
     def summary(self, summary):
-        self.meta['summary'] = stringify(summary)
-        self.update_meta()
+        self._meta_text('summary', summary)
 
     @property
     def author(self):
@@ -52,8 +64,7 @@ class Metadata(object):
 
     @author.setter
     def author(self, author):
-        self.meta['author'] = stringify(author)
-        self.update_meta()
+        self._meta_text('author', author)
 
     @property
     def crawler(self):
@@ -61,13 +72,12 @@ class Metadata(object):
 
     @crawler.setter
     def crawler(self, crawler):
-        self.meta['crawler'] = stringify(crawler)
-        self.update_meta()
+        self._meta_text('crawler', crawler)
 
     @property
     def file_size(self):
         file_size = self.meta.get('file_size')
-        return None if file_size is None else int(file_size)
+        return int(file_size) if file_size else None
 
     @file_size.setter
     def file_size(self, file_size):
@@ -75,45 +85,43 @@ class Metadata(object):
         self.update_meta()
 
     @property
-    def file_title(self):
+    def file_name(self):
         """The file title is a human-readable interpretation of the file name.
         It is used for labelling or as a backup title. It should not be used
         to generate an actual file system path."""
-        file_title = self.meta.get('file_name')
+        file_name = self.meta.get('file_name')
 
         # derive file name from headers
         disposition = self.headers.get('content_disposition')
-        if file_title is None and disposition is not None:
+        if file_name is None and disposition is not None:
             _, attrs = cgi.parse_header(disposition)
             filename = attrs.get('filename') or ''
-            file_title = stringify(unquote(filename))
+            file_name = stringify(unquote(filename))
 
-        if file_title is None and self.source_url:
+        if file_name is None and self.source_url:
             parsed = urlparse(self.source_url)
-            file_title = os.path.basename(parsed.path) or ''
-            file_title = stringify(unquote(file_title))
+            file_name = os.path.basename(parsed.path) or ''
+            file_name = stringify(unquote(file_name))
 
-        return file_title
+        return file_name
 
     @property
-    def file_name(self):
+    def safe_file_name(self):
         """File name is a slugified version of the file title that is safe to
         use as part of a file system path."""
-        return safe_filename(self.file_title, default='data')
+        return safe_filename(self.file_name, default='data')
 
     @file_name.setter
     def file_name(self, file_name):
-        self.meta['file_name'] = stringify(file_name)
-        self.update_meta()
+        self._meta_text('file_name', file_name)
 
     @property
     def source_url(self):
-        return self.meta.get('source_url')
+        return urls.clean(self.meta.get('source_url'))
 
     @source_url.setter
     def source_url(self, source_url):
-        self.meta['source_url'] = urls.clean(source_url)
-        self.update_meta()
+        self._meta_text('source_url', source_url)
 
     @property
     def languages(self):
@@ -126,11 +134,7 @@ class Metadata(object):
             self.add_language(lang)
 
     def add_language(self, language):
-        self.meta.setdefault('languages', [])
-        lang = languages.clean(language)
-        if lang is not None and lang not in self.meta['languages']:
-            self.meta['languages'].append(lang)
-            self.update_meta()
+        self._meta_add('languages', languages.clean(language))
 
     @property
     def countries(self):
@@ -143,11 +147,7 @@ class Metadata(object):
             self.add_country(country)
 
     def add_country(self, country):
-        self.meta.setdefault('countries', [])
-        country = countries.clean(country)
-        if country is not None and country not in self.meta['countries']:
-            self.meta['countries'].append(country)
-            self.update_meta()
+        self._meta_add('countries', countries.clean(country))
 
     @property
     def keywords(self):
@@ -160,28 +160,56 @@ class Metadata(object):
             self.add_keyword(kw)
 
     def add_keyword(self, kw):
-        self.meta.setdefault('keywords', [])
-        kw = stringify(kw)
-        if kw is not None and kw not in self.meta['keywords']:
-            self.meta['keywords'].append(kw)
-            self.update_meta()
+        self._meta_add('countries', stringify(kw))
+
+    @property
+    def date(self):
+        return self.meta.get('date')
+
+    @date.setter
+    def date(self, date):
+        self._meta_text(dates.clean(date))
+
+    @property
+    def authored_at(self):
+        return self.meta.get('authored_at')
+
+    @authored_at.setter
+    def authored_at(self, date):
+        self._meta_text(dates.clean(date))
+
+    @property
+    def modified_at(self):
+        return self.meta.get('modified_at')
+
+    @modified_at.setter
+    def modified_at(self, date):
+        self._meta_text(dates.clean(date))
+
+    @property
+    def published_at(self):
+        return self.meta.get('published_at')
+
+    @published_at.setter
+    def published_at(self, date):
+        self._meta_text(dates.clean(date))
+
+    @property
+    def retrieved_at(self):
+        return self.meta.get('retrieved_at')
+
+    @retrieved_at.setter
+    def retrieved_at(self, date):
+        self._meta_text(dates.clean(date))
 
     @property
     def dates(self):
-        return self.meta.get('dates', [])
-
-    @dates.setter
-    def dates(self, dates):
-        self.meta['dates'] = []
-        for obj in dates:
-            self.add_date(obj)
-
-    def add_date(self, obj):
-        self.meta.setdefault('dates', [])
-        date = dates.clean(obj)
-        if date is not None and date not in self.meta['dates']:
-            self.meta['dates'].append(date)
-            self.update_meta()
+        dates = set([self.date,
+                     self.authored_at,
+                     self.modified_at,
+                     self.published_at,
+                     self.retrieved_at])
+        return [d for d in dates if d is not None]
 
     @property
     def extension(self):
@@ -190,15 +218,15 @@ class Metadata(object):
         if extension is None and self.file_name:
             _, extension = os.path.splitext(self.file_name)
 
-        if extension is None or not len(extension):
+        extension = stringify(extension)
+        if extension is None:
             return None
 
-        extension = six.text_type(extension).lower().strip().strip('.')
-        return extension
+        return extension.lower().strip().strip('.')
 
     @extension.setter
     def extension(self, extension):
-        self.meta['extension'] = stringify(extension)
+        self._meta_text('extension', extension)
 
     @property
     def encoding(self):
@@ -206,8 +234,7 @@ class Metadata(object):
 
     @encoding.setter
     def encoding(self, encoding):
-        self.meta['encoding'] = stringify(encoding)
-        self.update_meta()
+        self._meta_text('encoding', encoding)
 
     @property
     def mime_type(self):
@@ -225,7 +252,7 @@ class Metadata(object):
 
     @mime_type.setter
     def mime_type(self, mime_type):
-        self.meta['mime_type'] = stringify(mime_type)
+        self._meta_text('mime_type', mime_type)
 
     @property
     def headers(self):
@@ -237,7 +264,9 @@ class Metadata(object):
         self.meta['headers'] = {}
         if isinstance(headers, Mapping):
             for key, value in headers.items():
-                self.meta['headers'][key] = stringify(value)
+                key, value = stringify(key), stringify(value)
+                if key is not None and value is not None:
+                    self.meta['headers'][key] = value
             self.update_meta()
 
     @property
@@ -248,8 +277,7 @@ class Metadata(object):
 
     @pdf_version.setter
     def pdf_version(self, pdf_version):
-        self.meta['pdf_version'] = stringify(pdf_version)
-        self.update_meta()
+        self._meta_text('pdf_version', pdf_version)
 
     @property
     def columns(self):
