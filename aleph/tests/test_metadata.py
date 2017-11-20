@@ -45,16 +45,13 @@ class MetadataTestCase(TestCase):
 
     def test_dates(self):
         meta = Metadata()
-        meta.add_date('yada yada')
+        meta.date = 'yada yada'
         assert len(meta.dates) == 0, meta.dates
 
-        # meta.add_date('today')
-        # assert len(meta.dates) == 1, meta.dates
-
         meta = Metadata()
-        meta.add_date('2001-01-20')
+        meta.date = '2001-01-20'
         assert len(meta.dates) == 1, meta.dates
-        meta.add_date('2001-01-20')
+        meta.authored_at = '2001-01-20'
         assert len(meta.dates) == 1, meta.dates
-        meta.add_date('2002-01-20')
+        meta.published_at = '2002-01-20'
         assert len(meta.dates) == 2, meta.dates
