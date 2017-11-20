@@ -54,7 +54,7 @@ def index_document(document):
         'summary': document.summary,
         'author': document.author,
         'file_size': document.file_size,
-        'file_name': document.file_title,
+        'file_name': document.file_name,
         'source_url': document.source_url,
         'languages': document.languages,
         'countries': document.countries,

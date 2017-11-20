@@ -22,8 +22,8 @@ class MetadataTestCase(TestCase):
     def test_file_names(self):
         meta = Metadata()
         meta.file_name = 'Foo Schnasel.doc'
-        assert meta.file_name == 'Foo_Schnasel.doc', meta.file_name
-        assert meta.file_title == 'Foo Schnasel.doc', meta.file_title
+        assert meta.safe_file_name == 'Foo_Schnasel.doc', meta.safe_file_name
+        assert meta.file_name == 'Foo Schnasel.doc', meta.file_name
 
     def test_keywords(self):
         meta = Metadata()
