@@ -14,6 +14,8 @@ import LogoutScreen from "./LogoutScreen";
 import SignupScreen from "./SignupScreen";
 import ActivateScreen from "./ActivateScreen";
 
+import './PageLayout.css';
+
 class PageLayout extends Component {
 
   componentWillMount() {
@@ -32,9 +34,9 @@ class PageLayout extends Component {
     }
 
     return (
-      <div>
+      <div className="PageLayout-root">
         <PageNavbar metadata={this.props.metadata} session={this.props.session}/>
-        <main>
+        <main className="PageLayout-main">
           <Switch>
             <Redirect exact from="/" to="/search"/>
             <Route path="/search" exact component={SearchScreen}/>

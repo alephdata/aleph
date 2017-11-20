@@ -12,7 +12,14 @@ body {
   padding: 0;
   font-family: sans-serif;
   background: $light-gray5;
+  width: 100%;
   min-height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+#root {
+  flex-grow: 1;
 }
 
 .spinner {
