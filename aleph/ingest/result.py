@@ -82,15 +82,22 @@ class DocumentResult(Result):
         doc.foreign_id = stringify(self.id)
         doc.content_hash = self.checksum or doc.content_hash
         doc.uploader_id = self.role_id or doc.uploader_id
-        doc.title = stringify(self.title) or self.meta.get('title')
-        doc.summary = stringify(self.summary) or self.meta.get('summary')
-        doc.author = stringify(self.author) or self.meta.get('author')
-        doc.mime_type = stringify(self.mime_type) or self.meta.get('mime_type')
-        doc.encoding = stringify(self.encoding) or self.meta.get('encoding')
+        doc.title = stringify(self.title) or doc.meta.get('title')
+        doc.summary = stringify(self.summary) or doc.meta.get('summary')
+        doc.author = stringify(self.author) or doc.meta.get('author')
+        doc.mime_type = stringify(self.mime_type) or doc.meta.get('mime_type')
+        doc.encoding = stringify(self.encoding) or doc.meta.get('encoding')
+
+        doc.date = self.date or doc.meta.get('date')
+        doc.authored_at = self.created_at or doc.meta.get('authored_at')
+        doc.modified_at = self.modified_at or doc.meta.get('modified_at')
+        doc.published_at = self.published_at or doc.meta.get('published_at')
+
         for kw in self.keywords:
             doc.add_keyword(kw)
         for lang in self.languages:
             doc.add_language(lang)
+
         doc.headers = self.headers or doc.meta.get('headers')
         doc.columns = self.columns.keys()
 

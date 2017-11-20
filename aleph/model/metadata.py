@@ -168,7 +168,7 @@ class Metadata(object):
 
     @date.setter
     def date(self, date):
-        self._meta_text(dates.clean(date))
+        self._meta_text('date', dates.clean(date))
 
     @property
     def authored_at(self):
@@ -176,7 +176,7 @@ class Metadata(object):
 
     @authored_at.setter
     def authored_at(self, date):
-        self._meta_text(dates.clean(date))
+        self._meta_text('authored_at', dates.clean(date))
 
     @property
     def modified_at(self):
@@ -184,7 +184,7 @@ class Metadata(object):
 
     @modified_at.setter
     def modified_at(self, date):
-        self._meta_text(dates.clean(date))
+        self._meta_text('modified_at', dates.clean(date))
 
     @property
     def published_at(self):
@@ -192,7 +192,7 @@ class Metadata(object):
 
     @published_at.setter
     def published_at(self, date):
-        self._meta_text(dates.clean(date))
+        self._meta_text('published_at', dates.clean(date))
 
     @property
     def retrieved_at(self):
@@ -200,7 +200,7 @@ class Metadata(object):
 
     @retrieved_at.setter
     def retrieved_at(self, date):
-        self._meta_text(dates.clean(date))
+        self._meta_text('retrieved_at', dates.clean(date))
 
     @property
     def dates(self):
