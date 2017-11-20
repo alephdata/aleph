@@ -95,7 +95,7 @@ def pdf(document_id):
     document = get_document(document_id)
     if document.type != Document.TYPE_PDF:
         raise BadRequest("PDF is only available for text documents")
-    file_name = '%.pdf' % document.safe_file_name
+    file_name = '%s.pdf' % document.safe_file_name
     return _serve_archive(document.pdf_version, file_name, PDF_MIME)
 
 

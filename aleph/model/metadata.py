@@ -2,6 +2,7 @@ import os
 import six
 import cgi
 import mimetypes
+from banal import ensure_list
 from collections import Mapping
 from urllib import unquote
 from urlparse import urlparse
@@ -130,7 +131,7 @@ class Metadata(object):
     @languages.setter
     def languages(self, languages):
         self.meta['languages'] = []
-        for lang in languages:
+        for lang in ensure_list(languages):
             self.add_language(lang)
 
     def add_language(self, language):
@@ -143,7 +144,7 @@ class Metadata(object):
     @countries.setter
     def countries(self, countries):
         self.meta['countries'] = []
-        for country in countries:
+        for country in ensure_list(countries):
             self.add_country(country)
 
     def add_country(self, country):
@@ -156,11 +157,11 @@ class Metadata(object):
     @keywords.setter
     def keywords(self, keywords):
         self.meta['keywords'] = []
-        for kw in keywords:
+        for kw in ensure_list(keywords):
             self.add_keyword(kw)
 
     def add_keyword(self, kw):
-        self._meta_add('countries', stringify(kw))
+        self._meta_add('keywords', stringify(kw))
 
     @property
     def date(self):
