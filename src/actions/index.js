@@ -69,3 +69,18 @@ export const fetchMetadata = () => (dispatch) => {
       metadata: response.data
     }));
 };
+
+export const fetchEntity = id => dispatch => {
+  dispatch({
+    type: 'FETCH_ENTITY_REQUEST',
+    payload: { id },
+  });
+
+  return endpoint.get(`entities/${id}`)
+    .then(response => {
+      dispatch({
+        type: 'FETCH_ENTITY_SUCCESS',
+        payload: { id, data: response.data },
+      });
+    });
+};

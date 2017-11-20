@@ -7,9 +7,8 @@ import { fetchCollections, fetchMetadata } from '../actions';
 
 import PageNavbar from '../components/PageNavbar';
 
-import SearchScreen from './SearchScreen';
+import SwitchPage from './SwitchPage';
 import LoginScreen from "./LoginScreen";
-import ErrorScreen from './ErrorScreen';
 import LogoutScreen from "./LogoutScreen";
 import SignupScreen from "./SignupScreen";
 import ActivateScreen from "./ActivateScreen";
@@ -38,13 +37,11 @@ class PageLayout extends Component {
         <PageNavbar metadata={this.props.metadata} session={this.props.session}/>
         <main className="PageLayout-main">
           <Switch>
-            <Redirect exact from="/" to="/search"/>
-            <Route path="/search" exact component={SearchScreen}/>
             <Route path="/login" exact component={LoginScreen}/>
             <Route path="/logout" exact component={LogoutScreen}/>
             <Route path="/signup" exact component={SignupScreen}/>
             <Route path="/activate/:code" exact component={ActivateScreen}/>
-            <Route component={ErrorScreen}/>
+            <Route component={SwitchPage}/>
           </Switch>
         </main>
       </div>
