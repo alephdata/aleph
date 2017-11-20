@@ -44,6 +44,10 @@ export const fetchNextSearchResults = () => (dispatch, getState) => {
   const { searchResults } = getState();
 
   if (searchResults.next) {
+    dispatch({
+      type: 'FETCH_SEARCH_NEXT_REQUEST',
+    });
+
     return endpoint.get(searchResults.next)
       .then(response => {
         dispatch({
