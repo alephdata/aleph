@@ -38,10 +38,10 @@ pyjwt >= 1.5.3
 
 followthemoney >= 0.3
 fingerprints >= 0.3.2
-storagelayer >= 0.1
-exactitude >= 2.0.1
+storagelayer >= 0.2.1
+exactitude >= 2.1.1
 ingestors >= 0.5.0
-normality >= 0.5.3
+normality >= 0.5.6
 
 # Python 3 backports
 functools32 >= 3.2

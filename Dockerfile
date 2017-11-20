@@ -12,7 +12,7 @@ RUN apt-get -qq -y update \
         poppler-utils poppler-data unrtf pstotext libwebp-dev python-pil \
         imagemagick-common imagemagick mdbtools p7zip-full libboost-python-dev libgsf-1-dev \
         libtesseract-dev libjpeg-dev libicu-dev libldap2-dev libsasl2-dev djvulibre-bin \
-        tesseract-ocr-all \    
+        tesseract-ocr-all libleptonica-dev \    
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

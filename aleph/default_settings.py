@@ -127,26 +127,19 @@ if env_bool('ALEPH_OAUTH', True):
 # Content processing options
 
 DEFAULT_LANGUAGE = env.get('ALEPH_DEFAULT_LANGUAGE', 'en')
-# OCR_PDF_PAGES = True
 
 # When no language is assigned, OCR will include these options:
-OCR_DEFAULTS = env_list('ALEPH_OCR_DEFAULTS', [DEFAULT_LANGUAGE])
+OCR_DEFAULTS = ['eng', 'rus', 'hbs']
+OCR_DEFAULTS = env_list('ALEPH_OCR_DEFAULTS', OCR_DEFAULTS)
 
-# Use Apache Tika for PDF extraction:
-TIKA_URI = env.get('ALEPH_TIKA_URI')
+# Language whitelist
+LANGUAGES = env_list('ALEPH_LANGUAGES', [])
 
 # Enable the Aho Corasick based entity string matcher:
 REGEX_ENTITIES = env_bool('ALEPH_REGEX_ENTITIES', True)
 
 # Automatically OCR pdf contents:
 PDF_OCR_PAGES = env_bool('ALEPH_PDF_OCR_PAGES', True)
-
-# Language whitelist
-LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
-             'el', 'lt', 'uk', 'zh', 'be', 'bg', 'bs', 'ja', 'cs', 'lv', 'pt',
-             'pl', 'hy', 'hr', 'hi', 'he', 'uz', 'mo', 'mn', 'ur', 'sq', 'ko',
-             'is', 'it', 'et', 'no', 'fa', 'sw', 'sl', 'az']
-LANGUAGES = env_list('ALEPH_LANGUAGES', LANGUAGES)
 
 # Category schema for collections.
 # TODO: add extra weight info.
