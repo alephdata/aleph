@@ -1,4 +1,6 @@
 
+PARTIAL_DATE = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
+
 COLLECTION_MAPPING = {
     "dynamic_templates": [
         {
@@ -95,13 +97,16 @@ ENTITY_MAPPING = {
         "identifiers": {"type": "keyword"},
         "addresses": {"type": "text"},
         "columns": {"type": "keyword"},
-        "dates": {
-            "type": "date",
-            "format": "yyyy-MM-dd||yyyy-MM||yyyy-MM-d||yyyy-M||yyyy"  # noqa
-        },
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
+        "date": {"type": "date", "format": PARTIAL_DATE},
+        "authored_at": {"type": "date", "format": PARTIAL_DATE},
+        "modified_at": {"type": "date", "format": PARTIAL_DATE},
+        "published_at": {"type": "date", "format": PARTIAL_DATE},
+        "retrieved_at": {"type": "date", "format": PARTIAL_DATE},
+        "dates": {"type": "date", "format": PARTIAL_DATE},
         "author": {"type": "text"},
+        "generator": {"type": "text"},
         "summary": {"type": "text"},
         "text": {"type": "text"},
         "properties": {

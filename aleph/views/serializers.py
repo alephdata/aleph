@@ -34,14 +34,14 @@ class Country(String):
 
     def _validate(self, value):
         if not countries.validate(value):
-            raise ValidationError('Invalid country code.')
+            raise ValidationError('Invalid country code: %s' % value)
 
 
 class PartialDate(String):
 
     def _validate(self, value):
         if not dates.validate(value):
-            raise ValidationError('Invalid date.')
+            raise ValidationError('Invalid date: %s' % value)
 
 
 class SchemaName(String):
@@ -49,7 +49,7 @@ class SchemaName(String):
     def _validate(self, value):
         schema = model.get(value)
         if schema is None:
-            raise ValidationError('Invalid schema name.')
+            raise ValidationError('Invalid schema name: %s' % value)
 
 
 class DatedSchema(object):
@@ -212,6 +212,11 @@ class DocumentSchema(Schema, DatedSchema):
     countries = List(Country(), missing=[])
     languages = List(Language(), missing=[])
     keywords = List(String(validate=Length(min=1, max=5000)), missing=[])
+    date = PartialDate()
+    authored_at = PartialDate()
+    modified_at = PartialDate()
+    published_at = PartialDate()
+    retrieved_at = PartialDate()
     dates = List(PartialDate(), dump_only=True)
     file_name = String()
     file_size = Integer(dump_only=True)

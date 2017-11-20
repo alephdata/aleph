@@ -68,9 +68,9 @@ class DocumentManager(Manager):
 
         First retrieve its data and then call the actual ingestor.
         """
+        content_hash = document.content_hash
         if file_path is None:
-            file_path = self.archive.load_file(document.content_hash,
-                                               file_name=document.file_name)
+            file_path = self.archive.load_file(content_hash, file_name=document.safe_file_name)  # noqa
 
         if file_path is None:
             # When a directory is ingested, the data is not stored. Thus, try
@@ -86,14 +86,15 @@ class DocumentManager(Manager):
 
         try:
             if not len(document.languages) and document.collection is not None:
-                document.languages = document.collection.languages or []
+                document.languages = document.collection.languages
 
             if not len(document.countries) and document.collection is not None:
-                document.countries = document.collection.countries or []
+                document.countries = document.collection.countries
 
             result = DocumentResult(self, document,
                                     file_path=file_path,
                                     role_id=role_id)
             self.ingest(file_path, result=result)
         finally:
-            self.archive.cleanup_file(document.content_hash)
+            db.session.rollback()
+            self.archive.cleanup_file(content_hash)
