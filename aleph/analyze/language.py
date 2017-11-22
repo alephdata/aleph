@@ -21,8 +21,8 @@ class LanguageAnalyzer(Analyzer):
         return cls._identifier
 
     def analyze(self, document):
-        if len(document.languages) > 0:
-            return
+        # if len(document.languages) > 0:
+        #     return
         lang, score = self.identifier.classify(document.text)
         if score < THRESHOLD:
             return

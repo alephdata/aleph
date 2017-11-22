@@ -33,7 +33,8 @@ class Metadata(object):
         value = stringify(value)
         if value is None:
             self.meta.pop(field, None)
-        self.meta[field] = value
+        else:
+            self.meta[field] = value
         self.update_meta()
 
     def _meta_add(self, field, value):
@@ -130,7 +131,7 @@ class Metadata(object):
 
     @languages.setter
     def languages(self, languages):
-        self.meta['languages'] = []
+        self.meta.pop('languages', None)
         for lang in ensure_list(languages):
             self.add_language(lang)
 
@@ -143,7 +144,7 @@ class Metadata(object):
 
     @countries.setter
     def countries(self, countries):
-        self.meta['countries'] = []
+        self.meta.pop('countries', None)
         for country in ensure_list(countries):
             self.add_country(country)
 
@@ -156,7 +157,7 @@ class Metadata(object):
 
     @keywords.setter
     def keywords(self, keywords):
-        self.meta['keywords'] = []
+        self.meta.pop('keywords', None)
         for kw in ensure_list(keywords):
             self.add_keyword(kw)
 
@@ -268,7 +269,9 @@ class Metadata(object):
                 key, value = stringify(key), stringify(value)
                 if key is not None and value is not None:
                     self.meta['headers'][key] = value
-            self.update_meta()
+        if not (self.meta['headers']):
+            self.meta.pop('headers')
+        self.update_meta()
 
     @property
     def pdf_version(self):
@@ -286,5 +289,9 @@ class Metadata(object):
 
     @columns.setter
     def columns(self, columns):
-        self.meta['columns'] = columns
+        columns = ensure_list(columns)
+        if len(columns):
+            self.meta['columns'] = columns
+        else:
+            self.meta.pop('columns', None)
         self.update_meta()

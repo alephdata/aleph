@@ -129,11 +129,15 @@ if env_bool('ALEPH_OAUTH', True):
 DEFAULT_LANGUAGE = env.get('ALEPH_DEFAULT_LANGUAGE', 'en')
 
 # When no language is assigned, OCR will include these options:
-OCR_DEFAULTS = ['eng', 'rus', 'hbs']
+OCR_DEFAULTS = ['eng', 'rus']
 OCR_DEFAULTS = env_list('ALEPH_OCR_DEFAULTS', OCR_DEFAULTS)
 
 # Language whitelist
-LANGUAGES = env_list('ALEPH_LANGUAGES', [])
+LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
+             'el', 'lt', 'uk', 'zh', 'be', 'bg', 'bs', 'ja', 'cs', 'lv', 'pt',
+             'pl', 'hy', 'hr', 'hi', 'he', 'uz', 'mo', 'mn', 'ur', 'sq', 'ko',
+             'is', 'it', 'et', 'no', 'fa', 'sw', 'sl', 'az']
+LANGUAGES = env_list('ALEPH_LANGUAGES', LANGUAGES)
 
 # Enable the Aho Corasick based entity string matcher:
 REGEX_ENTITIES = env_bool('ALEPH_REGEX_ENTITIES', True)

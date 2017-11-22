@@ -2,7 +2,7 @@
 import os
 import logging
 from normality import slugify
-
+from ingestors.util import decode_path
 from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
@@ -49,20 +49,22 @@ def alerts():
 @manager.option('-l', '--language', dest='language', nargs='*')
 @manager.option('-c', '--country', dest='country', nargs='*')
 @manager.option('-f', '--foreign_id', dest='foreign_id')
-def crawldir(directory, language=None, country=None, foreign_id=None):
+def crawldir(path, language=None, country=None, foreign_id=None):
     """Crawl the given directory."""
-    if directory is None or not os.path.exists(directory):
-        log.error("Invalid directory: %r", directory)
+    path = decode_path(path)
+    if path is None or not os.path.exists(path):
+        log.error("Invalid path: %r", path)
         return
-    directory = os.path.abspath(os.path.normpath(directory))
+    path = os.path.abspath(os.path.normpath(path))
+    path_name = os.path.basename(path)
 
     if foreign_id is None:
-        foreign_id = 'directory:%s' % slugify(directory)
+        foreign_id = 'directory:%s' % slugify(path)
     collection = Collection.by_foreign_id(foreign_id)
     if collection is None:
         collection = Collection.create({
             'foreign_id': foreign_id,
-            'label': directory,
+            'label': path_name,
             'managed': True
         })
 
@@ -73,10 +75,11 @@ def crawldir(directory, language=None, country=None, foreign_id=None):
     db.session.commit()
     update_collection(collection)
 
-    log.info('Crawling %r to %r...', directory, collection.foreign_id)
+    log.info('Crawling %r to %r...', path, collection.foreign_id)
     document = Document.by_keys(collection=collection,
-                                foreign_id=directory)
-    ingest_document(document, directory)
+                                foreign_id=path)
+    document.file_name = path_name
+    ingest_document(document, path)
 
 
 @manager.command
