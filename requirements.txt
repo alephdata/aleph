@@ -40,7 +40,7 @@ followthemoney >= 0.3.2
 fingerprints >= 0.3.2
 storagelayer >= 0.2.1
 exactitude >= 2.1.1
-ingestors >= 0.6.0
+ingestors >= 0.6.1
 normality >= 0.5.6
 
 # Python 3 backports
