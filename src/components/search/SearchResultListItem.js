@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import SchemaIcon from './SchemaIcon';
+import SchemaIcon from '../SchemaIcon';
 
 function getPath(url) {
   return new URL(url).pathname;

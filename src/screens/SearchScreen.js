@@ -6,8 +6,8 @@ import { debounce, isEqual, pickBy, mergeWith, isArray } from 'lodash';
 import { fetchSearchResults } from '../actions';
 import filters from '../filters';
 
-import SearchResultList from '../components/SearchResultList';
-import SearchFilter from '../components/SearchFilter';
+import SearchResultList from '../components/search/SearchResultList';
+import SearchFilter from '../components/search/SearchFilter';
 
 function parseQuery(search) {
   const searchQuery = queryString.parse(search);

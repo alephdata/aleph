@@ -22,12 +22,12 @@
   {
     "id": "search.collections",
     "defaultMessage": "Collections",
-    "filepath": "src/components/SearchFilter.js"
+    "filepath": "src/components/search/SearchFilter.js"
   },
   {
     "id": "search.schema.all",
     "defaultMessage": "All Results",
-    "filepath": "src/components/SearchFilterSchema.js"
+    "filepath": "src/components/search/SearchFilterSchema.js"
   },
   {
     "id": "login.email",
