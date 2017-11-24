@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Article from '../panes/Article';
+import Article from '../components/Article';
 import { fetchEntity } from '../actions';
-console.log(Article.InfoPane)
+
 class Entity extends Component {
   render() {
-    const { id, data: { entity } } = this.props;
+    const { data: { entity } } = this.props;
     if (entity === undefined || entity._isFetching) {
       return (
         <span>Loading entity..</span>
@@ -56,9 +56,9 @@ class EntityLoader extends Component {
   }
 
   fetchIfNeeded() {
-    const { id, data } = this.props;
+    const { entityId, data } = this.props;
     if (data.entity === undefined) {
-      this.props.fetchEntity(id);
+      this.props.fetchEntity(entityId);
     }
   }
 
@@ -70,9 +70,9 @@ class EntityLoader extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const id = ownProps.match.params.id;
-  const entity = id !== undefined ? state.entityCache[id] : undefined;
-  return { id, data: { entity } };
+  const { entityId } = ownProps.match.params;
+  const entity = entityId !== undefined ? state.entityCache[entityId] : undefined;
+  return { entityId, data: { entity } };
 }
 
 export default connect(mapStateToProps, { fetchEntity })(EntityLoader);

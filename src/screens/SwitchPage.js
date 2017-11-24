@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import EntityScreen from './EntityScreen';
+import RootScreen from './RootScreen';
+import CategoryScreen from './CategoryScreen';
+import CollectionScreen from './CollectionScreen';
 import ErrorScreen from './ErrorScreen';
 
 class SwitchPage extends Component {
   render() {
     return (
       <Switch>
-        <Route path="/entities/:id" component={EntityScreen}/>
+        <Route path="/entities/:entityId" component={EntityScreen}/>
+        <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
+        <Route path="/" exact component={RootScreen}/>
+        <Route path="/:categoryId/" exact component={CategoryScreen}/>
         <Route component={ErrorScreen}/>
       </Switch>
     )
