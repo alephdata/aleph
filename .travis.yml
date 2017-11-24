@@ -1,46 +1,32 @@
-language: python
-cache:
-  - apt
-  - pip
-  - npm
-python:
-  - "2.7"
+sudo: required
 services:
-  - postgresql
-  - rabbitmq
-addons:
-  postgresql: "9.5"
-  apt:
-    packages:
-      - python-software-properties
-      - libtesseract-dev
-      - poppler-utils
-      - libreoffice
-      - djvulibre-bin
-      - oracle-java8-installer
-      - oracle-java8-set-default
+  - docker
+
 env:
   global:
-    - ALEPH_SETTINGS=$TRAVIS_BUILD_DIR/contrib/docker_settings.py
     - ALEPH_DATABASE_NAME=aleph
     - ALEPH_DATABASE_URI=postgresql://localhost/$ALEPH_DATABASE_NAME
     - OAUTH_KEY=fake
     - OAUTH_SECRET=fake
+    - DOCKER_COMPOSE_VERSION=1.16.1
+
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y tesseract-ocr-eng libmagic1
-  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.4.0.deb && sudo dpkg -i --force-confnew elasticsearch-5.4.0.deb && sudo service elasticsearch start
+  - sudo apt-get update
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - sudo echo "ALEPH_DATABASE_NAME=$ALEPH_DATABASE_NAME\nALEPH_DATABASE_URI=$ALEPH_DATABASE_URI\nOAUTH_KEY=$OAUTH_KEY\nOAUTH_SECRET=$OAUTH_SECRET" >> aleph.env
+  - docker --version
+  - docker-compose --version
+
 install:
-  - pip install -q --upgrade setuptools pip
-  - pip install -r requirements.txt
-  - pip install -q -r requirements-testing.txt
-  - pip install -e .
-before_script:
-  - sleep 10
-  - psql -c "create database ${ALEPH_DATABASE_NAME}_test;" -U postgres
-  - nosetests --version
-  - psql --version
+  - docker-compose -f docker-compose.dev.yml build
+
 script:
-  - nosetests --with-coverage --cover-package=aleph
-after_success:
-  - coveralls
+  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
+  - sudo chmod 777 $TRAVIS_BUILD_DIR/build/data/elasticsearch # this is bad
+  - sudo sysctl -w vm.max_map_count=262144 # this is probably bad too
+  - sleep 8
+  - docker-compose -f docker-compose.dev.yml run --rm app /aleph/contrib/devwrapper.sh /aleph/contrib/test.sh
