@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
+import { groupBy, map } from 'lodash';
 import { Icon } from '@blueprintjs/core';
 
 import Breadcrumbs from '../components/Breadcrumbs';
@@ -17,7 +18,8 @@ function getPath(url) {
 
 class RootScreen extends Component {
   render() {
-    const { collections } = this.props;
+    const { collections, categories } = this.props;
+    const collectionsByCategory = groupBy(collections.results, 'category');
     return (
       <Article>
         <Article.InfoPane>
@@ -33,11 +35,20 @@ class RootScreen extends Component {
           <p>Search millions of documents and datasets, from public sources, leaks and investigations.</p>
           <p>Aleph's database contains:</p>
           <ul>
-            {Object.entries(collections.results).map(([id, collection]) => (
-              <li key={id}>
-                <Link to={getPath(collection.ui)}>
-                  {collection.label}
+            {map(collectionsByCategory, (group, categoryId) => (
+              <li key={categoryId}>
+                <Link to={getPath(categories[categoryId].ui)}>
+                  {categories[categoryId].label}
                 </Link>
+                <ul>
+                  {group.map(collection => (
+                    <li key={collection.id}>
+                      <Link to={getPath(collection.ui)}>
+                        {collection.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </li>
             ))}
           </ul>
@@ -53,6 +64,7 @@ class RootScreen extends Component {
 const mapStateToProps = state => {
   return {
     collections: state.collections,
+    categories: state.metadata.categories,
   };
 };
 
