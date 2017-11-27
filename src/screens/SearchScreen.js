@@ -17,10 +17,17 @@ const defaultQuery = {
   [filters.COLLECTIONS]: []
 }
 
-function parseQuery(search) {
-  const allParams = queryString.parse(search);
+function parseQuery({ location, browsingContext }) {
+  const allParams = queryString.parse(location.search);
   const relevantQueryParams = Object.keys(defaultQuery);
   const searchQuery = pick(allParams, relevantQueryParams);
+
+  if (browsingContext.collectionId !== undefined) {
+    if (searchQuery[filters.COLLECTIONS]) {
+      console.warn('Got a collection filter while viewing a single collection. Ignoring the filter.');
+    }
+    searchQuery[filters.COLLECTIONS] = browsingContext.collectionId;
+  }
 
   return mergeWith((defaultValue, newValue) => {
     return newValue !== undefined
@@ -77,9 +84,10 @@ class SearchScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ searchResults }, { location }) => {
-  const query = parseQuery(location.search);
-  return { query, searchResults };
+const mapStateToProps = ({ searchResults }, { location, match }) => {
+  const browsingContext = match.params;
+  const query = parseQuery({ location, browsingContext });
+  return { browsingContext, query, searchResults };
 }
 
 SearchScreen = connect(
