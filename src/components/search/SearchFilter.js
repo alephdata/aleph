@@ -85,7 +85,7 @@ class SearchFilter extends Component {
   }
 
   render() {
-    const { result, collections, countries } = this.props;
+    const { result, collections, countries, browsingContext } = this.props;
     const { query, queryCountries, queryCollectionIds } = this.state;
 
     // Standardised props passed to filters
@@ -105,9 +105,14 @@ class SearchFilter extends Component {
         .map(id => ({ id, filter, label: labels[id] }))
         .sort((a, b) => a.label < b.label ? -1 : 1)
 
+    // Hide the implicit collection filter when browsing that one collection.
+    const activeCollectionFilterTags =
+      activeFilterTagsFn(filters.COLLECTIONS, collections)
+        .filter(tag => tag.id !== browsingContext.collectionId);
+
     const activeFilterTags = [
       ...activeFilterTagsFn(filters.COUNTRIES, countries),
-      ...activeFilterTagsFn(filters.COLLECTIONS, collections)
+      ...activeCollectionFilterTags,
     ];
 
     return (
