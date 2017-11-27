@@ -52,6 +52,9 @@ class CategoryScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { categoryId } = ownProps.match.params;
   const category = state.metadata.categories[categoryId];
+  if (category === undefined) {
+    throw new Error(`Unknown category: ${categoryId}`)
+  }
   const collections = filter(state.collections.results, {category: category.id});
   return {
     category,
