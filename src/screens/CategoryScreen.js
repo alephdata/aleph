@@ -42,13 +42,8 @@ class CategoryScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { categoryId } = ownProps.match.params;
-  // TODO add category info to back-end.
-  // const category = state.metadata.categories[categoryId]; (or somewhere)
-  const category = {
-    summary: 'Bla bla some info about this category (to be added to the API).',
-    label: categoryId[0].toUpperCase() + categoryId.slice(1),
-  }
-  const collections = filter(state.collections.results, {category: categoryId});
+  const category = state.metadata.categories[categoryId];
+  const collections = filter(state.collections.results, {category: category.id});
   return {
     category,
     collections,
