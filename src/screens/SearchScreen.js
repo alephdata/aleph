@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
-import { debounce, isEqual, pick, pickBy, mergeWith, isArray } from 'lodash';
+import { debounce, isEqual, pick, pickBy, isArray } from 'lodash';
+import { mergeWith } from 'lodash/fp'; // use fp version to not mutate the array
 
 import { fetchSearchResults } from '../actions';
 import filters from '../filters';
@@ -21,11 +22,13 @@ function parseQuery(search) {
   const relevantQueryParams = Object.keys(defaultQuery);
   const searchQuery = pick(allParams, relevantQueryParams);
 
-  return mergeWith(defaultQuery, searchQuery, (defaultValue, newValue) => {
-    return newValue !== undefined ?
-      isArray(defaultValue) ? defaultValue.concat(newValue) : newValue :
-      defaultValue;
-  });
+  return mergeWith((defaultValue, newValue) => {
+    return newValue !== undefined
+      ? isArray(defaultValue)
+        ? defaultValue.concat(newValue)
+        : newValue
+      : defaultValue;
+  }, defaultQuery, searchQuery);
 }
 
 class SearchScreen extends Component {
