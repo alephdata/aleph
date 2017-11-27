@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
+import { Icon } from '@blueprintjs/core';
 
+import Breadcrumbs from '../components/Breadcrumbs';
 import Article from '../components/Article';
 import SearchScreen_ from './SearchScreen';
 const SearchScreen = withRouter(SearchScreen_);
+
+import './RootScreen.css';
 
 function getPath(url) {
   return new URL(url).pathname;
@@ -17,7 +21,15 @@ class RootScreen extends Component {
     return (
       <Article>
         <Article.InfoPane>
-          <h1>Search for leads with Aleph</h1>
+          <Breadcrumbs root>
+            <Link to={'/'}><Icon iconName="folder-open" /></Link>
+          </Breadcrumbs>
+          <h1>
+            <Link to={'/'}>
+              Aleph
+            </Link>
+          </h1>
+          <p className="tagline"><em>93,801,670</em><br />leads for your investigations</p>
           <p>Search millions of documents and datasets, from public sources, leaks and investigations.</p>
           <p>Aleph's database contains:</p>
           <ul>

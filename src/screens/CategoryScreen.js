@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
+import { Icon } from '@blueprintjs/core';
 
+import Breadcrumbs from '../components/Breadcrumbs';
 import Article from '../components/Article';
 import SearchScreen_ from './SearchScreen';
 const SearchScreen = withRouter(SearchScreen_);
@@ -18,7 +20,14 @@ class CategoryScreen extends Component {
     return (
       <Article>
         <Article.InfoPane>
-          <h1>{category.label}</h1>
+          <Breadcrumbs>
+            <Link to={'/'}><Icon iconName="folder-open" /> Aleph</Link>
+          </Breadcrumbs>
+          <h1>
+            <Link to={getPath(category.ui)}>
+              {category.label}
+            </Link>
+          </h1>
           <p>{category.summary}</p>
           Collections:
           <ul>
