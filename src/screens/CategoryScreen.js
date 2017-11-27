@@ -23,7 +23,7 @@ class CategoryScreen extends Component {
           Collections:
           <ul>
             {collections.map(collection => (
-              <li>
+              <li key={collection.id}>
                 <Link to={getPath(collection.ui)}>
                   {collection.label}
                 </Link>

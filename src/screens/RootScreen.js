@@ -22,7 +22,7 @@ class RootScreen extends Component {
           <p>Aleph's database contains:</p>
           <ul>
             {Object.entries(collections.results).map(([id, collection]) => (
-              <li>
+              <li key={id}>
                 <Link to={getPath(collection.ui)}>
                   {collection.label}
                 </Link>

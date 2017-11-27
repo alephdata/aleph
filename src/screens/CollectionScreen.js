@@ -19,7 +19,7 @@ class CollectionScreen extends Component {
           Contains:
           <ul>
             {Object.entries(collection.schemata).map(([key, value]) => (
-              <li>{key}: {value}</li>
+              <li key={key}>{key}: {value}</li>
             ))}
           </ul>
           <p>
