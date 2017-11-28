@@ -36,9 +36,7 @@ class RootScreen extends Component {
           <ul>
             {map(collectionsByCategory, (group, categoryId) => (
               <li key={categoryId}>
-                <Link to={getPath(categories[categoryId].ui)}>
-                  {categories[categoryId].label}
-                </Link>
+                {categories[categoryId]}
                 <ul>
                   {group.map(collection => (
                     <li key={collection.id}>

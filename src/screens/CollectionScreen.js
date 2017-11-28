@@ -21,7 +21,7 @@ class CollectionScreen extends Component {
         <Article.InfoPane>
           <Breadcrumbs>
             <Link to={'/'}><Icon iconName="folder-open" /> Aleph</Link>
-            <Link to={getPath(category.ui)}>{category.label}</Link>
+            <span>{category}</span>
           </Breadcrumbs>
           <h1>
             <Link to={getPath(collection.ui)}>
