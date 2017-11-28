@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import EntityScreen from './EntityScreen';
+import EntityScreen from 'components/entity/EntityScreen';
 import RootScreen from './RootScreen';
 import CollectionScreen from 'components/collection/CollectionScreen';
 import ErrorScreen from './ErrorScreen';
