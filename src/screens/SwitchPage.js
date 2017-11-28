@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import EntityScreen from './EntityScreen';
 import RootScreen from './RootScreen';
-import CollectionScreen from './CollectionScreen';
+import CollectionScreen from 'components/collection/CollectionScreen';
 import ErrorScreen from './ErrorScreen';
 
 class SwitchPage extends Component {
