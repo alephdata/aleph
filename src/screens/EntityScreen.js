@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Article from '../components/Article';
-import { fetchEntity } from '../actions';
+import Article from 'components/Article';
+import { fetchEntity } from 'actions';
 
 class EntityInfo extends Component {
   render() {

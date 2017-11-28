@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { groupBy, map } from 'lodash';
 import { Icon } from '@blueprintjs/core';
 
-import Breadcrumbs from '../components/Breadcrumbs';
-import Article from '../components/Article';
+import Breadcrumbs from 'components/Breadcrumbs';
+import Article from 'components/Article';
 
 import './RootScreen.css';
 

@@ -4,8 +4,8 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Icon } from '@blueprintjs/core';
 
-import Breadcrumbs from '../components/Breadcrumbs';
-import Article from '../components/Article';
+import Breadcrumbs from 'components/Breadcrumbs';
+import Article from 'components/Article';
 import SearchScreen_ from './SearchScreen';
 const SearchScreen = withRouter(SearchScreen_);
 

@@ -8,13 +8,13 @@ import en from 'react-intl/locale-data/en';
 import de from 'react-intl/locale-data/de';
 import ru from 'react-intl/locale-data/ru';
 import es from 'react-intl/locale-data/es';
-import translations from './translations.json';
+import translations from 'translations.json';
 
-import store from './store'
+import store from 'store'
 
-import PageLayout from './screens/PageLayout';
+import PageLayout from 'screens/PageLayout';
 
-import './App.css';
+import 'App.css';
 
 // have blueprint handle focus properly
 FocusStyleManager.onlyShowFocusOnTabs();

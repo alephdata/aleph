@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import {logout} from "../actions/sessionActions";
+import {logout} from "actions/sessionActions";
 import {withRouter} from "react-router";
 import {injectIntl} from "react-intl";
-import {showSuccessToast} from "../components/Toast";
-import messages from "../messages";
+import {showSuccessToast} from "components/Toast";
+import messages from "messages";
 
 class LogoutScreen extends Component {
   componentWillMount() {

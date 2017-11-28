@@ -4,11 +4,11 @@ import queryString from 'query-string';
 import { debounce, isEqual, pick, pickBy, isArray } from 'lodash';
 import { mergeWith } from 'lodash/fp'; // use fp version to not mutate the array
 
-import { fetchSearchResults } from '../actions';
-import filters from '../filters';
+import { fetchSearchResults } from 'actions';
+import filters from 'filters';
 
-import SearchResultList from '../components/search/SearchResultList';
-import SearchFilter from '../components/search/SearchFilter';
+import SearchResultList from 'components/search/SearchResultList';
+import SearchFilter from 'components/search/SearchFilter';
 
 const defaultQuery = {
   'q': '',

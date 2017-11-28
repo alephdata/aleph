@@ -1,6 +1,6 @@
 import axios from 'axios';
 import queryString from 'query-string';
-import store from './store';
+import store from 'store';
 
 export const endpoint = axios.create({
   baseURL: 'http://localhost:5000/api/2',

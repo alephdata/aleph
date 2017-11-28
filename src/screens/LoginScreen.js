@@ -4,11 +4,11 @@ import {connect} from 'react-redux'
 import {Redirect} from 'react-router';
 import {NonIdealState} from '@blueprintjs/core';
 
-import messages from '../messages';
-import {loginWithPassword, loginWithToken} from '../actions/sessionActions';
+import messages from 'messages';
+import {loginWithPassword, loginWithToken} from 'actions/sessionActions';
 
-import OAuthLogin, {handleOAuthCallback} from '../components/OAuthLogin';
-import {PasswordAuthLogin} from '../components/PasswordAuth';
+import OAuthLogin, {handleOAuthCallback} from 'components/OAuthLogin';
+import {PasswordAuthLogin} from 'components/PasswordAuth';
 
 class LoginScreen extends Component {
   onLogin(data) {

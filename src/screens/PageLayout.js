@@ -3,9 +3,9 @@ import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from "@blueprintjs/core";
 
-import { fetchCollections, fetchMetadata } from '../actions';
+import { fetchCollections, fetchMetadata } from 'actions';
 
-import PageNavbar from '../components/PageNavbar';
+import PageNavbar from 'components/PageNavbar';
 
 import SwitchPage from './SwitchPage';
 import LoginScreen from "./LoginScreen";

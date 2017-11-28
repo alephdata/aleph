@@ -4,12 +4,12 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import {Callout, Intent, NonIdealState} from '@blueprintjs/core';
 
-import messages from '../messages';
-import {endpoint} from '../api';
+import messages from 'messages';
+import {endpoint} from 'api';
 
-import OAuthLogin from '../components/OAuthLogin';
-import {PasswordAuthSignup} from '../components/PasswordAuth';
-import {xhrErrorToast} from '../components/XhrToast';
+import OAuthLogin from 'components/OAuthLogin';
+import {PasswordAuthSignup} from 'components/PasswordAuth';
+import {xhrErrorToast} from 'components/XhrToast';
 
 class SignupScreen extends Component {
   state = {submitted: false};
