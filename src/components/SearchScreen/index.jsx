@@ -17,17 +17,10 @@ const defaultQuery = {
   [filters.COLLECTIONS]: []
 }
 
-function parseQuery({ location, browsingContext }) {
+function parseQuery(location) {
   const allParams = queryString.parse(location.search);
   const relevantQueryParams = Object.keys(defaultQuery);
   const searchQuery = pick(allParams, relevantQueryParams);
-
-  if (browsingContext.collectionId !== undefined) {
-    if (searchQuery[filters.COLLECTIONS]) {
-      console.warn('Got a collection filter while viewing a single collection. Ignoring the filter.');
-    }
-    searchQuery[filters.COLLECTIONS] = browsingContext.collectionId;
-  }
 
   return mergeWith((defaultValue, newValue) => {
     return newValue !== undefined
@@ -51,15 +44,28 @@ class SearchScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!isEqual(this.props.query, prevProps.query)) {
+    if (
+      !isEqual(this.props.query, prevProps.query) ||
+      !isEqual(this.props.browsingContext, prevProps.browsingContext)
+    ) {
       this.fetchData();
     }
   }
 
   fetchData() {
-    const { query, fetchSearchResults } = this.props;
+    const { browsingContext, query, fetchSearchResults } = this.props;
+
+    // If we are viewing a single collection, add the appropriate filter.
+    const performedQuery = { ...query };
+    if (browsingContext.collectionId !== undefined) {
+      if (performedQuery[filters.COLLECTIONS]) {
+        console.warn('Got a collection filter while viewing a single collection. Ignoring the filter.');
+      }
+      performedQuery[filters.COLLECTIONS] = browsingContext.collectionId;
+    }
+
     fetchSearchResults({
-      ...pickBy(query, v => !!v),
+      ...pickBy(performedQuery, v => !!v),
       facet: 'schema'
     });
   }
@@ -91,7 +97,7 @@ class SearchScreen extends Component {
 
 const mapStateToProps = ({ searchResults }, { location, match }) => {
   const browsingContext = match.params;
-  const query = parseQuery({ location, browsingContext });
+  const query = parseQuery(location);
   return { browsingContext, query, searchResults };
 }
 

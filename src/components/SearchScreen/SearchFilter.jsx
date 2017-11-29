@@ -105,14 +105,9 @@ class SearchFilter extends Component {
         .map(id => ({ id, filter, label: labels[id] }))
         .sort((a, b) => a.label < b.label ? -1 : 1)
 
-    // Hide the implicit collection filter when browsing that one collection.
-    const activeCollectionFilterTags =
-      activeFilterTagsFn(filters.COLLECTIONS, collections)
-        .filter(tag => tag.id !== browsingContext.collectionId);
-
     const activeFilterTags = [
       ...activeFilterTagsFn(filters.COUNTRIES, countries),
-      ...activeCollectionFilterTags,
+      ...activeFilterTagsFn(filters.COLLECTIONS, collections),
     ];
 
     return (
