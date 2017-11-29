@@ -2,51 +2,51 @@
   {
     "id": "nav.logoff",
     "defaultMessage": "Logout",
-    "filepath": "src/components/AuthButton.js"
+    "filepath": "src/components/auth/AuthButton.jsx"
   },
   {
     "id": "nav.login",
     "defaultMessage": "Login",
-    "filepath": "src/components/AuthButton.js"
+    "filepath": "src/components/auth/AuthButton.jsx"
   },
   {
     "id": "nav.home",
     "defaultMessage": "Home",
-    "filepath": "src/components/PageNavbar.js"
+    "filepath": "src/components/PageLayout/PageNavbar.jsx"
   },
   {
     "id": "nav.documents",
     "defaultMessage": "Documents",
-    "filepath": "src/components/PageNavbar.js"
+    "filepath": "src/components/PageLayout/PageNavbar.jsx"
   },
   {
     "id": "search.collections",
     "defaultMessage": "Collections",
-    "filepath": "src/components/search/SearchFilter.js"
+    "filepath": "src/components/SearchScreen/SearchFilter.jsx"
   },
   {
     "id": "search.schema.all",
     "defaultMessage": "All Results",
-    "filepath": "src/components/search/SearchFilterSchema.js"
+    "filepath": "src/components/SearchScreen/SearchFilterSchema.jsx"
   },
   {
     "id": "login.email",
     "defaultMessage": "E-Mail address",
-    "filepath": "src/screens/LoginScreen.js"
+    "filepath": "src/components/auth/LoginScreen.jsx"
   },
   {
     "id": "login.password",
     "defaultMessage": "Password",
-    "filepath": "src/screens/LoginScreen.js"
+    "filepath": "src/components/auth/LoginScreen.jsx"
   },
   {
     "id": "login.submit",
     "defaultMessage": "Log in",
-    "filepath": "src/screens/LoginScreen.js"
+    "filepath": "src/components/auth/LoginScreen.jsx"
   },
   {
     "id": "login.provider",
     "defaultMessage": "Sign in with {label}",
-    "filepath": "src/screens/LoginScreen.js"
+    "filepath": "src/components/auth/LoginScreen.jsx"
   }
 ]

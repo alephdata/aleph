@@ -1,4 +1,4 @@
-import {endpoint} from '../api';
+import {endpoint} from 'app/api';
 
 export const loginWithToken = token => dispatch => {
   dispatch({type: 'LOGIN', token});
