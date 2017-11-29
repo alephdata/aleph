@@ -125,10 +125,12 @@ class SearchFilter extends Component {
             <SearchFilterCountries onOpen={this.onCountriesOpen} countries={queryCountries}
               {...multiFilterProps(filters.COUNTRIES)} />
           </div>
-          <div className="pt-large">
-            <SearchFilterCollections onOpen={this.onCollectionsOpen} collectionIds={queryCollectionIds}
-              {...multiFilterProps(filters.COLLECTIONS)} />
-          </div>
+          {browsingContext.collectionId === undefined && (
+            <div className="pt-large">
+              <SearchFilterCollections onOpen={this.onCollectionsOpen} collectionIds={queryCollectionIds}
+                {...multiFilterProps(filters.COLLECTIONS)} />
+            </div>
+          )}
           {activeFilterTags.length > 0 &&
             <div className="search-query__filters">
               Filtering for
