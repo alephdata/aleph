@@ -24,15 +24,13 @@ addLocaleData([...en, ...de, ...es, ...ru]);
 
 
 const App = () => (
-  <div className="App">
-    <Provider store={store}>
-      <IntlProvider locale="de" messages={translations.de}>
-        <BrowserRouter>
-          <Route path="/" component={PageLayout} />
-        </BrowserRouter>
-      </IntlProvider>
-    </Provider>
-  </div>
+  <Provider store={store}>
+    <IntlProvider locale="de" messages={translations.de}>
+      <BrowserRouter>
+        <Route path="/" component={PageLayout} />
+      </BrowserRouter>
+    </IntlProvider>
+  </Provider>
 );
 
 export default App;

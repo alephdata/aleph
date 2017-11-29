@@ -1,0 +1,22 @@
+nav.Breadcrumbs {
+  display: block;
+  margin-bottom: 1em;
+
+  ul {
+    display: inline;
+    list-style: none;
+    padding: unset;
+    margin: unset;
+
+    li {
+      display: inline;
+      margin-left: 0.2em;
+    }
+  }
+
+  &:not(.root) ul li::after {
+    color: grey;
+    content: '>';
+    margin-left: 0.2em;
+  }
+}

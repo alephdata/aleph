@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { mapValues, size, xor } from 'lodash';
 
-import { endpoint } from '../api';
-import filters from '../filters';
+import { endpoint } from '../../api';
+import filters from '../../filters';
 
 import SearchFilterCountries from './SearchFilterCountries';
 import SearchFilterCollections from './SearchFilterCollections';
@@ -85,7 +85,7 @@ class SearchFilter extends Component {
   }
 
   render() {
-    const { result, collections, countries } = this.props;
+    const { result, collections, countries, browsingContext } = this.props;
     const { query, queryCountries, queryCollectionIds } = this.state;
 
     // Standardised props passed to filters
@@ -105,9 +105,14 @@ class SearchFilter extends Component {
         .map(id => ({ id, filter, label: labels[id] }))
         .sort((a, b) => a.label < b.label ? -1 : 1)
 
+    // Hide the implicit collection filter when browsing that one collection.
+    const activeCollectionFilterTags =
+      activeFilterTagsFn(filters.COLLECTIONS, collections)
+        .filter(tag => tag.id !== browsingContext.collectionId);
+
     const activeFilterTags = [
       ...activeFilterTagsFn(filters.COUNTRIES, countries),
-      ...activeFilterTagsFn(filters.COLLECTIONS, collections)
+      ...activeCollectionFilterTags,
     ];
 
     return (
@@ -120,10 +125,12 @@ class SearchFilter extends Component {
             <SearchFilterCountries onOpen={this.onCountriesOpen} countries={queryCountries}
               {...multiFilterProps(filters.COUNTRIES)} />
           </div>
-          <div className="pt-large">
-            <SearchFilterCollections onOpen={this.onCollectionsOpen} collectionIds={queryCollectionIds}
-              {...multiFilterProps(filters.COLLECTIONS)} />
-          </div>
+          {browsingContext.collectionId === undefined && (
+            <div className="pt-large">
+              <SearchFilterCollections onOpen={this.onCollectionsOpen} collectionIds={queryCollectionIds}
+                {...multiFilterProps(filters.COLLECTIONS)} />
+            </div>
+          )}
           {activeFilterTags.length > 0 &&
             <div className="search-query__filters">
               Filtering for

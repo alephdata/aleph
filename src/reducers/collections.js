@@ -1,7 +1,7 @@
 import keyBy from 'lodash/keyBy';
 
 const initialState = {
-  results: []
+  results: {},
 };
 
 const collections = (state = initialState, action) => {

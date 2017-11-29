@@ -1,27 +1,41 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
-import { debounce, isEqual, pickBy, mergeWith, isArray } from 'lodash';
+import { debounce, isEqual, pick, pickBy, isArray } from 'lodash';
+import { mergeWith } from 'lodash/fp'; // use fp version to not mutate the array
 
 import { fetchSearchResults } from '../actions';
 import filters from '../filters';
 
-import SearchResultList from '../components/SearchResultList';
-import SearchFilter from '../components/SearchFilter';
+import SearchResultList from '../components/search/SearchResultList';
+import SearchFilter from '../components/search/SearchFilter';
 
-function parseQuery(search) {
-  const searchQuery = queryString.parse(search);
+const defaultQuery = {
+  'q': '',
+  [filters.SCHEMA]: '',
+  [filters.COUNTRIES]: [],
+  [filters.COLLECTIONS]: []
+}
 
-  return mergeWith({
-    'q': '',
-    [filters.SCHEMA]: '',
-    [filters.COUNTRIES]: [],
-    [filters.COLLECTIONS]: []
-  }, searchQuery, (defaultValue, newValue) => {
-    return newValue !== undefined ?
-      isArray(defaultValue) ? defaultValue.concat(newValue) : newValue :
-      defaultValue;
-  });
+function parseQuery({ location, browsingContext }) {
+  const allParams = queryString.parse(location.search);
+  const relevantQueryParams = Object.keys(defaultQuery);
+  const searchQuery = pick(allParams, relevantQueryParams);
+
+  if (browsingContext.collectionId !== undefined) {
+    if (searchQuery[filters.COLLECTIONS]) {
+      console.warn('Got a collection filter while viewing a single collection. Ignoring the filter.');
+    }
+    searchQuery[filters.COLLECTIONS] = browsingContext.collectionId;
+  }
+
+  return mergeWith((defaultValue, newValue) => {
+    return newValue !== undefined
+      ? isArray(defaultValue)
+        ? defaultValue.concat(newValue)
+        : newValue
+      : defaultValue;
+  }, defaultQuery, searchQuery);
 }
 
 class SearchScreen extends Component {
@@ -60,19 +74,25 @@ class SearchScreen extends Component {
   }
 
   render() {
-    const { query, searchResults } = this.props;
+    const { browsingContext, query, searchResults } = this.props;
     return (
       <section>
-        <SearchFilter result={searchResults} query={query} updateQuery={this.updateQuery} />
+        <SearchFilter
+          result={searchResults}
+          query={query}
+          updateQuery={this.updateQuery}
+          browsingContext={browsingContext}
+        />
         <SearchResultList result={searchResults} />
       </section>
     )
   }
 }
 
-const mapStateToProps = ({ searchResults }, { location }) => {
-  const query = parseQuery(location.search);
-  return { query, searchResults };
+const mapStateToProps = ({ searchResults }, { location, match }) => {
+  const browsingContext = match.params;
+  const query = parseQuery({ location, browsingContext });
+  return { browsingContext, query, searchResults };
 }
 
 SearchScreen = connect(
