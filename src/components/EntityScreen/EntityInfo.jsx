@@ -4,14 +4,14 @@ import DualPane from 'components/common/DualPane';
 
 class EntityInfo extends Component {
   render() {
-    const { entity } = this.props;
+    const { name, schema, created_at, countries = [] } = this.props.entity;
     return (
       <DualPane.InfoPane>
-        <h1>{entity.name}</h1>
+        <h1>{name}</h1>
         <ul>
-          <li>{entity.schema}</li>
-          <li>{entity.created_at}</li>
-          <li>{entity.countries.join(', ')}</li>
+          <li>{schema}</li>
+          <li>{created_at}</li>
+          <li>{countries.join(', ')}</li>
         </ul>
       </DualPane.InfoPane>
     );

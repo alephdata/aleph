@@ -4,11 +4,11 @@ import DualPane from 'components/common/DualPane';
 
 class EntityContent extends Component {
   render() {
-    const { entity } = this.props;
+    const { properties = {} } = this.props.entity;
     return (
       <DualPane.ContentPane>
         <dl>
-          {Object.entries(entity.properties).map(([property, values]) => ([
+          {Object.entries(properties).map(([property, values]) => ([
             <dt>{property}</dt>,
             <dd>
               {values.length === 1
