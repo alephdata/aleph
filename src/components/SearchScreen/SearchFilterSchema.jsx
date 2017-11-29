@@ -3,7 +3,7 @@ import { FormattedMessage, FormattedNumber } from 'react-intl';
 import c from 'classnames';
 import sumBy from 'lodash/sumBy';
 
-import SchemaIcon from 'components/icons/SchemaIcon';
+import SchemaIcon from 'components/common/SchemaIcon';
 
 import './SearchFilterSchema.css';
 

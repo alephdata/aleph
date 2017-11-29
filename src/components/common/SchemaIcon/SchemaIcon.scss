@@ -6,11 +6,11 @@
     width: 30px;
     height: 30px;
     // TODO: add default icon or remove when all schemas have icons
-    background-image: url(./Document.svg);
+    background-image: url(./icons/Document.svg);
 
     @each $schema in (Document, Person, LegalEntity, Company) {
         &.schema-icon--#{$schema} {
-            background-image: url(./#{$schema}.svg);
+            background-image: url(./icons/#{$schema}.svg);
         }
     }
 }
