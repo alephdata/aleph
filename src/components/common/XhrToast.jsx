@@ -1,4 +1,4 @@
-import {showErrorToast, showSuccessToast} from "./Toast";
+import {showErrorToast, showSuccessToast} from './Toast';
 import messages from 'content/messages';
 
 const defaultStatusMap = {
