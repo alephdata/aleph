@@ -1,4 +1,5 @@
 import logging
+from banal import is_mapping
 from datetime import datetime
 from normality import stringify
 from followthemoney import model
@@ -99,16 +100,19 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         db.session.refresh(other)
 
     def update(self, entity):
-        data = entity.get('data') or {}
-        data['name'] = entity.get('name')
-        data = self.schema.validate(data)
-        self.name = data.pop('name')
-        self.data = data
+        data = entity.get('properties')
+        if is_mapping(data):
+            self.data = self.schema.validate(data)
+        elif self.data is None:
+            self.data = {}
+
+        self.data.pop('name', None)
+        self.name = entity.get('name')
 
         fid = [stringify(f) for f in entity.get('foreign_ids') or []]
         self.foreign_ids = list(set([f for f in fid if f is not None]))
         self.updated_at = datetime.utcnow()
-        self.collection.touch()
+        # self.collection.touch()
         db.session.add(self)
 
     @classmethod

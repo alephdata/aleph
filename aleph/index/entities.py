@@ -32,7 +32,6 @@ def index_entity(entity):
 
     data = {
         'foreign_ids': entity.foreign_ids,
-        'data': entity.data,
         'created_at': entity.created_at,
         'updated_at': entity.updated_at,
         'bulk': False,
@@ -43,8 +42,10 @@ def index_entity(entity):
         }
     }
 
-    for k, v in entity.data.items():
-        data['properties'][k] = ensure_list(v)
+    for prop, values in entity.data.items():
+        values = ensure_list(values)
+        if len(values):
+            data['properties'][prop] = values
 
     # data['$documents'] = get_count(entity)
     data = finalize_index(data, entity.schema)
