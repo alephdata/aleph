@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@blueprintjs/core';
 
-import DualPane from 'components/common/DualPane';
-import Breadcrumbs from 'components/common/Breadcrumbs';
+import DualPane from 'src/components/common/DualPane';
+import Breadcrumbs from 'src/components/common/Breadcrumbs';
 
 import './HomeInfo.css';
 

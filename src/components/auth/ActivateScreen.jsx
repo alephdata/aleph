@@ -3,9 +3,9 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import {injectIntl, FormattedMessage} from 'react-intl';
 
-import {endpoint} from 'app/api';
-import {loginWithPassword} from 'actions/sessionActions';
-import {xhrErrorToast} from 'components/common/XhrToast';
+import {endpoint} from 'src/app/api';
+import {loginWithPassword} from 'src/actions/sessionActions';
+import {xhrErrorToast} from 'src/components/common/XhrToast';
 import {PasswordAuthActivate} from './PasswordAuth';
 
 class ActivateScreen extends Component {

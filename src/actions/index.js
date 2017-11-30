@@ -1,4 +1,4 @@
-import {endpoint} from 'app/api';
+import {endpoint} from 'src/app/api';
 
 export const fetchCollections = () => (dispatch) => {
   const limit = 5000;

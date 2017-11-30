@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { groupBy, map } from 'lodash';
 
-import DualPane from 'components/common/DualPane';
+import DualPane from 'src/components/common/DualPane';
 
 function getPath(url) {
   return new URL(url).pathname;

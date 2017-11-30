@@ -3,9 +3,9 @@ import {connect} from 'react-redux'
 import {withRouter} from 'react-router';
 import {injectIntl} from 'react-intl';
 
-import {logout} from 'actions/sessionActions';
-import messages from 'content/messages';
-import {showSuccessToast} from 'components/common/Toast';
+import {logout} from 'src/actions/sessionActions';
+import messages from 'src/content/messages';
+import {showSuccessToast} from 'src/components/common/Toast';
 
 class LogoutScreen extends Component {
   componentWillMount() {

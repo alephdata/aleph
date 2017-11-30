@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import {throttle} from 'lodash';
 
-import rootReducer from 'reducers';
+import rootReducer from 'src/reducers';
 import {loadState, saveState} from './storage';
 
 const persistedState = loadState();

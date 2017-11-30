@@ -4,8 +4,8 @@ import queryString from 'query-string';
 import { debounce, isEqual, pick, pickBy, isArray } from 'lodash';
 import { mergeWith } from 'lodash/fp'; // use fp version to not mutate the array
 
-import { fetchSearchResults } from 'actions';
-import filters from 'constants/searchfilters';
+import { fetchSearchResults } from 'src/actions';
+import filters from 'src/constants/searchfilters';
 
 import SearchResultList from './SearchResultList';
 import SearchFilter from './SearchFilter';

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 
-import DualPane from 'components/common/DualPane';
-import SearchScreen_ from 'components/SearchScreen';
+import DualPane from 'src/components/common/DualPane';
+import SearchScreen_ from 'src/components/SearchScreen';
 const SearchScreen = withRouter(SearchScreen_);
 
 class CollectionContent extends Component {

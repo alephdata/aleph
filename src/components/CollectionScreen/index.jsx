@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import DualPane from 'components/common/DualPane';
+import DualPane from 'src/components/common/DualPane';
 import CollectionContent from './CollectionContent';
 import CollectionInfo from './CollectionInfo';
 

@@ -3,15 +3,15 @@ import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
-import { fetchCollections, fetchMetadata } from 'actions';
-import LoginScreen from 'components/auth/LoginScreen';
-import LogoutScreen from 'components/auth/LogoutScreen';
-import SignupScreen from 'components/auth/SignupScreen';
-import ActivateScreen from 'components/auth/ActivateScreen';
-import EntityScreen from 'components/EntityScreen';
-import HomeScreen from 'components/HomeScreen';
-import CollectionScreen from 'components/CollectionScreen';
-import ErrorScreen from 'components/ErrorScreen';
+import { fetchCollections, fetchMetadata } from 'src/actions';
+import LoginScreen from 'src/components/auth/LoginScreen';
+import LogoutScreen from 'src/components/auth/LogoutScreen';
+import SignupScreen from 'src/components/auth/SignupScreen';
+import ActivateScreen from 'src/components/auth/ActivateScreen';
+import EntityScreen from 'src/components/EntityScreen';
+import HomeScreen from 'src/components/HomeScreen';
+import CollectionScreen from 'src/components/CollectionScreen';
+import ErrorScreen from 'src/components/ErrorScreen';
 import PageNavbar from './PageNavbar';
 
 import './PageLayout.css';

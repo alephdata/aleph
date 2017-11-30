@@ -4,9 +4,9 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import {Callout, Intent, NonIdealState} from '@blueprintjs/core';
 
-import messages from 'content/messages';
-import {endpoint} from 'app/api';
-import {xhrErrorToast} from 'components/common/XhrToast';
+import messages from 'src/content/messages';
+import {endpoint} from 'src/app/api';
+import {xhrErrorToast} from 'src/components/common/XhrToast';
 import OAuthLogin from './OAuthLogin';
 import {PasswordAuthSignup} from './PasswordAuth';
 

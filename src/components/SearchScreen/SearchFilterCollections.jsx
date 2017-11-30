@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Button, Checkbox, Dialog, NonIdealState, Spinner } from '@blueprintjs/core';
 import { debounce, fromPairs, xor } from 'lodash';
 
-import { endpoint } from 'app/api';
+import { endpoint } from 'src/app/api';
 
 import SearchFilterList from './SearchFilterList';
 import SearchFilterText from './SearchFilterText';

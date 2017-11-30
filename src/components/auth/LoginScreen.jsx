@@ -4,8 +4,8 @@ import {connect} from 'react-redux'
 import {Redirect} from 'react-router';
 import {NonIdealState} from '@blueprintjs/core';
 
-import messages from 'content/messages';
-import {loginWithPassword, loginWithToken} from 'actions/sessionActions';
+import messages from 'src/content/messages';
+import {loginWithPassword, loginWithToken} from 'src/actions/sessionActions';
 import OAuthLogin, {handleOAuthCallback} from './OAuthLogin';
 import {PasswordAuthLogin} from './PasswordAuth';
 

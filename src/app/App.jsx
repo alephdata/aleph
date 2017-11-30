@@ -9,8 +9,8 @@ import de from 'react-intl/locale-data/de';
 import ru from 'react-intl/locale-data/ru';
 import es from 'react-intl/locale-data/es';
 
-import translations from 'content/translations.json';
-import PageLayout from 'components/PageLayout';
+import translations from 'src/content/translations.json';
+import PageLayout from 'src/components/PageLayout';
 import store from './store';
 
 import './App.css';

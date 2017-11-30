@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { mapValues, size, xor } from 'lodash';
 
-import { endpoint } from 'app/api';
-import filters from 'constants/searchfilters';
+import { endpoint } from 'src/app/api';
+import filters from 'src/constants/searchfilters';
 
 import SearchFilterCountries from './SearchFilterCountries';
 import SearchFilterCollections from './SearchFilterCollections';

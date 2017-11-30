@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import DualPane from 'components/common/DualPane';
+import DualPane from 'src/components/common/DualPane';
 
 class EntityInfo extends Component {
   render() {

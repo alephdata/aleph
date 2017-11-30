@@ -3,7 +3,7 @@ import {FormattedMessage} from 'react-intl';
 import {Button} from '@blueprintjs/core';
 import {Link} from 'react-router-dom';
 
-import AuthButton from 'components/auth/AuthButton';
+import AuthButton from 'src/components/auth/AuthButton';
 
 const SignupButton = () => <Link to="/signup">
   <Button iconName="user" className="pt-minimal">

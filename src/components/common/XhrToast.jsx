@@ -1,5 +1,5 @@
 import {showErrorToast, showSuccessToast} from './Toast';
-import messages from 'content/messages';
+import messages from 'src/content/messages';
 
 const defaultStatusMap = {
   400: messages.status.bad_request,
