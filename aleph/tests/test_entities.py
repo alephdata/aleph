@@ -24,7 +24,7 @@ class EntitiesTestCase(TestCase):
         self.ent = Entity.create({
             'schema': 'LegalEntity',
             'name': 'Winnie the Pooh',
-            'data': {
+            'properties': {
                 'country': 'pa',
                 'summary': 'a fictional teddy bear created by A. A. Milne',
                 'alias': [u'Puh der Bär', 'Pooh Bear']
@@ -33,7 +33,7 @@ class EntitiesTestCase(TestCase):
         self.other = Entity.create({
             'schema': 'LegalEntity',
             'name': 'Pu der Bär',
-            'data': {
+            'properties': {
                 'country': 'de',
                 'description': 'he is a bear',
                 'alias': [u'Puh der Bär']
@@ -50,7 +50,7 @@ class EntitiesTestCase(TestCase):
         self.ent.merge(self.other)
         db.session.flush()
         data = dict(self.ent.data)
-        assert 'bear' in data['description'], data
+        assert 'bear' in data['description'][0], data
         assert 'pa' in data['country'], data
         db.session.refresh(self.alert)
         assert self.alert.label == self.ent.name
@@ -67,6 +67,6 @@ class EntitiesTestCase(TestCase):
                                  data={},
                                  headers=headers,
                                  content_type='application/json')
-        data = res.json
-        assert 'bear' in data['data']['description']
-        assert 'pa' in data['data']['country']
+        data = res.json['properties']
+        assert 'bear' in data['description'][0], data
+        assert 'pa' in data['country'], data

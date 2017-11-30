@@ -112,9 +112,6 @@ ENTITY_MAPPING = {
         "properties": {
             "type": "object"
         },
-        "data": {
-            "type": "object"
-        },
         "parent": {
             "type": "object",
             "properties": {
@@ -128,14 +125,6 @@ ENTITY_MAPPING = {
         {
             "fields": {
                 "match": "properties.*",
-                "mapping": {
-                    "type": "text"
-                }
-            }
-        },
-        {
-            "fields": {
-                "match": "data.*",
                 "mapping": {
                     "type": "keyword"
                 }

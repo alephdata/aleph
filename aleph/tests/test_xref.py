@@ -34,7 +34,7 @@ class XrefTestCase(TestCase):
             'schema': 'Person',
             'name': 'Carlos Danger',
             'collection_id': self.coll_a.id,
-            'data': {
+            'properties': {
                 'nationality': 'US'
             }
         }
@@ -45,7 +45,7 @@ class XrefTestCase(TestCase):
             'schema': 'Person',
             'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
-            'data': {
+            'properties': {
                 'nationality': 'US'
             }
         }
@@ -56,7 +56,7 @@ class XrefTestCase(TestCase):
             'schema': 'Company',
             'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
-            'data': {
+            'properties': {
                 'nationality': 'GB'
             }
         }
@@ -67,7 +67,7 @@ class XrefTestCase(TestCase):
             'schema': 'Person',
             'name': 'Pure Risk',
             'collection_id': self.coll_b.id,
-            'data': {
+            'properties': {
                 'nationality': 'US'
             }
         }
@@ -91,7 +91,7 @@ class XrefTestCase(TestCase):
             'schema': 'Person',
             'name': 'Carlos Danger',
             'collection_id': self.coll_a.id,
-            'data': {
+            'properties': {
                 'nationality': 'US'
             }
         }
@@ -102,7 +102,7 @@ class XrefTestCase(TestCase):
             'schema': 'Person',
             'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
-            'data': {
+            'properties': {
                 'nationality': 'US'
             }
         }
@@ -113,7 +113,7 @@ class XrefTestCase(TestCase):
             'schema': 'Company',
             'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
-            'data': {
+            'properties': {
                 'nationality': 'GB'
             }
         }
@@ -124,7 +124,7 @@ class XrefTestCase(TestCase):
             'schema': 'Person',
             'name': 'Pure Risk',
             'collection_id': self.coll_b.id,
-            'data': {
+            'properties': {
                 'nationality': 'US'
             }
         }
@@ -136,7 +136,7 @@ class XrefTestCase(TestCase):
             'schema': 'Company',
             'name': 'Carlof Danger',
             'collection_id': self.coll_c.id,
-            'data': {
+            'properties': {
                 'nationality': 'FR'
             }
         }
@@ -147,7 +147,7 @@ class XrefTestCase(TestCase):
             'schema': 'Person',
             'name': 'Dorian Gray',
             'collection_id': self.coll_c.id,
-            'data': {
+            'properties': {
                 'nationality': 'GB'
             }
         }

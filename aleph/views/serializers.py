@@ -161,8 +161,7 @@ class EntitySchema(Schema, DatedSchema):
     countries = List(Country(), dump_only=True)
     schema = SchemaName(required=True)
     schemata = List(SchemaName(), dump_only=True)
-    data = Dict()
-    properties = Dict(dump_only=True)
+    properties = Dict()
     bulk = Boolean(dump_only=True)
 
     @post_dump

@@ -85,8 +85,8 @@ def update(id):
     _, entity = get_entity(id, request.authz.WRITE)
     data = parse_request(schema=EntitySchema)
     if as_bool(request.args.get('merge')):
-        data['data'] = merge_data(data.get('data') or {},
-                                  entity.data or {})
+        data['properties'] = merge_data(data.get('properties') or {},
+                                        entity.data or {})
     entity.update(data)
     db.session.commit()
     update_entity(entity)
