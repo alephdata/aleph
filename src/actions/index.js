@@ -84,3 +84,18 @@ export const fetchEntity = id => dispatch => {
       });
     });
 };
+
+export const fetchDocument = id => dispatch => {
+  dispatch({
+    type: 'FETCH_DOCUMENT_REQUEST',
+    payload: { id },
+  });
+
+  return endpoint.get(`documents/${id}`)
+    .then(response => {
+      dispatch({
+        type: 'FETCH_DOCUMENT_SUCCESS',
+        payload: { id, data: response.data },
+      });
+    });
+};
