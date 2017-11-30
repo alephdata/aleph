@@ -45,8 +45,8 @@ def suggest():
 @blueprint.route('/api/2/entities', methods=['POST', 'PUT'])
 def create():
     data = parse_request(schema=EntitySchema)
-    collection = get_collection(data.get('collection_id'),
-                                request.authz.WRITE)
+    collection_id = data.get('collection_id')
+    collection = get_collection(collection_id, request.authz.WRITE)
     entity = Entity.create(data, collection)
     db.session.commit()
     update_entity(entity)
@@ -85,8 +85,8 @@ def update(id):
     _, entity = get_entity(id, request.authz.WRITE)
     data = parse_request(schema=EntitySchema)
     if as_bool(request.args.get('merge')):
-        data['properties'] = merge_data(data.get('properties') or {},
-                                        entity.data or {})
+        props = merge_data(data.get('properties'), entity.data)
+        data['properties'] = props
     entity.update(data)
     db.session.commit()
     update_entity(entity)

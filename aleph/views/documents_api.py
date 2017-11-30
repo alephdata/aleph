@@ -49,6 +49,7 @@ def update(document_id):
     document.update(data)
     db.session.commit()
     update_document(document)
+    update_collection(document.collection)
     return view(document_id)
 
 

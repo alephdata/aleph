@@ -7,7 +7,6 @@
 # alter.
 from celery.schedules import crontab
 from apikit.args import BOOL_TRUISH
-from tempfile import gettempdir
 from os import environ as env, path
 
 
@@ -198,9 +197,5 @@ CELERYBEAT_SCHEDULE = {
     'alert-every-night': {
         'task': 'aleph.logic.alerts.check_alerts',
         'schedule': crontab(hour=1, minute=30)
-    },
-    'periodic-cleanup': {
-        'task': 'aleph.logic.cleanup_system',
-        'schedule': crontab(hour='*/6')
-    },
+    }
 }

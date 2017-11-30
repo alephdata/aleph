@@ -37,7 +37,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.countries = data.get('countries', [])
         creator = data.get('creator') or {}
         self.update_creator(creator.get('id'))
-        self.touch()
+        self.updated_at = datetime.utcnow()
+        db.session.add(self)
 
     def update_creator(self, role):
         """Set the creator (and admin) of a collection."""
@@ -49,10 +50,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         db.session.add(self)
         db.session.flush()
         Permission.grant(self, role, True, True)
-
-    def touch(self):
-        self.updated_at = datetime.utcnow()
-        db.session.add(self)
 
     @property
     def roles(self):

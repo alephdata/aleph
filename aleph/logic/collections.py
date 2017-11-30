@@ -22,6 +22,10 @@ def update_collection(collection):
         index_delete(collection.id)
         return
 
+    collection.updated_at = datetime.utcnow()
+    db.session.add(collection)
+    db.session.commit()
+
     log.info("Updating: %r", collection)
     index_collection(collection)
 
@@ -79,9 +83,3 @@ def delete_collection(collection_id, wait=False):
 
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
-
-
-def cleanup_collections():
-    """Reindex collections periodically."""
-    for collection in Collection.all():
-        update_collection(collection)

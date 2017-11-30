@@ -187,13 +187,6 @@ def evilshit():
     upgrade()
 
 
-@manager.command
-def cleanup():
-    """Periodic system cleanup tasks."""
-    from aleph.logic import cleanup_system
-    cleanup_system()
-
-
 def main():
     manager.run()
 
