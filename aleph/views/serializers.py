@@ -176,16 +176,6 @@ class EntitySchema(Schema, DatedSchema):
         return data
 
 
-class LinkSchema(Schema, DatedSchema):
-    id = String(dump_only=True)
-    collection_id = Integer(dump_only=True, required=True)
-    name = String(validate=Length(min=2, max=500), required=True)
-    foreign_ids = List(String())
-    countries = List(Country())
-    schema = SchemaName()
-    schemata = List(SchemaName())
-
-
 class DocumentReference(Schema):
     id = String()
     foreign_id = String()

@@ -112,7 +112,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         fid = [stringify(f) for f in entity.get('foreign_ids') or []]
         self.foreign_ids = list(set([f for f in fid if f is not None]))
         self.updated_at = datetime.utcnow()
-        # self.collection.touch()
         db.session.add(self)
 
     @classmethod
@@ -122,7 +121,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         ent.id = make_textid()
         ent.collection = collection
         ent.update(data)
-        ent.collection.touch()
         return ent
 
     @classmethod

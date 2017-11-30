@@ -62,7 +62,7 @@ def reindex_entities(block=5000):
     for collection in cq.yield_per(block):
         log.info("Indexing entities in: %r", collection)
         eq = db.session.query(Entity)
-        eq = eq.filter(Entity.collection == collection)
+        eq = eq.filter(Entity.collection_id == collection.id)
         for entity in eq.yield_per(block):
             # Use the one that's already loaded:
             entity.collection = collection
@@ -81,10 +81,10 @@ def bulk_load(config):
         if collection is None:
             collection = Collection.create({
                 'foreign_id': foreign_id,
-                'managed': True,
                 'label': data.get('label') or foreign_id,
                 'summary': data.get('summary'),
                 'category': data.get('category'),
+                'managed': True,
             })
 
         for role_fk in dict_list(data, 'roles', 'role'):
