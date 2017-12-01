@@ -170,6 +170,7 @@ class SuggestEntitiesQuery(EntitiesQuery):
 
 
 class CombinedQuery(AuthzQuery):
+    TEXT_FIELDS = ['title^3', 'name^3', 'names^2', 'text']
     RETURN_FIELDS = set(DocumentsQuery.RETURN_FIELDS)
     RETURN_FIELDS = list(set(EntitiesQuery.RETURN_FIELDS).union(RETURN_FIELDS))
 
