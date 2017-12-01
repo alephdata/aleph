@@ -38,7 +38,7 @@ class SearchApiTestCase(TestCase):
         assert res.status_code == 200, res
         facet = res.json['facets']['schema']
         assert len(facet['values']) == 2
-        assert facet['values'][0]['label'] == 'Documents', facet
+        assert facet['values'][0]['label'] == 'Files', facet
 
         res = self.client.get('/api/2/search?facet=schema&filter:schema=Company')  # noqa
         assert res.status_code == 200, res
@@ -50,7 +50,7 @@ class SearchApiTestCase(TestCase):
         assert res.status_code == 200, res
         facet = res.json['facets']['schema']
         assert len(facet['values']) == 2, facet['values']
-        assert facet['values'][0]['label'] == 'Documents', facet
+        assert facet['values'][0]['label'] == 'Files', facet
 
     def test_basic_filters(self):
         res = self.client.get('/api/2/search?filter:source_id=23')
