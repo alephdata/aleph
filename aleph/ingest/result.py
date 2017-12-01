@@ -15,15 +15,15 @@ class DocumentResult(Result):
     """Wrapper to link a Document to an ingestor result object."""
 
     SCHEMATA = {
-        Result.FLAG_DIRECTORY: 'Folder',
-        Result.FLAG_PLAINTEXT: 'PlainText',
-        Result.FLAG_PACKAGE: 'Package',
-        Result.FLAG_PDF: 'Pages',
-        Result.FLAG_HTML: 'HyperText',
-        Result.FLAG_WORKBOOK: 'Workbook',
-        Result.FLAG_IMAGE: 'Image',
-        Result.FLAG_TABULAR: 'Table',
-        Result.FLAG_EMAIL: 'Email',
+        Result.FLAG_DIRECTORY: Document.SCHEMA_FOLDER,
+        Result.FLAG_PLAINTEXT: Document.SCHEMA_TEXT,
+        Result.FLAG_PACKAGE: Document.SCHEMA_PACKAGE,
+        Result.FLAG_PDF: Document.SCHEMA_PDF,
+        Result.FLAG_HTML: Document.SCHEMA_HTML,
+        Result.FLAG_WORKBOOK: Document.SCHEMA_WORKBOOK,
+        Result.FLAG_IMAGE: Document.SCHEMA_IMAGE,
+        Result.FLAG_TABULAR: Document.SCHEMA_TABLE,
+        Result.FLAG_EMAIL: Document.SCHEMA_EMAIL,
     }
 
     def __init__(self, manager, document, file_path=None, role_id=None):

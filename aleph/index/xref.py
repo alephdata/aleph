@@ -19,7 +19,7 @@ def entity_query(sample, collection_id=None, query=None):
     schema = model.get(sample.get('schema'))
     if schema is None or not schema.fuzzy:
         return {'match_none': {}}
-    if Document.COMMON_SCHEMA in schema.names:
+    if Document.SCHEMA in schema.names:
         return {'match_none': {}}
 
     if query is None:

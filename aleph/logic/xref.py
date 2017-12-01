@@ -29,7 +29,7 @@ def xref_item(item, collection_id=None):
                        })
     results = result.get('hits').get('hits')
     entity_id, document_id = None, None
-    if Document.COMMON_SCHEMA in item.get('schemata'):
+    if Document.SCHEMA in item.get('schemata'):
         document_id = item.get('id')
     else:
         entity_id = item.get('id')

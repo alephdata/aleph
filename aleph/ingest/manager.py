@@ -35,7 +35,8 @@ class DocumentManager(Manager):
         result.update()
         db.session.commit()
         document = result.document
-        log.debug('Ingested [%s]: %s', document.id, document.title)
+        log.debug('Ingested [%s:%s]: %s',
+                  document.id, document.schema, document.title)
         process_document(document)
 
     def get_cache(self, key):

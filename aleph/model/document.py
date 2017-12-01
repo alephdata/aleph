@@ -16,7 +16,16 @@ log = logging.getLogger(__name__)
 
 
 class Document(db.Model, DatedModel, Metadata):
-    COMMON_SCHEMA = 'Document'
+    SCHEMA = 'Document'
+    SCHEMA_FOLDER = 'Folder'
+    SCHEMA_PACKAGE = 'Package'
+    SCHEMA_WORKBOOK = 'Workbook'
+    SCHEMA_TEXT = 'PlainText'
+    SCHEMA_HTML = 'HyperText'
+    SCHEMA_PDF = 'Pages'
+    SCHEMA_IMAGE = 'Image'
+    SCHEMA_TABLE = 'Table'
+    SCHEMA_EMAIL = 'Email'
 
     # This means that text beyond the first 100 MB will not be indexed or
     # processed using NLP.
@@ -54,13 +63,13 @@ class Document(db.Model, DatedModel, Metadata):
     def supports_records(self):
         # Slightly unintuitive naming: this just checks the document type,
         # not if there actually are any records.
-        if self.schema not in ['Pages', 'Table']:
+        if self.schema not in [self.SCHEMA_PDF, self.SCHEMA_TABLE]:
             return False
         return True
 
     @property
     def supports_pages(self):
-        return self.schema == 'Pages'
+        return self.schema == self.SCHEMA_PDF
 
     def update(self, data):
         props = ('title', 'summary', 'author', 'crawler', 'source_url',
@@ -201,7 +210,7 @@ class Document(db.Model, DatedModel, Metadata):
         document = q.first()
         if document is None:
             document = cls()
-            document.schema = cls.COMMON_SCHEMA
+            document.schema = cls.SCHEMA
             document.collection_id = collection.id
             document.collection = collection
             document.parent_id = parent_id

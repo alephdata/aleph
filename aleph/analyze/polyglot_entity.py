@@ -4,7 +4,7 @@ import logging
 from polyglot.text import Text
 
 from aleph.analyze.analyzer import Analyzer
-from aleph.model import DocumentTag, DocumentTagCollector
+from aleph.model import Document, DocumentTag, DocumentTagCollector
 
 log = logging.getLogger(__name__)
 
@@ -17,9 +17,15 @@ class PolyglotEntityAnalyzer(Analyzer):
         'I-ORG': DocumentTag.TYPE_ORGANIZATION,
         # 'I-LOC': DocumentTag.TYPE_LOCATION
     }
+    IGNORED = [
+        Document.SCHEMA_PACKAGE,
+        Document.SCHEMA_FOLDER,
+        Document.SCHEMA_IMAGE,
+        Document.SCHEMA_TABLE
+    ]
 
     def analyze(self, document):
-        if document.schema in ['Table', 'Folder', 'Image', 'Package']:
+        if document.schema in self.IGNORED:
             return
         collector = DocumentTagCollector(document, self.ORIGIN)
         text = document.text

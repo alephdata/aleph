@@ -1,5 +1,4 @@
 import logging
-from followthemoney import model
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
 
@@ -30,18 +29,17 @@ def index():
 @blueprint.route('/api/2/documents/<int:document_id>')
 def view(document_id):
     enable_cache()
-    document = get_index_document(document_id)
+    document = get_document(document_id)
+    data = get_index_document(document_id)
+    data['headers'] = document.headers
     # TODO: should this be it's own API? Probably so, but for that it would
     # be unclear if we should JSON wrap it, or serve plain with the correct
     # MIME type?
-    schema = model.get(document.get('schema'))
-    if 'PlainText' in schema.names:
-        obj = get_document(document_id)
-        document['text'] = obj.body_text
-    if 'HyperText' in schema.names:
-        obj = get_document(document_id)
-        document['html'] = sanitize_html(obj.body_raw)
-    return jsonify(document, schema=DocumentSchema)
+    if Document.SCHEMA_HTML in document.model.names:
+        data['html'] = sanitize_html(document.body_raw)
+    if Document.SCHEMA_TEXT in document.model.names:
+        data['text'] = document.body_text
+    return jsonify(data, schema=DocumentSchema)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>', methods=['POST', 'PUT'])

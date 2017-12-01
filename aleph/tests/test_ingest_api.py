@@ -89,12 +89,14 @@ class IngestApiTestCase(TestCase):
         res = self.client.get('/api/2/documents',
                               headers=headers)
         assert res.json['total'] == 1, res.json
+
         res = self.client.get('/api/2/documents/1',
                               headers=headers)
         assert 'us' in res.json['countries'], res.json
         assert 'html' in res.json, res.json
         assert 'Wikipedia, the free encyclopedia' in res.json['html'], \
             res.json['html']
+
         res = self.client.get('/api/2/documents/1/file',
                               headers=headers)
         assert 'KDE2' in res.data
