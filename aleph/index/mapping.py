@@ -105,8 +105,8 @@ ENTITY_MAPPING = {
         "published_at": {"type": "date", "format": PARTIAL_DATE},
         "retrieved_at": {"type": "date", "format": PARTIAL_DATE},
         "dates": {"type": "date", "format": PARTIAL_DATE},
-        "author": {"type": "text"},
-        "generator": {"type": "text"},
+        "author": {"type": "keyword"},
+        "generator": {"type": "keyword"},
         "summary": {"type": "text"},
         "text": {"type": "text"},
         "properties": {

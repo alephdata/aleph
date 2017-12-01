@@ -69,6 +69,14 @@ class Metadata(object):
         self._meta_text('author', author)
 
     @property
+    def generator(self):
+        return self.meta.get('generator')
+
+    @generator.setter
+    def generator(self, generator):
+        self._meta_text('generator', generator)
+
+    @property
     def crawler(self):
         return self.meta.get('crawler')
 

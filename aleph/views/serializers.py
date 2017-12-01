@@ -213,6 +213,7 @@ class DocumentSchema(Schema, DatedSchema):
     file_name = String()
     file_size = Integer(dump_only=True)
     author = String()
+    generator = String()
     mime_type = String()
     extension = String(dump_only=True)
     encoding = String(dump_only=True)

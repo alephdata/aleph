@@ -153,8 +153,16 @@ class Document(db.Model, DatedModel, Metadata):
     def texts(self):
         if self.title is not None:
             yield self.title
+        if self.file_name is not None:
+            yield self.file_name
+        if self.source_url is not None:
+            yield self.source_url
         if self.summary is not None:
             yield self.summary
+        if self.author is not None:
+            yield self.author
+        if self.generator is not None:
+            yield self.generator
         if self.status != self.STATUS_SUCCESS:
             return
         if self.body_text is not None:
