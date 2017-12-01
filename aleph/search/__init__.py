@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 
 
 class DocumentsQuery(AuthzQuery):
-    TEXT_FIELDS = ['title^3', 'summary', 'text']
+    TEXT_FIELDS = ['title^3', 'text']
     RETURN_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
                      'languages', 'countries', 'source_url', 'created_at',
                      'updated_at', 'type', 'summary', 'status',
@@ -115,6 +115,7 @@ class AlertDocumentsQuery(EntityDocumentsQuery):
 
 
 class EntitiesQuery(AuthzQuery):
+    TEXT_FIELDS = ['name^3', 'names^2', 'text']
     RETURN_FIELDS = ['collection_id', 'roles', 'name', 'data', 'countries',
                      'schema', 'schemata', 'properties', 'created_at',
                      'updated_at', 'creator', '$bulk']
