@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import DualPane from 'src/components/common/DualPane';
 import TextViewer from './viewers/TextViewer';
 import HtmlViewer from './viewers/HtmlViewer';
+import FolderViewer from './viewers/FolderViewer';
 
 class DocumentContent extends Component {
   render() {
@@ -15,6 +16,9 @@ class DocumentContent extends Component {
         )}
         {document.html && (
           <HtmlViewer html={document.html} />
+        )}
+        {document.children && (
+          <FolderViewer document={document} />
         )}
       </DualPane.ContentPane>
     );
