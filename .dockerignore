@@ -1,6 +1,8 @@
-build*
-node_modules*
+build
+node_modules
 aleph.env
+aleph.egg-info
 docker-compose.*
 celerybeat-schedul*
 .git
+.vscode

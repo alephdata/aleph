@@ -47,7 +47,6 @@ RUN pip install -r /tmp/requirements.txt
 COPY . /aleph
 WORKDIR /aleph
 RUN pip install -e .
-RUN pip install --upgrade ingestors
 
 # Expose the green unicorn
 EXPOSE 8000
