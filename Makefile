@@ -4,17 +4,19 @@ DEVDOCKER=$(COMPOSE) run --rm app /aleph/contrib/devwrapper.sh
 shell:
 	$(DEVDOCKER) /bin/bash
 
-test:
+test: build
 	$(DEVDOCKER) contrib/test.sh
 
 upgrade: build
 	$(COMPOSE) up -d postgres elasticsearch
 	sleep 4
 	$(DEVDOCKER) aleph upgrade
+
+installdata:
 	$(DEVDOCKER) aleph installdata
 
 web:
-	$(COMPOSE) run --rm -p 5000:5000 app /aleph/contrib/devwrapper.sh \
+	$(COMPOSE) run --rm --service-ports app /aleph/contrib/devwrapper.sh \
 		python aleph/manage.py runserver -h 0.0.0.0
 
 worker:
@@ -30,7 +32,7 @@ rebuild:
 	$(COMPOSE) build --pull --no-cache
 
 build:
-	$(COMPOSE) build --pull
+	$(COMPOSE) build
 
 docs:
 	$(DEVDOCKER) sphinx-build -b html -d docs/_build/doctrees ./docs docs/_build/html
