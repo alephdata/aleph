@@ -33,8 +33,9 @@ services:
   app:
     build: .
     command: /bin/bash
-    expose:
-      - 5000
+    hostname: alephdev
+    ports:
+      - "5000"
     links:
       - postgres
       - elasticsearch

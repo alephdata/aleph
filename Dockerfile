@@ -42,6 +42,7 @@ COPY requirements-docs.txt requirements-testing.txt /tmp/
 RUN pip install -r /tmp/requirements-docs.txt
 COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
+RUN pip install --upgrade ingestors
 
 # Install aleph
 COPY . /aleph
