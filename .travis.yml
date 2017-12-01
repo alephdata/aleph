@@ -13,6 +13,7 @@ env:
 before_install:
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+  - sudo sysctl -w vm.max_map_count=262144
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
@@ -23,10 +24,8 @@ before_install:
 
 install:
   - docker-compose -f docker-compose.dev.yml build
+  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
+  - sleep 8
 
 script:
-  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
-  - sudo chmod 777 $TRAVIS_BUILD_DIR/build/data/elasticsearch # this is bad
-  - sudo sysctl -w vm.max_map_count=262144 # this is probably bad too
-  - sleep 8
   - docker-compose -f docker-compose.dev.yml run --rm app /aleph/contrib/devwrapper.sh /aleph/contrib/test.sh
