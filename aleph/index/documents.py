@@ -53,6 +53,7 @@ def index_document(document):
         'name': document.title,
         'summary': document.summary,
         'author': document.author,
+        'generator': document.generator,
         'file_size': document.file_size,
         'file_name': document.file_name,
         'source_url': document.source_url,

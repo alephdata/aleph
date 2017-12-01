@@ -85,6 +85,7 @@ class DocumentResult(Result):
         doc.title = stringify(self.title) or doc.meta.get('title')
         doc.summary = stringify(self.summary) or doc.meta.get('summary')
         doc.author = stringify(self.author) or doc.meta.get('author')
+        doc.generator = stringify(self.generator) or doc.meta.get('generator')
         doc.mime_type = stringify(self.mime_type) or doc.meta.get('mime_type')
         doc.encoding = stringify(self.encoding) or doc.meta.get('encoding')
 
