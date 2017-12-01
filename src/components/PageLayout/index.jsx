@@ -43,8 +43,8 @@ class PageLayout extends Component {
             <Route path="/logout" exact component={LogoutScreen}/>
             <Route path="/signup" exact component={SignupScreen}/>
             <Route path="/activate/:code" exact component={ActivateScreen}/>
-            <Route path="/entities/:entityId" component={EntityScreen}/>
-            <Route path="/documents/:documentId" component={DocumentScreen}/>
+            <Route path="/entities/:entityId" exact component={EntityScreen}/>
+            <Route path="/documents/:documentId" exact component={DocumentScreen}/>
             <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
             <Route path="/" exact component={HomeScreen}/>
             <Route component={ErrorScreen}/>
