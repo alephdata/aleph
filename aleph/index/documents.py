@@ -35,13 +35,11 @@ def index_document(document):
         return
 
     log.info("Index document [%s]: %s", document.id, document.title)
-    schema = model.get(Document.SCHEMA)
     data = {
-        'schema': schema.name,
-        'schemata': schema.names,
+        'schema': document.schema,
+        'schemata': document.model.names,
         'collection_id': document.collection_id,
         'roles': document.collection.roles,
-        'type': document.type,
         'status': document.status,
         'content_hash': document.content_hash,
         'foreign_id': document.foreign_id,
@@ -77,7 +75,7 @@ def index_document(document):
     if document.parent_id is not None:
         data['parent'] = {
             'id': document.parent_id,
-            'type': document.parent.type,
+            'schema': document.parent.schema,
             'title': document.parent.title,
         }
 

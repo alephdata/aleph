@@ -27,10 +27,13 @@ class QueryParser(object):
         return (self.offset / self.limit) + 1
 
     def prefixed_items(self, prefix):
-        return {
-            key[len(prefix):]: set(self.getlist(key))
-                for key in self.args.keys() if key.startswith(prefix)
-        }
+        items = {}
+        for key in self.args.keys():
+            if not key.startswith(prefix):
+                continue
+            name = key[len(prefix):]
+            items[name] = set(self.getlist(key))
+        return items
 
     @property
     def post_filters(self):

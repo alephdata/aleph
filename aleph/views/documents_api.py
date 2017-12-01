@@ -1,4 +1,5 @@
 import logging
+from followthemoney import model
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
 
@@ -33,10 +34,11 @@ def view(document_id):
     # TODO: should this be it's own API? Probably so, but for that it would
     # be unclear if we should JSON wrap it, or serve plain with the correct
     # MIME type?
-    if document.get('type') == Document.TYPE_SCROLL:
+    schema = model.get(document.get('schema'))
+    if 'PlainText' in schema.names:
         obj = get_document(document_id)
         document['text'] = obj.body_text
-    elif document.get('type') == Document.TYPE_HTML:
+    if 'HyperText' in schema.names:
         obj = get_document(document_id)
         document['html'] = sanitize_html(obj.body_raw)
     return jsonify(document, schema=DocumentSchema)
@@ -94,7 +96,7 @@ def file(document_id):
 @blueprint.route('/api/2/documents/<int:document_id>/pdf')
 def pdf(document_id):
     document = get_document(document_id)
-    if document.type != Document.TYPE_PDF:
+    if not document.supports_pages:
         raise BadRequest("PDF is only available for text documents")
     file_name = '%s.pdf' % document.safe_file_name
     return _serve_archive(document.pdf_version, file_name, PDF_MIME)
@@ -104,7 +106,7 @@ def pdf(document_id):
 def records(document_id):
     enable_cache()
     document = get_document(document_id)
-    if not document.has_records():
+    if not document.supports_records:
         raise BadRequest("This document does not have records.")
     result = RecordsQuery.handle_request(request, document=document,
                                          schema=RecordSchema)
@@ -115,7 +117,7 @@ def records(document_id):
 def record(document_id, index):
     enable_cache()
     document = get_document(document_id)
-    if not document.has_records():
+    if not document.supports_records:
         raise BadRequest("This document does not have records.")
     record = DocumentRecord.by_index(document.id, index)
     if record is None:

@@ -5,9 +5,9 @@ from aleph.model import Document
 
 log = logging.getLogger(__name__)
 
-FIELDS_XREF = ['schema', 'collection_id', 'name', 'fingerprints', 'emails',
-               'phones', 'dates', 'countries', 'schemata', 'identifiers',
-               'addresses']
+FIELDS_XREF = ['schema', 'schemata', 'collection_id', 'name', 'fingerprints',
+               'emails', 'phones', 'dates', 'countries', 'schemata',
+               'identifiers', 'addresses']
 
 
 def entity_query(sample, collection_id=None, query=None):
@@ -17,9 +17,9 @@ def entity_query(sample, collection_id=None, query=None):
     # Do not attempt to find xrefs for entity types such as land, buildings,
     # etc.
     schema = model.get(sample.get('schema'))
-    if schema is None:
+    if schema is None or not schema.fuzzy:
         return {'match_none': {}}
-    if sample.get('schema') != Document.SCHEMA and not schema.fuzzy:
+    if Document.COMMON_SCHEMA in schema.names:
         return {'match_none': {}}
 
     if query is None:

@@ -273,7 +273,7 @@ class SearchResultSchema(object):
     def dump(self, data, many=False):
         results = []
         for res in ensure_list(data):
-            if res.get('schema') == Document.SCHEMA:
+            if Document.COMMON_SCHEMA in res.get('schemata'):
                 res = DocumentSchema().dump(res)
             else:
                 res = EntitySchema().dump(res)

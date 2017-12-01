@@ -40,7 +40,7 @@ def generate_records(document):
 
 
 def index_records(document):
-    if not document.has_records():
+    if not document.supports_records:
         return
 
     try:

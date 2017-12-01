@@ -48,8 +48,7 @@ def index_entity(entity):
         if len(values):
             data['properties'][prop] = values
 
-    # data['$documents'] = get_count(entity)
-    data = finalize_index(data, entity.schema)
+    data = finalize_index(data, entity.model)
     es.index(index=entity_index(),
              doc_type=entity_type(),
              id=entity.id,

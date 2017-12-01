@@ -83,7 +83,7 @@ class IngestApiTestCase(TestCase):
         assert res.status_code == 200, (res, res.data)
         docs = res.json['documents']
         assert len(docs) == 1, docs
-        assert docs[0]['type'] == 'html', docs
+        assert docs[0]['schema'] == 'HyperText', docs
         flush_index()
 
         res = self.client.get('/api/2/documents',
@@ -141,7 +141,8 @@ class IngestApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         meta = {
             'file_name': 'directory',
-            'foreign_id': 'directory'
+            'foreign_id': 'directory',
+            'schema': 'Folder'
         }
         data = {
             'meta': json.dumps(meta)
@@ -152,7 +153,7 @@ class IngestApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert len(res.json['documents']) == 1, res.json
         directory = res.json['documents'][0]
-        assert directory['type'] == 'other', res.json
+        assert directory['schema'] == 'Folder', res.json
 
         meta = {
             'file_name': 'subdirectory',

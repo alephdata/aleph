@@ -30,7 +30,7 @@ class DocumentsQuery(AuthzQuery):
     def get_filters(self):
         filters = super(DocumentsQuery, self).get_filters()
         filters.append({
-            'term': {'schema': Document.SCHEMA}
+            'term': {'schemata': Document.COMMON_SCHEMA}
         })
         return filters
 

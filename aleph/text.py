@@ -24,4 +24,6 @@ def sanitize_html(html_text):
     """Remove anything from the given HTML that must not show up in the UI."""
     # TODO: circumvent encoding declarations? 
     # TODO: make links relative the source_url?
+    if html_text is None:
+        return
     return CLEANER.clean_html(html_text)

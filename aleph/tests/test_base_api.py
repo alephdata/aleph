@@ -35,4 +35,6 @@ class BaseApiTestCase(TestCase):
         res = self.client.get('/api/2/statistics')
         assert res.status_code == 200, res
         assert res.json['count'] == 4, res.json
-        assert res.json['schemata']['Document'] == 3, res.json
+        assert res.json['schemata']['PlainText'] == 1, res.json
+        assert res.json['schemata']['Pages'] == 1, res.json
+        assert res.json['schemata']['Table'] == 1, res.json

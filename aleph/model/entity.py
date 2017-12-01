@@ -20,12 +20,45 @@ log = logging.getLogger(__name__)
 
 class Entity(db.Model, UuidModel, SoftDeleteModel):
     name = db.Column(db.Unicode)
-    type = db.Column(db.String(255), index=True)
+    schema = db.Column(db.String(255), index=True)
     foreign_ids = db.Column(ARRAY(db.Unicode()))
     data = db.Column('data', JSONB)
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('entities', lazy='dynamic'))  # noqa
+
+    @property
+    def model(self):
+        return model.get(self.schema)
+
+    @property
+    def terms(self):
+        terms = set([self.name])
+        for alias in ensure_list(self.data.get('alias')):
+            if alias is not None and len(alias):
+                terms.add(alias)
+        return terms
+
+    @property
+    def regex_terms(self):
+        # This is to find the shortest possible regex for each entity.
+        # If, for example, and entity matches both "Al Qaeda" and
+        # "Al Qaeda in Iraq, Syria and the Levant", it is useless to
+        # search for the latter.
+        terms = set([match_form(t) for t in self.terms])
+        regex_terms = set()
+        for term in terms:
+            if term is None or len(term) < 4 or len(term) > 120:
+                continue
+            contained = False
+            for other in terms:
+                if other is None or other == term:
+                    continue
+                if other in term:
+                    contained = True
+            if not contained:
+                regex_terms.add(term)
+        return regex_terms
 
     def delete_matches(self):
         pq = db.session.query(Match)
@@ -76,7 +109,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         if self.collection_id != other.collection_id:
             raise ValueError("Cannot merge entities from different collections.")  # noqa
 
-        self.type = model.precise_schema(self.type, other.type)
+        self.schema = model.precise_schema(self.schema, other.schema)
         self.foreign_ids = string_set(self.foreign_ids, self.foreign_ids)
         self.created_at = min((self.created_at, other.created_at))
         self.updated_at = datetime.utcnow()
@@ -98,10 +131,12 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         db.session.refresh(other)
 
     def update(self, entity):
+        self.schema = entity.get('schema')
+
         data = entity.get('properties')
         if is_mapping(data):
             data['name'] = [entity.get('name')]
-            self.data = self.schema.validate(data)
+            self.data = self.model.validate(data)
         elif self.data is None:
             self.data = {}
 
@@ -119,7 +154,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         ent = cls.by_foreign_ids(foreign_ids, collection.id, deleted=True)
         if ent is None:
             ent = cls()
-            ent.type = data.pop('schema', None)
             ent.id = make_textid()
             ent.collection = collection
             ent.foreign_ids = foreign_ids
@@ -154,39 +188,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         q = db.session.query(func.max(cls.updated_at))
         q = q.filter(cls.deleted_at == None)  # noqa
         return q.scalar()
-
-    @property
-    def schema(self):
-        return model.get(self.type)
-
-    @property
-    def terms(self):
-        terms = set([self.name])
-        for alias in ensure_list(self.data.get('alias')):
-            if alias is not None and len(alias):
-                terms.add(alias)
-        return terms
-
-    @property
-    def regex_terms(self):
-        # This is to find the shortest possible regex for each entity.
-        # If, for example, and entity matches both "Al Qaeda" and
-        # "Al Qaeda in Iraq, Syria and the Levant", it is useless to
-        # search for the latter.
-        terms = set([match_form(t) for t in self.terms])
-        regex_terms = set()
-        for term in terms:
-            if term is None or len(term) < 4 or len(term) > 120:
-                continue
-            contained = False
-            for other in terms:
-                if other is None or other == term:
-                    continue
-                if other in term:
-                    contained = True
-            if not contained:
-                regex_terms.add(term)
-        return regex_terms
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)

@@ -19,7 +19,7 @@ class PolyglotEntityAnalyzer(Analyzer):
     }
 
     def analyze(self, document):
-        if document.type in [document.TYPE_TABULAR, document.TYPE_OTHER]:
+        if document.schema in ['Table', 'Folder', 'Image', 'Package']:
             return
         collector = DocumentTagCollector(document, self.ORIGIN)
         text = document.text

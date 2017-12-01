@@ -27,18 +27,18 @@
   records:
     - id: 9b052e79d3cbff66b4e9c1e943948bae
       name: KwaZulu
-      type: Company
+      schema: Company
       collection_id: 1000
       data:
-        other_names:
-          - name: kwazulu
+        aliases:
+          - kwazulu
     - id: 250e77f12a5ab6972a0895d290c4792f
       name: BaNana
-      type: Person
+      schema: Person
       collection_id: 2000
       data:
-        other_names:
-          - name: banana
+        aliases:
+          - banana
 
 - model: aleph.model.document.Document
   records:
@@ -46,19 +46,20 @@
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8291
       collection_id: 1000
       foreign_id: test1
-      type: text
+      schema: Pages
       status: success
       meta:
         title: Foo Document
-        file_name: foo.txt
-        extension: txt
+        file_name: foo.pdf
+        mime_type: application/pdf
         languages: ['en']
     - id: 1001
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8292
       collection_id: 2000
       foreign_id: test2
-      type: text
+      schema: PlainText
       status: success
+      body_text: TOP SECRET BANANA SECRETS FROM KWAZULU NATAL!
       meta:
         title: Secret Document
         file_name: bar.txt
@@ -68,7 +69,7 @@
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8294
       collection_id: 1000
       foreign_id: test3
-      type: text
+      schema: PlainText
       status: success
       meta:
         title: Does not mention fruit
@@ -79,29 +80,20 @@
       content_hash: 720badc9cfa9a80fc455239f86c56273dc5c8295
       collection_id: 1000
       foreign_id: test4
-      type: tabular
+      schema: Table
       status: success
       meta:
         title: Tabular thingie
         file_name: test.csv
         extension: csv
         languages: ['en']
-        tables:
-          - sheet: 0
-            sheet_name: "South Africa Places"
-            columns:
-              - label: ISSID
-                name: ISSID
-              - label: Municipality_metro
-                name: Municipality_metro
-              - label: TownCity_Name
-                name: TownCity_Name
-              - label: Coordinates
-                name: Coordinates
-              - label: Start_Date
-                name: Start_Date
-              - label: End_Date
-                name: End_Date
+        columns:
+          - ISSID
+          - Municipality_metro
+          - TownCity_Name
+          - Coordinates
+          - Start_Date
+          - End_Date
 
 - model: aleph.model.document.DocumentRecord
   records:
@@ -115,11 +107,6 @@
       index: 2
       text: >
         It has two pages in total.
-    - id: 100002
-      document_id: 1001
-      index: 1
-      text: >
-        TOP SECRET BANANA SECRETS FROM KWAZULU NATAL!
     - id: 100003
       document_id: 1002
       index: 1

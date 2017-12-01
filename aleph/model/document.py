@@ -1,4 +1,5 @@
 import logging
+from followthemoney import model
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
@@ -15,17 +16,11 @@ log = logging.getLogger(__name__)
 
 
 class Document(db.Model, DatedModel, Metadata):
-    SCHEMA = 'Document'
+    COMMON_SCHEMA = 'Document'
 
     # This means that text beyond the first 100 MB will not be indexed or
     # processed using NLP.
     MAX_TEXT_LENGTH = 1024 * 1024 * 100
-
-    TYPE_PDF = 'text'  # mismatch for historic reasons
-    TYPE_SCROLL = 'scroll'  # plain text which does not have pages
-    TYPE_HTML = 'html'
-    TYPE_TABULAR = 'tabular'
-    TYPE_OTHER = 'other'
 
     STATUS_PENDING = 'pending'
     STATUS_SUCCESS = 'success'
@@ -34,38 +29,38 @@ class Document(db.Model, DatedModel, Metadata):
     id = db.Column(db.BigInteger, primary_key=True)
     content_hash = db.Column(db.Unicode(65), nullable=True, index=True)
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True, index=True)
-    type = db.Column(db.Unicode(10), nullable=False)
+    schema = db.Column(db.String(255), nullable=False)
     status = db.Column(db.Unicode(10), nullable=True)
     meta = db.Column(JSONB, default={})
     error_message = db.Column(db.Unicode(), nullable=True)
     body_text = db.Column(db.Unicode(), nullable=True)
     body_raw = db.Column(db.Unicode(), nullable=True)
 
-    uploader_id = db.Column(db.Integer,
-                            db.ForeignKey('role.id'),
-                            nullable=True)
-
-    parent_id = db.Column(db.BigInteger,
-                          db.ForeignKey('document.id'),
-                          nullable=True,
-                          index=True)
-    children = db.relationship('Document',
-                               lazy='dynamic',
-                               backref=db.backref('parent',
-                                                  uselist=False,
-                                                  remote_side=[id]))
-
-    collection_id = db.Column(db.Integer,
-                              db.ForeignKey('collection.id'),
-                              nullable=False,
-                              index=True)
-    collection = db.relationship(Collection,
-                                 backref=db.backref('documents',
-                                                    lazy='dynamic'))
+    uploader_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
+    parent_id = db.Column(db.BigInteger, db.ForeignKey('document.id'), nullable=True, index=True)  # noqa
+    children = db.relationship('Document', lazy='dynamic', backref=db.backref('parent', uselist=False, remote_side=[id]))   # noqa
+    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
+    collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa
 
     def __init__(self, **kw):
         self.meta = {}
         super(Document, self).__init__(**kw)
+
+    @property
+    def model(self):
+        return model.get(self.schema)
+
+    @property
+    def supports_records(self):
+        # Slightly unintuitive naming: this just checks the document type,
+        # not if there actually are any records.
+        if self.schema not in ['Pages', 'Table']:
+            return False
+        return True
+
+    @property
+    def supports_pages(self):
+        return self.schema == 'Pages'
 
     def update(self, data):
         props = ('title', 'summary', 'author', 'crawler', 'source_url',
@@ -126,13 +121,6 @@ class Document(db.Model, DatedModel, Metadata):
         pq = pq.filter(cls.collection_id == collection_id)
         pq.delete(synchronize_session=False)
 
-    def has_records(self):
-        # Slightly unintuitive naming: this just checks the document type,
-        # not if there actually are any records.
-        if self.type not in [self.TYPE_PDF, self.TYPE_TABULAR]:
-            return False
-        return True
-
     def insert_records(self, sheet, iterable, chunk_size=1000):
         chunk = []
         for index, data in enumerate(iterable):
@@ -168,7 +156,7 @@ class Document(db.Model, DatedModel, Metadata):
         if self.body_text is not None:
             yield self.body_text[:self.MAX_TEXT_LENGTH]
 
-        if self.has_records():
+        if self.supports_records:
             # iterate over all the associated records.
             length = 0
             pq = db.session.query(DocumentRecord)
@@ -213,7 +201,7 @@ class Document(db.Model, DatedModel, Metadata):
         document = q.first()
         if document is None:
             document = cls()
-            document.type = cls.TYPE_OTHER
+            document.schema = cls.COMMON_SCHEMA
             document.collection_id = collection.id
             document.collection = collection
             document.parent_id = parent_id
@@ -240,4 +228,4 @@ class Document(db.Model, DatedModel, Metadata):
         return q.first()
 
     def __repr__(self):
-        return '<Document(%r,%r,%r)>' % (self.id, self.type, self.title)
+        return '<Document(%r,%r,%r)>' % (self.id, self.schema, self.title)
