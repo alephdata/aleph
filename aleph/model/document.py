@@ -68,26 +68,13 @@ class Document(db.Model, DatedModel, Metadata):
         super(Document, self).__init__(**kw)
 
     def update(self, data):
-        self.title = data.get('title', self.meta.get('title'))
-        self.summary = data.get('summary', self.meta.get('summary'))
-        self.author = data.get('author', self.meta.get('author'))
-        self.crawler = data.get('crawler', self.meta.get('crawler'))
-        self.source_url = data.get('source_url', self.meta.get('source_url'))
-        self.file_name = data.get('file_name', self.meta.get('file_name'))
-        self.mime_type = data.get('mime_type', self.meta.get('mime_type'))
-        self.headers = data.get('headers', self.meta.get('headers', {}))
-        self.date = data.get('date', self.meta.get('date'))
-        self.authored_at = data.get('authored_at',
-                                    self.meta.get('authored_at'))
-        self.modified_at = data.get('modified_at',
-                                    self.meta.get('modified_at'))
-        self.published_at = data.get('published_at',
-                                     self.meta.get('published_at'))
-        self.retrieved_at = data.get('retrieved_at',
-                                     self.meta.get('retrieved_at'))
-        self.languages = data.get('languages', self.meta.get('languages'))
-        self.countries = data.get('countries', self.meta.get('countries'))
-        self.keywords = data.get('keywords', self.meta.get('keywords'))
+        props = ('title', 'summary', 'author', 'crawler', 'source_url',
+                 'file_name', 'mime_type', 'headers', 'date', 'authored_at',
+                 'modified_at', 'published_at', 'retrieved_at', 'languages',
+                 'countries', 'keywords')
+        for prop in props:
+            value = data.get(prop, self.meta.get(prop))
+            setattr(self, prop, value)
         db.session.add(self)
 
     def update_meta(self):

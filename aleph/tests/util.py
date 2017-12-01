@@ -16,6 +16,7 @@ from aleph.oauth import oauth
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
 UI_URL = 'http://aleph.ui/'
 
+
 class TestCase(FlaskTestCase):
 
     # Expose faker since it should be easy to use
