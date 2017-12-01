@@ -16,6 +16,7 @@ from aleph.util import ensure_list
 
 
 class Category(String):
+    """A category of collections, e.g. leaks, court cases, sanctions list."""
 
     def _validate(self, value):
         categories = get_config('COLLECTION_CATEGORIES', {})
@@ -24,6 +25,7 @@ class Category(String):
 
 
 class Language(String):
+    """A valid language code."""
 
     def _validate(self, value):
         if not languages.validate(value):
@@ -31,6 +33,7 @@ class Language(String):
 
 
 class Country(String):
+    """A valid country code."""
 
     def _validate(self, value):
         if not countries.validate(value):
@@ -38,6 +41,7 @@ class Country(String):
 
 
 class PartialDate(String):
+    """Any valid prefix of an ISO 8661 datetime string."""
 
     def _validate(self, value):
         if not dates.validate(value):
@@ -195,7 +199,6 @@ class DocumentSchema(Schema, DatedSchema):
     parent = Nested(DocumentReference())
     uploader_id = Integer(dump_only=True)
     error_message = String(dump_only=True)
-    # title = String(validate=Length(min=2, max=5000), missing=None)
     title = String()
     summary = String()
     countries = List(Country(), missing=[])
@@ -264,6 +267,7 @@ class MatchCollectionsSchema(Schema, DatedSchema):
 
 
 class SearchResultSchema(object):
+    """Can either be a Document or an Entity."""
 
     def dump(self, data, many=False):
         results = []

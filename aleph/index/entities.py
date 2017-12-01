@@ -31,6 +31,7 @@ def index_entity(entity):
         return delete_entity(entity.id)
 
     data = {
+        'name': entity.name,
         'foreign_ids': entity.foreign_ids,
         'created_at': entity.created_at,
         'updated_at': entity.updated_at,
@@ -135,12 +136,12 @@ def finalize_index(data, schema):
     properties = data.get('properties', {})
 
     texts = []
-    for prop in schema.properties:
-        if prop.name not in properties:
+    for name, prop in schema.properties.items():
+        if name not in properties:
             continue
         if prop.type_name in ['date', 'url', 'uri', 'country']:
             continue
-        texts.extend(ensure_list(properties[prop.name]))
+        texts.extend(ensure_list(properties[name]))
 
     data['text'] = index_form(texts)
     data = schema.invert(data)

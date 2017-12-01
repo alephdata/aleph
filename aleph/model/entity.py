@@ -102,6 +102,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     def update(self, entity):
         data = entity.get('properties')
         if is_mapping(data):
+            data['name'] = [entity.get('name')]
             self.data = self.schema.validate(data)
         elif self.data is None:
             self.data = {}

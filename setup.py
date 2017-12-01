@@ -6,7 +6,6 @@ setup(
     description="Document sifting web frontend",
     long_description="",
     classifiers=[
-        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
@@ -23,6 +22,7 @@ setup(
     install_requires=[],
     test_suite='nose.collector',
     entry_points={
+        'aleph.init': [],
         'aleph.analyzers': [
             'lang = aleph.analyze.language:LanguageAnalyzer',
             'emails = aleph.analyze.regex:EMailAnalyzer',
@@ -30,7 +30,6 @@ setup(
             'corasick = aleph.analyze.corasick_entity:AhoCorasickEntityAnalyzer',  # noqa
             'polyglot = aleph.analyze.polyglot_entity:PolyglotEntityAnalyzer'
         ],
-        'aleph.init': [],
         'console_scripts': [
             'aleph = aleph.manage:main',
         ]
