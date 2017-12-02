@@ -4,7 +4,7 @@ import logging
 from polyglot.text import Text
 
 from aleph.analyze.analyzer import Analyzer
-from aleph.model import DocumentTag, DocumentTagCollector
+from aleph.model import Document, DocumentTag, DocumentTagCollector
 
 log = logging.getLogger(__name__)
 
@@ -17,10 +17,17 @@ class PolyglotEntityAnalyzer(Analyzer):
         'I-ORG': DocumentTag.TYPE_ORGANIZATION,
         # 'I-LOC': DocumentTag.TYPE_LOCATION
     }
+    IGNORED = [
+        Document.SCHEMA_PACKAGE,
+        Document.SCHEMA_FOLDER,
+        Document.SCHEMA_IMAGE,
+        Document.SCHEMA_TABLE
+    ]
 
     def analyze(self, document):
-        if document.type in [document.TYPE_TABULAR, document.TYPE_OTHER]:
+        if document.schema in self.IGNORED:
             return
+
         collector = DocumentTagCollector(document, self.ORIGIN)
         text = document.text
         if text is None or len(text) <= self.MIN_LENGTH:
@@ -40,9 +47,9 @@ class PolyglotEntityAnalyzer(Analyzer):
                 collector.emit(label, self.TYPES[entity.tag])
 
         except ValueError as ve:
-            log.info('NER value error: %r', ve)
+            log.warning('NER value error: %r', ve)
         except Exception as ex:
             log.warning('NER failed: %r', ex)
         finally:
-            log.info('Polyglot extracted %s entities.', len(collector))
             collector.save()
+            log.info('Polyglot extracted %s entities.', len(collector))

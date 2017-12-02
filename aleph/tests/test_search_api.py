@@ -19,8 +19,7 @@ class SearchApiTestCase(TestCase):
         assert 'Secret Document' not in res.data, res.json
 
         _, headers = self.login(is_admin=True)
-        res = self.client.get('/api/2/search?q=banana',
-                              headers=headers)
+        res = self.client.get('/api/2/search?q=banana', headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 3, res.json
         assert 'Secret Document' in res.data, res.json
@@ -37,8 +36,11 @@ class SearchApiTestCase(TestCase):
         res = self.client.get('/api/2/search?facet=schema')
         assert res.status_code == 200, res
         facet = res.json['facets']['schema']
-        assert len(facet['values']) == 2
-        assert facet['values'][0]['label'] == 'Files', facet
+        assert len(facet['values']) == 4, facet
+        keys = [val['id'] for val in facet['values']]
+        assert 'PlainText' in keys, facet
+        assert 'Company' in keys, facet
+        assert 'Pages' in keys, facet
 
         res = self.client.get('/api/2/search?facet=schema&filter:schema=Company')  # noqa
         assert res.status_code == 200, res
@@ -46,11 +48,10 @@ class SearchApiTestCase(TestCase):
         assert len(facet['values']) == 1, facet['values']
         assert facet['values'][0]['label'] == 'Companies', facet
 
-        res = self.client.get('/api/2/search?facet=schema&post_filter:schema=Company')
+        res = self.client.get('/api/2/search?facet=schema&post_filter:schema=Company')  # noqa
         assert res.status_code == 200, res
         facet = res.json['facets']['schema']
-        assert len(facet['values']) == 2, facet['values']
-        assert facet['values'][0]['label'] == 'Files', facet
+        assert len(facet['values']) == 4, facet['values']
 
     def test_basic_filters(self):
         res = self.client.get('/api/2/search?filter:source_id=23')

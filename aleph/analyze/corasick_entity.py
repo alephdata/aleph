@@ -43,7 +43,7 @@ class AutomatonCache(object):
         q = Entity.all()
         for entity in q:
             for term in entity.regex_terms:
-                type_ = self.TYPES.get(entity.type)
+                type_ = self.TYPES.get(entity.schema)
                 if type_ is None:
                     continue
                 if term in matches:

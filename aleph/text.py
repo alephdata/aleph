@@ -11,12 +11,10 @@ CLEANER = Cleaner(
 
 
 def match_form(text):
-    """Turn a string into a form appropriate for name matching.
-
-    The goal of this function is not to retain a readable version of the given
-    string, but rather to yield a normalised version suitable for comparisons
-    and machine analysis.
-    """
+    """Turn a string into a form appropriate for name matching."""
+    # The goal of this function is not to retain a readable version of the
+    # string, but rather to yield a normalised version suitable for
+    # comparisons and machine analysis.
     return normalize(text, lowercase=True, ascii=True)
 
 
@@ -24,4 +22,6 @@ def sanitize_html(html_text):
     """Remove anything from the given HTML that must not show up in the UI."""
     # TODO: circumvent encoding declarations? 
     # TODO: make links relative the source_url?
+    if html_text is None:
+        return
     return CLEANER.clean_html(html_text)

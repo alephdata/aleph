@@ -2,6 +2,7 @@ import os
 import json
 import shutil
 from banal import is_mapping
+from followthemoney import model
 from storagelayer import checksum
 from flask import Blueprint, request
 from tempfile import mkdtemp
@@ -91,8 +92,7 @@ def ingest_upload(id):
             if storage.filename:
                 document.file_name = os.path.basename(storage.filename)
             document.update(meta)
-            ingest_document(document, path,
-                            role_id=request.authz.id)
+            ingest_document(document, path, role_id=request.authz.id)
             documents.append(document)
 
         if not len(request.files):
@@ -103,9 +103,9 @@ def ingest_upload(id):
             document = Document.by_keys(collection=collection,
                                         parent_id=parent_id,
                                         foreign_id=foreign_id)
+            document.schema = model['Folder'].name
             document.update(meta)
-            ingest_document(document, upload_dir,
-                            role_id=request.authz.id)
+            ingest_document(document, upload_dir, role_id=request.authz.id)
             documents.append(document)
     finally:
         shutil.rmtree(upload_dir)

@@ -1,5 +1,5 @@
 from aleph.core import es
-from aleph.index.core import entity_type, entity_index, entities_index
+from aleph.index.core import entity_index, entities_index
 
 
 def get_instance_stats(authz):
@@ -15,7 +15,6 @@ def get_instance_stats(authz):
         }
     }
     result = es.search(index=entities_index(),
-                       doc_type=entity_type(),
                        body=query)
     aggregations = result.get('aggregations')
     data = {
@@ -45,7 +44,6 @@ def get_collection_stats(collection_id):
         }
     }
     result = es.search(index=entity_index(),
-                       doc_type=entity_type(),
                        body=query)
     aggregations = result.get('aggregations')
     data = {

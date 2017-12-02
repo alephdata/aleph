@@ -2,9 +2,8 @@ from pprint import pprint  # noqa
 
 from aleph.core import es
 from aleph.index.stats import get_collection_stats
-from aleph.index.core import collection_type
 from aleph.index.core import collection_index, collections_index
-from aleph.index.core import entities_index, entity_type, entity_index
+from aleph.index.core import entities_index, entity_index
 from aleph.index.core import records_index
 from aleph.index.util import query_delete
 
@@ -34,7 +33,7 @@ def index_collection(collection):
         }
     data.update(get_collection_stats(collection.id))
     es.index(index=collection_index(),
-             doc_type=collection_type(),
+             doc_type='doc',
              id=collection.id,
              body=data)
 
@@ -49,7 +48,6 @@ def update_roles(collection):
         }
     }
     es.update_by_query(index=entity_index(),
-                       doc_type=entity_type(),
                        body=body,
                        wait_for_completion=False)
 
@@ -60,6 +58,6 @@ def delete_collection(collection_id, wait=True):
     query_delete(records_index(), query, wait=wait)
     query_delete(entities_index(), query, wait=wait)
     es.delete(index=collections_index(),
-              doc_type=collection_type(),
+              doc_type='doc',
               id=collection_id,
               ignore=[404])

@@ -9,7 +9,7 @@ from aleph.core import db, es, celery
 from aleph.model import Match, Collection, Document
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
-from aleph.index.core import entities_index, entity_type
+from aleph.index.core import entities_index
 from aleph.index.xref import entity_query, FIELDS_XREF
 from aleph.index.util import unpack_result
 from aleph.search import QueryParser, MatchQueryResult
@@ -29,7 +29,7 @@ def xref_item(item, collection_id=None):
                        })
     results = result.get('hits').get('hits')
     entity_id, document_id = None, None
-    if item.get('schema') == Document.SCHEMA:
+    if Document.SCHEMA in item.get('schemata'):
         document_id = item.get('id')
     else:
         entity_id = item.get('id')
@@ -68,10 +68,8 @@ def xref_collection(collection, other=None):
     }
     scanner = scan(es,
                    index=entities_index(),
-                   doc_type=entity_type(),
                    query=query,
-                   scroll='15m',
-                   size=1000)
+                   scroll='15m')
 
     for i, res in enumerate(scanner):
         # xref_item.delay(unpack_result(res), other_id)

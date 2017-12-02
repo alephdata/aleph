@@ -71,7 +71,6 @@ ENTITY_MAPPING = {
         },
         "schema": {"type": "keyword"},
         "schemata": {"type": "keyword"},
-        "type": {"type": "keyword"},
         "bulk": {"type": "boolean"},
         "status": {"type": "keyword"},
         "error_message": {"type": "text"},

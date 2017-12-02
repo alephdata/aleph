@@ -2,6 +2,7 @@ import logging
 from collections import OrderedDict
 from ingestors import Result
 from normality import stringify
+from followthemoney import model
 
 from aleph.core import db
 from aleph.model import Document, DocumentRecord
@@ -13,8 +14,19 @@ log = logging.getLogger(__name__)
 class DocumentResult(Result):
     """Wrapper to link a Document to an ingestor result object."""
 
+    SCHEMATA = {
+        Result.FLAG_DIRECTORY: Document.SCHEMA_FOLDER,
+        Result.FLAG_PLAINTEXT: Document.SCHEMA_TEXT,
+        Result.FLAG_PACKAGE: Document.SCHEMA_PACKAGE,
+        Result.FLAG_PDF: Document.SCHEMA_PDF,
+        Result.FLAG_HTML: Document.SCHEMA_HTML,
+        Result.FLAG_WORKBOOK: Document.SCHEMA_WORKBOOK,
+        Result.FLAG_IMAGE: Document.SCHEMA_IMAGE,
+        Result.FLAG_TABULAR: Document.SCHEMA_TABLE,
+        Result.FLAG_EMAIL: Document.SCHEMA_EMAIL,
+    }
+
     def __init__(self, manager, document, file_path=None, role_id=None):
-        document.type = Document.TYPE_OTHER
         document.pdf_version = None
         self.manager = manager
         self.role_id = role_id
@@ -32,17 +44,14 @@ class DocumentResult(Result):
                       size=document.file_size)
 
     def emit_html_body(self, html, text):
-        self.document.type = Document.TYPE_HTML
         self.document.body_raw = html
         self.document.body_text = stringify(text)
 
     def emit_text_body(self, text):
-        self.document.type = Document.TYPE_SCROLL
         self.document.body_text = stringify(text)
 
     def emit_page(self, index, text):
         """Emit a plain text page."""
-        self.document.type = Document.TYPE_PDF
         text = stringify(text)
         record = DocumentRecord()
         record.document_id = self.document.id
@@ -60,11 +69,9 @@ class DocumentResult(Result):
 
     def emit_rows(self, iterator):
         """Emit rows of a tabular iterator."""
-        self.document.type = Document.TYPE_TABULAR
         self.document.insert_records(0, self._emit_iterator_rows(iterator))
 
     def emit_pdf_alternative(self, file_path):
-        self.document.type = Document.TYPE_PDF
         content_hash = self.manager.archive.archive_file(file_path)
         self.document.pdf_version = content_hash
 
@@ -76,9 +83,14 @@ class DocumentResult(Result):
             doc.error_message = None
         else:
             doc.status = Document.STATUS_FAIL
-            doc.type = Document.TYPE_OTHER
             doc.error_message = stringify(self.error_message)
 
+        schema = model['Document']
+        for flag, name in self.SCHEMATA.items():
+            if flag in self.flags:
+                schema = model[name]
+
+        doc.schema = schema.name
         doc.foreign_id = stringify(self.id)
         doc.content_hash = self.checksum or doc.content_hash
         doc.uploader_id = self.role_id or doc.uploader_id

@@ -7,14 +7,16 @@ from faker import Factory
 
 from aleph.model import Role, Document, create_system_roles
 from aleph.index import delete_index, upgrade_search, flush_index
+from aleph.index.core import collection_index, entity_index, record_index
 from aleph.logic.documents import process_document
 from aleph.logic import reindex_entities
-from aleph.core import db, create_app
+from aleph.core import db, es, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
 
-FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
+APP_NAME = 'aleph_test_instance'
 UI_URL = 'http://aleph.ui/'
+FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
 
 
 class TestCase(FlaskTestCase):
@@ -24,7 +26,6 @@ class TestCase(FlaskTestCase):
 
     def create_app(self):
         oauth.remote_apps = {}
-        app_name = 'aleph_test_name'
         app = create_app({
             'DEBUG': True,
             'TESTING': True,
@@ -33,7 +34,7 @@ class TestCase(FlaskTestCase):
             'ARCHIVE_TYPE': 'file',
             'ARCHIVE_PATH': self.temp_dir,
             'APP_UI_URL': UI_URL,
-            'APP_NAME': app_name,
+            'APP_NAME': APP_NAME,
             'PRESERVE_CONTEXT_ON_EXCEPTION': False,
             'CELERY_ALWAYS_EAGER': True
         })
@@ -70,8 +71,21 @@ class TestCase(FlaskTestCase):
         flush_index()
 
     def setUp(self):
-        delete_index()
-        upgrade_search()
+        if not hasattr(TestCase, '_global_test_state'):
+            TestCase._global_test_state = True
+            delete_index()
+            upgrade_search()
+        else:
+            indexes = [
+                collection_index(),
+                entity_index(),
+                record_index()
+            ]
+            es.delete_by_query(index=indexes,
+                               body={'query': {'match_all': {}}},
+                               refresh=True,
+                               conflicts='proceed')
+
         db.drop_all()
         db.create_all()
         create_system_roles()
@@ -84,7 +98,7 @@ class TestCase(FlaskTestCase):
         cls.temp_dir = mkdtemp()
         try:
             os.makedirs(cls.temp_dir)
-        except:
+        except Exception:
             pass
 
     @classmethod

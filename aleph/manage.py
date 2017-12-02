@@ -159,7 +159,7 @@ def upgrade():
 
 @manager.command
 def installdata():
-    """Create or upgrade the search index and database."""
+    """Install data needed for linguistic processing."""
     install_analyzers()
 
 
