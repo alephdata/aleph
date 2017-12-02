@@ -39,7 +39,19 @@ Insider the Aleph repository you will find a `Dockerfile` and a
 `docker-compose.dev.yml` files. These are used to build a container with the
 application and start the relevant services.
 
-To proceed run:
+For ElasticSearch, you need to run: 
+
+```
+sysctl -w vm.max_map_count=262144
+```
+
+Or to set this permanently, in `/etc/sysctl.conf` add:
+
+```
+vm.max_map_count=262144
+```
+
+Then, to proceed run:
 
  1. `make build` to start the application and relevant services. You can
     leave this open to have access to the development logs.
@@ -53,12 +65,9 @@ Your repository is mounted inside the docker container under the name
 
 ### Building from a clean state
 
-You can also build the Aleph images locally. This could be useful while working
-on the Dockerfile changes and new dependency upgrades.
+You can also build the Aleph images locally. This could be useful while working on the Dockerfile changes and new dependency upgrades.
 
-Aleph provides two commands to build the images. First one is `make base`, this
-will build the `alephdata/base` image (this is an intermediary image with
-system-level dependencies for Aleph). The second one is `make build`, this will
+To build the image you can run `make build`, which will
 build the `alephdata/aleph` image (this will generate a production ready image).
 
 <!-- ## Front-end
