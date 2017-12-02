@@ -9,7 +9,7 @@ from elasticsearch.helpers import BulkIndexError
 from elasticsearch import TransportError
 
 from aleph.core import es
-from aleph.index.core import entity_type, entity_index, entities_index
+from aleph.index.core import entity_index, entities_index
 from aleph.index.util import bulk_op, index_form
 from aleph.index.util import index_names, unpack_result
 from aleph.util import ensure_list
@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 def delete_entity(entity_id):
     """Delete an entity from the index."""
     es.delete(index=entities_index(),
-              doc_type=entity_type(),
+              doc_type='doc',
               id=entity_id,
               ignore=[404])
 
@@ -50,7 +50,7 @@ def index_entity(entity):
 
     data = finalize_index(data, entity.model)
     es.index(index=entity_index(),
-             doc_type=entity_type(),
+             doc_type='doc',
              id=entity.id,
              body=data)
     data['id'] = entity.id
@@ -60,7 +60,7 @@ def index_entity(entity):
 def get_entity(entity_id):
     """Fetch an entity from the index."""
     result = es.get(index=entities_index(),
-                    doc_type=entity_type(),
+                    doc_type='doc',
                     id=entity_id,
                     ignore=[404])
     entity = unpack_result(result)
@@ -88,7 +88,7 @@ def _index_updates(collection, entities):
         return
 
     result = es.mget(index=entities_index(),
-                     doc_type=entity_type(),
+                     doc_type='doc',
                      body={'ids': entities.keys()},
                      _source=['schema', 'properties', 'created_at'])
     for doc in result.get('docs', []):
@@ -113,7 +113,7 @@ def _index_updates(collection, entities):
         yield {
             '_id': doc_id,
             '_index': entity_index(),
-            '_type': entity_type(),
+            '_type': 'doc',
             '_source': entity
         }
 

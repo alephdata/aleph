@@ -14,8 +14,9 @@ from aleph.core import db, es, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
 
-FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
+APP_NAME = 'aleph_test_instance'
 UI_URL = 'http://aleph.ui/'
+FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
 
 
 class TestCase(FlaskTestCase):
@@ -25,7 +26,6 @@ class TestCase(FlaskTestCase):
 
     def create_app(self):
         oauth.remote_apps = {}
-        app_name = 'aleph_test_name'
         app = create_app({
             'DEBUG': True,
             'TESTING': True,
@@ -34,7 +34,7 @@ class TestCase(FlaskTestCase):
             'ARCHIVE_TYPE': 'file',
             'ARCHIVE_PATH': self.temp_dir,
             'APP_UI_URL': UI_URL,
-            'APP_NAME': app_name,
+            'APP_NAME': APP_NAME,
             'PRESERVE_CONTEXT_ON_EXCEPTION': False,
             'CELERY_ALWAYS_EAGER': True
         })

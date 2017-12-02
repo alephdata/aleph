@@ -11,11 +11,6 @@ def entities_index():
     return entity_index()
 
 
-def entity_type():
-    """doc_type for all entities."""
-    return 'base'
-
-
 def record_index():
     """Index that us currently written by new queries."""
     return '%s-record-v1' % app_name
@@ -26,11 +21,6 @@ def records_index():
     return record_index()
 
 
-def record_type():
-    """doc_type for all records."""
-    return 'base'
-
-
 def collection_index():
     """Index that us currently written by new queries."""
     return '%s-collection-v1' % app_name
@@ -39,8 +29,3 @@ def collection_index():
 def collections_index():
     """Combined index to run all queries against."""
     return collection_index()
-
-
-def collection_type():
-    """doc_type for all collections."""
-    return 'base'

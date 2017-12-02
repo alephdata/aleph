@@ -5,7 +5,7 @@ from elasticsearch.helpers import BulkIndexError
 
 from aleph.core import db
 from aleph.model import DocumentRecord
-from aleph.index.core import record_type, record_index, records_index
+from aleph.index.core import record_index, records_index
 from aleph.index.util import bulk_op, query_delete, index_form
 
 log = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ def generate_records(document):
         yield {
             '_id': record.id,
             '_index': record_index(),
-            '_type': record_type(),
+            '_type': 'doc',
             '_source': {
                 'document_id': document.id,
                 'collection_id': document.collection_id,

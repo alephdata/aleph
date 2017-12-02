@@ -1,13 +1,12 @@
 import logging
 from pprint import pprint  # noqa
 from banal import clean_dict
-from followthemoney import model
 from followthemoney.types import TYPES
 
 from aleph.core import celery, db, es
 from aleph.model import Document, DocumentTag
 from aleph.index.records import index_records, clear_records
-from aleph.index.core import entity_type, entity_index, entities_index
+from aleph.index.core import entity_index, entities_index
 from aleph.index.util import index_form, index_names, unpack_result
 
 log = logging.getLogger(__name__)
@@ -94,7 +93,7 @@ def index_document(document):
     data = clean_dict(data)
     # pprint(data)
     es.index(index=entity_index(),
-             doc_type=entity_type(),
+             doc_type='doc',
              body=data,
              id=document.id)
     data['id'] = document.id
@@ -104,7 +103,7 @@ def index_document(document):
 def get_document(document_id):
     """Fetch a document from the index."""
     result = es.get(index=entities_index(),
-                    doc_type=entity_type(),
+                    doc_type='doc',
                     id=document_id,
                     ignore=[404])
     document = unpack_result(result)
@@ -116,6 +115,6 @@ def get_document(document_id):
 def delete_document(document_id):
     clear_records(document_id)
     es.delete(index=entities_index(),
-              doc_type=entity_type(),
+              doc_type='doc',
               id=document_id,
               ignore=[404])

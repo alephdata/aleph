@@ -108,7 +108,6 @@ class Query(object):
         """Execute the query as assmbled."""
         # pprint(self.get_body())
         return es.search(index=self.get_index(),
-                         doc_type=self.get_doc_type(),
                          body=self.get_body())
 
     def scan(self):
@@ -120,7 +119,6 @@ class Query(object):
         }
         return scan(es,
                     index=self.get_index(),
-                    doc_type=self.get_doc_type(),
                     query=body)
 
     @classmethod

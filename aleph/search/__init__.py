@@ -5,9 +5,9 @@ from aleph.core import es
 from aleph.model import Document, DocumentRecord
 from aleph.index.xref import entity_query
 from aleph.index.util import unpack_result
-from aleph.index.core import entities_index, entity_type
-from aleph.index.core import records_index, record_type
-from aleph.index.core import collections_index, collection_type
+from aleph.index.core import entities_index
+from aleph.index.core import records_index
+from aleph.index.core import collections_index
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.result import SearchQueryResult  # noqa
@@ -36,9 +36,6 @@ class DocumentsQuery(AuthzQuery):
 
     def get_index(self):
         return entities_index()
-
-    def get_doc_type(self):
-        return entity_type()
 
 
 class EntityDocumentsQuery(DocumentsQuery):
@@ -127,9 +124,6 @@ class EntitiesQuery(AuthzQuery):
     def get_index(self):
         return entities_index()
 
-    def get_doc_type(self):
-        return entity_type()
-
 
 class SimilarEntitiesQuery(EntitiesQuery):
     """Given an entity, find the most similar other entities."""
@@ -183,9 +177,6 @@ class CombinedQuery(AuthzQuery):
     def get_index(self):
         return entities_index()
 
-    def get_doc_type(self):
-        return entity_type()
-
 
 class CollectionsQuery(AuthzQuery):
     RETURN_FIELDS = True
@@ -198,9 +189,6 @@ class CollectionsQuery(AuthzQuery):
 
     def get_index(self):
         return collections_index()
-
-    def get_doc_type(self):
-        return collection_type()
 
 
 class MatchQueryResult(DatabaseQueryResult):
@@ -217,7 +205,7 @@ class MatchQueryResult(DatabaseQueryResult):
         ids = {'ids': list(ids)}
 
         result = es.mget(index=entities_index(),
-                         doc_type=entity_type(),
+                         doc_type='doc',
                          body=ids)
         for doc in result.get('docs', []):
             entity = unpack_result(doc)
@@ -266,9 +254,6 @@ class RecordsQuery(Query):
 
     def get_index(self):
         return records_index()
-
-    def get_doc_type(self):
-        return record_type()
 
     def get_sort(self):
         if len(self.rows) or self.parser.text:
