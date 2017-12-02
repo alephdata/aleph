@@ -37,3 +37,9 @@ def flush_index():
     es.indices.refresh(index=collection_index())
     es.indices.refresh(index=entity_index())
     es.indices.refresh(index=record_index())
+
+
+def clear_index():
+    indexes = [collection_index(), entity_index(), record_index()]
+    q = {'query': {'match_all': {}}}
+    es.delete_by_query(index=indexes, body=q, refresh=True)

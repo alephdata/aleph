@@ -1,9 +1,9 @@
-from aleph.core import es_index
+from aleph.core import app_name
 
 
 def entity_index():
     """Index that us currently written by new queries."""
-    return '%s-entity-v1' % es_index
+    return '%s-entity-v1' % app_name
 
 
 def entities_index():
@@ -18,7 +18,7 @@ def entity_type():
 
 def record_index():
     """Index that us currently written by new queries."""
-    return '%s-record-v1' % es_index
+    return '%s-record-v1' % app_name
 
 
 def records_index():
@@ -33,7 +33,7 @@ def record_type():
 
 def collection_index():
     """Index that us currently written by new queries."""
-    return '%s-collection-v1' % es_index
+    return '%s-collection-v1' % app_name
 
 
 def collections_index():

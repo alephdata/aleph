@@ -27,6 +27,7 @@ class PolyglotEntityAnalyzer(Analyzer):
     def analyze(self, document):
         if document.schema in self.IGNORED:
             return
+
         collector = DocumentTagCollector(document, self.ORIGIN)
         text = document.text
         if text is None or len(text) <= self.MIN_LENGTH:
@@ -46,9 +47,9 @@ class PolyglotEntityAnalyzer(Analyzer):
                 collector.emit(label, self.TYPES[entity.tag])
 
         except ValueError as ve:
-            log.info('NER value error: %r', ve)
+            log.warning('NER value error: %r', ve)
         except Exception as ex:
             log.warning('NER failed: %r', ex)
         finally:
-            log.info('Polyglot extracted %s entities.', len(collector))
             collector.save()
+            log.info('Polyglot extracted %s entities.', len(collector))

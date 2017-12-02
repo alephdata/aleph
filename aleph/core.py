@@ -141,14 +141,9 @@ def get_app_secret_key():
 def get_es():
     app = current_app._get_current_object()
     if not hasattr(app, '_es_instance'):
-        app._es_instance = Elasticsearch(app.config.get('ELASTICSEARCH_URL'),
-                                         timeout=120)
+        url = app.config.get('ELASTICSEARCH_URL')
+        app._es_instance = Elasticsearch(url, timeout=120)
     return app._es_instance
-
-
-def get_es_index():
-    app = current_app._get_current_object()
-    return app.config.get('ELASTICSEARCH_INDEX', app.config.get('APP_NAME'))
 
 
 def get_archive():
@@ -172,7 +167,6 @@ app_name = LocalProxy(get_app_name)
 app_title = LocalProxy(get_app_title)
 app_ui_url = LocalProxy(get_app_ui_url)
 es = LocalProxy(get_es)
-es_index = LocalProxy(get_es_index)
 archive = LocalProxy(get_archive)
 secret_key = LocalProxy(get_app_secret_key)
 language_whitelist = LocalProxy(get_language_whitelist)

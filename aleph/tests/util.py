@@ -7,9 +7,10 @@ from faker import Factory
 
 from aleph.model import Role, Document, create_system_roles
 from aleph.index import delete_index, upgrade_search, flush_index
+from aleph.index.core import collection_index, entity_index, record_index
 from aleph.logic.documents import process_document
 from aleph.logic import reindex_entities
-from aleph.core import db, create_app
+from aleph.core import db, es, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
 
@@ -70,8 +71,21 @@ class TestCase(FlaskTestCase):
         flush_index()
 
     def setUp(self):
-        delete_index()
-        upgrade_search()
+        if not hasattr(TestCase, '_global_test_state'):
+            TestCase._global_test_state = True
+            delete_index()
+            upgrade_search()
+        else:
+            indexes = [
+                collection_index(),
+                entity_index(),
+                record_index()
+            ]
+            es.delete_by_query(index=indexes,
+                               body={'query': {'match_all': {}}},
+                               refresh=True,
+                               conflicts='proceed')
+
         db.drop_all()
         db.create_all()
         create_system_roles()
@@ -84,7 +98,7 @@ class TestCase(FlaskTestCase):
         cls.temp_dir = mkdtemp()
         try:
             os.makedirs(cls.temp_dir)
-        except:
+        except Exception:
             pass
 
     @classmethod
