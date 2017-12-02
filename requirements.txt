@@ -30,7 +30,7 @@ PyYAML == 3.11
 PyICU == 1.9.7
 chardet >= 3.0.3
 cchardet >= 2.1.1
-pyahocorasick == 1.1.4
+pyahocorasick == 1.1.6
 pycrypto >= 2.6.1
 cryptography >= 2.1.3
 pylru >= 1.0.9
