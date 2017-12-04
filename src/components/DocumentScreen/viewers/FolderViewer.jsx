@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { connect } from 'react-refetch';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
+import { fetchChildDocs } from 'src/actions';
 
 function getPath(url) {
   return new URL(url).pathname;
@@ -20,14 +22,27 @@ class DocAsListItem extends Component {
 }
 
 class FolderViewer extends Component {
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { document, childDocs } = this.props;
+    if (childDocs === undefined) {
+      this.props.fetchChildDocs(document.id);
+    }
+  }
+
   render() {
-    const { document, result } = this.props;
+    const { childDocs } = this.props;
     return (
       <div className="FolderViewer">
-        {result.pending && 'loading..'}
-        {result.rejected && <span>Error: {JSON.stringify(result.meta)}</span>}
         <ul>
-          {result.fulfilled && result.value.results.map(childDoc => (
+          {childDocs && childDocs.map(childDoc => (
             <DocAsListItem key={childDoc.id} document={childDoc} />
           ))}
         </ul>
@@ -36,6 +51,14 @@ class FolderViewer extends Component {
   }
 }
 
-export default connect(props => ({
-  result: `//localhost:5000/api/2/documents?filter%3Aparent.id=${props.document.id}`,
-}))(FolderViewer);
+const mapStateToProps = (state, ownProps) => {
+  const { childDocIdsResult } = ownProps.document;
+  const childDocs = childDocIdsResult !== undefined
+    ? childDocIdsResult.results.map(id => state.documentCache[id])
+    : undefined;
+  return {
+    childDocs,
+  };
+};
+
+export default connect(mapStateToProps, { fetchChildDocs })(FolderViewer);

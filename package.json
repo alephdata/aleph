@@ -19,7 +19,6 @@
     "react-intl-cra": "^0.2.7",
     "react-intl-po": "^2.0.2",
     "react-redux": "^5.0.4",
-    "react-refetch": "^1.0.3",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.0",
     "react-waypoint": "^7.3.1",
