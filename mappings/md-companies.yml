@@ -1,0 +1,102 @@
+md-companies:
+  label: Moldova Companies Registry
+  info_url: http://date.gov.md/ckan/en/dataset/11736-date-din-registrul-de-stat-al-unitatilor-de-drept-privind-intreprinderile-inregistrate-in-repu
+  category: company
+  summary: >
+    Registrul de stat al unităţilor de drept privind întreprinderile
+    înregistrate în Republica Moldova
+  roles:
+    - guest
+  queries:
+    - csv_url: http://archive.pudo.org/md-companies/latest/companies.csv
+      entities:
+        company:
+          schema: Company
+          keys:
+            - IDNO
+            - Denumirea_completă
+          properties:
+            name:
+              column: Denumirea_completă
+            registrationNumber:
+              column: IDNO
+            incorporationDate:
+              column: Data_înregistrării
+            address:
+              column: Adresa
+            jurisdiction:
+              literal: MD
+            legalForm:
+              column: Forma_org
+            status:
+              column: Statutul
+    - csv_url: http://archive.pudo.org/md-companies/latest/directors.csv
+      entities:
+        company:
+          schema: Company
+          keys:
+            - Company_IDNO
+            - Company_Name
+        director:
+          schema: LegalEntity
+          keys:
+            - Company_Name
+            - Company_IDNO
+            - Director
+          properties:
+            name:
+              column: Director
+        directorship:
+          schema: Directorship
+          keys:
+            - Director
+          properties:
+            director:
+              entity: director
+            organization:
+              entity: company
+    - csv_url: http://archive.pudo.org/md-companies/latest/founders.csv
+      entities:
+        company:
+          schema: Company
+          keys:
+            - Company_IDNO
+            - Company_Name
+        founder:
+          schema: LegalEntity
+          keys:
+            - Company_IDNO
+            - Company_Name
+            - Director
+          properties:
+            name:
+              column: Founder
+        ownership:
+          schema: Ownership
+          keys:
+            - Director
+          properties:
+            owner:
+              entity: founder
+            asset:
+              entity: company
+    - csv_url: http://archive.pudo.org/md-companies/latest/licensed.csv
+      entities:
+        company:
+          schema: Company
+          keys:
+            - Company_IDNO
+            - Company_Name
+          properties:
+            sector:
+              column: Denumire
+    - csv_url: http://archive.pudo.org/md-companies/latest/unlicensed.csv
+      entities:
+        company:
+          schema: Company
+          keys:
+            - Company_IDNO
+            - Company_Name
+          properties:
+            classification:
+              column: Denumire

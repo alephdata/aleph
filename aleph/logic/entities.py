@@ -117,9 +117,10 @@ def bulk_load_query(collection, query):
             base = entities.get(entity_id, {})
             entities[entity_id] = merge_data(entity, base)
             total += 1
-            if idx % 1000 == 0:
-                log.info("[%s] Loaded %s records, %s entities...",
-                         collection.foreign_id, idx, total)
+
+        if idx % 1000 == 0:
+            log.info("[%s] Loaded %s records, %s entities...",
+                     collection.foreign_id, idx, total)
 
         if len(entities) >= BULK_PAGE:
             index_bulk(collection, entities, chunk_size=BULK_PAGE)
