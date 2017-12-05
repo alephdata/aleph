@@ -52,7 +52,7 @@ class FolderViewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { childDocIdsResult } = ownProps.document;
+  const childDocIdsResult = state.documentChildrenResults[ownProps.document.id];
   const childDocs = childDocIdsResult !== undefined
     ? childDocIdsResult.results.map(id => state.documentCache[id])
     : undefined;

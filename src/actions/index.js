@@ -117,7 +117,7 @@ export const searchDocuments = query => async dispatch => {
 export const fetchChildDocs = id => async dispatch => {
   dispatch({
     type: 'FETCH_CHILDDOCS_REQUEST',
-    payload: id,
+    payload: { id },
   });
   // Run a search for the documents. This will load the (stubs of the) documents
   // into the documentCache for us.
