@@ -8,16 +8,17 @@ const initialState = {
 };
 
 const searchResults = (state = initialState, action) => {
-  switch (action.type) {
+  const { type, payload } = action;
+  switch (type) {
     case 'FETCH_SEARCH_REQUEST':
       return { ...state, isFetching: true }
     case 'FETCH_SEARCH_SUCCESS':
-      return { ...state, ...action.result, isFetching: false }
+      return { ...state, ...payload.result, isFetching: false }
     case 'FETCH_SEARCH_NEXT_REQUEST':
       return { ...state, isFetchingNext: true }
     case 'FETCH_SEARCH_NEXT_SUCCESS':
-      return { ...state, ...action.result, isFetchingNext: false,
-        results: uniqBy([...state.results, ...action.result.results], 'id')};
+      return { ...state, ...payload.result, isFetchingNext: false,
+        results: uniqBy([...state.results, ...payload.result.results], 'id')};
     default:
       return state;
   }

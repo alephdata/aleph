@@ -5,13 +5,14 @@ const initialState = {
 };
 
 const collections = (state = initialState, action) => {
-  switch (action.type) {
+  const { type, payload } = action;
+  switch (type) {
     case 'FETCH_COLLECTIONS_SUCCESS':
       return {
-        ...action.collections,
+        ...payload.collections,
         results: {
           ...state.results,
-          ...keyBy(action.collections.results, 'id')
+          ...keyBy(payload.collections.results, 'id')
         }
       };
     default:

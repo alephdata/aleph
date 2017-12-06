@@ -3,11 +3,12 @@ const initialState = {
 };
 
 const metadata = (state = initialState, action) => {
-  switch (action.type) {
+  const { type, payload } = action;
+  switch (type) {
     case 'FETCH_METADATA_REQUEST':
-      return { ...action.metadata, isLoaded: false }
+      return { isLoaded: false };
     case 'FETCH_METADATA_SUCCESS':
-      return { ...action.metadata, isLoaded: true }
+      return { ...payload.metadata, isLoaded: true };
     default:
       return state;
   }

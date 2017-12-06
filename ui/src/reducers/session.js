@@ -14,9 +14,10 @@ const login = (token) => {
 };
 
 const session = (state = initialState, action) => {
-  switch (action.type) {
+  const { type, payload } = action;
+  switch (type) {
     case 'LOGIN':
-      return login(action.token);
+      return login(payload.token);
     case 'LOGOUT':
       return {loggedIn: false};
     default:

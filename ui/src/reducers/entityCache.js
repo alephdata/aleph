@@ -1,9 +1,10 @@
 const initialState = {};
 
 const entityCache = (state = initialState, action) => {
-  if (!action.type.startsWith('FETCH_ENTITY_')) return state;
-  const { id, data } = action.payload;
-  switch (action.type) {
+  const { type, payload } = action;
+  if (!type.startsWith('FETCH_ENTITY_')) return state;
+  const { id, data } = payload;
+  switch (type) {
     case 'FETCH_ENTITY_REQUEST':
       return { ...state, [id]: { _isFetching: true } };
     case 'FETCH_ENTITY_SUCCESS':

@@ -10,7 +10,7 @@ export const fetchCollections = () => (dispatch) => {
       .then(response => {
         dispatch({
           type: 'FETCH_COLLECTIONS_SUCCESS',
-          collections: response.data
+          payload: { collections: response.data },
         });
 
         if (page < response.data.pages) {
@@ -25,7 +25,7 @@ export const fetchCollections = () => (dispatch) => {
 export const fetchSearchResults = (filters) => (dispatch) => {
   dispatch({
     type: 'FETCH_SEARCH_REQUEST',
-    filters
+    payload: { filters },
   });
 
   return endpoint.get('search', { params: filters })
@@ -34,8 +34,7 @@ export const fetchSearchResults = (filters) => (dispatch) => {
 
       dispatch({
         type: 'FETCH_SEARCH_SUCCESS',
-        filters,
-        result
+        payload: { filters, result },
       });
     });
 };
@@ -52,7 +51,7 @@ export const fetchNextSearchResults = () => (dispatch, getState) => {
       .then(response => {
         dispatch({
           type: 'FETCH_SEARCH_NEXT_SUCCESS',
-          result: response.data
+          payload: { result: response.data },
         });
       });
   }
@@ -66,7 +65,7 @@ export const fetchMetadata = () => (dispatch) => {
   return endpoint.get('metadata')
     .then((response) => dispatch({
       type: 'FETCH_METADATA_SUCCESS',
-      metadata: response.data
+      payload: { metadata: response.data },
     }));
 };
 

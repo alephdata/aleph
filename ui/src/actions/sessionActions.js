@@ -1,7 +1,7 @@
 import {endpoint} from 'src/app/api';
 
 export const loginWithToken = token => dispatch => {
-  dispatch({type: 'LOGIN', token});
+  dispatch({type: 'LOGIN', payload: { token } });
 };
 
 // TODO: Show success/error toasts
