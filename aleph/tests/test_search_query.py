@@ -2,8 +2,10 @@ from unittest import TestCase
 from aleph.search.parser import SearchQueryParser
 from aleph.search.query import Query
 
+
 def query(args):
     return Query(SearchQueryParser(args, None))
+
 
 class QueryTestCase(TestCase):
     def setUp(self):

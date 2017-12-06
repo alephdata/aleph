@@ -25,8 +25,9 @@ def convert_filters(filters):
 
 class Query(object):
     RESULT_CLASS = SearchQueryResult
-    RETURN_FIELDS = True
-    TEXT_FIELDS = ['_all']
+    INCLUDE_FIELDS = None
+    EXCLUDE_FIELDS = None
+    TEXT_FIELDS = ['text']
     SORT = {
         'default': ['_score']
     }
@@ -83,6 +84,14 @@ class Query(object):
     def get_highlight(self):
         return {}
 
+    def get_source(self):
+        source = {}
+        if self.INCLUDE_FIELDS:
+            source['include'] = self.INCLUDE_FIELDS
+        elif self.EXCLUDE_FIELDS:
+            source['exclude'] = self.EXCLUDE_FIELDS
+        return source
+
     def get_body(self):
         body = {
             'query': self.get_query(),
@@ -91,7 +100,7 @@ class Query(object):
             'aggregations': self.get_aggregations(),
             'sort': self.get_sort(),
             'highlight': self.get_highlight(),
-            '_source': self.RETURN_FIELDS
+            '_source': self.get_source()
         }
 
         post_filters = self.get_post_filters()
@@ -115,7 +124,7 @@ class Query(object):
         without aggregations."""
         body = {
             'query': self.get_query(),
-            '_source': self.RETURN_FIELDS
+            '_source': self.get_source()
         }
         return scan(es,
                     index=self.get_index(),

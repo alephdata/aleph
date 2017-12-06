@@ -18,10 +18,7 @@ log = logging.getLogger(__name__)
 
 class DocumentsQuery(AuthzQuery):
     TEXT_FIELDS = ['title^3', 'text']
-    RETURN_FIELDS = ['collection_id', 'title', 'file_name', 'extension',
-                     'languages', 'countries', 'source_url', 'created_at',
-                     'updated_at', 'type', 'summary', 'status',
-                     'error_message', 'content_hash', 'parent', '$children']
+    EXCLUDE_FIELDS = ['roles', 'text']
     SORT = {
         'default': ['_score', {'name.kw': 'asc'}],
         'name': [{'name.kw': 'asc'}, '_score'],
@@ -113,9 +110,7 @@ class AlertDocumentsQuery(EntityDocumentsQuery):
 
 class EntitiesQuery(AuthzQuery):
     TEXT_FIELDS = ['name^3', 'names^2', 'text']
-    RETURN_FIELDS = ['collection_id', 'roles', 'name', 'data', 'countries',
-                     'schema', 'schemata', 'properties', 'created_at',
-                     'updated_at', 'creator', '$bulk']
+    EXCLUDE_FIELDS = ['roles', 'text']
     SORT = {
         'default': ['_score', {'name.kw': 'asc'}],
         'name': [{'name.kw': 'asc'}, '_score']
@@ -139,7 +134,7 @@ class SimilarEntitiesQuery(EntitiesQuery):
 
 class SuggestEntitiesQuery(EntitiesQuery):
     """Given a text prefix, find the most similar other entities."""
-    RETURN_FIELDS = ['name', 'schema', 'fingerprints', '$documents']
+    INCLUDE_FIELDS = ['name', 'schema', 'fingerprints']
     SORT = {
         'default': ['_score', {'name.kw': 'asc'}]
     }
@@ -166,9 +161,7 @@ class SuggestEntitiesQuery(EntitiesQuery):
 
 class CombinedQuery(AuthzQuery):
     TEXT_FIELDS = ['title^3', 'name^3', 'names^2', 'text']
-    RETURN_FIELDS = set(DocumentsQuery.RETURN_FIELDS)
-    RETURN_FIELDS = list(set(EntitiesQuery.RETURN_FIELDS).union(RETURN_FIELDS))
-
+    EXCLUDE_FIELDS = ['roles', 'text']
     SORT = {
         'default': ['_score', {'name.kw': 'asc'}],
         'name': [{'name.kw': 'asc'}, '_score']
@@ -179,7 +172,6 @@ class CombinedQuery(AuthzQuery):
 
 
 class CollectionsQuery(AuthzQuery):
-    RETURN_FIELDS = True
     TEXT_FIELDS = ['label^3', 'summary']
     SORT = {
         'default': [{'count': 'desc'}, {'label.kw': 'asc'}],
@@ -240,7 +232,7 @@ class RecordsQueryResult(SearchQueryResult):
 
 class RecordsQuery(Query):
     RESULT_CLASS = RecordsQueryResult
-    RETURN_FIELDS = ['document_id', 'sheet', 'index']
+    EXCLUDE_FIELDS = ['text']
     TEXT_FIELDS = ['text']
     SORT = {
         'default': [{'index': 'asc'}],

@@ -86,6 +86,7 @@ ENTITY_MAPPING = {
         "extension": {"type": "keyword"},
         "mime_type": {"type": "keyword"},
         "encoding": {"type": "keyword"},
+        "entities": {"type": "keyword"},
         "languages": {"type": "keyword"},
         "countries": {"type": "keyword"},
         "keywords": {"type": "keyword"},
