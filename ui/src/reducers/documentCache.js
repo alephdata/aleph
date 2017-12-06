@@ -1,4 +1,6 @@
-import { assign, assignWith, keyBy } from 'lodash/fp';
+import { assign, assignWith } from 'lodash/fp';
+
+import { normaliseSearchResult } from './util';
 
 const initialState = {};
 
@@ -12,14 +14,10 @@ const documentCache = (state = initialState, action) => {
     case 'SEARCH_DOCUMENTS_SUCCESS':
       // Search results contain only a subset of the document's fields, so we
       // avoid erasing the existing value. A shallow merge of fields should do.
-      return assignWith(assign)(state, docsFromSearchResult(payload.data));
+      return assignWith(assign)(state, normaliseSearchResult(payload.result).objects);
     default:
       return state;
   }
 };
-
-function docsFromSearchResult(result) {
-  return keyBy('id')(result.results);
-}
 
 export default documentCache;

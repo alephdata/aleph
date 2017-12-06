@@ -1,5 +1,7 @@
 import uniq from 'lodash/uniq';
 
+import { normaliseSearchResult } from './util';
+
 const initialState = {};
 
 const documentChildrenResults = (state = initialState, action) => {
@@ -13,7 +15,7 @@ const documentChildrenResults = (state = initialState, action) => {
     case 'FETCH_CHILD_DOCS_SUCCESS':
       return {
         ...state,
-        [payload.id]: payload.data,
+        [payload.id]: normaliseSearchResult(payload.result).result,
       };
     case 'FETCH_CHILD_DOCS_NEXT_REQUEST':
       return {
@@ -24,10 +26,10 @@ const documentChildrenResults = (state = initialState, action) => {
       return {
         ...state,
         [payload.id]: {
-          ...mergeResults(state[payload.id] || {}, payload.data),
+          ...mergeResults(state[payload.id] || {}, normaliseSearchResult(payload.result).result),
           isFetchingNext: false,
         },
-      }
+      };
     default:
       return state;
   }

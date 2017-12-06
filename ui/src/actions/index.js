@@ -110,21 +110,12 @@ export const fetchChildDocs = id => async dispatch => {
   });
   dispatch({
     type: 'SEARCH_DOCUMENTS_SUCCESS',
-    payload: { data: response.data },
+    payload: { result: response.data },
   });
-  if (response.data && response.data.results !== undefined) {
-    // Since the docs are already put in the cache, we can normalise our data
-    // structure by only storing the ids of the children in the document. For
-    // simplicity, we pretend the API gave only these ids.
-    const normalisedData = {
-      ...response.data,
-      results: response.data.results.map(doc => doc.id)
-    };
-    dispatch({
-      type: 'FETCH_CHILD_DOCS_SUCCESS',
-      payload: { id, data: normalisedData },
-    });
-  }
+  dispatch({
+    type: 'FETCH_CHILD_DOCS_SUCCESS',
+    payload: { id, result: response.data },
+  });
 };
 
 export const fetchChildDocsNext = (id, next) => async dispatch => {
@@ -135,16 +126,10 @@ export const fetchChildDocsNext = (id, next) => async dispatch => {
   const response = await endpoint.get(next);
   dispatch({
     type: 'SEARCH_DOCUMENTS_SUCCESS',
-    payload: { data: response.data },
+    payload: { result: response.data },
   });
-  if (response.data) {
-    const normalisedData = {
-      ...response.data,
-      results: response.data.results.map(doc => doc.id),
-    };
-    dispatch({
-      type: 'FETCH_CHILD_DOCS_NEXT_SUCCESS',
-      payload: { id, data: normalisedData },
-    });
-  }
+  dispatch({
+    type: 'FETCH_CHILD_DOCS_NEXT_SUCCESS',
+    payload: { id, result: response.data },
+  });
 };
