@@ -9,6 +9,7 @@ import LogoutScreen from 'src/components/auth/LogoutScreen';
 import SignupScreen from 'src/components/auth/SignupScreen';
 import ActivateScreen from 'src/components/auth/ActivateScreen';
 import EntityScreen from 'src/components/EntityScreen';
+import DocumentScreen from 'src/components/DocumentScreen';
 import HomeScreen from 'src/components/HomeScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
@@ -42,7 +43,8 @@ class PageLayout extends Component {
             <Route path="/logout" exact component={LogoutScreen}/>
             <Route path="/signup" exact component={SignupScreen}/>
             <Route path="/activate/:code" exact component={ActivateScreen}/>
-            <Route path="/entities/:entityId" component={EntityScreen}/>
+            <Route path="/entities/:entityId" exact component={EntityScreen}/>
+            <Route path="/documents/:documentId" exact component={DocumentScreen}/>
             <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
             <Route path="/" exact component={HomeScreen}/>
             <Route component={ErrorScreen}/>

@@ -7,11 +7,15 @@
 .DualPane > .InfoPane {
   flex-grow: 0;
   flex-basis: 300px;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .DualPane > .ContentPane {
   flex-basis: 800px;
   flex-grow: 4;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 

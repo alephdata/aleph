@@ -84,3 +84,74 @@ export const fetchEntity = id => dispatch => {
       });
     });
 };
+
+export const fetchDocument = id => dispatch => {
+  dispatch({
+    type: 'FETCH_DOCUMENT_REQUEST',
+    payload: { id },
+  });
+
+  return endpoint.get(`documents/${id}`)
+    .then(response => {
+      dispatch({
+        type: 'FETCH_DOCUMENT_SUCCESS',
+        payload: { id, data: response.data },
+      });
+    });
+};
+
+export const searchDocuments = query => async dispatch => {
+  dispatch({
+    type: 'SEARCH_DOCUMENTS_REQUEST',
+    payload: { query },
+  });
+
+  const response = await endpoint.get('documents', { params: query });
+  dispatch({
+    type: 'SEARCH_DOCUMENTS_SUCCESS',
+    payload: { data: response.data },
+  });
+  return response.data;
+};
+
+export const fetchChildDocs = id => async dispatch => {
+  dispatch({
+    type: 'FETCH_CHILD_DOCS_REQUEST',
+    payload: { id },
+  });
+  // Run a search for the documents. This will load the (stubs of the) documents
+  // into the documentCache for us.
+  let data = await dispatch(searchDocuments({ 'filter:parent.id': id }));
+  if (data && data.results !== undefined) {
+    // Since the docs are already put in the cache, we can normalise our data
+    // structure by only storing the ids of the children in the document. For
+    // simplicity, we pretend the API gave only these ids.
+    data = { ...data, results: data.results.map(doc => doc.id) };
+    dispatch({
+      type: 'FETCH_CHILD_DOCS_SUCCESS',
+      payload: { id, data },
+    });
+  }
+};
+
+export const fetchChildDocsNext = (id, next) => async dispatch => {
+  dispatch({
+    type: 'FETCH_CHILD_DOCS_NEXT_REQUEST',
+    payload: { id },
+  });
+  const response = await endpoint.get(next);
+  dispatch({
+    type: 'SEARCH_DOCUMENTS_SUCCESS',
+    payload: { data: response.data },
+  });
+  if (response.data) {
+    const normalisedData = {
+      ...response.data,
+      results: response.data.results.map(doc => doc.id),
+    };
+    dispatch({
+      type: 'FETCH_CHILD_DOCS_NEXT_SUCCESS',
+      payload: { id, data: normalisedData },
+    });
+  }
+};
