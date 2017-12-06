@@ -8,26 +8,21 @@ import DocumentContent from './DocumentContent';
 
 class DocumentScreen extends Component {
   componentDidMount() {
-    this.fetchIfNeeded();
+    const { documentId } = this.props;
+    this.props.fetchDocument(documentId);
   }
 
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { documentId, document } = this.props;
-    if (document === undefined) {
+  componentDidUpdate(prevProps) {
+    const { documentId } = this.props;
+    if (documentId !== prevProps.documentId) {
       this.props.fetchDocument(documentId);
     }
   }
 
   render() {
     const { document } = this.props;
-     if (document === undefined || document._isFetching) {
-      return (
-        <span>Loading document metadata..</span>
-      );
+    if (document === undefined) {
+      return null;
     }
     return (
       <DualPane>
@@ -40,7 +35,9 @@ class DocumentScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { documentId } = ownProps.match.params;
-  const document = documentId !== undefined ? state.documentCache[documentId] : undefined;
+  const document = documentId !== undefined
+    ? state.documentCache[documentId]
+    : undefined;
   return { documentId, document };
 }
 

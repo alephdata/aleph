@@ -8,7 +8,7 @@ class DocumentInfo extends Component {
     const { document } = this.props;
     const hasTitle = !!document.title;
     // If it has a content_hash it is not a folder and <uri>/file should work.
-    const fileUri = document.content_hash !== undefined
+    const fileUri = document.uri && document.content_hash !== undefined
       ? `${document.uri}/file`
       : undefined
     return (

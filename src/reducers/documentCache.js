@@ -6,7 +6,7 @@ const documentCache = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
     case 'FETCH_DOCUMENT_REQUEST':
-      return { ...state, [payload.id]: { _isFetching: true } };
+      return { ...state, [payload.id]: { ...state[payload.id], _isFetching: true } };
     case 'FETCH_DOCUMENT_SUCCESS':
       return { ...state, [payload.id]: payload.data };
     case 'SEARCH_DOCUMENTS_SUCCESS':
