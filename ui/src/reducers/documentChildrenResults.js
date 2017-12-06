@@ -14,7 +14,6 @@ const documentChildrenResults = (state = initialState, action) => {
       return {
         ...state,
         [payload.id]: payload.data,
-        isFetching: false,
       };
     case 'FETCH_CHILD_DOCS_NEXT_REQUEST':
       return {
