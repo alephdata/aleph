@@ -109,10 +109,6 @@ export const fetchChildDocs = id => async dispatch => {
     params: { 'filter:parent.id': id }
   });
   dispatch({
-    type: 'SEARCH_DOCUMENTS_SUCCESS',
-    payload: { result: response.data },
-  });
-  dispatch({
     type: 'FETCH_CHILD_DOCS_SUCCESS',
     payload: { id, result: response.data },
   });
@@ -124,10 +120,6 @@ export const fetchChildDocsNext = (id, next) => async dispatch => {
     payload: { id },
   });
   const response = await endpoint.get(next);
-  dispatch({
-    type: 'SEARCH_DOCUMENTS_SUCCESS',
-    payload: { result: response.data },
-  });
   dispatch({
     type: 'FETCH_CHILD_DOCS_NEXT_SUCCESS',
     payload: { id, result: response.data },
