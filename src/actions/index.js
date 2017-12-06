@@ -116,7 +116,7 @@ export const searchDocuments = query => async dispatch => {
 
 export const fetchChildDocs = id => async dispatch => {
   dispatch({
-    type: 'FETCH_CHILDDOCS_REQUEST',
+    type: 'FETCH_CHILD_DOCS_REQUEST',
     payload: { id },
   });
   // Run a search for the documents. This will load the (stubs of the) documents
@@ -130,6 +130,28 @@ export const fetchChildDocs = id => async dispatch => {
     dispatch({
       type: 'FETCH_CHILD_DOCS_SUCCESS',
       payload: { id, data },
+    });
+  }
+};
+
+export const fetchChildDocsNext = (id, next) => async dispatch => {
+  dispatch({
+    type: 'FETCH_CHILD_DOCS_NEXT_REQUEST',
+    payload: { id },
+  });
+  const response = await endpoint.get(next);
+  dispatch({
+    type: 'SEARCH_DOCUMENTS_SUCCESS',
+    payload: { data: response.data },
+  });
+  if (response.data) {
+    const normalisedData = {
+      ...response.data,
+      results: response.data.results.map(doc => doc.id),
+    };
+    dispatch({
+      type: 'FETCH_CHILD_DOCS_NEXT_SUCCESS',
+      payload: { id, data: normalisedData },
     });
   }
 };

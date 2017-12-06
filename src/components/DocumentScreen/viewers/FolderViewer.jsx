@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import WayPoint from 'react-waypoint';
+import { Spinner } from '@blueprintjs/core';
 
-import { fetchChildDocs } from 'src/actions';
+import { fetchChildDocs, fetchChildDocsNext } from 'src/actions';
 
 function getPath(url) {
   return new URL(url).pathname;
@@ -22,6 +24,13 @@ class DocAsListItem extends Component {
 }
 
 class FolderViewer extends Component {
+  bottomReachedHandler() {
+    const { document, childDocsResult, fetchChildDocsNext } = this.props;
+    if (childDocsResult.next && !childDocsResult.isFetchingNext) {
+      fetchChildDocsNext(document.id, childDocsResult.next);
+    }
+  }
+
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -31,21 +40,33 @@ class FolderViewer extends Component {
   }
 
   fetchIfNeeded() {
-    const { document, childDocs } = this.props;
-    if (childDocs === undefined) {
+    const { document, childDocsResult } = this.props;
+    if (
+      !childDocsResult
+      || (!childDocsResult.results && !childDocsResult.isFetching)
+    ) {
       this.props.fetchChildDocs(document.id);
     }
   }
 
   render() {
-    const { childDocs } = this.props;
+    const { childDocsResult } = this.props;
     return (
       <div className="FolderViewer">
-        <ul>
-          {childDocs && childDocs.map(childDoc => (
-            <DocAsListItem key={childDoc.id} document={childDoc} />
-          ))}
-        </ul>
+        {childDocsResult && childDocsResult.results &&
+          <div>
+            <ul>
+              {childDocsResult.results.map(childDoc => (
+                <DocAsListItem key={childDoc.id} document={childDoc} />
+              ))}
+            </ul>
+            {childDocsResult.next && (
+              childDocsResult.isFetchingNext
+                ? <Spinner />
+                : <WayPoint onEnter={this.bottomReachedHandler.bind(this)} />
+            )}
+          </div>
+        }
       </div>
     );
   }
@@ -53,12 +74,20 @@ class FolderViewer extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const childDocIdsResult = state.documentChildrenResults[ownProps.document.id];
-  const childDocs = childDocIdsResult !== undefined
-    ? childDocIdsResult.results.map(id => state.documentCache[id])
+  // Denormalise the result, inserting the docs themselves into it.
+  const childDocsResult = childDocIdsResult !== undefined
+    ? {
+      ...childDocIdsResult,
+      results: childDocIdsResult.results
+        ? childDocIdsResult.results.map(id => state.documentCache[id])
+        : undefined,
+    }
     : undefined;
   return {
-    childDocs,
+    childDocsResult,
   };
 };
 
-export default connect(mapStateToProps, { fetchChildDocs })(FolderViewer);
+const mapDispatchToProps = { fetchChildDocs, fetchChildDocsNext };
+
+export default connect(mapStateToProps, mapDispatchToProps)(FolderViewer);

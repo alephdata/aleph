@@ -1,4 +1,5 @@
 import { assign, assignWith, keyBy } from 'lodash/fp';
+
 const initialState = {};
 
 const documentCache = (state = initialState, action) => {
