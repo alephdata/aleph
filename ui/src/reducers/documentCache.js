@@ -1,6 +1,10 @@
 import { assign, assignWith } from 'lodash/fp';
 
-import { fetchDocument } from 'src/actions';
+import {
+  fetchDocument,
+  fetchSearchResults, fetchNextSearchResults,
+  fetchChildDocs, fetchChildDocsNext,
+} from 'src/actions';
 import { normaliseSearchResult } from './util';
 
 const initialState = {};
@@ -8,12 +12,12 @@ const initialState = {};
 const documentCache = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'FETCH_DOCUMENT_REQUEST':
+    case fetchDocument.START:
       return { ...state, [payload.id]: { ...state[payload.id], _isFetching: true } };
     case fetchDocument.COMPLETE:
       return { ...state, [payload.id]: payload.data };
-    case 'FETCH_SEARCH_SUCCESS':
-    case 'FETCH_SEARCH_NEXT_SUCCESS': {
+    case fetchSearchResults.COMPLETE:
+    case fetchNextSearchResults.COMPLETE: {
       // Extract and cache the documents found in the search results.
       // Note we must run filterOnlyDocuments before normalisation, because the
       // ids of documents and entities can collide.
@@ -23,8 +27,8 @@ const documentCache = (state = initialState, action) => {
       // avoid erasing the existing value. A shallow merge of fields should do.
       return assignWith(assign)(state, newResults);
     }
-    case 'FETCH_CHILD_DOCS_SUCCESS':
-    case 'FETCH_CHILD_DOCS_NEXT_SUCCESS': {
+    case fetchChildDocs.COMPLETE:
+    case fetchChildDocsNext.COMPLETE: {
       const newResults = normaliseSearchResult(payload.result).objects;
       // Use shallow merge like above.
       return assignWith(assign)(state, newResults);

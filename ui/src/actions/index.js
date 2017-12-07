@@ -20,82 +20,39 @@ export const fetchCollections = () => async dispatch => {
   await fetchCollectionsPages();
 };
 
-export const fetchSearchResults = filters => async dispatch => {
-  dispatch({
-    type: 'FETCH_SEARCH_REQUEST',
-    payload: { filters },
-  });
+export const fetchSearchResults = asyncActionCreator(({ filters }) => async dispatch => {
   const response = await endpoint.get('search', { params: filters });
-  dispatch({
-    type: 'FETCH_SEARCH_SUCCESS',
-    payload: { filters, result: response.data },
-  });
-};
+  return { filters, result: response.data };
+}, { name: 'FETCH_SEARCH' });
 
-export const fetchNextSearchResults = () => async (dispatch, getState) => {
-  const { searchResults } = getState();
-  if (searchResults.next) {
-    dispatch({
-      type: 'FETCH_SEARCH_NEXT_REQUEST',
-    });
-    const response = await endpoint.get(searchResults.next);
-    dispatch({
-      type: 'FETCH_SEARCH_NEXT_SUCCESS',
-      payload: { result: response.data },
-    });
-  }
-};
+export const fetchNextSearchResults = asyncActionCreator(({ next }) => async dispatch => {
+  const response = await endpoint.get(next);
+  return { result: response.data };
+}, { name: 'FETCH_SEARCH_NEXT' });
 
-export const fetchMetadata = () => async dispatch => {
-  dispatch({
-    type: 'FETCH_METADATA_REQUEST'
-  });
+export const fetchMetadata = asyncActionCreator(() => async dispatch => {
   const response = await endpoint.get('metadata');
-  dispatch({
-    type: 'FETCH_METADATA_SUCCESS',
-    payload: { metadata: response.data },
-  });
-};
+  return { metadata: response.data };
+}, { name: 'FETCH_METADATA' });
 
-export const fetchEntity = id => async dispatch => {
-  dispatch({
-    type: 'FETCH_ENTITY_REQUEST',
-    payload: { id },
-  });
+export const fetchEntity = asyncActionCreator(({ id }) => async dispatch => {
   const response = await endpoint.get(`entities/${id}`);
-  dispatch({
-    type: 'FETCH_ENTITY_SUCCESS',
-    payload: { id, data: response.data },
-  });
-};
+  return { id, data: response.data };
+}, { name: 'FETCH_ENTITY' });
 
-export const fetchDocument = asyncActionCreator(id => async dispatch => {
+export const fetchDocument = asyncActionCreator(({ id }) => async dispatch => {
   const response = await endpoint.get(`documents/${id}`);
   return { id, data: response.data };
-});
+}, { name: 'FETCH_DOCUMENT' });
 
-export const fetchChildDocs = id => async dispatch => {
-  dispatch({
-    type: 'FETCH_CHILD_DOCS_REQUEST',
-    payload: { id },
-  });
+export const fetchChildDocs = asyncActionCreator(({ id }) => async dispatch => {
   const response = await endpoint.get('documents', {
     params: { 'filter:parent.id': id }
   });
-  dispatch({
-    type: 'FETCH_CHILD_DOCS_SUCCESS',
-    payload: { id, result: response.data },
-  });
-};
+  return { id, result: response.data };
+}, { name: 'FETCH_CHILD_DOCS' });
 
-export const fetchChildDocsNext = (id, next) => async dispatch => {
-  dispatch({
-    type: 'FETCH_CHILD_DOCS_NEXT_REQUEST',
-    payload: { id },
-  });
+export const fetchChildDocsNext = asyncActionCreator(({ id, next }) => async dispatch => {
   const response = await endpoint.get(next);
-  dispatch({
-    type: 'FETCH_CHILD_DOCS_NEXT_SUCCESS',
-    payload: { id, result: response.data },
-  });
-};
+  return { id, result: response.data };
+}, { name: 'FETCH_CHILD_DOCS_NEXT' });

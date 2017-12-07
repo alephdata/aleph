@@ -1,17 +1,21 @@
 // A global counter, to ensure we generate unique names for nameless functions.
 let counter = 1;
 
+/* Wraps an action creator in order to dispatch two extra actions: one just
+ * before dispatching the action, and one when dispatching has either completed
+ * or erred.
+ */
 export default function asyncActionCreator(actionCreator, {
   name = actionCreator.name || `asyncAction_${counter++}`,
   START = `${name}_START`,
   ERROR = `${name}_ERROR`,
   COMPLETE = `${name}_COMPLETE`,
 } = {}) {
-  const newActionCreator = (...args) => async function (dispatch) {
-    const action = actionCreator(...args);
+  const newActionCreator = (payload, ...otherArgs) => async function (dispatch) {
+    const action = actionCreator(payload, ...otherArgs);
     dispatch({
       type: START,
-      payload: args,
+      payload,
     });
     try {
       const valueOrPromise = dispatch(action);

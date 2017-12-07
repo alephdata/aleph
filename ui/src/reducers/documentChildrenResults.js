@@ -1,5 +1,6 @@
 import uniq from 'lodash/uniq';
 
+import { fetchChildDocs, fetchChildDocsNext } from 'src/actions';
 import { normaliseSearchResult } from './util';
 
 const initialState = {};
@@ -7,22 +8,22 @@ const initialState = {};
 const documentChildrenResults = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'FETCH_CHILD_DOCS_REQUEST':
+    case fetchChildDocs.START:
       return {
         ...state,
         [payload.id]: { ...state[payload.id], isFetching: true },
       };
-    case 'FETCH_CHILD_DOCS_SUCCESS':
+    case fetchChildDocs.COMPLETE:
       return {
         ...state,
         [payload.id]: normaliseSearchResult(payload.result).result,
       };
-    case 'FETCH_CHILD_DOCS_NEXT_REQUEST':
+    case fetchChildDocsNext.START:
       return {
         ...state,
         [payload.id]: { ...state[payload.id], isFetchingNext: true },
       }
-    case 'FETCH_CHILD_DOCS_NEXT_SUCCESS':
+    case fetchChildDocsNext.COMPLETE:
       return {
         ...state,
         [payload.id]: {

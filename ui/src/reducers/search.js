@@ -1,22 +1,24 @@
 import uniqBy from 'lodash/uniqBy';
 
+import { fetchSearchResults, fetchNextSearchResults } from 'src/actions';
+
 const initialState = {
   // Gets rid of a FOUC but technically not great
   isFetching: true,
   isFetchingNext: false,
-  results: []
+  results: [],
 };
 
 const searchResults = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'FETCH_SEARCH_REQUEST':
-      return { ...state, isFetching: true }
-    case 'FETCH_SEARCH_SUCCESS':
-      return { ...state, ...payload.result, isFetching: false }
-    case 'FETCH_SEARCH_NEXT_REQUEST':
-      return { ...state, isFetchingNext: true }
-    case 'FETCH_SEARCH_NEXT_SUCCESS':
+    case fetchSearchResults.START:
+      return { results: [], isFetching: true };
+    case fetchSearchResults.COMPLETE:
+      return { ...state, ...payload.result, isFetching: false };
+    case fetchNextSearchResults.START:
+      return { ...state, isFetchingNext: true };
+    case fetchNextSearchResults.COMPLETE:
       return { ...state, ...payload.result, isFetchingNext: false,
         results: uniqBy([...state.results, ...payload.result.results], 'id')};
     default:

@@ -65,8 +65,10 @@ class SearchScreen extends Component {
     }
 
     fetchSearchResults({
-      ...pickBy(performedQuery, v => !!v),
-      facet: 'schema'
+      filters: {
+        ...pickBy(performedQuery, v => !!v),
+        facet: 'schema'
+      },
     });
   }
 

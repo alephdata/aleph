@@ -27,7 +27,10 @@ class FolderViewer extends Component {
   bottomReachedHandler() {
     const { document, childDocsResult, fetchChildDocsNext } = this.props;
     if (childDocsResult.next && !childDocsResult.isFetchingNext) {
-      fetchChildDocsNext(document.id, childDocsResult.next);
+      fetchChildDocsNext({
+        id: document.id,
+        next: childDocsResult.next,
+      });
     }
   }
 
@@ -45,7 +48,7 @@ class FolderViewer extends Component {
       !childDocsResult
       || (!childDocsResult.results && !childDocsResult.isFetching)
     ) {
-      this.props.fetchChildDocs(document.id);
+      this.props.fetchChildDocs({ id: document.id });
     }
   }
 

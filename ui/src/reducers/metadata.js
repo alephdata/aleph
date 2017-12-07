@@ -1,3 +1,5 @@
+import { fetchMetadata } from 'src/actions';
+
 const initialState = {
   isLoaded: false
 };
@@ -5,9 +7,9 @@ const initialState = {
 const metadata = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'FETCH_METADATA_REQUEST':
+    case fetchMetadata.START:
       return { isLoaded: false };
-    case 'FETCH_METADATA_SUCCESS':
+    case fetchMetadata.COMPLETE:
       return { ...payload.metadata, isLoaded: true };
     default:
       return state;
