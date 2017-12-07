@@ -12,6 +12,7 @@ import es from 'react-intl/locale-data/es';
 import translations from 'src/content/translations.json';
 import PageLayout from 'src/components/PageLayout';
 import store from './store';
+import { endpoint } from './api';
 
 import './App.css';
 
@@ -20,6 +21,15 @@ FocusStyleManager.onlyShowFocusOnTabs();
 
 // add locale data to react-intl
 addLocaleData([...en, ...de, ...es, ...ru]);
+
+// Configure endpoint to add session bearer token.
+endpoint.interceptors.request.use(config => {
+  const { session } = store.getState();
+  if (session.loggedIn) {
+    config.headers.common['Authorization'] = `Bearer ${session.token}`;
+  }
+  return config;
+});
 
 
 const App = () => (
