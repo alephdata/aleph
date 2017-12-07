@@ -1,102 +1,83 @@
 import {endpoint} from 'src/app/api';
 
-export const fetchCollections = () => (dispatch) => {
+export const fetchCollections = () => async dispatch => {
   const limit = 5000;
 
-  function fetchCollectionsPages(page=1) {
-    return endpoint.get('collections', {
-        params: { limit, offset: (page - 1) * limit }
-      })
-      .then(response => {
-        dispatch({
-          type: 'FETCH_COLLECTIONS_SUCCESS',
-          payload: { collections: response.data },
-        });
-
-        if (page < response.data.pages) {
-          fetchCollectionsPages(page + 1);
-        }
-      });
+  async function fetchCollectionsPages(page=1) {
+    const response = await endpoint.get('collections', {
+      params: { limit, offset: (page - 1) * limit }
+    });
+    dispatch({
+      type: 'FETCH_COLLECTIONS_SUCCESS',
+      payload: { collections: response.data },
+    });
+    if (page < response.data.pages) {
+      await fetchCollectionsPages(page + 1);
+    }
   }
 
-  fetchCollectionsPages();
+  await fetchCollectionsPages();
 };
 
-export const fetchSearchResults = (filters) => (dispatch) => {
+export const fetchSearchResults = filters => async dispatch => {
   dispatch({
     type: 'FETCH_SEARCH_REQUEST',
     payload: { filters },
   });
-
-  return endpoint.get('search', { params: filters })
-    .then(response => {
-      const result = response.data;
-
-      dispatch({
-        type: 'FETCH_SEARCH_SUCCESS',
-        payload: { filters, result },
-      });
-    });
+  const response = await endpoint.get('search', { params: filters });
+  dispatch({
+    type: 'FETCH_SEARCH_SUCCESS',
+    payload: { filters, result: response.data },
+  });
 };
 
-export const fetchNextSearchResults = () => (dispatch, getState) => {
+export const fetchNextSearchResults = () => async (dispatch, getState) => {
   const { searchResults } = getState();
-
   if (searchResults.next) {
     dispatch({
       type: 'FETCH_SEARCH_NEXT_REQUEST',
     });
-
-    return endpoint.get(searchResults.next)
-      .then(response => {
-        dispatch({
-          type: 'FETCH_SEARCH_NEXT_SUCCESS',
-          payload: { result: response.data },
-        });
-      });
+    const response = await endpoint.get(searchResults.next);
+    dispatch({
+      type: 'FETCH_SEARCH_NEXT_SUCCESS',
+      payload: { result: response.data },
+    });
   }
 };
 
-export const fetchMetadata = () => (dispatch) => {
+export const fetchMetadata = () => async dispatch => {
   dispatch({
     type: 'FETCH_METADATA_REQUEST'
   });
-
-  return endpoint.get('metadata')
-    .then((response) => dispatch({
-      type: 'FETCH_METADATA_SUCCESS',
-      payload: { metadata: response.data },
-    }));
+  const response = await endpoint.get('metadata');
+  dispatch({
+    type: 'FETCH_METADATA_SUCCESS',
+    payload: { metadata: response.data },
+  });
 };
 
-export const fetchEntity = id => dispatch => {
+export const fetchEntity = id => async dispatch => {
   dispatch({
     type: 'FETCH_ENTITY_REQUEST',
     payload: { id },
   });
-
-  return endpoint.get(`entities/${id}`)
-    .then(response => {
-      dispatch({
-        type: 'FETCH_ENTITY_SUCCESS',
-        payload: { id, data: response.data },
-      });
-    });
+  const response = await endpoint.get(`entities/${id}`);
+  dispatch({
+    type: 'FETCH_ENTITY_SUCCESS',
+    payload: { id, data: response.data },
+  });
 };
 
-export const fetchDocument = id => dispatch => {
+export const fetchDocument = id => async dispatch => {
   dispatch({
     type: 'FETCH_DOCUMENT_REQUEST',
     payload: { id },
   });
-
-  return endpoint.get(`documents/${id}`)
-    .then(response => {
-      dispatch({
-        type: 'FETCH_DOCUMENT_SUCCESS',
-        payload: { id, data: response.data },
-      });
-    });
+  const response = await endpoint.get(`documents/${id}`);
+  dispatch({
+    type: 'FETCH_DOCUMENT_SUCCESS',
+    payload: { id, data: response.data },
+  });
 };
 
 export const fetchChildDocs = id => async dispatch => {
