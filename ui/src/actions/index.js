@@ -1,4 +1,5 @@
 import {endpoint} from 'src/app/api';
+import asyncActionCreator from './asyncActionCreator';
 
 export const fetchCollections = () => async dispatch => {
   const limit = 5000;
@@ -68,17 +69,10 @@ export const fetchEntity = id => async dispatch => {
   });
 };
 
-export const fetchDocument = id => async dispatch => {
-  dispatch({
-    type: 'FETCH_DOCUMENT_REQUEST',
-    payload: { id },
-  });
+export const fetchDocument = asyncActionCreator(id => async dispatch => {
   const response = await endpoint.get(`documents/${id}`);
-  dispatch({
-    type: 'FETCH_DOCUMENT_SUCCESS',
-    payload: { id, data: response.data },
-  });
-};
+  return { id, data: response.data };
+});
 
 export const fetchChildDocs = id => async dispatch => {
   dispatch({

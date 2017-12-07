@@ -1,5 +1,6 @@
 import { assign, assignWith } from 'lodash/fp';
 
+import { fetchDocument } from 'src/actions';
 import { normaliseSearchResult } from './util';
 
 const initialState = {};
@@ -9,7 +10,7 @@ const documentCache = (state = initialState, action) => {
   switch (type) {
     case 'FETCH_DOCUMENT_REQUEST':
       return { ...state, [payload.id]: { ...state[payload.id], _isFetching: true } };
-    case 'FETCH_DOCUMENT_SUCCESS':
+    case fetchDocument.COMPLETE:
       return { ...state, [payload.id]: payload.data };
     case 'FETCH_SEARCH_SUCCESS':
     case 'FETCH_SEARCH_NEXT_SUCCESS': {
