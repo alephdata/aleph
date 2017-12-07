@@ -8,7 +8,7 @@ from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
 from aleph.core import create_app, archive
-from aleph.model import db, upgrade_db, Collection, Document
+from aleph.model import db, upgrade_db, Collection, Document, Role
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
 from aleph.ingest import ingest_document
@@ -147,6 +147,20 @@ def resetindex():
 def indexentities():
     """Re-index all the entities."""
     reindex_entities()
+
+
+@manager.command
+@manager.option('-n', '--name', dest='name')
+@manager.option('-e', '--email', dest='email')
+@manager.option('-i', '--is_admin', dest='is_admin')
+def createuser(foreign_id, name=None, email=None, is_admin=False):
+    """Create a user and show their API key."""
+    role = Role.load_or_create(foreign_id, Role.USER,
+                               name or foreign_id,
+                               email=email or "user@example.com",
+                               is_admin=is_admin)
+    db.session.commit()
+    return role.api_key
 
 
 @manager.command
