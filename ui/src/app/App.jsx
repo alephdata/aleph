@@ -11,7 +11,11 @@ import es from 'react-intl/locale-data/es';
 
 import translations from 'src/content/translations.json';
 import PageLayout from 'src/components/PageLayout';
+// TODO Initialise store here instead of in store.js (which should just export
+// createStore).
 import store from './store';
+// TODO Initialise endpoint in here instead of api.js. And then pass it down as
+// context, like Provider passes down the store? Or use redux-axios-middleware?
 import { endpoint } from './api';
 
 import './App.css';
