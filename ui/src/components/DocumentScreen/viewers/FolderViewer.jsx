@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import WayPoint from 'react-waypoint';
 import { Spinner } from '@blueprintjs/core';
 
-import { fetchChildDocs, fetchChildDocsNext } from 'src/actions';
+import { fetchChildDocs, fetchNextChildDocs } from 'src/actions';
 
 function getPath(url) {
   return new URL(url).pathname;
@@ -25,9 +25,9 @@ class DocAsListItem extends Component {
 
 class FolderViewer extends Component {
   bottomReachedHandler() {
-    const { document, childDocsResult, fetchChildDocsNext } = this.props;
+    const { document, childDocsResult, fetchNextChildDocs } = this.props;
     if (childDocsResult.next && !childDocsResult.isFetchingNext) {
-      fetchChildDocsNext({
+      fetchNextChildDocs({
         id: document.id,
         next: childDocsResult.next,
       });
@@ -91,6 +91,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = { fetchChildDocs, fetchChildDocsNext };
+const mapDispatchToProps = { fetchChildDocs, fetchNextChildDocs };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FolderViewer);

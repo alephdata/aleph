@@ -23,12 +23,12 @@ export const fetchCollections = () => async dispatch => {
 export const fetchSearchResults = asyncActionCreator(({ filters }) => async dispatch => {
   const response = await endpoint.get('search', { params: filters });
   return { filters, result: response.data };
-}, { name: 'FETCH_SEARCH' });
+}, { name: 'FETCH_SEARCH_RESULTS' });
 
 export const fetchNextSearchResults = asyncActionCreator(({ next }) => async dispatch => {
   const response = await endpoint.get(next);
   return { result: response.data };
-}, { name: 'FETCH_SEARCH_NEXT' });
+}, { name: 'FETCH_NEXT_SEARCH_RESULTS' });
 
 export const fetchMetadata = asyncActionCreator(() => async dispatch => {
   const response = await endpoint.get('metadata');
@@ -52,7 +52,7 @@ export const fetchChildDocs = asyncActionCreator(({ id }) => async dispatch => {
   return { id, result: response.data };
 }, { name: 'FETCH_CHILD_DOCS' });
 
-export const fetchChildDocsNext = asyncActionCreator(({ id, next }) => async dispatch => {
+export const fetchNextChildDocs = asyncActionCreator(({ id, next }) => async dispatch => {
   const response = await endpoint.get(next);
   return { id, result: response.data };
-}, { name: 'FETCH_CHILD_DOCS_NEXT' });
+}, { name: 'FETCH_NEXT_CHILD_DOCS' });

@@ -3,7 +3,7 @@ import { assign, assignWith } from 'lodash/fp';
 import {
   fetchDocument,
   fetchSearchResults, fetchNextSearchResults,
-  fetchChildDocs, fetchChildDocsNext,
+  fetchChildDocs, fetchNextChildDocs,
 } from 'src/actions';
 import { normaliseSearchResult } from './util';
 
@@ -28,7 +28,7 @@ const documentCache = (state = initialState, action) => {
       return assignWith(assign)(state, newResults);
     }
     case fetchChildDocs.COMPLETE:
-    case fetchChildDocsNext.COMPLETE: {
+    case fetchNextChildDocs.COMPLETE: {
       const newResults = normaliseSearchResult(payload.result).objects;
       // Use shallow merge like above.
       return assignWith(assign)(state, newResults);
