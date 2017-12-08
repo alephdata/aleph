@@ -1,5 +1,7 @@
 import keyBy from 'lodash/keyBy';
 
+import { fetchCollectionsPage } from 'src/actions';
+
 const initialState = {
   results: {},
 };
@@ -7,12 +9,12 @@ const initialState = {
 const collections = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'FETCH_COLLECTIONS_SUCCESS':
+    case fetchCollectionsPage.COMPLETE:
       return {
-        ...payload.collections,
+        ...payload.result,
         results: {
           ...state.results,
-          ...keyBy(payload.collections.results, 'id')
+          ...keyBy(payload.result.results, 'id')
         }
       };
     default:

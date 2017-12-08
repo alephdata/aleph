@@ -24,11 +24,13 @@ export default function asyncActionCreator(actionCreator, {
         type: COMPLETE,
         payload: value,
       });
+      return value;
     } catch (error) {
       dispatch({
         type: ERROR,
         payload: error,
       });
+      throw error;
     }
   }
   Object.defineProperty(newActionCreator, 'name', { value: name });
