@@ -2,22 +2,18 @@ import {endpoint} from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
 
 export const fetchCollections = () => async dispatch => {
-  const limit = 5000;
-
-  async function fetchCollectionsPages(page=1) {
-    const response = await endpoint.get('collections', {
-      params: { limit, offset: (page - 1) * limit }
+  const limit = 1;
+  let page = 0;
+  let response;
+  do {
+    response = await endpoint.get('collections', {
+      params: { limit, offset: page * limit }
     });
     dispatch({
       type: 'FETCH_COLLECTIONS_SUCCESS',
       payload: { collections: response.data },
     });
-    if (page < response.data.pages) {
-      await fetchCollectionsPages(page + 1);
-    }
-  }
-
-  await fetchCollectionsPages();
+  } while (++page < response.data.pages);
 };
 
 export const fetchSearchResults = asyncActionCreator(({ filters }) => async dispatch => {
