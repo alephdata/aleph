@@ -42,13 +42,13 @@ def process_collection(collection_id):
     q = db.session.query(Document)
     q = q.filter(Document.collection_id == collection_id)
     q = q.filter(Document.parent_id == None)  # noqa
-    for document in q.yield_per(5000):
+    for document in q:
         ingest.delay(document.id)
 
     # re-process entities
     q = db.session.query(Entity)
     q = q.filter(Entity.collection_id == collection.id)
-    for entity in q.yield_per(5000):
+    for entity in q:
         update_entity_full(entity.id)
 
     update_collection(collection)

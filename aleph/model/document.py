@@ -221,9 +221,9 @@ class Document(db.Model, DatedModel, Metadata):
         return document
 
     @classmethod
-    def by_parent(cls, parent_id):
+    def by_parent(cls, parent):
         q = cls.all()
-        q = q.filter(Document.parent_id == parent_id)
+        q = q.filter(Document.parent_id == parent.id)
         return q
 
     @classmethod
