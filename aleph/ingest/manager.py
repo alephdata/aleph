@@ -48,7 +48,6 @@ class DocumentManager(Manager):
     def handle_child(self, parent, file_path, title=None, mime_type=None,
                      id=None, file_name=None):
         file_path = decode_path(file_path)
-        file_name = decode_path(file_name) or os.path.basename(file_path)
 
         content_hash = None
         if not os.path.isdir(file_path):
@@ -56,7 +55,8 @@ class DocumentManager(Manager):
 
         doc = Document.by_keys(parent_id=parent.document.id,
                                collection=parent.document.collection,
-                               foreign_id=id, content_hash=content_hash)
+                               foreign_id=id,
+                               content_hash=content_hash)
         doc.title = title or doc.meta.get('title')
         doc.file_name = file_name or doc.meta.get('file_name')
         doc.mime_type = mime_type or doc.meta.get('mime_type')

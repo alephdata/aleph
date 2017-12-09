@@ -80,7 +80,7 @@ def ingest_upload(id):
     try:
         documents = []
         for storage in request.files.values():
-            path = safe_filename(storage.filename)
+            path = safe_filename(storage.filename, default='upload')
             path = os.path.join(upload_dir, path)
             storage.save(path)
             content_hash = checksum(path)
@@ -88,10 +88,11 @@ def ingest_upload(id):
                                         parent_id=parent_id,
                                         foreign_id=foreign_id,
                                         content_hash=content_hash)
-            document.mime_type = storage.mimetype
-            if storage.filename:
-                document.file_name = os.path.basename(storage.filename)
             document.update(meta)
+            if document.file_name is None and storage.filename:
+                document.file_name = os.path.basename(storage.filename)
+            if document.mime_type is None and storage.mimetype:
+                document.mime_type = storage.mimetype
             ingest_document(document, path, role_id=request.authz.id)
             documents.append(document)
 

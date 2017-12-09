@@ -27,7 +27,9 @@ def ingest_document(document, file_path, role_id=None):
     document.status = Document.STATUS_PENDING
     if os.path.isdir(file_path):
         manager = get_manager()
-        manager.ingest_document(document, file_path=file_path, role_id=role_id)
+        manager.ingest_document(document,
+                                file_path=file_path,
+                                role_id=role_id)
     else:
         ch = archive.archive_file(file_path,
                                   content_hash=document.content_hash)
@@ -64,11 +66,11 @@ def ingest_complete(collection, role_id=None):
     """Operations supposed to be performed when an ingest process completes."""
     from aleph.logic.collections import update_collection, collection_url  # noqa
     update_collection(collection)
-    role = Role.by_id(role_id)
-    if role is not None:
-        # notify the user that their import is completed.
-        notify_role_template(role,
-                             collection.label,
-                             'email/ingest.html',
-                             collection=collection,
-                             url=collection_url(collection.id))
+    # role = Role.by_id(role_id)
+    # if role is not None:
+    #     # notify the user that their import is completed.
+    #     notify_role_template(role,
+    #                          collection.label,
+    #                          'email/ingest.html',
+    #                          collection=collection,
+    #                          url=collection_url(collection.id))

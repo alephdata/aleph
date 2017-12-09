@@ -109,21 +109,26 @@ class Metadata(object):
             file_name = stringify(unquote(filename))
 
         if file_name is None and self.source_url:
-            parsed = urlparse(self.source_url)
-            file_name = os.path.basename(parsed.path) or ''
-            file_name = stringify(unquote(file_name))
+            try:
+                parsed = urlparse(self.source_url)
+                parts = unquote(parsed.path).rsplit('/', 1)
+                path = stringify(parts[-1])
+                if path is not None and '.' in path:
+                    file_name = path
+            except Exception:
+                pass
 
         return file_name
+
+    @file_name.setter
+    def file_name(self, file_name):
+        self._meta_text('file_name', file_name)
 
     @property
     def safe_file_name(self):
         """File name is a slugified version of the file title that is safe to
         use as part of a file system path."""
         return safe_filename(self.file_name, default='data')
-
-    @file_name.setter
-    def file_name(self, file_name):
-        self._meta_text('file_name', file_name)
 
     @property
     def source_url(self):
