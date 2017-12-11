@@ -41,7 +41,7 @@ class Country(String):
 
 
 class PartialDate(String):
-    """Any valid prefix of an ISO 8661 datetime string."""
+    """Any valid prefix of an ISO 8601 datetime string."""
 
     def _validate(self, value):
         if not dates.validate(value):

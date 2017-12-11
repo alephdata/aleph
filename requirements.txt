@@ -39,7 +39,7 @@ pyjwt >= 1.5.3
 followthemoney >= 0.3.4
 fingerprints >= 0.3.2
 storagelayer >= 0.2.1
-exactitude >= 2.1.1
+exactitude >= 2.1.2
 ingestors >= 0.6.2
 normality >= 0.5.6
 
