@@ -42,14 +42,14 @@ class AutomatonCache(object):
         matches = {}
         q = Entity.all()
         for entity in q:
+            tag = self.TYPES.get(entity.schema)
+            if tag is None:
+                continue
             for term in entity.regex_terms:
-                type_ = self.TYPES.get(entity.schema)
-                if type_ is None:
-                    continue
                 if term in matches:
-                    matches[term].append((entity.name, type_))
+                    matches[term].append((entity.name, tag))
                 else:
-                    matches[term] = [(entity.name, type_)]
+                    matches[term] = [(entity.name, tag)]
 
         if not len(matches):
             return
@@ -77,15 +77,13 @@ class AhoCorasickEntityAnalyzer(Analyzer):
         if text is None or len(text) <= self.MIN_LENGTH:
             return
 
-        self.cache.generate()
-        if self.cache.automaton.kind == EMPTY:
-            return
-
-        text = text.encode('utf-8')
         collector = DocumentTagCollector(document, self.ORIGIN)
-        for match in self.cache.automaton.iter(text):
-            for (text, type) in match[1]:
-                collector.emit(text, type)
+        self.cache.generate()
+        if self.cache.automaton.kind != EMPTY:
+            text = text.encode('utf-8')
+            for match in self.cache.automaton.iter(text):
+                for (text, tag) in match[1]:
+                    collector.emit(text, tag)
 
         log.info('Aho Corasick extraced %s entities.', len(collector))
         collector.save()

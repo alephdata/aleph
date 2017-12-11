@@ -35,6 +35,7 @@ pycrypto >= 2.6.1
 cryptography >= 2.1.3
 pylru >= 1.0.9
 pyjwt >= 1.5.3
+regex >= 2017.12.09
 
 followthemoney >= 0.3.4
 fingerprints >= 0.3.2
