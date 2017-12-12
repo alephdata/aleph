@@ -39,11 +39,12 @@ class IngestApiTestCase(TestCase):
         meta = {
             'countries': ['de', 'us'],
             'languages': ['en'],
+            'mime_type': 'text/csv',
             'source_url': 'http://pudo.org/experts.csv'
         }
         data = {
             'meta': json.dumps(meta),
-            'foo': (open(self.csv_path), 'experts.csv')
+            'foo': open(self.csv_path),
         }
         res = self.client.post(self.url,
                                data=data,
