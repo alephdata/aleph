@@ -138,9 +138,6 @@ LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
              'is', 'it', 'et', 'no', 'fa', 'sw', 'sl', 'az']
 LANGUAGES = env_list('ALEPH_LANGUAGES', LANGUAGES)
 
-# Enable the Aho Corasick based entity string matcher:
-REGEX_ENTITIES = env_bool('ALEPH_REGEX_ENTITIES', True)
-
 # Automatically OCR pdf contents:
 PDF_OCR_PAGES = env_bool('ALEPH_PDF_OCR_PAGES', True)
 

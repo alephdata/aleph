@@ -66,9 +66,6 @@ class AhoCorasickEntityAnalyzer(Analyzer):
 
     cache = AutomatonCache()
 
-    def __init__(self):
-        self.disabled = not get_config('REGEX_ENTITIES', True)
-
     def analyze(self, document):
         text = document.text
         if text is None or len(text) <= self.MIN_LENGTH:
