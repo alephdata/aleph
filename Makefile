@@ -1,6 +1,8 @@
 COMPOSE=docker-compose -f docker-compose.dev.yml 
 DEVDOCKER=$(COMPOSE) run --rm app /aleph/contrib/devwrapper.sh
 
+all: build upgrade web
+
 shell:
 	$(DEVDOCKER) /bin/bash
 
@@ -16,8 +18,7 @@ installdata:
 	$(DEVDOCKER) aleph installdata
 
 web:
-	$(COMPOSE) run --rm --service-ports app /aleph/contrib/devwrapper.sh \
-		python aleph/manage.py runserver -h 0.0.0.0
+	$(COMPOSE) run --rm api
 
 worker:
 	$(DEVDOCKER) celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /var/lib/celery.pid
@@ -27,6 +28,9 @@ beat:
 
 clear:
 	$(DEVDOCKER) celery purge -f -A aleph.queues
+
+stop:
+	$(COMPOSE) stop
 
 rebuild:
 	$(COMPOSE) build --pull --no-cache

@@ -81,7 +81,7 @@ services:
 
   web:
     build: .
-    command: gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
+    command: gunicorn -w 8 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
     ports:
       - "13376:8000"
     links:

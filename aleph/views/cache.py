@@ -8,6 +8,7 @@ blueprint = Blueprint('cache', __name__)
 
 
 class NotModified(Exception):
+    """Converts to HTTP status 304."""
     pass
 
 

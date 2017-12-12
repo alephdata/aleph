@@ -49,8 +49,7 @@ COPY . /aleph
 WORKDIR /aleph
 RUN pip install -e .
 
-# Expose the green unicorn
-EXPOSE 8000
+# Run the green unicorn
 CMD gunicorn -w 5 -b 0.0.0.0:8000 --name aleph_gunicorn \
   --log-level info --log-file /var/log/gunicorn.log \
   aleph.manage:app
