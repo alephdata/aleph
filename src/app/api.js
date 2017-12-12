@@ -3,8 +3,10 @@ import queryString from 'query-string';
 
 import store from './store';
 
+const apiEndpoint = document.documentElement.getAttribute('data-api-endpoint');
+
 export const endpoint = axios.create({
-  baseURL: 'http://localhost:5000/api/2',
+  baseURL: apiEndpoint,
   headers: {},
   // Use non-bracket array params format
   paramsSerializer: queryString.stringify

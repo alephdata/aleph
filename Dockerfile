@@ -1,8 +1,10 @@
 FROM node:latest
-MAINTAINER Friedrich Lindenberg <friedrich@pudo.org>
+
+RUN mkdir /alephui
+WORKDIR /alephui
+COPY package.json /alephui
+RUN npm --quiet --silent install .
 
 COPY . /alephui
-WORKDIR /alephui
-RUN npm --quiet --silent install .
 
 RUN npm run build
