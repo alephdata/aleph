@@ -148,6 +148,18 @@ principles](https://12factor.net/). These environment variables can be found als
   on the same sections of a document's content
   (See: [#104](https://github.com/alephdata/aleph/issues/104)).
 
+## Users
+
+For development purposes, you can quickly create a new user with the `aleph createuser` command, inside a shell (`make shell`):
+
+```
+aleph createuser --email="user@example.com" --name="Alice" --is_admin=True userid123
+```
+
+If you pass an email address in the `ALEPH_ADMINS` environment variable (in your aleph.env file) it will automatically be made admin.
+
+The user's API key is returned.
+
 ## Running tests
 
 To run the tests, assuming you already have the `docker-compose` up and ready,
