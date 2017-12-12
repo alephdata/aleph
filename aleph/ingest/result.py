@@ -14,17 +14,17 @@ log = logging.getLogger(__name__)
 class DocumentResult(Result):
     """Wrapper to link a Document to an ingestor result object."""
 
-    SCHEMATA = {
-        Result.FLAG_DIRECTORY: Document.SCHEMA_FOLDER,
-        Result.FLAG_PLAINTEXT: Document.SCHEMA_TEXT,
-        Result.FLAG_PACKAGE: Document.SCHEMA_PACKAGE,
-        Result.FLAG_PDF: Document.SCHEMA_PDF,
-        Result.FLAG_HTML: Document.SCHEMA_HTML,
-        Result.FLAG_WORKBOOK: Document.SCHEMA_WORKBOOK,
-        Result.FLAG_IMAGE: Document.SCHEMA_IMAGE,
-        Result.FLAG_TABULAR: Document.SCHEMA_TABLE,
-        Result.FLAG_EMAIL: Document.SCHEMA_EMAIL,
-    }
+    SCHEMATA = (
+        (Result.FLAG_DIRECTORY, Document.SCHEMA_FOLDER),
+        (Result.FLAG_PLAINTEXT, Document.SCHEMA_TEXT),
+        (Result.FLAG_PACKAGE, Document.SCHEMA_PACKAGE),
+        (Result.FLAG_PDF, Document.SCHEMA_PDF),
+        (Result.FLAG_HTML, Document.SCHEMA_HTML),
+        (Result.FLAG_WORKBOOK, Document.SCHEMA_WORKBOOK),
+        (Result.FLAG_IMAGE, Document.SCHEMA_IMAGE),
+        (Result.FLAG_TABULAR, Document.SCHEMA_TABLE),
+        (Result.FLAG_EMAIL, Document.SCHEMA_EMAIL),
+    )
 
     def __init__(self, manager, document, file_path=None, role_id=None):
         document.pdf_version = None
@@ -94,7 +94,7 @@ class DocumentResult(Result):
             doc.error_message = stringify(self.error_message)
 
         schema = model['Document']
-        for flag, name in self.SCHEMATA.items():
+        for flag, name in self.SCHEMATA:
             if flag in self.flags:
                 schema = model[name]
 

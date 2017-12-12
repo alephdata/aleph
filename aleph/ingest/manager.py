@@ -70,27 +70,28 @@ class DocumentManager(Manager):
         First retrieve its data and then call the actual ingestor.
         """
         content_hash = document.content_hash
-        if file_path is None:
+        if file_path is None and content_hash is not None:
             file_path = self.archive.load_file(content_hash, file_name=document.safe_file_name)  # noqa
 
-        if file_path is None:
-            # When a directory is ingested, the data is not stored. Thus, try
-            # to recurse transparently.
-            for child in Document.by_parent(document):
-                self.ingest_document(child, role_id=role_id)
-            return
-
-        if not os.path.exists(file_path):
+        if file_path is not None and not os.path.exists(file_path):
             # Probably indicative of file system encoding issues.
-            log.warn("Ingest non-existant path [%r]: %s", document, file_path)
+            log.error("Ingest invalid path [%r]: %s",
+                      document, file_path)
             return
 
         try:
-            if not len(document.languages) and document.collection is not None:
-                document.languages = document.collection.languages
+            if file_path is None:
+                # When a directory is ingested, the data is not stored. Thus,
+                # try to recurse transparently.
+                for child in Document.by_parent(document):
+                    self.ingest_document(child, role_id=role_id)
 
-            if not len(document.countries) and document.collection is not None:
-                document.countries = document.collection.countries
+            if document.collection is not None:
+                if not len(document.languages):
+                    document.languages = document.collection.languages
+
+                if not len(document.countries):
+                    document.countries = document.collection.countries
 
             result = DocumentResult(self, document,
                                     file_path=file_path,
@@ -98,4 +99,5 @@ class DocumentManager(Manager):
             self.ingest(file_path, result=result)
         finally:
             db.session.rollback()
-            self.archive.cleanup_file(content_hash)
+            if content_hash is not None:
+                self.archive.cleanup_file(content_hash)

@@ -1,6 +1,6 @@
-import os
 import logging
 from flask import current_app
+from ingestors.util import is_file
 
 from aleph.core import db, archive, celery
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY
@@ -25,15 +25,15 @@ def ingest_document(document, file_path, role_id=None):
     """Given a stub document and file path, extract information.
     This does not attempt to infer metadata such as a file name."""
     document.status = Document.STATUS_PENDING
-    if os.path.isdir(file_path):
+    if not is_file(file_path):
         manager = get_manager()
         manager.ingest_document(document,
                                 file_path=file_path,
                                 role_id=role_id)
     else:
-        ch = archive.archive_file(file_path,
-                                  content_hash=document.content_hash)
-        document.content_hash = ch or document.content_hash
+        ch = document.content_hash
+        ch = archive.archive_file(file_path, content_hash=ch)
+        document.content_hash = ch
         db.session.commit()
         queue = WORKER_QUEUE
         routing_key = WORKER_ROUTING_KEY
@@ -66,11 +66,11 @@ def ingest_complete(collection, role_id=None):
     """Operations supposed to be performed when an ingest process completes."""
     from aleph.logic.collections import update_collection, collection_url  # noqa
     update_collection(collection)
-    # role = Role.by_id(role_id)
-    # if role is not None:
-    #     # notify the user that their import is completed.
-    #     notify_role_template(role,
-    #                          collection.label,
-    #                          'email/ingest.html',
-    #                          collection=collection,
-    #                          url=collection_url(collection.id))
+    role = Role.by_id(role_id)
+    if role is not None:
+        # notify the user that their import is completed.
+        notify_role_template(role,
+                             collection.label,
+                             'email/ingest.html',
+                             collection=collection,
+                             url=collection_url(collection.id))

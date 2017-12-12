@@ -157,6 +157,7 @@ class IngestApiTestCase(TestCase):
         assert len(res.json['documents']) == 1, res.json
         directory = res.json['documents'][0]
         assert directory['schema'] == 'Folder', res.json
+        assert directory['status'] == 'success', res.json
 
         meta = {
             'file_name': 'subdirectory',
