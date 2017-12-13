@@ -41,10 +41,9 @@ services:
       - unoservice
     volumes:
       - "./:/aleph"
-      - "./build/logs/app:/var/log"
+      - "./mapping:/aleph/mapping"
       - "./build/archive:/data"
       - "./build/polyglot:/polyglot"
-      - "./build/docs:/aleph/docs/_build"
       - "/:/host"
     environment:
       ALEPH_DEBUG: 'true'
@@ -78,11 +77,9 @@ services:
       - rabbitmq
       - unoservice
     volumes:
-      - "./:/aleph"
-      - "./build/logs/app:/var/log"
+      - "./aleph:/aleph/aleph"
       - "./build/archive:/data"
       - "./build/polyglot:/polyglot"
-      - "./build/docs:/aleph/docs/_build"
       - "/:/host"
     environment:
       ALEPH_DEBUG: 'true'

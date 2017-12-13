@@ -103,10 +103,7 @@ def _index_updates(collection, entities):
 
     for doc_id, entity in entities.items():
         entity.pop('id', None)
-        entity.pop('data', None)
         entity.update(common)
-        if 'created_at' not in entity:
-            entity['created_at'] = entity.get('updated_at')
         schema = model.get(entity.get('schema'))
         entity = finalize_index(entity, schema)
         # pprint(entity)
@@ -140,7 +137,10 @@ def finalize_index(data, schema):
             continue
         if prop.type_name in ['date', 'url', 'uri', 'country']:
             continue
-        texts.extend(ensure_list(properties[name]))
+        for value in ensure_list(properties[name]):
+            if name == 'name':
+                data['name'] = value
+            texts.append(value)
 
     data['text'] = index_form(texts)
     data = schema.invert(data)
@@ -148,5 +148,7 @@ def finalize_index(data, schema):
     data['schema'] = schema.name
     # Get implied schemata (i.e. parents of the actual schema)
     data['schemata'] = schema.names
-    # pprint(data)
+
+    if 'created_at' not in data:
+        data['created_at'] = data.get('updated_at')
     return data

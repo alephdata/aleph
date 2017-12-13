@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 
 
 class DocumentsQuery(AuthzQuery):
-    TEXT_FIELDS = ['title^3', 'text']
+    TEXT_FIELDS = ['name^3', 'names^2', 'text']
     EXCLUDE_FIELDS = ['roles', 'text']
     SORT = {
         'default': ['_score', {'name.kw': 'asc'}],
@@ -115,6 +115,14 @@ class EntitiesQuery(AuthzQuery):
         'default': ['_score', {'name.kw': 'asc'}],
         'name': [{'name.kw': 'asc'}, '_score']
     }
+
+    def get_query(self):
+        query = super(EntitiesQuery, self).get_query()
+        # TODO do we need to specify "Thing" here???
+        query['bool']['must_not'].append({
+            'term': {'schemata': Document.SCHEMA}
+        })
+        return query
 
     def get_index(self):
         return entities_index()
