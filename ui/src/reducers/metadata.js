@@ -1,19 +1,16 @@
+import { createReducer } from 'redux-act';
+
 import { fetchMetadata } from 'src/actions';
 
 const initialState = {
-  isLoaded: false
+  isLoaded: false,
 };
 
-const metadata = (state = initialState, action) => {
-  const { type, payload } = action;
-  switch (type) {
-    case fetchMetadata.START:
-      return { isLoaded: false };
-    case fetchMetadata.COMPLETE:
-      return { ...payload.metadata, isLoaded: true };
-    default:
-      return state;
-  }
-};
+export default createReducer({
+  [fetchMetadata.START]: state => ({ isLoaded: false }),
 
-export default metadata;
+  [fetchMetadata.COMPLETE]: (state, { metadata }) => ({
+    ...metadata,
+    isLoaded: true
+  }),
+}, initialState);

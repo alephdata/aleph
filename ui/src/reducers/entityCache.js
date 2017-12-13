@@ -1,21 +1,17 @@
+import { createReducer } from 'redux-act';
+
 import { fetchEntity } from 'src/actions';
 
 const initialState = {};
 
-const entityCache = (state = initialState, action) => {
-  const { type, payload } = action;
-  switch (type) {
-    case fetchEntity.START: {
-      const { id } = payload;
-      return { ...state, [id]: { _isFetching: true } };
-    }
-    case fetchEntity.COMPLETE: {
-      const { id, data } = payload;
-      return { ...state, [id]: data };
-    }
-    default:
-      return state;
-  }
-};
+export default createReducer({
+  [fetchEntity.START]: (state, { id }) => ({
+    ...state,
+    [id]: { _isFetching: true },
+  }),
 
-export default entityCache;
+  [fetchEntity.COMPLETE]: (state, { id, data }) => ({
+    ...state,
+    [id]: data,
+  }),
+}, initialState);

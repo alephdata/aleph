@@ -1,3 +1,4 @@
+import { createReducer } from 'redux-act';
 import uniqBy from 'lodash/uniqBy';
 
 import { fetchSearchResults, fetchNextSearchResults } from 'src/actions';
@@ -9,21 +10,27 @@ const initialState = {
   results: [],
 };
 
-const searchResults = (state = initialState, action) => {
-  const { type, payload } = action;
-  switch (type) {
-    case fetchSearchResults.START:
-      return { results: [], isFetching: true };
-    case fetchSearchResults.COMPLETE:
-      return { ...state, ...payload.result, isFetching: false };
-    case fetchNextSearchResults.START:
-      return { ...state, isFetchingNext: true };
-    case fetchNextSearchResults.COMPLETE:
-      return { ...state, ...payload.result, isFetchingNext: false,
-        results: uniqBy([...state.results, ...payload.result.results], 'id')};
-    default:
-      return state;
-  }
-};
+export default createReducer({
+  [fetchSearchResults.START]: state => ({
+    results: [],
+    isFetching: true,
+  }),
 
-export default searchResults;
+  [fetchSearchResults.COMPLETE]: (state, { result }) => ({
+    ...state,
+    ...result,
+    isFetching: false
+  }),
+
+  [fetchNextSearchResults.START]: state => ({
+    ...state,
+    isFetchingNext: true
+  }),
+
+  [fetchNextSearchResults.COMPLETE]: (state, { result }) => ({
+    ...state,
+    ...result,
+    isFetchingNext: false,
+    results: uniqBy([...state.results, ...result.results], 'id'),
+  }),
+}, initialState);
