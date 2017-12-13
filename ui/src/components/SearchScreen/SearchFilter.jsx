@@ -152,8 +152,8 @@ class SearchFilter extends Component {
 const mapStateToProps = ({ metadata, collections }) => ({
   countries: metadata.countries,
   countriesCount: size(metadata.countries),
-  collections: mapValues(collections.results, 'label'),
-  collectionsCount: size(collections.results)
+  collections: mapValues(collections, 'label'),
+  collectionsCount: size(collections),
 });
 
 SearchFilter = connect(mapStateToProps)(SearchFilter);

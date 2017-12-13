@@ -54,7 +54,7 @@ const SearchResultListItem = ({ result, collection, countries }) => {
 };
 
 const mapStateToProps = ({ collections, metadata }, { result }) => ({
-  collection: collections.results[result.collection_id],
+  collection: collections[result.collection_id],
   countries: metadata.countries
 });
 

@@ -11,7 +11,7 @@ function getPath(url) {
 class HomeContent extends Component {
   render() {
     const { collections, categories } = this.props;
-    const collectionsByCategory = groupBy(collections.results, 'category');
+    const collectionsByCategory = groupBy(collections, 'category');
     return (
       <DualPane.ContentPane>
         <p>Aleph's database contains:</p>
