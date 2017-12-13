@@ -7,7 +7,7 @@ import SearchFilterList from './SearchFilterList';
 import './SearchFilterCountries.css';
 
 const SearchFilterCountries = ({ currentValue, onChange, countries, onOpen }) => (
-  <Popover popoverClassName="search-filter-countries" position={Position.BOTTOM}
+  <Popover popoverClassName="search-filter-countries" position={Position.BOTTOM_RIGHT}
            popoverWillOpen={onOpen} inline>
     <Button rightIconName="caret-down">
       <FormattedMessage id="search.countries" defaultMessage="Countries"/>
