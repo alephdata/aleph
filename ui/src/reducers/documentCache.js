@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-act';
-import { assign, assignWith } from 'lodash/fp';
+import { assign, assignWith, set, update } from 'lodash/fp';
 
 import {
   fetchDocument,
@@ -37,15 +37,11 @@ function addDocumentsFromResult(state, { result }) {
 }
 
 export default createReducer({
-    [fetchDocument.START]: (state, { id }) => ({
-      ...state,
-      [id]: { ...state[id], _isFetching: true },
-    }),
+    [fetchDocument.START]: (state, { id }) =>
+      update([id, '_isFetching'], true)(state),
 
-    [fetchDocument.COMPLETE]: (state, { id, data }) => ({
-      ...state,
-      [id]: data,
-    }),
+    [fetchDocument.COMPLETE]: (state, { id, data }) =>
+      set(id, data)(state),
 
     [fetchSearchResults.COMPLETE]: addDocumentsFromResult,
     [fetchNextSearchResults.COMPLETE]: addDocumentsFromResult,

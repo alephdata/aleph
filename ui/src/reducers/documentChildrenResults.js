@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-act';
-import uniq from 'lodash/uniq';
+import { set, update, uniq } from 'lodash/fp';
 
 import { fetchChildDocs, fetchNextChildDocs } from 'src/actions';
 import { normaliseSearchResult } from './util';
@@ -7,28 +7,20 @@ import { normaliseSearchResult } from './util';
 const initialState = {};
 
 export default createReducer({
-  [fetchChildDocs.START]: (state, { id }) => ({
-    ...state,
-    [id]: { ...state[id], isFetching: true },
-  }),
+  [fetchChildDocs.START]: (state, { id }) =>
+    update(id, set('isFetching', true))(state),
 
-  [fetchChildDocs.COMPLETE]: (state, { id, result }) => ({
-    ...state,
-    [id]: normaliseSearchResult(result).result,
-  }),
+  [fetchChildDocs.COMPLETE]: (state, { id, result }) =>
+    set(id, normaliseSearchResult(result).result)(state),
 
-  [fetchNextChildDocs.START]: (state, { id }) => ({
-    ...state,
-    [id]: { ...state[id], isFetchingNext: true },
-  }),
+  [fetchNextChildDocs.START]: (state, { id }) =>
+    update(id, set('isFetchingNext', true))(state),
 
-  [fetchNextChildDocs.COMPLETE]: (state, { id, result }) => ({
-    ...state,
-    [id]: {
-      ...mergeResults(state[id], normaliseSearchResult(result).result),
+  [fetchNextChildDocs.COMPLETE]: (state, { id, result }) =>
+    update(id, obj => ({
+      ...mergeResults(obj, normaliseSearchResult(result).result),
       isFetchingNext: false,
-    },
-  }),
+    }))(state),
 }, initialState);
 
 function mergeResults(oldResult, newResult) {

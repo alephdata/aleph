@@ -1,5 +1,6 @@
 import { createReducer } from 'redux-act';
 import uniqBy from 'lodash/uniqBy';
+import { set } from 'lodash/fp';
 
 import { fetchSearchResults, fetchNextSearchResults } from 'src/actions';
 
@@ -22,10 +23,8 @@ export default createReducer({
     isFetching: false
   }),
 
-  [fetchNextSearchResults.START]: state => ({
-    ...state,
-    isFetchingNext: true
-  }),
+  [fetchNextSearchResults.START]: state =>
+    set('isFetchingNext', true)(state),
 
   [fetchNextSearchResults.COMPLETE]: (state, { result }) => ({
     ...state,
