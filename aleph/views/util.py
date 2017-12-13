@@ -1,10 +1,8 @@
-import StringIO
 from apikit import jsonify as jsonify_
 from apikit import obj_or_404
 from flask import request
 from urlparse import urlparse, urljoin
 from werkzeug.exceptions import ImATeapot, Forbidden, BadRequest
-import xlsxwriter
 
 from aleph.core import app_ui_url
 from aleph.authz import Authz
@@ -90,36 +88,3 @@ def get_best_next_url(*urls):
         url = urljoin(app_ui_url, url)
         if url and is_safe_url(url):
             return url
-
-
-def make_excel(result_iter, fields):
-    output = StringIO.StringIO()
-    workbook = xlsxwriter.Workbook(output)
-    worksheet = workbook.add_worksheet('Documents')
-
-    header = workbook.add_format({
-        'bold': True,
-        'border': 1,
-        'fg_color': '#D7E4BC'
-    })
-    col = 0
-    for field in fields:
-        field = field.replace('_', ' ').capitalize()
-        worksheet.write(0, col, field, header)
-        col += 1
-
-    row = 1
-    for data in result_iter:
-        col = 0
-        for field in fields:
-            val = data.get(field) or ''
-            if isinstance(val, (list, tuple, set)):
-                val = ', '.join(val)
-            worksheet.write_string(row, col, val)
-            col += 1
-        row += 1
-
-    worksheet.freeze_panes(1, 0)
-    workbook.close()
-    output.seek(0)
-    return output
