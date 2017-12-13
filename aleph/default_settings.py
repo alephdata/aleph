@@ -87,13 +87,6 @@ SECRET_KEY = env.get('ALEPH_SECRET_KEY')
 PASSWORD_LOGIN = env_bool('ALEPH_PASSWORD_LOGIN', True)
 PASSWORD_REGISTRATION = env_bool('ALEPH_PASSWORD_REGISTRATION', True)
 
-# LDAP Support
-LDAP_HOST = env.get('ALEPH_LDAP_HOST')
-LDAP_PORT = env.get('ALEPH_LDAP_PORT')
-LDAP_BASE_DN = env.get('ALEPH_LDAP_BASE_DN', 'uid={},dc=example,dc=com')
-LDAP_USERNAME = env.get("ALEPH_LDAP_USERNAME")
-LDAP_PASSWORD = env.get('ALEPH_LDAP_PASSWORD')
-
 # Designate users with the given email as admins automatically:
 # Assumes a comma-separated list.
 AUTHZ_ADMINS = env_list('ALEPH_ADMINS')

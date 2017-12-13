@@ -7,7 +7,6 @@ from flask import url_for as flask_url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
-from flask_simpleldap import LDAP, LDAPException
 from flask_cors import CORS
 from kombu import Queue
 from celery import Celery
@@ -25,7 +24,6 @@ db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
 celery = Celery('aleph', task_cls=SessionTask)
-ldap = LDAP()
 
 # these two queues are used so that background processing tasks
 # spawned by the user can be handled more quickly through a
@@ -97,11 +95,6 @@ def create_app(config={}):
     mail.init_app(app)
     db.init_app(app)
     CORS(app, origins=app.config.get('CORS_ORIGINS', []))
-
-    try:
-        ldap.init_app(app)
-    except LDAPException as error:
-        log.info(error)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.

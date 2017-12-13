@@ -4,9 +4,8 @@ from flask import current_app
 from sqlalchemy import or_
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_simpleldap import LDAPException
 
-from aleph.core import db, ldap, get_config, secret_key
+from aleph.core import db, get_config, secret_key
 from aleph.model.common import SoftDeleteModel, IdModel, make_textid
 
 log = logging.getLogger(__name__)
@@ -162,31 +161,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         :rtype: bool
         """
         return check_password_hash(self.password_digest or '', secret)
-
-    @classmethod
-    def authenticate_using_ldap(cls, identifier, password):
-        """Autheticates using user LDAP identifier and password.
-
-        :param str identifier: LDAP ID.
-        :param str password: LDAP password.
-        :return: A matched role.
-        :rtype: :py:class:`Role`
-        """
-        if not password:
-            return
-
-        try:
-            base_dn = get_config('LDAP_BASE_DN')
-
-            ldap_conn = ldap.initialize
-            ldap_conn.simple_bind_s(base_dn.format(identifier), password)
-            ldap_conn.unbind_s()
-        except LDAPException as exception:
-            log.info(exception)
-            return
-
-        foreign_id = 'ldap:{}'.format(identifier)
-        return cls.load_or_create(foreign_id, cls.USER, identifier, identifier)
 
     def __repr__(self):
         return '<Role(%r,%r)>' % (self.id, self.foreign_id)

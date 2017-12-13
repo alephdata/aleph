@@ -43,16 +43,10 @@ def password_login():
     q = q.filter(Role.password_digest != None)  # noqa
     role = q.first()
 
-    # Try a password authentication and an LDAP authentication if it is enabled
-    if role is not None:
-        if not role.check_password(data.get('password')):
-            return Unauthorized("Authentication has failed.")
-
     if role is None:
-        role = Role.authenticate_using_ldap(data.get('email'),
-                                            data.get('password'))
+        return Unauthorized("Authentication has failed.")
 
-    if role is None:
+    if not role.check_password(data.get('password')):
         return Unauthorized("Authentication has failed.")
 
     return jsonify({
@@ -91,7 +85,8 @@ def oauth_callback(provider):
         if role is None:
             continue
         log.info("Logged in: %r", role)
-        next_url = get_best_next_url(request.args.get('state'), request.referrer)
+        next_url = get_best_next_url(request.args.get('state'),
+                                     request.referrer)
         next_url, _ = urldefrag(next_url)
         next_url = '%s#token=%s' % (next_url, create_token(role))
         return redirect(next_url)
