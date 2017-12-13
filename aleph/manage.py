@@ -8,17 +8,19 @@ from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
 from aleph.core import create_app, archive
-from aleph.model import db, upgrade_db, Collection, Document, Role
+from aleph.model import db, upgrade_db
+from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
 from aleph.ingest import ingest_document
-from aleph.index import delete_index, upgrade_search
-from aleph.index import index_document_id
-from aleph.logic import reindex_entities, delete_collection, process_collection
-from aleph.logic import update_collection
+from aleph.index.admin import delete_index, upgrade_search
+from aleph.index.documents import index_document_id
+from aleph.logic.collections import reindex_entities, delete_collection
+from aleph.logic.collections import update_collection, process_collection
 from aleph.logic.alerts import check_alerts
 from aleph.logic.entities import bulk_load
 from aleph.logic.xref import xref_collection
+from aleph.logic.permissions import update_permission
 from aleph.util import load_config_file
 
 
@@ -161,6 +163,17 @@ def createuser(foreign_id, name=None, email=None, is_admin=False):
                                is_admin=is_admin)
     db.session.commit()
     return role.api_key
+
+
+@manager.command
+def publish(foreign_id):
+    """Make a collection visible to all users."""
+    collection = Collection.by_foreign_id(foreign_id)
+    if collection is None:
+        raise ValueError("No such collection: %r" % foreign_id)
+    role = Role.by_foreign_id(Role.SYSTEM_GUEST)
+    update_permission(role, collection, True, False)
+    db.session.commit()
 
 
 @manager.command
