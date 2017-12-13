@@ -1,0 +1,42 @@
+.DualPane {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.DualPane > .InfoPane {
+  flex-grow: 0;
+  flex-basis: 300px;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.DualPane > .ContentPane {
+  flex-basis: 800px;
+  flex-grow: 4;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+
+.InfoPane > .InfoPane-content-container {
+  position: sticky;
+  top: 20px;
+}
+
+.InfoPane .InfoPane-content {
+  margin: 20px;
+  padding: 2em 1em;
+  border: 1px solid lightgrey;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 1);
+}
+
+.InfoPane-content > h1 {
+  font-size: 1.2em;
+}
+
+.InfoPane ul {
+  list-style: none;
+  padding-left: 1em;
+}
