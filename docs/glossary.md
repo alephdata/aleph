@@ -54,20 +54,26 @@ Aleph.
 
 Common metadata fields include:
 
-* ``title``: a short document title (will be extrapolated from the file name, if none is given).
+* ``title``: a short document title (will be extrapolated from the file name,
+  if none is given).
 * ``summary``: an optional short description, usually less than 200 characters.
-* ``file_name``: the basename of the imported file, e.g. ``Source_Data.xlsx``. If not provided, this will be guessed from the ``source_url`` or ``source_path``)
+* ``file_name``: the basename of the imported file, e.g. ``Source_Data.xlsx``.
+  If not provided, this will be guessed from the ``source_url`` or ``source_path``)
 * ``foreign_id``: see above, e.g. a source URL, or foreign systems ID
 * ``extension``: e.g. ``pdf``, ``csv``, without the dot
 * ``mime_type``: e.g. ``text/csv``, ``application/pdf``
 * ``source_url``: e.g. ``http://source.com/documents/Source_Data.xlsx``
 * ``source_path``: local import path, e.g. ``/tmp/Source_Data.xlsx``
-* ``languages``: a list of lowercase two-letter ISO 3166-1 language codes, e.g ``['ja', 'en']``
-* ``countries``: a list of lowercase two-letter ISO country codes, e.g ``['jp', 'en']``
-* ``dates``: a list of ISO 8601 dates relevant to the document, eg. ``['2001-01-28']``
+* ``languages``: a list of lowercase two-letter ISO 3166-1 language codes,
+  e.g ``['ja', 'en']``
+* ``countries``: a list of lowercase two-letter ISO country codes,
+  e.g ``['jp', 'en']``
+* ``dates``: a list of ISO 8601 dates relevant to the document,
+  e.g ``['2001-01-28']``
 * ``keywords``: a list of key phrases.
 * ``emails``: email addresses extracted from the text.
-* ``headers``: a hash of the headers received upon download of the document via HTTP.
+* ``headers``: a hash of the headers received upon download of the document
+  via HTTP.
 * ``content_hash``: a SHA-1 checksum of the data (automatically generated).
 
 Other fields can be added, but they will not usually be shown in the user

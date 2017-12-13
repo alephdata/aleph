@@ -11,10 +11,10 @@ Before we continue, you will need to have Docker and `docker-compose`
 installed. Please refer to their manual to learn how to set up
 [Docker](https://docs.docker.com/engine/installation/) and [docker-compose](https://docs.docker.com/compose/install/).
 
-You will also need to edit a configuration file to provide some credentials
+You will also need to adapt a configuration to provide some credentials
 for the external services. This includes the OAuth credentials to allow
-Google users to login to Aleph and an email server credentials. Email server
-support is optional for development purposes.
+Google users to login to Aleph and an email server credentials. Email
+server support is optional for development purposes.
 
 Inside the same repository you will find a file called `aleph.env.tmpl`.
 This is a template of the configuration file. Make a copy of this file named
@@ -25,7 +25,7 @@ There you will need to [create an API key](https://support.google.com/googleapi/
 In the **Authorized redirect URIs** section, use this URL:
 
 ```
-http://localhost:5000/api/1/sessions/callback/google
+http://localhost:8080/api/1/sessions/callback/google
 ```
 
 Save the client ID and the client secret as `ALEPH_OAUTH_*` values.
@@ -57,49 +57,25 @@ Then, to proceed run:
     leave this open to have access to the development logs.
  2. `make upgrade` to run the latest database migrations and create/update
     any indexes.
- 3. `make web` to run the web-based API server.
- 4. Open `http://localhost:5000/` in your browser to visit the API server.
+ 3. `make web` to run the web-based API server and the user interface.
+ 4. Open `http://localhost:8080/` in your browser to visit the application.
 
 Your repository is mounted inside the docker container under the name
 `aleph_app`. You can access these services anytime by running `make shell`.
 
 ### Building from a clean state
 
-You can also build the Aleph images locally. This could be useful while working on the Dockerfile changes and new dependency upgrades.
+You can also build the Aleph images locally. This could be useful while working
+on the Dockerfile changes and new dependency upgrades.
 
 To build the image you can run `make build`, which will
 build the `alephdata/aleph` image (this will generate a production ready image).
 
-<!-- ## Front-end
-
-Aleph is transitioning the front-end codebase towards a more modern
-architecture and while this is still a work-in-progress, some of the features
-already landed and should make the front-end development easier.
-
-An LTS version of Node.js with NPM is required before we continue.
-First you will need to install the development packages (at the moment the
-build tool uses Webpack 2): `npm install .`.
-If you are using Docker, none of this is required.
-
-In order to build the front-end you will need to run: `make assets`.
-The front-end assets are always built when you start the application.
-
-If you are working on the front-end, you will need to start the assets
-watcher in parallel:
-
-```
-make assets-dev
-```
-
-While working on the front-end development, make sure you disable browser
-cache! -->
-
 ## Production deployment
 
 Aleph runs on PostgreSQL and ElasticSearch along with a couple of system
-tools like OpenOffice, ImageMagik, Tesseract and wkhtmltopdf. For a full list
-of system dependencies please review the [`aleph_base`
-Dockerfile](https://github.com/alephdata/aleph/blob/master/contrib/base/Dockerfile).
+tools like ImageMagik, Tesseract. For a full list of system dependencies
+please review the [`aleph_base` Dockerfile](https://github.com/alephdata/aleph/blob/master/Dockerfile).
 
 If you decide to not use Docker compose, you will have to provide all these
 dependencies and services and change the configuration file accordingly.
@@ -125,38 +101,21 @@ make upgrade
 
 ## Configuration
 
-Most of the Aleph configuration is handled via a set of values in a Python
-configuration file. The defaults are documented in the
-[default_settings.py](https://github.com/alephdata/aleph/blob/master/aleph/default_settings.py)
-file and can be overridden by creating a configuration file named
-``settings.py`` in the aleph base directory.
-
-While using Docker, the config file, in turn, is largely configured using
-environment variables in accordance with [12 factor
-principles](https://12factor.net/). These environment variables can be found also in
-[docker_settings.py](https://github.com/alephdata/aleph/blob/master/contrib/docker_settings.py).
-
-### Feature options
-
-* ``TIKA_URI`` - when enabled, this will use Apache Tika to extract content
-  from PDF files, rather than the built-in ``pdfminer`` and ``tesseract``
-  modules. The URI must point to a Tika server endpoint, which is also
-  responsible for handling OCR.
-
-  **Note:** using Tika with OCR'd documents may yield
-  different results from the built-in mechanism and OCR may not be performed
-  on the same sections of a document's content
-  (See: [#104](https://github.com/alephdata/aleph/issues/104)).
+Most of the Aleph configuration is handled via a set of environment values, which are
+read by Aleph inside of docker. They are set using the ``aleph.env`` file, and can be
+edited locally.
 
 ## Users
 
-For development purposes, you can quickly create a new user with the `aleph createuser` command, inside a shell (`make shell`):
+For development purposes, you can quickly create a new user with the
+`aleph createuser` command, inside a shell (`make shell`):
 
 ```
 aleph createuser --email="user@example.com" --name="Alice" --is_admin=True userid123
 ```
 
-If you pass an email address in the `ALEPH_ADMINS` environment variable (in your aleph.env file) it will automatically be made admin.
+If you pass an email address in the `ALEPH_ADMINS` environment variable (in your
+`aleph.env` file) it will automatically be made admin.
 
 The user's API key is returned.
 

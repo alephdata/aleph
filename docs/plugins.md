@@ -36,17 +36,6 @@ The supported entry points include:
 
 The documentation for this part is missing at the moment.
 
-## Custom SCSS
-
-An additional environment variable, ``CUSTOM_SCSS_PATH``, can be used to
-specify the path to a SCSS file which will be imported into the application
-upon start. The given path must be  absolute, or relative to the run-time
-location of Aleph. An example would be:
-
-```bash
-docker-compose run -e CUSTOM_SCSS_PATH=my.scss app make web
-```
-
 ## Custom OAuth
 
 It's possible to hook into the login code to support other providers, but you

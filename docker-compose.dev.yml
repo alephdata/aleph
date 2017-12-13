@@ -107,7 +107,7 @@ services:
       - api
     command: npm run start
     ports:
-      - "3000:3000"
+      - "8080:3000"
     volumes:
       - "./ui/src:/alephui/src"
       - "./ui/public:/alephui/public"
