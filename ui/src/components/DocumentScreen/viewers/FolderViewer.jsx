@@ -5,10 +5,7 @@ import WayPoint from 'react-waypoint';
 import { Spinner } from '@blueprintjs/core';
 
 import { fetchChildDocs, fetchNextChildDocs } from 'src/actions';
-
-function getPath(url) {
-  return new URL(url).pathname;
-}
+import getPath from 'src/util/getPath';
 
 class DocAsListItem extends Component {
   render() {

@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom';
 import { groupBy, map } from 'lodash';
 
 import DualPane from 'src/components/common/DualPane';
-
-function getPath(url) {
-  return new URL(url).pathname;
-}
+import getPath from 'src/util/getPath';
 
 class HomeContent extends Component {
   render() {
