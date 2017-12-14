@@ -1,0 +1,11 @@
+.HtmlViewer {
+  flex-grow: 1;
+  margin: 10px;
+}
+
+.HtmlViewer iframe {
+  background-color: white;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}

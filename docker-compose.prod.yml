@@ -79,11 +79,11 @@ services:
     env_file:
       - aleph.env
 
-  web:
+  api:
     build: .
-    command: gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
-    ports:
-      - "13376:8000"
+    command: gunicorn -w 8 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
+    expose:
+      - 8000
     links:
       - postgres
       - elasticsearch
@@ -102,3 +102,25 @@ services:
       UNOSERVICE_URL: http://unoservice:3000/convert
     env_file:
       - aleph.env
+
+  ui:
+    build: ui
+    command: /bin/bash -c "npm run build; tail -f /dev/null"
+    volumes:
+      - assets:/alephui/build
+    environment:
+      REACT_APP_API_ENDPOINT: '/api/2'
+
+  web:
+    image: nginx:alpine
+    links:
+      - api
+      - ui
+    ports:
+      - "8080:8080"
+    volumes:
+      - assets:/assets
+      - "./contrib/proxy.conf:/etc/nginx/nginx.conf"
+
+volumes:
+  assets: {}

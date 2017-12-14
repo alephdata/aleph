@@ -14,9 +14,13 @@ build*
 docs/_build
 site*
 
+ui/node_modules
+ui/build
+ui/**/*.css
+
 celerybeat-schedule*
 aleph.env
 test_settings.py
 .coverage
 
-node_modules
+npm-debug.log*
