@@ -1,13 +1,12 @@
 import logging
 from pprint import pprint  # noqa
-from banal import clean_dict
 from followthemoney.types import TYPES
 
-from aleph.core import celery, db, es
+from aleph.core import celery, db
 from aleph.model import Document, DocumentTag
 from aleph.index.records import index_records, clear_records
-from aleph.index.core import entity_index, entities_index
-from aleph.index.util import index_form, index_names, unpack_result
+from aleph.index.entities import get_entity, delete_entity, index_single
+from aleph.index.util import index_form
 
 log = logging.getLogger(__name__)
 
@@ -35,17 +34,11 @@ def index_document(document):
 
     log.info("Index document [%s]: %s", document.id, document.title)
     data = {
-        'schema': document.schema,
-        'schemata': document.model.names,
-        'collection_id': document.collection_id,
-        'roles': document.collection.roles,
         'status': document.status,
         'content_hash': document.content_hash,
         'foreign_id': document.foreign_id,
         'error_message': document.error_message,
         'uploader_id': document.uploader_id,
-        'created_at': document.created_at,
-        'updated_at': document.updated_at,
         'title': document.title,
         'name': document.title,
         'summary': document.summary,
@@ -68,8 +61,7 @@ def index_document(document):
         'mime_type': document.mime_type,
         'pdf_version': document.pdf_version,
         'columns': document.columns,
-        'children': document.children.count(),
-        'text': index_form(document.texts)
+        'children': document.children.count()
     }
     if document.parent_id is not None:
         data['parent'] = {
@@ -89,32 +81,15 @@ def index_document(document):
             data[field] = []
         data[field].append(tag.text)
 
-    index_names(data)
-    data = clean_dict(data)
-    # pprint(data)
-    es.index(index=entity_index(),
-             doc_type='doc',
-             body=data,
-             id=document.id)
-    data['id'] = document.id
-    return data
+    texts = index_form(document.texts)
+    return index_single(document, data, texts)
 
 
 def get_document(document_id):
     """Fetch a document from the index."""
-    result = es.get(index=entities_index(),
-                    doc_type='doc',
-                    id=document_id,
-                    ignore=[404])
-    document = unpack_result(result)
-    if document is not None:
-        document.pop('text', None)
-    return document
+    return get_entity(document_id)
 
 
 def delete_document(document_id):
     clear_records(document_id)
-    es.delete(index=entities_index(),
-              doc_type='doc',
-              id=document_id,
-              ignore=[404])
+    delete_entity(document_id)

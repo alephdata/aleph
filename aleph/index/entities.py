@@ -2,27 +2,22 @@ from __future__ import absolute_import
 
 import time
 import logging
+import fingerprints
 from pprint import pprint  # noqa
-from followthemoney import model
+from banal import clean_dict
 from datetime import datetime
+from followthemoney import model
 from elasticsearch.helpers import BulkIndexError
 from elasticsearch import TransportError
+from normality import latinize_text
 
 from aleph.core import es
 from aleph.index.core import entity_index, entities_index
 from aleph.index.util import bulk_op, index_form
-from aleph.index.util import index_names, unpack_result
+from aleph.index.util import unpack_result
 from aleph.util import ensure_list
 
 log = logging.getLogger(__name__)
-
-
-def delete_entity(entity_id):
-    """Delete an entity from the index."""
-    es.delete(index=entities_index(),
-              doc_type='doc',
-              id=entity_id,
-              ignore=[404])
 
 
 def index_entity(entity):
@@ -33,11 +28,6 @@ def index_entity(entity):
     data = {
         'name': entity.name,
         'foreign_ids': entity.foreign_ids,
-        'created_at': entity.created_at,
-        'updated_at': entity.updated_at,
-        'bulk': False,
-        'roles': entity.collection.roles,
-        'collection_id': entity.collection_id,
         'properties': {
             'name': [entity.name]
         }
@@ -48,13 +38,7 @@ def index_entity(entity):
         if len(values):
             data['properties'][prop] = values
 
-    data = finalize_index(data, entity.model)
-    es.index(index=entity_index(),
-             doc_type='doc',
-             id=entity.id,
-             body=data)
-    data['id'] = entity.id
-    return data
+    return index_single(entity, data, [])
 
 
 def get_entity(entity_id):
@@ -62,11 +46,17 @@ def get_entity(entity_id):
     result = es.get(index=entities_index(),
                     doc_type='doc',
                     id=entity_id,
-                    ignore=[404])
-    entity = unpack_result(result)
-    if entity is not None:
-        entity.pop('text', None)
-    return entity
+                    ignore=[404],
+                    _source_exclude=['text'])
+    return unpack_result(result)
+
+
+def delete_entity(entity_id):
+    """Delete an entity from the index."""
+    es.delete(index=entities_index(),
+              doc_type='doc',
+              id=entity_id,
+              ignore=[404])
 
 
 def _index_updates(collection, entities):
@@ -105,7 +95,7 @@ def _index_updates(collection, entities):
         entity.pop('id', None)
         entity.update(common)
         schema = model.get(entity.get('schema'))
-        entity = finalize_index(entity, schema)
+        entity = finalize_index(entity, schema, [])
         # pprint(entity)
         yield {
             '_id': doc_id,
@@ -127,11 +117,13 @@ def index_bulk(collection, entities, chunk_size=500):
             time.sleep(10)
 
 
-def finalize_index(data, schema):
+def finalize_index(data, schema, texts):
     """Apply final denormalisations to the index."""
-    properties = data.get('properties', {})
+    data['schema'] = schema.name
+    # Get implied schemata (i.e. parents of the actual schema)
+    data['schemata'] = schema.names
 
-    texts = []
+    properties = data.get('properties', {})
     for name, prop in schema.properties.items():
         if name not in properties:
             continue
@@ -141,14 +133,37 @@ def finalize_index(data, schema):
             if name == 'name':
                 data['name'] = value
             texts.append(value)
+    data = schema.invert(data)
 
     data['text'] = index_form(texts)
-    data = schema.invert(data)
-    index_names(data)
-    data['schema'] = schema.name
-    # Get implied schemata (i.e. parents of the actual schema)
-    data['schemata'] = schema.names
+
+    names = data.get('names', [])
+    fps = [fingerprints.generate(name) for name in names]
+    fps = [fp for fp in fps if fp is not None]
+    data['fingerprints'] = list(set(fps))
+
+    # Add latinised names
+    for name in list(names):
+        names.append(latinize_text(name))
+    data['names'] = list(set(names))
 
     if 'created_at' not in data:
         data['created_at'] = data.get('updated_at')
+    return data
+
+
+def index_single(obj, data, texts):
+    """Indexing aspects common to entities and documents."""
+    data['bulk'] = False
+    data['roles'] = obj.collection.roles
+    data['collection_id'] = obj.collection.id
+    data['created_at'] = obj.created_at
+    data['updated_at'] = obj.updated_at
+    data = finalize_index(data, obj.model, texts)
+    data = clean_dict(data)
+    es.index(index=entity_index(),
+             doc_type='doc',
+             id=str(obj.id),
+             body=data)
+    data['id'] = str(obj.id)
     return data

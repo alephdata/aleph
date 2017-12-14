@@ -20,8 +20,6 @@ def fetch_entity(entity_id):
     """Load entities from both the ES index and the database."""
     entity = get_entity(entity_id)
     obj = Entity.by_id(entity_id)
-    if obj is not None:
-        entity['data'] = obj.data
     return entity, obj
 
 
