@@ -5,6 +5,7 @@ from itsdangerous import BadSignature
 from aleph.core import db, get_config, app_ui_url
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Permission
+from aleph.logic.roles import check_visible
 from aleph.logic.permissions import update_permission
 from aleph.notify import notify_role_template
 from aleph.views.serializers import RoleSchema, PermissionSchema
@@ -13,13 +14,6 @@ from aleph.views.util import require, get_collection, jsonify, parse_request
 from aleph.views.util import obj_or_404
 
 blueprint = Blueprint('roles_api', __name__)
-
-
-def check_visible(role):
-    """Users should not see group roles which they are not a part of."""
-    if request.authz.is_admin or role.id in request.authz.roles:
-        return True
-    return role.type == Role.USER
 
 
 @blueprint.route('/api/2/roles/_suggest', methods=['GET'])
@@ -62,36 +56,40 @@ def create():
     data = parse_request(schema=RoleCreateSchema)
 
     try:
-        email = Role.SIGNATURE.loads(data.get('code'), max_age=Role.SIGNATURE_MAX_AGE)
-
-        role = Role.by_email(email).first()
-        if role is None:
-            role = Role.load_or_create(
-                foreign_id='password:{}'.format(email),
-                type=Role.USER,
-                name=data.get('name') or email,
-                email=email
-            )
-            role.set_password(data.get('password'))
-            db.session.add(role)
-            db.session.commit()
-            # Let the serializer return more info about this user
-            request.authz.id = role.id
-            return jsonify(role, schema=RoleSchema, status=201)
-        else:
-            return jsonify({
-                'status': 'error',
-                'message': 'Email is already registered'
-            }, status=409)
+        email = Role.SIGNATURE.loads(data.get('code'),
+                                     max_age=Role.SIGNATURE_MAX_AGE)
     except BadSignature:
-        return jsonify({'status': 'error', 'message': 'Invalid code'}, status=400)
+        return jsonify({
+            'status': 'error',
+            'message': 'Invalid code'
+        }, status=400)
+
+    role = Role.by_email(email).first()
+    if role is not None:
+        return jsonify({
+            'status': 'error',
+            'message': 'Email is already registered'
+        }, status=409)
+
+    role = Role.load_or_create(
+        foreign_id='password:{}'.format(email),
+        type=Role.USER,
+        name=data.get('name') or email,
+        email=email
+    )
+    role.set_password(data.get('password'))
+    db.session.add(role)
+    db.session.commit()
+    # Let the serializer return more info about this user
+    request.authz.id = role.id
+    return jsonify(role, schema=RoleSchema, status=201)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
 def view(id):
     role = obj_or_404(Role.by_id(id))
     require(request.authz.logged_in,
-            check_visible(role))
+            check_visible(role, request.authz))
     return jsonify(role, schema=RoleSchema)
 
 
@@ -113,9 +111,9 @@ def permissions_index(id):
     q = Permission.all()
     q = q.filter(Permission.collection_id == collection.id)
     permissions = []
-    roles = [r for r in Role.all_groups() if check_visible(r)]
+    roles = [r for r in Role.all_groups() if check_visible(r, request.authz)]
     for permission in q.all():
-        if not check_visible(permission.role):
+        if not check_visible(permission.role, request.authz):
             continue
         permissions.append(permission)
         if permission.role in roles:
@@ -145,7 +143,7 @@ def permissions_update(id):
     collection = get_collection(id, request.authz.WRITE)
     data = parse_request(schema=PermissionSchema)
     role = Role.all().filter(Role.id == data['role']['id']).first()
-    if role is None or not check_visible(role):
+    if role is None or not check_visible(role, request.authz):
         raise BadRequest()
 
     perm = update_permission(role,
