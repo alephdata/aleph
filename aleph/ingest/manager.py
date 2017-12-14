@@ -80,12 +80,6 @@ class DocumentManager(Manager):
             return
 
         try:
-            if file_path is None:
-                # When a directory is ingested, the data is not stored. Thus,
-                # try to recurse transparently.
-                for child in Document.by_parent(document):
-                    self.ingest_document(child, role_id=role_id)
-
             if document.collection is not None:
                 if not len(document.languages):
                     document.languages = document.collection.languages
@@ -97,6 +91,12 @@ class DocumentManager(Manager):
                                     file_path=file_path,
                                     role_id=role_id)
             self.ingest(file_path, result=result)
+
+            if file_path is None:
+                # When a directory is ingested, the data is not stored. Thus,
+                # try to recurse transparently.
+                for child in Document.by_parent(document):
+                    self.ingest_document(child, role_id=role_id)
         finally:
             db.session.rollback()
             if content_hash is not None:
