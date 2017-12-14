@@ -1,0 +1,49 @@
+{
+  "name": "aleph-ui",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@blueprintjs/core": "^1.32.0",
+    "axios": "^0.16.2",
+    "bourbon": "^4.3.2",
+    "classnames": "^2.2.5",
+    "jwt-decode": "latest",
+    "lodash": "^4.17.4",
+    "node-sass-package-importer": "^3.0.4",
+    "normalizr": "^3.2.2",
+    "query-string": "^4.3.4",
+    "react": "^15.6.1",
+    "react-addons-css-transition-group": "^15.6.0",
+    "react-dom": "^15.6.1",
+    "react-intl": "^2.3.0",
+    "react-intl-cra": "^0.2.7",
+    "react-intl-po": "^2.0.2",
+    "react-redux": "^5.0.4",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.0",
+    "react-waypoint": "^7.3.1",
+    "redux": "^3.6.0",
+    "redux-logger": "^3.0.1",
+    "redux-thunk": "^2.2.0"
+  },
+  "devDependencies": {
+    "faker": "^4.1.0",
+    "json-server": "^0.10.0",
+    "node-sass-chokidar": "0.0.3",
+    "npm-run-all": "^4.0.2",
+    "react-scripts": "0.9.5"
+  },
+  "scripts": {
+    "build-css": "node-sass-chokidar src/ -o src/ --importer=node_modules/node-sass-package-importer/dist/cli.js",
+    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive --importer=node_modules/node-sass-package-importer/dist/cli.js",
+    "messages": "react-intl-cra 'src/**/*.js' 'i18n/messages.json'",
+    "json2pot": "react-intl-po json2pot 'i18n/messages.json' -o 'i18n/messages.pot'",
+    "po2json": "react-intl-po po2json 'i18n/translations/*.po' -m 'i18n/messages.json' -o src/translations.json",
+    "start-js": "react-scripts start",
+    "start": "npm-run-all -p watch-css start-js",
+    "build": "npm run build-css && react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "start-mocks": "node mocks/server.js"
+  }
+}
