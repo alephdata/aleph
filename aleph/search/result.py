@@ -66,7 +66,6 @@ class SearchQueryResult(QueryResult):
         'languages': LanguageFacet,
         'countries': CountryFacet,
         'category': CategoryFacet,
-        'remote.countries': CountryFacet,
         'schema': SchemaFacet,
         'schemata': SchemaFacet
     }
@@ -81,12 +80,11 @@ class SearchQueryResult(QueryResult):
         for doc in hits.get('hits', []):
             data = doc.pop('_source')
             data['id'] = doc.pop('_id')
-            data['$score'] = doc.pop('_score')
-            data['$doc_type'] = doc.pop('_type')
+            data['score'] = doc.pop('_score')
             if len(doc.get('highlight', {})):
-                data['$highlight'] = {}
+                data['highlight'] = {}
                 for key, value in doc.get('highlight', {}).items():
-                    data['$highlight'][key] = value
+                    data['highlight'][key] = value
             self.results.append(data)
 
     def get_facets(self):

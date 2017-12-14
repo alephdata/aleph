@@ -56,15 +56,18 @@ class SchemaName(String):
             raise ValidationError('Invalid schema name: %s' % value)
 
 
-class DatedSchema(object):
+class BaseSchema(Schema):
+    id = String(dump_only=True)
+    score = Float(dump_only=True)
+    highlight = String(dump_only=True)
+
     # these are raw because dumping fails if the dates are already strings, as
     # in the case of data coming from the ES index.
     created_at = Raw(dump_only=True)
     updated_at = Raw(dump_only=True)
 
 
-class RoleSchema(Schema, DatedSchema):
-    id = String(dump_only=True)
+class RoleSchema(BaseSchema):
     name = String(validate=Length(min=3))
     email = String(validate=Email())
     api_key = String(dump_only=True)
@@ -86,11 +89,11 @@ class RoleSchema(Schema, DatedSchema):
         return data
 
 
-class RoleCodeCreateSchema(Schema, DatedSchema):
+class RoleCodeCreateSchema(Schema):
     email = String(validate=Email(), required=True)
 
 
-class RoleCreateSchema(Schema, DatedSchema):
+class RoleCreateSchema(Schema):
     name = String()
     password = String(validate=Length(min=Role.PASSWORD_MIN_LENGTH),
                       required=True)
@@ -108,16 +111,14 @@ class LoginSchema(Schema):
     password = String(validate=Length(min=3))
 
 
-class PermissionSchema(Schema, DatedSchema):
-    id = String(dump_only=True)
+class PermissionSchema(BaseSchema):
     write = Boolean(required=True)
     read = Boolean(required=True)
     collection_id = String(dump_only=True, required=True)
     role = Nested(RoleReferenceSchema)
 
 
-class AlertSchema(Schema, DatedSchema):
-    id = String(dump_only=True)
+class AlertSchema(BaseSchema):
     query_text = String()
     entity_id = String()
     label = String()
@@ -131,8 +132,7 @@ class AlertSchema(Schema, DatedSchema):
         return data
 
 
-class CollectionSchema(Schema, DatedSchema):
-    id = String(dump_only=True)
+class CollectionSchema(BaseSchema):
     label = String(validate=Length(min=2, max=500), required=True)
     foreign_id = String()
     summary = String(allow_none=True)
@@ -156,8 +156,7 @@ class CollectionIndexSchema(CollectionSchema):
     schemata = Dict(dump_only=True, default={})
 
 
-class EntitySchema(Schema, DatedSchema):
-    id = String(dump_only=True)
+class EntitySchema(BaseSchema):
     collection_id = Integer(required=True)
     name = String(validate=Length(min=2, max=500), required=True)
     names = List(String(), dump_only=True)
@@ -180,15 +179,14 @@ class EntitySchema(Schema, DatedSchema):
         return data
 
 
-class DocumentReference(Schema):
+class DocumentReference(BaseSchema):
     id = String()
     foreign_id = String()
     title = String()
     type = String(dump_only=True)
 
 
-class DocumentSchema(Schema, DatedSchema):
-    id = String(dump_only=True)
+class DocumentSchema(BaseSchema):
     collection_id = Integer(dump_only=True, required=True)
     schema = SchemaName(dump_only=True)
     schemata = List(SchemaName(), dump_only=True)
@@ -249,13 +247,13 @@ class RecordSchema(Schema):
         return data
 
 
-class MatchSchema(Schema, DatedSchema):
+class MatchSchema(BaseSchema):
     entity = Nested(EntitySchema, required=True)
     match = Nested(EntitySchema, required=True)
     score = Float(dump_only=True)
 
 
-class MatchCollectionsSchema(Schema, DatedSchema):
+class MatchCollectionsSchema(BaseSchema):
     matches = Integer(dump_only=True)
     parent = Integer(dump_only=True)
     collection = Nested(CollectionSchema, required=True)
