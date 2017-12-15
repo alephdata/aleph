@@ -44,13 +44,15 @@ def _load_parent(collection, meta):
     return parent.id
 
 
-def _load_metadata():
+def _load_metadata(collection):
     """Unpack the common, pre-defined metadata for all the uploaded files."""
     try:
         meta = json.loads(request.form.get('meta', '{}'))
     except Exception as ex:
         raise BadRequest(unicode(ex))
 
+    meta['schema'] = Document.SCHEMA
+    meta['collection_id'] = collection.id
     validate_data(meta, DocumentSchema)
     foreign_id = stringify(meta.get('foreign_id'))
 
@@ -73,7 +75,7 @@ def _load_metadata():
 def ingest_upload(id):
     collection = obj_or_404(Collection.by_id(id))
     require(request.authz.can_write(collection.id))
-    meta, foreign_id = _load_metadata()
+    meta, foreign_id = _load_metadata(collection)
     parent_id = _load_parent(collection, meta)
     role_id = None if collection.managed else request.authz.id
     upload_dir = mkdtemp()
