@@ -40,7 +40,14 @@ COLLECTION_MAPPING = {
             "properties": {
                 "id": {"type": "long"},
                 "type": {"type": "keyword"},
-                "name": {"type": "keyword"}
+                "name": {
+                    "type": "text",
+                    "fields": {
+                        "kw": {
+                            "type": "keyword"
+                        }
+                    }
+                }
             }
         },
     }
