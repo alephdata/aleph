@@ -18,6 +18,10 @@ def unpack_result(res):
     data['id'] = res.get('_id')
     if '_score' in res:
         data['score'] = res.get('_score')
+    if 'highlight' in res:
+        data['highlight'] = {}
+        for key, value in res.get('highlight', {}).items():
+            data['highlight'][key] = value
     return data
 
 

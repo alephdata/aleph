@@ -158,6 +158,7 @@ class CollectionIndexSchema(CollectionSchema):
 
 class EntityBaseSchema(BaseSchema):
     collection_id = Integer(required=True)
+    collection = Nested(CollectionSchema(), allow_none=True)
     schema = SchemaName(required=True)
     schemata = List(SchemaName(), dump_only=True)
     names = List(String(), dump_only=True)
@@ -188,18 +189,10 @@ class EntitySchema(EntityBaseSchema):
         return data
 
 
-class DocumentReference(BaseSchema):
-    id = String()
-    foreign_id = String()
-    title = String()
-    schema = String(dump_only=True)
-
-
-class DocumentSchema(EntityBaseSchema):
+class BaseDocumentSchema(EntityBaseSchema):
     status = String(dump_only=True)
     foreign_id = String(allow_none=True)
     content_hash = String(dump_only=True)
-    parent = Nested(DocumentReference(), missing={}, allow_none=True)
     uploader_id = Integer(dump_only=True)
     error_message = String(dump_only=True)
     title = String(allow_none=True)
@@ -233,6 +226,10 @@ class DocumentSchema(EntityBaseSchema):
         collection_id = data.get('collection_id')
         data['writeable'] = request.authz.can_write(collection_id)
         return data
+
+
+class DocumentSchema(BaseDocumentSchema):
+    parent = Nested(BaseDocumentSchema(), allow_none=True)
 
 
 class RecordSchema(Schema):

@@ -2,12 +2,22 @@ import six
 import math
 from urlnormalizer import query_string
 
+from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser
 from aleph.search.facet import CategoryFacet, CollectionFacet, CountryFacet
 from aleph.search.facet import LanguageFacet, SchemaFacet, Facet
+from aleph.search.expand import RoleExpander, DocumentExpander
+from aleph.search.expand import EntitiesExpander, CollectionExpander
 
 
 class QueryResult(object):
+    EXPANDERS = [
+        CollectionExpander('collection_id', 'collection'),
+        EntitiesExpander('entities', 'related'),
+        DocumentExpander('parent', 'parent'),
+        RoleExpander('uploader_id', 'uploader'),
+        RoleExpander('creator', 'creator'),
+    ]
 
     def __init__(self, request, parser=None, results=None, total=None,
                  schema=None):
@@ -31,13 +41,23 @@ class QueryResult(object):
         args.extend(self.parser.items)
         return self.request.base_url + query_string(args)
 
+    def process(self):
+        results = []
+        for result in self.results:
+            for expander in self.EXPANDERS:
+                expander.collect(self, result)
+            results.append(result)
+
+        for result in results:
+            for expander in self.EXPANDERS:
+                expander.apply(self, result)
+            data, err = self.schema().dump(result)
+            yield data
+
     def to_dict(self):
-        results = list(self.results)
-        if self.schema:
-            results, _ = self.schema().dump(results, many=True)
         return {
             'status': 'ok',
-            'results': results,
+            'results': list(self.process()),
             'total': self.total,
             'page': self.parser.page,
             'limit': self.parser.limit,
@@ -78,14 +98,7 @@ class SearchQueryResult(QueryResult):
         hits = self.result.get('hits', {})
         self.total = hits.get('total')
         for doc in hits.get('hits', []):
-            data = doc.pop('_source')
-            data['id'] = doc.pop('_id')
-            data['score'] = doc.pop('_score')
-            if len(doc.get('highlight', {})):
-                data['highlight'] = {}
-                for key, value in doc.get('highlight', {}).items():
-                    data['highlight'][key] = value
-            self.results.append(data)
+            self.results.append(unpack_result(doc))
 
     def get_facets(self):
         facets = {}
