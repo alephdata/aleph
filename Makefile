@@ -1,5 +1,5 @@
 COMPOSE=docker-compose -f docker-compose.dev.yml 
-DEVDOCKER=$(COMPOSE) run --rm app /aleph/contrib/devwrapper.sh
+DEVDOCKER=$(COMPOSE) run --rm app
 
 all: build upgrade web
 

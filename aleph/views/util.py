@@ -51,7 +51,7 @@ def parse_request(schema=None):
 def get_entity(id, action):
     entity, obj = fetch_entity(id)
     obj_or_404(entity)
-    if entity.get('$bulk') and action == request.authz.WRITE:
+    if entity.get('bulk') and action == request.authz.WRITE:
         raise ImATeapot("Cannot write this entity.")
     require(request.authz.can(entity.get('collection_id'), action))
     return entity, obj

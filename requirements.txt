@@ -36,7 +36,7 @@ pylru >= 1.0.9
 pyjwt >= 1.5.3
 regex >= 2017.12.09
 
-followthemoney >= 0.3.5
+followthemoney >= 0.3.6
 fingerprints >= 0.5.3
 storagelayer >= 0.2.1
 exactitude >= 2.1.2

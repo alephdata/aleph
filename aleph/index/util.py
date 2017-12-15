@@ -1,7 +1,6 @@
 import logging
-import fingerprints
 from elasticsearch.helpers import bulk
-from normality import stringify, latinize_text, collapse_spaces, ascii_text
+from normality import stringify, latinize_text, collapse_spaces
 
 from aleph.core import es
 
@@ -13,12 +12,12 @@ REQUEST_TIMEOUT = 60 * 60 * 2
 
 def unpack_result(res):
     """Turn a document hit from ES into a more traditional JSON object."""
-    if 'found' in res and not res.get('found'):
+    if res.get('found') is False:
         return
     data = res.get('_source')
     data['id'] = res.get('_id')
     if '_score' in res:
-        data['$score'] = res.get('_score')
+        data['score'] = res.get('_score')
     return data
 
 
@@ -72,17 +71,3 @@ def index_form(texts):
         total_len += len(latin)
         results.append(latin)
     return results
-
-
-def index_names(data):
-    """Handle entity names on documents and entities."""
-    names = data.get('names', [])
-    fps = [fingerprints.generate(name) for name in names]
-    fps = [fp for fp in fps if fp is not None]
-    data['fingerprints'] = list(set(fps))
-
-    # Add latinised names
-    for name in list(names):
-        names.append(ascii_text(name))
-    data['names'] = list(set(names))
-    return data

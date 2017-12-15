@@ -56,15 +56,18 @@ class SchemaName(String):
             raise ValidationError('Invalid schema name: %s' % value)
 
 
-class DatedSchema(object):
+class BaseSchema(Schema):
+    id = String(dump_only=True)
+    score = Float(dump_only=True)
+    highlight = String(dump_only=True)
+
     # these are raw because dumping fails if the dates are already strings, as
     # in the case of data coming from the ES index.
     created_at = Raw(dump_only=True)
     updated_at = Raw(dump_only=True)
 
 
-class RoleSchema(Schema, DatedSchema):
-    id = String(dump_only=True)
+class RoleSchema(BaseSchema):
     name = String(validate=Length(min=3))
     email = String(validate=Email())
     api_key = String(dump_only=True)
@@ -86,11 +89,11 @@ class RoleSchema(Schema, DatedSchema):
         return data
 
 
-class RoleCodeCreateSchema(Schema, DatedSchema):
+class RoleCodeCreateSchema(Schema):
     email = String(validate=Email(), required=True)
 
 
-class RoleCreateSchema(Schema, DatedSchema):
+class RoleCreateSchema(Schema):
     name = String()
     password = String(validate=Length(min=Role.PASSWORD_MIN_LENGTH),
                       required=True)
@@ -108,16 +111,14 @@ class LoginSchema(Schema):
     password = String(validate=Length(min=3))
 
 
-class PermissionSchema(Schema, DatedSchema):
-    id = String(dump_only=True)
+class PermissionSchema(BaseSchema):
     write = Boolean(required=True)
     read = Boolean(required=True)
     collection_id = String(dump_only=True, required=True)
     role = Nested(RoleReferenceSchema)
 
 
-class AlertSchema(Schema, DatedSchema):
-    id = String(dump_only=True)
+class AlertSchema(BaseSchema):
     query_text = String()
     entity_id = String()
     label = String()
@@ -131,8 +132,7 @@ class AlertSchema(Schema, DatedSchema):
         return data
 
 
-class CollectionSchema(Schema, DatedSchema):
-    id = String(dump_only=True)
+class CollectionSchema(BaseSchema):
     label = String(validate=Length(min=2, max=500), required=True)
     foreign_id = String()
     summary = String(allow_none=True)
@@ -156,17 +156,25 @@ class CollectionIndexSchema(CollectionSchema):
     schemata = Dict(dump_only=True, default={})
 
 
-class EntitySchema(Schema, DatedSchema):
-    id = String(dump_only=True)
+class EntityBaseSchema(BaseSchema):
     collection_id = Integer(required=True)
-    name = String(validate=Length(min=2, max=500), required=True)
-    names = List(String(), dump_only=True)
-    foreign_ids = List(String())
-    countries = List(Country(), dump_only=True)
     schema = SchemaName(required=True)
     schemata = List(SchemaName(), dump_only=True)
-    properties = Dict()
+    names = List(String(), dump_only=True)
+    addresses = List(String(), dump_only=True)
+    phones = List(String(), dump_only=True)
+    emails = List(String(), dump_only=True)
+    identifiers = List(String(), dump_only=True)
+    countries = List(Country(), dump_only=True)
+    entities = List(String(), dump_only=True)
+    dates = List(PartialDate(), dump_only=True)
     bulk = Boolean(dump_only=True)
+
+
+class EntitySchema(EntityBaseSchema):
+    foreign_ids = List(String())
+    name = String(validate=Length(min=2, max=500), required=True)
+    properties = Dict()
 
     @post_dump
     def transient(self, data):
@@ -180,20 +188,15 @@ class EntitySchema(Schema, DatedSchema):
         return data
 
 
-class DocumentReference(Schema):
+class DocumentReference(BaseSchema):
     id = String()
     foreign_id = String()
     title = String()
-    type = String(dump_only=True)
+    schema = String(dump_only=True)
 
 
-class DocumentSchema(Schema, DatedSchema):
-    id = String(dump_only=True)
-    collection_id = Integer(dump_only=True, required=True)
-    schema = SchemaName(dump_only=True)
-    schemata = List(SchemaName(), dump_only=True)
+class DocumentSchema(EntityBaseSchema):
     status = String(dump_only=True)
-    type = String(dump_only=True)
     foreign_id = String(allow_none=True)
     content_hash = String(dump_only=True)
     parent = Nested(DocumentReference(), missing={}, allow_none=True)
@@ -201,15 +204,13 @@ class DocumentSchema(Schema, DatedSchema):
     error_message = String(dump_only=True)
     title = String(allow_none=True)
     summary = String(allow_none=True)
-    countries = List(Country(), missing=[])
-    languages = List(Language(), missing=[])
-    keywords = List(String(validate=Length(min=1, max=5000)), missing=[])
+    languages = List(Language())
+    keywords = List(String(validate=Length(min=1, max=5000)))
     date = PartialDate(allow_none=True)
     authored_at = PartialDate(allow_none=True)
     modified_at = PartialDate(allow_none=True)
     published_at = PartialDate(allow_none=True)
     retrieved_at = PartialDate(allow_none=True)
-    dates = List(PartialDate(), dump_only=True)
     file_name = String(allow_none=True)
     file_size = Integer(dump_only=True)
     author = String(allow_none=True)
@@ -249,13 +250,13 @@ class RecordSchema(Schema):
         return data
 
 
-class MatchSchema(Schema, DatedSchema):
+class MatchSchema(BaseSchema):
     entity = Nested(EntitySchema, required=True)
     match = Nested(EntitySchema, required=True)
     score = Float(dump_only=True)
 
 
-class MatchCollectionsSchema(Schema, DatedSchema):
+class MatchCollectionsSchema(BaseSchema):
     matches = Integer(dump_only=True)
     parent = Integer(dump_only=True)
     collection = Nested(CollectionSchema, required=True)

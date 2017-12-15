@@ -87,12 +87,22 @@ class DocumentsApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
 
         data = ores.json.copy()
-        data['countries'] = ['xz']
+        data.pop('collection_id')
         res = self.client.post(url,
                                data=json.dumps(data),
                                headers=headers,
                                content_type='application/json')
         assert res.status_code == 400, res.json
+
+        data = ores.json.copy()
+        data['countries'] = ['xz']
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 200, res.json
+        out = res.json
+        assert not len(out['countries']), out['countries']
 
         data = ores.json.copy()
         data['keywords'] = ['']

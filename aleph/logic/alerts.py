@@ -53,9 +53,10 @@ def check_role_alerts(authz):
         return
     log.info('Alerting %r, %d alerts...', authz.role, len(alerts))
     for alert in alerts:
-        args = {'q': alert.query_text}
         entity = get_entity(alert.entity_id) if alert.entity_id else None
-        state = SearchQueryParser(args, authz)
+        state = SearchQueryParser({
+            'q': alert.query_text
+        }, authz)
         query = AlertDocumentsQuery(state,
                                     entity=entity,
                                     since=alert.notified_at)
