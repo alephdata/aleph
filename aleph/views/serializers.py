@@ -156,16 +156,25 @@ class CollectionIndexSchema(CollectionSchema):
     schemata = Dict(dump_only=True, default={})
 
 
-class EntitySchema(BaseSchema):
+class EntityBaseSchema(BaseSchema):
     collection_id = Integer(required=True)
-    name = String(validate=Length(min=2, max=500), required=True)
-    names = List(String(), dump_only=True)
-    foreign_ids = List(String())
-    countries = List(Country(), dump_only=True)
     schema = SchemaName(required=True)
     schemata = List(SchemaName(), dump_only=True)
-    properties = Dict()
+    names = List(String(), dump_only=True)
+    addresses = List(String(), dump_only=True)
+    phones = List(String(), dump_only=True)
+    emails = List(String(), dump_only=True)
+    identifiers = List(String(), dump_only=True)
+    countries = List(Country(), dump_only=True)
+    entities = List(String(), dump_only=True)
+    dates = List(PartialDate(), dump_only=True)
     bulk = Boolean(dump_only=True)
+
+
+class EntitySchema(EntityBaseSchema):
+    foreign_ids = List(String())
+    name = String(validate=Length(min=2, max=500), required=True)
+    properties = Dict()
 
     @post_dump
     def transient(self, data):
@@ -183,15 +192,11 @@ class DocumentReference(BaseSchema):
     id = String()
     foreign_id = String()
     title = String()
-    type = String(dump_only=True)
+    schema = String(dump_only=True)
 
 
-class DocumentSchema(BaseSchema):
-    collection_id = Integer(dump_only=True, required=True)
-    schema = SchemaName(dump_only=True)
-    schemata = List(SchemaName(), dump_only=True)
+class DocumentSchema(EntityBaseSchema):
     status = String(dump_only=True)
-    type = String(dump_only=True)
     foreign_id = String(allow_none=True)
     content_hash = String(dump_only=True)
     parent = Nested(DocumentReference(), missing={}, allow_none=True)
@@ -199,15 +204,13 @@ class DocumentSchema(BaseSchema):
     error_message = String(dump_only=True)
     title = String(allow_none=True)
     summary = String(allow_none=True)
-    countries = List(Country(), missing=[])
-    languages = List(Language(), missing=[])
-    keywords = List(String(validate=Length(min=1, max=5000)), missing=[])
+    languages = List(Language())
+    keywords = List(String(validate=Length(min=1, max=5000)))
     date = PartialDate(allow_none=True)
     authored_at = PartialDate(allow_none=True)
     modified_at = PartialDate(allow_none=True)
     published_at = PartialDate(allow_none=True)
     retrieved_at = PartialDate(allow_none=True)
-    dates = List(PartialDate(), dump_only=True)
     file_name = String(allow_none=True)
     file_size = Integer(dump_only=True)
     author = String(allow_none=True)
