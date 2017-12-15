@@ -6,7 +6,6 @@ from aleph.core import celery, db
 from aleph.model import Document, DocumentTag
 from aleph.index.records import index_records, clear_records
 from aleph.index.entities import get_entity, delete_entity, index_single
-from aleph.index.util import index_form
 
 log = logging.getLogger(__name__)
 
@@ -14,7 +13,8 @@ TAG_FIELDS = {
     DocumentTag.TYPE_EMAIL: TYPES['email'].invert,
     DocumentTag.TYPE_PHONE: TYPES['phone'].invert,
     DocumentTag.TYPE_PERSON: TYPES['name'].invert,
-    DocumentTag.TYPE_ORGANIZATION: TYPES['name'].invert
+    DocumentTag.TYPE_ORGANIZATION: TYPES['name'].invert,
+    DocumentTag.TYPE_LOCATION: TYPES['address'].invert,
 }
 
 
@@ -73,15 +73,12 @@ def index_document(document):
     q = db.session.query(DocumentTag)
     q = q.filter(DocumentTag.document_id == document.id)
     for tag in q.yield_per(5000):
-        field = TAG_FIELDS.get(tag.type)
-        if field is None:
-            log.warning("Cannot index document tag: %r", tag)
-            continue
+        field = TAG_FIELDS[tag.type]
         if field not in data:
             data[field] = []
         data[field].append(tag.text)
 
-    texts = index_form(document.texts)
+    texts = list(document.texts)
     return index_single(document, data, texts)
 
 

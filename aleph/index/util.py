@@ -1,6 +1,6 @@
 import logging
 from elasticsearch.helpers import bulk
-from normality import stringify, latinize_text, collapse_spaces, ascii_text
+from normality import stringify, latinize_text, collapse_spaces
 
 from aleph.core import es
 
