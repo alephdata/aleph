@@ -222,8 +222,7 @@ class Metadata(object):
         dates = set([self.date,
                      self.authored_at,
                      self.modified_at,
-                     self.published_at,
-                     self.retrieved_at])
+                     self.published_at])
         return [d for d in dates if d is not None]
 
     @property
