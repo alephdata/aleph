@@ -158,6 +158,7 @@ class CollectionIndexSchema(CollectionSchema):
 
 class EntityBaseSchema(BaseSchema):
     collection_id = Integer(required=True)
+    # TODO: ^ make this optional and derive an EntityCreateSchema.
     collection = Nested(CollectionSchema(), allow_none=True)
     schema = SchemaName(required=True)
     schemata = List(SchemaName(), dump_only=True)
