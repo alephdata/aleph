@@ -49,6 +49,8 @@ md-companies:
         directorship:
           schema: Directorship
           keys:
+            - Company_Name
+            - Company_IDNO
             - Director
           properties:
             director:
@@ -67,14 +69,16 @@ md-companies:
           keys:
             - Company_IDNO
             - Company_Name
-            - Director
+            - Founder
           properties:
             name:
               column: Founder
         ownership:
           schema: Ownership
           keys:
-            - Director
+            - Company_Name
+            - Company_IDNO
+            - Founder
           properties:
             owner:
               entity: founder
