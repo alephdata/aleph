@@ -102,7 +102,7 @@ def make_excel_safe_name(collection):
 def generate_matches_sheet(workbook, sheet, collection, match_collection,
                            authz, links=True, one_sheet=False, offset=0,
                            limit=1000):
-    from aleph.views.serializers import MatchSchema
+    from aleph.serializers import MatchSchema
 
     if one_sheet:
         sheet_label = "All matches (top %s per collection)" % limit

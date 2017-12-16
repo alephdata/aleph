@@ -11,7 +11,7 @@ from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.logic.sessions import create_token, check_token
 from aleph.views.util import get_best_next_url, parse_request, jsonify
-from aleph.views.serializers import LoginSchema
+from aleph.serializers import LoginSchema
 
 
 log = logging.getLogger(__name__)

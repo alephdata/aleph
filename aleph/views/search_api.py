@@ -2,7 +2,7 @@ from flask import Blueprint, request
 
 from aleph.views.cache import enable_cache
 from aleph.search import CombinedQuery
-from aleph.views.serializers import SearchResultSchema
+from aleph.serializers import SearchResultSchema
 from aleph.views.util import jsonify
 
 

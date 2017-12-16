@@ -10,7 +10,7 @@ from normality import safe_filename, stringify
 
 from aleph.ingest import ingest_document
 from aleph.model import Collection, Document
-from aleph.views.serializers import DocumentSchema
+from aleph.serializers import DocumentSchema
 from aleph.index.documents import index_document_id
 from aleph.views.util import require, obj_or_404, jsonify, validate_data
 

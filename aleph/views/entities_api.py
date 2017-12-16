@@ -12,7 +12,7 @@ from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.search import DatabaseQueryResult, QueryParser
 from aleph.views.util import get_entity, get_collection, jsonify, parse_request
 from aleph.views.cache import enable_cache
-from aleph.views.serializers import EntitySchema, DocumentSchema
+from aleph.serializers import EntitySchema, DocumentSchema
 
 blueprint = Blueprint('entities_api', __name__)
 

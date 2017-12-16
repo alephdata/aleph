@@ -5,7 +5,7 @@ from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Collection, Match
 from aleph.views.util import get_collection, require, obj_or_404, jsonify
 from aleph.search import QueryParser, DatabaseQueryResult, MatchQueryResult
-from aleph.views.serializers import MatchSchema, MatchCollectionsSchema
+from aleph.serializers import MatchSchema, MatchCollectionsSchema
 from aleph.logic.xref import generate_excel, process_xref
 
 

@@ -9,7 +9,7 @@ from aleph.logic.collections import update_collection
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document, get_index_document
 from aleph.views.util import jsonify, parse_request
-from aleph.views.serializers import DocumentSchema, RecordSchema
+from aleph.serializers import DocumentSchema, RecordSchema
 from aleph.search import DocumentsQuery, RecordsQuery
 from aleph.text import sanitize_html
 from aleph.util import PDF_MIME

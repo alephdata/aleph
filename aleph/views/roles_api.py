@@ -8,8 +8,8 @@ from aleph.model import Role, Permission
 from aleph.logic.roles import check_visible
 from aleph.logic.permissions import update_permission
 from aleph.notify import notify_role_template
-from aleph.views.serializers import RoleSchema, PermissionSchema
-from aleph.views.serializers import RoleCodeCreateSchema, RoleCreateSchema
+from aleph.serializers import RoleSchema, PermissionSchema
+from aleph.serializers import RoleCodeCreateSchema, RoleCreateSchema
 from aleph.views.util import require, get_collection, jsonify, parse_request
 from aleph.views.util import obj_or_404
 
