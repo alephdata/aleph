@@ -11,7 +11,7 @@ from aleph.core import url_for, get_config
 from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
 from aleph.logic.documents import document_url
-from aleph.model import Role, Document
+from aleph.model import Role, Document, Entity, Collection
 from aleph.util import ensure_list
 
 
@@ -57,6 +57,8 @@ class SchemaName(String):
 
 
 class BaseSchema(Schema):
+    EXPAND = []
+
     id = String(dump_only=True)
     score = Float(dump_only=True)
     highlight = String(dump_only=True)
@@ -133,6 +135,10 @@ class AlertSchema(BaseSchema):
 
 
 class CollectionSchema(BaseSchema):
+    EXPAND = [
+        ('creator', Role, 'creator'),
+    ]
+
     label = String(validate=Length(min=2, max=500), required=True)
     foreign_id = String()
     summary = String(allow_none=True)
@@ -168,14 +174,20 @@ class EntityBaseSchema(BaseSchema):
     emails = List(String(), dump_only=True)
     identifiers = List(String(), dump_only=True)
     countries = List(Country(), dump_only=True)
-    entities = List(String(), dump_only=True)
     dates = List(PartialDate(), dump_only=True)
     bulk = Boolean(dump_only=True)
 
 
 class EntitySchema(EntityBaseSchema):
+    EXPAND = [
+        ('collection_id', Collection, 'collection'),
+        ('entities', Entity, 'related'),
+    ]
+
     foreign_ids = List(String())
     name = String(validate=Length(min=2, max=500), required=True)
+    entities = List(String(), dump_only=True)
+    related = List(Nested(EntityBaseSchema()), dump_only=True)
     properties = Dict()
 
     @post_dump
@@ -190,7 +202,7 @@ class EntitySchema(EntityBaseSchema):
         return data
 
 
-class BaseDocumentSchema(EntityBaseSchema):
+class DocumentBaseSchema(EntityBaseSchema):
     status = String(dump_only=True)
     foreign_id = String(allow_none=True)
     content_hash = String(dump_only=True)
@@ -229,8 +241,14 @@ class BaseDocumentSchema(EntityBaseSchema):
         return data
 
 
-class DocumentSchema(BaseDocumentSchema):
-    parent = Nested(BaseDocumentSchema(), allow_none=True)
+class DocumentSchema(DocumentBaseSchema):
+    EXPAND = [
+        ('collection_id', Collection, 'collection'),
+        ('uploader_id', Document, 'uploader'),
+        ('parent', Document, 'parent'),
+    ]
+
+    parent = Nested(DocumentBaseSchema(), allow_none=True)
 
 
 class RecordSchema(Schema):
