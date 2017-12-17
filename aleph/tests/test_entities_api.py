@@ -1,7 +1,7 @@
 import json
 
 from aleph.core import db
-from aleph.model import Collection, Entity
+from aleph.model import Entity
 from aleph.index import index_entity, flush_index
 from aleph.tests.util import TestCase
 
@@ -11,11 +11,7 @@ class EntitiesApiTestCase(TestCase):
     def setUp(self):
         super(EntitiesApiTestCase, self).setUp()
         self.rolex = self.create_user(foreign_id='user_3')
-        self.col = Collection()
-        self.col.label = 'Test Collection'
-        self.col.foreign_id = 'test_coll_entities_api'
-        db.session.add(self.col)
-        db.session.flush()
+        self.col = self.create_collection()
         self.ent = Entity.create({
             'schema': 'LegalEntity',
             'name': 'Winnie the Pooh',
@@ -100,6 +96,27 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 'middle' in res.json['properties']['summary'][0], res.json
+
+    def test_create_collection_object(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/entities'
+        data = {
+            'schema': 'Asset',
+            'name': "Our house",
+            'collection': {
+                'id': self.col.id,
+                'label': 'blaaa'
+            },
+            'properties': {
+                'summary': "In the middle of our street"
+            }
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 200, res.json
+        assert res.json['collection']['id'] == str(self.col.id), res.json
 
     def test_create_nested(self):
         _, headers = self.login(is_admin=True)

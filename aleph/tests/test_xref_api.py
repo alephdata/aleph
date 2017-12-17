@@ -1,7 +1,6 @@
 from aleph.core import db
-from aleph.model import Collection, Entity, Permission, Role
+from aleph.model import Entity, Role
 from aleph.index import index_entity
-from aleph.logic import update_collection
 from aleph.tests.util import TestCase
 from aleph.logic.xref import xref_collection
 
@@ -15,13 +14,12 @@ class XrefApiTestCase(TestCase):
         self.guest = self.create_user(foreign_id=Role.SYSTEM_GUEST)
 
         # First public collection and entities
-        self.residents = Collection.create({
-            'label': 'Residents of Habitat Ring',
-            'foreign_id': 'test_residents'
-        }, role=self.creator)
-        db.session.add(self.residents)
-        db.session.flush()
-        Permission.grant(self.residents, self.guest, True, False)
+        self.residents = self.create_collection(
+            label='Residents of Habitat Ring',
+            foreign_id='test_residents',
+            creator=self.creator
+        )
+        self.grant(self.residents, self.guest, True, False)
 
         self.ent = Entity.create({
             'schema': 'Person',
@@ -36,13 +34,12 @@ class XrefApiTestCase(TestCase):
         db.session.add(self.ent2)
 
         # Second public collection and entities
-        self.dabo = Collection.create({
-            'label': 'Dabo Girls',
-            'foreign_id': 'test_dabo'
-        }, role=self.creator)
-        db.session.add(self.dabo)
-        db.session.flush()
-        Permission.grant(self.dabo, self.guest, True, False)
+        self.dabo = self.create_collection(
+            label='Dabo Girls',
+            foreign_id='test_dabo',
+            creator=self.creator
+        )
+        self.grant(self.dabo, self.guest, True, False)
 
         self.ent3 = Entity.create({
             'schema': 'Person',
@@ -63,13 +60,11 @@ class XrefApiTestCase(TestCase):
         db.session.add(self.ent5)
 
         # Private collection and entities
-        self.obsidian = Collection.create({
-            'label': 'Obsidian Order',
-            'foreign_id': 'test_obsidian',
-            'category': 'leak'
-        }, role=self.creator)
-        db.session.add(self.obsidian)
-        db.session.flush()
+        self.obsidian = self.create_collection(
+            label='Obsidian Order',
+            foreign_id='test_obsidian',
+            creator=self.creator
+        )
 
         self.ent6 = Entity.create({
             'schema': 'Person',
@@ -91,16 +86,16 @@ class XrefApiTestCase(TestCase):
         index_entity(self.ent5)
         index_entity(self.ent6)
         index_entity(self.ent7)
-        update_collection(self.obsidian)
-        update_collection(self.dabo)
+        self.flush_index()
 
     def test_summary(self):
         xref_collection(self.residents)
-        res = self.client.get('/api/2/collections/%s' % self.obsidian.id)
+        res = self.client.get('/api/2/collections/%s/xref' % self.obsidian.id)
         assert res.status_code == 403, res
 
         # Not logged in
-        res = self.client.get('/api/2/collections/%s/xref' % self.residents.id)
+        resi_url = '/api/2/collections/%s/xref' % self.residents.id
+        res = self.client.get(resi_url)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         coll0 = res.json['results'][0]['collection']
@@ -109,8 +104,7 @@ class XrefApiTestCase(TestCase):
 
         # Logged in as outsider (restricted access)
         _, headers = self.login(foreign_id='outsider')
-        res = self.client.get('/api/2/collections/%s/xref' % self.residents.id,
-                              headers=headers)
+        res = self.client.get(resi_url, headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         coll0 = res.json['results'][0]['collection']
@@ -119,8 +113,7 @@ class XrefApiTestCase(TestCase):
 
         # Logged in as creator (all access)
         _, headers = self.login(foreign_id='creator')
-        res = self.client.get('/api/2/collections/%s/xref' % self.residents.id,
-                              headers=headers)
+        res = self.client.get(resi_url, headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 2, res.json
         labels = [m['collection']['label'] for m in res.json['results']]
@@ -197,10 +190,10 @@ class XrefApiTestCase(TestCase):
         _, headers = self.login('creator')
         res = self.client.post('/api/2/collections/%s/xref' %
                                self.residents.id, headers=headers)
-
-        summary = self.client.get('/api/2/collections/%s/xref' % self.residents.id,
-                              headers=headers)
         assert res.status_code == 202, res
+
+        url = '/api/2/collections/%s/xref' % self.residents.id
+        summary = self.client.get(url, headers=headers)
         assert summary.status_code == 200, summary
         assert summary.json['total'] == 2, summary.json
         labels = [m['collection']['label'] for m in summary.json['results']]
@@ -208,24 +201,22 @@ class XrefApiTestCase(TestCase):
         assert 'Dabo Girls' in labels, summary.json
 
     def test_create_matches(self):
-        res = self.client.post('/api/2/collections/%s/xref/%s' %
-                               (self.residents.id, self.obsidian.id))
+        url = '/api/2/collections/%s/xref/%s' \
+            % (self.residents.id, self.obsidian.id)
+        res = self.client.post(url)
         assert res.status_code == 403, res
 
         _, headers = self.login('outsider')
-        res = self.client.post('/api/2/collections/%s/xref/%s' %
-                               (self.residents.id, self.obsidian.id), headers=headers)
+
+        res = self.client.post(url, headers=headers)
         assert res.status_code == 403, res
 
         _, headers = self.login('creator')
-        res = self.client.post('/api/2/collections/%s/xref/%s' %
-                               (self.residents.id, self.obsidian.id), headers=headers)
-
-        match_obsidian = self.client.get('/api/2/collections/%s/xref/%s' %
-                                         (self.residents.id, self.obsidian.id),
-                                         headers=headers)
+        res = self.client.post(url, headers=headers)
         assert res.status_code == 202, res
-        assert match_obsidian.status_code == 200, match_obsidian
+
+        match_obsidian = self.client.get(url, headers=headers)
+        assert match_obsidian.status_code == 200, match_obsidian.json
         assert match_obsidian.json['total'] == 1, match_obsidian.json
         assert 'Garak' in match_obsidian.json['results'][0]['entity']['name']
         assert 'Leeta' not in match_obsidian.json['results'][0]['entity']['name']  # noqa

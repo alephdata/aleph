@@ -5,11 +5,13 @@ from flask_testing import TestCase as FlaskTestCase
 from flask_fixtures import loaders, load_fixtures
 from faker import Factory
 
-from aleph.model import Role, Document, create_system_roles
+from aleph.model import Role, Document, Collection, Permission
+from aleph.model import create_system_roles
 from aleph.index import delete_index, upgrade_search, flush_index
 from aleph.index.core import collection_index, entity_index, record_index
 from aleph.logic.documents import process_document
-from aleph.logic import reindex_entities
+from aleph.logic.collections import update_collection
+from aleph.logic.entities import reindex_entities
 from aleph.core import db, es, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
@@ -57,6 +59,21 @@ class TestCase(FlaskTestCase):
         headers = {'Authorization': role.api_key}
         return role, headers
 
+    def create_collection(self, creator=None, **kwargs):
+        collection = Collection.create(kwargs, role=creator)
+        db.session.add(collection)
+        db.session.commit()
+        update_collection(collection)
+        return collection
+
+    def grant(self, collection, role, read, write):
+        Permission.grant(collection, role, read, write)
+        db.session.commit()
+        update_collection(collection)
+
+    def flush_index(self):
+        flush_index()
+
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
 
@@ -68,7 +85,7 @@ class TestCase(FlaskTestCase):
         if process_documents:
             for doc in Document.all():
                 process_document(doc)
-        flush_index()
+        self.flush_index()
 
     def setUp(self):
         if not hasattr(TestCase, '_global_test_state'):
