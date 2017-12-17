@@ -21,7 +21,7 @@ blueprint = Blueprint('entities_api', __name__)
 @blueprint.route('/api/2/entities', methods=['GET'])
 def index():
     enable_cache()
-    result = EntitiesQuery.handle_request(request, schema=CombinedSchema)
+    result = EntitiesQuery.handle(request, schema=CombinedSchema)
     return jsonify(result)
 
 
@@ -39,8 +39,7 @@ def all():
 @blueprint.route('/api/2/entities/_suggest', methods=['GET'])
 def suggest():
     enable_cache()
-    result = SuggestEntitiesQuery.handle_request(request,
-                                                 schema=CombinedSchema)
+    result = SuggestEntitiesQuery.handle(request, schema=CombinedSchema)
     return jsonify(result)
 
 
@@ -66,9 +65,9 @@ def view(id):
 def similar(id):
     enable_cache()
     entity, _ = get_entity(id, request.authz.READ)
-    result = SimilarEntitiesQuery.handle_request(request,
-                                                 entity=entity,
-                                                 schema=CombinedSchema)
+    result = SimilarEntitiesQuery.handle(request,
+                                         entity=entity,
+                                         schema=CombinedSchema)
     return jsonify(result)
 
 
@@ -76,9 +75,9 @@ def similar(id):
 def documents(id):
     enable_cache()
     entity, _ = get_entity(id, request.authz.READ)
-    result = EntityDocumentsQuery.handle_request(request,
-                                                 entity=entity,
-                                                 schema=CombinedSchema)
+    result = EntityDocumentsQuery.handle(request,
+                                         entity=entity,
+                                         schema=CombinedSchema)
     return jsonify(result)
 
 

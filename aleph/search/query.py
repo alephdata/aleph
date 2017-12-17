@@ -131,7 +131,7 @@ class Query(object):
                     query=body)
 
     @classmethod
-    def handle_request(cls, request, limit=None, schema=None, **kwargs):
+    def handle(cls, request, limit=None, schema=None, **kwargs):
         parser = SearchQueryParser(request.args, request.authz, limit=limit)
         result = cls(parser, **kwargs).search()
         return cls.RESULT_CLASS(request, parser, result, schema=schema)

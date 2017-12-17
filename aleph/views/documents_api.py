@@ -23,7 +23,7 @@ blueprint = Blueprint('documents_api', __name__)
 @blueprint.route('/api/2/documents', methods=['GET'])
 def index():
     enable_cache()
-    result = DocumentsQuery.handle_request(request, schema=CombinedSchema)
+    result = DocumentsQuery.handle(request, schema=CombinedSchema)
     return jsonify(result)
 
 
@@ -107,9 +107,9 @@ def records(document_id):
     document = get_document(document_id)
     if not document.supports_records:
         raise BadRequest("This document does not have records.")
-    result = RecordsQuery.handle_request(request,
-                                         document=document,
-                                         schema=RecordSchema)
+    result = RecordsQuery.handle(request,
+                                 document=document,
+                                 schema=RecordSchema)
     return jsonify(result)
 
 

@@ -14,7 +14,7 @@ blueprint = Blueprint('collections_api', __name__)
 
 @blueprint.route('/api/2/collections', methods=['GET'])
 def index():
-    result = CollectionsQuery.handle_request(request, schema=CollectionSchema)
+    result = CollectionsQuery.handle(request, schema=CollectionSchema)
     return jsonify(result)
 
 
