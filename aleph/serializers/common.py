@@ -1,3 +1,5 @@
+from banal import is_mapping
+from normality import stringify
 from followthemoney import model
 from exactitude import countries, languages, dates
 from marshmallow.fields import String, Raw, Float
@@ -57,3 +59,14 @@ class BaseSchema(ExpandableSchema):
     # in the case of data coming from the ES index.
     created_at = Raw(dump_only=True)
     updated_at = Raw(dump_only=True)
+
+
+def flatten_id(data, field, nested):
+    if not is_mapping(data):
+        return data
+    value = stringify(data.get(field))
+    if value is None:
+        nested = data.get(nested)
+        if is_mapping(nested):
+            value = stringify(nested.get('id'))
+    data[field] = value

@@ -10,7 +10,7 @@ from normality import safe_filename, stringify
 
 from aleph.ingest import ingest_document
 from aleph.model import Collection, Document
-from aleph.serializers.entities import CombinedSchema, DocumentUpdateSchema
+from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.index.documents import index_document_id
 from aleph.views.util import require, obj_or_404, jsonify, validate_data
 
@@ -51,7 +51,7 @@ def _load_metadata(collection):
     except Exception as ex:
         raise BadRequest(unicode(ex))
 
-    validate_data(meta, DocumentUpdateSchema)
+    validate_data(meta, DocumentCreateSchema)
     foreign_id = stringify(meta.get('foreign_id'))
 
     # If a foreign_id is specified, we cannot upload multiple files at once.
@@ -117,5 +117,5 @@ def ingest_upload(id):
 
     return jsonify({
         'status': 'ok',
-        'documents': [d.id for d in documents]
+        'documents': [CombinedSchema().dump(d).data for d in documents]
     })

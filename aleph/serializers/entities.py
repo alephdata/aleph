@@ -1,13 +1,15 @@
 from flask import request
-from marshmallow import Schema, post_dump
-from marshmallow.fields import Nested, Integer, String, DateTime, List
-from marshmallow.fields import Dict, Boolean, Float
+from normality import stringify
+from marshmallow import Schema, post_dump, pre_load
+from marshmallow.fields import Nested, Integer, String, List
+from marshmallow.fields import Dict, Boolean
 from marshmallow.validate import Length
 
 from aleph.core import url_for
 from aleph.logic.entities import entity_url
 from aleph.logic.documents import document_url
-from aleph.serializers.common import BaseSchema, SchemaName, PartialDate
+from aleph.serializers.common import BaseSchema, flatten_id
+from aleph.serializers.common import SchemaName, PartialDate
 from aleph.serializers.common import Country, Language
 from aleph.serializers.roles import RoleReferenceSchema
 from aleph.serializers.collections import CollectionSchema
@@ -88,10 +90,10 @@ class ShallowCombinedSchema(BaseSchema):
 
 class CombinedSchema(ShallowCombinedSchema):
     EXPAND = [
-        ('collection_id', Collection, 'collection', False),
-        ('entities', Entity, 'related', True),
-        ('uploader_id', Document, 'uploader', False),
-        ('parent', Document, 'parent', False),
+        ('collection_id', Collection, 'collection', CollectionSchema, False),
+        ('entities', Entity, 'related', ShallowCombinedSchema, True),
+        ('uploader_id', Document, 'uploader', ShallowCombinedSchema, False),
+        ('parent', Document, 'parent', ShallowCombinedSchema, False),
     ]
     related = List(Nested(ShallowCombinedSchema()))
     parent = Nested(ShallowCombinedSchema())
@@ -106,6 +108,10 @@ class EntityUpdateSchema(Schema):
 class EntityCreateSchema(EntityUpdateSchema):
     collection_id = String(required=True)
     foreign_ids = List(String())
+
+    @pre_load()
+    def flatten_collection(self, data):
+        flatten_id(data, 'collection_id', 'collection')
 
 
 class DocumentParentSchema(Schema):
@@ -129,4 +135,7 @@ class DocumentUpdateSchema(Schema):
     generator = String(allow_none=True)
     mime_type = String(allow_none=True)
     source_url = String(allow_none=True)
+
+
+class DocumentCreateSchema(DocumentUpdateSchema):
     parent = Nested(DocumentParentSchema())

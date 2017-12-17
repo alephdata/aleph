@@ -151,7 +151,8 @@ COLLECTION_CATEGORIES = {
     'procurement': 'Procurement',
     'grey': 'Grey literature',
     'license': 'Licenses and concessions',
-    'regulatory': 'Regulatory filings'
+    'regulatory': 'Regulatory filings',
+    'other': 'Other material'
 }
 
 

@@ -21,8 +21,8 @@ class RoleSchema(BaseSchema):
         data['uri'] = url_for('roles_api.view', id=data.get('id'))
         data['writeable'] = str(request.authz.id) == str(data.get('id'))
         if not data['writeable']:
-            data.pop('api_key')
-            data.pop('email')
+            data.pop('api_key', None)
+            data.pop('email', None)
         return data
 
 

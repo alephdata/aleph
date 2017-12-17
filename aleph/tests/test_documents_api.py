@@ -87,7 +87,7 @@ class DocumentsApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
 
         data = ores.json.copy()
-        data.pop('collection_id')
+        data['published_at'] = 'yesterday'
         res = self.client.post(url,
                                data=json.dumps(data),
                                headers=headers,
@@ -100,9 +100,7 @@ class DocumentsApiTestCase(TestCase):
                                data=json.dumps(data),
                                headers=headers,
                                content_type='application/json')
-        assert res.status_code == 200, res.json
-        out = res.json
-        assert not len(out['countries']), out['countries']
+        assert res.status_code == 400, res.json
 
         data = ores.json.copy()
         data['keywords'] = ['']

@@ -12,9 +12,8 @@ def get_jwt_secret():
 
 
 def create_token(role):
-    from aleph.serializers import RoleSchema
+    from aleph.serializers.roles import RoleSchema
     role, _ = RoleSchema().dump(role)
-    role.pop('foreign_id', None)
     role.pop('created_at', None)
     role.pop('updated_at', None)
     exp = datetime.utcnow() + timedelta(days=7)
