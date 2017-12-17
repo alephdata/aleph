@@ -18,8 +18,11 @@ class RoleSchema(BaseSchema):
 
     @post_dump
     def transient(self, data):
-        data['uri'] = url_for('roles_api.view', id=data.get('id'))
-        data['writeable'] = str(request.authz.id) == str(data.get('id'))
+        pk = str(data.get('id'))
+        data['links'] = {
+            'self': url_for('roles_api.view', id=pk)
+        }
+        data['writeable'] = str(request.authz.id) == pk
         if not data['writeable']:
             data.pop('api_key', None)
             data.pop('email', None)

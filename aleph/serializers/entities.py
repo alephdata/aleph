@@ -71,16 +71,43 @@ class ShallowCombinedSchema(BaseSchema):
     text = String()
     html = String()
 
+    def document_links(self, data, pk, schemata):
+        links = {
+            'self': url_for('documents_api.view', document_id=pk),
+            'ui': document_url(pk)
+        }
+        if data.get('content_hash'):
+            links['file'] = url_for('documents_api.file', document_id=pk)
+        if schemata.intersection([Document.SCHEMA_PDF]):
+            links['pdf'] = url_for('documents_api.pdf', document_id=pk)
+        if schemata.intersection([Document.SCHEMA_PDF, Document.SCHEMA_TABLE]):
+            links['records'] = url_for('documents_api.records', document_id=pk)
+        if schemata.intersection([Document.SCHEMA_FOLDER]):
+            query = (('filter:parent.id', pk),)
+            links['children'] = url_for('documents_api.index', _query=query)
+        return links
+
+    def entity_links(self, data, pk, schemata):
+        links = {
+            'self': url_for('entities_api.view', id=pk),
+            # 'similar': url_for('entities_api.similar', id=pk),
+            # 'documents': url_for('entities_api.documents', id=pk),
+            'ui': entity_url(pk)
+        }
+        query = (('filter:entities', pk),)
+        links['related'] = url_for('entities_api.index', _query=query)
+        return links
+
     @post_dump
     def hypermedia(self, data):
-        collection_id = data.get('collection_id')
-        is_document = Document.SCHEMA in data.get('schemas', [])
-        if is_document:
-            data['uri'] = url_for('documents_api.view', document_id=data.get('id'))  # noqa
-            data['ui'] = document_url(data.get('id'))
+        pk = str(data.get('id'))
+        collection = data.get('collection', {})
+        collection_id = collection.get('id', data.get('collection_id'))
+        schemata = set(data.get('schemata', []))
+        if Document.SCHEMA in schemata:
+            data['links'] = self.document_links(data, pk, schemata)
         else:
-            data['uri'] = url_for('entities_api.view', id=data.get('id'))
-            data['ui'] = entity_url(data.get('id'))
+            data['links'] = self.entity_links(data, pk, schemata)
 
         if data.get('bulk'):
             data['writeable'] = False

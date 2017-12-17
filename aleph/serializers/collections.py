@@ -35,8 +35,10 @@ class CollectionSchema(BaseSchema):
 
     @post_dump
     def transient(self, data):
-        id_ = str(data.get('id'))
-        data['uri'] = url_for('collections_api.view', id=id_)
-        data['ui'] = collection_url(id_)
-        data['writeable'] = request.authz.can_write(id_)
+        pk = str(data.get('id'))
+        data['links'] = {
+            'self': url_for('collections_api.view', id=pk),
+            'ui': collection_url(pk)
+        }
+        data['writeable'] = request.authz.can_write(pk)
         return data
