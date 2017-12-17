@@ -2,67 +2,17 @@ from flask import request
 from marshmallow import Schema, post_dump
 from marshmallow.fields import Nested, Integer, String, DateTime, List
 from marshmallow.fields import Dict, Boolean, Float
-from marshmallow.validate import Email, Length
+from marshmallow.validate import Length
 
 from aleph.core import url_for
-from aleph.logic.collections import collection_url
 from aleph.logic.entities import entity_url
 from aleph.logic.documents import document_url
 from aleph.serializers.common import BaseSchema, SchemaName, PartialDate
-from aleph.serializers.common import Category, Country, Language
-from aleph.model import Role, Document, Entity, Collection
+from aleph.serializers.common import Country, Language
+from aleph.serializers.roles import RoleReferenceSchema
+from aleph.serializers.collections import CollectionSchema
+from aleph.model import Document, Entity, Collection
 from aleph.util import ensure_list
-
-
-class RoleSchema(BaseSchema):
-    name = String(validate=Length(min=3))
-    email = String(validate=Email())
-    api_key = String(dump_only=True)
-    type = String(dump_only=True)
-    foreign_id = String(dump_only=True)
-    is_admin = Boolean(dump_only=True)
-
-    @post_dump
-    def transient(self, data):
-        data['uri'] = url_for('roles_api.view', id=data.get('id'))
-        writeable = False
-        if str(request.authz.id) == str(data.get('id')):
-            writeable = True
-        data['writeable'] = writeable
-        if not request.authz.is_admin and not writeable:
-            data.pop('email')
-        if not writeable:
-            data.pop('api_key')
-        return data
-
-
-class RoleCodeCreateSchema(Schema):
-    email = String(validate=Email(), required=True)
-
-
-class RoleCreateSchema(Schema):
-    name = String()
-    password = String(validate=Length(min=Role.PASSWORD_MIN_LENGTH),
-                      required=True)
-    code = String(required=True)
-
-
-class RoleReferenceSchema(Schema):
-    id = String(required=True)
-    name = String(dump_only=True)
-    type = String(dump_only=True)
-
-
-class LoginSchema(Schema):
-    email = String(validate=Email(), required=True)
-    password = String(validate=Length(min=3))
-
-
-class PermissionSchema(BaseSchema):
-    write = Boolean(required=True)
-    read = Boolean(required=True)
-    collection_id = String(dump_only=True, required=True)
-    role = Nested(RoleReferenceSchema)
 
 
 class AlertSchema(BaseSchema):
@@ -77,34 +27,6 @@ class AlertSchema(BaseSchema):
         data['uri'] = url_for('alerts_api.view', id=data.get('id'))
         data['writeable'] = True
         return data
-
-
-class CollectionSchema(BaseSchema):
-    EXPAND = [
-        ('creator', Role, 'creator'),
-    ]
-
-    label = String(validate=Length(min=2, max=500), required=True)
-    foreign_id = String()
-    summary = String(allow_none=True)
-    countries = List(Country())
-    lanaguages = List(Language())
-    managed = Boolean()
-    category = Category(required=True)
-    creator = Nested(RoleReferenceSchema, required=False, allow_none=True)
-
-    @post_dump
-    def transient(self, data):
-        id_ = str(data.get('id'))
-        data['uri'] = url_for('collections_api.view', id=id_)
-        data['ui'] = collection_url(id_)
-        data['writeable'] = request.authz.can_write(id_)
-        return data
-
-
-class CollectionIndexSchema(CollectionSchema):
-    count = Integer(dump_only=True)
-    schemata = Dict(dump_only=True, default={})
 
 
 class EntityBaseSchema(BaseSchema):
@@ -125,8 +47,8 @@ class EntityBaseSchema(BaseSchema):
 
 class EntitySchema(EntityBaseSchema):
     EXPAND = [
-        ('collection_id', Collection, 'collection'),
-        ('entities', Entity, 'related'),
+        ('collection_id', Collection, 'collection', False),
+        ('entities', Entity, 'related', True),
     ]
 
     foreign_ids = List(String())
@@ -152,6 +74,7 @@ class DocumentBaseSchema(EntityBaseSchema):
     foreign_id = String(allow_none=True)
     content_hash = String(dump_only=True)
     uploader_id = Integer(dump_only=True)
+    # TODO: uploader
     error_message = String(dump_only=True)
     title = String(allow_none=True)
     summary = String(allow_none=True)
@@ -174,7 +97,7 @@ class DocumentBaseSchema(EntityBaseSchema):
     text = String(dump_only=True)
     html = String(dump_only=True)
     columns = List(String(), dump_only=True)
-    children = Boolean(dump_only=True)
+    children = Integer(dump_only=True)
 
     @post_dump
     def transient(self, data):
@@ -188,9 +111,9 @@ class DocumentBaseSchema(EntityBaseSchema):
 
 class DocumentSchema(DocumentBaseSchema):
     EXPAND = [
-        ('collection_id', Collection, 'collection'),
-        ('uploader_id', Document, 'uploader'),
-        ('parent', Document, 'parent'),
+        ('collection_id', Collection, 'collection', False),
+        ('uploader_id', Document, 'uploader', False),
+        ('parent', Document, 'parent', False),
     ]
 
     parent = Nested(DocumentBaseSchema(), allow_none=True)

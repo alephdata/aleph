@@ -1,10 +1,10 @@
 from followthemoney import model
 from exactitude import countries, languages, dates
-from marshmallow import Schema
 from marshmallow.fields import String, Raw, Float
 from marshmallow.exceptions import ValidationError
 
 from aleph.core import get_config
+from aleph.serializers.expand import ExpandableSchema
 
 
 class Category(String):
@@ -48,9 +48,7 @@ class SchemaName(String):
             raise ValidationError('Invalid schema name: %s' % value)
 
 
-class BaseSchema(Schema):
-    EXPAND = []
-
+class BaseSchema(ExpandableSchema):
     id = String(dump_only=True)
     score = Float(dump_only=True)
     highlight = String(dump_only=True)

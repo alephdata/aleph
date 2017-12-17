@@ -6,7 +6,7 @@ from aleph.search import CollectionsQuery
 from aleph.index.collections import get_collection_stats
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.collections import process_collection
-from aleph.serializers import CollectionSchema, CollectionIndexSchema
+from aleph.serializers import CollectionSchema
 from aleph.views.util import get_collection, require, jsonify, parse_request
 
 blueprint = Blueprint('collections_api', __name__)
@@ -14,8 +14,7 @@ blueprint = Blueprint('collections_api', __name__)
 
 @blueprint.route('/api/2/collections', methods=['GET'])
 def index():
-    result = CollectionsQuery.handle_request(request,
-                                             schema=CollectionIndexSchema)
+    result = CollectionsQuery.handle_request(request, schema=CollectionSchema)
     return jsonify(result)
 
 
