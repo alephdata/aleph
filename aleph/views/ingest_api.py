@@ -13,7 +13,7 @@ from aleph.model import Document
 from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.index.documents import index_document_id
 from aleph.views.util import jsonify, validate_data
-from aleph.views.util import get_collection
+from aleph.views.util import get_db_collection
 
 
 blueprint = Blueprint('ingest_api', __name__)
@@ -72,7 +72,7 @@ def _load_metadata(collection):
 
 @blueprint.route('/api/2/collections/<int:id>/ingest', methods=['POST', 'PUT'])
 def ingest_upload(id):
-    collection = get_collection(id, request.authz.WRITE)
+    collection = get_db_collection(id, request.authz.WRITE)
     meta, foreign_id = _load_metadata(collection)
     parent_id = _load_parent(collection, meta)
     role_id = None if collection.managed else request.authz.id

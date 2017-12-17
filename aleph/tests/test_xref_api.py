@@ -1,6 +1,7 @@
 from aleph.core import db
 from aleph.model import Collection, Entity, Permission, Role
-from aleph.index import index_entity, flush_index
+from aleph.index import index_entity
+from aleph.logic import update_collection
 from aleph.tests.util import TestCase
 from aleph.logic.xref import xref_collection
 
@@ -90,7 +91,8 @@ class XrefApiTestCase(TestCase):
         index_entity(self.ent5)
         index_entity(self.ent6)
         index_entity(self.ent7)
-        flush_index()
+        update_collection(self.obsidian)
+        update_collection(self.dabo)
 
     def test_summary(self):
         xref_collection(self.residents)

@@ -25,6 +25,7 @@ class CollectionsApiTestCase(TestCase):
         }, self.col)
         db.session.add(self.ent)
         db.session.commit()
+        update_collection(self.col)
 
     def test_index(self):
         update_collection(self.col)

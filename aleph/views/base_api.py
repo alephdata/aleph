@@ -98,7 +98,7 @@ def handle_es_error(err):
     message = err.error
     try:
         status = int(err.status_code)
-    except:
+    except Exception:
         status = 500
     try:
         for cause in err.info.get('error', {}).get('root_cause', []):

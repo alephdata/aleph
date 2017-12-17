@@ -7,20 +7,13 @@ from followthemoney.util import merge_data
 from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Collection, Entity, Alert, Role, Permission
 from aleph.index import index_entity, flush_index
-from aleph.index.entities import get_entity, index_bulk
+from aleph.index.entities import index_bulk
 from aleph.index.collections import index_collection
 from aleph.logic.util import ui_url
 from aleph.util import dict_list
 
 log = logging.getLogger(__name__)
 BULK_PAGE = 500
-
-
-def fetch_entity(entity_id):
-    """Load entities from both the ES index and the database."""
-    entity = get_entity(entity_id)
-    obj = Entity.by_id(entity_id)
-    return entity, obj
 
 
 def entity_url(entity_id=None, **query):

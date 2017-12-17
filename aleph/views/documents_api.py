@@ -7,7 +7,7 @@ from aleph.model import Document, DocumentRecord
 from aleph.logic.documents import update_document, delete_document
 from aleph.logic.collections import update_collection
 from aleph.views.cache import enable_cache
-from aleph.views.util import get_document, get_index_document
+from aleph.views.util import get_db_document, get_index_document
 from aleph.views.util import jsonify, parse_request
 from aleph.serializers import RecordSchema
 from aleph.serializers.entities import CombinedSchema, DocumentUpdateSchema
@@ -30,8 +30,8 @@ def index():
 @blueprint.route('/api/2/documents/<int:document_id>')
 def view(document_id):
     enable_cache()
-    document = get_document(document_id)
     data = get_index_document(document_id)
+    document = get_db_document(document_id)
     data['headers'] = document.headers
     # TODO: should this be it's own API? Probably so, but for that it would
     # be unclear if we should JSON wrap it, or serve plain with the correct
@@ -45,7 +45,7 @@ def view(document_id):
 
 @blueprint.route('/api/2/documents/<int:document_id>', methods=['POST', 'PUT'])
 def update(document_id):
-    document = get_document(document_id, request.authz.WRITE)
+    document = get_db_document(document_id, request.authz.WRITE)
     data = parse_request(schema=DocumentUpdateSchema)
     document.update(data)
     db.session.commit()
@@ -56,7 +56,7 @@ def update(document_id):
 
 @blueprint.route('/api/2/documents/<int:document_id>', methods=['DELETE'])
 def delete(document_id):
-    document = get_document(document_id, request.authz.WRITE)
+    document = get_db_document(document_id, request.authz.WRITE)
     delete_document(document)
     update_collection(document.collection)
     return jsonify({'status': 'ok'}, status=410)
@@ -86,7 +86,7 @@ def _serve_archive(content_hash, file_name, mime_type):
 
 @blueprint.route('/api/2/documents/<int:document_id>/file')
 def file(document_id):
-    document = get_document(document_id)
+    document = get_db_document(document_id)
     return _serve_archive(document.content_hash,
                           document.file_name,
                           document.mime_type)
@@ -94,7 +94,7 @@ def file(document_id):
 
 @blueprint.route('/api/2/documents/<int:document_id>/pdf')
 def pdf(document_id):
-    document = get_document(document_id)
+    document = get_db_document(document_id)
     if not document.supports_pages:
         raise BadRequest("PDF is only available for text documents")
     file_name = '%s.pdf' % document.safe_file_name
@@ -104,7 +104,7 @@ def pdf(document_id):
 @blueprint.route('/api/2/documents/<int:document_id>/records')
 def records(document_id):
     enable_cache()
-    document = get_document(document_id)
+    document = get_db_document(document_id)
     if not document.supports_records:
         raise BadRequest("This document does not have records.")
     result = RecordsQuery.handle(request,
@@ -116,7 +116,7 @@ def records(document_id):
 @blueprint.route('/api/2/documents/<int:document_id>/records/<int:index>')
 def record(document_id, index):
     enable_cache()
-    document = get_document(document_id)
+    document = get_db_document(document_id)
     if not document.supports_records:
         raise BadRequest("This document does not have records.")
     record = DocumentRecord.by_index(document.id, index)

@@ -50,17 +50,6 @@ class EntitiesApiTestCase(TestCase):
         assert len(res.json['facets']) == 1, res.json
         assert 'values' in res.json['facets']['countries'], res.json
 
-    def test_all(self):
-        res = self.client.get('/api/2/entities/_all')
-        assert res.status_code == 200, res
-        assert len(res.json['results']) == 0, res.json
-        _, headers = self.login(is_admin=True)
-        res = self.client.get('/api/2/entities/_all',
-                              headers=headers)
-        assert res.status_code == 200, res
-        assert len(res.json['results']) == 1, res.json
-        assert res.json['results'][0] == [self.ent.id], res.json
-
     def test_view(self):
         res = self.client.get('/api/2/entities/%s' % self.ent.id)
         assert res.status_code == 403, res
