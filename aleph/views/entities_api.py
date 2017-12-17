@@ -46,8 +46,7 @@ def suggest():
 @blueprint.route('/api/2/entities', methods=['POST', 'PUT'])
 def create():
     data = parse_request(schema=EntityCreateSchema)
-    collection_id = data.get('collection_id')
-    collection = get_collection(collection_id, request.authz.WRITE)
+    collection = get_collection(data['collection_id'], request.authz.WRITE)
     entity = Entity.create(data, collection)
     db.session.commit()
     update_entity(entity)
