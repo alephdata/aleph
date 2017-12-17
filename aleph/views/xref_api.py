@@ -4,7 +4,7 @@ from flask import Blueprint, request, send_file
 from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Match
 from aleph.views.util import get_db_collection, jsonify
-from aleph.search import QueryParser, DatabaseQueryResult, MatchQueryResult
+from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.serializers import MatchSchema, MatchCollectionsSchema
 from aleph.logic.xref import generate_excel, process_xref
 
@@ -30,9 +30,9 @@ def matches(id, other_id):
     other = get_db_collection(other_id)
     parser = QueryParser(request.args, request.authz, limit=10)
     q = Match.find_by_collection(collection.id, other.id)
-    result = MatchQueryResult(request, q,
-                              parser=parser,
-                              schema=MatchSchema)
+    result = DatabaseQueryResult(request, q,
+                                 parser=parser,
+                                 schema=MatchSchema)
     return jsonify(result)
 
 

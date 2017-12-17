@@ -12,7 +12,7 @@ from aleph.logic.entities import entity_url
 from aleph.index.core import entities_index
 from aleph.index.xref import entity_query, FIELDS_XREF
 from aleph.index.util import unpack_result
-from aleph.search import QueryParser, MatchQueryResult
+from aleph.search import QueryParser, DatabaseQueryResult
 
 log = logging.getLogger(__name__)
 
@@ -112,7 +112,9 @@ def generate_matches_sheet(workbook, sheet, collection, match_collection,
     sheet.set_zoom(125)
     parser = QueryParser({}, authz, limit=limit)
     q_match = Match.find_by_collection(collection.id, match_collection.id)
-    matches = MatchQueryResult({}, q_match, parser=parser, schema=MatchSchema)
+    matches = DatabaseQueryResult({}, q_match,
+                                  parser=parser,
+                                  schema=MatchSchema)
 
     if offset < 3:
         sheet.write(0, 0, '', workbook.header_format)

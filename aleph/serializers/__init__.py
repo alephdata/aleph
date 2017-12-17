@@ -1,19 +1,13 @@
-from flask import request
 from marshmallow import Schema, post_dump
-from marshmallow.fields import Nested, Integer, String, DateTime, List
-from marshmallow.fields import Dict, Boolean, Float
-from marshmallow.validate import Length
+from marshmallow.fields import Nested, Integer, String, DateTime
+from marshmallow.fields import Dict, Float
 
 from aleph.core import url_for
-from aleph.logic.entities import entity_url
-from aleph.logic.documents import document_url
-from aleph.serializers.common import BaseSchema, SchemaName, PartialDate
-from aleph.serializers.common import Country, Language
+from aleph.serializers.common import BaseSchema
 from aleph.serializers.roles import RoleReferenceSchema
 from aleph.serializers.collections import CollectionSchema
-from aleph.serializers.entities import CombinedSchema
-from aleph.model import Document, Entity, Collection
-from aleph.util import ensure_list
+from aleph.serializers.entities import ShallowCombinedSchema
+from aleph.model import Entity
 
 
 class AlertSchema(BaseSchema):
@@ -46,8 +40,13 @@ class RecordSchema(Schema):
 
 
 class MatchSchema(BaseSchema):
-    entity = Nested(CombinedSchema, required=True)
-    match = Nested(CombinedSchema, required=True)
+    EXPAND = [
+        ('entity_id', Entity, 'entity', ShallowCombinedSchema, False),
+        ('match_id', Entity, 'match', ShallowCombinedSchema, False),
+    ]
+
+    entity_id = String()
+    match_id = String()
     score = Float(dump_only=True)
 
 
