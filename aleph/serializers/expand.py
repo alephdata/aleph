@@ -56,8 +56,7 @@ class ExpandableSchema(Schema):
     @post_dump(pass_many=True)
     def expand(self, objs, many=False):
         cache = {}
-        objs = ensure_list(objs)
-        for obj in objs:
+        for obj in ensure_list(objs):
             for (field, type_, _, _, _) in self.EXPAND:
                 type_ = self._type_dispatch(type_)
                 for key in self._get_values(obj, field):
@@ -66,7 +65,7 @@ class ExpandableSchema(Schema):
         self._resolve_roles(cache)
         self._resolve_index(cache)
 
-        for obj in objs:
+        for obj in ensure_list(objs):
             for (field, type_, target, schema, multi) in self.EXPAND:
                 value = []
                 type_ = self._type_dispatch(type_)

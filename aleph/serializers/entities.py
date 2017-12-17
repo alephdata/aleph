@@ -1,5 +1,6 @@
 from flask import request
-from normality import stringify
+from banal import ensure_list
+from followthemoney import model
 from marshmallow import Schema, post_dump, pre_load
 from marshmallow.fields import Nested, Integer, String, List
 from marshmallow.fields import Dict, Boolean
@@ -91,12 +92,32 @@ class ShallowCombinedSchema(BaseSchema):
 class CombinedSchema(ShallowCombinedSchema):
     EXPAND = [
         ('collection_id', Collection, 'collection', CollectionSchema, False),
-        ('entities', Entity, 'related', ShallowCombinedSchema, True),
+        ('entities', Entity, '_related', ShallowCombinedSchema, True),
         ('uploader_id', Document, 'uploader', ShallowCombinedSchema, False),
         ('parent', Document, 'parent', ShallowCombinedSchema, False),
     ]
     related = List(Nested(ShallowCombinedSchema()))
     parent = Nested(ShallowCombinedSchema())
+
+    @post_dump(pass_many=True)
+    def expand(self, objs, many=False):
+        super(ShallowCombinedSchema, self).expand(objs, many=many)
+        for obj in ensure_list(objs):
+            # This will replace entity IDs for related entities with the
+            # actual entity objects which have been retrieved because they
+            # were all listed in the 'entities' reverse index.
+            related = obj.pop('_related', [])
+            schema = model.get(obj.get('schema'))
+            if schema is None or not len(related):
+                continue
+            related = {r.get('id'): r for r in related}
+            properties = obj.get('properties')
+            for name, prop in schema.properties.items():
+                if name not in properties or prop.type_name != 'entity':
+                    continue
+                values = ensure_list(properties.get(name))
+                values = [related.get(v) for v in values if v in related]
+                properties[name] = values
 
 
 class EntityUpdateSchema(Schema):
