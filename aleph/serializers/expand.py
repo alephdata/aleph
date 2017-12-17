@@ -11,9 +11,10 @@ class ExpandableSchema(Schema):
     EXPAND = []
 
     def _get_values(self, obj, field):
+        value = None
         if isinstance(obj, dict):
             value = obj.get(field)
-        else:
+        elif hasattr(obj, field):
             value = getattr(obj, field)
 
         if isinstance(value, dict):

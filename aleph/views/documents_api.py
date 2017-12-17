@@ -9,7 +9,8 @@ from aleph.logic.collections import update_collection
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_document, get_index_document
 from aleph.views.util import jsonify, parse_request
-from aleph.serializers import DocumentSchema, RecordSchema
+from aleph.serializers import RecordSchema
+from aleph.serializers.entities import CombinedSchema, DocumentUpdateSchema
 from aleph.search import DocumentsQuery, RecordsQuery
 from aleph.text import sanitize_html
 from aleph.util import PDF_MIME
@@ -22,7 +23,7 @@ blueprint = Blueprint('documents_api', __name__)
 @blueprint.route('/api/2/documents', methods=['GET'])
 def index():
     enable_cache()
-    result = DocumentsQuery.handle_request(request, schema=DocumentSchema)
+    result = DocumentsQuery.handle_request(request, schema=CombinedSchema)
     return jsonify(result)
 
 
@@ -39,13 +40,13 @@ def view(document_id):
         data['html'] = sanitize_html(document.body_raw)
     if Document.SCHEMA_TEXT in document.model.names:
         data['text'] = document.body_text
-    return jsonify(data, schema=DocumentSchema)
+    return jsonify(data, schema=CombinedSchema)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>', methods=['POST', 'PUT'])
 def update(document_id):
     document = get_document(document_id, request.authz.WRITE)
-    data = parse_request(schema=DocumentSchema)
+    data = parse_request(schema=DocumentUpdateSchema)
     document.update(data)
     db.session.commit()
     update_document(document)
@@ -106,7 +107,8 @@ def records(document_id):
     document = get_document(document_id)
     if not document.supports_records:
         raise BadRequest("This document does not have records.")
-    result = RecordsQuery.handle_request(request, document=document,
+    result = RecordsQuery.handle_request(request,
+                                         document=document,
                                          schema=RecordSchema)
     return jsonify(result)
 

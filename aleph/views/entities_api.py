@@ -12,7 +12,8 @@ from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.search import DatabaseQueryResult, QueryParser
 from aleph.views.util import get_entity, get_collection, jsonify, parse_request
 from aleph.views.cache import enable_cache
-from aleph.serializers import EntitySchema, DocumentSchema
+from aleph.serializers.entities import CombinedSchema
+from aleph.serializers.entities import EntityCreateSchema, EntityUpdateSchema
 
 blueprint = Blueprint('entities_api', __name__)
 
@@ -20,7 +21,7 @@ blueprint = Blueprint('entities_api', __name__)
 @blueprint.route('/api/2/entities', methods=['GET'])
 def index():
     enable_cache()
-    result = EntitiesQuery.handle_request(request, schema=EntitySchema)
+    result = EntitiesQuery.handle_request(request, schema=CombinedSchema)
     return jsonify(result)
 
 
@@ -38,13 +39,14 @@ def all():
 @blueprint.route('/api/2/entities/_suggest', methods=['GET'])
 def suggest():
     enable_cache()
-    result = SuggestEntitiesQuery.handle_request(request, schema=EntitySchema)
+    result = SuggestEntitiesQuery.handle_request(request,
+                                                 schema=CombinedSchema)
     return jsonify(result)
 
 
 @blueprint.route('/api/2/entities', methods=['POST', 'PUT'])
 def create():
-    data = parse_request(schema=EntitySchema)
+    data = parse_request(schema=EntityCreateSchema)
     collection_id = data.get('collection_id')
     collection = get_collection(collection_id, request.authz.WRITE)
     entity = Entity.create(data, collection)
@@ -57,7 +59,7 @@ def create():
 @blueprint.route('/api/2/entities/<id>', methods=['GET'])
 def view(id):
     entity, obj = get_entity(id, request.authz.READ)
-    return jsonify(entity, schema=EntitySchema)
+    return jsonify(entity, schema=CombinedSchema)
 
 
 @blueprint.route('/api/2/entities/<id>/similar', methods=['GET'])
@@ -66,7 +68,7 @@ def similar(id):
     entity, _ = get_entity(id, request.authz.READ)
     result = SimilarEntitiesQuery.handle_request(request,
                                                  entity=entity,
-                                                 schema=EntitySchema)
+                                                 schema=CombinedSchema)
     return jsonify(result)
 
 
@@ -76,14 +78,14 @@ def documents(id):
     entity, _ = get_entity(id, request.authz.READ)
     result = EntityDocumentsQuery.handle_request(request,
                                                  entity=entity,
-                                                 schema=DocumentSchema)
+                                                 schema=CombinedSchema)
     return jsonify(result)
 
 
 @blueprint.route('/api/2/entities/<id>', methods=['POST', 'PUT'])
 def update(id):
     _, entity = get_entity(id, request.authz.WRITE)
-    data = parse_request(schema=EntitySchema)
+    data = parse_request(schema=EntityUpdateSchema)
     if as_bool(request.args.get('merge')):
         props = merge_data(data.get('properties'), entity.data)
         data['properties'] = props

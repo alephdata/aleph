@@ -13,20 +13,16 @@ class RoleSchema(BaseSchema):
     email = String(validate=Email())
     api_key = String(dump_only=True)
     type = String(dump_only=True)
-    foreign_id = String(dump_only=True)
-    is_admin = Boolean(dump_only=True)
+    # foreign_id = String(dump_only=True)
+    # is_admin = Boolean(dump_only=True)
 
     @post_dump
     def transient(self, data):
         data['uri'] = url_for('roles_api.view', id=data.get('id'))
-        writeable = False
-        if str(request.authz.id) == str(data.get('id')):
-            writeable = True
-        data['writeable'] = writeable
-        if not request.authz.is_admin and not writeable:
-            data.pop('email')
-        if not writeable:
+        data['writeable'] = str(request.authz.id) == str(data.get('id'))
+        if not data['writeable']:
             data.pop('api_key')
+            data.pop('email')
         return data
 
 
@@ -41,10 +37,8 @@ class RoleCreateSchema(Schema):
     code = String(required=True)
 
 
-class RoleReferenceSchema(Schema):
+class RoleReferenceSchema(RoleSchema):
     id = String(required=True)
-    name = String(dump_only=True)
-    type = String(dump_only=True)
 
 
 class LoginSchema(Schema):
