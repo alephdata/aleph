@@ -14,6 +14,7 @@ import getPath from 'src/util/getPath';
 class CollectionInfo extends Component {
   render() {
     const { collection } = this.props;
+
     return (
       <DualPane.InfoPane>
         <Breadcrumbs>
@@ -46,7 +47,8 @@ class CollectionInfo extends Component {
           
         </ul>
         <p>
-          Last update: {collection.updated_at}
+          Last update:
+          <FormattedDate value={collection.updated_at} />
         </p>
       </DualPane.InfoPane>
     );
@@ -54,7 +56,6 @@ class CollectionInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection } = ownProps;
   return {};
 }
 
