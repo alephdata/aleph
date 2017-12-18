@@ -9,10 +9,11 @@ from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
 
 from aleph.ingest import ingest_document
-from aleph.model import Collection, Document
-from aleph.views.serializers import DocumentSchema
+from aleph.model import Document
+from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.index.documents import index_document_id
-from aleph.views.util import require, obj_or_404, jsonify, validate_data
+from aleph.views.util import jsonify, validate_data
+from aleph.views.util import get_db_collection
 
 
 blueprint = Blueprint('ingest_api', __name__)
@@ -51,9 +52,7 @@ def _load_metadata(collection):
     except Exception as ex:
         raise BadRequest(unicode(ex))
 
-    meta['schema'] = Document.SCHEMA
-    meta['collection_id'] = collection.id
-    validate_data(meta, DocumentSchema)
+    validate_data(meta, DocumentCreateSchema)
     foreign_id = stringify(meta.get('foreign_id'))
 
     # If a foreign_id is specified, we cannot upload multiple files at once.
@@ -73,8 +72,7 @@ def _load_metadata(collection):
 
 @blueprint.route('/api/2/collections/<int:id>/ingest', methods=['POST', 'PUT'])
 def ingest_upload(id):
-    collection = obj_or_404(Collection.by_id(id))
-    require(request.authz.can_write(collection.id))
+    collection = get_db_collection(id, request.authz.WRITE)
     meta, foreign_id = _load_metadata(collection)
     parent_id = _load_parent(collection, meta)
     role_id = None if collection.managed else request.authz.id
@@ -119,5 +117,5 @@ def ingest_upload(id):
 
     return jsonify({
         'status': 'ok',
-        'documents': [DocumentSchema().dump(d).data for d in documents]
+        'documents': [CombinedSchema().dump(d).data for d in documents]
     })

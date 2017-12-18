@@ -11,6 +11,7 @@ from flask_cors import CORS
 from kombu import Queue
 from celery import Celery
 from elasticsearch import Elasticsearch
+from urlnormalizer import query_string
 import storagelayer
 
 from aleph import default_settings
@@ -179,7 +180,10 @@ def url_for(*a, **kw):
             api_url = parsed.geturl()
 
         kw['_external'] = False
+        query = kw.pop('_query', None)
         path = flask_url_for(*a, **kw)
+        if query is not None:
+            path = path + query_string(query)
         return urljoin(api_url, path)
     except RuntimeError:
         return None

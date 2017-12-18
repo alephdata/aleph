@@ -5,9 +5,9 @@ from aleph.model import Document
 
 log = logging.getLogger(__name__)
 
-FIELDS_XREF = ['schema', 'schemata', 'collection_id', 'name', 'fingerprints',
-               'emails', 'phones', 'dates', 'countries', 'schemata',
-               'identifiers', 'addresses']
+FIELDS_XREF = ['schema', 'schemata', 'collection_id', 'name',
+               'fingerprints', 'emails', 'phones', 'dates',
+               'countries', 'schemata', 'identifiers', 'addresses']
 
 
 def entity_query(sample, collection_id=None, query=None):
@@ -49,18 +49,6 @@ def entity_query(sample, collection_id=None, query=None):
             }
         })
 
-    # TODO: put names in FIELDS_XREF up there ^^^
-    # for value in sample.get('names', []):
-    #     required.append({
-    #         'match': {
-    #             'names': {
-    #                 'query': value,
-    #                 'operator': 'and',
-    #                 'cutoff_frequency': 0.01,
-    #             }
-    #         }
-    #     })
-
     for index in ['emails', 'phones']:
         for value in sample.get(index, []):
             required.append({
@@ -96,6 +84,18 @@ def entity_query(sample, collection_id=None, query=None):
             'common': {
                 field: {
                     'query': val
+                }
+            }
+        })
+
+    # TODO: put names in FIELDS_XREF up there ^^^
+    for value in sample.get('names', []):
+        query['bool']['should'].append({
+            'match': {
+                'names': {
+                    'query': value,
+                    'operator': 'and',
+                    'cutoff_frequency': 0.01,
                 }
             }
         })

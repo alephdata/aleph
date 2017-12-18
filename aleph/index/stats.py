@@ -1,5 +1,5 @@
 from aleph.core import es
-from aleph.index.core import entity_index, entities_index
+from aleph.index.core import entities_index
 
 
 def get_instance_stats(authz):
@@ -33,18 +33,15 @@ def get_collection_stats(collection_id):
     query = {
         'size': 0,
         'query': {
-            'term': {
-                'collection_id': collection_id
-            }
+            'term': {'collection_id': collection_id}
         },
         'aggs': {
             'schema': {'terms': {'field': 'schema', 'size': 1000}},
-            'countries': {'terms': {'field': 'countries', 'size': 250}},
+            'countries': {'terms': {'field': 'countries', 'size': 500}},
             'languages': {'terms': {'field': 'languages', 'size': 100}},
         }
     }
-    result = es.search(index=entity_index(),
-                       body=query)
+    result = es.search(index=entities_index(), body=query)
     aggregations = result.get('aggregations')
     data = {
         'schemata': {},

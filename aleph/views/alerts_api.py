@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from aleph.core import db
 from aleph.model import Alert
 from aleph.search import DatabaseQueryResult
-from aleph.views.serializers import AlertSchema
+from aleph.serializers import AlertSchema
 from aleph.views.util import require, obj_or_404, jsonify, parse_request
 
 blueprint = Blueprint('alerts_api', __name__)

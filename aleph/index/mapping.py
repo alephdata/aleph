@@ -38,9 +38,16 @@ COLLECTION_MAPPING = {
         "creator": {
             "type": "object",
             "properties": {
-                "id": {"type": "long"},
+                "id": {"type": "keyword"},
                 "type": {"type": "keyword"},
-                "name": {"type": "keyword"}
+                "name": {
+                    "type": "text",
+                    "fields": {
+                        "kw": {
+                            "type": "keyword"
+                        }
+                    }
+                }
             }
         },
     }
@@ -49,8 +56,8 @@ COLLECTION_MAPPING = {
 RECORD_MAPPING = {
     "date_detection": False,
     "properties": {
-        "collection_id": {"type": "long"},
-        "document_id": {"type": "long"},
+        "collection_id": {"type": "keyword"},
+        "document_id": {"type": "keyword"},
         "index": {"type": "long"},
         "sheet": {"type": "long"},
         "text": {"type": "text"}
@@ -78,7 +85,7 @@ ENTITY_MAPPING = {
         "foreign_id": {"type": "keyword"},
         "foreign_ids": {"type": "keyword"},
         "file_name": {"type": "keyword"},
-        "collection_id": {"type": "long"},
+        "collection_id": {"type": "keyword"},
         "roles": {"type": "long"},
         "uploader_id": {"type": "long"},
         "children": {"type": "long"},
@@ -115,7 +122,7 @@ ENTITY_MAPPING = {
         "parent": {
             "type": "object",
             "properties": {
-                "id": {"type": "long"},
+                "id": {"type": "keyword"},
                 "type": {"type": "keyword"},
                 "title": {"type": "keyword"}
             }

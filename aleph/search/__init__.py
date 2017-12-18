@@ -180,7 +180,7 @@ class CombinedQuery(AuthzQuery):
 
 
 class CollectionsQuery(AuthzQuery):
-    TEXT_FIELDS = ['label^3', 'summary']
+    TEXT_FIELDS = ['label^3', 'summary', 'creator.name']
     SORT = {
         'default': [{'count': 'desc'}, {'label.kw': 'asc'}],
         'score': ['_score', {'label.kw': 'asc'}],
@@ -189,40 +189,6 @@ class CollectionsQuery(AuthzQuery):
 
     def get_index(self):
         return collections_index()
-
-
-class MatchQueryResult(DatabaseQueryResult):
-    """Matches only include entity IDs, this will expand them into entities."""
-
-    def __init__(self, request, query, parser=None, schema=None):
-        super(MatchQueryResult, self).__init__(request, query,
-                                               parser=parser,
-                                               schema=schema)
-        ids = set()
-        for match in self.results:
-            ids.add(match.match_id)
-            ids.add(match.entity_id)
-        ids = {'ids': list(ids)}
-
-        result = es.mget(index=entities_index(),
-                         doc_type='doc',
-                         body=ids)
-        for doc in result.get('docs', []):
-            entity = unpack_result(doc)
-            if entity is None:
-                continue
-            for match in self.results:
-                if match.match_id == entity['id']:
-                    match.match = entity
-                if match.entity_id == entity['id']:
-                    match.entity = entity
-
-        # Do not return results if the entity has been removed in the mean
-        # time. Not sure this is the ideal way of doing this, as it'll mess
-        # with pagination counts etc.
-        for match in list(self.results):
-            if not hasattr(match, 'match') or not hasattr(match, 'entity'):
-                self.results.remove(match)
 
 
 class RecordsQueryResult(SearchQueryResult):

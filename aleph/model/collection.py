@@ -29,27 +29,20 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     creator_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
     creator = db.relationship(Role)
 
-    def update(self, data):
+    def update(self, data, creator=None):
         self.label = data.get('label', self.label)
         self.summary = data.get('summary', self.summary)
         self.category = data.get('category', self.category)
         self.managed = data.get('managed', False)
         self.countries = data.get('countries', [])
-        creator = data.get('creator') or {}
-        self.update_creator(creator.get('id'))
+        if creator is None:
+            creator = Role.by_id(data.get('creator_id'))
+        self.creator = creator
         self.updated_at = datetime.utcnow()
         db.session.add(self)
-
-    def update_creator(self, role):
-        """Set the creator (and admin) of a collection."""
-        if not isinstance(role, Role):
-            role = Role.by_id(role)
-        if role is None or role.type != Role.USER:
-            return
-        self.creator = role
-        db.session.add(self)
         db.session.flush()
-        Permission.grant(self, role, True, True)
+        if creator is not None:
+            Permission.grant(self, creator, True, True)
 
     @property
     def roles(self):
@@ -85,8 +78,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         if collection is None:
             collection = cls()
             collection.foreign_id = foreign_id
-            collection.update(data)
-            collection.update_creator(role)
+            collection.update(data, creator=role)
         collection.deleted_at = None
         return collection
 

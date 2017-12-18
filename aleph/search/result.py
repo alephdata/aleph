@@ -2,6 +2,7 @@ import six
 import math
 from urlnormalizer import query_string
 
+from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser
 from aleph.search.facet import CategoryFacet, CollectionFacet, CountryFacet
 from aleph.search.facet import LanguageFacet, SchemaFacet, Facet
@@ -78,14 +79,7 @@ class SearchQueryResult(QueryResult):
         hits = self.result.get('hits', {})
         self.total = hits.get('total')
         for doc in hits.get('hits', []):
-            data = doc.pop('_source')
-            data['id'] = doc.pop('_id')
-            data['score'] = doc.pop('_score')
-            if len(doc.get('highlight', {})):
-                data['highlight'] = {}
-                for key, value in doc.get('highlight', {}).items():
-                    data['highlight'][key] = value
-            self.results.append(data)
+            self.results.append(unpack_result(doc))
 
     def get_facets(self):
         facets = {}

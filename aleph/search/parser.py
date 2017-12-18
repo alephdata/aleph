@@ -3,7 +3,7 @@ from normality import stringify
 from werkzeug.datastructures import MultiDict
 
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
-MAX_RESULT_WINDOW = 10000
+MAX_RESULT_WINDOW = 1000
 
 
 class QueryParser(object):

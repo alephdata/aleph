@@ -5,7 +5,7 @@ from aleph.index.stats import get_collection_stats
 from aleph.index.core import collection_index, collections_index
 from aleph.index.core import entities_index, entity_index
 from aleph.index.core import records_index
-from aleph.index.util import query_delete
+from aleph.index.util import query_delete, unpack_result
 
 
 def index_collection(collection):
@@ -36,6 +36,16 @@ def index_collection(collection):
              doc_type='doc',
              id=collection.id,
              body=data)
+
+
+def get_collection(collection_id):
+    """Fetch a collection from the index."""
+    result = es.get(index=collections_index(),
+                    doc_type='doc',
+                    id=collection_id,
+                    ignore=[404],
+                    _source_exclude=['text'])
+    return unpack_result(result)
 
 
 def update_roles(collection):

@@ -2,13 +2,13 @@ from apikit import jsonify as jsonify_
 from apikit import obj_or_404
 from flask import request
 from urlparse import urlparse, urljoin
-from werkzeug.exceptions import ImATeapot, Forbidden, BadRequest
+from werkzeug.exceptions import MethodNotAllowed, Forbidden, BadRequest
 
 from aleph.core import app_ui_url
 from aleph.authz import Authz
-from aleph.model import Document, Collection
-from aleph.logic import fetch_entity
-from aleph.index.documents import get_document as _get_index_document
+from aleph.model import Document, Collection, Entity
+from aleph.index.documents import get_entity as _get_index_entity
+from aleph.index.collections import get_collection as _get_index_collection
 
 
 def require(*predicates):
@@ -48,30 +48,39 @@ def parse_request(schema=None):
     return data
 
 
-def get_entity(id, action):
-    entity, obj = fetch_entity(id)
-    obj_or_404(entity)
-    if entity.get('bulk') and action == request.authz.WRITE:
-        raise ImATeapot("Cannot write this entity.")
-    require(request.authz.can(entity.get('collection_id'), action))
-    return entity, obj
+def get_db_entity(entity_id, action=Authz.READ):
+    get_index_entity(entity_id, action=action)
+    entity = Entity.by_id(entity_id)
+    if entity is None:
+        raise MethodNotAllowed("Cannot write this entity")    
+    return entity
 
 
-def get_document(document_id, action=Authz.READ):
+def get_index_entity(entity_id, action=Authz.READ):
+    entity = obj_or_404(_get_index_entity(entity_id))
+    require(request.authz.can(entity['collection_id'], action))
+    return entity
+
+
+def get_db_document(document_id, action=Authz.READ):
     document = obj_or_404(Document.by_id(document_id))
     require(request.authz.can(document.collection_id, action))
     return document
 
 
 def get_index_document(document_id, action=Authz.READ):
-    document = obj_or_404(_get_index_document(document_id))
-    require(request.authz.can(document.get('collection_id'), action))
-    return document
+    return get_index_entity(document_id, action=action)
 
 
-def get_collection(collection_id, action=Authz.READ):
+def get_db_collection(collection_id, action=Authz.READ):
     collection = obj_or_404(Collection.by_id(collection_id))
     require(request.authz.can(collection.id, action))
+    return collection
+
+
+def get_index_collection(collection_id, action=Authz.READ):
+    collection = obj_or_404(_get_index_collection(collection_id))
+    require(request.authz.can(collection['id'], action))
     return collection
 
 

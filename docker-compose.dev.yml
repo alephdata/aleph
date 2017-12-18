@@ -41,7 +41,7 @@ services:
       - unoservice
     volumes:
       - "./:/aleph"
-      - "./mapping:/aleph/mapping"
+      - "./mappings:/aleph/mappings"
       - "./build/archive:/data"
       - "./build/polyglot:/polyglot"
       - "/:/host"

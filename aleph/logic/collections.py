@@ -4,6 +4,7 @@ from datetime import datetime
 from aleph.core import db, celery
 from aleph.ingest import ingest
 from aleph.model import Collection, Document, Entity, Match, Permission
+from aleph.index.admin import flush_index
 from aleph.index.collections import delete_collection as index_delete
 from aleph.index.collections import index_collection
 from aleph.logic.entities import update_entity_full
@@ -28,6 +29,7 @@ def update_collection(collection):
 
     log.info("Updating: %r", collection)
     index_collection(collection)
+    flush_index()
 
 
 @celery.task()

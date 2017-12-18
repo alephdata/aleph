@@ -4,7 +4,7 @@ from unittest import skip  # noqa
 from aleph.core import db
 from aleph.tests.util import TestCase
 from aleph.logic.xref import xref_collection
-from aleph.model import Collection, Match
+from aleph.model import Match
 
 
 class XrefTestCase(TestCase):
@@ -12,18 +12,9 @@ class XrefTestCase(TestCase):
     def setUp(self):
         super(XrefTestCase, self).setUp()
         self.user = self.create_user()
-        self.coll_a = Collection.create({
-            'label': 'Collection A',
-            'foreign_id': 'collA'
-        }, role=self.user)
-        self.coll_b = Collection.create({
-            'label': 'Collection B',
-            'foreign_id': 'collB'
-        }, role=self.user)
-        self.coll_c = Collection.create({
-            'label': 'Collection C',
-            'foreign_id': 'collC'
-        }, role=self.user)
+        self.coll_a = self.create_collection(creator=self.user)
+        self.coll_b = self.create_collection(creator=self.user)
+        self.coll_c = self.create_collection(creator=self.user)
         db.session.commit()
 
     def test_xref(self):

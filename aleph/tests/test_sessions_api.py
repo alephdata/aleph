@@ -1,6 +1,7 @@
 import jwt
 from aleph.core import db
 from aleph.model import Collection
+from aleph.logic import update_collection
 from aleph.tests.util import TestCase
 from aleph.tests.factories.models import RoleFactory
 
@@ -18,6 +19,7 @@ class SessionsApiTestCase(TestCase):
         self.wl.creator = self.create_user('watcher')
         db.session.add(self.wl)
         db.session.commit()
+        update_collection(self.wl)
         _, headers = self.login(foreign_id='admin', is_admin=True)
         res = self.client.get('/api/2/collections/%s' % self.wl.id,
                               headers=headers)

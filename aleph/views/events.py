@@ -1,6 +1,7 @@
 from flask import request, Blueprint
 
-from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
+from aleph.core import db, celery, get_config
+from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import EventLog
 
 blueprint = Blueprint('events', __name__)
@@ -9,6 +10,9 @@ blueprint = Blueprint('events', __name__)
 @blueprint.after_app_request
 def log_response(resp):
     if request.endpoint == 'static':
+        return resp
+
+    if get_config('DEBUG'):
         return resp
 
     source_ip = None
