@@ -23,10 +23,10 @@ const OAuthLogin = ({providers}) => {
 };
 
 export const handleOAuthCallback = (onLoginFn) => {
-  const parsedHash = queryString.parse(location.hash);
+  const parsedHash = queryString.parse(window.location.hash);
   if (parsedHash.token) {
     onLoginFn(parsedHash.token);
-    location.hash = '';
+    window.location.hash = '';
   }
 };
 

@@ -17,7 +17,7 @@ class Value extends Component {
     }
     if (model.type === 'url' || model.type === 'uri') {
         return (
-            <a href={value} target='_blank'>
+            <a href={value} rel="noopener noreferrer" target='_blank'>
                 <i className="fa fa-external-link-square" aria-hidden="true"></i>
                 { getHost(value) }
             </a>
@@ -47,7 +47,7 @@ class Table extends Component {
   render() {
     const { properties, schema, schemata, children } = this.props,
           model = schemata[schema] || {};
-    
+
     let items = [];
     Object.entries(properties).forEach(([name, values]) => {
         const propModel = model.properties[name];
