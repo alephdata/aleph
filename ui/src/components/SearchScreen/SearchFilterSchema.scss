@@ -14,12 +14,11 @@
     white-space: nowrap;
     border-bottom: 2px solid transparent;
 
-    & > .schema-icon {
-      float: left;
-      display: block;
-      width: 50px;
-      height: 50px;
-      margin: -10px 0 0 -10px;
+    & > .fa {
+      font-size: 2em;
+      color: white;
+      margin-top: 0em;
+      margin-right: 0.2em;
     }
 
     &.is-selected {

@@ -32,7 +32,7 @@ class CollectionInfo extends Component {
           {Object.entries(collection.schemata).map(([key, value]) => (
             <li key={key}>
               <Schema.Icon schema={key} />
-              <Schema.Name schema={key} />: <FormattedNumber value={value} />
+              <Schema.Name schema={key} plural />: <FormattedNumber value={value} />
             </li>
           ))}
         </ul>

@@ -2,16 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import SchemaIcon from 'src/components/common/SchemaIcon';
+import Schema from 'src/components/common/Schema';
 import getPath from 'src/util/getPath';
 
 const ListItem = ({ name, title, schema, properties, collection, links }) => (
   <tr className={`result result--${schema}`}>
     <td className="result__name">
       <Link to={getPath(links.ui)}>
-        <span className="result__icon">
-          <SchemaIcon schemaId={schema} />
-        </span>
+        <Schema.Icon schema={schema} />
         <span title={name}>{ name || title }</span>
       </Link>
     </td>

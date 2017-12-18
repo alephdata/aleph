@@ -8,7 +8,7 @@ class SchemaIcon extends Component {
   render() {
     const { schema, schemata } = this.props,
           model = schemata[schema] || {},
-          icon = model.icon || 'fa-bath';
+          icon = model.icon || 'fa-magic';
     return (
       <i className={ `fa ${ icon }` }></i>
     );
@@ -17,9 +17,12 @@ class SchemaIcon extends Component {
 
 class SchemaName extends Component {
   render() {
-    const { schema, schemata } = this.props,
-          model = schemata[schema] || {},
-          label = model.label || schema;
+    const { schema, schemata, plural } = this.props,
+          model = schemata[schema] || {};
+    let label = model.label || schema;
+    if (plural) {
+      label = model.plural || label;
+    }
     return (
       <span>{ label }</span>
     );
