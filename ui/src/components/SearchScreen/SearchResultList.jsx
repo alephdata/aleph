@@ -25,7 +25,7 @@ class SearchResultList extends Component {
         { !result.isFetching && result.results.length === 0 &&
           <NonIdealState visual="search" title="No search results"
             description="Try making your search more general" />}
-        <table className="results-table pt-table pt-striped">
+        <table className="results-table pt-table pt-bordered">
           <tbody>
             {result.results.map(item => <SearchResultListItem key={item.id} result={item} />)}
           </tbody>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import getHost from 'src/util/getHost';
+import Entity from './Entity';
 import Country from 'src/components/common/Country';
 
 
@@ -22,9 +23,9 @@ class Value extends Component {
             </a>
         );
     }
-    // if (model.type === 'entity') {
-    //     return (<span>ENTITY</span>);
-    // }
+    if (model.type === 'entity') {
+        return (<Entity.Link entity={value} />);
+    }
     return (
       <span>{value}</span>
     );

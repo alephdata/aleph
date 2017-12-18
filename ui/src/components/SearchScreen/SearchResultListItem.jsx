@@ -1,34 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import Schema from 'src/components/common/Schema';
 import Country from 'src/components/common/Country';
-import getPath from 'src/util/getPath';
+import Entity from 'src/components/EntityScreen/Entity';
 
-const SearchResultListItem = ({
-  result: { name, title, schema, collection, links, countries }
-}) => (
-  <tr className={`result result--${schema}`}>
+const SearchResultListItem = ({ result }) => (
+  <tr className={`result result--${result.schema}`}>
     <td width="5%">
-      <Schema.Icon schema={schema} />
+      <Schema.Icon schema={result.schema} />
     </td>
     <td className="result__name">
-      <Link to={getPath(links.ui)}>
-        <span title={name}>{ name || title }</span>
-      </Link>
+      <Entity.Link entity={result} />
     </td>
     <td className="result__collection">
-      {collection
-        ? (
-          <span title={collection.label}>
-            <span className="pt-icon pt-icon-globe" /> {collection.label}
-          </span>
-        )
-        : <span className="pt-skeleton">Loading collection</span>
-      }
+      <span title={result.collection.label}>
+        <span className="pt-icon pt-icon-globe" /> {result.collection.label}
+      </span>
     </td>
     <td>
-      <Country.List codes={countries} />
+      <Country.List codes={result.countries} />
     </td>
   </tr>
 );

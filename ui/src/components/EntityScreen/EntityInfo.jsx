@@ -3,6 +3,7 @@ import { FormattedMessage, FormattedDate } from 'react-intl';
 
 import Schema from 'src/components/common/Schema';
 import Property from './Property';
+import Entity from './Entity';
 import DualPane from 'src/components/common/DualPane';
 import CollectionSection from 'src/components/CollectionScreen/CollectionSection';
 
@@ -13,7 +14,7 @@ class EntityInfo extends Component {
       <DualPane.InfoPane>
         <h1>
           <Schema.Icon schema={schema} />
-          {name}
+          <Entity.Label entity={this.props.entity} />
         </h1>
 
         <Property.Table properties={properties} schema={schema}>

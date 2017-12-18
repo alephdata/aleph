@@ -19,16 +19,9 @@
   flex-flow: column nowrap;
 }
 
-// .InfoPane > .InfoPane-content-container {
-//   position: sticky;
-//   top: 20px;
-// }
-
 .InfoPane .InfoPane-content {
-  // margin: 20px;
   padding: 2em 1em;
   border: 1px solid lightgrey;
-  // border-radius: 4px;
   background: rgba(255, 255, 255, 1);
   min-height: 100vh;
 }
