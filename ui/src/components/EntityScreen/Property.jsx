@@ -49,23 +49,30 @@ class Table extends Component {
     const { properties, schema, schemata, children } = this.props,
           model = schemata[schema] || {};
     
-    const items = Object.entries(properties).map(([name, values]) => {
+    let items = [];
+    Object.entries(properties).map(([name, values]) => {
         const propModel = model.properties[name];
-        if (propModel && !propModel.hidden && values.length) {
-            return (
-                <tr key={`${name}`}>
-                    <th>
+        if (!propModel || propModel.hidden || !values.length) {
+            return;
+        }
+        values.map((value, i) => {
+            var header = [];
+            if (i === 0) {
+                header.push((
+                    <th rowSpan={ values.length }>
                         <Name name={name} model={propModel} />
                     </th>
+                ))
+            }
+            items.push((
+                <tr key={`${name}-${i}`}>
+                    {header}
                     <td>
-                        { values.map((value, i) => {
-                            return (<Value key={`value-${i}`} value={value} model={propModel} />)
-                        }) }
+                        <Value value={value} model={propModel} />
                     </td>
                 </tr>
-            )
-        }
-        return null;
+            ));
+        });
     });
 
     return (

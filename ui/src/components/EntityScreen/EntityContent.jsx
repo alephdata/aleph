@@ -7,23 +7,6 @@ class EntityContent extends Component {
     const { properties = {} } = this.props.entity;
     return (
       <DualPane.ContentPane>
-        <dl>
-          {Object.entries(properties).map(([property, values]) => ([
-            <dt>{property}</dt>,
-            <dd>
-              {values.length === 1
-                ? values[0]
-                : (
-                  <ul>
-                    {values.map(value => (
-                      <li>{value}</li>
-                    ))}
-                  </ul>
-                )
-              }
-            </dd>
-          ]))}
-        </dl>
         <pre>
           { JSON.stringify(this.props.entity, null, 2) }
         </pre>
