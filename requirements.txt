@@ -37,7 +37,7 @@ regex >= 2017.12.09
 # Dependencies maintained by OCCRP/pudo
 apikit == 0.3.2
 banal >= 0.3.2
-followthemoney >= 0.3.6
+followthemoney >= 0.3.9
 fingerprints >= 0.5.3
 storagelayer >= 0.2.1
 exactitude >= 2.1.2
