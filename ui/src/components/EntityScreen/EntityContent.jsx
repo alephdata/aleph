@@ -4,7 +4,7 @@ import DualPane from 'src/components/common/DualPane';
 
 class EntityContent extends Component {
   render() {
-    const { properties = {} } = this.props.entity;
+    // const { properties = {} } = this.props.entity;
     return (
       <DualPane.ContentPane>
         <pre>

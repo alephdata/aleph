@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { FormattedMessage, FormattedDate } from 'react-intl';
 
 import Schema from 'src/components/common/Schema';
-import Country from 'src/components/common/Country';
 import Property from './Property';
 import DualPane from 'src/components/common/DualPane';
 import CollectionSection from 'src/components/CollectionScreen/CollectionSection';

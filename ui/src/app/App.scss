@@ -46,6 +46,15 @@ body {
   }
 }
 
+pre {
+  border: none;
+  background-color: inherit;
+  box-shadow: none;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  word-wrap: break-word;
+}
+
 .flex-row {
   display: flex;
   align-items: center;

@@ -1,4 +1,3 @@
-import {FormattedMessage} from 'react-intl';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -16,7 +15,6 @@ class Value extends Component {
         return (<Country.Name code={value} />);
     }
     if (model.type === 'url' || model.type === 'uri') {
-        // TODO: add external link icon?
         return (
             <a href={value} target='_blank'>
                 <i className="fa fa-external-link-square" aria-hidden="true"></i>
@@ -50,16 +48,16 @@ class Table extends Component {
           model = schemata[schema] || {};
     
     let items = [];
-    Object.entries(properties).map(([name, values]) => {
+    Object.entries(properties).forEach(([name, values]) => {
         const propModel = model.properties[name];
         if (!propModel || propModel.hidden || !values.length) {
             return;
         }
-        values.map((value, i) => {
+        values.forEach((value, i) => {
             var header = [];
             if (i === 0) {
                 header.push((
-                    <th rowSpan={ values.length }>
+                    <th key={name} rowSpan={ values.length }>
                         <Name name={name} model={propModel} />
                     </th>
                 ))

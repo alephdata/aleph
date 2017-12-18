@@ -9,9 +9,11 @@ const SearchResultListItem = ({
   result: { name, title, schema, collection, links, countries }
 }) => (
   <tr className={`result result--${schema}`}>
+    <td width="5%">
+      <Schema.Icon schema={schema} />
+    </td>
     <td className="result__name">
       <Link to={getPath(links.ui)}>
-        <Schema.Icon schema={schema} />
         <span title={name}>{ name || title }</span>
       </Link>
     </td>

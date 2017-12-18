@@ -14,24 +14,15 @@
 
 .DualPane > .ContentPane {
   flex-basis: 800px;
-  flex-grow: 4;
+  flex-grow: 3;
   display: flex;
   flex-flow: column nowrap;
-
-  pre {
-    border: none;
-    background-color: inherit;
-    box-shadow: none;
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    word-wrap: break-word;
-  }
 }
 
-.InfoPane > .InfoPane-content-container {
-  position: sticky;
-  top: 20px;
-}
+// .InfoPane > .InfoPane-content-container {
+//   position: sticky;
+//   top: 20px;
+// }
 
 .InfoPane .InfoPane-content {
   // margin: 20px;
