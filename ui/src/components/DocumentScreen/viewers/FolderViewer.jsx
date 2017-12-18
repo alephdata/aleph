@@ -79,7 +79,7 @@ const mapStateToProps = (state, ownProps) => {
     ? {
       ...childDocIdsResult,
       results: childDocIdsResult.results
-        ? childDocIdsResult.results.map(id => state.documentCache[id])
+        ? childDocIdsResult.results.map(id => state.apiCache[id])
         : undefined,
     }
     : undefined;

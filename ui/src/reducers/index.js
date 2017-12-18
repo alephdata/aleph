@@ -4,8 +4,7 @@ import collections from './collections'
 import searchResults from './search'
 import metadata from './metadata'
 import session from './session'
-import entityCache from './entityCache';
-import documentCache from './documentCache';
+import apiCache from './apiCache';
 import documentChildrenResults from './documentChildrenResults';
 
 const rootReducer = combineReducers({
@@ -13,8 +12,7 @@ const rootReducer = combineReducers({
   searchResults,
   metadata,
   session,
-  entityCache,
-  documentCache,
+  apiCache,
   documentChildrenResults,
 })
 

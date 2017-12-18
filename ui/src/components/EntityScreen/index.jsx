@@ -40,7 +40,7 @@ class EntityScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entityId } = ownProps.match.params;
-  const entity = entityId !== undefined ? state.entityCache[entityId] : undefined;
+  const entity = entityId !== undefined ? state.apiCache[entityId] : undefined;
   return { entityId, entity };
 }
 
