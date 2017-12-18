@@ -35,7 +35,11 @@
     "npm-run-all": "^4.0.2",
     "react-scripts": "1.0.17"
   },
-  "proxy": "http://api:5000",
+  "proxy": {
+    "/api": {
+      "target": "http://api:5000"
+    }
+  },
   "scripts": {
     "build-css": "node-sass-chokidar src/ -o src/ --importer=node_modules/node-sass-package-importer/dist/cli.js",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive --importer=node_modules/node-sass-package-importer/dist/cli.js",

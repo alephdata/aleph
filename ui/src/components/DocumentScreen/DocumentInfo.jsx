@@ -10,10 +10,6 @@ class DocumentInfo extends Component {
   render() {
     const { document } = this.props;
     const hasTitle = !!document.title;
-    // If it has a content_hash it is not a folder and <uri>/file should work.
-    const fileUri = document.uri && document.content_hash !== undefined
-      ? `${document.uri}/file`
-      : undefined
     return (
       <DualPane.InfoPane>
         <h1>
@@ -36,9 +32,9 @@ class DocumentInfo extends Component {
           {hasTitle && <li>{document.file_name}</li>}
           <li>{document.created_at}</li>
         </ul>
-        {fileUri &&
+        {document.links && document.links.file &&
           <AnchorButton
-            href={fileUri}
+            href={document.links.file}
             download={document.file_name}
             intent="primary"
           >
