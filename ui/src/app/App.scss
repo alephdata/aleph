@@ -57,3 +57,21 @@ body {
     padding: 0 $pt-grid-size;
   }
 }
+
+
+// Table defaults
+table.pt-table {
+  width: 100%;
+}
+
+td.numeric {
+  text-align: right;
+
+  span {
+    float: right;
+  }
+}
+
+td.tiny, th.tiny {
+  width: 1%;
+}
