@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 import SchemaIcon from 'src/components/common/SchemaIcon';
 import getPath from 'src/util/getPath';
 
-const ListItem = ({ name, title, schema, properties, collection, ui }) => (
+const ListItem = ({ name, title, schema, properties, collection, links }) => (
   <tr className={`result result--${schema}`}>
     <td className="result__name">
-      <Link to={getPath(ui)}>
+      <Link to={getPath(links.ui)}>
         <span className="result__icon">
           <SchemaIcon schemaId={schema} />
         </span>
@@ -32,26 +32,26 @@ const ListItem = ({ name, title, schema, properties, collection, ui }) => (
   </tr>
 );
 
-const SearchResultListItem = ({ result, collection, countries }) => {
-  const schemaProperties = {
-    'Document': () => [],
-    'Company': () => [],
-    'LegalEntity': () => [],
-    'Land': () => [],
-    'Person': ({ nationality, address }) => [
-      {name: 'nationality', icon: 'flag', label: countries[nationality]},
-      {name: 'address', icon: 'map', label: address}
-    ]
-  };
+const SearchResultListItem = ({ result, countries }) => {
+  // const schemaProperties = {
+  //   'Document': () => [],
+  //   'Company': () => [],
+  //   'LegalEntity': () => [],
+  //   'Land': () => [],
+  //   'Person': ({ nationality, address }) => [
+  //     {name: 'nationality', icon: 'flag', label: countries[nationality]},
+  //     {name: 'address', icon: 'map', label: address}
+  //   ]
+  // };
 
-  const properties = schemaProperties[result.schema](result.properties)
-    .filter(property => !!property.label);
+  // const properties = schemaProperties[result.schema](result.properties)
+  //   .filter(property => !!property.label);
 
-  return <ListItem {...result} collection={collection} properties={properties} />;
+  const properties = [];
+  return <ListItem {...result} collection={result.collection} properties={properties} />;
 };
 
-const mapStateToProps = ({ collections, metadata }, { result }) => ({
-  collection: collections[result.collection_id],
+const mapStateToProps = ({ metadata }, { result }) => ({
   countries: metadata.countries
 });
 

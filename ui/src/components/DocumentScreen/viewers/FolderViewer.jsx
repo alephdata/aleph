@@ -12,7 +12,7 @@ class DocAsListItem extends Component {
     const { document } = this.props;
     return (
       <li>
-        <Link to={getPath(document.ui)}>
+        <Link to={getPath(document.links.ui)}>
           {document.file_name}
         </Link>
       </li>

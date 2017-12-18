@@ -102,7 +102,8 @@ class ShallowCombinedSchema(BaseSchema):
     def hypermedia(self, data):
         pk = str(data.get('id'))
         collection = data.get('collection', {})
-        collection_id = collection.get('id', data.get('collection_id'))
+        collection_id = collection.get('id')
+        collection_id = collection_id or data.get('collection_id')
         schemata = set(data.get('schemata', []))
         if Document.SCHEMA in schemata:
             data['links'] = self.document_links(data, pk, schemata)

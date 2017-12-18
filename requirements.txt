@@ -16,8 +16,6 @@ celery == 4.1.0
 elasticsearch >= 6.0.0, <= 7.0.0
 marshmallow == 2.13.5
 psycopg2 >= 2.7.1
-apikit == 0.3.2
-banal >= 0.3.1
 urlnormalizer >= 1.1.0
 gunicorn >= 19.6.0
 XlsxWriter == 0.6.6
@@ -36,6 +34,9 @@ pylru >= 1.0.9
 pyjwt >= 1.5.3
 regex >= 2017.12.09
 
+# Dependencies maintained by OCCRP/pudo
+apikit == 0.3.2
+banal >= 0.3.2
 followthemoney >= 0.3.6
 fingerprints >= 0.5.3
 storagelayer >= 0.2.1

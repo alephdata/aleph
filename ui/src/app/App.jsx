@@ -38,7 +38,7 @@ endpoint.interceptors.request.use(config => {
 
 const App = () => (
   <Provider store={store}>
-    <IntlProvider locale="de" messages={translations.de}>
+    <IntlProvider locale="en" messages={translations.en}>
       <BrowserRouter>
         <Route path="/" component={PageLayout} />
       </BrowserRouter>

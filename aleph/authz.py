@@ -48,6 +48,8 @@ class Authz(object):
 
         if isinstance(collection, Collection):
             collection = collection.id
+        if collection is None:
+            return False
 
         key = (collection, action)
         if key in self._cache:

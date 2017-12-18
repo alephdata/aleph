@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Icon } from '@blueprintjs/core';
+import { FormattedMessage, FormattedNumber } from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
@@ -14,11 +15,13 @@ class CollectionInfo extends Component {
     return (
       <DualPane.InfoPane>
         <Breadcrumbs>
-          <Link to={'/'}><Icon iconName="folder-open" /> Aleph</Link>
+          <Link to={'/'}>
+            <Icon iconName="folder-open" /> Aleph
+          </Link>
           <span>{categoryLabel}</span>
         </Breadcrumbs>
         <h1>
-          <Link to={getPath(collection.ui)}>
+          <Link to={getPath(collection.links.ui)}>
             {collection.label}
           </Link>
         </h1>
@@ -26,7 +29,7 @@ class CollectionInfo extends Component {
         Contains:
         <ul>
           {Object.entries(collection.schemata).map(([key, value]) => (
-            <li key={key}>{key}: {value}</li>
+            <li key={key}>{key}: <FormattedNumber value={value} /></li>
           ))}
         </ul>
         <p>

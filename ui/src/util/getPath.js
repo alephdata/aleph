@@ -1,3 +1,5 @@
 export default function getPath(url) {
-  return new URL(url).pathname;
+  if (url) {
+    return new URL(url).pathname;
+  }
 }

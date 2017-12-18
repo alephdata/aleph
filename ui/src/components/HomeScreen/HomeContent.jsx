@@ -19,7 +19,7 @@ class HomeContent extends Component {
               <ul>
                 {group.map(collection => (
                   <li key={collection.id}>
-                    <Link to={getPath(collection.ui)}>
+                    <Link to={getPath(collection.links.ui)}>
                       {collection.label}
                     </Link>
                   </li>
