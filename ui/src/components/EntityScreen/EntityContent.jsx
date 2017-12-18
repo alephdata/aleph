@@ -24,6 +24,9 @@ class EntityContent extends Component {
             </dd>
           ]))}
         </dl>
+        <pre>
+          { JSON.stringify(this.props.entity, null, 2) }
+        </pre>
       </DualPane.ContentPane>
     );
   }
