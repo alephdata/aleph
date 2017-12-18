@@ -42,7 +42,9 @@ class DocumentInfo extends Component {
           </AnchorButton>
         }
 
-        <CollectionSection collection={document.collection} />
+        {document.collection &&
+          <CollectionSection collection={document.collection} />
+        }
       </DualPane.InfoPane>
     );
   }

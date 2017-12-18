@@ -28,7 +28,9 @@ class EntityInfo extends Component {
           </tr>
         </Property.Table>
 
-        <CollectionSection collection={collection} />
+        {document.collection &&
+          <CollectionSection collection={collection} />
+        }
       </DualPane.InfoPane>
     );
   }
