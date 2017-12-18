@@ -18,7 +18,7 @@ class EntityScreen extends Component {
   fetchIfNeeded() {
     const { entityId, entity } = this.props;
     if (entity === undefined) {
-      this.props.fetchEntity(entityId);
+      this.props.fetchEntity({ id: entityId });
     }
   }
 

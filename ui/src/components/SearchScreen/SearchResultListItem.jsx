@@ -3,10 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import SchemaIcon from 'src/components/common/SchemaIcon';
-
-function getPath(url) {
-  return new URL(url).pathname;
-}
+import getPath from 'src/util/getPath';
 
 const ListItem = ({ name, title, schema, properties, collection, ui }) => (
   <tr className={`result result--${schema}`}>
@@ -54,7 +51,7 @@ const SearchResultListItem = ({ result, collection, countries }) => {
 };
 
 const mapStateToProps = ({ collections, metadata }, { result }) => ({
-  collection: collections.results[result.collection_id],
+  collection: collections[result.collection_id],
   countries: metadata.countries
 });
 

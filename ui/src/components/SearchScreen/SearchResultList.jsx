@@ -13,7 +13,7 @@ class SearchResultList extends Component {
   bottomReachedHandler() {
     const { result, fetchNextSearchResults } = this.props;
     if (result.next) {
-      fetchNextSearchResults();
+      fetchNextSearchResults({ next: result.next });
     }
   }
 

@@ -1,38 +1,27 @@
-import uniq from 'lodash/uniq';
+import { createReducer } from 'redux-act';
+import { set, update, uniq } from 'lodash/fp';
+
+import { fetchChildDocs, fetchNextChildDocs } from 'src/actions';
+import { normaliseSearchResult } from './util';
 
 const initialState = {};
 
-const documentChildrenResults = (state = initialState, action) => {
-  const { type, payload } = action;
-  switch (type) {
-    case 'FETCH_CHILD_DOCS_REQUEST':
-      return {
-        ...state,
-        [payload.id]: { ...state[payload.id], isFetching: true },
-      };
-    case 'FETCH_CHILD_DOCS_SUCCESS':
-      return {
-        ...state,
-        [payload.id]: payload.data,
-        isFetching: false,
-      };
-    case 'FETCH_CHILD_DOCS_NEXT_REQUEST':
-      return {
-        ...state,
-        [payload.id]: { ...state[payload.id], isFetchingNext: true },
-      }
-    case 'FETCH_CHILD_DOCS_NEXT_SUCCESS':
-      return {
-        ...state,
-        [payload.id]: {
-          ...mergeResults(state[payload.id] || {}, payload.data),
-          isFetchingNext: false,
-        },
-      }
-    default:
-      return state;
-  }
-};
+export default createReducer({
+  [fetchChildDocs.START]: (state, { id }) =>
+    update(id, set('isFetching', true))(state),
+
+  [fetchChildDocs.COMPLETE]: (state, { id, result }) =>
+    set(id, normaliseSearchResult(result).result)(state),
+
+  [fetchNextChildDocs.START]: (state, { id }) =>
+    update(id, set('isFetchingNext', true))(state),
+
+  [fetchNextChildDocs.COMPLETE]: (state, { id, result }) =>
+    update(id, obj => ({
+      ...mergeResults(obj, normaliseSearchResult(result).result),
+      isFetchingNext: false,
+    }))(state),
+}, initialState);
 
 function mergeResults(oldResult, newResult) {
   return {
@@ -42,5 +31,3 @@ function mergeResults(oldResult, newResult) {
     results: uniq((oldResult ? oldResult.results : []).concat(newResult.results)),
   };
 }
-
-export default documentChildrenResults;

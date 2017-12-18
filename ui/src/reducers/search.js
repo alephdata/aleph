@@ -1,26 +1,35 @@
+import { createReducer } from 'redux-act';
 import uniqBy from 'lodash/uniqBy';
+import { set } from 'lodash/fp';
+
+import { fetchSearchResults, fetchNextSearchResults } from 'src/actions';
 
 const initialState = {
   // Gets rid of a FOUC but technically not great
   isFetching: true,
   isFetchingNext: false,
-  results: []
+  results: [],
 };
 
-const searchResults = (state = initialState, action) => {
-  switch (action.type) {
-    case 'FETCH_SEARCH_REQUEST':
-      return { ...state, isFetching: true }
-    case 'FETCH_SEARCH_SUCCESS':
-      return { ...state, ...action.result, isFetching: false }
-    case 'FETCH_SEARCH_NEXT_REQUEST':
-      return { ...state, isFetchingNext: true }
-    case 'FETCH_SEARCH_NEXT_SUCCESS':
-      return { ...state, ...action.result, isFetchingNext: false,
-        results: uniqBy([...state.results, ...action.result.results], 'id')};
-    default:
-      return state;
-  }
-};
+export default createReducer({
+  [fetchSearchResults.START]: state => ({
+    results: [],
+    isFetching: true,
+  }),
 
-export default searchResults;
+  [fetchSearchResults.COMPLETE]: (state, { result }) => ({
+    ...state,
+    ...result,
+    isFetching: false
+  }),
+
+  [fetchNextSearchResults.START]: state =>
+    set('isFetchingNext', true)(state),
+
+  [fetchNextSearchResults.COMPLETE]: (state, { result }) => ({
+    ...state,
+    ...result,
+    isFetchingNext: false,
+    results: uniqBy([...state.results, ...result.results], 'id'),
+  }),
+}, initialState);

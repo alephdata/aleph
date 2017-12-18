@@ -1,22 +1,13 @@
-import keyBy from 'lodash/keyBy';
+import { createReducer } from 'redux-act';
 
-const initialState = {
-  results: {},
-};
+import { fetchCollectionsPage } from 'src/actions';
+import { normaliseSearchResult } from './util';
 
-const collections = (state = initialState, action) => {
-  switch (action.type) {
-    case 'FETCH_COLLECTIONS_SUCCESS':
-      return {
-        ...action.collections,
-        results: {
-          ...state.results,
-          ...keyBy(action.collections.results, 'id')
-        }
-      };
-    default:
-      return state;
-  }
-};
+const initialState = {};
 
-export default collections;
+export default createReducer({
+  [fetchCollectionsPage.COMPLETE]: (state, { result }) => ({
+    ...state,
+    ...normaliseSearchResult(result).objects,
+  }),
+}, initialState);

@@ -19,7 +19,7 @@ class CollectionScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
-  const collection = state.collections.results[collectionId];
+  const collection = state.collections[collectionId];
   // TODO handle case where collection is undefined / not loaded yet.
   return {
     collection,

@@ -1,16 +1,14 @@
+import { createReducer } from 'redux-act';
+import { set, update } from 'lodash/fp';
+
+import { fetchEntity } from 'src/actions';
+
 const initialState = {};
 
-const entityCache = (state = initialState, action) => {
-  if (!action.type.startsWith('FETCH_ENTITY_')) return state;
-  const { id, data } = action.payload;
-  switch (action.type) {
-    case 'FETCH_ENTITY_REQUEST':
-      return { ...state, [id]: { _isFetching: true } };
-    case 'FETCH_ENTITY_SUCCESS':
-      return { ...state, [id]: data };
-    default:
-      return state;
-  }
-};
+export default createReducer({
+  [fetchEntity.START]: (state, { id }) =>
+    update(id, set('_isFetching', true))(state),
 
-export default entityCache;
+  [fetchEntity.COMPLETE]: (state, { id, data }) =>
+    set(id, data)(state),
+}, initialState);

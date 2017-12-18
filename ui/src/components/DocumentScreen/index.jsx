@@ -9,13 +9,13 @@ import DocumentContent from './DocumentContent';
 class DocumentScreen extends Component {
   componentDidMount() {
     const { documentId } = this.props;
-    this.props.fetchDocument(documentId);
+    this.props.fetchDocument({ id: documentId });
   }
 
   componentDidUpdate(prevProps) {
     const { documentId } = this.props;
     if (documentId !== prevProps.documentId) {
-      this.props.fetchDocument(documentId);
+      this.props.fetchDocument({ id: documentId });
     }
   }
 

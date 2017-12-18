@@ -1,16 +1,12 @@
+import { createAction } from 'redux-act';
+
 import {endpoint} from 'src/app/api';
 
-export const loginWithToken = token => dispatch => {
-  dispatch({type: 'LOGIN', token});
-};
+export const loginWithToken = createAction('LOGIN');
+export const logout = createAction('LOGOUT');
 
 // TODO: Show success/error toasts
-export const loginWithPassword = (email, password) => dispatch => {
-  return endpoint.post('/sessions/login', {email, password}).then(response => {
-    dispatch(loginWithToken(response.data.token));
-  });
-};
-
-export const logout = () => dispatch => {
-  dispatch({type: 'LOGOUT'});
+export const loginWithPassword = (email, password) => async dispatch => {
+  const response = await endpoint.post('/sessions/login', {email, password});
+  dispatch(loginWithToken(response.data.token));
 };

@@ -5,10 +5,8 @@ import { Icon } from '@blueprintjs/core';
 
 import DualPane from 'src/components/common/DualPane';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
+import getPath from 'src/util/getPath';
 
-function getPath(url) {
-  return new URL(url).pathname;
-}
 
 class CollectionInfo extends Component {
   render() {

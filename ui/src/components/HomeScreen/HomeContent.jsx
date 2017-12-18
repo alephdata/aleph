@@ -3,15 +3,12 @@ import { Link } from 'react-router-dom';
 import { groupBy, map } from 'lodash';
 
 import DualPane from 'src/components/common/DualPane';
-
-function getPath(url) {
-  return new URL(url).pathname;
-}
+import getPath from 'src/util/getPath';
 
 class HomeContent extends Component {
   render() {
     const { collections, categories } = this.props;
-    const collectionsByCategory = groupBy(collections.results, 'category');
+    const collectionsByCategory = groupBy(collections, 'category');
     return (
       <DualPane.ContentPane>
         <p>Aleph's database contains:</p>
