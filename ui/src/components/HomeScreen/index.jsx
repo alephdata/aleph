@@ -19,7 +19,6 @@ class HomeScreen extends Component {
 const mapStateToProps = state => {
   return {
     collections: state.collections,
-    categories: state.metadata.categories,
   };
 };
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Schema from 'src/components/common/Schema';
+import Country from 'src/components/common/Country';
 import DualPane from 'src/components/common/DualPane';
 
 class EntityInfo extends Component {
@@ -22,6 +23,7 @@ class EntityInfo extends Component {
         <strong>{ collection.label }</strong>
         <p>{ collection.summary }</p>
         <p>{ collection.updated_at }</p>
+        <p>Contains entries from: <Country.List codes={ collection.countries } /></p>
       </DualPane.InfoPane>
     );
   }
