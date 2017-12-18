@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import Schema from 'src/components/common/Schema';
+import Country from 'src/components/common/Country';
 import getPath from 'src/util/getPath';
 
-const ListItem = ({ name, title, schema, properties, collection, links }) => (
+const ListItem = ({ name, title, schema, collection, links, countries }) => (
   <tr className={`result result--${schema}`}>
     <td className="result__name">
       <Link to={getPath(links.ui)}>
@@ -21,32 +22,13 @@ const ListItem = ({ name, title, schema, properties, collection, links }) => (
         <span className="pt-skeleton">Loading collection</span>}
     </td>
     <td>
-      {properties.map(property => (
-        <span className="result-property" data-property={property.name} key={property.name}>
-          <span className={`pt-icon pt-icon-${property.icon}`} /> {property.label}
-        </span>
-      ))}
+      <Country.List codes={ countries } />
     </td>
   </tr>
 );
 
 const SearchResultListItem = ({ result, countries }) => {
-  // const schemaProperties = {
-  //   'Document': () => [],
-  //   'Company': () => [],
-  //   'LegalEntity': () => [],
-  //   'Land': () => [],
-  //   'Person': ({ nationality, address }) => [
-  //     {name: 'nationality', icon: 'flag', label: countries[nationality]},
-  //     {name: 'address', icon: 'map', label: address}
-  //   ]
-  // };
-
-  // const properties = schemaProperties[result.schema](result.properties)
-  //   .filter(property => !!property.label);
-
-  const properties = [];
-  return <ListItem {...result} collection={result.collection} properties={properties} />;
+  return <ListItem {...result} />;
 };
 
 const mapStateToProps = ({ metadata }, { result }) => ({
