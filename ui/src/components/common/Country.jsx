@@ -1,4 +1,4 @@
-import 'font-awesome/css/font-awesome.min.css';
+import {FormattedMessage} from 'react-intl';
 
 import wordList from 'src/util/wordList';
 import React, { Component } from 'react';
@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 class Name extends Component {
   render() {
     const { code, countries } = this.props,
-          codeLabel = code ? code.toUpperCase() : 'Unknown',
+          codeLabel = code ? code.toUpperCase() : <FormattedMessage id="country.unknown" defaultMessage="Unknown"/>,
           label = countries[code] || codeLabel;
     
     if (!code) return null;
