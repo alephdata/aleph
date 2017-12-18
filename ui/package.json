@@ -33,7 +33,7 @@
     "json-server": "^0.10.0",
     "node-sass-chokidar": "0.0.3",
     "npm-run-all": "^4.0.2",
-    "react-scripts": "0.9.5"
+    "react-scripts": "1.0.17"
   },
   "proxy": "http://api:5000",
   "scripts": {
