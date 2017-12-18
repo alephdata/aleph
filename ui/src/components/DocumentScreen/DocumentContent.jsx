@@ -17,7 +17,7 @@ class DocumentContent extends Component {
         {document.html && (
           <HtmlViewer html={document.html} />
         )}
-        {document.children && (
+        {document.children !== undefined && (
           <FolderViewer document={document} />
         )}
       </DualPane.ContentPane>
