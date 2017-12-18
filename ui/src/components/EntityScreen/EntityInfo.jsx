@@ -5,6 +5,7 @@ import Schema from 'src/components/common/Schema';
 import Country from 'src/components/common/Country';
 import Property from './Property';
 import DualPane from 'src/components/common/DualPane';
+import CollectionSection from 'src/components/CollectionScreen/CollectionSection';
 
 class EntityInfo extends Component {
   render() {
@@ -27,11 +28,7 @@ class EntityInfo extends Component {
           </tr>
         </Property.Table>
 
-        <h3>Origin</h3>
-        <strong>{ collection.label }</strong>
-        <p>{ collection.summary }</p>
-        <p><FormattedDate value={collection.updated_at} /></p>
-        <p>Contains entries from: <Country.List codes={ collection.countries } /></p>
+        <CollectionSection collection={collection} />
       </DualPane.InfoPane>
     );
   }

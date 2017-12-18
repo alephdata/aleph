@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Schema from 'src/components/common/Schema';
 import DualPane from 'src/components/common/DualPane';
+import CollectionSection from 'src/components/CollectionScreen/CollectionSection';
 
 class DocumentInfo extends Component {
   render() {
@@ -44,6 +45,8 @@ class DocumentInfo extends Component {
             Download
           </AnchorButton>
         }
+
+        <CollectionSection collection={document.collection} />
       </DualPane.InfoPane>
     );
   }
