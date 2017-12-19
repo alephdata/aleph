@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchDocument } from 'src/actions';
+import Screen from 'src/components/common/Screen';
+import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
+import Entity from 'src/components/EntityScreen/Entity';
 import DocumentInfo from './DocumentInfo';
 import DocumentContent from './DocumentContent';
 
@@ -25,10 +28,24 @@ class DocumentScreen extends Component {
       return null;
     }
     return (
-      <DualPane>
-        <DocumentInfo document={document} />
-        <DocumentContent document={document} />
-      </DualPane>
+      <Screen>
+        <Breadcrumbs collection={document.collection}>
+          { document.parent && (
+            <li>
+              <Entity.Link entity={document.parent} className="pt-breadcrumb" icon />
+            </li>  
+          )}
+          <li>
+            <a className="pt-breadcrumb pt-breadcrumb-current">
+              <Entity.Label entity={document} icon />
+            </a>
+          </li>
+        </Breadcrumbs>
+        <DualPane>
+          <DocumentInfo document={document} />
+          <DocumentContent document={document} />
+        </DualPane>
+      </Screen>
     );
   }
 }
