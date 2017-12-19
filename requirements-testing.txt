@@ -1,6 +1,0 @@
-faker
-factory_boy
-nose
-flexmock==0.10.2
-coverage
-coveralls

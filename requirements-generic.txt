@@ -9,7 +9,7 @@ Flask-Fixtures==0.3.3
 Flask-Mail==0.9.1
 Flask-Migrate==1.8.0
 Flask-Cors==3.0.03
-SQLAlchemy==1.0.13
+SQLAlchemy>=1.0.13
 alembic==0.8.6
 
 celery == 4.1.0
@@ -34,15 +34,33 @@ pylru >= 1.0.9
 pyjwt >= 1.5.3
 regex >= 2017.12.09
 
-# Dependencies maintained by OCCRP/pudo
-apikit == 0.3.2
-banal >= 0.3.2
-followthemoney >= 0.3.10
-fingerprints >= 0.5.3
-storagelayer >= 0.2.1
-exactitude >= 2.1.2
-ingestors >= 0.6.5
-normality >= 0.5.6
+# Testing dependencies
+faker
+factory_boy
+nose
+flexmock==0.10.2
+coverage
+coveralls
 
 # Python 3 backports
 functools32 >= 3.2
+subprocess32
+backports.csv
+
+# Generating documentation
+sphinx==1.4.9
+sphinx-autoapi==0.4.0
+sphinx_rtd_theme==0.1.9
+recommonmark==0.4.0
+
+# Duplicative for speed of docker builds
+lxml
+parsedatetime>=2.1
+tesserocr>=2.2.2
+flanker>=0.4.38
+xlrd>=1.1.0
+phonenumbers>=8.8.4
+python-levenshtein
+pycountry
+pypdf2
+openpyxl

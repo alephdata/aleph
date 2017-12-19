@@ -38,11 +38,10 @@ ENV LANG='en_US.UTF-8' \
 
 # Install Python dependencies
 RUN pip install -q --upgrade pip && pip install -q --upgrade setuptools six
-COPY requirements-docs.txt requirements-testing.txt /tmp/
-RUN pip install -r /tmp/requirements-docs.txt
-COPY requirements.txt /tmp/
-RUN pip install -r /tmp/requirements.txt
-RUN pip install --upgrade ingestors
+COPY requirements-generic.txt /tmp/
+RUN pip install -q -r /tmp/requirements-generic.txt
+COPY requirements-toolkit.txt /tmp/
+RUN pip install -r /tmp/requirements-toolkit.txt
 
 # Install aleph
 COPY . /aleph
