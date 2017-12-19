@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import { AnchorButton } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
 
 import Schema from 'src/components/common/Schema';
 import Country from 'src/components/common/Country';
 import Language from 'src/components/common/Language';
 import Date from 'src/components/common/Date';
-import DualPane from 'src/components/common/DualPane';
 import Entity from 'src/components/EntityScreen/Entity';
-import CollectionSection from 'src/components/CollectionScreen/CollectionSection';
 
 class DocumentMetadata extends Component {
   render() {
