@@ -4,16 +4,17 @@ import { FormattedMessage } from 'react-intl';
 import DualPane from 'src/components/common/DualPane';
 import TextViewer from './viewers/TextViewer';
 import HtmlViewer from './viewers/HtmlViewer';
+import ImageViewer from './viewers/ImageViewer';
 import FolderViewer from './viewers/FolderViewer';
 import EmailHeadersViewer from './viewers/EmailHeadersViewer';
 
 class DocumentContent extends Component {
   render() {
     const { document } = this.props;
-    console.log(document.schemata);
+    // console.log(document.schemata);
+
     return (
       <DualPane.ContentPane>
-        <h1>{document.file_name}</h1>
         {document.status === 'fail' && (
           <div className="pt-callout pt-intent-warning">
             <h5>
@@ -34,6 +35,10 @@ class DocumentContent extends Component {
 
         {document.html && (
           <HtmlViewer html={document.html} />
+        )}
+
+        {document.schema === 'Image' && (
+          <ImageViewer links={document.links} />
         )}
 
         {document.children !== undefined && (
