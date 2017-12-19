@@ -32,7 +32,7 @@ class DocumentMetadata extends Component {
           { document.parent && (
             <tr>
               <th><FormattedMessage id="document.parent" defaultMessage="Folder"/></th>
-              <td><Entity.Link entity={document.parent} /></td>
+              <td><Entity.Link entity={document.parent} icon short /></td>
             </tr>
           )}
           { document.author && (
@@ -98,7 +98,7 @@ class DocumentMetadata extends Component {
           { document.content_hash && (
             <tr>
               <th><FormattedMessage id="document.content_hash" defaultMessage="Checksum"/></th>
-              <td>{document.content_hash}</td>
+              <td><code>{document.content_hash}</code></td>
             </tr>
           )}
         </tbody>

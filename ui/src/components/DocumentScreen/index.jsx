@@ -32,12 +32,12 @@ class DocumentScreen extends Component {
         <Breadcrumbs collection={document.collection}>
           { document.parent && (
             <li>
-              <Entity.Link entity={document.parent} className="pt-breadcrumb" icon />
+              <Entity.Link entity={document.parent} className="pt-breadcrumb" icon short />
             </li>  
           )}
           <li>
             <a className="pt-breadcrumb pt-breadcrumb-current">
-              <Entity.Label entity={document} icon />
+              <Entity.Label entity={document} icon short />
             </a>
           </li>
         </Breadcrumbs>

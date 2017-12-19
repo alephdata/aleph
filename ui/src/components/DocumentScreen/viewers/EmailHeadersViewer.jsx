@@ -6,6 +6,7 @@ import './EmailHeadersViewer.css';
 class EmailHeadersViewer extends Component {
   render() {
     const { headers } = this.props;
+    if (!headers) return null;
     return (
       <div className="EmailHeadersViewer">
         <table className="pt-table pt-bordered">

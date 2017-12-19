@@ -2,19 +2,21 @@ import { toString } from 'lodash';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 
+import Schema from 'src/components/common/Schema';
 import getPath from 'src/util/getPath';
 
 
 class Label extends Component {
   render() {
-    let { title, name, file_name } = this.props.entity;
+    const { short = false, icon = false } = this.props;
+    let { title, name, file_name, schema } = this.props.entity;
     title = toString(title);
     name = toString(name);
     file_name = toString(file_name);
 
-    if (title && file_name && title !== file_name) {
+    if (!short && title && file_name && title !== file_name) {
         return (
-            <span className="entity-label">
+            <span className="entity-label" title={title}>
                 <span className="title">{title} </span>
                 <span className="file-name">{file_name}</span>
             </span>
@@ -22,18 +24,23 @@ class Label extends Component {
     }
     
     return (
-      <span className="entity-label">{ title || name }</span>
+      <span className="entity-label" title={ title || name }>
+        {icon && (
+          <Schema.Icon schema={schema} />
+        )}
+        { title || name }
+      </span>
     );
   }
 }
 
 class EntityLink extends Component {
   render() {
-    const { entity, className } = this.props;
+    const { entity, className, icon, short } = this.props;
     
     return (
       <Link to={getPath(entity.links.ui)} className={className}>
-        <Label entity={entity} />
+        <Label entity={entity} icon={icon} short={short} />
       </Link>
     );
   }
