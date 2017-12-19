@@ -2,6 +2,7 @@ import React from 'react';
 
 import Schema from 'src/components/common/Schema';
 import Country from 'src/components/common/Country';
+import Collection from 'src/components/common/Collection';
 import Entity from 'src/components/EntityScreen/Entity';
 
 const SearchResultListItem = ({ result }) => (
@@ -13,9 +14,7 @@ const SearchResultListItem = ({ result }) => (
       <Entity.Link entity={result} />
     </td>
     <td className="result__collection">
-      <span title={result.collection.label}>
-        <span className="pt-icon pt-icon-globe" /> {result.collection.label}
-      </span>
+      <Collection.Link collection={result.collection} icon />
     </td>
     <td>
       <Country.List codes={result.countries} />

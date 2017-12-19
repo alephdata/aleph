@@ -1,4 +1,3 @@
-import {FormattedMessage} from 'react-intl';
 import { toString } from 'lodash';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
@@ -16,8 +15,8 @@ class Label extends Component {
     if (title && file_name && title !== file_name) {
         return (
             <span className="entity-label">
-                <span class="title">{title} </span>
-                <span class="file-name">{file_name}</span>
+                <span className="title">{title} </span>
+                <span className="file-name">{file_name}</span>
             </span>
         );
     }
@@ -30,10 +29,10 @@ class Label extends Component {
 
 class EntityLink extends Component {
   render() {
-    const entity = this.props.entity;
+    const { entity, className } = this.props;
     
     return (
-      <Link to={getPath(entity.links.ui)}>
+      <Link to={getPath(entity.links.ui)} className={className}>
         <Label entity={entity} />
       </Link>
     );

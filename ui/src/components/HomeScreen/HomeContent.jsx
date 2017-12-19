@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { groupBy, map } from 'lodash';
 
-import Category from 'src/components/CollectionScreen/Category';
+import Category from 'src/components/common/Category';
 import DualPane from 'src/components/common/DualPane';
 import getPath from 'src/util/getPath';
 

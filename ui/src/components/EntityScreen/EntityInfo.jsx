@@ -9,7 +9,7 @@ import CollectionSection from 'src/components/CollectionScreen/CollectionSection
 
 class EntityInfo extends Component {
   render() {
-    const { name, schema, collection, properties, updated_at } = this.props.entity;
+    const { schema, collection, properties, updated_at } = this.props.entity;
     return (
       <DualPane.InfoPane>
         <h1>

@@ -1,6 +1,6 @@
 nav.Breadcrumbs {
-  display: block;
-  margin-bottom: 1em;
+  display: flex;
+  flex-flow: row nowrap;
 
   ul {
     display: inline;
@@ -12,11 +12,5 @@ nav.Breadcrumbs {
       display: inline;
       margin-left: 0.2em;
     }
-  }
-
-  &:not(.root) ul li::after {
-    color: grey;
-    content: '>';
-    margin-left: 0.2em;
   }
 }

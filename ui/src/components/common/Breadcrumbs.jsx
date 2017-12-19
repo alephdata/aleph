@@ -1,19 +1,52 @@
-import React from 'react';
-import { castArray } from 'lodash';
-import classnames from 'classnames';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
+import Category from 'src/components/common/Category';
+import Collection from 'src/components/common/Collection';
 import './Breadcrumbs.css';
 
-const Breadcrumbs = ({ children = [], root }) => (
-  <nav className={classnames('Breadcrumbs', {root})}>
-    <ul>
-      {castArray(children).map((child, i) => (
-        <li key={child.key ? `breadcrumb_key_${child.key}` : `breadcrumb_nr_${i}`}>
-          {child}
-        </li>
-      ))}
-    </ul>
-  </nav>
-);
+class Breadcrumbs extends Component {
+  render() {
+    const { collection, children, app } = this.props;
 
-export default Breadcrumbs;
+    let collectionCrumbs = [];
+    if (collection) {
+      collectionCrumbs.push((
+        <li key='category'>
+          <a className="pt-breadcrumb pt-disabled">
+            <Category collection={collection} />
+          </a>
+        </li>
+      ));
+      collectionCrumbs.push((
+        <li key='collection'>
+          <Collection.Link collection={collection} className="pt-breadcrumb" icon />
+        </li>
+      ));
+    }
+
+    return (
+      <nav className="Breadcrumbs">
+        <ul className="pt-breadcrumbs">
+          <li key='root'>
+            <Link to="/" className="pt-breadcrumb">
+              { app.title }
+            </Link>
+          </li>
+          {collectionCrumbs}
+          {children}
+        </ul>
+      </nav>
+    );
+  }
+}
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    ...ownProps,
+    app: state.metadata.app
+  };
+}
+
+export default connect(mapStateToProps)(Breadcrumbs);

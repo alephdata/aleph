@@ -10,8 +10,6 @@
 }
 
 .result {
-    font-size: 12px;
-
     & > td {
         vertical-align: middle !important;
         max-width: 0;
@@ -25,22 +23,10 @@
             background-size: cover;
         }
     }
-
-    .pt-icon {
-        margin-right: ($pt-grid-size / 4);
-    }
-}
-
-.result__icon {
-    display: inline-block;
-    background-color: $gray3;
-    border-radius: 100px;
-    margin-right: $pt-grid-size;
 }
 
 .result__name {
     width: 40%;
-    font-size: 14px;
     font-weight: bold;
 }
 

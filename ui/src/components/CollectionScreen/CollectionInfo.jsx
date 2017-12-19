@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Icon } from '@blueprintjs/core';
 import { FormattedNumber, FormattedDate } from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
 import Schema from 'src/components/common/Schema';
-import Category from 'src/components/CollectionScreen/Category';
-import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import getPath from 'src/util/getPath';
 
 
 class CollectionInfo extends Component {
@@ -17,16 +12,8 @@ class CollectionInfo extends Component {
 
     return (
       <DualPane.InfoPane>
-        <Breadcrumbs>
-          <Link to={'/'}>
-            <Icon iconName="folder-open" /> Aleph
-          </Link>
-          <Category collection={ collection } />
-        </Breadcrumbs>
         <h1>
-          <Link to={getPath(collection.links.ui)}>
-            {collection.label}
-          </Link>
+          {collection.label}
         </h1>
         <p>{collection.summary}</p>
         Contains:
