@@ -1,4 +1,5 @@
 from flask import request
+from banal import is_mapping
 from marshmallow import post_dump, pre_dump, pre_load
 from marshmallow.fields import Nested, Integer, String, List
 from marshmallow.fields import Dict, Boolean
@@ -36,9 +37,11 @@ class CollectionSchema(BaseSchema):
 
     @pre_dump()
     def visibility(self, data):
-        public = Role.public_roles()
-        roles = data.get('roles', [])
-        data['secret'] = public.intersection(roles) < 0
+        roles = set()
+        if is_mapping(data):
+            roles = data.get('roles', [])
+            public = Role.public_roles()
+            data['secret'] = public.intersection(roles) < 0
 
     @post_dump
     def transient(self, data):
