@@ -1,4 +1,5 @@
 from aleph.core import es
+from aleph.model import Entity
 from aleph.index.core import entities_index
 
 
@@ -6,8 +7,11 @@ def get_instance_stats(authz):
     query = {
         'size': 0,
         'query': {
-            'terms': {
-                'roles': list(authz.roles)
+            'bool': {
+                'filter': [
+                    {'terms': {'roles': list(authz.roles)}},
+                    {'term': {'schemata': Entity.THING}}
+                ]
             }
         },
         'aggs': {
@@ -33,7 +37,12 @@ def get_collection_stats(collection_id):
     query = {
         'size': 0,
         'query': {
-            'term': {'collection_id': collection_id}
+            'bool': {
+                'filter': [
+                    {'term': {'collection_id': collection_id}},
+                    {'term': {'schemata': Entity.THING}}
+                ]
+            }
         },
         'aggs': {
             'schema': {'terms': {'field': 'schema', 'size': 1000}},

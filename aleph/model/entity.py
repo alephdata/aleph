@@ -19,6 +19,8 @@ log = logging.getLogger(__name__)
 
 
 class Entity(db.Model, UuidModel, SoftDeleteModel):
+    THING = 'Thing'
+
     name = db.Column(db.Unicode)
     schema = db.Column(db.String(255), index=True)
     foreign_ids = db.Column(ARRAY(db.Unicode()))

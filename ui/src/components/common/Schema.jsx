@@ -10,7 +10,7 @@ class SchemaIcon extends Component {
           model = schemata[schema] || {},
           icon = model.icon || 'fa-magic';
     return (
-      <i className={ `fa ${ icon }` }></i>
+      <i className={ `fa fa-fw ${ icon }` }></i>
     );
   }
 }
