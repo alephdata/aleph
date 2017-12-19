@@ -65,6 +65,7 @@ class ShallowCombinedSchema(BaseSchema):
     source_url = String()
     pdf_version = String()
     columns = List(String())
+    headers = Dict()
     children = Integer()
 
     # TODO: is this a separate endpoint?

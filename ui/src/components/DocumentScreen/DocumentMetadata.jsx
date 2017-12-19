@@ -5,7 +5,9 @@ import { FormattedMessage } from 'react-intl';
 import Schema from 'src/components/common/Schema';
 import Country from 'src/components/common/Country';
 import Language from 'src/components/common/Language';
+import Date from 'src/components/common/Date';
 import DualPane from 'src/components/common/DualPane';
+import Entity from 'src/components/EntityScreen/Entity';
 import CollectionSection from 'src/components/CollectionScreen/CollectionSection';
 
 class DocumentMetadata extends Component {
@@ -30,6 +32,12 @@ class DocumentMetadata extends Component {
               <td>{document.file_size}</td>
             </tr>
           )}
+          { document.parent && (
+            <tr>
+              <th><FormattedMessage id="document.parent" defaultMessage="Folder"/></th>
+              <td><Entity.Link entity={document.parent} /></td>
+            </tr>
+          )}
           { document.author && (
             <tr>
               <th><FormattedMessage id="document.author" defaultMessage="Author"/></th>
@@ -44,7 +52,7 @@ class DocumentMetadata extends Component {
           )}
           { document.mime_type && (
             <tr>
-              <th><FormattedMessage id="document.mime_type" defaultMessage="MIME type"/></th>
+              <th><FormattedMessage id="document.mime_type" defaultMessage="Content type"/></th>
               <td>{document.mime_type}</td>
             </tr>
           )}
@@ -58,6 +66,42 @@ class DocumentMetadata extends Component {
             <tr>
               <th><FormattedMessage id="document.countries" defaultMessage="Countries"/></th>
               <td><Country.List codes={document.countries} /></td>
+            </tr>
+          )}
+          { document.date && (
+            <tr>
+              <th><FormattedMessage id="document.date" defaultMessage="Date"/></th>
+              <td><Date value={document.date} /></td>
+            </tr>
+          )}
+          { document.authored_at && (
+            <tr>
+              <th><FormattedMessage id="document.authored_at" defaultMessage="Authored"/></th>
+              <td><Date value={document.authored_at} /></td>
+            </tr>
+          )}
+          { document.modified_at && (
+            <tr>
+              <th><FormattedMessage id="document.modified_at" defaultMessage="Modified"/></th>
+              <td><Date value={document.modified_at} /></td>
+            </tr>
+          )}
+          { document.retrieved_at && (
+            <tr>
+              <th><FormattedMessage id="document.retrieved_at" defaultMessage="Retrieved"/></th>
+              <td><Date value={document.retrieved_at} /></td>
+            </tr>
+          )}
+          { document.updated_at && (
+            <tr>
+              <th><FormattedMessage id="document.updated_at" defaultMessage="Imported"/></th>
+              <td><Date value={document.updated_at} /></td>
+            </tr>
+          )}
+          { document.content_hash && (
+            <tr>
+              <th><FormattedMessage id="document.content_hash" defaultMessage="Checksum"/></th>
+              <td>{document.content_hash}</td>
             </tr>
           )}
         </tbody>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
 import TextViewer from './viewers/TextViewer';
@@ -11,6 +12,14 @@ class DocumentContent extends Component {
     return (
       <DualPane.ContentPane>
         <h1>{document.file_name}</h1>
+        {document.status === 'fail' && (
+          <div className="pt-callout pt-intent-warning">
+            <h5>
+              <FormattedMessage id="document.status_fail" defaultMessage="This document was not imported correctly"/>
+            </h5>
+            { document.error_message }
+          </div>
+        )}
         {document.text && (
           <TextViewer text={document.text} />
         )}

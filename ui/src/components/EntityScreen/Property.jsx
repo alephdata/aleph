@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import getHost from 'src/util/getHost';
 import Entity from './Entity';
 import Country from 'src/components/common/Country';
+import Date from 'src/components/common/Date';
 
 
 class Value extends Component {
@@ -25,6 +26,9 @@ class Value extends Component {
     }
     if (model.type === 'entity') {
         return (<Entity.Link entity={value} />);
+    }
+    if (model.type === 'date') {
+        return (<Date value={value} />);
     }
     return (
       <span>{value}</span>
