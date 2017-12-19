@@ -129,6 +129,13 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return current_app._authz_roles[foreign_id]
 
     @classmethod
+    def public_roles(cls):
+        return set([
+            cls.load_id(cls.SYSTEM_USER),
+            cls.load_id(cls.SYSTEM_GUEST),
+        ])
+
+    @classmethod
     def by_prefix(cls, prefix):
         """Load a list of roles matching a name, email address, or foreign_id.
 

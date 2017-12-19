@@ -1,5 +1,5 @@
 from flask import request
-from marshmallow import post_dump, pre_load
+from marshmallow import post_dump, pre_dump, pre_load
 from marshmallow.fields import Nested, Integer, String, List
 from marshmallow.fields import Dict, Boolean
 from marshmallow.validate import Length
@@ -23,6 +23,7 @@ class CollectionSchema(BaseSchema):
     countries = List(Country())
     lanaguages = List(Language())
     managed = Boolean()
+    secret = Boolean(dump_only=True)
     category = Category(required=True)
     creator_id = String(allow_none=True)
     creator = Nested(RoleReferenceSchema(), dump_only=True)
@@ -32,6 +33,12 @@ class CollectionSchema(BaseSchema):
     @pre_load()
     def flatten_collection(self, data):
         flatten_id(data, 'creator_id', 'creator')
+
+    @pre_dump()
+    def visibility(self, data):
+        public = Role.public_roles()
+        roles = data.get('roles', [])
+        data['secret'] = public.intersection(roles) < 0
 
     @post_dump
     def transient(self, data):
