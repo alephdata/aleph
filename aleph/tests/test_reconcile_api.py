@@ -16,13 +16,13 @@ class ReconcileApiTestCase(TestCase):
         self.load_fixtures('docs.yaml')
         res = self.client.get('/api/freebase/reconcile?query=kwazulu')
         assert res.status_code == 200, res.json
-        assert res.json['num'] == 1, res
+        assert res.json['num'] == 1, res.json
         assert res.json['result'][0]['name'] == 'KwaZulu', res.json
 
         data = json.dumps({'query': 'KWazulu'})
         res = self.client.get('/api/freebase/reconcile?query=%s' % data)
         assert res.status_code == 200, res
-        assert res.json['num'] == 1, res
+        assert res.json['num'] == 1, res.json
         assert res.json['result'][0]['name'] == 'KwaZulu', res.json
 
     def test_suggest(self):
