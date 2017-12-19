@@ -17,12 +17,6 @@ const PageNavbar = ({metadata, session}) => (
       <div className="pt-navbar-heading">
         {metadata.app.title}
       </div>
-      <Button iconName="home" className="pt-minimal">
-        <FormattedMessage id="nav.home" defaultMessage="Home"/>
-      </Button>
-      <Button iconName="document" className="pt-minimal">
-        <FormattedMessage id="nav.documents" defaultMessage="Documents"/>
-      </Button>
     </div>
     <div className="pt-navbar-group pt-align-right">
       {session.loggedIn && <Button iconName="cog" className="pt-minimal"/>}
