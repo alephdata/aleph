@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { mapValues, size, xor } from 'lodash';
+import { size, xor } from 'lodash';
 
-import { endpoint } from 'src/app/api';
-
-import SearchFilterCountries from './SearchFilterCountries';
+import SearchFilterFacet from './SearchFilterFacet';
 import SearchFilterSchema from './SearchFilterSchema';
 import SearchFilterText from './SearchFilterText';
 
@@ -21,8 +19,6 @@ class SearchFilter extends Component {
 
     this.onSingleFilterChange = this.onSingleFilterChange.bind(this);
     this.onMultiFilterChange = this.onMultiFilterChange.bind(this);
-
-    this.onCountriesOpen = this.onCountriesOpen.bind(this);
   }
 
   componentDidUpdate(prevProps, { query }) {
@@ -53,22 +49,9 @@ class SearchFilter extends Component {
     this.props.updateQuery(query);
   }
 
-  onCountriesOpen() {
-    if (this.state.queryCountries === null) {
-      endpoint.get('search', {params: {
-        q: this.state.query.q,
-        facet: 'countries',
-        facet_size: this.props.countriesCount,
-        limit: 0
-      }}).then(({ data }) => this.setState({
-        queryCountries: data.facets.countries.values
-      }));
-    }
-  }
-
   render() {
-    const { result, collections, countries, browsingContext } = this.props;
-    const { query, queryCountries } = this.state;
+    const { result, countries } = this.props;
+    const { query } = this.state;
 
     // Standardised props passed to filters
     const filterProps = onChange => filter => {
@@ -98,8 +81,10 @@ class SearchFilter extends Component {
             <SearchFilterText {...singleFilterProps('q')} showSpinner={result.isFetching} />
           </div>
           <div className="pt-large">
-            <SearchFilterCountries onOpen={this.onCountriesOpen} countries={queryCountries}
-              {...multiFilterProps('filter:countries')} />
+            <SearchFilterFacet {...multiFilterProps('filter:countries')} />
+          </div>
+          <div className="pt-large">
+            <SearchFilterFacet {...multiFilterProps('filter:countries')} />
           </div>
           {activeFilterTags.length > 0 &&
             <div className="search-query__filters">
