@@ -1,0 +1,15 @@
+.PdfViewer {
+  flex-grow: 1;
+  width: 100%;
+  background-color: whitesmoke;
+  padding: 20px;
+}
+
+.PdfViewer .page {
+  margin: 20px 0;
+}
+
+.PdfViewer .page > canvas {
+  /* center each page */
+  margin: auto;
+}
