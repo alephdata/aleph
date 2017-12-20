@@ -35,6 +35,12 @@ class SearchScreen extends Component {
   constructor() {
     super();
 
+    this.state = {
+      result: {
+        isFetching: true
+      }
+    };
+
     this.fetchData = debounce(this.fetchData, 200);
     this.updateQuery = this.updateQuery.bind(this);
   }
@@ -54,6 +60,7 @@ class SearchScreen extends Component {
 
   fetchData() {
     const { browsingContext, query, fetchSearchResults } = this.props;
+    this.setState({isFetching: true})
 
     // If we are viewing a single collection, add the appropriate filter.
     const performedQuery = { ...query };
@@ -69,10 +76,9 @@ class SearchScreen extends Component {
         ...pickBy(performedQuery, v => !!v),
         facet: 'schema'
       },
+    }).then(({result}) => {
+      this.setState({result, isFetching: false})
     });
-    // .then(({result}) => {
-    //   this.setState({result: result})
-    // });
   }
 
   updateQuery(newQuery) {
@@ -85,25 +91,28 @@ class SearchScreen extends Component {
   }
 
   render() {
-    const { browsingContext, query, searchResults } = this.props;
+    const { query } = this.props;
+    const { result, isFetching } = this.state;
+    if (!result) {
+      return null;
+    }
     return (
       <section>
         <SearchFilter
-          result={searchResults}
+          result={result}
           query={query}
           updateQuery={this.updateQuery}
-          browsingContext={browsingContext}
         />
-        <SearchResult result={searchResults} />
+        <SearchResult result={result} isFetching={isFetching} />
       </section>
     )
   }
 }
 
-const mapStateToProps = ({ searchResults }, { location, match }) => {
+const mapStateToProps = (ownProps, { location, match }) => {
   const browsingContext = match.params;
   const query = parseQuery(location);
-  return { browsingContext, query, searchResults };
+  return { browsingContext, query };
 }
 
 SearchScreen = connect(
