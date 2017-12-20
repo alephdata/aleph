@@ -2,7 +2,7 @@ import os
 import logging
 
 from ingestors import Manager
-from ingestors.util import decode_path
+from ingestors.util import decode_path, is_file
 from storagelayer import checksum
 
 from aleph.core import db
@@ -50,7 +50,7 @@ class DocumentManager(Manager):
         file_path = decode_path(file_path)
 
         content_hash = None
-        if not os.path.isdir(file_path):
+        if is_file(file_path):
             content_hash = checksum(file_path)
 
         doc = Document.by_keys(parent_id=parent.document.id,
@@ -63,6 +63,9 @@ class DocumentManager(Manager):
 
         from aleph.ingest import ingest_document
         ingest_document(doc, file_path, role_id=parent.role_id)
+        return DocumentResult(self, document,
+                              file_path=file_path,
+                              role_id=parent.role_id)
 
     def ingest_document(self, document, file_path=None, role_id=None):
         """Ingest a database-backed document.

@@ -71,6 +71,14 @@ class Document(db.Model, DatedModel, Metadata):
     def supports_pages(self):
         return self.schema == self.SCHEMA_PDF
 
+    @property
+    def ancestors(self):
+        if self.parent_id is not None and self.parent:
+            ids = self.parent.ancestors
+            ids.append(self.parent_id)
+            return ids
+        return []
+
     def update(self, data):
         props = ('title', 'summary', 'author', 'crawler', 'source_url',
                  'file_name', 'mime_type', 'headers', 'date', 'authored_at',
