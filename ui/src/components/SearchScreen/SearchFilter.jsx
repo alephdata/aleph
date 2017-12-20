@@ -5,7 +5,6 @@ import { mapValues, size, xor } from 'lodash';
 import { endpoint } from 'src/app/api';
 
 import SearchFilterCountries from './SearchFilterCountries';
-import SearchFilterCollections from './SearchFilterCollections';
 import SearchFilterSchema from './SearchFilterSchema';
 import SearchFilterText from './SearchFilterText';
 
@@ -18,21 +17,18 @@ class SearchFilter extends Component {
     this.state = {
       query: props.query,
       queryCountries: null,
-      queryCollectionIds: null
     };
 
     this.onSingleFilterChange = this.onSingleFilterChange.bind(this);
     this.onMultiFilterChange = this.onMultiFilterChange.bind(this);
 
     this.onCountriesOpen = this.onCountriesOpen.bind(this);
-    this.onCollectionsOpen = this.onCollectionsOpen.bind(this);
   }
 
   componentDidUpdate(prevProps, { query }) {
     if (query.q !== this.state.query.q) {
       this.setState({
-        queryCountries: null,
-        queryCollectionIds: null
+        queryCountries: null
       });
     }
   }
@@ -70,22 +66,9 @@ class SearchFilter extends Component {
     }
   }
 
-  onCollectionsOpen() {
-    if (this.state.queryCollectionIds === null) {
-      endpoint.get('search', {params: {
-        q: this.props.queryText,
-        facet: 'collection_id',
-        facet_size: this.props.collectionsCount,
-        limit: 0
-      }}).then(({ data }) => this.setState({
-        queryCollectionIds: data.facets.collection_id.values.map(collection => collection.id)
-      }));
-    }
-  }
-
   render() {
     const { result, collections, countries, browsingContext } = this.props;
-    const { query, queryCountries, queryCollectionIds } = this.state;
+    const { query, queryCountries } = this.state;
 
     // Standardised props passed to filters
     const filterProps = onChange => filter => {
@@ -106,7 +89,6 @@ class SearchFilter extends Component {
 
     const activeFilterTags = [
       ...activeFilterTagsFn('filter:countries', countries),
-      ...activeFilterTagsFn('filter:collection_id', collections),
     ];
 
     return (
@@ -119,12 +101,6 @@ class SearchFilter extends Component {
             <SearchFilterCountries onOpen={this.onCountriesOpen} countries={queryCountries}
               {...multiFilterProps('filter:countries')} />
           </div>
-          {browsingContext.collectionId === undefined && (
-            <div className="pt-large">
-              <SearchFilterCollections onOpen={this.onCollectionsOpen} collectionIds={queryCollectionIds}
-                {...multiFilterProps('filter:collection_id')} />
-            </div>
-          )}
           {activeFilterTags.length > 0 &&
             <div className="search-query__filters">
               Filtering for
@@ -151,8 +127,6 @@ class SearchFilter extends Component {
 const mapStateToProps = ({ metadata, collections }) => ({
   countries: metadata.countries,
   countriesCount: size(metadata.countries),
-  collections: mapValues(collections, 'label'),
-  collectionsCount: size(collections),
 });
 
 SearchFilter = connect(mapStateToProps)(SearchFilter);
