@@ -5,20 +5,9 @@ import WayPoint from 'react-waypoint';
 import { Spinner } from '@blueprintjs/core';
 
 import { fetchChildDocs, fetchNextChildDocs } from 'src/actions';
+import EntityList from 'src/components/EntityScreen/EntityList';
 import getPath from 'src/util/getPath';
 
-class DocAsListItem extends Component {
-  render() {
-    const { document } = this.props;
-    return (
-      <li>
-        <Link to={getPath(document.links.ui)}>
-          {document.file_name}
-        </Link>
-      </li>
-    )
-  }
-}
 
 class FolderViewer extends Component {
   bottomReachedHandler() {
@@ -55,11 +44,7 @@ class FolderViewer extends Component {
       <div className="FolderViewer">
         {childDocsResult && childDocsResult.results &&
           <div>
-            <ul>
-              {childDocsResult.results.map(childDoc => (
-                <DocAsListItem key={childDoc.id} document={childDoc} />
-              ))}
-            </ul>
+            <EntityList result={childDocsResult} />
             {childDocsResult.next && (
               childDocsResult.isFetchingNext
                 ? <Spinner />

@@ -13,7 +13,7 @@ const initialState = {
 
 export default createReducer({
   [fetchSearchResults.START]: state => ({
-    results: [],
+    // results: [],
     isFetching: true,
   }),
 

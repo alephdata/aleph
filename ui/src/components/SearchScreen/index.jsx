@@ -7,7 +7,7 @@ import { mergeWith } from 'lodash/fp'; // use fp version to not mutate the array
 import { fetchSearchResults } from 'src/actions';
 import filters from 'src/constants/searchfilters';
 
-import SearchResultList from './SearchResultList';
+import SearchResult from './SearchResult';
 import SearchFilter from './SearchFilter';
 
 const defaultQuery = {
@@ -91,7 +91,7 @@ class SearchScreen extends Component {
           updateQuery={this.updateQuery}
           browsingContext={browsingContext}
         />
-        <SearchResultList result={searchResults} />
+        <SearchResult result={searchResults} />
       </section>
     )
   }
