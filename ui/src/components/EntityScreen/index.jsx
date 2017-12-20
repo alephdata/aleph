@@ -27,7 +27,7 @@ class EntityScreen extends Component {
 
   render() {
     const { entity } = this.props;
-    if (entity === undefined || entity._isFetching) {
+    if (entity === undefined || entity.isFetching) {
       return (
         <span>Loading entity..</span>
       );
@@ -50,7 +50,7 @@ class EntityScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entityId } = ownProps.match.params;
-  const entity = entityId !== undefined ? state.apiCache[entityId] : undefined;
+  const entity = entityId !== undefined ? state.entities[entityId] : undefined;
   return { entityId, entity };
 }
 

@@ -53,7 +53,7 @@ class DocumentScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { documentId } = ownProps.match.params;
   const document = documentId !== undefined
-    ? state.apiCache[documentId]
+    ? state.entities[documentId]
     : undefined;
   return { documentId, document };
 }

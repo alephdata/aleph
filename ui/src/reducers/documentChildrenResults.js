@@ -2,7 +2,6 @@ import { createReducer } from 'redux-act';
 import { set, update, uniq } from 'lodash/fp';
 
 import { fetchChildDocs, fetchNextChildDocs } from 'src/actions';
-import { normaliseSearchResult } from './util';
 
 const initialState = {};
 
@@ -11,17 +10,18 @@ export default createReducer({
     update(id, set('isFetching', true))(state),
 
   [fetchChildDocs.COMPLETE]: (state, { id, result }) =>
-    set(id, normaliseSearchResult(result).result)(state),
+    set(id, result)(state),
 
   [fetchNextChildDocs.START]: (state, { id }) =>
     update(id, set('isFetchingNext', true))(state),
 
   [fetchNextChildDocs.COMPLETE]: (state, { id, result }) =>
     update(id, obj => ({
-      ...mergeResults(obj, normaliseSearchResult(result).result),
+      ...mergeResults(obj, result),
       isFetchingNext: false,
     }))(state),
 }, initialState);
+
 
 function mergeResults(oldResult, newResult) {
   return {

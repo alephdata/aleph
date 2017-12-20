@@ -56,18 +56,8 @@ class FolderViewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const childDocIdsResult = state.documentChildrenResults[ownProps.document.id];
-  // Denormalise the result, inserting the docs themselves into it.
-  const childDocsResult = childDocIdsResult !== undefined
-    ? {
-      ...childDocIdsResult,
-      results: childDocIdsResult.results
-        ? childDocIdsResult.results.map(id => state.apiCache[id])
-        : undefined,
-    }
-    : undefined;
   return {
-    childDocsResult,
+    childDocsResult: state.documentChildrenResults[ownProps.document.id],
   };
 };
 
