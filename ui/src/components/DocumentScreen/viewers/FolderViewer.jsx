@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import WayPoint from 'react-waypoint';
 import { Spinner } from '@blueprintjs/core';
 
 import { fetchChildDocs, fetchNextChildDocs } from 'src/actions';
 import EntityList from 'src/components/EntityScreen/EntityList';
-import getPath from 'src/util/getPath';
 
 
 class FolderViewer extends Component {
