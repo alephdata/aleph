@@ -28,7 +28,7 @@ class PageLayout extends Component {
     const isLoaded = this.props.metadata && this.props.metadata.app && this.props.session;
     if (!isLoaded) {
       return (
-        <div>
+        <div className="PageLayout-spinner">
           <Spinner className="pt-large"/>
         </div>
       )

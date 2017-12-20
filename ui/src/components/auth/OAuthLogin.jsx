@@ -15,8 +15,9 @@ const OAuthLogin = ({providers}) => {
 
       {providers.map(provider => (
         <span key={provider.name}>
-          <a className="oauth-provider" href={`${provider.login}${loginUrlQueryString}`}
-             data-name={provider.name}></a>
+          <a className="oauth-provider" href={`${provider.login}${loginUrlQueryString}`} data-name={provider.name}>
+            {provider.label}
+          </a>
         </span>))}
     </div>
   );

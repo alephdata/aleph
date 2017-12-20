@@ -38,7 +38,7 @@ class DocumentContent extends Component {
         )}
 
         {document.schema === 'Image' && (
-          <ImageViewer links={document.links} />
+          <ImageViewer document={document} />
         )}
 
         {document.children !== undefined && (

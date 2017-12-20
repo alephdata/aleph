@@ -4,14 +4,14 @@ import './ImageViewer.css';
 
 class ImageViewer extends Component {
   render() {
-    const { links } = this.props;
-    if (!links || !links.file) {
+    const { document } = this.props;
+    if (!document.links || !document.links.file) {
         return null;
     }
 
     return (
       <div className="ImageViewer">
-        <img src={links.file} />
+        <img src={document.links.file} alt={document.file_name} />
       </div>
     );
   }
