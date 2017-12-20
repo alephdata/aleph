@@ -5,16 +5,16 @@ import { debounce, isEqual, pick, pickBy, isArray } from 'lodash';
 import { mergeWith } from 'lodash/fp'; // use fp version to not mutate the array
 
 import { fetchSearchResults } from 'src/actions';
-import filters from 'src/constants/searchfilters';
 
+import Query from './Query';
 import SearchResult from './SearchResult';
 import SearchFilter from './SearchFilter';
 
 const defaultQuery = {
   'q': '',
-  [filters.SCHEMA]: '',
-  [filters.COUNTRIES]: [],
-  [filters.COLLECTIONS]: []
+  'post_filter:schema': '',
+  'filter:countries': [],
+  'filter:collection_id': []
 }
 
 function parseQuery(location) {
@@ -58,10 +58,10 @@ class SearchScreen extends Component {
     // If we are viewing a single collection, add the appropriate filter.
     const performedQuery = { ...query };
     if (browsingContext.collectionId !== undefined) {
-      if (performedQuery[filters.COLLECTIONS]) {
+      if (performedQuery['filter:collection_id']) {
         console.warn('Got a collection filter while viewing a single collection. Ignoring the filter.');
       }
-      performedQuery[filters.COLLECTIONS] = browsingContext.collectionId;
+      performedQuery['filter:collection_id'] = browsingContext.collectionId;
     }
 
     fetchSearchResults({
@@ -70,6 +70,9 @@ class SearchScreen extends Component {
         facet: 'schema'
       },
     });
+    // .then(({result}) => {
+    //   this.setState({result: result})
+    // });
   }
 
   updateQuery(newQuery) {

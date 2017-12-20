@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { mapValues, size, xor } from 'lodash';
 
 import { endpoint } from 'src/app/api';
-import filters from 'src/constants/searchfilters';
 
 import SearchFilterCountries from './SearchFilterCountries';
 import SearchFilterCollections from './SearchFilterCollections';
@@ -106,8 +105,8 @@ class SearchFilter extends Component {
         .sort((a, b) => a.label < b.label ? -1 : 1)
 
     const activeFilterTags = [
-      ...activeFilterTagsFn(filters.COUNTRIES, countries),
-      ...activeFilterTagsFn(filters.COLLECTIONS, collections),
+      ...activeFilterTagsFn('filter:countries', countries),
+      ...activeFilterTagsFn('filter:collection_id', collections),
     ];
 
     return (
@@ -118,12 +117,12 @@ class SearchFilter extends Component {
           </div>
           <div className="pt-large">
             <SearchFilterCountries onOpen={this.onCountriesOpen} countries={queryCountries}
-              {...multiFilterProps(filters.COUNTRIES)} />
+              {...multiFilterProps('filter:countries')} />
           </div>
           {browsingContext.collectionId === undefined && (
             <div className="pt-large">
               <SearchFilterCollections onOpen={this.onCollectionsOpen} collectionIds={queryCollectionIds}
-                {...multiFilterProps(filters.COLLECTIONS)} />
+                {...multiFilterProps('filter:collection_id')} />
             </div>
           )}
           {activeFilterTags.length > 0 &&
@@ -143,7 +142,7 @@ class SearchFilter extends Component {
         </div>
         { result.total > 0 &&
           <SearchFilterSchema schemas={result.facets.schema.values}
-            {...singleFilterProps(filters.SCHEMA)} /> }
+            {...singleFilterProps('post_filter:schema')} /> }
       </div>
     );
   }
