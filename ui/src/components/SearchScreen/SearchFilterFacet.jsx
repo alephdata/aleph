@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Popover, Position, Spinner } from '@blueprintjs/core';
 
-import { endpoint } from 'src/app/api';
 import { fetchSearchResults } from 'src/actions';
 
 import './SearchFilterFacet.css';
@@ -32,48 +31,47 @@ class SearchFilterFacet extends Component {
   constructor(props)  {
     super(props);
 
-    this.state = {
-      query: props.query,
-      values: null,
-    };
+    this.state = {values: null};
 
     this.onOpen = this.onOpen.bind(this);
+    this.onSelect = this.onSelect.bind(this);
   }
 
-  componentDidUpdate(prevProps, { query }) {
-    // this.setState({
-    //   values: null
-    // });
+  componentDidUpdate(prevProps, nextProps) {
+    if (!this.props.query.sameAs(prevProps.query)) {
+      this.fetchValues();
+    }
+  }
+
+  fetchValues() {
+    let query = this.props.query;
+    query = query.limit(0);
+    query = query.addFacet('countries');
+    query = query.set('facet_size', 500);
+    let params = query.toParams();
+    this.props.fetchSearchResults({filters: params}).then(({result}) => {
+      this.setState({
+          values: result.facets.countries.values
+      })
+    });
   }
 
   onOpen() {
     if (this.state.values === null) {
-    //   const query = {
-    //     // q: this.state.query.q,
-    //     facet: 'countries',
-    //     facet_size: 500,
-    //     limit: 0
-    //   };
-    //   this.props.fetchSearchResults({filter: query}).then(({result}) => {
-    //       // console.log(result);
-    //       this.setState({
-    //           values: result.facets.countries.values
-    //       })
-    //   });
-      endpoint.get('search', {params: {
-        // q: this.state.query.q,
-        facet: 'countries',
-        facet_size: 500,
-        limit: 0
-      }}).then(({ data }) => this.setState({
-        values: data.facets.countries.values
-      }));
+      this.fetchValues();
     }
   }
 
+  onSelect(value) {
+    let query = this.props.query;
+    query = query.toggleFilter('countries', value)
+    this.props.updateQuery(query)
+  }
+
   render() {
-    const { currentValue, onChange } = this.props;
+    const { query } = this.props;
     const { values } = this.state;
+    const current = query.getFilters('countries');
 
     return (
       <Popover popoverClassName="search-filter-facet"
@@ -83,7 +81,9 @@ class SearchFilterFacet extends Component {
           <FormattedMessage id="search.countries" defaultMessage="Countries"/>
         </Button>
         {values !== null ?
-          <SearchFilterFacetList items={values} selectedItems={currentValue} onItemClick={onChange} /> :
+          <SearchFilterFacetList items={values}
+                                 selectedItems={current}
+                                 onItemClick={this.onSelect} /> :
           <Spinner className="search-filter-loading pt-large" />
         }
       </Popover>
@@ -92,5 +92,4 @@ class SearchFilterFacet extends Component {
 }
 
 SearchFilterFacet = connect(null, { fetchSearchResults })(SearchFilterFacet);
-
 export default SearchFilterFacet;

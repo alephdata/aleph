@@ -16,24 +16,59 @@ class Query {
         return new this(state, prefix);
     }
 
-    getField(name) {
+    clone(update) {
+        return new Query(_.cloneDeep(this.state), this.prefix);
+    }
+
+    get(name) {
         return this.state[this.prefix + name];
     }
 
+    set(name, value) {
+        let child = this.clone();
+        child.state[this.prefix + name] = value;
+        return child;
+    }
+
     getString(name) {
-        return _.toString(this.getField(name));
+        return _.toString(this.get(name));
+    }
+
+    setString(name, value) {
+        return this.set(name, _.toString(value));
+    }
+
+    getQ() {
+        return this.getString('q');
+    }
+
+    setQ(value) {
+        return this.setString('q', value);
     }
 
     getList(name) {
-        const value = this.getField(name);
+        const value = this.get(name);
+        if (_.isEmpty(value)) {
+            return [];
+        }
         if (_.isString(value)) {
             return [value];
         }
-        return _.toArray(value);
+        return _.sortedUniq(_.toArray(value));
+    }
+
+    toggle(name, value) {
+        let values = this.getList(name);
+        return this.set(name, _.xor(values, [value]));
+    }
+
+    add(name, value) {
+        let values = this.getList(name);
+        return this.set(name, _.union(values, [value]));
     }
 
     has(name) {
-        return !_.isEmpty(this.getField(name));
+        return 0 === this.getList(name).length;
     }
 
     hasFilter(name) {
@@ -44,9 +79,33 @@ class Query {
         return this.getList('filter:' + name);
     }
 
-    serialize() {
+    toggleFilter(name, value) {
+        return this.toggle('filter:' + name, value);
+    }
+
+    limit(count) {
+        return this.set('limit', count);
+    }
+
+    offset(count) {
+        return this.set('offset', count);
+    }
+
+    addFacet(value) {
+        return this.add('facet', value);
+    }
+
+    sameAs(other) {
+        return this.toLocation() === other.toLocation();
+    }
+
+    toLocation() {
         // turn the state to a query string.
         return queryString.stringify(this.state);
+    }
+
+    toParams() {
+        return this.state;
     }
 }
 

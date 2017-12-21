@@ -61,5 +61,4 @@ class SearchResult extends Component {
 }
 
 SearchResult = connect(null, { fetchNextSearchResults })(SearchResult);
-
 export default SearchResult;

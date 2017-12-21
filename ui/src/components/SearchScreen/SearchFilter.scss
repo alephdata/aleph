@@ -21,11 +21,9 @@
 .search-query {
   display: flex;
   flex-wrap: wrap;
-  padding: $pt-grid-size * 2;
-  padding-right: $pt-grid-size;
-  padding-bottom: $pt-grid-size;
-  background-color: $gray3;
-  color: $white;
+  // padding: $pt-grid-size * 2;
+  // padding-right: $pt-grid-size;
+  // padding-bottom: $pt-grid-size;
 
   & > div {
     margin-right: $pt-grid-size;
