@@ -21,6 +21,9 @@ installdata:
 web:
 	$(COMPOSE) up api ui
 
+api:
+	$(COMPOSE) up api
+
 worker:
 	$(DEVDOCKER) celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /var/lib/celery.pid
 
