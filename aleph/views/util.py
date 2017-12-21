@@ -107,7 +107,8 @@ CLEANER = Cleaner(
     links=False,
     add_nofollow=True,
     remove_tags=['body'],
-    kill_tags=['area', 'audio', 'base', 'bgsound', 'embed', 'form', 'frame', 'frameset', 'head', 'img', 'iframe', 'input', 'link', 'map', 'meta', 'nav', 'object', 'plaintext', 'track', 'video']
+    kill_tags=['area', 'audio', 'base', 'bgsound', 'embed', 'form', 'frame', 'frameset', 'head',
+               'img', 'iframe', 'input', 'link', 'map', 'meta', 'nav', 'object', 'plaintext', 'track', 'video']
 )
 
 
@@ -122,9 +123,15 @@ def sanitize_html(html_text, source_url):
     return cleaned
 
 
-def relative_urls(html_str, source_url):
+def relative_urls(html_text, source_url):
     base = source_url.rsplit('/', 1)
     base = base[0]
-    html = document_fromstring(html_str)
+    html = document_fromstring(html_text)
     html.make_links_absolute(base)
+    html = add_target_blank(html)
     return tostring(html)
+
+def add_target_blank(html):
+    for a in html.findall('.//a'):
+        a.attrib['target'] = '_blank'
+    return html
