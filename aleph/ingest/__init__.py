@@ -31,9 +31,7 @@ def ingest_document(document, file_path, role_id=None):
                                 file_path=file_path,
                                 role_id=role_id)
     else:
-        ch = document.content_hash
-        ch = archive.archive_file(file_path, content_hash=ch)
-        document.content_hash = ch
+        document.content_hash = archive.archive_file(file_path)
         db.session.commit()
         queue = WORKER_QUEUE
         routing_key = WORKER_ROUTING_KEY
