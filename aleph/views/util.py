@@ -3,6 +3,9 @@ from apikit import obj_or_404
 from flask import request
 from urlparse import urlparse, urljoin
 from werkzeug.exceptions import MethodNotAllowed, Forbidden, BadRequest
+from lxml.etree import tostring
+from lxml.html import document_fromstring
+from lxml.html.clean import Cleaner
 
 from aleph.core import app_ui_url
 from aleph.authz import Authz
@@ -52,7 +55,7 @@ def get_db_entity(entity_id, action=Authz.READ):
     get_index_entity(entity_id, action=action)
     entity = Entity.by_id(entity_id)
     if entity is None:
-        raise MethodNotAllowed("Cannot write this entity")    
+        raise MethodNotAllowed("Cannot write this entity")
     return entity
 
 
@@ -97,3 +100,31 @@ def get_best_next_url(*urls):
         url = urljoin(app_ui_url, url)
         if url and is_safe_url(url):
             return url
+
+CLEANER = Cleaner(
+    style=True,
+    meta=True,
+    links=False,
+    add_nofollow=True,
+    remove_tags=['body'],
+    kill_tags=['area', 'audio', 'base', 'bgsound', 'embed', 'form', 'frame', 'frameset', 'head', 'img', 'iframe', 'input', 'link', 'map', 'meta', 'nav', 'object', 'plaintext', 'track', 'video']
+)
+
+
+def sanitize_html(html_text, source_url):
+    """Remove anything from the given HTML that must not show up in the UI."""
+    # TODO: circumvent encoding declarations?
+    if html_text is None:
+        return
+    # Make links relative the source_url
+    cleaned = relative_urls(html_text, source_url)
+    cleaned = CLEANER.clean_html(cleaned)
+    return cleaned
+
+
+def relative_urls(html_str, source_url):
+    base = source_url.rsplit('/', 1)
+    base = base[0]
+    html = document_fromstring(html_str)
+    html.make_links_absolute(base)
+    return tostring(html)
