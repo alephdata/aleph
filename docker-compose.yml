@@ -14,8 +14,8 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.0.0
     volumes:
-      - "./build/data/elasticsearch:/usr/share/elasticsearch/data"
-      - "./build/logs/elasticsearch:/var/log"
+      - elasticsearch-data:/usr/share/elasticsearch/data
+      - elasticsearch-log:/var/log
 
   rabbitmq:
     image: rabbitmq
@@ -124,3 +124,5 @@ services:
 
 volumes:
   assets: {}
+  elasticsearch-data: {}
+  elasticsearch-log: {}
