@@ -59,13 +59,18 @@ class SearchContext extends Component {
   }
 
   render() {
-    const { query } = this.props;
+    const { query, collection } = this.props;
     const { result, isFetching } = this.state;
+    const showCollection = !collection;
 
     return (
       <div className="SearchContext">
-        <SearchFilter result={result} updateQuery={this.updateQuery} {...this.props} />
-        <SearchResult query={query} result={result} /> 
+        <SearchFilter query={query}
+                      result={result}
+                      updateQuery={this.updateQuery} />
+        <SearchResult query={query}
+                      result={result}
+                      showCollection={showCollection} />
       </div>
     )
   }

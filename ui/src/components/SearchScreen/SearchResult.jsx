@@ -27,15 +27,17 @@ class SearchResult extends Component {
 
   bottomReachedHandler() {
     const { fetchNextSearchResults } = this.props;
-    const { result } = this.state;
+    let { result } = this.state;
 
     if (result.next) {
       this.setState({isExpanding: true})
 
-      fetchNextSearchResults({ next: result.next }).then((res) => {
-        res.result.results = uniqBy([...result.results, ...res.result.results], 'id');
+      fetchNextSearchResults({ next: result.next }).then(({result: fresh}) => {
+        console.log(fresh);
+        result.next = fresh.next;
+        result.results.push(...fresh.results);
         this.setState({
-            result: res.result,
+            result: result,
             isExpanding: false
         });
       });
@@ -49,7 +51,7 @@ class SearchResult extends Component {
         { result.total === 0 &&
           <NonIdealState visual="search" title="No search results"
             description="Try making your search more general" />}
-        <EntityList result={result}/>
+        <EntityList {...this.props} result={result} />
         { result.next && (isExpanding ?
           <div className="results-loading"><Spinner /></div>
           : <Waypoint onEnter={this.bottomReachedHandler} />

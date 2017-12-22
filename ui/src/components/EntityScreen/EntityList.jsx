@@ -11,11 +11,14 @@ class EntityList extends Component {
     if (!result || !result.results) {
       return null;
     }
+    
 
     return (
       <table className="results-table pt-table pt-bordered">
         <tbody>
-          {result.results.map(item => <EntityListItem key={item.id} result={item} />)}
+          {result.results.map(item =>
+            <EntityListItem {...this.props} key={item.id} item={item} />
+          )}
         </tbody>
       </table>
     );
