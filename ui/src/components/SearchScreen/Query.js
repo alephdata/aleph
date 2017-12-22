@@ -1,6 +1,16 @@
 import _ from 'lodash';
 import queryString from 'query-string';
 
+function ensureArray(value) {
+    if (_.isEmpty(value)) {
+        return [];
+    }
+    if (_.isString(value)) {
+        return [value];
+    }
+    return _.sortedUniq(_.toArray(value));
+}
+
 class Query {
     // State of a particular API query. This doesn't need to be specific to any one 
     // of the APIs (entities, documents, collections, roles), but just serves as a
@@ -47,14 +57,7 @@ class Query {
     }
 
     getList(name) {
-        const value = this.get(name);
-        if (_.isEmpty(value)) {
-            return [];
-        }
-        if (_.isString(value)) {
-            return [value];
-        }
-        return _.sortedUniq(_.toArray(value));
+        return ensureArray(this.get(name));
     }
 
     toggle(name, value) {
@@ -75,8 +78,12 @@ class Query {
         return this.has('filter:' + name);
     }
 
-    getFilters(name) {
+    getFilter(name) {
         return this.getList('filter:' + name);
+    }
+
+    setFilter(name, value) {
+        return this.set('filter:' + name, value);
     }
 
     toggleFilter(name, value) {
@@ -95,6 +102,10 @@ class Query {
         return this.add('facet', value);
     }
 
+    clearFacets() {
+        return this.set('facet', []);
+    }
+
     sameAs(other) {
         return this.toLocation() === other.toLocation();
     }
@@ -105,7 +116,22 @@ class Query {
     }
 
     toParams() {
-        return this.state;
+        const facets = this.getList('facet');
+        let params = {};
+        Object.entries(this.state).forEach(([name, value]) => {
+            if (name.startsWith(this.prefix)) {
+                name = name.substr(this.prefix.length);
+                params[name] = value;
+            }
+        })
+        this.getList('facet').forEach((facet) => {
+            let srcFilter = 'filter:' + facet,
+                dstFilter = 'post_' + srcFilter;
+            params[dstFilter] = _.uniq(ensureArray(params[srcFilter]),
+                                       ensureArray(params[dstFilter]));
+            delete params[srcFilter];
+        })
+        return params;
     }
 }
 

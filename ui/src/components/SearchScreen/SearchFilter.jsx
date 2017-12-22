@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { connect } from 'react-redux';
 import { size, xor } from 'lodash';
 
@@ -11,79 +12,33 @@ import './SearchFilter.css';
 class SearchFilter extends Component {
   constructor(props)  {
     super(props);
-
-    this.onSingleFilterChange = this.onSingleFilterChange.bind(this);
-    this.onMultiFilterChange = this.onMultiFilterChange.bind(this);
-  }
-
-  // componentDidUpdate(prevProps, { query }) {
-  //   if (query.q !== this.state.query.q) {
-  //     this.setState({
-  //       queryCountries: null
-  //     });
-  //   }
-  // }
-
-  onSingleFilterChange(filter, value) {
-    // const query = {
-    //   ...this.state.query,
-    //   [filter]: value
-    // }
-
-    // this.setState({query});
-    let { query } = this.props;
-    this.props.updateQuery(query);
-  }
-
-  onMultiFilterChange(filter, value) {
-    // const query = {
-    //   ...this.state.query,
-    //   [filter]: xor(this.state.query[filter], [value])
-    // }
-
-    // this.setState({query});
-    let { query } = this.props;
-    this.props.updateQuery(query);
   }
 
   render() {
-    const { result, query, updateQuery } = this.props;
-    // const { query } = this.state;
-
-    // Standardised props passed to filters
-    const filterProps = onChange => filter => {
-      return {
-        onChange: onChange.bind(null, filter),
-        currentValue: query[filter]
-      };
-    };
-
-    const singleFilterProps = filterProps(this.onSingleFilterChange);
-    const multiFilterProps = filterProps(this.onMultiFilterChange);
-
-    // Generate list of active filters we want to display
-    // const activeFilterTagsFn = (filter, labels) =>
-    //   query[filter]
-    //     .map(id => ({ id, filter, label: labels[id] }))
-    //     .sort((a, b) => a.label < b.label ? -1 : 1)
-
-    // const activeFilterTags = [
-    //   ...activeFilterTagsFn('filter:countries', countries),
-    // ];
+    const { result, query, updateQuery, collection } = this.props;
 
     return (
-      <div className="search-filter">
+      <div className="SearchFilter">
         <div className="search-query">
           <div className="search-query__text">
             <SearchFilterText query={query} updateQuery={updateQuery} />
           </div>
           <div className="pt-large">
-            <SearchFilterFacet query={query} updateQuery={updateQuery} />
+            <SearchFilterFacet query={query} updateQuery={updateQuery} field='countries'>
+              <FormattedMessage id="search.countries" defaultMessage="Countries"/>
+            </SearchFilterFacet>
           </div>
+          {collection && (
+            <div className="pt-large">
+              <SearchFilterFacet query={query} updateQuery={updateQuery} field='collection_id'>
+                <FormattedMessage id="search.collections" defaultMessage="Collections"/>
+              </SearchFilterFacet>
+            </div>
+          )}
         </div>
+        <SearchFilterSchema query={query} updateQuery={updateQuery} result={result} />
       </div>
     );
-    //<SearchFilterSchema schemas={result.facets.schema.values} {...singleFilterProps('post_filter:schema')} />
   }
 }
 

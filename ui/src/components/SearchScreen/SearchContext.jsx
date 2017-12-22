@@ -34,19 +34,14 @@ class SearchContext extends Component {
   }
 
   fetchData() {
-    let { query, fetchSearchResults } = this.props;
     this.setState({isFetching: true})
+    let { query, fetchSearchResults, collection } = this.props;
+    query = query.addFacet('schema');
+    query = query.setFilter('schemata', 'Thing');
 
-    // If we are viewing a single collection, add the appropriate filter.
-    // const performedQuery = { ...query };
-    // if (browsingContext.collectionId !== undefined) {
-    //   if (performedQuery['filter:collection_id']) {
-    //     console.warn('Got a collection filter while viewing a single collection. Ignoring the filter.');
-    //   }
-    //   performedQuery['filter:collection_id'] = browsingContext.collectionId;
-    // }
-
-    console.log(query.toParams());
+    if (collection) {
+      query = query.setFilter('collection_id', collection.id);
+    }
 
     fetchSearchResults({
       filters: query.toParams(),
@@ -64,12 +59,12 @@ class SearchContext extends Component {
   }
 
   render() {
-    const { query, children } = this.props;
+    const { query } = this.props;
     const { result, isFetching } = this.state;
 
     return (
       <div className="SearchContext">
-        <SearchFilter query={query} result={result} updateQuery={this.updateQuery} />
+        <SearchFilter result={result} updateQuery={this.updateQuery} {...this.props} />
         <SearchResult query={query} result={result} /> 
       </div>
     )

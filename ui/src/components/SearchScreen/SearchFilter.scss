@@ -1,6 +1,6 @@
 @import "~@blueprintjs/core/dist/variables";
 
-.search-filter {
+.SearchFilter {
   margin-bottom: $pt-grid-size * 2;
 }
 
@@ -10,20 +10,11 @@
   & > .pt-input[type="search"] {
     border-radius: $pt-border-radius;
   }
-
-  & > .pt-spinner {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
 }
 
 .search-query {
   display: flex;
   flex-wrap: wrap;
-  // padding: $pt-grid-size * 2;
-  // padding-right: $pt-grid-size;
-  // padding-bottom: $pt-grid-size;
 
   & > div {
     margin-right: $pt-grid-size;
@@ -33,26 +24,6 @@
 
 .search-query__text {
   flex: 1;
-}
-
-.search-query__filters {
-  width: 100%;
-  font-size: $pt-font-size-small;
-
-  .pt-tag[data-filter='filter:collection_id'] {
-    background-color: transparentize($blue1, 0.6);
-  }
-
-  .pt-tag[data-filter='filter:countries'] {
-    background-color: transparentize($blue3, 0.6);
-  }
-}
-
-.search-filter-loading.pt-spinner:not(.ptv-svg-spinner) {
-  display: block;
-  margin: 0 auto;
-  overflow: hidden;
-  padding: $pt-grid-size;
 }
 
 .search-tick {

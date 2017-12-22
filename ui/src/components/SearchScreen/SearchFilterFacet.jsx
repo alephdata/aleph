@@ -44,14 +44,15 @@ class SearchFilterFacet extends Component {
   }
 
   fetchValues() {
+    const { field } = this.props;
     let query = this.props.query;
     query = query.limit(0);
-    query = query.addFacet('countries');
+    query = query.clearFacets().addFacet(field);
     query = query.set('facet_size', 500);
     let params = query.toParams();
     this.props.fetchSearchResults({filters: params}).then(({result}) => {
       this.setState({
-          values: result.facets.countries.values
+          values: result.facets[field].values
       })
     });
   }
@@ -63,22 +64,23 @@ class SearchFilterFacet extends Component {
   }
 
   onSelect(value) {
+    const { field } = this.props;
     let query = this.props.query;
-    query = query.toggleFilter('countries', value)
+    query = query.toggleFilter(field, value)
     this.props.updateQuery(query)
   }
 
   render() {
-    const { query } = this.props;
+    const { query, children, field } = this.props;
     const { values } = this.state;
-    const current = query.getFilters('countries');
+    const current = query.getFilter(field);
 
     return (
       <Popover popoverClassName="search-filter-facet"
                position={Position.BOTTOM_RIGHT}
                popoverWillOpen={this.onOpen} inline>
         <Button rightIconName="caret-down">
-          <FormattedMessage id="search.countries" defaultMessage="Countries"/>
+          {children}
         </Button>
         {values !== null ?
           <SearchFilterFacetList items={values}
