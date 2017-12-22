@@ -93,7 +93,7 @@ class SearchContext extends Component {
 
 const mapStateToProps = (ownProps, { location }) => {
   return {
-    query: ownProps.query || Query.fromLocation(location, ownProps.prefix)
+    query: Query.fromLocation(location, ownProps.prefix)
   };
 }
 
