@@ -5,11 +5,10 @@ import SearchContext from 'src/components/SearchScreen/SearchContext';
 
 class CollectionContent extends Component {
   render() {
+    const { collection } = this.props;
     return (
       <DualPane.ContentPane>
-        <SearchContext>
-          banana
-        </SearchContext>
+        <SearchContext collection={collection} />
       </DualPane.ContentPane>
     );
   }

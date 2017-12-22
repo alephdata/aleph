@@ -15,7 +15,7 @@ const PageNavbar = ({metadata, session}) => (
   <nav className="pt-navbar pt-dark">
     <div className="pt-navbar-group pt-align-left">
       <div className="pt-navbar-heading">
-        {metadata.app.title}
+        <Link to="/">{ String.fromCharCode(8501) } {metadata.app.title}</Link>
       </div>
     </div>
     <div className="pt-navbar-group pt-align-right">
