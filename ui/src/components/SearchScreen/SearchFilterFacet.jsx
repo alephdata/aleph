@@ -15,6 +15,12 @@ const SearchFilterFacetTick = ({ isTicked }) => (
 
 const SearchFilterFacetList = ({ items, selectedItems, onItemClick }) => (
   <ul className="search-filter-list">
+    { items.length === 0 && (
+      <li>
+        <FormattedMessage id="search.filter.no.items"
+                          defaultMessage="No options"/>
+      </li>
+    )}
     {items
       .sort((a, b) => a.label < b.label ? -1 : 1)
       .map(item => (

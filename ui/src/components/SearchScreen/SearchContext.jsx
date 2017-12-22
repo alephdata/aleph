@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { debounce, isEqual, pick, pickBy, isArray } from 'lodash';
-import { mergeWith } from 'lodash/fp'; // use fp version to not mutate the array
+import { debounce } from 'lodash';
 
 import { fetchSearchResults } from 'src/actions';
 
@@ -29,8 +28,8 @@ class SearchContext extends Component {
 
   componentDidUpdate(prevProps) {
     let changed = !this.props.query.sameAs(prevProps.query);
-    changed = changed || this.props.parent != prevProps.parent;
-    changed = changed || this.props.collection != prevProps.collection;
+    changed = changed || this.props.parent !== prevProps.parent;
+    changed = changed || this.props.collection !== prevProps.collection;
     if (changed) {
       this.fetchData();
     }
@@ -72,7 +71,7 @@ class SearchContext extends Component {
 
   render() {
     const { query, collection, parent } = this.props;
-    const { result, isFetching } = this.state;
+    const { result } = this.state;
     const showCollection = !collection;
     const showCountry = !parent;
 

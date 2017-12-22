@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { connect } from 'react-redux';
-import { size, xor } from 'lodash';
+import { FormattedMessage } from 'react-intl';
 
 import SearchFilterFacet from './SearchFilterFacet';
 import SearchFilterSchema from './SearchFilterSchema';
@@ -10,10 +8,6 @@ import SearchFilterText from './SearchFilterText';
 import './SearchFilter.css';
 
 class SearchFilter extends Component {
-  constructor(props)  {
-    super(props);
-  }
-
   render() {
     const { result, query, updateQuery } = this.props;
 

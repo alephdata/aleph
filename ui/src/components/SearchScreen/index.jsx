@@ -1,123 +1,26 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import queryString from 'query-string';
-import { debounce, isEqual, pick, pickBy, isArray } from 'lodash';
-import { mergeWith } from 'lodash/fp'; // use fp version to not mutate the array
 
-import { fetchSearchResults } from 'src/actions';
+import Screen from 'src/components/common/Screen';
+import Breadcrumbs from 'src/components/common/Breadcrumbs';
+import DualPane from 'src/components/common/DualPane';
+import HomeInfo from 'src/components/HomeScreen/HomeInfo';
+import SearchContext from './SearchContext';
 
-import Query from './Query';
-import SearchResult from './SearchResult';
-import SearchFilter from './SearchFilter';
-
-const defaultQuery = {
-  'q': '',
-  'post_filter:schema': '',
-  'filter:countries': [],
-  'filter:collection_id': []
-}
-
-function parseQuery(location) {
-  const allParams = queryString.parse(location.search);
-  const relevantQueryParams = Object.keys(defaultQuery);
-  const searchQuery = pick(allParams, relevantQueryParams);
-
-  return mergeWith((defaultValue, newValue) => {
-    return newValue !== undefined
-      ? isArray(defaultValue)
-        ? defaultValue.concat(newValue)
-        : newValue
-      : defaultValue;
-  }, defaultQuery, searchQuery);
-}
 
 class SearchScreen extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      result: {
-        isFetching: true
-      }
-    };
-
-    this.fetchData = debounce(this.fetchData, 200);
-    this.updateQuery = this.updateQuery.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchData();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      !isEqual(this.props.query, prevProps.query) ||
-      !isEqual(this.props.browsingContext, prevProps.browsingContext)
-    ) {
-      this.fetchData();
-    }
-  }
-
-  fetchData() {
-    const { browsingContext, query, fetchSearchResults } = this.props;
-    this.setState({isFetching: true})
-
-    // If we are viewing a single collection, add the appropriate filter.
-    const performedQuery = { ...query };
-    if (browsingContext.collectionId !== undefined) {
-      if (performedQuery['filter:collection_id']) {
-        console.warn('Got a collection filter while viewing a single collection. Ignoring the filter.');
-      }
-      performedQuery['filter:collection_id'] = browsingContext.collectionId;
-    }
-
-    fetchSearchResults({
-      filters: {
-        ...pickBy(performedQuery, v => !!v),
-        facet: 'schema'
-      },
-    }).then(({result}) => {
-      this.setState({result, isFetching: false})
-    });
-  }
-
-  updateQuery(newQuery) {
-    const { history, location } = this.props;
-
-    history.push({
-      pathname: location.pathname,
-      search: queryString.stringify(pickBy(newQuery, v => !!v))
-    });
-  }
-
   render() {
-    const { query } = this.props;
-    const { result, isFetching } = this.state;
-    if (!result) {
-      return null;
-    }
     return (
-      <section>
-        <SearchFilter
-          result={result}
-          query={query}
-          updateQuery={this.updateQuery}
-        />
-        <SearchResult result={result} isFetching={isFetching} />
-      </section>
+      <Screen>
+        <Breadcrumbs />
+        <DualPane>
+          <HomeInfo {...this.props} />
+          <DualPane.ContentPane>
+            <SearchContext />
+          </DualPane.ContentPane>
+        </DualPane>
+      </Screen>
     )
   }
 }
-
-const mapStateToProps = (ownProps, { location, match }) => {
-  const browsingContext = match.params;
-  const query = parseQuery(location);
-  return { browsingContext, query };
-}
-
-SearchScreen = connect(
-  mapStateToProps,
-  { fetchSearchResults }
-)(SearchScreen);
 
 export default SearchScreen;

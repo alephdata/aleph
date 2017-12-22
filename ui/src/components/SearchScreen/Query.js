@@ -121,7 +121,6 @@ class Query {
     }
 
     toParams() {
-        const facets = this.getList('facet');
         let params = {};
         Object.entries(this.state).forEach(([name, value]) => {
             if (name.startsWith(this.prefix)) {
@@ -129,6 +128,8 @@ class Query {
                 params[name] = value;
             }
         })
+
+        // convert all filters which are being faceted on into post-filters.
         this.getList('facet').forEach((facet) => {
             let srcFilter = 'filter:' + facet,
                 dstFilter = 'post_' + srcFilter;
