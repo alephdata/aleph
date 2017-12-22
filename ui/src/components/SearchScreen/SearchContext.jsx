@@ -28,19 +28,31 @@ class SearchContext extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.query.sameAs(prevProps.query)) {
+    let changed = !this.props.query.sameAs(prevProps.query);
+    changed = changed || this.props.parent != prevProps.parent;
+    changed = changed || this.props.collection != prevProps.collection;
+    if (changed) {
       this.fetchData();
     }
   }
 
   fetchData() {
     this.setState({isFetching: true})
-    let { query, fetchSearchResults, collection } = this.props;
+    let { query, fetchSearchResults, collection, parent } = this.props;
     query = query.addFacet('schema');
     query = query.setFilter('schemata', 'Thing');
 
     if (collection) {
       query = query.setFilter('collection_id', collection.id);
+    }
+
+    // TODO: should this just be a redirect to a normal search form?
+    if (parent) {
+      if (query.hasQuery()) {
+        query = query.setFilter('ancestors', parent.id);
+      } else {
+        query = query.setFilter('parent.id', parent.id);
+      }
     }
 
     fetchSearchResults({
@@ -59,17 +71,21 @@ class SearchContext extends Component {
   }
 
   render() {
-    const { query, collection } = this.props;
+    const { query, collection, parent } = this.props;
     const { result, isFetching } = this.state;
     const showCollection = !collection;
+    const showCountry = !parent;
 
     return (
       <div className="SearchContext">
         <SearchFilter query={query}
                       result={result}
+                      showCountry={showCountry}
+                      showCollection={showCollection}
                       updateQuery={this.updateQuery} />
         <SearchResult query={query}
                       result={result}
+                      showCountry={showCountry}
                       showCollection={showCollection} />
       </div>
     )

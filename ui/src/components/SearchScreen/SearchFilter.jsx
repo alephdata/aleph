@@ -15,7 +15,7 @@ class SearchFilter extends Component {
   }
 
   render() {
-    const { result, query, updateQuery, collection } = this.props;
+    const { result, query, updateQuery } = this.props;
 
     return (
       <div className="SearchFilter">
@@ -23,12 +23,14 @@ class SearchFilter extends Component {
           <div className="search-query__text">
             <SearchFilterText query={query} updateQuery={updateQuery} />
           </div>
-          <div className="pt-large">
-            <SearchFilterFacet query={query} updateQuery={updateQuery} field='countries'>
-              <FormattedMessage id="search.countries" defaultMessage="Countries"/>
-            </SearchFilterFacet>
-          </div>
-          {collection && (
+          {this.props.showCountry && (
+            <div className="pt-large">
+              <SearchFilterFacet query={query} updateQuery={updateQuery} field='countries'>
+                <FormattedMessage id="search.countries" defaultMessage="Countries"/>
+              </SearchFilterFacet>
+            </div>
+          )}
+          {this.props.showCollection && (
             <div className="pt-large">
               <SearchFilterFacet query={query} updateQuery={updateQuery} field='collection_id'>
                 <FormattedMessage id="search.collections" defaultMessage="Collections"/>

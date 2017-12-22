@@ -5,9 +5,7 @@ import {
   fetchDocument,
   fetchEntity,
   fetchSearchResults,
-  fetchNextSearchResults,
-  fetchChildDocs,
-  fetchNextChildDocs,
+  fetchNextSearchResults
 } from 'src/actions';
 import { mapById } from './util';
 
@@ -31,7 +29,5 @@ export default createReducer({
       set(id, data)(state),
 
     [fetchSearchResults.COMPLETE]: cacheResultEntities,
-    [fetchNextSearchResults.COMPLETE]: cacheResultEntities,
-    [fetchChildDocs.COMPLETE]: cacheResultEntities,
-    [fetchNextChildDocs.COMPLETE]: cacheResultEntities,
+    [fetchNextSearchResults.COMPLETE]: cacheResultEntities
 }, initialState);

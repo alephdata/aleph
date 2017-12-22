@@ -78,6 +78,11 @@ class Query {
         return this.has('filter:' + name);
     }
 
+    hasQuery() {
+        const query = this.getQ();
+        return query.length > 0;
+    }
+
     getFilter(name) {
         return this.getList('filter:' + name);
     }

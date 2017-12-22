@@ -33,7 +33,6 @@ class SearchResult extends Component {
       this.setState({isExpanding: true})
 
       fetchNextSearchResults({ next: result.next }).then(({result: fresh}) => {
-        console.log(fresh);
         result.next = fresh.next;
         result.results.push(...fresh.results);
         this.setState({

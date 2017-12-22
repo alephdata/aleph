@@ -42,15 +42,3 @@ export const fetchDocument = asyncActionCreator(({ id }) => async dispatch => {
   const response = await endpoint.get(`documents/${id}`);
   return { id, data: response.data };
 }, { name: 'FETCH_DOCUMENT' });
-
-export const fetchChildDocs = asyncActionCreator(({ id }) => async dispatch => {
-  const response = await endpoint.get('documents', {
-    params: { 'filter:parent.id': id }
-  });
-  return { id, result: response.data };
-}, { name: 'FETCH_CHILD_DOCS' });
-
-export const fetchNextChildDocs = asyncActionCreator(({ id, next }) => async dispatch => {
-  const response = await endpoint.get(next);
-  return { id, result: response.data };
-}, { name: 'FETCH_NEXT_CHILD_DOCS' });
