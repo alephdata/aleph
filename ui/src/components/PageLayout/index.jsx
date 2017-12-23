@@ -30,7 +30,9 @@ class PageLayout extends Component {
     if (!isLoaded) {
       return (
         <div className="PageLayout-spinner">
-          <Spinner className="pt-large"/>
+          <div className="spinner">
+            <Spinner className="pt-large"/>
+          </div>
         </div>
       )
     }
@@ -52,6 +54,14 @@ class PageLayout extends Component {
             <Route component={ErrorScreen}/>
           </Switch>
         </main>
+        <footer className="PageLayout-footer">
+          <p>
+            <strong>ℵ</strong> aleph search engine · 
+            {' '}
+            <i className="fa fa-fw fa-github" />
+            <a href="https://github.com/alephdata/aleph">open source</a>
+          </p>
+        </footer>
       </div>
     );
   }

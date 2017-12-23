@@ -17,7 +17,7 @@ class SearchFilterText extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.state = {value: nextProps.query.getQ()};
+    this.setState({value: nextProps.query.getQ()});
   }
 
   onChange({target}) {

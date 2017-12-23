@@ -11,21 +11,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  // background: $light-gray5;
-  width: 100%;
-  min-height: 100%;
-  display: flex;
-  flex-flow: column nowrap;
-}
-
-#root {
-  flex-grow: 1;
-}
-
-.spinner {
-  position: absolute;
-  top: 20px;
-  left: 40px;
+  background-color: $dark-gray3;
 }
 
 .pt-navbar a {
@@ -36,16 +22,6 @@ body {
   margin-top: $pt-grid-size;
 }
 
-.small-screen {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: ($pt-grid-size * 2);
-
-  h2 {
-    line-height: inherit;
-  }
-}
-
 pre {
   border: none;
   background-color: inherit;
@@ -54,19 +30,6 @@ pre {
   white-space: -moz-pre-wrap;
   word-wrap: break-word;
 }
-
-.flex-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin: 0 (-$pt-grid-size);
-
-  & > * {
-    padding: 0 $pt-grid-size;
-  }
-}
-
 
 // Table defaults
 table.pt-table {
