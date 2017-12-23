@@ -12,13 +12,13 @@
   }
 }
 
-.PageLayout-root {
-  
-}
+// .PageLayout-root {}
 
 .PageLayout-main {
+  display: flex;
   min-height: 80vh;
   background-color: $pt-app-background-color;
+  align-items: stretch;
 }
 
 .PageLayout-footer {

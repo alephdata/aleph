@@ -1,28 +1,22 @@
 .DualPane {
-  flex-grow: 1;
   display: flex;
   flex-flow: row nowrap;
+  align-content: stretch;
+  align-items: stretch;
+  flex: 1 0 0;
 }
 
-.DualPane > .InfoPane {
-  flex-grow: 0;
-  flex-basis: 300px;
-  min-width: 25%;
-  display: flex;
-  flex-flow: column;
-}
-
-.DualPane > .ContentPane {
-  flex-basis: 800px;
-  flex-grow: 3;
-  display: flex;
-  flex-flow: column nowrap;
-}
-
-.InfoPane .InfoPane-content {
-  // padding: 2em 1em;
+.DualPane .InfoPane {
+  flex: 1 0 0;
+  max-width: 30%;
   border: 1px solid lightgrey;
 }
+
+.DualPane .ContentPane {
+  flex: 3 0 0;
+}
+
+// .InfoPane .InfoPane-content {}
 
 .InfoPane-content > h1 {
   font-size: 1.2em;
