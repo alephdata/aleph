@@ -23,6 +23,7 @@ class PageNavbarSearchForm extends Component {
         q: this.state.value
       })
     })
+    this.setState({value: ''})
     event.preventDefault();
   }
 

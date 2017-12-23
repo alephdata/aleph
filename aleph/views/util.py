@@ -1,6 +1,7 @@
 from apikit import jsonify as jsonify_
 from apikit import obj_or_404
 from flask import request
+from normality import stringify
 from urlparse import urlparse, urljoin
 from werkzeug.exceptions import MethodNotAllowed, Forbidden, BadRequest
 from lxml.etree import tostring
@@ -101,37 +102,49 @@ def get_best_next_url(*urls):
         if url and is_safe_url(url):
             return url
 
+
 CLEANER = Cleaner(
     style=True,
     meta=True,
     links=False,
-    add_nofollow=True,
-    remove_tags=['body'],
-    kill_tags=['area', 'audio', 'base', 'bgsound', 'embed', 'form', 'frame', 'frameset', 'head',
-               'img', 'iframe', 'input', 'link', 'map', 'meta', 'nav', 'object', 'plaintext', 'track', 'video']
+    remove_tags=['body', 'form'],
+    kill_tags=['area', 'audio', 'base', 'bgsound', 'embed', 'frame',
+               'frameset', 'head', 'img', 'iframe', 'input', 'link',
+               'map', 'meta', 'nav', 'object', 'plaintext', 'track',
+               'video']
 )
 
 
-def sanitize_html(html_text, source_url):
+def sanitize_html(html_text, base_url):
     """Remove anything from the given HTML that must not show up in the UI."""
     # TODO: circumvent encoding declarations?
     if html_text is None:
         return
-    # Make links relative the source_url
-    cleaned = relative_urls(html_text, source_url)
-    cleaned = CLEANER.clean_html(cleaned)
-    return cleaned
-
-
-def relative_urls(html_text, source_url):
-    base = source_url.rsplit('/', 1)
-    base = base[0]
-    html = document_fromstring(html_text)
-    html.make_links_absolute(base)
-    html = add_target_blank(html)
+    cleaned = CLEANER.clean_html(html_text)
+    html = document_fromstring(cleaned)
+    for (el, attr, href, _) in html.iterlinks():
+        href = normalize_href(href, base_url)
+        if href is not None:
+            el.set(attr, href)
+        if el.tag == 'a':
+            el.set('target', '_blank')
+            rel = set(el.get('rel', '').lower().split())
+            rel.update(['nofollow', 'noreferrer', 'external', 'noopener'])
+            el.set('rel', ' '.join(rel))
     return tostring(html)
 
-def add_target_blank(html):
-    for a in html.findall('.//a'):
-        a.attrib['target'] = '_blank'
-    return html
+
+def normalize_href(href, base_url):
+    # Make links relative the source_url
+    href = stringify(href)
+    if href is None:
+        return
+    if base_url is not None:
+        return urljoin(base_url, href)
+    try:
+        parsed = urlparse(href)
+        if not parsed.netloc:
+            return None
+        return href
+    except Exception:
+        return None
