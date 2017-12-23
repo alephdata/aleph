@@ -31,6 +31,16 @@ pre {
   word-wrap: break-word;
 }
 
+.small-screen {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: ($pt-grid-size * 2);
+
+  h2 {
+    line-height: inherit;
+  }
+}
+
 // Table defaults
 table.pt-table {
   width: 100%;
