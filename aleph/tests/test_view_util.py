@@ -36,4 +36,4 @@ class ViewUtilTest(TestCase):
         assert html.find(
             './/a').get('href') == 'https://example.org/blockchain', html
         assert html.find('.//a').get('target') == '_blank', html
-        assert html.find('.//a').get('rel') == 'nofollow', html
+        assert 'nofollow' in html.find('.//a').get('rel'), html
