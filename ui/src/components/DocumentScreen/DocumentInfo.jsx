@@ -9,21 +9,24 @@ import CollectionSection from 'src/components/CollectionScreen/CollectionSection
 class DocumentInfo extends Component {
   render() {
     const { document } = this.props;
-    const hasTitle = !!document.title;
+    
     return (
       <DualPane.InfoPane>
         <h1>
           <Entity.Label entity={document} />
         </h1>
         <DocumentMetadata document={document} />
+
         {document.links && document.links.file &&
-          <AnchorButton
-            href={document.links.file}
-            download={document.file_name}
-            intent="primary"
-          >
-            Download
-          </AnchorButton>
+          <div className="pt-button-group pt-fill">
+            <AnchorButton
+              href={document.links.file}
+              download={document.file_name}
+              className="pt-minimal"
+            >
+              Download
+            </AnchorButton>
+          </div>
         }
 
         {document.collection &&
