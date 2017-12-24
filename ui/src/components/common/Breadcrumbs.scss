@@ -8,4 +8,12 @@
 
   border-bottom: 1px solid $aleph-border-color;
   box-shadow: $pt-elevation-shadow-0;
+
+  li {
+    // display: inline-block;
+    overflow-y: hidden;
+    max-width: 30em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
