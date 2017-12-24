@@ -17,7 +17,7 @@ class CollectionInfo extends Component {
         </h1>
         <p>{collection.summary}</p>
         Contains:
-        <table className="pt-table pt-condensed">
+        <table>
           <tbody>
             {Object.entries(collection.schemata).map(([key, value]) => (
               <tr key={key}>

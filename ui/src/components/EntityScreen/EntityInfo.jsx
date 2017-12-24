@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { FormattedMessage, FormattedDate } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import Schema from 'src/components/common/Schema';
 import Property from './Property';
 import Entity from './Entity';
 import DualPane from 'src/components/common/DualPane';
+import Date from 'src/components/common/Date';
 import CollectionSection from 'src/components/CollectionScreen/CollectionSection';
 
 class EntityInfo extends Component {
@@ -13,7 +14,6 @@ class EntityInfo extends Component {
     return (
       <DualPane.InfoPane>
         <h1>
-          <Schema.Icon schema={schema} />
           <Entity.Label entity={this.props.entity} />
         </h1>
 
@@ -23,7 +23,7 @@ class EntityInfo extends Component {
               <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
             </th>
             <td>
-              <FormattedDate value={updated_at} />
+              <Date value={updated_at} />
             </td>
           </tr>
         </Property.Table>

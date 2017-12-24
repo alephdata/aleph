@@ -1,3 +1,5 @@
+@import "src/app/variables.scss";
+
 .DualPane {
   display: flex;
   flex-flow: row nowrap;
@@ -9,20 +11,53 @@
 .DualPane .InfoPane {
   flex: 1 0 0;
   max-width: 30%;
-  border: 1px solid lightgrey;
+  border-right: 0px;
+  padding: $aleph-grid-size;
+  box-shadow: $pt-elevation-shadow-3;
+  margin-right: $aleph-grid-size;
+
+  h1 {
+    font-size: $aleph-font-size * 1.7;
+    margin: $aleph-grid-size 0 ($aleph-grid-size) 0;
+    line-height: 1.5em;
+  }
+
+  h3 {
+    font-size: $aleph-font-size * 1.5;
+    margin: ($aleph-grid-size * 2) 0 ($aleph-grid-size) 0;
+    line-height: 1.5em;
+  }
+
+}
+
+.InfoPane table {
+  width: 100%;
+  border: 0;
+
+  th, td {
+    padding-bottom: $aleph-grid-size;
+    vertical-align: top;
+  }
+
+  th {
+    text-align: left;
+    width: 30%;
+  }
+
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  code {
+    border: 0;
+    box-shadow: none;
+    overflow-wrap: break-word;
+  }
 }
 
 .DualPane .ContentPane {
   flex: 3 0 0;
-}
-
-// .InfoPane .InfoPane-content {}
-
-.InfoPane-content > h1 {
-  font-size: 1.2em;
-}
-
-.InfoPane ul {
-  list-style: none;
-  padding-left: 1em;
+  padding: $aleph-grid-size;
 }

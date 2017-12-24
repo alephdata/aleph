@@ -1,7 +1,7 @@
 $icon-font-path: "~@blueprintjs/core/resources/icons";
 
 @import "~@blueprintjs/core/src/blueprint.scss";
-@import "~@blueprintjs/core/dist/variables";
+@import "./variables.scss";
 
 html {
   height: 100%;
@@ -10,16 +10,18 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
-  background-color: $dark-gray3;
+  font-family: $pt-font-family;
+  font-weight: 300;
+  font-size: $aleph-font-size;
+  background-color: $aleph-body-background;
 }
 
-.pt-navbar a {
-  color: inherit;
-}
+// .pt-navbar a {
+//   color: inherit;
+// }
 
-.pt-card + .pt-card {
-  margin-top: $pt-grid-size;
+h1, h2, h3, h4, h5 {
+  font-weight: 300;
 }
 
 pre {
@@ -34,7 +36,7 @@ pre {
 .small-screen {
   max-width: 400px;
   margin: 0 auto;
-  padding: ($pt-grid-size * 2);
+  padding: ($aleph-grid-size * 2);
 
   h2 {
     line-height: inherit;

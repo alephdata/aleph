@@ -1,4 +1,4 @@
-@import "~@blueprintjs/core/dist/variables";
+@import "src/app/variables.scss";
 
 .PageLayout-spinner {
   height: 100vh;
@@ -17,16 +17,16 @@
 .PageLayout-main {
   display: flex;
   min-height: 80vh;
-  background-color: $pt-app-background-color;
+  background-color: $aleph-content-background;
   align-items: stretch;
 }
 
 .PageLayout-footer {
-  color: $pt-dark-text-color;
+  color: $aleph-dark-text-color;
   
   p {
     text-align: right;
-    padding: $pt-grid-size * 2;
+    padding: $aleph-grid-size * 2;
   }
 
   a, a:hover {

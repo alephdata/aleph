@@ -1,14 +1,14 @@
-@import "~@blueprintjs/core/dist/variables";
+@import "src/app/variables.scss";
 
 .SearchFilter {
-  margin-bottom: $pt-grid-size * 2;
+  margin-bottom: $aleph-grid-size * 2;
 }
 
 .search-input {
   position: relative;
 
   & > .pt-input[type="search"] {
-    border-radius: $pt-border-radius;
+    border-radius: $aleph-border-radius;
   }
 }
 
@@ -17,8 +17,8 @@
   flex-wrap: wrap;
 
   & > div {
-    margin-right: $pt-grid-size;
-    margin-bottom: $pt-grid-size;
+    margin-right: $aleph-grid-size;
+    margin-bottom: $aleph-grid-size;
   }
 }
 

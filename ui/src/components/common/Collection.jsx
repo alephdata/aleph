@@ -7,12 +7,11 @@ import getPath from 'src/util/getPath';
 class Label extends Component {
   render() {
     const { collection, icon } = this.props;
-    let iconClass = collection.secret ? 'fa fa-fw fa-lock' : 'fa fa-fw fa-globe';
 
     return (
       <span>
-        { icon && (<i className={ iconClass } />) }
         { collection.label }
+        { collection.secret && (<i className='fa fa-fw fa-lock' />) }
       </span>
     );
   }
