@@ -9,7 +9,7 @@ import Date from 'src/components/common/Date';
 
 class EntityListItem extends Component {
   render() {
-    const { item, showCollection = true, showCountry = true } = this.props;
+    const { item, aspects } = this.props;
     const date = min(item.dates);
 
     return (
@@ -17,7 +17,7 @@ class EntityListItem extends Component {
         <td className="result__name">
           <Entity.Link entity={item} icon />
         </td>
-        {showCollection && 
+        {aspects.collections && 
           <td className="result__collection">
             <Collection.Link collection={item.collection} icon />
           </td>
@@ -25,7 +25,7 @@ class EntityListItem extends Component {
         <td>
           <Schema.Name schema={item.schema} />
         </td>
-        {showCountry && (
+        {aspects.countries && (
           <td>
             <Country.List codes={item.countries} />
           </td>

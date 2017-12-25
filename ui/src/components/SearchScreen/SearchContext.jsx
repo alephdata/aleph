@@ -57,22 +57,23 @@ class SearchContext extends Component {
   }
 
   render() {
-    const { query, collection, parent } = this.props;
+    const { query, aspects = {} } = this.props;
     const { result } = this.state;
-    const showCollection = !collection;
-    const showCountry = !parent;
+  
+    aspects.collections = !!aspects.collections;
+    aspects.countries = !!aspects.countries;
+
+    console.log(aspects);
 
     return (
       <div className="SearchContext">
         <SearchFilter query={query}
                       result={result}
-                      showCountry={showCountry}
-                      showCollection={showCollection}
+                      aspects={aspects}
                       updateQuery={this.updateQuery} />
         <SearchResult query={query}
                       result={result}
-                      showCountry={showCountry}
-                      showCollection={showCollection} />
+                      aspects={aspects} />
       </div>
     )
   }

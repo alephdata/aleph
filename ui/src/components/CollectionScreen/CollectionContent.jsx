@@ -9,9 +9,15 @@ class CollectionContent extends Component {
     const context = {
       'filter:collection_id': collection.id
     };
+    const aspects = {
+      collections: false,
+      countries: true
+    };
     return (
       <DualPane.ContentPane>
-        <SearchContext collection={collection} context={context} />
+        <SearchContext collection={collection}
+                       context={context}
+                       aspects={aspects} />
       </DualPane.ContentPane>
     );
   }

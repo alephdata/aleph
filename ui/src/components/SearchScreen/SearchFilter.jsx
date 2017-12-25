@@ -9,7 +9,7 @@ import './SearchFilter.css';
 
 class SearchFilter extends Component {
   render() {
-    const { result, query, updateQuery } = this.props;
+    const { result, query, aspects, updateQuery } = this.props;
 
     return (
       <div className="SearchFilter">
@@ -17,14 +17,14 @@ class SearchFilter extends Component {
           <div className="search-query__text">
             <SearchFilterText query={query} updateQuery={updateQuery} />
           </div>
-          {this.props.showCountry && (
+          {aspects.countries && (
             <div className="pt-large">
               <SearchFilterFacet query={query} updateQuery={updateQuery} field='countries'>
                 <FormattedMessage id="search.countries" defaultMessage="Countries"/>
               </SearchFilterFacet>
             </div>
           )}
-          {this.props.showCollection && (
+          {aspects.collections && (
             <div className="pt-large">
               <SearchFilterFacet query={query} updateQuery={updateQuery} field='collection_id'>
                 <FormattedMessage id="search.collections" defaultMessage="Collections"/>
