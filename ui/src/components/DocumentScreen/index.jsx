@@ -23,7 +23,7 @@ class DocumentScreen extends Component {
   }
 
   render() {
-    const { document } = this.props;
+    const { document, location } = this.props;
     if (document === undefined) {
       return null;
     }
@@ -33,7 +33,7 @@ class DocumentScreen extends Component {
           { document.parent && (
             <li>
               <Entity.Link entity={document.parent} className="pt-breadcrumb" icon short />
-            </li>  
+            </li>
           )}
           <li>
             <a className="pt-breadcrumb pt-breadcrumb-current">
@@ -43,7 +43,7 @@ class DocumentScreen extends Component {
         </Breadcrumbs>
         <DualPane>
           <DocumentInfo document={document} />
-          <DocumentContent document={document} />
+          <DocumentContent document={document} fragId={location.hash} />
         </DualPane>
       </Screen>
     );

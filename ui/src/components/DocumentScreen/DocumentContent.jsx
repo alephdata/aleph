@@ -11,7 +11,7 @@ import EmailHeadersViewer from './viewers/EmailHeadersViewer';
 
 class DocumentContent extends Component {
   render() {
-    const { document } = this.props;
+    const { document, fragId } = this.props;
     // console.log(document.schemata);
 
     return (
@@ -39,7 +39,10 @@ class DocumentContent extends Component {
         )}
 
         {document.links && document.links.pdf && (
-          <PdfViewer url={document.links.pdf} />
+          <PdfViewer
+            url={document.links.pdf}
+            fragId={fragId}
+          />
         )}
 
         {document.schema === 'Image' && (
