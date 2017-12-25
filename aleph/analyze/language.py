@@ -3,6 +3,7 @@ from langid.langid import LanguageIdentifier, model
 # https://github.com/saffsd/langid.py
 
 from aleph.core import language_whitelist
+from aleph.model import Document
 from aleph.analyze.analyzer import Analyzer
 
 log = logging.getLogger(__name__)
@@ -12,6 +13,10 @@ CUTOFF = 50
 
 
 class LanguageAnalyzer(Analyzer):
+    IGNORED = [
+        Document.SCHEMA_PACKAGE,
+        Document.SCHEMA_FOLDER
+    ]
 
     @property
     def identifier(self):
@@ -21,8 +26,8 @@ class LanguageAnalyzer(Analyzer):
         return cls._identifier
 
     def analyze(self, document):
-        # if len(document.languages) > 0:
-        #     return
+        if document.schema in self.IGNORED:
+            return
         lang, score = self.identifier.classify(document.text)
         if score < THRESHOLD:
             return

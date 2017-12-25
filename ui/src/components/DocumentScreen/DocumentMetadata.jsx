@@ -5,6 +5,7 @@ import Schema from 'src/components/common/Schema';
 import Country from 'src/components/common/Country';
 import Language from 'src/components/common/Language';
 import Date from 'src/components/common/Date';
+import FileSize from 'src/components/common/FileSize';
 import Entity from 'src/components/EntityScreen/Entity';
 
 class DocumentMetadata extends Component {
@@ -29,7 +30,7 @@ class DocumentMetadata extends Component {
           { document.file_size && (
             <tr>
               <th><FormattedMessage id="document.file_size" defaultMessage="File size"/></th>
-              <td>{document.file_size}</td>
+              <td><FileSize value={document.file_size} /></td>
             </tr>
           )}
           { document.parent && (
