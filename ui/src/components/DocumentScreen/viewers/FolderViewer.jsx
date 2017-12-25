@@ -7,8 +7,11 @@ class FolderViewer extends Component {
 
   render() {
     const { document } = this.props;
+    const context = {
+      'filter:parent.id': document.id
+    };
     return (
-      <SearchContext collection={document.collection} parent={document} />
+      <SearchContext collection={document.collection} context={context} />
     );
   }
 }

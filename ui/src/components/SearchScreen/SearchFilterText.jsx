@@ -16,9 +16,9 @@ class SearchFilterText extends Component {
     this.props.updateQuery(query);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({value: nextProps.query.getQ()});
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   this.setState({value: nextProps.query.getQ()});
+  // }
 
   onChange({target}) {
     this.setState({value: target.value});

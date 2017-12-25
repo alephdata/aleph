@@ -37,22 +37,9 @@ class SearchContext extends Component {
 
   fetchData() {
     this.setState({isFetching: true})
-    let { query, fetchSearchResults, collection, parent } = this.props;
+    let { query, fetchSearchResults } = this.props;
     query = query.addFacet('schema');
     query = query.setFilter('schemata', 'Thing');
-
-    if (collection) {
-      query = query.setFilter('collection_id', collection.id);
-    }
-
-    // TODO: should this just be a redirect to a normal search form?
-    if (parent) {
-      if (query.hasQuery()) {
-        query = query.setFilter('ancestors', parent.id);
-      } else {
-        query = query.setFilter('parent.id', parent.id);
-      }
-    }
 
     fetchSearchResults({
       filters: query.toParams(),
@@ -91,9 +78,11 @@ class SearchContext extends Component {
   }
 }
 
-const mapStateToProps = (ownProps, { location }) => {
+const mapStateToProps = (state, ownProps) => {
+  const context = ownProps.context || {};
+  const location = ownProps.location;
   return {
-    query: Query.fromLocation(location, ownProps.prefix)
+    query: Query.fromLocation(location, context, ownProps.prefix)
   };
 }
 

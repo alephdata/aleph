@@ -25,6 +25,12 @@
       left: ($aleph-grid-size / 2);
       line-height: $aleph-line-height;
     }
+
+    .search-filter-list-label {
+      overflow-y: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   
     & > span {
       margin: ($aleph-grid-size / 2);

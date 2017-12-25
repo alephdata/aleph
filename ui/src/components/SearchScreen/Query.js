@@ -16,36 +16,41 @@ class Query {
     // of the APIs (entities, documents, collections, roles), but just serves as a
     // container for the default syntax of Aleph.
 
-    constructor (state, prefix) {
+    constructor (state, context, prefix) {
         this.state = state;
+        this.context = context || {};
         this.prefix = prefix || '';
     }
 
-    static fromLocation(location, prefix) {
+    static fromLocation(location, context, prefix) {
         const state = queryString.parse(location.search);
-        return new this(state, prefix);
+        return new this(state, context, prefix);
     }
 
     clone(update) {
-        return new Query(_.cloneDeep(this.state), this.prefix);
-    }
-
-    get(name) {
-        return this.state[this.prefix + name];
+        const state = _.cloneDeep(this.state);
+        return new Query(state, this.context, this.prefix);
     }
 
     set(name, value) {
-        let child = this.clone();
+        const child = this.clone();
         child.state[this.prefix + name] = value;
         return child;
     }
 
-    getString(name) {
-        return _.toString(this.get(name));
-    }
-
     setString(name, value) {
         return this.set(name, _.toString(value));
+    }
+
+    getList(name) {
+        const prefixName = this.prefix + _.toString(name),
+              ctxValues = ensureArray(this.context[name]),
+              stateValues = ensureArray(this.state[prefixName]);
+        return _.uniq(_.concat(ctxValues, stateValues));
+    }
+
+    getString(name) {
+        return _.toString(_.head(this.getList(name)));
     }
 
     getQ() {
@@ -53,11 +58,7 @@ class Query {
     }
 
     setQ(value) {
-        return this.setString('q', value);
-    }
-
-    getList(name) {
-        return ensureArray(this.get(name));
+        return this.set('q', value);
     }
 
     toggle(name, value) {
@@ -81,6 +82,18 @@ class Query {
     hasQuery() {
         const query = this.getQ();
         return query.length > 0;
+    }
+
+    fields() {
+        // List all the fields set for this query
+        const keys = _.keys(this.context);
+        _.keys(this.state).forEach((name) => {
+            if (name.startsWith(this.prefix)) {
+                name = name.substr(this.prefix.length);
+                keys.push(name);
+            }
+        })
+        return _.uniq(keys);
     }
 
     getFilter(name) {
@@ -122,11 +135,8 @@ class Query {
 
     toParams() {
         let params = {};
-        Object.entries(this.state).forEach(([name, value]) => {
-            if (name.startsWith(this.prefix)) {
-                name = name.substr(this.prefix.length);
-                params[name] = value;
-            }
+        this.fields().forEach((name) => {
+            params[name] = this.getList(name);
         })
 
         // convert all filters which are being faceted on into post-filters.
