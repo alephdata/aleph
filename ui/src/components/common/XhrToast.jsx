@@ -8,8 +8,12 @@ const defaultStatusMap = {
 };
 
 const xhrToastFn = (showToastFn, fallbackMessageKey) => (response, intl, statusMap={}) => {
-  const messageKey = response && (statusMap[response.status] || defaultStatusMap[response.status]);
-  showToastFn(intl.formatMessage(messageKey || fallbackMessageKey));
+  if (response && response.data && response.data.message) {
+    showToastFn(response.data.message);
+  } else {
+    const messageKey = response && (statusMap[response.status] || defaultStatusMap[response.status]);
+    showToastFn(intl.formatMessage(messageKey || fallbackMessageKey));
+  }
 };
 
 export const xhrErrorToast = xhrToastFn(showErrorToast, messages.status.unknown_error);

@@ -35,9 +35,14 @@ def validate_data(data, schema):
     # pprint(data)
     data, errors = schema().load(data)
     if len(errors):
+        message = None
+        for field, errors in errors.items():
+            for error in errors:
+                message = error
         raise BadRequest(response=jsonify({
             'status': 'error',
-            'errors': errors
+            'errors': errors,
+            'message': message
         }, status=400))
 
 

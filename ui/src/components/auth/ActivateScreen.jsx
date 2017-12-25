@@ -15,7 +15,6 @@ class ActivateScreen extends Component {
     endpoint.post('/roles', {code: params.code, ...data}).then((res) => {
       return loginWithPassword(res.data.email, data.password);
     }).catch(e => {
-      console.log(e);
       xhrErrorToast(e.response, intl);
     });
   }
