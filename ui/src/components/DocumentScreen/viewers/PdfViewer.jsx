@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Document, Page } from 'react-pdf/build/entry.webpack';
 import { findLast } from 'lodash';
 
@@ -27,6 +28,12 @@ class PdfViewer extends Component {
 
     return (
       <div className="PdfViewer">
+        {(pageNumber > 1) &&
+          <Link to={{ hash: `page=${pageNumber-1}` }}>Previous</Link>
+        }
+        {(pageNumber < numPages) &&
+          <Link to={{ hash: `page=${pageNumber+1}` }}>Next</Link>
+        }
         <Document file={url} onLoadSuccess={this.onDocumentLoad.bind(this)}>
           <Page
             pageNumber={pageNumber}
