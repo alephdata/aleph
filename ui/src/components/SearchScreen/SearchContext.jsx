@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { debounce } from 'lodash';
+import { isBoolean, debounce } from 'lodash';
 
 import { fetchSearchResults } from 'src/actions';
 
@@ -60,10 +60,8 @@ class SearchContext extends Component {
     const { query, aspects = {} } = this.props;
     const { result } = this.state;
   
-    aspects.collections = !!aspects.collections;
-    aspects.countries = !!aspects.countries;
-
-    console.log(aspects);
+    aspects.collections = isBoolean(aspects.collections) ? aspects.collections : true;
+    aspects.countries = isBoolean(aspects.countries) ? aspects.countries : true;
 
     return (
       <div className="SearchContext">
