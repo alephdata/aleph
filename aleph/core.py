@@ -116,14 +116,6 @@ def get_app_ui_url():
     return current_app.config.get('APP_UI_URL')
 
 
-def get_app_name():
-    return settings.APP_NAME or 'aleph'
-
-
-def get_app_title():
-    return settings.APP_TITLE or get_app_name()
-
-
 def get_es():
     app = current_app._get_current_object()
     if not hasattr(app, '_es_instance'):
@@ -149,8 +141,6 @@ def get_language_whitelist():
     return [c.lower().strip() for c in get_config('LANGUAGES')]
 
 
-app_name = LocalProxy(get_app_name)
-app_title = LocalProxy(get_app_title)
 app_ui_url = LocalProxy(get_app_ui_url)
 es = LocalProxy(get_es)
 archive = LocalProxy(get_archive)

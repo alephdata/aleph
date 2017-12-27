@@ -2,7 +2,7 @@ import logging
 from flask_mail import Message
 from flask import render_template
 
-from aleph.core import get_config, app_title, app_ui_url, mail
+from aleph.core import settings, app_ui_url, mail
 
 log = logging.getLogger(__name__)
 
@@ -15,8 +15,8 @@ def notify_role(role, subject, html):
     else:
         log.info('Notify %r with:\n %r', role, html)
 
-    sender = '%s <%s>' % (app_title, get_config('MAIL_FROM'))
-    subject = '[%s] %s' % (app_title, subject)
+    sender = '%s <%s>' % (settings.APP_TITLE, settings.MAIL_FROM)
+    subject = '[%s] %s' % (settings.APP_TITLE, subject)
     msg = Message(subject=subject,
                   sender=sender,
                   recipients=[role.email])
@@ -30,7 +30,7 @@ def notify_role_template(role, subject, template, **kwargs):
         html = render_template(template,
                                role=role,
                                ui_url=app_ui_url,
-                               app_title=app_title,
+                               app_title=settings.APP_TITLE,
                                **kwargs)
         notify_role(role, subject, html)
     except Exception as ex:

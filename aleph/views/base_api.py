@@ -6,7 +6,7 @@ from exactitude import countries, languages
 from followthemoney import model
 from followthemoney.exc import InvalidData
 
-from aleph.core import get_config, app_title, app_ui_url, url_for
+from aleph.core import settings, get_config, app_ui_url, url_for
 from aleph.index.stats import get_instance_stats
 from aleph.model import Collection
 from aleph.oauth import oauth
@@ -43,9 +43,9 @@ def metadata():
         'status': 'ok',
         'maintenance': request.authz.in_maintenance,
         'app': {
-            'title': six.text_type(app_title),
+            'title': settings.APP_TITLE,
             'ui_uri': six.text_type(app_ui_url),
-            'samples': get_config('SAMPLE_SEARCHES')
+            'samples': settings.SAMPLE_SEARCHES
         },
         'categories': Collection.CATEGORIES,
         'countries': countries.names,
