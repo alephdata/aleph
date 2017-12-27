@@ -2,10 +2,9 @@ import os
 import logging
 
 from ingestors import Manager
-from ingestors.util import decode_path, is_file
-from storagelayer import checksum
+from ingestors.util import decode_path
 
-from aleph.core import db
+from aleph.core import db, settings
 from aleph.model import Document, Cache
 from aleph.ingest.result import DocumentResult
 
@@ -22,7 +21,10 @@ class DocumentManager(Manager):
     RESULT_CLASS = DocumentResult
 
     def __init__(self, config, archive):
-        super(DocumentManager, self).__init__(config)
+        super(DocumentManager, self).__init__({
+            'PDF_OCR_PAGES': True,
+            'OCR_DEFAULTS': settings.OCR_DEFAULTS
+        })
         self.archive = archive
 
     def before(self, result):
