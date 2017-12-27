@@ -49,13 +49,13 @@ def create_app(config={}):
         'SQLALCHEMY_DATABASE_URI': settings.DATABASE_URI
     })
 
-    if not app.debug and app.config.get('MAIL_ADMINS'):
+    if settings.MAIL_SERVER and settings.ADMINS:
         credentials = (settings.MAIL_USERNAME,
                        settings.MAIL_PASSWORD)
         subject = '[%s] Crash report' % settings.APP_TITLE
         mail_handler = SMTPHandler(settings.MAIL_SERVER,
                                    settings.MAIL_FROM,
-                                   settings.MAIL_ADMINS,
+                                   settings.ADMINS,
                                    subject,
                                    credentials=credentials,
                                    secure=())
@@ -113,32 +113,30 @@ def get_config(name, default=None):
 
 
 def get_app_ui_url():
-    return current_app.config.get('APP_UI_URL')
+    return settings.APP_UI_URL
 
 
 def get_es():
-    app = current_app._get_current_object()
-    if not hasattr(app, '_es_instance'):
-        url = app.config.get('ELASTICSEARCH_URL')
-        app._es_instance = Elasticsearch(url, timeout=120)
-    return app._es_instance
+    if not hasattr(settings, '_es_instance'):
+        url = settings.ELASTICSEARCH_URL
+        settings._es_instance = Elasticsearch(url, timeout=120)
+    return settings._es_instance
 
 
 def get_archive():
-    app = current_app._get_current_object()
-    if not hasattr(app, '_aleph_archive'):
-        archive = storagelayer.init(app.config.get('ARCHIVE_TYPE'),
-                                    path=app.config.get('ARCHIVE_PATH'),
-                                    aws_key_id=app.config.get('ARCHIVE_AWS_KEY_ID'),  # noqa
-                                    aws_secret=app.config.get('ARCHIVE_AWS_SECRET'),  # noqa
-                                    aws_region=app.config.get('ARCHIVE_AWS_REGION'),  # noqa
-                                    bucket=app.config.get('ARCHIVE_BUCKET'))  # noqa
-        app._aleph_archive = archive
-    return app._aleph_archive
+    if not hasattr(settings, '_aleph_archive'):
+        archive = storagelayer.init(settings.ARCHIVE_TYPE,
+                                    path=settings.ARCHIVE_PATH,
+                                    aws_key_id=settings.ARCHIVE_AWS_KEY_ID,  # noqa
+                                    aws_secret=settings.ARCHIVE_AWS_SECRET,  # noqa
+                                    aws_region=settings.ARCHIVE_AWS_REGION,  # noqa
+                                    bucket=settings.ARCHIVE_BUCKET)  # noqa
+        settings._aleph_archive = archive
+    return settings._aleph_archive
 
 
 def get_language_whitelist():
-    return [c.lower().strip() for c in get_config('LANGUAGES')]
+    return [c.lower().strip() for c in settings.LANGUAGES]
 
 
 app_ui_url = LocalProxy(get_app_ui_url)
