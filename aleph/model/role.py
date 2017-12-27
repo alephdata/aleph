@@ -130,6 +130,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     @classmethod
     def public_roles(cls):
+        """Roles which make a collection to be considered public."""
         return set([
             cls.load_id(cls.SYSTEM_USER),
             cls.load_id(cls.SYSTEM_GUEST),

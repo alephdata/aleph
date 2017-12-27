@@ -3,14 +3,6 @@ from aleph.model import Collection, Role, Permission
 from aleph.util import ensure_list
 
 
-def get_public_roles():
-    """Roles which make a collection to be considered public."""
-    return [
-        Role.load_id(Role.SYSTEM_GUEST),
-        Role.load_id(Role.SYSTEM_USER),
-    ]
-
-
 class Authz(object):
     """Hold the authorization information for a user.
 
