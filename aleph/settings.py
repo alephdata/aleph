@@ -42,8 +42,8 @@ APP_TITLE = env.get('ALEPH_APP_TITLE', 'Aleph')
 APP_NAME = env.get('ALEPH_APP_NAME', 'aleph')
 APP_API_URL = env.get('ALEPH_API_URL')
 APP_UI_URL = env.get('ALEPH_UI_URL', 'http://localhost:3000/')
-APP_LOGO = env.get('ALEPH_LOGO', '/static/images/aleph_small.png')
-APP_FAVICON = env.get('ALEPH_FAVICON', '/static/images/aleph_small.png')
+# APP_LOGO = env.get('ALEPH_LOGO', '/static/images/aleph_small.png')
+# APP_FAVICON = env.get('ALEPH_FAVICON', '/static/images/aleph_small.png')
 
 # Force HTTPS here:
 URL_SCHEME = env.get('ALEPH_URL_SCHEME', 'http')
@@ -80,7 +80,6 @@ SECRET_KEY = env.get('ALEPH_SECRET_KEY')
 
 # Disable password-based authentication for SSO settings:
 PASSWORD_LOGIN = env_bool('ALEPH_PASSWORD_LOGIN', True)
-PASSWORD_REGISTRATION = env_bool('ALEPH_PASSWORD_REGISTRATION', True)
 
 # Designate users with the given email as admins automatically:
 # Assumes a comma-separated list.
