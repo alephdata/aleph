@@ -8,6 +8,7 @@ from followthemoney.exc import InvalidData
 
 from aleph.core import get_config, app_title, app_ui_url, url_for
 from aleph.index.stats import get_instance_stats
+from aleph.model import Collection
 from aleph.oauth import oauth
 from aleph.views.cache import enable_cache
 from aleph.views.util import jsonify
@@ -46,7 +47,7 @@ def metadata():
             'ui_uri': six.text_type(app_ui_url),
             'samples': get_config('SAMPLE_SEARCHES')
         },
-        'categories': get_config('COLLECTION_CATEGORIES', {}),
+        'categories': Collection.CATEGORIES,
         'countries': countries.names,
         'languages': languages.names,
         'schemata': model,

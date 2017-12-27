@@ -14,6 +14,28 @@ log = logging.getLogger(__name__)
 class Collection(db.Model, IdModel, SoftDeleteModel):
     """A set of documents and entities against which access control is
     enforced."""
+
+    # Category schema for collections.
+    # TODO: add extra weight info.
+    # TODO: should this be configurable?
+    CATEGORIES = {
+        'news': 'News archives',
+        'leak': 'Leaks',
+        'land': 'Land registry',
+        'gazette': 'Gazettes',
+        'court': 'Court archives',
+        'company': 'Company registries',
+        'watchlist': 'Watchlists',
+        'investigation': 'Personal collections',
+        'sanctions': 'Sanctions lists',
+        'scrape': 'Scrapes',
+        'procurement': 'Procurement',
+        'grey': 'Grey literature',
+        'license': 'Licenses and concessions',
+        'regulatory': 'Regulatory filings',
+        'other': 'Other material'
+    }
+
     label = db.Column(db.Unicode)
     summary = db.Column(db.Unicode, nullable=True)
     category = db.Column(db.Unicode, nullable=True)
