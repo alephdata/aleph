@@ -1,5 +1,5 @@
 import logging
-from banal import is_mapping
+from banal import is_mapping, ensure_list
 from datetime import datetime
 from followthemoney import model
 from sqlalchemy import func, or_
@@ -8,7 +8,6 @@ from followthemoney.util import merge_data
 
 from aleph.core import db
 from aleph.text import match_form
-from aleph.util import ensure_list
 from aleph.model.collection import Collection
 from aleph.model.permission import Permission
 from aleph.model.match import Match
