@@ -6,7 +6,7 @@ from exactitude import countries, languages
 from followthemoney import model
 from followthemoney.exc import InvalidData
 
-from aleph.core import settings, get_config, app_ui_url, url_for
+from aleph.core import settings, app_ui_url, url_for
 from aleph.index.stats import get_instance_stats
 from aleph.model import Collection
 from aleph.oauth import oauth
@@ -30,12 +30,12 @@ def metadata():
         })
 
     auth = {
-        'password_login': get_config('PASSWORD_LOGIN'),
+        'password_login': settings.PASSWORD_LOGIN,
         'oauth': providers
     }
 
     if auth['password_login']:
-        auth['registration'] = get_config('PASSWORD_REGISTRATION')
+        auth['registration'] = settings.PASSWORD_REGISTRATION
         auth['password_login_uri'] = url_for('sessions_api.password_login')
         auth['registration_uri'] = url_for('roles_api.create_code')
 

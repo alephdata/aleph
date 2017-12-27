@@ -2,7 +2,7 @@ import logging
 from logging.handlers import SMTPHandler
 from urlparse import urlparse, urljoin
 from werkzeug.local import LocalProxy
-from flask import Flask, current_app, request
+from flask import Flask, request
 from flask import url_for as flask_url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -106,10 +106,6 @@ def create_app(config={}):
 def configure_alembic(config):
     config.set_main_option('sqlalchemy.url', settings.DATABASE_URI)
     return config
-
-
-def get_config(name, default=None):
-    return current_app.config.get(name, default)
 
 
 def get_app_ui_url():
