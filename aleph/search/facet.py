@@ -2,7 +2,6 @@ import six
 from followthemoney import model
 from exactitude import countries, languages
 
-from aleph.core import get_config
 from aleph.model import Collection
 
 
@@ -78,11 +77,8 @@ class LanguageFacet(Facet):
 
 class CategoryFacet(Facet):
 
-    def expand(self, keys):
-        self.categories = get_config('COLLECTION_CATEGORIES', {})
-
     def update(self, result, key):
-        result['label'] = self.categories.get(key, key)
+        result['label'] = Collection.CATEGORIES.get(key, key)
 
 
 class CollectionFacet(Facet):
