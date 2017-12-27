@@ -142,6 +142,7 @@ MAIL_PORT = int(env.get('ALEPH_MAIL_PORT', 25))
 # Database, search index and queue processing.
 
 DATABASE_URI = env.get('ALEPH_DATABASE_URI')
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 ALEMBIC_DIR = path.join(path.dirname(__file__), 'migrate')
 ALEMBIC_DIR = path.abspath(ALEMBIC_DIR)
 

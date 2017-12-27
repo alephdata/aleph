@@ -20,6 +20,7 @@ from aleph.oauth import oauth
 APP_NAME = 'aleph_test_instance'
 UI_URL = 'http://aleph.ui/'
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
+DB_URI = settings.DATABASE_URI + '_test'
 
 
 class TestCase(FlaskTestCase):
@@ -42,8 +43,7 @@ class TestCase(FlaskTestCase):
         settings.ARCHIVE_TYPE = 'file'
         settings.ARCHIVE_PATH = self.temp_dir
         settings.CELERY_ALWAYS_EAGER = True
-        settings.DATABASE_URI = settings.DATABASE_URI + '_test'
-
+        settings.DATABASE_URI = DB_URI
         app = create_app({})
         mount_app_blueprints(app)
         return app
