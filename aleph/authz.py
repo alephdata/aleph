@@ -1,4 +1,4 @@
-from aleph.core import db, get_config
+from aleph.core import db, settings
 from aleph.model import Collection, Role, Permission
 from aleph.util import ensure_list
 
@@ -28,7 +28,7 @@ class Authz(object):
         self.logged_in = role is not None
         self.id = role.id if role is not None else None
         self.is_admin = override
-        self.in_maintenance = get_config('MAINTENANCE')
+        self.in_maintenance = settings.MAINTENANCE
         self.session_write = not self.in_maintenance and self.logged_in
 
         if self.logged_in and not self.is_admin:
