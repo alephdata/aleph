@@ -1,13 +1,12 @@
-import six
 import json
 import logging
 import fingerprints
 from pprint import pprint  # noqa
+from banal import ensure_list
 from flask import Blueprint, request, url_for
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
 
-from aleph.util import ensure_list
 from aleph.core import settings, app_ui_url
 from aleph.model import Entity
 from aleph.search import SearchQueryParser

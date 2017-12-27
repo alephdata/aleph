@@ -1,6 +1,5 @@
 from aleph.core import db, settings
 from aleph.model import Collection, Role, Permission
-from aleph.util import ensure_list
 
 
 class Authz(object):
@@ -11,7 +10,6 @@ class Authz(object):
     """
     READ = 'read'
     WRITE = 'write'
-    PUBLIC = 'public'
 
     def __init__(self, role=None, override=False):
         self._cache = {}
@@ -66,12 +64,6 @@ class Authz(object):
     def can_read(self, collection):
         """Check if a given collection can be read."""
         return self.can(collection, self.READ)
-
-    def check_roles(self, roles):
-        if self.is_admin:
-            return True
-        isect = self.roles.intersection(ensure_list(roles))
-        return len(isect) > 0
 
     def __repr__(self):
         return '<Authz(%s)>' % self.role

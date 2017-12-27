@@ -4,7 +4,7 @@ import time
 import logging
 import fingerprints
 from pprint import pprint  # noqa
-from banal import clean_dict
+from banal import clean_dict, ensure_list
 from datetime import datetime
 from followthemoney import model
 from elasticsearch.helpers import BulkIndexError
@@ -15,7 +15,6 @@ from aleph.core import es
 from aleph.index.core import entity_index, entities_index
 from aleph.index.util import bulk_op, index_form
 from aleph.index.util import unpack_result
-from aleph.util import ensure_list
 
 log = logging.getLogger(__name__)
 
