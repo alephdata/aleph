@@ -30,12 +30,10 @@ def metadata():
         })
 
     auth = {
-        'password_login': settings.PASSWORD_LOGIN,
         'oauth': providers
     }
 
-    if auth['password_login']:
-        auth['registration'] = settings.PASSWORD_REGISTRATION
+    if settings.PASSWORD_LOGIN:
         auth['password_login_uri'] = url_for('sessions_api.password_login')
         auth['registration_uri'] = url_for('roles_api.create_code')
 

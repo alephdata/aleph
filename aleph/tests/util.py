@@ -42,8 +42,9 @@ class TestCase(FlaskTestCase):
         settings.APP_UI_URL = UI_URL
         settings.ARCHIVE_TYPE = 'file'
         settings.ARCHIVE_PATH = self.temp_dir
-        settings.CELERY_ALWAYS_EAGER = True
         settings.DATABASE_URI = DB_URI
+        settings.QUEUE = False
+        settings.MAIL_SERVER = None
         app = create_app({})
         mount_app_blueprints(app)
         return app

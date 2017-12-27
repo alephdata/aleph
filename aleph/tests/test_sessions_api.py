@@ -1,5 +1,5 @@
 import jwt
-from aleph.core import db
+from aleph.core import db, settings
 from aleph.model import Collection
 from aleph.logic import update_collection
 from aleph.tests.util import TestCase
@@ -30,27 +30,16 @@ class SessionsApiTestCase(TestCase):
         assert res.status_code == 200, res
         auth = res.json['auth']
         assert len(auth['oauth']) == 0, auth
-        assert auth['password_login'], res
-        assert auth['registration'], res
-
-    def test_metadata_get_with_password_registration_disabled(self):
-        self.app.config['PASSWORD_REGISTRATION'] = False
-        res = self.client.get('/api/2/metadata')
-        assert res.status_code == 200, res
-        auth = res.json['auth']
-        auth = res.json['auth']
-        assert len(auth['oauth']) == 0, auth
-        assert auth['password_login'], res
-        assert not auth['registration'], res
+        assert auth['registration_uri'], res
 
     def test_metadata_get_without_password_login(self):
-        self.app.config['PASSWORD_LOGIN'] = False
-
+        settings.PASSWORD_LOGIN = False
         res = self.client.get('/api/2/metadata')
         assert res.status_code == 200, res
         auth = res.json['auth']
-        assert not auth['password_login'], auth
         assert len(auth['oauth']) == 0, auth
+        assert not auth.get('password_login_uri'), auth
+        assert not auth.get('registration_uri'), auth
 
     def test_password_login_get(self):
         res = self.client.get('/api/2/sessions/login')

@@ -1,6 +1,6 @@
 import json
 
-from aleph.core import db, mail
+from aleph.core import db, settings, mail
 from aleph.model import Role
 from aleph.tests.util import TestCase
 from aleph.tests.factories.models import RoleFactory
@@ -72,12 +72,12 @@ class RolesApiTestCase(TestCase):
             assert email in outbox[0].recipients, outbox[0]
 
     def test_create_no_payload(self):
-        self.app.config['PASSWORD_REGISTRATION'] = True
+        settings.PASSWORD_LOGIN = True
         res = self.client.post('/api/2/roles')
         assert res.status_code == 400, res
 
     def test_create_no_pass(self):
-        self.app.config['PASSWORD_REGISTRATION'] = True
+        settings.PASSWORD_LOGIN = True
         payload = dict(
             password='',
             code=self.fake.md5()
@@ -86,7 +86,7 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 400, res
 
     def test_create_no_code(self):
-        self.app.config['PASSWORD_REGISTRATION'] = True
+        settings.PASSWORD_LOGIN = True
         payload = dict(
             password=self.fake.password(),
             code=''
@@ -95,7 +95,7 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 400, res
 
     def test_create_registration_disabled(self):
-        self.app.config['PASSWORD_REGISTRATION'] = False
+        settings.PASSWORD_LOGIN = False
         email = self.fake.email()
         payload = dict(
             password=self.fake.password(),
@@ -105,7 +105,7 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 403, res
 
     def test_create_short_pass(self):
-        self.app.config['PASSWORD_REGISTRATION'] = True
+        settings.PASSWORD_LOGIN = True
         email = self.fake.email()
         payload = dict(
             password=self.fake.password()[:3],
@@ -115,7 +115,7 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 400, res
 
     def test_create_bad_code(self):
-        self.app.config['PASSWORD_REGISTRATION'] = True
+        settings.PASSWORD_LOGIN = True
         payload = dict(
             password=self.fake.password(),
             code='asdasda'
@@ -124,7 +124,7 @@ class RolesApiTestCase(TestCase):
         assert res.status_code == 400, res
 
     def test_create_success(self):
-        self.app.config['PASSWORD_REGISTRATION'] = True
+        settings.PASSWORD_LOGIN = True
         email = self.fake.email()
         name = self.fake.name()
         password = self.fake.password()
@@ -145,7 +145,7 @@ class RolesApiTestCase(TestCase):
         self.assertEqual(role.name, payload['name'])
 
     def test_create_on_existing_email(self):
-        self.app.config['PASSWORD_REGISTRATION'] = True
+        settings.PASSWORD_LOGIN = True
         email = self.fake.email()
         password = self.fake.password()
         payload = dict(

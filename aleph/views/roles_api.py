@@ -51,8 +51,7 @@ def create_code():
 
 @blueprint.route('/api/2/roles', methods=['POST'])
 def create():
-    require(not request.authz.in_maintenance,
-            settings.PASSWORD_REGISTRATION)
+    require(not request.authz.in_maintenance, settings.PASSWORD_LOGIN)
     data = parse_request(schema=RoleCreateSchema)
 
     try:
