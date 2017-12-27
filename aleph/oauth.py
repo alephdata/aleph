@@ -2,7 +2,7 @@ import jwt
 import logging
 from flask_oauthlib.client import OAuth
 
-from aleph import signals
+from aleph import signals, settings
 
 oauth = OAuth()
 log = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ def setup_providers(app):
 
 
 def configure_oauth(app):
-    if not app.config.get('TESTING'):
+    if not settings.TESTING:
         setup_providers(app)
     oauth.init_app(app)
     return oauth

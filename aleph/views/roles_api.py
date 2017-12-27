@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from itsdangerous import BadSignature
 
-from aleph.core import db, get_config, app_ui_url
+from aleph.core import db, settings, app_ui_url
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Permission
 from aleph.logic.roles import check_visible
@@ -52,7 +52,7 @@ def create_code():
 @blueprint.route('/api/2/roles', methods=['POST'])
 def create():
     require(not request.authz.in_maintenance,
-            get_config('PASSWORD_REGISTRATION'))
+            settings.PASSWORD_REGISTRATION)
     data = parse_request(schema=RoleCreateSchema)
 
     try:
