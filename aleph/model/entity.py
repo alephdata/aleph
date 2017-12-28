@@ -7,7 +7,7 @@ from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from followthemoney.util import merge_data
 
 from aleph.core import db
-from aleph.text import match_form
+from aleph.util import match_form
 from aleph.model.collection import Collection
 from aleph.model.permission import Permission
 from aleph.model.match import Match
