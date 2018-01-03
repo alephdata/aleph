@@ -4,13 +4,14 @@ import { FormattedMessage } from 'react-intl';
 import DualPane from 'src/components/common/DualPane';
 import TextViewer from './viewers/TextViewer';
 import HtmlViewer from './viewers/HtmlViewer';
+import PdfViewer from './viewers/PdfViewer';
 import ImageViewer from './viewers/ImageViewer';
 import FolderViewer from './viewers/FolderViewer';
 import EmailHeadersViewer from './viewers/EmailHeadersViewer';
 
 class DocumentContent extends Component {
   render() {
-    const { document } = this.props;
+    const { document, fragId } = this.props;
     // console.log(document.schemata);
 
     return (
@@ -35,6 +36,13 @@ class DocumentContent extends Component {
 
         {document.html && (
           <HtmlViewer html={document.html} />
+        )}
+
+        {document.links && document.links.pdf && (
+          <PdfViewer
+            url={document.links.pdf}
+            fragId={fragId}
+          />
         )}
 
         {document.schema === 'Image' && (
