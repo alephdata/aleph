@@ -20,8 +20,8 @@ class LoginScreen extends Component {
 
   render() {
     const {metadata, intl, session} = this.props;
-    const passwordLogin = metadata.auth.password_login;
-    const oauthLogin = Array.isArray(metadata.auth.oauth) && metadata.auth.oauth.length > 0;
+    const passwordLogin = metadata.auth.password_login_uri;
+    const oauthLogin = metadata.auth.oauth_uri;
 
     const hasLogin = passwordLogin || oauthLogin;
 
@@ -31,7 +31,7 @@ class LoginScreen extends Component {
         {hasLogin && <h2>Sign in</h2>}
 
         {passwordLogin && <PasswordAuthLogin onSubmit={this.onLogin.bind(this)}/>}
-        {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
+        {oauthLogin && <OAuthLogin provider={metadata.auth.oauth_uri}/>}
 
         {!hasLogin &&
           <NonIdealState visual="log-in"

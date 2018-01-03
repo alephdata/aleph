@@ -33,6 +33,8 @@ DEBUG = env_bool('ALEPH_DEBUG', False)
 CACHE = env_bool('ALEPH_CACHE', not DEBUG)
 # Puts the system into read-only mode and displays a warning.
 MAINTENANCE = env_bool('ALEPH_MAINTENANCE', False)
+# Unit test context.
+TESING = False
 
 
 ###############################################################################
@@ -78,35 +80,26 @@ MAX_CONTENT_LENGTH = int(env.get('ALEPH_MAX_CONTENT_LENGTH',
 # Required: set a secret key
 SECRET_KEY = env.get('ALEPH_SECRET_KEY')
 
-# Disable password-based authentication for SSO settings:
-PASSWORD_LOGIN = env_bool('ALEPH_PASSWORD_LOGIN', True)
-
 # Designate users with the given email as admins automatically:
 # Assumes a comma-separated list.
 ADMINS = env_list('ALEPH_ADMINS')
 
-# Configure your choice of OAUTH login providers, one
-# entry for each provider, providing the details as described in
+# Configure your OAUTH login provider, providing the details as described in
 # https://flask-oauthlib.readthedocs.io/en/latest/client.html
 #
-# In addition, include a 'name' entry and an optional 'label' entry.
-OAUTH = []
+OAUTH = env_bool('ALEPH_OAUTH', False)
+OAUTH_NAME = env.get('ALEPH_OAUTH_NAME', 'google')
+OAUTH_KEY = env.get('ALEPH_OAUTH_KEY')
+OAUTH_SECRET = env.get('ALEPH_OAUTH_SECRET')
+OAUTH_SCOPE = env.get('ALEPH_OAUTH_SCOPE', 'https://www.googleapis.com/auth/userinfo.email')  # noqa
+OAUTH_BASE_URL = env.get('ALEPH_OAUTH_BASE_URL', 'https://www.googleapis.com/oauth2/v1/')  # noqa
+OAUTH_REQUEST_TOKEN_URL = env.get('ALEPH_OAUTH_REQUEST_TOKEN_URL')
+OAUTH_TOKEN_METHOD = env.get('ALEPH_OAUTH_TOKEN_METHOD', 'POST')
+OAUTH_TOKEN_URL = env.get('ALEPH_OAUTH_TOKEN_URL', 'https://accounts.google.com/o/oauth2/token')  # noqa
+OAUTH_AUTHORIZE_URL = env.get('ALEPH_OAUTH_AUTHORIZE_URL', 'https://accounts.google.com/o/oauth2/auth')  # noqa
 
-if env_bool('ALEPH_OAUTH', True):
-    OAUTH.append({
-        'name': env.get('ALEPH_OAUTH_NAME', 'google'),
-        'label': env.get('ALEPH_OAUTH_LABEL', 'Google'),
-        'consumer_key': env.get('ALEPH_OAUTH_KEY'),
-        'consumer_secret': env.get('ALEPH_OAUTH_SECRET'),
-        'request_token_params': {
-            'scope': env.get('ALEPH_OAUTH_SCOPE', 'https://www.googleapis.com/auth/userinfo.email')  # noqa
-        },
-        'base_url': env.get('ALEPH_OAUTH_BASE_URL', 'https://www.googleapis.com/oauth2/v1/'),  # noqa
-        'request_token_url': None,
-        'access_token_method': 'POST',
-        'access_token_url': env.get('ALEPH_OAUTH_TOKEN_URL', 'https://accounts.google.com/o/oauth2/token'),  # noqa
-        'authorize_url': env.get('ALEPH_OAUTH_AUTHORIZE_URL', 'https://accounts.google.com/o/oauth2/auth'),  # noqa
-    })
+# Disable password-based authentication for SSO settings:
+PASSWORD_LOGIN = env_bool('ALEPH_PASSWORD_LOGIN', not OAUTH)
 
 
 ###############################################################################
