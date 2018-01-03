@@ -1,16 +1,19 @@
-nav.Breadcrumbs {
-  display: flex;
-  flex-flow: row nowrap;
+@import "src/app/variables.scss";
 
-  ul {
-    display: inline;
-    list-style: none;
-    padding: unset;
-    margin: unset;
+.Breadcrumbs {
+  padding-left: $aleph-grid-size;
+  padding-right: $aleph-grid-size;
+  padding-top: $aleph-grid-size / 3;
+  padding-bottom: $aleph-grid-size / 3;
 
-    li {
-      display: inline;
-      margin-left: 0.2em;
-    }
+  box-shadow: $pt-elevation-shadow-1;
+  // box-shadow: $pt-elevation-shadow-0;
+
+  li {
+    // display: inline-block;
+    overflow-y: hidden;
+    // max-width: 30em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }

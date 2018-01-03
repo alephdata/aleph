@@ -1,7 +1,7 @@
 $icon-font-path: "~@blueprintjs/core/resources/icons";
 
 @import "~@blueprintjs/core/src/blueprint.scss";
-@import "~@blueprintjs/core/dist/variables";
+@import "./variables.scss";
 
 html {
   height: 100%;
@@ -10,40 +10,18 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
-  // background: $light-gray5;
-  width: 100%;
-  min-height: 100%;
-  display: flex;
-  flex-flow: column nowrap;
+  font-family: $pt-font-family;
+  font-weight: 300;
+  font-size: $aleph-font-size;
+  background-color: $aleph-body-background;
 }
 
-#root {
-  flex-grow: 1;
-}
+// .pt-navbar a {
+//   color: inherit;
+// }
 
-.spinner {
-  position: absolute;
-  top: 20px;
-  left: 40px;
-}
-
-.pt-navbar a {
-  color: inherit;
-}
-
-.pt-card + .pt-card {
-  margin-top: $pt-grid-size;
-}
-
-.small-screen {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: ($pt-grid-size * 2);
-
-  h2 {
-    line-height: inherit;
-  }
+h1, h2, h3, h4, h5 {
+  font-weight: 300;
 }
 
 pre {
@@ -55,18 +33,15 @@ pre {
   word-wrap: break-word;
 }
 
-.flex-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin: 0 (-$pt-grid-size);
+.small-screen {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: ($aleph-grid-size * 2);
 
-  & > * {
-    padding: 0 $pt-grid-size;
+  h2 {
+    line-height: inherit;
   }
 }
-
 
 // Table defaults
 table.pt-table {

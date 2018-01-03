@@ -8,6 +8,7 @@ import LoginScreen from 'src/components/auth/LoginScreen';
 import LogoutScreen from 'src/components/auth/LogoutScreen';
 import SignupScreen from 'src/components/auth/SignupScreen';
 import ActivateScreen from 'src/components/auth/ActivateScreen';
+import SearchScreen from 'src/components/SearchScreen';
 import EntityScreen from 'src/components/EntityScreen';
 import DocumentScreen from 'src/components/DocumentScreen';
 import HomeScreen from 'src/components/HomeScreen';
@@ -29,7 +30,9 @@ class PageLayout extends Component {
     if (!isLoaded) {
       return (
         <div className="PageLayout-spinner">
-          <Spinner className="pt-large"/>
+          <div className="spinner">
+            <Spinner className="pt-large"/>
+          </div>
         </div>
       )
     }
@@ -46,10 +49,19 @@ class PageLayout extends Component {
             <Route path="/entities/:entityId" exact component={EntityScreen}/>
             <Route path="/documents/:documentId" exact component={DocumentScreen}/>
             <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
+            <Route path="/search" exact component={SearchScreen}/>
             <Route path="/" exact component={HomeScreen}/>
             <Route component={ErrorScreen}/>
           </Switch>
         </main>
+        <footer className="PageLayout-footer">
+          <p>
+            <strong>ℵ</strong> aleph Mk II · 
+            {' '}
+            <i className="fa fa-fw fa-github" />
+            <a href="https://github.com/alephdata/aleph">open source</a>
+          </p>
+        </footer>
       </div>
     );
   }

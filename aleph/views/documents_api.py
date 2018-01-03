@@ -8,11 +8,10 @@ from aleph.logic.documents import update_document, delete_document
 from aleph.logic.collections import update_collection
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_db_document, get_index_document
-from aleph.views.util import jsonify, parse_request
+from aleph.views.util import jsonify, parse_request, sanitize_html
 from aleph.serializers import RecordSchema
 from aleph.serializers.entities import CombinedSchema, DocumentUpdateSchema
 from aleph.search import DocumentsQuery, RecordsQuery
-from aleph.text import sanitize_html
 from aleph.util import PDF_MIME
 
 
@@ -37,7 +36,7 @@ def view(document_id):
     # be unclear if we should JSON wrap it, or serve plain with the correct
     # MIME type?
     if Document.SCHEMA_HTML in document.model.names:
-        data['html'] = sanitize_html(document.body_raw)
+        data['html'] = sanitize_html(document.body_raw, document.source_url)
     if Document.SCHEMA_TEXT in document.model.names:
         data['text'] = document.body_text
     return jsonify(data, schema=CombinedSchema)

@@ -7,6 +7,7 @@
     "axios": "^0.16.2",
     "bourbon": "^4.3.2",
     "classnames": "^2.2.5",
+    "filesize": "^3.5.11",
     "font-awesome": "^4.7.0",
     "jwt-decode": "latest",
     "lodash": "^4.17.4",

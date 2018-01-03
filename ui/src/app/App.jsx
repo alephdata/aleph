@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {BrowserRouter, Route} from 'react-router-dom';
 import {Provider} from 'react-redux'
 import {FocusStyleManager} from '@blueprintjs/core';
@@ -36,14 +36,18 @@ endpoint.interceptors.request.use(config => {
 });
 
 
-const App = () => (
-  <Provider store={store}>
-    <IntlProvider locale="en" messages={translations.en}>
-      <BrowserRouter>
-        <Route path="/" component={PageLayout} />
-      </BrowserRouter>
-    </IntlProvider>
-  </Provider>
-);
+class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <IntlProvider locale="en" messages={translations.en}>
+          <BrowserRouter>
+            <Route path="/" component={PageLayout} />
+          </BrowserRouter>
+        </IntlProvider>
+      </Provider>
+    )
+  }
+}
 
 export default App;

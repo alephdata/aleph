@@ -6,13 +6,12 @@ import getPath from 'src/util/getPath';
 
 class Label extends Component {
   render() {
-    const { collection, icon } = this.props;
-    let iconClass = collection.secret ? 'fa fa-fw fa-lock' : 'fa fa-fw fa-globe';
+    const { collection } = this.props;
 
     return (
       <span>
-        { icon && (<i className={ iconClass } />) }
         { collection.label }
+        { collection.secret && (<i className='fa fa-fw fa-lock' />) }
       </span>
     );
   }
@@ -20,11 +19,11 @@ class Label extends Component {
 
 class CollectionLink extends Component {
   render() {
-    const { collection, icon, className } = this.props;
+    const { collection, className } = this.props;
     
     return (
       <Link to={getPath(collection.links.ui)} className={className}>
-        <Label collection={collection} icon={icon} />
+        <Label collection={collection} />
       </Link>
     );
   }

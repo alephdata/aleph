@@ -1,17 +1,36 @@
+@import "src/app/variables.scss";
+
 .PageLayout-spinner {
-  // margin: 0 auto;
-  padding-top: 3em;
-  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .spinner {
+    align-self: center;
+    margin: auto;
+  }
 }
 
-.PageLayout-root {
-  height: 100%;
-  display: flex;
-  flex-flow: column;
-}
+// .PageLayout-root {}
 
 .PageLayout-main {
-  flex-grow: 1;
   display: flex;
-  flex-flow: column;
+  min-height: 80vh;
+  background-color: $aleph-content-background;
+  align-items: stretch;
+}
+
+.PageLayout-footer {
+  color: $aleph-dark-text-color;
+  
+  p {
+    text-align: right;
+    padding: $aleph-grid-size * 2;
+  }
+
+  a, a:hover {
+    color: inherit;
+    text-decoration: underline;
+  }
 }

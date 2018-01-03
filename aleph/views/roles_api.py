@@ -38,7 +38,7 @@ def suggest():
 def create_code():
     data = parse_request(schema=RoleCodeCreateSchema)
     signature = Role.SIGNATURE.dumps(data['email'])
-    url = '{}signup/{}'.format(app_ui_url, signature)
+    url = '{}activate/{}'.format(app_ui_url, signature)
     role = Role(email=data['email'], name='Visitor')
     notify_role_template(role, 'Registration',
                          'email/registration_code.html',

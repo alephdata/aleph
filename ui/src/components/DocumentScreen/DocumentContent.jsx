@@ -49,7 +49,7 @@ class DocumentContent extends Component {
           <ImageViewer document={document} />
         )}
 
-        {document.children !== undefined && (
+        {document.children !== undefined && document.children > 0 && (
           <FolderViewer document={document} />
         )}
 

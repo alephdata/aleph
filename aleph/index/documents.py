@@ -33,6 +33,7 @@ def index_document(document):
         return
 
     log.info("Index document [%s]: %s", document.id, document.title)
+    texts = list(document.texts)
     data = {
         'status': document.status,
         'content_hash': document.content_hash,
@@ -61,9 +62,13 @@ def index_document(document):
         'mime_type': document.mime_type,
         'pdf_version': document.pdf_version,
         'columns': document.columns,
+        'ancestors': document.ancestors,
         'children': document.children.count()
     }
+    texts.extend(document.columns)
+
     if document.parent_id is not None:
+        texts.append(document.parent.title)
         data['parent'] = {
             'id': document.parent_id,
             'schema': document.parent.schema,
@@ -77,8 +82,8 @@ def index_document(document):
         if field not in data:
             data[field] = []
         data[field].append(tag.text)
+        texts.append(tag.text)
 
-    texts = list(document.texts)
     return index_single(document, data, texts)
 
 

@@ -2,7 +2,6 @@ import logging
 from threading import RLock
 from ahocorasick import Automaton, EMPTY
 
-from aleph.core import get_config
 from aleph.text import match_form
 from aleph.model import Entity
 from aleph.analyze.analyzer import Analyzer

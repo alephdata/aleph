@@ -79,7 +79,7 @@ class Table extends Component {
     });
 
     return (
-      <table className="pt-table">
+      <table>
         <tbody>
             {items}
             {children}

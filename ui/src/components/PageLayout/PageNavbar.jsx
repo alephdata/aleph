@@ -4,6 +4,7 @@ import {Button} from '@blueprintjs/core';
 import {Link} from 'react-router-dom';
 
 import AuthButton from 'src/components/auth/AuthButton';
+import PageNavbarSearchForm from './PageNavbarSearchForm';
 
 const SignupButton = () => <Link to="/signup">
   <Button iconName="user" className="pt-minimal">
@@ -15,8 +16,9 @@ const PageNavbar = ({metadata, session}) => (
   <nav className="pt-navbar pt-dark">
     <div className="pt-navbar-group pt-align-left">
       <div className="pt-navbar-heading">
-        {metadata.app.title}
+        <Link to="/">{ String.fromCharCode(8501) } {metadata.app.title}</Link>
       </div>
+      <PageNavbarSearchForm />
     </div>
     <div className="pt-navbar-group pt-align-right">
       {session.loggedIn && <Button iconName="cog" className="pt-minimal"/>}

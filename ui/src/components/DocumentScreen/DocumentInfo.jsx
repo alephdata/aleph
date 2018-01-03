@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { AnchorButton } from '@blueprintjs/core';
 
-import Schema from 'src/components/common/Schema';
+import Entity from 'src/components/EntityScreen/Entity';
 import DualPane from 'src/components/common/DualPane';
 import DocumentMetadata from 'src/components/DocumentScreen/DocumentMetadata';
 import CollectionSection from 'src/components/CollectionScreen/CollectionSection';
@@ -9,22 +9,24 @@ import CollectionSection from 'src/components/CollectionScreen/CollectionSection
 class DocumentInfo extends Component {
   render() {
     const { document } = this.props;
-    const hasTitle = !!document.title;
+    
     return (
       <DualPane.InfoPane>
         <h1>
-          <Schema.Icon schema={document.schema} />
-          {hasTitle ? document.title : document.file_name}
+          <Entity.Label entity={document} />
         </h1>
         <DocumentMetadata document={document} />
+
         {document.links && document.links.file &&
-          <AnchorButton
-            href={document.links.file}
-            download={document.file_name}
-            intent="primary"
-          >
-            Download
-          </AnchorButton>
+          <div className="pt-button-group pt-fill">
+            <AnchorButton
+              href={document.links.file}
+              download={document.file_name}
+              className="pt-minimal"
+            >
+              Download
+            </AnchorButton>
+          </div>
         }
 
         {document.collection &&

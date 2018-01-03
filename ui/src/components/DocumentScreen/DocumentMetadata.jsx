@@ -5,17 +5,21 @@ import Schema from 'src/components/common/Schema';
 import Country from 'src/components/common/Country';
 import Language from 'src/components/common/Language';
 import Date from 'src/components/common/Date';
+import FileSize from 'src/components/common/FileSize';
 import Entity from 'src/components/EntityScreen/Entity';
 
 class DocumentMetadata extends Component {
   render() {
     const { document } = this.props;
     return (
-      <table className="pt-table">
+      <table>
         <tbody>
           <tr>
             <th><FormattedMessage id="document.type" defaultMessage="Type"/></th>
-            <td><Schema.Name schema={document.schema} /></td>
+            <td>
+              <Schema.Icon schema={document.schema} />
+              <Schema.Name schema={document.schema} />
+            </td>
           </tr>
           { document.file_name && (
             <tr>
@@ -26,7 +30,7 @@ class DocumentMetadata extends Component {
           { document.file_size && (
             <tr>
               <th><FormattedMessage id="document.file_size" defaultMessage="File size"/></th>
-              <td>{document.file_size}</td>
+              <td><FileSize value={document.file_size} /></td>
             </tr>
           )}
           { document.parent && (
@@ -45,12 +49,6 @@ class DocumentMetadata extends Component {
             <tr>
               <th><FormattedMessage id="document.generator" defaultMessage="Generator"/></th>
               <td>{document.generator}</td>
-            </tr>
-          )}
-          { document.mime_type && (
-            <tr>
-              <th><FormattedMessage id="document.mime_type" defaultMessage="Content type"/></th>
-              <td>{document.mime_type}</td>
             </tr>
           )}
           { document.languages && document.languages.length > 0 && (
@@ -95,10 +93,10 @@ class DocumentMetadata extends Component {
               <td><Date value={document.updated_at} /></td>
             </tr>
           )}
-          { document.content_hash && (
+          { document.mime_type && (
             <tr>
-              <th><FormattedMessage id="document.content_hash" defaultMessage="Checksum"/></th>
-              <td><code>{document.content_hash}</code></td>
+              <th><FormattedMessage id="document.mime_type" defaultMessage="MIME"/></th>
+              <td>{document.mime_type}</td>
             </tr>
           )}
         </tbody>

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { FormattedMessage, FormattedDate } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
+
+import Date from 'src/components/common/Date';
 
 class CollectionSection extends Component {
   render() {
@@ -11,7 +13,7 @@ class CollectionSection extends Component {
         </h3>
         <strong>{ label }</strong>
         <p>{ summary }</p>
-        <p><FormattedDate value={updated_at} /></p>
+        <p><Date value={updated_at} /></p>
       </div>
     );
   }

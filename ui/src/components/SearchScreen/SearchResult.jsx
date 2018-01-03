@@ -8,29 +8,55 @@ import { fetchNextSearchResults } from 'src/actions';
 import EntityList from 'src/components/EntityScreen/EntityList';
 
 class SearchResult extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        isExpanding: false,
+        result: props.result
+    };
+    this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      isExpanding: false,
+      result: nextProps.result
+    })
+  }
+
   bottomReachedHandler() {
-    const { result, fetchNextSearchResults } = this.props;
+    const { fetchNextSearchResults } = this.props;
+    let { result } = this.state;
+
     if (result.next) {
-      fetchNextSearchResults({ next: result.next });
+      this.setState({isExpanding: true})
+
+      fetchNextSearchResults({ next: result.next }).then(({result: fresh}) => {
+        result.next = fresh.next;
+        result.results.push(...fresh.results);
+        this.setState({
+            result: result,
+            isExpanding: false
+        });
+      });
     }
   }
 
   render() {
-    const { result } = this.props;
-
+    const { result, isExpanding } = this.state;
     return (
       <div>
-        { !result.isFetching && result.results.length === 0 &&
+        { result.total === 0 &&
           <NonIdealState visual="search" title="No search results"
             description="Try making your search more general" />}
-        <EntityList result={result} />
-        { result.next && (
-            result.isFetchingNext
-              ? <div className="results-loading"><Spinner /></div>
-              : <Waypoint onEnter={this.bottomReachedHandler.bind(this)} />
+        <EntityList {...this.props} result={result} />
+        { result.next && (isExpanding ?
+          <div className="results-loading"><Spinner /></div>
+          : <Waypoint onEnter={this.bottomReachedHandler} />
         )}
       </div>
     );
+    
   }
 }
 

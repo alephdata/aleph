@@ -54,7 +54,7 @@ export const PasswordAuthLogin = ({onSubmit}) => (
   <PasswordAuth onSubmit={onSubmit} showEmail showPassword
                 buttonText={<FormattedMessage id="password_auth.signin" defaultMessage="Sign in"/>}>
     <FormattedMessage id="password_auth.no_account" defaultMessage="Haven't got an account?" />{' '}
-    <Link to="/invite">
+    <Link to="/signup">
       <FormattedMessage id="password_auth.signup" defaultMessage="Sign up"/>
     </Link>
   </PasswordAuth>

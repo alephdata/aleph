@@ -127,6 +127,7 @@ ENTITY_MAPPING = {
                 "title": {"type": "keyword"}
             }
         },
+        "ancestors": {"type": "keyword"},
     },
     "dynamic_templates": [
         {

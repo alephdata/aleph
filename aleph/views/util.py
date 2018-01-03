@@ -1,8 +1,12 @@
 from apikit import jsonify as jsonify_
 from apikit import obj_or_404
 from flask import request
+from normality import stringify
 from urlparse import urlparse, urljoin
 from werkzeug.exceptions import MethodNotAllowed, Forbidden, BadRequest
+from lxml.etree import tostring
+from lxml.html import document_fromstring
+from lxml.html.clean import Cleaner
 
 from aleph.core import app_ui_url
 from aleph.authz import Authz
@@ -31,9 +35,14 @@ def validate_data(data, schema):
     # pprint(data)
     data, errors = schema().load(data)
     if len(errors):
+        message = None
+        for field, errors in errors.items():
+            for error in errors:
+                message = error
         raise BadRequest(response=jsonify({
             'status': 'error',
-            'errors': errors
+            'errors': errors,
+            'message': message
         }, status=400))
 
 
@@ -52,7 +61,7 @@ def get_db_entity(entity_id, action=Authz.READ):
     get_index_entity(entity_id, action=action)
     entity = Entity.by_id(entity_id)
     if entity is None:
-        raise MethodNotAllowed("Cannot write this entity")    
+        raise MethodNotAllowed("Cannot write this entity")
     return entity
 
 
@@ -97,3 +106,50 @@ def get_best_next_url(*urls):
         url = urljoin(app_ui_url, url)
         if url and is_safe_url(url):
             return url
+
+
+CLEANER = Cleaner(
+    style=True,
+    meta=True,
+    links=False,
+    remove_tags=['body', 'form'],
+    kill_tags=['area', 'audio', 'base', 'bgsound', 'embed', 'frame',
+               'frameset', 'head', 'img', 'iframe', 'input', 'link',
+               'map', 'meta', 'nav', 'object', 'plaintext', 'track',
+               'video']
+)
+
+
+def sanitize_html(html_text, base_url):
+    """Remove anything from the given HTML that must not show up in the UI."""
+    # TODO: circumvent encoding declarations?
+    if html_text is None:
+        return
+    cleaned = CLEANER.clean_html(html_text)
+    html = document_fromstring(cleaned)
+    for (el, attr, href, _) in html.iterlinks():
+        href = normalize_href(href, base_url)
+        if href is not None:
+            el.set(attr, href)
+        if el.tag == 'a':
+            el.set('target', '_blank')
+            rel = set(el.get('rel', '').lower().split())
+            rel.update(['nofollow', 'noreferrer', 'external', 'noopener'])
+            el.set('rel', ' '.join(rel))
+    return tostring(html)
+
+
+def normalize_href(href, base_url):
+    # Make links relative the source_url
+    href = stringify(href)
+    if href is None:
+        return
+    if base_url is not None:
+        return urljoin(base_url, href)
+    try:
+        parsed = urlparse(href)
+        if not parsed.netloc:
+            return None
+        return href
+    except Exception:
+        return None

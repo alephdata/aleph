@@ -1,10 +1,10 @@
 
 # Dependencies maintained by OCCRP/pudo
 apikit == 0.3.2
-banal >= 0.3.2
+banal >= 0.3.3
 followthemoney >= 0.3.11
 fingerprints >= 0.5.3
 storagelayer >= 0.2.1
 exactitude >= 2.1.2
-ingestors >= 0.6.6
-normality >= 0.5.6
+ingestors >= 0.6.9
+normality >= 0.5.7

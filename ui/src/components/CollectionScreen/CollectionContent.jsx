@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
 
 import DualPane from 'src/components/common/DualPane';
-import SearchScreen_ from 'src/components/SearchScreen';
-const SearchScreen = withRouter(SearchScreen_);
+import SearchContext from 'src/components/SearchScreen/SearchContext';
 
 class CollectionContent extends Component {
   render() {
+    const { collection } = this.props;
+    const context = {
+      'filter:collection_id': collection.id
+    };
+    const aspects = {
+      collections: false,
+      countries: true
+    };
     return (
       <DualPane.ContentPane>
-        <SearchScreen />
+        <SearchContext collection={collection}
+                       context={context}
+                       aspects={aspects} />
       </DualPane.ContentPane>
     );
   }
