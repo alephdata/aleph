@@ -29,7 +29,7 @@ class SessionsApiTestCase(TestCase):
         res = self.client.get('/api/2/metadata')
         assert res.status_code == 200, res
         auth = res.json['auth']
-        assert len(auth['oauth']) == 0, auth
+        assert not auth.get('oauth_uri'), auth
         assert auth['registration_uri'], res
 
     def test_metadata_get_without_password_login(self):
@@ -37,7 +37,7 @@ class SessionsApiTestCase(TestCase):
         res = self.client.get('/api/2/metadata')
         assert res.status_code == 200, res
         auth = res.json['auth']
-        assert len(auth['oauth']) == 0, auth
+        assert not auth.get('oauth_uri'), auth
         assert not auth.get('password_login_uri'), auth
         assert not auth.get('registration_uri'), auth
 
