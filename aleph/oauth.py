@@ -2,32 +2,27 @@ import jwt
 import logging
 from flask_oauthlib.client import OAuth
 
-from aleph import signals
+from aleph import signals, settings
 
 oauth = OAuth()
 log = logging.getLogger(__name__)
 
 
-def setup_providers(app):
-    # Reset the remote apps first!
-    oauth.remote_apps = {}
-
-    providers = app.config.get('OAUTH', [])
-    if isinstance(providers, dict):
-        providers = [providers]
-
-    for provider in providers:
-        # OAUTH providers from the config MUST have a name entry
-        name = provider.get('name')
-        label = provider.pop('label', name.capitalize())
-
-        provider = oauth.remote_app(**provider)
-        provider.label = label
-
-
 def configure_oauth(app):
-    if not app.config.get('TESTING'):
-        setup_providers(app)
+    if settings.OAUTH:
+        oauth.provider = oauth.remote_app(
+            name=settings.OAUTH_NAME,
+            consumer_key=settings.OAUTH_KEY,
+            consumer_secret=settings.OAUTH_SECRET,
+            request_token_params={
+                'scope': settings.OAUTH_SCOPE
+            },
+            base_url=settings.OAUTH_BASE_URL,
+            request_token_url=settings.OAUTH_REQUEST_TOKEN_URL,
+            access_token_method=settings.OAUTH_TOKEN_METHOD,
+            access_token_url=settings.OAUTH_TOKEN_URL,
+            authorize_url=settings.OAUTH_AUTHORIZE_URL
+        )
     oauth.init_app(app)
     return oauth
 

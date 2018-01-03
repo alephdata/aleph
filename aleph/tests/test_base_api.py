@@ -6,12 +6,6 @@ class BaseApiTestCase(TestCase):
     def setUp(self):
         super(BaseApiTestCase, self).setUp()
 
-    # def test_index(self):
-    #     res = self.client.get('/')
-    #     assert res.status_code == 200, res
-    #     assert '<title>' in res.data, res.data
-    #     assert 'notranslate' in res.data, res.data
-
     def test_404(self):
         res = self.client.get('/banana/split')
         assert res.status_code == 404, res

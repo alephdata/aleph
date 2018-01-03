@@ -1,7 +1,7 @@
 from flask import request, Response, Blueprint
 from apikit import cache_hash
 
-from aleph.core import get_config
+from aleph.core import settings
 
 
 blueprint = Blueprint('cache', __name__)
@@ -43,7 +43,7 @@ def enable_cache(vary_user=True, vary=None, server_side=False):
         cache_parts.extend((request.authz.roles))
         request._http_private = True
 
-    request._http_cache = get_config('CACHE')
+    request._http_cache = settings.CACHE
     request._http_etag = cache_hash(*cache_parts)
 
     if request.if_none_match == request._http_etag:

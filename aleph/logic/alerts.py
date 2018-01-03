@@ -3,7 +3,7 @@ from pprint import pprint  # noqa
 from flask import render_template, current_app
 
 from aleph.authz import Authz
-from aleph.core import app_title, app_ui_url, db, celery
+from aleph.core import settings, app_ui_url, db, celery
 from aleph.model import Role, Alert, Collection
 from aleph.notify import notify_role
 from aleph.index.entities import get_entity
@@ -72,7 +72,7 @@ def check_role_alerts(authz):
                                    role=authz.role,
                                    total=results.get('total'),
                                    results=format_results(alert, results),
-                                   app_title=app_title,
+                                   app_title=settings.APP_TITLE,
                                    ui_url=app_ui_url)
             notify_role(authz.role, subject, html)
         except Exception as ex:

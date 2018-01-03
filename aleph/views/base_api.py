@@ -6,8 +6,9 @@ from exactitude import countries, languages
 from followthemoney import model
 from followthemoney.exc import InvalidData
 
-from aleph.core import get_config, app_title, app_ui_url, url_for
+from aleph.core import settings, app_ui_url, url_for
 from aleph.index.stats import get_instance_stats
+from aleph.model import Collection
 from aleph.oauth import oauth
 from aleph.views.cache import enable_cache
 from aleph.views.util import jsonify
@@ -19,34 +20,23 @@ log = logging.getLogger(__name__)
 @blueprint.route('/api/2/metadata')
 def metadata():
     enable_cache(vary_user=False)
-    providers = []
-    for provider in oauth.remote_apps.values():
-        providers.append({
-            'name': provider.name,
-            'label': provider.label,
-            'login': url_for('sessions_api.oauth_init',
-                             provider=provider.name),
-        })
 
-    auth = {
-        'password_login': get_config('PASSWORD_LOGIN'),
-        'oauth': providers
-    }
-
-    if auth['password_login']:
-        auth['registration'] = get_config('PASSWORD_REGISTRATION')
+    auth = {}
+    if settings.PASSWORD_LOGIN:
         auth['password_login_uri'] = url_for('sessions_api.password_login')
         auth['registration_uri'] = url_for('roles_api.create_code')
+    if settings.OAUTH:
+        auth['oauth_uri'] = url_for('sessions_api.oauth_init')
 
     return jsonify({
         'status': 'ok',
         'maintenance': request.authz.in_maintenance,
         'app': {
-            'title': six.text_type(app_title),
+            'title': settings.APP_TITLE,
             'ui_uri': six.text_type(app_ui_url),
-            'samples': get_config('SAMPLE_SEARCHES')
+            'samples': settings.SAMPLE_SEARCHES
         },
-        'categories': get_config('COLLECTION_CATEGORIES', {}),
+        'categories': Collection.CATEGORIES,
         'countries': countries.names,
         'languages': languages.names,
         'schemata': model,

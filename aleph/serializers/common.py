@@ -5,7 +5,7 @@ from exactitude import countries, languages, dates
 from marshmallow.fields import String, Raw, Float
 from marshmallow.exceptions import ValidationError
 
-from aleph.core import get_config
+from aleph.model import Collection
 from aleph.serializers.expand import ExpandableSchema
 
 
@@ -13,8 +13,7 @@ class Category(String):
     """A category of collections, e.g. leaks, court cases, sanctions list."""
 
     def _validate(self, value):
-        categories = get_config('COLLECTION_CATEGORIES', {})
-        if value not in categories.keys():
+        if value not in Collection.CATEGORIES.keys():
             raise ValidationError('Invalid category.')
 
 

@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-act';
-import jwt_decode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 
 import { loginWithToken, logout } from 'src/actions/sessionActions';
 
@@ -7,8 +7,8 @@ const initialState = {
   loggedIn: false,
 };
 
-const login = token => {
-  const data = jwt_decode(token);
+const login = (token) => {
+  const data = jwtDecode(token);
   return {
     ...data,
     token,
@@ -17,6 +17,6 @@ const login = token => {
 };
 
 export default createReducer({
-  [loginWithToken]: (state, { token }) => login(token),
+  [loginWithToken]: (state, token) => login(token),
   [logout]: state => ({ loggedIn: false }),
 }, initialState);

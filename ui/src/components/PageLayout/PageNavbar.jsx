@@ -1,16 +1,8 @@
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
-import {Button} from '@blueprintjs/core';
 import {Link} from 'react-router-dom';
 
-import AuthButton from 'src/components/auth/AuthButton';
+import AuthButtons from 'src/components/auth/AuthButtons';
 import PageNavbarSearchForm from './PageNavbarSearchForm';
-
-const SignupButton = () => <Link to="/signup">
-  <Button iconName="user" className="pt-minimal">
-    <FormattedMessage id="nav.signup" defaultMessage="Sign up"/>
-  </Button>
-</Link>;
 
 const PageNavbar = ({metadata, session}) => (
   <nav className="pt-navbar pt-dark">
@@ -21,10 +13,7 @@ const PageNavbar = ({metadata, session}) => (
       <PageNavbarSearchForm />
     </div>
     <div className="pt-navbar-group pt-align-right">
-      {session.loggedIn && <Button iconName="cog" className="pt-minimal"/>}
-      {session.loggedIn && <Button iconName="notifications" className="pt-minimal"/>}
-      <AuthButton session={session}/>
-      {!session.loggedIn && metadata.auth.registration && <SignupButton/>}
+      <AuthButtons session={session} auth={metadata.auth} />
     </div>
   </nav>
 );

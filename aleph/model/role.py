@@ -5,7 +5,7 @@ from sqlalchemy import or_
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from aleph.core import db, get_config, secret_key
+from aleph.core import db, settings
 from aleph.model.common import SoftDeleteModel, IdModel, make_textid
 
 log = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     SYSTEM_USER = 'user'
 
     #: Generates URL-safe signatures for invitations.
-    SIGNATURE = URLSafeTimedSerializer(secret_key)
+    SIGNATURE = URLSafeTimedSerializer(settings.SECRET_KEY)
 
     #: Signature maximum age, defaults to 1 day
     SIGNATURE_MAX_AGE = 60 * 60 * 24
@@ -101,7 +101,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.is_admin = is_admin
 
         # see: https://github.com/alephdata/aleph/issues/111
-        auto_admins = [a.lower() for a in get_config('AUTHZ_ADMINS')]
+        auto_admins = [a.lower() for a in settings.ADMINS]
         if email is not None and email.lower() in auto_admins:
             role.is_admin = True
 
@@ -130,6 +130,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     @classmethod
     def public_roles(cls):
+        """Roles which make a collection to be considered public."""
         return set([
             cls.load_id(cls.SYSTEM_USER),
             cls.load_id(cls.SYSTEM_GUEST),

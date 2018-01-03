@@ -5,6 +5,7 @@ from flask_testing import TestCase as FlaskTestCase
 from flask_fixtures import loaders, load_fixtures
 from faker import Factory
 
+from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
 from aleph.model import create_system_roles
 from aleph.index import delete_index, upgrade_search, flush_index
@@ -19,6 +20,7 @@ from aleph.oauth import oauth
 APP_NAME = 'aleph_test_instance'
 UI_URL = 'http://aleph.ui/'
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
+DB_URI = settings.DATABASE_URI + '_test'
 
 
 class TestCase(FlaskTestCase):
@@ -28,18 +30,22 @@ class TestCase(FlaskTestCase):
 
     def create_app(self):
         oauth.remote_apps = {}
-        app = create_app({
-            'DEBUG': True,
-            'TESTING': True,
-            'CACHE': True,
-            'SECRET_KEY': 'batman',
-            'ARCHIVE_TYPE': 'file',
-            'ARCHIVE_PATH': self.temp_dir,
-            'APP_UI_URL': UI_URL,
-            'APP_NAME': APP_NAME,
-            'PRESERVE_CONTEXT_ON_EXCEPTION': False,
-            'CELERY_ALWAYS_EAGER': True
-        })
+
+        # The testing configuration is inferred from the production
+        # settings, but it can only be derived after the config files
+        # have actually been evaluated.
+        settings.APP_NAME = APP_NAME
+        settings.TESTING = True
+        settings.DEBUG = True
+        settings.CACHE = True
+        settings.SECRET_KEY = 'batman'
+        settings.APP_UI_URL = UI_URL
+        settings.ARCHIVE_TYPE = 'file'
+        settings.ARCHIVE_PATH = self.temp_dir
+        settings.DATABASE_URI = DB_URI
+        settings.QUEUE = False
+        settings.MAIL_SERVER = None
+        app = create_app({})
         mount_app_blueprints(app)
         return app
 

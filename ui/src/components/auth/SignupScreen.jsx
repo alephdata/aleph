@@ -32,7 +32,7 @@ class SignupScreen extends Component {
       return <Redirect to="/"/>;
     }
 
-    if (!metadata.auth.registration) {
+    if (!metadata.auth.registration_uri) {
       return (
         <NonIdealState visual=""
           title={intl.formatMessage(messages.signup.not_available.title)}
