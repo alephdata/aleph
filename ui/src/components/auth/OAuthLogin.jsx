@@ -4,21 +4,16 @@ import queryString from 'query-string';
 
 import './OAuthLogin.css';
 
-const OAuthLogin = ({providers}) => {
+const OAuthLogin = ({provider}) => {
   const location = window.location;
   const targetUrl = `${location.protocol}//${location.host}/login`;
   const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
 
   return (
     <div className="pt-card">
-      <FormattedMessage id="login.oauth" defaultMessage="Sign in with" />
-
-      {providers.map(provider => (
-        <span key={provider.name}>
-          <a className="oauth-provider" href={`${provider.login}${loginUrlQueryString}`} data-name={provider.name}>
-            {provider.label}
-          </a>
-        </span>))}
+      <a className="oauth-provider" href={`${provider}${loginUrlQueryString}`}>
+        <FormattedMessage id="login.oauth" defaultMessage="Sign in" />
+      </a>
     </div>
   );
 };

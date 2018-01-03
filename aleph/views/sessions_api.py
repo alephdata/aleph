@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
 from werkzeug.exceptions import Unauthorized
 
-from aleph import signals
+from aleph import signals, settings
 from aleph.core import db, url_for
 from aleph.authz import Authz
 from aleph.oauth import oauth
@@ -55,30 +55,27 @@ def password_login():
     })
 
 
-@blueprint.route('/api/2/sessions/oauth/<string:provider>')
+@blueprint.route('/api/2/sessions/oauth')
 def oauth_init(provider):
-    oauth_provider = oauth.remote_apps.get(provider)
-    if not oauth_provider:
+    if not settings.OAUTH:
         abort(404)
 
-    callback_url = url_for('.oauth_callback', provider=provider)
+    callback_url = url_for('.oauth_callback')
     state = get_best_next_url(request.args.get('next'), request.referrer)
+    return oauth.provider.authorize(callback=callback_url, state=state)
 
-    return oauth_provider.authorize(callback=callback_url, state=state)
 
-
-@blueprint.route('/api/2/sessions/callback/<string:provider>')
-def oauth_callback(provider):
-    oauth_provider = oauth.remote_apps.get(provider)
-    if not oauth_provider:
+@blueprint.route('/api/2/sessions/callback')
+def oauth_callback():
+    if not settings.OAUTH:
         abort(404)
 
-    resp = oauth_provider.authorized_response()
+    resp = oauth.provider.authorized_response()
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)
         return Unauthorized("Authentication has failed.")
 
-    response = signals.handle_oauth_session.send(provider=oauth_provider,
+    response = signals.handle_oauth_session.send(provider=oauth.provider,
                                                  oauth=resp)
     db.session.commit()
     for (_, role) in response:
@@ -91,5 +88,5 @@ def oauth_callback(provider):
         next_url = '%s#token=%s' % (next_url, create_token(role))
         return redirect(next_url)
 
-    log.error("No OAuth handler for %r was installed.", provider)
+    log.error("No OAuth handler for %r was installed.", oauth.provider.name)
     return Unauthorized("Authentication has failed.")

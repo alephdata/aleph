@@ -87,7 +87,6 @@ def create_app(config={}):
             }
         },
     )
-    celery.conf.update(app.config.get('CELERY', {}))
 
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
     configure_oauth(app)

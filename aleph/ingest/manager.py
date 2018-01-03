@@ -20,7 +20,7 @@ class DocumentManager(Manager):
 
     RESULT_CLASS = DocumentResult
 
-    def __init__(self, config, archive):
+    def __init__(self, archive):
         super(DocumentManager, self).__init__({
             'PDF_OCR_PAGES': True,
             'OCR_DEFAULTS': settings.OCR_DEFAULTS
