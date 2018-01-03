@@ -26,8 +26,7 @@ def metadata():
         auth['password_login_uri'] = url_for('sessions_api.password_login')
         auth['registration_uri'] = url_for('roles_api.create_code')
     if settings.OAUTH:
-        auth['oauth_uri'] = url_for('sessions_api.oauth_init',
-                                    provider=oauth.provider.name)
+        auth['oauth_uri'] = url_for('sessions_api.oauth_init')
 
     return jsonify({
         'status': 'ok',

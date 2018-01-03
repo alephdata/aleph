@@ -56,7 +56,7 @@ def password_login():
 
 
 @blueprint.route('/api/2/sessions/oauth')
-def oauth_init(provider):
+def oauth_init():
     if not settings.OAUTH:
         abort(404)
 
