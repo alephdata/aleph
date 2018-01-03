@@ -1,15 +1,46 @@
-.PdfViewer {
+.PdfViewer .page {
+  margin: 20px 0;
+}
+
+.document_pdf{
   flex-grow: 1;
   width: 100%;
   background-color: whitesmoke;
-  padding: 20px;
-}
-
-.PdfViewer .page {
-  margin: 20px 0;
+  padding-top: 20px;
 }
 
 .PdfViewer .page > canvas {
   /* center each page */
   margin: auto;
+  padding-bottom: 20px;
+  width: 80% !important;
+}
+
+.previousPage {
+  color: white;
+}
+
+.previousPage:hover {
+  color: white;
+}
+
+.nextPage {
+  color: white;
+}
+
+.disabledPage {
+  pointer-events: none;
+}
+
+.nextPage:hover {
+  color: white;
+}
+
+.nextPageButton {
+  float: right;
+  margin-right: 620px;
+}
+
+.previousPageButton {
+  margin-left: 565px;
 }

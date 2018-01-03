@@ -28,18 +28,22 @@ class PdfViewer extends Component {
 
     return (
       <div className="PdfViewer">
-        {(pageNumber > 1) &&
-          <Link to={{ hash: `page=${pageNumber-1}` }}>Previous</Link>
-        }
-        {(pageNumber < numPages) &&
-          <Link to={{ hash: `page=${pageNumber+1}` }}>Next</Link>
-        }
-        <Document file={url} onLoadSuccess={this.onDocumentLoad.bind(this)}>
+        <div className="pt-button-group pt-fill">
+          <Link to={{ hash: `page=${pageNumber-1}` }}><button className="pt-button pt-icon-arrow-left" disabled={pageNumber <= 1}/></Link>
+          <button className="pt-button pt-fill" disabled={true}>{pageNumber} of {numPages}</button>
+          <Link to={{ hash: `page=${pageNumber+1}` }}><button className="pt-button pt-icon-arrow-right" disabled={pageNumber >= numPages}/></Link>
+        </div>
+
+
+        <div className="document_pdf">
+        <Document renderAnnotations={true} file={url} onLoadSuccess={this.onDocumentLoad.bind(this)}>
           <Page
             pageNumber={pageNumber}
             className="page"
+            scale={1.5}
           />
         </Document>
+        </div>
       </div>
     );
   }
