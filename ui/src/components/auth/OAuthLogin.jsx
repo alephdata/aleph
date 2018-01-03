@@ -18,12 +18,4 @@ const OAuthLogin = ({provider}) => {
   );
 };
 
-export const handleOAuthCallback = (onLoginFn) => {
-  const parsedHash = queryString.parse(window.location.hash);
-  if (parsedHash.token) {
-    onLoginFn(parsedHash.token);
-    window.location.hash = '';
-  }
-};
-
 export default OAuthLogin;
