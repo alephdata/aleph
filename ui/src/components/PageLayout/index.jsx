@@ -21,7 +21,7 @@ import './PageLayout.css';
 class PageLayout extends Component {
 
   componentWillMount() {
-    this.props.fetchCollections();
+    this.props.fetchMetadata();
   }
 
   render() {
