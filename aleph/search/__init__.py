@@ -1,10 +1,8 @@
 import logging
 from followthemoney import model
 
-from aleph.core import es
 from aleph.model import Document, DocumentRecord
 from aleph.index.xref import entity_query
-from aleph.index.util import unpack_result
 from aleph.index.core import entities_index
 from aleph.index.core import records_index
 from aleph.index.core import collections_index
@@ -199,9 +197,11 @@ class RecordsQueryResult(SearchQueryResult):
         ids = [res.get('id') for res in self.results]
         for record in DocumentRecord.find_records(ids):
             for result in self.results:
-                if result['id'] == record.id:
-                    result['data'] = record.data
-                    result['text'] = record.text
+                if result['id'] == str(record.id):
+                    if record.data:
+                        result['data'] = record.data
+                    if record.text:
+                        result['text'] = record.text
 
 
 class RecordsQuery(Query):
