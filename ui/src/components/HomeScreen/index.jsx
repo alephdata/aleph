@@ -48,6 +48,7 @@ class HomeScreen extends Component {
                     <div className="search_subtitles">
                         <h1 className="search_h1">
                             <FormattedNumber value={countStats} />
+                            &nbsp;leads
                         </h1>
                     </div>
                     <form onSubmit={this.onSubmit} className="search_form">
