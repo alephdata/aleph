@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import queryString from 'query-string';
+import {fetchStatistics} from '../../actions/index';
+import { FormattedNumber } from 'react-intl';
 
-import Screen from 'src/components/common/Screen';
-import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import HomepageImage from '../../assets/europe_asia_dark.png';
-import DualPane from 'src/components/common/DualPane';
-import HomeInfo from './HomeInfo';
-import HomeContent from './HomeContent';
+import Screen from '../../components/common/Screen';
+import Breadcrumbs from '../../components/common/Breadcrumbs';
 
 import './style.css';
 
@@ -18,6 +16,10 @@ class HomeScreen extends Component {
 
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        if(!this.props.statistics.isLoaded) this.props.fetchStatistics();
     }
 
     onChange({target}) {
@@ -37,12 +39,15 @@ class HomeScreen extends Component {
     }
 
     render() {
+        const countStats = this.props.statistics.count;
         return (
             <Screen>
                 <Breadcrumbs/>
                 <div className="homepage_image">
                     <div className="search_subtitles">
-                        <h1 className="search_h1">93,801,670 leads</h1>
+                        <h1 className="search_h1">
+                            <FormattedNumber value={countStats} />
+                        </h1>
                     </div>
                     <form onSubmit={this.onSubmit} className="search_form">
                     <div className="pt-input-group .modifier .pt-large search_homepage">
@@ -56,10 +61,6 @@ class HomeScreen extends Component {
                     </div>
                     </form>
                 </div>
-                {/*<DualPane>
-          <HomeInfo {...this.props} />
-          <HomeContent {...this.props} />
-        </DualPane>*/}
             </Screen>
         );
     }
@@ -68,7 +69,8 @@ class HomeScreen extends Component {
 const mapStateToProps = state => {
     return {
         collections: state.collections,
+        statistics: state.statistics
     };
 };
 
-export default connect(mapStateToProps)(HomeScreen);
+export default connect(mapStateToProps, {fetchStatistics})(HomeScreen);

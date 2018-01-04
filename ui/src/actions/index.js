@@ -6,6 +6,11 @@ export const fetchMetadata = asyncActionCreator(() => async dispatch => {
   return { metadata: response.data };
 }, { name: 'FETCH_METADATA' });
 
+export const fetchStatistics = asyncActionCreator(() => async dispatch => {
+    const response = await endpoint.get('statistics');
+    return { statistics: response.data };
+}, { name: 'FETCH_STATISTICS' });
+
 export const fetchSearchResults = asyncActionCreator(({ filters }) => async dispatch => {
   const response = await endpoint.get('search', { params: filters });
   return { filters, result: response.data };
