@@ -37,11 +37,11 @@ class CollectionSchema(BaseSchema):
 
     @pre_dump()
     def visibility(self, data):
-        roles = set()
-        if is_mapping(data):
-            roles = data.get('roles', [])
-            public = Role.public_roles()
-            data['secret'] = public.intersection(roles) < 0
+        if not is_mapping(data):
+            return
+        roles = data.get('roles', [])
+        public = Role.public_roles()
+        data['secret'] = public.intersection(roles) < 0
 
     @post_dump
     def transient(self, data):
