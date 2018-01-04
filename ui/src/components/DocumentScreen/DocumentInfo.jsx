@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { AnchorButton } from '@blueprintjs/core';
+import { FormattedMessage } from 'react-intl';
 
 import Entity from 'src/components/EntityScreen/Entity';
 import DualPane from 'src/components/common/DualPane';
 import DocumentMetadata from 'src/components/DocumentScreen/DocumentMetadata';
-import CollectionSection from 'src/components/CollectionScreen/CollectionSection';
+import CollectionCard from 'src/components/CollectionScreen/CollectionCard';
 
 class DocumentInfo extends Component {
   render() {
@@ -29,9 +30,11 @@ class DocumentInfo extends Component {
           </div>
         }
 
-        {document.collection &&
-          <CollectionSection collection={document.collection} />
-        }
+        <h3>
+          <FormattedMessage id="collection.section" defaultMessage="Origin"/>
+        </h3>
+        <CollectionCard collection={document.collection} />
+
       </DualPane.InfoPane>
     );
   }

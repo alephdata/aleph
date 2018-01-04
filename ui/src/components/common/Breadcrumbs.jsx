@@ -13,13 +13,6 @@ class Breadcrumbs extends Component {
     let collectionCrumbs = [];
     if (collection) {
       collectionCrumbs.push((
-        <li key='category'>
-          <a className="pt-breadcrumb pt-disabled">
-            <Category collection={collection} />
-          </a>
-        </li>
-      ));
-      collectionCrumbs.push((
         <li key='collection'>
           <Collection.Link collection={collection} className="pt-breadcrumb" icon />
         </li>
