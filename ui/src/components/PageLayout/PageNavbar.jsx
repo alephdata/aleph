@@ -18,7 +18,7 @@ const PageNavbar = ({metadata, session}) => (
       <div className="pt-navbar-heading">
         <Link to="/">{ String.fromCharCode(8501) } {metadata.app.title}</Link>
       </div>
-      <PageNavbarSearchForm />
+        {/*<PageNavbarSearchForm />*/}
     </div>
     <div className="pt-navbar-group pt-align-right">
       {session.loggedIn && <Button iconName="cog" className="pt-minimal"/>}
