@@ -5,7 +5,6 @@ import {fetchStatistics} from '../../actions/index';
 import { FormattedNumber } from 'react-intl';
 
 import Screen from '../../components/common/Screen';
-import Breadcrumbs from '../../components/common/Breadcrumbs';
 
 import './style.css';
 
@@ -43,7 +42,6 @@ class HomeScreen extends Component {
         const countStats = this.props.statistics.count;
         return (
             <Screen>
-                <Breadcrumbs/>
                 <div className="homepage_image">
                     <div className="search_subtitles">
                         <h1 className="search_h1">
