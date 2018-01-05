@@ -2,7 +2,7 @@ import logging
 from threading import RLock
 from ahocorasick import Automaton, EMPTY
 
-from aleph.text import match_form
+from aleph.util import match_form
 from aleph.model import Entity
 from aleph.analyze.analyzer import Analyzer
 from aleph.model import DocumentTag, DocumentTagCollector

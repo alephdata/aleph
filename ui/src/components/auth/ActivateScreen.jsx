@@ -8,6 +8,7 @@ import {loginWithPassword} from 'src/actions/sessionActions';
 import {xhrErrorToast} from 'src/components/common/XhrToast';
 import {PasswordAuthActivate} from './PasswordAuth';
 
+
 class ActivateScreen extends Component {
   onActivate(data) {
     const {match: {params}, intl, loginWithPassword} = this.props;

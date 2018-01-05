@@ -1,5 +1,4 @@
 import logging
-from flask import current_app
 from ingestors.util import is_file
 
 from aleph.core import db, archive, celery
@@ -15,8 +14,7 @@ log = logging.getLogger(__name__)
 def get_manager():
     """Get an ingestor manager, as a singleton instance."""
     if not hasattr(DocumentManager, '_instance'):
-        DocumentManager._instance = DocumentManager(current_app.config,
-                                                    archive)
+        DocumentManager._instance = DocumentManager(archive)
         # log.info("Loaded ingestors: %r", DocumentManager._instance.ingestors)
     return DocumentManager._instance
 

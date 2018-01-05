@@ -5,7 +5,6 @@
 
 .env
 .vscode/*
-settings.py
 
 aleph/static/.webassets-cache/*
 aleph/static/assets/*

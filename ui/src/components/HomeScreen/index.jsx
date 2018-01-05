@@ -38,7 +38,6 @@ class HomeScreen extends Component {
     }
 
     render() {
-        const samples = this.props.metadata.app.samples;
         const countStats = this.props.statistics.count;
         return (
             <Screen>
@@ -46,7 +45,6 @@ class HomeScreen extends Component {
                     <div className="search_subtitles">
                         <h1 className="search_h1">
                             <FormattedNumber value={countStats} />
-                            &nbsp;leads
                         </h1>
                     </div>
                     <form onSubmit={this.onSubmit} className="search_form">
@@ -60,10 +58,6 @@ class HomeScreen extends Component {
                                value={this.state.value}/>
                     </div>
                     </form>
-                    <p className="homepage_examples">Examples: &nbsp; {samples.map(function(item){
-                        return <p className="search_example_item">{item},&nbsp; </p>
-                    })} <p> or browse sources.</p>
-                    </p>
                 </div>
             </Screen>
         );
@@ -73,8 +67,7 @@ class HomeScreen extends Component {
 const mapStateToProps = state => {
     return {
         collections: state.collections,
-        statistics: state.statistics,
-        metadata: state.metadata
+        statistics: state.statistics
     };
 };
 

@@ -2,13 +2,9 @@ import jwt
 import logging
 from datetime import datetime, timedelta
 
-from aleph.core import get_config
+from aleph.core import settings
 
 log = logging.getLogger(__name__)
-
-
-def get_jwt_secret():
-    return get_config('SECRET_KEY')
 
 
 def create_token(role):
@@ -21,12 +17,12 @@ def create_token(role):
         'role': role,
         'exp': exp
     }
-    return jwt.encode(payload, get_jwt_secret())
+    return jwt.encode(payload, settings.SECRET_KEY)
 
 
 def check_token(token):
     try:
-        data = jwt.decode(token, key=get_jwt_secret(), verify=True)
+        data = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
         return data.get('role')
     except jwt.DecodeError:
         return None
