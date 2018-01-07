@@ -7,9 +7,8 @@ from followthemoney import model
 from followthemoney.exc import InvalidData
 
 from aleph.core import settings, app_ui_url, url_for
-from aleph.index.stats import get_instance_stats
+from aleph.logic.statistics import get_instance_stats
 from aleph.model import Collection
-from aleph.oauth import oauth
 from aleph.views.cache import enable_cache
 from aleph.views.util import jsonify
 
