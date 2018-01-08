@@ -25,6 +25,14 @@ def unpack_result(res):
     return data
 
 
+def authz_query(authz):
+    """Generate a search query from an authz object."""
+    # Hot-wire authorization entirely for admins.
+    if authz.is_admin:
+        return {'match_all': {}}
+    return {'terms': {'roles': list(authz.roles)}}
+
+
 def bulk_op(iter, chunk_size=500):
     """Standard parameters for bulk operations."""
     bulk(es, iter,

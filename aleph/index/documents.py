@@ -77,12 +77,15 @@ def index_document(document):
 
     q = db.session.query(DocumentTag)
     q = q.filter(DocumentTag.document_id == document.id)
-    for tag in q.yield_per(5000):
+    q = q.order_by(DocumentTag.weight.desc())
+    q = q.limit(2000)
+    for tag in q:
         field = TAG_FIELDS[tag.type]
         if field not in data:
             data[field] = []
-        data[field].append(tag.text)
-        texts.append(tag.text)
+        if tag.text not in data[field]:
+            data[field].append(tag.text)
+            texts.append(tag.text)
 
     return index_single(document, data, texts)
 

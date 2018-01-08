@@ -1,0 +1,35 @@
+experts:
+    label: EC Expert Groups
+    category: scrape
+    roles:
+      - guest
+    queries:
+      - csv_url: ${ALEPH_TEST_BULK_CSV}
+        entities:
+          group:
+            schema: Organization
+            keys: group_code
+            properties:
+              name:
+                column: group_name
+              sourceUrl:
+                column: group_uri
+          member:
+            schema: Person
+            key: name
+            properties:
+              name:
+                column: name
+              nationality:
+                column: nationality
+              gender:
+                column: gender
+          membership:
+            schema: Membership
+            properties:
+              member:
+                entity: member
+              organization:
+                entity: group
+              role:
+                column: membership_status

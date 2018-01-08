@@ -4,11 +4,13 @@ import logging
 from followthemoney import model
 from followthemoney.util import merge_data
 
-from aleph.core import db, celery, USER_QUEUE, USER_ROUTING_KEY
+from aleph.core import es, db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Collection, Entity, Alert, Role, Permission
 from aleph.index import index_entity, flush_index
+from aleph.index.core import entities_index
 from aleph.index.entities import index_bulk
 from aleph.index.collections import index_collection
+from aleph.index.util import authz_query
 from aleph.logic.util import ui_url
 from aleph.util import dict_list
 
@@ -122,3 +124,98 @@ def bulk_load_query(collection, query):
 
     # Update collection stats
     index_collection(collection)
+
+
+def entity_references(entity, authz):
+    """Given a particular entity, find all the references to it from other
+    entities, grouped by the property where they are used."""
+    schema = model[entity.get('schema')]
+
+    # Generate all the possible mention locations.
+    properties = []
+    queries = []
+    for prop in model.properties:
+        if not prop.is_entity:
+            continue
+        if not schema.is_a(prop.range):
+            continue
+
+        field = 'properties.%s' % prop.name
+        queries.append({})
+        queries.append({
+            'size': 0,
+            'query': {
+                'bool': {
+                    'filter': [
+                        authz_query(authz),
+                        {'term': {'schemata': prop.schema.name}},
+                        {'term': {field: entity.get('id')}},
+                    ]
+                }
+            }
+        })
+        properties.append(prop)
+
+    # Run a count search (with schema facet?)
+    res = es.msearch(index=entities_index(), body=queries)
+    results = []
+    for prop, resp in zip(properties, res.get('responses', [])):
+        total = resp.get('hits', {}).get('total')
+        if total > 0:
+            results.append({
+                'count': total,
+                'property': prop,
+                'schema': prop.schema.name
+            })
+    return results
+
+
+def entity_pivot(entity, authz):
+    """Do a search on tags of an entity."""
+    # NOTE: This must also work for documents.
+    FIELDS = [
+        'names',
+        'emails',
+        'phones',
+        'addresses',
+        'identifiers'
+    ]
+    pivots = []
+    queries = []
+    # Go through all the tags which apply to this entity, and find how
+    # often they've been mentioned in other entities.
+    for field in FIELDS:
+        for value in entity.get(field, []):
+            queries.append({})
+            queries.append({
+                'size': 0,
+                'query': {
+                    'bool': {
+                        'filter': [
+                            authz_query(authz),
+                            {'term': {field: value}},
+                        ],
+                        'must_not': [
+                            {'ids': {'values': [entity.get('id')]}},
+                        ]
+                    }
+                }
+            })
+            pivots.append((field, value))
+
+    if not len(queries):
+        return []
+
+    res = es.msearch(index=entities_index(), body=queries)
+    results = []
+    for (field, value), resp in zip(pivots, res.get('responses', [])):
+        total = resp.get('hits', {}).get('total')
+        if total > 0:
+            results.append({
+                'value': value,
+                'field': field,
+                'count': total
+            })
+
+    results.sort(key=lambda p: p['count'], reverse=True)
+    return results
