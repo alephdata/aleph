@@ -87,6 +87,34 @@ To create a new collection, `POST` the JSON metadata to:
 
 <pre>/api/2/collections</pre>
 
+#### Uploading documents to collections
+
+To upload new documents to a collection, send a `POST` request with the files and metadata to:
+
+<pre>/api/2/collections/{collection_id}/ingest</pre>
+
+Metadata of a file is sent via a JSON-encoded POST variable, `meta`, which can contain nested values and lists for the following metadata fields:
+
+* `parent`: A dictionary containing `foreign_id` or `id` of parent Document.
+* `foreign_id`: Foreign id of the document
+* `title`: Title of the document
+* `summary`: Summary of the document
+* `author`: Author of the document
+* `crawler`: Name of the crawler used to fetch the document
+* `source_url`: URL of source file
+* `file_name`: Name of the document
+* `mime_type`: MIME type of the document
+* `headers`: Response headers while fetching the document
+* `authored_at`: When the document was authored
+* `modified_at`: Modification time of the document
+* `published_at`: Publication time of the document
+* `retrieved_at`: Retrieval time of the document
+* `languages`: Languages in the document
+* `countries`: Countries associated with the document
+* `keywords`: Keywords for the document
+
+To create a directory, send a `POST` request to the same endpoint with metadata but without any files.
+
 #### Processing collection contents
 
 To re-analyze and re-index all of the documents and entities in a collection:
