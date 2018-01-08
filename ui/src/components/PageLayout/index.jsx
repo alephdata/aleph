@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
-import { fetchCollections, fetchMetadata } from 'src/actions';
+import { fetchMetadata } from 'src/actions';
 import LoginScreen from 'src/components/auth/LoginScreen';
 import LogoutScreen from 'src/components/auth/LogoutScreen';
 import SignupScreen from 'src/components/auth/SignupScreen';
@@ -21,7 +21,6 @@ import './PageLayout.css';
 class PageLayout extends Component {
 
   componentWillMount() {
-    this.props.fetchCollections();
     this.props.fetchMetadata();
   }
 
@@ -73,7 +72,7 @@ const mapStateToProps = (state) => {
 
 PageLayout = connect(
   mapStateToProps,
-  { fetchCollections, fetchMetadata }
+  { fetchMetadata }
 )(PageLayout);
 
 export default PageLayout;

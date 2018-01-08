@@ -2,7 +2,6 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 
 import AuthButtons from 'src/components/auth/AuthButtons';
-import PageNavbarSearchForm from './PageNavbarSearchForm';
 
 const PageNavbar = ({metadata, session}) => (
   <nav className="pt-navbar pt-dark">
@@ -10,7 +9,6 @@ const PageNavbar = ({metadata, session}) => (
       <div className="pt-navbar-heading">
         <Link to="/">{ String.fromCharCode(8501) } {metadata.app.title}</Link>
       </div>
-      <PageNavbarSearchForm />
     </div>
     <div className="pt-navbar-group pt-align-right">
       <AuthButtons session={session} auth={metadata.auth} />

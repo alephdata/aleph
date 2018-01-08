@@ -1,0 +1,56 @@
+.homepage_image {
+  height: 70%;
+  background-size: cover;
+  color: white;
+  text-align: center;
+  z-index: 2;
+  background-image: url("../../assets/europe_asia_dark.png");
+}
+
+.search_homepage {
+  z-index: 1;
+  width: 60%;
+  position: absolute;
+  left: 20%;
+  top: 50%;
+}
+
+.search_span {
+  top: 8px !important;
+}
+
+.search_input {
+  height: 45px !important;
+}
+
+.search_form {
+  position: absolute;
+  left: 10%;
+  top: 50%;
+  width: 80%;
+}
+
+.search_h1 {
+  color: white !important;
+  margin-top: 20vh;
+  font-size: 4em;
+  font-weight: bold;
+}
+
+.search_subtitles {
+  position: absolute;
+  left: 22%;
+  top: 15%;
+  width: 55%;
+}
+
+.homepage_examples {
+  position: relative;
+  top: 52vh;
+  left: 52%;
+  display: flex;
+}
+
+.search_example_item {
+  float: right;
+}
