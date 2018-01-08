@@ -45,8 +45,11 @@ class HomeScreen extends Component {
             <Screen>
                 <div className="HomePage">
                     <h1 className="search_h1">
-                        <FormattedNumber value={countStats} />{' '}
-                        <FormattedMessage id='home.search.title' defaultMessage='leads' />
+                        <FormattedMessage id='home.search.title'
+                                          defaultMessage="{count} leads"
+                                          values={{
+                                            count: (<FormattedNumber value={countStats} />)
+                                          }} />
                     </h1>
                     <form onSubmit={this.onSubmit} className="search_form">
                         <div className="pt-input-group pt-large">

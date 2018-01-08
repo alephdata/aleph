@@ -25,11 +25,11 @@ class CollectionCard extends Component {
             <i className="fa fa-fw fa-refresh" />
             <Date value={collection.updated_at} />
           </div>
-          {
+          {/*
           <div className="fact">
             <Category collection={collection} />
           </div>
-          }
+          */}
         </div>
         {collection.summary && 
           (<p>{ collection.summary }</p>)

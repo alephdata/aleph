@@ -11,16 +11,18 @@ import CollectionCard from './CollectionCard';
 import './CollectionBrowser.css';
 
 class CollectionBrowser extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       result: {results: []},
+      queryText: props.query.getQ(),
       isFetching: true
     };
 
     this.fetchData = debounce(this.fetchData, 200);
     this.updateQuery = this.updateQuery.bind(this);
+    this.onChangeQueryText = this.onChangeQueryText.bind(this);
   }
 
   componentDidMount() {
@@ -43,6 +45,12 @@ class CollectionBrowser extends Component {
     });
   }
 
+  onChangeQueryText({target}) {
+    this.setState({queryText: target.value});
+    const query = this.props.query.setQ(target.value);
+    this.updateQuery(query);
+  }
+
   updateQuery(newQuery) {
     const { history, location } = this.props;
     history.push({
@@ -52,12 +60,35 @@ class CollectionBrowser extends Component {
   }
 
   render() {
-    const { result } = this.state;
+    const { result, queryText } = this.state;
     return (
       <div className="CollectionBrowser">
-        {result.results.map(res =>
-          <CollectionCard key={res.id} collection={res} />
-        )}
+        <div className="title">
+          <div className="section">
+            <h3>
+                <FormattedMessage id="collection.browser.title"
+                                defaultMessage="Browse {count} collections"
+                                values={{
+                                    count: (<FormattedNumber value={result.total} />)
+                                }} />
+            </h3>
+          </div>
+          <div className="section">
+            <div className="pt-input-group">
+                <span className="pt-icon pt-icon-search"></span>
+                <input className="pt-input" type="search"
+                    placeholder="Filter"
+                    onChange={this.onChangeQueryText} value={queryText} />
+            </div>
+          </div>
+        </div>
+        <div className="results">
+          {result.results.map(res =>
+            <div key={res.id} className="result">
+              <CollectionCard collection={res} />
+            </div>
+          )}
+        </div>
       </div>
     );
   }
