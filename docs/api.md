@@ -93,7 +93,7 @@ To upload new documents to a collection, send a `POST` request with the files an
 
 <pre>/api/2/collections/{collection_id}/ingest</pre>
 
-Metadata of a file can contain the following:
+Metadata of a file is sent via a JSON-encoded POST variable, `meta`, which can contain nested values and lists for the following metadata fields:
 
 * `parent`: A dictionary containing `foreign_id` or `id` of parent Document.
 * `foreign_id`: Foreign id of the document
@@ -103,7 +103,7 @@ Metadata of a file can contain the following:
 * `crawler`: Name of the crawler used to fetch the document
 * `source_url`: URL of source file
 * `file_name`: Name of the document
-* `mime_type`: Mimetype of the document
+* `mime_type`: MIME type of the document
 * `headers`: Response headers while fetching the document
 * `authored_at`: When the document was authored
 * `modified_at`: Modification time of the document
