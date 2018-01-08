@@ -34,7 +34,7 @@ class Query {
 
     set(name, value) {
         const child = this.clone();
-        child.state[this.prefix + name] = value;
+        child.state[this.prefix + name] = ensureArray(value);
         return child;
     }
 
@@ -109,11 +109,11 @@ class Query {
     }
 
     limit(count) {
-        return this.set('limit', count);
+        return this.set('limit', count + '');
     }
 
     offset(count) {
-        return this.set('offset', count);
+        return this.set('offset', count + '');
     }
 
     addFacet(value) {

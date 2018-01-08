@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
+import { injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import { debounce } from 'lodash';
+import { Spinner } from '@blueprintjs/core';
+import Waypoint from 'react-waypoint';
 
 import Query from '../SearchScreen/Query';
 import { fetchCollections } from 'src/actions';
@@ -17,12 +19,13 @@ class CollectionBrowser extends Component {
     this.state = {
       result: {results: []},
       queryText: props.query.getQ(),
-      isFetching: true
+      isFetching: true,
     };
 
     this.fetchData = debounce(this.fetchData, 200);
     this.updateQuery = this.updateQuery.bind(this);
     this.onChangeQueryText = this.onChangeQueryText.bind(this);
+    this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
   }
 
   componentDidMount() {
@@ -38,6 +41,7 @@ class CollectionBrowser extends Component {
   fetchData() {
     this.setState({isFetching: true})
     let { query } = this.props;
+    query = query.limit(30);
     this.props.fetchCollections({
       filters: query.toParams(),
     }).then(({result}) => {
@@ -59,8 +63,33 @@ class CollectionBrowser extends Component {
     });
   }
 
+  bottomReachedHandler() {
+    const { result, isFetching } = this.state;
+    if (!result || !result.next || isFetching) {
+        return
+    }
+    this.setState({isFetching: true})
+    const offset = result.offset || 0;
+    let query = this.props.query;
+    query = query.offset(offset + result.limit);
+    query = query.limit(result.limit);
+    this.props.fetchCollections({
+      filters: query.toParams(),
+    }).then(({result: fresh}) => {
+      result.next = fresh.next;
+      result.offset = fresh.offset;
+      result.results.push(...fresh.results);
+      this.setState({
+            result: result,
+            isFetching: false
+        });
+    });
+  }
+
   render() {
-    const { result, queryText } = this.state;
+    const { intl } = this.props;
+    const { result, queryText, isFetching } = this.state;
+    const { total = 0 } = result;
     return (
       <div className="CollectionBrowser">
         <div className="title">
@@ -69,7 +98,7 @@ class CollectionBrowser extends Component {
                 <FormattedMessage id="collection.browser.title"
                                 defaultMessage="Browse {count} collections"
                                 values={{
-                                    count: (<FormattedNumber value={result.total} />)
+                                    count: (<FormattedNumber value={total} />)
                                 }} />
             </h3>
           </div>
@@ -77,7 +106,7 @@ class CollectionBrowser extends Component {
             <div className="pt-input-group">
                 <span className="pt-icon pt-icon-search"></span>
                 <input className="pt-input" type="search"
-                    placeholder="Filter"
+                    placeholder={intl.formatMessage({id: "collection.browser.filter", defaultMessage: "Filter collections" })}
                     onChange={this.onChangeQueryText} value={queryText} />
             </div>
           </div>
@@ -88,6 +117,10 @@ class CollectionBrowser extends Component {
               <CollectionCard collection={res} />
             </div>
           )}
+          { result.next && (isFetching ?
+          <div className="results-loading"><Spinner /></div>
+          : <Waypoint onEnter={this.bottomReachedHandler} />
+        )}
         </div>
       </div>
     );
@@ -101,5 +134,5 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 CollectionBrowser = connect(mapStateToProps, { fetchCollections })(CollectionBrowser);
-CollectionBrowser = withRouter(CollectionBrowser);
+CollectionBrowser = injectIntl(withRouter(CollectionBrowser));
 export default CollectionBrowser;

@@ -4,7 +4,8 @@
     margin-top: $aleph-grid-size * 2;
 
     .title {
-        margin: $aleph-grid-size;        
+        margin: $aleph-grid-size;
+        margin-left: $aleph-grid-size * 3;
         display: flex;
         flex-flow: row wrap;
         width: inherit;

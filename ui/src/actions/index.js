@@ -40,8 +40,3 @@ export const fetchCollections = asyncActionCreator(({ filters }) => async dispat
   const response = await endpoint.get('collections', { params: filters });
   return { filters, result: response.data };
 }, { name: 'FETCH_COLLECTIONS' });
-
-// export const fetchNextSearchResults = asyncActionCreator(({ next }) => async dispatch => {
-//   const response = await endpoint.get(next);
-//   return { result: response.data };
-// }, { name: 'FETCH_NEXT_SEARCH_RESULTS' });
