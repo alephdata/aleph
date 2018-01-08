@@ -23,7 +23,8 @@ def index_collection(collection):
         'countries': collection.countries,
         'languages': collection.languages,
         'managed': collection.managed,
-        'roles': collection.roles
+        'roles': collection.roles,
+        'schemata': {}
     }
 
     if collection.creator is not None:
@@ -52,10 +53,7 @@ def index_collection(collection):
     }
     result = es.search(index=entities_index(), body=query)
     aggregations = result.get('aggregations')
-    data = {
-        'schemata': {},
-        'count': result['hits']['total']
-    }
+    data['count'] = result['hits']['total']
 
     # expose entities by schema count.
     for schema in aggregations['schema']['buckets']:
