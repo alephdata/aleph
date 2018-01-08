@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
-import HomeInfo from 'src/components/HomeScreen/HomeInfo';
 import SearchContext from './SearchContext';
 
 

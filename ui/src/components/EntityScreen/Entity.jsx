@@ -1,4 +1,3 @@
-import { toString } from 'lodash';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 
@@ -8,7 +7,7 @@ import getPath from 'src/util/getPath';
 
 class Label extends Component {
   render() {
-    const { short = false, icon = false } = this.props;
+    const { icon = false } = this.props;
     let { title, name, file_name, schema } = this.props.entity;
     // title = toString(title);
     // name = toString(name);

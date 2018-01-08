@@ -38,7 +38,7 @@ class HomeScreen extends Component {
     }
 
     render() {
-        const countStats = this.props.statistics.count;
+        const countStats = this.props.statistics.count || 0;
         return (
             <Screen>
                 <div className="homepage_image">

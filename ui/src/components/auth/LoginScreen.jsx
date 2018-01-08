@@ -7,7 +7,7 @@ import {NonIdealState} from '@blueprintjs/core';
 
 import messages from 'src/content/messages';
 import {loginWithPassword, loginWithToken} from 'src/actions/sessionActions';
-import OAuthLogin, {handleOAuthCallback} from './OAuthLogin';
+import OAuthLogin from './OAuthLogin';
 import {PasswordAuthLogin} from './PasswordAuth';
 
 class LoginScreen extends Component {

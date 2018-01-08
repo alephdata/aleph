@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { Tooltip } from '@blueprintjs/core';
 
 import Date from 'src/components/common/Date';
 import Category from 'src/components/common/Category';
@@ -26,11 +25,11 @@ class CollectionCard extends Component {
             <i className="fa fa-fw fa-refresh" />
             <Date value={collection.updated_at} />
           </div>
-          {/*
+          {
           <div className="fact">
             <Category collection={collection} />
           </div>
-          */}
+          }
         </div>
         {collection.summary && 
           (<p>{ collection.summary }</p>)

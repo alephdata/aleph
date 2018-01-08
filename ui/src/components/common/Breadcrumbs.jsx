@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import Category from 'src/components/common/Category';
 import Collection from 'src/components/common/Collection';
 import './Breadcrumbs.css';
 

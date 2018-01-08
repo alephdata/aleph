@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import Schema from 'src/components/common/Schema';
 import Property from './Property';
 import Entity from './Entity';
 import DualPane from 'src/components/common/DualPane';

@@ -9,7 +9,7 @@ class EntityList extends Component {
   render() {
     const { result, aspects } = this.props;
 
-    if (!result || !result.results || result.total == 0) {
+    if (!result || !result.results || result.total === 0) {
       return null;
     }
     

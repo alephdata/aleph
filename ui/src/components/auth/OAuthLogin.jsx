@@ -1,6 +1,5 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
-import queryString from 'query-string';
 
 import './OAuthLogin.css';
 
