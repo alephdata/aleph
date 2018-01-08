@@ -1,6 +1,9 @@
 @import "src/app/variables.scss";
 
 .Breadcrumbs {
+  background: $aleph-content-background;
+  z-index: 500;
+
   padding-left: $aleph-grid-size;
   padding-right: $aleph-grid-size;
   padding-top: $aleph-grid-size / 3;

@@ -1,0 +1,15 @@
+@import "src/app/variables.scss";
+
+.CollectionBrowser {
+    display: flex;
+    flex-flow: row wrap;
+    max-width: 100%;
+    align-content: stretch;
+    justify-content: flex-start;
+    align-items: stretch;
+
+    .CollectionCard {
+        margin: $aleph-grid-size;
+        width: 30%;
+    }
+}

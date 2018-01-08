@@ -36,19 +36,12 @@ export const fetchCollection = asyncActionCreator(({ id }) => async dispatch => 
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION' });
 
-export const fetchCollectionsPage = asyncActionCreator(({ page }) => async dispatch => {
-  const limit = 5000;
-  const response = await endpoint.get('collections', {
-    params: { limit, offset: page * limit }
-  });
-  return { result: response.data };
-}, { name: 'FETCH_COLLECTIONS_PAGE' });
+export const fetchCollections = asyncActionCreator(({ filters }) => async dispatch => {
+  const response = await endpoint.get('collections', { params: filters });
+  return { filters, result: response.data };
+}, { name: 'FETCH_COLLECTIONS' });
 
-export const fetchCollections = () => async dispatch => {
-  let page = 0;
-  let pages;
-  do {
-    const { result } = await dispatch(fetchCollectionsPage({ page }));
-    pages = result.pages;
-  } while (++page < pages);
-};
+// export const fetchNextSearchResults = asyncActionCreator(({ next }) => async dispatch => {
+//   const response = await endpoint.get(next);
+//   return { result: response.data };
+// }, { name: 'FETCH_NEXT_SEARCH_RESULTS' });

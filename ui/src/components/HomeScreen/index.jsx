@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import queryString from 'query-string';
 import {fetchStatistics} from '../../actions/index';
-import { FormattedNumber } from 'react-intl';
+import {injectIntl, FormattedMessage, FormattedNumber} from 'react-intl';
 
 import Screen from '../../components/common/Screen';
+import CollectionBrowser from '../../components/CollectionScreen/CollectionBrowser';
 
 import './style.css';
 
@@ -38,27 +39,28 @@ class HomeScreen extends Component {
     }
 
     render() {
+        const { intl } = this.props;
         const countStats = this.props.statistics.count || 0;
         return (
             <Screen>
-                <div className="homepage_image">
-                    <div className="search_subtitles">
-                        <h1 className="search_h1">
-                            <FormattedNumber value={countStats} />
-                        </h1>
-                    </div>
+                <div className="HomePage">
+                    <h1 className="search_h1">
+                        <FormattedNumber value={countStats} />{' '}
+                        <FormattedMessage id='home.search.title' defaultMessage='leads' />
+                    </h1>
                     <form onSubmit={this.onSubmit} className="search_form">
-                    <div className="pt-input-group .modifier .pt-large search_homepage">
-                        <span className="pt-icon pt-icon-search search_span"/>
-                        <input className="pt-input search_input"
-                               type="search"
-                               placeholder="Search input"
-                               dir="auto"
-                               onChange={this.onChange}
-                               value={this.state.value}/>
-                    </div>
+                        <div className="pt-input-group pt-large">
+                            <span className="pt-icon pt-icon-search search_span"/>
+                            <input className="pt-input search_input"
+                                type="search"
+                                placeholder={intl.formatMessage({id: 'home.search.placeholder', defaultMessage: "Search companies, people and documents."})}
+                                dir="auto"
+                                onChange={this.onChange}
+                                value={this.state.value}/>
+                        </div>
                     </form>
                 </div>
+                <CollectionBrowser />
             </Screen>
         );
     }
@@ -71,4 +73,5 @@ const mapStateToProps = state => {
     };
 };
 
+HomeScreen = injectIntl(HomeScreen)
 export default connect(mapStateToProps, {fetchStatistics})(HomeScreen);
