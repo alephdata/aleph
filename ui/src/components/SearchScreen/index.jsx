@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
@@ -11,9 +12,12 @@ class SearchScreen extends Component {
   render() {
     return (
       <Screen>
-        <Breadcrumbs />
+        <Breadcrumbs>
+          <li>
+            <FormattedMessage id="search.breadcrumb" defaultMessage="Global search" />
+          </li>
+        </Breadcrumbs>
         <DualPane>
-          <HomeInfo {...this.props} />
           <DualPane.ContentPane>
             <SearchContext />
           </DualPane.ContentPane>

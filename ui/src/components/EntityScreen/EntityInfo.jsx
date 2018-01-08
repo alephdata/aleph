@@ -6,7 +6,7 @@ import Property from './Property';
 import Entity from './Entity';
 import DualPane from 'src/components/common/DualPane';
 import Date from 'src/components/common/Date';
-import CollectionSection from 'src/components/CollectionScreen/CollectionSection';
+import CollectionCard from 'src/components/CollectionScreen/CollectionCard';
 
 class EntityInfo extends Component {
   render() {
@@ -28,9 +28,10 @@ class EntityInfo extends Component {
           </tr>
         </Property.Table>
 
-        {collection &&
-          <CollectionSection collection={collection} />
-        }
+        <h3>
+          <FormattedMessage id="collection.section" defaultMessage="Origin"/>
+        </h3>
+        <CollectionCard collection={collection} />
       </DualPane.InfoPane>
     );
   }

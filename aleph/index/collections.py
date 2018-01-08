@@ -1,7 +1,7 @@
 from pprint import pprint  # noqa
 
 from aleph.core import es
-from aleph.index.stats import get_collection_stats
+from aleph.model import Entity
 from aleph.index.core import collection_index, collections_index
 from aleph.index.core import entities_index, entity_index
 from aleph.index.core import records_index
@@ -23,15 +23,51 @@ def index_collection(collection):
         'countries': collection.countries,
         'languages': collection.languages,
         'managed': collection.managed,
-        'roles': collection.roles
+        'roles': collection.roles,
+        'schemata': {}
     }
+
     if collection.creator is not None:
         data['creator'] = {
             'id': collection.creator.id,
             'type': collection.creator.type,
             'name': collection.creator.name
         }
-    data.update(get_collection_stats(collection.id))
+
+    # Compute some statistics on the content of a collection.
+    query = {
+        'size': 0,
+        'query': {
+            'bool': {
+                'filter': [
+                    {'term': {'collection_id': collection.id}},
+                    {'term': {'schemata': Entity.THING}}
+                ]
+            }
+        },
+        'aggs': {
+            'schema': {'terms': {'field': 'schema', 'size': 1000}},
+            'countries': {'terms': {'field': 'countries', 'size': 500}},
+            'languages': {'terms': {'field': 'languages', 'size': 100}},
+        }
+    }
+    result = es.search(index=entities_index(), body=query)
+    aggregations = result.get('aggregations')
+    data['count'] = result['hits']['total']
+
+    # expose entities by schema count.
+    for schema in aggregations['schema']['buckets']:
+        data['schemata'][schema['key']] = schema['doc_count']
+
+    # if no countries or langs are given, take the most common from the data.
+    if not len(data.get('countries', [])):
+        countries = aggregations['countries']['buckets']
+        data['countries'] = [c['key'] for c in countries]
+
+    if not len(data.get('languages', [])):
+        countries = aggregations['languages']['buckets']
+        data['languages'] = [c['key'] for c in countries]
+
     es.index(index=collection_index(),
              doc_type='doc',
              id=collection.id,

@@ -1,7 +1,11 @@
+import os
 import json
+from pprint import pprint
 
 from aleph.core import db
 from aleph.model import Entity
+from aleph.util import load_config_file
+from aleph.logic.entities import bulk_load
 from aleph.index import index_entity, flush_index
 from aleph.tests.util import TestCase
 
@@ -265,3 +269,55 @@ class EntitiesApiTestCase(TestCase):
         assert len(data['results']) == 1, data
         assert 'Laden' in data['results'][0]['name'], data
         assert 'Pooh' not in res.data, res.data
+
+    def test_entity_references(self):
+        db_uri = 'file://' + self.get_fixture_path('experts.csv')
+        os.environ['ALEPH_TEST_BULK_CSV'] = db_uri
+        yml_path = self.get_fixture_path('experts.yml')
+        config = load_config_file(yml_path)
+        bulk_load(config)
+        flush_index()
+
+        res = self.client.get('/api/2/entities?q=Climate')
+        assert res.json['total'] == 1, res.json
+        grp_id = res.json['results'][0]['id']
+
+        res = self.client.get('/api/2/entities/%s/references' % grp_id)
+        results = res.json['results']
+        assert len(results) == 1, results
+        assert results[0]['count'] == 3, results
+
+    def test_entity_pivot(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/entities'
+        data = {
+            'schema': 'Person',
+            'name': "Blaaaa blubb",
+            'properties': {
+                'phone': '+491769817271'
+            },
+            'collection_id': self.col.id
+        }
+        resa = self.client.post(url,
+                                data=json.dumps(data),
+                                headers=headers,
+                                content_type='application/json')
+        data = {
+            'schema': 'Person',
+            'name': "Nobody Man",
+            'properties': {
+                'phone': '+491769817271'
+            },
+            'collection_id': self.col.id
+        }
+        resa = self.client.post(url,
+                                data=json.dumps(data),
+                                headers=headers,
+                                content_type='application/json')
+        flush_index()
+        url = '/api/2/entities/%s/pivot' % resa.json['id']
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, (res.status_code, res.json)
+        results = res.json['results']
+        assert len(results) == 1, results
+        assert results[0]['value'] == '+491769817271', results

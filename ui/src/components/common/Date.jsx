@@ -9,7 +9,7 @@ class Date extends Component {
     let date = value.split('T')[0];
     return (
       <span className='Date'>
-        [{ date }]
+        { date }
       </span>
     );
   }
