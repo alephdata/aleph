@@ -9,17 +9,6 @@ class Label extends Component {
   render() {
     const { icon = false } = this.props;
     let { title, name, file_name, schema } = this.props.entity;
-    // title = toString(title);
-    // name = toString(name);
-    // file_name = toString(file_name);
-    // if (!short && title && file_name && title !== file_name) {
-    //     return (
-    //         <span className="entity-label" title={title}>
-    //             <span className="title">{title} </span>
-    //             <span className="file-name">{file_name}</span>
-    //         </span>
-    //     );
-    // }
     
     return (
       <span className="entity-label" title={ title || name }>
