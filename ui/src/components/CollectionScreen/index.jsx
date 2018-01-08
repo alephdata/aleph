@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { fetchCollection } from 'src/actions';
 import Screen from 'src/components/common/Screen';
+import ScreenLoading from 'src/components/common/ScreenLoading';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import CollectionContent from './CollectionContent';
@@ -23,8 +24,8 @@ class CollectionScreen extends Component {
 
   render() {
     const { collection } = this.props;
-    if (!collection) {
-      return null;
+    if (!collection || !collection.links) {
+      return <ScreenLoading />;
     }
     return (
       <Screen>
