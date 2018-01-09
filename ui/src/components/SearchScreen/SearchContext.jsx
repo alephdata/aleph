@@ -8,6 +8,7 @@ import { fetchSearchResults } from 'src/actions';
 import Query from './Query';
 import SearchResult from './SearchResult';
 import SearchFilter from './SearchFilter';
+import SectionLoading from 'src/components/common/SectionLoading';
 
 
 class SearchContext extends Component {
@@ -58,7 +59,7 @@ class SearchContext extends Component {
 
   render() {
     const { query, aspects = {} } = this.props;
-    const { result } = this.state;
+    const { result, isFetching } = this.state;
   
     aspects.collections = isBoolean(aspects.collections) ? aspects.collections : true;
     aspects.countries = isBoolean(aspects.countries) ? aspects.countries : true;
@@ -72,6 +73,9 @@ class SearchContext extends Component {
         <SearchResult query={query}
                       result={result}
                       aspects={aspects} />
+        { isFetching && (
+          <SectionLoading />
+        )}
       </div>
     )
   }

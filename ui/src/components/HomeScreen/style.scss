@@ -1,56 +1,32 @@
-.homepage_image {
-  height: 70%;
+.HomePage {
+  background-image: url("../../assets/europe_asia_dark.png");
   background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
   color: white;
   text-align: center;
-  z-index: 2;
-  background-image: url("../../assets/europe_asia_dark.png");
-}
 
-.search_homepage {
-  z-index: 1;
-  width: 60%;
-  position: absolute;
-  left: 20%;
-  top: 50%;
-}
+  .search_h1 {
+    color: white !important;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    font-size: 4em;
+  }
 
-.search_span {
-  top: 8px !important;
-}
+  .search_form {
+    max-width: 50em;
+    margin: 0 auto;
+    padding-bottom: 5em;
+  }
 
-.search_input {
-  height: 45px !important;
-}
+  .homepage_examples {
+    position: relative;
+    top: 52vh;
+    left: 52%;
+    display: flex;
+  }
 
-.search_form {
-  position: absolute;
-  left: 10%;
-  top: 50%;
-  width: 80%;
-}
-
-.search_h1 {
-  color: white !important;
-  margin-top: 17vh;
-  font-size: 4em;
-  font-weight: bold;
-}
-
-.search_subtitles {
-  position: absolute;
-  left: 22%;
-  top: 10%;
-  width: 55%;
-}
-
-.homepage_examples {
-  position: relative;
-  top: 52vh;
-  left: 52%;
-  display: flex;
-}
-
-.search_example_item {
-  float: right;
+  .search_example_item {
+    float: right;
+  }
 }
