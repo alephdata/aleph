@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 
 import Date from 'src/components/common/Date';
-import Category from 'src/components/common/Category';
 import Collection from 'src/components/common/Collection';
 
 import './CollectionCard.css';

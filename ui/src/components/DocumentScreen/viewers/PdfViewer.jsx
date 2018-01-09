@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Document, Page } from 'react-pdf/build/entry.webpack';
 import { findLast } from 'lodash';
@@ -6,6 +7,14 @@ import { findLast } from 'lodash';
 import { parse as parsePdfFragId } from 'src/util/pdfFragId';
 
 import './PdfViewer.css';
+
+function getPageNumber(fragId) {
+  const pageParameter = findLast(
+    parsePdfFragId(fragId),
+    { parameter: 'page' },
+  );
+  return pageParameter && pageParameter.pagenum;
+}
 
 class PdfViewer extends Component {
   constructor(props) {
@@ -20,8 +29,15 @@ class PdfViewer extends Component {
   }
 
   render() {
-    const { url, fragId } = this.props;
+    const { url, fragId, session } = this.props;
     const { numPages } = this.state;
+    const fileInfo = {url: url};
+
+    if (session.token) {
+      fileInfo['httpHeaders'] = {
+        'Authorization': `Bearer ${session.token}`
+      }
+    }
 
     let pageNumber = getPageNumber(fragId);
     if (pageNumber === undefined) pageNumber = 1;
@@ -36,7 +52,7 @@ class PdfViewer extends Component {
 
 
         <div className="document_pdf">
-        <Document renderAnnotations={true} file={url} onLoadSuccess={this.onDocumentLoad.bind(this)}>
+        <Document renderAnnotations={true} file={fileInfo} onLoadSuccess={this.onDocumentLoad.bind(this)}>
           <Page
             pageNumber={pageNumber}
             className="page"
@@ -49,12 +65,10 @@ class PdfViewer extends Component {
   }
 }
 
-export default PdfViewer;
-
-function getPageNumber(fragId) {
-  const pageParameter = findLast(
-    parsePdfFragId(fragId),
-    { parameter: 'page' },
-  );
-  return pageParameter && pageParameter.pagenum;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    session: state.session
+  };
 }
+
+export default connect(mapStateToProps)(PdfViewer);

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NonIdealState, Spinner } from '@blueprintjs/core';
+import { NonIdealState } from '@blueprintjs/core';
 import Waypoint from 'react-waypoint';
 
 import { fetchNextSearchResults } from 'src/actions';

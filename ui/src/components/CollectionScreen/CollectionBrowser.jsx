@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import { debounce } from 'lodash';
-import { Spinner } from '@blueprintjs/core';
 import Waypoint from 'react-waypoint';
 
 import Query from '../SearchScreen/Query';
