@@ -6,6 +6,7 @@ import Waypoint from 'react-waypoint';
 import { fetchNextSearchResults } from 'src/actions';
 
 import EntityList from 'src/components/EntityScreen/EntityList';
+import SectionLoading from 'src/components/common/SectionLoading';
 
 class SearchResult extends Component {
   constructor(props) {
@@ -50,9 +51,11 @@ class SearchResult extends Component {
           <NonIdealState visual="search" title="No search results"
             description="Try making your search more general" />}
         <EntityList {...this.props} result={result} />
-        { result.next && (isExpanding ?
-          <div className="results-loading"><Spinner /></div>
-          : <Waypoint onEnter={this.bottomReachedHandler} />
+        { result.next && (
+          <Waypoint onEnter={this.bottomReachedHandler} />
+        )}
+        { isExpanding && (
+          <SectionLoading />
         )}
       </div>
     );

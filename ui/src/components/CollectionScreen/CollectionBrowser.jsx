@@ -7,6 +7,7 @@ import { Spinner } from '@blueprintjs/core';
 import Waypoint from 'react-waypoint';
 
 import Query from '../SearchScreen/Query';
+import SectionLoading from 'src/components/common/SectionLoading';
 import { fetchCollections } from 'src/actions';
 import CollectionCard from './CollectionCard';
 
@@ -117,10 +118,12 @@ class CollectionBrowser extends Component {
               <CollectionCard collection={res} />
             </div>
           )}
-          { result.next && (isFetching ?
-          <div className="results-loading"><Spinner /></div>
-          : <Waypoint onEnter={this.bottomReachedHandler} />
-        )}
+          { result.next && (
+            <Waypoint onEnter={this.bottomReachedHandler} />
+          )}
+          { isFetching && (
+            <SectionLoading />
+          )}
         </div>
       </div>
     );
