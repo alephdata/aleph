@@ -33,7 +33,7 @@ services:
   worker:
     build: .
     command: celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /var/lib/celery.pid
-    links:
+    depends_on:
       - postgres
       - elasticsearch
       - rabbitmq
@@ -58,7 +58,7 @@ services:
   beat:
     build: .
     command: celery -A aleph.queues beat -s /var/lib/celerybeat-schedule.db --pidfile /var/lib/celery.pid
-    links:
+    depends_on:
       - postgres
       - elasticsearch
       - rabbitmq
@@ -84,7 +84,7 @@ services:
     command: gunicorn -w 8 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
     expose:
       - 8000
-    links:
+    depends_on:
       - postgres
       - elasticsearch
       - rabbitmq
@@ -113,7 +113,7 @@ services:
 
   web:
     image: nginx:alpine
-    links:
+    depends_on:
       - api
       - ui
     ports:

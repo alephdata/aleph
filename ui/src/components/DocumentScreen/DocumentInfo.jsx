@@ -22,9 +22,7 @@ class DocumentInfo extends Component {
           <div className="pt-button-group pt-fill">
             <AnchorButton
               href={document.links.file}
-              download={document.file_name}
-              className="pt-minimal"
-            >
+              download={document.file_name}>
               Download
             </AnchorButton>
           </div>

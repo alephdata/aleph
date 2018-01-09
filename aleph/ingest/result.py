@@ -27,7 +27,6 @@ class DocumentResult(Result):
     )
 
     def __init__(self, manager, document, file_path=None, role_id=None):
-        document.pdf_version = None
         self.manager = manager
         self.role_id = role_id
         self.document = document

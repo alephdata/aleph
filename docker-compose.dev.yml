@@ -1,8 +1,14 @@
 version: "2"
 
+networks:
+  devnet:
+    driver: bridge
+
 services:
   postgres:
     image: postgres:10.0
+    networks:
+      - devnet
     volumes:
       - "./build/data/postgres:/var/lib/postgresql/data"
       - "./build/logs/postgres:/var/log"
@@ -13,18 +19,24 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.0.0
+    networks:
+      - devnet
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
       - elasticsearch-log:/var/log
 
   rabbitmq:
     image: rabbitmq
+    networks:
+      - devnet
     volumes:
       - "./build/data/rabbitmq:/var/lib/rabbitmq"
       - "./build/logs/rabbitmq:/var/log"
 
   unoservice:
     image: alephdata/unoservice
+    networks:
+      - devnet
     tmpfs: /tmp
     restart: on-failure
     expose:
@@ -33,8 +45,9 @@ services:
   app:
     build: .
     command: /bin/bash
-    hostname: alephdev
-    links:
+    networks:
+      - devnet
+    depends_on:
       - postgres
       - elasticsearch
       - rabbitmq
@@ -71,11 +84,13 @@ services:
     ports:
       - "5000:5000"
     restart: on-failure
-    links:
+    depends_on:
       - postgres
       - elasticsearch
       - rabbitmq
       - unoservice
+    networks:
+      - devnet
     volumes:
       - "./aleph:/aleph/aleph"
       - "./build/archive:/data"
@@ -100,8 +115,10 @@ services:
   
   ui:
     build: ui
-    links:
+    depends_on:
       - api
+    networks:
+      - devnet
     command: npm run start
     ports:
       - "8080:3000"
@@ -114,7 +131,6 @@ services:
       REACT_APP_API_ENDPOINT: '/api/2'
     env_file:
       - aleph.env
-
 
 volumes:
   elasticsearch-data: {}
