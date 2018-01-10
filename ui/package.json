@@ -24,11 +24,13 @@
     "react-redux": "^5.0.4",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.0",
+    "react-truncate": "^2.3.0",
     "react-waypoint": "^7.3.1",
     "redux": "^3.6.0",
     "redux-act": "^1.5.1",
     "redux-logger": "^3.0.1",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "truncate": "^2.0.0"
   },
   "devDependencies": {
     "faker": "^4.1.0",
