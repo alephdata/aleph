@@ -76,8 +76,6 @@ def create_app(config={}):
         task_queues=queues,
         task_default_queue=WORKER_QUEUE,
         task_default_routing_key=WORKER_ROUTING_KEY,
-        # ultra-high time limit to shoot hung tasks:
-        task_time_limit=3600 * 3,
         worker_max_tasks_per_child=500,
         worker_disable_rate_limits=True,
         beat_schedule={
