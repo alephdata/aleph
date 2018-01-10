@@ -58,6 +58,13 @@ CORS_ORIGINS = env_list('ALEPH_CORS_ORIGINS', seperator='|')
 
 
 ###############################################################################
+# Error reporting
+
+# Using sentry raven
+SENTRY_DSN = env.get('SENTRY_DSN')
+
+
+###############################################################################
 # Data storage
 
 # Archive type (either 's3' or 'file', i.e. local file system):
@@ -139,8 +146,8 @@ ALEMBIC_DIR = path.abspath(ALEMBIC_DIR)
 
 ELASTICSEARCH_URL = env.get('ALEPH_ELASTICSEARCH_URI', 'http://localhost:9200')
 
-# Enable delayed processing via queue
-QUEUE = env_bool('ALEPH_QUEUE')
+# Disable delayed processing via queue
+EAGER = env_bool('ALEPH_EAGER', False)
 
 BROKER_URI = 'amqp://guest:guest@localhost:5672//'
 BROKER_URI = env.get('ALEPH_BROKER_URI', BROKER_URI)

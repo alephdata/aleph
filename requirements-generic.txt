@@ -34,6 +34,9 @@ pylru >= 1.0.9
 pyjwt >= 1.5.3
 regex >= 2017.12.09
 
+# Error reporting
+raven[flask]
+
 # Testing dependencies
 faker
 factory_boy
