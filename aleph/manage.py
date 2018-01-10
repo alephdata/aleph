@@ -1,6 +1,7 @@
 # coding: utf-8
 import os
 import logging
+import datetime
 from normality import slugify
 from ingestors.util import decode_path
 from flask_script import Manager, commands as flask_script_commands
@@ -11,6 +12,7 @@ from aleph.core import create_app, archive
 from aleph.model import db, upgrade_db
 from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
+from aleph.views.triples import export_collections
 from aleph.analyze import install_analyzers
 from aleph.ingest import ingest_document
 from aleph.index.admin import delete_index, upgrade_search
@@ -212,6 +214,22 @@ def evilshit():
         enum = ENUM(name=enum['name'])
         enum.drop(bind=db.engine, checkfirst=True)
     upgrade()
+
+
+@manager.command
+def rdfdump():
+    
+    dump = export_collections()
+
+    dump_path = '/aleph/build/data/dumps'
+    if not os.path.exists(dump_path):
+        os.makedirs(dump_path)
+    fn = '%s/rdfdump_%s.n3' % (dump_path,
+                               datetime.datetime.now().strftime('%Y%m%d%H%M%S%f'))
+    with open(fn, 'w') as f:
+        f.write(dump)
+
+    log.info('RDF dump written to %s' % fn)
 
 
 def main():

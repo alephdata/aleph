@@ -33,6 +33,7 @@ cryptography >= 2.1.3
 pylru >= 1.0.9
 pyjwt >= 1.5.3
 regex >= 2017.12.09
+rdflib
 
 # Testing dependencies
 faker
