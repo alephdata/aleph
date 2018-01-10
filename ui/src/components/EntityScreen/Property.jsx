@@ -6,6 +6,7 @@ import Entity from './Entity';
 import Country from 'src/components/common/Country';
 import Date from 'src/components/common/Date';
 
+import './Property.css';
 
 class Value extends Component {
   render() {
@@ -49,10 +50,14 @@ class Name extends Component {
 
 class Table extends Component {
   render() {
-    const { properties, schema, schemata, children } = this.props,
+    const { properties, schema, schemata, children, classTable, classTh, classTd } = this.props,
           model = schemata[schema] || {};
 
     let items = [];
+      let tableClass = classTable ? classTable : '';
+      let tdClass = classTd ? classTd : '';
+      let thClass = classTh ? classTh : '';
+
     Object.entries(properties).forEach(([name, values]) => {
         const propModel = model.properties[name];
         if (!propModel || propModel.hidden || !values.length) {
@@ -62,7 +67,7 @@ class Table extends Component {
             var header = [];
             if (i === 0) {
                 header.push((
-                    <th key={name} rowSpan={ values.length }>
+                    <th className={thClass} key={name} rowSpan={ values.length }>
                         <Name name={name} model={propModel} />
                     </th>
                 ))
@@ -70,7 +75,7 @@ class Table extends Component {
             items.push((
                 <tr key={`${name}-${i}`}>
                     {header}
-                    <td>
+                    <td className={tdClass}>
                         <Value value={value} model={propModel} />
                     </td>
                 </tr>
@@ -79,7 +84,7 @@ class Table extends Component {
     });
 
     return (
-      <table>
+      <table className={tableClass}>
         <tbody>
             {items}
             {children}
@@ -93,7 +98,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     schemata: state.metadata.schemata
   };
-}
+};
 
 class Property extends Component {
   static Name = Name;

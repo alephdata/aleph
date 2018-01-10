@@ -4,16 +4,19 @@ import React, { Component } from 'react';
 import Schema from 'src/components/common/Schema';
 import getPath from 'src/util/getPath';
 
+import './Entity.css';
+
 
 class Label extends Component {
   render() {
-    const { icon = false } = this.props;
+    const { icon = false, addClass, iconClass } = this.props;
     let { title, name, file_name, schema } = this.props.entity;
+    const className = addClass ? 'entity-label document_title' : 'entity-label';
     
     return (
-      <span className="entity-label" title={ title || name }>
+      <span className={className} title={ title || name }>
         {icon && (
-          <Schema.Icon schema={schema} />
+          <Schema.Icon className={iconClass} schema={schema} />
         )}
         { title || name || file_name }
       </span>
@@ -23,10 +26,10 @@ class Label extends Component {
 
 class EntityLink extends Component {
   render() {
-    const { entity, className, icon, short } = this.props;
+    const { entity, className, icon, short, iconClass } = this.props;
     return (
       <Link to={getPath(entity.links.ui)} className={className}>
-        <Label entity={entity} icon={icon} short={short} />
+        <Label entity={entity} icon={icon} iconClass={iconClass} short={short} />
       </Link>
     );
   }
