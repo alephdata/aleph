@@ -88,9 +88,9 @@ class Query(object):
     def get_source(self):
         source = {}
         if self.INCLUDE_FIELDS:
-            source['include'] = self.INCLUDE_FIELDS
+            source['includes'] = self.INCLUDE_FIELDS
         elif self.EXCLUDE_FIELDS:
-            source['exclude'] = self.EXCLUDE_FIELDS
+            source['excludes'] = self.EXCLUDE_FIELDS
         return source
 
     def get_body(self):
