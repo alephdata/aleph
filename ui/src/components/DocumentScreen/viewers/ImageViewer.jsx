@@ -1,20 +1,26 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import SectionLoading from 'src/components/common/SectionLoading';
 
 import './ImageViewer.css';
 
 class ImageViewer extends Component {
   render() {
-    const { document } = this.props;
+    const { document, session } = this.props;
     if (!document.links || !document.links.file) {
-        return null;
+        return <SectionLoading />;
     }
+    const imageUrl = session.token ? `${document.links.file}?api_key=${session.token}` : document.links.file;
 
     return (
       <div className="ImageViewer">
-        <img src={document.links.file} alt={document.file_name} />
+        <img src={imageUrl} alt={document.file_name} />
       </div>
     );
   }
 }
 
-export default ImageViewer;
+const mapStateToProps = (state, ownProps) => {
+  return {session: state.session};
+}
+export default connect(mapStateToProps)(ImageViewer);

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { AnchorButton } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
 
@@ -9,8 +10,8 @@ import CollectionCard from 'src/components/CollectionScreen/CollectionCard';
 
 class DocumentInfo extends Component {
   render() {
-    const { document } = this.props;
-    
+    const { document, session } = this.props;
+
     return (
       <DualPane.InfoPane>
         <h1>
@@ -21,7 +22,7 @@ class DocumentInfo extends Component {
         {document.links && document.links.file &&
           <div className="pt-button-group pt-fill">
             <AnchorButton
-              href={document.links.file}
+              href={session.token ? `${document.links.file}?api_key=${session.token}` : document.links.file}
               download={document.file_name}>
               Download
             </AnchorButton>
@@ -38,4 +39,7 @@ class DocumentInfo extends Component {
   }
 }
 
-export default DocumentInfo;
+const mapStateToProps = (state, ownProps) => {
+  return {session: state.session};
+}
+export default connect(mapStateToProps)(DocumentInfo);

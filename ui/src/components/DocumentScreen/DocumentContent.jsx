@@ -12,7 +12,6 @@ import EmailHeadersViewer from './viewers/EmailHeadersViewer';
 class DocumentContent extends Component {
   render() {
     const { document, fragId } = this.props;
-    // console.log(document.schemata);
 
     return (
       <DualPane.ContentPane>
@@ -27,7 +26,7 @@ class DocumentContent extends Component {
         )}
 
         {document.schema === 'Email' && (
-          <EmailHeadersViewer headers={document.headers} />
+          <EmailHeadersViewer document={document} />
         )}
 
         {document.text && !document.html && (
@@ -52,7 +51,6 @@ class DocumentContent extends Component {
         {document.children !== undefined && document.children > 0 && (
           <FolderViewer document={document} />
         )}
-
       </DualPane.ContentPane>
     );
   }

@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import './EmailHeadersViewer.css';
+import FolderViewer from './FolderViewer';
 
 class EmailHeadersViewer extends Component {
   render() {
-    const { headers } = this.props;
-    if (!headers) return null;
+    const { document } = this.props;
+    const { headers = {} } = document;
+
     return (
       <div className="EmailHeadersViewer">
-        <table className="pt-table pt-bordered">
+        <table className="pt-table">
             <tbody>
                 {headers.from && (
                     <tr>
@@ -44,6 +46,22 @@ class EmailHeadersViewer extends Component {
                         <th><FormattedMessage id="email.bcc" defaultMessage="BCC"/></th>
                         <td>{headers.bcc}</td>
                     </tr>
+                )}
+                {document.children && (
+                  <tr>
+                    <th><FormattedMessage id="email.attachment" defaultMessage="Attachments"/></th>
+                    <td>
+                      <a href="#children">
+                        <i className="fa fa-paperclip" aria-hidden="true"></i>
+                        {' '}
+                        <FormattedMessage id="email.attachment.count"
+                                          defaultMessage="{count} attached files"
+                                          values={{
+                                            count: document.children
+                                          }} />
+                      </a>
+                    </td>
+                  </tr>
                 )}
             </tbody>
         </table>

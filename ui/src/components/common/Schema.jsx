@@ -7,10 +7,14 @@ import { connect } from 'react-redux';
 class SchemaIcon extends Component {
   render() {
     const { schema, schemata } = this.props,
-          model = schemata[schema] || {},
-          icon = model.icon || 'fa-magic';
+          model = schemata[schema] || {};
+
+    if (model.icon) {
+      return null;
+    }
+
     return (
-      <i className={ `fa fa-fw ${ icon }` }></i>
+      <i className={ `fa fa-fw ${ model.icon }` }></i>
     );
   }
 }
