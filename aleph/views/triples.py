@@ -1,14 +1,72 @@
 from urlparse import urljoin
+from banal import ensure_list
+from followthemoney import model
 from elasticsearch.helpers import scan
 from rdflib import Namespace, Graph, URIRef, Literal
-from rdflib.namespace import FOAF, DC, DCTERMS, RDF, RDFS, XSD
+from rdflib.namespace import FOAF, DC, DCTERMS, RDF, RDFS, SKOS, XSD
 
 from aleph.core import es
 from aleph.settings import APP_UI_URL
 
+DCMI = Namespace('http://purl.org/dc/dcmitype/')
 FTM = Namespace('https://data.occrp.org/ns/ftm#')
 ALEPH = Namespace('https://data.occrp.org/ns/aleph#')
-DCMI = Namespace('http://purl.org/dc/dcmitype/')
+
+
+def types_mapping():
+    mapping = {}
+    ps = model.properties
+    for p in ps:
+        mapping[p.name] = p.to_dict().get('type')
+    return mapping
+
+FTM_TYPES = types_mapping()
+
+
+def entity_uri(value):
+    return URIRef(urljoin(APP_UI_URL, 'entities/%s' % value))
+
+
+def document_uri(value):
+    return URIRef(urljoin(APP_UI_URL, 'documents/%s' % value))
+
+
+def collection_uri(value):
+    return URIRef(urljoin(APP_UI_URL, 'collections/%s' % value))
+
+
+def tel_uri(value):
+    return URIRef('tel:%s' % value)
+
+
+def email_uri(value):
+    return URIRef('mailto:%s' % value)
+
+
+def country_uri(value):
+    return URIRef('iso-3166-1:%s' % value)
+
+
+def date_lit(value):
+    return Literal(value, datatype=XSD.dateTime)
+
+
+def typed_object(predicate, value):
+    t = FTM_TYPES[predicate]
+    if t == 'date':
+        return date_lit(value)
+    if t == 'country':
+        return country_uri(value)
+    if t == 'email':
+        return email_uri(value)
+    if t == 'phone':
+        return tel_uri(value)
+    if t == 'url':
+        return URIRef(value)
+    if t == 'entity':
+        return entity_uri(value)
+    else:
+        return Literal(value)
 
 
 def setup_graph(uri):
@@ -33,7 +91,28 @@ def set_collection(g, entity_uri, collection_uri):
 
 
 def set_entity_properties(g, uri, entity):
-    pass
+    if entity.get('name'):
+        g.add((uri, SKOS.prefLabel, Literal(entity.get('name'))))
+    for name in entity.get('names', []):
+        g.add((uri, RDFS.label, Literal(name)))
+
+    for country in entity.get('countries', []):
+        if len(country) != 2:
+            continue
+        g.add((uri, ALEPH.country, country_uri(country)))
+
+    for phone in entity.get('phones', []):
+        g.add((uri, ALEPH.phone, tel_uri(phone)))
+
+    for email in entity.get('emails', []):
+        g.add((uri, ALEPH.email, email_uri(email)))
+
+    properties = entity.get('properties', {})
+    for name, values in properties.items():
+        pred = FTM[name]
+        for value in ensure_list(values):
+            obj = typed_object(name, value)
+            g.add((uri, pred, obj))
 
 
 def set_document_properties(g, uri, document):
@@ -42,13 +121,11 @@ def set_document_properties(g, uri, document):
     if document.get('author'):
         g.add((uri, DC.creator, Literal(document.get('author'))))
     if document.get('retreived_at'):
-        g.add((uri, ALEPH.retrievedAt, Literal(
-            document.get('retreived_at'), dataype=XSD.dateTime)))
+        g.add((uri, ALEPH.retrievedAt, date_lit(document.get('retreived_at'))))
     g.add((uri, ALEPH.fileName, Literal(document.get('file_name'))))
-    g.add((uri, ALEPH.mimeType, Literal(document.get('mime_type'))))
-    g.add((uri, ALEPH.sourceUrl, Literal(document.get('source_url'))))
-    g.add((uri, DCTERMS.modified, Literal(
-        document.get('updated_at'), datatype=XSD.dateTime)))
+    g.add((uri, ALEPH.sourceUrl, URIRef(document.get('source_url'))))
+    g.add((uri, ALEPH.mediaType, Literal(document.get('mime_type'))))
+    g.add((uri, DCTERMS.modified, date_lit(document.get('updated_at'))))
 
     # TODO: parents/children
 
@@ -56,25 +133,28 @@ def set_document_properties(g, uri, document):
 def export_entity(g, entity, collection_uri):
 
     if 'Document' in entity['schemata']:
-        uri = URIRef(urljoin(APP_UI_URL, 'documents/%s' % entity['id']))
+        uri = document_uri(entity['id'])
         set_document_properties(g, uri, entity)
     else:
-        uri = URIRef(urljoin(APP_UI_URL, 'entities/%s' % entity['id']))
+        uri = entity_uri(entity['id'])
 
     set_entity_properties(g, uri, entity)
     set_type(g, uri, entity)
     set_collection(g, uri, collection_uri)
 
+    print g.serialize(format='n3')
+
 
 def export_collection(collection):
-    collection_uri = URIRef(urljoin(APP_UI_URL, 'collections/%s' %
-                                    collection['id']))
-    g = setup_graph(collection_uri)
+    uri = collection_uri(collection['id'])
+    g = setup_graph(uri)
 
-    g.add((collection_uri, RDF.type, DCMI.Collection))
-    g.add((collection_uri, RDFS.label, Literal(collection['label'])))
-    g.add((collection_uri, ALEPH.foreignId, Literal(collection['foreign_id'])))
-    g.add((collection_uri, ALEPH.category, ALEPH[collection['category']]))
+    g.add((uri, RDF.type, DCMI.Collection))
+    g.add((uri, RDFS.label, Literal(collection['label'])))
+    g.add((uri, ALEPH.foreignId, Literal(collection['foreign_id'])))
+    g.add((uri, ALEPH.category, ALEPH[collection['category']]))
+
+    print g.serialize(format='n3')
 
     q = {
         'query': {
@@ -87,9 +167,8 @@ def export_collection(collection):
     for row in scan(es, index='aleph-entity-v1', query=q):
         entity = row['_source']
         entity['id'] = row['_id']
-        export_entity(g, entity, collection_uri)
+        export_entity(g, entity, uri)
 
-    print g.serialize(format='n3')
     return g
 
 
@@ -104,6 +183,7 @@ def export_collections():
     for hit in res['hits']['hits']:
         collection = hit['_source']
         collection['id'] = hit['_id']
+        # collection['id'] = 38
         g = export_collection(collection)
 
         out = out + g.serialize(format='ntriples')
