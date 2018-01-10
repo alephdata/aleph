@@ -12,7 +12,6 @@ from aleph.core import create_app, archive
 from aleph.model import db, upgrade_db
 from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
-from aleph.views.triples import export_collections
 from aleph.analyze import install_analyzers
 from aleph.ingest import ingest_document
 from aleph.index.admin import delete_index, upgrade_search
@@ -23,6 +22,7 @@ from aleph.logic.alerts import check_alerts
 from aleph.logic.entities import bulk_load, reindex_entities
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
+from aleph.logic.triples import export_collections
 from aleph.util import load_config_file
 
 
@@ -217,12 +217,14 @@ def evilshit():
 
 
 @manager.command
-def rdfdump():
+@manager.option('-f', '--filename', dest='fn')
+def rdfdump(fn=None):
 
-    dump_path = '/aleph/build/data/dumps'
-    if not os.path.exists(dump_path):
-        os.makedirs(dump_path)
-    fn = '%s/rdfdump_%s.n3' % (dump_path,
+    if fn is None:
+        dump_path = '/aleph/build/data/dumps'
+        if not os.path.exists(dump_path):
+            os.makedirs(dump_path)
+        fn = '%s/rdfdump_%s.n3' % (dump_path,
                                datetime.datetime.now().strftime('%Y%m%d%H%M%S%f'))
     with open(fn, 'a') as f:
         export_collections(f)
