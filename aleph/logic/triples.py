@@ -6,7 +6,7 @@ from rdflib import Namespace, Graph, URIRef, Literal
 from rdflib.namespace import FOAF, DC, DCTERMS, RDF, RDFS, SKOS, XSD
 
 from aleph.core import es
-from aleph.settings import APP_UI_URL
+from aleph.logic.util import ui_url
 
 DCMI = Namespace('http://purl.org/dc/dcmitype/')
 FTM = Namespace('https://data.occrp.org/ns/ftm#')
@@ -24,15 +24,15 @@ FTM_TYPES = types_mapping()
 
 
 def entity_uri(value):
-    return URIRef(urljoin(APP_UI_URL, 'entities/%s' % value))
+    return URIRef(ui_url('entities', value))
 
 
 def document_uri(value):
-    return URIRef(urljoin(APP_UI_URL, 'documents/%s' % value))
+    return URIRef(ui_url('documents', value))
 
 
 def collection_uri(value):
-    return URIRef(urljoin(APP_UI_URL, 'collections/%s' % value))
+    return URIRef(ui_url('collections', value))
 
 
 def tel_uri(value):
