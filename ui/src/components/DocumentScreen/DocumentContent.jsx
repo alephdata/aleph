@@ -9,6 +9,8 @@ import ImageViewer from './viewers/ImageViewer';
 import FolderViewer from './viewers/FolderViewer';
 import EmailHeadersViewer from './viewers/EmailHeadersViewer';
 
+import './DocumentContent.css';
+
 class DocumentContent extends Component {
   render() {
     const { document, fragId } = this.props;
@@ -16,7 +18,7 @@ class DocumentContent extends Component {
     return (
       <DualPane.ContentPane>
         {document.status === 'fail' && (
-          <div className="pt-callout pt-intent-warning">
+          <div className="IngestFailed pt-callout pt-intent-warning">
             <h5>
               <FormattedMessage id="document.status_fail"
                                 defaultMessage="This document was not imported successfully"/>

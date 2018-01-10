@@ -125,7 +125,8 @@ class Query {
     }
 
     sameAs(other) {
-        return this.toLocation() === other.toLocation();
+        return this.toLocation() === other.toLocation()
+            && queryString.stringify(this.context) === queryString.stringify(other.context);
     }
 
     toLocation() {

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import './EmailHeadersViewer.css';
-import FolderViewer from './FolderViewer';
 
 class EmailHeadersViewer extends Component {
   render() {
@@ -47,7 +46,7 @@ class EmailHeadersViewer extends Component {
                         <td>{headers.bcc}</td>
                     </tr>
                 )}
-                {document.children && (
+                {!!document.children && (
                   <tr>
                     <th><FormattedMessage id="email.attachment" defaultMessage="Attachments"/></th>
                     <td>

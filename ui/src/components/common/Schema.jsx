@@ -9,7 +9,7 @@ class SchemaIcon extends Component {
     const { schema, schemata } = this.props,
           model = schemata[schema] || {};
 
-    if (model.icon) {
+    if (!model.icon) {
       return null;
     }
 

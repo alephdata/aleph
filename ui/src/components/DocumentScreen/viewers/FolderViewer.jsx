@@ -18,8 +18,8 @@ class FolderViewer extends Component {
     return (
       <div id="children">
         <SearchContext collection={document.collection}
-                      context={context}
-                      aspects={aspects} />
+                       context={context}
+                       aspects={aspects} />
       </div>
     );
   }
