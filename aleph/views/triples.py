@@ -172,8 +172,7 @@ def export_collection(collection):
     return g
 
 
-def export_collections():
-    out = ""
+def export_collections(f):
 
     q = {
         'query': {'match_all': {}},
@@ -186,6 +185,4 @@ def export_collections():
         # collection['id'] = 38
         g = export_collection(collection)
 
-        out = out + g.serialize(format='ntriples')
-
-    return out
+        f.write(g.serialize(format='ntriples'))

@@ -218,16 +218,14 @@ def evilshit():
 
 @manager.command
 def rdfdump():
-    
-    dump = export_collections()
 
     dump_path = '/aleph/build/data/dumps'
     if not os.path.exists(dump_path):
         os.makedirs(dump_path)
     fn = '%s/rdfdump_%s.n3' % (dump_path,
                                datetime.datetime.now().strftime('%Y%m%d%H%M%S%f'))
-    with open(fn, 'w') as f:
-        f.write(dump)
+    with open(fn, 'a') as f:
+        export_collections(f)
 
     log.info('RDF dump written to %s' % fn)
 
