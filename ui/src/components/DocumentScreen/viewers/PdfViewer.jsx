@@ -66,9 +66,6 @@ class PdfViewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    session: state.session
-  };
+  return {session: state.session};
 }
-
 export default connect(mapStateToProps)(PdfViewer);

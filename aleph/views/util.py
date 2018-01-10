@@ -8,7 +8,7 @@ from lxml.etree import tostring
 from lxml.html import document_fromstring
 from lxml.html.clean import Cleaner
 
-from aleph.core import app_ui_url
+from aleph.core import settings
 from aleph.authz import Authz
 from aleph.model import Document, Collection, Entity
 from aleph.index.documents import get_entity as _get_index_entity
@@ -97,15 +97,16 @@ def is_safe_url(target):
     """Check if the forward URL is on the same host as the site."""
     test_url = urlparse(target)
     return test_url.scheme in ('http', 'https') and \
-        urlparse(app_ui_url).hostname == test_url.hostname
+        urlparse(settings.APP_UI_URL).hostname == test_url.hostname
 
 
 def get_best_next_url(*urls):
     """Returns the safest URL to redirect to from a given list."""
-    for url in urls + (app_ui_url,):
-        url = urljoin(app_ui_url, url)
+    for url in urls:
+        url = urljoin(settings.APP_UI_URL, url)
         if url and is_safe_url(url):
             return url
+    return settings.APP_UI_URL
 
 
 CLEANER = Cleaner(

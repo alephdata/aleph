@@ -18,6 +18,14 @@ log = logging.getLogger(__name__)
 blueprint = Blueprint('sessions_api', __name__)
 
 
+def _get_credential_role(credential):
+    data = check_token(credential)
+    if data is not None:
+        return Role.by_id(data.get('id'))
+    else:
+        return Role.by_api_key(credential)
+
+
 @blueprint.before_app_request
 def load_role():
     role = None
@@ -25,13 +33,9 @@ def load_role():
     if len(credential):
         if ' ' in credential:
             mechanism, credential = credential.split(' ', 1)
-        data = check_token(credential)
-        if data is not None:
-            role = Role.by_id(data.get('id'))
-        else:
-            role = Role.by_api_key(credential)
+        role = _get_credential_role(credential)
     elif 'api_key' in request.args:
-        role = Role.by_api_key(request.args.get('api_key'))
+        role = _get_credential_role(request.args.get('api_key'))
     request.authz = Authz(role=role)
 
 

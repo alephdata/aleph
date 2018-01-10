@@ -1,26 +1,8 @@
-@import "~@blueprintjs/core/dist/variables";
-
-$provider-logos: (
-  google: url(./icons/google_auth.png)
-);
+@import "src/app/variables.scss";
 
 .oauth-provider {
   text-align: center;
   display: inline-block;
   vertical-align: middle;
-  margin-left: $pt-grid-size;
-
-  &::before {
-    content: "";
-    display: block;
-    width: 40px;
-    height: 40px;
-    background-size: cover;
-  }
-
-  @each $provider, $logo in $provider-logos {
-    &[data-name='#{$provider}']::before {
-      background-image: $logo;
-    }
-  }
+  margin-left: $aleph-grid-size;
 }

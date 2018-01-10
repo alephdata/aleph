@@ -10,8 +10,17 @@ class FolderViewer extends Component {
     const context = {
       'filter:parent.id': document.id
     };
+    const aspects = {
+      filter: false,
+      countries: false,
+      collections: false
+    };
     return (
-      <SearchContext collection={document.collection} context={context} />
+      <div id="children">
+        <SearchContext collection={document.collection}
+                       context={context}
+                       aspects={aspects} />
+      </div>
     );
   }
 }

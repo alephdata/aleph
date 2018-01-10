@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 
+import './TextViewer.css';
+
 class TextViewer extends Component {
   render() {
     const { text } = this.props;
     return (
-      <pre>{text}</pre>
+      <div className="TextViewer">
+        <pre>{text}</pre>
+      </div>
     );
   }
 }

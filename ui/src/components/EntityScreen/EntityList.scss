@@ -1,4 +1,4 @@
-@import "~@blueprintjs/core/dist/variables";
+@import "src/app/variables.scss";
 
 .results-table {
     width: 100%;
@@ -30,5 +30,5 @@
 }
 
 .result-property {
-  margin-right: ($pt-grid-size * 2);
+  margin-right: ($aleph-grid-size * 2);
 }
