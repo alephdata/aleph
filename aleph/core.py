@@ -162,8 +162,8 @@ def url_for(*a, **kw):
             api_url = parsed.geturl()
 
         kw['_external'] = False
-        path = flask_url_for(*a, **kw)
         query = kw.pop('_query', None)
+        path = flask_url_for(*a, **kw)
         if query is not None:
             path = path + query_string(query)
         return urljoin(api_url, path)
