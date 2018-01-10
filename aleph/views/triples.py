@@ -69,15 +69,14 @@ def typed_object(predicate, value):
         return Literal(value)
 
 
-def setup_graph(uri):
-    g = Graph(identifier=uri)
+def ns_bind(g):
+    # NS binding useful for dumping to n3 for human readability but not
+    # necessary for ntriples
     g.namespace_manager.bind('dc', DC)
     g.namespace_manager.bind('dcmi', DCMI)
     g.namespace_manager.bind('dct', DCTERMS)
     g.namespace_manager.bind('ftm', FTM)
     g.namespace_manager.bind('aleph', ALEPH)
-
-    return g
 
 
 def set_type(g, uri, entity):
@@ -130,7 +129,8 @@ def set_document_properties(g, uri, document):
     # TODO: parents/children
 
 
-def export_entity(g, entity, collection_uri):
+def export_entity(f, entity, collection_uri):
+    g = Graph()
 
     if 'Document' in entity['schemata']:
         uri = document_uri(entity['id'])
@@ -142,19 +142,23 @@ def export_entity(g, entity, collection_uri):
     set_type(g, uri, entity)
     set_collection(g, uri, collection_uri)
 
-    print g.serialize(format='n3')
+    # ns_bind(g)
+    # print g.serialize(format='n3')
+    f.write(g.serialize(format='ntriples'))
 
 
-def export_collection(collection):
+def export_collection(f, collection):
     uri = collection_uri(collection['id'])
-    g = setup_graph(uri)
+    g = Graph()
 
     g.add((uri, RDF.type, DCMI.Collection))
     g.add((uri, RDFS.label, Literal(collection['label'])))
     g.add((uri, ALEPH.foreignId, Literal(collection['foreign_id'])))
     g.add((uri, ALEPH.category, ALEPH[collection['category']]))
 
-    print g.serialize(format='n3')
+    # ns_bind(g)
+    # print g.serialize(format='n3')
+    f.write(g.serialize(format='ntriples'))
 
     q = {
         'query': {
@@ -167,7 +171,7 @@ def export_collection(collection):
     for row in scan(es, index='aleph-entity-v1', query=q):
         entity = row['_source']
         entity['id'] = row['_id']
-        export_entity(g, entity, uri)
+        export_entity(f, entity, uri)
 
     return g
 
@@ -183,6 +187,4 @@ def export_collections(f):
         collection = hit['_source']
         collection['id'] = hit['_id']
         # collection['id'] = 38
-        g = export_collection(collection)
-
-        f.write(g.serialize(format='ntriples'))
+        export_collection(f, collection)
