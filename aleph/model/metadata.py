@@ -86,8 +86,7 @@ class Metadata(object):
 
     @property
     def file_size(self):
-        file_size = self.meta.get('file_size')
-        return int(file_size) if file_size else None
+        return self.meta.get('file_size')
 
     @file_size.setter
     def file_size(self, file_size):

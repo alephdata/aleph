@@ -16,4 +16,4 @@ class URL extends Component {
   }
 }
 
-export default Date;
+export default URL;

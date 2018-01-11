@@ -102,6 +102,9 @@ class DocumentResult(Result):
         doc.content_hash = self.checksum or doc.content_hash
         doc.uploader_id = self.role_id or doc.uploader_id
         doc.title = stringify(self.title) or doc.meta.get('title')
+        doc.file_name = stringify(self.file_name) or doc.meta.get('file_name')
+        doc.file_size = self.size or doc.meta.get('file_size')
+        doc.title = stringify(self.title) or doc.meta.get('title')
         doc.summary = stringify(self.summary) or doc.meta.get('summary')
         doc.author = stringify(self.author) or doc.meta.get('author')
         doc.generator = stringify(self.generator) or doc.meta.get('generator')

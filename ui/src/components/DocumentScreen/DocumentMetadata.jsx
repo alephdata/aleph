@@ -18,25 +18,23 @@ class DocumentMetadata extends Component {
           <table className='info-sheet'>
             <tbody>
               <tr>
-                  <th><FormattedMessage id="document.type" defaultMessage="Type"/></th>
-                  <td>
-                      <Schema.Icon schema={document.schema}/>
-                      <Schema.Name className='schema_name td_class' schema={document.schema}/>
-                  </td>
+                <th><FormattedMessage id="document.type" defaultMessage="Type"/></th>
+                <td>
+                  <Schema.Icon schema={document.schema}/>
+                  <Schema.Name schema={document.schema}/>
+                </td>
               </tr>
               {document.file_name && (
-                  <tr>
-                      <th><FormattedMessage id="document.file_name" defaultMessage="File name"/>
-                      </th>
-                      <td>{document.file_name}</td>
-                  </tr>
+                <tr>
+                  <th><FormattedMessage id="document.file_name" defaultMessage="File name"/></th>
+                  <td>{document.file_name}</td>
+                </tr>
               )}
               {document.file_size && (
-                  <tr>
-                      <th><FormattedMessage id="document.file_size" defaultMessage="File size"/>
-                      </th>
-                      <td><FileSize value={document.file_size}/></td>
-                  </tr>
+                <tr>
+                  <th><FormattedMessage id="document.file_size" defaultMessage="File size"/></th>
+                  <td><FileSize value={document.file_size}/></td>
+                </tr>
               )}
               {document.parent && (
                   <tr>
