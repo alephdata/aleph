@@ -1,3 +1,4 @@
+import logging
 from urlparse import urljoin
 from banal import ensure_list
 from followthemoney import model
@@ -14,6 +15,8 @@ from aleph.logic.util import ui_url
 DCMI = Namespace('http://purl.org/dc/dcmitype/')
 FTM = Namespace('https://data.occrp.org/ns/ftm#')
 ALEPH = Namespace('https://data.occrp.org/ns/aleph#')
+
+log = logging.getLogger('aleph')
 
 
 def types_mapping():
@@ -170,6 +173,7 @@ def export_entity(f, entity, collection_uri):
     # ns_bind(g)
     # print g.serialize(format='n3')
     f.write(g.serialize(format='ntriples'))
+    log.info('Wrote %s triples about <%s>' % (len(g), uri))
 
 
 def export_collection(f, collection):
@@ -184,6 +188,7 @@ def export_collection(f, collection):
     # ns_bind(g)
     # print g.serialize(format='n3')
     f.write(g.serialize(format='ntriples'))
+    log.info('Wrote %s triples about <%s>' % (len(g), uri))
 
     rows = query_collection_contents(collection['id'])
     for row in rows:
