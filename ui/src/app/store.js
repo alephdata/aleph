@@ -12,7 +12,7 @@ const store = createStore(
   persistedState,
   applyMiddleware(
     thunk,
-    logger
+    //logger
   )
 );
 
