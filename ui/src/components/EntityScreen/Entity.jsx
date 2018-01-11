@@ -1,5 +1,6 @@
 import {Link} from 'react-router-dom';
 import React, {Component} from 'react';
+import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
 
 import Schema from 'src/components/common/Schema';
@@ -13,6 +14,18 @@ class Label extends Component {
         const {icon = false, iconClass, truncate} = this.props;
         let {title, name, file_name, schema} = this.props.entity;
         let text = title || name || file_name;
+
+        if (!text || !text.length) {
+          return (
+            <span className='entity-label untitled'>
+              {icon && (
+                  <Schema.Icon className={iconClass} schema={schema}/>
+              )}
+              <FormattedMessage id='entity.label.missing'
+                                defaultMessage="Untitled" />
+            </span>
+          );
+        }
 
         if (truncate) {
             text = truncateText(text, truncate);
