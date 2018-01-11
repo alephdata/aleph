@@ -22,7 +22,6 @@ class EntityInfo extends Component {
 
   render() {
     const { references, entity } = this.props;
-    console.log(references);
   
     return (
       <DualPane.InfoPane>

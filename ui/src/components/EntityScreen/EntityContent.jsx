@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 
 import DualPane from 'src/components/common/DualPane';
+import EntityReferences from './EntityReferences';
 
 class EntityContent extends Component {
   render() {
-    // const { properties = {} } = this.props.entity;
+    const { entity } = this.props;
+
     return (
       <DualPane.ContentPane>
-        <pre>
-          { JSON.stringify(this.props.entity, null, 2) }
-        </pre>
+        <EntityReferences entity={entity} />
       </DualPane.ContentPane>
     );
   }

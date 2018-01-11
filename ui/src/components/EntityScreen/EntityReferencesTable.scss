@@ -1,0 +1,33 @@
+@import "src/app/variables.scss";
+
+.EntityReferencesTable {
+    margin-top: $aleph-grid-size;
+    margin-bottom: $aleph-grid-size * 2;
+
+    h3 {
+        padding-left: $aleph-grid-size;
+    }
+
+    table {
+        width: 100%;
+        border-spacing: 0;
+
+        th {
+            text-align: left;
+            font-weight: normal;
+            color: $aleph-greyed-text;
+        }
+
+        th, td {
+            text-align: left;
+            padding: ($aleph-grid-size) $aleph-grid-size ($aleph-grid-size) $aleph-grid-size;
+        }
+
+        td {
+            border-top: 1px solid $aleph-border-color;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}
