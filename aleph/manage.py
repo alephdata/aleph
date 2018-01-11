@@ -223,13 +223,9 @@ def evilshit():
 def rdfdump(fn=None, collection=None, entity=None):
 
     if fn is None:
-        dump_path = '/aleph/build/data/dumps'
-        if not os.path.exists(dump_path):
-            os.makedirs(dump_path)
-        fn = '%s/rdfdump_%s.n3' % (dump_path,
-                               datetime.datetime.now().strftime('%Y%m%d%H%M%S%f'))
-    with open(fn, 'a') as f:
-        export_triples(f, collection, entity)
+        fn = 'rdfdump_%s.n3' % datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
+    with open(fn, 'a') as outfile:
+        export_triples(outfile, collection, entity)
 
     log.info('RDF dump written to %s' % fn)
 

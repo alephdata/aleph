@@ -21,9 +21,8 @@ log = logging.getLogger('aleph')
 
 def types_mapping():
     mapping = {}
-    ps = model.properties
-    for p in ps:
-        mapping[p.name] = p.to_dict().get('type')
+    for prop in model.properties:
+        mapping[prop.name] = prop.type
     return mapping
 
 FTM_TYPES = types_mapping()
@@ -58,18 +57,18 @@ def date_lit(value):
 
 
 def typed_object(predicate, value):
-    t = FTM_TYPES[predicate]
-    if t == 'date':
+    ftm_type = FTM_TYPES[predicate]
+    if ftm_type == 'date':
         return date_lit(value)
-    if t == 'country':
+    if ftm_type == 'country':
         return country_uri(value)
-    if t == 'email':
+    if ftm_type == 'email':
         return email_uri(value)
-    if t == 'phone':
+    if ftm_type == 'phone':
         return tel_uri(value)
-    if t == 'url':
+    if ftm_type == 'url':
         return URIRef(value)
-    if t == 'entity':
+    if ftm_type == 'entity':
         return entity_uri(value)
     else:
         return Literal(value)
@@ -157,7 +156,7 @@ def query_collection_contents(collection_id):
     return res
 
 
-def export_entity(f, entity, collection_uri):
+def export_entity(outfile, entity, collection_uri):
     g = Graph()
 
     if 'Document' in entity['schemata']:
@@ -172,11 +171,11 @@ def export_entity(f, entity, collection_uri):
 
     # ns_bind(g)
     # print g.serialize(format='n3')
-    f.write(g.serialize(format='ntriples'))
-    log.info('Wrote %s triples about <%s>' % (len(g), uri))
+    outfile.write(g.serialize(format='ntriples'))
+    log.info('Wrote %s triples about <%s>', len(g), uri)
 
 
-def export_collection(f, collection):
+def export_collection(outfile, collection):
     uri = collection_uri(collection['id'])
     g = Graph()
 
@@ -187,34 +186,34 @@ def export_collection(f, collection):
 
     # ns_bind(g)
     # print g.serialize(format='n3')
-    f.write(g.serialize(format='ntriples'))
-    log.info('Wrote %s triples about <%s>' % (len(g), uri))
+    outfile.write(g.serialize(format='ntriples'))
+    log.info('Wrote %s triples about <%s>', len(g), uri)
 
     rows = query_collection_contents(collection['id'])
     for row in rows:
         entity = row['_source']
         entity['id'] = row['_id']
-        export_entity(f, entity, uri)
+        export_entity(outfile, entity, uri)
 
     return g
 
 
-def export_collections(f):
+def export_collections(outfile):
 
     res = query_collections()
     for hit in res['hits']['hits']:
         collection = hit['_source']
         collection['id'] = hit['_id']
-        export_collection(f, collection)
+        export_collection(outfile, collection)
 
 
-def export_triples(f, collection_id=None, entity_id=None):
+def export_triples(outfile, collection_id=None, entity_id=None):
     if entity_id is not None:
         entity = get_entity(entity_id)
         collection = collection_uri(entity['collection_id'])
-        export_entity(f, entity, collection)
+        export_entity(outfile, entity, collection)
     elif collection_id is not None:
         collection = get_collection(collection_id)
-        export_collection(f, collection)
+        export_collection(outfile, collection)
     else:
-        export_collections(f)
+        export_collections(outfile)
