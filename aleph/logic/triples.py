@@ -19,15 +19,6 @@ ALEPH = Namespace('https://data.occrp.org/ns/aleph#')
 log = logging.getLogger('aleph')
 
 
-def types_mapping():
-    mapping = {}
-    for prop in model.properties:
-        mapping[prop.name] = prop.type
-    return mapping
-
-FTM_TYPES = types_mapping()
-
-
 def entity_uri(value):
     return URIRef(ui_url('entities', value))
 
@@ -57,7 +48,7 @@ def date_lit(value):
 
 
 def typed_object(predicate, value):
-    ftm_type = FTM_TYPES[predicate]
+    ftm_type = model.property_types[predicate]
     if ftm_type == 'date':
         return date_lit(value)
     if ftm_type == 'country':
