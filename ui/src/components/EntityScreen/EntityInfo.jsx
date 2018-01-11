@@ -18,12 +18,12 @@ class EntityInfo extends Component {
           <Entity.Label entity={this.props.entity} addClass={true}/>
         </h1>
 
-        <Property.Table classTable='entity_table' classTh='th_class' classTd='td_class' properties={properties} schema={schema}>
+        <Property.Table properties={properties} schema={schema}>
           <tr>
-            <th className='th_class'>
+            <th>
               <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
             </th>
-            <td className='td_class'>
+            <td>
               <Date value={updated_at} />
             </td>
           </tr>

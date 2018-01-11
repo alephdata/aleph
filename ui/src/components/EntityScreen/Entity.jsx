@@ -10,9 +10,8 @@ import './Entity.css';
 
 class Label extends Component {
     render() {
-        const {icon = false, addClass, iconClass, truncate} = this.props;
+        const {icon = false, iconClass, truncate} = this.props;
         let {title, name, file_name, schema} = this.props.entity;
-        const className = addClass ? 'entity-label document_title' : 'entity-label';
         let text = title || name || file_name;
 
         if (truncate) {
@@ -20,12 +19,12 @@ class Label extends Component {
         }
 
         return (
-            <span className={className} title={title || name}>
-        {icon && (
-            <Schema.Icon className={iconClass} schema={schema}/>
-        )}
-                {text}
-      </span>
+          <span className='entity-label' title={title || name}>
+            {icon && (
+                <Schema.Icon className={iconClass} schema={schema}/>
+            )}
+            {text}
+          </span>
         );
     }
 }

@@ -15,32 +15,32 @@ class DocumentInfo extends Component {
         const {document, session} = this.props;
 
         return (
-            <DualPane.InfoPane>
-                <h1 className="document_info_border">
-                    <Entity.Label entity={document} addClass={true}/>
-                </h1>
-                <DocumentMetadata document={document}/>
+          <DualPane.InfoPane className="DocumentInfo">
+            <h1>
+              <Entity.Label entity={document} addClass={true}/>
+            </h1>
+            <DocumentMetadata document={document}/>
 
-                {document.links && document.links.file &&
-                <div className="pt-button-group pt-fill document_info_button">
-                    <AnchorButton
-                        href={session.token ? `${document.links.file}?api_key=${session.token}` : document.links.file}
-                        className="document_info_anchor_button"
-                        download={document.file_name}>
-                        <i className="fa fa-download document_info_icon" aria-hidden="true"/>Download
-                    </AnchorButton>
-                </div>
-                }
+            {document.links && document.links.file &&
+            <div className="pt-button-group pt-fill document_info_button">
+              <AnchorButton
+                  href={session.token ? `${document.links.file}?api_key=${session.token}` : document.links.file}
+                  className="document_info_anchor_button"
+                  download={document.file_name}>
+                  <i className="fa fa-download document_info_icon" aria-hidden="true"/>
+                  Download
+              </AnchorButton>
+            </div>
+            }
 
-                <h3 className="document_info_origin document_info_border">
-                    <FormattedMessage id="collection.section" defaultMessage="Origin"/>
-                </h3>
+            <h3>
+              <FormattedMessage id="collection.section" defaultMessage="Origin"/>
+            </h3>
 
-                <div className="collection_card_document_info">
-                    <CollectionCard collection={document.collection}/>
-                </div>
-
-            </DualPane.InfoPane>
+            <div>
+              <CollectionCard collection={document.collection}/>
+            </div>
+          </DualPane.InfoPane>
         );
     }
 }

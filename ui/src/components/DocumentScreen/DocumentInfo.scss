@@ -1,18 +1,7 @@
-.document_info_border {
-  border-bottom: 1px solid #b9b9b9;
-}
-
-.document_info_origin {
-  font-weight: bold;
-  font-size: 21px;
-}
-
-.collection_card_document_info {
-  margin-top: 28px;
-}
+@import "src/app/variables.scss";
 
 .document_info_button {
-  width: 189px;
+  width: 50%;
   height: 31px;
   font-weight: bolder;
   margin-right: 25px;

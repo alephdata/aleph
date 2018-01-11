@@ -8,14 +8,15 @@
   flex: 1 0 0;
 }
 
-.InfoPane-content-container {
-  margin-left: 17px;
-  margin-right: 17px;
+.DualPane .ContentPane {
+  flex: 2.5 0 0;
+  padding: $aleph-grid-size;
 }
 
 .DualPane .InfoPane {
   flex: 1 0 0;
-  max-width: 30%;
+  width: 30%;
+  min-width: 20em;
   border-right: 0px;
   padding: $aleph-grid-size;
   box-shadow: $pt-elevation-shadow-3;
@@ -23,46 +24,48 @@
 
   h1 {
     font-size: $aleph-font-size * 1.7;
-    margin: $aleph-grid-size 0 ($aleph-grid-size) 0;
-    line-height: 1.5em;
+    margin: ($aleph-grid-size) 0 ($aleph-grid-size * 2) 0;
+    padding-bottom: $aleph-grid-size;
+    line-height: 1.5;
+    border-bottom: 1px solid $aleph-border-color;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   h3 {
     font-size: $aleph-font-size * 1.5;
-    margin: ($aleph-grid-size * 2) 0 ($aleph-grid-size) 0;
-    line-height: 1.5em;
-  }
-
-}
-
-.InfoPane table {
-  width: 100%;
-  border: 0;
-
-  th, td {
+    margin: ($aleph-grid-size * 2) 0 ($aleph-grid-size * 2) 0;
     padding-bottom: $aleph-grid-size;
-    vertical-align: top;
+    line-height: 1.5;
+    border-bottom: 1px solid $aleph-border-color;
   }
 
-  th {
-    text-align: left;
-    // width: 30%;
-  }
-
-  td {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    // white-space: nowrap;
-  }
-
-  code {
+  table {
+    width: 100%;
     border: 0;
-    box-shadow: none;
-    overflow-wrap: break-word;
+  
+    th, td {
+      padding-bottom: $aleph-grid-size;
+      vertical-align: top;
+    }
+  
+    th {
+      text-align: left;
+    }
+  
+    td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+    }
+  
+    code {
+      border: 0;
+      box-shadow: none;
+      overflow-wrap: break-word;
+    }
   }
-}
-
-.DualPane .ContentPane {
-  flex: 3 0 0;
-  padding: $aleph-grid-size;
 }

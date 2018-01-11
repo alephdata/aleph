@@ -50,46 +50,43 @@ class Name extends Component {
 
 class Table extends Component {
     render() {
-        const {properties, schema, schemata, children, classTable, classTh, classTd} = this.props,
+        const {properties, schema, schemata, children} = this.props,
             model = schemata[schema] || {};
 
         let items = [];
-        let tableClass = classTable ? classTable : '';
-        let tdClass = classTd ? classTd : '';
-        let thClass = classTh ? classTh : '';
 
         Object.entries(properties).forEach(([name, values]) => {
-            const propModel = model.properties[name];
-            if (!propModel || propModel.hidden || !values.length) {
-                return;
+          const propModel = model.properties[name];
+          if (!propModel || propModel.hidden || !values.length) {
+            return;
+          }
+          values.forEach((value, i) => {
+            let header = [];
+            if (i === 0) {
+              header.push((
+                <th key={name} rowSpan={values.length}>
+                  <Name name={name} model={propModel}/>
+                </th>
+              ))
             }
-            values.forEach((value, i) => {
-                let header = [];
-                if (i === 0) {
-                    header.push((
-                        <th className={thClass} key={name} rowSpan={values.length}>
-                            <Name name={name} model={propModel}/>
-                        </th>
-                    ))
-                }
-                items.push((
-                    <tr key={`${name}-${i}`}>
-                        {header}
-                        <td className={tdClass}>
-                            <Value value={value} model={propModel}/>
-                        </td>
-                    </tr>
-                ));
-            });
+            items.push((
+              <tr key={`${name}-${i}`}>
+                {header}
+                <td>
+                  <Value value={value} model={propModel}/>
+                </td>
+              </tr>
+            ));
+          });
         });
 
         return (
-            <table className={tableClass}>
-                <tbody>
-                {items}
-                {children}
-                </tbody>
-            </table>
+          <table className="info-sheet">
+            <tbody>
+            {items}
+            {children}
+            </tbody>
+          </table>
         );
     }
 }
