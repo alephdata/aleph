@@ -6,6 +6,9 @@ from rdflib import Namespace, Graph, URIRef, Literal
 from rdflib.namespace import FOAF, DC, DCTERMS, RDF, RDFS, SKOS, XSD
 
 from aleph.core import es
+from aleph.index.core import collections_index, entities_index
+from aleph.index.entities import get_entity
+from aleph.index.collections import get_collection
 from aleph.logic.util import ui_url
 
 DCMI = Namespace('http://purl.org/dc/dcmitype/')
@@ -129,6 +132,28 @@ def set_document_properties(g, uri, document):
     # TODO: parents/children
 
 
+def query_collections():
+    q = {
+        'query': {'match_all': {}},
+        'size': 9999
+    }
+    res = es.search(index=collections_index(), body=q)
+    return res
+
+
+def query_collection_contents(collection_id):
+    q = {
+        'query': {
+            'term': {'collection_id': collection_id}
+        },
+        '_source': {
+            'exclude': ['text']
+        }
+    }
+    res = scan(es, index=entities_index(), query=q)
+    return res
+
+
 def export_entity(f, entity, collection_uri):
     g = Graph()
 
@@ -138,8 +163,8 @@ def export_entity(f, entity, collection_uri):
     else:
         uri = entity_uri(entity['id'])
 
-    set_entity_properties(g, uri, entity)
     set_type(g, uri, entity)
+    set_entity_properties(g, uri, entity)
     set_collection(g, uri, collection_uri)
 
     # ns_bind(g)
@@ -160,15 +185,8 @@ def export_collection(f, collection):
     # print g.serialize(format='n3')
     f.write(g.serialize(format='ntriples'))
 
-    q = {
-        'query': {
-            'term': {'collection_id': collection['id']}
-        },
-        '_source': {
-            'exclude': ['text']
-        }
-    }
-    for row in scan(es, index='aleph-entity-v1', query=q):
+    rows = query_collection_contents(collection['id'])
+    for row in rows:
         entity = row['_source']
         entity['id'] = row['_id']
         export_entity(f, entity, uri)
@@ -178,13 +196,20 @@ def export_collection(f, collection):
 
 def export_collections(f):
 
-    q = {
-        'query': {'match_all': {}},
-        'size': 9999
-    }
-    res = es.search(index='aleph-collection-v1', body=q)
+    res = query_collections()
     for hit in res['hits']['hits']:
         collection = hit['_source']
         collection['id'] = hit['_id']
-        # collection['id'] = 38
         export_collection(f, collection)
+
+
+def export_triples(f, collection_id=None, entity_id=None):
+    if entity_id is not None:
+        entity = get_entity(entity_id)
+        collection = collection_uri(entity['collection_id'])
+        export_entity(f, entity, collection)
+    elif collection_id is not None:
+        collection = get_collection(collection_id)
+        export_collection(f, collection)
+    else:
+        export_collections(f)
