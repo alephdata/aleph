@@ -100,7 +100,7 @@ services:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
       ALEPH_CACHE: 'false'
-      ALEPH_QUEUE: 'false'
+      ALEPH_EAGER: 'true'
       ALEPH_URL_SCHEME: 'http'
       ALEPH_ARCHIVE_TYPE: 'file'
       ALEPH_ARCHIVE_PATH: '/data'

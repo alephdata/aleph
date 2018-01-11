@@ -89,10 +89,10 @@ def ingest_upload(id):
                                         foreign_id=foreign_id,
                                         content_hash=content_hash)
             document.update(meta)
-            if document.file_name is None and storage.filename:
-                document.file_name = os.path.basename(storage.filename)
-            if document.mime_type is None and storage.mimetype:
-                document.mime_type = storage.mimetype
+            # if document.file_name is None and storage.filename:
+            #     document.file_name = os.path.basename(storage.filename)
+            # if document.mime_type is None and storage.mimetype:
+            #     document.mime_type = storage.mimetype
             ingest_document(document, path, role_id=role_id)
             documents.append(document)
 
