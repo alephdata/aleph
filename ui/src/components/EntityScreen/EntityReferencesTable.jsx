@@ -42,22 +42,26 @@ class EntityReferencesTable extends Component {
   }
 
   render() {
-    const { schema, model, property } = this.props;
+    const { model, property } = this.props;
     const { result, isFetching } = this.state;
     const results = ensureArray(result.results);
-    const exists = {};
+    const counts = {};
 
     for (let res of results) {
       _.keys(res.properties).forEach((key) => {
-        exists[key] = true;
+        counts[key] = counts[key] ? counts[key] + 1 : 1;
       });
     }
 
-    const columns = Object.values(model.properties).filter((prop) => {
-      if (prop.name === property.name) {
+    const columns = _.values(model.properties).filter((prop) => {
+      if (prop.name === property.name || prop.hidden) {
         return false;
       }
-      return !!exists[prop.name];
+      return prop.featured || !!counts[prop.name];
+    });
+
+    columns.sort((a, b) =>  {
+      return (counts[b.name] || 0) - (counts[a.name] || 0);
     });
 
     return (

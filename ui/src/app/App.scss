@@ -75,10 +75,7 @@ table.info-sheet {
     font-weight: normal;
     color: $aleph-greyed-text;
     white-space: nowrap;
-    padding-right: $aleph-grid-size * 2;
-    // overflow: hidden;
-    // text-overflow: ellipsis;
-    // width: auto;
+    padding-right: $aleph-grid-size;
   }
 
   td {

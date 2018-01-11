@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
+import _ from 'lodash';
 
 import Property from './Property';
 import Entity from './Entity';
@@ -21,7 +22,14 @@ class EntityInfo extends Component {
   }
 
   render() {
-    const { references, entity } = this.props;
+    const { references, entity, schema } = this.props;
+
+    const properties = _.values(schema.properties).filter((prop) => {
+      if (prop.hidden) {
+        return false;
+      }
+      return prop.featured || !!entity.properties[prop.name];
+    });
   
     return (
       <DualPane.InfoPane>
@@ -29,16 +37,35 @@ class EntityInfo extends Component {
           <Entity.Label entity={entity} />
         </h1>
 
-        <Property.Table properties={entity.properties} schema={entity.schema}>
-          <tr>
-            <th>
-              <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
-            </th>
-            <td>
-              <Date value={entity.updated_at} />
-            </td>
-          </tr>
-        </Property.Table>
+        <table className="info-sheet">
+          <tbody>
+            <tr>
+              <th><FormattedMessage id="entity.type" defaultMessage="Type"/></th>
+              <td>
+                <Schema.Icon schema={entity.schema}/>
+                <Schema.Name schema={entity.schema}/>
+              </td>
+            </tr>
+            { properties.map((prop) => (
+              <tr key={prop.name}>
+                <th>
+                  <Property.Name model={prop} />
+                </th>
+                <td>
+                  <Property.Values model={prop} values={entity.properties[prop.name]} />
+                </td>
+              </tr>
+            ))}
+            <tr>
+              <th>
+                <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
+              </th>
+              <td>
+                <Date value={entity.updated_at} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <h3>
           <FormattedMessage id="collection.section.origin" defaultMessage="Origin"/>
@@ -75,9 +102,10 @@ class EntityInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const references = state.entityReferences[ownProps.entity.id];
   return {
-    references: references,
+    references: state.entityReferences[ownProps.entity.id],
+    schema: state.metadata.schemata[ownProps.entity.schema]
   };
 };
+
 export default connect(mapStateToProps, {fetchEntityReferences})(EntityInfo);

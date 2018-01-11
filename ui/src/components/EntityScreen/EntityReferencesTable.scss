@@ -10,17 +10,19 @@
 
     table {
         width: 100%;
+        border-collapse: collapse;
         border-spacing: 0;
+        table-layout: fixed;
+
+        th, td {
+            text-align: left;
+            padding: ($aleph-grid-size) $aleph-grid-size ($aleph-grid-size) $aleph-grid-size;
+        }
 
         th {
             text-align: left;
             font-weight: normal;
             color: $aleph-greyed-text;
-        }
-
-        th, td {
-            text-align: left;
-            padding: ($aleph-grid-size) $aleph-grid-size ($aleph-grid-size) $aleph-grid-size;
         }
 
         td {
