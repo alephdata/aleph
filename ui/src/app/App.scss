@@ -96,3 +96,23 @@ table.info-sheet {
     word-break: normal;
   }
 }
+
+table.info-rank {
+  width: 100%;
+  table-layout: auto;
+
+  th {
+    font-weight: normal;
+    padding-left: 0;
+    margin-left: 0;
+    width: 100%;
+
+    i {
+      padding-right: $aleph-grid-size * 2;
+    }
+  }
+
+  td.numeric {
+    color: $aleph-greyed-text;
+  }
+}

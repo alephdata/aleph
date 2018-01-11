@@ -24,7 +24,7 @@
 
   h1 {
     font-size: $aleph-font-size * 1.7;
-    margin: ($aleph-grid-size) 0 ($aleph-grid-size * 2) 0;
+    margin: ($aleph-grid-size) 0 ($aleph-grid-size) 0;
     padding-bottom: $aleph-grid-size;
     line-height: 1.5;
     border-bottom: 1px solid $aleph-border-color;
@@ -37,7 +37,7 @@
 
   h3 {
     font-size: $aleph-font-size * 1.5;
-    margin: ($aleph-grid-size * 2) 0 ($aleph-grid-size * 2) 0;
+    margin: ($aleph-grid-size * 2) 0 ($aleph-grid-size) 0;
     padding-bottom: $aleph-grid-size;
     line-height: 1.5;
     border-bottom: 1px solid $aleph-border-color;

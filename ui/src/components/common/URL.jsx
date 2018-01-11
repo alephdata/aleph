@@ -9,7 +9,7 @@ class URL extends Component {
 
     return (
       <a href={value} rel="noopener noreferrer" target='_blank'>
-        <i className="fa fa-fw fa-external-link-square" aria-hidden="true"/>
+        <i className="fa fa-fw fa-external-link" aria-hidden="true"/>
         {getHost(value)}
       </a>
     );

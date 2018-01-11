@@ -48,19 +48,19 @@ class EntityInfo extends Component {
           <CollectionCard collection={entity.collection} />
         </div>
 
-        { references && references.results && (
+        { references && references.results && !!references.results.length && (
           <div className="references">
             <h3>
               <FormattedMessage id="collection.section.links" defaultMessage="Relationships"/>
             </h3>
-            <table className="pt-table pt-condensed">
+            <table className="info-rank">
               <tbody>
                 { references.results.map((ref) => (
                   <tr key={ref.property.qname}>
-                    <td>
+                    <th>
                       <Schema.Icon schema={ref.schema} />
                       { ref.property.reverse }
-                    </td>
+                    </th>
                     <td className="numeric">
                       <FormattedNumber value={ref.count} />
                     </td>
