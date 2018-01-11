@@ -22,7 +22,7 @@ from aleph.logic.alerts import check_alerts
 from aleph.logic.entities import bulk_load, reindex_entities
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
-from aleph.logic.triples import export_collections
+from aleph.logic.triples import export_triples
 from aleph.util import load_config_file
 
 
@@ -218,7 +218,9 @@ def evilshit():
 
 @manager.command
 @manager.option('-f', '--filename', dest='fn')
-def rdfdump(fn=None):
+@manager.option('-c', '--collection', dest='collection')
+@manager.option('-e', '--entity', dest='entity')
+def rdfdump(fn=None, collection=None, entity=None):
 
     if fn is None:
         dump_path = '/aleph/build/data/dumps'
@@ -227,7 +229,7 @@ def rdfdump(fn=None):
         fn = '%s/rdfdump_%s.n3' % (dump_path,
                                datetime.datetime.now().strftime('%Y%m%d%H%M%S%f'))
     with open(fn, 'a') as f:
-        export_collections(f)
+        export_triples(f, collection, entity)
 
     log.info('RDF dump written to %s' % fn)
 
