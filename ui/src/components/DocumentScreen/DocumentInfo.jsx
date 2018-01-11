@@ -22,21 +22,20 @@ class DocumentInfo extends Component {
             <DocumentMetadata document={document}/>
 
             {document.links && document.links.file &&
-            <div className="pt-button-group pt-fill document_info_button">
-              <AnchorButton
-                  href={session.token ? `${document.links.file}?api_key=${session.token}` : document.links.file}
-                  className="document_info_anchor_button"
-                  download={document.file_name}>
-                  <i className="fa fa-download document_info_icon" aria-hidden="true"/>
-                  Download
-              </AnchorButton>
-            </div>
+              <div className="pt-button-group pt-fill document_info_button">
+                <AnchorButton
+                    href={session.token ? `${document.links.file}?api_key=${session.token}` : document.links.file}
+                    className="document_info_anchor_button"
+                    download={document.file_name}>
+                    <i className="fa fa-download document_info_icon" aria-hidden="true"/>
+                    Download
+                </AnchorButton>
+              </div>
             }
 
             <h3>
               <FormattedMessage id="collection.section" defaultMessage="Origin"/>
             </h3>
-
             <div>
               <CollectionCard collection={document.collection}/>
             </div>

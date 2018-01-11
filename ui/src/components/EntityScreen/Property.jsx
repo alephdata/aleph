@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import getHost from 'src/util/getHost';
 import Entity from './Entity';
 import Country from 'src/components/common/Country';
 import Date from 'src/components/common/Date';
+import URL from 'src/components/common/URL';
 
 import './Property.css';
 
@@ -15,21 +15,16 @@ class Value extends Component {
             return null;
         }
         if (model.type === 'country') {
-            return (<Country.Name code={value}/>);
+            return (<Country.Name code={value} />);
         }
         if (model.type === 'url' || model.type === 'uri') {
-            return (
-                <a href={value} rel="noopener noreferrer" target='_blank'>
-                    <i className="fa fa-external-link-square" aria-hidden="true"/>
-                    {getHost(value)}
-                </a>
-            );
+            return (<URL value={value} />);
         }
         if (model.type === 'entity') {
-            return (<Entity.Link entity={value}/>);
+            return (<Entity.Link entity={value} />);
         }
         if (model.type === 'date') {
-            return (<Date value={value}/>);
+            return (<Date value={value} />);
         }
         return (
             <span>{value}</span>

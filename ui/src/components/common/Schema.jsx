@@ -8,16 +8,15 @@ import './Schema.css';
 
 class SchemaIcon extends Component {
     render() {
-        const {schema, schemata, className} = this.props,
+        const {schema, schemata} = this.props,
             model = schemata[schema] || {};
-        const iconClass = className ? className : '';
 
         if (!model.icon) {
             return null;
         }
 
         return (
-            <i className={`fa fa-fw ${ model.icon } ${ iconClass }`}/>
+            <i className={`fa fa-fw ${model.icon}`}/>
         );
     }
 }
