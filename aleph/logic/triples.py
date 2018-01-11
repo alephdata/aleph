@@ -126,8 +126,10 @@ def set_document_properties(g, uri, document):
         g.add((uri, DC.creator, Literal(document.get('author'))))
     if document.get('retreived_at'):
         g.add((uri, ALEPH.retrievedAt, date_lit(document.get('retreived_at'))))
-    g.add((uri, ALEPH.fileName, Literal(document.get('file_name'))))
-    g.add((uri, ALEPH.sourceUrl, URIRef(document.get('source_url'))))
+    if document.get('file_name'):
+        g.add((uri, ALEPH.fileName, Literal(document.get('file_name'))))
+    if document.get('source_url'):
+        g.add((uri, ALEPH.sourceUrl, URIRef(document.get('source_url'))))
     g.add((uri, ALEPH.mediaType, Literal(document.get('mime_type'))))
     g.add((uri, DCTERMS.modified, date_lit(document.get('updated_at'))))
 
