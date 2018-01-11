@@ -3,7 +3,7 @@
 .entity-label {
     &.untitled {
         color: $aleph-greyed-text;
-        font-variant: small-caps;
-        text-transform: lowercase;
+        // font-variant: small-caps;
+        text-transform: uppercase;
     }
 }
