@@ -22,7 +22,6 @@ def index():
 def create():
     require(request.authz.logged_in)
     data = parse_request(schema=CollectionSchema)
-    data['managed'] = False
     collection = Collection.create(data, request.authz.role)
     db.session.commit()
     update_collection(collection)
