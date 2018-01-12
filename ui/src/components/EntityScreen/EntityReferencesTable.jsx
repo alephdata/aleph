@@ -73,7 +73,7 @@ class EntityReferencesTable extends Component {
           <thead>
             <tr>
               {columns.map(prop => (
-                <th key={prop.name}>
+                <th key={prop.name} className={prop.type}>
                   <Property.Name model={prop} />
                 </th>
               ))}
@@ -83,7 +83,7 @@ class EntityReferencesTable extends Component {
             {results.map((entity) => (
               <tr key={entity.id}>
                 {columns.map(prop => (
-                  <td key={prop.name}>
+                  <td key={prop.name} className={prop.type}>
                     <Property.Values model={prop} values={entity.properties[prop.name]} />
                   </td>
                 ))}
