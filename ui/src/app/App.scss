@@ -48,6 +48,14 @@ pre {
   }
 }
 
+
+// Used to render failed imports, missing connections.
+.PartialError {
+  .pt-non-ideal-state {
+    min-height: 30vh;
+  }
+}
+
 // Table defaults
 table.pt-table {
   width: 100%;

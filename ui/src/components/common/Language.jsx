@@ -27,9 +27,7 @@ class List extends Component {
       return <Name languages={languages} code={code} key={code} />;
     });
     
-    return (
-      <span>{ wordList(names, ', ') }</span>
-    );
+    return (<span>{ wordList(names, ', ') }</span>);
   }
 }
 

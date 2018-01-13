@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 
 import Entity from './Entity';
 import Country from 'src/components/common/Country';

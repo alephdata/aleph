@@ -18,13 +18,20 @@ class DocumentContent extends Component {
     return (
       <DualPane.ContentPane>
         {document.status === 'fail' && (
-          <div className="IngestFailed pt-callout pt-intent-warning">
-            <h5>
-              <FormattedMessage id="document.status_fail"
-                                defaultMessage="This document was not imported successfully"/>
-            </h5>
-            { document.error_message }
-          </div>
+          <section className="PartialError">
+            <div className="pt-non-ideal-state">
+              <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
+                <span className="pt-icon pt-icon-issue"></span>
+              </div>
+              <h4 className="pt-non-ideal-state-title">
+                <FormattedMessage id="document.status_fail"
+                                  defaultMessage="Document failed to import"/>
+              </h4>
+              <div className="pt-non-ideal-state-description">
+                { document.error_message }
+              </div>
+            </div>
+          </section>
         )}
 
         {document.schema === 'Email' && (
