@@ -1,6 +1,7 @@
 # coding: utf-8
 import os
 import logging
+import datetime
 from normality import slugify
 from ingestors.util import decode_path
 from flask_script import Manager, commands as flask_script_commands
@@ -21,6 +22,7 @@ from aleph.logic.alerts import check_alerts
 from aleph.logic.entities import bulk_load, reindex_entities
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
+from aleph.logic.triples import export_triples
 from aleph.util import load_config_file
 
 
@@ -212,6 +214,20 @@ def evilshit():
         enum = ENUM(name=enum['name'])
         enum.drop(bind=db.engine, checkfirst=True)
     upgrade()
+
+
+@manager.command
+@manager.option('-f', '--filename', dest='fn')
+@manager.option('-c', '--collection', dest='collection')
+@manager.option('-e', '--entity', dest='entity')
+def rdfdump(fn=None, collection=None, entity=None):
+
+    if fn is None:
+        fn = 'rdfdump_%s.n3' % datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
+    with open(fn, 'a') as outfile:
+        export_triples(outfile, collection, entity)
+
+    log.info('RDF dump written to %s' % fn)
 
 
 def main():
