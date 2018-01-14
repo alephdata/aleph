@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 
 
 class Name extends Component {
+  shouldComponentUpdate(nextProps) {
+    return this.props.code !== nextProps.code;
+  }
+
   render() {
     const { code, languages } = this.props,
           codeLabel = code ? code.toUpperCase() : <FormattedMessage id="language.unknown" defaultMessage="Unknown"/>,

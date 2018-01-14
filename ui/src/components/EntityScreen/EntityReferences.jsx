@@ -9,7 +9,11 @@ class EntityReferences extends Component {
   render() {
     const { entity, references } = this.props;
 
-    if (!references || !references.results || !references.results.length) {
+    if (!references || references.isFetching) {
+      return null;
+    }
+
+    if (!references.results.length) {
       return (
         <section className="PartialError">
           <div className="pt-non-ideal-state">
