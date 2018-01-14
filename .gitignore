@@ -23,13 +23,6 @@ test_settings.py
 .coverage
 
 npm-debug.log*
-.idea/aleph.iml
-.idea/inspectionProfiles/profiles_settings.xml
-.idea/modules.xml
-ui/.idea/ui.iml
-ui/.idea/workspace.xml
-ui/.idea/modules.xml
-ui/.idea/misc.xml
-.idea/workspace.xml
-.idea/vcs.xml
-ui/.idea/watcherTasks.xml
+.idea/
+ui/.idea/
+node_modules/*

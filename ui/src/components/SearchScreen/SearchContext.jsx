@@ -28,18 +28,18 @@ class SearchContext extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    let changed = !this.props.query.sameAs(prevProps.query);
-    changed = changed || this.props.parent !== prevProps.parent;
-    changed = changed || this.props.collection !== prevProps.collection;
-    if (changed) {
+    if (!this.props.query.sameAs(prevProps.query)) {
       this.fetchData();
     }
   }
 
   fetchData() {
     this.setState({isFetching: true})
-    let { query, fetchSearchResults } = this.props;
-    query = query.addFacet('schema');
+    let { query, fetchSearchResults, aspects = {} } = this.props;
+    aspects.filter = isBoolean(aspects.filter) ? aspects.filter : true;
+    if (aspects.filter) {
+      query = query.addFacet('schema');
+    }
     query = query.setFilter('schemata', 'Thing');
 
     fetchSearchResults({
@@ -60,16 +60,19 @@ class SearchContext extends Component {
   render() {
     const { query, aspects = {} } = this.props;
     const { result, isFetching } = this.state;
-  
+
+    aspects.filter = isBoolean(aspects.filter) ? aspects.filter : true;
     aspects.collections = isBoolean(aspects.collections) ? aspects.collections : true;
     aspects.countries = isBoolean(aspects.countries) ? aspects.countries : true;
 
     return (
       <div className="SearchContext">
-        <SearchFilter query={query}
-                      result={result}
-                      aspects={aspects}
-                      updateQuery={this.updateQuery} />
+        { aspects.filter && (
+          <SearchFilter query={query}
+                        result={result}
+                        aspects={aspects}
+                        updateQuery={this.updateQuery} />
+        )}
         <SearchResult query={query}
                       result={result}
                       aspects={aspects} />

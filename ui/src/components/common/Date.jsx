@@ -8,7 +8,7 @@ class Date extends Component {
 
     let date = value.split('T')[0];
     return (
-      <span className='Date'>
+      <span className='Date' title={value}>
         { date }
       </span>
     );

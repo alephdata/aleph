@@ -10,13 +10,4 @@
   padding-bottom: $aleph-grid-size / 3;
 
   box-shadow: $pt-elevation-shadow-1;
-  // box-shadow: $pt-elevation-shadow-0;
-
-  li {
-    // display: inline-block;
-    overflow-y: hidden;
-    // max-width: 30em;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 }

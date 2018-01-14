@@ -1,0 +1,45 @@
+@import "src/app/variables.scss";
+
+.EntityReferencesTable {
+    margin-top: $aleph-grid-size;
+    margin-bottom: $aleph-grid-size * 2;
+
+    h3 {
+        padding-left: $aleph-grid-size;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        // table-layout: fixed;
+
+        th, td {
+            text-align: left;
+            padding: ($aleph-grid-size) $aleph-grid-size ($aleph-grid-size) $aleph-grid-size;
+
+            &.date {
+                width: 15%;
+                white-space: nowrap;
+            }
+
+            &.entity {
+                max-width: 25em;
+            }
+        }
+
+        th {
+            text-align: left;
+            font-weight: normal;
+            color: $aleph-greyed-text;
+            white-space: nowrap;
+        }
+
+        td {
+            border-top: 1px solid $aleph-border-color;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}

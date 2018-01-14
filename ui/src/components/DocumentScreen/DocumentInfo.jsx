@@ -1,41 +1,50 @@
-import React, { Component } from 'react';
-import { AnchorButton } from '@blueprintjs/core';
-import { FormattedMessage } from 'react-intl';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {AnchorButton} from '@blueprintjs/core';
+import {FormattedMessage} from 'react-intl';
 
 import Entity from 'src/components/EntityScreen/Entity';
 import DualPane from 'src/components/common/DualPane';
 import DocumentMetadata from 'src/components/DocumentScreen/DocumentMetadata';
 import CollectionCard from 'src/components/CollectionScreen/CollectionCard';
 
+import './DocumentInfo.css';
+
 class DocumentInfo extends Component {
-  render() {
-    const { document } = this.props;
-    
-    return (
-      <DualPane.InfoPane>
-        <h1>
-          <Entity.Label entity={document} />
-        </h1>
-        <DocumentMetadata document={document} />
+    render() {
+        const {document, session} = this.props;
 
-        {document.links && document.links.file &&
-          <div className="pt-button-group pt-fill">
-            <AnchorButton
-              href={document.links.file}
-              download={document.file_name}>
-              Download
-            </AnchorButton>
-          </div>
-        }
+        return (
+          <DualPane.InfoPane className="DocumentInfo">
+            <h1>
+              <Entity.Label entity={document} addClass={true}/>
+            </h1>
+            <DocumentMetadata document={document}/>
 
-        <h3>
-          <FormattedMessage id="collection.section" defaultMessage="Origin"/>
-        </h3>
-        <CollectionCard collection={document.collection} />
+            {document.links && document.links.file &&
+              <div className="pt-button-group pt-fill document_info_button">
+                <AnchorButton
+                    href={session.token ? `${document.links.file}?api_key=${session.token}` : document.links.file}
+                    className="document_info_anchor_button"
+                    download={document.file_name}>
+                    <i className="fa fa-download document_info_icon" aria-hidden="true"/>
+                    Download
+                </AnchorButton>
+              </div>
+            }
 
-      </DualPane.InfoPane>
-    );
-  }
+            <h3>
+              <FormattedMessage id="collection.section" defaultMessage="Origin"/>
+            </h3>
+            <div>
+              <CollectionCard collection={document.collection}/>
+            </div>
+          </DualPane.InfoPane>
+        );
+    }
 }
 
-export default DocumentInfo;
+const mapStateToProps = (state, ownProps) => {
+    return {session: state.session};
+}
+export default connect(mapStateToProps)(DocumentInfo);

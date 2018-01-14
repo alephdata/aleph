@@ -24,12 +24,10 @@ class List extends Component {
     
     if (!codes) return null;
     const names = codes.map((code, i) => {
-        return <Name languages={languages} code={code} key={code} />;
+      return <Name languages={languages} code={code} key={code} />;
     });
     
-    return (
-      <span>{ wordList(names, ', ') }</span>
-    );
+    return (<span>{ wordList(names, ', ') }</span>);
   }
 }
 

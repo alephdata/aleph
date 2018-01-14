@@ -1,15 +1,6 @@
 import _ from 'lodash';
 import queryString from 'query-string';
-
-function ensureArray(value) {
-    if (_.isEmpty(value)) {
-        return [];
-    }
-    if (_.isString(value)) {
-        return [value];
-    }
-    return _.sortedUniq(_.toArray(value));
-}
+import ensureArray from 'src/util/ensureArray';
 
 class Query {
     // State of a particular API query. This doesn't need to be specific to any one 
@@ -125,7 +116,8 @@ class Query {
     }
 
     sameAs(other) {
-        return this.toLocation() === other.toLocation();
+        return this.toLocation() === other.toLocation()
+            && queryString.stringify(this.context) === queryString.stringify(other.context);
     }
 
     toLocation() {

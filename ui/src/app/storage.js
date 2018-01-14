@@ -1,3 +1,4 @@
+
 export const loadState = () => {
   try {
     const state = localStorage.getItem('state');

@@ -35,7 +35,7 @@ class EntityScreen extends Component {
       <Screen>
         <Breadcrumbs collection={entity.collection}>
           <li>
-            <Entity.Link entity={entity} className="pt-breadcrumb" />
+            <Entity.Link entity={entity} className="pt-breadcrumb" truncate={30} />
           </li>
         </Breadcrumbs>
         <DualPane>

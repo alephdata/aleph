@@ -1,8 +1,18 @@
+@import "src/app/variables.scss";
 
 .EmailHeadersViewer {
+    margin-bottom: $aleph-grid-size * 2;
+
     table.pt-table {
         th {
             width: 10%;
+            margin-left: $aleph-grid-size;
+        }
+        th, td {
+            border-bottom: 1px solid $aleph-border-color;
+        }
+        tbody tr:first-child td {
+            box-shadow: none;
         }
     }
 }

@@ -48,6 +48,14 @@ pre {
   }
 }
 
+
+// Used to render failed imports, missing connections.
+.PartialError {
+  .pt-non-ideal-state {
+    min-height: 30vh;
+  }
+}
+
 // Table defaults
 table.pt-table {
   width: 100%;
@@ -63,4 +71,54 @@ td.numeric {
 
 td.tiny, th.tiny {
   width: 1%;
+}
+
+table.info-sheet {
+  width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  th {
+    font-weight: normal;
+    color: $aleph-greyed-text;
+    white-space: nowrap;
+    padding-right: $aleph-grid-size;
+  }
+
+  td {
+    width: 100%;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    word-break: break-all;
+  }
+
+  td.hide-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+}
+
+table.info-rank {
+  width: 100%;
+  table-layout: auto;
+  border-spacing: 0;
+
+  th {
+    font-weight: normal;
+    padding-left: 0;
+    margin-left: 0;
+    width: 100%;
+
+    i {
+      padding-right: $aleph-grid-size * 2;
+    }
+  }
+
+  td.numeric {
+    color: $aleph-greyed-text;
+  }
 }

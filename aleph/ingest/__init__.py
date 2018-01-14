@@ -63,7 +63,7 @@ def ingest_complete(collection, role_id=None):
     from aleph.logic.collections import update_collection, collection_url  # noqa
     update_collection(collection)
     role = Role.by_id(role_id)
-    if role is not None:
+    if role is not None and not collection.managed:
         # notify the user that their import is completed.
         notify_role_template(role,
                              collection.label,

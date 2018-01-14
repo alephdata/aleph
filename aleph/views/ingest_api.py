@@ -75,7 +75,6 @@ def ingest_upload(id):
     collection = get_db_collection(id, request.authz.WRITE)
     meta, foreign_id = _load_metadata(collection)
     parent_id = _load_parent(collection, meta)
-    role_id = None if collection.managed else request.authz.id
     upload_dir = mkdtemp()
     try:
         documents = []
@@ -89,11 +88,11 @@ def ingest_upload(id):
                                         foreign_id=foreign_id,
                                         content_hash=content_hash)
             document.update(meta)
-            if document.file_name is None and storage.filename:
-                document.file_name = os.path.basename(storage.filename)
-            if document.mime_type is None and storage.mimetype:
-                document.mime_type = storage.mimetype
-            ingest_document(document, path, role_id=role_id)
+            # if document.file_name is None and storage.filename:
+            #     document.file_name = os.path.basename(storage.filename)
+            # if document.mime_type is None and storage.mimetype:
+            #     document.mime_type = storage.mimetype
+            ingest_document(document, path, role_id=request.authz.id)
             documents.append(document)
 
         if not len(request.files):
@@ -106,7 +105,7 @@ def ingest_upload(id):
                                         foreign_id=foreign_id)
             document.schema = Document.SCHEMA_FOLDER
             document.update(meta)
-            ingest_document(document, None, role_id=role_id)
+            ingest_document(document, None, role_id=request.authz.id)
             documents.append(document)
     finally:
         shutil.rmtree(upload_dir)

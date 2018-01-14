@@ -1,5 +1,5 @@
 import logging
-from logging.handlers import SMTPHandler
+# from logging.handlers import SMTPHandler
 from urlparse import urlparse, urljoin
 from werkzeug.local import LocalProxy
 from flask import Flask, request
@@ -11,6 +11,8 @@ from flask_cors import CORS
 from kombu import Queue
 from celery import Celery
 from celery.schedules import crontab
+from raven.contrib.flask import Sentry
+from raven.contrib.celery import register_signal, register_logger_signal
 from elasticsearch import Elasticsearch
 from urlnormalizer import query_string
 import storagelayer
@@ -26,6 +28,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
 celery = Celery('aleph', task_cls=SessionTask)
+sentry = Sentry()
 
 # these two queues are used so that background processing tasks
 # spawned by the user can be handled more quickly through a
@@ -49,18 +52,18 @@ def create_app(config={}):
         'SQLALCHEMY_DATABASE_URI': settings.DATABASE_URI
     })
 
-    if settings.MAIL_SERVER and settings.ADMINS:
-        credentials = (settings.MAIL_USERNAME,
-                       settings.MAIL_PASSWORD)
-        subject = '[%s] Crash report' % settings.APP_TITLE
-        mail_handler = SMTPHandler(settings.MAIL_SERVER,
-                                   settings.MAIL_FROM,
-                                   settings.ADMINS,
-                                   subject,
-                                   credentials=credentials,
-                                   secure=())
-        mail_handler.setLevel(logging.ERROR)
-        app.logger.addHandler(mail_handler)
+    # if settings.MAIL_SERVER and settings.ADMINS:
+    #     credentials = (settings.MAIL_USERNAME,
+    #                    settings.MAIL_PASSWORD)
+    #     subject = '[%s] Crash report' % settings.APP_TITLE
+    #     mail_handler = SMTPHandler(settings.MAIL_SERVER,
+    #                                settings.MAIL_FROM,
+    #                                settings.ADMINS,
+    #                                subject,
+    #                                credentials=credentials,
+    #                                secure=())
+    #     mail_handler.setLevel(logging.ERROR)
+    #     app.logger.addHandler(mail_handler)
 
     queues = (
         Queue(WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY),
@@ -69,15 +72,13 @@ def create_app(config={}):
     celery.conf.update(
         imports=('aleph.queues'),
         broker_url=settings.BROKER_URI,
-        task_always_eager=not settings.QUEUE,
+        task_always_eager=settings.EAGER,
         task_eager_propagates=True,
         task_ignore_result=True,
         result_persistent=False,
         task_queues=queues,
         task_default_queue=WORKER_QUEUE,
         task_default_routing_key=WORKER_ROUTING_KEY,
-        # ultra-high time limit to shoot hung tasks:
-        task_time_limit=3600 * 3,
         worker_max_tasks_per_child=500,
         worker_disable_rate_limits=True,
         beat_schedule={
@@ -93,6 +94,16 @@ def create_app(config={}):
     mail.init_app(app)
     db.init_app(app)
     CORS(app, origins=settings.CORS_ORIGINS)
+
+    # Enable raven to submit issues to sentry if a DSN is defined. This will
+    # report errors from Flask and Celery operation modes to Sentry.
+    if settings.SENTRY_DSN:
+        sentry.init_app(app,
+                        dsn=settings.SENTRY_DSN,
+                        logging=True,
+                        level=logging.ERROR)
+        register_logger_signal(sentry.client)
+        register_signal(sentry.client, ignore_expected=True)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
@@ -151,8 +162,8 @@ def url_for(*a, **kw):
             api_url = parsed.geturl()
 
         kw['_external'] = False
-        path = flask_url_for(*a, **kw)
         query = kw.pop('_query', None)
+        path = flask_url_for(*a, **kw)
         if query is not None:
             path = path + query_string(query)
         return urljoin(api_url, path)
