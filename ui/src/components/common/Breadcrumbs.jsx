@@ -36,7 +36,6 @@ class Breadcrumbs extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    ...ownProps,
     app: state.metadata.app
   };
 }

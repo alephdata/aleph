@@ -33,7 +33,6 @@ class List extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    ...ownProps,
     languages: state.metadata.languages
   };
 }

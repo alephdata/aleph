@@ -35,7 +35,6 @@ class List extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    ...ownProps,
     countries: state.metadata.countries
   };
 }
