@@ -24,6 +24,16 @@
       position: absolute;
       left: ($aleph-grid-size / 2);
       line-height: $aleph-line-height;
+
+      &::before {
+        content: $pt-icon-tick;
+      }
+
+      opacity: 0.1;
+      &.is-ticked {
+        transition: opacity 0.2s ease-out;
+        opacity: 1;
+      }
     }
 
     .search-filter-list-label {
