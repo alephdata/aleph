@@ -13,7 +13,7 @@ from aleph.index.collections import get_collection
 from aleph.logic.util import ui_url
 
 DCMI = Namespace('http://purl.org/dc/dcmitype/')
-FTM = Namespace('https://data.occrp.org/ns/ftm#')
+FTM = Namespace('https://ns.data.occrp.org/ftm#')
 ALEPH = Namespace('https://data.occrp.org/ns/aleph#')
 
 log = logging.getLogger('aleph')
