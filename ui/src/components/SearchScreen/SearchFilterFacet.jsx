@@ -49,17 +49,17 @@ class SearchFilterFacet extends Component {
     }
   }
 
-  fetchValues() {
-    const { field } = this.props;
-    let query = this.props.query;
-    query = query.limit(0);
-    query = query.clearFacets().addFacet(field);
-    query = query.set('facet_size', 500);
-    let params = query.toParams();
-    this.props.fetchSearchResults({filters: params}).then(({result}) => {
-      this.setState({
-          values: result.facets[field].values
-      })
+  async fetchValues() {
+    const { field, query, fetchSearchResults } = this.props;
+    const params = query
+      .limit(0)
+      .clearFacets()
+      .addFacet(field)
+      .set('facet_size', 500)
+      .toParams();
+    const { result } = await fetchSearchResults({filters: params});
+    this.setState({
+      values: result.facets[field].values,
     });
   }
 
