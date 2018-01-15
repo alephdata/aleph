@@ -15,10 +15,8 @@ class Category extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    categories: state.metadata.categories
-  };
-}
+const mapStateToProps = state => ({
+  categories: state.metadata.categories,
+});
 
 export default connect(mapStateToProps)(Category);

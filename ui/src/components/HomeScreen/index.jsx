@@ -70,12 +70,10 @@ class HomeScreen extends Component {
     }
 }
 
-const mapStateToProps = state => {
-  return {
-    collections: state.collections,
-    statistics: state.statistics
-  };
-};
+const mapStateToProps = state => ({
+  collections: state.collections,
+  statistics: state.statistics,
+});
 
 HomeScreen = injectIntl(HomeScreen)
 export default connect(mapStateToProps, {fetchStatistics})(HomeScreen);

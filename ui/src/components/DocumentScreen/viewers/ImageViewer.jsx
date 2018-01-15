@@ -20,7 +20,8 @@ class ImageViewer extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {session: state.session};
-}
+const mapStateToProps = state => ({
+  session: state.session,
+});
+
 export default connect(mapStateToProps)(ImageViewer);

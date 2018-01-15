@@ -34,10 +34,8 @@ class Breadcrumbs extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    app: state.metadata.app
-  };
-}
+const mapStateToProps = state => ({
+  app: state.metadata.app,
+});
 
 export default connect(mapStateToProps)(Breadcrumbs);

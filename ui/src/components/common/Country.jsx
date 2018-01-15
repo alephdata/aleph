@@ -33,11 +33,9 @@ class List extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    countries: state.metadata.countries
-  };
-}
+const mapStateToProps = state => ({
+  countries: state.metadata.countries,
+});
 
 class Country extends Component {
   static Name = connect(mapStateToProps)(Name);

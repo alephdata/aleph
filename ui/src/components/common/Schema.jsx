@@ -37,11 +37,9 @@ class SchemaName extends Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
-    return {
-        schemata: state.metadata.schemata
-    };
-};
+const mapStateToProps = state => ({
+  schemata: state.metadata.schemata,
+});
 
 class Schema extends Component {
     static Name = connect(mapStateToProps)(SchemaName);

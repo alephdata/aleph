@@ -31,11 +31,9 @@ class List extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    languages: state.metadata.languages
-  };
-}
+const mapStateToProps = state => ({
+  languages: state.metadata.languages,
+});
 
 class Language extends Component {
   static Name = connect(mapStateToProps)(Name);
