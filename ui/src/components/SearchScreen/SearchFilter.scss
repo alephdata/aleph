@@ -23,7 +23,18 @@
 }
 
 .search-query__text {
-  flex: 1;
+  flex-grow: 1;
+  min-width: 20em;
+}
+
+.search-query__active-filters {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+
+  & > span {
+    margin: 2px;
+  }
 }
 
 .search-tick {

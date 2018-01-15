@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Tag } from '@blueprintjs/core';
 
+import Country from 'src/components/common/Country';
 import SearchFilterFacet from './SearchFilterFacet';
 import SearchFilterSchema from './SearchFilterSchema';
 import SearchFilterText from './SearchFilterText';
@@ -8,8 +10,15 @@ import SearchFilterText from './SearchFilterText';
 import './SearchFilter.css';
 
 class SearchFilter extends Component {
+  removeCountry(countryCode) {
+    const { query, updateQuery } = this.props;
+    updateQuery(query.removeFilter('countries', countryCode));
+  }
+
   render() {
     const { result, query, aspects, updateQuery } = this.props;
+    const selectedCountries = aspects.countries && query.getFilter('countries');
+    const hasActiveFilters = selectedCountries && selectedCountries.length > 0;
 
     return (
       <div className="SearchFilter">
@@ -17,6 +26,19 @@ class SearchFilter extends Component {
           <div className="search-query__text">
             <SearchFilterText query={query} updateQuery={updateQuery} />
           </div>
+          {hasActiveFilters && (
+            <div className="search-query__active-filters">
+              {selectedCountries.map(countryCode => (
+                <Tag
+                  className="pt-large"
+                  onRemove={() => this.removeCountry(countryCode)}
+                  key={countryCode}
+                >
+                  <Country.Name code={countryCode} />
+                </Tag>
+              ))}
+            </div>
+          )}
           {aspects.countries && (
             <div className="pt-large">
               <SearchFilterFacet query={query} updateQuery={updateQuery} field='countries'>
