@@ -51,7 +51,7 @@ class SearchResult extends Component {
             description="Try making your search more general" />}
         <EntityList {...this.props} result={result} />
         { result.next && (
-          <Waypoint onEnter={this.bottomReachedHandler} />
+          <Waypoint onEnter={this.bottomReachedHandler} bottomOffset="-600px" />
         )}
         { isExpanding && (
           <SectionLoading />
