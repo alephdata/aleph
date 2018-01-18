@@ -22,11 +22,15 @@ class SearchFilterActiveTags extends Component {
 
   render() {
     const { query, aspects } = this.props;
-    const selectedCountries = aspects.countries && query.getFilter('countries');
-    const selectedCollections = aspects.collections && query.getFilter('collection_id');
+    const selectedCountries = aspects.countries
+      ? query.getFilter('countries')
+      : [];
+    const selectedCollections = aspects.collections
+      ? query.getFilter('collection_id')
+      : [];
     const hasActiveFilters = (
-      (selectedCountries && selectedCountries.length > 0) ||
-      (selectedCollections && selectedCollections.length > 0)
+      selectedCountries.length > 0 ||
+      selectedCollections.length > 0
     );
 
     if (!hasActiveFilters) {
