@@ -5,6 +5,7 @@ from elasticsearch import TransportError
 from exactitude import countries, languages
 from followthemoney import model
 from followthemoney.exc import InvalidData
+from jwt import ExpiredSignatureError
 
 from aleph.core import settings, app_ui_url, url_for
 from aleph.logic.statistics import get_instance_stats
@@ -80,6 +81,14 @@ def handle_invalid_data(err):
         'status': 'error',
         'errors': err.errors
     }, status=400)
+
+
+@blueprint.app_errorhandler(ExpiredSignatureError)
+def handle_jwt_expired(err):
+    return jsonify({
+        'status': 'error',
+        'errors': 'Access token has expired.'
+    }, status=401)
 
 
 @blueprint.app_errorhandler(TransportError)
