@@ -6,6 +6,15 @@ export const fetchMetadata = asyncActionCreator(() => async dispatch => {
   return { metadata: response.data };
 }, { name: 'FETCH_METADATA' });
 
+export const fetchRole = asyncActionCreator(() => async dispatch => {
+    const response = await endpoint.get('roles/4');
+    return { role: response.data };
+}, { name: 'FETCH_ROLE' });
+
+export const fetchAlerts = asyncActionCreator(() => async dispatch => {
+    const response = await endpoint
+})
+
 export const fetchStatistics = asyncActionCreator(() => async dispatch => {
     const response = await endpoint.get('statistics');
     return { statistics: response.data };

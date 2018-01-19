@@ -1,0 +1,56 @@
+.label_icon_group {
+  display: inline-flex;
+}
+
+.name_group {
+  padding-left: 10px;
+  padding-top: 6px;
+}
+
+.email_group {
+  padding-left: 10px;
+  padding-top: 8px;
+}
+
+.label_class {
+  padding-left: 8px;
+  margin-top: -2px !important;
+}
+
+.api_key_group {
+  display: inline-flex;
+  padding-left: 20px;
+  padding-top: 10px;
+}
+
+.api_key {
+  padding-left: 10px;
+}
+
+.api_key_label {
+  color: #8A9BA8;
+  padding-left: 20px;
+}
+
+.input_class {
+  width: 300px !important;
+}
+
+.profile_info_anchor_button {
+  background-color: #738694 !important;
+  background-image: none !important;
+}
+
+.button_div {
+  padding-top: 30px;
+  width: 50%;
+  height: 31px;
+  font-weight: bolder;
+  margin-right: 25px;
+  margin-left: 25%;
+  margin-top: 20px;
+}
+
+.profile_info_anchor_button span{
+  color: white !important;
+}

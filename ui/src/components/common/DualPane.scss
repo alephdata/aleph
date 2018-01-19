@@ -14,6 +14,11 @@
   padding-top: $aleph-grid-size * 2;
 }
 
+.InfoPaneProfile {
+  width: 21% !important;
+  flex: 0 0 400px !important;
+}
+
 .DualPane .InfoPane {
   flex: 1 0 0;
   width: 30%;
