@@ -1,6 +1,6 @@
 import logging
 import exactitude
-from normality import slugify
+from normality import stringify, slugify
 
 from aleph.core import db
 from aleph.model.common import IdModel
@@ -66,10 +66,12 @@ class DocumentTagCollector(object):
     def emit(self, text, type, key=None, weight=1):
         "Create a tag, this can be called multiple times with the same text."
         cleaner = self.CLEANERS[type]
+        text = stringify(text)
         text = cleaner.clean(text, countries=self.document.countries)
         if text is None:
             return
 
+        key = stringify(key)
         if key is None:
             key = slugify(text, sep='-')
 
