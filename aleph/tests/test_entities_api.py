@@ -287,7 +287,7 @@ class EntitiesApiTestCase(TestCase):
         assert len(results) == 1, results
         assert results[0]['count'] == 3, results
 
-    def test_entity_pivot(self):
+    def test_entity_tags(self):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {
@@ -315,7 +315,7 @@ class EntitiesApiTestCase(TestCase):
                                 headers=headers,
                                 content_type='application/json')
         flush_index()
-        url = '/api/2/entities/%s/pivot' % resa.json['id']
+        url = '/api/2/entities/%s/tags' % resa.json['id']
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
         results = res.json['results']

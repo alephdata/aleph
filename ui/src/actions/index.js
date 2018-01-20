@@ -31,6 +31,11 @@ export const fetchEntityReferences = asyncActionCreator(({ id }) => async dispat
   return { id, data: response.data };
 }, { name: 'FETCH_ENTITY_REFERENCES' });
 
+export const fetchEntityTags = asyncActionCreator(({ id }) => async dispatch => {
+  const response = await endpoint.get(`entities/${id}/tags`);
+  return { id, data: response.data };
+}, { name: 'FETCH_ENTITY_TAGS' });
+
 export const fetchDocument = asyncActionCreator(({ id }) => async dispatch => {
   const response = await endpoint.get(`documents/${id}`);
   return { id, data: response.data };

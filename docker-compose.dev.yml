@@ -36,7 +36,7 @@ services:
     image: alephdata/unoservice
     networks:
       - devnet
-    tmpfs: /tmp
+    # tmpfs: /tmp
     restart: on-failure
     expose:
       - 3000
@@ -51,8 +51,7 @@ services:
       - elasticsearch
       - rabbitmq
       - unoservice
-    tmpfs:
-      - /tmp
+    # tmpfs: /tmp
     volumes:
       - "./:/aleph"
       - "./mappings:/aleph/mappings"
@@ -92,8 +91,7 @@ services:
       - unoservice
     networks:
       - devnet
-    tmpfs:
-      - /tmp
+    # tmpfs: /tmp
     volumes:
       - "./aleph:/aleph/aleph"
       - "./build/archive:/data"

@@ -16,11 +16,11 @@ class SchemaIcon extends Component {
           model = schemata[schema] || {};
 
     if (!model.icon) {
-        return null;
+      return null;
     }
 
     return (
-        <i className={`fa fa-fw ${model.icon}`}/>
+      <i className={`fa fa-fw ${model.icon}`}/>
     );
   }
 }
@@ -36,10 +36,10 @@ class SchemaName extends Component {
           model = schemata[schema] || {};
     let label = model.label || schema;
     if (plural) {
-        label = model.plural || label;
+      label = model.plural || label;
     }
     return (
-        <span title={label}>{label}</span>
+      <span title={label}>{label}</span>
     );
   }
 }

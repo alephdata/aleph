@@ -1,4 +1,5 @@
 import logging
+from banal import ensure_list
 from elasticsearch.helpers import bulk
 from normality import stringify, latinize_text, collapse_spaces
 
@@ -31,6 +32,28 @@ def authz_query(authz):
     if authz.is_admin:
         return {'match_all': {}}
     return {'terms': {'roles': list(authz.roles)}}
+
+
+def field_filter_query(field, values):
+    """Need to define work-around for full-text fields."""
+    values = ensure_list(values)
+    if field in ['names', 'addresses']:
+        queries = []
+        for value in values:
+            queries.append({
+                'match': {
+                    'names': {
+                        'query': value,
+                        'operator': 'and'
+                    }
+                }
+            })
+        return {
+            "bool": {
+                "must": queries
+            }
+        }
+    return {'terms': {field: values}}
 
 
 def bulk_op(iter, chunk_size=500):

@@ -5,6 +5,7 @@ import metadata from './metadata'
 import session from './session'
 import entities from './entities';
 import entityReferences from './entityReferences';
+import entityTags from './entityTags';
 import statistics from './statistics';
 
 const rootReducer = combineReducers({
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   session,
   entities,
   entityReferences,
+  entityTags,
   statistics
 });
 

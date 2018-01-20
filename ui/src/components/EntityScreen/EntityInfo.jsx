@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 import Property from './Property';
 import Entity from './Entity';
+import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import Date from 'src/components/common/Date';
 import Schema from 'src/components/common/Schema';
@@ -16,7 +17,7 @@ import './EntityInfo.css';
 class EntityInfo extends Component {
   componentDidMount() {
     const { entity } = this.props;
-    if(!this.props.references && entity) {
+    if(!this.props.references && entity && entity.id) {
       this.props.fetchEntityReferences(entity);
     }
   }
@@ -96,6 +97,8 @@ class EntityInfo extends Component {
             </table>
           </div>
         )}
+
+        <EntityInfoTags entity={entity} />
       </DualPane.InfoPane>
     );
   }

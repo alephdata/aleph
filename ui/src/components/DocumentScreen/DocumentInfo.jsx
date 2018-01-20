@@ -4,6 +4,7 @@ import {AnchorButton} from '@blueprintjs/core';
 import {FormattedMessage} from 'react-intl';
 
 import Entity from 'src/components/EntityScreen/Entity';
+import EntityInfoTags from 'src/components/EntityScreen/EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import DocumentMetadata from 'src/components/DocumentScreen/DocumentMetadata';
 import CollectionCard from 'src/components/CollectionScreen/CollectionCard';
@@ -39,6 +40,8 @@ class DocumentInfo extends Component {
             <div>
               <CollectionCard collection={document.collection}/>
             </div>
+
+            <EntityInfoTags entity={document} />
           </DualPane.InfoPane>
         );
     }

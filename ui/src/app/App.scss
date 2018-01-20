@@ -75,6 +75,7 @@ td.tiny, th.tiny {
 
 table.info-sheet {
   width: 100%;
+  max-width: 100%;
   table-layout: auto;
   border-collapse: collapse;
   border-spacing: 0;
@@ -92,26 +93,23 @@ table.info-sheet {
     overflow-wrap: break-word;
     word-break: break-all;
   }
-
-  td.hide-overflow {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow-wrap: normal;
-    word-break: normal;
-  }
 }
 
 table.info-rank {
   width: 100%;
-  table-layout: auto;
+  max-width: 100%;
+  table-layout: fixed;
   border-spacing: 0;
 
   th {
     font-weight: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     padding-left: 0;
     margin-left: 0;
-    width: 100%;
+    width: 90%;
+    max-width: 90%;
 
     i {
       padding-right: $aleph-grid-size * 2;
