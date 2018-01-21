@@ -9,10 +9,11 @@ import './ProfileInfo.css';
 
 class ProfileInfo extends Component {
     render() {
-        const {profileId} = this.props;
+        console.log(this.props.session)
+        let name = this.props.session.role.name;
 
         return (
-            <DualPane.InfoPane isProfile={true}>
+            <DualPane.InfoPane>
                 <h1>
                     Profile
                 </h1>
@@ -25,7 +26,7 @@ class ProfileInfo extends Component {
                             </label>
                         </div>
                         <div className="pt-form-content">
-                            <input id="name" defaultValue='Almir Alagic' className="pt-input input_class"
+                            <input id="name" defaultValue={name} className="pt-input input_class"
                                    placeholder="Enter your name" type="text" dir="auto"/>
                         </div>
                     </div>
@@ -94,7 +95,9 @@ class ProfileInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    return {};
+    return {
+        session: state.session
+    };
 };
 
 export default connect(mapStateToProps)(ProfileInfo);

@@ -7,13 +7,14 @@ export const fetchMetadata = asyncActionCreator(() => async dispatch => {
 }, { name: 'FETCH_METADATA' });
 
 export const fetchRole = asyncActionCreator(() => async dispatch => {
-    const response = await endpoint.get('roles/4');
+    const response = await endpoint.get('roles');
     return { role: response.data };
 }, { name: 'FETCH_ROLE' });
 
 export const fetchAlerts = asyncActionCreator(() => async dispatch => {
-    const response = await endpoint
-})
+    const response = await endpoint.get('alerts');
+    return { alerts: response.data };
+}, { name: 'FETCH_ALERTS' });
 
 export const fetchStatistics = asyncActionCreator(() => async dispatch => {
     const response = await endpoint.get('statistics');

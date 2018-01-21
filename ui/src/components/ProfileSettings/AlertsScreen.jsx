@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import {AnchorButton} from '@blueprintjs/core';
+import {AnchorButton, NonIdealState} from '@blueprintjs/core';
+import {FormattedMessage, injectIntl} from 'react-intl';
+import messages from 'src/content/messages';
+import { connect } from 'react-redux';
+import { fetchAlerts } from 'src/actions';
 
 import DualPane from 'src/components/common/DualPane';
 
@@ -8,8 +12,57 @@ import './AlertsScreen.css';
 const mockupList = ['emina', 'muratovic', 'test', 'dva', 'tri', 'cetiri', 'pet', 'sest', 'dhjshkhkhdha', 'lahskjakskagdkagsdkgdags', 'jashdahsdkhaskjkhasdkh'];
 
 class AlertsScreen extends Component {
+
+    constructor(){
+        super();
+
+        this.state = {
+            alerts: mockupList
+        };
+
+        this.deleteAlert = this.deleteAlert.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.fetchAlerts();
+    }
+
+    deleteAlert(id, event) {
+        event.preventDefault();
+        console.log('delete', event, id);
+        mockupList.splice(id, 1);
+        this.setState({alerts: mockupList});
+    }
+
     render() {
-        const { profileId } = this.props;
+        const { alerts } = this.props;
+        let alertsTable = [];
+        let deleteAlert = this.deleteAlert;
+
+        if(alerts.results !== undefined) {
+            if (alerts.results.length === 0) {
+                alertsTable = <NonIdealState visual=""
+                                             title="There are no alerts"/>
+            } else {
+                alertsTable = <div>
+                    <div className='header_alerts'>
+                        <p className='header_label header_topic'>Topic</p>
+                        <p className='header_label header_delete_search'>Search</p>
+                        <p className='header_label header_delete_search'>Delete</p>
+                    </div>
+                    <div className='table_body_alerts'>
+                        {alerts.results.map(function (item, index) {
+                            return <div key={index} className='table_row'>
+                                <p className='table_item_alert header_topic'>{item}</p>
+                                <p className='table_item_alert header_delete_search'><i className="fa fa-search" aria-hidden="true"/></p>
+                                <p className='table_item_alert header_delete_search'><i className="fa fa-trash-o" aria-hidden="true"/></p>
+                            </div>
+                        })}
+                    </div>
+                </div>
+            }
+        }
+
 
         return (
             <DualPane.ContentPane>
@@ -48,7 +101,7 @@ class AlertsScreen extends Component {
                             return <div key={index} className='table_row'>
                                 <p className='table_item_alert header_topic'>{item}</p>
                                 <p className='table_item_alert header_delete_search'><i className="fa fa-search" aria-hidden="true"/></p>
-                                <p className='table_item_alert header_delete_search'><i className="fa fa-trash-o" aria-hidden="true"/></p>
+                                <p key={index} className='table_item_alert header_delete_search' onClick={deleteAlert.bind(this, index)}><i className="fa fa-trash-o" aria-hidden="true"/></p>
                             </div>
                         })}
                     </div>
@@ -59,4 +112,10 @@ class AlertsScreen extends Component {
     }
 }
 
-export default AlertsScreen;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        alerts: state.alerts
+    }
+};
+
+export default connect(mapStateToProps, { fetchAlerts })(injectIntl(AlertsScreen));

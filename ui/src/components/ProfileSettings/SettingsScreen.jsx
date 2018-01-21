@@ -7,35 +7,18 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import AlertsScreen from './AlertsScreen';
 import ProfileInfo from './ProfileInfo';
-import store from '../../app/store';
 
 class SettingsScreen extends Component {
-    constructor() {
-        super();
-
-        this.state = {
-            profileId: 0
-        }
-    }
-
-    componentDidMount() {
-        const session = store.getState();
-        const profileId = session.role.id;
-        this.props.fetchRole();
-        if(profileId !== undefined) {
-            this.setState({profileId: profileId});
-        }
-    }
 
     render() {
-        const { profileId } = this.state;
+        const profileId = this.props.session.role.id;
         console.log('role', this.props.role, profileId);
         return (
             <Screen>
                 {/*<Breadcrumbs collection={collection} />*/}
                 <DualPane>
-                    <ProfileInfo profileId={profileId} />
-                    <AlertsScreen profileId={profileId} />
+                    <ProfileInfo />
+                    <AlertsScreen />
                 </DualPane>
             </Screen>
 
@@ -45,7 +28,8 @@ class SettingsScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        role: state.role
+        role: state.role,
+        session: state.session
     };
 };
 
