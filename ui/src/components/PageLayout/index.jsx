@@ -13,6 +13,7 @@ import EntityScreen from 'src/components/EntityScreen';
 import EntityRelatedScreen from 'src/components/EntityScreen/EntityRelatedScreen';
 import DocumentScreen from 'src/components/DocumentScreen';
 import DocumentRelatedScreen from 'src/components/DocumentScreen/DocumentRelatedScreen';
+import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
 import HomeScreen from 'src/components/HomeScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
@@ -51,6 +52,8 @@ class PageLayout extends Component {
             <Route path="/entities/:entityId/related" exact component={EntityRelatedScreen}/>
             <Route path="/documents/:documentId" exact component={DocumentScreen}/>
             <Route path="/documents/:documentId/related" exact component={DocumentRelatedScreen}/>
+            <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
+            <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
             <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
             <Route path="/search" exact component={SearchScreen}/>
             <Route path="/" exact component={HomeScreen}/>

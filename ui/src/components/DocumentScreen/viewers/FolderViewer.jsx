@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 import { withRouter } from 'react-router';
-import { injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import SearchContext from 'src/components/SearchScreen/SearchContext';
 import getPath from 'src/util/getPath';
