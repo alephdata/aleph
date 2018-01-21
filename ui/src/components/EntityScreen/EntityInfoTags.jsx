@@ -5,6 +5,7 @@ import { FormattedMessage, FormattedNumber } from 'react-intl';
 
 import Tag from 'src/components/common/Tag';
 import { fetchEntityTags } from '../../actions/index';
+import getPath from 'src/util/getPath';
 
 class EntityInfoTags extends Component {
   componentDidMount() {
@@ -21,11 +22,13 @@ class EntityInfoTags extends Component {
   }
 
   render() {
-    const { tags } = this.props;
+    const { tags, entity } = this.props;
 
-    if (!tags || !tags.results || tags.results.length === 0) {
+    if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
       return null;
     }
+
+    const linkPath = getPath(entity.links.ui) + '/related';
   
     return (
       <div className="tags">
@@ -38,7 +41,7 @@ class EntityInfoTags extends Component {
               <tr key={tag.id}>
                 <th>
                   <Tag.Icon field={tag.field} />
-                  <Link to={`/search${tag.id}`}>
+                  <Link to={`${linkPath}${tag.id}`}>
                     {tag.value}
                   </Link>
                 </th>

@@ -9,7 +9,7 @@ class TagIcon extends Component {
         identifiers: 'fa-id-card',
         emails: 'fa-envelope',
         phones: 'fa-phone',
-        addresses: 'fa-house'
+        addresses: 'fa-home'
       }
     }
   }

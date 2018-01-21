@@ -50,6 +50,11 @@ class Query(object):
     def get_filters(self):
         """Apply query filters from the user interface."""
         filters = convert_filters(self.parser.filters)
+        if len(self.parser.exclude):
+            exclude = {'ids': {'values': self.parser.exclude}}
+            filters.append({
+                'bool': {'must_not': exclude}
+            })
         return filters
 
     def get_post_filters(self):

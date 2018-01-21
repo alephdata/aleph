@@ -45,6 +45,10 @@ class Label extends Component {
 class EntityLink extends Component {
   render() {
     const {entity, className, icon, truncate} = this.props;
+    if (!entity || !entity.links) {
+      return <Label entity={entity} icon={icon} truncate={truncate}/>;
+    }
+
     return (
       <Link to={getPath(entity.links.ui)} className={className}>
         <Label entity={entity} icon={icon} truncate={truncate}/>
