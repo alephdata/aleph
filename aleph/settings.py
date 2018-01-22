@@ -75,11 +75,6 @@ ARCHIVE_AWS_REGION = env.get('ALEPH_ARCHIVE_REGION', 'eu-west-1')
 ARCHIVE_BUCKET = env.get('ALEPH_ARCHIVE_BUCKET')
 ARCHIVE_PATH = env.get('ALEPH_ARCHIVE_PATH')
 
-# Maximum upload size:
-MAX_CONTENT_LENGTH = int(env.get('ALEPH_MAX_CONTENT_LENGTH',
-                                 500 * 1024 * 1024))
-
-
 ##############################################################################
 # Security and authentication.
 
