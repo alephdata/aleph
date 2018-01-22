@@ -15,7 +15,7 @@ class CollectionCard extends Component {
       return (<span></span>)
     }
     return (
-      <div className="CollectionCard pt-card pt-elevation-1">
+      <div className="CollectionCard pt-card pt-elevation-1 pt-interactive">
         <h4><Collection.Link collection={collection} /></h4>
         <div className="facts">
           <div className="fact">
