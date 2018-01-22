@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
+import { connect } from 'react-redux';
 
 import getPath from 'src/util/getPath';
+import { fetchCollection } from 'src/actions';
 
 
 class Label extends Component {
@@ -29,9 +31,46 @@ class CollectionLink extends Component {
   }
 }
 
+class LabelById extends PureComponent {
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { id, collection } = this.props;
+    if (collection === undefined) {
+      this.props.fetchCollection({ id });
+    }
+  }
+
+  render() {
+    const { collection, id } = this.props;
+    if (collection === undefined || collection.isFetching) {
+      return (
+        <code>{id}</code>
+      );
+    } else {
+     return (
+       <Collection.Label collection={collection} />
+     );
+    }
+  }
+}
+
+const mapStateToProps = (state, ownProps) => ({
+  collection: state.collections[ownProps.id],
+});
+LabelById = connect(mapStateToProps, { fetchCollection })(LabelById);
+
+
 class Collection {
   static Label = Label;
   static Link = CollectionLink;
+  static LabelById = LabelById;
 }
 
 export default Collection;

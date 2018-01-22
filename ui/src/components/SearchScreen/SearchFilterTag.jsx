@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Tag } from '@blueprintjs/core';
 
 import Country from 'src/components/common/Country';
-import SearchFilterCollectionTag from './SearchFilterCollectionTag';
+import Collection from 'src/components/common/Collection';
 
 
 class SearchFilterTag extends PureComponent {
@@ -24,7 +24,7 @@ class SearchFilterTag extends PureComponent {
         );
       case 'collection_id':
         return (
-          <SearchFilterCollectionTag collectionId={value} />
+          <Collection.LabelById id={value} />
         );
       default:
         return (
