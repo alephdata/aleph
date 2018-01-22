@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
@@ -12,7 +12,7 @@ import CollectionCard from './CollectionCard';
 
 import './CollectionBrowser.css';
 
-class CollectionBrowser extends Component {
+class CollectionBrowser extends PureComponent {
   constructor(props) {
     super(props);
 

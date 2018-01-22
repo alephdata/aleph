@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
@@ -10,7 +10,7 @@ import Schema from 'src/components/common/Schema';
 import Date from 'src/components/common/Date';
 
 
-class CollectionInfo extends Component {
+class CollectionInfo extends PureComponent {
   render() {
     const { collection } = this.props;
 

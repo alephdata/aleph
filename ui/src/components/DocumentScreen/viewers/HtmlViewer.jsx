@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import './HtmlViewer.css';
 
-class HtmlViewer extends Component {
+class HtmlViewer extends PureComponent {
   render() {
     const { html } = this.props;
 

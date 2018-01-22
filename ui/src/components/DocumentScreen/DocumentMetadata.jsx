@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import Schema from 'src/components/common/Schema';
@@ -11,7 +11,7 @@ import Entity from 'src/components/EntityScreen/Entity';
 
 import './DocumentMetadata.css';
 
-class DocumentMetadata extends Component {
+class DocumentMetadata extends PureComponent {
   render() {
     const {document} = this.props;
     return (

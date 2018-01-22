@@ -1,10 +1,10 @@
 import { FormattedMessage } from 'react-intl';
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 
-class Category extends Component {
+class Category extends PureComponent {
   shouldComponentUpdate(nextProps) {
     const { category } = this.props.collection;
     return category !== nextProps.collection.category;

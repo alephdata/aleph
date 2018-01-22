@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
@@ -12,7 +12,7 @@ import DocumentInfo from './DocumentInfo';
 import SearchContext from 'src/components/SearchScreen/SearchContext';
 
 
-class DocumentRelatedScreen extends Component {
+class DocumentRelatedScreen extends PureComponent {
   componentDidMount() {
     const { documentId } = this.props;
     this.props.fetchDocument({ id: documentId });

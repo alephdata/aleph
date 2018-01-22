@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { min } from 'lodash';
 
 import Country from 'src/components/common/Country';
@@ -7,7 +7,7 @@ import Collection from 'src/components/common/Collection';
 import Entity from 'src/components/EntityScreen/Entity';
 import Date from 'src/components/common/Date';
 
-class EntityListItem extends Component {
+class EntityListItem extends PureComponent {
   render() {
     const { item, aspects } = this.props;
     const date = min(item.dates);

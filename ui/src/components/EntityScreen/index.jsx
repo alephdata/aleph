@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchEntity } from 'src/actions';
@@ -10,7 +10,7 @@ import EntityInfo from './EntityInfo';
 import Entity from './Entity';
 import EntityContent from './EntityContent';
 
-class EntityScreen extends Component {
+class EntityScreen extends PureComponent {
   componentDidMount() {
     this.fetchIfNeeded();
   }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import queryString from 'query-string';
 import { withRouter } from 'react-router';
 import { injectIntl } from 'react-intl';
@@ -8,7 +8,7 @@ import getPath from 'src/util/getPath';
 
 import './FolderViewer.css';
 
-class FolderViewer extends Component {
+class FolderViewer extends PureComponent {
 
   constructor() {
     super();

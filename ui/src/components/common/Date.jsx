@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 
-class Date extends Component {
+class Date extends PureComponent {
   shouldComponentUpdate(nextProps) {
     return this.props.value !== nextProps.value;
   }

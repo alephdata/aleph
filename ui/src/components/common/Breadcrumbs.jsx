@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Collection from 'src/components/common/Collection';
 import './Breadcrumbs.css';
 
-class Breadcrumbs extends Component {
+class Breadcrumbs extends PureComponent {
   render() {
     const { collection, children, app } = this.props;
 

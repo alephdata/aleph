@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { NonIdealState } from '@blueprintjs/core';
 import Waypoint from 'react-waypoint';
@@ -8,7 +8,7 @@ import { fetchNextSearchResults } from 'src/actions';
 import EntityList from 'src/components/EntityScreen/EntityList';
 import SectionLoading from 'src/components/common/SectionLoading';
 
-class SearchResult extends Component {
+class SearchResult extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

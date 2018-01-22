@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {BrowserRouter, Route} from 'react-router-dom';
 import {Provider} from 'react-redux'
 import {FocusStyleManager} from '@blueprintjs/core';
@@ -36,7 +36,7 @@ endpoint.interceptors.request.use(config => {
 });
 
 
-class App extends Component {
+class App extends PureComponent {
   render() {
     return (
       <Provider store={store}>

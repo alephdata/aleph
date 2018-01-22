@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import {injectIntl, FormattedMessage} from 'react-intl';
@@ -9,7 +9,7 @@ import {xhrErrorToast} from 'src/components/common/XhrToast';
 import {PasswordAuthActivate} from './PasswordAuth';
 
 
-class ActivateScreen extends Component {
+class ActivateScreen extends PureComponent {
   onActivate(data) {
     const {match: {params}, intl, loginWithPassword} = this.props;
 

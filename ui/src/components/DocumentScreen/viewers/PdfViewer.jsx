@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Document, Page } from 'react-pdf/build/entry.webpack';
@@ -16,7 +16,7 @@ function getPageNumber(fragId) {
   return pageParameter && pageParameter.pagenum;
 }
 
-class PdfViewer extends Component {
+class PdfViewer extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};

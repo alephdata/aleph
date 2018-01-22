@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -10,7 +10,7 @@ import ensureArray from 'src/util/ensureArray';
 
 import './EntityReferencesTable.css';
 
-class EntityReferencesTable extends Component {
+class EntityReferencesTable extends PureComponent {
   constructor() {
     super();
     this.state = {

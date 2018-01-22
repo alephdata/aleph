@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
@@ -11,7 +11,7 @@ import EmailHeadersViewer from './viewers/EmailHeadersViewer';
 
 import './DocumentContent.css';
 
-class DocumentContent extends Component {
+class DocumentContent extends PureComponent {
   render() {
     const { document, fragId } = this.props;
 

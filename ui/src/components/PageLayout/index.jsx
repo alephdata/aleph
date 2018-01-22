@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
@@ -21,7 +21,7 @@ import PageNavbar from './PageNavbar';
 
 import './PageLayout.css';
 
-class PageLayout extends Component {
+class PageLayout extends PureComponent {
 
   componentWillMount() {
     this.props.fetchMetadata();

@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 
-class TagIcon extends Component {
+class TagIcon extends PureComponent {
   constructor() {
     super();
     this.state = {
@@ -28,7 +28,7 @@ class TagIcon extends Component {
   }
 }
 
-class Tag extends Component {
+class Tag extends PureComponent {
   static Icon = TagIcon;
 }
 

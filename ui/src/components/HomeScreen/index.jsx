@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import {injectIntl, FormattedMessage, FormattedNumber} from 'react-intl';
@@ -9,7 +9,7 @@ import { fetchStatistics } from '../../actions/index';
 
 import './style.css';
 
-class HomeScreen extends Component {
+class HomeScreen extends PureComponent {
   constructor() {
     super();
     this.state = {value: ''};

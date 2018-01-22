@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import Truncate from 'react-truncate';
 
@@ -8,7 +8,7 @@ import Collection from 'src/components/common/Collection';
 
 import './CollectionCard.css';
 
-class CollectionCard extends Component {
+class CollectionCard extends PureComponent {
   render() {
     const { collection } = this.props;
     if (!collection || !collection.id) {

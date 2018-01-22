@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-class PageNavbarSearchForm extends Component {
+class PageNavbarSearchForm extends PureComponent {
   constructor() {
     super();
     this.state = {value: ''};

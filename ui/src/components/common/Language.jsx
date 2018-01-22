@@ -1,11 +1,11 @@
 import {FormattedMessage} from 'react-intl';
 
 import wordList from 'src/util/wordList';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 
-class Name extends Component {
+class Name extends PureComponent {
   shouldComponentUpdate(nextProps) {
     return this.props.code !== nextProps.code;
   }
@@ -22,7 +22,7 @@ class Name extends Component {
   }
 }
 
-class List extends Component {
+class List extends PureComponent {
   render() {
     const { codes, languages } = this.props;
     
@@ -39,7 +39,7 @@ const mapStateToProps = state => ({
   languages: state.metadata.languages,
 });
 
-class Language extends Component {
+class Language extends PureComponent {
   static Name = connect(mapStateToProps)(Name);
   static List = connect(mapStateToProps)(List);
 }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import Screen from 'src/components/common/Screen';
@@ -7,7 +7,7 @@ import DualPane from 'src/components/common/DualPane';
 import SearchContext from './SearchContext';
 
 
-class SearchScreen extends Component {
+class SearchScreen extends PureComponent {
   render() {
     return (
       <Screen>

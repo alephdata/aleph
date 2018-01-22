@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {injectIntl} from 'react-intl';
 import {connect} from 'react-redux'
 import {Redirect} from 'react-router';
@@ -10,7 +10,7 @@ import {loginWithPassword, loginWithToken} from 'src/actions/sessionActions';
 import OAuthLogin from './OAuthLogin';
 import {PasswordAuthLogin} from './PasswordAuth';
 
-class LoginScreen extends Component {
+class LoginScreen extends PureComponent {
   onLogin(data) {
     this.props.loginWithPassword(data.email, data.password);
   }

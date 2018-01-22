@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import SearchFilterFacet from './SearchFilterFacet';
@@ -8,7 +8,7 @@ import SearchFilterActiveTags from './SearchFilterActiveTags';
 
 import './SearchFilter.css';
 
-class SearchFilter extends Component {
+class SearchFilter extends PureComponent {
   render() {
     const { result, query, aspects, updateQuery } = this.props;
 

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import EntityReferencesTable from 'src/components/EntityScreen/EntityReferencesTable';
 
-class EntityReferences extends Component {
+class EntityReferences extends PureComponent {
 
   render() {
     const { entity, references } = this.props;

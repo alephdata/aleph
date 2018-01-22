@@ -1,12 +1,12 @@
 import 'font-awesome/css/font-awesome.min.css';
 
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 
 import './Schema.css';
 
 
-class SchemaIcon extends Component {
+class SchemaIcon extends PureComponent {
   shouldComponentUpdate(nextProps) {
     return this.props.schema !== nextProps.schema;
   }
@@ -25,7 +25,7 @@ class SchemaIcon extends Component {
   }
 }
 
-class SchemaName extends Component {
+class SchemaName extends PureComponent {
   shouldComponentUpdate(nextProps) {
     return this.props.schema !== nextProps.schema 
       || this.props.plural !== nextProps.plural;
@@ -48,7 +48,7 @@ const mapStateToProps = state => ({
   schemata: state.metadata.schemata,
 });
 
-class Schema extends Component {
+class Schema extends PureComponent {
   static Name = connect(mapStateToProps)(SchemaName);
   static Icon = connect(mapStateToProps)(SchemaIcon);
 }

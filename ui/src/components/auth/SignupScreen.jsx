@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
@@ -10,7 +10,7 @@ import {xhrErrorToast} from 'src/components/common/XhrToast';
 import OAuthLogin from './OAuthLogin';
 import {PasswordAuthSignup} from './PasswordAuth';
 
-class SignupScreen extends Component {
+class SignupScreen extends PureComponent {
   state = {submitted: false};
 
   onSignup(data) {

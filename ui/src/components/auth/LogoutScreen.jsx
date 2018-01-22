@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router';
 import {injectIntl} from 'react-intl';
@@ -7,7 +7,7 @@ import {logout} from 'src/actions/sessionActions';
 import messages from 'src/content/messages';
 import {showSuccessToast} from 'src/components/common/Toast';
 
-class LogoutScreen extends Component {
+class LogoutScreen extends PureComponent {
   componentWillMount() {
     const {logout, history, intl} = this.props;
     logout();

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchCollection } from 'src/actions';
@@ -9,7 +9,7 @@ import DualPane from 'src/components/common/DualPane';
 import CollectionContent from './CollectionContent';
 import CollectionInfo from './CollectionInfo';
 
-class CollectionScreen extends Component {
+class CollectionScreen extends PureComponent {
   componentDidMount() {
     const { collectionId } = this.props;
     this.props.fetchCollection({ id: collectionId });

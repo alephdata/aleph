@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import _ from 'lodash';
@@ -14,7 +14,7 @@ import { fetchEntityReferences } from '../../actions/index';
 
 import './EntityInfo.css';
 
-class EntityInfo extends Component {
+class EntityInfo extends PureComponent {
   componentDidMount() {
     const { entity } = this.props;
     if(!this.props.references && entity && entity.id) {

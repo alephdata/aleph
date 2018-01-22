@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Tab2, Tabs2, Tooltip, Position } from "@blueprintjs/core";
 import sumBy from 'lodash/sumBy';
@@ -7,7 +7,7 @@ import Schema from 'src/components/common/Schema';
 
 import './SearchFilterSchema.css';
 
-class SearchFilterSchema extends Component {
+class SearchFilterSchema extends PureComponent {
   constructor(props)  {
     super(props);
     this.ALL = 'ALL';

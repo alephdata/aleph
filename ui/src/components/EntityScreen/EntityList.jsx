@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import EntityListItem from './EntityListItem';
 
 import './EntityList.css';
 
-class EntityList extends Component {
+class EntityList extends PureComponent {
   render() {
     const { result, aspects } = this.props;
 

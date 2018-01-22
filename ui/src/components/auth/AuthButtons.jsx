@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {Button} from '@blueprintjs/core';
 import {FormattedMessage} from 'react-intl';
 import {Link} from 'react-router-dom';
 
 
-class AuthButtons extends Component {
+class AuthButtons extends PureComponent {
   render() {
     const { session, auth } = this.props;
     const location = window.location;
