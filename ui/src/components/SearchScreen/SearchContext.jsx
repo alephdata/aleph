@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { isBoolean, debounce } from 'lodash';
@@ -11,7 +11,7 @@ import SearchFilter from './SearchFilter';
 import SectionLoading from 'src/components/common/SectionLoading';
 
 
-class SearchContext extends PureComponent {
+class SearchContext extends Component {
   constructor() {
     super();
 

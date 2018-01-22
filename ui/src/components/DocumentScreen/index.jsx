@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchDocument } from 'src/actions';
@@ -10,7 +10,7 @@ import Entity from 'src/components/EntityScreen/Entity';
 import DocumentInfo from './DocumentInfo';
 import DocumentContent from './DocumentContent';
 
-class DocumentScreen extends PureComponent {
+class DocumentScreen extends Component {
   componentDidMount() {
     const { documentId } = this.props;
     this.props.fetchDocument({ id: documentId });

@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 
 import SearchFilterTag from './SearchFilterTag';
 
-class SearchFilterActiveTags extends PureComponent {
+class SearchFilterActiveTags extends Component {
   constructor(props) {
     super(props);
     this.removeFilterValue = this.removeFilterValue.bind(this);

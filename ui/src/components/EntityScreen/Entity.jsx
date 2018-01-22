@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom';
-import React, {PureComponent} from 'react';
+import React, {Component} from 'react';
 import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
 
@@ -9,7 +9,7 @@ import getPath from 'src/util/getPath';
 import './Entity.css';
 
 
-class Label extends PureComponent {
+class Label extends Component {
   render() {
     const {icon = false, truncate} = this.props;
     let {title, name, file_name, schema} = this.props.entity;
@@ -42,7 +42,7 @@ class Label extends PureComponent {
   }
 }
 
-class EntityLink extends PureComponent {
+class EntityLink extends Component {
   render() {
     const {entity, className, icon, truncate} = this.props;
     if (!entity || !entity.links) {

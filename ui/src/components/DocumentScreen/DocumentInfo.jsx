@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {AnchorButton} from '@blueprintjs/core';
 import {FormattedMessage} from 'react-intl';
@@ -11,7 +11,7 @@ import CollectionCard from 'src/components/CollectionScreen/CollectionCard';
 
 import './DocumentInfo.css';
 
-class DocumentInfo extends PureComponent {
+class DocumentInfo extends Component {
     render() {
         const {document, session} = this.props;
 

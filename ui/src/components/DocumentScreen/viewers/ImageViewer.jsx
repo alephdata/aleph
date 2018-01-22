@@ -1,10 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SectionLoading from 'src/components/common/SectionLoading';
 
 import './ImageViewer.css';
 
-class ImageViewer extends PureComponent {
+class ImageViewer extends Component {
   render() {
     const { document, session } = this.props;
     if (!document.links || !document.links.file) {

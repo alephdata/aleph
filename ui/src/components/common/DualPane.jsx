@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 
 import './DualPane.css';
 
-class InfoPane extends PureComponent {
+class InfoPane extends Component {
   render() {
     const { children } = this.props;
     return (
@@ -17,7 +17,7 @@ class InfoPane extends PureComponent {
   }
 }
 
-class ContentPane extends PureComponent {
+class ContentPane extends Component {
   render() {
     const { children } = this.props;
     return (
@@ -28,7 +28,7 @@ class ContentPane extends PureComponent {
   }
 }
 
-class DualPane extends PureComponent {
+class DualPane extends Component {
   static InfoPane = InfoPane;
   static ContentPane = ContentPane;
 

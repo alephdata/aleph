@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
-import React, { PureComponent } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import getPath from 'src/util/getPath';
 import { fetchCollection } from 'src/actions';
 
 
-class Label extends PureComponent {
+class Label extends Component {
   render() {
     const { collection, icon = true } = this.props;
 
@@ -19,7 +19,7 @@ class Label extends PureComponent {
   }
 }
 
-class CollectionLink extends PureComponent {
+class CollectionLink extends Component {
   render() {
     const { collection, icon = true, className } = this.props;
     

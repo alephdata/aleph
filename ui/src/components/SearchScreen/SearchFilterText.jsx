@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 
 import { debounce } from 'lodash';
 
 
-class SearchFilterText extends PureComponent {
+class SearchFilterText extends Component {
   constructor(props)  {
     super(props);
     this.state = {value: props.query.getQ()};

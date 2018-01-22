@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 
 import DualPane from 'src/components/common/DualPane';
 import EntityReferences from './EntityReferences';
 
-class EntityContent extends PureComponent {
+class EntityContent extends Component {
   render() {
     const { entity } = this.props;
 

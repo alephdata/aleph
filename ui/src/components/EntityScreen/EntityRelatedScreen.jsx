@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
@@ -11,7 +11,7 @@ import EntityInfo from './EntityInfo';
 import Entity from './Entity';
 import SearchContext from 'src/components/SearchScreen/SearchContext';
 
-class EntityScreen extends PureComponent {
+class EntityScreen extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
   }

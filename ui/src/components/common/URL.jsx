@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 
 import getHost from 'src/util/getHost';
 
-class URL extends PureComponent {
+class URL extends Component {
   render() {
     const { value } = this.props;
     if (!value) return null;

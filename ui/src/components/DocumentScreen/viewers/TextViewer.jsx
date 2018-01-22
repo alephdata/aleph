@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 
 import './TextViewer.css';
 
-class TextViewer extends PureComponent {
+class TextViewer extends Component {
   render() {
     const { text } = this.props;
     return (

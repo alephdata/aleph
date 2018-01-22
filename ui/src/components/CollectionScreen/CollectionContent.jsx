@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 
 import DualPane from 'src/components/common/DualPane';
 import SearchContext from 'src/components/SearchScreen/SearchContext';
 
-class CollectionContent extends PureComponent {
+class CollectionContent extends Component {
   render() {
     const { collection } = this.props;
     const context = {

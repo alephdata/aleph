@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import './EmailHeadersViewer.css';
 
-class EmailHeadersViewer extends PureComponent {
+class EmailHeadersViewer extends Component {
   render() {
     const { document } = this.props;
     const { headers = {} } = document;

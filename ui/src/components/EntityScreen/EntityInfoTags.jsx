@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
@@ -7,7 +7,7 @@ import Tag from 'src/components/common/Tag';
 import { fetchEntityTags } from '../../actions/index';
 import getPath from 'src/util/getPath';
 
-class EntityInfoTags extends PureComponent {
+class EntityInfoTags extends Component {
   componentDidMount() {
     const { entity } = this.props;
     if (!this.props.tags && entity && entity.id) {

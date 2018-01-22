@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 
 import './Screen.css';
 
-class Screen extends PureComponent {
+class Screen extends Component {
 
   componentDidMount() {
     window.scrollTo(0, 0)

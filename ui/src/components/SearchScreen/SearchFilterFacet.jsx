@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import c from 'classnames';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
@@ -33,7 +33,7 @@ const SearchFilterFacetList = ({ items, selectedItems, onItemClick }) => (
   </ul>
 );
 
-class SearchFilterFacet extends PureComponent {
+class SearchFilterFacet extends Component {
   constructor(props)  {
     super(props);
 

@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, {Component} from 'react';
 
 import Entity from './Entity';
 import Country from 'src/components/common/Country';
@@ -9,7 +9,7 @@ import ensureArray from 'src/util/ensureArray';
 
 import './Property.css';
 
-class Value extends PureComponent {
+class Value extends Component {
   render() {
     const {value, model} = this.props;
     if (!value) {
@@ -31,7 +31,7 @@ class Value extends PureComponent {
   }
 }
 
-class Name extends PureComponent {
+class Name extends Component {
   render() {
     const {name, model} = this.props,
           label = model.label || name;
@@ -40,7 +40,7 @@ class Name extends PureComponent {
   }
 }
 
-class Values extends PureComponent {
+class Values extends Component {
   render() {
     const {values, model} = this.props;
     const vals = ensureArray(values).map((value, idx) => (
@@ -53,7 +53,7 @@ class Values extends PureComponent {
   }
 }
 
-class Property extends PureComponent {
+class Property extends Component {
     static Name = Name;
     static Value = Value;
     static Values = Values;
