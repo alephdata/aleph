@@ -34,7 +34,7 @@ class SearchFilter extends Component {
           )}
         </div>
         <SearchFilterSchema query={query} updateQuery={updateQuery} result={result} />
-        <SearchFilterActiveTags aspects={aspects} query={query} updateQuery={updateQuery} />
+        <SearchFilterActiveTags aspects={{...aspects, schema: false}} query={query} updateQuery={updateQuery} />
       </div>
     );
   }

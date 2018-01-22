@@ -1,58 +1,40 @@
 import React, { Component } from 'react';
 
-import SearchFilterCollectionTag from './SearchFilterCollectionTag';
-import SearchFilterCountryTag from './SearchFilterCountryTag';
+import SearchFilterTag from './SearchFilterTag';
 
 class SearchFilterActiveTags extends Component {
   constructor(props) {
     super(props);
-    this.removeCollection = this.removeCollection.bind(this);
-    this.removeCountry = this.removeCountry.bind(this);
+    this.removeFilterValue = this.removeFilterValue.bind(this);
   }
 
-  removeCountry(countryCode) {
+  removeFilterValue(filter, value) {
     const { query, updateQuery } = this.props;
-    updateQuery(query.removeFilter('countries', countryCode));
-  }
-
-  removeCollection(collectionId) {
-    const { query, updateQuery } = this.props;
-    updateQuery(query.removeFilter('collection_id', collectionId));
+    updateQuery(query.removeFilter(filter, value));
   }
 
   render() {
     const { query, aspects } = this.props;
-    const selectedCountries = aspects.countries
-      ? query.getFilter('countries')
-      : [];
-    const selectedCollections = aspects.collections
-      ? query.getFilter('collection_id')
-      : [];
-    const hasActiveFilters = (
-      selectedCountries.length > 0 ||
-      selectedCollections.length > 0
-    );
 
-    if (!hasActiveFilters) {
+    const activeFilters = query.filters()
+      .filter(filter => aspects[filter] !== false);
+
+    if (activeFilters.length === 0) {
       return null;
     }
 
     return (
       <div className="search-query__active-filters">
-        {selectedCountries.map(countryCode => (
-          <SearchFilterCountryTag
-            countryCode={countryCode}
-            removeCountry={this.removeCountry}
-            key={countryCode}
-          />
-        ))}
-        {selectedCollections.map(collectionId => (
-          <SearchFilterCollectionTag
-            collectionId={collectionId}
-            removeCollection={this.removeCollection}
-            key={collectionId}
-          />
-        ))}
+        {activeFilters.map(filter =>
+          query.getFilter(filter).map(value => (
+            <SearchFilterTag
+              filter={filter}
+              value={value}
+              remove={this.removeFilterValue}
+              key={value}
+            />
+          ))
+        )}
       </div>
     );
   }
