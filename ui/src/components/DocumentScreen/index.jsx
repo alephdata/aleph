@@ -25,7 +25,7 @@ class DocumentScreen extends Component {
 
   render() {
     const { document, location } = this.props;
-    if (document === undefined) {
+    if (document === undefined || document.isFetching) {
       return <ScreenLoading />;
     }
     return (
