@@ -38,14 +38,14 @@ class RolesApiTestCase(TestCase):
         role, headers = self.login()
         url = '/api/2/roles/%s' % role.id
         res = self.client.get(url, headers=headers)
-        assert res.status_code == 200, res
+        assert res.status_code == 200, res.json
         data = res.json
         data['name'] = 'John Doe'
         res = self.client.post(url,
                                data=json.dumps(data),
                                headers=headers,
                                content_type='application/json')
-        assert res.status_code == 200, res
+        assert res.status_code == 200, res.json
         assert res.json['name'] == data['name'], res.json
 
         data['name'] = ''

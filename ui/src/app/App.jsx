@@ -17,6 +17,7 @@ import store from './store';
 // TODO Initialise endpoint in here instead of api.js. And then pass it down as
 // context, like Provider passes down the store? Or use redux-axios-middleware?
 import { endpoint } from './api';
+import { logout } from 'src/actions/sessionActions';
 
 import './App.css';
 
@@ -33,6 +34,16 @@ endpoint.interceptors.request.use(config => {
     config.headers.common['Authorization'] = `Bearer ${session.token}`;
   }
   return config;
+});
+
+endpoint.interceptors.response.use(function (response) {
+  return response;
+}, function (error) {
+  if (error.response.status === 401) {
+    store.dispatch(logout());
+    window.location.reload();
+  }
+  return Promise.reject(error);
 });
 
 

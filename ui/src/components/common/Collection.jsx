@@ -12,7 +12,7 @@ class Label extends Component {
 
     return (
       <span>
-        { collection.secret && (<i className='fa fa-fw fa-lock' />) }
+        { collection.secret && icon && (<i className='fa fa-fw fa-lock' />) }
         { collection.label }
       </span>
     );

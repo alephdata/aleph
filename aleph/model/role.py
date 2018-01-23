@@ -45,12 +45,19 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     type = db.Column(db.Enum(*TYPES, name='role_type'), nullable=False)
     password_digest = db.Column(db.Unicode, nullable=True)
+    password = None
     reset_token = db.Column(db.Unicode, nullable=True)
     permissions = db.relationship('Permission', backref='role')
+
+    @property
+    def has_password(self):
+        return self.password_digest is not None
 
     def update(self, data):
         self.name = data.get('name', self.name)
         self.email = data.get('email', self.email)
+        if data.get('password'):
+            self.set_password(data.get('password'))
 
     def clear_roles(self):
         """Removes any existing roles from group membership."""

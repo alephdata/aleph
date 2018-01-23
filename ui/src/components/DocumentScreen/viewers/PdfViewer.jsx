@@ -40,9 +40,11 @@ class PdfViewer extends Component {
   }
 
   setWidth = () => {
-    this.setState({
-      width: this.pdfElement.getBoundingClientRect().width
-    })
+    if (this.pdfElement) {
+      this.setState({
+        width: this.pdfElement.getBoundingClientRect().width
+      })
+    }
   }
 
   render() {
