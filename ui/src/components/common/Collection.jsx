@@ -21,11 +21,11 @@ class Label extends Component {
 
 class CollectionLink extends Component {
   render() {
-    const { collection, icon = true, className } = this.props;
+    const { children, collection, icon = true, className } = this.props;
     
     return (
       <Link to={getPath(collection.links.ui)} className={className}>
-        <Label collection={collection} icon={icon} />
+        {children || <Label collection={collection} icon={icon} />}
       </Link>
     );
   }

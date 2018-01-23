@@ -1,5 +1,15 @@
 @import "src/app/variables.scss";
 
+a.noLinkDecoration {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
 .CollectionCard {
     h4 {
         margin-top: 0;

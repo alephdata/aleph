@@ -15,41 +15,43 @@ class CollectionCard extends Component {
       return (<span></span>)
     }
     return (
-      <div className="CollectionCard pt-card pt-elevation-1 pt-interactive">
-        <h4><Collection.Link collection={collection} /></h4>
-        <div className="facts">
-          <div className="fact">
-            <Category collection={collection} />
+      <Collection.Link collection={collection} className="noLinkDecoration">
+        <div className="CollectionCard pt-card pt-elevation-1 pt-interactive">
+          <h4><Collection.Label collection={collection} /></h4>
+          <div className="facts">
+            <div className="fact">
+              <Category collection={collection} />
+            </div>
+            <div className="fact">
+              <FormattedMessage id="collection.total.count"
+                                defaultMessage="{count} Entries"
+                                values={{
+                                  count: <FormattedNumber value={collection.count} />
+                                }}/>
+            </div>
           </div>
-          <div className="fact">
-            <FormattedMessage id="collection.total.count"
-                              defaultMessage="{count} Entries"
+          {collection.summary &&
+            <p>
+              <Truncate lines={2}>
+                { collection.summary }
+              </Truncate>
+            </p>
+          }
+          {!collection.summary &&
+            (<p className="missing">
+              <FormattedMessage id="collection.summary.missing" defaultMessage="This collection has no description."/>
+            </p>)
+          }
+          <div className="bottom-fact">
+            <i className="fa fa-fw fa-refresh" />
+            <FormattedMessage id="collection.last_updated"
+                              defaultMessage="Last updated: {date}"
                               values={{
-                                count: <FormattedNumber value={collection.count} />
+                                date: <Date value={collection.updated_at} />
                               }}/>
           </div>
         </div>
-        {collection.summary && 
-          <p>
-            <Truncate lines={2}>
-              { collection.summary }
-            </Truncate>
-          </p>
-        }
-        {!collection.summary && 
-          (<p className="missing">
-            <FormattedMessage id="collection.summary.missing" defaultMessage="This collection has no description."/>
-          </p>)
-        }
-        <div className="bottom-fact">
-          <i className="fa fa-fw fa-refresh" />
-          <FormattedMessage id="collection.last_updated"
-                            defaultMessage="Last updated: {date}"
-                            values={{
-                              date: <Date value={collection.updated_at} />
-                            }}/>
-        </div>
-      </div>
+      </Collection.Link>
     );
   }
 }
