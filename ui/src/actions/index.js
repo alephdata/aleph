@@ -6,15 +6,30 @@ export const fetchMetadata = asyncActionCreator(() => async dispatch => {
   return { metadata: response.data };
 }, { name: 'FETCH_METADATA' });
 
-export const fetchRole = asyncActionCreator(() => async dispatch => {
-    const response = await endpoint.get('roles');
+export const fetchRole = asyncActionCreator((id) => async dispatch => {
+    const response = await endpoint.get(`roles/${id}`);
     return { role: response.data };
 }, { name: 'FETCH_ROLE' });
+
+export const addRole = asyncActionCreator((role) => async dispatch => {
+    const response = await endpoint.post(`roles/${role.id}`, role);
+    return {role: response.data};
+}, {name: 'ADD_ROLE'});
 
 export const fetchAlerts = asyncActionCreator(() => async dispatch => {
     const response = await endpoint.get('alerts');
     return { alerts: response.data };
 }, { name: 'FETCH_ALERTS' });
+
+export const deleteAlert = asyncActionCreator((id) => async dispatch => {
+    const response = await endpoint.delete(`alerts/${id}`);
+    return { alerts: response.data };
+}, { name: 'DELETE_ALERT' });
+
+export const addAlert = asyncActionCreator((alert) => async dispatch => {
+    const response = await endpoint.post('alerts', alert);
+    return { alerts: response.data };
+}, { name: 'DELETE_ALERT' });
 
 export const fetchStatistics = asyncActionCreator(() => async dispatch => {
     const response = await endpoint.get('statistics');

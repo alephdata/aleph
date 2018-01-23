@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { fetchRole } from 'src/actions';
+import { fetchRole, addRole } from 'src/actions';
 
 const initialState = {
     isLoaded: false,
@@ -8,8 +8,13 @@ const initialState = {
 
 export default createReducer({
     [fetchRole.START]: state => ({ isLoaded: false }),
+    [addRole.START]: state => ({ isLoaded: false }),
 
     [fetchRole.COMPLETE]: (state, { role }) => ({
+        ...role,
+        isLoaded: true
+    }),
+    [addRole.COMPLETE]: (state, { role }) => ({
         ...role,
         isLoaded: true
     }),

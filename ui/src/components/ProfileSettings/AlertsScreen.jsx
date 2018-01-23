@@ -3,7 +3,7 @@ import {AnchorButton, NonIdealState} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import messages from 'src/content/messages';
 import { connect } from 'react-redux';
-import { fetchAlerts } from 'src/actions';
+import { fetchAlerts, addAlert } from 'src/actions';
 
 import DualPane from 'src/components/common/DualPane';
 
@@ -17,10 +17,12 @@ class AlertsScreen extends Component {
         super();
 
         this.state = {
-            alerts: mockupList
+            alerts: mockupList,
+            newAlert: ''
         };
 
         this.deleteAlert = this.deleteAlert.bind(this);
+        this.onAddAlert = this.onAddAlert.bind(this);
     }
 
     componentDidMount() {
@@ -34,10 +36,18 @@ class AlertsScreen extends Component {
         this.setState({alerts: mockupList});
     }
 
+    onAddAlert(event) {
+        //event.preventDefault();
+        let value = document.getElementById('add_alert').value;
+        this.props.addAlert({query_text: value});
+    }
+
     render() {
         const { alerts } = this.props;
         let alertsTable = [];
         let deleteAlert = this.deleteAlert;
+
+        console.log('alerts', this.props.alerts)
 
         if(alerts.results !== undefined) {
             if (alerts.results.length === 0) {
@@ -81,9 +91,8 @@ class AlertsScreen extends Component {
                             <input id="add_alert" className="pt-input add_topic_input"
                                    placeholder="Add topic to the list" type="text" dir="auto"/>
                         </div>
-                        <div className="pt-button-group pt-fill alerts_button_div">
+                        <div className="pt-button-group pt-fill alerts_button_div" onClick={this.onAddAlert}>
                             <AnchorButton
-                                href='/'
                                 className="alerts_anchor_button">
                                 Add
                             </AnchorButton>
@@ -118,4 +127,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-export default connect(mapStateToProps, { fetchAlerts })(injectIntl(AlertsScreen));
+export default connect(mapStateToProps, { fetchAlerts, addAlert })(injectIntl(AlertsScreen));

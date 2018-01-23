@@ -23,6 +23,10 @@
   padding-top: 10px;
 }
 
+.api_key_title {
+  padding-top: 30px;
+}
+
 .api_key {
   padding-left: 10px;
 }
@@ -41,8 +45,17 @@
   background-image: none !important;
 }
 
+.error_label_text {
+  color: #db3737 !important;
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
 .button_div {
-  padding-top: 30px;
+  padding-top: 15px;
   width: 50%;
   height: 31px;
   font-weight: bolder;
