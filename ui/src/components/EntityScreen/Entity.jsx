@@ -1,10 +1,12 @@
 import {Link} from 'react-router-dom';
-import React, {Component} from 'react';
+import React, { Component, PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
+import { connect } from 'react-redux';
 
 import Schema from 'src/components/common/Schema';
 import getPath from 'src/util/getPath';
+import { fetchEntity } from 'src/actions';
 
 import './Entity.css';
 
@@ -57,9 +59,48 @@ class EntityLink extends Component {
   }
 }
 
+
+class LabelById extends PureComponent {
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { id, entity } = this.props;
+    if (entity === undefined) {
+      this.props.fetchEntity({ id });
+    }
+  }
+
+  render() {
+    const { entity, id, ...otherProps } = this.props;
+    if (entity === undefined || entity.isFetching) {
+      return (
+        <code>{id}</code>
+      );
+    } else {
+     return (
+       <Entity.Label entity={entity} {...otherProps} />
+     );
+    }
+  }
+}
+
+const mapStateToProps = (state, ownProps) => ({
+  entity: state.entities[ownProps.id],
+});
+LabelById = connect(mapStateToProps, { fetchEntity })(LabelById);
+
+
+
 class Entity {
   static Label = Label;
   static Link = EntityLink;
+  static LabelById = LabelById;
 }
 
 export default Entity;
