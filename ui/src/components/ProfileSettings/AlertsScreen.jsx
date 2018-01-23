@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {AnchorButton, NonIdealState} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
-import messages from 'src/content/messages';
 import { connect } from 'react-redux';
 import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
 import { withRouter } from 'react-router';
@@ -56,7 +55,7 @@ class AlertsScreen extends Component {
     }
 
     render() {
-        const { alerts } = this.props;
+        const { alerts, intl } = this.props;
         let alertsTable = [];
         let deleteAlert = this.deleteAlert;
         let searchAlert = this.onSearch;
@@ -68,9 +67,15 @@ class AlertsScreen extends Component {
             } else {
                 alertsTable = <div>
                     <div className='header_alerts'>
-                        <p className='header_label header_topic'>Topic</p>
-                        <p className='header_label header_delete_search'>Search</p>
-                        <p className='header_label header_delete_search'>Delete</p>
+                        <p className='header_label header_topic'>
+                            <FormattedMessage id="collection.summary.missing" defaultMessage="Topic"/>
+                        </p>
+                        <p className='header_label header_delete_search'>
+                            <FormattedMessage id="collection.summary.missing" defaultMessage="Search"/>
+                        </p>
+                        <p className='header_label header_delete_search'>
+                            <FormattedMessage id="collection.summary.missing" defaultMessage="Delete"/>
+                        </p>
                     </div>
                     <div className='table_body_alerts'>
                         {alerts.results.map(function (item, index) {
@@ -103,7 +108,7 @@ class AlertsScreen extends Component {
                         <div className="pt-form-content add_topic">
                             <input id="add_alert"
                                    className="pt-input add_topic_input"
-                                   placeholder="Add topic to the list"
+                                   placeholder={intl.formatMessage({id: "alerts.topic.desc", defaultMessage: "Add topic to the list" })}
                                    type="text"
                                    dir="auto"
                                    onChange={this.onChangeAddingInput}
@@ -113,7 +118,7 @@ class AlertsScreen extends Component {
                         <div className="pt-button-group pt-fill alerts_button_div" onClick={this.onAddAlert}>
                             <AnchorButton
                                 className="alerts_anchor_button">
-                                Add
+                                <FormattedMessage id="alerts.add" defaultMessage="Add"/>
                             </AnchorButton>
                         </div>
                     </div>
