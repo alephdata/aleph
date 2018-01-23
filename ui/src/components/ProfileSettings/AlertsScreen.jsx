@@ -3,13 +3,13 @@ import {AnchorButton, NonIdealState} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import messages from 'src/content/messages';
 import { connect } from 'react-redux';
-import { fetchAlerts, addAlert } from 'src/actions';
+import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
+import { withRouter } from 'react-router';
+import queryString from 'query-string';
 
 import DualPane from 'src/components/common/DualPane';
 
 import './AlertsScreen.css';
-
-const mockupList = ['emina', 'muratovic', 'test', 'dva', 'tri', 'cetiri', 'pet', 'sest', 'dhjshkhkhdha', 'lahskjakskagdkagsdkgdags', 'jashdahsdkhaskjkhasdkh'];
 
 class AlertsScreen extends Component {
 
@@ -17,12 +17,13 @@ class AlertsScreen extends Component {
         super();
 
         this.state = {
-            alerts: mockupList,
             newAlert: ''
         };
 
         this.deleteAlert = this.deleteAlert.bind(this);
         this.onAddAlert = this.onAddAlert.bind(this);
+        this.onChangeAddingInput = this.onChangeAddingInput.bind(this);
+        this.onSearch = this.onSearch.bind(this);
     }
 
     componentDidMount() {
@@ -30,24 +31,35 @@ class AlertsScreen extends Component {
     }
 
     deleteAlert(id, event) {
-        event.preventDefault();
-        console.log('delete', event, id);
-        mockupList.splice(id, 1);
-        this.setState({alerts: mockupList});
+        this.props.deleteAlert(id);
     }
 
     onAddAlert(event) {
-        //event.preventDefault();
-        let value = document.getElementById('add_alert').value;
-        this.props.addAlert({query_text: value});
+        event.preventDefault();
+        this.props.addAlert({query_text: this.state.newAlert});
+        this.setState({newAlert: ''})
+    }
+
+    onChangeAddingInput({target}) {
+        this.setState({newAlert: target.value})
+    }
+
+    onSearch(alert, event) {
+        const {history} = this.props;
+        history.push({
+            pathname: '/search',
+            search: queryString.stringify({
+                q: alert
+            })
+        });
+        event.preventDefault();
     }
 
     render() {
         const { alerts } = this.props;
         let alertsTable = [];
         let deleteAlert = this.deleteAlert;
-
-        console.log('alerts', this.props.alerts)
+        let searchAlert = this.onSearch;
 
         if(alerts.results !== undefined) {
             if (alerts.results.length === 0) {
@@ -63,9 +75,9 @@ class AlertsScreen extends Component {
                     <div className='table_body_alerts'>
                         {alerts.results.map(function (item, index) {
                             return <div key={index} className='table_row'>
-                                <p className='table_item_alert header_topic'>{item}</p>
-                                <p className='table_item_alert header_delete_search'><i className="fa fa-search" aria-hidden="true"/></p>
-                                <p className='table_item_alert header_delete_search'><i className="fa fa-trash-o" aria-hidden="true"/></p>
+                                <p className='table_item_alert header_topic'>{item.label}</p>
+                                <p className='table_item_alert header_delete_search' onClick={searchAlert.bind(this, item.label)}><i className="fa fa-search" aria-hidden="true"/></p>
+                                <p key={index} className='table_item_alert header_delete_search' onClick={deleteAlert.bind(this, item.id)}><i className="fa fa-trash-o" aria-hidden="true"/></p>
                             </div>
                         })}
                     </div>
@@ -87,10 +99,17 @@ class AlertsScreen extends Component {
                         </div>
                     </div>*/}
                     <div className='add_topic_div'>
+                        <form onSubmit={this.onAddAlert} className="search_form">
                         <div className="pt-form-content add_topic">
-                            <input id="add_alert" className="pt-input add_topic_input"
-                                   placeholder="Add topic to the list" type="text" dir="auto"/>
+                            <input id="add_alert"
+                                   className="pt-input add_topic_input"
+                                   placeholder="Add topic to the list"
+                                   type="text"
+                                   dir="auto"
+                                   onChange={this.onChangeAddingInput}
+                                   value={this.state.newAlert} />
                         </div>
+                        </form>
                         <div className="pt-button-group pt-fill alerts_button_div" onClick={this.onAddAlert}>
                             <AnchorButton
                                 className="alerts_anchor_button">
@@ -99,22 +118,7 @@ class AlertsScreen extends Component {
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div className='header_alerts'>
-                        <p className='header_label header_topic'>Topic</p>
-                        <p className='header_label header_delete_search'>Search</p>
-                        <p className='header_label header_delete_search'>Delete</p>
-                    </div>
-                    <div className='table_body_alerts'>
-                        {mockupList.map(function (item, index) {
-                            return <div key={index} className='table_row'>
-                                <p className='table_item_alert header_topic'>{item}</p>
-                                <p className='table_item_alert header_delete_search'><i className="fa fa-search" aria-hidden="true"/></p>
-                                <p key={index} className='table_item_alert header_delete_search' onClick={deleteAlert.bind(this, index)}><i className="fa fa-trash-o" aria-hidden="true"/></p>
-                            </div>
-                        })}
-                    </div>
-                </div>
+                {alertsTable}
 
             </DualPane.ContentPane>
         );
@@ -127,4 +131,5 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-export default connect(mapStateToProps, { fetchAlerts, addAlert })(injectIntl(AlertsScreen));
+AlertsScreen = withRouter(AlertsScreen);
+export default connect(mapStateToProps, { fetchAlerts, addAlert, deleteAlert })(injectIntl(AlertsScreen));

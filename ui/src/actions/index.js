@@ -22,12 +22,14 @@ export const fetchAlerts = asyncActionCreator(() => async dispatch => {
 }, { name: 'FETCH_ALERTS' });
 
 export const deleteAlert = asyncActionCreator((id) => async dispatch => {
-    const response = await endpoint.delete(`alerts/${id}`);
+    await endpoint.delete(`alerts/${id}`);
+    const response = await endpoint.get('alerts');
     return { alerts: response.data };
 }, { name: 'DELETE_ALERT' });
 
 export const addAlert = asyncActionCreator((alert) => async dispatch => {
-    const response = await endpoint.post('alerts', alert);
+    await endpoint.post('alerts', alert);
+    const response = await endpoint.get('alerts');
     return { alerts: response.data };
 }, { name: 'DELETE_ALERT' });
 
