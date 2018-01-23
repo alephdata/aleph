@@ -38,7 +38,7 @@ class CollectionCard extends Component {
         }
         {!collection.summary && 
           (<p className="missing">
-            <FormattedMessage id="collection.summary.missing" defaultMessage="This collecton has no description."/>
+            <FormattedMessage id="collection.summary.missing" defaultMessage="This collection has no description."/>
           </p>)
         }
         <div className="bottom-fact">
