@@ -25,6 +25,7 @@ class SearchFilterActiveTags extends Component {
 
     return (
       <div className="search-query__active-filters">
+        <b>Filters:</b>
         {activeFilters.map(filter =>
           query.getFilter(filter).map(value => (
             <SearchFilterTag
