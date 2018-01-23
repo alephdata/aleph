@@ -17,6 +17,7 @@
     "react": "^15.6.1",
     "react-addons-css-transition-group": "^15.6.0",
     "react-dom": "^15.6.1",
+    "react-helmet": "^5.2.0",
     "react-intl": "^2.3.0",
     "react-intl-cra": "^0.2.7",
     "react-intl-po": "^2.0.2",

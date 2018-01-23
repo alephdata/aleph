@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import { Helmet } from 'react-helmet';
 
 import { fetchEntity } from 'src/actions';
 import Screen from 'src/components/common/Screen';
@@ -36,6 +37,9 @@ class EntityScreen extends Component {
 
     return (
       <Screen>
+        <Helmet>
+          <title>{entity.name}</title>
+        </Helmet>
         <Breadcrumbs collection={entity.collection}>
           <li>
             <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30} />

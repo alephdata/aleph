@@ -43,8 +43,8 @@ TESING = False
 APP_TITLE = env.get('ALEPH_APP_TITLE', 'Aleph')
 APP_NAME = env.get('ALEPH_APP_NAME', 'aleph')
 APP_UI_URL = env.get('ALEPH_UI_URL', 'http://localhost:3000/')
-# APP_LOGO = env.get('ALEPH_LOGO', '/static/images/aleph_small.png')
-# APP_FAVICON = env.get('ALEPH_FAVICON', '/static/images/aleph_small.png')
+APP_LOGO = env.get('ALEPH_LOGO', 'https://cdn.occrp.org/common/logo/WhiteTransparent_globe.png')  # noqa
+APP_FAVICON = env.get('ALEPH_FAVICON', 'https://cdn.occrp.org/common/logo/WhiteOnRed_globe.png')  # noqa
 
 # Force HTTPS here:
 URL_SCHEME = env.get('ALEPH_URL_SCHEME')

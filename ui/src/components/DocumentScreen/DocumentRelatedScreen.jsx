@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import { Helmet } from 'react-helmet';
 
 import { fetchDocument } from 'src/actions';
 import Screen from 'src/components/common/Screen';
@@ -34,6 +35,9 @@ class DocumentRelatedScreen extends Component {
 
     return (
       <Screen>
+        <Helmet>
+          <title>{document.title || document.file_name}</title>
+        </Helmet>
         <Breadcrumbs collection={document.collection}>
           { document.parent && (
             <li>

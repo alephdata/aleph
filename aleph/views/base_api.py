@@ -34,7 +34,9 @@ def metadata():
         'app': {
             'title': settings.APP_TITLE,
             'ui_uri': six.text_type(app_ui_url),
-            'samples': settings.SAMPLE_SEARCHES
+            'samples': settings.SAMPLE_SEARCHES,
+            'logo': settings.APP_LOGO,
+            'favicon': settings.APP_FAVICON
         },
         'categories': Collection.CATEGORIES,
         'countries': countries.names,
