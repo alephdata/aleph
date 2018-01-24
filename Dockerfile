@@ -19,7 +19,7 @@ RUN apt-get -qq -y update \
 
 # Make a separate layer for this.
 RUN apt-get -qq -y update \
-    && apt-get -qq -y tesseract-ocr-all \    
+    && apt-get -qq -y install tesseract-ocr-all \    
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
