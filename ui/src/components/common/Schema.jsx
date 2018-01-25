@@ -39,7 +39,7 @@ class SchemaName extends Component {
       label = model.plural || label;
     }
     return (
-      <span title={label}>{label}</span>
+      <span>{label}</span>
     );
   }
 }
