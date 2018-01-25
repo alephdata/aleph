@@ -61,27 +61,6 @@ class CollectionInfo extends Component {
             </tr>
           </tbody>
         </table>
-        
-        <h3>
-          <FormattedMessage id="collection.contents" defaultMessage="Contents"/>
-        </h3>
-        <table className="info-rank">
-          <tbody>
-            {Object.entries(collection.schemata).map(([key, value]) => (
-              <tr key={key}>
-                <th>
-                  <Link to={{ path: location.path, search: `?filter:schema=${key}` }}>
-                    <Schema.Icon schema={key} />
-                    <Schema.Name schema={key} plural />
-                  </Link>
-                </th>
-                <td className="numeric">
-                  <FormattedNumber value={value} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </DualPane.InfoPane>
     );
   }
