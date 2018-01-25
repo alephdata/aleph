@@ -25,9 +25,8 @@ RUN apt-get -qq -y update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # New version of the PST file extractor
-RUN mkdir - /tmp/libpst \
+RUN mkdir /tmp/libpst \
     && wget -qO- http://www.five-ten-sg.com/libpst/packages/libpst-0.6.71.tar.gz | tar xz -C /tmp/libpst --strip-components=1 \
-    && ls /tmp \
     && cd /tmp/libpst \
     && ln -s /usr/bin/python /usr/bin/python2.7.10 \
     && ./configure \

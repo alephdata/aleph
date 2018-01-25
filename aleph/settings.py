@@ -61,7 +61,7 @@ CORS_ORIGINS = env_list('ALEPH_CORS_ORIGINS', seperator='|')
 # Error reporting
 
 # Using sentry raven
-SENTRY_DSN = env.get('SENTRY_DSN')
+SENTRY_DSN = env.get('ALEPH_SENTRY_DSN')
 
 
 ###############################################################################
