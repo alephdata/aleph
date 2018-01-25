@@ -13,6 +13,16 @@ body {
   font-family: $pt-font-family;
   font-weight: 300;
   font-size: $aleph-font-size;
+
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100vh;
+}
+
+#root {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .pt-navbar a {
