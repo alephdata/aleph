@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
+import TableViewer from './viewers/TableViewer';
 import TextViewer from './viewers/TextViewer';
 import HtmlViewer from './viewers/HtmlViewer';
 import PdfViewer from './viewers/PdfViewer';
@@ -36,6 +37,10 @@ class DocumentContent extends Component {
 
         {document.schema === 'Email' && (
           <EmailHeadersViewer document={document} />
+        )}
+
+        {document.schema === 'Table' && (
+          <TableViewer document={document}/>
         )}
 
         {document.text && !document.html && (

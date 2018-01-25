@@ -50,3 +50,13 @@ export const fetchCollections = asyncActionCreator(({ filters }) => async dispat
   const response = await endpoint.get('collections', { params: filters });
   return { filters, result: response.data };
 }, { name: 'FETCH_COLLECTIONS' });
+
+export const fetchDocumentRecords = asyncActionCreator(({ id }) => async dispatch => {
+    const response = await endpoint.get(`/documents/${id}/records`);
+    return { data: response.data };
+}, { name: 'FETCH_DOCUMENT_RECORDS' });
+
+export const fetchNextDocumentRecords = asyncActionCreator(({ next }) => async dispatch => {
+    const response = await endpoint.get(next);
+    return { data: response.data };
+}, { name: 'FETCH_NEXT_DOCUMENT_RECORDS' });
