@@ -24,7 +24,7 @@ class CollectionScreen extends Component {
   }
 
   render() {
-    const { collection } = this.props;
+    const { collection, location } = this.props;
     if (!collection || !collection.links) {
       return <ScreenLoading />;
     }
@@ -35,7 +35,7 @@ class CollectionScreen extends Component {
         </Helmet>
         <Breadcrumbs collection={collection} />
         <DualPane>
-          <CollectionInfo collection={collection} />
+          <CollectionInfo collection={collection} location={location} />
           <CollectionContent collection={collection} />
         </DualPane>
       </Screen>

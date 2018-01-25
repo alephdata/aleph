@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
 
 import DualPane from 'src/components/common/DualPane';
 import Category from 'src/components/common/Category';
@@ -12,7 +13,7 @@ import Date from 'src/components/common/Date';
 
 class CollectionInfo extends Component {
   render() {
-    const { collection } = this.props;
+    const { collection, location } = this.props;
 
     return (
       <DualPane.InfoPane>
@@ -69,8 +70,10 @@ class CollectionInfo extends Component {
             {Object.entries(collection.schemata).map(([key, value]) => (
               <tr key={key}>
                 <th>
-                  <Schema.Icon schema={key} />
-                  <Schema.Name schema={key} plural />
+                  <Link to={{ path: location.path, search: `?filter:schema=${key}` }}>
+                    <Schema.Icon schema={key} />
+                    <Schema.Name schema={key} plural />
+                  </Link>
                 </th>
                 <td className="numeric">
                   <FormattedNumber value={value} />
