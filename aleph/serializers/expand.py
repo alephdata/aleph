@@ -41,7 +41,6 @@ class ExpandableSchema(Schema):
                 continue
             query.append({
                 '_index': type_,
-                '_doc': 'doc',
                 '_id': id_
             })
 
