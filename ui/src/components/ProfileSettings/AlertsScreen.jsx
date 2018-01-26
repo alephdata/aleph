@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {AnchorButton, NonIdealState} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
-import { connect } from 'react-redux';
-import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
-import { withRouter } from 'react-router';
+import {connect} from 'react-redux';
+import {fetchAlerts, addAlert, deleteAlert} from 'src/actions';
+import {withRouter} from 'react-router';
 import queryString from 'query-string';
 
 import DualPane from 'src/components/common/DualPane';
@@ -12,7 +12,7 @@ import './AlertsScreen.css';
 
 class AlertsScreen extends Component {
 
-    constructor(){
+    constructor() {
         super();
 
         this.state = {
@@ -30,12 +30,12 @@ class AlertsScreen extends Component {
     }
 
     deleteAlert(id, event) {
-        this.props.deleteAlert(id);
+        this.props.deleteAlert(id).then(this.props.fetchAlerts());
     }
 
     onAddAlert(event) {
         event.preventDefault();
-        this.props.addAlert({query_text: this.state.newAlert});
+        this.props.addAlert({query_text: this.state.newAlert}).then(this.props.fetchAlerts());
         this.setState({newAlert: ''})
     }
 
@@ -43,7 +43,7 @@ class AlertsScreen extends Component {
         this.setState({newAlert: target.value})
     }
 
-    onSearch(alert, event) {
+    onSearch(alert) {
         const {history} = this.props;
         history.push({
             pathname: '/search',
@@ -51,16 +51,13 @@ class AlertsScreen extends Component {
                 q: alert
             })
         });
-        event.preventDefault();
     }
 
     render() {
-        const { alerts, intl } = this.props;
+        const {alerts, intl} = this.props;
         let alertsTable = [];
-        let deleteAlert = this.deleteAlert;
-        let searchAlert = this.onSearch;
 
-        if(alerts.results !== undefined) {
+        if (alerts.results !== undefined) {
             if (alerts.results.length === 0) {
                 alertsTable = <NonIdealState visual=""
                                              title="There are no alerts"/>
@@ -68,23 +65,27 @@ class AlertsScreen extends Component {
                 alertsTable = <div>
                     <div className='header_alerts'>
                         <p className='header_label header_topic'>
-                            <FormattedMessage id="collection.summary.missing" defaultMessage="Topic"/>
+                            <FormattedMessage id="alerts.topic" defaultMessage="Topic"/>
                         </p>
                         <p className='header_label header_delete_search'>
-                            <FormattedMessage id="collection.summary.missing" defaultMessage="Search"/>
+                            <FormattedMessage id="alerts.search" defaultMessage="Search"/>
                         </p>
                         <p className='header_label header_delete_search'>
-                            <FormattedMessage id="collection.summary.missing" defaultMessage="Delete"/>
+                            <FormattedMessage id="alerts.delete" defaultMessage="Delete"/>
                         </p>
                     </div>
                     <div className='table_body_alerts'>
-                        {alerts.results.map(function (item, index) {
-                            return <div key={index} className='table_row'>
+                        {alerts.results.map((item, index) => (
+                            <div key={index} className='table_row'>
                                 <p className='table_item_alert header_topic'>{item.label}</p>
-                                <p className='table_item_alert header_delete_search' onClick={searchAlert.bind(this, item.label)}><i className="fa fa-search" aria-hidden="true"/></p>
-                                <p key={index} className='table_item_alert header_delete_search' onClick={deleteAlert.bind(this, item.id)}><i className="fa fa-trash-o" aria-hidden="true"/></p>
+                                <p className='table_item_alert header_delete_search'
+                                   onClick={() => this.onSearch(item.label)}><i className="fa fa-search"
+                                                                                aria-hidden="true"/></p>
+                                <p key={index} className='table_item_alert header_delete_search'
+                                   onClick={() => this.deleteAlert(item.id)}><i className="fa fa-trash-o"
+                                                                                aria-hidden="true"/></p>
                             </div>
-                        })}
+                        ))}
                     </div>
                 </div>
             }
@@ -92,8 +93,13 @@ class AlertsScreen extends Component {
 
 
         return (
-            <DualPane.ContentPane>
+            <DualPane.ContentPane isLimited={true}>
                 <div className='main_div'>
+                    <div className='title_div'>
+                        <h1 className='alerts_title'>
+                            Alerts & Notifications
+                        </h1>
+                    </div>
                     {/*<div className='title_div'>
                         <h1 className='alerts_title'>
                             Alerts & Notifications
@@ -105,26 +111,28 @@ class AlertsScreen extends Component {
                     </div>*/}
                     <div className='add_topic_div'>
                         <form onSubmit={this.onAddAlert} className="search_form">
-                        <div className="pt-form-content add_topic">
-                            <input id="add_alert"
-                                   className="pt-input add_topic_input"
-                                   placeholder={intl.formatMessage({id: "alerts.topic.desc", defaultMessage: "Add topic to the list" })}
-                                   type="text"
-                                   dir="auto"
-                                   onChange={this.onChangeAddingInput}
-                                   value={this.state.newAlert} />
-                        </div>
+                            <div className="pt-form-content add_topic">
+                                <input id="add_alert"
+                                       className="pt-input add_topic_input"
+                                       placeholder={intl.formatMessage({
+                                           id: "alerts.topic.desc",
+                                           defaultMessage: "Add topic to the list"
+                                       })}
+                                       type="text"
+                                       dir="auto"
+                                       onChange={this.onChangeAddingInput}
+                                       value={this.state.newAlert}/>
+                                <div className="pt-button-group pt-fill alerts_button_div" onClick={this.onAddAlert}>
+                                    <AnchorButton
+                                        className="">
+                                        <FormattedMessage id="alerts.add" defaultMessage="Add"/>
+                                    </AnchorButton>
+                                </div>
+                            </div>
                         </form>
-                        <div className="pt-button-group pt-fill alerts_button_div" onClick={this.onAddAlert}>
-                            <AnchorButton
-                                className="alerts_anchor_button">
-                                <FormattedMessage id="alerts.add" defaultMessage="Add"/>
-                            </AnchorButton>
-                        </div>
                     </div>
                 </div>
                 {alertsTable}
-
             </DualPane.ContentPane>
         );
     }
@@ -137,4 +145,4 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 AlertsScreen = withRouter(AlertsScreen);
-export default connect(mapStateToProps, { fetchAlerts, addAlert, deleteAlert })(injectIntl(AlertsScreen));
+export default connect(mapStateToProps, {fetchAlerts, addAlert, deleteAlert})(injectIntl(AlertsScreen));

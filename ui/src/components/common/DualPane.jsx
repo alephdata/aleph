@@ -4,8 +4,7 @@ import './DualPane.css';
 
 class InfoPane extends Component {
   render() {
-    const { children, isProfile } = this.props;
-    let infoPaneClass = isProfile ? 'InfoPane InfoPaneProfile' : 'InfoPane';
+    const { children } = this.props;
     return (
       <aside className='InfoPane'>
         <div className="InfoPane-content-container">
@@ -19,10 +18,12 @@ class InfoPane extends Component {
 }
 
 class ContentPane extends Component {
+
   render() {
-    const { children } = this.props;
+    const { children, isLimited } = this.props;
+    let contentPaneClass = isLimited ? 'ContentPane limitedContentPane' : 'ContentPane';
     return (
-      <main className="ContentPane">
+      <main className={contentPaneClass}>
         {children}
       </main>
     );
@@ -34,7 +35,7 @@ class DualPane extends Component {
   static ContentPane = ContentPane;
 
   render() {
-    const { children, isProfile } = this.props;
+    const { children } = this.props;
 
     return (
       <article className="DualPane">

@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {AnchorButton} from '@blueprintjs/core';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import { addRole } from 'src/actions';
+import {FormattedMessage, injectIntl} from 'react-intl';
+import {addRole} from 'src/actions';
 
 import DualPane from 'src/components/common/DualPane';
 
@@ -28,10 +28,10 @@ class ProfileInfo extends Component {
         this.onChangeName = this.onChangeName.bind(this);
         this.onSubmitInfo = this.onSubmitInfo.bind(this);
         this.checkPasswords = this.checkPasswords.bind(this);
-     }
+    }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.role.isLoaded) {
+        if (nextProps.role.isLoaded) {
             this.setState(nextProps.role)
         }
 
@@ -59,15 +59,18 @@ class ProfileInfo extends Component {
 
     onSubmitInfo() {
         let isCorrect = this.checkPasswords();
-        if(isCorrect) {
+        if (isCorrect) {
             this.props.addRole(this.state);
         } else {
-            this.setState({requiredLabel: 'pt-input input_class pt-intent-danger', requiredLabelText: 'pt-form-helper-text error_label_text show'})
+            this.setState({
+                requiredLabel: 'pt-input input_class pt-intent-danger',
+                requiredLabelText: 'pt-form-helper-text error_label_text show'
+            })
         }
     }
 
     render() {
-        const { intl } = this.props
+        const {intl} = this.props
 
         return (
             <DualPane.InfoPane>
@@ -85,7 +88,10 @@ class ProfileInfo extends Component {
                         <div className="pt-form-content">
                             <input className="pt-input input_class"
                                    type="text"
-                                   placeholder={intl.formatMessage({id: "profile.info.placeholder.name", defaultMessage: "Enter your name"})}
+                                   placeholder={intl.formatMessage({
+                                       id: "profile.info.placeholder.name",
+                                       defaultMessage: "Enter your name"
+                                   })}
                                    dir="auto"
                                    onChange={this.onChangeName}
                                    value={this.state.name}/>
@@ -101,7 +107,10 @@ class ProfileInfo extends Component {
                         <div className="pt-form-content">
                             <input className="pt-input input_class"
                                    type="text"
-                                   placeholder={intl.formatMessage({id: "profile.info.placeholder.email", defaultMessage: "Enter your email"})}
+                                   placeholder={intl.formatMessage({
+                                       id: "profile.info.placeholder.email",
+                                       defaultMessage: "Enter your email"
+                                   })}
                                    dir="auto"
                                    onChange={this.onChangeEmail}
                                    value={this.state.email}/>
@@ -117,7 +126,10 @@ class ProfileInfo extends Component {
                         <div className="pt-form-content">
                             <input className={this.state.requiredLabel}
                                    type="password"
-                                   placeholder={intl.formatMessage({id: "profile.info.placeholder.confirm", defaultMessage: "Enter your password"})}
+                                   placeholder={intl.formatMessage({
+                                       id: "profile.info.placeholder.confirm",
+                                       defaultMessage: "Enter your password"
+                                   })}
                                    dir="auto"
                                    onChange={this.onChangePass}
                                    value={this.state.password}/>
@@ -133,7 +145,10 @@ class ProfileInfo extends Component {
                         <div className="pt-form-content">
                             <input className={this.state.requiredLabel}
                                    type="password"
-                                   placeholder={intl.formatMessage({id: "profile.info.placeholder.confirm", defaultMessage: "Confirm your password"})}
+                                   placeholder={intl.formatMessage({
+                                       id: "profile.info.placeholder.confirm",
+                                       defaultMessage: "Confirm your password"
+                                   })}
                                    dir="auto"
                                    onChange={this.onChangeConfirmPass}
                                    value={this.state.confirmPass}/>
@@ -144,25 +159,27 @@ class ProfileInfo extends Component {
                     </div>
                     <div className="pt-button-group pt-fill button_div" onClick={this.onSubmitInfo}>
                         <AnchorButton
-                            className="profile_info_anchor_button">
+                            className="">
                             <FormattedMessage id="profile.info.save" defaultMessage="Save changes"/>
                         </AnchorButton>
                     </div>
                 </div>
-                <h1 className='api_key_title'>
-                    <FormattedMessage id="profile.info.api" defaultMessage="API Key"/>
-                </h1>
-                <div>
-                    <div className='api_key_group'>
-                        <i className="fa fa-key" aria-hidden="true"/>
-                        <label className="pt-label api_key">
-                            {this.state.api_key}
+                <div className='api_key_div'>
+                    <h1>
+                        <FormattedMessage id="profile.info.api" defaultMessage="API Key"/>
+                    </h1>
+                    <div>
+                        <div className='api_key_group'>
+                            <i className="fa fa-key" aria-hidden="true"/>
+                            <label className="pt-label api_key">
+                                {this.state.api_key}
+                            </label>
+                        </div>
+                        <label className="pt-label api_key_label">
+                            <FormattedMessage id="profile.info.api.desc" defaultMessage="Use the API key to read and write data
+                        via a remote application or client library"/>
                         </label>
                     </div>
-                    <label className="pt-label api_key_label">
-                        <FormattedMessage id="profile.info.api.desc" defaultMessage="Use the API key to read and write data
-                        via a remote application or client library"/>
-                    </label>
                 </div>
             </DualPane.InfoPane>
         );

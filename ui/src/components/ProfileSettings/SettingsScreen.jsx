@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import AlertsScreen from './AlertsScreen';
 import ProfileInfo from './ProfileInfo';
-import { fetchRole } from 'src/actions';
+import {fetchRole} from 'src/actions';
 
 class SettingsScreen extends Component {
 
@@ -19,8 +19,8 @@ class SettingsScreen extends Component {
             <Screen>
                 {/*<Breadcrumbs collection={collection} />*/}
                 <DualPane>
-                    <ProfileInfo />
-                    <AlertsScreen />
+                    <ProfileInfo/>
+                    <AlertsScreen/>
                 </DualPane>
             </Screen>
 
@@ -35,4 +35,4 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps, { fetchRole })(SettingsScreen);
+export default connect(mapStateToProps, {fetchRole})(SettingsScreen);

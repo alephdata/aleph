@@ -8,20 +8,20 @@
   flex: 1 0 0;
 }
 
+.limitedContentPane {
+  flex: 800px 0 !important;
+  margin:0 auto;
+  width: 800px;
+}
+
 .DualPane .ContentPane {
   flex: 2.5 0 0;
   padding: $aleph-grid-size;
   padding-top: $aleph-grid-size * 2;
 }
 
-.InfoPaneProfile {
-  width: 21% !important;
-  flex: 0 0 400px !important;
-}
-
 .DualPane .InfoPane {
-  flex: 1 0 0;
-  width: 30%;
+  width: 25%;
   min-width: 20em;
   border-right: 0px;
   padding: $aleph-grid-size * 2;
