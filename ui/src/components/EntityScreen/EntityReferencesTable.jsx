@@ -69,7 +69,7 @@ class EntityReferencesTable extends Component {
         <h3>
           {property.reverse}
         </h3>
-        <table>
+        <table className="pt-table pt-bordered">
           <thead>
             <tr>
               {columns.map(prop => (
