@@ -1,8 +1,10 @@
+@import "src/app/variables.scss";
+
 .settings-icon {
-  font-size: 20px;
+  font-size: $aleph-grid-size * 2;
 }
 
 .settings_button {
-  padding-top: 4px !important;
-  padding-left: 8px !important;
+  padding-top: $aleph-grid-size * 0.4 !important;
+  padding-left: $aleph-grid-size * 0.8 !important;
 }
