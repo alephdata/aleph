@@ -18,6 +18,7 @@ export const addRole = asyncActionCreator((role) => async dispatch => {
 
 export const fetchAlerts = asyncActionCreator(() => async dispatch => {
     const response = await endpoint.get('alerts');
+    response.data.results.reverse();
     return { alerts: response.data };
 }, { name: 'FETCH_ALERTS' });
 

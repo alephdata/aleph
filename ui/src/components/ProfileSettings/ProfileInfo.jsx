@@ -72,7 +72,6 @@ class ProfileInfo extends Component {
     render() {
         const {intl, role} = this.props;
         const {name, email, password, confirmPass, api_key} = this.state;
-        console.log(this.state)
 
         return (
             <DualPane.InfoPane>
