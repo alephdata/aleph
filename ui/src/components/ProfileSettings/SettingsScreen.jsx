@@ -15,9 +15,10 @@ class SettingsScreen extends Component {
     }
 
     render() {
+        const {collection, app} = this.props
         return (
             <Screen>
-                {/*<Breadcrumbs collection={collection} />*/}
+                <Breadcrumbs collection={{label: 'User Settings', links: {ui: app.ui_uri + 'settings'}}} />
                 <DualPane>
                     <ProfileInfo/>
                     <AlertsScreen/>
@@ -31,7 +32,9 @@ class SettingsScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
     return {
         session: state.session,
-        role: state.role
+        role: state.role,
+        collection: state.collection,
+        app: state.metadata.app
     };
 };
 
