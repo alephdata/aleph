@@ -47,7 +47,7 @@ class CollectionInfo extends Component {
                   <FormattedMessage id="collection.countries" defaultMessage="Country"/>
                 </th>
                 <td>
-                  <Country.List codes={collection.countries} />
+                  <Country.List codes={collection.countries} truncate={10} />
                 </td>
               </tr>
             )}

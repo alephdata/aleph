@@ -1,4 +1,4 @@
-import {FormattedMessage} from 'react-intl';
+import { FormattedNumber, FormattedMessage } from 'react-intl';
 
 import wordList from 'src/util/wordList';
 import React, { Component } from 'react';
@@ -24,13 +24,29 @@ class Name extends Component {
 
 class List extends Component {
   render() {
-    const { codes, countries } = this.props;
-    
+    const { codes, countries, truncate = Infinity } = this.props;
     if (!codes) return null;
-    const names = codes.map((code, i) => {
-        return <Name countries={countries} code={code} key={code} />;
-    });
-    
+
+    let names = codes.map(code => (
+      <Name countries={countries} code={code} key={code} />
+    ));
+
+    // Truncate if too long
+    if (names.length > truncate) {
+      const ellipsis = (
+        <i>
+          … (
+          <FormattedNumber value={codes.length} />
+          &nbsp;
+          <FormattedMessage id="Country.total" defaultMessage="total" />
+          )
+        </i>
+      );
+      // Cut slightly deeper than requested, as the ellipsis takes space too.
+      const numberToKeep = truncate - 1;
+      names = [...names.slice(0, numberToKeep), ellipsis];
+    }
+
     return (
       <span>{ wordList(names, ', ') }</span>
     );
