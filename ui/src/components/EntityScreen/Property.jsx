@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import Entity from './Entity';
 import Country from 'src/components/common/Country';
@@ -40,6 +41,21 @@ class Name extends Component {
   }
 }
 
+class Reverse extends Component {
+  render() {
+    const { model } = this.props;
+    return model.reverse
+      ? (<span>{model.reverse}</span>)
+      : (
+        <FormattedMessage
+          id="property.inverse"
+          defaultMessage="'{name}' of …"
+          values={model}
+        />
+      );
+  }
+}
+
 class Values extends Component {
   render() {
     const {values, model} = this.props;
@@ -55,6 +71,7 @@ class Values extends Component {
 
 class Property extends Component {
     static Name = Name;
+    static Reverse = Reverse;
     static Value = Value;
     static Values = Values;
 }

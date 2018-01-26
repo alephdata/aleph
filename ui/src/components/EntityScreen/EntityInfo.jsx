@@ -86,7 +86,7 @@ class EntityInfo extends Component {
                   <tr key={ref.property.qname}>
                     <th>
                       <Schema.Icon schema={ref.schema} />
-                      { ref.property.reverse }
+                      <Property.Reverse model={ref.property} />
                     </th>
                     <td className="numeric">
                       <FormattedNumber value={ref.count} />

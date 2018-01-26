@@ -67,7 +67,7 @@ class EntityReferencesTable extends Component {
     return (
       <section className="EntityReferencesTable">
         <h3>
-          {property.reverse}
+          <Property.Reverse model={property} />
         </h3>
         <table className="pt-table pt-bordered">
           <thead>
