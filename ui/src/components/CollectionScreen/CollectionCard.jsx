@@ -32,7 +32,7 @@ class CollectionCard extends Component {
           </div>
           {collection.summary &&
             <p>
-              <Truncate lines={2}>
+              <Truncate lines={2} title={collection.summary}>
                 { collection.summary }
               </Truncate>
             </p>
