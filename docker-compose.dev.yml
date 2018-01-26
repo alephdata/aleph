@@ -30,14 +30,13 @@ services:
     networks:
       - devnet
     volumes:
-      - "./build/data/rabbitmq:/var/lib/rabbitmq"
-      - "./build/logs/rabbitmq:/var/log"
+      - rabbitmq-data:/var/lib/rabbitmq
 
   unoservice:
     image: alephdata/unoservice
     networks:
       - devnet
-    tmpfs: /tmp
+    # tmpfs: /tmp
     restart: on-failure
     expose:
       - 3000
@@ -52,6 +51,7 @@ services:
       - elasticsearch
       - rabbitmq
       - unoservice
+    # tmpfs: /tmp
     volumes:
       - "./:/aleph"
       - "./mappings:/aleph/mappings"
@@ -91,6 +91,7 @@ services:
       - unoservice
     networks:
       - devnet
+    # tmpfs: /tmp
     volumes:
       - "./aleph:/aleph/aleph"
       - "./build/archive:/data"
@@ -135,3 +136,4 @@ services:
 volumes:
   elasticsearch-data: {}
   elasticsearch-log: {}
+  rabbitmq-data: {}

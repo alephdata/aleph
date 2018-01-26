@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
-import { debounce } from 'lodash';
+import { debounce, range } from 'lodash';
 import Waypoint from 'react-waypoint';
 
 import Query from '../SearchScreen/Query';
@@ -117,6 +117,13 @@ class CollectionBrowser extends Component {
               <CollectionCard collection={res} />
             </div>
           )}
+          {
+            // Hacky: we append N-2 empty divs, to prevent the last item(s) from
+            // trying to fill up the whole bottom row.
+            range(0, result.results.length - 2).map(i => (
+              <div key={i} className="result"></div>
+            ))
+          }
           { result.next && (
             <Waypoint onEnter={this.bottomReachedHandler} />
           )}

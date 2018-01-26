@@ -113,9 +113,7 @@ class DocumentMetadata extends Component {
           {document.mime_type && (
               <tr>
                   <th><FormattedMessage id="document.mime_type" defaultMessage="MIME"/></th>
-                  <td className="hide-overflow">
-                    {document.mime_type}
-                  </td>
+                  <td>{document.mime_type}</td>
               </tr>
           )}
         </tbody>

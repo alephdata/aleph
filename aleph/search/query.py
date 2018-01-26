@@ -2,7 +2,7 @@ from pprint import pprint  # noqa
 from elasticsearch.helpers import scan
 
 from aleph.core import es
-from aleph.index.util import authz_query
+from aleph.index.util import authz_query, field_filter_query
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 
@@ -16,7 +16,7 @@ def convert_filters(filters):
         if field in ['id', '_id']:
             id_values.extend(values)
         else:
-            ret.append({'terms': {field: list(values)}})
+            ret.append(field_filter_query(field, list(values)))
 
     if id_values:
         ret.append({'ids': {'values': id_values}})
@@ -49,7 +49,13 @@ class Query(object):
 
     def get_filters(self):
         """Apply query filters from the user interface."""
-        return convert_filters(self.parser.filters)
+        filters = convert_filters(self.parser.filters)
+        if len(self.parser.exclude):
+            exclude = {'ids': {'values': self.parser.exclude}}
+            filters.append({
+                'bool': {'must_not': exclude}
+            })
+        return filters
 
     def get_post_filters(self):
         """Apply post-aggregation query filters."""

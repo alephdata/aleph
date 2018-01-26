@@ -12,15 +12,21 @@ RUN apt-get -qq -y update \
         poppler-utils poppler-data unrtf pstotext libwebp-dev python-pil \
         imagemagick-common imagemagick mdbtools p7zip-full libboost-python-dev libgsf-1-dev \
         libtesseract-dev libjpeg-dev libicu-dev libldap2-dev libsasl2-dev djvulibre-bin \
-        tesseract-ocr-all libleptonica-dev \    
+        libleptonica-dev \    
+    && apt-get -qq -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Make a separate layer for this.
+RUN apt-get -qq -y update \
+    && apt-get -qq -y install tesseract-ocr-all \    
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # New version of the PST file extractor
-RUN mkdir - /tmp/libpst \
+RUN mkdir /tmp/libpst \
     && wget -qO- http://www.five-ten-sg.com/libpst/packages/libpst-0.6.71.tar.gz | tar xz -C /tmp/libpst --strip-components=1 \
-    && ls /tmp \
     && cd /tmp/libpst \
     && ln -s /usr/bin/python /usr/bin/python2.7.10 \
     && ./configure \
@@ -46,7 +52,8 @@ RUN pip install -r /tmp/requirements-toolkit.txt
 # Install aleph
 COPY . /aleph
 WORKDIR /aleph
-RUN pip install -e .
+ENV PYTHONPATH /aleph
+RUN cd /usr/local/lib/python2.7/site-packages && python /aleph/setup.py develop
 
 # Run the green unicorn
 CMD gunicorn -w 5 -b 0.0.0.0:8000 --name aleph_gunicorn \

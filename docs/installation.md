@@ -11,14 +11,15 @@ Before we continue, you will need to have Docker and `docker-compose`
 installed. Please refer to their manual to learn how to set up
 [Docker](https://docs.docker.com/engine/installation/) and [docker-compose](https://docs.docker.com/compose/install/).
 
-You will also need to adapt a configuration to provide some credentials
-for the external services. This includes the OAuth credentials to allow
-Google users to login to Aleph and an email server credentials. Email
-server support is optional for development purposes.
+You will also need to adapt a configuration file and may want to provide some credentials for various external services. This includes the OAuth credentials to allow Google users to login to Aleph and an email server credentials. Email server support is optional for development purposes.
 
 Inside the same repository you will find a file called `aleph.env.tmpl`.
 This is a template of the configuration file. Make a copy of this file named
-`aleph.env` and follow the steps below to edit it.
+`aleph.env` and edit it as you need.
+
+### OAuth
+
+Using OAuth for login is optional. Skip this section (and leave the config commented out) if you don't want to use it.
 
 To get the OAuth credentials please visit the [Google Developers Console](https://console.developers.google.com/).
 There you will need to [create an API key](https://support.google.com/googleapi/answer/6158862).
@@ -35,23 +36,11 @@ example of a value is the output of `openssl rand -hex 24`.
 
 ## Development installation steps
 
-Insider the Aleph repository you will find a `Dockerfile` and a
+Inside the Aleph repository you will find a `Dockerfile` and a
 `docker-compose.dev.yml` files. These are used to build a container with the
 application and start the relevant services.
 
-For ElasticSearch, you need to run: 
-
-```
-sysctl -w vm.max_map_count=262144
-```
-
-Or to set this permanently, in `/etc/sysctl.conf` add:
-
-```
-vm.max_map_count=262144
-```
-
-Then, to proceed run:
+You can use `make all` to set everything up and launch the web service. This is equivalent to:
 
  1. `make build` to start the application and relevant services. You can
     leave this open to have access to the development logs.
@@ -63,7 +52,58 @@ Then, to proceed run:
 Your repository is mounted inside the docker container under the name
 `aleph_app`. You can access these services anytime by running `make shell`.
 
-### Building from a clean state
+### Users
+
+For development purposes, you can quickly create a new user with the
+`aleph createuser` command, inside a shell (`make shell`):
+
+```
+aleph createuser --email="user@example.com" --name="Alice" --is_admin=True --password=123abc userid123
+```
+
+If you pass an email address in the `ALEPH_ADMINS` environment variable (in your `aleph.env` file) it will automatically be made admin.
+
+The user's API key is returned, which you can use in the `Authorization` HTTP header of requests to the API.
+
+If you pass a password, you can use this email address and password to log into the Web UI.
+
+### Frequent issues
+
+Most problems arise when the ElasticSearch container doesn't startup properly, or in time. If `upgrade` fails with errors like `NewConnectionError: <urllib3.connection.HTTPConnection object at 0x7fb11b6ab0d0>: Failed to establish a new connection: [Errno 111] Connection refused` this is what happened.
+
+You can find out specifically what went wrong with ES by consulting the logs for that container:
+
+```
+docker-compose -f docker-compose.dev.yml logs elasticsearch
+```
+
+You will almost certainly need to run the following before you build:
+
+```
+sysctl -w vm.max_map_count=262144
+```
+
+Or to set this permanently, in `/etc/sysctl.conf` add:
+
+```
+vm.max_map_count=262144
+```
+
+If the error in your ES container contains:
+
+```
+elasticsearch_1 | [1]: max file descriptors [4096] for elasticsearch process is too low, increase to at least [65536]
+```
+
+Please see [the relevent ElasticSearch documentation for this issue](https://www.elastic.co/guide/en/elasticsearch/reference/current/file-descriptors.html).
+
+If all else fails, you may just need to wait a little longer for the ES service to initialize before you run upgrade. Doing the following (after `make build`) should be sufficient:
+
+1. `make shell`
+2. Inside the aleph shell run `aleph upgrade`.
+3. If that succeeds, in a new terminal run `make web` to launch the UI and API.
+
+## Building from a clean state
 
 You can also build the Aleph images locally. This could be useful while working
 on the Dockerfile changes and new dependency upgrades.
@@ -104,20 +144,6 @@ make upgrade
 Most of the Aleph configuration is handled via a set of environment values, which are
 read by Aleph inside of docker. They are set using the ``aleph.env`` file, and can be
 edited locally.
-
-## Users
-
-For development purposes, you can quickly create a new user with the
-`aleph createuser` command, inside a shell (`make shell`):
-
-```
-aleph createuser --email="user@example.com" --name="Alice" --is_admin=True userid123
-```
-
-If you pass an email address in the `ALEPH_ADMINS` environment variable (in your
-`aleph.env` file) it will automatically be made admin.
-
-The user's API key is returned.
 
 ## Running tests
 

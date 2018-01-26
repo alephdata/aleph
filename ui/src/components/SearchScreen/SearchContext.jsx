@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { isBoolean, debounce } from 'lodash';
+import { Helmet } from 'react-helmet';
 
 import { fetchSearchResults } from 'src/actions';
 
@@ -67,6 +68,12 @@ class SearchContext extends Component {
 
     return (
       <div className="SearchContext">
+        {query.hasQuery() && (
+          <Helmet>
+            <title>{query.getQ()}</title>
+          </Helmet>
+        )}
+        
         { aspects.filter && (
           <SearchFilter query={query}
                         result={result}

@@ -7,14 +7,17 @@ from aleph.core import url_for
 from aleph.serializers.common import BaseSchema
 from aleph.model import Role
 
+MIN_LENGTH = Length(min=Role.PASSWORD_MIN_LENGTH)
+
 
 class RoleSchema(BaseSchema):
     name = String(validate=Length(min=3))
     email = String(validate=Email())
     api_key = String(dump_only=True)
+    password = String(validate=MIN_LENGTH, missing=None)
     type = String(dump_only=True)
-    # foreign_id = String(dump_only=True)
-    # is_admin = Boolean(dump_only=True)
+    is_admin = Boolean(dump_only=True)
+    has_password = Boolean(dump_only=True)
 
     @post_dump
     def transient(self, data):
@@ -26,6 +29,8 @@ class RoleSchema(BaseSchema):
         if not data['writeable']:
             data.pop('api_key', None)
             data.pop('email', None)
+            data.pop('password', None)
+            data.pop('has_password', None)
         return data
 
 
@@ -35,8 +40,7 @@ class RoleCodeCreateSchema(Schema):
 
 class RoleCreateSchema(Schema):
     name = String()
-    password = String(validate=Length(min=Role.PASSWORD_MIN_LENGTH),
-                      required=True)
+    password = String(validate=MIN_LENGTH, required=True)
     code = String(required=True)
 
 

@@ -92,6 +92,15 @@ class Query {
         return _.uniq(keys);
     }
 
+    filters() {
+      // List all the filters explictly active in this query
+      // (i.e. not through the context)
+      const keyPrefix = this.prefix + 'filter:';
+      return _.keys(this.state)
+        .filter(name => name.startsWith(keyPrefix))
+        .map(name => name.substr(keyPrefix.length));
+    }
+
     getFilter(name) {
         return this.getList('filter:' + name);
     }

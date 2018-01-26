@@ -44,6 +44,10 @@ class QueryParser(object):
         return self.prefixed_items('filter:')
 
     @property
+    def exclude(self):
+        return self.getlist('exclude')
+
+    @property
     def items(self):
         for key in self.args.keys():
             if key == 'offset':

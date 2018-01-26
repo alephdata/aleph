@@ -41,7 +41,7 @@ class CollectionSchema(BaseSchema):
             return
         roles = data.get('roles', [])
         public = Role.public_roles()
-        data['secret'] = public.intersection(roles) < 0
+        data['secret'] = len(public.intersection(roles)) == 0
 
     @post_dump
     def transient(self, data):

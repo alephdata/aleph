@@ -12,21 +12,27 @@
   }
 }
 
-// .PageLayout-root {}
+.PageLayout-root {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: column nowrap;
+}
 
 .PageLayout-main {
+  flex-grow: 1;
   display: flex;
-  min-height: 90vh;
+  flex-flow: column nowrap;
   background-color: $aleph-content-background;
   align-items: stretch;
 }
 
 .PageLayout-footer {
+  background-color: $aleph-banner-background;
   color: $aleph-dark-text-color;
-  
+
   p {
     text-align: right;
-    padding: $aleph-grid-size * 2;
+    padding: $aleph-grid-size * 1;
   }
 
   a, a:hover {

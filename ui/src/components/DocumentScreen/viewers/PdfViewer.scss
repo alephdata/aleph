@@ -1,19 +1,21 @@
+@import "src/app/variables.scss";
+
 .PdfViewer .page {
-  margin: 20px 0;
+  margin: $aleph-grid-size 0;
 }
 
-.document_pdf{
+.document_pdf s{
   flex-grow: 1;
   width: 100%;
   background-color: whitesmoke;
-  padding-top: 20px;
+  padding-top: $aleph-grid-size;
 }
 
 .PdfViewer .page > canvas {
   /* center each page */
   margin: auto;
-  padding-bottom: 20px;
-  width: 80% !important;
+  padding-bottom: $aleph-grid-size;
+  width: 90%;
 }
 
 .previousPage {

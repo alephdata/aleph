@@ -3,6 +3,8 @@ from __future__ import absolute_import
 import logging
 from followthemoney import model
 from followthemoney.util import merge_data
+from six.moves.urllib.parse import quote
+from urlnormalizer import query_string
 
 from aleph.core import es, db, celery, USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Collection, Entity, Alert, Role, Permission
@@ -10,7 +12,7 @@ from aleph.index import index_entity, flush_index
 from aleph.index.core import entities_index
 from aleph.index.entities import index_bulk
 from aleph.index.collections import index_collection
-from aleph.index.util import authz_query
+from aleph.index.util import authz_query, field_filter_query
 from aleph.logic.util import ui_url
 from aleph.util import dict_list
 
@@ -170,7 +172,7 @@ def entity_references(entity, authz):
     return results
 
 
-def entity_pivot(entity, authz):
+def entity_tags(entity, authz):
     """Do a search on tags of an entity."""
     # NOTE: This must also work for documents.
     FIELDS = [
@@ -186,6 +188,8 @@ def entity_pivot(entity, authz):
     # often they've been mentioned in other entities.
     for field in FIELDS:
         for value in entity.get(field, []):
+            if value is None:
+                continue
             queries.append({})
             queries.append({
                 'size': 0,
@@ -193,7 +197,7 @@ def entity_pivot(entity, authz):
                     'bool': {
                         'filter': [
                             authz_query(authz),
-                            {'term': {field: value}},
+                            field_filter_query(field, value)
                         ],
                         'must_not': [
                             {'ids': {'values': [entity.get('id')]}},
@@ -211,7 +215,10 @@ def entity_pivot(entity, authz):
     for (field, value), resp in zip(pivots, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
         if total > 0:
+            qvalue = quote(value.encode('utf-8'))
+            key = ('filter:%s' % field, qvalue)
             results.append({
+                'id': query_string([key]),
                 'value': value,
                 'field': field,
                 'count': total

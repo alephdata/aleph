@@ -56,6 +56,11 @@ export const fetchEntityReferences = asyncActionCreator(({ id }) => async dispat
   return { id, data: response.data };
 }, { name: 'FETCH_ENTITY_REFERENCES' });
 
+export const fetchEntityTags = asyncActionCreator(({ id }) => async dispatch => {
+  const response = await endpoint.get(`entities/${id}/tags`);
+  return { id, data: response.data };
+}, { name: 'FETCH_ENTITY_TAGS' });
+
 export const fetchDocument = asyncActionCreator(({ id }) => async dispatch => {
   const response = await endpoint.get(`documents/${id}`);
   return { id, data: response.data };
@@ -70,3 +75,13 @@ export const fetchCollections = asyncActionCreator(({ filters }) => async dispat
   const response = await endpoint.get('collections', { params: filters });
   return { filters, result: response.data };
 }, { name: 'FETCH_COLLECTIONS' });
+
+export const fetchDocumentRecords = asyncActionCreator(({ id }) => async dispatch => {
+    const response = await endpoint.get(`/documents/${id}/records`);
+    return { data: response.data };
+}, { name: 'FETCH_DOCUMENT_RECORDS' });
+
+export const fetchNextDocumentRecords = asyncActionCreator(({ next }) => async dispatch => {
+    const response = await endpoint.get(next);
+    return { data: response.data };
+}, { name: 'FETCH_NEXT_DOCUMENT_RECORDS' });

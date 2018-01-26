@@ -70,7 +70,9 @@ class ProfileInfo extends Component {
     }
 
     render() {
-        const {intl} = this.props
+        const {intl, role} = this.props;
+        const {name, email, password, confirmPass, api_key} = this.state;
+        console.log(this.state)
 
         return (
             <DualPane.InfoPane>
@@ -94,7 +96,7 @@ class ProfileInfo extends Component {
                                    })}
                                    dir="auto"
                                    onChange={this.onChangeName}
-                                   value={this.state.name}/>
+                                   value={name}/>
                         </div>
                     </div>
                     <div className="pt-form-group email_group">
@@ -113,10 +115,10 @@ class ProfileInfo extends Component {
                                    })}
                                    dir="auto"
                                    onChange={this.onChangeEmail}
-                                   value={this.state.email}/>
+                                   value={email}/>
                         </div>
                     </div>
-                    <div className="pt-form-group email_group">
+                    {role.has_password && <div className="pt-form-group email_group">
                         <div className='label_icon_group'>
                             <i className="fa fa-unlock-alt" aria-hidden="true"/>
                             <label className="pt-label label_class">
@@ -132,10 +134,11 @@ class ProfileInfo extends Component {
                                    })}
                                    dir="auto"
                                    onChange={this.onChangePass}
-                                   value={this.state.password}/>
+                                   value={password === null ? '' : password}/>
                         </div>
                     </div>
-                    <div className="pt-form-group email_group">
+                    }
+                    {role.has_password && <div className="pt-form-group email_group">
                         <div className='label_icon_group'>
                             <i className="fa fa-unlock-alt" aria-hidden="true"/>
                             <label className="pt-label label_class">
@@ -151,12 +154,12 @@ class ProfileInfo extends Component {
                                    })}
                                    dir="auto"
                                    onChange={this.onChangeConfirmPass}
-                                   value={this.state.confirmPass}/>
+                                   value={confirmPass}/>
                         </div>
                         <div className={this.state.requiredLabelText}>
                             <FormattedMessage id="profile.info.error" defaultMessage="Passwords are not the same!"/>
                         </div>
-                    </div>
+                    </div>}
                     <div className="pt-button-group pt-fill button_div" onClick={this.onSubmitInfo}>
                         <AnchorButton
                             className="">
@@ -172,7 +175,7 @@ class ProfileInfo extends Component {
                         <div className='api_key_group'>
                             <i className="fa fa-key" aria-hidden="true"/>
                             <label className="pt-label api_key">
-                                {this.state.api_key}
+                                {api_key}
                             </label>
                         </div>
                         <label className="pt-label api_key_label">

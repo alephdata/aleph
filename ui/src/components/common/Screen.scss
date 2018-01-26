@@ -1,7 +1,6 @@
-
 .Screen {
+  flex-grow: 1;
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
   align-items: stretch;
-  width: 100%;
 }

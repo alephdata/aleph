@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
+import { Helmet } from 'react-helmet';
 
 import { fetchMetadata } from 'src/actions';
 import LoginScreen from 'src/components/auth/LoginScreen';
@@ -10,7 +11,10 @@ import SignupScreen from 'src/components/auth/SignupScreen';
 import ActivateScreen from 'src/components/auth/ActivateScreen';
 import SearchScreen from 'src/components/SearchScreen';
 import EntityScreen from 'src/components/EntityScreen';
+import EntityRelatedScreen from 'src/components/EntityScreen/EntityRelatedScreen';
 import DocumentScreen from 'src/components/DocumentScreen';
+import DocumentRelatedScreen from 'src/components/DocumentScreen/DocumentRelatedScreen';
+import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
 import HomeScreen from 'src/components/HomeScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
 import SettingsScreen from 'src/components/ProfileSettings/SettingsScreen';
@@ -26,7 +30,8 @@ class PageLayout extends Component {
   }
 
   render() {
-    const isLoaded = this.props.metadata && this.props.metadata.app && this.props.session;
+    const { metadata, session } = this.props;
+    const isLoaded = metadata && metadata.app && session;
     if (!isLoaded) {
       return (
         <div className="PageLayout-spinner">
@@ -39,7 +44,11 @@ class PageLayout extends Component {
 
     return (
       <div className="PageLayout-root">
-        <PageNavbar metadata={this.props.metadata} session={this.props.session}/>
+        <Helmet titleTemplate={`%s - ${metadata.app.title}`}>
+          <title>{metadata.app.title}</title>
+          <link rel="shortcut icon" href={metadata.app.favicon} />
+        </Helmet>
+        <PageNavbar metadata={metadata} session={session}/>
         <main className="PageLayout-main">
           <Switch>
             <Route path="/login" exact component={LoginScreen}/>
@@ -48,7 +57,11 @@ class PageLayout extends Component {
             <Route path="/settings" exact component={SettingsScreen}/>
             <Route path="/activate/:code" exact component={ActivateScreen}/>
             <Route path="/entities/:entityId" exact component={EntityScreen}/>
+            <Route path="/entities/:entityId/related" exact component={EntityRelatedScreen}/>
             <Route path="/documents/:documentId" exact component={DocumentScreen}/>
+            <Route path="/documents/:documentId/related" exact component={DocumentRelatedScreen}/>
+            <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
+            <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
             <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
             <Route path="/search" exact component={SearchScreen}/>
             <Route path="/" exact component={HomeScreen}/>

@@ -157,12 +157,16 @@ def indexentities():
 @manager.option('-n', '--name', dest='name')
 @manager.option('-e', '--email', dest='email')
 @manager.option('-i', '--is_admin', dest='is_admin')
-def createuser(foreign_id, name=None, email=None, is_admin=False):
+@manager.option('-p', '--password', dest='password')
+def createuser(foreign_id, password=None, name=None, email=None, is_admin=False):
     """Create a user and show their API key."""
     role = Role.load_or_create(foreign_id, Role.USER,
                                name or foreign_id,
                                email=email or "user@example.com",
                                is_admin=is_admin)
+    if password is not None:
+        role.set_password(password)
+    db.session.add(role)
     db.session.commit()
     return role.api_key
 

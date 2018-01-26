@@ -75,7 +75,7 @@ class ShallowCombinedSchema(BaseSchema):
     def document_links(self, data, pk, schemata):
         links = {
             'self': url_for('documents_api.view', document_id=pk),
-            'pivot': url_for('entities_api.pivot', id=pk),
+            'tags': url_for('entities_api.tags', id=pk),
             'ui': document_url(pk)
         }
         if data.get('content_hash'):
@@ -95,7 +95,7 @@ class ShallowCombinedSchema(BaseSchema):
             # 'similar': url_for('entities_api.similar', id=pk),
             # 'documents': url_for('entities_api.documents', id=pk),
             'references': url_for('entities_api.references', id=pk),
-            'pivot': url_for('entities_api.pivot', id=pk),
+            'tags': url_for('entities_api.tags', id=pk),
             'ui': entity_url(pk)
         }
 

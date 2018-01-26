@@ -3,7 +3,10 @@ DEVDOCKER=$(COMPOSE) run --rm app
 
 all: build upgrade web
 
-shell:
+services:
+	$(COMPOSE) up -d rabbitmq unoservice postgres elasticsearch
+
+shell: services    
 	$(DEVDOCKER) /bin/bash
 
 test: build
@@ -18,23 +21,18 @@ upgrade: build
 installdata:
 	$(DEVDOCKER) aleph installdata
 
-web:
+web: services
 	$(COMPOSE) up api ui
 
-api:
-	$(COMPOSE) up api
+worker: services
+	$(COMPOSE) run --rm -e ALEPH_EAGER=false app celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /tmp/celery.pid -s /tmp/celerybeat-schedule.db
 
-worker:
-	$(DEVDOCKER) celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /var/lib/celery.pid
-
-beat:
-	$(DEVDOCKER) celery -A aleph.queues beat -s /var/lib/celerybeat-schedule.db --pidfile /var/lib/celery.pid
-
-clear:
+purge:
 	$(DEVDOCKER) celery purge -f -A aleph.queues
 
-stop:
-	$(COMPOSE) stop
+clean:
+	$(COMPOSE) down
+	$(COMPOSE) rm -f
 
 rebuild:
 	$(COMPOSE) build --pull --no-cache

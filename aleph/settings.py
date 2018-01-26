@@ -43,8 +43,8 @@ TESING = False
 APP_TITLE = env.get('ALEPH_APP_TITLE', 'Aleph')
 APP_NAME = env.get('ALEPH_APP_NAME', 'aleph')
 APP_UI_URL = env.get('ALEPH_UI_URL', 'http://localhost:3000/')
-# APP_LOGO = env.get('ALEPH_LOGO', '/static/images/aleph_small.png')
-# APP_FAVICON = env.get('ALEPH_FAVICON', '/static/images/aleph_small.png')
+APP_LOGO = env.get('ALEPH_LOGO', 'https://cdn.occrp.org/common/logo/WhiteTransparent_globe.png')  # noqa
+APP_FAVICON = env.get('ALEPH_FAVICON', 'https://cdn.occrp.org/common/logo/WhiteOnRed_globe.png')  # noqa
 
 # Force HTTPS here:
 URL_SCHEME = env.get('ALEPH_URL_SCHEME')
@@ -61,7 +61,7 @@ CORS_ORIGINS = env_list('ALEPH_CORS_ORIGINS', seperator='|')
 # Error reporting
 
 # Using sentry raven
-SENTRY_DSN = env.get('SENTRY_DSN')
+SENTRY_DSN = env.get('ALEPH_SENTRY_DSN')
 
 
 ###############################################################################
@@ -74,11 +74,6 @@ ARCHIVE_AWS_SECRET = env.get('AWS_SECRET_ACCESS_KEY')
 ARCHIVE_AWS_REGION = env.get('ALEPH_ARCHIVE_REGION', 'eu-west-1')
 ARCHIVE_BUCKET = env.get('ALEPH_ARCHIVE_BUCKET')
 ARCHIVE_PATH = env.get('ALEPH_ARCHIVE_PATH')
-
-# Maximum upload size:
-MAX_CONTENT_LENGTH = int(env.get('ALEPH_MAX_CONTENT_LENGTH',
-                                 500 * 1024 * 1024))
-
 
 ##############################################################################
 # Security and authentication.

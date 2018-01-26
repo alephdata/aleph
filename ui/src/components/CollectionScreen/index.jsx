@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Helmet } from 'react-helmet';
 
 import { fetchCollection } from 'src/actions';
 import Screen from 'src/components/common/Screen';
@@ -23,15 +24,18 @@ class CollectionScreen extends Component {
   }
 
   render() {
-    const { collection } = this.props;
+    const { collection, location } = this.props;
     if (!collection || !collection.links) {
       return <ScreenLoading />;
     }
     return (
       <Screen>
+        <Helmet>
+          <title>{collection.label}</title>
+        </Helmet>
         <Breadcrumbs collection={collection} />
         <DualPane>
-          <CollectionInfo collection={collection} />
+          <CollectionInfo collection={collection} location={location} />
           <CollectionContent collection={collection} />
         </DualPane>
       </Screen>

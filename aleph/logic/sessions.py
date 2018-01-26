@@ -15,7 +15,6 @@ def create_token(role):
     exp = datetime.utcnow() + timedelta(days=7)
     payload = {
         'role': role,
-        # 'api_key': role.api_key,
         'exp': exp
     }
     return jwt.encode(payload, settings.SECRET_KEY)

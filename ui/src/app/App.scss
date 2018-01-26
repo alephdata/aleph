@@ -13,7 +13,16 @@ body {
   font-family: $pt-font-family;
   font-weight: 300;
   font-size: $aleph-font-size;
-  background-color: $aleph-body-background;
+
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100vh;
+}
+
+#root {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .pt-navbar a {
@@ -48,6 +57,18 @@ pre {
   }
 }
 
+// a basic clearfix
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+* html .clearfix             { zoom: 1; } /* IE6 */
+*:first-child+html .clearfix { zoom: 1; } /* IE7 */
+
 
 // Used to render failed imports, missing connections.
 .PartialError {
@@ -75,6 +96,7 @@ td.tiny, th.tiny {
 
 table.info-sheet {
   width: 100%;
+  max-width: 100%;
   table-layout: auto;
   border-collapse: collapse;
   border-spacing: 0;
@@ -90,28 +112,24 @@ table.info-sheet {
     width: 100%;
     overflow: hidden;
     overflow-wrap: break-word;
-    word-break: break-all;
-  }
-
-  td.hide-overflow {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow-wrap: normal;
-    word-break: normal;
   }
 }
 
 table.info-rank {
   width: 100%;
-  table-layout: auto;
+  max-width: 100%;
+  table-layout: fixed;
   border-spacing: 0;
 
   th {
     font-weight: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     padding-left: 0;
     margin-left: 0;
-    width: 100%;
+    width: 90%;
+    max-width: 90%;
 
     i {
       padding-right: $aleph-grid-size * 2;

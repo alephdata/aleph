@@ -1,0 +1,12 @@
+@import "src/app/variables.scss";
+
+.FolderViewer {
+    section.folder-filter {
+        margin-bottom: $aleph-grid-size;
+    }
+
+    .pt-input-group {
+        max-width: 15em;
+        float: right;
+    }
+}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Document, Page } from 'react-pdf/build/entry.webpack';
-import { findLast } from 'lodash';
+import { findLast, throttle } from 'lodash';
 
 import { parse as parsePdfFragId } from 'src/util/pdfFragId';
 
@@ -19,7 +19,9 @@ function getPageNumber(fragId) {
 class PdfViewer extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      width: null
+    };
   }
 
   onDocumentLoad(pdfInfo) {
@@ -28,9 +30,26 @@ class PdfViewer extends Component {
     });
   }
 
+  componentDidMount () {
+    this.setWidth()
+    window.addEventListener("resize", throttle(this.setWidth, 500))
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener("resize", throttle(this.setWidth, 500))
+  }
+
+  setWidth = () => {
+    if (this.pdfElement) {
+      this.setState({
+        width: this.pdfElement.getBoundingClientRect().width
+      })
+    }
+  }
+
   render() {
     const { url, fragId, session } = this.props;
-    const { numPages } = this.state;
+    const { numPages, width } = this.state;
     const fileInfo = {url: url};
 
     if (session.token) {
@@ -50,15 +69,10 @@ class PdfViewer extends Component {
           <Link to={{ hash: `page=${pageNumber+1}` }}><button className="pt-button pt-icon-arrow-right" disabled={pageNumber >= numPages}/></Link>
         </div>
 
-
-        <div className="document_pdf">
-        <Document renderAnnotations={true} file={fileInfo} onLoadSuccess={this.onDocumentLoad.bind(this)}>
-          <Page
-            pageNumber={pageNumber}
-            className="page"
-            scale={1.5}
-          />
-        </Document>
+        <div className="document_pdf"  ref={(ref) => this.pdfElement = ref}>
+          <Document renderAnnotations={true} file={fileInfo} onLoadSuccess={this.onDocumentLoad.bind(this)}>
+            <Page pageNumber={pageNumber} className="page" width={width} />
+          </Document>
         </div>
       </div>
     );

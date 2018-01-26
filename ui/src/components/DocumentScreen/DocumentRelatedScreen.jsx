@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 import { Helmet } from 'react-helmet';
 
 import { fetchDocument } from 'src/actions';
@@ -9,9 +10,10 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import Entity from 'src/components/EntityScreen/Entity';
 import DocumentInfo from './DocumentInfo';
-import DocumentContent from './DocumentContent';
+import SearchContext from 'src/components/SearchScreen/SearchContext';
 
-class DocumentScreen extends Component {
+
+class DocumentRelatedScreen extends Component {
   componentDidMount() {
     const { documentId } = this.props;
     this.props.fetchDocument({ id: documentId });
@@ -25,10 +27,12 @@ class DocumentScreen extends Component {
   }
 
   render() {
-    const { document, location } = this.props;
-    if (document === undefined || document.isFetching) {
+    const { document } = this.props;
+    if (document === undefined) {
       return <ScreenLoading />;
     }
+    const context = { exclude: document.id };
+
     return (
       <Screen>
         <Helmet>
@@ -43,10 +47,17 @@ class DocumentScreen extends Component {
           <li>
             <Entity.Link entity={document} className="pt-breadcrumb" icon truncate={30} />
           </li>
+          <li>
+            <a className="pt-breadcrumb">
+              <FormattedMessage id="document.related" defaultMessage="Related"/>
+            </a>
+          </li>
         </Breadcrumbs>
         <DualPane>
           <DocumentInfo document={document} />
-          <DocumentContent document={document} fragId={location.hash} />
+          <DualPane.ContentPane>
+            <SearchContext context={context} />
+          </DualPane.ContentPane>
         </DualPane>
       </Screen>
     );
@@ -61,4 +72,4 @@ const mapStateToProps = (state, ownProps) => {
   return { documentId, document };
 }
 
-export default connect(mapStateToProps, { fetchDocument })(DocumentScreen);
+export default connect(mapStateToProps, { fetchDocument })(DocumentRelatedScreen);

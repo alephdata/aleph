@@ -26,12 +26,16 @@ def log_response(resp):
         else:
             query = request.values.to_dict(flat=False)
 
+    role_id = None
+    if hasattr(request, 'authz'):
+        role_id = request.authz.id
+
     args = [request.endpoint,
             '%s %s' % (request.method, request.full_path),
             source_ip,
             query,
             request.view_args,
-            request.authz.id]
+            role_id]
     save_event.apply_async(args,
                            queue=USER_QUEUE,
                            routing_key=USER_ROUTING_KEY)
