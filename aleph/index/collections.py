@@ -60,11 +60,11 @@ def index_collection(collection):
         data['schemata'][schema['key']] = schema['doc_count']
 
     # if no countries or langs are given, take the most common from the data.
-    if not len(data.get('countries', [])):
+    if not data.get('countries'):
         countries = aggregations['countries']['buckets']
         data['countries'] = [c['key'] for c in countries]
 
-    if not len(data.get('languages', [])):
+    if not data.get('languages'):
         countries = aggregations['languages']['buckets']
         data['languages'] = [c['key'] for c in countries]
 
