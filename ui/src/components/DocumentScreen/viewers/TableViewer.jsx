@@ -97,7 +97,11 @@ class TableViewer extends Component {
       <div className="TableViewer">
         <Table columnNames={columnNames} records={result.results} />
         {!isExpanding && result.next && (
-          <Waypoint onEnter={this.bottomReachedHandler} bottomOffset="-600px" />
+          <Waypoint
+            onEnter={this.bottomReachedHandler}
+            bottomOffset="-600px"
+            scrollableAncestor={window}
+          />
         )}
         {isExpanding && (
           <SectionLoading />

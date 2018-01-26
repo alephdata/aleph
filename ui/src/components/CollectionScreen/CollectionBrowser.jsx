@@ -125,7 +125,10 @@ class CollectionBrowser extends Component {
             ))
           }
           { result.next && (
-            <Waypoint onEnter={this.bottomReachedHandler} />
+            <Waypoint
+              onEnter={this.bottomReachedHandler}
+              scrollableAncestor={window}
+            />
           )}
           { isFetching && (
             <SectionLoading />

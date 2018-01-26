@@ -7,21 +7,17 @@ $aleph-infobar-width: $aleph-grid-size * 30;
   flex-flow: row nowrap;
   align-content: stretch;
   align-items: stretch;
-  // An arbitrary height (it will grow), required (in Firefox though not in
-  // Chromium) to make the content pane rather than the body get a scrollbar.
-  height: 100px;
 }
 
 .DualPane .ContentPane {
   flex-grow: 1;
-  overflow: auto;
+  overflow-x: auto;
   padding: $aleph-grid-size;
   padding-top: $aleph-grid-size * 2;
 }
 
 .DualPane .InfoPane {
   flex: none;
-  overflow: auto;
   width: $aleph-infobar-width;
   border-right: 0px;
   padding: $aleph-grid-size * 2;
