@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { FormattedNumber, FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
 import Category from 'src/components/common/Category';
 import Language from 'src/components/common/Language';
 import Country from 'src/components/common/Country';
-import Schema from 'src/components/common/Schema';
 import Date from 'src/components/common/Date';
 
 
 class CollectionInfo extends Component {
   render() {
-    const { collection, location } = this.props;
+    const { collection } = this.props;
 
     return (
       <DualPane.InfoPane>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { Tab2, Tabs2, Tooltip, Position } from "@blueprintjs/core";
+import { Tab2, Tabs2 } from "@blueprintjs/core";
 import sumBy from 'lodash/sumBy';
 
 import Schema from 'src/components/common/Schema';
