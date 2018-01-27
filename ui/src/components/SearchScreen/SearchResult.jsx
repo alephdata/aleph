@@ -50,7 +50,7 @@ class SearchResult extends Component {
           <NonIdealState visual="search" title="No search results"
             description="Try making your search more general" />}
         <EntityList {...this.props} result={result} />
-        { result.next && (
+        { !isExpanding && result.next && (
           <Waypoint
             onEnter={this.bottomReachedHandler}
             bottomOffset="-600px"

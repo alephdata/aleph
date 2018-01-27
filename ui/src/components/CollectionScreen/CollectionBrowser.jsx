@@ -124,7 +124,7 @@ class CollectionBrowser extends Component {
               <div key={i} className="result"></div>
             ))
           }
-          { result.next && (
+          { !isFetching && result.next && (
             <Waypoint
               onEnter={this.bottomReachedHandler}
               scrollableAncestor={window}
