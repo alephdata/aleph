@@ -29,13 +29,15 @@ class AlertsPane extends Component {
     this.props.fetchAlerts();
   }
 
-  deleteAlert(id, event) {
-    this.props.deleteAlert(id).then(this.props.fetchAlerts());
+  async deleteAlert(id, event) {
+    await this.props.deleteAlert(id);
+    await this.props.fetchAlerts();
   }
 
-  onAddAlert(event) {
+  async onAddAlert(event) {
     event.preventDefault();
-    this.props.addAlert({query_text: this.state.newAlert}).then(this.props.fetchAlerts());
+    await this.props.addAlert({query_text: this.state.newAlert});
+    await this.props.fetchAlerts();
     this.setState({newAlert: ''});
   }
 
