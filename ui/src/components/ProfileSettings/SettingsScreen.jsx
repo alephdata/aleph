@@ -10,32 +10,32 @@ import {fetchRole} from 'src/actions';
 
 class SettingsScreen extends Component {
 
-    componentDidMount() {
-        this.props.fetchRole(this.props.session.role.id);
-    }
+  componentDidMount() {
+    this.props.fetchRole(this.props.session.role.id);
+  }
 
-    render() {
-        const {collection, app} = this.props
-        return (
-            <Screen>
-                <Breadcrumbs collection={{label: 'User Settings', links: {ui: app.ui_uri + 'settings'}}} />
-                <DualPane>
-                    <ProfileInfo/>
-                    <AlertsScreen/>
-                </DualPane>
-            </Screen>
+  render() {
+    const {collection, app} = this.props;
+    return (
+      <Screen>
+        <Breadcrumbs collection={{label: 'User Settings', links: {ui: app.ui_uri + 'settings'}}} />
+        <DualPane>
+          <ProfileInfo/>
+          <AlertsScreen/>
+        </DualPane>
+      </Screen>
 
-        )
-    }
+    );
+  }
 }
 
 const mapStateToProps = (state, ownProps) => {
-    return {
-        session: state.session,
-        role: state.role,
-        collection: state.collection,
-        app: state.metadata.app
-    };
+  return {
+    session: state.session,
+    role: state.role,
+    collection: state.collection,
+    app: state.metadata.app
+  };
 };
 
 export default connect(mapStateToProps, {fetchRole})(SettingsScreen);
