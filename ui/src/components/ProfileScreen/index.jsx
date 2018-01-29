@@ -4,10 +4,10 @@ import {connect} from 'react-redux';
 import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
-import AlertsScreen from './AlertsScreen';
+import AlertsPane from './AlertsPane';
 import ProfileInfo from './ProfileInfo';
 
-class SettingsScreen extends Component {
+class ProfileScreen extends Component {
 
   render() {
     const { app } = this.props;
@@ -16,7 +16,7 @@ class SettingsScreen extends Component {
         <Breadcrumbs collection={{label: 'User Settings', links: {ui: app.ui_uri + 'settings'}}} />
         <DualPane>
           <ProfileInfo/>
-          <AlertsScreen/>
+          <AlertsPane/>
         </DualPane>
       </Screen>
 
@@ -30,4 +30,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps)(SettingsScreen);
+export default connect(mapStateToProps)(ProfileScreen);

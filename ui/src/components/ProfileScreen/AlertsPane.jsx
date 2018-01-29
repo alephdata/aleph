@@ -8,9 +8,9 @@ import queryString from 'query-string';
 
 import DualPane from 'src/components/common/DualPane';
 
-import './AlertsScreen.css';
+import './AlertsPane.css';
 
-class AlertsScreen extends Component {
+class AlertsPane extends Component {
 
   constructor() {
     super();
@@ -102,7 +102,7 @@ class AlertsScreen extends Component {
     }
 
     return (
-      <DualPane.ContentPane isLimited={true} className="AlertsScreen">
+      <DualPane.ContentPane isLimited={true} className="AlertsPane">
         <div className='main_div'>
           <div className='title_div'>
             <h1 className='alerts_title'>
@@ -155,5 +155,5 @@ const mapStateToProps = (state, ownProps) => ({
     alerts: state.alerts,
 });
 
-AlertsScreen = withRouter(AlertsScreen);
-export default connect(mapStateToProps, {fetchAlerts, addAlert, deleteAlert})(injectIntl(AlertsScreen));
+AlertsPane = withRouter(AlertsPane);
+export default connect(mapStateToProps, {fetchAlerts, addAlert, deleteAlert})(injectIntl(AlertsPane));

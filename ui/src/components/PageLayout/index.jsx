@@ -17,7 +17,7 @@ import DocumentRelatedScreen from 'src/components/DocumentScreen/DocumentRelated
 import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
 import HomeScreen from 'src/components/HomeScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
-import SettingsScreen from 'src/components/ProfileSettings/SettingsScreen';
+import ProfileScreen from 'src/components/ProfileScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
 import PageNavbar from './PageNavbar';
 
@@ -54,7 +54,7 @@ class PageLayout extends Component {
             <Route path="/login" exact component={LoginScreen}/>
             <Route path="/logout" exact component={LogoutScreen}/>
             <Route path="/signup" exact component={SignupScreen}/>
-            <Route path="/settings" exact component={SettingsScreen}/>
+            <Route path="/settings" exact component={ProfileScreen}/>
             <Route path="/activate/:code" exact component={ActivateScreen}/>
             <Route path="/entities/:entityId" exact component={EntityScreen}/>
             <Route path="/entities/:entityId/related" exact component={EntityRelatedScreen}/>
