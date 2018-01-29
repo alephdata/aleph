@@ -2,12 +2,11 @@ import React, {Component} from 'react';
 import {AnchorButton, NonIdealState} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
-import {fetchAlerts, addAlert, deleteAlert} from 'src/actions';
-import {withRouter} from 'react-router';
 import queryString from 'query-string';
-import AlertsTable from './AlertsTable';
 
+import {fetchAlerts, addAlert, deleteAlert} from 'src/actions';
 import DualPane from 'src/components/common/DualPane';
+import AlertsTable from './AlertsTable';
 
 import './AlertsPane.css';
 
@@ -114,5 +113,5 @@ const mapStateToProps = (state, ownProps) => ({
     alerts: state.alerts,
 });
 
-AlertsPane = withRouter(AlertsPane);
-export default connect(mapStateToProps, {fetchAlerts, addAlert, deleteAlert})(injectIntl(AlertsPane));
+AlertsPane = injectIntl(AlertsPane);
+export default connect(mapStateToProps, {fetchAlerts, addAlert, deleteAlert})(AlertsPane);

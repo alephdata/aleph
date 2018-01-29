@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {AnchorButton} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
-import {addRole, fetchRole} from 'src/actions';
 
+import {addRole, fetchRole} from 'src/actions';
 import DualPane from 'src/components/common/DualPane';
 
 import './ProfileInfo.css';

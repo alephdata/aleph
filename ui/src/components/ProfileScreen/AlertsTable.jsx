@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {NonIdealState} from '@blueprintjs/core';
 import {FormattedMessage} from 'react-intl';
-import {connect} from 'react-redux';
-import {withRouter} from 'react-router';
 
 class AlertsTable extends Component {
 
@@ -64,7 +62,4 @@ class AlertsTable extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({});
-
-AlertsTable = withRouter(AlertsTable);
-export default connect(mapStateToProps)(AlertsTable);
+export default AlertsTable;
