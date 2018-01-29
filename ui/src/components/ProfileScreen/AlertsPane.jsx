@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {fetchAlerts, addAlert, deleteAlert} from 'src/actions';
 import {withRouter} from 'react-router';
 import queryString from 'query-string';
+import AlertsTable from './AlertsTable';
 
 import DualPane from 'src/components/common/DualPane';
 
@@ -57,51 +58,7 @@ class AlertsPane extends Component {
 
   render() {
     const {alerts, intl} = this.props;
-    let alertsTable = [];
-
-    if (alerts.results !== undefined) {
-      if (alerts.results.length === 0) {
-        alertsTable = (
-          <NonIdealState visual="" title="There are no alerts"/>
-        );
-      } else {
-        alertsTable = (
-          <div>
-            <div className='header_alerts'>
-              <p className='header_label header_topic'>
-                <FormattedMessage id="alerts.topic" defaultMessage="Topic"/>
-              </p>
-              <p className='header_label header_delete_search'>
-                <FormattedMessage id="alerts.search" defaultMessage="Search"/>
-              </p>
-              <p className='header_label header_delete_search'>
-                <FormattedMessage id="alerts.delete" defaultMessage="Delete"/>
-              </p>
-            </div>
-            <div className='table_body_alerts'>
-              {alerts.results.map((item, index) => (
-                <div key={index} className='table_row'>
-                  <p className='table_item_alert header_topic'>
-                    {item.label}
-                  </p>
-                  <p className='table_item_alert header_delete_search'
-                    onClick={() => this.onSearch(item.label)}>
-                    <i className="fa fa-search" aria-hidden="true"/>
-                  </p>
-                  <p
-                    key={index}
-                    className='table_item_alert header_delete_search'
-                    onClick={() => this.deleteAlert(item.id)}
-                  >
-                    <i className="fa fa-trash-o" aria-hidden="true"/>
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      }
-    }
+    const hasAlerts = !(alerts.results !== undefined && alerts.results.length === 0);
 
     return (
       <DualPane.ContentPane isLimited={true} className="AlertsPane">
@@ -147,7 +104,7 @@ class AlertsPane extends Component {
             </form>
           </div>
         </div>
-        {alertsTable}
+        <AlertsTable alerts={alerts} hasAlerts={hasAlerts} deleteAlert={this.deleteAlert} onSearch={this.onSearch}/>
       </DualPane.ContentPane>
     );
   }
