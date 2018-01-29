@@ -6,16 +6,11 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import AlertsScreen from './AlertsScreen';
 import ProfileInfo from './ProfileInfo';
-import {fetchRole} from 'src/actions';
 
 class SettingsScreen extends Component {
 
-  componentDidMount() {
-    this.props.fetchRole(this.props.session.role.id);
-  }
-
   render() {
-    const {collection, app} = this.props;
+    const { app } = this.props;
     return (
       <Screen>
         <Breadcrumbs collection={{label: 'User Settings', links: {ui: app.ui_uri + 'settings'}}} />
@@ -31,11 +26,8 @@ class SettingsScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    session: state.session,
-    role: state.role,
-    collection: state.collection,
     app: state.metadata.app
   };
 };
 
-export default connect(mapStateToProps, {fetchRole})(SettingsScreen);
+export default connect(mapStateToProps)(SettingsScreen);

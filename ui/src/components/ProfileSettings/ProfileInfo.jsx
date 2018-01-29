@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {AnchorButton} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
-import {addRole} from 'src/actions';
+import {addRole, fetchRole} from 'src/actions';
 
 import DualPane from 'src/components/common/DualPane';
 
@@ -28,6 +28,10 @@ class ProfileInfo extends Component {
     this.onChangeName = this.onChangeName.bind(this);
     this.onSubmitInfo = this.onSubmitInfo.bind(this);
     this.checkPasswords = this.checkPasswords.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.fetchRole(this.props.session.role.id);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -190,8 +194,8 @@ class ProfileInfo extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     session: state.session,
-    role: state.role
+    role: state.role,
   };
 };
 
-export default connect(mapStateToProps, {addRole})(injectIntl(ProfileInfo));
+export default connect(mapStateToProps, {addRole, fetchRole})(injectIntl(ProfileInfo));
