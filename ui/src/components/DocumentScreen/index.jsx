@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
+import { NonIdealState } from '@blueprintjs/core';
 
 import { fetchDocument } from 'src/actions';
 import Screen from 'src/components/common/Screen';
@@ -28,6 +29,11 @@ class DocumentScreen extends Component {
     const { document, location } = this.props;
     if (document === undefined || document.isFetching) {
       return <ScreenLoading />;
+    }
+    if (document.error) {
+      return (
+        <NonIdealState visual="error" title="Document not found" />
+      );
     }
     return (
       <Screen>

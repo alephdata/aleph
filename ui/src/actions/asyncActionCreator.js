@@ -28,7 +28,7 @@ export default function asyncActionCreator(actionCreator, {
     } catch (error) {
       dispatch({
         type: ERROR,
-        payload: error,
+        payload: { error, args: payload },
       });
       throw error;
     }
