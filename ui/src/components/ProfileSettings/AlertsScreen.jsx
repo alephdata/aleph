@@ -102,7 +102,7 @@ class AlertsScreen extends Component {
     }
 
     return (
-      <DualPane.ContentPane isLimited={true}>
+      <DualPane.ContentPane isLimited={true} className="AlertsScreen">
         <div className='main_div'>
           <div className='title_div'>
             <h1 className='alerts_title'>

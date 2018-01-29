@@ -30,7 +30,7 @@ class AuthButtons extends Component {
       ));
 
       return (
-        <span>{items}</span>
+        <span className="AuthButtons">{items}</span>
       )
     }
 
@@ -65,7 +65,7 @@ class AuthButtons extends Component {
     }
 
     return (
-      <span>{items}</span>
+      <span className="AuthButtons">{items}</span>
     )
   }
 }

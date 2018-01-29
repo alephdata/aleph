@@ -73,7 +73,7 @@ class ProfileInfo extends Component {
     const {name, email, password, confirmPass, api_key} = this.state;
 
     return (
-      <DualPane.InfoPane>
+      <DualPane.InfoPane className="ProfileInfo">
         <h1>
           Profile
         </h1>
