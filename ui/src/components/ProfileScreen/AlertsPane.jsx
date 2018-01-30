@@ -47,7 +47,7 @@ class AlertsPane extends Component {
     const {alerts, intl} = this.props;
 
     return (
-      <DualPane.ContentPane isLimited={true} className="AlertsPane">
+      <DualPane.ContentPane limitedWidth={true} className="AlertsPane">
         <div className='main_div'>
           <div className='title_div'>
             <h1 className='alerts_title'>

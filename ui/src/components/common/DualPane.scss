@@ -9,17 +9,16 @@ $aleph-infobar-width: $aleph-grid-size * 40;
   align-items: stretch;
 }
 
-.limitedContentPane {
-  flex: 800px 0 !important;
-  margin:0 auto;
-  width: 800px;
-}
-
 .DualPane .ContentPane {
   flex-grow: 1;
   overflow-x: auto;
   padding: $aleph-grid-size;
   padding-top: $aleph-grid-size * 2;
+
+  &.limitedWidth {
+    margin: 0 auto;
+    max-width: 800px;
+  }
 }
 
 .DualPane .InfoPane {

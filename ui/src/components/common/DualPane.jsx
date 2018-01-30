@@ -21,9 +21,9 @@ class InfoPane extends Component {
 class ContentPane extends Component {
 
   render() {
-    const { children, className, isLimited } = this.props;
+    const { children, className, limitedWidth } = this.props;
     return (
-      <main className={c('ContentPane', { limitedContentPane: isLimited }, className)}>
+      <main className={c('ContentPane', { limitedWidth: limitedWidth }, className)}>
         {children}
       </main>
     );
