@@ -32,9 +32,13 @@ class AlertsTable extends Component {
     const hasAlerts = !(alerts.results !== undefined && alerts.results.length === 0);
 
     if (!hasAlerts || alerts.results === undefined) {
-      return <NonIdealState visual="" title="There are no alerts"/>
+      return (
+        <div>
+          <NonIdealState visual="" title="There are no alerts"/>
+        </div>
+      );
     }
-  
+
     return (
       <div>
         <div className='header_alerts'>
