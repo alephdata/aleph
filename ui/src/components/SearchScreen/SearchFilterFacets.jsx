@@ -3,12 +3,14 @@ import { FormattedMessage } from 'react-intl';
 
 import SearchFilterFacet from './SearchFilterFacet';
 
+import './SearchFilterFacets.css';
+
 class SearchFilterFacets extends Component {
   render() {
     const { query, aspects, updateQuery } = this.props;
 
     return (
-      <div>
+      <div className="SearchFilterFacets">
         {aspects.countries && (
           <div className="pt-large">
             <SearchFilterFacet query={query} updateQuery={updateQuery} field='countries'>
