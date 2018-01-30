@@ -61,6 +61,7 @@ class PageLayout extends Component {
             <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
             <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
             <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
+            <Route path="/collections/:collectionId/edit" exact component={CollectionEditScreen}/>
             <Route path="/search" exact component={SearchScreen}/>
             <Route path="/" exact component={HomeScreen}/>
             <Route component={ErrorScreen}/>

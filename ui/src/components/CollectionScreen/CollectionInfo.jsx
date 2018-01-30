@@ -1,17 +1,20 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {FormattedMessage} from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
 import Category from 'src/components/common/Category';
 import Language from 'src/components/common/Language';
 import Country from 'src/components/common/Country';
 import Date from 'src/components/common/Date';
+import {AnchorButton} from '@blueprintjs/core';
+import {Link} from 'react-router-dom';
 
 
 class CollectionInfo extends Component {
+
   render() {
-    const { collection } = this.props;
+    const {collection} = this.props;
 
     return (
       <DualPane.InfoPane>
@@ -21,44 +24,53 @@ class CollectionInfo extends Component {
         <p>{collection.summary}</p>
         <table className='info-sheet'>
           <tbody>
+          <tr>
+            <th>
+              <FormattedMessage id="collection.category" defaultMessage="Category"/>
+            </th>
+            <td>
+              <Category collection={collection}/>
+            </td>
+          </tr>
+          {collection.languages && !!collection.languages.length && (
             <tr>
               <th>
-                <FormattedMessage id="collection.category" defaultMessage="Category"/>
+                <FormattedMessage id="collection.languages" defaultMessage="Language"/>
               </th>
               <td>
-                <Category collection={collection} />
+                <Language.List codes={collection.languages}/>
               </td>
             </tr>
-            { collection.languages && !!collection.languages.length && (
-              <tr>
-                <th>
-                  <FormattedMessage id="collection.languages" defaultMessage="Language"/>
-                </th>
-                <td>
-                  <Language.List codes={collection.languages} />
-                </td>
-              </tr>
-            )}
-            { collection.countries && !!collection.countries.length && (
-              <tr>
-                <th>
-                  <FormattedMessage id="collection.countries" defaultMessage="Country"/>
-                </th>
-                <td>
-                  <Country.List codes={collection.countries} truncate={10} />
-                </td>
-              </tr>
-            )}
+          )}
+          {collection.countries && !!collection.countries.length && (
             <tr>
               <th>
-                <FormattedMessage id="collection.updated_at" defaultMessage="Last updated"/>
+                <FormattedMessage id="collection.countries" defaultMessage="Country"/>
               </th>
               <td>
-                <Date value={collection.updated_at} />
+                <Country.List codes={collection.countries} truncate={10}/>
               </td>
             </tr>
+          )}
+          <tr>
+            <th>
+              <FormattedMessage id="collection.updated_at" defaultMessage="Last updated"/>
+            </th>
+            <td>
+              <Date value={collection.updated_at}/>
+            </td>
+          </tr>
           </tbody>
         </table>
+
+        <div className="pt-button-group pt-fill button_div">
+          <Link to="edit">
+            <AnchorButton
+              className="">
+              <FormattedMessage id="collection.info.edit" defaultMessage="Edit"/>
+            </AnchorButton>
+          </Link>
+        </div>
       </DualPane.InfoPane>
     );
   }
