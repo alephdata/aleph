@@ -37,15 +37,23 @@ class SearchFilterFacet extends Component {
   constructor(props)  {
     super(props);
 
-    this.state = {values: null};
+    this.state = {
+      values: null,
+      isOpen: false,
+    };
 
-    this.onOpen = this.onOpen.bind(this);
+    this.onInteraction = this.onInteraction.bind(this);
     this.onSelect = this.onSelect.bind(this);
   }
 
-  componentDidUpdate(prevProps, nextProps) {
-    if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchValues();
+  componentWillReceiveProps(nextProps) {
+    const { isOpen } = this.state;
+    if (!nextProps.query.sameAs(this.props.query)) {
+      // Invalidate previously fetched values.
+      this.setState({ values: null });
+      if (isOpen) {
+        this.fetchValues();
+      }
     }
   }
 
@@ -63,8 +71,10 @@ class SearchFilterFacet extends Component {
     });
   }
 
-  onOpen() {
-    if (this.state.values === null) {
+  onInteraction(nextOpenState) {
+    this.setState({ isOpen: nextOpenState });
+
+    if (nextOpenState === true && this.state.values === null) {
       this.fetchValues();
     }
   }
@@ -78,13 +88,15 @@ class SearchFilterFacet extends Component {
 
   render() {
     const { query, children, field } = this.props;
-    const { values } = this.state;
+    const { values, isOpen } = this.state;
     const current = query.getFilter(field);
 
     return (
       <Popover popoverClassName="search-filter-facet"
                position={Position.BOTTOM_RIGHT}
-               popoverWillOpen={this.onOpen} inline>
+               isOpen={isOpen}
+               onInteraction={this.onInteraction}
+               inline>
         <Button rightIconName="caret-down">
           {children}
         </Button>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
 
-import SearchFilterFacet from './SearchFilterFacet';
+import SearchFilterFacets from './SearchFilterFacets';
 import SearchFilterSchema from './SearchFilterSchema';
 import SearchFilterText from './SearchFilterText';
 import SearchFilterActiveTags from './SearchFilterActiveTags';
@@ -18,20 +17,7 @@ class SearchFilter extends Component {
           <div className="search-query__text">
             <SearchFilterText query={query} updateQuery={updateQuery} />
           </div>
-          {aspects.countries && (
-            <div className="pt-large">
-              <SearchFilterFacet query={query} updateQuery={updateQuery} field='countries'>
-                <FormattedMessage id="search.countries" defaultMessage="Countries"/>
-              </SearchFilterFacet>
-            </div>
-          )}
-          {aspects.collections && (
-            <div className="pt-large">
-              <SearchFilterFacet query={query} updateQuery={updateQuery} field='collection_id'>
-                <FormattedMessage id="search.collections" defaultMessage="Collections"/>
-              </SearchFilterFacet>
-            </div>
-          )}
+          <SearchFilterFacets aspects={aspects} query={query} updateQuery={updateQuery} />
         </div>
         <SearchFilterActiveTags aspects={{...aspects, schema: false}} query={query} updateQuery={updateQuery} />
         <SearchFilterSchema query={query} updateQuery={updateQuery} result={result} />

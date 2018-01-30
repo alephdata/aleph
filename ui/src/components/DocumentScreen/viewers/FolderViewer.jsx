@@ -10,8 +10,8 @@ import './FolderViewer.css';
 
 class FolderViewer extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {queryText: ''};
 
     this.onChangeQueryText = this.onChangeQueryText.bind(this);

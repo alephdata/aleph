@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
+import { NonIdealState } from '@blueprintjs/core';
 
 import { fetchCollection } from 'src/actions';
 import Screen from 'src/components/common/Screen';
@@ -25,8 +26,13 @@ class CollectionScreen extends Component {
 
   render() {
     const { collection, location } = this.props;
-    if (!collection || !collection.links) {
+    if (collection === undefined || collection.isFetching) {
       return <ScreenLoading />;
+    }
+    if (collection.error) {
+      return (
+        <NonIdealState visual="error" title="Collection not found" />
+      );
     }
     return (
       <Screen>

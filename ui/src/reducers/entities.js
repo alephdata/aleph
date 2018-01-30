@@ -23,6 +23,11 @@ export default createReducer({
     [fetchEntity.START]: (state, { id }) =>
       update(id, set('isFetching', true))(state),
 
+    [fetchDocument.ERROR]: (state, { error, args: { id } }) =>
+      set(id, { error: error.message })(state),
+    [fetchEntity.ERROR]: (state, { error, args: { id } }) =>
+      set(id, { error: error.message })(state),
+
     [fetchDocument.COMPLETE]: (state, { id, data }) =>
       set(id, data)(state),
     [fetchEntity.COMPLETE]: (state, { id, data }) =>

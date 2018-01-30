@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
+import c from 'classnames';
 
 import './DualPane.css';
 
 class InfoPane extends Component {
   render() {
-    const { children } = this.props;
+    const { children, className } = this.props;
     return (
-      <aside className="InfoPane">
+      <aside className='InfoPane'>
         <div className="InfoPane-content-container">
-          <div className="InfoPane-content">
+          <div className={c("InfoPane-content", className)}>
             {children}
           </div>
         </div>
@@ -18,10 +19,11 @@ class InfoPane extends Component {
 }
 
 class ContentPane extends Component {
+
   render() {
-    const { children } = this.props;
+    const { children, className, isLimited } = this.props;
     return (
-      <main className="ContentPane">
+      <main className={c('ContentPane', { limitedContentPane: isLimited }, className)}>
         {children}
       </main>
     );
@@ -33,10 +35,10 @@ class DualPane extends Component {
   static ContentPane = ContentPane;
 
   render() {
-    const { children } = this.props;
+    const { children, className } = this.props;
 
     return (
-      <article className="DualPane">
+      <article className={c("DualPane", className)}>
         { children }
       </article>
     );

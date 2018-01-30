@@ -11,8 +11,8 @@ import ensureArray from 'src/util/ensureArray';
 import './EntityReferencesTable.css';
 
 class EntityReferencesTable extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       result: {},
       isFetching: true

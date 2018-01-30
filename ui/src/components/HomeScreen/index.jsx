@@ -10,8 +10,8 @@ import { fetchStatistics } from '../../actions/index';
 import './style.css';
 
 class HomeScreen extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {value: ''};
 
     this.onChange = this.onChange.bind(this);

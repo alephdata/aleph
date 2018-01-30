@@ -1,5 +1,5 @@
 @import "src/app/variables.scss";
-$aleph-infobar-width: $aleph-grid-size * 30;
+$aleph-infobar-width: $aleph-grid-size * 40;
 
 .DualPane {
   flex-grow: 1;
@@ -7,6 +7,12 @@ $aleph-infobar-width: $aleph-grid-size * 30;
   flex-flow: row nowrap;
   align-content: stretch;
   align-items: stretch;
+}
+
+.limitedContentPane {
+  flex: 800px 0 !important;
+  margin:0 auto;
+  width: 800px;
 }
 
 .DualPane .ContentPane {
@@ -17,6 +23,8 @@ $aleph-infobar-width: $aleph-grid-size * 30;
 }
 
 .DualPane .InfoPane {
+  //width: 25%;
+  min-width: 20em;
   flex: none;
   width: $aleph-infobar-width;
   border-right: 0px;

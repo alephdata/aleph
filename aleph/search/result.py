@@ -1,7 +1,7 @@
 import six
 import math
-from urlnormalizer import query_string
 
+from aleph.core import url_external
 from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser
 from aleph.search.facet import CategoryFacet, CollectionFacet, CountryFacet
@@ -30,7 +30,7 @@ class QueryResult(object):
         offset = (page - 1) * self.parser.limit
         args = [('offset', six.text_type(offset))]
         args.extend(self.parser.items)
-        return self.request.base_url + query_string(args)
+        return url_external(self.request.path, args)
 
     def to_dict(self):
         results = list(self.results)

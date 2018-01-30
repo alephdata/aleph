@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
+import { NonIdealState } from '@blueprintjs/core';
 
 import { fetchEntity } from 'src/actions';
 import Screen from 'src/components/common/Screen';
@@ -32,6 +33,11 @@ class EntityScreen extends Component {
     const { entity } = this.props;
     if (entity === undefined || entity.isFetching) {
       return <ScreenLoading />;
+    }
+    if (entity.error) {
+      return (
+        <NonIdealState visual="error" title="Entity not found" />
+      );
     }
     return (
       <Screen>

@@ -3,8 +3,8 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
 class PageNavbarSearchForm extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {value: ''};
 
     this.onChange = this.onChange.bind(this);

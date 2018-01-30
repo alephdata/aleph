@@ -34,7 +34,7 @@ class List extends Component {
     // Truncate if too long
     if (names.length > truncate) {
       const ellipsis = (
-        <i>
+        <i key="ellipsis">
           … (
           <FormattedNumber value={codes.length} />
           &nbsp;
