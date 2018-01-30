@@ -7,6 +7,8 @@ import entities from './entities';
 import entityReferences from './entityReferences';
 import entityTags from './entityTags';
 import statistics from './statistics';
+import role from './roles';
+import alerts from './alerts';
 
 const rootReducer = combineReducers({
   collections,
@@ -14,8 +16,10 @@ const rootReducer = combineReducers({
   session,
   entities,
   entityReferences,
+  statistics,
+  role,
+  alerts,
   entityTags,
-  statistics
 });
 
 export default rootReducer;

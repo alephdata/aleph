@@ -3,28 +3,42 @@ import {Button} from '@blueprintjs/core';
 import {FormattedMessage} from 'react-intl';
 import {Link} from 'react-router-dom';
 
+import './AuthButtons.css';
 
 class AuthButtons extends Component {
   render() {
-    const { session, auth } = this.props;
+    const {session, auth} = this.props;
     const location = window.location;
     const targetUrl = `${location.protocol}//${location.host}/login`;
     const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
     const items = [];
 
     if (session.loggedIn) {
-      return <Link to="/logout">
-        <Button iconName="log-out" className="pt-minimal">
-          <FormattedMessage id="nav.signout" defaultMessage="Log out"/>
-        </Button>
-      </Link>
+      items.push((
+        <Link key='login' to="/logout">
+          <Button iconName="log-out" className="pt-minimal">
+            <FormattedMessage id="nav.signout" defaultMessage="Log out"/>
+          </Button>
+        </Link>
+      ));
+      items.push((
+        <Link key='settings' to="/settings">
+          <Button className="pt-minimal settings_button">
+            <i className="fa fa-cog settings-icon" aria-hidden="true"/>
+          </Button>
+        </Link>
+      ));
+
+      return (
+        <span className="AuthButtons">{items}</span>
+      )
     }
 
     if (auth.oauth_uri) {
       items.push((
         <a key='oauth' href={`${auth.oauth_uri}${loginUrlQueryString}`}>
           <Button iconName="user" className="pt-minimal">
-            <FormattedMessage id="login.oauth" defaultMessage="Sign in" />
+            <FormattedMessage id="login.oauth" defaultMessage="Sign in"/>
           </Button>
         </a>
       ))
@@ -51,7 +65,7 @@ class AuthButtons extends Component {
     }
 
     return (
-      <span>{items}</span>
+      <span className="AuthButtons">{items}</span>
     )
   }
 }
