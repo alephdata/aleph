@@ -152,18 +152,25 @@ language_whitelist = LocalProxy(get_language_whitelist)
 
 
 def url_for(*a, **kw):
+    """Overwrite Flask url_for to force external paths."""
+    try:
+        kw['_external'] = False
+        query = kw.pop('_query', None)
+        path = flask_url_for(*a, **kw)
+        return url_external(path, query)
+    except RuntimeError:
+        return None
+
+
+def url_external(path, query):
     """Generate external URLs with HTTPS (if configured)."""
     try:
         api_url = request.url_root
-
         if settings.URL_SCHEME is not None:
             parsed = urlparse(api_url)
             parsed = parsed._replace(scheme=settings.URL_SCHEME)
             api_url = parsed.geturl()
 
-        kw['_external'] = False
-        query = kw.pop('_query', None)
-        path = flask_url_for(*a, **kw)
         if query is not None:
             path = path + query_string(query)
         return urljoin(api_url, path)

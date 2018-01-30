@@ -64,7 +64,6 @@ services:
       ALEPH_CACHE: 'false'
       ALEPH_OAUTH: 'false'
       ALEPH_EAGER: 'true'
-      ALEPH_URL_SCHEME: 'http'
       ALEPH_ARCHIVE_TYPE: 'file'
       ALEPH_ARCHIVE_PATH: '/data'
       POLYGLOT_DATA_PATH: /polyglot
@@ -102,7 +101,6 @@ services:
       ALEPH_SECRET_KEY: 'development'
       ALEPH_CACHE: 'false'
       ALEPH_EAGER: 'true'
-      ALEPH_URL_SCHEME: 'http'
       ALEPH_ARCHIVE_TYPE: 'file'
       ALEPH_ARCHIVE_PATH: '/data'
       POLYGLOT_DATA_PATH: /polyglot

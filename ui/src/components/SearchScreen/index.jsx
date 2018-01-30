@@ -13,7 +13,9 @@ class SearchScreen extends Component {
       <Screen>
         <Breadcrumbs>
           <li>
-            <FormattedMessage id="search.breadcrumb" defaultMessage="Global search" />
+            <a className="pt-breadcrumb">
+              <FormattedMessage id="search.breadcrumb" defaultMessage="Global search" />
+            </a>
           </li>
         </Breadcrumbs>
         <DualPane>
