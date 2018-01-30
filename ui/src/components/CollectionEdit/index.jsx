@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
+import { fetchCollection } from 'src/actions';
+
 import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
@@ -9,14 +11,19 @@ import CollectionEditInfo from './CollectionEditInfo';
 
 class CollectionEditScreen extends Component {
 
+  componentDidMount() {
+    const { collectionId } = this.props;
+    this.props.fetchCollection({ id: collectionId });
+  }
+
   render() {
-    const { app } = this.props;
+    const { app, collection, location } = this.props;
     return (
       <Screen>
-        <Breadcrumbs collection={{label: 'Collection Settings', links: {ui: app.ui_uri + 'edit'}}} />
+        <Breadcrumbs collection={{label: 'Collection Settings', links: {ui: 'http://localhost:8080' + location.pathname}}} />
         <DualPane>
-          <CollectionEditInfo/>
-          <CollectionEditContent/>
+          <CollectionEditInfo collection={collection}/>
+          <CollectionEditContent collection={collection}/>
         </DualPane>
       </Screen>
 
@@ -25,9 +32,9 @@ class CollectionEditScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    app: state.metadata.app
-  };
+  const { collectionId } = ownProps.match.params;
+  const collection = state.collections[collectionId];
+  return { collectionId, collection, app: state.metadata.app };
 };
 
-export default connect(mapStateToProps)(CollectionEditScreen);
+export default connect(mapStateToProps, { fetchCollection })(CollectionEditScreen);
