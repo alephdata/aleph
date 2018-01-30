@@ -15,6 +15,7 @@ class CollectionInfo extends Component {
 
   render() {
     const {collection} = this.props;
+    const link = collection.id + '/edit';
 
     return (
       <DualPane.InfoPane>
@@ -64,7 +65,7 @@ class CollectionInfo extends Component {
         </table>
 
         <div className="pt-button-group pt-fill button_div">
-          <Link to="edit">
+          <Link to={link}>
             <AnchorButton
               className="">
               <FormattedMessage id="collection.info.edit" defaultMessage="Edit"/>

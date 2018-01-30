@@ -20,6 +20,7 @@ import CollectionScreen from 'src/components/CollectionScreen';
 import ProfileScreen from 'src/components/ProfileScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
 import PageNavbar from './PageNavbar';
+import CollectionEditScreen from 'src/components/CollectionEdit';
 
 import './PageLayout.css';
 
