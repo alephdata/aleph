@@ -5,6 +5,7 @@ import {throttle} from 'lodash';
 
 import rootReducer from 'src/reducers';
 import {loadState, saveState} from './storage';
+import errorToastMiddleware from './error-toast-middleware';
 
 const persistedState = loadState();
 const store = createStore(
@@ -12,6 +13,7 @@ const store = createStore(
   persistedState,
   applyMiddleware(
     thunk,
+    errorToastMiddleware,
     // logger
   )
 );
