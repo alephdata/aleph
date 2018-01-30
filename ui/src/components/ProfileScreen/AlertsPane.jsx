@@ -12,8 +12,8 @@ import './AlertsPane.css';
 
 class AlertsPane extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       newAlert: '',

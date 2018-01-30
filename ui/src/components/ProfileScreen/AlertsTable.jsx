@@ -4,8 +4,8 @@ import {FormattedMessage} from 'react-intl';
 
 class AlertsTable extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.deleteAlert = this.deleteAlert.bind(this);
     this.onSearch = this.onSearch.bind(this);

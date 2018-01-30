@@ -9,8 +9,8 @@ import DualPane from 'src/components/common/DualPane';
 import './ProfileInfo.css';
 
 class ProfileInfo extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       name: '',
