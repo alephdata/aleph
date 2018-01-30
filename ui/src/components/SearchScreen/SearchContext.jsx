@@ -13,8 +13,8 @@ import SectionLoading from 'src/components/common/SectionLoading';
 
 
 class SearchContext extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       result: {isFetching: true}

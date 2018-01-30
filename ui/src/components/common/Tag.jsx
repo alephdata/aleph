@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 
 class TagIcon extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       icons: {
         names: 'fa-tags',
