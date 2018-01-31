@@ -36,5 +36,10 @@
             height: 100%;
             width: 100%;
         }
+
+        &.bogus {
+          padding: 0;
+          margin: 0;
+        }
     }
 }
