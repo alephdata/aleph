@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 
 class DocumentsQuery(AuthzQuery):
-    TEXT_FIELDS = ['name^3', 'names^2', 'text']
+    TEXT_FIELDS = ['name^3', 'names.text^2', 'text']
     EXCLUDE_FIELDS = ['roles', 'text']
     SORT = {
         'default': ['_score', {'name.kw': 'asc'}],
@@ -107,7 +107,7 @@ class AlertDocumentsQuery(EntityDocumentsQuery):
 
 
 class EntitiesQuery(AuthzQuery):
-    TEXT_FIELDS = ['name^3', 'names^2', 'text']
+    TEXT_FIELDS = ['name^3', 'names.text^2', 'text']
     EXCLUDE_FIELDS = ['roles', 'text']
     SORT = {
         'default': ['_score', {'name.kw': 'asc'}],
@@ -152,7 +152,7 @@ class SuggestEntitiesQuery(EntitiesQuery):
         query = super(SuggestEntitiesQuery, self).get_query()
         query['bool']['must'] = [{
             'match_phrase_prefix': {
-                'names': self.parser.prefix
+                'names.text': self.parser.prefix
             }
         }]
 
@@ -166,7 +166,7 @@ class SuggestEntitiesQuery(EntitiesQuery):
 
 
 class CombinedQuery(AuthzQuery):
-    TEXT_FIELDS = ['title^3', 'name^3', 'names^2', 'text']
+    TEXT_FIELDS = ['title^3', 'name^3', 'names.text^2', 'text']
     EXCLUDE_FIELDS = ['roles', 'text']
     SORT = {
         'default': ['_score', {'name.kw': 'asc'}],

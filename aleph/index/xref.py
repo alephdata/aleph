@@ -92,7 +92,7 @@ def entity_query(sample, collection_id=None, query=None):
     for value in sample.get('names', []):
         query['bool']['should'].append({
             'match': {
-                'names': {
+                'names.text': {
                     'query': value,
                     'operator': 'and',
                     'cutoff_frequency': 0.01,
