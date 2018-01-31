@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {BrowserRouter, Route} from 'react-router-dom';
 import {Provider} from 'react-redux'
 import {FocusStyleManager} from '@blueprintjs/core';
+import { inRange } from 'lodash';
 
 import {addLocaleData, IntlProvider} from 'react-intl';
 import en from 'react-intl/locale-data/en';
@@ -36,15 +37,32 @@ endpoint.interceptors.request.use(config => {
   return config;
 });
 
-endpoint.interceptors.response.use(function (response) {
-  return response;
-}, function (error) {
-  if (error.response.status === 401) {
-    store.dispatch(logout());
-    window.location.reload();
+// Upon 401 Unauthorised (e.g. session has expired), reset the whole app.
+endpoint.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      store.dispatch(logout());
+      window.location.reload();
+    }
+    return Promise.reject(error);
   }
-  return Promise.reject(error);
-});
+);
+
+// Use a response's error message when available.
+endpoint.interceptors.response.use(
+  response => response,
+  error => {
+    if (
+      error.response &&
+      inRange(error.response.status, 400, 500) &&
+      error.response.data && error.response.data.message
+    ) {
+      error.message = error.response.data.message;
+    }
+    return Promise.reject(error);
+  }
+);
 
 
 class App extends Component {
