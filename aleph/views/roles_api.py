@@ -5,7 +5,7 @@ from itsdangerous import BadSignature
 from aleph.core import db, settings, app_ui_url
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Permission
-from aleph.logic.roles import check_visible
+from aleph.logic.roles import check_visible, check_editable
 from aleph.logic.permissions import update_permission
 from aleph.notify import notify_role_template
 from aleph.serializers.roles import RoleSchema, PermissionSchema
@@ -87,16 +87,15 @@ def create():
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
 def view(id):
     role = obj_or_404(Role.by_id(id))
-    require(request.authz.logged_in,
-            check_visible(role, request.authz))
+    require(check_editable(role, request.authz))
     return jsonify(role, schema=RoleSchema)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     role = obj_or_404(Role.by_id(id))
-    require(request.authz.session_write,
-            role.id == request.authz.id)
+    require(request.authz.session_write)
+    require(check_editable(role, request.authz))
     data = parse_request(schema=RoleSchema)
     role.update(data)
     db.session.add(role)

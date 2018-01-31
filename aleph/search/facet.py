@@ -23,6 +23,7 @@ class Facet(object):
     def to_dict(self):
         results = []
         active = list(self.parser.filters.get(self.name, []))
+        active.extend(self.parser.post_filters.get(self.name, []))
 
         for bucket in self.data.get('buckets', []):
             key = six.text_type(bucket.get('key'))
