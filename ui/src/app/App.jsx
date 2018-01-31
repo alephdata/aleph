@@ -36,15 +36,17 @@ endpoint.interceptors.request.use(config => {
   return config;
 });
 
-endpoint.interceptors.response.use(function (response) {
-  return response;
-}, function (error) {
-  if (error.response.status === 401) {
-    store.dispatch(logout());
-    window.location.reload();
+// Upon 401 Unauthorised (e.g. session has expired), reset the whole app.
+endpoint.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      store.dispatch(logout());
+      window.location.reload();
+    }
+    return Promise.reject(error);
   }
-  return Promise.reject(error);
-});
+);
 
 
 class App extends Component {
