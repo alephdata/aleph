@@ -17,7 +17,7 @@ class SearchFilterFacets extends Component {
 
   showFacet(filterName) {
     const { query, updateQuery } = this.props;
-    updateQuery(query.showUiFacet(filterName));
+    updateQuery(query.showUiFacet(filterName), { replace: true });
   }
 
   render() {
