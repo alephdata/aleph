@@ -133,6 +133,18 @@ class Query {
         return this.set('facet', []);
     }
 
+    showUiFacet(name) {
+        return this.add('uifacet', name);
+    }
+
+    hideUiFacet(name) {
+        return this.remove('uifacet', name);
+    }
+
+    getUiFacets() {
+        return this.getList('uifacet');
+    }
+
     sameAs(other) {
         return this.toLocation() === other.toLocation()
             && queryString.stringify(this.context) === queryString.stringify(other.context);
