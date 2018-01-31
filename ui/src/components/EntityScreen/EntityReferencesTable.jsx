@@ -54,10 +54,10 @@ class EntityReferencesTable extends Component {
     }
 
     const columns = _.values(model.properties).filter((prop) => {
-      if (prop.name === property.name || prop.hidden) {
+      if (prop.name === property.name || prop.caption) {
         return false;
       }
-      return prop.featured || !!counts[prop.name];
+      return model.featured.includes(prop.name) || !!counts[prop.name];
     });
 
     columns.sort((a, b) =>  {

@@ -26,7 +26,7 @@ class EntityInfo extends Component {
     const { references, entity, schema } = this.props;
 
     const properties = _.values(schema.properties).filter((prop) => {
-      if (prop.hidden) {
+      if (prop.caption) {
         return false;
       }
       return prop.featured || !!entity.properties[prop.name];
