@@ -47,8 +47,17 @@ class SearchFilterFacet extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { field, query } = this.props;
     const { isOpen } = this.state;
-    if (!nextProps.query.sameAs(this.props.query)) {
+    const needsUpdate = (
+      nextProps.field !== field ||
+      // If the query changed, our known values are outdated; except if the only
+      // change was in our facet field, so we omit this field in the comparison.
+      !nextProps.query.clearFilter(field)
+        .sameAs(query.clearFilter(field))
+    );
+
+    if (needsUpdate) {
       // Invalidate previously fetched values.
       this.setState({ values: null });
       if (isOpen) {

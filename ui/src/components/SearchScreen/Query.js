@@ -67,6 +67,10 @@ class Query {
         return this.set(name, _.without(values, value));
     }
 
+    clear(name) {
+        return this.set(name, []);
+    }
+
     has(name) {
         return 0 === this.getList(name).length;
     }
@@ -115,6 +119,10 @@ class Query {
 
     removeFilter(name, value) {
         return this.remove('filter:' + name, value);
+    }
+
+    clearFilter(name) {
+        return this.clear('filter:' + name);
     }
 
     limit(count) {
