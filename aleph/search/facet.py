@@ -59,7 +59,7 @@ class SchemaFacet(Facet):
     def update(self, result, key):
         try:
             result['label'] = model.get(key).plural
-        except NameError:
+        except AttributeError:
             result['label'] = key
 
 
