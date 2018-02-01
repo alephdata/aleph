@@ -60,8 +60,8 @@ class SearchFilterFacets extends Component {
             position={Position.BOTTOM_RIGHT}
             inline
           >
-            <Button iconName="filter">
-              <FormattedMessage id="search.addAFilter" defaultMessage="Add a filter" />
+            <Button iconName="filter" rightIconName="caret-down">
+              <FormattedMessage id="search.addAFilter" defaultMessage="Filters" />
             </Button>
             <CheckboxList
               items={possibleFacets.map(name => ({ id: name, label: getLabel(name) }))}
