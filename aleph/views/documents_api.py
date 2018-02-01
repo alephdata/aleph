@@ -87,7 +87,7 @@ def _serve_archive(content_hash, file_name, mime_type):
 def file(document_id):
     document = get_db_document(document_id)
     return _serve_archive(document.content_hash,
-                          document.file_name,
+                          document.safe_file_name,
                           document.mime_type)
 
 
@@ -96,8 +96,9 @@ def pdf(document_id):
     document = get_db_document(document_id)
     if not document.supports_pages:
         raise BadRequest("PDF is only available for text documents")
-    file_name = '%s.pdf' % document.safe_file_name
-    return _serve_archive(document.pdf_version, file_name, PDF_MIME)
+    return _serve_archive(document.pdf_version,
+                          '%s.pdf' % document.safe_file_name,
+                          PDF_MIME)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/records')
