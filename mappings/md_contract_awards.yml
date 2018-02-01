@@ -53,7 +53,7 @@ md_contract_awards:
               entity: supplier
             contract: 
               entity: contract
-            name:
+            summary:
               join: " part of "
               columns: 
                 - md_contract_awards.numarul_documentului
