@@ -17,7 +17,7 @@ class Facet(object):
     def expand(self, keys):
         pass
 
-    def update(self, result):
+    def update(self, result, key):
         pass
 
     def to_dict(self):
@@ -48,7 +48,7 @@ class Facet(object):
         for result in results:
             self.update(result, result.get('id'))
 
-        results = sorted(results, key=lambda k: k['active'], reverse=True)
+        results = sorted(results, key=lambda k: k['count'], reverse=True)
         return {
             'values': results,
         }
@@ -57,7 +57,6 @@ class Facet(object):
 class SchemaFacet(Facet):
 
     def update(self, result, key):
-        key = result.get('id')
         try:
             result['label'] = model.get(key).plural
         except NameError:

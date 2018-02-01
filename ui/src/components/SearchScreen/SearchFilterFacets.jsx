@@ -27,12 +27,12 @@ class SearchFilterFacets extends Component {
       'collection_id',
       'countries',
       'languages',
-      // 'emails',
-      // 'phones',
-      // 'names',
-      // 'addresses',
-      // 'mime_type',
-      // 'author',
+      'emails',
+      'phones',
+      'names',
+      'addresses',
+      'mime_type',
+      'author',
     ];
     if (!aspects.collections) {
       possibleFacets = without(['collection_id'])(possibleFacets);
