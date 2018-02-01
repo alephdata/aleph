@@ -1,0 +1,37 @@
+@import "src/app/variables.scss";
+
+.CollectionEditInfo {
+  .label_class {
+    padding-left: $aleph-grid-size;
+    margin-top: $aleph-grid-size * - 0.2 !important;
+  }
+
+  .label_group {
+    padding-left: $aleph-grid-size;
+    padding-top: $aleph-grid-size;
+  }
+
+  .label_icon_group {
+    display: inline-flex;
+  }
+
+  .input_class {
+    width: 100% !important;
+  }
+
+  .api_key_group {
+    display: inline-flex;
+    padding-top: $aleph-grid-size;
+    padding-left: $aleph-grid-size;
+  }
+
+  .api_key {
+    padding-left: $aleph-grid-size;
+  }
+
+  .api_key_label {
+    color: #8A9BA8;
+    padding-left: $aleph-grid-size * 2;
+  }
+
+}

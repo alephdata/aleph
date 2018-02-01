@@ -5,6 +5,8 @@ import {FormattedMessage, injectIntl} from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
 
+import './CollectionEditInfo.css';
+
 class CollectionEditInfo extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +39,7 @@ class CollectionEditInfo extends Component {
           {collection === undefined ? '' : collection.label}
         </h1>
         <div>
-          <div className="pt-form-group name_group">
+          <div className="pt-form-group label_group">
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
               <label className="pt-label label_class">
@@ -68,7 +70,7 @@ class CollectionEditInfo extends Component {
             </label>
           </div>
 
-          <div className="pt-form-group name_group">
+          <div className="pt-form-group label_group">
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
               <label className="pt-label label_class">
@@ -88,7 +90,7 @@ class CollectionEditInfo extends Component {
             </div>
           </div>
 
-          <div className="pt-form-group name_group">
+          <div className="pt-form-group label_group">
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
               <label className="pt-label label_class">
@@ -108,7 +110,7 @@ class CollectionEditInfo extends Component {
             </div>
           </div>
 
-          <div className="pt-form-group name_group">
+          <div className="pt-form-group label_group">
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
               <label className="pt-label label_class">
@@ -128,7 +130,7 @@ class CollectionEditInfo extends Component {
             </div>
           </div>
 
-          <div className="pt-form-group name_group">
+          <div className="pt-form-group label_group">
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
               <label className="pt-label label_class">
