@@ -1,4 +1,4 @@
-us-bis-denied:
+us_bis_denied:
   label: US Denied Persons List
   info_url: https://opensanctions.org
   category: sanctions

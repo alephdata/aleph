@@ -1,4 +1,4 @@
-ua-sdfm-blacklist:
+ua_sdfm_blacklist:
   label: SDFM Blacklist
   info_url: https://opensanctions.org
   category: sanctions

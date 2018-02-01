@@ -1,4 +1,4 @@
-interpol-red-notices:
+interpol_red_notices:
   label: INTERPOL Red Notices
   info_url: https://opensanctions.org
   category: sanctions

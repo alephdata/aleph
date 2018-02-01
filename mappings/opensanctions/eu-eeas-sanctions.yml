@@ -1,4 +1,4 @@
-eu-eeas-sanctions:
+eu_eeas_sanctions:
   label: EEAS Consolidated List
   info_url: https://opensanctions.org
   category: sanctions
