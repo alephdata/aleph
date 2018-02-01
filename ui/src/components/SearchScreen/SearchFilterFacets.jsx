@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Menu, MenuItem, Button, Popover, Position } from '@blueprintjs/core';
+import { Button, Popover, Position } from '@blueprintjs/core';
 import { without } from 'lodash/fp';
 
 import messages from 'src/content/messages';
 import SearchFilterFacet from './SearchFilterFacet';
+import CheckboxList from './CheckboxList';
 
 import './SearchFilterFacets.css';
 
