@@ -53,9 +53,7 @@ class PdfViewer extends Component {
     const fileInfo = {url: url};
 
     if (session.token) {
-      fileInfo['httpHeaders'] = {
-        'Authorization': `Bearer ${session.token}`
-      }
+      fileInfo.url = `${fileInfo.url}?api_key=${session.token}`
     }
 
     let pageNumber = getPageNumber(fragId);
