@@ -3,10 +3,10 @@
 .AuthButtons {
   .settings-icon {
     font-size: $aleph-grid-size * 2;
+    padding-right: $aleph-grid-size * 0.6;
   }
 
   .settings_button {
-    padding-top: $aleph-grid-size * 0.4 !important;
     padding-left: $aleph-grid-size * 0.8 !important;
   }
 }

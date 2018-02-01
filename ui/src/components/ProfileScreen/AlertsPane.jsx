@@ -3,6 +3,7 @@ import {AnchorButton} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
 import queryString from 'query-string';
+import {withRouter} from 'react-router';
 
 import {fetchAlerts, addAlert, deleteAlert} from 'src/actions';
 import DualPane from 'src/components/common/DualPane';
@@ -114,4 +115,5 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 AlertsPane = injectIntl(AlertsPane);
+AlertsPane = withRouter(AlertsPane);
 export default connect(mapStateToProps, {fetchAlerts, addAlert, deleteAlert})(AlertsPane);
