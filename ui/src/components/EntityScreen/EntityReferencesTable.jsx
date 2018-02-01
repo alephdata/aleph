@@ -57,7 +57,10 @@ class EntityReferencesTable extends Component {
       if (prop.name === property.name || prop.caption) {
         return false;
       }
-      return model.featured.includes(prop.name) || !!counts[prop.name];
+      return (
+        (Array.isArray(model.featured) && model.featured.includes(prop.name))
+        || !!counts[prop.name]
+      );
     });
 
     columns.sort((a, b) =>  {
