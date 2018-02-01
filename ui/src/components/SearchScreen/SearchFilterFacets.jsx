@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, Popover, Position } from '@blueprintjs/core';
-import { without } from 'lodash/fp';
+import { without, union } from 'lodash/fp';
 
 import messages from 'src/content/messages';
 import SearchFilterFacet from './SearchFilterFacet';
@@ -24,8 +24,7 @@ class SearchFilterFacets extends Component {
   render() {
     const { aspects, query, updateQuery, intl } = this.props;
 
-    let possibleFacets = [
-      'collection_id',
+    const possibleFacets = [
       'countries',
       'languages',
       'emails',
@@ -35,13 +34,14 @@ class SearchFilterFacets extends Component {
       'mime_type',
       'author',
     ];
-    if (!aspects.collections) {
-      possibleFacets = without(['collection_id'])(possibleFacets);
+
+    let shownFacets = query.getUiFacets();
+    if (aspects.collections) {
+      // The Collections facet is treated specially. Always show it (if sensible).
+      shownFacets = union(['collection_id'])(shownFacets);
     }
 
     const getLabel = filterName => intl.formatMessage(messages.search.filter[filterName]);
-
-    const shownFacets = query.getUiFacets();
 
     return (
       <div className="SearchFilterFacets pt-large">
