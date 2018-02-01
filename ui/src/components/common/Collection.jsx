@@ -6,7 +6,7 @@ import getPath from 'src/util/getPath';
 import { fetchCollection } from 'src/actions';
 
 
-class Label extends Component {
+class Label extends PureComponent {
   render() {
     const { collection, icon = true } = this.props;
 

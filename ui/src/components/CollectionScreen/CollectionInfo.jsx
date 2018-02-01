@@ -6,6 +6,7 @@ import DualPane from 'src/components/common/DualPane';
 import Category from 'src/components/common/Category';
 import Language from 'src/components/common/Language';
 import Country from 'src/components/common/Country';
+import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
 
 
@@ -29,6 +30,16 @@ class CollectionInfo extends Component {
                 <Category collection={collection} />
               </td>
             </tr>
+            { collection.creator && (
+              <tr>
+                <th>
+                  <FormattedMessage id="collection.creator" defaultMessage="Manager"/>
+                </th>
+                <td>
+                  <Role.Label role={collection.creator} />
+                </td>
+              </tr>
+            )}
             { collection.languages && !!collection.languages.length && (
               <tr>
                 <th>
