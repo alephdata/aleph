@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Document, Page } from 'react-pdf/build/entry.webpack';
 import { findLast, throttle } from 'lodash';
 
+import SectionLoading from 'src/components/common/SectionLoading';
 import { parse as parsePdfFragId } from 'src/util/pdfFragId';
 
 import './PdfViewer.css';
@@ -20,7 +21,8 @@ class PdfViewer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      width: null
+      width: null,
+      numPages: 0
     };
   }
 
@@ -48,12 +50,16 @@ class PdfViewer extends Component {
   }
 
   render() {
-    const { url, fragId, session } = this.props;
+    const { document, fragId, session } = this.props;
     const { numPages, width } = this.state;
-    const fileInfo = {url: url};
 
+    if (!document || !document.links || !document.links.pdf) {
+      return null;
+    }
+
+    let url = document.links.pdf;
     if (session.token) {
-      fileInfo.url = `${fileInfo.url}?api_key=${session.token}`
+      url = `${url}?api_key=${session.token}`
     }
 
     let pageNumber = getPageNumber(fragId);
@@ -68,7 +74,10 @@ class PdfViewer extends Component {
         </div>
 
         <div className="document_pdf"  ref={(ref) => this.pdfElement = ref}>
-          <Document renderAnnotations={true} file={fileInfo} onLoadSuccess={this.onDocumentLoad.bind(this)}>
+          <Document renderAnnotations={true}
+                    file={url}
+                    onLoadSuccess={this.onDocumentLoad.bind(this)}
+                    loading={(<SectionLoading />)}>
             <Page pageNumber={pageNumber} className="page" width={width} />
           </Document>
         </div>
