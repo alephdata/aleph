@@ -59,17 +59,12 @@ class SearchFilterTag extends PureComponent {
   render() {
     const { filter, value } = this.props;
     return (
-      <Tooltip
-        content={this.label(filter, value)}
-        position={Position.BOTTOM}
-      >
         <TagWidget
           className="pt-large SearchFilterTag"
           onRemove={this.onRemove}
         >
           {this.label(filter, value)}
         </TagWidget>
-      </Tooltip>
     );
   }
 }

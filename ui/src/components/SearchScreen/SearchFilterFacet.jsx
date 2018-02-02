@@ -79,7 +79,7 @@ class SearchFilterFacet extends Component {
                position={Position.BOTTOM_RIGHT}
                isOpen={isOpen}
                onInteraction={this.onInteraction}
-               inline>
+               inline={true} >
         <Button rightIconName="caret-down">
           {children}
         </Button>

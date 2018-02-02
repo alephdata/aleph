@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { Tab2, Tabs2 } from "@blueprintjs/core";
+import { Tab, Tabs } from "@blueprintjs/core";
 import sumBy from 'lodash/sumBy';
 
 import Schema from 'src/components/common/Schema';
@@ -30,23 +30,23 @@ class SearchFilterSchema extends Component {
   
     return (
       <div className="SearchFilterSchema">
-        <Tabs2 onChange={this.tabChange} selectedTabId={current}>
-          <Tab2 id={this.ALL}>
+        <Tabs onChange={this.tabChange} selectedTabId={current}>
+          <Tab id={this.ALL}>
             <FormattedMessage id="search.schema.all" defaultMessage="All"/>
             <span className="count">
               <FormattedNumber value={sumBy(values, 'count')} />
             </span>
-          </Tab2>
+          </Tab>
           { values.map((schema) => (
-            <Tab2 key={schema.id} id={schema.id}>
+            <Tab key={schema.id} id={schema.id}>
               <Schema.Icon schema={schema.id} />
               <Schema.Name plural schema={schema.id} />
               <span className="count">
                 <FormattedNumber value={schema.count} />
               </span>
-            </Tab2>
+            </Tab>
           ))}
-        </Tabs2>
+        </Tabs>
       </div> 
     )
   }
