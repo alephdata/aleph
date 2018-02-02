@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, Popover, Position } from '@blueprintjs/core';
-import { without, union } from 'lodash/fp';
+import { union } from 'lodash/fp';
 
 import messages from 'src/content/messages';
 import SearchFilterFacet from './SearchFilterFacet';
