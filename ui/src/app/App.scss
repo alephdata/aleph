@@ -3,6 +3,7 @@ $icon-font-path: "~@blueprintjs/icons/resources/icons";
 @import "~@blueprintjs/core/src/blueprint.scss";
 @import "~@blueprintjs/icons/src/blueprint-icons.scss";
 @import "./variables.scss";
+@import "./tables.scss";
 
 html {
   height: 100%;
@@ -74,56 +75,5 @@ pre {
 .PartialError {
   .pt-non-ideal-state {
     min-height: 30vh;
-  }
-}
-
-// Table defaults
-table.pt-table {
-  width: 100%;
-}
-
-td.numeric {
-  text-align: right;
-
-  span {
-    float: right;
-  }
-}
-
-
-table.info-sheet {
-  th {
-    font-weight: normal;
-    color: $aleph-greyed-text;
-    padding-right: $aleph-grid-size;
-  }
-
-  td {
-    overflow: hidden;
-    overflow-wrap: break-word;
-  }
-}
-
-table.info-rank {
-  width: 100%;
-  table-layout: fixed;
-  border-spacing: 0;
-
-  th {
-    font-weight: normal;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding-left: 0;
-    margin-left: 0;
-    width: 90%;
-
-    i {
-      padding-right: $aleph-grid-size * 2;
-    }
-  }
-
-  td.numeric {
-    color: $aleph-greyed-text;
   }
 }

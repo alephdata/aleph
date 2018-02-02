@@ -1,0 +1,96 @@
+@import "~@blueprintjs/core/src/blueprint.scss";
+@import "./variables.scss";
+
+// Column & row customisation for any tables.
+table {
+  // Force a table-row to be a single line, truncating contents of large cells.
+  tr.nowrap > td,
+  tr.nowrap > th {
+    max-width: 0; // somehow, this seems to make keep column widths in check.
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  th.wide, td.wide {
+    width: 30%;
+  }
+
+  td.schema {
+  }
+
+  td.entity {
+    font-weight: bold;
+  }
+
+  td.date {
+  }
+
+  td.numeric {
+    text-align: right;
+
+    // Float on the right, so that numbers overflow to the left.
+    // (FormattedNumber creates a <span>)
+    & > span {
+      float: right;
+    }
+  }
+}
+
+
+// Tables as normally used in ContentPane
+table.data-table {
+  @extend .pt-html-table, .pt-html-table-bordered;
+
+  width: 100%;
+
+  th {
+    white-space: nowrap;
+  }
+}
+
+// Tables as normally used in InfoPane
+table.info-sheet,
+table.info-rank {
+  width: 100%;
+  border-spacing: 0;
+
+  th, td {
+    padding-bottom: $aleph-grid-size;
+    vertical-align: top;
+  }
+
+  th {
+    text-align: left;
+    font-weight: normal;
+  }
+}
+
+table.info-sheet {
+  th {
+    color: $aleph-greyed-text;
+    padding-right: $aleph-grid-size;
+  }
+}
+
+table.info-rank {
+  // XXX: We fix the table layout to ensure the <th>s keep their width limited.
+  table-layout: fixed;
+
+  th {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 0;
+    margin-left: 0;
+    width: 90%;
+
+    i {
+      padding-right: $aleph-grid-size * 2;
+    }
+  }
+
+  td.numeric {
+    color: $aleph-greyed-text;
+  }
+}

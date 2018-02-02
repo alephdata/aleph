@@ -48,31 +48,6 @@ $aleph-infobar-width: $aleph-grid-size * 40;
     line-height: 1.5;
     border-bottom: 1px solid $aleph-border-color;
   }
-
-  table {
-    border: 0;
-  
-    th, td {
-      padding-bottom: $aleph-grid-size;
-      vertical-align: top;
-    }
-  
-    th {
-      text-align: left;
-    }
-  
-    td {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      overflow-wrap: break-word;
-    }
-  
-    code {
-      border: 0;
-      box-shadow: none;
-      overflow-wrap: break-word;
-    }
-  }
 }
 
 

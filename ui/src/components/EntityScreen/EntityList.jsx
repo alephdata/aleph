@@ -12,12 +12,12 @@ class EntityList extends Component {
     if (!result || !result.results || result.total === 0) {
       return null;
     }
-    
+
     return (
-      <table className="results-table pt-html-table pt-html-table-bordered">
+      <table className="data-table">
         <thead>
           <tr>
-            <th>
+            <th className="wide">
               <FormattedMessage id="entity.list.name" defaultMessage="Name"/>
             </th>
             {aspects.collections && 
@@ -39,8 +39,8 @@ class EntityList extends Component {
           </tr>
         </thead>
         <tbody>
-          {result.results.map(item =>
-            <EntityListItem key={item.id} item={item} aspects={aspects} />
+          {result.results.map(entity =>
+            <EntityListItem key={entity.id} entity={entity} aspects={aspects} />
           )}
         </tbody>
       </table>
