@@ -10,8 +10,6 @@ import FileSize from 'src/components/common/FileSize';
 import URL from 'src/components/common/URL';
 import Entity from 'src/components/EntityScreen/Entity';
 
-import './DocumentMetadata.css';
-
 class DocumentMetadata extends Component {
   render() {
     const {document} = this.props;

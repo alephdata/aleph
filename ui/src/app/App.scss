@@ -44,8 +44,7 @@ pre {
   background-color: inherit;
   box-shadow: none;
   white-space: pre-wrap;
-  white-space: -moz-pre-wrap;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .small-screen {
@@ -96,21 +95,13 @@ td.tiny, th.tiny {
 }
 
 table.info-sheet {
-  width: 100%;
-  max-width: 100%;
-  table-layout: auto;
-  border-collapse: collapse;
-  border-spacing: 0;
-
   th {
     font-weight: normal;
     color: $aleph-greyed-text;
-    white-space: nowrap;
     padding-right: $aleph-grid-size;
   }
 
   td {
-    width: 100%;
     overflow: hidden;
     overflow-wrap: break-word;
   }
@@ -118,7 +109,6 @@ table.info-sheet {
 
 table.info-rank {
   width: 100%;
-  max-width: 100%;
   table-layout: fixed;
   border-spacing: 0;
 
@@ -130,7 +120,6 @@ table.info-rank {
     padding-left: 0;
     margin-left: 0;
     width: 90%;
-    max-width: 90%;
 
     i {
       padding-right: $aleph-grid-size * 2;

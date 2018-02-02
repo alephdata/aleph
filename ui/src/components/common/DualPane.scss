@@ -23,8 +23,6 @@ $aleph-infobar-width: $aleph-grid-size * 40;
 }
 
 .DualPane .InfoPane {
-  //width: 25%;
-  min-width: 20em;
   flex: none;
   width: $aleph-infobar-width;
   border-right: 0px;
@@ -41,7 +39,6 @@ $aleph-infobar-width: $aleph-grid-size * 40;
 
     overflow: hidden;
     text-overflow: ellipsis;
-    word-wrap: break-word;
     overflow-wrap: break-word;
   }
 
@@ -54,7 +51,6 @@ $aleph-infobar-width: $aleph-grid-size * 40;
   }
 
   table {
-    width: 100%;
     border: 0;
   
     th, td {
@@ -69,7 +65,7 @@ $aleph-infobar-width: $aleph-grid-size * 40;
     td {
       overflow: hidden;
       text-overflow: ellipsis;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
   
     code {
@@ -89,13 +85,11 @@ $aleph-infobar-width: $aleph-grid-size * 40;
 
   .DualPane .InfoPane {
     width: initial;
-    overflow: initial;
     margin: 0;
     margin-bottom: $aleph-grid-size;
   }
 
   .DualPane .ContentPane {
     width: initial;
-    overflow: initial;
   }
 }
