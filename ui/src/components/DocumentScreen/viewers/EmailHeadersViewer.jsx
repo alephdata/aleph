@@ -10,7 +10,7 @@ class EmailHeadersViewer extends Component {
 
     return (
       <div className="EmailHeadersViewer">
-        <table className="pt-table">
+        <table className="pt-html-table">
             <tbody>
                 {headers.date && (
                   <tr>
@@ -51,7 +51,7 @@ class EmailHeadersViewer extends Component {
                     <th><FormattedMessage id="email.attachment" defaultMessage="Attachments"/></th>
                     <td>
                       <a href="#children">
-                        <i className="fa fa-paperclip" aria-hidden="true"></i>
+                        <i className="fa fa-paperclip" aria-hidden="true"/>
                         {' '}
                         <FormattedMessage id="email.attachment.count"
                                           defaultMessage="{count} attached files"
