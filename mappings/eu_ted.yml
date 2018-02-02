@@ -58,7 +58,7 @@ eu_ted:
             - ID_AWARD
             - YEAR
           properties:
-            name:
+            summary:
               column: TITLE
             sourceUrl:
               column: TED_NOTICE_URL

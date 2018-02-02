@@ -16,8 +16,7 @@ class AuthButtons extends Component {
     if (session.loggedIn) {
       items.push((
         <Link key='settings' to="/settings">
-          <Button className="pt-minimal settings_button ">
-            <i className="fa fa-cog settings-icon" aria-hidden="true"/>
+          <Button iconName="cog" className="pt-minimal">
             <FormattedMessage id="nav.settings" defaultMessage="Settings"/>
           </Button>
         </Link>

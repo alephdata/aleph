@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
-import { Tag as TagWidget } from '@blueprintjs/core';
+import { Tag as TagWidget, Tooltip, Position } from '@blueprintjs/core';
 
 import Tag from 'src/components/common/Tag';
 import Country from 'src/components/common/Country';
 import Collection from 'src/components/common/Collection';
 import Entity from 'src/components/EntityScreen/Entity';
+
+import './SearchFilterTag.css';
 
 
 class SearchFilterTag extends PureComponent {
@@ -57,12 +59,12 @@ class SearchFilterTag extends PureComponent {
   render() {
     const { filter, value } = this.props;
     return (
-      <TagWidget
-        className="pt-large"
-        onRemove={this.onRemove}
-      >
-        {this.label(filter, value)}
-      </TagWidget>
+        <TagWidget
+          className="pt-large SearchFilterTag"
+          onRemove={this.onRemove}
+        >
+          {this.label(filter, value)}
+        </TagWidget>
     );
   }
 }

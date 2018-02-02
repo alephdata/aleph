@@ -4,7 +4,7 @@ apikit == 0.3.2
 banal >= 0.3.3
 followthemoney >= 0.4.6
 fingerprints >= 0.5.3
-storagelayer >= 0.2.1
+storagelayer >= 0.2.4
 exactitude >= 2.1.2
 ingestors >= 0.6.17
 normality >= 0.5.7

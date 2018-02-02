@@ -1,0 +1,57 @@
+@import "src/app/variables.scss";
+
+.CheckboxList {
+  list-style: none;
+  margin: 0;
+  padding: ($aleph-grid-size / 2) 0;
+
+  & > li {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    padding-left: ($pt-icon-size-standard + $aleph-grid-size * 1.5);
+    padding-right: ($aleph-grid-size / 2);
+
+    &.clickable {
+      cursor: pointer;
+
+      &:hover {
+        background-color: $aleph-hover-background;
+      }
+    }
+
+    &.faint {
+      color: $aleph-greyed-text;
+    }
+
+    & > .Tick {
+      position: absolute;
+      left: ($aleph-grid-size / 2);
+      line-height: $aleph-line-height;
+
+      &::before {
+        content: $pt-icon-tick;
+      }
+
+      opacity: 0.1;
+      transition: opacity 0.2s ease-out;
+      &.is-ticked {
+        opacity: 1;
+      }
+    }
+
+    .label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  
+    & > span {
+      margin: ($aleph-grid-size / 2);
+    }
+
+    .count {
+      color: $gray1;
+    }
+  }
+}

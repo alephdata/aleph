@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Menu, MenuItem, Button, Popover, Position } from '@blueprintjs/core';
-import { without } from 'lodash/fp';
+import { Button, Popover, Position } from '@blueprintjs/core';
+import { union } from 'lodash/fp';
 
 import messages from 'src/content/messages';
 import SearchFilterFacet from './SearchFilterFacet';
+import CheckboxList from './CheckboxList';
 
 import './SearchFilterFacets.css';
 
@@ -12,19 +13,18 @@ class SearchFilterFacets extends Component {
   constructor(props) {
     super(props);
 
-    this.showFacet = this.showFacet.bind(this);
+    this.toggleFacet = this.toggleFacet.bind(this);
   }
 
-  showFacet(filterName) {
+  toggleFacet(filterName) {
     const { query, updateQuery } = this.props;
-    updateQuery(query.showUiFacet(filterName), { replace: true });
+    updateQuery(query.toggleUiFacet(filterName), { replace: true });
   }
 
   render() {
     const { aspects, query, updateQuery, intl } = this.props;
 
-    let possibleFacets = [
-      'collection_id',
+    const possibleFacets = [
       'countries',
       'languages',
       'emails',
@@ -34,14 +34,14 @@ class SearchFilterFacets extends Component {
       'mime_type',
       'author',
     ];
-    if (!aspects.collections) {
-      possibleFacets = without(['collection_id'])(possibleFacets);
+
+    let shownFacets = query.getUiFacets();
+    if (aspects.collections) {
+      // The Collections facet is treated specially. Always show it (if sensible).
+      shownFacets = union(['collection_id'])(shownFacets);
     }
 
     const getLabel = filterName => intl.formatMessage(messages.search.filter[filterName]);
-
-    const shownFacets = query.getUiFacets();
-    const addFilterOptions = without(shownFacets)(possibleFacets);
 
     return (
       <div className="SearchFilterFacets pt-large">
@@ -55,23 +55,19 @@ class SearchFilterFacets extends Component {
             {getLabel(filterName)}
           </SearchFilterFacet>
         ))}
-        {addFilterOptions && (
+        {possibleFacets && (
           <Popover
             position={Position.BOTTOM_RIGHT}
             inline
           >
-            <Button iconName="filter">
-              <FormattedMessage id="search.addAFilter" defaultMessage="Add a filter" />
+            <Button iconName="filter" rightIconName="caret-down">
+              <FormattedMessage id="search.addAFilter" defaultMessage="Filters" />
             </Button>
-            <Menu>
-              {addFilterOptions.map(filterName => (
-                <MenuItem
-                  text={getLabel(filterName)}
-                  onClick={() => this.showFacet(filterName)}
-                  key={filterName}
-                />
-              ))}
-            </Menu>
+            <CheckboxList
+              items={possibleFacets.map(name => ({ id: name, label: getLabel(name) }))}
+              selectedItems={shownFacets}
+              onItemClick={this.toggleFacet}
+            />
           </Popover>
         )}
       </div>

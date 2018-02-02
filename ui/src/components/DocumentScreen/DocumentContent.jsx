@@ -52,10 +52,7 @@ class DocumentContent extends Component {
         )}
 
         {document.links && document.links.pdf && (
-          <PdfViewer
-            url={document.links.pdf}
-            fragId={fragId}
-          />
+          <PdfViewer document={document} fragId={fragId} />
         )}
 
         {document.schema === 'Image' && (

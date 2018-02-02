@@ -1,6 +1,8 @@
+from __future__ import absolute_import
+
 import logging
 from pprint import pprint  # noqa
-from followthemoney.types import TYPES
+from collections import defaultdict
 
 from aleph.core import celery, db
 from aleph.model import Document, DocumentTag
@@ -8,14 +10,6 @@ from aleph.index.records import index_records, clear_records
 from aleph.index.entities import get_entity, delete_entity, index_single
 
 log = logging.getLogger(__name__)
-
-TAG_FIELDS = {
-    DocumentTag.TYPE_EMAIL: TYPES['email'].invert,
-    DocumentTag.TYPE_PHONE: TYPES['phone'].invert,
-    DocumentTag.TYPE_PERSON: TYPES['name'].invert,
-    DocumentTag.TYPE_ORGANIZATION: TYPES['name'].invert,
-    DocumentTag.TYPE_LOCATION: TYPES['address'].invert,
-}
 
 
 @celery.task()
@@ -26,6 +20,23 @@ def index_document_id(document_id):
         return
     index_document(document)
     index_records(document)
+
+
+def generate_tags(document):
+    """Transform document tag objects into normalized tag snippets."""
+    tags = defaultdict(set)
+    q = db.session.query(DocumentTag)
+    q = q.filter(DocumentTag.document_id == document.id)
+    q = q.order_by(DocumentTag.weight.desc())
+    for tag in q:
+        type_ = DocumentTag.TYPES[tag.type]
+        values = type_.normalize(tag.text,
+                                 cleaned=True,
+                                 countries=document.countries)
+        tags[tag.field].update(values)
+
+    # pprint(dict(tags))
+    return tags.items()
 
 
 def index_document(document):
@@ -75,17 +86,11 @@ def index_document(document):
             'title': document.parent.title,
         }
 
-    q = db.session.query(DocumentTag)
-    q = q.filter(DocumentTag.document_id == document.id)
-    q = q.order_by(DocumentTag.weight.desc())
-    q = q.limit(2000)
-    for tag in q:
-        field = TAG_FIELDS[tag.type]
+    for (field, values) in generate_tags(document):
         if field not in data:
-            data[field] = []
-        if tag.text not in data[field]:
-            data[field].append(tag.text)
-            texts.append(tag.text)
+            data[field] = list(values)
+        else:
+            data[field].extend(values)
 
     return index_single(document, data, texts)
 

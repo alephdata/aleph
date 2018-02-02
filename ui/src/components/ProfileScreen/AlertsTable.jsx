@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {NonIdealState} from '@blueprintjs/core';
 import {FormattedMessage} from 'react-intl';
+import {withRouter} from 'react-router';
+import queryString from 'query-string';
 
 class AlertsTable extends Component {
 
@@ -16,16 +18,25 @@ class AlertsTable extends Component {
   }
 
   onSearch(alert) {
-    this.props.onSearch(alert);
+    const { history } = this.props;
+    history.push({
+      pathname: '/search',
+      search: queryString.stringify({
+        q: alert
+      })
+    });
   }
 
   render() {
-    const {hasAlerts, alerts} = this.props;
+    const { alerts } = this.props;
+    const hasAlerts = !(alerts.results !== undefined && alerts.results.length === 0);
 
     if (!hasAlerts || alerts.results === undefined) {
       return <NonIdealState visual="" title="There are no alerts"/>
-    } else {
-      return <div>
+    }
+  
+    return (
+      <div>
         <div className='header_alerts'>
           <p className='header_label header_topic'>
             <FormattedMessage id="alerts.topic" defaultMessage="Topic"/>
@@ -38,17 +49,16 @@ class AlertsTable extends Component {
           </p>
         </div>
         <div className='table_body_alerts'>
-          {alerts.results.map((item, index) => (
-            <div key={index} className='table_row'>
+          {alerts.results.map((item) => (
+            <div key={item.id} className='table_row'>
               <p className='table_item_alert header_topic'>
                 {item.label}
               </p>
               <p className='table_item_alert header_delete_search'
-                 onClick={() => this.onSearch(item.label)}>
+                  onClick={() => this.onSearch(item.label)}>
                 <i className="fa fa-search" aria-hidden="true"/>
               </p>
               <p
-                key={index}
                 className='table_item_alert header_delete_search'
                 onClick={() => this.deleteAlert(item.id)}
               >
@@ -58,8 +68,8 @@ class AlertsTable extends Component {
           ))}
         </div>
       </div>
-    }
+    )
   }
 }
 
-export default AlertsTable;
+export default withRouter(AlertsTable);
