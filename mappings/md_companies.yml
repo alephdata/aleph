@@ -48,7 +48,7 @@ md_companies:
               column: Director
         directorship:
           schema: Directorship
-          key_literal: director
+          key_literal: Directorship
           properties:
             director:
               entity: director
@@ -72,7 +72,7 @@ md_companies:
               column: Founder
         ownership:
           schema: Ownership
-          key_literal: owner
+          key_literal: Ownership
           properties:
             owner:
               entity: founder
