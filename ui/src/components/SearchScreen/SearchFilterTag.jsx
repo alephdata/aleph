@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Tag as TagWidget, Tooltip, Position } from '@blueprintjs/core';
+import { Tag as TagWidget } from '@blueprintjs/core';
 
 import Tag from 'src/components/common/Tag';
 import Country from 'src/components/common/Country';
