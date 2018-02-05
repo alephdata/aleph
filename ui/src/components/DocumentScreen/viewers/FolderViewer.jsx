@@ -61,7 +61,6 @@ class FolderViewer extends Component {
                   onChange={this.onChangeQueryText} value={queryText} />
             </div>
           </form>
-          <div className="clearfix" />
         </section>
         <SearchContext collection={document.collection}
                        context={context}
