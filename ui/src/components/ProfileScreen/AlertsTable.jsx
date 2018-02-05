@@ -29,9 +29,8 @@ class AlertsTable extends Component {
 
   render() {
     const { alerts } = this.props;
-    const hasAlerts = !(alerts.results !== undefined && alerts.results.length === 0);
 
-    if (!hasAlerts || alerts.results === undefined) {
+    if (alerts.results === undefined || alerts.results.length === 0) {
       return (
         <div>
           <NonIdealState visual="" title="There are no alerts"/>
