@@ -27,15 +27,6 @@ body {
   flex-flow: column nowrap;
 }
 
-.pt-navbar a {
-  color: inherit;
-
-  &:hover { 
-    color: inherit;
-    text-decoration: none;
-  }
-}
-
 h1, h2, h3, h4, h5 {
   font-weight: 300;
 }

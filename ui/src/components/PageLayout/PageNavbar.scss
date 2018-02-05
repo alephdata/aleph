@@ -1,5 +1,14 @@
-.pt-navbar {
-    img {
-        height: 32px;
+.PageNavbar.pt-navbar {
+  img {
+    height: 32px;
+  }
+
+  a {
+    color: inherit;
+
+    &:hover {
+      color: inherit;
+      text-decoration: none;
     }
+  }
 }
