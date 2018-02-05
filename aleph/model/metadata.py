@@ -6,6 +6,8 @@ from banal import ensure_list
 from collections import Mapping
 from urllib import unquote
 from urlparse import urlparse
+from celestial import normalize_mimetype, DEFAULT
+
 from exactitude import countries, languages, dates, urls
 from normality import safe_filename, stringify, slugify
 
@@ -257,10 +259,11 @@ class Metadata(object):
             mime_type, _ = mimetypes.guess_type(self.file_name)
 
         # derive mime type from headers
-        if mime_type is None and self.headers.get('content_type') is not None:
-            mime_type, _ = cgi.parse_header(self.headers['content_type'])
+        if mime_type is None:
+            mime_type = self.headers.get('content_type')
 
-        if mime_type != 'application/octet-stream':
+        mime_type = normalize_mimetype(mime_type)
+        if mime_type != DEFAULT:
             return mime_type
 
     @mime_type.setter
