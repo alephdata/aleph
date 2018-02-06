@@ -1,9 +1,14 @@
 import React from 'react';
+import { injectIntl } from 'react-intl';
+import { NonIdealState } from '@blueprintjs/core';
 
-const ErrorScreen = ({ location }) => (
-  <div>
-    <h3>No match for <code>{location.pathname}</code></h3>
-  </div>
-)
+import messages from 'src/content/messages';
 
-export default ErrorScreen;
+const ErrorScreen = ({ location, intl }) => (
+  <NonIdealState
+    visual="error"
+    title={intl.formatMessage(messages.status.no_route_error, { path: location.pathname })}
+  />
+);
+
+export default injectIntl(ErrorScreen);
