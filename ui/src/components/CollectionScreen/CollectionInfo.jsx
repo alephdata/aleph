@@ -20,56 +20,54 @@ class CollectionInfo extends Component {
           {collection.label}
         </h1>
         <p>{collection.summary}</p>
-        <table className='info-sheet'>
-          <tbody>
-            <tr>
-              <th>
-                <FormattedMessage id="collection.category" defaultMessage="Category"/>
-              </th>
-              <td>
-                <Category collection={collection} />
-              </td>
-            </tr>
-            { collection.creator && (
-              <tr>
-                <th>
-                  <FormattedMessage id="collection.creator" defaultMessage="Manager"/>
-                </th>
-                <td>
-                  <Role.Label role={collection.creator} />
-                </td>
-              </tr>
-            )}
-            { collection.languages && !!collection.languages.length && (
-              <tr>
-                <th>
-                  <FormattedMessage id="collection.languages" defaultMessage="Language"/>
-                </th>
-                <td>
-                  <Language.List codes={collection.languages} />
-                </td>
-              </tr>
-            )}
-            { collection.countries && !!collection.countries.length && (
-              <tr>
-                <th>
-                  <FormattedMessage id="collection.countries" defaultMessage="Country"/>
-                </th>
-                <td>
-                  <Country.List codes={collection.countries} truncate={10} />
-                </td>
-              </tr>
-            )}
-            <tr>
-              <th>
-                <FormattedMessage id="collection.updated_at" defaultMessage="Last updated"/>
-              </th>
-              <td>
-                <Date value={collection.updated_at} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ul className='info-sheet'>
+          <li>
+            <span className="key">
+              <FormattedMessage id="collection.category" defaultMessage="Category"/>
+            </span>
+            <span className="value">
+              <Category collection={collection} />
+            </span>
+          </li>
+          { collection.creator && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.creator" defaultMessage="Manager"/>
+              </span>
+              <span className="value">
+                <Role.Label role={collection.creator} />
+              </span>
+            </li>
+          )}
+          { collection.languages && !!collection.languages.length && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.languages" defaultMessage="Language"/>
+              </span>
+              <span className="value">
+                <Language.List codes={collection.languages} />
+              </span>
+            </li>
+          )}
+          { collection.countries && !!collection.countries.length && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.countries" defaultMessage="Country"/>
+              </span>
+              <span className="value">
+                <Country.List codes={collection.countries} truncate={10} />
+              </span>
+            </li>
+          )}
+          <li>
+            <span className="key">
+              <FormattedMessage id="collection.updated_at" defaultMessage="Last updated"/>
+            </span>
+            <span className="value">
+              <Date value={collection.updated_at} />
+            </span>
+          </li>
+        </ul>
       </DualPane.InfoPane>
     );
   }

@@ -35,24 +35,22 @@ class EntityInfoTags extends Component {
         <h2>
           <FormattedMessage id="entity.section.tags" defaultMessage="Related tags"/>
         </h2>
-        <table className="info-rank">
-          <tbody>
-            { tags.results.map((tag) => (
-              <tr key={tag.id}>
-                <th>
-                  <Tag.Icon field={tag.field} />
-                  <Link to={`${linkPath}${tag.id}`}>
-                    {tag.value}
-                  </Link>
-                </th>
-                <td className="numeric">
-                  <FormattedNumber value={tag.count} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>   
+        <ul className="info-rank">
+          { tags.results.map((tag) => (
+            <li key={tag.id}>
+              <span className="key">
+                <Tag.Icon field={tag.field} />
+                <Link to={`${linkPath}${tag.id}`}>
+                  {tag.value}
+                </Link>
+              </span>
+              <span className="value">
+                <FormattedNumber value={tag.count} />
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 }

@@ -49,48 +49,72 @@ table.data-table {
   }
 }
 
-// Tables as normally used in InfoPane
-table.info-sheet,
-table.info-rank {
-  width: 100%;
-  border-spacing: 0;
+// Two-column 'tables' as normally used in InfoPane
+ul.info-sheet,
+ul.info-rank {
+  padding: 0;
+  list-style: none;
 
-  th, td {
+  li {
+    display: flex;
+    padding-top: $aleph-grid-size;
     padding-bottom: $aleph-grid-size;
-    vertical-align: top;
-  }
 
-  th {
-    text-align: left;
-    font-weight: normal;
+    .key, .value {
+      overflow: hidden;
+      word-wrap: break-word;
+    }
+
+    .key {
+      padding-right: $aleph-grid-size;
+    }
+
+    &:not(:last-child) {
+      border-bottom: 0.5px solid $aleph-border-color;
+    }
   }
 }
 
-table.info-sheet {
-  th {
-    color: $aleph-greyed-text;
-    padding-right: $aleph-grid-size;
+ul.info-sheet {
+  li {
+    flex-flow: row wrap;
+
+    // padding-top is split between li and .key, adding up to equal padding-bottom.
+    // (done to keep space between key and value when it wraps onto a new line)
+    padding-top: $aleph-grid-size * 0.5;
+    .key, .value {
+      padding-top: $aleph-grid-size * 0.5;
+    }
+
+    .key {
+      flex-basis: 12em;
+      color: $aleph-greyed-text;
+      flex-grow: 1;
+    }
+
+    .value {
+      // We want .key to grow only if .value is wrapped onto the next line;
+      // a near infinite grow ratio keeps the (non-wrapped) values aligned.
+      flex-grow: 1e9;
+    }
   }
 }
 
-table.info-rank {
-  // XXX: We fix the table layout to ensure the <th>s keep their width limited.
-  table-layout: fixed;
+ul.info-rank li {
+  flex-flow: row nowrap;
 
-  th {
+  .key {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding-left: 0;
-    margin-left: 0;
-    width: 90%;
-
-    i {
-      padding-right: $aleph-grid-size * 2;
-    }
   }
 
-  td.numeric {
+  .key i { // the icon, if any
+    padding-right: $aleph-grid-size * 2;
+  }
+
+  .value {
     color: $aleph-greyed-text;
+    margin-left: auto; // = align right
   }
 }
