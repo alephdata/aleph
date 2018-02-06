@@ -41,38 +41,40 @@ class AlertsTable extends Component {
     }
 
     return (
-      <div>
-        <div className='header_alerts'>
-          <p className='header_label header_topic'>
-            <FormattedMessage id="alerts.topic" defaultMessage="Topic"/>
-          </p>
-          <p className='header_label header_delete_search'>
-            <FormattedMessage id="alerts.search" defaultMessage="Search"/>
-          </p>
-          <p className='header_label header_delete_search'>
-            <FormattedMessage id="alerts.delete" defaultMessage="Delete"/>
-          </p>
-        </div>
-        <div className='table_body_alerts'>
+      <table className="AlertsTable data-table">
+        <thead>
+          <tr>
+            <th className='topic'>
+              <FormattedMessage id="alerts.topic" defaultMessage="Topic"/>
+            </th>
+            <th>
+              <FormattedMessage id="alerts.search" defaultMessage="Search"/>
+            </th>
+            <th>
+              <FormattedMessage id="alerts.delete" defaultMessage="Delete"/>
+            </th>
+          </tr>
+        </thead>
+        <tbody className='table_body_alerts'>
           {alerts.results.map((item) => (
-            <div key={item.id} className='table_row'>
-              <p className='table_item_alert header_topic'>
+            <tr key={item.id} className='table_row'>
+              <td className='table_item_alert header_topic'>
                 {item.label}
-              </p>
-              <p className='table_item_alert header_delete_search'
+              </td>
+              <td className='buttonCell'
                   onClick={() => this.onSearch(item.label)}>
                 <i className="fa fa-search" aria-hidden="true"/>
-              </p>
-              <p
-                className='table_item_alert header_delete_search'
+              </td>
+              <td
+                className='buttonCell'
                 onClick={() => this.deleteAlert(item.id)}
               >
                 <i className="fa fa-trash-o" aria-hidden="true"/>
-              </p>
-            </div>
+              </td>
+            </tr>
           ))}
-        </div>
-      </div>
+        </tbody>
+      </table>
     )
   }
 }

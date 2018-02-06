@@ -3,8 +3,7 @@
 .AlertsPane {
   .addTopicForm {
     display: flex;
-    padding-left: $aleph-grid-size;
-    padding-top: $aleph-grid-size * 2;
+    padding: ($aleph-grid-size * 2) $aleph-grid-size;
 
     .addTopicInput {
       flex-grow: 1;
