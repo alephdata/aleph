@@ -31,6 +31,15 @@ h1, h2, h3, h4, h5 {
   font-weight: 300;
 }
 
+h1 {
+  font-size: $aleph-font-size * 1.7;
+}
+
+h2 {
+  font-size: $aleph-font-size * 1.5;
+  margin-top: $aleph-grid-size * 2;
+}
+
 pre {
   border: none;
   background-color: inherit;
@@ -44,7 +53,7 @@ pre {
   margin: 0 auto;
   padding: ($aleph-grid-size * 2);
 
-  h2 {
+  h1 {
     line-height: inherit;
   }
 }

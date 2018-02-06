@@ -68,18 +68,18 @@ class EntityInfo extends Component {
           </tbody>
         </table>
 
-        <h3>
+        <h2>
           <FormattedMessage id="collection.section.origin" defaultMessage="Origin"/>
-        </h3>
+        </h2>
         <div>
           <CollectionCard collection={entity.collection} />
         </div>
 
         { references && references.results && !!references.results.length && (
           <div className="references">
-            <h3>
+            <h2>
               <FormattedMessage id="collection.section.links" defaultMessage="Relationships"/>
-            </h3>
+            </h2>
             <table className="info-rank">
               <tbody>
                 { references.results.map((ref) => (

@@ -34,9 +34,9 @@ class DocumentInfo extends Component {
               </div>
             }
 
-            <h3>
+            <h2>
               <FormattedMessage id="collection.section" defaultMessage="Origin"/>
-            </h3>
+            </h2>
             <div>
               <CollectionCard collection={document.collection}/>
             </div>

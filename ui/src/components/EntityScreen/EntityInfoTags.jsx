@@ -32,9 +32,9 @@ class EntityInfoTags extends Component {
   
     return (
       <div className="tags">
-        <h3>
+        <h2>
           <FormattedMessage id="entity.section.tags" defaultMessage="Related tags"/>
-        </h3>
+        </h2>
         <table className="info-rank">
           <tbody>
             { tags.results.map((tag) => (
