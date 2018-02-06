@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AnchorButton} from '@blueprintjs/core';
+import {Button} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
 
@@ -48,41 +48,28 @@ class AlertsPane extends Component {
 
     return (
       <DualPane.ContentPane limitedWidth={true} className="AlertsPane">
-        <div className='main_div'>
-          <div className='title_div'>
-            <h1 className='alerts_title'>
-              <FormattedMessage id="alerts.title"
-                                defaultMessage="Alerts & Notifications"/>
-            </h1>
-          </div>
-          <div className='add_topic_div'>
-            <form onSubmit={this.onAddAlert} className="search_form">
-              <div className="pt-form-content add_topic">
-                <input
-                  id="add_alert"
-                  className="pt-input add_topic_input"
-                  placeholder={intl.formatMessage({
-                    id: "alerts.add.placeholder",
-                    defaultMessage: "Subscribe to notifications"
-                  })}
-                  type="text"
-                  dir="auto"
-                  autoComplete="off"
-                  onChange={this.onChangeAddingInput}
-                  value={this.state.newAlert}
-                />
-                <div
-                  className="pt-button-group pt-fill alerts_button_div"
-                  onClick={this.onAddAlert}>
-                  <AnchorButton>
-                    <FormattedMessage id="alerts.add"
-                                      defaultMessage="Add"/>
-                  </AnchorButton>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
+        <h1>
+          <FormattedMessage id="alerts.title"
+                            defaultMessage="Alerts & Notifications"/>
+        </h1>
+        <form onSubmit={this.onAddAlert} className="addTopicForm">
+          <input
+            className="pt-input addTopicInput"
+            placeholder={intl.formatMessage({
+              id: "alerts.add.placeholder",
+              defaultMessage: "Subscribe to notifications"
+            })}
+            type="text"
+            dir="auto"
+            autoComplete="off"
+            onChange={this.onChangeAddingInput}
+            value={this.state.newAlert}
+          />
+          <Button className="addTopicButton" onClick={this.onAddAlert}>
+            <FormattedMessage id="alerts.add"
+                              defaultMessage="Add"/>
+          </Button>
+        </form>
         <AlertsTable alerts={alerts} deleteAlert={this.deleteAlert} />
       </DualPane.ContentPane>
     );

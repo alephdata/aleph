@@ -4,6 +4,8 @@ import {FormattedMessage} from 'react-intl';
 import {withRouter} from 'react-router';
 import queryString from 'query-string';
 
+import './AlertsTable.css';
+
 class AlertsTable extends Component {
 
   constructor(props) {

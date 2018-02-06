@@ -1,0 +1,43 @@
+@import "src/app/variables.scss";
+
+.AlertsPane {
+  .header_alerts {
+    width: 100%;
+    display: inline-flex;
+    padding-top: $aleph-grid-size * 2;
+    padding-left: $aleph-grid-size;
+  }
+
+  .header_label {
+    border-bottom: 1px solid $table-border;
+    border-right: 1px solid $table-border;
+    height: $aleph-font-size * 1.9;
+    color: $table-header-color;
+    font-size: $aleph-grid-size * 1.5;
+    padding-bottom: $aleph-grid-size * 2.7;
+  }
+
+  .header_topic {
+    width: 80%;
+  }
+
+  .header_delete_search {
+    width: 10%;
+    text-align: center;
+  }
+
+  .table_body_alerts {
+    padding-left: $aleph-grid-size;
+  }
+
+  .table_item_alert {
+    border-bottom: 1px solid $table-border;
+    border-right: 1px solid $table-border;
+    padding-bottom: $aleph-grid-size * 0.4;
+  }
+
+  .table_row {
+    width: 100%;
+    display: inline-flex;
+  }
+}
