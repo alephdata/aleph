@@ -91,24 +91,21 @@ class CollectionBrowser extends Component {
     const { result, queryText, isFetching } = this.state;
     const { total = 0 } = result;
     return (
-      <div className="CollectionBrowser">
-        <div className="title">
-          <div className="section">
-            <h3>
-                <FormattedMessage id="collection.browser.title"
-                                defaultMessage="Browse {count} collections"
-                                values={{
-                                    count: (<FormattedNumber value={total} />)
-                                }} />
-            </h3>
-          </div>
-          <div className="section">
-            <div className="pt-input-group">
-                <span className="pt-icon pt-icon-search"></span>
-                <input className="pt-input" type="search"
-                    placeholder={intl.formatMessage({id: "collection.browser.filter", defaultMessage: "Filter collections" })}
-                    onChange={this.onChangeQueryText} value={queryText} />
-            </div>
+      <section className="CollectionBrowser">
+        <div className="header">
+          <h1>
+            <FormattedMessage id="collection.browser.title"
+              defaultMessage="Browse {count} collections"
+              values={{
+                count: (<FormattedNumber value={total} />)
+              }}
+            />
+          </h1>
+          <div className="filterCollectionsInput pt-input-group">
+              <i className="pt-icon pt-icon-search" />
+              <input className="pt-input" type="search"
+                placeholder={intl.formatMessage({id: "collection.browser.filter", defaultMessage: "Filter collections" })}
+                onChange={this.onChangeQueryText} value={queryText} />
           </div>
         </div>
         <div className="results">
@@ -134,7 +131,7 @@ class CollectionBrowser extends Component {
             <SectionLoading />
           )}
         </div>
-      </div>
+      </section>
     );
   }
 }

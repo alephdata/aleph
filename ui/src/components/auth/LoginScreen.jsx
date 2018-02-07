@@ -34,7 +34,7 @@ class LoginScreen extends Component {
     }
 
     return <section className="small-screen">
-        {hasLogin && <h2>Sign in</h2>}
+        {hasLogin && <h1>Sign in</h1>}
 
         {passwordLogin && <PasswordAuthLogin onSubmit={this.onLogin.bind(this)}/>}
         {oauthLogin && <OAuthLogin provider={metadata.auth.oauth_uri}/>}

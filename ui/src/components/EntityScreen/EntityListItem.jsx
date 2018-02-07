@@ -9,28 +9,28 @@ import Date from 'src/components/common/Date';
 
 class EntityListItem extends Component {
   render() {
-    const { item, aspects } = this.props;
-    const date = min(item.dates);
+    const { entity, aspects } = this.props;
+    const date = min(entity.dates);
 
     return (
-      <tr className={`result result--${item.schema}`}>
-        <td className="result__name">
-          <Entity.Link entity={item} icon />
+      <tr className={`nowrap`}>
+        <td className="entity">
+          <Entity.Link entity={entity} icon />
         </td>
         {aspects.collections && 
-          <td className="result__collection">
-            <Collection.Link collection={item.collection} icon />
+          <td className="collection">
+            <Collection.Link collection={entity.collection} icon />
           </td>
         }
-        <td>
-          <Schema.Name schema={item.schema} />
+        <td className="schema">
+          <Schema.Name schema={entity.schema} />
         </td>
         {aspects.countries && (
-          <td>
-            <Country.List codes={item.countries} />
+          <td className="country">
+            <Country.List codes={entity.countries} />
           </td>
         )}
-        <td>
+        <td className="date">
           <Date value={date} />
         </td>
       </tr>

@@ -78,10 +78,10 @@ class ProfileInfo extends Component {
 
     return (
       <DualPane.InfoPane className="ProfileInfo">
-        <h1>
-          Profile
-        </h1>
-        <div>
+        <section>
+          <h1>
+            Profile
+          </h1>
           <div className="pt-form-group name_group">
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
@@ -168,8 +168,8 @@ class ProfileInfo extends Component {
               <FormattedMessage id="profile.info.save" defaultMessage="Save changes"/>
             </AnchorButton>
           </div>
-        </div>
-        <div className='api_key_div'>
+        </section>
+        <section className='api_key_div'>
           <h1>
             <FormattedMessage id="profile.info.api" defaultMessage="API Key"/>
           </h1>
@@ -185,7 +185,7 @@ class ProfileInfo extends Component {
             via a remote application or client library"/>
             </label>
           </div>
-        </div>
+        </section>
       </DualPane.InfoPane>
     );
   }

@@ -3,6 +3,7 @@ $icon-font-path: "~@blueprintjs/icons/resources/icons";
 @import "~@blueprintjs/core/src/blueprint.scss";
 @import "~@blueprintjs/icons/src/blueprint-icons.scss";
 @import "./variables.scss";
+@import "./tables.scss";
 
 html {
   height: 100%;
@@ -26,17 +27,17 @@ body {
   flex-flow: column nowrap;
 }
 
-.pt-navbar a {
-  color: inherit;
-
-  &:hover { 
-    color: inherit;
-    text-decoration: none;
-  }
-}
-
 h1, h2, h3, h4, h5 {
   font-weight: 300;
+}
+
+h1 {
+  font-size: $aleph-font-size * 1.7;
+}
+
+h2 {
+  font-size: $aleph-font-size * 1.5;
+  margin-top: $aleph-grid-size * 2;
 }
 
 pre {
@@ -44,8 +45,7 @@ pre {
   background-color: inherit;
   box-shadow: none;
   white-space: pre-wrap;
-  white-space: -moz-pre-wrap;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .small-screen {
@@ -53,91 +53,14 @@ pre {
   margin: 0 auto;
   padding: ($aleph-grid-size * 2);
 
-  h2 {
+  h1 {
     line-height: inherit;
   }
 }
-
-// a basic clearfix
-.clearfix:after {
-  visibility: hidden;
-  display: block;
-  font-size: 0;
-  content: " ";
-  clear: both;
-  height: 0;
-}
-* html .clearfix             { zoom: 1; } /* IE6 */
-*:first-child+html .clearfix { zoom: 1; } /* IE7 */
-
 
 // Used to render failed imports, missing connections.
 .PartialError {
   .pt-non-ideal-state {
     min-height: 30vh;
-  }
-}
-
-// Table defaults
-table.pt-table {
-  width: 100%;
-}
-
-td.numeric {
-  text-align: right;
-
-  span {
-    float: right;
-  }
-}
-
-td.tiny, th.tiny {
-  width: 1%;
-}
-
-table.info-sheet {
-  width: 100%;
-  max-width: 100%;
-  table-layout: auto;
-  border-collapse: collapse;
-  border-spacing: 0;
-
-  th {
-    font-weight: normal;
-    color: $aleph-greyed-text;
-    white-space: nowrap;
-    padding-right: $aleph-grid-size;
-  }
-
-  td {
-    width: 100%;
-    overflow: hidden;
-    overflow-wrap: break-word;
-  }
-}
-
-table.info-rank {
-  width: 100%;
-  max-width: 100%;
-  table-layout: fixed;
-  border-spacing: 0;
-
-  th {
-    font-weight: normal;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding-left: 0;
-    margin-left: 0;
-    width: 90%;
-    max-width: 90%;
-
-    i {
-      padding-right: $aleph-grid-size * 2;
-    }
-  }
-
-  td.numeric {
-    color: $aleph-greyed-text;
   }
 }

@@ -38,63 +38,59 @@ class EntityInfo extends Component {
           <Entity.Label entity={entity} />
         </h1>
 
-        <table className="info-sheet">
-          <tbody>
-            <tr>
-              <th><FormattedMessage id="entity.type" defaultMessage="Type"/></th>
-              <td>
-                <Schema.Icon schema={entity.schema}/>
-                <Schema.Name schema={entity.schema}/>
-              </td>
-            </tr>
-            { properties.map((prop) => (
-              <tr key={prop.name}>
-                <th>
-                  <Property.Name model={prop} />
-                </th>
-                <td>
-                  <Property.Values model={prop} values={entity.properties[prop.name]} />
-                </td>
-              </tr>
-            ))}
-            <tr>
-              <th>
-                <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
-              </th>
-              <td>
-                <Date value={entity.updated_at} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ul className="info-sheet">
+          <li>
+            <span className="key"><FormattedMessage id="entity.type" defaultMessage="Type"/></span>
+            <span className="value">
+              <Schema.Icon schema={entity.schema}/>
+              <Schema.Name schema={entity.schema}/>
+            </span>
+          </li>
+          { properties.map((prop) => (
+            <li key={prop.name}>
+              <span className="key">
+                <Property.Name model={prop} />
+              </span>
+              <span className="value">
+                <Property.Values model={prop} values={entity.properties[prop.name]} />
+              </span>
+            </li>
+          ))}
+          <li>
+            <span className="key">
+              <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
+            </span>
+            <span className="value">
+              <Date value={entity.updated_at} />
+            </span>
+          </li>
+        </ul>
 
-        <h3>
+        <h2>
           <FormattedMessage id="collection.section.origin" defaultMessage="Origin"/>
-        </h3>
+        </h2>
         <div>
           <CollectionCard collection={entity.collection} />
         </div>
 
         { references && references.results && !!references.results.length && (
           <div className="references">
-            <h3>
+            <h2>
               <FormattedMessage id="collection.section.links" defaultMessage="Relationships"/>
-            </h3>
-            <table className="info-rank">
-              <tbody>
-                { references.results.map((ref) => (
-                  <tr key={ref.property.qname}>
-                    <th>
-                      <Schema.Icon schema={ref.schema} />
-                      <Property.Reverse model={ref.property} />
-                    </th>
-                    <td className="numeric">
-                      <FormattedNumber value={ref.count} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            </h2>
+            <ul className="info-rank">
+              { references.results.map((ref) => (
+                <li key={ref.property.qname}>
+                  <span className="key">
+                    <Schema.Icon schema={ref.schema} />
+                    <Property.Reverse model={ref.property} />
+                  </span>
+                  <span className="value">
+                    <FormattedNumber value={ref.count} />
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 

@@ -1,4 +1,7 @@
+@import 'src/app/variables.scss';
+
 .HomePage {
+  background-color: $aleph-banner-background; // fallback for when image is lacking.
   background-image: url("../../assets/europe_asia_dark.png");
   background-size: cover;
   background-repeat: no-repeat;

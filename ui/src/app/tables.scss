@@ -1,0 +1,120 @@
+@import "~@blueprintjs/core/src/blueprint.scss";
+@import "./variables.scss";
+
+// Column & row customisation for any tables.
+table {
+  // Force a table-row to be a single line, truncating contents of large cells.
+  tr.nowrap > td,
+  tr.nowrap > th {
+    max-width: 0; // somehow, this seems to make keep column widths in check.
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  th.wide, td.wide {
+    width: 30%;
+  }
+
+  td.schema {
+  }
+
+  td.entity {
+    font-weight: bold;
+  }
+
+  td.date {
+  }
+
+  td.numeric {
+    text-align: right;
+
+    // Float on the right, so that numbers overflow to the left.
+    // (FormattedNumber creates a <span>)
+    & > span {
+      float: right;
+    }
+  }
+}
+
+
+// Tables as normally used in ContentPane
+table.data-table {
+  @extend .pt-html-table, .pt-html-table-bordered;
+
+  width: 100%;
+
+  th {
+    white-space: nowrap;
+  }
+}
+
+// Two-column 'tables' as normally used in InfoPane
+ul.info-sheet,
+ul.info-rank {
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    padding-top: $aleph-grid-size;
+    padding-bottom: $aleph-grid-size;
+
+    .key, .value {
+      overflow: hidden;
+      word-wrap: break-word;
+    }
+
+    .key {
+      padding-right: $aleph-grid-size;
+    }
+
+    &:not(:last-child) {
+      border-bottom: 0.5px solid $aleph-border-color;
+    }
+  }
+}
+
+ul.info-sheet {
+  li {
+    flex-flow: row wrap;
+
+    // padding-top is split between li and .key, adding up to equal padding-bottom.
+    // (done to keep space between key and value when it wraps onto a new line)
+    padding-top: $aleph-grid-size * 0.5;
+    .key, .value {
+      padding-top: $aleph-grid-size * 0.5;
+    }
+
+    .key {
+      flex-basis: 12em;
+      color: $aleph-greyed-text;
+      flex-grow: 1;
+    }
+
+    .value {
+      // We want .key to grow only if .value is wrapped onto the next line;
+      // a near infinite grow ratio keeps the (non-wrapped) values aligned.
+      flex-grow: 1e9;
+    }
+  }
+}
+
+ul.info-rank li {
+  flex-flow: row nowrap;
+
+  .key {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .key i { // the icon, if any
+    padding-right: $aleph-grid-size * 2;
+  }
+
+  .value {
+    color: $aleph-greyed-text;
+    margin-left: auto; // = align right
+  }
+}

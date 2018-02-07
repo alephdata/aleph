@@ -11,7 +11,7 @@ class Table extends Component {
     const { columnNames, records } = this.props;
 
     return (
-      <table className="pt-html-table pt-html-table-bordered">
+      <table className="data-table">
         <thead>
           <tr>
             {columnNames.map((columnName, index) => (
