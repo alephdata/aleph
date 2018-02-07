@@ -12,7 +12,7 @@ MIN_LENGTH = Length(min=Role.PASSWORD_MIN_LENGTH)
 
 class RoleSchema(BaseSchema):
     name = String(validate=Length(min=3))
-    email = String(validate=Email())
+    email = String(dump_only=True)
     api_key = String(dump_only=True)
     password = String(validate=MIN_LENGTH, missing=None)
     type = String(dump_only=True)

@@ -13,13 +13,12 @@ class ProfileScreen extends Component {
     const { app } = this.props;
     return (
       <Screen>
-        <Breadcrumbs collection={{label: 'User Settings', links: {ui: app.ui_uri + 'settings'}}} />
+        <Breadcrumbs collection={{label: 'Settings', links: {ui: app.ui_uri + 'settings'}}} />
         <DualPane>
           <ProfileInfo/>
           <AlertsPane/>
         </DualPane>
       </Screen>
-
     );
   }
 }
