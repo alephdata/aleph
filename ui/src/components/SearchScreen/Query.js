@@ -125,6 +125,18 @@ class Query {
         return this.clear('filter:' + name);
     }
 
+    getSort() {
+        if (!this.has('sort')) return {};
+        // Currently only supporting sorting by a single field.
+        const valueString = this.getList('sort')[0];
+        const [field, ascOrDescOrUndefined] = valueString.split(':');
+        return { field, desc: ascOrDescOrUndefined === 'desc' };
+    }
+
+    sortBy(name, desc=false) {
+        return this.set('sort', `${name}:${desc ? 'desc' : 'asc'}`)
+    }
+
     limit(count) {
         return this.set('limit', count + '');
     }

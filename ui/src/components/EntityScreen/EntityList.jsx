@@ -7,6 +7,13 @@ import EntityListItem from './EntityListItem';
 import './EntityList.css';
 
 class EntityList extends Component {
+  sortColumn(field) {
+    const { query, updateQuery } = this.props;
+    const { field: sortedField, desc } = query.getSort();
+    const newQuery = query.sortBy(field, (sortedField === field && !desc));
+    updateQuery(newQuery);
+  }
+
   render() {
     const { result, aspects, intl } = this.props;
 
@@ -15,7 +22,7 @@ class EntityList extends Component {
     }
 
     const TH = ({ field }) => (
-      <th>
+      <th onClick={() => this.sortColumn(field)}>
         {/* <FormattedMessage field={`entity.list.${field}`} /> */}
         {intl.formatMessage(messages.entity.list[field])}
       </th>
