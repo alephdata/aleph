@@ -123,6 +123,30 @@ let messages = {
       },
     }
   },
+  entity: {
+    list: {
+      name: {
+        id: 'entity.list.names',
+        defaultMessage: 'Names'
+      },
+      collection_id: {
+        id: 'entity.list.collection_id',
+        defaultMessage: 'Collections'
+      },
+      schema: {
+        id: 'entity.list.schema',
+        defaultMessage: 'Type'
+      },
+      countries: {
+        id: 'entity.list.countries',
+        defaultMessage: 'Countries'
+      },
+      dates: {
+        id: 'entity.list.dates',
+        defaultMessage: 'Date'
+      },
+    }
+  }
 };
 
 messages = defineMessages(messages);

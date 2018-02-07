@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import messages from 'src/content/messages';
 
 import EntityListItem from './EntityListItem';
 
@@ -7,35 +8,32 @@ import './EntityList.css';
 
 class EntityList extends Component {
   render() {
-    const { result, aspects } = this.props;
+    const { result, aspects, intl } = this.props;
 
     if (!result || !result.results || result.total === 0) {
       return null;
     }
-    
+
+    const TH = ({ field }) => (
+      <th>
+        {/* <FormattedMessage field={`entity.list.${field}`} /> */}
+        {intl.formatMessage(messages.entity.list[field])}
+      </th>
+    );
+
     return (
       <table className="results-table pt-html-table pt-html-table-bordered">
         <thead>
           <tr>
-            <th>
-              <FormattedMessage id="entity.list.name" defaultMessage="Name"/>
-            </th>
+            <TH field="name" />
             {aspects.collections && 
-              <th>
-                <FormattedMessage id="entity.list.collection" defaultMessage="Collection"/>
-              </th>
+              <TH field="collection_id" />
             }
-            <th>
-              <FormattedMessage id="entity.list.schema" defaultMessage="Type"/>
-            </th>
+            <TH field="schema" />
             {aspects.countries && (
-              <th>
-                <FormattedMessage id="entity.list.country" defaultMessage="Country"/>
-              </th>
+              <TH field="countries" />
             )}
-            <th>
-              <FormattedMessage id="entity.list.date" defaultMessage="Date"/>
-            </th>
+            <TH field="dates" />
           </tr>
         </thead>
         <tbody>
@@ -48,4 +46,4 @@ class EntityList extends Component {
   }
 }
 
-export default EntityList;
+export default injectIntl(EntityList);
