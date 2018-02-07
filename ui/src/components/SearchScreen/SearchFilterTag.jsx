@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Tag as TagWidget } from '@blueprintjs/core';
 
 import Tag from 'src/components/common/Tag';
@@ -32,15 +33,19 @@ class SearchFilterTag extends PureComponent {
         );
       case 'ancestors':
       case 'parent.id':
-        return [
-          'inside: ',
-          <Entity.LabelById id={value} icon />
-        ];
+        return (
+          <span>
+            <FormattedMessage id="search.filterTag.ancestors" defaultMessage="inside:" />
+            <Entity.LabelById id={value} icon />
+          </span>
+        );
       case 'entities':
-        return [
-          'related: ',
-          <Entity.LabelById id={value} icon />
-        ];
+        return (
+          <span>
+            <FormattedMessage id="search.filterTag.entities" defaultMessage="related:" />
+            <Entity.LabelById id={value} icon />
+          </span>
+        );
       case 'names':
       case 'identifiers':
       case 'emails':
