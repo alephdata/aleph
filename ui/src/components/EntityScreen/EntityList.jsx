@@ -15,7 +15,7 @@ class EntityList extends Component {
   }
 
   render() {
-    const { result, aspects, intl } = this.props;
+    const { result, aspects, query, intl } = this.props;
 
     if (!result || !result.results || result.total === 0) {
       return null;
@@ -25,6 +25,9 @@ class EntityList extends Component {
       <th onClick={() => this.sortColumn(field)}>
         {/* <FormattedMessage field={`entity.list.${field}`} /> */}
         {intl.formatMessage(messages.entity.list[field])}
+        {query.getSort().field === field &&
+          <span className={`pt-icon-standard pt-icon-caret-${query.getSort().desc ? 'up' : 'down'}`}/>
+        }
       </th>
     );
 
