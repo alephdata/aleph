@@ -178,7 +178,7 @@ class CombinedQuery(AuthzQuery):
 
 
 class CollectionsQuery(AuthzQuery):
-    TEXT_FIELDS = ['label^3', 'summary', 'creator.name']
+    TEXT_FIELDS = ['label^3', 'text']
     SORT = {
         'default': [{'count': 'desc'}, {'label.kw': 'asc'}],
         'score': ['_score', {'label.kw': 'asc'}],

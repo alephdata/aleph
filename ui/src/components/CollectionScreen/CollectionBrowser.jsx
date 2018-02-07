@@ -22,8 +22,7 @@ class CollectionBrowser extends Component {
       isFetching: true,
     };
 
-    this.fetchData = debounce(this.fetchData, 200);
-    this.updateQuery = this.updateQuery.bind(this);
+    this.updateQuery = debounce(this.updateQuery.bind(this), 400);
     this.onChangeQueryText = this.onChangeQueryText.bind(this);
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
   }
