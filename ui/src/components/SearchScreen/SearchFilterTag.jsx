@@ -47,11 +47,11 @@ class SearchFilterTag extends PureComponent {
       case 'phones':
       case 'addresses':
         return (
-          [<Tag.Icon field={filter} />, value]
+          <span><Tag.Icon field={filter} /> {value}</span>
         );
       default:
         return (
-          <div><i>{filter}</i>: {value}</div>
+          <span><i>{filter}</i>: {value}</span>
         );
     }
   }
@@ -61,8 +61,7 @@ class SearchFilterTag extends PureComponent {
     return (
         <TagWidget
           className="pt-large SearchFilterTag"
-          onRemove={this.onRemove}
-        >
+          onRemove={this.onRemove}>
           {this.label(filter, value)}
         </TagWidget>
     );
