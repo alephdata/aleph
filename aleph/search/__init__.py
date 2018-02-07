@@ -203,8 +203,8 @@ class RecordsQuery(Query):
         return records_index()
 
     def get_sort(self):
-        if len(self.rows) or self.parser.text:
-            return self.SORT.get('score')
+        # if len(self.rows) or self.parser.text:
+        #     return [{''}]
         return super(RecordsQuery, self).get_sort()
 
     def get_highlight(self):
