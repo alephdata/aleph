@@ -43,7 +43,7 @@ class Query(object):
             "simple_query_string": {
                 "query": self.parser.text,
                 "fields": self.TEXT_FIELDS,
-                "default_operator": "AND"
+                "default_operator": "and"
             }
         }
 
