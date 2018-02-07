@@ -72,7 +72,7 @@ class Query {
     }
 
     has(name) {
-        return 0 === this.getList(name).length;
+        return this.getList(name).length !== 0;
     }
 
     hasFilter(name) {
