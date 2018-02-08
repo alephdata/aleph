@@ -44,7 +44,7 @@ class SignupScreen extends Component {
       <section className="small-screen">
         <h1><FormattedMessage id="signup.signup" defaultMessage="Sign up"/></h1>
         {submitted ?
-          <Callout intent={Intent.SUCCESS} iconName="tick">
+          <Callout intent={Intent.SUCCESS} icon="tick">
             <h5><FormattedMessage id="signup.inbox.title" defaultMessage="Check your inbox"/></h5>
             <FormattedMessage id="signup.inbox.desc" defaultMessage="We've sent you an email, please follow the link to complete your registration"/>
           </Callout> :

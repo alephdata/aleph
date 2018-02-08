@@ -60,7 +60,7 @@ class SearchFilterFacets extends Component {
             position={Position.BOTTOM_RIGHT}
             inline
           >
-            <Button iconName="filter" rightIconName="caret-down">
+            <Button icon="filter" rightIcon="caret-down">
               <FormattedMessage id="search.addAFilter" defaultMessage="Filters" />
             </Button>
             <CheckboxList
