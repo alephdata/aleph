@@ -3,8 +3,6 @@ import { FormattedMessage } from 'react-intl';
 
 import EntityListItem from './EntityListItem';
 
-import './EntityList.css';
-
 class EntityList extends Component {
   render() {
     const { result, aspects } = this.props;
