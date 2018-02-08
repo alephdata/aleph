@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import { injectIntl } from 'react-intl';
-import c from 'classnames';
 
 import messages from 'src/content/messages';
 import EntityListItem from './EntityListItem';
+import SortableTH from 'src/components/common/SortableTH';
 
-import './EntityList.css';
 
 class EntityList extends Component {
   sortColumn(field) {
     const { query, updateQuery } = this.props;
     const { field: sortedField, desc } = query.getSort();
     // Toggle through sorting states: ascending, descending, or unsorted.
-    let newQuery
+    let newQuery;
     if (sortedField !== field) {
       newQuery = query.sortBy(field, false);
     } else {
@@ -32,36 +31,32 @@ class EntityList extends Component {
       return null;
     }
 
-    const TH = ({ field, ...otherProps }) => {
+    const TH = ({ sortable, field, ...otherProps }) => {
       const { field: sortedField, desc } = query.getSort();
-      const isSorted = sortedField === field;
       return (
-        <th onClick={() => this.sortColumn(field)} {...otherProps}>
-          <div>
-            {/* <FormattedMessage id={`entity.list.${field}`} /> */}
-            {intl.formatMessage(messages.entity.list[field])}
-            <span className={c('caret', 'pt-icon-large',
-                               `pt-icon-caret-${isSorted && desc ? 'up' : 'down'}`,
-                               { 'hidden': !isSorted },
-                             )}/>
-          </div>
-        </th>
+        <SortableTH sortable={sortable}
+                    sorted={sortedField === field && (desc ? 'desc' : 'asc')}
+                    onClick={() => this.sortColumn(field)}
+                    {...otherProps}>
+          {/* <FormattedMessage id={`entity.list.${field}`} /> */}
+          {intl.formatMessage(messages.entity.list[field])}
+        </SortableTH>
       );
     }
 
     return (
-      <table className="EntityList data-table">
+      <table className="data-table">
         <thead>
           <tr>
-            <TH field="name" className="wide" />
+            <TH field="name" className="wide" sortable={true} />
             {aspects.collections && 
               <TH field="collection_id" />
             }
             <TH field="schema" />
             {aspects.countries && (
-              <TH field="countries" />
+              <TH field="countries" sortable={true} />
             )}
-            <TH field="dates" />
+            <TH field="dates" sortable={true} />
           </tr>
         </thead>
         <tbody>

@@ -1,7 +1,7 @@
 @import "src/app/variables.scss";
 
-.EntityList {
-  th div {
+.SortableTH {
+  div {
     display: flex;
 
     .caret {
@@ -14,7 +14,7 @@
     }
   }
 
-  th:hover div .caret {
+  &:hover div .caret {
     opacity: 0.5;
   }
 }
