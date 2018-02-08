@@ -43,21 +43,5 @@ build:
 docs:
 	$(DEVDOCKER) sphinx-build -b html -d docs/_build/doctrees ./docs docs/_build/html
 
-sanctions: services
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/ch-seco-sanctions.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/kg-fiu-national.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/coe-assembly.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/eu-eeas-sanctions.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/ua-sdfm-blacklist.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/eu-meps.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/un-sc-sanctions.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/everypolitician.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/us-bis-denied.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/gb-coh-disqualified.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/us-cia-world-leaders.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/gb-hmt-sanctionslist.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/us-ofac.yml
-	$(DEVDOCKER) aleph bulkload mappings/opensanctions/interpol-red-notices.yml
-
 
 .PHONY: build
