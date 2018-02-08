@@ -22,6 +22,10 @@ let messages = {
       id: 'status.unknown_error',
       defaultMessage: 'An unexpected error occured'
     },
+    no_route_error: {
+      id: 'status.no_route_error',
+      defaultMessage: 'No such page: {path}'
+    },
     logout_success: {
       id: 'status.logout_success',
       defaultMessage: 'Logout successful'

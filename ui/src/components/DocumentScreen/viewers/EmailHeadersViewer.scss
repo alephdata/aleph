@@ -1,18 +1,24 @@
+@import "~@blueprintjs/core/src/blueprint.scss";
 @import "src/app/variables.scss";
 
 .EmailHeadersViewer {
-    margin-bottom: $aleph-grid-size * 2;
+  margin-bottom: $aleph-grid-size * 2;
 
-    table.pt-html-table {
-        th {
-            width: 10%;
-            margin-left: $aleph-grid-size;
-        }
-        th, td {
-            border-bottom: 1px solid $aleph-border-color;
-        }
-        tbody tr:first-child td {
-            box-shadow: none;
-        }
+  table {
+    @extend .pt-html-table;
+
+    th {
+      width: 10%;
+      margin-left: $aleph-grid-size;
     }
+
+    th, td {
+      border-bottom: 1px solid $aleph-border-color;
+    }
+
+    tbody tr:first-child td {
+      // Remove border above first row.
+      box-shadow: none;
+    }
+  }
 }

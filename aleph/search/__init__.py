@@ -166,7 +166,7 @@ class CombinedQuery(AuthzQuery):
 
 
 class CollectionsQuery(AuthzQuery):
-    TEXT_FIELDS = ['label^3', 'summary', 'creator.name']
+    TEXT_FIELDS = ['label^3', 'text']
     SORT_DEFAULT = ['_score', {'label.kw': 'asc'}]
 
     def get_index(self):

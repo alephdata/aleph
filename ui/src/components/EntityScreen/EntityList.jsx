@@ -4,8 +4,6 @@ import messages from 'src/content/messages';
 
 import EntityListItem from './EntityListItem';
 
-import './EntityList.css';
-
 class EntityList extends Component {
   sortColumn(field) {
     const { query, updateQuery } = this.props;
@@ -21,8 +19,8 @@ class EntityList extends Component {
       return null;
     }
 
-    const TH = ({ field }) => (
-      <th onClick={() => this.sortColumn(field)}>
+    const TH = ({ field, ...otherProps }) => (
+      <th onClick={() => this.sortColumn(field)} {...otherProps}>
         {/* <FormattedMessage field={`entity.list.${field}`} /> */}
         {intl.formatMessage(messages.entity.list[field])}
         {query.getSort().field === field &&
@@ -32,10 +30,10 @@ class EntityList extends Component {
     );
 
     return (
-      <table className="results-table pt-html-table pt-html-table-bordered">
+      <table className="data-table">
         <thead>
           <tr>
-            <TH field="name" />
+            <TH field="name" className="wide" />
             {aspects.collections && 
               <TH field="collection_id" />
             }
@@ -47,8 +45,8 @@ class EntityList extends Component {
           </tr>
         </thead>
         <tbody>
-          {result.results.map(item =>
-            <EntityListItem key={item.id} item={item} aspects={aspects} />
+          {result.results.map(entity =>
+            <EntityListItem key={entity.id} entity={entity} aspects={aspects} />
           )}
         </tbody>
       </table>

@@ -10,7 +10,7 @@ class EmailHeadersViewer extends Component {
 
     return (
       <div className="EmailHeadersViewer">
-        <table className="pt-html-table">
+        <table>
             <tbody>
                 {headers.date && (
                   <tr>

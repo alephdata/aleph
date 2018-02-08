@@ -7,7 +7,7 @@ from aleph.model import EventLog
 blueprint = Blueprint('events', __name__)
 
 
-@blueprint.after_app_request
+# @blueprint.after_app_request
 def log_response(resp):
     if request.endpoint == 'static':
         return resp

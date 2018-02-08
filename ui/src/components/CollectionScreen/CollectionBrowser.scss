@@ -3,8 +3,9 @@
 .CollectionBrowser {
     margin-top: $aleph-grid-size * 2;
 
-    .title {
+    .header {
         margin: $aleph-grid-size;
+        // Align left side with text in the left-most cards.
         margin-left: $aleph-grid-size * 3;
         display: flex;
         flex-flow: row wrap;
@@ -12,12 +13,9 @@
         align-items: flex-end;
         justify-content: space-between;
 
-        h3 {
-            margin-bottom: 0;
-        }
-
-        .pt-input-group {
+        .filterCollectionsInput {
             max-width: 15em;
+            margin-left: auto; // make it stay on the right.
         }
     }
 
@@ -30,8 +28,9 @@
     
     .result {
         padding: $aleph-grid-size;
+        min-width: 20em;
         flex: 1 0 33%;
-        
+
         .CollectionCard {
             height: 100%;
             width: 100%;

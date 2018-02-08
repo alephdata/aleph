@@ -28,6 +28,7 @@ COLLECTION_MAPPING = {
         "countries": {"type": "keyword"},
         "category": {"type": "keyword"},
         "summary": {"type": "text"},
+        "text": {"type": "text"},
         "managed": {"type": "boolean"},
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},

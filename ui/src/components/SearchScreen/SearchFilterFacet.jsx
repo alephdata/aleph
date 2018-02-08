@@ -80,7 +80,7 @@ class SearchFilterFacet extends Component {
                isOpen={isOpen}
                onInteraction={this.onInteraction}
                inline={true} >
-        <Button rightIconName="caret-down">
+        <Button rightIcon="caret-down">
           {children}
         </Button>
         {values !== null
