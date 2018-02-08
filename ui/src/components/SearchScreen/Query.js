@@ -134,6 +134,9 @@ class Query {
     }
 
     sortBy(name, desc=false) {
+        if (!name) {
+          return this.clear('sort');
+        }
         return this.set('sort', `${name}:${desc ? 'desc' : 'asc'}`)
     }
 

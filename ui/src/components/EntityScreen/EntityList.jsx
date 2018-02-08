@@ -11,7 +11,17 @@ class EntityList extends Component {
   sortColumn(field) {
     const { query, updateQuery } = this.props;
     const { field: sortedField, desc } = query.getSort();
-    const newQuery = query.sortBy(field, (sortedField === field && !desc));
+    // Toggle through sorting states: ascending, descending, or unsorted.
+    let newQuery
+    if (sortedField !== field) {
+      newQuery = query.sortBy(field, false);
+    } else {
+      if (!desc) {
+        newQuery = query.sortBy(field, true);
+      } else {
+        newQuery = query.sortBy(null);
+      }
+    }
     updateQuery(newQuery);
   }
 
