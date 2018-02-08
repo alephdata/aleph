@@ -32,18 +32,22 @@ class EntityList extends Component {
       return null;
     }
 
-    const TH = ({ field, ...otherProps }) => (
-      <th onClick={() => this.sortColumn(field)} {...otherProps}>
-        <div>
-          {/* <FormattedMessage field={`entity.list.${field}`} /> */}
-          {intl.formatMessage(messages.entity.list[field])}
-          <span className={c('caret', 'pt-icon-large',
-                             `pt-icon-caret-${query.getSort().desc ? 'up' : 'down'}`,
-                             { 'hidden': query.getSort().field !== field }
-                           )}/>
-        </div>
-      </th>
-    );
+    const TH = ({ field, ...otherProps }) => {
+      const { field: sortedField, desc } = query.getSort();
+      const isSorted = sortedField === field;
+      return (
+        <th onClick={() => this.sortColumn(field)} {...otherProps}>
+          <div>
+            {/* <FormattedMessage id={`entity.list.${field}`} /> */}
+            {intl.formatMessage(messages.entity.list[field])}
+            <span className={c('caret', 'pt-icon-large',
+                               `pt-icon-caret-${isSorted && desc ? 'up' : 'down'}`,
+                               { 'hidden': !isSorted },
+                             )}/>
+          </div>
+        </th>
+      );
+    }
 
     return (
       <table className="EntityList data-table">

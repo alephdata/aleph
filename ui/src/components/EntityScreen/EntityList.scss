@@ -6,10 +6,15 @@
 
     .caret {
       margin-left: auto;
+      transition: opacity 0.1s;
 
       &.hidden {
-        visibility: hidden;
+        opacity: 0.1;
       }
     }
+  }
+
+  th:hover div .caret {
+    opacity: 0.5;
   }
 }
