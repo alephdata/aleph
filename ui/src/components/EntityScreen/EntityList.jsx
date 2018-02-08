@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { injectIntl } from 'react-intl';
-import messages from 'src/content/messages';
+import c from 'classnames';
 
+import messages from 'src/content/messages';
 import EntityListItem from './EntityListItem';
+
+import './EntityList.css';
 
 class EntityList extends Component {
   sortColumn(field) {
@@ -21,16 +24,19 @@ class EntityList extends Component {
 
     const TH = ({ field, ...otherProps }) => (
       <th onClick={() => this.sortColumn(field)} {...otherProps}>
-        {/* <FormattedMessage field={`entity.list.${field}`} /> */}
-        {intl.formatMessage(messages.entity.list[field])}
-        {query.getSort().field === field &&
-          <span className={`pt-icon-standard pt-icon-caret-${query.getSort().desc ? 'up' : 'down'}`}/>
-        }
+        <div>
+          {/* <FormattedMessage field={`entity.list.${field}`} /> */}
+          {intl.formatMessage(messages.entity.list[field])}
+          <span className={c('caret', 'pt-icon-large',
+                             `pt-icon-caret-${query.getSort().desc ? 'up' : 'down'}`,
+                             { 'hidden': query.getSort().field !== field }
+                           )}/>
+        </div>
       </th>
     );
 
     return (
-      <table className="data-table">
+      <table className="EntityList data-table">
         <thead>
           <tr>
             <TH field="name" className="wide" />

@@ -1,0 +1,15 @@
+@import "src/app/variables.scss";
+
+.EntityList {
+  th div {
+    display: flex;
+
+    .caret {
+      margin-left: auto;
+
+      &.hidden {
+        visibility: hidden;
+      }
+    }
+  }
+}
