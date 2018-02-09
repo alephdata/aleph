@@ -38,7 +38,6 @@ def ingest_document(document, file_path, role_id=None):
                            kwargs={'role_id': role_id},
                            queue=queue,
                            routing_key=routing_key)
-    db.session.expunge(document)
 
 
 @celery.task()
