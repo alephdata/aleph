@@ -14,7 +14,10 @@
     }
   }
 
-  &:hover div .caret {
-    opacity: 0.5;
+  &:hover div .caret.hidden {
+    opacity: 0.4;
+  }
+  &:hover div .caret:not(.hidden) {
+    opacity: 0.7;
   }
 }
