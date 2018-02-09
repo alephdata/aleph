@@ -80,7 +80,7 @@ class DocumentTagCollector(object):
         if text is None:
             return
 
-        if len(text) > DocumentTag.TEXT_LENGTH:
+        if len(text) > (DocumentTag.TEXT_LENGTH - 50):
             return
 
         if (text, type) not in self.keyed:
