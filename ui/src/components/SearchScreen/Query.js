@@ -72,7 +72,7 @@ class Query {
     }
 
     has(name) {
-        return 0 === this.getList(name).length;
+        return this.getList(name).length !== 0;
     }
 
     hasFilter(name) {
@@ -123,6 +123,21 @@ class Query {
 
     clearFilter(name) {
         return this.clear('filter:' + name);
+    }
+
+    getSort() {
+        if (!this.has('sort')) return {};
+        // Currently only supporting sorting by a single field.
+        const valueString = this.getList('sort')[0];
+        const [field, ascOrDescOrUndefined] = valueString.split(':');
+        return { field, desc: ascOrDescOrUndefined === 'desc' };
+    }
+
+    sortBy(name, desc=false) {
+        if (!name) {
+          return this.clear('sort');
+        }
+        return this.set('sort', `${name}:${desc ? 'desc' : 'asc'}`)
     }
 
     limit(count) {

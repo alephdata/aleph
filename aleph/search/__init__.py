@@ -17,10 +17,7 @@ log = logging.getLogger(__name__)
 class DocumentsQuery(AuthzQuery):
     TEXT_FIELDS = ['name^3', 'names.text^2', 'text']
     EXCLUDE_FIELDS = ['roles', 'text']
-    SORT = {
-        'default': ['_score', {'name.kw': 'asc'}],
-        'name': [{'name.kw': 'asc'}, '_score'],
-    }
+    SORT_DEFAULT = ['_score', {'name.kw': 'asc'}]
 
     def get_filters(self):
         filters = super(DocumentsQuery, self).get_filters()
@@ -109,10 +106,7 @@ class AlertDocumentsQuery(EntityDocumentsQuery):
 class EntitiesQuery(AuthzQuery):
     TEXT_FIELDS = ['name^3', 'names.text^2', 'text']
     EXCLUDE_FIELDS = ['roles', 'text']
-    SORT = {
-        'default': ['_score', {'name.kw': 'asc'}],
-        'name': [{'name.kw': 'asc'}, '_score']
-    }
+    SORT_DEFAULT = ['_score', {'name.kw': 'asc'}]
 
     def get_query(self):
         query = super(EntitiesQuery, self).get_query()
@@ -141,9 +135,6 @@ class SimilarEntitiesQuery(EntitiesQuery):
 class SuggestEntitiesQuery(EntitiesQuery):
     """Given a text prefix, find the most similar other entities."""
     INCLUDE_FIELDS = ['name', 'schema', 'fingerprints']
-    SORT = {
-        'default': ['_score', {'name.kw': 'asc'}]
-    }
 
     def __init__(self, parser):
         super(SuggestEntitiesQuery, self).__init__(parser)
@@ -168,10 +159,7 @@ class SuggestEntitiesQuery(EntitiesQuery):
 class CombinedQuery(AuthzQuery):
     TEXT_FIELDS = ['title^3', 'name^3', 'names.text^2', 'text']
     EXCLUDE_FIELDS = ['roles', 'text']
-    SORT = {
-        'default': ['_score', {'name.kw': 'asc'}],
-        'name': [{'name.kw': 'asc'}, '_score']
-    }
+    SORT_DEFAULT = ['_score', {'name.kw': 'asc'}]
 
     def get_index(self):
         return entities_index()
@@ -179,11 +167,7 @@ class CombinedQuery(AuthzQuery):
 
 class CollectionsQuery(AuthzQuery):
     TEXT_FIELDS = ['label^3', 'text']
-    SORT = {
-        'default': [{'count': 'desc'}, {'label.kw': 'asc'}],
-        'score': ['_score', {'label.kw': 'asc'}],
-        'label': [{'label.kw': 'asc'}],
-    }
+    SORT_DEFAULT = ['_score', {'label.kw': 'asc'}]
 
     def get_index(self):
         return collections_index()
@@ -208,10 +192,7 @@ class RecordsQuery(Query):
     RESULT_CLASS = RecordsQueryResult
     EXCLUDE_FIELDS = ['text']
     TEXT_FIELDS = ['text']
-    SORT = {
-        'default': [{'index': 'asc'}],
-        'score': ['_score', {'index': 'asc'}],
-    }
+    SORT_DEFAULT = [{'index': 'asc'}]
 
     def __init__(self, parser, document=None):
         super(RecordsQuery, self).__init__(parser)
@@ -222,8 +203,8 @@ class RecordsQuery(Query):
         return records_index()
 
     def get_sort(self):
-        if len(self.rows) or self.parser.text:
-            return self.SORT.get('score')
+        # if len(self.rows) or self.parser.text:
+        #     return [{''}]
         return super(RecordsQuery, self).get_sort()
 
     def get_highlight(self):

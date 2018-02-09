@@ -29,9 +29,12 @@ class Query(object):
     INCLUDE_FIELDS = None
     EXCLUDE_FIELDS = None
     TEXT_FIELDS = ['text']
-    SORT = {
-        'default': ['_score']
+    SORT_FIELDS = {
+        'label': 'label.kw',
+        'name': 'name.kw',
+        'score': '_score',
     }
+    SORT_DEFAULT = ['_score']
 
     def __init__(self, parser):
         self.parser = parser
@@ -85,8 +88,14 @@ class Query(object):
 
     def get_sort(self):
         """Pick one of a set of named result orderings."""
-        default = self.SORT.get('default')
-        return self.SORT.get(self.parser.sort, default)
+        if not len(self.parser.sorts):
+            return self.SORT_DEFAULT
+
+        sort_fields = ['_score']
+        for (field, direction) in self.parser.sorts:
+            field = self.SORT_FIELDS.get(field, field)
+            sort_fields.append({field: direction})
+        return list(reversed(sort_fields))
 
     def get_highlight(self):
         return {}
