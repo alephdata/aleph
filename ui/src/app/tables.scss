@@ -68,34 +68,20 @@ ul.info-rank {
     .key {
       padding-right: $aleph-grid-size;
     }
-
-    &:not(:last-child) {
-      border-bottom: 0.5px solid $aleph-border-color;
-    }
   }
 }
 
 ul.info-sheet {
   li {
-    flex-flow: row wrap;
-
-    // padding-top is split between li and .key, adding up to equal padding-bottom.
-    // (done to keep space between key and value when it wraps onto a new line)
-    padding-top: $aleph-grid-size * 0.5;
-    .key, .value {
-      padding-top: $aleph-grid-size * 0.5;
-    }
+    flex-direction: column;
+    padding-top: $aleph-grid-size;
 
     .key {
-      flex-basis: 12em;
       color: $aleph-greyed-text;
-      flex-grow: 1;
     }
 
     .value {
-      // We want .key to grow only if .value is wrapped onto the next line;
-      // a near infinite grow ratio keeps the (non-wrapped) values aligned.
-      flex-grow: 1e9;
+      padding-top: $aleph-grid-size * 0.5;
     }
   }
 }
