@@ -1,6 +1,6 @@
 import logging
 import exactitude
-from normality import stringify, slugify
+from normality import stringify
 from followthemoney.types import TYPES
 
 from aleph.core import db
@@ -11,6 +11,7 @@ log = logging.getLogger(__name__)
 
 class DocumentTag(db.Model, IdModel):
     """A record reflects an entity or tag extracted from a document."""
+    TEXT_LENGTH = 1024
 
     TYPE_PHONE = 'phone'
     TYPE_EMAIL = 'email'
@@ -30,7 +31,7 @@ class DocumentTag(db.Model, IdModel):
     origin = db.Column(db.Unicode(255), nullable=False, index=True)
     type = db.Column(db.Unicode(16), nullable=False)
     weight = db.Column(db.Integer, default=1)
-    text = db.Column(db.Unicode(1024), nullable=True)
+    text = db.Column(db.Unicode(TEXT_LENGTH), nullable=True)
 
     document_id = db.Column(db.Integer(), db.ForeignKey('document.id'), index=True)  # noqa
     document = db.relationship("Document", backref=db.backref('tags', cascade='all, delete-orphan'))  # noqa
@@ -75,7 +76,11 @@ class DocumentTagCollector(object):
         cleaner = DocumentTag.TYPES[type]
         text = stringify(text)
         text = cleaner.clean(text, countries=self.document.countries)
+
         if text is None:
+            return
+
+        if len(text) > DocumentTag.TEXT_LENGTH:
             return
 
         if (text, type) not in self.keyed:

@@ -44,11 +44,18 @@ class AutomatonCache(object):
             tag = self.TYPES.get(entity.schema)
             if tag is None:
                 continue
-            for term in entity.regex_terms:
-                if term in matches:
-                    matches[term].append((entity.name, tag))
+            for name in entity.names:
+                if name is None or len(name) > 120:
+                    continue
+                match = match_form(name)
+                # TODO: this is a weird heuristic, but to avoid overly
+                # aggressive matching it may make sense:
+                if match is None or ' ' not in match:
+                    continue
+                if match in matches:
+                    matches[match].append((name, tag))
                 else:
-                    matches[term] = [(entity.name, tag)]
+                    matches[match] = [(name, tag)]
 
         if not len(matches):
             return
@@ -66,10 +73,7 @@ class AhoCorasickEntityAnalyzer(Analyzer):
     cache = AutomatonCache()
 
     def analyze(self, document):
-        text = document.text
-        if text is None or len(text) <= self.MIN_LENGTH:
-            return
-        text = match_form(text)
+        text = match_form(document.text)
         if text is None or len(text) <= self.MIN_LENGTH:
             return
 
