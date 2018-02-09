@@ -31,15 +31,14 @@ def ingest_document(document, file_path, role_id=None):
     else:
         document.content_hash = archive.archive_file(file_path)
         db.session.commit()
-        queue = WORKER_QUEUE
-        routing_key = WORKER_ROUTING_KEY
-        if role_id is not None:
-            queue = USER_QUEUE
-            routing_key = USER_ROUTING_KEY
+        managed = document.collection.managed
+        queue = USER_QUEUE if managed else WORKER_QUEUE
+        routing_key = USER_ROUTING_KEY if managed else WORKER_ROUTING_KEY
         ingest.apply_async(args=[document.id],
                            kwargs={'role_id': role_id},
                            queue=queue,
                            routing_key=routing_key)
+    db.session.expunge(document)
 
 
 @celery.task()
