@@ -89,10 +89,15 @@ ul.info-sheet {
 ul.info-rank li {
   flex-flow: row nowrap;
 
+  // Ensure things stay on a single line, truncating the key if needed.
   .key {
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .value {
     white-space: nowrap;
+    overflow: visible;
   }
 
   .key i { // the icon, if any
