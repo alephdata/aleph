@@ -15,7 +15,7 @@ alembic==0.8.6
 celery == 4.1.0
 elasticsearch >= 6.0.0, <= 7.0.0
 marshmallow == 2.13.5
-psycopg2 >= 2.7.1
+psycopg2-binary >= 2.7.1
 gunicorn >= 19.6.0
 XlsxWriter == 0.6.6
 polyglot == 16.7.4
