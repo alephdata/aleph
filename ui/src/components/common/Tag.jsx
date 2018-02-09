@@ -23,7 +23,7 @@ class TagIcon extends Component {
           icon = this.state.icons[field] || 'fa-link';
 
     return (
-      <i className={`fa fa-fw ${icon}`}/>
+      <i className={`fa fa-fw ${icon}`} title={field} />
     );
   }
 }
