@@ -65,7 +65,7 @@ class SearchFilterTag extends PureComponent {
     const { filter, value } = this.props;
     return (
         <TagWidget
-          className="pt-large SearchFilterTag"
+          className="pt-large pt-minimal SearchFilterTag"
           onRemove={this.onRemove}>
           {this.label(filter, value)}
         </TagWidget>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { InputGroup } from '@blueprintjs/core';
 
 
 class SearchFilterText extends Component {
@@ -24,12 +25,14 @@ class SearchFilterText extends Component {
   }
 
   render() {
+    const { children } = this.props;
+
     return (
-      <form className="search-input pt-input-group pt-large"
+      <form className="search-input"
             onSubmit={this.onSubmit}>
-        <span className="pt-icon pt-icon-search"/>
-        <input className="pt-input" type="search"
-          onChange={this.onChange} value={this.state.value} />
+        <InputGroup type="search" leftIcon="search" className="pt-large"
+            onChange={this.onChange} value={this.state.value}
+            rightElement={children} />
       </form>
     )
   }
