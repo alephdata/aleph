@@ -25,6 +25,10 @@ services:
   unoservice:
     image: alephdata/unoservice
     restart: on-failure
+    tmpfs:
+      - /tmp
+      - /root/.config
+    mem_limit: 1g
     expose:
       - 3000
 
