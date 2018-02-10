@@ -19,7 +19,7 @@ def get_manager():
     return DocumentManager._instance
 
 
-def ingest_document(document, file_path, role_id=None):
+def ingest_document(document, file_path, role_id=None, shallow=False):
     """Given a stub document and file path, extract information.
     This does not attempt to infer metadata such as a file name."""
     document.status = Document.STATUS_PENDING
@@ -27,7 +27,8 @@ def ingest_document(document, file_path, role_id=None):
         manager = get_manager()
         manager.ingest_document(document,
                                 file_path=file_path,
-                                role_id=role_id)
+                                role_id=role_id,
+                                shallow=shallow)
     else:
         document.content_hash = archive.archive_file(file_path)
         db.session.commit()

@@ -101,7 +101,9 @@ def ingest_upload(id):
                                         foreign_id=foreign_id)
             document.schema = Document.SCHEMA_FOLDER
             document.update(meta)
-            ingest_document(document, None, role_id=request.authz.id)
+            ingest_document(document, None,
+                            role_id=request.authz.id,
+                            shallow=True)
             documents.append(document)
     finally:
         shutil.rmtree(upload_dir)

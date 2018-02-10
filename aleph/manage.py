@@ -18,6 +18,7 @@ from aleph.index.admin import delete_index, upgrade_search
 from aleph.index.documents import index_document_id
 from aleph.logic.collections import update_collection, process_collection
 from aleph.logic.collections import delete_collection
+from aleph.logic.documents import process_document_id
 from aleph.logic.alerts import check_alerts
 from aleph.logic.entities import bulk_load, reindex_entities
 from aleph.logic.xref import xref_collection
@@ -102,6 +103,17 @@ def process(foreign_id):
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
     process_collection(collection.id)
+
+
+@manager.command
+def retry():
+    """Retry importing documents which were not successfully parsed."""
+    q = Document.all_ids()
+    q = q.filter(Document.status != Document.STATUS_SUCCESS)
+    for idx, (doc_id,) in enumerate(q.all(), 1):
+        process_document_id.delay(doc_id)
+        if idx % 1000 == 0:
+            log.info("Process: %s documents...", idx)    
 
 
 @manager.command

@@ -65,7 +65,8 @@ class DocumentManager(Manager):
                               file_path=file_path,
                               role_id=parent.role_id)
 
-    def ingest_document(self, document, file_path=None, role_id=None):
+    def ingest_document(self, document, file_path=None,
+                        role_id=None, shallow=False):
         """Ingest a database-backed document.
 
         First retrieve its data and then call the actual ingestor.
@@ -76,8 +77,7 @@ class DocumentManager(Manager):
 
         if file_path is not None and not os.path.exists(file_path):
             # Probably indicative of file system encoding issues.
-            log.error("Ingest invalid path [%r]: %s",
-                      document, file_path)
+            log.error("Invalid path [%r]: %s", document, file_path)
             return
 
         try:
@@ -93,11 +93,12 @@ class DocumentManager(Manager):
                                     role_id=role_id)
             self.ingest(file_path, result=result)
 
-            if file_path is None:
+            if not shallow and file_path is None:
                 # When a directory is ingested, the data is not stored. Thus,
                 # try to recurse transparently.
                 for child in Document.by_parent(document):
-                    self.ingest_document(child, role_id=role_id)
+                    from aleph.ingest import ingest_document
+                    ingest_document(child, None, role_id=role_id)
         finally:
             db.session.rollback()
             if content_hash is not None:
