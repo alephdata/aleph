@@ -1,8 +1,9 @@
 import os
 import logging
+from tempfile import mkdtemp
 
 from ingestors import Manager
-from ingestors.util import decode_path
+from ingestors.util import decode_path, remove_directory
 
 from aleph.core import db, settings
 from aleph.model import Document, Cache
@@ -71,9 +72,16 @@ class DocumentManager(Manager):
 
         First retrieve its data and then call the actual ingestor.
         """
+        # Work path will be used by storagelayer to cache a local
+        # copy of data from an S3-based archive, and by ingestors
+        # to perform processing and generate intermediary files.
+        work_path = mkdtemp(prefix="aleph.ingest.")
         content_hash = document.content_hash
         if file_path is None and content_hash is not None:
-            file_path = self.archive.load_file(content_hash, file_name=document.safe_file_name)  # noqa
+            file_name = document.safe_file_name
+            file_path = self.archive.load_file(content_hash,
+                                               file_name=file_name,
+                                               temp_path=work_path)
 
         if file_path is not None and not os.path.exists(file_path):
             # Probably indicative of file system encoding issues.
@@ -81,12 +89,11 @@ class DocumentManager(Manager):
             return
 
         try:
-            if document.collection is not None:
-                if not len(document.languages):
-                    document.languages = document.collection.languages
+            if not len(document.languages):
+                document.languages = document.collection.languages
 
-                if not len(document.countries):
-                    document.countries = document.collection.countries
+            if not len(document.countries):
+                document.countries = document.collection.countries
 
             result = DocumentResult(self, document,
                                     file_path=file_path,
@@ -95,11 +102,12 @@ class DocumentManager(Manager):
 
             if not shallow and file_path is None:
                 # When a directory is ingested, the data is not stored. Thus,
-                # try to recurse transparently.
+                # try to recurse on the database-backed known children.
                 for child in Document.by_parent(document):
                     from aleph.ingest import ingest_document
                     ingest_document(child, None, role_id=role_id)
         finally:
             db.session.rollback()
-            if content_hash is not None:
-                self.archive.cleanup_file(content_hash)
+            # Removing the temp_path given to storagelayer makes it redundant
+            # to also call cleanup on the archive.
+            remove_directory(work_path)
