@@ -1,8 +1,8 @@
-FROM alephdata/platform:2.0.0
+FROM alephdata/platform:2.0.1
 
 # Install Python dependencies
 COPY requirements-generic.txt /tmp/
-RUN pip install -q -r /tmp/requirements-generic.txt
+RUN pip install -r /tmp/requirements-generic.txt
 COPY requirements-toolkit.txt /tmp/
 RUN pip install -r /tmp/requirements-toolkit.txt
 
