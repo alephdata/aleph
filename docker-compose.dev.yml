@@ -19,6 +19,7 @@ services:
 
   rabbitmq:
     image: rabbitmq
+    hostname: queue
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
 
