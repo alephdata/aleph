@@ -72,7 +72,8 @@ def create_app(config={}):
     celery.conf.update(
         imports=('aleph.queues'),
         broker_url=settings.BROKER_URI,
-        broker_connection_retry=False,
+        # broker_connection_retry=False,
+        broker_connection_max_retries=5,
         task_always_eager=settings.EAGER,
         task_eager_propagates=True,
         task_ignore_result=True,
