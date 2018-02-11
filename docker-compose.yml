@@ -33,6 +33,7 @@ services:
   worker:
     build: .
     command: celery -A aleph.queues -B -c 4 -l INFO worker
+    restart: on-failure
     links:
       - postgres
       - elasticsearch
