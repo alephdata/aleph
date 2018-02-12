@@ -34,9 +34,9 @@ sentry = Sentry()
 # spawned by the user can be handled more quickly through a
 # separate worker daemon and don't get boxed in behind very
 # large bulk imports. see: https://github.com/alephdata/aleph/issues/44
-USER_QUEUE = 'user'
+USER_QUEUE = '%s_user' % settings.QUEUE_PREFIX
 USER_ROUTING_KEY = 'user.process'
-WORKER_QUEUE = 'worker'
+WORKER_QUEUE = '%s_worker' % settings.QUEUE_PREFIX
 WORKER_ROUTING_KEY = 'worker.process'
 
 
@@ -51,19 +51,6 @@ def create_app(config={}):
     app.config.update({
         'SQLALCHEMY_DATABASE_URI': settings.DATABASE_URI
     })
-
-    # if settings.MAIL_SERVER and settings.ADMINS:
-    #     credentials = (settings.MAIL_USERNAME,
-    #                    settings.MAIL_PASSWORD)
-    #     subject = '[%s] Crash report' % settings.APP_TITLE
-    #     mail_handler = SMTPHandler(settings.MAIL_SERVER,
-    #                                settings.MAIL_FROM,
-    #                                settings.ADMINS,
-    #                                subject,
-    #                                credentials=credentials,
-    #                                secure=())
-    #     mail_handler.setLevel(logging.ERROR)
-    #     app.logger.addHandler(mail_handler)
 
     queues = (
         Queue(WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY),

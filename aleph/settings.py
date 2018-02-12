@@ -143,6 +143,7 @@ ELASTICSEARCH_URL = env.get('ALEPH_ELASTICSEARCH_URI', 'http://localhost:9200')
 
 # Disable delayed processing via queue
 EAGER = env_bool('ALEPH_EAGER', False)
+QUEUE_PREFIX = env.get('ALEPH_QUEUE_PREFIX', APP_NAME)
 
 BROKER_URI = 'amqp://guest:guest@localhost:5672//'
 BROKER_URI = env.get('ALEPH_BROKER_URI', BROKER_URI)

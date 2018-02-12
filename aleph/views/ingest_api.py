@@ -75,7 +75,7 @@ def ingest_upload(id):
     collection = get_db_collection(id, request.authz.WRITE)
     meta, foreign_id = _load_metadata(collection)
     parent_id = _load_parent(collection, meta)
-    upload_dir = mkdtemp()
+    upload_dir = mkdtemp(prefix='aleph.upload.')
     try:
         documents = []
         for storage in request.files.values():
