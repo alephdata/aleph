@@ -5,7 +5,7 @@ import { injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import { debounce, range } from 'lodash';
 import Waypoint from 'react-waypoint';
 
-import Query from '../SearchScreen/Query';
+import Query from 'src/components/search/Query';
 import SectionLoading from 'src/components/common/SectionLoading';
 import { fetchCollections } from 'src/actions';
 import CollectionCard from './CollectionCard';

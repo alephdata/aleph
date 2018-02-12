@@ -10,7 +10,7 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import Entity from 'src/components/EntityScreen/Entity';
 import DocumentInfo from './DocumentInfo';
-import SearchContext from 'src/components/SearchScreen/SearchContext';
+import SearchContext from 'src/components/search/SearchContext';
 
 
 class DocumentRelatedScreen extends Component {

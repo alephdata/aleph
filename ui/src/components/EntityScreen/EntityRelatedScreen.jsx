@@ -10,7 +10,7 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import EntityInfo from './EntityInfo';
 import Entity from './Entity';
-import SearchContext from 'src/components/SearchScreen/SearchContext';
+import SearchContext from 'src/components/search/SearchContext';
 
 class EntityScreen extends Component {
   componentDidMount() {

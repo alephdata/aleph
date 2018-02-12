@@ -8,7 +8,7 @@ import { fetchSearchResults } from 'src/actions';
 
 import Query from './Query';
 import SearchResult from './SearchResult';
-import SearchFilter from './SearchFilter';
+import SearchFilter from './filter/SearchFilter';
 import SectionLoading from 'src/components/common/SectionLoading';
 
 

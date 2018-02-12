@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import { withRouter } from 'react-router';
 import { injectIntl } from 'react-intl';
 
-import SearchContext from 'src/components/SearchScreen/SearchContext';
+import SearchContext from 'src/components/search/SearchContext';
 import getPath from 'src/util/getPath';
 
 import './FolderViewer.css';

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import DualPane from 'src/components/common/DualPane';
-import SearchContext from 'src/components/SearchScreen/SearchContext';
+import SearchContext from 'src/components/search/SearchContext';
 
 class CollectionContent extends Component {
   render() {
