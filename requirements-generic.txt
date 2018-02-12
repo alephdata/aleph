@@ -13,7 +13,7 @@ SQLAlchemy>=1.0.13
 alembic==0.8.6
 
 celery == 4.1.0
-librabbitmq >= 1.6.1
+# librabbitmq >= 1.6.1
 elasticsearch >= 6.0.0, <= 7.0.0
 marshmallow == 2.13.5
 psycopg2-binary >= 2.7.1
