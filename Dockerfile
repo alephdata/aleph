@@ -2,9 +2,9 @@ FROM alephdata/platform:2.0.3
 
 # Install Python dependencies
 COPY requirements-generic.txt /tmp/
-RUN pip install -r /tmp/requirements-generic.txt
+RUN pip install -r /tmp/requirements-generic.txt && rm -rf /root/.cache
 COPY requirements-toolkit.txt /tmp/
-RUN pip install -r /tmp/requirements-toolkit.txt
+RUN pip install -r /tmp/requirements-toolkit.txt && rm -rf /root/.cache
 
 # Install aleph
 COPY . /aleph
