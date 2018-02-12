@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import SearchFilterFacets from './SearchFilterFacets';
+import SearchFilterFacets from '../facets/SearchFilterFacets';
 import SearchFilterSchema from './SearchFilterSchema';
 import SearchFilterText from './SearchFilterText';
 import SearchFilterActiveTags from './SearchFilterActiveTags';
