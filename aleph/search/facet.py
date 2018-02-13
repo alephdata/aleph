@@ -10,9 +10,12 @@ class Facet(object):
     def __init__(self, name, aggregations, parser):
         self.name = name
         self.parser = parser
-        self.data = aggregations.get('scoped', {}).get(name, {}).get(name)
-        if self.data is None:
-            self.data = aggregations.get(name)
+        self.data = self.extract(aggregations, name)
+        self.cardinality = self.extract(aggregations, '%s.cardinality' % name)
+
+    def extract(self, aggregations, name):
+        data = aggregations.get('scoped', {}).get(name, {}).get(name)
+        return data or aggregations.get(name, {})
 
     def expand(self, keys):
         pass
@@ -23,42 +26,39 @@ class Facet(object):
     def to_dict(self):
         active = list(self.parser.filters.get(self.name, []))
         active.extend(self.parser.post_filters.get(self.name, []))
-        filters = len(active)
-        if 'value' in self.data:
-            return {
-                'total': self.data.get('value'),
-                'filters': filters,
-            }
+        data = {'filters': list(active)}
+        if self.parser.facet_total:
+            data['total'] = self.cardinality.get('value')
 
-        results = []
-        for bucket in self.data.get('buckets', []):
-            key = six.text_type(bucket.get('key'))
-            results.append({
-                'id': key,
-                'label': key,
-                'count': bucket.pop('doc_count', 0),
-                'active': key in active
-            })
-            if key in active:
-                active.remove(key)
+        if self.parser.facet_values:
+            results = []
+            for bucket in self.data.get('buckets', []):
+                key = six.text_type(bucket.get('key'))
+                results.append({
+                    'id': key,
+                    'label': key,
+                    'count': bucket.pop('doc_count', 0),
+                    'active': key in active
+                })
+                if key in active:
+                    active.remove(key)
 
-        for key in active:
-            results.insert(0, {
-                'id': key,
-                'label': key,
-                'count': 0,
-                'active': True
-            })
+            for key in active:
+                results.insert(0, {
+                    'id': key,
+                    'label': key,
+                    'count': 0,
+                    'active': True
+                })
 
-        self.expand([r.get('id') for r in results])
-        for result in results:
-            self.update(result, result.get('id'))
+            self.expand([r.get('id') for r in results])
+            for result in results:
+                self.update(result, result.get('id'))
 
-        results = sorted(results, key=lambda k: k['count'], reverse=True)
-        return {
-            'filters': filters,
-            'values': results,
-        }
+            data['values'] = sorted(results,
+                                    key=lambda k: k['count'],
+                                    reverse=True)
+        return data
 
 
 class SchemaFacet(Facet):
