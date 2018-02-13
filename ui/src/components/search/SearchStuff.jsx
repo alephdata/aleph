@@ -11,7 +11,7 @@ import Query from './Query';
 
 class SearchStuff extends Component {
   static propTypes = {
-    children: PropTypes.func.required,
+    children: PropTypes.func.isRequired,
   };
 
   constructor(props) {

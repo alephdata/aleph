@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 
 import DualPane from 'src/components/common/DualPane';
-import SearchContext from 'src/components/search/SearchContext';
+import SearchStuff from 'src/components/search/SearchStuff';
+import SearchResult from 'src/components/search/SearchResult';
+import SearchFilter from 'src/components/search/filter/SearchFilter';
+import SectionLoading from 'src/components/common/SectionLoading';
 
 class CollectionContent extends Component {
   render() {
@@ -14,11 +17,15 @@ class CollectionContent extends Component {
       countries: true
     };
     return (
-      <DualPane.ContentPane>
-        <SearchContext collection={collection}
-                       context={context}
-                       aspects={aspects} />
-      </DualPane.ContentPane>
+      <SearchStuff context={context} aspects={aspects}>{searchStuff => (
+        <DualPane.ContentPane>
+            <SearchFilter {...searchStuff} />
+            <SearchResult {...searchStuff} />
+            {searchStuff.isFetching && (
+              <SectionLoading />
+            )}
+        </DualPane.ContentPane>
+      )}</SearchStuff>
     );
   }
 }
