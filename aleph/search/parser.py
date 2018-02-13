@@ -113,6 +113,7 @@ class SearchQueryParser(QueryParser):
             self.limit = max(0, MAX_RESULT_WINDOW - self.offset)
         self.facet_names = self.getlist('facet')
         self.facet_size = self.getint('facet_size', 50)
+        self.facet_count = self.getbool('facet_count', False)
         self.highlight = []
 
     @property

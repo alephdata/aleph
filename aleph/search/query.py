@@ -86,15 +86,24 @@ class Query(object):
 
     def get_aggregations(self):
         """Aggregate the query in order to generate faceted results."""
-        return {
-            name: {
+        aggregations = {}
+        for facet_name in self.parser.facet_names:
+            agg = {
                 'terms': {
-                    'field': name,
+                    'field': facet_name,
                     'size': self.parser.facet_size
                 }
             }
-            for name in self.parser.facet_names
-        }
+            if self.parser.facet_count:
+                # Option to return total distinct value counts for
+                # a given facet, instead of the top buckets.
+                agg = {
+                    'cardinality': {
+                        'field': facet_name
+                    }
+                }
+            aggregations[facet_name] = agg
+        return aggregations
 
     def get_sort(self):
         """Pick one of a set of named result orderings."""

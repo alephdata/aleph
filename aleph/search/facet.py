@@ -21,10 +21,16 @@ class Facet(object):
         pass
 
     def to_dict(self):
-        results = []
         active = list(self.parser.filters.get(self.name, []))
         active.extend(self.parser.post_filters.get(self.name, []))
+        filters = len(active)
+        if 'value' in self.data:
+            return {
+                'total': self.data.get('value'),
+                'filters': filters,
+            }
 
+        results = []
         for bucket in self.data.get('buckets', []):
             key = six.text_type(bucket.get('key'))
             results.append({
@@ -50,6 +56,7 @@ class Facet(object):
 
         results = sorted(results, key=lambda k: k['count'], reverse=True)
         return {
+            'filters': filters,
             'values': results,
         }
 
