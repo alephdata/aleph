@@ -16,7 +16,7 @@ class QueryTestCase(TestCase):
     # using assertEquals, so it fails to allow lists to be
     # in any order
     def assertDictEqual(self, d1, d2, msg=None):
-        for k,v1 in d1.iteritems():
+        for k, v1 in d1.iteritems():
             self.assertIn(k, d2, msg)
             v2 = d2[k]
             self.assertEqual(v1, v2, msg)
@@ -31,19 +31,25 @@ class QueryTestCase(TestCase):
                     self.assertEqual(item1, item2)
                     has_equal = True
                     break
-                except:
+                except Exception:
                     pass
             if not has_equal:
                 self.fail('Item %r missing' % item1)
 
     def test_no_text(self):
         q = query([])
-        self.assertEqual(q.get_text_query(), {'match_all': {}})
+        self.assertEqual(q.get_text_query(), [{'match_all': {}}])
 
     def test_has_text(self):
         q = query([('q', 'search text')])
         text_q = q.get_text_query()
-        self.assertEqual(text_q['simple_query_string']['query'], 'search text')
+        self.assertEqual(text_q[0]['simple_query_string']['query'],
+                         'search text')
+
+    def test_has_prefix(self):
+        q = query([('prefix', 'tex')])
+        text_q = q.get_text_query()
+        self.assertEqual(text_q[0]['match_phrase_prefix']['text'], 'tex')
 
     def test_id_filter(self):
         q = query([
@@ -83,7 +89,7 @@ class QueryTestCase(TestCase):
     def test_offset(self):
         q = query([('offset', 10), ('limit', 100)])
         body = q.get_body()
-        self.assertDictContainsSubset({'from': 10, 'size': 100}, q.get_body())
+        self.assertDictContainsSubset({'from': 10, 'size': 100}, body)
 
     def test_post_filters(self):
         q = query([

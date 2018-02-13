@@ -29,6 +29,7 @@ class Query(object):
     INCLUDE_FIELDS = None
     EXCLUDE_FIELDS = None
     TEXT_FIELDS = ['text']
+    PREFIX_FIELD = 'text'
     SORT_FIELDS = {
         'label': 'label.kw',
         'name': 'name.kw',
@@ -40,15 +41,24 @@ class Query(object):
         self.parser = parser
 
     def get_text_query(self):
-        if not self.parser.text:
-            return {'match_all': {}}
-        return {
-            "simple_query_string": {
-                "query": self.parser.text,
-                "fields": self.TEXT_FIELDS,
-                "default_operator": "and"
-            }
-        }
+        query = []
+        if self.parser.text:
+            query.append({
+                "simple_query_string": {
+                    "query": self.parser.text,
+                    "fields": self.TEXT_FIELDS,
+                    "default_operator": "and"
+                }
+            })
+        if self.parser.prefix:
+            query.append({
+                "match_phrase_prefix": {
+                    self.PREFIX_FIELD: self.parser.prefix
+                }
+            })
+        if not len(query):
+            query.append({'match_all': {}})
+        return query
 
     def get_filters(self):
         """Apply query filters from the user interface."""
@@ -68,7 +78,7 @@ class Query(object):
         return {
             'bool': {
                 'should': [],
-                'must': [self.get_text_query()],
+                'must': self.get_text_query(),
                 'must_not': [],
                 'filter': self.get_filters()
             }

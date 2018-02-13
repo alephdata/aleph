@@ -22,6 +22,7 @@ class QueryParser(object):
         if limit is None:
             limit = min(MAX_RESULT_WINDOW, max(0, self.getint('limit', 20)))
         self.limit = limit
+        self.text = stringify(self.get('q'))
         self.prefix = stringify(self.get('prefix'))
 
     @property
@@ -112,13 +113,13 @@ class SearchQueryParser(QueryParser):
             self.limit = max(0, MAX_RESULT_WINDOW - self.offset)
         self.facet_names = self.getlist('facet')
         self.facet_size = self.getint('facet_size', 50)
-        self.text = stringify(self.get('q'))
-        self.sort = self.get('sort', 'default').strip().lower()
         self.highlight = []
 
     @property
     def highlight_terms(self):
         if self.text is not None:
             yield self.text
+        if self.prefix is not None:
+            yield self.prefix
         for term in self.highlight:
             yield term
