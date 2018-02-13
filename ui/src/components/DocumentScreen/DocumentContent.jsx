@@ -9,6 +9,7 @@ import PdfViewer from './viewers/PdfViewer';
 import ImageViewer from './viewers/ImageViewer';
 import FolderViewer from './viewers/FolderViewer';
 import EmailHeadersViewer from './viewers/EmailHeadersViewer';
+import DocumentToolbar from './DocumentToolbar';
 
 import './DocumentContent.css';
 
@@ -18,6 +19,9 @@ class DocumentContent extends Component {
 
     return (
       <DualPane.ContentPane>
+      
+        <DocumentToolbar/>
+      
         {document.status === 'fail' && (
           <section className="PartialError">
             <div className="pt-non-ideal-state">
