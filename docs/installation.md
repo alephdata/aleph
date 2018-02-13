@@ -58,7 +58,7 @@ For development purposes, you can quickly create a new user with the
 `aleph createuser` command, inside a shell (`make shell`):
 
 ```
-aleph createuser --email="user@example.com" --name="Alice" --is_admin=True --password=123abc userid123
+aleph createuser --email="user@example.com" --name="Alice" --is_admin --password=123abc userid123
 ```
 
 If you pass an email address in the `ALEPH_ADMINS` environment variable (in your `aleph.env` file) it will automatically be made admin.
