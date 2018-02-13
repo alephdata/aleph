@@ -67,6 +67,12 @@ The user's API key is returned, which you can use in the `Authorization` HTTP he
 
 If you pass a password, you can use this email address and password to log into the Web UI.
 
+### Sample Data
+
+If you want to quickly get some sample data in your Alpeh instance you can use `make shell` to run Aleph's crawldir on the `docs` directory.
+
+    aleph crawldir docs
+
 ### Frequent issues
 
 Most problems arise when the ElasticSearch container doesn't startup properly, or in time. If `upgrade` fails with errors like `NewConnectionError: <urllib3.connection.HTTPConnection object at 0x7fb11b6ab0d0>: Failed to establish a new connection: [Errno 111] Connection refused` this is what happened.
