@@ -26,7 +26,9 @@ class SearchFilterSchema extends Component {
   render() {
     const { result, query } = this.props;
     const current = query.getFilter('schema') + '' || this.ALL;
-    const values = (result && !result.isFetching) ? result.facets.schema.values : [];
+    const values = (result && result.facets && result.facets.schema)
+      ? result.facets.schema.values
+      : [];
   
     return (
       <div className="SearchFilterSchema">
