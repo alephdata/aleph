@@ -45,8 +45,6 @@ class PolyglotEntityAnalyzer(Analyzer):
 
     def tag_text(self, text, languages):
         for language in languages:
-            if len(self.languages) and language not in self.languages:
-                continue
             text = Text(text, hint_language_code=language)
             for entity in text.entities:
                 if entity.tag == 'I-LOC':
@@ -65,7 +63,9 @@ class PolyglotEntityAnalyzer(Analyzer):
 
         collector = DocumentTagCollector(document, self.ORIGIN)
         try:
-            languages = document.languages
+            languages = set(document.languages)
+            if len(self.languages):
+                languages = languages.intersection(self.languages)
             if not len(languages):
                 languages = [settings.DEFAULT_LANGUAGE]
 
