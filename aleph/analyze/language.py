@@ -10,6 +10,7 @@ THRESHOLD = 0.8
 
 
 class LanguageAnalyzer(Analyzer):
+    PRIORITY = 100
     MAX_LENGTH = 40000
     IGNORED = [
         Document.SCHEMA_PACKAGE,

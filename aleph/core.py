@@ -18,7 +18,7 @@ from urlnormalizer import query_string
 import storagelayer
 
 from aleph import settings
-from aleph.ext import get_init
+from aleph.ext import get_extensions
 from aleph.util import SessionTask
 from aleph.oauth import configure_oauth
 
@@ -97,7 +97,7 @@ def create_app(config={}):
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
-    for plugin in get_init():
+    for plugin in get_extensions('aleph.init'):
         plugin(app=app)
     return app
 

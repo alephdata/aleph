@@ -11,12 +11,4 @@ def get_extensions(section):
     if not EXTENSIONS[section]:
         for ep in iter_entry_points(section):
             EXTENSIONS[section][ep.name] = ep.load()
-    return EXTENSIONS[section]
-
-
-def get_init():
-    return get_extensions('aleph.init').values()
-
-
-def get_analyzers():
-    return get_extensions('aleph.analyzers').values()
+    return EXTENSIONS[section].values()
