@@ -7,6 +7,15 @@
     display: flex;
     padding: $aleph-grid-size;
 
+    &.active {
+      font-weight: bold;
+    }
+
+    &:not(.clickable) {
+      color: $aleph-greyed-text;
+      font-style: italic;
+    }
+
     & > .caret {
       transition: transform 100ms;
 

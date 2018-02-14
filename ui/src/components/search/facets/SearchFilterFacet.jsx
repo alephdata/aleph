@@ -15,6 +15,7 @@ class SearchFilterFacet extends Component {
     super(props);
 
     this.state = {
+      total: null,
       values: null,
       isOpen: props.initiallyOpen !== undefined ? props.initiallyOpen : this.isActive(),
     };
@@ -36,7 +37,7 @@ class SearchFilterFacet extends Component {
 
     if (needsUpdate) {
       // Invalidate previously fetched values.
-      this.setState({ values: null });
+      this.setState({ values: null, total: null });
     }
 
     // // If we just became active, open up for clarity.
@@ -54,10 +55,12 @@ class SearchFilterFacet extends Component {
   }
 
   fetchIfNeeded() {
-    const { isOpen, values } = this.state;
+    const { isOpen, values, total } = this.state;
     // TODO check if already fetching?
-    if (isOpen && values === null) {
-      this.fetchValues();
+    const fetchTotal = total === null;
+    const fetchValues = values === null && isOpen;
+    if (fetchValues || fetchTotal) {
+      this.fetchData({ fetchTotal, fetchValues });
     }
   }
 
@@ -65,18 +68,24 @@ class SearchFilterFacet extends Component {
     return props.query.getFilter(props.field).length > 0;
   }
 
-  async fetchValues() {
+  async fetchData({ fetchTotal, fetchValues }) {
     const { field, query, fetchSearchResults } = this.props;
     const params = query
       .limit(0)
       .clearFacets()
       .addFacet(field)
+      .set('facet_total', fetchTotal ? 'true' : 'false')
+      .set('facet_values', fetchValues ? 'true' : 'false')
       .set('facet_size', 500)
       .toParams();
     const { result } = await fetchSearchResults({filters: params});
-    this.setState({
-      values: result.facets[field].values,
-    });
+    const { total, values } = result.facets[field];
+    if (fetchTotal) {
+      this.setState({ total });
+    }
+    if (fetchValues) {
+      this.setState({ values });
+    }
   }
 
   onClick() {
@@ -94,7 +103,7 @@ class SearchFilterFacet extends Component {
 
   render() {
     const { query, field, intl } = this.props;
-    const { values, isOpen } = this.state;
+    const { total, values, isOpen } = this.state;
 
     const current = query.getFilter(field);
     const isActive = this.isActive();
@@ -104,14 +113,12 @@ class SearchFilterFacet extends Component {
 
     return (
       <div className="SearchFilterFacet">
-        <div className="clickable opener" onClick={this.onClick}>
+        <div className={c('opener', { clickable: total !== 0, active: isActive })} onClick={this.onClick}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
-          <font color={!isActive ? 'gray' : 'black'}>
-            {isActive
-              ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} {fieldLabel}" values={{fieldLabel, count: current.length}} />
-              : <FormattedMessage id="search.facets.filterBy" defaultMessage="Filter by {fieldLabel}" values={{fieldLabel}} />
-            }
-          </font>
+          {isActive
+            ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count: current.length, total }} />
+            : <FormattedMessage id="search.facets.filterBy" defaultMessage="Found {total} {fieldLabel}" values={{ fieldLabel, total }} />
+          }
         </div>
         <Collapse isOpen={isOpen}>
           {values !== null
