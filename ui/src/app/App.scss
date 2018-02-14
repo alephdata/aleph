@@ -64,3 +64,11 @@ pre {
     min-height: 30vh;
   }
 }
+
+.clickable {
+  cursor: pointer;
+
+  &:hover {
+    background-color: $aleph-hover-background;
+  }
+}
