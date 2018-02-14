@@ -3,13 +3,17 @@
 .SearchFilterFacet {
   border-bottom: 1px solid $aleph-border-color;
 
-  .button {
+  & > .opener {
     display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin: 0;
-    padding-top: $aleph-grid-size;
-    padding-bottom: $aleph-grid-size;
+    padding: $aleph-grid-size;
+
+    & > .caret {
+      transition: transform 100ms;
+
+      &.rotate {
+        transform: rotate(90deg);
+      }
+    }
   }
 
   .CheckboxList {

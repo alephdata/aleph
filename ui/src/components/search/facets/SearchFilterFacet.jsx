@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Button, Collapse, Spinner } from '@blueprintjs/core';
+import { Icon, Collapse, Spinner } from '@blueprintjs/core';
+import c from 'classnames';
 
 import messages from 'src/content/messages';
 import { fetchSearchResults } from 'src/actions';
@@ -18,7 +19,7 @@ class SearchFilterFacet extends Component {
       isOpen: this.isActive(),
     };
 
-    this.onInteraction = this.onInteraction.bind(this);
+    this.onClick = this.onClick.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.isActive = this.isActive.bind(this);
   }
@@ -69,7 +70,7 @@ class SearchFilterFacet extends Component {
     });
   }
 
-  onInteraction() {
+  onClick() {
     this.setState(
       state => ({ ...state, isOpen: !state.isOpen }),
     );
@@ -88,15 +89,21 @@ class SearchFilterFacet extends Component {
 
     const current = query.getFilter(field);
     const isActive = this.isActive();
-    const fieldLabel = intl.formatMessage(messages.search.filter[field]);
+    const fieldLabel = messages.search.filter[field]
+      ? intl.formatMessage(messages.search.filter[field])
+      : field;
 
     return (
       <div className="SearchFilterFacet">
-        <Button className="button pt-minimal" rightIcon="caret-down" onClick={this.onInteraction}>
+        <div className="clickable opener" onClick={this.onClick}>
+          <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
           <font color={!isActive ? 'gray' : 'black'}>
-            Filter{isActive && 'ing'} by {fieldLabel}
+            {isActive
+              ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} {fieldLabel}" values={{fieldLabel, count: current.length}} />
+              : <FormattedMessage id="search.facets.filterBy" defaultMessage="Filter by {fieldLabel}" values={{fieldLabel}} />
+            }
           </font>
-        </Button>
+        </div>
         <Collapse isOpen={isOpen}>
           {values !== null
             ? <CheckboxList items={values}

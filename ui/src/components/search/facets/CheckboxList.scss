@@ -2,8 +2,8 @@
 
 .CheckboxList {
   list-style: none;
+  padding-left: 0;
   margin: 0;
-  padding: ($aleph-grid-size / 2) 0;
 
   & > li {
     position: relative;
