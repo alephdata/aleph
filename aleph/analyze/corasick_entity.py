@@ -1,20 +1,17 @@
 import logging
-from threading import RLock
-from ahocorasick import Automaton, EMPTY
+from normality import normalize
+from ahocorasick import Automaton
 
 from aleph import settings
-from aleph.util import match_form
 from aleph.model import Entity
 from aleph.analyze.analyzer import Analyzer
 from aleph.model import DocumentTag, DocumentTagCollector
 
-
 log = logging.getLogger(__name__)
-lock = RLock()
 
 
-class AutomatonCache(object):
-
+class AhoCorasickEntityAnalyzer(Analyzer):
+    MIN_LENGTH = 20
     TYPES = {
         'Person': DocumentTag.TYPE_PERSON,
         'Organization': DocumentTag.TYPE_ORGANIZATION,
@@ -23,24 +20,27 @@ class AutomatonCache(object):
     }
 
     def __init__(self):
-        self.latest = None
-        self.automaton = Automaton()
-        self.matches = {}
+        self.active = settings.ANALYZE_POLYGLOT
 
-    def generate(self):
-        with lock:
-            self._generate()
+    def match_form(self, text):
+        """Turn a string into a form appropriate for name matching."""
+        # The goal of this function is not to retain a readable version of the
+        # string, but rather to yield a normalised version suitable for
+        # comparisons and machine analysis.
+        text = normalize(text, lowercase=True, ascii=True)
+        if text is None:
+            return
+        # TODO: this is a weird heuristic, but to avoid overly aggressive
+        # matching it may make sense:
+        if ' ' not in text:
+            return
+        return text.encode('utf-8')
 
-    def _generate(self):
-        latest = Entity.latest()
-        if latest is None:
-            return
-        if self.latest is not None and self.latest >= latest:
-            return
-        self.latest = latest
+    def build_automaton(self):
+        q = Entity.all()
+        q = q.filter(Entity.schema.in_(self.TYPES.keys()))
 
         matches = {}
-        q = Entity.all()
         for entity in q:
             tag = self.TYPES.get(entity.schema)
             if tag is None:
@@ -48,10 +48,8 @@ class AutomatonCache(object):
             for name in entity.names:
                 if name is None or len(name) > 120:
                     continue
-                match = match_form(name)
-                # TODO: this is a weird heuristic, but to avoid overly
-                # aggressive matching it may make sense:
-                if match is None or ' ' not in match:
+                match = self.match_form(name)
+                if match is None:
                     continue
                 if match in matches:
                     matches[match].append((name, tag))
@@ -61,34 +59,41 @@ class AutomatonCache(object):
         if not len(matches):
             return
 
+        automaton = Automaton()
         for term, entities in matches.iteritems():
-            self.automaton.add_word(term.encode('utf-8'), entities)
-        self.automaton.make_automaton()
-        log.info('Generated automaton with %s terms', len(matches))
+            automaton.add_word(term, entities)
+        automaton.make_automaton()
+        return automaton
 
-
-class AhoCorasickEntityAnalyzer(Analyzer):
-    MIN_LENGTH = 20
-
-    cache = AutomatonCache()
-
-    def __init__(self):
-        self.active = settings.ANALYZE_POLYGLOT
+    @property
+    def automaton(self):
+        """Generate an Aho-Corasick matcher for database-stored entities."""
+        # This is technically incorrect because database entities can be 
+        # added at any time and the automaton here will not be updated.
+        # In earlier versions of Aleph there used to be a lot of code to
+        # make sure this was always the latest version. It produced a lot
+        # of overhead, while the workers are restarted every couple of
+        # minutes anyway -- so: meh.
+        cls = type(self)
+        if not hasattr(cls, '_automaton'):
+            cls._automaton = self.build_automaton()
+        return cls._automaton
 
     def analyze(self, document):
         collector = DocumentTagCollector(document, 'corasick')
-        self.cache.generate()
-        if self.cache.automaton.kind == EMPTY:
+        if self.automaton is None:
             return
 
         for text in document.texts:
             if len(text) <= self.MIN_LENGTH:
                 continue
-            text = match_form(text)
-            text = text.encode('utf-8')
-            for match in self.cache.automaton.iter(text):
+            text = self.match_form(text)
+            if text is None:
+                continue
+            for match in self.automaton.iter(text):
                 for (match_text, tag) in match[1]:
                     collector.emit(match_text, tag)
 
-        log.info('Aho Corasick extraced %s entities.', len(collector))
+        if len(collector):
+            log.info('Aho Corasick extraced %s entities.', len(collector))
         collector.save()

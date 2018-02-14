@@ -163,11 +163,5 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             q = q.filter(Permission.role_id.in_(authz.roles))
         return q
 
-    @classmethod
-    def latest(cls):
-        q = db.session.query(func.max(cls.updated_at))
-        q = q.filter(cls.deleted_at == None)  # noqa
-        return q.scalar()
-
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)

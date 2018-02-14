@@ -1,4 +1,5 @@
 from pprint import pprint  # noqa
+from normality import normalize
 
 from aleph.core import es
 from aleph.model import Entity
@@ -6,7 +7,6 @@ from aleph.index.core import collection_index, collections_index
 from aleph.index.core import entities_index, entity_index
 from aleph.index.core import records_index
 from aleph.index.util import query_delete, unpack_result, index_form
-from aleph.util import match_form
 
 
 def index_collection(collection):
@@ -77,7 +77,7 @@ def index_collection(collection):
         countries = aggregations['languages']['buckets']
         data['languages'] = [c['key'] for c in countries]
 
-    texts.extend([match_form(t) for t in texts])
+    texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)
     es.index(index=collection_index(),
              doc_type='doc',
