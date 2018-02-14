@@ -5,6 +5,7 @@ import logging
 from polyglot.text import Text
 from normality import collapse_spaces
 
+from aleph import settings
 from aleph.analyze.analyzer import Analyzer
 from aleph.model import Document, DocumentTag, DocumentTagCollector
 
@@ -25,6 +26,9 @@ class PolyglotEntityAnalyzer(Analyzer):
         Document.SCHEMA_IMAGE,
         Document.SCHEMA_TABLE
     ]
+
+    def __init__(self):
+        self.active = settings.ANALYZE_POLYGLOT
 
     def analyze(self, document):
         if document.schema in self.IGNORED:

@@ -131,14 +131,9 @@ def get_archive():
     return settings._aleph_archive
 
 
-def get_language_whitelist():
-    return [c.lower().strip() for c in settings.LANGUAGES]
-
-
 app_ui_url = LocalProxy(get_app_ui_url)
 es = LocalProxy(get_es)
 archive = LocalProxy(get_archive)
-language_whitelist = LocalProxy(get_language_whitelist)
 
 
 def url_for(*a, **kw):

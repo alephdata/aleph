@@ -6,7 +6,7 @@ log = logging.getLogger(__name__)
 class Analyzer(object):
 
     def __init__(self):
-        self.disabled = False
+        self.active = True
 
     def analyze(self, document):
         pass

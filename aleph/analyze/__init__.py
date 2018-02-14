@@ -26,7 +26,7 @@ def analyze_document(document):
 
     for cls in get_analyzers():
         analyzer = cls()
-        if not analyzer.disabled:
+        if analyzer.active:
             analyzer.analyze(document)
 
     db.session.add(document)

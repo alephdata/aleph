@@ -2,6 +2,7 @@ import logging
 from threading import RLock
 from ahocorasick import Automaton, EMPTY
 
+from aleph import settings
 from aleph.util import match_form
 from aleph.model import Entity
 from aleph.analyze.analyzer import Analyzer
@@ -71,6 +72,9 @@ class AhoCorasickEntityAnalyzer(Analyzer):
     MIN_LENGTH = 100
 
     cache = AutomatonCache()
+
+    def __init__(self):
+        self.active = settings.ANALYZE_POLYGLOT
 
     def analyze(self, document):
         text = match_form(document.text)

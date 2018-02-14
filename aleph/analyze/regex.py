@@ -1,7 +1,7 @@
 import re
 import logging
-from exactitude import phones
 
+from aleph import settings
 from aleph.analyze.analyzer import Analyzer
 from aleph.model import DocumentTag, DocumentTagCollector
 
@@ -32,9 +32,15 @@ class EMailAnalyzer(RegexAnalyzer):
     ORIGIN = 'regex:email'
     TYPE = DocumentTag.TYPE_EMAIL
 
+    def __init__(self):
+        self.active = settings.ANALYZE_EMAILS
+
 
 class PhoneNumberAnalyzer(RegexAnalyzer):
     REGEX = r'(\+?[\d\-\(\)\/\s]{5,})'
     RE = re.compile(REGEX, re.IGNORECASE)
     ORIGIN = 'regex:phones'
     TYPE = DocumentTag.TYPE_PHONE
+
+    def __init__(self):
+        self.active = settings.ANALYZE_PHONES
