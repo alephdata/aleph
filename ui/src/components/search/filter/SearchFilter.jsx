@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import SearchFilterFacets from '../facets/SearchFilterFacets';
 import SearchFilterSchema from './SearchFilterSchema';
 import SearchFilterText from './SearchFilterText';
 import SearchFilterActiveTags from './SearchFilterActiveTags';
@@ -20,7 +19,6 @@ class SearchFilter extends Component {
                                       query={query} updateQuery={updateQuery} />
             </SearchFilterText>
           </div>
-          <SearchFilterFacets aspects={aspects} query={query} updateQuery={updateQuery} />
         </div>
         <SearchFilterSchema query={query} updateQuery={updateQuery} result={result} />
       </div>

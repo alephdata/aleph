@@ -156,14 +156,6 @@ class Query {
         return this.set('facet', []);
     }
 
-    toggleUiFacet(name) {
-        return this.toggle('uifacet', name);
-    }
-
-    getUiFacets() {
-        return this.getList('uifacet');
-    }
-
     sameAs(other) {
         return this.toLocation() === other.toLocation()
             && queryString.stringify(this.context) === queryString.stringify(other.context);

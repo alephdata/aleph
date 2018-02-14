@@ -1,7 +1,20 @@
 @import "src/app/variables.scss";
 
-.SearchFilterFacet .CheckboxList {
-  width: 250px;
-  overflow: auto;
-  max-height: 50vh;
+.SearchFilterFacet {
+  border-bottom: 1px solid $aleph-border-color;
+
+  .button {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin: 0;
+    padding-top: $aleph-grid-size;
+    padding-bottom: $aleph-grid-size;
+  }
+
+  .CheckboxList {
+    overflow: auto;
+    max-height: 20em;
+    margin-bottom: $aleph-grid-size * 2;
+  }
 }

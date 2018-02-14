@@ -1,30 +1,14 @@
 import React, { Component } from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import { Button, Popover, Position } from '@blueprintjs/core';
-import { union } from 'lodash/fp';
 
-import messages from 'src/content/messages';
 import SearchFilterFacet from './SearchFilterFacet';
-import CheckboxList from './CheckboxList';
 
 import './SearchFilterFacets.css';
 
 class SearchFilterFacets extends Component {
-  constructor(props) {
-    super(props);
-
-    this.toggleFacet = this.toggleFacet.bind(this);
-  }
-
-  toggleFacet(filterName) {
-    const { query, updateQuery } = this.props;
-    updateQuery(query.toggleUiFacet(filterName), { replace: true });
-  }
-
   render() {
-    const { aspects, query, updateQuery, intl } = this.props;
+    const { aspects, query, updateQuery } = this.props;
 
-    const possibleFacets = [
+    let possibleFacets = [
       'countries',
       'languages',
       'emails',
@@ -34,46 +18,25 @@ class SearchFilterFacets extends Component {
       'mime_type',
       'author',
     ];
-
-    let shownFacets = query.getUiFacets();
     if (aspects.collections) {
-      // The Collections facet is treated specially. Always show it (if sensible).
-      shownFacets = union(['collection_id'])(shownFacets);
+      possibleFacets = ['collection_id', ...possibleFacets];
     }
 
-    const getLabel = filterName => intl.formatMessage(messages.search.filter[filterName]);
-
     return (
-      <div className="SearchFilterFacets pt-large">
-        {shownFacets.map(filterName => (
-          <SearchFilterFacet
-            query={query}
-            updateQuery={updateQuery}
-            field={filterName}
-            key={filterName}
-          >
-            {getLabel(filterName)}
-          </SearchFilterFacet>
-        ))}
-        {possibleFacets && (
-          <Popover
-            position={Position.BOTTOM_RIGHT}
-            inline
-          >
-            <Button icon="filter" rightIcon="caret-down">
-              <FormattedMessage id="search.addAFilter" defaultMessage="Filters" />
-            </Button>
-            <CheckboxList
-              items={possibleFacets.map(name => ({ id: name, label: getLabel(name) }))}
-              selectedItems={shownFacets}
-              onItemClick={this.toggleFacet}
+      <ul className="SearchFilterFacets pt-large">
+        {possibleFacets.map(filterName => (
+          <li className="facet" key={filterName}>
+            <SearchFilterFacet
+              query={query}
+              updateQuery={updateQuery}
+              field={filterName}
+              key={filterName}
             />
-          </Popover>
-        )}
-      </div>
+          </li>
+        ))}
+      </ul>
     );
   }
 }
 
-SearchFilterFacets = injectIntl(SearchFilterFacets);
 export default SearchFilterFacets;

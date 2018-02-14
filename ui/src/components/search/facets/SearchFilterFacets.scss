@@ -2,9 +2,8 @@
 
 .SearchFilterFacets {
   display: flex;
-  flex-flow: row wrap;
-  
-  & > * {
-    margin: 0 1px;
-  }
+  flex-flow: column nowrap;
+
+  padding-left: 0;
+  list-style: none;
 }

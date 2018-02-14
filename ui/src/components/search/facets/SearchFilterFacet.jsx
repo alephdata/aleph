@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Popover, Position, Spinner } from '@blueprintjs/core';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { Button, Collapse, Spinner } from '@blueprintjs/core';
 
+import messages from 'src/content/messages';
 import { fetchSearchResults } from 'src/actions';
 import CheckboxList from './CheckboxList';
 
@@ -13,16 +15,16 @@ class SearchFilterFacet extends Component {
 
     this.state = {
       values: null,
-      isOpen: false,
+      isOpen: this.isActive(),
     };
 
     this.onInteraction = this.onInteraction.bind(this);
     this.onSelect = this.onSelect.bind(this);
+    this.isActive = this.isActive.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     const { field, query } = this.props;
-    const { isOpen } = this.state;
     const needsUpdate = (
       nextProps.field !== field ||
       // If the query changed, our known values are outdated; except if the only
@@ -34,10 +36,23 @@ class SearchFilterFacet extends Component {
     if (needsUpdate) {
       // Invalidate previously fetched values.
       this.setState({ values: null });
-      if (isOpen) {
-        this.fetchValues();
-      }
     }
+
+    // // If we just became active, open up for clarity.
+    // if (this.isActive(nextProps) && !this.isActive(this.props)) {
+    //   this.setState({ isOpen: true });
+    // }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const { isOpen, values } = nextState;
+    if (isOpen && values === null) {
+      this.fetchValues();
+    }
+  }
+
+  isActive(props = this.props) {
+    return props.query.getFilter(props.field).length > 0;
   }
 
   async fetchValues() {
@@ -54,12 +69,10 @@ class SearchFilterFacet extends Component {
     });
   }
 
-  onInteraction(nextOpenState) {
-    this.setState({ isOpen: nextOpenState });
-
-    if (nextOpenState === true && this.state.values === null) {
-      this.fetchValues();
-    }
+  onInteraction() {
+    this.setState(
+      state => ({ ...state, isOpen: !state.isOpen }),
+    );
   }
 
   onSelect(value) {
@@ -70,29 +83,33 @@ class SearchFilterFacet extends Component {
   }
 
   render() {
-    const { query, children, field } = this.props;
+    const { query, field, intl } = this.props;
     const { values, isOpen } = this.state;
+
     const current = query.getFilter(field);
+    const isActive = this.isActive();
+    const fieldLabel = intl.formatMessage(messages.search.filter[field]);
 
     return (
-      <Popover popoverClassName="SearchFilterFacet"
-               position={Position.BOTTOM_RIGHT}
-               isOpen={isOpen}
-               onInteraction={this.onInteraction}
-               inline={true} >
-        <Button rightIcon="caret-down">
-          {children}
+      <div className="SearchFilterFacet">
+        <Button className="button pt-minimal" rightIcon="caret-down" onClick={this.onInteraction}>
+          <font color={!isActive ? 'gray' : 'black'}>
+            Filter{isActive && 'ing'} by {fieldLabel}
+          </font>
         </Button>
-        {values !== null
-          ? <CheckboxList items={values}
-                          selectedItems={current}
-                          onItemClick={this.onSelect} />
-          : <Spinner className="pt-large" />
-        }
-      </Popover>
+        <Collapse isOpen={isOpen}>
+          {values !== null
+            ? <CheckboxList items={values}
+                            selectedItems={current}
+                            onItemClick={this.onSelect} />
+            : <Spinner className="pt-large" />
+          }
+        </Collapse>
+      </div>
     );
   }
 }
 
+SearchFilterFacet = injectIntl(SearchFilterFacet);
 SearchFilterFacet = connect(null, { fetchSearchResults })(SearchFilterFacet);
 export default SearchFilterFacet;
