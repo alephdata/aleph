@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import regex
 import logging
 from polyglot.text import Text
+from polyglot.downloader import downloader
 from normality import collapse_spaces
 
 from aleph import settings
@@ -30,19 +31,23 @@ class PolyglotEntityAnalyzer(Analyzer):
     def __init__(self):
         self.active = settings.ANALYZE_POLYGLOT
 
-    def analyze(self, document):
-        if document.schema in self.IGNORED:
-            return
+    @property
+    def languages(self):
+        cls = type(self)
+        if not hasattr(cls, '_languages'):
+            try:
+                packages = downloader.packages()
+                packages = [p for p in packages if p.task == 'ner2']
+                cls._languages = [p.language for p in packages]
+            except Exception:
+                log.info("Cannot load polyglot language list.")
+        return cls._languages
 
-        collector = DocumentTagCollector(document, self.ORIGIN)
-        text = document.text
-        if text is None or len(text) <= self.MIN_LENGTH:
-            return
-        try:
-            hint_language_code = None
-            if len(document.languages) == 1:
-                hint_language_code = document.languages[0]
-            text = Text(text, hint_language_code=hint_language_code)
+    def tag_text(self, text, languages):
+        for language in languages:
+            if len(self.languages) and language not in self.languages:
+                continue
+            text = Text(text, hint_language_code=language)
             for entity in text.entities:
                 if entity.tag == 'I-LOC':
                     continue
@@ -52,14 +57,27 @@ class PolyglotEntityAnalyzer(Analyzer):
                 label = collapse_spaces(label)
                 if ' ' not in label or len(label) < 4 or len(label) > 200:
                     continue
-                # log.info("Entity [Doc %s]: %s [%s]",
-                #          document.id, label, entity.tag)
-                collector.emit(label, self.TYPES[entity.tag])
+                yield label, entity.tag
 
+    def analyze(self, document):
+        if document.schema in self.IGNORED:
+            return
+
+        collector = DocumentTagCollector(document, self.ORIGIN)
+        try:
+            languages = document.languages
+            if not len(languages):
+                languages = [settings.DEFAULT_LANGUAGE]
+
+            for text in document.texts:
+                if len(text) <= self.MIN_LENGTH:
+                    continue
+                for label, tag in self.tag_text(text, languages):
+                    # log.info("Entity [%s]: %s", document.id, label)
+                    collector.emit(label, self.TYPES[tag])
         except ValueError as ve:
             log.warning('NER value error: %r', ve)
-        except Exception as ex:
-            log.warning('NER failed: %r', ex)
-        finally:
-            collector.save()
+
+        collector.save()
+        if len(collector):
             log.info('Polyglot extracted %s entities.', len(collector))

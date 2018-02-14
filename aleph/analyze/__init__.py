@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 import logging
-from timeit import default_timer as timer
 from polyglot.downloader import downloader
 
 from aleph.core import db
@@ -20,9 +19,7 @@ def install_analyzers():
 
 def analyze_document(document):
     """Run analyzers (such as NER) on a given document."""
-    log.info("Analyze document [%s]: %s",
-             document.id, document.title)
-    start = timer()
+    log.info("Analyze document [%s]: %s", document.id, document.title)
 
     for cls in get_analyzers():
         analyzer = cls()
@@ -31,6 +28,3 @@ def analyze_document(document):
 
     db.session.add(document)
     db.session.commit()
-    end = timer()
-    log.info("Completed analysis [%s]: %s (elapsed: %.2fs)",
-             document.id, document.title, end - start)

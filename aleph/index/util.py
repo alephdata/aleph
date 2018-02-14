@@ -6,6 +6,8 @@ from normality import stringify, latinize_text, collapse_spaces
 from aleph.core import es
 
 log = logging.getLogger(__name__)
+
+# This means that text beyond the first 100 MB will not be indexed
 INDEX_MAX_LEN = 1024 * 1024 * 100
 TIMEOUT = '60m'
 REQUEST_TIMEOUT = 60 * 60 * 2

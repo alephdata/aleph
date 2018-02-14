@@ -1,4 +1,3 @@
-import six
 import logging
 from sqlalchemy.dialects.postgresql import JSONB
 
@@ -24,10 +23,8 @@ class DocumentRecord(db.Model):
         """Utility method to get all text snippets in a record."""
         if self.data is not None:
             for value in self.data.values():
-                if isinstance(value, six.text_type):
-                    yield value
-        if self.text is not None:
-            yield self.text
+                yield value
+        yield self.text
 
     @classmethod
     def find_records(cls, ids):

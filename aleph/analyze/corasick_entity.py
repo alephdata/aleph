@@ -68,8 +68,7 @@ class AutomatonCache(object):
 
 
 class AhoCorasickEntityAnalyzer(Analyzer):
-    ORIGIN = 'regex'
-    MIN_LENGTH = 100
+    MIN_LENGTH = 20
 
     cache = AutomatonCache()
 
@@ -77,17 +76,19 @@ class AhoCorasickEntityAnalyzer(Analyzer):
         self.active = settings.ANALYZE_POLYGLOT
 
     def analyze(self, document):
-        text = match_form(document.text)
-        if text is None or len(text) <= self.MIN_LENGTH:
+        collector = DocumentTagCollector(document, 'corasick')
+        self.cache.generate()
+        if self.cache.automaton.kind == EMPTY:
             return
 
-        collector = DocumentTagCollector(document, self.ORIGIN)
-        self.cache.generate()
-        if self.cache.automaton.kind != EMPTY:
+        for text in document.texts:
+            if len(text) <= self.MIN_LENGTH:
+                continue
+            text = match_form(text)
             text = text.encode('utf-8')
             for match in self.cache.automaton.iter(text):
-                for (text, tag) in match[1]:
-                    collector.emit(text, tag)
+                for (match_text, tag) in match[1]:
+                    collector.emit(match_text, tag)
 
         log.info('Aho Corasick extraced %s entities.', len(collector))
         collector.save()

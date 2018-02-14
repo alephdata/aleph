@@ -1,3 +1,4 @@
+import six
 import logging
 from followthemoney import model
 from sqlalchemy import func
@@ -26,10 +27,6 @@ class Document(db.Model, DatedModel, Metadata):
     SCHEMA_IMAGE = 'Image'
     SCHEMA_TABLE = 'Table'
     SCHEMA_EMAIL = 'Email'
-
-    # This means that text beyond the first 100 MB will not be indexed or
-    # processed using NLP.
-    MAX_TEXT_LENGTH = 1024 * 1024 * 100
 
     STATUS_PENDING = 'pending'
     STATUS_SUCCESS = 'success'
@@ -155,40 +152,41 @@ class Document(db.Model, DatedModel, Metadata):
             db.session.bulk_insert_mappings(DocumentRecord, chunk)
 
     @property
-    def texts(self):
-        if self.title is not None:
-            yield self.title
-        if self.file_name is not None:
-            yield self.file_name
-        if self.source_url is not None:
-            yield self.source_url
-        if self.summary is not None:
-            yield self.summary
-        if self.author is not None:
-            yield self.author
-        if self.generator is not None:
-            yield self.generator
+    def raw_texts(self):
+        yield self.title
+        yield self.file_name
+        yield self.source_url
+        yield self.summary
+        yield self.author
+        yield self.generator
         if self.status != self.STATUS_SUCCESS:
             return
-        if self.body_text is not None:
-            yield self.body_text[:self.MAX_TEXT_LENGTH]
 
+        yield self.body_text
         if self.supports_records:
             # iterate over all the associated records.
-            length = 0
             pq = db.session.query(DocumentRecord)
             pq = pq.filter(DocumentRecord.document_id == self.id)
             pq = pq.order_by(DocumentRecord.index.asc())
-            for record in pq.yield_per(1000):
+            for record in pq.yield_per(10000):
                 for text in record.texts:
                     yield text
-                    length += len(text)
-                if length >= self.MAX_TEXT_LENGTH:
-                    break
 
     @property
-    def text(self):
-        return '\n\n'.join(self.texts)
+    def texts(self):
+        for text in self.raw_texts:
+            if not isinstance(text, six.string_types):
+                continue
+            if not len(text):
+                continue
+            try:
+                # try to exclude numeric data from
+                # spreadsheets
+                float(text)
+                continue
+            except Exception:
+                pass
+            yield text
 
     @classmethod
     def pending_count(cls, collection_id=None):

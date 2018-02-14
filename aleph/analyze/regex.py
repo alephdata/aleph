@@ -19,10 +19,11 @@ class RegexAnalyzer(Analyzer):
 
     def analyze(self, document):
         collector = DocumentTagCollector(document, self.ORIGIN)
-        for match in self.RE.finditer(document.text):
-            text = self.extract_match(document, match)
-            if text is not None:
-                collector.emit(text, self.TYPE)
+        for text in document.texts:
+            for match in self.RE.finditer(text):
+                match_text = self.extract_match(document, match)
+                if match_text is not None:
+                    collector.emit(match_text, self.TYPE)
         collector.save()
 
 
