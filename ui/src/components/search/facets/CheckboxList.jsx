@@ -21,7 +21,7 @@ const CheckboxList = ({ items, selectedItems, onItemClick }) => (
         <li className="clickable" onClick={() => onItemClick(item.id)} key={item.id}>
           <Tick isTicked={selectedItems.includes(item.id)} />
           <span className="label" title={item.label}>{item.label}</span>
-          {item.count && (
+          {item.count !== undefined && (
             <span className="count"><FormattedNumber value={item.count} /></span>
           )}
         </li>
