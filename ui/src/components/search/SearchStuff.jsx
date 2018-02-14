@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { isBoolean, debounce } from 'lodash';
+import { debounce } from 'lodash';
 
 import { fetchSearchResults } from 'src/actions';
 
@@ -39,14 +39,8 @@ class SearchStuff extends Component {
 
   fetchData() {
     this.setState({isFetching: true});
-    const { fetchSearchResults, aspects = {} } = this.props;
-
+    const { fetchSearchResults } = this.props;
     let query = this.getQuery();
-
-    aspects.filter = isBoolean(aspects.filter) ? aspects.filter : true;
-    if (aspects.filter) {
-      query = query.addFacet('schema');
-    }
     query = query.setFilter('schemata', 'Thing');
 
     fetchSearchResults({

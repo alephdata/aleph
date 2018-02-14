@@ -9,6 +9,7 @@ class SearchFilterFacets extends Component {
     const { aspects, query, updateQuery } = this.props;
 
     let possibleFacets = [
+      'schema',
       'countries',
       'languages',
       'emails',
@@ -27,6 +28,7 @@ class SearchFilterFacets extends Component {
         {possibleFacets.map(filterName => (
           <li className="facet" key={filterName}>
             <SearchFilterFacet
+              initiallyOpen={filterName === 'schema' ? true : undefined}
               query={query}
               updateQuery={updateQuery}
               field={filterName}

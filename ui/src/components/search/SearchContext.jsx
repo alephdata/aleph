@@ -36,11 +36,7 @@ class SearchContext extends Component {
 
   fetchData() {
     this.setState({isFetching: true})
-    let { query, fetchSearchResults, aspects = {} } = this.props;
-    aspects.filter = isBoolean(aspects.filter) ? aspects.filter : true;
-    if (aspects.filter) {
-      query = query.addFacet('schema');
-    }
+    let { query, fetchSearchResults } = this.props;
     query = query.setFilter('schemata', 'Thing');
 
     fetchSearchResults({
@@ -77,7 +73,6 @@ class SearchContext extends Component {
         
         { aspects.filter && (
           <SearchFilter query={query}
-                        result={result}
                         aspects={aspects}
                         updateQuery={this.updateQuery} />
         )}

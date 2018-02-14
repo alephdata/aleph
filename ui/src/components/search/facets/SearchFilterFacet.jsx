@@ -16,7 +16,7 @@ class SearchFilterFacet extends Component {
 
     this.state = {
       values: null,
-      isOpen: this.isActive(),
+      isOpen: props.initiallyOpen !== undefined ? props.initiallyOpen : this.isActive(),
     };
 
     this.onClick = this.onClick.bind(this);
