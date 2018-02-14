@@ -184,8 +184,8 @@ class Query {
         this.getList('facet').forEach((facet) => {
             let srcFilter = 'filter:' + facet,
                 dstFilter = 'post_' + srcFilter;
-            params[dstFilter] = _.uniq(ensureArray(params[srcFilter]),
-                                       ensureArray(params[dstFilter]));
+            params[dstFilter] = _.union(ensureArray(params[srcFilter]),
+                                        ensureArray(params[dstFilter]));
             delete params[srcFilter];
         })
         return params;
