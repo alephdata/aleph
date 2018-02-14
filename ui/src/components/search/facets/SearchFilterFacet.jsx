@@ -45,8 +45,17 @@ class SearchFilterFacet extends Component {
     // }
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    const { isOpen, values } = nextState;
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { isOpen, values } = this.state;
+    // TODO check if already fetching?
     if (isOpen && values === null) {
       this.fetchValues();
     }
