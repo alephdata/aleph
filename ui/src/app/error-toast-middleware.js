@@ -1,8 +1,7 @@
-import { Intent } from '@blueprintjs/core';
 import { get } from 'lodash';
 
 import * as actions from 'src/actions';
-import toaster from './toaster';
+import { showWarningToast } from './toast';
 
 const errorActionTypes = [
   actions.fetchMetadata.ERROR,
@@ -29,10 +28,7 @@ const errorToastMiddleware = store => next => action => {
     const description = get(action, 'payload.error.message', defaultDescription);
     const message = `${action.type}: ${description}`;
     console.error(message);
-    toaster.show({
-      intent: Intent.WARNING,
-      message,
-    });
+    showWarningToast(message);
   }
 
   return newState;

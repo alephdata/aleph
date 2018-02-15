@@ -6,7 +6,7 @@ import {Callout, Intent, NonIdealState} from '@blueprintjs/core';
 
 import messages from 'src/content/messages';
 import {endpoint} from 'src/app/api';
-import {xhrErrorToast} from 'src/components/common/XhrToast';
+import {xhrErrorToast} from './xhrToast';
 import OAuthLogin from './OAuthLogin';
 import {PasswordAuthSignup} from './PasswordAuth';
 
