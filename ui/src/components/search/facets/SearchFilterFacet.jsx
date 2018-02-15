@@ -17,6 +17,8 @@ class SearchFilterFacet extends Component {
     this.state = {
       total: null,
       values: null,
+      fetchingTotal: false,
+      fetchingValues: false,
       isOpen: props.initiallyOpen !== undefined ? props.initiallyOpen : this.isActive(),
     };
 
@@ -37,7 +39,7 @@ class SearchFilterFacet extends Component {
 
     if (needsUpdate) {
       // Invalidate previously fetched values.
-      this.setState({ values: null, total: null });
+      this.setState({ values: null, total: null, fetchingTotal: false, fetchingValues: false });
     }
 
     // // If we just became active, open up for clarity.
@@ -55,10 +57,9 @@ class SearchFilterFacet extends Component {
   }
 
   fetchIfNeeded() {
-    const { isOpen, values, total } = this.state;
-    // TODO check if already fetching?
-    const fetchTotal = total === null;
-    const fetchValues = values === null && isOpen;
+    const { isOpen, values, total, fetchingTotal, fetchingValues } = this.state;
+    const fetchTotal = total === null && !fetchingTotal;
+    const fetchValues = values === null && isOpen && !fetchingValues;
     if (fetchValues || fetchTotal) {
       this.fetchData({ fetchTotal, fetchValues });
     }
@@ -78,13 +79,19 @@ class SearchFilterFacet extends Component {
       .set('facet_values', fetchValues ? 'true' : 'false')
       .set('facet_size', 500)
       .toParams();
+    if (fetchTotal) {
+      this.setState({ fetchingTotal: true });
+    }
+    if (fetchValues) {
+      this.setState({ fetchingValues: true });
+    }
     const { result } = await fetchSearchResults({filters: params});
     const { total, values } = result.facets[field];
     if (fetchTotal) {
-      this.setState({ total });
+      this.setState({ total, fetchingTotal: false });
     }
     if (fetchValues) {
-      this.setState({ values });
+      this.setState({ values, fetchingValues: false });
     }
   }
 
