@@ -3,7 +3,6 @@ import os
 import yaml
 from celery import Task
 from banal import ensure_list
-from normality import normalize
 
 
 PDF_MIME = 'application/pdf'

@@ -7,6 +7,7 @@ from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Permission
 from aleph.logic.roles import check_visible, check_editable
 from aleph.logic.permissions import update_permission
+from aleph.logic.collections import update_collection
 from aleph.notify import notify_role_template
 from aleph.serializers.roles import RoleSchema, PermissionSchema
 from aleph.serializers.roles import RoleCodeCreateSchema, RoleCreateSchema
@@ -137,18 +138,17 @@ def permissions_index(id):
 @blueprint.route('/api/2/collections/<int:id>/permissions',
                  methods=['POST', 'PUT'])
 def permissions_update(id):
-    # TODO: consider using a list to bundle permission writes
     collection = get_db_collection(id, request.authz.WRITE)
-    data = parse_request(PermissionSchema)
-    role = Role.all().filter(Role.id == data['role']['id']).first()
-    if role is None or not check_visible(role, request.authz):
-        raise BadRequest()
+    for permission in parse_request(PermissionSchema, many=True):
+        role_id = permission.get('role', {}).get('id')
+        role = Role.by_id(role_id).first()
+        if not check_visible(role, request.authz):
+            continue
 
-    perm = update_permission(role,
-                             collection,
-                             data['read'],
-                             data['write'])
-    return jsonify({
-        'status': 'ok',
-        'updated': PermissionSchema().dump(perm)
-    })
+        update_permission(role,
+                          collection,
+                          permission['read'],
+                          permission['write'])
+
+    update_collection(collection, roles=True)
+    return permissions_index(id)

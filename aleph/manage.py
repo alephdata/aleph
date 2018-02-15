@@ -16,7 +16,8 @@ from aleph.analyze import install_analyzers
 from aleph.ingest import ingest_document, ingest
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.index.documents import index_document_id
-from aleph.logic.collections import update_collection, process_collection
+from aleph.logic.collections import update_collection
+from aleph.logic.collections import process_collection
 from aleph.logic.collections import delete_collection
 from aleph.logic.alerts import check_alerts
 from aleph.logic.entities import bulk_load, reindex_entities
@@ -192,7 +193,7 @@ def publish(foreign_id):
         raise ValueError("No such collection: %r" % foreign_id)
     role = Role.by_foreign_id(Role.SYSTEM_GUEST)
     update_permission(role, collection, True, False)
-    db.session.commit()
+    update_collection(collection, roles=True)
 
 
 @manager.command

@@ -34,17 +34,17 @@ def validate_data(data, schema, many=None):
     # from pprint import pprint
     # pprint(data)
     data, errors = schema().load(data, many=many)
-    if len(errors):
-        message = None
-        for field, errors in errors.items():
-            for error in errors:
-                message = error
-        raise BadRequest(response=jsonify({
-            'status': 'error',
-            'errors': errors,
-            'message': message
-        }, status=400))
-    return data
+    if not len(errors):
+        return data
+    message = None
+    for field, errors in errors.items():
+        for error in errors:
+            message = error
+    raise BadRequest(response=jsonify({
+        'status': 'error',
+        'errors': errors,
+        'message': message
+    }, status=400))
 
 
 def parse_request(schema, many=None):
@@ -140,7 +140,7 @@ def sanitize_html(html_text, base_url):
 
 
 def normalize_href(href, base_url):
-    # Make links relative the source_url
+    # Make links relative to the source_url
     href = stringify(href)
     if href is None:
         return
