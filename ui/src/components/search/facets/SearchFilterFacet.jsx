@@ -75,9 +75,9 @@ class SearchFilterFacet extends Component {
       .limit(0)
       .clearFacets()
       .addFacet(field)
-      .set('facet_total', fetchTotal ? 'true' : 'false')
-      .set('facet_values', fetchValues ? 'true' : 'false')
-      .set('facet_size', 500)
+      .set('facet_total', fetchTotal)
+      .set('facet_values', fetchValues)
+      .set('facet_size', 10)
       .toParams();
     if (fetchTotal) {
       this.setState({ fetchingTotal: true });
