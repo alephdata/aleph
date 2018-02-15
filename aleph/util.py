@@ -3,9 +3,19 @@ import os
 import yaml
 from celery import Task
 from banal import ensure_list
+from pkg_resources import iter_entry_points
 
-
+EXTENSIONS = {}
 PDF_MIME = 'application/pdf'
+
+
+def get_extensions(section):
+    if section not in EXTENSIONS:
+        EXTENSIONS[section] = {}
+    if not EXTENSIONS[section]:
+        for ep in iter_entry_points(section):
+            EXTENSIONS[section][ep.name] = ep.load()
+    return EXTENSIONS[section].values()
 
 
 def load_config_file(file_path):

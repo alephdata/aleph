@@ -41,6 +41,8 @@ class Authz(object):
         if collection is None:
             return False
 
+        # TBD, Should we cache beyond a single request life cycle?
+        # probably a horrible idea.
         key = (collection, action)
         if key in self._cache:
             return self._cache[key]

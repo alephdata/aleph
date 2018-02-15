@@ -18,8 +18,7 @@ from urlnormalizer import query_string
 import storagelayer
 
 from aleph import settings
-from aleph.ext import get_extensions
-from aleph.util import SessionTask
+from aleph.util import SessionTask, get_extensions
 from aleph.oauth import configure_oauth
 
 log = logging.getLogger(__name__)

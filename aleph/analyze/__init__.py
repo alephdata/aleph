@@ -4,7 +4,7 @@ import logging
 from polyglot.downloader import downloader
 
 from aleph.core import db
-from aleph.ext import get_extensions
+from aleph.util import get_extensions
 
 
 log = logging.getLogger(__name__)
