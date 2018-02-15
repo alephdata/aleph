@@ -45,8 +45,8 @@ class PolyglotEntityAnalyzer(Analyzer):
 
     def tag_text(self, text, languages):
         for language in languages:
-            text = Text(text, hint_language_code=language)
-            for entity in text.entities:
+            parsed = Text(text, hint_language_code=language)
+            for entity in parsed.entities:
                 if entity.tag == 'I-LOC':
                     continue
 
