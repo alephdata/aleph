@@ -9,7 +9,7 @@ import { fetchSearchResults } from 'src/actions';
 import Query from './Query';
 
 
-class SearchStuff extends Component {
+class SearchContext extends Component {
   static propTypes = {
     children: PropTypes.func.isRequired,
   };
@@ -77,8 +77,8 @@ class SearchStuff extends Component {
     };
 
     // XXX: A shallow prop comparison by WrappedComponent would always
-    // consider searchStuff to have changed. Should we cache it in our state?
-    const searchStuff = {
+    // consider searchContext to have changed. Should we cache it in our state?
+    const searchContext = {
       query: this.getQuery(),
       updateQuery: this.updateQuery,
       result,
@@ -86,11 +86,11 @@ class SearchStuff extends Component {
       aspects: aspectsWithDefaults,
     };
 
-    return children(searchStuff);
+    return children(searchContext);
   }
 }
 
-SearchStuff = connect(null, { fetchSearchResults })(SearchStuff);
-SearchStuff = withRouter(SearchStuff);
+SearchContext = connect(null, { fetchSearchResults })(SearchContext);
+SearchContext = withRouter(SearchContext);
 
-export default SearchStuff;
+export default SearchContext;

@@ -10,7 +10,7 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import Entity from 'src/components/EntityScreen/Entity';
 import DocumentInfo from './DocumentInfo';
-import SearchStuff from 'src/components/search/SearchStuff';
+import SearchContext from 'src/components/search/SearchContext';
 import SearchFilter from 'src/components/search/filter/SearchFilter';
 import SearchResult from 'src/components/search/SearchResult';
 
@@ -55,15 +55,15 @@ class DocumentRelatedScreen extends Component {
             </a>
           </li>
         </Breadcrumbs>
-        <SearchStuff context={context}>{searchStuff => (
+        <SearchContext context={context}>{searchContext => (
           <DualPane>
             <DocumentInfo document={document} />
             <DualPane.ContentPane>
-              <SearchFilter {...searchStuff} />
-              <SearchResult {...searchStuff} />
+              <SearchFilter {...searchContext} />
+              <SearchResult {...searchContext} />
             </DualPane.ContentPane>
           </DualPane>
-        )}</SearchStuff>
+        )}</SearchContext>
       </Screen>
     );
   }

@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import { withRouter } from 'react-router';
 import { injectIntl } from 'react-intl';
 
-import SearchStuff from 'src/components/search/SearchStuff';
+import SearchContext from 'src/components/search/SearchContext';
 import SearchResult from 'src/components/search/SearchResult';
 
 import getPath from 'src/util/getPath';
@@ -64,11 +64,11 @@ class FolderViewer extends Component {
             </div>
           </form>
         </section>
-        <SearchStuff context={context} aspects={aspects}>{searchStuff => (
+        <SearchContext context={context} aspects={aspects}>{searchContext => (
           <div>
-            <SearchResult {...searchStuff} />
+            <SearchResult {...searchContext} />
           </div>
-        )}</SearchStuff>
+        )}</SearchContext>
       </div>
     );
   }

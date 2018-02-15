@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import DualPane from 'src/components/common/DualPane';
-import SearchStuff from 'src/components/search/SearchStuff';
+import SearchContext from 'src/components/search/SearchContext';
 import SearchResult from 'src/components/search/SearchResult';
 import SearchFilter from 'src/components/search/filter/SearchFilter';
 
@@ -16,12 +16,12 @@ class CollectionContent extends Component {
       countries: true
     };
     return (
-      <SearchStuff context={context} aspects={aspects}>{searchStuff => (
+      <SearchContext context={context} aspects={aspects}>{searchContext => (
         <DualPane.ContentPane>
-            <SearchFilter {...searchStuff} />
-            <SearchResult {...searchStuff} />
+            <SearchFilter {...searchContext} />
+            <SearchResult {...searchContext} />
         </DualPane.ContentPane>
-      )}</SearchStuff>
+      )}</SearchContext>
     );
   }
 }

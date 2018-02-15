@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Helmet } from 'react-helmet';
 
-import SearchStuff from './SearchStuff';
+import SearchContext from './SearchContext';
 import SearchResult from './SearchResult';
 import SearchFilter from './filter/SearchFilter';
 import SearchFilterFacets from './facets/SearchFilterFacets';
@@ -14,11 +14,11 @@ import DualPane from 'src/components/common/DualPane';
 class SearchScreen extends Component {
   render() {
     return (
-      <SearchStuff>{searchStuff => (
+      <SearchContext>{searchContext => (
         <Screen>
-          {searchStuff.query.hasQuery() && (
+          {searchContext.query.hasQuery() && (
             <Helmet>
-              <title>{searchStuff.query.getQ()}</title>
+              <title>{searchContext.query.getQ()}</title>
             </Helmet>
           )}
           <Breadcrumbs>
@@ -30,15 +30,15 @@ class SearchScreen extends Component {
           </Breadcrumbs>
           <DualPane>
             <DualPane.InfoPane>
-              <SearchFilterFacets {...searchStuff}/>
+              <SearchFilterFacets {...searchContext}/>
             </DualPane.InfoPane>
             <DualPane.ContentPane>
-              <SearchFilter {...searchStuff} />
-              <SearchResult {...searchStuff} />
+              <SearchFilter {...searchContext} />
+              <SearchResult {...searchContext} />
             </DualPane.ContentPane>
           </DualPane>
         </Screen>
-      )}</SearchStuff>
+      )}</SearchContext>
     )
   }
 }
