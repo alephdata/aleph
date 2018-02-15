@@ -29,11 +29,11 @@ def jsonify(obj, schema=None, status=200, **kwargs):
     return jsonify_(obj, status=status, **kwargs)
 
 
-def validate_data(data, schema):
+def validate_data(data, schema, many=None):
     """Validate the data inside a request against a schema."""
     # from pprint import pprint
     # pprint(data)
-    data, errors = schema().load(data)
+    data, errors = schema().load(data, many=many)
     if len(errors):
         message = None
         for field, errors in errors.items():
@@ -44,17 +44,16 @@ def validate_data(data, schema):
             'errors': errors,
             'message': message
         }, status=400))
+    return data
 
 
-def parse_request(schema=None):
+def parse_request(schema, many=None):
     """Get request form data or body and validate it against a schema."""
     if request.is_json:
         data = request.get_json()
     else:
         data = request.form.to_dict(flat=True)
-    if schema is not None:
-        validate_data(data, schema)
-    return data
+    return validate_data(data, schema, many=many)
 
 
 def get_db_entity(entity_id, action=Authz.READ):

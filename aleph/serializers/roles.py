@@ -56,5 +56,5 @@ class LoginSchema(Schema):
 class PermissionSchema(BaseSchema):
     write = Boolean(required=True)
     read = Boolean(required=True)
-    collection_id = String(dump_only=True, required=True)
+    collection_id = String(dump_only=True)
     role = Nested(RoleReferenceSchema)

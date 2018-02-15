@@ -170,7 +170,8 @@ def indexentities():
 @manager.option('-e', '--email', dest='email')
 @manager.option('-i', '--is_admin', dest='is_admin')
 @manager.option('-p', '--password', dest='password')
-def createuser(foreign_id, password=None, name=None, email=None, is_admin=False):
+def createuser(foreign_id, password=None, name=None, email=None,
+               is_admin=False):
     """Create a user and show their API key."""
     role = Role.load_or_create(foreign_id, Role.USER,
                                name or foreign_id,

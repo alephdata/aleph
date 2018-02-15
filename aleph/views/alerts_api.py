@@ -20,7 +20,7 @@ def index():
 @blueprint.route('/api/2/alerts', methods=['POST', 'PUT'])
 def create():
     require(request.authz.session_write)
-    data = parse_request(schema=AlertSchema)
+    data = parse_request(AlertSchema)
     alert = Alert.create(data, request.authz.role)
     db.session.commit()
     return view(alert.id)

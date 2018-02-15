@@ -36,7 +36,7 @@ def suggest():
 
 @blueprint.route('/api/2/roles/code', methods=['POST'])
 def create_code():
-    data = parse_request(schema=RoleCodeCreateSchema)
+    data = parse_request(RoleCodeCreateSchema)
     signature = Role.SIGNATURE.dumps(data['email'])
     url = '{}activate/{}'.format(app_ui_url, signature)
     role = Role(email=data['email'], name='Visitor')
@@ -52,7 +52,7 @@ def create_code():
 @blueprint.route('/api/2/roles', methods=['POST'])
 def create():
     require(not request.authz.in_maintenance, settings.PASSWORD_LOGIN)
-    data = parse_request(schema=RoleCreateSchema)
+    data = parse_request(RoleCreateSchema)
 
     try:
         email = Role.SIGNATURE.loads(data.get('code'),
@@ -81,14 +81,14 @@ def create():
     db.session.commit()
     # Let the serializer return more info about this user
     request.authz.id = role.id
-    return jsonify(role, schema=RoleSchema, status=201)
+    return jsonify(role, RoleSchema, status=201)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
 def view(id):
     role = obj_or_404(Role.by_id(id))
     require(check_editable(role, request.authz))
-    return jsonify(role, schema=RoleSchema)
+    return jsonify(role, RoleSchema)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])
@@ -96,7 +96,7 @@ def update(id):
     role = obj_or_404(Role.by_id(id))
     require(request.authz.session_write)
     require(check_editable(role, request.authz))
-    data = parse_request(schema=RoleSchema)
+    data = parse_request(RoleSchema)
     role.update(data)
     db.session.add(role)
     db.session.commit()
@@ -139,7 +139,7 @@ def permissions_index(id):
 def permissions_update(id):
     # TODO: consider using a list to bundle permission writes
     collection = get_db_collection(id, request.authz.WRITE)
-    data = parse_request(schema=PermissionSchema)
+    data = parse_request(PermissionSchema)
     role = Role.all().filter(Role.id == data['role']['id']).first()
     if role is None or not check_visible(role, request.authz):
         raise BadRequest()
