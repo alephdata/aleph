@@ -10,7 +10,9 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import EntityInfo from './EntityInfo';
 import Entity from './Entity';
-import SearchContext from 'src/components/search/SearchContext';
+import SearchStuff from 'src/components/search/SearchStuff';
+import SearchFilter from 'src/components/search/filter/SearchFilter';
+import SearchResult from 'src/components/search/SearchResult';
 
 class EntityScreen extends Component {
   componentDidMount() {
@@ -50,12 +52,15 @@ class EntityScreen extends Component {
             </a>
           </li>
         </Breadcrumbs>
-        <DualPane>
-          <EntityInfo entity={entity} />
-          <DualPane.ContentPane>
-            <SearchContext context={context} />
-          </DualPane.ContentPane>
-        </DualPane>
+        <SearchStuff context={context}>{searchStuff => (
+          <DualPane>
+            <EntityInfo entity={entity} />
+            <DualPane.ContentPane>
+              <SearchFilter {...searchStuff} />
+              <SearchResult {...searchStuff} />
+            </DualPane.ContentPane>
+          </DualPane>
+        )}</SearchStuff>
       </Screen>
     );
   }
