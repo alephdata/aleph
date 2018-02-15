@@ -14,6 +14,8 @@ class Facet(object):
         self.cardinality = self.extract(aggregations, '%s.cardinality' % name)
 
     def extract(self, aggregations, name):
+        if aggregations is None:
+            return {}
         data = aggregations.get('scoped', {}).get(name, {}).get(name)
         return data or aggregations.get(name, {})
 
