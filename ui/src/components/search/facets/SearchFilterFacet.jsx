@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Icon, Collapse, Spinner } from '@blueprintjs/core';
+import { Button, Icon, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
 import messages from 'src/content/messages';
@@ -11,12 +11,16 @@ import CheckboxList from './CheckboxList';
 import './SearchFilterFacet.css';
 
 class SearchFilterFacet extends Component {
+  defaultLimit = 10;
+  limitIncreaseStep = 10;
+
   constructor(props)  {
     super(props);
 
     this.state = {
       total: null,
       values: null,
+      limit: this.defaultLimit,
       fetchingTotal: false,
       fetchingValues: false,
       isOpen: props.initiallyOpen !== undefined ? props.initiallyOpen : this.isActive(),
@@ -25,6 +29,7 @@ class SearchFilterFacet extends Component {
     this.onClick = this.onClick.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.isActive = this.isActive.bind(this);
+    this.showMore = this.showMore.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,7 +44,13 @@ class SearchFilterFacet extends Component {
 
     if (needsUpdate) {
       // Invalidate previously fetched values.
-      this.setState({ values: null, total: null, fetchingTotal: false, fetchingValues: false });
+      this.setState({
+        total: null,
+        values: null,
+        limit: this.defaultLimit,
+        fetchingTotal: false,
+        fetchingValues: false,
+      });
     }
 
     // // If we just became active, open up for clarity.
@@ -57,11 +68,15 @@ class SearchFilterFacet extends Component {
   }
 
   fetchIfNeeded() {
-    const { isOpen, values, total, fetchingTotal, fetchingValues } = this.state;
+    const { isOpen, total, values, limit, fetchingTotal, fetchingValues } = this.state;
     const fetchTotal = total === null && !fetchingTotal;
-    const fetchValues = values === null && isOpen && !fetchingValues;
+    const fetchValues = isOpen && !fetchingValues && (
+      values === null
+      // If the limit has increased, we may have to fetch again.
+      || (values.length < limit && total !== null && values.length < total)
+    );
     if (fetchValues || fetchTotal) {
-      this.fetchData({ fetchTotal, fetchValues });
+      this.fetchData({ fetchTotal, fetchValues, limit });
     }
   }
 
@@ -69,15 +84,15 @@ class SearchFilterFacet extends Component {
     return props.query.getFilter(props.field).length > 0;
   }
 
-  async fetchData({ fetchTotal, fetchValues }) {
+  async fetchData({ fetchTotal, fetchValues, limit }) {
     const { field, query, fetchSearchResults } = this.props;
     const params = query
-      .limit(0)
+      .limit(0) // The limit of the results, not the facets.
       .clearFacets()
       .addFacet(field)
       .set('facet_total', fetchTotal)
       .set('facet_values', fetchValues)
-      .set('facet_size', 10)
+      .set('facet_size', limit)
       .toParams();
     if (fetchTotal) {
       this.setState({ fetchingTotal: true });
@@ -95,6 +110,11 @@ class SearchFilterFacet extends Component {
     }
   }
 
+  showMore() {
+    const { limit } = this.state;
+    this.setState({ limit: limit + this.limitIncreaseStep });
+  }
+
   onClick() {
     this.setState(
       state => ({ ...state, isOpen: !state.isOpen }),
@@ -110,7 +130,7 @@ class SearchFilterFacet extends Component {
 
   render() {
     const { query, field, intl } = this.props;
-    const { total, values, isOpen } = this.state;
+    const { total, values, limit, isOpen, fetchingValues } = this.state;
 
     const current = query.getFilter(field);
     const isActive = this.isActive();
@@ -128,12 +148,20 @@ class SearchFilterFacet extends Component {
           }
         </div>
         <Collapse isOpen={isOpen}>
-          {values !== null
-            ? <CheckboxList items={values}
-                            selectedItems={current}
-                            onItemClick={this.onSelect} />
-            : <Spinner className="pt-large" />
-          }
+          {values !== null && (
+            <CheckboxList items={values}
+                          selectedItems={current}
+                          onItemClick={this.onSelect}>
+              {!fetchingValues && limit < total && (
+                <Button onClick={this.showMore} className="showMoreButton pt-minimal">
+                  <FormattedMessage id="search.facets.showMore" defaultMessage="show more {fieldLabel}…" values={{ fieldLabel }}/>
+                </Button>
+              )}
+              {fetchingValues && (
+                <Spinner className="pt-large" />
+              )}
+            </CheckboxList>
+          )}
         </Collapse>
       </div>
     );

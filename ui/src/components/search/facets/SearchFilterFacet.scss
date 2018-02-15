@@ -26,8 +26,11 @@
   }
 
   .CheckboxList {
-    overflow: auto;
-    max-height: 20em;
     margin-bottom: $aleph-grid-size * 2;
+  }
+
+  button.showMoreButton {
+    font-style: italic;
+    color: $aleph-greyed-text;
   }
 }
