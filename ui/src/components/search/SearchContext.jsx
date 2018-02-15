@@ -80,9 +80,6 @@ class SearchContext extends Component {
                       result={result}
                       aspects={aspects}
                       updateQuery={this.updateQuery} />
-        { isFetching && (
-          <SectionLoading />
-        )}
       </div>
     )
   }

@@ -4,7 +4,6 @@ import DualPane from 'src/components/common/DualPane';
 import SearchStuff from 'src/components/search/SearchStuff';
 import SearchResult from 'src/components/search/SearchResult';
 import SearchFilter from 'src/components/search/filter/SearchFilter';
-import SectionLoading from 'src/components/common/SectionLoading';
 
 class CollectionContent extends Component {
   render() {
@@ -21,9 +20,6 @@ class CollectionContent extends Component {
         <DualPane.ContentPane>
             <SearchFilter {...searchStuff} />
             <SearchResult {...searchStuff} />
-            {searchStuff.isFetching && (
-              <SectionLoading />
-            )}
         </DualPane.ContentPane>
       )}</SearchStuff>
     );

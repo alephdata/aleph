@@ -5,7 +5,6 @@ import { injectIntl } from 'react-intl';
 
 import SearchStuff from 'src/components/search/SearchStuff';
 import SearchResult from 'src/components/search/SearchResult';
-import SectionLoading from 'src/components/common/SectionLoading';
 
 import getPath from 'src/util/getPath';
 
@@ -68,9 +67,6 @@ class FolderViewer extends Component {
         <SearchStuff context={context} aspects={aspects}>{searchStuff => (
           <div>
             <SearchResult {...searchStuff} />
-            {searchStuff.isFetching && (
-              <SectionLoading />
-            )}
           </div>
         )}</SearchStuff>
       </div>
