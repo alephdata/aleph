@@ -1,26 +1,17 @@
 import { createReducer } from 'redux-act';
 
-import { fetchAlerts, deleteAlert, addAlert } from 'src/actions';
+import { fetchAlerts } from 'src/actions';
 
-const initialState = {
-  isLoaded: false,
-};
+const initialState = {};
 
 export default createReducer({
-  [fetchAlerts.START]: state => ({ isLoaded: false }),
-  [deleteAlert.START]: state => ({ isLoaded: false }),
-  [addAlert.START]: state => ({ isLoaded: false }),
-
   [fetchAlerts.COMPLETE]: (state, { alerts }) => ({
-    ...alerts,
-    isLoaded: true
+    ...alerts
   }),
-  [deleteAlert.COMPLETE]: (state, { alerts }) => ({
-    ...alerts,
-    isLoaded: true
-  }),
-  [addAlert.COMPLETE]: (state, { alerts }) => ({
-    ...alerts,
-    isLoaded: true
-  }),
+  // [deleteAlert.COMPLETE]: (state, { alerts }) => ({
+  //   ...alerts
+  // }),
+  // [addAlert.COMPLETE]: (state, { alerts }) => ({
+  //   ...alerts
+  // }),
 }, initialState);

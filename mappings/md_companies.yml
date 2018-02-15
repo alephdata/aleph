@@ -1,4 +1,4 @@
-md-companies:
+md_companies:
   label: Moldova Companies Registry
   info_url: http://date.gov.md/ckan/en/dataset/11736-date-din-registrul-de-stat-al-unitatilor-de-drept-privind-intreprinderile-inregistrate-in-repu
   category: company
@@ -48,10 +48,7 @@ md-companies:
               column: Director
         directorship:
           schema: Directorship
-          keys:
-            - Company_Name
-            - Company_IDNO
-            - Director
+          key_literal: Directorship
           properties:
             director:
               entity: director
@@ -67,18 +64,15 @@ md-companies:
         founder:
           schema: LegalEntity
           keys:
-            - Company_IDNO
             - Company_Name
+            - Company_IDNO
             - Founder
           properties:
             name:
               column: Founder
         ownership:
           schema: Ownership
-          keys:
-            - Company_Name
-            - Company_IDNO
-            - Founder
+          key_literal: Ownership
           properties:
             owner:
               entity: founder
@@ -102,5 +96,5 @@ md-companies:
             - Company_IDNO
             - Company_Name
           properties:
-            classification:
+            sector:
               column: Denumire

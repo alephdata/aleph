@@ -5,5 +5,5 @@ entities:
     properties:
       country:
         column: country_code
-      # notes:
-      #   column: place
+      notes:
+        column: place

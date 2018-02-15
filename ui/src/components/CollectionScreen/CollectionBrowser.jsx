@@ -121,7 +121,7 @@ class CollectionBrowser extends Component {
             // Hacky: we append N-2 empty divs, to prevent the last item(s) from
             // trying to fill up the whole bottom row.
             range(0, result.results.length - 2).map(i => (
-              <div key={i} className="result"></div>
+              <div key={i} className="bogus result"></div>
             ))
           }
           { !isFetching && result.next && (

@@ -14,7 +14,7 @@ class EntityList extends Component {
     }
     
     return (
-      <table className="results-table pt-table pt-bordered">
+      <table className="results-table pt-html-table pt-html-table-bordered">
         <thead>
           <tr>
             <th>

@@ -1,4 +1,4 @@
-us-ofac:
+us_ofac:
   label: US OFAC Consolidated List
   info_url: https://opensanctions.org
   category: sanctions

@@ -6,6 +6,7 @@ import DualPane from 'src/components/common/DualPane';
 import Category from 'src/components/common/Category';
 import Language from 'src/components/common/Language';
 import Country from 'src/components/common/Country';
+import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
 import {AnchorButton} from '@blueprintjs/core';
 import {Link} from 'react-router-dom';
@@ -33,26 +34,36 @@ class CollectionInfo extends Component {
               <Category collection={collection}/>
             </td>
           </tr>
-          {collection.languages && !!collection.languages.length && (
-            <tr>
-              <th>
-                <FormattedMessage id="collection.languages" defaultMessage="Language"/>
-              </th>
-              <td>
-                <Language.List codes={collection.languages}/>
-              </td>
-            </tr>
-          )}
-          {collection.countries && !!collection.countries.length && (
-            <tr>
-              <th>
-                <FormattedMessage id="collection.countries" defaultMessage="Country"/>
-              </th>
-              <td>
-                <Country.List codes={collection.countries} truncate={10}/>
-              </td>
-            </tr>
-          )}
+            { collection.creator && (
+              <tr>
+                <th>
+                  <FormattedMessage id="collection.creator" defaultMessage="Manager"/>
+                </th>
+                <td>
+                  <Role.Label role={collection.creator} />
+                </td>
+              </tr>
+            )}
+            { collection.languages && !!collection.languages.length && (
+              <tr>
+                <th>
+                  <FormattedMessage id="collection.languages" defaultMessage="Language"/>
+                </th>
+                <td>
+                  <Language.List codes={collection.languages} />
+                </td>
+              </tr>
+            )}
+            { collection.countries && !!collection.countries.length && (
+              <tr>
+                <th>
+                  <FormattedMessage id="collection.countries" defaultMessage="Country"/>
+                </th>
+                <td>
+                  <Country.List codes={collection.countries} truncate={10} />
+                </td>
+              </tr>
+            )}
           <tr>
             <th>
               <FormattedMessage id="collection.updated_at" defaultMessage="Last updated"/>
@@ -79,6 +90,6 @@ class CollectionInfo extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {};
-}
+};
 
 export default connect(mapStateToProps)(CollectionInfo);

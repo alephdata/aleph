@@ -1,5 +1,5 @@
-filters:
-  quality: weak
+filters_not:
+  quality: strong
 entities:
   entity:
     schema: Thing

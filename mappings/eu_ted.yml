@@ -1,0 +1,335 @@
+eu_ted:
+  label: EU Tenders Electronic Daily (TED) Contract award notices
+  info_url: https://data.europa.eu/euodp/data/dataset/ted-csv
+  category: procurement
+  summary: >
+    A subset of Tenders Electronic Daily (TED) data covering public procurement
+    for the European Economic Area, Switzerland, and the former Yugoslav Republic
+    of Macedonia from 2006-01-01 to 2016-12-31.
+
+    This data includes the most important fields from the contract notice and
+    contract award notice standard forms, such as who bought what from whom, for
+    how much, and which procedure and award criteria were used.
+
+    Generally, the data consists of tenders above the procurement thresholds. However,
+    publishing below threshold tenders in TED is considered good practice, and thus
+    a non-negligible number of below threshold tenders is present as well.
+  roles:
+    - guest
+  queries:
+    - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+      entities:
+        contract:
+          schema: Contract
+          keys:
+            - ID_NOTICE_CAN
+            - ID_LOT_AWARDED
+            - YEAR
+          properties:
+            name:
+              column: TITLE
+            sourceUrl:
+              column: TED_NOTICE_URL
+            type:
+              join: ", "
+              columns:
+                - TYPE_OF_CONTRACT
+                - TOP_TYPE
+            authority:
+              entity: authority
+            amountEur:
+              column: VALUE_EURO
+            numberAwards:
+              column: NUMBER_AWARDS
+            noticeId:
+              column: ID_NOTICE_CAN
+        award:
+          schema: ContractAward
+          keys:
+            - ID_AWARD
+            - YEAR
+          properties:
+            summary:
+              column: TITLE
+            sourceUrl:
+              column: TED_NOTICE_URL
+            nutsCode:
+              column: TAL_LOCATION_NUTS
+            cpvCode:
+              split: "---"
+              columns:
+                - CPV
+                - ADDITIONAL_CPVS
+            decisionReason:
+              column: CRIT_CRITERIA
+            lotNumber:
+              column: ID_LOT_AWARDED
+            amountEur:
+              column: AWARD_VALUE_EURO
+            date:
+              column: DT_AWARD
+              format: "%d-%b-%y"
+            documentNumber:
+              column: CONTRACT_NUMBER
+            supplier:
+              entity: supplier
+            contract:
+              entity: contract
+        supplier:
+          schema: LegalEntity
+          keys:
+            - WIN_NAME
+            - WIN_NATIONALID
+          properties:
+            name:
+              column: WIN_NAME
+            idNumber:
+              column: WIN_NATIONALID
+            address:
+              join: ", "
+              columns:
+                - WIN_ADDRESS
+                - WIN_TOWN
+                - WIN_POSTAL_CODE
+              country:
+                column: WIN_COUNTRY_CODE
+        authority:
+          schema: LegalEntity
+          keys:
+            - CAE_NAME
+            - CAE_NATIONALID
+          properties:
+            name:
+              column: CAE_NAME
+            idNumber:
+              column: CAE_NATIONALID
+            address:
+              join: ", "
+              columns:
+                - CAE_ADDRESS
+                - CAE_TOWN
+                - CAE_POSTAL_CODE
+            country:
+              column: ISO_COUNTRY_CODE
+            sector:
+              column: MAIN_ACTIVITY
+    - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+      filters_not:
+        CANCELLED: 0
+      entities:
+        contract:
+          schema: Contract
+          keys:
+            - ID_NOTICE_CAN
+            - ID_LOT_AWARDED
+            - YEAR
+          properties:
+            cancelled:
+              literal: True
+    - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+      filters:
+        CAE_TYPE: 1
+      entities:
+        authority:
+          schema: PublicBody
+          keys:
+            - CAE_NAME
+            - CAE_NATIONALID
+          properties:
+            description:
+              literal: "Ministry or any other national or federal authority, including their regional or local subdivisions"
+    - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+      filters:
+        CAE_TYPE: 3
+      entities:
+        authority:
+          schema: PublicBody
+          keys:
+            - CAE_NAME
+            - CAE_NATIONALID
+          properties:
+            description:
+              literal: "Regional or local authority"
+    - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+      filters:
+        CAE_TYPE: 4
+      entities:
+        authority:
+          schema: LegalEntity
+          keys:
+            - CAE_NAME
+            - CAE_NATIONALID
+          properties:
+            description:
+              literal: "Water, energy, transport and telecommunications sectors"
+    - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+      filters:
+        CAE_TYPE: 5
+      entities:
+        authority:
+          schema: PublicBody
+          keys:
+            - CAE_NAME
+            - CAE_NATIONALID
+          properties:
+            description:
+              literal: "European Union institution/agency"
+    - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+      filters:
+        CAE_TYPE: 5A
+      entities:
+        authority:
+          schema: LegalEntity
+          keys:
+            - CAE_NAME
+            - CAE_NATIONALID
+          properties:
+            description:
+              literal: "Other international organisation"
+    - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+      filters:
+        CAE_TYPE: 6
+      entities:
+        authority:
+          schema: PublicBody
+          keys:
+            - CAE_NAME
+            - CAE_NATIONALID
+          properties:
+            description:
+              literal: "Body governed by public law"
+    - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+      filters:
+        CAE_TYPE: 8
+      entities:
+        authority:
+          schema: LegalEntity
+          keys:
+            - CAE_NAME
+            - CAE_NATIONALID
+          properties:
+            description:
+              literal: "Other"
+    - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+      filters:
+        CAE_TYPE: N
+      entities:
+        authority:
+          schema: PublicBody
+          keys:
+            - CAE_NAME
+            - CAE_NATIONALID
+          properties:
+            description:
+              literal: "National or federal Agency / Office"
+    - csv_urls:
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+      filters:
+        CAE_TYPE: R
+      entities:
+        authority:
+          schema: PublicBody
+          keys:
+            - CAE_NAME
+            - CAE_NATIONALID
+          properties:
+            description:
+              literal: "Regional or local Agency / Office"

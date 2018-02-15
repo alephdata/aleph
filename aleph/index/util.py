@@ -37,22 +37,6 @@ def authz_query(authz):
 def field_filter_query(field, values):
     """Need to define work-around for full-text fields."""
     values = ensure_list(values)
-    if field in ['names', 'addresses']:
-        queries = []
-        for value in values:
-            queries.append({
-                'match': {
-                    'names': {
-                        'query': value,
-                        'operator': 'and'
-                    }
-                }
-            })
-        return {
-            "bool": {
-                "must": queries
-            }
-        }
     return {'terms': {field: values}}
 
 

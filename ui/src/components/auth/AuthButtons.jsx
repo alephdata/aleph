@@ -15,16 +15,17 @@ class AuthButtons extends Component {
 
     if (session.loggedIn) {
       items.push((
-        <Link key='login' to="/logout">
-          <Button iconName="log-out" className="pt-minimal">
-            <FormattedMessage id="nav.signout" defaultMessage="Log out"/>
+        <Link key='settings' to="/settings">
+          <Button iconName="cog" className="pt-minimal">
+            <FormattedMessage id="nav.settings" defaultMessage="Settings"/>
           </Button>
         </Link>
       ));
+
       items.push((
-        <Link key='settings' to="/settings">
-          <Button className="pt-minimal settings_button">
-            <i className="fa fa-cog settings-icon" aria-hidden="true"/>
+        <Link key='login' to="/logout">
+          <Button iconName="log-out" className="pt-minimal">
+            <FormattedMessage id="nav.signout" defaultMessage="Log out"/>
           </Button>
         </Link>
       ));

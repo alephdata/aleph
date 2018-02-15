@@ -1,4 +1,4 @@
-un-sc-sanctions:
+un_sc_sanctions:
   label: UN Consolidated Sanctions
   info_url: https://opensanctions.org
   category: sanctions

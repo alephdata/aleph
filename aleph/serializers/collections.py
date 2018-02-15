@@ -23,7 +23,7 @@ class CollectionSchema(BaseSchema):
     summary = String(allow_none=True)
     countries = List(Country())
     lanaguages = List(Language())
-    managed = Boolean()
+    managed = Boolean(missing=False)
     secret = Boolean(dump_only=True)
     category = Category(required=True)
     creator_id = String(allow_none=True)

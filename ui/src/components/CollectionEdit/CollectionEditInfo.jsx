@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {AnchorButton} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
+import NamedMultiSelect from 'src/components/common/NamedMultiSelect';
 
 import './CollectionEditInfo.css';
 
@@ -14,24 +14,46 @@ class CollectionEditInfo extends Component {
     this.state = {
       label: '',
       summary: '',
-      countries: '',
-      languages: ''
-    }
+      countries: [],
+      languages: [],
+      listCountries: [],
+      listLanguages: []
+    };
 
+    this.onSelectCountry = this.onSelectCountry.bind(this);
+    this.onSelectLanguage = this.onSelectLanguage.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.collection.isFetching === undefined) {
       this.setState({
         label: nextProps.collection.label,
-        summary: nextProps.collection.summary === null ? '' : nextProps.collection.summary});
+        summary: nextProps.collection.summary === null ? '' : nextProps.collection.summary,
+        countries: nextProps.collection.countries,
+        listCountries: this.structureList(nextProps.countries),
+        languages: nextProps.collection.languages,
+        listLanguages: this.structureList(nextProps.languages)
+      });
     }
+  }
+
+  structureList(list) {
+    return Object.keys(list).map(function(k) {
+      return {index:k, name:list[k]} });
+  }
+
+  onSelectCountry(countries) {
+    this.setState({countries: countries.selectedItems, listCountries: countries.list});
+  }
+
+  onSelectLanguage(languages) {
+    this.setState({languages: languages.selectedItems, listLanguages: languages.list});
   }
 
   render() {
     const {collection, intl} = this.props;
-    const {label, summary, countries, languages} = this.state;
-    console.log(this.props.collection)
+    const {label, summary} = this.state;
+    console.log('', this.props.languages)
 
     return (
       <DualPane.InfoPane className="CollectionEditInfo">
@@ -58,18 +80,26 @@ class CollectionEditInfo extends Component {
                      value={label}/>
             </div>
           </div>
-          <div>
+          <div className="pt-form-group label_group">
             <div className='api_key_group'>
               <i className="fa fa-key" aria-hidden="true"/>
               <label className="pt-label api_key">
                 Import ID
               </label>
             </div>
-            <label className="pt-label api_key_label">
-              kkslkslslsksjjs
-            </label>
+            <div className="pt-form-content">
+              <input className="pt-input input_class"
+                     type="text"
+                     placeholder={intl.formatMessage({
+                       id: "collection.edit.info.placeholder.import.key",
+                       defaultMessage: "Import key"
+                     })}
+                     dir="auto"
+                     disabled
+                     value={collection === undefined ? '' : collection.foreign_id === undefined ? '' : collection.foreign_id}
+              />
+            </div>
           </div>
-
           <div className="pt-form-group label_group">
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
@@ -78,18 +108,18 @@ class CollectionEditInfo extends Component {
               </label>
             </div>
             <div className="pt-form-content">
-              <input className="pt-input input_class"
-                     type="text"
+              <textarea className="pt-input input_class"
+                     //type="text"
                      placeholder={intl.formatMessage({
                        id: "collection.edit.info.placeholder.summart",
                        defaultMessage: "Enter summary of collection"
                      })}
                      dir="auto"
+                        rows={5}
                      onChange={this.onChangeName}
                      value={summary}/>
             </div>
           </div>
-
           <div className="pt-form-group label_group">
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
@@ -106,10 +136,9 @@ class CollectionEditInfo extends Component {
                      })}
                      dir="auto"
                      onChange={this.onChangeName}
-                     value={summary}/>
+                     value= {collection === undefined ? '' : collection.creator === undefined ? '' : collection.creator}/>
             </div>
           </div>
-
           <div className="pt-form-group label_group">
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
@@ -118,18 +147,14 @@ class CollectionEditInfo extends Component {
               </label>
             </div>
             <div className="pt-form-content">
-              <input className="pt-input input_class"
-                     type="text"
-                     placeholder={intl.formatMessage({
-                       id: "collection.edit.info.placeholder.countries",
-                       defaultMessage: "Enter countries"
-                     })}
-                     dir="auto"
-                     onChange={this.onChangeName}
-                     value={countries}/>
+              <NamedMultiSelect
+                onSelectCountry={this.onSelectCountry}
+                onRemoveCountry={this.onRemoveCountry}
+                list={this.state.listCountries}
+                selectedItems={this.state.countries}
+                isCountry={true}/>
             </div>
           </div>
-
           <div className="pt-form-group label_group">
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
@@ -137,19 +162,13 @@ class CollectionEditInfo extends Component {
                 <FormattedMessage id="collection.edit.info.countries" defaultMessage="Languages"/>
               </label>
             </div>
-            <div className="pt-form-content">
-              <input className="pt-input input_class"
-                     type="text"
-                     placeholder={intl.formatMessage({
-                       id: "collection.edit.info.placeholder.languages",
-                       defaultMessage: "Enter languages"
-                     })}
-                     dir="auto"
-                     onChange={this.onChangeName}
-                     value={languages}/>
-            </div>
+            <NamedMultiSelect
+              onSelectCountry={this.onSelectLanguage}
+              onRemoveCountry={this.onRemoveLanguage}
+              list={this.state.listLanguages}
+              selectedItems={this.state.languages}
+              isCountry={true}/>
           </div>
-
         </div>
       </DualPane.InfoPane>
     );
@@ -158,6 +177,8 @@ class CollectionEditInfo extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    countries: state.metadata.countries,
+    languages: state.metadata.languages
   }
 };
 

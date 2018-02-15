@@ -22,7 +22,6 @@
   .api_key_group {
     display: inline-flex;
     padding-top: $aleph-grid-size;
-    padding-left: $aleph-grid-size;
   }
 
   .api_key {
@@ -32,6 +31,10 @@
   .api_key_label {
     color: #8A9BA8;
     padding-left: $aleph-grid-size * 2;
+  }
+
+  .multiple_select_input {
+    width: 100%;
   }
 
 }

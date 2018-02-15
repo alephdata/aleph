@@ -1,4 +1,5 @@
 import logging
+from banal import as_bool
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -55,7 +56,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.label = data.get('label', self.label)
         self.summary = data.get('summary', self.summary)
         self.category = data.get('category', self.category)
-        self.managed = data.get('managed', False)
+        self.managed = as_bool(data.get('managed'), default=False)
         self.countries = data.get('countries', [])
         if creator is None:
             creator = Role.by_id(data.get('creator_id'))

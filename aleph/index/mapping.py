@@ -98,11 +98,25 @@ ENTITY_MAPPING = {
         "countries": {"type": "keyword"},
         "keywords": {"type": "keyword"},
         "fingerprints": {"type": "keyword"},
-        "names": {"type": "text"},
+        "names": {
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
         "emails": {"type": "keyword"},
         "phones": {"type": "keyword"},
         "identifiers": {"type": "keyword"},
-        "addresses": {"type": "text"},
+        "addresses": {
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
         "columns": {"type": "keyword"},
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},

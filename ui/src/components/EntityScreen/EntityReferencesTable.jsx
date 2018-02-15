@@ -54,10 +54,13 @@ class EntityReferencesTable extends Component {
     }
 
     const columns = _.values(model.properties).filter((prop) => {
-      if (prop.name === property.name || prop.hidden) {
+      if (prop.name === property.name || prop.caption) {
         return false;
       }
-      return prop.featured || !!counts[prop.name];
+      return (
+        (Array.isArray(model.featured) && model.featured.includes(prop.name))
+        || !!counts[prop.name]
+      );
     });
 
     columns.sort((a, b) =>  {
@@ -69,7 +72,7 @@ class EntityReferencesTable extends Component {
         <h3>
           <Property.Reverse model={property} />
         </h3>
-        <table className="pt-table pt-bordered">
+        <table className="pt-html-table pt-html-table-bordered">
           <thead>
             <tr>
               {columns.map(prop => (

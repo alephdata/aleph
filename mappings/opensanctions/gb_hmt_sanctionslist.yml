@@ -1,4 +1,4 @@
-gb-hmt-sanctionslist:
+gb_hmt_sanctionslist:
   label: GB Consolidated List of Targets
   info_url: https://opensanctions.org
   category: sanctions

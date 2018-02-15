@@ -50,9 +50,10 @@ class SearchContext extends Component {
     });
   }
 
-  updateQuery(newQuery) {
+  updateQuery(newQuery, { replace = false } = {}) {
     const { history, location } = this.props;
-    history.push({
+    const navigate = replace ? history.replace : history.push;
+    navigate({
       pathname: location.pathname,
       search: newQuery.toLocation()
     });

@@ -17,12 +17,13 @@ class Facet(object):
     def expand(self, keys):
         pass
 
-    def update(self, result):
+    def update(self, result, key):
         pass
 
     def to_dict(self):
         results = []
         active = list(self.parser.filters.get(self.name, []))
+        active.extend(self.parser.post_filters.get(self.name, []))
 
         for bucket in self.data.get('buckets', []):
             key = six.text_type(bucket.get('key'))
@@ -47,7 +48,7 @@ class Facet(object):
         for result in results:
             self.update(result, result.get('id'))
 
-        results = sorted(results, key=lambda k: k['active'], reverse=True)
+        results = sorted(results, key=lambda k: k['count'], reverse=True)
         return {
             'values': results,
         }
@@ -56,10 +57,9 @@ class Facet(object):
 class SchemaFacet(Facet):
 
     def update(self, result, key):
-        key = result.get('id')
         try:
             result['label'] = model.get(key).plural
-        except NameError:
+        except AttributeError:
             result['label'] = key
 
 

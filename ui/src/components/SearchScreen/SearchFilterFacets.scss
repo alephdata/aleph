@@ -4,7 +4,7 @@
   display: flex;
   flex-flow: row wrap;
   
-  & > div {
+  & > * {
     margin: 0 1px;
   }
 }

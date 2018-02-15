@@ -74,7 +74,55 @@ let messages = {
         defaultMessage: 'To proceed with sign up, please check your email.'
       }
     }
-  }
+  },
+  search: {
+    filter: {
+      addAFilter: {
+        id: 'search.filter.addAFilter',
+        defaultMessage: 'Add a filter'
+      },
+      schema: {
+        id: 'search.filter.schema',
+        defaultMessage: 'Type'
+      },
+      collection_id: {
+        id: 'search.filter.collection_id',
+        defaultMessage: 'Collections'
+      },
+      languages: {
+        id: 'search.filter.languages',
+        defaultMessage: 'Languages'
+      },
+      emails: {
+        id: 'search.filter.emails',
+        defaultMessage: 'Emails'
+      },
+      phones: {
+        id: 'search.filter.phones',
+        defaultMessage: 'Phones'
+      },
+      countries: {
+        id: 'search.filter.countries',
+        defaultMessage: 'Countries'
+      },
+      names: {
+        id: 'search.filter.names',
+        defaultMessage: 'Names'
+      },
+      addresses: {
+        id: 'search.filter.addresses',
+        defaultMessage: 'Addresses'
+      },
+      mime_type: {
+        id: 'search.filter.mime_type',
+        defaultMessage: 'File type'
+      },
+      author: {
+        id: 'search.filter.author',
+        defaultMessage: 'Author'
+      },
+    }
+  },
 };
 
 messages = defineMessages(messages);

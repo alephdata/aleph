@@ -6,7 +6,7 @@ import getPath from 'src/util/getPath';
 import { fetchCollection } from 'src/actions';
 
 
-class Label extends Component {
+class Label extends PureComponent {
   render() {
     const { collection, icon = true } = this.props;
 
@@ -22,6 +22,10 @@ class Label extends Component {
 class CollectionLink extends Component {
   render() {
     const { children, collection, icon = true, className } = this.props;
+
+    if (!collection || !collection.links) {
+      return null;
+    }
     
     return (
       <Link to={getPath(collection.links.ui)} className={className}>

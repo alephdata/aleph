@@ -67,6 +67,10 @@ class Query {
         return this.set(name, _.without(values, value));
     }
 
+    clear(name) {
+        return this.set(name, []);
+    }
+
     has(name) {
         return 0 === this.getList(name).length;
     }
@@ -117,6 +121,10 @@ class Query {
         return this.remove('filter:' + name, value);
     }
 
+    clearFilter(name) {
+        return this.clear('filter:' + name);
+    }
+
     limit(count) {
         return this.set('limit', count + '');
     }
@@ -131,6 +139,14 @@ class Query {
 
     clearFacets() {
         return this.set('facet', []);
+    }
+
+    toggleUiFacet(name) {
+        return this.toggle('uifacet', name);
+    }
+
+    getUiFacets() {
+        return this.getList('uifacet');
     }
 
     sameAs(other) {

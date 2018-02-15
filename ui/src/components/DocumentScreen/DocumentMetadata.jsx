@@ -4,6 +4,7 @@ import {FormattedMessage} from 'react-intl';
 import Schema from 'src/components/common/Schema';
 import Country from 'src/components/common/Country';
 import Language from 'src/components/common/Language';
+import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
 import FileSize from 'src/components/common/FileSize';
 import URL from 'src/components/common/URL';
@@ -108,6 +109,12 @@ class DocumentMetadata extends Component {
                   <th><FormattedMessage id="document.updated_at" defaultMessage="Imported"/>
                   </th>
                   <td><Date value={document.updated_at}/></td>
+              </tr>
+          )}
+          {document.uploader && (
+              <tr>
+                  <th><FormattedMessage id="document.uploader" defaultMessage="Uploader"/></th>
+                  <td><Role.Label role={document.uploader} /></td>
               </tr>
           )}
           {document.mime_type && (

@@ -32,6 +32,11 @@ export const addAlert = asyncActionCreator((alert) => async dispatch => {
   return {};
 }, { name: 'ADD_ALERT' });
 
+export const fetchCollectionPermissions = asyncActionCreator((id) => async dispatch => {
+  const response = await endpoint.get(`collections/${id}/permissions`);
+  return {permissions: response.data};
+}, { name: 'FETCH_COLLECTION_PERMISSIONS' });
+
 export const fetchStatistics = asyncActionCreator(() => async dispatch => {
   const response = await endpoint.get('statistics');
   return { statistics: response.data };
