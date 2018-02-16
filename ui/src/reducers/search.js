@@ -31,8 +31,16 @@ export default createReducer({
   [fetchSearchResults.COMPLETE]: (state, { query, result }) =>
     set([query.toString()], result)(state),
 
+  // Upon error, leave some error status.
+  [fetchSearchResults.ERROR]: (state, { args: { query } }) =>
+    set([query.toString()], { status: 'error' })(state),
+
   [fetchNextSearchResults.START]: (state, { query }) =>
     update([query.toString()], assign({ isExpanding: true }))(state),
 
   [fetchNextSearchResults.COMPLETE]: combineResults,
+
+  // Upon error, merely reset the isExpanding flag.
+  [fetchNextSearchResults.ERROR]: (state, { args: { query, result } }) =>
+    update([query.toString()], assign({ isExpanding: false }))(state),
 }, initialState);

@@ -20,13 +20,17 @@ class SearchContext extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    this.fetchIfNeeded();
+    // Check for a change of query, as unconditionally calling fetchIfNeeded
+    // could cause an infinite loop (if fetching fails).
+    if (!this.props.query.sameAs(prevProps.query)) {
+      this.fetchIfNeeded();
+    }
   }
 
   fetchIfNeeded() {
     const { result, query, fetchSearchResults } = this.props;
 
-    if (result === undefined) {
+    if (result === undefined || (result.status === 'error')) {
       fetchSearchResults({ query });
     }
   }
