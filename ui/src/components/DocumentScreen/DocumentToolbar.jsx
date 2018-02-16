@@ -33,7 +33,6 @@ export default connect(mapStateToProps)(DocumentToolbar);
  */
 export class DownloadButton extends React.Component {
   render() {
-      
     if (this.props.session && this.props.download) {
       if (Array.isArray(this.props.download)) {
         // If passed an array, rrender Download button with multiple options
@@ -59,7 +58,7 @@ export class DownloadButton extends React.Component {
               preventOverflow: { enabled: false, boundariesElement: "scrollParent" }
             }}
             >
-              <a type="button" className="pt-button pt-icon-caret-down"></a>
+              <div className="pt-button pt-icon-caret-down"/>
             </Popover>
           </div>
         );
