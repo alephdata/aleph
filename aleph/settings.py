@@ -47,7 +47,7 @@ APP_LOGO = env.get('ALEPH_LOGO', 'https://cdn.occrp.org/common/logo/WhiteTranspa
 APP_FAVICON = env.get('ALEPH_FAVICON', 'https://cdn.occrp.org/common/logo/WhiteOnRed_globe.png')  # noqa
 
 # Force HTTPS here:
-URL_SCHEME = env.get('ALEPH_URL_SCHEME')
+URL_SCHEME = env.get('ALEPH_URL_SCHEME', 'http')
 
 # Shown on the home page as a few sample queries:
 SAMPLE_SEARCHES = ['TeliaSonera', 'Vladimir Putin']
