@@ -37,9 +37,9 @@ export const fetchStatistics = asyncActionCreator(() => async dispatch => {
   return { statistics: response.data };
 }, { name: 'FETCH_STATISTICS' });
 
-export const fetchSearchResults = asyncActionCreator(({ filters }) => async dispatch => {
-  const response = await endpoint.get('search', { params: filters });
-  return { filters, result: response.data };
+export const fetchSearchResults = asyncActionCreator(({ query }) => async dispatch => {
+  const response = await endpoint.get('search', { params: query.toParams() });
+  return { query, result: response.data };
 }, { name: 'FETCH_SEARCH_RESULTS' });
 
 export const fetchNextSearchResults = asyncActionCreator(({ next }) => async dispatch => {

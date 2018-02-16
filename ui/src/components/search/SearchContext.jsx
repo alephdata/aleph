@@ -39,7 +39,7 @@ class SearchContext extends Component {
     const { query, fetchSearchResults } = this.props;
 
     fetchSearchResults({
-      filters: query.toParams(),
+      query,
     }).then(({result}) => {
       this.setState({result, isFetching: false})
     });

@@ -86,21 +86,20 @@ class SearchFilterFacet extends Component {
 
   async fetchData({ fetchTotal, fetchValues, limit }) {
     const { field, query, fetchSearchResults } = this.props;
-    const params = query
+    const facetQuery = query
       .limit(0) // The limit of the results, not the facets.
       .clearFacets()
       .addFacet(field)
       .set('facet_total', fetchTotal)
       .set('facet_values', fetchValues)
-      .set('facet_size', limit)
-      .toParams();
+      .set('facet_size', limit);
     if (fetchTotal) {
       this.setState({ fetchingTotal: true });
     }
     if (fetchValues) {
       this.setState({ fetchingValues: true });
     }
-    const { result } = await fetchSearchResults({filters: params});
+    const { result } = await fetchSearchResults({ query: facetQuery });
     const { total, values } = result.facets[field];
     if (fetchTotal) {
       this.setState({ total, fetchingTotal: false });

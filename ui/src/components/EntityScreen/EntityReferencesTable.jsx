@@ -35,7 +35,7 @@ class EntityReferencesTable extends Component {
     const { query } = this.props;
 
     this.props.fetchSearchResults({
-      filters: query.toParams(),
+      query,
     }).then(({result}) => {
       this.setState({result, isFetching: false})
     });
