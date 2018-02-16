@@ -2,47 +2,33 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { debounce } from 'lodash';
 
 import { fetchSearchResults } from 'src/actions';
+import { selectResult } from 'src/selectors';
 
 import Query from './Query';
-
 
 class SearchContext extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      result: {},
-      isFetching: false,
-    };
-
-    this.fetchData = debounce(this.fetchData, 200);
     this.updateQuery = this.updateQuery.bind(this);
   }
 
   componentDidMount() {
-    this.fetchData();
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
-    const { query } = this.props;
-
-    if (!query.sameAs(prevProps.query)) {
-      this.fetchData();
-    }
+    this.fetchIfNeeded();
   }
 
-  fetchData() {
-    this.setState({isFetching: true});
-    const { query, fetchSearchResults } = this.props;
+  fetchIfNeeded() {
+    const { result, query, fetchSearchResults } = this.props;
 
-    fetchSearchResults({
-      query,
-    }).then(({result}) => {
-      this.setState({result, isFetching: false})
-    });
+    if (result === undefined) {
+      fetchSearchResults({ query });
+    }
   }
 
   updateQuery(newQuery, { replace = false } = {}) {
@@ -55,8 +41,7 @@ class SearchContext extends Component {
   }
 
   render() {
-    const { query, aspects, children } = this.props;
-    const { result, isFetching } = this.state;
+    const { query, aspects, children, result } = this.props;
 
     // Default some aspects to true
     const aspectsWithDefaults = {
@@ -72,7 +57,7 @@ class SearchContext extends Component {
       query,
       updateQuery: this.updateQuery,
       result,
-      isFetching,
+      isFetching: result && result.isFetching,
       aspects: aspectsWithDefaults,
     };
 
@@ -90,8 +75,11 @@ const mapStateToProps = (state, ownProps) => {
   };
   const query = Query.fromLocation(location, contextWithDefaults, prefix);
 
+  const result = selectResult(state, query);
+
   return {
     query,
+    result,
   };
 };
 

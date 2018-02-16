@@ -162,8 +162,14 @@ class Query {
   }
 
   toLocation() {
-    // turn the state to a query string.
+    // Turn the state to a query string, but hiding the params implicit in the
+    // context.
     return queryString.stringify(this.state);
+  }
+
+  toString() {
+    // Return the full query string for this query, including implicit context.
+    return queryString.stringify(this.toParams());
   }
 
   toParams() {

@@ -46,7 +46,7 @@ class SearchResult extends Component {
     const { isFetching } = this.props;
     const { result, isExpanding } = this.state;
 
-    if (isFetching) {
+    if (!result || isFetching) {
       return (
         <SectionLoading />
       );
