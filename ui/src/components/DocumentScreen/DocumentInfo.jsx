@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {AnchorButton} from '@blueprintjs/core';
 import {FormattedMessage} from 'react-intl';
 
 import Entity from 'src/components/EntityScreen/Entity';
@@ -13,7 +12,7 @@ import './DocumentInfo.css';
 
 class DocumentInfo extends Component {
     render() {
-        const {document, session} = this.props;
+        const {document} = this.props;
 
         return (
           <DualPane.InfoPane className="DocumentInfo">
@@ -21,26 +20,12 @@ class DocumentInfo extends Component {
               <Entity.Label entity={document} addClass={true}/>
             </h1>
             <DocumentMetadata document={document}/>
-
-            {document.links && document.links.file &&
-              <div className="pt-button-group pt-fill document_info_button">
-                <AnchorButton
-                    href={(session && session.token) ? `${document.links.file}?api_key=${session.token}` : document.links.file}
-                    className="document_info_anchor_button"
-                    download={document.file_name}>
-                    <i className="fa fa-download document_info_icon" aria-hidden="true"/>
-                    Download
-                </AnchorButton>
-              </div>
-            }
-
             <h2>
               <FormattedMessage id="collection.section" defaultMessage="Origin"/>
             </h2>
             <div>
               <CollectionCard collection={document.collection}/>
             </div>
-
             <EntityInfoTags entity={document} />
           </DualPane.InfoPane>
         );

@@ -7,9 +7,9 @@ class InfoPane extends Component {
   render() {
     const { children, className } = this.props;
     return (
-      <aside className='InfoPane'>
+      <aside className={`InfoPane ${className}`}>
         <div className="InfoPane-content-container">
-          <div className={c("InfoPane-content", className)}>
+          <div className="InfoPane-content">
             {children}
           </div>
         </div>
