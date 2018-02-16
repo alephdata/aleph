@@ -10,19 +10,6 @@ import Query from './Query';
 
 
 class SearchContext extends Component {
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    context: PropTypes.object,
-    aspects: PropTypes.object,
-    prefix: PropTypes.string,
-  };
-
-  static defaultProps = {
-    context: {},
-    aspects: {}, // XXX we set individual aspects' defaults in render()
-    prefix: '',
-  };
-
   constructor(props) {
     super(props);
 
@@ -33,7 +20,6 @@ class SearchContext extends Component {
 
     this.fetchData = debounce(this.fetchData, 200);
     this.updateQuery = this.updateQuery.bind(this);
-    this.getQuery = this.getQuery.bind(this);
   }
 
   componentDidMount() {
@@ -41,31 +27,22 @@ class SearchContext extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.getQuery().sameAs(this.getQuery(prevProps))) {
+    const { query } = this.props;
+
+    if (!query.sameAs(prevProps.query)) {
       this.fetchData();
     }
   }
 
   fetchData() {
     this.setState({isFetching: true});
-    const { fetchSearchResults } = this.props;
-    let query = this.getQuery();
+    const { query, fetchSearchResults } = this.props;
 
     fetchSearchResults({
       filters: query.toParams(),
     }).then(({result}) => {
       this.setState({result, isFetching: false})
     });
-  }
-
-  getQuery(props = this.props) {
-    const { location, context, prefix } = props;
-    // We normally only want Things, not Intervals (relations between things).
-    const contextWithDefaults = {
-      ...context,
-      'filter:schemata': context['filter:schemata'] || 'Thing',
-    };
-    return Query.fromLocation(location, contextWithDefaults, prefix);
   }
 
   updateQuery(newQuery, { replace = false } = {}) {
@@ -78,7 +55,7 @@ class SearchContext extends Component {
   }
 
   render() {
-    const { children, aspects } = this.props;
+    const { query, aspects, children } = this.props;
     const { result, isFetching } = this.state;
 
     // Default some aspects to true
@@ -92,7 +69,7 @@ class SearchContext extends Component {
     // XXX: A shallow prop comparison by WrappedComponent would always
     // consider searchContext to have changed. Should we cache it in our state?
     const searchContext = {
-      query: this.getQuery(),
+      query,
       updateQuery: this.updateQuery,
       result,
       isFetching,
@@ -103,7 +80,35 @@ class SearchContext extends Component {
   }
 }
 
-SearchContext = connect(null, { fetchSearchResults })(SearchContext);
+const mapStateToProps = (state, ownProps) => {
+  const { location, context, prefix } = ownProps;
+
+  // We normally only want Things, not Intervals (relations between things).
+  const contextWithDefaults = {
+    ...context,
+    'filter:schemata': context['filter:schemata'] || 'Thing',
+  };
+  const query = Query.fromLocation(location, contextWithDefaults, prefix);
+
+  return {
+    query,
+  };
+};
+
+SearchContext = connect(mapStateToProps, { fetchSearchResults })(SearchContext);
 SearchContext = withRouter(SearchContext);
+
+SearchContext.propTypes = {
+  children: PropTypes.func.isRequired,
+  context: PropTypes.object,
+  aspects: PropTypes.object,
+  prefix: PropTypes.string,
+};
+
+SearchContext.defaultProps = {
+  context: {},
+  aspects: {}, // XXX we set individual aspects' defaults in render()
+  prefix: '',
+};
 
 export default SearchContext;
