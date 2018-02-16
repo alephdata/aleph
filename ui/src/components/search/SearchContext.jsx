@@ -57,7 +57,6 @@ class SearchContext extends Component {
       query,
       updateQuery: this.updateQuery,
       result,
-      isFetching: result && result.isFetching,
       aspects: aspectsWithDefaults,
     };
 
