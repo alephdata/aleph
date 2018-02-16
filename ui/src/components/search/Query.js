@@ -7,10 +7,10 @@ class Query {
     // of the APIs (entities, documents, collections, roles), but just serves as a
     // container for the default syntax of Aleph.
 
-    constructor (state, context, prefix) {
+    constructor (state, context = {}, prefix = '') {
         this.state = state;
-        this.context = context || {};
-        this.prefix = prefix || '';
+        this.context = context;
+        this.prefix = prefix;
     }
 
     static fromLocation(location, context, prefix) {

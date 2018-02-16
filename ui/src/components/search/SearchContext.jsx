@@ -12,6 +12,15 @@ import Query from './Query';
 class SearchContext extends Component {
   static propTypes = {
     children: PropTypes.func.isRequired,
+    context: PropTypes.object,
+    aspects: PropTypes.object,
+    prefix: PropTypes.string,
+  };
+
+  static defaultProps = {
+    context: {},
+    aspects: {}, // XXX we set individual aspects' defaults in render()
+    prefix: '',
   };
 
   constructor(props) {
@@ -50,7 +59,7 @@ class SearchContext extends Component {
   }
 
   getQuery(props = this.props) {
-    const { location, context = {}, prefix } = props;
+    const { location, context, prefix } = props;
     // We normally only want Things, not Intervals (relations between things).
     const contextWithDefaults = {
       ...context,
