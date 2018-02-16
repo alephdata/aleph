@@ -41,7 +41,6 @@ class SearchContext extends Component {
     this.setState({isFetching: true});
     const { fetchSearchResults } = this.props;
     let query = this.getQuery();
-    query = query.setFilter('schemata', 'Thing');
 
     fetchSearchResults({
       filters: query.toParams(),
@@ -51,8 +50,13 @@ class SearchContext extends Component {
   }
 
   getQuery(props = this.props) {
-    const { location, context, prefix } = props;
-    return Query.fromLocation(location, context, prefix);
+    const { location, context = {}, prefix } = props;
+    // We normally only want Things, not Intervals (relations between things).
+    const contextWithDefaults = {
+      ...context,
+      'filter:schemata': context['filter:schemata'] || 'Thing',
+    };
+    return Query.fromLocation(location, contextWithDefaults, prefix);
   }
 
   updateQuery(newQuery, { replace = false } = {}) {
