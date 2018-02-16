@@ -11,39 +11,20 @@ import SectionLoading from 'src/components/common/SectionLoading';
 class SearchResult extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-        isExpanding: false,
-        result: props.result
-    };
+
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      isExpanding: false,
-      result: nextProps.result
-    })
-  }
-
   bottomReachedHandler() {
-    const { fetchNextSearchResults } = this.props;
-    let { result } = this.state;
+    const { query, result, fetchNextSearchResults } = this.props;
 
     if (result.next) {
-      this.setState({isExpanding: true});
-      fetchNextSearchResults({ next: result.next }).then(({result: fresh}) => {
-        result.next = fresh.next;
-        result.results.push(...fresh.results);
-        this.setState({
-            result: result,
-            isExpanding: false
-        });
-      });
+      fetchNextSearchResults({ query, result });
     }
   }
 
   render() {
-    const { result, isExpanding } = this.state;
+    const { result } = this.props;
 
     if (result === undefined || result.isFetching) {
       return (
@@ -56,14 +37,14 @@ class SearchResult extends Component {
           <NonIdealState visual="search" title="No search results"
             description="Try making your search more general" />}
         <EntityList {...this.props} result={result} />
-        { !isExpanding && result.next && (
+        { !result.isExpanding && result.next && (
           <Waypoint
             onEnter={this.bottomReachedHandler}
             bottomOffset="-600px"
             scrollableAncestor={window}
           />
         )}
-        { isExpanding && (
+        { result.isExpanding && (
           <SectionLoading />
         )}
       </div>

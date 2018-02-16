@@ -42,9 +42,9 @@ export const fetchSearchResults = asyncActionCreator(({ query }) => async dispat
   return { query, result: response.data };
 }, { name: 'FETCH_SEARCH_RESULTS' });
 
-export const fetchNextSearchResults = asyncActionCreator(({ next }) => async dispatch => {
-  const response = await endpoint.get(next);
-  return { result: response.data };
+export const fetchNextSearchResults = asyncActionCreator(({ query, result }) => async dispatch => {
+  const response = await endpoint.get(result.next);
+  return { query, prevResult: result, nextResult: response.data };
 }, { name: 'FETCH_NEXT_SEARCH_RESULTS' });
 
 export const fetchEntity = asyncActionCreator(({ id }) => async dispatch => {
