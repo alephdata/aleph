@@ -11,7 +11,10 @@ want to execute it as a stand-alone application, run the following commands:
 * `npm start` - React app at [http://localhost:3000](http://localhost:3000)
 
 Be sure to have the environment variable ``REACT_APP_API_ENDPOINT`` pointed
-at an Aleph 2 instance with CORS enabled.
+at an Aleph 2 instance with CORS enabled. To do this, you can create a `.env`
+file in the root of the ui folder that contains something like the following:
+
+  REACT_APP_API_ENDPOINT=http://localhost:5000/api/2
 
 ## Translation
 

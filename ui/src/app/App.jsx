@@ -22,6 +22,8 @@ import { logout } from 'src/actions/sessionActions';
 
 import './App.css';
 
+require('dotenv').config();
+
 // have blueprint handle focus properly
 FocusStyleManager.onlyShowFocusOnTabs();
 
