@@ -5,7 +5,7 @@
 
   & > .opener {
     display: flex;
-    padding: $aleph-grid-size;
+    padding: 0 $aleph-grid-size;
     align-items: center;
 
     &.active {
@@ -18,11 +18,16 @@
     }
 
     & > .caret {
+      margin-right: $aleph-grid-size * 0.5;
       transition: transform 100ms;
 
       &.rotate {
         transform: rotate(90deg);
       }
+    }
+
+    & > .text {
+      padding: $aleph-grid-size 0;
     }
 
     & > .clearButton {

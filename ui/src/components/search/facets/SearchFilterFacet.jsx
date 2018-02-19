@@ -165,14 +165,16 @@ class SearchFilterFacet extends Component {
       <div className="SearchFilterFacet">
         <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
-          {isActive
-            ? total !== null
-              ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count, total }} />
-              : <FormattedMessage id="search.facets.filteringByNoTotal" defaultMessage="Filtering by {count} {fieldLabel}" values={{ fieldLabel, count }} />
-            : total !== null
-              ? <FormattedMessage id="search.facets.filterBy" defaultMessage="Found {total} {fieldLabel}" values={{ fieldLabel, total }} />
-              : <FormattedMessage id="search.facets.countingTotal" defaultMessage="Counting {fieldLabel}…" values={{ fieldLabel }} />
-          }
+          <span className="text">
+            {isActive
+              ? total !== null
+                ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count, total }} />
+                : <FormattedMessage id="search.facets.filteringByNoTotal" defaultMessage="Filtering by {count} {fieldLabel}" values={{ fieldLabel, count }} />
+              : total !== null
+                ? <FormattedMessage id="search.facets.filterBy" defaultMessage="Found {total} {fieldLabel}" values={{ fieldLabel, total }} />
+                : <FormattedMessage id="search.facets.countingTotal" defaultMessage="Counting {fieldLabel}…" values={{ fieldLabel }} />
+            }
+          </span>
           {isActive && (
             <Icon onClick={this.onClear} className="clearButton"
               // FIXME Blueprint Icon seems not to pass down the title prop
