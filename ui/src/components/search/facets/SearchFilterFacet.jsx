@@ -38,8 +38,9 @@ class SearchFilterFacet extends Component {
       nextProps.field !== field ||
       // If the query changed, our known values are outdated; except if the only
       // change was in our facet field, so we omit this field in the comparison.
-      !nextProps.query.clearFilter(field)
-        .sameAs(query.clearFilter(field))
+      // (and likewise, the sorting should be irrelevant to our results)
+      !nextProps.query.clearFilter(field).sortBy(null)
+         .sameAs(query.clearFilter(field).sortBy(null))
     );
 
     if (needsUpdate) {
