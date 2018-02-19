@@ -1,11 +1,11 @@
 @import "src/app/variables.scss";
 
-.entity-label {
-    &.untitled {
-        color: $aleph-greyed-text;
-        // font-variant: small-caps;
-        text-transform: uppercase;
-    }
+.EntityLabel {
+  &.untitled {
+    color: $aleph-greyed-text;
+    // font-variant: small-caps;
+    text-transform: uppercase;
+  }
 }
 
 .EntityLink {

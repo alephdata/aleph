@@ -12,7 +12,7 @@ import { fetchEntity } from 'src/actions';
 import './Entity.css';
 
 
-class Label extends Component {
+class EntityLabel extends Component {
   render() {
     const {icon = false, truncate} = this.props;
     let {title, name, file_name, schema} = this.props.entity;
@@ -20,7 +20,7 @@ class Label extends Component {
 
     if (!text || !text.length) {
       return (
-        <span className='entity-label untitled'>
+        <span className='EntityLabel untitled'>
           {icon && (
               <Schema.Icon schema={schema}/>
           )}
@@ -35,7 +35,7 @@ class Label extends Component {
     }
 
     return (
-      <span className='entity-label' title={title || name}>
+      <span className='EntityLabel' title={title || name}>
         {icon && (
           <Schema.Icon schema={schema}/>
         )}
@@ -49,19 +49,19 @@ class EntityLink extends Component {
   render() {
     const {entity, className, icon, truncate} = this.props;
     if (!entity || !entity.links) {
-      return <Label entity={entity} icon={icon} truncate={truncate}/>;
+      return <Entity.Label entity={entity} icon={icon} truncate={truncate}/>;
     }
 
     return (
       <Link to={getPath(entity.links.ui)} className={c('EntityLink', className)}>
-        <Label entity={entity} icon={icon} truncate={truncate}/>
+        <Entity.Label entity={entity} icon={icon} truncate={truncate}/>
       </Link>
     );
   }
 }
 
 
-class LabelById extends PureComponent {
+class EntityLabelById extends PureComponent {
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -94,14 +94,14 @@ class LabelById extends PureComponent {
 const mapStateToProps = (state, ownProps) => ({
   entity: state.entities[ownProps.id],
 });
-LabelById = connect(mapStateToProps, { fetchEntity })(LabelById);
+EntityLabelById = connect(mapStateToProps, { fetchEntity })(EntityLabelById);
 
 
 
 class Entity {
-  static Label = Label;
+  static Label = EntityLabel;
   static Link = EntityLink;
-  static LabelById = LabelById;
+  static EntityLabelById = EntityLabelById;
 }
 
 export default Entity;
