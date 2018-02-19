@@ -73,8 +73,8 @@ const mapStateToProps = (state, ownProps) => {
 
   // We normally only want Things, not Intervals (relations between things).
   const contextWithDefaults = {
-    ...context,
     'filter:schemata': context['filter:schemata'] || 'Thing',
+    ...context,
   };
   const query = Query.fromLocation(location, contextWithDefaults, prefix);
 
