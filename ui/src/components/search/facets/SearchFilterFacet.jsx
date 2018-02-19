@@ -165,6 +165,9 @@ class SearchFilterFacet extends Component {
               </span>
             )
           }
+          {fetchingValues && (
+            <Spinner className="pt-small spinner" />
+          )}
         </div>
         <Collapse isOpen={isOpen}>
           {values !== null && (
@@ -175,9 +178,6 @@ class SearchFilterFacet extends Component {
                 <Button onClick={this.showMore} className="showMoreButton pt-minimal">
                   <FormattedMessage id="search.facets.showMore" defaultMessage="show more {fieldLabel}…" values={{ fieldLabel }}/>
                 </Button>
-              )}
-              {fetchingValues && (
-                <Spinner className="pt-large" />
               )}
             </CheckboxList>
           )}

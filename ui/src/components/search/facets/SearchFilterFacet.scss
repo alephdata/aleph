@@ -23,6 +23,10 @@
         transform: rotate(90deg);
       }
     }
+
+    & > .spinner {
+      margin-left: auto;
+    }
   }
 
   .CheckboxList {
