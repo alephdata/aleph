@@ -60,12 +60,18 @@ class SearchFilterFacet extends Component {
     // }
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     this.fetchIfNeeded();
   }
 
-  componentDidMount() {
-    this.fetchIfNeeded();
+  componentDidUpdate(prevProps, prevState) {
+    // Check for a change of query, as unconditionally calling fetchIfNeeded
+    // could cause an infinite loop (if fetching fails).
+    if (!this.props.query.sameAs(prevProps.query)
+      || this.state.isOpen !== prevState.isOpen
+      || this.state.limit !== prevState.limit) {
+      this.fetchIfNeeded();
+    }
   }
 
   fetchIfNeeded() {
@@ -100,8 +106,15 @@ class SearchFilterFacet extends Component {
     if (fetchValues) {
       this.setState({ fetchingValues: true });
     }
-    const { result } = await fetchSearchResults({ query: facetQuery });
-    const { total, values } = result.facets[field];
+    let total, values
+    try {
+      const { result } = await fetchSearchResults({ query: facetQuery });
+      total = result.facets[field].total;
+      values = result.facets[field].values;
+    } catch (err) {
+      total = null;
+      values = null;
+    }
     if (fetchTotal) {
       this.setState({ total, fetchingTotal: false });
     }
