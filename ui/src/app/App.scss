@@ -48,6 +48,10 @@ pre {
   overflow-wrap: break-word;
 }
 
+a {
+  color: $aleph-link-color;
+}
+
 .small-screen {
   max-width: 400px;
   margin: 0 auto;

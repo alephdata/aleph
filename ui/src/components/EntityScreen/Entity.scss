@@ -7,3 +7,9 @@
         text-transform: uppercase;
     }
 }
+
+.EntityLink {
+  &:visited {
+    color: $aleph-visited-link-color;
+  }
+}

@@ -3,6 +3,7 @@ import React, { Component, PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
 import { connect } from 'react-redux';
+import c from 'classnames';
 
 import Schema from 'src/components/common/Schema';
 import getPath from 'src/util/getPath';
@@ -52,7 +53,7 @@ class EntityLink extends Component {
     }
 
     return (
-      <Link to={getPath(entity.links.ui)} className={className}>
+      <Link to={getPath(entity.links.ui)} className={c('EntityLink', className)}>
         <Label entity={entity} icon={icon} truncate={truncate}/>
       </Link>
     );
