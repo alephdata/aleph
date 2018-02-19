@@ -28,6 +28,7 @@ class SearchFilterFacet extends Component {
 
     this.onClick = this.onClick.bind(this);
     this.onSelect = this.onSelect.bind(this);
+    this.onClear = this.onClear.bind(this);
     this.isActive = this.isActive.bind(this);
     this.showMore = this.showMore.bind(this);
   }
@@ -141,6 +142,14 @@ class SearchFilterFacet extends Component {
     this.props.updateQuery(query)
   }
 
+  onClear(event) {
+    event.stopPropagation();
+    const { field } = this.props;
+    let query = this.props.query;
+    query = query.clearFilter(field);
+    this.props.updateQuery(query);
+  }
+
   render() {
     const { query, field, intl } = this.props;
     const { total, values, limit, isOpen, fetchingValues } = this.state;
@@ -165,6 +174,12 @@ class SearchFilterFacet extends Component {
               </span>
             )
           }
+          {isActive && (
+            <Icon onClick={this.onClear} className="clearButton"
+              // FIXME Blueprint Icon seems not to pass down the title prop
+              title="Clear this filter"
+              icon="disable" iconSize={12} />
+          )}
           {fetchingValues && (
             <Spinner className="pt-small spinner" />
           )}

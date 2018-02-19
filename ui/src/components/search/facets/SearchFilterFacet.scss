@@ -6,6 +6,7 @@
   & > .opener {
     display: flex;
     padding: $aleph-grid-size;
+    align-items: center;
 
     &.active {
       font-weight: bold;
@@ -21,6 +22,17 @@
 
       &.rotate {
         transform: rotate(90deg);
+      }
+    }
+
+    & > .clearButton {
+      margin-left: $aleph-grid-size;
+
+      transition: opacity 100ms;
+      opacity: 0.5;
+
+      &:hover {
+        opacity: 0.8;
       }
     }
 
