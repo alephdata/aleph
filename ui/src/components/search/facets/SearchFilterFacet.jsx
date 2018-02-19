@@ -155,6 +155,7 @@ class SearchFilterFacet extends Component {
     const { total, values, limit, isOpen, fetchingValues } = this.state;
 
     const current = query.getFilter(field);
+    const count = current.length;
     const isActive = this.isActive();
     const fieldLabel = messages.search.filter[field]
       ? intl.formatMessage(messages.search.filter[field])
@@ -164,15 +165,13 @@ class SearchFilterFacet extends Component {
       <div className="SearchFilterFacet">
         <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
-          {total !== null
-            ? isActive
-              ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count: current.length, total }} />
-              : <FormattedMessage id="search.facets.filterBy" defaultMessage="Found {total} {fieldLabel}" values={{ fieldLabel, total }} />
-            : (
-              <span className="">
-                <FormattedMessage id="search.facets.countingTotal" defaultMessage="Counting {fieldLabel}…" values={{fieldLabel}} />
-              </span>
-            )
+          {isActive
+            ? total !== null
+              ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count, total }} />
+              : <FormattedMessage id="search.facets.filteringByNoTotal" defaultMessage="Filtering by {count} {fieldLabel}" values={{ fieldLabel, count }} />
+            : total !== null
+              ? <FormattedMessage id="search.facets.filterBy" defaultMessage="Found {total} {fieldLabel}" values={{ fieldLabel, total }} />
+              : <FormattedMessage id="search.facets.countingTotal" defaultMessage="Counting {fieldLabel}…" values={{ fieldLabel }} />
           }
           {isActive && (
             <Icon onClick={this.onClear} className="clearButton"
