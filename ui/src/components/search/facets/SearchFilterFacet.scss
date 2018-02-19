@@ -33,11 +33,9 @@
     & > .clearButton {
       margin-left: $aleph-grid-size;
 
-      transition: opacity 100ms;
-      opacity: 0.5;
-
       &:hover {
-        opacity: 0.8;
+        // Element is on a background (set by .clickable), so invert its own background.
+        background: $aleph-content-background;
       }
     }
 

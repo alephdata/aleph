@@ -176,10 +176,9 @@ class SearchFilterFacet extends Component {
             }
           </span>
           {isActive && (
-            <Icon onClick={this.onClear} className="clearButton"
-              // FIXME Blueprint Icon seems not to pass down the title prop
-              title="Clear this filter"
-              icon="disable" iconSize={12} />
+            <Button onClick={this.onClear}
+              className="clearButton pt-minimal pt-small"
+              title="Clear this filter" icon="disable" />
           )}
           {fetchingValues && (
             <Spinner className="pt-small spinner" />
