@@ -47,6 +47,19 @@ export const fetchNextSearchResults = asyncActionCreator(({ query, result }) => 
   return { query, prevResult: result, nextResult: response.data };
 }, { name: 'FETCH_NEXT_SEARCH_RESULTS' });
 
+export const fetchFacet = asyncActionCreator(({ query, field, fetchTotal, fetchValues, limit=10 }) => async dispatch => {
+  const facetQuery = query
+    .limit(0) // The limit of the results, not the facets.
+    .clearFacets()
+    .addFacet(field)
+    .set('facet_total', fetchTotal)
+    .set('facet_values', fetchValues)
+    .set('facet_size', limit);
+  const response = await endpoint.get('search', { params: facetQuery.toParams() });
+  const result = response.data.facets[field];
+  return { query, field, fetchTotal, fetchValues, result };
+}, { name: 'FETCH_FACET' });
+
 export const fetchEntity = asyncActionCreator(({ id }) => async dispatch => {
   const response = await endpoint.get(`entities/${id}`);
   return { id, data: response.data };

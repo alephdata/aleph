@@ -5,7 +5,8 @@ import { Button, Icon, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
 import messages from 'src/content/messages';
-import { fetchSearchResults } from 'src/actions';
+import { fetchFacet } from 'src/actions';
+import { selectFacet } from 'src/selectors';
 import CheckboxList from './CheckboxList';
 
 import './SearchFilterFacet.css';
@@ -18,11 +19,7 @@ class SearchFilterFacet extends Component {
     super(props);
 
     this.state = {
-      total: null,
-      values: null,
       limit: this.defaultLimit,
-      fetchingTotal: false,
-      fetchingValues: false,
       isOpen: props.initiallyOpen !== undefined ? props.initiallyOpen : this.isActive(),
     };
 
@@ -31,34 +28,6 @@ class SearchFilterFacet extends Component {
     this.onClear = this.onClear.bind(this);
     this.isActive = this.isActive.bind(this);
     this.showMore = this.showMore.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { field, query } = this.props;
-    const needsUpdate = (
-      nextProps.field !== field ||
-      // If the query changed, our known values are outdated; except if the only
-      // change was in our facet field, so we omit this field in the comparison.
-      // (and likewise, the sorting should be irrelevant to our results)
-      !nextProps.query.clearFilter(field).sortBy(null)
-         .sameAs(query.clearFilter(field).sortBy(null))
-    );
-
-    if (needsUpdate) {
-      // Invalidate previously fetched values.
-      this.setState({
-        total: null,
-        values: null,
-        limit: this.defaultLimit,
-        fetchingTotal: false,
-        fetchingValues: false,
-      });
-    }
-
-    // // If we just became active, open up for clarity.
-    // if (this.isActive(nextProps) && !this.isActive(this.props)) {
-    //   this.setState({ isOpen: true });
-    // }
   }
 
   componentDidMount() {
@@ -76,52 +45,22 @@ class SearchFilterFacet extends Component {
   }
 
   fetchIfNeeded() {
-    const { isOpen, total, values, limit, fetchingTotal, fetchingValues } = this.state;
-    const fetchTotal = total === null && !fetchingTotal;
-    const fetchValues = isOpen && !fetchingValues && (
-      values === null
+    const { total, values, isFetchingTotal, isFetchingValues, fetchFacet } = this.props;
+    const { isOpen, limit } = this.state;
+    const fetchTotal = total === undefined && !isFetchingTotal;
+    const fetchValues = isOpen && !isFetchingValues && (
+      values === undefined
       // If the limit has increased, we may have to fetch again.
-      || (values.length < limit && total !== null && values.length < total)
+      || (values.length < limit && total !== undefined && values.length < total)
     );
-    if (fetchValues || fetchTotal) {
-      this.fetchData({ fetchTotal, fetchValues, limit });
+    if (fetchTotal || fetchValues) {
+      const { query, field } = this.props;
+      fetchFacet({ query, field, fetchTotal, fetchValues, limit });
     }
   }
 
   isActive(props = this.props) {
     return props.query.getFilter(props.field).length > 0;
-  }
-
-  async fetchData({ fetchTotal, fetchValues, limit }) {
-    const { field, query, fetchSearchResults } = this.props;
-    const facetQuery = query
-      .limit(0) // The limit of the results, not the facets.
-      .clearFacets()
-      .addFacet(field)
-      .set('facet_total', fetchTotal)
-      .set('facet_values', fetchValues)
-      .set('facet_size', limit);
-    if (fetchTotal) {
-      this.setState({ fetchingTotal: true });
-    }
-    if (fetchValues) {
-      this.setState({ fetchingValues: true });
-    }
-    let total, values
-    try {
-      const { result } = await fetchSearchResults({ query: facetQuery });
-      total = result.facets[field].total;
-      values = result.facets[field].values;
-    } catch (err) {
-      total = null;
-      values = null;
-    }
-    if (fetchTotal) {
-      this.setState({ total, fetchingTotal: false });
-    }
-    if (fetchValues) {
-      this.setState({ values, fetchingValues: false });
-    }
   }
 
   showMore() {
@@ -151,8 +90,8 @@ class SearchFilterFacet extends Component {
   }
 
   render() {
-    const { query, field, intl } = this.props;
-    const { total, values, limit, isOpen, fetchingValues } = this.state;
+    const { query, field, total, values, isFetchingValues, intl } = this.props;
+    const { limit, isOpen } = this.state;
 
     const current = query.getFilter(field);
     const count = current.length;
@@ -167,10 +106,10 @@ class SearchFilterFacet extends Component {
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
           <span className="text">
             {isActive
-              ? total !== null
+              ? total !== undefined
                 ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count, total }} />
                 : <FormattedMessage id="search.facets.filteringByNoTotal" defaultMessage="Filtering by {count} {fieldLabel}" values={{ fieldLabel, count }} />
-              : total !== null
+              : total !== undefined
                 ? <FormattedMessage id="search.facets.filterBy" defaultMessage="Found {total} {fieldLabel}" values={{ fieldLabel, total }} />
                 : <FormattedMessage id="search.facets.countingTotal" defaultMessage="Counting {fieldLabel}…" values={{ fieldLabel }} />
             }
@@ -180,16 +119,16 @@ class SearchFilterFacet extends Component {
               className="clearButton pt-minimal pt-small"
               title="Clear this filter" icon="disable" />
           )}
-          {fetchingValues && (
+          {isFetchingValues && (
             <Spinner className="pt-small spinner" />
           )}
         </div>
         <Collapse isOpen={isOpen}>
-          {values !== null && (
+          {values !== undefined && (
             <CheckboxList items={values}
                           selectedItems={current}
                           onItemClick={this.onSelect}>
-              {!fetchingValues && limit < total && (
+              {!isFetchingValues && limit < total && (
                 <Button onClick={this.showMore} className="showMoreButton pt-minimal">
                   <FormattedMessage id="search.facets.showMore" defaultMessage="show more {fieldLabel}…" values={{ fieldLabel }}/>
                 </Button>
@@ -202,6 +141,10 @@ class SearchFilterFacet extends Component {
   }
 }
 
+const mapStateToProps = (state, { query, field }) => ({
+  ...selectFacet(state, { query, field }),
+});
+
 SearchFilterFacet = injectIntl(SearchFilterFacet);
-SearchFilterFacet = connect(null, { fetchSearchResults })(SearchFilterFacet);
+SearchFilterFacet = connect(mapStateToProps, { fetchFacet })(SearchFilterFacet);
 export default SearchFilterFacet;
