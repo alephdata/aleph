@@ -56,14 +56,6 @@ class DocumentMetadata extends Component {
             </span>
           </li>
         )}
-        {document.source_url && (
-          <li>
-            <span className="key">
-              <FormattedMessage id="document.source_url" defaultMessage="Source URL"/>
-            </span>
-            <span className="value"><URL value={document.source_url} /></span>
-          </li>
-        )}
         {document.author && (
           <li>
             <span className="key">

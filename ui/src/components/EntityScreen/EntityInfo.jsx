@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
+import { Tab, Tabs, Icon } from "@blueprintjs/core";
 import _ from 'lodash';
+
 
 import Property from './Property';
 import Entity from './Entity';
@@ -9,12 +11,24 @@ import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import Date from 'src/components/common/Date';
 import Schema from 'src/components/common/Schema';
-import CollectionCard from 'src/components/CollectionScreen/CollectionCard';
+import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
 import { fetchEntityReferences } from '../../actions/index';
 
 import './EntityInfo.css';
 
-class EntityInfo extends Component {
+class EntityInfo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeTabId: 'source'
+    };
+    this.handleTabChange = this.handleTabChange.bind(this);
+  }
+  
+  handleTabChange(activeTabId: TabId) {
+    this.setState({ activeTabId });
+  }
+  
   componentDidMount() {
     const { entity } = this.props;
     if(!this.props.references && entity && entity.id) {
@@ -33,68 +47,34 @@ class EntityInfo extends Component {
     });
   
     return (
-      <DualPane.InfoPane>
-        <h1>
-          <Entity.Label entity={entity} />
-        </h1>
-
-        <ul className="info-sheet">
-          <li>
-            <span className="key"><FormattedMessage id="entity.type" defaultMessage="Type"/></span>
-            <span className="value">
-              <Schema.Icon schema={entity.schema}/>
-              <Schema.Name schema={entity.schema}/>
-            </span>
-          </li>
-          { properties.map((prop) => (
-            <li key={prop.name}>
-              <span className="key">
-                <Property.Name model={prop} />
-              </span>
-              <span className="value">
-                <Property.Values model={prop} values={entity.properties[prop.name]} />
-              </span>
-            </li>
-          ))}
-          <li>
-            <span className="key">
-              <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
-            </span>
-            <span className="value">
-              <Date value={entity.updated_at} />
-            </span>
-          </li>
-        </ul>
-
-        <h2>
-          <FormattedMessage id="collection.section.origin" defaultMessage="Origin"/>
-        </h2>
-        <div>
-          <CollectionCard collection={entity.collection} />
+      <DualPane.InfoPane className="EntityInfo">
+        <div className="PaneHeading">
+          <h1 style={{margin: 0, border: 0}}>
+            <Entity.Label entity={entity} addClass={true}/>
+          </h1>
         </div>
-
-        { references && references.results && !!references.results.length && (
-          <div className="references">
-            <h2>
-              <FormattedMessage id="collection.section.links" defaultMessage="Relationships"/>
-            </h2>
-            <ul className="info-rank">
-              { references.results.map((ref) => (
-                <li key={ref.property.qname}>
-                  <span className="key">
-                    <Schema.Icon schema={ref.schema} />
-                    <Property.Reverse model={ref.property} />
-                  </span>
-                  <span className="value">
-                    <FormattedNumber value={ref.count} />
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <EntityInfoTags entity={entity} />
+        <div className="PaneContent">
+          <Tabs id="TabsExample"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+              <Tab id="source" 
+                title={
+                  <React.Fragment>
+                    <Icon icon="graph"/> <FormattedMessage id="document.info.source" defaultMessage="Source"/>
+                  </React.Fragment>
+                }
+                panel={<CollectionInfo collection={entity.collection}/>}
+              />
+              <Tab id="tags"
+                title={
+                  <React.Fragment>
+                    <Icon icon="tag"/> <FormattedMessage id="document.info.tags" defaultMessage="Related Tags"/>
+                  </React.Fragment>
+                }
+                panel={<EntityInfoTags entity={entity} />}
+              />
+              <Tabs.Expander />
+          </Tabs>
+        </div>
+        
       </DualPane.InfoPane>
     );
   }

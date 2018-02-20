@@ -32,7 +32,7 @@ class DocumentRelatedScreen extends Component {
       return <ScreenLoading />;
     }
     const context = { exclude: document.id };
-
+console.log(document)
     return (
       <Screen>
         <Helmet>
@@ -54,10 +54,10 @@ class DocumentRelatedScreen extends Component {
           </li>
         </Breadcrumbs>
         <DualPane>
-          <DocumentInfo document={document} />
           <DualPane.ContentPane>
             <SearchContext context={context} />
           </DualPane.ContentPane>
+          <DocumentInfo document={document} />
         </DualPane>
       </Screen>
     );

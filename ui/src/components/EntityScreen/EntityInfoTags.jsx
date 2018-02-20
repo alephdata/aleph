@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
+import { FormattedNumber } from 'react-intl';
 
 import Tag from 'src/components/common/Tag';
 import { fetchEntityTags } from '../../actions/index';
@@ -32,9 +32,6 @@ class EntityInfoTags extends Component {
   
     return (
       <div className="tags">
-        <h2>
-          <FormattedMessage id="entity.section.tags" defaultMessage="Related tags"/>
-        </h2>
         <ul className="info-rank">
           { tags.results.map((tag) => (
             <li key={tag.id}>

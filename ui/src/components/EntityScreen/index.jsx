@@ -50,8 +50,8 @@ class EntityScreen extends Component {
           </li>
         </Breadcrumbs>
         <DualPane>
-          <EntityInfo entity={entity} />
           <EntityContent entity={entity} />
+          <EntityInfo entity={entity} />
         </DualPane>
       </Screen>
     );

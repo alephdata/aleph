@@ -1,1 +1,19 @@
 @import "src/app/variables.scss";
+
+.DualPane .InfoPane.EntityInfo {
+  padding: 0;
+}
+
+.DualPane .InfoPane.EntityInfo .PaneHeading {
+  background: $aleph-sidebar-background;
+  padding: 40px 20px;
+}
+
+.DualPane .InfoPane.EntityInfo .PaneContent {
+  padding: 10px 20px 20px 20px;
+}
+
+.DualPane .InfoPane .pt-tab-list .pt-icon {
+  padding-bottom: 20px;
+  padding-right: 20px;
+}
