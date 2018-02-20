@@ -155,14 +155,12 @@ class CollectionEditInfo extends Component {
                 <FormattedMessage id="collection.edit.info.countries" defaultMessage="Countries"/>
               </label>
             </div>
-            <div className="pt-form-content">
               <NamedMultiSelect
-                onSelectCountry={this.onSelectCountry}
-                onRemoveCountry={this.onRemoveCountry}
+                onSelectItem={this.onSelectCountry}
+                onRemoveItem={this.onRemoveCountry}
                 list={this.state.listCountries}
                 selectedItems={this.state.countries}
                 isCountry={true}/>
-            </div>
           </div>
           <div className="pt-form-group label_group">
             <div className='label_icon_group'>
@@ -172,11 +170,11 @@ class CollectionEditInfo extends Component {
               </label>
             </div>
             <NamedMultiSelect
-              onSelectCountry={this.onSelectLanguage}
-              onRemoveCountry={this.onRemoveLanguage}
+              onSelectItem={this.onSelectLanguage}
+              onRemoveItem={this.onRemoveLanguage}
               list={this.state.listLanguages}
               selectedItems={this.state.languages}
-              isCountry={true}/>
+              isCountry={false}/>
           </div>
           {/*<div className="pt-form-group label_group">
             <div className='label_icon_group'>

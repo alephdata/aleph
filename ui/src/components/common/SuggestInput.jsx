@@ -24,7 +24,8 @@ class SuggestInput extends Component {
     super(props);
 
     this.state = {
-      list: mockList
+      list: mockList,
+      selectedItem: {}
     };
 
     this.itemRenderer = this.itemRenderer.bind(this);
@@ -33,20 +34,22 @@ class SuggestInput extends Component {
     this.getSelectedItemIndex = this.getSelectedItemIndex.bind(this);
     this.isItemSelected = this.isItemSelected.bind(this);
     this.handleItemSelect = this.handleItemSelect.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.filterList = this.filterList.bind(this);
     this.removeFromList = this.removeFromList.bind(this);
+    this.inputRenderer = this.inputRenderer.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      //list: nextProps.list
+      list: nextProps.list
     });
   }
 
-  itemRenderer(item) {
-    return <MenuItem
+  itemRenderer(item, opts) {
+    console.log('item renderer', opts)
+    return opts.modifiers.matchesPredicate && <MenuItem
       key={item.id}
-      onClick={this.handleItemSelect.bind(this, item)}
+      onClick={opts.handleClick}
       text={item.name}
       shouldDismissPopover={false}
     />;
@@ -84,33 +87,24 @@ class SuggestInput extends Component {
     console.log('handle item', item)
   }
 
-  handleChange(query, item) {
-    return false;
-    console.log('handle change', query, item)
+  filterList(query, item) {
+    console.log('handle change', query, item);
     if (query !== '') {
       query = query.toString().toLowerCase();
       if(item !== undefined) {
-        console.log('IF', item.name.toLowerCase().includes(query))
-        if(item.name.toLowerCase().includes(query)) {
-          console.log('UNUTRA')
-          return true;
-        }
-        return false;
+        return item.name.toLowerCase().includes(query);
+
       }
     } else if(query !== undefined) {
-      console.log('ELSE')
       return true;
     }
 
     return false;
   }
 
-  testing() {
-    console.log('testing');
-  }
+  inputRenderer(item) {
+    this.props.onSelectItem(item);
 
-  inputRenderer(event, item) {
-    console.log('INPUT VALUE RENDERER')
     return item.name
   }
 
@@ -122,18 +116,16 @@ class SuggestInput extends Component {
       <Suggest
         initialContent={<MenuItem disabled={true} text='Add new user!' />}
         className='multiple_select_input'
-        //itemPredicate={this.handleChange.bind(this)}
+        //itemPredicate={this.filterList.bind(this)}
         noResults={<MenuItem disabled={true} text="No results." />}
-        inputProps={{onChange: this.handleChange}}
+        inputProps={{onChange: this.props.onTyping}}
         items={list}
         itemRenderer={this.itemRenderer}
-        onItemSelect={this.testing}
-        //intent={false}
-        popoverProps={{targetClassName: 'multiple_select_input'}}
+        onItemSelect={this.handleItemSelect}
+        intent={false}
+        popoverProps={{targetClassName: 'multiple_select_input', popoverClassName: 'multiple_select_input'}}
         closeOnSelect={true}
-        minimal={true}
-        inputValueRenderer={this.inputRenderer}
-        openOnKeyDown={false}/>
+        inputValueRenderer={this.inputRenderer}/>
     );
   }
 }

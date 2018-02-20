@@ -34,12 +34,12 @@ class NamedMultiSelect extends Component {
     });
   }
 
-  itemRenderer(item) {
-    //console.log('item renderer', item)
-    return <MenuItem
+  itemRenderer(item, opts) {
+    console.log('item renderer', opts)
+    return opts.modifiers.matchesPredicate && <MenuItem
       //iconName="blank"
       key={item.index}
-      onClick={this.handleItemSelect.bind(this, item)}
+      onClick={opts.handleClick}
       text={item.name}
       shouldDismissPopover={false}
     />;
@@ -52,14 +52,15 @@ class NamedMultiSelect extends Component {
   }
 
   removeItem(index) {
+    console.log('remove')
     this.setState({selectedItems: this.state.selectedItems.filter((item, i) => i !== index)});
   }
 
   selectItem(item) {
     console.log('select', item)
     let selectedItems = this.state.selectedItems;
-    selectedItems.push(item.item.index);
-    let list = this.removeFromList(item.item.index);
+    selectedItems.push(item.index);
+    let list = this.removeFromList(item.index);
 
     this.props.onSelectItem({selectedItems: selectedItems, list: list});
   }
@@ -76,16 +77,23 @@ class NamedMultiSelect extends Component {
   }
 
   isItemSelected(item) {
-    return this.getSelectedItemIndex(item) !== -1;
+    for(let i = 0; i < this.state.selectedItems.length; i++) {
+      if(this.state.selectedItems[i].name === item.name) return true;
+    }
+    return false;
   }
 
   getSelectedItemIndex(item) {
     //console.log('get selected', item)
-    return this.state.selectedItems.indexOf(item);
+    for(let i = 0; i < this.state.selectedItems.length; i++) {
+      if(this.state.selectedItems[i].name === item.name) return i;
+    }
+
+    return -1;
   }
 
-  handleItemSelect(item) {
-    //console.log('handle item', this.isItemSelected(item))
+  handleItemSelect(item){
+    console.log('test method', this.isItemSelected(item))
     if (!this.isItemSelected(item)) {
       this.selectItem(item);
     } else {
@@ -93,17 +101,13 @@ class NamedMultiSelect extends Component {
     }
   }
 
-  testMethod(){
-    console.log('test method')
-  }
-
   handleChange(query, item) {
     //console.log('handle change', query, item)
     if (query !== '') {
       query = query.toLowerCase();
-      if(item.name.toLowerCase().includes(query)) return item;
+      return item.name.toLowerCase().includes(query);
     } else {
-      return item;
+      return true;
     }
   }
 
@@ -120,11 +124,13 @@ class NamedMultiSelect extends Component {
                 items={list}
                 itemRenderer={this.itemRenderer}
                 tagRenderer={this.tagRenderer}
-                onItemSelect={this.testMethod}
+                onItemSelect={this.handleItemSelect}
                 intent={false}
                 popoverProps={{targetClassName: 'multiple_select_input'}}
+                tagInputProps={{onRemove: this.handleItemSelect}}
                 resetOnSelect={true}
-                selectedItems={selectedItems}/>
+                selectedItems={selectedItems}
+              />
     );
   }
 }

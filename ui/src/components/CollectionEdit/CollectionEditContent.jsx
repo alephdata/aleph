@@ -16,18 +16,19 @@ class CollectionEditContent extends Component {
     super(props);
 
     this.state = {
-      newUser: '',
+      newUser: {},
       collectionId: -1,
       listUsers: [],
+      users: []
     };
 
     this.onAddUser = this.onAddUser.bind(this);
-    this.onChangeAddingInput = this.onChangeAddingInput.bind(this);
     this.onTyping = this.onTyping.bind(this);
+    this.onSelectUser = this.onSelectUser.bind(this);
   }
 
   componentDidMount() {
-    this.props.fetchUsers('emi');
+    //this.props.fetchUsers('emi');
   }
 
   componentWillReceiveProps(nextProps) {
@@ -35,58 +36,57 @@ class CollectionEditContent extends Component {
       console.log('propsss')
       this.setState({
         collectionId: nextProps.collection.id,
-        listUsers: nextProps.users.results});
+        listUsers: nextProps.users.results === undefined ? [] : nextProps.users.results
+      });
       this.props.fetchCollectionPermissions(nextProps.collection.id);
     }
   }
 
-  onAddUser(user) {
-    console.log('add', user, this.props.collection)
+  onAddUser() {
+    if (this.state.newUser.id === undefined) alert('no user');
+    let usersList = this.state.users;
+    usersList.push(this.state.newUser);
+    console.log('user list', usersList)
+    this.setState({users: usersList});
   }
 
-  onTyping(query) {
-    this.props.fetchUsers(query);
-    this.setState({listUsers: this.props.users.results})
+  async onTyping(event) {
+    let query = event.target.value;
+    console.log('on typing', query)
+    if(query.length >= 3) {
+      await this.props.fetchUsers(query);
+      this.setState({listUsers: this.props.users.results})
+    } else {
+      this.setState({listUsers: []})
+    }
   }
 
-  onChangeAddingInput({target}) {
-    this.setState({newUser: target.value});
+  onSelectUser(user) {
+    this.setState({newUser: user});
   }
 
   render() {
-    const {intl, permissions} = this.props;
-    const {listUsers} = this.state
-    console.log('render', this.props, this.state)
+    const {intl, permissions, collection} = this.props;
+    const {listUsers, users} = this.state;
+    console.log('list users', listUsers)
 
     return (
       <DualPane.ContentPane limitedWidth={true} className="CollectionEditContent">
-            <h1>
-              <FormattedMessage id="collection.edit.title"
-                                defaultMessage="Access Control"/>
-            </h1>
-            <form onSubmit={this.onAddUser} className="addUserForm">
-              <SuggestInput
-                onSelectCountry={this.onSelectUser}
-                onRemoveCountry={this.onRemoveUser}
-                list={listUsers}/>
-              {/*<input
-                  className="pt-input addUserInput"
-                  placeholder={intl.formatMessage({
-                    id: "collection.edit.add.placeholder",
-                    defaultMessage: "Grant access to more users"
-                  })}
-                  type="text"
-                  dir="auto"
-                  autoComplete="off"
-                  onChange={this.onChangeAddingInput}
-                  value={this.state.newUser}
-                />*/}
-                <Button className="addUserButton" onClick={this.onAddUser}>
-                  <FormattedMessage id="user.add"
-                                    defaultMessage="Add"/>
-                </Button>
-            </form>
-        <CollectionEditTable permissions={permissions} collection={this.props.collection}/>
+        <h1>
+          <FormattedMessage id="collection.edit.title"
+                            defaultMessage="Access Control"/>
+        </h1>
+        <form onSubmit={this.onAddUser} className="addUserForm">
+          <SuggestInput
+            onSelectItem={this.onSelectUser}
+            list={listUsers}
+            onTyping={this.onTyping}/>
+          <Button className="addUserButton" onClick={this.onAddUser}>
+            <FormattedMessage id="user.add"
+                              defaultMessage="Add"/>
+          </Button>
+        </form>
+        <CollectionEditTable users={users} permissions={permissions} collection={collection}/>
       </DualPane.ContentPane>
     );
   }
@@ -98,4 +98,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 CollectionEditContent = injectIntl(CollectionEditContent);
-export default connect(mapStateToProps, {fetchCollectionPermissions, fetchUsers, updateCollection})(CollectionEditContent);
+export default connect(mapStateToProps, {
+  fetchCollectionPermissions,
+  fetchUsers,
+  updateCollection
+})(CollectionEditContent);

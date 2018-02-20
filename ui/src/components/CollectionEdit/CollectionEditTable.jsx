@@ -12,7 +12,18 @@ class CollectionEditTable extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      users: []
+    };
+
     this.onSave = this.onSave.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('will receive', nextProps)
+    this.setState({
+      users: nextProps.users
+    })
   }
 
   onSave() {
@@ -20,7 +31,8 @@ class CollectionEditTable extends Component {
   }
 
   render() {
-    const {permissions} = this.props;
+    console.log('users', this.props.users)
+    const {permissions, users} = this.props;
     const hasAlerts = !(permissions.results !== undefined && permissions.results.length === 0);
 
     if (!hasAlerts || permissions.results === undefined) {
@@ -55,19 +67,19 @@ class CollectionEditTable extends Component {
       </tr>)
     )) : <tr/>;
 
-    let userRows = permissions.results !== undefined ? permissions.results[0].map((permission, index) => (
-      (permission.role.type === 'users' && <tr key={index} className='table-row'>
+    let userRows = (users.length !== 0 && users.map((users, index) => (
+      (<tr key={index} className='table-row'>
         <td className='first-row'>
-          {permission.role.name}
+          {users.role.name}
         </td>
         <td className='other-rows'>
-          <input type="checkbox" defaultChecked={permission.read}/>
+          <input type="checkbox" defaultChecked={users.read}/>
         </td>
         <td className='other-rows'>
-          <input type="checkbox" defaultChecked={permission.role.writable}/>
+          <input type="checkbox" defaultChecked={users.role.writable}/>
         </td>
       </tr>)
-    )) : <tr/>;
+    )));
 
     return (
       <form className='CollectionEditTable'>
