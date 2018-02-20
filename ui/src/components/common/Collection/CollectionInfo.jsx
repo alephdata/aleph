@@ -11,12 +11,16 @@ import Date from 'src/components/common/Date';
 
 class CollectionInfo extends Component {
   render() {
-    const { collection } = this.props;
+    const { document, collection } = this.props;
+    
+    // If collection data it hasn't loaded yet don't attempt to draw anything
+    if (!collection)
+      return null
 
     return (
       <React.Fragment>
         <h1 style={{margin: 0, border: 0}}>
-          {collection.label}
+          {collection.label || null}
         </h1>
         <p>{collection.summary}</p>
         <ul className='info-sheet'>

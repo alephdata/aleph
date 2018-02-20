@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs, Icon } from "@blueprintjs/core";
 
 import Entity from 'src/components/EntityScreen/Entity';
 import EntityInfoTags from 'src/components/EntityScreen/EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import DocumentMetadata from 'src/components/DocumentScreen/DocumentMetadata';
-import DocumentCollection from 'src/components/DocumentScreen/DocumentCollection';
+import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
+import URL from 'src/components/common/URL';
 
 import './DocumentInfo.css';
 
@@ -49,7 +50,19 @@ class DocumentInfo extends React.Component {
                     <Icon icon="graph"/> <FormattedMessage id="document.info.source" defaultMessage="Source"/>
                   </React.Fragment>
                 }
-                panel={<DocumentCollection collection={document.collection}/>}
+                panel={
+                  <React.Fragment>
+                  <CollectionInfo collection={document.collection}/>
+                  {document.source_url && (
+                    <ul className='info-sheet'>
+                      <li>
+                        <span className="key"><FormattedMessage id="document.info.source_url" defaultMessage="Document Source URL"/></span>
+                        <span className="value"><URL value={document.source_url} /></span>
+                      </li>
+                    </ul>
+                  )}
+                  </React.Fragment>
+                }
               />
               <Tab id="tags"
                 title={
@@ -71,5 +84,4 @@ const mapStateToProps = state => ({
   session: state.session,
 });
 
-DocumentInfo = injectIntl(DocumentInfo)
 export default connect(mapStateToProps)(DocumentInfo);

@@ -1,0 +1,24 @@
+@import "src/app/variables.scss";
+
+.EntityContent {
+  font-size: 1.2em;
+  margin: auto;
+  padding: 10px;
+  max-width: 1024px;
+}
+
+.EntityContent h1 {
+  font-size: 2em;
+  line-height: 1.2em;
+  margin: 0.3em 0 0 0;
+}
+
+.EntityContent h2 {
+  font-weight: 600;
+  font-size: 1.5em;
+  margin: 0.5em 0;
+}
+
+.EntityContent .muted {
+  color: $aleph-greyed-text;
+}

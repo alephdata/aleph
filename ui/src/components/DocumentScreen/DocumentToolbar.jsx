@@ -11,15 +11,21 @@ import './DocumentToolbar.css';
 class DocumentToolbar extends React.Component {
   constructor(props) {
     super(props);
+    
+    let searchPlaceholder = this.props.intl.formatMessage({id: "document.file.search", defaultMessage: "Search document" });
+    let searchEnabled = false;
+    
+    if (this.props.document.children !== undefined && this.props.document.children > 0) {
+      searchPlaceholder = this.props.intl.formatMessage({id: "document.folder.search", defaultMessage: "Search folder" })
+      searchEnabled = true
+    }
 
     this.state = {
       queryText: '',
+      searchPlaceholder: searchPlaceholder,
+      searchEnabled: searchEnabled
     };
-    
-    this.searchPlaceholder = this.props.intl.formatMessage({id: "document.file.search", defaultMessage: "Search document" })
-    if (this.props.document.children !== undefined && this.props.document.children > 0)
-      this.searchPlaceholder = this.props.intl.formatMessage({id: "document.folder.search", defaultMessage: "Search folder" })
-      
+
     this.onChangeSearchQuery = this.onChangeSearchQuery.bind(this);
     this.onSubmitSearch = this.onSubmitSearch.bind(this);
   }
@@ -57,7 +63,7 @@ class DocumentToolbar extends React.Component {
         <form onSubmit={this.onSubmitSearch} style={{maxWidth: 200, float: 'right'}}>
           <div className="pt-input-group">
             <span className="pt-icon pt-icon-search"></span>
-            <input className="pt-input" type="search" placeholder={this.searchPlaceholder} onChange={this.onChangeSearchQuery} value={this.state.queryText} dir="auto"/>
+            <input className="pt-input" type="search" disabled={!this.state.searchEnabled} placeholder={this.state.searchPlaceholder} onChange={this.onChangeSearchQuery} value={this.state.queryText} dir="auto"/>
           </div>
         </form>
       </div>
