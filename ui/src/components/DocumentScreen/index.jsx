@@ -51,8 +51,8 @@ class DocumentScreen extends Component {
           </li>
         </Breadcrumbs>
         <DualPane>
-          <DocumentInfo document={document} />
           <DocumentContent document={document} fragId={location.hash} />
+          <DocumentInfo document={document} />
         </DualPane>
       </Screen>
     );

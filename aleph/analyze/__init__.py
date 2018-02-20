@@ -25,8 +25,12 @@ def analyze_document(document):
 
     for cls in analyzers:
         analyzer = cls()
-        if analyzer.active:
+        if not analyzer.active:
+            continue
+        try:
             analyzer.analyze(document)
+        except Exception:
+            log.exception("Analyzer %s failed.", cls)
 
     db.session.add(document)
     db.session.commit()

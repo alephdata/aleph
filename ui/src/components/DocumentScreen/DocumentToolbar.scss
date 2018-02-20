@@ -1,9 +1,7 @@
 @import "src/app/variables.scss";
 
 .document-content-toolbar {
-  border-bottom: 1px solid $aleph-border-color;
-  padding-bottom: 0.75em;
   margin-bottom: 1em;
   clear: both;
-  overflow: auto;
+  overflow: visible;
 }

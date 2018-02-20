@@ -5,7 +5,7 @@ import {injectIntl, FormattedMessage} from 'react-intl';
 
 import {endpoint} from 'src/app/api';
 import {loginWithPassword} from 'src/actions/sessionActions';
-import {xhrErrorToast} from 'src/components/common/XhrToast';
+import {xhrErrorToast} from './xhrToast';
 import {PasswordAuthActivate} from './PasswordAuth';
 
 

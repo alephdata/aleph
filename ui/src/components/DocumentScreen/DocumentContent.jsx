@@ -17,17 +17,10 @@ class DocumentContent extends Component {
   render() {
     const { document, fragId } = this.props;
     
-    let download 
-    
-    // @TODO If email w/ attachments then pass them as array of download options
-    if (document.links && document.links.file) {
-      download = { name: '', url: document.links.file }
-    }
-    
     return (
       <DualPane.ContentPane>
       
-        <DocumentToolbar download={download}/>
+        <DocumentToolbar document={document}/>
       
         {document.status === 'fail' && (
           <section className="PartialError">
