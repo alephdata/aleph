@@ -32,7 +32,7 @@ class DocumentRelatedScreen extends Component {
       return <ScreenLoading />;
     }
     const context = { exclude: document.id };
-console.log(document)
+
     return (
       <Screen>
         <Helmet>
