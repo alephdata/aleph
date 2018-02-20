@@ -5,6 +5,7 @@ import {
   fetchSearchResults,
   fetchNextSearchResults
 } from 'src/actions';
+import { keyForQuery } from 'src/selectors';
 
 // a mapping of query to its search result and facet results
 const initialState = {
@@ -23,26 +24,26 @@ function combineResults(state, { query, prevResult, nextResult }) {
     results: [ ...prevResult.results, ...nextResult.results],
   }
 
-  return set([query.toString(), 'result'], totalResult)(state);
+  return set([keyForQuery(query), 'result'], totalResult)(state);
 }
 
 export default createReducer({
   [fetchSearchResults.START]: (state, { query }) =>
-    set([query.toString(), 'result'], { isFetching: true })(state),
+    set([keyForQuery(query), 'result'], { isFetching: true })(state),
 
   [fetchSearchResults.COMPLETE]: (state, { query, result }) =>
-    set([query.toString(), 'result'], result)(state),
+    set([keyForQuery(query), 'result'], result)(state),
 
   // Upon error, leave some error status.
   [fetchSearchResults.ERROR]: (state, { args: { query } }) =>
-    set([query.toString(), 'result'], { status: 'error' })(state),
+    set([keyForQuery(query), 'result'], { status: 'error' })(state),
 
   [fetchNextSearchResults.START]: (state, { query }) =>
-    update([query.toString(), 'result'], assign({ isExpanding: true }))(state),
+    update([keyForQuery(query), 'result'], assign({ isExpanding: true }))(state),
 
   [fetchNextSearchResults.COMPLETE]: combineResults,
 
   // Upon error, merely reset the isExpanding flag.
   [fetchNextSearchResults.ERROR]: (state, { args: { query, result } }) =>
-    update([query.toString(), 'result'], assign({ isExpanding: false }))(state),
+    update([keyForQuery(query), 'result'], assign({ isExpanding: false }))(state),
 }, initialState);
