@@ -8,7 +8,10 @@ import { selectResult } from 'src/selectors';
 
 import Query from './Query';
 
+
 class SearchContext extends Component {
+  defaultLimit = 50;
+
   constructor(props) {
     super(props);
 
@@ -32,7 +35,11 @@ class SearchContext extends Component {
     const { result, query, fetchSearchResults } = this.props;
 
     if (result === undefined || (result.status === 'error')) {
-      fetchSearchResults({ query });
+      // Set the default limit.
+      const finalQuery = query.has('limit')
+        ? query
+        : query.limit(this.defaultLimit);
+      fetchSearchResults({ query: finalQuery });
     }
   }
 
@@ -84,7 +91,6 @@ const mapStateToProps = (state, ownProps) => {
 
   // We normally only want Things, not Intervals (relations between things).
   const contextWithDefaults = {
-    limit: 50,
     'filter:schemata': context['filter:schemata'] || 'Thing',
     ...context,
   };
