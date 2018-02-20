@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { fetchSearchResults } from 'src/actions';
+import { fetchSearchResults, fetchNextSearchResults } from 'src/actions';
 import { selectResult } from 'src/selectors';
 
 import Query from './Query';
@@ -13,6 +13,7 @@ class SearchContext extends Component {
     super(props);
 
     this.updateQuery = this.updateQuery.bind(this);
+    this.getMoreResults = this.getMoreResults.bind(this);
   }
 
   componentDidMount() {
@@ -32,6 +33,14 @@ class SearchContext extends Component {
 
     if (result === undefined || (result.status === 'error')) {
       fetchSearchResults({ query });
+    }
+  }
+
+  getMoreResults() {
+    const { query, result, fetchNextSearchResults } = this.props;
+
+    if (result && result.next) {
+      fetchNextSearchResults({ query, result });
     }
   }
 
@@ -61,6 +70,8 @@ class SearchContext extends Component {
       query,
       updateQuery: this.updateQuery,
       result,
+      hasMoreResults: result && !!result.next,
+      getMoreResults: this.getMoreResults,
       aspects: aspectsWithDefaults,
     };
 
@@ -87,7 +98,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-SearchContext = connect(mapStateToProps, { fetchSearchResults })(SearchContext);
+SearchContext = connect(mapStateToProps, { fetchSearchResults, fetchNextSearchResults })(SearchContext);
 SearchContext = withRouter(SearchContext);
 
 SearchContext.propTypes = {
