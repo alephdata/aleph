@@ -22,6 +22,10 @@ let messages = {
       id: 'status.unknown_error',
       defaultMessage: 'An unexpected error occured'
     },
+    no_route_error: {
+      id: 'status.no_route_error',
+      defaultMessage: 'No such page: {path}'
+    },
     logout_success: {
       id: 'status.logout_success',
       defaultMessage: 'Logout successful'
@@ -123,6 +127,30 @@ let messages = {
       },
     }
   },
+  entity: {
+    list: {
+      name: {
+        id: 'entity.list.names',
+        defaultMessage: 'Names'
+      },
+      collection_id: {
+        id: 'entity.list.collection_id',
+        defaultMessage: 'Collections'
+      },
+      schema: {
+        id: 'entity.list.schema',
+        defaultMessage: 'Type'
+      },
+      countries: {
+        id: 'entity.list.countries',
+        defaultMessage: 'Countries'
+      },
+      dates: {
+        id: 'entity.list.dates',
+        defaultMessage: 'Date'
+      },
+    }
+  }
 };
 
 messages = defineMessages(messages);

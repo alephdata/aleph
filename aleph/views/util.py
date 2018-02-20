@@ -29,32 +29,31 @@ def jsonify(obj, schema=None, status=200, **kwargs):
     return jsonify_(obj, status=status, **kwargs)
 
 
-def validate_data(data, schema):
+def validate_data(data, schema, many=None):
     """Validate the data inside a request against a schema."""
     # from pprint import pprint
     # pprint(data)
-    data, errors = schema().load(data)
-    if len(errors):
-        message = None
-        for field, errors in errors.items():
-            for error in errors:
-                message = error
-        raise BadRequest(response=jsonify({
-            'status': 'error',
-            'errors': errors,
-            'message': message
-        }, status=400))
+    data, errors = schema().load(data, many=many)
+    if not len(errors):
+        return data
+    message = None
+    for field, errors in errors.items():
+        for error in errors:
+            message = error
+    raise BadRequest(response=jsonify({
+        'status': 'error',
+        'errors': errors,
+        'message': message
+    }, status=400))
 
 
-def parse_request(schema=None):
+def parse_request(schema, many=None):
     """Get request form data or body and validate it against a schema."""
     if request.is_json:
         data = request.get_json()
     else:
         data = request.form.to_dict(flat=True)
-    if schema is not None:
-        validate_data(data, schema)
-    return data
+    return validate_data(data, schema, many=many)
 
 
 def get_db_entity(entity_id, action=Authz.READ):
@@ -141,7 +140,7 @@ def sanitize_html(html_text, base_url):
 
 
 def normalize_href(href, base_url):
-    # Make links relative the source_url
+    # Make links relative to the source_url
     href = stringify(href)
     if href is None:
         return

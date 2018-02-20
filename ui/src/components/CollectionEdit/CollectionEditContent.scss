@@ -1,74 +1,20 @@
 @import "src/app/variables.scss";
 
 .CollectionEditContent {
-  .collection_edit_title {
-    font-size: $aleph-font-size * 1.7;
-    margin: 0 0 $aleph-grid-size 0;
-    padding-bottom: $aleph-grid-size;
-    line-height: 1.5;
-    padding-left: $aleph-grid-size * 1.5;
-    float: left;
-  }
+  .addUserForm {
+    display: flex;
+    padding: ($aleph-grid-size * 2) $aleph-grid-size;
 
-  .title_div {
-    width: 100%;
-  }
+    .addUserInput {
+      flex-grow: 1;
+    }
 
-  .add_user_div {
-    width: 100%;
-  }
+    .addUserButton {
+      width: 8em;
+    }
 
-  .add_user {
-    padding-left: $aleph-grid-size;
-    padding-top: $aleph-grid-size * 2;
-  }
-
-  .add_user_input {
-    width: 84% !important;
-  }
-
-  .collection_edit_button_div {
-    width: 15% !important;
-    float: right;
-  }
-
-  .header_access_control {
-    width: 100%;
-    display: inline-flex;
-    padding-top: $aleph-grid-size * 2;
-    padding-left: $aleph-grid-size;
-  }
-
-  .header_label {
-    border-bottom: 1px solid $table-border;
-    border-right: 1px solid $table-border;
-    height: $aleph-font-size * 1.9;
-    color: $table-header-color;
-    font-size: $aleph-grid-size * 1.5;
-    padding-bottom: $aleph-grid-size * 2.7;
-  }
-
-  .header_types {
-    width: 80%;
-  }
-
-  .header_edit {
-    width: 10%;
-    text-align: center;
-  }
-
-  .table_body_access_control {
-    padding-left: $aleph-grid-size;
-  }
-
-  .table_item_access_control {
-    border-bottom: 1px solid $table-border;
-    border-right: 1px solid $table-border;
-    padding-bottom: $aleph-grid-size * 0.4;
-  }
-
-  .table_row {
-    width: 100%;
-    display: inline-flex;
+    .multiple_select_input {
+      width: 100%;
+    }
   }
 }

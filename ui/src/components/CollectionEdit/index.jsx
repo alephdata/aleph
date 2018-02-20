@@ -10,14 +10,24 @@ import CollectionEditContent from './CollectionEditContent';
 import CollectionEditInfo from './CollectionEditInfo';
 
 class CollectionEditScreen extends Component {
+  constructor(){
+    super();
+
+    this.state = {
+      collection: {}
+    }
+  }
 
   componentDidMount() {
     const { collectionId } = this.props;
     this.props.fetchCollection({ id: collectionId });
+    //this.setState({collection: this.props.collection})
   }
 
   render() {
-    const { app, collection, location } = this.props;
+    const { location, collection } = this.props;
+    //const {collection} = this.state;
+
     return (
       <Screen>
         <Breadcrumbs collection={{label: 'Collection Settings', links: {ui: 'http://localhost:8080' + location.pathname}}} />

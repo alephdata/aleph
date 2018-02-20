@@ -29,45 +29,51 @@ class AlertsTable extends Component {
 
   render() {
     const { alerts } = this.props;
-    const hasAlerts = !(alerts.results !== undefined && alerts.results.length === 0);
 
-    if (!hasAlerts || alerts.results === undefined) {
-      return <NonIdealState visual="" title="There are no alerts"/>
-    }
-  
-    return (
-      <div>
-        <div className='header_alerts'>
-          <p className='header_label header_topic'>
-            <FormattedMessage id="alerts.topic" defaultMessage="Topic"/>
-          </p>
-          <p className='header_label header_delete_search'>
-            <FormattedMessage id="alerts.search" defaultMessage="Search"/>
-          </p>
-          <p className='header_label header_delete_search'>
-            <FormattedMessage id="alerts.delete" defaultMessage="Delete"/>
-          </p>
+    if (alerts.results === undefined || alerts.results.length === 0) {
+      return (
+        <div>
+          <NonIdealState visual="" title="There are no alerts"/>
         </div>
-        <div className='table_body_alerts'>
+      );
+    }
+
+    return (
+
+      <table className="AlertsTable settings-table">
+        <thead>
+          <tr>
+            <th className='topic'>
+              <FormattedMessage id="alerts.topic" defaultMessage="Topic"/>
+            </th>
+            <th className='other-topics'>
+              <FormattedMessage id="alerts.search" defaultMessage="Search"/>
+            </th>
+            <th className='other-topics'>
+              <FormattedMessage id="alerts.delete" defaultMessage="Delete"/>
+            </th>
+          </tr>
+        </thead>
+        <tbody className='table_body_alerts'>
           {alerts.results.map((item) => (
-            <div key={item.id} className='table_row'>
-              <p className='table_item_alert header_topic'>
+            <tr key={item.id} className='table-row'>
+              <td className='first-row header_topic'>
                 {item.label}
-              </p>
-              <p className='table_item_alert header_delete_search'
+              </td>
+              <td className='other-rows'
                   onClick={() => this.onSearch(item.label)}>
                 <i className="fa fa-search" aria-hidden="true"/>
-              </p>
-              <p
-                className='table_item_alert header_delete_search'
+              </td>
+              <td
+                className='other-rows'
                 onClick={() => this.deleteAlert(item.id)}
               >
                 <i className="fa fa-trash-o" aria-hidden="true"/>
-              </p>
-            </div>
+              </td>
+            </tr>
           ))}
-        </div>
-      </div>
+        </tbody>
+      </table>
     )
   }
 }

@@ -13,10 +13,11 @@ from aleph.model import db, upgrade_db
 from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
-from aleph.ingest import ingest_document
+from aleph.ingest import ingest_document, ingest
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.index.documents import index_document_id
-from aleph.logic.collections import update_collection, process_collection
+from aleph.logic.collections import update_collection
+from aleph.logic.collections import process_collection
 from aleph.logic.collections import delete_collection
 from aleph.logic.alerts import check_alerts
 from aleph.logic.entities import bulk_load, reindex_entities
@@ -105,6 +106,18 @@ def process(foreign_id):
 
 
 @manager.command
+def retry():
+    """Retry importing documents which were not successfully parsed."""
+    q = Document.all_ids()
+    q = q.filter(Document.status != Document.STATUS_SUCCESS)
+    log.info("Retry: %s documents", q.count())
+    for idx, (doc_id,) in enumerate(q.all(), 1):
+        ingest.delay(doc_id)
+        if idx % 1000 == 0:
+            log.info("Process: %s documents...", idx)
+
+
+@manager.command
 def xref(foreign_id):
     """Cross-reference all entities and documents in a collection."""
     collection = Collection.by_foreign_id(foreign_id)
@@ -158,7 +171,8 @@ def indexentities():
 @manager.option('-e', '--email', dest='email')
 @manager.option('-i', '--is_admin', dest='is_admin')
 @manager.option('-p', '--password', dest='password')
-def createuser(foreign_id, password=None, name=None, email=None, is_admin=False):
+def createuser(foreign_id, password=None, name=None, email=None,
+               is_admin=False):
     """Create a user and show their API key."""
     role = Role.load_or_create(foreign_id, Role.USER,
                                name or foreign_id,
@@ -179,7 +193,7 @@ def publish(foreign_id):
         raise ValueError("No such collection: %r" % foreign_id)
     role = Role.by_foreign_id(Role.SYSTEM_GUEST)
     update_permission(role, collection, True, False)
-    db.session.commit()
+    update_collection(collection, roles=True)
 
 
 @manager.command

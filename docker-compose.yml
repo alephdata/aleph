@@ -18,12 +18,15 @@ services:
 
   rabbitmq:
     image: rabbitmq
+    hostname: queue
     volumes:
       - "./build/data/rabbitmq:/var/lib/rabbitmq"
 
   unoservice:
     image: alephdata/unoservice
-    tmpfs: /tmp
+    tmpfs:
+      - /tmp
+      - /root/.config
     restart: on-failure
     expose:
       - 3000
@@ -31,6 +34,7 @@ services:
   worker:
     build: .
     command: celery -A aleph.queues -B -c 4 -l INFO worker
+    restart: on-failure
     links:
       - postgres
       - elasticsearch

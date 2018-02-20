@@ -42,9 +42,9 @@ class SignupScreen extends Component {
 
     return (
       <section className="small-screen">
-        <h2><FormattedMessage id="signup.signup" defaultMessage="Sign up"/></h2>
+        <h1><FormattedMessage id="signup.signup" defaultMessage="Sign up"/></h1>
         {submitted ?
-          <Callout intent={Intent.SUCCESS} iconName="tick">
+          <Callout intent={Intent.SUCCESS} icon="tick">
             <h5><FormattedMessage id="signup.inbox.title" defaultMessage="Check your inbox"/></h5>
             <FormattedMessage id="signup.inbox.desc" defaultMessage="We've sent you an email, please follow the link to complete your registration"/>
           </Callout> :
@@ -52,7 +52,6 @@ class SignupScreen extends Component {
             <PasswordAuthSignup onSubmit={this.onSignup.bind(this)}/>
             {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
           </span>}
-
       </section>
     );
   }

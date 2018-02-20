@@ -9,15 +9,26 @@ import PdfViewer from './viewers/PdfViewer';
 import ImageViewer from './viewers/ImageViewer';
 import FolderViewer from './viewers/FolderViewer';
 import EmailHeadersViewer from './viewers/EmailHeadersViewer';
+import DocumentToolbar from './DocumentToolbar';
 
 import './DocumentContent.css';
 
 class DocumentContent extends Component {
   render() {
     const { document, fragId } = this.props;
-
+    
+    let download 
+    
+    // @TODO If email w/ attachments then pass them as array of download options
+    if (document.links && document.links.file) {
+      download = { name: '', url: document.links.file }
+    }
+    
     return (
       <DualPane.ContentPane>
+      
+        <DocumentToolbar download={download}/>
+      
         {document.status === 'fail' && (
           <section className="PartialError">
             <div className="pt-non-ideal-state">

@@ -3,18 +3,19 @@ import os
 import yaml
 from celery import Task
 from banal import ensure_list
-from normality import normalize
+from pkg_resources import iter_entry_points
 
-
+EXTENSIONS = {}
 PDF_MIME = 'application/pdf'
 
 
-def match_form(text):
-    """Turn a string into a form appropriate for name matching."""
-    # The goal of this function is not to retain a readable version of the
-    # string, but rather to yield a normalised version suitable for
-    # comparisons and machine analysis.
-    return normalize(text, lowercase=True, ascii=True)
+def get_extensions(section):
+    if section not in EXTENSIONS:
+        EXTENSIONS[section] = {}
+    if not EXTENSIONS[section]:
+        for ep in iter_entry_points(section):
+            EXTENSIONS[section][ep.name] = ep.load()
+    return EXTENSIONS[section].values()
 
 
 def load_config_file(file_path):

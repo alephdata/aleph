@@ -83,7 +83,8 @@ class SearchContext extends Component {
         )}
         <SearchResult query={query}
                       result={result}
-                      aspects={aspects} />
+                      aspects={aspects}
+                      updateQuery={this.updateQuery} />
         { isFetching && (
           <SectionLoading />
         )}

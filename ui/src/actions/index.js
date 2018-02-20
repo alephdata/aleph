@@ -6,6 +6,16 @@ export const fetchMetadata = asyncActionCreator(() => async dispatch => {
   return { metadata: response.data };
 }, { name: 'FETCH_METADATA' });
 
+export const fetchUsers = asyncActionCreator((prefix) => async dispatch => {
+  const response = await endpoint.get(`roles/_suggest?prefix=${prefix}`);
+  return { users: response.data };
+}, { name: 'FETCH_USERS' });
+
+export const updateCollection = asyncActionCreator((collection) => async dispatch => {
+  const response = await endpoint.post(`collections/${collection.id}`, collection);
+  return {collection: response.data};
+}, {name: 'UPDATE_COLLECTION'});
+
 export const fetchRole = asyncActionCreator((id) => async dispatch => {
   const response = await endpoint.get(`roles/${id}`);
   return { role: response.data };

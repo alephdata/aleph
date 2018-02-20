@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-
-import { debounce } from 'lodash';
+import { InputGroup } from '@blueprintjs/core';
 
 
 class SearchFilterText extends Component {
@@ -8,12 +7,7 @@ class SearchFilterText extends Component {
     super(props);
     this.state = {value: props.query.getQ()};
     this.onChange = this.onChange.bind(this);
-    this.updateQuery = debounce(this.updateQuery, 200);
-  }
-
-  updateQuery(value) {
-    const query = this.props.query.setQ(value);
-    this.props.updateQuery(query);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   // componentWillReceiveProps(nextProps) {
@@ -22,16 +16,24 @@ class SearchFilterText extends Component {
 
   onChange({target}) {
     this.setState({value: target.value});
-    this.updateQuery(target.value);
+  }
+
+  onSubmit(event) {
+    event.preventDefault();
+    const newQuery = this.props.query.setQ(this.state.value);
+    this.props.updateQuery(newQuery);
   }
 
   render() {
+    const { children } = this.props;
+
     return (
-      <div className="search-input pt-input-group pt-large">
-        <span className="pt-icon pt-icon-search"/>
-        <input className="pt-input" type="search"
-          onChange={this.onChange} value={this.state.value} />    
-      </div>
+      <form className="search-input"
+            onSubmit={this.onSubmit}>
+        <InputGroup type="search" leftIcon="search" className="pt-large"
+            onChange={this.onChange} value={this.state.value}
+            rightElement={children} />
+      </form>
     )
   }
 }

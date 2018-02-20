@@ -1,7 +1,7 @@
 import re
 import logging
-from exactitude import phones
 
+from aleph import settings
 from aleph.analyze.analyzer import Analyzer
 from aleph.model import DocumentTag, DocumentTagCollector
 
@@ -19,10 +19,11 @@ class RegexAnalyzer(Analyzer):
 
     def analyze(self, document):
         collector = DocumentTagCollector(document, self.ORIGIN)
-        for match in self.RE.finditer(document.text):
-            text = self.extract_match(document, match)
-            if text is not None:
-                collector.emit(text, self.TYPE)
+        for text in document.texts:
+            for match in self.RE.finditer(text):
+                match_text = self.extract_match(document, match)
+                if match_text is not None:
+                    collector.emit(match_text, self.TYPE)
         collector.save()
 
 
@@ -32,9 +33,15 @@ class EMailAnalyzer(RegexAnalyzer):
     ORIGIN = 'regex:email'
     TYPE = DocumentTag.TYPE_EMAIL
 
+    def __init__(self):
+        self.active = settings.ANALYZE_EMAILS
+
 
 class PhoneNumberAnalyzer(RegexAnalyzer):
     REGEX = r'(\+?[\d\-\(\)\/\s]{5,})'
     RE = re.compile(REGEX, re.IGNORECASE)
     ORIGIN = 'regex:phones'
     TYPE = DocumentTag.TYPE_PHONE
+
+    def __init__(self):
+        self.active = settings.ANALYZE_PHONES

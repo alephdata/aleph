@@ -1,0 +1,13 @@
+@import "src/app/variables.scss";
+
+.CollectionEditTable {
+  .header_topic {
+    font-weight: 700;
+  }
+
+  .saveButton {
+    float: right;
+    margin-top: 7%;
+    width: 20%;
+  }
+}

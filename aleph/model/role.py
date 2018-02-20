@@ -55,7 +55,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     def update(self, data):
         self.name = data.get('name', self.name)
-        self.email = data.get('email', self.email)
         if data.get('password'):
             self.set_password(data.get('password'))
 

@@ -1,11 +1,12 @@
 from pprint import pprint  # noqa
+from normality import normalize
 
 from aleph.core import es
 from aleph.model import Entity
 from aleph.index.core import collection_index, collections_index
 from aleph.index.core import entities_index, entity_index
 from aleph.index.core import records_index
-from aleph.index.util import query_delete, unpack_result
+from aleph.index.util import query_delete, unpack_result, index_form
 
 
 def index_collection(collection):
@@ -24,8 +25,15 @@ def index_collection(collection):
         'languages': collection.languages,
         'managed': collection.managed,
         'roles': collection.roles,
-        'schemata': {}
+        'schemata': {},
     }
+
+    texts = [
+        collection.label,
+        collection.foreign_id,
+        collection.summary,
+        collection.category
+    ]
 
     if collection.creator is not None:
         data['creator'] = {
@@ -33,6 +41,7 @@ def index_collection(collection):
             'type': collection.creator.type,
             'name': collection.creator.name
         }
+        texts.append(collection.creator.name)
 
     # Compute some statistics on the content of a collection.
     query = {
@@ -68,6 +77,8 @@ def index_collection(collection):
         countries = aggregations['languages']['buckets']
         data['languages'] = [c['key'] for c in countries]
 
+    texts.extend([normalize(t, ascii=True) for t in texts])
+    data['text'] = index_form(texts)
     es.index(index=collection_index(),
              doc_type='doc',
              id=collection.id,

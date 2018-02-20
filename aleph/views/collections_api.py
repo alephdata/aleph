@@ -21,7 +21,7 @@ def index():
 @blueprint.route('/api/2/collections', methods=['POST', 'PUT'])
 def create():
     require(request.authz.logged_in)
-    data = parse_request(schema=CollectionSchema)
+    data = parse_request(CollectionSchema)
     collection = Collection.create(data, request.authz.role)
     db.session.commit()
     update_collection(collection)
@@ -37,7 +37,7 @@ def view(id):
 @blueprint.route('/api/2/collections/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     collection = get_db_collection(id, request.authz.WRITE)
-    data = parse_request(schema=CollectionSchema)
+    data = parse_request(CollectionSchema)
     collection.update(data)
     db.session.commit()
     update_collection(collection)

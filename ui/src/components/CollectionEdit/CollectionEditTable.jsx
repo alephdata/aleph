@@ -1,119 +1,122 @@
 import React, {Component} from 'react';
 import {NonIdealState} from '@blueprintjs/core';
 import {FormattedMessage} from 'react-intl';
+import {Checkbox} from '@blueprintjs/core';
+import {Button} from '@blueprintjs/core';
+
+import './CollectionEditTable.css';
+import {connect} from "react-redux";
 
 class CollectionEditTable extends Component {
 
   constructor(props) {
     super(props);
+
+    this.onSave = this.onSave.bind(this);
+  }
+
+  onSave() {
+    console.log('on save', this.props.collection)
   }
 
   render() {
-    const {users} = this.props;
-    const hasAlerts = !(users.results !== undefined && users.results.length === 0);
+    const {permissions} = this.props;
+    const hasAlerts = !(permissions.results !== undefined && permissions.results.length === 0);
 
-    if (!hasAlerts || users.results === undefined) {
-      //return <NonIdealState visual="" title="There are no alerts"/>
+    if (!hasAlerts || permissions.results === undefined) {
+      return <NonIdealState visual="" title="There are no permissions"/>
     }
 
+    let stateRows = permissions.results !== undefined ? permissions.results[0].map((permission, index) => (
+      (permission.role.type === 'system' && <tr key={index} className='table-row'>
+        <td className='first-row'>
+          {permission.role.name}
+        </td>
+        <td className='other-rows'>
+          <input type="checkbox" defaultChecked={permission.read}/>
+        </td>
+        <td className='other-rows'>
+          <input type="checkbox" defaultChecked={permission.role.writable}/>
+        </td>
+      </tr>)
+    )) : <tr/>;
+
+    let groupRows = permissions.results !== undefined ? permissions.results[0].map((permission, index) => (
+      (permission.role.type === 'group' && <tr key={index} className='table-row'>
+        <td className='first-row'>
+          {permission.role.name}
+        </td>
+        <td className='other-rows'>
+          <input type="checkbox" defaultChecked={permission.read}/>
+        </td>
+        <td className='other-rows'>
+          <input type="checkbox" defaultChecked={permission.role.writable}/>
+        </td>
+      </tr>)
+    )) : <tr/>;
+
+    let userRows = permissions.results !== undefined ? permissions.results[0].map((permission, index) => (
+      (permission.role.type === 'users' && <tr key={index} className='table-row'>
+        <td className='first-row'>
+          {permission.role.name}
+        </td>
+        <td className='other-rows'>
+          <input type="checkbox" defaultChecked={permission.read}/>
+        </td>
+        <td className='other-rows'>
+          <input type="checkbox" defaultChecked={permission.role.writable}/>
+        </td>
+      </tr>)
+    )) : <tr/>;
+
     return (
-      <div>
-        <div className='header_access_control'>
-          <p className='header_label header_types'>
-            <FormattedMessage id="collection.edit.types" defaultMessage="Types"/>
-          </p>
-          <p className='header_label header_edit'>
-            <FormattedMessage id="collection.edit.view" defaultMessage="View"/>
-          </p>
-          <p className='header_label header_edit'>
-            <FormattedMessage id="collection.edit.edit" defaultMessage="Edit"/>
-          </p>
-        </div>
-        <div className='table_body'>
-          <div key={1} className='table_row'>
-            <p className='table_item_access_control header_topic'>
-              States
-            </p>
-          </div>
-          <div key={2} className='table_row'>
-            <p className='table_item_access_control header_types'>
-              All visitors
-            </p>
-            <p className='table_item_access_control header_edit'>
-              <i className="fa fa-search" aria-hidden="true"/>
-            </p>
-            <p
-              className='table_item_access_control header_edit'>
-              <i className="fa fa-trash-o" aria-hidden="true"/>
-            </p>
-          </div>
-          <div key={3} className='table_row'>
-            <p className='table_item_access_control header_types'>
-              Logged-in users
-            </p>
-            <p className='table_item_access_control header_edit'>
-              <i className="fa fa-search" aria-hidden="true"/>
-            </p>
-            <p
-              className='table_item_access_control header_edit'>
-              <i className="fa fa-trash-o" aria-hidden="true"/>
-            </p>
-          </div>
-          <div key={4} className='table_row'>
-            <p className='table_item_alert header_topic'>
+      <form className='CollectionEditTable'>
+        <table className="settings-table">
+          <thead>
+          <tr>
+            <th className='topic'>
+              <FormattedMessage id="alerts.topic" defaultMessage="Types"/>
+            </th>
+            <th className='other-topics'>
+              <FormattedMessage id="alerts.search" defaultMessage="View"/>
+            </th>
+            <th className='other-topics'>
+              <FormattedMessage id="alerts.delete" defaultMessage="Edit"/>
+            </th>
+          </tr>
+          </thead>
+          <tbody className='table_body_alerts'>
+          {stateRows}
+          <tr key={1} className='table-row'>
+            <td className='first-row header_topic'>
               Groups
-            </p>
-          </div>
-          <div key={5} className='table_row'>
-            <p className='table_item_alert header_topic'>
-              Project Laundromat
-            </p>
-            <p className='table_item_alert header_delete_search'>
-              <i className="fa fa-search" aria-hidden="true"/>
-            </p>
-            <p
-              className='table_item_alert header_delete_search'>
-              <i className="fa fa-trash-o" aria-hidden="true"/>
-            </p>
-          </div>
-          <div key={6} className='table_row'>
-            <p className='table_item_alert header_topic'>
-              OCCRP Staff
-            </p>
-            <p className='table_item_alert header_delete_search'>
-              <i className="fa fa-search" aria-hidden="true"/>
-            </p>
-            <p
-              className='table_item_alert header_delete_search'>
-              <i className="fa fa-trash-o" aria-hidden="true"/>
-            </p>
-          </div>
-          <div key={7} className='table_row'>
-            <p className='table_item_alert header_topic'>
+            </td>
+            <td className='other-rows'/>
+            <td className='other-rows'/>
+          </tr>
+          {groupRows}
+          <tr key={2} className='table-row'>
+            <td className='first-row header_topic'>
               Users
-            </p>
-          </div>
-          {/*{users.results.map((item) => (
-            <div key={item.id} className='table_row'>
-              <p className='table_item_alert header_topic'>
-                {item.label}
-              </p>
-              <p className='table_item_alert header_delete_search'
-                 onClick={() => this.onSearch(item.label)}>
-                <i className="fa fa-search" aria-hidden="true"/>
-              </p>
-              <p
-                className='table_item_alert header_delete_search'
-                onClick={() => this.deleteAlert(item.id)}
-              >
-                <i className="fa fa-trash-o" aria-hidden="true"/>
-              </p>
-            </div>
-          ))}*/}
-        </div>
-      </div>
+            </td>
+            <td className='other-rows'/>
+            <td className='other-rows'/>
+          </tr>
+          {userRows}
+          </tbody>
+        </table>
+        <Button className="saveButton" onClick={this.onSave}>
+          <FormattedMessage id="collection.edit.save"
+                            defaultMessage="Save"/>
+        </Button>
+      </form>
     )
   }
 }
 
-export default CollectionEditTable;
+const mapStateToProps = (state, ownProps) => {
+    return {
+    };
+};
+
+export default connect(mapStateToProps)(CollectionEditTable);

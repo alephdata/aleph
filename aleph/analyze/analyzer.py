@@ -4,9 +4,10 @@ log = logging.getLogger(__name__)
 
 
 class Analyzer(object):
+    PRIORITY = 10
 
     def __init__(self):
-        self.disabled = False
+        self.active = True
 
     def analyze(self, document):
         pass

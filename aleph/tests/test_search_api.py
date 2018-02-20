@@ -32,6 +32,16 @@ class SearchApiTestCase(TestCase):
         text = json.dumps(lang_facet)
         assert '"ru"' in text, lang_facet
 
+    def test_facet_counts(self):
+        res = self.client.get('/api/2/search?facet=languages&facet_total=true')
+        assert res.status_code == 200, res
+        lang_facet = res.json['facets']['languages']
+        assert lang_facet['total'] == 2
+        res = self.client.get('/api/2/search?facet=banana&facet_total=true')
+        assert res.status_code == 200, res
+        banana_facet = res.json['facets']['banana']
+        assert banana_facet['total'] == 0
+
     def test_facet_schema(self):
         res = self.client.get('/api/2/search?facet=schema')
         assert res.status_code == 200, res

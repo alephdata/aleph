@@ -6,7 +6,7 @@ import AuthButtons from 'src/components/auth/AuthButtons';
 import './PageNavbar.css';
 
 const PageNavbar = ({metadata, session}) => (
-  <nav className="pt-navbar pt-dark">
+  <nav className="PageNavbar pt-navbar pt-dark">
     <div className="pt-navbar-group pt-align-left">
       <div className="pt-navbar-heading">
         <Link to="/">

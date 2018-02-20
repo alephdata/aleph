@@ -1,0 +1,23 @@
+@import "src/app/variables.scss";
+
+.SortableTH {
+  div {
+    display: flex;
+
+    .caret {
+      margin-left: auto;
+      transition: opacity 0.1s;
+
+      &.hidden {
+        opacity: 0.1;
+      }
+    }
+  }
+
+  &:hover div .caret.hidden {
+    opacity: 0.4;
+  }
+  &:hover div .caret:not(.hidden) {
+    opacity: 0.7;
+  }
+}

@@ -24,7 +24,7 @@ before_install:
 
 install:
   - docker-compose -f docker-compose.dev.yml build
-  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
+  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch unoservice
   - sleep 8
 
 script:

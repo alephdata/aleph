@@ -1,0 +1,151 @@
+@import "~@blueprintjs/core/src/blueprint.scss";
+@import "./variables.scss";
+
+// Column & row customisation for any tables.
+table {
+  // Force a table-row to be a single line, truncating contents of large cells.
+  tr.nowrap > td,
+  tr.nowrap > th {
+    max-width: 0; // somehow, this seems to make keep column widths in check.
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  th.wide, td.wide {
+    width: 30%;
+  }
+
+  td.schema {
+  }
+
+  td.entity {
+    font-weight: bold;
+  }
+
+  td.date {
+  }
+
+  td.numeric {
+    text-align: right;
+
+    // Float on the right, so that numbers overflow to the left.
+    // (FormattedNumber creates a <span>)
+    & > span {
+      float: right;
+    }
+  }
+}
+
+
+// Tables as normally used in ContentPane
+table.data-table {
+  @extend .pt-html-table, .pt-html-table-bordered;
+
+  width: 100%;
+
+  th {
+    white-space: nowrap;
+  }
+}
+
+table.settings-table {
+  @extend .data-table;
+
+  border-bottom: 1px solid $table-border-color;
+
+  th.topic {
+    width: 80%;
+  }
+
+  th {
+    height: $aleph-font-size * 1.9;
+    color: $table-header-color;
+    font-size: $aleph-grid-size * 1.5;
+    padding-bottom: $aleph-grid-size * 2.7;
+  }
+
+  .other-topics {
+    width: 10%;
+    text-align: center;
+  }
+
+  td.first-row {
+    width: 80%;
+  }
+
+  td.other-rows {
+    width: 10%;
+    text-align: center;
+  }
+
+  tbody {
+    padding-left: $aleph-grid-size;
+  }
+
+  tr {
+    width: 100%;
+    display: inline-flex;
+  }
+}
+
+// Two-column 'tables' as normally used in InfoPane
+ul.info-sheet,
+ul.info-rank {
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    padding-top: $aleph-grid-size;
+    padding-bottom: $aleph-grid-size;
+
+    .key, .value {
+      overflow: hidden;
+      word-wrap: break-word;
+    }
+
+    .key {
+      padding-right: $aleph-grid-size;
+    }
+  }
+}
+
+ul.info-sheet {
+  li {
+    flex-direction: column;
+    padding-top: $aleph-grid-size;
+
+    .key {
+      color: $aleph-greyed-text;
+    }
+
+    .value {
+      padding-top: $aleph-grid-size * 0.5;
+    }
+  }
+}
+
+ul.info-rank li {
+  flex-flow: row nowrap;
+
+  // Ensure things stay on a single line, truncating the key if needed.
+  .key {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .value {
+    white-space: nowrap;
+    overflow: visible;
+  }
+
+  .key i { // the icon, if any
+    padding-right: $aleph-grid-size * 2;
+  }
+
+  .value {
+    color: $aleph-greyed-text;
+    margin-left: auto; // = align right
+  }
+}

@@ -29,23 +29,36 @@ class Query(object):
     INCLUDE_FIELDS = None
     EXCLUDE_FIELDS = None
     TEXT_FIELDS = ['text']
-    SORT = {
-        'default': ['_score']
+    PREFIX_FIELD = 'text'
+    SORT_FIELDS = {
+        'label': 'label.kw',
+        'name': 'name.kw',
+        'score': '_score',
     }
+    SORT_DEFAULT = ['_score']
 
     def __init__(self, parser):
         self.parser = parser
 
     def get_text_query(self):
-        if not self.parser.text:
-            return {'match_all': {}}
-        return {
-            "simple_query_string": {
-                "query": self.parser.text,
-                "fields": self.TEXT_FIELDS,
-                "default_operator": "AND"
-            }
-        }
+        query = []
+        if self.parser.text:
+            query.append({
+                "simple_query_string": {
+                    "query": self.parser.text,
+                    "fields": self.TEXT_FIELDS,
+                    "default_operator": "and"
+                }
+            })
+        if self.parser.prefix:
+            query.append({
+                "match_phrase_prefix": {
+                    self.PREFIX_FIELD: self.parser.prefix
+                }
+            })
+        if not len(query):
+            query.append({'match_all': {}})
+        return query
 
     def get_filters(self):
         """Apply query filters from the user interface."""
@@ -65,7 +78,7 @@ class Query(object):
         return {
             'bool': {
                 'should': [],
-                'must': [self.get_text_query()],
+                'must': self.get_text_query(),
                 'must_not': [],
                 'filter': self.get_filters()
             }
@@ -73,20 +86,37 @@ class Query(object):
 
     def get_aggregations(self):
         """Aggregate the query in order to generate faceted results."""
-        return {
-            name: {
-                'terms': {
-                    'field': name,
-                    'size': self.parser.facet_size
+        aggregations = {}
+        for facet_name in self.parser.facet_names:
+            if self.parser.facet_values:
+                aggregations[facet_name] = {
+                    'terms': {
+                        'field': facet_name,
+                        'size': self.parser.facet_size
+                    }
                 }
-            }
-            for name in self.parser.facet_names
-        }
+
+            if self.parser.facet_total:
+                # Option to return total distinct value counts for
+                # a given facet, instead of the top buckets.
+                agg_name = '%s.cardinality' % facet_name
+                aggregations[agg_name] = {
+                    'cardinality': {
+                        'field': facet_name
+                    }
+                }
+        return aggregations
 
     def get_sort(self):
         """Pick one of a set of named result orderings."""
-        default = self.SORT.get('default')
-        return self.SORT.get(self.parser.sort, default)
+        if not len(self.parser.sorts):
+            return self.SORT_DEFAULT
+
+        sort_fields = ['_score']
+        for (field, direction) in self.parser.sorts:
+            field = self.SORT_FIELDS.get(field, field)
+            sort_fields.append({field: direction})
+        return list(reversed(sort_fields))
 
     def get_highlight(self):
         return {}

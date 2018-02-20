@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {AnchorButton} from '@blueprintjs/core';
+import {Button, MenuItem} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
 
 import DualPane from 'src/components/common/DualPane';
 import CollectionEditTable from "./CollectionEditTable";
-import {fetchCollectionPermissions} from 'src/actions';
+import {fetchCollectionPermissions, fetchUsers, updateCollection} from 'src/actions';
+import SuggestInput from 'src/components/common/SuggestInput';
 
 import './CollectionEditContent.css';
 
@@ -16,43 +17,36 @@ class CollectionEditContent extends Component {
 
     this.state = {
       newUser: '',
-      collectionId: -1
+      collectionId: -1,
+      listUsers: [],
     };
 
     this.onAddUser = this.onAddUser.bind(this);
     this.onChangeAddingInput = this.onChangeAddingInput.bind(this);
+    this.onTyping = this.onTyping.bind(this);
   }
 
   componentDidMount() {
-    console.log('did', this.props.collection)
-    //if(this.props.collection !== undefined) this.props.fetchCollectionPermissions(this.props.collection.id);
-  }
-
-  componentWillMount() {
-    console.log('will')
+    this.props.fetchUsers('emi');
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('props', nextProps.collection.isFetching === undefined && this.state.collectionId === -1)
     if (nextProps.collection.isFetching === undefined && this.state.collectionId === -1) {
-      this.setState({collectionId: nextProps.collection.id})
+      console.log('propsss')
+      this.setState({
+        collectionId: nextProps.collection.id,
+        listUsers: nextProps.users.results});
       this.props.fetchCollectionPermissions(nextProps.collection.id);
     }
   }
 
-  componentDidUpdate() {
-    console.log('update')
-    //this.props.fetchCollectionPermissions(this.state.collectionId);
-  }
-
-  componentWillUpdate(nextProps) {
-    if (nextProps.collection.isFetching === undefined) {
-      //this.props.fetchCollectionPermissions(nextProps.collection.id);
-    }
-  }
-
   onAddUser(user) {
+    console.log('add', user, this.props.collection)
+  }
 
+  onTyping(query) {
+    this.props.fetchUsers(query);
+    this.setState({listUsers: this.props.users.results})
   }
 
   onChangeAddingInput({target}) {
@@ -60,24 +54,23 @@ class CollectionEditContent extends Component {
   }
 
   render() {
-    const {intl} = this.props;
-    console.log('render', this.props.permissions, this.props.collection)
+    const {intl, permissions} = this.props;
+    const {listUsers} = this.state
+    console.log('render', this.props, this.state)
 
     return (
-      <DualPane.ContentPane isLimited={true} className="CollectionEditContent">
-        <div className='main_div'>
-          <div className='title_div'>
-            <h1 className='collection_edit_title'>
+      <DualPane.ContentPane limitedWidth={true} className="CollectionEditContent">
+            <h1>
               <FormattedMessage id="collection.edit.title"
-                                defaultMessage="Acces Control"/>
+                                defaultMessage="Access Control"/>
             </h1>
-          </div>
-          <div className='add_user_div'>
-            <form onSubmit={this.onAddUser} className="search_form">
-              <div className="pt-form-content add_user">
-                <input
-                  id="add_alert"
-                  className="pt-input add_user_input"
+            <form onSubmit={this.onAddUser} className="addUserForm">
+              <SuggestInput
+                onSelectCountry={this.onSelectUser}
+                onRemoveCountry={this.onRemoveUser}
+                list={listUsers}/>
+              {/*<input
+                  className="pt-input addUserInput"
                   placeholder={intl.formatMessage({
                     id: "collection.edit.add.placeholder",
                     defaultMessage: "Grant access to more users"
@@ -87,28 +80,22 @@ class CollectionEditContent extends Component {
                   autoComplete="off"
                   onChange={this.onChangeAddingInput}
                   value={this.state.newUser}
-                />
-                <div
-                  className="pt-button-group pt-fill collection_edit_button_div"
-                  onClick={this.onAddAlert}>
-                  <AnchorButton>
-                    <FormattedMessage id="user.add"
-                                      defaultMessage="Add"/>
-                  </AnchorButton>
-                </div>
-              </div>
+                />*/}
+                <Button className="addUserButton" onClick={this.onAddUser}>
+                  <FormattedMessage id="user.add"
+                                    defaultMessage="Add"/>
+                </Button>
             </form>
-          </div>
-        </div>
-        <CollectionEditTable users={[]}/>
+        <CollectionEditTable permissions={permissions} collection={this.props.collection}/>
       </DualPane.ContentPane>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  permissions: state.permissions
+  permissions: state.permissions,
+  users: state.users
 });
 
 CollectionEditContent = injectIntl(CollectionEditContent);
-export default connect(mapStateToProps, {fetchCollectionPermissions})(CollectionEditContent);
+export default connect(mapStateToProps, {fetchCollectionPermissions, fetchUsers, updateCollection})(CollectionEditContent);

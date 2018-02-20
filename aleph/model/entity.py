@@ -7,7 +7,6 @@ from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from followthemoney.util import merge_data
 
 from aleph.core import db
-from aleph.util import match_form
 from aleph.model.collection import Collection
 from aleph.model.permission import Permission
 from aleph.model.match import Match
@@ -33,33 +32,13 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return model.get(self.schema)
 
     @property
-    def terms(self):
-        terms = set([self.name])
-        for alias in ensure_list(self.data.get('alias')):
-            if alias is not None and len(alias):
-                terms.add(alias)
-        return terms
-
-    @property
-    def regex_terms(self):
-        # This is to find the shortest possible regex for each entity.
-        # If, for example, and entity matches both "Al Qaeda" and
-        # "Al Qaeda in Iraq, Syria and the Levant", it is useless to
-        # search for the latter.
-        terms = set([match_form(t) for t in self.terms])
-        regex_terms = set()
-        for term in terms:
-            if term is None or len(term) < 4 or len(term) > 120:
+    def names(self):
+        names = set([self.name])
+        for name, prop in self.model.properties.items():
+            if prop.type_name not in ['name']:
                 continue
-            contained = False
-            for other in terms:
-                if other is None or other == term:
-                    continue
-                if other in term:
-                    contained = True
-            if not contained:
-                regex_terms.add(term)
-        return regex_terms
+            names.update(ensure_list(self.data.get(name)))
+        return names
 
     def delete_matches(self):
         pq = db.session.query(Match)
@@ -183,12 +162,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             q = q.filter(Permission.read == True)  # noqa
             q = q.filter(Permission.role_id.in_(authz.roles))
         return q
-
-    @classmethod
-    def latest(cls):
-        q = db.session.query(func.max(cls.updated_at))
-        q = q.filter(cls.deleted_at == None)  # noqa
-        return q.scalar()
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)

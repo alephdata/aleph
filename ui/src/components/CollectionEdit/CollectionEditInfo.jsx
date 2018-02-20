@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {FormattedMessage, injectIntl} from 'react-intl';
+import { Select } from "@blueprintjs/select";
 
 import DualPane from 'src/components/common/DualPane';
 import NamedMultiSelect from 'src/components/common/NamedMultiSelect';
@@ -17,14 +18,20 @@ class CollectionEditInfo extends Component {
       countries: [],
       languages: [],
       listCountries: [],
-      listLanguages: []
+      listLanguages: [],
+      categories: []
     };
 
     this.onSelectCountry = this.onSelectCountry.bind(this);
     this.onSelectLanguage = this.onSelectLanguage.bind(this);
   }
 
+  componentDidMount() {
+    console.log('did mount', this.props)
+  }
+
   componentWillReceiveProps(nextProps) {
+    console.log('props');
     if (nextProps.collection.isFetching === undefined) {
       this.setState({
         label: nextProps.collection.label,
@@ -32,7 +39,8 @@ class CollectionEditInfo extends Component {
         countries: nextProps.collection.countries,
         listCountries: this.structureList(nextProps.countries),
         languages: nextProps.collection.languages,
-        listLanguages: this.structureList(nextProps.languages)
+        listLanguages: this.structureList(nextProps.languages),
+        categories: nextProps.categories
       });
     }
   }
@@ -53,7 +61,8 @@ class CollectionEditInfo extends Component {
   render() {
     const {collection, intl} = this.props;
     const {label, summary} = this.state;
-    console.log('', this.props.languages)
+
+    console.log(this.state.categories)
 
     return (
       <DualPane.InfoPane className="CollectionEditInfo">
@@ -169,6 +178,16 @@ class CollectionEditInfo extends Component {
               selectedItems={this.state.languages}
               isCountry={true}/>
           </div>
+          {/*<div className="pt-form-group label_group">
+            <div className='label_icon_group'>
+              <i className="fa fa-id-card" aria-hidden="true"/>
+              <label className="pt-label label_class">
+                <FormattedMessage id="collection.edit.info.categories" defaultMessage="Categories"/>
+              </label>
+            </div>
+            <Select
+              items={this.state.categories}/>
+          </div>*/}
         </div>
       </DualPane.InfoPane>
     );
@@ -178,7 +197,8 @@ class CollectionEditInfo extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     countries: state.metadata.countries,
-    languages: state.metadata.languages
+    languages: state.metadata.languages,
+    categories: state.metadata.categories
   }
 };
 

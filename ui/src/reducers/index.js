@@ -10,6 +10,7 @@ import statistics from './statistics';
 import role from './roles';
 import alerts from './alerts';
 import permissions from './permissions';
+import users from './users';
 
 const rootReducer = combineReducers({
   collections,
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
   role,
   alerts,
   entityTags,
-  permissions
+  permissions,
+  users
 });
 
 export default rootReducer;

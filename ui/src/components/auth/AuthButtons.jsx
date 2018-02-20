@@ -16,7 +16,7 @@ class AuthButtons extends Component {
     if (session.loggedIn) {
       items.push((
         <Link key='settings' to="/settings">
-          <Button iconName="cog" className="pt-minimal">
+          <Button icon="cog" className="pt-minimal">
             <FormattedMessage id="nav.settings" defaultMessage="Settings"/>
           </Button>
         </Link>
@@ -24,7 +24,7 @@ class AuthButtons extends Component {
 
       items.push((
         <Link key='login' to="/logout">
-          <Button iconName="log-out" className="pt-minimal">
+          <Button icon="log-out" className="pt-minimal">
             <FormattedMessage id="nav.signout" defaultMessage="Log out"/>
           </Button>
         </Link>
@@ -38,7 +38,7 @@ class AuthButtons extends Component {
     if (auth.oauth_uri) {
       items.push((
         <a key='oauth' href={`${auth.oauth_uri}${loginUrlQueryString}`}>
-          <Button iconName="user" className="pt-minimal">
+          <Button icon="user" className="pt-minimal">
             <FormattedMessage id="login.oauth" defaultMessage="Sign in"/>
           </Button>
         </a>
@@ -48,7 +48,7 @@ class AuthButtons extends Component {
     if (auth.password_login_uri) {
       items.push((
         <Link key='login' to="/login">
-          <Button iconName="user" className="pt-minimal">
+          <Button icon="user" className="pt-minimal">
             <FormattedMessage id="nav.signin" defaultMessage="Log in"/>
           </Button>
         </Link>
@@ -58,7 +58,7 @@ class AuthButtons extends Component {
     if (auth.registration_uri) {
       items.push((
         <Link key='signup' to="/signup">
-          <Button iconName="user" className="pt-minimal">
+          <Button icon="user" className="pt-minimal">
             <FormattedMessage id="nav.signup" defaultMessage="Register"/>
           </Button>
         </Link>

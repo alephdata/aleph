@@ -15,11 +15,13 @@ class SearchFilter extends Component {
       <div className="SearchFilter">
         <div className="search-query">
           <div className="search-query__text">
-            <SearchFilterText query={query} updateQuery={updateQuery} />
+            <SearchFilterText query={query} updateQuery={updateQuery}>
+              <SearchFilterActiveTags aspects={{...aspects, schema: false}}
+                                      query={query} updateQuery={updateQuery} />
+            </SearchFilterText>
           </div>
           <SearchFilterFacets aspects={aspects} query={query} updateQuery={updateQuery} />
         </div>
-        <SearchFilterActiveTags aspects={{...aspects, schema: false}} query={query} updateQuery={updateQuery} />
         <SearchFilterSchema query={query} updateQuery={updateQuery} result={result} />
       </div>
     );

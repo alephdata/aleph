@@ -18,8 +18,7 @@ from urlnormalizer import query_string
 import storagelayer
 
 from aleph import settings
-from aleph.ext import get_init
-from aleph.util import SessionTask
+from aleph.util import SessionTask, get_extensions
 from aleph.oauth import configure_oauth
 
 log = logging.getLogger(__name__)
@@ -34,9 +33,9 @@ sentry = Sentry()
 # spawned by the user can be handled more quickly through a
 # separate worker daemon and don't get boxed in behind very
 # large bulk imports. see: https://github.com/alephdata/aleph/issues/44
-USER_QUEUE = 'user'
+USER_QUEUE = '%s_user' % settings.QUEUE_PREFIX
 USER_ROUTING_KEY = 'user.process'
-WORKER_QUEUE = 'worker'
+WORKER_QUEUE = '%s_worker' % settings.QUEUE_PREFIX
 WORKER_ROUTING_KEY = 'worker.process'
 
 
@@ -52,19 +51,6 @@ def create_app(config={}):
         'SQLALCHEMY_DATABASE_URI': settings.DATABASE_URI
     })
 
-    # if settings.MAIL_SERVER and settings.ADMINS:
-    #     credentials = (settings.MAIL_USERNAME,
-    #                    settings.MAIL_PASSWORD)
-    #     subject = '[%s] Crash report' % settings.APP_TITLE
-    #     mail_handler = SMTPHandler(settings.MAIL_SERVER,
-    #                                settings.MAIL_FROM,
-    #                                settings.ADMINS,
-    #                                subject,
-    #                                credentials=credentials,
-    #                                secure=())
-    #     mail_handler.setLevel(logging.ERROR)
-    #     app.logger.addHandler(mail_handler)
-
     queues = (
         Queue(WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY),
         Queue(USER_QUEUE, routing_key=USER_ROUTING_KEY),
@@ -72,6 +58,9 @@ def create_app(config={}):
     celery.conf.update(
         imports=('aleph.queues'),
         broker_url=settings.BROKER_URI,
+        # broker_connection_retry=False,
+        broker_connection_max_retries=3,
+        broker_pool_limit=None,
         task_always_eager=settings.EAGER,
         task_eager_propagates=True,
         task_ignore_result=True,
@@ -107,7 +96,7 @@ def create_app(config={}):
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
-    for plugin in get_init():
+    for plugin in get_extensions('aleph.init'):
         plugin(app=app)
     return app
 
@@ -141,14 +130,9 @@ def get_archive():
     return settings._aleph_archive
 
 
-def get_language_whitelist():
-    return [c.lower().strip() for c in settings.LANGUAGES]
-
-
 app_ui_url = LocalProxy(get_app_ui_url)
 es = LocalProxy(get_es)
 archive = LocalProxy(get_archive)
-language_whitelist = LocalProxy(get_language_whitelist)
 
 
 def url_for(*a, **kw):

@@ -45,7 +45,7 @@ def view(document_id):
 @blueprint.route('/api/2/documents/<int:document_id>', methods=['POST', 'PUT'])
 def update(document_id):
     document = get_db_document(document_id, request.authz.WRITE)
-    data = parse_request(schema=DocumentUpdateSchema)
+    data = parse_request(DocumentUpdateSchema)
     document.update(data)
     db.session.commit()
     update_document(document)

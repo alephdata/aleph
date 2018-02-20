@@ -6,7 +6,7 @@ from aleph.ingest import ingest
 from aleph.model import Collection, Document, Entity, Match, Permission
 from aleph.index.admin import flush_index
 from aleph.index.collections import delete_collection as index_delete
-from aleph.index.collections import index_collection
+from aleph.index.collections import index_collection, update_roles
 from aleph.logic.entities import update_entity_full
 from aleph.logic.util import ui_url
 
@@ -17,7 +17,7 @@ def collection_url(collection_id=None, **query):
     return ui_url('collections', id=collection_id, **query)
 
 
-def update_collection(collection):
+def update_collection(collection, roles=False):
     """Create or update a collection."""
     if collection.deleted_at is not None:
         index_delete(collection.id)
@@ -29,6 +29,8 @@ def update_collection(collection):
 
     log.info("Updating: %r", collection)
     index_collection(collection)
+    if roles:
+        update_roles()
     flush_index()
 
 

@@ -33,7 +33,7 @@ class ActivateScreen extends Component {
 
     return (
       <section className="small-screen">
-        <h2><FormattedMessage id="signup.title" defaultMessage="Activate your account"/></h2>
+        <h1><FormattedMessage id="signup.title" defaultMessage="Activate your account"/></h1>
         <PasswordAuthActivate onSubmit={this.onActivate.bind(this)}/>
       </section>
     );

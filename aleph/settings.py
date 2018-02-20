@@ -109,7 +109,7 @@ PASSWORD_LOGIN = env_bool('ALEPH_PASSWORD_LOGIN', not OAUTH)
 DEFAULT_LANGUAGE = env.get('ALEPH_DEFAULT_LANGUAGE', 'en')
 
 # When no language is assigned, OCR will include these options:
-OCR_DEFAULTS = ['eng', 'rus']
+OCR_DEFAULTS = ['eng']
 OCR_DEFAULTS = env_list('ALEPH_OCR_DEFAULTS', OCR_DEFAULTS)
 
 # Language whitelist
@@ -118,6 +118,14 @@ LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
              'pl', 'hy', 'hr', 'hi', 'he', 'uz', 'mo', 'mn', 'ur', 'sq', 'ko',
              'is', 'it', 'et', 'no', 'fa', 'sw', 'sl', 'az']
 LANGUAGES = env_list('ALEPH_LANGUAGES', LANGUAGES)
+LANGUAGES = [l.lower().strip() for l in LANGUAGES]
+
+# Analyzers to be used for tag extraction:
+ANALYZE_LANGUAGE = env_bool('ALEPH_ANAYZE_LANGUAGE', True)
+ANALYZE_POLYGLOT = env_bool('ALEPH_ANAYZE_POLYGLOT', True)
+ANALYZE_CORASICK = env_bool('ALEPH_ANAYZE_CORASICK', True)
+ANALYZE_PHONES = env_bool('ALEPH_ANAYZE_PHONES', True)
+ANALYZE_EMAILS = env_bool('ALEPH_ANAYZE_EMAILS', True)
 
 
 ##############################################################################
@@ -143,6 +151,7 @@ ELASTICSEARCH_URL = env.get('ALEPH_ELASTICSEARCH_URI', 'http://localhost:9200')
 
 # Disable delayed processing via queue
 EAGER = env_bool('ALEPH_EAGER', False)
+QUEUE_PREFIX = env.get('ALEPH_QUEUE_PREFIX', APP_NAME)
 
 BROKER_URI = 'amqp://guest:guest@localhost:5672//'
 BROKER_URI = env.get('ALEPH_BROKER_URI', BROKER_URI)

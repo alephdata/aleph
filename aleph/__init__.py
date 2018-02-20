@@ -13,6 +13,7 @@ warnings.filterwarnings('ignore', category=ExtDeprecationWarning)
 logging.basicConfig(level=logging.DEBUG)
 
 # specific loggers
+logging.getLogger('langid').setLevel(logging.WARNING)
 logging.getLogger('rdflib').setLevel(logging.WARNING)
 logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)

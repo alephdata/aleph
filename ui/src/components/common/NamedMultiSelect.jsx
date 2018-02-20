@@ -35,18 +35,18 @@ class NamedMultiSelect extends Component {
   }
 
   itemRenderer(item) {
-    console.log('item renderer', item)
+    //console.log('item renderer', item)
     return <MenuItem
-      iconName="blank"
-      key={item.item.index}
+      //iconName="blank"
+      key={item.index}
       onClick={this.handleItemSelect.bind(this, item)}
-      text={item.item.name}
+      text={item.name}
       shouldDismissPopover={false}
     />;
   }
 
   tagRenderer(event, item) {
-    console.log('tag renderer', item, this.state.selectedItems);
+    //console.log('tag renderer', item, this.state.selectedItems);
     return this.props.isCountry ? <Country.Name code={this.state.selectedItems[item]}/> :
       <Language.Name code={this.state.selectedItems[item]}/>;
   }
@@ -80,12 +80,12 @@ class NamedMultiSelect extends Component {
   }
 
   getSelectedItemIndex(item) {
-    console.log('get selected', item)
+    //console.log('get selected', item)
     return this.state.selectedItems.indexOf(item);
   }
 
   handleItemSelect(item) {
-    console.log('handle item', this.isItemSelected(item))
+    //console.log('handle item', this.isItemSelected(item))
     if (!this.isItemSelected(item)) {
       this.selectItem(item);
     } else {
@@ -94,14 +94,13 @@ class NamedMultiSelect extends Component {
   }
 
   testMethod(){
-    console.log('handle')
+    console.log('test method')
   }
 
   handleChange(query, item) {
     //console.log('handle change', query, item)
     if (query !== '') {
       query = query.toLowerCase();
-      //this.setState({searchCountriesQuery: ''});
       if(item.name.toLowerCase().includes(query)) return item;
     } else {
       return item;
@@ -110,7 +109,6 @@ class NamedMultiSelect extends Component {
 
   render() {
     const {selectedItems, list} = this.state;
-    console.log('listt', list, selectedItems)
 
     return (
               <MultiSelect

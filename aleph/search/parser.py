@@ -1,6 +1,6 @@
 from banal import as_bool
 from normality import stringify
-from werkzeug.datastructures import MultiDict
+from werkzeug.datastructures import MultiDict, OrderedMultiDict
 
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
 MAX_RESULT_WINDOW = 1000
@@ -8,16 +8,21 @@ MAX_RESULT_WINDOW = 1000
 
 class QueryParser(object):
     """Hold state for common query parameters."""
+    SORT_ASC = 'asc'
+    SORT_DESC = 'desc'
+    SORT_DEFAULT = SORT_ASC
+    SORTS = [SORT_ASC, SORT_DESC]
 
     def __init__(self, args, authz, limit=None):
         if not isinstance(args, MultiDict):
-            args = MultiDict(args)
+            args = OrderedMultiDict(args)
         self.args = args
         self.authz = authz
         self.offset = max(0, self.getint('offset', 0))
         if limit is None:
             limit = min(MAX_RESULT_WINDOW, max(0, self.getint('limit', 20)))
         self.limit = limit
+        self.text = stringify(self.get('q'))
         self.prefix = stringify(self.get('prefix'))
 
     @property
@@ -48,18 +53,30 @@ class QueryParser(object):
         return self.getlist('exclude')
 
     @property
+    def sorts(self):
+        sort = []
+        for value in self.getlist('sort'):
+            direction = self.SORT_DEFAULT
+            if ':' in value:
+                value, direction = value.rsplit(':', 1)
+            if direction in self.SORTS:
+                sort.append((value, direction))
+        return sort
+
+    @property
     def items(self):
-        for key in self.args.keys():
+        for (key, value) in self.args.iteritems(multi=True):
             if key == 'offset':
                 continue
-            for value in self.getlist(key):
+            value = stringify(value, encoding='utf-8')
+            if value is not None:
                 yield key, value
 
     def getlist(self, name, default=None):
         values = []
         for value in self.args.getlist(name):
             value = stringify(value, encoding='utf-8')
-            if value:
+            if value is not None:
                 values.append(value)
         return values or (default or [])
 
@@ -96,13 +113,15 @@ class SearchQueryParser(QueryParser):
             self.limit = max(0, MAX_RESULT_WINDOW - self.offset)
         self.facet_names = self.getlist('facet')
         self.facet_size = self.getint('facet_size', 50)
-        self.text = stringify(self.get('q'))
-        self.sort = self.get('sort', 'default').strip().lower()
+        self.facet_total = self.getbool('facet_total', False)
+        self.facet_values = self.getbool('facet_values', True)
         self.highlight = []
 
     @property
     def highlight_terms(self):
         if self.text is not None:
             yield self.text
+        if self.prefix is not None:
+            yield self.prefix
         for term in self.highlight:
             yield term

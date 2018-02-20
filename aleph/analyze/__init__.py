@@ -1,11 +1,10 @@
 from __future__ import absolute_import
 
 import logging
-from timeit import default_timer as timer
 from polyglot.downloader import downloader
 
 from aleph.core import db
-from aleph.ext import get_analyzers
+from aleph.util import get_extensions
 
 
 log = logging.getLogger(__name__)
@@ -20,17 +19,14 @@ def install_analyzers():
 
 def analyze_document(document):
     """Run analyzers (such as NER) on a given document."""
-    log.info("Analyze document [%s]: %s",
-             document.id, document.title)
-    start = timer()
+    log.info("Analyze document [%s]: %s", document.id, document.title)
+    analyzers = get_extensions('aleph.analyzers')
+    analyzers = sorted(analyzers, key=lambda a: a.PRIORITY, reverse=True)
 
-    for cls in get_analyzers():
+    for cls in analyzers:
         analyzer = cls()
-        if not analyzer.disabled:
+        if analyzer.active:
             analyzer.analyze(document)
 
     db.session.add(document)
     db.session.commit()
-    end = timer()
-    log.info("Completed analysis [%s]: %s (elapsed: %.2fs)",
-             document.id, document.title, end - start)

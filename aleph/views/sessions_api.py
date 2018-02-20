@@ -42,7 +42,7 @@ def load_role():
 @blueprint.route('/api/2/sessions/login', methods=['POST'])
 def password_login():
     """Provides email and password authentication."""
-    data = parse_request(schema=LoginSchema)
+    data = parse_request(LoginSchema)
     q = Role.by_email(data.get('email'))
     q = q.filter(Role.password_digest != None)  # noqa
     role = q.first()

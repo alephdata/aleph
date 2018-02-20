@@ -12,7 +12,7 @@ MIN_LENGTH = Length(min=Role.PASSWORD_MIN_LENGTH)
 
 class RoleSchema(BaseSchema):
     name = String(validate=Length(min=3))
-    email = String(validate=Email())
+    email = String(dump_only=True)
     api_key = String(dump_only=True)
     password = String(validate=MIN_LENGTH, missing=None)
     type = String(dump_only=True)
@@ -56,5 +56,5 @@ class LoginSchema(Schema):
 class PermissionSchema(BaseSchema):
     write = Boolean(required=True)
     read = Boolean(required=True)
-    collection_id = String(dump_only=True, required=True)
+    collection_id = String(dump_only=True)
     role = Nested(RoleReferenceSchema)
