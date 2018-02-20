@@ -1,4 +1,5 @@
 
 export function selectResult(state, query) {
-  return state.search[query.toString()];
+  const queryState = state.search[query.toString()];
+  return queryState && queryState.result;
 }
