@@ -69,7 +69,7 @@ class PdfViewer extends Component {
       <React.Fragment>
         <DocumentToolbar document={document} pageNumber={pageNumber} pageTotal={numPages}/>
         <div className="DocumentContent PdfViewer">
-          <div className="document_pdf"  ref={(ref) => this.pdfElement = ref}>
+          <div className="document_pdf" ref={(ref) => this.pdfElement = ref}>
             <Document renderAnnotations={true}
                       file={url}
                       onLoadSuccess={this.onDocumentLoad.bind(this)}
