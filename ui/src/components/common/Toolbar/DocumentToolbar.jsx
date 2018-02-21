@@ -64,13 +64,13 @@ class DocumentToolbar extends React.Component {
 
     return (
       <div className="DocumentToolbar">
-        { this.props.pageNumber && this.props.pageNumber > 0 && this.props.pageTotal && this.props.pageTotal > 0 && (
+        { (this.props.pageNumber && this.props.pageNumber > 0 && this.props.pageTotal && this.props.pageTotal > 0 && (
           <ButtonGroup minimal={false} style={{float: 'left'}}>
               <AnchorButton href={`#page=${this.props.pageNumber-1}`} icon="arrow-left" disabled={this.props.pageNumber <= 1} style={{margin: 0}}/>
               <Button disabled style={{minWidth: '70px', margin: 0, color: 'rgb(24, 32, 38)'}}>{this.props.pageNumber} of {this.props.pageTotal}</Button>
               <AnchorButton href={`#page=${this.props.pageNumber+1}`} icon="arrow-right" disabled={this.props.pageNumber >= this.props.pageTotal} style={{margin: 0}}/>
           </ButtonGroup>
-        ) || null}
+        )) || null}
         <form onSubmit={this.onSubmitSearch} style={{maxWidth: 200, float: 'right', margin: '0px 10px'}}>
           <div className="pt-input-group">
             <span className="pt-icon pt-icon-search"></span>
