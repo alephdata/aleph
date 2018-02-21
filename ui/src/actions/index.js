@@ -13,7 +13,6 @@ export const fetchUsers = asyncActionCreator((prefix) => async dispatch => {
 
 export const updateCollection = asyncActionCreator((collection) => async dispatch => {
   const response = await endpoint.post(`collections/${collection.id}`, collection);
-  console.log('RESPONSE', response);
   return {collection: response.data};
 }, {name: 'UPDATE_COLLECTION'});
 
