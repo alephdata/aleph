@@ -27,12 +27,12 @@ class DocumentInfo extends React.Component {
   }
 
   render() {
-    const {document} = this.props;
+    const { document } = this.props;
     return (
       <DualPane.InfoPane className="DocumentInfo">
         <div className="PaneHeading">
           <span className="muted">
-            <Schema.Label icon={true} />
+            <Schema.Label schema={document.schema} icon={true} />
           </span>
           <h1>
             <Entity.Label entity={document} addClass={true}/>
