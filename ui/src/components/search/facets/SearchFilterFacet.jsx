@@ -5,21 +5,17 @@ import { Button, Icon, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
 import messages from 'src/content/messages';
-import { fetchFacet } from 'src/actions';
+import { fetchFacet, fetchNextFacetValues } from 'src/actions';
 import { selectFacet } from 'src/selectors';
 import CheckboxList from './CheckboxList';
 
 import './SearchFilterFacet.css';
 
 class SearchFilterFacet extends Component {
-  defaultLimit = 10;
-  limitIncreaseStep = 10;
-
   constructor(props)  {
     super(props);
 
     this.state = {
-      limit: this.defaultLimit,
       isOpen: props.initiallyOpen !== undefined ? props.initiallyOpen : this.isActive(),
     };
 
@@ -38,24 +34,19 @@ class SearchFilterFacet extends Component {
     // Check for a change of query, as unconditionally calling fetchIfNeeded
     // could cause an infinite loop (if fetching fails).
     if (!this.props.query.sameAs(prevProps.query)
-      || this.state.isOpen !== prevState.isOpen
-      || this.state.limit !== prevState.limit) {
+      || this.state.isOpen !== prevState.isOpen) {
       this.fetchIfNeeded();
     }
   }
 
   fetchIfNeeded() {
     const { total, values, isFetchingTotal, isFetchingValues, fetchFacet } = this.props;
-    const { isOpen, limit } = this.state;
+    const { isOpen } = this.state;
     const fetchTotal = total === undefined && !isFetchingTotal;
-    const fetchValues = isOpen && !isFetchingValues && (
-      values === undefined
-      // If the limit has increased, we may have to fetch again.
-      || (values.length < limit && total !== undefined && values.length < total)
-    );
+    const fetchValues = isOpen && values === undefined && !isFetchingValues;
     if (fetchTotal || fetchValues) {
       const { query, field } = this.props;
-      fetchFacet({ query, field, fetchTotal, fetchValues, limit });
+      fetchFacet({ query, field, fetchTotal, fetchValues });
     }
   }
 
@@ -64,8 +55,8 @@ class SearchFilterFacet extends Component {
   }
 
   showMore() {
-    const { limit } = this.state;
-    this.setState({ limit: limit + this.limitIncreaseStep });
+    const { query, field, fetchNextFacetValues } = this.props;
+    fetchNextFacetValues({ query, field });
   }
 
   onClick() {
@@ -90,8 +81,9 @@ class SearchFilterFacet extends Component {
   }
 
   render() {
-    const { query, field, total, values, isFetchingValues, intl } = this.props;
-    const { limit, isOpen } = this.state;
+    const { query, field, total, values, isFetchingValues,
+            isExpandingValues, valuesLimit, intl } = this.props;
+    const { isOpen } = this.state;
 
     const current = query.getFilter(field);
     const count = current.length;
@@ -99,6 +91,11 @@ class SearchFilterFacet extends Component {
     const fieldLabel = messages.search.filter[field]
       ? intl.formatMessage(messages.search.filter[field])
       : field;
+
+    // The values array can include extra selected-but-zero-hit values that are
+    // excluded from total, so we compare not against the array's length but
+    // against the requested limit.
+    const hasMoreValues = valuesLimit < total;
 
     return (
       <div className="SearchFilterFacet">
@@ -119,7 +116,7 @@ class SearchFilterFacet extends Component {
               className="clearButton pt-minimal pt-small"
               title="Clear this filter" icon="disable" />
           )}
-          {isFetchingValues && (
+          {(isFetchingValues || isExpandingValues) && (
             <Spinner className="pt-small spinner" />
           )}
         </div>
@@ -128,7 +125,7 @@ class SearchFilterFacet extends Component {
             <CheckboxList items={values}
                           selectedItems={current}
                           onItemClick={this.onSelect}>
-              {!isFetchingValues && limit < total && (
+              {!isFetchingValues && hasMoreValues && (
                 <Button onClick={this.showMore} className="showMoreButton pt-minimal">
                   <FormattedMessage id="search.facets.showMore" defaultMessage="show more {fieldLabel}…" values={{ fieldLabel }}/>
                 </Button>
@@ -146,5 +143,5 @@ const mapStateToProps = (state, { query, field }) => ({
 });
 
 SearchFilterFacet = injectIntl(SearchFilterFacet);
-SearchFilterFacet = connect(mapStateToProps, { fetchFacet })(SearchFilterFacet);
+SearchFilterFacet = connect(mapStateToProps, { fetchFacet, fetchNextFacetValues })(SearchFilterFacet);
 export default SearchFilterFacet;
