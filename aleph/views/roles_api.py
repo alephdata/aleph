@@ -141,7 +141,7 @@ def permissions_update(id):
     collection = get_db_collection(id, request.authz.WRITE)
     for permission in parse_request(PermissionSchema, many=True):
         role_id = permission.get('role', {}).get('id')
-        role = Role.by_id(role_id).first()
+        role = Role.by_id(role_id)
         if not check_visible(role, request.authz):
             continue
 
