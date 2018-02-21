@@ -16,7 +16,7 @@ class SortableTH extends Component {
         { 'hidden': !sorted },
       );
       return (
-        <th className={c('SortableTH', className)} onClick={onClick} {...otherProps}>
+        <th className={c('SortableTH clickable', className)} onClick={onClick} {...otherProps}>
           <div>
             {children}
             <span className={iconClass}/>
