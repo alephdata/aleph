@@ -87,7 +87,7 @@ let messages = {
       },
       schema: {
         id: 'search.filter.schema',
-        defaultMessage: 'Type'
+        defaultMessage: 'Types'
       },
       collection_id: {
         id: 'search.filter.collection_id',
@@ -119,11 +119,11 @@ let messages = {
       },
       mime_type: {
         id: 'search.filter.mime_type',
-        defaultMessage: 'File type'
+        defaultMessage: 'File types'
       },
       author: {
         id: 'search.filter.author',
-        defaultMessage: 'Author'
+        defaultMessage: 'Authors'
       },
     }
   },

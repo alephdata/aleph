@@ -14,10 +14,9 @@ class SearchFilterActiveTags extends Component {
   }
 
   render() {
-    const { query, aspects } = this.props;
+    const { query } = this.props;
 
-    const activeFilters = query.filters()
-      .filter(filter => aspects[filter] !== false);
+    const activeFilters = query.filters();
 
     if (activeFilters.length === 0) {
       return null;
