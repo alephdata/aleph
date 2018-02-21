@@ -32,17 +32,16 @@ class EntityContent extends Component {
     });
 
     return (
+<<<<<<< HEAD
       <DualPane.ContentPane style={{padding: 0}}>
         <div className="ContentPaneOuter">
           <div className="ContentPaneInner EntityContent max-width-content-limit" style={{padding: 20}}>
             <span className="muted">
-              <Schema.Label schema={entity.schema} icon={true} />
+              <Schema.Icon schema={entity.schema}/>{' '}<Schema.Name schema={entity.schema}/>
             </span>
-
             <h1>
               <Entity.Label entity={entity} addClass={true}/>
             </h1>
-      
             <ul className="info-sheet">
               <li>
               </li>
@@ -57,6 +56,24 @@ class EntityContent extends Component {
                 </li>
               ))}
               <li>
+=======
+      <DualPane.ContentPane>
+        <div className="EntityContent">
+      
+          <span className="muted">
+            <Schema.Label schema={entity.schema} icon={true} />
+          </span>
+
+          <h1>
+            <Entity.Label entity={entity} addClass={true}/>
+          </h1>
+        
+          <ul className="info-sheet">
+            <li>
+            </li>
+            { properties.map((prop) => (
+              <li key={prop.name}>
+>>>>>>> 04bcb11048b3fa85f92b61f6dc0acfb186e7ddc8
                 <span className="key">
                   <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
                 </span>
@@ -65,7 +82,6 @@ class EntityContent extends Component {
                 </span>
               </li>
             </ul>
-        
             <EntityReferences entity={entity} />
           </div>
         </div>

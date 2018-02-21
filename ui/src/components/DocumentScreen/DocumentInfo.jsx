@@ -32,7 +32,7 @@ class DocumentInfo extends React.Component {
       <DualPane.InfoPane className="DocumentInfo">
         <div className="PaneHeading">
           <span className="muted">
-            <Schema.Icon schema={document.schema}/>{' '}<Schema.Name schema={document.schema}/>
+            <Schema.Label icon={true} />
           </span>
           <h1>
             <Entity.Label entity={document} addClass={true}/>

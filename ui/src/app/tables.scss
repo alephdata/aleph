@@ -12,18 +12,20 @@ table {
     overflow: hidden;
   }
 
-  th.wide, td.wide {
-    width: 30%;
+  // Make these columns take the minimal width that fits the content
+  tr td.date {
+    width: 1%;
+    overflow: visible;
+    max-width: unset;
+    text-overflow: unset;
   }
 
-  td.schema {
+  th.wide, td.wide {
+    width: 40%;
   }
 
   td.entity {
     font-weight: bold;
-  }
-
-  td.date {
   }
 
   td.numeric {
@@ -40,9 +42,13 @@ table {
 
 // Tables as normally used in ContentPane
 table.data-table {
-  @extend .pt-html-table, .pt-html-table-bordered;
+  @extend .pt-html-table;
 
   width: 100%;
+
+  td {
+    border-bottom: 1px solid $aleph-border-color;
+  }
 
   th {
     white-space: nowrap;

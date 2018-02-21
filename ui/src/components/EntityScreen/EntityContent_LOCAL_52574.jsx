@@ -36,13 +36,11 @@ class EntityContent extends Component {
         <div className="ContentPaneOuter">
           <div className="ContentPaneInner EntityContent max-width-content-limit" style={{padding: 20}}>
             <span className="muted">
-              <Schema.Label schema={entity.schema} icon={true} />
+              <Schema.Icon schema={entity.schema}/>{' '}<Schema.Name schema={entity.schema}/>
             </span>
-
             <h1>
               <Entity.Label entity={entity} addClass={true}/>
             </h1>
-      
             <ul className="info-sheet">
               <li>
               </li>
@@ -65,7 +63,6 @@ class EntityContent extends Component {
                 </span>
               </li>
             </ul>
-        
             <EntityReferences entity={entity} />
           </div>
         </div>

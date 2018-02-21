@@ -40,7 +40,7 @@ class EntityInfo extends React.Component {
       <DualPane.InfoPane className="EntityInfo">
         <div className="PaneHeading">
           <span className="muted">
-            <Schema.Icon schema={entity.schema}/>{' '}<Schema.Name schema={entity.schema}/>
+            <Schema.Label schema={entity.schema} icon={true} />
           </span>
           <h1>
             <Entity.Label entity={entity} addClass={true}/>
@@ -66,7 +66,7 @@ class EntityInfo extends React.Component {
                         { references.results.map((ref) => (
                           <li key={ref.property.qname}>
                             <span className="key">
-                              <Schema.Icon schema={ref.schema} />
+                              <Schema.Icon schema={ref.schema} />{' '}
                               <Property.Reverse model={ref.property} />
                             </span>
                             <span className="value">

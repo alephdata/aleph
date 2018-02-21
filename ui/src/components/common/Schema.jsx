@@ -25,18 +25,18 @@ class SchemaIcon extends Component {
   }
 }
 
-class SchemaName extends Component {
-  shouldComponentUpdate(nextProps) {
-    return this.props.schema !== nextProps.schema 
-      || this.props.plural !== nextProps.plural;
-  }
-
+class SchemaLabel extends Component {
   render() {
-    const {schema, schemata, plural} = this.props,
-          model = schemata[schema] || {};
+    const { schema, schemata, plural, icon } = this.props;
+    const model = schemata[schema] || {};
     let label = model.label || schema;
     if (plural) {
       label = model.plural || label;
+    }
+    if (icon) {
+      return (
+        <span><Schema.Icon schema={schema} /> {label}</span>
+      );
     }
     return (
       <span>{label}</span>
@@ -49,9 +49,8 @@ const mapStateToProps = state => ({
 });
 
 class Schema extends Component {
-  static Name = connect(mapStateToProps)(SchemaName);
+  static Label = connect(mapStateToProps)(SchemaLabel);
   static Icon = connect(mapStateToProps)(SchemaIcon);
 }
-
 
 export default Schema;
