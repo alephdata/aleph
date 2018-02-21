@@ -204,7 +204,8 @@ class CollectionEditInfo extends Component {
             </div>
             <div className="pt-form-content">
               <SuggestInput
-                //defaultValue={collection === undefined ? undefined : collection.creator === undefined ? undefined : collection.creator.name}
+                isCategory={false}
+                defaultValue={collection === undefined ? undefined : collection.creator === undefined ? undefined : collection.creator.name}
                 onSelectItem={this.onSelectUser}
                 list={listUsers}
                 onTyping={this.onTyping}/>

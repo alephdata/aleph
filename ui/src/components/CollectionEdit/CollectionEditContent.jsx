@@ -116,7 +116,7 @@ class CollectionEditContent extends Component {
   }
 
   async onSavePermissions() {
-    console.log('on save', this.state.permissions)
+    console.log('on save', this.props.collection)
     await this.props.updateCollection(this.props.collection);
     await this.props.updateCollectionPermissions(this.state.permissions.results[0]);
     showSuccessToast('You have saved collection!');

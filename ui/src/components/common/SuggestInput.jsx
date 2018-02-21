@@ -2,18 +2,16 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {MenuItem} from '@blueprintjs/core'
 import {Suggest} from "@blueprintjs/select";
-import {FormattedMessage, injectIntl} from 'react-intl';
+import {injectIntl} from 'react-intl';
 
 class SuggestInput extends Component {
   constructor(props) {
     super(props);
 
-    console.log('constructor', this.props)
     this.state = {
       list: [],
       selectedItem: {},
-      input: this.props.defaultValue ? this.props.isCategory ? this.props.categories[this.props.defaultValue]
-        ? this.props.defaultValue : '' : '' : ''
+      input: ''
     };
 
     this.itemRenderer = this.itemRenderer.bind(this);
@@ -24,13 +22,11 @@ class SuggestInput extends Component {
     this.handleItemSelect = this.handleItemSelect.bind(this);
   }
 
-  componentDidMount() {
-
-  }
-
   componentWillReceiveProps(nextProps) {
     this.setState({
-      list: nextProps.list
+      list: nextProps.list,
+      input: nextProps.isCategory ? nextProps.categories[nextProps.defaultValue]
+        : nextProps.defaultValue ? nextProps.defaultValue : ''
     });
   }
 
@@ -52,31 +48,31 @@ class SuggestInput extends Component {
   }
 
   inputRenderer(item) {
-    this.props.onSelectItem(item);
-
     return item.name
   }
 
   handleItemSelect(item) {
    console.log('select', item);
    this.setState({input: item.name});
+    this.props.onSelectItem(item);
   }
 
   onInputChange({target}) {
+    console.log('change', target.value)
     this.setState({input: target.value});
 
     this.props.onTyping(target.value);
   }
 
   render() {
-    const {list} = this.state;
+    const {list, input} = this.state;
 
     return (
       <Suggest
         initialContent={<MenuItem disabled={true} text='Add new user!' />}
         className='multiple_select_input'
         noResults={<MenuItem disabled={true} text="No results." />}
-        inputProps={{onChange: this.onInputChange, value: this.state.input}}
+        inputProps={{onChange: this.onInputChange, value: input}}
         items={list}
         itemRenderer={this.itemRenderer}
         onItemSelect={this.handleItemSelect}
