@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, MenuItem} from '@blueprintjs/core';
+import {Button} from '@blueprintjs/core';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
 
@@ -7,8 +7,10 @@ import DualPane from 'src/components/common/DualPane';
 import CollectionEditTable from "./CollectionEditTable";
 import {fetchCollectionPermissions, fetchUsers, updateCollection} from 'src/actions';
 import SuggestInput from 'src/components/common/SuggestInput';
+import {showErrorToast} from 'src/app/toast';
 
 import './CollectionEditContent.css';
+import {showInfoToast} from "../../app/toast";
 
 class CollectionEditContent extends Component {
 
@@ -19,7 +21,7 @@ class CollectionEditContent extends Component {
       newUser: {},
       collectionId: -1,
       listUsers: [],
-      users: []
+      permissions: []
     };
 
     this.onAddUser = this.onAddUser.bind(this);
@@ -28,31 +30,36 @@ class CollectionEditContent extends Component {
   }
 
   componentDidMount() {
-    //this.props.fetchUsers('emi');
+    console.log('did mount', this.props)
+
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.collection.isFetching === undefined && this.state.collectionId === -1) {
-      console.log('propsss')
+  async componentWillReceiveProps(nextProps) {
+    console.log(this.props !== nextProps)
+    if(this.props.collection !== nextProps.collection) {
+      console.log('will receive props', nextProps)
+      await this.props.fetchCollectionPermissions(nextProps.collection.id);
       this.setState({
         collectionId: nextProps.collection.id,
-        listUsers: nextProps.users.results === undefined ? [] : nextProps.users.results
+        listUsers: nextProps.users.results === undefined ? [] : nextProps.users.results,
+        permissions: this.props.permissions
       });
-      this.props.fetchCollectionPermissions(nextProps.collection.id);
+
     }
   }
 
   onAddUser() {
-    if (this.state.newUser.id === undefined) alert('no user');
-    let usersList = this.state.users;
-    usersList.push(this.state.newUser);
-    console.log('user list', usersList)
-    this.setState({users: usersList});
+    if (this.state.newUser.id === undefined) {
+      showErrorToast('You must select user!');
+    }
+    let permissions = this.state.permissions;
+    permissions.results[0].push(this.state.newUser);
+    this.setState({permissions: permissions});
+    showInfoToast('You have added new user. Click Save button!');
+    console.log('DODANO', this.state.permissions)
   }
 
-  async onTyping(event) {
-    let query = event.target.value;
-    console.log('on typing', query)
+  async onTyping(query) {
     if(query.length >= 3) {
       await this.props.fetchUsers(query);
       this.setState({listUsers: this.props.users.results})
@@ -66,9 +73,9 @@ class CollectionEditContent extends Component {
   }
 
   render() {
-    const {intl, permissions, collection} = this.props;
-    const {listUsers, users} = this.state;
-    console.log('list users', listUsers)
+    const {collection} = this.props;
+    const {listUsers, newUser, permissions} = this.state;
+    console.log('render', this.state.permissions)
 
     return (
       <DualPane.ContentPane limitedWidth={true} className="CollectionEditContent">
@@ -78,6 +85,7 @@ class CollectionEditContent extends Component {
         </h1>
         <form onSubmit={this.onAddUser} className="addUserForm">
           <SuggestInput
+            defaultValue={newUser.name === undefined ? undefined : newUser.name}
             onSelectItem={this.onSelectUser}
             list={listUsers}
             onTyping={this.onTyping}/>
@@ -86,7 +94,7 @@ class CollectionEditContent extends Component {
                               defaultMessage="Add"/>
           </Button>
         </form>
-        <CollectionEditTable users={users} permissions={permissions} collection={collection}/>
+        <CollectionEditTable permissions={permissions} collection={collection}/>
       </DualPane.ContentPane>
     );
   }

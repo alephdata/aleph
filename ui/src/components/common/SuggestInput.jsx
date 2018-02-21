@@ -4,39 +4,21 @@ import {MenuItem} from '@blueprintjs/core'
 import {Suggest} from "@blueprintjs/select";
 import {FormattedMessage, injectIntl} from 'react-intl';
 
-const mockList = [
-  {
-    id: 1,
-    name: 'jedan'
-  },
-  {
-    id: 2,
-    name: 'dva'
-  },
-  {
-    id: 3,
-    name: 'tri'
-  },
-];
-
 class SuggestInput extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      list: mockList,
-      selectedItem: {}
+      list: [],
+      selectedItem: {},
+      input: ''
     };
 
     this.itemRenderer = this.itemRenderer.bind(this);
-    this.removeItem = this.removeItem.bind(this);
-    this.selectItem = this.selectItem.bind(this);
     this.getSelectedItemIndex = this.getSelectedItemIndex.bind(this);
     this.isItemSelected = this.isItemSelected.bind(this);
-    this.handleItemSelect = this.handleItemSelect.bind(this);
-    this.filterList = this.filterList.bind(this);
-    this.removeFromList = this.removeFromList.bind(this);
     this.inputRenderer = this.inputRenderer.bind(this);
+    this.onInputChange = this.onInputChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -46,7 +28,6 @@ class SuggestInput extends Component {
   }
 
   itemRenderer(item, opts) {
-    console.log('item renderer', opts)
     return opts.modifiers.matchesPredicate && <MenuItem
       key={item.id}
       onClick={opts.handleClick}
@@ -55,51 +36,12 @@ class SuggestInput extends Component {
     />;
   }
 
-  removeItem(index) {
-    this.setState({selectedItems: this.state.selectedItems.filter((item, i) => i !== index)});
-  }
-
-  selectItem(item) {
-    console.log('select', item)
-  }
-
-  removeFromList(index) {
-    let array = [];
-    for (let i = 0; i < this.state.list.length; i++) {
-      if (this.state.list[i].index !== index) {
-        array.push(this.state.list[i]);
-      }
-    }
-
-    return array;
-  }
-
   isItemSelected(item) {
     return this.getSelectedItemIndex(item) !== -1;
   }
 
   getSelectedItemIndex(item) {
-    console.log('get selected', item)
     return this.state.selectedItems.indexOf(item);
-  }
-
-  handleItemSelect(item) {
-    console.log('handle item', item)
-  }
-
-  filterList(query, item) {
-    console.log('handle change', query, item);
-    if (query !== '') {
-      query = query.toString().toLowerCase();
-      if(item !== undefined) {
-        return item.name.toLowerCase().includes(query);
-
-      }
-    } else if(query !== undefined) {
-      return true;
-    }
-
-    return false;
   }
 
   inputRenderer(item) {
@@ -108,22 +50,26 @@ class SuggestInput extends Component {
     return item.name
   }
 
+  onInputChange({target}) {
+    this.setState({input: target.value});
+
+    this.props.onTyping(target.value);
+  }
+
   render() {
     const {list} = this.state;
-    console.log('listt', list);
 
     return (
       <Suggest
         initialContent={<MenuItem disabled={true} text='Add new user!' />}
         className='multiple_select_input'
-        //itemPredicate={this.filterList.bind(this)}
         noResults={<MenuItem disabled={true} text="No results." />}
-        inputProps={{onChange: this.props.onTyping}}
+        inputProps={{onChange: this.onInputChange, value: this.props.defaultValue !== undefined ? this.props.defaultValue : this.state.input}}
         items={list}
         itemRenderer={this.itemRenderer}
         onItemSelect={this.handleItemSelect}
         intent={false}
-        popoverProps={{targetClassName: 'multiple_select_input', popoverClassName: 'multiple_select_input'}}
+        popoverProps={{targetClassName: 'multiple_select_input', className: 'multiple_select_input'}}
         closeOnSelect={true}
         inputValueRenderer={this.inputRenderer}/>
     );

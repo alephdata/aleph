@@ -37,7 +37,6 @@ class NamedMultiSelect extends Component {
   itemRenderer(item, opts) {
     console.log('item renderer', opts)
     return opts.modifiers.matchesPredicate && <MenuItem
-      //iconName="blank"
       key={item.index}
       onClick={opts.handleClick}
       text={item.name}
@@ -46,14 +45,14 @@ class NamedMultiSelect extends Component {
   }
 
   tagRenderer(event, item) {
-    //console.log('tag renderer', item, this.state.selectedItems);
     return this.props.isCountry ? <Country.Name code={this.state.selectedItems[item]}/> :
       <Language.Name code={this.state.selectedItems[item]}/>;
   }
 
   removeItem(index) {
-    console.log('remove')
     this.setState({selectedItems: this.state.selectedItems.filter((item, i) => i !== index)});
+
+    this.props.onSelectItem({selectedItems: this.state.selectedItems, list: this.state.list});
   }
 
   selectItem(item) {
@@ -93,7 +92,6 @@ class NamedMultiSelect extends Component {
   }
 
   handleItemSelect(item){
-    console.log('test method', this.isItemSelected(item))
     if (!this.isItemSelected(item)) {
       this.selectItem(item);
     } else {

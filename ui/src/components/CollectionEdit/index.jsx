@@ -15,25 +15,36 @@ class CollectionEditScreen extends Component {
 
     this.state = {
       collection: {}
-    }
+    };
+
+    this.onChangeCollection = this.onChangeCollection.bind(this);
   }
 
   componentDidMount() {
     const { collectionId } = this.props;
     this.props.fetchCollection({ id: collectionId });
-    //this.setState({collection: this.props.collection})
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(this.props !== nextProps) {
+      this.setState({collection: nextProps.collection});
+    }
+
+  }
+
+  onChangeCollection(collection) {
+    this.setState({collection})
   }
 
   render() {
     const { location, collection } = this.props;
-    //const {collection} = this.state;
 
     return (
       <Screen>
         <Breadcrumbs collection={{label: 'Collection Settings', links: {ui: 'http://localhost:8080' + location.pathname}}} />
         <DualPane>
-          <CollectionEditInfo collection={collection}/>
-          <CollectionEditContent collection={collection}/>
+          <CollectionEditInfo onChangeCollection={this.onChangeCollection} collection={collection}/>
+          <CollectionEditContent collection={this.state.collection}/>
         </DualPane>
       </Screen>
 

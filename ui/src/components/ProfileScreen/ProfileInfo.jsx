@@ -7,6 +7,7 @@ import {addRole, fetchRole} from 'src/actions';
 import DualPane from 'src/components/common/DualPane';
 
 import './ProfileInfo.css';
+import {showSuccessToast, showErrorToast} from "../../app/toast";
 
 class ProfileInfo extends Component {
   constructor(props) {
@@ -55,10 +56,12 @@ class ProfileInfo extends Component {
     return this.state.password === this.state.confirmPassword;
   }
 
-  onSubmitInfo() {
+  async onSubmitInfo() {
     if (this.checkPasswords()) {
-      this.props.addRole(this.state);
+      await this.props.addRole(this.state);
+      showSuccessToast('You have updated your info!');
     } else {
+      showErrorToast('Check your passwords!');
       this.setState({
         requiredLabel: 'pt-input input_class pt-intent-danger',
         requiredLabelText: 'pt-form-helper-text error_label_text show'

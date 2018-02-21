@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {FormattedMessage, injectIntl} from 'react-intl';
-import { Select } from "@blueprintjs/select";
+import SuggestInput from 'src/components/common/SuggestInput';
 
 import DualPane from 'src/components/common/DualPane';
 import NamedMultiSelect from 'src/components/common/NamedMultiSelect';
+import {fetchUsers} from "../../actions";
 
 import './CollectionEditInfo.css';
 
@@ -19,19 +20,37 @@ class CollectionEditInfo extends Component {
       languages: [],
       listCountries: [],
       listLanguages: [],
-      categories: []
+      categories: [],
+      category: {},
+      listUsers: [],
+      contact: {},
+      collection: {}
     };
 
     this.onSelectCountry = this.onSelectCountry.bind(this);
     this.onSelectLanguage = this.onSelectLanguage.bind(this);
+    this.onTyping = this.onTyping.bind(this);
+    this.onSelectUser = this.onSelectUser.bind(this);
+    this.onSelectCategory = this.onSelectCategory.bind(this);
+    this.onFilterCategories = this.onFilterCategories.bind(this);
+    this.onChangeLabel = this.onChangeLabel.bind(this);
+    this.onChangeSummary = this.onChangeSummary.bind(this);
   }
 
   componentDidMount() {
     console.log('did mount', this.props)
   }
 
+  onSelectUser(user) {
+    this.setState({contact: user});
+    let collection = this.state.collection;
+    collection.creator = user;
+    this.setState({collection});
+    this.props.onChangeCollection(collection);
+  }
+
   componentWillReceiveProps(nextProps) {
-    console.log('props');
+    console.log('props', nextProps);
     if (nextProps.collection.isFetching === undefined) {
       this.setState({
         label: nextProps.collection.label,
@@ -40,8 +59,20 @@ class CollectionEditInfo extends Component {
         listCountries: this.structureList(nextProps.countries),
         languages: nextProps.collection.languages,
         listLanguages: this.structureList(nextProps.languages),
-        categories: nextProps.categories
+        categories: this.structureList(nextProps.categories),
+        listUsers: nextProps.users.results === undefined ? [] : nextProps.users.results,
+        collection: nextProps.collection
       });
+    }
+  }
+
+  async onTyping(query) {
+    console.log(query)
+    if(query.length >= 3) {
+      await this.props.fetchUsers(query);
+      this.setState({listUsers: this.props.users.results})
+    } else {
+      this.setState({listUsers: []})
     }
   }
 
@@ -52,17 +83,62 @@ class CollectionEditInfo extends Component {
 
   onSelectCountry(countries) {
     this.setState({countries: countries.selectedItems, listCountries: countries.list});
+    let collection = this.state.collection;
+    collection.languages = countries.selectedItems;
+    this.setState({collection})
+    this.props.onChangeCollection(collection);
+  }
+
+  onSelectCategory(category) {
+    this.setState({category: category});
+    let collection = this.state.collection;
+    collection.category = category;
+    this.setState({collection});
+    this.props.onChangeCollection(collection);
   }
 
   onSelectLanguage(languages) {
     this.setState({languages: languages.selectedItems, listLanguages: languages.list});
+    let collection = this.state.collection;
+    collection.languages = languages.selectedItems;
+    this.setState({collection});
+    this.props.onChangeCollection(collection);
+  }
+
+  onFilterCategories(event) {
+    let query = event.target.value.toLowerCase();
+    let categoryList = [];
+
+    let categories = this.structureList(this.props.categories);
+
+    for(let i = 0; i < categories.length; i++) {
+      if(categories[i].name.toLowerCase().includes(query)) {
+        categoryList.push(categories[i]);
+      }
+    }
+
+    this.setState({categories: categoryList});
+  }
+
+  onChangeLabel({target}) {
+    this.setState({label: target.value});
+    let collection = this.state.collection;
+    collection.label = target.value;
+    this.setState({collection});
+    this.props.onChangeCollection(collection);
+  }
+
+  onChangeSummary({target}) {
+    this.setState({summary: target.value})
+    let collection = this.state.collection;
+    collection.summary = target.value;
+    this.setState({collection});
+    this.props.onChangeCollection(collection);
   }
 
   render() {
     const {collection, intl} = this.props;
-    const {label, summary} = this.state;
-
-    console.log(this.state.categories)
+    const {label, summary, listUsers} = this.state;
 
     return (
       <DualPane.InfoPane className="CollectionEditInfo">
@@ -85,7 +161,7 @@ class CollectionEditInfo extends Component {
                        defaultMessage: "Enter name of collection"
                      })}
                      dir="auto"
-                     onChange={this.onChangeName}
+                     onChange={this.onChangeLabel}
                      value={label}/>
             </div>
           </div>
@@ -125,7 +201,7 @@ class CollectionEditInfo extends Component {
                      })}
                      dir="auto"
                         rows={5}
-                     onChange={this.onChangeName}
+                     onChange={this.onChangeSummary}
                      value={summary}/>
             </div>
           </div>
@@ -137,15 +213,11 @@ class CollectionEditInfo extends Component {
               </label>
             </div>
             <div className="pt-form-content">
-              <input className="pt-input input_class"
-                     type="text"
-                     placeholder={intl.formatMessage({
-                       id: "collection.edit.info.placeholder.contact",
-                       defaultMessage: "Enter name of contact"
-                     })}
-                     dir="auto"
-                     onChange={this.onChangeName}
-                     value= {collection === undefined ? '' : collection.creator === undefined ? '' : collection.creator}/>
+              <SuggestInput
+                defaultValue={collection === undefined ? undefined : collection.creator === undefined ? undefined : collection.creator.name}
+                onSelectItem={this.onSelectUser}
+                list={listUsers}
+                onTyping={this.onTyping}/>
             </div>
           </div>
           <div className="pt-form-group label_group">
@@ -157,7 +229,6 @@ class CollectionEditInfo extends Component {
             </div>
               <NamedMultiSelect
                 onSelectItem={this.onSelectCountry}
-                onRemoveItem={this.onRemoveCountry}
                 list={this.state.listCountries}
                 selectedItems={this.state.countries}
                 isCountry={true}/>
@@ -171,21 +242,22 @@ class CollectionEditInfo extends Component {
             </div>
             <NamedMultiSelect
               onSelectItem={this.onSelectLanguage}
-              onRemoveItem={this.onRemoveLanguage}
               list={this.state.listLanguages}
               selectedItems={this.state.languages}
               isCountry={false}/>
           </div>
-          {/*<div className="pt-form-group label_group">
+          <div className="pt-form-group label_group">
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
               <label className="pt-label label_class">
                 <FormattedMessage id="collection.edit.info.categories" defaultMessage="Categories"/>
               </label>
             </div>
-            <Select
-              items={this.state.categories}/>
-          </div>*/}
+            <SuggestInput
+              onSelectItem={this.onSelectCategory}
+              list={this.state.categories}
+              onTyping={this.onFilterCategories}/>
+          </div>
         </div>
       </DualPane.InfoPane>
     );
@@ -196,8 +268,9 @@ const mapStateToProps = (state, ownProps) => {
   return {
     countries: state.metadata.countries,
     languages: state.metadata.languages,
-    categories: state.metadata.categories
+    categories: state.metadata.categories,
+    users: state.users
   }
 };
 
-export default connect(mapStateToProps)(injectIntl(CollectionEditInfo));
+export default connect(mapStateToProps, {fetchUsers})(injectIntl(CollectionEditInfo));
