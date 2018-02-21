@@ -8,7 +8,7 @@ import Language from 'src/components/common/Language';
 import Country from 'src/components/common/Country';
 import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
-import {AnchorButton} from '@blueprintjs/core';
+import {Button} from '@blueprintjs/core';
 import {Link} from 'react-router-dom';
 
 
@@ -72,15 +72,12 @@ class CollectionInfo extends Component {
             </span>
           </li>
         </ul>
-
-        <div className="pt-button-group pt-fill button_div">
-          <Link to={link}>
-            <AnchorButton
-              className="">
-              <FormattedMessage id="collection.info.edit" defaultMessage="Edit"/>
-            </AnchorButton>
-          </Link>
-        </div>
+        {collection.writeable && <Link to={link}>
+            <Button className="editButton">
+              <FormattedMessage id="collection.info.edit"
+                                defaultMessage="Edit"/>
+            </Button>
+          </Link>}
       </DualPane.InfoPane>
     );
   }

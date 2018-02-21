@@ -1,5 +1,4 @@
 from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest
 from itsdangerous import BadSignature
 
 from aleph.core import db, settings, app_ui_url

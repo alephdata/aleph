@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {MenuItem} from '@blueprintjs/core'
+import {MenuItem, Classes} from '@blueprintjs/core'
 import {Suggest} from "@blueprintjs/select";
 import {injectIntl} from 'react-intl';
 
@@ -32,7 +32,7 @@ class SuggestInput extends Component {
 
   itemRenderer(item, opts) {
     return opts.modifiers.matchesPredicate && <MenuItem
-      key={item.id}
+      key={item.index}
       onClick={opts.handleClick}
       text={item.name}
       shouldDismissPopover={false}
@@ -52,13 +52,11 @@ class SuggestInput extends Component {
   }
 
   handleItemSelect(item) {
-   console.log('select', item);
    this.setState({input: item.name});
     this.props.onSelectItem(item);
   }
 
   onInputChange({target}) {
-    console.log('change', target.value)
     this.setState({input: target.value});
 
     this.props.onTyping(target.value);
@@ -77,7 +75,7 @@ class SuggestInput extends Component {
         itemRenderer={this.itemRenderer}
         onItemSelect={this.handleItemSelect}
         intent={false}
-        popoverProps={{targetClassName: 'multiple_select_input', className: 'multiple_select_input'}}
+        popoverProps={{targetClassName: 'multiple_select_input', className: 'multiple_select_input', popoverClassName: Classes.MINIMAL}}
         closeOnSelect={true}
         inputValueRenderer={this.inputRenderer}/>
     );

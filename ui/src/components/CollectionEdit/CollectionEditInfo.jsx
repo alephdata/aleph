@@ -22,6 +22,8 @@ class CollectionEditInfo extends Component {
       listLanguages: [],
       listCategories: [],
       category: {},
+      categoryName: '',
+      contactName: '',
       listUsers: [],
       contact: {},
       collection: {}
@@ -56,7 +58,9 @@ class CollectionEditInfo extends Component {
         listLanguages: this.structureList(nextProps.languages),
         listCategories: this.structureList(nextProps.categories),
         listUsers: nextProps.users.results === undefined ? [] : nextProps.users.results,
-        collection: nextProps.collection
+        collection: nextProps.collection,
+        categoryName: nextProps.collection === undefined ? undefined : nextProps.collection.category === undefined ? undefined : nextProps.collection.category,
+        contactName: nextProps.collection === undefined ? undefined : nextProps.collection.creator === undefined ? nextProps.session.role.name : nextProps.collection.creator.name
       });
     }
   }
@@ -68,6 +72,8 @@ class CollectionEditInfo extends Component {
     } else {
       this.setState({listUsers: []})
     }
+
+    this.setState({contactName: query})
   }
 
   structureList(list) {
@@ -108,7 +114,7 @@ class CollectionEditInfo extends Component {
       }
     }
 
-    this.setState({listCategories: categoryList});
+    this.setState({listCategories: categoryList, categoryName: query});
   }
 
   onChangeLabel({target}) {
@@ -128,8 +134,8 @@ class CollectionEditInfo extends Component {
   }
 
   render() {
-    const {collection, intl, categories} = this.props;
-    const {label, summary, listUsers, listCategories, listCountries, countries, listLanguages, languages} = this.state;
+    const {collection, intl, categories, session} = this.props;
+    const {label, summary, listUsers, listCategories, listCountries, countries, listLanguages, languages, categoryName, contactName} = this.state;
 
     return (
       <DualPane.InfoPane className="CollectionEditInfo">
@@ -205,7 +211,7 @@ class CollectionEditInfo extends Component {
             <div className="pt-form-content">
               <SuggestInput
                 isCategory={false}
-                defaultValue={collection === undefined ? undefined : collection.creator === undefined ? undefined : collection.creator.name}
+                defaultValue={contactName}
                 onSelectItem={this.onSelectUser}
                 list={listUsers}
                 onTyping={this.onTyping}/>
@@ -246,7 +252,7 @@ class CollectionEditInfo extends Component {
             </div>
             <SuggestInput
               isCategory={true}
-              defaultValue={collection === undefined ? undefined : collection.category === undefined ? undefined : collection.category}
+              defaultValue={categoryName}
               onSelectItem={this.onSelectCategory}
               list={listCategories}
               categories={categories}
@@ -263,7 +269,8 @@ const mapStateToProps = (state, ownProps) => {
     countries: state.metadata.countries,
     languages: state.metadata.languages,
     categories: state.metadata.categories,
-    users: state.users
+    users: state.users,
+    session: state.session
   }
 };
 

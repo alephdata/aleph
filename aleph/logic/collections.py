@@ -30,7 +30,7 @@ def update_collection(collection, roles=False):
     log.info("Updating: %r", collection)
     index_collection(collection)
     if roles:
-        update_roles()
+        update_roles(collection)
     flush_index()
 
 

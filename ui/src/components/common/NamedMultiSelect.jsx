@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {MenuItem} from '@blueprintjs/core'
+import {MenuItem, Classes} from '@blueprintjs/core'
 import {MultiSelect} from "@blueprintjs/select";
 import {injectIntl} from 'react-intl';
 
@@ -51,7 +51,10 @@ class NamedMultiSelect extends Component {
   removeItem(index) {
     this.setState({selectedItems: this.state.selectedItems.filter((item, i) => i !== index)});
 
-    this.props.onSelectItem({selectedItems: this.state.selectedItems.filter((item, i) => i !== index), list: this.state.list});
+    this.props.onSelectItem({
+      selectedItems: this.state.selectedItems.filter((item, i) => i !== index),
+      list: this.state.list
+    });
   }
 
   selectItem(item) {
@@ -74,21 +77,21 @@ class NamedMultiSelect extends Component {
   }
 
   isItemSelected(item) {
-    for(let i = 0; i < this.state.selectedItems.length; i++) {
-      if(this.state.selectedItems[i].name === item.name) return true;
+    for (let i = 0; i < this.state.selectedItems.length; i++) {
+      if (this.state.selectedItems[i].name === item.name) return true;
     }
     return false;
   }
 
   getSelectedItemIndex(item) {
-    for(let i = 0; i < this.state.selectedItems.length; i++) {
-      if(this.state.selectedItems[i] === item.props.code) return i;
+    for (let i = 0; i < this.state.selectedItems.length; i++) {
+      if (this.state.selectedItems[i] === item.props.code) return i;
     }
 
     return -1;
   }
 
-  handleItemSelect(item){
+  handleItemSelect(item) {
     if (!this.isItemSelected(item)) {
       this.selectItem(item);
     } else {
@@ -110,22 +113,28 @@ class NamedMultiSelect extends Component {
     const {intl} = this.props;
 
     return (
-              <MultiSelect
-                initialContent={<MenuItem disabled={true} text={intl.formatMessage({id: 'named.multiselect.add', defaultMessage: 'Add new item!'})} />}
-                className='multiple_select_input'
-                itemPredicate={this.handleChange.bind(this)}
-                noResults={<MenuItem disabled={true} text={intl.formatMessage({id: 'named.multiselect.no.results', defaultMessage: "No results."})}/>}
-                inputProps={{onChange: this.handleChange}}
-                items={list}
-                itemRenderer={this.itemRenderer}
-                tagRenderer={this.tagRenderer}
-                onItemSelect={this.handleItemSelect}
-                intent={false}
-                popoverProps={{targetClassName: 'multiple_select_input'}}
-                tagInputProps={{onRemove: this.handleItemSelect}}
-                resetOnSelect={true}
-                selectedItems={selectedItems}
-              />
+      <MultiSelect
+        initialContent={<MenuItem disabled={true} text={intl.formatMessage({
+          id: 'named.multiselect.add',
+          defaultMessage: 'Add new item!'
+        })}/>}
+        className='multiple_select_input'
+        itemPredicate={this.handleChange.bind(this)}
+        noResults={<MenuItem disabled={true} text={intl.formatMessage({
+          id: 'named.multiselect.no.results',
+          defaultMessage: "No results."
+        })}/>}
+        inputProps={{onChange: this.handleChange}}
+        items={list}
+        itemRenderer={this.itemRenderer}
+        tagRenderer={this.tagRenderer}
+        onItemSelect={this.handleItemSelect}
+        intent={false}
+        popoverProps={{targetClassName: 'multiple_select_input', popoverClassName: Classes.MINIMAL}}
+        tagInputProps={{onRemove: this.handleItemSelect}}
+        resetOnSelect={true}
+        selectedItems={selectedItems}
+      />
     );
   }
 }

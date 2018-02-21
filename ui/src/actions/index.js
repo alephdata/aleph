@@ -45,6 +45,9 @@ export const addAlert = asyncActionCreator((alert) => async dispatch => {
 
 export const fetchCollectionPermissions = asyncActionCreator((id) => async dispatch => {
   const response = await endpoint.get(`collections/${id}/permissions`);
+  response.data.results[0].sort(function(first, second){
+    return first.role.name < second.role.name ? -1 : 1;
+  });
   return {permissions: response.data};
 }, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 
