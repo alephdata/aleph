@@ -9,9 +9,9 @@ import { fetchFacet, fetchNextFacetValues } from 'src/actions';
 import { selectFacet } from 'src/selectors';
 import CheckboxList from './CheckboxList';
 
-import './SearchFilterFacet.css';
+import './SearchFacet.css';
 
-class SearchFilterFacet extends Component {
+class SearchFacet extends Component {
   constructor(props)  {
     super(props);
 
@@ -98,7 +98,7 @@ class SearchFilterFacet extends Component {
     const hasMoreValues = valuesLimit < total;
 
     return (
-      <div className="SearchFilterFacet">
+      <div className="SearchFacet">
         <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
           <span className="text">
@@ -142,6 +142,6 @@ const mapStateToProps = (state, { query, field }) => ({
   ...selectFacet(state, { query, field }),
 });
 
-SearchFilterFacet = injectIntl(SearchFilterFacet);
-SearchFilterFacet = connect(mapStateToProps, { fetchFacet, fetchNextFacetValues })(SearchFilterFacet);
-export default SearchFilterFacet;
+SearchFacet = injectIntl(SearchFacet);
+SearchFacet = connect(mapStateToProps, { fetchFacet, fetchNextFacetValues })(SearchFacet);
+export default SearchFacet;

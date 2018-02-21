@@ -11,7 +11,7 @@ import DualPane from 'src/components/common/DualPane';
 import Entity from 'src/components/EntityScreen/Entity';
 import DocumentInfo from './DocumentInfo';
 import SearchContext from 'src/components/search/SearchContext';
-import SearchFilter from 'src/components/search/filter/SearchFilter';
+import SearchFilter from 'src/components/search/SearchFilter';
 import SearchResult from 'src/components/search/SearchResult';
 
 

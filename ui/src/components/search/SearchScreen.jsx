@@ -4,8 +4,8 @@ import { Helmet } from 'react-helmet';
 
 import SearchContext from './SearchContext';
 import SearchResult from './SearchResult';
-import SearchFilter from './filter/SearchFilter';
-import SearchFilterFacets from './facets/SearchFilterFacets';
+import SearchFilter from './SearchFilter';
+import SearchFacets from './SearchFacets';
 import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
@@ -30,7 +30,7 @@ class SearchScreen extends Component {
           </Breadcrumbs>
           <DualPane>
             <DualPane.InfoPane>
-              <SearchFilterFacets {...searchContext}/>
+              <SearchFacets {...searchContext}/>
             </DualPane.InfoPane>
             <DualPane.ContentPane>
               <SearchFilter {...searchContext} />

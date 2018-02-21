@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-import SearchFilterFacet from './SearchFilterFacet';
+import SearchFacet from './SearchFacet';
 
-import './SearchFilterFacets.css';
+import './SearchFacets.css';
 
-class SearchFilterFacets extends Component {
+class SearchFacets extends Component {
   render() {
     const { aspects, query, updateQuery } = this.props;
 
@@ -24,10 +24,10 @@ class SearchFilterFacets extends Component {
     }
 
     return (
-      <ul className="SearchFilterFacets pt-large">
+      <ul className="SearchFacets pt-large">
         {possibleFacets.map(filterName => (
           <li className="facet" key={filterName}>
-            <SearchFilterFacet
+            <SearchFacet
               initiallyOpen={filterName === 'schema' ? true : undefined}
               query={query}
               updateQuery={updateQuery}
@@ -41,4 +41,4 @@ class SearchFilterFacets extends Component {
   }
 }
 
-export default SearchFilterFacets;
+export default SearchFacets;

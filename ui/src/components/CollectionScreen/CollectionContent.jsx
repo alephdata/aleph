@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import DualPane from 'src/components/common/DualPane';
 import SearchContext from 'src/components/search/SearchContext';
 import SearchResult from 'src/components/search/SearchResult';
-import SearchFilter from 'src/components/search/filter/SearchFilter';
+import SearchFilter from 'src/components/search/SearchFilter';
 
 class CollectionContent extends Component {
   render() {
