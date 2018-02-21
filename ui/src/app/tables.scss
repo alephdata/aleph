@@ -40,9 +40,13 @@ table {
 
 // Tables as normally used in ContentPane
 table.data-table {
-  @extend .pt-html-table, .pt-html-table-bordered;
+  @extend .pt-html-table;
 
   width: 100%;
+
+  td {
+    border-bottom: 1px solid $aleph-border-color;
+  }
 
   th {
     white-space: nowrap;
