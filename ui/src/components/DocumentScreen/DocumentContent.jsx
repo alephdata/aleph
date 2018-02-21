@@ -9,20 +9,16 @@ import PdfViewer from './viewers/PdfViewer';
 import ImageViewer from './viewers/ImageViewer';
 import FolderViewer from './viewers/FolderViewer';
 import EmailHeadersViewer from './viewers/EmailHeadersViewer';
-import DocumentToolbar from './DocumentToolbar';
 
 import './DocumentContent.css';
 
 class DocumentContent extends React.Component {
   render() {
     const { document, fragId } = this.props;
-    
-    return (
-      <DualPane.ContentPane>
-      
-        <DocumentToolbar document={document}/>
-      
-        {document.status === 'fail' && (
+
+    if (document.status === 'fail' && !(document.children !== undefined && document.children > 0)) {
+      return (
+        <DualPane.ContentPane>
           <section className="PartialError">
             <div className="pt-non-ideal-state">
               <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
@@ -37,8 +33,13 @@ class DocumentContent extends React.Component {
               </div>
             </div>
           </section>
-        )}
-
+        </DualPane.ContentPane>
+      )
+    }
+    
+    return (
+      <DualPane.ContentPane className="DocumentPane">
+      
         {document.schema === 'Email' && (
           <EmailHeadersViewer document={document} />
         )}

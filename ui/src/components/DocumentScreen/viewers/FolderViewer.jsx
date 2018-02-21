@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
+
 import SearchContext from 'src/components/SearchScreen/SearchContext';
+import DocumentToolbar from 'src/components/common/DocumentToolbar/DocumentToolbar';
 
 import './FolderViewer.css';
 
@@ -20,11 +22,16 @@ class FolderViewer extends Component {
       collections: false
     };
     return (
-      <div id="children" className="FolderViewer">
-        <SearchContext collection={document.collection}
-                       context={context}
-                       aspects={aspects} />
-      </div>
+      <React.Fragment>
+        <DocumentToolbar document={document}/>
+        <div className="DocumentContent">
+          <div id="children" className="FolderViewer">
+            <SearchContext collection={document.collection}
+                           context={context}
+                           aspects={aspects} />
+          </div>
+        </div>
+      </React.Fragment>
     );
   }
 }
