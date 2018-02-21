@@ -58,6 +58,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.category = data.get('category', self.category)
         self.managed = as_bool(data.get('managed'), default=False)
         self.countries = data.get('countries', [])
+        self.languages = data.get('languages', [])
         if creator is None:
             creator = Role.by_id(data.get('creator_id'))
         self.creator = creator

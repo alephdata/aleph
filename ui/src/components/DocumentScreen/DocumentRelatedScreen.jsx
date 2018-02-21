@@ -54,10 +54,10 @@ class DocumentRelatedScreen extends Component {
           </li>
         </Breadcrumbs>
         <DualPane>
-          <DocumentInfo document={document} />
           <DualPane.ContentPane>
             <SearchContext context={context} />
           </DualPane.ContentPane>
+          <DocumentInfo document={document} />
         </DualPane>
       </Screen>
     );

@@ -69,10 +69,10 @@ class EntityReferencesTable extends Component {
 
     return (
       <section className="EntityReferencesTable">
-        <h1>
+        <h2>
           <Property.Reverse model={property} />
-        </h1>
-        <table className="data-table">
+        </h2>
+        <table className="pt-html-table" style={{width: '100%'}}>
           <thead>
             <tr>
               {columns.map(prop => (

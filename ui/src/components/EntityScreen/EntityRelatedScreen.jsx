@@ -51,10 +51,10 @@ class EntityScreen extends Component {
           </li>
         </Breadcrumbs>
         <DualPane>
-          <EntityInfo entity={entity} />
           <DualPane.ContentPane>
             <SearchContext context={context} />
           </DualPane.ContentPane>
+          <EntityInfo entity={entity} />
         </DualPane>
       </Screen>
     );

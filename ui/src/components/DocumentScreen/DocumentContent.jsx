@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
@@ -13,7 +13,7 @@ import DocumentToolbar from './DocumentToolbar';
 
 import './DocumentContent.css';
 
-class DocumentContent extends Component {
+class DocumentContent extends React.Component {
   render() {
     const { document, fragId } = this.props;
     
