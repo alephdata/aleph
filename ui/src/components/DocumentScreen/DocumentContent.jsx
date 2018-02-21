@@ -42,8 +42,13 @@ class DocumentContent extends React.Component {
         {document.schema === 'Email' && (
           <EmailViewer document={document}/>
         )}
-
-        {document.schema === 'Table' && (
+        
+        {/* 
+          Use table view for Tables *unless* it's an Excel spreadsheet with
+          sheets (in which case it will fall through to the "folder" view
+          to list all sheets in the spreadsheet).
+        */}
+        {document.schema === 'Table' && document.children !== undefined && document.extension !== 'xlsx' && document.children !== undefined && (
           <TableViewer document={document}/>
         )}
 
