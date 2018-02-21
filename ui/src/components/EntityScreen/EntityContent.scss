@@ -14,11 +14,10 @@
 }
 
 .EntityContent h2 {
-  font-weight: 600;
   font-size: 1.5em;
-  margin: 0.5em 0;
-}
-
-.EntityContent .muted {
-  color: $aleph-greyed-text;
+  line-height: 1.5em;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $aleph-border-color;
+  overflow-wrap: break-word;
 }

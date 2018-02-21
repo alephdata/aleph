@@ -11,7 +11,7 @@ import Date from 'src/components/common/Date';
 
 class CollectionInfo extends Component {
   render() {
-    const { document, collection } = this.props;
+    const { collection } = this.props;
     
     // If collection data it hasn't loaded yet don't attempt to draw anything
     if (!collection)

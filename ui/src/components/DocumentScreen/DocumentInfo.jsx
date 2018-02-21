@@ -6,6 +6,7 @@ import { Tab, Tabs, Icon } from "@blueprintjs/core";
 import Entity from 'src/components/EntityScreen/Entity';
 import EntityInfoTags from 'src/components/EntityScreen/EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
+import Schema from 'src/components/common/Schema';
 import DocumentMetadata from 'src/components/DocumentScreen/DocumentMetadata';
 import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
 import URL from 'src/components/common/URL';
@@ -30,7 +31,10 @@ class DocumentInfo extends React.Component {
     return (
       <DualPane.InfoPane className="DocumentInfo">
         <div className="PaneHeading">
-          <h1 style={{margin: 0, border: 0}}>
+          <span className="muted">
+            <Schema.Icon schema={document.schema}/>{' '}<Schema.Name schema={document.schema}/>
+          </span>
+          <h1>
             <Entity.Label entity={document} addClass={true}/>
           </h1>
         </div>

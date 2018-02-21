@@ -2,14 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Tab, Tabs, Icon } from "@blueprintjs/core";
-import _ from 'lodash';
-
 
 import Property from './Property';
 import Entity from './Entity';
 import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
-import Date from 'src/components/common/Date';
 import Schema from 'src/components/common/Schema';
 import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
 import { fetchEntityReferences } from '../../actions/index';
@@ -20,7 +17,7 @@ class EntityInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTabId: 'source'
+      activeTabId: 'overview'
     };
     this.handleTabChange = this.handleTabChange.bind(this);
   }
@@ -37,24 +34,57 @@ class EntityInfo extends React.Component {
   }
 
   render() {
-    const { references, entity, schema } = this.props;
-
-    const properties = _.values(schema.properties).filter((prop) => {
-      if (prop.caption) {
-        return false;
-      }
-      return prop.featured || !!entity.properties[prop.name];
-    });
+    const { references, entity } = this.props;
   
     return (
       <DualPane.InfoPane className="EntityInfo">
         <div className="PaneHeading">
-          <h1 style={{margin: 0, border: 0}}>
+          <span className="muted">
+            <Schema.Icon schema={entity.schema}/>{' '}<Schema.Name schema={entity.schema}/>
+          </span>
+          <h1>
             <Entity.Label entity={entity} addClass={true}/>
           </h1>
         </div>
         <div className="PaneContent">
           <Tabs id="TabsExample"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+              <Tab id="overview" 
+                title={
+                  <React.Fragment>
+                    <Icon icon="graph"/> <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
+                  </React.Fragment>
+                }
+                panel={
+                  <React.Fragment>
+                    <h2>
+                      <FormattedMessage 
+                        id="entity.references.title"
+                        defaultMessage="Relationships"/>
+                    </h2>
+                    { (references && references.results && !!references.results.length && (
+                      <ul className="info-rank">
+                        { references.results.map((ref) => (
+                          <li key={ref.property.qname}>
+                            <span className="key">
+                              <Schema.Icon schema={ref.schema} />
+                              <Property.Reverse model={ref.property} />
+                            </span>
+                            <span className="value">
+                              <FormattedNumber value={ref.count} />
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )) ||
+                      <p className="muted">
+                        <FormattedMessage 
+                          id="entity.references.empty.description"
+                          defaultMessage="There are no known relationships."/>
+                      </p>
+                    }
+                  </React.Fragment>
+                }
+              />
               <Tab id="source" 
                 title={
                   <React.Fragment>
