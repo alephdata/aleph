@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { Tab, Tabs, Icon } from "@blueprintjs/core";
+import { Tab, Tabs } from "@blueprintjs/core";
 
 import Property from './Property';
 import Entity from './Entity';
@@ -51,7 +51,7 @@ class EntityInfo extends React.Component {
               <Tab id="overview" 
                 title={
                   <React.Fragment>
-                    <Icon icon="graph"/> <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
+                    <span className="pt-icon-standard pt-icon-info-sign"/> <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
                   </React.Fragment>
                 }
                 panel={
@@ -88,7 +88,7 @@ class EntityInfo extends React.Component {
               <Tab id="source" 
                 title={
                   <React.Fragment>
-                    <Icon icon="graph"/> <FormattedMessage id="document.info.source" defaultMessage="Source"/>
+                    <span className="pt-icon-standard pt-icon-database"/> <FormattedMessage id="document.info.source" defaultMessage="Source"/>
                   </React.Fragment>
                 }
                 panel={<CollectionInfo collection={entity.collection}/>}
@@ -96,7 +96,7 @@ class EntityInfo extends React.Component {
               <Tab id="tags"
                 title={
                   <React.Fragment>
-                    <Icon icon="tag"/> <FormattedMessage id="document.info.tags" defaultMessage="Related Tags"/>
+                    <span className="pt-icon-standard pt-icon-tag"/> <FormattedMessage id="document.info.tags" defaultMessage="Related Tags"/>
                   </React.Fragment>
                 }
                 panel={<EntityInfoTags entity={entity} />}
