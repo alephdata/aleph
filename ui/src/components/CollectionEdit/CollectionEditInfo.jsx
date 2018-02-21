@@ -20,7 +20,7 @@ class CollectionEditInfo extends Component {
       languages: [],
       listCountries: [],
       listLanguages: [],
-      categories: [],
+      listCategories: [],
       category: {},
       listUsers: [],
       contact: {},
@@ -37,10 +37,6 @@ class CollectionEditInfo extends Component {
     this.onChangeSummary = this.onChangeSummary.bind(this);
   }
 
-  componentDidMount() {
-    console.log('did mount', this.props)
-  }
-
   onSelectUser(user) {
     this.setState({contact: user});
     let collection = this.state.collection;
@@ -50,7 +46,6 @@ class CollectionEditInfo extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('props', nextProps);
     if (nextProps.collection.isFetching === undefined) {
       this.setState({
         label: nextProps.collection.label,
@@ -59,7 +54,7 @@ class CollectionEditInfo extends Component {
         listCountries: this.structureList(nextProps.countries),
         languages: nextProps.collection.languages,
         listLanguages: this.structureList(nextProps.languages),
-        categories: this.structureList(nextProps.categories),
+        listCategories: this.structureList(nextProps.categories),
         listUsers: nextProps.users.results === undefined ? [] : nextProps.users.results,
         collection: nextProps.collection
       });
@@ -67,7 +62,6 @@ class CollectionEditInfo extends Component {
   }
 
   async onTyping(query) {
-    console.log(query)
     if(query.length >= 3) {
       await this.props.fetchUsers(query);
       this.setState({listUsers: this.props.users.results})
@@ -84,15 +78,15 @@ class CollectionEditInfo extends Component {
   onSelectCountry(countries) {
     this.setState({countries: countries.selectedItems, listCountries: countries.list});
     let collection = this.state.collection;
-    collection.languages = countries.selectedItems;
-    this.setState({collection})
+    collection.countries = countries.selectedItems;
+    this.setState({collection});
     this.props.onChangeCollection(collection);
   }
 
   onSelectCategory(category) {
     this.setState({category: category});
     let collection = this.state.collection;
-    collection.category = category;
+    collection.category = category.index;
     this.setState({collection});
     this.props.onChangeCollection(collection);
   }
@@ -105,19 +99,16 @@ class CollectionEditInfo extends Component {
     this.props.onChangeCollection(collection);
   }
 
-  onFilterCategories(event) {
-    let query = event.target.value.toLowerCase();
+  onFilterCategories(query) {
     let categoryList = [];
-
     let categories = this.structureList(this.props.categories);
-
     for(let i = 0; i < categories.length; i++) {
       if(categories[i].name.toLowerCase().includes(query)) {
         categoryList.push(categories[i]);
       }
     }
 
-    this.setState({categories: categoryList});
+    this.setState({listCategories: categoryList});
   }
 
   onChangeLabel({target}) {
@@ -137,8 +128,8 @@ class CollectionEditInfo extends Component {
   }
 
   render() {
-    const {collection, intl} = this.props;
-    const {label, summary, listUsers} = this.state;
+    const {collection, intl, categories} = this.props;
+    const {label, summary, listUsers, listCategories, listCountries, countries, listLanguages, languages} = this.state;
 
     return (
       <DualPane.InfoPane className="CollectionEditInfo">
@@ -194,7 +185,6 @@ class CollectionEditInfo extends Component {
             </div>
             <div className="pt-form-content">
               <textarea className="pt-input input_class"
-                     //type="text"
                      placeholder={intl.formatMessage({
                        id: "collection.edit.info.placeholder.summart",
                        defaultMessage: "Enter summary of collection"
@@ -214,7 +204,7 @@ class CollectionEditInfo extends Component {
             </div>
             <div className="pt-form-content">
               <SuggestInput
-                defaultValue={collection === undefined ? undefined : collection.creator === undefined ? undefined : collection.creator.name}
+                //defaultValue={collection === undefined ? undefined : collection.creator === undefined ? undefined : collection.creator.name}
                 onSelectItem={this.onSelectUser}
                 list={listUsers}
                 onTyping={this.onTyping}/>
@@ -229,8 +219,8 @@ class CollectionEditInfo extends Component {
             </div>
               <NamedMultiSelect
                 onSelectItem={this.onSelectCountry}
-                list={this.state.listCountries}
-                selectedItems={this.state.countries}
+                list={listCountries}
+                selectedItems={countries}
                 isCountry={true}/>
           </div>
           <div className="pt-form-group label_group">
@@ -242,8 +232,8 @@ class CollectionEditInfo extends Component {
             </div>
             <NamedMultiSelect
               onSelectItem={this.onSelectLanguage}
-              list={this.state.listLanguages}
-              selectedItems={this.state.languages}
+              list={listLanguages}
+              selectedItems={languages}
               isCountry={false}/>
           </div>
           <div className="pt-form-group label_group">
@@ -254,8 +244,11 @@ class CollectionEditInfo extends Component {
               </label>
             </div>
             <SuggestInput
+              isCategory={true}
+              defaultValue={collection === undefined ? undefined : collection.category === undefined ? undefined : collection.category}
               onSelectItem={this.onSelectCategory}
-              list={this.state.categories}
+              list={listCategories}
+              categories={categories}
               onTyping={this.onFilterCategories}/>
           </div>
         </div>

@@ -12,8 +12,7 @@ export const fetchUsers = asyncActionCreator((prefix) => async dispatch => {
 }, { name: 'FETCH_USERS' });
 
 export const updateCollection = asyncActionCreator((collection) => async dispatch => {
-  let id = collection.id === undefined ? collection.results[0][0].id : collection.id;
-  const response = await endpoint.post(`collections/${id}`, collection);
+  const response = await endpoint.post(`collections/${collection.id}`, collection);
   console.log('RESPONSE', response);
   return {collection: response.data};
 }, {name: 'UPDATE_COLLECTION'});
@@ -46,6 +45,11 @@ export const addAlert = asyncActionCreator((alert) => async dispatch => {
 
 export const fetchCollectionPermissions = asyncActionCreator((id) => async dispatch => {
   const response = await endpoint.get(`collections/${id}/permissions`);
+  return {permissions: response.data};
+}, { name: 'FETCH_COLLECTION_PERMISSIONS' });
+
+export const updateCollectionPermissions = asyncActionCreator((permissions) => async dispatch => {
+  const response = await endpoint.post(`collections/${permissions[0].collection_id}/permissions`, permissions);
   return {permissions: response.data};
 }, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 

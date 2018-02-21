@@ -8,10 +8,12 @@ class SuggestInput extends Component {
   constructor(props) {
     super(props);
 
+    console.log('constructor', this.props)
     this.state = {
       list: [],
       selectedItem: {},
-      input: ''
+      input: this.props.defaultValue ? this.props.isCategory ? this.props.categories[this.props.defaultValue]
+        ? this.props.defaultValue : '' : '' : ''
     };
 
     this.itemRenderer = this.itemRenderer.bind(this);
@@ -19,6 +21,11 @@ class SuggestInput extends Component {
     this.isItemSelected = this.isItemSelected.bind(this);
     this.inputRenderer = this.inputRenderer.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
+    this.handleItemSelect = this.handleItemSelect.bind(this);
+  }
+
+  componentDidMount() {
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -50,6 +57,11 @@ class SuggestInput extends Component {
     return item.name
   }
 
+  handleItemSelect(item) {
+   console.log('select', item);
+   this.setState({input: item.name});
+  }
+
   onInputChange({target}) {
     this.setState({input: target.value});
 
@@ -64,7 +76,7 @@ class SuggestInput extends Component {
         initialContent={<MenuItem disabled={true} text='Add new user!' />}
         className='multiple_select_input'
         noResults={<MenuItem disabled={true} text="No results." />}
-        inputProps={{onChange: this.onInputChange, value: this.props.defaultValue !== undefined ? this.props.defaultValue : this.state.input}}
+        inputProps={{onChange: this.onInputChange, value: this.state.input}}
         items={list}
         itemRenderer={this.itemRenderer}
         onItemSelect={this.handleItemSelect}
@@ -78,7 +90,6 @@ class SuggestInput extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-
   }
 };
 

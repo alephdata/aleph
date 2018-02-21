@@ -3,67 +3,33 @@ import {NonIdealState} from '@blueprintjs/core';
 import {FormattedMessage} from 'react-intl';
 import {Checkbox} from '@blueprintjs/core';
 import {Button} from '@blueprintjs/core';
-import {connect} from "react-redux";
 
 import './CollectionEditTable.css';
-import {updateCollection} from "../../actions";
-import {showSuccessToast} from "../../app/toast";
 
 class CollectionEditTable extends Component {
 
   constructor(props) {
     super(props);
 
-    this.state = {
-      permissions: []
-    };
-
     this.onSave = this.onSave.bind(this);
     this.handleCheckboxRead = this.handleCheckboxRead.bind(this);
     this.handleCheckboxWrite = this.handleCheckboxWrite.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log('users')
-    this.setState({permissions: nextProps.permissions})
-  }
-
   async onSave() {
-    console.log('on save', this.state.permissions)
-    await this.props.updateCollection(this.props.collection);
-    await this.props.updateCollection(this.state.permissions);
-    showSuccessToast('You have saved collection!');
+    this.props.onSave();
   }
 
   handleCheckboxRead(item) {
-    let newPermission = item;
-    let permissions = this.state.permissions;
-    for(let i = 0; i < this.state.permissions.results[0].length; i++) {
-      if(this.state.permissions.results[0][i].role.id === item.role.id) {
-        newPermission.read = !this.state.permissions.results[0][i].read;
-        permissions.results[0][i] = newPermission;
-      }
-    }
-
-    this.setState({permissions: permissions})
+    this.props.handleCheckboxRead(item);
   }
 
   handleCheckboxWrite(item) {
-    let newPermission = item;
-    let permissions = this.state.permissions;
-    for(let i = 0; i < this.state.permissions.results[0].length; i++) {
-      if(this.state.permissions.results[0][i].role.id === item.role.id) {
-        newPermission.write = !this.state.permissions.results[0][i].write;
-        permissions.results[0][i] = newPermission;
-      }
-    }
-
-    this.setState({permissions: permissions})
+    this.props.handleCheckboxWrite(item);
   }
 
   render() {
     const {permissions} = this.props;
-    console.log('RENDER')
     const hasAlerts = !(permissions.results !== undefined && permissions.results.length === 0);
 
     if (!hasAlerts || permissions.results === undefined) {
@@ -99,9 +65,9 @@ class CollectionEditTable extends Component {
     )));
 
     let userRows = (permissions.results !== undefined && permissions.results[0].map((permission, index) => (
-      (permission.type === 'user' && <tr key={index} className='table-row'>
+      (permission.role.type === 'user' && <tr key={index} className='table-row'>
         <td className='first-row'>
-          {permission.name}
+          {permission.role.name}
         </td>
         <td className='other-rows'>
           <Checkbox className='checkbox-center' checked={permission.read} onChange={() => this.handleCheckboxRead(permission)}/>
@@ -130,7 +96,7 @@ class CollectionEditTable extends Component {
           </thead>
           <tbody className='table_body_alerts'>
           {stateRows}
-          <tr key={1} className='table-row'>
+          <tr className='table-row'>
             <td className='first-row header_topic'>
               Groups
             </td>
@@ -138,7 +104,7 @@ class CollectionEditTable extends Component {
             <td className='other-rows'/>
           </tr>
           {groupRows}
-          <tr key={2} className='table-row'>
+          <tr className='table-row'>
             <td className='first-row header_topic'>
               Users
             </td>
@@ -157,10 +123,4 @@ class CollectionEditTable extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-    return {
-      permissions: state.permissions
-    };
-};
-
-export default connect(mapStateToProps, {updateCollection})(CollectionEditTable);
+export default CollectionEditTable;

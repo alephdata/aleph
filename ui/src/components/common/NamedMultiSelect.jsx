@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {MenuItem} from '@blueprintjs/core'
 import {MultiSelect} from "@blueprintjs/select";
-import {FormattedMessage, injectIntl} from 'react-intl';
+import {injectIntl} from 'react-intl';
 
 import Country from 'src/components/common/Country';
 import Language from 'src/components/common/Language';
@@ -35,7 +35,6 @@ class NamedMultiSelect extends Component {
   }
 
   itemRenderer(item, opts) {
-    console.log('item renderer', opts)
     return opts.modifiers.matchesPredicate && <MenuItem
       key={item.index}
       onClick={opts.handleClick}
@@ -52,11 +51,10 @@ class NamedMultiSelect extends Component {
   removeItem(index) {
     this.setState({selectedItems: this.state.selectedItems.filter((item, i) => i !== index)});
 
-    this.props.onSelectItem({selectedItems: this.state.selectedItems, list: this.state.list});
+    this.props.onSelectItem({selectedItems: this.state.selectedItems.filter((item, i) => i !== index), list: this.state.list});
   }
 
   selectItem(item) {
-    console.log('select', item)
     let selectedItems = this.state.selectedItems;
     selectedItems.push(item.index);
     let list = this.removeFromList(item.index);
@@ -83,9 +81,8 @@ class NamedMultiSelect extends Component {
   }
 
   getSelectedItemIndex(item) {
-    //console.log('get selected', item)
     for(let i = 0; i < this.state.selectedItems.length; i++) {
-      if(this.state.selectedItems[i].name === item.name) return i;
+      if(this.state.selectedItems[i] === item.props.code) return i;
     }
 
     return -1;
@@ -100,7 +97,6 @@ class NamedMultiSelect extends Component {
   }
 
   handleChange(query, item) {
-    //console.log('handle change', query, item)
     if (query !== '') {
       query = query.toLowerCase();
       return item.name.toLowerCase().includes(query);
@@ -111,13 +107,14 @@ class NamedMultiSelect extends Component {
 
   render() {
     const {selectedItems, list} = this.state;
+    const {intl} = this.props;
 
     return (
               <MultiSelect
-                initialContent={<MenuItem disabled={true} text='Add new item!' />}
+                initialContent={<MenuItem disabled={true} text={intl.formatMessage({id: 'named.multiselect.add', defaultMessage: 'Add new item!'})} />}
                 className='multiple_select_input'
                 itemPredicate={this.handleChange.bind(this)}
-                noResults={<MenuItem disabled={true} text="No results."/>}
+                noResults={<MenuItem disabled={true} text={intl.formatMessage({id: 'named.multiselect.no.results', defaultMessage: "No results."})}/>}
                 inputProps={{onChange: this.handleChange}}
                 items={list}
                 itemRenderer={this.itemRenderer}
