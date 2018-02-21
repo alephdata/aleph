@@ -9,7 +9,7 @@ import LoginScreen from 'src/components/auth/LoginScreen';
 import LogoutScreen from 'src/components/auth/LogoutScreen';
 import SignupScreen from 'src/components/auth/SignupScreen';
 import ActivateScreen from 'src/components/auth/ActivateScreen';
-import SearchScreen from 'src/components/SearchScreen';
+import SearchScreen from 'src/components/search/SearchScreen';
 import EntityScreen from 'src/components/EntityScreen';
 import EntityRelatedScreen from 'src/components/EntityScreen/EntityRelatedScreen';
 import DocumentScreen from 'src/components/DocumentScreen';

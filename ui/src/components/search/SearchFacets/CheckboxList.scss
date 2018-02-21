@@ -2,8 +2,8 @@
 
 .CheckboxList {
   list-style: none;
+  padding-left: 0;
   margin: 0;
-  padding: ($aleph-grid-size / 2) 0;
 
   & > li {
     position: relative;
@@ -11,14 +11,6 @@
     justify-content: space-between;
     padding-left: ($pt-icon-size-standard + $aleph-grid-size * 1.5);
     padding-right: ($aleph-grid-size / 2);
-
-    &.clickable {
-      cursor: pointer;
-
-      &:hover {
-        background-color: $aleph-hover-background;
-      }
-    }
 
     &.faint {
       color: $aleph-greyed-text;

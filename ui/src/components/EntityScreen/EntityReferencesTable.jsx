@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import { fetchSearchResults } from 'src/actions';
 import SectionLoading from 'src/components/common/SectionLoading';
-import Query from 'src/components/SearchScreen/Query';
+import Query from 'src/components/search/Query';
 import Property from './Property';
 import ensureArray from 'src/util/ensureArray';
 
@@ -35,7 +35,7 @@ class EntityReferencesTable extends Component {
     const { query } = this.props;
 
     this.props.fetchSearchResults({
-      filters: query.toParams(),
+      query,
     }).then(({result}) => {
       this.setState({result, isFetching: false})
     });

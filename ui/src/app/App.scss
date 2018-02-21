@@ -48,6 +48,10 @@ pre {
   overflow-wrap: break-word;
 }
 
+a {
+  color: $aleph-link-color;
+}
+
 .small-screen {
   max-width: 400px;
   margin: 0 auto;
@@ -68,3 +72,12 @@ pre {
 .muted {
   color: $aleph-greyed-text;
 }
+
+.clickable {
+  cursor: pointer;
+
+  &:hover {
+    background-color: $aleph-hover-background;
+  }
+}
+

@@ -1,0 +1,55 @@
+@import "src/app/variables.scss";
+
+.SearchFacet {
+  border-bottom: 1px solid $aleph-border-color;
+
+  & > .opener {
+    display: flex;
+    padding: 0 $aleph-grid-size;
+    align-items: center;
+
+    &.active {
+      font-weight: bold;
+    }
+
+    &:not(.clickable) {
+      color: $aleph-greyed-text;
+      font-style: italic;
+    }
+
+    & > .caret {
+      margin-right: $aleph-grid-size * 0.5;
+      transition: transform 100ms;
+
+      &.rotate {
+        transform: rotate(90deg);
+      }
+    }
+
+    & > .text {
+      padding: $aleph-grid-size 0;
+    }
+
+    & > .clearButton {
+      margin-left: $aleph-grid-size;
+
+      &:hover {
+        // Element is on a background (set by .clickable), so invert its own background.
+        background: $aleph-content-background;
+      }
+    }
+
+    & > .spinner {
+      margin-left: auto;
+    }
+  }
+
+  .CheckboxList {
+    margin-bottom: $aleph-grid-size * 2;
+  }
+
+  button.showMoreButton {
+    font-style: italic;
+    color: $aleph-greyed-text;
+  }
+}
