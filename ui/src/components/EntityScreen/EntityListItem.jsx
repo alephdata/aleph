@@ -23,7 +23,7 @@ class EntityListItem extends Component {
           </td>
         }
         <td className="schema">
-          <Schema.Name schema={entity.schema} />
+          <Schema.Label schema={entity.schema} />
         </td>
         {aspects.countries && (
           <td className="country">

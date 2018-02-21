@@ -36,7 +36,7 @@ class EntityContent extends Component {
         <div className="EntityContent">
       
           <span className="muted">
-            <Schema.Icon schema={entity.schema}/>{' '}<Schema.Name schema={entity.schema}/>
+            <Schema.Label schema={entity.schema} icon={true} />
           </span>
 
           <h1>

@@ -19,8 +19,7 @@ class DocumentMetadata extends Component {
           <FormattedMessage id="document.type" defaultMessage="Type"/>
         </span>
         <span className="value">
-          <Schema.Icon schema={document.schema}/>
-          <Schema.Name schema={document.schema}/>
+          <Schema.Label schema={document.schema} icon={true}/>
         </span>
         </li>
         {document.file_name && (

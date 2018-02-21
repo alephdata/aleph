@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tag as TagWidget } from '@blueprintjs/core';
 
+import Schema from 'src/components/common/Schema';
 import Tag from 'src/components/common/Tag';
 import Country from 'src/components/common/Country';
 import Collection from 'src/components/common/Collection';
@@ -23,6 +24,10 @@ class SearchFilterTag extends PureComponent {
   
   label(filter, value) {
     switch (filter) {
+      case 'schema':
+        return (
+          <Schema.Label schema={value} icon={true} plural={true} />
+        );
       case 'countries':
         return (
           <Country.Name code={value} />
