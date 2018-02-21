@@ -11,12 +11,12 @@ class SortableTH extends Component {
         <th>{children}</th>
       );
     } else {
-      const iconClass = c(className, 'caret', 'pt-icon-large',
+      const iconClass = c('caret', 'pt-icon-large',
         `pt-icon-caret-${sorted === 'desc' ? 'up' : 'down'}`,
         { 'hidden': !sorted },
       );
       return (
-        <th className="SortableTH" onClick={onClick} {...otherProps}>
+        <th className={c('SortableTH', className)} onClick={onClick} {...otherProps}>
           <div>
             {children}
             <span className={iconClass}/>
