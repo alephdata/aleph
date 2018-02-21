@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import _ from 'lodash';
 
 import Property from './Property';
 import Entity from './Entity';
-import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import Date from 'src/components/common/Date';
 import Schema from 'src/components/common/Schema';
-import CollectionCard from 'src/components/CollectionScreen/CollectionCard';
 import EntityReferences from './EntityReferences';
 import { fetchEntityReferences } from '../../actions/index';
 
@@ -24,7 +22,7 @@ class EntityContent extends Component {
   }
 
   render() {
-    const { references, entity, schema } = this.props;
+    const { entity, schema } = this.props;
 
     const properties = _.values(schema.properties).filter((prop) => {
       if (prop.caption) {

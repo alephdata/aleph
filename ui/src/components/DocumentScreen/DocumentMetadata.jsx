@@ -7,7 +7,6 @@ import Language from 'src/components/common/Language';
 import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
 import FileSize from 'src/components/common/FileSize';
-import URL from 'src/components/common/URL';
 import Entity from 'src/components/EntityScreen/Entity';
 
 class DocumentMetadata extends Component {
