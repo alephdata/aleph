@@ -8,7 +8,7 @@ import HtmlViewer from './viewers/HtmlViewer';
 import PdfViewer from './viewers/PdfViewer';
 import ImageViewer from './viewers/ImageViewer';
 import FolderViewer from './viewers/FolderViewer';
-import EmailHeadersViewer from './viewers/EmailHeadersViewer';
+import EmailViewer from './viewers/EmailViewer';
 
 import './DocumentContent.css';
 
@@ -38,22 +38,21 @@ class DocumentContent extends React.Component {
     }
     
     return (
-      <DualPane.ContentPane className="DocumentPane">
-      
+      <DualPane.ContentPane style={{padding: 0}}>
         {document.schema === 'Email' && (
-          <EmailHeadersViewer document={document} />
+          <EmailViewer document={document}/>
         )}
 
         {document.schema === 'Table' && (
           <TableViewer document={document}/>
         )}
 
-        {document.text && !document.html && (
-          <TextViewer text={document.text} />
+        {document.text && !document.html && document.schema !== 'Email' && (
+          <TextViewer document={document}/>
         )}
 
         {document.html && (
-          <HtmlViewer html={document.html} />
+          <HtmlViewer document={document}/>
         )}
 
         {document.links && document.links.pdf && (
@@ -64,7 +63,7 @@ class DocumentContent extends React.Component {
           <ImageViewer document={document} />
         )}
 
-        {document.children !== undefined && document.children > 0 && (
+        {document.children !== undefined && document.children > 0 && document.schema !== 'Email' && (
           <FolderViewer document={document} />
         )}
       </DualPane.ContentPane>

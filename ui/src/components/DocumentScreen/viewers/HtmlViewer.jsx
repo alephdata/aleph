@@ -1,15 +1,22 @@
 import React, { Component } from 'react';
 
+import Toolbar from 'src/components/common/Toolbar/DocumentToolbar';
+
 import './HtmlViewer.css';
 
 class HtmlViewer extends Component {
   render() {
-    const { html } = this.props;
+    const { document } = this.props;
 
     return (
-      <div className="HtmlViewer">
-        <span dangerouslySetInnerHTML={{__html: html}} />
-      </div>
+      <React.Fragment>
+        <Toolbar document={document}/>
+        <div className="ContentPaneOuter">
+          <div className="ContentPaneInner HtmlViewer max-width-content-limit">
+            <span dangerouslySetInnerHTML={{__html: document.html}} />
+          </div>
+        </div>
+      </React.Fragment>
     );
   }
 }

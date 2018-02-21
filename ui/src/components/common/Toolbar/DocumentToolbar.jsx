@@ -18,9 +18,11 @@ class DocumentToolbar extends React.Component {
     let searchPlaceholder = this.props.intl.formatMessage({id: "document.file.search", defaultMessage: "Search document" });
     let searchEnabled = false;
     
-    if (this.props.document.children !== undefined && this.props.document.children > 0) {
+    // If is a folder (but NOT an email!)
+    if (this.props.document && this.props.document.children !== undefined && this.props.document.children > 0 && this.props.document.schema !== 'Email') {
       searchPlaceholder = this.props.intl.formatMessage({id: "document.folder.search", defaultMessage: "Search folder" })
-      searchEnabled = true
+      // @FIXME Search disabled old search now broken and needs to be refactored
+      //searchEnabled = true
     }
 
     this.state = {
@@ -56,7 +58,7 @@ class DocumentToolbar extends React.Component {
   render() {
     let downloadLink
     // @TODO If email w/ attachments then pass them as array of download options
-    if (this.props.document.links && this.props.document.links.file) {
+    if (this.props.document && this.props.document.links && this.props.document.links.file) {
       downloadLink = { name: '', url: this.props.document.links.file }
     }
 

@@ -5,34 +5,40 @@ import Waypoint from 'react-waypoint';
 import { fetchDocumentRecords, fetchNextDocumentRecords } from 'src/actions';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import SectionLoading from 'src/components/common/SectionLoading';
+import Toolbar from 'src/components/common/Toolbar/DocumentToolbar';
 
 class Table extends Component {
   render() {
     const { columnNames, records } = this.props;
 
     return (
-      <table className="data-table">
-        <thead>
-          <tr>
-            {columnNames.map((columnName, index) => (
-              <th key={columnName}>
-                {columnName}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {records.map(record => (
-            <tr key={record.id}>
-              {columnNames.map(columnName => (
-                <td key={columnName}>
-                  {record.data[columnName] || '–'}
-                </td>
+      <React.Fragment>
+        <Toolbar document={document}/>
+        <div style={{width: '100%', flex: 1, overflow: 'auto'}}>
+          <table className="pt-html-table pt-html-table-bordered">
+            <thead>
+              <tr>
+                {columnNames.map((columnName, index) => (
+                  <th key={columnName}>
+                    {columnName}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {records.map(record => (
+                <tr key={record.id}>
+                  {columnNames.map(columnName => (
+                    <td key={columnName}>
+                      {record.data[columnName] || '–'}
+                    </td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            </tbody>
+          </table>
+        </div>
+      </React.Fragment>
     );
   }
 }

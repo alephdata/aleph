@@ -32,41 +32,39 @@ class EntityContent extends Component {
     });
 
     return (
-      <DualPane.ContentPane>
-        <div className="EntityContent">
-      
-          <span className="muted">
-            <Schema.Icon schema={entity.schema}/>{' '}<Schema.Name schema={entity.schema}/>
-          </span>
-
-          <h1>
-            <Entity.Label entity={entity} addClass={true}/>
-          </h1>
-        
-          <ul className="info-sheet">
-            <li>
-            </li>
-            { properties.map((prop) => (
-              <li key={prop.name}>
+      <DualPane.ContentPane style={{padding: 0}}>
+        <div className="ContentPaneOuter">
+          <div className="ContentPaneInner EntityContent max-width-content-limit" style={{padding: 20}}>
+            <span className="muted">
+              <Schema.Icon schema={entity.schema}/>{' '}<Schema.Name schema={entity.schema}/>
+            </span>
+            <h1>
+              <Entity.Label entity={entity} addClass={true}/>
+            </h1>
+            <ul className="info-sheet">
+              <li>
+              </li>
+              { properties.map((prop) => (
+                <li key={prop.name}>
+                  <span className="key">
+                    <Property.Name model={prop} />
+                  </span>
+                  <span className="value">
+                    <Property.Values model={prop} values={entity.properties[prop.name]} />
+                  </span>
+                </li>
+              ))}
+              <li>
                 <span className="key">
-                  <Property.Name model={prop} />
+                  <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
                 </span>
                 <span className="value">
-                  <Property.Values model={prop} values={entity.properties[prop.name]} />
+                  <Date value={entity.updated_at} />
                 </span>
               </li>
-            ))}
-            <li>
-              <span className="key">
-                <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
-              </span>
-              <span className="value">
-                <Date value={entity.updated_at} />
-              </span>
-            </li>
-          </ul>
-          
-          <EntityReferences entity={entity} />
+            </ul>
+            <EntityReferences entity={entity} />
+          </div>
         </div>
       </DualPane.ContentPane>
     );

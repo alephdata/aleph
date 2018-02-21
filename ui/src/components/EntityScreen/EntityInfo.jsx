@@ -47,7 +47,7 @@ class EntityInfo extends React.Component {
           </h1>
         </div>
         <div className="PaneContent">
-          <Tabs id="TabsExample"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+          <Tabs id="EntityInfoTabs"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
               <Tab id="overview" 
                 title={
                   <React.Fragment>

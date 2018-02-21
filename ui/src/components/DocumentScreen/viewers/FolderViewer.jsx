@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 
 import SearchContext from 'src/components/search/SearchContext';
 import SearchResult from 'src/components/search/SearchResult';
-import DocumentToolbar from 'src/components/common/DocumentToolbar/DocumentToolbar';
+import Toolbar from 'src/components/common/Toolbar/DocumentToolbar';
 
 import './FolderViewer.css';
 
@@ -24,15 +24,13 @@ class FolderViewer extends Component {
     };
     return (
       <React.Fragment>
-        <DocumentToolbar document={document}/>
-        <div className="DocumentContent">
-          <div id="children" className="FolderViewer">
-            <SearchContext context={context} aspects={aspects}>{searchContext => (
-              <div>
-                <SearchResult {...searchContext} />
-              </div>
-            )}</SearchContext>
-          </div>
+        <Toolbar document={document}/>
+        <div id="children" className="FolderViewer">
+          <SearchContext context={context} aspects={aspects}>{searchContext => (
+            <div>
+              <SearchResult {...searchContext} />
+            </div>
+          )}</SearchContext>
         </div>
       </React.Fragment>
     );

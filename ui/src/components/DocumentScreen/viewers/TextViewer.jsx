@@ -1,14 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
+
+import Toolbar from 'src/components/common/Toolbar/DocumentToolbar';
 
 import './TextViewer.css';
 
-class TextViewer extends Component {
+class TextViewer extends React.Component {
   render() {
-    const { text } = this.props;
+    const { document } = this.props;
     return (
-      <div className="TextViewer">
-        <pre>{text}</pre>
-      </div>
+      <React.Fragment>
+        <Toolbar document={document}/>
+        <div className="ContentPaneOuter">
+          <div className="ContentPaneInner TextViewer max-width-content-limit">
+            <pre>{document.text}</pre>
+          </div>
+        </div>
+      </React.Fragment>
     );
   }
 }

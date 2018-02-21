@@ -6,8 +6,11 @@
   overflow: visible;
   background: $aleph-toolbar-background;
   border-bottom: 1px solid $aleph-border-color;
-  z-index: 10;
+  border-right: 1px solid $aleph-border-color;
   overflow: auto;
+  flex: 1;
+  width: 100%;
+  max-height: 51px;
 }
 
 /* @TODO Refactor this hack which makes toolbar elements similar in height */

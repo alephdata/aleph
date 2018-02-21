@@ -1,14 +1,8 @@
 @import "src/app/variables.scss";
 
-.PdfViewer {
-  padding: 0;
-  background: $aleph-toolbar-background;
-}
-
 .PdfViewer .page {
   margin: 0;
   padding: 0;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
 .PdfViewer .ReactPDF__Page__canvas {
