@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-act';
-import { assign, set, update } from 'lodash/fp';
+import { set, update } from 'lodash/fp';
 
 import {
   fetchSearchResults,
@@ -37,11 +37,11 @@ export default createReducer({
     set([queryToResultKey(query)], { status: 'error' })(state),
 
   [fetchNextSearchResults.START]: (state, { query }) =>
-    update([queryToResultKey(query)], assign({ isExpanding: true }))(state),
+    update([queryToResultKey(query)], set('isExpanding', true))(state),
 
   [fetchNextSearchResults.COMPLETE]: combineResults,
 
   // Upon error, merely reset the isExpanding flag.
   [fetchNextSearchResults.ERROR]: (state, { args: { query, result } }) =>
-    update([queryToResultKey(query)], assign({ isExpanding: false }))(state),
+    update([queryToResultKey(query)], set('isExpanding', false))(state),
 }, initialState);
