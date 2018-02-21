@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import SearchContext from 'src/components/SearchScreen/SearchContext';
+import SearchContext from 'src/components/search/SearchContext';
+import SearchResult from 'src/components/search/SearchResult';
 
 import './FolderViewer.css';
 
@@ -21,9 +22,11 @@ class FolderViewer extends Component {
     };
     return (
       <div id="children" className="FolderViewer">
-        <SearchContext collection={document.collection}
-                       context={context}
-                       aspects={aspects} />
+        <SearchContext context={context} aspects={aspects}>{searchContext => (
+          <div>
+            <SearchResult {...searchContext} />
+          </div>
+        )}</SearchContext>
       </div>
     );
   }

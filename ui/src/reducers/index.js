@@ -9,6 +9,8 @@ import entityTags from './entityTags';
 import statistics from './statistics';
 import role from './roles';
 import alerts from './alerts';
+import search from './search';
+import facets from './facets';
 
 const rootReducer = combineReducers({
   collections,
@@ -20,6 +22,8 @@ const rootReducer = combineReducers({
   role,
   alerts,
   entityTags,
+  search,
+  facets,
 });
 
 export default rootReducer;

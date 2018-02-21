@@ -13,3 +13,6 @@ $aleph-content-background: white;
 $aleph-sidebar-background: $light-gray5;
 $aleph-hover-background: $gray5;
 $aleph-border-color: $pt-divider-black;
+
+$aleph-link-color: $pt-link-color;
+$aleph-visited-link-color: darken($aleph-link-color, 10%);
