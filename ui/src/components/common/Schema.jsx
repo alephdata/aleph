@@ -3,8 +3,6 @@ import 'font-awesome/css/font-awesome.min.css';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import './Schema.css';
-
 
 class SchemaIcon extends Component {
   shouldComponentUpdate(nextProps) {
