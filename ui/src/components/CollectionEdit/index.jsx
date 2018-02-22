@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
-import { fetchCollection } from 'src/actions';
+import {injectIntl} from "react-intl";
+import { NonIdealState } from '@blueprintjs/core';
 
 import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import CollectionEditContent from './CollectionEditContent';
 import CollectionEditInfo from './CollectionEditInfo';
+
+import { fetchCollection } from 'src/actions';
 
 class CollectionEditScreen extends Component {
   constructor(){
@@ -37,7 +39,13 @@ class CollectionEditScreen extends Component {
   }
 
   render() {
-    const { location, collection } = this.props;
+    const { intl, location, collection, session } = this.props;
+
+    if(!session.loggedIn || !collection.writable) {
+      return <NonIdealState
+        visual="error"
+        title={intl.formatMessage({id: 'collection.edit.error', defaultMessage: "You cannot access collection editing."})}/>
+    }
 
     return (
       <Screen>
@@ -55,7 +63,7 @@ class CollectionEditScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
   const collection = state.collections[collectionId];
-  return { collectionId, collection, app: state.metadata.app };
+  return { collectionId, collection, app: state.metadata.app, session: state.session };
 };
 
-export default connect(mapStateToProps, { fetchCollection })(CollectionEditScreen);
+export default connect(mapStateToProps, { fetchCollection })(injectIntl(CollectionEditScreen));
