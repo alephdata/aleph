@@ -39,7 +39,7 @@ class EntityInfo extends React.Component {
     return (
       <DualPane.InfoPane className="EntityInfo">
         <div className="PaneHeading">
-          <span className="muted">
+          <span className="pt-text-muted">
             <Schema.Label schema={entity.schema} icon={true} />
           </span>
           <h1>
@@ -76,7 +76,7 @@ class EntityInfo extends React.Component {
                         ))}
                       </ul>
                     )) ||
-                      <p className="muted">
+                      <p className="pt-text-muted">
                         <FormattedMessage 
                           id="entity.references.empty.description"
                           defaultMessage="There are no known relationships."/>

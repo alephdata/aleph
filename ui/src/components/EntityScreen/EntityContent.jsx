@@ -37,7 +37,7 @@ class EntityContent extends Component {
           <div className="ContentPaneInner EntityContent max-width-content-limit" style={{padding: 0}}>
       
             <div className="EntitySummary">
-              <span className="muted">
+              <span className="pt-text-muted">
                 <Schema.Label schema={entity.schema} icon={true} />
               </span>
 

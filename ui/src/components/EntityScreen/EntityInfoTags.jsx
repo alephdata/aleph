@@ -27,7 +27,7 @@ class EntityInfoTags extends React.Component {
     if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
       return (
         <React.Fragment>
-          <p className="muted">
+          <p className="pt-text-muted">
             <FormattedMessage 
               id="entity.tags.empty.description"
               defaultMessage="There are no known related tags."/>

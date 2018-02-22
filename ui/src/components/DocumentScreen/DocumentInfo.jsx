@@ -31,7 +31,7 @@ class DocumentInfo extends React.Component {
     return (
       <DualPane.InfoPane className="DocumentInfo">
         <div className="PaneHeading">
-          <span className="muted">
+          <span className="pt-text-muted">
             <Schema.Label schema={document.schema} icon={true} />
           </span>
           <h1>
