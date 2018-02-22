@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup, Button, AnchorButton } from "@blueprintjs/core";
 
@@ -67,7 +67,16 @@ class DocumentToolbar extends React.Component {
         { (this.props.pageNumber && this.props.pageNumber > 0 && this.props.pageTotal && this.props.pageTotal > 0 && (
           <ButtonGroup minimal={false} style={{float: 'left'}}>
               <AnchorButton href={`#page=${this.props.pageNumber-1}`} icon="arrow-left" disabled={this.props.pageNumber <= 1} style={{margin: 0}}/>
-              <Button disabled style={{minWidth: '70px', margin: 0, color: 'rgb(24, 32, 38)'}}>{this.props.pageNumber} of {this.props.pageTotal}</Button>
+              <Button disabled style={{minWidth: '112px', margin: 0, color: 'rgb(24, 32, 38)'}}>
+                <FormattedMessage
+                  id="document.paging"
+                  defaultMessage="Page {pageNumber} of {pageTotal}"
+                  values={{
+                     pageNumber: this.props.pageNumber,
+                     pageTotal: this.props.pageTotal
+                   }}
+                />                  
+              </Button>
               <AnchorButton href={`#page=${this.props.pageNumber+1}`} icon="arrow-right" disabled={this.props.pageNumber >= this.props.pageTotal} style={{margin: 0}}/>
           </ButtonGroup>
         )) || null}
