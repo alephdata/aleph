@@ -1,15 +1,11 @@
 @import "src/app/variables.scss";
 
 .CollectionEditContent {
-  .addUserForm {
+  .addRoleForm {
     display: flex;
     padding: ($aleph-grid-size * 2) $aleph-grid-size;
 
-    .addUserInput {
-      flex-grow: 1;
-    }
-
-    .addUserButton {
+    .addRoleButton {
       width: 8em;
     }
 

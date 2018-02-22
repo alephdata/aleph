@@ -53,7 +53,11 @@ class CollectionEditTable extends Component {
           </tr>
           </thead>
           <tbody className='table_body_alerts'>
-          <CollectionEditRow permissions={permissions} type='system'/>
+          <CollectionEditRow
+            permissions={permissions}
+            type='system'
+            handleCheckboxRead={this.handleCheckboxRead}
+            handleCheckboxWrite={this.handleCheckboxWrite}/>
           <tr key={1} className='table-row'>
             <td className='first-row header_topic'>
               <FormattedMessage id="collection.edit.groups" defaultMessage="Groups"/>
@@ -61,7 +65,11 @@ class CollectionEditTable extends Component {
             <td className='other-rows'/>
             <td className='other-rows'/>
           </tr>
-          <CollectionEditRow permissions={permissions} type='group'/>
+          <CollectionEditRow
+            permissions={permissions}
+            type='group'
+            handleCheckboxRead={this.handleCheckboxRead}
+            handleCheckboxWrite={this.handleCheckboxWrite}/>
           <tr key={2} className='table-row'>
             <td className='first-row header_topic'>
               <FormattedMessage id="collection.edit.groups" defaultMessage="Users"/>
@@ -69,7 +77,11 @@ class CollectionEditTable extends Component {
             <td className='other-rows'/>
             <td className='other-rows'/>
           </tr>
-          <CollectionEditRow permissions={permissions} type='user'/>
+          <CollectionEditRow
+            permissions={permissions}
+            type='user'
+            handleCheckboxRead={this.handleCheckboxRead}
+            handleCheckboxWrite={this.handleCheckboxWrite}/>
           </tbody>
         </table>
         <Button className="saveButton" onClick={this.onSave}>

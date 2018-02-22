@@ -5,7 +5,7 @@ import SuggestInput from 'src/components/common/SuggestInput';
 
 import DualPane from 'src/components/common/DualPane';
 import NamedMultiSelect from 'src/components/common/NamedMultiSelect';
-import {fetchUsers} from "../../actions";
+import {fetchRoles} from "../../actions";
 
 import './CollectionEditInfo.css';
 
@@ -24,7 +24,7 @@ class CollectionEditInfo extends Component {
       category: {},
       categoryName: '',
       contactName: '',
-      listUsers: [],
+      listRoles: [],
       contact: {},
       collection: {}
     };
@@ -32,17 +32,17 @@ class CollectionEditInfo extends Component {
     this.onSelectCountry = this.onSelectCountry.bind(this);
     this.onSelectLanguage = this.onSelectLanguage.bind(this);
     this.onTyping = this.onTyping.bind(this);
-    this.onSelectUser = this.onSelectUser.bind(this);
+    this.onSelectRole = this.onSelectRole.bind(this);
     this.onSelectCategory = this.onSelectCategory.bind(this);
     this.onFilterCategories = this.onFilterCategories.bind(this);
     this.onChangeLabel = this.onChangeLabel.bind(this);
     this.onChangeSummary = this.onChangeSummary.bind(this);
   }
 
-  onSelectUser(user) {
-    this.setState({contact: user});
+  onSelectRole(role) {
+    this.setState({contact: role});
     let collection = this.state.collection;
-    collection.creator = user;
+    collection.creator = role;
     this.setState({collection});
     this.props.onChangeCollection(collection);
   }
@@ -57,7 +57,7 @@ class CollectionEditInfo extends Component {
         languages: nextProps.collection.languages,
         listLanguages: this.structureList(nextProps.languages),
         listCategories: this.structureList(nextProps.categories),
-        listUsers: nextProps.users.results === undefined ? [] : nextProps.users.results,
+        listRoles: nextProps.roles === undefined ? [] : nextProps.roles.results === undefined ? [] : nextProps.roles.results,
         collection: nextProps.collection,
         categoryName: nextProps.collection === undefined ? undefined : nextProps.collection.category === undefined ? undefined : nextProps.collection.category,
         contactName: nextProps.collection === undefined ? undefined : nextProps.collection.creator === undefined ? nextProps.session.role.name : nextProps.collection.creator.name
@@ -67,10 +67,11 @@ class CollectionEditInfo extends Component {
 
   async onTyping(query) {
     if(query.length >= 3) {
-      await this.props.fetchUsers(query);
-      this.setState({listUsers: this.props.users.results})
+      await this.props.fetchRoles(query);
+      console.log(this.props)
+      this.setState({listRoles: this.props.roles.results})
     } else {
-      this.setState({listUsers: []})
+      this.setState({listRoles: []})
     }
 
     this.setState({contactName: query})
@@ -134,8 +135,8 @@ class CollectionEditInfo extends Component {
   }
 
   render() {
-    const {collection, intl, categories, session} = this.props;
-    const {label, summary, listUsers, listCategories, listCountries, countries, listLanguages, languages, categoryName, contactName} = this.state;
+    const {collection, intl, categories} = this.props;
+    const {label, summary, listRoles, listCategories, listCountries, countries, listLanguages, languages, categoryName, contactName} = this.state;
 
     return (
       <DualPane.InfoPane className="CollectionEditInfo">
@@ -212,8 +213,8 @@ class CollectionEditInfo extends Component {
               <SuggestInput
                 isCategory={false}
                 defaultValue={contactName}
-                onSelectItem={this.onSelectUser}
-                list={listUsers}
+                onSelectItem={this.onSelectRole}
+                list={listRoles}
                 onTyping={this.onTyping}/>
             </div>
           </div>
@@ -265,13 +266,14 @@ class CollectionEditInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log('state', state);
   return {
     countries: state.metadata.countries,
     languages: state.metadata.languages,
     categories: state.metadata.categories,
-    users: state.users,
-    session: state.session
+    roles: state.role,
+    session: state.session,
   }
 };
 
-export default connect(mapStateToProps, {fetchUsers})(injectIntl(CollectionEditInfo));
+export default connect(mapStateToProps, {fetchRoles})(injectIntl(CollectionEditInfo));

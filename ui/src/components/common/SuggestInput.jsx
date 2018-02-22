@@ -4,6 +4,8 @@ import {MenuItem, Classes} from '@blueprintjs/core'
 import {Suggest} from "@blueprintjs/select";
 import {injectIntl} from 'react-intl';
 
+import './SuggestInput.css';
+
 class SuggestInput extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +34,7 @@ class SuggestInput extends Component {
 
   itemRenderer(item, opts) {
     return opts.modifiers.matchesPredicate && <MenuItem
-      key={item.index}
+      key={item.index === undefined ? item.id : item.index}
       onClick={opts.handleClick}
       text={item.name}
       shouldDismissPopover={false}

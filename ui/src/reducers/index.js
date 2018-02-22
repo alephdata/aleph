@@ -10,7 +10,6 @@ import statistics from './statistics';
 import role from './roles';
 import alerts from './alerts';
 import permissions from './permissions';
-import users from './users';
 import search from './search';
 import facets from './facets';
 
@@ -25,7 +24,6 @@ const rootReducer = combineReducers({
   alerts,
   entityTags,
   permissions,
-  users,
   search,
   facets,
 });

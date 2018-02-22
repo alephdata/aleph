@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 
 import DualPane from 'src/components/common/DualPane';
 import CollectionEditTable from "./CollectionEditTable";
-import {fetchCollectionPermissions, fetchUsers, updateCollection, updateCollectionPermissions} from 'src/actions';
+import {fetchCollectionPermissions, fetchRoles, updateCollection, updateCollectionPermissions} from 'src/actions';
 import SuggestInput from 'src/components/common/SuggestInput';
 import {showErrorToast, showInfoToast, showSuccessToast} from 'src/app/toast';
 
@@ -17,15 +17,15 @@ class CollectionEditContent extends Component {
     super(props);
 
     this.state = {
-      newUser: {},
+      newRole: {},
       collectionId: -1,
-      listUsers: [],
+      listRoles: [],
       permissions: {}
     };
 
-    this.onAddUser = this.onAddUser.bind(this);
+    this.onAddRole = this.onAddRole.bind(this);
     this.onTyping = this.onTyping.bind(this);
-    this.onSelectUser = this.onSelectUser.bind(this);
+    this.onSelectRole = this.onSelectRole.bind(this);
     this.handleCheckboxWrite = this.handleCheckboxWrite.bind(this);
     this.handleCheckboxRead = this.handleCheckboxRead.bind(this);
     this.onSavePermissions = this.onSavePermissions.bind(this);
@@ -36,7 +36,7 @@ class CollectionEditContent extends Component {
       await this.props.fetchCollectionPermissions(nextProps.collection.id);
       this.setState({
         collectionId: nextProps.collection.id,
-        listUsers: nextProps.users.results === undefined ? [] : nextProps.users.results,
+        listRoles: nextProps.roles === undefined ? [] : nextProps.roles.results === undefined ? [] : nextProps.roles.results,
         permissions: {
           results: [
             [...this.props.permissions.results ? this.props.permissions.results[0].slice() : []]
@@ -46,17 +46,17 @@ class CollectionEditContent extends Component {
     }
   }
 
-  onAddUser() {
-    if (this.state.newUser.id === undefined) {
+  onAddRole() {
+    if (this.state.newRole.id === undefined) {
       showErrorToast('You must select user!');
     }
     let permissions = this.state.permissions;
-    let isAlreadyPermission = this.isPermission(this.state.newUser);
+    let isAlreadyPermission = this.isPermission(this.state.newRole);
 
     if (!isAlreadyPermission) {
       let newPermissions = {
         ...permissions,
-        results: [[...permissions.results[0], this.state.newUser], ...permissions.results.slice(1)]
+        results: [[...permissions.results[0], this.state.newRole], ...permissions.results.slice(1)]
       };
       this.setState({permissions: newPermissions});
       showInfoToast('You have added new user. Click Save button!');
@@ -65,10 +65,10 @@ class CollectionEditContent extends Component {
     }
   }
 
-  isPermission(user) {
+  isPermission(item) {
     for (let i = 0; i < this.state.permissions.results[0].length; i++) {
       if (this.state.permissions.results[0][i].role.type === 'user') {
-        if (this.state.permissions.results[0][i].role.id === user.role.id) return true;
+        if (this.state.permissions.results[0][i].role.id === item.role.id) return true;
       }
     }
 
@@ -77,18 +77,18 @@ class CollectionEditContent extends Component {
 
   async onTyping(query) {
     if (query.length >= 3) {
-      await this.props.fetchUsers(query);
-      this.setState({listUsers: this.props.users.results})
+      await this.props.fetchRoles(query);
+      this.setState({listRoles: this.props.roles.results})
     } else {
-      this.setState({listUsers: []})
+      this.setState({listRoles: []})
     }
 
-    this.setState({newUser: {name: query}})
+    this.setState({newRole: {name: query}})
   }
 
-  onSelectUser(user) {
-    let newUser = {...user, role: {type: 'user', id: user.id, name: user.name}, read: false, write: false};
-    this.setState({newUser});
+  onSelectRole(role) {
+    let newRole = {...role, role: {type: 'user', id: role.id, name: role.name}, read: false, write: false};
+    this.setState({newRole});
   }
 
   handleCheckboxWrite(item) {
@@ -125,7 +125,7 @@ class CollectionEditContent extends Component {
 
   render() {
     const {collection} = this.props;
-    const {listUsers, newUser, permissions} = this.state;
+    const {listRoles, newRole, permissions} = this.state;
 
     return (
       <DualPane.ContentPane limitedWidth={true} className="CollectionEditContent">
@@ -133,14 +133,14 @@ class CollectionEditContent extends Component {
           <FormattedMessage id="collection.edit.title"
                             defaultMessage="Access Control"/>
         </h1>
-        <form onSubmit={this.onAddUser} className="addUserForm">
+        <form onSubmit={this.onAddRole} className="addRoleForm">
           <SuggestInput
-            defaultValue={newUser.name === undefined ? undefined : newUser.name}
-            onSelectItem={this.onSelectUser}
-            list={listUsers}
+            defaultValue={newRole.name === undefined ? undefined : newRole.name}
+            onSelectItem={this.onSelectRole}
+            list={listRoles}
             onTyping={this.onTyping}/>
-          <Button className="addUserButton" onClick={this.onAddUser}>
-            <FormattedMessage id="user.add"
+          <Button className="addRoleButton" onClick={this.onAddRole}>
+            <FormattedMessage id="role.add"
                               defaultMessage="Add"/>
           </Button>
         </form>
@@ -158,13 +158,13 @@ class CollectionEditContent extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
   permissions: state.permissions,
-  users: state.users
+  roles: state.role
 });
 
 CollectionEditContent = injectIntl(CollectionEditContent);
 export default connect(mapStateToProps, {
   fetchCollectionPermissions,
-  fetchUsers,
+  fetchRoles,
   updateCollection,
   updateCollectionPermissions
 })(CollectionEditContent);
