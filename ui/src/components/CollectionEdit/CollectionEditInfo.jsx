@@ -68,7 +68,6 @@ class CollectionEditInfo extends Component {
   async onTyping(query) {
     if(query.length >= 3) {
       await this.props.fetchRoles(query);
-      console.log(this.props)
       this.setState({listRoles: this.props.roles.results})
     } else {
       this.setState({listRoles: []})
@@ -266,7 +265,6 @@ class CollectionEditInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('state', state);
   return {
     countries: state.metadata.countries,
     languages: state.metadata.languages,
