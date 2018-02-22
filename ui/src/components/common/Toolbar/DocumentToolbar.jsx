@@ -65,13 +65,13 @@ class DocumentToolbar extends React.Component {
     return (
       <div className="DocumentToolbar">
         <PagingButtons pageNumber={this.props.pageNumber} pageTotal={this.props.pageTotal}/>
-        <form onSubmit={this.onSubmitSearch} style={{maxWidth: 200, float: 'right', margin: '0px 10px'}}>
+        <form onSubmit={this.onSubmitSearch} className="ToolbarSearchForm">
           <div className="pt-input-group">
             <span className="pt-icon pt-icon-search"></span>
             <input className="pt-input" type="search" disabled={!this.state.searchEnabled} placeholder={this.state.searchPlaceholder} onChange={this.onChangeSearchQuery} value={this.state.queryText} dir="auto"/>
           </div>
         </form>
-        <DownloadButton style={{float: 'right', margin: 0}} downloadLink={downloadLink} session={this.props.session}/>
+        <DownloadButton downloadLink={downloadLink} session={this.props.session}/>
       </div>
     );
   }

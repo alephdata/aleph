@@ -22,7 +22,7 @@ export class DownloadButton extends React.Component {
             </ul>
           )
         return (
-          <div className="pt-button-group" style={this.props.style}>
+          <div className="DownloadButton pt-button-group" style={this.props.style}>
             <a href={this.props.session.token ? `${this.props.downloadLink[0].url}?api_key=${this.props.session.token}` : this.props.downloadLink[0].url} className="pt-button">
               <span className="pt-icon-standard pt-icon-download"></span>
               <span><FormattedMessage id="document.download" defaultMessage="Download"/></span>
@@ -43,7 +43,7 @@ export class DownloadButton extends React.Component {
       } else {
         // Render Download button with single button
         return (
-          <a href={this.props.session.token ? `${this.props.downloadLink.url}?api_key=${this.props.session.token}` : this.props.downloadLink.url} type="button" className="pt-button" style={this.props.style}>
+          <a href={this.props.session.token ? `${this.props.downloadLink.url}?api_key=${this.props.session.token}` : this.props.downloadLink.url} type="button" className="DownloadButton pt-button" style={this.props.style}>
             <span className="pt-icon-standard pt-icon-download"></span>
             <span><FormattedMessage id="document.download" defaultMessage="Download"/></span>
           </a>
@@ -52,7 +52,7 @@ export class DownloadButton extends React.Component {
     } else {
       // Render disabled control
       return (
-        <button type="button" className="pt-button" disabled style={this.props.style}>
+        <button type="button" className="DownloadButton pt-button" disabled style={this.props.style}>
           <span className="pt-icon-standard pt-icon-download"></span>
           <span><FormattedMessage id="document.download" defaultMessage="Download"/></span>
         </button>
