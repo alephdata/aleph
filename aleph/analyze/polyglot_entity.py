@@ -35,6 +35,7 @@ class PolyglotEntityAnalyzer(EntityAnalyzer):
                 cls._languages = [p.language for p in packages]
             except Exception:
                 log.info("Cannot load polyglot language list.")
+                cls._languages = []
         return cls._languages
 
     def tag_text(self, text, languages):
