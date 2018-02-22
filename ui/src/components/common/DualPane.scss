@@ -1,4 +1,5 @@
 @import "src/app/variables.scss";
+
 $aleph-infobar-width: $aleph-grid-size * 40;
 
 .DualPane {
@@ -60,13 +61,20 @@ $aleph-infobar-width: $aleph-grid-size * 40;
   }
 }
 
-.DualPane .ContentPane .ContentPaneOuter {
-  flex: 2;
-  padding: 30px 20px;
-  background: $aleph-toolbar-background;
-}
-
-.DualPane .ContentPane .ContentPaneInner {
-  background: white;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+/* 
+ * .ContentPaneOuter and .ContentPaneInner can be used together inside 
+ * .ContentPane if you want to have content (like a file contents or entity)
+ * appear displayed in a container. This used mostly for document and entity
+ * views, but not for folders or things like spreadsheets.
+ */
+.DualPane .ContentPane {
+  .ContentPaneOuter {
+    flex: 2;
+    padding: $aleph-grid-size*4;
+    background: $aleph-toolbar-background;
+    .ContentPaneInner {
+      background: white;
+      box-shadow: $pt-elevation-shadow-3;
+    }
+  }
 }
