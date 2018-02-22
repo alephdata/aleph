@@ -24,6 +24,7 @@ class PdfViewer extends Component {
       width: null,
       numPages: 0
     };
+    this.onDocumentLoad = this.onDocumentLoad.bind(this);
   }
 
   onDocumentLoad(pdfInfo) {
@@ -73,7 +74,7 @@ class PdfViewer extends Component {
             <div className="document_pdf" ref={(ref) => this.pdfElement = ref}>
               <Document renderAnnotations={true}
                         file={url}
-                        onLoadSuccess={this.onDocumentLoad.bind(this)}
+                        onLoadSuccess={this.onDocumentLoad}
                         loading={(<SectionLoading />)}>
                 <Page pageNumber={pageNumber} className="page" width={width} />
               </Document>
