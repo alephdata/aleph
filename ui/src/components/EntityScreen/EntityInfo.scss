@@ -1,24 +1,19 @@
 @import "src/app/variables.scss";
 
-.DualPane .InfoPane.EntityInfo {
-  padding: 0;
-}
+.EntityInfo {
+  padding: 0 !important;
 
-.DualPane .InfoPane.EntityInfo .PaneHeading {
-  background: $aleph-sidebar-background;
-  padding: 40px 20px;
-}
+  .PaneHeading {
+    background: $aleph-sidebar-background;
+    padding: $aleph-grid-size*4 $aleph-grid-size*2;
+  }
 
-.DualPane .InfoPane.EntityInfo .PaneHeading h1 {
-  border: 0;
-  margin: 0;
-}
+  .PaneHeading h1 {
+    border: 0;
+    margin: 0;
+  }
 
-.DualPane .InfoPane.EntityInfo .PaneContent {
-  padding: 10px 20px 20px 20px;
-}
-
-.DualPane .InfoPane .pt-tab-list .pt-icon {
-  padding-bottom: 20px;
-  padding-right: 20px;
+  .PaneContent {
+    padding: $aleph-grid-size $aleph-grid-size*2;
+  }
 }

@@ -3,25 +3,25 @@
 .EntityContent {
   font-size: 1.2em;
   margin: auto;
-  padding: 10px;
-}
+  padding: $aleph-grid-size;
 
-.EntityContent h1 {
-  font-size: 2em;
-  line-height: 1.2em;
-  margin: 0.3em 0 0 0;
-}
+  h1 {
+    font-size: 2em;
+    line-height: 1.2em;
+    margin: $aleph-grid-size 0 0 0;
+  }
 
-.EntityContent h2 {
-  font-size: 1.5em;
-  line-height: 1.5em;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid $aleph-border-color;
-  overflow-wrap: break-word;
-}
-
-.EntitySummary {
-  padding: 20px;
-  background: $aleph-toolbar-background;
+  h2 {
+    font-size: 1.5em;
+    line-height: 1.5em;
+    margin-bottom: $aleph-grid-size;
+    padding-bottom: $aleph-grid-size;
+    border-bottom: 1px solid $aleph-border-color;
+    overflow-wrap: break-word;
+  }
+  
+  .EntitySummary {
+    padding: $aleph-grid-size*2;
+    background: $aleph-toolbar-background;
+  }
 }
