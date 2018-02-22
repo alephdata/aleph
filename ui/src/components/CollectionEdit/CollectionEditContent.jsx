@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Button} from '@blueprintjs/core';
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {connect} from 'react-redux';
 
 import DualPane from 'src/components/common/DualPane';
@@ -10,6 +10,25 @@ import SuggestInput from 'src/components/common/SuggestInput';
 import {showErrorToast, showInfoToast, showSuccessToast} from 'src/app/toast';
 
 import './CollectionEditContent.css';
+
+const messages = defineMessages({
+  must_select_user: {
+    id: 'collection.edit.must_select_user',
+    defaultMessage: 'You must select user!',
+  },
+  user_added: {
+    id: 'collection.edit.user_added',
+    defaultMessage: 'You have added new user. Click Save button!',
+  },
+  user_already_added: {
+    id: 'collection.edit.user_already_added',
+    defaultMessage: 'You have already added same user!',
+  },
+  save_success: {
+    id: 'collection.edit.save_success',
+    defaultMessage: 'You have saved collection!',
+  },
+});
 
 class CollectionEditContent extends Component {
 
@@ -47,8 +66,10 @@ class CollectionEditContent extends Component {
   }
 
   onAddRole() {
+    const { intl } = this.props;
+
     if (this.state.newRole.id === undefined) {
-      showErrorToast('You must select user!');
+      showErrorToast(intl.formatMessage(messages.must_select_user));
     }
     let permissions = this.state.permissions;
     let isAlreadyPermission = this.isPermission(this.state.newRole);
@@ -59,9 +80,9 @@ class CollectionEditContent extends Component {
         results: [[...permissions.results[0], this.state.newRole], ...permissions.results.slice(1)]
       };
       this.setState({permissions: newPermissions});
-      showInfoToast('You have added new user. Click Save button!');
+      showInfoToast(intl.formatMessage(messages.user_added));
     } else {
-      showInfoToast('You have already added same user!');
+      showInfoToast(intl.formatMessage(messages.user_already_added));
     }
   }
 
@@ -118,9 +139,10 @@ class CollectionEditContent extends Component {
   }
 
   async onSavePermissions() {
+    const { intl } = this.props;
     await this.props.updateCollection(this.props.collection);
     await this.props.updateCollectionPermissions(this.state.permissions.results[0]);
-    showSuccessToast('You have saved collection!');
+    showSuccessToast(intl.formatMessage(messages.save_success));
   }
 
   render() {
@@ -140,7 +162,7 @@ class CollectionEditContent extends Component {
             list={listRoles}
             onTyping={this.onTyping}/>
           <Button className="addRoleButton" onClick={this.onAddRole}>
-            <FormattedMessage id="role.add"
+            <FormattedMessage id="collection.edit.add_role"
                               defaultMessage="Add"/>
           </Button>
         </form>

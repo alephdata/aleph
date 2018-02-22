@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {injectIntl} from "react-intl";
+import { defineMessages, injectIntl} from "react-intl";
 import { NonIdealState } from '@blueprintjs/core';
 
 import Screen from 'src/components/common/Screen';
@@ -10,6 +10,13 @@ import CollectionEditContent from './CollectionEditContent';
 import CollectionEditInfo from './CollectionEditInfo';
 
 import { fetchCollection } from 'src/actions';
+
+const messages = defineMessages({
+  access_error: {
+    id: 'collection.edit.access_error',
+    defaultMessage: 'You cannot access collection editing.',
+  },
+});
 
 class CollectionEditScreen extends Component {
   constructor(){
@@ -44,7 +51,7 @@ class CollectionEditScreen extends Component {
     if(!session.loggedIn || !collection.writable) {
       return <NonIdealState
         visual="error"
-        title={intl.formatMessage({id: 'collection.edit.error', defaultMessage: "You cannot access collection editing."})}/>
+        title={intl.formatMessage(messages.access_error)}/>
     }
 
     return (

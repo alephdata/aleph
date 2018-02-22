@@ -42,7 +42,7 @@ class EmailViewer extends React.Component {
             <Tab id="email"
               title={
                 <React.Fragment>
-                   <span className="pt-icon-standard pt-icon-envelope"/> <FormattedMessage id="document.email.body" defaultMessage="Email Message"/>
+                   <span className="pt-icon-standard pt-icon-envelope"/> <FormattedMessage id="email.body" defaultMessage="Email Message"/>
                 </React.Fragment>
               }
               panel={
@@ -85,12 +85,12 @@ class EmailViewer extends React.Component {
                           )}
                           {!!document.children && (
                             <tr>
-                              <th><FormattedMessage id="email.attachment" defaultMessage="Attachments"/></th>
+                              <th><FormattedMessage id="email.attachments" defaultMessage="Attachments"/></th>
                               <td>
                                 <a href="#children" onClick={() => {this.setState({activeTabId: 'attachments'})}}>
                                   <span className="pt-icon-standard pt-icon-paperclip"/>
                                   {' '}
-                                  <FormattedMessage id="email.attachment.count"
+                                  <FormattedMessage id="email.attachment_count"
                                                     defaultMessage="{count} attached files"
                                                     values={{
                                                       count: document.children
@@ -109,7 +109,7 @@ class EmailViewer extends React.Component {
               <Tab id="attachments"
                 title={
                   <React.Fragment>
-                     <span className="pt-icon-standard pt-icon-paperclip"/> <FormattedMessage id="document.email.attachments" defaultMessage="Attachments"/>
+                     <span className="pt-icon-standard pt-icon-paperclip"/> <FormattedMessage id="email.attachments" defaultMessage="Attachments"/>
                   </React.Fragment>
                 }
                 panel={

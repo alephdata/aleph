@@ -1,15 +1,57 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Button, Icon, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
-import messages from 'src/content/messages';
 import { fetchFacet, fetchNextFacetValues } from 'src/actions';
 import { selectFacet } from 'src/selectors';
 import CheckboxList from './CheckboxList';
 
 import './SearchFacet.css';
+
+const messages = defineMessages({
+  facet_schema: {
+    id: 'search.facets.facet.schema',
+    defaultMessage: 'Types',
+  },
+  facet_collection_id: {
+    id: 'search.facets.facet.collection_id',
+    defaultMessage: 'Collections',
+  },
+  facet_languages: {
+    id: 'search.facets.facet.languages',
+    defaultMessage: 'Languages',
+  },
+  facet_emails: {
+    id: 'search.facets.facet.emails',
+    defaultMessage: 'Emails',
+  },
+  facet_phones: {
+    id: 'search.facets.facet.phones',
+    defaultMessage: 'Phones',
+  },
+  facet_countries: {
+    id: 'search.facets.facet.countries',
+    defaultMessage: 'Countries',
+  },
+  facet_names: {
+    id: 'search.facets.facet.names',
+    defaultMessage: 'Names',
+  },
+  facet_addresses: {
+    id: 'search.facets.facet.addresses',
+    defaultMessage: 'Addresses',
+  },
+  facet_mime_type: {
+    id: 'search.facets.facet.mime_type',
+    defaultMessage: 'File types',
+  },
+  facet_author: {
+    id: 'search.facets.facet.author',
+    defaultMessage: 'Authors',
+  },
+})
 
 class SearchFacet extends Component {
   constructor(props)  {
@@ -88,8 +130,8 @@ class SearchFacet extends Component {
     const current = query.getFilter(field);
     const count = current.length;
     const isActive = this.isActive();
-    const fieldLabel = messages.search.filter[field]
-      ? intl.formatMessage(messages.search.filter[field])
+    const fieldLabel = messages[`facet_${field}`]
+      ? intl.formatMessage(messages[`facet_${field}`])
       : field;
 
     // The values array can include extra selected-but-zero-hit values that are

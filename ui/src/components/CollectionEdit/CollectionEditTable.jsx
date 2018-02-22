@@ -42,13 +42,13 @@ class CollectionEditTable extends Component {
           <thead>
           <tr key={0}>
             <th className='topic'>
-              <FormattedMessage id="collection.edit.types" defaultMessage="Types"/>
+              <FormattedMessage id="collection.edit.permissionstable.types" defaultMessage="Types"/>
             </th>
             <th className='other-topics'>
-              <FormattedMessage id="collection.edit.view" defaultMessage="View"/>
+              <FormattedMessage id="collection.edit.permissionstable.view" defaultMessage="View"/>
             </th>
             <th className='other-topics'>
-              <FormattedMessage id="collection.edit.edit" defaultMessage="Edit"/>
+              <FormattedMessage id="collection.edit.permissionstable.edit" defaultMessage="Edit"/>
             </th>
           </tr>
           </thead>
@@ -72,7 +72,7 @@ class CollectionEditTable extends Component {
             handleCheckboxWrite={this.handleCheckboxWrite}/>
           <tr key={2} className='table-row'>
             <td className='first-row header_topic'>
-              <FormattedMessage id="collection.edit.groups" defaultMessage="Users"/>
+              <FormattedMessage id="collection.edit.users" defaultMessage="Users"/>
             </td>
             <td className='other-rows'/>
             <td className='other-rows'/>
