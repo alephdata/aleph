@@ -1,18 +1,14 @@
 @import "src/app/variables.scss";
 
-.PdfViewer .page {
-  margin: 0;
-  padding: 0;
-}
-
-.PdfViewer .ReactPDF__Page__canvas {
-  padding: 0 !important;
-}
-
-.document_pdf {
+.PdfViewer .document_pdf {
   flex-grow: 1;
   width: 100%;
   background-color: whitesmoke;
+}
+
+.PdfViewer .page {
+  margin: 0;
+  padding: 0;
 }
 
 .PdfViewer .page > canvas {
@@ -22,8 +18,19 @@
   width: 90%;
 }
 
+.PdfViewer .ReactPDF__Page__canvas {
+  padding: 0 !important;
+}
+
 .PdfViewer .SectionLoading {
   background: white;
+}
+
+.PdfViewer .ReactPDF__Error {
+  background: white;
+  text-align: center;
+  padding: 100px 20px;
+  font-size: 1.2em;
 }
 
 .PdfViewer .spinner {
