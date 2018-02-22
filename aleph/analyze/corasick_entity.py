@@ -4,13 +4,14 @@ from ahocorasick import Automaton
 
 from aleph import settings
 from aleph.model import Entity
-from aleph.analyze.analyzer import Analyzer
-from aleph.model import DocumentTag, DocumentTagCollector
+from aleph.analyze.analyzer import EntityAnalyzer
+from aleph.model import DocumentTag
 
 log = logging.getLogger(__name__)
 
 
-class AhoCorasickEntityAnalyzer(Analyzer):
+class AhoCorasickEntityAnalyzer(EntityAnalyzer):
+    ORIGIN = 'corasick'
     MIN_LENGTH = 20
     TYPES = {
         'Person': DocumentTag.TYPE_PERSON,
@@ -79,8 +80,7 @@ class AhoCorasickEntityAnalyzer(Analyzer):
             cls._automaton = self.build_automaton()
         return cls._automaton
 
-    def analyze(self, document):
-        collector = DocumentTagCollector(document, 'corasick')
+    def extract(self, collector, document):
         if self.automaton is None:
             return
 
@@ -96,4 +96,3 @@ class AhoCorasickEntityAnalyzer(Analyzer):
 
         if len(collector):
             log.info('Aho Corasick extraced %s entities.', len(collector))
-        collector.save()

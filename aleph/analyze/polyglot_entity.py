@@ -7,13 +7,13 @@ from polyglot.downloader import downloader
 from normality import collapse_spaces
 
 from aleph import settings
-from aleph.analyze.analyzer import Analyzer
-from aleph.model import Document, DocumentTag, DocumentTagCollector
+from aleph.analyze.analyzer import EntityAnalyzer
+from aleph.model import DocumentTag
 
 log = logging.getLogger(__name__)
 
 
-class PolyglotEntityAnalyzer(Analyzer):
+class PolyglotEntityAnalyzer(EntityAnalyzer):
     ORIGIN = 'polyglot'
     MIN_LENGTH = 100
     CLEAN = regex.compile('(^[^\w]*|[^\w]*$)')
@@ -21,12 +21,6 @@ class PolyglotEntityAnalyzer(Analyzer):
         'I-PER': DocumentTag.TYPE_PERSON,
         'I-ORG': DocumentTag.TYPE_ORGANIZATION,
     }
-    IGNORED = [
-        Document.SCHEMA_PACKAGE,
-        Document.SCHEMA_FOLDER,
-        Document.SCHEMA_IMAGE,
-        Document.SCHEMA_TABLE
-    ]
 
     def __init__(self):
         self.active = settings.ANALYZE_POLYGLOT
@@ -57,11 +51,7 @@ class PolyglotEntityAnalyzer(Analyzer):
                     continue
                 yield label, entity.tag
 
-    def analyze(self, document):
-        if document.schema in self.IGNORED:
-            return
-
-        collector = DocumentTagCollector(document, self.ORIGIN)
+    def extract(self, collector, document):
         try:
             languages = set(document.languages)
             if len(self.languages):
@@ -78,6 +68,5 @@ class PolyglotEntityAnalyzer(Analyzer):
         except ValueError as ve:
             log.warning('NER value error: %r', ve)
 
-        collector.save()
         if len(collector):
             log.info('Polyglot extracted %s entities.', len(collector))

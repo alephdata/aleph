@@ -13,6 +13,7 @@ class LanguageAnalyzer(Analyzer):
     PRIORITY = 100
     MAX_LENGTH = 40000
     IGNORED = [
+        Document.SCHEMA,
         Document.SCHEMA_PACKAGE,
         Document.SCHEMA_FOLDER,
         Document.SCHEMA_WORKBOOK,
