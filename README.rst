@@ -10,7 +10,7 @@
    :target: https://travis-ci.org/alephdata/aleph/
    :alt: Build Status
 
-**Aleph** is a tool for indexing large amounts of both unstructured (PDF, Word,
+**Aleph** is a tool for indexing large amounts of both documents (PDF, Word,
 HTML) and structured (CSV, XLS, SQL) data for easy browsing and search. It is
 built with investigative reporting as a primary use case. Aleph allows
 cross-referencing mentions of well-known entities (such as people and
@@ -18,15 +18,15 @@ companies) against watchlists, e.g. from prior research or public datasets.
 
 Here's some key features:
 
-* Web-based UI for search across large document and data sets.
-* Watchlist editor for making custom sets of entities to be tracked.
-* Equal support for structured (i.e. tabular) and unstructured (i.e. textual)
-  sources.
-* Importers include a local filesystem traverser, web crawlers and a SQL query
-  importer.
-* Document entity tagger (regular expressions-based, and optionally using NLP).
-* Support for OCR, unpacking Zip/RAR/Tarballs, language and encoding detection.
-* Entity watchlist importers for `OpenSanctions <http://opensanctions.org/>`_.
+* Web-based search across large document and data sets.
+* Imports many file formats, including popular office formats, spreadsheets,
+  email and zipped archives. Processing includes optical character recognition,
+  language and encoding detection and named entity extraction.
+* Load structured entity graph data from databases and CSV files. This allows
+  navigation of complex datasets like companies registries, sanctions lists or
+  procurement data. Import tools for `OpenSanctions <http://opensanctions.org/>`_.
+  are included.
+* Receive notifications for new search matches with a personal watchlist.
 * OAuth authorization and access control on a per-source and per-watchlist
   basis.
 
@@ -48,3 +48,4 @@ OpenOil. For coordination, the following mailing list exists:
 If you find any errors or issues using Aleph please
 `file an issue on GitHub <https://github.com/alephdata/aleph/issues/new>`_ or
 contact the mailing list.
+
