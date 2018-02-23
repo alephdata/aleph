@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { Tab, Tabs, Icon } from "@blueprintjs/core";
+import { Tab, Tabs } from "@blueprintjs/core";
 
 import Property from './Property';
 import Entity from './Entity';
@@ -39,7 +39,7 @@ class EntityInfo extends React.Component {
     return (
       <DualPane.InfoPane className="EntityInfo">
         <div className="PaneHeading">
-          <span className="muted">
+          <span className="pt-text-muted">
             <Schema.Label schema={entity.schema} icon={true} />
           </span>
           <h1>
@@ -47,11 +47,11 @@ class EntityInfo extends React.Component {
           </h1>
         </div>
         <div className="PaneContent">
-          <Tabs id="TabsExample"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+          <Tabs id="EntityInfoTabs"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
               <Tab id="overview" 
                 title={
                   <React.Fragment>
-                    <Icon icon="graph"/> <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
+                    <span className="pt-icon-standard pt-icon-info-sign"/> <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
                   </React.Fragment>
                 }
                 panel={
@@ -76,7 +76,7 @@ class EntityInfo extends React.Component {
                         ))}
                       </ul>
                     )) ||
-                      <p className="muted">
+                      <p className="pt-text-muted">
                         <FormattedMessage 
                           id="entity.references.empty.description"
                           defaultMessage="There are no known relationships."/>
@@ -88,7 +88,7 @@ class EntityInfo extends React.Component {
               <Tab id="source" 
                 title={
                   <React.Fragment>
-                    <Icon icon="graph"/> <FormattedMessage id="document.info.source" defaultMessage="Source"/>
+                    <span className="pt-icon-standard pt-icon-database"/> <FormattedMessage id="document.info.source" defaultMessage="Source"/>
                   </React.Fragment>
                 }
                 panel={<CollectionInfo collection={entity.collection}/>}
@@ -96,7 +96,7 @@ class EntityInfo extends React.Component {
               <Tab id="tags"
                 title={
                   <React.Fragment>
-                    <Icon icon="tag"/> <FormattedMessage id="document.info.tags" defaultMessage="Related Tags"/>
+                    <span className="pt-icon-standard pt-icon-tag"/> <FormattedMessage id="document.info.tags" defaultMessage="Related Tags"/>
                   </React.Fragment>
                 }
                 panel={<EntityInfoTags entity={entity} />}

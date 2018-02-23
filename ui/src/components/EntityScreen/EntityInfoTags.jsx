@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import {Link} from 'react-router-dom';
-import { FormattedNumber } from 'react-intl';
+import { Link } from 'react-router-dom';
+import { FormattedNumber, FormattedMessage } from 'react-intl';
 
 import Tag from 'src/components/common/Tag';
 import { fetchEntityTags } from '../../actions/index';
 import getPath from 'src/util/getPath';
 
-class EntityInfoTags extends Component {
+class EntityInfoTags extends React.Component {
   componentDidMount() {
     const { entity } = this.props;
     if (!this.props.tags && entity && entity.id) {
@@ -25,7 +25,15 @@ class EntityInfoTags extends Component {
     const { tags, entity } = this.props;
 
     if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
-      return null;
+      return (
+        <React.Fragment>
+          <p className="pt-text-muted">
+            <FormattedMessage 
+              id="entity.tags.empty.description"
+              defaultMessage="There are no known related tags."/>
+          </p>
+        </React.Fragment>
+      );
     }
 
     const linkPath = getPath(entity.links.ui) + '/related';

@@ -1,10 +1,13 @@
 @import "src/app/variables.scss";
 
 .ImageViewer {
-    img {
-        max-width: 95%;
-        height: auto;
-    }
+  text-align: center;
+  padding: 20px;
 
-    margin-bottom: 2 * $aleph-grid-size;
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  margin-bottom: 2 * $aleph-grid-size;
 }

@@ -32,41 +32,47 @@ class EntityContent extends Component {
     });
 
     return (
-      <DualPane.ContentPane>
-        <div className="EntityContent">
+      <DualPane.ContentPane style={{padding: 0}}>
+        <div className="ContentPaneOuter">
+          <div className="ContentPaneInner EntityContent">
       
-          <span className="muted">
-            <Schema.Label schema={entity.schema} icon={true} />
-          </span>
+            <div className="EntitySummary">
+              <span className="pt-text-muted">
+                <Schema.Label schema={entity.schema} icon={true} />
+              </span>
 
-          <h1>
-            <Entity.Label entity={entity} addClass={true}/>
-          </h1>
+              <h1>
+                <Entity.Label entity={entity} addClass={true}/>
+              </h1>
+            </div>
+      
+            <div style={{padding: '0 20px 20px 20px'}}>
+              <ul className="info-sheet" style={{marginTop: 0}}>
+                <li>
+                </li>
+                { properties.map((prop) => (
+                  <li key={prop.name}>
+                    <span className="key">
+                      <Property.Name model={prop} />
+                    </span>
+                    <span className="value">
+                      <Property.Values model={prop} values={entity.properties[prop.name]} />
+                    </span>
+                  </li>
+                ))}
+                <li>
+                  <span className="key">
+                    <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
+                  </span>
+                  <span className="value">
+                    <Date value={entity.updated_at} />
+                  </span>
+                </li>
+              </ul>
         
-          <ul className="info-sheet">
-            <li>
-            </li>
-            { properties.map((prop) => (
-              <li key={prop.name}>
-                <span className="key">
-                  <Property.Name model={prop} />
-                </span>
-                <span className="value">
-                  <Property.Values model={prop} values={entity.properties[prop.name]} />
-                </span>
-              </li>
-            ))}
-            <li>
-              <span className="key">
-                <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
-              </span>
-              <span className="value">
-                <Date value={entity.updated_at} />
-              </span>
-            </li>
-          </ul>
-          
-          <EntityReferences entity={entity} />
+              <EntityReferences entity={entity} />
+            </div>
+          </div>
         </div>
       </DualPane.ContentPane>
     );

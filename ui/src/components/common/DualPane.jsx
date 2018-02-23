@@ -7,7 +7,7 @@ class InfoPane extends Component {
   render() {
     const { children, className } = this.props;
     return (
-      <aside className={`InfoPane ${className}`}>
+      <aside className={`InfoPane ${className}`} style={this.props.style}>
         <div className="InfoPane-content-container">
           <div className="InfoPane-content">
             {children}
@@ -19,11 +19,10 @@ class InfoPane extends Component {
 }
 
 class ContentPane extends Component {
-
   render() {
     const { children, className, limitedWidth } = this.props;
     return (
-      <main className={c('ContentPane', { limitedWidth: limitedWidth }, className)}>
+      <main className={c('ContentPane', { limitedWidth: limitedWidth }, className)} style={this.props.style}>
         {children}
       </main>
     );
