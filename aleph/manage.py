@@ -239,7 +239,6 @@ def evilshit():
 @manager.option('-c', '--collection', dest='collection')
 @manager.option('-e', '--entity', dest='entity')
 def rdfdump(fn=None, collection=None, entity=None):
-
     if fn is None:
         fn = 'rdfdump_%s.n3' % datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
     with open(fn, 'a') as outfile:

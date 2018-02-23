@@ -33,14 +33,10 @@ Here's some key features:
 Documentation
 -------------
 
-The documentation for Aleph is available at
-`aleph.readthedocs.io <http://aleph.readthedocs.io/>`_.
-Feel free to edit the source files in the ``docs`` folder and send pull
-requests for improvements.
-
-To build the documentation, run ``make docs``
-
-You'll find the resulting HTML files in /build/docs/html.
+The documentation for Aleph is `available on our Wiki
+<https://github.com/alephdata/aleph/wiki>`_. If you wish to run your own
+copy of Aleph (or contribute to the development), get started with the
+`installation documentation <https://github.com/alephdata/aleph/wiki/Installation>`_.
 
 Support
 -------
