@@ -8,6 +8,7 @@ import DualPane from 'src/components/common/DualPane';
 import AlertsTable from './AlertsTable';
 
 import './AlertsPane.css';
+import {showSuccessToast} from "../../app/toast";
 
 class AlertsPane extends Component {
 
@@ -36,6 +37,7 @@ class AlertsPane extends Component {
     event.preventDefault();
     await this.props.addAlert({query_text: this.state.newAlert});
     await this.props.fetchAlerts();
+    showSuccessToast('You have updated your alerts!');
     this.setState({newAlert: ''});
   }
 

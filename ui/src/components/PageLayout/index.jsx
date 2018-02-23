@@ -20,6 +20,7 @@ import CollectionScreen from 'src/components/CollectionScreen';
 import ProfileScreen from 'src/components/ProfileScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
 import PageNavbar from './PageNavbar';
+import CollectionEditScreen from 'src/components/CollectionEdit';
 
 import './PageLayout.css';
 
@@ -63,6 +64,7 @@ class PageLayout extends Component {
             <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
             <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
             <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
+            <Route path="/collections/:collectionId/edit" exact component={CollectionEditScreen}/>
             <Route path="/search" exact component={SearchScreen}/>
             <Route path="/" exact component={HomeScreen}/>
             <Route component={ErrorScreen}/>
