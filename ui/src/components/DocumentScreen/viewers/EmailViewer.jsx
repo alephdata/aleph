@@ -37,7 +37,7 @@ class EmailViewer extends React.Component {
       <React.Fragment>
         <Toolbar document={document}/>
         <div className="ContentPaneOuter">
-          <div className="ContentPaneInner EmailViewer max-width-content-limit" style={{padding: '10px 20px 0 20px'}}>
+          <div className="ContentPaneInner EmailViewer" style={{padding: '10px 20px 0 20px'}}>
           <Tabs id="EmailTabs"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
             <Tab id="email"
               title={

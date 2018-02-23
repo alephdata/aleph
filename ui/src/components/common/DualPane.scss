@@ -75,6 +75,9 @@ $aleph-infobar-width: $aleph-grid-size * 40;
     .ContentPaneInner {
       background: white;
       box-shadow: $pt-elevation-shadow-3;
+      max-width: 1024px;
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 }

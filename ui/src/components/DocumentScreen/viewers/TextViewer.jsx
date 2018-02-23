@@ -11,7 +11,7 @@ class TextViewer extends React.Component {
       <React.Fragment>
         <Toolbar document={document}/>
         <div className="ContentPaneOuter">
-          <div className="ContentPaneInner TextViewer max-width-content-limit">
+          <div className="ContentPaneInner TextViewer">
             <pre>{document.text}</pre>
           </div>
         </div>

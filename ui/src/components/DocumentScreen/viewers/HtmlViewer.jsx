@@ -12,7 +12,7 @@ class HtmlViewer extends Component {
       <React.Fragment>
         <Toolbar document={document}/>
         <div className="ContentPaneOuter">
-          <div className="ContentPaneInner HtmlViewer max-width-content-limit">
+          <div className="ContentPaneInner HtmlViewer">
             <span dangerouslySetInnerHTML={{__html: document.html}} />
           </div>
         </div>
