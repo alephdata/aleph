@@ -51,6 +51,10 @@ const messages = defineMessages({
     id: 'search.facets.facet.author',
     defaultMessage: 'Authors',
   },
+  clear_filter: {
+    id: 'search.facets.clear_filter',
+    defaultMessage: 'Clear this filter',
+  },
 })
 
 class SearchFacet extends Component {
@@ -156,7 +160,7 @@ class SearchFacet extends Component {
           {isActive && (
             <Button onClick={this.onClear}
               className="clearButton pt-minimal pt-small"
-              title="Clear this filter" icon="disable" />
+              title={intl.formatMessage(messages.clear_filter)} icon="disable" />
           )}
           {(isFetchingValues || isExpandingValues) && (
             <Spinner className="pt-small spinner" />

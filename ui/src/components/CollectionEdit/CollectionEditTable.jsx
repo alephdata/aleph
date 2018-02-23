@@ -1,10 +1,17 @@
 import React, {Component} from 'react';
 import {NonIdealState} from '@blueprintjs/core';
-import {FormattedMessage} from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import {Button} from '@blueprintjs/core';
 
 import './CollectionEditTable.css';
 import CollectionEditRow from "./CollectionEditRow";
+
+const messages = defineMessages({
+  no_permissions: {
+    id: 'collection.edit.no_permissions',
+    defaultMessage: 'There are no permissions',
+  },
+});
 
 class CollectionEditTable extends Component {
 
@@ -29,11 +36,11 @@ class CollectionEditTable extends Component {
   }
 
   render() {
-    const {permissions} = this.props;
+    const { permissions, intl } = this.props;
     const hasAlerts = !(permissions.results !== undefined && permissions.results.length === 0);
 
     if (!hasAlerts || permissions.results === undefined) {
-      return <NonIdealState visual="" title="There are no permissions"/>
+      return <NonIdealState visual="" title={intl.formatMessage(messages.no_permissions)}/>
     }
 
     return (
@@ -93,4 +100,4 @@ class CollectionEditTable extends Component {
   }
 }
 
-export default CollectionEditTable;
+export default injectIntl(CollectionEditTable);
