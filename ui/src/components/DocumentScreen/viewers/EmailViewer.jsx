@@ -37,92 +37,89 @@ class EmailViewer extends React.Component {
       <React.Fragment>
         <Toolbar document={document}/>
         <div className="ContentPaneOuter">
-          <div className="ContentPaneInner EmailViewer" style={{padding: '10px 20px 0 20px'}}>
-          <Tabs id="EmailTabs"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
-            <Tab id="email"
-              title={
-                <React.Fragment>
-                   <span className="pt-icon-standard pt-icon-envelope"/> <FormattedMessage id="document.email.body" defaultMessage="Email Message"/>
-                </React.Fragment>
-              }
-              panel={
-                <React.Fragment>
-                  <table style={{margin: '0 -20px'}}>
-                      <tbody>
-                          {headers.date && (
-                            <tr>
-                              <th><FormattedMessage id="email.date" defaultMessage="Date"/></th>
-                              <td>{headers.date}</td>
-                            </tr>
-                          )}
-                          {headers.from && (
-                            <tr>
-                              <th><FormattedMessage id="email.from" defaultMessage="From"/></th>
-                              <td>{headers.from}</td>
-                            </tr>
-                          )}
-                          <tr>
-                            <th><FormattedMessage id="email.subject" defaultMessage="Subject"/></th>
-                            <td>{headers.subject}</td>
-                          </tr>
-                          {headers.to && (
-                            <tr>
-                              <th><FormattedMessage id="email.to" defaultMessage="Recipient"/></th>
-                              <td>{headers.to}</td>
-                            </tr>
-                          )}
-                          {headers.cc && (
-                            <tr>
-                              <th><FormattedMessage id="email.cc" defaultMessage="CC"/></th>
-                              <td>{headers.cc}</td>
-                            </tr>
-                          )}
-                          {headers.bcc && (
-                            <tr>
-                              <th><FormattedMessage id="email.bcc" defaultMessage="BCC"/></th>
-                              <td>{headers.bcc}</td>
-                            </tr>
-                          )}
-                          {!!document.children && (
-                            <tr>
-                              <th><FormattedMessage id="email.attachment" defaultMessage="Attachments"/></th>
-                              <td>
-                                <a href="#children" onClick={() => {this.setState({activeTabId: 'attachments'})}}>
-                                  <span className="pt-icon-standard pt-icon-paperclip"/>
-                                  {' '}
-                                  <FormattedMessage id="email.attachment.count"
-                                                    defaultMessage="{count} attached files"
-                                                    values={{
-                                                      count: document.children
-                                                    }} />
-                                </a>
-                              </td>
-                            </tr>
-                          )}
-                      </tbody>
-                  </table>
-                  <pre style={{padding: '10px 20px 20px 20px'}}>{document.text}</pre>
-                </React.Fragment>
-              } 
-            />
-            {!!document.children && (
-              <Tab id="attachments"
+          <div className="ContentPaneInner EmailViewer">
+            <div className="EmailHeader">
+              <table className="pt-html-table">
+                <tbody>
+                  {headers.date && (
+                    <tr>
+                      <th><FormattedMessage id="email.date" defaultMessage="Date"/></th>
+                      <td>{headers.date}</td>
+                    </tr>
+                  )}
+                  {headers.from && (
+                    <tr>
+                      <th><FormattedMessage id="email.from" defaultMessage="From"/></th>
+                      <td>{headers.from}</td>
+                    </tr>
+                  )}
+                  <tr>
+                    <th><FormattedMessage id="email.subject" defaultMessage="Subject"/></th>
+                    <td>{headers.subject}</td>
+                  </tr>
+                  {headers.to && (
+                    <tr>
+                      <th><FormattedMessage id="email.to" defaultMessage="Recipient"/></th>
+                      <td>{headers.to}</td>
+                    </tr>
+                  )}
+                  {headers.cc && (
+                    <tr>
+                      <th><FormattedMessage id="email.cc" defaultMessage="CC"/></th>
+                      <td>{headers.cc}</td>
+                    </tr>
+                  )}
+                  {headers.bcc && (
+                    <tr>
+                      <th><FormattedMessage id="email.bcc" defaultMessage="BCC"/></th>
+                      <td>{headers.bcc}</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <Tabs id="EmailTabs"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+              <Tab id="email"
                 title={
                   <React.Fragment>
-                     <span className="pt-icon-standard pt-icon-paperclip"/> <FormattedMessage id="document.email.attachments" defaultMessage="Attachments"/>
+                    <span className="pt-icon-standard pt-icon-envelope"/>
+                    {' '}
+                    <FormattedMessage id="document.email.body" defaultMessage="Message"/>
                   </React.Fragment>
                 }
                 panel={
-                  <div style={{margin: '0 -20px'}}>
-                    <SearchContext context={context} aspects={aspects}>{searchContext => (
-                      <div>
-                        <SearchResult {...searchContext} />
-                      </div>
-                    )}</SearchContext>
+                  <pre>{document.text}</pre>
+                } 
+              />
+              <Tab id="attachments"
+                disabled={!document.children}
+                title={
+                  <React.Fragment>
+                    <span className="pt-icon-standard pt-icon-paperclip"/>
+                    {' '}
+                    {!!document.children && (
+                      <React.Fragment>
+                        <FormattedMessage id="document.email.attachments" defaultMessage="Attachments"/>
+                        <span className="pt-tag pt-round pt-intent-primary">{document.children}</span>
+                      </React.Fragment>
+                    )}
+                    {!document.children && (
+                      <FormattedMessage id="document.email.no_attachments" defaultMessage="No Attachments"/>
+                    )}
+                  </React.Fragment>
+                }
+                panel={
+                  <div className="EmailAttachments">
+                    {!!document.children && (
+                      <SearchContext context={context} aspects={aspects}>{searchContext => (
+                        <div>
+                          <SearchResult {...searchContext} />
+                        </div>
+                      )}</SearchContext>
+                    )}
                   </div>
                 } 
               />
-            )}
            </Tabs>
           </div>
         </div>
