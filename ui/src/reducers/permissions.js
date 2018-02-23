@@ -1,5 +1,4 @@
 import { createReducer } from 'redux-act';
-import { set, update } from 'lodash/fp';
 
 import { fetchCollectionPermissions, updateCollectionPermissions } from 'src/actions';
 
