@@ -4,21 +4,30 @@
 .EmailViewer {
   margin-bottom: $aleph-grid-size * 2;
 
-  table {
-    @extend .pt-html-table;
-
-    th {
-      width: 10%;
-      margin-left: $aleph-grid-size;
-    }
-
+  .EmailHeader table {
+    width: 100%;
     th, td {
+      box-shadow: none !important;
       border-bottom: 1px solid $aleph-border-color;
-    }
-
-    tbody tr:first-child td {
+    } 
+  }
+  
+  .EmailAttachments table {
+    tbody tr:first-child {
       // Remove border above first row.
       box-shadow: none;
     }
+  }
+  
+  .pt-tabs {
+    margin: ($aleph-grid-size/2) $aleph-grid-size*2;
+  }
+  
+  pre {
+    padding: 0 0  $aleph-grid-size 0;
+  }
+  
+  .EmailAttachments {
+    margin: 0 -($aleph-grid-size * 2)
   }
 }
