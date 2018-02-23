@@ -1,17 +1,23 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router';
-import {injectIntl} from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import {logout} from 'src/actions/sessionActions';
-import messages from 'src/content/messages';
 import {showSuccessToast} from 'src/components/common/Toast';
+
+const messages = defineMessages({
+  success: {
+    id: 'logout.success',
+    defaultMessage: 'Logout successful',
+  },
+});
 
 class LogoutScreen extends Component {
   componentWillMount() {
     const {logout, history, intl} = this.props;
     logout();
-    showSuccessToast(intl.formatMessage(messages.status.logout_success));
+    showSuccessToast(intl.formatMessage(messages.success));
     history.push('/');
   }
 

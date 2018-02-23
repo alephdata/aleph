@@ -1,14 +1,24 @@
 import React, {Component} from 'react';
-import {injectIntl} from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import {connect} from 'react-redux'
 import {Redirect} from 'react-router';
 import queryString from 'query-string';
 import {NonIdealState} from '@blueprintjs/core';
 
-import messages from 'src/content/messages';
 import {loginWithPassword, loginWithToken} from 'src/actions/sessionActions';
 import OAuthLogin from './OAuthLogin';
 import {PasswordAuthLogin} from './PasswordAuth';
+
+const messages = defineMessages({
+  not_available_title: {
+    id: 'login.not_available_title',
+    defaultMessage: 'Login is disabled',
+  },
+  not_available_desc: {
+    id: 'login.not_available_desc',
+    defaultMessage: 'There is no login provider configured for this app',
+  }
+});
 
 class LoginScreen extends Component {
   onLogin(data) {
@@ -41,8 +51,8 @@ class LoginScreen extends Component {
 
         {!hasLogin &&
           <NonIdealState visual="log-in"
-            title={intl.formatMessage(messages.login.not_available.title)}
-            description={intl.formatMessage(messages.login.not_available.desc)}/>}
+            title={intl.formatMessage(messages.not_available_title)}
+            description={intl.formatMessage(messages.not_available_desc)}/>}
       </section>
   }
 }

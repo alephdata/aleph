@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Button} from '@blueprintjs/core';
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {connect} from 'react-redux';
 
 import {fetchAlerts, addAlert, deleteAlert} from 'src/actions';
@@ -9,6 +9,17 @@ import AlertsTable from './AlertsTable';
 
 import './AlertsPane.css';
 import {showSuccessToast} from "../../app/toast";
+
+const messages = defineMessages({
+  add_placeholder: {
+    id: 'alerts.add_placeholder',
+    defaultMessage: 'Subscribe to notifications',
+  },
+  update_success: {
+    id: 'alerts.update_success',
+    defaultMessage: 'You have updated your alerts!',
+  },
+});
 
 class AlertsPane extends Component {
 
@@ -34,10 +45,11 @@ class AlertsPane extends Component {
   }
 
   async onAddAlert(event) {
+    const { intl } = this.props;
     event.preventDefault();
     await this.props.addAlert({query_text: this.state.newAlert});
     await this.props.fetchAlerts();
-    showSuccessToast('You have updated your alerts!');
+    showSuccessToast(intl.formatMessage(messages.update_success));
     this.setState({newAlert: ''});
   }
 
@@ -57,10 +69,7 @@ class AlertsPane extends Component {
         <form onSubmit={this.onAddAlert} className="addTopicForm">
           <input
             className="pt-input addTopicInput"
-            placeholder={intl.formatMessage({
-              id: "alerts.add.placeholder",
-              defaultMessage: "Subscribe to notifications"
-            })}
+            placeholder={intl.formatMessage(messages.add_placeholder)}
             type="text"
             dir="auto"
             autoComplete="off"

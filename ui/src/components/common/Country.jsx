@@ -38,7 +38,7 @@ class List extends Component {
           … (
           <FormattedNumber value={codes.length} />
           &nbsp;
-          <FormattedMessage id="Country.total" defaultMessage="total" />
+          <FormattedMessage id="country.total" defaultMessage="total" />
           )
         </i>
       );

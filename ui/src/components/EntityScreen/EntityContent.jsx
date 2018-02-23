@@ -62,7 +62,7 @@ class EntityContent extends Component {
                 ))}
                 <li>
                   <span className="key">
-                    <FormattedMessage id="entity.updated" defaultMessage="Last updated"/>
+                    <FormattedMessage id="entity.last_updated" defaultMessage="Last updated"/>
                   </span>
                   <span className="value">
                     <Date value={entity.updated_at} />

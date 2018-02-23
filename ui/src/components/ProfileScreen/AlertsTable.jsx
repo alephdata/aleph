@@ -1,8 +1,15 @@
 import React, {Component} from 'react';
 import {NonIdealState} from '@blueprintjs/core';
-import {FormattedMessage} from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import {withRouter} from 'react-router';
 import queryString from 'query-string';
+
+const messages = defineMessages({
+  no_alerts: {
+    id: 'alerts.no_alerts',
+    defaultMessage: 'There are no alerts',
+  },
+});
 
 class AlertsTable extends Component {
 
@@ -28,12 +35,12 @@ class AlertsTable extends Component {
   }
 
   render() {
-    const { alerts } = this.props;
+    const { alerts, intl } = this.props;
 
     if (alerts.results === undefined || alerts.results.length === 0) {
       return (
         <div>
-          <NonIdealState visual="" title="There are no alerts"/>
+          <NonIdealState visual="" title={intl.formatMessage(messages.no_alerts)}/>
         </div>
       );
     }
@@ -78,4 +85,4 @@ class AlertsTable extends Component {
   }
 }
 
-export default withRouter(AlertsTable);
+export default withRouter(injectIntl(AlertsTable));

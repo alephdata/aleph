@@ -29,7 +29,7 @@ class EntityInfoTags extends React.Component {
         <React.Fragment>
           <p className="pt-text-muted">
             <FormattedMessage 
-              id="entity.tags.empty.description"
+              id="entity.info.tags.empty_description"
               defaultMessage="There are no known related tags."/>
           </p>
         </React.Fragment>

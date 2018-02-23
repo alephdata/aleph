@@ -2,10 +2,21 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {MenuItem, Classes} from '@blueprintjs/core'
 import {MultiSelect} from "@blueprintjs/select";
-import {injectIntl} from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import Country from 'src/components/common/Country';
 import Language from 'src/components/common/Language';
+
+const messages = defineMessages({
+  add: {
+    id: 'named.multiselect.add',
+    defaultMessage: 'Add new item!'
+  },
+  no_results: {
+    id: 'named.multiselect.no.results',
+    defaultMessage: 'No results.',
+  },
+});
 
 class NamedMultiSelect extends Component {
   constructor(props) {
@@ -114,16 +125,10 @@ class NamedMultiSelect extends Component {
 
     return (
       <MultiSelect
-        initialContent={<MenuItem disabled={true} text={intl.formatMessage({
-          id: 'named.multiselect.add',
-          defaultMessage: 'Add new item!'
-        })}/>}
+        initialContent={<MenuItem disabled={true} text={intl.formatMessage(messages.add)}/>}
         className='multiple_select_input'
         itemPredicate={this.handleChange.bind(this)}
-        noResults={<MenuItem disabled={true} text={intl.formatMessage({
-          id: 'named.multiselect.no.results',
-          defaultMessage: "No results."
-        })}/>}
+        noResults={<MenuItem disabled={true} text={intl.formatMessage(messages.no_results)}/>}
         inputProps={{onChange: this.handleChange}}
         items={list}
         itemRenderer={this.itemRenderer}

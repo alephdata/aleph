@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { NonIdealState } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import { fetchDocument } from 'src/actions';
 import Screen from 'src/components/common/Screen';
@@ -11,6 +12,13 @@ import DualPane from 'src/components/common/DualPane';
 import Entity from 'src/components/EntityScreen/Entity';
 import DocumentInfo from './DocumentInfo';
 import DocumentContent from './DocumentContent';
+
+const messages = defineMessages({
+  not_found: {
+    id: 'document.not_found',
+    defaultMessage: 'Document not found',
+  },
+});
 
 class DocumentScreen extends Component {
   componentDidMount() {
@@ -26,13 +34,13 @@ class DocumentScreen extends Component {
   }
 
   render() {
-    const { document, location } = this.props;
+    const { document, location, intl } = this.props;
     if (document === undefined || document.isFetching) {
       return <ScreenLoading />;
     }
     if (document.error) {
       return (
-        <NonIdealState visual="error" title="Document not found" />
+        <NonIdealState visual="error" title={intl.formatMessage(messages.not_found)} />
       );
     }
     return (
@@ -67,4 +75,4 @@ const mapStateToProps = (state, ownProps) => {
   return { documentId, document };
 }
 
-export default connect(mapStateToProps, { fetchDocument })(DocumentScreen);
+export default connect(mapStateToProps, { fetchDocument })(injectIntl(DocumentScreen));

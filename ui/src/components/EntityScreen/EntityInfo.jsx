@@ -51,7 +51,7 @@ class EntityInfo extends React.Component {
               <Tab id="overview" 
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-info-sign"/> <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
+                    <span className="pt-icon-standard pt-icon-info-sign"/> <FormattedMessage id="entity.info.overview" defaultMessage="Overview"/>
                   </React.Fragment>
                 }
                 panel={

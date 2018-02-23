@@ -27,7 +27,7 @@ class CollectionInfo extends Component {
         <ul className='info-sheet'>
           <li>
             <span className="key">
-              <FormattedMessage id="collection.category" defaultMessage="Category"/>
+              <FormattedMessage id="collection.info.category" defaultMessage="Category"/>
             </span>
             <span className="value">
               <Category collection={collection}/>
@@ -36,7 +36,7 @@ class CollectionInfo extends Component {
           {collection.creator && (
             <li>
               <span className="key">
-                <FormattedMessage id="collection.creator" defaultMessage="Manager"/>
+                <FormattedMessage id="collection.info.creator" defaultMessage="Manager"/>
               </span>
               <span className="value">
                 <Role.Label role={collection.creator}/>
@@ -46,7 +46,7 @@ class CollectionInfo extends Component {
           {collection.languages && !!collection.languages.length && (
             <li>
               <span className="key">
-                <FormattedMessage id="collection.languages" defaultMessage="Language"/>
+                <FormattedMessage id="collection.info.languages" defaultMessage="Language"/>
               </span>
               <span className="value">
                 <Language.List codes={collection.languages}/>
@@ -56,7 +56,7 @@ class CollectionInfo extends Component {
           {collection.countries && !!collection.countries.length && (
             <li>
               <span className="key">
-                <FormattedMessage id="collection.countries" defaultMessage="Country"/>
+                <FormattedMessage id="collection.info.countries" defaultMessage="Country"/>
               </span>
               <span className="value">
                 <Country.List codes={collection.countries} truncate={10}/>
@@ -65,7 +65,7 @@ class CollectionInfo extends Component {
           )}
           <li>
             <span className="key">
-              <FormattedMessage id="collection.updated_at" defaultMessage="Last updated"/>
+              <FormattedMessage id="collection.info.updated_at" defaultMessage="Last updated"/>
             </span>
             <span className="value">
               <Date value={collection.updated_at}/>

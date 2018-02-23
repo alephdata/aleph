@@ -1,14 +1,24 @@
 import React, {Component} from 'react';
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import {Callout, Intent, NonIdealState} from '@blueprintjs/core';
 
-import messages from 'src/content/messages';
 import {endpoint} from 'src/app/api';
 import {xhrErrorToast} from './xhrToast';
 import OAuthLogin from './OAuthLogin';
 import {PasswordAuthSignup} from './PasswordAuth';
+
+const messages = defineMessages({
+  not_available_title: {
+    id: 'signup.not_available_title',
+    defaultMessage: 'Registration is disabled'
+  },
+  not_available_desc: {
+    id: 'signup.not_available_desc',
+    defaultMessage: 'Please contact the site admin to get an account'
+  }
+});
 
 class SignupScreen extends Component {
   state = {submitted: false};
@@ -35,8 +45,8 @@ class SignupScreen extends Component {
     if (!metadata.auth.registration_uri) {
       return (
         <NonIdealState visual=""
-          title={intl.formatMessage(messages.signup.not_available.title)}
-          description={intl.formatMessage(messages.signup.not_available.desc)}/>
+          title={intl.formatMessage(messages.not_available_title)}
+          description={intl.formatMessage(messages.not_available_desc)}/>
       );
     }
 

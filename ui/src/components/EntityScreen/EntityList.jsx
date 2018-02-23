@@ -1,10 +1,31 @@
 import React, { Component } from 'react';
-import { injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 
-import messages from 'src/content/messages';
 import EntityListItem from './EntityListItem';
 import SortableTH from 'src/components/common/SortableTH';
 
+const messages = defineMessages({
+  column_name: {
+    id: 'entity.column.names',
+    defaultMessage: 'Names',
+  },
+  column_collection_id: {
+    id: 'entity.column.collection_id',
+    defaultMessage: 'Collections',
+  },
+  column_schema: {
+    id: 'entity.column.schema',
+    defaultMessage: 'Type',
+  },
+  column_countries: {
+    id: 'entity.column.countries',
+    defaultMessage: 'Countries',
+  },
+  column_dates: {
+    id: 'entity.column.dates',
+    defaultMessage: 'Date',
+  },
+});
 
 class EntityList extends Component {
   sortColumn(field) {
@@ -38,8 +59,7 @@ class EntityList extends Component {
                     sorted={sortedField === field && (desc ? 'desc' : 'asc')}
                     onClick={() => this.sortColumn(field)}
                     {...otherProps}>
-          {/* <FormattedMessage id={`entity.list.${field}`} /> */}
-          {intl.formatMessage(messages.entity.list[field])}
+          {intl.formatMessage(messages[`column_${field}`])}
         </SortableTH>
       );
     }
