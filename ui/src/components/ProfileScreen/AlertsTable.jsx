@@ -4,8 +4,6 @@ import {FormattedMessage} from 'react-intl';
 import {withRouter} from 'react-router';
 import queryString from 'query-string';
 
-import './AlertsTable.css';
-
 class AlertsTable extends Component {
 
   constructor(props) {
@@ -41,32 +39,33 @@ class AlertsTable extends Component {
     }
 
     return (
-      <table className="AlertsTable data-table">
+
+      <table className="AlertsTable settings-table">
         <thead>
           <tr>
             <th className='topic'>
               <FormattedMessage id="alerts.topic" defaultMessage="Topic"/>
             </th>
-            <th>
+            <th className='other-topics'>
               <FormattedMessage id="alerts.search" defaultMessage="Search"/>
             </th>
-            <th>
+            <th className='other-topics'>
               <FormattedMessage id="alerts.delete" defaultMessage="Delete"/>
             </th>
           </tr>
         </thead>
         <tbody className='table_body_alerts'>
           {alerts.results.map((item) => (
-            <tr key={item.id} className='table_row'>
-              <td className='table_item_alert header_topic'>
+            <tr key={item.id} className='table-row'>
+              <td className='first-row header_topic'>
                 {item.label}
               </td>
-              <td className='buttonCell'
+              <td className='other-rows'
                   onClick={() => this.onSearch(item.label)}>
                 <i className="fa fa-search" aria-hidden="true"/>
               </td>
               <td
-                className='buttonCell'
+                className='other-rows'
                 onClick={() => this.deleteAlert(item.id)}
               >
                 <i className="fa fa-trash-o" aria-hidden="true"/>

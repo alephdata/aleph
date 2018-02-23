@@ -1,0 +1,16 @@
+@import "src/app/variables.scss";
+
+.CollectionEditContent {
+  .addRoleForm {
+    display: flex;
+    padding: ($aleph-grid-size * 2) $aleph-grid-size;
+
+    .addRoleButton {
+      width: 8em;
+    }
+
+    .multiple_select_input {
+      width: 100%;
+    }
+  }
+}

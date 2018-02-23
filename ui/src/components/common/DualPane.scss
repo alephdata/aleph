@@ -41,6 +41,10 @@ $aleph-infobar-width: $aleph-grid-size * 40;
     border-bottom: 1px solid $aleph-border-color;
     overflow-wrap: break-word;
   }
+
+  .editButton {
+    width: 8em;
+  }
 }
 
 

@@ -55,6 +55,46 @@ table.data-table {
   }
 }
 
+table.settings-table {
+  @extend .data-table;
+
+  border-bottom: 1px solid $table-border-color;
+
+  th.topic {
+    width: 80%;
+  }
+
+  th {
+    height: $aleph-font-size * 1.9;
+    color: $table-header-color;
+    font-size: $aleph-grid-size * 1.5;
+    padding-bottom: $aleph-grid-size * 2.7;
+  }
+
+  .other-topics {
+    width: 10%;
+    text-align: center;
+  }
+
+  td.first-row {
+    width: 80%;
+  }
+
+  td.other-rows {
+    width: 10%;
+    text-align: center;
+  }
+
+  tbody {
+    padding-left: $aleph-grid-size;
+  }
+
+  tr {
+    width: 100%;
+    display: inline-flex;
+  }
+}
+
 // Two-column 'tables' as normally used in InfoPane
 ul.info-sheet,
 ul.info-rank {

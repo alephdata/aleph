@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 import { set, update } from 'lodash/fp';
 
-import { fetchCollection, fetchCollections } from 'src/actions';
+import { fetchCollection, fetchCollections, updateCollection } from 'src/actions';
 import { mapById } from './util';
 
 const initialState = {};
@@ -19,5 +19,8 @@ export default createReducer({
     set(id, { error: error.message })(state),
 
   [fetchCollection.COMPLETE]: (state, { id, data }) =>
+    set(id, data)(state),
+
+  [updateCollection.COMPLETE]: (state, { id, data }) =>
     set(id, data)(state),
 }, initialState);

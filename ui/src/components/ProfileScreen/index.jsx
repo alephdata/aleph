@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import { NonIdealState } from '@blueprintjs/core';
+import {injectIntl} from "react-intl";
 
 import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
@@ -10,7 +12,14 @@ import ProfileInfo from './ProfileInfo';
 class ProfileScreen extends Component {
 
   render() {
-    const { app } = this.props;
+    const { intl, app, session } = this.props;
+
+    if(!session.loggedIn) {
+      return <NonIdealState
+        visual="error"
+        title={intl.formatMessage({id: 'profile.settings.error', defaultMessage: "You cannot access profile settings."})}/>
+    }
+
     return (
       <Screen>
         <Breadcrumbs collection={{label: 'Settings', links: {ui: app.ui_uri + 'settings'}}} />
@@ -25,8 +34,9 @@ class ProfileScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    app: state.metadata.app
+    app: state.metadata.app,
+    session: state.session
   };
 };
 
-export default connect(mapStateToProps)(ProfileScreen);
+export default connect(mapStateToProps)(injectIntl(ProfileScreen));

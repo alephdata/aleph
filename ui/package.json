@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@blueprintjs/select": "^2.0.0-beta.3",
     "@blueprintjs/core": "^2.0.0-rc.1",
     "axios": "^0.16.2",
     "bourbon": "^4.3.2",
@@ -15,6 +16,7 @@
     "node-sass-package-importer": "^3.0.4",
     "normalizr": "^3.2.2",
     "query-string": "^4.3.4",
+    "react-addons-css-transition-group": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-helmet": "^5.2.0",

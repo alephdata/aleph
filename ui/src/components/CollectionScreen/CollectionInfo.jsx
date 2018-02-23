@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {FormattedMessage} from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
 import Category from 'src/components/common/Category';
@@ -8,11 +8,15 @@ import Language from 'src/components/common/Language';
 import Country from 'src/components/common/Country';
 import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
+import {Button} from '@blueprintjs/core';
+import {Link} from 'react-router-dom';
 
 
 class CollectionInfo extends Component {
+
   render() {
-    const { collection } = this.props;
+    const {collection} = this.props;
+    const link = collection.id + '/edit';
 
     return (
       <DualPane.InfoPane>
@@ -26,36 +30,36 @@ class CollectionInfo extends Component {
               <FormattedMessage id="collection.category" defaultMessage="Category"/>
             </span>
             <span className="value">
-              <Category collection={collection} />
+              <Category collection={collection}/>
             </span>
           </li>
-          { collection.creator && (
+          {collection.creator && (
             <li>
               <span className="key">
                 <FormattedMessage id="collection.creator" defaultMessage="Manager"/>
               </span>
               <span className="value">
-                <Role.Label role={collection.creator} />
+                <Role.Label role={collection.creator}/>
               </span>
             </li>
           )}
-          { collection.languages && !!collection.languages.length && (
+          {collection.languages && !!collection.languages.length && (
             <li>
               <span className="key">
                 <FormattedMessage id="collection.languages" defaultMessage="Language"/>
               </span>
               <span className="value">
-                <Language.List codes={collection.languages} />
+                <Language.List codes={collection.languages}/>
               </span>
             </li>
           )}
-          { collection.countries && !!collection.countries.length && (
+          {collection.countries && !!collection.countries.length && (
             <li>
               <span className="key">
                 <FormattedMessage id="collection.countries" defaultMessage="Country"/>
               </span>
               <span className="value">
-                <Country.List codes={collection.countries} truncate={10} />
+                <Country.List codes={collection.countries} truncate={10}/>
               </span>
             </li>
           )}
@@ -64,10 +68,16 @@ class CollectionInfo extends Component {
               <FormattedMessage id="collection.updated_at" defaultMessage="Last updated"/>
             </span>
             <span className="value">
-              <Date value={collection.updated_at} />
+              <Date value={collection.updated_at}/>
             </span>
           </li>
         </ul>
+        {collection.writeable && <Link to={link}>
+            <Button className="editButton">
+              <FormattedMessage id="collection.info.edit"
+                                defaultMessage="Edit"/>
+            </Button>
+          </Link>}
       </DualPane.InfoPane>
     );
   }
@@ -75,6 +85,6 @@ class CollectionInfo extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {};
-}
+};
 
 export default connect(mapStateToProps)(CollectionInfo);
