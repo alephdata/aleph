@@ -46,11 +46,7 @@ class DocumentMetadata extends Component {
               <FormattedMessage id="document.parent" defaultMessage="Folder"/>
             </span>
             <span className="value">
-              <Entity.Link
-                icon iconClass='icon_margin_right'
-                entity={document.parent}
-                short
-              />
+              <Entity.Link icon entity={document.parent} />
             </span>
           </li>
         )}
