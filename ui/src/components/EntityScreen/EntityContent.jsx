@@ -34,7 +34,7 @@ class EntityContent extends Component {
     return (
       <DualPane.ContentPane style={{padding: 0}}>
         <div className="ContentPaneOuter">
-          <div className="ContentPaneInner EntityContent max-width-content-limit" style={{padding: 0}}>
+          <div className="ContentPaneInner EntityContent">
       
             <div className="EntitySummary">
               <span className="pt-text-muted">

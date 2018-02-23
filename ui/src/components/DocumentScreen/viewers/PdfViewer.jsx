@@ -70,7 +70,7 @@ class PdfViewer extends Component {
       <React.Fragment>
         <Toolbar document={document} pageNumber={pageNumber} pageTotal={numPages}/>
         <div className="ContentPaneOuter">
-          <div className="ContentPaneInner PdfViewer max-width-content-limit">
+          <div className="ContentPaneInner PdfViewer">
             <div className="document_pdf" ref={(ref) => this.pdfElement = ref}>
               <Document renderAnnotations={true}
                         file={url}
