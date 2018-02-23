@@ -29,7 +29,6 @@ Here's some key features:
 * Entity watchlist importers for `OpenSanctions <http://opensanctions.org/>`_.
 * OAuth authorization and access control on a per-source and per-watchlist
   basis.
-* Excel export for search result sets.
 
 Documentation
 -------------

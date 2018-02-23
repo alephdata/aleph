@@ -51,12 +51,6 @@ functools32 >= 3.2
 subprocess32
 backports.csv
 
-# Generating documentation
-sphinx==1.4.9
-sphinx-autoapi==0.4.0
-sphinx_rtd_theme==0.1.9
-recommonmark==0.4.0
-
 # Duplicative for speed of docker builds
 lxml
 parsedatetime>=2.1
