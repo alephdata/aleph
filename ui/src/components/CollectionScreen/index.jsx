@@ -64,4 +64,4 @@ const mapStateToProps = (state, ownProps) => {
   return { collectionId, collection };
 };
 
-export default connect(mapStateToProps, { fetchCollection })(CollectionScreen);
+export default connect(mapStateToProps, { fetchCollection })(injectIntl(CollectionScreen));
