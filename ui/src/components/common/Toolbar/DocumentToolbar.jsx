@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 
 import getPath from 'src/util/getPath';
@@ -11,16 +11,27 @@ import PagingButtons from './PagingButtons'
 
 import './DocumentToolbar.css';
 
+const messages = defineMessages({
+  placeholder_file_search: {
+    id: 'document.placeholder_file_search',
+    defaultMessage: 'Search document',
+  },
+  placeholder_folder_search: {
+    id: 'document.placeholder_folder_search',
+    defaultMessage: 'Search folder',
+  },
+});
+
 class DocumentToolbar extends React.Component {
   constructor(props) {
     super(props);
     
-    let searchPlaceholder = this.props.intl.formatMessage({id: "document.file.search", defaultMessage: "Search document" });
+    let searchPlaceholder = this.props.intl.formatMessage(messages.placeholder_file_search);
     let searchEnabled = false;
     
     // If is a folder (but NOT an email!)
     if (this.props.document && this.props.document.children !== undefined && this.props.document.children > 0 && this.props.document.schema !== 'Email') {
-      searchPlaceholder = this.props.intl.formatMessage({id: "document.folder.search", defaultMessage: "Search folder" })
+      searchPlaceholder = this.props.intl.formatMessage(messages.placeholder_folder_search);
       // @FIXME Search disabled old search now broken and needs to be refactored
       //searchEnabled = true
     }

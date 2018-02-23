@@ -72,10 +72,19 @@ class PageLayout extends Component {
         </main>
         <footer className="PageLayout-footer">
           <p>
-            <strong>ℵ</strong> aleph Mk II · 
-            {' '}
-            <i className="fa fa-fw fa-github" />
-            <a href="https://github.com/alephdata/aleph">open source</a>
+            <strong>ℵ</strong> aleph Mk II
+            <span className="pt-text-muted"> • </span>
+            <span>
+              <a href="https://github.com/alephdata/aleph"><i className="fa fa-fw fa-github" /></a>
+              {' '}
+              <a href="https://github.com/alephdata/aleph">Source Code</a>
+            </span>
+            <span className="pt-text-muted"> • </span>
+            <span>
+              <a href="https://github.com/alephdata/aleph/wiki/User-manual"><i className="fa fa-fw fa-book" /></a>
+              {' '}
+              <a href="https://github.com/alephdata/aleph/wiki/User-manual">Documentation</a>
+            </span>
           </p>
         </footer>
       </div>

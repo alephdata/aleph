@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {FormattedMessage, injectIntl} from 'react-intl';
+import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import SuggestInput from 'src/components/common/SuggestInput';
 
 import DualPane from 'src/components/common/DualPane';
@@ -8,6 +8,21 @@ import NamedMultiSelect from 'src/components/common/NamedMultiSelect';
 import {fetchRoles} from "../../actions";
 
 import './CollectionEditInfo.css';
+
+const messages = defineMessages({
+  placeholder_label: {
+    id: 'collection.edit.info.placeholder_label',
+    defaultMessage: 'Enter name of collection',
+  },
+  placeholder_summary: {
+    id: 'collection.edit.info.placeholder_summary',
+    defaultMessage: 'Enter summary of collection',
+  },
+  placeholder_import_key: {
+    id: 'collection.edit.info.placeholder_import_key',
+    defaultMessage: 'Import key',
+  },
+});
 
 class CollectionEditInfo extends Component {
   constructor(props) {
@@ -153,10 +168,7 @@ class CollectionEditInfo extends Component {
             <div className="pt-form-content">
               <input className="pt-input input_class"
                      type="text"
-                     placeholder={intl.formatMessage({
-                       id: "collection.edit.info.placeholder.label",
-                       defaultMessage: "Enter name of collection"
-                     })}
+                     placeholder={intl.formatMessage(messages.placeholder_label)}
                      dir="auto"
                      onChange={this.onChangeLabel}
                      value={label}/>
@@ -172,10 +184,7 @@ class CollectionEditInfo extends Component {
             <div className="pt-form-content">
               <input className="pt-input input_class"
                      type="text"
-                     placeholder={intl.formatMessage({
-                       id: "collection.edit.info.placeholder.import.key",
-                       defaultMessage: "Import key"
-                     })}
+                     placeholder={intl.formatMessage(messages.placeholder_import_key)}
                      dir="auto"
                      disabled
                      value={collection === undefined ? '' : collection.foreign_id === undefined ? '' : collection.foreign_id}
@@ -191,10 +200,7 @@ class CollectionEditInfo extends Component {
             </div>
             <div className="pt-form-content">
               <textarea className="pt-input input_class"
-                     placeholder={intl.formatMessage({
-                       id: "collection.edit.info.placeholder.summart",
-                       defaultMessage: "Enter summary of collection"
-                     })}
+                     placeholder={intl.formatMessage(messages.placeholder_summary)}
                      dir="auto"
                         rows={5}
                      onChange={this.onChangeSummary}
@@ -234,7 +240,7 @@ class CollectionEditInfo extends Component {
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
               <label className="pt-label label_class">
-                <FormattedMessage id="collection.edit.info.countries" defaultMessage="Languages"/>
+                <FormattedMessage id="collection.edit.info.languages" defaultMessage="Languages"/>
               </label>
             </div>
             <NamedMultiSelect

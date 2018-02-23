@@ -84,7 +84,7 @@ class EmailViewer extends React.Component {
                   <React.Fragment>
                     <span className="pt-icon-standard pt-icon-envelope"/>
                     {' '}
-                    <FormattedMessage id="document.email.body" defaultMessage="Message"/>
+                    <FormattedMessage id="email.body" defaultMessage="Message"/>
                   </React.Fragment>
                 }
                 panel={
@@ -99,12 +99,12 @@ class EmailViewer extends React.Component {
                     {' '}
                     {!!document.children && (
                       <React.Fragment>
-                        <FormattedMessage id="document.email.attachments" defaultMessage="Attachments"/>
+                        <FormattedMessage id="email.attachments" defaultMessage="Attachments"/>
                         <span className="pt-tag pt-round pt-intent-primary">{document.children}</span>
                       </React.Fragment>
                     )}
                     {!document.children && (
-                      <FormattedMessage id="document.email.no_attachments" defaultMessage="No Attachments"/>
+                      <FormattedMessage id="email.no_attachments" defaultMessage="No Attachments"/>
                     )}
                   </React.Fragment>
                 }

@@ -1,13 +1,20 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
-import {injectIntl, FormattedMessage, FormattedNumber} from 'react-intl';
+import {defineMessages, injectIntl, FormattedMessage, FormattedNumber} from 'react-intl';
 
 import Screen from '../../components/common/Screen';
 import CollectionBrowser from '../../components/CollectionScreen/CollectionBrowser';
 import { fetchStatistics } from '../../actions/index';
 
 import './style.css';
+
+const messages = defineMessages({
+  search_placeholder: {
+    id: 'home.search_placeholder',
+    defaultMessage: 'Search companies, people and documents.',
+  },
+});
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -59,7 +66,7 @@ class HomeScreen extends Component {
               <span className="pt-icon pt-icon-search search_span"/>
               <input className="pt-input search_input"
                   type="search"
-                  placeholder={intl.formatMessage({id: 'home.search.placeholder', defaultMessage: "Search companies, people and documents."})}
+                  placeholder={intl.formatMessage(messages.search_placeholder)}
                   dir="auto"
                   onChange={this.onChange}
                   value={this.state.value}/>

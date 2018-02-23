@@ -12,7 +12,7 @@ const CheckboxList = ({ items, selectedItems, onItemClick, children }) => (
   <ul className="CheckboxList">
     {items && items.length === 0 && (
       <li className="faint">
-        <FormattedMessage id="search.filter.no.items"
+        <FormattedMessage id="search.facets.no_items"
                           defaultMessage="No options"/>
       </li>
     )}
