@@ -1,0 +1,477 @@
+Return-Path: <kevin.kuehnert@jusos.de>
+Received: from mail1.spd.de (mail1.spd.de [195.50.146.133]) by mx-ha.gmx.net
+ (mxgmx116 [212.227.17.5]) with ESMTPS (Nemesis) id 1MicYF-1fDoV10QLP-00fA5G for
+ <mailme43297@gmx.net>; Fri, 9 Feb 2018 15:43:20 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by mail1.spd.de (Postfix) with ESMTP id 81058A05A4
+	for <mailme43297@gmx.net>; Fri,  9 Feb 2018 15:43:19 +0100 (CET)
+Received: from mail1.spd.de ([127.0.0.1])
+	by localhost (mail1.spd.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id WHWtM73PAmNt for <mailme43297@gmx.net>;
+	Fri,  9 Feb 2018 15:43:19 +0100 (CET)
+Received: from rz-ex2.spd.de (unknown [10.0.0.165])
+	by mail1.spd.de (Postfix) with ESMTP
+	for <mailme43297@gmx.net>; Fri,  9 Feb 2018 15:43:19 +0100 (CET)
+Received: from pv-ex2.spd.de ([10.0.0.160]) by rz-ex2.spd.de with Microsoft SMTPSVC(6.0.3790.4675);
+	 Fri, 9 Feb 2018 15:43:19 +0100
+Subject: Fwd: Re: Your Campaign
+References: <KSaAPNrQc1jCbHOWa7EvqFpPvtBrU2NGAQGxsp6ef1AHWlix2C1IQpXl_oC323d8Y-USwZZH4wMWT_lGim2hRMVpyp2obkgNYrTeGoebyBU=@protonmail.com>
+To: mailme43297@gmx.net
+From: =?UTF-8?Q?Kevin_K=c3=bchnert?= <kevin.kuehnert@jusos.de>
+X-Forwarded-Message-Id: <KSaAPNrQc1jCbHOWa7EvqFpPvtBrU2NGAQGxsp6ef1AHWlix2C1IQpXl_oC323d8Y-USwZZH4wMWT_lGim2hRMVpyp2obkgNYrTeGoebyBU=@protonmail.com>
+Message-ID: <b54f8968-0af1-95be-e570-652b4410c040@pv-ex2.spd.de>
+Date: Fri, 9 Feb 2018 15:43:19 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
+MIME-Version: 1.0
+In-Reply-To: <KSaAPNrQc1jCbHOWa7EvqFpPvtBrU2NGAQGxsp6ef1AHWlix2C1IQpXl_oC323d8Y-USwZZH4wMWT_lGim2hRMVpyp2obkgNYrTeGoebyBU=@protonmail.com>
+Content-Type: multipart/alternative;
+ boundary="------------7C70EBD0972648D49C17B09E"
+Envelope-To: <mailme43297@gmx.net>
+X-GMX-Antispam: 0 (Mail was not recognized as spam); Detail=V3;
+X-UI-Filterresults: notjunk:1;V01:K0:Brzx8qfkhHM=:+3eZIJDUOe2HniWcouycOaXlFp
+ Z1I3c2MB3tXnC7gwCA7tjqfQ4tTctuLdN63qWo9pcUjn2LeHo3JvM3W6Je7LDeSLZ4D8bLl0f
+ lF5d8V8gmHA568gWH+IFQLKPeVBLrdDYyv4MZQNZMbWYnKdK80i9iN97Li7ekW1fk81WE9ZO3
+ oeUbRYLU/2beXN/KXXJ7T8KZbXtVVB/10ztg1cFbmL1g1k5CcWXsLO3SaewaFmH2/ZYcZ8ydK
+ ntyrutXNyPz2nYe0fX2O9by2Hha4Z4mVjj9Atu49nLVXEo+8U6CAqJ4lxbvBX2EX3WWFam/uc
+ dVcFcWyWs7uO1cYsKBfR8T+oHh435DAkY1DG1eUmeMjriix754G37fxY4O3mtxy/hj/fMgeVo
+ /QFEM4uFojgi1RxZ6X0jpG0S2hFDViDBwjEpliYIecv3DOw7oRTWLYtwBFMLUcusnIf9VUgpM
+ 2fyYMzYmW5gCRgvboVKCHoo+n0GPubF+hILUIo1j1/AbCJalN0MekqrX385+JE1L2CnyGGo5k
+ Uys9yco5lM80ymHhqVwt2Pv/JPkJCuHijga2QkgFTe6zXTMMudQzF1GTdIYV+o72YexSH9rJN
+ 67QbxALVAtjBrhOdJoUAN5UlKJ3/xCTwRnhbqudbtpWGr1elBXg1qQMkQySq4cOp58oJ4ZoUv
+ oq2uoZPeNC/rePq2ubzVOZm1b+JmqdBjUpbsNjxIjqc5ouXkPlmodsGFdsj5bXZbx4Ll3xloP
+ jriVtNMPqriupoAXrmr4lsfp0QiAcjnjWiLPuQ9LaSqeM3n++NQAbhseVhrGO5Dcbi0GTmYGx
+ +rcKKdBRifP9qaCRJyIv09dD07BtJ/QXouMYovPpSXzmYNd1zGy4p768MdEpD6+RwiNMUNPm7
+ ehTFvKEcDpOa/npLQMG2YgcD6aVNwr7akqqr6NwaydeQIK0iSLu5l2oKtR9MJW0dwsMnJ53sG
+ CrpgyZv3PyCVcEziQynFhEt1uevrXzmJBSigZL0jUX0NaiQIg2vxJFMnn5k2IP3GpYYWKycH0
+ m96ipxCYCp0uVUYibxOdvmgBGSfUzNmNT7P93BXpdtL45bjnFui4WdTD9VK2PZXlxN9ojeA5M
+ 7qpax4ffljNsr/B2s1SWLrip1BZHDtUxkbQu8bHdfhM78XDtFrKR2uDVbNoXEwssZXtCvSX5q
+ as3mu9Vhd3mfHFxkdV0aUwHQ0Gaj0LbFqtIIlLPB3wqZJwaoOWZaeovZBZ8ZImOmJFHhRiSqB
+ g4yNIT7i5zSHMVmMDkfOtuFwUx3lcy7L2WtimNAMgyCXr6huM1ab+lfKanajoBUw9NXb44RtP
+ d5DEHqcQ5jCZrtYoL2QlN6ExT7I8ynryoVK+DE/LOXtfDtOKG8yIRXQ605KJw8cXvSDnQSdps
+ knLTuH+uYy6cfI8bIDywX1OSDEzcq370NvreRCdTjF+YFMWPkRB+MOXx1kdS0u/vhBV8MB2un
+ oNQiFV9PI73WJ/q2+2Dcd8ZV7sCoB+dXh1KtmptBJ8Vie1slgmoPx6N9UYWYsL3cNPhjCzShL
+ K6VNBwDMg+XL1sA/TIu6oEoaMxfBq0pIjS2pY2FKk133SeULfV9IL3BD4ze32zzj2Bz/tfN6e
+ IS3LlhIQ2kC9+qpzYeVeo1IXH7Ymd49R
+
+This is a multi-part message in MIME format.
+--------------7C70EBD0972648D49C17B09E
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+
+
+
+
+-------- Weitergeleitete Nachricht --------
+Betreff: 	Re: Your Campaign
+Datum: 	Fri, 09 Feb 2018 03:31:00 -0500
+Von: 	j3445 <j3445@protonmail.com>
+Antwort an: 	j3445 <j3445@protonmail.com>
+An: 	Kevin K=C3=BChnert <kevin.kuehnert@jusos.de>
+
+
+
+Looking forward
+
+-------- Original Message --------
+On 8 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2018 =D0=B3. 7:49 =D0=B4=D0=
+=BD=D1=8F, Kevin K=C3=BChnert <kevin.kuehnert@jusos.de>=20
+wrote:
+
+> Hi Juri,
+>
+> sounds good! I=E2=80=99ll collect the data for the Facebook audience an=
+d send=20
+> all the information to you soon, so you can launch the campaign=20
+> immediately. As long as it looks like the Jusos paid for the ads, I=E2=80=
+=99m=20
+> not worried.
+>
+> Kev
+>
+> Am 08.02.2018 um 15:01 schrieb j3445:
+>> I would design the campaign to primarily address the older members of=20
+>> the party. For this it would be useful if you or J could still=20
+>> provide me with appropriate data material. We've already roughly=20
+>> calculated the campaign and expect to pay around 4,000 to 5,000=20
+>> euros, including the social bots. Do not worry, we'll pay from=20
+>> Frankfurt. The payment will not be traceable.
+>>
+>> -------- Original Message --------
+>> On 8 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2018 =D0=B3. 3:41 =D0=B4=
+=D0=BD=D1=8F, Kevin K=C3=BChnert=20
+>> <kevin.kuehnert@jusos.de> wrote:
+>>
+>>> Thanks for the information, very interesting. I=E2=80=99m opposed to =
+going=20
+>>> directly against Martin=E2=80=99s twitter account which would be just=
+ "too=20
+>>> much".
+>>> But in the light of yesterday=E2=80=99s decisions (coalition agreemen=
+t) I=20
+>>> think a targeted advertising campaign on Facebook would be=20
+>>> appreciated by the Nogroko-Movement. How much money would you invest=20
+>>> in these ads (ball park)? As for social bots: We could indeed use a=20
+>>> mighty push for the #nogroko-hashtag on Twitter.
+>>>
+>>> Kev
+>>>
+>>> Am 07.02.2018 um 19:30 schrieb j3445:
+>>>> I would advise against meeting in person, but I will be in Hamburg=20
+>>>> in 2 weeks (02/22-24) if you still want to meet. Until then, I=20
+>>>> still have a lot of work here in St. Petersburg. Basically, we can=20
+>>>> offer you everything: An opinion campaign with bots against Schulz,=20
+>>>> social bots on Twitter and Facebook or even a targeted Facebook=20
+>>>> advertising campaign. Only condition: you stay with your line until=20
+>>>> March.
+>>>>
+>>>> Juri
+>>>>
+>>>> -------- Original Message --------
+>>>> On 7 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2018 =D0=B3. 6:34 =D0=
+=B4=D0=BD=D1=8F, Kevin K=C3=BChnert=20
+>>>> <kevin.kuehnert@jusos.de> wrote:
+>>>>
+>>>>> Dear Juri,
+>>>>>
+>>>>> perfect, that=E2=80=99s a relief. So... what can you offer me? Btw:=
+ Is there
+>>>>> another (safer) way to communicate? Maybe we could meet up in Berli=
+n?
+>>>>>
+>>>>> Sincerely
+>>>>> Kevin
+>>>>>
+>>>>> Am 07.02.2018 um 06:30 schrieb j3445:
+>>>>>> Mio Mio Mate Ginger
+>>>>>>
+>>>>>> -------- Original Message --------
+>>>>>> On 6 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2018 =D0=B3. 11:22=
+ =D0=B4=D0=BD=D1=8F, Kevin K=C3=BChnert=20
+>>>>>> <kevin.kuehnert@jusos.de> wrote:
+>>>>>>
+>>>>>>> Hi Juri,
+>>>>>>>
+>>>>>>> thanks for your mail. J. already told me to expect a mail from yo=
+u.
+>>>>>>> But just to be sure: Could you name me J=E2=80=99s favorite bever=
+age?
+>>>>>>> As you can certainly understand, this is a delicate matter...
+>>>>>>>
+>>>>>>> Kind regards
+>>>>>>> Kevin
+>>>>>>>
+>>>>>>> Am 06.02.2018 um 16:55 schrieb j3445:
+>>>>>>>> Dear Kevin,
+>>>>>>>>
+>>>>>>>> i=E2=80=99m Juri and met J. a few weeks ago in Munster, he gave =
+me your=20
+>>>>>>>> e-mail address, because that would be safer to connect. As I've=20
+>>>>>>>> already explained to J., i=E2=80=99d like to talk to you about=20
+>>>>>>>> supporting your NoGroko-Campaign. J. let shine through that=20
+>>>>>>>> you'd be generally interested?
+>>>>>>>>
+>>>>>>>> Greetings, Juri
+>>>>>>
+>>>>
+>>
+
+
+--------------7C70EBD0972648D49C17B09E
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+  <head>
+
+    <meta http-equiv=3D"content-type" content=3D"text/html; charset=3Dutf=
+-8">
+  </head>
+  <body text=3D"#000000" bgcolor=3D"#FFFFFF">
+    <p>
+      <meta http-equiv=3D"content-type" content=3D"text/html; charset=3Du=
+tf-8">
+    </p>
+    <p><br>
+    </p>
+    <div class=3D"moz-forward-container"><br>
+      <br>
+      -------- Weitergeleitete Nachricht --------
+      <table class=3D"moz-email-headers-table" cellspacing=3D"0"
+        cellpadding=3D"0" border=3D"0">
+        <tbody>
+          <tr>
+            <th nowrap=3D"nowrap" valign=3D"BASELINE" align=3D"RIGHT">Bet=
+reff:
+            </th>
+            <td>Re: Your Campaign</td>
+          </tr>
+          <tr>
+            <th nowrap=3D"nowrap" valign=3D"BASELINE" align=3D"RIGHT">Dat=
+um: </th>
+            <td>Fri, 09 Feb 2018 03:31:00 -0500</td>
+          </tr>
+          <tr>
+            <th nowrap=3D"nowrap" valign=3D"BASELINE" align=3D"RIGHT">Von=
+: </th>
+            <td>j3445 <a class=3D"moz-txt-link-rfc2396E"
+                href=3D"mailto:j3445@protonmail.com">&lt;j3445@protonmail=
+.com&gt;</a></td>
+          </tr>
+          <tr>
+            <th nowrap=3D"nowrap" valign=3D"BASELINE" align=3D"RIGHT">Ant=
+wort
+              an: </th>
+            <td>j3445 <a class=3D"moz-txt-link-rfc2396E"
+                href=3D"mailto:j3445@protonmail.com">&lt;j3445@protonmail=
+.com&gt;</a></td>
+          </tr>
+          <tr>
+            <th nowrap=3D"nowrap" valign=3D"BASELINE" align=3D"RIGHT">An:=
+ </th>
+            <td>Kevin K=C3=BChnert <a class=3D"moz-txt-link-rfc2396E"
+                href=3D"mailto:kevin.kuehnert@jusos.de">&lt;kevin.kuehner=
+t@jusos.de&gt;</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <br>
+      <div>Looking forward</div>
+      <div><br>
+      </div>
+      <div>-------- Original Message --------<br>
+      </div>
+      <div> On 8 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2018 =D0=B3. =
+7:49 =D0=B4=D0=BD=D1=8F, Kevin K=C3=BChnert <a
+          class=3D"moz-txt-link-rfc2396E"
+          href=3D"mailto:kevin.kuehnert@jusos.de">&lt;kevin.kuehnert@juso=
+s.de&gt;</a>
+        wrote:<br>
+      </div>
+      <div> <br>
+      </div>
+      <blockquote class=3D"protonmail_quote" type=3D"cite">
+        <div>Hi Juri,<br>
+        </div>
+        <div> <br>
+        </div>
+        <div> sounds good! I=E2=80=99ll collect the data for the Facebook
+          audience and send all the information to you soon, so you can
+          launch the campaign immediately. As long as it looks like the
+          Jusos paid for the ads, I=E2=80=99m not worried.<br>
+        </div>
+        <div> <br>
+        </div>
+        <div> Kev<br>
+        </div>
+        <div><br>
+        </div>
+        <div class=3D"moz-cite-prefix">Am 08.02.2018 um 15:01 schrieb
+          j3445:<br>
+        </div>
+        <blockquote type=3D"cite">
+          <div>I would design the campaign to primarily address the
+            older members of the party. For this it would be useful if
+            you or J could still provide me with appropriate data
+            material. We've already roughly calculated the campaign and
+            expect to pay around 4,000 to 5,000 euros, including the
+            social bots. Do not worry, we'll pay from Frankfurt. The
+            payment will not be traceable.<br>
+          </div>
+          <div><br>
+          </div>
+          <div>-------- Original Message --------<br>
+          </div>
+          <div>On 8 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2018 =D0=B3=
+. 3:41 =D0=B4=D0=BD=D1=8F, Kevin K=C3=BChnert <a
+              href=3D"mailto:kevin.kuehnert@jusos.de"
+              class=3D"moz-txt-link-rfc2396E" moz-do-not-send=3D"true">&l=
+t;kevin.kuehnert@jusos.de&gt;</a>
+            wrote:<br>
+          </div>
+          <div><br>
+          </div>
+          <blockquote type=3D"cite" class=3D"protonmail_quote">
+            <div>Thanks for the information, very interesting. I=E2=80=99=
+m
+              opposed to going directly against Martin=E2=80=99s twitter =
+account
+              which would be just "too much".<br>
+            </div>
+            <div>But in the light of yesterday=E2=80=99s decisions (coali=
+tion
+              agreement) I think a targeted advertising campaign on
+              Facebook would be appreciated by the Nogroko-Movement. How
+              much money would you invest in these ads (ball park)? As
+              for social bots: We could indeed use a mighty push for the
+              #nogroko-hashtag on Twitter.<br>
+            </div>
+            <div><br>
+            </div>
+            <div>Kev<br>
+            </div>
+            <div><br>
+            </div>
+            <div class=3D"moz-cite-prefix">Am 07.02.2018 um 19:30 schrieb
+              j3445:<br>
+            </div>
+            <blockquote type=3D"cite">
+              <div>I would advise against meeting in person, but I will
+                be in Hamburg in 2 weeks (02/22-24) if you still want to
+                meet. Until then, I still have a lot of work here in St.
+                Petersburg. Basically, we can offer you everything: An
+                opinion campaign with bots against Schulz, social bots
+                on Twitter and Facebook or even a targeted Facebook
+                advertising campaign. Only condition: you stay with your
+                line until March.<br>
+              </div>
+              <div><br>
+              </div>
+              <div>Juri<br>
+              </div>
+              <div><br>
+              </div>
+              <div>-------- Original Message --------<br>
+              </div>
+              <div>On 7 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2018 =D0=
+=B3. 6:34 =D0=B4=D0=BD=D1=8F, Kevin K=C3=BChnert <a
+                  class=3D"moz-txt-link-rfc2396E"
+                  href=3D"mailto:kevin.kuehnert@jusos.de"
+                  moz-do-not-send=3D"true">&lt;kevin.kuehnert@jusos.de&gt=
+;</a>
+                wrote:<br>
+              </div>
+              <div><br>
+              </div>
+              <blockquote class=3D"protonmail_quote" type=3D"cite">
+                <div>Dear Juri,<br>
+                </div>
+                <div><br>
+                </div>
+                <div>perfect, that=E2=80=99s a relief. So... what can you=
+ offer
+                  me? Btw: Is there<br>
+                </div>
+                <div>another (safer) way to communicate? Maybe we could
+                  meet up in Berlin?<br>
+                </div>
+                <div><br>
+                </div>
+                <div>Sincerely<br>
+                </div>
+                <div>Kevin<br>
+                </div>
+                <div><br>
+                </div>
+                <div class=3D"moz-cite-prefix">Am 07.02.2018 um 06:30
+                  schrieb j3445:<br>
+                </div>
+                <blockquote type=3D"cite">
+                  <div>Mio Mio Mate Ginger<br>
+                  </div>
+                  <div><br>
+                  </div>
+                  <div>-------- Original Message --------<br>
+                  </div>
+                  <div>On 6 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 20=
+18 =D0=B3. 11:22 =D0=B4=D0=BD=D1=8F, Kevin K=C3=BChnert <a
+                      href=3D"mailto:kevin.kuehnert@jusos.de"
+                      class=3D"moz-txt-link-rfc2396E"
+                      moz-do-not-send=3D"true">&lt;kevin.kuehnert@jusos.d=
+e&gt;</a>
+                    wrote:<br>
+                  </div>
+                  <div><br>
+                  </div>
+                  <blockquote class=3D"protonmail_quote" type=3D"cite">
+                    <div>Hi Juri,<br>
+                    </div>
+                    <div><br>
+                    </div>
+                    <div>thanks for your mail. J. already told me to
+                      expect a mail from you.<br>
+                    </div>
+                    <div>But just to be sure: Could you name me J=E2=80=99=
+s=C2=A0
+                      favorite beverage?<br>
+                    </div>
+                    <div>As you can certainly understand, this is a
+                      delicate matter...<br>
+                    </div>
+                    <div><br>
+                    </div>
+                    <div>Kind regards<br>
+                    </div>
+                    <div>Kevin<br>
+                    </div>
+                    <div><br>
+                    </div>
+                    <div class=3D"moz-cite-prefix">Am 06.02.2018 um 16:55
+                      schrieb j3445:<br>
+                    </div>
+                    <blockquote type=3D"cite">
+                      <div><span class=3D"highlight"
+                          style=3D"background-color:transparent"><span
+                            class=3D"colour" style=3D"color:rgb(0, 0, 0)"=
+><span
+                              class=3D"font" style=3D"font-family:Arial">=
+<span
+                                class=3D"size" style=3D"font-size:11pt">D=
+ear
+                                Kevin,</span></span></span></span><br>
+                      </div>
+                      <div><br>
+                      </div>
+                      <div><span class=3D"highlight"
+                          style=3D"background-color:transparent"><span
+                            class=3D"colour" style=3D"color:rgb(0, 0, 0)"=
+><span
+                              class=3D"font" style=3D"font-family:Arial">=
+<span
+                                class=3D"size" style=3D"font-size:11pt">i=
+=E2=80=99m
+                                Juri and met J. a few weeks ago in
+                                Munster, he gave me your e-mail address,
+                                because that would be safer to connect.
+                                As I've already explained to J., i=E2=80=99=
+d
+                                like to talk to you about supporting
+                                your NoGroko-Campaign. J. let shine
+                                through that you'd be generally
+                                interested?</span></span></span></span><b=
+r>
+                      </div>
+                      <div><br>
+                      </div>
+                      <div><span class=3D"highlight"
+                          style=3D"background-color:transparent"><span
+                            class=3D"colour" style=3D"color:rgb(0, 0, 0)"=
+><span
+                              class=3D"font" style=3D"font-family:Arial">=
+<span
+                                class=3D"size" style=3D"font-size:11pt">G=
+reetings,
+                                Juri</span></span></span></span><br>
+                      </div>
+                    </blockquote>
+                  </blockquote>
+                  <div><br>
+                  </div>
+                </blockquote>
+              </blockquote>
+              <div><br>
+              </div>
+            </blockquote>
+          </blockquote>
+          <div><br>
+          </div>
+        </blockquote>
+      </blockquote>
+      <div><br>
+      </div>
+    </div>
+  </body>
+</html>
+
+--------------7C70EBD0972648D49C17B09E--
