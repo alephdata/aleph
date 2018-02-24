@@ -30,11 +30,7 @@ class CollectionEditInfo extends Component {
 
     this.state = {
       countries: [],
-      languages: [],
       listCountries: [],
-      listCategories: [],
-      category: {},
-      categoryName: '',
       contactName: '',
       listRoles: [],
       contact: {},
@@ -44,8 +40,6 @@ class CollectionEditInfo extends Component {
     this.onSelectCountry = this.onSelectCountry.bind(this);
     this.onTyping = this.onTyping.bind(this);
     this.onSelectRole = this.onSelectRole.bind(this);
-    this.onSelectCategory = this.onSelectCategory.bind(this);
-    this.onFilterCategories = this.onFilterCategories.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
   }
 
@@ -65,10 +59,8 @@ class CollectionEditInfo extends Component {
     this.setState({
       countries: nextProps.collection.countries,
       listCountries: this.structureList(nextProps.countries),
-      listCategories: this.structureList(nextProps.categories),
       listRoles: nextProps.roles === undefined ? [] : nextProps.roles.results === undefined ? [] : nextProps.roles.results,
       collection: nextProps.collection,
-      categoryName: nextProps.collection === undefined ? undefined : nextProps.collection.category === undefined ? undefined : nextProps.collection.category,
       contactName: nextProps.collection === undefined ? undefined : nextProps.collection.creator === undefined ? nextProps.session.role.name : nextProps.collection.creator.name
     });
   }
@@ -97,26 +89,6 @@ class CollectionEditInfo extends Component {
     this.props.onChangeCollection(collection);
   }
 
-  onSelectCategory(category) {
-    this.setState({category: category});
-    let collection = this.state.collection;
-    collection.category = category.index;
-    this.setState({collection});
-    this.props.onChangeCollection(collection);
-  }
-
-  onFilterCategories(query) {
-    let categoryList = [];
-    let categories = this.structureList(this.props.categories);
-    for(let i = 0; i < categories.length; i++) {
-      if(categories[i].name.toLowerCase().includes(query)) {
-        categoryList.push(categories[i]);
-      }
-    }
-
-    this.setState({listCategories: categoryList, categoryName: query});
-  }
-
   onFieldChange({target}) {
     const collection = this.props.collection;
     collection[target.id] = target.value;
@@ -126,7 +98,7 @@ class CollectionEditInfo extends Component {
 
   render() {
     const {collection, intl, categories} = this.props;
-    const {listRoles, listCategories, listCountries, countries, categoryName, contactName} = this.state;
+    const {listRoles, listCountries, countries, contactName} = this.state;
 
     return (
       <DualPane.InfoPane className="CollectionEditInfo">
@@ -215,16 +187,18 @@ class CollectionEditInfo extends Component {
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
               <label className="pt-label label_class">
-                <FormattedMessage id="collection.edit.info.categories" defaultMessage="Categories"/>
+                <FormattedMessage id="collection.edit.info.category" defaultMessage="Category"/>
               </label>
             </div>
-            <SuggestInput
-              isCategory={true}
-              defaultValue={categoryName}
-              onSelectItem={this.onSelectCategory}
-              list={listCategories}
-              categories={categories}
-              onTyping={this.onFilterCategories}/>
+            <div class="pt-select pt-fill">
+              <select id="category" onChange={this.onFieldChange}>
+                { Object.keys(categories).map((key) => (
+                  <option key={key} value={key} selected={key === collection.category}>
+                    {categories[key]}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       </DualPane.InfoPane>
