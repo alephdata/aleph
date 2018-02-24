@@ -8,6 +8,7 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import CollectionEditContent from './CollectionEditContent';
 import CollectionEditInfo from './CollectionEditInfo';
+import ScreenLoading from 'src/components/common/ScreenLoading';
 
 import { fetchCollection } from 'src/actions';
 
@@ -38,7 +39,6 @@ class CollectionEditScreen extends Component {
     if(this.props !== nextProps) {
       this.setState({collection: nextProps.collection});
     }
-
   }
 
   onChangeCollection(collection) {
@@ -46,7 +46,11 @@ class CollectionEditScreen extends Component {
   }
 
   render() {
-    const { intl, location, collection, session } = this.props;
+    const { intl, collection } = this.props;
+
+    if (!collection || !collection.id) {
+      return <ScreenLoading />;
+    }
 
     if(!collection.writeable) {
       return <NonIdealState
@@ -56,7 +60,7 @@ class CollectionEditScreen extends Component {
 
     return (
       <Screen>
-        <Breadcrumbs collection={{label: 'Collection Settings', links: {ui: 'http://localhost:8080' + location.pathname}}} />
+        <Breadcrumbs collection={collection} />
         <DualPane>
           <CollectionEditInfo onChangeCollection={this.onChangeCollection} collection={collection}/>
           <CollectionEditContent collection={this.state.collection}/>
@@ -70,7 +74,7 @@ class CollectionEditScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
   const collection = state.collections[collectionId];
-  return { collectionId, collection, app: state.metadata.app, session: state.session };
+  return {collectionId, collection };
 };
 
 export default connect(mapStateToProps, { fetchCollection })(injectIntl(CollectionEditScreen));

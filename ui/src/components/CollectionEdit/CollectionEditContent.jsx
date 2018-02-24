@@ -14,7 +14,7 @@ import './CollectionEditContent.css';
 const messages = defineMessages({
   must_select_user: {
     id: 'collection.edit.must_select_user',
-    defaultMessage: 'You must select user!',
+    defaultMessage: 'You must select a user!',
   },
   user_added: {
     id: 'collection.edit.user_added',
@@ -22,11 +22,11 @@ const messages = defineMessages({
   },
   user_already_added: {
     id: 'collection.edit.user_already_added',
-    defaultMessage: 'You have already added same user!',
+    defaultMessage: 'That user already has access.',
   },
   save_success: {
     id: 'collection.edit.save_success',
-    defaultMessage: 'You have saved collection!',
+    defaultMessage: 'You have saved your changes.',
   },
 });
 

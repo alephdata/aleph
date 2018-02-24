@@ -5,22 +5,22 @@ import SuggestInput from 'src/components/common/SuggestInput';
 
 import DualPane from 'src/components/common/DualPane';
 import NamedMultiSelect from 'src/components/common/NamedMultiSelect';
-import {fetchRoles} from "../../actions";
+import {fetchRoles} from "src/actions";
 
 import './CollectionEditInfo.css';
 
 const messages = defineMessages({
   placeholder_label: {
     id: 'collection.edit.info.placeholder_label',
-    defaultMessage: 'Enter name of collection',
+    defaultMessage: 'A label for this collection',
   },
   placeholder_summary: {
     id: 'collection.edit.info.placeholder_summary',
-    defaultMessage: 'Enter summary of collection',
+    defaultMessage: 'A brief summary of this collection',
   },
   placeholder_import_key: {
     id: 'collection.edit.info.placeholder_import_key',
-    defaultMessage: 'Import key',
+    defaultMessage: 'Import ID',
   },
 });
 
@@ -34,7 +34,6 @@ class CollectionEditInfo extends Component {
       countries: [],
       languages: [],
       listCountries: [],
-      listLanguages: [],
       listCategories: [],
       category: {},
       categoryName: '',
@@ -45,7 +44,6 @@ class CollectionEditInfo extends Component {
     };
 
     this.onSelectCountry = this.onSelectCountry.bind(this);
-    this.onSelectLanguage = this.onSelectLanguage.bind(this);
     this.onTyping = this.onTyping.bind(this);
     this.onSelectRole = this.onSelectRole.bind(this);
     this.onSelectCategory = this.onSelectCategory.bind(this);
@@ -69,8 +67,6 @@ class CollectionEditInfo extends Component {
         summary: nextProps.collection.summary === null ? '' : nextProps.collection.summary,
         countries: nextProps.collection.countries,
         listCountries: this.structureList(nextProps.countries),
-        languages: nextProps.collection.languages,
-        listLanguages: this.structureList(nextProps.languages),
         listCategories: this.structureList(nextProps.categories),
         listRoles: nextProps.roles === undefined ? [] : nextProps.roles.results === undefined ? [] : nextProps.roles.results,
         collection: nextProps.collection,
@@ -112,14 +108,6 @@ class CollectionEditInfo extends Component {
     this.props.onChangeCollection(collection);
   }
 
-  onSelectLanguage(languages) {
-    this.setState({languages: languages.selectedItems, listLanguages: languages.list});
-    let collection = this.state.collection;
-    collection.languages = languages.selectedItems;
-    this.setState({collection});
-    this.props.onChangeCollection(collection);
-  }
-
   onFilterCategories(query) {
     let categoryList = [];
     let categories = this.structureList(this.props.categories);
@@ -150,7 +138,7 @@ class CollectionEditInfo extends Component {
 
   render() {
     const {collection, intl, categories} = this.props;
-    const {label, summary, listRoles, listCategories, listCountries, countries, listLanguages, languages, categoryName, contactName} = this.state;
+    const {label, summary, listRoles, listCategories, listCountries, countries, categoryName, contactName} = this.state;
 
     return (
       <DualPane.InfoPane className="CollectionEditInfo">
@@ -240,19 +228,6 @@ class CollectionEditInfo extends Component {
             <div className='label_icon_group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
               <label className="pt-label label_class">
-                <FormattedMessage id="collection.edit.info.languages" defaultMessage="Languages"/>
-              </label>
-            </div>
-            <NamedMultiSelect
-              onSelectItem={this.onSelectLanguage}
-              list={listLanguages}
-              selectedItems={languages}
-              isCountry={false}/>
-          </div>
-          <div className="pt-form-group label_group">
-            <div className='label_icon_group'>
-              <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label_class">
                 <FormattedMessage id="collection.edit.info.categories" defaultMessage="Categories"/>
               </label>
             </div>
@@ -273,7 +248,6 @@ class CollectionEditInfo extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     countries: state.metadata.countries,
-    languages: state.metadata.languages,
     categories: state.metadata.categories,
     roles: state.role,
     session: state.session,
