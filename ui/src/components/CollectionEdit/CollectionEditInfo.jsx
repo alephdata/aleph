@@ -17,11 +17,7 @@ const messages = defineMessages({
   placeholder_summary: {
     id: 'collection.edit.info.placeholder_summary',
     defaultMessage: 'A brief summary of this collection',
-  },
-  placeholder_import_key: {
-    id: 'collection.edit.info.placeholder_import_key',
-    defaultMessage: 'Import ID',
-  },
+  }
 });
 
 class CollectionEditInfo extends Component {
@@ -130,11 +126,27 @@ class CollectionEditInfo extends Component {
             <div className="pt-form-content">
               <input className="pt-input input_class"
                      type="text"
-                     placeholder={intl.formatMessage(messages.placeholder_import_key)}
                      dir="auto"
                      disabled
                      value={collection.foreign_id || ''}
               />
+            </div>
+          </div>
+          <div className="pt-form-group label_group">
+            <div className='label_icon_group'>
+              <i className="fa fa-id-card" aria-hidden="true"/>
+              <label className="pt-label label_class">
+                <FormattedMessage id="collection.edit.info.category" defaultMessage="Category"/>
+              </label>
+            </div>
+            <div class="pt-select pt-fill">
+              <select id="category" onChange={this.onFieldChange}>
+                { Object.keys(categories).map((key) => (
+                  <option key={key} value={key} selected={key === collection.category}>
+                    {categories[key]}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="pt-form-group label_group">
@@ -182,23 +194,6 @@ class CollectionEditInfo extends Component {
                 list={listCountries}
                 selectedItems={countries}
                 isCountry={true}/>
-          </div>
-          <div className="pt-form-group label_group">
-            <div className='label_icon_group'>
-              <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label_class">
-                <FormattedMessage id="collection.edit.info.category" defaultMessage="Category"/>
-              </label>
-            </div>
-            <div class="pt-select pt-fill">
-              <select id="category" onChange={this.onFieldChange}>
-                { Object.keys(categories).map((key) => (
-                  <option key={key} value={key} selected={key === collection.category}>
-                    {categories[key]}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
         </div>
       </DualPane.InfoPane>
