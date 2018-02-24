@@ -29,8 +29,6 @@ class CollectionEditInfo extends Component {
     super(props);
 
     this.state = {
-      label: '',
-      summary: '',
       countries: [],
       languages: [],
       listCountries: [],
@@ -48,8 +46,7 @@ class CollectionEditInfo extends Component {
     this.onSelectRole = this.onSelectRole.bind(this);
     this.onSelectCategory = this.onSelectCategory.bind(this);
     this.onFilterCategories = this.onFilterCategories.bind(this);
-    this.onChangeLabel = this.onChangeLabel.bind(this);
-    this.onChangeSummary = this.onChangeSummary.bind(this);
+    this.onFieldChange = this.onFieldChange.bind(this);
   }
 
   onSelectRole(role) {
@@ -61,19 +58,19 @@ class CollectionEditInfo extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.collection.isFetching === undefined) {
-      this.setState({
-        label: nextProps.collection.label,
-        summary: nextProps.collection.summary === null ? '' : nextProps.collection.summary,
-        countries: nextProps.collection.countries,
-        listCountries: this.structureList(nextProps.countries),
-        listCategories: this.structureList(nextProps.categories),
-        listRoles: nextProps.roles === undefined ? [] : nextProps.roles.results === undefined ? [] : nextProps.roles.results,
-        collection: nextProps.collection,
-        categoryName: nextProps.collection === undefined ? undefined : nextProps.collection.category === undefined ? undefined : nextProps.collection.category,
-        contactName: nextProps.collection === undefined ? undefined : nextProps.collection.creator === undefined ? nextProps.session.role.name : nextProps.collection.creator.name
-      });
+    if (nextProps.collection.isFetching) {
+      return;
     }
+    
+    this.setState({
+      countries: nextProps.collection.countries,
+      listCountries: this.structureList(nextProps.countries),
+      listCategories: this.structureList(nextProps.categories),
+      listRoles: nextProps.roles === undefined ? [] : nextProps.roles.results === undefined ? [] : nextProps.roles.results,
+      collection: nextProps.collection,
+      categoryName: nextProps.collection === undefined ? undefined : nextProps.collection.category === undefined ? undefined : nextProps.collection.category,
+      contactName: nextProps.collection === undefined ? undefined : nextProps.collection.creator === undefined ? nextProps.session.role.name : nextProps.collection.creator.name
+    });
   }
 
   async onTyping(query) {
@@ -120,31 +117,19 @@ class CollectionEditInfo extends Component {
     this.setState({listCategories: categoryList, categoryName: query});
   }
 
-  onChangeLabel({target}) {
-    this.setState({label: target.value});
-    let collection = this.state.collection;
-    collection.label = target.value;
-    this.setState({collection});
-    this.props.onChangeCollection(collection);
-  }
-
-  onChangeSummary({target}) {
-    this.setState({summary: target.value})
-    let collection = this.state.collection;
-    collection.summary = target.value;
+  onFieldChange({target}) {
+    const collection = this.props.collection;
+    collection[target.id] = target.value;
     this.setState({collection});
     this.props.onChangeCollection(collection);
   }
 
   render() {
     const {collection, intl, categories} = this.props;
-    const {label, summary, listRoles, listCategories, listCountries, countries, categoryName, contactName} = this.state;
+    const {listRoles, listCategories, listCountries, countries, categoryName, contactName} = this.state;
 
     return (
       <DualPane.InfoPane className="CollectionEditInfo">
-        <h1>
-          {collection === undefined ? '' : collection.label}
-        </h1>
         <div>
           <div className="pt-form-group label_group">
             <div className='label_icon_group'>
@@ -154,12 +139,13 @@ class CollectionEditInfo extends Component {
               </label>
             </div>
             <div className="pt-form-content">
-              <input className="pt-input input_class"
+              <input id="label"
+                     className="pt-input input_class"
                      type="text"
                      placeholder={intl.formatMessage(messages.placeholder_label)}
                      dir="auto"
-                     onChange={this.onChangeLabel}
-                     value={label}/>
+                     onChange={this.onFieldChange}
+                     value={collection.label || ''}/>
             </div>
           </div>
           <div className="pt-form-group label_group">
@@ -175,7 +161,7 @@ class CollectionEditInfo extends Component {
                      placeholder={intl.formatMessage(messages.placeholder_import_key)}
                      dir="auto"
                      disabled
-                     value={collection === undefined ? '' : collection.foreign_id === undefined ? '' : collection.foreign_id}
+                     value={collection.foreign_id || ''}
               />
             </div>
           </div>
@@ -187,12 +173,13 @@ class CollectionEditInfo extends Component {
               </label>
             </div>
             <div className="pt-form-content">
-              <textarea className="pt-input input_class"
+              <textarea id="summary"
+                     className="pt-input input_class"
                      placeholder={intl.formatMessage(messages.placeholder_summary)}
                      dir="auto"
                         rows={5}
-                     onChange={this.onChangeSummary}
-                     value={summary}/>
+                     onChange={this.onFieldChange}
+                     value={collection.summary || ''}/>
             </div>
           </div>
           <div className="pt-form-group label_group">

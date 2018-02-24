@@ -66,7 +66,6 @@ class CollectionEditScreen extends Component {
           <CollectionEditContent collection={this.state.collection}/>
         </DualPane>
       </Screen>
-
     );
   }
 }
