@@ -14,7 +14,7 @@ import { fetchCollection } from 'src/actions';
 const messages = defineMessages({
   access_error: {
     id: 'collection.edit.access_error',
-    defaultMessage: 'You cannot access collection editing.',
+    defaultMessage: 'You cannot edit this collection.',
   },
 });
 
@@ -48,7 +48,7 @@ class CollectionEditScreen extends Component {
   render() {
     const { intl, location, collection, session } = this.props;
 
-    if(!session.loggedIn || !collection.writable) {
+    if(!collection.writeable) {
       return <NonIdealState
         visual="error"
         title={intl.formatMessage(messages.access_error)}/>
