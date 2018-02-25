@@ -97,7 +97,6 @@ class Select extends Component {
               popoverProps={{
                 position: Position.BOTTOM_LEFT,
                 className: "RoleSelect",
-                // minimal: true
               }}
               filterable={true}
               resetOnClose={true}

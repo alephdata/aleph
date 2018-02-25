@@ -4,7 +4,7 @@ import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
 import Role from 'src/components/common/Role';
-import NamedMultiSelect from 'src/components/common/NamedMultiSelect';
+import Country from 'src/components/common/Country';
 
 import './CollectionEditInfo.css';
 
@@ -23,15 +23,11 @@ class CollectionEditInfo extends Component {
   constructor(props) {
     super(props);
 
-    const countries = Object.keys(props.countries).map(function(k) {
-      return {index:k, name:props.countries[k]}
-    });
     this.state = {
-      countries: countries,
       collection: props.collection,
     }
 
-    this.onSelectCountry = this.onSelectCountry.bind(this);
+    this.onSelectCountries = this.onSelectCountries.bind(this);
     this.onSelectCreator = this.onSelectCreator.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
   }
@@ -42,16 +38,16 @@ class CollectionEditInfo extends Component {
     });
   }
 
-  onSelectCountry(countries) {
+  onFieldChange({target}) {
     const { collection } = this.props;
-    collection.countries = countries.selectedItems;
+    collection[target.id] = target.value;
     this.setState({collection: collection});
     this.props.onChangeCollection(collection);
   }
 
-  onFieldChange({target}) {
+  onSelectCountries(countries) {
     const { collection } = this.props;
-    collection[target.id] = target.value;
+    collection.countries = countries;
     this.setState({collection: collection});
     this.props.onChangeCollection(collection);
   }
@@ -79,28 +75,12 @@ class CollectionEditInfo extends Component {
             </div>
             <div className="pt-form-content">
               <input id="label"
-                     className="pt-input input_class"
+                     className="pt-input pt-large input_class"
                      type="text"
                      placeholder={intl.formatMessage(messages.placeholder_label)}
                      dir="auto"
                      onChange={this.onFieldChange}
                      value={collection.label || ''}/>
-            </div>
-          </div>
-          <div className="pt-form-group label_group">
-            <div className='api_key_group'>
-              <i className="fa fa-key" aria-hidden="true"/>
-              <label className="pt-label api_key">
-                Import ID
-              </label>
-            </div>
-            <div className="pt-form-content">
-              <input className="pt-input input_class"
-                     type="text"
-                     dir="auto"
-                     disabled
-                     value={collection.foreign_id || ''}
-              />
             </div>
           </div>
           <div className="pt-form-group label_group">
@@ -156,11 +136,25 @@ class CollectionEditInfo extends Component {
                 <FormattedMessage id="collection.edit.info.countries" defaultMessage="Countries"/>
               </label>
             </div>
-            <NamedMultiSelect
-              onSelectItem={this.onSelectCountry}
-              list={this.state.countries}
-              selectedItems={collection.countries}
-              isCountry={true}/>
+            <Country.MultiSelect
+              onChange={this.onSelectCountries}
+              codes={collection.countries} />
+          </div>
+          <div className="pt-form-group label_group">
+            <div className='label_icon_group'>
+              <i className="fa fa-key" aria-hidden="true"/>
+              <label className="pt-label label_class">
+                Import ID
+              </label>
+            </div>
+            <div className="pt-form-content">
+              <input className="pt-input input_class"
+                     type="text"
+                     dir="auto"
+                     disabled
+                     value={collection.foreign_id || ''}
+              />
+            </div>
           </div>
         </div>
       </DualPane.InfoPane>
@@ -169,10 +163,7 @@ class CollectionEditInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    countries: state.metadata.countries,
-    categories: state.metadata.categories
-  }
+  return { categories: state.metadata.categories }
 };
 
 export default connect(mapStateToProps)(injectIntl(CollectionEditInfo));
