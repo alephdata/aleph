@@ -11,7 +11,7 @@ import './Role.css';
 const messages = defineMessages({
   label: {
     id: 'role.select.user',
-    defaultMessage: 'Select a user',
+    defaultMessage: 'Choose a user',
   },
   suggest_initial: {
     id: 'role.begin.typing',
@@ -19,7 +19,7 @@ const messages = defineMessages({
   },
   no_results: {
     id: 'role.no.results',
-    defaultMessage: 'No such user',
+    defaultMessage: 'No match, keep typing',
   }
 });
 

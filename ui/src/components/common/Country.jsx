@@ -131,8 +131,6 @@ class MultiSelect extends Component {
     const { intl, countries } = this.props;
     const items = Object.keys(countries);
 
-    console.log(codes);
-
     return (
       <BlueprintMultiSelect
         initialContent={
