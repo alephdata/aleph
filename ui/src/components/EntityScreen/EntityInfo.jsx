@@ -47,11 +47,12 @@ class EntityInfo extends React.Component {
           </h1>
         </div>
         <div className="PaneContent">
-          <Tabs id="EntityInfoTabs"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+          <Tabs id="EntityInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
               <Tab id="overview" 
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-info-sign"/> <FormattedMessage id="entity.info.overview" defaultMessage="Overview"/>
+                    <span className="pt-icon-standard pt-icon-info-sign"/>
+                    <FormattedMessage id="entity.info.overview" defaultMessage="Overview"/>
                   </React.Fragment>
                 }
                 panel={
