@@ -37,7 +37,7 @@ class EntityInfo extends React.Component {
     const { references, entity } = this.props;
   
     return (
-      <DualPane.InfoPane className="EntityInfo">
+      <DualPane.InfoPane className="EntityInfo withHeading">
         <div className="PaneHeading">
           <span className="pt-text-muted">
             <Schema.Label schema={entity.schema} icon={true} />

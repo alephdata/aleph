@@ -19,65 +19,72 @@ class CollectionInfo extends Component {
     const link = collection.id + '/edit';
 
     return (
-      <DualPane.InfoPane>
-        <h1>
-          {collection.label}
-        </h1>
-        <p>{collection.summary}</p>
-        <ul className='info-sheet'>
-          <li>
-            <span className="key">
-              <FormattedMessage id="collection.info.category" defaultMessage="Category"/>
-            </span>
-            <span className="value">
-              <Category collection={collection}/>
-            </span>
-          </li>
-          {collection.creator && (
+      <DualPane.InfoPane className="CollectionInfo withHeading">
+        <div className="PaneHeading">
+          <span className="pt-text-muted">
+            <FormattedMessage id="collection.info.heading" defaultMessage="Collection"/>
+          </span>
+          <h1>
+            {collection.label}
+          </h1>
+        </div>
+        <div className="PaneContent">        
+          <p>{collection.summary}</p>
+          <ul className='info-sheet'>
             <li>
               <span className="key">
-                <FormattedMessage id="collection.info.creator" defaultMessage="Manager"/>
+                <FormattedMessage id="collection.info.category" defaultMessage="Category"/>
               </span>
               <span className="value">
-                <Role.Label role={collection.creator}/>
+                <Category collection={collection}/>
               </span>
             </li>
-          )}
-          {collection.languages && !!collection.languages.length && (
+            {collection.creator && (
+              <li>
+                <span className="key">
+                  <FormattedMessage id="collection.info.creator" defaultMessage="Manager"/>
+                </span>
+                <span className="value">
+                  <Role.Label role={collection.creator}/>
+                </span>
+              </li>
+            )}
+            {collection.languages && !!collection.languages.length && (
+              <li>
+                <span className="key">
+                  <FormattedMessage id="collection.info.languages" defaultMessage="Language"/>
+                </span>
+                <span className="value">
+                  <Language.List codes={collection.languages}/>
+                </span>
+              </li>
+            )}
+            {collection.countries && !!collection.countries.length && (
+              <li>
+                <span className="key">
+                  <FormattedMessage id="collection.info.countries" defaultMessage="Country"/>
+                </span>
+                <span className="value">
+                  <Country.List codes={collection.countries} truncate={10}/>
+                </span>
+              </li>
+            )}
             <li>
               <span className="key">
-                <FormattedMessage id="collection.info.languages" defaultMessage="Language"/>
+                <FormattedMessage id="collection.info.updated_at" defaultMessage="Last updated"/>
               </span>
               <span className="value">
-                <Language.List codes={collection.languages}/>
+                <Date value={collection.updated_at}/>
               </span>
             </li>
-          )}
-          {collection.countries && !!collection.countries.length && (
-            <li>
-              <span className="key">
-                <FormattedMessage id="collection.info.countries" defaultMessage="Country"/>
-              </span>
-              <span className="value">
-                <Country.List codes={collection.countries} truncate={10}/>
-              </span>
-            </li>
-          )}
-          <li>
-            <span className="key">
-              <FormattedMessage id="collection.info.updated_at" defaultMessage="Last updated"/>
-            </span>
-            <span className="value">
-              <Date value={collection.updated_at}/>
-            </span>
-          </li>
-        </ul>
-        {collection.writeable && <Link to={link}>
+          </ul>
+          {collection.writeable && <Link to={link}>
             <Button className="editButton">
               <FormattedMessage id="collection.info.edit"
                                 defaultMessage="Edit"/>
             </Button>
           </Link>}
+        </div>
       </DualPane.InfoPane>
     );
   }
