@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
-import SuggestInput from 'src/components/common/SuggestInput';
 
 import DualPane from 'src/components/common/DualPane';
+import Role from 'src/components/common/Role';
 import NamedMultiSelect from 'src/components/common/NamedMultiSelect';
-import {fetchRoles} from "src/actions";
 
 import './CollectionEditInfo.css';
 
@@ -24,77 +23,49 @@ class CollectionEditInfo extends Component {
   constructor(props) {
     super(props);
 
+    const countries = Object.keys(props.countries).map(function(k) {
+      return {index:k, name:props.countries[k]}
+    });
     this.state = {
-      countries: [],
-      listCountries: [],
-      contactName: '',
-      listRoles: [],
-      contact: {},
-      collection: {}
-    };
+      countries: countries,
+      collection: props.collection,
+    }
 
     this.onSelectCountry = this.onSelectCountry.bind(this);
-    this.onTyping = this.onTyping.bind(this);
-    this.onSelectRole = this.onSelectRole.bind(this);
+    this.onSelectCreator = this.onSelectCreator.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
   }
 
-  onSelectRole(role) {
-    this.setState({contact: role});
-    let collection = this.state.collection;
-    collection.creator = role;
-    this.setState({collection});
-    this.props.onChangeCollection(collection);
-  }
-
   componentWillReceiveProps(nextProps) {
-    if (nextProps.collection.isFetching) {
-      return;
-    }
-    
     this.setState({
-      countries: nextProps.collection.countries,
-      listCountries: this.structureList(nextProps.countries),
-      listRoles: nextProps.roles === undefined ? [] : nextProps.roles.results === undefined ? [] : nextProps.roles.results,
-      collection: nextProps.collection,
-      contactName: nextProps.collection === undefined ? undefined : nextProps.collection.creator === undefined ? nextProps.session.role.name : nextProps.collection.creator.name
+      collection: nextProps.collection
     });
   }
 
-  async onTyping(query) {
-    if(query.length >= 3) {
-      await this.props.fetchRoles(query);
-      this.setState({listRoles: this.props.roles.results})
-    } else {
-      this.setState({listRoles: []})
-    }
-
-    this.setState({contactName: query})
-  }
-
-  structureList(list) {
-    return Object.keys(list).map(function(k) {
-      return {index:k, name:list[k]} });
-  }
-
   onSelectCountry(countries) {
-    this.setState({countries: countries.selectedItems, listCountries: countries.list});
-    let collection = this.state.collection;
+    const { collection } = this.props;
     collection.countries = countries.selectedItems;
-    this.setState({collection});
+    this.setState({collection: collection});
     this.props.onChangeCollection(collection);
   }
 
   onFieldChange({target}) {
-    const collection = this.props.collection;
+    const { collection } = this.props;
     collection[target.id] = target.value;
-    this.setState({collection});
+    this.setState({collection: collection});
+    this.props.onChangeCollection(collection);
+  }
+
+  onSelectCreator(creator) {
+    const { collection } = this.props;
+    collection.creator = creator;
+    this.setState({collection: collection});
     this.props.onChangeCollection(collection);
   }
 
   render() {
-    const {collection, intl, categories} = this.props;
-    const {listRoles, listCountries, countries, contactName} = this.state;
+    const {intl, categories} = this.props;
+    const {collection} = this.state;
 
     return (
       <DualPane.InfoPane className="CollectionEditInfo">
@@ -139,10 +110,10 @@ class CollectionEditInfo extends Component {
                 <FormattedMessage id="collection.edit.info.category" defaultMessage="Category"/>
               </label>
             </div>
-            <div class="pt-select pt-fill">
-              <select id="category" onChange={this.onFieldChange}>
+            <div className="pt-select pt-fill">
+              <select id="category" onChange={this.onFieldChange} value={collection.category}>
                 { Object.keys(categories).map((key) => (
-                  <option key={key} value={key} selected={key === collection.category}>
+                  <option key={key} value={key}>
                     {categories[key]}
                   </option>
                 ))}
@@ -158,12 +129,12 @@ class CollectionEditInfo extends Component {
             </div>
             <div className="pt-form-content">
               <textarea id="summary"
-                     className="pt-input input_class"
-                     placeholder={intl.formatMessage(messages.placeholder_summary)}
-                     dir="auto"
+                        className="pt-input input_class"
+                        placeholder={intl.formatMessage(messages.placeholder_summary)}
+                        dir="auto"
                         rows={5}
-                     onChange={this.onFieldChange}
-                     value={collection.summary || ''}/>
+                        onChange={this.onFieldChange}
+                        value={collection.summary || ''}/>
             </div>
           </div>
           <div className="pt-form-group label_group">
@@ -174,12 +145,8 @@ class CollectionEditInfo extends Component {
               </label>
             </div>
             <div className="pt-form-content">
-              <SuggestInput
-                isCategory={false}
-                defaultValue={contactName}
-                onSelectItem={this.onSelectRole}
-                list={listRoles}
-                onTyping={this.onTyping}/>
+              <Role.Select role={collection.creator}
+                           onSelect={this.onSelectCreator} />
             </div>
           </div>
           <div className="pt-form-group label_group">
@@ -189,11 +156,11 @@ class CollectionEditInfo extends Component {
                 <FormattedMessage id="collection.edit.info.countries" defaultMessage="Countries"/>
               </label>
             </div>
-              <NamedMultiSelect
-                onSelectItem={this.onSelectCountry}
-                list={listCountries}
-                selectedItems={countries}
-                isCountry={true}/>
+            <NamedMultiSelect
+              onSelectItem={this.onSelectCountry}
+              list={this.state.countries}
+              selectedItems={collection.countries}
+              isCountry={true}/>
           </div>
         </div>
       </DualPane.InfoPane>
@@ -204,10 +171,8 @@ class CollectionEditInfo extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     countries: state.metadata.countries,
-    categories: state.metadata.categories,
-    roles: state.role,
-    session: state.session,
+    categories: state.metadata.categories
   }
 };
 
-export default connect(mapStateToProps, {fetchRoles})(injectIntl(CollectionEditInfo));
+export default connect(mapStateToProps)(injectIntl(CollectionEditInfo));

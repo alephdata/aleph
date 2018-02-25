@@ -1,20 +1,19 @@
 import { combineReducers } from 'redux'
 
-import collections from './collections';
 import metadata from './metadata';
 import session from './session';
+import statistics from './statistics';
 import entities from './entities';
 import entityReferences from './entityReferences';
 import entityTags from './entityTags';
-import statistics from './statistics';
+import collections from './collections';
+import collectionPermissions from './collectionPermissions';
 import role from './roles';
 import alerts from './alerts';
-import permissions from './permissions';
 import search from './search';
 import facets from './facets';
 
 const rootReducer = combineReducers({
-  collections,
   metadata,
   session,
   entities,
@@ -23,7 +22,8 @@ const rootReducer = combineReducers({
   role,
   alerts,
   entityTags,
-  permissions,
+  collections,
+  collectionPermissions,
   search,
   facets,
 });
