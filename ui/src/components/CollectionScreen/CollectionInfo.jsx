@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {FormattedMessage} from 'react-intl';
+import {Button} from '@blueprintjs/core';
+import {Link} from 'react-router-dom';
 
 import DualPane from 'src/components/common/DualPane';
 import Category from 'src/components/common/Category';
@@ -8,8 +10,8 @@ import Language from 'src/components/common/Language';
 import Country from 'src/components/common/Country';
 import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
-import {Button} from '@blueprintjs/core';
-import {Link} from 'react-router-dom';
+
+import CollectionInfoXref from './CollectionInfoXref';
 
 
 class CollectionInfo extends Component {
@@ -84,6 +86,8 @@ class CollectionInfo extends Component {
                                 defaultMessage="Edit"/>
             </Button>
           </Link>}
+
+          <CollectionInfoXref collection={collection} />
         </div>
       </DualPane.InfoPane>
     );

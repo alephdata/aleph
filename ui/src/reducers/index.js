@@ -8,6 +8,8 @@ import entityReferences from './entityReferences';
 import entityTags from './entityTags';
 import collections from './collections';
 import collectionPermissions from './collectionPermissions';
+import collectionXrefIndex from './collectionXrefIndex';
+import collectionXrefMatches from './collectionXrefMatches';
 import role from './roles';
 import alerts from './alerts';
 import search from './search';
@@ -24,6 +26,8 @@ const rootReducer = combineReducers({
   entityTags,
   collections,
   collectionPermissions,
+  collectionXrefIndex,
+  collectionXrefMatches,
   search,
   facets,
 });

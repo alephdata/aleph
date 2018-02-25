@@ -58,6 +58,16 @@ export const updateCollectionPermissions = asyncActionCreator((id, permissions) 
   return { id, data: response.data};
 }, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 
+export const fetchCollectionXrefIndex = asyncActionCreator((id) => async dispatch => {
+  const response = await endpoint.get(`collections/${id}/xref`);
+  return { id, data: response.data};
+}, { name: 'FETCH_COLLECTION_XREF_INDEX' });
+
+export const fetchCollectionXrefMatches = asyncActionCreator((id, otherId) => async dispatch => {
+  const response = await endpoint.get(`collections/${id}/xref/${otherId}`);
+  return { id, otherId, data: response.data};
+}, { name: 'FETCH_COLLECTION_XREF_MATCHES' });
+
 export const fetchStatistics = asyncActionCreator(() => async dispatch => {
   const response = await endpoint.get('statistics');
   return { statistics: response.data };
