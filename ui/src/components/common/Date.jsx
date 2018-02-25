@@ -1,7 +1,22 @@
 import React, { Component } from 'react';
+import { min } from 'lodash';
+
+
+class Earliest extends Component {
+  shouldComponentUpdate(nextProps) {
+    return this.props.values !== nextProps.values;
+  }
+  
+  render() {
+    const earliest = min(this.props.values);
+    return <Date value={earliest} />
+  }
+}
 
 
 class Date extends Component {
+  static Earliest = Earliest;
+
   shouldComponentUpdate(nextProps) {
     return this.props.value !== nextProps.value;
   }

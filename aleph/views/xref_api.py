@@ -28,7 +28,7 @@ def index(id):
 def matches(id, other_id):
     collection = get_db_collection(id)
     other = get_db_collection(other_id)
-    parser = QueryParser(request.args, request.authz, limit=10)
+    parser = QueryParser(request.args, request.authz)
     q = Match.find_by_collection(collection.id, other.id)
     result = DatabaseQueryResult(request, q,
                                  parser=parser,

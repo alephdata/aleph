@@ -27,9 +27,9 @@ class Name extends Component {
   }
 
   render() {
-    const { code, countries } = this.props,
+    const { code, countries, short = false } = this.props,
           codeLabel = code ? code.toUpperCase() : <FormattedMessage id="country.unknown" defaultMessage="Unknown"/>,
-          label = countries[code] || codeLabel;
+          label = short ? codeLabel : (countries[code] || codeLabel);
     
     if (!code) return null;
     return (
@@ -40,11 +40,11 @@ class Name extends Component {
 
 class List extends Component {
   render() {
-    const { codes, countries, truncate = Infinity } = this.props;
+    const { codes, countries, truncate = Infinity, short = false } = this.props;
     if (!codes) return null;
 
     let names = codes.map(code => (
-      <Name countries={countries} code={code} key={code} />
+      <Name countries={countries} code={code} key={code} short={short} />
     ));
 
     // Truncate if too long

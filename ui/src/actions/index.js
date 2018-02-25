@@ -64,7 +64,7 @@ export const fetchCollectionXrefIndex = asyncActionCreator((id) => async dispatc
 }, { name: 'FETCH_COLLECTION_XREF_INDEX' });
 
 export const fetchCollectionXrefMatches = asyncActionCreator((id, otherId) => async dispatch => {
-  const response = await endpoint.get(`collections/${id}/xref/${otherId}`);
+  const response = await endpoint.get(`collections/${id}/xref/${otherId}?limit=100`);
   return { id, otherId, data: response.data};
 }, { name: 'FETCH_COLLECTION_XREF_MATCHES' });
 

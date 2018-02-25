@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { FormattedNumber, FormattedMessage } from 'react-intl';
+import { FormattedNumber } from 'react-intl';
 
-import Collection from 'src/components/common/Collection';
 import { fetchCollectionXrefIndex } from '../../actions/index';
 import getPath from 'src/util/getPath';
 
