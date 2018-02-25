@@ -76,6 +76,9 @@ class ProfileInfo extends Component {
   }
 
   checkPasswords() {
+    if (!this.props.role.has_password) {
+      return true;
+    }
     return this.state.password === this.state.confirmPassword;
   }
 
@@ -95,7 +98,6 @@ class ProfileInfo extends Component {
 
   render() {
     const {intl, role} = this.props;
-    // const {name, email, password, confirmPassword, api_key} = this.state;
 
     return (
       <DualPane.InfoPane className="ProfileInfo">
@@ -184,11 +186,13 @@ class ProfileInfo extends Component {
             <FormattedMessage id="profileinfo.api" defaultMessage="API Key"/>
           </h1>
           <div>
-            <div className='api_key_group'>
-              <i className="fa fa-fw fa-key" aria-hidden="true"/>
-              <label className="pt-label api_key">
-                {this.state.api_key}
-              </label>
+            <div className="pt-form-content">
+              <div class="pt-input-group .modifier">
+                <span class="pt-icon pt-icon-key"></span>
+                <input className="pt-input"
+                   readOnly={true}
+                   value={this.state.api_key}/>
+              </div>
             </div>
             <label className="pt-label api_key_label">
               <FormattedMessage id="profileinfo.api_desc"
