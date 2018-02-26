@@ -52,6 +52,10 @@
 
   .CheckboxList {
     margin-bottom: $aleph-grid-size * 2;
+    
+    .is-ticked + .label {
+      font-weight: bold;
+    }
   }
 
   .ShowMore {
