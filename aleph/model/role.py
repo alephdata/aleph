@@ -1,7 +1,7 @@
 import logging
 
 from flask import current_app
-from sqlalchemy import or_
+from sqlalchemy import or_, not_
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -143,13 +143,15 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         ])
 
     @classmethod
-    def by_prefix(cls, prefix):
+    def by_prefix(cls, prefix, exclude=[]):
         """Load a list of roles matching a name, email address, or foreign_id.
 
         :param str pattern: Pattern to match.
         """
         q = cls.all()
         q = q.filter(Role.type == Role.USER)
+        if len(exclude):
+            q = q.filter(not_(Role.id.in_(exclude)))
         q = q.filter(or_(
             cls.foreign_id.ilike('%' + prefix + '%'),
             cls.email.ilike('%' + prefix + '%'),

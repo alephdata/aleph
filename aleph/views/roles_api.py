@@ -29,7 +29,7 @@ def suggest():
             'total': 0
         })
     # this only returns users, not groups
-    q = Role.by_prefix(parser.prefix)
+    q = Role.by_prefix(parser.prefix, exclude=parser.exclude)
     result = DatabaseQueryResult(request, q, parser=parser, schema=RoleSchema)
     return jsonify(result)
 
@@ -128,9 +128,10 @@ def permissions_index(id):
             'role': role
         })
 
+    permissions, errors = PermissionSchema().dump(permissions, many=True)
     return jsonify({
         'total': len(permissions),
-        'results': PermissionSchema().dump(permissions, many=True)
+        'results': permissions
     })
 
 

@@ -28,3 +28,7 @@ export function queryToFacetKey(query, field) {
     .sortBy(null)
     .toString()
 }
+
+export function matchesKey(collectionId, otherId) {
+  return collectionId + '*' + otherId;
+}

@@ -29,7 +29,7 @@ class DocumentInfo extends React.Component {
   render() {
     const { document } = this.props;
     return (
-      <DualPane.InfoPane className="DocumentInfo">
+      <DualPane.InfoPane className="DocumentInfo withHeading">
         <div className="PaneHeading">
           <span className="pt-text-muted">
             <Schema.Label schema={document.schema} icon={true} />
@@ -43,7 +43,8 @@ class DocumentInfo extends React.Component {
               <Tab id="overview"
                 title={
                   <React.Fragment>
-                     <span className="pt-icon-standard pt-icon-info-sign"/> <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
+                     <span className="pt-icon-standard pt-icon-info-sign"/>
+                     <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
                   </React.Fragment>
                 }
                 panel={<DocumentMetadata document={document}/>} 
@@ -51,7 +52,8 @@ class DocumentInfo extends React.Component {
               <Tab id="source" 
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-database"/> <FormattedMessage id="document.info.source" defaultMessage="Source"/>
+                    <span className="pt-icon-standard pt-icon-database"/>
+                    <FormattedMessage id="document.info.source" defaultMessage="Source"/>
                   </React.Fragment>
                 }
                 panel={
@@ -71,7 +73,8 @@ class DocumentInfo extends React.Component {
               <Tab id="tags"
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-tag"/> <FormattedMessage id="document.info.tags" defaultMessage="Related Tags"/>
+                    <span className="pt-icon-standard pt-icon-tag"/>
+                    <FormattedMessage id="document.info.tags" defaultMessage="Links"/>
                   </React.Fragment>
                 }
                 panel={<EntityInfoTags entity={document} />}

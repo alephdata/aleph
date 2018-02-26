@@ -11,10 +11,10 @@ class Label extends PureComponent {
     const { collection, icon = true } = this.props;
 
     return (
-      <span>
+      <React.Fragment>
         { collection.secret && icon && (<i className='fa fa-fw fa-lock' />) }
         { collection.label }
-      </span>
+      </React.Fragment>
     );
   }
 }

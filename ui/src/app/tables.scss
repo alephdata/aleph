@@ -15,6 +15,7 @@ table {
   // Make these columns take the minimal width that fits the content
   tr td.date {
     width: 1%;
+    white-space: nowrap;
     overflow: visible;
     max-width: unset;
     text-overflow: unset;
@@ -22,13 +23,20 @@ table {
 
   th.wide, td.wide {
     width: 40%;
+    max-width: unset;
+  }
+
+  th.narrow, td.narrow {
+    width: 1%;
+    max-width: unset;
   }
 
   td.entity {
     font-weight: bold;
+    max-width: unset;
   }
 
-  td.numeric {
+  th.numeric, td.numeric {
     text-align: right;
 
     // Float on the right, so that numbers overflow to the left.

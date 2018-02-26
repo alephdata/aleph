@@ -1,27 +1,22 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
-import SuggestInput from 'src/components/common/SuggestInput';
 
 import DualPane from 'src/components/common/DualPane';
-import NamedMultiSelect from 'src/components/common/NamedMultiSelect';
-import {fetchRoles} from "../../actions";
+import Role from 'src/components/common/Role';
+import Country from 'src/components/common/Country';
 
 import './CollectionEditInfo.css';
 
 const messages = defineMessages({
   placeholder_label: {
     id: 'collection.edit.info.placeholder_label',
-    defaultMessage: 'Enter name of collection',
+    defaultMessage: 'A label for this collection',
   },
   placeholder_summary: {
     id: 'collection.edit.info.placeholder_summary',
-    defaultMessage: 'Enter summary of collection',
-  },
-  placeholder_import_key: {
-    id: 'collection.edit.info.placeholder_import_key',
-    defaultMessage: 'Import key',
-  },
+    defaultMessage: 'A brief summary of this collection',
+  }
 });
 
 class CollectionEditInfo extends Component {
@@ -29,134 +24,47 @@ class CollectionEditInfo extends Component {
     super(props);
 
     this.state = {
-      label: '',
-      summary: '',
-      countries: [],
-      languages: [],
-      listCountries: [],
-      listLanguages: [],
-      listCategories: [],
-      category: {},
-      categoryName: '',
-      contactName: '',
-      listRoles: [],
-      contact: {},
-      collection: {}
-    };
+      collection: props.collection,
+    }
 
-    this.onSelectCountry = this.onSelectCountry.bind(this);
-    this.onSelectLanguage = this.onSelectLanguage.bind(this);
-    this.onTyping = this.onTyping.bind(this);
-    this.onSelectRole = this.onSelectRole.bind(this);
-    this.onSelectCategory = this.onSelectCategory.bind(this);
-    this.onFilterCategories = this.onFilterCategories.bind(this);
-    this.onChangeLabel = this.onChangeLabel.bind(this);
-    this.onChangeSummary = this.onChangeSummary.bind(this);
-  }
-
-  onSelectRole(role) {
-    this.setState({contact: role});
-    let collection = this.state.collection;
-    collection.creator = role;
-    this.setState({collection});
-    this.props.onChangeCollection(collection);
+    this.onSelectCountries = this.onSelectCountries.bind(this);
+    this.onSelectCreator = this.onSelectCreator.bind(this);
+    this.onFieldChange = this.onFieldChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.collection.isFetching === undefined) {
-      this.setState({
-        label: nextProps.collection.label,
-        summary: nextProps.collection.summary === null ? '' : nextProps.collection.summary,
-        countries: nextProps.collection.countries,
-        listCountries: this.structureList(nextProps.countries),
-        languages: nextProps.collection.languages,
-        listLanguages: this.structureList(nextProps.languages),
-        listCategories: this.structureList(nextProps.categories),
-        listRoles: nextProps.roles === undefined ? [] : nextProps.roles.results === undefined ? [] : nextProps.roles.results,
-        collection: nextProps.collection,
-        categoryName: nextProps.collection === undefined ? undefined : nextProps.collection.category === undefined ? undefined : nextProps.collection.category,
-        contactName: nextProps.collection === undefined ? undefined : nextProps.collection.creator === undefined ? nextProps.session.role.name : nextProps.collection.creator.name
-      });
-    }
+    this.setState({
+      collection: nextProps.collection
+    });
   }
 
-  async onTyping(query) {
-    if(query.length >= 3) {
-      await this.props.fetchRoles(query);
-      this.setState({listRoles: this.props.roles.results})
-    } else {
-      this.setState({listRoles: []})
-    }
-
-    this.setState({contactName: query})
-  }
-
-  structureList(list) {
-    return Object.keys(list).map(function(k) {
-      return {index:k, name:list[k]} });
-  }
-
-  onSelectCountry(countries) {
-    this.setState({countries: countries.selectedItems, listCountries: countries.list});
-    let collection = this.state.collection;
-    collection.countries = countries.selectedItems;
-    this.setState({collection});
+  onFieldChange({target}) {
+    const { collection } = this.props;
+    collection[target.id] = target.value;
+    this.setState({collection: collection});
     this.props.onChangeCollection(collection);
   }
 
-  onSelectCategory(category) {
-    this.setState({category: category});
-    let collection = this.state.collection;
-    collection.category = category.index;
-    this.setState({collection});
+  onSelectCountries(countries) {
+    const { collection } = this.props;
+    collection.countries = countries;
+    this.setState({collection: collection});
     this.props.onChangeCollection(collection);
   }
 
-  onSelectLanguage(languages) {
-    this.setState({languages: languages.selectedItems, listLanguages: languages.list});
-    let collection = this.state.collection;
-    collection.languages = languages.selectedItems;
-    this.setState({collection});
-    this.props.onChangeCollection(collection);
-  }
-
-  onFilterCategories(query) {
-    let categoryList = [];
-    let categories = this.structureList(this.props.categories);
-    for(let i = 0; i < categories.length; i++) {
-      if(categories[i].name.toLowerCase().includes(query)) {
-        categoryList.push(categories[i]);
-      }
-    }
-
-    this.setState({listCategories: categoryList, categoryName: query});
-  }
-
-  onChangeLabel({target}) {
-    this.setState({label: target.value});
-    let collection = this.state.collection;
-    collection.label = target.value;
-    this.setState({collection});
-    this.props.onChangeCollection(collection);
-  }
-
-  onChangeSummary({target}) {
-    this.setState({summary: target.value})
-    let collection = this.state.collection;
-    collection.summary = target.value;
-    this.setState({collection});
+  onSelectCreator(creator) {
+    const { collection } = this.props;
+    collection.creator = creator;
+    this.setState({collection: collection});
     this.props.onChangeCollection(collection);
   }
 
   render() {
-    const {collection, intl, categories} = this.props;
-    const {label, summary, listRoles, listCategories, listCountries, countries, listLanguages, languages, categoryName, contactName} = this.state;
+    const {intl, categories} = this.props;
+    const {collection} = this.state;
 
     return (
       <DualPane.InfoPane className="CollectionEditInfo">
-        <h1>
-          {collection === undefined ? '' : collection.label}
-        </h1>
         <div>
           <div className="pt-form-group label_group">
             <div className='label_icon_group'>
@@ -166,29 +74,30 @@ class CollectionEditInfo extends Component {
               </label>
             </div>
             <div className="pt-form-content">
-              <input className="pt-input input_class"
+              <input id="label"
+                     className="pt-input pt-large input_class"
                      type="text"
                      placeholder={intl.formatMessage(messages.placeholder_label)}
                      dir="auto"
-                     onChange={this.onChangeLabel}
-                     value={label}/>
+                     onChange={this.onFieldChange}
+                     value={collection.label || ''}/>
             </div>
           </div>
           <div className="pt-form-group label_group">
-            <div className='api_key_group'>
-              <i className="fa fa-key" aria-hidden="true"/>
-              <label className="pt-label api_key">
-                Import ID
+            <div className='label_icon_group'>
+              <i className="fa fa-id-card" aria-hidden="true"/>
+              <label className="pt-label label_class">
+                <FormattedMessage id="collection.edit.info.category" defaultMessage="Category"/>
               </label>
             </div>
-            <div className="pt-form-content">
-              <input className="pt-input input_class"
-                     type="text"
-                     placeholder={intl.formatMessage(messages.placeholder_import_key)}
-                     dir="auto"
-                     disabled
-                     value={collection === undefined ? '' : collection.foreign_id === undefined ? '' : collection.foreign_id}
-              />
+            <div className="pt-select pt-fill">
+              <select id="category" onChange={this.onFieldChange} value={collection.category}>
+                { Object.keys(categories).map((key) => (
+                  <option key={key} value={key}>
+                    {categories[key]}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="pt-form-group label_group">
@@ -199,12 +108,13 @@ class CollectionEditInfo extends Component {
               </label>
             </div>
             <div className="pt-form-content">
-              <textarea className="pt-input input_class"
-                     placeholder={intl.formatMessage(messages.placeholder_summary)}
-                     dir="auto"
+              <textarea id="summary"
+                        className="pt-input input_class"
+                        placeholder={intl.formatMessage(messages.placeholder_summary)}
+                        dir="auto"
                         rows={5}
-                     onChange={this.onChangeSummary}
-                     value={summary}/>
+                        onChange={this.onFieldChange}
+                        value={collection.summary || ''}/>
             </div>
           </div>
           <div className="pt-form-group label_group">
@@ -215,12 +125,8 @@ class CollectionEditInfo extends Component {
               </label>
             </div>
             <div className="pt-form-content">
-              <SuggestInput
-                isCategory={false}
-                defaultValue={contactName}
-                onSelectItem={this.onSelectRole}
-                list={listRoles}
-                onTyping={this.onTyping}/>
+              <Role.Select role={collection.creator}
+                           onSelect={this.onSelectCreator} />
             </div>
           </div>
           <div className="pt-form-group label_group">
@@ -230,39 +136,25 @@ class CollectionEditInfo extends Component {
                 <FormattedMessage id="collection.edit.info.countries" defaultMessage="Countries"/>
               </label>
             </div>
-              <NamedMultiSelect
-                onSelectItem={this.onSelectCountry}
-                list={listCountries}
-                selectedItems={countries}
-                isCountry={true}/>
+            <Country.MultiSelect
+              onChange={this.onSelectCountries}
+              codes={collection.countries} />
           </div>
           <div className="pt-form-group label_group">
             <div className='label_icon_group'>
-              <i className="fa fa-id-card" aria-hidden="true"/>
+              <i className="fa fa-key" aria-hidden="true"/>
               <label className="pt-label label_class">
-                <FormattedMessage id="collection.edit.info.languages" defaultMessage="Languages"/>
+                Import ID
               </label>
             </div>
-            <NamedMultiSelect
-              onSelectItem={this.onSelectLanguage}
-              list={listLanguages}
-              selectedItems={languages}
-              isCountry={false}/>
-          </div>
-          <div className="pt-form-group label_group">
-            <div className='label_icon_group'>
-              <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label_class">
-                <FormattedMessage id="collection.edit.info.categories" defaultMessage="Categories"/>
-              </label>
+            <div className="pt-form-content">
+              <input className="pt-input input_class"
+                     type="text"
+                     dir="auto"
+                     disabled
+                     value={collection.foreign_id || ''}
+              />
             </div>
-            <SuggestInput
-              isCategory={true}
-              defaultValue={categoryName}
-              onSelectItem={this.onSelectCategory}
-              list={listCategories}
-              categories={categories}
-              onTyping={this.onFilterCategories}/>
           </div>
         </div>
       </DualPane.InfoPane>
@@ -271,13 +163,7 @@ class CollectionEditInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    countries: state.metadata.countries,
-    languages: state.metadata.languages,
-    categories: state.metadata.categories,
-    roles: state.role,
-    session: state.session,
-  }
+  return { categories: state.metadata.categories }
 };
 
-export default connect(mapStateToProps, {fetchRoles})(injectIntl(CollectionEditInfo));
+export default connect(mapStateToProps)(injectIntl(CollectionEditInfo));

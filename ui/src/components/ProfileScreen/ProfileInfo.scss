@@ -20,23 +20,9 @@
     margin-top: $aleph-grid-size * - 0.2 !important;
   }
 
-  .api_key_group {
-    display: inline-flex;
-    // padding-left: $aleph-grid-size * 2;
-    padding-top: $aleph-grid-size;
-  }
-
-  .api_key_div {
-    padding-top: $aleph-grid-size * 3;
-  }
-
-  .api_key {
-    // padding-left: $aleph-grid-size;
-  }
-
   .api_key_label {
     color: $aleph-greyed-text;
-    // padding-left: $aleph-grid-size * 2;
+    padding-top: $aleph-grid-size;
   }
 
   .input_class {
