@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import React, { Component, PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import getPath from 'src/util/getPath';
@@ -35,7 +36,7 @@ class CollectionLink extends Component {
   }
 }
 
-class LabelById extends PureComponent {
+class CollectionLoad extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -52,15 +53,14 @@ class LabelById extends PureComponent {
   }
 
   render() {
-    const { collection, id } = this.props;
-    if (collection === undefined || collection.isFetching) {
-      return (
-        <code>{id}</code>
-      );
+    const { collection, children, renderWhenLoading } = this.props;
+    if (
+      (collection === undefined || collection.isFetching)
+      && renderWhenLoading !== undefined
+    ) {
+      return renderWhenLoading;
     } else {
-     return (
-       <Collection.Label collection={collection} />
-     );
+      return children(collection);
     }
   }
 }
@@ -68,13 +68,18 @@ class LabelById extends PureComponent {
 const mapStateToProps = (state, ownProps) => ({
   collection: state.collections[ownProps.id],
 });
-LabelById = connect(mapStateToProps, { fetchCollection })(LabelById);
+CollectionLoad = connect(mapStateToProps, { fetchCollection })(CollectionLoad);
 
+CollectionLoad.propTypes = {
+  id: PropTypes.string.isRequired,
+  children: PropTypes.func.isRequired,
+  renderWhenLoading: PropTypes.node,
+}
 
 class Collection {
   static Label = Label;
   static Link = CollectionLink;
-  static LabelById = LabelById;
+  static Load = CollectionLoad;
 }
 
 export default Collection;
