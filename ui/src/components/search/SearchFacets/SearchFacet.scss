@@ -45,11 +45,13 @@
       }
     }
 
-    & > .spinner {
-      margin-left: auto;
-    }
   }
-
+  
+  .spinner {
+    display: block !important;
+    margin: 0 auto $aleph-grid-size auto !important;
+  }
+    
   .CheckboxList {
     margin-bottom: $aleph-grid-size * 2;
     

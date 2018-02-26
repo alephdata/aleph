@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Icon, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
@@ -154,7 +154,7 @@ class SearchFacet extends Component {
                 ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count, total }} />
                 : <FormattedMessage id="search.facets.filteringByNoTotal" defaultMessage="Filtering by {count} {fieldLabel}" values={{ fieldLabel, count }} />
               : total !== undefined
-              ? <span><FormattedMessage id="search.facets.filterBy" defaultMessage="{fieldLabel}" values={{ fieldLabel, total }} /> <span className="pt-tag pt-intent-primary pt-small pt-round">{total}</span></span>
+                ? <span><FormattedMessage id="search.facets.filterBy" defaultMessage="{fieldLabel}" values={{ fieldLabel, total }} />{total > 0 && (<span className='pt-tag pt-small pt-round pt-intent-primary'><FormattedNumber value={total} /></span>)}</span>
                 : <FormattedMessage id="search.facets.countingTotal" defaultMessage="Counting {fieldLabel}…" values={{ fieldLabel }} />
             }
           </span>
@@ -163,21 +163,21 @@ class SearchFacet extends Component {
               className="ClearButton pt-minimal pt-small"
               title={intl.formatMessage(messages.clear_filter)} icon="disable" />
           )}
-          {(isFetchingValues || isExpandingValues) && (
-            <Spinner className="pt-small spinner" />
-          )}
         </div>
         <Collapse isOpen={isOpen}>
           {values !== undefined && (
             <CheckboxList items={values}
                           selectedItems={current}
                           onItemClick={this.onSelect}>
-              {!isFetchingValues && hasMoreValues && (
+              {!isFetchingValues && !isExpandingValues && hasMoreValues && (
                 <a href="#" className="ShowMore" onClick={this.showMore}>
                   <FormattedMessage id="search.facets.showMore" defaultMessage="Show more…" values={{ fieldLabel }} style={{paddingTop: 10}}/>
                 </a>
               )}
             </CheckboxList>
+          )}
+          {(isFetchingValues || isExpandingValues) && (
+            <Spinner className="pt-small spinner" />
           )}
         </Collapse>
       </div>
