@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import { debounce, range } from 'lodash';
 import Waypoint from 'react-waypoint';
 
@@ -11,6 +11,13 @@ import { fetchCollections } from 'src/actions';
 import CollectionCard from './CollectionCard';
 
 import './CollectionBrowser.css';
+
+const messages = defineMessages({
+  filter: {
+    id: 'collectionbrowser.filter',
+    defaultMessage: 'Filter collections',
+  },
+});
 
 class CollectionBrowser extends Component {
   constructor(props) {
@@ -103,7 +110,7 @@ class CollectionBrowser extends Component {
           <div className="filterCollectionsInput pt-input-group">
               <i className="pt-icon pt-icon-search" />
               <input className="pt-input" type="search"
-                placeholder={intl.formatMessage({id: "collection.browser.filter", defaultMessage: "Filter collections" })}
+                placeholder={intl.formatMessage(messages.filter)}
                 onChange={this.onChangeQueryText} value={queryText} />
           </div>
         </div>

@@ -21,7 +21,7 @@ class EntityReferences extends React.Component {
               id="entity.references.title"
               defaultMessage="Relationships"/>
           </h2>
-          <p className="muted">
+          <p className="pt-text-muted">
             <FormattedMessage 
               id="entity.references.empty.description"
               defaultMessage="There are no known relationships."/>

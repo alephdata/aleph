@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { NonIdealState } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import { fetchCollection } from 'src/actions';
 import Screen from 'src/components/common/Screen';
@@ -10,6 +11,13 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import CollectionContent from './CollectionContent';
 import CollectionInfo from './CollectionInfo';
+
+const messages = defineMessages({
+  not_found: {
+    id: 'collection.not_found',
+    defaultMessage: 'Collection not found',
+  },
+});
 
 class CollectionScreen extends Component {
   componentDidMount() {
@@ -25,13 +33,13 @@ class CollectionScreen extends Component {
   }
 
   render() {
-    const { collection, location } = this.props;
+    const { collection, location, intl } = this.props;
     if (collection === undefined || collection.isFetching) {
       return <ScreenLoading />;
     }
     if (collection.error) {
       return (
-        <NonIdealState visual="error" title="Collection not found" />
+        <NonIdealState visual="error" title={intl.formatMessage(messages.not_found)} />
       );
     }
     return (
@@ -56,4 +64,4 @@ const mapStateToProps = (state, ownProps) => {
   return { collectionId, collection };
 };
 
-export default connect(mapStateToProps, { fetchCollection })(CollectionScreen);
+export default connect(mapStateToProps, { fetchCollection })(injectIntl(CollectionScreen));

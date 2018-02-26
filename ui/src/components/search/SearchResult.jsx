@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 import Waypoint from 'react-waypoint';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import EntityList from 'src/components/EntityScreen/EntityList';
 import SectionLoading from 'src/components/common/SectionLoading';
 
+const messages = defineMessages({
+  no_results_title: {
+    id: 'search.no_results_title',
+    defaultMessage: 'No search results',
+  },
+  no_results_description: {
+    id: 'search.no_results_description',
+    defaultMessage: 'Try making your search more general',
+  },
+})
+
 class SearchResult extends Component {
   render() {
-    const { result, hasMoreResults, getMoreResults } = this.props;
+    const { result, hasMoreResults, getMoreResults, intl } = this.props;
 
     if (result === undefined || result.isFetching) {
       return (
@@ -17,8 +29,8 @@ class SearchResult extends Component {
     return (
       <div>
         { result.total === 0 &&
-          <NonIdealState visual="search" title="No search results"
-            description="Try making your search more general" />}
+          <NonIdealState visual="search" title={intl.formatMessage(messages.no_results_title)}
+            description={intl.formatMessage(messages.no_results_description)} />}
         <EntityList {...this.props} result={result} />
         { !result.isExpanding && hasMoreResults && (
           <Waypoint
@@ -35,4 +47,4 @@ class SearchResult extends Component {
   }
 }
 
-export default SearchResult;
+export default injectIntl(SearchResult);

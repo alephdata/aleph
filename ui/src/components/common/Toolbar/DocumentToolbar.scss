@@ -1,0 +1,30 @@
+@import "src/app/variables.scss";
+
+.DocumentToolbar {  
+  padding: 10px;
+  clear: both;
+  overflow: visible;
+  background: $aleph-toolbar-background;
+  border-bottom: 1px solid $aleph-border-color;
+  border-right: 1px solid $aleph-border-color;
+  overflow: auto;
+  flex: 1;
+  width: 100%;
+  max-height: 51px;
+  
+  .ToolbarSearchForm {
+    max-width: 200;
+    float: right;
+    margin: 0 0 0 $aleph-grid-size;
+  }
+
+  .DownloadButton {
+    float: right;
+    margin: 0;
+  }
+}
+
+/* @TODO Refactor this hack which makes toolbar elements similar in height */
+.DocumentToolbar > * {
+  max-height: 30px;
+}

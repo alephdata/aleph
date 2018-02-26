@@ -1,12 +1,36 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {AnchorButton} from '@blueprintjs/core';
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 import {addRole, fetchRole} from 'src/actions';
 import DualPane from 'src/components/common/DualPane';
 
 import './ProfileInfo.css';
+import {showSuccessToast, showErrorToast} from "../../app/toast";
+
+const messages = defineMessages({
+  placeholder_name: {
+    id: 'profileinfo.placeholder_name',
+    defaultMessage: 'Your name',
+  },
+  placeholder_enter_password: {
+    id: 'profileinfo.placeholder_enter_password',
+    defaultMessage: 'Enter your password',
+  },
+  placeholder_confirm_password: {
+    id: 'profileinfo.placeholder_confirm_password',
+    defaultMessage: 'Confirm your password',
+  },
+  update_success: {
+    id: 'profileinfo.update_success',
+    defaultMessage: 'You have updated your info!',
+  },
+  check_passwords: {
+    id: 'profileinfo.check_passwords',
+    defaultMessage: 'Check your passwords!',
+  }
+});
 
 class ProfileInfo extends Component {
   constructor(props) {
@@ -55,10 +79,13 @@ class ProfileInfo extends Component {
     return this.state.password === this.state.confirmPassword;
   }
 
-  onSubmitInfo() {
+  async onSubmitInfo() {
+    const { intl } = this.props;
     if (this.checkPasswords()) {
-      this.props.addRole(this.state);
+      await this.props.addRole(this.state);
+      showSuccessToast(intl.formatMessage(messages.update_success));
     } else {
+      showErrorToast(intl.formatMessage(messages.check_passwords));
       this.setState({
         requiredLabel: 'pt-input input_class pt-intent-danger',
         requiredLabelText: 'pt-form-helper-text error_label_text show'
@@ -74,22 +101,19 @@ class ProfileInfo extends Component {
       <DualPane.InfoPane className="ProfileInfo">
         <section>
           <h1>
-            <FormattedMessage id="profile.info.title" defaultMessage="Settings"/>
+            <FormattedMessage id="profileinfo.title" defaultMessage="Settings"/>
           </h1>
           <div className="pt-form-group name_group">
             <div className='label_icon_group'>
               <i className="fa fa-fw fa-id-card" aria-hidden="true"/>
               <label className="pt-label label_class">
-                <FormattedMessage id="profile.info.name" defaultMessage="Name"/>
+                <FormattedMessage id="profileinfo.name" defaultMessage="Name"/>
               </label>
             </div>
             <div className="pt-form-content">
               <input className="pt-input input_class"
                    type="text"
-                   placeholder={intl.formatMessage({
-                     id: "profile.info.placeholder.name",
-                     defaultMessage: "Your name"
-                   })}
+                   placeholder={intl.formatMessage(messages.placeholder_name)}
                    dir="auto"
                    onChange={this.onChangeName}
                    value={this.state.name}/>
@@ -99,7 +123,7 @@ class ProfileInfo extends Component {
             <div className='label_icon_group'>
               <i className="fa fa-fw fa-at" aria-hidden="true"/>
               <label className="pt-label label_class">
-                <FormattedMessage id="profile.info.email" defaultMessage="Email"/>
+                <FormattedMessage id="profileinfo.email" defaultMessage="Email"/>
               </label>
             </div>
             <div className="pt-form-content">
@@ -116,16 +140,13 @@ class ProfileInfo extends Component {
                 <div className='label_icon_group'>
                   <i className="fa fa-unlock-alt" aria-hidden="true"/>
                   <label className="pt-label label_class">
-                    <FormattedMessage id="profile.info.password" defaultMessage="Password"/>
+                    <FormattedMessage id="profileinfo.password" defaultMessage="Password"/>
                   </label>
                 </div>
                 <div className="pt-form-content">
                   <input className={this.state.requiredLabel}
                       type="password"
-                      placeholder={intl.formatMessage({
-                        id: "profile.info.placeholder.confirm",
-                        defaultMessage: "Enter your password"
-                      })}
+                      placeholder={intl.formatMessage(messages.placeholder_enter_password)}
                       dir="auto"
                       onChange={this.onChangePass}
                       value={this.state.password === null ? '' : this.state.password}/>
@@ -135,35 +156,32 @@ class ProfileInfo extends Component {
                 <div className='label_icon_group'>
                   <i className="fa fa-unlock-alt" aria-hidden="true"/>
                   <label className="pt-label label_class">
-                    <FormattedMessage id="profile.info.confirmPassword" defaultMessage="Confirm password"/>
+                    <FormattedMessage id="profileinfo.confirmPassword" defaultMessage="Confirm password"/>
                   </label>
                 </div>
                 <div className="pt-form-content">
                   <input className={this.state.requiredLabel}
                       type="password"
-                      placeholder={intl.formatMessage({
-                        id: "profile.info.placeholder.confirm",
-                        defaultMessage: "Confirm your password"
-                      })}
+                      placeholder={intl.formatMessage(messages.placeholder_confirm_password)}
                       dir="auto"
                       onChange={this.onChangeconfirmPassword}
                       value={this.state.confirmPassword}/>
                 </div>
                 <div className={this.state.requiredLabelText}>
-                  <FormattedMessage id="profile.info.error" defaultMessage="Passwords are not the same!"/>
+                  <FormattedMessage id="profileinfo.error" defaultMessage="Passwords are not the same!"/>
                 </div>
               </div>
             </div>
           )}
           <div className="pt-button-group pt-fill button_div" onClick={this.onSubmitInfo}>
-            <AnchorButton className="">
-              <FormattedMessage id="profile.info.save" defaultMessage="Save changes"/>
+            <AnchorButton>
+              <FormattedMessage id="profileinfo.save" defaultMessage="Save changes"/>
             </AnchorButton>
           </div>
         </section>
         <section className='api_key_div'>
           <h1>
-            <FormattedMessage id="profile.info.api" defaultMessage="API Key"/>
+            <FormattedMessage id="profileinfo.api" defaultMessage="API Key"/>
           </h1>
           <div>
             <div className='api_key_group'>
@@ -173,7 +191,7 @@ class ProfileInfo extends Component {
               </label>
             </div>
             <label className="pt-label api_key_label">
-              <FormattedMessage id="profile.info.api.desc"
+              <FormattedMessage id="profileinfo.api_desc"
                                 defaultMessage="Use the API key to read and write data via a remote application or client library"
                                 />
             </label>

@@ -11,8 +11,14 @@ $aleph-dark-text-color: $pt-dark-text-color;
 $aleph-greyed-text: gray;
 $aleph-content-background: white;
 $aleph-sidebar-background: $light-gray5;
+$aleph-toolbar-background: $light-gray5;
+$aleph-footer-background: $light-gray5;
 $aleph-hover-background: $light-gray5;
 $aleph-border-color: $pt-divider-black;
+
+$table-border: $light-gray3;
+$table-header-color: #4A90E2;
+$table-border-color: rgba(16, 22, 26, 0.15);
 
 $aleph-link-color: $pt-link-color;
 $aleph-visited-link-color: darken($aleph-link-color, 10%);

@@ -1,10 +1,34 @@
+import { defineMessages } from 'react-intl';
+
 import {showErrorToast, showSuccessToast} from 'src/app/toast';
-import messages from 'src/content/messages';
+
+const messages = defineMessages({
+  bad_request: {
+    id: 'auth.bad_request',
+    defaultMessage: 'The Server did not accept your input',
+  },
+  unauthorized: {
+    id: 'auth.unauthorized',
+    defaultMessage: 'Not authorized',
+  },
+  server_error: {
+    id: 'auth.server_error',
+    defaultMessage: 'Server error',
+  },
+  unknown_error: {
+    id: 'auth.unknown_error',
+    defaultMessage: 'An unexpected error occured',
+  },
+  success: {
+    id: 'auth.success',
+    defaultMessage: 'Success',
+  },
+});
 
 const defaultStatusMap = {
-  400: messages.status.bad_request,
-  401: messages.status.unauthorized,
-  500: messages.status.server_error
+  400: messages.bad_request,
+  401: messages.unauthorized,
+  500: messages.server_error,
 };
 
 const xhrToastFn = (showToastFn, fallbackMessageKey) => (response, intl, statusMap={}) => {
@@ -16,5 +40,5 @@ const xhrToastFn = (showToastFn, fallbackMessageKey) => (response, intl, statusM
   }
 };
 
-export const xhrErrorToast = xhrToastFn(showErrorToast, messages.status.unknown_error);
-export const xhrSuccessToast = xhrToastFn(showSuccessToast, messages.status.success);
+export const xhrErrorToast = xhrToastFn(showErrorToast, messages.unknown_error);
+export const xhrSuccessToast = xhrToastFn(showSuccessToast, messages.success);

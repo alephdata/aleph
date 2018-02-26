@@ -30,6 +30,9 @@ FocusStyleManager.onlyShowFocusOnTabs();
 // add locale data to react-intl
 addLocaleData([...en, ...de, ...es, ...ru]);
 
+// TODO store this value in the redux state, make it changeable by the user.
+const locale='en';
+
 // Configure endpoint to add session bearer token.
 endpoint.interceptors.request.use(config => {
   const { session } = store.getState();
@@ -66,12 +69,11 @@ endpoint.interceptors.response.use(
   }
 );
 
-
 class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <IntlProvider locale="en" messages={translations.en}>
+        <IntlProvider locale={locale} messages={translations[locale]}>
           <BrowserRouter>
             <Route path="/" component={PageLayout} />
           </BrowserRouter>

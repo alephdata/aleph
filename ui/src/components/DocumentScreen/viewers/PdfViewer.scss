@@ -1,48 +1,40 @@
 @import "src/app/variables.scss";
 
-.PdfViewer .page {
-  margin: $aleph-grid-size 0;
-}
+.PdfViewer {
+  .document_pdf {
+    flex-grow: 1;
+    width: 100%;
+    background-color: whitesmoke;
+  }
 
-.document_pdf s{
-  flex-grow: 1;
-  width: 100%;
-  background-color: whitesmoke;
-  padding-top: $aleph-grid-size;
-}
+  .page {
+    margin: 0;
+    padding: 0;
+  }
 
-.PdfViewer .page > canvas {
-  /* center each page */
-  margin: auto;
-  padding-bottom: $aleph-grid-size;
-  width: 90%;
-}
+  .page > canvas {
+    /* center each page */
+    margin: auto;
+    padding-bottom: $aleph-grid-size;
+    width: 90%;
+  }
 
-.previousPage {
-  color: white;
-}
+  .ReactPDF__Page__canvas {
+    padding: 0 !important;
+  }
 
-.previousPage:hover {
-  color: white;
-}
+  .SectionLoading {
+    background: white;
+  }
 
-.nextPage {
-  color: white;
-}
+  .ReactPDF__Error {
+    background: white;
+    text-align: center;
+    padding: 100px 20px;
+    font-size: 1.2em;
+  }
 
-.disabledPage {
-  pointer-events: none;
-}
-
-.nextPage:hover {
-  color: white;
-}
-
-.nextPageButton {
-  float: right;
-  margin-right: 620px;
-}
-
-.previousPageButton {
-  margin-left: 565px;
+  .spinner {
+    margin: 100px 0;
+  }
 }

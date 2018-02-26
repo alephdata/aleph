@@ -11,24 +11,19 @@ class Cache(db.Model):
 
     @classmethod
     def get_cache(cls, key):
-        session = db.sessionmaker(bind=db.engine)()
-        q = session.query(cls.value)
+        q = db.session.query(cls.value)
         q = q.filter_by(key=key)
         cobj = q.first()
         value = cobj.value if cobj is not None else None
-        session.close()
         return value
 
     @classmethod
     def set_cache(cls, key, value):
-        session = db.sessionmaker(bind=db.engine)()
-        q = session.query(cls)
+        q = db.session.query(cls)
         q = q.filter_by(key=key)
         cobj = q.first()
         if cobj is None:
             cobj = cls()
             cobj.key = key
         cobj.value = value
-        session.add(cobj)
-        session.commit()
-        session.close()
+        db.session.add(cobj)

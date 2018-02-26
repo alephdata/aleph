@@ -8,21 +8,17 @@ import HtmlViewer from './viewers/HtmlViewer';
 import PdfViewer from './viewers/PdfViewer';
 import ImageViewer from './viewers/ImageViewer';
 import FolderViewer from './viewers/FolderViewer';
-import EmailHeadersViewer from './viewers/EmailHeadersViewer';
-import DocumentToolbar from './DocumentToolbar';
+import EmailViewer from './viewers/EmailViewer';
 
 import './DocumentContent.css';
 
 class DocumentContent extends React.Component {
   render() {
     const { document, fragId } = this.props;
-    
-    return (
-      <DualPane.ContentPane>
-      
-        <DocumentToolbar document={document}/>
-      
-        {document.status === 'fail' && (
+
+    if (document.status === 'fail' && !(document.children !== undefined && document.children > 0)) {
+      return (
+        <DualPane.ContentPane>
           <section className="PartialError">
             <div className="pt-non-ideal-state">
               <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
@@ -37,22 +33,31 @@ class DocumentContent extends React.Component {
               </div>
             </div>
           </section>
-        )}
-
+        </DualPane.ContentPane>
+      )
+    }
+    
+    return (
+      <DualPane.ContentPane style={{padding: 0}}>
         {document.schema === 'Email' && (
-          <EmailHeadersViewer document={document} />
+          <EmailViewer document={document}/>
         )}
-
-        {document.schema === 'Table' && (
+        
+        {/* 
+          Use table view for Tables *unless* it's an Excel spreadsheet with
+          sheets (in which case it will fall through to the "folder" view
+          to list all sheets in the spreadsheet).
+        */}
+        {document.schema === 'Table' && document.children !== undefined && document.extension !== 'xlsx' && document.children !== undefined && (
           <TableViewer document={document}/>
         )}
 
-        {document.text && !document.html && (
-          <TextViewer text={document.text} />
+        {document.text && !document.html && document.schema !== 'Email' && (
+          <TextViewer document={document}/>
         )}
 
         {document.html && (
-          <HtmlViewer html={document.html} />
+          <HtmlViewer document={document}/>
         )}
 
         {document.links && document.links.pdf && (
@@ -63,7 +68,7 @@ class DocumentContent extends React.Component {
           <ImageViewer document={document} />
         )}
 
-        {document.children !== undefined && document.children > 0 && (
+        {document.children !== undefined && document.children > 0 && document.schema !== 'Email' && (
           <FolderViewer document={document} />
         )}
       </DualPane.ContentPane>

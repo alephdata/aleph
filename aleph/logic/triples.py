@@ -1,10 +1,9 @@
 import logging
-from urlparse import urljoin
 from banal import ensure_list
 from followthemoney import model
 from elasticsearch.helpers import scan
 from rdflib import Namespace, Graph, URIRef, Literal
-from rdflib.namespace import FOAF, DC, DCTERMS, RDF, RDFS, SKOS, XSD
+from rdflib.namespace import DC, DCTERMS, RDF, RDFS, SKOS, XSD
 
 from aleph.core import es
 from aleph.index.core import collections_index, entities_index

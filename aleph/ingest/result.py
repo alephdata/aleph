@@ -113,9 +113,6 @@ class DocumentResult(Result):
         for lang in self.languages:
             doc.add_language(safe_string(lang))
 
-        # if len(self.pages):
-        #     doc.body_text = '\n\n'.join(self.pages)
-
         db.session.flush()
 
         collector = DocumentTagCollector(doc, 'ingestors')

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { NonIdealState } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import { fetchEntity } from 'src/actions';
 import Screen from 'src/components/common/Screen';
@@ -12,6 +13,12 @@ import EntityInfo from './EntityInfo';
 import Entity from './Entity';
 import EntityContent from './EntityContent';
 
+const messages = defineMessages({
+  not_found: {
+    id: 'entity.not_found',
+    defaultMessage: 'Entity not found',
+  },
+});
 
 class EntityScreen extends Component {
   componentDidMount() {
@@ -30,13 +37,13 @@ class EntityScreen extends Component {
   }
 
   render() {
-    const { entity } = this.props;
+    const { entity, intl } = this.props;
     if (entity === undefined || entity.isFetching) {
       return <ScreenLoading />;
     }
     if (entity.error) {
       return (
-        <NonIdealState visual="error" title="Entity not found" />
+        <NonIdealState visual="error" title={intl.formatMessage(messages.not_found)}/>
       );
     }
     return (
@@ -64,4 +71,4 @@ const mapStateToProps = (state, ownProps) => {
   return { entityId, entity };
 }
 
-export default connect(mapStateToProps, { fetchEntity })(EntityScreen);
+export default connect(mapStateToProps, { fetchEntity })(injectIntl(EntityScreen));

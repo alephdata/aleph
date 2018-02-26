@@ -69,10 +69,6 @@ a {
   }
 }
 
-.muted {
-  color: $aleph-greyed-text;
-}
-
 .clickable {
   cursor: pointer;
 
@@ -81,3 +77,16 @@ a {
   }
 }
 
+/* Taming Blueprint icons and tags/badges when displayed inside tabs */
+.pt-tab {
+  /* If no icon min-width then the default tabs border is rendered badly */
+  .pt-icon-standard {
+    min-width: 20px;
+  }
+  /* Tags (badges) in tabs have way too much padding by default and look huge */
+  .pt-tag {
+    padding: 0 10px;
+    margin-left: $aleph-grid-size;
+    min-width: 0;
+  }
+}

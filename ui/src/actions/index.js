@@ -7,6 +7,16 @@ export const fetchMetadata = asyncActionCreator(() => async dispatch => {
   return { metadata: response.data };
 }, { name: 'FETCH_METADATA' });
 
+export const fetchRoles = asyncActionCreator((prefix) => async dispatch => {
+  const response = await endpoint.get(`roles/_suggest?prefix=${prefix}`);
+  return { roles: response.data };
+}, { name: 'FETCH_ROLES' });
+
+export const updateCollection = asyncActionCreator((collection) => async dispatch => {
+  const response = await endpoint.post(`collections/${collection.id}`, collection);
+  return {collection: response.data};
+}, {name: 'UPDATE_COLLECTION'});
+
 export const fetchRole = asyncActionCreator((id) => async dispatch => {
   const response = await endpoint.get(`roles/${id}`);
   return { role: response.data };
@@ -32,6 +42,19 @@ export const addAlert = asyncActionCreator((alert) => async dispatch => {
   await endpoint.post('alerts', alert);
   return {};
 }, { name: 'ADD_ALERT' });
+
+export const fetchCollectionPermissions = asyncActionCreator((id) => async dispatch => {
+  const response = await endpoint.get(`collections/${id}/permissions`);
+  response.data.results[0].sort(function(first, second){
+    return first.role.name < second.role.name ? -1 : 1;
+  });
+  return {permissions: response.data};
+}, { name: 'FETCH_COLLECTION_PERMISSIONS' });
+
+export const updateCollectionPermissions = asyncActionCreator((permissions) => async dispatch => {
+  const response = await endpoint.post(`collections/${permissions[0].collection_id}/permissions`, permissions);
+  return {permissions: response.data};
+}, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 
 export const fetchStatistics = asyncActionCreator(() => async dispatch => {
   const response = await endpoint.get('statistics');
