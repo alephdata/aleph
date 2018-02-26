@@ -46,27 +46,30 @@ class HomeScreen extends Component {
 
     return (
       <Screen>
-        <div className="HomePage">
-          <h1 className="search_h1">
-            <FormattedMessage id='home.search.title'
-                              defaultMessage="{count} leads"
-                              values={{
-                                count: (<FormattedNumber value={countStats} />)
-                              }} />
-          </h1>
-          <form onSubmit={this.onSubmit} className="search_form">
-            <div className="pt-input-group pt-large">
-              <span className="pt-icon pt-icon-search search_span"/>
-              <input className="pt-input search_input"
-                  type="search"
-                  placeholder={intl.formatMessage({id: 'home.search.placeholder', defaultMessage: "Search companies, people and documents."})}
-                  dir="auto"
-                  onChange={this.onChange}
-                  value={this.state.value}/>
-            </div>
-          </form>
+        <div id='section2' className="HomePage">
+          <section>
+            <i className="far fa-circle"/>
+            <h1 className="search_h1">
+              <FormattedMessage id='home.search.title'
+                                defaultMessage="Follow The Money" />
+            </h1>
+            <form onSubmit={this.onSubmit} className="search_form">
+              <div className="pt-input-group pt-large">
+                <span className="pt-icon pt-icon-search search_span"/>
+                <input className="pt-input search_input"
+                       type="search"
+                       placeholder={intl.formatMessage({id: 'home.search.placeholder', defaultMessage: "Search companies, people and documents."})}
+                       dir="auto"
+                       onChange={this.onChange}
+                       value={this.state.value}/>
+              </div>
+            </form>
+            <div className='homepage_collections_footer'>Want to browse collections?</div>
+          </section>
         </div>
-        <CollectionBrowser />
+        <div id='section2'>
+          <CollectionBrowser />
+        </div>
       </Screen>
     );
   }

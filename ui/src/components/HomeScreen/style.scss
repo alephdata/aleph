@@ -16,10 +16,24 @@
     font-size: 4em;
   }
 
+  section {
+    min-height: 98vh;
+  }
+
   .search_form {
     max-width: 50em;
     margin: 0 auto;
     padding-bottom: 5em;
+  }
+
+  .homepage_collections_footer {
+    height: 45px;
+    background-color: #394b59;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    padding-top: 10px;
   }
 
   .homepage_examples {
