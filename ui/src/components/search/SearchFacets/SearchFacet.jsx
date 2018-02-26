@@ -54,7 +54,8 @@ class SearchFacet extends Component {
     return props.query.getFilter(props.field).length > 0;
   }
 
-  showMore() {
+  showMore(e) {
+    e.preventDefault();
     const { query, field, fetchNextFacetValues } = this.props;
     fetchNextFacetValues({ query, field });
   }
@@ -99,21 +100,21 @@ class SearchFacet extends Component {
 
     return (
       <div className="SearchFacet">
-        <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick}>
+        <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick} style={{position: 'relative'}}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
-          <span className="text">
+          <span className="FacetName">
             {isActive
               ? total !== undefined
                 ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count, total }} />
                 : <FormattedMessage id="search.facets.filteringByNoTotal" defaultMessage="Filtering by {count} {fieldLabel}" values={{ fieldLabel, count }} />
               : total !== undefined
-                ? <FormattedMessage id="search.facets.filterBy" defaultMessage="Found {total} {fieldLabel}" values={{ fieldLabel, total }} />
+              ? <span><FormattedMessage id="search.facets.filterBy" defaultMessage="{fieldLabel}" values={{ fieldLabel, total }} /> <span className="pt-tag pt-intent-primary pt-small pt-round">{total}</span></span>
                 : <FormattedMessage id="search.facets.countingTotal" defaultMessage="Counting {fieldLabel}…" values={{ fieldLabel }} />
             }
           </span>
-          {isActive && (
+          {isActive && !isFetchingValues && !isExpandingValues && (
             <Button onClick={this.onClear}
-              className="clearButton pt-minimal pt-small"
+              className="ClearButton pt-minimal pt-small"
               title="Clear this filter" icon="disable" />
           )}
           {(isFetchingValues || isExpandingValues) && (
@@ -126,9 +127,9 @@ class SearchFacet extends Component {
                           selectedItems={current}
                           onItemClick={this.onSelect}>
               {!isFetchingValues && hasMoreValues && (
-                <Button onClick={this.showMore} className="showMoreButton pt-minimal">
-                  <FormattedMessage id="search.facets.showMore" defaultMessage="show more {fieldLabel}…" values={{ fieldLabel }}/>
-                </Button>
+                <a href="#" className="ShowMore" onClick={this.showMore}>
+                  <FormattedMessage id="search.facets.showMore" defaultMessage="Show more…" values={{ fieldLabel }} style={{paddingTop: 10}}/>
+                </a>
               )}
             </CheckboxList>
           )}

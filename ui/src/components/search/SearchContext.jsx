@@ -8,7 +8,6 @@ import { selectResult } from 'src/selectors';
 
 import Query from './Query';
 
-
 class SearchContext extends Component {
   defaultLimit = 50;
 
