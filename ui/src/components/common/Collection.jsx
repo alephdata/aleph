@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import React, { Component, PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -7,7 +7,7 @@ import getPath from 'src/util/getPath';
 import { fetchCollection } from 'src/actions';
 
 
-class Label extends PureComponent {
+class CollectionLabel extends Component {
   render() {
     const { collection, icon = true } = this.props;
 
@@ -24,13 +24,9 @@ class CollectionLink extends Component {
   render() {
     const { children, collection, icon = true, className } = this.props;
 
-    if (!collection || !collection.links) {
-      return null;
-    }
-    
     return (
       <Link to={getPath(collection.links.ui)} className={className}>
-        {children || <Label collection={collection} icon={icon} />}
+        {children || <Collection.Label collection={collection} icon={icon} />}
       </Link>
     );
   }
@@ -77,7 +73,7 @@ CollectionLoad.propTypes = {
 }
 
 class Collection {
-  static Label = Label;
+  static Label = CollectionLabel;
   static Link = CollectionLink;
   static Load = CollectionLoad;
 }
