@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { Helmet } from 'react-helmet';
+
+import Screen from 'src/components/common/Screen';
+import DualPane from 'src/components/common/DualPane';
 
 import SearchContext from './SearchContext';
 import SearchResult from './SearchResult';
 import SearchFilter from './SearchFilter';
 import SearchFacets from './SearchFacets';
-import Screen from 'src/components/common/Screen';
-import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import DualPane from 'src/components/common/DualPane';
 
+import './SearchScreen.css';
 
 class SearchScreen extends Component {
   render() {
@@ -21,15 +21,8 @@ class SearchScreen extends Component {
               <title>{searchContext.query.getQ()}</title>
             </Helmet>
           )}
-          <Breadcrumbs>
-            <li>
-              <a className="pt-breadcrumb">
-                <FormattedMessage id="search.breadcrumb" defaultMessage="Global search" />
-              </a>
-            </li>
-          </Breadcrumbs>
-          <DualPane>
-            <DualPane.InfoPane>
+          <DualPane className="SearchScreen">
+            <DualPane.InfoPane className="SearchFacetsPane">
               <SearchFacets {...searchContext}/>
             </DualPane.InfoPane>
             <DualPane.ContentPane>
