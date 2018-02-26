@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { NonIdealState } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import { fetchEntity } from 'src/actions';
 import Screen from 'src/components/common/Screen';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
@@ -21,31 +19,15 @@ const messages = defineMessages({
 });
 
 class EntityScreen extends Component {
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { entityId, entity } = this.props;
-    if (entity === undefined) {
-      this.props.fetchEntity({ id: entityId });
-    }
-  }
-
   render() {
     const { entity, intl } = this.props;
-    if (entity === undefined || entity.isFetching) {
-      return <ScreenLoading />;
-    }
+
     if (entity.error) {
       return (
         <NonIdealState visual="error" title={intl.formatMessage(messages.not_found)}/>
       );
     }
+
     return (
       <Screen>
         <Helmet>
@@ -65,10 +47,14 @@ class EntityScreen extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { entityId } = ownProps.match.params;
-  const entity = entityId !== undefined ? state.entities[entityId] : undefined;
-  return { entityId, entity };
-}
+EntityScreen = injectIntl(EntityScreen);
 
-export default connect(mapStateToProps, { fetchEntity })(injectIntl(EntityScreen));
+// Wrap the EntityScreen into Entity.Load to handle data fetching.
+export default ({ match, ...otherProps }) => (
+  <Entity.Load
+    id={match.params.entityId}
+    renderWhenLoading={<ScreenLoading />}
+  >{entity => (
+    <EntityScreen entity={entity} {...otherProps} />
+  )}</Entity.Load>
+);
