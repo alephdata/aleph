@@ -14,7 +14,7 @@
     cursor: pointer;
     background: $aleph-toolbar-background;
     border-bottom: 1px solid $aleph-border-color;
-  
+
     &.active {
       font-weight: bold;
     }
@@ -32,12 +32,15 @@
       }
     }
 
-    & > .FacetName {
+    .FacetName {
       padding: $aleph-grid-size 0;
-      font-weight: bold;
       font-size: 1.1em;
     }
-
+    
+    &.clickable .FacetName {
+      font-weight: bold;
+    }
+    
     .FilterCount {
       padding-left: $aleph-grid-size;
       font-weight: normal;
