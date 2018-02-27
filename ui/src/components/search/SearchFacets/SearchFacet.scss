@@ -35,9 +35,18 @@
     & > .FacetName {
       padding: $aleph-grid-size 0;
       font-weight: bold;
-      font-size: 1.2em;
+      font-size: 1.1em;
     }
 
+    .FilterCount {
+      padding-left: $aleph-grid-size;
+      font-weight: normal;
+    }
+    
+    .FacetIcon {
+      margin-right: $aleph-grid-size;
+    }
+    
     & > .ClearButton {
       position: absolute;
       top: $aleph-grid-size/2;
@@ -56,7 +65,11 @@
       right: $aleph-grid-size;
       padding-top: 0;
       padding-bottom: 0;
-    }    
+    }
+    
+    .pt-tag.pt-intent-primary {
+      font-weight: bold;
+    }
   }
 
   p {

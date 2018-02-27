@@ -18,10 +18,10 @@ class PageNavbarSearchForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.location.pathname == '/search')
+    if (this.props.location.pathname === '/search')
       return
       
-    if (nextProps.searchContext && nextProps.searchContext.query.state.q != this.state.value) {
+    if (nextProps.searchContext && nextProps.searchContext.query.state.q !== this.state.value) {
       this.setState({ value: nextProps.searchContext.query.getQ() })
     }
   }
@@ -32,7 +32,7 @@ class PageNavbarSearchForm extends Component {
 
   onSubmit(event) {
     event.preventDefault();
-    if (this.props.location.pathname == '/search') {
+    if (this.props.location.pathname === '/search') {
       let query = this.props.searchContext.query.setQ(this.state.value);
       this.props.searchContext.updateQuery(query);
     } else {

@@ -57,6 +57,20 @@ const messages = defineMessages({
   },
 })
 
+// @TODO Refactor these out to somewhere reuseabe if we keep them.
+const icons = {
+  ['Types']: 'list',
+  ['Collections']: 'database',
+  ['Languages']: 'translate',
+  ['Emails']: 'envelope',
+  ['Phones']: 'phone',
+  ['Countries']: 'globe',
+  ['Names']: 'id-number',
+  ['Addresses']: 'map',
+  ['File types']: 'document',
+  ['Authors']: 'person'
+}
+
 class SearchFacet extends Component {
   constructor(props)  {
     super(props);
@@ -144,21 +158,33 @@ class SearchFacet extends Component {
     // against the requested limit.
     const hasMoreValues = valuesLimit < total;
 
+    console.log(icons);
+    
     return (
       <div className="SearchFacet">
         <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick} style={{position: 'relative'}}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
           <span className="FacetName">
-            {fieldLabel}      
-            {isActive 
-              ? null
-              : total !== undefined
-                ? total > 0
-                  ? <span className='pt-tag pt-small pt-round pt-intent-primary'><FormattedNumber value={total} /></span>
-                  : <span className='pt-tag pt-small pt-round pt-minimal'><FormattedNumber value={total} /></span>
-                : <span className='pt-tag pt-small pt-round pt-minimal'>…</span>
-            }
-          </span>
+            {icons[fieldLabel] && (<React.Fragment><span className={`FacetIcon pt-icon pt-icon-${icons[fieldLabel]}`}/></React.Fragment>)}
+            {fieldLabel} 
+          </span>     
+            
+          {isActive && count > 0 && total !== undefined && total > 0 && (
+            <span className="FilterCount pt-text-muted"><FormattedMessage id="search.facets.filtersSelected" defaultMessage="{count} of {total} selected" values={{ count, total }} /></span>
+          )}
+
+          {isActive && total === undefined && (
+            <span className="pt-tag pt-small pt-round pt-minimal">…</span>
+          )}
+
+          {!isActive && total !== undefined && total === 0 && (
+            <span className="pt-tag pt-small pt-round pt-minimal">0</span>
+          )}
+
+          {!isActive && total !== undefined && total > 0 && (
+            <span className="pt-tag pt-small pt-round pt-intent-primary"><FormattedNumber value={total} /></span>
+          )}
+          
           {isActive && !isFetchingValues && !isExpandingValues && (
             <Button onClick={this.onClear}
               className="ClearButton pt-minimal pt-small pt-intent-primary"
@@ -166,12 +192,6 @@ class SearchFacet extends Component {
           )}
         </div>
         <Collapse isOpen={isOpen}>
-          {isActive
-            ? total !== undefined
-              ? <p className="pt-text-muted"><FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count, total }} /></p>
-              : <p className="pt-text-muted"><FormattedMessage id="search.facets.filteringByNoTotal" defaultMessage="Filtering by {count} {fieldLabel}" values={{ fieldLabel, count }} /></p>
-            : null
-          }
           {values !== undefined && (
             <CheckboxList items={values}
                           selectedItems={current}
