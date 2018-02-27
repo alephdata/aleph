@@ -21,10 +21,10 @@ const setFacetFetching = ({ fetchTotal, fetchValues }) => facet => {
 }
 
 const setFacetResult = ({ fetchTotal, fetchValues, result, valuesLimit }) => facet => {
-  if (fetchTotal) {
+  if (fetchTotal && result) {
     facet = { ...facet, total: result.total, isFetchingTotal: false };
   }
-  if (fetchValues) {
+  if (fetchValues && result) {
     facet = { ...facet, values: result.values, isFetchingValues: false, valuesLimit };
   }
   return facet;

@@ -18,6 +18,8 @@ export function queryToResultKey(query) {
 }
 
 export function queryToFacetKey(query, field) {
+  if (!query) return null
+    
   // Strip the parts of the query that are irrelevant to the facet cache.
   return query
     .clear('limit')

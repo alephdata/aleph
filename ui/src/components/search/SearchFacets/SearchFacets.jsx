@@ -19,7 +19,8 @@ class SearchFacets extends Component {
       'mime_type',
       'author',
     ];
-    if (aspects.collections) {
+    
+    if (aspects && aspects.collections) {
       possibleFacets = ['collection_id', ...possibleFacets];
     }
 

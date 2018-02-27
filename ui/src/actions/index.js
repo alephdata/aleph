@@ -87,6 +87,7 @@ const defaultFacetValuesLimit = 10;
 const facetValuesLimitIncreaseStep = 10;
 
 const _fetchFacet = async ({ query, field, fetchTotal, fetchValues, valuesLimit }) => {
+  if (!query) return null
   const facetQuery = query
     .limit(0) // The limit of the results, not the facets.
     .clearFacets()

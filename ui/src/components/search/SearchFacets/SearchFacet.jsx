@@ -79,7 +79,7 @@ class SearchFacet extends Component {
   componentDidUpdate(prevProps, prevState) {
     // Check for a change of query, as unconditionally calling fetchIfNeeded
     // could cause an infinite loop (if fetching fails).
-    if (!this.props.query.sameAs(prevProps.query)
+    if (this.props.query && !this.props.query.sameAs(prevProps.query)
       || this.state.isOpen !== prevState.isOpen) {
       this.fetchIfNeeded();
     }
@@ -97,7 +97,7 @@ class SearchFacet extends Component {
   }
 
   isActive(props = this.props) {
-    return props.query.getFilter(props.field).length > 0;
+    return props.query ? props.query.getFilter(props.field).length > 0 : false;
   }
 
   showMore(e) {
@@ -132,8 +132,8 @@ class SearchFacet extends Component {
             isExpandingValues, valuesLimit, intl } = this.props;
     const { isOpen } = this.state;
 
-    const current = query.getFilter(field);
-    const count = current.length;
+    const current = query ? query.getFilter(field) : null;
+    const count = current ? current.length : 0;
     const isActive = this.isActive();
     const fieldLabel = messages[`facet_${field}`]
       ? intl.formatMessage(messages[`facet_${field}`])
@@ -162,7 +162,7 @@ class SearchFacet extends Component {
           {isActive && !isFetchingValues && !isExpandingValues && (
             <Button onClick={this.onClear}
               className="ClearButton pt-minimal pt-small pt-intent-primary"
-              title={intl.formatMessage(messages.clear_filter)} icon="delete"></Button>
+              title={intl.formatMessage(messages.clear_filter)} icon="cross"></Button>
           )}
         </div>
         <Collapse isOpen={isOpen}>
