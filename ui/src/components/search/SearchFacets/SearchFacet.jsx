@@ -149,22 +149,29 @@ class SearchFacet extends Component {
         <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick} style={{position: 'relative'}}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
           <span className="FacetName">
-            {isActive
-              ? total !== undefined
-                ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count, total }} />
-                : <FormattedMessage id="search.facets.filteringByNoTotal" defaultMessage="Filtering by {count} {fieldLabel}" values={{ fieldLabel, count }} />
+            {fieldLabel}      
+            {isActive 
+              ? null
               : total !== undefined
-                ? <span><FormattedMessage id="search.facets.filterBy" defaultMessage="{fieldLabel}" values={{ fieldLabel, total }} />{total > 0 && (<span className='pt-tag pt-small pt-round pt-intent-primary'><FormattedNumber value={total} /></span>)}</span>
-                : <FormattedMessage id="search.facets.countingTotal" defaultMessage="Counting {fieldLabel}…" values={{ fieldLabel }} />
+                ? total > 0
+                  ? <span className='pt-tag pt-small pt-round pt-intent-primary'><FormattedNumber value={total} /></span>
+                  : <span className='pt-tag pt-small pt-round pt-minimal'><FormattedNumber value={total} /></span>
+                : <span className='pt-tag pt-small pt-round pt-minimal'>…</span>
             }
           </span>
           {isActive && !isFetchingValues && !isExpandingValues && (
             <Button onClick={this.onClear}
-              className="ClearButton pt-minimal pt-small"
-              title={intl.formatMessage(messages.clear_filter)} icon="disable" />
+              className="ClearButton pt-minimal pt-small pt-intent-primary"
+              title={intl.formatMessage(messages.clear_filter)} icon="delete"></Button>
           )}
         </div>
         <Collapse isOpen={isOpen}>
+          {isActive
+            ? total !== undefined
+              ? <p className="pt-text-muted"><FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count, total }} /></p>
+              : <p className="pt-text-muted"><FormattedMessage id="search.facets.filteringByNoTotal" defaultMessage="Filtering by {count} {fieldLabel}" values={{ fieldLabel, count }} /></p>
+            : null
+          }
           {values !== undefined && (
             <CheckboxList items={values}
                           selectedItems={current}
