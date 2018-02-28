@@ -25,12 +25,12 @@ class CollectionBrowser extends Component {
 
     this.state = {
       result: {results: []},
-      queryText: props.query.getQ(),
+      queryPrefix: props.query.getString('prefix'),
       isFetching: true,
     };
 
     this.updateQuery = debounce(this.updateQuery.bind(this), 400);
-    this.onChangeQueryText = this.onChangeQueryText.bind(this);
+    this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
   }
 
@@ -55,9 +55,9 @@ class CollectionBrowser extends Component {
     });
   }
 
-  onChangeQueryText({target}) {
-    this.setState({queryText: target.value});
-    const query = this.props.query.setQ(target.value);
+  onChangeQueryPrefix({target}) {
+    this.setState({queryPrefix: target.value});
+    const query = this.props.query.set('prefix', target.value);
     this.updateQuery(query);
   }
 
@@ -94,7 +94,7 @@ class CollectionBrowser extends Component {
 
   render() {
     const { intl } = this.props;
-    const { result, queryText, isFetching } = this.state;
+    const { result, queryPrefix, isFetching } = this.state;
     const { total = 0 } = result;
     return (
       <section className="CollectionBrowser">
@@ -111,7 +111,7 @@ class CollectionBrowser extends Component {
               <i className="pt-icon pt-icon-search" />
               <input className="pt-input" type="search"
                 placeholder={intl.formatMessage(messages.filter)}
-                onChange={this.onChangeQueryText} value={queryText} />
+                onChange={this.onChangeQueryPrefix} value={queryPrefix} />
           </div>
         </div>
         <div className="results">
