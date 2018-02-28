@@ -33,21 +33,27 @@ class SearchFilterTag extends PureComponent {
         );
       case 'collection_id':
         return (
-          <Collection.LabelById id={value} />
+          <Collection.Load id={value} renderWhenLoading={'…'}>{collection => (
+            <Collection.Label collection={collection} />
+          )}</Collection.Load>
         );
       case 'ancestors':
       case 'parent.id':
         return (
           <span>
             <FormattedMessage id="search.filterTag.ancestors" defaultMessage="inside:" />
-            <Entity.LabelById id={value} icon />
+            <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
+              <Entity.Label entity={entity} icon />
+            )}</Entity.Load>
           </span>
         );
       case 'entities':
         return (
           <span>
             <FormattedMessage id="search.filterTag.entities" defaultMessage="related:" />
-            <Entity.LabelById id={value} icon />
+            <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
+              <Entity.Label entity={entity} icon />
+            )}</Entity.Load>
           </span>
         );
       case 'names':
