@@ -1,5 +1,6 @@
 import {Link} from 'react-router-dom';
-import React, { Component, PureComponent } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
 import { connect } from 'react-redux';
@@ -58,8 +59,7 @@ class EntityLink extends Component {
   }
 }
 
-
-class EntityLabelById extends PureComponent {
+class EntityLoad extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -76,15 +76,14 @@ class EntityLabelById extends PureComponent {
   }
 
   render() {
-    const { entity, id, ...otherProps } = this.props;
-    if (entity === undefined || entity.isFetching) {
-      return (
-        <code>{id}</code>
-      );
+    const { entity, children, renderWhenLoading } = this.props;
+    if (
+      (entity === undefined || entity.isFetching)
+      && renderWhenLoading !== undefined
+    ) {
+      return renderWhenLoading;
     } else {
-     return (
-       <Entity.Label entity={entity} {...otherProps} />
-     );
+      return children(entity);
     }
   }
 }
@@ -92,14 +91,18 @@ class EntityLabelById extends PureComponent {
 const mapStateToProps = (state, ownProps) => ({
   entity: state.entities[ownProps.id],
 });
-EntityLabelById = connect(mapStateToProps, { fetchEntity })(EntityLabelById);
+EntityLoad = connect(mapStateToProps, { fetchEntity })(EntityLoad);
 
-
+EntityLoad.propTypes = {
+  id: PropTypes.string.isRequired,
+  children: PropTypes.func.isRequired,
+  renderWhenLoading: PropTypes.node,
+}
 
 class Entity {
   static Label = EntityLabel;
   static Link = EntityLink;
-  static EntityLabelById = EntityLabelById;
+  static Load = EntityLoad;
 }
 
 export default Entity;

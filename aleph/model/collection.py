@@ -37,6 +37,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         'other': 'Other material'
     }
 
+    DEFAULT = 'other'
+
     label = db.Column(db.Unicode)
     summary = db.Column(db.Unicode, nullable=True)
     category = db.Column(db.Unicode, nullable=True)
@@ -56,6 +58,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.label = data.get('label', self.label)
         self.summary = data.get('summary', self.summary)
         self.category = data.get('category', self.category)
+        self.category = self.category or self.DEFAULT
         self.managed = as_bool(data.get('managed'), default=False)
         self.countries = data.get('countries', [])
         self.languages = data.get('languages', [])

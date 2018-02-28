@@ -21,9 +21,11 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
             permission = Permission()
             permission.role_id = role.id
             permission.collection_id = collection.id
-        permission.read = read
+            db.session.add(permission)
+        permission.read = read or write
         permission.write = write
-        db.session.add(permission)
+        if not permission.read:
+            permission.deleted_at = datetime.utcnow()
         db.session.flush()
         return permission
 

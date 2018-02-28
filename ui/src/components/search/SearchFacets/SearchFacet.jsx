@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Icon, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
@@ -57,6 +57,20 @@ const messages = defineMessages({
   },
 })
 
+// @TODO Refactor these out to somewhere reuseabe if we keep them.
+const facetIcons = {
+  'Types': 'list',
+  'Collections': 'database',
+  'Languages': 'translate',
+  'Emails': 'envelope',
+  'Phones': 'phone',
+  'Countries': 'globe',
+  'Names': 'id-number',
+  'Addresses': 'map',
+  'File types': 'document',
+  'Authors': 'person'
+}
+
 class SearchFacet extends Component {
   constructor(props)  {
     super(props);
@@ -79,8 +93,8 @@ class SearchFacet extends Component {
   componentDidUpdate(prevProps, prevState) {
     // Check for a change of query, as unconditionally calling fetchIfNeeded
     // could cause an infinite loop (if fetching fails).
-    if (!this.props.query.sameAs(prevProps.query)
-      || this.state.isOpen !== prevState.isOpen) {
+    if (this.props.query 
+        && (!this.props.query.sameAs(prevProps.query)|| this.state.isOpen !== prevState.isOpen)) {
       this.fetchIfNeeded();
     }
   }
@@ -97,10 +111,11 @@ class SearchFacet extends Component {
   }
 
   isActive(props = this.props) {
-    return props.query.getFilter(props.field).length > 0;
+    return props.query ? props.query.getFilter(props.field).length > 0 : false;
   }
 
-  showMore() {
+  showMore(e) {
+    e.preventDefault();
     const { query, field, fetchNextFacetValues } = this.props;
     fetchNextFacetValues({ query, field });
   }
@@ -131,8 +146,8 @@ class SearchFacet extends Component {
             isExpandingValues, valuesLimit, intl } = this.props;
     const { isOpen } = this.state;
 
-    const current = query.getFilter(field);
-    const count = current.length;
+    const current = query ? query.getFilter(field) : null;
+    const count = current ? current.length : 0;
     const isActive = this.isActive();
     const fieldLabel = messages[`facet_${field}`]
       ? intl.formatMessage(messages[`facet_${field}`])
@@ -145,25 +160,38 @@ class SearchFacet extends Component {
 
     return (
       <div className="SearchFacet">
-        <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick}>
+        <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick} style={{position: 'relative'}}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
-          <span className="text">
-            {isActive
-              ? total !== undefined
-                ? <FormattedMessage id="search.facets.filteringBy" defaultMessage="Filtering by {count} of {total} {fieldLabel}" values={{ fieldLabel, count, total }} />
-                : <FormattedMessage id="search.facets.filteringByNoTotal" defaultMessage="Filtering by {count} {fieldLabel}" values={{ fieldLabel, count }} />
-              : total !== undefined
-                ? <FormattedMessage id="search.facets.filterBy" defaultMessage="Found {total} {fieldLabel}" values={{ fieldLabel, total }} />
-                : <FormattedMessage id="search.facets.countingTotal" defaultMessage="Counting {fieldLabel}…" values={{ fieldLabel }} />
-            }
-          </span>
-          {isActive && (
-            <Button onClick={this.onClear}
-              className="clearButton pt-minimal pt-small"
-              title={intl.formatMessage(messages.clear_filter)} icon="disable" />
+          <span className="FacetName">
+            {facetIcons[fieldLabel] && (<React.Fragment><span className={`FacetIcon pt-icon pt-icon-${facetIcons[fieldLabel]}`}/></React.Fragment>)}
+            {fieldLabel} 
+          </span>     
+            
+          {isActive && count > 0 && total !== undefined && total > 0 && (
+            <span className="FilterCount pt-text-muted">
+              <FormattedMessage id="search.facets.filtersSelected"
+                defaultMessage="{count} selected"
+                values={{ count: intl.formatNumber(count) }}
+                />
+            </span>
           )}
-          {(isFetchingValues || isExpandingValues) && (
-            <Spinner className="pt-small spinner" />
+
+          {isActive && total === undefined && (
+            <span className="pt-tag pt-small pt-round pt-minimal">…</span>
+          )}
+
+          {!isActive && total !== undefined && total === 0 && (
+            <span className="pt-tag pt-small pt-round pt-minimal">0</span>
+          )}
+
+          {!isActive && total !== undefined && total > 0 && (
+            <span className="pt-tag pt-small pt-round pt-intent-primary"><FormattedNumber value={total} /></span>
+          )}
+          
+          {isActive && !isFetchingValues && !isExpandingValues && (
+            <Button onClick={this.onClear}
+              className="ClearButton pt-minimal pt-small"
+              title={intl.formatMessage(messages.clear_filter)} icon="cross"></Button>
           )}
         </div>
         <Collapse isOpen={isOpen}>
@@ -171,12 +199,15 @@ class SearchFacet extends Component {
             <CheckboxList items={values}
                           selectedItems={current}
                           onItemClick={this.onSelect}>
-              {!isFetchingValues && hasMoreValues && (
-                <Button onClick={this.showMore} className="showMoreButton pt-minimal">
-                  <FormattedMessage id="search.facets.showMore" defaultMessage="show more {fieldLabel}…" values={{ fieldLabel }}/>
-                </Button>
+              {!isFetchingValues && !isExpandingValues && hasMoreValues && (
+                <a href="" className="ShowMore" onClick={this.showMore}>
+                  <FormattedMessage id="search.facets.showMore" defaultMessage="Show more…" values={{ fieldLabel }} style={{paddingTop: 10}}/>
+                </a>
               )}
             </CheckboxList>
+          )}
+          {(isFetchingValues || isExpandingValues) && (
+            <Spinner className="pt-small spinner" />
           )}
         </Collapse>
       </div>

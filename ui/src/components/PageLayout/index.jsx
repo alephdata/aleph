@@ -16,11 +16,14 @@ import DocumentScreen from 'src/components/DocumentScreen';
 import DocumentRelatedScreen from 'src/components/DocumentScreen/DocumentRelatedScreen';
 import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
 import HomeScreen from 'src/components/HomeScreen';
-import CollectionScreen from 'src/components/CollectionScreen';
 import ProfileScreen from 'src/components/ProfileScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
-import PageNavbar from './PageNavbar';
+import PageNavbar from './PageNavbarSearchForm';
+import CollectionScreen from 'src/components/CollectionScreen';
 import CollectionEditScreen from 'src/components/CollectionEdit';
+import CollectionXrefScreen from 'src/components/CollectionXref';
+
+import SearchContext from 'src/components/search/SearchContext';
 
 import './PageLayout.css';
 
@@ -49,27 +52,32 @@ class PageLayout extends Component {
           <title>{metadata.app.title}</title>
           <link rel="shortcut icon" href={metadata.app.favicon} />
         </Helmet>
-        <PageNavbar metadata={metadata} session={session}/>
-        <main className="PageLayout-main">
-          <Switch>
-            <Route path="/login" exact component={LoginScreen}/>
-            <Route path="/logout" exact component={LogoutScreen}/>
-            <Route path="/signup" exact component={SignupScreen}/>
-            <Route path="/settings" exact component={ProfileScreen}/>
-            <Route path="/activate/:code" exact component={ActivateScreen}/>
-            <Route path="/entities/:entityId" exact component={EntityScreen}/>
-            <Route path="/entities/:entityId/related" exact component={EntityRelatedScreen}/>
-            <Route path="/documents/:documentId" exact component={DocumentScreen}/>
-            <Route path="/documents/:documentId/related" exact component={DocumentRelatedScreen}/>
-            <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
-            <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
-            <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
-            <Route path="/collections/:collectionId/edit" exact component={CollectionEditScreen}/>
-            <Route path="/search" exact component={SearchScreen}/>
-            <Route path="/" exact component={HomeScreen}/>
-            <Route component={ErrorScreen}/>
-          </Switch>
-        </main>
+        <SearchContext>{searchContext => (
+          <React.Fragment>
+            <PageNavbar metadata={metadata} session={session} searchContext={searchContext}/>
+            <main className="PageLayout-main">
+              <Switch>
+                <Route path="/login" exact component={LoginScreen}/>
+                <Route path="/logout" exact component={LogoutScreen}/>
+                <Route path="/signup" exact component={SignupScreen}/>
+                <Route path="/settings" exact component={ProfileScreen}/>
+                <Route path="/activate/:code" exact component={ActivateScreen}/>
+                <Route path="/entities/:entityId" exact component={EntityScreen}/>
+                <Route path="/entities/:entityId/related" exact component={EntityRelatedScreen}/>
+                <Route path="/documents/:documentId" exact component={DocumentScreen}/>
+                <Route path="/documents/:documentId/related" exact component={DocumentRelatedScreen}/>
+                <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
+                <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
+                <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
+                <Route path="/collections/:collectionId/edit" exact component={CollectionEditScreen}/>
+                <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefScreen}/>
+                <Route path="/search" exact render={()=><SearchScreen searchContext={searchContext}/>}/>
+                <Route path="/" exact component={HomeScreen}/>
+                <Route component={ErrorScreen}/>
+              </Switch>
+            </main>
+          </React.Fragment>
+        )}</SearchContext>
         <footer className="PageLayout-footer">
           <p>
             <strong>ℵ</strong> aleph Mk II

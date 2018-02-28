@@ -1,12 +1,19 @@
 @import "src/app/variables.scss";
 
 .SearchFacet {
-  border-bottom: 1px solid $aleph-border-color;
+  margin-top: -$aleph-grid-size;
+  margin-bottom: $aleph-grid-size;
+  margin-left: -$aleph-grid-size/2;
+  margin-right: -$aleph-grid-size/2;
 
   & > .opener {
     display: flex;
     padding: 0 $aleph-grid-size;
+    margin-bottom: $aleph-grid-size;
     align-items: center;
+    cursor: pointer;
+    background: $aleph-toolbar-background;
+    border-bottom: 1px solid $aleph-border-color;
 
     &.active {
       font-weight: bold;
@@ -14,7 +21,6 @@
 
     &:not(.clickable) {
       color: $aleph-greyed-text;
-      font-style: italic;
     }
 
     & > .caret {
@@ -26,30 +32,72 @@
       }
     }
 
-    & > .text {
+    .FacetName {
       padding: $aleph-grid-size 0;
+      font-size: 1.1em;
     }
-
-    & > .clearButton {
-      margin-left: $aleph-grid-size;
-
-      &:hover {
+    
+    &.clickable .FacetName {
+      font-weight: bold;
+    }
+    
+    .FilterCount {
+      padding-left: $aleph-grid-size;
+      font-weight: normal;
+    }
+    
+    .FacetIcon {
+      margin-right: $aleph-grid-size;
+    }
+    
+    & > .ClearButton {
+      position: absolute;
+      top: $aleph-grid-size/2;
+      right: $aleph-grid-size/2;
+      border-radius: 1em;
+      
+      &a:hover {
         // Element is on a background (set by .clickable), so invert its own background.
         background: $aleph-content-background;
       }
     }
-
-    & > .spinner {
-      margin-left: auto;
+    
+    .pt-tag {
+      position: absolute;
+      top: $aleph-grid-size;
+      right: $aleph-grid-size;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    
+    .pt-tag.pt-intent-primary {
+      font-weight: bold;
     }
   }
 
+  p {
+    text-align: center;
+  }
+  
+  .spinner {
+    display: block !important;
+    margin: 0 auto $aleph-grid-size*2 auto !important;
+  }
+    
   .CheckboxList {
-    margin-bottom: $aleph-grid-size * 2;
+    padding-bottom: $aleph-grid-size;
+
+    .is-ticked {
+      color: $pt-intent-primary;
+    }
+    
+    .is-ticked + .label {
+      font-weight: bold;
+    }
   }
 
-  button.showMoreButton {
-    font-style: italic;
-    color: $aleph-greyed-text;
+  .ShowMore {
+    margin-top: $aleph-grid-size;
+    font-weight: bold;
   }
 }

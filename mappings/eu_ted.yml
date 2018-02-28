@@ -19,14 +19,14 @@ eu_ted:
   queries:
     - csv_urls:
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
       entities:
         contract:
           schema: Contract
@@ -124,14 +124,14 @@ eu_ted:
               column: MAIN_ACTIVITY
     - csv_urls:
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
       filters_not:
         CANCELLED: 0
       entities:
@@ -146,14 +146,14 @@ eu_ted:
               literal: True
     - csv_urls:
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
       filters:
         CAE_TYPE: 1
       entities:
@@ -167,14 +167,14 @@ eu_ted:
               literal: "Ministry or any other national or federal authority, including their regional or local subdivisions"
     - csv_urls:
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
       filters:
         CAE_TYPE: 3
       entities:
@@ -188,14 +188,14 @@ eu_ted:
               literal: "Regional or local authority"
     - csv_urls:
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
       filters:
         CAE_TYPE: 4
       entities:
@@ -209,14 +209,14 @@ eu_ted:
               literal: "Water, energy, transport and telecommunications sectors"
     - csv_urls:
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
       filters:
         CAE_TYPE: 5
       entities:
@@ -230,14 +230,14 @@ eu_ted:
               literal: "European Union institution/agency"
     - csv_urls:
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
       filters:
         CAE_TYPE: 5A
       entities:
@@ -251,14 +251,14 @@ eu_ted:
               literal: "Other international organisation"
     - csv_urls:
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
       filters:
         CAE_TYPE: 6
       entities:
@@ -272,14 +272,14 @@ eu_ted:
               literal: "Body governed by public law"
     - csv_urls:
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
       filters:
         CAE_TYPE: 8
       entities:
@@ -293,14 +293,14 @@ eu_ted:
               literal: "Other"
     - csv_urls:
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
       filters:
         CAE_TYPE: N
       entities:
@@ -314,14 +314,14 @@ eu_ted:
               literal: "National or federal Agency / Office"
     - csv_urls:
         - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2016.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
-        # - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2015.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2014.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2013.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2012.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2011.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2010.csv
+        - http://data.europa.eu/euodp/repository/ec/dg-grow/mapps/TED_CAN_2009.csv
       filters:
         CAE_TYPE: R
       entities:

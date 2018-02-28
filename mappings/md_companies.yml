@@ -78,6 +78,8 @@ md_companies:
               entity: founder
             asset:
               entity: company
+            role:
+              literal: founder
     - csv_url: http://archive.pudo.org/md-companies/latest/licensed.csv
       entities:
         company:
@@ -98,3 +100,5 @@ md_companies:
           properties:
             sector:
               column: Denumire
+            caemCode:
+              column: Cod_CAEM

@@ -5,7 +5,7 @@ import { InputGroup } from '@blueprintjs/core';
 class SearchFilterText extends Component {
   constructor(props)  {
     super(props);
-    this.state = {value: props.query.getQ()};
+    this.state = {value: props.query ? props.query.getQ() : null};
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }

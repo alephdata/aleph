@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { min } from 'lodash';
 
 import Country from 'src/components/common/Country';
 import Schema from 'src/components/common/Schema';
@@ -10,7 +9,6 @@ import Date from 'src/components/common/Date';
 class EntityListItem extends Component {
   render() {
     const { entity, aspects } = this.props;
-    const date = min(entity.dates);
 
     return (
       <tr className={`nowrap`}>
@@ -31,7 +29,7 @@ class EntityListItem extends Component {
           </td>
         )}
         <td className="date">
-          <Date value={date} />
+          <Date.Earliest value={entity.dates} />
         </td>
       </tr>
     );

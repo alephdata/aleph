@@ -10,7 +10,7 @@ from aleph.logic.collections import collection_url
 from aleph.serializers.common import BaseSchema, flatten_id
 from aleph.serializers.common import Category, Country, Language
 from aleph.serializers.roles import RoleReferenceSchema
-from aleph.model import Role
+from aleph.model import Role, Collection
 
 
 class CollectionSchema(BaseSchema):
@@ -25,7 +25,7 @@ class CollectionSchema(BaseSchema):
     lanaguages = List(Language())
     managed = Boolean(missing=False)
     secret = Boolean(dump_only=True)
-    category = Category(required=True)
+    category = Category(missing=Collection.DEFAULT)
     creator_id = String(allow_none=True)
     creator = Nested(RoleReferenceSchema(), dump_only=True)
     count = Integer(dump_only=True)

@@ -18,6 +18,8 @@ export function queryToResultKey(query) {
 }
 
 export function queryToFacetKey(query, field) {
+  if (!query) return null
+    
   // Strip the parts of the query that are irrelevant to the facet cache.
   return query
     .clear('limit')
@@ -27,4 +29,8 @@ export function queryToFacetKey(query, field) {
     // And neither will sorting ever influence the aggregate values.
     .sortBy(null)
     .toString()
+}
+
+export function matchesKey(collectionId, otherId) {
+  return collectionId + '*' + otherId;
 }

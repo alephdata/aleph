@@ -1,9 +1,6 @@
 @import "src/app/variables.scss";
 
 .PageNavbar.pt-navbar {
-  position: fixed;
-  right: 0;
-  left: 0;
   img {
     height: 32px;
   }
@@ -17,7 +14,7 @@
     }
   }
   
-  .SearchFilter {
+  form {
     position: absolute;
     top: $aleph-grid-size /2;
     left: $aleph-grid-size * 42;
@@ -28,7 +25,6 @@
       color: $pt-text-color;
       border-radius: 2px !important;
       width: $aleph-grid-size * 50 !important;
-      margin-right: 10px;
     }
   }
 }
