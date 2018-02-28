@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import {Link} from 'react-router-dom';
 import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
+import numeral from 'numeral';
 
 import Screen from '../../components/common/Screen';
 import CollectionBrowser from '../../components/CollectionScreen/CollectionBrowser';
 import { fetchStatistics } from '../../actions/index';
 import Schema from 'src/components/common/Schema';
-
-import numeral from 'numeral';
 
 import './style.css';
 
@@ -96,18 +95,6 @@ class HomeScreen extends Component {
     }, 8000);
   }
 
-  getRoundNumber(number) {
-    if(number.includes('k')){
-      return number.split(' ')[0] + ' thousand';
-    } else if(number.includes('m')) {
-      return number.split(' ')[0] + ' million';
-    } else if(number.includes('b')) {
-      return number.split(' ')[0] + ' billion';
-    }
-
-    return number;
-  }
-
   render() {
     const { intl } = this.props;
     const { topThree, isOpen, count } = this.state;
@@ -142,14 +129,21 @@ class HomeScreen extends Component {
               </form>
               <div className='top_three_group'>
                 <h4>We have&nbsp;</h4>
-                <Link to="/search"> <h4>{this.getRoundNumber(numeral(count).format('0 a'))} results</h4></Link>
-                <h4>, including&nbsp;</h4>
+                <Link to="/search"> <h4>{numeral(count).format('0 a')} results</h4></Link>
+                <h4>&nbsp;including&nbsp;</h4>
               {topThree.length > 0 && topThree.map((item, index) => (
                 <Link key={index} to={item.link}>
-                    <h4 key={index + 2}> {this.getRoundNumber(numeral(item.number).format('0 a'))} <Schema.Label schema={item.name} plural={true}/>,&nbsp;</h4>
+                  {index === 0 && <h4 key={index + 2}>{numeral(item.number).format('0 a')}&nbsp;
+                  <Schema.Label schema={item.name} plural={true}/>,&nbsp;
+                  </h4>}
+                  {index === 1 && <h4 key={index + 2}>{numeral(item.number).format('0 a')}&nbsp;
+                    <Schema.Label schema={item.name} plural={true}/>&nbsp;
+                  </h4>}
+                  {index === 2 && <h4 key={index + 2}>and {numeral(item.number).format('0 a')}&nbsp;
+                    <Schema.Label schema={item.name} plural={true}/>.
+                  </h4>}
                   </Link>
               ))}
-              <h4>etc.</h4>
               </div>
             </div>
             </div>
