@@ -170,11 +170,8 @@ class SearchFacet extends Component {
           {isActive && count > 0 && total !== undefined && total > 0 && (
             <span className="FilterCount pt-text-muted">
               <FormattedMessage id="search.facets.filtersSelected"
-                defaultMessage="{count} of {total} selected"
-                values={{ 
-                  count: intl.formatNumber(count),
-                  total: intl.formatNumber(total)
-                }}
+                defaultMessage="{count} selected"
+                values={{ count: intl.formatNumber(count) }}
                 />
             </span>
           )}
