@@ -7,9 +7,8 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { fetchDocument } from 'src/actions';
 import Screen from 'src/components/common/Screen';
 import ScreenLoading from 'src/components/common/ScreenLoading';
-import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
-import Entity from 'src/components/EntityScreen/Entity';
+
 import DocumentInfo from './DocumentInfo';
 import DocumentContent from './DocumentContent';
 
@@ -48,16 +47,6 @@ class DocumentScreen extends Component {
         <Helmet>
           <title>{document.title || document.file_name}</title>
         </Helmet>
-        <Breadcrumbs collection={document.collection}>
-          { document.parent && (
-            <li>
-              <Entity.Link entity={document.parent} className="pt-breadcrumb" icon truncate={30} />
-            </li>
-          )}
-          <li>
-            <Entity.Link entity={document} className="pt-breadcrumb" icon truncate={30} />
-          </li>
-        </Breadcrumbs>
         <DualPane>
           <DocumentContent document={document} fragId={location.hash} />
           <DocumentInfo document={document} />

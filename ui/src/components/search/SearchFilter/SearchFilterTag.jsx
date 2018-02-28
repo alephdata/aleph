@@ -10,7 +10,6 @@ import Entity from 'src/components/EntityScreen/Entity';
 
 import './SearchFilterTag.css';
 
-
 class SearchFilterTag extends PureComponent {
   constructor(props) {
     super(props);
