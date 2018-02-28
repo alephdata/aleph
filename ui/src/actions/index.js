@@ -1,5 +1,4 @@
 import { endpoint } from 'src/app/api';
-import queryString from 'query-string';
 import asyncActionCreator from './asyncActionCreator';
 import { selectFacet } from 'src/selectors';
 
@@ -9,8 +8,7 @@ export const fetchMetadata = asyncActionCreator(() => async dispatch => {
 }, { name: 'FETCH_METADATA' });
 
 export const suggestRoles = asyncActionCreator((prefix, exclude) => async dispatch => {
-  const query = queryString.stringify({prefix: prefix, exclude: exclude});
-  const response = await endpoint.get(`roles/_suggest?${query}`);
+  const response = await endpoint.get(`roles/_suggest`, {params: {prefix, exclude}});
   return response.data;
 }, { name: 'SUGGEST_ROLES' });
 
