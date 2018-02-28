@@ -1,6 +1,6 @@
 @import "src/app/variables.scss";
 
-.PageLayout-spinner {
+.PageLayoutLoading {
   height: 100vh;
   display: flex;
   align-items: center;
@@ -12,7 +12,7 @@
   }
 }
 
-.PageLayout-root {
+.PageLayout {
   flex-grow: 1;
   display: flex;
   flex-flow: column nowrap;
