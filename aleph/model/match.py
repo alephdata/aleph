@@ -28,6 +28,7 @@ class Match(db.Model, IdModel, DatedModel):
         q = q.filter(Match.document_id == None)  # noqa
         q = q.filter(Match.match_collection_id == other_id)
         q = q.order_by(Match.score.desc())
+        q = q.order_by(Match.id)
         return q
 
     @classmethod
