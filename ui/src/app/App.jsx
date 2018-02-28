@@ -1,20 +1,22 @@
-import React, {Component} from 'react';
-import {BrowserRouter, Route} from 'react-router-dom';
-import {Provider} from 'react-redux'
-import {FocusStyleManager} from '@blueprintjs/core';
+import React from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { Provider } from 'react-redux'
+import { FocusStyleManager } from '@blueprintjs/core';
 import { inRange } from 'lodash';
 
-import {addLocaleData, IntlProvider} from 'react-intl';
+import { addLocaleData, IntlProvider } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import de from 'react-intl/locale-data/de';
 import ru from 'react-intl/locale-data/ru';
 import es from 'react-intl/locale-data/es';
 
 import translations from 'src/content/translations.json';
-import PageLayout from 'src/components/PageLayout';
+import Router from './Router';
+
 // TODO Initialise store here instead of in store.js (which should just export
 // createStore).
 import store from './store';
+
 // TODO Initialise endpoint in here instead of api.js. And then pass it down as
 // context, like Provider passes down the store? Or use redux-axios-middleware?
 import { endpoint } from './api';
@@ -69,13 +71,13 @@ endpoint.interceptors.response.use(
   }
 );
 
-class App extends Component {
+class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
         <IntlProvider locale={locale} messages={translations[locale]}>
           <BrowserRouter>
-            <Route path="/" component={PageLayout} />
+            <Route path="/" component={Router} />
           </BrowserRouter>
         </IntlProvider>
       </Provider>
