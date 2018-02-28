@@ -9,6 +9,8 @@ import CollectionBrowser from '../../components/CollectionScreen/CollectionBrows
 import { fetchStatistics } from '../../actions/index';
 import Schema from 'src/components/common/Schema';
 
+import numeral from 'numeral';
+
 import './style.css';
 
 const messages = defineMessages({
@@ -24,7 +26,8 @@ class HomeScreen extends Component {
     this.state = {
       value: '',
       isOpen: false,
-      topThree: []
+      topThree: [],
+      count: 0
     };
 
     this.onChange = this.onChange.bind(this);
@@ -42,7 +45,7 @@ class HomeScreen extends Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.statistics.isLoaded) {
       let topThree = this.getTopThreeStatistics(nextProps.statistics.schemata);
-      this.setState({topThree})
+      this.setState({topThree: topThree, count: nextProps.statistics.count})
     }
   }
 
@@ -79,12 +82,35 @@ class HomeScreen extends Component {
 
   onFooterClick() {
     this.setState({isOpen: true});
-    window.scrollTo(0, 0)
+    const el = document.getElementById('section2');
+    const y = el.getBoundingClientRect().top;
+    let h = 60;
+
+    let timerID = setInterval(function() {
+      if( window.pageYOffset + h  >= y) {
+        clearInterval(timerID);
+        window.scrollTo(0, y);
+      } else {
+        window.scrollBy(0, h);
+      }
+    }, 8000);
+  }
+
+  getRoundNumber(number) {
+    if(number.includes('k')){
+      return number.split(' ')[0] + ' thousand';
+    } else if(number.includes('m')) {
+      return number.split(' ')[0] + ' million';
+    } else if(number.includes('b')) {
+      return number.split(' ')[0] + ' billion';
+    }
+
+    return number;
   }
 
   render() {
     const { intl } = this.props;
-    const { topThree, isOpen } = this.state;
+    const { topThree, isOpen, count } = this.state;
     const classNames = [
       'nav',
       isOpen && 'nav-open'
@@ -100,6 +126,9 @@ class HomeScreen extends Component {
                 <FormattedMessage id='home.search.title'
                                   defaultMessage="Follow The Money" />
               </h1>
+              <div className='homepage-summary'>
+                <h4>Search public records, databases and leaks from hundreds of global sources.</h4>
+              </div>
               <form onSubmit={this.onSubmit} className="search_form">
                 <div className="pt-input-group pt-large">
                   <span className="pt-icon pt-icon-search search_span"/>
@@ -113,17 +142,18 @@ class HomeScreen extends Component {
               </form>
               <div className='top_three_group'>
                 <h4>We have&nbsp;</h4>
-                <Link to="/search"> <h4> 50 milions results</h4></Link>
+                <Link to="/search"> <h4>{this.getRoundNumber(numeral(count).format('0 a'))} results</h4></Link>
                 <h4>, including&nbsp;</h4>
               {topThree.length > 0 && topThree.map((item, index) => (
                 <Link key={index} to={item.link}>
-                    <h4 key={index + 2}> {item.number} <Schema.Label schema={item.name} plural={true}/>,&nbsp;</h4>
+                    <h4 key={index + 2}> {this.getRoundNumber(numeral(item.number).format('0 a'))} <Schema.Label schema={item.name} plural={true}/>,&nbsp;</h4>
                   </Link>
               ))}
               <h4>etc.</h4>
               </div>
             </div>
             </div>
+
             <div className='homepage_collections_footer'>
               <a className='browse_collection_label' onClick={this.onFooterClick} href='#section2'>Want to browse collections?</a>
             </div>
