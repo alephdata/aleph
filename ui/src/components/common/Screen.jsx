@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
-import PageNavbar from 'src/components/PageLayout/PageNavbarSearchForm';
+import { Navbar } from 'src/components/Navbar';
 
 import './Screen.css';
 
@@ -28,11 +28,13 @@ class Screen extends React.Component {
           <link rel="shortcut icon" href={this.props.metadata.app.favicon} />
         </Helmet>
       
-        <PageNavbar metadata={this.props.metadata} session={this.props.session} searchContext={this.props.searchContext}/>
+        <Navbar metadata={this.props.metadata} session={this.props.session} searchContext={this.props.searchContext}/>
         
-        { this.props.children }
+        <main className="main">
+          { this.props.children }
+        </main>
         
-        <footer className="PageLayout-footer">
+        <footer className="footer">
           <p>
             <strong>ℵ</strong> aleph Mk II
             <span className="pt-text-muted"> • </span>
@@ -61,5 +63,7 @@ const mapStateToProps = (state) => {
 Screen = connect(
   mapStateToProps
 )(Screen);
+
+Screen = withRouter(Screen);
 
 export default Screen;

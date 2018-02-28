@@ -17,16 +17,13 @@ import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedire
 import HomeScreen from 'src/components/HomeScreen';
 import ProfileScreen from 'src/components/ProfileScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
-import PageNavbar from './PageNavbarSearchForm';
 import CollectionScreen from 'src/components/CollectionScreen';
 import CollectionEditScreen from 'src/components/CollectionEdit';
 import CollectionXrefScreen from 'src/components/CollectionXref';
 
-import SearchContext from 'src/components/search/SearchContext';
+import './Router.css';
 
-import './PageLayout.css';
-
-class PageLayout extends Component {
+class Router extends Component {
 
   componentWillMount() {
     this.props.fetchMetadata();
@@ -37,34 +34,32 @@ class PageLayout extends Component {
     const isLoaded = metadata && metadata.app && session;
     if (!isLoaded) {
       return (
-        <div className="PageLayoutLoading">
+        <div className="RouterLoading">
           <div className="spinner"><Spinner className="pt-large"/></div>
         </div>
       )
     }
 
     return (
-      <div className="PageLayout">
-        <Switch>
-          <Route path="/login" exact component={LoginScreen}/>
-          <Route path="/logout" exact component={LogoutScreen}/>
-          <Route path="/signup" exact component={SignupScreen}/>
-          <Route path="/settings" exact component={ProfileScreen}/>
-          <Route path="/activate/:code" exact component={ActivateScreen}/>
-          <Route path="/entities/:entityId" exact component={EntityScreen}/>
-          <Route path="/entities/:entityId/related" exact component={EntityRelatedScreen}/>
-          <Route path="/documents/:documentId" exact component={DocumentScreen}/>
-          <Route path="/documents/:documentId/related" exact component={DocumentRelatedScreen}/>
-          <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
-          <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
-          <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
-          <Route path="/collections/:collectionId/edit" exact component={CollectionEditScreen}/>
-          <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefScreen}/>
-          <Route path="/search" exact component={SearchScreen}/>
-          <Route path="/" exact component={HomeScreen}/>
-          <Route component={ErrorScreen}/>
-        </Switch>
-      </div>
+      <Switch>
+        <Route path="/login" exact component={LoginScreen}/>
+        <Route path="/logout" exact component={LogoutScreen}/>
+        <Route path="/signup" exact component={SignupScreen}/>
+        <Route path="/settings" exact component={ProfileScreen}/>
+        <Route path="/activate/:code" exact component={ActivateScreen}/>
+        <Route path="/entities/:entityId" exact component={EntityScreen}/>
+        <Route path="/entities/:entityId/related" exact component={EntityRelatedScreen}/>
+        <Route path="/documents/:documentId" exact component={DocumentScreen}/>
+        <Route path="/documents/:documentId/related" exact component={DocumentRelatedScreen}/>
+        <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
+        <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
+        <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
+        <Route path="/collections/:collectionId/edit" exact component={CollectionEditScreen}/>
+        <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefScreen}/>
+        <Route path="/search" exact component={SearchScreen}/>
+        <Route path="/" exact component={HomeScreen}/>
+        <Route component={ErrorScreen}/>
+      </Switch>
     );
   }
 }
@@ -73,9 +68,9 @@ const mapStateToProps = (state) => {
   return state;
 };
 
-PageLayout = connect(
+Router = connect(
   mapStateToProps,
   { fetchMetadata }
-)(PageLayout);
+)(Router);
 
-export default PageLayout;
+export default Router;

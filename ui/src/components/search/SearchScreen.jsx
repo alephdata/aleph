@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 
 import Screen from 'src/components/common/Screen';
 import DualPane from 'src/components/common/DualPane';
