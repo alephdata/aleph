@@ -1,30 +1,36 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Helmet } from 'react-helmet';
-import { NonIdealState } from '@blueprintjs/core';
-import { FormattedMessage, FormattedNumber, defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 
-import { fetchCollection, fetchCollectionXrefMatches } from 'src/actions';
+import { fetchCollection, fetchCollectionXrefMatches, fetchCollectionXrefIndex } from 'src/actions';
 import Entity from 'src/components/EntityScreen/Entity';
 import Screen from 'src/components/common/Screen';
 import Date from 'src/components/common/Date';
 import Country from 'src/components/common/Country';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import DualPane from 'src/components/common/DualPane';
 import { matchesKey } from 'src/selectors';
+import getPath from 'src/util/getPath';
 
 import './CollectionXrefScreen.css';
 
 
 class CollectionXrefScreen extends Component {
+  constructor() {
+    super()
+
+    this.onOtherChange = this.onOtherChange.bind(this)
+  }
+
   componentDidMount() {
     this.fetchData()
   }
 
   componentDidUpdate(prevProps) {
     const { collectionId, otherId } = this.props;
-    if (collectionId !== prevProps.collectionId) {
+    if (collectionId !== prevProps.collectionId || otherId !== prevProps.otherId) {
       this.fetchData();
     }
   }
@@ -34,12 +40,22 @@ class CollectionXrefScreen extends Component {
     this.props.fetchCollection({ id: collectionId });
     this.props.fetchCollection({ id: otherId });
     this.props.fetchCollectionXrefMatches(collectionId, otherId);
+    this.props.fetchCollectionXrefIndex(collectionId);
+  }
+
+  onOtherChange({ target }) {
+    const { collection, otherId, history } = this.props;
+    if (otherId !== target.value) {
+      history.push({
+        pathname: getPath(collection.links.ui) + '/xref/' + target.value
+      })
+    }
   }
 
   render() {
-    const { collection, other, matches } = this.props;
+    const { collection, other, index, matches } = this.props;
     const loading = collection === undefined || collection.isFetching || other === undefined || other.isFetching;
-    if (loading || !matches) {
+    if (loading || !matches || !index) {
       return <ScreenLoading />;
     }
     
@@ -57,7 +73,15 @@ class CollectionXrefScreen extends Component {
                 {collection.label}
               </th>
               <th colSpan="3">
-                {other.label}
+                <div className="pt-select pt-fill">
+                  <select id="other" onChange={this.onOtherChange} value={other.id}>
+                    { index.results.map((res) => (
+                      <option key={res.collection.id} value={res.collection.id}>
+                        {res.collection.label} ({res.matches})
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </th>
             </tr>
             <tr>
@@ -127,12 +151,13 @@ class CollectionXrefScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, otherId } = ownProps.match.params;
-  const matchKey = matchesKey(collectionId, otherId);
   const collection = state.collections[collectionId];
   const other = state.collections[otherId];
+  const matchKey = matchesKey(collectionId, otherId);
   const matches = state.collectionXrefMatches[matchKey];
-  return { collectionId, otherId, collection, other, matches };
+  const index = state.collectionXrefIndex[collectionId];
+  return { collectionId, otherId, collection, other, matches, index };
 };
 
-CollectionXrefScreen = injectIntl(CollectionXrefScreen);
-export default connect(mapStateToProps, { fetchCollection, fetchCollectionXrefMatches })(CollectionXrefScreen);
+CollectionXrefScreen = withRouter(injectIntl(CollectionXrefScreen));
+export default connect(mapStateToProps, { fetchCollection, fetchCollectionXrefMatches, fetchCollectionXrefIndex })(CollectionXrefScreen);
