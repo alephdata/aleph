@@ -57,7 +57,7 @@ class DatabaseQueryResult(QueryResult):
                                                   schema=schema)
         self.total = query.count()
         results = query.limit(self.parser.limit)
-        results.offset(self.parser.offset)
+        results = results.offset(self.parser.offset)
         self.results = results.all()
 
 

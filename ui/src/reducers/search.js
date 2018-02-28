@@ -6,24 +6,11 @@ import {
   fetchNextSearchResults,
 } from 'src/actions';
 import { queryToResultKey } from 'src/selectors';
+import { combineResults } from 'src/reducers/util';
 
 // a mapping of query string to result object
 const initialState = {};
 
-// prevResult is to be passed explicitly to appendResults, even though it should
-// normally equal the current result; this is just for in case we e.g.
-// accidentally trigger multiple fetches.
-function combineResults(state, { query, prevResult, nextResult }) {
-  // We store the next result, but with the previous (= current) results
-  // prepended. Note that result attributes like 'page' and 'limit' will be
-  // confusing now, but we do not use them anyway.
-  const totalResult = {
-    ...nextResult,
-    results: [ ...prevResult.results, ...nextResult.results],
-  }
-
-  return set([queryToResultKey(query)], totalResult)(state);
-}
 
 export default createReducer({
   [fetchSearchResults.START]: (state, { query }) =>
@@ -39,7 +26,8 @@ export default createReducer({
   [fetchNextSearchResults.START]: (state, { query }) =>
     update([queryToResultKey(query)], set('isExpanding', true))(state),
 
-  [fetchNextSearchResults.COMPLETE]: combineResults,
+  [fetchNextSearchResults.COMPLETE]: (state, { query, prevResult, nextResult }) =>
+    set([queryToResultKey(query)], combineResults(prevResult, nextResult))(state),
 
   // Upon error, merely reset the isExpanding flag.
   [fetchNextSearchResults.ERROR]: (state, { args: { query, result } }) =>
