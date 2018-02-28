@@ -5,8 +5,8 @@ import Screen from 'src/components/common/Screen';
 import DualPane from 'src/components/common/DualPane';
 
 import SearchResult from './SearchResult';
-import SearchFilter from './SearchFilter';
 import SearchFacets from './SearchFacets';
+//import SearchFilter from './SearchFilter';
 
 import './SearchScreen.css';
 

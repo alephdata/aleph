@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import SearchFilterTag from './SearchFilterTag';
+//import SearchFilterTag from './SearchFilterTag';
 
 class SearchFilterActiveTags extends Component {
   constructor(props) {
@@ -32,9 +32,8 @@ class SearchFilterActiveTags extends Component {
     // component and now cause errors when called but I'm not sure why yet.
     return (
       <div className="search-query__active-filters">
-        {activeFilters.map(filter =>
+        {/*activeFilters.map(filter =>
           query.getFilter(filter).map(value => {
-            /*
             return (
               <SearchFilterTag
                 filter={filter}
@@ -43,9 +42,8 @@ class SearchFilterActiveTags extends Component {
                 key={value}
               />
             )
-            */
           })
-        )}
+        )*/}
       </div>
     );
   }

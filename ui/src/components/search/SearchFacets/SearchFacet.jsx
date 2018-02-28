@@ -59,16 +59,16 @@ const messages = defineMessages({
 
 // @TODO Refactor these out to somewhere reuseabe if we keep them.
 const icons = {
-  ['Types']: 'list',
-  ['Collections']: 'database',
-  ['Languages']: 'translate',
-  ['Emails']: 'envelope',
-  ['Phones']: 'phone',
-  ['Countries']: 'globe',
-  ['Names']: 'id-number',
-  ['Addresses']: 'map',
-  ['File types']: 'document',
-  ['Authors']: 'person'
+  'Types': 'list',
+  'Collections': 'database',
+  'Languages': 'translate',
+  'Emails': 'envelope',
+  'Phones': 'phone',
+  'Countries': 'globe',
+  'Names': 'id-number',
+  'Addresses': 'map',
+  'File types': 'document',
+  'Authors': 'person'
 }
 
 class SearchFacet extends Component {
@@ -93,8 +93,8 @@ class SearchFacet extends Component {
   componentDidUpdate(prevProps, prevState) {
     // Check for a change of query, as unconditionally calling fetchIfNeeded
     // could cause an infinite loop (if fetching fails).
-    if (this.props.query && !this.props.query.sameAs(prevProps.query)
-      || this.state.isOpen !== prevState.isOpen) {
+    if (this.props.query 
+        && (!this.props.query.sameAs(prevProps.query)|| this.state.isOpen !== prevState.isOpen)) {
       this.fetchIfNeeded();
     }
   }
@@ -197,7 +197,7 @@ class SearchFacet extends Component {
                           selectedItems={current}
                           onItemClick={this.onSelect}>
               {!isFetchingValues && !isExpandingValues && hasMoreValues && (
-                <a href="#" className="ShowMore" onClick={this.showMore}>
+                <a href="" className="ShowMore" onClick={this.showMore}>
                   <FormattedMessage id="search.facets.showMore" defaultMessage="Show more…" values={{ fieldLabel }} style={{paddingTop: 10}}/>
                 </a>
               )}
