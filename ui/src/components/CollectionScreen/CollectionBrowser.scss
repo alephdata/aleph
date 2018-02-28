@@ -2,7 +2,8 @@
 
 .CollectionBrowser {
   margin-top: $aleph-grid-size * 2;
-  min-height: 91vh;
+  padding-top: 3em;
+  min-height: 95vh;
 
   .header {
     margin: $aleph-grid-size;

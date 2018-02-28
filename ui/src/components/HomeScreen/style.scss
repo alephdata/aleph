@@ -1,5 +1,16 @@
 @import 'src/app/variables.scss';
 
+.nav {
+  //opacity: 0;
+}
+
+.nav-open {
+  opacity: 1;
+  //transform: translateY(0);
+  transition: opacity 800ms ease-in;
+  //animation-fill-mode: backwards;
+}
+
 .HomePage {
   background-color: $aleph-banner-background; // fallback for when image is lacking.
   background-image: url("../../assets/europe_asia_dark.png");
@@ -9,21 +20,57 @@
   color: white;
   text-align: center;
 
+  .outer_searchbox_div {
+    display: table;
+    position: absolute;
+    height: 80%;
+    width: 100%;
+  }
+
+  h4 {
+    color: white !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .inner_searchbox_div {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .item_group {
+    padding-right: 3em;
+    padding-left: 2.5em;
+    border-right: white 1px solid;
+    border-left: white 1px solid;
+  }
+
   .search_h1 {
     color: white !important;
-    margin-top: 2em;
     margin-bottom: 1em;
     font-size: 4em;
   }
 
+  .top_three_group {
+    display: inline-flex;
+  }
+
   section {
-    min-height: 98vh;
+    min-height: 95vh;
+  }
+
+  .allButton {
+    width: 8em;
+  }
+
+  .browse_collection_label {
+    color: white;
   }
 
   .search_form {
     max-width: 50em;
     margin: 0 auto;
-    padding-bottom: 5em;
+    padding-bottom: 2em;
   }
 
   .homepage_collections_footer {
@@ -41,9 +88,5 @@
     top: 52vh;
     left: 52%;
     display: flex;
-  }
-
-  .search_example_item {
-    float: right;
   }
 }
