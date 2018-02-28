@@ -58,7 +58,7 @@ const messages = defineMessages({
 })
 
 // @TODO Refactor these out to somewhere reuseabe if we keep them.
-const icons = {
+const facetIcons = {
   'Types': 'list',
   'Collections': 'database',
   'Languages': 'translate',
@@ -158,19 +158,25 @@ class SearchFacet extends Component {
     // against the requested limit.
     const hasMoreValues = valuesLimit < total;
 
-    console.log(icons);
-    
     return (
       <div className="SearchFacet">
         <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick} style={{position: 'relative'}}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
           <span className="FacetName">
-            {icons[fieldLabel] && (<React.Fragment><span className={`FacetIcon pt-icon pt-icon-${icons[fieldLabel]}`}/></React.Fragment>)}
+            {facetIcons[fieldLabel] && (<React.Fragment><span className={`FacetIcon pt-icon pt-icon-${facetIcons[fieldLabel]}`}/></React.Fragment>)}
             {fieldLabel} 
           </span>     
             
           {isActive && count > 0 && total !== undefined && total > 0 && (
-            <span className="FilterCount pt-text-muted"><FormattedMessage id="search.facets.filtersSelected" defaultMessage="{count} of {total} selected" values={{ count, total }} /></span>
+            <span className="FilterCount pt-text-muted">
+              <FormattedMessage id="search.facets.filtersSelected"
+                defaultMessage="{count} of {total} selected"
+                values={{ 
+                  count: intl.formatNumber(count),
+                  total: intl.formatNumber(total)
+                }}
+                />
+            </span>
           )}
 
           {isActive && total === undefined && (
@@ -187,7 +193,7 @@ class SearchFacet extends Component {
           
           {isActive && !isFetchingValues && !isExpandingValues && (
             <Button onClick={this.onClear}
-              className="ClearButton pt-minimal pt-small pt-intent-primary"
+              className="ClearButton pt-minimal pt-small"
               title={intl.formatMessage(messages.clear_filter)} icon="cross"></Button>
           )}
         </div>
