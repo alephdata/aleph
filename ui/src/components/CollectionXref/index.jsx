@@ -43,11 +43,18 @@ class CollectionXrefScreen extends Component {
   }
 
   fetchData() {
-    const { collectionId, otherId } = this.props;
-    this.props.fetchCollection({ id: collectionId });
-    this.props.fetchCollection({ id: otherId });
+    const { collectionId, otherId, index } = this.props;
+    const { collection, other } = this.props;
+    if (!collection || !collection.id) {
+      this.props.fetchCollection({ id: collectionId });
+    }
+    if (!other || !other.id) {
+      this.props.fetchCollection({ id: otherId });
+    }
+    if (!index || !index.total) {
+      this.props.fetchCollectionXrefIndex(collectionId);
+    }
     this.props.fetchCollectionXrefMatches(collectionId, otherId);
-    this.props.fetchCollectionXrefIndex(collectionId);
   }
 
   onOtherChange({ target }) {
@@ -68,9 +75,8 @@ class CollectionXrefScreen extends Component {
 
   render() {
     const { collection, other, index, matches } = this.props;
-    const loading = collection === undefined || collection.isFetching || other === undefined || other.isFetching;
-
-    if (loading || !matches || !index) {
+    const loading = !collection || !collection.id || !other || !other.id || !matches || !index;
+    if (loading) {
       return <ScreenLoading />;
     }
     
