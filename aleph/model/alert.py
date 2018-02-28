@@ -52,7 +52,11 @@ class Alert(db.Model, SoftDeleteModel):
 
     @classmethod
     def by_role(cls, role):
-        return cls.all().filter(cls.role_id == role.id)
+        q = cls.all()
+        q = q.filter(cls.role_id == role.id)
+        q = q.order_by(cls.created_at.desc())
+        q = q.order_by(cls.id.desc())
+        return q
 
     @classmethod
     def create(cls, data, role):

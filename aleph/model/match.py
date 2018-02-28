@@ -61,6 +61,7 @@ class Match(db.Model, IdModel, DatedModel):
         q = q.add_entity(coll)
         q = q.group_by(coll, parent)
         q = q.order_by(cnt.desc())
+        q = q.order_by(parent.asc())
         return q
 
     def __repr__(self):
