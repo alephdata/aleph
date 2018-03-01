@@ -30,7 +30,7 @@ class EntityInfoTags extends React.Component {
           <p className="pt-text-muted">
             <FormattedMessage 
               id="entity.info.tags.empty_description"
-              defaultMessage="There are no known links."/>
+              defaultMessage="No links found."/>
           </p>
         </React.Fragment>
       );
