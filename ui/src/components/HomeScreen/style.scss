@@ -1,16 +1,5 @@
 @import 'src/app/variables.scss';
 
-.nav {
-  //opacity: 0;
-}
-
-.nav-open {
-  opacity: 1;
-  //transform: translateY(0);
-  transition: opacity 800ms ease-in;
-  //animation-fill-mode: backwards;
-}
-
 .HomePage {
   background-color: $aleph-banner-background; // fallback for when image is lacking.
   background-image: url("../../assets/europe_asia_dark.png");
