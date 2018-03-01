@@ -17,7 +17,7 @@ class SearchScreen extends Component {
       <Screen>
         {searchContext && searchContext.query.hasQuery() && (
           <Helmet>
-            <title>{searchContext.query.getQ()}</title>
+            <title>{searchContext.query.getString('q')}</title>
           </Helmet>
         )}
         <DualPane className="SearchScreen">

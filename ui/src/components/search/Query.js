@@ -44,14 +44,6 @@ class Query {
     return _.toString(_.head(this.getList(name)));
   }
 
-  getQ() {
-    return this.getString('q');
-  }
-
-  setQ(value) {
-    return this.set('q', value);
-  }
-
   toggle(name, value) {
     let values = this.getList(name);
     return this.set(name, _.xor(values, [value]));

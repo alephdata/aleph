@@ -11,7 +11,7 @@ import './PageNavbarSearchForm.css';
 class PageNavbarSearchForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: props.searchContext ? props.searchContext.query.getQ() : ''};
+    this.state = {value: props.searchContext ? props.searchContext.query.getString('q') : ''};
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -22,7 +22,9 @@ class PageNavbarSearchForm extends Component {
       return
       
     if (nextProps.searchContext && nextProps.searchContext.query.state.q !== this.state.value) {
-      this.setState({ value: nextProps.searchContext.query.getQ() })
+      this.setState({
+        value: nextProps.searchContext.query.getString('q')
+      })
     }
   }
   
@@ -33,7 +35,7 @@ class PageNavbarSearchForm extends Component {
   onSubmit(event) {
     event.preventDefault();
     if (this.props.location.pathname === '/search') {
-      let query = this.props.searchContext.query.setQ(this.state.value);
+      let query = this.props.searchContext.query.set('q', this.state.value);
       this.props.searchContext.updateQuery(query);
     } else {
       const { history } = this.props;
