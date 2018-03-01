@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import SectionLoading from 'src/components/common/SectionLoading';
-import Toolbar from 'src/components/common/Toolbar/DocumentToolbar';
+import { DocumentToolbar } from 'src/components/Toolbar';
 
 import './ImageViewer.css';
 
@@ -16,7 +16,7 @@ class ImageViewer extends Component {
 
     return (
       <React.Fragment>
-        <Toolbar document={document}/>
+        <DocumentToolbar document={document}/>
           <div className="ImageViewer">
             <img src={imageUrl} alt={document.file_name} />
           </div>

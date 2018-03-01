@@ -4,7 +4,7 @@ import { Document, Page } from 'react-pdf/build/entry.webpack';
 import { findLast, throttle } from 'lodash';
 
 import SectionLoading from 'src/components/common/SectionLoading';
-import Toolbar from 'src/components/common/Toolbar/DocumentToolbar';
+import { DocumentToolbar } from 'src/components/Toolbar';
 import { parse as parsePdfFragId } from 'src/util/pdfFragId';
 
 import './PdfViewer.css';
@@ -68,7 +68,7 @@ class PdfViewer extends Component {
 
     return (
       <React.Fragment>
-        <Toolbar document={document} pageNumber={pageNumber} pageTotal={numPages}/>
+        <DocumentToolbar document={document} pageNumber={pageNumber} pageTotal={numPages}/>
         <div className="ContentPaneOuter">
           <div className="ContentPaneInner PdfViewer">
             <div className="document_pdf" ref={(ref) => this.pdfElement = ref}>
