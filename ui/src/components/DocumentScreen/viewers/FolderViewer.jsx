@@ -35,7 +35,7 @@ class FolderViewer extends Component {
               <SearchResult {...searchContext} />
             )}</SearchContext>
           )}
-          {document.children == 0 && (
+          {document.children === 0 && (
             <p className="folder-empty pt-text-muted">
               <FormattedMessage
                 id="folder.empty"
