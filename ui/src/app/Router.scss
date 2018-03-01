@@ -1,0 +1,13 @@
+@import "src/app/variables.scss";
+
+.RouterLoading {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .spinner {
+    align-self: center;
+    margin: auto;
+  }
+}

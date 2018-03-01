@@ -157,6 +157,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             cls.email.ilike('%' + prefix + '%'),
             cls.name.ilike('%' + prefix + '%')
         ))
+        q = q.order_by(Role.id.asc())
         return q
 
     @classmethod

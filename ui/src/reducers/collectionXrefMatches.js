@@ -1,12 +1,20 @@
 import { createReducer } from 'redux-act';
-import { set } from 'lodash/fp';
+import { set, update } from 'lodash/fp';
 
-import { fetchCollectionXrefMatches } from 'src/actions';
+import { fetchCollectionXrefMatches, fetchNextCollectionXrefMatches } from 'src/actions';
 import { matchesKey } from 'src/selectors';
+import { combineResults } from 'src/reducers/util';
 
 const initialState = {};
 
 export default createReducer({
-  [fetchCollectionXrefMatches.COMPLETE]: (state, { id, otherId, data }) =>
-    set(matchesKey(id, otherId), data)(state),
+  [fetchCollectionXrefMatches.COMPLETE]: (state, { id, otherId, result }) =>
+    set(matchesKey(id, otherId), result)(state),
+
+  [fetchNextCollectionXrefMatches.START]: (state, { id, otherId }) =>
+    update(matchesKey(id, otherId), set('isExpanding', true))(state),
+  
+  [fetchNextCollectionXrefMatches.COMPLETE]: (state, { id, otherId, prevResult, nextResult }) =>
+    set(matchesKey(id, otherId), combineResults(prevResult, nextResult))(state),
+
 }, initialState);

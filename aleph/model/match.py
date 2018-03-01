@@ -28,6 +28,7 @@ class Match(db.Model, IdModel, DatedModel):
         q = q.filter(Match.document_id == None)  # noqa
         q = q.filter(Match.match_collection_id == other_id)
         q = q.order_by(Match.score.desc())
+        q = q.order_by(Match.id)
         return q
 
     @classmethod
@@ -60,6 +61,7 @@ class Match(db.Model, IdModel, DatedModel):
         q = q.add_entity(coll)
         q = q.group_by(coll, parent)
         q = q.order_by(cnt.desc())
+        q = q.order_by(parent.asc())
         return q
 
     def __repr__(self):

@@ -3,13 +3,19 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
+import Waypoint from 'react-waypoint';
 
-import { fetchCollection, fetchCollectionXrefMatches, fetchCollectionXrefIndex } from 'src/actions';
+import {
+    fetchCollection,
+    fetchCollectionXrefMatches,
+    fetchNextCollectionXrefMatches,
+    fetchCollectionXrefIndex } from 'src/actions';
 import Entity from 'src/components/EntityScreen/Entity';
 import Screen from 'src/components/common/Screen';
 import Date from 'src/components/common/Date';
 import Country from 'src/components/common/Country';
 import ScreenLoading from 'src/components/common/ScreenLoading';
+import SectionLoading from 'src/components/common/SectionLoading';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import { matchesKey } from 'src/selectors';
 import getPath from 'src/util/getPath';
@@ -22,6 +28,7 @@ class CollectionXrefScreen extends Component {
     super()
 
     this.onOtherChange = this.onOtherChange.bind(this)
+    this.onLoadMore = this.onLoadMore.bind(this)
   }
 
   componentDidMount() {
@@ -36,11 +43,18 @@ class CollectionXrefScreen extends Component {
   }
 
   fetchData() {
-    const { collectionId, otherId } = this.props;
-    this.props.fetchCollection({ id: collectionId });
-    this.props.fetchCollection({ id: otherId });
+    const { collectionId, otherId, index } = this.props;
+    const { collection, other } = this.props;
+    if (!collection || !collection.id) {
+      this.props.fetchCollection({ id: collectionId });
+    }
+    if (!other || !other.id) {
+      this.props.fetchCollection({ id: otherId });
+    }
+    if (!index || !index.total) {
+      this.props.fetchCollectionXrefIndex(collectionId);
+    }
     this.props.fetchCollectionXrefMatches(collectionId, otherId);
-    this.props.fetchCollectionXrefIndex(collectionId);
   }
 
   onOtherChange({ target }) {
@@ -52,10 +66,17 @@ class CollectionXrefScreen extends Component {
     }
   }
 
+  onLoadMore() {
+    const { collectionId, otherId, matches } = this.props;
+    if (matches.next && !matches.isExpanding) {
+      this.props.fetchNextCollectionXrefMatches(collectionId, otherId, matches);
+    } 
+  }
+
   render() {
     const { collection, other, index, matches } = this.props;
-    const loading = collection === undefined || collection.isFetching || other === undefined || other.isFetching;
-    if (loading || !matches || !index) {
+    const loading = !collection || !collection.id || !other || !other.id || !matches || !index;
+    if (loading) {
       return <ScreenLoading />;
     }
     
@@ -143,8 +164,17 @@ class CollectionXrefScreen extends Component {
             ))}
           </tbody>
         </table>
+        { !matches.isExpanding && matches.next && (
+          <Waypoint
+            onEnter={this.onLoadMore}
+            bottomOffset="-600px"
+            scrollableAncestor={window}
+          />
+        )}
+        { matches.isExpanding && (
+          <SectionLoading />
+        )}
       </Screen>
-      
     )
   }
 }
@@ -160,4 +190,9 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 CollectionXrefScreen = withRouter(injectIntl(CollectionXrefScreen));
-export default connect(mapStateToProps, { fetchCollection, fetchCollectionXrefMatches, fetchCollectionXrefIndex })(CollectionXrefScreen);
+export default connect(mapStateToProps, {
+  fetchCollection,
+  fetchCollectionXrefMatches,
+  fetchNextCollectionXrefMatches,
+  fetchCollectionXrefIndex
+})(CollectionXrefScreen);

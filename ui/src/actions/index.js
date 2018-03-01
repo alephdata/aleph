@@ -1,5 +1,4 @@
 import { endpoint } from 'src/app/api';
-import queryString from 'query-string';
 import asyncActionCreator from './asyncActionCreator';
 import { selectFacet } from 'src/selectors';
 
@@ -9,8 +8,7 @@ export const fetchMetadata = asyncActionCreator(() => async dispatch => {
 }, { name: 'FETCH_METADATA' });
 
 export const suggestRoles = asyncActionCreator((prefix, exclude) => async dispatch => {
-  const query = queryString.stringify({prefix: prefix, exclude: exclude});
-  const response = await endpoint.get(`roles/_suggest?${query}`);
+  const response = await endpoint.get(`roles/_suggest`, {params: {prefix, exclude}});
   return response.data;
 }, { name: 'SUGGEST_ROLES' });
 
@@ -64,9 +62,14 @@ export const fetchCollectionXrefIndex = asyncActionCreator((id) => async dispatc
 }, { name: 'FETCH_COLLECTION_XREF_INDEX' });
 
 export const fetchCollectionXrefMatches = asyncActionCreator((id, otherId) => async dispatch => {
-  const response = await endpoint.get(`collections/${id}/xref/${otherId}?limit=100`);
-  return { id, otherId, data: response.data};
+  const response = await endpoint.get(`collections/${id}/xref/${otherId}?limit=50`);
+  return { id, otherId, result: response.data};
 }, { name: 'FETCH_COLLECTION_XREF_MATCHES' });
+
+export const fetchNextCollectionXrefMatches = asyncActionCreator((id, otherId, result) => async dispatch => {
+  const response = await endpoint.get(result.next);
+  return { id, otherId, prevResult: result, nextResult: response.data};
+}, { name: 'FETCH_COLLECTION_XREF_NEXT_MATCHES' });
 
 export const fetchStatistics = asyncActionCreator(() => async dispatch => {
   const response = await endpoint.get('statistics');

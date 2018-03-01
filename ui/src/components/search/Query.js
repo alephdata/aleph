@@ -7,25 +7,25 @@ class Query {
   // of the APIs (entities, documents, collections, roles), but just serves as a
   // container for the default syntax of Aleph.
 
-  constructor (state, context = {}, prefix = '') {
+  constructor (state, context = {}, queryName = '') {
     this.state = state;
     this.context = context;
-    this.prefix = prefix;
+    this.queryName = queryName;
   }
 
-  static fromLocation(location, context, prefix) {
+  static fromLocation(location, context, queryName) {
     const state = queryString.parse(location.search);
-    return new this(state, context, prefix);
+    return new this(state, context, queryName);
   }
 
   clone(update) {
     const state = _.cloneDeep(this.state);
-    return new Query(state, this.context, this.prefix);
+    return new Query(state, this.context, this.queryName);
   }
 
   set(name, value) {
     const child = this.clone();
-    child.state[this.prefix + name] = ensureArray(value);
+    child.state[this.queryName + name] = ensureArray(value);
     return child;
   }
 
@@ -34,9 +34,9 @@ class Query {
   }
 
   getList(name) {
-    const prefixName = this.prefix + _.toString(name),
+    const fieldName = this.queryName + _.toString(name),
         ctxValues = ensureArray(this.context[name]),
-        stateValues = ensureArray(this.state[prefixName]);
+        stateValues = ensureArray(this.state[fieldName]);
     return _.uniq(_.concat(ctxValues, stateValues));
   }
 
@@ -80,16 +80,21 @@ class Query {
   }
 
   hasQuery() {
-    const query = this.getQ();
-    return query.length > 0;
+    if (this.getString('q').length > 0) {
+      return true
+    }
+    if (this.getString('prefix').length > 0) {
+      return true
+    }
+    return false;
   }
 
   fields() {
     // List all the fields set for this query
     const keys = _.keys(this.context);
     _.keys(this.state).forEach((name) => {
-      if (name.startsWith(this.prefix)) {
-        name = name.substr(this.prefix.length);
+      if (name.startsWith(this.queryName)) {
+        name = name.substr(this.queryName.length);
         keys.push(name);
       }
     })
@@ -99,10 +104,10 @@ class Query {
   filters() {
     // List all the filters explictly active in this query
     // (i.e. not through the context)
-    const keyPrefix = this.prefix + 'filter:';
+    const fieldPrefix = this.queryName + 'filter:';
     return _.keys(this.state)
-    .filter(name => name.startsWith(keyPrefix))
-    .map(name => name.substr(keyPrefix.length));
+    .filter(name => name.startsWith(fieldPrefix))
+    .map(name => name.substr(fieldPrefix.length));
   }
 
   getFilter(name) {
