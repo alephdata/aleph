@@ -67,7 +67,7 @@ class DocumentContent extends React.Component {
       documentViewer = <PdfViewer document={document} fragId={fragId} />
     } else if (document.schema === 'Image') {
       documentViewer = <ImageViewer document={document} />
-    } else if (document.children !== undefined && document.children > 0) {
+    } else if (document.children !== undefined) {
       documentViewer = <FolderViewer document={document} />
     }
     
