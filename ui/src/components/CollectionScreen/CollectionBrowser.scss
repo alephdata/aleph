@@ -6,7 +6,7 @@
     .header {
         margin: $aleph-grid-size;
         // Align left side with text in the left-most cards.
-        margin-left: $aleph-grid-size * 3;
+        // margin-left: $aleph-grid-size * 3;
         display: flex;
         flex-flow: row wrap;
         width: inherit;
@@ -19,26 +19,8 @@
         }
     }
 
-    .results {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: flex-start;
-        align-items: stretch;
-    }
-    
-    .result {
+    ul.results {
+        list-style-type: none;
         padding: $aleph-grid-size;
-        min-width: 20em;
-        flex: 1 0 33%;
-
-        .CollectionCard {
-            height: 100%;
-            width: 100%;
-        }
-
-        &.bogus {
-          padding: 0;
-          margin: 0;
-        }
     }
 }

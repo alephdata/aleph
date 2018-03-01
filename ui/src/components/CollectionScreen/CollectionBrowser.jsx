@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
-import { debounce, range } from 'lodash';
+import { debounce } from 'lodash';
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/components/search/Query';
 import SectionLoading from 'src/components/common/SectionLoading';
 import { fetchCollections } from 'src/actions';
-import CollectionCard from './CollectionCard';
+import CollectionListItem from './CollectionListItem';
 
 import './CollectionBrowser.css';
 
@@ -101,7 +101,7 @@ class CollectionBrowser extends Component {
         <div className="header">
           <h1>
             <FormattedMessage id="collection.browser.title"
-              defaultMessage="Browse {count} collections"
+              defaultMessage="{count} collections"
               values={{
                 count: (<FormattedNumber value={total} />)
               }}
@@ -114,19 +114,10 @@ class CollectionBrowser extends Component {
                 onChange={this.onChangeQueryPrefix} value={queryPrefix} />
           </div>
         </div>
-        <div className="results">
+        <ul className="results">
           {result.results.map(res =>
-            <div key={res.id} className="result">
-              <CollectionCard collection={res} />
-            </div>
+            <CollectionListItem key={res.id} collection={res} />
           )}
-          {
-            // Hacky: we append N-2 empty divs, to prevent the last item(s) from
-            // trying to fill up the whole bottom row.
-            range(0, result.results.length - 2).map(i => (
-              <div key={i} className="bogus result"></div>
-            ))
-          }
           { !isFetching && result.next && (
             <Waypoint
               onEnter={this.bottomReachedHandler}
@@ -136,7 +127,7 @@ class CollectionBrowser extends Component {
           { isFetching && (
             <SectionLoading />
           )}
-        </div>
+        </ul>
       </section>
     );
   }
@@ -144,7 +135,7 @@ class CollectionBrowser extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    query: Query.fromLocation(ownProps.location, {}, 'co')
+    query: Query.fromLocation(ownProps.location, {}, 'collection')
   };
 }
 
