@@ -38,7 +38,7 @@ class EmailViewer extends React.Component {
         <DocumentToolbar document={document}/>
         <div className="ContentPaneOuter">
           <div className="ContentPaneInner EmailViewer">
-            <div className="EmailHeader">
+            <div className="email-header">
               <table className="pt-html-table">
                 <tbody>
                   {headers.date && (
@@ -88,7 +88,9 @@ class EmailViewer extends React.Component {
                   </React.Fragment>
                 }
                 panel={
-                  <pre>{document.text}</pre>
+                  (document.text && document.text.length > 0)
+                    ? <pre>{document.text}</pre>
+                    : <p className="email-no-body pt-text-muted"><FormattedMessage id="email.body.empty" defaultMessage="No message body."/></p>
                 } 
               />
               <Tab id="attachments"
@@ -109,7 +111,7 @@ class EmailViewer extends React.Component {
                   </React.Fragment>
                 }
                 panel={
-                  <div className="EmailAttachments">
+                  <div className="email-attachments">
                     {!!document.children && (
                       <SearchContext context={context} aspects={aspects}>{searchContext => (
                         <div>
