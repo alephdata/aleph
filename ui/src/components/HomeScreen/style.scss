@@ -27,13 +27,6 @@
     vertical-align: middle;
   }
 
-  .item_group {
-    padding-right: 3em;
-    padding-left: 2.5em;
-    border-right: white 1px solid;
-    border-left: white 1px solid;
-  }
-
   .search_h1 {
     color: white !important;
     margin-bottom: 0.5em;
@@ -46,10 +39,6 @@
 
   section {
     min-height: 95.5vh;
-  }
-
-  .allButton {
-    width: 8em;
   }
 
   .browse_collection_label {
@@ -73,7 +62,7 @@
     left: 0;
     position: absolute;
     right: 0;
-    padding-top: 10px;
+    padding-top: 1em;
   }
 
   .homepage_examples {

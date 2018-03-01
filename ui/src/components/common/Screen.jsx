@@ -22,6 +22,7 @@ class Screen extends React.Component {
 
   render() {
     const {isHomepage} = this.props;
+    let mainClass = isHomepage ? 'main-homepage' : 'main';
 
     return (
       <div className="Screen">
@@ -32,7 +33,7 @@ class Screen extends React.Component {
 
         <Navbar metadata={this.props.metadata} session={this.props.session} searchContext={this.props.searchContext}/>
 
-        <main className="main">
+        <main className={mainClass}>
           {this.props.children}
         </main>
 
