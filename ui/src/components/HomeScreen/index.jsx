@@ -24,7 +24,6 @@ class HomeScreen extends Component {
     super(props);
     this.state = {
       value: '',
-      isOpen: false,
       topThree: [],
       count: 0
     };
@@ -80,7 +79,6 @@ class HomeScreen extends Component {
   }
 
   onFooterClick() {
-    this.setState({isOpen: true});
     const el = document.getElementById('section2');
     const y = el.getBoundingClientRect().top;
     let h = 60;
@@ -92,16 +90,12 @@ class HomeScreen extends Component {
       } else {
         window.scrollBy(0, h);
       }
-    }, 8000);
+    }, 15);
   }
 
   render() {
     const { intl } = this.props;
-    const { topThree, isOpen, count } = this.state;
-    const classNames = [
-      'nav',
-      isOpen && 'nav-open'
-    ].filter(Boolean);
+    const { topThree, count } = this.state;
 
     return (
       <Screen>
@@ -149,11 +143,11 @@ class HomeScreen extends Component {
             </div>
 
             <div className='homepage_collections_footer'>
-              <a className='browse_collection_label' onClick={this.onFooterClick} href='#section2'>Want to browse collections?</a>
+              <a className='browse_collection_label' onClick={this.onFooterClick}>Want to browse collections?</a>
             </div>
           </section>
         </div>
-        <div id='section2' className={classNames.join(' ')}>
+        <div id='section2'>
           <CollectionBrowser />
         </div>
       </Screen>
