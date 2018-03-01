@@ -19,6 +19,9 @@ class CollectionListItem extends Component {
     return (
       <li className="CollectionListItem">
         <h4>
+          <span className="pt-tag pt-small pt-round pt-intent-primary">
+            <FormattedNumber value={collection.count} />
+          </span>
           <Collection.Link collection={collection} icon />
         </h4>
         {collection.summary &&
