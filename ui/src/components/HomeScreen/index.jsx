@@ -118,7 +118,7 @@ class HomeScreen extends Component {
                   <div className="pt-input-group pt-large">
                     <span className="pt-icon pt-icon-search search_span"/>
                     <input className="pt-input search_input"
-                           type="search"
+                           type="text"
                            placeholder={intl.formatMessage(messages.search_placeholder)}
                            dir="auto"
                            onChange={this.onChange}
