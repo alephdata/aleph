@@ -4,7 +4,7 @@
 .EmailViewer {
   margin-bottom: $aleph-grid-size * 2;
 
-  .EmailHeader table {
+  .email-header table {
     width: 100%;
     th, td {
       box-shadow: none !important;
@@ -12,7 +12,7 @@
     } 
   }
   
-  .EmailAttachments table {
+  .email-attachments table {
     tbody tr:first-child {
       // Remove border above first row.
       box-shadow: none;
@@ -24,10 +24,14 @@
   }
   
   pre {
-    padding: 0 0  $aleph-grid-size 0;
+    padding: 0 0 $aleph-grid-size 0;
+  }
+
+  .email-no-body {
+    padding: 0 0 $aleph-grid-size*2 0;
   }
   
-  .EmailAttachments {
+  .email-attachments {
     margin: 0 -($aleph-grid-size * 2)
   }
 }
