@@ -9,8 +9,12 @@ class Footer extends React.Component {
   }
 
   render() {
+    const {isHomepage} = this.props;
+
+    let footerClass = isHomepage ? 'HomepageFooter' : 'Footer';
+
     return (
-      <footer className="Footer">
+      <footer className={footerClass}>
         <p>
           <strong>ℵ</strong> <FormattedMessage id='footer.aleph'
                                                defaultMessage="aleph Mk II"/>

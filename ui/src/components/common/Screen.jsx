@@ -11,16 +11,17 @@ import Footer from "../Footer/Footer";
 class Screen extends React.Component {
 
   componentDidMount() {
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.location && (this.props.location.pathname !== prevProps.location.pathname)) {
-      window.scrollTo(0, 0)
+      window.scrollTo(0, 0);
     }
   }
 
   render() {
+    const {isHomepage} = this.props;
 
     return (
       <div className="Screen">
@@ -35,7 +36,7 @@ class Screen extends React.Component {
           {this.props.children}
         </main>
 
-        <Footer/>
+        <Footer isHomepage={isHomepage}/>
       </div>
     )
   }
