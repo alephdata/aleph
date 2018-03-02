@@ -14,7 +14,7 @@ import EntityRelatedScreen from 'src/components/EntityScreen/EntityRelatedScreen
 import DocumentScreen from 'src/components/DocumentScreen';
 import DocumentRelatedScreen from 'src/components/DocumentScreen/DocumentRelatedScreen';
 import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
-import HomeScreen from 'src/components/HomeScreen';
+import HomeScreen from 'src/screens/HomeScreen';
 import ProfileScreen from 'src/components/ProfileScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
 import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen';

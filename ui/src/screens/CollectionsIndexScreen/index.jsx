@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import { debounce } from 'lodash';
 import Waypoint from 'react-waypoint';
@@ -23,6 +22,7 @@ const messages = defineMessages({
     defaultMessage: 'Filter collections',
   },
 });
+
 
 class CollectionsIndexScreen extends Component {
   constructor(props) {
@@ -114,7 +114,6 @@ class CollectionsIndexScreen extends Component {
   render() {
     const { intl } = this.props;
     const { result, queryPrefix, isFetching } = this.state;
-    const { total = 0 } = result;
 
     if (!result || !result.pages) {
       return <SectionLoading />
