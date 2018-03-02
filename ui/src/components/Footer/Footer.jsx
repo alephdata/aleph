@@ -9,13 +9,13 @@ class Footer extends React.Component {
   }
 
   render() {
-    const {isHomepage, metadata} = this.props;
+    const {isHomepage, metadata, breadcrumbs} = this.props;
 
     let footerClass = isHomepage ? 'HomepageFooter' : 'Footer';
 
     return (
       <footer className={footerClass}>
-        <p>
+        <div className="info">
           <strong>ℵ</strong>
           {' '}
           <FormattedMessage id='footer.aleph'
@@ -25,7 +25,7 @@ class Footer extends React.Component {
                             }} />
           <span className="pt-text-muted"> • </span>
           <span>
-              <a href="https://github.com/alephdata/aleph/wiki/User-manual"><i className="fa fa-fw fa-book"/></a>
+            <a href="https://github.com/alephdata/aleph/wiki/User-manual"><i className="fa fa-fw fa-book"/></a>
             {' '}
             <a href="https://github.com/alephdata/aleph/wiki/User-manual">
                 <FormattedMessage id='footer.help'
@@ -41,7 +41,8 @@ class Footer extends React.Component {
                                 defaultMessage="Code"/>
             </a>
           </span>
-        </p>
+        </div>
+        {breadcrumbs}
       </footer>
     );
   }

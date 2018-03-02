@@ -22,7 +22,7 @@ class Screen extends React.Component {
   }
 
   render() {
-    const {isHomepage, className, metadata} = this.props;
+    const {isHomepage, className, metadata, breadcrumbs} = this.props;
     let mainClass = isHomepage ? 'main-homepage' : 'main';
 
     return (
@@ -40,7 +40,9 @@ class Screen extends React.Component {
           {this.props.children}
         </main>
 
-        <Footer isHomepage={isHomepage} metadata={metadata} />
+        <Footer isHomepage={isHomepage}
+                metadata={metadata}
+                breadcrumbs={breadcrumbs} />
       </div>
     )
   }

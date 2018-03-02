@@ -119,9 +119,18 @@ class CollectionsIndexScreen extends Component {
       return <SectionLoading />
     }
 
+    const breadcrumbs = (<Breadcrumbs>
+      <li>
+        <a className="pt-breadcrumb">
+          <FormattedMessage id="collection.browser.breadcrumb"
+                            defaultMessage="Collections overview" />
+        </a>
+      </li>
+    </Breadcrumbs>)
+
     return (
-      <Screen className="CollectionsIndexScreen">
-        <Breadcrumbs />
+      <Screen className="CollectionsIndexScreen" breadcrumbs={breadcrumbs}>
+        
         <DualPane>
           <DualPane.InfoPane>
             <div className="pt-input-group pt-fill">

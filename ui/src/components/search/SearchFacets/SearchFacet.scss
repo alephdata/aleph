@@ -12,7 +12,8 @@
     margin-bottom: $aleph-grid-size;
     align-items: center;
     cursor: pointer;
-    background: $aleph-toolbar-background;
+    // background: $aleph-toolbar-background;
+    background: $aleph-sidebar-background;
     border-bottom: 1px solid $aleph-border-color;
 
     &.active {

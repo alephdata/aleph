@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Helmet } from 'react-helmet';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import Waypoint from 'react-waypoint';
 
@@ -79,13 +78,18 @@ class CollectionXrefScreen extends Component {
     if (loading) {
       return <ScreenLoading />;
     }
+
+    const breadcrumbs = (<Breadcrumbs collection={collection}>
+      <li>
+        <a className="pt-breadcrumb">
+          <FormattedMessage id="collection.xref.crumb"
+                            defaultMessage="Cross-referencing"/>
+        </a>
+      </li>
+    </Breadcrumbs>)
     
     return (
-      <Screen>
-        <Helmet>
-          <title>{collection.label}</title>
-        </Helmet>
-        <Breadcrumbs collection={collection} />
+      <Screen title={collection.label} breadcrumbs={breadcrumbs}>
         <table className="CollectionXrefScreen data-table">
           <thead>
             <tr>
