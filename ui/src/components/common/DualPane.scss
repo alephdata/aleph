@@ -53,11 +53,13 @@ $aleph-infobar-width: $aleph-grid-size * 40;
     .PaneHeading {
       background: $aleph-sidebar-background;
       padding: $aleph-grid-size*4 $aleph-grid-size*2;
+      color: white;
     }
 
     .PaneHeading h1 {
       border: 0;
       margin: 0;
+      color: white;
     }
 
     .PaneContent {

@@ -6,10 +6,12 @@ $aleph-font-size: $pt-font-size;
 $aleph-line-height: $pt-line-height;
 $aleph-border-radius: $pt-border-radius; 
 
+$aleph-page-background: $light-gray5;
 $aleph-banner-background: $dark-gray3;
-$aleph-sidebar-background: $light-gray4;
-$aleph-toolbar-background: $light-gray5;
+$aleph-sidebar-background: $dark-gray4;
+$aleph-toolbar-background: $aleph-page-background;
 $aleph-footer-background: $light-gray4;
+$aleph-facet-background: $light-gray4;
 $aleph-hover-background: $light-gray5;
 $aleph-content-background: white;
 $aleph-border-color: $pt-divider-black;
