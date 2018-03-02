@@ -22,14 +22,14 @@ class Screen extends React.Component {
   }
 
   render() {
-    const {isHomepage, className} = this.props;
+    const {isHomepage, className, metadata} = this.props;
     let mainClass = isHomepage ? 'main-homepage' : 'main';
 
     return (
       <div className={c("Screen", className)}>
-        <Helmet titleTemplate={`%s - ${this.props.title || this.props.metadata.app.title}`}>
-          <title>{this.props.title || this.props.metadata.app.title}</title>
-          <link rel="shortcut icon" href={this.props.metadata.app.favicon}/>
+        <Helmet titleTemplate={`%s - ${this.props.title || metadata.app.title}`}>
+          <title>{this.props.title || metadata.app.title}</title>
+          <link rel="shortcut icon" href={metadata.app.favicon}/>
         </Helmet>
 
         <Navbar metadata={this.props.metadata}
@@ -40,7 +40,7 @@ class Screen extends React.Component {
           {this.props.children}
         </main>
 
-        <Footer isHomepage={isHomepage}/>
+        <Footer isHomepage={isHomepage} metadata={metadata} />
       </div>
     )
   }
