@@ -5,15 +5,15 @@
   flex-flow: column nowrap;
   
   .main-homepage {
-    @extend .main;
+    flex-grow: 1;
+    display: flex;
+    flex-flow: column nowrap;
     background-color: $aleph-content-background;
     align-items: stretch;
   }
 
   .main {
+    @extend .main-homepage;
     padding-bottom: ($aleph-grid-size*4 - 1);
-    flex-grow: 1;
-    display: flex;
-    flex-flow: column nowrap;
   }
 }
