@@ -1,8 +1,7 @@
 @import "src/app/variables.scss";
 
-.CollectionBrowser {
-  margin-top: $aleph-grid-size * 2;
-  min-height: 94.5vh;
+.CollectionsIndexScreen {
+    // margin-top: $aleph-grid-size * 2;
 
   .DualPane .InfoPane {
     box-shadow: none;

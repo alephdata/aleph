@@ -5,14 +5,17 @@ import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'r
 import { debounce } from 'lodash';
 import Waypoint from 'react-waypoint';
 
+import Screen from 'src/components/common/Screen';
+import ScreenLoading from 'src/components/common/ScreenLoading';
+import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import Query from 'src/components/search/Query';
 import DualPane from 'src/components/common/DualPane';
 import SectionLoading from 'src/components/common/SectionLoading';
 import CheckboxList from 'src/components/common/CheckboxList';
 import { fetchCollections } from 'src/actions';
-import CollectionListItem from './CollectionListItem';
+import CollectionListItem from 'src/components/CollectionScreen/CollectionListItem';
 
-import './CollectionBrowser.css';
+import './CollectionsIndexScreen.css';
 
 const messages = defineMessages({
   filter: {
@@ -21,7 +24,7 @@ const messages = defineMessages({
   },
 });
 
-class CollectionBrowser extends Component {
+class CollectionsIndexScreen extends Component {
   constructor(props) {
     super(props);
 
@@ -118,10 +121,11 @@ class CollectionBrowser extends Component {
     }
 
     return (
-      <section className="CollectionBrowser">
+      <Screen className="CollectionsIndexScreen">
+        <Breadcrumbs />
         <DualPane>
           <DualPane.InfoPane>
-            <div className="filterCollectionsInput pt-input-group pt-fill">
+            <div className="pt-input-group pt-fill">
               <i className="pt-icon pt-icon-search" />
               <input className="pt-input" type="search"
                 placeholder={intl.formatMessage(messages.filter)}
@@ -168,10 +172,11 @@ class CollectionBrowser extends Component {
             </ul>
           </DualPane.ContentPane>
         </DualPane>
-      </section>
+      </Screen>
     );
   }
 }
+
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -179,6 +184,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 }
 
-CollectionBrowser = connect(mapStateToProps, { fetchCollections })(CollectionBrowser);
-CollectionBrowser = injectIntl(withRouter(CollectionBrowser));
-export default CollectionBrowser;
+CollectionsIndexScreen = injectIntl(CollectionsIndexScreen);
+CollectionsIndexScreen = connect(mapStateToProps, { fetchCollections })(CollectionsIndexScreen);
+export default CollectionsIndexScreen;

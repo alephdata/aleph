@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import queryString from 'query-string';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
 import numeral from 'numeral';
 
@@ -30,7 +30,6 @@ class HomeScreen extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.onFooterClick = this.onFooterClick.bind(this);
     this.getTopThreeStatistics = this.getTopThreeStatistics.bind(this);
   }
 
@@ -79,83 +78,64 @@ class HomeScreen extends Component {
     event.preventDefault();
   }
 
-  onFooterClick() {
-    const el = document.getElementById('section2');
-    const y = el.getBoundingClientRect().top;
-    let h = 60;
-
-    let timerID = setInterval(function () {
-      if (window.pageYOffset + h >= y) {
-        clearInterval(timerID);
-        window.scrollTo(0, y);
-      } else {
-        window.scrollBy(0, h);
-      }
-    }, 15);
-  }
-
   render() {
     const {intl} = this.props;
     const {topThree, count} = this.state;
 
     return (
       <Screen isHomepage={true}>
-        <div id='section1' className='HomePage'>
-          <section>
-            <div className='outer_searchbox_div'>
-              <div className='inner_searchbox_div'>
-                <h1 className="search_h1">
-                  <FormattedMessage id='home.search.title'
-                                    defaultMessage="Follow The Money"/>
-                </h1>
-                <div className='homepage-summary'>
-                  <h4>
-                    <FormattedMessage id='home.summary'
-                                      defaultMessage="Search public records, databases and leaks from hundreds of global sources."/>
-                  </h4>
+        <section className='HomePage'>
+          <div className='outer_searchbox_div'>
+            <div className='inner_searchbox_div'>
+              <h1 className="search_h1">
+                <FormattedMessage id='home.search.title'
+                                  defaultMessage="Follow The Money"/>
+              </h1>
+              <div className='homepage-summary'>
+                <h4>
+                  <FormattedMessage id='home.summary'
+                                    defaultMessage="Search public records, databases and leaks from hundreds of global sources."/>
+                </h4>
+              </div>
+              <form onSubmit={this.onSubmit} className="search_form">
+                <div className="pt-input-group pt-large">
+                  <span className="pt-icon pt-icon-search search_span"/>
+                  <input className="pt-input search_input"
+                          type="text"
+                          placeholder={intl.formatMessage(messages.search_placeholder)}
+                          dir="auto"
+                          onChange={this.onChange}
+                          value={this.state.value}/>
                 </div>
-                <form onSubmit={this.onSubmit} className="search_form">
-                  <div className="pt-input-group pt-large">
-                    <span className="pt-icon pt-icon-search search_span"/>
-                    <input className="pt-input search_input"
-                           type="text"
-                           placeholder={intl.formatMessage(messages.search_placeholder)}
-                           dir="auto"
-                           onChange={this.onChange}
-                           value={this.state.value}/>
-                  </div>
-                </form>
-                <div className='top_three_group'>
-                  <h4>We have&nbsp;</h4>
-                  <Link to="/search"><h4>{numeral(count).format('0a')} results</h4></Link>
-                  <h4>&nbsp;including&nbsp;</h4>
-                  {topThree.length > 0 && topThree.map((item, index) => (
-                    <Link key={index} to={item.link}>
-                      {index === 0 && <h4 key={index + 2}>{numeral(item.number).format('0a')}&nbsp;
-                        <Schema.Label lowerCase={true} schema={item.name} plural={true}/>,&nbsp;
-                      </h4>}
-                      {index === 1 && <h4 key={index + 2}>{numeral(item.number).format('0a')}&nbsp;
-                        <Schema.Label lowerCase={true} schema={item.name} plural={true}/>&nbsp;
-                      </h4>}
-                      {index === 2 && <h4 key={index + 2}>and {numeral(item.number).format('0a')}&nbsp;
-                        <Schema.Label lowerCase={true} schema={item.name} plural={true}/>.
-                      </h4>}
-                    </Link>
-                  ))}
-                </div>
+              </form>
+              <div className='top_three_group'>
+                <h4>We have&nbsp;</h4>
+                <Link to="/search"><h4>{numeral(count).format('0a')} results</h4></Link>
+                <h4>&nbsp;including&nbsp;</h4>
+                {topThree.length > 0 && topThree.map((item, index) => (
+                  <Link key={index} to={item.link}>
+                    {index === 0 && <h4 key={index + 2}>{numeral(item.number).format('0a')}&nbsp;
+                      <Schema.Label lowerCase={true} schema={item.name} plural={true}/>,&nbsp;
+                    </h4>}
+                    {index === 1 && <h4 key={index + 2}>{numeral(item.number).format('0a')}&nbsp;
+                      <Schema.Label lowerCase={true} schema={item.name} plural={true}/>&nbsp;
+                    </h4>}
+                    {index === 2 && <h4 key={index + 2}>and {numeral(item.number).format('0a')}&nbsp;
+                      <Schema.Label lowerCase={true} schema={item.name} plural={true}/>.
+                    </h4>}
+                  </Link>
+                ))}
               </div>
             </div>
+          </div>
 
-            <div className='homepage_collections_footer'>
-              <a className='browse_collection_label' onClick={this.onFooterClick}><FormattedMessage
-                id='home.collections'
-                defaultMessage="Want to browse collections?"/></a>
-            </div>
-          </section>
-        </div>
-        <div id='section2'>
-          <CollectionBrowser/>
-        </div>
+          <div className='homepage_collections_footer'>
+            <Link to="/collections">
+              <FormattedMessage id='home.collections'
+                                defaultMessage="Want to browse collections?"/>
+            </Link>
+          </div>
+        </section>
       </Screen>
     );
   }

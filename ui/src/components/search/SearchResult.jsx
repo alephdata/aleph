@@ -30,7 +30,8 @@ class SearchResult extends Component {
       <div>
         { result.total === 0 &&
           <NonIdealState visual="search" title={intl.formatMessage(messages.no_results_title)}
-            description={intl.formatMessage(messages.no_results_description)} />}
+            description={intl.formatMessage(messages.no_results_description)} />
+        }
         <EntityList {...this.props} result={result} />
         { !result.isExpanding && hasMoreResults && (
           <Waypoint
