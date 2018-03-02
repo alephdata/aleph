@@ -10,8 +10,6 @@ import ImageViewer from './viewers/ImageViewer';
 import FolderViewer from './viewers/FolderViewer';
 import EmailViewer from './viewers/EmailViewer';
 
-import './DocumentContent.css';
-
 class DocumentContent extends React.Component {
   render() {
     const { document, fragId } = this.props;
@@ -22,7 +20,7 @@ class DocumentContent extends React.Component {
           <section className="PartialError">
             <div className="pt-non-ideal-state">
               <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-                <span className="pt-icon pt-icon-issue"></span>
+                <span className="pt-icon pt-icon-issue"/>
               </div>
               <h4 className="pt-non-ideal-state-title">
                 <FormattedMessage id="document.status_fail"

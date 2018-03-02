@@ -34,7 +34,7 @@ class PdfViewer extends Component {
   }
 
   componentDidMount () {
-    this.setWidth()
+    this.setWidth();
     window.addEventListener("resize", throttle(this.setWidth, 500))
   }
 
@@ -48,7 +48,7 @@ class PdfViewer extends Component {
         width: this.pdfElement.getBoundingClientRect().width
       })
     }
-  }
+  };
 
   render() {
     const { document, fragId, session } = this.props;
@@ -69,9 +69,9 @@ class PdfViewer extends Component {
     return (
       <React.Fragment>
         <Toolbar document={document} pageNumber={pageNumber} pageTotal={numPages}/>
-        <div className="ContentPaneOuter">
-          <div className="ContentPaneInner PdfViewer">
-            <div className="document_pdf" ref={(ref) => this.pdfElement = ref}>
+        <div className="content-pane-outer">
+          <div className="content-pane-inner PdfViewer">
+            <div className="document-pdf" ref={(ref) => this.pdfElement = ref}>
               <Document renderAnnotations={true}
                         file={url}
                         onLoadSuccess={this.onDocumentLoad}

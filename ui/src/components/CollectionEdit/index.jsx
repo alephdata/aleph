@@ -126,7 +126,7 @@ class CollectionEditScreen extends Component {
             <CollectionPermissionsEdit permissions={permissions}
                                        onChangePermissions={this.onChangePermissions} />
           
-            <Button className="saveButton" onClick={this.onSave}>
+            <Button className="save-button" onClick={this.onSave}>
               <FormattedMessage id="collection.edit.save"
                                 defaultMessage="Save"/>
             </Button>

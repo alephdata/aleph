@@ -36,9 +36,9 @@ class EmailViewer extends React.Component {
     return (
       <React.Fragment>
         <Toolbar document={document}/>
-        <div className="ContentPaneOuter">
-          <div className="ContentPaneInner EmailViewer">
-            <div className="EmailHeader">
+        <div className="content-pane-outer">
+          <div className="content-pane-inner EmailViewer">
+            <div className="email-header">
               <table className="pt-html-table">
                 <tbody>
                   {headers.date && (
@@ -109,7 +109,7 @@ class EmailViewer extends React.Component {
                   </React.Fragment>
                 }
                 panel={
-                  <div className="EmailAttachments">
+                  <div className="email-attachments">
                     {!!document.children && (
                       <SearchContext context={context} aspects={aspects}>{searchContext => (
                         <div>

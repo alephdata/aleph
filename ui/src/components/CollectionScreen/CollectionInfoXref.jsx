@@ -28,7 +28,6 @@ class CollectionInfoXref extends React.Component {
       return null;
     }
 
-    console.log(index);
     const linkPath = getPath(collection.links.ui) + '/xref/';
 
     return (

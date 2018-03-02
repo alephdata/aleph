@@ -1,23 +1,6 @@
 @import "src/app/variables.scss";
 
 .CollectionPermissionsEdit {
-  .addRoleForm {
-    display: flex;
-    padding: ($aleph-grid-size * 2) $aleph-grid-size;
-
-    .addRoleButton {
-      width: 8em;
-    }
-
-    .multiple_select_input {
-      width: 100%;
-    }
-  }
-
-  .header_topic {
-    font-weight: 700;
-  }
-
   .checkbox-center {
     margin: auto;
     width: 10%;
