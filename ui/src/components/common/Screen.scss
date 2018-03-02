@@ -15,5 +15,8 @@
   .main {
     @extend .main;
     padding-bottom: ($aleph-grid-size*4 - 1);
+    flex-grow: 1;
+    display: flex;
+    flex-flow: column nowrap;
   }
 }
