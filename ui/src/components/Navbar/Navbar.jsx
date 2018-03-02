@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import { InputGroup } from '@blueprintjs/core';
 
 import AuthButtons from 'src/components/auth/AuthButtons';
 
-import './PageNavbarSearchForm.css';
+import './Navbar.css';
 
-class PageNavbarSearchForm extends Component {
+class Navbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {value: props.searchContext ? props.searchContext.query.getString('q') : ''};
@@ -51,27 +51,29 @@ class PageNavbarSearchForm extends Component {
   render() {
     const {metadata,session} = this.props
     return (
-      <nav className="PageNavbar pt-navbar pt-dark">
-        <div className="pt-navbar-group pt-align-left">
-          <div className="pt-navbar-heading">
-            <Link to="/">
-              <img src={metadata.app.logo} alt={metadata.app.title} />
-            </Link>
+      <div className="Navbar">
+        <nav className="pt-navbar pt-dark">
+          <div className="pt-navbar-group pt-align-left">
+            <div className="pt-navbar-heading">
+              <Link to="/">
+                <img src={metadata.app.logo} alt={metadata.app.title} />
+              </Link>
+            </div>
+            <div className="pt-navbar-heading">
+              <Link to="/">{metadata.app.title}</Link>
+            </div>
+            <form onSubmit={this.onSubmit}>
+              <InputGroup type="text" leftIcon="search" className="pt-large"
+                onChange={this.onChange} value={this.state.value} />
+            </form>
           </div>
-          <div className="pt-navbar-heading">
-            <Link to="/">{metadata.app.title}</Link>
+          <div className="pt-navbar-group pt-align-right">
+            <AuthButtons session={session} auth={metadata.auth} />
           </div>
-          <form onSubmit={this.onSubmit}>
-            <InputGroup type="text" leftIcon="search" className="pt-large"
-              onChange={this.onChange} value={this.state.value} />
-          </form>
-        </div>
-        <div className="pt-navbar-group pt-align-right">
-          <AuthButtons session={session} auth={metadata.auth} />
-        </div>
-      </nav>
+        </nav>
+      </div>
     );
   }
 }
 
-export default withRouter(PageNavbarSearchForm);
+export default withRouter(Navbar);

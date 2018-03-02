@@ -1,31 +1,16 @@
 @import "src/app/variables.scss";
 
 .CollectionBrowser {
-    margin-top: $aleph-grid-size * 2;
+  margin-top: $aleph-grid-size * 2;
+  min-height: 94.5vh;
 
-    .header {
-        margin: $aleph-grid-size;
-        // Align left side with text in the left-most cards.
-        // margin-left: $aleph-grid-size * 3;
-        display: flex;
-        flex-flow: row wrap;
-        width: inherit;
-        align-items: flex-end;
-        justify-content: space-between;
+  .DualPane .InfoPane {
+    box-shadow: none;
+  }
 
-        .filterCollectionsInput {
-            max-width: 15em;
-            margin-left: auto; // make it stay on the right.
-        }
-    }
-
-    .DualPane .InfoPane {
-        box-shadow: none;
-    }
-
-    ul.results {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
+  ul.results {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
 }
