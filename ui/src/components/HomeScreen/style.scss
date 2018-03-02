@@ -9,17 +9,60 @@
   color: white;
   text-align: center;
 
+  .outer_searchbox_div {
+    display: table;
+    position: absolute;
+    height: 80%;
+    width: 100%;
+  }
+
+  h4 {
+    color: white !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .inner_searchbox_div {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
   .search_h1 {
     color: white !important;
-    margin-top: 2em;
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
     font-size: 4em;
+  }
+
+  .top_three_group {
+    display: inline-flex;
+  }
+
+  section {
+    min-height: 95.5vh;
+  }
+
+  .browse_collection_label {
+    color: white;
+  }
+
+  .homepage-summary {
+    margin-bottom: 3em;
   }
 
   .search_form {
     max-width: 50em;
     margin: 0 auto;
-    padding-bottom: 5em;
+    padding-bottom: 2em;
+  }
+
+  .homepage_collections_footer {
+    height: 45px;
+    background-color: #394b59;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    padding-top: 1em;
   }
 
   .homepage_examples {
@@ -27,9 +70,5 @@
     top: 52vh;
     left: 52%;
     display: flex;
-  }
-
-  .search_example_item {
-    float: right;
   }
 }

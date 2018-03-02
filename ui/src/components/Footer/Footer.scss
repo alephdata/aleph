@@ -1,0 +1,23 @@
+@import "src/app/variables.scss";
+
+.HomepageFooter {
+  width : 100%;
+  background-color: $aleph-footer-background;
+  border-top: 1px solid $aleph-border-color;
+
+  p {
+    text-align: center;
+    padding: $aleph-grid-size $aleph-grid-size*2 0 $aleph-grid-size*2;
+  }
+
+  a, a:hover {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+
+.Footer {
+  @extend .HomepageFooter;
+  position: fixed !important;
+  bottom: 0;
+}
