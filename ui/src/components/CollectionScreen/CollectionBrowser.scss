@@ -8,6 +8,11 @@
     box-shadow: none;
   }
 
+  .note {
+    color: $aleph-greyed-text;
+    margin-top: $aleph-grid-size;
+  }
+
   ul.results {
     list-style-type: none;
     padding: 0;

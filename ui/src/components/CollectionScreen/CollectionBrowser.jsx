@@ -127,6 +127,13 @@ class CollectionBrowser extends Component {
                 placeholder={intl.formatMessage(messages.filter)}
                 onChange={this.onChangeQueryPrefix} value={queryPrefix} />
             </div>
+            <p className="note">
+              <FormattedMessage id="collection.browser.total"
+                              defaultMessage="Browsing {total} collections."
+                              values={{
+                                total: result.total
+                              }}/>
+            </p>
 
             <h4>
               <FormattedMessage id="collections.browser.categories"
