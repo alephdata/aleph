@@ -8,6 +8,7 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/components/search/Query';
 import DualPane from 'src/components/common/DualPane';
 import SectionLoading from 'src/components/common/SectionLoading';
+import CheckboxList from 'src/components/common/CheckboxList';
 import { fetchCollections } from 'src/actions';
 import CollectionListItem from './CollectionListItem';
 
@@ -32,6 +33,7 @@ class CollectionBrowser extends Component {
 
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
+    this.onFacetToggle = this.onFacetToggle.bind(this);
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
   }
 
@@ -63,6 +65,16 @@ class CollectionBrowser extends Component {
     this.setState({queryPrefix: target.value});
     const query = this.props.query.set('prefix', target.value);
     this.updateQuery(query);
+  }
+
+  onFacetToggle(facet) {
+    const updateQuery = this.updateQuery;
+    return (value) => {
+      // console.log(facet, value);
+      let query = this.props.query;
+      query = query.toggleFilter(facet, value);
+      updateQuery(query);
+    }
   }
 
   updateQuery(newQuery) {
@@ -120,27 +132,17 @@ class CollectionBrowser extends Component {
               <FormattedMessage id="collections.browser.categories"
                                 defaultMessage="Categories" />
             </h4>
-            <ul>
-              { result.facets.category.values.map((facet) => (
-                <li>
-                  {facet.label}
-                  {facet.count}
-                </li>
-              ))}
-            </ul>
+            <CheckboxList items={result.facets.category.values}
+                          selectedItems={result.facets.category.filters}
+                          onItemClick={this.onFacetToggle('category')} />
 
             <h4>
               <FormattedMessage id="collections.browser.countries"
                                 defaultMessage="Countries" />
             </h4>
-            <ul>
-              { result.facets.countries.values.map((facet) => (
-                <li>
-                  {facet.label}
-                  {facet.count}
-                </li>
-              ))}
-            </ul>
+            <CheckboxList items={result.facets.countries.values}
+                          selectedItems={result.facets.countries.filters}
+                          onItemClick={this.onFacetToggle('countries')} />
           </DualPane.InfoPane>
           <DualPane.ContentPane>
             <ul className="results">

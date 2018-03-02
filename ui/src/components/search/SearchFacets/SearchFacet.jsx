@@ -6,7 +6,7 @@ import c from 'classnames';
 
 import { fetchFacet, fetchNextFacetValues } from 'src/actions';
 import { selectFacet } from 'src/selectors';
-import CheckboxList from './CheckboxList';
+import CheckboxList from 'src/components/common/CheckboxList';
 
 import './SearchFacet.css';
 
@@ -163,7 +163,11 @@ class SearchFacet extends Component {
         <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick} style={{position: 'relative'}}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
           <span className="FacetName">
-            {facetIcons[fieldLabel] && (<React.Fragment><span className={`FacetIcon pt-icon pt-icon-${facetIcons[fieldLabel]}`}/></React.Fragment>)}
+            {facetIcons[fieldLabel] && (
+              <React.Fragment>
+                <span className={`FacetIcon pt-icon pt-icon-${facetIcons[fieldLabel]}`}/>
+              </React.Fragment>
+            )}
             {fieldLabel} 
           </span>     
             

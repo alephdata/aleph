@@ -3,6 +3,7 @@
 .CheckboxList {
   list-style: none;
   padding-left: 0;
+  padding-bottom: $aleph-grid-size;
   margin: 0;
 
   & > li {
@@ -27,8 +28,16 @@
 
       opacity: 0.1;
       transition: opacity 0.2s ease-out;
-      &.is-ticked {
+    }
+
+    &.active {
+      .Tick {
         opacity: 1;
+        color: $pt-intent-primary;
+      }
+
+      .label {
+        font-weight: bold;
       }
     }
 
