@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { Helmet } from 'react-helmet';
 import { NonIdealState, Button } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
@@ -114,11 +113,7 @@ class CollectionEditScreen extends Component {
     }
 
     return (
-      <Screen>
-        <Helmet>
-          <title>{collection.label}</title>
-        </Helmet>
-        <Breadcrumbs collection={collection} />
+      <Screen breadcrumbs={<Breadcrumbs collection={collection} />} title={collection.label}>
         <DualPane>
           <CollectionEditInfo collection={this.state.collection} 
                               onChangeCollection={this.onChangeCollection} />

@@ -34,7 +34,8 @@ class Screen extends React.Component {
 
         <Navbar metadata={this.props.metadata}
                 session={this.props.session}
-                searchContext={this.props.searchContext}/>
+                searchContext={this.props.searchContext}
+                isHomepage={isHomepage} />
 
         <main className={mainClass}>
           {this.props.children}

@@ -49,7 +49,7 @@ class Navbar extends React.Component {
   }
   
   render() {
-    const {metadata,session} = this.props
+    const {metadata, session, isHomepage} = this.props
     return (
       <div className="Navbar">
         <nav className="pt-navbar">
@@ -62,10 +62,12 @@ class Navbar extends React.Component {
             <div className="pt-navbar-heading">
               <Link to="/">{metadata.app.title}</Link>
             </div>
-            <form onSubmit={this.onSubmit}>
-              <InputGroup type="text" leftIcon="search" className="pt-large"
-                onChange={this.onChange} value={this.state.value} />
-            </form>
+            {!isHomepage && (
+              <form onSubmit={this.onSubmit}>
+                <InputGroup type="text" leftIcon="search" className="pt-large"
+                  onChange={this.onChange} value={this.state.value} />
+              </form>
+            )} 
           </div>
           <div className="pt-navbar-group pt-align-right">
             <AuthButtons session={session} auth={metadata.auth} />

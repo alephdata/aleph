@@ -10,6 +10,7 @@ import Schema from 'src/components/common/Schema';
 import DocumentMetadata from 'src/components/DocumentScreen/DocumentMetadata';
 import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
 import URL from 'src/components/common/URL';
+import { getEntityTags } from 'src/selectors';
 
 import './DocumentInfo.css';
 
@@ -62,8 +63,13 @@ class DocumentInfo extends React.Component {
                   {document.source_url && (
                     <ul className='info-sheet'>
                       <li>
-                        <span className="key"><FormattedMessage id="document.info.source_url" defaultMessage="Document Source URL"/></span>
-                        <span className="value"><URL value={document.source_url} /></span>
+                        <span className="key">
+                          <FormattedMessage id="document.info.source_url"
+                                            defaultMessage="Document Source URL"/>
+                        </span>
+                        <span className="value">
+                          <URL value={document.source_url} />
+                        s</span>
                       </li>
                     </ul>
                   )}
@@ -74,7 +80,8 @@ class DocumentInfo extends React.Component {
                 title={
                   <React.Fragment>
                     <span className="pt-icon-standard pt-icon-tag"/>
-                    <FormattedMessage id="document.info.links" defaultMessage="Links"/>
+                    <FormattedMessage id="document.info.links"
+                                      defaultMessage="Links"/>
                   </React.Fragment>
                 }
                 panel={<EntityInfoTags entity={document} />}
@@ -87,8 +94,9 @@ class DocumentInfo extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   session: state.session,
+  tags: getEntityTags(state, ownProps.document.id)
 });
 
 export default connect(mapStateToProps)(DocumentInfo);

@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
 import Tag from 'src/components/common/Tag';
-import { fetchEntityTags } from '../../actions/index';
+import { fetchEntityTags } from 'src/actions/index';
+import { getEntityTags } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
 class EntityInfoTags extends React.Component {
@@ -62,7 +63,7 @@ class EntityInfoTags extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    tags: state.entityTags[ownProps.entity.id]
+    tags: getEntityTags(state, ownProps.entity.id)
   };
 };
 

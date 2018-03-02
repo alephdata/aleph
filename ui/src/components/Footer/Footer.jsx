@@ -4,9 +4,6 @@ import {FormattedMessage} from 'react-intl';
 import './Footer.css';
 
 class Footer extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     const {isHomepage, metadata, breadcrumbs} = this.props;

@@ -16,7 +16,7 @@ import Country from 'src/components/common/Country';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import SectionLoading from 'src/components/common/SectionLoading';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import { matchesKey } from 'src/selectors';
+import { matchesKey, getCollection } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
 import './CollectionXrefScreen.css';
@@ -185,8 +185,8 @@ class CollectionXrefScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, otherId } = ownProps.match.params;
-  const collection = state.collections[collectionId];
-  const other = state.collections[otherId];
+  const collection = getCollection(state, collectionId);
+  const other = getCollection(state, otherId);
   const matchKey = matchesKey(collectionId, otherId);
   const matches = state.collectionXrefMatches[matchKey];
   const index = state.collectionXrefIndex[collectionId];

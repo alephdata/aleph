@@ -34,3 +34,13 @@ export function queryToFacetKey(query, field) {
 export function matchesKey(collectionId, otherId) {
   return collectionId + '*' + otherId;
 }
+
+export function getCollection(state, collectionId) {
+  // get a collection from the store.
+  const collection = state.collections[collectionId];
+  return collection;
+}
+
+export function getEntityTags(state, entityId) {
+  return state.entityTags[entityId];
+}

@@ -111,8 +111,8 @@ ul.info-rank {
 
   li {
     display: flex;
-    padding-top: $aleph-grid-size;
-    padding-bottom: $aleph-grid-size;
+    // padding-top: $aleph-grid-size;
+    padding-bottom: $aleph-grid-size * 1.5;
 
     .key, .value {
       overflow: hidden;
@@ -128,10 +128,11 @@ ul.info-rank {
 ul.info-sheet {
   li {
     flex-direction: column;
-    padding-top: $aleph-grid-size;
+    // padding-top: $aleph-grid-size;
 
     .key {
       color: $aleph-greyed-text;
+      font-size: $pt-font-size-small;
     }
 
     .value {
@@ -149,6 +150,7 @@ ul.info-rank li {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
   .value {
     white-space: nowrap;
     overflow: visible;
