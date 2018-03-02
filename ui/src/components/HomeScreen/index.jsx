@@ -127,17 +127,17 @@ class HomeScreen extends Component {
                 </form>
                 <div className='top_three_group'>
                   <h4>We have&nbsp;</h4>
-                  <Link to="/search"><h4>{numeral(count).format('0 a')} results</h4></Link>
+                  <Link to="/search"><h4>{numeral(count).format('0a')} results</h4></Link>
                   <h4>&nbsp;including&nbsp;</h4>
                   {topThree.length > 0 && topThree.map((item, index) => (
                     <Link key={index} to={item.link}>
-                      {index === 0 && <h4 key={index + 2}>{numeral(item.number).format('0 a')}&nbsp;
+                      {index === 0 && <h4 key={index + 2}>{numeral(item.number).format('0a')}&nbsp;
                         <Schema.Label lowerCase={true} schema={item.name} plural={true}/>,&nbsp;
                       </h4>}
-                      {index === 1 && <h4 key={index + 2}>{numeral(item.number).format('0 a')}&nbsp;
+                      {index === 1 && <h4 key={index + 2}>{numeral(item.number).format('0a')}&nbsp;
                         <Schema.Label lowerCase={true} schema={item.name} plural={true}/>&nbsp;
                       </h4>}
-                      {index === 2 && <h4 key={index + 2}>and {numeral(item.number).format('0 a')}&nbsp;
+                      {index === 2 && <h4 key={index + 2}>and {numeral(item.number).format('0a')}&nbsp;
                         <Schema.Label lowerCase={true} schema={item.name} plural={true}/>.
                       </h4>}
                     </Link>
