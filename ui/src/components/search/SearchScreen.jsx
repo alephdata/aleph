@@ -14,7 +14,7 @@ class SearchScreen extends React.Component {
   render() {
     return (
       <SearchContext>{searchContext => (
-        <Screen searchContext={searchContext} title={searchContext.query.getQ()}>
+        <Screen searchContext={searchContext} title={searchContext.query.getString('q')}>
           <DualPane className="SearchScreen">
             <DualPane.InfoPane className="SearchFacetsPane">
               <SearchFacets {...searchContext}/>

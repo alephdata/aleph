@@ -1,0 +1,35 @@
+@import "src/app/variables.scss";
+
+.CollectionListItem {
+    margin-bottom: $aleph-grid-size * 2;
+    padding-bottom: $aleph-grid-size * 2;
+    border-bottom: 1px solid $table-border-color;
+
+    h4 {
+        font-weight: bold;
+
+        .pt-tag {
+            float: right;
+            display: block;
+        }
+    }
+
+    .summary {
+        font-size: $aleph-font-size * 1.1;
+    }
+
+    .details {
+        margin-bottom: 0;
+        color: $aleph-greyed-text;
+    }
+
+    .details-item { 
+        display: inline-block;
+        min-width: 8em;
+        margin-right: 2em;
+
+        .pt-icon {
+            margin-right: $aleph-grid-size / 2;
+        }
+    }
+}

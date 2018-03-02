@@ -1,0 +1,20 @@
+@import "src/app/variables.scss";
+
+.CollectionsIndexScreen {
+    // margin-top: $aleph-grid-size * 2;
+
+  .DualPane .InfoPane {
+    box-shadow: none;
+  }
+
+  .note {
+    color: $aleph-greyed-text;
+    margin-top: $aleph-grid-size;
+  }
+
+  ul.results {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+}

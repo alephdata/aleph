@@ -6,6 +6,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+  min-height: 95.5vh;
   color: white;
   text-align: center;
 
@@ -37,14 +38,6 @@
     display: inline-flex;
   }
 
-  section {
-    min-height: 95.5vh;
-  }
-
-  .browse_collection_label {
-    color: white;
-  }
-
   .homepage-summary {
     margin-bottom: 3em;
   }
@@ -63,6 +56,10 @@
     position: absolute;
     right: 0;
     padding-top: 1em;
+
+    a {
+      color: white;
+    }
   }
 
   .homepage_examples {

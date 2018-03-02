@@ -83,18 +83,6 @@
     display: block !important;
     margin: 0 auto $aleph-grid-size*2 auto !important;
   }
-    
-  .CheckboxList {
-    padding-bottom: $aleph-grid-size;
-
-    .is-ticked {
-      color: $pt-intent-primary;
-    }
-    
-    .is-ticked + .label {
-      font-weight: bold;
-    }
-  }
 
   .ShowMore {
     margin-top: $aleph-grid-size;
