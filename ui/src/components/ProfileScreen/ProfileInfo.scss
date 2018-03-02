@@ -1,35 +1,35 @@
 @import "src/app/variables.scss";
 
 .ProfileInfo {
-  .label_icon_group {
+  .label-icon-group {
     display: inline-flex;
   }
 
-  .name_group {
+  .name-group {
     // padding-left: $aleph-grid-size;
     padding-top: $aleph-grid-size;
   }
 
-  .email_group {
+  .email-group {
     // padding-left: $aleph-grid-size;
     padding-top: $aleph-grid-size;
   }
 
-  .label_class {
+  .label-class {
     padding-left: $aleph-grid-size;
     margin-top: $aleph-grid-size * - 0.2 !important;
   }
 
-  .api_key_label {
+  .api-key-label {
     color: $aleph-greyed-text;
     padding-top: $aleph-grid-size;
   }
 
-  .input_class {
+  .input-class {
     width: 100% !important;
   }
 
-  .error_label_text {
+  .error-label-text {
     color: #db3737 !important;
     display: none;
   }
@@ -38,7 +38,7 @@
     display: block;
   }
 
-  .button_div {
+  .button-div {
     padding-top: $aleph-grid-size;
     // padding-left: $aleph-grid-size * 2;
     // padding-right: $aleph-grid-size * 2;

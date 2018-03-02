@@ -102,9 +102,9 @@ class HomeScreen extends Component {
       <Screen isHomepage={true}>
         <div id='section1' className='HomePage'>
           <section>
-            <div className='outer_searchbox_div'>
-              <div className='inner_searchbox_div'>
-                <h1 className="search_h1">
+            <div className='outer-searchbox-div'>
+              <div className='inner-searchbox-div'>
+                <h1 className="search-h1">
                   <FormattedMessage id='home.search.title'
                                     defaultMessage="Follow The Money"/>
                 </h1>
@@ -114,10 +114,10 @@ class HomeScreen extends Component {
                                       defaultMessage="Search public records, databases and leaks from hundreds of global sources."/>
                   </h4>
                 </div>
-                <form onSubmit={this.onSubmit} className="search_form">
+                <form onSubmit={this.onSubmit} className="search-form">
                   <div className="pt-input-group pt-large">
-                    <span className="pt-icon pt-icon-search search_span"/>
-                    <input className="pt-input search_input"
+                    <span className="pt-icon pt-icon-search search-span"/>
+                    <input className="pt-input search-input"
                            type="text"
                            placeholder={intl.formatMessage(messages.search_placeholder)}
                            dir="auto"
@@ -125,7 +125,7 @@ class HomeScreen extends Component {
                            value={this.state.value}/>
                   </div>
                 </form>
-                <div className='top_three_group'>
+                <div className='top-three-group'>
                   <h4>We have&nbsp;</h4>
                   <Link to="/search"><h4>{numeral(count).format('0 a')} results</h4></Link>
                   <h4>&nbsp;including&nbsp;</h4>
@@ -146,8 +146,8 @@ class HomeScreen extends Component {
               </div>
             </div>
 
-            <div className='homepage_collections_footer'>
-              <a className='browse_collection_label' onClick={this.onFooterClick}><FormattedMessage
+            <div className='homepage-collections-footer'>
+              <a className='browse-collection-label' onClick={this.onFooterClick}><FormattedMessage
                 id='home.collections'
                 defaultMessage="Want to browse collections?"/></a>
             </div>

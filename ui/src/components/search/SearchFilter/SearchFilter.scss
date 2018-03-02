@@ -22,12 +22,12 @@
   }
 }
 
-.search-query__text {
+.search-query-text {
   flex-grow: 1;
   min-width: 20em;
 }
 
-.search-query__active-filters {
+.search-query-active-filters {
   margin-right: 10px;
   display: flex;
   flex-flow: row nowrap;

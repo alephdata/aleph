@@ -6,9 +6,9 @@ import {connect} from 'react-redux';
 import {fetchAlerts, addAlert, deleteAlert} from 'src/actions';
 import DualPane from 'src/components/common/DualPane';
 import AlertsTable from './AlertsTable';
+import {showSuccessToast} from "../../app/toast";
 
 import './AlertsPane.css';
-import {showSuccessToast} from "../../app/toast";
 
 const messages = defineMessages({
   add_placeholder: {
@@ -66,9 +66,9 @@ class AlertsPane extends Component {
           <FormattedMessage id="alerts.title"
                             defaultMessage="Alerts & Notifications"/>
         </h1>
-        <form onSubmit={this.onAddAlert} className="addTopicForm">
+        <form onSubmit={this.onAddAlert} className="add-topic-form">
           <input
-            className="pt-input addTopicInput"
+            className="pt-input add-topic-input"
             placeholder={intl.formatMessage(messages.add_placeholder)}
             type="text"
             dir="auto"
@@ -76,7 +76,7 @@ class AlertsPane extends Component {
             onChange={this.onChangeAddingInput}
             value={this.state.newAlert}
           />
-          <Button className="addTopicButton" onClick={this.onAddAlert}>
+          <Button className="add-topic-button" onClick={this.onAddAlert}>
             <FormattedMessage id="alerts.add"
                               defaultMessage="Add"/>
           </Button>

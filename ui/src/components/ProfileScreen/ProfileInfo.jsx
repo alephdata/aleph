@@ -42,8 +42,8 @@ class ProfileInfo extends Component {
       password: '',
       confirmPassword: '',
       api_key: '',
-      requiredLabel: 'pt-input input_class',
-      requiredLabelText: 'pt-form-helper-text error_label_text'
+      requiredLabel: 'pt-input input-class',
+      requiredLabelText: 'pt-form-helper-text error-label-text'
     };
 
     this.onChangePass = this.onChangePass.bind(this);
@@ -90,8 +90,8 @@ class ProfileInfo extends Component {
     } else {
       showErrorToast(intl.formatMessage(messages.check_passwords));
       this.setState({
-        requiredLabel: 'pt-input input_class pt-intent-danger',
-        requiredLabelText: 'pt-form-helper-text error_label_text show'
+        requiredLabel: 'pt-input input-class pt-intent-danger',
+        requiredLabelText: 'pt-form-helper-text error-label-text show'
       })
     }
   }
@@ -105,15 +105,15 @@ class ProfileInfo extends Component {
           <h1>
             <FormattedMessage id="profileinfo.title" defaultMessage="Settings"/>
           </h1>
-          <div className="pt-form-group name_group">
-            <div className='label_icon_group'>
+          <div className="pt-form-group name-group">
+            <div className='label-icon-group'>
               <i className="fa fa-fw fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label_class">
+              <label className="pt-label label-class">
                 <FormattedMessage id="profileinfo.name" defaultMessage="Name"/>
               </label>
             </div>
             <div className="pt-form-content">
-              <input className="pt-input input_class"
+              <input className="pt-input input-class"
                    type="text"
                    placeholder={intl.formatMessage(messages.placeholder_name)}
                    dir="auto"
@@ -121,15 +121,15 @@ class ProfileInfo extends Component {
                    value={this.state.name}/>
             </div>
           </div>
-          <div className="pt-form-group email_group">
-            <div className='label_icon_group'>
+          <div className="pt-form-group email-group">
+            <div className='label-icon-group'>
               <i className="fa fa-fw fa-at" aria-hidden="true"/>
-              <label className="pt-label label_class">
+              <label className="pt-label label-class">
                 <FormattedMessage id="profileinfo.email" defaultMessage="Email"/>
               </label>
             </div>
             <div className="pt-form-content">
-              <input className="pt-input input_class"
+              <input className="pt-input input-class"
                    type="text"
                    dir="auto"
                    disabled={true}
@@ -138,10 +138,10 @@ class ProfileInfo extends Component {
           </div>
           {role.has_password && (
             <div>
-              <div className="pt-form-group email_group">
-                <div className='label_icon_group'>
+              <div className="pt-form-group email-group">
+                <div className='label-icon-group'>
                   <i className="fa fa-unlock-alt" aria-hidden="true"/>
-                  <label className="pt-label label_class">
+                  <label className="pt-label label-class">
                     <FormattedMessage id="profileinfo.password" defaultMessage="Password"/>
                   </label>
                 </div>
@@ -154,10 +154,10 @@ class ProfileInfo extends Component {
                       value={this.state.password === null ? '' : this.state.password}/>
                 </div>
               </div>
-              <div className="pt-form-group email_group">
-                <div className='label_icon_group'>
+              <div className="pt-form-group email-group">
+                <div className='label-icon-group'>
                   <i className="fa fa-unlock-alt" aria-hidden="true"/>
-                  <label className="pt-label label_class">
+                  <label className="pt-label label-class">
                     <FormattedMessage id="profileinfo.confirmPassword" defaultMessage="Confirm password"/>
                   </label>
                 </div>
@@ -175,7 +175,7 @@ class ProfileInfo extends Component {
               </div>
             </div>
           )}
-          <div className="pt-button-group pt-fill button_div" onClick={this.onSubmitInfo}>
+          <div className="pt-button-group pt-fill button-div" onClick={this.onSubmitInfo}>
             <AnchorButton>
               <FormattedMessage id="profileinfo.save" defaultMessage="Save changes"/>
             </AnchorButton>
@@ -194,7 +194,7 @@ class ProfileInfo extends Component {
                    value={this.state.api_key}/>
               </div>
             </div>
-            <label className="pt-label api_key_label">
+            <label className="pt-label api-key-label">
               <FormattedMessage id="profileinfo.api_desc"
                                 defaultMessage="Use the API key to read and write data via a remote application or client library"
                                 />

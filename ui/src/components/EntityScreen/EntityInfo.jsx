@@ -11,8 +11,6 @@ import Schema from 'src/components/common/Schema';
 import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
 import { fetchEntityReferences } from '../../actions/index';
 
-import './EntityInfo.css';
-
 class EntityInfo extends React.Component {
   constructor(props) {
     super(props);

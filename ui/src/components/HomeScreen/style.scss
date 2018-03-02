@@ -9,7 +9,7 @@
   color: white;
   text-align: center;
 
-  .outer_searchbox_div {
+  .outer-searchbox-div {
     display: table;
     position: absolute;
     height: 80%;
@@ -22,18 +22,18 @@
     margin-bottom: 0 !important;
   }
 
-  .inner_searchbox_div {
+  .inner-searchbox-div {
     display: table-cell;
     vertical-align: middle;
   }
 
-  .search_h1 {
+  .search-h1 {
     color: white !important;
     margin-bottom: 0.5em;
     font-size: 4em;
   }
 
-  .top_three_group {
+  .top-three-group {
     display: inline-flex;
   }
 
@@ -41,7 +41,7 @@
     min-height: 95.5vh;
   }
 
-  .browse_collection_label {
+  .browse-collection-label {
     color: white;
   }
 
@@ -49,13 +49,13 @@
     margin-bottom: 3em;
   }
 
-  .search_form {
+  .search-form {
     max-width: 50em;
     margin: 0 auto;
     padding-bottom: 2em;
   }
 
-  .homepage_collections_footer {
+  .homepage-collections-footer {
     height: 45px;
     background-color: #394b59;
     bottom: 0;
@@ -65,7 +65,7 @@
     padding-top: 1em;
   }
 
-  .homepage_examples {
+  .homepage-examples {
     position: relative;
     top: 52vh;
     left: 52%;
