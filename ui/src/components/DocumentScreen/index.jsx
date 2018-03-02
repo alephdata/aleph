@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet';
 import { NonIdealState } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import { fetchDocument } from 'src/actions';
 import Screen from 'src/components/common/Screen';
+import Entity from 'src/components/EntityScreen/Entity';
+import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import DualPane from 'src/components/common/DualPane';
 
@@ -42,11 +43,20 @@ class DocumentScreen extends Component {
         <NonIdealState visual="error" title={intl.formatMessage(messages.not_found)} />
       );
     }
+
+    const breadcrumbs = (<Breadcrumbs collection={document.collection}>
+      { document.parent && (
+        <li>
+          <Entity.Link entity={document.parent} className="pt-breadcrumb" icon truncate={30} />
+        </li>
+      )}
+      <li>
+        <Entity.Link entity={document} className="pt-breadcrumb" icon truncate={30} />
+      </li>
+    </Breadcrumbs>);
+
     return (
-      <Screen>
-        <Helmet>
-          <title>{document.title || document.file_name}</title>
-        </Helmet>
+      <Screen breadcrumbs={breadcrumbs} title={document.title || document.file_name}>
         <DualPane>
           <DocumentContent document={document} fragId={location.hash} />
           <DocumentInfo document={document} />
