@@ -3,9 +3,8 @@
   flex-grow: 1;
   display: flex;
   flex-flow: column nowrap;
-  padding-bottom: ($aleph-grid-size*4 - 1);
   
-  .main {
+  .main-homepage {
     flex-grow: 1;
     display: flex;
     flex-flow: column nowrap;
@@ -13,21 +12,8 @@
     align-items: stretch;
   }
 
-  .footer {
-    position: fixed !important;
-    bottom: 0;
-    width : 100%;
-    background-color: $aleph-footer-background;
-    border-top: 1px solid $aleph-border-color;
-  
-    p {
-      text-align: center;
-      padding: $aleph-grid-size $aleph-grid-size*2 0 $aleph-grid-size*2;
-    }
-
-    a, a:hover {
-      color: inherit;
-      text-decoration: underline;
-    }
+  .main {
+    @extend .main;
+    padding-bottom: ($aleph-grid-size*4 - 1);
   }
 }

@@ -25,7 +25,7 @@ class SchemaIcon extends Component {
 
 class SchemaLabel extends Component {
   render() {
-    const { schema, schemata, plural, icon } = this.props;
+    const { schema, schemata, plural, icon, lowerCase } = this.props;
     const model = schemata[schema] || {};
     let label = model.label || schema;
     if (plural) {
@@ -35,6 +35,10 @@ class SchemaLabel extends Component {
       return (
         <span><Schema.Icon schema={schema} /> {label}</span>
       );
+    }
+
+    if(lowerCase) {
+      label = label.toLowerCase();
     }
     return (
       <span>{label}</span>

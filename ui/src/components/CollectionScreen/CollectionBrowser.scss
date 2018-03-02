@@ -1,44 +1,45 @@
 @import "src/app/variables.scss";
 
 .CollectionBrowser {
-    margin-top: $aleph-grid-size * 2;
+  margin-top: $aleph-grid-size * 2;
+  min-height: 94.5vh;
 
-    .header {
-        margin: $aleph-grid-size;
-        // Align left side with text in the left-most cards.
-        margin-left: $aleph-grid-size * 3;
-        display: flex;
-        flex-flow: row wrap;
-        width: inherit;
-        align-items: flex-end;
-        justify-content: space-between;
+  .header {
+    margin: $aleph-grid-size;
+    // Align left side with text in the left-most cards.
+    margin-left: $aleph-grid-size * 3;
+    display: flex;
+    flex-flow: row wrap;
+    width: inherit;
+    align-items: flex-end;
+    justify-content: space-between;
 
-        .filterCollectionsInput {
-            max-width: 15em;
-            margin-left: auto; // make it stay on the right.
-        }
+    .filterCollectionsInput {
+      max-width: 15em;
+      margin-left: auto; // make it stay on the right.
+    }
+  }
+
+  .results {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  .result {
+    padding: $aleph-grid-size;
+    min-width: 20em;
+    flex: 1 0 33%;
+
+    .CollectionCard {
+      height: 100%;
+      width: 100%;
     }
 
-    .results {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: flex-start;
-        align-items: stretch;
+    &.bogus {
+      padding: 0;
+      margin: 0;
     }
-    
-    .result {
-        padding: $aleph-grid-size;
-        min-width: 20em;
-        flex: 1 0 33%;
-
-        .CollectionCard {
-            height: 100%;
-            width: 100%;
-        }
-
-        &.bogus {
-          padding: 0;
-          margin: 0;
-        }
-    }
+  }
 }
