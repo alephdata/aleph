@@ -13,12 +13,13 @@ class SearchFacets extends Component {
         {facets.map((facet) => (
           <li className="facet" key={facet.field}>
             <SearchFacet
-              initiallyOpen={facet.active}
+              initiallyOpen={facet.initiallyOpen}
               query={query}
               updateQuery={updateQuery}
               field={facet.field}
               label={facet.label}
               icon={facet.icon}
+              defaultSize={facet.defaultSize}
             />
           </li>
         ))}

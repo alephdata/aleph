@@ -22,14 +22,13 @@ class SearchFacet extends Component {
 
     this.state = {
       isOpen: !!props.initiallyOpen,
-      facetSize: 10,
+      facetSize: props.defaultSize || 10,
       loadKey: null
     };
 
     this.onClick = this.onClick.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.onClear = this.onClear.bind(this);
-    this.isActive = this.isActive.bind(this);
     this.showMore = this.showMore.bind(this);
   }
 
@@ -64,10 +63,6 @@ class SearchFacet extends Component {
       })
       fetchFacet({ query });
     }
-  }
-
-  isActive(props = this.props) {
-    return props.query ? props.query.getFilter(props.field).length > 0 : false;
   }
 
   showMore(event) {
@@ -107,7 +102,7 @@ class SearchFacet extends Component {
     const isExpandingValues = !isFetchingValues && facet.values.length < Math.min(facet.total, facetSize);
     const current = query ? query.getFilter(field) : null;
     const count = current ? current.length : 0;
-    const isActive = this.isActive();
+    const isActive = this.props.query.getFilter(field).length > 0;
     
     // The values array can include extra selected-but-zero-hit values that are
     // excluded from total, so we compare not against the array's length but

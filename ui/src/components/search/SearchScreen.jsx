@@ -62,15 +62,15 @@ class SearchScreen extends React.Component {
 
     const facets = [
       {
-        field: 'schema',
-        label: intl.formatMessage(messages.facet_schema),
-        icon: 'list',
-        active: true
-      },
-      {
         field: 'collection_id',
         label: intl.formatMessage(messages.facet_collection_id),
         icon: 'database'
+      },
+      {
+        field: 'schema',
+        label: intl.formatMessage(messages.facet_schema),
+        icon: 'list',
+        initiallyOpen: true
       },
       {
         field: 'countries',

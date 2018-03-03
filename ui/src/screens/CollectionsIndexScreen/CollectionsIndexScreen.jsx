@@ -44,13 +44,14 @@ class CollectionsIndexScreen extends Component {
           field: 'category',
           label: intl.formatMessage(messages.facet_category),
           icon: 'list',
-          active: true
+          initiallyOpen: true
         },
         {
           field: 'countries',
           label: intl.formatMessage(messages.facet_countries),
           icon: 'globe',
-          active: true
+          initiallyOpen: true,
+          defaultSize: 300
         },
       ]
     };
