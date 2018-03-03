@@ -6,7 +6,6 @@ import { defineMessages, injectIntl } from "react-intl";
 import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
-import AlertsPane from './AlertsPane';
 import ProfileInfo from './ProfileInfo';
 
 const messages = defineMessages({
@@ -31,7 +30,6 @@ class ProfileScreen extends Component {
         <Breadcrumbs collection={{label: 'Settings', links: {ui: app.ui_uri + 'settings'}}} />
         <DualPane>
           <ProfileInfo/>
-          <AlertsPane/>
         </DualPane>
       </Screen>
     );

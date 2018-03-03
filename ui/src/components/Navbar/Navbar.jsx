@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import { InputGroup } from '@blueprintjs/core';
 
-import AuthButtons from 'src/components/auth/AuthButtons';
+import AuthButtons from 'src/components/AuthButtons/AuthButtons';
+import SettingsButton from 'src/components/SettingsButton/SettingsButton';
 
 import './Navbar.css';
 
@@ -70,6 +71,7 @@ class Navbar extends React.Component {
             )} 
           </div>
           <div className="pt-navbar-group pt-align-right">
+            <SettingsButton />
             <AuthButtons session={session} auth={metadata.auth} />
           </div>
         </nav>

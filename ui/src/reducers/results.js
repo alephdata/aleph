@@ -26,7 +26,7 @@ function updateResults(state, { query, result }) {
     isLoading: false,
     results: result.results.map((r) => r.id)
   }
-  if (!previous.pages) {
+  if (previous.page === undefined) {
     state[key] = result;
     return state;
   }
