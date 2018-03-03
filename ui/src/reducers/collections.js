@@ -7,9 +7,9 @@ import { mapById } from './util';
 const initialState = {};
 
 export default createReducer({
-  [queryCollections.COMPLETE]: (state, { query, nextResult }) => ({
+  [queryCollections.COMPLETE]: (state, { query, result }) => ({
     ...state,
-    ...mapById(nextResult),
+    ...mapById(result),
   }),
 
   [fetchCollection.START]: (state, { id }) =>

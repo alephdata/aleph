@@ -4,7 +4,6 @@ export function mapById(result) {
   return result ? keyBy(result.results, 'id') : {};
 }
 
-
 // prevResult is to be passed explicitly to appendResults, even though it should
 // normally equal the current result; this is just for in case we e.g.
 // accidentally trigger multiple fetches.
@@ -22,6 +21,3 @@ export function combineResults(prevResult, nextResult) {
   }
 }
 
-export function queryResults(state, { query, prevResult, nextResult}) {
-
-}

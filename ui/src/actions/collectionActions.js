@@ -3,7 +3,7 @@ import asyncActionCreator from './asyncActionCreator';
 import { queryEndpoint } from './util';
 
 export const queryCollections = asyncActionCreator((query) => async dispatch => {
-  return queryEndpoint('collections', query);
+  return queryEndpoint(query);
 }, { name: 'QUERY_COLLECTIONS' });
 
 export const fetchCollection = asyncActionCreator(({ id }) => async dispatch => {

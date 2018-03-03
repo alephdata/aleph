@@ -4,27 +4,17 @@ export function selectFacet(state, { query, field }) {
   return get([field, queryToFacetKey(query, field)])(state.facets);
 }
 
-// Functions below are not selectors, but needed both here and in the reducers.
-export function queryToResultKey(query) {
-  // Strip the parts of the query that are irrelevant to the result cache.
-  return query
-    .clear('limit')
-    .clear('offset')
-    .toString()
-}
-
 export function queryToFacetKey(query, field) {
   if (!query) return null
     
   // Strip the parts of the query that are irrelevant to the facet cache.
   return query
     .clear('limit')
-    .clear('offset')
     // Values in our field itself will not influence the facet results.
     .clearFilter(field)
     // And neither will sorting ever influence the aggregate values.
     .sortBy(null)
-    .toString()
+    .toKey()
 }
 
 export function matchesKey(collectionId, otherId) {
@@ -33,7 +23,12 @@ export function matchesKey(collectionId, otherId) {
 
 
 export function selectResult(state, query) {
-  return get([queryToResultKey(query)])(state.search);
+  const key = query.toKey();
+  const loading = {
+    isLoading: true,
+    results: []
+  };
+  return state.results[key] || loading;
 }
 
 export function selectCollection(state, collectionId) {
@@ -43,21 +38,11 @@ export function selectCollection(state, collectionId) {
 }
 
 export function selectCollectionsResult(state, query) {
-  const key = queryToResultKey(query);
-  const loading = {
-    isLoading: true,
-    results: []
-  };
-  return state.collectionsQuery[key] || loading;
+  return selectResult(state, query);
 }
 
 export function selectEntitiesResult(state, query) {
-  const key = queryToResultKey(query);
-  const loading = {
-    isLoading: true,
-    results: []
-  };
-  return state.search[key] || loading;
+  return selectResult(state, query);
 }
 
 export function getEntityTags(state, entityId) {

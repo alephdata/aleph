@@ -7,6 +7,10 @@ import Entity from 'src/components/EntityScreen/Entity';
 import Date from 'src/components/common/Date';
 
 class EntityListItem extends Component {
+  shouldComponentUpdate(nextProps) {
+    return !this.props.entity.id || this.props.entity.id !== nextProps.entity.id;
+  }
+
   render() {
     const { entity, aspects } = this.props;
 

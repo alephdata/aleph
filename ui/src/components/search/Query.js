@@ -171,6 +171,13 @@ class Query {
     return `${this.path}?${query}`;
   }
 
+  toKey() {
+    // Strip the parts of the query that are irrelevant to the result cache.
+    return this
+      .clear('offset')
+      .toString();
+  }
+
   toParams() {
     let params = {};
     this.fields().forEach((name) => {

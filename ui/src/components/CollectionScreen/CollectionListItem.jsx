@@ -11,13 +11,17 @@ import Collection from 'src/components/common/Collection';
 import './CollectionListItem.css';
 
 class CollectionListItem extends Component {
+  shouldComponentUpdate(nextProps) {
+    return !this.props.collection.id || this.props.collection.id !== nextProps.collection.id;
+  }
+
   render() {
     const { collection } = this.props;
     if (!collection || !collection.id) {
       return null;
     }
     return (
-      <li className="CollectionListItem">
+      <li className="CollectionListItem" key={collection.id}>
         <h4>
           <span className="pt-tag pt-small pt-round pt-intent-primary">
             <FormattedNumber value={collection.count} />
