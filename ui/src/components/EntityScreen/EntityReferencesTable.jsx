@@ -105,7 +105,7 @@ class EntityReferencesTable extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { entity, property } = ownProps;
   const filterName = `filter:properties.${property.name}`;
-  const query = Query.fromLocation({}, {
+  const query = Query.fromLocation('search', {}, {
     [filterName]: entity.id
   });
 

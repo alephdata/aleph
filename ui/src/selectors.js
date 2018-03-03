@@ -1,9 +1,5 @@
 import { get } from 'lodash/fp';
 
-export function selectResult(state, query) {
-  return get([queryToResultKey(query)])(state.search);
-}
-
 export function selectFacet(state, { query, field }) {
   return get([field, queryToFacetKey(query, field)])(state.facets);
 }
@@ -35,19 +31,33 @@ export function matchesKey(collectionId, otherId) {
   return collectionId + '*' + otherId;
 }
 
-export function getCollection(state, collectionId) {
+
+export function selectResult(state, query) {
+  return get([queryToResultKey(query)])(state.search);
+}
+
+export function selectCollection(state, collectionId) {
   // get a collection from the store.
   const collection = state.collections[collectionId];
   return collection;
 }
 
-export function getCollectionsQuery(state, query) {
+export function selectCollectionsResult(state, query) {
   const key = queryToResultKey(query);
   const loading = {
     isLoading: true,
     results: []
   };
   return state.collectionsQuery[key] || loading;
+}
+
+export function selectEntitiesResult(state, query) {
+  const key = queryToResultKey(query);
+  const loading = {
+    isLoading: true,
+    results: []
+  };
+  return state.search[key] || loading;
 }
 
 export function getEntityTags(state, entityId) {

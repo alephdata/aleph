@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { fetchSearchResults, fetchNextSearchResults } from 'src/actions';
-import { selectResult } from 'src/selectors';
+import { selectEntitiesResult } from 'src/selectors';
 
 import Query from './Query';
 
@@ -33,7 +33,7 @@ class SearchContext extends Component {
   fetchIfNeeded() {
     const { result, query, fetchSearchResults } = this.props;
 
-    if (result === undefined || (result.status === 'error')) {
+    if (result.pages === undefined || (result.status === 'error')) {
       // Set the default limit.
       const finalQuery = query.has('limit')
         ? query
@@ -93,9 +93,8 @@ const mapStateToProps = (state, ownProps) => {
     'filter:schemata': context['filter:schemata'] || 'Thing',
     ...context,
   };
-  const query = Query.fromLocation(location, contextWithDefaults, prefix);
-
-  const result = selectResult(state, query);
+  const query = Query.fromLocation('search', location, contextWithDefaults, prefix);
+  const result = selectEntitiesResult(state, query);
 
   return {
     query,

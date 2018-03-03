@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import getPath from 'src/util/getPath';
 import { fetchCollection } from 'src/actions';
-import { getCollection } from 'src/selectors';
+import { selectCollection } from 'src/selectors';
 
 
 class CollectionLabel extends Component {
@@ -63,7 +63,7 @@ class CollectionLoad extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  collection: getCollection(state, ownProps.id),
+  collection: selectCollection(state, ownProps.id),
 });
 CollectionLoad = connect(mapStateToProps, { fetchCollection })(CollectionLoad);
 

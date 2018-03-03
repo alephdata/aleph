@@ -12,7 +12,7 @@ import ScreenLoading from 'src/components/common/ScreenLoading';
 import SectionLoading from 'src/components/common/SectionLoading';
 import CheckboxList from 'src/components/common/CheckboxList';
 import { queryCollections } from 'src/actions';
-import { getCollectionsQuery } from 'src/selectors';
+import { selectCollectionsResult } from 'src/selectors';
 import CollectionListItem from 'src/components/CollectionScreen/CollectionListItem';
 
 import './CollectionsIndexScreen.css';
@@ -162,15 +162,15 @@ class CollectionsIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const query = Query.fromLocation(ownProps.location, {}, 'collection')
+  const query = Query.fromLocation('collections', ownProps.location, {})
     .sortBy('count', true)
     .addFacet('category')
     .addFacet('countries')
     .limit(30);
 
-  return {
+return {
     query: query,
-    result: getCollectionsQuery(state, query)
+    result: selectCollectionsResult(state, query)
   };
 }
 
