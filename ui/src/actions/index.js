@@ -9,6 +9,7 @@ import {
 } from './documentActions';
 import {
   fetchCollections,
+  queryCollections,
   fetchCollection,
   updateCollection,
   fetchCollectionPermissions,
@@ -46,6 +47,7 @@ export {
   fetchFacet,
   fetchNextFacetValues,
   fetchCollections,
+  queryCollections,
   fetchCollection,
   updateCollection,
   fetchCollectionPermissions,

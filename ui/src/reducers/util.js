@@ -12,8 +12,16 @@ export function combineResults(prevResult, nextResult) {
   // We store the next result, but with the previous (= current) results
   // prepended. Note that result attributes like 'page' and 'limit' will be
   // confusing now, but we do not use them anyway.
+
+  if (!prevResult) {
+    return nextResult;
+  }
   return {
     ...nextResult,
     results: [ ...prevResult.results, ...nextResult.results],
   }
+}
+
+export function queryResults(state, { query, prevResult, nextResult}) {
+
 }

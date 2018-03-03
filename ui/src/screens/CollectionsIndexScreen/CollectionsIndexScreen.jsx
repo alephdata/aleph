@@ -8,9 +8,11 @@ import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import Query from 'src/components/search/Query';
 import DualPane from 'src/components/common/DualPane';
+import ScreenLoading from 'src/components/common/ScreenLoading';
 import SectionLoading from 'src/components/common/SectionLoading';
 import CheckboxList from 'src/components/common/CheckboxList';
-import { fetchCollections } from 'src/actions';
+import { queryCollections } from 'src/actions';
+import { getCollectionsQuery } from 'src/selectors';
 import CollectionListItem from 'src/components/CollectionScreen/CollectionListItem';
 
 import './CollectionsIndexScreen.css';
@@ -28,9 +30,7 @@ class CollectionsIndexScreen extends Component {
     super(props);
 
     this.state = {
-      result: {results: []},
-      queryPrefix: props.query.getString('prefix'),
-      isFetching: true,
+      queryPrefix: props.query.getString('prefix')
     };
 
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
@@ -50,17 +50,8 @@ class CollectionsIndexScreen extends Component {
   }
 
   fetchData() {
-    this.setState({isFetching: true})
     let { query } = this.props;
-    query = query.sortBy('count', true);
-    query = query.addFacet('category');
-    query = query.addFacet('countries');
-    query = query.limit(30);
-    this.props.fetchCollections({
-      filters: query.toParams(),
-    }).then(({result}) => {
-      this.setState({result, isFetching: false})
-    });
+    this.props.queryCollections({query});
   }
 
   onChangeQueryPrefix({target}) {
@@ -72,7 +63,6 @@ class CollectionsIndexScreen extends Component {
   onFacetToggle(facet) {
     const updateQuery = this.updateQuery;
     return (value) => {
-      // console.log(facet, value);
       let query = this.props.query;
       query = query.toggleFilter(facet, value);
       updateQuery(query);
@@ -88,34 +78,17 @@ class CollectionsIndexScreen extends Component {
   }
 
   bottomReachedHandler() {
-    const { result, isFetching } = this.state;
-    if (!result || !result.next || isFetching) {
-        return
+    const { query, result } = this.props;
+    if (!result.isLoading) {
+      this.props.queryCollections({query, result, next: result.next});
     }
-    this.setState({isFetching: true})
-    const offset = result.offset || 0;
-    let query = this.props.query;
-    query = query.offset(offset + result.limit);
-    query = query.limit(result.limit);
-    this.props.fetchCollections({
-      filters: query.toParams(),
-    }).then(({result: fresh}) => {
-      result.next = fresh.next;
-      result.offset = fresh.offset;
-      result.results.push(...fresh.results);
-      this.setState({
-            result: result,
-            isFetching: false
-        });
-    });
   }
 
   render() {
-    const { intl } = this.props;
-    const { result, queryPrefix, isFetching } = this.state;
-
-    if (!result || !result.pages) {
-      return <SectionLoading />
+    const { result, intl } = this.props;
+    const { queryPrefix } = this.state;
+    if (!result.pages) {
+      return <ScreenLoading />
     }
 
     const breadcrumbs = (<Breadcrumbs>
@@ -137,42 +110,46 @@ class CollectionsIndexScreen extends Component {
                 placeholder={intl.formatMessage(messages.filter)}
                 onChange={this.onChangeQueryPrefix} value={queryPrefix} />
             </div>
-            <p className="note">
-              <FormattedMessage id="collection.browser.total"
-                              defaultMessage="Browsing {total} collections."
-                              values={{
-                                total: <FormattedNumber value={result.total} />
-                              }}/>
-            </p>
+            { !result.isLoading && (
+              <React.Fragment>
+                <p className="note">
+                  <FormattedMessage id="collection.browser.total"
+                                  defaultMessage="Browsing {total} collections."
+                                  values={{
+                                    total: <FormattedNumber value={result.total} />
+                                  }}/>
+                </p>
 
-            <h4>
-              <FormattedMessage id="collections.browser.categories"
-                                defaultMessage="Categories" />
-            </h4>
-            <CheckboxList items={result.facets.category.values}
-                          selectedItems={result.facets.category.filters}
-                          onItemClick={this.onFacetToggle('category')} />
+                <h4>
+                  <FormattedMessage id="collections.browser.categories"
+                                    defaultMessage="Categories" />
+                </h4>
+                <CheckboxList items={result.facets.category.values}
+                              selectedItems={result.facets.category.filters}
+                              onItemClick={this.onFacetToggle('category')} />
 
-            <h4>
-              <FormattedMessage id="collections.browser.countries"
-                                defaultMessage="Countries" />
-            </h4>
-            <CheckboxList items={result.facets.countries.values}
-                          selectedItems={result.facets.countries.filters}
-                          onItemClick={this.onFacetToggle('countries')} />
+                <h4>
+                  <FormattedMessage id="collections.browser.countries"
+                                    defaultMessage="Countries" />
+                </h4>
+                <CheckboxList items={result.facets.countries.values}
+                              selectedItems={result.facets.countries.filters}
+                              onItemClick={this.onFacetToggle('countries')} />
+              </React.Fragment>
+            )}
           </DualPane.InfoPane>
           <DualPane.ContentPane>
             <ul className="results">
               {result.results.map(res =>
                 <CollectionListItem key={res.id} collection={res} />
               )}
-              { !isFetching && result.next && (
+              { !result.isLoading && result.next && (
                 <Waypoint
                   onEnter={this.bottomReachedHandler}
                   scrollableAncestor={window}
                 />
               )}
-              { isFetching && (
+              { result.isLoading && (
                 <SectionLoading />
               )}
             </ul>
@@ -185,11 +162,18 @@ class CollectionsIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
+  const query = Query.fromLocation(ownProps.location, {}, 'collection')
+    .sortBy('count', true)
+    .addFacet('category')
+    .addFacet('countries')
+    .limit(30);
+
   return {
-    query: Query.fromLocation(ownProps.location, {}, 'collection')
+    query: query,
+    result: getCollectionsQuery(state, query)
   };
 }
 
 CollectionsIndexScreen = injectIntl(CollectionsIndexScreen);
-CollectionsIndexScreen = connect(mapStateToProps, { fetchCollections })(CollectionsIndexScreen);
+CollectionsIndexScreen = connect(mapStateToProps, { queryCollections })(CollectionsIndexScreen);
 export default CollectionsIndexScreen;

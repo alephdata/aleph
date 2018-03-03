@@ -41,6 +41,15 @@ export function getCollection(state, collectionId) {
   return collection;
 }
 
+export function getCollectionsQuery(state, query) {
+  const key = queryToResultKey(query);
+  const loading = {
+    isLoading: true,
+    results: []
+  };
+  return state.collectionsQuery[key] || loading;
+}
+
 export function getEntityTags(state, entityId) {
   return state.entityTags[entityId];
 }
