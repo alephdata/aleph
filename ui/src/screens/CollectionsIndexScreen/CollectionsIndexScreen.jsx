@@ -5,7 +5,6 @@ import { debounce } from 'lodash';
 import Waypoint from 'react-waypoint';
 
 import Screen from 'src/components/common/Screen';
-import ScreenLoading from 'src/components/common/ScreenLoading';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import Query from 'src/components/search/Query';
 import DualPane from 'src/components/common/DualPane';
@@ -143,7 +142,7 @@ class CollectionsIndexScreen extends Component {
               <FormattedMessage id="collection.browser.total"
                               defaultMessage="Browsing {total} collections."
                               values={{
-                                total: result.total
+                                total: <FormattedNumber value={result.total} />
                               }}/>
             </p>
 

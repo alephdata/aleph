@@ -14,13 +14,14 @@ import EntityRelatedScreen from 'src/components/EntityScreen/EntityRelatedScreen
 import DocumentScreen from 'src/components/DocumentScreen';
 import DocumentRelatedScreen from 'src/components/DocumentScreen/DocumentRelatedScreen';
 import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
-import HomeScreen from 'src/screens/HomeScreen';
 import ProfileScreen from 'src/components/ProfileScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
-import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
 import CollectionEditScreen from 'src/components/CollectionEdit';
-import CollectionXrefScreen from 'src/components/CollectionXref';
+
+import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
+import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen/CollectionsIndexScreen';
+import CollectionsXrefScreen from 'src/screens/CollectionsXrefScreen/CollectionsXrefScreen';
 
 import './Router.css';
 
@@ -57,7 +58,7 @@ class Router extends Component {
         <Route path="/collections" exact component={CollectionsIndexScreen}/>
         <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
         <Route path="/collections/:collectionId/edit" exact component={CollectionEditScreen}/>
-        <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefScreen}/>
+        <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionsXrefScreen}/>
         <Route path="/search" exact component={SearchScreen}/>
         <Route path="/" exact component={HomeScreen}/>
         <Route component={ErrorScreen}/>

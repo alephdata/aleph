@@ -22,7 +22,7 @@ $breadcrumb-line-height: $pt-icon-size-large - 1px !default;
   @extend .HomepageFooter;
   position: fixed !important;
   bottom: 0;
-  font-size: $pt-font-size;
+  font-size: $pt-font-size-large;
   padding: ($aleph-grid-size / 2) $aleph-grid-size ($aleph-grid-size / 2) $aleph-grid-size;
 
   .Breadcrumbs {

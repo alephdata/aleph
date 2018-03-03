@@ -19,10 +19,10 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import { matchesKey, getCollection } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
-import './CollectionXrefScreen.css';
+import './CollectionsXrefScreen.css';
 
 
-class CollectionXrefScreen extends Component {
+class CollectionsXrefScreen extends Component {
   constructor() {
     super()
 
@@ -193,10 +193,10 @@ const mapStateToProps = (state, ownProps) => {
   return { collectionId, otherId, collection, other, matches, index };
 };
 
-CollectionXrefScreen = withRouter(injectIntl(CollectionXrefScreen));
+CollectionsXrefScreen = withRouter(injectIntl(CollectionsXrefScreen));
 export default connect(mapStateToProps, {
   fetchCollection,
   fetchCollectionXrefMatches,
   fetchNextCollectionXrefMatches,
   fetchCollectionXrefIndex
-})(CollectionXrefScreen);
+})(CollectionsXrefScreen);
