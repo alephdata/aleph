@@ -10,7 +10,7 @@ export const fetchSearchResults = asyncActionCreator(({ query }) => async dispat
 
 export const fetchNextSearchResults = asyncActionCreator(({ query, result }) => async dispatch => {
   const response = await endpoint.get(result.next);
-  return { query, prevResult: result, nextResult: response.data };
+  return { query, result: response.data };
 }, { name: 'FETCH_NEXT_SEARCH_RESULTS' });
 
 const defaultFacetValuesLimit = 10;

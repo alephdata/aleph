@@ -6,23 +6,22 @@ import {
   fetchSearchResults,
   fetchNextSearchResults
 } from 'src/actions';
-import { combineResults } from './util';
 
 const initialState = {};
 
 function updateResults(state, { query, result }) {
   const key = query.toKey(),
         previous = state[key] || {};
-  if (previous.pages) {
-    // don't overwrite existing results
-    if (previous.offset < result.offset) {
-        state[key] = {
-          ...result,
-          results: [...previous.results, ...result.results]
-        }
-    }
-  } else {
+  if (!previous.pages) {
     state[key] = result;
+    return state;
+  }
+  // don't overwrite existing results
+  if (previous.offset < result.offset) {
+      state[key] = {
+        ...result,
+        results: [...previous.results, ...result.results]
+      }
   }
   return state;
 }
@@ -35,8 +34,7 @@ export default createReducer({
   [fetchSearchResults.START]: (state, { query }) =>
     set([query.toKey()], { isFetching: true })(state),
 
-  [fetchSearchResults.COMPLETE]: (state, { query, result }) =>
-    set([query.toKey()], result)(state),
+  [fetchSearchResults.COMPLETE]: updateResults,
 
   // Upon error, leave some error status.
   [fetchSearchResults.ERROR]: (state, { args: { query } }) =>
@@ -45,8 +43,7 @@ export default createReducer({
   [fetchNextSearchResults.START]: (state, { query }) =>
     update([query.toKey()], set('isExpanding', true))(state),
 
-  [fetchNextSearchResults.COMPLETE]: (state, { query, prevResult, nextResult }) =>
-    set([query.toKey()], combineResults(prevResult, nextResult))(state),
+  [fetchNextSearchResults.COMPLETE]: updateResults,
 
   // Upon error, merely reset the isExpanding flag.
   [fetchNextSearchResults.ERROR]: (state, { args: { query, result } }) =>
