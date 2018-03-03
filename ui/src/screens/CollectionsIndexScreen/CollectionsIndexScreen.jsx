@@ -162,7 +162,7 @@ class CollectionsIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const query = Query.fromLocation('collections', ownProps.location, {})
+  const query = Query.fromLocation('collections', ownProps.location, {}, 'collections:')
     .sortBy('count', true)
     .addFacet('category')
     .addFacet('countries')

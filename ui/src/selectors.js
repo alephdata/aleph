@@ -28,6 +28,7 @@ export function selectResult(state, query) {
     isLoading: true,
     results: []
   };
+  // TODO this is the ideal place to do unpack by ID.
   return state.results[key] || loading;
 }
 
@@ -42,6 +43,10 @@ export function selectCollectionsResult(state, query) {
 }
 
 export function selectEntitiesResult(state, query) {
+  return selectResult(state, query);
+}
+
+export function selectDocumentRecordsResult(state, query) {
   return selectResult(state, query);
 }
 

@@ -4,8 +4,7 @@ import { suggestRoles, fetchRole, addRole } from './roleActions';
 import { fetchAlerts, addAlert, deleteAlert } from './alertActions';
 import {
   fetchDocument,
-  fetchDocumentRecords,
-  fetchNextDocumentRecords
+  queryDocumentRecords,
 } from './documentActions';
 import {
   queryCollections,
@@ -34,13 +33,12 @@ export {
   fetchAlerts,
   addAlert,
   deleteAlert,
-  fetchDocument,
-  fetchDocumentRecords,
-  fetchNextDocumentRecords,
   queryEntities,
   fetchEntity,
   fetchEntityReferences,
   fetchEntityTags,
+  fetchDocument,
+  queryDocumentRecords,
   fetchFacet,
   fetchNextFacetValues,
   queryCollections,

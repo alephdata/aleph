@@ -10,13 +10,12 @@ export async function queryEndpoint({query, next}) {
       query,
       result: response.data
     };
-  } else {
-    const response = await endpoint.get(query.path, {
-      params: query.toParams()
-    });
-    return {
-      query,
-      result: response.data
-    };
-  }
+  } 
+  const response = await endpoint.get(query.path, {
+    params: query.toParams()
+  });
+  return {
+    query,
+    result: response.data
+  };
 } 

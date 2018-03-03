@@ -5,7 +5,7 @@ import { queryEndpoint } from './util';
 
 export const queryEntities = asyncActionCreator((query) => async dispatch => {
   return queryEndpoint(query);
-}, { name: 'QUERY_COLLECTIONS' });
+}, { name: 'QUERY_ENTITIES' });
 
 const defaultFacetValuesLimit = 10;
 const facetValuesLimitIncreaseStep = 10;

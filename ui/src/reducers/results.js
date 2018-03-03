@@ -4,6 +4,7 @@ import { assign } from 'lodash/fp';
 import {
   queryCollections,
   queryEntities,
+  queryDocumentRecords,
 } from 'src/actions';
 
 const initialState = {};
@@ -40,4 +41,7 @@ export default createReducer({
   [queryEntities.START]: updateLoading(true),
   [queryEntities.ERROR]: updateLoading(false),
   [queryEntities.COMPLETE]: updateResults,
+  [queryDocumentRecords.START]: updateLoading(true),
+  [queryDocumentRecords.ERROR]: updateLoading(false),
+  [queryDocumentRecords.COMPLETE]: updateResults,
 }, initialState);

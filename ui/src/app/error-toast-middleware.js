@@ -13,8 +13,7 @@ const errorActionTypes = [
   actions.fetchEntityTags.ERROR,
   actions.fetchDocument.ERROR,
   actions.fetchCollection.ERROR,
-  actions.fetchDocumentRecords.ERROR,
-  actions.fetchNextDocumentRecords.ERROR,
+  actions.queryDocumentRecords.ERROR,
 ];
 
 // Middleware that after handling any action normally, shows a toast if the

@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Waypoint from 'react-waypoint';
 
-import { fetchDocumentRecords, fetchNextDocumentRecords } from 'src/actions';
+import { queryDocumentRecords } from 'src/actions';
+import { selectDocumentRecordsResult } from 'src/selectors';
+import Query from 'src/components/search/Query';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import SectionLoading from 'src/components/common/SectionLoading';
 import { DocumentToolbar } from 'src/components/Toolbar';
@@ -46,11 +49,6 @@ class Table extends Component {
 class TableViewer extends Component {
   constructor(props) {
     super(props);
-    
-    this.state = {
-      isExpanding: false,
-    };
-    
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
   }
 
@@ -60,56 +58,36 @@ class TableViewer extends Component {
 
   // TODO Handle prop change: cancel fetches, reset state, start again.
 
-  async fetchRecords() {
-    const { document, fetchDocumentRecords } = this.props;
-
-    const { data } = await fetchDocumentRecords({ id: document.id });
-    this.setState({
-      result: data,
-     });
+  fetchRecords() {
+    const { queryDocumentRecords, query } = this.props;
+    if (query.path) {
+      queryDocumentRecords({query})
+    }
   }
 
-  async bottomReachedHandler() {
-    const { fetchNextDocumentRecords } = this.props;
-    let { isExpanding, result } = this.state;
+  bottomReachedHandler() {
+    const { query, result, queryDocumentRecords } = this.props;
 
-    if (!isExpanding && result.next) {
-      this.setState({ isExpanding: true });
-      const { data } = await fetchNextDocumentRecords({ next: result.next })
-      const newResult = {
-        ...data,
-        results: result.results.concat(data.results),
-      };
-      this.setState({
-          result: newResult,
-          isExpanding: false,
-      });
+    if (!result.isLoading && result.next) {
+      queryDocumentRecords({query, next: result.next})
     };
   }
 
   render() {
-    const { document } = this.props;
-    const { result, isExpanding } = this.state;
-
-    if (result === undefined) {
-      return (
-        <ScreenLoading />
-      );
-    }
-
+    const { document, result } = this.props;
     const columnNames = document.columns;
 
     return (
       <div className="TableViewer">
         <Table columnNames={columnNames} records={result.results} />
-        {!isExpanding && result.next && (
+        {!result.isLoading && result.next && (
           <Waypoint
             onEnter={this.bottomReachedHandler}
             bottomOffset="-600px"
             scrollableAncestor={window}
           />
         )}
-        {isExpanding && (
+        {result.isLoading && (
           <SectionLoading />
         )}
       </div>
@@ -117,5 +95,19 @@ class TableViewer extends Component {
   }
 }
 
-const mapStateToProps = null;
-export default connect(mapStateToProps, { fetchDocumentRecords, fetchNextDocumentRecords })(TableViewer);
+const mapStateToProps = (state, ownProps) => {
+  const { document, location } = ownProps;
+  const path = document.links ? document.links.records : null;
+  const query = Query.fromLocation(path, location, {}, 'table:')
+    .limit(50);
+
+  return {
+    query: query,
+    result: selectDocumentRecordsResult(state, query),
+    model: state.metadata.schemata[ownProps.schema]
+  }
+}
+
+TableViewer = connect(mapStateToProps, { queryDocumentRecords })(TableViewer);
+TableViewer = withRouter(TableViewer);
+export default TableViewer;
