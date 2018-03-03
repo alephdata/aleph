@@ -11,65 +11,11 @@ import CheckboxList from 'src/components/common/CheckboxList';
 import './SearchFacet.css';
 
 const messages = defineMessages({
-  facet_schema: {
-    id: 'search.facets.facet.schema',
-    defaultMessage: 'Types',
-  },
-  facet_collection_id: {
-    id: 'search.facets.facet.collection_id',
-    defaultMessage: 'Collections',
-  },
-  facet_languages: {
-    id: 'search.facets.facet.languages',
-    defaultMessage: 'Languages',
-  },
-  facet_emails: {
-    id: 'search.facets.facet.emails',
-    defaultMessage: 'Emails',
-  },
-  facet_phones: {
-    id: 'search.facets.facet.phones',
-    defaultMessage: 'Phones',
-  },
-  facet_countries: {
-    id: 'search.facets.facet.countries',
-    defaultMessage: 'Countries',
-  },
-  facet_names: {
-    id: 'search.facets.facet.names',
-    defaultMessage: 'Names',
-  },
-  facet_addresses: {
-    id: 'search.facets.facet.addresses',
-    defaultMessage: 'Addresses',
-  },
-  facet_mime_type: {
-    id: 'search.facets.facet.mime_type',
-    defaultMessage: 'File types',
-  },
-  facet_author: {
-    id: 'search.facets.facet.author',
-    defaultMessage: 'Authors',
-  },
   clear_filter: {
     id: 'search.facets.clear_filter',
     defaultMessage: 'Clear this filter',
   },
 })
-
-// @TODO Refactor these out to somewhere reuseabe if we keep them.
-const facetIcons = {
-  'Types': 'list',
-  'Collections': 'database',
-  'Languages': 'translate',
-  'Emails': 'envelope',
-  'Phones': 'phone',
-  'Countries': 'globe',
-  'Names': 'id-number',
-  'Addresses': 'map',
-  'File types': 'document',
-  'Authors': 'person'
-}
 
 class SearchFacet extends Component {
   constructor(props)  {
@@ -142,7 +88,7 @@ class SearchFacet extends Component {
   }
 
   render() {
-    const { query, field, total, values, isFetchingValues,
+    const { query, field, label, icon, total, values, isFetchingValues,
             isExpandingValues, valuesLimit, intl } = this.props;
     const { isOpen } = this.state;
 
@@ -163,12 +109,10 @@ class SearchFacet extends Component {
         <div className={c('opener', { clickable: !!total, active: isActive })} onClick={this.onClick} style={{position: 'relative'}}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
           <span className="FacetName">
-            {facetIcons[fieldLabel] && (
               <React.Fragment>
-                <span className={`FacetIcon pt-icon pt-icon-${facetIcons[fieldLabel]}`}/>
+                <span className={`FacetIcon pt-icon pt-icon-${icon}`}/>
               </React.Fragment>
-            )}
-            {fieldLabel} 
+            {label} 
           </span>     
             
           {isActive && count > 0 && total !== undefined && total > 0 && (
@@ -204,8 +148,10 @@ class SearchFacet extends Component {
                           selectedItems={current}
                           onItemClick={this.onSelect}>
               {!isFetchingValues && !isExpandingValues && hasMoreValues && (
-                <a href="" className="ShowMore" onClick={this.showMore}>
-                  <FormattedMessage id="search.facets.showMore" defaultMessage="Show more…" values={{ fieldLabel }} style={{paddingTop: 10}}/>
+                <a className="ShowMore" onClick={this.showMore}>
+                  <FormattedMessage id="search.facets.showMore"
+                                    defaultMessage="Show more…"
+                                    style={{paddingTop: 10}}/>
                 </a>
               )}
             </CheckboxList>

@@ -14,6 +14,7 @@ import { getEntityTags } from 'src/selectors';
 
 import './DocumentInfo.css';
 
+
 class DocumentInfo extends React.Component {
   constructor(props) {
     super(props);

@@ -4,36 +4,21 @@ import SearchFacet from './SearchFacet';
 
 import './SearchFacets.css';
 
+
 class SearchFacets extends Component {
   render() {
-    const { aspects, query, updateQuery } = this.props;
-
-    let possibleFacets = [
-      'schema',
-      'countries',
-      'languages',
-      'emails',
-      'phones',
-      'names',
-      'addresses',
-      'mime_type',
-      'author',
-    ];
-    
-    if (aspects && aspects.collections) {
-      possibleFacets = ['collection_id', ...possibleFacets];
-    }
-
+    const { facets, query, updateQuery } = this.props;
     return (
       <ul className="SearchFacets pt-large">
-        {possibleFacets.map(filterName => (
-          <li className="facet" key={filterName}>
+        {facets.map((facet) => (
+          <li className="facet" key={facet.field}>
             <SearchFacet
-              initiallyOpen={filterName === 'schema' ? true : undefined}
+              initiallyOpen={facet.active}
               query={query}
               updateQuery={updateQuery}
-              field={filterName}
-              key={filterName}
+              field={facet.field}
+              label={facet.label}
+              icon={facet.icon}
             />
           </li>
         ))}
