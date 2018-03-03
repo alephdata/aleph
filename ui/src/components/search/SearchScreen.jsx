@@ -27,7 +27,7 @@ const messages = defineMessages({
   },
   facet_emails: {
     id: 'search.facets.facet.emails',
-    defaultMessage: 'E-Mail Addresses',
+    defaultMessage: 'E-Mails',
   },
   facet_phones: {
     id: 'search.facets.facet.phones',
@@ -76,12 +76,12 @@ class SearchScreen extends React.Component {
       {
         field: 'countries',
         label: intl.formatMessage(messages.facet_countries),
-        icon: 'database'
+        icon: 'globe'
       },
       {
         field: 'languages',
         label: intl.formatMessage(messages.facet_languages),
-        icon: 'globe'
+        icon: 'translate'
       },
       {
         field: 'emails',
