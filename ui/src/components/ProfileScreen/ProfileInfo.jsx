@@ -187,8 +187,8 @@ class ProfileInfo extends Component {
           </h1>
           <div>
             <div className="pt-form-content">
-              <div class="pt-input-group .modifier">
-                <span class="pt-icon pt-icon-key"></span>
+              <div className="pt-input-group">
+                <span className="pt-icon pt-icon-key"></span>
                 <input className="pt-input"
                    readOnly={true}
                    value={this.state.api_key}/>

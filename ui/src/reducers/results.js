@@ -20,6 +20,12 @@ function updateLoading(value) {
 function updateResults(state, { query, result }) {
   const key = query.toKey(),
         previous = state[key] || {};
+  
+  result = {
+    ...result,
+    isLoading: false,
+    results: result.results.map((r) => r.id)
+  }
   if (!previous.pages) {
     state[key] = result;
     return state;

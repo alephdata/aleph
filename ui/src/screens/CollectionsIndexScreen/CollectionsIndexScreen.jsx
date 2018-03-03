@@ -87,9 +87,6 @@ class CollectionsIndexScreen extends Component {
   render() {
     const { result, intl } = this.props;
     const { queryPrefix } = this.state;
-    if (!result.pages) {
-      return <ScreenLoading />
-    }
 
     const breadcrumbs = (<Breadcrumbs>
       <li>

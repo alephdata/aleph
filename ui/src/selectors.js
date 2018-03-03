@@ -1,4 +1,4 @@
-import { get } from 'lodash/fp';
+import { get, map } from 'lodash/fp';
 
 export function selectFacet(state, { query, field }) {
   return get([field, queryToFacetKey(query, field)])(state.facets);
@@ -22,32 +22,42 @@ export function matchesKey(collectionId, otherId) {
 }
 
 
-export function selectResult(state, query) {
+export function selectResult(state, query, expand) {
   const key = query.toKey();
-  const loading = {
+  const result = {
     isLoading: true,
-    results: []
+    results: [],
+    ...state.results[key]
   };
-  // TODO this is the ideal place to do unpack by ID.
-  return state.results[key] || loading;
+  result.results = result.results.map((id) => expand(state, id));
+  return result;
 }
 
 export function selectCollection(state, collectionId) {
   // get a collection from the store.
-  const collection = state.collections[collectionId];
-  return collection;
+  return state.collections[collectionId];
+}
+
+export function selectEntity(state, entityId) {
+  // get a collection from the store.
+  return state.entities[entityId];
+}
+
+export function selectDocumentRecord(state, recordId) {
+  // get a collection from the store.
+  return state.documentRecords[recordId];
 }
 
 export function selectCollectionsResult(state, query) {
-  return selectResult(state, query);
+  return selectResult(state, query, selectCollection);
 }
 
 export function selectEntitiesResult(state, query) {
-  return selectResult(state, query);
+  return selectResult(state, query, selectEntity);
 }
 
 export function selectDocumentRecordsResult(state, query) {
-  return selectResult(state, query);
+  return selectResult(state, query, selectDocumentRecord);
 }
 
 export function getEntityTags(state, entityId) {
