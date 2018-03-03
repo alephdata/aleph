@@ -129,7 +129,6 @@ class CollectionsIndexScreen extends Component {
 
     return (
       <Screen className="CollectionsIndexScreen" breadcrumbs={breadcrumbs}>
-        
         <DualPane>
           <DualPane.InfoPane>
             <div className="pt-input-group pt-fill">

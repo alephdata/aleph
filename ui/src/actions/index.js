@@ -1,75 +1,41 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
+import { suggestRoles, fetchRole, addRole } from './roleActions';
+import { fetchAlerts, addAlert, deleteAlert } from './alertActions';
+import {
+  fetchCollections,
+  fetchCollection,
+  updateCollection,
+  fetchCollectionPermissions,
+  updateCollectionPermissions,
+  fetchCollectionXrefIndex,
+  fetchCollectionXrefMatches,
+  fetchNextCollectionXrefMatches
+} from './collectionActions';
 import { selectFacet } from 'src/selectors';
+
+
+export {
+  suggestRoles,
+  fetchRole,
+  addRole,
+  fetchAlerts,
+  addAlert,
+  deleteAlert,
+  fetchCollections,
+  fetchCollection,
+  updateCollection,
+  fetchCollectionPermissions,
+  updateCollectionPermissions,
+  fetchCollectionXrefIndex,
+  fetchCollectionXrefMatches,
+  fetchNextCollectionXrefMatches
+};
 
 export const fetchMetadata = asyncActionCreator(() => async dispatch => {
   const response = await endpoint.get('metadata');
   return { metadata: response.data };
 }, { name: 'FETCH_METADATA' });
-
-export const suggestRoles = asyncActionCreator((prefix, exclude) => async dispatch => {
-  const response = await endpoint.get(`roles/_suggest`, {params: {prefix, exclude}});
-  return response.data;
-}, { name: 'SUGGEST_ROLES' });
-
-export const updateCollection = asyncActionCreator((collection) => async dispatch => {
-  const response = await endpoint.post(`collections/${collection.id}`, collection);
-  return {collection: response.data};
-}, {name: 'UPDATE_COLLECTION'});
-
-export const fetchRole = asyncActionCreator((id) => async dispatch => {
-  const response = await endpoint.get(`roles/${id}`);
-  return { role: response.data };
-}, { name: 'FETCH_ROLE' });
-
-export const addRole = asyncActionCreator((role) => async dispatch => {
-  const response = await endpoint.post(`roles/${role.id}`, role);
-  return {role: response.data};
-}, {name: 'ADD_ROLE'});
-
-export const fetchAlerts = asyncActionCreator(() => async dispatch => {
-  const response = await endpoint.get('alerts');
-  response.data.results.reverse();
-  return { alerts: response.data };
-}, { name: 'FETCH_ALERTS' });
-
-export const deleteAlert = asyncActionCreator((id) => async dispatch => {
-  await endpoint.delete(`alerts/${id}`);
-  return {};
-}, { name: 'DELETE_ALERT' });
-
-export const addAlert = asyncActionCreator((alert) => async dispatch => {
-  await endpoint.post('alerts', alert);
-  return {};
-}, { name: 'ADD_ALERT' });
-
-export const fetchCollectionPermissions = asyncActionCreator((id) => async dispatch => {
-  const response = await endpoint.get(`collections/${id}/permissions`);
-  response.data.results.sort(function(first, second){
-    return first.role.name < second.role.name ? -1 : 1;
-  });
-  return { id, data: response.data};
-}, { name: 'FETCH_COLLECTION_PERMISSIONS' });
-
-export const updateCollectionPermissions = asyncActionCreator((id, permissions) => async dispatch => {
-  const response = await endpoint.post(`collections/${id}/permissions`, permissions);
-  return { id, data: response.data};
-}, { name: 'FETCH_COLLECTION_PERMISSIONS' });
-
-export const fetchCollectionXrefIndex = asyncActionCreator((id) => async dispatch => {
-  const response = await endpoint.get(`collections/${id}/xref`);
-  return { id, data: response.data};
-}, { name: 'FETCH_COLLECTION_XREF_INDEX' });
-
-export const fetchCollectionXrefMatches = asyncActionCreator((id, otherId) => async dispatch => {
-  const response = await endpoint.get(`collections/${id}/xref/${otherId}?limit=50`);
-  return { id, otherId, result: response.data};
-}, { name: 'FETCH_COLLECTION_XREF_MATCHES' });
-
-export const fetchNextCollectionXrefMatches = asyncActionCreator((id, otherId, result) => async dispatch => {
-  const response = await endpoint.get(result.next);
-  return { id, otherId, prevResult: result, nextResult: response.data};
-}, { name: 'FETCH_COLLECTION_XREF_NEXT_MATCHES' });
 
 export const fetchStatistics = asyncActionCreator(() => async dispatch => {
   const response = await endpoint.get('statistics');
@@ -137,16 +103,6 @@ export const fetchDocument = asyncActionCreator(({ id }) => async dispatch => {
   const response = await endpoint.get(`documents/${id}`);
   return { id, data: response.data };
 }, { name: 'FETCH_DOCUMENT' });
-
-export const fetchCollection = asyncActionCreator(({ id }) => async dispatch => {
-  const response = await endpoint.get(`collections/${id}`);
-  return { id, data: response.data };
-}, { name: 'FETCH_COLLECTION' });
-
-export const fetchCollections = asyncActionCreator(({ filters }) => async dispatch => {
-  const response = await endpoint.get('collections', { params: filters });
-  return { filters, result: response.data };
-}, { name: 'FETCH_COLLECTIONS' });
 
 export const fetchDocumentRecords = asyncActionCreator(({ id }) => async dispatch => {
   const response = await endpoint.get(`/documents/${id}/records`);
