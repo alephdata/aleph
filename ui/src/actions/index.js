@@ -8,7 +8,6 @@ import {
   fetchNextDocumentRecords
 } from './documentActions';
 import {
-  fetchCollections,
   queryCollections,
   fetchCollection,
   updateCollection,
@@ -46,7 +45,6 @@ export {
   fetchNextSearchResults,
   fetchFacet,
   fetchNextFacetValues,
-  fetchCollections,
   queryCollections,
   fetchCollection,
   updateCollection,

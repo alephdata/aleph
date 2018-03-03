@@ -13,7 +13,7 @@ const errorActionTypes = [
   actions.fetchEntityTags.ERROR,
   actions.fetchDocument.ERROR,
   actions.fetchCollection.ERROR,
-  actions.fetchCollections.ERROR,
+  actions.queryCollections.ERROR,
   actions.fetchDocumentRecords.ERROR,
   actions.fetchNextDocumentRecords.ERROR,
 ];

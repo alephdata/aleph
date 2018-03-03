@@ -21,11 +21,6 @@ export const queryCollections = asyncActionCreator(({ query, result, next }) => 
   }
 }, { name: 'QUERY_COLLECTIONS' });
 
-export const fetchCollections = asyncActionCreator(({ filters }) => async dispatch => {
-  const response = await endpoint.get('collections', { params: filters });
-  return { filters, result: response.data };
-}, { name: 'FETCH_COLLECTIONS' });
-
 export const fetchCollection = asyncActionCreator(({ id }) => async dispatch => {
   const response = await endpoint.get(`collections/${id}`);
   return { id, data: response.data };

@@ -1,17 +1,12 @@
 import { createReducer } from 'redux-act';
 import { set, update } from 'lodash/fp';
 
-import { fetchCollection, fetchCollections, updateCollection, queryCollections } from 'src/actions';
+import { fetchCollection, updateCollection, queryCollections } from 'src/actions';
 import { mapById } from './util';
 
 const initialState = {};
 
 export default createReducer({
-  [fetchCollections.COMPLETE]: (state, { result }) => ({
-    ...state,
-    ...mapById(result),
-  }),
-
   [queryCollections.COMPLETE]: (state, { query, nextResult }) => ({
     ...state,
     ...mapById(nextResult),
