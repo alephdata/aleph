@@ -2,15 +2,12 @@ import { createReducer } from 'redux-act';
 import { set, update } from 'lodash/fp';
 
 import { fetchCollection, updateCollection, queryCollections } from 'src/actions';
-import { mapById } from './util';
+import { cacheResults } from './util';
 
 const initialState = {};
 
 export default createReducer({
-  [queryCollections.COMPLETE]: (state, { query, result }) => ({
-    ...state,
-    ...mapById(result),
-  }),
+  [queryCollections.COMPLETE]: cacheResults,
 
   [fetchCollection.START]: (state, { id }) =>
     update(id, set('isFetching', true))(state),

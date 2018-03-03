@@ -18,11 +18,10 @@ import {
   fetchNextCollectionXrefMatches
 } from './collectionActions';
 import {
+  queryEntities,
   fetchEntity,
   fetchEntityReferences,
   fetchEntityTags,
-  fetchSearchResults,
-  fetchNextSearchResults,
   fetchFacet,
   fetchNextFacetValues
 } from './entityActions';
@@ -38,11 +37,10 @@ export {
   fetchDocument,
   fetchDocumentRecords,
   fetchNextDocumentRecords,
+  queryEntities,
   fetchEntity,
   fetchEntityReferences,
   fetchEntityTags,
-  fetchSearchResults,
-  fetchNextSearchResults,
   fetchFacet,
   fetchNextFacetValues,
   queryCollections,

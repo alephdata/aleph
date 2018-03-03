@@ -1,4 +1,5 @@
 import keyBy from 'lodash/keyBy';
+import { assign, assignWith } from 'lodash/fp';
 
 export function mapById(result) {
   return result ? keyBy(result.results, 'id') : {};
@@ -19,5 +20,11 @@ export function combineResults(prevResult, nextResult) {
     ...nextResult,
     results: [ ...prevResult.results, ...nextResult.results],
   }
+}
+
+export function cacheResults(state, { result }) {
+  // The search results may contain only a subset of the object's fields, so
+  // to not erase any existing value, we do a shallow merge of object fields.
+  return assignWith(assign)(state, mapById(result));
 }
 

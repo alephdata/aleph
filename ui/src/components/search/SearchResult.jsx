@@ -19,13 +19,8 @@ const messages = defineMessages({
 
 class SearchResult extends Component {
   render() {
-    const { result, hasMoreResults, getMoreResults, intl } = this.props;
+    const { result, getMoreResults, intl } = this.props;
 
-    if (result === undefined || result.isFetching) {
-      return (
-        <SectionLoading />
-      );
-    }
     return (
       <div>
         { result.total === 0 &&
@@ -33,14 +28,14 @@ class SearchResult extends Component {
             description={intl.formatMessage(messages.no_results_description)} />
         }
         <EntityList {...this.props} result={result} />
-        { !result.isExpanding && hasMoreResults && (
+        { !result.isLoading && result.next && (
           <Waypoint
             onEnter={getMoreResults}
             bottomOffset="-600px"
             scrollableAncestor={window}
           />
         )}
-        { result.isExpanding && (
+        { result.isLoading && (
           <SectionLoading />
         )}
       </div>

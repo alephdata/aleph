@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { fetchSearchResults, fetchNextSearchResults } from 'src/actions';
+import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 
 import Query from './Query';
@@ -29,18 +29,18 @@ class SearchContext extends Component {
   }
 
   fetchIfNeeded() {
-    const { result, query, fetchSearchResults } = this.props;
+    const { result, query, queryEntities } = this.props;
 
     if (result.pages === undefined || (result.status === 'error')) {
-      fetchSearchResults({ query: query });
+      queryEntities({ query: query });
     }
   }
 
   getMoreResults() {
-    const { query, result, fetchNextSearchResults } = this.props;
+    const { query, result, queryEntities } = this.props;
 
     if (result && result.next) {
-      fetchNextSearchResults({ query, result });
+      queryEntities({ query, next: result.next });
     }
   }
 
@@ -70,7 +70,6 @@ class SearchContext extends Component {
       query,
       updateQuery: this.updateQuery,
       result,
-      hasMoreResults: result && !!result.next,
       getMoreResults: this.getMoreResults,
       aspects: aspectsWithDefaults,
     };
@@ -97,7 +96,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-SearchContext = connect(mapStateToProps, { fetchSearchResults, fetchNextSearchResults })(SearchContext);
+SearchContext = connect(mapStateToProps, { queryEntities })(SearchContext);
 SearchContext = withRouter(SearchContext);
 
 SearchContext.propTypes = {

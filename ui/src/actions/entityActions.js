@@ -1,17 +1,11 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
 import { selectFacet } from 'src/selectors';
+import { queryEndpoint } from './util';
 
-
-export const fetchSearchResults = asyncActionCreator(({ query }) => async dispatch => {
-  const response = await endpoint.get('search', { params: query.toParams() });
-  return { query, result: response.data };
-}, { name: 'FETCH_SEARCH_RESULTS' });
-
-export const fetchNextSearchResults = asyncActionCreator(({ query, result }) => async dispatch => {
-  const response = await endpoint.get(result.next);
-  return { query, result: response.data };
-}, { name: 'FETCH_NEXT_SEARCH_RESULTS' });
+export const queryEntities = asyncActionCreator((query) => async dispatch => {
+  return queryEndpoint(query);
+}, { name: 'QUERY_COLLECTIONS' });
 
 const defaultFacetValuesLimit = 10;
 const facetValuesLimitIncreaseStep = 10;

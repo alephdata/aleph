@@ -1,13 +1,20 @@
 import { createReducer } from 'redux-act';
-import { set, update } from 'lodash/fp';
+import { assign } from 'lodash/fp';
 
 import {
   queryCollections,
-  fetchSearchResults,
-  fetchNextSearchResults
+  queryEntities,
 } from 'src/actions';
 
 const initialState = {};
+
+function updateLoading(value) {
+  return function(state, { query, result }) {
+    const key = query.toKey();
+    assign(state[key], {isLoading: value});
+    return state;
+  }
+}
 
 function updateResults(state, { query, result }) {
   const key = query.toKey(),
@@ -27,26 +34,10 @@ function updateResults(state, { query, result }) {
 }
 
 export default createReducer({
-  // [queryCollections.START]: updateResultsLoading(true),
-  // [queryCollections.ERROR]: updateResultsLoading(false),
+  [queryCollections.START]: updateLoading(true),
+  [queryCollections.ERROR]: updateLoading(false),
   [queryCollections.COMPLETE]: updateResults,
-  
-  [fetchSearchResults.START]: (state, { query }) =>
-    set([query.toKey()], { isFetching: true })(state),
-
-  [fetchSearchResults.COMPLETE]: updateResults,
-
-  // Upon error, leave some error status.
-  [fetchSearchResults.ERROR]: (state, { args: { query } }) =>
-    set([query.toKey()], { status: 'error' })(state),
-
-  [fetchNextSearchResults.START]: (state, { query }) =>
-    update([query.toKey()], set('isExpanding', true))(state),
-
-  [fetchNextSearchResults.COMPLETE]: updateResults,
-
-  // Upon error, merely reset the isExpanding flag.
-  [fetchNextSearchResults.ERROR]: (state, { args: { query, result } }) =>
-    update([query.toKey()], set('isExpanding', false))(state),
-
+  [queryEntities.START]: updateLoading(true),
+  [queryEntities.ERROR]: updateLoading(false),
+  [queryEntities.COMPLETE]: updateResults,
 }, initialState);
