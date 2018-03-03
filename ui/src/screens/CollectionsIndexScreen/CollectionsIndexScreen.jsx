@@ -8,6 +8,7 @@ import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import Query from 'src/components/search/Query';
 import DualPane from 'src/components/common/DualPane';
+import SearchFacets from 'src/components/Facet/SearchFacets';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import SectionLoading from 'src/components/common/SectionLoading';
 import CheckboxList from 'src/components/common/CheckboxList';
@@ -22,20 +23,42 @@ const messages = defineMessages({
     id: 'collectionbrowser.filter',
     defaultMessage: 'Filter collections',
   },
+  facet_category: {
+    id: 'search.facets.facet.category',
+    defaultMessage: 'Categories',
+  },
+  facet_countries: {
+    id: 'search.facets.facet.countries',
+    defaultMessage: 'Countries',
+  },
 });
 
 
 class CollectionsIndexScreen extends Component {
   constructor(props) {
     super(props);
+    const { intl } = props; 
 
     this.state = {
-      queryPrefix: props.query.getString('prefix')
+      queryPrefix: props.query.getString('prefix'),
+      facets: [
+        {
+          field: 'category',
+          label: intl.formatMessage(messages.facet_category),
+          icon: 'list',
+          active: true
+        },
+        {
+          field: 'countries',
+          label: intl.formatMessage(messages.facet_countries),
+          icon: 'globe',
+          active: true
+        },
+      ]
     };
 
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
-    this.onFacetToggle = this.onFacetToggle.bind(this);
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
   }
 
@@ -85,7 +108,7 @@ class CollectionsIndexScreen extends Component {
   }
 
   render() {
-    const { result, intl } = this.props;
+    const { result, query, intl } = this.props;
     const { queryPrefix } = this.state;
 
     const breadcrumbs = (<Breadcrumbs>
@@ -107,33 +130,16 @@ class CollectionsIndexScreen extends Component {
                 placeholder={intl.formatMessage(messages.filter)}
                 onChange={this.onChangeQueryPrefix} value={queryPrefix} />
             </div>
-            { !result.isLoading && (
-              <React.Fragment>
-                <p className="note">
-                  <FormattedMessage id="collection.browser.total"
-                                  defaultMessage="Browsing {total} collections."
-                                  values={{
-                                    total: <FormattedNumber value={result.total} />
-                                  }}/>
-                </p>
-
-                <h4>
-                  <FormattedMessage id="collections.browser.categories"
-                                    defaultMessage="Categories" />
-                </h4>
-                <CheckboxList items={result.facets.category.values}
-                              selectedItems={result.facets.category.filters}
-                              onItemClick={this.onFacetToggle('category')} />
-
-                <h4>
-                  <FormattedMessage id="collections.browser.countries"
-                                    defaultMessage="Countries" />
-                </h4>
-                <CheckboxList items={result.facets.countries.values}
-                              selectedItems={result.facets.countries.filters}
-                              onItemClick={this.onFacetToggle('countries')} />
-              </React.Fragment>
-            )}
+            <p className="note">
+              <FormattedMessage id="collection.browser.total"
+                                defaultMessage="Browsing {total} collections."
+                                values={{
+                                  total: <FormattedNumber value={result.total} />
+                                }}/>
+            </p>
+            <SearchFacets facets={this.state.facets}
+                          query={query}
+                          updateQuery={this.updateQuery} />
           </DualPane.InfoPane>
           <DualPane.ContentPane>
             <ul className="results">
