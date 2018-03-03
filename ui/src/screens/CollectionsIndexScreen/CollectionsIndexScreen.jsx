@@ -79,7 +79,7 @@ class CollectionsIndexScreen extends Component {
 
   bottomReachedHandler() {
     const { query, result } = this.props;
-    if (!result.isLoading) {
+    if (!result.isLoading && result.next) {
       this.props.queryCollections({query, result, next: result.next});
     }
   }

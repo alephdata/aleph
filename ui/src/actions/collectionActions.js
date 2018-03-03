@@ -1,24 +1,9 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
+import { queryEndpoint } from './util';
 
-export const queryCollections = asyncActionCreator(({ query, result, next }) => async dispatch => {
-  if (next) {
-    const response = await endpoint.get(next);
-    return {
-      query,
-      nextResult: response.data,
-      prevResult: result
-    };
-  } else {
-    const response = await endpoint.get('collections', {
-      params: query.toParams()
-    });
-    return {
-      query,
-      nextResult: response.data,
-      prevResult: result
-    };
-  }
+export const queryCollections = asyncActionCreator((query) => async dispatch => {
+  return queryEndpoint('collections', query);
 }, { name: 'QUERY_COLLECTIONS' });
 
 export const fetchCollection = asyncActionCreator(({ id }) => async dispatch => {

@@ -23,14 +23,11 @@ class CollectionInfoXref extends React.Component {
 
   render() {
     const { index, collection } = this.props;
-
     if (!index) {
       return null;
     }
 
-    console.log(index);
     const linkPath = getPath(collection.links.ui) + '/xref/';
-
     return (
       <div className="xrefs">
         <ul className="info-rank">
