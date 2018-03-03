@@ -9,9 +9,7 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import Query from 'src/components/search/Query';
 import DualPane from 'src/components/common/DualPane';
 import SearchFacets from 'src/components/Facet/SearchFacets';
-import ScreenLoading from 'src/components/common/ScreenLoading';
 import SectionLoading from 'src/components/common/SectionLoading';
-import CheckboxList from 'src/components/common/CheckboxList';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import CollectionListItem from 'src/components/CollectionScreen/CollectionListItem';
@@ -134,7 +132,7 @@ class CollectionsIndexScreen extends Component {
               <FormattedMessage id="collection.browser.total"
                                 defaultMessage="Browsing {total} collections."
                                 values={{
-                                  total: <FormattedNumber value={result.total} />
+                                  total: <FormattedNumber value={result.total || 0} />
                                 }}/>
             </p>
             <SearchFacets facets={this.state.facets}
@@ -167,8 +165,6 @@ class CollectionsIndexScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const query = Query.fromLocation('collections', ownProps.location, {}, 'collections:')
     .sortBy('count', true)
-    .addFacet('category')
-    .addFacet('countries')
     .limit(30);
 
 return {

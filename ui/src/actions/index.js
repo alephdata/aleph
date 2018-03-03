@@ -2,6 +2,7 @@ import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
 import { suggestRoles, fetchRole, addRole } from './roleActions';
 import { fetchAlerts, addAlert, deleteAlert } from './alertActions';
+import { fetchFacet } from './facetActions';
 import {
   fetchDocument,
   queryDocumentRecords,
@@ -21,7 +22,6 @@ import {
   fetchEntity,
   fetchEntityReferences,
   fetchEntityTags,
-  fetchFacet,
   fetchNextFacetValues
 } from './entityActions';
 
@@ -40,7 +40,6 @@ export {
   fetchDocument,
   queryDocumentRecords,
   fetchFacet,
-  fetchNextFacetValues,
   queryCollections,
   fetchCollection,
   updateCollection,

@@ -1,26 +1,8 @@
-import { get, map } from 'lodash/fp';
-
-export function selectFacet(state, { query, field }) {
-  return get([field, queryToFacetKey(query, field)])(state.facets);
-}
-
-export function queryToFacetKey(query, field) {
-  if (!query) return null
-    
-  // Strip the parts of the query that are irrelevant to the facet cache.
-  return query
-    .clear('limit')
-    // Values in our field itself will not influence the facet results.
-    .clearFilter(field)
-    // And neither will sorting ever influence the aggregate values.
-    .sortBy(null)
-    .toKey()
-}
+import { get } from 'lodash/fp';
 
 export function matchesKey(collectionId, otherId) {
   return collectionId + '*' + otherId;
 }
-
 
 export function selectResult(state, query, expand) {
   const key = query.toKey();
