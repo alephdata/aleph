@@ -1,4 +1,3 @@
-import { get } from 'lodash/fp';
 
 export function matchesKey(collectionId, otherId) {
   return collectionId + '*' + otherId;

@@ -6,7 +6,6 @@ import Waypoint from 'react-waypoint';
 import { queryDocumentRecords } from 'src/actions';
 import { selectDocumentRecordsResult } from 'src/selectors';
 import Query from 'src/components/search/Query';
-import ScreenLoading from 'src/components/common/ScreenLoading';
 import SectionLoading from 'src/components/common/SectionLoading';
 import { DocumentToolbar } from 'src/components/Toolbar';
 

@@ -54,7 +54,7 @@ class SearchFacet extends Component {
   }
 
   updateState() {
-    const { field, facets, fetchFacet } = this.props;
+    const { fetchFacet } = this.props;
     const query = this.facetQuery(),
           key = query.toKey();
     if (this.state.loadKey !== key) {

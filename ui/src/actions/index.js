@@ -21,8 +21,7 @@ import {
   queryEntities,
   fetchEntity,
   fetchEntityReferences,
-  fetchEntityTags,
-  fetchNextFacetValues
+  fetchEntityTags
 } from './entityActions';
 
 

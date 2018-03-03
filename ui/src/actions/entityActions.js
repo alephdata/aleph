@@ -1,6 +1,5 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
-import { selectFacet } from 'src/selectors';
 import { queryEndpoint } from './util';
 
 export const queryEntities = asyncActionCreator((query) => async dispatch => {

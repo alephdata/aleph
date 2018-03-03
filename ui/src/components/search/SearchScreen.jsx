@@ -1,5 +1,5 @@
 import React from 'react';
-import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import Screen from 'src/components/common/Screen';
 import DualPane from 'src/components/common/DualPane';
