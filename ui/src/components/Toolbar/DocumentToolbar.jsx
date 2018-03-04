@@ -79,7 +79,11 @@ class DocumentToolbar extends React.Component {
         <form onSubmit={this.onSubmitSearch} className="ToolbarSearchForm">
           <div className="pt-input-group">
             <span className="pt-icon pt-icon-search"></span>
-            <input className="pt-input" type="search" disabled={!this.state.searchEnabled} placeholder={this.state.searchPlaceholder} onChange={this.onChangeSearchQuery} value={this.state.queryText} dir="auto"/>
+            <input className="pt-input" type="search" dir="auto"
+                   disabled={!this.state.searchEnabled}
+                   placeholder={this.state.searchPlaceholder}
+                   onChange={this.onChangeSearchQuery}
+                   value={this.state.queryText} />
           </div>
         </form>
         <DownloadButton downloadLink={downloadLink} session={this.props.session}/>

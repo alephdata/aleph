@@ -10,7 +10,6 @@ import DualPane from 'src/components/common/DualPane';
 import Entity from 'src/components/EntityScreen/Entity';
 import DocumentInfo from './DocumentInfo';
 import SearchContext from 'src/components/search/SearchContext';
-import SearchResult from 'src/components/search/SearchResult';
 
 
 class DocumentRelatedScreen extends Component {
@@ -50,14 +49,12 @@ class DocumentRelatedScreen extends Component {
 
     return (
       <Screen breadcrumbs={breadcrumbs} title={document.title || document.file_name}>
-        <SearchContext context={context}>{searchContext => (
-          <DualPane>
-            <DualPane.ContentPane>
-              <SearchResult {...searchContext} />
-            </DualPane.ContentPane>
-            <DocumentInfo document={document} />
-          </DualPane>
-        )}</SearchContext>
+        <DualPane>
+          <DualPane.ContentPane>
+            <SearchContext context={context} />
+          </DualPane.ContentPane>
+          <DocumentInfo document={document} />
+        </DualPane>
       </Screen>
     );
   }

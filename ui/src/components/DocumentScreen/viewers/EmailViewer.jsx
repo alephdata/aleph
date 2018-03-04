@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
 import SearchContext from 'src/components/search/SearchContext';
-import SearchResult from 'src/components/search/SearchResult';
 import { DocumentToolbar } from 'src/components/Toolbar';
 
 import './EmailViewer.css';
@@ -112,13 +111,7 @@ class EmailViewer extends React.Component {
                 }
                 panel={
                   <div className="email-attachments">
-                    {!!document.children && (
-                      <SearchContext context={context} aspects={aspects}>{searchContext => (
-                        <div>
-                          <SearchResult {...searchContext} />
-                        </div>
-                      )}</SearchContext>
-                    )}
+                    <SearchContext context={context} aspects={aspects} />
                   </div>
                 } 
               />

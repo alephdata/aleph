@@ -3,12 +3,17 @@ import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 
 import SearchContext from 'src/components/search/SearchContext';
-import SearchResult from 'src/components/search/SearchResult';
 import { DocumentToolbar } from 'src/components/Toolbar';
 
 import './FolderViewer.css';
 
 class FolderViewer extends Component {
+  constructor(props) {
+    super(props);
+
+
+  }
+
   render() {
     const { document } = this.props;
 
@@ -28,13 +33,9 @@ class FolderViewer extends Component {
     
     return (
       <React.Fragment>
-        <DocumentToolbar document={document}/>
+        <DocumentToolbar document={document} />
         <div id="children" className="FolderViewer">
-          {document.children > 0 && (
-            <SearchContext context={context} aspects={aspects}>{searchContext => (
-              <SearchResult {...searchContext} />
-            )}</SearchContext>
-          )}
+          <SearchContext context={context} aspects={aspects} />
           {document.children === 0 && (
             <p className="folder-empty pt-text-muted">
               <FormattedMessage

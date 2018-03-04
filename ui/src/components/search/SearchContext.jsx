@@ -1,12 +1,28 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
+import { NonIdealState } from '@blueprintjs/core';
+import Waypoint from 'react-waypoint';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-
-import { queryEntities } from 'src/actions';
-import { selectEntitiesResult } from 'src/selectors';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import Query from 'src/app/Query';
+import { queryEntities } from 'src/actions';
+import { selectEntitiesResult } from 'src/selectors';
+import EntityList from 'src/components/EntityScreen/EntityList';
+import SectionLoading from 'src/components/common/SectionLoading';
+
+
+const messages = defineMessages({
+  no_results_title: {
+    id: 'search.no_results_title',
+    defaultMessage: 'No search results',
+  },
+  no_results_description: {
+    id: 'search.no_results_description',
+    defaultMessage: 'Try making your search more general',
+  },
+})
 
 class SearchContext extends Component {
   constructor(props) {
@@ -54,7 +70,7 @@ class SearchContext extends Component {
   }
 
   render() {
-    const { query, aspects, children, result } = this.props;
+    const { query, aspects, result, intl } = this.props;
 
     // Default some aspects to true
     const aspectsWithDefaults = {
@@ -64,17 +80,29 @@ class SearchContext extends Component {
       ...aspects
     };
 
-    // XXX: A shallow prop comparison by WrappedComponent would always
-    // consider searchContext to have changed. Should we cache it in our state?
-    const searchContext = {
-      query,
-      updateQuery: this.updateQuery,
-      result,
-      getMoreResults: this.getMoreResults,
-      aspects: aspectsWithDefaults,
-    };
-
-    return children(searchContext);
+    return (
+      <React.Fragment>
+        { result.total === 0 &&
+          <NonIdealState visual="search"
+                         title={intl.formatMessage(messages.no_results_title)}
+                         description={intl.formatMessage(messages.no_results_description)} />
+        }
+        <EntityList query={query}
+                    aspects={aspectsWithDefaults}
+                    updateQuery={this.updateQuery}
+                    result={result} />
+        { !result.isLoading && result.next && (
+          <Waypoint
+            onEnter={this.getMoreResults}
+            bottomOffset="-600px"
+            scrollableAncestor={window}
+          />
+        )}
+        { result.isLoading && (
+          <SectionLoading />
+        )}
+      </React.Fragment>
+    );
   }
 }
 
@@ -98,6 +126,8 @@ const mapStateToProps = (state, ownProps) => {
 
 SearchContext = connect(mapStateToProps, { queryEntities })(SearchContext);
 SearchContext = withRouter(SearchContext);
+SearchContext = injectIntl(SearchContext);
+
 
 SearchContext.propTypes = {
   children: PropTypes.func.isRequired,
