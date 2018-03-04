@@ -5,7 +5,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { NonIdealState } from '@blueprintjs/core';
 import Waypoint from 'react-waypoint';
 
-import Query from 'src/components/search/Query';
+import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import Screen from 'src/components/common/Screen';

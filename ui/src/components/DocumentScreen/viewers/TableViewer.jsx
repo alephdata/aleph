@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Waypoint from 'react-waypoint';
 
+import Query from 'src/app/Query';
 import { queryDocumentRecords } from 'src/actions';
 import { selectDocumentRecordsResult } from 'src/selectors';
-import Query from 'src/components/search/Query';
 import SectionLoading from 'src/components/common/SectionLoading';
 import { DocumentToolbar } from 'src/components/Toolbar';
 

@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 
-import Query from './Query';
+import Query from 'src/app/Query';
 
 class SearchContext extends Component {
   constructor(props) {

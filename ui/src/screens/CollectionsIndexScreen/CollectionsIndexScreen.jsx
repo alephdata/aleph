@@ -4,14 +4,14 @@ import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'r
 import { debounce } from 'lodash';
 import Waypoint from 'react-waypoint';
 
+import Query from 'src/app/Query';
+import { queryCollections } from 'src/actions';
+import { selectCollectionsResult } from 'src/selectors';
 import Screen from 'src/components/common/Screen';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import Query from 'src/components/search/Query';
 import DualPane from 'src/components/common/DualPane';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import SectionLoading from 'src/components/common/SectionLoading';
-import { queryCollections } from 'src/actions';
-import { selectCollectionsResult } from 'src/selectors';
 import CollectionListItem from 'src/components/CollectionScreen/CollectionListItem';
 
 import './CollectionsIndexScreen.css';
