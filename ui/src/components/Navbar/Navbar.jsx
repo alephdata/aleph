@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
+import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import { InputGroup } from '@blueprintjs/core';
@@ -8,6 +9,14 @@ import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import SettingsButton from 'src/components/SettingsButton/SettingsButton';
 
 import './Navbar.css';
+
+const messages = defineMessages({
+  search_placeholder: {
+    id: 'home.search_placeholder',
+    defaultMessage: 'Search companies, people and documents.',
+  },
+});
+
 
 class Navbar extends React.Component {
   constructor(props) {
@@ -60,7 +69,7 @@ class Navbar extends React.Component {
   }
   
   render() {
-    const {metadata, session, isHomepage} = this.props
+    const {metadata, session, intl, isHomepage} = this.props
 
     return (
       <div className="Navbar">
@@ -77,7 +86,9 @@ class Navbar extends React.Component {
             {!isHomepage && (
               <form onSubmit={this.onSubmit}>
                 <InputGroup type="text" leftIcon="search" className="pt-large"
-                  onChange={this.onChange} value={this.state.value} />
+                  onChange={this.onChange} value={this.state.value}
+                  placeholder={intl.formatMessage(messages.search_placeholder)}
+                  />
               </form>
             )} 
           </div>
@@ -91,4 +102,5 @@ class Navbar extends React.Component {
   }
 }
 
+Navbar = injectIntl(Navbar);
 export default withRouter(Navbar);

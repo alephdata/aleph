@@ -3,14 +3,17 @@ import { createReducer } from 'redux-act';
 import { fetchStatistics } from 'src/actions';
 
 const initialState = {
-    isLoaded: false,
+    isLoading: false,
 };
 
 export default createReducer({
-    [fetchStatistics.START]: state => ({ isLoaded: false }),
+    [fetchStatistics.START]: state => ({
+      ...state,
+      isLoading: true
+    }),
 
     [fetchStatistics.COMPLETE]: (state, { statistics }) => ({
-        ...statistics,
-        isLoaded: true
+      ...statistics,
+      isLoading: false
     }),
 }, initialState);

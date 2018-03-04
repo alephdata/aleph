@@ -2,11 +2,11 @@
  * https://stackoverflow.com/questions/23618744/rendering-comma-separated-list-of-links
  */
 export default function wordList(arr, sep) {
-    if (arr.length === 0) {
-        return [];
-    }
+  if (arr.length === 0) {
+    return [];
+  }
 
-    return arr.slice(1).reduce(function(xs, x, i) {
-        return xs.concat([sep, x]);
-    }, [arr[0]]);
+  return arr.slice(1).reduce(function(xs, x, i) {
+    return xs.concat([sep, x]);
+  }, [arr[0]]);
 }

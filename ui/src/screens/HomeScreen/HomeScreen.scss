@@ -6,66 +6,40 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  min-height: 95.5vh;
-  color: white;
+  min-height: 95vh;
   text-align: center;
 
-  .outer_searchbox_div {
+  .outer-searchbox {
     display: table;
     position: absolute;
     height: 80%;
     width: 100%;
   }
 
-  h4 {
-    color: white !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
-
-  .inner_searchbox_div {
+  .inner-searchbox {
     display: table-cell;
     vertical-align: middle;
   }
 
-  .search_h1 {
-    color: white !important;
-    margin-bottom: 0.5em;
-    font-size: 4em;
-  }
-
-  .top_three_group {
-    display: inline-flex;
-  }
-
   .homepage-summary {
-    margin-bottom: 3em;
+    margin-bottom: 1em;
+    font-size: $pt-font-size-large * 1.2;
+    font-weight: bold;
+    // color: $light-gray2;
+    color: white;
   }
 
-  .search_form {
+  .search-form {
     max-width: 50em;
     margin: 0 auto;
     padding-bottom: 2em;
   }
 
-  .homepage_collections_footer {
-    height: $aleph-grid-size * 5;
-    background-color: $dark-gray5;
-    bottom: 0;
-    left: 0;
-    position: absolute;
-    right: 0;
-    padding-top: 1em;
-
-    a {
-      color: white;
+  .calls-to-action {
+    .pt-button {
+      margin-left: $aleph-grid-size;
+      margin-right: $aleph-grid-size;
     }
   }
 
-  .homepage_examples {
-    position: relative;
-    top: 52vh;
-    left: 52%;
-    display: flex;
-  }
 }
