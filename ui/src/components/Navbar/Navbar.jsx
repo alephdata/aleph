@@ -12,19 +12,29 @@ import './Navbar.css';
 class Navbar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {value: props.searchContext ? props.searchContext.query.getString('q') : ''};
+    this.state = {value: ''};
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.location.pathname === '/search')
-      return
-      
-    if (nextProps.searchContext && nextProps.searchContext.query.state.q !== this.state.value) {
+  componentDidMount() {
+    const { query } = this.props;
+    if (query !== undefined) {
       this.setState({
-        value: nextProps.searchContext.query.getString('q')
+        value: query.getString('q')
+      })
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.location.pathname === '/search') {
+      return
+    }
+      
+    if (nextProps.query && nextProps.query.state.q !== this.state.value) {
+      this.setState({
+        value: nextProps.query.getString('q')
       })
     }
   }
@@ -34,10 +44,10 @@ class Navbar extends React.Component {
   }
 
   onSubmit(event) {
+    const { query, updateQuery } = this.props;
     event.preventDefault();
-    if (this.props.location.pathname === '/search') {
-      let query = this.props.searchContext.query.set('q', this.state.value);
-      this.props.searchContext.updateQuery(query);
+    if (updateQuery !== undefined) {
+      updateQuery(query.set('q', this.state.value));
     } else {
       const { history } = this.props;
       history.push({
@@ -51,6 +61,7 @@ class Navbar extends React.Component {
   
   render() {
     const {metadata, session, isHomepage} = this.props
+
     return (
       <div className="Navbar">
         <nav className="pt-navbar">

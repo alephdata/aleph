@@ -8,7 +8,6 @@ import LoginScreen from 'src/components/auth/LoginScreen';
 import LogoutScreen from 'src/components/auth/LogoutScreen';
 import SignupScreen from 'src/components/auth/SignupScreen';
 import ActivateScreen from 'src/components/auth/ActivateScreen';
-import SearchScreen from 'src/components/search/SearchScreen';
 import EntityScreen from 'src/components/EntityScreen';
 import EntityRelatedScreen from 'src/components/EntityScreen/EntityRelatedScreen';
 import DocumentScreen from 'src/components/DocumentScreen';
@@ -19,6 +18,7 @@ import CollectionScreen from 'src/components/CollectionScreen';
 import CollectionEditScreen from 'src/components/CollectionEdit';
 
 import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
+import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
 import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen/CollectionsIndexScreen';
 import CollectionsXrefScreen from 'src/screens/CollectionsXrefScreen/CollectionsXrefScreen';
 

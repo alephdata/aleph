@@ -37,16 +37,16 @@ class SettingsButton extends Component {
 
     return (
       <React.Fragment>
-        <Button icon="cog" className="pt-minimal"  onClick={this.toggleSettings}>
-          <FormattedMessage id="nav.settings" defaultMessage="Settings"/>
-        </Button>
-        <SettingsDialog isOpen={this.state.settingsIsOpen}
-                        toggleDialog={this.toggleSettings} />
         <Button icon="notifications" className="pt-minimal"  onClick={this.toggleAlerts}>
           <FormattedMessage id="nav.notifications" defaultMessage="Notifications"/>
         </Button>
         <AlertsDialog isOpen={this.state.alertsIsOpen}
                       toggleDialog={this.toggleAlerts} />
+        <Button icon="cog" className="pt-minimal"  onClick={this.toggleSettings}>
+          <FormattedMessage id="nav.settings" defaultMessage="Settings"/>
+        </Button>
+        <SettingsDialog isOpen={this.state.settingsIsOpen}
+                        toggleDialog={this.toggleSettings} />
       </React.Fragment>
     );
   }
