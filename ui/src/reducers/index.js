@@ -11,7 +11,6 @@ import collections from './collections';
 import collectionPermissions from './collectionPermissions';
 import collectionXrefIndex from './collectionXrefIndex';
 import collectionXrefMatches from './collectionXrefMatches';
-import role from './roles';
 import results from './results';
 import alerts from './alerts';
 import facets from './facets';
@@ -23,7 +22,6 @@ const rootReducer = combineReducers({
   entities,
   entityReferences,
   documentRecords,
-  role,
   alerts,
   entityTags,
   collections,

@@ -1,6 +1,6 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
-import { suggestRoles, fetchRole, addRole } from './roleActions';
+import { suggestRoles, fetchRole, updateRole } from './roleActions';
 import { fetchAlerts, addAlert, deleteAlert } from './alertActions';
 import { fetchFacet } from './facetActions';
 import {
@@ -28,7 +28,7 @@ import {
 export {
   suggestRoles,
   fetchRole,
-  addRole,
+  updateRole,
   fetchAlerts,
   addAlert,
   deleteAlert,

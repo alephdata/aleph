@@ -12,7 +12,7 @@ export const fetchRole = asyncActionCreator((id) => async dispatch => {
   return { role: response.data };
 }, { name: 'FETCH_ROLE' });
 
-export const addRole = asyncActionCreator((role) => async dispatch => {
+export const updateRole = asyncActionCreator((role) => async dispatch => {
   const response = await endpoint.post(`roles/${role.id}`, role);
   return {role: response.data};
-}, {name: 'ADD_ROLE'});
+}, {name: 'UPDATE_ROLE'});

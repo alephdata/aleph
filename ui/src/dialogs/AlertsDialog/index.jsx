@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { NonIdealState, Dialog, Button, Intent } from '@blueprintjs/core';
+import { NonIdealState, Dialog } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -7,7 +7,6 @@ import queryString from 'query-string';
 
 import SectionLoading from 'src/components/common/SectionLoading';
 import {fetchAlerts, addAlert, deleteAlert} from 'src/actions';
-import {showSuccessToast} from "src/app/toast";
 
 import './AlertsDialog.css';
 
@@ -57,13 +56,11 @@ class AlertsDialog extends Component {
   }
 
   async onAddAlert(event) {
-    const { intl } = this.props;
     const { newAlert } = this.state;
     event.preventDefault();
     this.setState({newAlert: ''});
     await this.props.addAlert({query_text: newAlert});
     await this.props.fetchAlerts();
-    // showSuccessToast(intl.formatMessage(messages.update_success));
   }
 
   onSearch(alert) {
@@ -89,14 +86,14 @@ class AlertsDialog extends Component {
               title={intl.formatMessage(messages.title)}>
         <div className="pt-dialog-body">
           <form onSubmit={this.onAddAlert}>
-            <div class="pt-control-group pt-fill">
+            <div className="pt-control-group pt-fill">
               <input type="text"
-                     className="pt-input"
+                     className="pt-input pt-large"
                      autoComplete="off"
                      placeholder={intl.formatMessage(messages.add_placeholder)}
                      onChange={this.onChangeAddingInput}
                      value={this.state.newAlert} />
-              <button className="pt-button pt-intent-primary pt-fixed"
+              <button className="pt-button pt-intent-primary pt-large pt-fixed"
                       onClick={this.onAddAlert}>
                 <FormattedMessage id="alerts.add"
                                   defaultMessage="Add"/>
