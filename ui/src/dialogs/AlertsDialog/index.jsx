@@ -14,7 +14,7 @@ import './AlertsDialog.css';
 const messages = defineMessages({
   title: {
     id: 'alerts.title',
-    defaultMessage: 'Manage your notifications',
+    defaultMessage: 'Manage your alerts',
   },
   save_button: {
     id: 'alerts.save',
@@ -23,10 +23,6 @@ const messages = defineMessages({
   add_placeholder: {
     id: 'alerts.add_placeholder',
     defaultMessage: 'Receive e-mail when there are new results.',
-  },
-  update_success: {
-    id: 'alerts.update_success',
-    defaultMessage: 'You have updated your alerts!',
   },
   no_alerts: {
     id: 'alerts.no_alerts',

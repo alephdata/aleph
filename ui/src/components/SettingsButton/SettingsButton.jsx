@@ -38,7 +38,7 @@ class SettingsButton extends Component {
     return (
       <React.Fragment>
         <Button icon="notifications" className="pt-minimal"  onClick={this.toggleAlerts}>
-          <FormattedMessage id="nav.notifications" defaultMessage="Notifications"/>
+          <FormattedMessage id="nav.alerts" defaultMessage="Alerts"/>
         </Button>
         <AlertsDialog isOpen={this.state.alertsIsOpen}
                       toggleDialog={this.toggleAlerts} />
