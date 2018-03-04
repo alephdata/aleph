@@ -26,11 +26,6 @@ class EmailViewer extends React.Component {
     const context = {
       'filter:parent.id': document.id
     };
-    const aspects = {
-      filter: false,
-      countries: false,
-      collections: false
-    };
     
     return (
       <React.Fragment>
@@ -111,7 +106,9 @@ class EmailViewer extends React.Component {
                 }
                 panel={
                   <div className="email-attachments">
-                    <EntitySearch context={context} hideCollection={true} documentMode={true} />
+                    <EntitySearch context={context}
+                                  hideCollection={true}
+                                  documentMode={true} />
                   </div>
                 } 
               />

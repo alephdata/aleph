@@ -10,7 +10,7 @@ import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import Screen from 'src/components/common/Screen';
 import DualPane from 'src/components/common/DualPane';
-import EntityList from 'src/components/EntityScreen/EntityList';
+import EntityTable from 'src/components/EntityTable/EntityTable';
 import SectionLoading from 'src/components/common/SectionLoading';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 
@@ -170,11 +170,6 @@ class SearchScreen extends React.Component {
 
   render() {
     const { query, result, intl } = this.props;
-    const aspects = {
-      filter: true,
-      collections: true,
-      countries: true
-    };
 
     return (
       <Screen query={query}
@@ -193,10 +188,9 @@ class SearchScreen extends React.Component {
                              title={intl.formatMessage(messages.no_results_title)}
                              description={intl.formatMessage(messages.no_results_description)} />
             }
-            <EntityList query={query}
-                        aspects={aspects}
-                        updateQuery={this.updateQuery}
-                        result={result} />
+            <EntityTable query={query}
+                         updateQuery={this.updateQuery}
+                         result={result} />
             { !result.isLoading && result.next && (
               <Waypoint
                 onEnter={this.getMoreResults}

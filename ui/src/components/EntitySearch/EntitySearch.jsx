@@ -9,7 +9,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
-import EntityList from 'src/components/EntityScreen/EntityList';
+import EntityTable from 'src/components/EntityTable/EntityTable';
 import SectionLoading from 'src/components/common/SectionLoading';
 
 
@@ -71,14 +71,6 @@ class EntitySearch extends Component {
 
   render() {
     const { query, result, intl } = this.props;
-
-    // Default some aspects to true
-    const aspectsWithDefaults = {
-      filter: true,
-      collections: true,
-      countries: true
-    };
-
     return (
       <React.Fragment>
         { result.total === 0 &&
@@ -86,10 +78,11 @@ class EntitySearch extends Component {
                          title={intl.formatMessage(messages.no_results_title)}
                          description={intl.formatMessage(messages.no_results_description)} />
         }
-        <EntityList query={query}
-                    aspects={aspectsWithDefaults}
-                    updateQuery={this.updateQuery}
-                    result={result} />
+        <EntityTable query={query}
+                     documentMode={this.props.documentMode}
+                     hideCollection={this.props.hideCollection}
+                     updateQuery={this.updateQuery}
+                     result={result} />
         { !result.isLoading && result.next && (
           <Waypoint
             onEnter={this.getMoreResults}
@@ -128,10 +121,9 @@ EntitySearch = withRouter(EntitySearch);
 EntitySearch = injectIntl(EntitySearch);
 
 EntitySearch.propTypes = {
-  children: PropTypes.func.isRequired,
   context: PropTypes.object,
-  documentMode: PropTypes.boolean,
-  hideCollection: PropTypes.boolean,
+  documentMode: PropTypes.bool,
+  hideCollection: PropTypes.bool,
   prefix: PropTypes.string,
 };
 

@@ -47,13 +47,7 @@ class FolderViewer extends Component {
     if (!document || !document.id || !document.links) {
       return null;
     }
-    
-    const aspects = {
-      filter: false,
-      countries: false,
-      collections: false
-    };
-    
+
     return (
       <React.Fragment>
         <DocumentToolbar document={document}

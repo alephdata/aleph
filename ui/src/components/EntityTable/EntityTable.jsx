@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import EntityListItem from './EntityListItem';
+import EntityTableRow from './EntityTableRow';
 import SortableTH from 'src/components/common/SortableTH';
 
 const messages = defineMessages({
   column_name: {
-    id: 'entity.column.names',
-    defaultMessage: 'Names',
+    id: 'entity.column.name',
+    defaultMessage: 'Name',
   },
   column_collection_id: {
     id: 'entity.column.collection_id',
-    defaultMessage: 'Collections',
+    defaultMessage: 'Collection',
   },
   column_schema: {
     id: 'entity.column.schema',
@@ -21,13 +21,17 @@ const messages = defineMessages({
     id: 'entity.column.countries',
     defaultMessage: 'Countries',
   },
+  column_file_size: {
+    id: 'entity.column.file_size',
+    defaultMessage: 'Size',
+  },
   column_dates: {
     id: 'entity.column.dates',
     defaultMessage: 'Date',
   },
 });
 
-class EntityList extends Component {
+class EntityTable extends Component {
   sortColumn(field) {
     const { query, updateQuery } = this.props;
     const { field: sortedField, desc } = query.getSort();
@@ -46,7 +50,8 @@ class EntityList extends Component {
   }
 
   render() {
-    const { result, aspects, query, intl } = this.props;
+    const { result, query, intl } = this.props;
+    const { hideCollection = false, documentMode = false } = this.props;
 
     if (!result || !result.results || result.total === 0) {
       return null;
@@ -69,19 +74,25 @@ class EntityList extends Component {
         <thead>
           <tr>
             <TH field="name" className="wide" sortable={true} />
-            {aspects.collections && 
+            {!hideCollection && 
               <TH field="collection_id" />
             }
             <TH field="schema" />
-            {aspects.countries && (
+            {!documentMode && (
               <TH field="countries" sortable={true} />
             )}
             <TH field="dates" sortable={true} />
+            {documentMode && (
+              <TH field="file_size" sortable={true} />
+            )}
           </tr>
         </thead>
         <tbody>
           {result.results.map(entity =>
-            <EntityListItem key={entity.id} entity={entity} aspects={aspects} />
+            <EntityTableRow key={entity.id}
+                            entity={entity}
+                            hideCollection={hideCollection}
+                            documentMode={documentMode} />
           )}
         </tbody>
       </table>
@@ -89,4 +100,4 @@ class EntityList extends Component {
   }
 }
 
-export default injectIntl(EntityList);
+export default injectIntl(EntityTable);
