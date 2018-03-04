@@ -1,10 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
-import queryString from 'query-string';
-
-import getPath from 'src/util/getPath';
 
 import DownloadButton from './DownloadButton'
 import PagingButtons from './PagingButtons'
@@ -12,66 +8,46 @@ import PagingButtons from './PagingButtons'
 import './DocumentToolbar.css';
 
 const messages = defineMessages({
-  placeholder_file_search: {
-    id: 'document.placeholder_file_search',
+  default_placeholder: {
+    id: 'document.default_placeholder',
     defaultMessage: 'Search document',
-  },
-  placeholder_folder_search: {
-    id: 'document.placeholder_folder_search',
-    defaultMessage: 'Search folder',
-  },
+  }
 });
 
 class DocumentToolbar extends React.Component {
   constructor(props) {
     super(props);
-    
-    let searchPlaceholder = this.props.intl.formatMessage(messages.placeholder_file_search);
-    let searchEnabled = false;
-    
-    // If is a folder (but NOT an email!)
-    if (this.props.document && this.props.document.children !== undefined && this.props.document.children > 0 && this.props.document.schema !== 'Email') {
-      searchPlaceholder = this.props.intl.formatMessage(messages.placeholder_folder_search);
-      // @FIXME Search disabled old search now broken and needs to be refactored
-      //searchEnabled = true
-    }
+    this.state = { queryText: props.queryText };
 
-    this.state = {
-      queryText: '',
-      searchPlaceholder: searchPlaceholder,
-      searchEnabled: searchEnabled
-    };
-
-    this.onChangeSearchQuery = this.onChangeSearchQuery.bind(this);
+    this.onChangeQuery = this.onChangeQuery.bind(this);
     this.onSubmitSearch = this.onSubmitSearch.bind(this);
   }
 
-  onChangeSearchQuery({target}) {
+  onChangeQuery({target}) {
     this.setState({queryText: target.value});
+    if (this.props.onChangeQuery !== undefined) {
+      this.props.onChangeQuery(target.value);
+    }
   }
 
-  /*
-   * @TODO Perform context sensitive search depending on the type of document
-   * (currently only does a folder search)
-   */
   onSubmitSearch(event) {
-    const path = getPath(this.props.document.links.ui) + '/related';
-    this.props.history.push({
-      pathname: path,
-      search: queryString.stringify({
-        q: this.state.queryText,
-        'filter:ancestors': this.props.document.id
-      })
-    });
     event.preventDefault();
+    if (this.props.onSubmitSearch !== undefined) {
+      this.props.onSubmitSearch();
+    }
   }
     
   render() {
+    const { intl } = this.props;
+    const defaultPlaceholder = intl.formatMessage(messages.default_placeholder);
+    const queryPlaceholder = this.props.queryPlaceholder || defaultPlaceholder;
+    const searchDisabled = this.props.onChangeQuery === undefined;
+
     let downloadLink
     // @TODO If email w/ attachments then pass them as array of download options
     if (this.props.document && this.props.document.links && this.props.document.links.file) {
       downloadLink = { name: '', url: this.props.document.links.file }
-    }
+    }    
 
     return (
       <div className="DocumentToolbar">
@@ -80,23 +56,18 @@ class DocumentToolbar extends React.Component {
           <div className="pt-input-group">
             <span className="pt-icon pt-icon-search"></span>
             <input className="pt-input" type="search" dir="auto"
-                   disabled={!this.state.searchEnabled}
-                   placeholder={this.state.searchPlaceholder}
-                   onChange={this.onChangeSearchQuery}
+                   disabled={searchDisabled}
+                   placeholder={queryPlaceholder}
+                   onChange={this.onChangeQuery}
                    value={this.state.queryText} />
           </div>
         </form>
-        <DownloadButton downloadLink={downloadLink} session={this.props.session}/>
+        <DownloadButton downloadLink={downloadLink} />
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  session: state.session,
-});
-
 DocumentToolbar = injectIntl(DocumentToolbar)
 DocumentToolbar = withRouter(DocumentToolbar)
-
-export default connect(mapStateToProps)(DocumentToolbar);
+export default DocumentToolbar;
