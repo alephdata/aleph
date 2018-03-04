@@ -141,5 +141,5 @@ const mapStateToProps = (state, ownProps) => {
 
 TableViewer = connect(mapStateToProps, { queryDocumentRecords })(TableViewer);
 TableViewer = withRouter(TableViewer);
-TableViewer = injectIntl(TableViewer)
+TableViewer = injectIntl(TableViewer);
 export default TableViewer;

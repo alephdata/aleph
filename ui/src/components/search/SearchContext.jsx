@@ -60,10 +60,12 @@ class SearchContext extends Component {
     }
   }
 
-  updateQuery(newQuery, { replace = false } = {}) {
+  updateQuery(newQuery) {
+    if (this.props.updateQuery !== undefined) {
+      return this.props.updateQuery(newQuery);
+    }
     const { history, location } = this.props;
-    const navigate = replace ? history.replace : history.push;
-    navigate({
+    history.push({
       pathname: location.pathname,
       search: newQuery.toLocation()
     });
@@ -107,7 +109,7 @@ class SearchContext extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, context, prefix } = ownProps;
+  const { location, context, prefix, query } = ownProps;
 
   // We normally only want Things, not Intervals (relations between things).
   const contextWithDefaults = {
@@ -115,11 +117,11 @@ const mapStateToProps = (state, ownProps) => {
     'limit': 50,
     ...context,
   };
-  const query = Query.fromLocation('search', location, contextWithDefaults, prefix);
-  const result = selectEntitiesResult(state, query);
+  const searchQuery = query !== undefined ? query : Query.fromLocation('search', location, contextWithDefaults, prefix);
+  const result = selectEntitiesResult(state, searchQuery);
 
   return {
-    query,
+    query: searchQuery,
     result,
   };
 };
