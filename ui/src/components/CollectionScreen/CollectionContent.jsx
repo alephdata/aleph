@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import DualPane from 'src/components/common/DualPane';
-import SearchContext from 'src/components/search/SearchContext';
+import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 
 class CollectionContent extends Component {
   render() {
@@ -9,13 +9,9 @@ class CollectionContent extends Component {
     const context = {
       'filter:collection_id': collection.id
     };
-    const aspects = {
-      collections: false,
-      countries: true
-    };
     return (
       <DualPane.ContentPane>
-        <SearchContext context={context} aspects={aspects} />
+        <EntitySearch context={context} hideCollection={true} />
       </DualPane.ContentPane>
     );
   }

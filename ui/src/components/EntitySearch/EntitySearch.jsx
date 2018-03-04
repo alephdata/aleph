@@ -24,7 +24,7 @@ const messages = defineMessages({
   },
 })
 
-class SearchContext extends Component {
+class EntitySearch extends Component {
   constructor(props) {
     super(props);
 
@@ -45,8 +45,7 @@ class SearchContext extends Component {
   }
 
   fetchIfNeeded() {
-    const { result, query, queryEntities } = this.props;
-
+    const { query, result, queryEntities } = this.props;
     if (result.pages === undefined || (result.status === 'error')) {
       queryEntities({ query: query });
     }
@@ -54,7 +53,6 @@ class SearchContext extends Component {
 
   getMoreResults() {
     const { query, result, queryEntities } = this.props;
-
     if (result && result.next) {
       queryEntities({ query, next: result.next });
     }
@@ -72,14 +70,13 @@ class SearchContext extends Component {
   }
 
   render() {
-    const { query, aspects, result, intl } = this.props;
+    const { query, result, intl } = this.props;
 
     // Default some aspects to true
     const aspectsWithDefaults = {
       filter: true,
       collections: true,
-      countries: true,
-      ...aspects
+      countries: true
     };
 
     return (
@@ -126,22 +123,23 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-SearchContext = connect(mapStateToProps, { queryEntities })(SearchContext);
-SearchContext = withRouter(SearchContext);
-SearchContext = injectIntl(SearchContext);
+EntitySearch = connect(mapStateToProps, { queryEntities })(EntitySearch);
+EntitySearch = withRouter(EntitySearch);
+EntitySearch = injectIntl(EntitySearch);
 
-
-SearchContext.propTypes = {
+EntitySearch.propTypes = {
   children: PropTypes.func.isRequired,
   context: PropTypes.object,
-  aspects: PropTypes.object,
+  documentMode: PropTypes.boolean,
+  hideCollection: PropTypes.boolean,
   prefix: PropTypes.string,
 };
 
-SearchContext.defaultProps = {
+EntitySearch.defaultProps = {
   context: {},
-  aspects: {}, // XXX we set individual aspects' defaults in render()
+  documentMode: false,
+  hideCollection: false,
   prefix: '',
 };
 
-export default SearchContext;
+export default EntitySearch;

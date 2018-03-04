@@ -9,7 +9,8 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import EntityInfo from './EntityInfo';
 import Entity from './Entity';
-import SearchContext from 'src/components/search/SearchContext';
+import EntitySearch from 'src/components/EntitySearch/EntitySearch';
+
 
 class EntityScreen extends Component {
   componentDidMount() {
@@ -50,7 +51,7 @@ class EntityScreen extends Component {
       <Screen title={entity.name} breadcrumbs={breadcrumbs}>
         <DualPane>
           <DualPane.ContentPane>
-            <SearchContext context={context} />
+            <EntitySearch context={context} />
           </DualPane.ContentPane>
           <EntityInfo entity={entity} />
         </DualPane>

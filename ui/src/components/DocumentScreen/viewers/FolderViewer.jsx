@@ -6,7 +6,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
 
 import Query from 'src/app/Query';
-import SearchContext from 'src/components/search/SearchContext';
+import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { DocumentToolbar } from 'src/components/Toolbar';
 
 import './FolderViewer.css';
@@ -61,7 +61,10 @@ class FolderViewer extends Component {
                          queryPlaceholder={queryPlaceholder}
                          onChangeQuery={this.onQueryPrefixChange} />
         <div id="children" className="FolderViewer">
-          <SearchContext query={query} updateQuery={this.updateQuery} aspects={aspects} />
+          <EntitySearch query={query}
+                        updateQuery={this.updateQuery}
+                        hideCollection={true}
+                        documentMode={true} />
           {document.children === 0 && (
             <p className="folder-empty pt-text-muted">
               <FormattedMessage

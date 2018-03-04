@@ -9,7 +9,7 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import Entity from 'src/components/EntityScreen/Entity';
 import DocumentInfo from './DocumentInfo';
-import SearchContext from 'src/components/search/SearchContext';
+import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 
 
 class DocumentRelatedScreen extends Component {
@@ -51,7 +51,7 @@ class DocumentRelatedScreen extends Component {
       <Screen breadcrumbs={breadcrumbs} title={document.title || document.file_name}>
         <DualPane>
           <DualPane.ContentPane>
-            <SearchContext context={context} />
+            <EntitySearch context={context} />
           </DualPane.ContentPane>
           <DocumentInfo document={document} />
         </DualPane>
