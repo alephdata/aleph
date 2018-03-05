@@ -13,7 +13,7 @@ export const fetchCollection = asyncActionCreator(({ id }) => async dispatch => 
 
 export const updateCollection = asyncActionCreator((collection) => async dispatch => {
   const response = await endpoint.post(`collections/${collection.id}`, collection);
-  return {collection: response.data};
+  return {id: collection.id, data: response.data};
 }, {name: 'UPDATE_COLLECTION'});
 
 export const fetchCollectionPermissions = asyncActionCreator((id) => async dispatch => {

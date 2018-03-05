@@ -75,13 +75,9 @@ class FolderViewer extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { document, location } = ownProps;
-  const context = {
-    'filter:parent.id': document.id
-  };
-  // @TODO: we can make a conditional here to see if a prefix if 
-  // defined, and if so switch from alphabetically-ranked shallow
-  // listings to deep search sorted by relevancy.
-  // the resulting behaviour is equivalent to OS X.
+  const prefix = Query.fromLocation('search', location, {}, 'folder').getString('prefix'),
+        field = prefix.length === 0 ? 'filter:parent.id' : 'filter:ancestors',
+        context = {[field]: document.id};
   const query = Query.fromLocation('search', location, context, 'folder').limit(50);
   return {
     query: query
