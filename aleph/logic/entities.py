@@ -82,21 +82,20 @@ def bulk_load(config):
                 'managed': True,
             })
 
-        for role_fk in dict_list(data, 'roles', 'role'):
-            role = Role.by_foreign_id(role_fk)
-            if role is not None:
-                Permission.grant(collection, role, True, False)
-            else:
-                log.warning("Could not find role: %s", role_fk)
-
         db.session.commit()
         index_collection(collection)
 
         for query in dict_list(data, 'queries', 'query'):
-            bulk_load_query(collection, query)
+            bulk_load_query.delay(collection.id, query)
 
 
-def bulk_load_query(collection, query):
+@celery.task()
+def bulk_load_query(collection_id, query):
+    collection = Collection.by_id(collection_id)
+    if collection is None:
+        log.warning("Collection does not exist: %s", collection_id)
+        return
+
     mapping = model.make_mapping(query, key_prefix=collection.foreign_id)
     entities = {}
     total = 0
