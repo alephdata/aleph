@@ -8,10 +8,4 @@ export default createReducer({
   [fetchAlerts.COMPLETE]: (state, { alerts }) => ({
     ...alerts
   }),
-  // [deleteAlert.COMPLETE]: (state, { alerts }) => ({
-  //   ...alerts
-  // }),
-  // [addAlert.COMPLETE]: (state, { alerts }) => ({
-  //   ...alerts
-  // }),
 }, initialState);
