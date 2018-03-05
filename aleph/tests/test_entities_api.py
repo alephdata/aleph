@@ -276,13 +276,16 @@ class EntitiesApiTestCase(TestCase):
         yml_path = self.get_fixture_path('experts.yml')
         config = load_config_file(yml_path)
         bulk_load(config)
+        _, headers = self.login(is_admin=True)
         flush_index()
 
-        res = self.client.get('/api/2/entities?q=Climate')
+        res = self.client.get('/api/2/entities?q=Climate',
+                              headers=headers)
         assert res.json['total'] == 1, res.json
         grp_id = res.json['results'][0]['id']
 
-        res = self.client.get('/api/2/entities/%s/references' % grp_id)
+        res = self.client.get('/api/2/entities/%s/references' % grp_id,
+                              headers=headers)
         results = res.json['results']
         assert len(results) == 1, results
         assert results[0]['count'] == 3, results

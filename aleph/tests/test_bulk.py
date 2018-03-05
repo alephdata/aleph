@@ -1,11 +1,11 @@
 import os
 from unittest import skip  # noqa
 
-from aleph.tests.util import TestCase
 from aleph.util import load_config_file
 from aleph.logic.entities import bulk_load
 from aleph.model import Collection
 from aleph.index import flush_index
+from aleph.tests.util import TestCase
 
 
 class BulkLoadTestCase(TestCase):
@@ -22,12 +22,18 @@ class BulkLoadTestCase(TestCase):
         yml_path = self.get_fixture_path('kek.yml')
         config = load_config_file(yml_path)
         bulk_load(config)
-        flush_index()
 
         count = Collection.all().count()
         assert 1 == count, count
 
-        res = self.client.get('/api/2/entities?q=friede+springer')
+        coll = Collection.by_foreign_id('kek')
+        assert coll.category == 'scrape', coll.category
+
+        _, headers = self.login(is_admin=True)
+        flush_index()
+
+        res = self.client.get('/api/2/entities?q=friede+springer',
+                              headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         res0 = res.json['results'][0]
@@ -42,12 +48,18 @@ class BulkLoadTestCase(TestCase):
         yml_path = self.get_fixture_path('experts.yml')
         config = load_config_file(yml_path)
         bulk_load(config)
+
+        coll = Collection.by_foreign_id('experts')
+        assert coll.category == 'scrape', coll.category
+
+        _, headers = self.login(is_admin=True)
         flush_index()
 
         count = Collection.all().count()
         assert 1 == count, count
 
-        res = self.client.get('/api/2/entities?q=Greenfield')
+        res = self.client.get('/api/2/entities?q=Greenfield',
+                              headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         res0 = res.json['results'][0]
