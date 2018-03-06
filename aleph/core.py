@@ -64,12 +64,13 @@ def create_app(config={}):
         task_always_eager=settings.EAGER,
         task_eager_propagates=True,
         task_ignore_result=True,
-        result_persistent=False,
+        task_acks_late=True,
         task_queues=queues,
         task_default_queue=WORKER_QUEUE,
         task_default_routing_key=WORKER_ROUTING_KEY,
         worker_max_tasks_per_child=500,
         worker_disable_rate_limits=True,
+        result_persistent=False,
         beat_schedule={
             'alert-every-night': {
                 'task': 'aleph.logic.alerts.check_alerts',
