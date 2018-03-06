@@ -18,7 +18,7 @@ from aleph.index.admin import delete_index, upgrade_search
 from aleph.index.documents import index_document_id
 from aleph.logic.collections import update_collection
 from aleph.logic.collections import process_collection
-from aleph.logic.collections import delete_collection
+from aleph.logic.collections import delete_collection, delete_documents, delete_entities
 from aleph.logic.alerts import check_alerts
 from aleph.logic.entities import bulk_load, reindex_entities
 from aleph.logic.xref import xref_collection
@@ -94,6 +94,24 @@ def flush(foreign_id):
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
     delete_collection(collection.id)
+
+
+@manager.command
+def flush_documents(foreign_id):
+    """Delete all documents from given collection."""
+    collection = Collection.by_foreign_id(foreign_id)
+    if collection is None:
+        raise ValueError("No such collection: %r" % foreign_id)
+    delete_documents(collection.id)
+
+
+@manager.command
+def flush_entities(foreign_id):
+    """Delete all entities from given collection."""
+    collection = Collection.by_foreign_id(foreign_id)
+    if collection is None:
+        raise ValueError("No such collection: %r" % foreign_id)
+    delete_entities(collection.id)
 
 
 @manager.command

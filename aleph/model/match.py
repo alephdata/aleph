@@ -41,6 +41,16 @@ class Match(db.Model, IdModel, DatedModel):
         q.delete(synchronize_session=False)
 
     @classmethod
+    def delete_by_reference(cls, reference_id, deleted_at=None):
+        q = db.session.query(cls)
+        q = q.filter(or (
+            cls.document_id == reference_id,
+            cls.entity_id == reference_id,
+            cls.match_id == reference_id
+        ))
+        q.delete(synchronize_session=False)
+
+    @classmethod
     def group_by_collection(cls, collection_id, authz=None):
         from aleph.model import Collection, Permission
         cnt = func.count(Match.id).label('matches')
