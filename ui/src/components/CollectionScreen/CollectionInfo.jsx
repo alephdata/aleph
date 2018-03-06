@@ -12,21 +12,31 @@ import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
 
 import CollectionInfoXref from './CollectionInfoXref';
+import CollectionEditDialog from 'src/dialogs/CollectionEditDialog';
 
 
 class CollectionInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTabId: 'overview'
+      activeTabId: 'overview',
+      collectionInfoIsOpen: false
     };
+
     this.handleTabChange = this.handleTabChange.bind(this);
+    this.toggleCollectionEdit = this.toggleCollectionEdit.bind(this);
   }
-  
+
   handleTabChange(activeTabId: TabId) {
     this.setState({ activeTabId });
   }
-  
+
+  toggleCollectionEdit() {
+    this.setState({
+      collectionInfoIsOpen: !this.state.collectionInfoIsOpen
+    })
+  }
+
   render() {
     const {collection} = this.props;
     const link = collection.id + '/edit';
@@ -43,7 +53,7 @@ class CollectionInfo extends Component {
         </div>
         <div className="PaneContent">
           <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
-            <Tab id="overview" 
+            <Tab id="overview"
               title={
                 <React.Fragment>
                   <span className="pt-icon-standard pt-icon-info-sign"/>
@@ -101,16 +111,22 @@ class CollectionInfo extends Component {
                       </span>
                     </li>
                   </ul>
-                  {collection.writeable && <Link to={link}>
-                    <Button className="editButton">
-                      <FormattedMessage id="collection.info.edit"
-                                        defaultMessage="Edit"/>
-                    </Button>
-                  </Link>}
+                  {collection.writeable &&
+                    <React.Fragment>
+                      <Button className="editButton" onClick={this.toggleCollectionEdit}>
+                        <FormattedMessage id="collection.info.edit"
+                                          defaultMessage="Edit"/>
+                      </Button>
+                      <CollectionEditDialog
+                        collection={collection}
+                        isOpen={this.state.collectionInfoIsOpen}
+                        toggleDialog={this.toggleCollectionEdit}
+                      />
+                    </React.Fragment>}
                 </React.Fragment>
               }
             />
-            <Tab id="xref" 
+            <Tab id="xref"
               title={
                 <React.Fragment>
                   <span className="pt-icon-standard pt-icon-database"/>
@@ -128,7 +144,8 @@ class CollectionInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {};
+  return {
+  };
 };
 
 export default connect(mapStateToProps)(CollectionInfo);
