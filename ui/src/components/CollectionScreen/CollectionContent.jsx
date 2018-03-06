@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 
 import DualPane from 'src/components/common/DualPane';
-import SearchContext from 'src/components/search/SearchContext';
-import SearchResult from 'src/components/search/SearchResult';
-import SearchFilter from 'src/components/search/SearchFilter';
+import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 
 class CollectionContent extends Component {
   render() {
@@ -11,17 +9,10 @@ class CollectionContent extends Component {
     const context = {
       'filter:collection_id': collection.id
     };
-    const aspects = {
-      collections: false,
-      countries: true
-    };
     return (
-      <SearchContext context={context} aspects={aspects}>{searchContext => (
-        <DualPane.ContentPane>
-            <SearchFilter {...searchContext} />
-            <SearchResult {...searchContext} />
-        </DualPane.ContentPane>
-      )}</SearchContext>
+      <DualPane.ContentPane>
+        <EntitySearch context={context} hideCollection={true} />
+      </DualPane.ContentPane>
     );
   }
 }

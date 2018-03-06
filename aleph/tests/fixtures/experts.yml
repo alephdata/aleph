@@ -1,8 +1,6 @@
 experts:
     label: EC Expert Groups
     category: scrape
-    roles:
-      - guest
     queries:
       - csv_url: ${ALEPH_TEST_BULK_CSV}
         entities:

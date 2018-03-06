@@ -32,9 +32,11 @@ class Screen extends React.Component {
           <link rel="shortcut icon" href={metadata.app.favicon}/>
         </Helmet>
 
-        <Navbar metadata={this.props.metadata}
+        <Navbar metadata={metadata}
                 session={this.props.session}
-                searchContext={this.props.searchContext}/>
+                query={this.props.query}
+                updateQuery={this.props.updateQuery}
+                isHomepage={isHomepage} />
 
         <main className={mainClass}>
           {this.props.children}
@@ -49,13 +51,12 @@ class Screen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return state;
+  return {
+    metadata: state.metadata,
+    session: state.session
+  };
 };
 
-Screen = connect(
-  mapStateToProps
-)(Screen);
-
+Screen = connect(mapStateToProps)(Screen);
 Screen = withRouter(Screen);
-
 export default Screen;

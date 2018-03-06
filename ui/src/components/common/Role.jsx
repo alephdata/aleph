@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import {defineMessages, injectIntl} from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { Button, MenuItem, Position, Classes, Alignment } from "@blueprintjs/core";
 import { Select as BlueprintSelect } from "@blueprintjs/select";
 

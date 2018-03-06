@@ -4,14 +4,14 @@ import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'r
 import { debounce } from 'lodash';
 import Waypoint from 'react-waypoint';
 
+import Query from 'src/app/Query';
+import { queryCollections } from 'src/actions';
+import { selectCollectionsResult } from 'src/selectors';
 import Screen from 'src/components/common/Screen';
-import ScreenLoading from 'src/components/common/ScreenLoading';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import Query from 'src/components/search/Query';
 import DualPane from 'src/components/common/DualPane';
+import SearchFacets from 'src/components/Facet/SearchFacets';
 import SectionLoading from 'src/components/common/SectionLoading';
-import CheckboxList from 'src/components/common/CheckboxList';
-import { fetchCollections } from 'src/actions';
 import CollectionListItem from 'src/components/CollectionScreen/CollectionListItem';
 
 import './CollectionsIndexScreen.css';
@@ -21,22 +21,43 @@ const messages = defineMessages({
     id: 'collectionbrowser.filter',
     defaultMessage: 'Filter collections',
   },
+  facet_category: {
+    id: 'search.facets.facet.category',
+    defaultMessage: 'Categories',
+  },
+  facet_countries: {
+    id: 'search.facets.facet.countries',
+    defaultMessage: 'Countries',
+  },
 });
 
 
 class CollectionsIndexScreen extends Component {
   constructor(props) {
     super(props);
+    const { intl } = props; 
 
     this.state = {
-      result: {results: []},
       queryPrefix: props.query.getString('prefix'),
-      isFetching: true,
+      facets: [
+        {
+          field: 'category',
+          label: intl.formatMessage(messages.facet_category),
+          icon: 'list',
+          initiallyOpen: true
+        },
+        {
+          field: 'countries',
+          label: intl.formatMessage(messages.facet_countries),
+          icon: 'globe',
+          initiallyOpen: true,
+          defaultSize: 300
+        },
+      ]
     };
 
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
-    this.onFacetToggle = this.onFacetToggle.bind(this);
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
   }
 
@@ -51,17 +72,8 @@ class CollectionsIndexScreen extends Component {
   }
 
   fetchData() {
-    this.setState({isFetching: true})
     let { query } = this.props;
-    query = query.sortBy('count', true);
-    query = query.addFacet('category');
-    query = query.addFacet('countries');
-    query = query.limit(30);
-    this.props.fetchCollections({
-      filters: query.toParams(),
-    }).then(({result}) => {
-      this.setState({result, isFetching: false})
-    });
+    this.props.queryCollections({query});
   }
 
   onChangeQueryPrefix({target}) {
@@ -73,7 +85,6 @@ class CollectionsIndexScreen extends Component {
   onFacetToggle(facet) {
     const updateQuery = this.updateQuery;
     return (value) => {
-      // console.log(facet, value);
       let query = this.props.query;
       query = query.toggleFilter(facet, value);
       updateQuery(query);
@@ -89,35 +100,15 @@ class CollectionsIndexScreen extends Component {
   }
 
   bottomReachedHandler() {
-    const { result, isFetching } = this.state;
-    if (!result || !result.next || isFetching) {
-        return
+    const { query, result } = this.props;
+    if (!result.isLoading && result.next) {
+      this.props.queryCollections({query, result, next: result.next});
     }
-    this.setState({isFetching: true})
-    const offset = result.offset || 0;
-    let query = this.props.query;
-    query = query.offset(offset + result.limit);
-    query = query.limit(result.limit);
-    this.props.fetchCollections({
-      filters: query.toParams(),
-    }).then(({result: fresh}) => {
-      result.next = fresh.next;
-      result.offset = fresh.offset;
-      result.results.push(...fresh.results);
-      this.setState({
-            result: result,
-            isFetching: false
-        });
-    });
   }
 
   render() {
-    const { intl } = this.props;
-    const { result, queryPrefix, isFetching } = this.state;
-
-    if (!result || !result.pages) {
-      return <SectionLoading />
-    }
+    const { result, query, intl } = this.props;
+    const { queryPrefix } = this.state;
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
@@ -130,7 +121,6 @@ class CollectionsIndexScreen extends Component {
 
     return (
       <Screen className="CollectionsIndexScreen" breadcrumbs={breadcrumbs}>
-        
         <DualPane>
           <DualPane.InfoPane>
             <div className="pt-input-group pt-fill">
@@ -141,40 +131,27 @@ class CollectionsIndexScreen extends Component {
             </div>
             <p className="note">
               <FormattedMessage id="collection.browser.total"
-                              defaultMessage="Browsing {total} collections."
-                              values={{
-                                total: result.total
-                              }}/>
+                                defaultMessage="Browsing {total} collections."
+                                values={{
+                                  total: <FormattedNumber value={result.total || 0} />
+                                }}/>
             </p>
-
-            <h4>
-              <FormattedMessage id="collections.browser.categories"
-                                defaultMessage="Categories" />
-            </h4>
-            <CheckboxList items={result.facets.category.values}
-                          selectedItems={result.facets.category.filters}
-                          onItemClick={this.onFacetToggle('category')} />
-
-            <h4>
-              <FormattedMessage id="collections.browser.countries"
-                                defaultMessage="Countries" />
-            </h4>
-            <CheckboxList items={result.facets.countries.values}
-                          selectedItems={result.facets.countries.filters}
-                          onItemClick={this.onFacetToggle('countries')} />
+            <SearchFacets facets={this.state.facets}
+                          query={query}
+                          updateQuery={this.updateQuery} />
           </DualPane.InfoPane>
           <DualPane.ContentPane>
             <ul className="results">
               {result.results.map(res =>
                 <CollectionListItem key={res.id} collection={res} />
               )}
-              { !isFetching && result.next && (
+              { !result.isLoading && result.next && (
                 <Waypoint
                   onEnter={this.bottomReachedHandler}
                   scrollableAncestor={window}
                 />
               )}
-              { isFetching && (
+              { result.isLoading && (
                 <SectionLoading />
               )}
             </ul>
@@ -187,11 +164,16 @@ class CollectionsIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    query: Query.fromLocation(ownProps.location, {}, 'collection')
+  const query = Query.fromLocation('collections', ownProps.location, {}, 'collections:')
+    .sortBy('count', true)
+    .limit(30);
+
+return {
+    query: query,
+    result: selectCollectionsResult(state, query)
   };
 }
 
 CollectionsIndexScreen = injectIntl(CollectionsIndexScreen);
-CollectionsIndexScreen = connect(mapStateToProps, { fetchCollections })(CollectionsIndexScreen);
+CollectionsIndexScreen = connect(mapStateToProps, { queryCollections })(CollectionsIndexScreen);
 export default CollectionsIndexScreen;

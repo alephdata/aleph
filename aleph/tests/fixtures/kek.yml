@@ -1,8 +1,6 @@
 kek:
     label: KEK
     category: scrape
-    roles:
-      - guest
     queries:
       - database: ${ALEPH_TEST_BULK_DATABASE_URI}
         tables:

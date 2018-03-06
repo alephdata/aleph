@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { fetchSearchResults } from 'src/actions';
+import Query from 'src/app/Query';
+import { queryEntities } from 'src/actions';
+import { selectEntitiesResult } from 'src/selectors';
 import SectionLoading from 'src/components/common/SectionLoading';
-import Query from 'src/components/search/Query';
 import Property from './Property';
 import ensureArray from 'src/util/ensureArray';
 
@@ -14,8 +15,7 @@ class EntityReferencesTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      result: {},
-      isFetching: true
+      result: {}
     };
     this.fetchData = this.fetchData.bind(this);
   }
@@ -31,19 +31,12 @@ class EntityReferencesTable extends Component {
   }
 
   fetchData() {
-    this.setState({isFetching: true})
     const { query } = this.props;
-
-    this.props.fetchSearchResults({
-      query,
-    }).then(({result}) => {
-      this.setState({result, isFetching: false})
-    });
+    this.props.queryEntities({ query });
   }
 
   render() {
-    const { model, property } = this.props;
-    const { result, isFetching } = this.state;
+    const { model, result, property } = this.props;
     const results = ensureArray(result.results);
     const counts = {};
 
@@ -94,7 +87,7 @@ class EntityReferencesTable extends Component {
             ))}
           </tbody>
         </table>
-        { isFetching && (
+        { result.isLoading && (
           <SectionLoading />
         )}
       </section>
@@ -104,15 +97,16 @@ class EntityReferencesTable extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entity, property } = ownProps;
-  const filterName = `filter:properties.${property.name}`;
-  const query = Query.fromLocation({}, {
-    [filterName]: entity.id
-  });
+  const context = {
+    [`filter:properties.${property.name}`]: entity.id
+  }
+  const query = Query.fromLocation('search', {}, context, property.name);
 
   return {
     query: query,
+    result: selectEntitiesResult(state, query),
     model: state.metadata.schemata[ownProps.schema]
   }
 }
 
-export default connect(mapStateToProps, { fetchSearchResults })(EntityReferencesTable);
+export default connect(mapStateToProps, { queryEntities })(EntityReferencesTable);

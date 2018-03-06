@@ -7,20 +7,21 @@ class Query {
   // of the APIs (entities, documents, collections, roles), but just serves as a
   // container for the default syntax of Aleph.
 
-  constructor (state, context = {}, queryName = '') {
+  constructor (path, state, context = {}, queryName = '') {
+    this.path = path;
     this.state = state;
     this.context = context;
     this.queryName = queryName;
   }
 
-  static fromLocation(location, context, queryName) {
+  static fromLocation(path, location, context, queryName) {
     const state = queryString.parse(location.search);
-    return new this(state, context, queryName);
+    return new this(path, state, context, queryName);
   }
 
   clone(update) {
     const state = _.cloneDeep(this.state);
-    return new Query(state, this.context, this.queryName);
+    return new Query(this.path, state, this.context, this.queryName);
   }
 
   set(name, value) {
@@ -166,7 +167,15 @@ class Query {
 
   toString() {
     // Return the full query string for this query, including implicit context.
-    return queryString.stringify(this.toParams());
+    const query = queryString.stringify(this.toParams());
+    return `${this.path}?${query}`;
+  }
+
+  toKey() {
+    // Strip the parts of the query that are irrelevant to the result cache.
+    return this
+      .clear('offset')
+      .toString();
   }
 
   toParams() {

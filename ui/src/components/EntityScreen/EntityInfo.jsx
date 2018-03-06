@@ -9,7 +9,8 @@ import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import Schema from 'src/components/common/Schema';
 import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
-import { fetchEntityReferences } from '../../actions/index';
+import { fetchEntityReferences } from 'src/actions/index';
+import { getEntityTags } from 'src/selectors';
 
 class EntityInfo extends React.Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class EntityInfo extends React.Component {
     return (
       <DualPane.InfoPane className="EntityInfo with-heading">
         <div className="pane-heading">
-          <span className="pt-text-muted">
+          <span>
             <Schema.Label schema={entity.schema} icon={true} />
           </span>
           <h1>
@@ -87,7 +88,8 @@ class EntityInfo extends React.Component {
               <Tab id="source" 
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-database"/> <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
+                    <span className="pt-icon-standard pt-icon-database"/>
+                    <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
                   </React.Fragment>
                 }
                 panel={<CollectionInfo collection={entity.collection}/>}
@@ -95,7 +97,8 @@ class EntityInfo extends React.Component {
               <Tab id="tags"
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-tag"/> <FormattedMessage id="entity.info.links" defaultMessage="Links"/>
+                    <span className="pt-icon-standard pt-icon-tag"/>
+                    <FormattedMessage id="entity.info.links" defaultMessage="Links"/>
                   </React.Fragment>
                 }
                 panel={<EntityInfoTags entity={entity} />}
@@ -103,7 +106,6 @@ class EntityInfo extends React.Component {
               <Tabs.Expander />
           </Tabs>
         </div>
-        
       </DualPane.InfoPane>
     );
   }
@@ -112,7 +114,8 @@ class EntityInfo extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     references: state.entityReferences[ownProps.entity.id],
-    schema: state.metadata.schemata[ownProps.entity.schema]
+    schema: state.metadata.schemata[ownProps.entity.schema],
+    tags: getEntityTags(state, ownProps.entity.id)
   };
 };
 

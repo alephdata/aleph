@@ -14,24 +14,14 @@ class AuthButtons extends Component {
     const items = [];
 
     if (session.loggedIn) {
-      items.push((
-        <Link key='settings' to="/settings">
-          <Button icon="cog" className="pt-minimal">
-            <FormattedMessage id="nav.settings" defaultMessage="Settings"/>
-          </Button>
-        </Link>
-      ));
-
-      items.push((
-        <Link key='login' to="/logout">
-          <Button icon="log-out" className="pt-minimal">
-            <FormattedMessage id="nav.signout" defaultMessage="Log out"/>
-          </Button>
-        </Link>
-      ));
-
       return (
-        <span className="AuthButtons">{items}</span>
+        <span className="AuthButtons">
+          <Link key='login' to="/logout">
+            <Button icon="log-out" className="pt-minimal">
+              <FormattedMessage id="nav.signout" defaultMessage="Log out"/>
+            </Button>
+          </Link>
+        </span>
       )
     }
 

@@ -71,7 +71,7 @@ class DocumentContent extends React.Component {
     
     return (
       <DualPane.ContentPane style={{padding: 0}}>
-      { documentViewer }
+        { documentViewer }
       </DualPane.ContentPane>
     );
   }

@@ -6,16 +6,14 @@ import { showWarningToast } from './toast';
 const errorActionTypes = [
   actions.fetchMetadata.ERROR,
   actions.fetchStatistics.ERROR,
-  actions.fetchSearchResults.ERROR,
-  actions.fetchNextSearchResults.ERROR,
+  actions.queryEntities.ERROR,
+  actions.queryCollections.ERROR,
   actions.fetchEntity.ERROR,
   actions.fetchEntityReferences.ERROR,
   actions.fetchEntityTags.ERROR,
   actions.fetchDocument.ERROR,
   actions.fetchCollection.ERROR,
-  actions.fetchCollections.ERROR,
-  actions.fetchDocumentRecords.ERROR,
-  actions.fetchNextDocumentRecords.ERROR,
+  actions.queryDocumentRecords.ERROR,
 ];
 
 // Middleware that after handling any action normally, shows a toast if the

@@ -34,7 +34,7 @@ class CollectionInfo extends Component {
     return (
       <DualPane.InfoPane className="CollectionInfo with-heading">
         <div className="pane-heading">
-          <span className="pt-text-muted">
+          <span>
             <FormattedMessage id="collection.info.heading" defaultMessage="Collection"/>
           </span>
           <h1>

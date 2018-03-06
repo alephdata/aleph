@@ -6,11 +6,10 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  min-height: 95.5vh;
-  color: white;
+  min-height: 95vh;
   text-align: center;
 
-  .outer-searchbox-div {
+  .outer-searchbox {
     display: table;
     position: absolute;
     height: 80%;
@@ -23,7 +22,7 @@
     margin-bottom: 0 !important;
   }
 
-  .inner-searchbox-div {
+  .inner-searchbox {
     display: table-cell;
     vertical-align: middle;
   }
@@ -47,7 +46,11 @@
   }
 
   .homepage-summary {
-    margin-bottom: 3em;
+    margin-bottom: 1em;
+    font-size: $pt-font-size-large * 1.2;
+    font-weight: bold;
+    // color: $light-gray2;
+    color: white;
   }
 
   .search-form {
@@ -56,24 +59,11 @@
     padding-bottom: 2em;
   }
 
-  .homepage-collections-footer {
-    height: 45px;
-    background-color: #394b59;
-    bottom: 0;
-    left: 0;
-    position: absolute;
-    right: 0;
-    padding-top: 1em;
-
-    a {
-      color: white;
+  .calls-to-action {
+    .pt-button {
+      margin-left: $aleph-grid-size;
+      margin-right: $aleph-grid-size;
     }
   }
 
-  .homepage-examples {
-    position: relative;
-    top: 52vh;
-    left: 52%;
-    display: flex;
-  }
 }

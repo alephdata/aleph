@@ -10,6 +10,7 @@ import Schema from 'src/components/common/Schema';
 import DocumentMetadata from 'src/components/DocumentScreen/DocumentMetadata';
 import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
 import URL from 'src/components/common/URL';
+import { getEntityTags } from 'src/selectors';
 
 class DocumentInfo extends React.Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class DocumentInfo extends React.Component {
     return (
       <DualPane.InfoPane className="DocumentInfo with-heading">
         <div className="pane-heading">
-          <span className="pt-text-muted">
+          <span>
             <Schema.Label schema={document.schema} icon={true} />
           </span>
           <h1>
@@ -60,8 +61,13 @@ class DocumentInfo extends React.Component {
                   {document.source_url && (
                     <ul className='info-sheet'>
                       <li>
-                        <span className="key"><FormattedMessage id="document.info.source_url" defaultMessage="Document Source URL"/></span>
-                        <span className="value"><URL value={document.source_url} /></span>
+                        <span className="key">
+                          <FormattedMessage id="document.info.source_url"
+                                            defaultMessage="Document Source URL"/>
+                        </span>
+                        <span className="value">
+                          <URL value={document.source_url} />
+                        s</span>
                       </li>
                     </ul>
                   )}
@@ -72,7 +78,8 @@ class DocumentInfo extends React.Component {
                 title={
                   <React.Fragment>
                     <span className="pt-icon-standard pt-icon-tag"/>
-                    <FormattedMessage id="document.info.links" defaultMessage="Links"/>
+                    <FormattedMessage id="document.info.links"
+                                      defaultMessage="Links"/>
                   </React.Fragment>
                 }
                 panel={<EntityInfoTags entity={document} />}
@@ -85,8 +92,9 @@ class DocumentInfo extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   session: state.session,
+  tags: getEntityTags(state, ownProps.document.id)
 });
 
 export default connect(mapStateToProps)(DocumentInfo);

@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
+import { debounce } from 'lodash';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import { defineMessages, injectIntl } from 'react-intl';
 import Waypoint from 'react-waypoint';
 
-import { fetchDocumentRecords, fetchNextDocumentRecords } from 'src/actions';
-import ScreenLoading from 'src/components/common/ScreenLoading';
+import Query from 'src/app/Query';
+import { queryDocumentRecords } from 'src/actions';
+import { selectDocumentRecordsResult } from 'src/selectors';
 import SectionLoading from 'src/components/common/SectionLoading';
 import { DocumentToolbar } from 'src/components/Toolbar';
+
+
+const messages = defineMessages({
+  placeholder: {
+    id: 'document.placeholder_table_filter',
+    defaultMessage: 'Filter this table',
+  },
+});
+
 
 class Table extends Component {
   render() {
@@ -13,9 +26,8 @@ class Table extends Component {
 
     return (
       <React.Fragment>
-        <DocumentToolbar document={document}/>
         <div style={{width: '100%', flex: 1, overflow: 'auto'}}>
-          <table className="pt-html-table pt-html-table-bordered">
+          <table className="data-table">
             <thead>
               <tr>
                 {columnNames.map((columnName, index) => (
@@ -46,11 +58,8 @@ class Table extends Component {
 class TableViewer extends Component {
   constructor(props) {
     super(props);
-    
-    this.state = {
-      isExpanding: false,
-    };
-    
+    this.updateQuery = this.updateQuery.bind(this);
+    this.onQueryPrefixChange = debounce(this.onQueryPrefixChange.bind(this), 200);
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
   }
 
@@ -58,58 +67,58 @@ class TableViewer extends Component {
     this.fetchRecords();
   }
 
-  // TODO Handle prop change: cancel fetches, reset state, start again.
-
-  async fetchRecords() {
-    const { document, fetchDocumentRecords } = this.props;
-
-    const { data } = await fetchDocumentRecords({ id: document.id });
-    this.setState({
-      result: data,
-     });
+  componentDidUpdate(prevProps) {
+    if (!this.props.query.sameAs(prevProps.query)) {
+      this.fetchRecords();
+    }
   }
 
-  async bottomReachedHandler() {
-    const { fetchNextDocumentRecords } = this.props;
-    let { isExpanding, result } = this.state;
+  fetchRecords() {
+    const { queryDocumentRecords, query } = this.props;
+    if (query.path) {
+      queryDocumentRecords({query})
+    }
+  }
 
-    if (!isExpanding && result.next) {
-      this.setState({ isExpanding: true });
-      const { data } = await fetchNextDocumentRecords({ next: result.next })
-      const newResult = {
-        ...data,
-        results: result.results.concat(data.results),
-      };
-      this.setState({
-          result: newResult,
-          isExpanding: false,
-      });
+  updateQuery(newQuery) {
+    const { history, location } = this.props;
+    history.replace({
+      pathname: location.pathname,
+      search: newQuery.toLocation()
+    });
+  }
+
+  onQueryPrefixChange(prefix) {
+    this.updateQuery(this.props.query.set('prefix', prefix));
+  }
+
+  bottomReachedHandler() {
+    const { query, result, queryDocumentRecords } = this.props;
+    if (!result.isLoading && result.next) {
+      queryDocumentRecords({query, next: result.next})
     };
   }
 
   render() {
-    const { document } = this.props;
-    const { result, isExpanding } = this.state;
-
-    if (result === undefined) {
-      return (
-        <ScreenLoading />
-      );
-    }
-
+    const { document, result, intl } = this.props;
+    const queryPlaceholder = intl.formatMessage(messages.placeholder);
     const columnNames = document.columns;
 
     return (
       <div className="TableViewer">
+        <DocumentToolbar document={document}
+                         queryText={this.props.query.getString('prefix')}
+                         queryPlaceholder={queryPlaceholder}
+                         onChangeQuery={this.onQueryPrefixChange} />
         <Table columnNames={columnNames} records={result.results} />
-        {!isExpanding && result.next && (
+        {!result.isLoading && result.next && (
           <Waypoint
             onEnter={this.bottomReachedHandler}
             bottomOffset="-600px"
             scrollableAncestor={window}
           />
         )}
-        {isExpanding && (
+        {result.isLoading && (
           <SectionLoading />
         )}
       </div>
@@ -117,5 +126,20 @@ class TableViewer extends Component {
   }
 }
 
-const mapStateToProps = null;
-export default connect(mapStateToProps, { fetchDocumentRecords, fetchNextDocumentRecords })(TableViewer);
+const mapStateToProps = (state, ownProps) => {
+  const { document, location } = ownProps;
+  const path = document.links ? document.links.records : null;
+  const query = Query.fromLocation(path, location, {}, 'table')
+    .limit(50);
+
+  return {
+    query: query,
+    result: selectDocumentRecordsResult(state, query),
+    model: state.metadata.schemata[ownProps.schema]
+  }
+}
+
+TableViewer = connect(mapStateToProps, { queryDocumentRecords })(TableViewer);
+TableViewer = withRouter(TableViewer);
+TableViewer = injectIntl(TableViewer);
+export default TableViewer;

@@ -16,13 +16,13 @@ import Country from 'src/components/common/Country';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import SectionLoading from 'src/components/common/SectionLoading';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import { matchesKey } from 'src/selectors';
+import { matchesKey, selectCollection } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
-import './CollectionXrefScreen.css';
+import './CollectionsXrefScreen.css';
 
 
-class CollectionXrefScreen extends Component {
+class CollectionsXrefScreen extends Component {
   constructor() {
     super()
 
@@ -185,18 +185,18 @@ class CollectionXrefScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, otherId } = ownProps.match.params;
-  const collection = state.collections[collectionId];
-  const other = state.collections[otherId];
+  const collection = selectCollection(state, collectionId);
+  const other = selectCollection(state, otherId);
   const matchKey = matchesKey(collectionId, otherId);
   const matches = state.collectionXrefMatches[matchKey];
   const index = state.collectionXrefIndex[collectionId];
   return { collectionId, otherId, collection, other, matches, index };
 };
 
-CollectionXrefScreen = withRouter(injectIntl(CollectionXrefScreen));
+CollectionsXrefScreen = withRouter(injectIntl(CollectionsXrefScreen));
 export default connect(mapStateToProps, {
   fetchCollection,
   fetchCollectionXrefMatches,
   fetchNextCollectionXrefMatches,
   fetchCollectionXrefIndex
-})(CollectionXrefScreen);
+})(CollectionsXrefScreen);

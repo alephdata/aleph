@@ -8,19 +8,19 @@ import LoginScreen from 'src/components/auth/LoginScreen';
 import LogoutScreen from 'src/components/auth/LogoutScreen';
 import SignupScreen from 'src/components/auth/SignupScreen';
 import ActivateScreen from 'src/components/auth/ActivateScreen';
-import SearchScreen from 'src/components/search/SearchScreen';
 import EntityScreen from 'src/components/EntityScreen';
 import EntityRelatedScreen from 'src/components/EntityScreen/EntityRelatedScreen';
 import DocumentScreen from 'src/components/DocumentScreen';
 import DocumentRelatedScreen from 'src/components/DocumentScreen/DocumentRelatedScreen';
 import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
-import HomeScreen from 'src/screens/HomeScreen';
-import ProfileScreen from 'src/components/ProfileScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
-import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
 import CollectionEditScreen from 'src/components/CollectionEdit';
-import CollectionXrefScreen from 'src/components/CollectionXref';
+
+import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
+import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
+import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen/CollectionsIndexScreen';
+import CollectionsXrefScreen from 'src/screens/CollectionsXrefScreen/CollectionsXrefScreen';
 
 import './Router.css';
 
@@ -46,7 +46,6 @@ class Router extends Component {
         <Route path="/login" exact component={LoginScreen}/>
         <Route path="/logout" exact component={LogoutScreen}/>
         <Route path="/signup" exact component={SignupScreen}/>
-        <Route path="/settings" exact component={ProfileScreen}/>
         <Route path="/activate/:code" exact component={ActivateScreen}/>
         <Route path="/entities/:entityId" exact component={EntityScreen}/>
         <Route path="/entities/:entityId/related" exact component={EntityRelatedScreen}/>
@@ -57,7 +56,7 @@ class Router extends Component {
         <Route path="/collections" exact component={CollectionsIndexScreen}/>
         <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
         <Route path="/collections/:collectionId/edit" exact component={CollectionEditScreen}/>
-        <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefScreen}/>
+        <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionsXrefScreen}/>
         <Route path="/search" exact component={SearchScreen}/>
         <Route path="/" exact component={HomeScreen}/>
         <Route component={ErrorScreen}/>
