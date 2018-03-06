@@ -1,19 +1,21 @@
 @import "src/app/variables.scss";
+
 .Screen {
   flex-grow: 1;
   display: flex;
   flex-flow: column nowrap;
+  background: $aleph-toolbar-background;
   
   .main-homepage {
-    @extend .main;
-    background-color: $aleph-content-background;
+    flex-grow: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    // background-color: $aleph-content-background;
     align-items: stretch;
   }
 
   .main {
-    padding-bottom: ($aleph-grid-size*4 - 1);
-    flex-grow: 1;
-    display: flex;
-    flex-flow: column nowrap;
+    @extend .main-homepage;
+    padding-bottom: ($aleph-grid-size * 2 - 1);
   }
 }

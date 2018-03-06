@@ -4,10 +4,6 @@ import { FormattedMessage, FormattedNumber } from 'react-intl';
 
 import './CheckboxList.css';
 
-const Tick = ({ isTicked }) => (
-  <span className={c('pt-icon-standard', 'Tick', {'is-ticked': isTicked})} />
-)
-
 const CheckboxList = ({ items, selectedItems, onItemClick, children }) => (
   <ul className="CheckboxList">
     {items && items.length === 0 && (
@@ -17,12 +13,18 @@ const CheckboxList = ({ items, selectedItems, onItemClick, children }) => (
       </li>
     )}
     {items && items.map(item => (
-      <li className="clickable" onClick={() => onItemClick(item.id)} key={item.id}>
-        <Tick isTicked={selectedItems.includes(item.id)} />
+      <li className={c('clickable', {'active': selectedItems.includes(item.id)})}
+        onClick={() => onItemClick(item.id)}
+        key={item.id}>
+        
+        <span className={c('pt-icon-standard', 'Tick')} />
         <span className="label" title={item.label}>{item.label}</span>
         {item.count !== undefined && (
-          <span className="count"><FormattedNumber value={item.count} /></span>
+          <span className="count">
+            <FormattedNumber value={item.count} />
+          </span>
         )}
+
       </li>
     ))}
     {children && (

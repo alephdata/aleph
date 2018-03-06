@@ -1,5 +1,7 @@
 @import "src/app/variables.scss";
 
+$breadcrumb-line-height: $pt-icon-size-large - 1px !default;
+
 .HomepageFooter {
   width : 100%;
   background-color: $aleph-footer-background;
@@ -20,4 +22,25 @@
   @extend .HomepageFooter;
   position: fixed !important;
   bottom: 0;
+  font-size: $pt-font-size;
+  padding: ($aleph-grid-size / 2) $aleph-grid-size ($aleph-grid-size / 2) $aleph-grid-size;
+
+  .Breadcrumbs {
+    padding: 0;
+    background: unset;
+    box-shadow: none;
+
+    ul.pt-breadcrumbs {
+      height: unset;
+
+      li a.pt-breadcrumb {
+        font-size: unset;
+      }
+    }
+  }
+
+  .info {
+    float: right;
+    padding: 0;
+  }
 }

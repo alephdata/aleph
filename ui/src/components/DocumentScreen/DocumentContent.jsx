@@ -23,8 +23,9 @@ class DocumentContent extends React.Component {
                 <span className="pt-icon pt-icon-issue"/>
               </div>
               <h4 className="pt-non-ideal-state-title">
-                <FormattedMessage id="document.status_fail"
-                                  defaultMessage="Document failed to import"/>
+                <FormattedMessage
+                  id="document.status_fail"
+                  defaultMessage="Document failed to import"/>
               </h4>
               <div className="pt-non-ideal-state-description">
                 { document.error_message }
@@ -35,43 +36,48 @@ class DocumentContent extends React.Component {
       )
     }
     
+    // @ TODO Check if downlink link exist and display download button
+    let documentViewer = <section className="PartialError">
+      <div className="pt-non-ideal-state">
+        <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
+          <span className="pt-icon pt-icon-issue"></span>
+        </div>
+        <h4 className="pt-non-ideal-state-title">
+          <FormattedMessage
+            id="document.no_viewer"
+            defaultMessage="No preview is available for this document"/>
+        </h4>
+        <div className="pt-non-ideal-state-description">
+          { document.error_message }
+        </div>
+      </div>
+    </section>
+
+    if (document.schema === 'Email') {
+      documentViewer = <EmailViewer document={document}/>
+    } else if (document.schema === 'Table' && document.extension !== 'xlsx' && document.children !== undefined) {
+      documentViewer = <TableViewer document={document}/>
+    } else if (document.text && !document.html) {
+      documentViewer = <TextViewer document={document}/>
+    } else if (document.html) {
+      documentViewer = <HtmlViewer document={document}/>
+    } else if (document.links && document.links.pdf) {
+      documentViewer = <PdfViewer document={document} fragId={fragId} />
+    } else if (document.schema === 'Image') {
+      documentViewer = <ImageViewer document={document} />
+    } else if (document.children !== undefined) {
+      documentViewer = <FolderViewer document={document} />
+    }
+    
     return (
       <DualPane.ContentPane style={{padding: 0}}>
-        {document.schema === 'Email' && (
-          <EmailViewer document={document}/>
-        )}
-        
-        {/* 
-          Use table view for Tables *unless* it's an Excel spreadsheet with
-          sheets (in which case it will fall through to the "folder" view
-          to list all sheets in the spreadsheet).
-        */}
-        {document.schema === 'Table' && document.children !== undefined && document.extension !== 'xlsx' && document.children !== undefined && (
-          <TableViewer document={document}/>
-        )}
-
-        {document.text && !document.html && document.schema !== 'Email' && (
-          <TextViewer document={document}/>
-        )}
-
-        {document.html && (
-          <HtmlViewer document={document}/>
-        )}
-
-        {document.links && document.links.pdf && (
-          <PdfViewer document={document} fragId={fragId} />
-        )}
-
-        {document.schema === 'Image' && (
-          <ImageViewer document={document} />
-        )}
-
-        {document.children !== undefined && document.children > 0 && document.schema !== 'Email' && (
-          <FolderViewer document={document} />
-        )}
+      { documentViewer }
       </DualPane.ContentPane>
     );
   }
 }
 
 export default DocumentContent;
+
+
+

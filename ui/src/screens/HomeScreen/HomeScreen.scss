@@ -6,6 +6,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+  min-height: 95.5vh;
   color: white;
   text-align: center;
 
@@ -63,6 +64,10 @@
     position: absolute;
     right: 0;
     padding-top: 1em;
+
+    a {
+      color: white;
+    }
   }
 
   .homepage-examples {

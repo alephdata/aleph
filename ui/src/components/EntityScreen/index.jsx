@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Helmet } from 'react-helmet';
 import { NonIdealState } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
@@ -28,16 +27,14 @@ class EntityScreen extends Component {
       );
     }
 
+    const breadcrumbs = (<Breadcrumbs collection={entity.collection}>
+      <li>
+        <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30} />
+      </li>
+    </Breadcrumbs>);
+
     return (
-      <Screen>
-        <Helmet>
-          <title>{entity.name}</title>
-        </Helmet>
-        <Breadcrumbs collection={entity.collection}>
-          <li>
-            <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30} />
-          </li>
-        </Breadcrumbs>
+      <Screen breadcrumbs={breadcrumbs} title={entity.name}>
         <DualPane>
           <EntityContent entity={entity} />
           <EntityInfo entity={entity} />

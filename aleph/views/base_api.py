@@ -7,6 +7,7 @@ from followthemoney import model
 from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError
 
+from aleph import __version__
 from aleph.core import settings, app_ui_url, url_for
 from aleph.logic.statistics import get_instance_stats
 from aleph.model import Collection
@@ -33,6 +34,7 @@ def metadata():
         'maintenance': request.authz.in_maintenance,
         'app': {
             'title': settings.APP_TITLE,
+            'version': __version__,
             'ui_uri': six.text_type(app_ui_url),
             'samples': settings.SAMPLE_SEARCHES,
             'logo': settings.APP_LOGO,

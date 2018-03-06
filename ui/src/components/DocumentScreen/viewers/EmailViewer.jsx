@@ -4,7 +4,7 @@ import { Tab, Tabs } from "@blueprintjs/core";
 
 import SearchContext from 'src/components/search/SearchContext';
 import SearchResult from 'src/components/search/SearchResult';
-import Toolbar from 'src/components/common/Toolbar/DocumentToolbar';
+import { DocumentToolbar } from 'src/components/Toolbar';
 
 import './EmailViewer.css';
 
@@ -35,7 +35,7 @@ class EmailViewer extends React.Component {
     
     return (
       <React.Fragment>
-        <Toolbar document={document}/>
+        <DocumentToolbar document={document}/>
         <div className="content-pane-outer">
           <div className="content-pane-inner EmailViewer">
             <div className="email-header">
@@ -88,7 +88,9 @@ class EmailViewer extends React.Component {
                   </React.Fragment>
                 }
                 panel={
-                  <pre>{document.text}</pre>
+                  (document.text && document.text.length > 0)
+                    ? <pre>{document.text}</pre>
+                    : <p className="email-no-body pt-text-muted"><FormattedMessage id="email.body.empty" defaultMessage="No message body."/></p>
                 } 
               />
               <Tab id="attachments"

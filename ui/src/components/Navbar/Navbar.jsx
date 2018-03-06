@@ -11,7 +11,7 @@ import './Navbar.css';
 class Navbar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {value: props.searchContext ? props.searchContext.query.getQ() : ''};
+    this.state = {value: props.searchContext ? props.searchContext.query.getString('q') : ''};
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -22,7 +22,9 @@ class Navbar extends React.Component {
       return
       
     if (nextProps.searchContext && nextProps.searchContext.query.state.q !== this.state.value) {
-      this.setState({ value: nextProps.searchContext.query.getQ() })
+      this.setState({
+        value: nextProps.searchContext.query.getString('q')
+      })
     }
   }
   
@@ -33,7 +35,7 @@ class Navbar extends React.Component {
   onSubmit(event) {
     event.preventDefault();
     if (this.props.location.pathname === '/search') {
-      let query = this.props.searchContext.query.setQ(this.state.value);
+      let query = this.props.searchContext.query.set('q', this.state.value);
       this.props.searchContext.updateQuery(query);
     } else {
       const { history } = this.props;
@@ -50,7 +52,7 @@ class Navbar extends React.Component {
     const {metadata,session} = this.props
     return (
       <div className="Navbar">
-        <nav className="pt-navbar pt-dark">
+        <nav className="pt-navbar">
           <div className="pt-navbar-group pt-align-left">
             <div className="pt-navbar-heading">
               <Link to="/">

@@ -72,7 +72,7 @@ class DocumentInfo extends React.Component {
                 title={
                   <React.Fragment>
                     <span className="pt-icon-standard pt-icon-tag"/>
-                    <FormattedMessage id="document.info.tags" defaultMessage="Links"/>
+                    <FormattedMessage id="document.info.links" defaultMessage="Links"/>
                   </React.Fragment>
                 }
                 panel={<EntityInfoTags entity={document} />}

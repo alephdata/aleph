@@ -29,11 +29,10 @@ class CollectionScreen extends Component {
     }
 
     return (
-      <Screen>
+      <Screen breadcrumbs={<Breadcrumbs collection={collection} />}>
         <Helmet>
           <title>{collection.label}</title>
         </Helmet>
-        <Breadcrumbs collection={collection} />
         <DualPane>
           <CollectionInfo collection={collection} />
           <CollectionContent collection={collection} />

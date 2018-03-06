@@ -5,7 +5,7 @@ import Waypoint from 'react-waypoint';
 import { fetchDocumentRecords, fetchNextDocumentRecords } from 'src/actions';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import SectionLoading from 'src/components/common/SectionLoading';
-import Toolbar from 'src/components/common/Toolbar/DocumentToolbar';
+import { DocumentToolbar } from 'src/components/Toolbar';
 
 class Table extends Component {
   render() {
@@ -13,7 +13,7 @@ class Table extends Component {
 
     return (
       <React.Fragment>
-        <Toolbar document={document}/>
+        <DocumentToolbar document={document}/>
         <div style={{width: '100%', flex: 1, overflow: 'auto'}}>
           <table className="pt-html-table pt-html-table-bordered">
             <thead>

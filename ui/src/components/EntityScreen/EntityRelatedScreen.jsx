@@ -11,7 +11,6 @@ import DualPane from 'src/components/common/DualPane';
 import EntityInfo from './EntityInfo';
 import Entity from './Entity';
 import SearchContext from 'src/components/search/SearchContext';
-import SearchFilter from 'src/components/search/SearchFilter';
 import SearchResult from 'src/components/search/SearchResult';
 
 class EntityScreen extends Component {
@@ -55,7 +54,6 @@ class EntityScreen extends Component {
         <SearchContext context={context}>{searchContext => (
           <DualPane>
             <DualPane.ContentPane>
-              <SearchFilter {...searchContext} />
               <SearchResult {...searchContext} />
             </DualPane.ContentPane>
             <EntityInfo entity={entity} />
