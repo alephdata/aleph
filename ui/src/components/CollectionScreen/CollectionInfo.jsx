@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {FormattedMessage} from 'react-intl';
 import { Button, Tab, Tabs } from "@blueprintjs/core";
-import {Link} from 'react-router-dom';
 
 import DualPane from 'src/components/common/DualPane';
 import Category from 'src/components/common/Category';
@@ -13,18 +12,47 @@ import Date from 'src/components/common/Date';
 
 import CollectionInfoXref from './CollectionInfoXref';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog';
+import PermissionsDialog from 'src/dialogs/PermissionsDialog';
 
+import { fetchCollectionPermissions } from 'src/actions';
 
 class CollectionInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeTabId: 'overview',
-      collectionInfoIsOpen: false
+      collectionInfoIsOpen: false,
+      collectionPermissionsAreOpen: false,
+      permissions: props.permissions
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
     this.toggleCollectionEdit = this.toggleCollectionEdit.bind(this);
+    this.togglePermissions = this.togglePermissions.bind(this);
+    this.fetchCollection = this.fetchCollection.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log('prev', prevProps)
+    if (this.props.collectionId !== prevProps.collectionId) {
+      this.fetchCollection();
+    }
+  }
+
+  fetchCollection() {
+    const { collectionId } = this.props;
+    this.setState({ permissions: [] });
+    this.props.fetchCollection({ id: collectionId });
+    this.props.fetchCollectionPermissions(collectionId);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
+    if(nextProps.permissions && !this.state.permissions.length) {
+      this.setState({
+        permissions: nextProps.permissions
+      });
+    }
   }
 
   handleTabChange(activeTabId: TabId) {
@@ -37,9 +65,16 @@ class CollectionInfo extends Component {
     })
   }
 
+  togglePermissions() {
+    this.setState({
+      collectionPermissionsAreOpen: !this.state.collectionPermissionsAreOpen
+    })
+  }
+
   render() {
     const {collection} = this.props;
-    const link = collection.id + '/edit';
+    const {permissions} = this.state;
+    console.log(permissions)
 
     return (
       <DualPane.InfoPane className="CollectionInfo withHeading">
@@ -113,14 +148,24 @@ class CollectionInfo extends Component {
                   </ul>
                   {collection.writeable &&
                     <React.Fragment>
-                      <Button className="editButton" onClick={this.toggleCollectionEdit}>
+                      <Button className="pt-fill" onClick={this.toggleCollectionEdit}>
                         <FormattedMessage id="collection.info.edit"
-                                          defaultMessage="Edit"/>
+                                          defaultMessage="Edit info"/>
                       </Button>
                       <CollectionEditDialog
                         collection={collection}
                         isOpen={this.state.collectionInfoIsOpen}
                         toggleDialog={this.toggleCollectionEdit}
+                      />
+                      <Button className="pt-fill" onClick={this.togglePermissions}>
+                        <FormattedMessage id="collection.info.permissions"
+                                          defaultMessage="Add permissions"/>
+                      </Button>
+                      <PermissionsDialog
+                        collection={collection}
+                        permissions={permissions}
+                        isOpen={this.state.collectionPermissionsAreOpen}
+                        toggleDialog={this.togglePermissions}
                       />
                     </React.Fragment>}
                 </React.Fragment>
@@ -144,8 +189,11 @@ class CollectionInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const { collectionId } = ownProps.collection.id;
   return {
+    collectionId,
+    permissions: state.collectionPermissions[collectionId] || []
   };
 };
 
-export default connect(mapStateToProps)(CollectionInfo);
+export default connect(mapStateToProps, {fetchCollectionPermissions})(CollectionInfo);

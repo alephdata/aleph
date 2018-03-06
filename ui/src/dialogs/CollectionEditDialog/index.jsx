@@ -6,7 +6,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Role from 'src/components/common/Role';
 import Country from 'src/components/common/Country';
 import {showSuccessToast} from "../../app/toast";
-import {updateCollection, updateCollectionPermissions} from "../../actions";
+import {updateCollection} from "../../actions";
 
 const messages = defineMessages({
   placeholder_label: {
@@ -182,4 +182,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, {updateCollection, updateCollectionPermissions})(injectIntl(CollectionEditDialog));
+export default connect(mapStateToProps, {updateCollection})(injectIntl(CollectionEditDialog));

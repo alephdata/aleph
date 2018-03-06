@@ -1,10 +1,26 @@
 import React, {Component} from 'react';
-import { Checkbox } from '@blueprintjs/core';
-import { FormattedMessage } from 'react-intl';
+import { Dialog, Button, Intent, Checkbox } from '@blueprintjs/core';
+import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 
 import Role from 'src/components/common/Role';
+import {showSuccessToast} from "../../app/toast";
+import { updateCollectionPermissions } from 'src/actions';
+import {connect} from "react-redux";
 
-import './CollectionPermissionsEdit.css';
+const messages = defineMessages({
+  title : {
+    id: 'permissions.title',
+    defaultMessage: 'Collection permissions'
+  },
+  save_button: {
+    id: 'collection.edit.info.save',
+    defaultMessage: 'Update',
+  },
+  save_success: {
+    id: 'collection.edit.save_success',
+    defaultMessage: 'Your changes are saved.',
+  }
+});
 
 class PermissionRow extends Component {
   render() {
@@ -27,11 +43,16 @@ class PermissionRow extends Component {
   }
 }
 
-class CollectionPermissionsEdit extends Component {
 
+class PermissionDialog extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      permissions: props.permissions,
+    };
+
+    this.onSave = this.onSave.bind(this);
     this.onAddRole = this.onAddRole.bind(this);
     this.onToggle = this.onToggle.bind(this);
   }
@@ -46,7 +67,7 @@ class CollectionPermissionsEdit extends Component {
   onAddRole(role) {
     const { permissions } = this.props;
     permissions.push({role: role, read: true, write: false});
-    this.props.onChangePermissions(permissions);
+    this.setState({permissions: permissions});
   }
 
   onToggle(permission, flag) {
@@ -56,22 +77,31 @@ class CollectionPermissionsEdit extends Component {
       }
       return perm;
     });
-    this.props.onChangePermissions(permissions);
+    this.setState({permissions: permissions});
+  }
+
+
+  async onSave() {
+    const { intl, collection } = this.props;
+    const { permissions } = this.state;
+
+    await this.props.updateCollectionPermissions(collection.id, permissions);
+    showSuccessToast(intl.formatMessage(messages.save_success));
+    this.props.toggleDialog();
   }
 
   render() {
-    const { permissions } = this.props;
+    const { intl, permissions } = this.props;
     const exclude = permissions.map((perm) => perm.role.id);
-
     return (
-      <div className="CollectionPermissionsEdit">
-        <h1>
-          <FormattedMessage id="collection.permissions.title"
-                            defaultMessage="Access Control"/>
-        </h1>
-
-        <table className="settings-table">
-          <thead>
+      <Dialog
+        icon="cog"
+        isOpen={this.props.isOpen}
+        onClose={this.props.toggleDialog}
+        title={intl.formatMessage(messages.title)}>
+        <div className="pt-dialog-body">
+          <table className="settings-table">
+            <thead>
             <tr key={0}>
               <th className='topic' />
               <th className='other-topics'>
@@ -84,8 +114,8 @@ class CollectionPermissionsEdit extends Component {
               </th>
             </tr>
             </thead>
-          <tbody className='table_body_alerts'>
-            {this.filterPermissions('system').map((permission) => 
+            <tbody className='table_body_alerts'>
+            {this.filterPermissions('system').map((permission) =>
               <PermissionRow key={permission.role.id}
                              permission={permission}
                              onToggle={this.onToggle} />
@@ -98,7 +128,7 @@ class CollectionPermissionsEdit extends Component {
               <td className='other-rows'/>
               <td className='other-rows'/>
             </tr>
-            {this.filterPermissions('group').map((permission) => 
+            {this.filterPermissions('group').map((permission) =>
               <PermissionRow key={permission.role.id}
                              permission={permission}
                              onToggle={this.onToggle} />
@@ -111,7 +141,7 @@ class CollectionPermissionsEdit extends Component {
               <td className='other-rows'/>
               <td className='other-rows'/>
             </tr>
-            {this.filterPermissions('user').map((permission) => 
+            {this.filterPermissions('user').map((permission) =>
               <PermissionRow key={permission.role.id}
                              permission={permission}
                              onToggle={this.onToggle} />
@@ -124,11 +154,26 @@ class CollectionPermissionsEdit extends Component {
               <td className='other-rows'/>
               <td className='other-rows'/>
             </tr>
-          </tbody>
-        </table>
-      </div>
+            </tbody>
+          </table>
+        </div>
+        <div className="pt-dialog-footer">
+          <div className="pt-dialog-footer-actions">
+            <Button
+              intent={Intent.PRIMARY}
+              onClick={this.onSave}
+              text={intl.formatMessage(messages.save_button)}
+            />
+          </div>
+        </div>
+      </Dialog>
     );
   }
 }
 
-export default CollectionPermissionsEdit;
+const mapStateToProps = (state, ownProps) => {
+  return {
+  };
+};
+
+export default connect(mapStateToProps, {updateCollectionPermissions})(injectIntl(PermissionDialog));
