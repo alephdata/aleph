@@ -97,7 +97,7 @@ def flush(foreign_id):
 
 
 @manager.command
-def flush_documents(foreign_id):
+def flushdocuments(foreign_id):
     """Delete all documents from given collection."""
     collection = Collection.by_foreign_id(foreign_id)
     if collection is None:
@@ -106,7 +106,7 @@ def flush_documents(foreign_id):
 
 
 @manager.command
-def flush_entities(foreign_id):
+def flushentities(foreign_id):
     """Delete all entities from given collection."""
     collection = Collection.by_foreign_id(foreign_id)
     if collection is None:

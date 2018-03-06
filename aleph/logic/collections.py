@@ -6,6 +6,8 @@ from aleph.ingest import ingest
 from aleph.model import Collection, Document, Entity, Match, Permission
 from aleph.index.admin import flush_index
 from aleph.index.collections import delete_collection as index_delete
+from aleph.index.collections import delete_documents as index_delete_documents
+from aleph.index.collections import delete_entities as index_delete_entities
 from aleph.index.collections import index_collection, update_roles
 from aleph.logic.entities import update_entity_full, delete_entity
 from aleph.logic.documents import delete_document
@@ -102,12 +104,9 @@ def delete_entities(collection_id, wait=False):
     deleted_at = datetime.utcnow()
 
     log.info("Delete entities...")
-    q = q.filter(Entity.collection_id == collection.id)
-    for entity in q:
-        delete_entity(entity, deleted_at=deleted_at)
+    Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
+    index_delete_entities(collection_id, wait=wait)
 
-        log.info("Delete cross-referencing matches...")
-        Match.delete_by_reference(entity.id, deleted_at=deleted_at)
 
 
 @celery.task()
@@ -122,9 +121,5 @@ def delete_documents(collection_id, wait=False):
     deleted_at = datetime.utcnow()
 
     log.info("Delete documents...")
-    q = q.filter(Document.collection_id == collection.id)
-    for document in q:
-        delete_document(document, deleted_at=deleted_at)
-
-        log.info("Delete cross-referencing matches...")
-        Match.delete_by_reference(document.id, deleted_at=deleted_at)
+    Document.delete_by_collection(collection_id, deleted_at=deleted_at)
+    index_delete_documents(collection_id, wait=wait)
