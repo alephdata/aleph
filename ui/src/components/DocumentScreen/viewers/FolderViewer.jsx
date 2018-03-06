@@ -75,6 +75,8 @@ class FolderViewer extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { document, location } = ownProps;
+  // when a prefix is defined, we switch to recursive folder search - otherwise
+  // a flat listing of the immediate children of this directory is shown.
   const prefix = Query.fromLocation('search', location, {}, 'folder').getString('prefix'),
         field = prefix.length === 0 ? 'filter:parent.id' : 'filter:ancestors',
         context = {[field]: document.id};

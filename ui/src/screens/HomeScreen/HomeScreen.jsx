@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import queryString from 'query-string';
-import { Link } from 'react-router-dom';
 import { Button, AnchorButton } from "@blueprintjs/core";
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import numeral from 'numeral';

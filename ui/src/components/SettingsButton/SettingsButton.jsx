@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { Button } from '@blueprintjs/core';
+import { Button, AnchorButton } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
 
 import SettingsDialog from 'src/dialogs/SettingsDialog';
@@ -37,16 +37,23 @@ class SettingsButton extends Component {
 
     return (
       <React.Fragment>
-        <Button icon="notifications" className="pt-minimal"  onClick={this.toggleAlerts}>
-          <FormattedMessage id="nav.alerts" defaultMessage="Alerts"/>
-        </Button>
-        <AlertsDialog isOpen={this.state.alertsIsOpen}
-                      toggleDialog={this.toggleAlerts} />
-        <Button icon="cog" className="pt-minimal"  onClick={this.toggleSettings}>
-          <FormattedMessage id="nav.settings" defaultMessage="Settings"/>
-        </Button>
-        <SettingsDialog isOpen={this.state.settingsIsOpen}
-                        toggleDialog={this.toggleSettings} />
+        <AnchorButton icon="database" className="pt-minimal" href="/collections">
+          <FormattedMessage id="nav.collections" defaultMessage="Collections"/>
+        </AnchorButton>
+        {session.loggedIn && (
+          <React.Fragment>
+            <Button icon="notifications" className="pt-minimal"  onClick={this.toggleAlerts}>
+              <FormattedMessage id="nav.alerts" defaultMessage="Alerts"/>
+            </Button>
+            <AlertsDialog isOpen={this.state.alertsIsOpen}
+                          toggleDialog={this.toggleAlerts} />
+            <Button icon="cog" className="pt-minimal"  onClick={this.toggleSettings}>
+              <FormattedMessage id="nav.settings" defaultMessage="Settings"/>
+            </Button>
+            <SettingsDialog isOpen={this.state.settingsIsOpen}
+                            toggleDialog={this.toggleSettings} />
+          </React.Fragment>
+        )}
       </React.Fragment>
     );
   }
