@@ -20,6 +20,7 @@ from aleph.logic.collections import update_collection
 from aleph.logic.collections import process_collection
 from aleph.logic.collections import delete_collection, delete_documents, delete_entities
 from aleph.logic.alerts import check_alerts
+from aleph.logic.roles import update_role
 from aleph.logic.entities import bulk_load, reindex_entities
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
@@ -199,6 +200,7 @@ def createuser(foreign_id, password=None, name=None, email=None,
     if password is not None:
         role.set_password(password)
     db.session.add(role)
+    update_role(role)
     db.session.commit()
     return role.api_key
 

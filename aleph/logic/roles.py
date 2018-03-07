@@ -1,8 +1,16 @@
-from aleph.model import Role
+from aleph.model import db
+from aleph.model import Role, Subscription
+from aleph.logic.notifications import channel
 
 
 def update_role(role):
-    pass
+    """Synchronize denormalised role configuration."""
+    db.session.flush()
+    Subscription.subscribe(role, channel(role))
+    for group in Role.all_groups():
+        Subscription.unsubscribe(role, channel(group))
+    for group in role.roles:
+        Subscription.subscribe(role, channel(group))
 
 
 def check_visible(role, authz):
