@@ -9,7 +9,7 @@ class Footer extends React.Component {
     const {metadata, breadcrumbs} = this.props;
 
     return (
-      <footer className="Footer">
+      <footer id="Footer" className="Footer">
         <div className="info">
           <strong>ℵ</strong>
           {' '}
