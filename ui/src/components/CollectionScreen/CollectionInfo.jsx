@@ -12,9 +12,9 @@ import Date from 'src/components/common/Date';
 
 import CollectionInfoXref from './CollectionInfoXref';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog';
-import PermissionsDialog from 'src/dialogs/PermissionsDialog';
 
 import { fetchCollectionPermissions } from 'src/actions';
+import CollectionPermissionsEdit from "../CollectionEdit/CollectionPermissionsEdit";
 
 class CollectionInfo extends Component {
   constructor(props) {
@@ -22,37 +22,30 @@ class CollectionInfo extends Component {
     this.state = {
       activeTabId: 'overview',
       collectionInfoIsOpen: false,
-      collectionPermissionsAreOpen: false,
       permissions: props.permissions
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
     this.toggleCollectionEdit = this.toggleCollectionEdit.bind(this);
-    this.togglePermissions = this.togglePermissions.bind(this);
     this.fetchCollection = this.fetchCollection.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
-    console.log('prev', prevProps)
-    if (this.props.collectionId !== prevProps.collectionId) {
-      this.fetchCollection();
-    }
+  componentDidMount() {
+    const { collection } = this.props;
+    this.setState({ permissions: [] });
+    this.props.fetchCollectionPermissions(collection.id);
   }
 
   fetchCollection() {
-    const { collectionId } = this.props;
+    const { collection } = this.props;
     this.setState({ permissions: [] });
-    this.props.fetchCollection({ id: collectionId });
-    this.props.fetchCollectionPermissions(collectionId);
+    this.props.fetchCollectionPermissions(collection.id);
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
-    if(nextProps.permissions && !this.state.permissions.length) {
       this.setState({
         permissions: nextProps.permissions
       });
-    }
   }
 
   handleTabChange(activeTabId: TabId) {
@@ -65,16 +58,9 @@ class CollectionInfo extends Component {
     })
   }
 
-  togglePermissions() {
-    this.setState({
-      collectionPermissionsAreOpen: !this.state.collectionPermissionsAreOpen
-    })
-  }
-
   render() {
     const {collection} = this.props;
     const {permissions} = this.state;
-    console.log(permissions)
 
     return (
       <DualPane.InfoPane className="CollectionInfo withHeading">
@@ -86,7 +72,7 @@ class CollectionInfo extends Component {
             {collection.label}
           </h1>
         </div>
-        <div className="PaneContent">
+        <div className="CollectionContent">
           <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
             <Tab id="overview"
               title={
@@ -157,16 +143,6 @@ class CollectionInfo extends Component {
                         isOpen={this.state.collectionInfoIsOpen}
                         toggleDialog={this.toggleCollectionEdit}
                       />
-                      <Button className="pt-fill" onClick={this.togglePermissions}>
-                        <FormattedMessage id="collection.info.permissions"
-                                          defaultMessage="Add permissions"/>
-                      </Button>
-                      <PermissionsDialog
-                        collection={collection}
-                        permissions={permissions}
-                        isOpen={this.state.collectionPermissionsAreOpen}
-                        toggleDialog={this.togglePermissions}
-                      />
                     </React.Fragment>}
                 </React.Fragment>
               }
@@ -180,6 +156,15 @@ class CollectionInfo extends Component {
               }
               panel={<CollectionInfoXref collection={collection} />}
             />
+            {collection.writeable &&<Tab id="permissions"
+                 title={
+                   <React.Fragment>
+                     <span className="pt-icon-standard pt-icon-database"/>
+                     <FormattedMessage id="collection.info.source" defaultMessage="Permissions"/>
+                   </React.Fragment>
+                 }
+                 panel={<CollectionPermissionsEdit collection={collection} permissions={permissions} />}
+            />}
             <Tabs.Expander />
           </Tabs>
         </div>
@@ -189,7 +174,7 @@ class CollectionInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collectionId } = ownProps.collection.id;
+  const collectionId = ownProps.collection.id;
   return {
     collectionId,
     permissions: state.collectionPermissions[collectionId] || []

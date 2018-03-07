@@ -59,10 +59,6 @@ class CollectionEditScreen extends Component {
     this.props.fetchCollectionPermissions(collectionId);
   }
 
-  // componentWillUnmount() {
-  //   this.setState({collection: {}, permissions: []})
-  // }
-
   componentWillReceiveProps(nextProps) {
     if(this.props.collection.id !== nextProps.collection.id) {
       this.setState({
