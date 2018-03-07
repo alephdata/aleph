@@ -62,28 +62,28 @@
     }
   }
   
-  .editButton {
+  .edit-button {
     width: 8em;
   }
 
-  .withHeading {
+  .with-heading {
     padding: 0 !important;
     background: $aleph-content-background;
 
-    .PaneHeading {
+    .pane-heading {
       background: $aleph-sidebar-background;
       padding: $aleph-grid-size*4 $aleph-grid-size*2;
       color: white;
     }
 
-    .PaneHeading h1 {
+    .pane-heading h1 {
       border: 0;
       margin: 0;
       color: white;
       font-weight: 300;
     }
 
-    .PaneContent {
+    .pane-content {
       padding: $aleph-grid-size $aleph-grid-size*2;
     }
   }
