@@ -168,7 +168,7 @@ class SettingsDialog extends Component {
             </label>
             <div className="pt-form-content">
               <div className="pt-input-group pt-fill">
-                <span className="pt-icon pt-icon-key"></span>
+                <span className="pt-icon pt-icon-key"/>
                 <input className="pt-input" id="api_key"
                        readOnly={true}
                        type="text" dir="auto"

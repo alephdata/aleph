@@ -22,7 +22,7 @@ class ContentPane extends Component {
   render() {
     const { children, className, limitedWidth } = this.props;
     return (
-      <main className={c('ContentPane', { limitedWidth: limitedWidth }, className)} style={this.props.style}>
+      <main className={c('ContentPane', { 'limited-width': limitedWidth }, className)} style={this.props.style}>
         {children}
       </main>
     );

@@ -12,8 +12,6 @@ import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
 import { fetchEntityReferences } from 'src/actions/index';
 import { getEntityTags } from 'src/selectors';
 
-import './EntityInfo.css';
-
 class EntityInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -38,8 +36,8 @@ class EntityInfo extends React.Component {
     const { references, entity } = this.props;
   
     return (
-      <DualPane.InfoPane className="EntityInfo withHeading">
-        <div className="PaneHeading">
+      <DualPane.InfoPane className="EntityInfo with-heading">
+        <div className="pane-heading">
           <span>
             <Schema.Label schema={entity.schema} icon={true} />
           </span>
@@ -47,7 +45,7 @@ class EntityInfo extends React.Component {
             <Entity.Label entity={entity} addClass={true}/>
           </h1>
         </div>
-        <div className="PaneContent">
+        <div className="pane-content">
           <Tabs id="EntityInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
               <Tab id="overview" 
                 title={

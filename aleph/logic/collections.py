@@ -6,8 +6,11 @@ from aleph.ingest import ingest
 from aleph.model import Collection, Document, Entity, Match, Permission
 from aleph.index.admin import flush_index
 from aleph.index.collections import delete_collection as index_delete
+from aleph.index.collections import delete_documents as index_delete_documents
+from aleph.index.collections import delete_entities as index_delete_entities
 from aleph.index.collections import index_collection, update_roles
-from aleph.logic.entities import update_entity_full
+from aleph.logic.entities import update_entity_full, delete_entity
+from aleph.logic.documents import delete_document
 from aleph.logic.util import ui_url
 
 log = logging.getLogger(__name__)
@@ -73,17 +76,30 @@ def delete_collection(collection_id, wait=False):
     deleted_at = datetime.utcnow()
     index_delete(collection_id, wait=wait)
 
-    log.info("Delete cross-referencing matches...")
+    log.info("Deleting cross-referencing matches...")
     Match.delete_by_collection(collection_id)
 
-    log.info("Delete permissions...")
+    log.info("Deleting permissions...")
     Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
 
-    log.info("Delete documents...")
-    Document.delete_by_collection(collection_id, deleted_at=deleted_at)
-
-    log.info("Delete entities...")
-    Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
+    delete_documents(collection_id, wait=wait)
+    delete_entities(collection_id, wait=wait)
 
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
+
+
+@celery.task()
+def delete_entities(collection_id, wait=False):
+    deleted_at = datetime.utcnow()
+    log.info("Deleting entities...")
+    Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
+    index_delete_entities(collection_id, wait=wait)
+
+
+@celery.task()
+def delete_documents(collection_id, wait=False):
+    deleted_at = datetime.utcnow()
+    log.info("Deleting documents...")
+    Document.delete_by_collection(collection_id, deleted_at=deleted_at)
+    index_delete_documents(collection_id, wait=wait)

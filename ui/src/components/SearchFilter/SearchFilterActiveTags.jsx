@@ -31,7 +31,7 @@ class SearchFilterActiveTags extends Component {
     // NB: The old URLs for these no longer seem to work with the search 
     // component and now cause errors when called but I'm not sure why yet.
     return (
-      <div className="search-query__active-filters">
+      <div className="search-query-active-filters">
         {/*activeFilters.map(filter =>
           query.getFilter(filter).map(value => {
             return (

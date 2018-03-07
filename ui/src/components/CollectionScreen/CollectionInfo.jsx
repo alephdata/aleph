@@ -63,8 +63,8 @@ class CollectionInfo extends Component {
     const {permissions} = this.state;
 
     return (
-      <DualPane.InfoPane className="CollectionInfo withHeading">
-        <div className="PaneHeading">
+      <DualPane.InfoPane className="CollectionInfo with-heading">
+        <div className="pane-heading">
           <span>
             <FormattedMessage id="collection.info.heading" defaultMessage="Collection"/>
           </span>
@@ -72,7 +72,7 @@ class CollectionInfo extends Component {
             {collection.label}
           </h1>
         </div>
-        <div className="CollectionContent">
+        <div className="collection-content">
           <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
             <Tab id="overview"
               title={

@@ -10,8 +10,8 @@ class TextViewer extends React.Component {
     return (
       <React.Fragment>
         <DocumentToolbar document={document}/>
-        <div className="ContentPaneOuter">
-          <div className="ContentPaneInner TextViewer">
+        <div className="content-pane-outer">
+          <div className="content-pane-inner TextViewer">
             <pre>{document.text}</pre>
           </div>
         </div>

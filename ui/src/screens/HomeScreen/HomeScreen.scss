@@ -16,9 +16,33 @@
     width: 100%;
   }
 
+  h4 {
+    color: white !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
   .inner-searchbox {
     display: table-cell;
     vertical-align: middle;
+  }
+
+  .search-h1 {
+    color: white !important;
+    margin-bottom: 0.5em;
+    font-size: 4em;
+  }
+
+  .top-three-group {
+    display: inline-flex;
+  }
+
+  section {
+    min-height: 95.5vh;
+  }
+
+  .browse-collection-label {
+    color: white;
   }
 
   .homepage-summary {

@@ -25,7 +25,7 @@ class CollectionEditInfo extends Component {
 
     this.state = {
       collection: props.collection,
-    }
+    };
 
     this.onSelectCountries = this.onSelectCountries.bind(this);
     this.onSelectCreator = this.onSelectCreator.bind(this);
@@ -67,15 +67,15 @@ class CollectionEditInfo extends Component {
       <DualPane.InfoPane className="CollectionEditInfo">
         <div>
           <div className="pt-form-group label_group">
-            <div className='label_icon_group'>
+            <div className='label-icon-group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label_class">
+              <label className="pt-label label-class">
                 <FormattedMessage id="collection.edit.info.label" defaultMessage="Label"/>
               </label>
             </div>
             <div className="pt-form-content">
               <input id="label"
-                     className="pt-input pt-large input_class"
+                     className="pt-input pt-large input-class"
                      type="text"
                      placeholder={intl.formatMessage(messages.placeholder_label)}
                      dir="auto"
@@ -83,10 +83,10 @@ class CollectionEditInfo extends Component {
                      value={collection.label || ''}/>
             </div>
           </div>
-          <div className="pt-form-group label_group">
-            <div className='label_icon_group'>
+          <div className="pt-form-group label-group">
+            <div className='label-icon-group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label_class">
+              <label className="pt-label label-class">
                 <FormattedMessage id="collection.edit.info.category" defaultMessage="Category"/>
               </label>
             </div>
@@ -100,16 +100,16 @@ class CollectionEditInfo extends Component {
               </select>
             </div>
           </div>
-          <div className="pt-form-group label_group">
-            <div className='label_icon_group'>
+          <div className="pt-form-group label-group">
+            <div className='label-icon-group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label_class">
+              <label className="pt-label label-class">
                 <FormattedMessage id="collection.edit.info.summary" defaultMessage="Summary"/>
               </label>
             </div>
             <div className="pt-form-content">
               <textarea id="summary"
-                        className="pt-input input_class"
+                        className="pt-input input-class"
                         placeholder={intl.formatMessage(messages.placeholder_summary)}
                         dir="auto"
                         rows={5}
@@ -117,10 +117,10 @@ class CollectionEditInfo extends Component {
                         value={collection.summary || ''}/>
             </div>
           </div>
-          <div className="pt-form-group label_group">
-            <div className='label_icon_group'>
+          <div className="pt-form-group label-group">
+            <div className='label-icon-group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label_class">
+              <label className="pt-label label-class">
                 <FormattedMessage id="collection.edit.info.contact" defaultMessage="Contact"/>
               </label>
             </div>
@@ -129,10 +129,10 @@ class CollectionEditInfo extends Component {
                            onSelect={this.onSelectCreator} />
             </div>
           </div>
-          <div className="pt-form-group label_group">
-            <div className='label_icon_group'>
+          <div className="pt-form-group label-group">
+            <div className='label-icon-group'>
               <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label_class">
+              <label className="pt-label label-class">
                 <FormattedMessage id="collection.edit.info.countries" defaultMessage="Countries"/>
               </label>
             </div>
@@ -140,15 +140,15 @@ class CollectionEditInfo extends Component {
               onChange={this.onSelectCountries}
               codes={collection.countries} />
           </div>
-          <div className="pt-form-group label_group">
-            <div className='label_icon_group'>
+          <div className="pt-form-group label-group">
+            <div className='label-icon-group'>
               <i className="fa fa-key" aria-hidden="true"/>
-              <label className="pt-label label_class">
+              <label className="pt-label label-class">
                 Import ID
               </label>
             </div>
             <div className="pt-form-content">
-              <input className="pt-input input_class"
+              <input className="pt-input input-class"
                      type="text"
                      dir="auto"
                      disabled
