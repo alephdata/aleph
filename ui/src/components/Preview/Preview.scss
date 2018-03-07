@@ -28,6 +28,7 @@
   }
   
   &.loading {
+    background: $aleph-page-background;
     overflow: hidden;
   }
   
@@ -54,6 +55,10 @@
     .pt-button {
       margin: 0 $aleph-grid-size 0 0 ;
       float: left;
+    }
+
+    .pt-button.button-maximise {
+      border-radius: 1em;
     }
     
     .pt-button.button-close {
