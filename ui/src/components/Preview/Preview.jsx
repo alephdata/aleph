@@ -8,6 +8,7 @@ import { Button } from '@blueprintjs/core';
 import getPath from 'src/util/getPath';
 import { fetchCollection } from 'src/actions';
 import CollectionInfo from 'src/components/CollectionScreen/CollectionInfo';
+import SectionLoading from 'src/components/common/SectionLoading';
 
 import './Preview.css';
 
@@ -105,28 +106,34 @@ class Preview extends React.Component {
   }
   
   render() {
+    const { previewId,
+            previewType,
+            previewTop,
+            previewBottom,
+            maximised,
+            collection
+          } = this.state;
+    
     let className = 'Preview'
     
-    if (this.state.maximised === true)
+    if (maximised === true)
       className += ' maximised'
       
-    if (this.state.previewType === 'collection' &&
-        this.state.collection &&
-        !this.state.collection.isFetching) {
+    if (previewType === 'collection' && collection && !collection.isFetching) {
       // If we have a collection and it's ready to render
       return (
         <div className={className} style={{
-          top: this.state.previewTop,
-          bottom: this.state.previewBottom
+          top: previewTop,
+          bottom: previewBottom
           }}>
           <div className="toolbar">
             <Button
-              icon={(this.state.maximised) ? 'chevron-right' : 'chevron-left'}
-              className="button-maximise pt-minimal"
-              onClick={ () => { this.setState({maximised: !this.state.maximised})} }
+              icon={(maximised) ? 'chevron-right' : 'chevron-left'}
+              className={`button-maximise ${(maximised) ? 'pt-active' : ''}`}
+              onClick={ () => { this.setState({maximised: !maximised})} }
             />
           
-            <Link to={getPath(this.state.collection.links.ui)} className="pt-button button-link">
+            <Link to={getPath(collection.links.ui)} className="pt-button button-link">
               <span className="pt-icon-folder-open"/>
             </Link>
           
@@ -134,26 +141,28 @@ class Preview extends React.Component {
               <span className="pt-icon-cross button-close pt-button pt-minimal"/>
             </Link>
           </div>
-          <CollectionInfo collection={this.state.collection} />
+          <CollectionInfo collection={collection} />
         </div>
       );
-    } else if (this.state.previewId !== null) {
+    } else if (previewId !== null) {
       // If we have an element to load but it's not ready to render yet
       // (We could add a loading spinner if we want.)
       className += ' loading'
       return (
         <div className={className} style={{
-          top: this.state.previewTop,
-          bottom: this.state.previewBottom
-          }} />
+          top: previewTop,
+          bottom: previewBottom
+          }}>
+          <SectionLoading/>
+        </div>
       );
     } else {
       // If we have no element to display, don't render
       className += ' hidden'
       return (
         <div className={className} style={{
-          top: this.state.previewTop,
-          bottom: this.state.previewBottom
+          top: previewTop,
+          bottom: previewBottom
           }} />
         )
     }
