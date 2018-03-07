@@ -1,6 +1,5 @@
 from aleph import signals
 from aleph.views.cache import blueprint as cache
-from aleph.views.events import blueprint as events
 from aleph.views.base_api import blueprint as base_api
 from aleph.views.documents_api import blueprint as documents_api
 from aleph.views.search_api import blueprint as search_api
@@ -16,7 +15,6 @@ from aleph.views.xref_api import blueprint as xref_api
 
 def mount_app_blueprints(app):
     app.register_blueprint(cache)
-    app.register_blueprint(events)
     app.register_blueprint(base_api)
     app.register_blueprint(documents_api)
     app.register_blueprint(search_api)
