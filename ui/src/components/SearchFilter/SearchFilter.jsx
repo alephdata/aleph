@@ -12,7 +12,7 @@ class SearchFilter extends Component {
     return (
       <div className="SearchFilter">
         <div className="search-query">
-          <div className="search-query__text">
+          <div className="search-query-text">
             <SearchFilterText query={query} updateQuery={updateQuery}>
               <SearchFilterActiveTags aspects={aspects}
                                       query={query} updateQuery={updateQuery} />

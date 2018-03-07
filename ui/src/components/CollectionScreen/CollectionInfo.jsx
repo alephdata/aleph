@@ -32,8 +32,8 @@ class CollectionInfo extends Component {
     const link = collection.id + '/edit';
 
     return (
-      <DualPane.InfoPane className="CollectionInfo withHeading">
-        <div className="PaneHeading">
+      <DualPane.InfoPane className="CollectionInfo with-heading">
+        <div className="pane-heading">
           <span>
             <FormattedMessage id="collection.info.heading" defaultMessage="Collection"/>
           </span>
@@ -41,7 +41,7 @@ class CollectionInfo extends Component {
             {collection.label}
           </h1>
         </div>
-        <div className="PaneContent">
+        <div className="pane-content">
           <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
             <Tab id="overview" 
               title={
@@ -102,7 +102,7 @@ class CollectionInfo extends Component {
                     </li>
                   </ul>
                   {collection.writeable && <Link to={link}>
-                    <Button className="editButton">
+                    <Button className="edit-button">
                       <FormattedMessage id="collection.info.edit"
                                         defaultMessage="Edit"/>
                     </Button>

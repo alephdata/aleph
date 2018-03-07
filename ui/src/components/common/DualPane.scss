@@ -19,7 +19,7 @@ $aleph-infobar-width: $aleph-grid-size * 40;
   display: flex;
   flex-direction: column;
   
-  &.limitedWidth {
+  &.limited-width {
     margin: 0 auto;
     max-width: 800px;
   }
@@ -42,28 +42,28 @@ $aleph-infobar-width: $aleph-grid-size * 40;
     overflow-wrap: break-word;
   }
 
-  .editButton {
+  .edit-button {
     width: 8em;
   }
 
-  &.withHeading {
+  &.with-heading {
     padding: 0 !important;
     background: $aleph-content-background;
 
-    .PaneHeading {
+    .pane-heading {
       background: $aleph-sidebar-background;
       padding: $aleph-grid-size*4 $aleph-grid-size*2;
       color: white;
     }
 
-    .PaneHeading h1 {
+    .pane-heading h1 {
       border: 0;
       margin: 0;
       color: white;
       font-weight: 300;
     }
 
-    .PaneContent {
+    .pane-content {
       padding: $aleph-grid-size $aleph-grid-size*2;
     }
   }
@@ -94,15 +94,19 @@ $aleph-infobar-width: $aleph-grid-size * 40;
  * views, but not for folders or things like spreadsheets.
  */
 .DualPane .ContentPane {
-  .ContentPaneOuter {
+  .content-pane-outer {
     flex: 2;
-    padding: $aleph-grid-size * 4;
-    .ContentPaneInner {
-      background: white;
-      box-shadow: $pt-elevation-shadow-3;
-      max-width: 1024px;
-      margin-left: auto;
-      margin-right: auto;
+    padding: $aleph-grid-size*4;
+    background: $aleph-toolbar-background;
+    .content-pane-inner {
+      padding: $aleph-grid-size * 4;
+      .ContentPaneInner {
+        background: white;
+        box-shadow: $pt-elevation-shadow-3;
+        max-width: 1024px;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
   }
 }

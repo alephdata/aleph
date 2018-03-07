@@ -12,9 +12,6 @@ import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
 import URL from 'src/components/common/URL';
 import { getEntityTags } from 'src/selectors';
 
-import './DocumentInfo.css';
-
-
 class DocumentInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -31,8 +28,8 @@ class DocumentInfo extends React.Component {
   render() {
     const { document } = this.props;
     return (
-      <DualPane.InfoPane className="DocumentInfo withHeading">
-        <div className="PaneHeading">
+      <DualPane.InfoPane className="DocumentInfo with-heading">
+        <div className="pane-heading">
           <span>
             <Schema.Label schema={document.schema} icon={true} />
           </span>
@@ -40,7 +37,7 @@ class DocumentInfo extends React.Component {
             <Entity.Label entity={document} addClass={true}/>
           </h1>
         </div>
-        <div className="PaneContent">
+        <div className="pane-content">
           <Tabs id="DocumentInfoTabs"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
               <Tab id="overview"
                 title={
