@@ -80,3 +80,22 @@ class SoftDeleteModel(DatedModel):
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
+
+
+class EventsEnumMeta(type):
+    def __init__(cls, name, bases, kwds):
+        for name, value in kwds.items():
+            if name.upper() != name:
+                continue
+            value['name'] = name
+            kwds['__all__'][name] = value
+        super(EventsEnumMeta, cls).__init__(name, bases, kwds)
+
+
+class EventsEnum(object):
+    __metaclass__ = EventsEnumMeta
+    __all__ = {}
+
+    @classmethod
+    def get(cls, name):
+        return cls.__all__.get(name)
