@@ -1,6 +1,10 @@
 from aleph.model import Role
 
 
+def update_role(role):
+    pass
+
+
 def check_visible(role, authz):
     """Users should not see group roles which they are not a part of."""
     if role is None:

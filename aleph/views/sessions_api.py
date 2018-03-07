@@ -43,11 +43,8 @@ def load_role():
 def password_login():
     """Provides email and password authentication."""
     data = parse_request(LoginSchema)
-    q = Role.by_email(data.get('email'))
-    q = q.filter(Role.password_digest != None)  # noqa
-    role = q.first()
-
-    if role is None:
+    role = Role.by_email(data.get('email'))
+    if role is None or not role.has_password:
         return Unauthorized("Authentication has failed.")
 
     if not role.check_password(data.get('password')):
