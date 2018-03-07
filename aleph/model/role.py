@@ -1,7 +1,7 @@
 import logging
 
 from flask import current_app
-from sqlalchemy import or_, not_
+from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -80,8 +80,11 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     @classmethod
     def by_email(cls, email):
-        if email:
-            return cls.all().filter_by(email=email)
+        if email is None:
+            return None
+        q = cls.all()
+        q = q.filter(func.lower(cls.email) == email.lower())
+        return q.first()
 
     @classmethod
     def by_api_key(cls, api_key):
@@ -113,7 +116,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
         db.session.add(role)
         db.session.flush()
-
         return role
 
     @classmethod

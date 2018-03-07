@@ -63,7 +63,7 @@ def create():
             'message': 'Invalid code'
         }, status=400)
 
-    role = Role.by_email(email).first()
+    role = Role.by_email(email)
     if role is not None:
         return jsonify({
             'status': 'error',
