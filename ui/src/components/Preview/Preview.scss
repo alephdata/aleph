@@ -25,6 +25,7 @@
   &.hidden {
     width: 0;
     overflow: hidden;
+    box-shadow: none;
   }
   
   &.loading {
@@ -64,6 +65,7 @@
     .pt-button.button-close {
       margin: 0;
       float: right;
+      border-radius: 1em;
     }
   }
   
