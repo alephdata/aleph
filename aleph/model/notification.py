@@ -4,14 +4,12 @@ from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from aleph.core import db
 from aleph.model.role import Role
 from aleph.model.event import Events
-from aleph.model.common import DatedModel
+from aleph.model.common import DatedModel, IdModel
 
 log = logging.getLogger(__name__)
 
 
-class Notification(db.Model, DatedModel):
-    GLOBAL = 'global'
-
+class Notification(db.Model, IdModel, DatedModel):
     _event = db.Column('event', db.String(255))
     channels = db.Column(ARRAY(db.String(255)))
     params = db.Column(JSONB)
@@ -30,14 +28,13 @@ class Notification(db.Model, DatedModel):
         self._event = event
 
     @classmethod
-    def emit(cls, actor, event, channels=[], params={}):
+    def publish(cls, event, actor, channels=[], params={}):
         notf = cls()
         notf.actor = actor
         notf.event = event
+        notf.params = {k: v for (k, v) in params.items() if v is not None}
 
         channels = [c for c in channels if c is not None]
         notf.channels = list(set(channels))
-
-        notf.params = {k: v for (k, v) in params.items() if v is not None}
         db.session.add(notf)
         return notf

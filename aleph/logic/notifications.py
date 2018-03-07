@@ -30,10 +30,10 @@ def publish(event, actor=None, params=None, channels=None):
     params = params or {}
     channels = ensure_list(channels)
     channels.append(channel(actor, clazz=Role))
-    for param, clazz in event.get('params', {}).items():
-        obj = params.get(params)
-        params[param] = object_id(obj, clazz=clazz)
+    for name, clazz in event.get('params', {}).items():
+        obj = params.get(name)
+        params[name] = object_id(obj, clazz=clazz)
         channels.append(channel(obj, clazz=clazz))
-    Notification.emit(event, actor,
-                      params=params,
-                      channels=channels)
+    Notification.publish(event, actor,
+                         params=params,
+                         channels=channels)

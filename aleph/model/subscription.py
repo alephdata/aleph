@@ -3,12 +3,12 @@ from datetime import datetime
 
 from aleph.core import db
 from aleph.model.role import Role
-from aleph.model.common import SoftDeleteModel
+from aleph.model.common import SoftDeleteModel, IdModel
 
 log = logging.getLogger(__name__)
 
 
-class Subscription(db.Model, SoftDeleteModel):
+class Subscription(db.Model, IdModel, SoftDeleteModel):
     channel = db.Column(db.String(255), index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
     role = db.relationship(Role)

@@ -93,7 +93,6 @@ class EventsEnumMeta(type):
 
 class EventsEnum(object):
     __metaclass__ = EventsEnumMeta
-    __all__ = {}
 
     @classmethod
     def get(cls, name):

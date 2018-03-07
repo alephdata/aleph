@@ -7,6 +7,7 @@ from aleph.model.common import EventsEnum
 
 
 class Events(EventsEnum):
+    __all__ = {}
 
     # UPDATE COLLECTION (collection)
     UPDATE_COLLECTION = {
