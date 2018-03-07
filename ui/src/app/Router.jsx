@@ -15,7 +15,6 @@ import DocumentRelatedScreen from 'src/components/DocumentScreen/DocumentRelated
 import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
-import CollectionEditScreen from 'src/components/CollectionEdit';
 
 import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
 import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
@@ -55,7 +54,6 @@ class Router extends Component {
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
         <Route path="/collections" exact component={CollectionsIndexScreen}/>
         <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
-        <Route path="/collections/:collectionId/edit" exact component={CollectionEditScreen}/>
         <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionsXrefScreen}/>
         <Route path="/search" exact component={SearchScreen}/>
         <Route path="/" exact component={HomeScreen}/>

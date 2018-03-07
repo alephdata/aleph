@@ -14,7 +14,7 @@ import CollectionInfoXref from './CollectionInfoXref';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog';
 
 import { fetchCollectionPermissions } from 'src/actions';
-import CollectionPermissionsEdit from "../CollectionEdit/CollectionPermissionsEdit";
+import CollectionPermissionsEdit from "../CollectionPermissions/CollectionPermissionsEdit";
 
 class CollectionInfo extends Component {
   constructor(props) {
