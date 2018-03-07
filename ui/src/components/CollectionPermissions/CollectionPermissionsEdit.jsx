@@ -4,10 +4,10 @@ import {connect} from 'react-redux';
 import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 
 import Role from 'src/components/common/Role';
-
-import './CollectionPermissionsEdit.css';
 import {showSuccessToast} from "../../app/toast";
 import {updateCollectionPermissions} from "../../actions";
+
+import './CollectionPermissionsEdit.css';
 
 const messages = defineMessages({
   save_success: {
@@ -20,17 +20,15 @@ class PermissionRow extends Component {
   render() {
     const { permission, onToggle } = this.props;
     return (<tr>
-      <td className='first-row'>
+      <td>
         {permission.role.name}
       </td>
       <td className='other-rows'>
-        <Checkbox className='checkbox-center'
-                  checked={permission.read}
+        <Checkbox checked={permission.read}
                   onChange={() => onToggle(permission, 'read')} />
       </td>
       <td className='other-rows'>
-        <Checkbox className='checkbox-center'
-                  checked={permission.write}
+        <Checkbox checked={permission.write}
                   onChange={() => onToggle(permission, 'write')} />
       </td>
     </tr>);
@@ -85,11 +83,11 @@ class CollectionPermissionsEdit extends Component {
 
     return (
       <React.Fragment>
-      <table className="settings-table">
+      <table className="settings-table CollectionPermissions">
         <thead>
         <tr key={0}>
-          <th className='topic' />
-          <th className='other-topics'>
+          <th/>
+          <th>
             <FormattedMessage id="collection.edit.permissionstable.view"
                               defaultMessage="View"/>
           </th>
@@ -99,14 +97,14 @@ class CollectionPermissionsEdit extends Component {
           </th>
         </tr>
         </thead>
-        <tbody className='table_body_alerts'>
+        <tbody>
         {this.filterPermissions('system').map((permission) =>
           <PermissionRow key={permission.role.id}
                          permission={permission}
                          onToggle={this.onToggle} />
         )}
-        <tr key={'groups'} className='table-row'>
-          <td className='first-row header_topic'>
+        <tr key={'groups'}>
+          <td className='header-topic'>
             <FormattedMessage id="collection.edit.groups"
                               defaultMessage="Groups"/>
           </td>
@@ -118,8 +116,8 @@ class CollectionPermissionsEdit extends Component {
                          permission={permission}
                          onToggle={this.onToggle} />
         )}
-        <tr key={'users'} className='table-row'>
-          <td className='first-row header_topic'>
+        <tr key={'users'}>
+          <td className='header-topic'>
             <FormattedMessage id="collection.edit.users"
                               defaultMessage="Users"/>
           </td>
@@ -131,8 +129,8 @@ class CollectionPermissionsEdit extends Component {
                          permission={permission}
                          onToggle={this.onToggle} />
         )}
-        <tr key="add" className='table-row'>
-          <td className='first-row'>
+        <tr key="add">
+          <td>
             <Role.Select onSelect={this.onAddRole}
                          exclude={exclude} />
           </td>
@@ -142,8 +140,8 @@ class CollectionPermissionsEdit extends Component {
         </tbody>
       </table>
         <Button className="pt-fill" onClick={this.onSave}>
-          <FormattedMessage id="collection.info.permissions"
-                            defaultMessage="Add permissions"/>
+          <FormattedMessage id="collection.info.permissions.update"
+                            defaultMessage="Update permissions"/>
         </Button>
       </React.Fragment>
     );
