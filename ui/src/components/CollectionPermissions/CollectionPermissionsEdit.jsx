@@ -91,7 +91,7 @@ class CollectionPermissionsEdit extends Component {
             <FormattedMessage id="collection.edit.permissionstable.view"
                               defaultMessage="View"/>
           </th>
-          <th className='other-topics'>
+          <th>
             <FormattedMessage id="collection.edit.permissionstable.edit"
                               defaultMessage="Edit"/>
           </th>

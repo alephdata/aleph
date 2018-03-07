@@ -60,7 +60,7 @@ class CollectionInfo extends Component {
 
   render() {
     const {collection} = this.props;
-    const {permissions} = this.state;
+    const {permissions, activeTabId, collectionInfoIsOpen} = this.state;
 
     return (
       <DualPane.InfoPane className="CollectionInfo with-heading">
@@ -73,7 +73,7 @@ class CollectionInfo extends Component {
           </h1>
         </div>
         <div className="collection-content">
-          <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+          <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={activeTabId}>
             <Tab id="overview"
               title={
                 <React.Fragment>
@@ -140,7 +140,7 @@ class CollectionInfo extends Component {
                       </Button>
                       <CollectionEditDialog
                         collection={collection}
-                        isOpen={this.state.collectionInfoIsOpen}
+                        isOpen={collectionInfoIsOpen}
                         toggleDialog={this.toggleCollectionEdit}
                       />
                     </React.Fragment>}
@@ -156,7 +156,7 @@ class CollectionInfo extends Component {
               }
               panel={<CollectionInfoXref collection={collection} />}
             />
-            {collection.writeable &&<Tab id="permissions"
+            {collection.writeable && <Tab id="permissions"
                  title={
                    <React.Fragment>
                      <span className="pt-icon-standard pt-icon-database"/>
