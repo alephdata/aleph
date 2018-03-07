@@ -33,6 +33,19 @@ class CollectionLink extends Component {
   }
 }
 
+
+class CollectionPreviewLink extends Component {
+  render() {
+    const { collection, icon = true, className } = this.props;
+
+    return (
+      <a href={`#preview:id=${collection.id}&preview:type=collection`}>
+        <Collection.Label collection={collection} icon={icon} />
+      </a>
+    );
+  }
+}        
+
 class CollectionLoad extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
@@ -77,6 +90,7 @@ class Collection {
   static Label = CollectionLabel;
   static Link = CollectionLink;
   static Load = CollectionLoad;
+  static PreviewLink = CollectionPreviewLink;
 }
 
 export default Collection;

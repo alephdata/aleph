@@ -72,7 +72,7 @@ class Navbar extends React.Component {
     const {metadata, session, intl, isHomepage} = this.props
 
     return (
-      <div className="Navbar">
+      <div id="Navbar" className="Navbar">
         <nav className="pt-navbar">
           <div className="pt-navbar-group pt-align-left">
             <div className="pt-navbar-heading">

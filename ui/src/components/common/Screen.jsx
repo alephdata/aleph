@@ -5,9 +5,10 @@ import {Helmet} from 'react-helmet';
 import c from 'classnames';
 
 import {Navbar} from 'src/components/Navbar';
+import Preview from "src/components/Preview";
+import Footer from "../Footer/Footer";
 
 import './Screen.css';
-import Footer from "../Footer/Footer";
 
 class Screen extends React.Component {
 
@@ -41,6 +42,8 @@ class Screen extends React.Component {
         <main className={mainClass}>
           {this.props.children}
         </main>
+          
+        <Preview/>
 
         <Footer isHomepage={isHomepage}
                 metadata={metadata}
