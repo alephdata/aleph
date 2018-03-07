@@ -76,17 +76,14 @@ def delete_collection(collection_id, wait=False):
     deleted_at = datetime.utcnow()
     index_delete(collection_id, wait=wait)
 
-    log.info("Delete cross-referencing matches...")
+    log.info("Deleting cross-referencing matches...")
     Match.delete_by_collection(collection_id)
 
-    log.info("Delete permissions...")
+    log.info("Deleting permissions...")
     Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
 
-    log.info("Delete documents...")
-    Document.delete_by_collection(collection_id, deleted_at=deleted_at)
-
-    log.info("Delete entities...")
-    Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
+    delete_documents(collection_id, wait=wait)
+    delete_entities(collection_id, wait=wait)
 
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
@@ -94,32 +91,15 @@ def delete_collection(collection_id, wait=False):
 
 @celery.task()
 def delete_entities(collection_id, wait=False):
-    q = db.session.query(Collection)
-    q = q.filter(Collection.id == collection_id)
-    collection = q.first()
-    if collection is None:
-        log.error("No collection with ID: %r", collection_id)
-        return
-
     deleted_at = datetime.utcnow()
-
-    log.info("Delete entities...")
+    log.info("Deleting entities...")
     Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
     index_delete_entities(collection_id, wait=wait)
 
 
-
 @celery.task()
 def delete_documents(collection_id, wait=False):
-    q = db.session.query(Collection)
-    q = q.filter(Collection.id == collection_id)
-    collection = q.first()
-    if collection is None:
-        log.error("No collection with ID: %r", collection_id)
-        return
-
     deleted_at = datetime.utcnow()
-
-    log.info("Delete documents...")
+    log.info("Deleting documents...")
     Document.delete_by_collection(collection_id, deleted_at=deleted_at)
     index_delete_documents(collection_id, wait=wait)
