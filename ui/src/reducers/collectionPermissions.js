@@ -8,7 +8,7 @@ const initialState = {};
 export default createReducer({
   [fetchCollectionPermissions.COMPLETE]: (state, { id, data }) =>
     set(id, data.results)(state),
-  
+
   [updateCollectionPermissions.COMPLETE]: (state, { id, data }) =>
     set(id, data.results)(state),
 

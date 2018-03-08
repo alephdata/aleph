@@ -66,6 +66,10 @@ $aleph-infobar-width: $aleph-grid-size * 40;
     .pane-content {
       padding: $aleph-grid-size $aleph-grid-size*2;
     }
+
+    .collection-content {
+      padding: $aleph-grid-size $aleph-grid-size;
+    }
   }
 }
 

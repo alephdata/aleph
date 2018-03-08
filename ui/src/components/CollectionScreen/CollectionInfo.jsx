@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {FormattedMessage} from 'react-intl';
 import { Button, Tab, Tabs } from "@blueprintjs/core";
-import {Link} from 'react-router-dom';
 
 import DualPane from 'src/components/common/DualPane';
 import Category from 'src/components/common/Category';
@@ -12,24 +11,56 @@ import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
 
 import CollectionInfoXref from './CollectionInfoXref';
+import CollectionEditDialog from 'src/dialogs/CollectionEditDialog';
 
+import { fetchCollectionPermissions } from 'src/actions';
+import CollectionPermissionsEdit from "../CollectionPermissions/CollectionPermissionsEdit";
 
 class CollectionInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTabId: 'overview'
+      activeTabId: 'overview',
+      collectionInfoIsOpen: false,
+      permissions: props.permissions
     };
+
     this.handleTabChange = this.handleTabChange.bind(this);
+    this.toggleCollectionEdit = this.toggleCollectionEdit.bind(this);
+    this.fetchCollection = this.fetchCollection.bind(this);
   }
-  
+
+  componentDidMount() {
+    const { collection } = this.props;
+    this.setState({ permissions: [] });
+    this.props.fetchCollectionPermissions(collection.id);
+  }
+
+  fetchCollection() {
+    const { collection } = this.props;
+    this.setState({ permissions: [] });
+    this.props.fetchCollectionPermissions(collection.id);
+  }
+
+  componentWillReceiveProps(nextProps) {
+      this.setState({
+        permissions: nextProps.permissions
+      });
+  }
+
   handleTabChange(activeTabId: TabId) {
     this.setState({ activeTabId });
   }
-  
+
+  toggleCollectionEdit() {
+    this.setState({
+      collectionInfoIsOpen: !this.state.collectionInfoIsOpen
+    })
+  }
+
   render() {
     const {collection} = this.props;
-    const link = collection.id + '/edit';
+    const {permissions, activeTabId, collectionInfoIsOpen} = this.state;
 
     return (
       <DualPane.InfoPane className="CollectionInfo with-heading">
@@ -41,9 +72,9 @@ class CollectionInfo extends Component {
             {collection.label}
           </h1>
         </div>
-        <div className="pane-content">
-          <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
-            <Tab id="overview" 
+        <div className="collection-content">
+          <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={activeTabId}>
+            <Tab id="overview"
               title={
                 <React.Fragment>
                   <span className="pt-icon-standard pt-icon-info-sign"/>
@@ -101,16 +132,22 @@ class CollectionInfo extends Component {
                       </span>
                     </li>
                   </ul>
-                  {collection.writeable && <Link to={link}>
-                    <Button className="edit-button">
-                      <FormattedMessage id="collection.info.edit"
-                                        defaultMessage="Edit"/>
-                    </Button>
-                  </Link>}
+                  {collection.writeable &&
+                    <React.Fragment>
+                      <Button className="pt-fill" onClick={this.toggleCollectionEdit}>
+                        <FormattedMessage id="collection.info.edit"
+                                          defaultMessage="Edit info"/>
+                      </Button>
+                      <CollectionEditDialog
+                        collection={collection}
+                        isOpen={collectionInfoIsOpen}
+                        toggleDialog={this.toggleCollectionEdit}
+                      />
+                    </React.Fragment>}
                 </React.Fragment>
               }
             />
-            <Tab id="xref" 
+            <Tab id="xref"
               title={
                 <React.Fragment>
                   <span className="pt-icon-standard pt-icon-database"/>
@@ -119,6 +156,15 @@ class CollectionInfo extends Component {
               }
               panel={<CollectionInfoXref collection={collection} />}
             />
+            {collection.writeable && <Tab id="permissions"
+                 title={
+                   <React.Fragment>
+                     <span className="pt-icon-standard pt-icon-database"/>
+                     <FormattedMessage id="collection.info.source" defaultMessage="Permissions"/>
+                   </React.Fragment>
+                 }
+                 panel={<CollectionPermissionsEdit collection={collection} permissions={permissions} />}
+            />}
             <Tabs.Expander />
           </Tabs>
         </div>
@@ -128,7 +174,11 @@ class CollectionInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {};
+  const collectionId = ownProps.collection.id;
+  return {
+    collectionId,
+    permissions: state.collectionPermissions[collectionId] || []
+  };
 };
 
-export default connect(mapStateToProps)(CollectionInfo);
+export default connect(mapStateToProps, {fetchCollectionPermissions})(CollectionInfo);
