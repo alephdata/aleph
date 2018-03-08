@@ -38,7 +38,7 @@ class DocumentToolbar extends React.Component {
   }
     
   render() {
-    const { intl } = this.props;
+    const { intl, location: loc } = this.props;
     const defaultPlaceholder = intl.formatMessage(messages.default_placeholder);
     const queryPlaceholder = this.props.queryPlaceholder || defaultPlaceholder;
     const searchDisabled = this.props.onChangeQuery === undefined;
@@ -51,7 +51,11 @@ class DocumentToolbar extends React.Component {
 
     return (
       <div className="DocumentToolbar">
-        <PagingButtons pageNumber={this.props.pageNumber} pageTotal={this.props.pageTotal}/>
+        <PagingButtons
+          pageNumber={this.props.pageNumber}
+          pageTotal={this.props.pageTotal}
+          location={loc}
+          />
         <form onSubmit={this.onSubmitSearch} className="ToolbarSearchForm">
           <div className="pt-input-group">
             <span className="pt-icon pt-icon-search"></span>

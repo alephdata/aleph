@@ -11,6 +11,7 @@ import { fetchCollection, fetchEntity, fetchDocument } from 'src/actions';
 import CollectionInfo from 'src/components/CollectionScreen/CollectionInfo';
 import EntityInfo from 'src/components/EntityScreen/EntityInfo';
 import DocumentInfo from 'src/components/DocumentScreen/DocumentInfo';
+import DocumentContent from 'src/components/DocumentScreen/DocumentContent';
 import SectionLoading from 'src/components/common/SectionLoading';
 
 import './Preview.css';
@@ -110,7 +111,6 @@ class Preview extends React.Component {
 
   // @TODO Debounce this callback!
   handleScroll(event) {
-    const previewWidth = document.getElementById('Preview').offsetWidth;
     const navbarHeight = document.getElementById('Navbar').getBoundingClientRect().height;
     const footerHeight = document.getElementById('Footer').getBoundingClientRect().height;
     const scrollPos = window.scrollY;
@@ -123,6 +123,7 @@ class Preview extends React.Component {
     /*
     if (this.state.reflowContent === true) {
       setTimeout(() => {
+        const previewWidth = document.getElementById('Preview').offsetWidth;
         [...document.getElementsByClassName("ContentPane")].forEach(
           (element, index, array) => {
             element.style.paddingRight = `${previewWidth + 20}px`;
@@ -145,11 +146,7 @@ class Preview extends React.Component {
     this.setState({ maximised: !this.state.maximised })
     
     // @EXPERIMENTAL - Enable this if handleScroll content padding is enabled
-    /*
-    if (this.state.reflowContent === true) {
-      setTimeout(() => { this.handleScroll(); }, 500);
-    }
-    */
+    // this.handleScroll();
   }
   
   render() {
@@ -162,7 +159,8 @@ class Preview extends React.Component {
             entity,
             document: doc
           } = this.state;
-
+    const { location: loc} = this.props;
+    
     let className = 'Preview'
     
     if (maximised === true)
@@ -184,9 +182,15 @@ class Preview extends React.Component {
     }
     
     if (previewType === 'document' && doc && !doc.isFetching) {
-      view = <DocumentInfo document={doc} />
+      view = (maximised === true) ? <DocumentContent document={doc} fragId={loc.hash}/> : <DocumentInfo document={doc} />
       link = getPath(doc.links.ui)
       linkIcon = 'document'
+      
+      // @FIXME: This is a hack to trigger window resize event when displaying
+      // a document preview. This forces the PDF viewer to display at the 
+      // right size (otherwise it displays at the incorrect height).
+      if (maximised === true)
+        setTimeout(() => {window.dispatchEvent(new Event('resize')) }, 1000);
     }
 
     if (view !== null) {
@@ -201,7 +205,7 @@ class Preview extends React.Component {
             toggleMaximise={ this.toggleMaximise }
             link={link}
             linkIcon={linkIcon}
-            location={this.props.location}
+            location={loc}
             />
           {view}
         </div>

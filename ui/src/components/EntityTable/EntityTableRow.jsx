@@ -18,7 +18,7 @@ class EntityTableRow extends Component {
     return (
       <tr className={`nowrap`}>
         <td className="entity">
-          <Entity.Link entity={entity} icon />
+          <Entity.PreviewLink entity={entity} icon />
         </td>
         {!hideCollection && 
           <td className="collection">
