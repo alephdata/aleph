@@ -167,42 +167,29 @@ class Preview extends React.Component {
     
     if (maximised === true)
       className += ' maximised'
-      
-    if (previewType === 'collection' && collection && !collection.isFetching) {
-      // If we have a collection and it's ready to render
-      return (
-        <div id="Preview" className={className} style={{
-          top: previewTop,
-          bottom: previewBottom
-          }}>
-          <PreviewToolbar
-            maximised={maximised}
-            toggleMaximise={ this.toggleMaximise }
-            link={getPath(collection.links.ui)}
-            linkIcon='folder-open'
-            location={this.props.location}
-            />
-          <CollectionInfo collection={collection} />
-        </div>
-      );
-    } else if (previewType === 'entity' && entity && !entity.isFetching) {
-      // If we have an entity and it's ready to render
-      return (
-        <div id="Preview" className={className} style={{
-          top: previewTop,
-          bottom: previewBottom
-          }}>
-          <PreviewToolbar
-            maximised={maximised}
-            toggleMaximise={ this.toggleMaximise }
-            link={getPath(entity.links.ui)}
-            linkIcon='folder-open'
-            location={this.props.location}
-            />
-          <EntityInfo entity={entity} />
-        </div>
-      );
-    } else if (previewType === 'document' && doc && !doc.isFetching) {
+    
+    let view = null,
+        link = null,
+        linkIcon = null;
+    
+    if (previewType === 'collection' && collection && !collection.isFetching) {      
+      view = <CollectionInfo collection={collection} />
+      link = getPath(collection.links.ui)
+      linkIcon = 'folder-open'
+    }
+    if (previewType === 'entity' && entity && !entity.isFetching) {
+      view = <EntityInfo entity={entity} />
+      link = getPath(entity.links.ui)
+      linkIcon = 'folder-open'
+    }
+    
+    if (previewType === 'document' && doc && !doc.isFetching) {
+      view = <DocumentInfo document={doc} />
+      link = getPath(doc.links.ui)
+      linkIcon = 'document'
+    }
+
+    if (view !== null) {
       // If we have a document and it's ready to render
       return (
         <div id="Preview" className={className} style={{
@@ -212,11 +199,11 @@ class Preview extends React.Component {
           <PreviewToolbar
             maximised={maximised}
             toggleMaximise={ this.toggleMaximise }
-            link={getPath(doc.links.ui)}
-            linkIcon='document'
+            link={link}
+            linkIcon={linkIcon}
             location={this.props.location}
             />
-          <DocumentInfo document={doc} />
+          {view}
         </div>
       );
   } else if (previewId !== null) {
