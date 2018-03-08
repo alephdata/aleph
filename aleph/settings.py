@@ -85,6 +85,9 @@ SECRET_KEY = env.get('ALEPH_SECRET_KEY')
 # Assumes a comma-separated list.
 ADMINS = env_list('ALEPH_ADMINS')
 
+# Set the foreign ID of the default system user.
+SYSTEM_USER = env.get('ALEPH_SYSTEM_USER', 'system:aleph')
+
 # Configure your OAUTH login provider, providing the details as described in
 # https://flask-oauthlib.readthedocs.io/en/latest/client.html
 #

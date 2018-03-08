@@ -105,7 +105,9 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         if role.api_key is None:
             role.api_key = make_textid()
 
-        role.email = email
+        if email is not None:
+            role.email = email
+
         if is_admin is not None:
             role.is_admin = is_admin
 
@@ -120,9 +122,9 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     @classmethod
     def load_cli_user(cls):
-        return cls.load_or_create(foreign_id='system:aleph',
-                                  type=cls.USER,
-                                  name='Aleph')
+        return cls.load_or_create(foreign_id=settings.SYSTEM_USER,
+                                  name='Aleph',
+                                  type=cls.USER)
 
     @classmethod
     def load_id(cls, foreign_id, type=None, name=None):
