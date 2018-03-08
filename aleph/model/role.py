@@ -53,6 +53,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def has_password(self):
         return self.password_digest is not None
 
+    @property
+    def is_public(self):
+        return self.id in self.public_roles()
+
     def update(self, data):
         self.name = data.get('name', self.name)
         if data.get('password'):
@@ -68,10 +72,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         self.roles.append(role)
         db.session.add(role)
         db.session.add(self)
-
-    @classmethod
-    def notifiable(cls):
-        return cls.all_ids().filter(cls.email != None)  # noqa
 
     @classmethod
     def by_foreign_id(cls, foreign_id):

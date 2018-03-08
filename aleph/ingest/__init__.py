@@ -4,7 +4,6 @@ from ingestors.util import is_file
 from aleph.core import db, archive, celery
 from aleph.model import Document, Role
 from aleph.ingest.manager import DocumentManager
-from aleph.notify import notify_role_template
 
 log = logging.getLogger(__name__)
 
@@ -51,19 +50,9 @@ def ingest(document_id, role_id=None):
     from aleph.logic.collections import update_collection
     update_collection(document.collection)
 
-    pending = Document.pending_count(collection_id=document.collection.id)
-    if pending == 0:
-        ingest_complete(document.collection, role_id=role_id)
-
-
-def ingest_complete(collection, role_id=None):
-    """Operations supposed to be performed when an ingest process completes."""
-    from aleph.logic.collections import collection_url  # noqa
-    role = Role.by_id(role_id)
-    if role is not None and not collection.managed:
-        # notify the user that their import is completed.
-        notify_role_template(role,
-                             collection.label,
-                             'email/ingest.html',
-                             collection=collection,
-                             url=collection_url(collection.id))
+    from aleph.logic.notifications import publish
+    params = {
+        'document': document,
+        'collection': document.collection
+    }
+    publish(Events.INGEST_DOCUMENT, role_id, params=params)

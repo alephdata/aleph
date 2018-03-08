@@ -31,7 +31,8 @@ class Events(EventsEnum):
         'template': '{{entity}} matches your alert for {{alert}}.',
         'params': {
             'entity': Entity,
-            'alert': Alert
+            'alert': Alert,
+            'role': Role
         }
     }
 
