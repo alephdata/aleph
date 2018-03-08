@@ -105,4 +105,20 @@
       padding: $aleph-grid-size $aleph-grid-size*2;
     }
   }
+  
+  /* Special case handling for collection sidebar which has custom padding */
+  .CollectionInfo {
+    .collection-content {
+      padding: 0 $aleph-grid-size;
+    }
+  }
+  
+  /*
+  .ContentPane,
+  .content-pane-outer,
+  .content-pane-inner,
+  .content-pane-inner > * {
+    height: 100%;
+  }
+  */
 }

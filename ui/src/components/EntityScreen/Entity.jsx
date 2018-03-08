@@ -12,7 +12,6 @@ import { fetchEntity } from 'src/actions';
 
 import './Entity.css';
 
-
 class EntityLabel extends Component {
   render() {
     const {icon = false, truncate} = this.props;
@@ -55,6 +54,24 @@ class EntityLink extends Component {
       <Link to={getPath(entity.links.ui)} className={c('EntityLink', className)}>
         <Entity.Label entity={entity} icon={icon} truncate={truncate}/>
       </Link>
+    );
+  }
+}
+
+class EntityPreviewLink extends Component {
+  render() {
+    const {entity, className, icon, truncate} = this.props;
+    if (!entity || !entity.links) {
+      return <Entity.Label entity={entity} icon={icon} truncate={truncate}/>;
+    }
+
+    // Determine if entity is a 'Document' or an actual entity
+    const previewType = (entity.schemata && entity.schemata.indexOf('Document') !== -1) ? 'document' : 'entity';
+    
+    return (
+      <a href={`#preview:id=${entity.id}&preview:type=${previewType}`} className={c('EntityLink', className)}>
+        <Entity.Label entity={entity} icon={icon} truncate={truncate} />
+      </a>
     );
   }
 }
@@ -103,6 +120,7 @@ class Entity {
   static Label = EntityLabel;
   static Link = EntityLink;
   static Load = EntityLoad;
+  static PreviewLink = EntityPreviewLink;
 }
 
 export default Entity;

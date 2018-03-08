@@ -7,7 +7,6 @@ import getPath from 'src/util/getPath';
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
 
-
 class CollectionLabel extends Component {
   render() {
     const { collection, icon = true } = this.props;
@@ -33,7 +32,6 @@ class CollectionLink extends Component {
   }
 }
 
-
 class CollectionPreviewLink extends Component {
   render() {
     const { collection, icon = true, className } = this.props;
@@ -44,7 +42,7 @@ class CollectionPreviewLink extends Component {
       </a>
     );
   }
-}        
+}
 
 class CollectionLoad extends Component {
   componentDidMount() {
