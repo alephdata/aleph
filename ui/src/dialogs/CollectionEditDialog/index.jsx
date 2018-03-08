@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
+import { connect } from 'react-redux';
+import { Dialog, Button, Intent } from '@blueprintjs/core';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import DualPane from 'src/components/common/DualPane';
 import Role from 'src/components/common/Role';
 import Country from 'src/components/common/Country';
-
-import './CollectionEditInfo.css';
+import {showSuccessToast} from "../../app/toast";
+import {updateCollection} from "../../actions";
 
 const messages = defineMessages({
   placeholder_label: {
@@ -16,10 +16,23 @@ const messages = defineMessages({
   placeholder_summary: {
     id: 'collection.edit.info.placeholder_summary',
     defaultMessage: 'A brief summary of this collection',
-  }
+  },
+  title : {
+    id: 'collection.edit.info.title',
+    defaultMessage: 'Collection info'
+  },
+  save_button: {
+    id: 'collection.edit.info.save',
+    defaultMessage: 'Update',
+  },
+  save_success: {
+    id: 'collection.edit.save_success',
+    defaultMessage: 'Your changes are saved.',
+  },
 });
 
-class CollectionEditInfo extends Component {
+
+class CollectionEditDialog extends Component {
   constructor(props) {
     super(props);
 
@@ -27,6 +40,7 @@ class CollectionEditInfo extends Component {
       collection: props.collection,
     };
 
+    this.onSave = this.onSave.bind(this);
     this.onSelectCountries = this.onSelectCountries.bind(this);
     this.onSelectCreator = this.onSelectCreator.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
@@ -42,40 +56,46 @@ class CollectionEditInfo extends Component {
     const { collection } = this.props;
     collection[target.id] = target.value;
     this.setState({collection: collection});
-    this.props.onChangeCollection(collection);
   }
 
   onSelectCountries(countries) {
     const { collection } = this.props;
     collection.countries = countries;
     this.setState({collection: collection});
-    this.props.onChangeCollection(collection);
   }
 
   onSelectCreator(creator) {
     const { collection } = this.props;
     collection.creator = creator;
     this.setState({collection: collection});
-    this.props.onChangeCollection(collection);
+  }
+
+  async onSave() {
+    const { intl } = this.props;
+    const { collection } = this.state;
+
+    await this.props.updateCollection(collection);
+    showSuccessToast(intl.formatMessage(messages.save_success));
+    this.props.toggleDialog();
   }
 
   render() {
-    const {intl, categories} = this.props;
-    const {collection} = this.state;
-
+    const { intl, categories } = this.props;
+    const { collection } = this.state;
     return (
-      <DualPane.InfoPane className="CollectionEditInfo">
-        <div>
-          <div className="pt-form-group label_group">
-            <div className='label-icon-group'>
-              <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label-class">
+      <Dialog
+        icon="cog"
+        isOpen={this.props.isOpen}
+        onClose={this.props.toggleDialog}
+        title={intl.formatMessage(messages.title)}>
+        <div className="pt-dialog-body">
+          <div className="pt-form-group">
+              <label className="pt-label">
                 <FormattedMessage id="collection.edit.info.label" defaultMessage="Label"/>
               </label>
-            </div>
             <div className="pt-form-content">
               <input id="label"
-                     className="pt-input pt-large input-class"
+                     className="pt-input pt-large pt-fill"
                      type="text"
                      placeholder={intl.formatMessage(messages.placeholder_label)}
                      dir="auto"
@@ -83,13 +103,10 @@ class CollectionEditInfo extends Component {
                      value={collection.label || ''}/>
             </div>
           </div>
-          <div className="pt-form-group label-group">
-            <div className='label-icon-group'>
-              <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label-class">
+          <div className="pt-form-group">
+              <label className="pt-label">
                 <FormattedMessage id="collection.edit.info.category" defaultMessage="Category"/>
               </label>
-            </div>
             <div className="pt-select pt-fill">
               <select id="category" onChange={this.onFieldChange} value={collection.category}>
                 { Object.keys(categories).map((key) => (
@@ -100,16 +117,13 @@ class CollectionEditInfo extends Component {
               </select>
             </div>
           </div>
-          <div className="pt-form-group label-group">
-            <div className='label-icon-group'>
-              <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label-class">
+          <div className="pt-form-group">
+              <label className="pt-label">
                 <FormattedMessage id="collection.edit.info.summary" defaultMessage="Summary"/>
               </label>
-            </div>
             <div className="pt-form-content">
               <textarea id="summary"
-                        className="pt-input input-class"
+                        className="pt-input pt-fill"
                         placeholder={intl.formatMessage(messages.placeholder_summary)}
                         dir="auto"
                         rows={5}
@@ -117,38 +131,29 @@ class CollectionEditInfo extends Component {
                         value={collection.summary || ''}/>
             </div>
           </div>
-          <div className="pt-form-group label-group">
-            <div className='label-icon-group'>
-              <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label-class">
+          <div className="pt-form-group">
+              <label className="pt-label">
                 <FormattedMessage id="collection.edit.info.contact" defaultMessage="Contact"/>
               </label>
-            </div>
             <div className="pt-form-content">
               <Role.Select role={collection.creator}
                            onSelect={this.onSelectCreator} />
             </div>
           </div>
-          <div className="pt-form-group label-group">
-            <div className='label-icon-group'>
-              <i className="fa fa-id-card" aria-hidden="true"/>
-              <label className="pt-label label-class">
+          <div className="pt-form-group">
+              <label className="pt-label">
                 <FormattedMessage id="collection.edit.info.countries" defaultMessage="Countries"/>
               </label>
-            </div>
             <Country.MultiSelect
               onChange={this.onSelectCountries}
               codes={collection.countries} />
           </div>
-          <div className="pt-form-group label-group">
-            <div className='label-icon-group'>
-              <i className="fa fa-key" aria-hidden="true"/>
-              <label className="pt-label label-class">
-                Import ID
+          <div className="pt-form-group">
+              <label className="pt-label">
+                <FormattedMessage id="collection.edit.info.import.id" defaultMessage="Import ID"/>
               </label>
-            </div>
             <div className="pt-form-content">
-              <input className="pt-input input-class"
+              <input className="pt-input pt-fill"
                      type="text"
                      dir="auto"
                      disabled
@@ -157,13 +162,24 @@ class CollectionEditInfo extends Component {
             </div>
           </div>
         </div>
-      </DualPane.InfoPane>
+        <div className="pt-dialog-footer">
+          <div className="pt-dialog-footer-actions">
+            <Button
+              intent={Intent.PRIMARY}
+              onClick={this.onSave}
+              text={intl.formatMessage(messages.save_button)}
+            />
+          </div>
+        </div>
+      </Dialog>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { categories: state.metadata.categories }
+  return {
+    categories: state.metadata.categories
+  };
 };
 
-export default connect(mapStateToProps)(injectIntl(CollectionEditInfo));
+export default connect(mapStateToProps, {updateCollection})(injectIntl(CollectionEditDialog));

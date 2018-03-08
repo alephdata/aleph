@@ -12,7 +12,8 @@ class SettingsButton extends Component {
     this.state = {
       settingsIsOpen: false,
       alertsIsOpen: false,
-    }
+    };
+
     this.toggleSettings = this.toggleSettings.bind(this);
     this.toggleAlerts = this.toggleAlerts.bind(this);
   }
