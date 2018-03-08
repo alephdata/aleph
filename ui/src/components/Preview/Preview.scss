@@ -13,7 +13,7 @@
   bottom: 0;
   width: $aleph-infobar-width;
   box-shadow: $pt-elevation-shadow-3;
-  border-left: 1px solid $aleph-border-color;
+  
   background: $aleph-content-background;
   overflow-x: hidden; // just in case.
   transition: width 0.1s ease-in-out;
@@ -51,7 +51,7 @@
     position: relative;
     background: $aleph-toolbar-background;
     padding: $aleph-grid-size;
-    padding-left: $aleph-grid-size* 4;
+    padding-left: $aleph-grid-size*4;
     clear: both;
     overflow: auto;
     
@@ -70,6 +70,7 @@
       top: 0;
       left: 0;
       bottom: 0;
+      border-radius: 0;
     }
     
     .pt-button.button-close {
