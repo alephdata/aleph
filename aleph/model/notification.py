@@ -28,10 +28,10 @@ class Notification(db.Model, IdModel, DatedModel):
         self._event = event
 
     @classmethod
-    def publish(cls, event, actor, channels=[], params={}):
+    def publish(cls, event, actor_id=None, channels=[], params={}):
         notf = cls()
-        notf.actor = actor
         notf.event = event
+        notf.actor_id = actor_id
         notf.params = {k: v for (k, v) in params.items() if v is not None}
 
         channels = [c for c in channels if c is not None]

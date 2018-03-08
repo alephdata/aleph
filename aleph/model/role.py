@@ -119,6 +119,12 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return role
 
     @classmethod
+    def load_cli_user(cls):
+        return cls.load_or_create(foreign_id='system:aleph',
+                                  type=cls.USER,
+                                  name='Aleph')
+
+    @classmethod
     def load_id(cls, foreign_id, type=None, name=None):
         """Load a role and return the ID.
 

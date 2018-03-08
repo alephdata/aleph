@@ -35,13 +35,14 @@ def check_alert(authz, alert):
     results = query.search().get('hits')
     for result in results.get('hits', []):
         document = unpack_result(result)
-        actor_id = document.get('uploader_id')
         params = {
             'alert': alert,
             'role': authz.role,
             'entity': document
         }
-        publish(Events.MATCH_ALERT, actor_id, params=params)
+        publish(Events.MATCH_ALERT,
+                actor_id=document.get('uploader_id'),
+                params=params)
 
     alert.update()
     log.info('Found %d new results for: %s', results['total'], alert.label)
