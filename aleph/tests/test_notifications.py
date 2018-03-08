@@ -13,7 +13,7 @@ class NotificationsTestCase(TestCase):
         event = Events.PUBLISH_COLLECTION
         role = self.create_user()
         collection = self.create_collection(foreign_id='NoNoNo')
-        publish(event, role, params={'collection': collection})
+        publish(event, role.id, params={'collection': collection})
         db.session.commit()
 
         notifications = Notification.all().all()

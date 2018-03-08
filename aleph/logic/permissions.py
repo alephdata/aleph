@@ -15,15 +15,15 @@ def update_permission(role, collection, read, write, editor=None):
     if pre.read != post.read and post.read:
         if role.is_public:
             publish(Events.PUBLISH_COLLECTION,
-                    actor=editor,
+                    actor_id=editor.id,
                     params=params)
         else:
             publish(Events.GRANT_COLLECTION,
-                    actor=editor,
+                    actor_id=editor.id,
                     params=params)
     elif pre.read != post.read and pre.read:
         publish(Events.REVOKE_COLLECTION,
-                actor=editor,
+                actor_id=editor.id,
                 params=params)
     db.session.commit()
     return post

@@ -55,4 +55,6 @@ def ingest(document_id, role_id=None):
         'document': document,
         'collection': document.collection
     }
-    publish(Events.INGEST_DOCUMENT, role_id, params=params)
+    publish(Events.INGEST_DOCUMENT,
+            actor_id=role_id,
+            params=params)

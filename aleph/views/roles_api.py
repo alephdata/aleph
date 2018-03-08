@@ -150,7 +150,8 @@ def permissions_update(id):
         update_permission(role,
                           collection,
                           permission['read'],
-                          permission['write'])
+                          permission['write'],
+                          editor=request.authz.role)
 
     update_collection(collection, roles=True)
     return permissions_index(id)

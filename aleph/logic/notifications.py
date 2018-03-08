@@ -23,17 +23,18 @@ def channel(obj, clazz=None):
         return '%s:%s' % (clazz.__name__, obj)
 
 
-def publish(event, actor=None, params=None, channels=None):
+def publish(event, actor_id=None, params=None, channels=None):
     if not isinstance(event, dict):
         event = Events.get(event)
     assert event is not None, event
     params = params or {}
     channels = ensure_list(channels)
-    channels.append(channel(actor, clazz=Role))
+    channels.append(channel(actor_id, clazz=Role))
     for name, clazz in event.get('params', {}).items():
         obj = params.get(name)
         params[name] = object_id(obj, clazz=clazz)
         channels.append(channel(obj, clazz=clazz))
-    Notification.publish(event, actor,
+    Notification.publish(event,
+                         actor_id=actor_id,
                          params=params,
                          channels=channels)
