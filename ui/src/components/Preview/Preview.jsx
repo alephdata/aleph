@@ -2,12 +2,15 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { Button } from '@blueprintjs/core';
 
 import getPath from 'src/util/getPath';
-import { fetchCollection } from 'src/actions';
+import { fetchCollection, fetchEntity, fetchDocument } from 'src/actions';
 import CollectionInfo from 'src/components/CollectionScreen/CollectionInfo';
+import EntityInfo from 'src/components/EntityScreen/EntityInfo';
+import DocumentInfo from 'src/components/DocumentScreen/DocumentInfo';
 import SectionLoading from 'src/components/common/SectionLoading';
 
 import './Preview.css';
@@ -19,7 +22,9 @@ const defaultState = {
   previewId: null,
   previewType: null,
   previewTab: null,
-  collection: null
+  collection: null,
+  entity: null,
+  document: null
 }
 
 class Preview extends React.Component {
@@ -27,7 +32,10 @@ class Preview extends React.Component {
     super(props);
     this.state = defaultState;
     this.state.collection = props.collection || null;
+    this.state.entity = props.entity || null;
+    this.state.document = props.document || null;
     this.handleScroll = this.handleScroll.bind(this);
+    this.toggleMaximise = this.toggleMaximise.bind(this);
   }
 
   componentDidMount() {
@@ -40,10 +48,16 @@ class Preview extends React.Component {
   }
   
   componentWillReceiveProps(newProps) {
-    // Storing the collection in state rather than using the prop value
+    // Storing the collection/entities in state rather than using the prop value
     // so we can control rendering behaviour (this is a work in progress)
     if (newProps.collection) {
       this.setState({ collection: newProps.collection })
+    }
+    if (newProps.entity) {
+      this.setState({ entity: newProps.entity })
+    }
+    if (newProps.document) {
+      this.setState({ document: newProps.document })
     }
   }
 
@@ -75,6 +89,12 @@ class Preview extends React.Component {
         
         if (previewType === 'collection')
           this.props.fetchCollection({ id: previewId });
+
+        if (previewType === 'entity')
+          this.props.fetchEntity({ id: previewId });
+
+        if (previewType === 'document')
+          this.props.fetchDocument({ id: previewId });
       }
 
       if (this.state.previewTab !== previewTab) {
@@ -90,11 +110,27 @@ class Preview extends React.Component {
 
   // @TODO Debounce this callback!
   handleScroll(event) {
+    const previewWidth = document.getElementById('Preview').offsetWidth;
     const navbarHeight = document.getElementById('Navbar').getBoundingClientRect().height;
     const footerHeight = document.getElementById('Footer').getBoundingClientRect().height;
     const scrollPos = window.scrollY;
     const previewTop = (scrollPos <= navbarHeight) ? navbarHeight - scrollPos : 0;
     const previewBottom = footerHeight;
+
+    // @EXPERIMENTAL When enabled this adds right padding (equal to the width
+    // of the Preview bar) any ContentPane elements on the page.
+    // This is a working proof of concept but not intended as a feature yet.
+    /*
+    if (this.state.reflowContent === true) {
+      setTimeout(() => {
+        [...document.getElementsByClassName("ContentPane")].forEach(
+          (element, index, array) => {
+            element.style.paddingRight = `${previewWidth + 20}px`;
+          }
+        );
+      }, 500);
+    }
+    */
     
     if (previewTop === this.state.previewTop)
       return;
@@ -105,15 +141,28 @@ class Preview extends React.Component {
     })
   }
   
+  toggleMaximise() {
+    this.setState({ maximised: !this.state.maximised })
+    
+    // @EXPERIMENTAL - Enable this if handleScroll content padding is enabled
+    /*
+    if (this.state.reflowContent === true) {
+      setTimeout(() => { this.handleScroll(); }, 500);
+    }
+    */
+  }
+  
   render() {
     const { previewId,
             previewType,
             previewTop,
             previewBottom,
             maximised,
-            collection
+            collection,
+            entity,
+            document: doc
           } = this.state;
-    
+
     let className = 'Preview'
     
     if (maximised === true)
@@ -122,34 +171,60 @@ class Preview extends React.Component {
     if (previewType === 'collection' && collection && !collection.isFetching) {
       // If we have a collection and it's ready to render
       return (
-        <div className={className} style={{
+        <div id="Preview" className={className} style={{
           top: previewTop,
           bottom: previewBottom
           }}>
-          <div className="toolbar">
-            <Button
-              icon={(maximised) ? 'double-chevron-right' : 'double-chevron-left'}
-              className={`button-maximise ${(maximised) ? 'pt-active' : ''}`}
-              onClick={ () => { this.setState({maximised: !maximised})} }
+          <PreviewToolbar
+            maximised={maximised}
+            toggleMaximise={ this.toggleMaximise }
+            link={getPath(collection.links.ui)}
+            linkIcon='folder-open'
+            location={this.props.location}
             />
-          
-            <Link to={getPath(collection.links.ui)} className="pt-button button-link">
-              <span className="pt-icon-folder-open"/>
-            </Link>
-          
-            <Link to={this.props.location.pathname + this.props.location.search}>
-              <span className="pt-icon-cross button-close pt-button pt-minimal"/>
-            </Link>
-          </div>
           <CollectionInfo collection={collection} />
         </div>
       );
-    } else if (previewId !== null) {
+    } else if (previewType === 'entity' && entity && !entity.isFetching) {
+      // If we have an entity and it's ready to render
+      return (
+        <div id="Preview" className={className} style={{
+          top: previewTop,
+          bottom: previewBottom
+          }}>
+          <PreviewToolbar
+            maximised={maximised}
+            toggleMaximise={ this.toggleMaximise }
+            link={getPath(entity.links.ui)}
+            linkIcon='folder-open'
+            location={this.props.location}
+            />
+          <EntityInfo entity={entity} />
+        </div>
+      );
+    } else if (previewType === 'document' && doc && !doc.isFetching) {
+      // If we have a document and it's ready to render
+      return (
+        <div id="Preview" className={className} style={{
+          top: previewTop,
+          bottom: previewBottom
+          }}>
+          <PreviewToolbar
+            maximised={maximised}
+            toggleMaximise={ this.toggleMaximise }
+            link={getPath(doc.links.ui)}
+            linkIcon='document'
+            location={this.props.location}
+            />
+          <DocumentInfo document={doc} />
+        </div>
+      );
+  } else if (previewId !== null) {
       // If we have an element to load but it's not ready to render yet
       // (We could add a loading spinner if we want.)
       className += ' loading'
       return (
-        <div className={className} style={{
+        <div id="Preview" className={className} style={{
           top: previewTop,
           bottom: previewBottom
           }}>
@@ -160,7 +235,7 @@ class Preview extends React.Component {
       // If we have no element to display, don't render
       className += ' hidden'
       return (
-        <div className={className} style={{
+        <div id="Preview" className={className} style={{
           top: previewTop,
           bottom: previewBottom
           }} />
@@ -169,23 +244,67 @@ class Preview extends React.Component {
   }
 }
 
+class PreviewToolbar extends React.Component {
+  render() {
+    const { maximised,
+            toggleMaximise,
+            location: loc,
+            link,
+            linkIcon
+          } = this.props;
+      
+    return (
+      <div className="toolbar">
+        <Button
+          icon={(maximised) ? 'double-chevron-right' : 'double-chevron-left'}
+          className={`button-maximise ${(maximised) ? 'pt-active' : ''}`}
+          onClick={ () => toggleMaximise() }
+        />
+        <Link to={link} className="pt-button button-link">
+          <span className={`pt-icon-${linkIcon}`}/>
+          <FormattedMessage id="sidebar.open" defaultMessage="Open…"/>
+        </Link>
+        <Link to={loc.pathname + loc.search}>
+          <span className="pt-icon-cross button-close pt-button pt-minimal"/>
+        </Link>
+      </div> 
+    )
+  }
+}
+
 const mapStateToProps = (state, ownProps) => {
   const parsedHash = queryString.parse(ownProps.location.hash);
-  let collection = null
+  let collection = null,
+      entity = null,
+      doc = null;
   
-  if (parsedHash['preview:id'] &&
-      parsedHash['preview:type'] && 
-      parsedHash['preview:type'] === 'collection'
-      && state.collections[parsedHash['preview:id']]) {
-      collection = state.collections[parsedHash['preview:id']];
+  if (parsedHash['preview:id'] && parsedHash['preview:type']) {
+    const previewId = parsedHash['preview:id'];
+    const previewType = parsedHash['preview:type'];
+    
+    if (previewType === 'collection' && state.collections[previewId]) {
+      collection = state.collections[previewId];
+    }
+    
+    if (previewType === 'entity' && state.entities[previewId]) {
+      entity = state.entities[previewId];
+    }
+    
+    if (previewType === 'document' && state.entities[previewId]) {
+      doc = state.entities[previewId];
+    }
   }
   return {
-    collection: collection
+    collection: collection,
+    entity: entity,
+    document: doc
   };
 };
 
 Preview = connect(mapStateToProps, {
-  fetchCollection
+  fetchCollection,
+  fetchEntity,
+  fetchDocument
 })(Preview);
 
 Preview = withRouter(Preview);
