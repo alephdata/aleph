@@ -128,7 +128,7 @@ class Preview extends React.Component {
           }}>
           <div className="toolbar">
             <Button
-              icon={(maximised) ? 'chevron-right' : 'chevron-left'}
+              icon={(maximised) ? 'double-chevron-right' : 'double-chevron-left'}
               className={`button-maximise ${(maximised) ? 'pt-active' : ''}`}
               onClick={ () => { this.setState({maximised: !maximised})} }
             />
