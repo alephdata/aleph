@@ -2,8 +2,6 @@ import logging
 from ingestors.util import is_file
 
 from aleph.core import db, archive, celery
-from aleph.core import USER_QUEUE, USER_ROUTING_KEY
-from aleph.core import WORKER_QUEUE, WORKER_ROUTING_KEY
 from aleph.model import Document, Events
 from aleph.ingest.manager import DocumentManager
 
@@ -31,13 +29,10 @@ def ingest_document(document, file_path, role_id=None, shallow=False):
     else:
         document.content_hash = archive.archive_file(file_path)
         db.session.commit()
-        managed = document.collection.managed
-        queue = USER_QUEUE if managed else WORKER_QUEUE
-        routing_key = USER_ROUTING_KEY if managed else WORKER_ROUTING_KEY
+        priority = 3 if document.collection.managed else 5
         ingest.apply_async(args=[document.id],
                            kwargs={'role_id': role_id},
-                           queue=queue,
-                           routing_key=routing_key)
+                           priority=priority)
 
 
 @celery.task()

@@ -50,7 +50,7 @@ def process_collection(collection_id):
     q = q.filter(Document.collection_id == collection_id)
     q = q.filter(Document.parent_id == None)  # noqa
     for document in q:
-        ingest.delay(document.id)
+        ingest.apply_async([document.id], priority=1)
 
     # re-process entities
     q = db.session.query(Entity)
