@@ -32,6 +32,7 @@ class Preview extends React.Component {
   constructor(props) {
     super(props);
     this.state = defaultState;
+    this.state.maximised = props.maximised || null;
     this.state.collection = props.collection || null;
     this.state.entity = props.entity || null;
     this.state.document = props.document || null;
@@ -145,7 +146,13 @@ class Preview extends React.Component {
   toggleMaximise() {
     this.setState({ maximised: !this.state.maximised })
     
-    // @EXPERIMENTAL - Enable this if handleScroll content padding is enabled
+    // Update maximise state in URL so link for current view can be shared but 
+    // deliberately *without* polluting history with a state change.
+    const parsedHash = queryString.parse(this.props.location.hash);
+    parsedHash['preview:maximised'] = !this.state.maximised;
+    window.location.hash = queryString.stringify(parsedHash);
+    
+    // @EXPERIMENTAL - Enable if content padding is enabled in handleScroll()
     // this.handleScroll();
   }
   
