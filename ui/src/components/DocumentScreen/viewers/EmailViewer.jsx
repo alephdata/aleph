@@ -27,6 +27,16 @@ class EmailViewer extends React.Component {
       'filter:parent.id': document.id
     };
     
+    // Render mesage body (with preference for HTML version)
+    let messageBody = <p className="email-no-body pt-text-muted">
+        <FormattedMessage id="email.body.empty" defaultMessage="No message body."/>
+      </p>
+    if (document.html && document.html.length) {
+      messageBody = <span dangerouslySetInnerHTML={{__html: document.html}}/>
+    } else if (document.text && document.text.length > 0) {
+      messageBody = <pre>{document.text}</pre>
+    })
+    
     return (
       <React.Fragment>
         <DocumentToolbar document={document}/>
@@ -81,11 +91,7 @@ class EmailViewer extends React.Component {
                     <FormattedMessage id="email.body" defaultMessage="Message"/>
                   </React.Fragment>
                 }
-                panel={
-                  (document.text && document.text.length > 0)
-                    ? <pre>{document.text}</pre>
-                    : <p className="email-no-body pt-text-muted"><FormattedMessage id="email.body.empty" defaultMessage="No message body."/></p>
-                } 
+                panel={messageBody} 
               />
               <Tab id="attachments"
                 disabled={!document.children}
