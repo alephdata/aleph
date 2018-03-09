@@ -35,7 +35,7 @@ class EmailViewer extends React.Component {
       messageBody = <span dangerouslySetInnerHTML={{__html: document.html}}/>
     } else if (document.text && document.text.length > 0) {
       messageBody = <pre>{document.text}</pre>
-    })
+    }
     
     return (
       <React.Fragment>
