@@ -191,7 +191,6 @@ def export_collection(outfile, collection):
 
 
 def export_collections(outfile):
-
     res = query_collections()
     for hit in res['hits']['hits']:
         collection = hit['_source']
