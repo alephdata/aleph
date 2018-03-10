@@ -11,6 +11,8 @@ log = logging.getLogger(__name__)
 
 
 class Notification(db.Model, IdModel, DatedModel):
+    GLOBAL = 'Global'
+
     _event = db.Column('event', db.String(255))
     channels = db.Column(ARRAY(db.String(255)))
     params = db.Column(JSONB)
@@ -51,5 +53,4 @@ class Notification(db.Model, IdModel, DatedModel):
         q = q.filter(cls.channels.any(sq.c.channel))
         q = q.order_by(cls.created_at.desc())
         q = q.order_by(cls.id.desc())
-        print q
         return q
