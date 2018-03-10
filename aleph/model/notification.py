@@ -38,3 +38,8 @@ class Notification(db.Model, IdModel, DatedModel):
         notf.channels = list(set(channels))
         db.session.add(notf)
         return notf
+
+    @classmethod
+    def by_role(cls, role):
+        q = cls.all()
+        return q
