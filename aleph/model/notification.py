@@ -4,6 +4,7 @@ from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from aleph.core import db
 from aleph.model.role import Role
 from aleph.model.event import Events
+from aleph.model.subscription import Subscription
 from aleph.model.common import DatedModel, IdModel
 
 log = logging.getLogger(__name__)
@@ -41,5 +42,14 @@ class Notification(db.Model, IdModel, DatedModel):
 
     @classmethod
     def by_role(cls, role):
+        sq = db.session.query(Subscription.channel)
+        sq = sq.filter(Subscription.deleted_at == None)  # noqa
+        sq = sq.filter(Subscription.role_id == role.id)
+        sq = sq.cte('sq')
         q = cls.all()
+        q = q.filter(cls.actor_id != role.id)
+        q = q.filter(cls.channels.any(sq.c.channel))
+        q = q.order_by(cls.created_at.desc())
+        q = q.order_by(cls.id.desc())
+        print q
         return q
