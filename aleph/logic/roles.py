@@ -1,14 +1,16 @@
 from aleph.model import db
-from aleph.model import Role, Subscription
+from aleph.model import Role, Subscription, Notification
 from aleph.logic.notifications import channel
 
 
 def update_role(role):
     """Synchronize denormalised role configuration."""
     db.session.flush()
-    Subscription.subscribe(role, channel(role))
     for group in Role.all_groups():
-        Subscription.unsubscribe(role, channel(group))
+        Subscription.unsubscribe(role=role, channel=channel(group))
+
+    Subscription.subscribe(role, channel(role))
+    Subscription.subscribe(role, Notification.GLOBAL)
     for group in role.roles:
         Subscription.subscribe(role, channel(group))
 

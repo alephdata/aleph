@@ -1,7 +1,7 @@
 import logging
 
 from aleph.core import db
-from aleph.model import Permission, Events
+from aleph.model import Permission, Events, Notification
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
@@ -16,7 +16,8 @@ def update_permission(role, collection, read, write, editor=None):
         if role.is_public:
             publish(Events.PUBLISH_COLLECTION,
                     actor_id=editor.id,
-                    params=params)
+                    params=params,
+                    channels=[Notification.GLOBAL])
         else:
             publish(Events.GRANT_COLLECTION,
                     actor_id=editor.id,
