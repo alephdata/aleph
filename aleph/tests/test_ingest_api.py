@@ -3,7 +3,6 @@ from StringIO import StringIO
 
 from aleph.core import db
 from aleph.model import Collection
-from aleph.index import flush_index
 from aleph.tests.util import TestCase
 
 
@@ -35,6 +34,7 @@ class IngestApiTestCase(TestCase):
         assert res.status_code == 400, res
 
     def test_upload_csv_doc(self):
+        self.flush_index()
         _, headers = self.login(is_admin=True)
         meta = {
             'countries': ['de', 'us'],
@@ -53,7 +53,7 @@ class IngestApiTestCase(TestCase):
         docs = res.json['documents']
         assert len(docs) == 1, docs
         assert docs[0]['file_name'] == 'experts.csv', docs
-        flush_index()
+        self.flush_index()
 
         res = self.client.get('/api/2/documents',
                               headers=headers)
@@ -176,3 +176,4 @@ class IngestApiTestCase(TestCase):
         assert 'parent' in subdirectory, subdirectory
         parent = subdirectory['parent']
         assert parent['id'] == directory['id'], parent
+        self.flush_index()
