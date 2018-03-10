@@ -85,7 +85,7 @@ class IngestApiTestCase(TestCase):
         docs = res.json['documents']
         assert len(docs) == 1, docs
         assert docs[0]['schema'] == 'HyperText', docs
-        flush_index()
+        self.flush_index()
 
         res = self.client.get('/api/2/documents',
                               headers=headers)
@@ -176,4 +176,3 @@ class IngestApiTestCase(TestCase):
         assert 'parent' in subdirectory, subdirectory
         parent = subdirectory['parent']
         assert parent['id'] == directory['id'], parent
-        self.flush_index()

@@ -1,5 +1,8 @@
 import logging
 import flask_migrate
+from sqlalchemy import MetaData, inspect
+from sqlalchemy.exc import InternalError
+from sqlalchemy.dialects.postgresql import ENUM
 
 from aleph.core import db  # noqa
 from aleph.model.role import Role  # noqa
@@ -21,6 +24,23 @@ def upgrade_db():
     log.info("Beginning database migration...")
     flask_migrate.upgrade()
     create_system_roles()
+
+
+def destroy_db():
+    metadata = MetaData()
+    metadata.bind = db.engine
+    metadata.reflect()
+    tables = list(metadata.sorted_tables)
+    while len(tables):
+        for table in tables:
+            try:
+                table.drop(checkfirst=True)
+                tables.remove(table)
+            except InternalError:
+                pass
+    for enum in inspect(db.engine).get_enums():
+        enum = ENUM(name=enum['name'])
+        enum.drop(bind=db.engine, checkfirst=True)
 
 
 def create_system_roles():

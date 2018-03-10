@@ -9,7 +9,7 @@ from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
 from aleph.core import create_app, archive
-from aleph.model import db, upgrade_db
+from aleph.model import db, upgrade_db, destroy_db
 from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
@@ -232,23 +232,7 @@ def installdata():
 def evilshit():
     """EVIL: Delete all data and recreate the database."""
     delete_index()
-    from sqlalchemy import MetaData, inspect
-    from sqlalchemy.exc import InternalError
-    from sqlalchemy.dialects.postgresql import ENUM
-    metadata = MetaData()
-    metadata.bind = db.engine
-    metadata.reflect()
-    tables = list(metadata.sorted_tables)
-    while len(tables):
-        for table in tables:
-            try:
-                table.drop(checkfirst=True)
-                tables.remove(table)
-            except InternalError:
-                pass
-    for enum in inspect(db.engine).get_enums():
-        enum = ENUM(name=enum['name'])
-        enum.drop(bind=db.engine, checkfirst=True)
+    destroy_db()
     upgrade()
 
 
