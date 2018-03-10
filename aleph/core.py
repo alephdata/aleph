@@ -42,11 +42,9 @@ def create_app(config={}):
         'SQLALCHEMY_DATABASE_URI': settings.DATABASE_URI
     })
 
-    queues = (
-        Queue(settings.QUEUE_NAME,
-              routing_key=settings.QUEUE_ROUTING_KEY,
-              queue_arguments={'x-max-priority': 8})
-    )
+    queue = Queue(settings.QUEUE_NAME,
+                  routing_key=settings.QUEUE_ROUTING_KEY,
+                  queue_arguments={'x-max-priority': 9})
     celery.conf.update(
         imports=('aleph.queues'),
         broker_url=settings.BROKER_URI,
@@ -57,7 +55,7 @@ def create_app(config={}):
         task_eager_propagates=True,
         task_ignore_result=True,
         task_acks_late=True,
-        task_queues=queues,
+        task_queues=(queue,),
         task_default_queue=settings.QUEUE_NAME,
         task_default_routing_key=settings.QUEUE_ROUTING_KEY,
         worker_max_tasks_per_child=500,
