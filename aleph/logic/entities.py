@@ -6,8 +6,8 @@ from followthemoney.util import merge_data
 from six.moves.urllib.parse import quote
 from urlnormalizer import query_string
 
-from aleph.core import es, db, celery, USER_QUEUE, USER_ROUTING_KEY
-from aleph.model import Collection, Entity, Alert, Role, Permission
+from aleph.core import es, db, celery
+from aleph.model import Collection, Entity, Alert
 from aleph.index import index_entity, flush_index
 from aleph.index.core import entities_index
 from aleph.index.entities import index_bulk
@@ -26,9 +26,7 @@ def entity_url(entity_id=None, **query):
 
 def update_entity(entity):
     index_entity(entity)
-    update_entity_full.apply_async([entity.id],
-                                   queue=USER_QUEUE,
-                                   routing_key=USER_ROUTING_KEY)
+    update_entity_full.apply_async([entity.id], priority=7)
     # needed to make the call to view() work:
     flush_index()
 
@@ -86,7 +84,7 @@ def bulk_load(config):
         index_collection(collection)
 
         for query in dict_list(data, 'queries', 'query'):
-            bulk_load_query.delay(collection.id, query)
+            bulk_load_query.apply_async([collection.id, query], priority=6)
 
 
 @celery.task()

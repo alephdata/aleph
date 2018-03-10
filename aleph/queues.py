@@ -7,7 +7,6 @@ from aleph.logic.collections import process_collection, delete_collection  # noq
 from aleph.logic.documents import process_document_id  # noqa
 from aleph.logic.xref import process_xref # noqa
 from aleph.logic.alerts import check_alerts  # noqa
-from aleph.views.events import save_event  # noqa
 
 flask_app = create_app()
 flask_app.app_context().push()

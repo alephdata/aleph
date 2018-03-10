@@ -47,7 +47,7 @@ def collections():
 @manager.command
 def alerts():
     """Generate alert notifications."""
-    check_alerts.delay()
+    check_alerts.apply_async([], priority=8)
 
 
 @manager.command
@@ -130,7 +130,7 @@ def retry():
     q = q.filter(Document.status != Document.STATUS_SUCCESS)
     log.info("Retry: %s documents", q.count())
     for idx, (doc_id,) in enumerate(q.all(), 1):
-        ingest.delay(doc_id)
+        ingest.apply_async([doc_id], priority=1)
         if idx % 1000 == 0:
             log.info("Process: %s documents...", idx)
 
@@ -156,7 +156,7 @@ def index(foreign_id=None):
             raise ValueError("No such collection: %r" % foreign_id)
         q = q.filter(Document.collection_id == collection.id)
     for idx, (doc_id,) in enumerate(q.yield_per(5000), 1):
-        index_document_id.delay(doc_id)
+        index_document_id.apply_async([doc_id], priority=1)
         if idx % 1000 == 0:
             log.info("Index: %s documents...", idx)
     if foreign_id is None:

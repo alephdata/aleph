@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 
-from aleph.core import USER_QUEUE, USER_ROUTING_KEY, db
+from aleph.core import db
 from aleph.model import Collection
 from aleph.search import CollectionsQuery
 from aleph.logic.collections import delete_collection, update_collection
@@ -47,16 +47,12 @@ def update(id):
 @blueprint.route('/api/2/collections/<int:id>/process', methods=['POST', 'PUT'])  # noqa
 def process(id):
     collection = get_db_collection(id, request.authz.WRITE)
-    process_collection.apply_async([collection.id],
-                                   queue=USER_QUEUE,
-                                   routing_key=USER_ROUTING_KEY)
+    process_collection.apply_async([collection.id], priority=2)
     return jsonify({'status': 'accepted'}, status=202)
 
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['DELETE'])
 def delete(id):
     collection = get_db_collection(id, request.authz.WRITE)
-    delete_collection.apply_async([collection.id],
-                                  queue=USER_QUEUE,
-                                  routing_key=USER_ROUTING_KEY)
+    delete_collection.apply_async([collection.id], priority=7)
     return jsonify({'status': 'accepted'}, status=202)
