@@ -49,6 +49,12 @@ class SchemaName(String):
             raise ValidationError('Invalid schema name: %s' % value)
 
 
+class ClassName(String):
+
+    def _validate(self, value):
+        return value.__name__
+
+
 class BaseSchema(ExpandableSchema):
     id = String(dump_only=True)
     score = Float(dump_only=True)
