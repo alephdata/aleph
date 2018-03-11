@@ -97,3 +97,7 @@ class EventsEnum(object):
     @classmethod
     def get(cls, name):
         return cls.__all__.get(name)
+
+    @classmethod
+    def names(cls):
+        return cls.__all__.keys()

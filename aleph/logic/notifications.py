@@ -34,7 +34,7 @@ def publish(event, actor_id=None, params=None, channels=None):
         obj = params.get(name)
         params[name] = object_id(obj, clazz=clazz)
         channels.append(channel(obj, clazz=clazz))
-    Notification.publish(event,
+    Notification.publish(event.get('name'),
                          actor_id=actor_id,
                          params=params,
                          channels=channels)

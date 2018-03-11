@@ -4,8 +4,8 @@ from marshmallow.fields import Nested, String, Boolean
 from marshmallow.validate import Email, Length
 
 from aleph.core import url_for
-from aleph.serializers.common import BaseSchema
 from aleph.model import Role
+from aleph.serializers.common import BaseSchema
 
 MIN_LENGTH = Length(min=Role.PASSWORD_MIN_LENGTH)
 
@@ -27,10 +27,11 @@ class RoleSchema(BaseSchema):
         }
         data['writeable'] = str(request.authz.id) == pk
         if not data['writeable']:
-            data.pop('api_key', None)
-            data.pop('email', None)
             data.pop('password', None)
             data.pop('has_password', None)
+        if data['type'] != Role.USER:
+            data.pop('api_key', None)
+            data.pop('email', None)
         return data
 
 
