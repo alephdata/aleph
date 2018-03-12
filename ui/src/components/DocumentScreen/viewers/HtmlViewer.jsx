@@ -11,8 +11,8 @@ class HtmlViewer extends Component {
     return (
       <React.Fragment>
         <DocumentToolbar document={document}/>
-        <div className="content-pane-outer">
-          <div className="content-pane-inner HtmlViewer">
+        <div className="outer">
+          <div className="inner HtmlViewer">
             <span dangerouslySetInnerHTML={{__html: document.html}} />
           </div>
         </div>
