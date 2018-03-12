@@ -45,34 +45,29 @@ class EntityLabel extends Component {
 
 class EntityLink extends Component {
   render() {
-    const {entity, className, icon, truncate} = this.props;
+    const {entity, className, icon, truncate, preview} = this.props;
     if (!entity || !entity.links) {
       return <Entity.Label entity={entity} icon={icon} truncate={truncate}/>;
     }
 
-    return (
-      <Link to={getPath(entity.links.ui)} className={c('EntityLink', className)}>
-        <Entity.Label entity={entity} icon={icon} truncate={truncate}/>
-      </Link>
-    );
-  }
-}
+    if (preview === true) {
+      // Displays in preview sidebar
 
-class EntityPreviewLink extends Component {
-  render() {
-    const {entity, className, icon, truncate} = this.props;
-    if (!entity || !entity.links) {
-      return <Entity.Label entity={entity} icon={icon} truncate={truncate}/>;
+      // Determine if entity is a 'Document' or an actual entity
+      const previewType = (entity.schemata && entity.schemata.indexOf('Document') !== -1) ? 'document' : 'entity';
+      
+      return (
+        <a href={`#preview:id=${entity.id}&preview:type=${previewType}`} className={c('EntityLink', className)}>
+          <Entity.Label entity={entity} icon={icon} truncate={truncate} />
+        </a>
+      );
+    } else {
+      return (
+        <Link to={getPath(entity.links.ui)} className={c('EntityLink', className)}>
+          <Entity.Label entity={entity} icon={icon} truncate={truncate}/>
+        </Link>
+      );
     }
-
-    // Determine if entity is a 'Document' or an actual entity
-    const previewType = (entity.schemata && entity.schemata.indexOf('Document') !== -1) ? 'document' : 'entity';
-    
-    return (
-      <a href={`#preview:id=${entity.id}&preview:type=${previewType}`} className={c('EntityLink', className)}>
-        <Entity.Label entity={entity} icon={icon} truncate={truncate} />
-      </a>
-    );
   }
 }
 
@@ -120,7 +115,6 @@ class Entity {
   static Label = EntityLabel;
   static Link = EntityLink;
   static Load = EntityLoad;
-  static PreviewLink = EntityPreviewLink;
 }
 
 export default Entity;

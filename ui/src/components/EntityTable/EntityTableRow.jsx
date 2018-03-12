@@ -13,16 +13,16 @@ class EntityTableRow extends Component {
   }
 
   render() {
-    const { entity, hideCollection, documentMode } = this.props;
+    const { entity, hideCollection, documentMode, showLinksInPreview } = this.props;
 
     return (
       <tr className={`nowrap`}>
         <td className="entity">
-          <Entity.PreviewLink entity={entity} icon />
+          <Entity.Link preview={showLinksInPreview} entity={entity} icon />
         </td>
         {!hideCollection && 
           <td className="collection">
-            <Collection.Link collection={entity.collection} icon />
+            <Collection.Link preview={showLinksInPreview} collection={entity.collection} icon />
           </td>
         }
         <td className="schema">

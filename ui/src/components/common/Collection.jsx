@@ -22,25 +22,22 @@ class CollectionLabel extends Component {
 
 class CollectionLink extends Component {
   render() {
-    const { collection, icon = true, className } = this.props;
+    const { collection, icon = true, className, preview } = this.props;
 
-    return (
-      <Link to={getPath(collection.links.ui)} className={className}>
-        <Collection.Label collection={collection} icon={icon} />
-      </Link>
-    );
-  }
-}
-
-class CollectionPreviewLink extends Component {
-  render() {
-    const { collection, icon = true, className } = this.props;
-
-    return (
-      <a href={`#preview:id=${collection.id}&preview:type=collection`}>
-        <Collection.Label collection={collection} icon={icon} />
-      </a>
-    );
+    if (preview === true) {
+      // Displays in preview sidebar
+      return (
+        <a href={`#preview:id=${collection.id}&preview:type=collection`}>
+          <Collection.Label collection={collection} icon={icon} />
+        </a>
+      );
+    } else {
+      return (
+        <Link to={getPath(collection.links.ui)} className={className}>
+          <Collection.Label collection={collection} icon={icon} />
+        </Link>
+      );
+    }
   }
 }
 
@@ -88,7 +85,6 @@ class Collection {
   static Label = CollectionLabel;
   static Link = CollectionLink;
   static Load = CollectionLoad;
-  static PreviewLink = CollectionPreviewLink;
 }
 
 export default Collection;

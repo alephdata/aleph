@@ -11,7 +11,7 @@ class CollectionContent extends Component {
     };
     return (
       <DualPane.ContentPane>
-        <EntitySearch context={context} hideCollection={true} />
+        <EntitySearch showLinksInPreview={true} context={context} hideCollection={true} />
       </DualPane.ContentPane>
     );
   }

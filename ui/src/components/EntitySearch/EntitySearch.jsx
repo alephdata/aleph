@@ -70,7 +70,7 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const { query, result, intl } = this.props;
+    const { query, result, intl, showLinksInPreview } = this.props;
     return (
       <React.Fragment>
         { result.total === 0 &&
@@ -82,7 +82,8 @@ class EntitySearch extends Component {
                      documentMode={this.props.documentMode}
                      hideCollection={this.props.hideCollection}
                      updateQuery={this.updateQuery}
-                     result={result} />
+                     result={result}
+                     showLinksInPreview={showLinksInPreview} />
         { !result.isLoading && result.next && (
           <Waypoint
             onEnter={this.getMoreResults}

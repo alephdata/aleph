@@ -50,7 +50,7 @@ class EntityTable extends Component {
   }
 
   render() {
-    const { result, query, intl } = this.props;
+    const { result, query, intl, showLinksInPreview } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
 
     if (!result || !result.results || result.total === 0) {
@@ -92,7 +92,9 @@ class EntityTable extends Component {
             <EntityTableRow key={entity.id}
                             entity={entity}
                             hideCollection={hideCollection}
-                            documentMode={documentMode} />
+                            documentMode={documentMode}
+                            showLinksInPreview={showLinksInPreview}
+                             />
           )}
         </tbody>
       </table>

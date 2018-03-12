@@ -190,7 +190,8 @@ class SearchScreen extends React.Component {
             }
             <EntityTable query={query}
                          updateQuery={this.updateQuery}
-                         result={result} />
+                         result={result}
+                         showLinksInPreview={true} />
             { !result.isLoading && result.next && (
               <Waypoint
                 onEnter={this.getMoreResults}
