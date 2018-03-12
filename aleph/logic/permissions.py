@@ -1,8 +1,9 @@
 import logging
 
 from aleph.core import db
-from aleph.model import Permission, Events, Notification
-from aleph.logic.notifications import publish
+from aleph.model import Permission, Events
+from aleph.model import Subscription, Notification
+from aleph.logic.notifications import publish, channel
 
 log = logging.getLogger(__name__)
 
@@ -26,5 +27,7 @@ def update_permission(role, collection, read, write, editor=None):
         publish(Events.REVOKE_COLLECTION,
                 actor_id=editor.id,
                 params=params)
+        Subscription.unsubscribe(role=role,
+                                 channel=channel(collection))
     db.session.commit()
     return post
