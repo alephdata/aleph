@@ -6,7 +6,7 @@ import Schema from 'src/components/common/Schema';
 import Tag from 'src/components/common/Tag';
 import Country from 'src/components/common/Country';
 import Collection from 'src/components/common/Collection';
-import Entity from 'src/components/EntityScreen/Entity';
+import Entity from 'src/screens/EntityScreen/Entity';
 
 import './SearchFilterTag.css';
 

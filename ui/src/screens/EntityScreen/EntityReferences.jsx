@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
-import EntityReferencesTable from 'src/components/EntityScreen/EntityReferencesTable';
+import EntityReferencesTable from 'src/screens/EntityScreen/EntityReferencesTable';
 
 class EntityReferences extends React.Component {
 
