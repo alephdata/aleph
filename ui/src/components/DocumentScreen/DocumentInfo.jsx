@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
-import Entity from 'src/components/EntityScreen/Entity';
-import EntityInfoTags from 'src/components/EntityScreen/EntityInfoTags';
+import Entity from 'src/screens/EntityScreen/Entity';
+import EntityInfoTags from 'src/screens/EntityScreen/EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import Schema from 'src/components/common/Schema';
 import DocumentMetadata from 'src/components/DocumentScreen/DocumentMetadata';

@@ -7,7 +7,7 @@ import Language from 'src/components/common/Language';
 import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
 import FileSize from 'src/components/common/FileSize';
-import Entity from 'src/components/EntityScreen/Entity';
+import Entity from 'src/screens/EntityScreen/Entity';
 
 class DocumentMetadata extends Component {
   render() {

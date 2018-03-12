@@ -7,7 +7,7 @@ import Screen from 'src/components/common/Screen';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
-import Entity from 'src/components/EntityScreen/Entity';
+import Entity from 'src/screens/EntityScreen/Entity';
 import DocumentInfo from './DocumentInfo';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 

@@ -9,7 +9,7 @@ import { Button } from '@blueprintjs/core';
 import getPath from 'src/util/getPath';
 import { fetchCollection, fetchEntity, fetchDocument } from 'src/actions';
 import CollectionInfo from 'src/components/CollectionScreen/CollectionInfo';
-import EntityInfo from 'src/components/EntityScreen/EntityInfo';
+import EntityInfo from 'src/screens/EntityScreen/EntityInfo';
 import DocumentInfo from 'src/components/DocumentScreen/DocumentInfo';
 import DocumentContent from 'src/components/DocumentScreen/DocumentContent';
 import SectionLoading from 'src/components/common/SectionLoading';
