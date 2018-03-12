@@ -1,11 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import { Tab, Tabs } from "@blueprintjs/core";
 
 import EntityReferencesTable from 'src/screens/EntityScreen/EntityReferencesTable';
+import Property from './Property';
 
 class EntityReferences extends React.Component {
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeTabId: 'entity-reference-tab-0'
+    };
+    this.handleTabChange = this.handleTabChange.bind(this);
+  }
+  
+  handleTabChange(activeTabId: TabId) {
+    this.setState({ activeTabId });
+  }
+  
   render() {
     const { entity, references } = this.props;
 
@@ -32,12 +45,23 @@ class EntityReferences extends React.Component {
   
     return (
       <section>
-        { references.results.map(ref => (
-          <EntityReferencesTable key={ref.property.qname}
-                                 entity={entity}
-                                 schema={ref.schema}
-                                 property={ref.property} />
-        ))}
+        <Tabs id="EntityReferenceTabs" large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+        { references.results.map((ref, i) => {
+          return <Tab id={`entity-reference-tab-${i}`}
+            title={<Property.Reverse model={ref.property} />}
+            panel={
+              <React.Fragment>
+                <EntityReferencesTable
+                  key={ref.property.qname}
+                  entity={entity}
+                  schema={ref.schema}
+                  property={ref.property}
+                 /> 
+              </React.Fragment>
+            }
+          />
+        })}
+        </Tabs>
       </section>
     );
   }
