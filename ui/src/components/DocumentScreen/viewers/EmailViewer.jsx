@@ -40,8 +40,8 @@ class EmailViewer extends React.Component {
     return (
       <React.Fragment>
         <DocumentToolbar document={document}/>
-        <div className="content-pane-outer">
-          <div className="content-pane-inner EmailViewer">
+        <div className="outer">
+          <div className="inner EmailViewer">
             <div className="email-header">
               <table className="pt-html-table">
                 <tbody>

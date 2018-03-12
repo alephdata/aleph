@@ -10,13 +10,15 @@ import ImageViewer from './viewers/ImageViewer';
 import FolderViewer from './viewers/FolderViewer';
 import EmailViewer from './viewers/EmailViewer';
 
+import './DocumentContent.css';
+
 class DocumentContent extends React.Component {
   render() {
     const { document, fragId } = this.props;
 
     if (document.status === 'fail' && !(document.children !== undefined && document.children > 0)) {
       return (
-        <DualPane.ContentPane>
+        <DualPane.ContentPane className="DocumentContent">
           <section className="PartialError">
             <div className="pt-non-ideal-state">
               <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
@@ -70,7 +72,7 @@ class DocumentContent extends React.Component {
     }
     
     return (
-      <DualPane.ContentPane style={{padding: 0}}>
+      <DualPane.ContentPane className="DocumentContent">
         { documentViewer }
       </DualPane.ContentPane>
     );
