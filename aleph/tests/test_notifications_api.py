@@ -43,4 +43,6 @@ class NotificationsApiTestCase(TestCase):
         assert res.json['total'] == 2, res.json
         not0 = res.json['results'][0]
 
-        assert False, not0
+        role = not0['params']['role']
+        assert isinstance(role, dict), not0
+        assert 'actor' in not0['params'], not0['params']

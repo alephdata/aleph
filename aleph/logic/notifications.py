@@ -1,7 +1,7 @@
 import six
 from banal import ensure_list
 
-from aleph.model import Role, Events, Notification
+from aleph.model import Role, Event, Events, Notification
 
 
 def object_id(obj, clazz=None):
@@ -24,17 +24,15 @@ def channel(obj, clazz=None):
 
 
 def publish(event, actor_id=None, params=None, channels=None):
-    if not isinstance(event, dict):
-        event = Events.get(event)
-    assert event is not None, event
+    assert isinstance(event, Event), event
     params = params or {}
     channels = ensure_list(channels)
     channels.append(channel(actor_id, clazz=Role))
-    for name, clazz in event.get('params', {}).items():
+    for name, clazz in event.params.items():
         obj = params.get(name)
         params[name] = object_id(obj, clazz=clazz)
         channels.append(channel(obj, clazz=clazz))
-    Notification.publish(event.get('name'),
+    Notification.publish(event,
                          actor_id=actor_id,
                          params=params,
                          channels=channels)

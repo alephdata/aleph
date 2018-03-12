@@ -2,7 +2,7 @@ from banal import is_mapping
 from normality import stringify
 from followthemoney import model
 from exactitude import countries, languages, dates
-from marshmallow.fields import String, Raw, Float
+from marshmallow.fields import String, Raw, Float, Field
 from marshmallow.exceptions import ValidationError
 
 from aleph.model import Collection
@@ -47,12 +47,6 @@ class SchemaName(String):
         schema = model.get(value)
         if schema is None:
             raise ValidationError('Invalid schema name: %s' % value)
-
-
-class ClassName(String):
-
-    def _validate(self, value):
-        return value.__name__
 
 
 class BaseSchema(ExpandableSchema):
