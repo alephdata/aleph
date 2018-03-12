@@ -8,7 +8,6 @@ import Property from './Property';
 import Entity from './Entity';
 import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
-import Date from 'src/components/common/Date';
 import Schema from 'src/components/common/Schema';
 import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
 import URL from 'src/components/common/URL';
