@@ -3,8 +3,6 @@ from __future__ import absolute_import
 import logging
 from followthemoney import model
 from followthemoney.util import merge_data
-from six.moves.urllib.parse import quote
-from urlnormalizer import query_string
 
 from aleph.core import es, db, celery
 from aleph.model import Collection, Entity, Alert
@@ -157,16 +155,10 @@ def entity_references(entity, authz):
 
     # Run a count search (with schema facet?)
     res = es.msearch(index=entities_index(), body=queries)
-    results = []
     for prop, resp in zip(properties, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
         if total > 0:
-            results.append({
-                'count': total,
-                'property': prop,
-                'schema': prop.schema.name
-            })
-    return results
+            yield (prop, total)
 
 
 def entity_tags(entity, authz):
@@ -205,21 +197,10 @@ def entity_tags(entity, authz):
             pivots.append((field, value))
 
     if not len(queries):
-        return []
+        return
 
     res = es.msearch(index=entities_index(), body=queries)
-    results = []
     for (field, value), resp in zip(pivots, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
         if total > 0:
-            qvalue = quote(value.encode('utf-8'))
-            key = ('filter:%s' % field, qvalue)
-            results.append({
-                'id': query_string([key]),
-                'value': value,
-                'field': field,
-                'count': total
-            })
-
-    results.sort(key=lambda p: p['count'], reverse=True)
-    return results
+            yield (field, value, total)
