@@ -15,10 +15,7 @@ log = logging.getLogger(__name__)
 
 class ParamTypes(Field):
     def _serialize(self, value, attr, obj):
-        out = {}
-        for param, clazz in value.items():
-            out[param] = clazz.__name__.lower()
-        return out
+        return {p: c.__name__.lower() for (p, c) in value.items()}
 
 
 class EventSchema(BaseSchema):
