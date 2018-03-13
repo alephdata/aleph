@@ -9,9 +9,7 @@ import LogoutScreen from 'src/components/auth/LogoutScreen';
 import SignupScreen from 'src/components/auth/SignupScreen';
 import ActivateScreen from 'src/components/auth/ActivateScreen';
 import EntityScreen from 'src/screens/EntityScreen';
-import EntityRelatedScreen from 'src/screens/EntityScreen/EntityRelatedScreen';
 import DocumentScreen from 'src/components/DocumentScreen';
-import DocumentRelatedScreen from 'src/components/DocumentScreen/DocumentRelatedScreen';
 import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
@@ -48,9 +46,7 @@ class Router extends Component {
         <Route path="/signup" exact component={SignupScreen}/>
         <Route path="/activate/:code" exact component={ActivateScreen}/>
         <Route path="/entities/:entityId" exact component={EntityScreen}/>
-        <Route path="/entities/:entityId/related" exact component={EntityRelatedScreen}/>
         <Route path="/documents/:documentId" exact component={DocumentScreen}/>
-        <Route path="/documents/:documentId/related" exact component={DocumentRelatedScreen}/>
         <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
         <Route path="/collections" exact component={CollectionsIndexScreen}/>
