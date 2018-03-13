@@ -7,7 +7,7 @@ import Entity from 'src/screens/EntityScreen/Entity';
 import EntityInfoTags from 'src/screens/EntityScreen/EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import Schema from 'src/components/common/Schema';
-import DocumentMetadata from 'src/components/DocumentScreen/DocumentMetadata';
+import DocumentMetadata from 'src/screens/DocumentScreen/DocumentMetadata';
 import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
 import URL from 'src/components/common/URL';
 import { getEntityTags } from 'src/selectors';
