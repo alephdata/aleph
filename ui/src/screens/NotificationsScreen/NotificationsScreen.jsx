@@ -66,6 +66,7 @@ class NotificationsScreen extends React.Component {
     return (
       <Screen title={intl.formatMessage(messages.title)}>
         <DualPane className="NotificationsScreen">
+          <DualPane.InfoPane className="dummy-pane" />
           <DualPane.ContentPane>
             { result.total === 0 &&
               <NonIdealState visual="issue"
