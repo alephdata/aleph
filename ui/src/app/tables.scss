@@ -33,11 +33,15 @@ table {
   tr.active {
     background: $pt-intent-primary;
     color: white;
+    
     td {
       background: $pt-intent-primary;
       color: white;
-      
-      a {
+
+      a:link, 
+      a:visited,
+      a:hover,
+      a:active,{
         color: white;
       }
     }
