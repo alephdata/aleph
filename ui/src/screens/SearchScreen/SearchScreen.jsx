@@ -13,6 +13,7 @@ import DualPane from 'src/components/common/DualPane';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SectionLoading from 'src/components/common/SectionLoading';
 import SearchFacets from 'src/components/Facet/SearchFacets';
+import QueryTags from 'src/components/QueryTags/QueryTags';
 
 import './SearchScreen.css';
 
@@ -182,7 +183,7 @@ class SearchScreen extends React.Component {
                           facets={this.state.facets} />
           </DualPane.InfoPane>
           <DualPane.ContentPane>
-            {/*<SearchFilter {...searchContext} />*/}
+            <QueryTags query={query} updateQuery={this.updateQuery} />
             { result.total === 0 &&
               <NonIdealState visual="search"
                              title={intl.formatMessage(messages.no_results_title)}

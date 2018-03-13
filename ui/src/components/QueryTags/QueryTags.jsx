@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 
-//import SearchFilterTag from './SearchFilterTag';
+import QueryFilterTag from './QueryFilterTag';
 
-class SearchFilterActiveTags extends Component {
+// import './QueryTags.css';
+
+
+class QueryTags extends Component {
   constructor(props) {
     super(props);
     this.removeFilterValue = this.removeFilterValue.bind(this);
@@ -15,9 +18,7 @@ class SearchFilterActiveTags extends Component {
 
   render() {
     const { query } = this.props;
-
     const activeFilters = query ? query.filters() : [];
-
     if (activeFilters.length === 0) {
       return null;
     }
@@ -26,16 +27,12 @@ class SearchFilterActiveTags extends Component {
     // "?exclude={id}"
     // "?parent.id={id}"
     // "?ancestors={id}"
-    // …but how the search control works has been refactored and I am having
-    // trouble replicating the test cases so coming back to this later.
-    // NB: The old URLs for these no longer seem to work with the search 
-    // component and now cause errors when called but I'm not sure why yet.
     return (
-      <div className="search-query-active-filters">
-        {/*activeFilters.map(filter =>
+      <div className="QueryTags">
+        {activeFilters.map(filter =>
           query.getFilter(filter).map(value => {
             return (
-              <SearchFilterTag
+              <QueryFilterTag
                 filter={filter}
                 value={value}
                 remove={this.removeFilterValue}
@@ -43,10 +40,10 @@ class SearchFilterActiveTags extends Component {
               />
             )
           })
-        )*/}
+        )}
       </div>
     );
   }
 }
 
-export default SearchFilterActiveTags;
+export default QueryTags;
