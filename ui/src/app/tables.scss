@@ -30,6 +30,19 @@ table {
     text-align: right;
   }
 
+  tr.active {
+    background: $pt-intent-primary;
+    color: white;
+    td {
+      background: $pt-intent-primary;
+      color: white;
+      
+      a {
+        color: white;
+      }
+    }
+  }
+  
   th.wide, td.wide {
     width: 40%;
     max-width: unset;
@@ -55,7 +68,6 @@ table {
     }
   }
 }
-
 
 // Tables as normally used in ContentPane
 table.data-table {
