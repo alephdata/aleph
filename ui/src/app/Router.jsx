@@ -10,9 +10,9 @@ import SignupScreen from 'src/components/auth/SignupScreen';
 import ActivateScreen from 'src/components/auth/ActivateScreen';
 import EntityScreen from 'src/screens/EntityScreen';
 import EntityRelatedScreen from 'src/screens/EntityScreen/EntityRelatedScreen';
-import DocumentScreen from 'src/components/DocumentScreen';
-import DocumentRelatedScreen from 'src/components/DocumentScreen/DocumentRelatedScreen';
-import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
+import DocumentScreen from 'src/screens/DocumentScreen';
+import DocumentRelatedScreen from 'src/screens/DocumentScreen/DocumentRelatedScreen';
+import DocumentRedirectScreen from 'src/screens/DocumentScreen/DocumentRedirectScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
 
