@@ -103,7 +103,7 @@ class Select extends Component {
               resetOnSelect={true}>
       <Button text={label}
               className="pt-fill"
-              aligntext={Alignment.LEFT}
+              alignText={Alignment.LEFT}
               rightIcon="search" />
     </BlueprintSelect>;
   }  

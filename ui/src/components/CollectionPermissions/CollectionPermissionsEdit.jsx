@@ -39,6 +39,7 @@ class CollectionPermissionsEdit extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {permissions: []};
 
     this.onAddRole = this.onAddRole.bind(this);
     this.onToggle = this.onToggle.bind(this);
@@ -70,10 +71,10 @@ class CollectionPermissionsEdit extends Component {
   }
 
   async onSave() {
-    const { intl, collection } = this.props;
+    const { intl, collection, updateCollectionPermissions } = this.props;
     const { permissions } = this.state;
 
-    await this.props.updateCollectionPermissions(collection.id, permissions);
+    await updateCollectionPermissions(collection.id, permissions);
     showSuccessToast(intl.formatMessage(messages.save_success));
   }
 
@@ -82,75 +83,70 @@ class CollectionPermissionsEdit extends Component {
     const exclude = permissions.map((perm) => perm.role.id);
 
     return (
-      <React.Fragment>
-      <table className="settings-table CollectionPermissions">
-        <thead>
-        <tr key={0}>
-          <th/>
-          <th>
-            <FormattedMessage id="collection.edit.permissionstable.view"
-                              defaultMessage="View"/>
-          </th>
-          <th>
-            <FormattedMessage id="collection.edit.permissionstable.edit"
-                              defaultMessage="Edit"/>
-          </th>
-        </tr>
-        </thead>
-        <tbody>
-        {this.filterPermissions('system').map((permission) =>
-          <PermissionRow key={permission.role.id}
-                         permission={permission}
-                         onToggle={this.onToggle} />
-        )}
-        <tr key={'groups'}>
-          <td className='header-topic'>
-            <FormattedMessage id="collection.edit.groups"
-                              defaultMessage="Groups"/>
-          </td>
-          <td className='other-rows'/>
-          <td className='other-rows'/>
-        </tr>
-        {this.filterPermissions('group').map((permission) =>
-          <PermissionRow key={permission.role.id}
-                         permission={permission}
-                         onToggle={this.onToggle} />
-        )}
-        <tr key={'users'}>
-          <td className='header-topic'>
-            <FormattedMessage id="collection.edit.users"
-                              defaultMessage="Users"/>
-          </td>
-          <td className='other-rows'/>
-          <td className='other-rows'/>
-        </tr>
-        {this.filterPermissions('user').map((permission) =>
-          <PermissionRow key={permission.role.id}
-                         permission={permission}
-                         onToggle={this.onToggle} />
-        )}
-        <tr key="add">
-          <td>
-            <Role.Select onSelect={this.onAddRole}
-                         exclude={exclude} />
-          </td>
-          <td className='other-rows'/>
-          <td className='other-rows'/>
-        </tr>
-        </tbody>
-      </table>
-        <Button className="pt-fill" onClick={this.onSave}>
-          <FormattedMessage id="collection.info.permissions.update"
-                            defaultMessage="Update permissions"/>
-        </Button>
-      </React.Fragment>
+      <div className="CollectionPermissions">
+        <table className="settings-table">
+          <thead>
+          <tr key={0}>
+            <th/>
+            <th>
+              <FormattedMessage id="collection.edit.permissionstable.view"
+                                defaultMessage="View"/>
+            </th>
+            <th>
+              <FormattedMessage id="collection.edit.permissionstable.edit"
+                                defaultMessage="Edit"/>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          {this.filterPermissions('system').map((permission) =>
+            <PermissionRow key={permission.role.id}
+                          permission={permission}
+                          onToggle={this.onToggle} />
+          )}
+          <tr key={'groups'}>
+            <td className='header-topic' colSpan="3">
+              <FormattedMessage id="collection.edit.groups"
+                                defaultMessage="Groups"/>
+            </td>
+          </tr>
+          {this.filterPermissions('group').map((permission) =>
+            <PermissionRow key={permission.role.id}
+                          permission={permission}
+                          onToggle={this.onToggle} />
+          )}
+          <tr key={'users'}>
+            <td className='header-topic' colSpan="3">
+              <FormattedMessage id="collection.edit.users"
+                                defaultMessage="Users"/>
+            </td>
+          </tr>
+          {this.filterPermissions('user').map((permission) =>
+            <PermissionRow key={permission.role.id}
+                          permission={permission}
+                          onToggle={this.onToggle} />
+          )}
+          <tr key="add">
+            <td colSpan="3">
+              <Role.Select onSelect={this.onAddRole}
+                          exclude={exclude} />
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div className="save">
+          <Button className="pt-intent-primary pt-large" onClick={this.onSave}>
+            <FormattedMessage id="collection.info.permissions.update"
+                              defaultMessage="Save"/>
+          </Button>
+        </div>
+      </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-  };
+  return {};
 };
 
 export default connect(mapStateToProps, {updateCollectionPermissions})(injectIntl(CollectionPermissionsEdit));
