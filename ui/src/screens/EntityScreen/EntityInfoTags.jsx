@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
@@ -22,6 +23,14 @@ class EntityInfoTags extends React.Component {
     }
   }
 
+  getLink(tag) {
+    const { entity } = this.props;
+    const key = `filter:${tag.field}`;
+    const params = {exclude: entity.id, [key]: tag.value};
+    const query = queryString.stringify(params);
+    return `/search?${query}`;
+  }
+
   render() {
     const { tags, entity } = this.props;
 
@@ -36,8 +45,9 @@ class EntityInfoTags extends React.Component {
         </React.Fragment>
       );
     }
-
-    const linkPath = getPath(entity.links.ui) + '/related';
+    
+    
+    
   
     return (
       <div className="tags">
@@ -46,7 +56,7 @@ class EntityInfoTags extends React.Component {
             <li key={tag.id}>
               <span className="key">
                 <Tag.Icon field={tag.field} />
-                <Link to={`${linkPath}${tag.id}`}>
+                <Link to={this.getLink(tag)}>
                   {tag.value}
                 </Link>
               </span>
