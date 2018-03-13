@@ -170,28 +170,28 @@ class Preview extends React.Component {
     
     let className = 'Preview'
     
-    if (maximised === true)
-      className += ' maximised'
-    
+
     let view = null,
         link = null,
-        linkIcon = null;
+        linkIcon = null,
+        showQuickPreview = false;
     
     if (previewType === 'collection' && collection && !collection.isFetching) {      
-      view = <CollectionInfo collection={collection} />
-      link = getPath(collection.links.ui)
-      linkIcon = 'folder-open'
+      view = <CollectionInfo collection={collection} />;
+      link = getPath(collection.links.ui);
+      linkIcon = 'folder-open';
     }
     if (previewType === 'entity' && entity && !entity.isFetching) {
-      view = <EntityInfo entity={entity} />
-      link = getPath(entity.links.ui)
-      linkIcon = 'folder-open'
+      view = <EntityInfo entity={entity} />;
+      link = getPath(entity.links.ui);
+      linkIcon = 'folder-open';
     }
     
     if (previewType === 'document' && doc && !doc.isFetching) {
-      view = (maximised === true) ? <DocumentContent document={doc} fragId={loc.hash}/> : <DocumentInfo document={doc} />
-      link = getPath(doc.links.ui)
-      linkIcon = 'document'
+      view = (maximised === true) ? <DocumentContent document={doc} fragId={loc.hash}/> : <DocumentInfo document={doc} />;
+      link = getPath(doc.links.ui);
+      linkIcon = 'document';
+      showQuickPreview = true;
       
       // @FIXME: This is a hack to trigger window resize event when displaying
       // a document preview. This forces the PDF viewer to display at the 
@@ -199,6 +199,10 @@ class Preview extends React.Component {
       if (maximised === true)
         setTimeout(() => {window.dispatchEvent(new Event('resize')) }, 1000);
     }
+    
+    // Only allow Preview to be maximised if Quick Previews are enabled
+    if (showQuickPreview === true && maximised === true)
+      className += ' maximised'
 
     if (view !== null) {
       // If we have a document and it's ready to render
@@ -208,11 +212,12 @@ class Preview extends React.Component {
           bottom: previewBottom
           }}>
           <PreviewToolbar
-            maximised={maximised}
+            maximised={(showQuickPreview) ? maximised : false}
             toggleMaximise={ this.toggleMaximise }
             link={link}
             linkIcon={linkIcon}
             location={loc}
+            showQuickPreview={showQuickPreview}
             />
           {view}
         </div>
@@ -248,24 +253,34 @@ class PreviewToolbar extends React.Component {
             toggleMaximise,
             location: loc,
             link,
-            linkIcon
+            linkIcon,
+            showQuickPreview
           } = this.props;
       
     return (
-      <div className="toolbar">
-        <Button
-          icon={(maximised) ? 'double-chevron-right' : 'double-chevron-left'}
-          className={`button-maximise ${(maximised) ? 'pt-active' : ''}`}
-          onClick={ () => toggleMaximise() }
-        />
-        <Link to={link} className="pt-button button-link">
-          <span className={`pt-icon-${linkIcon}`}/>
-          <FormattedMessage id="sidebar.open" defaultMessage="Open…"/>
-        </Link>
-        <Link to={loc.pathname + loc.search}>
-          <span className="pt-icon-cross button-close pt-button pt-minimal"/>
-        </Link>
-      </div> 
+      <React.Fragment>
+        <div className="toolbar">
+          {showQuickPreview === true && (<Button
+            icon="eye-open"
+            className={`button-maximise ${(maximised) ? 'pt-active' : ''}`}
+            onClick={ () => toggleMaximise() }>
+              <FormattedMessage id="preview" defaultMessage="Preview"/>
+          </Button>
+          )}
+          <Link to={link} className="pt-button button-link">
+            <span className={`pt-icon-${linkIcon}`}/>
+            <FormattedMessage id="sidebar.open" defaultMessage="Open…"/>
+          </Link>
+          <Link to={loc.pathname + loc.search}>
+            <span className="pt-icon-cross button-close pt-button pt-minimal"/>
+          </Link>
+        </div>
+        {maximised === true && (
+          <div className="quick-preview-heading">
+            <FormattedMessage id="preview" defaultMessage="Preview"/>          
+          </div>
+        )}
+      </React.Fragment>
     )
   }
 }
