@@ -13,7 +13,9 @@ def update_permission(role, collection, read, write, editor=None):
     pre = Permission.by_collection_role(collection, role)
     post = Permission.grant(collection, role, read, write)
     params = {'role': role, 'collection': collection}
-    if pre.read != post.read and post.read:
+    granted = pre is None or (pre.read != post.read and post.read)
+    revoked = pre is not None and (pre.read != post.read and pre.read)
+    if granted:
         if role.is_public:
             publish(Events.PUBLISH_COLLECTION,
                     actor_id=editor.id,
@@ -23,11 +25,11 @@ def update_permission(role, collection, read, write, editor=None):
             publish(Events.GRANT_COLLECTION,
                     actor_id=editor.id,
                     params=params)
-    elif pre.read != post.read and pre.read:
+    elif revoked:
         publish(Events.REVOKE_COLLECTION,
                 actor_id=editor.id,
                 params=params)
-        Subscription.unsubscribe(role=role,
-                                 channel=channel(collection))
+        cchannel = channel(collection)
+        Subscription.unsubscribe(role=role, channel=cchannel)
     db.session.commit()
     return post

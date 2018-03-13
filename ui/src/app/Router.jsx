@@ -18,6 +18,7 @@ import CollectionScreen from 'src/components/CollectionScreen';
 
 import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
 import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
+import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
 import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen/CollectionsIndexScreen';
 import CollectionsXrefScreen from 'src/screens/CollectionsXrefScreen/CollectionsXrefScreen';
 
@@ -56,6 +57,7 @@ class Router extends Component {
         <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
         <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionsXrefScreen}/>
         <Route path="/search" exact component={SearchScreen}/>
+        <Route path="/notifications" exact component={NotificationsScreen}/>
         <Route path="/" exact component={HomeScreen}/>
         <Route component={ErrorScreen}/>
       </Switch>

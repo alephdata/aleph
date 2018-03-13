@@ -1,3 +1,4 @@
+import logging
 from banal import ensure_list
 from marshmallow import pre_dump, post_dump
 from marshmallow.fields import Dict, Raw, String, Nested, Field
@@ -9,12 +10,15 @@ from aleph.serializers.entities import CombinedSchema
 from aleph.serializers.collections import CollectionSchema
 from aleph.serializers.common import BaseSchema
 
+log = logging.getLogger(__name__)
+
 
 class ParamTypes(Field):
     def _serialize(self, value, attr, obj):
+        out = {}
         for param, clazz in value.items():
-            value[param] = clazz.__name__.lower()
-        return value
+            out[param] = clazz.__name__.lower()
+        return out
 
 
 class EventSchema(BaseSchema):

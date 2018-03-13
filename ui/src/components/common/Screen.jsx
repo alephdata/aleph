@@ -28,7 +28,7 @@ class Screen extends React.Component {
 
     return (
       <div className={c("Screen", className)}>
-        <Helmet titleTemplate={`%s - ${this.props.title || metadata.app.title}`}>
+        <Helmet titleTemplate={`%s - ${metadata.app.title}`}>
           <title>{this.props.title || metadata.app.title}</title>
           <link rel="shortcut icon" href={metadata.app.favicon}/>
         </Helmet>

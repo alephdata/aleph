@@ -2,6 +2,7 @@ import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
 import { suggestRoles, fetchRole, updateRole } from './roleActions';
 import { fetchAlerts, addAlert, deleteAlert } from './alertActions';
+import { queryNotifications } from './notificationActions';
 import { fetchFacet } from './facetActions';
 import {
   fetchDocument,
@@ -46,7 +47,8 @@ export {
   updateCollectionPermissions,
   fetchCollectionXrefIndex,
   fetchCollectionXrefMatches,
-  fetchNextCollectionXrefMatches
+  fetchNextCollectionXrefMatches,
+  queryNotifications
 };
 
 export const fetchMetadata = asyncActionCreator(() => async dispatch => {
