@@ -2,8 +2,10 @@ from banal import as_bool
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from followthemoney.util import merge_data
+from six.moves.urllib.parse import quote
+from urlnormalizer import query_string
 
-from aleph.core import db
+from aleph.core import db, url_for
 from aleph.model import Entity
 from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.collections import update_collection
@@ -74,9 +76,19 @@ def documents(id):
 def references(id):
     enable_cache()
     entity = get_index_entity(id, request.authz.READ)
+    results = []
+    for prop, total in entity_references(entity, request.authz):
+        key = ('filter:properties.%s' % prop.name, id)
+        link = url_for('search_api.search', _query=(key,))
+        results.append({
+            'count': total,
+            'property': prop,
+            'schema': prop.schema.name,
+            'results': link
+        })
     return jsonify({
         'status': 'ok',
-        'results': entity_references(entity, request.authz)
+        'results': results
     })
 
 
@@ -84,9 +96,24 @@ def references(id):
 def tags(id):
     enable_cache()
     entity = get_index_entity(id, request.authz.READ)
+    results = []
+    for (field, value, total) in entity_tags(entity, request.authz):
+        qvalue = quote(value.encode('utf-8'))
+        key = ('filter:%s' % field, qvalue)
+        link = url_for('search_api.search', _query=(key,))
+        results.append({
+            'id': query_string([key]),
+            'value': value,
+            'field': field,
+            'count': total,
+            'results': link 
+        })
+
+    results.sort(key=lambda p: p['count'], reverse=True)
     return jsonify({
         'status': 'ok',
-        'results': entity_tags(entity, request.authz)
+        'total': len(results),
+        'results': results
     })
 
 
