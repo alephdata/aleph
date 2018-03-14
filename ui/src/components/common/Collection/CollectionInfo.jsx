@@ -15,7 +15,7 @@ class CollectionInfo extends Component {
     
     // If collection data it hasn't loaded yet don't attempt to draw anything
     if (!collection)
-      return null
+      return null;
 
     return (
       <React.Fragment>
