@@ -66,7 +66,7 @@ class HomeScreen extends Component {
             <div className='inner-searchbox'>
               <div className='homepage-summary'>
                 <FormattedMessage id='home.summary'
-                                  defaultMessage="Search {total} public records, scrapes and leaks from {collections} global sources."
+                                  defaultMessage="Search {total} public records, scrapes, and leaks from {collections} global sources."
                                   values={{
                                     total: total,
                                     collections: collections
