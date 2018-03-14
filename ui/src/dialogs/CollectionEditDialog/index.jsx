@@ -11,15 +11,15 @@ import {updateCollection} from "../../actions";
 const messages = defineMessages({
   placeholder_label: {
     id: 'collection.edit.info.placeholder_label',
-    defaultMessage: 'A label for this collection',
+    defaultMessage: 'A label for this source',
   },
   placeholder_summary: {
     id: 'collection.edit.info.placeholder_summary',
-    defaultMessage: 'A brief summary of this collection',
+    defaultMessage: 'A brief summary of this source',
   },
   title : {
     id: 'collection.edit.info.title',
-    defaultMessage: 'Collection info'
+    defaultMessage: 'Source info'
   },
   save_button: {
     id: 'collection.edit.info.save',

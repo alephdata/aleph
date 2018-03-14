@@ -131,7 +131,7 @@ class HomeScreen extends Component {
           <div className='homepage_collections_footer'>
             <Link to="/collections">
               <FormattedMessage id='home.collections'
-                                defaultMessage="Want to browse collections?"/>
+                                defaultMessage="Want to browse sources?"/>
             </Link>
           </div>
         </section>

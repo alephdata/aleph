@@ -25,7 +25,7 @@ const messages = defineMessages({
   },
   facet_collection_id: {
     id: 'search.facets.facet.collection_id',
-    defaultMessage: 'Collections',
+    defaultMessage: 'Sources',
   },
   facet_languages: {
     id: 'search.facets.facet.languages',
@@ -73,7 +73,7 @@ const messages = defineMessages({
 class SearchScreen extends React.Component {
   constructor(props) {
     const { intl } = props;
-    super(props)
+    super(props);
 
     const facets = [
       {

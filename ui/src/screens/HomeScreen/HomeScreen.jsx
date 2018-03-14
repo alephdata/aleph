@@ -92,7 +92,7 @@ class HomeScreen extends Component {
                 </Button>
                 <AnchorButton icon="database" className="pt-large pt-intent-primary" href="/collections">
                   <FormattedMessage id='home.explore'
-                                    defaultMessage="Explore collections..." />
+                                    defaultMessage="Explore sources..." />
                 </AnchorButton>
               </div>
             </div>

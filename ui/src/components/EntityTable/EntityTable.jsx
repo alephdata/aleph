@@ -12,7 +12,7 @@ const messages = defineMessages({
   },
   column_collection_id: {
     id: 'entity.column.collection_id',
-    defaultMessage: 'Collection',
+    defaultMessage: 'Source',
   },
   column_schema: {
     id: 'entity.column.schema',

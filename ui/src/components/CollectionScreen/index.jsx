@@ -14,7 +14,7 @@ import Collection from 'src/components/common/Collection';
 const messages = defineMessages({
   not_found: {
     id: 'collection.not_found',
-    defaultMessage: 'Collection not found',
+    defaultMessage: 'Source not found',
   },
 });
 

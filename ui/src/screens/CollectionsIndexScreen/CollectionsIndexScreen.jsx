@@ -19,7 +19,7 @@ import './CollectionsIndexScreen.css';
 const messages = defineMessages({
   filter: {
     id: 'collectionbrowser.filter',
-    defaultMessage: 'Filter collections',
+    defaultMessage: 'Filter sources',
   },
   facet_category: {
     id: 'search.facets.facet.category',
@@ -114,10 +114,10 @@ class CollectionsIndexScreen extends Component {
       <li>
         <a className="pt-breadcrumb">
           <FormattedMessage id="collection.browser.breadcrumb"
-                            defaultMessage="Collections overview" />
+                            defaultMessage="Sources overview" />
         </a>
       </li>
-    </Breadcrumbs>)
+    </Breadcrumbs>);
 
     return (
       <Screen className="CollectionsIndexScreen" breadcrumbs={breadcrumbs}>
@@ -131,7 +131,7 @@ class CollectionsIndexScreen extends Component {
             </div>
             <p className="note">
               <FormattedMessage id="collection.browser.total"
-                                defaultMessage="Browsing {total} collections."
+                                defaultMessage="Browsing {total} sources."
                                 values={{
                                   total: <FormattedNumber value={result.total || 0} />
                                 }}/>
