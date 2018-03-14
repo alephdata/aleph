@@ -32,14 +32,11 @@ class SettingsButton extends Component {
 
   render() {
     const { session } = this.props;
-    if (!session.loggedIn) {
-      return null;
-    }
 
     return (
       <React.Fragment>
         <AnchorButton icon="database" className="pt-minimal" href="/collections">
-          <FormattedMessage id="nav.collections" defaultMessage="Collections"/>
+          <FormattedMessage id="nav.collections" defaultMessage="Sources"/>
         </AnchorButton>
         {session.loggedIn && (
           <React.Fragment>
