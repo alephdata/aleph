@@ -4,7 +4,6 @@ import SearchFacet from './SearchFacet';
 
 import './SearchFacets.css';
 
-
 class SearchFacets extends Component {
   render() {
     const { facets, query, updateQuery } = this.props;
