@@ -13,7 +13,7 @@ import EntityRelatedScreen from 'src/components/EntityScreen/EntityRelatedScreen
 import DocumentScreen from 'src/components/DocumentScreen';
 import DocumentRelatedScreen from 'src/components/DocumentScreen/DocumentRelatedScreen';
 import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
-import ErrorScreen from 'src/components/ErrorScreen';
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
 
 import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
@@ -57,7 +57,7 @@ class Router extends Component {
         <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionsXrefScreen}/>
         <Route path="/search" exact component={SearchScreen}/>
         <Route path="/" exact component={HomeScreen}/>
-        <Route component={ErrorScreen}/>
+        <Route component={ErrorScreen.PageNotFound}/>
       </Switch>
     );
   }

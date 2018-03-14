@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
-import { NonIdealState } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import Screen from 'src/components/common/Screen';
@@ -10,6 +9,7 @@ import DualPane from 'src/components/common/DualPane';
 import CollectionContent from './CollectionContent';
 import CollectionInfo from './CollectionInfo';
 import Collection from 'src/components/common/Collection';
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 const messages = defineMessages({
   not_found: {
@@ -20,16 +20,16 @@ const messages = defineMessages({
 
 class CollectionScreen extends Component {
   render() {
-    const { collection, intl } = this.props;
+    const { collection } = this.props;
 
     if (collection.error) {
       return (
-        <NonIdealState visual="error" title={intl.formatMessage(messages.not_found)} />
-      );
+        <ErrorScreen.EmptyList title={messages.not_found}/>
+      )
     }
 
     return (
-      <Screen breadcrumbs={<Breadcrumbs collection={collection} />}>
+      <Screen isError={collection.error} errorMessage={messages.not_found} breadcrumbs={<Breadcrumbs collection={collection} />}>
         <Helmet>
           <title>{collection.label}</title>
         </Helmet>
