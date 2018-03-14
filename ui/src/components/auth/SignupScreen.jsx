@@ -4,10 +4,13 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import {Callout, Intent, NonIdealState} from '@blueprintjs/core';
 
+import Screen from 'src/components/common/Screen';
 import {endpoint} from 'src/app/api';
 import {xhrErrorToast} from './xhrToast';
 import OAuthLogin from './OAuthLogin';
 import {PasswordAuthSignup} from './PasswordAuth';
+
+import './SignIn.css';
 
 const messages = defineMessages({
   not_available_title: {
@@ -51,18 +54,24 @@ class SignupScreen extends Component {
     }
 
     return (
-      <section className="small-screen">
-        <h1><FormattedMessage id="signup.signup" defaultMessage="Sign up"/></h1>
-        {submitted ?
-          <Callout intent={Intent.SUCCESS} icon="tick">
-            <h5><FormattedMessage id="signup.inbox.title" defaultMessage="Check your inbox"/></h5>
-            <FormattedMessage id="signup.inbox.desc" defaultMessage="We've sent you an email, please follow the link to complete your registration"/>
-          </Callout> :
-          <span>
+      <Screen>
+        <div className='outer-div'>
+          <div className='inner-div'>
+            <section className="small-screen">
+              <h1><FormattedMessage id="signup.signup" defaultMessage="Sign up"/></h1>
+              {submitted ?
+                <Callout intent={Intent.SUCCESS} icon="tick">
+                  <h5><FormattedMessage id="signup.inbox.title" defaultMessage="Check your inbox"/></h5>
+                  <FormattedMessage id="signup.inbox.desc" defaultMessage="We've sent you an email, please follow the link to complete your registration"/>
+                </Callout> :
+                <span>
             <PasswordAuthSignup onSubmit={this.onSignup.bind(this)}/>
-            {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
+                  {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
           </span>}
-      </section>
+            </section>
+          </div>
+        </div>
+      </Screen>
     );
   }
 }

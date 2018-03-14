@@ -52,7 +52,7 @@ const PasswordAuth = ({onSubmit, showEmail, showName, showPassword, buttonText, 
 
 export const PasswordAuthLogin = ({onSubmit}) => (
   <PasswordAuth onSubmit={onSubmit} showEmail showPassword
-                buttonText={<FormattedMessage id="password_auth.signin" defaultMessage="Sign in"/>}>
+                buttonText={<FormattedMessage id="password_auth.signin" defaultMessage="Sign in"/>}>{' '}&nbsp;
     <FormattedMessage id="password_auth.no_account" defaultMessage="Haven't got an account?" />{' '}
     <Link to="/signup">
       <FormattedMessage id="password_auth.signup" defaultMessage="Sign up"/>
@@ -62,7 +62,7 @@ export const PasswordAuthLogin = ({onSubmit}) => (
 
 export const PasswordAuthSignup = ({onSubmit}) => (
   <PasswordAuth onSubmit={onSubmit} showEmail
-                buttonText={<FormattedMessage id="password_auth.signup" defaultMessage="Sign up"/>}>
+                buttonText={<FormattedMessage id="password_auth.signup" defaultMessage="Sign up"/>}>{' '}&nbsp;
     <FormattedMessage id="password_auth.has_account" defaultMessage="Already have an account?"/>{' '}
     <Link to="/login"><FormattedMessage id="password_auth.signin" defaultMessage="Sign in"/></Link>
   </PasswordAuth>

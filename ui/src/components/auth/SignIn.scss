@@ -1,0 +1,11 @@
+.outer-div {
+  display: table;
+  position: absolute;
+  height: 80%;
+  width: 100%;
+}
+
+.inner-div {
+  display: table-cell;
+  vertical-align: middle;
+}

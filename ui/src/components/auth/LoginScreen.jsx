@@ -5,9 +5,12 @@ import {Redirect} from 'react-router';
 import queryString from 'query-string';
 import {NonIdealState} from '@blueprintjs/core';
 
+import Screen from 'src/components/common/Screen';
 import {loginWithPassword, loginWithToken} from 'src/actions/sessionActions';
 import OAuthLogin from './OAuthLogin';
 import {PasswordAuthLogin} from './PasswordAuth';
+
+import './SignIn.css';
 
 const messages = defineMessages({
   not_available_title: {
@@ -43,17 +46,25 @@ class LoginScreen extends Component {
       return <Redirect to="/" />
     }
 
-    return <section className="small-screen">
-        {hasLogin && <h1>Sign in</h1>}
+    return (
+      <Screen>
+        <div className='outer-div'>
+          <div className='inner-div'>
+            <section className="small-screen">
+              {hasLogin && <h1>Sign in</h1>}
 
-        {passwordLogin && <PasswordAuthLogin onSubmit={this.onLogin.bind(this)}/>}
-        {oauthLogin && <OAuthLogin provider={metadata.auth.oauth_uri}/>}
+              {passwordLogin && <PasswordAuthLogin onSubmit={this.onLogin.bind(this)}/>}
+              {oauthLogin && <OAuthLogin provider={metadata.auth.oauth_uri}/>}
 
-        {!hasLogin &&
-          <NonIdealState visual="log-in"
-            title={intl.formatMessage(messages.not_available_title)}
-            description={intl.formatMessage(messages.not_available_desc)}/>}
-      </section>
+              {!hasLogin &&
+              <NonIdealState visual="log-in"
+                             title={intl.formatMessage(messages.not_available_title)}
+                             description={intl.formatMessage(messages.not_available_desc)}/>}
+            </section>
+          </div>
+        </div>
+      </Screen>
+    )
   }
 }
 
