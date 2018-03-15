@@ -1,21 +1,13 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Document, Page } from 'react-pdf/build/entry.webpack';
-import { findLast, throttle } from 'lodash';
+import { throttle } from 'lodash';
+import queryString from 'query-string';
 
 import SectionLoading from 'src/components/common/SectionLoading';
-import { DocumentToolbar } from 'src/components/Toolbar';
-import { parse as parsePdfFragId } from 'src/util/pdfFragId';
 
 import './PdfViewer.css';
-
-function getPageNumber(fragId) {
-  const pageParameter = findLast(
-    parsePdfFragId(fragId),
-    { parameter: 'page' },
-  );
-  return pageParameter && pageParameter.pagenum;
-}
 
 class PdfViewer extends Component {
   constructor(props) {
@@ -31,6 +23,8 @@ class PdfViewer extends Component {
     this.setState({
       numPages: pdfInfo.numPages
     });
+    if (this.props.onDocumentLoad)
+      this.props.onDocumentLoad(pdfInfo)
   }
 
   componentDidMount () {
@@ -51,7 +45,7 @@ class PdfViewer extends Component {
   };
 
   render() {
-    const { document, fragId, session } = this.props;
+    const { document, session, location: loc } = this.props;
     const { numPages, width } = this.state;
 
     if (!document || !document.links || !document.links.pdf) {
@@ -60,15 +54,14 @@ class PdfViewer extends Component {
 
     let url = document.links.pdf;
     if (session.token) {
-      url = `${url}?api_key=${session.token}`
+      url = `${url}?api_key=${session.token}`;
     }
 
-    let pageNumber = getPageNumber(fragId);
-    if (pageNumber === undefined) pageNumber = 1;
+    const parsedHash = queryString.parse(loc.hash);
+    let pageNumber = (parsedHash.page && parseInt(parsedHash.page, 10) <= numPages) ? parseInt(parsedHash.page, 10) : 1;
 
     return (
       <React.Fragment>
-        <DocumentToolbar document={document} pageNumber={pageNumber} pageTotal={numPages}/>
         <div className="outer">
           <div className="inner PdfViewer">
             <div className="document_pdf" ref={(ref) => this.pdfElement = ref}>
@@ -89,4 +82,9 @@ class PdfViewer extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {session: state.session};
 }
-export default connect(mapStateToProps)(PdfViewer);
+
+PdfViewer = connect(mapStateToProps)(PdfViewer);
+
+PdfViewer = withRouter(PdfViewer);
+
+export default PdfViewer

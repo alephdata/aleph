@@ -9,10 +9,11 @@ import { Button } from '@blueprintjs/core';
 import getPath from 'src/util/getPath';
 import { fetchCollection, fetchEntity, fetchDocument } from 'src/actions';
 import CollectionInfo from 'src/components/CollectionScreen/CollectionInfo';
-import EntityInfo from 'src/screens/EntityScreen/EntityInfo';
 import DocumentInfo from 'src/screens/DocumentScreen/DocumentInfo';
-import DocumentContent from 'src/screens/DocumentScreen/DocumentContent';
+import { DocumentViewer } from 'src/components/DocumentViewer';
+import EntityInfo from 'src/screens/EntityScreen/EntityInfo';
 import SectionLoading from 'src/components/common/SectionLoading';
+import { Toolbar, CloseButton, DownloadButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
 
 import './Preview.css';
 
@@ -25,7 +26,9 @@ const defaultState = {
   previewTab: null,
   collection: null,
   entity: null,
-  document: null
+  document: null,
+  numberOfPages: 0,
+  queryText: ''
 }
 
 class Preview extends React.Component {
@@ -38,8 +41,26 @@ class Preview extends React.Component {
     this.state.document = props.document || null;
     this.handleScroll = this.handleScroll.bind(this);
     this.toggleMaximise = this.toggleMaximise.bind(this);
+    this.onDocumentLoad = this.onDocumentLoad.bind(this);
+    this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
   }
 
+  onDocumentLoad(documentInfo) {
+    if (documentInfo) {
+      if (documentInfo.numPages) {
+        this.setState({
+          numberOfPages: documentInfo.numPages
+        });
+      }
+    }
+  }
+
+  onSearchQueryChange(queryText) {
+    this.setState({
+      queryText: queryText
+    });
+  }
+  
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
     this.handleScroll();
@@ -167,9 +188,9 @@ class Preview extends React.Component {
             document: doc
           } = this.state;
     const { location: loc} = this.props;
+    const { numberOfPages } = this.state;
     
     let className = 'Preview'
-    
 
     let view = null,
         link = null,
@@ -188,7 +209,7 @@ class Preview extends React.Component {
     }
     
     if (previewType === 'document' && doc && !doc.isFetching) {
-      view = (maximised === true) ? <DocumentContent document={doc} fragId={loc.hash}/> : <DocumentInfo document={doc} />;
+      view = (maximised === true) ? <DocumentViewer document={doc} queryText={this.state.queryText} onDocumentLoad={this.onDocumentLoad} /> : <DocumentInfo document={doc} />;
       link = getPath(doc.links.ui);
       linkIcon = 'document';
       showQuickPreview = true;
@@ -211,14 +232,28 @@ class Preview extends React.Component {
           top: previewTop,
           bottom: previewBottom
           }}>
-          <PreviewToolbar
-            maximised={(showQuickPreview) ? maximised : false}
-            toggleMaximise={ this.toggleMaximise }
-            link={link}
-            linkIcon={linkIcon}
-            location={loc}
-            showQuickPreview={showQuickPreview}
-            />
+
+          <Toolbar className="color">
+            {showQuickPreview === true && (<Button
+              icon="eye-open"
+              className={`button-maximise ${(maximised) ? 'pt-active' : ''}`}
+              onClick={this.toggleMaximise}>
+                <FormattedMessage id="preview" defaultMessage="Preview"/>
+            </Button>
+            )}
+            <Link to={link} className="pt-button button-link">
+              <span className={`pt-icon-${linkIcon}`}/>
+              <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
+            </Link>
+            <DownloadButton document={doc}/>
+            {showQuickPreview === true && maximised && (
+              <PagingButtons numberOfPages={numberOfPages}/>
+            )}
+            <CloseButton/>
+            {showQuickPreview === true && maximised && (
+              <DocumentSearch document={doc} queryText={this.state.queryText} onSearchQueryChange={this.onSearchQueryChange}/>
+            )}
+          </Toolbar>
           {view}
         </div>
       );
@@ -247,43 +282,12 @@ class Preview extends React.Component {
   }
 }
 
-class PreviewToolbar extends React.Component {
-  render() {
-    const { maximised,
-            toggleMaximise,
-            location: loc,
-            link,
-            linkIcon,
-            showQuickPreview
-          } = this.props;
-      
-    return (
-      <React.Fragment>
-        <div className="toolbar">
-          {showQuickPreview === true && (<Button
-            icon="eye-open"
-            className={`button-maximise ${(maximised) ? 'pt-active' : ''}`}
-            onClick={ () => toggleMaximise() }>
-              <FormattedMessage id="preview" defaultMessage="Preview"/>
-          </Button>
-          )}
-          <Link to={link} className="pt-button button-link">
-            <span className={`pt-icon-${linkIcon}`}/>
-            <FormattedMessage id="sidebar.open" defaultMessage="Open…"/>
-          </Link>
-          <Link to={loc.pathname + loc.search}>
-            <span className="pt-icon-cross button-close pt-button pt-minimal"/>
-          </Link>
-        </div>
-        {maximised === true && (
-          <div className="quick-preview-heading">
-            <FormattedMessage id="preview" defaultMessage="Preview"/>          
-          </div>
-        )}
-      </React.Fragment>
-    )
-  }
-}
+/*
+          <DocumentSearch document={doc} queryText={this.state.queryText} onSearchQueryChange={this.onSearchQueryChange}/>
+        </Toolbar>
+        <DocumentViewer document={doc} queryText={this.state.queryText} onDocumentLoad={this.onDocumentLoad} />
+*/
+
 
 const mapStateToProps = (state, ownProps) => {
   const parsedHash = queryString.parse(ownProps.location.hash);

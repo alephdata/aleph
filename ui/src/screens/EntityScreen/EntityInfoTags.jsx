@@ -7,7 +7,6 @@ import { FormattedNumber, FormattedMessage } from 'react-intl';
 import Tag from 'src/components/common/Tag';
 import { fetchEntityTags } from 'src/actions/index';
 import { getEntityTags } from 'src/selectors';
-import getPath from 'src/util/getPath';
 
 class EntityInfoTags extends React.Component {
   componentDidMount() {

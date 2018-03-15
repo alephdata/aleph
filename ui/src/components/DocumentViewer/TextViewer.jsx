@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { DocumentToolbar } from 'src/components/Toolbar';
-
 import './TextViewer.css';
 
 class TextViewer extends React.Component {
@@ -9,7 +7,6 @@ class TextViewer extends React.Component {
     const { document } = this.props;
     return (
       <React.Fragment>
-        <DocumentToolbar document={document}/>
         <div className="outer">
           <div className="inner TextViewer">
             <pre>{document.text}</pre>

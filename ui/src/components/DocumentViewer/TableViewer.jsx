@@ -9,16 +9,13 @@ import Query from 'src/app/Query';
 import { queryDocumentRecords } from 'src/actions';
 import { selectDocumentRecordsResult } from 'src/selectors';
 import SectionLoading from 'src/components/common/SectionLoading';
-import { DocumentToolbar } from 'src/components/Toolbar';
-
 
 const messages = defineMessages({
   placeholder: {
     id: 'document.placeholder_table_filter',
-    defaultMessage: 'Filter this table',
+    defaultMessage: 'Search table…',
   },
 });
-
 
 class Table extends Component {
   render() {
@@ -58,9 +55,14 @@ class Table extends Component {
 class TableViewer extends Component {
   constructor(props) {
     super(props);
-    this.updateQuery = this.updateQuery.bind(this);
-    this.onQueryPrefixChange = debounce(this.onQueryPrefixChange.bind(this), 200);
+    this.updateQuery = debounce(this.updateQuery.bind(this), 200);    
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.queryText !== this.props.queryText) {
+      this.updateSearchQuery(this.props.query.set('prefix', newProps.queryText));
+    }
   }
 
   componentDidMount() {
@@ -84,12 +86,18 @@ class TableViewer extends Component {
     const { history, location } = this.props;
     history.replace({
       pathname: location.pathname,
-      search: newQuery.toLocation()
+      search: newQuery.toLocation(),
+      hash: location.hash
     });
-  }
-
-  onQueryPrefixChange(prefix) {
-    this.updateQuery(this.props.query.set('prefix', prefix));
+  } 
+  
+  componentWillReceiveProps(newProps) {
+    if (newProps.onDocumentLoad)
+      newProps.onDocumentLoad({ queryText: newProps.query.getString('prefix') })
+    
+//    if (newProps.queryText !== this.props.queryText) {
+//      this.updateQuery(this.props.query.set('prefix', newProps.query.getString('prefix')));
+//    }
   }
 
   bottomReachedHandler() {
@@ -100,16 +108,12 @@ class TableViewer extends Component {
   }
 
   render() {
-    const { document, result, intl } = this.props;
-    const queryPlaceholder = intl.formatMessage(messages.placeholder);
+    const { document, result } = this.props;
     const columnNames = document.columns;
+
 
     return (
       <div className="TableViewer">
-        <DocumentToolbar document={document}
-                         queryText={this.props.query.getString('prefix')}
-                         queryPlaceholder={queryPlaceholder}
-                         onChangeQuery={this.onQueryPrefixChange} />
         <Table columnNames={columnNames} records={result.results} />
         {!result.isLoading && result.next && (
           <Waypoint
@@ -142,4 +146,5 @@ const mapStateToProps = (state, ownProps) => {
 TableViewer = connect(mapStateToProps, { queryDocumentRecords })(TableViewer);
 TableViewer = withRouter(TableViewer);
 TableViewer = injectIntl(TableViewer);
+
 export default TableViewer;

@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
-import { DocumentToolbar } from 'src/components/Toolbar';
 
 import './EmailViewer.css';
 
@@ -39,7 +38,6 @@ class EmailViewer extends React.Component {
     
     return (
       <React.Fragment>
-        <DocumentToolbar document={document}/>
         <div className="outer">
           <div className="inner EmailViewer">
             <div className="email-header">

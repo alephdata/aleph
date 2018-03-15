@@ -42,7 +42,6 @@ class DocumentInfo extends React.Component {
               <Tab id="overview"
                 title={
                   <React.Fragment>
-                     <span className="pt-icon-standard pt-icon-info-sign"/>
                      <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
                   </React.Fragment>
                 }
@@ -51,7 +50,6 @@ class DocumentInfo extends React.Component {
               <Tab id="source" 
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-database"/>
                     <FormattedMessage id="document.info.source" defaultMessage="Source"/>
                   </React.Fragment>
                 }
@@ -77,7 +75,6 @@ class DocumentInfo extends React.Component {
               <Tab id="tags"
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-tag"/>
                     <FormattedMessage id="document.info.links"
                                       defaultMessage="Links"/>
                   </React.Fragment>

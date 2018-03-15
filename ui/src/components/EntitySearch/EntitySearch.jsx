@@ -74,9 +74,11 @@ class EntitySearch extends Component {
     return (
       <React.Fragment>
         { result.total === 0 &&
-          <NonIdealState visual="search"
-                         title={intl.formatMessage(messages.no_results_title)}
-                         description={intl.formatMessage(messages.no_results_description)} />
+          <section className="PartialError">
+            <NonIdealState visual="search"
+                           title={intl.formatMessage(messages.no_results_title)}
+                           description={intl.formatMessage(messages.no_results_description)} />
+          </section>
         }
         <EntityTable query={query}
                      documentMode={this.props.documentMode}

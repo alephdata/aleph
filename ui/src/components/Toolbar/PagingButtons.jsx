@@ -1,41 +1,41 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup, Button, AnchorButton } from "@blueprintjs/core";
 
 import './PagingButtons.css';
 
-export default class extends React.Component {
+class PagingButtons extends React.Component {
   render() {
-    const { pageNumber, pageTotal, location: loc } = this.props;
-    
+    const { location: loc, numberOfPages } = this.props;
+
     // Preserve exsting hash value while updating any existing value for 'page'
     const parsedHash = queryString.parse(loc.hash);
-    if (parsedHash.page)
-      delete parsedHash.page
+    const currentPage = (parsedHash.page && parseInt(parsedHash.page, 10) <= numberOfPages) ? parseInt(parsedHash.page, 10) : 1;
     
-    parsedHash.page = pageNumber-1;
+    parsedHash.page = currentPage-1;
     const prevButtonLink = queryString.stringify(parsedHash);
     
-    parsedHash.page = pageNumber+1;
+    parsedHash.page = currentPage+1;
     const nextButtonLink = queryString.stringify(parsedHash);
     
-    if (pageNumber && pageNumber > 0 &&
-       pageTotal && pageTotal > 0) {
+    if (currentPage && currentPage > 0 &&
+       numberOfPages && numberOfPages > 0) {
        return (
          <ButtonGroup className="PagingButtons" minimal={false} style={{float: 'left'}}>
-             <AnchorButton href={`#${prevButtonLink}`} icon="arrow-left" disabled={pageNumber <= 1}/>
+             <AnchorButton href={`#${prevButtonLink}`} icon="arrow-left" disabled={currentPage <= 1}/>
              <Button disabled className="PagingText">
                <FormattedMessage
                  id="document.paging"
-                 defaultMessage="Page {pageNumber} of {pageTotal}"
+                 defaultMessage="Page {currentPage} of {numberOfPages}"
                  values={{
-                    pageNumber: pageNumber,
-                    pageTotal: pageTotal
+                    currentPage: currentPage,
+                    numberOfPages: numberOfPages
                   }}
                />
              </Button>
-             <AnchorButton href={`#${nextButtonLink}`} icon="arrow-right" disabled={pageNumber >= pageTotal}/>
+             <AnchorButton href={`#${nextButtonLink}`} icon="arrow-right" disabled={currentPage >= numberOfPages}/>
          </ButtonGroup>
        );
      } else {
@@ -43,3 +43,7 @@ export default class extends React.Component {
      }
   }
 }
+
+PagingButtons = withRouter(PagingButtons);
+
+export default PagingButtons

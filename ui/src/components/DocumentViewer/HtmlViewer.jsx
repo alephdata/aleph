@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import { DocumentToolbar } from 'src/components/Toolbar';
-
 import './HtmlViewer.css';
 
 class HtmlViewer extends Component {
@@ -10,7 +8,6 @@ class HtmlViewer extends Component {
 
     return (
       <React.Fragment>
-        <DocumentToolbar document={document}/>
         <div className="outer">
           <div className="inner HtmlViewer">
             <span dangerouslySetInnerHTML={{__html: document.html}} />

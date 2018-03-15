@@ -47,32 +47,6 @@
     overflow-wrap: break-word;
   }
   
-  .toolbar {
-    position: relative;
-    background: $aleph-toolbar-background;
-    padding: $aleph-grid-size;
-    clear: both;
-    overflow: auto;
-
-    .pt-button {
-      margin: 0;
-      float: left;
-      margin-right: $aleph-grid-size;
-    }
-    
-    .pt-button.button-close {
-      float: right;
-      border-radius: 1em;
-    }
-  }
-  
-  .quick-preview-heading {
-    padding: $aleph-grid-size;
-    text-align: center;
-    background: $aleph-sidebar-background;
-    color: white;
-  }
-  
   .edit-button {
     width: 8em;
   }
@@ -83,7 +57,7 @@
 
     .pane-heading {
       background: $aleph-sidebar-background;
-      padding: $aleph-grid-size*4 $aleph-grid-size*2;
+      padding: $aleph-grid-size*2 $aleph-grid-size*2 $aleph-grid-size*4 $aleph-grid-size*2;
       color: white;
     }
 
@@ -117,12 +91,5 @@
     }
   }
   
-  /*
-  .ContentPane,
-  .outer,
-  .inner,
-  .inner > * {
-    height: 100%;
-  }
-  */
+
 }
