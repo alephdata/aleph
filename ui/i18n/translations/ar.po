@@ -1,15 +1,13 @@
-# Translators:
-# pudo <friedrich@pudo.org>, 2018
+# 
 msgid ""
 msgstr ""
 "POT-Creation-Date: 2018-03-15T07:58:16.562Z\n"
-"Last-Translator: pudo <friedrich@pudo.org>, 2018\n"
-"Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
+"Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Generator: react-intl-po\n"
 
 #. [property.inverse]
@@ -38,28 +36,28 @@ msgstr ""
 #. A label for this source
 #: i18n/messages.json
 msgid "A label for this source"
-msgstr "Eine Bezeichnung für diese Quelle"
+msgstr ""
 
 #. [settings.api_key]
 #. defaultMessage is:
 #. API Secret Access Key
 #: i18n/messages.json
 msgid "API Secret Access Key"
-msgstr "API-Zugangsschlüssel"
+msgstr ""
 
 #. [collection.info.access]
 #. defaultMessage is:
 #. Access
 #: i18n/messages.json
 msgid "Access"
-msgstr "Zugang"
+msgstr ""
 
 #. [password_auth.activate]
 #. defaultMessage is:
 #. Activate
 #: i18n/messages.json
 msgid "Activate"
-msgstr "Aktivieren"
+msgstr ""
 
 #. [signup.title]
 #. defaultMessage is:
@@ -80,7 +78,7 @@ msgstr ""
 #. Addresses
 #: i18n/messages.json
 msgid "Addresses"
-msgstr "Adressen"
+msgstr ""
 
 #. [nav.alerts]
 #. defaultMessage is:
@@ -94,70 +92,70 @@ msgstr ""
 #. Already have an account?
 #: i18n/messages.json
 msgid "Already have an account?"
-msgstr "Haben Sie bereits ein Nutzerkonto?"
+msgstr ""
 
 #. [auth.unknown_error]
 #. defaultMessage is:
 #. An unexpected error occured
 #: i18n/messages.json
 msgid "An unexpected error occured"
-msgstr "Ein unerwarteter Fehler ist aufgetreten."
+msgstr ""
 
 #. [email.attachments]
 #. defaultMessage is:
 #. Attachments
 #: i18n/messages.json
 msgid "Attachments"
-msgstr "Anhänge"
+msgstr ""
 
 #. [document.author]
 #. defaultMessage is:
 #. Author
 #: i18n/messages.json
 msgid "Author"
-msgstr "Autor"
+msgstr ""
 
 #. [document.authored_at]
 #. defaultMessage is:
 #. Authored
 #: i18n/messages.json
 msgid "Authored"
-msgstr "Geschrieben"
+msgstr ""
 
 #. [search.facets.facet.author]
 #. defaultMessage is:
 #. Authors
 #: i18n/messages.json
 msgid "Authors"
-msgstr "Autoren"
+msgstr ""
 
 #. [email.bcc]
 #. defaultMessage is:
 #. BCC
 #: i18n/messages.json
 msgid "BCC"
-msgstr "BCC"
+msgstr ""
 
 #. [collection.browser.total]
 #. defaultMessage is:
 #. Browsing {total} sources.
 #: i18n/messages.json
 msgid "Browsing {total} sources."
-msgstr "Erforsche {total} quellen."
+msgstr ""
 
 #. [email.cc]
 #. defaultMessage is:
 #. CC
 #: i18n/messages.json
 msgid "CC"
-msgstr "CC"
+msgstr ""
 
 #. [search.facets.facet.category]
 #. defaultMessage is:
 #. Categories
 #: i18n/messages.json
 msgid "Categories"
-msgstr "Kategorien"
+msgstr ""
 
 #. [collection.info.category]
 #. defaultMessage is:
@@ -170,7 +168,7 @@ msgstr "Kategorien"
 #. Category
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Category"
-msgstr "Kategorie"
+msgstr ""
 
 #. [signup.inbox.title]
 #. defaultMessage is:
@@ -205,7 +203,7 @@ msgstr ""
 #. Contact
 #: i18n/messages.json
 msgid "Contact"
-msgstr "Kontakt"
+msgstr ""
 
 #. [entity.column.countries]
 #. defaultMessage is:
@@ -268,14 +266,14 @@ msgstr ""
 #. Date
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Date"
-msgstr "Datum"
+msgstr ""
 
 #. [alerts.delete]
 #. defaultMessage is:
 #. Delete
 #: i18n/messages.json
 msgid "Delete"
-msgstr "Löschen"
+msgstr ""
 
 #. [document.info.source_url]
 #. defaultMessage is:
@@ -310,21 +308,21 @@ msgstr ""
 #. E-Mails
 #: i18n/messages.json
 msgid "E-Mails"
-msgstr "E-Mails"
+msgstr ""
 
 #. [settings.email]
 #. defaultMessage is:
 #. E-mail Address
 #: i18n/messages.json
 msgid "E-mail Address"
-msgstr "E-Mail-Adresse"
+msgstr ""
 
 #. [collection.edit.permissionstable.edit]
 #. defaultMessage is:
 #. Edit
 #: i18n/messages.json
 msgid "Edit"
-msgstr "Bearbeiten"
+msgstr ""
 
 #. [collection.info.edit]
 #. defaultMessage is:
@@ -366,14 +364,14 @@ msgstr ""
 #. File size
 #: i18n/messages.json
 msgid "File size"
-msgstr "Dateigrösse"
+msgstr ""
 
 #. [search.facets.facet.mime_type]
 #. defaultMessage is:
 #. File types
 #: i18n/messages.json
 msgid "File types"
-msgstr "Dateitypen"
+msgstr ""
 
 #. [collectionbrowser.filter]
 #. defaultMessage is:
@@ -408,7 +406,7 @@ msgstr ""
 #. From
 #: i18n/messages.json
 msgid "From"
-msgstr "Von"
+msgstr ""
 
 #. [document.generator]
 #. defaultMessage is:
@@ -422,7 +420,7 @@ msgstr ""
 #. Groups
 #: i18n/messages.json
 msgid "Groups"
-msgstr "Gruppen"
+msgstr ""
 
 #. [password_auth.no_account]
 #. defaultMessage is:
@@ -436,7 +434,7 @@ msgstr ""
 #. Help
 #: i18n/messages.json
 msgid "Help"
-msgstr "Hilfe"
+msgstr ""
 
 #. [collection.edit.info.import.id]
 #. defaultMessage is:
@@ -467,7 +465,7 @@ msgstr ""
 #. Language
 #: i18n/messages.json i18n/messages.json
 msgid "Language"
-msgstr "Sprache"
+msgstr ""
 
 #. [document.languages]
 #. defaultMessage is:
@@ -477,7 +475,7 @@ msgstr "Sprache"
 #. Languages
 #: i18n/messages.json i18n/messages.json
 msgid "Languages"
-msgstr "Sprachen"
+msgstr ""
 
 #. [collection.info.updated_at]
 #. defaultMessage is:
@@ -1058,14 +1056,14 @@ msgstr ""
 #. Unknown
 #: i18n/messages.json i18n/messages.json
 msgid "Unknown"
-msgstr "Unbekannt"
+msgstr ""
 
 #. [entity.label.missing]
 #. defaultMessage is:
 #. Untitled
 #: i18n/messages.json
 msgid "Untitled"
-msgstr "Unbenannt"
+msgstr ""
 
 #. [alerts.save]
 #. defaultMessage is:
@@ -1113,14 +1111,14 @@ msgstr ""
 #. Users
 #: i18n/messages.json
 msgid "Users"
-msgstr "Benutzer"
+msgstr ""
 
 #. [collection.edit.permissionstable.view]
 #. defaultMessage is:
 #. View
 #: i18n/messages.json
 msgid "View"
-msgstr "Lesen"
+msgstr ""
 
 #. [home.collections]
 #. defaultMessage is:
@@ -1151,7 +1149,7 @@ msgstr ""
 #. Your Name
 #: i18n/messages.json
 msgid "Your Name"
-msgstr "Ihr Name"
+msgstr ""
 
 #. [collection.edit.save_success]
 #. defaultMessage is:
@@ -1161,46 +1159,46 @@ msgstr "Ihr Name"
 #. Your changes are saved.
 #: i18n/messages.json i18n/messages.json
 msgid "Your changes are saved."
-msgstr "Ihre Änderungen wurden gespeichert."
+msgstr ""
 
 #. [settings.email.no_change]
 #. defaultMessage is:
 #. Your e-mail address cannot be changed
 #: i18n/messages.json
 msgid "Your e-mail address cannot be changed"
-msgstr "Sie können Ihre E-Mail Adresse nicht ändern."
+msgstr ""
 
 #. [footer.aleph]
 #. defaultMessage is:
 #. aleph {version}
 #: i18n/messages.json
 msgid "aleph {version}"
-msgstr "aleph {version}"
+msgstr ""
 
 #. [search.filterTag.ancestors]
 #. defaultMessage is:
 #. in:
 #: i18n/messages.json
 msgid "in:"
-msgstr "in:"
+msgstr ""
 
 #. [search.filterTag.exclude]
 #. defaultMessage is:
 #. not:
 #: i18n/messages.json
 msgid "not:"
-msgstr "nicht:"
+msgstr ""
 
 #. [country.total]
 #. defaultMessage is:
 #. total
 #: i18n/messages.json
 msgid "total"
-msgstr "gesamt"
+msgstr ""
 
 #. [search.facets.filtersSelected]
 #. defaultMessage is:
 #. {count} selected
 #: i18n/messages.json
 msgid "{count} selected"
-msgstr "{count} ausgewählt"
+msgstr ""

@@ -160,7 +160,7 @@ class CollectionInfo extends Component {
                  title={
                    <React.Fragment>
                      <span className="pt-icon-standard pt-icon-database"/>
-                     <FormattedMessage id="collection.info.source" defaultMessage="Permissions"/>
+                     <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
                    </React.Fragment>
                  }
                  panel={<CollectionPermissionsEdit collection={collection} permissions={permissions} />}

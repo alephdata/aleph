@@ -1,14 +1,15 @@
 import six
 import logging
 from flask import Blueprint, request
+from flask.ext.babel import gettext, get_locale
 from elasticsearch import TransportError
 from exactitude import countries, languages
-from followthemoney import model
+from followthemoney import model, set_model_locale
 from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError
 
 from aleph import __version__
-from aleph.core import settings, app_ui_url, url_for
+from aleph.core import settings, babel, app_ui_url, url_for
 from aleph.logic.statistics import get_instance_stats
 from aleph.model import Collection
 from aleph.views.cache import enable_cache
@@ -18,9 +19,22 @@ blueprint = Blueprint('base_api', __name__)
 log = logging.getLogger(__name__)
 
 
+@babel.localeselector
+def determine_locale():
+    locale = request.accept_languages.best_match(settings.UI_LANGUAGES)
+    api_locale = request.args.get('api_locale')
+    if api_locale in settings.UI_LANGUAGES:
+        locale = api_locale
+    if locale is None:
+        locale = 'en'
+    set_model_locale(locale)
+    return locale
+
+
 @blueprint.route('/api/2/metadata')
 def metadata():
-    enable_cache(vary_user=False)
+    locale = get_locale()
+    enable_cache(vary_user=False, vary=[six.text_type(locale)])
 
     auth = {}
     if settings.PASSWORD_LOGIN:
@@ -28,6 +42,14 @@ def metadata():
         auth['registration_uri'] = url_for('roles_api.create_code')
     if settings.OAUTH:
         auth['oauth_uri'] = url_for('sessions_api.oauth_init')
+
+    country_names = {}
+    for code, label in countries.names.items():
+        country_names[code] = locale.territories.get(code, label)
+
+    language_names = {}
+    for code, label in languages.names.items():
+        language_names[code] = locale.languages.get(code, label)
 
     return jsonify({
         'status': 'ok',
@@ -38,11 +60,12 @@ def metadata():
             'ui_uri': six.text_type(app_ui_url),
             'samples': settings.SAMPLE_SEARCHES,
             'logo': settings.APP_LOGO,
-            'favicon': settings.APP_FAVICON
+            'favicon': settings.APP_FAVICON,
+            'locale': six.text_type(locale)
         },
         'categories': Collection.CATEGORIES,
-        'countries': countries.names,
-        'languages': languages.names,
+        'countries': country_names,
+        'languages': language_names,
         'schemata': model,
         'auth': auth
     })
@@ -58,7 +81,7 @@ def statistics():
 def api_v1_message(path):
     return jsonify({
         'status': 'error',
-        'message': '/api/1/ is deprecated, please use /api/2/.'
+        'message': gettext('/api/1/ is deprecated, please use /api/2/.')
     }, status=501)
 
 
@@ -66,7 +89,7 @@ def api_v1_message(path):
 def handle_authz_error(err):
     return jsonify({
         'status': 'error',
-        'message': 'You are not authorized to do this.',
+        'message': gettext('You are not authorized to do this.'),
         'roles': request.authz.roles
     }, status=403)
 
@@ -75,7 +98,7 @@ def handle_authz_error(err):
 def handle_not_found_error(err):
     return jsonify({
         'status': 'error',
-        'message': 'This path does not exist.'
+        'message': gettext('This path does not exist.')
     }, status=404)
 
 
@@ -91,7 +114,7 @@ def handle_invalid_data(err):
 def handle_jwt_expired(err):
     return jsonify({
         'status': 'error',
-        'errors': 'Access token has expired.'
+        'errors': gettext('Access token has expired.')
     }, status=401)
 
 

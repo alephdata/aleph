@@ -1,6 +1,7 @@
 import logging
 from banal import as_bool
 from datetime import datetime
+from flask.ext.babel import lazy_gettext
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db
@@ -20,21 +21,21 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     # TODO: add extra weight info.
     # TODO: should this be configurable?
     CATEGORIES = {
-        'news': 'News archives',
-        'leak': 'Leaks',
-        'land': 'Land registry',
-        'gazette': 'Gazettes',
-        'court': 'Court archives',
-        'company': 'Company registries',
-        'watchlist': 'Watchlists',
-        'investigation': 'Personal collections',
-        'sanctions': 'Sanctions lists',
-        'scrape': 'Scrapes',
-        'procurement': 'Procurement',
-        'grey': 'Grey literature',
-        'license': 'Licenses and concessions',
-        'regulatory': 'Regulatory filings',
-        'other': 'Other material'
+        'news': lazy_gettext('News archives'),
+        'leak': lazy_gettext('Leaks'),
+        'land': lazy_gettext('Land registry'),
+        'gazette': lazy_gettext('Gazettes'),
+        'court': lazy_gettext('Court archives'),
+        'company': lazy_gettext('Company registries'),
+        'watchlist': lazy_gettext('Watchlists'),
+        'investigation': lazy_gettext('Personal collections'),
+        'sanctions': lazy_gettext('Sanctions lists'),
+        'scrape': lazy_gettext('Scrapes'),
+        'procurement': lazy_gettext('Procurement'),
+        'grey': lazy_gettext('Grey literature'),
+        'license': lazy_gettext('Licenses and concessions'),
+        'regulatory': lazy_gettext('Regulatory filings'),
+        'other': lazy_gettext('Other material')
     }
 
     DEFAULT = 'other'
