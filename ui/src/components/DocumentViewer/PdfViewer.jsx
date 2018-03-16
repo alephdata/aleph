@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Document, Page } from 'react-pdf/build/entry.webpack';
+import { Document, Page } from 'react-pdf/dist/entry.webpack';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
 
