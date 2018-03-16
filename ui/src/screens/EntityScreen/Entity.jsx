@@ -14,11 +14,21 @@ import './Entity.css';
 
 class EntityLabel extends Component {
   render() {
-    const {icon = false, truncate} = this.props;
-    let {title, name, file_name, schema} = this.props.entity;
-    let text = title || name || file_name;
+    const { icon = false, truncate } = this.props;
+    let { title, name: entityName, file_name, schema } = this.props.entity;
+    
+    // Trim names *before* checking to see which ones look okay to use
+    title = title ? title.trim() : null;
+    entityName = entityName ? entityName.trim() : null;
+    file_name = file_name ? file_name.trim() : null;
+    
+    let text = title || entityName || file_name;
 
-    if (!text || !text.length) {
+    if (truncate) {
+      text = truncateText(text, truncate);
+    }
+
+    if (!text || !text.length || text.length < 1) {
       return (
         <span className='EntityLabel untitled'>
           {icon && <Schema.Icon schema={schema}/>}
@@ -28,13 +38,9 @@ class EntityLabel extends Component {
         </span>
       );
     }
-
-    if (truncate) {
-      text = truncateText(text, truncate);
-    }
-
+    
     return (
-      <span className='EntityLabel' title={title || name}>
+      <span className='EntityLabel' title={title || entityName}>
         {icon && <Schema.Icon schema={schema}/>}
         {icon && ' '}
         {text}
