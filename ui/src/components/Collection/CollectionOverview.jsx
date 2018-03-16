@@ -7,6 +7,7 @@ import Language from 'src/components/common/Language';
 import Country from 'src/components/common/Country';
 import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
+import Collection from 'src/components/Collection/Collection';
 
 class CollectionOverview extends Component {
   render() {
@@ -18,9 +19,9 @@ class CollectionOverview extends Component {
 
     return (
       <React.Fragment>
-        <h1 style={{margin: 0, border: 0}}>
-          {collection.label || null}
-        </h1>
+        <h4>
+          <Collection.Link collection={collection}/>
+        </h4>
         <p>{collection.summary}</p>
         <ul className='info-sheet'>
           <li>
