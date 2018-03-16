@@ -234,18 +234,22 @@ class Preview extends React.Component {
           }}>
 
           <Toolbar className="color">
-            {showQuickPreview === true && (<Button
-              icon="eye-open"
-              className={`button-maximise ${(maximised) ? 'pt-active' : ''}`}
-              onClick={this.toggleMaximise}>
+            {showQuickPreview === true && (
+              <Button icon="eye-open"
+                className={`button-maximise ${(maximised) ? 'pt-active' : ''}`}
+                onClick={this.toggleMaximise}>
                 <FormattedMessage id="preview" defaultMessage="Preview"/>
-            </Button>
+              </Button>
             )}
-            <Link to={link} className="pt-button button-link">
-              <span className={`pt-icon-${linkIcon}`}/>
-              <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
-            </Link>
-            <DownloadButton document={doc}/>
+            {previewType !== 'collection' && (
+              <Link to={link} className="pt-button button-link">
+                <span className={`pt-icon-${linkIcon}`}/>
+                <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
+              </Link>
+            )}
+            {previewType !== 'collection' && (
+              <DownloadButton document={doc}/>
+            )}
             {showQuickPreview === true && maximised && (
               <PagingButtons numberOfPages={numberOfPages}/>
             )}
