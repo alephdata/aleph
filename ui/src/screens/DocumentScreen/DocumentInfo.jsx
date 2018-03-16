@@ -8,7 +8,7 @@ import EntityInfoTags from 'src/screens/EntityScreen/EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import Schema from 'src/components/common/Schema';
 import DocumentMetadata from 'src/screens/DocumentScreen/DocumentMetadata';
-import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
+import CollectionOverview from 'src/components/Collection/CollectionOverview';
 import URL from 'src/components/common/URL';
 import { getEntityTags } from 'src/selectors';
 
@@ -55,7 +55,7 @@ class DocumentInfo extends React.Component {
                 }
                 panel={
                   <React.Fragment>
-                  <CollectionInfo collection={document.collection}/>
+                  <CollectionOverview collection={document.collection}/>
                   {document.source_url && (
                     <ul className='info-sheet'>
                       <li>
@@ -65,7 +65,7 @@ class DocumentInfo extends React.Component {
                         </span>
                         <span className="value">
                           <URL value={document.source_url} />
-                        s</span>
+                        </span>
                       </li>
                     </ul>
                   )}

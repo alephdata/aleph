@@ -8,8 +8,7 @@ import Country from 'src/components/common/Country';
 import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
 
-
-class CollectionInfo extends Component {
+class CollectionOverview extends Component {
   render() {
     const { collection } = this.props;
     
@@ -80,4 +79,6 @@ const mapStateToProps = (state, ownProps) => {
   return {};
 }
 
-export default connect(mapStateToProps)(CollectionInfo);
+CollectionOverview = connect(mapStateToProps)(CollectionOverview);
+
+export default CollectionOverview;

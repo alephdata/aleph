@@ -9,7 +9,7 @@ import Entity from './Entity';
 import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import Schema from 'src/components/common/Schema';
-import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
+import CollectionOverview from 'src/components/Collection/CollectionOverview';
 import URL from 'src/components/common/URL';
 import { fetchEntityReferences } from 'src/actions/index';
 import { getEntityTags } from 'src/selectors';
@@ -107,7 +107,7 @@ class EntityInfo extends React.Component {
                 }
                 panel={
                   <React.Fragment>
-                    <CollectionInfo collection={entity.collection}/>
+                    <CollectionOverview collection={entity.collection}/>
                     {sourceUrl && (
                       <ul className='info-sheet'>
                         <li>
