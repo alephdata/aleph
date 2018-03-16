@@ -66,7 +66,7 @@ class CollectionInfo extends Component {
       <DualPane.InfoPane className="CollectionInfo with-heading">
         <div className="pane-heading">
           <span>
-            <FormattedMessage id="collection.info.heading" defaultMessage="Collection"/>
+            <FormattedMessage id="collection.info.heading" defaultMessage="Source"/>
           </span>
           <h1>
             {collection.label}
