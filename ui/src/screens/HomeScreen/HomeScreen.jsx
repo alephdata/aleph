@@ -87,7 +87,7 @@ class HomeScreen extends Component {
               
               <div className="calls-to-action">
                 <Button icon="search" className="pt-large pt-intent-primary" onClick={this.onSubmit}>
-                  <FormattedMessage id='home.explore'
+                  <FormattedMessage id='home.search'
                                     defaultMessage="Search" />
                 </Button>
                 <AnchorButton icon="database" className="pt-large pt-intent-primary" href="/collections">

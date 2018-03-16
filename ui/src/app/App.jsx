@@ -31,7 +31,7 @@ FocusStyleManager.onlyShowFocusOnTabs();
 addLocaleData([...en, ...de, ...es, ...ru]);
 
 // TODO store this value in the redux state, make it changeable by the user.
-const locale='en';
+const locale = 'en';
 
 // Configure endpoint to add session bearer token.
 endpoint.interceptors.request.use(config => {
@@ -39,6 +39,7 @@ endpoint.interceptors.request.use(config => {
   if (session.loggedIn) {
     config.headers.common['Authorization'] = `Bearer ${session.token}`;
   }
+  config.headers.common['Accept-Language'] = locale;
   return config;
 });
 

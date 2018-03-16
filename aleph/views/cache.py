@@ -1,5 +1,5 @@
+from banal import hash_data
 from flask import request, Response, Blueprint
-from apikit import cache_hash
 
 from aleph.core import settings
 
@@ -44,7 +44,7 @@ def enable_cache(vary_user=True, vary=None, server_side=False):
         request._http_private = True
 
     request._http_cache = settings.CACHE
-    request._http_etag = cache_hash(*cache_parts)
+    request._http_etag = hash_data(cache_parts)
 
     if request.if_none_match == request._http_etag:
         raise NotModified()
