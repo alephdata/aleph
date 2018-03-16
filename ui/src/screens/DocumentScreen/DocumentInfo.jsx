@@ -75,8 +75,8 @@ class DocumentInfo extends React.Component {
               <Tab id="tags"
                 title={
                   <React.Fragment>
-                    <FormattedMessage id="document.info.links"
-                                      defaultMessage="Links"/>
+                    <FormattedMessage id="document.info.tags"
+                                      defaultMessage="Tags"/>
                   </React.Fragment>
                 }
                 panel={<EntityInfoTags entity={document} />}

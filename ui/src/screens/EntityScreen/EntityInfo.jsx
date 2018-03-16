@@ -64,7 +64,6 @@ class EntityInfo extends React.Component {
               <Tab id="overview" 
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-info-sign"/>
                     <FormattedMessage id="entity.info.overview" defaultMessage="Overview"/>
                   </React.Fragment>
                 }
@@ -103,7 +102,6 @@ class EntityInfo extends React.Component {
               <Tab id="source" 
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-database"/>
                     <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
                   </React.Fragment>
                 }
@@ -129,8 +127,7 @@ class EntityInfo extends React.Component {
               <Tab id="tags"
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-tag"/>
-                    <FormattedMessage id="entity.info.links" defaultMessage="Links"/>
+                    <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
                   </React.Fragment>
                 }
                 panel={<EntityInfoTags entity={entity} />}

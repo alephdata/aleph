@@ -75,7 +75,7 @@
   
   /* Removing padding and shadow when displaying document previews in sidebar */
   /* This allows us to display more of the document in a limited space. */
-  .DocumentContent {    
+  .DocumentContent {
     .outer {
       padding: 0;
       .inner {
@@ -83,13 +83,5 @@
       }
     }
   }
-  
-  /* Special case handling for collection sidebar which has custom padding */
-  .CollectionInfo {
-    .collection-content {
-      padding: 0 $aleph-grid-size;
-    }
-  }
-  
 
 }

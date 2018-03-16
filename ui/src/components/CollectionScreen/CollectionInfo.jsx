@@ -72,12 +72,11 @@ class CollectionInfo extends Component {
             {collection.label}
           </h1>
         </div>
-        <div className="collection-content">
+        <div className="pane-content">
           <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={activeTabId}>
             <Tab id="overview"
               title={
                 <React.Fragment>
-                  <span className="pt-icon-standard pt-icon-info-sign"/>
                   <FormattedMessage id="collection .info.overview" defaultMessage="Overview"/>
                 </React.Fragment>
               }
@@ -150,7 +149,6 @@ class CollectionInfo extends Component {
             <Tab id="xref"
               title={
                 <React.Fragment>
-                  <span className="pt-icon-standard pt-icon-database"/>
                   <FormattedMessage id="collection.info.source" defaultMessage="Cross-reference"/>
                 </React.Fragment>
               }
@@ -159,7 +157,6 @@ class CollectionInfo extends Component {
             {collection.writeable && <Tab id="permissions"
                  title={
                    <React.Fragment>
-                     <span className="pt-icon-standard pt-icon-database"/>
                      <FormattedMessage id="collection.info.source" defaultMessage="Permissions"/>
                    </React.Fragment>
                  }
