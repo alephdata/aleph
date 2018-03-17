@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Waypoint from 'react-waypoint';
 import _ from 'lodash';
 
 import Query from 'src/app/Query';
@@ -33,6 +34,13 @@ class EntityReferencesTable extends Component {
   fetchData() {
     const { query } = this.props;
     this.props.queryEntities({ query });
+  }
+
+  getMoreResults() {
+    const { query, result, queryEntities } = this.props;
+    if (!result.isLoading && result.next) {
+      queryEntities({ query, next: result.next });
+    }
   }
 
   render() {
@@ -84,6 +92,13 @@ class EntityReferencesTable extends Component {
             ))}
           </tbody>
         </table>
+        { !result.isLoading && result.next && (
+          <Waypoint
+            onEnter={this.getMoreResults}
+            bottomOffset="-600px"
+            scrollableAncestor={window}
+          />
+        )}
         { result.isLoading && (
           <SectionLoading />
         )}
