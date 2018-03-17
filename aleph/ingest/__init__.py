@@ -2,7 +2,7 @@ import logging
 from ingestors.util import is_file
 
 from aleph.core import db, archive, celery
-from aleph.model import Document, Role
+from aleph.model import Document, Role, Events
 from aleph.ingest.manager import DocumentManager
 
 log = logging.getLogger(__name__)

@@ -19,5 +19,5 @@ class NotificationsTestCase(TestCase):
         notifications = Notification.all().all()
         assert 1 == len(notifications), notifications
         not0 = notifications[0]
-        assert not0._event == event['name'], not0._event
+        assert not0._event == event.name, not0._event
         assert not0.params['collection'] == collection.id, not0.params
