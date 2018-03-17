@@ -9,8 +9,6 @@ import LogoutScreen from 'src/components/auth/LogoutScreen';
 import SignupScreen from 'src/components/auth/SignupScreen';
 import ActivateScreen from 'src/components/auth/ActivateScreen';
 import EntityScreen from 'src/screens/EntityScreen';
-import DocumentScreen from 'src/components/DocumentScreen';
-import DocumentRedirectScreen from 'src/components/DocumentScreen/DocumentRedirectScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
 
@@ -19,6 +17,8 @@ import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
 import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
 import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen/CollectionsIndexScreen';
 import CollectionsXrefScreen from 'src/screens/CollectionsXrefScreen/CollectionsXrefScreen';
+import DocumentScreen from 'src/screens/DocumentScreen';
+import DocumentRedirectScreen from 'src/screens/DocumentScreen/DocumentRedirectScreen';
 
 import './Router.css';
 
