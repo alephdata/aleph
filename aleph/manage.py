@@ -20,6 +20,7 @@ from aleph.logic.collections import update_collection
 from aleph.logic.collections import process_collection
 from aleph.logic.collections import delete_collection, delete_documents, delete_entities
 from aleph.logic.alerts import check_alerts
+from aleph.logic.roles import update_role
 from aleph.logic.entities import bulk_load, reindex_entities
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
@@ -65,13 +66,15 @@ def crawldir(path, language=None, country=None, foreign_id=None):
 
     if foreign_id is None:
         foreign_id = 'directory:%s' % slugify(path)
+
+    role = Role.load_cli_user()
     collection = Collection.by_foreign_id(foreign_id)
     if collection is None:
         collection = Collection.create({
             'foreign_id': foreign_id,
             'label': path_name,
             'managed': True
-        })
+        }, role=role)
 
     if language is not None:
         collection.languages = [language]
@@ -84,7 +87,7 @@ def crawldir(path, language=None, country=None, foreign_id=None):
     document = Document.by_keys(collection=collection,
                                 foreign_id=path)
     document.file_name = path_name
-    ingest_document(document, path)
+    ingest_document(document, path, role_id=role.id)
 
 
 @manager.command
@@ -199,6 +202,7 @@ def createuser(foreign_id, password=None, name=None, email=None,
     if password is not None:
         role.set_password(password)
     db.session.add(role)
+    update_role(role)
     db.session.commit()
     return role.api_key
 
@@ -210,7 +214,8 @@ def publish(foreign_id):
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
     role = Role.by_foreign_id(Role.SYSTEM_GUEST)
-    update_permission(role, collection, True, False)
+    editor = Role.load_cli_user()
+    update_permission(role, collection, True, False, editor=editor)
     update_collection(collection, roles=True)
 
 

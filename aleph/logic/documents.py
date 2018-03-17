@@ -21,6 +21,10 @@ def update_document(document):
 
 
 def delete_document(document, deleted_at=None):
+    for child in document.children:
+        # TODO: are we likely to hit recursion limits?
+        delete_document(child, deleted_at=deleted_at)
+
     index.delete_document(document.id)
     document.delete(deleted_at=deleted_at)
 

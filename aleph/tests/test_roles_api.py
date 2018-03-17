@@ -139,7 +139,7 @@ class RolesApiTestCase(TestCase):
         self.assertEqual(res.status_code, 201)
         self.assertEqual(res.json['email'], email)
 
-        role = Role.by_email(email).first()
+        role = Role.by_email(email)
         self.assertIsNotNone(role)
         self.assertTrue(role.check_password(password))
         self.assertEqual(role.name, payload['name'])

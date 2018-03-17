@@ -4,7 +4,6 @@ from itertools import chain
 from datetime import datetime
 from normality import stringify
 
-
 from aleph.core import db
 
 

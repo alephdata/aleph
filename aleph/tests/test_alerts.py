@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
-from aleph.core import db, mail
-from aleph.model import Alert
+from aleph.core import db
+from aleph.model import Alert, Notification
 from aleph.logic.alerts import check_alerts
 from aleph.tests.util import TestCase
 
@@ -22,25 +22,21 @@ class AlertsTestCase(TestCase):
         alert.notified_at = datetime.utcnow() + timedelta(hours=72)
         db.session.commit()
 
-        with mail.record_messages() as outbox:
-            check_alerts()
-            assert len(outbox) == 0, outbox
+        notcount = Notification.all().count()
+        assert notcount == 0, notcount
 
         db.session.refresh(alert)
         alert.notified_at = datetime.utcnow() - timedelta(hours=72)
         db.session.add(alert)
         db.session.commit()
 
-        with mail.record_messages() as outbox:
-            check_alerts()
-            assert len(outbox) == 1, outbox
-            msg = outbox[0]
-            assert 'Test Alert' in msg.subject, msg
-            assert 'test@pudo.org' in msg.recipients, msg
+        check_alerts()
+        notcount = Notification.all().count()
+        assert notcount == 3, notcount
 
-        with mail.record_messages() as outbox:
-            check_alerts()
-            assert len(outbox) == 0, outbox
+        check_alerts()
+        notcount = Notification.all().count()
+        assert notcount == 3, notcount
 
     def test_notify_no_email(self):
         data = {'query': {}, 'custom_label': 'Test Alert'}
@@ -49,6 +45,5 @@ class AlertsTestCase(TestCase):
         alert.notified_at = datetime.utcnow() - timedelta(hours=72)
         db.session.commit()
 
-        with mail.record_messages() as outbox:
-            check_alerts()
-            assert len(outbox) == 0, outbox
+        notcount = Notification.all().count()
+        assert notcount == 0, notcount
