@@ -165,7 +165,8 @@ class SearchScreen extends React.Component {
     const navigate = replace ? history.replace : history.push;
     navigate({
       pathname: location.pathname,
-      search: newQuery.toLocation()
+      search: newQuery.toLocation(),
+      hash: location.hash,
     });
   }
 

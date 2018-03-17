@@ -163,7 +163,7 @@ class CollectionsIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const query = Query.fromLocation('collections', ownProps.location, {}, 'collections:')
+  const query = Query.fromLocation('collections', ownProps.location, {}, 'collections')
     .sortBy('count', true)
     .limit(30);
 
