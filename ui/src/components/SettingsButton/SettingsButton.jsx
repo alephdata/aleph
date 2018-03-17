@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, AnchorButton } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
 
 import SettingsDialog from 'src/dialogs/SettingsDialog';
@@ -35,9 +36,9 @@ class SettingsButton extends Component {
 
     return (
       <React.Fragment>
-        <AnchorButton icon="database" className="pt-minimal" href="/collections">
+        <Link to="/collections" className="pt-minimal pt-button pt-icon-database">
           <FormattedMessage id="nav.collections" defaultMessage="Sources"/>
-        </AnchorButton>
+        </Link>
         {session.loggedIn && (
           <React.Fragment>
             <Button icon="notifications" className="pt-minimal"  onClick={this.toggleAlerts}>

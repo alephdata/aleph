@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import queryString from 'query-string';
-import { Button, AnchorButton } from "@blueprintjs/core";
+import { Button } from "@blueprintjs/core";
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import numeral from 'numeral';
 
@@ -29,11 +30,12 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchStatistics();
+    this.fetchIfNeeded();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.statistics.isLoading && nextProps.statistics.count === undefined) {
+  fetchIfNeeded() {
+    const { statistics } = this.props;
+    if (!statistics.isLoading && statistics.count === undefined) {
       this.props.fetchStatistics();
     }
   }
@@ -86,14 +88,14 @@ class HomeScreen extends Component {
               </form>
               
               <div className="calls-to-action">
-                <Button icon="search" className="pt-large pt-intent-primary" onClick={this.onSubmit}>
+                <a className="pt-button pt-large pt-intent-primary pt-icon-search" onClick={this.onSubmit}>
                   <FormattedMessage id='home.search'
                                     defaultMessage="Search" />
-                </Button>
-                <AnchorButton icon="database" className="pt-large pt-intent-primary" href="/collections">
+                </a>
+                <Link className="pt-button pt-large pt-intent-primary pt-icon-database" to="/collections">
                   <FormattedMessage id='home.explore'
                                     defaultMessage="Explore sources..." />
-                </AnchorButton>
+                </Link>
               </div>
             </div>
           </div>

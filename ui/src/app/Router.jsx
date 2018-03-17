@@ -25,7 +25,10 @@ import './Router.css';
 class Router extends Component {
 
   componentWillMount() {
-    this.props.fetchMetadata();
+    const { metadata } = this.props;
+    if (!metadata.app) {
+      this.props.fetchMetadata();
+    }
   }
 
   render() {
