@@ -85,7 +85,7 @@ class SearchScreen extends React.Component {
         field: 'schema',
         label: intl.formatMessage(messages.facet_schema),
         icon: 'list',
-        initiallyOpen: true
+        defaultSize: 20
       },
       {
         field: 'countries',
