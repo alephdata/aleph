@@ -17,8 +17,8 @@ from aleph.ingest import ingest_document, ingest
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.index.documents import index_document_id
 from aleph.logic.collections import update_collection
-from aleph.logic.collections import process_collection
-from aleph.logic.collections import delete_collection, delete_documents, delete_entities
+from aleph.logic.collections import process_collection, delete_entities
+from aleph.logic.collections import delete_collection, delete_documents
 from aleph.logic.alerts import check_alerts
 from aleph.logic.roles import update_role
 from aleph.logic.entities import bulk_load, reindex_entities
@@ -144,7 +144,7 @@ def xref(foreign_id):
     collection = Collection.by_foreign_id(foreign_id)
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
-    xref_collection(collection)
+    xref_collection(collection.id)
 
 
 @manager.command

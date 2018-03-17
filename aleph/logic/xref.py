@@ -15,9 +15,10 @@ log = logging.getLogger(__name__)
 def xref_item(item, collection_id=None):
     """Cross-reference an entity or document, given as an indexed document."""
     name = item.get('name') or item.get('title')
+    query = entity_query(item, collection_id=collection_id)
     result = es.search(index=entities_index(),
                        body={
-                           'query': entity_query(item, collection_id),
+                           'query': query,
                            'size': 10,
                            '_source': ['collection_id', 'name'],
                        })
@@ -50,14 +51,12 @@ def xref_item(item, collection_id=None):
     db.session.commit()
 
 
-def xref_collection(collection, other=None):
+@celery.task()
+def xref_collection(collection_id, other_id=None):
     """Cross-reference all the entities and documents in a collection."""
-    log.info("Cross-reference collection: %r", collection)
-    other_id = other.id if other is not None else None
+    query = {'term': {'collection_id': collection_id}}
     query = {
-        'query': {
-            'term': {'collection_id': collection.id}
-        },
+        'query': query,
         '_source': FIELDS_XREF
     }
     scanner = scan(es,
@@ -66,20 +65,7 @@ def xref_collection(collection, other=None):
                    scroll='15m')
 
     for i, res in enumerate(scanner):
-        xref_item.apply_async([unpack_result(res), other_id], priority=4)
-
-
-@celery.task()
-def process_xref(collection_id, other_id=None):
-    q = db.session.query(Collection).filter(Collection.id == collection_id)
-    collection = q.first()
-    if collection is None:
-        log.error("No collection with ID: %r", collection_id)
-
-    if other_id is not None:
-        q = db.session.query(Collection).filter(Collection.id == other_id)
-        other = q.first()
-    else:
-        other = None
-
-    xref_collection(collection, other)
+        res = unpack_result(res)
+        xref_item.apply_async(args=[res],
+                              kwargs={'collection_id': other_id},
+                              priority=4)
