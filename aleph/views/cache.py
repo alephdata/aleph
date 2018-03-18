@@ -1,9 +1,10 @@
+import logging
 from banal import hash_data
 from flask import request, Response, Blueprint
 
 from aleph.core import settings
 
-
+log = logging.getLogger(__name__)
 blueprint = Blueprint('cache', __name__)
 
 
@@ -19,7 +20,6 @@ def handle_not_modified(exc):
 @blueprint.before_app_request
 def setup_caching():
     """Set some request attributes at the beginning of the request.
-
     By default, caching will be disabled."""
     request._http_cache = False
     request._http_etag = None
@@ -36,7 +36,6 @@ def enable_cache(vary_user=True, vary=None, server_side=False):
     args = sorted(set(request.args.items()))
     # jquery where is your god now?!?
     args = filter(lambda (k, v): k != '_', args)
-
     cache_parts = [args, vary]
 
     if vary_user:
@@ -45,7 +44,6 @@ def enable_cache(vary_user=True, vary=None, server_side=False):
 
     request._http_cache = settings.CACHE
     request._http_etag = hash_data(cache_parts)
-
     if request.if_none_match == request._http_etag:
         raise NotModified()
 

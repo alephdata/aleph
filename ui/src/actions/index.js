@@ -1,3 +1,4 @@
+import { createAction } from 'redux-act';
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
 import { suggestRoles, fetchRole, updateRole } from './roleActions';
@@ -60,3 +61,5 @@ export const fetchStatistics = asyncActionCreator(() => async dispatch => {
   const response = await endpoint.get('statistics');
   return { statistics: response.data };
 }, { name: 'FETCH_STATISTICS' });
+
+export const setLocale = createAction('SET_LOCALE');

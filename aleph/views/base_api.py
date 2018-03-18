@@ -4,12 +4,12 @@ from flask import Blueprint, request
 from flask.ext.babel import gettext, get_locale
 from elasticsearch import TransportError
 from exactitude import countries, languages
-from followthemoney import model, set_model_locale
+from followthemoney import model
 from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError
 
 from aleph import __version__
-from aleph.core import settings, babel, app_ui_url, url_for
+from aleph.core import settings, app_ui_url, url_for
 from aleph.logic.statistics import get_instance_stats
 from aleph.model import Collection
 from aleph.views.cache import enable_cache
@@ -17,18 +17,6 @@ from aleph.views.util import jsonify
 
 blueprint = Blueprint('base_api', __name__)
 log = logging.getLogger(__name__)
-
-
-@babel.localeselector
-def determine_locale():
-    locale = request.accept_languages.best_match(settings.UI_LANGUAGES)
-    api_locale = request.args.get('api_locale')
-    if api_locale in settings.UI_LANGUAGES:
-        locale = api_locale
-    if locale is None:
-        locale = 'en'
-    set_model_locale(locale)
-    return locale
 
 
 @blueprint.route('/api/2/metadata')
@@ -45,11 +33,11 @@ def metadata():
 
     country_names = {}
     for code, label in countries.names.items():
-        country_names[code] = locale.territories.get(code, label)
+        country_names[code] = locale.territories.get(code.upper(), label)
 
     language_names = {}
     for code, label in languages.names.items():
-        language_names[code] = locale.languages.get(code, label)
+        language_names[code] = locale.languages.get(code.upper(), label)
 
     return jsonify({
         'status': 'ok',
@@ -61,7 +49,8 @@ def metadata():
             'samples': settings.SAMPLE_SEARCHES,
             'logo': settings.APP_LOGO,
             'favicon': settings.APP_FAVICON,
-            'locale': six.text_type(locale)
+            'locale': six.text_type(locale),
+            'locales': settings.UI_LANGUAGES
         },
         'categories': Collection.CATEGORIES,
         'countries': country_names,

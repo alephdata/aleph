@@ -7,8 +7,10 @@ import { inRange } from 'lodash';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import de from 'react-intl/locale-data/de';
+import bs from 'react-intl/locale-data/bs';
 import ru from 'react-intl/locale-data/ru';
 import es from 'react-intl/locale-data/es';
+import ar from 'react-intl/locale-data/ar';
 
 import translations from 'src/content/translations.json';
 import Router from './Router';
@@ -28,18 +30,28 @@ import './App.css';
 FocusStyleManager.onlyShowFocusOnTabs();
 
 // add locale data to react-intl
-addLocaleData([...en, ...de, ...es, ...ru]);
+addLocaleData([...en, ...de, ...bs, ...es, ...ru, ...ar]);
 
-// TODO store this value in the redux state, make it changeable by the user.
-const locale = 'en';
+const getLocale = function(store) {
+  const { config, metadata } = store.getState();
+  if (config && config.locale) {
+    return config.locale;
+  }
+  if (metadata && metadata.app) {
+    return metadata.app.locale;
+  }
+}
 
 // Configure endpoint to add session bearer token.
 endpoint.interceptors.request.use(config => {
-  const { session } = store.getState();
+  const { session } = store.getState(),
+        locale = getLocale(store);
   if (session.loggedIn) {
     config.headers.common['Authorization'] = `Bearer ${session.token}`;
   }
-  config.headers.common['Accept-Language'] = locale;
+  if (locale) {
+    config.headers.common['Accept-Language'] = locale;
+  }
   return config;
 });
 
@@ -72,9 +84,10 @@ endpoint.interceptors.response.use(
 
 class App extends React.Component {
   render() {
+    const locale = getLocale(store) || 'en';
     return (
       <Provider store={store}>
-        <IntlProvider locale={locale} messages={translations[locale]}>
+        <IntlProvider locale={locale} key={locale} messages={translations[locale]}>
           <BrowserRouter>
             <Route path="/" component={Router} />
           </BrowserRouter>

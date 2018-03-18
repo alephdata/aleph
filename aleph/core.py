@@ -12,6 +12,7 @@ from flask.ext.babel import Babel
 from kombu import Queue
 from celery import Celery
 from celery.schedules import crontab
+from followthemoney import set_model_locale
 from raven.contrib.flask import Sentry
 from raven.contrib.celery import register_signal, register_logger_signal
 from elasticsearch import Elasticsearch
@@ -41,7 +42,8 @@ def create_app(config={}):
         raise RuntimeError("aleph database must be PostgreSQL!")
 
     app.config.update({
-        'SQLALCHEMY_DATABASE_URI': settings.DATABASE_URI
+        'SQLALCHEMY_DATABASE_URI': settings.DATABASE_URI,
+        'BABEL_DOMAIN': 'aleph'
     })
 
     queue = Queue(settings.QUEUE_NAME,
@@ -93,6 +95,14 @@ def create_app(config={}):
     for plugin in get_extensions('aleph.init'):
         plugin(app=app)
     return app
+
+
+@babel.localeselector
+def determine_locale():
+    locale = request.accept_languages.best_match(settings.UI_LANGUAGES)
+    locale = locale or str(babel.default_locale)
+    set_model_locale(locale)
+    return locale
 
 
 @migrate.configure

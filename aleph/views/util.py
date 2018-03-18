@@ -1,9 +1,7 @@
 import six
 import json
 import types
-from uuid import UUID
 from hashlib import sha1
-from decimal import Decimal
 from datetime import datetime, date
 from flask import Response, request
 from flask_babel.speaklater import LazyString
@@ -198,13 +196,6 @@ class JSONEncoder(json.JSONEncoder):
             return [o for o in obj]
         if hasattr(obj, 'to_dict'):
             return obj.to_dict()
-        # try:
-        #     from sqlalchemy.orm import Query
-        #     from sqlalchemy.ext.associationproxy import _AssociationList
-        #     if isinstance(obj, Query) or isinstance(obj, _AssociationList):
-        #         return [r for r in obj]
-        # except ImportError:
-        #     pass
         return json.JSONEncoder.default(self, obj)
 
 
