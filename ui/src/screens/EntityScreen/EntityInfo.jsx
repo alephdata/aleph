@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import queryString from 'query-string';
+import { Link } from 'react-router-dom';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 import _ from 'lodash';
@@ -8,11 +10,13 @@ import Property from './Property';
 import Entity from './Entity';
 import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
+import TabCount from 'src/components/common/TabCount';
 import Schema from 'src/components/common/Schema';
 import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
 import URL from 'src/components/common/URL';
 import { fetchEntityReferences } from 'src/actions/index';
-import { getEntityTags } from 'src/selectors';
+import { selectEntityTags } from 'src/selectors';
+import getPath from 'src/util/getPath';
 
 class EntityInfo extends React.Component {
   constructor(props) {
@@ -26,7 +30,7 @@ class EntityInfo extends React.Component {
   handleTabChange(activeTabId: TabId) {
     this.setState({ activeTabId });
   }
-  FormattedMessage
+
   componentDidMount() {
     const { entity } = this.props;
     if(!this.props.references && entity && entity.id) {
@@ -34,8 +38,17 @@ class EntityInfo extends React.Component {
     }
   }
 
+  referenceLink(reference) {
+    const { entity } = this.props;
+    const path = getPath(entity.links.ui);
+    const tabName = 'references-' + reference.property.qname;
+    const query = queryString.stringify({'content:tab': tabName})
+    return path + '?' + query;
+  }
+
   render() {
-    const { references, entity, schema } = this.props;
+    const { references, entity, schema, tags } = this.props;
+    const tagsTotal = tags !== undefined ? tags.total : undefined;
     
     let sourceUrl = null;
     const entityProperties = _.values(schema.properties).filter((prop) => {
@@ -60,7 +73,7 @@ class EntityInfo extends React.Component {
           </h1>
         </div>
         <div className="pane-content">
-          <Tabs id="EntityInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+          <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
               <Tab id="overview" 
                 title={
                   <React.Fragment>
@@ -88,7 +101,9 @@ class EntityInfo extends React.Component {
                           <li key={ref.property.qname}>
                             <span className="key">
                               <Schema.Icon schema={ref.schema} />{' '}
-                              <Property.Reverse model={ref.property} />
+                              <Link to={this.referenceLink(ref)}>
+                                <Property.Reverse model={ref.property} />
+                              </Link>
                             </span>
                             <span className="value">
                               <FormattedNumber value={ref.count} />
@@ -126,11 +141,11 @@ class EntityInfo extends React.Component {
                   </React.Fragment>
                 }
               />
-              <Tab id="tags"
+              <Tab id="tags" disabled={!tagsTotal || tagsTotal === 0}
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-tag"/>
-                    <FormattedMessage id="entity.info.links" defaultMessage="Links"/>
+                    <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
+                    <TabCount count={tagsTotal} />
                   </React.Fragment>
                 }
                 panel={<EntityInfoTags entity={entity} />}
@@ -147,7 +162,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     references: state.entityReferences[ownProps.entity.id],
     schema: state.metadata.schemata[ownProps.entity.schema],
-    tags: getEntityTags(state, ownProps.entity.id)
+    tags: selectEntityTags(state, ownProps.entity.id)
   };
 };
 

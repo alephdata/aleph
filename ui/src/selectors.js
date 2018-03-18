@@ -45,6 +45,6 @@ export function selectNotificationsResult(state, query) {
   return selectResult(state, query, (state, id) => state.notifications[id]);
 }
 
-export function getEntityTags(state, entityId) {
+export function selectEntityTags(state, entityId) {
   return state.entityTags[entityId];
 }

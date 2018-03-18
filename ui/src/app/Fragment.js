@@ -22,6 +22,8 @@ class Fragment {
     const state = _.assign({}, this.state, newState);
     this.history.replace({
       hash: queryString.stringify(state),
+      search: this.location.search,
+      pathname: this.location.pathname
     });
   }
 }

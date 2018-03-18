@@ -73,7 +73,7 @@ class CollectionInfo extends Component {
           </h1>
         </div>
         <div className="collection-content">
-          <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={activeTabId}>
+          <Tabs id="CollectionInfoTabs" onChange={this.handleTabChange} selectedTabId={activeTabId}>
             <Tab id="overview"
               title={
                 <React.Fragment>
