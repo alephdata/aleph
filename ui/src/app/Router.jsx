@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
 import { fetchMetadata } from 'src/actions';
-import LoginScreen from 'src/components/auth/LoginScreen';
-import LogoutScreen from 'src/components/auth/LogoutScreen';
-import SignupScreen from 'src/components/auth/SignupScreen';
-import ActivateScreen from 'src/components/auth/ActivateScreen';
 import EntityScreen from 'src/screens/EntityScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
 import CollectionScreen from 'src/components/CollectionScreen';
 
+import LoginScreen from 'src/screens/LoginScreen/LoginScreen';
+import LogoutScreen from 'src/screens/LogoutScreen/LogoutScreen';
+import SignupScreen from 'src/screens/SignupScreen/SignupScreen';
+import ActivateScreen from 'src/screens/ActivateScreen/ActivateScreen';
 import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
 import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
 import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
