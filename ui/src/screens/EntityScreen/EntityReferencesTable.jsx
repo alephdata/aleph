@@ -15,9 +15,6 @@ import './EntityReferencesTable.css';
 class EntityReferencesTable extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      result: {}
-    };
     this.fetchData = this.fetchData.bind(this);
   }
 
@@ -32,8 +29,10 @@ class EntityReferencesTable extends Component {
   }
 
   fetchData() {
-    const { query } = this.props;
-    this.props.queryEntities({ query });
+    const { query, result } = this.props;
+    if (result.total === undefined) {
+      this.props.queryEntities({ query });
+    }
   }
 
   getMoreResults() {

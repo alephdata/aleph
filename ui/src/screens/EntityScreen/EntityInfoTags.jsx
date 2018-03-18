@@ -11,15 +11,19 @@ import { getEntityTags } from 'src/selectors';
 
 class EntityInfoTags extends React.Component {
   componentDidMount() {
-    const { entity } = this.props;
-    if (!this.props.tags && entity && entity.id) {
-      this.props.fetchEntityTags(entity);
-    }
+    this.fetchIfNeeded(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.entity.id !== nextProps.entity.id) {
-      this.props.fetchEntityTags(nextProps.entity);
+      this.fetchIfNeeded(nextProps);
+    }
+  }
+
+  fetchIfNeeded(props) {
+    const { entity, tags } = props;
+    if ((!tags || tags.total === undefined)&& entity && entity.id) {
+      this.props.fetchEntityTags(entity);
     }
   }
 

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import queryString from 'query-string';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import { Button, Icon, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
+import Fragment from 'src/app/Fragment';
 import { fetchFacet } from 'src/actions';
 import CheckboxList from 'src/components/common/CheckboxList';
 
@@ -61,10 +61,8 @@ class SearchFacet extends Component {
   }
 
   updateFacetSize(facetSize) {
-    const { location, field } = this.props;
-    const parsedHash = queryString.parse(location.hash);
-    parsedHash['facet:' + field] = facetSize;
-    window.location.hash = queryString.stringify(parsedHash);
+    const { fragment, field } = this.props;
+    fragment.update({['facet:' + field]: facetSize});
   }
 
   showMore(event) {
@@ -172,9 +170,9 @@ class SearchFacet extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const parsedHash = queryString.parse(ownProps.location.hash),
+  const fragment = Fragment.fromLocation(ownProps.location, ownProps.history),
         defaultSize = ownProps.defaultSize || 0,
-        facetSize = parsedHash['facet:' + ownProps.field] || defaultSize,
+        facetSize = fragment.get('facet:' + ownProps.field) || defaultSize,
         isOpen = facetSize > 0;
 
   // this is hacky: block loading the facet until the main query result
@@ -200,6 +198,7 @@ const mapStateToProps = (state, ownProps) => {
     facetQuery: facetQuery,
     isBlocked: isBlocked,
     isOpen: isOpen,
+    fragment: fragment
   };
 };
 
