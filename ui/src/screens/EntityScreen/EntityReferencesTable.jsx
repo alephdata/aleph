@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import { Icon } from "@blueprintjs/core";
 import Waypoint from 'react-waypoint';
 import _ from 'lodash';
 
 import Query from 'src/app/Query';
+import Fragment from 'src/app/Fragment';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import SectionLoading from 'src/components/common/SectionLoading';
@@ -42,6 +45,18 @@ class EntityReferencesTable extends Component {
     }
   }
 
+  onShowDetails(entity) {
+    const { history, location } = this.props;
+    return (event) => {
+      event.preventDefault();
+      const fragment = Fragment.fromLocation(location, history);
+      fragment.update({
+        'preview:type': 'entity',
+        'preview:id': entity.id
+      });
+    }
+  }
+
   render() {
     const { model, result, property } = this.props;
     const results = ensureArray(result.results);
@@ -77,6 +92,7 @@ class EntityReferencesTable extends Component {
                   <Property.Name model={prop} />
                 </th>
               ))}
+              <th key="details" className="narrow"></th>
             </tr>
           </thead>
           <tbody>
@@ -87,6 +103,11 @@ class EntityReferencesTable extends Component {
                     <Property.Values model={prop} values={entity.properties[prop.name]} />
                   </td>
                 ))}
+                <td key="details" className="narrow">
+                  <a onClick={this.onShowDetails(entity)}>
+                    <Icon icon="list-detail-view" />
+                  </a>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -120,4 +141,6 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { queryEntities })(EntityReferencesTable);
+EntityReferencesTable = connect(mapStateToProps, { queryEntities })(EntityReferencesTable);
+EntityReferencesTable = withRouter(EntityReferencesTable);
+export default EntityReferencesTable;

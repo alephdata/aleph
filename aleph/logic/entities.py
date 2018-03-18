@@ -153,6 +153,9 @@ def entity_references(entity, authz):
         })
         properties.append(prop)
 
+    if not len(queries):
+        return
+
     # Run a count search (with schema facet?)
     res = es.msearch(index=entities_index(), body=queries)
     for prop, resp in zip(properties, res.get('responses', [])):
