@@ -32,16 +32,16 @@ class EntityTableRow extends Component {
           const previewType = (entity.schemata && entity.schemata.indexOf('Document') !== -1) ? 'document' : 'entity';
           
           // @TODO Refactor to save maximised state perference in localStorage
-          // For now only set explicitly on documents.
+          // For now only set explicitly on documents (or if already set).
           let newFragment = {
             'preview:id': entity.id,
             'preview:type': previewType,
-            'preview:maximised': null,
+            'preview:maximised': fragment.get('preview:maximised'),
             'page': 1
           }
           
           // Open documents in maximised mode by default
-          // (unless maximise is explicitly set to false)
+          // (unless maximise is already explicitly set to false)
           if (previewType === 'document') {
             if (!fragment.get('preview:maximised') ||
                 fragment.get('preview:maximised') !== 'false') {
