@@ -9,8 +9,8 @@ from aleph.index.collections import delete_collection as index_delete
 from aleph.index.collections import delete_documents as index_delete_documents
 from aleph.index.collections import delete_entities as index_delete_entities
 from aleph.index.collections import index_collection, update_roles
-from aleph.logic.entities import update_entity_full, delete_entity
-from aleph.logic.documents import delete_document
+from aleph.logic.entities import update_entity_full
+from aleph.logic.xref import xref_collection
 from aleph.logic.util import ui_url
 
 log = logging.getLogger(__name__)
@@ -34,6 +34,10 @@ def update_collection(collection, roles=False):
     index_collection(collection)
     if roles:
         update_roles(collection)
+
+    if not collection.managed:
+        xref_collection.apply_async([collection.id], priority=3)
+
     flush_index()
 
 
