@@ -80,7 +80,6 @@ def bulk_load(config):
 
         db.session.commit()
         index_collection(collection)
-
         for query in dict_list(data, 'queries', 'query'):
             bulk_load_query.apply_async([collection.id, query], priority=6)
 

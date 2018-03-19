@@ -3,7 +3,7 @@ from pprint import pprint  # noqa
 from elasticsearch.helpers import scan
 
 from aleph.core import db, es, celery
-from aleph.model import Match, Collection, Document
+from aleph.model import Match, Document
 from aleph.index.core import entities_index
 from aleph.index.xref import entity_query, FIELDS_XREF
 from aleph.index.util import unpack_result
