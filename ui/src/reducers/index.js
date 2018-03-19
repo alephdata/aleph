@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 
 import metadata from './metadata';
 import session from './session';
+import config from './config';
 import statistics from './statistics';
 import entities from './entities';
 import entityReferences from './entityReferences';
@@ -13,16 +14,19 @@ import collectionXrefIndex from './collectionXrefIndex';
 import collectionXrefMatches from './collectionXrefMatches';
 import results from './results';
 import alerts from './alerts';
+import notifications from './notifications';
 import facets from './facets';
 
 const rootReducer = combineReducers({
   metadata,
   session,
+  config,
   statistics,
   entities,
   entityReferences,
   documentRecords,
   alerts,
+  notifications,
   entityTags,
   collections,
   collectionPermissions,

@@ -69,7 +69,7 @@ class XrefTestCase(TestCase):
         q = db.session.query(Match)
         assert 0 == q.count(), q.count()
 
-        xref_collection(self.coll_a)
+        xref_collection(self.coll_a.id)
 
         q = db.session.query(Match)
         assert 2 == q.count(), q.count()
@@ -149,7 +149,7 @@ class XrefTestCase(TestCase):
         q = db.session.query(Match)
         assert 0 == q.count(), q.count()
 
-        xref_collection(self.coll_a, self.coll_c)
+        xref_collection(self.coll_a.id, self.coll_c.id)
 
         q = db.session.query(Match)
         assert 1 == q.count(), q.count()

@@ -44,13 +44,12 @@ class CollectionsIndexScreen extends Component {
           field: 'category',
           label: intl.formatMessage(messages.facet_category),
           icon: 'list',
-          initiallyOpen: true
+          defaultSize: 20
         },
         {
           field: 'countries',
           label: intl.formatMessage(messages.facet_countries),
           icon: 'globe',
-          initiallyOpen: true,
           defaultSize: 300
         },
       ]
@@ -164,7 +163,7 @@ class CollectionsIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const query = Query.fromLocation('collections', ownProps.location, {}, 'collections:')
+  const query = Query.fromLocation('collections', ownProps.location, {}, 'collections')
     .sortBy('count', true)
     .limit(30);
 

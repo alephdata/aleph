@@ -7,12 +7,14 @@ import { InputGroup } from '@blueprintjs/core';
 
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import SettingsButton from 'src/components/SettingsButton/SettingsButton';
+import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
 
 import './Navbar.css';
 
+
 const messages = defineMessages({
   search_placeholder: {
-    id: 'home.search_placeholder',
+    id: 'navbar.search_placeholder',
     defaultMessage: 'Search companies, people and documents.',
   },
 });
@@ -95,6 +97,7 @@ class Navbar extends React.Component {
           <div className="pt-navbar-group pt-align-right">
             <SettingsButton />
             <AuthButtons session={session} auth={metadata.auth} />
+            <LanguageMenu />
           </div>
         </nav>
       </div>

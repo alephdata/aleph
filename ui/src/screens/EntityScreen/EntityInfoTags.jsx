@@ -6,26 +6,31 @@ import { FormattedNumber, FormattedMessage } from 'react-intl';
 
 import Tag from 'src/components/common/Tag';
 import { fetchEntityTags } from 'src/actions/index';
-import { getEntityTags } from 'src/selectors';
+import { selectEntityTags } from 'src/selectors';
 
 class EntityInfoTags extends React.Component {
   componentDidMount() {
-    const { entity } = this.props;
-    if (!this.props.tags && entity && entity.id) {
-      this.props.fetchEntityTags(entity);
-    }
+    this.fetchIfNeeded(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.entity.id !== nextProps.entity.id) {
-      this.props.fetchEntityTags(nextProps.entity);
+      this.fetchIfNeeded(nextProps);
+    }
+  }
+
+  fetchIfNeeded(props) {
+    const { entity, tags } = props;
+    if ((!tags || tags.total === undefined) && entity && entity.id) {
+      this.props.fetchEntityTags(entity);
     }
   }
 
   getLink(tag) {
-    const { entity } = this.props;
+    // const { entity } = this.props;
     const key = `filter:${tag.field}`;
-    const params = {exclude: entity.id, [key]: tag.value};
+    // const params = {exclude: entity.id, [key]: tag.value};
+    const params = {[key]: tag.value};
     const query = queryString.stringify(params);
     return `/search?${query}`;
   }
@@ -44,10 +49,7 @@ class EntityInfoTags extends React.Component {
         </React.Fragment>
       );
     }
-    
-    
-    
-  
+
     return (
       <div className="tags">
         <ul className="info-rank">
@@ -72,7 +74,7 @@ class EntityInfoTags extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    tags: getEntityTags(state, ownProps.entity.id)
+    tags: selectEntityTags(state, ownProps.entity.id)
   };
 };
 

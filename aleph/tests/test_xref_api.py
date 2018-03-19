@@ -89,7 +89,7 @@ class XrefApiTestCase(TestCase):
         self.flush_index()
 
     def test_summary(self):
-        xref_collection(self.residents)
+        xref_collection(self.residents.id)
         res = self.client.get('/api/2/collections/%s/xref' % self.obsidian.id)
         assert res.status_code == 403, res
 
@@ -121,7 +121,7 @@ class XrefApiTestCase(TestCase):
         assert 'Dabo Girls' in labels, res.json
 
     def test_matches(self):
-        xref_collection(self.residents)
+        xref_collection(self.residents.id)
         # Not logged in
         match_dabo = self.client.get('/api/2/collections/%s/xref/%s' %
                                      (self.residents.id, self.dabo.id))

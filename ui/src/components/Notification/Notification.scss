@@ -1,0 +1,17 @@
+@import "src/app/variables.scss";
+
+.Notification {
+    padding-top: $aleph-grid-size;
+    padding-bottom: $aleph-grid-size * 1.5;
+    border-bottom: 1px solid $aleph-border-color;
+
+    .timestamp {
+        float: right;
+        color: $aleph-greyed-text;
+        // font-size: $pt-font-size-small;
+    }
+
+    .param {
+        font-weight: bold;
+    }
+}

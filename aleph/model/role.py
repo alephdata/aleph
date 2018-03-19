@@ -1,7 +1,7 @@
 import logging
 
 from flask import current_app
-from sqlalchemy import or_, not_
+from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -53,6 +53,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def has_password(self):
         return self.password_digest is not None
 
+    @property
+    def is_public(self):
+        return self.id in self.public_roles()
+
     def update(self, data):
         self.name = data.get('name', self.name)
         if data.get('password'):
@@ -70,18 +74,17 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         db.session.add(self)
 
     @classmethod
-    def notifiable(cls):
-        return cls.all_ids().filter(cls.email != None)  # noqa
-
-    @classmethod
     def by_foreign_id(cls, foreign_id):
         if foreign_id is not None:
             return cls.all().filter_by(foreign_id=foreign_id).first()
 
     @classmethod
     def by_email(cls, email):
-        if email:
-            return cls.all().filter_by(email=email)
+        if email is None:
+            return None
+        q = cls.all()
+        q = q.filter(func.lower(cls.email) == email.lower())
+        return q.first()
 
     @classmethod
     def by_api_key(cls, api_key):
@@ -102,7 +105,9 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         if role.api_key is None:
             role.api_key = make_textid()
 
-        role.email = email
+        if email is not None:
+            role.email = email
+
         if is_admin is not None:
             role.is_admin = is_admin
 
@@ -113,8 +118,13 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
         db.session.add(role)
         db.session.flush()
-
         return role
+
+    @classmethod
+    def load_cli_user(cls):
+        return cls.load_or_create(foreign_id=settings.SYSTEM_USER,
+                                  name='Aleph',
+                                  type=cls.USER)
 
     @classmethod
     def load_id(cls, foreign_id, type=None, name=None):

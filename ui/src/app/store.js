@@ -19,8 +19,10 @@ const store = createStore(
 );
 
 store.subscribe(throttle(() => {
+  const state = store.getState();
   saveState({
-    session: store.getState().session
+    session: state.session,
+    config: state.config
   })
 }));
 

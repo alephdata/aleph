@@ -10,7 +10,7 @@ import Schema from 'src/components/common/Schema';
 import DocumentMetadata from 'src/screens/DocumentScreen/DocumentMetadata';
 import CollectionOverview from 'src/components/Collection/CollectionOverview';
 import URL from 'src/components/common/URL';
-import { getEntityTags } from 'src/selectors';
+import { selectEntityTags } from 'src/selectors';
 
 class DocumentInfo extends React.Component {
   constructor(props) {
@@ -38,7 +38,7 @@ class DocumentInfo extends React.Component {
           </h1>
         </div>
         <div className="pane-content">
-          <Tabs id="DocumentInfoTabs"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+          <Tabs id="DocumentInfoTabs" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
               <Tab id="overview"
                 title={
                   <React.Fragment>
@@ -91,7 +91,7 @@ class DocumentInfo extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
   session: state.session,
-  tags: getEntityTags(state, ownProps.document.id)
+  tags: selectEntityTags(state, ownProps.document.id)
 });
 
 export default connect(mapStateToProps)(DocumentInfo);

@@ -6,11 +6,9 @@ import queryString from 'query-string';
 import {NonIdealState} from '@blueprintjs/core';
 
 import Screen from 'src/components/common/Screen';
-import {loginWithPassword, loginWithToken} from 'src/actions/sessionActions';
-import OAuthLogin from './OAuthLogin';
-import {PasswordAuthLogin} from './PasswordAuth';
-
-import './SignIn.css';
+import OAuthLogin from 'src/components/auth/OAuthLogin';
+import {PasswordAuthLogin} from 'src/components/auth/PasswordAuth';
+import { loginWithPassword, loginWithToken } from 'src/actions/sessionActions';
 
 const messages = defineMessages({
   not_available_title: {
@@ -46,10 +44,15 @@ class LoginScreen extends Component {
       return <Redirect to="/" />
     }
 
+    if (!passwordLogin && oauthLogin) {
+      window.location.replace(oauthLogin);
+      return null;
+    }
+
     return (
       <Screen>
-        <div className='outer-div'>
-          <div className='inner-div'>
+        <div className="small-screen-outer">
+          <div className="small-screen-inner">
             <section className="small-screen">
               {hasLogin && <h1>Sign in</h1>}
 

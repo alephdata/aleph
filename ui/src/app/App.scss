@@ -62,6 +62,18 @@ a {
   }
 }
 
+.small-screen-outer {
+  display: table;
+  position: absolute;
+  height: 80%;
+  width: 100%;
+}
+
+.small-screen-inner {
+  display: table-cell;
+  vertical-align: middle;
+}
+
 // Used to render failed imports, missing connections.
 .PartialError {
   .pt-non-ideal-state {

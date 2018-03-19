@@ -5,6 +5,7 @@ import {
   queryCollections,
   queryEntities,
   queryDocumentRecords,
+  queryNotifications,
 } from 'src/actions';
 
 const initialState = {};
@@ -50,4 +51,7 @@ export default createReducer({
   [queryDocumentRecords.START]: updateLoading(true),
   [queryDocumentRecords.ERROR]: updateLoading(false),
   [queryDocumentRecords.COMPLETE]: updateResults,
+  [queryNotifications.START]: updateLoading(true),
+  [queryNotifications.ERROR]: updateLoading(false),
+  [queryNotifications.COMPLETE]: updateResults,
 }, initialState);

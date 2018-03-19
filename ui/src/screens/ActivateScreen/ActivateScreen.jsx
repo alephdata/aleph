@@ -3,10 +3,11 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import {injectIntl, FormattedMessage} from 'react-intl';
 
-import {endpoint} from 'src/app/api';
-import {loginWithPassword} from 'src/actions/sessionActions';
-import {xhrErrorToast} from './xhrToast';
-import {PasswordAuthActivate} from './PasswordAuth';
+import Screen from 'src/components/common/Screen';
+import { endpoint } from 'src/app/api';
+import { loginWithPassword } from 'src/actions/sessionActions';
+import { xhrErrorToast } from 'src/components/auth/xhrToast';
+import { PasswordAuthActivate } from 'src/components/auth/PasswordAuth';
 
 
 class ActivateScreen extends Component {
@@ -32,10 +33,16 @@ class ActivateScreen extends Component {
     }
 
     return (
-      <section className="small-screen">
-        <h1><FormattedMessage id="signup.title" defaultMessage="Activate your account"/></h1>
-        <PasswordAuthActivate onSubmit={this.onActivate.bind(this)}/>
-      </section>
+      <Screen>
+        <div className="small-screen-outer">
+          <div className="small-screen-inner">
+            <section className="small-screen">
+              <h1><FormattedMessage id="signup.title" defaultMessage="Activate your account"/></h1>
+              <PasswordAuthActivate onSubmit={this.onActivate.bind(this)}/>
+            </section>
+          </div>
+        </div>
+      </Screen>
     );
   }
 }

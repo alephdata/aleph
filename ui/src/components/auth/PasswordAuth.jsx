@@ -1,7 +1,7 @@
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
-import {Link} from 'react-router-dom';
-import {Button, Intent} from '@blueprintjs/core';
+import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
+import { Button, Intent } from '@blueprintjs/core';
 
 const PasswordAuth = ({onSubmit, showEmail, showName, showPassword, buttonText, children}) => {
   let emailElement, passwordElement, nameElement;

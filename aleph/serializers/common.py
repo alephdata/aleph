@@ -2,7 +2,7 @@ from banal import is_mapping
 from normality import stringify
 from followthemoney import model
 from exactitude import countries, languages, dates
-from marshmallow.fields import String, Raw, Float
+from marshmallow.fields import String, Raw, Float, Field
 from marshmallow.exceptions import ValidationError
 
 from aleph.model import Collection

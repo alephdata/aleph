@@ -73,7 +73,7 @@ class CollectionInfo extends Component {
           </h1>
         </div>
         <div className="pane-content">
-          <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={activeTabId}>
+          <Tabs id="CollectionInfoTabs" onChange={this.handleTabChange} selectedTabId={activeTabId}>
             <Tab id="overview"
               title={
                 <React.Fragment>
@@ -157,7 +157,8 @@ class CollectionInfo extends Component {
             {collection.writeable && <Tab id="permissions"
                  title={
                    <React.Fragment>
-                     <FormattedMessage id="collection.info.source" defaultMessage="Permissions"/>
+                     <span className="pt-icon-standard pt-icon-database"/>
+                     <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
                    </React.Fragment>
                  }
                  panel={<CollectionPermissionsEdit collection={collection} permissions={permissions} />}

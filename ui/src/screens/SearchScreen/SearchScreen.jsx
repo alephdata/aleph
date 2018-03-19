@@ -85,7 +85,7 @@ class SearchScreen extends React.Component {
         field: 'schema',
         label: intl.formatMessage(messages.facet_schema),
         icon: 'list',
-        initiallyOpen: true
+        defaultSize: 20
       },
       {
         field: 'countries',
@@ -165,7 +165,8 @@ class SearchScreen extends React.Component {
     const navigate = replace ? history.replace : history.push;
     navigate({
       pathname: location.pathname,
-      search: newQuery.toLocation()
+      search: newQuery.toLocation(),
+      hash: location.hash,
     });
   }
 

@@ -5,14 +5,15 @@
 # defaults. If that is not sufficient, point the envrionment variable
 # ALEPH_SETTINGS to a new Python file that overrides the settings you need to
 # alter.
-from apikit.args import BOOL_TRUISH
 from os import environ as env, path
+from banal.bools import BOOL_TRUEISH
+from flask.ext.babel import lazy_gettext
 
 
 def env_bool(name, default=False):
     """Extract a boolean value from the environment consistently."""
     if name in env:
-        return env.get(name).lower().strip() in BOOL_TRUISH
+        return env.get(name).lower().strip() in BOOL_TRUEISH
     return default
 
 
@@ -40,7 +41,7 @@ TESING = False
 ###############################################################################
 # General instance information
 
-APP_TITLE = env.get('ALEPH_APP_TITLE', 'Aleph')
+APP_TITLE = env.get('ALEPH_APP_TITLE', lazy_gettext('Aleph'))
 APP_NAME = env.get('ALEPH_APP_NAME', 'aleph')
 APP_UI_URL = env.get('ALEPH_UI_URL', 'http://localhost:3000/')
 APP_LOGO = env.get('ALEPH_LOGO', 'https://cdn.occrp.org/common/logo/RedTransparent_globe.png')  # noqa
@@ -50,7 +51,7 @@ APP_FAVICON = env.get('ALEPH_FAVICON', 'https://cdn.occrp.org/common/logo/WhiteO
 URL_SCHEME = env.get('ALEPH_URL_SCHEME', 'http')
 
 # Shown on the home page as a few sample queries:
-SAMPLE_SEARCHES = ['TeliaSonera', 'Vladimir Putin']
+SAMPLE_SEARCHES = [lazy_gettext('TeliaSonera'), lazy_gettext('Vladimir Putin')]
 SAMPLE_SEARCHES = env_list('ALEPH_SAMPLE_SEARCHES', SAMPLE_SEARCHES)
 
 # Cross-origin resource sharing
@@ -84,6 +85,9 @@ SECRET_KEY = env.get('ALEPH_SECRET_KEY')
 # Designate users with the given email as admins automatically:
 # Assumes a comma-separated list.
 ADMINS = env_list('ALEPH_ADMINS')
+
+# Set the foreign ID of the default system user.
+SYSTEM_USER = env.get('ALEPH_SYSTEM_USER', 'system:aleph')
 
 # Configure your OAUTH login provider, providing the details as described in
 # https://flask-oauthlib.readthedocs.io/en/latest/client.html
@@ -119,6 +123,9 @@ LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
              'is', 'it', 'et', 'no', 'fa', 'sw', 'sl', 'az']
 LANGUAGES = env_list('ALEPH_LANGUAGES', LANGUAGES)
 LANGUAGES = [l.lower().strip() for l in LANGUAGES]
+
+# User interface
+UI_LANGUAGES = ['ru', 'es', 'de', 'bs', 'en']
 
 # Analyzers to be used for tag extraction:
 ANALYZE_LANGUAGE = env_bool('ALEPH_ANAYZE_LANGUAGE', True)

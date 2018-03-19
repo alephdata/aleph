@@ -5,12 +5,10 @@ import {Redirect} from 'react-router';
 import {Callout, Intent, NonIdealState} from '@blueprintjs/core';
 
 import Screen from 'src/components/common/Screen';
-import {endpoint} from 'src/app/api';
-import {xhrErrorToast} from './xhrToast';
-import OAuthLogin from './OAuthLogin';
-import {PasswordAuthSignup} from './PasswordAuth';
-
-import './SignIn.css';
+import { endpoint } from 'src/app/api';
+import { xhrErrorToast } from 'src/components/auth/xhrToast';
+import OAuthLogin from 'src/components/auth/OAuthLogin';
+import {PasswordAuthSignup} from 'src/components/auth/PasswordAuth';
 
 const messages = defineMessages({
   not_available_title: {
@@ -55,8 +53,8 @@ class SignupScreen extends Component {
 
     return (
       <Screen>
-        <div className='outer-div'>
-          <div className='inner-div'>
+        <div className="small-screen-outer">
+          <div className="small-screen-inner">
             <section className="small-screen">
               <h1><FormattedMessage id="signup.signup" defaultMessage="Sign up"/></h1>
               {submitted ?

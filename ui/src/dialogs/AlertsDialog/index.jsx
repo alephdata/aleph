@@ -43,7 +43,10 @@ class AlertsDialog extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchAlerts();
+    const { alerts, fetchAlerts } = this.props;
+    if (alerts.total === undefined) {
+      fetchAlerts();
+    }
   }
 
   async onDeleteAlert(id, event) {

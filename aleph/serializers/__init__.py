@@ -1,27 +1,13 @@
 from marshmallow import Schema, post_dump
-from marshmallow.fields import Nested, Integer, String, DateTime
+from marshmallow.fields import Nested, Integer, String
 from marshmallow.fields import Dict, Float
 
 from aleph.core import url_for
 from aleph.serializers.common import BaseSchema
-from aleph.serializers.roles import RoleReferenceSchema
+from aleph.serializers.alerts import AlertSchema  
 from aleph.serializers.collections import CollectionSchema
 from aleph.serializers.entities import ShallowCombinedSchema
 from aleph.model import Entity
-
-
-class AlertSchema(BaseSchema):
-    query_text = String()
-    entity_id = String()
-    label = String()
-    role = Nested(RoleReferenceSchema, dump_only=True)
-    notified_at = DateTime(dump_only=True)
-
-    @post_dump
-    def transient(self, data):
-        data['uri'] = url_for('alerts_api.view', id=data.get('id'))
-        data['writeable'] = True
-        return data
 
 
 class RecordSchema(Schema):
