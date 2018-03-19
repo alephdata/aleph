@@ -22,7 +22,7 @@ class CollectionSchema(BaseSchema):
     foreign_id = String()
     summary = String(allow_none=True)
     countries = List(Country())
-    lanaguages = List(Language())
+    languages = List(Language())
     managed = Boolean(missing=False)
     secret = Boolean(dump_only=True)
     category = Category(missing=Collection.DEFAULT)
