@@ -194,7 +194,6 @@ class Preview extends React.Component {
             entity,
             document: doc
           } = this.state;
-    const { location: loc} = this.props;
     const { numberOfPages } = this.state;
     
     let className = 'Preview'

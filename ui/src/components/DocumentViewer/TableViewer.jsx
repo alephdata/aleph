@@ -63,6 +63,9 @@ class TableViewer extends Component {
     if (newProps.queryText !== this.props.queryText) {
       this.updateSearchQuery(this.props.query.set('prefix', newProps.queryText));
     }
+    
+    if (newProps.onDocumentLoad)
+      newProps.onDocumentLoad({ queryText: newProps.query.getString('prefix') })
   }
 
   componentDidMount() {
@@ -91,15 +94,6 @@ class TableViewer extends Component {
     });
   } 
   
-  componentWillReceiveProps(newProps) {
-    if (newProps.onDocumentLoad)
-      newProps.onDocumentLoad({ queryText: newProps.query.getString('prefix') })
-    
-//    if (newProps.queryText !== this.props.queryText) {
-//      this.updateQuery(this.props.query.set('prefix', newProps.query.getString('prefix')));
-//    }
-  }
-
   bottomReachedHandler() {
     const { query, result, queryDocumentRecords } = this.props;
     if (!result.isLoading && result.next) {

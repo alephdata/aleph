@@ -41,7 +41,6 @@ class DocumentSearch extends React.Component {
   }
   
   componentDidMount() {
-    const { query } = this.props;
     const queryText = this.props.query.getString('prefix');
     this.setState({ queryText: queryText });
 
@@ -63,7 +62,7 @@ class DocumentSearch extends React.Component {
   }
   
   render() {
-    const { document: doc, intl, disabled, placeholder, query } = this.props;
+    const { document: doc, intl, disabled, placeholder } = this.props;
     
     // This is a temporary conditional block to allow us to enable search
     // only on document types where we have added support for them in the UI.

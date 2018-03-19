@@ -46,7 +46,7 @@ class EntityReferencesTable extends Component {
   }
 
   onShowDetails(entity) {
-    const { history, location } = this.props;
+    const { history } = this.props;
     return (event) => {
       event.preventDefault();
       const fragment = new Fragment(history);

@@ -1,6 +1,5 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import { Button } from '@blueprintjs/core';
 
 import Fragment from 'src/app/Fragment';
