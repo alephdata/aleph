@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { Button } from '@blueprintjs/core';
 
+import Fragment from 'src/app/Fragment';
 import getPath from 'src/util/getPath';
 import { fetchCollection, fetchEntity, fetchDocument } from 'src/actions';
 import CollectionInfo from 'src/components/CollectionScreen/CollectionInfo';
@@ -165,13 +166,9 @@ class Preview extends React.Component {
   }
   
   toggleMaximise() {
+    const { fragment } = this.props;
+    fragment.update({'preview:maximised': (this.state.maximised) ? 'false' : 'true' });
     this.setState({ maximised: !this.state.maximised })
-    
-    // Update maximise state in URL so link for current view can be shared but 
-    // deliberately *without* polluting history with a state change.
-    const parsedHash = queryString.parse(this.props.location.hash);
-    parsedHash['preview:maximised'] = !this.state.maximised;
-    window.location.hash = queryString.stringify(parsedHash);
     
     // @EXPERIMENTAL - Enable if content padding is enabled in handleScroll()
     // this.handleScroll();
@@ -251,7 +248,7 @@ class Preview extends React.Component {
               <DownloadButton document={doc}/>
             )}
             {showQuickPreview === true && maximised && (
-              <PagingButtons numberOfPages={numberOfPages}/>
+              <PagingButtons document={doc} numberOfPages={numberOfPages}/>
             )}
             <CloseButton/>
             {showQuickPreview === true && maximised && (
@@ -286,14 +283,8 @@ class Preview extends React.Component {
   }
 }
 
-/*
-          <DocumentSearch document={doc} queryText={this.state.queryText} onSearchQueryChange={this.onSearchQueryChange}/>
-        </Toolbar>
-        <DocumentViewer document={doc} queryText={this.state.queryText} onDocumentLoad={this.onDocumentLoad} />
-*/
-
-
 const mapStateToProps = (state, ownProps) => {
+  const fragment = new Fragment(ownProps.history);
   const parsedHash = queryString.parse(ownProps.location.hash);
   let collection = null,
       entity = null,
@@ -318,7 +309,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     collection: collection,
     entity: entity,
-    document: doc
+    document: doc,
+    fragment: fragment
   };
 };
 

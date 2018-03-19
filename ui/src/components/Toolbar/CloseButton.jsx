@@ -3,13 +3,23 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Button } from '@blueprintjs/core';
 
+import Fragment from 'src/app/Fragment';
+
 class CloseButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.close = this.close.bind(this);
+  }
+  
+  close() {
+    const { history: hist } = this.props;
+    const fragment = new Fragment(hist);
+    fragment.update({'preview:id': null});
+  }
+  
   render() {
-    const { location: loc } = this.props;
     return (
-      <Link to={loc.pathname + loc.search} className="button-close">
-        <Button className="pt-minimal" icon="cross"/>
-      </Link>
+      <Button className="pt-minimal button-close" icon="cross" onClick={this.close}/>
     );
   }
 }

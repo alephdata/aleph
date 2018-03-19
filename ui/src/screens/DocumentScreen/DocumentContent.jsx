@@ -65,7 +65,7 @@ class DocumentContent extends React.Component {
       <DualPane.ContentPane className="DocumentContent">
         <Toolbar>
           <DownloadButton document={doc}/>
-          {doc.links && doc.links.pdf && (<PagingButtons numberOfPages={numberOfPages}/>)}
+          <PagingButtons document={doc} numberOfPages={numberOfPages}/>
           <DocumentSearch document={doc} queryText={this.state.queryText} onSearchQueryChange={this.onSearchQueryChange}/>
         </Toolbar>
         <DocumentViewer document={doc} queryText={this.state.queryText} onDocumentLoad={this.onDocumentLoad} />

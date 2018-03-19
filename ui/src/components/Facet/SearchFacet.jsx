@@ -170,7 +170,7 @@ class SearchFacet extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const fragment = Fragment.fromLocation(ownProps.location, ownProps.history),
+  const fragment = new Fragment(ownProps.history),
         defaultSize = ownProps.defaultSize || 0,
         facetSize = fragment.get('facet:' + ownProps.field) || defaultSize,
         isOpen = facetSize > 0;

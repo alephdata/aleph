@@ -6,7 +6,7 @@
   overflow: visible;
   background: $aleph-toolbar-background;
   border-bottom: 1px solid $aleph-border-color;
-  overflow: auto;
+  overflow: hidden;
   flex: 1;
   width: 100%;
   max-height: $aleph-grid-size * 5;

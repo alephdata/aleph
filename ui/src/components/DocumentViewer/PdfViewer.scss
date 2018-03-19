@@ -2,7 +2,6 @@
 
 .PdfViewer {
   .document-pdf {
-    flex-grow: 1;
     width: 100%;
     background-color: whitesmoke;
   }
@@ -18,8 +17,8 @@
     padding-bottom: $aleph-grid-size;
     width: 90%;
   }
-
-  .ReactPDF__Page__canvas {
+  
+  .react-pdf__Page__canvas {
     padding: 0 !important;
   }
 
@@ -27,7 +26,7 @@
     background: white;
   }
 
-  .ReactPDF__Error {
+  .react-pdf__message, react-pdf__message--error {
     background: white;
     text-align: center;
     padding: 100px 20px;

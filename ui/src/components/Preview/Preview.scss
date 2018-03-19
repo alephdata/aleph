@@ -16,7 +16,7 @@
   
   background: $aleph-content-background;
   overflow-x: hidden; // just in case.
-  transition: width 0.1s ease-in-out;
+  transition: width 0.3s ease-in-out;
   
   > * {
    min-width: $aleph-infobar-width;
@@ -82,6 +82,5 @@
         box-shadow: none;
       }
     }
-  }
-
+  }  
 }

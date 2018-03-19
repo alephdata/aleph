@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 
+import Fragment from 'src/app/Fragment';
 import Country from 'src/components/common/Country';
 import Schema from 'src/components/common/Schema';
 import Collection from 'src/components/common/Collection';
@@ -17,14 +18,29 @@ class EntityTableRow extends Component {
   onRowClickHandler(event) {
     // If showLinksInPreview enabled allows the user to click anywhere on the
     // row and have the row selected and preview open automatically.
-    const { showLinksInPreview } = this.props;
+    const { entity, history: hist, showLinksInPreview } = this.props;
     if (showLinksInPreview && showLinksInPreview === true) {
       // If the target that was clicked was not a link then find the the first 
       // link and simulate clicking the link in it, which will load the preview.
       // (If the target *was* a link does not do anything.)
-      if (event.target.nodeName !== 'A') {
-        const links = event.currentTarget.getElementsByTagName('a');
-        if (links[0]) links[0].click();
+      if (!event.target.classList.contains('CollectionLink')) {
+        event.preventDefault();
+
+        const fragment = new Fragment(hist);
+        if (fragment.get('preview:id') !== entity.id) {
+          // Update the preview to show the entity / document for this row
+
+          fragment.update({
+            'preview:id': entity.id,
+            'preview:type': (entity.schemata && entity.schemata.indexOf('Document') !== -1) ? 'document' : 'entity'
+          });
+        } else {
+          // If this entity is already being previewed, hide the preview of it
+          fragment.update({
+            'preview:id': null,
+            'preview:type': null
+          });
+        }
       }
     }
   }  

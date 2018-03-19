@@ -1,17 +1,11 @@
 import _ from 'lodash';
 import queryString from 'query-string';
 
-
 class Fragment {
-
-  constructor (location, history) {
-    this.location = location;
-    this.state = queryString.parse(location.hash);
+  constructor(history) {
+    this.location = history.location;
+    this.state = queryString.parse(history.location.hash);
     this.history = history;
-  }
-
-  static fromLocation(location, history) {
-    return new this(location, history);
   }
 
   get(name) {

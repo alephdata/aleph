@@ -74,7 +74,7 @@ class EntityReferences extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const fragment = Fragment.fromLocation(ownProps.location, ownProps.history);
+  const fragment = new Fragment(ownProps.history);
   const references = state.entityReferences[ownProps.entity.id];
   const reference = (references && references.results && references.results.length) ? references.results[0] : undefined;
   const defaultTab = reference ? 'references-' + reference.property.qname : undefined;

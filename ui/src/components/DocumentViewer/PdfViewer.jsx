@@ -27,19 +27,24 @@ class PdfViewer extends Component {
       this.props.onDocumentLoad(pdfInfo)
   }
 
-  componentDidMount () {
-    this.setWidth();
-    window.addEventListener("resize", throttle(this.setWidth, 500))
+  componentDidMount() {
+    this.updateWidth();
+    window.addEventListener("resize", throttle(this.updateWidth, 500))
   }
 
-  componentWillUnmount () {
-    window.removeEventListener("resize", throttle(this.setWidth, 500))
+  componentWillUnmount() {
+    window.removeEventListener("resize", throttle(this.updateWidth, 500))
+  }
+  
+  componentWillUpdate() {
+    this.updateWidth();
   }
 
-  setWidth = () => {
-    if (this.pdfElement) {
+  updateWidth = () => {
+    const PdfViewerElement =  window.document.getElementById('PdfViewer');
+    if (PdfViewerElement && PdfViewerElement.getBoundingClientRect().width !== this.state.width) {
       this.setState({
-        width: this.pdfElement.getBoundingClientRect().width
+        width: PdfViewerElement.getBoundingClientRect().width
       })
     }
   };
@@ -59,18 +64,20 @@ class PdfViewer extends Component {
 
     const parsedHash = queryString.parse(loc.hash);
     let pageNumber = (parsedHash.page && parseInt(parsedHash.page, 10) <= numPages) ? parseInt(parsedHash.page, 10) : 1;
-
+    
     return (
       <React.Fragment>
         <div className="outer">
-          <div className="inner PdfViewer">
+          <div id="PdfViewer" className="inner PdfViewer">
             <div className="document_pdf" ref={(ref) => this.pdfElement = ref}>
+              {width && (
               <Document renderAnnotations={true}
                         file={url}
                         onLoadSuccess={this.onDocumentLoad}
                         loading={(<SectionLoading />)}>
                 <Page pageNumber={pageNumber} className="page" width={width} />
               </Document>
+            )}
             </div>
           </div>
         </div>

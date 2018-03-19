@@ -49,7 +49,7 @@ class EntityReferencesTable extends Component {
     const { history, location } = this.props;
     return (event) => {
       event.preventDefault();
-      const fragment = Fragment.fromLocation(location, history);
+      const fragment = new Fragment(history);
       fragment.update({
         'preview:type': 'entity',
         'preview:id': entity.id
