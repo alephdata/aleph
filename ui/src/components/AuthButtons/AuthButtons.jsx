@@ -1,26 +1,74 @@
 import React, {Component} from 'react';
-import {Button} from '@blueprintjs/core';
-import {FormattedMessage} from 'react-intl';
-import {Link} from 'react-router-dom';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
+import { Menu, MenuItem, MenuDivider, Popover, Button, Position } from "@blueprintjs/core";
+
+import SettingsDialog from 'src/dialogs/SettingsDialog';
+import AlertsDialog from 'src/dialogs/AlertsDialog';
 
 import './AuthButtons.css';
 
+const messages = defineMessages({
+  alerts: {
+    id: 'nav.alerts',
+    defaultMessage: 'Alerts',
+  },
+  settings: {
+    id: 'nav.settings',
+    defaultMessage: 'Settings',
+  },
+  signout: {
+    id: 'nav.signout',
+    defaultMessage: 'Log out',
+  }
+});
+
 class AuthButtons extends Component {
+  constructor() {
+    super();
+    this.state = {
+      settingsIsOpen: false,
+      alertsIsOpen: false,
+    };
+
+    this.toggleSettings = this.toggleSettings.bind(this);
+    this.toggleAlerts = this.toggleAlerts.bind(this);
+  }
+
+  toggleSettings() {
+    this.setState({
+      settingsIsOpen: !this.state.settingsIsOpen
+    })
+  }
+
+  toggleAlerts() {
+    this.setState({
+      alertsIsOpen: !this.state.alertsIsOpen
+    })
+  }
+
   render() {
-    const {session, auth} = this.props;
+    const {session, auth, intl} = this.props;
     const location = window.location;
     const targetUrl = `${location.protocol}//${location.host}/login`;
     const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
     const items = [];
 
     if (session.loggedIn) {
-      return (
+      return ( 
         <span className="AuthButtons">
-          <Link key='login' to="/logout">
-            <Button icon="log-out" className="pt-minimal">
-              <FormattedMessage id="nav.signout" defaultMessage="Log out"/>
-            </Button>
-          </Link>
+          <Popover content={
+            <Menu>
+              <MenuItem icon="notifications" onClick={this.toggleAlerts} text={intl.formatMessage(messages.alerts)+'…'} />
+              <MenuItem icon="cog" onClick={this.toggleSettings} text={intl.formatMessage(messages.settings)+'…'} />
+              <MenuDivider />
+              <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
+            </Menu>      
+            } position={Position.BOTTOM_LEFT}>
+            <Button icon="user" className="pt-minimal" />
+          </Popover>
+          <AlertsDialog isOpen={this.state.alertsIsOpen} toggleDialog={this.toggleAlerts} />
+          <SettingsDialog isOpen={this.state.settingsIsOpen} toggleDialog={this.toggleSettings} />
         </span>
       )
     }
@@ -61,4 +109,5 @@ class AuthButtons extends Component {
   }
 }
 
+AuthButtons = injectIntl(AuthButtons);
 export default AuthButtons;

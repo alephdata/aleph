@@ -1,12 +1,11 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
-import { InputGroup } from '@blueprintjs/core';
+import { InputGroup } from "@blueprintjs/core";
 
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
-import SettingsButton from 'src/components/SettingsButton/SettingsButton';
 import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
 
 import './Navbar.css';
@@ -95,7 +94,9 @@ class Navbar extends React.Component {
             )} 
           </div>
           <div className="pt-navbar-group pt-align-right">
-            <SettingsButton />
+            <Link to="/collections" className="pt-minimal pt-button pt-icon-database">
+              <FormattedMessage id="nav.collections" defaultMessage="Sources"/>
+            </Link>
             <AuthButtons session={session} auth={metadata.auth} />
             <LanguageMenu />
           </div>
