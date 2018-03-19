@@ -2,7 +2,7 @@
 # pudo <friedrich@pudo.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-03-15T07:58:16.562Z\n"
+"POT-Creation-Date: 2018-03-18T20:46:43.993Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2018\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -396,13 +396,6 @@ msgstr ""
 msgid "Folder"
 msgstr ""
 
-#. [home.search.title]
-#. defaultMessage is:
-#. Follow The Money
-#: i18n/messages.json
-msgid "Follow The Money"
-msgstr ""
-
 #. [email.from]
 #. defaultMessage is:
 #. From
@@ -492,10 +485,7 @@ msgstr ""
 #. [document.info.links]
 #. defaultMessage is:
 #. Links
-#. [entity.info.links]
-#. defaultMessage is:
-#. Links
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Links"
 msgstr ""
 
@@ -813,10 +803,7 @@ msgstr ""
 #. [home.search_placeholder]
 #. defaultMessage is:
 #. Search companies, people and documents.
-#. [home.search_placeholder]
-#. defaultMessage is:
-#. Search companies, people and documents.
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Search companies, people and documents."
 msgstr ""
 
@@ -825,14 +812,6 @@ msgstr ""
 #. Search document
 #: i18n/messages.json
 msgid "Search document"
-msgstr ""
-
-#. [home.summary]
-#. defaultMessage is:
-#. Search public records, databases and leaks from hundreds of global sources.
-#: i18n/messages.json
-msgid ""
-"Search public records, databases and leaks from hundreds of global sources."
 msgstr ""
 
 #. [document.placeholder_tolder_filter]
@@ -981,6 +960,13 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
+#. [entity.info.tags]
+#. defaultMessage is:
+#. Tags
+#: i18n/messages.json
+msgid "Tags"
+msgstr ""
+
 #. [auth.bad_request]
 #. defaultMessage is:
 #. The Server did not accept your input
@@ -1122,13 +1108,6 @@ msgstr "Benutzer"
 msgid "View"
 msgstr "Lesen"
 
-#. [home.collections]
-#. defaultMessage is:
-#. Want to browse sources?
-#: i18n/messages.json
-msgid "Want to browse sources?"
-msgstr ""
-
 #. [signup.inbox.desc]
 #. defaultMessage is:
 #. We've sent you an email, please follow the link to complete your
@@ -1137,6 +1116,13 @@ msgstr ""
 msgid ""
 "We've sent you an email, please follow the link to complete your "
 "registration"
+msgstr ""
+
+#. [notifications.no_notifications]
+#. defaultMessage is:
+#. You do not have any notifications.
+#: i18n/messages.json
+msgid "You do not have any notifications."
 msgstr ""
 
 #. [alerts.no_alerts]
@@ -1169,6 +1155,13 @@ msgstr "Ihre Änderungen wurden gespeichert."
 #: i18n/messages.json
 msgid "Your e-mail address cannot be changed"
 msgstr "Sie können Ihre E-Mail Adresse nicht ändern."
+
+#. [notifications.title]
+#. defaultMessage is:
+#. Your notifications
+#: i18n/messages.json
+msgid "Your notifications"
+msgstr ""
 
 #. [footer.aleph]
 #. defaultMessage is:

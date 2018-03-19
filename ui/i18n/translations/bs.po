@@ -2,7 +2,7 @@
 # Emina Muratovic <emina@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-03-15T07:58:16.562Z\n"
+"POT-Creation-Date: 2018-03-18T20:46:43.993Z\n"
 "Last-Translator: Emina Muratovic <emina@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -396,13 +396,6 @@ msgstr "Filtriraj tabelu"
 msgid "Folder"
 msgstr "Folder"
 
-#. [home.search.title]
-#. defaultMessage is:
-#. Follow The Money
-#: i18n/messages.json
-msgid "Follow The Money"
-msgstr "Slijedite novac"
-
 #. [email.from]
 #. defaultMessage is:
 #. From
@@ -492,10 +485,7 @@ msgstr "Zadnji put izmijenjeno"
 #. [document.info.links]
 #. defaultMessage is:
 #. Links
-#. [entity.info.links]
-#. defaultMessage is:
-#. Links
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Links"
 msgstr "Linkovi"
 
@@ -813,10 +803,7 @@ msgstr "Pretraži po nazivu ili mail-u"
 #. [home.search_placeholder]
 #. defaultMessage is:
 #. Search companies, people and documents.
-#. [home.search_placeholder]
-#. defaultMessage is:
-#. Search companies, people and documents.
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Search companies, people and documents."
 msgstr "Pretraži kompanije, osobe ili dokumenta"
 
@@ -826,16 +813,6 @@ msgstr "Pretraži kompanije, osobe ili dokumenta"
 #: i18n/messages.json
 msgid "Search document"
 msgstr "Pretraži dokument"
-
-#. [home.summary]
-#. defaultMessage is:
-#. Search public records, databases and leaks from hundreds of global sources.
-#: i18n/messages.json
-msgid ""
-"Search public records, databases and leaks from hundreds of global sources."
-msgstr ""
-"Pretraži javne podatake, baze podataka i informacije koje su 'procurile' u "
-"javnost iz vise hiljada globalnih izvora."
 
 #. [document.placeholder_tolder_filter]
 #. defaultMessage is:
@@ -853,6 +830,9 @@ msgid ""
 "Search {total} public records, scrapes, and leaks from {collections} global "
 "sources."
 msgstr ""
+"Pretražite {total} javnih podataka, podataka koji su uvezeni sa web stranica"
+" i informacija koje su 'procurile' u javnost iz {collections} globalnih "
+"izvora."
 
 #. [auth.server_error]
 #. defaultMessage is:
@@ -982,6 +962,13 @@ msgstr "Uspješno"
 #: i18n/messages.json
 msgid "Summary"
 msgstr "Opis"
+
+#. [entity.info.tags]
+#. defaultMessage is:
+#. Tags
+#: i18n/messages.json
+msgid "Tags"
+msgstr ""
 
 #. [auth.bad_request]
 #. defaultMessage is:
@@ -1125,13 +1112,6 @@ msgstr "Korisnici"
 msgid "View"
 msgstr "Pregled"
 
-#. [home.collections]
-#. defaultMessage is:
-#. Want to browse sources?
-#: i18n/messages.json
-msgid "Want to browse sources?"
-msgstr "Želiš li pretraživati izvore?"
-
 #. [signup.inbox.desc]
 #. defaultMessage is:
 #. We've sent you an email, please follow the link to complete your
@@ -1142,6 +1122,13 @@ msgid ""
 "registration"
 msgstr ""
 "Poslali smo vam mail, molimo vas da pomoću linka završite vašu registraciju"
+
+#. [notifications.no_notifications]
+#. defaultMessage is:
+#. You do not have any notifications.
+#: i18n/messages.json
+msgid "You do not have any notifications."
+msgstr ""
 
 #. [alerts.no_alerts]
 #. defaultMessage is:
@@ -1173,6 +1160,13 @@ msgstr "Vaše izmjene su sačuvane."
 #: i18n/messages.json
 msgid "Your e-mail address cannot be changed"
 msgstr "Vaša mail adresa se ne može promijeniti"
+
+#. [notifications.title]
+#. defaultMessage is:
+#. Your notifications
+#: i18n/messages.json
+msgid "Your notifications"
+msgstr ""
 
 #. [footer.aleph]
 #. defaultMessage is:

@@ -2,7 +2,7 @@
 # jen occrp <jen@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-03-15T07:58:16.562Z\n"
+"POT-Creation-Date: 2018-03-18T20:46:43.993Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -396,13 +396,6 @@ msgstr "Отфильтровать таблицу"
 msgid "Folder"
 msgstr "Папка"
 
-#. [home.search.title]
-#. defaultMessage is:
-#. Follow The Money
-#: i18n/messages.json
-msgid "Follow The Money"
-msgstr "Следуй за деньгами"
-
 #. [email.from]
 #. defaultMessage is:
 #. From
@@ -492,10 +485,7 @@ msgstr "Обновлено"
 #. [document.info.links]
 #. defaultMessage is:
 #. Links
-#. [entity.info.links]
-#. defaultMessage is:
-#. Links
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Links"
 msgstr "Ссылки"
 
@@ -814,10 +804,7 @@ msgstr "Искать по имени или электронному адрес�
 #. [home.search_placeholder]
 #. defaultMessage is:
 #. Search companies, people and documents.
-#. [home.search_placeholder]
-#. defaultMessage is:
-#. Search companies, people and documents.
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Search companies, people and documents."
 msgstr "Искать людей, компании или документы."
 
@@ -827,14 +814,6 @@ msgstr "Искать людей, компании или документы."
 #: i18n/messages.json
 msgid "Search document"
 msgstr "Поиск по документу"
-
-#. [home.summary]
-#. defaultMessage is:
-#. Search public records, databases and leaks from hundreds of global sources.
-#: i18n/messages.json
-msgid ""
-"Search public records, databases and leaks from hundreds of global sources."
-msgstr ""
 
 #. [document.placeholder_tolder_filter]
 #. defaultMessage is:
@@ -852,6 +831,8 @@ msgid ""
 "Search {total} public records, scrapes, and leaks from {collections} global "
 "sources."
 msgstr ""
+"Поиск по {total} опубликованных документов и открытым источникам со всего "
+"мира."
 
 #. [auth.server_error]
 #. defaultMessage is:
@@ -981,6 +962,13 @@ msgstr "Вы успешно авторизованы"
 #: i18n/messages.json
 msgid "Summary"
 msgstr "Краткое описание"
+
+#. [entity.info.tags]
+#. defaultMessage is:
+#. Tags
+#: i18n/messages.json
+msgid "Tags"
+msgstr ""
 
 #. [auth.bad_request]
 #. defaultMessage is:
@@ -1124,13 +1112,6 @@ msgstr "Пользователи"
 msgid "View"
 msgstr "Просмотр"
 
-#. [home.collections]
-#. defaultMessage is:
-#. Want to browse sources?
-#: i18n/messages.json
-msgid "Want to browse sources?"
-msgstr "Просмотр источников"
-
 #. [signup.inbox.desc]
 #. defaultMessage is:
 #. We've sent you an email, please follow the link to complete your
@@ -1140,6 +1121,13 @@ msgid ""
 "We've sent you an email, please follow the link to complete your "
 "registration"
 msgstr "Мы отправили вам письмо с ссылкой для завершения регистрации"
+
+#. [notifications.no_notifications]
+#. defaultMessage is:
+#. You do not have any notifications.
+#: i18n/messages.json
+msgid "You do not have any notifications."
+msgstr ""
 
 #. [alerts.no_alerts]
 #. defaultMessage is:
@@ -1171,6 +1159,13 @@ msgstr "Изменения сохранены"
 #: i18n/messages.json
 msgid "Your e-mail address cannot be changed"
 msgstr "Не удалось изменить ваш эл. адрес"
+
+#. [notifications.title]
+#. defaultMessage is:
+#. Your notifications
+#: i18n/messages.json
+msgid "Your notifications"
+msgstr ""
 
 #. [footer.aleph]
 #. defaultMessage is:
