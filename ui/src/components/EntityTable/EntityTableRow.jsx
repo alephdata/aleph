@@ -30,14 +30,28 @@ class EntityTableRow extends Component {
         if (fragment.get('preview:id') !== entity.id) {
           // Update the preview to show the entity / document for this row
           const previewType = (entity.schemata && entity.schemata.indexOf('Document') !== -1) ? 'document' : 'entity';
-          // Open documents in maximised mode by default
-          const previewMaximised = (previewType === 'document') ? true : false;
-          fragment.update({
+          
+          // @TODO Refactor to save maximised state perference in localStorage
+          // For now only set explicitly on documents.
+          let newFragment = {
             'preview:id': entity.id,
             'preview:type': previewType,
-            'preview:maximised': previewMaximised,
+            'preview:maximised': null,
             'page': 1
-          });
+          }
+          
+          // Open documents in maximised mode by default
+          // (unless maximise is explicitly set to false)
+          if (previewType === 'document') {
+            if (!fragment.get('preview:maximised') ||
+                fragment.get('preview:maximised') !== 'false') {
+               newFragment['preview:maximised'] = 'true';
+             } else {
+               newFragment['preview:maximised'] = 'false';
+             }
+          }
+          
+          fragment.update(newFragment);
         } else {
           // If this entity is already being previewed, hide the preview of it
           fragment.update({
