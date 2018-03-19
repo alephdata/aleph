@@ -88,7 +88,6 @@ class Preview extends React.Component {
   async componentDidUpdate(prevProps) {
     const parsedHash = queryString.parse(this.props.location.hash);
     if (parsedHash['preview:id'] && parsedHash['preview:type']) {
-      // If passed a 
       const previewId = parsedHash['preview:id'];
       const previewType = parsedHash['preview:type'];
       const previewTab = parsedHash['preview:tab'] || null;
@@ -167,8 +166,19 @@ class Preview extends React.Component {
   
   toggleMaximise() {
     const { fragment } = this.props;
-    fragment.update({'preview:maximised': (this.state.maximised) ? 'false' : 'true' });
-    this.setState({ maximised: !this.state.maximised })
+    const newMaximiseState = !this.state.maximised;
+    
+    fragment.update({'preview:maximised': newMaximiseState });
+    
+    this.setState({ 
+      maximised: newMaximiseState
+    })
+
+    // @FIXME: This is a hack to trigger window resize event when displaying
+    // a document preview. This forces the PDF viewer to display at the 
+    // right size (otherwise it displays at the incorrect height).    
+    if (newMaximiseState === true)
+      setTimeout(() => {window.dispatchEvent(new Event('resize')) }, 1000);
     
     // @EXPERIMENTAL - Enable if content padding is enabled in handleScroll()
     // this.handleScroll();
@@ -194,34 +204,32 @@ class Preview extends React.Component {
         linkIcon = null,
         showQuickPreview = false;
     
-    if (previewType === 'collection' && collection && !collection.isFetching) {      
+    if (previewType === 'collection' && collection && collection.links && !collection.isFetching) {      
       view = <CollectionInfo collection={collection} />;
       link = getPath(collection.links.ui);
       linkIcon = 'folder-open';
     }
-    if (previewType === 'entity' && entity && !entity.isFetching) {
+    if (previewType === 'entity' && entity && entity.links && !entity.isFetching) {
       view = <EntityInfo entity={entity} />;
       link = getPath(entity.links.ui);
       linkIcon = 'folder-open';
     }
     
-    if (previewType === 'document' && doc && !doc.isFetching) {
-      view = (maximised === true) ? <DocumentViewer document={doc} queryText={this.state.queryText} onDocumentLoad={this.onDocumentLoad} /> : <DocumentInfo document={doc} />;
-      link = getPath(doc.links.ui);
-      linkIcon = 'document';
+    if (previewType === 'document') {
+      // Allow quick previews on documents
       showQuickPreview = true;
-      
-      // @FIXME: This is a hack to trigger window resize event when displaying
-      // a document preview. This forces the PDF viewer to display at the 
-      // right size (otherwise it displays at the incorrect height).
-      if (maximised === true)
-        setTimeout(() => {window.dispatchEvent(new Event('resize')) }, 1000);
+    
+      if (doc && doc.links && !doc.isFetching) {
+        view = (maximised === true) ? <DocumentViewer document={doc} queryText={this.state.queryText} onDocumentLoad={this.onDocumentLoad} /> : <DocumentInfo document={doc} />;
+        link = getPath(doc.links.ui);
+        linkIcon = 'document';
+      }
     }
     
     // Only allow Preview to be maximised if Quick Previews are enabled
     if (showQuickPreview === true && maximised === true)
       className += ' maximised'
-
+      
     if (view !== null) {
       // If we have a document and it's ready to render
       return (
@@ -229,7 +237,6 @@ class Preview extends React.Component {
           top: previewTop,
           bottom: previewBottom
           }}>
-
           <Toolbar className="color">
             {showQuickPreview === true && (
               <Button icon="eye-open"
@@ -267,6 +274,9 @@ class Preview extends React.Component {
           top: previewTop,
           bottom: previewBottom
           }}>
+          <Toolbar className="color">
+            <CloseButton/>
+          </Toolbar>
           <SectionLoading/>
         </div>
       );

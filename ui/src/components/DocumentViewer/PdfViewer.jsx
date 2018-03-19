@@ -42,9 +42,10 @@ class PdfViewer extends Component {
 
   updateWidth = () => {
     const PdfViewerElement =  window.document.getElementById('PdfViewer');
-    if (PdfViewerElement && PdfViewerElement.getBoundingClientRect().width !== this.state.width) {
+    const width = (PdfViewerElement) ? PdfViewerElement.getBoundingClientRect().width : null;
+    if (width !== null && width !== this.state.width) {
       this.setState({
-        width: PdfViewerElement.getBoundingClientRect().width
+        width: width
       })
     }
   };

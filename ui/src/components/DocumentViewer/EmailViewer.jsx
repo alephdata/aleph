@@ -31,9 +31,9 @@ class EmailViewer extends React.Component {
         <FormattedMessage id="email.body.empty" defaultMessage="No message body."/>
       </p>
     if (document.html && document.html.length) {
-      messageBody = <span dangerouslySetInnerHTML={{__html: document.html}}/>
+      messageBody = <span className="email-body" dangerouslySetInnerHTML={{__html: document.html}}/>
     } else if (document.text && document.text.length > 0) {
-      messageBody = <pre>{document.text}</pre>
+      messageBody = <pre className="email-body">{document.text}</pre>
     }
     
     return (

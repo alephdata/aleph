@@ -29,10 +29,14 @@ class EntityTableRow extends Component {
         const fragment = new Fragment(hist);
         if (fragment.get('preview:id') !== entity.id) {
           // Update the preview to show the entity / document for this row
-
+          const previewType = (entity.schemata && entity.schemata.indexOf('Document') !== -1) ? 'document' : 'entity';
+          // Open documents in maximised mode by default
+          const previewMaximised = (previewType === 'document') ? true : false;
           fragment.update({
             'preview:id': entity.id,
-            'preview:type': (entity.schemata && entity.schemata.indexOf('Document') !== -1) ? 'document' : 'entity'
+            'preview:type': previewType,
+            'preview:maximised': previewMaximised,
+            'page': 1
           });
         } else {
           // If this entity is already being previewed, hide the preview of it
