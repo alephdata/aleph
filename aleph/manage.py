@@ -9,7 +9,7 @@ from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
 from aleph.core import create_app, archive
-from aleph.model import db, upgrade_db
+from aleph.model import db, upgrade_db, destroy_db
 from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
@@ -47,7 +47,7 @@ def collections():
 @manager.command
 def alerts():
     """Generate alert notifications."""
-    check_alerts.delay()
+    check_alerts.apply_async([], priority=8)
 
 
 @manager.command
@@ -130,7 +130,7 @@ def retry():
     q = q.filter(Document.status != Document.STATUS_SUCCESS)
     log.info("Retry: %s documents", q.count())
     for idx, (doc_id,) in enumerate(q.all(), 1):
-        ingest.delay(doc_id)
+        ingest.apply_async([doc_id], priority=1)
         if idx % 1000 == 0:
             log.info("Process: %s documents...", idx)
 
@@ -156,7 +156,7 @@ def index(foreign_id=None):
             raise ValueError("No such collection: %r" % foreign_id)
         q = q.filter(Document.collection_id == collection.id)
     for idx, (doc_id,) in enumerate(q.yield_per(5000), 1):
-        index_document_id.delay(doc_id)
+        index_document_id.apply_async([doc_id], priority=1)
         if idx % 1000 == 0:
             log.info("Index: %s documents...", idx)
     if foreign_id is None:
@@ -232,23 +232,7 @@ def installdata():
 def evilshit():
     """EVIL: Delete all data and recreate the database."""
     delete_index()
-    from sqlalchemy import MetaData, inspect
-    from sqlalchemy.exc import InternalError
-    from sqlalchemy.dialects.postgresql import ENUM
-    metadata = MetaData()
-    metadata.bind = db.engine
-    metadata.reflect()
-    tables = list(metadata.sorted_tables)
-    while len(tables):
-        for table in tables:
-            try:
-                table.drop(checkfirst=True)
-                tables.remove(table)
-            except InternalError:
-                pass
-    for enum in inspect(db.engine).get_enums():
-        enum = ENUM(name=enum['name'])
-        enum.drop(bind=db.engine, checkfirst=True)
+    destroy_db()
     upgrade()
 
 

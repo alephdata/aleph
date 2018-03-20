@@ -62,9 +62,6 @@ class EntityReferencesTable extends Component {
 
     return (
       <section className="EntityReferencesTable">
-        <h3>
-          <Property.Reverse model={property} />
-        </h3>
         <table className="data-table" style={{width: '100%'}}>
           <thead>
             <tr>

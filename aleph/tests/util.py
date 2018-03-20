@@ -7,7 +7,7 @@ from faker import Factory
 
 from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
-from aleph.model import create_system_roles
+from aleph.model import create_system_roles, destroy_db
 from aleph.index import delete_index, upgrade_search, flush_index
 from aleph.index.core import collection_index, entity_index, record_index
 from aleph.logic.documents import process_document
@@ -109,7 +109,7 @@ class TestCase(FlaskTestCase):
                                refresh=True,
                                conflicts='proceed')
 
-        db.drop_all()
+        destroy_db()
         db.create_all()
         create_system_roles()
 

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NonIdealState } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import { fetchDocument } from 'src/actions';
 import Screen from 'src/components/common/Screen';
-import Entity from 'src/components/EntityScreen/Entity';
+import Entity from 'src/screens/EntityScreen/Entity';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import DualPane from 'src/components/common/DualPane';
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 import DocumentInfo from './DocumentInfo';
 import DocumentContent from './DocumentContent';
@@ -34,13 +34,13 @@ class DocumentScreen extends Component {
   }
 
   render() {
-    const { document, location, intl } = this.props;
+    const { document, location } = this.props;
     if (document === undefined || document.isFetching) {
       return <ScreenLoading />;
     }
     if (document.error) {
       return (
-        <NonIdealState visual="error" title={intl.formatMessage(messages.not_found)} />
+        <ErrorScreen.PageNotFound visual="error" title={messages.not_found}/>
       );
     }
 
@@ -72,6 +72,6 @@ const mapStateToProps = (state, ownProps) => {
     ? state.entities[documentId]
     : undefined;
   return { documentId, document };
-}
+};
 
 export default connect(mapStateToProps, { fetchDocument })(injectIntl(DocumentScreen));

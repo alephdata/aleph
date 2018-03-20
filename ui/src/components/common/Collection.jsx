@@ -7,7 +7,6 @@ import getPath from 'src/util/getPath';
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
 
-
 class CollectionLabel extends Component {
   render() {
     const { collection, icon = true } = this.props;
@@ -23,13 +22,22 @@ class CollectionLabel extends Component {
 
 class CollectionLink extends Component {
   render() {
-    const { collection, icon = true, className } = this.props;
+    const { collection, icon = true, className, preview } = this.props;
 
-    return (
-      <Link to={getPath(collection.links.ui)} className={className}>
-        <Collection.Label collection={collection} icon={icon} />
-      </Link>
-    );
+    if (preview === true) {
+      // Displays in preview sidebar
+      return (
+        <a href={`#preview:id=${collection.id}&preview:type=collection`}>
+          <Collection.Label collection={collection} icon={icon} />
+        </a>
+      );
+    } else {
+      return (
+        <Link to={getPath(collection.links.ui)} className={className}>
+          <Collection.Label collection={collection} icon={icon} />
+        </Link>
+      );
+    }
   }
 }
 

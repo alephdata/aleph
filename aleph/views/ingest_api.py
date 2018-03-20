@@ -110,7 +110,7 @@ def ingest_upload(id):
 
     # Update child counts in index.
     if parent_id is not None:
-        index_document_id.delay(parent_id)
+        index_document_id.apply_async([parent_id], priority=1)
 
     return jsonify({
         'status': 'ok',

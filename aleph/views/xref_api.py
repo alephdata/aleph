@@ -1,12 +1,10 @@
-from banal import as_bool
-from flask import Blueprint, request, send_file
+from flask import Blueprint, request
 
-from aleph.core import USER_QUEUE, USER_ROUTING_KEY
 from aleph.model import Match
 from aleph.views.util import get_db_collection, jsonify
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.serializers import MatchSchema, MatchCollectionsSchema
-from aleph.logic.xref import generate_excel, process_xref
+from aleph.logic.xref import process_xref
 
 
 blueprint = Blueprint('xref_api', __name__)
@@ -36,26 +34,11 @@ def matches(id, other_id):
     return jsonify(result)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/xref.xlsx')
-def report(collection_id):
-    collection = get_db_collection(id)
-    output = generate_excel(collection,
-                            request.authz,
-                            links=as_bool(request.args.get('links')),
-                            one_sheet=as_bool(request.args.get('merge')))
-    outputfile = "%s Cross-referenced.xlsx" % collection.label
-    return send_file(output,
-                     as_attachment=True,
-                     attachment_filename=outputfile)
-
-
 @blueprint.route('/api/2/collections/<int:collection_id>/xref',
                  methods=['POST'])
 def generate_summary(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    process_xref.apply_async([collection.id],
-                             queue=USER_QUEUE,
-                             routing_key=USER_ROUTING_KEY)
+    process_xref.apply_async([collection.id], priority=5)
     return jsonify({'status': 'accepted'}, status=202)
 
 
@@ -64,7 +47,5 @@ def generate_summary(collection_id):
 def generate_matches(collection_id, other_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     other = get_db_collection(other_id)
-    process_xref.apply_async([collection.id, other.id],
-                             queue=USER_QUEUE,
-                             routing_key=USER_ROUTING_KEY)
+    process_xref.apply_async([collection.id, other.id], priority=6)
     return jsonify({'status': 'accepted'}, status=202)

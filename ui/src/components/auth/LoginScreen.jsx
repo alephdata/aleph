@@ -8,6 +8,7 @@ import {NonIdealState} from '@blueprintjs/core';
 import {loginWithPassword, loginWithToken} from 'src/actions/sessionActions';
 import OAuthLogin from './OAuthLogin';
 import {PasswordAuthLogin} from './PasswordAuth';
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 const messages = defineMessages({
   not_available_title: {
@@ -50,9 +51,7 @@ class LoginScreen extends Component {
         {oauthLogin && <OAuthLogin provider={metadata.auth.oauth_uri}/>}
 
         {!hasLogin &&
-          <NonIdealState visual="log-in"
-            title={intl.formatMessage(messages.not_available_title)}
-            description={intl.formatMessage(messages.not_available_desc)}/>}
+        <ErrorScreen.PageNotFound visual='login-in' title={messages.not_available_title} description={messages.not_available_desc}/>}
       </section>
   }
 }

@@ -2,13 +2,15 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
-import TableViewer from './viewers/TableViewer';
-import TextViewer from './viewers/TextViewer';
-import HtmlViewer from './viewers/HtmlViewer';
-import PdfViewer from './viewers/PdfViewer';
-import ImageViewer from './viewers/ImageViewer';
-import FolderViewer from './viewers/FolderViewer';
-import EmailViewer from './viewers/EmailViewer';
+import TableViewer from 'src/components/DocumentViewers/TableViewer';
+import TextViewer from 'src/components/DocumentViewers/TextViewer';
+import HtmlViewer from 'src/components/DocumentViewers/HtmlViewer';
+import PdfViewer from 'src/components/DocumentViewers/PdfViewer';
+import ImageViewer from 'src/components/DocumentViewers/ImageViewer';
+import FolderViewer from 'src/components/DocumentViewers/FolderViewer';
+import EmailViewer from 'src/components/DocumentViewers/EmailViewer';
+
+import './DocumentContent.css';
 
 class DocumentContent extends React.Component {
   render() {
@@ -16,7 +18,7 @@ class DocumentContent extends React.Component {
 
     if (document.status === 'fail' && !(document.children !== undefined && document.children > 0)) {
       return (
-        <DualPane.ContentPane>
+        <DualPane.ContentPane className="DocumentContent">
           <section className="PartialError">
             <div className="pt-non-ideal-state">
               <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
@@ -70,7 +72,7 @@ class DocumentContent extends React.Component {
     }
     
     return (
-      <DualPane.ContentPane style={{padding: 0}}>
+      <DualPane.ContentPane className="DocumentContent">
         { documentViewer }
       </DualPane.ContentPane>
     );

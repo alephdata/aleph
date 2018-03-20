@@ -29,15 +29,6 @@ mail = Mail()
 celery = Celery('aleph', task_cls=SessionTask)
 sentry = Sentry()
 
-# these two queues are used so that background processing tasks
-# spawned by the user can be handled more quickly through a
-# separate worker daemon and don't get boxed in behind very
-# large bulk imports. see: https://github.com/alephdata/aleph/issues/44
-USER_QUEUE = '%s_user' % settings.QUEUE_PREFIX
-USER_ROUTING_KEY = 'user.process'
-WORKER_QUEUE = '%s_worker' % settings.QUEUE_PREFIX
-WORKER_ROUTING_KEY = 'worker.process'
-
 
 def create_app(config={}):
     app = Flask('aleph')
@@ -51,10 +42,9 @@ def create_app(config={}):
         'SQLALCHEMY_DATABASE_URI': settings.DATABASE_URI
     })
 
-    queues = (
-        Queue(WORKER_QUEUE, routing_key=WORKER_ROUTING_KEY),
-        Queue(USER_QUEUE, routing_key=USER_ROUTING_KEY),
-    )
+    queue = Queue(settings.QUEUE_NAME,
+                  routing_key=settings.QUEUE_ROUTING_KEY,
+                  queue_arguments={'x-max-priority': 9})
     celery.conf.update(
         imports=('aleph.queues'),
         broker_url=settings.BROKER_URI,
@@ -65,9 +55,9 @@ def create_app(config={}):
         task_eager_propagates=True,
         task_ignore_result=True,
         task_acks_late=True,
-        task_queues=queues,
-        task_default_queue=WORKER_QUEUE,
-        task_default_routing_key=WORKER_ROUTING_KEY,
+        task_queues=(queue,),
+        task_default_queue=settings.QUEUE_NAME,
+        task_default_routing_key=settings.QUEUE_ROUTING_KEY,
         worker_max_tasks_per_child=500,
         worker_disable_rate_limits=True,
         result_persistent=False,

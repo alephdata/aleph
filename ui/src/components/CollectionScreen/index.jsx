@@ -24,12 +24,12 @@ class CollectionScreen extends Component {
 
     if (collection.error) {
       return (
-        <ErrorScreen.EmptyList title={messages.not_found}/>
+        <ErrorScreen.PageNotFound title={messages.not_found}/>
       )
     }
 
     return (
-      <Screen isError={collection.error} errorMessage={messages.not_found} breadcrumbs={<Breadcrumbs collection={collection} />}>
+      <Screen breadcrumbs={<Breadcrumbs collection={collection} />}>
         <Helmet>
           <title>{collection.label}</title>
         </Helmet>

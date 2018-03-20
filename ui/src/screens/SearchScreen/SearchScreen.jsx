@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
-import { NonIdealState } from '@blueprintjs/core';
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';
@@ -13,6 +12,8 @@ import DualPane from 'src/components/common/DualPane';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SectionLoading from 'src/components/common/SectionLoading';
 import SearchFacets from 'src/components/Facet/SearchFacets';
+import QueryTags from 'src/components/QueryTags/QueryTags';
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 import './SearchScreen.css';
 
@@ -72,7 +73,7 @@ const messages = defineMessages({
 class SearchScreen extends React.Component {
   constructor(props) {
     const { intl } = props;
-    super(props)
+    super(props);
 
     const facets = [
       {
@@ -182,15 +183,14 @@ class SearchScreen extends React.Component {
                           facets={this.state.facets} />
           </DualPane.InfoPane>
           <DualPane.ContentPane>
-            {/*<SearchFilter {...searchContext} />*/}
+            <QueryTags query={query} updateQuery={this.updateQuery} />
             { result.total === 0 &&
-              <NonIdealState visual="search"
-                             title={intl.formatMessage(messages.no_results_title)}
-                             description={intl.formatMessage(messages.no_results_description)} />
+            <ErrorScreen.EmptyList visual="search" title={messages.no_results_title} description={messages.no_results_description}/>
             }
             <EntityTable query={query}
                          updateQuery={this.updateQuery}
-                         result={result} />
+                         result={result}
+                         showLinksInPreview={true} />
             { !result.isLoading && result.next && (
               <Waypoint
                 onEnter={this.getMoreResults}

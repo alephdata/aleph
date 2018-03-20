@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import EntityTableRow from './EntityTableRow';
@@ -50,7 +51,7 @@ class EntityTable extends Component {
   }
 
   render() {
-    const { result, query, intl } = this.props;
+    const { result, query, intl, showLinksInPreview, location: loc } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
 
     if (!result || !result.results || result.total === 0) {
@@ -92,12 +93,17 @@ class EntityTable extends Component {
             <EntityTableRow key={entity.id}
                             entity={entity}
                             hideCollection={hideCollection}
-                            documentMode={documentMode} />
+                            documentMode={documentMode}
+                            showLinksInPreview={showLinksInPreview}
+                            location={loc}
+                             />
           )}
         </tbody>
       </table>
     );
   }
 }
+
+EntityTable = withRouter(EntityTable);
 
 export default injectIntl(EntityTable);

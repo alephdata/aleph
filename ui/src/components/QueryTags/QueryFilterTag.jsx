@@ -5,12 +5,14 @@ import { Tag as TagWidget } from '@blueprintjs/core';
 import Schema from 'src/components/common/Schema';
 import Tag from 'src/components/common/Tag';
 import Country from 'src/components/common/Country';
+import Language from 'src/components/common/Language';
 import Collection from 'src/components/common/Collection';
-import Entity from 'src/components/EntityScreen/Entity';
+import Entity from 'src/screens/EntityScreen/Entity';
 
-import './SearchFilterTag.css';
+import './QueryFilterTag.css';
 
-class SearchFilterTag extends PureComponent {
+
+class QueryFilterTag extends PureComponent {
   constructor(props) {
     super(props);
     this.onRemove = this.onRemove.bind(this);
@@ -31,6 +33,10 @@ class SearchFilterTag extends PureComponent {
         return (
           <Country.Name code={value} />
         );
+      case 'languages':
+        return (
+          <Language.Name code={value} />
+        );
       case 'collection_id':
         return (
           <Collection.Load id={value} renderWhenLoading={'…'}>{collection => (
@@ -40,21 +46,29 @@ class SearchFilterTag extends PureComponent {
       case 'ancestors':
       case 'parent.id':
         return (
-          <span>
-            <FormattedMessage id="search.filterTag.ancestors" defaultMessage="inside:" />
+          <React.Fragment>
+            <FormattedMessage id="search.filterTag.ancestors" defaultMessage="in:" />
             <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
               <Entity.Label entity={entity} icon />
             )}</Entity.Load>
-          </span>
+          </React.Fragment>
+        );
+      case 'exclude':
+        return (
+          <React.Fragment>
+            <FormattedMessage id="search.filterTag.exclude" defaultMessage="not:" />
+            <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
+              <Entity.Label entity={entity} icon />
+            )}</Entity.Load>
+          </React.Fragment>
         );
       case 'entities':
         return (
-          <span>
-            <FormattedMessage id="search.filterTag.entities" defaultMessage="related:" />
+          <React.Fragment>
             <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
               <Entity.Label entity={entity} icon />
             )}</Entity.Load>
-          </span>
+          </React.Fragment>
         );
       case 'names':
       case 'identifiers':
@@ -62,11 +76,13 @@ class SearchFilterTag extends PureComponent {
       case 'phones':
       case 'addresses':
         return (
-          <span><Tag.Icon field={filter} /> {value}</span>
+          <React.Fragment>
+            <Tag.Icon field={filter} /> {value}
+          </React.Fragment>
         );
       default:
         return (
-          <span><i>{filter}</i>: {value}</span>
+          <React.Fragment>{value}</React.Fragment>
         );
     }
   }
@@ -75,7 +91,7 @@ class SearchFilterTag extends PureComponent {
     const { filter, value } = this.props;
     return (
         <TagWidget
-          className="pt-large pt-minimal SearchFilterTag"
+          className="pt-large pt-intent-primary QueryFilterTag"
           onRemove={this.onRemove}>
           {this.label(filter, value)}
         </TagWidget>
@@ -83,4 +99,4 @@ class SearchFilterTag extends PureComponent {
   }
 }
 
-export default SearchFilterTag;
+export default QueryFilterTag;

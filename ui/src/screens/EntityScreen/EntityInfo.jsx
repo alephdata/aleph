@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
+import _ from 'lodash';
 
 import Property from './Property';
 import Entity from './Entity';
@@ -9,6 +10,7 @@ import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import Schema from 'src/components/common/Schema';
 import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
+import URL from 'src/components/common/URL';
 import { fetchEntityReferences } from 'src/actions/index';
 import { getEntityTags } from 'src/selectors';
 
@@ -24,7 +26,7 @@ class EntityInfo extends React.Component {
   handleTabChange(activeTabId: TabId) {
     this.setState({ activeTabId });
   }
-  
+  FormattedMessage
   componentDidMount() {
     const { entity } = this.props;
     if(!this.props.references && entity && entity.id) {
@@ -33,8 +35,20 @@ class EntityInfo extends React.Component {
   }
 
   render() {
-    const { references, entity } = this.props;
-  
+    const { references, entity, schema } = this.props;
+    
+    let sourceUrl = null;
+    const entityProperties = _.values(schema.properties).filter((prop) => {
+      if (prop.caption) {
+        return false;
+      }
+      if (prop.name === 'sourceUrl' && entity.properties[prop.name]) {
+        sourceUrl = entity.properties[prop.name][0]
+        return false;
+      }
+      return entity.properties[prop.name];
+    });
+    
     return (
       <DualPane.InfoPane className="EntityInfo with-heading">
         <div className="pane-heading">
@@ -56,12 +70,19 @@ class EntityInfo extends React.Component {
                 }
                 panel={
                   <React.Fragment>
-                    <h2>
-                      <FormattedMessage 
-                        id="entity.references.title"
-                        defaultMessage="Relationships"/>
-                    </h2>
-                    { (references && references.results && !!references.results.length && (
+                    <ul className="info-sheet">
+                      { entityProperties.map((prop) => (
+                        <li key={prop.name}>
+                          <span className="key">
+                            <Property.Name model={prop} />
+                          </span>
+                          <span className="value">
+                            <Property.Values model={prop} values={entity.properties[prop.name]} />
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    { (references && !references.isFetching && references.results && !!references.results.length && (
                       <ul className="info-rank">
                         { references.results.map((ref) => (
                           <li key={ref.property.qname}>
@@ -75,13 +96,7 @@ class EntityInfo extends React.Component {
                           </li>
                         ))}
                       </ul>
-                    )) ||
-                      <p className="pt-text-muted">
-                        <FormattedMessage 
-                          id="entity.references.empty.description"
-                          defaultMessage="There are no known relationships."/>
-                      </p>
-                    }
+                    ))}
                   </React.Fragment>
                 }
               />
@@ -92,7 +107,24 @@ class EntityInfo extends React.Component {
                     <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
                   </React.Fragment>
                 }
-                panel={<CollectionInfo collection={entity.collection}/>}
+                panel={
+                  <React.Fragment>
+                    <CollectionInfo collection={entity.collection}/>
+                    {sourceUrl && (
+                      <ul className='info-sheet'>
+                        <li>
+                          <span className="key">
+                            <FormattedMessage id="entity.info.source_url"
+                                              defaultMessage="Source URL"/>
+                          </span>
+                          <span className="value">
+                            <URL value={sourceUrl} />
+                          </span>
+                        </li>
+                      </ul>
+                    )}
+                  </React.Fragment>
+                }
               />
               <Tab id="tags"
                 title={

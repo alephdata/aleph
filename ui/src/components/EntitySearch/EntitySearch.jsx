@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { NonIdealState } from '@blueprintjs/core';
 import Waypoint from 'react-waypoint';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -11,6 +10,7 @@ import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SectionLoading from 'src/components/common/SectionLoading';
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 
 const messages = defineMessages({
@@ -22,7 +22,7 @@ const messages = defineMessages({
     id: 'search.no_results_description',
     defaultMessage: 'Try making your search more general',
   },
-})
+});
 
 class EntitySearch extends Component {
   constructor(props) {
@@ -70,19 +70,18 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const { query, result, intl } = this.props;
+    const { query, result, showLinksInPreview } = this.props;
     return (
       <React.Fragment>
         { result.total === 0 &&
-          <NonIdealState visual="search"
-                         title={intl.formatMessage(messages.no_results_title)}
-                         description={intl.formatMessage(messages.no_results_description)} />
+        <ErrorScreen.PageNotFound visual='search' title={messages.no_results_title} description={messages.no_results_description}/>
         }
         <EntityTable query={query}
                      documentMode={this.props.documentMode}
                      hideCollection={this.props.hideCollection}
                      updateQuery={this.updateQuery}
-                     result={result} />
+                     result={result}
+                     showLinksInPreview={showLinksInPreview} />
         { !result.isLoading && result.next && (
           <Waypoint
             onEnter={this.getMoreResults}

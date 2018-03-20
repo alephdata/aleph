@@ -1,29 +1,27 @@
 import React, {Component} from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { NonIdealState } from '@blueprintjs/core';
 
 import Screen from 'src/components/common/Screen';
 import DualPane from 'src/components/common/DualPane';
 
-import 'ErrorScreen.css';
-
-const messages = defineMessages({
-  no_route_error: {
-    id: 'errorscreen.no_route_error',
-    defaultMessage: 'Page not found',
-  },
-});
+import './ErrorScreen.css';
 
 class EmptyList extends Component {
   render() {
     const {title, intl} = this.props;
+    let visual = this.props.visual !== undefined ? this.props.visual : 'error';
+    let description = this.props.description !== undefined ? this.props.description
+      : '';
+    console.log(title, visual, description)
 
     return (
       <div className='outer-div'>
         <div className='inner-div'>
           <NonIdealState
-            visual="error"
+            visual={visual}
             title={intl.formatMessage(title)}
+            description={description}
           />
         </div>
       </div>
@@ -33,14 +31,19 @@ class EmptyList extends Component {
 
 class PageNotFound extends Component {
   render() {
-    const {intl} = this.props;
+    const {intl, title} = this.props;
+    let visual = this.props.visual !== undefined ? this.props.visual : 'error';
+    let description = this.props.description !== undefined ? this.props.description
+      : '';
+    console.log(title, visual, description)
     return (
       <Screen>
         <DualPane>
           <DualPane.ContentPane>
             <NonIdealState
-              visual="error"
-              title={intl.formatMessage(messages.no_route_error)}
+              visual={visual}
+              title={intl.formatMessage(title)}
+              description={description}
             />
           </DualPane.ContentPane>
         </DualPane>
