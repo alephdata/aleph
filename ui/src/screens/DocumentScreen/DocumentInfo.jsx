@@ -1,16 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import { Tab, Tabs } from "@blueprintjs/core";
+import { Tab, Tabs, Button } from "@blueprintjs/core";
 
-import Entity from 'src/screens/EntityScreen/Entity';
-import EntityInfoTags from 'src/screens/EntityScreen/EntityInfoTags';
-import DualPane from 'src/components/common/DualPane';
-import Schema from 'src/components/common/Schema';
-import DocumentMetadata from 'src/screens/DocumentScreen/DocumentMetadata';
-import CollectionOverview from 'src/components/Collection/CollectionOverview';
 import URL from 'src/components/common/URL';
 import { selectEntityTags } from 'src/selectors';
+import DualPane from 'src/components/common/DualPane';
+import { Toolbar, CloseButton, DownloadButton } from 'src/components/Toolbar';
+import TabCount from 'src/components/common/TabCount';
+import Schema from 'src/components/common/Schema';
+import Entity from 'src/screens/EntityScreen/Entity';
+import EntityInfoTags from 'src/screens/EntityScreen/EntityInfoTags';
+import DocumentMetadata from 'src/screens/DocumentScreen/DocumentMetadata';
+import CollectionOverview from 'src/components/Collection/CollectionOverview';
 
 class DocumentInfo extends React.Component {
   constructor(props) {
@@ -26,15 +28,28 @@ class DocumentInfo extends React.Component {
   }
 
   render() {
-    const { document } = this.props;
+    const { document: doc, tags, showToolbar, toggleMaximise } = this.props;
+    const tagsTotal = tags !== undefined ? tags.total : undefined;
+    
     return (
       <DualPane.InfoPane className="DocumentInfo with-heading">
+        {showToolbar && (
+          <Toolbar className='toolbar-preview'>
+            <Button icon="eye-open"
+              className="button-maximise"
+              onClick={toggleMaximise}>
+              <FormattedMessage id="preview" defaultMessage="Preview"/>
+            </Button>
+            <DownloadButton document={doc}/>
+            <CloseButton/>
+          </Toolbar>
+        )}
         <div className="pane-heading">
           <span>
-            <Schema.Label schema={document.schema} icon={true} />
+            <Schema.Label schema={doc.schema} icon={true}/>
           </span>
           <h1>
-            <Entity.Label entity={document} addClass={true}/>
+            <Entity.Label entity={doc} addClass={true}/>
           </h1>
         </div>
         <div className="pane-content">
@@ -45,7 +60,7 @@ class DocumentInfo extends React.Component {
                      <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
                   </React.Fragment>
                 }
-                panel={<DocumentMetadata document={document}/>} 
+                panel={<DocumentMetadata document={doc}/>} 
               />
               <Tab id="source" 
                 title={
@@ -55,8 +70,8 @@ class DocumentInfo extends React.Component {
                 }
                 panel={
                   <React.Fragment>
-                  <CollectionOverview collection={document.collection}/>
-                  {document.source_url && (
+                  <CollectionOverview collection={doc.collection}/>
+                  {doc.source_url && (
                     <ul className='info-sheet'>
                       <li>
                         <span className="key">
@@ -64,7 +79,7 @@ class DocumentInfo extends React.Component {
                                             defaultMessage="Document Source URL"/>
                         </span>
                         <span className="value">
-                          <URL value={document.source_url} />
+                          <URL value={doc.source_url} />
                         </span>
                       </li>
                     </ul>
@@ -72,14 +87,14 @@ class DocumentInfo extends React.Component {
                   </React.Fragment>
                 }
               />
-              <Tab id="tags"
+              <Tab id="tags" disabled={!tagsTotal || tagsTotal === 0}
                 title={
                   <React.Fragment>
-                    <FormattedMessage id="document.info.tags"
-                                      defaultMessage="Tags"/>
+                    <FormattedMessage id="document.info.tags" defaultMessage="Tags"/>
+                    <TabCount count={tagsTotal} />
                   </React.Fragment>
                 }
-                panel={<EntityInfoTags entity={document} />}
+                panel={<EntityInfoTags entity={doc} />}
               />
               <Tabs.Expander />
           </Tabs>

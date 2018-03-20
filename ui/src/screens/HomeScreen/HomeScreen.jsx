@@ -66,34 +66,37 @@ class HomeScreen extends Component {
           <div className='outer-searchbox'>
             <div className='inner-searchbox'>
               <div className='homepage-summary'>
+              {total && collections && (
                 <FormattedMessage id='home.summary'
-                                  defaultMessage="Search {total} public records, scrapes, and leaks from {collections} global sources."
+                                  defaultMessage="Search {total} public records from {collections} sources"
                                   values={{
                                     total: total,
                                     collections: collections
                                   }}
                                   />
+              )}
               </div>
               <form onSubmit={this.onSubmit} className="search-form">
                 <div className="pt-input-group pt-large">
                   <span className="pt-icon pt-icon-search search_span"/>
                   <input className="pt-input search_input"
-                          type="text"
-                          placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
-                          dir="auto"
-                          onChange={this.onChange}
-                          value={this.state.value}/>
+                         type="search"
+                         placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
+                         dir="auto"
+                         onChange={this.onChange}
+                         value={this.state.value}
+                         autoFocus/>
                 </div>
               </form>
               
               <div className="calls-to-action">
-                <a className="pt-button pt-large pt-intent-primary pt-icon-search" onClick={this.onSubmit}>
+                <a className="pt-button pt-large pt-icon-search" onClick={this.onSubmit}>
                   <FormattedMessage id='home.search'
-                                    defaultMessage="Search" />
+                                    defaultMessage="Search records" />
                 </a>
-                <Link className="pt-button pt-large pt-intent-primary pt-icon-database" to="/collections">
+                <Link className="pt-button pt-large pt-icon-database" to="/collections">
                   <FormattedMessage id='home.explore'
-                                    defaultMessage="Explore sources..." />
+                                    defaultMessage="Browse sources" />
                 </Link>
               </div>
             </div>

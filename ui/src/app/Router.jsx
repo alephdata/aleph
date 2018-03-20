@@ -6,7 +6,7 @@ import { Spinner } from '@blueprintjs/core';
 import { fetchMetadata } from 'src/actions';
 import EntityScreen from 'src/screens/EntityScreen';
 import ErrorScreen from 'src/components/ErrorScreen';
-import CollectionScreen from 'src/components/CollectionScreen';
+import CollectionScreen from 'src/screens/CollectionScreen';
 
 import LoginScreen from 'src/screens/LoginScreen/LoginScreen';
 import LogoutScreen from 'src/screens/LogoutScreen/LogoutScreen';

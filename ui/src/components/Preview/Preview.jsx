@@ -1,20 +1,22 @@
+/*
+ * @TODO This has gotten a bit large and there is some scope for refactoring.
+ * Moving some of the logic out of the render and into componentWillReceiveProps
+ * would be a good idea. This might require some extra state options though.
+ */
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
-import { Button } from '@blueprintjs/core';
+import classnames from 'classnames';
 
 import Fragment from 'src/app/Fragment';
-import getPath from 'src/util/getPath';
 import { fetchCollection, fetchEntity, fetchDocument } from 'src/actions';
-import CollectionInfo from 'src/components/CollectionScreen/CollectionInfo';
+import CollectionInfo from 'src/screens/CollectionScreen/CollectionInfo';
 import DocumentInfo from 'src/screens/DocumentScreen/DocumentInfo';
 import { DocumentViewer } from 'src/components/DocumentViewer';
 import EntityInfo from 'src/screens/EntityScreen/EntityInfo';
 import SectionLoading from 'src/components/common/SectionLoading';
-import { Toolbar, CloseButton, DownloadButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
 
 import './Preview.css';
 
@@ -27,9 +29,7 @@ const defaultState = {
   previewTab: null,
   collection: null,
   entity: null,
-  document: null,
-  numberOfPages: 0,
-  queryText: ''
+  document: null
 }
 
 class Preview extends React.Component {
@@ -42,26 +42,8 @@ class Preview extends React.Component {
     this.state.document = props.document || null;
     this.handleScroll = this.handleScroll.bind(this);
     this.toggleMaximise = this.toggleMaximise.bind(this);
-    this.onDocumentLoad = this.onDocumentLoad.bind(this);
-    this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
   }
 
-  onDocumentLoad(documentInfo) {
-    if (documentInfo) {
-      if (documentInfo.numPages) {
-        this.setState({
-          numberOfPages: documentInfo.numPages
-        });
-      }
-    }
-  }
-
-  onSearchQueryChange(queryText) {
-    this.setState({
-      queryText: queryText
-    });
-  }
-  
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
     this.handleScroll();
@@ -174,11 +156,6 @@ class Preview extends React.Component {
       maximised: newMaximiseState
     })
 
-    // @FIXME: This is a hack to trigger window resize event when displaying
-    // a document preview. This forces the PDF viewer to display at the 
-    // right size (otherwise it displays at the incorrect height).    
-    if (newMaximiseState === true)
-      setTimeout(() => {window.dispatchEvent(new Event('resize')) }, 1000);
     
     // @EXPERIMENTAL - Enable if content padding is enabled in handleScroll()
     // this.handleScroll();
@@ -194,96 +171,54 @@ class Preview extends React.Component {
             entity,
             document: doc
           } = this.state;
-    const { numberOfPages } = this.state;
     
     let className = 'Preview'
 
-    let view = null,
-        link = null,
-        linkIcon = null,
-        showQuickPreview = false;
+    let view = null;
     
     if (previewType === 'collection' && collection && collection.links && !collection.isFetching) {      
-      view = <CollectionInfo collection={collection} />;
-      link = getPath(collection.links.ui);
-      linkIcon = 'folder-open';
-    }
-    if (previewType === 'entity' && entity && entity.links && !entity.isFetching) {
-      view = <EntityInfo entity={entity} />;
-      link = getPath(entity.links.ui);
-      linkIcon = 'folder-open';
-    }
-    
-    if (previewType === 'document') {
-      // Allow quick previews on documents
-      showQuickPreview = true;
-    
+      view = <CollectionInfo collection={collection} showToolbar={true} />;
+    } else if (previewType === 'entity' && entity && entity.links && !entity.isFetching) {
+      view = <EntityInfo entity={entity}  showToolbar={true} />;
+    } else if (previewType === 'document') {
       if (doc && doc.links && !doc.isFetching) {
-        view = (maximised === true) ? <DocumentViewer document={doc} queryText={this.state.queryText} onDocumentLoad={this.onDocumentLoad} /> : <DocumentInfo document={doc} />;
-        link = getPath(doc.links.ui);
-        linkIcon = 'document';
+        if (maximised === true) {
+          // Only allow Preview to have be maximised for document previews
+          className = classnames('maximised', className);
+          // If document preview is maximised, show document content preview
+          view = <DocumentViewer document={doc} toggleMaximise={this.toggleMaximise} showToolbar={true} previewMode={true} />;
+        } else {
+          // If document preview is not maximised, show document info
+          view = <DocumentInfo document={doc} toggleMaximise={this.toggleMaximise} showToolbar={true} />;
+        }
       }
     }
     
-    // Only allow Preview to be maximised if Quick Previews are enabled
-    if (showQuickPreview === true && maximised === true)
-      className += ' maximised'
-      
     if (view !== null) {
-      // If we have a document and it's ready to render
+      // If we have a document and it's ready to render display it
       return (
         <div id="Preview" className={className} style={{
           top: previewTop,
           bottom: previewBottom
           }}>
-          <Toolbar className="color">
-            {showQuickPreview === true && (
-              <Button icon="eye-open"
-                className={`button-maximise ${(maximised) ? 'pt-active' : ''}`}
-                onClick={this.toggleMaximise}>
-                <FormattedMessage id="preview" defaultMessage="Preview"/>
-              </Button>
-            )}
-            {previewType !== 'collection' && (
-              <Link to={link} className="pt-button button-link">
-                <span className={`pt-icon-${linkIcon}`}/>
-                <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
-              </Link>
-            )}
-            {previewType !== 'collection' && (
-              <DownloadButton document={doc}/>
-            )}
-            {showQuickPreview === true && maximised && (
-              <PagingButtons document={doc} numberOfPages={numberOfPages}/>
-            )}
-            <CloseButton/>
-            {showQuickPreview === true && maximised && (
-              <DocumentSearch document={doc} queryText={this.state.queryText} onSearchQueryChange={this.onSearchQueryChange}/>
-            )}
-          </Toolbar>
           {view}
         </div>
       );
-  } else if (previewId !== null) {
-      // If we have an element to load but it's not ready to render yet
-      // (We could add a loading spinner if we want.)
-      className += ' loading'
+    } else if (previewId !== null) {
+      // Handle when we have an element to load but it's not ready to render yet
       return (
-        <div id="Preview" className={className} style={{
+        <div id="Preview" className={classnames('loading', className)} style={{
           top: previewTop,
           bottom: previewBottom
           }}>
-          <Toolbar className="color">
-            <CloseButton/>
-          </Toolbar>
           <SectionLoading/>
         </div>
       );
     } else {
-      // If we have no element to display, don't render
-      className += ' hidden'
+      // Handle if we have no element to display - renders hidden (0px width)
+      // Note: We don't return null as we want a hide animation to happen!
       return (
-        <div id="Preview" className={className} style={{
+        <div id="Preview" className={classnames('hidden', className)} style={{
           top: previewTop,
           bottom: previewBottom
           }} />
@@ -305,16 +240,13 @@ const mapStateToProps = (state, ownProps) => {
     
     if (previewType === 'collection' && state.collections[previewId]) {
       collection = state.collections[previewId];
-    }
-    
-    if (previewType === 'entity' && state.entities[previewId]) {
+    } else if (previewType === 'entity' && state.entities[previewId]) {
       entity = state.entities[previewId];
-    }
-    
-    if (previewType === 'document' && state.entities[previewId]) {
+    } else if (previewType === 'document' && state.entities[previewId]) {
       doc = state.entities[previewId];
     }
   }
+  
   return {
     collection: collection,
     entity: entity,

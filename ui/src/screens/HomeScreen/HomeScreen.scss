@@ -1,12 +1,18 @@
 @import 'src/app/variables.scss';
 
 .HomePage {
-  background-color: $aleph-banner-background; // fallback for when image is lacking.
-  background-image: url("../../assets/europe_asia_dark.png");
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  min-height: 400px;
+  padding: 4em 0;
+  background-color: black;
+  background-image: url("../../assets/europe_asia_dark.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  min-height: 95vh;
   text-align: center;
 
   .outer-searchbox {
@@ -14,6 +20,7 @@
     position: absolute;
     height: 80%;
     width: 100%;
+    padding: $aleph-grid-size * 2;
   }
 
   h4 {
@@ -46,10 +53,9 @@
   }
 
   .homepage-summary {
-    margin-bottom: 1em;
-    font-size: $pt-font-size-large * 1.2;
-    font-weight: bold;
-    // color: $light-gray2;
+    margin-bottom: 0.5em;
+    font-size: $pt-font-size-large * 2.2;
+    min-height: $pt-font-size-large * 3;
     color: white;
   }
 
