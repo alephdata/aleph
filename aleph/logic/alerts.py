@@ -10,8 +10,6 @@ from aleph.index.entities import get_entity
 from aleph.index.util import unpack_result
 from aleph.search import AlertDocumentsQuery, SearchQueryParser
 from aleph.logic.notifications import publish
-from aleph.logic.documents import document_url
-from aleph.logic.collections import collection_url
 
 log = logging.getLogger(__name__)
 
