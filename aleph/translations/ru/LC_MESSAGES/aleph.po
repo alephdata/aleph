@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-03-15 19:48+0100\n"
+"POT-Creation-Date: 2018-03-21 14:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -21,15 +21,15 @@ msgstr ""
 
 #: aleph/settings.py:44
 msgid "Aleph"
-msgstr ""
+msgstr "Алеф"
 
 #: aleph/settings.py:54
 msgid "TeliaSonera"
-msgstr ""
+msgstr "TeliaSonera"
 
 #: aleph/settings.py:54
 msgid "Vladimir Putin"
-msgstr ""
+msgstr "Владимир Путин"
 
 #: aleph/model/collection.py:24
 msgid "News archives"
@@ -49,7 +49,7 @@ msgstr "Вестники"
 
 #: aleph/model/collection.py:28
 msgid "Court archives"
-msgstr "Судебные архивы"
+msgstr "Архивы судебных документов"
 
 #: aleph/model/collection.py:29
 msgid "Company registries"
@@ -61,7 +61,7 @@ msgstr "Контрольные и розыскные списки"
 
 #: aleph/model/collection.py:31
 msgid "Personal collections"
-msgstr "Личные коллекции"
+msgstr "Индивидуальные коллекции"
 
 #: aleph/model/collection.py:32
 msgid "Sanctions lists"
@@ -69,7 +69,7 @@ msgstr "Санкционные списки"
 
 #: aleph/model/collection.py:33
 msgid "Scrapes"
-msgstr "Данные, загруженные с сайтов"
+msgstr "Веб-скрэйпинг"
 
 #: aleph/model/collection.py:34
 msgid "Procurement"
@@ -77,11 +77,11 @@ msgstr "Закупки"
 
 #: aleph/model/collection.py:35
 msgid "Grey literature"
-msgstr "Утечки"
+msgstr "Секретные документы"
 
 #: aleph/model/collection.py:36
 msgid "Licenses and concessions"
-msgstr "Лицензии и концессии"
+msgstr "Лицензии и концессионные соглашения"
 
 #: aleph/model/collection.py:37
 msgid "Regulatory filings"
@@ -91,18 +91,18 @@ msgstr "Распорядительные документы"
 msgid "Other material"
 msgstr "Прочие материалы"
 
-#: aleph/views/base_api.py:82
+#: aleph/views/base_api.py:73
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ устарел, пожалуйста, используйте /api/2/."
 
-#: aleph/views/base_api.py:90
+#: aleph/views/base_api.py:81
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:99
+#: aleph/views/base_api.py:90
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:115
+#: aleph/views/base_api.py:106
 msgid "Access token has expired."
 msgstr "Ключ доступа устарел."
