@@ -1,26 +1,33 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
+import Fragment from 'src/app/Fragment';
 import EntityReferencesTable from 'src/screens/EntityScreen/EntityReferencesTable';
 import Property from './Property';
 
 class EntityReferences extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      activeTabId: 'entity-reference-tab-0'
-    };
+    this.state = {};
     this.handleTabChange = this.handleTabChange.bind(this);
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ activeTab: nextProps.activeTab });
+  }
   
-  handleTabChange(activeTabId: TabId) {
-    this.setState({ activeTabId });
+  handleTabChange(activeTab) {
+    const { fragment } = this.props;
+    fragment.update({'content:tab': activeTab});
+    this.setState({ activeTab })
   }
   
   render() {
     const { entity, references } = this.props;
+    const { activeTab } = this.state;
 
     if (!references || references.isFetching) {
       return null;
@@ -42,25 +49,24 @@ class EntityReferences extends React.Component {
         </React.Fragment>
       );
     }
-  
+
     return (
       <section>
-        <Tabs id="EntityReferenceTabs" large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
-        { references.results.map((ref, i) => {
-          return <Tab id={`entity-reference-tab-${i}`}
-            title={<Property.Reverse model={ref.property} />}
-            panel={
-              <React.Fragment>
-                <EntityReferencesTable
-                  key={ref.property.qname}
-                  entity={entity}
-                  schema={ref.schema}
-                  property={ref.property}
-                 /> 
-              </React.Fragment>
-            }
-          />
-        })}
+        <Tabs id="EntityReferenceTabs" onChange={this.handleTabChange} selectedTabId={activeTab}>
+          { references.results.map((ref, i) => {
+            return <Tab id={`references-${ref.property.qname}`} key={i}
+              title={<Property.Reverse model={ref.property} />}
+              panel={
+                <React.Fragment>
+                  <EntityReferencesTable
+                    entity={entity}
+                    schema={ref.schema}
+                    property={ref.property}
+                  /> 
+                </React.Fragment>
+              }
+            />
+          })}
         </Tabs>
       </section>
     );
@@ -68,26 +74,14 @@ class EntityReferences extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const fragment = new Fragment(ownProps.history);
   const references = state.entityReferences[ownProps.entity.id];
-  return {references};
+  const reference = (references && references.results && references.results.length) ? references.results[0] : undefined;
+  const defaultTab = reference ? 'references-' + reference.property.qname : undefined;
+  const activeTab = fragment.get('content:tab') || defaultTab;
+  return { fragment, references, activeTab };
 };
 
-export default connect(mapStateToProps, {})(EntityReferences);
-
-/*
-        <section className="PartialError">
-          <div className="pt-non-ideal-state">
-            <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-              <span className="pt-icon pt-icon-link"></span>
-            </div>
-            <h4 className="pt-non-ideal-state-title">
-              <FormattedMessage id="entity.references.empty"
-                                defaultMessage="No relationships"/>
-            </h4>
-            <div className="pt-non-ideal-state-description">
-              <FormattedMessage id="entity.references.empty.description"
-                                defaultMessage="Not currently related to other entities or documents."/>
-            </div>
-          </div>
-        </section>
-*/
+EntityReferences = connect(mapStateToProps, {})(EntityReferences)
+EntityReferences = withRouter(EntityReferences);
+export default EntityReferences;

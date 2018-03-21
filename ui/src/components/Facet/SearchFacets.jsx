@@ -4,7 +4,6 @@ import SearchFacet from './SearchFacet';
 
 import './SearchFacets.css';
 
-
 class SearchFacets extends Component {
   render() {
     const { facets, query, updateQuery } = this.props;
@@ -13,7 +12,6 @@ class SearchFacets extends Component {
         {facets.map((facet) => (
           <li className="facet" key={facet.field}>
             <SearchFacet
-              initiallyOpen={facet.initiallyOpen}
               query={query}
               updateQuery={updateQuery}
               field={facet.field}

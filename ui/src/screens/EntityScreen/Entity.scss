@@ -1,10 +1,11 @@
 @import "src/app/variables.scss";
 
 .EntityLabel {
+  /* @TODO Refactor Entity to use .pt-text-muted instead of .untitled class */
+  /* Using opacity change (instead of fixed color) is an interim measure */
   &.untitled {
-    color: $aleph-greyed-text;
-    // font-variant: small-caps;
     text-transform: uppercase;
+    opacity: 0.5;
   }
 }
 

@@ -19,7 +19,7 @@ import './CollectionsIndexScreen.css';
 const messages = defineMessages({
   filter: {
     id: 'collectionbrowser.filter',
-    defaultMessage: 'Filter collections',
+    defaultMessage: 'Filter sources',
   },
   facet_category: {
     id: 'search.facets.facet.category',
@@ -44,13 +44,12 @@ class CollectionsIndexScreen extends Component {
           field: 'category',
           label: intl.formatMessage(messages.facet_category),
           icon: 'list',
-          initiallyOpen: true
+          defaultSize: 20
         },
         {
           field: 'countries',
           label: intl.formatMessage(messages.facet_countries),
           icon: 'globe',
-          initiallyOpen: true,
           defaultSize: 300
         },
       ]
@@ -114,10 +113,10 @@ class CollectionsIndexScreen extends Component {
       <li>
         <a className="pt-breadcrumb">
           <FormattedMessage id="collection.browser.breadcrumb"
-                            defaultMessage="Collections overview" />
+                            defaultMessage="Sources overview" />
         </a>
       </li>
-    </Breadcrumbs>)
+    </Breadcrumbs>);
 
     return (
       <Screen className="CollectionsIndexScreen" breadcrumbs={breadcrumbs}>
@@ -131,7 +130,7 @@ class CollectionsIndexScreen extends Component {
             </div>
             <p className="note">
               <FormattedMessage id="collection.browser.total"
-                                defaultMessage="Browsing {total} collections."
+                                defaultMessage="Browsing {total} sources."
                                 values={{
                                   total: <FormattedNumber value={result.total || 0} />
                                 }}/>
@@ -164,7 +163,7 @@ class CollectionsIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const query = Query.fromLocation('collections', ownProps.location, {}, 'collections:')
+  const query = Query.fromLocation('collections', ownProps.location, {}, 'collections')
     .sortBy('count', true)
     .limit(30);
 

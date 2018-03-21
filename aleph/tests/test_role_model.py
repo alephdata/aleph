@@ -29,10 +29,10 @@ class RoleModelTest(TestCase):
         self.assertIsNone(Role.by_email(None))
 
     def test_by_email_does_not_match(self):
-        self.assertIsNone(Role.by_email(self.fake.email()).first())
+        self.assertIsNone(Role.by_email(self.fake.email()))
 
     def test_by_email_matches(self):
-        self.assertEqual(Role.by_email(self.role.email).first(), self.role)
+        self.assertEqual(Role.by_email(self.role.email), self.role)
 
     def test_load_or_create_role_exists(self):
         self.assertEqual(

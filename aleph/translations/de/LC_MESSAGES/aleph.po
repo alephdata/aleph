@@ -1,0 +1,108 @@
+# Translations template for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-03-16 11:09+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: pudo <friedrich@pudo.org>, 2018\n"
+"Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.5.1\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: aleph/settings.py:44
+msgid "Aleph"
+msgstr "Aleph"
+
+#: aleph/settings.py:54
+msgid "TeliaSonera"
+msgstr "TeliaSonera"
+
+#: aleph/settings.py:54
+msgid "Vladimir Putin"
+msgstr "Gerhard Schröder"
+
+#: aleph/model/collection.py:24
+msgid "News archives"
+msgstr "Nachrichtenarchive"
+
+#: aleph/model/collection.py:25
+msgid "Leaks"
+msgstr "Geleakte Daten"
+
+#: aleph/model/collection.py:26
+msgid "Land registry"
+msgstr "Grundbuchämter"
+
+#: aleph/model/collection.py:27
+msgid "Gazettes"
+msgstr "Anzeiger"
+
+#: aleph/model/collection.py:28
+msgid "Court archives"
+msgstr "Gerichtsarchive"
+
+#: aleph/model/collection.py:29
+msgid "Company registries"
+msgstr "Firmenregister"
+
+#: aleph/model/collection.py:30
+msgid "Watchlists"
+msgstr "Suchlisten"
+
+#: aleph/model/collection.py:31
+msgid "Personal collections"
+msgstr "Persönliche Sammlungen"
+
+#: aleph/model/collection.py:32
+msgid "Sanctions lists"
+msgstr "Sanktionslisten"
+
+#: aleph/model/collection.py:33
+msgid "Scrapes"
+msgstr "Scrapes"
+
+#: aleph/model/collection.py:34
+msgid "Procurement"
+msgstr "Auftragsvergabe"
+
+#: aleph/model/collection.py:35
+msgid "Grey literature"
+msgstr "Graue Literatur"
+
+#: aleph/model/collection.py:36
+msgid "Licenses and concessions"
+msgstr "Lizenzen und Zulassungen"
+
+#: aleph/model/collection.py:37
+msgid "Regulatory filings"
+msgstr "Aufsichtsbekanntmachungen"
+
+#: aleph/model/collection.py:38
+msgid "Other material"
+msgstr "Anderes Material"
+
+#: aleph/views/base_api.py:84
+msgid "/api/1/ is deprecated, please use /api/2/."
+msgstr "/api/1/ is deprecated, please use /api/2/."
+
+#: aleph/views/base_api.py:92
+msgid "You are not authorized to do this."
+msgstr "Sie sind nicht autorisiert, dies zu tun."
+
+#: aleph/views/base_api.py:101
+msgid "This path does not exist."
+msgstr "Dieser Pfad existiert nicht."
+
+#: aleph/views/base_api.py:117
+msgid "Access token has expired."
+msgstr "Access token ist ausgelaufen."

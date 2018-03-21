@@ -8,13 +8,15 @@ $aleph-border-radius: $pt-border-radius;
 
 $aleph-page-background: $light-gray5;
 $aleph-banner-background: $dark-gray3;
-$aleph-sidebar-background: $dark-gray4;
+$aleph-sidebar-background: darken($pt-intent-primary, 10%);
 $aleph-toolbar-background: $aleph-page-background;
 $aleph-footer-background: $light-gray4;
 $aleph-facet-background: $light-gray4;
+$aleph-table-heading-background: $light-gray4;
+$aleph-table-border-color: $light-gray2;
 $aleph-hover-background: $light-gray5;
 $aleph-content-background: white;
-$aleph-border-color: $pt-divider-black;
+$aleph-border-color: $light-gray2;
 $aleph-dark-text-color: $pt-dark-text-color;
 $aleph-greyed-text: $gray3;
 

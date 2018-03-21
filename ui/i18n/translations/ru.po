@@ -1,7 +1,9 @@
-# 
+# Translators:
+# jen occrp <jen@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2017-07-12T10:53:50.428Z\n"
+"POT-Creation-Date: 2018-03-18T20:46:43.993Z\n"
+"Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,16 +12,1192 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: react-intl-po\n"
 
-#. [nav.documents]
+#. [property.inverse]
 #. defaultMessage is:
-#. Documents
+#. '{name}' of …
 #: i18n/messages.json
-msgid "Documents"
+msgid "'{name}' of …"
+msgstr "'{name}' …"
+
+#. [settings.password_confirm]
+#. defaultMessage is:
+#. (confirm)
+#: i18n/messages.json
+msgid "(confirm)"
+msgstr "(подтвердить)"
+
+#. [collection.edit.info.placeholder_summary]
+#. defaultMessage is:
+#. A brief summary of this source
+#: i18n/messages.json
+msgid "A brief summary of this source"
+msgstr "Краткое описание источника"
+
+#. [collection.edit.info.placeholder_label]
+#. defaultMessage is:
+#. A label for this source
+#: i18n/messages.json
+msgid "A label for this source"
+msgstr "Метка для источника"
+
+#. [settings.api_key]
+#. defaultMessage is:
+#. API Secret Access Key
+#: i18n/messages.json
+msgid "API Secret Access Key"
+msgstr "API-ключ"
+
+#. [collection.info.access]
+#. defaultMessage is:
+#. Access
+#: i18n/messages.json
+msgid "Access"
+msgstr "Доступ"
+
+#. [password_auth.activate]
+#. defaultMessage is:
+#. Activate
+#: i18n/messages.json
+msgid "Activate"
+msgstr "Активировать"
+
+#. [signup.title]
+#. defaultMessage is:
+#. Activate your account
+#: i18n/messages.json
+msgid "Activate your account"
+msgstr "Активирируйте аккаунт"
+
+#. [alerts.add]
+#. defaultMessage is:
+#. Add
+#: i18n/messages.json
+msgid "Add"
+msgstr "Добавить"
+
+#. [search.facets.facet.addresses]
+#. defaultMessage is:
+#. Addresses
+#: i18n/messages.json
+msgid "Addresses"
+msgstr "Адреса"
+
+#. [nav.alerts]
+#. defaultMessage is:
+#. Alerts
+#: i18n/messages.json
+msgid "Alerts"
+msgstr "Оповещения"
+
+#. [password_auth.has_account]
+#. defaultMessage is:
+#. Already have an account?
+#: i18n/messages.json
+msgid "Already have an account?"
+msgstr "У вас уже есть аккаунт?"
+
+#. [auth.unknown_error]
+#. defaultMessage is:
+#. An unexpected error occured
+#: i18n/messages.json
+msgid "An unexpected error occured"
+msgstr "Произошла ошибка"
+
+#. [email.attachments]
+#. defaultMessage is:
+#. Attachments
+#: i18n/messages.json
+msgid "Attachments"
+msgstr "Вложения"
+
+#. [document.author]
+#. defaultMessage is:
+#. Author
+#: i18n/messages.json
+msgid "Author"
+msgstr "Автор"
+
+#. [document.authored_at]
+#. defaultMessage is:
+#. Authored
+#: i18n/messages.json
+msgid "Authored"
+msgstr "Документ отредактирован"
+
+#. [search.facets.facet.author]
+#. defaultMessage is:
+#. Authors
+#: i18n/messages.json
+msgid "Authors"
+msgstr "Авторы"
+
+#. [email.bcc]
+#. defaultMessage is:
+#. BCC
+#: i18n/messages.json
+msgid "BCC"
+msgstr "Скрытая копия"
+
+#. [collection.browser.total]
+#. defaultMessage is:
+#. Browsing {total} sources.
+#: i18n/messages.json
+msgid "Browsing {total} sources."
+msgstr "Всего источников: {total}."
+
+#. [email.cc]
+#. defaultMessage is:
+#. CC
+#: i18n/messages.json
+msgid "CC"
+msgstr "Копия"
+
+#. [search.facets.facet.category]
+#. defaultMessage is:
+#. Categories
+#: i18n/messages.json
+msgid "Categories"
+msgstr "Категории"
+
+#. [collection.info.category]
+#. defaultMessage is:
+#. Category
+#. [collection.category]
+#. defaultMessage is:
+#. Category
+#. [collection.edit.info.category]
+#. defaultMessage is:
+#. Category
+#: i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Category"
+msgstr "Категория"
+
+#. [signup.inbox.title]
+#. defaultMessage is:
+#. Check your inbox
+#: i18n/messages.json
+msgid "Check your inbox"
+msgstr "Проверьте почту"
+
+#. [role.select.user]
+#. defaultMessage is:
+#. Choose a user
+#: i18n/messages.json
+msgid "Choose a user"
+msgstr "Выберите пользователя"
+
+#. [search.facets.clear_filter]
+#. defaultMessage is:
+#. Clear this filter
+#: i18n/messages.json
+msgid "Clear this filter"
+msgstr "Убрать фильтр"
+
+#. [footer.code]
+#. defaultMessage is:
+#. Code
+#: i18n/messages.json
+msgid "Code"
+msgstr "Код"
+
+#. [collection.edit.info.contact]
+#. defaultMessage is:
+#. Contact
+#: i18n/messages.json
+msgid "Contact"
+msgstr "Контакт"
+
+#. [entity.column.countries]
+#. defaultMessage is:
+#. Countries
+#. [collection.edit.info.countries]
+#. defaultMessage is:
+#. Countries
+#. [search.facets.facet.countries]
+#. defaultMessage is:
+#. Countries
+#. [xref.countries]
+#. defaultMessage is:
+#. Countries
+#. [document.countries]
+#. defaultMessage is:
+#. Countries
+#. [search.facets.facet.countries]
+#. defaultMessage is:
+#. Countries
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
+msgid "Countries"
+msgstr "Страны"
+
+#. [collection.info.countries]
+#. defaultMessage is:
+#. Country
+#. [collection.countries]
+#. defaultMessage is:
+#. Country
+#: i18n/messages.json i18n/messages.json
+msgid "Country"
+msgstr "Страна"
+
+#. [collection.info.source]
+#. defaultMessage is:
+#. Cross-reference
+#: i18n/messages.json
+msgid "Cross-reference"
+msgstr "Сопоставить"
+
+#. [collection.xref.crumb]
+#. defaultMessage is:
+#. Cross-referencing
+#: i18n/messages.json
+msgid "Cross-referencing"
+msgstr "Сопоставление"
+
+#. [email.date]
+#. defaultMessage is:
+#. Date
+#. [entity.column.dates]
+#. defaultMessage is:
+#. Date
+#. [xref.date]
+#. defaultMessage is:
+#. Date
+#. [document.date]
+#. defaultMessage is:
+#. Date
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Date"
+msgstr "Дата"
+
+#. [alerts.delete]
+#. defaultMessage is:
+#. Delete
+#: i18n/messages.json
+msgid "Delete"
+msgstr "Удалить"
+
+#. [document.info.source_url]
+#. defaultMessage is:
+#. Document Source URL
+#: i18n/messages.json
+msgid "Document Source URL"
+msgstr "Источник документа"
+
+#. [document.status_fail]
+#. defaultMessage is:
+#. Document failed to import
+#: i18n/messages.json
+msgid "Document failed to import"
+msgstr "Не удалось импортировать документ"
+
+#. [document.not_found]
+#. defaultMessage is:
+#. Document not found
+#: i18n/messages.json
+msgid "Document not found"
+msgstr "Документ не найден"
+
+#. [document.download]
+#. defaultMessage is:
+#. Download
+#: i18n/messages.json
+msgid "Download"
+msgstr "Скачать"
+
+#. [search.facets.facet.emails]
+#. defaultMessage is:
+#. E-Mails
+#: i18n/messages.json
+msgid "E-Mails"
+msgstr "Эл. почта"
+
+#. [settings.email]
+#. defaultMessage is:
+#. E-mail Address
+#: i18n/messages.json
+msgid "E-mail Address"
+msgstr "Электронный адрес"
+
+#. [collection.edit.permissionstable.edit]
+#. defaultMessage is:
+#. Edit
+#: i18n/messages.json
+msgid "Edit"
+msgstr "Редактировать"
+
+#. [collection.info.edit]
+#. defaultMessage is:
+#. Edit info
+#: i18n/messages.json
+msgid "Edit info"
+msgstr "Редактировать информацию"
+
+#. [password_auth.email]
+#. defaultMessage is:
+#. Email address
+#: i18n/messages.json
+msgid "Email address"
+msgstr "Электронные адреса"
+
+#. [entity.not_found]
+#. defaultMessage is:
+#. Entity not found
+#: i18n/messages.json
+msgid "Entity not found"
+msgstr "Сущность не найдена"
+
+#. [home.explore]
+#. defaultMessage is:
+#. Explore sources...
+#: i18n/messages.json
+msgid "Explore sources..."
+msgstr "Подробнее об источниках"
+
+#. [document.file_name]
+#. defaultMessage is:
+#. File name
+#: i18n/messages.json
+msgid "File name"
+msgstr "Имя файла"
+
+#. [document.file_size]
+#. defaultMessage is:
+#. File size
+#: i18n/messages.json
+msgid "File size"
+msgstr "Размер файла"
+
+#. [search.facets.facet.mime_type]
+#. defaultMessage is:
+#. File types
+#: i18n/messages.json
+msgid "File types"
+msgstr "Типы файлов"
+
+#. [collectionbrowser.filter]
+#. defaultMessage is:
+#. Filter sources
+#: i18n/messages.json
+msgid "Filter sources"
+msgstr "Отфильтровать источники"
+
+#. [document.placeholder_table_filter]
+#. defaultMessage is:
+#. Filter this table
+#: i18n/messages.json
+msgid "Filter this table"
+msgstr "Отфильтровать таблицу"
+
+#. [document.parent]
+#. defaultMessage is:
+#. Folder
+#: i18n/messages.json
+msgid "Folder"
+msgstr "Папка"
+
+#. [email.from]
+#. defaultMessage is:
+#. From
+#: i18n/messages.json
+msgid "From"
+msgstr "От"
+
+#. [document.generator]
+#. defaultMessage is:
+#. Generator
+#: i18n/messages.json
+msgid "Generator"
+msgstr "Генератор"
+
+#. [collection.edit.groups]
+#. defaultMessage is:
+#. Groups
+#: i18n/messages.json
+msgid "Groups"
+msgstr "Группы"
+
+#. [password_auth.no_account]
+#. defaultMessage is:
+#. Haven't got an account?
+#: i18n/messages.json
+msgid "Haven't got an account?"
+msgstr "Нет аккаунта?"
+
+#. [footer.help]
+#. defaultMessage is:
+#. Help
+#: i18n/messages.json
+msgid "Help"
+msgstr "Помощь"
+
+#. [collection.edit.info.import.id]
+#. defaultMessage is:
+#. Import ID
+#: i18n/messages.json
+msgid "Import ID"
+msgstr "Импортировать ID"
+
+#. [document.updated_at]
+#. defaultMessage is:
+#. Imported
+#: i18n/messages.json
+msgid "Imported"
+msgstr "Импортировано"
+
+#. [collection.edit.info.label]
+#. defaultMessage is:
+#. Label
+#: i18n/messages.json
+msgid "Label"
+msgstr "Метка"
+
+#. [collection.info.languages]
+#. defaultMessage is:
+#. Language
+#. [collection.languages]
+#. defaultMessage is:
+#. Language
+#: i18n/messages.json i18n/messages.json
+msgid "Language"
+msgstr "Язык"
+
+#. [document.languages]
+#. defaultMessage is:
+#. Languages
+#. [search.facets.facet.languages]
+#. defaultMessage is:
+#. Languages
+#: i18n/messages.json i18n/messages.json
+msgid "Languages"
+msgstr "Языки"
+
+#. [collection.info.updated_at]
+#. defaultMessage is:
+#. Last updated
+#. [collection.updated_at]
+#. defaultMessage is:
+#. Last updated
+#: i18n/messages.json i18n/messages.json
+msgid "Last updated"
+msgstr "Обновлено"
+
+#. [document.info.links]
+#. defaultMessage is:
+#. Links
+#: i18n/messages.json
+msgid "Links"
+msgstr "Ссылки"
+
+#. [nav.signin]
+#. defaultMessage is:
+#. Log in
+#: i18n/messages.json
+msgid "Log in"
+msgstr "Войти"
+
+#. [nav.signout]
+#. defaultMessage is:
+#. Log out
+#: i18n/messages.json
+msgid "Log out"
+msgstr "Выйти"
+
+#. [login.not_available_title]
+#. defaultMessage is:
+#. Login is disabled
+#: i18n/messages.json
+msgid "Login is disabled"
+msgstr "Логин заблокирован"
+
+#. [logout.success]
+#. defaultMessage is:
+#. Logout successful
+#: i18n/messages.json
+msgid "Logout successful"
+msgstr "Вы вышли из системы"
+
+#. [document.mime_type]
+#. defaultMessage is:
+#. MIME
+#: i18n/messages.json
+msgid "MIME"
+msgstr "MIME"
+
+#. [alerts.title]
+#. defaultMessage is:
+#. Manage your alerts
+#: i18n/messages.json
+msgid "Manage your alerts"
+msgstr "Управление оповещениями"
+
+#. [collection.info.creator]
+#. defaultMessage is:
+#. Manager
+#. [collection.creator]
+#. defaultMessage is:
+#. Manager
+#: i18n/messages.json i18n/messages.json
+msgid "Manager"
+msgstr "Автор"
+
+#. [email.body]
+#. defaultMessage is:
+#. Message
+#: i18n/messages.json
+msgid "Message"
+msgstr "Сообщение"
+
+#. [document.modified_at]
+#. defaultMessage is:
+#. Modified
+#: i18n/messages.json
+msgid "Modified"
+msgstr "Отредактировано"
+
+#. [entity.column.name]
+#. defaultMessage is:
+#. Name
+#. [settings.name]
+#. defaultMessage is:
+#. Name
+#. [xref.name]
+#. defaultMessage is:
+#. Name
+#: i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Name"
+msgstr "Имя"
+
+#. [search.facets.facet.names]
+#. defaultMessage is:
+#. Names
+#: i18n/messages.json
+msgid "Names"
+msgstr "Имена"
+
+#. [email.no_attachments]
+#. defaultMessage is:
+#. No Attachments
+#: i18n/messages.json
+msgid "No Attachments"
+msgstr "Вложений нет"
+
+#. [entity.info.tags.empty_description]
+#. defaultMessage is:
+#. No links found.
+#: i18n/messages.json
+msgid "No links found."
+msgstr "Ссылки не найдены"
+
+#. [role.no.results]
+#. defaultMessage is:
+#. No match, keep typing
+#: i18n/messages.json
+msgid "No match, keep typing"
+msgstr "Совпадений нет..."
+
+#. [email.body.empty]
+#. defaultMessage is:
+#. No message body.
+#: i18n/messages.json
+msgid "No message body."
+msgstr "Текст письма отсутствует"
+
+#. [search.facets.no_items]
+#. defaultMessage is:
+#. No options
+#: i18n/messages.json
+msgid "No options"
+msgstr "Варианты отсутствуют"
+
+#. [document.no_viewer]
+#. defaultMessage is:
+#. No preview is available for this document
+#: i18n/messages.json
+msgid "No preview is available for this document"
+msgstr "Просмотр документа невозможен"
+
+#. [country.multiselect.no.results]
+#. defaultMessage is:
+#. No results.
+#: i18n/messages.json
+msgid "No results."
+msgstr "Результатов нет."
+
+#. [search.no_results_title]
+#. defaultMessage is:
+#. No search results
+#. [search.no_results_title]
+#. defaultMessage is:
+#. No search results
+#: i18n/messages.json i18n/messages.json
+msgid "No search results"
+msgstr "Ничего не найдено"
+
+#. [auth.unauthorized]
+#. defaultMessage is:
+#. Not authorized
+#: i18n/messages.json
+msgid "Not authorized"
+msgstr "Требуется авторизация"
+
+#. [sidebar.open]
+#. defaultMessage is:
+#. Open…
+#: i18n/messages.json
+msgid "Open…"
+msgstr "Открыть…"
+
+#. [category.other]
+#. defaultMessage is:
+#. Other
+#: i18n/messages.json
+msgid "Other"
+msgstr "Прочее"
+
+#. [collection .info.overview]
+#. defaultMessage is:
+#. Overview
+#. [document.info.overview]
+#. defaultMessage is:
+#. Overview
+#. [entity.info.overview]
+#. defaultMessage is:
+#. Overview
+#: i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Overview"
+msgstr "Обзор"
+
+#. [errorscreen.no_route_error]
+#. defaultMessage is:
+#. Page not found
+#: i18n/messages.json
+msgid "Page not found"
+msgstr "Страница не найдена"
+
+#. [document.paging]
+#. defaultMessage is:
+#. Page {pageNumber} of {pageTotal}
+#: i18n/messages.json
+msgid "Page {pageNumber} of {pageTotal}"
+msgstr "Страница {pageNumber} из {pageTotal}"
+
+#. [password_auth.password]
+#. defaultMessage is:
+#. Password
+#. [settings.password]
+#. defaultMessage is:
+#. Password
+#: i18n/messages.json i18n/messages.json
+msgid "Password"
+msgstr "Пароль"
+
+#. [settings.password.missmatch]
+#. defaultMessage is:
+#. Passwords do not match
+#: i18n/messages.json
+msgid "Passwords do not match"
+msgstr "Введённые пароли различаются"
+
+#. [search.facets.facet.phones]
+#. defaultMessage is:
+#. Phones
+#: i18n/messages.json
+msgid "Phones"
+msgstr "Номера телефонов"
+
+#. [signup.not_available_desc]
+#. defaultMessage is:
+#. Please contact the site admin to get an account
+#: i18n/messages.json
+msgid "Please contact the site admin to get an account"
+msgstr ""
+"Чтобы зарегистрироваться, обратитесь, пожалуйста, к администратору сайта"
+
+#. [preview]
+#. defaultMessage is:
+#. Preview
+#: i18n/messages.json
+msgid "Preview"
+msgstr "Просмотр"
+
+#. [alerts.add_placeholder]
+#. defaultMessage is:
+#. Receive e-mail when there are new results.
+#: i18n/messages.json
+msgid "Receive e-mail when there are new results."
+msgstr "Прислать эл. сообщение, когда появятся новые результаты."
+
+#. [email.to]
+#. defaultMessage is:
+#. Recipient
+#: i18n/messages.json
+msgid "Recipient"
+msgstr "Получатель"
+
+#. [nav.signup]
+#. defaultMessage is:
+#. Register
+#: i18n/messages.json
+msgid "Register"
+msgstr "Зарегистрироваться"
+
+#. [signup.not_available_title]
+#. defaultMessage is:
+#. Registration is disabled
+#: i18n/messages.json
+msgid "Registration is disabled"
+msgstr "Регистрация невозможна"
+
+#. [entity.references.title]
+#. defaultMessage is:
+#. Relationships
+#: i18n/messages.json
+msgid "Relationships"
+msgstr "Взаимосвязи"
+
+#. [document.retrieved_at]
+#. defaultMessage is:
+#. Retrieved
+#: i18n/messages.json
+msgid "Retrieved"
+msgstr "Получено"
+
+#. [collection.info.permissions.update]
+#. defaultMessage is:
+#. Save
+#: i18n/messages.json
+msgid "Save"
+msgstr "Сохранить"
+
+#. [xref.score]
+#. defaultMessage is:
+#. Score
+#: i18n/messages.json
+msgid "Score"
+msgstr "Соответствия"
+
+#. [alerts.search]
+#. defaultMessage is:
+#. Search
+#. [home.search]
+#. defaultMessage is:
+#. Search
+#: i18n/messages.json i18n/messages.json
+msgid "Search"
+msgstr "Поиск"
+
+#. [country.multiselect.select]
+#. defaultMessage is:
+#. Search by country name
+#: i18n/messages.json
+msgid "Search by country name"
+msgstr "Искать по названию страны"
+
+#. [role.begin.typing]
+#. defaultMessage is:
+#. Search by name or email
+#: i18n/messages.json
+msgid "Search by name or email"
+msgstr "Искать по имени или электронному адресу"
+
+#. [home.search_placeholder]
+#. defaultMessage is:
+#. Search companies, people and documents.
+#: i18n/messages.json
+msgid "Search companies, people and documents."
+msgstr "Искать людей, компании или документы."
+
+#. [document.default_placeholder]
+#. defaultMessage is:
+#. Search document
+#: i18n/messages.json
+msgid "Search document"
+msgstr "Поиск по документу"
+
+#. [document.placeholder_tolder_filter]
+#. defaultMessage is:
+#. Search this folder
+#: i18n/messages.json
+msgid "Search this folder"
+msgstr "Искать в этой папке"
+
+#. [home.summary]
+#. defaultMessage is:
+#. Search {total} public records, scrapes, and leaks from {collections} global
+#. sources.
+#: i18n/messages.json
+msgid ""
+"Search {total} public records, scrapes, and leaks from {collections} global "
+"sources."
+msgstr ""
+"Поиск по {total} опубликованных документов и открытым источникам со всего "
+"мира."
+
+#. [auth.server_error]
+#. defaultMessage is:
+#. Server error
+#: i18n/messages.json
+msgid "Server error"
+msgstr "Ошибка сервера"
+
+#. [nav.settings]
+#. defaultMessage is:
+#. Settings
+#. [settings.title]
+#. defaultMessage is:
+#. Settings
+#: i18n/messages.json i18n/messages.json
+msgid "Settings"
+msgstr "Настройки"
+
+#. [search.facets.showMore]
+#. defaultMessage is:
+#. Show more…
+#: i18n/messages.json
+msgid "Show more…"
+msgstr "Подробнее…"
+
+#. [login.oauth]
+#. defaultMessage is:
+#. Sign in
+#. [password_auth.signin]
+#. defaultMessage is:
+#. Sign in
+#. [login.oauth]
+#. defaultMessage is:
+#. Sign in
+#: i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Sign in"
+msgstr "Войти"
+
+#. [password_auth.signup]
+#. defaultMessage is:
+#. Sign up
+#. [signup.signup]
+#. defaultMessage is:
+#. Sign up
+#: i18n/messages.json i18n/messages.json
+msgid "Sign up"
+msgstr "Зарегистрироваться"
+
+#. [entity.column.file_size]
+#. defaultMessage is:
+#. Size
+#: i18n/messages.json
+msgid "Size"
+msgstr "Размер"
+
+#. [collection.info.heading]
+#. defaultMessage is:
+#. Source
+#. [entity.column.collection_id]
+#. defaultMessage is:
+#. Source
+#. [document.info.source]
+#. defaultMessage is:
+#. Source
+#. [entity.info.source]
+#. defaultMessage is:
+#. Source
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Source"
+msgstr "Источник"
+
+#. [entity.info.source_url]
+#. defaultMessage is:
+#. Source URL
+#: i18n/messages.json
+msgid "Source URL"
+msgstr "Адрес источника"
+
+#. [collection.edit.info.title]
+#. defaultMessage is:
+#. Source info
+#: i18n/messages.json
+msgid "Source info"
+msgstr "Об источнике"
+
+#. [collection.not_found]
+#. defaultMessage is:
+#. Source not found
+#: i18n/messages.json
+msgid "Source not found"
+msgstr "Источник не найден"
+
+#. [nav.collections]
+#. defaultMessage is:
+#. Sources
+#. [search.facets.facet.collection_id]
+#. defaultMessage is:
+#. Sources
+#: i18n/messages.json i18n/messages.json
+msgid "Sources"
+msgstr "Источники"
+
+#. [collection.browser.breadcrumb]
+#. defaultMessage is:
+#. Sources overview
+#: i18n/messages.json
+msgid "Sources overview"
+msgstr "Обзор источников"
+
+#. [email.subject]
+#. defaultMessage is:
+#. Subject
+#: i18n/messages.json
+msgid "Subject"
+msgstr "Тема"
+
+#. [auth.success]
+#. defaultMessage is:
+#. Success
+#: i18n/messages.json
+msgid "Success"
+msgstr "Вы успешно авторизованы"
+
+#. [collection.edit.info.summary]
+#. defaultMessage is:
+#. Summary
+#: i18n/messages.json
+msgid "Summary"
+msgstr "Краткое описание"
+
+#. [entity.info.tags]
+#. defaultMessage is:
+#. Tags
+#: i18n/messages.json
+msgid "Tags"
 msgstr ""
 
-#. [nav.home]
+#. [auth.bad_request]
 #. defaultMessage is:
-#. Home
+#. The Server did not accept your input
 #: i18n/messages.json
-msgid "Home"
+msgid "The Server did not accept your input"
+msgstr "Серверу не понравился ваш запрос"
+
+#. [entity.references.empty.description]
+#. defaultMessage is:
+#. There are no known relationships.
+#: i18n/messages.json
+msgid "There are no known relationships."
+msgstr "Взаимосвязи не обнаружены"
+
+#. [login.not_available_desc]
+#. defaultMessage is:
+#. There is no login provider configured for this app
+#: i18n/messages.json
+msgid "There is no login provider configured for this app"
+msgstr "Для данного приложения не настроена сторонняя авторизация"
+
+#. [folder.empty]
+#. defaultMessage is:
+#. This folder is empty.
+#: i18n/messages.json
+msgid "This folder is empty."
+msgstr "Папка пуста"
+
+#. [alerts.topic]
+#. defaultMessage is:
+#. Topic
+#: i18n/messages.json
+msgid "Topic"
+msgstr "Тема"
+
+#. [search.no_results_description]
+#. defaultMessage is:
+#. Try making your search more general
+#. [search.no_results_description]
+#. defaultMessage is:
+#. Try making your search more general
+#: i18n/messages.json i18n/messages.json
+msgid "Try making your search more general"
+msgstr "Попробуйте расширить критерии поиска"
+
+#. [home.search_placeholder]
+#. defaultMessage is:
+#. Try searching: {samples}
+#: i18n/messages.json
+msgid "Try searching: {samples}"
+msgstr "Поиск: {samples}"
+
+#. [entity.column.schema]
+#. defaultMessage is:
+#. Type
+#. [document.type]
+#. defaultMessage is:
+#. Type
+#: i18n/messages.json i18n/messages.json
+msgid "Type"
+msgstr "Тип"
+
+#. [search.facets.facet.schema]
+#. defaultMessage is:
+#. Types
+#: i18n/messages.json
+msgid "Types"
+msgstr "Типы"
+
+#. [country.unknown]
+#. defaultMessage is:
+#. Unknown
+#. [language.unknown]
+#. defaultMessage is:
+#. Unknown
+#: i18n/messages.json i18n/messages.json
+msgid "Unknown"
+msgstr "Что-то неизвестное"
+
+#. [entity.label.missing]
+#. defaultMessage is:
+#. Untitled
+#: i18n/messages.json
+msgid "Untitled"
+msgstr "Без названия"
+
+#. [alerts.save]
+#. defaultMessage is:
+#. Update
+#. [collection.edit.info.save]
+#. defaultMessage is:
+#. Update
+#. [settings.save]
+#. defaultMessage is:
+#. Update
+#: i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Update"
+msgstr "Обновить"
+
+#. [collection.last_updated]
+#. defaultMessage is:
+#. Updated {date}
+#: i18n/messages.json
+msgid "Updated {date}"
+msgstr "Обновлено {date}"
+
+#. [document.uploader]
+#. defaultMessage is:
+#. Uploader
+#: i18n/messages.json
+msgid "Uploader"
+msgstr "Обновил"
+
+#. [settings.password.rules]
+#. defaultMessage is:
+#. Use at least six characters
+#: i18n/messages.json
+msgid "Use at least six characters"
+msgstr "Используйте хотя бы 6 символов"
+
+#. [profileinfo.api_desc]
+#. defaultMessage is:
+#. Use the API key to read and write data via remote applications.
+#: i18n/messages.json
+msgid "Use the API key to read and write data via remote applications."
 msgstr ""
+"Использовать API-ключ для редактирования данных через сторонние приложения"
+
+#. [collection.edit.users]
+#. defaultMessage is:
+#. Users
+#: i18n/messages.json
+msgid "Users"
+msgstr "Пользователи"
+
+#. [collection.edit.permissionstable.view]
+#. defaultMessage is:
+#. View
+#: i18n/messages.json
+msgid "View"
+msgstr "Просмотр"
+
+#. [signup.inbox.desc]
+#. defaultMessage is:
+#. We've sent you an email, please follow the link to complete your
+#. registration
+#: i18n/messages.json
+msgid ""
+"We've sent you an email, please follow the link to complete your "
+"registration"
+msgstr "Мы отправили вам письмо с ссылкой для завершения регистрации"
+
+#. [notifications.no_notifications]
+#. defaultMessage is:
+#. You do not have any notifications.
+#: i18n/messages.json
+msgid "You do not have any notifications."
+msgstr ""
+
+#. [alerts.no_alerts]
+#. defaultMessage is:
+#. You have no notifications set up.
+#: i18n/messages.json
+msgid "You have no notifications set up."
+msgstr "У вас нет настроены оповещения"
+
+#. [password_auth.name]
+#. defaultMessage is:
+#. Your Name
+#: i18n/messages.json
+msgid "Your Name"
+msgstr "Ваше имя"
+
+#. [collection.edit.save_success]
+#. defaultMessage is:
+#. Your changes are saved.
+#. [collection.edit.save_success]
+#. defaultMessage is:
+#. Your changes are saved.
+#: i18n/messages.json i18n/messages.json
+msgid "Your changes are saved."
+msgstr "Изменения сохранены"
+
+#. [settings.email.no_change]
+#. defaultMessage is:
+#. Your e-mail address cannot be changed
+#: i18n/messages.json
+msgid "Your e-mail address cannot be changed"
+msgstr "Не удалось изменить ваш эл. адрес"
+
+#. [notifications.title]
+#. defaultMessage is:
+#. Your notifications
+#: i18n/messages.json
+msgid "Your notifications"
+msgstr ""
+
+#. [footer.aleph]
+#. defaultMessage is:
+#. aleph {version}
+#: i18n/messages.json
+msgid "aleph {version}"
+msgstr "алеф {version}"
+
+#. [search.filterTag.ancestors]
+#. defaultMessage is:
+#. in:
+#: i18n/messages.json
+msgid "in:"
+msgstr "в:"
+
+#. [search.filterTag.exclude]
+#. defaultMessage is:
+#. not:
+#: i18n/messages.json
+msgid "not:"
+msgstr "не:"
+
+#. [country.total]
+#. defaultMessage is:
+#. total
+#: i18n/messages.json
+msgid "total"
+msgstr "всего"
+
+#. [search.facets.filtersSelected]
+#. defaultMessage is:
+#. {count} selected
+#: i18n/messages.json
+msgid "{count} selected"
+msgstr "{count} выбрано"

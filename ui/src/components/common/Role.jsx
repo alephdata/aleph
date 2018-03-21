@@ -26,11 +26,15 @@ const messages = defineMessages({
 
 class Label extends Component {
   shouldComponentUpdate(nextProps) {
-    return this.props.value !== nextProps.value;
+    return this.props.role.id !== nextProps.role.id;
   }
 
   render() {
     const { role, icon = true } = this.props;
+
+    if (!role) {
+      return null;
+    }
 
     return (
       <span>

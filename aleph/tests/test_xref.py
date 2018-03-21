@@ -12,9 +12,9 @@ class XrefTestCase(TestCase):
     def setUp(self):
         super(XrefTestCase, self).setUp()
         self.user = self.create_user()
-        self.coll_a = self.create_collection(creator=self.user)
-        self.coll_b = self.create_collection(creator=self.user)
-        self.coll_c = self.create_collection(creator=self.user)
+        self.coll_a = self.create_collection(creator=self.user, managed=True)
+        self.coll_b = self.create_collection(creator=self.user, managed=True)
+        self.coll_c = self.create_collection(creator=self.user, managed=True)
         db.session.commit()
 
     def test_xref(self):
@@ -69,7 +69,7 @@ class XrefTestCase(TestCase):
         q = db.session.query(Match)
         assert 0 == q.count(), q.count()
 
-        xref_collection(self.coll_a)
+        xref_collection(self.coll_a.id)
 
         q = db.session.query(Match)
         assert 2 == q.count(), q.count()
@@ -149,7 +149,7 @@ class XrefTestCase(TestCase):
         q = db.session.query(Match)
         assert 0 == q.count(), q.count()
 
-        xref_collection(self.coll_a, self.coll_c)
+        xref_collection(self.coll_a.id, self.coll_c.id)
 
         q = db.session.query(Match)
         assert 1 == q.count(), q.count()

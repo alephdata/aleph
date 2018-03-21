@@ -8,9 +8,9 @@ import EntityInfoTags from 'src/screens/EntityScreen/EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import Schema from 'src/components/common/Schema';
 import DocumentMetadata from 'src/screens/DocumentScreen/DocumentMetadata';
-import CollectionInfo from 'src/components/common/Collection/CollectionInfo';
+import CollectionOverview from 'src/components/Collection/CollectionOverview';
 import URL from 'src/components/common/URL';
-import { getEntityTags } from 'src/selectors';
+import { selectEntityTags } from 'src/selectors';
 
 class DocumentInfo extends React.Component {
   constructor(props) {
@@ -38,11 +38,10 @@ class DocumentInfo extends React.Component {
           </h1>
         </div>
         <div className="pane-content">
-          <Tabs id="DocumentInfoTabs"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+          <Tabs id="DocumentInfoTabs" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
               <Tab id="overview"
                 title={
                   <React.Fragment>
-                     <span className="pt-icon-standard pt-icon-info-sign"/>
                      <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
                   </React.Fragment>
                 }
@@ -51,13 +50,12 @@ class DocumentInfo extends React.Component {
               <Tab id="source" 
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-database"/>
                     <FormattedMessage id="document.info.source" defaultMessage="Source"/>
                   </React.Fragment>
                 }
                 panel={
                   <React.Fragment>
-                  <CollectionInfo collection={document.collection}/>
+                  <CollectionOverview collection={document.collection}/>
                   {document.source_url && (
                     <ul className='info-sheet'>
                       <li>
@@ -67,7 +65,7 @@ class DocumentInfo extends React.Component {
                         </span>
                         <span className="value">
                           <URL value={document.source_url} />
-                        s</span>
+                        </span>
                       </li>
                     </ul>
                   )}
@@ -77,9 +75,8 @@ class DocumentInfo extends React.Component {
               <Tab id="tags"
                 title={
                   <React.Fragment>
-                    <span className="pt-icon-standard pt-icon-tag"/>
-                    <FormattedMessage id="document.info.links"
-                                      defaultMessage="Links"/>
+                    <FormattedMessage id="document.info.tags"
+                                      defaultMessage="Tags"/>
                   </React.Fragment>
                 }
                 panel={<EntityInfoTags entity={document} />}
@@ -94,7 +91,7 @@ class DocumentInfo extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
   session: state.session,
-  tags: getEntityTags(state, ownProps.document.id)
+  tags: selectEntityTags(state, ownProps.document.id)
 });
 
 export default connect(mapStateToProps)(DocumentInfo);

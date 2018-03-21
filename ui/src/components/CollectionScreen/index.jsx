@@ -14,7 +14,7 @@ import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 const messages = defineMessages({
   not_found: {
     id: 'collection.not_found',
-    defaultMessage: 'Collection not found',
+    defaultMessage: 'Source not found',
   },
 });
 

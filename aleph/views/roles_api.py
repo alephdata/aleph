@@ -4,7 +4,7 @@ from itsdangerous import BadSignature
 from aleph.core import db, settings, app_ui_url
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Permission
-from aleph.logic.roles import check_visible, check_editable
+from aleph.logic.roles import check_visible, check_editable, update_role
 from aleph.logic.permissions import update_permission
 from aleph.logic.collections import update_collection
 from aleph.notify import notify_role_template
@@ -63,7 +63,7 @@ def create():
             'message': 'Invalid code'
         }, status=400)
 
-    role = Role.by_email(email).first()
+    role = Role.by_email(email)
     if role is not None:
         return jsonify({
             'status': 'error',
@@ -78,6 +78,7 @@ def create():
     )
     role.set_password(data.get('password'))
     db.session.add(role)
+    update_role(role)
     db.session.commit()
     # Let the serializer return more info about this user
     request.authz.id = role.id
@@ -99,6 +100,7 @@ def update(id):
     data = parse_request(RoleSchema)
     role.update(data)
     db.session.add(role)
+    update_role(role)
     db.session.commit()
     return view(role.id)
 
@@ -148,7 +150,8 @@ def permissions_update(id):
         update_permission(role,
                           collection,
                           permission['read'],
-                          permission['write'])
+                          permission['write'],
+                          editor=request.authz.role)
 
     update_collection(collection, roles=True)
     return permissions_index(id)

@@ -12,7 +12,7 @@ const messages = defineMessages({
   },
   column_collection_id: {
     id: 'entity.column.collection_id',
-    defaultMessage: 'Collection',
+    defaultMessage: 'Source',
   },
   column_schema: {
     id: 'entity.column.schema',
@@ -51,7 +51,7 @@ class EntityTable extends Component {
   }
 
   render() {
-    const { result, query, intl, showLinksInPreview, location: loc } = this.props;
+    const { result, query, intl, showLinksInPreview, location: loc, history: hist } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
 
     if (!result || !result.results || result.total === 0) {
@@ -96,7 +96,7 @@ class EntityTable extends Component {
                             documentMode={documentMode}
                             showLinksInPreview={showLinksInPreview}
                             location={loc}
-                             />
+                            history={hist} />
           )}
         </tbody>
       </table>

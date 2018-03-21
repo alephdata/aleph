@@ -1,0 +1,39 @@
+@import "src/app/variables.scss";
+
+.PdfViewer {
+  .document-pdf {
+    width: 100%;
+    background-color: whitesmoke;
+  }
+
+  .page {
+    margin: 0;
+    padding: 0;
+  }
+
+  .page > canvas {
+    /* center each page */
+    margin: auto;
+    padding-bottom: $aleph-grid-size;
+    width: 90%;
+  }
+  
+  .react-pdf__Page__canvas {
+    padding: 0 !important;
+  }
+
+  .SectionLoading {
+    background: white;
+  }
+
+  .react-pdf__message, react-pdf__message--error {
+    background: white;
+    text-align: center;
+    padding: 100px 20px;
+    font-size: 1.2em;
+  }
+
+  .spinner {
+    margin: 100px 0;
+  }
+}

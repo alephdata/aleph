@@ -1,6 +1,9 @@
+@import "src/app/variables.scss";
+
 .SearchScreen {
   .SearchFacetsPane {
     border: none !important;
     box-shadow: none !important;
+    padding: $aleph-grid-size;
   }
 }

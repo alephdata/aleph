@@ -1,5 +1,13 @@
-import DocumentToolbar from './DocumentToolbar';
+import Toolbar from './Toolbar';
+import CloseButton from './CloseButton';
+import DownloadButton from './DownloadButton';
+import PagingButtons from './PagingButtons';
+import DocumentSearch from './DocumentSearch';
 
 export {
-  DocumentToolbar
+  Toolbar,
+  CloseButton,
+  DownloadButton,
+  PagingButtons,
+  DocumentSearch
 };

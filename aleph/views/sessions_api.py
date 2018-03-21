@@ -9,6 +9,7 @@ from aleph.core import db, url_for
 from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
+from aleph.logic.roles import update_role
 from aleph.logic.sessions import create_token, check_token
 from aleph.views.util import get_best_next_url, parse_request, jsonify
 from aleph.serializers.roles import LoginSchema
@@ -43,16 +44,15 @@ def load_role():
 def password_login():
     """Provides email and password authentication."""
     data = parse_request(LoginSchema)
-    q = Role.by_email(data.get('email'))
-    q = q.filter(Role.password_digest != None)  # noqa
-    role = q.first()
-
-    if role is None:
+    role = Role.by_email(data.get('email'))
+    if role is None or not role.has_password:
         return Unauthorized("Authentication has failed.")
 
     if not role.check_password(data.get('password')):
         return Unauthorized("Authentication has failed.")
 
+    update_role(role)
+    db.session.commit()
     return jsonify({
         'status': 'ok',
         'token': create_token(role)
@@ -81,13 +81,14 @@ def oauth_callback():
 
     response = signals.handle_oauth_session.send(provider=oauth.provider,
                                                  oauth=resp)
-    db.session.commit()
     for (_, role) in response:
         if role is None:
             continue
+        update_role(role)
+        db.session.commit()
         log.info("Logged in: %r", role)
-        next_url = get_best_next_url(request.args.get('state'),
-                                     request.referrer)
+        state = request.args.get('state')
+        next_url = get_best_next_url(state, request.referrer)
         next_url, _ = urldefrag(next_url)
         next_url = '%s#token=%s' % (next_url, create_token(role))
         return redirect(next_url)

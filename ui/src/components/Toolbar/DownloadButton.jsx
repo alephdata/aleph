@@ -3,27 +3,29 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 
-/*
- * Expects a 'download' prop with the values {name: '', url: ''}
- * 
- * May also be passed an array of similar objects if there are multiple download
- * options, the first item in the array will be the default download action.
- */
 export class DownloadButton extends React.Component {
   render() {
-    if (this.props.session && this.props.downloadLink) {
-      if (Array.isArray(this.props.downloadLink)) {
+    const { session, document: doc } = this.props;
+
+    // @TODO If email w/ attachments then pass them as array of download options
+    let downloadLink
+    if (doc && doc.links && doc.links.file) {
+      downloadLink = { name: '', url: doc.links.file }
+    }
+  
+    if (session && downloadLink) {
+      if (Array.isArray(downloadLink)) {
         // If passed an array, rrender Download button with multiple options
         let popoverContent = (
             <ul className="pt-menu">
-              {this.props.downloadLink.map((item,i) => {
+              {downloadLink.map((item,i) => {
                 return <li key={i}><a className="pt-menu-item" href={item.url}>{item.name}</a></li>
               })}
             </ul>
           )
         return (
           <div className="DownloadButton pt-button-group" style={this.props.style}>
-            <a href={this.props.session.token ? `${this.props.downloadLink[0].url}?api_key=${this.props.session.token}` : this.props.downloadLink[0].url} className="pt-button">
+            <a href={session.token ? `${downloadLink[0].url}?api_key=${session.token}` : downloadLink[0].url} className="pt-button">
               <span className="pt-icon-standard pt-icon-download"></span>
               <span><FormattedMessage id="document.download" defaultMessage="Download"/></span>
             </a>
@@ -43,7 +45,7 @@ export class DownloadButton extends React.Component {
       } else {
         // Render Download button with single button
         return (
-          <a href={this.props.session.token ? `${this.props.downloadLink.url}?api_key=${this.props.session.token}` : this.props.downloadLink.url} type="button" className="DownloadButton pt-button" style={this.props.style}>
+          <a href={session.token ? `${downloadLink.url}?api_key=${session.token}` : downloadLink.url} type="button" className="DownloadButton pt-button" style={this.props.style}>
             <span className="pt-icon-standard pt-icon-download"></span>
             <span><FormattedMessage id="document.download" defaultMessage="Download"/></span>
           </a>

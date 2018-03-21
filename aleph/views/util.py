@@ -1,9 +1,14 @@
-from apikit import jsonify as jsonify_
-from apikit import obj_or_404
-from flask import request
+import six
+import json
+import types
+from hashlib import sha1
+from datetime import datetime, date
+from flask import Response, request
+from flask_babel.speaklater import LazyString
 from normality import stringify
 from urlparse import urlparse, urljoin
-from werkzeug.exceptions import MethodNotAllowed, Forbidden, BadRequest
+from werkzeug.exceptions import MethodNotAllowed, Forbidden
+from werkzeug.exceptions import BadRequest, NotFound
 from lxml.etree import tostring
 from lxml.html import document_fromstring
 from lxml.html.clean import Cleaner
@@ -22,11 +27,11 @@ def require(*predicates):
             raise Forbidden("Sorry, you're not permitted to do this!")
 
 
-def jsonify(obj, schema=None, status=200, **kwargs):
-    """Serialize to JSON and also dump from the given schema."""
-    if schema is not None:
-        obj, _ = schema().dump(obj)
-    return jsonify_(obj, status=status, **kwargs)
+def obj_or_404(obj):
+    """Raise a 404 error if the given object is None."""
+    if obj is None:
+        raise NotFound()
+    return obj
 
 
 def validate_data(data, schema, many=None):
@@ -153,3 +158,55 @@ def normalize_href(href, base_url):
         return href
     except Exception:
         return None
+
+
+def cache_hash(*a, **kw):
+    """ Try to hash an arbitrary object for caching. """
+
+    def cache_str(o):
+        if isinstance(o, (types.FunctionType, types.BuiltinFunctionType,
+                          types.MethodType, types.BuiltinMethodType,
+                          types.UnboundMethodType)):
+            return getattr(o, 'func_name', 'func')
+        if isinstance(o, dict):
+            o = [k + ':' + cache_str(v) for k, v in o.items()]
+        if isinstance(o, (list, tuple, set)):
+            o = sorted(map(cache_str, o))
+            o = '|'.join(o)
+        if isinstance(o, basestring):
+            return o
+        if hasattr(o, 'updated_at'):
+            return cache_str((repr(o), o.updated_at))
+        return repr(o)
+
+    hash = cache_str((a, kw)).encode('utf-8')
+    return sha1(hash).hexdigest()
+
+
+class JSONEncoder(json.JSONEncoder):
+    """ This encoder will serialize all entities that have a to_dict
+    method by calling that method and serializing the result. """
+
+    def default(self, obj):
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        if isinstance(obj, LazyString):
+            return six.text_type(obj)
+        if isinstance(obj, set):
+            return [o for o in obj]
+        if hasattr(obj, 'to_dict'):
+            return obj.to_dict()
+        return json.JSONEncoder.default(self, obj)
+
+
+def jsonify(obj, schema=None, status=200, headers=None, encoder=JSONEncoder):
+    """Serialize to JSON and also dump from the given schema."""
+    if schema is not None:
+        obj, _ = schema().dump(obj)
+    data = encoder().encode(obj)
+    if 'callback' in request.args:
+        cb = request.args.get('callback')
+        data = '%s && %s(%s)' % (cb, cb, data)
+    return Response(data, headers=headers,
+                    status=status,
+                    mimetype='application/json')

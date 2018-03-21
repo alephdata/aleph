@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import c from 'classnames';
 
 import getPath from 'src/util/getPath';
 import { fetchCollection } from 'src/actions';
@@ -27,13 +28,15 @@ class CollectionLink extends Component {
     if (preview === true) {
       // Displays in preview sidebar
       return (
-        <a href={`#preview:id=${collection.id}&preview:type=collection`}>
+        <a href={`#preview:id=${collection.id}&preview:type=collection`}
+           className={c('CollectionLink', className)}>
           <Collection.Label collection={collection} icon={icon} />
         </a>
       );
     } else {
       return (
-        <Link to={getPath(collection.links.ui)} className={className}>
+        <Link to={getPath(collection.links.ui)}
+              className={c('CollectionLink', className)}>
           <Collection.Label collection={collection} icon={icon} />
         </Link>
       );

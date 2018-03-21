@@ -66,18 +66,17 @@ class CollectionInfo extends Component {
       <DualPane.InfoPane className="CollectionInfo with-heading">
         <div className="pane-heading">
           <span>
-            <FormattedMessage id="collection.info.heading" defaultMessage="Collection"/>
+            <FormattedMessage id="collection.info.heading" defaultMessage="Source"/>
           </span>
           <h1>
             {collection.label}
           </h1>
         </div>
-        <div className="collection-content">
-          <Tabs id="CollectionInfoTabs" large="true" onChange={this.handleTabChange} selectedTabId={activeTabId}>
+        <div className="pane-content">
+          <Tabs id="CollectionInfoTabs" onChange={this.handleTabChange} selectedTabId={activeTabId}>
             <Tab id="overview"
               title={
                 <React.Fragment>
-                  <span className="pt-icon-standard pt-icon-info-sign"/>
                   <FormattedMessage id="collection .info.overview" defaultMessage="Overview"/>
                 </React.Fragment>
               }
@@ -150,7 +149,6 @@ class CollectionInfo extends Component {
             <Tab id="xref"
               title={
                 <React.Fragment>
-                  <span className="pt-icon-standard pt-icon-database"/>
                   <FormattedMessage id="collection.info.source" defaultMessage="Cross-reference"/>
                 </React.Fragment>
               }
@@ -160,7 +158,7 @@ class CollectionInfo extends Component {
                  title={
                    <React.Fragment>
                      <span className="pt-icon-standard pt-icon-database"/>
-                     <FormattedMessage id="collection.info.source" defaultMessage="Permissions"/>
+                     <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
                    </React.Fragment>
                  }
                  panel={<CollectionPermissionsEdit collection={collection} permissions={permissions} />}

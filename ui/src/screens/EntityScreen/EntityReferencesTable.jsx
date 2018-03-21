@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import { Icon } from "@blueprintjs/core";
+import Waypoint from 'react-waypoint';
 import _ from 'lodash';
 
 import Query from 'src/app/Query';
+import Fragment from 'src/app/Fragment';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import SectionLoading from 'src/components/common/SectionLoading';
@@ -14,9 +18,6 @@ import './EntityReferencesTable.css';
 class EntityReferencesTable extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      result: {}
-    };
     this.fetchData = this.fetchData.bind(this);
   }
 
@@ -31,8 +32,29 @@ class EntityReferencesTable extends Component {
   }
 
   fetchData() {
-    const { query } = this.props;
-    this.props.queryEntities({ query });
+    const { query, result } = this.props;
+    if (result.total === undefined) {
+      this.props.queryEntities({ query });
+    }
+  }
+
+  getMoreResults() {
+    const { query, result, queryEntities } = this.props;
+    if (!result.isLoading && result.next) {
+      queryEntities({ query, next: result.next });
+    }
+  }
+
+  onShowDetails(entity) {
+    const { history } = this.props;
+    return (event) => {
+      event.preventDefault();
+      const fragment = new Fragment(history);
+      fragment.update({
+        'preview:type': 'entity',
+        'preview:id': entity.id
+      });
+    }
   }
 
   render() {
@@ -70,6 +92,7 @@ class EntityReferencesTable extends Component {
                   <Property.Name model={prop} />
                 </th>
               ))}
+              <th key="details" className="narrow"></th>
             </tr>
           </thead>
           <tbody>
@@ -80,10 +103,22 @@ class EntityReferencesTable extends Component {
                     <Property.Values model={prop} values={entity.properties[prop.name]} />
                   </td>
                 ))}
+                <td key="details" className="narrow">
+                  <a onClick={this.onShowDetails(entity)}>
+                    <Icon icon="list-detail-view" />
+                  </a>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+        { !result.isLoading && result.next && (
+          <Waypoint
+            onEnter={this.getMoreResults}
+            bottomOffset="-600px"
+            scrollableAncestor={window}
+          />
+        )}
         { result.isLoading && (
           <SectionLoading />
         )}
@@ -106,4 +141,6 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { queryEntities })(EntityReferencesTable);
+EntityReferencesTable = connect(mapStateToProps, { queryEntities })(EntityReferencesTable);
+EntityReferencesTable = withRouter(EntityReferencesTable);
+export default EntityReferencesTable;

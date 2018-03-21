@@ -1,9 +1,8 @@
 
 # Dependencies maintained by OCCRP/pudo
-apikit == 0.3.2
 banal >= 0.3.3
 urlnormalizer >= 1.2.0
-followthemoney >= 0.4.9
+followthemoney >= 0.6.6
 fingerprints >= 0.5.3
 storagelayer >= 0.3.2
 exactitude >= 2.2.0

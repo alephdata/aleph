@@ -40,8 +40,13 @@ rebuild:
 build:
 	$(COMPOSE) build
 
-docs:
-	$(DEVDOCKER) sphinx-build -b html -d docs/_build/doctrees ./docs docs/_build/html
+# pybabel init -i aleph/translations/messages.pot -d aleph/translations -l de -D aleph
+translate:
+	pip install --upgrade transifex-client
+	pybabel extract -F babel.cfg -k lazy_gettext -o aleph/translations/messages.pot aleph
+	tx push --source
+	tx pull --all
+	pybabel compile -d aleph/translations -D aleph -f
 
 
 .PHONY: build

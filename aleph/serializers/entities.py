@@ -14,7 +14,7 @@ from aleph.serializers.common import SchemaName, PartialDate
 from aleph.serializers.common import Country, Language
 from aleph.serializers.roles import RoleReferenceSchema
 from aleph.serializers.collections import CollectionSchema
-from aleph.model import Document, Entity, Collection
+from aleph.model import Role, Document, Entity, Collection
 
 
 class ShallowCombinedSchema(BaseSchema):
@@ -122,7 +122,7 @@ class CombinedSchema(ShallowCombinedSchema):
     EXPAND = [
         ('collection_id', Collection, 'collection', CollectionSchema, False),
         ('entities', Entity, '_related', ShallowCombinedSchema, True),
-        ('uploader_id', Document, 'uploader', ShallowCombinedSchema, False),
+        ('uploader_id', Role, 'uploader', RoleReferenceSchema, False),
         ('parent', Document, 'parent', ShallowCombinedSchema, False),
     ]
     related = List(Nested(ShallowCombinedSchema()))

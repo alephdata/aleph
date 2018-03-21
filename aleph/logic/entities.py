@@ -80,7 +80,6 @@ def bulk_load(config):
 
         db.session.commit()
         index_collection(collection)
-
         for query in dict_list(data, 'queries', 'query'):
             bulk_load_query.apply_async([collection.id, query], priority=6)
 
@@ -152,6 +151,9 @@ def entity_references(entity, authz):
             }
         })
         properties.append(prop)
+
+    if not len(queries):
+        return
 
     # Run a count search (with schema facet?)
     res = es.msearch(index=entities_index(), body=queries)

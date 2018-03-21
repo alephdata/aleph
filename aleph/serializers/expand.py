@@ -1,4 +1,7 @@
+from __future__ import absolute_import
+
 from banal import ensure_list, first
+from collections import OrderedDict
 from marshmallow import Schema, post_dump
 
 from aleph.core import es
@@ -14,15 +17,7 @@ class ExpandableSchema(Schema):
         value = obj.get(field)
         if isinstance(value, dict):
             value = value.get('id')
-
         return [str(v) for v in ensure_list(value)]
-
-    def _type_dispatch(self, type_):
-        if type_ in [Collection]:
-            return collections_index()
-        if type_ in [Document, Entity]:
-            return entities_index()
-        return type_
 
     def _resolve_roles(self, cache):
         roles = set()
@@ -35,29 +30,28 @@ class ExpandableSchema(Schema):
             cache[(Role, str(role.id))] = role
 
     def _resolve_index(self, cache):
-        query = []
+        queries = OrderedDict()
         for (type_, id_) in cache.keys():
-            if type_ == Role:
-                continue
-            query.append({
-                '_index': type_,
-                '_id': id_
-            })
+            if type_ in [Collection]:
+                index = collections_index()
+                queries[(type_, id_)] = {'_index': index, '_id': id_}
+            elif type_ in [Document, Entity]:
+                index = entities_index()
+                queries[(type_, id_)] = {'_index': index, '_id': id_}
 
-        if not len(query):
+        if not len(queries):
             return
 
-        results = es.mget(body={'docs': query},
+        results = es.mget(body={'docs': queries.values()},
                           _source_exclude=['text'])
-        for doc in results['docs']:
-            cache[(doc['_index'], doc['_id'])] = unpack_result(doc)
+        for key, doc in zip(queries.keys(), results['docs']):
+            cache[key] = unpack_result(doc)
 
     @post_dump(pass_many=True)
     def expand(self, objs, many=False):
         cache = {}
         for obj in ensure_list(objs):
             for (field, type_, _, _, _) in self.EXPAND:
-                type_ = self._type_dispatch(type_)
                 for key in self._get_values(obj, field):
                     cache[(type_, key)] = None
 
@@ -67,7 +61,6 @@ class ExpandableSchema(Schema):
         for obj in ensure_list(objs):
             for (field, type_, target, schema, multi) in self.EXPAND:
                 value = []
-                type_ = self._type_dispatch(type_)
                 for key in self._get_values(obj, field):
                     value.append(cache.get((type_, key)))
 
