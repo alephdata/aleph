@@ -12,7 +12,7 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import SectionLoading from 'src/components/common/SectionLoading';
-import CollectionListItem from 'src/components/CollectionScreen/CollectionListItem';
+import CollectionListItem from 'src/screens/CollectionScreen/CollectionListItem';
 
 import './CollectionsIndexScreen.css';
 
