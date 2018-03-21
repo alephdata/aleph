@@ -18,17 +18,21 @@ const messages = defineMessages({
     defaultMessage: 'A brief summary of this source',
   },
   title : {
-    id: 'collection.edit.info.title',
-    defaultMessage: 'Source info'
+    id: 'collection.edit.title',
+    defaultMessage: 'Source settings'
   },
   save_button: {
     id: 'collection.edit.info.save',
-    defaultMessage: 'Update',
+    defaultMessage: 'Save changes',
   },
   save_success: {
     id: 'collection.edit.save_success',
     defaultMessage: 'Your changes are saved.',
   },
+  save_error: {
+    id: 'collection.edit.save_error',
+    defaultMessage: 'Failed to save changes.',
+  }
 });
 
 
@@ -74,9 +78,13 @@ class CollectionEditDialog extends Component {
     const { intl } = this.props;
     const { collection } = this.state;
 
-    await this.props.updateCollection(collection);
-    showSuccessToast(intl.formatMessage(messages.save_success));
-    this.props.toggleDialog();
+    try {
+      await this.props.updateCollection(collection);
+      showSuccessToast(intl.formatMessage(messages.save_success));
+      this.props.toggleDialog();
+    } catch (e) {
+      alert(intl.formatMessage(messages.save_error));
+    }
   }
 
   render() {
@@ -109,6 +117,7 @@ class CollectionEditDialog extends Component {
               </label>
             <div className="pt-select pt-fill">
               <select id="category" onChange={this.onFieldChange} value={collection.category}>
+                {!collection.category && <option key='--' value='' selected>--</option>}
                 { Object.keys(categories).map((key) => (
                   <option key={key} value={key}>
                     {categories[key]}

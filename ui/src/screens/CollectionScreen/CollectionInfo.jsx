@@ -81,8 +81,19 @@ class CollectionInfo extends Component {
           <Toolbar className="toolbar-preview">
             <Link to={`/search?filter:collection_id=${collection.id}`} className="pt-button button-link">
               <span className={`pt-icon-search`}/>
-              <FormattedMessage id="sidebar.search_collection" defaultMessage="Search Collection"/>
+              <FormattedMessage id="collection.info..search_button" defaultMessage="Search"/>
             </Link>
+            {collection.writeable &&
+              <React.Fragment>
+                <Button icon="cog" onClick={this.toggleCollectionEdit}>
+                  <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
+                </Button>
+                <CollectionEditDialog
+                  collection={collection}
+                  isOpen={collectionInfoIsOpen}
+                  toggleDialog={this.toggleCollectionEdit}
+                />
+              </React.Fragment>}
             <CloseButton/>
           </Toolbar>
         )}
@@ -153,18 +164,6 @@ class CollectionInfo extends Component {
                       </span>
                     </li>
                   </ul>
-                  {collection.writeable &&
-                    <React.Fragment>
-                      <Button className="pt-fill" onClick={this.toggleCollectionEdit}>
-                        <FormattedMessage id="collection.info.edit"
-                                          defaultMessage="Edit info"/>
-                      </Button>
-                      <CollectionEditDialog
-                        collection={collection}
-                        isOpen={collectionInfoIsOpen}
-                        toggleDialog={this.toggleCollectionEdit}
-                      />
-                    </React.Fragment>}
                 </React.Fragment>
               }
             />
@@ -180,7 +179,6 @@ class CollectionInfo extends Component {
             {collection.writeable && <Tab id="permissions"
                  title={
                    <React.Fragment>
-                     <span className="pt-icon-standard pt-icon-database"/>
                      <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
                    </React.Fragment>
                  }

@@ -151,6 +151,7 @@ class MultiSelect extends Component {
         popoverProps={{
           position: Position.BOTTOM_LEFT,
           className: "CountryMultiSelect",
+          usePortal: false
         }}
         resetOnSelect={true}
         openOnKeyDown={true}
