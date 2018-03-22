@@ -10,7 +10,6 @@ import {fetchAlerts, addAlert, deleteAlert} from 'src/actions';
 
 import './AlertsDialog.css';
 
-
 const messages = defineMessages({
   title: {
     id: 'alerts.title',
