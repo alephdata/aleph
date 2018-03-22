@@ -1,16 +1,16 @@
 .NotificationsScreen {
-    flex-grow: 1;
-    display: flex;
-    flex-flow: row nowrap;
-    align-content: stretch;
-    align-items: stretch;
-    
-    .dummy-pane {
-        border: none !important;
-        box-shadow: none !important;
-    }
+  flex-grow: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  align-content: stretch;
+  align-items: stretch;
+  
+  .dummy-pane {
+    border: none !important;
+    box-shadow: none !important;
+  }
 
-    ul.notifications-list {
-        list-style-type: none;
-    }
+  ul.notifications-list {
+    list-style-type: none;
+  }
 }

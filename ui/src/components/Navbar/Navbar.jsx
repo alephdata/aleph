@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
 import {addAlert, fetchAlerts} from 'src/actions';
+import Query from 'src/app/Query'
 
 import './Navbar.css';
 import {showSuccessToast} from "../../app/toast";
@@ -20,29 +21,33 @@ const messages = defineMessages({
   },
   success: {
     id: 'navbar.success',
-    defaultMessage: 'You have successfully added alert!'
+    defaultMessage: 'You are now subscribed to alerts for this search'
+  },
+  alert: {
+    id: 'navbar.alert',
+    defaultMessage: 'Alert'
   }
 });
-
 
 class Navbar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    this.state = {searchValue: ''};
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onAddAlert = this.onAddAlert.bind(this);
-    this.valid = this.valid.bind(this);
+    this.alertExists = this.alertExists.bind(this);
   }
 
   componentDidMount() {
     const { query } = this.props;
     if (query !== undefined) {
       this.setState({
-        value: query.getString('q')
+        searchValue: query.getString('q')
       })
     }
+    this.props.fetchAlerts();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -50,51 +55,59 @@ class Navbar extends React.Component {
       return
     }
       
-    if (nextProps.query && nextProps.query.state.q !== this.state.value) {
+    if (nextProps.query && nextProps.query.state.q !== this.state.searchValue) {
       this.setState({
-        value: nextProps.query.getString('q')
+        searchValue: nextProps.query.getString('q')
       })
+      this.props.fetchAlerts();
     }
   }
   
   onChange({ target }) {
-    this.setState({value: target.value})
+    this.setState({searchValue: target.value})
   }
 
   onSubmit(event) {
     const { query, updateQuery } = this.props;
     event.preventDefault();
     if (updateQuery !== undefined) {
-      updateQuery(query.set('q', this.state.value));
+      updateQuery(query.set('q', this.state.searchValue));
     } else {
       const { history } = this.props;
       history.push({
         pathname: '/search',
         search: queryString.stringify({
-          q: this.state.value
+          q: this.state.searchValue
         })
       })
     }
   }
 
-  valid() {
-    return this.state.value;
+  alertExists() {
+    const { alerts } = this.props;
+    
+    if (!alerts || !alerts.results)
+      return false;
+
+    return alerts.results.some((a) => {
+      return a.query_text === this.state.searchValue;
+    });
   }
 
   async onAddAlert(event) {
-    const {value} = this.state;
+    const {searchValue} = this.state;
     const {intl} = this.props;
 
     event.preventDefault();
-    await this.props.addAlert({query_text: value});
+    await this.props.addAlert({query_text: searchValue});
     await this.props.fetchAlerts();
     showSuccessToast(intl.formatMessage(messages.success));
   }
   
   render() {
     const {metadata, session, intl, isHomepage} = this.props;
-    const {value} = this.state;
-
+    const {searchValue} = this.state;
+    
     return (
       <div id="Navbar" className="Navbar">
         <nav className="pt-navbar">
@@ -108,18 +121,24 @@ class Navbar extends React.Component {
               <Link to="/">{metadata.app.title}</Link>
             </div>
             {!isHomepage && (
-                <form onSubmit={this.onSubmit} className='navbar-search-form'>
-                  <InputGroup type="text" leftIcon="search" className="pt-large"
-                              onChange={this.onChange} value={this.state.value}
-                              placeholder={intl.formatMessage(messages.search_placeholder)}
-                  />
-                  <Button
-                    intent={Intent.PRIMARY}
-                    onClick={this.onAddAlert}
-                    disabled={!this.valid()}
-                    text='Create alert'
-                  />
-                </form>
+              <form onSubmit={this.onSubmit} className='navbar-search-form'>
+                <InputGroup type="text" leftIcon="search" className="pt-large"
+                  onChange={this.onChange} value={searchValue}
+                  placeholder={intl.formatMessage(messages.search_placeholder)}
+                  rightElement={
+                    searchValue && (
+                      <Button
+                        icon="notifications"
+                        intent={this.alertExists() ? Intent.PRIMARY : Intent.DEFAULT}
+                        className={this.alertExists() ? 'pt-minimal' : 'pt-minimal'}
+                        onClick={this.onAddAlert}
+                        disabled={this.alertExists()}
+                        text={intl.formatMessage(messages.alert)}
+                      />
+                    )
+                  }
+                />
+              </form>
             )} 
           </div>
           <div className="pt-navbar-group pt-align-right">
@@ -136,8 +155,11 @@ class Navbar extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-});
+const mapStateToProps = (state, ownProps) => {
+  return {
+    alerts: state.alerts
+  }
+};
 
 Navbar = injectIntl(Navbar);
 Navbar = withRouter(Navbar);
