@@ -11,8 +11,7 @@ from aleph.model import create_system_roles, destroy_db
 from aleph.index import delete_index, upgrade_search, flush_index
 from aleph.index.core import collection_index, entity_index, record_index
 from aleph.logic.documents import process_document
-from aleph.logic.collections import update_collection
-from aleph.logic.entities import reindex_entities
+from aleph.logic.collections import update_collection, update_collections
 from aleph.core import db, es, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
@@ -87,7 +86,7 @@ class TestCase(FlaskTestCase):
         filepath = self.get_fixture_path(file_name)
         load_fixtures(db, loaders.load(filepath))
         db.session.commit()
-        reindex_entities()
+        update_collections()
         if process_documents:
             for doc in Document.all():
                 process_document(doc)

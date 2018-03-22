@@ -1,11 +1,9 @@
 import logging
 from pprint import pprint  # noqa
-from flask import render_template, current_app
 
 from aleph.authz import Authz
-from aleph.core import settings, app_ui_url, db, celery
-from aleph.model import Role, Alert, Events, Collection
-from aleph.notify import notify_role
+from aleph.core import db, celery
+from aleph.model import Role, Alert, Events
 from aleph.index.entities import get_entity
 from aleph.index.util import unpack_result
 from aleph.search import AlertDocumentsQuery, SearchQueryParser
