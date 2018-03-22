@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import {Callout, Intent} from '@blueprintjs/core';
 
-import {endpoint} from 'src/app/api';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import Screen from 'src/components/common/Screen';
 import { endpoint } from 'src/app/api';

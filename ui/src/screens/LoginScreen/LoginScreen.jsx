@@ -3,10 +3,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import {connect} from 'react-redux'
 import {Redirect} from 'react-router';
 import queryString from 'query-string';
-import {NonIdealState} from '@blueprintjs/core';
 
-import OAuthLogin from './OAuthLogin';
-import {PasswordAuthLogin} from './PasswordAuth';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import Screen from 'src/components/common/Screen';
 import OAuthLogin from 'src/components/auth/OAuthLogin';
@@ -38,7 +35,7 @@ class LoginScreen extends Component {
   }
 
   render() {
-    const {metadata, intl, session} = this.props;
+    const {metadata, session} = this.props;
     const passwordLogin = metadata.auth.password_login_uri;
     const oauthLogin = metadata.auth.oauth_uri;
     const hasLogin = passwordLogin || oauthLogin;

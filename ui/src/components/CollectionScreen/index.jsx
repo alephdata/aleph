@@ -16,13 +16,26 @@ const messages = defineMessages({
     id: 'collection.not_found',
     defaultMessage: 'Source not found',
   },
+  not_authorized: {
+    id: 'collection.not_auth',
+    defaultMessage: 'You are not authorized to do this.',
+  },
+  not_authorized_decr: {
+    id: 'collection.not_auth_decr',
+    defaultMessage: <a href='/login'>Please go to login page.</a>,
+  }
 });
 
 class CollectionScreen extends Component {
   render() {
-    const { collection } = this.props;
+    const { collection, intl } = this.props;
+    console.log(collection)
 
-    if (collection.error) {
+    if(collection.error === intl.formatMessage({id: 'error_dec', defaultMessage:'You are not authorized to do this.'})) {
+      return (
+        <ErrorScreen.PageNotFound title={messages.not_authorized} description={messages.not_authorized_decr}/>
+      )
+    } else if (collection.error) {
       return (
         <ErrorScreen.PageNotFound title={messages.not_found}/>
       )

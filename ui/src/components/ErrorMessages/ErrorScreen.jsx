@@ -12,8 +12,7 @@ class EmptyList extends Component {
     const {title, intl} = this.props;
     let visual = this.props.visual !== undefined ? this.props.visual : 'error';
     let description = this.props.description !== undefined ? this.props.description
-      : '';
-    console.log(title, visual, description)
+      : {id: 'error_desc', defaultMessage: ' '};
 
     return (
       <div className='outer-div'>
@@ -21,7 +20,7 @@ class EmptyList extends Component {
           <NonIdealState
             visual={visual}
             title={intl.formatMessage(title)}
-            description={description}
+            description={intl.formatMessage(description)}
           />
         </div>
       </div>
@@ -34,8 +33,8 @@ class PageNotFound extends Component {
     const {intl, title} = this.props;
     let visual = this.props.visual !== undefined ? this.props.visual : 'error';
     let description = this.props.description !== undefined ? this.props.description
-      : '';
-    console.log(title, visual, description)
+      : {id: 'error_desc', defaultMessage: ' '};
+    console.log(title, description)
     return (
       <Screen>
         <DualPane>
@@ -43,7 +42,7 @@ class PageNotFound extends Component {
             <NonIdealState
               visual={visual}
               title={intl.formatMessage(title)}
-              description={description}
+              description={intl.formatMessage(description)}
             />
           </DualPane.ContentPane>
         </DualPane>
