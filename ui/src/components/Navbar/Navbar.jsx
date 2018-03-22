@@ -3,19 +3,25 @@ import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
-import { InputGroup } from "@blueprintjs/core";
+import { InputGroup, Button, Intent } from "@blueprintjs/core";
+import { connect } from 'react-redux';
 
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
+import {addAlert, fetchAlerts} from 'src/actions';
 
 import './Navbar.css';
-
+import {showSuccessToast} from "../../app/toast";
 
 const messages = defineMessages({
   search_placeholder: {
     id: 'navbar.search_placeholder',
     defaultMessage: 'Search companies, people and documents.',
   },
+  success: {
+    id: 'navbar.success',
+    defaultMessage: 'You have successfully added alert!'
+  }
 });
 
 
@@ -26,6 +32,8 @@ class Navbar extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onAddAlert = this.onAddAlert.bind(this);
+    this.valid = this.valid.bind(this);
   }
 
   componentDidMount() {
@@ -68,9 +76,24 @@ class Navbar extends React.Component {
       })
     }
   }
+
+  valid() {
+    return this.state.value;
+  }
+
+  async onAddAlert(event) {
+    const {value} = this.state;
+    const {intl} = this.props;
+
+    event.preventDefault();
+    await this.props.addAlert({query_text: value});
+    await this.props.fetchAlerts();
+    showSuccessToast(intl.formatMessage(messages.success));
+  }
   
   render() {
-    const {metadata, session, intl, isHomepage} = this.props
+    const {metadata, session, intl, isHomepage} = this.props;
+    const {value} = this.state;
 
     return (
       <div id="Navbar" className="Navbar">
@@ -85,12 +108,18 @@ class Navbar extends React.Component {
               <Link to="/">{metadata.app.title}</Link>
             </div>
             {!isHomepage && (
-              <form onSubmit={this.onSubmit}>
-                <InputGroup type="text" leftIcon="search" className="pt-large"
-                  onChange={this.onChange} value={this.state.value}
-                  placeholder={intl.formatMessage(messages.search_placeholder)}
+                <form onSubmit={this.onSubmit} className='navbar-search-form'>
+                  <InputGroup type="text" leftIcon="search" className="pt-large"
+                              onChange={this.onChange} value={this.state.value}
+                              placeholder={intl.formatMessage(messages.search_placeholder)}
                   />
-              </form>
+                  <Button
+                    intent={Intent.PRIMARY}
+                    onClick={this.onAddAlert}
+                    disabled={!this.valid()}
+                    text='Create alert'
+                  />
+                </form>
             )} 
           </div>
           <div className="pt-navbar-group pt-align-right">
@@ -106,5 +135,9 @@ class Navbar extends React.Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => ({
+});
+
 Navbar = injectIntl(Navbar);
-export default withRouter(Navbar);
+Navbar = withRouter(Navbar);
+export default connect(mapStateToProps, {addAlert, fetchAlerts})(Navbar);
