@@ -34,7 +34,6 @@ class PageNotFound extends Component {
     let visual = this.props.visual !== undefined ? this.props.visual : 'error';
     let description = this.props.description !== undefined ? this.props.description
       : {id: 'error_desc', defaultMessage: ' '};
-    console.log(title, description)
     return (
       <Screen>
         <DualPane>
