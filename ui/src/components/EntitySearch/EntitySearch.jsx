@@ -46,7 +46,7 @@ class EntitySearch extends Component {
 
   fetchIfNeeded() {
     const {query, result, queryEntities} = this.props;
-    if (result.pages === undefined || (result.status === 'error')) {
+    if ((result.pages === undefined || (result.status === 'error'))) {
       queryEntities({query: query});
     }
   }

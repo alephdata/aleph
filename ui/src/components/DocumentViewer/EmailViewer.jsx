@@ -108,11 +108,11 @@ class EmailViewer extends React.Component {
                     )}
                   </React.Fragment>
                 }
-                panel={
-                  <div className="email-attachments">
-                    <EntitySearch query={query}
+               panel={
+                 document.children && <div className="email-attachments">
+                     <EntitySearch query={query}
                                   hideCollection={true}
-                                  documentMode={true} />
+                                  documentMode={true}/>
                   </div>
                 } 
               />
