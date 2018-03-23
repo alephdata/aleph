@@ -28,10 +28,9 @@ const messages = defineMessages({
 
 class CollectionScreen extends Component {
   render() {
-    const { collection, intl } = this.props;
-    console.log(collection)
+    const { collection } = this.props;
 
-    if(collection.error === intl.formatMessage({id: 'error_dec', defaultMessage:'You are not authorized to do this.'})) {
+    if(collection.error === 'You are not authorized to do this.') {
       return (
         <ErrorScreen.PageNotFound title={messages.not_authorized} description={messages.not_authorized_decr}/>
       )
