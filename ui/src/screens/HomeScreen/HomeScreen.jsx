@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import queryString from 'query-string';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import numeral from 'numeral';
-import { InputGroup, Button, Intent } from "@blueprintjs/core";
+import { ControlGroup, InputGroup, Button, Intent } from "@blueprintjs/core";
 
 import { fetchStatistics } from 'src/actions/index';
 import Screen from 'src/components/common/Screen'
@@ -82,32 +82,31 @@ class HomeScreen extends Component {
               )}
               </div>
               <form onSubmit={this.onSubmit} className="search-form">
-                <InputGroup type="text"
-                  leftIcon="search"
-                  className="pt-large"
-                  autoFocus={true}
-                  onChange={this.onChange} value={this.state.value}
-                  placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
-                  rightElement={
-                   <Button className="pt-minimal"
+                <ControlGroup fill={true}>
+                  <InputGroup
+                    type="text"
+                    leftIcon="search"
+                    className="pt-large"
+                    autoFocus={true}
+                    onChange={this.onChange} value={this.state.value}
+                    placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
+                  />
+                  <Button
+                    className="pt-large pt-fixed"
+                    intent={Intent.PRIMARY}
                     onClick={this.onSubmit}
-                    text={<span>
-                      {intl.formatMessage(messages.home_search)}
-                      </span>}
-                    />
-                  }
-                />
+                    text={
+                      <React.Fragment>
+                        {intl.formatMessage(messages.home_search)}
+                      </React.Fragment>
+                    }
+                  />
+                </ControlGroup>
               </form>
-              
               <div className="calls-to-action">
                 <Link className="pt-button pt-large pt-icon-database" to="/collections">
                   <FormattedMessage id='home.explore' defaultMessage="Browse sources" />
                 </Link>
-                {!session || session.loggedIn !== true && 
-                  <Link className="pt-button pt-large pt-intent-primary pt-icon-log-in" to="/login">
-                    <FormattedMessage id='home.signin' defaultMessage="Sign in" />
-                  </Link>
-                }
               </div>
             </div>
           </div>
