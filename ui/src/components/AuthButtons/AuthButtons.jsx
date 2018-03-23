@@ -89,7 +89,7 @@ class AuthButtons extends Component {
     if (auth.oauth_uri) {
       items.push((
         <a key='oauth' href={`${auth.oauth_uri}${loginUrlQueryString}`}>
-          <Button icon="user" className="pt-minimal">
+          <Button icon="log-in" className="pt-minimal">
             <FormattedMessage id="login.oauth" defaultMessage="Sign in"/>
           </Button>
         </a>
