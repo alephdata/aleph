@@ -1,7 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
+import Query from 'src/app/Query';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 
 import './EmailViewer.css';
@@ -20,11 +23,8 @@ class EmailViewer extends React.Component {
   }
   
   render() {
-    const { document } = this.props;
+    const { document, query } = this.props;
     const { headers = {} } = document;
-    const context = {
-      'filter:parent.id': document.id
-    };
     
     // Render mesage body (with preference for HTML version)
     let messageBody = <p className="email-no-body pt-text-muted">
@@ -110,7 +110,7 @@ class EmailViewer extends React.Component {
                 }
                 panel={
                   <div className="email-attachments">
-                    <EntitySearch context={context}
+                    <EntitySearch query={query}
                                   hideCollection={true}
                                   documentMode={true} />
                   </div>
@@ -123,5 +123,20 @@ class EmailViewer extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const { document, location } = ownProps;
+  // For showing attachments
+  const prefix = Query.fromLocation('search', location, {}, 'folder').getString('prefix'),
+        field = prefix.length === 0 ? 'filter:parent.id' : 'filter:ancestors',
+        context = {[field]: document.id};
+  const query = Query.fromLocation('search', location, context, 'folder').limit(50);
+  return {
+    query: query
+  }
+}
+
+EmailViewer = connect(mapStateToProps)(EmailViewer);
+EmailViewer = withRouter(EmailViewer);
 
 export default EmailViewer;
