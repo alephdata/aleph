@@ -47,7 +47,6 @@ class Navbar extends React.Component {
         searchValue: query.getString('q')
       })
     }
-    this.props.fetchAlerts();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,7 +58,6 @@ class Navbar extends React.Component {
       this.setState({
         searchValue: nextProps.query.getString('q')
       })
-      this.props.fetchAlerts();
     }
   }
   

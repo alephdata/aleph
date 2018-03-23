@@ -56,14 +56,19 @@ class Preview extends React.Component {
   componentWillReceiveProps(newProps) {
     // Storing the collection/entities in state rather than using the prop value
     // so we can control rendering behaviour (this is a work in progress)
-    if (newProps.collection) {
+    if (newProps.collection !== null && newProps.collection !== undefined) {
+      console.log('COLLECTION')
       this.setState({ collection: newProps.collection })
     }
-    if (newProps.entity) {
+    if (newProps.entity !== undefined && newProps.entity !== null) {
+      console.log('ENTITI')
       this.setState({ entity: newProps.entity })
     }
-    if (newProps.document) {
-      this.setState({ document: newProps.document })
+    if (newProps.document !== undefined && newProps.document !== null) {
+      if(!newProps.document.isFetching) {
+        console.log('DOCUM')
+        this.setState({ document: newProps.document })
+      }
     }
   }
 
@@ -195,6 +200,7 @@ class Preview extends React.Component {
     }
     
     if (view !== null) {
+      console.log('if')
       // If we have a document and it's ready to render display it
       return (
         <div id="Preview" className={className} style={{
@@ -205,6 +211,7 @@ class Preview extends React.Component {
         </div>
       );
     } else if (previewId !== null) {
+      console.log('else if')
       // Handle when we have an element to load but it's not ready to render yet
       return (
         <div id="Preview" className={classnames('loading', className)} style={{
@@ -215,6 +222,8 @@ class Preview extends React.Component {
         </div>
       );
     } else {
+      console.log('ELSE')
+      return null;
       // Handle if we have no element to display - renders hidden (0px width)
       // Note: We don't return null as we want a hide animation to happen!
       return (
