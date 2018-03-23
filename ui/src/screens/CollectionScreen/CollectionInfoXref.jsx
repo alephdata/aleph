@@ -50,8 +50,12 @@ class CollectionInfoXref extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const { collection } = ownProps;
+  const xRefs = state.collectionXrefIndex[ownProps.collection.id];
+  if (ownProps.onCollectionXRefLoad)
+    ownProps.onCollectionXRefLoad(collection, xRefs)
   return {
-    index: state.collectionXrefIndex[ownProps.collection.id]
+    index: xRefs
   };
 };
 

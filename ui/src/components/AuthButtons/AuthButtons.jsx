@@ -10,8 +10,12 @@ import './AuthButtons.css';
 
 const messages = defineMessages({
   alerts: {
-    id: 'nav.alerts',
-    defaultMessage: 'Alerts',
+    id: 'nav.manage_alerts',
+    defaultMessage: 'Manage alerts',
+  },
+  view_notifications: {
+    id: 'nav.view_notifications',
+    defaultMessage: 'Notifications',
   },
   settings: {
     id: 'nav.settings',
@@ -19,7 +23,7 @@ const messages = defineMessages({
   },
   signout: {
     id: 'nav.signout',
-    defaultMessage: 'Log out',
+    defaultMessage: 'Sign out',
   }
 });
 
@@ -59,14 +63,23 @@ class AuthButtons extends Component {
         <span className="AuthButtons">
           <Popover content={
             <Menu>
-              <MenuItem icon="notifications" onClick={this.toggleAlerts} text={intl.formatMessage(messages.alerts)+'…'} />
               <MenuItem icon="cog" onClick={this.toggleSettings} text={intl.formatMessage(messages.settings)+'…'} />
               <MenuDivider />
               <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
-            </Menu>      
+            </Menu>
             } position={Position.BOTTOM_LEFT}>
             <Button icon="user" className="pt-minimal" />
           </Popover>
+
+          <Popover content={
+            <Menu>
+              <MenuItem onClick={this.toggleAlerts} text={intl.formatMessage(messages.alerts)+'…'} />
+              <MenuItem href="/notifications" text={intl.formatMessage(messages.view_notifications)} />
+            </Menu>
+            } position={Position.BOTTOM_LEFT}>
+            <Button icon="notifications" className="pt-minimal" />
+          </Popover>
+              
           <AlertsDialog isOpen={this.state.alertsIsOpen} toggleDialog={this.toggleAlerts} />
           <SettingsDialog isOpen={this.state.settingsIsOpen} toggleDialog={this.toggleSettings} />
         </span>
@@ -86,8 +99,8 @@ class AuthButtons extends Component {
     if (auth.password_login_uri) {
       items.push((
         <Link key='login' to="/login">
-          <Button icon="user" className="pt-minimal">
-            <FormattedMessage id="nav.signin" defaultMessage="Log in"/>
+          <Button icon="log-in" className="pt-minimal">
+            <FormattedMessage id="nav.signin" defaultMessage="Sign in"/>
           </Button>
         </Link>
       ))

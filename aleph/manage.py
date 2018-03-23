@@ -16,12 +16,12 @@ from aleph.analyze import install_analyzers
 from aleph.ingest import ingest_document, ingest
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.index.documents import index_document_id
-from aleph.logic.collections import update_collection
+from aleph.logic.collections import update_collection, update_collections
 from aleph.logic.collections import process_collection, delete_entities
 from aleph.logic.collections import delete_collection, delete_documents
 from aleph.logic.alerts import check_alerts
 from aleph.logic.roles import update_role
-from aleph.logic.entities import bulk_load, reindex_entities
+from aleph.logic.entities import bulk_load
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
 from aleph.logic.triples import export_triples
@@ -163,7 +163,7 @@ def index(foreign_id=None):
         if idx % 1000 == 0:
             log.info("Index: %s documents...", idx)
     if foreign_id is None:
-        reindex_entities()
+        update_collections()
 
 
 @manager.command
@@ -182,9 +182,9 @@ def resetindex():
 
 
 @manager.command
-def indexentities():
-    """Re-index all the entities."""
-    reindex_entities()
+def repair():
+    """Re-index all the collections and entities."""
+    update_collections()
 
 
 @manager.command

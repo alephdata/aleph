@@ -10,6 +10,7 @@ import Property from './Property';
 import Entity from './Entity';
 import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
+import { Toolbar, CloseButton, DownloadButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
 import TabCount from 'src/components/common/TabCount';
 import Schema from 'src/components/common/Schema';
 import CollectionOverview from 'src/components/Collection/CollectionOverview';
@@ -47,8 +48,9 @@ class EntityInfo extends React.Component {
   }
 
   render() {
-    const { references, entity, schema, tags } = this.props;
+    const { references, entity, schema, tags, showToolbar } = this.props;
     const tagsTotal = tags !== undefined ? tags.total : undefined;
+    const connectionsTotal = (references && !references.isFetching && references.results) ? references.results.length : undefined;
     
     let sourceUrl = null;
     const entityProperties = _.values(schema.properties).filter((prop) => {
@@ -64,6 +66,15 @@ class EntityInfo extends React.Component {
     
     return (
       <DualPane.InfoPane className="EntityInfo with-heading">
+        {showToolbar && (
+          <Toolbar className="toolbar-preview">
+            <Link to={getPath(entity.links.ui)} className="pt-button button-link">
+              <span className={`pt-icon-folder-open`}/>
+              <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
+            </Link>
+            <CloseButton/>
+          </Toolbar>
+        )}
         <div className="pane-heading">
           <span>
             <Schema.Label schema={entity.schema} icon={true} />
@@ -94,23 +105,6 @@ class EntityInfo extends React.Component {
                         </li>
                       ))}
                     </ul>
-                    { (references && !references.isFetching && references.results && !!references.results.length && (
-                      <ul className="info-rank">
-                        { references.results.map((ref) => (
-                          <li key={ref.property.qname}>
-                            <span className="key">
-                              <Schema.Icon schema={ref.schema} />{' '}
-                              <Link to={this.referenceLink(ref)}>
-                                <Property.Reverse model={ref.property} />
-                              </Link>
-                            </span>
-                            <span className="value">
-                              <FormattedNumber value={ref.count} />
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    ))}
                   </React.Fragment>
                 }
               />
@@ -134,6 +128,35 @@ class EntityInfo extends React.Component {
                             <URL value={sourceUrl} />
                           </span>
                         </li>
+                      </ul>
+                    )}
+                  </React.Fragment>
+                }
+              />
+              <Tab id="connections" disabled={!connectionsTotal || connectionsTotal === 0}
+                title={
+                  <React.Fragment>
+                    <FormattedMessage id="entity.info.connections" defaultMessage="Connections"/>
+                    <TabCount count={connectionsTotal} />
+                  </React.Fragment>
+                }
+                panel={
+                  <React.Fragment>
+                    {connectionsTotal && connectionsTotal > 0 && (
+                      <ul className="info-rank">
+                        { references.results.map((ref) => (
+                          <li key={ref.property.qname}>
+                            <span className="key">
+                              <Schema.Icon schema={ref.schema} />{' '}
+                              <Link to={this.referenceLink(ref)}>
+                                <Property.Reverse model={ref.property} />
+                              </Link>
+                            </span>
+                            <span className="value">
+                              <FormattedNumber value={ref.count} />
+                            </span>
+                          </li>
+                        ))}
                       </ul>
                     )}
                   </React.Fragment>

@@ -5,11 +5,11 @@
     img {
       height: 32px;
     }
-
+    
     .pt-navbar-heading {
       font-weight: bold;
     }
-
+    
     a {
       color: inherit;
 
@@ -32,5 +32,9 @@
         width: $aleph-grid-size * 50 !important;
       }
     }
+  }
+
+  .navbar-search-form {
+    display: inline-flex;
   }
 }

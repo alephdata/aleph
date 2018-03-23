@@ -44,21 +44,7 @@ def update_entity_full(entity_id):
         return
     Alert.dedupe(entity.id)
     index_entity(entity)
-    # xref_item(item)
-
-
-@celery.task()
-def reindex_entities(block=5000):
-    cq = db.session.query(Collection)
-    for collection in cq.yield_per(block):
-        log.info("Indexing entities in: %r", collection)
-        eq = db.session.query(Entity)
-        eq = eq.filter(Entity.collection_id == collection.id)
-        for entity in eq.yield_per(block):
-            # Use the one that's already loaded:
-            entity.collection = collection
-            index_entity(entity)
-        index_collection(collection)
+    index_collection(entity.collection)
 
 
 def bulk_load(config):

@@ -67,12 +67,12 @@ class SearchFacet extends Component {
 
   showMore(event) {
     event.preventDefault();
-    this.updateFacetSize(this.props.facetSize + this.FACET_INCREMENT);
+    this.updateFacetSize(parseInt(this.props.facetSize, 10) + this.FACET_INCREMENT);
   }
 
   onToggleOpen() {
     const defaultSize = this.props.defaultSize || this.FACET_INCREMENT;
-    const newSize = this.props.facetSize > 0 ? 0 : defaultSize;
+    const newSize = parseInt(this.props.facetSize, 10) > 0 ? 0 : defaultSize;
     this.updateFacetSize(newSize);
   }
 
@@ -101,9 +101,9 @@ class SearchFacet extends Component {
     // The values array can include extra selected-but-zero-hit values that are
     // excluded from total, so we compare not against the array's length but
     // against the requested limit.
-    const hasMoreValues = facetSize < facet.total;
+    const hasMoreValues = parseInt(facetSize, 10) < facet.total;
     const isUpdating = isBlocked || this.props.facet.total === undefined;
-    const isExpanding  = facet.values === undefined || (facet.total !== 0 && facet.values.length < Math.min(facet.total || 10000, facetSize));
+    const isExpanding  = facet.values === undefined || (facet.total !== 0 && facet.values.length < Math.min(facet.total || 10000, parseInt(facetSize, 10)));
 
     return (
       <div className="SearchFacet">

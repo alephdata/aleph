@@ -36,9 +36,20 @@ def update_collection(collection, roles=False):
         update_roles(collection)
 
     if not collection.managed:
-        xref_collection.apply_async([collection.id], priority=3)
+        xref_collection.apply_async([collection.id], priority=2)
+
+    eq = db.session.query(Entity.id)
+    eq = eq.filter(Entity.collection_id == collection.id)
+    for entity in eq.all():
+        update_entity_full.apply_async([entity.id], priority=2)
 
     flush_index()
+
+
+def update_collections():
+    cq = db.session.query(Collection)
+    for collection in cq.all():
+        update_collection(collection, roles=True)
 
 
 @celery.task()

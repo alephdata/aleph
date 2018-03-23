@@ -9,7 +9,7 @@ import Query from 'src/app/Query';
 import { queryNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
 import Screen from 'src/components/common/Screen';
-import DualPane from 'src/components/common/DualPane';
+import SinglePane from 'src/components/common/SinglePane';
 import SectionLoading from 'src/components/common/SectionLoading';
 import Notification from 'src/components/Notification/Notification';
 
@@ -65,33 +65,30 @@ class NotificationsScreen extends React.Component {
 
     return (
       <Screen title={intl.formatMessage(messages.title)}>
-        <DualPane className="NotificationsScreen">
-          <DualPane.InfoPane className="dummy-pane" />
-          <DualPane.ContentPane>
-            { result.total === 0 &&
-              <NonIdealState visual="issue"
-                             title={intl.formatMessage(messages.no_notifications)} />
-            }
-            { result.total !== 0 &&
-              <ul className="notifications-list">
-                {result.results.map((notification) =>
-                  <Notification key={notification.id}
-                                notification={notification} />
-                )}
-              </ul>
-            }
-            { !result.isLoading && result.next && (
-              <Waypoint
-                onEnter={this.getMoreResults}
-                bottomOffset="-600px"
-                scrollableAncestor={window}
-              />
-            )}
-            { result.isLoading && (
-              <SectionLoading />
-            )}
-          </DualPane.ContentPane>
-        </DualPane>
+        <SinglePane className="NotificationsScreen" limitedWidth={true}>
+          { result.total === 0 &&
+            <NonIdealState visual="issue"
+                           title={intl.formatMessage(messages.no_notifications)} />
+          }
+          { result.total !== 0 &&
+            <ul className="notifications-list">
+              {result.results.map((notification) =>
+                <Notification key={notification.id}
+                              notification={notification} />
+              )}
+            </ul>
+          }
+          { !result.isLoading && result.next && (
+            <Waypoint
+              onEnter={this.getMoreResults}
+              bottomOffset="-600px"
+              scrollableAncestor={window}
+            />
+          )}
+          { result.isLoading && (
+            <SectionLoading />
+          )}
+        </SinglePane>
       </Screen>
     )
   }

@@ -10,7 +10,6 @@ import {fetchAlerts, addAlert, deleteAlert} from 'src/actions';
 
 import './AlertsDialog.css';
 
-
 const messages = defineMessages({
   title: {
     id: 'alerts.title',
@@ -85,17 +84,16 @@ class AlertsDialog extends Component {
               title={intl.formatMessage(messages.title)}>
         <div className="pt-dialog-body">
           <form onSubmit={this.onAddAlert}>
-            <div className="pt-control-group pt-fill">
+            <div className="pt-input-group pt-fill pt-large">
               <input type="text"
-                     className="pt-input pt-large"
-                     autoComplete="off"
-                     placeholder={intl.formatMessage(messages.add_placeholder)}
-                     onChange={this.onChangeAddingInput}
-                     value={this.state.newAlert} />
-              <button className="pt-button pt-intent-primary pt-large pt-fixed"
-                      onClick={this.onAddAlert}>
-                <FormattedMessage id="alerts.add"
-                                  defaultMessage="Add"/>
+                autoFocus={true}
+                className="pt-input"
+                autoComplete="off"
+                placeholder={intl.formatMessage(messages.add_placeholder)}
+                onChange={this.onChangeAddingInput}
+                value={this.state.newAlert} />
+              <button className="pt-button pt-intent-primary" onClick={this.onAddAlert}>
+                <FormattedMessage id="alerts.add" defaultMessage="Add"/>
               </button>
             </div>
           </form>
@@ -145,7 +143,7 @@ class AlertsDialog extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    alerts: state.alerts,
+  alerts: state.alerts
 });
 
 AlertsDialog = injectIntl(AlertsDialog);

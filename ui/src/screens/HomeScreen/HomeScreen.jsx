@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import queryString from 'query-string';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import numeral from 'numeral';
+import { InputGroup, Button, Intent } from "@blueprintjs/core";
 
 import { fetchStatistics } from 'src/actions/index';
 import Screen from 'src/components/common/Screen'
@@ -14,6 +15,10 @@ const messages = defineMessages({
   search_placeholder: {
     id: 'home.search_placeholder',
     defaultMessage: 'Try searching: {samples}',
+  },
+  home_search: {
+    id: 'home.search',
+    defaultMessage: 'Search',
   },
 });
 
@@ -55,46 +60,54 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const {intl, metadata, statistics} = this.props;
+    const {intl, metadata, statistics, session} = this.props;
     const total = statistics.count === undefined ? '' : numeral(statistics.count).format('0a');
     const collections = statistics.count === undefined ? '' : <FormattedNumber value={statistics.collections} />;
     const samples = metadata.app.samples.join(', ');
-
+    
     return (
       <Screen isHomepage={true}>
         <section className='HomePage'>
           <div className='outer-searchbox'>
             <div className='inner-searchbox'>
               <div className='homepage-summary'>
+              {total && collections && (
                 <FormattedMessage id='home.summary'
-                                  defaultMessage="Search {total} public records, scrapes, and leaks from {collections} global sources."
+                                  defaultMessage="Search {total} public records and leaks from {collections} sources"
                                   values={{
                                     total: total,
                                     collections: collections
                                   }}
                                   />
+              )}
               </div>
               <form onSubmit={this.onSubmit} className="search-form">
-                <div className="pt-input-group pt-large">
-                  <span className="pt-icon pt-icon-search search_span"/>
-                  <input className="pt-input search_input"
-                          type="text"
-                          placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
-                          dir="auto"
-                          onChange={this.onChange}
-                          value={this.state.value}/>
-                </div>
+                <InputGroup type="text"
+                  leftIcon="search"
+                  className="pt-large"
+                  autoFocus={true}
+                  onChange={this.onChange} value={this.state.value}
+                  placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
+                  rightElement={
+                   <Button className="pt-minimal"
+                    onClick={this.onSubmit}
+                    text={<span>
+                      {intl.formatMessage(messages.home_search)}
+                      </span>}
+                    />
+                  }
+                />
               </form>
               
               <div className="calls-to-action">
-                <a className="pt-button pt-large pt-intent-primary pt-icon-search" onClick={this.onSubmit}>
-                  <FormattedMessage id='home.search'
-                                    defaultMessage="Search" />
-                </a>
-                <Link className="pt-button pt-large pt-intent-primary pt-icon-database" to="/collections">
-                  <FormattedMessage id='home.explore'
-                                    defaultMessage="Explore sources..." />
+                <Link className="pt-button pt-large pt-icon-database" to="/collections">
+                  <FormattedMessage id='home.explore' defaultMessage="Browse sources" />
                 </Link>
+                {!session || session.loggedIn !== true && 
+                  <Link className="pt-button pt-large pt-intent-primary pt-icon-log-in" to="/login">
+                    <FormattedMessage id='home.signin' defaultMessage="Sign in" />
+                  </Link>
+                }
               </div>
             </div>
           </div>
@@ -106,7 +119,8 @@ class HomeScreen extends Component {
 
 const mapStateToProps = state => ({
   statistics: state.statistics,
-  metadata: state.metadata
+  metadata: state.metadata,
+  session: state.session
 });
 
 HomeScreen = injectIntl(HomeScreen);

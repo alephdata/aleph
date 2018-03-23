@@ -2,7 +2,7 @@
 # jen occrp <jen@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-03-18T20:46:43.993Z\n"
+"POT-Creation-Date: 2018-03-21T13:36:24.824Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgstr "API-ключ"
 #. Access
 #: i18n/messages.json
 msgid "Access"
-msgstr "Доступ"
+msgstr "Права доступа"
 
 #. [password_auth.activate]
 #. defaultMessage is:
@@ -138,12 +138,19 @@ msgstr "Авторы"
 msgid "BCC"
 msgstr "Скрытая копия"
 
+#. [home.explore]
+#. defaultMessage is:
+#. Browse sources
+#: i18n/messages.json
+msgid "Browse sources"
+msgstr ""
+
 #. [collection.browser.total]
 #. defaultMessage is:
 #. Browsing {total} sources.
 #: i18n/messages.json
 msgid "Browsing {total} sources."
-msgstr "Всего источников: {total}."
+msgstr "Всего коллекций данных: {total}."
 
 #. [email.cc]
 #. defaultMessage is:
@@ -159,13 +166,13 @@ msgstr "Копия"
 msgid "Categories"
 msgstr "Категории"
 
-#. [collection.info.category]
-#. defaultMessage is:
-#. Category
 #. [collection.category]
 #. defaultMessage is:
 #. Category
 #. [collection.edit.info.category]
+#. defaultMessage is:
+#. Category
+#. [collection.info.category]
 #. defaultMessage is:
 #. Category
 #: i18n/messages.json i18n/messages.json i18n/messages.json
@@ -198,7 +205,14 @@ msgstr "Убрать фильтр"
 #. Code
 #: i18n/messages.json
 msgid "Code"
-msgstr "Код"
+msgstr "Исходный код"
+
+#. [entity.info.connections]
+#. defaultMessage is:
+#. Connections
+#: i18n/messages.json
+msgid "Connections"
+msgstr ""
 
 #. [collection.edit.info.contact]
 #. defaultMessage is:
@@ -230,10 +244,10 @@ msgstr "Контакт"
 msgid "Countries"
 msgstr "Страны"
 
-#. [collection.info.countries]
+#. [collection.countries]
 #. defaultMessage is:
 #. Country
-#. [collection.countries]
+#. [collection.info.countries]
 #. defaultMessage is:
 #. Country
 #: i18n/messages.json i18n/messages.json
@@ -245,7 +259,7 @@ msgstr "Страна"
 #. Cross-reference
 #: i18n/messages.json
 msgid "Cross-reference"
-msgstr "Сопоставить"
+msgstr "Сопоставление данных"
 
 #. [collection.xref.crumb]
 #. defaultMessage is:
@@ -282,14 +296,7 @@ msgstr "Удалить"
 #. Document Source URL
 #: i18n/messages.json
 msgid "Document Source URL"
-msgstr "Источник документа"
-
-#. [document.status_fail]
-#. defaultMessage is:
-#. Document failed to import
-#: i18n/messages.json
-msgid "Document failed to import"
-msgstr "Не удалось импортировать документ"
+msgstr "Ссылка на источник документа"
 
 #. [document.not_found]
 #. defaultMessage is:
@@ -324,21 +331,14 @@ msgstr "Электронный адрес"
 #. Edit
 #: i18n/messages.json
 msgid "Edit"
-msgstr "Редактировать"
-
-#. [collection.info.edit]
-#. defaultMessage is:
-#. Edit info
-#: i18n/messages.json
-msgid "Edit info"
-msgstr "Редактировать информацию"
+msgstr "Редактирование"
 
 #. [password_auth.email]
 #. defaultMessage is:
 #. Email address
 #: i18n/messages.json
 msgid "Email address"
-msgstr "Электронные адреса"
+msgstr "Электронный адрес"
 
 #. [entity.not_found]
 #. defaultMessage is:
@@ -347,12 +347,12 @@ msgstr "Электронные адреса"
 msgid "Entity not found"
 msgstr "Сущность не найдена"
 
-#. [home.explore]
+#. [collection.edit.save_error]
 #. defaultMessage is:
-#. Explore sources...
+#. Failed to save changes.
 #: i18n/messages.json
-msgid "Explore sources..."
-msgstr "Подробнее об источниках"
+msgid "Failed to save changes."
+msgstr ""
 
 #. [document.file_name]
 #. defaultMessage is:
@@ -380,14 +380,7 @@ msgstr "Типы файлов"
 #. Filter sources
 #: i18n/messages.json
 msgid "Filter sources"
-msgstr "Отфильтровать источники"
-
-#. [document.placeholder_table_filter]
-#. defaultMessage is:
-#. Filter this table
-#: i18n/messages.json
-msgid "Filter this table"
-msgstr "Отфильтровать таблицу"
+msgstr "Отфильтровать данные по источникам"
 
 #. [document.parent]
 #. defaultMessage is:
@@ -452,10 +445,10 @@ msgstr "Импортировано"
 msgid "Label"
 msgstr "Метка"
 
-#. [collection.info.languages]
+#. [collection.languages]
 #. defaultMessage is:
 #. Language
-#. [collection.languages]
+#. [collection.info.languages]
 #. defaultMessage is:
 #. Language
 #: i18n/messages.json i18n/messages.json
@@ -472,22 +465,15 @@ msgstr "Язык"
 msgid "Languages"
 msgstr "Языки"
 
-#. [collection.info.updated_at]
+#. [collection.updated_at]
 #. defaultMessage is:
 #. Last updated
-#. [collection.updated_at]
+#. [collection.info.updated_at]
 #. defaultMessage is:
 #. Last updated
 #: i18n/messages.json i18n/messages.json
 msgid "Last updated"
-msgstr "Обновлено"
-
-#. [document.info.links]
-#. defaultMessage is:
-#. Links
-#: i18n/messages.json
-msgid "Links"
-msgstr "Ссылки"
+msgstr "Последнее изменение"
 
 #. [nav.signin]
 #. defaultMessage is:
@@ -531,10 +517,10 @@ msgstr "MIME"
 msgid "Manage your alerts"
 msgstr "Управление оповещениями"
 
-#. [collection.info.creator]
+#. [collection.creator]
 #. defaultMessage is:
 #. Manager
-#. [collection.creator]
+#. [collection.info.creator]
 #. defaultMessage is:
 #. Manager
 #: i18n/messages.json i18n/messages.json
@@ -566,7 +552,7 @@ msgstr "Отредактировано"
 #. Name
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Name"
-msgstr "Имя"
+msgstr "Название"
 
 #. [search.facets.facet.names]
 #. defaultMessage is:
@@ -581,13 +567,6 @@ msgstr "Имена"
 #: i18n/messages.json
 msgid "No Attachments"
 msgstr "Вложений нет"
-
-#. [entity.info.tags.empty_description]
-#. defaultMessage is:
-#. No links found.
-#: i18n/messages.json
-msgid "No links found."
-msgstr "Ссылки не найдены"
 
 #. [role.no.results]
 #. defaultMessage is:
@@ -634,6 +613,13 @@ msgstr "Результатов нет."
 msgid "No search results"
 msgstr "Ничего не найдено"
 
+#. [entity.info.tags.empty_description]
+#. defaultMessage is:
+#. No tags found.
+#: i18n/messages.json
+msgid "No tags found."
+msgstr ""
+
 #. [auth.unauthorized]
 #. defaultMessage is:
 #. Not authorized
@@ -643,10 +629,13 @@ msgstr "Требуется авторизация"
 
 #. [sidebar.open]
 #. defaultMessage is:
-#. Open…
-#: i18n/messages.json
-msgid "Open…"
-msgstr "Открыть…"
+#. Open
+#. [sidebar.open]
+#. defaultMessage is:
+#. Open
+#: i18n/messages.json i18n/messages.json
+msgid "Open"
+msgstr ""
 
 #. [category.other]
 #. defaultMessage is:
@@ -666,7 +655,7 @@ msgstr "Прочее"
 #. Overview
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Overview"
-msgstr "Обзор"
+msgstr "Информация"
 
 #. [errorscreen.no_route_error]
 #. defaultMessage is:
@@ -677,10 +666,10 @@ msgstr "Страница не найдена"
 
 #. [document.paging]
 #. defaultMessage is:
-#. Page {pageNumber} of {pageTotal}
+#. Page {currentPage} of {numberOfPages}
 #: i18n/messages.json
-msgid "Page {pageNumber} of {pageTotal}"
-msgstr "Страница {pageNumber} из {pageTotal}"
+msgid "Page {currentPage} of {numberOfPages}"
+msgstr ""
 
 #. [password_auth.password]
 #. defaultMessage is:
@@ -717,7 +706,10 @@ msgstr ""
 #. [preview]
 #. defaultMessage is:
 #. Preview
-#: i18n/messages.json
+#. [preview]
+#. defaultMessage is:
+#. Preview
+#: i18n/messages.json i18n/messages.json
 msgid "Preview"
 msgstr "Просмотр"
 
@@ -770,6 +762,13 @@ msgstr "Получено"
 msgid "Save"
 msgstr "Сохранить"
 
+#. [collection.edit.info.save]
+#. defaultMessage is:
+#. Save changes
+#: i18n/messages.json
+msgid "Save changes"
+msgstr ""
+
 #. [xref.score]
 #. defaultMessage is:
 #. Score
@@ -780,10 +779,13 @@ msgstr "Соответствия"
 #. [alerts.search]
 #. defaultMessage is:
 #. Search
+#. [collection.info..search_button]
+#. defaultMessage is:
+#. Search
 #. [home.search]
 #. defaultMessage is:
 #. Search
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Search"
 msgstr "Поиск"
 
@@ -801,38 +803,40 @@ msgstr "Искать по названию страны"
 msgid "Search by name or email"
 msgstr "Искать по имени или электронному адресу"
 
-#. [home.search_placeholder]
+#. [navbar.search_placeholder]
 #. defaultMessage is:
 #. Search companies, people and documents.
 #: i18n/messages.json
 msgid "Search companies, people and documents."
 msgstr "Искать людей, компании или документы."
 
-#. [document.default_placeholder]
-#. defaultMessage is:
-#. Search document
-#: i18n/messages.json
-msgid "Search document"
-msgstr "Поиск по документу"
-
 #. [document.placeholder_tolder_filter]
 #. defaultMessage is:
-#. Search this folder
+#. Search folder…
 #: i18n/messages.json
-msgid "Search this folder"
-msgstr "Искать в этой папке"
+msgid "Search folder…"
+msgstr ""
+
+#. [document.placeholder_table_filter]
+#. defaultMessage is:
+#. Search table…
+#: i18n/messages.json
+msgid "Search table…"
+msgstr ""
 
 #. [home.summary]
 #. defaultMessage is:
-#. Search {total} public records, scrapes, and leaks from {collections} global
-#. sources.
+#. Search {total} public records and leaks from {collections} sources
 #: i18n/messages.json
-msgid ""
-"Search {total} public records, scrapes, and leaks from {collections} global "
-"sources."
+msgid "Search {total} public records and leaks from {collections} sources"
 msgstr ""
-"Поиск по {total} опубликованных документов и открытым источникам со всего "
-"мира."
+
+#. [search.placeholder]
+#. defaultMessage is:
+#. Search…
+#: i18n/messages.json
+msgid "Search…"
+msgstr ""
 
 #. [auth.server_error]
 #. defaultMessage is:
@@ -847,7 +851,10 @@ msgstr "Ошибка сервера"
 #. [settings.title]
 #. defaultMessage is:
 #. Settings
-#: i18n/messages.json i18n/messages.json
+#. [collection.info.edit_button]
+#. defaultMessage is:
+#. Settings
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Settings"
 msgstr "Настройки"
 
@@ -888,10 +895,10 @@ msgstr "Зарегистрироваться"
 msgid "Size"
 msgstr "Размер"
 
-#. [collection.info.heading]
+#. [entity.column.collection_id]
 #. defaultMessage is:
 #. Source
-#. [entity.column.collection_id]
+#. [collection.info.heading]
 #. defaultMessage is:
 #. Source
 #. [document.info.source]
@@ -911,19 +918,19 @@ msgstr "Источник"
 msgid "Source URL"
 msgstr "Адрес источника"
 
-#. [collection.edit.info.title]
-#. defaultMessage is:
-#. Source info
-#: i18n/messages.json
-msgid "Source info"
-msgstr "Об источнике"
-
 #. [collection.not_found]
 #. defaultMessage is:
 #. Source not found
 #: i18n/messages.json
 msgid "Source not found"
 msgstr "Источник не найден"
+
+#. [collection.edit.title]
+#. defaultMessage is:
+#. Source settings
+#: i18n/messages.json
+msgid "Source settings"
+msgstr ""
 
 #. [nav.collections]
 #. defaultMessage is:
@@ -933,14 +940,14 @@ msgstr "Источник не найден"
 #. Sources
 #: i18n/messages.json i18n/messages.json
 msgid "Sources"
-msgstr "Источники"
+msgstr "Коллекции данных"
 
 #. [collection.browser.breadcrumb]
 #. defaultMessage is:
 #. Sources overview
 #: i18n/messages.json
 msgid "Sources overview"
-msgstr "Обзор источников"
+msgstr "Обзор источников данных"
 
 #. [email.subject]
 #. defaultMessage is:
@@ -963,12 +970,15 @@ msgstr "Вы успешно авторизованы"
 msgid "Summary"
 msgstr "Краткое описание"
 
+#. [document.info.tags]
+#. defaultMessage is:
+#. Tags
 #. [entity.info.tags]
 #. defaultMessage is:
 #. Tags
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Tags"
-msgstr ""
+msgstr "Теги"
 
 #. [auth.bad_request]
 #. defaultMessage is:
@@ -1020,7 +1030,7 @@ msgstr "Попробуйте расширить критерии поиска"
 #. Try searching: {samples}
 #: i18n/messages.json
 msgid "Try searching: {samples}"
-msgstr "Поиск: {samples}"
+msgstr "Например, {samples}"
 
 #. [entity.column.schema]
 #. defaultMessage is:
@@ -1059,13 +1069,10 @@ msgstr "Без названия"
 #. [alerts.save]
 #. defaultMessage is:
 #. Update
-#. [collection.edit.info.save]
-#. defaultMessage is:
-#. Update
 #. [settings.save]
 #. defaultMessage is:
 #. Update
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Update"
 msgstr "Обновить"
 
@@ -1088,15 +1095,14 @@ msgstr "Обновил"
 #. Use at least six characters
 #: i18n/messages.json
 msgid "Use at least six characters"
-msgstr "Используйте хотя бы 6 символов"
+msgstr "Минимум 6 символов"
 
 #. [profileinfo.api_desc]
 #. defaultMessage is:
 #. Use the API key to read and write data via remote applications.
 #: i18n/messages.json
 msgid "Use the API key to read and write data via remote applications."
-msgstr ""
-"Использовать API-ключ для редактирования данных через сторонние приложения"
+msgstr "API-ключ для редактирования данных через сторонние приложения"
 
 #. [collection.edit.users]
 #. defaultMessage is:
@@ -1127,14 +1133,14 @@ msgstr "Мы отправили вам письмо с ссылкой для з�
 #. You do not have any notifications.
 #: i18n/messages.json
 msgid "You do not have any notifications."
-msgstr ""
+msgstr "У вас нет оповещений"
 
 #. [alerts.no_alerts]
 #. defaultMessage is:
 #. You have no notifications set up.
 #: i18n/messages.json
 msgid "You have no notifications set up."
-msgstr "У вас нет настроены оповещения"
+msgstr "У вас нет активных оповещений"
 
 #. [password_auth.name]
 #. defaultMessage is:
@@ -1165,7 +1171,7 @@ msgstr "Не удалось изменить ваш эл. адрес"
 #. Your notifications
 #: i18n/messages.json
 msgid "Your notifications"
-msgstr ""
+msgstr "Оповещения"
 
 #. [footer.aleph]
 #. defaultMessage is:
