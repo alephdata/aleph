@@ -2,8 +2,10 @@ import logging
 from ingestors.util import is_file
 
 from aleph.core import db, archive, celery
-from aleph.model import Document, Role, Events
+from aleph.model import Document, Events
+from aleph.index.collections import index_collection
 from aleph.ingest.manager import DocumentManager
+from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
 
@@ -47,10 +49,8 @@ def ingest(document_id, role_id=None):
     get_manager().ingest_document(document, role_id=role_id)
 
     # is this too often?
-    from aleph.logic.collections import update_collection
-    update_collection(document.collection)
+    index_collection(document.collection)
 
-    from aleph.logic.notifications import publish
     params = {
         'document': document,
         'collection': document.collection
