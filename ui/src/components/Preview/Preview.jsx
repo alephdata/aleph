@@ -56,16 +56,14 @@ class Preview extends React.Component {
   componentWillReceiveProps(newProps) {
     // Storing the collection/entities in state rather than using the prop value
     // so we can control rendering behaviour (this is a work in progress)
-    if (newProps.collection !== null && newProps.collection !== undefined) {
+    if (newProps.collection) {
       this.setState({ collection: newProps.collection })
     }
-    if (newProps.entity !== undefined && newProps.entity !== null) {
+    if (newProps.entity) {
       this.setState({ entity: newProps.entity })
     }
-    if (newProps.document !== undefined && newProps.document !== null) {
-      if(!newProps.document.isFetching) {
-        this.setState({ document: newProps.document })
-      }
+    if (newProps.document) {
+      this.setState({ document: newProps.document })
     }
   }
 
