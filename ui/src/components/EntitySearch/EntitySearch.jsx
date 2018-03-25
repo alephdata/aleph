@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { NonIdealState } from '@blueprintjs/core';
+import React, {Component} from 'react';
 import Waypoint from 'react-waypoint';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
+import {defineMessages, injectIntl} from 'react-intl';
 
 import Query from 'src/app/Query';
-import { queryEntities } from 'src/actions';
-import { selectEntitiesResult } from 'src/selectors';
+import {queryEntities} from 'src/actions';
+import {selectEntitiesResult} from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SectionLoading from 'src/components/common/SectionLoading';
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 
 const messages = defineMessages({
@@ -22,7 +22,7 @@ const messages = defineMessages({
     id: 'search.no_results_description',
     defaultMessage: 'Try making your search more general',
   },
-})
+});
 
 class EntitySearch extends Component {
   constructor(props) {
@@ -45,16 +45,16 @@ class EntitySearch extends Component {
   }
 
   fetchIfNeeded() {
-    const { query, result, queryEntities } = this.props;
-    if (result.pages === undefined || (result.status === 'error')) {
-      queryEntities({ query: query });
+    const {query, result, queryEntities} = this.props;
+    if ((result.pages === undefined || (result.status === 'error'))) {
+      queryEntities({query: query});
     }
   }
 
   getMoreResults() {
-    const { query, result, queryEntities } = this.props;
+    const {query, result, queryEntities} = this.props;
     if (result && result.next) {
-      queryEntities({ query, next: result.next });
+      queryEntities({query, next: result.next});
     }
   }
 
@@ -62,7 +62,7 @@ class EntitySearch extends Component {
     if (this.props.updateQuery !== undefined) {
       return this.props.updateQuery(newQuery);
     }
-    const { history, location } = this.props;
+    const {history, location} = this.props;
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation()
@@ -70,31 +70,30 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const { query, result, intl, showLinksInPreview } = this.props;
+    const {query, result, showLinksInPreview} = this.props;
     return (
       <React.Fragment>
-        { result.total === 0 &&
-          <section className="PartialError">
-            <NonIdealState visual="search"
-                           title={intl.formatMessage(messages.no_results_title)}
-                           description={intl.formatMessage(messages.no_results_description)} />
-          </section>
+        {result.total === 0 &&
+        <section className="PartialError">
+          <ErrorScreen.PageNotFound visual='search' title={messages.no_results_title}
+                                    description={messages.no_results_description}/>
+        </section>
         }
         <EntityTable query={query}
                      documentMode={this.props.documentMode}
                      hideCollection={this.props.hideCollection}
                      updateQuery={this.updateQuery}
                      result={result}
-                     showLinksInPreview={showLinksInPreview} />
-        { !result.isLoading && result.next && (
+                     showLinksInPreview={showLinksInPreview}/>
+        {!result.isLoading && result.next && (
           <Waypoint
             onEnter={this.getMoreResults}
             bottomOffset="-600px"
             scrollableAncestor={window}
           />
         )}
-        { result.isLoading && (
-          <SectionLoading />
+        {result.isLoading && (
+          <SectionLoading/>
         )}
       </React.Fragment>
     );
@@ -102,7 +101,7 @@ class EntitySearch extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, context, prefix, query } = ownProps;
+  const {location, context, prefix, query} = ownProps;
 
   // We normally only want Things, not Intervals (relations between things).
   const contextWithDefaults = {
@@ -119,7 +118,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-EntitySearch = connect(mapStateToProps, { queryEntities })(EntitySearch);
+EntitySearch = connect(mapStateToProps, {queryEntities})(EntitySearch);
 EntitySearch = withRouter(EntitySearch);
 EntitySearch = injectIntl(EntitySearch);
 

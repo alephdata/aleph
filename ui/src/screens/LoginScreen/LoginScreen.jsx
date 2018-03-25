@@ -3,8 +3,8 @@ import { defineMessages, injectIntl } from 'react-intl';
 import {connect} from 'react-redux'
 import {Redirect} from 'react-router';
 import queryString from 'query-string';
-import {NonIdealState} from '@blueprintjs/core';
 
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import Screen from 'src/components/common/Screen';
 import OAuthLogin from 'src/components/auth/OAuthLogin';
 import {PasswordAuthLogin} from 'src/components/auth/PasswordAuth';
@@ -35,7 +35,7 @@ class LoginScreen extends Component {
   }
 
   render() {
-    const {metadata, intl, session} = this.props;
+    const {metadata, session} = this.props;
     const passwordLogin = metadata.auth.password_login_uri;
     const oauthLogin = metadata.auth.oauth_uri;
     const hasLogin = passwordLogin || oauthLogin;
@@ -58,12 +58,9 @@ class LoginScreen extends Component {
 
               {passwordLogin && <PasswordAuthLogin onSubmit={this.onLogin.bind(this)}/>}
               {oauthLogin && <OAuthLogin provider={metadata.auth.oauth_uri}/>}
-
-              {!hasLogin &&
-              <NonIdealState visual="log-in"
-                             title={intl.formatMessage(messages.not_available_title)}
-                             description={intl.formatMessage(messages.not_available_desc)}/>}
-            </section>
+        {!hasLogin &&
+        <ErrorScreen.PageNotFound visual='log-in' title={messages.not_available_title} description={messages.not_available_desc}/>}
+      </section>
           </div>
         </div>
       </Screen>

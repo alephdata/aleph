@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
 import { fetchMetadata } from 'src/actions';
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import EntityScreen from 'src/screens/EntityScreen';
-import ErrorScreen from 'src/components/ErrorScreen';
 import CollectionScreen from 'src/screens/CollectionScreen';
 
 import LoginScreen from 'src/screens/LoginScreen/LoginScreen';
@@ -58,7 +58,7 @@ class Router extends Component {
         <Route path="/search" exact component={SearchScreen}/>
         <Route path="/notifications" exact component={NotificationsScreen}/>
         <Route path="/" exact component={HomeScreen}/>
-        <Route component={ErrorScreen}/>
+        <Route component={ErrorScreen.PageNotFound}/>
       </Switch>
     );
   }

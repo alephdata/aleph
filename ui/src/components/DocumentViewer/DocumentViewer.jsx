@@ -19,7 +19,7 @@ export default class extends React.Component {
     this.state = {
       numberOfPages: null,
       queryText: ''
-    }
+    };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
     this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
   }
@@ -33,7 +33,7 @@ export default class extends React.Component {
       // @FIXME: This is a hack to trigger window resize event when displaying
       // a document preview. This forces the PDF viewer to display at the 
       // right size (otherwise it displays at the incorrect height).    
-      setTimeout(() => {window.dispatchEvent(new Event('resize')) }, 1500);
+      //setTimeout(() => {window.dispatchEvent(new Event('resize')) }, 1500);
     }
   }
 

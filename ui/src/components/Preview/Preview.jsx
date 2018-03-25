@@ -215,6 +215,7 @@ class Preview extends React.Component {
         </div>
       );
     } else {
+      return null;
       // Handle if we have no element to display - renders hidden (0px width)
       // Note: We don't return null as we want a hide animation to happen!
       return (

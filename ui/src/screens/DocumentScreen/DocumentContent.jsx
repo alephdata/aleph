@@ -1,5 +1,4 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 
 import DualPane from 'src/components/common/DualPane';
 import { DocumentViewer } from 'src/components/DocumentViewer';

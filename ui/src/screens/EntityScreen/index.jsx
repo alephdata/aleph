@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { NonIdealState } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import Screen from 'src/components/common/Screen';
@@ -9,6 +8,7 @@ import DualPane from 'src/components/common/DualPane';
 import EntityInfo from './EntityInfo';
 import Entity from './Entity';
 import EntityContent from './EntityContent';
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 const messages = defineMessages({
   not_found: {
@@ -19,11 +19,11 @@ const messages = defineMessages({
 
 class EntityScreen extends Component {
   render() {
-    const { entity, intl } = this.props;
+    const { entity } = this.props;
 
     if (entity.error) {
       return (
-        <NonIdealState visual="error" title={intl.formatMessage(messages.not_found)}/>
+        <ErrorScreen.PageNotFound visual="error" title={messages.not_found}/>
       );
     }
 
