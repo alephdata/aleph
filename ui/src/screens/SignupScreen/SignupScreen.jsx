@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
-import {Callout, Intent, NonIdealState} from '@blueprintjs/core';
+import {Callout, Intent} from '@blueprintjs/core';
 
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import Screen from 'src/components/common/Screen';
 import { endpoint } from 'src/app/api';
 import { xhrErrorToast } from 'src/components/auth/xhrToast';
@@ -35,7 +36,7 @@ class SignupScreen extends Component {
 
   render() {
     const {submitted} = this.state;
-    const {metadata, intl, session} = this.props;
+    const {metadata, session} = this.props;
 
     const oauthLogin = Array.isArray(metadata.auth.oauth) && metadata.auth.oauth.length > 0;
 
@@ -45,9 +46,7 @@ class SignupScreen extends Component {
 
     if (!metadata.auth.registration_uri) {
       return (
-        <NonIdealState visual=""
-          title={intl.formatMessage(messages.not_available_title)}
-          description={intl.formatMessage(messages.not_available_desc)}/>
+        <ErrorScreen.PageNotFound visual='' title={messages.not_available_title} description={messages.not_available_desc}/>
       );
     }
 

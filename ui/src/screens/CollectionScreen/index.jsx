@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
-import { NonIdealState } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import Screen from 'src/components/common/Screen';
@@ -10,22 +9,35 @@ import DualPane from 'src/components/common/DualPane';
 import CollectionContent from './CollectionContent';
 import CollectionInfo from './CollectionInfo';
 import Collection from 'src/components/common/Collection';
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 const messages = defineMessages({
   not_found: {
     id: 'collection.not_found',
     defaultMessage: 'Source not found',
   },
+  not_authorized: {
+    id: 'collection.not_auth',
+    defaultMessage: 'You are not authorized to do this.',
+  },
+  not_authorized_decr: {
+    id: 'collection.not_auth_decr',
+    defaultMessage: <a href='/login'>Please go to login page.</a>,
+  }
 });
 
 class CollectionScreen extends Component {
   render() {
-    const { collection, intl } = this.props;
+    const { collection } = this.props;
 
-    if (collection.error) {
+    if(collection.error === 'You are not authorized to do this.') {
       return (
-        <NonIdealState visual="error" title={intl.formatMessage(messages.not_found)} />
-      );
+        <ErrorScreen.PageNotFound title={messages.not_authorized} description={messages.not_authorized_decr}/>
+      )
+    } else if (collection.error) {
+      return (
+        <ErrorScreen.PageNotFound title={messages.not_found}/>
+      )
     }
 
     return (
