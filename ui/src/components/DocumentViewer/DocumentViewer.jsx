@@ -95,7 +95,7 @@ class DocumentViewer extends React.Component {
       return <PdfViewer document={doc} onDocumentLoad={onDocumentLoad} />
     } else if (doc.schema === 'Image') {
       return <ImageViewer document={doc} />;
-    } else if (doc.children !== undefined) {
+    } else if (doc.schemata['Folder'] !== undefined && doc.children !== undefined) {
       return <FolderViewer document={doc} queryText={queryText} />;
     } else {
       return <section className="PartialError">

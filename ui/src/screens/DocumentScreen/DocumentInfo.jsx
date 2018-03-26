@@ -70,7 +70,7 @@ class DocumentInfo extends React.Component {
                 }
                 panel={
                   <React.Fragment>
-                  <CollectionOverview collection={doc.collection}/>
+                  <CollectionOverview collection={doc.collection} hasHeader={true}/>
                   {doc.source_url && (
                     <ul className='info-sheet'>
                       <li>
