@@ -6,7 +6,6 @@ from banal import ensure_list
 from pkg_resources import iter_entry_points
 
 EXTENSIONS = {}
-PDF_MIME = 'application/pdf'
 
 
 def get_extensions(section):
