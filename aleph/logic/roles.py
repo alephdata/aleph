@@ -10,7 +10,7 @@ def update_role(role):
     for group in Role.all_groups():
         Subscription.unsubscribe(role=role, channel=channel(group))
 
-    if role.deleted_at is None:
+    if role.deleted_at is None and role.type == Role.USER:
         Subscription.subscribe(role, channel(role))
         Subscription.subscribe(role, Notification.GLOBAL)
         for group in role.roles:
