@@ -16,6 +16,8 @@ def update_role(role):
         for group in role.roles:
             Subscription.subscribe(role, channel(group))
 
+    db.session.commit()
+
 
 def update_roles():
     q = db.session.query(Role)
