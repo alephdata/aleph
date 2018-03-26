@@ -4,7 +4,7 @@ services:
   postgres:
     image: postgres:10.0
     volumes:
-      - "./build/data/postgres:/var/lib/postgresql/data"
+      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER:     aleph
       POSTGRES_PASSWORD: aleph
@@ -20,7 +20,7 @@ services:
     image: rabbitmq
     hostname: queue
     volumes:
-      - "./build/data/rabbitmq:/var/lib/rabbitmq"
+      - rabbitmq-data:/var/lib/rabbitmq
 
   unoservice:
     image: alephdata/unoservice
@@ -42,15 +42,14 @@ services:
       - unoservice
     tmpfs: /tmp
     volumes:
-      - "./build/archive:/archive"
-      - "./build/incoming:/incoming"
+      - archive-data:/data
       - polyglot:/polyglot
     environment:
       C_FORCE_ROOT: 'true'
       ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
       ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
       ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-      ALEPH_ARCHIVE_PATH: /archive
+      ALEPH_ARCHIVE_PATH: /data
       POLYGLOT_DATA_PATH: /polyglot
       UNOSERVICE_URL: http://unoservice:3000/convert
     env_file:
@@ -66,15 +65,14 @@ services:
       - worker
     tmpfs: /tmp
     volumes:
-      - "./build/data/beat:/var/lib/"
-      - "./build/archive:/archive"
+      - archive-data:/data
       - polyglot:/polyglot
     environment:
       C_FORCE_ROOT: 'true'
       ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
       ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
       ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-      ALEPH_ARCHIVE_PATH: /archive
+      ALEPH_ARCHIVE_PATH: /data
       POLYGLOT_DATA_PATH: /polyglot
       UNOSERVICE_URL: http://unoservice:3000/convert
     env_file:
@@ -91,13 +89,13 @@ services:
       - rabbitmq
       - worker
     volumes:
-      - "./build/archive:/archive"
+      - archive-data:/data
       - polyglot:/polyglot
     environment:
       ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
       ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
       ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-      ALEPH_ARCHIVE_PATH: /archive
+      ALEPH_ARCHIVE_PATH: /data
       POLYGLOT_DATA_PATH: /polyglot
       UNOSERVICE_URL: http://unoservice:3000/convert
     env_file:
@@ -124,6 +122,9 @@ services:
 
 volumes:
   assets: {}
+  archive-data: {}
   polyglot: {}
+  postgres-data: {}
+  rabbitmq-data: {}
   elasticsearch-data: {}
   elasticsearch-log: {}

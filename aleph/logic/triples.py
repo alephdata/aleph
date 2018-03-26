@@ -6,16 +6,16 @@ from rdflib import Namespace, Graph, URIRef, Literal
 from rdflib.namespace import DC, DCTERMS, RDF, RDFS, SKOS, XSD
 
 from aleph.core import es
-from aleph.index.core import collections_index, entities_index
-from aleph.index.entities import get_entity
-from aleph.index.collections import get_collection
+from aleph.model import Document
+from aleph.index.core import entities_index
+from aleph.index.util import unpack_result
 from aleph.logic.util import ui_url
 
 DCMI = Namespace('http://purl.org/dc/dcmitype/')
 FTM = Namespace('https://w3id.org/ftm#')
 ALEPH = Namespace('https://alephdata.github.io/aleph/terms#')
 
-log = logging.getLogger('aleph')
+log = logging.getLogger(__name__)
 
 
 def entity_uri(value):
@@ -30,7 +30,7 @@ def collection_uri(value):
     return URIRef(ui_url('collections', value))
 
 
-def tel_uri(value):
+def phone_uri(value):
     return URIRef('tel:%s' % value)
 
 
@@ -46,165 +46,111 @@ def date_lit(value):
     return Literal(value, datatype=XSD.dateTime)
 
 
-def typed_object(predicate, value):
-    ftm_type = model.property_types[predicate]
-    if ftm_type == 'date':
-        return date_lit(value)
-    if ftm_type == 'country':
-        return country_uri(value)
-    if ftm_type == 'email':
-        return email_uri(value)
-    if ftm_type == 'phone':
-        return tel_uri(value)
-    if ftm_type == 'url':
-        return URIRef(value)
-    if ftm_type == 'entity':
-        return entity_uri(value)
-    else:
-        return Literal(value)
+def itergraph(graph):
+    nt = graph.serialize(format='ntriples')
+    for line in nt.splitlines():
+        if len(line):
+            yield line
+            yield '\n'
 
 
-def ns_bind(g):
-    # NS binding useful for dumping to n3 for human readability but not
-    # necessary for ntriples
-    g.namespace_manager.bind('dc', DC)
-    g.namespace_manager.bind('dcmi', DCMI)
-    g.namespace_manager.bind('dct', DCTERMS)
-    g.namespace_manager.bind('ftm', FTM)
-    g.namespace_manager.bind('aleph', ALEPH)
-
-
-def set_type(g, uri, entity):
-    for schema in entity['schemata']:
-        g.add((uri, RDF.type, FTM[schema]))
-
-
-def set_collection(g, entity_uri, collection_uri):
-    g.add((entity_uri, DCTERMS.isPartOf, collection_uri))
-    g.add((collection_uri, DCTERMS.hasPart, entity_uri))
-
-
-def set_entity_properties(g, uri, entity):
-    if entity.get('name'):
-        g.add((uri, SKOS.prefLabel, Literal(entity.get('name'))))
-    for name in entity.get('names', []):
-        g.add((uri, RDFS.label, Literal(name)))
-
-    for country in entity.get('countries', []):
-        if len(country) != 2:
-            continue
-        g.add((uri, ALEPH.country, country_uri(country)))
-
-    for phone in entity.get('phones', []):
-        g.add((uri, ALEPH.phone, tel_uri(phone)))
-
-    for email in entity.get('emails', []):
-        g.add((uri, ALEPH.email, email_uri(email)))
-
+def export_entity_properties(g, uri, entity):
     properties = entity.get('properties', {})
-    for name, values in properties.items():
-        pred = FTM[name]
-        for value in ensure_list(values):
-            obj = typed_object(name, value)
-            g.add((uri, pred, obj))
+    schema = model.get(entity.get('schema'))
+    for name, prop in schema.properties.items():
+        for value in ensure_list(properties.get(name)):
+            if prop.type_name == 'date':
+                obj = date_lit(value)
+            if prop.type_name == 'country':
+                obj = country_uri(value)
+            if prop.type_name == 'email':
+                obj = email_uri(value)
+            if prop.type_name == 'phone':
+                obj = phone_uri(value)
+            if prop.type_name == 'url':
+                obj = URIRef(value)
+            if prop.type_name == 'entity':
+                obj = entity_uri(value)
+            else:
+                obj = Literal(value)
+            g.add((uri, FTM[name], obj))
 
 
-def set_document_properties(g, uri, document):
+def export_document_properties(g, uri, document):
     if document.get('title'):
         g.add((uri, DC.title, Literal(document.get('title'))))
     if document.get('author'):
         g.add((uri, DC.creator, Literal(document.get('author'))))
-    if document.get('retreived_at'):
-        g.add((uri, ALEPH.retrievedAt, date_lit(document.get('retreived_at'))))
+    if document.get('retrieved_at'):
+        g.add((uri, ALEPH.retrievedAt, date_lit(document.get('retrieved_at'))))
     if document.get('file_name'):
         g.add((uri, ALEPH.fileName, Literal(document.get('file_name'))))
     if document.get('source_url'):
-        g.add((uri, ALEPH.sourceUrl, URIRef(document.get('source_url'))))
+        g.add((uri, DC.source, URIRef(document.get('source_url'))))
+    if document.get('parent'):
+        parent_uri = document_uri(document.get('parent', {}).get('id'))
+        g.add((uri, DC.isPartOf, parent_uri))
+        g.add((parent_uri, DC.hasPart, uri))
     g.add((uri, ALEPH.mediaType, Literal(document.get('mime_type'))))
     g.add((uri, DCTERMS.modified, date_lit(document.get('updated_at'))))
 
-    # TODO: parents/children
 
-
-def query_collections():
-    q = {
-        'query': {'match_all': {}},
-        'size': 9999
-    }
-    res = es.search(index=collections_index(), body=q)
-    return res
-
-
-def query_collection_contents(collection_id):
-    q = {
-        'query': {
-            'term': {'collection_id': collection_id}
-        },
-        '_source': {
-            'exclude': ['text']
-        }
-    }
-    res = scan(es, index=entities_index(), query=q)
-    return res
-
-
-def export_entity(outfile, entity, collection_uri):
+def export_entity(entity, collection_uri):
     g = Graph()
+    schemata = ensure_list(entity['schemata'])
 
-    if 'Document' in entity['schemata']:
+    if Document.SCHEMA in schemata:
         uri = document_uri(entity['id'])
-        set_document_properties(g, uri, entity)
+        export_document_properties(g, uri, entity)
     else:
         uri = entity_uri(entity['id'])
+        export_entity_properties(g, uri, entity)
 
-    set_type(g, uri, entity)
-    set_entity_properties(g, uri, entity)
-    set_collection(g, uri, collection_uri)
+    g.add((uri, DCTERMS.isPartOf, collection_uri))
+    g.add((collection_uri, DCTERMS.hasPart, uri))
 
-    # ns_bind(g)
-    # print g.serialize(format='n3')
-    outfile.write(g.serialize(format='ntriples'))
-    log.info('Wrote %s triples about <%s>', len(g), uri)
+    if entity.get('name'):
+        g.add((uri, SKOS.prefLabel, Literal(entity.get('name'))))
 
+    for schema in schemata:
+        g.add((uri, RDF.type, FTM[schema]))
 
-def export_collection(outfile, collection):
-    uri = collection_uri(collection['id'])
-    g = Graph()
+    for name in ensure_list(entity.get('names')):
+        g.add((uri, ALEPH.name, Literal(name)))
 
-    g.add((uri, RDF.type, DCMI.Collection))
-    g.add((uri, RDFS.label, Literal(collection['label'])))
-    g.add((uri, ALEPH.foreignId, Literal(collection['foreign_id'])))
-    g.add((uri, ALEPH.category, ALEPH[collection['category']]))
+    for country in ensure_list(entity.get('countries')):
+        g.add((uri, ALEPH.country, country_uri(country)))
 
-    # ns_bind(g)
-    # print g.serialize(format='n3')
-    outfile.write(g.serialize(format='ntriples'))
-    log.info('Wrote %s triples about <%s>', len(g), uri)
+    for language in ensure_list(entity.get('languages')):
+        g.add((uri, DCMI.language, Literal(language)))
 
-    rows = query_collection_contents(collection['id'])
-    for row in rows:
-        entity = row['_source']
-        entity['id'] = row['_id']
-        export_entity(outfile, entity, uri)
+    for phone in ensure_list(entity.get('phones')):
+        g.add((uri, ALEPH.phone, phone_uri(phone)))
+
+    for email in ensure_list(entity.get('emails')):
+        g.add((uri, ALEPH.email, email_uri(email)))
 
     return g
 
 
-def export_collections(outfile):
-    res = query_collections()
-    for hit in res['hits']['hits']:
-        collection = hit['_source']
-        collection['id'] = hit['_id']
-        export_collection(outfile, collection)
+def export_collection(collection):
+    uri = collection_uri(collection.id)
+    g = Graph()
 
+    g.add((uri, RDF.type, DCMI.Collection))
+    g.add((uri, RDFS.label, Literal(collection.label)))
+    g.add((uri, DCMI.identifier, Literal(collection.foreign_id)))
+    g.add((uri, ALEPH.category, ALEPH[collection.category]))
 
-def export_triples(outfile, collection_id=None, entity_id=None):
-    if entity_id is not None:
-        entity = get_entity(entity_id)
-        collection = collection_uri(entity['collection_id'])
-        export_entity(outfile, entity, collection)
-    elif collection_id is not None:
-        collection = get_collection(collection_id)
-        export_collection(outfile, collection)
-    else:
-        export_collections(outfile)
+    for line in itergraph(g):
+        yield line
+
+    q = {'term': {'collection_id': collection.id}}
+    q = {
+        'query': q,
+        '_source': {'exclude': ['text']}
+    }
+    for row in scan(es, index=entities_index(), query=q):
+        g = export_entity(unpack_result(row), uri)
+        for line in itergraph(g):
+            yield line
