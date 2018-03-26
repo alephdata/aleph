@@ -12,7 +12,6 @@ import EntityTable from 'src/components/EntityTable/EntityTable';
 import SectionLoading from 'src/components/common/SectionLoading';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
-
 const messages = defineMessages({
   no_results_title: {
     id: 'search.no_results_title',

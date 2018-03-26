@@ -101,7 +101,7 @@ class DocumentViewer extends React.Component {
       return <section className="PartialError">
       <div className="pt-non-ideal-state">
         <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-          <span className="pt-icon pt-icon-issue"></span>
+          <span className="pt-icon pt-icon-issue"/>
         </div>
         <h4 className="pt-non-ideal-state-title">
           <FormattedMessage
