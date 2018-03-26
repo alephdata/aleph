@@ -60,7 +60,7 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const {intl, metadata, statistics, session} = this.props;
+    const {intl, metadata, statistics} = this.props;
     const total = statistics.count === undefined ? '' : numeral(statistics.count).format('0a');
     const collections = statistics.count === undefined ? '' : <FormattedNumber value={statistics.collections} />;
     const samples = metadata.app.samples.join(', ');
@@ -118,8 +118,7 @@ class HomeScreen extends Component {
 
 const mapStateToProps = state => ({
   statistics: state.statistics,
-  metadata: state.metadata,
-  session: state.session
+  metadata: state.metadata
 });
 
 HomeScreen = injectIntl(HomeScreen);

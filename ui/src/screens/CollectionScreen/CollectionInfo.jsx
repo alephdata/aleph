@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { Button, Tab, Tabs } from "@blueprintjs/core";
 
-import getPath from 'src/util/getPath';
 import { fetchCollectionPermissions } from 'src/actions';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog';
