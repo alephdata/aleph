@@ -74,7 +74,7 @@ class AuthButtons extends Component {
           <Popover content={
             <Menu>
               <MenuItem onClick={this.toggleAlerts} text={intl.formatMessage(messages.alerts)+'…'} />
-              <MenuItem href="/notifications" text={intl.formatMessage(messages.view_notifications)} />
+              <Link to="/notifications" className="pt-menu-item">{intl.formatMessage(messages.view_notifications)}</Link>
             </Menu>
             } position={Position.BOTTOM_LEFT}>
             <Button icon="notifications" className="pt-minimal" />
