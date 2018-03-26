@@ -35,11 +35,12 @@ stop:
 	$(COMPOSE) rm -f
 
 clean:
-	rm -rf dist build .eggs
+	rm -rf dist build .eggs ui/build
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
+	find ui/src -name '*.css' -exec rm -f {} +
 
 rebuild:
 	$(COMPOSE) build --pull --no-cache

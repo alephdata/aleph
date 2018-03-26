@@ -4,8 +4,7 @@ services:
   postgres:
     image: postgres:10.0
     volumes:
-      - "./build/data/postgres:/var/lib/postgresql/data"
-      - "./build/logs/postgres:/var/log"
+      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: aleph
       POSTGRES_PASSWORD: aleph
@@ -43,10 +42,10 @@ services:
       - unoservice
     # tmpfs: /tmp
     volumes:
+      - archive-data:/data
+      - polyglot:/polyglot
       - "./:/aleph"
       - "./mappings:/aleph/mappings"
-      - "./build/archive:/data"
-      - "./build/polyglot:/polyglot"
       - "/:/host"
     environment:
       ALEPH_DEBUG: 'true'
@@ -79,9 +78,9 @@ services:
       - rabbitmq
       - unoservice
     volumes:
+      - archive-data:/data
+      - polyglot:/polyglot
       - "./aleph:/aleph/aleph"
-      - "./build/archive:/data"
-      - "./build/polyglot:/polyglot"
       - "/:/host"
     environment:
       ALEPH_DEBUG: 'true'
@@ -117,6 +116,9 @@ services:
       - aleph.env
 
 volumes:
+  archive-data: {}
+  polyglot: {}
   elasticsearch-data: {}
   elasticsearch-log: {}
+  postgres-data: {}
   rabbitmq-data: {}

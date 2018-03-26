@@ -19,7 +19,7 @@ from aleph.logic.collections import update_collection, update_collections
 from aleph.logic.collections import process_collection, delete_entities
 from aleph.logic.collections import delete_collection, delete_documents
 from aleph.logic.alerts import check_alerts
-from aleph.logic.roles import update_role
+from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
@@ -182,6 +182,7 @@ def resetindex():
 @manager.command
 def repair():
     """Re-index all the collections and entities."""
+    update_roles()
     update_collections()
 
 
