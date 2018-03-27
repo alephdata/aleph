@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
+import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import { Button } from "@blueprintjs/core";
 
 import { Toolbar, CloseButton, DownloadButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
@@ -12,6 +12,13 @@ import PdfViewer from './PdfViewer';
 import ImageViewer from './ImageViewer';
 import FolderViewer from './FolderViewer';
 import EmailViewer from './EmailViewer';
+
+const messages = defineMessages({
+  ignored_file: {
+    id: 'document.viewer.ignored_file',
+    defaultMessage: 'The system does not work with these types of files. Please download it so you’ll be able to see it.',
+  }
+});
 
 export default class extends React.Component {
   constructor(props) {
@@ -81,7 +88,7 @@ export default class extends React.Component {
 
 class DocumentViewer extends React.Component {
   render() {
-    const { document: doc, queryText, onDocumentLoad } = this.props;
+    const { document: doc, queryText, onDocumentLoad, intl } = this.props;
   
     if (doc.schema === 'Email') {
       return <EmailViewer document={doc}/>;
@@ -95,9 +102,25 @@ class DocumentViewer extends React.Component {
       return <PdfViewer document={doc} onDocumentLoad={onDocumentLoad} />
     } else if (doc.schema === 'Image') {
       return <ImageViewer document={doc} />;
-    } else if (doc.children !== undefined) {
+    } else if (doc.schema === 'Folder' || doc.schema === 'Package') {
       return <FolderViewer document={doc} queryText={queryText} />;
-    } else {
+    } else if(doc.schema === 'Document'){
+      return <section className="PartialError">
+        <div className="pt-non-ideal-state">
+          <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
+            <span className="pt-icon pt-icon-issue"/>
+          </div>
+          <h4 className="pt-non-ideal-state-title">
+            <FormattedMessage
+              id="document.no_viewer"
+              defaultMessage="No preview is available for this document"/>
+          </h4>
+          <div className="pt-non-ideal-state-description">
+            { intl.formatMessage(messages.ignored_file)}
+          </div>
+        </div>
+      </section>
+    } else if(doc.status === 'fail') {
       return <section className="PartialError">
       <div className="pt-non-ideal-state">
         <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
@@ -116,3 +139,5 @@ class DocumentViewer extends React.Component {
     }
   }
 }
+
+DocumentViewer = injectIntl(DocumentViewer);
