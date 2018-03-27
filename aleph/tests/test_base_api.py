@@ -1,3 +1,5 @@
+from aleph.core import cache
+from aleph.logic.statistics import get_instance_stats
 from aleph.tests.util import TestCase
 
 
@@ -25,6 +27,7 @@ class BaseApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'count' in res.json, res.json
         assert res.json['count'] == 0, res.json
+        cache.delete_memoized(get_instance_stats)
         self.load_fixtures('docs.yaml')
         res = self.client.get('/api/2/statistics')
         assert res.status_code == 200, res

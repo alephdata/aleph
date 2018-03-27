@@ -83,6 +83,8 @@ def index_collection(collection):
              doc_type='doc',
              id=collection.id,
              body=data)
+    data['id'] = collection.id
+    return data
 
 
 def get_collection(collection_id):

@@ -1,12 +1,12 @@
 import os
 import json
-from pprint import pprint
+# from pprint import pprint
 
 from aleph.core import db
 from aleph.model import Entity
 from aleph.util import load_config_file
 from aleph.logic.entities import bulk_load
-from aleph.index import index_entity, flush_index
+from aleph.index import index_entity
 from aleph.tests.util import TestCase
 
 
@@ -28,7 +28,7 @@ class EntitiesApiTestCase(TestCase):
 
     def test_index(self):
         index_entity(self.ent)
-        flush_index()
+        self.flush_index()
         res = self.client.get('/api/2/entities?facet=collection_id')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
@@ -232,7 +232,7 @@ class EntitiesApiTestCase(TestCase):
                                headers=headers,
                                content_type='application/json')
         assert res.status_code == 200, res
-        flush_index()
+        self.flush_index()
         res = self.client.get('/api/2/entities/_suggest?prefix=osa',
                               headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
@@ -261,7 +261,7 @@ class EntitiesApiTestCase(TestCase):
                                data=json.dumps(data),
                                headers=headers,
                                content_type='application/json')
-        flush_index()
+        self.flush_index()
         res = self.client.get('/api/2/entities/%s/similar' % res.json['id'],
                               headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
@@ -277,7 +277,7 @@ class EntitiesApiTestCase(TestCase):
         config = load_config_file(yml_path)
         bulk_load(config)
         _, headers = self.login(is_admin=True)
-        flush_index()
+        self.flush_index()
 
         res = self.client.get('/api/2/entities?q=Climate',
                               headers=headers)
@@ -317,7 +317,7 @@ class EntitiesApiTestCase(TestCase):
                                 data=json.dumps(data),
                                 headers=headers,
                                 content_type='application/json')
-        flush_index()
+        self.flush_index()
         url = '/api/2/entities/%s/tags' % resa.json['id']
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)

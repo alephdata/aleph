@@ -111,6 +111,7 @@ class TestCase(FlaskTestCase):
         destroy_db()
         db.create_all()
         create_system_roles()
+        self.flush_index()
 
     def tearDown(self):
         db.session.close()
