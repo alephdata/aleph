@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db
+from aleph.model.collection import Collection
 from aleph.model.common import IdModel, SoftDeleteModel
 
 log = logging.getLogger(__name__)
