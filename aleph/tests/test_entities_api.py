@@ -241,6 +241,7 @@ class EntitiesApiTestCase(TestCase):
         assert 'Laden' in data['results'][0]['name'], data
 
     def test_similar_entity(self):
+        self.flush_index()
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {
