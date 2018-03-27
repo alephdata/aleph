@@ -98,13 +98,19 @@ class Navbar extends React.Component {
   alertExists() {
     const { alerts } = this.props;
     const {searchValue} = this.state;
-    
-    if (!alerts || !alerts.results)
-      return false;
+    // @FIXME The try/catch here is temporary to confirm this hotfix works
+    // and workaround the issue temporarily in case it doesn't.
+    try {
+      if (!alerts || !alerts.results || !searchValue)
+        return false;
 
-    return alerts.results.some((a) => {
-      return a.query_text.trim() === searchValue.trim();
-    });
+      return alerts.results.some((a) => {
+        return a.query_text && a.query_text.trim() === searchValue.trim();
+      });
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   }
 
   async onAddAlert(event) {

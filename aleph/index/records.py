@@ -1,6 +1,5 @@
 import time
 import logging
-from elasticsearch import TransportError
 from elasticsearch.helpers import BulkIndexError
 
 from aleph.core import db
@@ -43,11 +42,7 @@ def index_records(document):
     if not document.supports_records:
         return
 
-    try:
-        clear_records(document.id)
-    except TransportError as terr:
-        log.exception(terr)
-
+    clear_records(document.id)
     while True:
         try:
             bulk_op(generate_records(document))

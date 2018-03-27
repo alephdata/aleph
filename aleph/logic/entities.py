@@ -6,7 +6,7 @@ from followthemoney.util import merge_data
 
 from aleph.core import es, db, celery
 from aleph.model import Collection, Entity, Alert
-from aleph.index import index_entity, flush_index
+from aleph.index import index_entity
 from aleph.index.core import entities_index
 from aleph.index.entities import index_bulk
 from aleph.index.collections import index_collection
@@ -23,10 +23,8 @@ def entity_url(entity_id=None, **query):
 
 
 def update_entity(entity):
-    index_entity(entity)
     update_entity_full.apply_async([entity.id], priority=7)
-    # needed to make the call to view() work:
-    flush_index()
+    return index_entity(entity)
 
 
 def delete_entity(entity, deleted_at=None):

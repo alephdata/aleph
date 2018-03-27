@@ -2,7 +2,6 @@ import logging
 from datetime import datetime
 
 from aleph.core import db, celery
-from aleph.ingest import ingest
 from aleph.model import Collection, Document, Entity, Match, Permission
 from aleph.index.admin import flush_index
 from aleph.index.collections import delete_collection as index_delete
@@ -26,35 +25,30 @@ def update_collection(collection, roles=False):
         index_delete(collection.id)
         return
 
-    collection.updated_at = datetime.utcnow()
-    db.session.add(collection)
-    db.session.commit()
-
     log.info("Updating: %r", collection)
-    index_collection(collection)
     if roles:
         update_roles(collection)
 
     if not collection.managed:
         xref_collection.apply_async([collection.id], priority=2)
-
-    eq = db.session.query(Entity.id)
-    eq = eq.filter(Entity.collection_id == collection.id)
-    for entity in eq.all():
-        update_entity_full.apply_async([entity.id], priority=2)
-
-    flush_index()
+    return index_collection(collection)
 
 
 def update_collections():
     cq = db.session.query(Collection)
     for collection in cq.all():
         update_collection(collection, roles=True)
+        eq = db.session.query(Entity.id)
+        eq = eq.filter(Entity.collection_id == collection.id)
+        for entity in eq.all():
+            update_entity_full.apply_async([entity.id], priority=2)
+
 
 
 @celery.task()
 def process_collection(collection_id):
     """Re-analyze the elements of this collection, documents and entities."""
+    from aleph.ingest import ingest
     q = db.session.query(Collection).filter(Collection.id == collection_id)
     collection = q.first()
     if collection is None:
@@ -91,14 +85,14 @@ def delete_collection(collection_id, wait=False):
     deleted_at = datetime.utcnow()
     index_delete(collection_id, wait=wait)
 
+    delete_documents(collection_id, wait=wait)
+    delete_entities(collection_id, wait=wait)
+
     log.info("Deleting cross-referencing matches...")
     Match.delete_by_collection(collection_id)
 
     log.info("Deleting permissions...")
     Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
-
-    delete_documents(collection_id, wait=wait)
-    delete_entities(collection_id, wait=wait)
 
     collection.delete(deleted_at=deleted_at)
     db.session.commit()

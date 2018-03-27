@@ -6,7 +6,7 @@ import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'r
 import numeral from 'numeral';
 import { ControlGroup, InputGroup, Button, Intent } from "@blueprintjs/core";
 
-import { fetchStatistics } from 'src/actions/index';
+// import { fetchStatistics } from 'src/actions/index';
 import Screen from 'src/components/common/Screen'
 
 import './HomeScreen.css';
@@ -33,16 +33,16 @@ class HomeScreen extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { statistics } = this.props;
-    if (!statistics.isLoading && statistics.count === undefined) {
-      this.props.fetchStatistics();
-    }
-  }
+  // componentDidMount() {
+  //   this.fetchIfNeeded();
+  // }
+  //
+  // fetchIfNeeded() {
+  //   const { statistics } = this.props;
+  //   if (!statistics.isLoading && statistics.count === undefined) {
+  //     this.props.fetchStatistics();
+  //   }
+  // }
 
   onChange({target}) {
     this.setState({value: target.value})
@@ -60,7 +60,7 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const {intl, metadata, statistics, session} = this.props;
+    const {intl, metadata, statistics} = this.props;
     const total = statistics.count === undefined ? '' : numeral(statistics.count).format('0a');
     const collections = statistics.count === undefined ? '' : <FormattedNumber value={statistics.collections} />;
     const samples = metadata.app.samples.join(', ');
@@ -103,11 +103,13 @@ class HomeScreen extends Component {
                   />
                 </ControlGroup>
               </form>
+              {/*}
               <div className="calls-to-action">
                 <Link className="pt-button pt-large pt-icon-database" to="/collections">
                   <FormattedMessage id='home.explore' defaultMessage="Browse sources" />
                 </Link>
               </div>
+              */}
             </div>
           </div>
         </section>
@@ -118,9 +120,8 @@ class HomeScreen extends Component {
 
 const mapStateToProps = state => ({
   statistics: state.statistics,
-  metadata: state.metadata,
-  session: state.session
+  metadata: state.metadata
 });
 
 HomeScreen = injectIntl(HomeScreen);
-export default connect(mapStateToProps, {fetchStatistics})(HomeScreen);
+export default connect(mapStateToProps, {})(HomeScreen);

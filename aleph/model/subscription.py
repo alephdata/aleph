@@ -24,7 +24,9 @@ class Subscription(db.Model, IdModel, SoftDeleteModel):
 
     @classmethod
     def subscribe(cls, role, channel):
-        subscription = cls.find(channel=channel, role_id=role.id)
+        subscription = cls.find(channel=channel,
+                                role_id=role.id,
+                                deleted=True)
         if subscription is None:
             subscription = cls()
         subscription.channel = channel

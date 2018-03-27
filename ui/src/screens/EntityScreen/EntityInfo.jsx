@@ -10,7 +10,7 @@ import Property from './Property';
 import Entity from './Entity';
 import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
-import { Toolbar, CloseButton, DownloadButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
+import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import TabCount from 'src/components/common/TabCount';
 import Schema from 'src/components/common/Schema';
 import CollectionOverview from 'src/components/Collection/CollectionOverview';

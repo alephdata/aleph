@@ -6,7 +6,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import classnames from 'classnames';
 
@@ -215,7 +214,6 @@ class Preview extends React.Component {
         </div>
       );
     } else {
-      return null;
       // Handle if we have no element to display - renders hidden (0px width)
       // Note: We don't return null as we want a hide animation to happen!
       return (

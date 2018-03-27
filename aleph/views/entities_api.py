@@ -41,9 +41,9 @@ def create():
     collection = get_db_collection(data['collection_id'], request.authz.WRITE)
     entity = Entity.create(data, collection)
     db.session.commit()
-    update_entity(entity)
+    data = update_entity(entity)
     update_collection(collection)
-    return view(entity.id)
+    return jsonify(data, schema=CombinedSchema)
 
 
 @blueprint.route('/api/2/entities/<id>', methods=['GET'])
@@ -126,9 +126,9 @@ def update(id):
         data['properties'] = props
     entity.update(data)
     db.session.commit()
-    update_entity(entity)
+    data = update_entity(entity)
     update_collection(entity.collection)
-    return view(entity.id)
+    return jsonify(data, schema=CombinedSchema)
 
 
 @blueprint.route('/api/2/entities/<id>/merge/<other_id>', methods=['DELETE'])
@@ -142,10 +142,10 @@ def merge(id, other_id):
         raise BadRequest(ve.message)
 
     db.session.commit()
-    update_entity(entity)
+    data = update_entity(entity)
     update_entity(other)
     update_collection(entity.collection)
-    return view(entity.id)
+    return jsonify(data, schema=CombinedSchema)
 
 
 @blueprint.route('/api/2/entities/<id>', methods=['DELETE'])

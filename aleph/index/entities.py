@@ -104,7 +104,7 @@ def _index_updates(collection, entities):
         }
 
 
-def index_bulk(collection, entities, chunk_size=500):
+def index_bulk(collection, entities, chunk_size=200):
     """Index a set of entities."""
     while True:
         try:

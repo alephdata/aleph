@@ -40,7 +40,7 @@ class EntityReferencesTable extends Component {
 
   getMoreResults() {
     const { query, result, queryEntities } = this.props;
-    if (!result.isLoading && result.next) {
+    if (result && !result.isLoading && result.next) {
       queryEntities({ query, next: result.next });
     }
   }

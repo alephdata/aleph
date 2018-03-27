@@ -2,7 +2,7 @@
 # pudo <friedrich@pudo.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-03-21T13:36:24.824Z\n"
+"POT-Creation-Date: 2018-03-26T09:17:08.043Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2018\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -82,11 +82,11 @@ msgstr ""
 msgid "Addresses"
 msgstr "Adressen"
 
-#. [nav.alerts]
+#. [navbar.alert]
 #. defaultMessage is:
-#. Alerts
+#. Alert
 #: i18n/messages.json
-msgid "Alerts"
+msgid "Alert"
 msgstr ""
 
 #. [password_auth.has_account]
@@ -475,20 +475,6 @@ msgstr "Sprachen"
 msgid "Last updated"
 msgstr ""
 
-#. [nav.signin]
-#. defaultMessage is:
-#. Log in
-#: i18n/messages.json
-msgid "Log in"
-msgstr ""
-
-#. [nav.signout]
-#. defaultMessage is:
-#. Log out
-#: i18n/messages.json
-msgid "Log out"
-msgstr ""
-
 #. [login.not_available_title]
 #. defaultMessage is:
 #. Login is disabled
@@ -508,6 +494,13 @@ msgstr ""
 #. MIME
 #: i18n/messages.json
 msgid "MIME"
+msgstr ""
+
+#. [nav.manage_alerts]
+#. defaultMessage is:
+#. Manage alerts
+#: i18n/messages.json
+msgid "Manage alerts"
 msgstr ""
 
 #. [alerts.title]
@@ -625,6 +618,13 @@ msgstr ""
 #. Not authorized
 #: i18n/messages.json
 msgid "Not authorized"
+msgstr ""
+
+#. [nav.view_notifications]
+#. defaultMessage is:
+#. Notifications
+#: i18n/messages.json
+msgid "Notifications"
 msgstr ""
 
 #. [sidebar.open]
@@ -873,8 +873,22 @@ msgstr ""
 #. [login.oauth]
 #. defaultMessage is:
 #. Sign in
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#. [nav.signin]
+#. defaultMessage is:
+#. Sign in
+#. [home.signin]
+#. defaultMessage is:
+#. Sign in
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Sign in"
+msgstr ""
+
+#. [nav.signout]
+#. defaultMessage is:
+#. Sign out
+#: i18n/messages.json
+msgid "Sign out"
 msgstr ""
 
 #. [password_auth.signup]
@@ -1125,6 +1139,13 @@ msgstr "Lesen"
 msgid ""
 "We've sent you an email, please follow the link to complete your "
 "registration"
+msgstr ""
+
+#. [navbar.success]
+#. defaultMessage is:
+#. You are now subscribed to alerts for this search
+#: i18n/messages.json
+msgid "You are now subscribed to alerts for this search"
 msgstr ""
 
 #. [notifications.no_notifications]

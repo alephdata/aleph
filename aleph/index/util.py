@@ -1,6 +1,7 @@
 import logging
 from banal import ensure_list
 from elasticsearch.helpers import bulk
+from elasticsearch import TransportError
 from normality import stringify, latinize_text, collapse_spaces
 
 from aleph.core import es
@@ -53,13 +54,15 @@ def bulk_op(iter, chunk_size=500):
 
 def query_delete(index, query, wait=True):
     "Delete all documents matching the given query inside the index."
-    es.delete_by_query(index=index,
-                       body={'query': query},
-                       refresh=True,
-                       conflicts='proceed',
-                       timeout=TIMEOUT,
-                       request_timeout=REQUEST_TIMEOUT,
-                       wait_for_completion=wait)
+    try:
+        es.delete_by_query(index=index,
+                           body={'query': query},
+                           conflicts='proceed',
+                           timeout=TIMEOUT,
+                           request_timeout=REQUEST_TIMEOUT,
+                           wait_for_completion=wait)
+    except TransportError as terr:
+        log.warning("Query delete failed: %s", terr)
 
 
 def index_form(texts):
