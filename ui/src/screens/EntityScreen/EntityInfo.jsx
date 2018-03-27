@@ -116,7 +116,7 @@ class EntityInfo extends React.Component {
                 }
                 panel={
                   <React.Fragment>
-                    <CollectionOverview collection={entity.collection}/>
+                    <CollectionOverview collection={entity.collection} hasHeader={true}/>
                     {sourceUrl && (
                       <ul className='info-sheet'>
                         <li>
