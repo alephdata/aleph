@@ -30,6 +30,12 @@ class DossierMatch(db.Model, IdModel, SoftDeleteModel):
     def make_dossier_id(self):
         return 'dossier-%s' % make_textid()
 
+    @classmethod
+    def merge_entity(cls, dossier_id, entity_id):
+        # 1. Look up if the entity is in an existing dossier
+        # 2. Merge the two dossiers
+        pass
+
     def __repr__(self):
         return '<DossierMatch(%r, %r, %r)>' % \
             (self.dossier_id, self.entity_id, self.match)

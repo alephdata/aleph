@@ -26,7 +26,7 @@ def index_entity(entity):
 
     data = {
         'name': entity.name,
-        'foreign_ids': entity.foreign_ids,
+        'foreign_id': entity.foreign_id,
         'properties': {
             'name': [entity.name]
         }

@@ -2,16 +2,15 @@ import logging
 from banal import is_mapping, ensure_list
 from datetime import datetime
 from followthemoney import model
-from sqlalchemy import func, or_
-from sqlalchemy.dialects.postgresql import JSONB, ARRAY
-from followthemoney.util import merge_data
+from sqlalchemy import or_
+from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
 from aleph.model.collection import Collection
 from aleph.model.permission import Permission
 from aleph.model.match import Match
 from aleph.model.common import SoftDeleteModel, UuidModel
-from aleph.model.common import make_textid, string_set
+from aleph.model.common import make_textid
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +20,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
     name = db.Column(db.Unicode)
     schema = db.Column(db.String(255), index=True)
-    foreign_ids = db.Column(ARRAY(db.Unicode()))
+    foreign_id = db.Column(db.Unicode)
     data = db.Column('data', JSONB)
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
@@ -83,33 +82,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         pq.update({cls.deleted_at: deleted_at},
                   synchronize_session=False)
 
-    def merge(self, other):
-        if self.id == other.id:
-            raise ValueError("Cannot merge an entity with itself.")
-        if self.collection_id != other.collection_id:
-            raise ValueError("Cannot merge entities from different collections.")  # noqa
-
-        self.schema = model.precise_schema(self.schema, other.schema)
-        self.foreign_ids = string_set(self.foreign_ids, self.foreign_ids)
-        self.created_at = min((self.created_at, other.created_at))
-        self.updated_at = datetime.utcnow()
-
-        data = merge_data(self.data, other.data)
-        if self.name != other.name:
-            data = merge_data(data, {'alias': [other.name]})
-        self.data = data
-
-        # update alerts
-        from aleph.model.alert import Alert
-        q = db.session.query(Alert).filter(Alert.entity_id == other.id)
-        q.update({Alert.entity_id: self.id})
-
-        # delete source entities
-        other.delete()
-        db.session.add(self)
-        db.session.commit()
-        db.session.refresh(other)
-
     def update(self, entity):
         self.schema = entity.get('schema')
 
@@ -124,31 +96,30 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         self.name = entity.get('name')
 
         # TODO: should this be mutable?
-        # self.foreign_ids = string_set(entity.get('foreign_ids'))
+        # self.foreign_id = entity.get('foreign_id')
         self.updated_at = datetime.utcnow()
         db.session.add(self)
 
     @classmethod
     def create(cls, data, collection):
-        foreign_ids = string_set(data.get('foreign_ids'))
-        ent = cls.by_foreign_ids(foreign_ids, collection.id, deleted=True)
+        foreign_id = data.get('foreign_id')
+        ent = cls.by_foreign_id(foreign_id, collection.id, deleted=True)
         if ent is None:
             ent = cls()
             ent.id = make_textid()
             ent.collection = collection
-            ent.foreign_ids = foreign_ids
-        ent.update(data)
+            ent.foreign_id = foreign_id
         ent.deleted_at = None
+        ent.update(data)
         return ent
 
     @classmethod
-    def by_foreign_ids(cls, foreign_ids, collection_id, deleted=False):
-        if not len(foreign_ids):
+    def by_foreign_id(cls, foreign_id, collection_id, deleted=False):
+        if foreign_id is None:
             return None
         q = cls.all(deleted=deleted)
         q = q.filter(Entity.collection_id == collection_id)
-        foreign_id = func.cast(foreign_ids, ARRAY(db.Unicode()))
-        q = q.filter(cls.foreign_ids.contains(foreign_id))
+        q = q.filter(cls.foreign_id == foreign_id)
         q = q.order_by(Entity.deleted_at.desc().nullsfirst())
         return q.first()
 
