@@ -93,6 +93,7 @@ class TestCase(FlaskTestCase):
         self.flush_index()
 
     def setUp(self):
+        self.flush_index()
         if not hasattr(TestCase, '_global_test_state'):
             TestCase._global_test_state = True
             delete_index()
@@ -111,7 +112,6 @@ class TestCase(FlaskTestCase):
         destroy_db()
         db.create_all()
         create_system_roles()
-        self.flush_index()
 
     def tearDown(self):
         db.session.close()
