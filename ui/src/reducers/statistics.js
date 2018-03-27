@@ -1,9 +1,9 @@
 import { createReducer } from 'redux-act';
 
-import { fetchStatistics } from 'src/actions';
+import { fetchMetadata, fetchStatistics } from 'src/actions';
 
 const initialState = {
-    isLoading: false,
+    isLoading: true,
 };
 
 export default createReducer({
@@ -14,6 +14,11 @@ export default createReducer({
 
     [fetchStatistics.COMPLETE]: (state, { statistics }) => ({
       ...statistics,
+      isLoading: false
+    }),
+
+    [fetchMetadata.COMPLETE]: (state, { metadata }) => ({
+      ...metadata.statistics,
       isLoading: false
     }),
 }, initialState);

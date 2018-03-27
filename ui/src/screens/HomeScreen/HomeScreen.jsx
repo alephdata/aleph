@@ -6,7 +6,7 @@ import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'r
 import numeral from 'numeral';
 import { ControlGroup, InputGroup, Button, Intent } from "@blueprintjs/core";
 
-import { fetchStatistics } from 'src/actions/index';
+// import { fetchStatistics } from 'src/actions/index';
 import Screen from 'src/components/common/Screen'
 
 import './HomeScreen.css';
@@ -33,16 +33,16 @@ class HomeScreen extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { statistics } = this.props;
-    if (!statistics.isLoading && statistics.count === undefined) {
-      this.props.fetchStatistics();
-    }
-  }
+  // componentDidMount() {
+  //   this.fetchIfNeeded();
+  // }
+  //
+  // fetchIfNeeded() {
+  //   const { statistics } = this.props;
+  //   if (!statistics.isLoading && statistics.count === undefined) {
+  //     this.props.fetchStatistics();
+  //   }
+  // }
 
   onChange({target}) {
     this.setState({value: target.value})
@@ -124,4 +124,4 @@ const mapStateToProps = state => ({
 });
 
 HomeScreen = injectIntl(HomeScreen);
-export default connect(mapStateToProps, {fetchStatistics})(HomeScreen);
+export default connect(mapStateToProps, {})(HomeScreen);
