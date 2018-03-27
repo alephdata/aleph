@@ -3,7 +3,7 @@ import Waypoint from 'react-waypoint';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import {defineMessages, injectIntl} from 'react-intl';
+import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
 
 import Query from 'src/app/Query';
 import {queryEntities} from 'src/actions';
@@ -12,6 +12,7 @@ import EntityTable from 'src/components/EntityTable/EntityTable';
 import SectionLoading from 'src/components/common/SectionLoading';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
+import './style.css';
 
 const messages = defineMessages({
   no_results_title: {
@@ -21,7 +22,7 @@ const messages = defineMessages({
   no_results_description: {
     id: 'search.no_results_description',
     defaultMessage: 'Try making your search more general',
-  },
+  }
 });
 
 class EntitySearch extends Component {
@@ -70,7 +71,7 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const {query, result, showLinksInPreview} = this.props;
+    const {query, result, showLinksInPreview, hasWarning} = this.props;
     return (
       <React.Fragment>
         {result.total === 0 &&
@@ -79,6 +80,10 @@ class EntitySearch extends Component {
                                     description={messages.no_results_description}/>
         </section>
         }
+        {hasWarning === true && <div className='warning-folder'>
+          <strong><FormattedMessage id="search.warning" defaultMessage="Warning!" />&nbsp;</strong>
+          <p><FormattedMessage id="search.not_properly_imported" defaultMessage="This folder is not properly imported!" /></p>
+        </div>}
         <EntityTable query={query}
                      documentMode={this.props.documentMode}
                      hideCollection={this.props.hideCollection}

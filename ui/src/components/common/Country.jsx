@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 
 import './Country.css';
 
-
 const messages = defineMessages({
   select: {
     id: 'country.multiselect.select',

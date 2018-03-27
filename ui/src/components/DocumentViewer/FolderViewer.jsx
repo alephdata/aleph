@@ -39,7 +39,7 @@ class FolderViewer extends Component {
   }
 
   render() {
-    const { document, query } = this.props;
+    const { document, query, hasWarning } = this.props;
     
     if (!document || !document.id || !document.links) {
       return null;
@@ -50,7 +50,8 @@ class FolderViewer extends Component {
         <div id="children" className="FolderViewer">
           <EntitySearch query={query}
                         hideCollection={true}
-                        documentMode={true} />
+                        documentMode={true}
+                        hasWarning={hasWarning}/>
           {document.children === 0 && (
             <p className="folder-empty pt-text-muted">
               <FormattedMessage
