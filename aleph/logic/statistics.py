@@ -1,9 +1,14 @@
-from aleph.core import es
+import logging
+
+from aleph.core import es, cache
 from aleph.model import Entity
 from aleph.index.util import authz_query
 from aleph.index.core import entities_index, collections_index
 
+log = logging.getLogger(__name__)
 
+
+@cache.memoize(3600 * 2)
 def get_instance_stats(authz):
     # Compute entity stats:
     query = {
@@ -43,4 +48,5 @@ def get_instance_stats(authz):
     result = es.search(index=collections_index(),
                        body=query)
     data['collections'] = result.get('hits').get('total')
+    log.debug("Generated stats for %s.", authz)
     return data
