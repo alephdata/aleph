@@ -103,11 +103,13 @@ class HomeScreen extends Component {
                   />
                 </ControlGroup>
               </form>
+              {/*}
               <div className="calls-to-action">
                 <Link className="pt-button pt-large pt-icon-database" to="/collections">
                   <FormattedMessage id='home.explore' defaultMessage="Browse sources" />
                 </Link>
               </div>
+              */}
             </div>
           </div>
         </section>

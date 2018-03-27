@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs, Button } from "@blueprintjs/core";
 
+import getPath from 'src/util/getPath';
 import URL from 'src/components/common/URL';
 import { selectEntityTags } from 'src/selectors';
 import DualPane from 'src/components/common/DualPane';
@@ -40,6 +42,12 @@ class DocumentInfo extends React.Component {
               onClick={toggleMaximise}>
               <FormattedMessage id="preview" defaultMessage="Preview"/>
             </Button>
+            {doc.links && doc.links.ui && (
+              <Link to={getPath(doc.links.ui)} className="pt-button button-link">
+                <span className={`pt-icon-document`}/>
+                <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
+              </Link>
+            )}
             <DownloadButton document={doc}/>
             <CloseButton/>
           </Toolbar>
