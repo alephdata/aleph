@@ -53,10 +53,19 @@
   }
 
   .homepage-summary {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.75em;
     font-size: $pt-font-size-large * 2.2;
     min-height: $pt-font-size-large * 3;
     color: white;
+    
+    > * {
+      animation: fadein 2s;
+    }
+    
+    @keyframes fadein {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
   }
 
   .search-form {

@@ -21,7 +21,7 @@
   
     form {
       position: absolute;
-      top: $aleph-grid-size /2;
+      top: $aleph-grid-size/2;
       left: $aleph-grid-size * 42;
       margin: 0;
     
@@ -36,5 +36,20 @@
 
   .navbar-search-form {
     display: inline-flex;
+    
+    .alert-toggle {
+      .pt-button {
+        height: 40px;
+        .pt-icon-notifications {
+          margin-left: $aleph-grid-size/2;
+        }
+      }
+    
+      .pt-switch {
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-right: 0;
+      }
+    }
   }
 }

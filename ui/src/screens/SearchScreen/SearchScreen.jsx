@@ -171,7 +171,7 @@ class SearchScreen extends React.Component {
   }
 
   render() {
-    const { query, result, intl } = this.props;
+    const { query, result } = this.props;
 
     return (
       <Screen query={query}

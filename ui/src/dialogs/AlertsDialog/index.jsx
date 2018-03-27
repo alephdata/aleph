@@ -84,16 +84,18 @@ class AlertsDialog extends Component {
               title={intl.formatMessage(messages.title)}>
         <div className="pt-dialog-body">
           <form onSubmit={this.onAddAlert}>
-            <div className="pt-input-group pt-fill pt-large">
-              <input type="text"
-                autoFocus={true}
-                className="pt-input"
-                autoComplete="off"
-                placeholder={intl.formatMessage(messages.add_placeholder)}
-                onChange={this.onChangeAddingInput}
-                value={this.state.newAlert} />
-              <button className="pt-button pt-intent-primary" onClick={this.onAddAlert}>
-                <FormattedMessage id="alerts.add" defaultMessage="Add"/>
+            <div className="pt-control-group pt-fill">
+              <div className="pt-input-group pt-large pt-fill">
+                <input type="text"
+                  autoFocus={true}
+                  className="pt-input"
+                  autoComplete="off"
+                  placeholder={intl.formatMessage(messages.add_placeholder)}
+                  onChange={this.onChangeAddingInput}
+                  value={this.state.newAlert} />
+              </div>
+              <button className="pt-button pt-large pt-fixed pt-intent-primary" onClick={this.onAddAlert}>
+                <FormattedMessage id="alerts.add" defaultMessage="Add alert"/>
               </button>
             </div>
           </form>

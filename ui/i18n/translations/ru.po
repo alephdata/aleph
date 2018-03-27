@@ -2,7 +2,7 @@
 # jen occrp <jen@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-03-21T13:36:24.824Z\n"
+"POT-Creation-Date: 2018-03-26T09:17:08.043Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "Краткое описание источника"
 #. A label for this source
 #: i18n/messages.json
 msgid "A label for this source"
-msgstr "Метка для источника"
+msgstr "Название источника"
 
 #. [settings.api_key]
 #. defaultMessage is:
@@ -82,12 +82,12 @@ msgstr "Добавить"
 msgid "Addresses"
 msgstr "Адреса"
 
-#. [nav.alerts]
+#. [navbar.alert]
 #. defaultMessage is:
-#. Alerts
+#. Alert
 #: i18n/messages.json
-msgid "Alerts"
-msgstr "Оповещения"
+msgid "Alert"
+msgstr ""
 
 #. [password_auth.has_account]
 #. defaultMessage is:
@@ -143,7 +143,7 @@ msgstr "Скрытая копия"
 #. Browse sources
 #: i18n/messages.json
 msgid "Browse sources"
-msgstr ""
+msgstr "Просмотр источников"
 
 #. [collection.browser.total]
 #. defaultMessage is:
@@ -212,7 +212,7 @@ msgstr "Исходный код"
 #. Connections
 #: i18n/messages.json
 msgid "Connections"
-msgstr ""
+msgstr "Связи"
 
 #. [collection.edit.info.contact]
 #. defaultMessage is:
@@ -317,7 +317,7 @@ msgstr "Скачать"
 #. E-Mails
 #: i18n/messages.json
 msgid "E-Mails"
-msgstr "Эл. почта"
+msgstr "Эл. письма"
 
 #. [settings.email]
 #. defaultMessage is:
@@ -352,7 +352,7 @@ msgstr "Сущность не найдена"
 #. Failed to save changes.
 #: i18n/messages.json
 msgid "Failed to save changes."
-msgstr ""
+msgstr "Не удалось сохранить изменения."
 
 #. [document.file_name]
 #. defaultMessage is:
@@ -380,7 +380,7 @@ msgstr "Типы файлов"
 #. Filter sources
 #: i18n/messages.json
 msgid "Filter sources"
-msgstr "Отфильтровать данные по источникам"
+msgstr "Отфильтровать по названию"
 
 #. [document.parent]
 #. defaultMessage is:
@@ -443,7 +443,7 @@ msgstr "Импортировано"
 #. Label
 #: i18n/messages.json
 msgid "Label"
-msgstr "Метка"
+msgstr "Название"
 
 #. [collection.languages]
 #. defaultMessage is:
@@ -475,20 +475,6 @@ msgstr "Языки"
 msgid "Last updated"
 msgstr "Последнее изменение"
 
-#. [nav.signin]
-#. defaultMessage is:
-#. Log in
-#: i18n/messages.json
-msgid "Log in"
-msgstr "Войти"
-
-#. [nav.signout]
-#. defaultMessage is:
-#. Log out
-#: i18n/messages.json
-msgid "Log out"
-msgstr "Выйти"
-
 #. [login.not_available_title]
 #. defaultMessage is:
 #. Login is disabled
@@ -509,6 +495,13 @@ msgstr "Вы вышли из системы"
 #: i18n/messages.json
 msgid "MIME"
 msgstr "MIME"
+
+#. [nav.manage_alerts]
+#. defaultMessage is:
+#. Manage alerts
+#: i18n/messages.json
+msgid "Manage alerts"
+msgstr ""
 
 #. [alerts.title]
 #. defaultMessage is:
@@ -573,7 +566,7 @@ msgstr "Вложений нет"
 #. No match, keep typing
 #: i18n/messages.json
 msgid "No match, keep typing"
-msgstr "Совпадений нет..."
+msgstr "Уточните запрос..."
 
 #. [email.body.empty]
 #. defaultMessage is:
@@ -618,7 +611,7 @@ msgstr "Ничего не найдено"
 #. No tags found.
 #: i18n/messages.json
 msgid "No tags found."
-msgstr ""
+msgstr "Теги не найдены"
 
 #. [auth.unauthorized]
 #. defaultMessage is:
@@ -626,6 +619,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "Not authorized"
 msgstr "Требуется авторизация"
+
+#. [nav.view_notifications]
+#. defaultMessage is:
+#. Notifications
+#: i18n/messages.json
+msgid "Notifications"
+msgstr ""
 
 #. [sidebar.open]
 #. defaultMessage is:
@@ -635,7 +635,7 @@ msgstr "Требуется авторизация"
 #. Open
 #: i18n/messages.json i18n/messages.json
 msgid "Open"
-msgstr ""
+msgstr "Открыть"
 
 #. [category.other]
 #. defaultMessage is:
@@ -669,7 +669,7 @@ msgstr "Страница не найдена"
 #. Page {currentPage} of {numberOfPages}
 #: i18n/messages.json
 msgid "Page {currentPage} of {numberOfPages}"
-msgstr ""
+msgstr "Страница {currentPage} из {numberOfPages}"
 
 #. [password_auth.password]
 #. defaultMessage is:
@@ -693,7 +693,7 @@ msgstr "Введённые пароли различаются"
 #. Phones
 #: i18n/messages.json
 msgid "Phones"
-msgstr "Номера телефонов"
+msgstr "Телефоны"
 
 #. [signup.not_available_desc]
 #. defaultMessage is:
@@ -767,14 +767,14 @@ msgstr "Сохранить"
 #. Save changes
 #: i18n/messages.json
 msgid "Save changes"
-msgstr ""
+msgstr "Сохранить изменения"
 
 #. [xref.score]
 #. defaultMessage is:
 #. Score
 #: i18n/messages.json
 msgid "Score"
-msgstr "Соответствия"
+msgstr "Оценка"
 
 #. [alerts.search]
 #. defaultMessage is:
@@ -815,28 +815,28 @@ msgstr "Искать людей, компании или документы."
 #. Search folder…
 #: i18n/messages.json
 msgid "Search folder…"
-msgstr ""
+msgstr "Поиск по папке..."
 
 #. [document.placeholder_table_filter]
 #. defaultMessage is:
 #. Search table…
 #: i18n/messages.json
 msgid "Search table…"
-msgstr ""
+msgstr "Поиск по таблице..."
 
 #. [home.summary]
 #. defaultMessage is:
 #. Search {total} public records and leaks from {collections} sources
 #: i18n/messages.json
 msgid "Search {total} public records and leaks from {collections} sources"
-msgstr ""
+msgstr "{total} документов, архивов и публичных записей со всего мира"
 
 #. [search.placeholder]
 #. defaultMessage is:
 #. Search…
 #: i18n/messages.json
 msgid "Search…"
-msgstr ""
+msgstr "Искать..."
 
 #. [auth.server_error]
 #. defaultMessage is:
@@ -863,7 +863,7 @@ msgstr "Настройки"
 #. Show more…
 #: i18n/messages.json
 msgid "Show more…"
-msgstr "Подробнее…"
+msgstr "Показать ещё…"
 
 #. [login.oauth]
 #. defaultMessage is:
@@ -874,9 +874,23 @@ msgstr "Подробнее…"
 #. [login.oauth]
 #. defaultMessage is:
 #. Sign in
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#. [nav.signin]
+#. defaultMessage is:
+#. Sign in
+#. [home.signin]
+#. defaultMessage is:
+#. Sign in
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Sign in"
 msgstr "Войти"
+
+#. [nav.signout]
+#. defaultMessage is:
+#. Sign out
+#: i18n/messages.json
+msgid "Sign out"
+msgstr ""
 
 #. [password_auth.signup]
 #. defaultMessage is:
@@ -930,7 +944,7 @@ msgstr "Источник не найден"
 #. Source settings
 #: i18n/messages.json
 msgid "Source settings"
-msgstr ""
+msgstr "Настройки"
 
 #. [nav.collections]
 #. defaultMessage is:
@@ -1128,6 +1142,13 @@ msgid ""
 "registration"
 msgstr "Мы отправили вам письмо с ссылкой для завершения регистрации"
 
+#. [navbar.success]
+#. defaultMessage is:
+#. You are now subscribed to alerts for this search
+#: i18n/messages.json
+msgid "You are now subscribed to alerts for this search"
+msgstr ""
+
 #. [notifications.no_notifications]
 #. defaultMessage is:
 #. You do not have any notifications.
@@ -1140,7 +1161,7 @@ msgstr "У вас нет оповещений"
 #. You have no notifications set up.
 #: i18n/messages.json
 msgid "You have no notifications set up."
-msgstr "У вас нет активных оповещений"
+msgstr "У вас не настроены оповещения"
 
 #. [password_auth.name]
 #. defaultMessage is:

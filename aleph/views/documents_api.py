@@ -1,6 +1,7 @@
 import logging
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
+from celestial.types import PDF
 
 from aleph.core import archive, db
 from aleph.model import Document, DocumentRecord
@@ -12,8 +13,6 @@ from aleph.views.util import jsonify, parse_request, sanitize_html
 from aleph.serializers import RecordSchema
 from aleph.serializers.entities import CombinedSchema, DocumentUpdateSchema
 from aleph.search import DocumentsQuery, RecordsQuery
-from aleph.util import PDF_MIME
-
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('documents_api', __name__)
@@ -99,7 +98,7 @@ def pdf(document_id):
     file_name = document.safe_file_name
     if document.pdf_version != document.content_hash:
         file_name = '%s.pdf' % file_name
-    return _serve_archive(document.pdf_version, file_name, PDF_MIME)
+    return _serve_archive(document.pdf_version, file_name, PDF)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/records')

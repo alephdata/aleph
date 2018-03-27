@@ -3,7 +3,7 @@
 # Lejla Camdzic <lejla@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-03-21T13:36:24.824Z\n"
+"POT-Creation-Date: 2018-03-26T09:17:08.043Z\n"
 "Last-Translator: Lejla Camdzic <lejla@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -83,12 +83,12 @@ msgstr "Dodaj"
 msgid "Addresses"
 msgstr "Adrese"
 
-#. [nav.alerts]
+#. [navbar.alert]
 #. defaultMessage is:
-#. Alerts
+#. Alert
 #: i18n/messages.json
-msgid "Alerts"
-msgstr "Pretplata"
+msgid "Alert"
+msgstr ""
 
 #. [password_auth.has_account]
 #. defaultMessage is:
@@ -476,20 +476,6 @@ msgstr "Jezici"
 msgid "Last updated"
 msgstr "Posljednja izmjena"
 
-#. [nav.signin]
-#. defaultMessage is:
-#. Log in
-#: i18n/messages.json
-msgid "Log in"
-msgstr "Prijava"
-
-#. [nav.signout]
-#. defaultMessage is:
-#. Log out
-#: i18n/messages.json
-msgid "Log out"
-msgstr "Odjava"
-
 #. [login.not_available_title]
 #. defaultMessage is:
 #. Login is disabled
@@ -510,6 +496,13 @@ msgstr "Uspješno ste se odjavili"
 #: i18n/messages.json
 msgid "MIME"
 msgstr "MIME"
+
+#. [nav.manage_alerts]
+#. defaultMessage is:
+#. Manage alerts
+#: i18n/messages.json
+msgid "Manage alerts"
+msgstr ""
 
 #. [alerts.title]
 #. defaultMessage is:
@@ -627,6 +620,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "Not authorized"
 msgstr "Nije Vam dozvoljen pristup"
+
+#. [nav.view_notifications]
+#. defaultMessage is:
+#. Notifications
+#: i18n/messages.json
+msgid "Notifications"
+msgstr ""
 
 #. [sidebar.open]
 #. defaultMessage is:
@@ -874,9 +874,23 @@ msgstr "Prikaži više..."
 #. [login.oauth]
 #. defaultMessage is:
 #. Sign in
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#. [nav.signin]
+#. defaultMessage is:
+#. Sign in
+#. [home.signin]
+#. defaultMessage is:
+#. Sign in
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Sign in"
 msgstr "Prijava"
+
+#. [nav.signout]
+#. defaultMessage is:
+#. Sign out
+#: i18n/messages.json
+msgid "Sign out"
+msgstr ""
 
 #. [password_auth.signup]
 #. defaultMessage is:
@@ -1129,6 +1143,13 @@ msgid ""
 "registration"
 msgstr ""
 "Poslali smo Vam e-mail, molimo da pomoću linka završite svoju registraciju"
+
+#. [navbar.success]
+#. defaultMessage is:
+#. You are now subscribed to alerts for this search
+#: i18n/messages.json
+msgid "You are now subscribed to alerts for this search"
+msgstr ""
 
 #. [notifications.no_notifications]
 #. defaultMessage is:
