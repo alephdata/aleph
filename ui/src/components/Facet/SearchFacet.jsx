@@ -43,9 +43,10 @@ class SearchFacet extends Component {
   }
 
   fetchIfNeeded() {
-    const { fetchFacet, facetQuery, isBlocked } = this.props;
+    const { fetchFacet, facetQuery, isBlocked, isOpen } = this.props;
     const key = facetQuery.toKey();
-    if (!isBlocked && this.state.key !== key) {
+    
+    if (isOpen && !isBlocked && this.state.key !== key) {
       this.setState({ key: key });
       fetchFacet({ query: facetQuery });
     }
@@ -107,12 +108,12 @@ class SearchFacet extends Component {
 
     return (
       <div className="SearchFacet">
-        <div className={c('opener', { clickable: !!facet.total, active: isFiltered })} onClick={this.onToggleOpen} style={{position: 'relative'}}>
+        <div className={c('opener clickable', { active: !isUpdating && isFiltered })} onClick={this.onToggleOpen} style={{position: 'relative'}}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
           <span className="FacetName">
             <span className={`FacetIcon pt-icon pt-icon-${icon}`}/>  
             {label} 
-          </span>     
+          </span>
             
           {isFiltered && (
             <React.Fragment>
@@ -128,16 +129,12 @@ class SearchFacet extends Component {
             </React.Fragment>
           )}
 
-          {!isFiltered && (
+          {isOpen && !isFiltered && (
             <React.Fragment>
-              {isUpdating && (
-                <span className="pt-tag pt-small pt-round pt-minimal">…</span>
-              )}
-
               {facet.total === 0 && (
                 <span className="pt-tag pt-small pt-round pt-minimal">0</span>
               )}
-
+              
               {facet.total > 0 && (
                 <span className="pt-tag pt-small pt-round pt-intent-primary">
                   <FormattedNumber value={facet.total} />
@@ -146,12 +143,13 @@ class SearchFacet extends Component {
             </React.Fragment>
           )} 
         </div>
-        <Collapse isOpen={isOpen}>
+          <Collapse isOpen={isOpen} className={c({updating: isUpdating})}>
           {facet.values !== undefined && (
             <CheckboxList items={facet.values}
                           selectedItems={current}
-                          onItemClick={this.onSelect}>
-              {hasMoreValues && (
+                          onItemClick={this.onSelect}
+                          >
+              {!isUpdating && hasMoreValues && (
                 <a className="ShowMore" onClick={this.showMore}>
                   <FormattedMessage id="search.facets.showMore"
                                     defaultMessage="Show more…"
@@ -160,7 +158,7 @@ class SearchFacet extends Component {
               )}
             </CheckboxList>
           )}
-          {(isExpanding && isOpen) && (
+          {((isUpdating || isExpanding) && isOpen) && (
             <Spinner className="pt-small spinner" />
           )}
         </Collapse>
