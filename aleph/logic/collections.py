@@ -25,30 +25,24 @@ def update_collection(collection, roles=False):
         index_delete(collection.id)
         return
 
-    collection.updated_at = datetime.utcnow()
-    db.session.add(collection)
-    db.session.commit()
-
     log.info("Updating: %r", collection)
-    index_collection(collection)
     if roles:
         update_roles(collection)
 
     if not collection.managed:
         xref_collection.apply_async([collection.id], priority=2)
-
-    eq = db.session.query(Entity.id)
-    eq = eq.filter(Entity.collection_id == collection.id)
-    for entity in eq.all():
-        update_entity_full.apply_async([entity.id], priority=2)
-
-    flush_index()
+    return index_collection(collection)
 
 
 def update_collections():
     cq = db.session.query(Collection)
     for collection in cq.all():
         update_collection(collection, roles=True)
+        eq = db.session.query(Entity.id)
+        eq = eq.filter(Entity.collection_id == collection.id)
+        for entity in eq.all():
+            update_entity_full.apply_async([entity.id], priority=2)
+
 
 
 @celery.task()

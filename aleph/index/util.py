@@ -55,7 +55,6 @@ def query_delete(index, query, wait=True):
     "Delete all documents matching the given query inside the index."
     es.delete_by_query(index=index,
                        body={'query': query},
-                       refresh=True,
                        conflicts='proceed',
                        timeout=TIMEOUT,
                        request_timeout=REQUEST_TIMEOUT,
