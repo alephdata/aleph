@@ -103,10 +103,11 @@ class DocumentViewer extends React.Component {
     } else if (doc.schema === 'Image') {
       return <ImageViewer document={doc} />;
     } else if (doc.schema === 'Folder' || doc.schema === 'Package') {
+      if(doc.status === 'fail') return <FolderViewer hasWarning={true} document={doc} queryText={queryText}/>;
       return <FolderViewer document={doc} queryText={queryText} />;
     } else if(doc.schema === 'Document'){
-      return <section className="PartialError">
-        <div className="pt-non-ideal-state">
+      return <section className="PartialError outer-div">
+        <div className="pt-non-ideal-state inner-div">
           <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
             <span className="pt-icon pt-icon-issue"/>
           </div>
@@ -121,8 +122,8 @@ class DocumentViewer extends React.Component {
         </div>
       </section>
     } else if(doc.status === 'fail') {
-      return <section className="PartialError">
-      <div className="pt-non-ideal-state">
+      return <section className="PartialError outer-div">
+      <div className="pt-non-ideal-state inner-div">
         <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
           <span className="pt-icon pt-icon-issue"/>
         </div>
