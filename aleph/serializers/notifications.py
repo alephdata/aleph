@@ -45,7 +45,7 @@ class NotificationSchema(BaseSchema):
         if not len(alerts):
             return
         for alert in Alert.all_by_ids(alerts, deleted=True):
-            cache[(Alert, str(alert.id))] = role
+            cache[(Alert, str(alert.id))] = alert
 
     @pre_dump(pass_many=True)
     def expand(self, objs, many=False):
@@ -58,6 +58,7 @@ class NotificationSchema(BaseSchema):
         self._resolve_roles(cache)
         self._resolve_index(cache)
 
+        results = []
         for obj in ensure_list(objs):
             params = {}
             for name, clazz, value in obj.iterparams():
@@ -65,4 +66,11 @@ class NotificationSchema(BaseSchema):
                 value = cache.get((clazz, str(value)))
                 if value is not None:
                     params[name], _ = schema().dump(value)
-            obj.params = params
+            results.append({
+                'id': obj.id,
+                'created_at': obj.created_at,
+                'actor_id': obj.actor_id,
+                'event': obj.event,
+                'params': params
+            })
+        return results
