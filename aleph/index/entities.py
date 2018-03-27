@@ -132,8 +132,8 @@ def finalize_index(data, schema, texts):
             if name == 'name':
                 data['name'] = value
             texts.append(value)
-    data = schema.invert(data)
 
+    data = schema.invert(data)
     data['text'] = index_form(texts)
 
     names = data.get('names', [])

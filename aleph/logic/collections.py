@@ -29,7 +29,7 @@ def update_collection(collection, roles=False):
     if roles:
         update_roles(collection)
 
-    if not collection.managed:
+    if collection.casefile:
         xref_collection.apply_async([collection.id], priority=2)
     return index_collection(collection)
 

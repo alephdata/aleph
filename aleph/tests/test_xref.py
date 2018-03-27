@@ -12,9 +12,9 @@ class XrefTestCase(TestCase):
     def setUp(self):
         super(XrefTestCase, self).setUp()
         self.user = self.create_user()
-        self.coll_a = self.create_collection(creator=self.user, managed=True)
-        self.coll_b = self.create_collection(creator=self.user, managed=True)
-        self.coll_c = self.create_collection(creator=self.user, managed=True)
+        self.coll_a = self.create_collection(creator=self.user, casefile=False)
+        self.coll_b = self.create_collection(creator=self.user, casefile=False)
+        self.coll_c = self.create_collection(creator=self.user, casefile=False)
         db.session.commit()
 
     def test_xref(self):
