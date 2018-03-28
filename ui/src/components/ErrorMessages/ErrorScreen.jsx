@@ -28,6 +28,27 @@ class EmptyList extends Component {
   }
 }
 
+class LinkDescription extends Component {
+  render() {
+    const {title, intl} = this.props;
+    let visual = this.props.visual !== undefined ? this.props.visual : 'error';
+    let description = this.props.description !== undefined ? this.props.description
+      : {id: 'error_desc', defaultMessage: ' '};
+
+    return (
+      <div className='outer-div'>
+        <div className='inner-div'>
+          <NonIdealState
+            visual={visual}
+            title={intl.formatMessage(title)}
+            description={<a href='/login'>{intl.formatMessage(description)}</a>}
+          />
+        </div>
+      </div>
+    )
+  }
+}
+
 class PageNotFound extends Component {
   render() {
     const {intl, title} = this.props;
@@ -53,6 +74,7 @@ class PageNotFound extends Component {
 class ErrorScreen extends Component {
   static PageNotFound = injectIntl(PageNotFound);
   static EmptyList = injectIntl(EmptyList);
+  static LinkDescription = injectIntl(LinkDescription);
 }
 
 export default ErrorScreen;

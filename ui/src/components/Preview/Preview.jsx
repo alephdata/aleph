@@ -44,7 +44,7 @@ const messages = defineMessages({
   },
   not_authorized_decr: {
     id: 'preview.not_auth_decr',
-    defaultMessage: <a href='/login'>Please go to login page.</a>,
+    defaultMessage: 'Please go to the login page.',
   }
 });
 
@@ -235,7 +235,7 @@ class Preview extends React.Component {
         top: previewTop,
         bottom: previewBottom
       }}>
-        <ErrorScreen.EmptyList title={messages.not_authorized} description={messages.not_authorized_decr}/>
+        <ErrorScreen.LinkDescription title={messages.not_authorized} description={messages.not_authorized_decr}/>
       </div>
     } else if(collection !== null && collection.error){
       return <div id="Preview" className={className} style={{
