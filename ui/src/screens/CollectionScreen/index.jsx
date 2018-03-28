@@ -30,7 +30,7 @@ class CollectionScreen extends Component {
   render() {
     const { collection } = this.props;
 
-    if(collection.error === 'You are not authorized to do this.') {
+    if(collection.status === 403) {
       return (
         <ErrorScreen.LinkDescription isPage={true} title={messages.not_authorized} description={messages.not_authorized_decr}/>
       )
