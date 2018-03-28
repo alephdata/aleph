@@ -32,7 +32,7 @@ class CollectionScreen extends Component {
 
     if(collection.error === 'You are not authorized to do this.') {
       return (
-        <ErrorScreen.LinkDescription title={messages.not_authorized} description={messages.not_authorized_decr}/>
+        <ErrorScreen.LinkDescription isPage={true} title={messages.not_authorized} description={messages.not_authorized_decr}/>
       )
     } else if (collection.error) {
       return (
