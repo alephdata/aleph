@@ -27,7 +27,6 @@ class Link(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def delete_by_collection(cls, collection_id, deleted_at=None):
         deleted_at = deleted_at or datetime.utcnow()
-
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq = pq.filter(cls.deleted_at == None)  # noqa
