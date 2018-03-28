@@ -1,9 +1,9 @@
 import logging
 from banal import ensure_list
-from marshmallow import pre_dump, post_dump
-from marshmallow.fields import Dict, Raw, String, Nested, Field
+from marshmallow import pre_dump
+from marshmallow.fields import Raw, String, Nested, Field
 
-from aleph.model import Alert, Role, Entity, Collection, Document, Events
+from aleph.model import Alert, Role, Entity, Collection, Document
 from aleph.serializers.roles import RoleSchema
 from aleph.serializers.alerts import AlertSchema
 from aleph.serializers.entities import CombinedSchema
