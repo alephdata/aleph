@@ -9,6 +9,7 @@ env:
     - OAUTH_KEY=fake
     - OAUTH_SECRET=fake
     - DOCKER_COMPOSE_VERSION=1.16.1
+    - DOCKER_IMAGE_NAME=alephdata/aleph
 
 before_install:
   - sudo apt-get update
@@ -23,9 +24,18 @@ before_install:
   - docker-compose --version
 
 install:
+  - echo "${TRAVIS_BRANCH}"
+  - docker build -t $DOCKER_IMAGE_NAME .
   - docker-compose -f docker-compose.dev.yml build
   - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch unoservice
-  - sleep 8
+  - sleep 4
 
 script:
   - docker-compose -f docker-compose.dev.yml run --rm app /aleph/contrib/devwrapper.sh /aleph/contrib/test.sh
+
+after_success:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  # push to latest if master branch
+  - if [[ $TRAVIS_BRANCH = master ]]; then docker push $DOCKER_IMAGE_NAME:latest; else true; fi
+  # push tag as well
+  - if [[ $TRAVIS_TAG = $TRAVIS_BRANCH ]]; then docker push $DOCKER_IMAGE_NAME:$TRAVIS_TAG; else true ; fi
