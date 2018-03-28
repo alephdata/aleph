@@ -137,6 +137,10 @@ class DocumentViewer extends React.Component {
         </div>
       </div>
     </section>
+    } else {
+      // If document is still loading we still need to return something
+      // (or it will trigger an error)
+      return null;
     }
   }
 }

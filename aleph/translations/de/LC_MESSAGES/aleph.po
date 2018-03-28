@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-03-16 11:09+0100\n"
+"POT-Creation-Date: 2018-03-28 10:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2018\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
@@ -91,18 +91,38 @@ msgstr "Aufsichtsbekanntmachungen"
 msgid "Other material"
 msgstr "Anderes Material"
 
-#: aleph/views/base_api.py:84
+#: aleph/model/event.py:42
+msgid "{{actor}} changed the settings of {{collection}}."
+msgstr ""
+
+#: aleph/model/event.py:48
+msgid "{{actor}} uploaded {{document}} to {{collection}}."
+msgstr ""
+
+#: aleph/model/event.py:57
+msgid "{{entity}} matches your alert for {{alert}}."
+msgstr ""
+
+#: aleph/model/event.py:67
+msgid "{{actor}} gave {{role}} access to {{collection}}."
+msgstr ""
+
+#: aleph/model/event.py:82
+msgid "{{actor}} removed access to {{collection}} from {{role}}."
+msgstr ""
+
+#: aleph/views/base_api.py:76
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ is deprecated, please use /api/2/."
 
-#: aleph/views/base_api.py:92
+#: aleph/views/base_api.py:84
 msgid "You are not authorized to do this."
 msgstr "Sie sind nicht autorisiert, dies zu tun."
 
-#: aleph/views/base_api.py:101
+#: aleph/views/base_api.py:93
 msgid "This path does not exist."
 msgstr "Dieser Pfad existiert nicht."
 
-#: aleph/views/base_api.py:117
+#: aleph/views/base_api.py:109
 msgid "Access token has expired."
 msgstr "Access token ist ausgelaufen."
