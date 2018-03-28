@@ -40,7 +40,10 @@ class QueryFilterTag extends PureComponent {
       case 'collection_id':
         return (
           <Collection.Load id={value} renderWhenLoading={'…'}>{collection => (
-            <Collection.Label collection={collection} />
+            <React.Fragment>
+              {collection && <Collection.Label collection={collection} />}
+              {collection !== null && collection.error && 'lklklkk'}
+            </React.Fragment>
           )}</Collection.Load>
         );
       case 'ancestors':
