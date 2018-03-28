@@ -106,7 +106,7 @@ class EntityTableRow extends Component {
           </td>
         )}
         <td className="date">
-          <Date.Earliest value={entity.dates} />
+          <Date.Earliest values={entity.dates} />
         </td>
         {documentMode && (
           <td className="file-size">

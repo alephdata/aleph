@@ -68,4 +68,4 @@ class Authz(object):
         return self.can(collection, self.READ)
 
     def __repr__(self):
-        return '<Authz(%s)>' % self.role
+        return '<Authz(%s)>' % self.id
