@@ -230,7 +230,7 @@ class Preview extends React.Component {
           <SectionLoading/>
         </div>
       );
-    } else if(collection !== null && collection !== null && collection.error === 'You are not authorized to do this.'){
+    } else if(collection !== null && collection !== null && collection.status === 403){
       return <div id="Preview" className={className} style={{
         top: previewTop,
         bottom: previewBottom
