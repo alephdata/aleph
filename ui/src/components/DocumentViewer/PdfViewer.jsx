@@ -24,8 +24,16 @@ class PdfViewer extends Component {
     this.setState({
       numPages: pdfInfo.numPages
     });
+    
     if (this.props.onDocumentLoad)
       this.props.onDocumentLoad(pdfInfo)
+
+    // This handles a rare race condition where the page is slow to render
+    // on initial load - it makes sure it pops to the size as soon as it can
+    // (otherwise on first render the first page viewed may appear too small).
+    setTimeout(() => {
+      this.updateWidth();
+    }, 1000);
   }
 
   componentDidMount() {
