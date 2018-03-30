@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
+import classNames from 'classnames';
 
 import SectionLoading from 'src/components/common/SectionLoading';
 
@@ -53,10 +54,12 @@ class PdfViewer extends Component {
   render() {
     const { document, session, location: loc } = this.props;
     const { numPages, width } = this.state;
-
+    
     if (!document || !document.links || !document.links.pdf) {
       return null;
     }
+
+    const pagesVisible = false;
 
     let url = document.links.pdf;
     if (session.token) {
@@ -68,17 +71,31 @@ class PdfViewer extends Component {
     
     return (
       <React.Fragment>
-        <div className="outer">
-          <div id="PdfViewer" className="inner PdfViewer">
-            <div className="document_pdf" ref={(ref) => this.pdfElement = ref}>
-              {width && (
-              <Document renderAnnotations={true}
-                        file={url}
-                        onLoadSuccess={this.onDocumentLoad}
-                        loading={(<SectionLoading />)}>
-                <Page pageNumber={pageNumber} className="page" width={width} />
-              </Document>
-            )}
+        <div className="PdfViewer">
+          <div className={classNames("outer", { 'with-page-list': pagesVisible })}>
+            <div className="pages">
+              <ul>
+                <li>
+                  Result number on page 1
+                </li>
+                <li>
+                  Result number on page 2
+                </li>
+              </ul>
+            </div>
+            <div className="inner">
+              <div id="PdfViewer" className="document" style={{minWidth: width}}>
+                <div ref={(ref) => this.pdfElement = ref}>
+                  {width && (
+                  <Document renderAnnotations={true}
+                            file={url}
+                            onLoadSuccess={this.onDocumentLoad}
+                            loading={(<SectionLoading />)}>
+                    <Page pageNumber={pageNumber} className="page" width={width}/>
+                  </Document>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -1,40 +1,82 @@
 @import "src/app/variables.scss";
 
+$pagesWidth: 200px;
+
 .PdfViewer {
-  .document-pdf {
-    width: 100%;
-    background-color: whitesmoke;
-  }
+  .outer {
+    position: relative;
+    background: transparent !important;
 
-  .page {
-    margin: 0;
-    padding: 0;
-  }
+    .pages {
+      display: none;
+    }
+    
+    &.with-page-list {
+      padding-left: $pagesWidth + ($aleph-grid-size * 4);
+      
+      .pages {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: $pagesWidth;
+        border-right: 1px solid $aleph-border-color;
+        border-bottom: 1px solid $aleph-border-color;
+        background: white;
+        
+        ul {
+          padding-left: 0;
+          margin: 0;
+          li {
+            list-style: none;
+            padding: $aleph-grid-size;
+            border-bottom: 1px solid $aleph-border-color;
+          }
+        }
+      
+    }
 
-  .page > canvas {
-    /* center each page */
-    margin: auto;
-    padding-bottom: $aleph-grid-size;
-    width: 90%;
-  }
-  
-  .react-pdf__Page__canvas {
-    padding: 0 !important;
-  }
+    .inner {
+      width: auto;
+      
+      .document {
+        width: 100%;
+      }
 
-  .SectionLoading {
-    background: white;
-  }
+      .page {
+        margin: 0;
+        padding: 0;
+      }
 
-  .react-pdf__message,
-  .react-pdf__message--error {
-    background: white;
-    text-align: center;
-    padding: 100px 20px;
-    font-size: 1.2em;
-  }
+      .page > canvas {
+        /* center each page */
+        margin: auto;
+        padding-bottom: $aleph-grid-size;
+      }
 
-  .spinner {
-    margin: 100px 0;
+      .react-pdf__Page__canvas {
+        padding: 0 !important;
+      }
+
+      .react-pdf__message--error {
+        text-align: center;
+        padding: 100px 20px;
+        font-size: 1.2em;
+        width: 100%;
+      }
+
+      .spinner {
+        margin: 100px 0;
+      }
+    }
+  }
+}
+
+.Preview {
+  .PdfViewer {
+    .outer.with-page-list {
+        padding-left: $pagesWidth;
+    }
   }
 }
