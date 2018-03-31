@@ -1,20 +1,26 @@
 @import "src/app/variables.scss";
 
-$pagesWidth: 200px;
+$pagesWidth: 150px;
 
 .PdfViewer {
+  display: flex;
+  
   .outer {
     position: relative;
     background: transparent !important;
-
+    display: flex;
+    height: 100%;
+    flex: 1;
+    
     .pages {
       display: none;
     }
     
     &.with-page-list {
       padding-left: $pagesWidth + ($aleph-grid-size * 4);
-      
+  
       .pages {
+        flex: 1;
         display: block;
         position: absolute;
         top: 0;
@@ -22,9 +28,16 @@ $pagesWidth: 200px;
         bottom: 0;
         width: $pagesWidth;
         border-right: 1px solid $aleph-border-color;
-        border-bottom: 1px solid $aleph-border-color;
         background: white;
+        overflow: auto;
+        height: 100%;
         
+        .heading {
+          background: $aleph-table-heading-background;
+          padding: $aleph-grid-size;
+          border-bottom: 1px solid $aleph-border-color;
+        }
+    
         ul {
           padding-left: 0;
           margin: 0;
@@ -34,12 +47,14 @@ $pagesWidth: 200px;
             border-bottom: 1px solid $aleph-border-color;
           }
         }
-      
+    
+      }
     }
 
     .inner {
+      flex: 1;
       width: auto;
-      
+    
       .document {
         width: 100%;
       }
@@ -70,9 +85,13 @@ $pagesWidth: 200px;
         margin: 100px 0;
       }
     }
+
   }
 }
 
+/* Don't show padding between list of pages & doc in preview as space limited
+ * This is included here and not in Preview just to make it easier follow
+ */
 .Preview {
   .PdfViewer {
     .outer.with-page-list {
