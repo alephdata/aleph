@@ -96,7 +96,7 @@ class CollectionInfo extends Component {
                   isOpen={collectionInfoIsOpen}
                   toggleDialog={this.toggleCollectionEdit}
                 />
-                <Button icon="cog" onClick={this.toggleAccess}>
+                <Button icon="key" onClick={this.toggleAccess}>
                   <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
                 </Button>
                 <AccessCollectionDialog

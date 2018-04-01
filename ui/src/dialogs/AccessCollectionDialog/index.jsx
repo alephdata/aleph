@@ -88,7 +88,7 @@ class AccessCollectionDialog extends Component {
     const exclude = permissions.map((perm) => perm.role.id);
 
     return (
-      <Dialog icon="notifications" className="AlertsDialog"
+      <Dialog icon="key" className="AlertsDialog"
               isOpen={this.props.isOpen}
               onClose={this.props.toggleDialog}
               title={intl.formatMessage(messages.title)}>
