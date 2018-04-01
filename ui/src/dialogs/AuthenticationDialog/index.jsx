@@ -11,7 +11,7 @@ import OAuthLogin from 'src/components/auth/OAuthLogin';
 import {PasswordAuthLogin} from 'src/components/auth/PasswordAuth';
 import {PasswordAuthSignup} from 'src/components/auth/PasswordAuth';
 import queryString from "query-string";
-import {loginWithPassword, loginWithToken} from "../../actions/sessionActions";
+import {loginWithPassword, loginWithToken} from "src/actions/sessionActions";
 
 import './style.css';
 
