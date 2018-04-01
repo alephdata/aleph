@@ -1,6 +1,5 @@
 import React from 'react';
 import {defineMessages, FormattedMessage} from 'react-intl';
-import { Link } from 'react-router-dom';
 import { Button, Intent } from '@blueprintjs/core';
 import { showWarningToast } from 'src/app/toast';
 

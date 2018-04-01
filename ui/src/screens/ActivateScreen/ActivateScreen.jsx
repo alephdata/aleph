@@ -24,11 +24,7 @@ class ActivateScreen extends Component {
   render() {
     const {match: {params}, session, intl} = this.props;
 
-    if (!params.code) {
-      return <Redirect to="/signup"/>;
-    }
-
-    if (session.loggedIn) {
+    if (!params.code || session.loggedIn) {
       return <Redirect to="/"/>;
     }
 
