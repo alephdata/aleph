@@ -7,10 +7,7 @@ import { fetchMetadata } from 'src/actions';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import EntityScreen from 'src/screens/EntityScreen';
 import CollectionScreen from 'src/screens/CollectionScreen';
-
-import LoginScreen from 'src/screens/LoginScreen/LoginScreen';
 import LogoutScreen from 'src/screens/LogoutScreen/LogoutScreen';
-import SignupScreen from 'src/screens/SignupScreen/SignupScreen';
 import ActivateScreen from 'src/screens/ActivateScreen/ActivateScreen';
 import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
 import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
@@ -44,9 +41,7 @@ class Router extends Component {
 
     return (
       <Switch>
-        <Route path="/login" exact component={LoginScreen}/>
         <Route path="/logout" exact component={LogoutScreen}/>
-        <Route path="/signup" exact component={SignupScreen}/>
         <Route path="/activate/:code" exact component={ActivateScreen}/>
         <Route path="/entities/:entityId" exact component={EntityScreen}/>
         <Route path="/documents/:documentId" exact component={DocumentScreen}/>
