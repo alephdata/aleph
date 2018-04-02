@@ -51,11 +51,11 @@ class PdfViewer extends Component {
   
   componentDidMount() {
     this.updateWidth();
-    window.addEventListener("resize", throttle(this.updateWidth, 500))
+    window.addEventListener("resize", throttle(this.updateWidth, 1000))
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", throttle(this.updateWidth, 500))
+    window.removeEventListener("resize", throttle(this.updateWidth, 1000))
   }
   
   componentWillUpdate() {
