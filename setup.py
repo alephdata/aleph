@@ -28,7 +28,11 @@ setup(
             'emails = aleph.analyze.regex:EMailAnalyzer',
             'phones = aleph.analyze.regex:PhoneNumberAnalyzer',
             'corasick = aleph.analyze.corasick_entity:AhoCorasickEntityAnalyzer',  # noqa
-            'polyglot = aleph.analyze.polyglot_entity:PolyglotEntityAnalyzer'
+            'polyglot = aleph.analyze.polyglot_entity:PolyglotEntityAnalyzer',
+            'ipv4 = aleph.analyze.regex:IPV4Analyzer',
+            'ipv6 = aleph.analyze.regex:IPV6Analyzer',
+            'iban = aleph.analyze.regex:IBANAnalyzer'
+
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',
