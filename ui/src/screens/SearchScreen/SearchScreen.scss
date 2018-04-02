@@ -16,11 +16,10 @@
 
   .total-count {
     display: flex;
-    padding: 0 10px;
+    padding: 0 $aleph-grid-size;
     -ms-flex-align: center;
     align-items: center;
-    cursor: pointer;
-    background: #ebf1f5 !important;
+    background: $aleph-facet-background !important;
     height: 3em !important;
     margin-top: $aleph-grid-size;
   }
