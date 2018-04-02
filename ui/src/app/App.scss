@@ -63,6 +63,12 @@ a {
   }
 }
 
+.auth-screen {
+  @extend .small-screen;
+
+  width: 26em;
+}
+
 .small-screen-outer {
   display: table;
   position: absolute;

@@ -22,13 +22,9 @@ class ActivateScreen extends Component {
   }
 
   render() {
-    const {match: {params}, session} = this.props;
+    const {match: {params}, session, intl} = this.props;
 
-    if (!params.code) {
-      return <Redirect to="/signup"/>;
-    }
-
-    if (session.loggedIn) {
+    if (!params.code || session.loggedIn) {
       return <Redirect to="/"/>;
     }
 
@@ -38,7 +34,7 @@ class ActivateScreen extends Component {
           <div className="small-screen-inner">
             <section className="small-screen">
               <h1><FormattedMessage id="signup.title" defaultMessage="Activate your account"/></h1>
-              <PasswordAuthActivate onSubmit={this.onActivate.bind(this)}/>
+              <PasswordAuthActivate onSubmit={this.onActivate.bind(this)} intl={intl}/>
             </section>
           </div>
         </div>

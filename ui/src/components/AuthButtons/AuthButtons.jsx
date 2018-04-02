@@ -5,6 +5,7 @@ import { Menu, MenuItem, MenuDivider, Popover, Button, Position } from "@bluepri
 
 import SettingsDialog from 'src/dialogs/SettingsDialog';
 import AlertsDialog from 'src/dialogs/AlertsDialog';
+import AuthenticationDialog from 'src/dialogs/AuthenticationDialog';
 
 import './AuthButtons.css';
 
@@ -24,6 +25,10 @@ const messages = defineMessages({
   signout: {
     id: 'nav.signout',
     defaultMessage: 'Sign out',
+  },
+  signin: {
+    id: 'nav.sigin',
+    defaultMessage: 'Sign in / Register',
   }
 });
 
@@ -33,11 +38,20 @@ class AuthButtons extends Component {
     this.state = {
       settingsIsOpen: false,
       alertsIsOpen: false,
+      isSignupOpen: false
     };
 
     this.toggleSettings = this.toggleSettings.bind(this);
     this.toggleAlerts = this.toggleAlerts.bind(this);
+    this.toggleAuthentication = this.toggleAuthentication.bind(this);
   }
+
+  toggleAuthentication() {
+    this.setState({
+      isSignupOpen: !this.state.isSignupOpen
+    })
+  }
+
 
   toggleSettings() {
     this.setState({
@@ -54,7 +68,7 @@ class AuthButtons extends Component {
   render() {
     const {session, auth, intl} = this.props;
     const location = window.location;
-    const targetUrl = `${location.protocol}//${location.host}/login`;
+    const targetUrl = `${location.protocol}//${location.host}/oauth`;
     const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
     const items = [];
 
@@ -88,36 +102,29 @@ class AuthButtons extends Component {
 
     if (auth.oauth_uri) {
       items.push((
+        <Menu className='menu-item-width' key='oauthmenu'>
         <a key='oauth' href={`${auth.oauth_uri}${loginUrlQueryString}`}>
           <Button icon="log-in" className="pt-minimal">
             <FormattedMessage id="login.oauth" defaultMessage="Sign in"/>
           </Button>
         </a>
+        </Menu>
       ))
     }
 
     if (auth.password_login_uri) {
       items.push((
-        <Link key='login' to="/login">
-          <Button icon="log-in" className="pt-minimal">
-            <FormattedMessage id="nav.signin" defaultMessage="Sign in"/>
-          </Button>
-        </Link>
-      ))
-    }
-
-    if (auth.registration_uri) {
-      items.push((
-        <Link key='signup' to="/signup">
-          <Button icon="user" className="pt-minimal">
-            <FormattedMessage id="nav.signup" defaultMessage="Register"/>
-          </Button>
-        </Link>
+        <Menu className='menu-item-width' key='signin'>
+          <MenuItem icon='log-in' onClick={this.toggleAuthentication} text={intl.formatMessage(messages.signin)} />
+          <AuthenticationDialog isOpen={this.state.isSignupOpen} toggleDialog={this.toggleAuthentication} />
+        </Menu>
       ))
     }
 
     return (
-      <span className="AuthButtons">{items}</span>
+      <span className="AuthButtons">
+        {items}
+      </span>
     )
   }
 }
