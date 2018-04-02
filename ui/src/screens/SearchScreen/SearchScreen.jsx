@@ -177,7 +177,7 @@ class SearchScreen extends React.Component {
               title={query.getString('q')}>
         <DualPane className="SearchScreen">
           <DualPane.InfoPane className="SearchFacetsPane">
-            <div className='total-count'>
+            <div className='total-count pt-text-muted'>
               <span className='total-count-span'>
               <span className="total-icon pt-icon-standard pt-icon-search"/>
               <FormattedNumber value={result.total !== undefined ? result.total : 0} />&nbsp;results
