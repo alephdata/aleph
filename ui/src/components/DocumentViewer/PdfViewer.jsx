@@ -22,24 +22,22 @@ class PdfViewer extends Component {
       searchResults: props.searchResults || null
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
+    this.onRenderSuccess = this.onRenderSuccess.bind(this);
   }
 
   onDocumentLoad(pdfInfo) {
     this.setState({
       numPages: pdfInfo.numPages
     });
-    
+
     if (this.props.onDocumentLoad)
       this.props.onDocumentLoad(pdfInfo)
 
-    // This handles a rare race condition where the page is slow to render
-    // on initial load - it makes sure it pops to the size as soon as it can
-    // (otherwise on first render the first page viewed may appear too small).
-    setTimeout(() => {
-      this.updateWidth();
-    }, 1000);
-    
     this.fetchRecords();
+  }
+  
+  onRenderSuccess() {
+    this.updateWidth();
   }
 
   componentWillReceiveProps(newProps) {
@@ -123,7 +121,7 @@ class PdfViewer extends Component {
                               file={url}
                               onLoadSuccess={this.onDocumentLoad}
                               loading={(<SectionLoading />)}>
-                    <Page pageNumber={pageNumber} className="page" width={width}/>
+                    <Page pageNumber={pageNumber} className="page" width={width} onRenderSuccess={this.onRenderSuccess}/>
                   </Document>
                   )}
                 </div>
