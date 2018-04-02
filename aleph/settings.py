@@ -133,6 +133,9 @@ ANALYZE_POLYGLOT = env_bool('ALEPH_ANAYZE_POLYGLOT', True)
 ANALYZE_CORASICK = env_bool('ALEPH_ANAYZE_CORASICK', True)
 ANALYZE_PHONES = env_bool('ALEPH_ANAYZE_PHONES', True)
 ANALYZE_EMAILS = env_bool('ALEPH_ANAYZE_EMAILS', True)
+ANALYZE_IPV4 = env_bool('ALEPH_ANAYZE_IPV4', True)
+ANALYZE_IPV6 = env_bool('ALEPH_ANAYZE_IPV6', True)
+ANALYZE_IBAN = env_bool('ALEPH_ANAYZE_IBAN', True)
 
 
 ##############################################################################

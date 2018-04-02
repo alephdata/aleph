@@ -24,6 +24,7 @@ def analyze_document(document):
     analyzers = sorted(analyzers, key=lambda a: a.PRIORITY, reverse=True)
 
     for cls in analyzers:
+        print ('Load ' + str(cls))
         analyzer = cls()
         if not analyzer.active:
             continue
