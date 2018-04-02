@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl, FormattedNumber } from 'react-intl';
+import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'react-intl';
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';
@@ -180,7 +180,7 @@ class SearchScreen extends React.Component {
             <div className='total-count pt-text-muted'>
               <span className='total-count-span'>
               <span className="total-icon pt-icon-standard pt-icon-search"/>
-              <FormattedNumber value={result.total !== undefined ? result.total : 0} />&nbsp;results
+              <FormattedNumber value={result.total !== undefined ? result.total : 0} />&nbsp;<FormattedMessage id="search.screen.results" defaultMessage="results"/>
             </span>
             </div>
             <SearchFacets query={query}
