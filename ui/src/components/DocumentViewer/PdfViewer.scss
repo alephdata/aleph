@@ -10,15 +10,18 @@ $pagesWidth: 150px;
     background: transparent !important;
     display: flex;
     height: 100%;
+    width: 100%;
     flex: 1;
-    
+    overflow-x: hidden;
+    overflow-y: visible;
+      
     .pages {
       display: none;
     }
     
     &.with-page-list {
       padding-left: $pagesWidth + ($aleph-grid-size * 4);
-  
+      
       .pages {
         flex: 1;
         display: block;
@@ -28,9 +31,10 @@ $pagesWidth: 150px;
         bottom: 0;
         width: $pagesWidth;
         border-right: 1px solid $aleph-border-color;
+        border-bottom: 1px solid $aleph-border-color;
         background: white;
         overflow: auto;
-        height: 100%;
+        text-align: right;
         
         .heading {
           background: $aleph-table-heading-background;
@@ -43,11 +47,18 @@ $pagesWidth: 150px;
           margin: 0;
           li {
             list-style: none;
-            padding: $aleph-grid-size;
+            padding: 0;
             border-bottom: 1px solid $aleph-border-color;
             
+            .no-results,
             a {
+              padding: $aleph-grid-size;
               display: block;
+            }
+            
+            a.active {
+              color: white;
+              background: $aleph-link-color;
             }
           }
         }
@@ -58,7 +69,8 @@ $pagesWidth: 150px;
     .inner {
       flex: 1;
       width: auto;
-    
+      overflow-x: hidden;
+      
       .document {
         width: 100%;
       }

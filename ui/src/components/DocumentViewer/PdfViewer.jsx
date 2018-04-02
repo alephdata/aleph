@@ -101,20 +101,20 @@ class PdfViewer extends Component {
         <div className="PdfViewer">
           <div className={classNames("outer", { 'with-page-list': displayDocumentSearchResults })}>
             <div className="pages">
-              <div className="heading">Found on page:</div>
+              <div className="heading">Found on:</div>
               {displayDocumentSearchResults === true &&
                 <ul>
                   {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
-                    <li className="pt-text-muted">No Results.</li>
+                    <li><span className="no-results pt-text-muted">No Results.</span></li>
                   }
                   {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
-                    <li><a href={result.href}>Page {result.pageNumber}</a></li>
+                    <li><a href={result.href} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</a></li>
                   ))}
                 </ul>
               }
             </div>
-            <div className="inner">
-              <div id="PdfViewer" className="document" style={{minWidth: width}}>
+            <div id="PdfViewer" className="inner">
+              <div className="document">
                 <div ref={(ref) => this.pdfElement = ref}>
                   {width && (
                     <Document renderAnnotations={true}
