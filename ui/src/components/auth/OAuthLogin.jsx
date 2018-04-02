@@ -5,7 +5,7 @@ import './OAuthLogin.css';
 
 const OAuthLogin = ({provider}) => {
   const location = window.location;
-  const targetUrl = `${location.protocol}//${location.host}/login`;
+  const targetUrl = `${location.protocol}//${location.host}/oauth`;
   const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
 
   return (
