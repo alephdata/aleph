@@ -32,7 +32,7 @@ class CollectionScreen extends Component {
 
     if(collection.status === 403) {
       return (
-        <ErrorScreen.LinkDescription isPage={true} title={messages.not_authorized} description={messages.not_authorized_decr}/>
+        <ErrorScreen.PageNotFound title={messages.not_authorized} description={messages.not_authorized_decr}/>
       )
     } else if (collection.error) {
       return (
