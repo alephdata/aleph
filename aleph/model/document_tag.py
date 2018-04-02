@@ -18,6 +18,9 @@ class DocumentTag(db.Model, IdModel):
     TYPE_PERSON = 'person'
     TYPE_ORGANIZATION = 'organization'
     TYPE_LOCATION = 'location'
+    TYPE_IPV4 = 'IP'
+#    TYPE_IPV6 = 'IP'
+
 
     TYPES = {
         TYPE_PERSON: exactitude.names,
@@ -25,6 +28,8 @@ class DocumentTag(db.Model, IdModel):
         TYPE_EMAIL: exactitude.emails,
         TYPE_PHONE: exactitude.phones,
         TYPE_LOCATION: exactitude.addresses,
+        TYPE_IPV4: exactitude.ipv4,
+#        TYPE_IPV6: exactitude.ipv6,
     }
 
     id = db.Column(db.BigInteger, primary_key=True)
