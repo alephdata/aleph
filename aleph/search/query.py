@@ -119,7 +119,18 @@ class Query(object):
         return list(reversed(sort_fields))
 
     def get_highlight(self):
-        return {}
+        if not self.parser.highlight:
+            return {}
+
+        return {
+            'fields': {
+                'text': {
+                    'number_of_fragments': self.highlight_count,
+                    'fragment_size': self.highlight_length,
+                    'encoder': 'html'
+                }
+            }
+        }
 
     def get_source(self):
         source = {}
