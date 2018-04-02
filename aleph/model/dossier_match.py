@@ -90,6 +90,8 @@ class DossierMatch(db.Model, IdModel, SoftDeleteModel):
         """
         if dest_id == from_id:
             return
+        # TODO: do counts and merge from the smaller dossier to the
+        # larger dossier so that IDs become stable over time.
         merged_at = merged_at or datetime.utcnow()
         q = cls.all()
         q = q.filter(cls.dossier_id == from_id)
