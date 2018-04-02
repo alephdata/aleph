@@ -149,7 +149,7 @@ class PdfViewer extends Component {
       return null;
     }
     
-    const displayDocumentSearchResults = (queryText) ? true : false;
+    const displayDocumentSearchResults = (queryText && numPages > 0) ? true : false;
     
     let url = document.links.pdf;
     if (session.token) {
