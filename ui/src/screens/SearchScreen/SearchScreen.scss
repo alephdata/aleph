@@ -6,4 +6,26 @@
     box-shadow: none !important;
     padding: $aleph-grid-size;
   }
+
+  .total-count-span {
+    display: inline-flex;
+    padding-left: 1.3em;
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+
+  .total-count {
+    display: flex;
+    padding: 0 10px;
+    -ms-flex-align: center;
+    align-items: center;
+    cursor: pointer;
+    background: #ebf1f5 !important;
+    height: 3em !important;
+    margin-top: $aleph-grid-size;
+  }
+
+  .total-icon {
+    margin-right: 0.5em;
+  }
 }
