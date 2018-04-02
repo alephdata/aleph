@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { Spinner } from '@blueprintjs/core';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
-import { throttle } from 'lodash';
+import { throttle, debounce } from 'lodash';
 import queryString from 'query-string';
 import classNames from 'classnames';
 
@@ -19,10 +20,12 @@ class PdfViewer extends Component {
     this.state = {
       width: null,
       numPages: 0,
-      searchResults: props.searchResults || null
+      searchResults: null,
+      fetchRecords: false
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
     this.onRenderSuccess = this.onRenderSuccess.bind(this);
+    this.updateSearchResults =  debounce(this.updateSearchResults.bind(this), 1000);
   }
 
   onDocumentLoad(pdfInfo) {
@@ -32,8 +35,6 @@ class PdfViewer extends Component {
 
     if (this.props.onDocumentLoad)
       this.props.onDocumentLoad(pdfInfo)
-
-    this.fetchRecords();
   }
   
   onRenderSuccess() {
@@ -41,16 +42,15 @@ class PdfViewer extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({ 
-      searchResults: newProps.searchResults || null
-    });
     if (newProps.queryText !== this.props.queryText) {
+      this.setState({ searchResults: null, fetchRecords: true });
       this.fetchRecords();
     }
   }
   
   componentDidMount() {
     this.updateWidth();
+    this.fetchRecords();
     window.addEventListener("resize", throttle(this.updateWidth, 1000))
   }
 
@@ -61,6 +61,10 @@ class PdfViewer extends Component {
   componentWillUpdate() {
     this.updateWidth();
   }
+  
+  componentDidUpdate() {
+    this.updateSearchResults();
+  }
 
   fetchRecords() {
     const { queryDocumentRecords, query } = this.props;
@@ -69,6 +73,62 @@ class PdfViewer extends Component {
     }
   }
 
+  /*
+   * @FIXME
+   * Putting the state into props.state in mapStateToProps and calling 
+   * updateSearchResults() every time the component updates is basically 
+   * a hack because the there is something up with our lifescycle whereby 
+   * we don't get updated search results the first time a new search is
+   * performed.
+   *
+   * This approach of setting fetchRecords to false in componentWillReceiveProps 
+   * and then calling this.fetchRecords(); again and then parsing the result
+   * works around the problem but is hard to follow (and hard to explain).
+   * 
+   * One possible fix would be a simple async method (which can be used with 
+   * await) to get document record results.
+   *
+   * We should really invest the time to understand what is wrong with our 
+   * lifecycle that is causing this bug too, though it requires a bit more
+   * time sunk into digging.
+   */
+  updateSearchResults() {
+    const { state, query, queryText, location: loc } = this.props;
+    const { fetchRecords } = this.state;
+    
+    if (fetchRecords === true) {
+      this.setState({ fetchRecords: false })
+      this.fetchRecords();
+      return;
+    }
+    
+    if (this.state.searchResults === null || this.state.searchResults.isLoading === true) {
+      
+      const hash = queryString.parse(loc.hash);
+      const results = (queryText) ? selectDocumentRecordsResult(state, query) : null;
+
+      const searchResults = {
+        isLoading: (results) ? results.isLoading : false,
+        results: []
+      };
+    
+      if (results !== null) {
+        results.results.map((result) => {
+          hash.page = result.index
+          searchResults.results.push({
+            pageNumber: result.index,
+            href: `#${queryString.stringify(hash)}`
+          })
+          return true;
+        });
+      }
+      
+      this.setState({
+        searchResults: searchResults
+      });
+    }
+  }
+  
   updateWidth = () => {
     const PdfViewerElement =  window.document.getElementById('PdfViewer');
     const width = (PdfViewerElement) ? PdfViewerElement.getBoundingClientRect().width : null;
@@ -81,7 +141,7 @@ class PdfViewer extends Component {
 
   render() {
     const { document, session, queryText, hash } = this.props;
-    const { width, searchResults, numPages } = this.state;
+    const { width, numPages, searchResults } = this.state;
 
     const pageNumber = (hash.page && parseInt(hash.page, 10) <= numPages) ? parseInt(hash.page, 10) : 1;
 
@@ -102,6 +162,9 @@ class PdfViewer extends Component {
           <div className={classNames("outer", { 'with-page-list': displayDocumentSearchResults })}>
             <div className="pages">
               <div className="heading">Found on:</div>
+              {displayDocumentSearchResults === true && (searchResults === null || searchResults.isLoading === true) &&
+                <Spinner className="pt-small spinner" />
+              }
               {displayDocumentSearchResults === true &&
                 <ul>
                   {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
@@ -142,29 +205,13 @@ const mapStateToProps = (state, ownProps) => {
   const qs = queryString.parse(loc.search);
   const path = doc.links ? doc.links.records : null;
   const query = Query.fromLocation(path, loc, { q: qs.q || null}, 'document').limit(50);
-  const results = (qs.q) ? selectDocumentRecordsResult(state, query) : null;
-
-  const searchResults = {
-    isLoading: (results) ? results.isLoading : false,
-    results: []
-  };
-  if (results !== null) {
-    results.results.map((result) => {
-      hash.page = result.index
-      searchResults.results.push({
-        pageNumber: result.index,
-        href: `#${queryString.stringify(hash)}`
-      })
-      return true;
-    });
-  }
   
   return {
+    state: state,
     session: state.session,
     query: query,
     queryText: qs.q || null,
-    hash: queryString.parse(loc.hash),
-    searchResults: searchResults
+    hash: queryString.parse(loc.hash)
   }
 }
 

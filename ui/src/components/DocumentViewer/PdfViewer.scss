@@ -34,7 +34,12 @@ $pagesWidth: 150px;
         border-bottom: 1px solid $aleph-border-color;
         background: white;
         overflow: auto;
-        text-align: right;
+
+        .spinner {
+          display: block;
+          text-align: center;
+          margin: $aleph-grid-size auto;
+        }
         
         .heading {
           background: $aleph-table-heading-background;
@@ -49,6 +54,10 @@ $pagesWidth: 150px;
             list-style: none;
             padding: 0;
             border-bottom: 1px solid $aleph-border-color;
+            
+            a {
+              text-align: right; 
+            }
             
             .no-results,
             a {
