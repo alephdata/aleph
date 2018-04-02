@@ -7,6 +7,8 @@ import { fetchMetadata } from 'src/actions';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import EntityScreen from 'src/screens/EntityScreen';
 import CollectionScreen from 'src/screens/CollectionScreen';
+
+import OAuth from "src/components/auth/OAuth";
 import LogoutScreen from 'src/screens/LogoutScreen/LogoutScreen';
 import ActivateScreen from 'src/screens/ActivateScreen/ActivateScreen';
 import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
@@ -41,6 +43,7 @@ class Router extends Component {
 
     return (
       <Switch>
+        <Route path="/oauth" exact component={OAuth}/>
         <Route path="/logout" exact component={LogoutScreen}/>
         <Route path="/activate/:code" exact component={ActivateScreen}/>
         <Route path="/entities/:entityId" exact component={EntityScreen}/>
