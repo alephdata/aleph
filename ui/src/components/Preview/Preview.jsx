@@ -235,7 +235,7 @@ class Preview extends React.Component {
         top: previewTop,
         bottom: previewBottom
       }}>
-        <ErrorScreen.LinkDescription isPage={false} title={messages.not_authorized} description={messages.not_authorized_decr}/>
+        <ErrorScreen.EmptyList title={messages.not_authorized} description={messages.not_authorized_decr}/>
       </div>
     } else if(collection !== null && collection.error){
       return <div id="Preview" className={className} style={{
