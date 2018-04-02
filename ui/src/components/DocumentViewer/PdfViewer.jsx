@@ -82,8 +82,9 @@ class PdfViewer extends Component {
   };
 
   render() {
-    const { document, session, hash, query, queryText } = this.props;
-    const { numPages, width, searchResults } = this.state;
+    const { document, session, queryText, hash } = this.props;
+    const { width, searchResults, numPages } = this.state;
+
     const pageNumber = (hash.page && parseInt(hash.page, 10) <= numPages) ? parseInt(hash.page, 10) : 1;
 
     if (!document || !document.links || !document.links.pdf) {
@@ -102,12 +103,14 @@ class PdfViewer extends Component {
         <div className="PdfViewer">
           <div className={classNames("outer", { 'with-page-list': displayDocumentSearchResults })}>
             <div className="pages">
+              <div className="heading">Found on page:</div>
               {displayDocumentSearchResults === true &&
                 <ul>
-                  {searchResults && searchResults.results && searchResults.results.map((searchResult, index) => (
-                    <li>
-                      Page {searchResult.index}
-                    </li>
+                  {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
+                    <li className="pt-text-muted">No Results.</li>
+                  }
+                  {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
+                    <li><a href={result.href}>Page {result.pageNumber}</a></li>
                   ))}
                 </ul>
               }
@@ -116,10 +119,10 @@ class PdfViewer extends Component {
               <div id="PdfViewer" className="document" style={{minWidth: width}}>
                 <div ref={(ref) => this.pdfElement = ref}>
                   {width && (
-                  <Document renderAnnotations={true}
-                            file={url}
-                            onLoadSuccess={this.onDocumentLoad}
-                            loading={(<SectionLoading />)}>
+                    <Document renderAnnotations={true}
+                              file={url}
+                              onLoadSuccess={this.onDocumentLoad}
+                              loading={(<SectionLoading />)}>
                     <Page pageNumber={pageNumber} className="page" width={width}/>
                   </Document>
                   )}
@@ -136,16 +139,34 @@ class PdfViewer extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { document: doc, location: loc } = ownProps;
 
+  const hash = queryString.parse(loc.hash);
+  
   const qs = queryString.parse(loc.search);
   const path = doc.links ? doc.links.records : null;
   const query = Query.fromLocation(path, loc, { q: qs.q || null}, 'document').limit(50);
+  const results = (qs.q) ? selectDocumentRecordsResult(state, query) : null;
+
+  const searchResults = {
+    isLoading: (results) ? results.isLoading : false,
+    results: []
+  };
+  if (results !== null) {
+    results.results.map((result) => {
+      hash.page = result.index
+      searchResults.results.push({
+        pageNumber: result.index,
+        href: `#${queryString.stringify(hash)}`
+      })
+      return true;
+    });
+  }
   
   return {
     session: state.session,
     query: query,
-    hash: queryString.parse(loc.hash),
     queryText: qs.q || null,
-    searchResults: (qs.q) ? selectDocumentRecordsResult(state, query) : null
+    hash: queryString.parse(loc.hash),
+    searchResults: searchResults
   }
 }
 

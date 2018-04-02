@@ -45,6 +45,10 @@ $pagesWidth: 150px;
             list-style: none;
             padding: $aleph-grid-size;
             border-bottom: 1px solid $aleph-border-color;
+            
+            a {
+              display: block;
+            }
           }
         }
     
