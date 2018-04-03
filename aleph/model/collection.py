@@ -67,7 +67,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.publisher_url = data.get('publisher_url', self.publisher_url)
         self.info_url = data.get('info_url', self.info_url)
         self.data_url = data.get('data_url', self.data_url)
-        self.category = self.category or self.DEFAULT
+        self.category = data.get('category') or self.DEFAULT
         self.casefile = as_bool(data.get('casefile'), default=False)
         self.countries = data.get('countries', [])
         self.languages = data.get('languages', [])
@@ -118,7 +118,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         if collection is None:
             collection = cls()
             collection.foreign_id = foreign_id
-            collection.update(data, creator=role)
+        collection.update(data, creator=role)
         collection.deleted_at = None
         return collection
 

@@ -9,7 +9,7 @@ from aleph.model.common import IdModel, SoftDeleteModel
 log = logging.getLogger(__name__)
 
 
-class Link(db.Model, IdModel, SoftDeleteModel):
+class DossierLink(db.Model, IdModel, SoftDeleteModel):
     """A link defines a dossier pseudo-object to be relevant to a particular
     collection (usually a casefile). It carries additional information, like
     a description of why the dossier is relevant to the case, and some tags
@@ -34,4 +34,4 @@ class Link(db.Model, IdModel, SoftDeleteModel):
                   synchronize_session=False)
 
     def __repr__(self):
-        return '<Link(%r, %r, %r)>' % (self.dossier_id, self.collection_id)
+        return '<DossierLink(%r, %r, %r)>' % (self.dossier_id, self.collection_id)

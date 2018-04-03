@@ -46,27 +46,27 @@ class EntitiesTestCase(TestCase):
         index_entity(self.ent)
         index_entity(self.other)
 
-    def test_merge(self):
-        self.ent.merge(self.other)
-        db.session.flush()
-        data = dict(self.ent.data)
-        assert 'bear' in data['description'][0], data
-        assert 'pa' in data['country'], data
-        db.session.refresh(self.alert)
-        assert self.alert.label == self.ent.name
-        assert self.other.deleted_at is not None, self.other
+    # def test_merge(self):
+    #     self.ent.merge(self.other)
+    #     db.session.flush()
+    #     data = dict(self.ent.data)
+    #     assert 'bear' in data['description'][0], data
+    #     assert 'pa' in data['country'], data
+    #     db.session.refresh(self.alert)
+    #     assert self.alert.label == self.ent.name
+    #     assert self.other.deleted_at is not None, self.other
 
-    def test_api_merge(self):
-        url = '/api/2/entities/%s/merge/%s' % (self.ent.id, self.other.id)
-        res = self.client.delete(url,
-                                 data={},
-                                 content_type='application/json')
-        assert res.status_code == 403, res.status_code
-        _, headers = self.login(is_admin=True)
-        res = self.client.delete(url,
-                                 data={},
-                                 headers=headers,
-                                 content_type='application/json')
-        data = res.json['properties']
-        assert 'bear' in data['description'][0], data
-        assert 'pa' in data['country'], data
+    # def test_api_merge(self):
+    #     url = '/api/2/entities/%s/merge/%s' % (self.ent.id, self.other.id)
+    #     res = self.client.delete(url,
+    #                              data={},
+    #                              content_type='application/json')
+    #     assert res.status_code == 403, res.status_code
+    #     _, headers = self.login(is_admin=True)
+    #     res = self.client.delete(url,
+    #                              data={},
+    #                              headers=headers,
+    #                              content_type='application/json')
+    #     data = res.json['properties']
+    #     assert 'bear' in data['description'][0], data
+    #     assert 'pa' in data['country'], data

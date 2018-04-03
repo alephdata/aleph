@@ -54,7 +54,7 @@ def bulk_load(config):
     for foreign_id, data in config.items():
         collection = Collection.by_foreign_id(foreign_id)
         if collection is None:
-            data['forgeign_id'] = foreign_id
+            data['foreign_id'] = foreign_id
             data['label'] = data.get('label', foreign_id)
             collection = Collection.create(data)
 
