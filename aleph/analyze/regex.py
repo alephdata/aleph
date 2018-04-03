@@ -19,12 +19,10 @@ class RegexAnalyzer(EntityAnalyzer):
 
     def extract(self, collector, document):
         for text in document.texts:
-#            print('searching ' + str(self.TYPE))
 
             for match in self.RE.finditer(text):
                 match_text = self.extract_match(document, match)
 
-                print('extractor match text ' + str(match_text))
                 if match_text is not None:
                     collector.emit(match_text, self.TYPE)
 
@@ -55,8 +53,6 @@ class IPV4Analyzer(RegexAnalyzer):
     ORIGIN = 'regex:ipv4'
     TYPE = DocumentTag.TYPE_IPV4
 
-#    print ('IPv4 Analyzer running')
-
     def __init__(self):
         self.active = settings.ANALYZE_IPV4
 
@@ -73,7 +69,7 @@ class IPV6Analyzer(RegexAnalyzer):
 
 
 class IBANAnalyzer(RegexAnalyzer):
-    REGEX = '([a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16})'
+    REGEX = '([a-zA-Z]{2} ?[0-9]{2} ?[a-zA-Z0-9]{4} ?[0-9]{7} ?([a-zA-Z0-9]?){0,16})'
 
     RE = re.compile(REGEX, re.IGNORECASE)
     ORIGIN = 'regex:iban'
@@ -81,25 +77,3 @@ class IBANAnalyzer(RegexAnalyzer):
 
     def __init__(self):
         self.active = settings.ANALYZE_IBAN
-
-
-
-
-# match = ipv4.search("Your ip address is 192.168.0.1, have fun!")
-# if match:
-#     print('IPv4 address found:')
-#     print(match.group()) # matching substring
-#     print('at position',match.span()) # indexes of the substring found
-# else:
-#     print('IPv4 address not found')
-
-
-#
-# ipv6 =
-# match = ipv6.search("Your ip address is 2001:0db8:85a3:0000:0000:8a2e:0370:7334, have fun!")
-# if match:
-#     print('IPv6 address found:')
-#     print(match.group()) # matching substring
-#     print('at position',match.span()) # indexes of the substring found
-# else:
-#     print('IPv6 address not found')
