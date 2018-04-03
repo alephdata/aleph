@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from sqlalchemy.orm import aliased
 
 from aleph.core import db
 from aleph.model.common import IdModel, SoftDeleteModel
@@ -126,21 +127,46 @@ class DossierMatch(db.Model, IdModel, SoftDeleteModel):
         return match
 
     @classmethod
-    def find_by_id(cls, dossier_id, deleted=False):
+    def decided_matches_by_id(cls, dossier_id):
         """Find all matches for a dossier by their ID."""
-        q = cls.all(deleted=deleted)
-        q = q.filter(cls.dossier_id == dossier_id)
+        match = aliased(cls)
+        prev_match = aliased(cls)
+        q = db.session.query(match)
+        q = q.filter(match.decided == True)  # noqa
+        q = q.filter(match.deleted_at == None)  # noqa
+        q = q.filter(prev_match.match == True)  # noqa
+        q = q.filter(prev_match.decided == True)  # noqa
+        q = q.filter(prev_match.entity_id == prev_match.entity_id)
+        q = q.filter(prev_match.dossier_id == dossier_id)
+        q = q.order_by(match.updated_at.asc())
         return q
 
-    @classmethod
-    def find_by_entity(cls, entity_id):
-        """Find all dossier matches for an entity."""
-        q = cls.all()
-        q = q.filter(cls.entity_id == entity_id)
-        q = q.filter(cls.decided == True)  # noqa
-        q = q.filter(cls.match == True)  # noqa
-        q = q.order_by(cls.updated_at.desc())
-        return q
+    # @classmethod
+    # def dossier_by_id(cls, dossier_id, deleted=False):
+    #     """Find the current ID of a dossier."""
+    #     pmatch = aliased(cls)
+    #     amatch = aliased(cls)
+    #     q = db.session.query(amatch.c.dossier_id)
+    #     q = q.filter(amatch.match == True)  # noqa
+    #     q = q.filter(amatch.decided == True)  # noqa
+    #     q = q.filter(amatch.deleted_at == None)  # noqa
+    #     q = q.filter(pmatch.dossier_id == dossier_id)  # noqa
+    #     q = q.filter(pmatch.match == True)  # noqa
+    #     q = q.filter(pmatch.decided == True)  # noqa
+    #     q = q.filter(pmatch.entity_id == amatch.entity_id)
+    #     q = q.order_by(amatch.updated_at.desc())
+    #     for (dossier_id,) in q:
+    #         return dossier_id
+
+    # @classmethod
+    # def matches_by_entity(cls, entity_id):
+    #     """Find all dossier matches for an entity."""
+    #     q = cls.all()
+    #     q = q.filter(cls.entity_id == entity_id)
+    #     q = q.filter(cls.decided == True)  # noqa
+    #     q = q.filter(cls.match == True)  # noqa
+    #     q = q.order_by(cls.updated_at.desc())
+    #     return q
 
     def __repr__(self):
         return '<DossierMatch(%r, %r, %r)>' % \
