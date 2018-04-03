@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-03-15 19:48+0100\n"
+"POT-Creation-Date: 2018-03-28 10:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -90,18 +90,38 @@ msgstr ""
 msgid "Other material"
 msgstr ""
 
-#: aleph/views/base_api.py:82
+#: aleph/model/event.py:42
+msgid "{{actor}} changed the settings of {{collection}}."
+msgstr ""
+
+#: aleph/model/event.py:48
+msgid "{{actor}} uploaded {{document}} to {{collection}}."
+msgstr ""
+
+#: aleph/model/event.py:57
+msgid "{{entity}} matches your alert for {{alert}}."
+msgstr ""
+
+#: aleph/model/event.py:67
+msgid "{{actor}} gave {{role}} access to {{collection}}."
+msgstr ""
+
+#: aleph/model/event.py:82
+msgid "{{actor}} removed access to {{collection}} from {{role}}."
+msgstr ""
+
+#: aleph/views/base_api.py:76
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr ""
 
-#: aleph/views/base_api.py:90
+#: aleph/views/base_api.py:84
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:99
+#: aleph/views/base_api.py:93
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:115
+#: aleph/views/base_api.py:109
 msgid "Access token has expired."
 msgstr ""

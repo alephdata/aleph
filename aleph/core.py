@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_cors import CORS
+from flask_caching import Cache
 from flask.ext.babel import Babel
 from kombu import Queue
 from celery import Celery
@@ -31,6 +32,7 @@ mail = Mail()
 celery = Celery('aleph', task_cls=SessionTask)
 sentry = Sentry()
 babel = Babel()
+cache = Cache()
 
 
 def create_app(config={}):
@@ -78,6 +80,7 @@ def create_app(config={}):
     mail.init_app(app)
     db.init_app(app)
     babel.init_app(app)
+    cache.init_app(app, config={'CACHE_TYPE': 'simple'})
     CORS(app, origins=settings.CORS_ORIGINS)
 
     # Enable raven to submit issues to sentry if a DSN is defined. This will

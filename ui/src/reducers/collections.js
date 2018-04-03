@@ -13,7 +13,7 @@ export default createReducer({
     update(id, set('isFetching', true))(state),
 
   [fetchCollection.ERROR]: (state, { error, args: { id } }) =>
-    set(id, { error: error.message })(state),
+    set(id, { error: error.message, status: error.response !== undefined ? error.response.status : 400 })(state),
 
   [fetchCollection.COMPLETE]: (state, { id, data }) =>
     set(id, data)(state),

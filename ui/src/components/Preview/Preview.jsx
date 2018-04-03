@@ -8,6 +8,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import classnames from 'classnames';
+import {defineMessages, injectIntl} from "react-intl";
 
 import Fragment from 'src/app/Fragment';
 import { fetchCollection, fetchEntity, fetchDocument } from 'src/actions';
@@ -16,6 +17,7 @@ import DocumentInfo from 'src/screens/DocumentScreen/DocumentInfo';
 import { DocumentViewer } from 'src/components/DocumentViewer';
 import EntityInfo from 'src/screens/EntityScreen/EntityInfo';
 import SectionLoading from 'src/components/common/SectionLoading';
+import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 import './Preview.css';
 
@@ -29,7 +31,22 @@ const defaultState = {
   collection: null,
   entity: null,
   document: null
-}
+};
+
+const messages = defineMessages({
+  not_found: {
+    id: 'preview.not_found',
+    defaultMessage: 'Source not found',
+  },
+  not_authorized: {
+    id: 'preview.not_auth',
+    defaultMessage: 'You are not authorized to do this.',
+  },
+  not_authorized_decr: {
+    id: 'preview.not_auth_decr',
+    defaultMessage: 'Please go to the login page.',
+  }
+});
 
 class Preview extends React.Component {
   constructor(props) {
@@ -75,7 +92,7 @@ class Preview extends React.Component {
       
       let maximised = this.state.maximised;
       if (parsedHash['preview:maximised']) {
-        maximised = (parsedHash['preview:maximised'] === 'true') ? true : false;
+        maximised = (parsedHash['preview:maximised'] === 'true');
       }
       
       if (this.state.previewId !== previewId ||
@@ -171,9 +188,10 @@ class Preview extends React.Component {
             document: doc
           } = this.state;
     
-    let className = 'Preview'
+    let className = 'Preview';
 
     let view = null;
+
     
     if (previewType === 'collection' && collection && collection.links && !collection.isFetching) {      
       view = <CollectionInfo collection={collection} showToolbar={true} />;
@@ -201,7 +219,6 @@ class Preview extends React.Component {
         }
       }
     }
-    
     if (view !== null) {
       // If we have a document and it's ready to render display it
       return (
@@ -212,7 +229,7 @@ class Preview extends React.Component {
           {view}
         </div>
       );
-    } else if (previewId !== null) {
+    } else if (previewId !== null && (collection === null || collection.error === undefined)) {
       // Handle when we have an element to load but it's not ready to render yet
       return (
         <div id="Preview" className={classnames('loading', className)} style={{
@@ -222,6 +239,20 @@ class Preview extends React.Component {
           <SectionLoading/>
         </div>
       );
+    } else if(collection !== null && collection !== null && collection.status === 403){
+      return <div id="Preview" className={className} style={{
+        top: previewTop,
+        bottom: previewBottom
+      }}>
+        <ErrorScreen.EmptyList title={messages.not_authorized} description={messages.not_authorized_decr}/>
+      </div>
+    } else if(collection !== null && collection.error){
+      return <div id="Preview" className={className} style={{
+        top: previewTop,
+        bottom: previewBottom
+      }}>
+        <ErrorScreen.EmptyList title={messages.not_found}/>
+      </div>
     } else {
       // Handle if we have no element to display - renders hidden (0px width)
       // Note: We don't return null as we want a hide animation to happen!
@@ -270,5 +301,6 @@ Preview = connect(mapStateToProps, {
 })(Preview);
 
 Preview = withRouter(Preview);
+Preview = injectIntl(Preview);
 
 export default Preview;

@@ -2,13 +2,11 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
+import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import { Button } from "@blueprintjs/core";
 import queryString from 'query-string';
 
-
 import { Toolbar, CloseButton, DownloadButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
-import Query from 'src/app/Query';
 import getPath from 'src/util/getPath';
 import TableViewer from './TableViewer';
 import TextViewer from './TextViewer';
@@ -17,6 +15,13 @@ import PdfViewer from './PdfViewer';
 import ImageViewer from './ImageViewer';
 import FolderViewer from './FolderViewer';
 import EmailViewer from './EmailViewer';
+
+const messages = defineMessages({
+  ignored_file: {
+    id: 'document.viewer.ignored_file',
+    defaultMessage: 'The system does not work with these types of files. Please download it so you’ll be able to see it.',
+  }
+});
 
 class DocumentViewer extends React.Component {
   constructor(props) {
@@ -82,24 +87,23 @@ class DocumentViewer extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { document: doc, location: loc } = ownProps;
+  const { location: loc } = ownProps;
   const qs = queryString.parse(loc.search);
-//  console.log(qs.q)
   return {
     queryText: qs.q || null
   }
 }
 
 DocumentViewer = connect(mapStateToProps)(DocumentViewer);
-
+DocumentViewer = injectIntl(DocumentViewer);
 DocumentViewer = withRouter(DocumentViewer);
 
 export default DocumentViewer
 
 class DocumentView extends React.Component {
   render() {
-    const { document: doc, queryText, onDocumentLoad } = this.props;
-  
+    const { document: doc, queryText, onDocumentLoad, intl } = this.props;
+
     if (doc.schema === 'Email') {
       return <EmailViewer document={doc}/>;
     } else if (doc.schema === 'Table') {
@@ -112,13 +116,30 @@ class DocumentView extends React.Component {
       return <PdfViewer document={doc} onDocumentLoad={onDocumentLoad} />
     } else if (doc.schema === 'Image') {
       return <ImageViewer document={doc} />;
-    } else if (doc.children !== undefined) {
+    } else if (doc.schema === 'Folder' || doc.schema === 'Package') {
+      if(doc.status === 'fail') return <FolderViewer hasWarning={true} document={doc} queryText={queryText}/>;
       return <FolderViewer document={doc} queryText={queryText} />;
-    } else {
-      return <section className="PartialError">
-      <div className="pt-non-ideal-state">
+    } else if(doc.schema === 'Document'){
+      return <section className="PartialError outer-div">
+        <div className="pt-non-ideal-state inner-div">
+          <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
+            <span className="pt-icon pt-icon-issue"/>
+          </div>
+          <h4 className="pt-non-ideal-state-title">
+            <FormattedMessage
+              id="document.no_viewer"
+              defaultMessage="No preview is available for this document"/>
+          </h4>
+          <div className="pt-non-ideal-state-description">
+            { intl.formatMessage(messages.ignored_file)}
+          </div>
+        </div>
+      </section>
+    } else if(doc.status === 'fail') {
+      return <section className="PartialError outer-div">
+      <div className="pt-non-ideal-state inner-div">
         <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-          <span className="pt-icon pt-icon-issue"></span>
+          <span className="pt-icon pt-icon-issue"/>
         </div>
         <h4 className="pt-non-ideal-state-title">
           <FormattedMessage
@@ -130,6 +151,11 @@ class DocumentView extends React.Component {
         </div>
       </div>
     </section>
+    } else {
+      // If document is still loading we still need to return something
+      // (or it will trigger an error)
+      return null;
     }
   }
 }
+

@@ -66,6 +66,7 @@ def xref_collection(collection_id, other_id=None):
 
     for i, res in enumerate(scanner):
         res = unpack_result(res)
-        xref_item.apply_async(args=[res],
-                              kwargs={'collection_id': other_id},
-                              priority=4)
+        # xref_item.apply_async(args=[res],
+        #                       kwargs={'collection_id': other_id},
+        #                       priority=4)
+        xref_item(res, collection_id=other_id)

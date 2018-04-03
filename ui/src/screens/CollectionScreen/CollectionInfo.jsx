@@ -7,14 +7,11 @@ import { Button, Tab, Tabs } from "@blueprintjs/core";
 import { fetchCollectionPermissions } from 'src/actions';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog';
+import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog';
 import DualPane from 'src/components/common/DualPane';
-import Category from 'src/components/common/Category';
-import Language from 'src/components/common/Language';
-import Country from 'src/components/common/Country';
-import Role from 'src/components/common/Role';
-import Date from 'src/components/common/Date';
-import CollectionPermissionsEdit from 'src/components/CollectionPermissions/CollectionPermissionsEdit';
 import CollectionInfoXref from './CollectionInfoXref';
+import CollectionOverview from "../../components/Collection/CollectionOverview";
+import CollectionInfoContent from 'src/screens/CollectionScreen/CollectionInfoContent';
 
 class CollectionInfo extends Component {
   constructor(props) {
@@ -23,13 +20,15 @@ class CollectionInfo extends Component {
       activeTabId: 'overview',
       collectionInfoIsOpen: false,
       permissions: props.permissions,
-      collectionXRefTab: false
+      collectionXRefTab: false,
+      accessIsOpen: false
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
     this.toggleCollectionEdit = this.toggleCollectionEdit.bind(this);
     this.fetchCollection = this.fetchCollection.bind(this);
     this.onCollectionXRefLoad = this.onCollectionXRefLoad.bind(this);
+    this.toggleAccess = this.toggleAccess.bind(this);
   }
 
   componentDidMount() {
@@ -60,6 +59,12 @@ class CollectionInfo extends Component {
       collectionInfoIsOpen: !this.state.collectionInfoIsOpen
     })
   }
+
+  toggleAccess() {
+    this.setState({
+      accessIsOpen: !this.state.accessIsOpen
+    })
+  }
   
   onCollectionXRefLoad(collection, xRefs) {
     if (xRefs && xRefs.total && xRefs.total > 0) {
@@ -71,7 +76,7 @@ class CollectionInfo extends Component {
 
   render() {
     const {collection, showToolbar } = this.props;
-    const {permissions, activeTabId, collectionXRefTab, collectionInfoIsOpen} = this.state;
+    const {permissions, activeTabId, collectionXRefTab, collectionInfoIsOpen, accessIsOpen} = this.state;
     
     // @TODO Discussion: 'Search Collection' link to update the current query?
     return (
@@ -91,6 +96,15 @@ class CollectionInfo extends Component {
                   collection={collection}
                   isOpen={collectionInfoIsOpen}
                   toggleDialog={this.toggleCollectionEdit}
+                />
+                <Button icon="key" onClick={this.toggleAccess}>
+                  <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
+                </Button>
+                <AccessCollectionDialog
+                  collection={collection}
+                  isOpen={accessIsOpen}
+                  toggleDialog={this.toggleAccess}
+                  permissions={permissions}
                 />
               </React.Fragment>}
             <CloseButton/>
@@ -113,57 +127,7 @@ class CollectionInfo extends Component {
                 </React.Fragment>
               }
               panel={
-                <React.Fragment>
-                  <p>{collection.summary}</p>
-                  <ul className='info-sheet'>
-                    <li>
-                      <span className="key">
-                        <FormattedMessage id="collection.info.category" defaultMessage="Category"/>
-                      </span>
-                      <span className="value">
-                        <Category collection={collection}/>
-                      </span>
-                    </li>
-                    {collection.creator && (
-                      <li>
-                        <span className="key">
-                          <FormattedMessage id="collection.info.creator" defaultMessage="Manager"/>
-                        </span>
-                        <span className="value">
-                          <Role.Label role={collection.creator}/>
-                        </span>
-                      </li>
-                    )}
-                    {collection.languages && !!collection.languages.length && (
-                      <li>
-                        <span className="key">
-                          <FormattedMessage id="collection.info.languages" defaultMessage="Language"/>
-                        </span>
-                        <span className="value">
-                          <Language.List codes={collection.languages}/>
-                        </span>
-                      </li>
-                    )}
-                    {collection.countries && !!collection.countries.length && (
-                      <li>
-                        <span className="key">
-                          <FormattedMessage id="collection.info.countries" defaultMessage="Country"/>
-                        </span>
-                        <span className="value">
-                          <Country.List codes={collection.countries} truncate={10}/>
-                        </span>
-                      </li>
-                    )}
-                    <li>
-                      <span className="key">
-                        <FormattedMessage id="collection.info.updated_at" defaultMessage="Last updated"/>
-                      </span>
-                      <span className="value">
-                        <Date value={collection.updated_at}/>
-                      </span>
-                    </li>
-                  </ul>
-                </React.Fragment>
+                <CollectionOverview collection={collection} hasHeader={false}/>
               }
             />
             <Tab id="xref"
@@ -175,14 +139,14 @@ class CollectionInfo extends Component {
               }
               panel={<CollectionInfoXref onCollectionXRefLoad={this.onCollectionXRefLoad} collection={collection} />}
             />
-            {collection.writeable && <Tab id="permissions"
+            <Tab id="content"
                  title={
                    <React.Fragment>
-                     <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
+                     <FormattedMessage id="collection.info.contents" defaultMessage="Contents"/>
                    </React.Fragment>
                  }
-                 panel={<CollectionPermissionsEdit collection={collection} permissions={permissions} />}
-            />}
+                 panel={<CollectionInfoContent collection={collection} schemata={collection.schemata} />}
+            />
             <Tabs.Expander />
           </Tabs>
         </div>

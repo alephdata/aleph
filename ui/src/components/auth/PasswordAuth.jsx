@@ -1,19 +1,34 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
+import {defineMessages, FormattedMessage} from 'react-intl';
 import { Button, Intent } from '@blueprintjs/core';
+import { showWarningToast } from 'src/app/toast';
 
-const PasswordAuth = ({onSubmit, showEmail, showName, showPassword, buttonText, children}) => {
-  let emailElement, passwordElement, nameElement;
+const messages = defineMessages({
+  not_same: {
+    id: 'pass.auth.not_same',
+    defaultMessage: 'Your passwords are not the same!'
+  },
+});
+
+const PasswordAuth = ({onSubmit, showEmail, showName, showPassword, showConfirmPass, buttonText, children, intl, isActivation}) => {
+  let emailElement, passwordElement, confirmElement, nameElement;
 
   const submit = (event) => {
     event.preventDefault();
 
-    onSubmit({
-      email: showEmail && emailElement.value,
-      password: showPassword && passwordElement.value,
-      name: showName && nameElement.value
-    });
+    let password = document.getElementById('pass');
+    let confirm = document.getElementById('confirm-pass');
+    let arePasswordsTheSame = isActivation ? password.value === confirm.value : true;
+
+      if(arePasswordsTheSame) {
+        onSubmit({
+          email: showEmail && emailElement.value,
+          password: showPassword && passwordElement.value,
+          name: showName && nameElement.value
+        });
+      } else {
+        showWarningToast(intl.formatMessage(messages.not_same))
+      }
   };
 
   return (
@@ -32,9 +47,15 @@ const PasswordAuth = ({onSubmit, showEmail, showName, showPassword, buttonText, 
       {showPassword &&
         <label className="pt-label">
           <FormattedMessage id="password_auth.password" defaultMessage="Password"/>
-          <input className="pt-input pt-fill" type="password" name="password" required
+          <input id="pass" className="pt-input pt-fill" type="password" name="password" required
                  ref={(el) => passwordElement = el}/>
         </label>}
+      {showConfirmPass &&
+      <label className="pt-label">
+        <FormattedMessage id="password_auth.confirm" defaultMessage="Confirm password"/>
+        <input id="confirm-pass" className="pt-input pt-fill" type="password" name="confirm" required
+               ref={(el) => confirmElement = el}/>
+      </label>}
 
       <div className="flex-row">
         <span>
@@ -53,22 +74,18 @@ const PasswordAuth = ({onSubmit, showEmail, showName, showPassword, buttonText, 
 export const PasswordAuthLogin = ({onSubmit}) => (
   <PasswordAuth onSubmit={onSubmit} showEmail showPassword
                 buttonText={<FormattedMessage id="password_auth.signin" defaultMessage="Sign in"/>}>{' '}&nbsp;
-    <FormattedMessage id="password_auth.no_account" defaultMessage="Haven't got an account?" />{' '}
-    <Link to="/signup">
-      <FormattedMessage id="password_auth.signup" defaultMessage="Sign up"/>
-    </Link>
   </PasswordAuth>
 );
 
 export const PasswordAuthSignup = ({onSubmit}) => (
   <PasswordAuth onSubmit={onSubmit} showEmail
                 buttonText={<FormattedMessage id="password_auth.signup" defaultMessage="Sign up"/>}>{' '}&nbsp;
-    <FormattedMessage id="password_auth.has_account" defaultMessage="Already have an account?"/>{' '}
-    <Link to="/login"><FormattedMessage id="password_auth.signin" defaultMessage="Sign in"/></Link>
   </PasswordAuth>
 );
 
-export const PasswordAuthActivate = ({onSubmit}) => (
-  <PasswordAuth onSubmit={onSubmit} showPassword showName
+export const PasswordAuthActivate = ({onSubmit, intl}) => (
+  <PasswordAuth onSubmit={onSubmit} showPassword showName isActivation
+                intl={intl}
+                showConfirmPass={true}
                 buttonText={<FormattedMessage id="password_auth.activate" defaultMessage="Activate"/>}/>
 );

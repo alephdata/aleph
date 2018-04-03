@@ -22,7 +22,7 @@ const messages = defineMessages({
   },
   not_authorized_decr: {
     id: 'collection.not_auth_decr',
-    defaultMessage: <a href='/login'>Please go to login page.</a>,
+    defaultMessage: 'Please go to the login page.',
   }
 });
 
@@ -30,7 +30,7 @@ class CollectionScreen extends Component {
   render() {
     const { collection } = this.props;
 
-    if(collection.error === 'You are not authorized to do this.') {
+    if(collection.status === 403) {
       return (
         <ErrorScreen.PageNotFound title={messages.not_authorized} description={messages.not_authorized_decr}/>
       )

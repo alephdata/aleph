@@ -11,6 +11,10 @@ from aleph.index.mapping import COLLECTION_MAPPING
 log = logging.getLogger(__name__)
 
 
+def all_indexes():
+    return [collection_index(), entity_index(), record_index()]
+
+
 def upgrade_search():
     """Add any missing properties to the index mappings."""
     INDEXES = [
@@ -27,19 +31,16 @@ def upgrade_search():
 
 
 def delete_index():
-    es.indices.delete(collection_index(), ignore=[404, 400])
-    es.indices.delete(entity_index(), ignore=[404, 400])
-    es.indices.delete(record_index(), ignore=[404, 400])
+    es.indices.delete(index=all_indexes(), ignore=[404, 400])
 
 
 def flush_index():
     """Run a refresh to apply all indexing changes."""
-    es.indices.refresh(index=collection_index())
-    es.indices.refresh(index=entity_index())
-    es.indices.refresh(index=record_index())
+    es.indices.refresh(index=all_indexes(),
+                       ignore=[404, 400],
+                       ignore_unavailable=True)
 
 
 def clear_index():
-    indexes = [collection_index(), entity_index(), record_index()]
     q = {'query': {'match_all': {}}}
-    es.delete_by_query(index=indexes, body=q, refresh=True)
+    es.delete_by_query(index=all_indexes(), body=q, refresh=True)

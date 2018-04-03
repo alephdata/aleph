@@ -125,7 +125,7 @@ class SearchFacet extends Component {
               </span>
               <Button onClick={this.onClear}
                 className="ClearButton pt-minimal pt-small"
-                title={intl.formatMessage(messages.clear_filter)} icon="cross"></Button>
+                title={intl.formatMessage(messages.clear_filter)} icon="cross"/>
             </React.Fragment>
           )}
 

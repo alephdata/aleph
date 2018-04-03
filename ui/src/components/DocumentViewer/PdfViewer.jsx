@@ -235,8 +235,6 @@ class PdfViewer extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { document: doc, location: loc } = ownProps;
 
-  const hash = queryString.parse(loc.hash);
-  
   const qs = queryString.parse(loc.search);
   const path = doc.links ? doc.links.records : null;
   const query = Query.fromLocation(path, loc, { q: qs.q || null}, 'document').limit(50);

@@ -11,7 +11,7 @@ import Collection from 'src/components/Collection/Collection';
 
 class CollectionOverview extends Component {
   render() {
-    const { collection } = this.props;
+    const { collection, hasHeader } = this.props;
     
     // If collection data it hasn't loaded yet don't attempt to draw anything
     if (!collection)
@@ -19,9 +19,9 @@ class CollectionOverview extends Component {
 
     return (
       <React.Fragment>
-        <h4>
+        {hasHeader && <h4>
           <Collection.Link collection={collection}/>
-        </h4>
+        </h4>}
         <p>{collection.summary}</p>
         <ul className='info-sheet'>
           <li>
@@ -78,7 +78,7 @@ class CollectionOverview extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {};
-}
+};
 
 CollectionOverview = connect(mapStateToProps)(CollectionOverview);
 

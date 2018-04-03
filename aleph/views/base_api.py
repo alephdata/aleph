@@ -10,8 +10,9 @@ from jwt import ExpiredSignatureError
 
 from aleph import __version__
 from aleph.core import settings, app_ui_url, url_for
-from aleph.logic.statistics import get_instance_stats
+from aleph.authz import Authz
 from aleph.model import Collection
+from aleph.logic.statistics import get_instance_stats
 from aleph.views.cache import enable_cache
 from aleph.views.util import jsonify
 
@@ -22,7 +23,8 @@ log = logging.getLogger(__name__)
 @blueprint.route('/api/2/metadata')
 def metadata():
     locale = get_locale()
-    enable_cache(vary_user=False, vary=[six.text_type(locale)])
+    locale_name = six.text_type(locale)
+    enable_cache(vary_user=False, vary=[locale_name])
 
     auth = {}
     if settings.PASSWORD_LOGIN:
@@ -49,10 +51,11 @@ def metadata():
             'samples': settings.SAMPLE_SEARCHES,
             'logo': settings.APP_LOGO,
             'favicon': settings.APP_FAVICON,
-            'locale': six.text_type(locale),
+            'locale': locale_name,
             'locales': settings.UI_LANGUAGES
         },
         'categories': Collection.CATEGORIES,
+        'statistics': get_instance_stats(Authz()),
         'countries': country_names,
         'languages': language_names,
         'schemata': model,

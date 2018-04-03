@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'react-intl';
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';
@@ -16,7 +16,6 @@ import QueryTags from 'src/components/QueryTags/QueryTags';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 import './SearchScreen.css';
-
 
 const messages = defineMessages({
   facet_schema: {
@@ -68,7 +67,6 @@ const messages = defineMessages({
     defaultMessage: 'Try making your search more general',
   },
 });
-
 
 class SearchScreen extends React.Component {
   constructor(props) {
@@ -179,6 +177,12 @@ class SearchScreen extends React.Component {
               title={query.getString('q')}>
         <DualPane className="SearchScreen">
           <DualPane.InfoPane className="SearchFacetsPane">
+            <div className='total-count pt-text-muted'>
+              <span className='total-count-span'>
+              <span className="total-icon pt-icon-standard pt-icon-search"/>
+              <FormattedNumber value={result.total !== undefined ? result.total : 0} />&nbsp;<FormattedMessage id="search.screen.results" defaultMessage="results"/>
+            </span>
+            </div>
             <SearchFacets query={query}
                           updateQuery={this.updateQuery}
                           facets={this.state.facets} />

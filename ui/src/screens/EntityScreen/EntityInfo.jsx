@@ -44,7 +44,7 @@ class EntityInfo extends React.Component {
     const path = getPath(entity.links.ui);
     const tabName = 'references-' + reference.property.qname;
     const query = queryString.stringify({'content:tab': tabName})
-    return path + '?' + query;
+    return path + '#' + query;
   }
 
   render() {
@@ -116,7 +116,7 @@ class EntityInfo extends React.Component {
                 }
                 panel={
                   <React.Fragment>
-                    <CollectionOverview collection={entity.collection}/>
+                    <CollectionOverview collection={entity.collection} hasHeader={true}/>
                     {sourceUrl && (
                       <ul className='info-sheet'>
                         <li>

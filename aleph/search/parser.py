@@ -111,17 +111,21 @@ class SearchQueryParser(QueryParser):
         self.offset = min(MAX_RESULT_WINDOW, self.offset)
         if (self.limit + self.offset) > MAX_RESULT_WINDOW:
             self.limit = max(0, MAX_RESULT_WINDOW - self.offset)
-        self.facet_names = self.getlist('facet')
-        self.facet_size = self.getint('facet_size', 50)
-        self.facet_total = self.getbool('facet_total', False)
-        self.facet_values = self.getbool('facet_values', True)
-        self.highlight = []
 
-    @property
-    def highlight_terms(self):
-        if self.text is not None:
-            yield self.text
-        if self.prefix is not None:
-            yield self.prefix
-        for term in self.highlight:
-            yield term
+        # Set of field names to facet by (i.e. include the count of distinct
+        # values in the result set). These must match 'keyword' fields in the
+        # index.
+        self.facet_names = self.getlist('facet')
+        # Number of distinct values to be included (i.e. top N)
+        self.facet_size = self.getint('facet_size', 50)
+        # Flag to perform a count of the total number of distinct values.
+        self.facet_total = self.getbool('facet_total', False)
+        # Flag to disable returning actual values (i.e. count only)
+        self.facet_values = self.getbool('facet_values', True)
+
+        # Include highlighted fragments of matching text in the result.
+        self.highlight = self.getbool('highlight', False)
+        # Length of each snippet in characters
+        self.highlight_length = self.getint('highlight_length', 100)
+        # Number of snippets per document, 0 = return full document text.
+        self.highlight_count = self.getint('highlight_count', 5)

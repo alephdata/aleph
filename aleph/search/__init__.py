@@ -207,15 +207,6 @@ class RecordsQuery(Query):
         #     return [{''}]
         return super(RecordsQuery, self).get_sort()
 
-    def get_highlight(self):
-        return {
-            'fields': {
-                'text': {
-                    'number_of_fragments': 1
-                }
-            }
-        }
-
     def get_query(self):
         query = super(RecordsQuery, self).get_query()
         query['bool']['filter'].append({

@@ -93,6 +93,7 @@ class TestCase(FlaskTestCase):
         self.flush_index()
 
     def setUp(self):
+        self.flush_index()
         if not hasattr(TestCase, '_global_test_state'):
             TestCase._global_test_state = True
             delete_index()
