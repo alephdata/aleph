@@ -21,11 +21,12 @@ class PdfViewer extends Component {
       width: null,
       numPages: 0,
       searchResults: null,
-      fetchRecords: false
+      fetchedRecords: false,
+      selectedRecords: false
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
-    this.onRenderSuccess = this.onRenderSuccess.bind(this);
-    this.updateSearchResults =  debounce(this.updateSearchResults.bind(this), 1000);
+    this.onResize =  debounce(this.onResize.bind(this), 500);
+    this.updateSearchResults =  debounce(this.updateSearchResults.bind(this), 100);
   }
 
   onDocumentLoad(pdfInfo) {
@@ -37,29 +38,26 @@ class PdfViewer extends Component {
       this.props.onDocumentLoad(pdfInfo)
   }
   
-  onRenderSuccess() {
-    this.updateWidth();
-  }
-
   componentWillReceiveProps(newProps) {
     if (newProps.queryText !== this.props.queryText) {
-      this.setState({ searchResults: null, fetchRecords: true });
-      this.fetchRecords();
+      this.setState({ 
+        searchResults: null,
+        fetchedRecords: false,
+        selectedRecords: false,
+        numPages: 0
+      });
+      this.updateSearchResults();
     }
   }
   
   componentDidMount() {
-    this.updateWidth();
+    this.onResize();
     this.fetchRecords();
-    window.addEventListener("resize", throttle(this.updateWidth, 1000))
+    window.addEventListener("resize", throttle(this.onResize, 1000))
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", throttle(this.updateWidth, 1000))
-  }
-  
-  componentWillUpdate() {
-    this.updateWidth();
+    window.removeEventListener("resize", throttle(this.onResize, 1000))
   }
   
   componentDidUpdate() {
@@ -77,33 +75,30 @@ class PdfViewer extends Component {
    * @FIXME
    * Putting the state into props.state in mapStateToProps and calling 
    * updateSearchResults() every time the component updates is basically 
-   * a hack because the there is something up with our lifescycle whereby 
+   * a hack because the there is something up with our lifecycle whereby 
    * we don't get updated search results the first time a new search is
    * performed.
    *
-   * This approach of setting fetchRecords to false in componentWillReceiveProps 
-   * and then calling this.fetchRecords(); again and then parsing the result
-   * works around the problem but is hard to follow (and hard to explain).
-   * 
-   * One possible fix would be a simple async method (which can be used with 
-   * await) to get document record results.
+   * This approach of setting fetchedRecords to false in 
+   * componentWillReceiveProps and then calling updateSearchResults(), 
+   * then parsing the result works around the problem but is hard to follow.
    *
    * We should really invest the time to understand what is wrong with our 
-   * lifecycle that is causing this bug too, though it requires a bit more
-   * time sunk into digging.
+   * lifecycle that is causing this bug, though that requires a bit more
+   * time sunk into figuring out why we don't just get new props when a new
+   * query is made by fetchRecords()
    */
   updateSearchResults() {
     const { state, query, queryText, location: loc } = this.props;
-    const { fetchRecords } = this.state;
+    const { fetchedRecords, selectedRecords } = this.state;
     
-    if (fetchRecords === true) {
-      this.setState({ fetchRecords: false })
+    if (fetchedRecords === false) {
+      this.setState({ fetchedRecords: true });
       this.fetchRecords();
       return;
     }
     
-    if (this.state.searchResults === null || this.state.searchResults.isLoading === true) {
-      
+    if (selectedRecords === false) {
       const hash = queryString.parse(loc.hash);
       const results = (queryText) ? selectDocumentRecordsResult(state, query) : null;
 
@@ -114,6 +109,9 @@ class PdfViewer extends Component {
     
       if (results !== null) {
         results.results.map((result) => {
+          if (!result || !result.index)
+            return false;
+          
           hash.page = result.index
           searchResults.results.push({
             pageNumber: result.index,
@@ -124,20 +122,27 @@ class PdfViewer extends Component {
       }
       
       this.setState({
+        selectedRecords: (results && results.isLoading === false) ? true : false,
         searchResults: searchResults
       });
     }
   }
   
-  updateWidth = () => {
+  onResize() {
+    // Node we use a magic number to subtract scrollBarWidth (usually 15-17px) 
+    // to avoid loops whereby it draws with and without a scrollbar (and keeps
+    // resizing indefinitely) when displayed at specific sizes in preview mode.
+    // We should refactor this out for a better solution wherby on the document
+    // itself scrolls in the preview (and possibly in the normal view too).
+    const scrollBarWidth = 20;
     const PdfViewerElement =  window.document.getElementById('PdfViewer');
-    const width = (PdfViewerElement) ? PdfViewerElement.getBoundingClientRect().width : null;
+    const width = (PdfViewerElement) ? parseInt(PdfViewerElement.getBoundingClientRect().width - scrollBarWidth, 10) : null;
     if (width !== null && width !== this.state.width) {
       this.setState({
-        width: width
+        width: width - scrollBarWidth
       })
     }
-  };
+  }
 
   render() {
     const { document, session, queryText, hash } = this.props;
@@ -148,52 +153,82 @@ class PdfViewer extends Component {
     if (!document || !document.links || !document.links.pdf) {
       return null;
     }
+
+    const displayPdf = (queryText) ? false : true;
+    const displayPdfWithSearchResults = (queryText && numPages > 0) ? true : false;
     
-    const displayDocumentSearchResults = (queryText && numPages > 0) ? true : false;
+    if (displayPdf === true) {
+      let fileUrl = document.links.pdf;
+      if (session.token) {
+        fileUrl = `${fileUrl}?api_key=${session.token}`;
+      }
     
-    let url = document.links.pdf;
-    if (session.token) {
-      url = `${url}?api_key=${session.token}`;
-    }
-    
-    return (
-      <React.Fragment>
-        <div className="PdfViewer">
-          <div className={classNames("outer", { 'with-page-list': displayDocumentSearchResults })}>
-            <div className="pages">
-              <div className="heading">Found on:</div>
-              {displayDocumentSearchResults === true && (searchResults === null || searchResults.isLoading === true) &&
-                <Spinner className="pt-small spinner" />
-              }
-              {displayDocumentSearchResults === true &&
-                <ul>
-                  {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
-                    <li><span className="no-results pt-text-muted">No Results.</span></li>
-                  }
-                  {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
-                    <li><a href={result.href} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</a></li>
-                  ))}
-                </ul>
+      return (
+        <React.Fragment>
+          <div className="PdfViewer">
+            <div className={classNames("outer", { 'with-search-results': displayPdfWithSearchResults })}>
+              <div className="pages">
+                <div className="heading">Found on:</div>
+                {displayPdfWithSearchResults === true && (searchResults === null || searchResults.isLoading === true) &&
+                  <Spinner className="pt-small spinner" />
+                }
+                {displayPdfWithSearchResults === true &&
+                  <ul>
+                    {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
+                      <li><span className="no-results pt-text-muted">No Results.</span></li>
+                    }
+                    {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
+                      <li key={`page-${index}`}><a href={result.href} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</a></li>
+                    ))}
+                  </ul>
+                }
+              </div>
+              {displayPdf === true &&
+                <div id="PdfViewer" className="inner">
+                  <div className="document">
+                    <div ref={(ref) => this.pdfElement = ref}>
+                      {width && (
+                        <Document renderAnnotations={true}
+                                  file={fileUrl}
+                                  onLoadSuccess={this.onDocumentLoad}
+                                  loading={(<SectionLoading />)}>
+                        <Page pageNumber={pageNumber} className="page" width={width}/>
+                      </Document>
+                      )}
+                    </div>
+                  </div>
+                </div>
               }
             </div>
-            <div id="PdfViewer" className="inner">
-              <div className="document">
-                <div ref={(ref) => this.pdfElement = ref}>
-                  {width && (
-                    <Document renderAnnotations={true}
-                              file={url}
-                              onLoadSuccess={this.onDocumentLoad}
-                              loading={(<SectionLoading />)}>
-                    <Page pageNumber={pageNumber} className="page" width={width} onRenderSuccess={this.onRenderSuccess}/>
-                  </Document>
-                  )}
+          </div>
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          <div className="PdfViewer">
+            <div className="outer">
+              <div className="search-results">
+                <div className="pages">
+                  <div className="heading">Found on:</div>
+                  {(searchResults === null || searchResults.isLoading === true) &&
+                    <Spinner className="pt-small spinner" />
+                  }
+                  <ul>
+                    {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
+                      <li><span className="no-results pt-text-muted">No Results.</span></li>
+                    }
+                    {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
+                      <li key={`page-${index}`}><a href={result.href} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</a></li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </React.Fragment>
-    );
+        </React.Fragment>
+      );
+    }
   }
 }
 

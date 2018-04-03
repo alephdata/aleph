@@ -1,9 +1,14 @@
 import React from 'react';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { Button } from "@blueprintjs/core";
+import queryString from 'query-string';
+
 
 import { Toolbar, CloseButton, DownloadButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
+import Query from 'src/app/Query';
 import getPath from 'src/util/getPath';
 import TableViewer from './TableViewer';
 import TextViewer from './TextViewer';
@@ -13,7 +18,7 @@ import ImageViewer from './ImageViewer';
 import FolderViewer from './FolderViewer';
 import EmailViewer from './EmailViewer';
 
-export default class extends React.Component {
+class DocumentViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,11 +34,6 @@ export default class extends React.Component {
       this.setState({
         numberOfPages: documentInfo.numPages
       });
-
-      // @FIXME: This is a hack to trigger window resize event when displaying
-      // a document preview. This forces the PDF viewer to display at the 
-      // right size (otherwise it displays at the incorrect height).    
-      //setTimeout(() => {window.dispatchEvent(new Event('resize')) }, 1500);
     }
   }
 
@@ -73,13 +73,30 @@ export default class extends React.Component {
           <DocumentSearch document={doc} queryText={queryText} onSearchQueryChange={this.onSearchQueryChange}/>
         </Toolbar>
       )}
-      <DocumentViewer  document={doc} queryText={queryText} onDocumentLoad={this.onDocumentLoad}/>
+      <DocumentView  document={doc} queryText={queryText} onDocumentLoad={this.onDocumentLoad}/>
     </React.Fragment>
   }
  
 }
 
-class DocumentViewer extends React.Component {
+
+
+const mapStateToProps = (state, ownProps) => {
+  const { document: doc, location: loc } = ownProps;
+  const qs = queryString.parse(loc.search);
+//  console.log(qs.q)
+  return {
+    queryText: qs.q || null
+  }
+}
+
+DocumentViewer = connect(mapStateToProps)(DocumentViewer);
+
+DocumentViewer = withRouter(DocumentViewer);
+
+export default DocumentViewer
+
+class DocumentView extends React.Component {
   render() {
     const { document: doc, queryText, onDocumentLoad } = this.props;
   

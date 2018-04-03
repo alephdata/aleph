@@ -17,9 +17,39 @@ $pagesWidth: 150px;
       
     .pages {
       display: none;
+
+      .heading {
+        background: $aleph-table-heading-background;
+        padding: $aleph-grid-size;
+        border-bottom: 1px solid $aleph-border-color;
+      }
+      
+      .spinner {
+        display: block;
+        text-align: center;
+        margin: $aleph-grid-size auto;
+      }
+    }
+
+    .search-results {
+      flex: 1;
+      
+      .pages {
+        display: block;
+
+        ul {
+          padding-left: 0;
+          margin: 0;
+          li {
+            list-style: none;
+            padding: $aleph-grid-size;
+            border-bottom: 1px solid $aleph-border-color;
+          }
+        }
+      }
     }
     
-    &.with-page-list {
+    &.with-search-results {
       padding-left: $pagesWidth + ($aleph-grid-size * 4);
       
       .pages {
@@ -34,18 +64,6 @@ $pagesWidth: 150px;
         border-bottom: 1px solid $aleph-border-color;
         background: white;
         overflow: auto;
-
-        .spinner {
-          display: block;
-          text-align: center;
-          margin: $aleph-grid-size auto;
-        }
-        
-        .heading {
-          background: $aleph-table-heading-background;
-          padding: $aleph-grid-size;
-          border-bottom: 1px solid $aleph-border-color;
-        }
     
         ul {
           padding-left: 0;
@@ -119,8 +137,8 @@ $pagesWidth: 150px;
  */
 .Preview {
   .PdfViewer {
-    .outer.with-page-list {
-        padding-left: $pagesWidth;
+    .outer.with-search-results {
+      padding-left: $pagesWidth;
     }
   }
 }
