@@ -12,6 +12,7 @@ import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import SectionLoading from 'src/components/common/SectionLoading';
+import CalloutBox from 'src/components/common/CalloutBox';
 import CollectionListItem from 'src/screens/CollectionScreen/CollectionListItem';
 
 import './CollectionsIndexScreen.css';
@@ -140,6 +141,7 @@ class CollectionsIndexScreen extends Component {
                           updateQuery={this.updateQuery} />
           </DualPane.InfoPane>
           <DualPane.ContentPane>
+            <CalloutBox className='callout'/>
             <ul className="results">
               {result.results.map(res =>
                 <CollectionListItem key={res.id} collection={res} />

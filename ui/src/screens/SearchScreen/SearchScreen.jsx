@@ -14,6 +14,7 @@ import SectionLoading from 'src/components/common/SectionLoading';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
+import CalloutBox from 'src/components/common/CalloutBox';
 
 import './SearchScreen.css';
 
@@ -65,7 +66,7 @@ const messages = defineMessages({
   no_results_description: {
     id: 'search.no_results_description',
     defaultMessage: 'Try making your search more general',
-  },
+  }
 });
 
 class SearchScreen extends React.Component {
@@ -192,6 +193,7 @@ class SearchScreen extends React.Component {
             { result.total === 0 &&
             <ErrorScreen.EmptyList visual="search" title={messages.no_results_title} description={messages.no_results_description}/>
             }
+            <CalloutBox className='callout'/>
             <EntityTable query={query}
                          updateQuery={this.updateQuery}
                          result={result}
