@@ -11,6 +11,7 @@ import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog';
 import DualPane from 'src/components/common/DualPane';
 import CollectionInfoXref from './CollectionInfoXref';
 import CollectionOverview from "../../components/Collection/CollectionOverview";
+import CollectionInfoContent from 'src/screens/CollectionScreen/CollectionInfoContent';
 
 class CollectionInfo extends Component {
   constructor(props) {
@@ -137,6 +138,14 @@ class CollectionInfo extends Component {
                 </React.Fragment>
               }
               panel={<CollectionInfoXref onCollectionXRefLoad={this.onCollectionXRefLoad} collection={collection} />}
+            />
+            <Tab id="content"
+                 title={
+                   <React.Fragment>
+                     <FormattedMessage id="collection.info.contents" defaultMessage="Contents"/>
+                   </React.Fragment>
+                 }
+                 panel={<CollectionInfoContent collection={collection} schemata={collection.schemata} />}
             />
             <Tabs.Expander />
           </Tabs>
