@@ -220,7 +220,7 @@ class Preview extends React.Component {
           {view}
         </div>
       );
-    } else if (previewId !== null && collection !== null && collection.error === undefined) {
+    } else if (previewId !== null && (collection === null || collection.error === undefined)) {
       // Handle when we have an element to load but it's not ready to render yet
       return (
         <div id="Preview" className={classnames('loading', className)} style={{
