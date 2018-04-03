@@ -48,9 +48,11 @@ rebuild:
 build:
 	$(COMPOSE) build
 
+dev: 
+	pip install -q transifex-client bumpversion babel
+
 # pybabel init -i aleph/translations/messages.pot -d aleph/translations -l de -D aleph
-translate:
-	pip install --upgrade transifex-client
+translate: dev
 	pybabel extract -F babel.cfg -k lazy_gettext -o aleph/translations/messages.pot aleph
 	tx push --source
 	tx pull --all
