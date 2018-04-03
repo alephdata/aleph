@@ -34,4 +34,5 @@ class DossierLink(db.Model, IdModel, SoftDeleteModel):
                   synchronize_session=False)
 
     def __repr__(self):
-        return '<DossierLink(%r, %r, %r)>' % (self.dossier_id, self.collection_id)
+        return '<DossierLink(%r, %r, %r)>' % \
+            (self.dossier_id, self.collection_id)
