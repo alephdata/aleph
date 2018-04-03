@@ -1,7 +1,7 @@
 """remove event log
 
 Revision ID: e1d41654e85b
-Revises: ea39c04daca4
+Revises: 358b9b972b8f
 Create Date: 2018-03-07 15:33:34.299841
 
 """
@@ -9,7 +9,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = 'e1d41654e85b'
-down_revision = 'ea39c04daca4'
+down_revision = '358b9b972b8f'
 
 
 def upgrade():

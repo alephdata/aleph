@@ -1,8 +1,8 @@
-"""Casework basic objects
+"""Basics of the case work system discussed in #334.
 
-Revision ID: 2bf6da56c2f4
+Revision ID: 09d444361eff
 Revises: ff8e10fe44d7
-Create Date: 2018-03-27 18:23:57.512547
+Create Date: 2018-04-03 05:17:59.869686
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '2bf6da56c2f4'
+revision = '09d444361eff'
 down_revision = 'ff8e10fe44d7'
 
 
@@ -29,15 +29,9 @@ def upgrade():
         sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
         sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_dossier_match_dossier_id'),
-                    'dossier_match',
-                    ['dossier_id'],
-                    unique=False)
-    op.create_index(op.f('ix_dossier_match_entity_id'),
-                    'dossier_match',
-                    ['entity_id'],
-                    unique=False)
-    op.create_table('link',
+    op.create_index(op.f('ix_dossier_match_dossier_id'), 'dossier_match', ['dossier_id'], unique=False)
+    op.create_index(op.f('ix_dossier_match_entity_id'), 'dossier_match', ['entity_id'], unique=False)
+    op.create_table('dossier_link',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.Column('updated_at', sa.DateTime(), nullable=True),
@@ -51,10 +45,11 @@ def upgrade():
         sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
         sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_link_collection_id'),
-                    'link', ['collection_id'], unique=False)
-    op.create_index(op.f('ix_link_dossier_id'),
-                    'link', ['dossier_id'], unique=False)
+    op.create_index(op.f('ix_dossier_link_collection_id'), 'dossier_link', ['collection_id'], unique=False)
+    op.create_index(op.f('ix_dossier_link_dossier_id'), 'dossier_link', ['dossier_id'], unique=False)
+    op.add_column(u'entity', sa.Column('foreign_id', sa.Unicode(), nullable=True))
+    op.drop_column(u'entity', 'foreign_ids')
+
     op.add_column(u'collection', sa.Column('casefile', sa.Boolean(), nullable=True))
     op.add_column(u'collection', sa.Column('data_url', sa.Unicode(), nullable=True))
     op.add_column(u'collection', sa.Column('info_url', sa.Unicode(), nullable=True))
