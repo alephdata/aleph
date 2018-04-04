@@ -12,7 +12,6 @@ const messages = defineMessages({
 
 const PasswordAuth = ({onSubmit, buttonClassName, showEmail, showName, showPassword, showConfirmPass, buttonText, children, intl, isActivation, className}) => {
   let emailElement, passwordElement, confirmElement, nameElement;
-  console.log(children)
 
   const submit = (event) => {
     event.preventDefault();

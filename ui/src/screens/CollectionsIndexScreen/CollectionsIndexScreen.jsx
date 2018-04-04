@@ -14,6 +14,7 @@ import SearchFacets from 'src/components/Facet/SearchFacets';
 import SectionLoading from 'src/components/common/SectionLoading';
 import CalloutBox from 'src/components/common/CalloutBox';
 import CollectionListItem from 'src/screens/CollectionScreen/CollectionListItem';
+import AuthenticationDialog from 'src/dialogs/AuthenticationDialog';
 
 import './CollectionsIndexScreen.css';
 
@@ -53,12 +54,15 @@ class CollectionsIndexScreen extends Component {
           icon: 'globe',
           defaultSize: 300
         },
-      ]
+      ],
+      isSignupOpen: false
     };
 
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
+    this.onSignin = this.onSignin.bind(this);
+    this.toggleAuthentication = this.toggleAuthentication.bind(this);
   }
 
   componentDidMount() {
@@ -82,15 +86,6 @@ class CollectionsIndexScreen extends Component {
     this.updateQuery(query);
   }
 
-  onFacetToggle(facet) {
-    const updateQuery = this.updateQuery;
-    return (value) => {
-      let query = this.props.query;
-      query = query.toggleFilter(facet, value);
-      updateQuery(query);
-    }
-  }
-
   updateQuery(newQuery) {
     const { history, location } = this.props;
     history.push({
@@ -106,9 +101,17 @@ class CollectionsIndexScreen extends Component {
     }
   }
 
+  onSignin() {
+    this.setState({isSignupOpen: !this.state.isSignupOpen})
+  }
+
+  toggleAuthentication() {
+    this.setState({isSignupOpen: !this.state.isSignupOpen})
+  }
+
   render() {
-    const { result, query, intl } = this.props;
-    const { queryPrefix } = this.state;
+    const { result, query, intl, metadata, session  } = this.props;
+    const { queryPrefix, isSignupOpen } = this.state;
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
@@ -141,7 +144,8 @@ class CollectionsIndexScreen extends Component {
                           updateQuery={this.updateQuery} />
           </DualPane.InfoPane>
           <DualPane.ContentPane>
-            <CalloutBox className='callout'/>
+            <AuthenticationDialog auth={metadata.auth} isOpen={isSignupOpen} toggleDialog={this.toggleAuthentication} />
+            {!session.loggedIn && <CalloutBox onClick={this.onSignin} className='callout'/>}
             <ul className="results">
               {result.results.map(res =>
                 <CollectionListItem key={res.id} collection={res} />
@@ -171,7 +175,9 @@ const mapStateToProps = (state, ownProps) => {
 
 return {
     query: query,
-    result: selectCollectionsResult(state, query)
+    result: selectCollectionsResult(state, query),
+    metadata: state.metadata,
+    session: state.session
   };
 }
 
