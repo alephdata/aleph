@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Spinner } from '@blueprintjs/core';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
 import { throttle, debounce } from 'lodash';
@@ -8,6 +9,7 @@ import queryString from 'query-string';
 import classNames from 'classnames';
 
 import Query from 'src/app/Query';
+import getPath from 'src/util/getPath';
 import { queryDocumentRecords } from 'src/actions';
 import { selectDocumentRecordsResult } from 'src/selectors';
 import SectionLoading from 'src/components/common/SectionLoading';
@@ -89,7 +91,7 @@ class PdfViewer extends Component {
    * query is made by fetchRecords()
    */
   updateSearchResults() {
-    const { state, query, queryText, location: loc } = this.props;
+    const { state, query, queryText, document: doc, location: loc } = this.props;
     const { fetchedRecords, selectedRecords } = this.state;
     
     if (fetchedRecords === false) {
@@ -106,7 +108,7 @@ class PdfViewer extends Component {
         isLoading: (results) ? results.isLoading : false,
         results: []
       };
-    
+      
       if (results !== null) {
         results.results.map((result) => {
           if (!result || !result.index)
@@ -115,8 +117,11 @@ class PdfViewer extends Component {
           hash.page = result.index
           searchResults.results.push({
             pageNumber: result.index,
-            href: `#${queryString.stringify(hash)}`
+            href: `#${queryString.stringify(hash)}`,
+            to: `${getPath(doc.links.ui)}#page=${result.index}`,
+            text: result.text
           })
+
           return true;
         });
       }
@@ -125,7 +130,9 @@ class PdfViewer extends Component {
         selectedRecords: (results && results.isLoading === false) ? true : false,
         searchResults: searchResults
       });
+      return;
     }
+    
   }
   
   onResize() {
@@ -219,7 +226,10 @@ class PdfViewer extends Component {
                       <li><span className="no-results pt-text-muted">No Results.</span></li>
                     }
                     {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
-                      <li key={`page-${index}`}><a href={result.href} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</a></li>
+                      <li key={`page-${index}`}>
+                        <Link to={result.to} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</Link>
+                        <div dangerouslySetInnerHTML={{__html: result.text}} />
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -237,7 +247,12 @@ const mapStateToProps = (state, ownProps) => {
 
   const qs = queryString.parse(loc.search);
   const path = doc.links ? doc.links.records : null;
-  const query = Query.fromLocation(path, loc, { q: qs.q || null}, 'document').limit(50);
+  const query = Query.fromLocation(path, loc, { 
+      q: qs.q || null,
+      highlight: true,
+      highlight_count: 1,
+      highlight_length: 3
+    }, 'document').limit(50);
   
   return {
     state: state,
