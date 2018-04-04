@@ -82,8 +82,6 @@ class DocumentTagCollector(object):
         "Create a tag, this can be called multiple times with the same text."
         cleaner = DocumentTag.TYPES[type]
 
-        print ('tagging type ' + str(type))
-        print cleaner
         text = stringify(text)
         text = cleaner.clean(text, countries=self.document.countries)
 
