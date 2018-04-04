@@ -1,3 +1,4 @@
+import logging
 from pprint import pprint  # noqa
 from elasticsearch.helpers import scan
 
@@ -5,6 +6,8 @@ from aleph.core import es
 from aleph.index.util import authz_query, field_filter_query
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
+
+log = logging.getLogger(__name__)
 
 
 def convert_filters(filters):
@@ -125,9 +128,8 @@ class Query(object):
         return {
             'fields': {
                 'text': {
-                    'number_of_fragments': self.highlight_count,
-                    'fragment_size': self.highlight_length,
-                    'encoder': 'html'
+                    'number_of_fragments': self.parser.highlight_count,
+                    'fragment_size': self.parser.highlight_length
                 }
             }
         }
@@ -159,6 +161,7 @@ class Query(object):
                 }
             }
 
+        # log.info("Query: %r", body)
         return body
 
     def search(self):

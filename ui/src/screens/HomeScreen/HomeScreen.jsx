@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import queryString from 'query-string';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import numeral from 'numeral';
 import { ControlGroup, InputGroup, Button, Intent } from "@blueprintjs/core";
 
-// import { fetchStatistics } from 'src/actions/index';
+import { fetchStatistics } from 'src/actions/index';
 import Screen from 'src/components/common/Screen'
 
 import './HomeScreen.css';
@@ -33,16 +32,9 @@ class HomeScreen extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  // componentDidMount() {
-  //   this.fetchIfNeeded();
-  // }
-  //
-  // fetchIfNeeded() {
-  //   const { statistics } = this.props;
-  //   if (!statistics.isLoading && statistics.count === undefined) {
-  //     this.props.fetchStatistics();
-  //   }
-  // }
+  componentDidMount() {
+    this.props.fetchStatistics();
+  }
 
   onChange({target}) {
     this.setState({value: target.value})
@@ -61,8 +53,6 @@ class HomeScreen extends Component {
 
   render() {
     const {intl, metadata, statistics} = this.props;
-    const total = statistics.count === undefined ? '' : numeral(statistics.count).format('0a');
-    const collections = statistics.count === undefined ? '' : <FormattedNumber value={statistics.collections} />;
     const samples = metadata.app.samples.join(', ');
     
     return (
@@ -71,15 +61,12 @@ class HomeScreen extends Component {
           <div className='outer-searchbox'>
             <div className='inner-searchbox'>
               <div className='homepage-summary'>
-              {total && collections && (
-                <FormattedMessage id='home.summary'
-                                  defaultMessage="Search {total} public records and leaks from {collections} sources"
-                                  values={{
-                                    total: total,
-                                    collections: collections
-                                  }}
-                                  />
-              )}
+              <FormattedMessage id='home.summary'
+                                defaultMessage="Search {total} public records and leaks from {collections} sources"
+                                values={{
+                                  total: numeral(statistics.entities).format('0a'),
+                                  collections: <FormattedNumber value={statistics.collections} />
+                                }} />
               </div>
               <form onSubmit={this.onSubmit} className="search-form">
                 <ControlGroup fill={true}>
@@ -103,13 +90,6 @@ class HomeScreen extends Component {
                   />
                 </ControlGroup>
               </form>
-              {/*}
-              <div className="calls-to-action">
-                <Link className="pt-button pt-large pt-icon-database" to="/collections">
-                  <FormattedMessage id='home.explore' defaultMessage="Browse sources" />
-                </Link>
-              </div>
-              */}
             </div>
           </div>
         </section>
@@ -124,4 +104,4 @@ const mapStateToProps = state => ({
 });
 
 HomeScreen = injectIntl(HomeScreen);
-export default connect(mapStateToProps, {})(HomeScreen);
+export default connect(mapStateToProps, { fetchStatistics })(HomeScreen);
