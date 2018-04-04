@@ -2,13 +2,13 @@ import os
 import six
 import cgi
 import mimetypes
+import exactitude
 from banal import ensure_list
 from collections import Mapping
 from urllib import unquote
 from urlparse import urlparse
 from celestial import normalize_mimetype, DEFAULT
 
-from exactitude import countries, languages, dates, urls
 from normality import safe_filename, stringify, slugify
 
 
@@ -133,7 +133,7 @@ class Metadata(object):
 
     @property
     def source_url(self):
-        return urls.clean(self.meta.get('source_url'))
+        return exactitude.urls.clean(self.meta.get('source_url'))
 
     @source_url.setter
     def source_url(self, source_url):
@@ -141,7 +141,10 @@ class Metadata(object):
 
     @property
     def languages(self):
-        return self.meta.get('languages', [])
+        languages = set()
+        for lang in ensure_list(self.meta.get('languages')):
+            languages.update(exactitude.languages.normalize(lang))
+        return list(languages)
 
     @languages.setter
     def languages(self, languages):
@@ -150,11 +153,14 @@ class Metadata(object):
             self.add_language(lang)
 
     def add_language(self, language):
-        self._meta_add('languages', languages.clean(language))
+        self._meta_add('languages', language)
 
     @property
     def countries(self):
-        return self.meta.get('countries', [])
+        countries = set()
+        for country in ensure_list(self.meta.get('countries')):
+            countries.update(exactitude.countries.normalize(country))
+        return list(countries)
 
     @countries.setter
     def countries(self, countries):
@@ -163,7 +169,7 @@ class Metadata(object):
             self.add_country(country)
 
     def add_country(self, country):
-        self._meta_add('countries', countries.clean(country))
+        self._meta_add('countries', country)
 
     @property
     def keywords(self):
@@ -184,7 +190,7 @@ class Metadata(object):
 
     @date.setter
     def date(self, date):
-        self._meta_text('date', dates.clean(date))
+        self._meta_text('date', exactitude.dates.clean(date))
 
     @property
     def authored_at(self):
@@ -192,7 +198,7 @@ class Metadata(object):
 
     @authored_at.setter
     def authored_at(self, date):
-        self._meta_text('authored_at', dates.clean(date))
+        self._meta_text('authored_at', exactitude.dates.clean(date))
 
     @property
     def modified_at(self):
@@ -200,7 +206,7 @@ class Metadata(object):
 
     @modified_at.setter
     def modified_at(self, date):
-        self._meta_text('modified_at', dates.clean(date))
+        self._meta_text('modified_at', exactitude.dates.clean(date))
 
     @property
     def published_at(self):
@@ -208,7 +214,7 @@ class Metadata(object):
 
     @published_at.setter
     def published_at(self, date):
-        self._meta_text('published_at', dates.clean(date))
+        self._meta_text('published_at', exactitude.dates.clean(date))
 
     @property
     def retrieved_at(self):
@@ -216,7 +222,7 @@ class Metadata(object):
 
     @retrieved_at.setter
     def retrieved_at(self, date):
-        self._meta_text('retrieved_at', dates.clean(date))
+        self._meta_text('retrieved_at', exactitude.dates.clean(date))
 
     @property
     def dates(self):

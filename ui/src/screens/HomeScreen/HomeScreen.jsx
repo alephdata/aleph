@@ -64,7 +64,7 @@ class HomeScreen extends Component {
               <FormattedMessage id='home.summary'
                                 defaultMessage="Search {total} public records and leaks from {collections} sources"
                                 values={{
-                                  total: numeral(statistics.things).format('0a'),
+                                  total: numeral(statistics.entities).format('0a'),
                                   collections: <FormattedNumber value={statistics.collections} />
                                 }} />
               </div>

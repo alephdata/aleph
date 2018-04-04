@@ -1,16 +1,16 @@
-from marshmallow import Schema, post_dump
+from marshmallow import post_dump
 from marshmallow.fields import Nested, Integer, String
 from marshmallow.fields import Dict, Float
 
 from aleph.core import url_for
 from aleph.serializers.common import BaseSchema
-from aleph.serializers.alerts import AlertSchema  
+from aleph.serializers.alerts import AlertSchema  # noqa
 from aleph.serializers.collections import CollectionSchema
 from aleph.serializers.entities import ShallowCombinedSchema
 from aleph.model import Entity
 
 
-class RecordSchema(Schema):
+class RecordSchema(BaseSchema):
     id = String(dump_only=True)
     document_id = String(dump_only=True)
     index = Integer(dump_only=True)
