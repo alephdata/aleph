@@ -2,7 +2,7 @@ from banal import is_mapping
 from normality import stringify
 from followthemoney import model
 from exactitude import countries, languages, dates
-from marshmallow.fields import String, Raw, Float, Field
+from marshmallow.fields import String, Raw, Float
 from marshmallow.exceptions import ValidationError
 
 from aleph.model import Collection
@@ -52,7 +52,7 @@ class SchemaName(String):
 class BaseSchema(ExpandableSchema):
     id = String(dump_only=True)
     score = Float(dump_only=True)
-    highlight = String(dump_only=True)
+    highlight = Raw(dump_only=True)
 
     # these are raw because dumping fails if the dates are already strings, as
     # in the case of data coming from the ES index.

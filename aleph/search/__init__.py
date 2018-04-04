@@ -197,15 +197,9 @@ class RecordsQuery(Query):
     def __init__(self, parser, document=None):
         super(RecordsQuery, self).__init__(parser)
         self.document = document
-        self.rows = parser.getintlist('row')
 
     def get_index(self):
         return records_index()
-
-    def get_sort(self):
-        # if len(self.rows) or self.parser.text:
-        #     return [{''}]
-        return super(RecordsQuery, self).get_sort()
 
     def get_query(self):
         query = super(RecordsQuery, self).get_query()
@@ -214,11 +208,4 @@ class RecordsQuery(Query):
                 'document_id': self.document.id
             }
         })
-        if len(self.rows):
-            query['bool']['should'].append({
-                "constant_score": {
-                    "filter": {'terms': {'index': self.rows}},
-                    "boost": 1000
-                }
-            })
         return query
