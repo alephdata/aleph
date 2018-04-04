@@ -6,10 +6,12 @@ class CalloutBox extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.onSignIn = this.onSignIn.bind(this);
   }
 
   onSignIn() {
-
+    this.props.onClick();
   }
 
   render() {

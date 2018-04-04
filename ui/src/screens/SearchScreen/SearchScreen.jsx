@@ -15,6 +15,7 @@ import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import CalloutBox from 'src/components/common/CalloutBox';
+import AuthenticationDialog from 'src/dialogs/AuthenticationDialog';
 
 import './SearchScreen.css';
 
@@ -127,10 +128,12 @@ class SearchScreen extends React.Component {
         icon: 'person'
       }
     ];
-    this.state = {facets: facets};
+    this.state = {facets: facets, isSignupOpen: false};
 
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
+    this.onSignin = this.onSignin.bind(this);
+    this.toggleAuthentication = this.toggleAuthentication.bind(this);
   }
 
   componentDidMount() {
@@ -169,8 +172,17 @@ class SearchScreen extends React.Component {
     });
   }
 
+  onSignin() {
+    this.setState({isSignupOpen: !this.state.isSignupOpen})
+  }
+
+  toggleAuthentication() {
+    this.setState({isSignupOpen: !this.state.isSignupOpen})
+  }
+
   render() {
-    const { query, result } = this.props;
+    const { query, result, metadata, session } = this.props;
+    const { isSignupOpen } = this.state;
 
     return (
       <Screen query={query}
@@ -193,7 +205,8 @@ class SearchScreen extends React.Component {
             { result.total === 0 &&
             <ErrorScreen.EmptyList visual="search" title={messages.no_results_title} description={messages.no_results_description}/>
             }
-            <CalloutBox className='callout'/>
+            <AuthenticationDialog auth={metadata.auth} isOpen={isSignupOpen} toggleDialog={this.toggleAuthentication} />
+            {!session.loggedIn && <CalloutBox onClick={this.onSignin} className='callout'/>}
             <EntityTable query={query}
                          updateQuery={this.updateQuery}
                          result={result}
@@ -226,7 +239,7 @@ const mapStateToProps = (state, ownProps) => {
   };
   const query = Query.fromLocation('search', location, context, '');
   const result = selectEntitiesResult(state, query);
-  return { query, result };
+  return { query, result, metadata: state.metadata, session: state.session };
 };
 
 SearchScreen = connect(mapStateToProps, { queryEntities })(SearchScreen);

@@ -96,7 +96,7 @@ class AuthenticationDialog extends Component {
     const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
 
     if (session.loggedIn) {
-      return <Redirect to="/"/>;
+      return <Redirect to={window.location.pathname + window.location.search}/>;
     }
 
     if (!metadata.auth.registration_uri) {
