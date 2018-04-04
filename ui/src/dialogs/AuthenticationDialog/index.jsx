@@ -2,12 +2,11 @@ import React, {Component} from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
-import {Callout, Intent, Dialog} from '@blueprintjs/core';
+import {Callout, Intent, Dialog, MenuDivider, Button, Tab, Tabs} from '@blueprintjs/core';
 
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import { endpoint } from 'src/app/api';
 import { xhrErrorToast } from 'src/components/auth/xhrToast';
-import OAuthLogin from 'src/components/auth/OAuthLogin';
 import {PasswordAuthLogin} from 'src/components/auth/PasswordAuth';
 import {PasswordAuthSignup} from 'src/components/auth/PasswordAuth';
 import queryString from "query-string";
@@ -22,7 +21,11 @@ const messages = defineMessages({
   },
   title: {
     id: 'signup.title',
-    defaultMessage: 'Sign in / Register',
+    defaultMessage: 'Sign in',
+  },
+  registrationTitle: {
+    id: 'signup.register',
+    defaultMessage: 'Register',
   },
   registration_not_available_desc: {
     id: 'signup.not_available_desc',
@@ -44,7 +47,14 @@ class AuthenticationDialog extends Component {
 
     this.state = {
       submitted: false,
+      firstSection: '',
+      secondSection: 'hide'
     };
+
+    this.onLogin = this.onLogin.bind(this);
+    this.onSignup = this.onSignup.bind(this);
+    this.onRegisterClick = this.onRegisterClick.bind(this);
+    this.onSignInClick = this.onSignInClick.bind(this);
   }
 
   componentWillMount() {
@@ -68,12 +78,22 @@ class AuthenticationDialog extends Component {
     this.props.loginWithPassword(data.email, data.password);
   }
 
+  onRegisterClick() {
+    this.setState({firstSection: 'hide', secondSection: ''})
+  }
+
+  onSignInClick() {
+    this.setState({firstSection: '', secondSection: 'hide'})
+  }
+
   render() {
-    const {submitted} = this.state;
-    const {metadata, session, intl} = this.props;
+    const {submitted, firstSection, secondSection} = this.state;
+    const {metadata, session, intl, auth} = this.props;
     const passwordLogin = metadata.auth.password_login_uri;
-    const oauthLogin = Array.isArray(metadata.auth.oauth) && metadata.auth.oauth.length > 0;
-    const hasLogin = passwordLogin || oauthLogin;
+    const hasLogin = passwordLogin;
+    const location = window.location;
+    const targetUrl = `${location.protocol}//${location.host}/oauth`;
+    const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
 
     if (session.loggedIn) {
       return <Redirect to="/"/>;
@@ -85,37 +105,52 @@ class AuthenticationDialog extends Component {
       );
     }
 
-    if (!passwordLogin && oauthLogin) {
-      window.location.replace(oauthLogin);
-      return null;
-    }
-
     return (
-      <Dialog icon="authentication" className="AuthenticationScreen" backdropClassName='test-class'
+      <Dialog icon="authentication" className="AuthenticationScreen"
               isOpen={this.props.isOpen}
               onClose={this.props.toggleDialog}
-              title={intl.formatMessage(messages.title)}>
-        <div className="auth-dialog-body">
-          <section className="auth-screen">
-            {hasLogin && <h1>Sign in</h1>}
-            {passwordLogin && <PasswordAuthLogin onSubmit={this.onLogin.bind(this)}/>}
-            {oauthLogin && <OAuthLogin provider={metadata.auth.oauth_uri}/>}
-            {!hasLogin &&
-            <ErrorScreen.PageNotFound visual='log-in' title={messages.not_available_title} description={messages.not_available_desc}/>}
-          </section>
-          <section className="auth-screen">
-            <h1><FormattedMessage id="signup.signup" defaultMessage="Register"/></h1>
-            {submitted ?
-              <Callout intent={Intent.SUCCESS} icon="tick">
-                <h5><FormattedMessage id="signup.inbox.title" defaultMessage="Check your inbox"/></h5>
-                <FormattedMessage id="signup.inbox.desc" defaultMessage="We've sent you an email, please follow the link to complete your registration"/>
-              </Callout> :
-              <span>
-            <PasswordAuthSignup onSubmit={this.onSignup.bind(this)}/>
-                {oauthLogin && <OAuthLogin providers={metadata.auth.oauth}/>}
+              title={firstSection === '' ? intl.formatMessage(messages.title) : intl.formatMessage(messages.registrationTitle)}>
+          <section className={`auth-screen ${firstSection}`}>
+              {passwordLogin && <PasswordAuthLogin buttonClassName='signin-button' onSubmit={this.onLogin}/>}
+            {passwordLogin &&  <div className='link-box'>
+              <a key='oauth' onClick={this.onRegisterClick}>
+                <FormattedMessage id="signup.register" defaultMessage="Don't have account? Register!"/>
+              </a>
+            </div>}
+              <MenuDivider className='menu-divider'/>
+              {auth.oauth_uri && <div className='oauth-box'>
+                <a key='oauth' href={`${auth.oauth_uri}${loginUrlQueryString}`}>
+                  <Button icon="log-in" className="pt-large pt-fill">
+                    <FormattedMessage id="login.oauth" defaultMessage="Sign in via OAuth"/>
+                  </Button>
+                </a>
+              </div>}
+              {!hasLogin &&
+              <ErrorScreen.PageNotFound visual='log-in' title={messages.not_available_title} description={messages.not_available_desc}/>}
+            </section>
+          <section className={`auth-screen ${secondSection}`}>
+              {submitted ?
+                <Callout intent={Intent.SUCCESS} icon="tick">
+                  <h5><FormattedMessage id="signup.inbox.title" defaultMessage="Check your inbox"/></h5>
+                  <FormattedMessage id="signup.inbox.desc" defaultMessage="We've sent you an email, please follow the link to complete your registration"/>
+                </Callout> :
+                <span>
+                    <PasswordAuthSignup buttonClassName='signin-button' onSubmit={this.onSignup}/>
+                  <div className='link-box'>
+                  <a key='oauth' onClick={this.onSignInClick}>
+                <FormattedMessage id="signup.login" defaultMessage="Already have account? Sign in!"/>
+            </a>
+                  </div>
+                  <MenuDivider className='menu-divider'/>
+                  {auth.oauth_uri && <div className='oauth-box'>
+                      <a key='oauth' href={`${auth.oauth_uri}${loginUrlQueryString}`}>
+                        <Button icon="log-in" className="pt-large pt-fill">
+                          <FormattedMessage id="login.oauth" defaultMessage="Sign in via OAuth"/>
+                        </Button>
+                      </a>
+                  </div>}
           </span>}
-          </section>
-        </div>
+            </section>
       </Dialog>
     );
   }

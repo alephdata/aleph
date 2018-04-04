@@ -112,11 +112,11 @@ class AuthButtons extends Component {
       ))
     }
 
-    if (auth.password_login_uri) {
+    if (auth.password_login_uri || auth.oauth_uri) {
       items.push((
         <Menu className='menu-item-width' key='signin'>
           <MenuItem icon='log-in' onClick={this.toggleAuthentication} text={intl.formatMessage(messages.signin)} />
-          <AuthenticationDialog isOpen={this.state.isSignupOpen} toggleDialog={this.toggleAuthentication} />
+          <AuthenticationDialog auth={auth} isOpen={this.state.isSignupOpen} toggleDialog={this.toggleAuthentication} />
         </Menu>
       ))
     }
