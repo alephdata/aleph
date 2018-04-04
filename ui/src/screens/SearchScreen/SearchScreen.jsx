@@ -1,12 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'react-intl';
+import {connect} from 'react-redux';
+import {withRouter, Redirect} from 'react-router';
+import {defineMessages, injectIntl, FormattedNumber, FormattedMessage} from 'react-intl';
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';
-import { queryEntities } from 'src/actions';
-import { selectEntitiesResult } from 'src/selectors';
+import {queryEntities} from 'src/actions';
+import {selectEntitiesResult} from 'src/selectors';
 import Screen from 'src/components/common/Screen';
 import DualPane from 'src/components/common/DualPane';
 import EntityTable from 'src/components/EntityTable/EntityTable';
@@ -72,7 +72,7 @@ const messages = defineMessages({
 
 class SearchScreen extends React.Component {
   constructor(props) {
-    const { intl } = props;
+    const {intl} = props;
     super(props);
 
     const facets = [
@@ -149,21 +149,21 @@ class SearchScreen extends React.Component {
   }
 
   fetchIfNeeded() {
-    const { result, query, queryEntities } = this.props;
+    const {result, query, queryEntities} = this.props;
     if (result.isLoading || (result.status === 'error')) {
-      queryEntities({ query: query });
+      queryEntities({query: query});
     }
   }
 
   getMoreResults() {
-    const { query, result, queryEntities } = this.props;
+    const {query, result, queryEntities} = this.props;
     if (!result.isLoading && result.next) {
-      queryEntities({ query, next: result.next });
+      queryEntities({query, next: result.next});
     }
   }
 
-  updateQuery(newQuery, { replace = false } = {}) {
-    const { history, location } = this.props;
+  updateQuery(newQuery, {replace = false} = {}) {
+    const {history, location} = this.props;
     const navigate = replace ? history.replace : history.push;
     navigate({
       pathname: location.pathname,
@@ -181,8 +181,8 @@ class SearchScreen extends React.Component {
   }
 
   render() {
-    const { query, result, metadata, session } = this.props;
-    const { isSignupOpen } = this.state;
+    const {query, result, metadata, session} = this.props;
+    const {isSignupOpen} = this.state;
 
     return (
       <Screen query={query}
@@ -193,33 +193,35 @@ class SearchScreen extends React.Component {
             <div className='total-count pt-text-muted'>
               <span className='total-count-span'>
               <span className="total-icon pt-icon-standard pt-icon-search"/>
-              <FormattedNumber value={result.total !== undefined ? result.total : 0} />&nbsp;<FormattedMessage id="search.screen.results" defaultMessage="results"/>
+              <FormattedNumber value={result.total !== undefined ? result.total : 0}/>&nbsp;<FormattedMessage
+                id="search.screen.results" defaultMessage="results"/>
             </span>
             </div>
             <SearchFacets query={query}
                           updateQuery={this.updateQuery}
-                          facets={this.state.facets} />
+                          facets={this.state.facets}/>
           </DualPane.InfoPane>
           <DualPane.ContentPane>
-            <QueryTags query={query} updateQuery={this.updateQuery} />
-            { result.total === 0 &&
-            <ErrorScreen.EmptyList visual="search" title={messages.no_results_title} description={messages.no_results_description}/>
+            <QueryTags query={query} updateQuery={this.updateQuery}/>
+            {result.total === 0 &&
+            <ErrorScreen.EmptyList visual="search" title={messages.no_results_title}
+                                   description={messages.no_results_description}/>
             }
-            <AuthenticationDialog auth={metadata.auth} isOpen={isSignupOpen} toggleDialog={this.toggleAuthentication} />
+            <AuthenticationDialog auth={metadata.auth} isOpen={isSignupOpen} toggleDialog={this.toggleAuthentication}/>
             {!session.loggedIn && <CalloutBox onClick={this.onSignin} className='callout'/>}
             <EntityTable query={query}
                          updateQuery={this.updateQuery}
                          result={result}
-                         showLinksInPreview={true} />
-            { !result.isLoading && result.next && (
+                         showLinksInPreview={true}/>
+            {!result.isLoading && result.next && (
               <Waypoint
                 onEnter={this.getMoreResults}
                 bottomOffset="-600px"
                 scrollableAncestor={window}
               />
             )}
-            { result.isLoading && (
-              <SectionLoading />
+            {result.isLoading && (
+              <SectionLoading/>
             )}
           </DualPane.ContentPane>
         </DualPane>
@@ -230,7 +232,7 @@ class SearchScreen extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
+  const {location} = ownProps;
 
   // We normally only want Things, not Intervals (relations between things).
   const context = {
@@ -239,9 +241,9 @@ const mapStateToProps = (state, ownProps) => {
   };
   const query = Query.fromLocation('search', location, context, '');
   const result = selectEntitiesResult(state, query);
-  return { query, result, metadata: state.metadata, session: state.session };
+  return {query, result, metadata: state.metadata, session: state.session};
 };
 
-SearchScreen = connect(mapStateToProps, { queryEntities })(SearchScreen);
+SearchScreen = connect(mapStateToProps, {queryEntities})(SearchScreen);
 SearchScreen = withRouter(SearchScreen);
 export default injectIntl(SearchScreen);
