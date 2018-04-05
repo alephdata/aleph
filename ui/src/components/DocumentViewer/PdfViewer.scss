@@ -44,10 +44,20 @@ $pagesWidth: 150px;
             list-style: none;
             padding: $aleph-grid-size;
             border-bottom: 1px solid $aleph-border-color;
-            max-height: 6em;
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;
+            
+            p { 
+              margin-bottom: 0;
+              a {
+                text-decoration: none;
+                margin-bottom: $aleph-grid-size * 2;
+              }
+              em {
+                background: $aleph-text-highlight-color;
+              }
+            }
           }
         }
       }

@@ -27,7 +27,7 @@ class PdfViewer extends Component {
       selectedRecords: false
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
-    this.onResize =  debounce(this.onResize.bind(this), 500);
+    this.onResize = this.onResize.bind(this);
     this.updateSearchResults =  debounce(this.updateSearchResults.bind(this), 100);
   }
 
@@ -38,6 +38,28 @@ class PdfViewer extends Component {
 
     if (this.props.onDocumentLoad)
       this.props.onDocumentLoad(pdfInfo)
+
+    // Handle a resize event (to check document width) after loading
+    // Note: onDocumentLoad actualy happens *before* rendering, but the
+    // rendering calls happen a bit too often as we don't have sophisticated
+    // shouldComponentUpdate code in this component.
+    this.onResize();
+    
+    // @FIXME As a bit of a hack, resize event (to check document width) 1 
+    // second after the document has loaded.
+    //
+    // This will mostly do nothing, because nothing will have changed - which 
+    // is fine, but in practice in a simple way to trigger once after a short 
+    // delay to allow time for the view to do a first render.
+    setTimeout(() => {
+      // We only want to do anything if the size *has not* been calculated yet.
+      // This is because rendering a PDF can change it slightly but we don't
+      // want to flash the entire PDF render (as it's slow) just to change
+      // it by a 1 or 2 pixels.
+      if (this.state.width === null) {
+        this.onResize();
+      }
+    }, 1000);
   }
   
   componentWillReceiveProps(newProps) {
@@ -64,10 +86,14 @@ class PdfViewer extends Component {
   
   componentDidUpdate() {
     this.updateSearchResults();
+    if (this.state.width === null) {
+      this.onResize();
+    }
   }
 
   fetchRecords() {
-    const { queryDocumentRecords, query } = this.props;
+    const { queryDocumentRecords, query, location: loc } = this.props;
+    const qs = queryString.parse(loc.search);    
     if (query.path) {
       queryDocumentRecords({query})
     }
@@ -116,10 +142,11 @@ class PdfViewer extends Component {
           
           hash.page = result.index
           searchResults.results.push({
+            id:  Math.random().toString(36).substr(2, 9),
             pageNumber: result.index,
             href: `#${queryString.stringify(hash)}`,
             to: `${getPath(doc.links.ui)}#page=${result.index}`,
-            text: result.text
+            highlight: result.highlight
           })
 
           return true;
@@ -127,12 +154,11 @@ class PdfViewer extends Component {
       }
       
       this.setState({
-        selectedRecords: (results && results.isLoading === false) ? true : false,
+        selectedRecords: (results && results.isLoading === false || queryText === null) ? true : false,
         searchResults: searchResults
       });
       return;
     }
-    
   }
   
   onResize() {
@@ -144,6 +170,7 @@ class PdfViewer extends Component {
     const scrollBarWidth = 20;
     const PdfViewerElement =  window.document.getElementById('PdfViewer');
     const width = (PdfViewerElement) ? parseInt(PdfViewerElement.getBoundingClientRect().width - scrollBarWidth, 10) : null;
+
     if (width !== null && width !== this.state.width) {
       this.setState({
         width: width - scrollBarWidth
@@ -161,7 +188,7 @@ class PdfViewer extends Component {
       return null;
     }
 
-    const displayPdf = (queryText) ? false : true;
+    const displayPdf = (queryText === null) ? true : false;
     const displayPdfWithSearchResults = (queryText && numPages > 0) ? true : false;
     
     if (displayPdf === true) {
@@ -185,7 +212,7 @@ class PdfViewer extends Component {
                       <li><span className="no-results pt-text-muted">No Results.</span></li>
                     }
                     {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
-                      <li key={`page-${index}`}><a href={result.href} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</a></li>
+                      <li key={`page-${result.id}`}><a href={result.href} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</a></li>
                     ))}
                   </ul>
                 }
@@ -194,14 +221,19 @@ class PdfViewer extends Component {
                 <div id="PdfViewer" className="inner">
                   <div className="document">
                     <div ref={(ref) => this.pdfElement = ref}>
-                      {width && (
-                        <Document renderAnnotations={true}
-                                  file={fileUrl}
-                                  onLoadSuccess={this.onDocumentLoad}
-                                  loading={(<SectionLoading />)}>
-                        <Page pageNumber={pageNumber} className="page" width={width}/>
+                        <Document
+                          renderAnnotations={true}
+                          file={fileUrl}
+                          onLoadSuccess={this.onDocumentLoad}
+                          loading={(<SectionLoading />)}>
+                        {/* 
+                            Only render Page when width has been set and numPages has been figured out.
+                            This limits flashing / visible resizing when displaying page for the first time.
+                        */}
+                        {width !== null && numPages > 0 && (
+                          <Page pageNumber={pageNumber} className="page" width={width}/>
+                        )}
                       </Document>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -226,9 +258,17 @@ class PdfViewer extends Component {
                       <li><span className="no-results pt-text-muted">No Results.</span></li>
                     }
                     {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
-                      <li key={`page-${index}`}>
-                        <Link to={result.to} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</Link>
-                        <div dangerouslySetInnerHTML={{__html: result.text}} />
+                      <li key={`page-${result.id}`}>
+                        <p>
+                          <Link to={result.to} className={classNames({active: pageNumber === result.pageNumber})}>
+                             <span className={`pt-icon-document`}/> Page {result.pageNumber}
+                          </Link>
+                        </p>
+                        <p>
+                          <Link to={result.to} className="pt-text-muted">
+                              <span dangerouslySetInnerHTML={{__html: result.highlight.join('  …  ')}} />
+                          </Link>
+                        </p>
                       </li>
                     ))}
                   </ul>
@@ -246,19 +286,20 @@ const mapStateToProps = (state, ownProps) => {
   const { document: doc, location: loc } = ownProps;
 
   const qs = queryString.parse(loc.search);
+  const queryText = (qs.q && qs.q.length > 0) ? qs.q : null;
   const path = doc.links ? doc.links.records : null;
   const query = Query.fromLocation(path, loc, { 
-      q: qs.q || null,
+      q: queryText,
       highlight: true,
-      highlight_count: 1,
-      highlight_length: 3
+      highlight_count: 10,
+      highlight_length: 100
     }, 'document').limit(50);
   
   return {
     state: state,
     session: state.session,
     query: query,
-    queryText: qs.q || null,
+    queryText: queryText,
     hash: queryString.parse(loc.hash)
   }
 }
