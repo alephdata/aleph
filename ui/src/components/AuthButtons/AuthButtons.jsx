@@ -67,9 +67,6 @@ class AuthButtons extends Component {
 
   render() {
     const {session, auth, intl} = this.props;
-    const location = window.location;
-    const targetUrl = `${location.protocol}//${location.host}/oauth`;
-    const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
     const items = [];
 
     if (session.loggedIn) {
@@ -100,23 +97,11 @@ class AuthButtons extends Component {
       )
     }
 
-    if (auth.oauth_uri) {
-      items.push((
-        <Menu className='menu-item-width' key='oauthmenu'>
-        <a key='oauth' href={`${auth.oauth_uri}${loginUrlQueryString}`}>
-          <Button icon="log-in" className="pt-minimal">
-            <FormattedMessage id="login.oauth" defaultMessage="Sign in"/>
-          </Button>
-        </a>
-        </Menu>
-      ))
-    }
-
-    if (auth.password_login_uri) {
+    if (auth.password_login_uri || auth.oauth_uri) {
       items.push((
         <Menu className='menu-item-width' key='signin'>
           <MenuItem icon='log-in' onClick={this.toggleAuthentication} text={intl.formatMessage(messages.signin)} />
-          <AuthenticationDialog isOpen={this.state.isSignupOpen} toggleDialog={this.toggleAuthentication} />
+          <AuthenticationDialog auth={auth} isOpen={this.state.isSignupOpen} toggleDialog={this.toggleAuthentication} />
         </Menu>
       ))
     }

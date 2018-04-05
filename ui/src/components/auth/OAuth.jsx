@@ -33,8 +33,6 @@ class OAuth extends Component {
 
   render() {
     const {metadata, session} = this.props;
-    const passwordLogin = metadata.auth.password_login_uri;
-    const oauthLogin = Array.isArray(metadata.auth.oauth) && metadata.auth.oauth.length > 0;
 
     if (session.loggedIn) {
       return <Redirect to="/"/>;
@@ -42,9 +40,6 @@ class OAuth extends Component {
       return (
         <ErrorScreen.PageNotFound visual='' title={messages.registration_not_available_title} description={messages.registration_not_available_desc}/>
       );
-    } else if (!passwordLogin && oauthLogin) {
-      window.location.replace(oauthLogin);
-      return null;
     } else {
       window.location.replace('/');
       return null;

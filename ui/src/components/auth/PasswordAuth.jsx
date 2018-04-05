@@ -10,7 +10,7 @@ const messages = defineMessages({
   },
 });
 
-const PasswordAuth = ({onSubmit, showEmail, showName, showPassword, showConfirmPass, buttonText, children, intl, isActivation}) => {
+const PasswordAuth = ({onSubmit, buttonClassName, showEmail, showName, showPassword, showConfirmPass, buttonText, children, intl, isActivation, className}) => {
   let emailElement, passwordElement, confirmElement, nameElement;
 
   const submit = (event) => {
@@ -32,7 +32,7 @@ const PasswordAuth = ({onSubmit, showEmail, showName, showPassword, showConfirmP
   };
 
   return (
-    <form onSubmit={submit} className="pt-card">
+    <form onSubmit={submit} className={className}>
       {showEmail && <label className="pt-label">
           <FormattedMessage id="password_auth.email" defaultMessage="Email address"/>
           <input className="pt-input pt-fill" type="email" name="email" required
@@ -59,7 +59,7 @@ const PasswordAuth = ({onSubmit, showEmail, showName, showPassword, showConfirmP
 
       <div className="flex-row">
         <span>
-          <Button className="pt-large" intent={Intent.PRIMARY} type="submit">
+          <Button className={`pt-large ${buttonClassName}`} intent={Intent.PRIMARY} type="submit">
             {buttonText}
           </Button>
         </span>
@@ -71,20 +71,20 @@ const PasswordAuth = ({onSubmit, showEmail, showName, showPassword, showConfirmP
   );
 };
 
-export const PasswordAuthLogin = ({onSubmit}) => (
-  <PasswordAuth onSubmit={onSubmit} showEmail showPassword
-                buttonText={<FormattedMessage id="password_auth.signin" defaultMessage="Sign in"/>}>{' '}&nbsp;
+export const PasswordAuthLogin = ({onSubmit, buttonClassName}) => (
+  <PasswordAuth onSubmit={onSubmit} showEmail showPassword buttonClassName={buttonClassName}
+                buttonText={<FormattedMessage id="password_auth.signin" defaultMessage="Sign in"/>}>{' '}
   </PasswordAuth>
 );
 
-export const PasswordAuthSignup = ({onSubmit}) => (
-  <PasswordAuth onSubmit={onSubmit} showEmail
-                buttonText={<FormattedMessage id="password_auth.signup" defaultMessage="Sign up"/>}>{' '}&nbsp;
+export const PasswordAuthSignup = ({onSubmit, buttonClassName}) => (
+  <PasswordAuth onSubmit={onSubmit} showEmail buttonClassName={buttonClassName}
+                buttonText={<FormattedMessage id="password_auth.signup" defaultMessage="Sign up"/>}>{' '}
   </PasswordAuth>
 );
 
-export const PasswordAuthActivate = ({onSubmit, intl}) => (
-  <PasswordAuth onSubmit={onSubmit} showPassword showName isActivation
+export const PasswordAuthActivate = ({onSubmit, intl, className}) => (
+  <PasswordAuth onSubmit={onSubmit} showPassword showName isActivation className={className}
                 intl={intl}
                 showConfirmPass={true}
                 buttonText={<FormattedMessage id="password_auth.activate" defaultMessage="Activate"/>}/>
