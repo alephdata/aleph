@@ -191,7 +191,6 @@ class Preview extends React.Component {
     let className = 'Preview';
 
     let view = null;
-
     
     if (previewType === 'collection' && collection && collection.links && !collection.isFetching) {      
       view = <CollectionInfo collection={collection} showToolbar={true} />;
@@ -239,14 +238,14 @@ class Preview extends React.Component {
           <SectionLoading/>
         </div>
       );
-    } else if(collection !== null && collection !== null && collection.status === 403){
+    } else if (collection !== null && collection !== null && collection.status === 403){
       return <div id="Preview" className={className} style={{
         top: previewTop,
         bottom: previewBottom
       }}>
         <ErrorScreen.EmptyList title={messages.not_authorized} description={messages.not_authorized_decr}/>
       </div>
-    } else if(collection !== null && collection.error){
+    } else if (collection !== null && collection.error){
       return <div id="Preview" className={className} style={{
         top: previewTop,
         bottom: previewBottom

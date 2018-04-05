@@ -13,6 +13,7 @@ import getPath from 'src/util/getPath';
 import { queryDocumentRecords } from 'src/actions';
 import { selectDocumentRecordsResult } from 'src/selectors';
 import SectionLoading from 'src/components/common/SectionLoading';
+import { DocumentSearch } from 'src/components/Toolbar';
 
 import './PdfViewer.css';
 
@@ -20,6 +21,7 @@ class PdfViewer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      documentSearchQueryText: props.queryText,
       width: null,
       numPages: 0,
       searchResults: null,
@@ -28,6 +30,8 @@ class PdfViewer extends Component {
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
     this.onResize = this.onResize.bind(this);
+    this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
+    this.onSubmitDocumentSearch = this.onSubmitDocumentSearch.bind(this);
     this.updateSearchResults =  debounce(this.updateSearchResults.bind(this), 100);
   }
 
@@ -64,12 +68,15 @@ class PdfViewer extends Component {
   
   componentWillReceiveProps(newProps) {
     if (newProps.queryText !== this.props.queryText) {
-      this.setState({ 
+      this.setState({
+        documentSearchQueryText: newProps.queryText,
         searchResults: null,
         fetchedRecords: false,
         selectedRecords: false,
         numPages: 0
       });
+      if (this.props.onDocumentLoad)
+        this.props.onDocumentLoad(null)
       this.updateSearchResults();
     }
   }
@@ -93,8 +100,12 @@ class PdfViewer extends Component {
 
   fetchRecords() {
     const { queryDocumentRecords, query, location: loc } = this.props;
-    const qs = queryString.parse(loc.search);    
+    const { documentSearchQueryText } = this.state;
+    
     if (query.path) {
+      if (query.context) {
+        query.context.q = documentSearchQueryText;
+      }
       queryDocumentRecords({query})
     }
   }
@@ -118,7 +129,7 @@ class PdfViewer extends Component {
    */
   updateSearchResults() {
     const { state, query, queryText, document: doc, location: loc } = this.props;
-    const { fetchedRecords, selectedRecords } = this.state;
+    const { fetchedRecords, selectedRecords, documentSearchQueryText } = this.state;
     
     if (fetchedRecords === false) {
       this.setState({ fetchedRecords: true });
@@ -128,7 +139,12 @@ class PdfViewer extends Component {
     
     if (selectedRecords === false) {
       const hash = queryString.parse(loc.hash);
-      const results = (queryText) ? selectDocumentRecordsResult(state, query) : null;
+      
+      if (query.context) {
+        query.context.q = documentSearchQueryText;
+      }
+
+      const results = (documentSearchQueryText) ? selectDocumentRecordsResult(state, query) : null;
 
       const searchResults = {
         isLoading: (results) ? results.isLoading : false,
@@ -154,7 +170,7 @@ class PdfViewer extends Component {
       }
       
       this.setState({
-        selectedRecords: (results && results.isLoading === false || queryText === null) ? true : false,
+        selectedRecords: (results && results.isLoading === false || documentSearchQueryText === null) ? true : false,
         searchResults: searchResults
       });
       return;
@@ -178,21 +194,58 @@ class PdfViewer extends Component {
     }
   }
 
+  onSearchQueryChange(queryText) {
+    const { documentSearchQueryText } = this.state;
+    if (queryText !== documentSearchQueryText) {
+      this.setState({
+        documentSearchQueryText: queryText || '',
+        searchResults: null,
+        fetchedRecords: false,
+        selectedRecords: false,
+        numPages: 0
+      });
+      
+      this.updateSearchResults();
+    }
+  }
+  
+  onSearchQueryChange(queryText) {
+    const { documentSearchQueryText } = this.state;
+    if (queryText !== documentSearchQueryText) {
+      
+      this.setState({
+        documentSearchQueryText: queryText
+      });
+    }
+  }
+  
+  onSubmitDocumentSearch(queryText) {
+    this.setState({
+      documentSearchQueryText: queryText,
+      searchResults: null,
+      fetchedRecords: false,
+      selectedRecords: false,
+      numPages: 0
+    });
+    
+    this.updateSearchResults();    
+  }
+  
   render() {
-    const { document, session, queryText, hash } = this.props;
-    const { width, numPages, searchResults } = this.state;
+    const { document: doc, session, hash, queryText } = this.props;
+    const { width, numPages, searchResults, documentSearchQueryText } = this.state;
 
     const pageNumber = (hash.page && parseInt(hash.page, 10) <= numPages) ? parseInt(hash.page, 10) : 1;
 
-    if (!document || !document.links || !document.links.pdf) {
+    if (!doc || !doc.links || !doc.links.pdf) {
       return null;
     }
 
-    const displayPdf = (queryText === null) ? true : false;
-    const displayPdfWithSearchResults = (queryText && numPages > 0) ? true : false;
+    const displayPdf = (documentSearchQueryText === null) ? true : false;
+    const displayPdfWithSearchResults = (documentSearchQueryText && numPages > 0) ? true : false;
     
     if (displayPdf === true) {
-      let fileUrl = document.links.pdf;
+      let fileUrl = doc.links.pdf;
       if (session.token) {
         fileUrl = `${fileUrl}?api_key=${session.token}`;
       }
@@ -209,7 +262,7 @@ class PdfViewer extends Component {
                 {displayPdfWithSearchResults === true &&
                   <ul>
                     {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
-                      <li><span className="no-results pt-text-muted">No Results.</span></li>
+                      <li><span className="no-results pt-text-muted">No results.</span></li>
                     }
                     {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
                       <li key={`page-${result.id}`}><a href={result.href} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</a></li>
@@ -249,13 +302,20 @@ class PdfViewer extends Component {
             <div className="outer">
               <div className="search-results">
                 <div className="pages">
-                  <div className="heading">Found on:</div>
+                  <div className="heading">
+                    <DocumentSearch
+                      document={doc}
+                      queryText={documentSearchQueryText}
+                      onSearchQueryChange={this.onSearchQueryChange}
+                      onSubmitSearch={this.onSubmitDocumentSearch}
+                      />
+                  </div>
                   {(searchResults === null || searchResults.isLoading === true) &&
                     <Spinner className="pt-small spinner" />
                   }
                   <ul>
                     {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
-                      <li><span className="no-results pt-text-muted">No Results.</span></li>
+                      <li><span className="no-results pt-text-muted">No results.</span></li>
                     }
                     {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
                       <li key={`page-${result.id}`}>

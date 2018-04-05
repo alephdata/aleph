@@ -16,7 +16,9 @@ const messages = defineMessages({
 class DocumentSearch extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { queryText: props.queryText || '' };
+    this.state = { 
+      queryText: props.queryText || null
+    };
     this.updateSearchQuery = debounce(this.updateSearchQuery.bind(this), 200);
     this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
     this.onSubmitSearch = this.onSubmitSearch.bind(this);
@@ -32,8 +34,10 @@ class DocumentSearch extends React.Component {
   }
 
   onSearchQueryChange(e) {
-    const queryText = e.target.value;
-    this.setState({ queryText: queryText });
+    const queryText = (e.target.value && e.target.value.length > 0) ? e.target.value : null;
+    this.setState({ 
+      queryText: queryText
+    });
     if (this.props.onSearchQueryChange) {
       this.props.onSearchQueryChange(queryText);
     }
@@ -41,32 +45,34 @@ class DocumentSearch extends React.Component {
   }
   
   componentDidMount() {
-    const queryText = this.props.query.getString('prefix');
-    this.setState({ queryText: queryText });
-
+    const queryText = this.props.queryText;
+    
     if (this.props.onSearchQueryChange) {
       this.props.onSearchQueryChange(queryText);
     }
   }
   
   componentWillReceiveProps(newProps) {
-//    if (!this.props.queryText && newProps.queryText)
-//      this.setState({ queryText: newProps.queryText });
+    this.setState({ queryText: newProps.queryText});
   }
   
   onSubmitSearch(event) {
+    const queryText = this.state.queryText;
+    
     event.preventDefault();
     if (this.props.onSubmitSearch !== undefined) {
-      this.props.onSubmitSearch();
+      this.props.onSubmitSearch(queryText);
     }
   }
   
   render() {
     const { document: doc, intl, disabled, placeholder } = this.props;
+    const { queryText } = this.state;
     
     // This is a temporary conditional block to allow us to enable search
     // only on document types where we have added support for them in the UI.
     let isSearchable = false;
+    
     if (doc.schema === 'Email') {
       isSearchable = false;
     } else if (doc.schema === 'Table' && doc.children !== undefined) {
@@ -76,10 +82,10 @@ class DocumentSearch extends React.Component {
     } else if (doc.html) {
       isSearchable = false;
     } else if (doc.links && doc.links.pdf) {
-      isSearchable = false;
+      isSearchable = true;
     } else if (doc.schema === 'Image') {
       isSearchable = false;
-    } else if (doc.children !== undefined) {
+    } else if (doc.schema === 'Folder') {
       isSearchable = true;
     }
     if (isSearchable !== true)
@@ -93,7 +99,7 @@ class DocumentSearch extends React.Component {
                   disabled={disabled}
                   placeholder={placeholder || intl.formatMessage(messages.search_paceholder)}
                   onChange={this.onSearchQueryChange}
-                  value={this.state.queryText} />
+                  value={queryText} />
          </div>
        </form>
     );
@@ -101,13 +107,15 @@ class DocumentSearch extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location } = ownProps;
-  // when a prefix is defined, we switch to recursive folder search - otherwise
-  // a flat listing of the immediate children of this directory is shown.
-  const prefix = Query.fromLocation('search', location, {}, 'folder').getString('prefix'),
+  const { document: doc, location: loc } = ownProps;
+
+  let searchType = (doc.schema === 'Folder') ? 'folder' : 'document';
+
+  const prefix = Query.fromLocation('search', loc, {}, 'folder').getString('prefix'),
         field = prefix.length === 0 ? 'filter:parent.id' : 'filter:ancestors',
-        context = {[field]: document.id};
-  const query = Query.fromLocation('search', location, context, 'folder').limit(50);
+        context = {[field]: doc.id};
+
+  const query = Query.fromLocation('search', loc, context, searchType).limit(50);
   return {
     query: query
   }

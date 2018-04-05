@@ -35,11 +35,9 @@ class DocumentViewer extends React.Component {
   }
   
   onDocumentLoad(documentInfo) {
-    if (documentInfo && documentInfo.numPages) {
-      this.setState({
-        numberOfPages: documentInfo.numPages
-      });
-    }
+    this.setState({
+      numberOfPages: (documentInfo && documentInfo.numPages) ? documentInfo.numPages : null
+    });
   }
 
   onSearchQueryChange(queryText) {
@@ -54,28 +52,30 @@ class DocumentViewer extends React.Component {
     
     return <React.Fragment>
       {showToolbar && (
-        <Toolbar className={(previewMode) ? 'toolbar-preview' : null}>
-          {previewMode && toggleMaximise && (
+        <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
+          {previewMode === true && toggleMaximise && (
             <Button icon="eye-open"
               className="button-maximise pt-active"
               onClick={toggleMaximise}>
               <FormattedMessage id="preview" defaultMessage="Preview"/>
             </Button>
           )}
-          {previewMode && (
+          {previewMode === true && (
             <Link to={getPath(doc.links.ui)} className="pt-button button-link">
               <span className={`pt-icon-document`}/>
               <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
             </Link>
           )}
           <DownloadButton document={doc}/>
-          {numberOfPages !== null  && numberOfPages > 0 && (
+          {numberOfPages !== null && numberOfPages > 0 && (
             <PagingButtons document={doc} numberOfPages={numberOfPages}/>
           )}
-          {previewMode && (
+          {previewMode === true && (
             <CloseButton/>
           )}
-          <DocumentSearch document={doc} queryText={queryText} onSearchQueryChange={this.onSearchQueryChange}/>
+          {previewMode !== true && (
+            <DocumentSearch document={doc} queryText={queryText} onSearchQueryChange={this.onSearchQueryChange}/>
+          )}
         </Toolbar>
       )}
       <DocumentView  document={doc} queryText={queryText} onDocumentLoad={this.onDocumentLoad}/>
@@ -84,13 +84,11 @@ class DocumentViewer extends React.Component {
  
 }
 
-
-
 const mapStateToProps = (state, ownProps) => {
   const { location: loc } = ownProps;
   const qs = queryString.parse(loc.search);
   return {
-    queryText: qs.q || null
+    queryText: (qs.q && qs.q.length > 0) ? qs.q : null
   }
 }
 
