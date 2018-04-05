@@ -125,7 +125,7 @@ class AuthenticationDialog extends Component {
           {passwordLogin && <PasswordAuthLogin buttonClassName='signin-button' onSubmit={this.onLogin}/>}
           {passwordLogin && <div className='link-box'>
             <a key='oauth' onClick={this.onRegisterClick}>
-              <FormattedMessage id="signup.register" defaultMessage="Don't have account? Register!"/>
+              <FormattedMessage id="signup.register.question" defaultMessage="Don't have account? Register!"/>
             </a>
           </div>}
           <MenuDivider className='menu-divider'/>
