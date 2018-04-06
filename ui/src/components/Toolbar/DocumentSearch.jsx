@@ -99,7 +99,7 @@ class DocumentSearch extends React.Component {
                   disabled={disabled}
                   placeholder={placeholder || intl.formatMessage(messages.search_paceholder)}
                   onChange={this.onSearchQueryChange}
-                  value={queryText} />
+                  value={queryText || ''} />
          </div>
        </form>
     );

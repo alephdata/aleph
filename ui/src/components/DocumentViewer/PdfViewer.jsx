@@ -33,6 +33,7 @@ class PdfViewer extends Component {
     this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
     this.onSubmitDocumentSearch = this.onSubmitDocumentSearch.bind(this);
     this.updateSearchResults =  debounce(this.updateSearchResults.bind(this), 100);
+    this.onSearchResultClick = this.onSearchResultClick.bind(this);
   }
 
   onDocumentLoad(pdfInfo) {
@@ -193,26 +194,10 @@ class PdfViewer extends Component {
       })
     }
   }
-
-  onSearchQueryChange(queryText) {
-    const { documentSearchQueryText } = this.state;
-    if (queryText !== documentSearchQueryText) {
-      this.setState({
-        documentSearchQueryText: queryText || '',
-        searchResults: null,
-        fetchedRecords: false,
-        selectedRecords: false,
-        numPages: 0
-      });
-      
-      this.updateSearchResults();
-    }
-  }
   
   onSearchQueryChange(queryText) {
     const { documentSearchQueryText } = this.state;
     if (queryText !== documentSearchQueryText) {
-      
       this.setState({
         documentSearchQueryText: queryText
       });
@@ -231,8 +216,24 @@ class PdfViewer extends Component {
     this.updateSearchResults();    
   }
   
+  onSearchResultClick(e, pageNumber) {
+    const { document: doc, history: hist, previewMode } = this.props;
+    const { documentSearchQueryText } = this.state;
+    
+    if (previewMode !== true) {
+      e.preventDefault();
+      hist.push({
+        pathname: getPath(doc.links.ui),
+        search: queryString.stringify({
+          q: ''
+        }),
+        hash: `page=${pageNumber}`
+      });
+    }
+  }
+  
   render() {
-    const { document: doc, session, hash, queryText } = this.props;
+    const { document: doc, session, hash, queryText, previewMode } = this.props;
     const { width, numPages, searchResults, documentSearchQueryText } = this.state;
 
     const pageNumber = (hash.page && parseInt(hash.page, 10) <= numPages) ? parseInt(hash.page, 10) : 1;
@@ -241,9 +242,9 @@ class PdfViewer extends Component {
       return null;
     }
 
-    const displayPdf = (documentSearchQueryText === null) ? true : false;
-    const displayPdfWithSearchResults = (documentSearchQueryText && numPages > 0) ? true : false;
-    
+    const displayPdf = (previewMode !== true && documentSearchQueryText === null) ? true : false;
+    const displayPdfWithSearchResults = (previewMode !== true && documentSearchQueryText && numPages > 0) ? true : false;
+
     if (displayPdf === true) {
       let fileUrl = doc.links.pdf;
       if (session.token) {
@@ -259,11 +260,11 @@ class PdfViewer extends Component {
                 {displayPdfWithSearchResults === true && (searchResults === null || searchResults.isLoading === true) &&
                   <Spinner className="pt-small spinner" />
                 }
+                {displayPdfWithSearchResults === true && searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
+                  <p className="no-results pt-text-muted">No results.</p>
+                }
                 {displayPdfWithSearchResults === true &&
                   <ul>
-                    {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
-                      <li><span className="no-results pt-text-muted">No results.</span></li>
-                    }
                     {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
                       <li key={`page-${result.id}`}><a href={result.href} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</a></li>
                     ))}
@@ -302,31 +303,33 @@ class PdfViewer extends Component {
             <div className="outer">
               <div className="search-results">
                 <div className="pages">
-                  <div className="heading">
-                    <DocumentSearch
-                      document={doc}
-                      queryText={documentSearchQueryText}
-                      onSearchQueryChange={this.onSearchQueryChange}
-                      onSubmitSearch={this.onSubmitDocumentSearch}
-                      />
-                  </div>
+                  {previewMode === true && (
+                    <div className="heading">
+                      <DocumentSearch
+                        document={doc}
+                        queryText={documentSearchQueryText}
+                        onSearchQueryChange={this.onSearchQueryChange}
+                        onSubmitSearch={this.onSubmitDocumentSearch}
+                        />
+                    </div>
+                  )}
                   {(searchResults === null || searchResults.isLoading === true) &&
                     <Spinner className="pt-small spinner" />
                   }
+                  {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
+                    <p className="no-results pt-text-muted">No results.</p>
+                  }
                   <ul>
-                    {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
-                      <li><span className="no-results pt-text-muted">No results.</span></li>
-                    }
                     {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
                       <li key={`page-${result.id}`}>
                         <p>
-                          <Link to={result.to} className={classNames({active: pageNumber === result.pageNumber})}>
-                             <span className={`pt-icon-document`}/> Page {result.pageNumber}
+                          <Link onClick={(e) => this.onSearchResultClick(e, result.pageNumber)} to={result.to} className={classNames({active: pageNumber === result.pageNumber})}>
+                            <span className={`pt-icon-document`}/> Page {result.pageNumber}
                           </Link>
                         </p>
                         <p>
-                          <Link to={result.to} className="pt-text-muted">
-                              <span dangerouslySetInnerHTML={{__html: result.highlight.join('  …  ')}} />
+                          <Link onClick={(e) => this.onSearchResultClick(e, result.pageNumber)} to={result.to} className="pt-text-muted">
+                            <span dangerouslySetInnerHTML={{__html: result.highlight.join('  …  ')}} />
                           </Link>
                         </p>
                       </li>
@@ -343,10 +346,12 @@ class PdfViewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document: doc, location: loc } = ownProps;
+  const { document: doc, location: loc, queryText: queryTextFromProps, previewMode } = ownProps;
 
   const qs = queryString.parse(loc.search);
-  const queryText = (qs.q && qs.q.length > 0) ? qs.q : null;
+  const queryText = (queryTextFromProps)
+                      ? queryTextFromProps
+                      : (qs.q && qs.q.length > 0) ? qs.q : null;
   const path = doc.links ? doc.links.records : null;
   const query = Query.fromLocation(path, loc, { 
       q: queryText,

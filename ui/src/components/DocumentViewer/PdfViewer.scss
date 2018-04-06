@@ -37,6 +37,11 @@ $pagesWidth: 150px;
       .pages {
         display: block;
 
+        .no-results {
+          padding: $aleph-grid-size;
+          text-align: center;
+        }
+
         ul {
           padding-left: 0;
           margin: 0;
@@ -47,16 +52,21 @@ $pagesWidth: 150px;
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;
-            
+
             p { 
               margin-bottom: 0;
               a {
                 text-decoration: none;
-                margin-bottom: $aleph-grid-size * 2;
               }
               em {
                 background: $aleph-text-highlight-color;
+                font-style: normal;
               }
+            }
+            
+            p:first-child { 
+              margin-bottom: $aleph-grid-size;
+              font-weight: bold;
             }
           }
         }
@@ -90,7 +100,7 @@ $pagesWidth: 150px;
             a {
               text-align: right; 
             }
-            
+                        
             .no-results,
             a {
               padding: $aleph-grid-size;

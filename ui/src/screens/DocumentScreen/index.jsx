@@ -74,4 +74,8 @@ const mapStateToProps = (state, ownProps) => {
   return { documentId, document };
 };
 
-export default connect(mapStateToProps, { fetchDocument })(injectIntl(DocumentScreen));
+DocumentScreen = connect(mapStateToProps, { fetchDocument }, null, { pure: false })(DocumentScreen);
+DocumentScreen = injectIntl(DocumentScreen);
+
+export default DocumentScreen
+

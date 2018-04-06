@@ -28,10 +28,22 @@ class DocumentViewer extends React.Component {
     super(props);
     this.state = {
       numberOfPages: null,
-      queryText: ''
+      queryText: this.props.queryText,
+      documentSearchQueryText: this.props.queryText
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
     this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
+    this.onSubmitDocumentSearch = this.onSubmitDocumentSearch.bind(this);
+  }
+
+  componentWillReceiveProps(newProps) {
+    const { previewMode } = newProps;
+    if (previewMode === true) {
+      this.setState({
+        queryText: newProps.queryText,
+        documentSearchQueryText: newProps.queryText
+      });
+    }
   }
   
   onDocumentLoad(documentInfo) {
@@ -45,10 +57,26 @@ class DocumentViewer extends React.Component {
       queryText: queryText
     });
   }
+
+  onSubmitDocumentSearch(queryText) {
+    const { document: doc, history: hist } = this.props;
+
+    this.setState({
+      queryText: queryText,
+      documentSearchQueryText: queryText
+    });
+
+    hist.push({
+      pathname: getPath(doc.links.ui),
+      search: queryString.stringify({
+        q: queryText
+      })
+    })    
+  }
   
   render() {
     const { document: doc, showToolbar, toggleMaximise, previewMode } = this.props;
-    const { numberOfPages, queryText } = this.state;
+    const { numberOfPages, queryText, documentSearchQueryText } = this.state;
     
     return <React.Fragment>
       {showToolbar && (
@@ -74,11 +102,16 @@ class DocumentViewer extends React.Component {
             <CloseButton/>
           )}
           {previewMode !== true && (
-            <DocumentSearch document={doc} queryText={queryText} onSearchQueryChange={this.onSearchQueryChange}/>
+            <DocumentSearch
+              document={doc}
+              queryText={queryText}
+              onSearchQueryChange={this.onSearchQueryChange}
+              onSubmitSearch={this.onSubmitDocumentSearch}
+            />
           )}
         </Toolbar>
       )}
-      <DocumentView  document={doc} queryText={queryText} onDocumentLoad={this.onDocumentLoad}/>
+      <DocumentView document={doc} previewMode={previewMode} queryText={documentSearchQueryText} onDocumentLoad={this.onDocumentLoad}/>
     </React.Fragment>
   }
  
@@ -100,8 +133,8 @@ export default DocumentViewer
 
 class DocumentView extends React.Component {
   render() {
-    const { document: doc, queryText, onDocumentLoad, intl } = this.props;
-
+    const { document: doc, intl, queryText, previewMode, onDocumentLoad} = this.props;
+    
     if (doc.schema === 'Email') {
       return <EmailViewer document={doc}/>;
     } else if (doc.schema === 'Table') {
@@ -111,13 +144,13 @@ class DocumentView extends React.Component {
     } else if (doc.html) {
       return <HtmlViewer document={doc}/>;
     } else if (doc.links && doc.links.pdf) {
-      return <PdfViewer document={doc} onDocumentLoad={onDocumentLoad} />
+      return <PdfViewer document={doc} queryText={queryText} previewMode={previewMode} onDocumentLoad={onDocumentLoad} />
     } else if (doc.schema === 'Image') {
       return <ImageViewer document={doc} />;
     } else if (doc.schema === 'Folder' || doc.schema === 'Package') {
-      if(doc.status === 'fail') return <FolderViewer hasWarning={true} document={doc} queryText={queryText}/>;
+      if (doc.status === 'fail') return <FolderViewer hasWarning={true} document={doc} queryText={queryText}/>;
       return <FolderViewer document={doc} queryText={queryText} />;
-    } else if(doc.schema === 'Document'){
+    } else if(doc.schema === 'Document') {
       return <section className="PartialError outer-div">
         <div className="pt-non-ideal-state inner-div">
           <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
@@ -156,4 +189,3 @@ class DocumentView extends React.Component {
     }
   }
 }
-
