@@ -3,7 +3,7 @@
 # Lejla Camdzic <lejla@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-04-05T16:49:00.596Z\n"
+"POT-Creation-Date: 2018-04-06T15:52:24.071Z\n"
 "Last-Translator: Lejla Camdzic <lejla@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -837,20 +837,6 @@ msgstr "Pretraži po nazivu ili e-mailu"
 #: i18n/messages.json
 msgid "Search companies, people and documents."
 msgstr "Pretraži kompanije, osobe ili dokumente"
-
-#. [document.placeholder_tolder_filter]
-#. defaultMessage is:
-#. Search folder…
-#: i18n/messages.json
-msgid "Search folder…"
-msgstr ""
-
-#. [document.placeholder_table_filter]
-#. defaultMessage is:
-#. Search table…
-#: i18n/messages.json
-msgid "Search table…"
-msgstr ""
 
 #. [home.summary]
 #. defaultMessage is:
