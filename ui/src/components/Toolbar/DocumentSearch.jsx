@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
-import { debounce } from 'lodash';
 
 import Query from 'src/app/Query';
 
@@ -19,33 +18,16 @@ class DocumentSearch extends React.Component {
     this.state = { 
       queryText: props.query.getString('prefix')
     };
-    // this.updateSearchQuery = debounce(this.updateSearchQuery.bind(this), 200);
     this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
     this.onSubmitSearch = this.onSubmitSearch.bind(this);
   }
-  
-  // updateSearchQuery(newQuery) {
-    
-  // }
 
   onSearchQueryChange(e) {
     const queryText = (e.target.value && e.target.value.length > 0) ? e.target.value : null;
     this.setState({ 
       queryText: queryText
     });
-    // if (this.props.onSearchQueryChange) {
-    //   this.props.onSearchQueryChange(queryText);
-    // }
-    // this.updateSearchQuery(this.props.query.set('prefix', queryText));
   }
-  
-  // componentDidMount() {
-  //   const queryText = this.props.queryText;
-    
-  //   if (this.props.onSearchQueryChange) {
-  //     this.props.onSearchQueryChange(queryText);
-  //   }
-  // }
   
   componentWillReceiveProps(newProps) {
     this.setState({ queryText: newProps.query.getString('prefix')});
@@ -64,26 +46,26 @@ class DocumentSearch extends React.Component {
   }
   
   render() {
-    const { document: doc, intl, disabled, placeholder, query } = this.props;
+    const { document, intl, disabled, placeholder } = this.props;
     const { queryText } = this.state;
     
     // This is a temporary conditional block to allow us to enable search
     // only on document types where we have added support for them in the UI.
     let isSearchable = false;
     
-    if (doc.schema === 'Email') {
+    if (document.schema === 'Email') {
       isSearchable = false;
-    } else if (doc.schema === 'Table') {
+    } else if (document.schema === 'Table') {
       isSearchable = true;
-    } else if (doc.text && !doc.html) {
+    } else if (document.text && !document.html) {
       isSearchable = false;
-    } else if (doc.html) {
+    } else if (document.html) {
       isSearchable = false;
-    } else if (doc.links && doc.links.pdf) {
+    } else if (document.links && document.links.pdf) {
       isSearchable = true;
-    } else if (doc.schema === 'Image') {
+    } else if (document.schema === 'Image') {
       isSearchable = false;
-    } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
+    } else if (document.schema === 'Folder' || document.schema === 'Package' || document.schema === 'Workbook') {
       isSearchable = true;
     }
     if (isSearchable !== true)

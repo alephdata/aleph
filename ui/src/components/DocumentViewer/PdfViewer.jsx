@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Spinner } from '@blueprintjs/core';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
-import { throttle, debounce } from 'lodash';
+import { throttle } from 'lodash';
 import queryString from 'query-string';
 import classNames from 'classnames';
 
@@ -13,7 +12,6 @@ import getPath from 'src/util/getPath';
 import { queryDocumentRecords } from 'src/actions';
 import { selectDocumentRecordsResult } from 'src/selectors';
 import SectionLoading from 'src/components/common/SectionLoading';
-import { DocumentSearch } from 'src/components/Toolbar';
 
 import './PdfViewer.css';
 
@@ -114,7 +112,7 @@ class PdfViewer extends Component {
   }
   
   render() {
-    const { document, session, hash, previewMode, result, query } = this.props;
+    const { document, session, hash, result, query } = this.props;
     const { width, numPages } = this.state;
 
     const pageNumber = (hash.page && parseInt(hash.page, 10) <= numPages) ? parseInt(hash.page, 10) : 1;
@@ -200,7 +198,7 @@ class PdfViewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location, queryText, previewMode } = ownProps;
+  const { document, location, queryText } = ownProps;
 
   const path = document.links ? document.links.records : null;
   let query = Query.fromLocation(path, location, { 

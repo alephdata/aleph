@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { debounce } from 'lodash';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import { Button } from "@blueprintjs/core";
-import queryString from 'query-string';
 
 import Query from 'src/app/Query';
 import { Toolbar, CloseButton, DownloadButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';

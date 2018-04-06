@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
-import { debounce } from 'lodash';
 
 import Query from 'src/app/Query';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
@@ -12,10 +11,6 @@ import './FolderViewer.css';
 
 
 class FolderViewer extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { document, query, hasWarning } = this.props;
     

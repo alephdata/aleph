@@ -19,10 +19,6 @@ const messages = defineMessages({
 });
 
 class OAuth extends Component {
-  constructor() {
-    super();
-  }
-
   componentWillMount() {
     const parsedHash = queryString.parse(window.location.hash);
     if (parsedHash.token) {
