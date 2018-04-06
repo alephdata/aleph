@@ -37,10 +37,10 @@ kek:
                 template: "{{comp.address}}"
           ownership:
             schema: Ownership
+            key_literal: Ownership
             keys:
               - comp.id
               - sub.id
-              - shares.share
             properties:
               owner:
                 entity: company

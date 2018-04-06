@@ -24,6 +24,10 @@ experts:
                 column: gender
           membership:
             schema: Membership
+            key_literal: Membership
+            keys:
+              - name
+              - group_code
             properties:
               member:
                 entity: member
