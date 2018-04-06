@@ -166,12 +166,11 @@ class Preview extends React.Component {
     const { fragment } = this.props;
     const newMaximiseState = !this.state.maximised;
     
-    fragment.update({'preview:maximised': newMaximiseState });
+    fragment.update({'preview:maximised': newMaximiseState});
     
     this.setState({ 
       maximised: newMaximiseState
     })
-
     
     // @EXPERIMENTAL - Enable if content padding is enabled in handleScroll()
     // this.handleScroll();

@@ -162,10 +162,9 @@ class SearchScreen extends React.Component {
     }
   }
 
-  updateQuery(newQuery, {replace = false} = {}) {
-    const {history, location} = this.props;
-    const navigate = replace ? history.replace : history.push;
-    navigate({
+  updateQuery(newQuery) {
+    const { history, location } = this.props;
+    history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
       hash: location.hash,
@@ -232,7 +231,7 @@ class SearchScreen extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const {location} = ownProps;
+  const { location } = ownProps;
 
   // We normally only want Things, not Intervals (relations between things).
   const context = {
@@ -244,6 +243,6 @@ const mapStateToProps = (state, ownProps) => {
   return {query, result, metadata: state.metadata, session: state.session};
 };
 
-SearchScreen = connect(mapStateToProps, {queryEntities})(SearchScreen);
+SearchScreen = connect(mapStateToProps, { queryEntities })(SearchScreen);
 SearchScreen = withRouter(SearchScreen);
 export default injectIntl(SearchScreen);
