@@ -17,7 +17,7 @@ def get_instance_stats(authz):
             'bool': {
                 'filter': [
                     authz_query(authz),
-                    {'term': {'schemata': Entity.THING}}
+                    # {'term': {'schemata': Entity.THING}}
                 ]
             }
         }
@@ -36,6 +36,6 @@ def get_instance_stats(authz):
     collections = es.search(index=collections_index(), body=query)
     log.debug("Generated stats for %r.", authz_query(authz))
     return {
-        'things': entities.get('hits').get('total'),
+        'entities': entities.get('hits').get('total'),
         'collections': collections.get('hits').get('total')
     }

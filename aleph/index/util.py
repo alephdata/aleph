@@ -18,14 +18,14 @@ def unpack_result(res):
     """Turn a document hit from ES into a more traditional JSON object."""
     if res.get('found') is False:
         return
-    data = res.get('_source') or {}
+    data = res.get('_source', {})
     data['id'] = res.get('_id')
     if '_score' in res:
         data['score'] = res.get('_score')
     if 'highlight' in res:
-        data['highlight'] = {}
+        data['highlight'] = []
         for key, value in res.get('highlight', {}).items():
-            data['highlight'][key] = value
+            data['highlight'].extend(value)
     return data
 
 
