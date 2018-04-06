@@ -1,15 +1,12 @@
 import React, {Component} from 'react';
 import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
-import {Redirect} from 'react-router';
 import {Callout, Intent, Dialog, MenuDivider, Button} from '@blueprintjs/core';
 
-import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import {endpoint} from 'src/app/api';
 import {xhrErrorToast} from 'src/components/auth/xhrToast';
 import {PasswordAuthLogin} from 'src/components/auth/PasswordAuth';
 import {PasswordAuthSignup} from 'src/components/auth/PasswordAuth';
-import queryString from "query-string";
 import {loginWithPassword, loginWithToken} from "src/actions/sessionActions";
 
 import './style.css';
@@ -97,8 +94,8 @@ class AuthenticationDialog extends Component {
   }
 
   render() {
+    const {metadata, intl, auth} = this.props;
     const {submitted, firstSection, secondSection} = this.state;
-    const {metadata, session, intl, auth} = this.props;
     const passwordLogin = metadata.auth.password_login_uri;
 
     return (
@@ -143,7 +140,7 @@ class AuthenticationDialog extends Component {
   }
 }
 
-const mapStateToProps = ({session, metadata}) => ({session, metadata});
+const mapStateToProps = ({metadata}) => ({metadata});
 
 AuthenticationDialog = connect(mapStateToProps, {loginWithToken, loginWithPassword})(injectIntl(AuthenticationDialog));
 export default AuthenticationDialog;
