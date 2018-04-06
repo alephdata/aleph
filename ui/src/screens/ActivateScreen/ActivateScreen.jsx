@@ -34,7 +34,7 @@ class ActivateScreen extends Component {
           <div className="small-screen-inner">
             <section className="small-screen">
               <h1><FormattedMessage id="signup.title" defaultMessage="Activate your account"/></h1>
-              <PasswordAuthActivate onSubmit={this.onActivate.bind(this)} intl={intl}/>
+              <PasswordAuthActivate className='pt-card' onSubmit={this.onActivate.bind(this)} intl={intl}/>
             </section>
           </div>
         </div>

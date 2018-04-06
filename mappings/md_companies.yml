@@ -49,6 +49,10 @@ md_companies:
         directorship:
           schema: Directorship
           key_literal: Directorship
+          keys:
+            - Company_Name
+            - Company_IDNO
+            - Director
           properties:
             director:
               entity: director
@@ -73,6 +77,10 @@ md_companies:
         ownership:
           schema: Ownership
           key_literal: Ownership
+          keys:
+            - Company_Name
+            - Company_IDNO
+            - Director
           properties:
             owner:
               entity: founder

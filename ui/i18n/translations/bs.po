@@ -3,7 +3,7 @@
 # Lejla Camdzic <lejla@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-03-26T09:17:08.043Z\n"
+"POT-Creation-Date: 2018-04-05T16:49:00.596Z\n"
 "Last-Translator: Lejla Camdzic <lejla@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -69,12 +69,15 @@ msgstr "Aktiviraj"
 msgid "Activate your account"
 msgstr "Aktiviraj svoj profil"
 
+#. [navbar.alert_add]
+#. defaultMessage is:
+#. Add alert
 #. [alerts.add]
 #. defaultMessage is:
-#. Add
-#: i18n/messages.json
-msgid "Add"
-msgstr "Dodaj"
+#. Add alert
+#: i18n/messages.json i18n/messages.json
+msgid "Add alert"
+msgstr ""
 
 #. [search.facets.facet.addresses]
 #. defaultMessage is:
@@ -90,12 +93,19 @@ msgstr "Adrese"
 msgid "Alert"
 msgstr ""
 
-#. [password_auth.has_account]
+#. [navbar.alert_remove]
 #. defaultMessage is:
-#. Already have an account?
+#. Alert on
 #: i18n/messages.json
-msgid "Already have an account?"
-msgstr "Već imate profil?"
+msgid "Alert on"
+msgstr ""
+
+#. [signup.login]
+#. defaultMessage is:
+#. Already have account? Sign in!
+#: i18n/messages.json
+msgid "Already have account? Sign in!"
+msgstr ""
 
 #. [auth.unknown_error]
 #. defaultMessage is:
@@ -139,13 +149,6 @@ msgstr "Autori"
 msgid "BCC"
 msgstr "BCC"
 
-#. [home.explore]
-#. defaultMessage is:
-#. Browse sources
-#: i18n/messages.json
-msgid "Browse sources"
-msgstr ""
-
 #. [collection.browser.total]
 #. defaultMessage is:
 #. Browsing {total} sources.
@@ -173,10 +176,7 @@ msgstr "Kategorije"
 #. [collection.edit.info.category]
 #. defaultMessage is:
 #. Category
-#. [collection.info.category]
-#. defaultMessage is:
-#. Category
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Category"
 msgstr "Kategorija"
 
@@ -208,6 +208,13 @@ msgstr "Uklonite filter"
 msgid "Code"
 msgstr "Code"
 
+#. [password_auth.confirm]
+#. defaultMessage is:
+#. Confirm password
+#: i18n/messages.json
+msgid "Confirm password"
+msgstr ""
+
 #. [entity.info.connections]
 #. defaultMessage is:
 #. Connections
@@ -221,6 +228,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "Contact"
 msgstr "Kontakt"
+
+#. [collection.info.contents]
+#. defaultMessage is:
+#. Contents
+#: i18n/messages.json
+msgid "Contents"
+msgstr ""
 
 #. [entity.column.countries]
 #. defaultMessage is:
@@ -248,10 +262,7 @@ msgstr "Države"
 #. [collection.countries]
 #. defaultMessage is:
 #. Country
-#. [collection.info.countries]
-#. defaultMessage is:
-#. Country
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Country"
 msgstr "Država"
 
@@ -305,6 +316,13 @@ msgstr "URL izvora dokumenta"
 #: i18n/messages.json
 msgid "Document not found"
 msgstr "Dokument nije pronađen"
+
+#. [signup.register.question]
+#. defaultMessage is:
+#. Don't have account? Register!
+#: i18n/messages.json
+msgid "Don't have account? Register!"
+msgstr ""
 
 #. [document.download]
 #. defaultMessage is:
@@ -411,13 +429,6 @@ msgstr "Generator"
 msgid "Groups"
 msgstr "Grupe"
 
-#. [password_auth.no_account]
-#. defaultMessage is:
-#. Haven't got an account?
-#: i18n/messages.json
-msgid "Haven't got an account?"
-msgstr "Nemate profil?"
-
 #. [footer.help]
 #. defaultMessage is:
 #. Help
@@ -449,10 +460,7 @@ msgstr "Oznaka"
 #. [collection.languages]
 #. defaultMessage is:
 #. Language
-#. [collection.info.languages]
-#. defaultMessage is:
-#. Language
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Language"
 msgstr "Jezik"
 
@@ -469,10 +477,7 @@ msgstr "Jezici"
 #. [collection.updated_at]
 #. defaultMessage is:
 #. Last updated
-#. [collection.info.updated_at]
-#. defaultMessage is:
-#. Last updated
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Last updated"
 msgstr "Posljednja izmjena"
 
@@ -504,6 +509,13 @@ msgstr "MIME"
 msgid "Manage alerts"
 msgstr ""
 
+#. [collection.edit.title]
+#. defaultMessage is:
+#. Manage collection permissions
+#: i18n/messages.json
+msgid "Manage collection permissions"
+msgstr ""
+
 #. [alerts.title]
 #. defaultMessage is:
 #. Manage your alerts
@@ -514,10 +526,7 @@ msgstr "Upravljaj pretplatama"
 #. [collection.creator]
 #. defaultMessage is:
 #. Manager
-#. [collection.info.creator]
-#. defaultMessage is:
-#. Manager
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Manager"
 msgstr "Upravitelj"
 
@@ -634,7 +643,10 @@ msgstr ""
 #. [sidebar.open]
 #. defaultMessage is:
 #. Open
-#: i18n/messages.json i18n/messages.json
+#. [sidebar.open]
+#. defaultMessage is:
+#. Open
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Open"
 msgstr ""
 
@@ -657,13 +669,6 @@ msgstr "Drugo"
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Overview"
 msgstr "Sažetak"
-
-#. [errorscreen.no_route_error]
-#. defaultMessage is:
-#. Page not found
-#: i18n/messages.json
-msgid "Page not found"
-msgstr "Stranica nije pronađena"
 
 #. [document.paging]
 #. defaultMessage is:
@@ -699,9 +704,22 @@ msgstr "Telefoni"
 #. [signup.not_available_desc]
 #. defaultMessage is:
 #. Please contact the site admin to get an account
-#: i18n/messages.json
+#. [signup.not_available_desc]
+#. defaultMessage is:
+#. Please contact the site admin to get an account
+#: i18n/messages.json i18n/messages.json
 msgid "Please contact the site admin to get an account"
 msgstr "Molim kontaktirajte administratora da biste otvorili profil"
+
+#. [preview.not_auth_decr]
+#. defaultMessage is:
+#. Please go to the login page.
+#. [collection.not_auth_decr]
+#. defaultMessage is:
+#. Please go to the login page.
+#: i18n/messages.json i18n/messages.json
+msgid "Please go to the login page."
+msgstr ""
 
 #. [preview]
 #. defaultMessage is:
@@ -712,6 +730,13 @@ msgstr "Molim kontaktirajte administratora da biste otvorili profil"
 #: i18n/messages.json i18n/messages.json
 msgid "Preview"
 msgstr "Pregled"
+
+#. [nav.alerts_tooltip]
+#. defaultMessage is:
+#. Receive alerts for new results
+#: i18n/messages.json
+msgid "Receive alerts for new results"
+msgstr ""
 
 #. [alerts.add_placeholder]
 #. defaultMessage is:
@@ -727,7 +752,7 @@ msgstr "Dobiti mail kad se pojave novi rezultati pretrage."
 msgid "Recipient"
 msgstr "Primalac"
 
-#. [nav.signup]
+#. [signup.register]
 #. defaultMessage is:
 #. Register
 #: i18n/messages.json
@@ -737,7 +762,10 @@ msgstr "Registrujte se"
 #. [signup.not_available_title]
 #. defaultMessage is:
 #. Registration is disabled
-#: i18n/messages.json
+#. [signup.not_available_title]
+#. defaultMessage is:
+#. Registration is disabled
+#: i18n/messages.json i18n/messages.json
 msgid "Registration is disabled"
 msgstr "Registracija nije moguća"
 
@@ -865,25 +893,29 @@ msgstr "Podešavanja"
 msgid "Show more…"
 msgstr "Prikaži više..."
 
-#. [login.oauth]
-#. defaultMessage is:
-#. Sign in
 #. [password_auth.signin]
 #. defaultMessage is:
 #. Sign in
-#. [login.oauth]
+#. [signup.title]
 #. defaultMessage is:
 #. Sign in
-#. [nav.signin]
-#. defaultMessage is:
-#. Sign in
-#. [home.signin]
-#. defaultMessage is:
-#. Sign in
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Sign in"
 msgstr "Prijava"
+
+#. [nav.sigin]
+#. defaultMessage is:
+#. Sign in / Register
+#: i18n/messages.json
+msgid "Sign in / Register"
+msgstr ""
+
+#. [login.oauth]
+#. defaultMessage is:
+#. Sign in via OAuth
+#: i18n/messages.json
+msgid "Sign in via OAuth"
+msgstr ""
 
 #. [nav.signout]
 #. defaultMessage is:
@@ -895,10 +927,7 @@ msgstr ""
 #. [password_auth.signup]
 #. defaultMessage is:
 #. Sign up
-#. [signup.signup]
-#. defaultMessage is:
-#. Sign up
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Sign up"
 msgstr "Registracija"
 
@@ -908,6 +937,13 @@ msgstr "Registracija"
 #: i18n/messages.json
 msgid "Size"
 msgstr "Veličina"
+
+#. [search.callout_first_part_description]
+#. defaultMessage is:
+#. Some sources are hidden from anonymous users, please
+#: i18n/messages.json
+msgid "Some sources are hidden from anonymous users, please"
+msgstr ""
 
 #. [entity.column.collection_id]
 #. defaultMessage is:
@@ -932,10 +968,13 @@ msgstr "Izvor"
 msgid "Source URL"
 msgstr "URL izvora"
 
+#. [preview.not_found]
+#. defaultMessage is:
+#. Source not found
 #. [collection.not_found]
 #. defaultMessage is:
 #. Source not found
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Source not found"
 msgstr "Izvor nije pronađen"
 
@@ -1001,6 +1040,16 @@ msgstr "Linkovi"
 msgid "The Server did not accept your input"
 msgstr "Server nije prihvatio Vaš unos"
 
+#. [document.viewer.ignored_file]
+#. defaultMessage is:
+#. The system does not work with these types of files. Please download it so
+#. you’ll be able to see it.
+#: i18n/messages.json
+msgid ""
+"The system does not work with these types of files. Please download it so "
+"you’ll be able to see it."
+msgstr ""
+
 #. [entity.references.empty.description]
 #. defaultMessage is:
 #. There are no known relationships.
@@ -1021,6 +1070,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "This folder is empty."
 msgstr "Ovaj folder je prazan."
+
+#. [search.not_properly_imported]
+#. defaultMessage is:
+#. This folder is not properly imported!
+#: i18n/messages.json
+msgid "This folder is not properly imported!"
+msgstr ""
 
 #. [alerts.topic]
 #. defaultMessage is:
@@ -1133,6 +1189,13 @@ msgstr "Korisnici"
 msgid "View"
 msgstr "Pregled"
 
+#. [search.warning]
+#. defaultMessage is:
+#. Warning!
+#: i18n/messages.json
+msgid "Warning!"
+msgstr ""
+
 #. [signup.inbox.desc]
 #. defaultMessage is:
 #. We've sent you an email, please follow the link to complete your
@@ -1144,11 +1207,14 @@ msgid ""
 msgstr ""
 "Poslali smo Vam e-mail, molimo da pomoću linka završite svoju registraciju"
 
-#. [navbar.success]
+#. [preview.not_auth]
 #. defaultMessage is:
-#. You are now subscribed to alerts for this search
-#: i18n/messages.json
-msgid "You are now subscribed to alerts for this search"
+#. You are not authorized to do this.
+#. [collection.not_auth]
+#. defaultMessage is:
+#. You are not authorized to do this.
+#: i18n/messages.json i18n/messages.json
+msgid "You are not authorized to do this."
 msgstr ""
 
 #. [notifications.no_notifications]
@@ -1164,6 +1230,20 @@ msgstr ""
 #: i18n/messages.json
 msgid "You have no notifications set up."
 msgstr "Niste podesili pojmove za obavijesti."
+
+#. [navbar.alert_removed]
+#. defaultMessage is:
+#. You will no longer receive alerts for this search
+#: i18n/messages.json
+msgid "You will no longer receive alerts for this search"
+msgstr ""
+
+#. [navbar.alert_added]
+#. defaultMessage is:
+#. You will receive alerts for new results
+#: i18n/messages.json
+msgid "You will receive alerts for new results"
+msgstr ""
 
 #. [password_auth.name]
 #. defaultMessage is:
@@ -1196,6 +1276,13 @@ msgstr "Vaša e-mail adresa ne može se promijeniti"
 msgid "Your notifications"
 msgstr ""
 
+#. [pass.auth.not_same]
+#. defaultMessage is:
+#. Your passwords are not the same!
+#: i18n/messages.json
+msgid "Your passwords are not the same!"
+msgstr ""
+
 #. [footer.aleph]
 #. defaultMessage is:
 #. aleph {version}
@@ -1216,6 +1303,20 @@ msgstr "unutar:"
 #: i18n/messages.json
 msgid "not:"
 msgstr "osim:"
+
+#. [search.screen.results]
+#. defaultMessage is:
+#. results
+#: i18n/messages.json
+msgid "results"
+msgstr ""
+
+#. [search.callout_second_part_description]
+#. defaultMessage is:
+#. sign in to see all results you’re authorised to access.
+#: i18n/messages.json
+msgid "sign in to see all results you’re authorised to access."
+msgstr ""
 
 #. [country.total]
 #. defaultMessage is:

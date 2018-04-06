@@ -1,7 +1,33 @@
 .AuthenticationScreen {
-  width: 63em !important;
+  width: 28em !important;
 
-  .auth-dialog-body {
-    display: inline-flex;
+  .tabs {
+    margin-left: 1em;
+  }
+
+  .pt-tab-panel {
+    margin-top: 0 !important;
+  }
+
+  .oauth-box {
+    text-align: center;
+    margin-top: 1em;
+  }
+
+  .menu-divider {
+    margin-top: 1em;
+  }
+
+  .signin-button {
+    float: right;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  .link-box {
+    margin-top: 5em;
+    margin-left: 8.5em;
   }
 }
