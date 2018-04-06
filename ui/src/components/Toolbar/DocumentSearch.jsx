@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import queryString from 'query-string';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 
@@ -36,12 +37,15 @@ class DocumentSearch extends React.Component {
   onSubmitSearch(event) {
     const { history, location, query } = this.props;
     const { queryText } = this.state;
+    const hashQuery = queryString.parse(location.hash);
+    hashQuery['mode'] = 'search';
+    hashQuery['page'] = undefined;
     event.preventDefault();
     
     history.push({
       pathname: location.pathname,
       search: query.setString('prefix', queryText).toLocation(),
-      hash: location.hash
+      hash: queryString.stringify(hashQuery)
     });
   }
   
