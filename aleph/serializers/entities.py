@@ -34,7 +34,6 @@ class ShallowCombinedSchema(BaseSchema):
     bulk = Boolean()
 
     # Entity attributes
-    foreign_ids = List(String())
     foreign_id = String()
     name = String()
     entities = List(String())
@@ -157,7 +156,7 @@ class EntityUpdateSchema(Schema):
 
 class EntityCreateSchema(EntityUpdateSchema):
     collection_id = String(required=True)
-    foreign_ids = List(String())
+    foreign_id = String()
 
     @pre_load()
     def flatten_collection(self, data):

@@ -54,13 +54,9 @@ def bulk_load(config):
     for foreign_id, data in config.items():
         collection = Collection.by_foreign_id(foreign_id)
         if collection is None:
-            collection = Collection.create({
-                'foreign_id': foreign_id,
-                'label': data.get('label') or foreign_id,
-                'summary': data.get('summary'),
-                'category': data.get('category'),
-                'managed': True,
-            })
+            data['foreign_id'] = foreign_id
+            data['label'] = data.get('label', foreign_id)
+            collection = Collection.create(data)
 
         db.session.commit()
         index_collection(collection)

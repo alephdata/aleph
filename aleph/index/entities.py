@@ -14,7 +14,7 @@ from normality import latinize_text
 from aleph.core import es
 from aleph.index.core import entity_index, entities_index
 from aleph.index.util import bulk_op, index_form
-from aleph.index.util import unpack_result
+from aleph.index.util import unpack_result, query_delete
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ def index_entity(entity):
 
     data = {
         'name': entity.name,
-        'foreign_ids': entity.foreign_ids,
+        'foreign_id': entity.foreign_id,
         'properties': {
             'name': [entity.name]
         }
@@ -132,8 +132,8 @@ def finalize_index(data, schema, texts):
             if name == 'name':
                 data['name'] = value
             texts.append(value)
-    data = schema.invert(data)
 
+    data = schema.invert(data)
     data['text'] = index_form(texts)
 
     names = data.get('names', [])
