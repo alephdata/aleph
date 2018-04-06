@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { Menu, MenuItem, MenuDivider, Popover, Button, Position } from "@blueprintjs/core";
+import { Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon } from "@blueprintjs/core";
 
 import SettingsDialog from 'src/dialogs/SettingsDialog';
 import AlertsDialog from 'src/dialogs/AlertsDialog';
@@ -74,6 +74,13 @@ class AuthButtons extends Component {
         <span className="AuthButtons">
           <Popover content={
             <Menu>
+              <Link to="/notifications" className="pt-menu-item">
+                <Icon icon="timeline-events" /> {' '}
+                <div class="pt-text-overflow-ellipsis pt-fill">
+                  {intl.formatMessage(messages.view_notifications)}
+                </div>
+              </Link>
+              <MenuItem icon="notifications" onClick={this.toggleAlerts} text={intl.formatMessage(messages.alerts)+'…'} />
               <MenuItem icon="cog" onClick={this.toggleSettings} text={intl.formatMessage(messages.settings)+'…'} />
               <MenuDivider />
               <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
@@ -82,15 +89,6 @@ class AuthButtons extends Component {
             <Button icon="user" className="pt-minimal" />
           </Popover>
 
-          <Popover content={
-            <Menu>
-              <MenuItem onClick={this.toggleAlerts} text={intl.formatMessage(messages.alerts)+'…'} />
-              <Link to="/notifications" className="pt-menu-item">{intl.formatMessage(messages.view_notifications)}</Link>
-            </Menu>
-            } position={Position.BOTTOM_LEFT}>
-            <Button icon="notifications" className="pt-minimal" />
-          </Popover>
-              
           <AlertsDialog isOpen={this.state.alertsIsOpen} toggleDialog={this.toggleAlerts} />
           <SettingsDialog isOpen={this.state.settingsIsOpen} toggleDialog={this.toggleSettings} />
         </span>
@@ -98,19 +96,17 @@ class AuthButtons extends Component {
     }
 
     if (auth.password_login_uri || auth.oauth_uri) {
-      items.push((
-        <Menu className='menu-item-width' key='signin'>
-          <MenuItem icon='log-in' onClick={this.toggleAuthentication} text={intl.formatMessage(messages.signin)} />
-          <AuthenticationDialog auth={auth} isOpen={this.state.isSignupOpen} toggleDialog={this.toggleAuthentication} />
-        </Menu>
-      ))
+      return (
+        <span className="AuthButtons">
+          <Menu className='menu-item-width' key='signin'>
+            <MenuItem icon='log-in' onClick={this.toggleAuthentication} text={intl.formatMessage(messages.signin)} />
+            <AuthenticationDialog auth={auth} isOpen={this.state.isSignupOpen} toggleDialog={this.toggleAuthentication} />
+          </Menu>
+        </span>
+      );
     }
 
-    return (
-      <span className="AuthButtons">
-        {items}
-      </span>
-    )
+    return null;
   }
 }
 

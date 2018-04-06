@@ -6,6 +6,7 @@ import Schema from 'src/components/common/Schema';
 import Tag from 'src/components/common/Tag';
 import Country from 'src/components/common/Country';
 import Language from 'src/components/common/Language';
+import Category from 'src/components/common/Category';
 import Collection from 'src/components/common/Collection';
 import Entity from 'src/screens/EntityScreen/Entity';
 
@@ -36,6 +37,10 @@ class QueryFilterTag extends PureComponent {
       case 'languages':
         return (
           <Language.Name code={value} />
+        );
+      case 'category':
+        return (
+          <Category category={value} />
         );
       case 'collection_id':
         return (
