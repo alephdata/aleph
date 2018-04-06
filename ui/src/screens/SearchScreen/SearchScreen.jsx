@@ -202,13 +202,13 @@ class SearchScreen extends React.Component {
                           facets={this.state.facets}/>
           </DualPane.InfoPane>
           <DualPane.ContentPane>
-            <QueryTags query={query} updateQuery={this.updateQuery}/>
+            {!session.loggedIn && <CalloutBox onClick={this.onSignin} className='callout'/>}
             {result.total === 0 &&
             <ErrorScreen.EmptyList visual="search" title={messages.no_results_title}
                                    description={messages.no_results_description}/>
             }
             <AuthenticationDialog auth={metadata.auth} isOpen={isSignupOpen} toggleDialog={this.toggleAuthentication}/>
-            {!session.loggedIn && <CalloutBox onClick={this.onSignin} className='callout'/>}
+            <QueryTags query={query} updateQuery={this.updateQuery}/>
             <EntityTable query={query}
                          updateQuery={this.updateQuery}
                          result={result}

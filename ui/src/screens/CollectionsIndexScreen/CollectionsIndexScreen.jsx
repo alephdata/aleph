@@ -15,6 +15,7 @@ import SectionLoading from 'src/components/common/SectionLoading';
 import CalloutBox from 'src/components/common/CalloutBox';
 import CollectionListItem from 'src/screens/CollectionScreen/CollectionListItem';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog';
+import QueryTags from 'src/components/QueryTags/QueryTags';
 
 import './CollectionsIndexScreen.css';
 
@@ -146,6 +147,7 @@ class CollectionsIndexScreen extends Component {
           <DualPane.ContentPane>
             <AuthenticationDialog auth={metadata.auth} isOpen={isSignupOpen} toggleDialog={this.toggleAuthentication}/>
             {!session.loggedIn && <CalloutBox onClick={this.onSignin} className='callout'/>}
+            <QueryTags query={query} updateQuery={this.updateQuery}/>
             <ul className="results">
               {result.results.map(res =>
                 <CollectionListItem key={res.id} collection={res}/>
