@@ -2,7 +2,7 @@ from flask import request
 from banal import is_mapping
 from marshmallow import post_dump, pre_dump, pre_load
 from marshmallow.fields import Nested, Integer, String, List
-from marshmallow.fields import Dict, Boolean
+from marshmallow.fields import Dict, Boolean, Url
 from marshmallow.validate import Length
 
 from aleph.core import url_for
@@ -20,10 +20,15 @@ class CollectionSchema(BaseSchema):
 
     label = String(validate=Length(min=2, max=500), required=True)
     foreign_id = String()
+    kind = String(dump_only=True)
+    casefile = Boolean(missing=None)
     summary = String(allow_none=True)
+    publisher = String(allow_none=True)
+    publisher_url = Url(allow_none=True)
+    data_url = Url(allow_none=True)
+    info_url = Url(allow_none=True)
     countries = List(Country())
     languages = List(Language())
-    managed = Boolean(missing=False)
     secret = Boolean(dump_only=True)
     category = Category(missing=Collection.DEFAULT)
     creator_id = String(allow_none=True)

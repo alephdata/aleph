@@ -1,3 +1,5 @@
+from banal import ensure_list
+
 from aleph.core import db, settings
 from aleph.model import Collection, Role, Permission
 
@@ -66,6 +68,13 @@ class Authz(object):
     def can_read(self, collection):
         """Check if a given collection can be read."""
         return self.can(collection, self.READ)
+
+    def match(self, roles):
+        """See if there's overlap in roles."""
+        roles = ensure_list(roles)
+        if not len(roles):
+            return False
+        return self.roles.intersection(roles) > 0
 
     def __repr__(self):
         return '<Authz(%s)>' % self.id

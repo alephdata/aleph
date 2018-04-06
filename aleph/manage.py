@@ -71,7 +71,7 @@ def crawldir(path, language=None, country=None, foreign_id=None):
         collection = Collection.create({
             'foreign_id': foreign_id,
             'label': path_name,
-            'managed': True
+            'casefile': False
         }, role=role)
 
     if language is not None:

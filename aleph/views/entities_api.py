@@ -131,23 +131,6 @@ def update(id):
     return jsonify(data, schema=CombinedSchema)
 
 
-@blueprint.route('/api/2/entities/<id>/merge/<other_id>', methods=['DELETE'])
-def merge(id, other_id):
-    entity = get_db_entity(id, request.authz.WRITE)
-    other = get_db_entity(other_id, request.authz.WRITE)
-
-    try:
-        entity.merge(other)
-    except ValueError as ve:
-        raise BadRequest(ve.message)
-
-    db.session.commit()
-    data = update_entity(entity)
-    update_entity(other)
-    update_collection(entity.collection)
-    return jsonify(data, schema=CombinedSchema)
-
-
 @blueprint.route('/api/2/entities/<id>', methods=['DELETE'])
 def delete(id):
     entity = get_db_entity(id, request.authz.WRITE)
