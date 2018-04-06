@@ -53,7 +53,7 @@ const mapStateToProps = (state, ownProps) => {
         context = {[field]: document.id};
 
   let query = Query.fromLocation('search', location, context, 'document').limit(50);
-  if (queryText !== undefined) {
+  if (queryText) {
     query = query.setString('prefix', queryText);
   }
 

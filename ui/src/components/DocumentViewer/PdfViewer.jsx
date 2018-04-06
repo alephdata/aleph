@@ -54,18 +54,12 @@ class PdfViewer extends Component {
       // This is because rendering a PDF can change it slightly but we don't
       // want to flash the entire PDF render (as it's slow) just to change
       // it by a 1 or 2 pixels.
-      //if (this.state.width === null) {
-      this.onResize();
-      //}
+      if (this.state.width === null) {
+        this.onResize();
+      }
     }, 1000);
   }
-  
-  // componentWillReceiveProps(newProps) {
-  //   if (!newProps.query.sameAs(this.props.query)) {
-  //     this.fetchRecords();
-  //   }
-  // }
-  
+
   componentDidMount() {
     this.fetchRecords();
     this.onResize();
