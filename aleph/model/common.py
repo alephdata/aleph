@@ -1,23 +1,11 @@
 import uuid
-from banal import ensure_list
-from itertools import chain
 from datetime import datetime
-from normality import stringify
 
 from aleph.core import db
 
 
 def make_textid():
     return uuid.uuid4().hex
-
-
-def string_set(*lists):
-    """Make a list of clean strings."""
-    # Used by entity for foreign_ids.
-    items = chain(*[ensure_list(l) for l in lists])
-    items = [stringify(i) for i in items]
-    items = [i for i in items if i is not None]
-    return list(set(items))
 
 
 class IdModel(object):

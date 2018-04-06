@@ -31,7 +31,7 @@ def ingest_document(document, file_path, role_id=None, shallow=False):
     else:
         document.content_hash = archive.archive_file(file_path)
         db.session.commit()
-        priority = 3 if document.collection.managed else 5
+        priority = 5 if document.collection.casefile else 3
         ingest.apply_async(args=[document.id],
                            kwargs={'role_id': role_id},
                            priority=priority)
@@ -51,7 +51,7 @@ def ingest(document_id, role_id=None):
     # is this too often?
     index_collection(document.collection)
 
-    if not document.collection.managed:
+    if document.collection.casefile:
         params = {
             'document': document,
             'collection': document.collection

@@ -26,7 +26,7 @@ def index_entity(entity):
 
     data = {
         'name': entity.name,
-        'foreign_ids': entity.foreign_ids,
+        'foreign_id': entity.foreign_id,
         'properties': {
             'name': [entity.name]
         }
@@ -132,8 +132,8 @@ def finalize_index(data, schema, texts):
             if name == 'name':
                 data['name'] = value
             texts.append(value)
-    data = schema.invert(data)
 
+    data = schema.invert(data)
     data['text'] = index_form(texts)
 
     names = data.get('names', [])

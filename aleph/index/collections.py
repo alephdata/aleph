@@ -19,20 +19,31 @@ def index_collection(collection):
         'created_at': collection.created_at,
         'updated_at': collection.updated_at,
         'label': collection.label,
+        'kind': collection.kind,
         'summary': collection.summary,
-        'category': collection.category,
         'countries': collection.countries,
         'languages': collection.languages,
-        'managed': collection.managed,
+        'casefile': collection.casefile,
         'roles': collection.roles,
         'schemata': {},
     }
+
+    if not collection.casefile:
+        data['category'] = collection.category
+        data['publisher'] = collection.publisher
+        data['publisher_url'] = collection.publisher_url
+        data['info_url'] = collection.info_url
+        data['data_url'] = collection.data_url
 
     texts = [
         collection.label,
         collection.foreign_id,
         collection.summary,
-        collection.category
+        collection.category,
+        collection.publisher,
+        collection.publisher_url,
+        collection.info_url,
+        collection.data_url
     ]
 
     if collection.creator is not None:
