@@ -1,5 +1,5 @@
 import React from 'react';
-import {defineMessages, FormattedMessage} from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import { Button, Intent } from '@blueprintjs/core';
 import { showWarningToast } from 'src/app/toast';
 
@@ -12,23 +12,21 @@ const messages = defineMessages({
 
 const PasswordAuth = ({onSubmit, buttonClassName, showEmail, showName, showPassword, showConfirmPass, buttonText, children, intl, isActivation, className}) => {
   let emailElement, passwordElement, confirmElement, nameElement;
-
+  
   const submit = (event) => {
     event.preventDefault();
+    
+    let arePasswordsTheSame = isActivation ? passwordElement.value === confirmElement.value : true;
 
-    let password = document.getElementById('pass');
-    let confirm = document.getElementById('confirm-pass');
-    let arePasswordsTheSame = isActivation ? password.value === confirm.value : true;
-
-      if(arePasswordsTheSame) {
-        onSubmit({
-          email: showEmail && emailElement.value,
-          password: showPassword && passwordElement.value,
-          name: showName && nameElement.value
-        });
-      } else {
-        showWarningToast(intl.formatMessage(messages.not_same))
-      }
+    if (arePasswordsTheSame) {
+      onSubmit({
+        email: showEmail && emailElement.value,
+        password: showPassword && passwordElement.value,
+        name: showName && nameElement.value
+      });
+    } else {
+      showWarningToast(intl.formatMessage(messages.not_same))
+    }
   };
 
   return (
