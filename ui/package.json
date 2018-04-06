@@ -22,7 +22,7 @@
     "react-dom": "^16.2.0",
     "react-helmet": "^5.2.0",
     "react-intl": "^2.3.0",
-    "react-pdf": "^3.0.0-beta",
+    "react-pdf": "^3.0.0",
     "react-redux": "^5.0.4",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.0",

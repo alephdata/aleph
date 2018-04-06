@@ -16,70 +16,74 @@ const messages = defineMessages({
 class DocumentSearch extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { queryText: props.queryText || '' };
-    this.updateSearchQuery = debounce(this.updateSearchQuery.bind(this), 200);
+    this.state = { 
+      queryText: props.query.getString('prefix')
+    };
+    // this.updateSearchQuery = debounce(this.updateSearchQuery.bind(this), 200);
     this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
     this.onSubmitSearch = this.onSubmitSearch.bind(this);
   }
   
-  updateSearchQuery(newQuery) {
-    const { history, location, query } = this.props;
-    history.replace({
-      pathname: location.pathname,
-      search: query.toLocation(),
-      hash: location.hash
-    });
-  }
+  // updateSearchQuery(newQuery) {
+    
+  // }
 
   onSearchQueryChange(e) {
-    const queryText = e.target.value;
-    this.setState({ queryText: queryText });
-    if (this.props.onSearchQueryChange) {
-      this.props.onSearchQueryChange(queryText);
-    }
-    this.updateSearchQuery(this.props.query.set('prefix', queryText));
+    const queryText = (e.target.value && e.target.value.length > 0) ? e.target.value : null;
+    this.setState({ 
+      queryText: queryText
+    });
+    // if (this.props.onSearchQueryChange) {
+    //   this.props.onSearchQueryChange(queryText);
+    // }
+    // this.updateSearchQuery(this.props.query.set('prefix', queryText));
   }
   
-  componentDidMount() {
-    const queryText = this.props.query.getString('prefix');
-    this.setState({ queryText: queryText });
-
-    if (this.props.onSearchQueryChange) {
-      this.props.onSearchQueryChange(queryText);
-    }
-  }
+  // componentDidMount() {
+  //   const queryText = this.props.queryText;
+    
+  //   if (this.props.onSearchQueryChange) {
+  //     this.props.onSearchQueryChange(queryText);
+  //   }
+  // }
   
   componentWillReceiveProps(newProps) {
-//    if (!this.props.queryText && newProps.queryText)
-//      this.setState({ queryText: newProps.queryText });
+    this.setState({ queryText: newProps.query.getString('prefix')});
   }
   
   onSubmitSearch(event) {
+    const { history, location, query } = this.props;
+    const { queryText } = this.state;
     event.preventDefault();
-    if (this.props.onSubmitSearch !== undefined) {
-      this.props.onSubmitSearch();
-    }
+    
+    history.push({
+      pathname: location.pathname,
+      search: query.setString('prefix', queryText).toLocation(),
+      hash: location.hash
+    });
   }
   
   render() {
-    const { document: doc, intl, disabled, placeholder } = this.props;
+    const { document: doc, intl, disabled, placeholder, query } = this.props;
+    const { queryText } = this.state;
     
     // This is a temporary conditional block to allow us to enable search
     // only on document types where we have added support for them in the UI.
     let isSearchable = false;
+    
     if (doc.schema === 'Email') {
       isSearchable = false;
-    } else if (doc.schema === 'Table' && doc.children !== undefined) {
-      isSearchable = false;
+    } else if (doc.schema === 'Table') {
+      isSearchable = true;
     } else if (doc.text && !doc.html) {
       isSearchable = false;
     } else if (doc.html) {
       isSearchable = false;
     } else if (doc.links && doc.links.pdf) {
-      isSearchable = false;
+      isSearchable = true;
     } else if (doc.schema === 'Image') {
       isSearchable = false;
-    } else if (doc.children !== undefined) {
+    } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
       isSearchable = true;
     }
     if (isSearchable !== true)
@@ -93,7 +97,7 @@ class DocumentSearch extends React.Component {
                   disabled={disabled}
                   placeholder={placeholder || intl.formatMessage(messages.search_paceholder)}
                   onChange={this.onSearchQueryChange}
-                  value={this.state.queryText} />
+                  value={queryText || ''} />
          </div>
        </form>
     );
@@ -101,13 +105,8 @@ class DocumentSearch extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location } = ownProps;
-  // when a prefix is defined, we switch to recursive folder search - otherwise
-  // a flat listing of the immediate children of this directory is shown.
-  const prefix = Query.fromLocation('search', location, {}, 'folder').getString('prefix'),
-        field = prefix.length === 0 ? 'filter:parent.id' : 'filter:ancestors',
-        context = {[field]: document.id};
-  const query = Query.fromLocation('search', location, context, 'folder').limit(50);
+  const { location } = ownProps;
+  const query = Query.fromLocation('search', location, {}, 'document').limit(50);
   return {
     query: query
   }

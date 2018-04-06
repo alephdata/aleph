@@ -1,39 +1,168 @@
 @import "src/app/variables.scss";
 
+$pagesWidth: 150px;
+
 .PdfViewer {
-  .document-pdf {
-    width: 100%;
-    background-color: whitesmoke;
-  }
-
-  .page {
-    margin: 0;
-    padding: 0;
-  }
-
-  .page > canvas {
-    /* center each page */
-    margin: auto;
-    padding-bottom: $aleph-grid-size;
-    width: 90%;
-  }
+  display: flex;
   
-  .react-pdf__Page__canvas {
-    padding: 0 !important;
-  }
+  .outer {
+    position: relative;
+    background: transparent !important;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: visible;
+      
+    .pages {
+      display: none;
 
-  .SectionLoading {
-    background: white;
-  }
+      .heading {
+        background: $aleph-table-heading-background;
+        padding: $aleph-grid-size;
+        border-bottom: 1px solid $aleph-border-color;
+      }
+      
+      .spinner {
+        display: block;
+        text-align: center;
+        margin: $aleph-grid-size auto;
+      }
+    }
 
-  .react-pdf__message, react-pdf__message--error {
-    background: white;
-    text-align: center;
-    padding: 100px 20px;
-    font-size: 1.2em;
-  }
+    .search-results {
+      flex: 1;
+      
+      .pages {
+        display: block;
 
-  .spinner {
-    margin: 100px 0;
+        .no-results {
+          padding: $aleph-grid-size;
+          text-align: center;
+        }
+
+        ul {
+          padding-left: 0;
+          margin: 0;
+          li {
+            list-style: none;
+            padding: $aleph-grid-size;
+            border-bottom: 1px solid $aleph-border-color;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+
+            p { 
+              margin-bottom: 0;
+              a {
+                text-decoration: none;
+              }
+              em {
+                background: $aleph-text-highlight-color;
+                font-style: normal;
+              }
+            }
+            
+            p:first-child { 
+              margin-bottom: $aleph-grid-size;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+    
+    &.with-search-results {
+      padding-left: $pagesWidth + ($aleph-grid-size * 4);
+      
+      .pages {
+        flex: 1;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: $pagesWidth;
+        border-right: 1px solid $aleph-border-color;
+        border-bottom: 1px solid $aleph-border-color;
+        background: white;
+        overflow: auto;
+    
+        ul {
+          padding-left: 0;
+          margin: 0;
+          li {
+            list-style: none;
+            padding: 0;
+            border-bottom: 1px solid $aleph-border-color;
+            
+            a {
+              text-align: right; 
+            }
+                        
+            .no-results,
+            a {
+              padding: $aleph-grid-size;
+              display: block;
+            }
+            
+            a.active {
+              color: white;
+              background: $aleph-link-color;
+            }
+          }
+        }
+    
+      }
+    }
+
+    .inner {
+      flex: 1;
+      width: auto;
+      overflow-x: hidden;
+      
+      .document {
+        width: 100%;
+      }
+
+      .page {
+        margin: 0;
+        padding: 0;
+      }
+
+      .page > canvas {
+        /* center each page */
+        margin: auto;
+        padding-bottom: $aleph-grid-size;
+      }
+
+      .react-pdf__Page__canvas {
+        padding: 0 !important;
+      }
+
+      .react-pdf__message--error {
+        text-align: center;
+        padding: 100px 20px;
+        font-size: 1.2em;
+        width: 100%;
+      }
+
+      .spinner {
+        margin: 100px 0;
+      }
+    }
+
+  }
+}
+
+/* Don't show padding between list of pages & doc in preview as space limited
+ * This is included here and not in Preview just to make it easier follow
+ */
+.Preview {
+  .PdfViewer {
+    .outer.with-search-results {
+      padding-left: $pagesWidth;
+    }
   }
 }

@@ -1,8 +1,12 @@
 import React from 'react';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import { Button } from "@blueprintjs/core";
+import queryString from 'query-string';
 
+import Query from 'src/app/Query';
 import { Toolbar, CloseButton, DownloadButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
 import getPath from 'src/util/getPath';
 import TableViewer from './TableViewer';
@@ -20,76 +24,81 @@ const messages = defineMessages({
   }
 });
 
-export default class extends React.Component {
+class DocumentViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numberOfPages: null,
-      queryText: ''
+      numberOfPages: null
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
-    this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
   }
   
   onDocumentLoad(documentInfo) {
-    if (documentInfo && documentInfo.numPages) {
-      this.setState({
-        numberOfPages: documentInfo.numPages
-      });
-
-      // @FIXME: This is a hack to trigger window resize event when displaying
-      // a document preview. This forces the PDF viewer to display at the 
-      // right size (otherwise it displays at the incorrect height).    
-      //setTimeout(() => {window.dispatchEvent(new Event('resize')) }, 1500);
-    }
-  }
-
-  onSearchQueryChange(queryText) {
     this.setState({
-      queryText: queryText
+      numberOfPages: (documentInfo && documentInfo.numPages) ? documentInfo.numPages : null
     });
   }
   
   render() {
-    const { document: doc, showToolbar, toggleMaximise, previewMode } = this.props;
-    const { numberOfPages, queryText } = this.state;
+    const { document: doc, showToolbar, toggleMaximise, previewMode, queryText } = this.props;
+    const { numberOfPages } = this.state;
     
     return <React.Fragment>
       {showToolbar && (
-        <Toolbar className={(previewMode) ? 'toolbar-preview' : null}>
-          {previewMode && toggleMaximise && (
+        <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
+          {previewMode === true && toggleMaximise && (
             <Button icon="eye-open"
               className="button-maximise pt-active"
               onClick={toggleMaximise}>
               <FormattedMessage id="preview" defaultMessage="Preview"/>
             </Button>
           )}
-          {previewMode && (
+          {previewMode === true && (
             <Link to={getPath(doc.links.ui)} className="pt-button button-link">
               <span className={`pt-icon-document`}/>
               <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
             </Link>
           )}
           <DownloadButton document={doc}/>
-          {numberOfPages !== null  && numberOfPages > 0 && (
+          {numberOfPages !== null && numberOfPages > 0 && (
             <PagingButtons document={doc} numberOfPages={numberOfPages}/>
           )}
-          {previewMode && (
+          {previewMode === true && (
             <CloseButton/>
           )}
-          <DocumentSearch document={doc} queryText={queryText} onSearchQueryChange={this.onSearchQueryChange}/>
+          {previewMode !== true && (
+            <DocumentSearch document={doc} />
+          )}
         </Toolbar>
       )}
-      <DocumentViewer  document={doc} queryText={queryText} onDocumentLoad={this.onDocumentLoad}/>
+      <DocumentView document={doc}
+                    previewMode={previewMode}
+                    queryText={queryText}
+                    onDocumentLoad={this.onDocumentLoad}
+                    />
     </React.Fragment>
   }
  
 }
 
-class DocumentViewer extends React.Component {
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+  const query = Query.fromLocation('search', location, {});
+  return {
+    queryText: query.getString('q')
+  }
+}
+
+DocumentViewer = connect(mapStateToProps)(DocumentViewer);
+DocumentViewer = injectIntl(DocumentViewer);
+DocumentViewer = withRouter(DocumentViewer);
+export default DocumentViewer
+
+
+class DocumentView extends React.Component {
   render() {
-    const { document: doc, queryText, onDocumentLoad, intl } = this.props;
-  
+    const { document: doc, intl, queryText, previewMode, onDocumentLoad} = this.props;
+    
     if (doc.schema === 'Email') {
       return <EmailViewer document={doc}/>;
     } else if (doc.schema === 'Table') {
@@ -99,13 +108,13 @@ class DocumentViewer extends React.Component {
     } else if (doc.html) {
       return <HtmlViewer document={doc}/>;
     } else if (doc.links && doc.links.pdf) {
-      return <PdfViewer document={doc} onDocumentLoad={onDocumentLoad} />
+      return <PdfViewer document={doc} queryText={queryText} previewMode={previewMode} onDocumentLoad={onDocumentLoad} />
     } else if (doc.schema === 'Image') {
       return <ImageViewer document={doc} />;
-    } else if (doc.schema === 'Folder' || doc.schema === 'Package') {
-      if(doc.status === 'fail') return <FolderViewer hasWarning={true} document={doc} queryText={queryText}/>;
+    } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
+      if (doc.status === 'fail') return <FolderViewer hasWarning={true} document={doc} queryText={queryText}/>;
       return <FolderViewer document={doc} queryText={queryText} />;
-    } else if(doc.schema === 'Document'){
+    } else if(doc.schema === 'Document') {
       return <section className="PartialError outer-div">
         <div className="pt-non-ideal-state inner-div">
           <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
@@ -144,5 +153,3 @@ class DocumentViewer extends React.Component {
     }
   }
 }
-
-DocumentViewer = injectIntl(DocumentViewer);
