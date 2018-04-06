@@ -2,7 +2,7 @@
 # pudo <friedrich@pudo.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-04-05T16:49:00.596Z\n"
+"POT-Creation-Date: 2018-04-06T15:52:24.071Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2018\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -835,20 +835,6 @@ msgstr ""
 #. Search companies, people and documents.
 #: i18n/messages.json
 msgid "Search companies, people and documents."
-msgstr ""
-
-#. [document.placeholder_tolder_filter]
-#. defaultMessage is:
-#. Search folder…
-#: i18n/messages.json
-msgid "Search folder…"
-msgstr ""
-
-#. [document.placeholder_table_filter]
-#. defaultMessage is:
-#. Search table…
-#: i18n/messages.json
-msgid "Search table…"
 msgstr ""
 
 #. [home.summary]

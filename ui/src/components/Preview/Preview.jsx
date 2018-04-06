@@ -191,17 +191,25 @@ class Preview extends React.Component {
     let className = 'Preview';
 
     let view = null;
-
     
     if (previewType === 'collection' && collection && collection.links && !collection.isFetching) {      
       view = <CollectionInfo collection={collection} showToolbar={true} />;
     } else if (previewType === 'entity' && entity && entity.links && !entity.isFetching) {
-      view = <EntityInfo entity={entity}  showToolbar={true} />;
+      view = <EntityInfo entity={entity} showToolbar={true} />;
     } else if (previewType === 'document') {
-      if (doc && doc.links && !doc.isFetching) {
+      if (doc && doc.links)
+        
+      // Only allow Preview to have be maximised for document previews
+      // Note: This check happens outside of the following conditional, as
+      // we want the window to *stay* expanded while switching between
+      // previewing different documents(otherwise it starts to close breifly 
+      // and that looks odd).
+      if (maximised === true) {
+        className = classnames('maximised', className);
+      }
+      
+      if (!doc.isFetching) {
         if (maximised === true) {
-          // Only allow Preview to have be maximised for document previews
-          className = classnames('maximised', className);
           // If document preview is maximised, show document content preview
           view = <DocumentViewer document={doc} toggleMaximise={this.toggleMaximise} showToolbar={true} previewMode={true} />;
         } else {
@@ -230,14 +238,14 @@ class Preview extends React.Component {
           <SectionLoading/>
         </div>
       );
-    } else if(collection !== null && collection !== null && collection.status === 403){
+    } else if (collection !== null && collection !== null && collection.status === 403){
       return <div id="Preview" className={className} style={{
         top: previewTop,
         bottom: previewBottom
       }}>
         <ErrorScreen.EmptyList title={messages.not_authorized} description={messages.not_authorized_decr}/>
       </div>
-    } else if(collection !== null && collection.error){
+    } else if (collection !== null && collection.error){
       return <div id="Preview" className={className} style={{
         top: previewTop,
         bottom: previewBottom

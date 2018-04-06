@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Menu, MenuItem, MenuDivider, Popover, Button, Position } from "@blueprintjs/core";
 

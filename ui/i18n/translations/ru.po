@@ -2,7 +2,7 @@
 # jen occrp <jen@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-04-05T16:49:00.596Z\n"
+"POT-Creation-Date: 2018-04-06T15:52:24.071Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgstr "Активирируйте аккаунт"
 #. Add alert
 #: i18n/messages.json i18n/messages.json
 msgid "Add alert"
-msgstr ""
+msgstr "Добавить оповещение"
 
 #. [search.facets.facet.addresses]
 #. defaultMessage is:
@@ -97,14 +97,14 @@ msgstr "Оповещение"
 #. Alert on
 #: i18n/messages.json
 msgid "Alert on"
-msgstr ""
+msgstr "Оповещение о"
 
 #. [signup.login]
 #. defaultMessage is:
 #. Already have account? Sign in!
 #: i18n/messages.json
 msgid "Already have account? Sign in!"
-msgstr ""
+msgstr "Вы уже зарегистрированы? Авторизуйтесь!"
 
 #. [auth.unknown_error]
 #. defaultMessage is:
@@ -153,7 +153,7 @@ msgstr "Скрытая копия"
 #. Browsing {total} sources.
 #: i18n/messages.json
 msgid "Browsing {total} sources."
-msgstr "Всего коллекций данных: {total}."
+msgstr "Кол-во источников данных для просмотра: {total}."
 
 #. [email.cc]
 #. defaultMessage is:
@@ -212,7 +212,7 @@ msgstr "Исходный код"
 #. Confirm password
 #: i18n/messages.json
 msgid "Confirm password"
-msgstr ""
+msgstr "Подтвердить пароль"
 
 #. [entity.info.connections]
 #. defaultMessage is:
@@ -233,7 +233,7 @@ msgstr "Контакт"
 #. Contents
 #: i18n/messages.json
 msgid "Contents"
-msgstr ""
+msgstr "Содержимое"
 
 #. [entity.column.countries]
 #. defaultMessage is:
@@ -321,7 +321,7 @@ msgstr "Документ не найден"
 #. Don't have account? Register!
 #: i18n/messages.json
 msgid "Don't have account? Register!"
-msgstr ""
+msgstr "У вас нет аккакунта? Зарегистрируйтесь!"
 
 #. [document.download]
 #. defaultMessage is:
@@ -398,7 +398,7 @@ msgstr "Типы файлов"
 #. Filter sources
 #: i18n/messages.json
 msgid "Filter sources"
-msgstr "Отфильтровать по названию"
+msgstr "Отфильтровать"
 
 #. [document.parent]
 #. defaultMessage is:
@@ -440,7 +440,7 @@ msgstr "Помощь"
 #. Import ID
 #: i18n/messages.json
 msgid "Import ID"
-msgstr "Импортировать ID"
+msgstr "ID импорта"
 
 #. [document.updated_at]
 #. defaultMessage is:
@@ -513,14 +513,14 @@ msgstr "Управление оповещениями"
 #. Manage collection permissions
 #: i18n/messages.json
 msgid "Manage collection permissions"
-msgstr ""
+msgstr "Управлять правами доступа к коллекциями данных"
 
 #. [alerts.title]
 #. defaultMessage is:
 #. Manage your alerts
 #: i18n/messages.json
 msgid "Manage your alerts"
-msgstr "Оповещения о новых результатах поиска"
+msgstr "Управление оповещениями о новых результатах поиска"
 
 #. [collection.creator]
 #. defaultMessage is:
@@ -691,7 +691,7 @@ msgstr "Пароль"
 #. Passwords do not match
 #: i18n/messages.json
 msgid "Passwords do not match"
-msgstr "Введённые пароли различаются"
+msgstr "Пароли не совпадают"
 
 #. [search.facets.facet.phones]
 #. defaultMessage is:
@@ -719,7 +719,7 @@ msgstr ""
 #. Please go to the login page.
 #: i18n/messages.json i18n/messages.json
 msgid "Please go to the login page."
-msgstr ""
+msgstr "Пожалуйста, перейдите на страницу входа."
 
 #. [preview]
 #. defaultMessage is:
@@ -736,7 +736,7 @@ msgstr "Просмотр"
 #. Receive alerts for new results
 #: i18n/messages.json
 msgid "Receive alerts for new results"
-msgstr ""
+msgstr "Получать оповещения о новых результатах поиска"
 
 #. [alerts.add_placeholder]
 #. defaultMessage is:
@@ -838,20 +838,6 @@ msgstr "Искать по имени или электронному адрес�
 msgid "Search companies, people and documents."
 msgstr "Искать людей, компании или документы."
 
-#. [document.placeholder_tolder_filter]
-#. defaultMessage is:
-#. Search folder…
-#: i18n/messages.json
-msgid "Search folder…"
-msgstr "Поиск по папке..."
-
-#. [document.placeholder_table_filter]
-#. defaultMessage is:
-#. Search table…
-#: i18n/messages.json
-msgid "Search table…"
-msgstr "Поиск по таблице..."
-
 #. [home.summary]
 #. defaultMessage is:
 #. Search {total} public records and leaks from {collections} sources
@@ -908,14 +894,14 @@ msgstr "Войти"
 #. Sign in / Register
 #: i18n/messages.json
 msgid "Sign in / Register"
-msgstr ""
+msgstr "Войти / Зарегистрироваться"
 
 #. [login.oauth]
 #. defaultMessage is:
 #. Sign in via OAuth
 #: i18n/messages.json
 msgid "Sign in via OAuth"
-msgstr ""
+msgstr "Войти с помощью OAuth"
 
 #. [nav.signout]
 #. defaultMessage is:
@@ -944,6 +930,7 @@ msgstr "Размер"
 #: i18n/messages.json
 msgid "Some sources are hidden from anonymous users, please"
 msgstr ""
+"Некоторые источники недоступны анонимным пользователям — авторизуйтесь!"
 
 #. [entity.column.collection_id]
 #. defaultMessage is:
@@ -993,7 +980,7 @@ msgstr "Настройки"
 #. Sources
 #: i18n/messages.json i18n/messages.json
 msgid "Sources"
-msgstr "Коллекции данных"
+msgstr "Источники данных"
 
 #. [collection.browser.breadcrumb]
 #. defaultMessage is:
@@ -1049,6 +1036,8 @@ msgid ""
 "The system does not work with these types of files. Please download it so "
 "you’ll be able to see it."
 msgstr ""
+"Работа с данным типом файлов не поддерживается. Для просмотра попробуйте "
+"скачать файл."
 
 #. [entity.references.empty.description]
 #. defaultMessage is:
@@ -1076,7 +1065,7 @@ msgstr "Папка пуста"
 #. This folder is not properly imported!
 #: i18n/messages.json
 msgid "This folder is not properly imported!"
-msgstr ""
+msgstr "Не удалось импортировать папку!"
 
 #. [alerts.topic]
 #. defaultMessage is:
@@ -1193,7 +1182,7 @@ msgstr "Просмотр"
 #. Warning!
 #: i18n/messages.json
 msgid "Warning!"
-msgstr ""
+msgstr "Внимание!"
 
 #. [signup.inbox.desc]
 #. defaultMessage is:
@@ -1213,7 +1202,7 @@ msgstr "Мы отправили вам письмо с ссылкой для з�
 #. You are not authorized to do this.
 #: i18n/messages.json i18n/messages.json
 msgid "You are not authorized to do this."
-msgstr ""
+msgstr "Недостаточно прав."
 
 #. [notifications.no_notifications]
 #. defaultMessage is:
@@ -1234,14 +1223,14 @@ msgstr "Оповещения не настроены."
 #. You will no longer receive alerts for this search
 #: i18n/messages.json
 msgid "You will no longer receive alerts for this search"
-msgstr ""
+msgstr "Вы не будете получать оповещения о новых результатах поиска"
 
 #. [navbar.alert_added]
 #. defaultMessage is:
 #. You will receive alerts for new results
 #: i18n/messages.json
 msgid "You will receive alerts for new results"
-msgstr ""
+msgstr "Вы будете получать оповещения о новых результатах поиска"
 
 #. [password_auth.name]
 #. defaultMessage is:
@@ -1279,7 +1268,7 @@ msgstr "Объявления"
 #. Your passwords are not the same!
 #: i18n/messages.json
 msgid "Your passwords are not the same!"
-msgstr ""
+msgstr "Пароли не совпадают!"
 
 #. [footer.aleph]
 #. defaultMessage is:
@@ -1307,14 +1296,14 @@ msgstr "не:"
 #. results
 #: i18n/messages.json
 msgid "results"
-msgstr ""
+msgstr "результаты"
 
 #. [search.callout_second_part_description]
 #. defaultMessage is:
 #. sign in to see all results you’re authorised to access.
 #: i18n/messages.json
 msgid "sign in to see all results you’re authorised to access."
-msgstr ""
+msgstr "Авторизуйтесь для просмотра всех доступных вам результатов."
 
 #. [country.total]
 #. defaultMessage is:

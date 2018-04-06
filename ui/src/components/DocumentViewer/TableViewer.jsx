@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { debounce } from 'lodash';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';
@@ -10,12 +9,6 @@ import { queryDocumentRecords } from 'src/actions';
 import { selectDocumentRecordsResult } from 'src/selectors';
 import SectionLoading from 'src/components/common/SectionLoading';
 
-const messages = defineMessages({
-  placeholder: {
-    id: 'document.placeholder_table_filter',
-    defaultMessage: 'Search table…',
-  },
-});
 
 class Table extends Component {
   render() {
@@ -54,18 +47,8 @@ class Table extends Component {
 
 class TableViewer extends Component {
   constructor(props) {
-    super(props);
-    this.updateQuery = debounce(this.updateQuery.bind(this), 200);    
+    super(props);  
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (newProps.queryText !== this.props.queryText) {
-      this.updateSearchQuery(this.props.query.set('prefix', newProps.queryText));
-    }
-    
-    if (newProps.onDocumentLoad)
-      newProps.onDocumentLoad({ queryText: newProps.query.getString('prefix') })
   }
 
   componentDidMount() {
@@ -84,15 +67,6 @@ class TableViewer extends Component {
       queryDocumentRecords({query})
     }
   }
-
-  updateQuery(newQuery) {
-    const { history, location } = this.props;
-    history.replace({
-      pathname: location.pathname,
-      search: newQuery.toLocation(),
-      hash: location.hash
-    });
-  } 
   
   bottomReachedHandler() {
     const { query, result, queryDocumentRecords } = this.props;
@@ -125,10 +99,14 @@ class TableViewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location } = ownProps;
+  const { document, location, queryText } = ownProps;
   const path = document.links ? document.links.records : null;
-  const query = Query.fromLocation(path, location, {}, 'table')
+  let query = Query.fromLocation(path, location, {}, 'document')
     .limit(50);
+
+  if (queryText) {
+    query = query.setString('prefix', queryText);
+  }
 
   return {
     query: query,
