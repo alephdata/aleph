@@ -2,6 +2,7 @@ import logging
 from banal import is_mapping, ensure_list
 from datetime import datetime
 from followthemoney import model
+from followthemoney.util import merge_data
 from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
 
@@ -89,7 +90,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
             raise ValueError("Cannot merge entities from different collections.")  # noqa
 
         self.schema = model.precise_schema(self.schema, other.schema)
-        self.foreign_ids = string_set(self.foreign_ids, self.foreign_ids)
         self.created_at = min((self.created_at, other.created_at))
         self.updated_at = datetime.utcnow()
 

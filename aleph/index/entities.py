@@ -14,7 +14,7 @@ from normality import latinize_text
 from aleph.core import es
 from aleph.index.core import entity_index, entities_index
 from aleph.index.util import bulk_op, index_form
-from aleph.index.util import unpack_result, query_delete
+from aleph.index.util import unpack_result
 
 log = logging.getLogger(__name__)
 
