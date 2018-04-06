@@ -114,7 +114,6 @@ class PdfViewer extends Component {
   render() {
     const { document, session, hash, result, query } = this.props;
     const { width, numPages } = this.state;
-
     const pageNumber = (hash.page && parseInt(hash.page, 10) <= numPages) ? parseInt(hash.page, 10) : 1;
 
     if (!document || !document.links || !document.links.pdf) {

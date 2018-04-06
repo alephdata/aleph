@@ -51,25 +51,10 @@ class DocumentSearch extends React.Component {
     
     // This is a temporary conditional block to allow us to enable search
     // only on document types where we have added support for them in the UI.
-    let isSearchable = false;
-    
-    if (document.schema === 'Email') {
-      isSearchable = false;
-    } else if (document.schema === 'Table') {
-      isSearchable = true;
-    } else if (document.text && !document.html) {
-      isSearchable = false;
-    } else if (document.html) {
-      isSearchable = false;
-    } else if (document.links && document.links.pdf) {
-      isSearchable = true;
-    } else if (document.schema === 'Image') {
-      isSearchable = false;
-    } else if (document.schema === 'Folder' || document.schema === 'Package' || document.schema === 'Workbook') {
-      isSearchable = true;
+    const SEARCHABLE = ['Pages', 'Table', 'Folder', 'Package', 'Workbook'];
+    if (SEARCHABLE.indexOf(document.schema) === -1) {
+      return null;
     }
-    if (isSearchable !== true)
-      return null
       
     return (
       <form onSubmit={this.onSubmitSearch} className="DocumentSearch">
