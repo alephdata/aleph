@@ -6,6 +6,7 @@ import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import { Button } from "@blueprintjs/core";
 import queryString from 'query-string';
 
+import Query from 'src/app/Query';
 import { Toolbar, CloseButton, DownloadButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
 import getPath from 'src/util/getPath';
 import TableViewer from './TableViewer';
@@ -33,7 +34,7 @@ class DocumentViewer extends React.Component {
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
     this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
-    this.onSubmitDocumentSearch = this.onSubmitDocumentSearch.bind(this);
+    //this.onSubmitDocumentSearch = this.onSubmitDocumentSearch.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -58,21 +59,21 @@ class DocumentViewer extends React.Component {
     });
   }
 
-  onSubmitDocumentSearch(queryText) {
-    const { document: doc, history: hist } = this.props;
+  // onSubmitDocumentSearch(queryText) {
+  //   const { document: doc, history: hist } = this.props;
 
-    this.setState({
-      queryText: queryText,
-      documentSearchQueryText: queryText
-    });
+  //   this.setState({
+  //     queryText: queryText,
+  //     documentSearchQueryText: queryText
+  //   });
 
-    hist.push({
-      pathname: getPath(doc.links.ui),
-      search: queryString.stringify({
-        q: queryText
-      })
-    })    
-  }
+  //   hist.push({
+  //     pathname: getPath(doc.links.ui),
+  //     search: queryString.stringify({
+  //       q: queryText
+  //     })
+  //   })    
+  // }
   
   render() {
     const { document: doc, showToolbar, toggleMaximise, previewMode } = this.props;
@@ -102,12 +103,7 @@ class DocumentViewer extends React.Component {
             <CloseButton/>
           )}
           {previewMode !== true && (
-            <DocumentSearch
-              document={doc}
-              queryText={queryText}
-              onSearchQueryChange={this.onSearchQueryChange}
-              onSubmitSearch={this.onSubmitDocumentSearch}
-            />
+            <DocumentSearch document={doc} />
           )}
         </Toolbar>
       )}
@@ -118,18 +114,18 @@ class DocumentViewer extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location: loc } = ownProps;
-  const qs = queryString.parse(loc.search);
+  const { location } = ownProps;
+  const query = Query.fromLocation('search', location, {});
   return {
-    queryText: (qs.q && qs.q.length > 0) ? qs.q : null
+    queryText: query.getString('q')
   }
 }
 
 DocumentViewer = connect(mapStateToProps)(DocumentViewer);
 DocumentViewer = injectIntl(DocumentViewer);
 DocumentViewer = withRouter(DocumentViewer);
-
 export default DocumentViewer
+
 
 class DocumentView extends React.Component {
   render() {
@@ -147,7 +143,7 @@ class DocumentView extends React.Component {
       return <PdfViewer document={doc} queryText={queryText} previewMode={previewMode} onDocumentLoad={onDocumentLoad} />
     } else if (doc.schema === 'Image') {
       return <ImageViewer document={doc} />;
-    } else if (doc.schema === 'Folder' || doc.schema === 'Package') {
+    } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
       if (doc.status === 'fail') return <FolderViewer hasWarning={true} document={doc} queryText={queryText}/>;
       return <FolderViewer document={doc} queryText={queryText} />;
     } else if(doc.schema === 'Document') {

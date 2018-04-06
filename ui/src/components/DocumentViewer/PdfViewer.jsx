@@ -21,18 +21,11 @@ class PdfViewer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      documentSearchQueryText: props.queryText,
       width: null,
-      numPages: 0,
-      searchResults: null,
-      fetchedRecords: false,
-      selectedRecords: false
+      numPages: 0
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
     this.onResize = this.onResize.bind(this);
-    this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
-    this.onSubmitDocumentSearch = this.onSubmitDocumentSearch.bind(this);
-    this.updateSearchResults =  debounce(this.updateSearchResults.bind(this), 100);
     this.onSearchResultClick = this.onSearchResultClick.bind(this);
   }
 
@@ -61,120 +54,41 @@ class PdfViewer extends Component {
       // This is because rendering a PDF can change it slightly but we don't
       // want to flash the entire PDF render (as it's slow) just to change
       // it by a 1 or 2 pixels.
-      if (this.state.width === null) {
-        this.onResize();
-      }
+      //if (this.state.width === null) {
+      this.onResize();
+      //}
     }, 1000);
   }
   
-  componentWillReceiveProps(newProps) {
-    if (newProps.queryText !== this.props.queryText) {
-      this.setState({
-        documentSearchQueryText: newProps.queryText,
-        searchResults: null,
-        fetchedRecords: false,
-        selectedRecords: false,
-        numPages: 0
-      });
-      if (this.props.onDocumentLoad)
-        this.props.onDocumentLoad(null)
-      this.updateSearchResults();
-    }
-  }
+  // componentWillReceiveProps(newProps) {
+  //   if (!newProps.query.sameAs(this.props.query)) {
+  //     this.fetchRecords();
+  //   }
+  // }
   
   componentDidMount() {
-    this.onResize();
     this.fetchRecords();
+    this.onResize();
     window.addEventListener("resize", throttle(this.onResize, 1000))
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", throttle(this.onResize, 1000))
   }
-  
-  componentDidUpdate() {
-    this.updateSearchResults();
+
+  componentDidUpdate(prevProps) {
     if (this.state.width === null) {
       this.onResize();
+    }
+    if (!this.props.query.sameAs(prevProps.query)) {
+      this.fetchRecords();
     }
   }
 
   fetchRecords() {
-    const { queryDocumentRecords, query, location: loc } = this.props;
-    const { documentSearchQueryText } = this.state;
-    
+    const { queryDocumentRecords, query } = this.props;
     if (query.path) {
-      if (query.context) {
-        query.context.q = documentSearchQueryText;
-      }
       queryDocumentRecords({query})
-    }
-  }
-
-  /*
-   * @FIXME
-   * Putting the state into props.state in mapStateToProps and calling 
-   * updateSearchResults() every time the component updates is basically 
-   * a hack because the there is something up with our lifecycle whereby 
-   * we don't get updated search results the first time a new search is
-   * performed.
-   *
-   * This approach of setting fetchedRecords to false in 
-   * componentWillReceiveProps and then calling updateSearchResults(), 
-   * then parsing the result works around the problem but is hard to follow.
-   *
-   * We should really invest the time to understand what is wrong with our 
-   * lifecycle that is causing this bug, though that requires a bit more
-   * time sunk into figuring out why we don't just get new props when a new
-   * query is made by fetchRecords()
-   */
-  updateSearchResults() {
-    const { state, query, queryText, document: doc, location: loc } = this.props;
-    const { fetchedRecords, selectedRecords, documentSearchQueryText } = this.state;
-    
-    if (fetchedRecords === false) {
-      this.setState({ fetchedRecords: true });
-      this.fetchRecords();
-      return;
-    }
-    
-    if (selectedRecords === false) {
-      const hash = queryString.parse(loc.hash);
-      
-      if (query.context) {
-        query.context.q = documentSearchQueryText;
-      }
-
-      const results = (documentSearchQueryText) ? selectDocumentRecordsResult(state, query) : null;
-
-      const searchResults = {
-        isLoading: (results) ? results.isLoading : false,
-        results: []
-      };
-      
-      if (results !== null) {
-        results.results.map((result) => {
-          if (!result || !result.index)
-            return false;
-          
-          hash.page = result.index
-          searchResults.results.push({
-            id:  Math.random().toString(36).substr(2, 9),
-            pageNumber: result.index,
-            href: `#${queryString.stringify(hash)}`,
-            to: `${getPath(doc.links.ui)}#page=${result.index}`,
-            highlight: result.highlight
-          })
-
-          return true;
-        });
-      }
-      
-      this.setState({
-        selectedRecords: (results && results.isLoading === false || documentSearchQueryText === null) ? true : false,
-        searchResults: searchResults
-      });
-      return;
     }
   }
   
@@ -194,59 +108,31 @@ class PdfViewer extends Component {
       })
     }
   }
-  
-  onSearchQueryChange(queryText) {
-    const { documentSearchQueryText } = this.state;
-    if (queryText !== documentSearchQueryText) {
-      this.setState({
-        documentSearchQueryText: queryText
-      });
-    }
-  }
-  
-  onSubmitDocumentSearch(queryText) {
-    this.setState({
-      documentSearchQueryText: queryText,
-      searchResults: null,
-      fetchedRecords: false,
-      selectedRecords: false,
-      numPages: 0
+
+  onSearchResultClick(e, res) {
+    const { document, history, query } = this.props;
+    e.preventDefault();
+    history.push({
+      pathname: getPath(document.links.ui),
+      search: queryString.stringify({documentprefix: query.getString('prefix')}),
+      hash: `page=${res.index}`
     });
-    
-    this.updateSearchResults();    
-  }
-  
-  onSearchResultClick(e, pageNumber) {
-    const { document: doc, history: hist, previewMode } = this.props;
-    const { documentSearchQueryText } = this.state;
-    
-    if (previewMode !== true) {
-      e.preventDefault();
-      hist.push({
-        pathname: getPath(doc.links.ui),
-        search: queryString.stringify({
-          q: ''
-        }),
-        hash: `page=${pageNumber}`
-      });
-    }
   }
   
   render() {
-    const { document: doc, session, hash, queryText, previewMode } = this.props;
-    const { width, numPages, searchResults, documentSearchQueryText } = this.state;
+    const { document, session, hash, previewMode, result, query } = this.props;
+    const { width, numPages } = this.state;
 
     const pageNumber = (hash.page && parseInt(hash.page, 10) <= numPages) ? parseInt(hash.page, 10) : 1;
 
-    if (!doc || !doc.links || !doc.links.pdf) {
+    if (!document || !document.links || !document.links.pdf) {
       return null;
     }
 
-    const displayPdf = (previewMode !== true && documentSearchQueryText === null) ? true : false;
-    const displayPdfWithSearchResults = (previewMode !== true && documentSearchQueryText && numPages > 0) ? true : false;
+    const displayPdf = !query.hasQuery() || result.total === 0;
 
     if (displayPdf === true) {
-      let fileUrl = doc.links.pdf;
+      let fileUrl = document.links.pdf;
       if (session.token) {
         fileUrl = `${fileUrl}?api_key=${session.token}`;
       }
@@ -254,44 +140,26 @@ class PdfViewer extends Component {
       return (
         <React.Fragment>
           <div className="PdfViewer">
-            <div className={classNames("outer", { 'with-search-results': displayPdfWithSearchResults })}>
-              <div className="pages">
-                <div className="heading">Found on:</div>
-                {displayPdfWithSearchResults === true && (searchResults === null || searchResults.isLoading === true) &&
-                  <Spinner className="pt-small spinner" />
-                }
-                {displayPdfWithSearchResults === true && searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
-                  <p className="no-results pt-text-muted">No results.</p>
-                }
-                {displayPdfWithSearchResults === true &&
-                  <ul>
-                    {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
-                      <li key={`page-${result.id}`}><a href={result.href} className={classNames({active: pageNumber === result.pageNumber})}>Page {result.pageNumber}</a></li>
-                    ))}
-                  </ul>
-                }
-              </div>
-              {displayPdf === true &&
-                <div id="PdfViewer" className="inner">
-                  <div className="document">
-                    <div ref={(ref) => this.pdfElement = ref}>
-                        <Document
-                          renderAnnotations={true}
-                          file={fileUrl}
-                          onLoadSuccess={this.onDocumentLoad}
-                          loading={(<SectionLoading />)}>
-                        {/* 
-                            Only render Page when width has been set and numPages has been figured out.
-                            This limits flashing / visible resizing when displaying page for the first time.
-                        */}
-                        {width !== null && numPages > 0 && (
-                          <Page pageNumber={pageNumber} className="page" width={width}/>
-                        )}
-                      </Document>
-                    </div>
+            <div className="outer">
+              <div id="PdfViewer" className="inner">
+                <div className="document">
+                  <div ref={(ref) => this.pdfElement = ref}>
+                      <Document
+                        renderAnnotations={true}
+                        file={fileUrl}
+                        onLoadSuccess={this.onDocumentLoad}
+                        loading={(<SectionLoading />)}>
+                      {/* 
+                          Only render Page when width has been set and numPages has been figured out.
+                          This limits flashing / visible resizing when displaying page for the first time.
+                      */}
+                      {width !== null && numPages > 0 && (
+                        <Page pageNumber={pageNumber} className="page" width={width}/>
+                      )}
+                    </Document>
                   </div>
                 </div>
-              }
+              </div>
             </div>
           </div>
         </React.Fragment>
@@ -303,34 +171,26 @@ class PdfViewer extends Component {
             <div className="outer">
               <div className="search-results">
                 <div className="pages">
-                  {previewMode === true && (
-                    <div className="heading">
-                      <DocumentSearch
-                        document={doc}
-                        queryText={documentSearchQueryText}
-                        onSearchQueryChange={this.onSearchQueryChange}
-                        onSubmitSearch={this.onSubmitDocumentSearch}
-                        />
-                    </div>
-                  )}
-                  {(searchResults === null || searchResults.isLoading === true) &&
+                  {(result === null || result.isLoading === true) &&
                     <Spinner className="pt-small spinner" />
                   }
-                  {searchResults !== null && searchResults.isLoading === false && searchResults.results.length === 0 &&
+                  {result !== null && result.isLoading === false && result.results.length === 0 &&
                     <p className="no-results pt-text-muted">No results.</p>
                   }
                   <ul>
-                    {searchResults !== null && searchResults.results.length > 0 && searchResults.results.map((result, index) => (
-                      <li key={`page-${result.id}`}>
+                    {result !== null && result.results.length > 0 && result.results.map((res, index) => (
+                      <li key={`page-${res.id}`}>
                         <p>
-                          <Link onClick={(e) => this.onSearchResultClick(e, result.pageNumber)} to={result.to} className={classNames({active: pageNumber === result.pageNumber})}>
-                            <span className={`pt-icon-document`}/> Page {result.pageNumber}
-                          </Link>
+                          <a onClick={(e) => this.onSearchResultClick(e, res)} className={classNames({active: pageNumber === res.index})}>
+                            <span className={`pt-icon-document`}/> Page {res.index}
+                          </a>
                         </p>
                         <p>
-                          <Link onClick={(e) => this.onSearchResultClick(e, result.pageNumber)} to={result.to} className="pt-text-muted">
-                            <span dangerouslySetInnerHTML={{__html: result.highlight.join('  …  ')}} />
-                          </Link>
+                          <a onClick={(e) => this.onSearchResultClick(e, res)} className="pt-text-muted">
+                            { res.highlight !== undefined && (
+                              <span dangerouslySetInnerHTML={{__html: res.highlight.join('  …  ')}} />
+                            )}
+                          </a>
                         </p>
                       </li>
                     ))}
@@ -346,31 +206,27 @@ class PdfViewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document: doc, location: loc, queryText: queryTextFromProps, previewMode } = ownProps;
+  const { document, location, queryText, previewMode } = ownProps;
 
-  const qs = queryString.parse(loc.search);
-  const queryText = (queryTextFromProps)
-                      ? queryTextFromProps
-                      : (qs.q && qs.q.length > 0) ? qs.q : null;
-  const path = doc.links ? doc.links.records : null;
-  const query = Query.fromLocation(path, loc, { 
-      q: queryText,
+  const path = document.links ? document.links.records : null;
+  let query = Query.fromLocation(path, location, { 
       highlight: true,
       highlight_count: 10,
-      highlight_length: 100
+      highlight_length: 120
     }, 'document').limit(50);
+
+  if (queryText.length > 0) {
+    query = query.setString('prefix', queryText);
+  }
   
   return {
-    state: state,
+    result: selectDocumentRecordsResult(state, query),
     session: state.session,
-    query: query,
-    queryText: queryText,
-    hash: queryString.parse(loc.hash)
+    hash: queryString.parse(location.hash),
+    query: query
   }
 }
 
 PdfViewer = connect(mapStateToProps, { queryDocumentRecords })(PdfViewer);
-
 PdfViewer = withRouter(PdfViewer);
-
 export default PdfViewer

@@ -127,10 +127,10 @@ class EmailViewer extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { document, location } = ownProps;
   // For showing attachments
-  const prefix = Query.fromLocation('search', location, {}, 'folder').getString('prefix'),
+  const prefix = Query.fromLocation('search', location, {}, 'document').getString('prefix'),
         field = prefix.length === 0 ? 'filter:parent.id' : 'filter:ancestors',
         context = {[field]: document.id};
-  const query = Query.fromLocation('search', location, context, 'folder').limit(50);
+  const query = Query.fromLocation('search', location, context, 'document').limit(50);
   return {
     query: query
   }

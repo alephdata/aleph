@@ -12,8 +12,10 @@ const initialState = {};
 
 function updateLoading(value) {
   return function(state, { query, result }) {
-    const key = query.toKey();
-    assign(state[key], {isLoading: value});
+    if (query !== undefined) {
+      const key = query.toKey();
+      assign(state[key], {isLoading: value});
+    }
     return state;
   }
 }

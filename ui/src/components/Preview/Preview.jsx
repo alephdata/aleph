@@ -195,7 +195,7 @@ class Preview extends React.Component {
     if (previewType === 'collection' && collection && collection.links && !collection.isFetching) {      
       view = <CollectionInfo collection={collection} showToolbar={true} />;
     } else if (previewType === 'entity' && entity && entity.links && !entity.isFetching) {
-      view = <EntityInfo entity={entity}  showToolbar={true} />;
+      view = <EntityInfo entity={entity} showToolbar={true} />;
     } else if (previewType === 'document') {
       if (doc && doc.links)
         
