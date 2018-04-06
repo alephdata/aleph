@@ -112,16 +112,17 @@ class PdfViewer extends Component {
   }
   
   render() {
-    const { document, session, hash, result, query } = this.props;
+    const { document, session, hashQuery, previewMode, result, query } = this.props;
     const { width, numPages } = this.state;
-
-    const pageNumber = (hash.page && parseInt(hash.page, 10) <= numPages) ? parseInt(hash.page, 10) : 1;
+    const pageNumber = (hashQuery.page && parseInt(hashQuery.page, 10) <= numPages) ? parseInt(hashQuery.page, 10) : 1;
 
     if (!document || !document.links || !document.links.pdf) {
       return null;
     }
 
-    const displayPdf = !query.hasQuery() || result.total === 0;
+    const searchMode = hashQuery['mode'] === 'search' && query.hasQuery();
+    const searchPreview = previewMode && (query.hasQuery() && (result.isLoading || result.total > 0));
+    const displayPdf = !searchMode && !searchPreview;
 
     if (displayPdf === true) {
       let fileUrl = document.links.pdf;
@@ -214,7 +215,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     result: selectDocumentRecordsResult(state, query),
     session: state.session,
-    hash: queryString.parse(location.hash),
+    hashQuery: queryString.parse(location.hash),
     query: query
   }
 }
