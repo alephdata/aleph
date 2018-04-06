@@ -28,23 +28,9 @@ class DocumentViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numberOfPages: null,
-      queryText: this.props.queryText,
-      documentSearchQueryText: this.props.queryText
+      numberOfPages: null
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
-    this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
-    //this.onSubmitDocumentSearch = this.onSubmitDocumentSearch.bind(this);
-  }
-
-  componentWillReceiveProps(newProps) {
-    const { previewMode } = newProps;
-    if (previewMode === true) {
-      this.setState({
-        queryText: newProps.queryText,
-        documentSearchQueryText: newProps.queryText
-      });
-    }
   }
   
   onDocumentLoad(documentInfo) {
@@ -52,32 +38,10 @@ class DocumentViewer extends React.Component {
       numberOfPages: (documentInfo && documentInfo.numPages) ? documentInfo.numPages : null
     });
   }
-
-  onSearchQueryChange(queryText) {
-    this.setState({
-      queryText: queryText
-    });
-  }
-
-  // onSubmitDocumentSearch(queryText) {
-  //   const { document: doc, history: hist } = this.props;
-
-  //   this.setState({
-  //     queryText: queryText,
-  //     documentSearchQueryText: queryText
-  //   });
-
-  //   hist.push({
-  //     pathname: getPath(doc.links.ui),
-  //     search: queryString.stringify({
-  //       q: queryText
-  //     })
-  //   })    
-  // }
   
   render() {
-    const { document: doc, showToolbar, toggleMaximise, previewMode } = this.props;
-    const { numberOfPages, queryText, documentSearchQueryText } = this.state;
+    const { document: doc, showToolbar, toggleMaximise, previewMode, queryText } = this.props;
+    const { numberOfPages } = this.state;
     
     return <React.Fragment>
       {showToolbar && (
@@ -107,7 +71,11 @@ class DocumentViewer extends React.Component {
           )}
         </Toolbar>
       )}
-      <DocumentView document={doc} previewMode={previewMode} queryText={documentSearchQueryText} onDocumentLoad={this.onDocumentLoad}/>
+      <DocumentView document={doc}
+                    previewMode={previewMode}
+                    queryText={queryText}
+                    onDocumentLoad={this.onDocumentLoad}
+                    />
     </React.Fragment>
   }
  
