@@ -1,21 +1,14 @@
 .AuthenticationScreen {
   width: 28em !important;
 
-  .tabs {
+  .inner {
     margin-left: 1em;
-  }
-
-  .pt-tab-panel {
-    margin-top: 0 !important;
-  }
-
-  .oauth-box {
-    text-align: center;
-    margin-top: 1em;
+    margin-right: 1em;
   }
 
   .menu-divider {
-    margin-top: 1em;
+    margin-top: 1§em;
+    margin-bottom: 1em;
   }
 
   .signin-button {
@@ -27,7 +20,8 @@
   }
 
   .link-box {
-    margin-top: 5em;
-    margin-left: 8.5em;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    // margin-left: 8.5em;
   }
 }

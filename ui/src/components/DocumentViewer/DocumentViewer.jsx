@@ -37,65 +37,8 @@ class DocumentViewer extends React.Component {
       numberOfPages: (documentInfo && documentInfo.numPages) ? documentInfo.numPages : null
     });
   }
-  
-  render() {
-    const { document: doc, showToolbar, toggleMaximise, previewMode, queryText } = this.props;
-    const { numberOfPages } = this.state;
-    
-    return <React.Fragment>
-      {showToolbar && (
-        <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
-          {previewMode === true && toggleMaximise && (
-            <Button icon="eye-open"
-              className="button-maximise pt-active"
-              onClick={toggleMaximise}>
-              <FormattedMessage id="preview" defaultMessage="Preview"/>
-            </Button>
-          )}
-          {previewMode === true && (
-            <Link to={getPath(doc.links.ui)} className="pt-button button-link">
-              <span className={`pt-icon-document`}/>
-              <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
-            </Link>
-          )}
-          <DownloadButton document={doc}/>
-          {numberOfPages !== null && numberOfPages > 0 && (
-            <PagingButtons document={doc} numberOfPages={numberOfPages}/>
-          )}
-          {previewMode === true && (
-            <CloseButton/>
-          )}
-          {previewMode !== true && (
-            <DocumentSearch document={doc} />
-          )}
-        </Toolbar>
-      )}
-      <DocumentView document={doc}
-                    previewMode={previewMode}
-                    queryText={queryText}
-                    onDocumentLoad={this.onDocumentLoad}
-                    />
-    </React.Fragment>
-  }
- 
-}
 
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const query = Query.fromLocation('search', location, {});
-  return {
-    queryText: query.getString('q')
-  }
-}
-
-DocumentViewer = connect(mapStateToProps)(DocumentViewer);
-DocumentViewer = injectIntl(DocumentViewer);
-DocumentViewer = withRouter(DocumentViewer);
-export default DocumentViewer
-
-
-class DocumentView extends React.Component {
-  render() {
+  renderContent() {
     const { document: doc, intl, queryText, previewMode, onDocumentLoad} = this.props;
     
     if (doc.schema === 'Email') {
@@ -151,4 +94,54 @@ class DocumentView extends React.Component {
       return null;
     }
   }
+  
+  render() {
+    const { document: doc, showToolbar, toggleMaximise, previewMode } = this.props;
+    const { numberOfPages } = this.state;
+    
+    return <React.Fragment>
+      {showToolbar && (
+        <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
+          {previewMode === true && toggleMaximise && (
+            <Button icon="eye-open"
+              className="button-maximise pt-active"
+              onClick={toggleMaximise}>
+              <FormattedMessage id="preview" defaultMessage="Preview"/>
+            </Button>
+          )}
+          {previewMode === true && (
+            <Link to={getPath(doc.links.ui)} className="pt-button button-link">
+              <span className={`pt-icon-document`}/>
+              <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
+            </Link>
+          )}
+          <DownloadButton document={doc}/>
+          {numberOfPages !== null && numberOfPages > 0 && (
+            <PagingButtons document={doc} numberOfPages={numberOfPages}/>
+          )}
+          {previewMode === true && (
+            <CloseButton/>
+          )}
+          {previewMode !== true && (
+            <DocumentSearch document={doc} />
+          )}
+        </Toolbar>
+      )}
+      {this.renderContent()}
+    </React.Fragment>
+  }
+ 
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+  const query = Query.fromLocation('search', location, {});
+  return {
+    queryText: query.getString('q')
+  }
+}
+
+DocumentViewer = connect(mapStateToProps)(DocumentViewer);
+DocumentViewer = injectIntl(DocumentViewer);
+DocumentViewer = withRouter(DocumentViewer);
+export default DocumentViewer

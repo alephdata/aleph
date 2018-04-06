@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 
-import Fragment from 'src/app/Fragment';
 import Country from 'src/components/common/Country';
 import Schema from 'src/components/common/Schema';
 import Collection from 'src/components/common/Collection';
@@ -16,51 +15,33 @@ class EntityTableRow extends Component {
   }
 
   onRowClickHandler(event) {
-    // If showLinksInPreview enabled allows the user to click anywhere on the
-    // row and have the row selected and preview open automatically.
-    const { entity, history: hist, showLinksInPreview } = this.props;
-    if (showLinksInPreview && showLinksInPreview === true) {
-      // If the target that was clicked was not a link then find the the first 
-      // link and simulate clicking the link in it, which will load the preview.
-      // (If the target *was* a link does not do anything.)
-      if (!event.target.classList.contains('CollectionLink')) {
-        event.preventDefault();
+    // If the target that was clicked was not a link then find the the first 
+    // link and simulate clicking the link in it, which will load the preview.
+    // (If the target *was* a link does not do anything.)
+    if (event.target.classList.contains('CollectionLink')) {
+      return;
+    }
+    event.preventDefault();
+    const { entity, history, location } = this.props;
+    const parsedHash = queryString.parse(location.hash);
 
-        const fragment = new Fragment(hist);
-        if (fragment.get('preview:id') !== entity.id) {
-          // Update the preview to show the entity / document for this row
-          const previewType = (entity.schemata && entity.schemata.indexOf('Document') !== -1) ? 'document' : 'entity';
-          
-          // @TODO Refactor to save maximised state perference in localStorage
-          // For now only set explicitly on documents (or if already set).
-          let newFragment = {
-            'preview:id': entity.id,
-            'preview:type': previewType,
-            'preview:maximised': fragment.get('preview:maximised'),
-            'page': 1
-          }
-          
-          // Open documents in maximised mode by default
-          // (unless maximise is already explicitly set to false)
-          if (previewType === 'document') {
-            if (!fragment.get('preview:maximised') ||
-                fragment.get('preview:maximised') !== 'false') {
-               newFragment['preview:maximised'] = 'true';
-             } else {
-               newFragment['preview:maximised'] = 'false';
-             }
-          }
-          
-          fragment.update(newFragment);
-        } else {
-          // If this entity is already being previewed, hide the preview of it
-          fragment.update({
-            'preview:id': null,
-            'preview:type': null
-          });
-        }
+    if (parsedHash['preview:id'] === entity.id) {
+      // If this entity is already being previewed, hide the preview of it
+      parsedHash['preview:id'] = undefined;
+      parsedHash['preview:type'] = undefined;
+    } else {
+      parsedHash['preview:id'] = entity.id;
+      parsedHash['preview:type'] = (entity.schemata && entity.schemata.indexOf('Document') !== -1) ? 'document' : 'entity';
+      if (parsedHash['preview:type'] === 'document' && !parsedHash['preview:maximised']) {
+        parsedHash['preview:maximised'] = 'true';
       }
     }
+
+    history.replace({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
   }  
   
   shouldComponentUpdate(nextProps) {
@@ -74,7 +55,7 @@ class EntityTableRow extends Component {
   }
 
   render() {
-    const { entity, hideCollection, documentMode, showLinksInPreview, className, location: loc } = this.props;
+    const { entity, hideCollection, documentMode, className, location: loc } = this.props;
     const parsedHash = queryString.parse(loc.hash);
     
     let rowClassName = (className) ? `${className} nowrap` : 'nowrap'
@@ -90,11 +71,11 @@ class EntityTableRow extends Component {
     return (
       <tr className={rowClassName} onClick={this.onRowClickHandler}>
         <td className="entity">
-          <Entity.Link preview={showLinksInPreview} entity={entity} icon />
+          <Entity.Link preview={true} entity={entity} icon />
         </td>
         {!hideCollection && 
           <td className="collection">
-            <Collection.Link preview={showLinksInPreview} collection={entity.collection} icon />
+            <Collection.Link preview={true} collection={entity.collection} icon />
           </td>
         }
         <td className="schema">

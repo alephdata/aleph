@@ -1,9 +1,10 @@
-import {Link} from 'react-router-dom';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
+import queryString from 'query-string';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import c from 'classnames';
 
 import Schema from 'src/components/common/Schema';
@@ -50,32 +51,48 @@ class EntityLabel extends Component {
 }
 
 class EntityLink extends Component {
+  constructor() {
+    super();
+    this.onClick = this.onClick.bind(this);
+  }
+
+  onClick(event) {
+    const { entity, history, location, preview } = this.props;
+    event.preventDefault();
+
+    if (preview === true) {
+      const parsedHash = queryString.parse(location.hash);
+      parsedHash['preview:id'] = entity.id;
+      parsedHash['preview:type'] = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
+
+      history.replace({
+        pathname: location.pathname,
+        search: location.search,
+        hash: queryString.stringify(parsedHash),
+      });
+    } else { 
+      history.push({
+        pathname: getPath(entity.links.ui)
+      });
+    }
+  }
+
   render() {
-    const {entity, className, icon, truncate, preview} = this.props;
-    if (!entity || !entity.links) {
+    const { entity, className, icon, truncate } = this.props;
+    if (!entity || !entity.links || !entity.schemata) {
       return <Entity.Label entity={entity} icon={icon} truncate={truncate}/>;
     }
 
-    if (preview === true) {
-      // Displays in preview sidebar
-
-      // Determine if entity is a 'Document' or an actual entity
-      const previewType = (entity.schemata && entity.schemata.indexOf('Document') !== -1) ? 'document' : 'entity';
-      
-      return (
-        <a href={`#preview:id=${entity.id}&preview:type=${previewType}`} className={c('EntityLink', className)}>
-          <Entity.Label entity={entity} icon={icon} truncate={truncate} />
-        </a>
-      );
-    } else {
-      return (
-        <Link to={getPath(entity.links.ui)} className={c('EntityLink', className)}>
-          <Entity.Label entity={entity} icon={icon} truncate={truncate}/>
-        </Link>
-      );
-    }
+    return (
+      <a onClick={this.onClick} className={c('EntityLink', className)}>
+        <Entity.Label entity={entity} icon={icon} truncate={truncate} />
+      </a>
+    );
   }
 }
+
+EntityLink = withRouter(EntityLink);
+
 
 class EntityLoad extends Component {
   componentDidMount() {
