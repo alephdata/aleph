@@ -104,6 +104,7 @@ def flushdocuments(foreign_id):
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
     delete_documents(collection.id)
+    db.session.commit()
 
 
 @manager.command
@@ -113,6 +114,7 @@ def flushentities(foreign_id):
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
     delete_entities(collection.id)
+    db.session.commit()
 
 
 @manager.command
