@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button } from "@blueprintjs/core";
 
 import Query from 'src/app/Query';
@@ -39,23 +39,23 @@ class DocumentViewer extends React.Component {
   }
 
   renderContent() {
-    const { document: doc, intl, queryText, previewMode, onDocumentLoad} = this.props;
+    const { document: doc, intl, queryText, previewMode} = this.props;
     
     if (doc.schema === 'Email') {
       return <EmailViewer document={doc}/>;
     } else if (doc.schema === 'Table') {
-      return <TableViewer document={doc} queryText={queryText} onDocumentLoad={onDocumentLoad}/>;
+      return <TableViewer document={doc} queryText={queryText}/>;
     } else if (doc.text && !doc.html) {
       return <TextViewer document={doc}/>;
     } else if (doc.html) {
       return <HtmlViewer document={doc}/>;
     } else if (doc.links && doc.links.pdf) {
-      return <PdfViewer document={doc} queryText={queryText} previewMode={previewMode} onDocumentLoad={onDocumentLoad} />
+      return <PdfViewer document={doc} queryText={queryText} previewMode={previewMode} onDocumentLoad={this.onDocumentLoad} />
     } else if (doc.schema === 'Image') {
-      return <ImageViewer document={doc} />;
+      return <ImageViewer document={doc}/>;
     } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
       if (doc.status === 'fail') return <FolderViewer hasWarning={true} document={doc} queryText={queryText}/>;
-      return <FolderViewer document={doc} queryText={queryText} />;
+      return <FolderViewer document={doc} queryText={queryText}/>;
     } else if(doc.schema === 'Document') {
       return <section className="PartialError outer-div">
         <div className="pt-non-ideal-state inner-div">
