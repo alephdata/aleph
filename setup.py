@@ -29,8 +29,7 @@ setup(
             'phones = aleph.analyze.regex:PhoneNumberAnalyzer',
             'corasick = aleph.analyze.corasick_entity:AhoCorasickEntityAnalyzer',  # noqa
             'polyglot = aleph.analyze.polyglot_entity:PolyglotEntityAnalyzer',
-            'ipv4 = aleph.analyze.regex:IPV4Analyzer',
-            'ipv6 = aleph.analyze.regex:IPV6Analyzer',
+            'ip = aleph.analyze.regex:IPAnalyzer',
             'iban = aleph.analyze.regex:IBANAnalyzer'
 
         ],

@@ -18,8 +18,7 @@ class DocumentTag(db.Model, IdModel):
     TYPE_PERSON = 'person'
     TYPE_ORGANIZATION = 'organization'
     TYPE_LOCATION = 'location'
-    TYPE_IPV4 = 'ipv4'
-    TYPE_IPV6 = 'ipv6'
+    TYPE_IP = 'ip'
     TYPE_IBAN = 'iban'
 
 
@@ -29,8 +28,7 @@ class DocumentTag(db.Model, IdModel):
         TYPE_EMAIL: exactitude.emails,
         TYPE_PHONE: exactitude.phones,
         TYPE_LOCATION: exactitude.addresses,
-        TYPE_IPV4: exactitude.ipv4s,
-        TYPE_IPV6: exactitude.ipv6s,
+        TYPE_IP: exactitude.ips,
         TYPE_IBAN: exactitude.ibans,
     }
 
