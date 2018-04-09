@@ -29,6 +29,9 @@ def check_alert(authz, alert):
                                 entity=entity,
                                 since=alert.notified_at)
     results = query.search().get('hits')
+    if results.get('total') == 0:
+        return
+
     for result in results.get('hits', []):
         document = unpack_result(result)
         params = {
