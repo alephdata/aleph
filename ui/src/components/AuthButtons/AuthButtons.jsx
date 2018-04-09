@@ -67,7 +67,6 @@ class AuthButtons extends Component {
 
   render() {
     const {session, auth, intl} = this.props;
-    const items = [];
 
     if (session.loggedIn) {
       return ( 
