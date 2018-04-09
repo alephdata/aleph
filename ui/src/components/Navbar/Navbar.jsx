@@ -197,20 +197,20 @@ class Navbar extends React.Component {
                     placeholder={intl.formatMessage(messages.search_placeholder)}
                     /*rightElement={<button className="pt-button pt-minimalx pt-icon-arrow-right"></button>}*/
                   />
-                  {showAlertToggle && (
-                    <div className="alert-toggle">
-                      <Tooltip position={Position.RIGHT} intent={Intent.PRIMARY} content={
-                         <FormattedMessage id="nav.alerts_tooltip" defaultMessage="Receive alerts for new results"/>
-                      }>
-                        <div className={classNames('pt-button pt-minimal', alertExists ? 'pt-intent-primary' : '')}
-                          onClick={alertButtonOnClick}>
-                          <span className={classNames('pt-icon-notifications', alertExists ? 'selected' : 'pt-text-muted')}/>
-                          <Switch checked={alertExists} disabled={alertChangeProgress}/>
-                        </div>
-                      </Tooltip>
-                    </div>
-                  )}
                 </ControlGroup>
+                {showAlertToggle && (
+                  <div className="alert-toggle">
+                    <Tooltip position={Position.RIGHT} intent={Intent.PRIMARY} content={
+                      <FormattedMessage id="nav.alerts_tooltip" defaultMessage="Receive alerts for new results"/>
+                    }>
+                      <div className={classNames('pt-button pt-minimal', alertExists ? 'pt-intent-primary' : '')}
+                           onClick={alertButtonOnClick}>
+                        <span className={classNames('pt-icon-notifications', alertExists ? 'selected' : 'pt-text-muted')}/>
+                        <Switch className='alerts-tooltip' checked={alertExists} disabled={alertChangeProgress}/>
+                      </div>
+                    </Tooltip>
+                  </div>
+                )}
               </form>
             )} 
           </div>
