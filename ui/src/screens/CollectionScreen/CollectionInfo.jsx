@@ -112,7 +112,10 @@ class CollectionInfo extends Component {
               }
               panel={<React.Fragment>
                 <CollectionOverview collection={collection} hasHeader={false}/>
-
+                <Link to={`/collections/${collection.id}`} className="pt-button pt-fill button-link">
+                  <span className={`pt-icon-folder-open`}/>
+                  <FormattedMessage id="collection.info.open" defaultMessage="Open"/>
+                </Link>
               </React.Fragment>
               }
             />
