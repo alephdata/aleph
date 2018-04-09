@@ -10,6 +10,7 @@
   flex: 1;
   width: 100%;
   max-height: $aleph-grid-size * 5;
+  min-height: $aleph-grid-size * 5;
 
   > * {
     margin: 0 $aleph-grid-size 0 0;
