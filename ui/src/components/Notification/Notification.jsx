@@ -18,13 +18,13 @@ class Notification extends Component {
     const object = params[name];
     const type = event.params[name] || 'role';
     if (type === 'collection') {
-      return <Collection.Link collection={object} />;
+      return <Collection.Link collection={object} preview icon />;
     }
     if (type === 'document' || type === 'entity') {
-      return <Entity.Link collection={object} />;
+      return <Entity.Link entity={object} preview icon />;
     }
     if (type === 'alert') {
-      return <span>{object.query_text}</span>;
+      return <span>{object.label}</span>;
     }
     if (type === 'role') {
       return <Role.Label role={object} />;

@@ -1,4 +1,5 @@
 import logging
+from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -56,7 +57,10 @@ class Notification(db.Model, IdModel, DatedModel):
         sq = sq.filter(Subscription.role_id == role.id)
         sq = sq.cte('sq')
         q = cls.all()
-        q = q.filter(cls.actor_id != role.id)
+        q = q.filter(or_(
+            cls.actor_id != role.id,
+            cls.actor_id == None  # noqa
+        ))
         q = q.filter(cls.channels.any(sq.c.channel))
         q = q.filter(cls._event.in_(Events.names()))
         q = q.order_by(cls.created_at.desc())
