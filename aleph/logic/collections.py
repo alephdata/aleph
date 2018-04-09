@@ -3,7 +3,6 @@ from datetime import datetime
 
 from aleph.core import db, celery
 from aleph.model import Collection, Document, Entity, Match, Permission
-from aleph.index.admin import flush_index
 from aleph.index.collections import delete_collection as index_delete
 from aleph.index.collections import delete_documents as index_delete_documents
 from aleph.index.collections import delete_entities as index_delete_entities
@@ -42,7 +41,6 @@ def update_collections():
         eq = eq.filter(Entity.collection_id == collection.id)
         for entity in eq.all():
             update_entity_full.apply_async([entity.id], priority=2)
-
 
 
 @celery.task()
