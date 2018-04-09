@@ -59,7 +59,7 @@ class EntityReferences extends React.Component {
                         title={
                           <React.Fragment>
                             <Property.Reverse model={ref.property} />
-                            <TabCount count={references.results.length} />
+                            <TabCount count={ref.count} />
                           </React.Fragment>
                         }
               panel={
