@@ -65,7 +65,7 @@ class EntityDocumentsQuery(DocumentsQuery):
                     'match_phrase': {
                         field: {
                             'query': name,
-                            'slop': 3
+                            'slop': 1
                         }
                     }
                 })
@@ -81,14 +81,6 @@ class AlertDocumentsQuery(EntityDocumentsQuery):
     def __init__(self, parser, entity=None, since=None):
         super(AlertDocumentsQuery, self).__init__(parser, entity=entity)
         self.since = since
-
-    def get_highlight(self):
-        return {
-            'fields': {
-                'text': {},
-                'summary': {},
-            }
-        }
 
     def get_query(self):
         query = super(EntityDocumentsQuery, self).get_query()

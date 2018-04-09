@@ -6,7 +6,7 @@ import queryString from "query-string";
 import {loginWithToken} from "src/actions/sessionActions";
 
 
-class OAuth extends Component {
+class OAuthScreen extends Component {
   componentWillMount() {
     const parsedHash = queryString.parse(window.location.hash);
     if (parsedHash.token) {
@@ -28,5 +28,5 @@ class OAuth extends Component {
 
 const mapStateToProps = ({ session }) => ({ session });
 
-OAuth = connect(mapStateToProps, {loginWithToken})(OAuth);
-export default OAuth;
+OAuthScreen = connect(mapStateToProps, {loginWithToken})(OAuthScreen);
+export default OAuthScreen;

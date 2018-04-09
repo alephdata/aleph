@@ -4,7 +4,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from aleph.core import db
 from aleph.model.role import Role
-from aleph.model.event import Event, Events
+from aleph.model.event import Events
 from aleph.model.subscription import Subscription
 from aleph.model.common import DatedModel, IdModel
 

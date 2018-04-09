@@ -12,29 +12,17 @@ import {loginWithPassword, loginWithToken} from "src/actions/sessionActions";
 import './style.css';
 
 const messages = defineMessages({
-  registration_not_available_title: {
-    id: 'signup.not_available_title',
-    defaultMessage: 'Registration is disabled'
-  },
   title: {
     id: 'signup.title',
     defaultMessage: 'Sign in',
   },
-  registrationTitle: {
+  registration_title: {
     id: 'signup.register',
     defaultMessage: 'Register',
-  },
-  registration_not_available_desc: {
-    id: 'signup.not_available_desc',
-    defaultMessage: 'Please contact the site admin to get an account'
   },
   not_available_title: {
     id: 'login.not_available_title',
     defaultMessage: 'Login is disabled',
-  },
-  not_available_desc: {
-    id: 'login.not_available_desc',
-    defaultMessage: 'There is no login provider configured for this app',
   }
 });
 
@@ -52,19 +40,15 @@ class AuthenticationDialog extends Component {
     this.onSignup = this.onSignup.bind(this);
     this.onRegisterClick = this.onRegisterClick.bind(this);
     this.onSignInClick = this.onSignInClick.bind(this);
-    this.onOAuthLogin = this.onSignInClick.bind(this);
+    this.onOAuthLogin = this.onOAuthLogin.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    const {auth} = this.props.metadata;
-    if (nextProps.isOpen && !auth.password_login_uri) {
-      this.onOAuthLogin();
-    }
   }
 
   onOAuthLogin() {
-    const {auth} = this.props.metadata;
-    if (!auth.oauth_uri) {
+    const { auth } = this.props.metadata;
+    if (auth.oauth_uri) {
       const location = window.location;
       const targetUrl = `${location.protocol}//${location.host}/oauth`;
       const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
@@ -94,15 +78,25 @@ class AuthenticationDialog extends Component {
   }
 
   render() {
-    const {metadata, intl, auth} = this.props;
+    const { metadata, intl } = this.props;
+    const { auth } = metadata;
     const {submitted, firstSection, secondSection} = this.state;
-    const passwordLogin = metadata.auth.password_login_uri;
+    const passwordLogin = auth.password_login_uri;
+
+    if (!this.props.isOpen) {
+      return null;
+    }
+
+    if (!auth.password_login_uri) {
+      this.onOAuthLogin();
+      return null;
+    }
 
     return (
       <Dialog icon="authentication" className="AuthenticationScreen"
               isOpen={this.props.isOpen}
               onClose={this.props.toggleDialog}
-              title={firstSection === '' ? intl.formatMessage(messages.title) : intl.formatMessage(messages.registrationTitle)}>
+              title={firstSection === '' ? intl.formatMessage(messages.title) : intl.formatMessage(messages.registration_title)}>
         <div className="inner">
           <section className={firstSection}>
             {passwordLogin && <PasswordAuthLogin buttonClassName='signin-button' onSubmit={this.onLogin}/>}
