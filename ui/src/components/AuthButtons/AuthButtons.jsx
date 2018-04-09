@@ -75,7 +75,7 @@ class AuthButtons extends Component {
             <Menu>
               <Link to="/notifications" className="pt-menu-item">
                 <Icon icon="timeline-events" /> {' '}
-                <div class="pt-text-overflow-ellipsis pt-fill">
+                <div className="pt-text-overflow-ellipsis pt-fill">
                   {intl.formatMessage(messages.view_notifications)}
                 </div>
               </Link>

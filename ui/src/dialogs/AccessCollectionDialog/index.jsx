@@ -3,9 +3,9 @@ import { Button, Checkbox, Dialog } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-import {updateCollectionPermissions} from 'src/actions';
+import { updateCollectionPermissions, fetchCollectionPermissions } from 'src/actions';
 import Role from 'src/components/common/Role';
-import {showSuccessToast} from "../../app/toast";
+import { showSuccessToast } from "../../app/toast";
 
 import './AccessCollectionDialog.css';
 
@@ -44,11 +44,31 @@ class AccessCollectionDialog extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {permissions: []};
+    this.state = {
+      permissions: []
+    };
 
     this.onAddRole = this.onAddRole.bind(this);
     this.onToggle = this.onToggle.bind(this);
     this.onSave = this.onSave.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchPermissions();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { collection } = this.props;
+    if (!collection || (nextProps.collection && nextProps.collection.id !== collection.id)) {
+      this.fetchPermissions();
+    }
+  }
+
+  fetchPermissions() {
+    const { collection } = this.props;
+    if (collection && collection.writeable) {
+      this.props.fetchCollectionPermissions(collection.id);
+    }
   }
 
   filterPermissions(type) {
@@ -59,13 +79,13 @@ class AccessCollectionDialog extends Component {
   }
 
   onAddRole(role) {
-    const { permissions } = this.props;
+    const { permissions } = this.state;
     permissions.push({role: role, read: true, write: false});
     this.setState({permissions: permissions});
   }
 
   onToggle(permission, flag) {
-    const permissions = this.props.permissions.map((perm) => {
+    const permissions = this.state.permissions.map((perm) => {
       if (perm.role.id === permission.role.id) {
         perm[flag] = !perm[flag];
       }
@@ -84,8 +104,13 @@ class AccessCollectionDialog extends Component {
   }
 
   render() {
-    const {permissions, intl} = this.props;
+    const {collection, intl} = this.props;
+    const {permissions} = this.state;
     const exclude = permissions.map((perm) => perm.role.id);
+
+    if (!collection || !collection.writeable) {
+      return null;
+    }
 
     return (
       <Dialog icon="key" className="AlertsDialog"
@@ -157,8 +182,12 @@ class AccessCollectionDialog extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-});
+const mapStateToProps = (state, ownProps) => {
+  const collectionId = ownProps.collection.id;
+  return {
+    permissions: state.collectionPermissions[collectionId] || []
+  };
+};
 
 AccessCollectionDialog = injectIntl(AccessCollectionDialog);
-export default connect(mapStateToProps, {updateCollectionPermissions})(AccessCollectionDialog);
+export default connect(mapStateToProps, {updateCollectionPermissions, fetchCollectionPermissions})(AccessCollectionDialog);

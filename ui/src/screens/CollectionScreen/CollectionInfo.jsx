@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { Button, Tab, Tabs } from "@blueprintjs/core";
 
-import { fetchCollectionPermissions } from 'src/actions';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog';
 import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog';
@@ -19,33 +18,18 @@ class CollectionInfo extends Component {
     this.state = {
       activeTabId: 'overview',
       collectionInfoIsOpen: false,
-      permissions: props.permissions,
       collectionXRefTab: false,
       accessIsOpen: false
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
     this.toggleCollectionEdit = this.toggleCollectionEdit.bind(this);
-    this.fetchCollection = this.fetchCollection.bind(this);
     this.onCollectionXRefLoad = this.onCollectionXRefLoad.bind(this);
     this.toggleAccess = this.toggleAccess.bind(this);
   }
 
-  componentDidMount() {
-    const { collection } = this.props;
-    this.setState({ permissions: [] });
-    this.props.fetchCollectionPermissions(collection.id);
-  }
-
-  fetchCollection() {
-    const { collection } = this.props;
-    this.setState({ permissions: [] });
-    this.props.fetchCollectionPermissions(collection.id);
-  }
-
   componentWillReceiveProps(nextProps) {
     this.setState({
-      permissions: nextProps.permissions,
       collectionXRefTab: false
     });
   }
@@ -156,11 +140,7 @@ class CollectionInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const collectionId = ownProps.collection.id;
-  return {
-    collectionId,
-    permissions: state.collectionPermissions[collectionId] || []
-  };
+  return {}
 };
 
-export default connect(mapStateToProps, {fetchCollectionPermissions})(CollectionInfo);
+export default connect(mapStateToProps, {})(CollectionInfo);
