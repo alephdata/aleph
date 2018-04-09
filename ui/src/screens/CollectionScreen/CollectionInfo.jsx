@@ -69,7 +69,7 @@ class CollectionInfo extends Component {
           <Toolbar className="toolbar-preview">
             <Link to={`/search?filter:collection_id=${collection.id}`} className="pt-button button-link">
               <span className={`pt-icon-search`}/>
-              <FormattedMessage id="collection.info..search_button" defaultMessage="Search"/>
+              <FormattedMessage id="collection.info.explore_button" defaultMessage="Explore"/>
             </Link>
             {collection.writeable &&
               <React.Fragment>
@@ -110,8 +110,10 @@ class CollectionInfo extends Component {
                   <FormattedMessage id="collection .info.overview" defaultMessage="Overview"/>
                 </React.Fragment>
               }
-              panel={
+              panel={<React.Fragment>
                 <CollectionOverview collection={collection} hasHeader={false}/>
+
+              </React.Fragment>
               }
             />
             <Tab id="xref"

@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 
 import QueryFilterTag from './QueryFilterTag';
 
-// import './QueryTags.css';
-
-
 class QueryTags extends Component {
   constructor(props) {
     super(props);

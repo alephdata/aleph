@@ -12,7 +12,6 @@ import Entity from 'src/screens/EntityScreen/Entity';
 
 import './QueryFilterTag.css';
 
-
 class QueryFilterTag extends PureComponent {
   constructor(props) {
     super(props);

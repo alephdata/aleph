@@ -16,7 +16,7 @@ class CalloutBox extends React.Component {
     const { className } = this.props;
 
     return (
-      <Callout onClick={this.onSignIn} className={`${className} clickable pt-icon-info-sign pt-intent-primary`}>
+      <Callout onClick={this.onSignIn} className={`${className} clickable pt-icon-info-sign pt-intent-warning`}>
         <h4 className="pt-callout-title">
           <FormattedMessage
             id="search.callout_heading"
@@ -25,7 +25,7 @@ class CalloutBox extends React.Component {
         </h4>
         <FormattedMessage
           id="search.callout_message"
-          defaultMessage="Sign in to see all results you’re authorised to access."
+          defaultMessage="Please sign in to see all results you’re authorised to access."
           />
       </Callout>
     )
