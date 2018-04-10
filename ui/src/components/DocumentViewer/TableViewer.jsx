@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl } from 'react-intl';
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';
@@ -79,7 +78,6 @@ class TableViewer extends Component {
     const { document, result } = this.props;
     const columnNames = document.columns;
 
-
     return (
       <div className="TableViewer">
         <Table columnNames={columnNames} records={result.results} />
@@ -117,6 +115,4 @@ const mapStateToProps = (state, ownProps) => {
 
 TableViewer = connect(mapStateToProps, { queryDocumentRecords })(TableViewer);
 TableViewer = withRouter(TableViewer);
-TableViewer = injectIntl(TableViewer);
-
 export default TableViewer;
