@@ -42,8 +42,6 @@ class DocumentScreen extends Component {
       return <ScreenLoading />;
     }
 
-    console.log('document', document)
-
     if (document.status === 403) {
       return (
          <ErrorScreen.PageNotFound visual="error" title={messages.not_authorized}
