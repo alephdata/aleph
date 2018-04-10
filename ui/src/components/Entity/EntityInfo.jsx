@@ -6,8 +6,8 @@ import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 import _ from 'lodash';
 
-import Property from './Property';
-import Entity from './Entity';
+import Property from '../common/Property';
+import Entity from '../common/Entity';
 import EntityInfoTags from './EntityInfoTags';
 import DualPane from 'src/components/common/DualPane';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';

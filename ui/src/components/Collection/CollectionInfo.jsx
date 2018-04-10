@@ -5,8 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import { Button, Tab, Tabs } from "@blueprintjs/core";
 
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
-import CollectionEditDialog from 'src/dialogs/CollectionEditDialog';
-import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog';
+import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
+import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog/AccessCollectionDialog';
 import DualPane from 'src/components/common/DualPane';
 import CollectionInfoXref from './CollectionInfoXref';
 import CollectionOverview from "../../components/Collection/CollectionOverview";

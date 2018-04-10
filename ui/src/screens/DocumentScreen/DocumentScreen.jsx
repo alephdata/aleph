@@ -10,8 +10,8 @@ import ScreenLoading from 'src/components/common/ScreenLoading';
 import DualPane from 'src/components/common/DualPane';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
-import DocumentInfo from './DocumentInfo';
-import DocumentContent from './DocumentContent';
+import DocumentInfo from '../../components/Document/DocumentInfo';
+import DocumentContent from '../../components/Document/DocumentContent';
 
 const messages = defineMessages({
   not_found: {

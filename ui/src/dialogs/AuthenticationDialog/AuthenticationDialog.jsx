@@ -9,7 +9,7 @@ import {PasswordAuthLogin} from 'src/components/auth/PasswordAuth';
 import {PasswordAuthSignup} from 'src/components/auth/PasswordAuth';
 import {loginWithPassword, loginWithToken} from "src/actions/sessionActions";
 
-import './style.css';
+import './AuthenticationDialog.css';
 
 const messages = defineMessages({
   title: {

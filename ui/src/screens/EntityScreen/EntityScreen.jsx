@@ -5,9 +5,9 @@ import Screen from 'src/components/common/Screen';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
-import EntityInfo from './EntityInfo';
-import Entity from './Entity';
-import EntityContent from './EntityContent';
+import EntityInfo from '../../components/Entity/EntityInfo';
+import Entity from '../../components/common/Entity';
+import EntityContent from '../../components/Entity/EntityContent';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 const messages = defineMessages({
