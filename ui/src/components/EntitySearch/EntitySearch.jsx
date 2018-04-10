@@ -66,7 +66,7 @@ class EntitySearch extends Component {
     const {history, location} = this.props;
     history.push({
       pathname: location.pathname,
-      search: newQuery.toLocation()
+      search: newQuery.toLocation(),
     });
   }
 
