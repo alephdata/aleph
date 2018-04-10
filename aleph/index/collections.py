@@ -1,3 +1,5 @@
+import six
+import exactitude
 from pprint import pprint  # noqa
 from normality import normalize
 
@@ -21,30 +23,16 @@ def index_collection(collection):
         'label': collection.label,
         'kind': collection.kind,
         'summary': collection.summary,
-        'countries': collection.countries,
-        'languages': collection.languages,
+        'category': collection.category,
+        'publisher': collection.publisher,
+        'publisher_url': collection.publisher_url,
+        'info_url': collection.info_url,
+        'data_url': collection.data_url,
         'casefile': collection.casefile,
         'roles': collection.roles,
         'schemata': {},
     }
-
-    if not collection.casefile:
-        data['category'] = collection.category
-        data['publisher'] = collection.publisher
-        data['publisher_url'] = collection.publisher_url
-        data['info_url'] = collection.info_url
-        data['data_url'] = collection.data_url
-
-    texts = [
-        collection.label,
-        collection.foreign_id,
-        collection.summary,
-        collection.category,
-        collection.publisher,
-        collection.publisher_url,
-        collection.info_url,
-        collection.data_url
-    ]
+    texts = [v for v in data.values() if isinstance(v, six.string_types)]
 
     if collection.creator is not None:
         data['creator'] = {
@@ -80,13 +68,17 @@ def index_collection(collection):
         data['schemata'][schema['key']] = schema['doc_count']
 
     # if no countries or langs are given, take the most common from the data.
-    if not data.get('countries'):
+    countries = collection.countries
+    if not len(countries):
         countries = aggregations['countries']['buckets']
-        data['countries'] = [c['key'] for c in countries]
+        countries = [c['key'] for c in countries]
+    data['countries'] = exactitude.countries.normalize_set(countries)
 
-    if not data.get('languages'):
-        countries = aggregations['languages']['buckets']
-        data['languages'] = [c['key'] for c in countries]
+    languages = collection.languages
+    if not len(languages):
+        languages = aggregations['languages']['buckets']
+        languages = [c['key'] for c in languages]
+    data['languages'] = exactitude.countries.normalize_set(countries)
 
     texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)
