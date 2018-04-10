@@ -9,7 +9,7 @@ import {
     fetchCollectionXrefMatches,
     fetchNextCollectionXrefMatches,
     fetchCollectionXrefIndex } from 'src/actions';
-import Entity from 'src/screens/EntityScreen/Entity';
+import Entity from 'src/components/common/Entity';
 import Screen from 'src/components/common/Screen';
 import Date from 'src/components/common/Date';
 import Country from 'src/components/common/Country';

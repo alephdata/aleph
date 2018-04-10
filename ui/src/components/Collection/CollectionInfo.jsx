@@ -8,9 +8,7 @@ import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog/AccessCollectionDialog';
 import DualPane from 'src/components/common/DualPane';
-import CollectionInfoXref from './CollectionInfoXref';
-import CollectionOverview from "../../components/Collection/CollectionOverview";
-import CollectionInfoContent from 'src/components/Collection/CollectionInfoContent';
+import { CollectionInfoXref, CollectionOverview, CollectionInfoContent } from 'src/components/Collection';
 
 class CollectionInfo extends Component {
   constructor(props) {

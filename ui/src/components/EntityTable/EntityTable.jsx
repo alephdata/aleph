@@ -68,7 +68,7 @@ class EntityTable extends Component {
           {intl.formatMessage(messages[`column_${field}`])}
         </SortableTH>
       );
-    }
+    };
 
     return (
       <table className="data-table">

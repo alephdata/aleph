@@ -12,10 +12,10 @@ import {defineMessages, injectIntl} from "react-intl";
 
 import Fragment from 'src/app/Fragment';
 import { fetchCollection, fetchEntity, fetchDocument } from 'src/actions';
-import CollectionInfo from 'src/screens/CollectionScreen/CollectionInfo';
-import DocumentInfo from 'src/screens/DocumentScreen/DocumentInfo';
+import { CollectionInfo } from 'src/components/Collection';
+import { DocumentInfo } from 'src/components/Document';
 import { DocumentViewer } from 'src/components/DocumentViewer';
-import EntityInfo from 'src/screens/EntityScreen/EntityInfo';
+import EntityInfo from 'src/components/Entity/EntityInfo';
 import SectionLoading from 'src/components/common/SectionLoading';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 

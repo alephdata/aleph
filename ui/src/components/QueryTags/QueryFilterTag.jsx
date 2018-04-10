@@ -8,7 +8,7 @@ import Country from 'src/components/common/Country';
 import Language from 'src/components/common/Language';
 import Category from 'src/components/common/Category';
 import Collection from 'src/components/common/Collection';
-import Entity from 'src/screens/EntityScreen/Entity';
+import Entity from 'src/components/common/Entity';
 
 import './QueryFilterTag.css';
 

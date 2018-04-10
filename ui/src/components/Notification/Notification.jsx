@@ -3,7 +3,7 @@ import { FormattedRelative } from 'react-intl';
 
 import Role from 'src/components/common/Role';
 import Collection from 'src/components/common/Collection';
-import Entity from 'src/screens/EntityScreen/Entity';
+import Entity from 'src/components/common/Entity';
 
 import './Notification.css';
 

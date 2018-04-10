@@ -15,7 +15,7 @@ import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 import CalloutBox from 'src/components/common/CalloutBox';
-import AuthenticationDialog from 'src/dialogs/AuthenticationDialog';
+import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 
 import './SearchScreen.css';
 

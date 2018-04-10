@@ -6,8 +6,7 @@ import Screen from 'src/components/common/Screen';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import DualPane from 'src/components/common/DualPane';
-import CollectionContent from './CollectionContent';
-import CollectionInfo from './CollectionInfo';
+import { CollectionInfo, CollectionContent } from 'src/components/Collection';
 import Collection from 'src/components/common/Collection';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 

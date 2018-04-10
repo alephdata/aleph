@@ -3,9 +3,9 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon } from "@blueprintjs/core";
 
-import SettingsDialog from 'src/dialogs/SettingsDialog';
-import AlertsDialog from 'src/dialogs/AlertsDialog';
-import AuthenticationDialog from 'src/dialogs/AuthenticationDialog';
+import SettingsDialog from 'src/dialogs/SettingsDialog/SettingsDialog';
+import AlertsDialog from 'src/dialogs/AlertsDialog/AlertsDialog';
+import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 
 import './AuthButtons.css';
 

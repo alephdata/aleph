@@ -5,8 +5,8 @@ import { Spinner } from '@blueprintjs/core';
 
 import { fetchMetadata } from 'src/actions';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
-import EntityScreen from 'src/screens/EntityScreen';
-import CollectionScreen from 'src/screens/CollectionScreen';
+import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
+import CollectionScreen from 'src/screens/CollectionScreen/CollectionScreen';
 
 import OAuthScreen from "src/screens/OAuthScreen/OAuthScreen";
 import LogoutScreen from 'src/screens/LogoutScreen/LogoutScreen';
@@ -16,8 +16,8 @@ import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
 import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
 import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen/CollectionsIndexScreen';
 import CollectionsXrefScreen from 'src/screens/CollectionsXrefScreen/CollectionsXrefScreen';
-import DocumentScreen from 'src/screens/DocumentScreen';
-import DocumentRedirectScreen from 'src/screens/DocumentScreen/DocumentRedirectScreen';
+import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
+import { DocumentRedirectScreen } from 'src/components/Document';
 
 import './Router.css';
 

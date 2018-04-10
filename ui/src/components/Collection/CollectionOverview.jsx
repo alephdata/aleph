@@ -7,7 +7,7 @@ import Language from 'src/components/common/Language';
 import Country from 'src/components/common/Country';
 import Role from 'src/components/common/Role';
 import Date from 'src/components/common/Date';
-import Collection from 'src/components/Collection/Collection';
+import Collection from 'src/components/common/Collection';
 
 class CollectionOverview extends Component {
   render() {

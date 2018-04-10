@@ -5,7 +5,7 @@ import {Helmet} from 'react-helmet';
 import c from 'classnames';
 
 import {Navbar} from 'src/components/Navbar';
-import Preview from "src/components/Preview";
+import Preview from "src/components/Preview/Preview";
 import Footer from "../Footer/Footer";
 
 import './Screen.css';

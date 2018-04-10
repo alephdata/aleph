@@ -6,7 +6,7 @@ import { Tab, Tabs } from "@blueprintjs/core";
 
 import Fragment from 'src/app/Fragment';
 import TabCount from 'src/components/common/TabCount';
-import EntityReferencesTable from 'src/screens/EntityScreen/EntityReferencesTable';
+import { EntityReferencesTable } from 'src/components/Entity';
 import Property from '../common/Property';
 
 class EntityReferences extends React.Component {

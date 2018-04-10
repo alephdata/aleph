@@ -4,14 +4,13 @@ import { defineMessages, injectIntl } from 'react-intl';
 
 import { fetchDocument } from 'src/actions';
 import Screen from 'src/components/common/Screen';
-import Entity from 'src/screens/EntityScreen/Entity';
+import Entity from 'src/components/common/Entity';
 import Breadcrumbs from 'src/components/common/Breadcrumbs';
 import ScreenLoading from 'src/components/common/ScreenLoading';
 import DualPane from 'src/components/common/DualPane';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
-import DocumentInfo from '../../components/Document/DocumentInfo';
-import DocumentContent from '../../components/Document/DocumentContent';
+import { DocumentContent, DocumentInfo } from '../../components/Document';
 
 const messages = defineMessages({
   not_found: {
