@@ -3,4 +3,8 @@
 .EntityReferencesTable {
   margin-bottom: $aleph-grid-size * 2;
   overflow-x: auto;
+
+  .references-data-table {
+    width: 100% !important;
+  }
 }

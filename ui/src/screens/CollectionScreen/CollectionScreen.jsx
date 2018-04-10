@@ -1,37 +1,18 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import { Screen, ScreenLoading, Breadcrumbs, DualPane, Collection } from 'src/components/common';
 import { CollectionInfo, CollectionContent } from 'src/components/Collection';
-import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
-
-const messages = defineMessages({
-  not_found: {
-    id: 'collection.not_found',
-    defaultMessage: 'Source not found',
-  },
-  not_authorized: {
-    id: 'collection.not_auth',
-    defaultMessage: 'You are not authorized to do this.',
-  },
-  not_authorized_decr: {
-    id: 'collection.not_auth_decr',
-    defaultMessage: 'Please go to the login page.',
-  }
-});
+import ErrorScreen from "../../components/ErrorMessages/ErrorScreen";
 
 class CollectionScreen extends Component {
   render() {
     const { collection } = this.props;
 
-    if(collection.status === 403) {
+    if (collection.error) {
       return (
-        <ErrorScreen.PageNotFound title={messages.not_authorized} description={messages.not_authorized_decr}/>
-      )
-    } else if (collection.error) {
-      return (
-        <ErrorScreen.PageNotFound title={messages.not_found}/>
+          <ErrorScreen.NoTranslation title={collection.error}/>
       )
     }
 

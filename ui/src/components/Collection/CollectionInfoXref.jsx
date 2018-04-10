@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FormattedNumber } from 'react-intl';
 
-import { fetchCollectionXrefIndex } from '../../actions/index';
+import { fetchCollectionXrefIndex } from 'src/actions/index';
 import getPath from 'src/util/getPath';
 
 class CollectionInfoXref extends React.Component {
