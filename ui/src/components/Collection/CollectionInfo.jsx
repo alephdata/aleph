@@ -10,7 +10,7 @@ import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog/AccessCol
 import DualPane from 'src/components/common/DualPane';
 import CollectionInfoXref from './CollectionInfoXref';
 import CollectionOverview from "../../components/Collection/CollectionOverview";
-import CollectionInfoContent from 'src/screens/CollectionScreen/CollectionInfoContent';
+import CollectionInfoContent from 'src/components/Collection/CollectionInfoContent';
 
 class CollectionInfo extends Component {
   constructor(props) {
