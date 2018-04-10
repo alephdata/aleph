@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {injectIntl} from 'react-intl';
-import { NonIdealState } from '@blueprintjs/core';
 
 import { Screen, ScreenLoading, Breadcrumbs, DualPane, Entity } from 'src/components/common';
 import { EntityContent, EntityInfo } from 'src/components/Entity/';
+import ErrorScreen from "../../components/ErrorMessages/ErrorScreen";
 
 class EntityScreen extends Component {
   render() {
@@ -11,9 +11,7 @@ class EntityScreen extends Component {
 
       if (entity.error) {
           return (
-              <NonIdealState
-                  title={entity.error}
-              />
+              <ErrorScreen.NoTranslation title={entity.error}/>
           )
       }
 

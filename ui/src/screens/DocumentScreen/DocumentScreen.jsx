@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import { NonIdealState } from '@blueprintjs/core';
 
 import { fetchDocument } from 'src/actions';
 import { Screen, Entity, Breadcrumbs, ScreenLoading, DualPane } from 'src/components/common';
 import { DocumentContent, DocumentInfo } from '../../components/Document';
+import ErrorScreen from "../../components/ErrorMessages/ErrorScreen";
 
 class DocumentScreen extends Component {
   componentDidMount() {
@@ -28,9 +28,7 @@ class DocumentScreen extends Component {
 
     if (document.error) {
       return (
-          <NonIdealState
-              title={document.error}
-          />
+          <ErrorScreen.NoTranslation title={document.error}/>
       );
     }
 

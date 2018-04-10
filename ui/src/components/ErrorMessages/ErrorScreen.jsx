@@ -50,9 +50,28 @@ class PageNotFound extends Component {
   }
 }
 
+class ErrorScreenNoTranslation extends Component {
+    render() {
+        const {title} = this.props;
+
+        return (
+            <Screen>
+                <DualPane>
+                    <DualPane.ContentPane>
+                        <NonIdealState visual='error'
+                                       title={title}
+                        />
+                    </DualPane.ContentPane>
+                </DualPane>
+            </Screen>
+        )
+    }
+}
+
 class ErrorScreen extends Component {
   static PageNotFound = injectIntl(PageNotFound);
   static EmptyList = injectIntl(EmptyList);
+  static NoTranslation = ErrorScreenNoTranslation;
 }
 
 export default ErrorScreen;
