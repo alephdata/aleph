@@ -1,27 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import { NonIdealState } from '@blueprintjs/core';
 
 import { fetchDocument } from 'src/actions';
 import { Screen, Entity, Breadcrumbs, ScreenLoading, DualPane } from 'src/components/common';
-import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
-
 import { DocumentContent, DocumentInfo } from '../../components/Document';
-
-const messages = defineMessages({
-  not_found: {
-    id: 'document.not_found',
-    defaultMessage: 'Document not found',
-  },
-  not_authorized: {
-    id: 'collection.not_auth',
-    defaultMessage: 'You are not authorized to do this.',
-  },
-  not_authorized_decr: {
-    id: 'collection.not_auth_decr',
-    defaultMessage: 'Please go to the login page.',
-  }
-});
 
 class DocumentScreen extends Component {
   componentDidMount() {
@@ -42,14 +26,11 @@ class DocumentScreen extends Component {
       return <ScreenLoading />;
     }
 
-    if (document.status === 403) {
+    if (document.error) {
       return (
-         <ErrorScreen.PageNotFound visual="error" title={messages.not_authorized}
-                                      description={messages.not_authorized_decr}/>
-        );
-    } else if (document.error) {
-      return (
-        <ErrorScreen.PageNotFound visual="error" title={messages.not_found}/>
+          <NonIdealState
+              title={document.error}
+          />
       );
     }
 

@@ -18,6 +18,7 @@ class EntityReferencesTable extends Component {
   constructor(props) {
     super(props);
     this.fetchData = this.fetchData.bind(this);
+    this.getMoreResults = this.getMoreResults.bind(this);
   }
 
   componentDidMount() {
@@ -83,7 +84,7 @@ class EntityReferencesTable extends Component {
 
     return (
       <section className="EntityReferencesTable">
-        <table className="data-table" style={{width: '100%'}}>
+        <table className="data-table references-data-table">
           <thead>
             <tr>
               {columns.map(prop => (
@@ -91,7 +92,7 @@ class EntityReferencesTable extends Component {
                   <Property.Name model={prop} />
                 </th>
               ))}
-              <th key="details" className="narrow"></th>
+              <th key="details" className="narrow"/>
             </tr>
           </thead>
           <tbody>
@@ -130,7 +131,7 @@ const mapStateToProps = (state, ownProps) => {
   const { entity, property } = ownProps;
   const context = {
     [`filter:properties.${property.name}`]: entity.id
-  }
+  };
   const query = Query.fromLocation('search', {}, context, property.name);
 
   return {
@@ -138,7 +139,7 @@ const mapStateToProps = (state, ownProps) => {
     result: selectEntitiesResult(state, query),
     model: state.metadata.schemata[ownProps.schema]
   }
-}
+};
 
 EntityReferencesTable = connect(mapStateToProps, { queryEntities })(EntityReferencesTable);
 EntityReferencesTable = withRouter(EntityReferencesTable);
