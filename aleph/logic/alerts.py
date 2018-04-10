@@ -64,8 +64,7 @@ def alert_query(alert, authz):
         })
 
     if entity is not None:
-        TAGS = ['names', 'fingerprints', 'emails', 'phones']
-        for field in TAGS:
+        for field in ['names', 'fingerprints', 'emails', 'phones']:
             for value in ensure_list(entity.get(field)):
                 clauses.append({'term': {field: value}})
                 clauses.append({
@@ -79,12 +78,14 @@ def alert_query(alert, authz):
         'query': {
             'bool': {
                 'should': clauses,
-                'filter': [{
-                    'range': {
-                        'created_at': {'gt': alert.notified_at}
-                    }
-                }],
-                'must': [authz_query(authz)],
+                'filter': [
+                    {
+                        'range': {
+                            'created_at': {'gt': alert.notified_at}
+                        }
+                    },
+                    authz_query(authz)
+                ],
                 'minimum_should_match': 1
             }
         }
