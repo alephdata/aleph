@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
-import {defineMessages, FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Tag as TagWidget } from '@blueprintjs/core';
 
 import { Schema, Tag, Country, Language, Category, Collection, Entity } from 'src/components/common';
 
 import './QueryFilterTag.css';
+
 
 class QueryFilterTag extends PureComponent {
   constructor(props) {
