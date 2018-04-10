@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
 
 import Query from 'src/app/Query';
@@ -59,6 +58,4 @@ const mapStateToProps = (state, ownProps) => {
 
 FolderViewer = connect(mapStateToProps)(FolderViewer);
 FolderViewer = withRouter(FolderViewer);
-FolderViewer = injectIntl(FolderViewer);
-
 export default FolderViewer;

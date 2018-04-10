@@ -130,7 +130,6 @@ class DocumentViewer extends React.Component {
       {this.renderContent()}
     </React.Fragment>
   }
- 
 }
 
 const mapStateToProps = (state, ownProps) => {
