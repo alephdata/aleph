@@ -1,0 +1,70 @@
+@import "src/app/variables.scss";
+
+.Toolbar {  
+  padding: $aleph-grid-size;
+  clear: both;
+  overflow: visible;
+  background: $aleph-toolbar-background;
+  border-bottom: 1px solid $aleph-border-color;
+  flex: 1;
+  width: 100%;
+  max-height: $aleph-grid-size * 5;
+  min-height: $aleph-grid-size * 5;
+
+  > * {
+    margin: 0 $aleph-grid-size 0 0;
+    float: left;
+  }
+
+  > .button-close {
+    margin: 0;
+    float: right;
+    border-radius: 0;
+  }
+  
+  .DocumentSearch {
+    float: right;
+    margin-right: 0;
+  }
+}
+
+.Toolbar.toolbar-preview {
+  background: $aleph-sidebar-background;
+  border-color: transparent;
+  
+  * {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    color: white !important;
+  }
+
+  .pt-input.pt-disabled,
+  .pt-button.pt-disabled,
+  .pt-button:disabled {
+    opacity: 0.5;
+  }
+
+  .PagingText.pt-disabled {
+    opacity: 1;
+  }
+
+  .pt-button.pt-active {
+    background: #fff !important;
+    color: $aleph-sidebar-background !important;
+    * {
+      color: $aleph-sidebar-background !important;
+    }
+  }
+  
+  .DocumentSearch {
+    .pt-icon {
+     color: $aleph-sidebar-background !important;
+    }
+    
+    .pt-input {
+      background: white !important;
+      color: $pt-text-color !important;
+    }
+  }
+}

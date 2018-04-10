@@ -42,6 +42,8 @@ def index_entity(entity):
 
 def get_entity(entity_id):
     """Fetch an entity from the index."""
+    if entity_id is None:
+        return None
     result = es.get(index=entities_index(),
                     doc_type='doc',
                     id=entity_id,

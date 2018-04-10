@@ -50,7 +50,7 @@ class Query(object):
                 "simple_query_string": {
                     "query": self.parser.text,
                     "fields": self.TEXT_FIELDS,
-                    "default_operator": "and"
+                    "default_operator": "AND"
                 }
             })
         if self.parser.prefix:

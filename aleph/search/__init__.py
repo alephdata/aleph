@@ -75,26 +75,6 @@ class EntityDocumentsQuery(DocumentsQuery):
         return query
 
 
-class AlertDocumentsQuery(EntityDocumentsQuery):
-    """Find documents matching an alert criterion."""
-
-    def __init__(self, parser, entity=None, since=None):
-        super(AlertDocumentsQuery, self).__init__(parser, entity=entity)
-        self.since = since
-
-    def get_query(self):
-        query = super(EntityDocumentsQuery, self).get_query()
-        if self.since is not None:
-            query['bool']['filter'].append({
-                "range": {
-                    "created_at": {
-                        "gt": self.since
-                    }
-                }
-            })
-        return query
-
-
 class EntitiesQuery(AuthzQuery):
     TEXT_FIELDS = ['name^3', 'names.text^2', 'text']
     EXCLUDE_FIELDS = ['roles', 'text']
