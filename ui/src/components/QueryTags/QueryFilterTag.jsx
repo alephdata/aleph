@@ -40,7 +40,6 @@ class QueryFilterTag extends PureComponent {
           <Collection.Load id={value} renderWhenLoading={'…'}>{collection => (
             <React.Fragment>
               {collection && <Collection.Label collection={collection} />}
-              {collection !== null && collection.error && 'lklklkk'}
             </React.Fragment>
           )}</Collection.Load>
         );

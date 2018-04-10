@@ -13,6 +13,14 @@ const messages = defineMessages({
     id: 'document.not_found',
     defaultMessage: 'Document not found',
   },
+  not_authorized: {
+    id: 'collection.not_auth',
+    defaultMessage: 'You are not authorized to do this.',
+  },
+  not_authorized_decr: {
+    id: 'collection.not_auth_decr',
+    defaultMessage: 'Please go to the login page.',
+  }
 });
 
 class DocumentScreen extends Component {
@@ -33,7 +41,15 @@ class DocumentScreen extends Component {
     if (document === undefined || document.isFetching) {
       return <ScreenLoading />;
     }
-    if (document.error) {
+
+    console.log('document', document)
+
+    if (document.status === 403) {
+      return (
+         <ErrorScreen.PageNotFound visual="error" title={messages.not_authorized}
+                                      description={messages.not_authorized_decr}/>
+        );
+    } else if (document.error) {
       return (
         <ErrorScreen.PageNotFound visual="error" title={messages.not_found}/>
       );
