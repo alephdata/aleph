@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import Collection from 'src/components/common/Collection';
+import { Collection } from 'src/components/common';
+
 import './Breadcrumbs.css';
 
 class Breadcrumbs extends Component {

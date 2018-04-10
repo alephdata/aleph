@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import DualPane from 'src/components/common/DualPane';
+import { DualPane } from 'src/components/common';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 
 class CollectionContent extends Component {

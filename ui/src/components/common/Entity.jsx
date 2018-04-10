@@ -7,9 +7,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
 
-import Schema from 'src/components/common/Schema';
+import { Schema } from 'src/components/common';
 import getPath from 'src/util/getPath';
-import { fetchEntity } from 'src/actions';
+import { fetchEntity } from 'src/actions/index';
 
 import './Entity.css';
 

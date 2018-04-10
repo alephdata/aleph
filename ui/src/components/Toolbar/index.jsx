@@ -5,9 +5,9 @@ import PagingButtons from './PagingButtons';
 import DocumentSearch from './DocumentSearch';
 
 export {
-  Toolbar,
-  CloseButton,
-  DownloadButton,
-  PagingButtons,
-  DocumentSearch
+    Toolbar,
+    CloseButton,
+    DownloadButton,
+    PagingButtons,
+    DocumentSearch
 };

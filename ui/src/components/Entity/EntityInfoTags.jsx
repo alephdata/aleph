@@ -4,7 +4,7 @@ import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
-import Tag from 'src/components/common/Tag';
+import { Tag } from 'src/components/common';
 import { fetchEntityTags } from 'src/actions/index';
 import { selectEntityTags } from 'src/selectors';
 

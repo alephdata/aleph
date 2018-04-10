@@ -1,3 +1,11 @@
 import Preview from './Preview';
+import PreviewCollection from './PreviewCollection';
+import PreviewDocument from './PreviewDocument';
+import PreviewEntity from './PreviewEntity';
 
-export default Preview
+export {
+    Preview,
+    PreviewEntity,
+    PreviewDocument,
+    PreviewCollection
+}

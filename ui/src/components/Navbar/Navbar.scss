@@ -9,6 +9,12 @@
     .pt-navbar-heading {
       font-weight: bold;
     }
+
+    .pt-popover-target {
+      input {
+        width: $aleph-grid-size * 3 !important;
+      }
+    }
     
     a {
       color: inherit;

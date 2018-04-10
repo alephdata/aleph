@@ -1,7 +1,7 @@
 import React from 'react';
 
-import DualPane from 'src/components/common/DualPane';
-import { DocumentViewer } from 'src/components/DocumentViewer';
+import { DualPane } from 'src/components/common';
+import { DocumentViewer } from 'src/components/DocumentViewer/index';
 
 import './DocumentContent.css';
 

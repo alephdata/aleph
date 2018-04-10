@@ -16,16 +16,10 @@ class CalloutBox extends React.Component {
     const { className } = this.props;
 
     return (
-      <Callout onClick={this.onSignIn} className={`${className} clickable pt-icon-info-sign pt-intent-primary`}>
-        <h4 className="pt-callout-title">
-          <FormattedMessage
-            id="search.callout_heading"
-            defaultMessage="Some sources are hidden from anonymous users"
-            />
-        </h4>
+      <Callout onClick={this.onSignIn} className={`${className} clickable pt-icon-info-sign pt-intent-warning`}>
         <FormattedMessage
           id="search.callout_message"
-          defaultMessage="Sign in to see all results you’re authorised to access."
+          defaultMessage="Some sources are hidden from anonymous users. Please sign in to see all results you’re authorised to access!"
           />
       </Callout>
     )

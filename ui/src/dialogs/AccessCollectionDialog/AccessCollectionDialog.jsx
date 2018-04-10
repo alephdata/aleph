@@ -4,8 +4,8 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
 import { updateCollectionPermissions, fetchCollectionPermissions } from 'src/actions';
-import Role from 'src/components/common/Role';
-import { showSuccessToast } from "../../app/toast";
+import { Role } from 'src/components/common';
+import { showSuccessToast } from "src/app/toast";
 
 import './AccessCollectionDialog.css';
 

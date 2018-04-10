@@ -76,7 +76,7 @@ class EntitySearch extends Component {
       <React.Fragment>
         {result.total === 0 &&
         <section className="PartialError">
-          <ErrorScreen.PageNotFound visual='search' title={messages.no_results_title}
+          <ErrorScreen.EmptyList visual='search' title={messages.no_results_title}
                                     description={messages.no_results_description}/>
         </section>
         }

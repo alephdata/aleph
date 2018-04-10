@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { FormattedNumber } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import Schema from 'src/components/common/Schema';
+import { Schema } from 'src/components/common';
 
 class CollectionInfoContent extends React.Component {
   constructor() {

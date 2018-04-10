@@ -3,21 +3,24 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import { fetchDocument } from 'src/actions';
-import Screen from 'src/components/common/Screen';
-import Entity from 'src/screens/EntityScreen/Entity';
-import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import ScreenLoading from 'src/components/common/ScreenLoading';
-import DualPane from 'src/components/common/DualPane';
+import { Screen, Entity, Breadcrumbs, ScreenLoading, DualPane } from 'src/components/common';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
-import DocumentInfo from './DocumentInfo';
-import DocumentContent from './DocumentContent';
+import { DocumentContent, DocumentInfo } from '../../components/Document';
 
 const messages = defineMessages({
   not_found: {
     id: 'document.not_found',
     defaultMessage: 'Document not found',
   },
+  not_authorized: {
+    id: 'collection.not_auth',
+    defaultMessage: 'You are not authorized to do this.',
+  },
+  not_authorized_decr: {
+    id: 'collection.not_auth_decr',
+    defaultMessage: 'Please go to the login page.',
+  }
 });
 
 class DocumentScreen extends Component {
@@ -38,7 +41,13 @@ class DocumentScreen extends Component {
     if (document === undefined || document.isFetching) {
       return <ScreenLoading />;
     }
-    if (document.error) {
+
+    if (document.status === 403) {
+      return (
+         <ErrorScreen.PageNotFound visual="error" title={messages.not_authorized}
+                                      description={messages.not_authorized_decr}/>
+        );
+    } else if (document.error) {
       return (
         <ErrorScreen.PageNotFound visual="error" title={messages.not_found}/>
       );

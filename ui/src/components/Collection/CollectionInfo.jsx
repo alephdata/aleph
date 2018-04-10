@@ -5,12 +5,10 @@ import { FormattedMessage } from 'react-intl';
 import { Button, Tab, Tabs } from "@blueprintjs/core";
 
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
-import CollectionEditDialog from 'src/dialogs/CollectionEditDialog';
-import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog';
-import DualPane from 'src/components/common/DualPane';
-import CollectionInfoXref from './CollectionInfoXref';
-import CollectionOverview from "../../components/Collection/CollectionOverview";
-import CollectionInfoContent from 'src/screens/CollectionScreen/CollectionInfoContent';
+import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
+import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog/AccessCollectionDialog';
+import { DualPane } from 'src/components/common';
+import { CollectionInfoXref, CollectionOverview, CollectionInfoContent } from 'src/components/Collection';
 
 class CollectionInfo extends Component {
   constructor(props) {
@@ -69,7 +67,7 @@ class CollectionInfo extends Component {
           <Toolbar className="toolbar-preview">
             <Link to={`/search?filter:collection_id=${collection.id}`} className="pt-button button-link">
               <span className={`pt-icon-search`}/>
-              <FormattedMessage id="collection.info..search_button" defaultMessage="Search"/>
+              <FormattedMessage id="collection.info.explore_button" defaultMessage="Explore"/>
             </Link>
             {collection.writeable &&
               <React.Fragment>
@@ -110,8 +108,9 @@ class CollectionInfo extends Component {
                   <FormattedMessage id="collection .info.overview" defaultMessage="Overview"/>
                 </React.Fragment>
               }
-              panel={
+              panel={<React.Fragment>
                 <CollectionOverview collection={collection} hasHeader={false}/>
+              </React.Fragment>
               }
             />
             <Tab id="xref"

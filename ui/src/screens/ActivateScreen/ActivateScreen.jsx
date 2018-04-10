@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import {injectIntl, FormattedMessage} from 'react-intl';
 
-import Screen from 'src/components/common/Screen';
+import { Screen } from 'src/components/common';
 import { endpoint } from 'src/app/api';
 import { loginWithPassword } from 'src/actions/sessionActions';
 import { xhrErrorToast } from 'src/components/auth/xhrToast';

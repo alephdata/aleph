@@ -9,13 +9,7 @@ import {
     fetchCollectionXrefMatches,
     fetchNextCollectionXrefMatches,
     fetchCollectionXrefIndex } from 'src/actions';
-import Entity from 'src/screens/EntityScreen/Entity';
-import Screen from 'src/components/common/Screen';
-import Date from 'src/components/common/Date';
-import Country from 'src/components/common/Country';
-import ScreenLoading from 'src/components/common/ScreenLoading';
-import SectionLoading from 'src/components/common/SectionLoading';
-import Breadcrumbs from 'src/components/common/Breadcrumbs';
+import { Entity, Screen, Date, Country, ScreenLoading, SectionLoading, Breadcrumbs } from 'src/components/common';
 import { matchesKey, selectCollection } from 'src/selectors';
 import getPath from 'src/util/getPath';
 

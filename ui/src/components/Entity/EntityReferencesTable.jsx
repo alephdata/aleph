@@ -7,10 +7,9 @@ import _ from 'lodash';
 
 import Query from 'src/app/Query';
 import Fragment from 'src/app/Fragment';
-import { queryEntities } from 'src/actions';
+import { queryEntities } from 'src/actions/index';
 import { selectEntitiesResult } from 'src/selectors';
-import SectionLoading from 'src/components/common/SectionLoading';
-import Property from './Property';
+import { SectionLoading, Property } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 
 import './EntityReferencesTable.css';

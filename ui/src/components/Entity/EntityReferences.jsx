@@ -5,8 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
 import Fragment from 'src/app/Fragment';
-import EntityReferencesTable from 'src/screens/EntityScreen/EntityReferencesTable';
-import Property from './Property';
+import { TabCount, Property } from 'src/components/common';
+import { EntityReferencesTable } from 'src/components/Entity';
 
 class EntityReferences extends React.Component {
   constructor(props) {
@@ -55,7 +55,12 @@ class EntityReferences extends React.Component {
         <Tabs id="EntityReferenceTabs" onChange={this.handleTabChange} selectedTabId={activeTab}>
           { references.results.map((ref, i) => {
             return <Tab id={`references-${ref.property.qname}`} key={i}
-              title={<Property.Reverse model={ref.property} />}
+                        title={
+                          <React.Fragment>
+                            <Property.Reverse model={ref.property} />
+                            <TabCount count={ref.count} />
+                          </React.Fragment>
+                        }
               panel={
                 <React.Fragment>
                   <EntityReferencesTable

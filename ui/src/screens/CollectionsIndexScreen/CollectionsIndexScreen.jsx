@@ -7,15 +7,11 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import {queryCollections} from 'src/actions';
 import {selectCollectionsResult} from 'src/selectors';
-import Screen from 'src/components/common/Screen';
-import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import DualPane from 'src/components/common/DualPane';
+import { Screen, Breadcrumbs, DualPane, SectionLoading, CalloutBox } from 'src/components/common';
 import SearchFacets from 'src/components/Facet/SearchFacets';
-import SectionLoading from 'src/components/common/SectionLoading';
-import CalloutBox from 'src/components/common/CalloutBox';
-import CollectionListItem from 'src/screens/CollectionScreen/CollectionListItem';
-import AuthenticationDialog from 'src/dialogs/AuthenticationDialog';
+import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 import QueryTags from 'src/components/QueryTags/QueryTags';
+import { CollectionListItem } from 'src/components/Collection';
 
 import './CollectionsIndexScreen.css';
 

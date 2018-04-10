@@ -4,12 +4,9 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import classnames from 'classnames';
 
-import PreviewEntity from 'src/components/Preview/PreviewEntity';
-import PreviewCollection from 'src/components/Preview/PreviewCollection';
-import PreviewDocument from 'src/components/Preview/PreviewDocument';
+import { PreviewEntity, PreviewCollection, PreviewDocument } from 'src/components/Preview/';
 
 import './Preview.css';
-
 
 class Preview extends React.Component {
   constructor(props) {

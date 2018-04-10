@@ -5,16 +5,12 @@ import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs, Button } from "@blueprintjs/core";
 
 import getPath from 'src/util/getPath';
-import URL from 'src/components/common/URL';
+import { URL, DualPane, TabCount, Schema, Entity } from 'src/components/common';
 import { selectEntityTags } from 'src/selectors';
-import DualPane from 'src/components/common/DualPane';
 import { Toolbar, CloseButton, DownloadButton } from 'src/components/Toolbar';
-import TabCount from 'src/components/common/TabCount';
-import Schema from 'src/components/common/Schema';
-import Entity from 'src/screens/EntityScreen/Entity';
-import EntityInfoTags from 'src/screens/EntityScreen/EntityInfoTags';
-import DocumentMetadata from 'src/screens/DocumentScreen/DocumentMetadata';
-import CollectionOverview from 'src/components/Collection/CollectionOverview';
+import { EntityInfoTags } from 'src/components/Entity';
+import { DocumentMetadata } from 'src/components/Document';
+import { CollectionOverview } from 'src/components/Collection';
 
 class DocumentInfo extends React.Component {
   constructor(props) {
