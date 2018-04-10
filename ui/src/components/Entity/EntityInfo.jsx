@@ -6,15 +6,10 @@ import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 import _ from 'lodash';
 
-import Property from '../common/Property';
-import Entity from '../common/Entity';
+import { Property, Entity, DualPane, TabCount, Schema, URL } from 'src/components/common';
 import { EntityInfoTags } from 'src/components/Entity';
-import DualPane from 'src/components/common/DualPane';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
-import TabCount from 'src/components/common/TabCount';
-import Schema from 'src/components/common/Schema';
 import { CollectionOverview } from 'src/components/Collection';
-import URL from 'src/components/common/URL';
 import { fetchEntityReferences } from 'src/actions/index';
 import { selectEntityTags } from 'src/selectors';
 import getPath from 'src/util/getPath';

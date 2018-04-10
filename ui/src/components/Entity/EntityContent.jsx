@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import DualPane from 'src/components/common/DualPane';
+import { DualPane } from 'src/components/common';
 import { EntityReferences } from 'src/components/Entity';
 import { fetchEntityReferences } from 'src/actions/index';
 

@@ -15,8 +15,8 @@ import { fetchCollection, fetchEntity, fetchDocument } from 'src/actions';
 import { CollectionInfo } from 'src/components/Collection';
 import { DocumentInfo } from 'src/components/Document';
 import { DocumentViewer } from 'src/components/DocumentViewer';
-import EntityInfo from 'src/components/Entity/EntityInfo';
-import SectionLoading from 'src/components/common/SectionLoading';
+import { EntityInfo } from 'src/components/Entity';
+import { SectionLoading } from 'src/components/common';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 import './Preview.css';

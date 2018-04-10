@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import Entity from './Entity';
-import Country from 'src/components/common/Country';
-import Date from 'src/components/common/Date';
-import URL from 'src/components/common/URL';
+import Entity from 'src/components/common/Entity';
+import { Country, Date, URL } from 'src/components/common';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
 

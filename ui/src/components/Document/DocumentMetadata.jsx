@@ -1,13 +1,7 @@
 import React, {Component} from 'react';
 import {FormattedMessage} from 'react-intl';
 
-import Schema from 'src/components/common/Schema';
-import Country from 'src/components/common/Country';
-import Language from 'src/components/common/Language';
-import Role from 'src/components/common/Role';
-import Date from 'src/components/common/Date';
-import FileSize from 'src/components/common/FileSize';
-import Entity from 'src/components/common/Entity';
+import { Schema, Country, Language, Role, Date, FileSize, Entity } from 'src/components/common';
 
 class DocumentMetadata extends Component {
   render() {

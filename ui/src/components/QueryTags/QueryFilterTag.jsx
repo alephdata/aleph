@@ -2,13 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tag as TagWidget } from '@blueprintjs/core';
 
-import Schema from 'src/components/common/Schema';
-import Tag from 'src/components/common/Tag';
-import Country from 'src/components/common/Country';
-import Language from 'src/components/common/Language';
-import Category from 'src/components/common/Category';
-import Collection from 'src/components/common/Collection';
-import Entity from 'src/components/common/Entity';
+import { Schema, Tag, Country, Language, Category, Collection, Entity } from 'src/components/common';
 
 import './QueryFilterTag.css';
 

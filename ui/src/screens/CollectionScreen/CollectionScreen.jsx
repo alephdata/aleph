@@ -2,12 +2,8 @@ import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import Screen from 'src/components/common/Screen';
-import ScreenLoading from 'src/components/common/ScreenLoading';
-import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import DualPane from 'src/components/common/DualPane';
+import { Screen, ScreenLoading, Breadcrumbs, DualPane, Collection } from 'src/components/common';
 import { CollectionInfo, CollectionContent } from 'src/components/Collection';
-import Collection from 'src/components/common/Collection';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 const messages = defineMessages({

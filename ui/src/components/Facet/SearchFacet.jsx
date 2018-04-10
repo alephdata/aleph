@@ -7,7 +7,7 @@ import c from 'classnames';
 
 import Fragment from 'src/app/Fragment';
 import { fetchFacet } from 'src/actions';
-import CheckboxList from 'src/components/common/CheckboxList';
+import { CheckboxList } from 'src/components/common';
 
 import './SearchFacet.css';
 

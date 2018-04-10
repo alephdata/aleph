@@ -8,9 +8,7 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import { queryNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
-import Screen from 'src/components/common/Screen';
-import SinglePane from 'src/components/common/SinglePane';
-import SectionLoading from 'src/components/common/SectionLoading';
+import { Screen, SinglePane, SectionLoading } from 'src/components/common';
 import Notification from 'src/components/Notification/Notification';
 
 import './NotificationsScreen.css';

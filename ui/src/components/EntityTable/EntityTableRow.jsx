@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 
-import Country from 'src/components/common/Country';
-import Schema from 'src/components/common/Schema';
-import Collection from 'src/components/common/Collection';
-import Entity from 'src/components/common/Entity';
-import FileSize from 'src/components/common/FileSize';
-import Date from 'src/components/common/Date';
+import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/components/common';
 
 class EntityTableRow extends Component {
   constructor(props) {

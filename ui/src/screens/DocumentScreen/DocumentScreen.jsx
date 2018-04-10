@@ -3,11 +3,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import { fetchDocument } from 'src/actions';
-import Screen from 'src/components/common/Screen';
-import Entity from 'src/components/common/Entity';
-import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import ScreenLoading from 'src/components/common/ScreenLoading';
-import DualPane from 'src/components/common/DualPane';
+import { Screen, Entity, Breadcrumbs, ScreenLoading, DualPane } from 'src/components/common';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 import { DocumentContent, DocumentInfo } from '../../components/Document';

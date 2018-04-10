@@ -2,12 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
-import Category from 'src/components/common/Category';
-import Language from 'src/components/common/Language';
-import Country from 'src/components/common/Country';
-import Role from 'src/components/common/Role';
-import Date from 'src/components/common/Date';
-import Collection from 'src/components/common/Collection';
+import { Category, Language, Country, Role, Date, Collection } from 'src/components/common';
 
 class CollectionOverview extends Component {
   render() {

@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import Screen from 'src/components/common/Screen';
-import ScreenLoading from 'src/components/common/ScreenLoading';
-import Breadcrumbs from 'src/components/common/Breadcrumbs';
-import DualPane from 'src/components/common/DualPane';
-import Entity from '../../components/common/Entity';
+import { Screen, ScreenLoading, Breadcrumbs, DualPane, Entity} from 'src/components/common';
 import { EntityContent, EntityInfo } from 'src/components/Entity/';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import EntityTableRow from './EntityTableRow';
-import SortableTH from 'src/components/common/SortableTH';
+import { SortableTH } from 'src/components/common';
 
 const messages = defineMessages({
   column_name: {
