@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { FormattedMessage } from 'react-intl';
+import {defineMessages, FormattedMessage} from 'react-intl';
 import { Tag as TagWidget } from '@blueprintjs/core';
 
 import { Schema, Tag, Country, Language, Category, Collection, Entity } from 'src/components/common';
@@ -40,6 +40,7 @@ class QueryFilterTag extends PureComponent {
           <Collection.Load id={value} renderWhenLoading={'…'}>{collection => (
             <React.Fragment>
               {collection && <Collection.Label collection={collection} />}
+              {collection && collection.error &&  <FormattedMessage id="query.not_accessible" defaultMessage="Not accessible!"/>}
             </React.Fragment>
           )}</Collection.Load>
         );

@@ -46,7 +46,7 @@ class PreviewCollection extends React.Component {
     } else if (collection && collection.error) {
       return <ErrorScreen.EmptyList title={collection.message} />
     }
-    
+
     if (!collection || !collection.id) {
       return <SectionLoading/>;
     }
