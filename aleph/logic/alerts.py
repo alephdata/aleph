@@ -55,7 +55,7 @@ def alert_query(alert, authz):
         # Many users have bookmarked complex queries, otherwise we'd use a
         # precise match query.
         clauses.append({
-            'simple_query_string': {    
+            'simple_query_string': {
                 'query': alert.query_text,
                 'fields': ['text'],
                 'default_operator': 'AND',
