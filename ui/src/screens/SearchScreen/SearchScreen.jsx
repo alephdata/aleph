@@ -130,7 +130,6 @@ class SearchScreen extends React.Component {
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
     this.onSignin = this.onSignin.bind(this);
-    this.toggleAuthentication = this.toggleAuthentication.bind(this);
   }
 
   componentDidMount() {
@@ -169,10 +168,6 @@ class SearchScreen extends React.Component {
   }
 
   onSignin() {
-    this.setState({isSignupOpen: !this.state.isSignupOpen})
-  }
-
-  toggleAuthentication() {
     this.setState({isSignupOpen: !this.state.isSignupOpen})
   }
 

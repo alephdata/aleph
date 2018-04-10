@@ -23,8 +23,7 @@ log = logging.getLogger(__name__)
 @blueprint.route('/api/2/metadata')
 def metadata():
     locale = get_locale()
-    locale_name = six.text_type(locale)
-    enable_cache(vary_user=False, vary=[locale_name])
+    enable_cache(vary_user=False)
 
     auth = {}
     if settings.PASSWORD_LOGIN:
@@ -39,7 +38,7 @@ def metadata():
 
     language_names = {}
     for code, label in languages.names.items():
-        language_names[code] = locale.languages.get(code.upper(), label)
+        language_names[code] = locale.languages.get(code.lower(), label)
 
     return jsonify({
         'status': 'ok',
@@ -51,7 +50,7 @@ def metadata():
             'samples': settings.SAMPLE_SEARCHES,
             'logo': settings.APP_LOGO,
             'favicon': settings.APP_FAVICON,
-            'locale': locale_name,
+            'locale': six.text_type(locale),
             'locales': settings.UI_LANGUAGES
         },
         'categories': Collection.CATEGORIES,
@@ -65,7 +64,7 @@ def metadata():
 
 @blueprint.route('/api/2/statistics')
 def statistics():
-    enable_cache()
+    enable_cache(vary_user=True)
     return jsonify(get_instance_stats(request.authz))
 
 
