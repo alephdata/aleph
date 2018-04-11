@@ -104,9 +104,9 @@ class DocumentViewer extends React.Component {
         <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
           {previewMode === true && toggleMaximise && (
             <Button icon="eye-open"
-              className="button-maximise pt-active"
+              className="button-maximise"
               onClick={toggleMaximise}>
-              <FormattedMessage id="preview" defaultMessage="Preview"/>
+              <FormattedMessage id="info" defaultMessage="Info"/>
             </Button>
           )}
           {previewMode === true && (
