@@ -127,10 +127,13 @@ def process(foreign_id):
 
 
 @manager.command
-def retry():
+def retry(foreign_id=None):
     """Retry importing documents which were not successfully parsed."""
     q = Document.all_ids()
     q = q.filter(Document.status != Document.STATUS_SUCCESS)
+    if foreign_id is not None:
+        collection = Collection.by_foreign_id(foreign_id)
+        q = q.filter(Document.collection_id == collection.id)
     log.info("Retry: %s documents", q.count())
     for idx, (doc_id,) in enumerate(q.all(), 1):
         ingest.apply_async([doc_id], priority=1)
