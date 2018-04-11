@@ -35,7 +35,7 @@ class CollectionLink extends Component {
       );
     } else {
       return (
-        <Link to={getPath(collection.links.ui)}
+        <Link to={`/search?filter:collection_id=${collection.id}#preview:id=${collection.id}&preview:type=collection`}
               className={c('CollectionLink', className)}>
           <Collection.Label collection={collection} icon={icon} />
         </Link>
