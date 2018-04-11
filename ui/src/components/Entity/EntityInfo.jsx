@@ -63,7 +63,7 @@ class EntityInfo extends React.Component {
       <DualPane.InfoPane className="EntityInfo with-heading">
         {showToolbar && (
           <Toolbar className="toolbar-preview">
-            <Link to={getPath(entity.links.ui)} className="pt-button button-link">
+            <Link to={getPath(entity.links.ui)} className="pt-button button-link button-hover">
               <span className={`pt-icon-folder-open`}/>
               <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
             </Link>

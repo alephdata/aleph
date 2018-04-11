@@ -104,18 +104,18 @@ class DocumentViewer extends React.Component {
         <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
           {previewMode === true && toggleMaximise && (
             <Button icon="eye-open"
-              className="button-maximise"
+              className="button-maximise button-hover"
               onClick={toggleMaximise}>
               <FormattedMessage id="info" defaultMessage="Info"/>
             </Button>
           )}
           {previewMode === true && (
-            <Link to={getPath(doc.links.ui)} className="pt-button button-link">
+            <Link to={getPath(doc.links.ui)} className="pt-button button-link button-hover">
               <span className={`pt-icon-document`}/>
               <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
             </Link>
           )}
-          <DownloadButton document={doc}/>
+          <DownloadButton isPreview={previewMode} className='button-hover' document={doc}/>
           {numberOfPages !== null && numberOfPages > 0 && (
             <PagingButtons document={doc} numberOfPages={numberOfPages}/>
           )}

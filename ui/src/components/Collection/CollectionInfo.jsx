@@ -65,13 +65,13 @@ class CollectionInfo extends Component {
       <DualPane.InfoPane className="CollectionInfo with-heading">
         {showToolbar && (
           <Toolbar className="toolbar-preview">
-            <Link to={`/search?filter:collection_id=${collection.id}`} className="pt-button button-link">
+            <Link to={`/search?filter:collection_id=${collection.id}`} className="pt-button button-link button-hover">
               <span className={`pt-icon-search`}/>
               <FormattedMessage id="collection.info.explore_button" defaultMessage="Explore"/>
             </Link>
             {collection.writeable &&
               <React.Fragment>
-                <Button icon="cog" onClick={this.toggleCollectionEdit}>
+                <Button icon="cog" onClick={this.toggleCollectionEdit} className='button-hover'>
                   <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
                 </Button>
                 <CollectionEditDialog
@@ -79,7 +79,7 @@ class CollectionInfo extends Component {
                   isOpen={collectionInfoIsOpen}
                   toggleDialog={this.toggleCollectionEdit}
                 />
-                <Button icon="key" onClick={this.toggleAccess}>
+                <Button icon="key" onClick={this.toggleAccess} className='button-hover'>
                   <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
                 </Button>
                 <AccessCollectionDialog
