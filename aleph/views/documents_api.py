@@ -38,6 +38,8 @@ def view(document_id):
         data['html'] = sanitize_html(document.body_raw, document.source_url)
     if Document.SCHEMA_TEXT in document.model.names:
         data['text'] = document.body_text
+    if Document.SCHEMA_IMAGE in document.model.names:
+        data['text'] = document.body_text
     return jsonify(data, schema=CombinedSchema)
 
 
