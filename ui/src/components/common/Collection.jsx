@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import c from 'classnames';
+import { Icon, Intent } from '@blueprintjs/core';
 
-import getPath from 'src/util/getPath';
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
 
@@ -31,13 +31,14 @@ class CollectionLink extends Component {
         <a href={`#preview:id=${collection.id}&preview:type=collection`}
            className={c('CollectionLink', className)}>
           <Collection.Label collection={collection} icon={icon} />
+          <Icon className='collection-icon' icon='document-open' intent={Intent.NONE}/>
         </a>
       );
     } else {
       return (
         <Link to={`/search?filter:collection_id=${collection.id}#preview:id=${collection.id}&preview:type=collection`}
               className={c('CollectionLink', className)}>
-          <Collection.Label collection={collection} icon={icon} />
+          <Collection.Label collection={collection} icon={icon} iconOpen={true} />
         </Link>
       );
     }

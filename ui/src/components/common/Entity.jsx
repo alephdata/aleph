@@ -135,7 +135,7 @@ EntityLoad.propTypes = {
   id: PropTypes.string.isRequired,
   children: PropTypes.func.isRequired,
   renderWhenLoading: PropTypes.node,
-}
+};
 
 class Entity {
   static Label = EntityLabel;
