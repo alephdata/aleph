@@ -69,13 +69,13 @@ def index_collection(collection):
 
     # if no countries or langs are given, take the most common from the data.
     countries = collection.countries
-    if not len(countries):
+    if countries is None or not len(countries):
         countries = aggregations['countries']['buckets']
         countries = [c['key'] for c in countries]
     data['countries'] = exactitude.countries.normalize_set(countries)
 
     languages = collection.languages
-    if not len(languages):
+    if languages is None or not len(languages):
         languages = aggregations['languages']['buckets']
         languages = [c['key'] for c in languages]
     data['languages'] = exactitude.countries.normalize_set(countries)

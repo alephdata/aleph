@@ -38,7 +38,7 @@ def metadata():
 
     language_names = {}
     for code, label in languages.names.items():
-        language_names[code] = locale.languages.get(code.lower(), label)
+        language_names[code] = locale.languages.get(code, label)
 
     return jsonify({
         'status': 'ok',
