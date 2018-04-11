@@ -90,7 +90,6 @@ class AccessCollectionDialog extends Component {
       }
       return perm;
     });
-
     this.setState({permissions: permissions});
   }
 
@@ -99,6 +98,7 @@ class AccessCollectionDialog extends Component {
     const { permissions } = this.state;
 
     await updateCollectionPermissions(collection.id, permissions);
+    this.props.toggleDialog();
     showSuccessToast(intl.formatMessage(messages.save_success));
   }
 

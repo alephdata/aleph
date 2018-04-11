@@ -2,7 +2,7 @@
 # John Ospina <jmospina@gmail.com>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-04-06T15:52:24.071Z\n"
+"POT-Creation-Date: 2018-04-11T10:15:31.260Z\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgstr "Activar tu cuenta"
 #. Add alert
 #: i18n/messages.json i18n/messages.json
 msgid "Add alert"
-msgstr ""
+msgstr "Agregar alerta"
 
 #. [search.facets.facet.addresses]
 #. defaultMessage is:
@@ -97,14 +97,14 @@ msgstr "Alerta"
 #. Alert on
 #: i18n/messages.json
 msgid "Alert on"
-msgstr ""
+msgstr "Alerta encendida"
 
 #. [signup.login]
 #. defaultMessage is:
 #. Already have account? Sign in!
 #: i18n/messages.json
 msgid "Already have account? Sign in!"
-msgstr ""
+msgstr "¿Ya posees una cuenta? ¡Ingresa!"
 
 #. [auth.unknown_error]
 #. defaultMessage is:
@@ -212,7 +212,7 @@ msgstr "Código"
 #. Confirm password
 #: i18n/messages.json
 msgid "Confirm password"
-msgstr ""
+msgstr "Confirmar contraseña"
 
 #. [entity.info.connections]
 #. defaultMessage is:
@@ -233,8 +233,11 @@ msgstr "Contacto"
 #. Contents
 #: i18n/messages.json
 msgid "Contents"
-msgstr ""
+msgstr "Contenidos"
 
+#. [document.countries]
+#. defaultMessage is:
+#. Countries
 #. [entity.column.countries]
 #. defaultMessage is:
 #. Countries
@@ -245,9 +248,6 @@ msgstr ""
 #. defaultMessage is:
 #. Countries
 #. [xref.countries]
-#. defaultMessage is:
-#. Countries
-#. [document.countries]
 #. defaultMessage is:
 #. Countries
 #. [search.facets.facet.countries]
@@ -279,6 +279,9 @@ msgstr "Referencia cruzada"
 msgid "Cross-referencing"
 msgstr ""
 
+#. [document.date]
+#. defaultMessage is:
+#. Date
 #. [email.date]
 #. defaultMessage is:
 #. Date
@@ -286,9 +289,6 @@ msgstr ""
 #. defaultMessage is:
 #. Date
 #. [xref.date]
-#. defaultMessage is:
-#. Date
-#. [document.date]
 #. defaultMessage is:
 #. Date
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
@@ -309,19 +309,12 @@ msgstr "Borrar"
 msgid "Document Source URL"
 msgstr "URL del Documento Fuente"
 
-#. [document.not_found]
-#. defaultMessage is:
-#. Document not found
-#: i18n/messages.json
-msgid "Document not found"
-msgstr "Documento no encontrado"
-
 #. [signup.register.question]
 #. defaultMessage is:
 #. Don't have account? Register!
 #: i18n/messages.json
 msgid "Don't have account? Register!"
-msgstr ""
+msgstr "¿No posees una cuenta? ¡Regístrate!"
 
 #. [document.download]
 #. defaultMessage is:
@@ -358,12 +351,12 @@ msgstr "Editar"
 msgid "Email address"
 msgstr "Dirección de correo electrónico"
 
-#. [entity.not_found]
+#. [collection.info.explore_button]
 #. defaultMessage is:
-#. Entity not found
+#. Explore
 #: i18n/messages.json
-msgid "Entity not found"
-msgstr "Entidad no encontrada"
+msgid "Explore"
+msgstr ""
 
 #. [collection.edit.save_error]
 #. defaultMessage is:
@@ -398,70 +391,70 @@ msgstr "Tipos de archivo"
 #. Filter sources
 #: i18n/messages.json
 msgid "Filter sources"
-msgstr ""
+msgstr "Filtrar fuentes"
 
 #. [document.parent]
 #. defaultMessage is:
 #. Folder
 #: i18n/messages.json
 msgid "Folder"
-msgstr ""
+msgstr "Carpeta"
 
 #. [email.from]
 #. defaultMessage is:
 #. From
 #: i18n/messages.json
 msgid "From"
-msgstr ""
+msgstr "De"
 
 #. [document.generator]
 #. defaultMessage is:
 #. Generator
 #: i18n/messages.json
 msgid "Generator"
-msgstr ""
+msgstr "Generador"
 
 #. [collection.edit.groups]
 #. defaultMessage is:
 #. Groups
 #: i18n/messages.json
 msgid "Groups"
-msgstr ""
+msgstr "Grupos"
 
 #. [footer.help]
 #. defaultMessage is:
 #. Help
 #: i18n/messages.json
 msgid "Help"
-msgstr ""
+msgstr "Ayuda"
 
 #. [collection.edit.info.import.id]
 #. defaultMessage is:
 #. Import ID
 #: i18n/messages.json
 msgid "Import ID"
-msgstr ""
+msgstr "Importar ID"
 
 #. [document.updated_at]
 #. defaultMessage is:
 #. Imported
 #: i18n/messages.json
 msgid "Imported"
-msgstr ""
+msgstr "Importado"
 
 #. [collection.edit.info.label]
 #. defaultMessage is:
 #. Label
 #: i18n/messages.json
 msgid "Label"
-msgstr ""
+msgstr "Etiqueta"
 
 #. [collection.languages]
 #. defaultMessage is:
 #. Language
 #: i18n/messages.json
 msgid "Language"
-msgstr ""
+msgstr "Idioma"
 
 #. [document.languages]
 #. defaultMessage is:
@@ -471,77 +464,77 @@ msgstr ""
 #. Languages
 #: i18n/messages.json i18n/messages.json
 msgid "Languages"
-msgstr ""
+msgstr "Idiomas"
 
 #. [collection.updated_at]
 #. defaultMessage is:
 #. Last updated
 #: i18n/messages.json
 msgid "Last updated"
-msgstr ""
+msgstr "Última actualización"
 
 #. [login.not_available_title]
 #. defaultMessage is:
 #. Login is disabled
 #: i18n/messages.json
 msgid "Login is disabled"
-msgstr ""
+msgstr "El ingreso está desactivado"
 
 #. [logout.success]
 #. defaultMessage is:
 #. Logout successful
 #: i18n/messages.json
 msgid "Logout successful"
-msgstr ""
+msgstr "Ha salido exitosamente"
 
 #. [document.mime_type]
 #. defaultMessage is:
 #. MIME
 #: i18n/messages.json
 msgid "MIME"
-msgstr ""
+msgstr "MIME - Extensiones Multipropósito de Correo"
 
 #. [nav.manage_alerts]
 #. defaultMessage is:
 #. Manage alerts
 #: i18n/messages.json
 msgid "Manage alerts"
-msgstr ""
+msgstr "Administrar alertas"
 
 #. [collection.edit.title]
 #. defaultMessage is:
 #. Manage collection permissions
 #: i18n/messages.json
 msgid "Manage collection permissions"
-msgstr ""
+msgstr "Administrar colección de permisos"
 
 #. [alerts.title]
 #. defaultMessage is:
 #. Manage your alerts
 #: i18n/messages.json
 msgid "Manage your alerts"
-msgstr ""
+msgstr "Administrar tus alertas"
 
 #. [collection.creator]
 #. defaultMessage is:
 #. Manager
 #: i18n/messages.json
 msgid "Manager"
-msgstr ""
+msgstr "Administrador"
 
 #. [email.body]
 #. defaultMessage is:
 #. Message
 #: i18n/messages.json
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 #. [document.modified_at]
 #. defaultMessage is:
 #. Modified
 #: i18n/messages.json
 msgid "Modified"
-msgstr ""
+msgstr "Modificado"
 
 #. [entity.column.name]
 #. defaultMessage is:
@@ -554,56 +547,56 @@ msgstr ""
 #. Name
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #. [search.facets.facet.names]
 #. defaultMessage is:
 #. Names
 #: i18n/messages.json
 msgid "Names"
-msgstr ""
+msgstr "Nombres"
 
 #. [email.no_attachments]
 #. defaultMessage is:
 #. No Attachments
 #: i18n/messages.json
 msgid "No Attachments"
-msgstr ""
+msgstr "Sin Adjuntos"
 
 #. [role.no.results]
 #. defaultMessage is:
 #. No match, keep typing
 #: i18n/messages.json
 msgid "No match, keep typing"
-msgstr ""
+msgstr "Sin coincidencias, sigue escribiendo"
 
 #. [email.body.empty]
 #. defaultMessage is:
 #. No message body.
 #: i18n/messages.json
 msgid "No message body."
-msgstr ""
+msgstr "Sin cuerpo de mensaje"
 
 #. [search.facets.no_items]
 #. defaultMessage is:
 #. No options
 #: i18n/messages.json
 msgid "No options"
-msgstr ""
+msgstr "Sin opciones"
 
 #. [document.no_viewer]
 #. defaultMessage is:
 #. No preview is available for this document
 #: i18n/messages.json
 msgid "No preview is available for this document"
-msgstr ""
+msgstr "La vista previa para este documento no está disponible"
 
 #. [country.multiselect.no.results]
 #. defaultMessage is:
 #. No results.
 #: i18n/messages.json
 msgid "No results."
-msgstr ""
+msgstr "Sin resultados."
 
 #. [search.no_results_title]
 #. defaultMessage is:
@@ -613,13 +606,20 @@ msgstr ""
 #. No search results
 #: i18n/messages.json i18n/messages.json
 msgid "No search results"
-msgstr ""
+msgstr "Sin resultados de búsqueda"
 
 #. [entity.info.tags.empty_description]
 #. defaultMessage is:
 #. No tags found.
 #: i18n/messages.json
 msgid "No tags found."
+msgstr "No se encontraron etiquetas."
+
+#. [query.not_accessible]
+#. defaultMessage is:
+#. Not accessible!
+#: i18n/messages.json
+msgid "Not accessible!"
 msgstr ""
 
 #. [auth.unauthorized]
@@ -627,14 +627,14 @@ msgstr ""
 #. Not authorized
 #: i18n/messages.json
 msgid "Not authorized"
-msgstr ""
+msgstr "No autorizado"
 
 #. [nav.view_notifications]
 #. defaultMessage is:
 #. Notifications
 #: i18n/messages.json
 msgid "Notifications"
-msgstr ""
+msgstr "Notificaciones"
 
 #. [sidebar.open]
 #. defaultMessage is:
@@ -647,14 +647,14 @@ msgstr ""
 #. Open
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Open"
-msgstr ""
+msgstr "Abierto"
 
 #. [category.other]
 #. defaultMessage is:
 #. Other
 #: i18n/messages.json
 msgid "Other"
-msgstr ""
+msgstr "Otro"
 
 #. [collection .info.overview]
 #. defaultMessage is:
@@ -667,14 +667,14 @@ msgstr ""
 #. Overview
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Overview"
-msgstr ""
+msgstr "Revisión"
 
 #. [document.paging]
 #. defaultMessage is:
 #. Page {currentPage} of {numberOfPages}
 #: i18n/messages.json
 msgid "Page {currentPage} of {numberOfPages}"
-msgstr ""
+msgstr "Página {currentPage} de {numberOfPages}"
 
 #. [password_auth.password]
 #. defaultMessage is:
@@ -684,41 +684,21 @@ msgstr ""
 #. Password
 #: i18n/messages.json i18n/messages.json
 msgid "Password"
-msgstr ""
+msgstr "Contraseña"
 
 #. [settings.password.missmatch]
 #. defaultMessage is:
 #. Passwords do not match
 #: i18n/messages.json
 msgid "Passwords do not match"
-msgstr ""
+msgstr "Las contraseñas no coinciden"
 
 #. [search.facets.facet.phones]
 #. defaultMessage is:
 #. Phones
 #: i18n/messages.json
 msgid "Phones"
-msgstr ""
-
-#. [signup.not_available_desc]
-#. defaultMessage is:
-#. Please contact the site admin to get an account
-#. [signup.not_available_desc]
-#. defaultMessage is:
-#. Please contact the site admin to get an account
-#: i18n/messages.json i18n/messages.json
-msgid "Please contact the site admin to get an account"
-msgstr ""
-
-#. [preview.not_auth_decr]
-#. defaultMessage is:
-#. Please go to the login page.
-#. [collection.not_auth_decr]
-#. defaultMessage is:
-#. Please go to the login page.
-#: i18n/messages.json i18n/messages.json
-msgid "Please go to the login page."
-msgstr ""
+msgstr "Teléfonos"
 
 #. [preview]
 #. defaultMessage is:
@@ -728,114 +708,101 @@ msgstr ""
 #. Preview
 #: i18n/messages.json i18n/messages.json
 msgid "Preview"
-msgstr ""
+msgstr "Vista previa"
 
 #. [nav.alerts_tooltip]
 #. defaultMessage is:
 #. Receive alerts for new results
 #: i18n/messages.json
 msgid "Receive alerts for new results"
-msgstr ""
+msgstr "Recibe alertas para nuevos resultados"
 
 #. [alerts.add_placeholder]
 #. defaultMessage is:
 #. Receive e-mail when there are new results.
 #: i18n/messages.json
 msgid "Receive e-mail when there are new results."
-msgstr ""
+msgstr "Recibe un correo electrónico cuando haya nuevos resultados."
 
 #. [email.to]
 #. defaultMessage is:
 #. Recipient
 #: i18n/messages.json
 msgid "Recipient"
-msgstr ""
+msgstr "Destinatario"
 
 #. [signup.register]
 #. defaultMessage is:
 #. Register
 #: i18n/messages.json
 msgid "Register"
-msgstr ""
-
-#. [signup.not_available_title]
-#. defaultMessage is:
-#. Registration is disabled
-#. [signup.not_available_title]
-#. defaultMessage is:
-#. Registration is disabled
-#: i18n/messages.json i18n/messages.json
-msgid "Registration is disabled"
-msgstr ""
+msgstr "Registro"
 
 #. [entity.references.title]
 #. defaultMessage is:
 #. Relationships
 #: i18n/messages.json
 msgid "Relationships"
-msgstr ""
+msgstr "Relaciones"
 
 #. [document.retrieved_at]
 #. defaultMessage is:
 #. Retrieved
 #: i18n/messages.json
 msgid "Retrieved"
-msgstr ""
+msgstr "Obtenido"
 
 #. [collection.info.permissions.update]
 #. defaultMessage is:
 #. Save
 #: i18n/messages.json
 msgid "Save"
-msgstr ""
+msgstr "Guardar"
 
 #. [collection.edit.info.save]
 #. defaultMessage is:
 #. Save changes
 #: i18n/messages.json
 msgid "Save changes"
-msgstr ""
+msgstr "Guardar cambios"
 
 #. [xref.score]
 #. defaultMessage is:
 #. Score
 #: i18n/messages.json
 msgid "Score"
-msgstr ""
+msgstr "Puntuación"
 
 #. [alerts.search]
-#. defaultMessage is:
-#. Search
-#. [collection.info..search_button]
 #. defaultMessage is:
 #. Search
 #. [home.search]
 #. defaultMessage is:
 #. Search
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Search"
-msgstr ""
+msgstr "Buscar"
 
 #. [country.multiselect.select]
 #. defaultMessage is:
 #. Search by country name
 #: i18n/messages.json
 msgid "Search by country name"
-msgstr ""
+msgstr "Buscar por nombre de país"
 
 #. [role.begin.typing]
 #. defaultMessage is:
 #. Search by name or email
 #: i18n/messages.json
 msgid "Search by name or email"
-msgstr ""
+msgstr "Buscar por nombre o correo electrónico"
 
 #. [navbar.search_placeholder]
 #. defaultMessage is:
 #. Search companies, people and documents.
 #: i18n/messages.json
 msgid "Search companies, people and documents."
-msgstr ""
+msgstr "Buscar empresas, personas y documentos."
 
 #. [home.summary]
 #. defaultMessage is:
@@ -843,40 +810,41 @@ msgstr ""
 #: i18n/messages.json
 msgid "Search {total} public records and leaks from {collections} sources"
 msgstr ""
+"Buscar {total} registros públicos y filtraciones {collections} fuentes"
 
 #. [search.placeholder]
 #. defaultMessage is:
 #. Search…
 #: i18n/messages.json
 msgid "Search…"
-msgstr ""
+msgstr "Buscar..."
 
 #. [auth.server_error]
 #. defaultMessage is:
 #. Server error
 #: i18n/messages.json
 msgid "Server error"
-msgstr ""
+msgstr "Error del servidor"
 
 #. [nav.settings]
-#. defaultMessage is:
-#. Settings
-#. [settings.title]
 #. defaultMessage is:
 #. Settings
 #. [collection.info.edit_button]
 #. defaultMessage is:
 #. Settings
+#. [settings.title]
+#. defaultMessage is:
+#. Settings
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Settings"
-msgstr ""
+msgstr "Configuraciones"
 
 #. [search.facets.showMore]
 #. defaultMessage is:
 #. Show more…
 #: i18n/messages.json
 msgid "Show more…"
-msgstr ""
+msgstr "Mostras más..."
 
 #. [password_auth.signin]
 #. defaultMessage is:
@@ -886,53 +854,53 @@ msgstr ""
 #. Sign in
 #: i18n/messages.json i18n/messages.json
 msgid "Sign in"
-msgstr ""
+msgstr "Iniciar sesión"
 
 #. [nav.sigin]
 #. defaultMessage is:
 #. Sign in / Register
 #: i18n/messages.json
 msgid "Sign in / Register"
-msgstr ""
+msgstr "Iniciar sesión / Registrase"
 
 #. [login.oauth]
 #. defaultMessage is:
 #. Sign in via OAuth
 #: i18n/messages.json
 msgid "Sign in via OAuth"
-msgstr ""
+msgstr "Iniciar sesión vía OAuth"
 
 #. [nav.signout]
 #. defaultMessage is:
 #. Sign out
 #: i18n/messages.json
 msgid "Sign out"
-msgstr ""
+msgstr "Terminar sesión"
 
 #. [password_auth.signup]
 #. defaultMessage is:
 #. Sign up
 #: i18n/messages.json
 msgid "Sign up"
-msgstr ""
+msgstr "Registrarse"
 
 #. [entity.column.file_size]
 #. defaultMessage is:
 #. Size
 #: i18n/messages.json
 msgid "Size"
-msgstr ""
+msgstr "Tamaño"
 
-#. [search.callout_first_part_description]
+#. [search.callout_message]
 #. defaultMessage is:
-#. Some sources are hidden from anonymous users, please
+#. Some sources are hidden from anonymous users. Please sign in to see all
+#. results you’re authorised to access!
 #: i18n/messages.json
-msgid "Some sources are hidden from anonymous users, please"
+msgid ""
+"Some sources are hidden from anonymous users. Please sign in to see all "
+"results you’re authorised to access!"
 msgstr ""
 
-#. [entity.column.collection_id]
-#. defaultMessage is:
-#. Source
 #. [collection.info.heading]
 #. defaultMessage is:
 #. Source
@@ -942,33 +910,26 @@ msgstr ""
 #. [entity.info.source]
 #. defaultMessage is:
 #. Source
+#. [entity.column.collection_id]
+#. defaultMessage is:
+#. Source
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Source"
-msgstr ""
+msgstr "Fuente"
 
 #. [entity.info.source_url]
 #. defaultMessage is:
 #. Source URL
 #: i18n/messages.json
 msgid "Source URL"
-msgstr ""
-
-#. [preview.not_found]
-#. defaultMessage is:
-#. Source not found
-#. [collection.not_found]
-#. defaultMessage is:
-#. Source not found
-#: i18n/messages.json i18n/messages.json
-msgid "Source not found"
-msgstr ""
+msgstr "URL fuente"
 
 #. [collection.edit.title]
 #. defaultMessage is:
 #. Source settings
 #: i18n/messages.json
 msgid "Source settings"
-msgstr ""
+msgstr "Configuración de fuente"
 
 #. [nav.collections]
 #. defaultMessage is:
@@ -978,35 +939,35 @@ msgstr ""
 #. Sources
 #: i18n/messages.json i18n/messages.json
 msgid "Sources"
-msgstr ""
+msgstr "Fuentes"
 
 #. [collection.browser.breadcrumb]
 #. defaultMessage is:
 #. Sources overview
 #: i18n/messages.json
 msgid "Sources overview"
-msgstr ""
+msgstr "Resumen de fuentes"
 
 #. [email.subject]
 #. defaultMessage is:
 #. Subject
 #: i18n/messages.json
 msgid "Subject"
-msgstr ""
+msgstr "Asunto"
 
 #. [auth.success]
 #. defaultMessage is:
 #. Success
 #: i18n/messages.json
 msgid "Success"
-msgstr ""
+msgstr "Acierto"
 
 #. [collection.edit.info.summary]
 #. defaultMessage is:
 #. Summary
 #: i18n/messages.json
 msgid "Summary"
-msgstr ""
+msgstr "Resumen"
 
 #. [document.info.tags]
 #. defaultMessage is:
@@ -1016,14 +977,14 @@ msgstr ""
 #. Tags
 #: i18n/messages.json i18n/messages.json
 msgid "Tags"
-msgstr ""
+msgstr "Etiquetas"
 
 #. [auth.bad_request]
 #. defaultMessage is:
 #. The Server did not accept your input
 #: i18n/messages.json
 msgid "The Server did not accept your input"
-msgstr ""
+msgstr "El servidor no aceptó su entrada"
 
 #. [document.viewer.ignored_file]
 #. defaultMessage is:
@@ -1034,41 +995,36 @@ msgid ""
 "The system does not work with these types of files. Please download it so "
 "you’ll be able to see it."
 msgstr ""
+"El sistema no trabaja con este tipo de archivos. Por favor, descárgalo para "
+"poder visualizarlo."
 
 #. [entity.references.empty.description]
 #. defaultMessage is:
 #. There are no known relationships.
 #: i18n/messages.json
 msgid "There are no known relationships."
-msgstr ""
-
-#. [login.not_available_desc]
-#. defaultMessage is:
-#. There is no login provider configured for this app
-#: i18n/messages.json
-msgid "There is no login provider configured for this app"
-msgstr ""
+msgstr "No hay relaciones conocidas."
 
 #. [folder.empty]
 #. defaultMessage is:
 #. This folder is empty.
 #: i18n/messages.json
 msgid "This folder is empty."
-msgstr ""
+msgstr "Esta carpeta está vacía."
 
 #. [search.not_properly_imported]
 #. defaultMessage is:
 #. This folder is not properly imported!
 #: i18n/messages.json
 msgid "This folder is not properly imported!"
-msgstr ""
+msgstr "¡Esta carpeta no se importa correctamente!"
 
 #. [alerts.topic]
 #. defaultMessage is:
 #. Topic
 #: i18n/messages.json
 msgid "Topic"
-msgstr ""
+msgstr "Tema"
 
 #. [search.no_results_description]
 #. defaultMessage is:
@@ -1078,31 +1034,31 @@ msgstr ""
 #. Try making your search more general
 #: i18n/messages.json i18n/messages.json
 msgid "Try making your search more general"
-msgstr ""
+msgstr "Intenta haciendo tu búsqueda más general"
 
 #. [home.search_placeholder]
 #. defaultMessage is:
 #. Try searching: {samples}
 #: i18n/messages.json
 msgid "Try searching: {samples}"
-msgstr ""
+msgstr "Intenta buscando: {samples}"
 
-#. [entity.column.schema]
+#. [document.type]
 #. defaultMessage is:
 #. Type
-#. [document.type]
+#. [entity.column.schema]
 #. defaultMessage is:
 #. Type
 #: i18n/messages.json i18n/messages.json
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. [search.facets.facet.schema]
 #. defaultMessage is:
 #. Types
 #: i18n/messages.json
 msgid "Types"
-msgstr ""
+msgstr "Tipos"
 
 #. [country.unknown]
 #. defaultMessage is:
@@ -1112,14 +1068,14 @@ msgstr ""
 #. Unknown
 #: i18n/messages.json i18n/messages.json
 msgid "Unknown"
-msgstr ""
+msgstr "Desconocido"
 
 #. [entity.label.missing]
 #. defaultMessage is:
 #. Untitled
 #: i18n/messages.json
 msgid "Untitled"
-msgstr ""
+msgstr "Sin título"
 
 #. [alerts.save]
 #. defaultMessage is:
@@ -1129,28 +1085,28 @@ msgstr ""
 #. Update
 #: i18n/messages.json i18n/messages.json
 msgid "Update"
-msgstr ""
+msgstr "Actualizar"
 
 #. [collection.last_updated]
 #. defaultMessage is:
 #. Updated {date}
 #: i18n/messages.json
 msgid "Updated {date}"
-msgstr ""
+msgstr "Actualizado {date}"
 
 #. [document.uploader]
 #. defaultMessage is:
 #. Uploader
 #: i18n/messages.json
 msgid "Uploader"
-msgstr ""
+msgstr "Cargador / Utilidad de carga"
 
 #. [settings.password.rules]
 #. defaultMessage is:
 #. Use at least six characters
 #: i18n/messages.json
 msgid "Use at least six characters"
-msgstr ""
+msgstr "Usa, al menos, seis caracteres"
 
 #. [profileinfo.api_desc]
 #. defaultMessage is:
@@ -1158,27 +1114,29 @@ msgstr ""
 #: i18n/messages.json
 msgid "Use the API key to read and write data via remote applications."
 msgstr ""
+"Use la clave API para leer y escribir datos a través de aplicaciones "
+"remotas."
 
 #. [collection.edit.users]
 #. defaultMessage is:
 #. Users
 #: i18n/messages.json
 msgid "Users"
-msgstr ""
+msgstr "Usuarios"
 
 #. [collection.edit.permissionstable.view]
 #. defaultMessage is:
 #. View
 #: i18n/messages.json
 msgid "View"
-msgstr ""
+msgstr "Vista"
 
 #. [search.warning]
 #. defaultMessage is:
 #. Warning!
 #: i18n/messages.json
 msgid "Warning!"
-msgstr ""
+msgstr "¡Cuidado!"
 
 #. [signup.inbox.desc]
 #. defaultMessage is:
@@ -1189,51 +1147,43 @@ msgid ""
 "We've sent you an email, please follow the link to complete your "
 "registration"
 msgstr ""
-
-#. [preview.not_auth]
-#. defaultMessage is:
-#. You are not authorized to do this.
-#. [collection.not_auth]
-#. defaultMessage is:
-#. You are not authorized to do this.
-#: i18n/messages.json i18n/messages.json
-msgid "You are not authorized to do this."
-msgstr ""
+"Te enviaremos un correo electrónico, por favor ingresa al enlace para "
+"completar tu registro"
 
 #. [notifications.no_notifications]
 #. defaultMessage is:
 #. You do not have any notifications.
 #: i18n/messages.json
 msgid "You do not have any notifications."
-msgstr ""
+msgstr "No tienes notificaciones."
 
 #. [alerts.no_alerts]
 #. defaultMessage is:
 #. You have no notifications set up.
 #: i18n/messages.json
 msgid "You have no notifications set up."
-msgstr ""
+msgstr "No tienes notificaciones configuradas."
 
 #. [navbar.alert_removed]
 #. defaultMessage is:
 #. You will no longer receive alerts for this search
 #: i18n/messages.json
 msgid "You will no longer receive alerts for this search"
-msgstr ""
+msgstr "No recibirás más alertas para esta búsqueda"
 
 #. [navbar.alert_added]
 #. defaultMessage is:
 #. You will receive alerts for new results
 #: i18n/messages.json
 msgid "You will receive alerts for new results"
-msgstr ""
+msgstr "Recibirás alertas sobre nuevos resultados"
 
 #. [password_auth.name]
 #. defaultMessage is:
 #. Your Name
 #: i18n/messages.json
 msgid "Your Name"
-msgstr ""
+msgstr "Tu nombre"
 
 #. [collection.edit.save_success]
 #. defaultMessage is:
@@ -1243,74 +1193,67 @@ msgstr ""
 #. Your changes are saved.
 #: i18n/messages.json i18n/messages.json
 msgid "Your changes are saved."
-msgstr ""
+msgstr "Tus cambios han sido guardados."
 
 #. [settings.email.no_change]
 #. defaultMessage is:
 #. Your e-mail address cannot be changed
 #: i18n/messages.json
 msgid "Your e-mail address cannot be changed"
-msgstr ""
+msgstr "Tu dirección de correo electrónico no puede ser modificada"
 
 #. [notifications.title]
 #. defaultMessage is:
 #. Your notifications
 #: i18n/messages.json
 msgid "Your notifications"
-msgstr ""
+msgstr "Tus notificaciones"
 
 #. [pass.auth.not_same]
 #. defaultMessage is:
 #. Your passwords are not the same!
 #: i18n/messages.json
 msgid "Your passwords are not the same!"
-msgstr ""
+msgstr "¡Tus contraseñas no coinciden!"
 
 #. [footer.aleph]
 #. defaultMessage is:
 #. aleph {version}
 #: i18n/messages.json
 msgid "aleph {version}"
-msgstr ""
+msgstr "aleph {version}"
 
 #. [search.filterTag.ancestors]
 #. defaultMessage is:
 #. in:
 #: i18n/messages.json
 msgid "in:"
-msgstr ""
+msgstr "en:"
 
 #. [search.filterTag.exclude]
 #. defaultMessage is:
 #. not:
 #: i18n/messages.json
 msgid "not:"
-msgstr ""
+msgstr "no:"
 
 #. [search.screen.results]
 #. defaultMessage is:
 #. results
 #: i18n/messages.json
 msgid "results"
-msgstr ""
-
-#. [search.callout_second_part_description]
-#. defaultMessage is:
-#. sign in to see all results you’re authorised to access.
-#: i18n/messages.json
-msgid "sign in to see all results you’re authorised to access."
-msgstr ""
+msgstr "resultados"
 
 #. [country.total]
 #. defaultMessage is:
 #. total
 #: i18n/messages.json
 msgid "total"
-msgstr ""
+msgstr "total"
 
 #. [search.facets.filtersSelected]
 #. defaultMessage is:
 #. {count} selected
 #: i18n/messages.json
 msgid "{count} selected"
-msgstr ""
+msgstr "{count} seleccionado"

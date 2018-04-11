@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-04-06T15:52:24.071Z\n"
+"POT-Creation-Date: 2018-04-11T10:15:31.260Z\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -233,6 +233,9 @@ msgstr ""
 msgid "Contents"
 msgstr ""
 
+#. [document.countries]
+#. defaultMessage is:
+#. Countries
 #. [entity.column.countries]
 #. defaultMessage is:
 #. Countries
@@ -243,9 +246,6 @@ msgstr ""
 #. defaultMessage is:
 #. Countries
 #. [xref.countries]
-#. defaultMessage is:
-#. Countries
-#. [document.countries]
 #. defaultMessage is:
 #. Countries
 #. [search.facets.facet.countries]
@@ -277,6 +277,9 @@ msgstr ""
 msgid "Cross-referencing"
 msgstr ""
 
+#. [document.date]
+#. defaultMessage is:
+#. Date
 #. [email.date]
 #. defaultMessage is:
 #. Date
@@ -284,9 +287,6 @@ msgstr ""
 #. defaultMessage is:
 #. Date
 #. [xref.date]
-#. defaultMessage is:
-#. Date
-#. [document.date]
 #. defaultMessage is:
 #. Date
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
@@ -305,13 +305,6 @@ msgstr ""
 #. Document Source URL
 #: i18n/messages.json
 msgid "Document Source URL"
-msgstr ""
-
-#. [document.not_found]
-#. defaultMessage is:
-#. Document not found
-#: i18n/messages.json
-msgid "Document not found"
 msgstr ""
 
 #. [signup.register.question]
@@ -356,11 +349,11 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
-#. [entity.not_found]
+#. [collection.info.explore_button]
 #. defaultMessage is:
-#. Entity not found
+#. Explore
 #: i18n/messages.json
-msgid "Entity not found"
+msgid "Explore"
 msgstr ""
 
 #. [collection.edit.save_error]
@@ -620,6 +613,13 @@ msgstr ""
 msgid "No tags found."
 msgstr ""
 
+#. [query.not_accessible]
+#. defaultMessage is:
+#. Not accessible!
+#: i18n/messages.json
+msgid "Not accessible!"
+msgstr ""
+
 #. [auth.unauthorized]
 #. defaultMessage is:
 #. Not authorized
@@ -698,26 +698,6 @@ msgstr ""
 msgid "Phones"
 msgstr ""
 
-#. [signup.not_available_desc]
-#. defaultMessage is:
-#. Please contact the site admin to get an account
-#. [signup.not_available_desc]
-#. defaultMessage is:
-#. Please contact the site admin to get an account
-#: i18n/messages.json i18n/messages.json
-msgid "Please contact the site admin to get an account"
-msgstr ""
-
-#. [preview.not_auth_decr]
-#. defaultMessage is:
-#. Please go to the login page.
-#. [collection.not_auth_decr]
-#. defaultMessage is:
-#. Please go to the login page.
-#: i18n/messages.json i18n/messages.json
-msgid "Please go to the login page."
-msgstr ""
-
 #. [preview]
 #. defaultMessage is:
 #. Preview
@@ -754,16 +734,6 @@ msgstr ""
 #. Register
 #: i18n/messages.json
 msgid "Register"
-msgstr ""
-
-#. [signup.not_available_title]
-#. defaultMessage is:
-#. Registration is disabled
-#. [signup.not_available_title]
-#. defaultMessage is:
-#. Registration is disabled
-#: i18n/messages.json i18n/messages.json
-msgid "Registration is disabled"
 msgstr ""
 
 #. [entity.references.title]
@@ -804,13 +774,10 @@ msgstr ""
 #. [alerts.search]
 #. defaultMessage is:
 #. Search
-#. [collection.info..search_button]
-#. defaultMessage is:
-#. Search
 #. [home.search]
 #. defaultMessage is:
 #. Search
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Search"
 msgstr ""
 
@@ -859,10 +826,10 @@ msgstr ""
 #. [nav.settings]
 #. defaultMessage is:
 #. Settings
-#. [settings.title]
+#. [collection.info.edit_button]
 #. defaultMessage is:
 #. Settings
-#. [collection.info.edit_button]
+#. [settings.title]
 #. defaultMessage is:
 #. Settings
 #: i18n/messages.json i18n/messages.json i18n/messages.json
@@ -921,16 +888,16 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#. [search.callout_first_part_description]
+#. [search.callout_message]
 #. defaultMessage is:
-#. Some sources are hidden from anonymous users, please
+#. Some sources are hidden from anonymous users. Please sign in to see all
+#. results you’re authorised to access!
 #: i18n/messages.json
-msgid "Some sources are hidden from anonymous users, please"
+msgid ""
+"Some sources are hidden from anonymous users. Please sign in to see all "
+"results you’re authorised to access!"
 msgstr ""
 
-#. [entity.column.collection_id]
-#. defaultMessage is:
-#. Source
 #. [collection.info.heading]
 #. defaultMessage is:
 #. Source
@@ -938,6 +905,9 @@ msgstr ""
 #. defaultMessage is:
 #. Source
 #. [entity.info.source]
+#. defaultMessage is:
+#. Source
+#. [entity.column.collection_id]
 #. defaultMessage is:
 #. Source
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
@@ -949,16 +919,6 @@ msgstr ""
 #. Source URL
 #: i18n/messages.json
 msgid "Source URL"
-msgstr ""
-
-#. [preview.not_found]
-#. defaultMessage is:
-#. Source not found
-#. [collection.not_found]
-#. defaultMessage is:
-#. Source not found
-#: i18n/messages.json i18n/messages.json
-msgid "Source not found"
 msgstr ""
 
 #. [collection.edit.title]
@@ -1040,13 +1000,6 @@ msgstr ""
 msgid "There are no known relationships."
 msgstr ""
 
-#. [login.not_available_desc]
-#. defaultMessage is:
-#. There is no login provider configured for this app
-#: i18n/messages.json
-msgid "There is no login provider configured for this app"
-msgstr ""
-
 #. [folder.empty]
 #. defaultMessage is:
 #. This folder is empty.
@@ -1085,10 +1038,10 @@ msgstr ""
 msgid "Try searching: {samples}"
 msgstr ""
 
-#. [entity.column.schema]
+#. [document.type]
 #. defaultMessage is:
 #. Type
-#. [document.type]
+#. [entity.column.schema]
 #. defaultMessage is:
 #. Type
 #: i18n/messages.json i18n/messages.json
@@ -1188,16 +1141,6 @@ msgid ""
 "registration"
 msgstr ""
 
-#. [preview.not_auth]
-#. defaultMessage is:
-#. You are not authorized to do this.
-#. [collection.not_auth]
-#. defaultMessage is:
-#. You are not authorized to do this.
-#: i18n/messages.json i18n/messages.json
-msgid "You are not authorized to do this."
-msgstr ""
-
 #. [notifications.no_notifications]
 #. defaultMessage is:
 #. You do not have any notifications.
@@ -1290,13 +1233,6 @@ msgstr ""
 #. results
 #: i18n/messages.json
 msgid "results"
-msgstr ""
-
-#. [search.callout_second_part_description]
-#. defaultMessage is:
-#. sign in to see all results you’re authorised to access.
-#: i18n/messages.json
-msgid "sign in to see all results you’re authorised to access."
 msgstr ""
 
 #. [country.total]
