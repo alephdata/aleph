@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { Link } from 'react-router-dom';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
+import {FormattedMessage, FormattedNumber, injectIntl, defineMessages} from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 import _ from 'lodash';
+import { NonIdealState } from '@blueprintjs/core';
 
 import { Property, Entity, DualPane, TabCount, Schema, URL } from 'src/components/common';
 import { EntityInfoTags } from 'src/components/Entity';
@@ -13,6 +14,14 @@ import { CollectionOverview } from 'src/components/Collection';
 import { fetchEntityReferences } from 'src/actions/index';
 import { selectEntityTags } from 'src/selectors';
 import getPath from 'src/util/getPath';
+import ErrorScreen from "../ErrorMessages/ErrorScreen";
+
+const messages = defineMessages({
+    no_data: {
+        id: 'entity.info.no.data',
+        defaultMessage: 'We do not have data for this entity.'
+    }
+});
 
 class EntityInfo extends React.Component {
   constructor(props) {
@@ -43,7 +52,7 @@ class EntityInfo extends React.Component {
   }
 
   render() {
-    const { references, entity, schema, tags, showToolbar } = this.props;
+    const { references, entity, schema, tags, showToolbar, intl } = this.props;
     const tagsTotal = tags !== undefined ? tags.total : undefined;
     const connectionsTotal = (references && !references.isFetching && references.results) ? references.results.length : undefined;
     
@@ -53,7 +62,7 @@ class EntityInfo extends React.Component {
         return false;
       }
       if (prop.name === 'sourceUrl' && entity.properties[prop.name]) {
-        sourceUrl = entity.properties[prop.name][0]
+        sourceUrl = entity.properties[prop.name][0];
         return false;
       }
       return entity.properties[prop.name];
@@ -89,6 +98,9 @@ class EntityInfo extends React.Component {
                 panel={
                   <React.Fragment>
                     <ul className="info-sheet">
+                      {entityProperties.length === 0 &&
+                          <ErrorScreen.EmptyList title={messages.no_data}/>
+                      }
                       { entityProperties.map((prop) => (
                         <li key={prop.name}>
                           <span className="key">
@@ -182,4 +194,5 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
+EntityInfo = injectIntl(EntityInfo);
 export default connect(mapStateToProps, {fetchEntityReferences})(EntityInfo);
