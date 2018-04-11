@@ -35,7 +35,7 @@ script:
   - docker-compose -f docker-compose.dev.yml run --rm app /aleph/contrib/devwrapper.sh /aleph/contrib/test.sh
 
 after_success:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   # push tag as well
   - if [[ $TRAVIS_TAG = $TRAVIS_BRANCH ]]; then
       docker tag alephdata/aleph:latest alephdata/aleph:$TRAVIS_TAG ;
