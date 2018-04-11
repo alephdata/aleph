@@ -29,11 +29,11 @@ class PermissionRow extends Component {
       </td>
       <td className='other-rows'>
         <Checkbox checked={permission.read}
-                  onChange={() => onToggle(permission, 'read')} />
+                  onClick={() => onToggle(permission, 'read')} />
       </td>
       <td className='other-rows'>
         <Checkbox checked={permission.write}
-                  onChange={() => onToggle(permission, 'write')} />
+                  onClick={() => onToggle(permission, 'write')} />
       </td>
     </tr>);
   }
@@ -41,7 +41,6 @@ class PermissionRow extends Component {
 
 
 class AccessCollectionDialog extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -85,7 +84,7 @@ class AccessCollectionDialog extends Component {
   }
 
   onToggle(permission, flag) {
-    const permissions = this.state.permissions.map((perm) => {
+    const permissions = this.props.permissions.map((perm) => {
       if (perm.role.id === permission.role.id) {
         perm[flag] = !perm[flag];
       }
