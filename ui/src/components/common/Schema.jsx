@@ -2,7 +2,7 @@ import 'font-awesome/css/font-awesome.min.css';
 
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
+import { Link } from 'react-router-dom';
 
 class SchemaIcon extends Component {
   shouldComponentUpdate(nextProps) {
@@ -33,7 +33,7 @@ class SchemaLabel extends Component {
     }
     if (icon) {
       return (
-        <span><Schema.Icon schema={schema} /> {label}</span>
+        <span><Schema.Icon schema={schema}/> {label}</span>
       );
     }
 
@@ -46,6 +46,20 @@ class SchemaLabel extends Component {
   }
 }
 
+class SchemaLink extends Component {
+  render() {
+    const { schema, plural, url } = this.props;
+    return (
+        <React.Fragment>
+            <Schema.Icon schema={schema}/>
+            <Link to={url}>
+                <Schema.Label schema={schema} icon={false} plural={plural}/>
+            </Link>
+        </React.Fragment>
+    );
+  }
+}
+
 const mapStateToProps = state => ({
   schemata: state.metadata.schemata,
 });
@@ -53,6 +67,7 @@ const mapStateToProps = state => ({
 class Schema extends Component {
   static Label = connect(mapStateToProps)(SchemaLabel);
   static Icon = connect(mapStateToProps)(SchemaIcon);
+  static Link = connect(mapStateToProps)(SchemaLink);
 }
 
 export default Schema;

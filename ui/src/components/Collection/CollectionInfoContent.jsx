@@ -50,9 +50,7 @@ class CollectionInfoContent extends React.Component {
           { content.map((item, index) => (
             <li key={index}>
               <span className="key">
-                  <Link to={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}>
-                <Schema.Label schema={item.name} icon={true} plural={true}/>
-                    </Link>
+                <Schema.Link schema={item.name} plural={true} url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}/>
               </span>
               <span className="value">
                 <FormattedNumber value={item.number} />
