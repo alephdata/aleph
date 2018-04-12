@@ -47,9 +47,6 @@ class EntityConnections extends React.Component {
                                 </li>
                             ))}
                         </ul>
-                        <span className="tags">
-                            Tags
-                          </span>
                         <EntityInfoTags entity={entity} />
                     </div>
                 )}

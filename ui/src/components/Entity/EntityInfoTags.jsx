@@ -54,6 +54,9 @@ class EntityInfoTags extends React.Component {
 
     return (
       <div className="tags">
+        <span className="tags">
+          <FormattedMessage id='entity.info.tags' defaultMessage='Tags'/>
+                          </span>
         <ul className="info-rank">
           { tags.results.map((tag) => (
             <li key={tag.id}>
