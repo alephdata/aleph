@@ -4,8 +4,8 @@ from banal import ensure_list
 from elasticsearch.helpers import scan
 
 from aleph.authz import Authz
-from aleph.core import db, es, celery
-from aleph.model import Role, Alert, Events
+from aleph.core import db, es
+from aleph.model import Alert, Events
 from aleph.index.core import entities_index
 from aleph.index.entities import get_entity
 from aleph.index.util import unpack_result, authz_query
