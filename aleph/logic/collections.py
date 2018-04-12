@@ -6,7 +6,7 @@ from aleph.model import Collection, Document, Entity, Match, Permission
 from aleph.index.collections import delete_collection as index_delete
 from aleph.index.collections import delete_documents as index_delete_documents
 from aleph.index.collections import delete_entities as index_delete_entities
-from aleph.index.collections import index_collection, update_roles
+from aleph.index.collections import index_collection
 from aleph.logic.entities import update_entity_full
 from aleph.logic.xref import xref_collection
 from aleph.logic.util import ui_url
@@ -18,30 +18,30 @@ def collection_url(collection_id=None, **query):
     return ui_url('collections', id=collection_id, **query)
 
 
-def update_collection(collection, roles=False):
+def update_collection(collection):
     """Create or update a collection."""
-    if collection.deleted_at is not None:
-        index_delete(collection.id)
-        return
-
     log.info("Updating: %r", collection)
-    if roles:
-        update_roles(collection)
+
+    if collection.deleted_at is not None:
+        index_delete(str(collection.id))
+        return
 
     if collection.casefile:
         xref_collection.apply_async([collection.id], priority=2)
+
+        # TODO: rebuild dossiers
+        eq = db.session.query(Entity.id)
+        eq = eq.filter(Entity.collection_id == collection.id)
+        for entity in eq:
+            update_entity_full.apply_async([entity.id], priority=1)
 
     return index_collection(collection)
 
 
 def update_collections():
     cq = db.session.query(Collection)
-    for collection in cq.all():
-        update_collection(collection, roles=True)
-        eq = db.session.query(Entity.id)
-        eq = eq.filter(Entity.collection_id == collection.id)
-        for entity in eq.all():
-            update_entity_full.apply_async([entity.id], priority=2)
+    for collection in cq:
+        update_collection(collection)
 
 
 @celery.task()

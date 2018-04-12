@@ -48,10 +48,8 @@ def ingest(document_id, role_id=None):
 
     get_manager().ingest_document(document, role_id=role_id)
 
-    # is this too often?
-    index_collection(document.collection)
-
     if document.collection.casefile:
+        index_collection(document.collection)
         params = {
             'document': document,
             'collection': document.collection

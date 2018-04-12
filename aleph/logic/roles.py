@@ -1,11 +1,16 @@
+import logging
+
 from aleph.model import db
 from aleph.model import Role, Subscription, Notification
 from aleph.logic.notifications import channel
+
+log = logging.getLogger(__name__)
 
 
 def update_role(role):
     """Synchronize denormalised role configuration."""
     db.session.flush()
+    log.info("Updating: %r", role)
     Subscription.unsubscribe(role=role, channel=channel(role))
     for group in Role.all_groups():
         Subscription.unsubscribe(role=role, channel=channel(group))

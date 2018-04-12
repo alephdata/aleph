@@ -79,7 +79,7 @@ def index_collection(collection):
     if languages is None or not len(languages):
         languages = aggregations['languages']['buckets']
         languages = [c['key'] for c in languages]
-    data['languages'] = exactitude.countries.normalize_set(countries)
+    data['languages'] = exactitude.languages.normalize_set(languages)
 
     texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)
