@@ -28,12 +28,12 @@ def update_collection(collection):
 
     if collection.casefile:
         xref_collection.apply_async([collection.id], priority=2)
-
         # TODO: rebuild dossiers
-        eq = db.session.query(Entity.id)
-        eq = eq.filter(Entity.collection_id == collection.id)
-        for entity in eq:
-            update_entity_full.apply_async([entity.id], priority=1)
+
+    eq = db.session.query(Entity.id)
+    eq = eq.filter(Entity.collection_id == collection.id)
+    for entity in eq:
+        update_entity_full.apply_async([entity.id], priority=1)
 
     return index_collection(collection)
 
