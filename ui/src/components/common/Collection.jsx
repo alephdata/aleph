@@ -23,7 +23,7 @@ class CollectionLabel extends Component {
 
 class CollectionLink extends Component {
   render() {
-    const { collection, icon = true, className, preview } = this.props;
+    const { collection, icon = true, className, preview, indexScreen } = this.props;
 
     if (preview === true) {
       // Displays in preview sidebar
@@ -31,7 +31,7 @@ class CollectionLink extends Component {
         <a href={`#preview:id=${collection.id}&preview:type=collection`}
            className={c('CollectionLink', className)}>
           <Collection.Label collection={collection} icon={icon} />
-          <Icon className='collection-icon' icon='document-open' intent={Intent.NONE}/>
+            {indexScreen !== true && <Icon className='collection-icon' icon='document-open' intent={Intent.NONE}/>}
         </a>
       );
     } else {
@@ -83,7 +83,7 @@ CollectionLoad.propTypes = {
   id: PropTypes.string.isRequired,
   children: PropTypes.func.isRequired,
   renderWhenLoading: PropTypes.node,
-}
+};
 
 class Collection {
   static Label = CollectionLabel;
