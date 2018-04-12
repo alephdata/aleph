@@ -45,6 +45,14 @@ def update_collections():
         update_collection(collection)
 
 
+def index_collections():
+    cq = db.session.query(Collection)
+    cq = cq.order_by(Collection.id.desc())
+    for collection in cq:
+        log.info("Index [%s]: %s", collection.foreign_id, collection.label)
+        index_collection(collection)
+
+
 @celery.task()
 def process_collection(collection_id):
     """Re-analyze the elements of this collection, documents and entities."""

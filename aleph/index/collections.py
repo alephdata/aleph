@@ -1,4 +1,5 @@
 import six
+import logging
 import exactitude
 from pprint import pprint  # noqa
 from normality import normalize
@@ -10,6 +11,8 @@ from aleph.index.core import entities_index, entity_index
 from aleph.index.core import records_index
 from aleph.index.util import query_delete, unpack_result
 from aleph.index.util import index_doc, index_form
+
+log = logging.getLogger(__name__)
 
 
 def index_collection(collection):
@@ -112,8 +115,8 @@ def update_roles(collection):
 
 def delete_collection(collection_id, wait=True):
     """Delete all documents from a particular collection."""
-    delete_entities(collection_id, wait=wait)
-    delete_documents(collection_id, wait=wait)
+    # delete_entities(collection_id, wait=wait)
+    # delete_documents(collection_id, wait=wait)
     es.delete(index=collections_index(),
               doc_type='doc',
               id=collection_id,

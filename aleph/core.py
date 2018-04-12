@@ -70,7 +70,8 @@ def create_app(config={}):
         beat_schedule={
             'background': {
                 'task': 'aleph.logic.scheduled.background',
-                'schedule': crontab(hour='*', minute=0)
+                'schedule': crontab(hour='*', minute=0),
+                'priority': 7
             }
         },
     )
