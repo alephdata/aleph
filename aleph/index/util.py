@@ -74,8 +74,7 @@ def index_doc(index, id, body):
             es.index(index=index,
                      doc_type='doc',
                      id=str(id),
-                     body=body,
-                     timeout=REQUEST_TIMEOUT)
+                     body=body)
             body['id'] = str(id)
             return body
         except TransportError as terr:

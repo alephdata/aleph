@@ -83,7 +83,7 @@ def index_collection(collection):
 
     texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)
-    return index_doc(collection_index, collection.id, data)
+    return index_doc(collection_index(), collection.id, data)
 
 
 def get_collection(collection_id):
