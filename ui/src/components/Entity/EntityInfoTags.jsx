@@ -43,6 +43,9 @@ class EntityInfoTags extends React.Component {
     if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
       return (
         <React.Fragment>
+          <span className="tags">
+          <FormattedMessage id='entity.info.tags' defaultMessage='Tags'/>
+                          </span>
           <p className="pt-text-muted">
             <FormattedMessage 
               id="entity.info.tags.empty_description"

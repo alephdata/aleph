@@ -50,10 +50,14 @@ class EntityReferencesTable extends Component {
     return (event) => {
       event.preventDefault();
       const fragment = new Fragment(history);
-      fragment.update({
-        'preview:type': 'entity',
-        'preview:id': entity.id
-      });
+      if(fragment.state['preview:id']) {
+        fragment.update({'preview:id': null});
+      } else {
+        fragment.update({
+          'preview:type': 'entity',
+          'preview:id': entity.id
+        });
+      }
     }
   }
 
