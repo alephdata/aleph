@@ -31,7 +31,7 @@ class CollectionLink extends Component {
         <a href={`#preview:id=${collection.id}&preview:type=collection`}
            className={c('CollectionLink', className)}>
           <Collection.Label collection={collection} icon={icon} />
-            {indexScreen !== true && <Icon className='collection-icon' icon='document-open' intent={Intent.NONE}/>}
+            {indexScreen !== true && <Icon className='collection-icon' icon='folder-open' intent={Intent.NONE}/>}
         </a>
       );
     } else {

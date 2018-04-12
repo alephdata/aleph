@@ -40,7 +40,7 @@ class DocumentInfo extends React.Component {
             </Button>
             {doc.links && doc.links.ui && (
               <Link to={getPath(doc.links.ui)} className="pt-button button-link button-hover">
-                <span className={`pt-icon-document`}/>
+                <span className={`pt-icon-folder-open`}/>
                 <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
               </Link>
             )}
