@@ -2,13 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { Link } from 'react-router-dom';
-import {FormattedMessage, FormattedNumber, injectIntl, defineMessages} from 'react-intl';
+import {FormattedMessage, defineMessages} from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 import _ from 'lodash';
-import { NonIdealState } from '@blueprintjs/core';
 
 import { Property, Entity, DualPane, TabCount, Schema, URL } from 'src/components/common';
-import { EntityInfoTags } from 'src/components/Entity';
+import { EntityInfoTags, EntityConnections } from 'src/components/Entity';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
 import { fetchEntityReferences } from 'src/actions/index';
@@ -43,18 +42,14 @@ class EntityInfo extends React.Component {
     }
   }
 
-  referenceLink(reference) {
-    const { entity } = this.props;
-    const path = getPath(entity.links.ui);
-    const tabName = 'references-' + reference.property.qname;
-    const query = queryString.stringify({'content:tab': tabName})
-    return path + '#' + query;
-  }
-
   render() {
-    const { references, entity, schema, tags, showToolbar, intl } = this.props;
+    const { references, entity, schema, tags, showToolbar } = this.props;
     const tagsTotal = tags !== undefined ? tags.total : undefined;
-    const connectionsTotal = (references && !references.isFetching && references.results) ? references.results.length : undefined;
+    const relationshipTotal = (references && !references.isFetching && references.results) ? references.results.length : undefined;
+    const connectionsTotal = relationshipTotal === undefined ?
+        tagsTotal === undefined ?
+            0 : tagsTotal : tagsTotal === undefined ?
+            relationshipTotal : tagsTotal + relationshipTotal;
     
     let sourceUrl = null;
     const entityProperties = _.values(schema.properties).filter((prop) => {
@@ -148,37 +143,11 @@ class EntityInfo extends React.Component {
                   </React.Fragment>
                 }
                 panel={
-                  <React.Fragment>
-                    {connectionsTotal && connectionsTotal > 0 && (
-                      <ul className="info-rank">
-                        { references.results.map((ref) => (
-                          <li key={ref.property.qname}>
-                            <span className="key">
-                              <Schema.Icon schema={ref.schema} />{' '}
-                              <Link to={this.referenceLink(ref)}>
-                                <Property.Reverse model={ref.property} />
-                              </Link>
-                            </span>
-                            <span className="value">
-                              <FormattedNumber value={ref.count} />
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </React.Fragment>
+                    <React.Fragment>
+                        <EntityConnections connectionsTotal={connectionsTotal} references={references} entity={entity}/>
+                    </React.Fragment>
                 }
               />
-              <Tab id="tags" disabled={!tagsTotal || tagsTotal === 0}
-                title={
-                  <React.Fragment>
-                    <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
-                    <TabCount count={tagsTotal} />
-                  </React.Fragment>
-                }
-                panel={<EntityInfoTags entity={entity} />}
-              />
-              <Tabs.Expander />
           </Tabs>
         </div>
       </DualPane.InfoPane>
@@ -194,5 +163,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-EntityInfo = injectIntl(EntityInfo);
 export default connect(mapStateToProps, {fetchEntityReferences})(EntityInfo);

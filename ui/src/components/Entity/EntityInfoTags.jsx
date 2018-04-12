@@ -8,6 +8,8 @@ import { Tag } from 'src/components/common';
 import { fetchEntityTags } from 'src/actions/index';
 import { selectEntityTags } from 'src/selectors';
 
+import './EntityInfoTags.css';
+
 class EntityInfoTags extends React.Component {
   componentDidMount() {
     this.fetchIfNeeded(this.props);
