@@ -25,7 +25,7 @@ export class DownloadButton extends React.Component {
                 );
                 return (
                     <div className="DownloadButton pt-button-group" style={this.props.style}>
-                        <a href={session.token ? `${downloadLink[0].url}?api_key=${session.token}` : downloadLink[0].url} className="pt-button">
+                        <a href={session.token ? `${downloadLink[0].url}?api_key=${session.token}` : downloadLink[0].url} className="pt-button" rel="nofollow">
                             <span className="pt-icon-standard pt-icon-download"/>
                             <span><FormattedMessage id="document.download" defaultMessage="Download"/></span>
                         </a>
@@ -45,7 +45,7 @@ export class DownloadButton extends React.Component {
             } else {
                 // Render Download button with single button
                 return (
-                    <a href={session.token ? `${downloadLink.url}?api_key=${session.token}` : downloadLink.url} type="button" className="DownloadButton pt-button" style={this.props.style}>
+                    <a href={session.token ? `${downloadLink.url}?api_key=${session.token}` : downloadLink.url} type="button" className="DownloadButton pt-button" style={this.props.style} rel="nofollow">
                         <span className="pt-icon-standard pt-icon-download"/>
                         <span><FormattedMessage id="document.download" defaultMessage="Download"/></span>
                     </a>
