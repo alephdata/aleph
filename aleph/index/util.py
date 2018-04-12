@@ -1,3 +1,4 @@
+import time
 import logging
 from banal import ensure_list
 from elasticsearch.helpers import bulk
@@ -12,6 +13,7 @@ log = logging.getLogger(__name__)
 INDEX_MAX_LEN = 1024 * 1024 * 100
 TIMEOUT = '60m'
 REQUEST_TIMEOUT = 60 * 60 * 2
+RETRY_DELAY = 10
 
 
 def unpack_result(res):
@@ -63,6 +65,22 @@ def query_delete(index, query, wait=True):
                            wait_for_completion=wait)
     except TransportError as terr:
         log.warning("Query delete failed: %s", terr)
+
+
+def index_doc(index, id, body):
+    """Index a single document and retry until it has been stored."""
+    while True:
+        try:
+            es.index(index=index,
+                     doc_type='doc',
+                     id=str(id),
+                     body=body,
+                     timeout=REQUEST_TIMEOUT)
+            body['id'] = str(id)
+            return body
+        except TransportError as terr:
+            log.warning("Index error [%s:%s]: %s", index, id, terr)
+            time.sleep(RETRY_DELAY)
 
 
 def index_form(texts):

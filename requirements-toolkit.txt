@@ -6,6 +6,6 @@ followthemoney >= 0.6.15
 fingerprints >= 0.5.3
 storagelayer >= 0.4.1
 exactitude >= 2.3.3
-ingestors >= 0.7.16
+ingestors >= 0.7.17
 normality >= 0.5.12
 celestial >= 0.2.1

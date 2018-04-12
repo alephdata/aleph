@@ -8,7 +8,8 @@ from aleph.model import Entity
 from aleph.index.core import collection_index, collections_index
 from aleph.index.core import entities_index, entity_index
 from aleph.index.core import records_index
-from aleph.index.util import query_delete, unpack_result, index_form
+from aleph.index.util import query_delete, unpack_result
+from aleph.index.util import index_doc, index_form
 
 
 def index_collection(collection):
@@ -82,12 +83,7 @@ def index_collection(collection):
 
     texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)
-    es.index(index=collection_index(),
-             doc_type='doc',
-             id=collection.id,
-             body=data)
-    data['id'] = collection.id
-    return data
+    return index_doc(collection_index, collection.id, data)
 
 
 def get_collection(collection_id):
