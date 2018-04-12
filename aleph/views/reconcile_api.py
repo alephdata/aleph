@@ -12,7 +12,7 @@ from aleph.model import Entity
 from aleph.search import SearchQueryParser
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.views.util import jsonify
-from aleph.logic.entities import entity_url
+from aleph.logic.util import entity_url
 
 # See: https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API
 

@@ -9,13 +9,8 @@ from aleph.index.collections import delete_entities as index_delete_entities
 from aleph.index.collections import index_collection, update_collection_roles
 from aleph.logic.entities import update_entity_full
 from aleph.logic.xref import xref_collection
-from aleph.logic.util import ui_url
 
 log = logging.getLogger(__name__)
-
-
-def collection_url(collection_id=None, **query):
-    return ui_url('collections', id=collection_id, **query)
 
 
 def update_collection(collection):

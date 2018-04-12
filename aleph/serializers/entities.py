@@ -7,8 +7,7 @@ from marshmallow.fields import Dict, Boolean
 from marshmallow.validate import Length
 
 from aleph.core import url_for
-from aleph.logic.entities import entity_url
-from aleph.logic.documents import document_url
+from aleph.logic.util import document_url, entity_url
 from aleph.serializers.common import BaseSchema, flatten_id
 from aleph.serializers.common import SchemaName, PartialDate
 from aleph.serializers.common import Country, Language

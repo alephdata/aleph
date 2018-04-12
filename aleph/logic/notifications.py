@@ -4,18 +4,52 @@ import requests
 from banal import ensure_list
 
 from aleph.core import db, settings
-from aleph.model import Role, Event, Notification
+from aleph.model import Role, Alert, Event, Notification
+from aleph.model import Collection, Document, Entity
+from aleph.index.entities import get_entity
+from aleph.logic.util import collection_url, entity_url, document_url
+from aleph.logic.util import ui_url, quoted
 
 log = logging.getLogger(__name__)
 
 
 def object_id(obj, clazz=None):
+    """Turn a given object into an ID that can be stored in with
+    the notification."""
     clazz = clazz or type(obj)
     if isinstance(obj, clazz):
         obj = obj.id
     elif isinstance(obj, dict):
         obj = obj.get('id')
     return obj
+
+
+def resolve_id(object_id, clazz):
+    """From an object ID and class type, generate a human-readable
+    label and a link that can be rendered into the notification.
+    """
+    text, link = None, None
+    if clazz == Role:
+        role = Role.by_id(object_id)
+        text = quoted(role.name if role is not None else None)
+    elif clazz == Alert:
+        alert = Alert.by_id(object_id)
+        text = quoted(alert.label if alert is not None else None)
+    elif clazz == Collection:
+        collection = Collection.by_id(object_id)
+        if collection is not None:
+            text = quoted(collection.label)
+            link = collection_url(object_id)
+    elif clazz in [Document, Entity]:
+        entity = get_entity(object_id)
+        if entity is not None:
+            if Document.SCHEMA in entity.get('schemata'):
+                text = quoted(entity.get('title', entity.get('file_name')))
+                link = document_url(object_id)
+            else:
+                text = quoted(entity.get('name'))
+                link = entity_url(object_id)
+    return text, link
 
 
 def channel(obj, clazz=None):
@@ -45,6 +79,8 @@ def publish(event, actor_id=None, params=None, channels=None):
                                         params=outparams,
                                         channels=channels)
     db.session.flush()
+
+    # TODO: send this into the queue.
     ldn_publish(notification)
 
 
@@ -57,17 +93,17 @@ def ldn_publish(notification):
         log.debug("Linked data notifications (LDN) not configured.")
         return
 
-    text = render_text(notification)
+    text, link = render_notification(notification)
     timestamp = notification.created_at.strftime("%Y-%m-%d %H:%M:%S")
     for role in notification.recipients:
         message = {
             "@context": {"schema": "http://schema.org#"},
             "@id": notification.id,
             "schema:email": role.email,
-            "schema:link": "http://data.blubb",
-            "schema:producer": six.text_type(settings.APP_TITLE),
-            "schema:subjectOf": text,
+            "schema:producer": "aleph",  # six.text_type(settings.APP_TITLE),
             "schema:text": text,
+            "schema:subjectOf": text,
+            "schema:link": link,
             "schema:timestamp": timestamp
         }
         headers = {
@@ -77,10 +113,20 @@ def ldn_publish(notification):
         res = requests.post(settings.LDN_RECEIVER_URI,
                             json=message,
                             headers=headers)
-        print res.json()
+        print res
 
 
-def render_text(notification):
+def render_notification(notification):
     """ Generate a text version of the notification, suitable for use
     in an email or text message. """
-    return 'banana'
+    # TODO: get and use the role's locale preference.
+    link = ui_url('notificiation')
+    message = six.text_type(notification.event.template)
+    for name, clazz, value in notification.iterparams():
+        template = '{{%s}}' % name
+        text, plink = resolve_id(value, clazz)
+        if name == notification.event.link and plink is not None:
+            link = plink
+        text = text or '(unknown)'
+        message = message.replace(template, text)
+    return message, link

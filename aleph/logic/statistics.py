@@ -1,7 +1,6 @@
 import logging
 
 from aleph.core import es, cache
-from aleph.model import Entity
 from aleph.index.util import authz_query
 from aleph.index.core import entities_index, collections_index
 

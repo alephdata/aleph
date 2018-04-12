@@ -9,9 +9,10 @@ from aleph.model.collection import Collection
 
 class Event(object):
 
-    def __init__(self, template, params):
+    def __init__(self, template, link, params):
         self.name = None
         self.template = template
+        self.link = link
         self.params = params
 
 
@@ -40,12 +41,14 @@ class Events(object):
     # UPDATE COLLECTION (collection)
     UPDATE_COLLECTION = Event(
         template=lazy_gettext('{{actor}} changed the settings of {{collection}}.'),  # noqa
+        link='collection',
         params={'collection': Collection}
     )
 
     # UPLOAD DOCUMENT (document)
     INGEST_DOCUMENT = Event(
         template=lazy_gettext('{{actor}} uploaded {{document}} to {{collection}}.'),  # noqa
+        link='document',
         params={
             'document': Document,
             'collection': Collection
@@ -55,6 +58,7 @@ class Events(object):
     # ALERT MATCH (entity)
     MATCH_ALERT = Event(
         template=lazy_gettext('{{entity}} matches your alert for {{alert}}.'),  # noqa
+        link='entity',
         params={
             'entity': Entity,
             'alert': Alert,
@@ -65,6 +69,7 @@ class Events(object):
     # GRANT COLLECTION (collection, role)
     GRANT_COLLECTION = Event(
         template=lazy_gettext('{{actor}} gave {{role}} access to {{collection}}.'),  # noqa
+        link='collection',
         params={
             'collection': Collection,
             'role': Role
@@ -74,12 +79,14 @@ class Events(object):
     # PUBLISH COLLECTION (collection)
     PUBLISH_COLLECTION = Event(
         template='{{actor}} published {{collection}}.',
+        link='collection',
         params={'collection': Collection}
     )
 
     # REVOKE COLLECTION (collection, role)
     REVOKE_COLLECTION = Event(
         template=lazy_gettext('{{actor}} removed access to {{collection}} from {{role}}.'),  # noqa
+        link='collection',
         params={
             'collection': Collection,
             'role': Role
