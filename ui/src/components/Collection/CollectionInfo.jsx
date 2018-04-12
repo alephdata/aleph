@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
-import { Button, Tab, Tabs } from "@blueprintjs/core";
+import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
+import {FormattedMessage} from 'react-intl';
+import {Button, Tab, Tabs} from "@blueprintjs/core";
 
-import { Toolbar, CloseButton } from 'src/components/Toolbar';
+import {Toolbar, CloseButton} from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog/AccessCollectionDialog';
-import { DualPane } from 'src/components/common';
-import { CollectionInfoXref, CollectionOverview, CollectionInfoContent } from 'src/components/Collection';
+import {DualPane} from 'src/components/common';
+import {CollectionInfoXref, CollectionOverview, CollectionInfoContent} from 'src/components/Collection';
 
 class CollectionInfo extends Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class CollectionInfo extends Component {
   }
 
   handleTabChange(activeTabId: TabId) {
-    this.setState({ activeTabId });
+    this.setState({activeTabId});
   }
 
   toggleCollectionEdit() {
@@ -47,7 +47,7 @@ class CollectionInfo extends Component {
       accessIsOpen: !this.state.accessIsOpen
     })
   }
-  
+
   onCollectionXRefLoad(collection, xRefs) {
     if (xRefs && xRefs.total && xRefs.total > 0) {
       this.setState({
@@ -57,9 +57,9 @@ class CollectionInfo extends Component {
   }
 
   render() {
-    const {collection, showToolbar } = this.props;
+    const {collection, showToolbar} = this.props;
     const {permissions, activeTabId, collectionXRefTab, collectionInfoIsOpen, accessIsOpen} = this.state;
-    
+
     // @TODO Discussion: 'Search Collection' link to update the current query?
     return (
       <DualPane.InfoPane className="CollectionInfo with-heading">
@@ -70,25 +70,25 @@ class CollectionInfo extends Component {
               <FormattedMessage id="collection.info.explore_button" defaultMessage="Explore"/>
             </Link>
             {collection.writeable &&
-              <React.Fragment>
-                <Button icon="cog" onClick={this.toggleCollectionEdit} className='button-hover'>
-                  <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
-                </Button>
-                <CollectionEditDialog
-                  collection={collection}
-                  isOpen={collectionInfoIsOpen}
-                  toggleDialog={this.toggleCollectionEdit}
-                />
-                <Button icon="key" onClick={this.toggleAccess} className='button-hover'>
-                  <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
-                </Button>
-                <AccessCollectionDialog
-                  collection={collection}
-                  isOpen={accessIsOpen}
-                  toggleDialog={this.toggleAccess}
-                  permissions={permissions}
-                />
-              </React.Fragment>}
+            <React.Fragment>
+              <Button icon="cog" onClick={this.toggleCollectionEdit} className='button-hover'>
+                <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
+              </Button>
+              <CollectionEditDialog
+                collection={collection}
+                isOpen={collectionInfoIsOpen}
+                toggleDialog={this.toggleCollectionEdit}
+              />
+              <Button icon="key" onClick={this.toggleAccess} className='button-hover'>
+                <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
+              </Button>
+              <AccessCollectionDialog
+                collection={collection}
+                isOpen={accessIsOpen}
+                toggleDialog={this.toggleAccess}
+                permissions={permissions}
+              />
+            </React.Fragment>}
             <CloseButton/>
           </Toolbar>
         )}
@@ -103,24 +103,15 @@ class CollectionInfo extends Component {
         <div className="pane-content">
           <Tabs id="CollectionInfoTabs" onChange={this.handleTabChange} selectedTabId={activeTabId}>
             <Tab id="overview"
-              title={
-                <React.Fragment>
-                  <FormattedMessage id="collection .info.overview" defaultMessage="Overview"/>
-                </React.Fragment>
-              }
-              panel={<React.Fragment>
-                <CollectionOverview collection={collection} hasHeader={false}/>
-              </React.Fragment>
-              }
-            />
-            <Tab id="xref"
-              disabled={!collectionXRefTab}
-              title={
-                <React.Fragment>
-                  <FormattedMessage id="collection.info.source" defaultMessage="Cross-reference"/>
-                </React.Fragment>
-              }
-              panel={<CollectionInfoXref onCollectionXRefLoad={this.onCollectionXRefLoad} collection={collection} />}
+                 title={
+                   <React.Fragment>
+                     <FormattedMessage id="collection .info.overview" defaultMessage="Overview"/>
+                   </React.Fragment>
+                 }
+                 panel={<React.Fragment>
+                   <CollectionOverview collection={collection} hasHeader={false}/>
+                 </React.Fragment>
+                 }
             />
             <Tab id="content"
                  title={
@@ -128,9 +119,18 @@ class CollectionInfo extends Component {
                      <FormattedMessage id="collection.info.contents" defaultMessage="Contents"/>
                    </React.Fragment>
                  }
-                 panel={<CollectionInfoContent collection={collection} schemata={collection.schemata} />}
+                 panel={<CollectionInfoContent collection={collection} schemata={collection.schemata}/>}
             />
-            <Tabs.Expander />
+            <Tab id="xref"
+                 disabled={!collectionXRefTab}
+                 title={
+                   <React.Fragment>
+                     <FormattedMessage id="collection.info.source" defaultMessage="Cross-reference"/>
+                   </React.Fragment>
+                 }
+                 panel={<CollectionInfoXref onCollectionXRefLoad={this.onCollectionXRefLoad} collection={collection}/>}
+            />
+
           </Tabs>
         </div>
       </DualPane.InfoPane>
