@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router'
+import { Redirect } from 'react-router';
 
 class DocumentRedirectScreen extends Component {
   render() {
