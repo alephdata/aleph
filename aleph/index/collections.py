@@ -113,26 +113,24 @@ def update_roles(collection):
                        wait_for_completion=False)
 
 
-def delete_collection(collection_id, wait=True):
+def delete_collection(collection_id):
     """Delete all documents from a particular collection."""
-    # delete_entities(collection_id, wait=wait)
-    # delete_documents(collection_id, wait=wait)
     es.delete(index=collections_index(),
               doc_type='doc',
               id=collection_id,
               ignore=[404])
 
 
-def delete_entities(collection_id, wait=True):
+def delete_entities(collection_id):
     """Delete entities from a collection."""
     query = {'bool': {
         'must_not': {'term': {'schemata': 'Document'}},
         'must': {'term': {'collection_id': collection_id}}
     }}
-    query_delete(entities_index(), query, wait=wait)
+    query_delete(entities_index(), query)
 
 
-def delete_documents(collection_id, wait=True):
+def delete_documents(collection_id):
     """Delete documents from a collection."""
     query = {'bool': {
         'must': [
@@ -140,6 +138,6 @@ def delete_documents(collection_id, wait=True):
             {'term': {'collection_id': collection_id}}
         ]
     }}
-    query_delete(entities_index(), query, wait=wait)
+    query_delete(entities_index(), query)
     records_query = {'term': {'collection_id': collection_id}}
-    query_delete(records_index(), records_query, wait=wait)
+    query_delete(records_index(), records_query)

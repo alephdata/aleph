@@ -11,8 +11,8 @@ log = logging.getLogger(__name__)
 
 # This means that text beyond the first 100 MB will not be indexed
 INDEX_MAX_LEN = 1024 * 1024 * 100
-TIMEOUT = '60m'
 REQUEST_TIMEOUT = 60 * 60 * 2
+TIMEOUT = '%ss' % REQUEST_TIMEOUT
 RETRY_DELAY = 10
 
 
@@ -54,7 +54,7 @@ def bulk_op(iter, chunk_size=500):
          timeout=TIMEOUT)
 
 
-def query_delete(index, query, wait=True):
+def query_delete(index, query):
     "Delete all documents matching the given query inside the index."
     try:
         es.delete_by_query(index=index,
@@ -62,7 +62,7 @@ def query_delete(index, query, wait=True):
                            conflicts='proceed',
                            timeout=TIMEOUT,
                            request_timeout=REQUEST_TIMEOUT,
-                           wait_for_completion=wait)
+                           wait_for_completion=True)
     except TransportError as terr:
         log.warning("Query delete failed: %s", terr)
 

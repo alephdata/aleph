@@ -79,7 +79,7 @@ def process_collection(collection_id):
 
 
 @celery.task()
-def delete_collection(collection_id, wait=False):
+def delete_collection(collection_id):
     # Deleting a collection affects many associated objects and requires
     # checks, so this is done manually and in detail here.
     q = db.session.query(Collection)
@@ -91,10 +91,10 @@ def delete_collection(collection_id, wait=False):
 
     log.info("Deleting collection [%r]: %r", collection.id, collection.label)
     deleted_at = collection.deleted_at or datetime.utcnow()
-    index_delete(collection_id, wait=wait)
+    index_delete(collection_id)
 
-    delete_documents(collection_id, deleted_at=deleted_at, wait=wait)
-    delete_entities(collection_id, deleted_at=deleted_at, wait=wait)
+    delete_documents(collection_id, deleted_at=deleted_at)
+    delete_entities(collection_id, deleted_at=deleted_at)
 
     log.info("Deleting cross-referencing matches...")
     Match.delete_by_collection(collection_id, deleted_at=deleted_at)
@@ -107,16 +107,16 @@ def delete_collection(collection_id, wait=False):
 
 
 @celery.task()
-def delete_entities(collection_id, deleted_at=None, wait=False):
+def delete_entities(collection_id, deleted_at=None):
     deleted_at = deleted_at or datetime.utcnow()
     log.info("Deleting entities...")
     Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
-    index_delete_entities(collection_id, wait=wait)
+    index_delete_entities(collection_id)
 
 
 @celery.task()
-def delete_documents(collection_id, deleted_at=None, wait=False):
+def delete_documents(collection_id, deleted_at=None):
     deleted_at = deleted_at or datetime.utcnow()
     log.info("Deleting documents...")
     Document.delete_by_collection(collection_id, deleted_at=deleted_at)
-    index_delete_documents(collection_id, wait=wait)
+    index_delete_documents(collection_id)
