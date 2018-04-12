@@ -1,13 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import {FormattedMessage, defineMessages} from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 import _ from 'lodash';
 
 import { Property, Entity, DualPane, TabCount, Schema, URL } from 'src/components/common';
-import { EntityInfoTags, EntityConnections } from 'src/components/Entity';
+import { EntityConnections } from 'src/components/Entity';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
 import { fetchEntityReferences } from 'src/actions/index';
